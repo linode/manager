@@ -13,9 +13,9 @@
     "type": "git",
     "url": "https://github.com/Linode/manager.git"
   },
-  "keywords": [ ],
+  "keywords": [],
   "author": "Drew DeVault <ddevault@linode.com> et al",
-  "license": "3-Clause-BSD",
+  "license": "BSD-3-Clause",
   "bugs": {
     "url": "https://github.com/Linode/manager/issues"
   },
@@ -43,13 +43,17 @@
   },
   "dependencies": {
     "babel-preset-stage-0": "^6.3.13",
+    "css-loader": "^0.23.1",
     "history": "^1.17.0",
+    "node-sass": "^3.4.2",
     "react": "^0.14.3",
     "react-dom": "^0.14.3",
     "react-redux": "^4.0.6",
     "react-router": "^1.0.3",
     "redux": "^3.0.5",
     "redux-simple-router": "^1.0.2",
-    "redux-thunk": "^1.0.3"
+    "redux-thunk": "^1.0.3",
+    "sass-loader": "^3.1.2",
+    "style-loader": "^0.13.0"
   }
 }
