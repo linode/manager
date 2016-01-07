@@ -6,6 +6,7 @@ import { createHistory } from 'history';
 import { Router, Route, IndexRoute } from 'react-router';
 import DevTools from './containers/DevTools';
 import { syncReduxAndRouter } from 'redux-simple-router'
+import styles from '../scss/manager.scss';
 
 const store = configureStore();
 const history = createHistory();
