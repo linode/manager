@@ -1,11 +1,11 @@
 import { combineReducers } from 'redux';
 import { routeReducer } from 'redux-simple-router';
-import counter from './counter';
 import authentication from './authentication';
+import linodes from './linodes';
 
 const rootReducer = combineReducers({
   routing: routeReducer,
-  counter,
+  linodes,
   authentication
 });
 
