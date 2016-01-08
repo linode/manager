@@ -16,8 +16,8 @@ syncReduxAndRouter(history, store);
 import Layout from './containers/Layout';
 import IndexPage from './containers/IndexPage';
 import CounterPage from './containers/CounterPage';
+import OAuthCallbackPage from './containers/OAuth';
 import NotFound from './containers/NotFound';
-import * as oauth from './containers/oauth';
 
 const init = () => {
   let state = store.getState();
@@ -34,9 +34,9 @@ const init = () => {
           <Route path="/" component={Layout}>
             <IndexRoute component={IndexPage} />
             <Route path="counter" component={CounterPage} />
-          </Route>
-          <Route path="/oauth">
-            <Route path="callback" onEnter={(n, r) => oauth.default(store, n, r)} />
+            <Route path="oauth">
+              <Route path="callback" component={OAuthCallbackPage} />
+            </Route>
           </Route>
           <Route path="*" component={NotFound} />
         </Router>

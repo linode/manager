@@ -10,7 +10,7 @@ class CounterPage extends Component {
     return (
       <div>
         <h1>
-        Counter page
+          Counter page
         </h1>
         <Counter counter={counter}
           increment={() => dispatch(increment())}

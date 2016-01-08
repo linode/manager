@@ -6,20 +6,14 @@ const default_state = {
 
 export default function authentication(state = default_state, action) {
     switch (action.type) {
-    case CALLBACK:
-        return {
-            ...state,
-            username: action.query.username,
-            email: action.query.email,
-            exchange_code: action.query.code
-        };
     case SET_TOKEN:
         let newState = {
             ...state,
             scopes: action.scopes,
+            username: action.username,
+            email: action.email,
             token: action.token
         };
-        delete newState.exchange_code;
         return newState;
     default:
         return state;
