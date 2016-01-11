@@ -17,6 +17,7 @@
 
     .status {
         $size: 0.75rem;
+        $tooltip: rgba(0,0,0,0.75);
 
         width: $size;
         height: $size;
@@ -24,6 +25,47 @@
         border-radius: $size / 2;
         box-shadow: 0 0 1px 1px #444;
         margin-right: 0.5rem;
+        position: relative;
+
+        &:hover {
+            &::after, &::before {
+                opacity: 1;
+                visibility: visible;
+            }
+        }
+
+        &::after {
+            content: attr(title);
+            position: absolute;
+            left: $size;
+            top: -($size * 0.35);
+            margin-left: 0.5rem;
+            background: $tooltip;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            font-size: 10pt;
+            border-radius: 3px;
+            display: block;
+            opacity: 0;
+            transition: opacity 0.25s linear;
+            visibility: collapse;
+        }
+
+        &::before {
+            content: "";
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-top: ($size * 0.5) solid transparent;
+            border-right: 0.5rem solid $tooltip;
+            border-bottom: ($size * 0.5) solid transparent;
+            left: $size;
+            top: ($size / 10);
+            display: block;
+            opacity: 0;
+            transition: opacity 0.25s linear;
+            visibility: collapse;
+        }
         
         &.running {
             background-color: lighten($brand-success, 10);

@@ -7,11 +7,6 @@ export class Linode extends Component {
     this.renderPowerButtons = this.renderPowerButtons.bind(this);
   }
 
-  componentDidMount() {
-    let node = findDOMNode(this);
-    //$(node).find(".status").tooltip({ placement: "right" });
-  }
-
   renderPowerButtons() {
     const { linode } = this.props;
     switch (linode.status) {
