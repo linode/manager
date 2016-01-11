@@ -1,0 +1,40 @@
+.linode {
+    padding: 1rem;
+
+    h4 {
+        font-size: 14pt;
+        margin-bottom: 0.5rem;
+    }
+
+    ul {
+        font-size: 10pt;
+    }
+
+    .btn-default {
+        background-color: transparent;
+        margin-bottom: .5rem;
+    }
+
+    .status {
+        $size: 0.75rem;
+
+        width: $size;
+        height: $size;
+        display: inline-block;
+        border-radius: $size / 2;
+        box-shadow: 0 0 1px 1px #444;
+        margin-right: 0.5rem;
+        
+        &.running {
+            background-color: lighten($brand-success, 10);
+        }
+
+        &.being_created {
+            background-color: lightgrey;
+        }
+
+        &.brand_new {
+            background-color: lighten($brand-info, 10);
+        }
+    }
+}

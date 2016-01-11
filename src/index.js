@@ -35,8 +35,8 @@ const init = () => {
             <Route path="oauth">
               <Route path="callback" component={OAuthCallbackPage} />
             </Route>
+            <Route path="*" component={NotFound} />
           </Route>
-          <Route path="*" component={NotFound} />
         </Router>
         <DevTools />
       </div>

@@ -17,7 +17,7 @@ class Navigation extends Component {
           </p>
           <ul className="nav navbar-nav">
               <li className="nav-item">
-                  <Link className="nav-link" to="/linodes">Linodes</Link>
+                  <Link className="nav-link" to="/">Linodes</Link>
               </li>
               <li className="nav-item">
                   <Link className="nav-link" to="/node-balancers">Node Balancers</Link>
