@@ -2,6 +2,7 @@ import { UPDATE_LINODES } from '../actions/linodes';
 
 const default_state = {
     page: -1,
+    loading: false,
     linodes: []
 };
 
