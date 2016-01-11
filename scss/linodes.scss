@@ -1,3 +1,22 @@
+.linodes {
+    .display-group {
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        h2 {
+            font-size: 28pt;
+            margin: 0;
+            padding: 0;
+        }
+    }
+}
+
+.linode, .new-linode, .display-group {
+    height: 8rem;
+}
+
 .linode {
     padding: 1rem;
 
@@ -6,8 +25,13 @@
         margin-bottom: 0.5rem;
     }
 
+    a {
+        color: black;
+    }
+
     ul {
         font-size: 10pt;
+        margin-bottom: 0;
     }
 
     .btn-default {
@@ -78,5 +102,15 @@
         &.brand_new {
             background-color: lighten($brand-info, 10);
         }
+    }
+}
+
+.new-linode {
+    position: relative;
+
+    button {
+        width: 100%;
+        height: 100%;
+        font-size: 24pt;
     }
 }

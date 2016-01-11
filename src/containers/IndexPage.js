@@ -3,6 +3,8 @@ import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { updateLinodesIfNecessary } from '../actions/linodes';
 import { Linode } from '../components/Linode';
+import { NewLinode } from '../components/Linode';
+import _ from 'underscore';
 
 class IndexPage extends Component {
   componentDidMount() {
@@ -10,35 +12,47 @@ class IndexPage extends Component {
     dispatch(updateLinodesIfNecessary(authentication.token));
   }
 
+  renderGroup(linodes, group) {
+    return (
+      <div key={group} className="row linodes" style={{marginBottom: "2rem"}}>
+        {group ? <div className="col-md-6 display-group">
+          <h2 className="text-muted">{group}</h2>
+        </div> : ""}
+        <div className="col-md-6">
+          <NewLinode />
+        </div>
+        {linodes.map(l => {
+          return (
+          <div key={l.id} className="col-md-6">
+            <Linode linode={l} />
+          </div>);
+        })}
+      </div>
+    );
+  }
+
   render() {
     const { linodes } = this.props.linodes;
     return (
       <div className="row">
         <div className="col-md-9">
-          <div className="row">
-            {linodes.map(l => {
-              return (
-              <div key={l.id} className="col-md-6">
-                <Linode linode={l} />
-              </div>);
-            })}
-          </div>
+          {_.map(_.groupBy(linodes, l => l.group), this.renderGroup)}
         </div>
         <div className="col-md-3">
-          <div className="card">
-            <h4 className="text-centered">
-              Support Tickets
-            </h4>
-          </div>
-          <div className="card">
+          <div className="card" style={{padding: "1rem"}}>
             <h4 className="text-centered">
               Recent Events
             </h4>
-          </div>
-          <div className="card">
-            <h4 className="text-centered">
-              Account Info
-            </h4>
+            <ul className="list-unstyled">
+              <li>
+                <i className="fa fa-check text-success" style={{marginRight: "0.5rem"}}></i>
+                test_linode_15 booted
+              </li>
+              <li>
+                <i className="fa fa-check text-success" style={{marginRight: "0.5rem"}}></i>
+                test_linode_15 created
+              </li>
+            </ul>
           </div>
         </div>
       </div>
