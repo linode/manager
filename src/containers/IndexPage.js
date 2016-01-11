@@ -6,6 +6,12 @@ import { Linode } from '../components/Linode';
 import { NewLinode } from '../components/Linode';
 import _ from 'underscore';
 
+const sortOrder = {
+  "running": 0,
+  "powered_off": 1,
+  "brand_new": 2
+};
+
 class IndexPage extends Component {
   componentDidMount() {
     const { authentication, dispatch } = this.props;
@@ -15,18 +21,18 @@ class IndexPage extends Component {
   renderGroup(linodes, group) {
     return (
       <div key={group} className="row linodes" style={{marginBottom: "2rem"}}>
-        {group ? <div className="col-md-6 display-group">
+        {group ? <div className="col-md-12 display-group">
           <h2 className="text-muted">{group}</h2>
         </div> : ""}
-        <div className="col-md-6">
-          <NewLinode />
-        </div>
-        {linodes.map(l => {
+        {_.sortBy(linodes, l => sortOrder[l.status]).map(l => {
           return (
           <div key={l.id} className="col-md-6">
             <Linode linode={l} />
           </div>);
         })}
+        <div className="col-md-6">
+          <NewLinode />
+        </div>
       </div>
     );
   }

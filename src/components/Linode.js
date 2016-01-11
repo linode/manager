@@ -13,20 +13,38 @@ export class Linode extends Component {
     switch (linode.status) {
     case "running":
       return (
-        <div>
+        <div className="power">
           <button className="btn btn-default btn-block btn-sm">
-            Shutdown
+            <i className="fa fa-power-off"></i>
+            <span className="hover">OFF</span>
+            &nbsp;
           </button>
           <button className="btn btn-default btn-block btn-sm">
-            Reboot
+            <i className="fa fa-refresh"></i>
+            <span className="hover">Reboot</span>
+            &nbsp;
+          </button>
+        </div>
+      );
+    case "brand_new":
+      return (
+        <div className="power">
+          <button className="btn btn-default btn-block btn-sm">
+            <i className="fa fa-power-off"></i>
+            <span className="hover">ON</span>
+            &nbsp;
           </button>
         </div>
       );
     default:
       return (
-        <button className="btn btn-default btn-block btn-sm">
-          Power On
-        </button>
+        <div className="power">
+          <button className="btn btn-default btn-block btn-sm">
+            <i className="fa fa-power-off"></i>
+            <span className="hover">ON</span>
+            &nbsp;
+          </button>
+        </div>
       );
     }
   }
@@ -36,9 +54,9 @@ export class Linode extends Component {
     return (
       <div className={`linode card ${linode.status}`}>
         <div className="row">
-          <div className="col-md-8">
+          <div className="col-md-9">
             <h4>
-              <span title={linode.status} className={`status ${linode.status}`}></span>
+              <span data-title={linode.status} className={`status ${linode.status}`}></span>
               <Link to={`/linodes/${linode.id}`}>
                 {linode.label}
               </Link>
@@ -49,7 +67,7 @@ export class Linode extends Component {
               <li>{linode.ip_addresses.public.ipv6}</li>
             </ul>
           </div>
-          <div className="col-md-4">
+          <div className="col-md-3">
             {this.renderPowerButtons()}
           </div>
         </div>
@@ -63,7 +81,6 @@ export class NewLinode extends Component {
     return (
       <div className="card new-linode">
         <button className="btn btn-success">
-          Create a Linode
           <i className="fa fa-plus" style={{marginLeft: "1rem"}}></i>
         </button>
       </div>
