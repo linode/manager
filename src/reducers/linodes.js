@@ -1,4 +1,4 @@
-import { UPDATE_LINODES } from '../actions/linodes';
+import { UPDATE_LINODES, UPDATE_LINODE } from '../actions/linodes';
 
 const default_state = {
     localPage: -1,
@@ -6,6 +6,13 @@ const default_state = {
     loading: false,
     linodes: []
 };
+
+function transformLinode(linode) {
+    return {
+        _polling: false,
+        ...linode
+    };
+}
 
 export default function linodes(state=default_state, action) {
     switch (action.type) {
@@ -15,7 +22,18 @@ export default function linodes(state=default_state, action) {
             ...state,
             localPage: response.page,
             remotePage: response.page,
-            linodes: response.linodes
+            linodes: response.linodes.map(transformLinode)
+        };
+    case UPDATE_LINODE:
+        const linode = action.response;
+        return {
+            ...state,
+            linodes: state.linodes.map(l => {
+                if (l.id !== linode.id) {
+                    return l;
+                }
+                return transformLinode(linode);
+            })
         };
     default:
         return state;

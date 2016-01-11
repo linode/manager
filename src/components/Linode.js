@@ -9,7 +9,7 @@ export class Linode extends Component {
   }
 
   renderPowerButtons() {
-    const { linode } = this.props;
+    const { linode, onPowerOn } = this.props;
     switch (linode.status) {
     case "running":
       return (
@@ -29,7 +29,7 @@ export class Linode extends Component {
     case "brand_new":
       return (
         <div className="power">
-          <button className="btn btn-default btn-block btn-sm">
+          <button onClick={onPowerOn} className="btn btn-default btn-block btn-sm">
             <i className="fa fa-power-off"></i>
             <span className="hover">ON</span>
             &nbsp;
