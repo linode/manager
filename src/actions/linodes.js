@@ -3,6 +3,7 @@ import fetch from '../fetch';
 export const UPDATE_LINODES = "@@linodes/UPDATE_LINODES";
 export const UPDATE_LINODE = "@@linodes/UPDATE_LINODE";
 export const LINODE_PENDING = "@@linodes/LINODE_PENDING";
+export const LINODE_RECOVER = "@@linodes/LINODE_RECOVER";
 
 function shouldUpdate(state) {
   if (state.localPage !== state.remotePage) {
@@ -94,4 +95,8 @@ export function rebootLinode(id) {
     const json = await response.json();
     monitor(id, json.jobs[1], dispatch);
   };
+}
+
+export function toggleLinodeRecovery(id, recover) {
+  return { type: LINODE_RECOVER, linode: { id }, recover };
 }

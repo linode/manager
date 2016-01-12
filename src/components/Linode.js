@@ -1,13 +1,8 @@
 import React, { Component } from 'react';
-import { findDOMNode } from 'react-dom';
 import { Link } from 'react-router';
 import { LinodePower } from './LinodePower';
 
 export class Linode extends Component {
-  constructor() {
-    super();
-  }
-
   render() {
     const { linode, onPowerOn, onPowerOff, onReboot } = this.props;
     return (

@@ -1,4 +1,7 @@
-import { UPDATE_LINODES, UPDATE_LINODE, LINODE_PENDING } from '../actions/linodes';
+import {
+    UPDATE_LINODES, UPDATE_LINODE, LINODE_PENDING,
+    LINODE_RECOVER
+} from '../actions/linodes';
 
 const default_state = {
     localPage: -1,
@@ -61,6 +64,19 @@ export default function linodes(state=default_state, action) {
                     return l;
                 }
                 return { ...l, _pending: pending };
+            })
+        };
+    }
+    case LINODE_RECOVER:
+    {
+        const { linode, recovering } = action;
+        return {
+            ...state,
+            linodes: state.linodes.map(l => {
+                if (l.id !== linode.id) {
+                    return l;
+                }
+                return { ...l, _recovering: recovering };
             })
         };
     }

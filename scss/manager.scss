@@ -1,3 +1,33 @@
 $root: "/";
 @import 'base';
 @import 'linodes';
+
+.modal {
+    z-index: 999999;
+
+    &.modal-large {
+        .modal-dialog {
+            width: map-get($container-max-widths, "xl");
+        }
+    }
+
+    &.fade.in {
+        background: rgba(0,0,0,0.25);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal-content {
+        padding: 1rem;
+    }
+
+    .modal-header {
+        border: none;
+        padding: 0;
+    }
+
+    .modal-body {
+        padding: 0;
+    }
+}
