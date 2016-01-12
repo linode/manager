@@ -18,7 +18,10 @@
 .power {
     button {
         position: relative;
-        color: black;
+
+        &.btn-default {
+            color: black;
+        }
 
         i {
             width: 100%;

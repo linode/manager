@@ -7,9 +7,14 @@ const default_state = {
     linodes: []
 };
 
+const client_extensions = {
+    _pending: false,
+    _recovering: false
+};
+
 function transformLinode(linode, oldLinode={}) {
     return {
-        _pending: false,
+        ...client_extensions,
         ...oldLinode,
         ...linode
     };
