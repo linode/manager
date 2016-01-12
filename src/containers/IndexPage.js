@@ -5,12 +5,6 @@ import { updateLinodesIfNecessary, powerOnLinode, powerOffLinode, rebootLinode }
 import { Linode, NewLinode } from '../components/Linode';
 import _ from 'underscore';
 
-const sortOrder = {
-  "running": 0,
-  "powered_off": 1,
-  "brand_new": 2
-};
-
 class IndexPage extends Component {
   constructor() {
     super();
@@ -46,7 +40,7 @@ class IndexPage extends Component {
         {group ? <div className="col-md-12 display-group">
           <h2 className="text-muted">{group}</h2>
         </div> : ""}
-        {_.sortBy(linodes, l => sortOrder[l.status]).map(l => {
+        {linodes.map(l => {
           return (
           <div key={l.id} className="col-md-6">
             <Linode linode={l}
