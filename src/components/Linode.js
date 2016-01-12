@@ -21,7 +21,7 @@ export class Linode extends Component {
         <div className="power">
           <button onClick={onPowerOff} className="btn btn-default btn-block btn-sm">
             <i className="fa fa-power-off"></i>
-            <span className="hover">OFF</span>
+            <span className="hover">Stop</span>
             &nbsp;
           </button>
           <button onClick={onReboot} className="btn btn-default btn-block btn-sm">
@@ -36,7 +36,7 @@ export class Linode extends Component {
         <div className="power">
           <button onClick={onPowerOn} className="btn btn-default btn-block btn-sm">
             <i className="fa fa-power-off"></i>
-            <span className="hover">ON</span>
+            <span className="hover">Start</span>
             &nbsp;
           </button>
         </div>
@@ -46,7 +46,7 @@ export class Linode extends Component {
         <div className="power">
           <button onClick={onPowerOn} className="btn btn-default btn-block btn-sm">
             <i className="fa fa-power-off"></i>
-            <span className="hover">ON</span>
+            <span className="hover">Start</span>
             &nbsp;
           </button>
         </div>
