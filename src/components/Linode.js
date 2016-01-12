@@ -9,17 +9,22 @@ export class Linode extends Component {
   }
 
   renderPowerButtons() {
-    const { linode, onPowerOn } = this.props;
+    const { linode, onPowerOn, onPowerOff, onReboot } = this.props;
+    if (linode._pending) {
+      return <div>
+        <i className="fa fa-spinner fa-spin pull-right"></i>
+      </div>;
+    }
     switch (linode.status) {
     case "running":
       return (
         <div className="power">
-          <button className="btn btn-default btn-block btn-sm">
+          <button onClick={onPowerOff} className="btn btn-default btn-block btn-sm">
             <i className="fa fa-power-off"></i>
             <span className="hover">OFF</span>
             &nbsp;
           </button>
-          <button className="btn btn-default btn-block btn-sm">
+          <button onClick={onReboot} className="btn btn-default btn-block btn-sm">
             <i className="fa fa-refresh"></i>
             <span className="hover">Reboot</span>
             &nbsp;
@@ -39,7 +44,7 @@ export class Linode extends Component {
     default:
       return (
         <div className="power">
-          <button className="btn btn-default btn-block btn-sm">
+          <button onClick={onPowerOn} className="btn btn-default btn-block btn-sm">
             <i className="fa fa-power-off"></i>
             <span className="hover">ON</span>
             &nbsp;
@@ -52,7 +57,7 @@ export class Linode extends Component {
   render() {
     const { linode } = this.props;
     return (
-      <div className={`linode card ${linode.status}`}>
+      <div className={`linode card ${linode.status} ${linode._pending ? 'pending' : ''}`}>
         <div className="row">
           <div className="col-md-9">
             <h4>

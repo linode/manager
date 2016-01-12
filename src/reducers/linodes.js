@@ -1,4 +1,4 @@
-import { UPDATE_LINODES, UPDATE_LINODE } from '../actions/linodes';
+import { UPDATE_LINODES, UPDATE_LINODE, LINODE_PENDING } from '../actions/linodes';
 
 const default_state = {
     localPage: -1,
@@ -9,7 +9,7 @@ const default_state = {
 
 function transformLinode(linode) {
     return {
-        _polling: false,
+        _pending: false,
         ...linode
     };
 }
@@ -35,6 +35,19 @@ export default function linodes(state=default_state, action) {
                 return transformLinode(linode);
             })
         };
+    case LINODE_PENDING:
+    {
+        const { linode, pending } = action;
+        return {
+            ...state,
+            linodes: state.linodes.map(l => {
+                if (l.id !== linode.id) {
+                    return l;
+                }
+                return { ...l, _pending: pending };
+            })
+        };
+    }
     default:
         return state;
     }

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
-import { updateLinodesIfNecessary, powerOffLinode } from '../actions/linodes';
+import { updateLinodesIfNecessary, powerOnLinode, powerOffLinode, rebootLinode } from '../actions/linodes';
 import { Linode, NewLinode } from '../components/Linode';
 import _ from 'underscore';
 
@@ -14,9 +14,10 @@ const sortOrder = {
 class IndexPage extends Component {
   constructor() {
     super();
-    this.powerOn = this.powerOn.bind(this);
     this.renderGroup = this.renderGroup.bind(this);
     this.render = this.render.bind(this);
+    this.powerOn = this.powerOn.bind(this);
+    this.powerOff = this.powerOff.bind(this);
   }
 
   componentDidMount() {
@@ -26,7 +27,17 @@ class IndexPage extends Component {
 
   powerOn(linode) {
     const { dispatch } = this.props;
+    dispatch(powerOnLinode(linode.id));
+  }
+
+  powerOff(linode) {
+    const { dispatch } = this.props;
     dispatch(powerOffLinode(linode.id));
+  }
+
+  reboot(linode) {
+    const { dispatch } = this.props;
+    dispatch(rebootLinode(linode.id));
   }
 
   renderGroup(linodes, group) {
@@ -38,7 +49,10 @@ class IndexPage extends Component {
         {_.sortBy(linodes, l => sortOrder[l.status]).map(l => {
           return (
           <div key={l.id} className="col-md-6">
-            <Linode onPowerOn={() => this.powerOn(l)} linode={l} />
+            <Linode linode={l}
+              onPowerOn={() => this.powerOn(l)}
+              onPowerOff={() => this.powerOff(l)}
+              onReboot={() => this.reboot(l)} />
           </div>);
         })}
         <div className="col-md-6">

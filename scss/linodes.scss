@@ -50,6 +50,11 @@
 .linode {
     padding: 1rem;
 
+    &.pending {
+        box-shadow: 0px $elevation-1 0 rgba(0, 0, 0, 0.12) inset, 0px $elevation-1 0 rgba(0, 0, 0, 0.24) inset;
+        background: rgba(0,0,0,0.05);
+    }
+
     &.powered_off {
         @extend .alert-danger;
     }
