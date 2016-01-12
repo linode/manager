@@ -60,10 +60,10 @@ export function updateJobUntil(linodeId, jobId, test, done=null, timeout=3000) {
 }
 
 async function monitor(id, json, dispatch) {
-    dispatch(updateJobUntil(id, json.id, (j) => j.finished !== null, () => {
-      dispatch(updateLinode(id));
-      dispatch({ type: LINODE_PENDING, linode: { id }, pending: false });
-    }));
+  dispatch(updateJobUntil(id, json.id, (j) => j.finished !== null, () => {
+    dispatch(updateLinode(id));
+    dispatch({ type: LINODE_PENDING, linode: { id }, pending: false });
+  }));
 }
 
 export function powerOnLinode(id) {

@@ -1,61 +1,15 @@
 import React, { Component } from 'react';
 import { findDOMNode } from 'react-dom';
 import { Link } from 'react-router';
+import { LinodePower } from './LinodePower';
 
 export class Linode extends Component {
   constructor() {
     super();
-    this.renderPowerButtons = this.renderPowerButtons.bind(this);
-  }
-
-  renderPowerButtons() {
-    const { linode, onPowerOn, onPowerOff, onReboot } = this.props;
-    if (linode._pending) {
-      return <div>
-        <i className="fa fa-spinner fa-spin pull-right"></i>
-      </div>;
-    }
-    switch (linode.status) {
-    case "running":
-      return (
-        <div className="power">
-          <button onClick={onPowerOff} className="btn btn-default btn-block btn-sm">
-            <i className="fa fa-power-off"></i>
-            <span className="hover">Stop</span>
-            &nbsp;
-          </button>
-          <button onClick={onReboot} className="btn btn-default btn-block btn-sm">
-            <i className="fa fa-refresh"></i>
-            <span className="hover">Reboot</span>
-            &nbsp;
-          </button>
-        </div>
-      );
-    case "brand_new":
-      return (
-        <div className="power">
-          <button onClick={onPowerOn} className="btn btn-default btn-block btn-sm">
-            <i className="fa fa-power-off"></i>
-            <span className="hover">Start</span>
-            &nbsp;
-          </button>
-        </div>
-      );
-    default:
-      return (
-        <div className="power">
-          <button onClick={onPowerOn} className="btn btn-default btn-block btn-sm">
-            <i className="fa fa-power-off"></i>
-            <span className="hover">Start</span>
-            &nbsp;
-          </button>
-        </div>
-      );
-    }
   }
 
   render() {
-    const { linode } = this.props;
+    const { linode, onPowerOn, onPowerOff, onReboot } = this.props;
     return (
       <div className={`linode card ${linode.status} ${linode._pending ? 'pending' : ''}`}>
         <div className="row">
@@ -73,7 +27,11 @@ export class Linode extends Component {
             </ul>
           </div>
           <div className="col-md-3">
-            {this.renderPowerButtons()}
+            <LinodePower
+              linode={linode}
+              onPowerOn={onPowerOn}
+              onPowerOff={onPowerOff}
+              onReboot={onReboot} />
           </div>
         </div>
       </div>

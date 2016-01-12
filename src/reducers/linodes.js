@@ -7,9 +7,10 @@ const default_state = {
     linodes: []
 };
 
-function transformLinode(linode) {
+function transformLinode(linode, oldLinode={}) {
     return {
         _pending: false,
+        ...oldLinode,
         ...linode
     };
 }
@@ -26,15 +27,25 @@ export default function linodes(state=default_state, action) {
         };
     case UPDATE_LINODE:
         const linode = action.response;
-        return {
-            ...state,
-            linodes: state.linodes.map(l => {
-                if (l.id !== linode.id) {
-                    return l;
-                }
-                return transformLinode(linode);
-            })
-        };
+        if (state.linodes.find(l => l.id == linode.id)) {
+            return {
+                ...state,
+                linodes: state.linodes.map(l => {
+                    if (l.id !== linode.id) {
+                        return l;
+                    }
+                    return transformLinode(linode, l);
+                })
+            };
+        } else {
+            return {
+                ...state,
+                linodes: [
+                    ...state.linodes,
+                    linode
+                ]
+            };
+        }
     case LINODE_PENDING:
     {
         const { linode, pending } = action;

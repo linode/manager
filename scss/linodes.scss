@@ -18,6 +18,7 @@
 .power {
     button {
         position: relative;
+        color: black;
 
         i {
             width: 100%;
@@ -47,13 +48,26 @@
     }
 }
 
-.linode {
+.power-management {
     padding: 1rem;
 
-    &.pending {
-        box-shadow: 0px $elevation-1 0 rgba(0, 0, 0, 0.12) inset, 0px $elevation-1 0 rgba(0, 0, 0, 0.24) inset;
-        background: rgba(0,0,0,0.05);
+    &.powered_off {
+        @extend .alert-danger;
     }
+
+    &.running {
+        @extend .alert-success;
+    }
+}
+
+.pending {
+    box-shadow: 0px $elevation-1 0 rgba(0, 0, 0, 0.12) inset, 0px $elevation-1 0 rgba(0, 0, 0, 0.24) inset;
+    background-color: rgba(0,0,0,0.05) !important;
+    color: black !important;
+}
+
+.linode {
+    padding: 1rem;
 
     &.powered_off {
         @extend .alert-danger;

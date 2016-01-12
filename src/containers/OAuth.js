@@ -27,7 +27,7 @@ class OAuthCallbackPage extends Component {
   }
 
   render() {
-    return <div>Logging you in...</div>;
+    return <div></div>;
   }
 }
 
