@@ -12,6 +12,7 @@ class IndexPage extends Component {
     this.render = this.render.bind(this);
     this.powerOn = this.powerOn.bind(this);
     this.powerOff = this.powerOff.bind(this);
+    this.reboot = this.reboot.bind(this);
   }
 
   componentDidMount() {
@@ -78,6 +79,7 @@ class IndexPage extends Component {
                 test_linode_15 created
               </li>
             </ul>
+            <p className="text-muted text-centered">- fake data, not final design -</p>
           </div>
         </div>
       </div>
@@ -86,7 +88,7 @@ class IndexPage extends Component {
 }
 
 function select(state) {
-  return { linodes: state.linodes, authentication: state.authentication };
+  return { linodes: state.linodes };
 }
 
 export default connect(select)(IndexPage);

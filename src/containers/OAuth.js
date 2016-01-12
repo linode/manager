@@ -8,6 +8,7 @@ class OAuthCallbackPage extends Component {
   componentDidMount() {
     const { dispatch, location } = this.props;
     const { code, username, email } = location.query;
+    const returnTo = location.query["return"];
 
     if (code) {
       let xhr = new XMLHttpRequest();
@@ -19,7 +20,7 @@ class OAuthCallbackPage extends Component {
       xhr.onload = () => {
           let json = JSON.parse(xhr.response);
           dispatch(set_token(json.access_token, json.scopes, username, email));
-          dispatch(pushPath("/"));
+          dispatch(pushPath(returnTo ? returnTo : "/"));
       };
       xhr.send(data);
     }
