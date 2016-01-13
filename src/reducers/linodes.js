@@ -6,7 +6,6 @@ import {
 const default_state = {
     localPage: -1,
     remotePage: 0,
-    loading: false,
     linodes: []
 };
 
