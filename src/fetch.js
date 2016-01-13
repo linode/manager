@@ -6,12 +6,12 @@ export default function _fetch(token, input, init) {
     mode: 'cors',
     ...init,
     headers: {
-      "Accept": "application/json",
-      "Content-Type": "application/json",
-      "Authorization": `token ${token}`
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': `token ${token}`
     },
   };
-  if (typeof input === "string") {
+  if (typeof input === 'string') {
     input = API_ROOT + input;
   }
   return fetch(input, init);

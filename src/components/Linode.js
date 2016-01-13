@@ -39,7 +39,7 @@ export class NewLinode extends Component {
     return (
       <div className="card new-linode">
         <button className="btn btn-success">
-          <i className="fa fa-plus" style={{marginLeft: "1rem"}}></i>
+          <i className="fa fa-plus" style={{marginLeft: '1rem'}}></i>
         </button>
       </div>
     );

@@ -68,15 +68,15 @@ class LinodeDetailPage extends Component {
         {!linode._pending ? 
         <div className="row">
           <div className="col-md-12">
-            <div className="text-centered" style={{paddingTop: "1rem"}}>
+            <div className="text-centered" style={{paddingTop: '1rem'}}>
               {linode.label} is
               <strong>
-                {" " + linode.status}
+                {' ' + linode.status}
               </strong>
             </div>
           </div>
         </div>
-        : ""}
+        : ''}
       </div>
     );
   }
@@ -84,7 +84,7 @@ class LinodeDetailPage extends Component {
   renderNetworkingBox(linode) {
     return (
       <div className="card info">
-        <div style={{padding: "1rem"}}>
+        <div style={{padding: '1rem'}}>
           <h4>Networking</h4>
           <ul className="list-unstyled">
             {linode.ip_addresses.public.ipv4.map(i => <li key={i}>{i}</li>)}
@@ -104,7 +104,7 @@ class LinodeDetailPage extends Component {
   renderEvents(linode) {
     return (
       <div className="card info">
-        <div style={{padding: "1rem"}}>
+        <div style={{padding: '1rem'}}>
           <h4>Events</h4>
           <div>
             {/* TODO: Actual events */}
@@ -155,7 +155,7 @@ class LinodeDetailPage extends Component {
                 </span>
               </li>
             </ul>
-            <div className="text-centered" style={{marginTop: "0.5rem"}}>
+            <div className="text-centered" style={{marginTop: '0.5rem'}}>
               <Link to={`/linodes/${linode.id}/events`}>More Events</Link>
             </div>
           </div>

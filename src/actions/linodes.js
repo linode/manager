@@ -1,9 +1,9 @@
 import fetch from '../fetch';
 
-export const UPDATE_LINODES = "@@linodes/UPDATE_LINODES";
-export const UPDATE_LINODE = "@@linodes/UPDATE_LINODE";
-export const LINODE_PENDING = "@@linodes/LINODE_PENDING";
-export const LINODE_RECOVER = "@@linodes/LINODE_RECOVER";
+export const UPDATE_LINODES = '@@linodes/UPDATE_LINODES';
+export const UPDATE_LINODE = '@@linodes/UPDATE_LINODE';
+export const LINODE_PENDING = '@@linodes/LINODE_PENDING';
+export const LINODE_RECOVER = '@@linodes/LINODE_RECOVER';
 
 function shouldUpdate(state) {
   if (state.localPage !== state.remotePage) {
@@ -16,7 +16,7 @@ function shouldUpdate(state) {
 export function updateLinodesIfNecessary() {
   return async (dispatch, getState) => {
     const { token } = getState().authentication;
-    const response = await fetch(token, "/linodes");
+    const response = await fetch(token, '/linodes');
     const json = await response.json();
     dispatch({ type: UPDATE_LINODES, response: json });
   };
@@ -71,7 +71,7 @@ export function powerOnLinode(id) {
   return async (dispatch, getState) => {
     dispatch({ type: LINODE_PENDING, linode: { id }, pending: true });
     const { token } = getState().authentication;
-    const response = await fetch(token, `/linodes/${id}/boot`, { method: "POST" });
+    const response = await fetch(token, `/linodes/${id}/boot`, { method: 'POST' });
     const json = await response.json();
     monitor(id, json, dispatch);
   };
@@ -81,7 +81,7 @@ export function powerOffLinode(id) {
   return async (dispatch, getState) => {
     dispatch({ type: LINODE_PENDING, linode: { id }, pending: true });
     const { token } = getState().authentication;
-    const response = await fetch(token, `/linodes/${id}/shutdown`, { method: "POST" });
+    const response = await fetch(token, `/linodes/${id}/shutdown`, { method: 'POST' });
     const json = await response.json();
     monitor(id, json, dispatch);
   };
@@ -91,7 +91,7 @@ export function rebootLinode(id) {
   return async (dispatch, getState) => {
     dispatch({ type: LINODE_PENDING, linode: { id }, pending: true });
     const { token } = getState().authentication;
-    const response = await fetch(token, `/linodes/${id}/reboot`, { method: "POST" });
+    const response = await fetch(token, `/linodes/${id}/reboot`, { method: 'POST' });
     const json = await response.json();
     monitor(id, json.jobs[1], dispatch);
   };

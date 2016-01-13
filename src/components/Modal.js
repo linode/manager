@@ -4,7 +4,7 @@ export class Modal extends Component {
   render() {
     const { visible, large } = this.props;
     return (
-      <div className={`modal fade ${large ? "modal-large" : ""} ${visible ? "in" : ""}`}>
+      <div className={`modal fade ${large ? 'modal-large' : ''} ${visible ? 'in' : ''}`}>
         <div className="modal-dialog" role="document">
           <div className="modal-content">
             {this.props.children}

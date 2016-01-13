@@ -37,10 +37,10 @@ class IndexPage extends Component {
 
   renderGroup(linodes, group) {
     return (
-      <div key={group} className="row linodes" style={{marginBottom: "2rem"}}>
+      <div key={group} className="row linodes" style={{marginBottom: '2rem'}}>
         {group ? <div className="col-md-12 display-group">
           <h2 className="text-muted">{group}</h2>
-        </div> : ""}
+        </div> : ''}
         {linodes.map(l => {
           return (
           <div key={l.id} className="col-md-6">
@@ -65,17 +65,17 @@ class IndexPage extends Component {
           {_.map(_.groupBy(linodes, l => l.group), this.renderGroup)}
         </div>
         <div className="col-md-3">
-          <div className="card" style={{padding: "1rem"}}>
+          <div className="card" style={{padding: '1rem'}}>
             <h4 className="text-centered">
               Recent Events
             </h4>
             <ul className="list-unstyled">
               <li>
-                <i className="fa fa-check text-success" style={{marginRight: "0.5rem"}}></i>
+                <i className="fa fa-check text-success" style={{marginRight: '0.5rem'}}></i>
                 test_linode_15 booted
               </li>
               <li>
-                <i className="fa fa-check text-success" style={{marginRight: "0.5rem"}}></i>
+                <i className="fa fa-check text-success" style={{marginRight: '0.5rem'}}></i>
                 test_linode_15 created
               </li>
             </ul>

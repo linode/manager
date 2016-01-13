@@ -25,14 +25,14 @@ const init = () => {
   let state = store.getState();
   // TODO: Persist your session in a cookie or localStorage or something?
   function checkLogin(next, replace) {
-    if (next.location.pathname !== "/oauth/callback" && state.authentication.token === null) {
+    if (next.location.pathname !== '/oauth/callback' && state.authentication.token === null) {
       const query = Object.keys(next.location.query)
         .reduce((a,k) => [...a, `${k}=${encodeURIComponent(next.location.query[k])}`], []).join('%26');
       window.location = `https://login.alpha.linode.com/oauth/authorize?`+
         `client_id=${client_id}` +
         `&scopes=*` +
         `&redirect_uri=${encodeURIComponent(APP_ROOT)}/oauth/callback?return=` +
-        encodeURIComponent(next.location.pathname + (query ? "%3F" + query : ""));
+        encodeURIComponent(next.location.pathname + (query ? '%3F' + query : ''));
       return;
     }
   }

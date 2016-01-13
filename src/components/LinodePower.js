@@ -10,22 +10,22 @@ export class LinodePower extends Component {
   render() {
     const { linode, cols, onPowerOn, onPowerOff, onReboot, onRecover } = this.props;
     if (linode._pending) {
-      return <div className={`${cols ? "text-centered" : "pull-right"}`}>
+      return <div className={`${cols ? 'text-centered' : 'pull-right'}`}>
         <i className="fa fa-spinner fa-spin"></i>
       </div>;
     }
     switch (linode.status) {
-    case "running":
+    case 'running':
       return (
         <div className="power">
-          <div className={cols ? "col-md-4" : ""}>
+          <div className={cols ? 'col-md-4' : ''}>
             <button onClick={onPowerOff} className="btn btn-default btn-block btn-sm">
               <i className="fa fa-power-off"></i>
               <span className="hover">Stop</span>
               &nbsp;
             </button>
           </div>
-          <div className={cols ? "col-md-4" : ""}>
+          <div className={cols ? 'col-md-4' : ''}>
             <button onClick={onReboot} className="btn btn-default btn-block btn-sm">
               <i className="fa fa-refresh"></i>
               <span className="hover">Reboot</span>
@@ -33,20 +33,20 @@ export class LinodePower extends Component {
             </button>
           </div>
           {cols ?
-          <div className={cols ? "col-md-4" : ""}>
+          <div className={cols ? 'col-md-4' : ''}>
             <button onClick={onRecover} className="btn btn-danger btn-block btn-sm">
               <i className="fa fa-exclamation-triangle"></i>
               <span className="hover">Fix</span>
               &nbsp;
             </button>
           </div>
-          : "" }
+          : '' }
         </div>
       );
     default:
       return (
         <div className="power">
-          <div className={cols ? "col-md-6" : ""}>
+          <div className={cols ? 'col-md-6' : ''}>
             <button onClick={onPowerOn} className="btn btn-default btn-block btn-sm">
               <i className="fa fa-power-off"></i>
               <span className="hover">Start</span>
@@ -54,14 +54,14 @@ export class LinodePower extends Component {
             </button>
           </div>
           {cols ?
-          <div className={cols ? "col-md-6" : ""}>
+          <div className={cols ? 'col-md-6' : ''}>
             <button onClick={onRecover} className="btn btn-danger btn-block btn-sm">
               <i className="fa fa-exclamation-triangle"></i>
               <span className="hover">Fix</span>
               &nbsp;
             </button>
           </div>
-          : "" }
+          : '' }
         </div>
       );
     }

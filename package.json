@@ -7,7 +7,10 @@
     "build:webpack": "cross-env NODE_ENV=production webpack --config webpack.config.prod.js",
     "build": "npm run clean && npm run build:webpack",
     "start": "node devServer.js",
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix",
+    "test": "NODE_ENV=test mocha --recursive --compilers js:babel-core/register --require ./test/setup.js",
+    "test:watch": "npm test -- --watch"
   },
   "repository": {
     "type": "git",
@@ -34,6 +37,8 @@
     "eventsource-polyfill": "^0.9.6",
     "express": "^4.13.3",
     "imports-loader": "^0.6.5",
+    "jsdom": "^7.2.2",
+    "mocha": "^2.3.4",
     "redux-devtools": "^3.0.1",
     "redux-devtools-dock-monitor": "^1.0.1",
     "redux-devtools-log-monitor": "^1.0.1",

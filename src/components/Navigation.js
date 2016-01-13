@@ -32,9 +32,9 @@ class Navigation extends Component {
                 </a>
               </div>
               <div className="pull-right nav-text" style={{
-                  color: "white",
-                  marginTop: "2px",
-                  marginRight: "5px"}}> {/* TODO: styles */}
+                  color: 'white',
+                  marginTop: '2px',
+                  marginRight: '5px'}}> {/* TODO: styles */}
                 Hi {username}! &nbsp;
               </div>
             </div>
