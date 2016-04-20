@@ -95,7 +95,7 @@
 .linode {
     padding: 1rem;
 
-    &.powered_off {
+    &.offline {
         @extend .alert-danger;
     }
 
@@ -178,7 +178,7 @@
             background-color: lighten($brand-info, 10);
         }
 
-        &.powered_off {
+        &.offline {
             background-color: red;
         }
     }

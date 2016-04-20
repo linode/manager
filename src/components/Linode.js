@@ -5,12 +5,21 @@ import { LinodePower } from './LinodePower';
 export class Linode extends Component {
   render() {
     const { linode, onPowerOn, onPowerOff, onReboot } = this.props;
+    const pendingStates = [
+        "booting",
+        "rebooting",
+        "shutting_down",
+        "migrating",
+        "provisioning",
+        "deleting"
+    ];
+    const pending = pendingStates.indexOf(linode.state) !== -1;
     return (
-      <div className={`linode card ${linode.status} ${linode._pending ? 'pending' : ''}`}>
+      <div className={`linode card ${linode.state} ${pending ? 'pending' : ''}`}>
         <div className="row">
           <div className="col-md-9">
             <h4>
-              <span data-title={linode.status} className={`status ${linode.status}`}></span>
+              <span data-title={linode.state} className={`status ${linode.state}`}></span>
               <Link to={`/linodes/${linode.id}`}>
                 {linode.label}
               </Link>
@@ -24,6 +33,7 @@ export class Linode extends Component {
           <div className="col-md-3">
             <LinodePower
               linode={linode}
+              pending={pending}
               onPowerOn={onPowerOn}
               onPowerOff={onPowerOff}
               onReboot={onReboot} />

@@ -8,13 +8,13 @@ export class LinodePower extends Component {
   }
 
   render() {
-    const { linode, cols, onPowerOn, onPowerOff, onReboot, onRecover } = this.props;
-    if (linode._pending) {
+    const { linode, pending, cols, onPowerOn, onPowerOff, onReboot, onRecover } = this.props;
+    if (pending) {
       return <div className={`${cols ? 'text-centered' : 'pull-right'}`}>
         <i className="fa fa-spinner fa-spin"></i>
       </div>;
     }
-    switch (linode.status) {
+    switch (linode.state) {
     case 'running':
       return (
         <div className="power">

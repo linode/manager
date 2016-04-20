@@ -2,7 +2,6 @@ import fetch from '../fetch';
 
 export const UPDATE_LINODES = '@@linodes/UPDATE_LINODES';
 export const UPDATE_LINODE = '@@linodes/UPDATE_LINODE';
-export const LINODE_PENDING = '@@linodes/LINODE_PENDING';
 export const LINODE_RECOVER = '@@linodes/LINODE_RECOVER';
 
 function shouldUpdate(state) {
@@ -27,7 +26,7 @@ export function updateLinode(id) {
     const { token } = getState().authentication;
     const response = await fetch(token, `/linodes/${id}`);
     const json = await response.json();
-    dispatch({ type: UPDATE_LINODE, response: json });
+    dispatch({ type: UPDATE_LINODE, linode: json });
   };
 }
 
@@ -36,7 +35,7 @@ export function updateLinodeUntil(id, test, timeout=3000) {
     const { token } = getState().authentication;
     const response = await fetch(token, `/linodes/${id}`);
     const json = await response.json();
-    dispatch({ type: UPDATE_LINODE, json });
+    dispatch({ type: UPDATE_LINODE, linode: json });
     if (!test(json)) {
       setTimeout(() => update(dispatch, getState), timeout);
     }
@@ -44,57 +43,28 @@ export function updateLinodeUntil(id, test, timeout=3000) {
   return update;
 }
 
-export function updateJobUntil(linodeId, jobId, test, done=null, timeout=3000) {
-  const update = async (dispatch, getState) => {
-    const { token } = getState().authentication;
-    const response = await fetch(token, `/linodes/${linodeId}/jobs/${jobId}`);
+function linodeAction(id, action, temp, expected) {
+  return async (dispatch, getState) => {
+    const state = getState();
+    const { token } = state.authentication;
+    const linode = state.linodes.linodes.reduce((l, v) => l.id == id ? l : v);
+    dispatch({ type: UPDATE_LINODE, linode: { ...linode, state: temp } });
+    const response = await fetch(token, `/linodes/${id}/${action}`, { method: 'POST' });
     const json = await response.json();
-    if (!test(json)) {
-      setTimeout(() => update(dispatch, getState), timeout);
-    } else {
-      if (done !== null) {
-        done(json);
-      }
-    }
+    dispatch(updateLinodeUntil(id, l => l.state == expected));
   };
-  return update;
-}
-
-async function monitor(id, json, dispatch) {
-  dispatch(updateJobUntil(id, json.id, (j) => j.finished !== null, () => {
-    dispatch(updateLinode(id));
-    dispatch({ type: LINODE_PENDING, linode: { id }, pending: false });
-  }));
 }
 
 export function powerOnLinode(id) {
-  return async (dispatch, getState) => {
-    dispatch({ type: LINODE_PENDING, linode: { id }, pending: true });
-    const { token } = getState().authentication;
-    const response = await fetch(token, `/linodes/${id}/boot`, { method: 'POST' });
-    const json = await response.json();
-    monitor(id, json, dispatch);
-  };
+  return linodeAction(id, "boot", "booting", "running");
 }
 
 export function powerOffLinode(id) {
-  return async (dispatch, getState) => {
-    dispatch({ type: LINODE_PENDING, linode: { id }, pending: true });
-    const { token } = getState().authentication;
-    const response = await fetch(token, `/linodes/${id}/shutdown`, { method: 'POST' });
-    const json = await response.json();
-    monitor(id, json, dispatch);
-  };
+  return linodeAction(id, "shutdown", "shutting_down", "offline");
 }
 
 export function rebootLinode(id) {
-  return async (dispatch, getState) => {
-    dispatch({ type: LINODE_PENDING, linode: { id }, pending: true });
-    const { token } = getState().authentication;
-    const response = await fetch(token, `/linodes/${id}/reboot`, { method: 'POST' });
-    const json = await response.json();
-    monitor(id, json.jobs[1], dispatch);
-  };
+  return linodeAction(id, "reboot", "rebooting", "running");
 }
 
 export function toggleLinodeRecovery(id, recover) {

@@ -1,5 +1,5 @@
 import {
-    UPDATE_LINODES, UPDATE_LINODE, LINODE_PENDING,
+    UPDATE_LINODES, UPDATE_LINODE,
     LINODE_RECOVER
 } from '../actions/linodes';
 
@@ -10,7 +10,6 @@ const default_state = {
 };
 
 const client_extensions = {
-    _pending: false,
     _recovering: false
 };
 
@@ -33,7 +32,7 @@ export default function linodes(state=default_state, action) {
             linodes: response.linodes.map(transformLinode)
         };
     case UPDATE_LINODE:
-        const linode = action.response;
+        const { linode } = action;
         if (state.linodes.find(l => l.id == linode.id)) {
             return {
                 ...state,
@@ -53,19 +52,6 @@ export default function linodes(state=default_state, action) {
                 ]
             };
         }
-    case LINODE_PENDING:
-    {
-        const { linode, pending } = action;
-        return {
-            ...state,
-            linodes: state.linodes.map(l => {
-                if (l.id !== linode.id) {
-                    return l;
-                }
-                return { ...l, _pending: pending };
-            })
-        };
-    }
     case LINODE_RECOVER:
     {
         const { linode, recovering } = action;
