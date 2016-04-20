@@ -56,14 +56,23 @@ class LinodeDetailPage extends Component {
   }
 
   renderPowerBox(linode) {
+    const pendingStates = [
+        "booting",
+        "rebooting",
+        "shutting_down",
+        "migrating",
+        "provisioning",
+        "deleting"
+    ];
+    const pending = pendingStates.indexOf(linode.state) !== -1;
     return (
-      <div className={`card power-management ${linode.status} ${linode._pending ? 'pending' : ''}`}>
+      <div className={`card power-management ${linode.state} ${pending ? 'pending' : ''}`}>
         <div className="row">
           <LinodePower linode={linode} cols={true}
             onPowerOn={l => this.powerOn(linode)}
             onPowerOff={l => this.powerOff(linode)}
             onReboot={l => this.reboot(linode)}
-            onRecover={l => this.revoer(linode)} />
+            onRecover={l => this.recover(linode)} />
         </div>
         {!linode._pending ? 
         <div className="row">
@@ -71,7 +80,7 @@ class LinodeDetailPage extends Component {
             <div className="text-centered" style={{paddingTop: '1rem'}}>
               {linode.label} is
               <strong>
-                {' ' + linode.status}
+                {' ' + linode.state}
               </strong>
             </div>
           </div>
