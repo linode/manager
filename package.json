@@ -9,7 +9,7 @@
     "start": "node devServer.js",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
-    "test": "NODE_ENV=test mocha --recursive --compilers js:babel-core/register --require ./test/setup.js",
+    "test": "NODE_ENV=test mocha --recursive --compilers js:babel-core/register --require ./test/setup.js -R xunit-file",
     "test:watch": "npm test -- --watch"
   },
   "repository": {
@@ -46,7 +46,8 @@
     "rimraf": "^2.4.3",
     "webpack": "^1.12.9",
     "webpack-dev-middleware": "^1.4.0",
-    "webpack-hot-middleware": "^2.6.0"
+    "webpack-hot-middleware": "^2.6.0",
+    "xunit-file": "^0.0.9"
   },
   "dependencies": {
     "babel-plugin-transform-runtime": "^6.4.0",
