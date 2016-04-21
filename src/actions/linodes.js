@@ -1,4 +1,4 @@
-import fetch from '../fetch';
+import { fetch } from '../fetch';
 
 export const UPDATE_LINODES = '@@linodes/UPDATE_LINODES';
 export const UPDATE_LINODE = '@@linodes/UPDATE_LINODE';
@@ -31,16 +31,17 @@ export function updateLinode(id) {
 }
 
 export function updateLinodeUntil(id, test, timeout=3000) {
-  const update = async (dispatch, getState) => {
+  return async (dispatch, getState) => {
     const { token } = getState().authentication;
-    const response = await fetch(token, `/linodes/${id}`);
-    const json = await response.json();
-    dispatch({ type: UPDATE_LINODE, linode: json });
-    if (!test(json)) {
-      setTimeout(() => update(dispatch, getState), timeout);
+    while (true) {
+      const response = await fetch(token, `/linodes/${id}`, Math.random());
+      const json = await response.json();
+      dispatch({ type: UPDATE_LINODE, linode: json });
+      if (test(json)) break;
+
+      await new Promise(r => setTimeout(r, timeout));
     }
   };
-  return update;
 }
 
 function linodeAction(id, action, temp, expected) {

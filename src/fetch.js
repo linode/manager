@@ -1,7 +1,7 @@
 import { API_ROOT } from './constants';
-import fetch from 'isomorphic-fetch';
+import { fetch as _fetch } from 'isomorphic-fetch';
 
-export default function _fetch(token, input, init) {
+export function fetch(token, input, init) {
   init = {
     mode: 'cors',
     ...init,
@@ -9,10 +9,10 @@ export default function _fetch(token, input, init) {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
       'Authorization': `token ${token}`
-    },
+    }
   };
   if (typeof input === 'string') {
     input = API_ROOT + input;
   }
-  return fetch(input, init);
-}
+  return _fetch(input, init);
+};

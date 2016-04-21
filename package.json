@@ -43,6 +43,7 @@
     "redux-devtools": "^3.0.1",
     "redux-devtools-dock-monitor": "^1.0.1",
     "redux-devtools-log-monitor": "^1.0.1",
+    "sinon": "^1.17.3",
     "rimraf": "^2.4.3",
     "webpack": "^1.12.9",
     "webpack-dev-middleware": "^1.4.0",
