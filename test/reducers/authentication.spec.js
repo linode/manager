@@ -18,7 +18,7 @@ describe("authentication reducer", () => {
 
     expect(
       authentication(state, {
-        type: SET_TOKEN,
+        type: actions.SET_TOKEN,
         scopes: [],
         username: 'me',
         email: 'me@example.org',
