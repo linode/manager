@@ -77,7 +77,7 @@
 .power-management {
     padding: 1rem;
 
-    &.powered_off {
+    &.offline {
         @extend .alert-danger;
     }
 

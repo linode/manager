@@ -41,7 +41,7 @@ describe("linodes reducer", () => {
           linodes: [ linode ]
         }
       }).linodes[0]
-    ).to.have.property('_pending');
+    ).to.have.property('_recovering');
   });
 
   it('should handle UPDATE_LINODE', () => {
@@ -58,7 +58,7 @@ describe("linodes reducer", () => {
     expect(
       linodes(state, {
         type: actions.UPDATE_LINODE,
-        response: {
+        linode: {
           id: "lnde_1",
           label: "hello_world_2"
         }
@@ -81,32 +81,12 @@ describe("linodes reducer", () => {
     expect(
       linodes(state, {
         type: actions.UPDATE_LINODE,
-        response: {
+        linode: {
           id: "lnde_1",
           label: "hello_world_2"
         }
       }).linodes[1]
     ).to.have.property("label").which.equals("goodbye_world");
-  });
-
-  it('should handle LINODE_PENDING', () => {
-    const state = { 
-      localPage: 0,
-      remotePage: 0,
-      linodes: [
-        { id: "lnde_1", _pending: false }
-      ]
-    };
-
-    deepFreeze(state);
-
-    expect(
-      linodes(state, {
-        type: actions.LINODE_PENDING,
-        linode: state.linodes[0],
-        pending: true
-      }).linodes[0]
-    ).to.have.property('_pending').which.equals(true);
   });
 
   it('should handle LINODE_RECOVER', () => {
