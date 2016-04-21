@@ -1,4 +1,4 @@
-FROM debian:8.4
+FROM debian:jessie-backports
 MAINTAINER Linode Developers <developers@linode.com>
 
 VOLUME ["/target"]
