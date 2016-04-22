@@ -8,16 +8,35 @@ import _ from 'underscore';
 class IndexPage extends Component {
   constructor() {
     super();
+    this.componentDidMount = this.componentDidMount.bind(this);
+    this.componentWillUnmount = this.componentWillUnmount.bind(this);
     this.renderGroup = this.renderGroup.bind(this);
     this.render = this.render.bind(this);
     this.powerOn = this.powerOn.bind(this);
     this.powerOff = this.powerOff.bind(this);
     this.reboot = this.reboot.bind(this);
+    this.handleScroll = this.handleScroll.bind(this);
   }
 
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch(fetchLinodes());
+    window.addEventListener('scroll', this.handleScroll);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.handleScroll);
+  }
+
+  handleScroll(e) {
+    const { dispatch, linodes } = this.props;
+    if (document.body.scrollTop + window.innerHeight
+        >= document.body.offsetHeight) {
+      const page = Math.max.apply(this, linodes.pagesFetched);
+      if (page <= linodes.totalPages) {
+        dispatch(fetchLinodes(page));
+      }
+    }
   }
 
   powerOn(linode) {
