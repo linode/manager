@@ -9,7 +9,7 @@
     "start": "node devServer.js",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
-    "test": "NODE_ENV=test node_modules/.bin/babel-node node_modules/.bin/babel-istanbul cover node_modules/.bin/_mocha -- --require test/setup.js --recursive",
+    "test": "NODE_ENV=test node_modules/.bin/babel-node node_modules/.bin/babel-istanbul cover --report cobertura node_modules/.bin/_mocha -- --require test/setup.js --recursive",
     "test:watch": "npm test -- --watch"
   },
   "repository": {
