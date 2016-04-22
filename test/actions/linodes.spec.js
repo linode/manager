@@ -19,8 +19,9 @@ describe("linodes actions", sinon.test(() => {
   
   it('should update linodes', async () => {
     let fetchResponse = {
-      localPage: 0,
-      remotePage: 1,
+      page: 1,
+      total_pages: 1,
+      total_results: 0,
       linodes: []
     };
 
