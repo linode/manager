@@ -34,7 +34,7 @@ export function updateLinodeUntil(id, test, timeout=3000) {
   return async (dispatch, getState) => {
     const { token } = getState().authentication;
     while (true) {
-      const response = await fetch(token, `/linodes/${id}`, Math.random());
+      const response = await fetch(token, `/linodes/${id}`);
       const json = await response.json();
       dispatch({ type: UPDATE_LINODE, linode: json });
       if (test(json)) break;
