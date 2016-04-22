@@ -9,7 +9,7 @@
     "start": "node devServer.js",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
-    "test": "NODE_ENV=test mocha --recursive --compilers js:babel-core/register --require ./test/setup.js",
+    "test": "NODE_ENV=test node_modules/.bin/babel-node node_modules/.bin/babel-istanbul cover --report cobertura node_modules/.bin/_mocha -- --require test/setup.js --recursive",
     "test:watch": "npm test -- --watch"
   },
   "repository": {
@@ -24,8 +24,10 @@
   },
   "homepage": "https://github.com/Linode/manager",
   "devDependencies": {
+    "babel-cli": "^6.7.5",
     "babel-core": "^6.3.15",
     "babel-eslint": "^5.0.0-beta4",
+    "babel-istanbul": "^0.8.0",
     "babel-loader": "^6.2.0",
     "babel-preset-es2015": "^6.3.13",
     "babel-preset-react": "^6.3.13",
