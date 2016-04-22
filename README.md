@@ -48,4 +48,17 @@ Tests are in the test/ directory. They use Mocha and Chai to do the whole
 testing thing, look them up. Let's get good test coverage from day one on this
 project, shall we?
 
+### (Linode-internal) devenv-test
+
+Tests mirroring Baker prbuilder tests can be built locally using the
+`devenv-test` script.
+
+    devenv test -docker .
+
+Or:
+
+    devenv test -docker manager
+
+Testing using `devenv-test` without docker is not currently supported.
+
 TODO: Add info for when this repo becomes open source

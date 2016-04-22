@@ -8,18 +8,13 @@ describe("linodes actions", sinon.test(() => {
   let auth = { token: 'token' };
   let getState = sinon.stub().returns({
     authentication: auth,
-    linodes: {
-      linodes: {
-        "1": {
-          "state": "booting"
-        }
-      }
-    }
+    linodes: { linodes: [{ id: 1 }] }
   });
 
   let dispatch = sinon.spy();
 
   beforeEach(() => {
+    // Make sure callCount is reset after each test, etc.
     dispatch.reset();
     getState.reset();
   });
@@ -85,11 +80,67 @@ describe("linodes actions", sinon.test(() => {
       type: actions.UPDATE_LINODE,
       linode: fetchResponse
     });
-    dispatch.getCall(2).calledWith({
-      ...fetchResponse,
-      state: 'running'
+    sinon.assert.calledWith(dispatch.getCall(1), {
+      type: actions.UPDATE_LINODE,
+      linode: { ...fetchResponse, state: 'running' }
     });
 
     fetchStub.restore();
   });
+
+  function testLinodeAction(action, tempState, finalState) {
+    return async () => {
+      let fetchResponse = { id: 1, state: tempState};
+
+      let fetchStub = sinon.stub(fetch, 'fetch');
+      // POST /linodes/<id>/<action>
+      fetchStub.onCall(0).returns({});
+      // GET /linodes/<id>
+      fetchStub.onCall(1).returns({ json: () => fetchResponse });
+      fetchStub.onCall(2).returns({ json: () => {
+        return { ...fetchResponse, state: finalState };
+      } });
+
+      let callCount = 0;
+      let dispatch = sinon.spy(async (action) => {
+        callCount++;
+        if (callCount !== 2) return;
+
+        // Second call must dispatch updateLinodeUntil() result.
+        await action(dispatch, getState);
+      });
+
+      let timeout = 0; // speed things up
+      let p = action(fetchResponse.id, timeout);
+      await p(dispatch, getState);
+
+      expect(fetchStub.callCount).to.equal(3);
+      expect(dispatch.callCount).to.equal(4);
+
+      sinon.assert.calledWith(dispatch.getCall(0), {
+        type: actions.UPDATE_LINODE,
+        linode: fetchResponse
+      });
+      // Second call dispatches updateLinodeUntil
+      sinon.assert.calledWith(dispatch.getCall(2), {
+        type: actions.UPDATE_LINODE,
+        linode: fetchResponse
+      });
+      sinon.assert.calledWith(dispatch.getCall(3), {
+        type: actions.UPDATE_LINODE,
+        linode: { ...fetchResponse, state: finalState }
+      });
+
+      fetchStub.restore();
+    };
+  }
+
+  it("should power on linode and check till running",
+     testLinodeAction(actions.powerOnLinode, "booting", "running"));
+
+  it("should power off linode and check till offline",
+     testLinodeAction(actions.powerOffLinode, "shutting_down", "offline"));
+
+  it("should reboot linode and check till running",
+     testLinodeAction(actions.rebootLinode, "rebooting", "running"));
 }));

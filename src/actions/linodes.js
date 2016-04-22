@@ -42,27 +42,26 @@ export function updateLinodeUntil(id, test, timeout=3000) {
   };
 }
 
-function linodeAction(id, action, temp, expected) {
+function linodeAction(id, action, temp, expected, timeout=undefined) {
   return async (dispatch, getState) => {
     const state = getState();
     const { token } = state.authentication;
     dispatch({ type: UPDATE_LINODE, linode: { id, state: temp } });
     const response = await fetch(token, `/linodes/${id}/${action}`, { method: 'POST' });
-    const json = await response.json();
-    dispatch(updateLinodeUntil(id, l => l.state == expected));
+    await dispatch(updateLinodeUntil(id, l => l.state == expected, timeout));
   };
 }
 
-export function powerOnLinode(id) {
-  return linodeAction(id, "boot", "booting", "running");
+export function powerOnLinode(id, timeout=undefined) {
+  return linodeAction(id, "boot", "booting", "running", timeout);
 }
 
-export function powerOffLinode(id) {
-  return linodeAction(id, "shutdown", "shutting_down", "offline");
+export function powerOffLinode(id, timeout=undefined) {
+  return linodeAction(id, "shutdown", "shutting_down", "offline", timeout);
 }
 
-export function rebootLinode(id) {
-  return linodeAction(id, "reboot", "rebooting", "running");
+export function rebootLinode(id, timeout=undefined) {
+  return linodeAction(id, "reboot", "rebooting", "running", timeout);
 }
 
 export function deleteLinode(id) {
