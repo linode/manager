@@ -13,7 +13,7 @@ describe("linodes reducer", () => {
   it('should handle UPDATE_LINODES', () => {
     const state = linodes(undefined, {});
     const linode = { label: "hello_world" };
-    
+
     deepFreeze(state);
 
     expect(

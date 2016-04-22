@@ -9,7 +9,7 @@
     "start": "node devServer.js",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
-    "test": "NODE_ENV=test mocha --recursive --compilers js:babel-core/register --require ./test/setup.js -R xunit-file",
+    "test": "NODE_ENV=test mocha --recursive --compilers js:babel-core/register --require ./test/setup.js",
     "test:watch": "npm test -- --watch"
   },
   "repository": {
@@ -43,6 +43,7 @@
     "redux-devtools": "^3.0.1",
     "redux-devtools-dock-monitor": "^1.0.1",
     "redux-devtools-log-monitor": "^1.0.1",
+    "sinon": "^1.17.3",
     "rimraf": "^2.4.3",
     "webpack": "^1.12.9",
     "webpack-dev-middleware": "^1.4.0",

@@ -4,4 +4,4 @@ set -e -x
 
 npm install
 
-npm test
+npm test -- -R xunit-file
