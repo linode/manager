@@ -3,10 +3,11 @@ import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import {
   updateLinode, powerOnLinode, powerOffLinode,
-  rebootLinode, toggleLinodeRecover
+  rebootLinode
 } from '../actions/linodes';
 import { LinodePower } from '../components/LinodePower';
 import { RecoveryModal } from '../components/RecoveryModal';
+import { LinodeStates } from '../constants';
 
 class LinodeDetailPage extends Component {
   constructor() {
@@ -16,14 +17,13 @@ class LinodeDetailPage extends Component {
     this.powerOn = this.powerOn.bind(this);
     this.powerOff = this.powerOff.bind(this);
     this.reboot = this.reboot.bind(this);
-    this.recover = this.recover.bind(this);
     this.renderPowerBox = this.renderPowerBox.bind(this);
   }
 
   getLinode() {
     const { linodes } = this.props.linodes;
     const { linodeId } = this.props.params;
-    return linodes.find(l => l.id == linodeId);
+    return linodes[linodeId];
   }
 
   componentDidMount() {
@@ -50,29 +50,15 @@ class LinodeDetailPage extends Component {
     dispatch(rebootLinode(linode.id));
   }
 
-  recover(linode) {
-    const { dispatch } = this.props;
-    dispatch(toggleLinodeRecovery(linode.id));
-  }
-
   renderPowerBox(linode) {
-    const pendingStates = [
-        "booting",
-        "rebooting",
-        "shutting_down",
-        "migrating",
-        "provisioning",
-        "deleting"
-    ];
-    const pending = pendingStates.indexOf(linode.state) !== -1;
+    const pending = LinodeStates.pending.indexOf(linode.state) !== -1;
     return (
       <div className={`card power-management ${linode.state} ${pending ? 'pending' : ''}`}>
         <div className="row">
           <LinodePower linode={linode} cols={true}
             onPowerOn={l => this.powerOn(linode)}
             onPowerOff={l => this.powerOff(linode)}
-            onReboot={l => this.reboot(linode)}
-            onRecover={l => this.recover(linode)} />
+            onReboot={l => this.reboot(linode)} />
         </div>
         {!linode._pending ? 
         <div className="row">

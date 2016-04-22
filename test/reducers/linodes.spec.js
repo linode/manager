@@ -7,12 +7,12 @@ describe("linodes reducer", () => {
   it('should handle initial state', () => {
     expect(
       linodes(undefined, {})
-    ).to.be.eql({ pagesFetched: [], totalPages: -1, linodes: [] });
+    ).to.be.eql({ pagesFetched: [], totalPages: -1, linodes: {} });
   });
 
   it('should handle UPDATE_LINODES', () => {
     const state = linodes(undefined, {});
-    const linode = { label: "hello_world" };
+    const linode = { id: 'linode_1', label: "hello_world" };
 
     deepFreeze(state);
 
@@ -20,37 +20,21 @@ describe("linodes reducer", () => {
       linodes(state, {
         type: actions.UPDATE_LINODES,
         response: {
-          page: 0,
+          page: 1,
+          total_pages: 1,
           linodes: [ linode ]
         }
       })
-    ).to.have.property('linodes').with.length(1);
-  });
-
-  it('should transform linodes passed to it', () => {
-    const state = linodes(undefined, {});
-    const linode = { id: "lnde_1", label: "hello_world" };
-
-    deepFreeze(state);
-
-    expect(
-      linodes(state, {
-        type: actions.UPDATE_LINODES,
-        response: {
-          page: 0,
-          linodes: [ linode ]
-        }
-      }).linodes[0]
-    ).to.have.property('_recovering');
+    ).to.have.property('linodes').which.has.keys("linode_1");
   });
 
   it('should handle UPDATE_LINODE', () => {
     const state = { 
       localPage: 0,
       remotePage: 0,
-      linodes: [
-        { id: "lnde_1", label: "hello_world" }
-      ]
+      linodes: {
+        "linode_1": { id: "linode_1", label: "hello_world" }
+      }
     };
 
     deepFreeze(state);
@@ -59,11 +43,13 @@ describe("linodes reducer", () => {
       linodes(state, {
         type: actions.UPDATE_LINODE,
         linode: {
-          id: "lnde_1",
+          id: "linode_1",
           label: "hello_world_2"
         }
-      }).linodes[0]
-    ).to.have.property("label").which.equals("hello_world_2");
+      })
+    ).to.have.property("linodes")
+    .which.has.property("linode_1")
+    .which.has.property("label").which.equals("hello_world_2");
   });
 
   it('should only update the relevant linode', () => {
@@ -87,25 +73,5 @@ describe("linodes reducer", () => {
         }
       }).linodes[1]
     ).to.have.property("label").which.equals("goodbye_world");
-  });
-
-  it('should handle LINODE_RECOVER', () => {
-    const state = { 
-      localPage: 0,
-      remotePage: 0,
-      linodes: [
-        { id: "lnde_1", _recovering: false }
-      ]
-    };
-
-    deepFreeze(state);
-
-    expect(
-      linodes(state, {
-        type: actions.LINODE_RECOVER,
-        linode: state.linodes[0],
-        recovering: true
-      }).linodes[0]
-    ).to.have.property('_recovering').which.equals(true);
   });
 });

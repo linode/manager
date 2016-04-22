@@ -4,10 +4,10 @@ export const UPDATE_LINODES = '@@linodes/UPDATE_LINODES';
 export const UPDATE_LINODE = '@@linodes/UPDATE_LINODE';
 export const LINODE_RECOVER = '@@linodes/LINODE_RECOVER';
 
-export function updateLinodesIfNecessary() {
+export function fetchLinodes(page = 0) {
   return async (dispatch, getState) => {
     const { token } = getState().authentication;
-    const response = await fetch(token, '/linodes');
+    const response = await fetch(token, `/linodes?page=${page+1}`);
     const json = await response.json();
     dispatch({ type: UPDATE_LINODES, response: json });
   };
@@ -40,8 +40,7 @@ function linodeAction(id, action, temp, expected) {
   return async (dispatch, getState) => {
     const state = getState();
     const { token } = state.authentication;
-    const linode = state.linodes.linodes.reduce((l, v) => l.id == id ? l : v);
-    dispatch({ type: UPDATE_LINODE, linode: { ...linode, state: temp } });
+    dispatch({ type: UPDATE_LINODE, linode: { id, state: temp } });
     const response = await fetch(token, `/linodes/${id}/${action}`, { method: 'POST' });
     const json = await response.json();
     dispatch(updateLinodeUntil(id, l => l.state == expected));

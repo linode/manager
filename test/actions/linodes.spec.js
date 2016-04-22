@@ -29,9 +29,9 @@ describe("linodes actions", sinon.test(() => {
       json: () => fetchResponse
     });
 
-    await actions.updateLinodesIfNecessary()(dispatch, getState);
+    await actions.fetchLinodes()(dispatch, getState);
 
-    sinon.assert.calledWith(fetchStub, auth.token, '/linodes');
+    sinon.assert.calledWith(fetchStub, auth.token, '/linodes?page=1');
     sinon.assert.calledWith(dispatch, {
       type: actions.UPDATE_LINODES,
       response: fetchResponse

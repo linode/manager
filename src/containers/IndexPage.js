@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
-import { updateLinodesIfNecessary, powerOnLinode, powerOffLinode, rebootLinode } from '../actions/linodes';
+import { fetchLinodes, powerOnLinode, powerOffLinode, rebootLinode } from '../actions/linodes';
 import { Linode, NewLinode } from '../components/Linode';
 import _ from 'underscore';
 
@@ -17,7 +17,7 @@ class IndexPage extends Component {
 
   componentDidMount() {
     const { dispatch } = this.props;
-    dispatch(updateLinodesIfNecessary());
+    dispatch(fetchLinodes());
   }
 
   powerOn(linode) {
@@ -62,7 +62,7 @@ class IndexPage extends Component {
     return (
       <div className="row">
         <div className="col-md-9">
-          {_.map(_.groupBy(linodes, l => l.group), this.renderGroup)}
+          {_.map(_.groupBy(Object.values(linodes), l => l.group), this.renderGroup)}
         </div>
         <div className="col-md-3">
           <div className="card" style={{padding: '1rem'}}>
