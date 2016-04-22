@@ -4,8 +4,8 @@ import {
 } from '../actions/linodes';
 
 const default_state = {
-    localPage: -1,
-    remotePage: 0,
+    pagesFetched: [],
+    totalPages: -1,
     linodes: []
 };
 
@@ -27,8 +27,8 @@ export default function linodes(state=default_state, action) {
         const { response } = action;
         return {
             ...state,
-            localPage: response.page,
-            remotePage: response.page,
+            pagesFetched: [...state.pagesFetched.filter(p => p !== response.page), response.page],
+            totalPages: response.total_pages,
             linodes: response.linodes.map(transformLinode)
         };
     case UPDATE_LINODE:

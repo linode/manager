@@ -1,5 +1,5 @@
 import { API_ROOT } from './constants';
-import { fetch as _fetch } from 'isomorphic-fetch';
+import _fetch from 'isomorphic-fetch';
 
 export function fetch(token, input, init) {
   init = {

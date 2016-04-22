@@ -4,14 +4,6 @@ export const UPDATE_LINODES = '@@linodes/UPDATE_LINODES';
 export const UPDATE_LINODE = '@@linodes/UPDATE_LINODE';
 export const LINODE_RECOVER = '@@linodes/LINODE_RECOVER';
 
-function shouldUpdate(state) {
-  if (state.localPage !== state.remotePage) {
-    return true;
-  }
-  // TODO: Other conditions?
-  return false;
-}
-
 export function updateLinodesIfNecessary() {
   return async (dispatch, getState) => {
     const { token } = getState().authentication;

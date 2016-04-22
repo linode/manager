@@ -1,19 +1,12 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
 import { LinodePower } from './LinodePower';
+import { LinodeStates } from '../constants';
 
 export class Linode extends Component {
   render() {
     const { linode, onPowerOn, onPowerOff, onReboot } = this.props;
-    const pendingStates = [
-        "booting",
-        "rebooting",
-        "shutting_down",
-        "migrating",
-        "provisioning",
-        "deleting"
-    ];
-    const pending = pendingStates.indexOf(linode.state) !== -1;
+    const pending = LinodeStates.pending.indexOf(linode.state) !== -1;
     return (
       <div className={`linode card ${linode.state} ${pending ? 'pending' : ''}`}>
         <div className="row">
