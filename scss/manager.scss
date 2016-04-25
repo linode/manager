@@ -2,6 +2,44 @@ $root: "/";
 @import 'base';
 @import 'linodes';
 
+/* TODO: move into styles repo */
+header {
+  position: relative;
+  top: 15px;
+  width: 100%;
+  z-index: 9999;
+}
+
+.header {
+    position: relative;
+    padding-bottom: 2rem;
+    padding-top: 0;
+}
+
+.layout > .container {
+  margin-top: 2.5rem;
+}
+
+nav {
+  position: relative;
+}
+
+.navbar-header .nav-text {
+    color: $linode-green;
+}
+/* /TODO */
+
+.pull-right {
+    float: right !important;
+}
+
+.login-info {
+    .btn {
+        color: white;
+        font-weight: bold;
+    }
+}
+
 .modal {
     z-index: 999999;
 

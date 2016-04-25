@@ -25,6 +25,11 @@ export function updateLinode(id) {
 export function updateLinodeUntil(id, test, timeout=3000) {
   return async (dispatch, getState) => {
     const { token } = getState().authentication;
+    const linode = getState().linodes.linodes[id];
+    if (linode._polling) {
+        return;
+    }
+    dispatch({ type: UPDATE_LINODE, linode: { id, _polling: true } });
     while (true) {
       const response = await fetch(token, `/linodes/${id}`);
       const json = await response.json();
@@ -33,6 +38,7 @@ export function updateLinodeUntil(id, test, timeout=3000) {
 
       await new Promise(r => setTimeout(r, timeout));
     }
+    dispatch({ type: UPDATE_LINODE, linode: { id, _polling: false } });
   };
 }
 

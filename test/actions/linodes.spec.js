@@ -7,7 +7,14 @@ import * as fetch from '../../src/fetch';
 describe("linodes actions", sinon.test(() => {
   let auth = { token: 'token' };
   let getState = sinon.stub().returns({
-    authentication: auth
+    authentication: auth,
+    linodes: {
+      linodes: {
+        "1": {
+          "state": "booting"
+        }
+      }
+    }
   });
 
   let dispatch = sinon.spy();
@@ -72,15 +79,13 @@ describe("linodes actions", sinon.test(() => {
     let p = actions.updateLinodeUntil(fetchResponse.id, test, timeout);
     await p(dispatch, getState);
 
-    // Stub has no calledTwice method
     expect(fetchStub.callCount).to.equal(2);
-    // Spy does
-    sinon.assert.calledTwice(dispatch);
-    sinon.assert.calledWith(dispatch.getCall(0), {
+    expect(dispatch.callCount).to.equal(4);
+    sinon.assert.calledWith(dispatch.getCall(1), {
       type: actions.UPDATE_LINODE,
       linode: fetchResponse
     });
-    dispatch.getCall(1).calledWith({
+    dispatch.getCall(2).calledWith({
       ...fetchResponse,
       state: 'running'
     });

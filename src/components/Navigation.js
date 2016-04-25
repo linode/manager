@@ -6,8 +6,8 @@ class Navigation extends Component {
   render() {
     const { username } = this.props;
     return (
-      <header className="container">
-        <nav id="main-nav" className="navbar navbar-dark bg-inverse" role="navigation">
+      <nav id="main-nav" className="navbar navbar-default navbar-dark container" role="navigation">
+        <div className="navbar-header">
           <Link className="navbar-brand" to="/">
               <img id="navbar-logo" src={logo}
                   width="115" height="45" />
@@ -15,32 +15,38 @@ class Navigation extends Component {
           <p className="nav-text">
               <strong>Manager</strong>
           </p>
+        </div>
+        <div className="navbar-collapse collapse">
           <ul className="nav navbar-nav">
               <li className="nav-item">
                   <Link className="nav-link" to="/">Linodes</Link>
               </li>
               <li className="nav-item">
+                  <Link className="nav-link" to="/dns">DNS</Link>
+              </li>
+              <li className="nav-item">
                   <Link className="nav-link" to="/node-balancers">Node Balancers</Link>
               </li>
           </ul>
-          {username ?
-            <div>
-              <div className="pull-right nav-text">
-                <a className="btn btn-success" href="https://login.alpha.linode.com/logout">
-                    Log Out &nbsp;
-                    <i className="fa fa-caret-right" />
-                </a>
-              </div>
-              <div className="pull-right nav-text" style={{
-                  color: 'white',
-                  marginTop: '2px',
-                  marginRight: '5px'}}> {/* TODO: styles */}
-                Hi {username}! &nbsp;
-              </div>
+        </div>
+        {username ?
+          <div className="login-info">
+            <div className="pull-right nav-text">
+              <a className="btn btn-success" href="https://login.alpha.linode.com/logout">
+                  Log Out &nbsp;
+                  <i className="fa fa-caret-right" />
+              </a>
             </div>
-          : <span />}
-        </nav>
-      </header>
+            <div className="pull-right nav-text" style={{
+                textTransform: 'none',
+                color: 'white',
+                fontWeight: 'bold',
+                marginTop: '0.5rem' }}> {/* TODO: styles */}
+              Hi {username}! &nbsp;
+            </div>
+          </div>
+        : <span />}
+      </nav>
     );
   }
 }

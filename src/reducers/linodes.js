@@ -9,6 +9,13 @@ const default_state = {
     linodes: { }
 };
 
+function transform(linode) {
+    return {
+        _polling: false,
+        ...linode
+    };
+}
+
 export default function linodes(state=default_state, action) {
     switch (action.type) {
     case UPDATE_LINODES:
@@ -19,7 +26,8 @@ export default function linodes(state=default_state, action) {
             totalPages: response.total_pages,
             linodes: {
                 ...state.linodes,
-                ...response.linodes.reduce((s, l) => ({ ...s, [l.id]: l }), { })
+                ...response.linodes.reduce((s, l) =>
+                  ({ ...s, [l.id]: transform(l) }), { })
             }
         };
     case UPDATE_LINODE:

@@ -1,9 +1,16 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
-import { fetchLinodes, powerOnLinode, powerOffLinode, rebootLinode } from '../actions/linodes';
 import { Linode, NewLinode } from '../components/Linode';
+import { LinodeStates } from '../constants';
 import _ from 'underscore';
+import {
+    fetchLinodes,
+    updateLinodeUntil,
+    powerOnLinode,
+    powerOffLinode,
+    rebootLinode
+} from '../actions/linodes';
 
 class IndexPage extends Component {
   constructor() {
@@ -19,9 +26,17 @@ class IndexPage extends Component {
   }
 
   componentDidMount() {
-    const { dispatch } = this.props;
+    const { dispatch, linodes } = this.props;
     dispatch(fetchLinodes());
     window.addEventListener('scroll', this.handleScroll);
+    if (linodes.length > 0) {
+        linodes.map(l => {
+            const state = l.state;
+            if (LinodeStates.pending.indexOf(state) !== -1) {
+                updateLinodeUntil(l.id, ln => state);
+            }
+        });
+    }
   }
 
   componentWillUnmount() {
