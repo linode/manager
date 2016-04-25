@@ -30,8 +30,8 @@ describe("linodes reducer", () => {
 
   it('should handle UPDATE_LINODE', () => {
     const state = { 
-      localPage: 0,
-      remotePage: 0,
+      pagesFetched: [ ],
+      totalPages: 1,
       linodes: {
         "linode_1": { id: "linode_1", label: "hello_world" }
       }
@@ -54,12 +54,12 @@ describe("linodes reducer", () => {
 
   it('should only update the relevant linode', () => {
     const state = { 
-      localPage: 0,
-      remotePage: 0,
-      linodes: [
-        { id: "lnde_1", label: "hello_world" },
-        { id: "lnde_2", label: "goodbye_world" }
-      ]
+      pagesFetched: [ ],
+      totalPages: 1,
+      linodes: {
+        "lnde_1": { id: "lnde_1", label: "hello_world" },
+        "lnde_2": { id: "lnde_2", label: "goodbye_world" }
+      }
     };
 
     deepFreeze(state);
@@ -71,7 +71,28 @@ describe("linodes reducer", () => {
           id: "lnde_1",
           label: "hello_world_2"
         }
-      }).linodes[1]
-    ).to.have.property("label").which.equals("goodbye_world");
+      }).linodes
+    ).to.have.property("lnde_2")
+    .to.have.property("label").which.equals("goodbye_world");
+  });
+
+  it('should handle DELETE_LINODE', () => {
+    const state = {
+      pagesFetched: [ ],
+      totalPages: 1,
+      linodes: {
+        "lnde_1": { id: "lnde_1", label: "hello_world" },
+        "lnde_2": { id: "lnde_2", label: "goodbye_world" }
+      }
+    };
+
+    deepFreeze(state);
+
+    expect(
+      linodes(state, {
+        type: actions.DELETE_LINODE,
+        id: "lnde_2"
+      }).linodes
+    ).not.to.have.property("lnde_2");
   });
 });

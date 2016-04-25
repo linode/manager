@@ -2,7 +2,7 @@ import { fetch } from '../fetch';
 
 export const UPDATE_LINODES = '@@linodes/UPDATE_LINODES';
 export const UPDATE_LINODE = '@@linodes/UPDATE_LINODE';
-export const LINODE_RECOVER = '@@linodes/LINODE_RECOVER';
+export const DELETE_LINODE = '@@linodes/DELETE_LINODE';
 
 export function fetchLinodes(page = 0) {
   return async (dispatch, getState) => {
@@ -63,6 +63,17 @@ export function powerOffLinode(id) {
 
 export function rebootLinode(id) {
   return linodeAction(id, "reboot", "rebooting", "running");
+}
+
+export function deleteLinode(id) {
+  return async (dispatch, getState) => {
+    const state = getState();
+    const { token } = state.authentication;
+    dispatch({ type: DELETE_LINODE, id });
+    const response = await fetch(token, `/linodes/${id}`, { method: 'DELETE' });
+    const json = await response.json();
+    // Note: do we want to do anything at this point?
+  };
 }
 
 export function toggleLinodeRecovery(id, recover) {

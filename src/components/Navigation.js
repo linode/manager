@@ -41,7 +41,7 @@ class Navigation extends Component {
                 textTransform: 'none',
                 color: 'white',
                 fontWeight: 'bold',
-                marginTop: '0.5rem' }}> {/* TODO: styles */}
+                marginTop: '0.5rem' }}>
               Hi {username}! &nbsp;
             </div>
           </div>

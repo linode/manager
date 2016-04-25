@@ -1,7 +1,8 @@
 import {
     UPDATE_LINODES, UPDATE_LINODE,
-    LINODE_RECOVER
+    DELETE_LINODE
 } from '../actions/linodes';
+import _ from 'underscore';
 
 const default_state = {
     pagesFetched: [],
@@ -38,6 +39,12 @@ export default function linodes(state=default_state, action) {
                 ...state.linodes,
                 [linode.id]: { ...state.linodes[linode.id], ...linode }
             }
+        };
+    case DELETE_LINODE:
+        const { id } = action;
+        return {
+            ...state,
+            linodes: _.omit(state.linodes.keys, id)
         };
     default:
         return state;
