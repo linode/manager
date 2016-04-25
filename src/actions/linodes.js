@@ -1,4 +1,4 @@
-import { fetch } from '../fetch';
+import { _fetch as fetch } from '../fetch';
 
 export const UPDATE_LINODES = '@@linodes/UPDATE_LINODES';
 export const UPDATE_LINODE = '@@linodes/UPDATE_LINODE';

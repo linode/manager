@@ -18,9 +18,11 @@ class OAuthCallbackPage extends Component {
       data.append('client_secret', client_secret);
       data.append('code', code);
       xhr.onload = () => {
-          let json = JSON.parse(xhr.response);
-          dispatch(set_token(json.access_token, json.scopes, username, email));
-          dispatch(pushPath(returnTo ? returnTo : '/'));
+        let json = JSON.parse(xhr.response);
+        dispatch(set_token(json.access_token, json.scopes, username, email));
+        console.log("here");
+        return;
+        dispatch(pushPath(returnTo ? returnTo : '/'));
       };
       xhr.send(data);
     }

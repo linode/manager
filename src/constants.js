@@ -1,4 +1,5 @@
 export const API_ROOT = 'https://api.alpha.linode.com/v4';
+export const LOGIN_ROOT = 'https://login.alpha.linode.com';
 export const APP_ROOT = 'http://localhost:3000';
 
 export const LinodeStates = {
