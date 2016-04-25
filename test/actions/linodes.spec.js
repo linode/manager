@@ -8,7 +8,7 @@ describe("linodes actions", sinon.test(() => {
   let auth = { token: 'token' };
   let getState = sinon.stub().returns({
     authentication: auth,
-    linodes: { linodes: [{ id: 1 }] }
+    linodes: { linodes: { 1: { id: 1, _polling: false } } }
   });
 
   let dispatch = sinon.spy();
@@ -27,7 +27,7 @@ describe("linodes actions", sinon.test(() => {
       linodes: []
     };
 
-    let fetchStub = sinon.stub(fetch, '_fetch').returns({
+    let fetchStub = sinon.stub(fetch, 'fetch').returns({
       json: () => fetchResponse
     });
 
@@ -45,7 +45,7 @@ describe("linodes actions", sinon.test(() => {
   it("should update linode", async () => {
     let fetchResponse = { id: 1 };
 
-    let fetchStub = sinon.stub(fetch, '_fetch').returns({
+    let fetchStub = sinon.stub(fetch, 'fetch').returns({
       json: () => fetchResponse
     });
 
@@ -64,7 +64,7 @@ describe("linodes actions", sinon.test(() => {
     let fetchResponse = { id: 1, state: 'booting' };
     let test = linode => linode.state == 'running';
 
-    let fetchStub = sinon.stub(fetch, '_fetch');
+    let fetchStub = sinon.stub(fetch, 'fetch');
     fetchStub.onCall(0).returns({ json: () => fetchResponse });
     fetchStub.onCall(1).returns({ json: () => {
       return { ...fetchResponse, state: 'running' };
@@ -76,14 +76,22 @@ describe("linodes actions", sinon.test(() => {
 
     expect(fetchStub.callCount).to.equal(2);
     expect(dispatch.callCount).to.equal(4);
+    sinon.assert.calledWith(dispatch.getCall(0), {
+      type: actions.UPDATE_LINODE,
+      linode: { id: fetchResponse.id, _polling: true }
+    })
     sinon.assert.calledWith(dispatch.getCall(1), {
       type: actions.UPDATE_LINODE,
       linode: fetchResponse
     });
-    sinon.assert.calledWith(dispatch.getCall(1), {
+    sinon.assert.calledWith(dispatch.getCall(2), {
       type: actions.UPDATE_LINODE,
       linode: { ...fetchResponse, state: 'running' }
     });
+    sinon.assert.calledWith(dispatch.getCall(3), {
+      type: actions.UPDATE_LINODE,
+      linode: { id: fetchResponse.id, _polling: false}
+    })
 
     fetchStub.restore();
   });
@@ -92,7 +100,7 @@ describe("linodes actions", sinon.test(() => {
     return async () => {
       let fetchResponse = { id: 1, state: tempState};
 
-      let fetchStub = sinon.stub(fetch, '_fetch');
+      let fetchStub = sinon.stub(fetch, 'fetch');
       // POST /linodes/<id>/<action>
       fetchStub.onCall(0).returns({});
       // GET /linodes/<id>
@@ -115,7 +123,7 @@ describe("linodes actions", sinon.test(() => {
       await p(dispatch, getState);
 
       expect(fetchStub.callCount).to.equal(3);
-      expect(dispatch.callCount).to.equal(4);
+      expect(dispatch.callCount).to.equal(6);
 
       sinon.assert.calledWith(dispatch.getCall(0), {
         type: actions.UPDATE_LINODE,
@@ -124,12 +132,20 @@ describe("linodes actions", sinon.test(() => {
       // Second call dispatches updateLinodeUntil
       sinon.assert.calledWith(dispatch.getCall(2), {
         type: actions.UPDATE_LINODE,
+        linode: { id: fetchResponse.id, _polling: true }
+      })
+      sinon.assert.calledWith(dispatch.getCall(3), {
+        type: actions.UPDATE_LINODE,
         linode: fetchResponse
       });
-      sinon.assert.calledWith(dispatch.getCall(3), {
+      sinon.assert.calledWith(dispatch.getCall(4), {
         type: actions.UPDATE_LINODE,
         linode: { ...fetchResponse, state: finalState }
       });
+      sinon.assert.calledWith(dispatch.getCall(5), {
+        type: actions.UPDATE_LINODE,
+        linode: { id: fetchResponse.id, _polling: false }
+      })
 
       fetchStub.restore();
     };

@@ -1,7 +1,7 @@
 import { API_ROOT } from './constants';
-import fetch from 'isomorphic-fetch';
+import _fetch from 'isomorphic-fetch';
 
-export function _fetch(token, input, init) {
+export function fetch(token, input, init) {
   init = {
     mode: 'cors',
     ...init,
@@ -14,5 +14,5 @@ export function _fetch(token, input, init) {
   if (typeof input === 'string') {
     input = API_ROOT + input;
   }
-  return fetch(input, init);
+  return _fetch(input, init);
 };
