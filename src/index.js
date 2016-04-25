@@ -28,13 +28,11 @@ const init = () => {
     if (next.location.pathname !== '/oauth/callback' && state.authentication.token === null) {
       const query = Object.keys(next.location.query)
               .reduce((a,k) => [...a, `${k}=${encodeURIComponent(next.location.query[k])}`], []).join('%26');
-      const location = `${LOGIN_ROOT}/oauth/authorize?`+
+      window.location = `${LOGIN_ROOT}/oauth/authorize?`+
         `client_id=${client_id}` +
         `&scopes=*` +
         `&redirect_uri=${encodeURIComponent(APP_ROOT)}/oauth/callback?return=` +
               encodeURIComponent(next.location.pathname + (query ? '%3F' + query : ''));
-      console.log(location);
-      window.location = location;
       return;
     }
   }

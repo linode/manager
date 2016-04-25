@@ -20,7 +20,6 @@ class OAuthCallbackPage extends Component {
       xhr.onload = () => {
         let json = JSON.parse(xhr.response);
         dispatch(set_token(json.access_token, json.scopes, username, email));
-        console.log("here");
         return;
         dispatch(pushPath(returnTo ? returnTo : '/'));
       };

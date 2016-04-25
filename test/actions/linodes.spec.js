@@ -27,7 +27,7 @@ describe("linodes actions", sinon.test(() => {
       linodes: []
     };
 
-    let fetchStub = sinon.stub(fetch, 'fetch').returns({
+    let fetchStub = sinon.stub(fetch, '_fetch').returns({
       json: () => fetchResponse
     });
 
@@ -45,7 +45,7 @@ describe("linodes actions", sinon.test(() => {
   it("should update linode", async () => {
     let fetchResponse = { id: 1 };
 
-    let fetchStub = sinon.stub(fetch, 'fetch').returns({
+    let fetchStub = sinon.stub(fetch, '_fetch').returns({
       json: () => fetchResponse
     });
 
@@ -64,7 +64,7 @@ describe("linodes actions", sinon.test(() => {
     let fetchResponse = { id: 1, state: 'booting' };
     let test = linode => linode.state == 'running';
 
-    let fetchStub = sinon.stub(fetch, 'fetch');
+    let fetchStub = sinon.stub(fetch, '_fetch');
     fetchStub.onCall(0).returns({ json: () => fetchResponse });
     fetchStub.onCall(1).returns({ json: () => {
       return { ...fetchResponse, state: 'running' };
@@ -92,7 +92,7 @@ describe("linodes actions", sinon.test(() => {
     return async () => {
       let fetchResponse = { id: 1, state: tempState};
 
-      let fetchStub = sinon.stub(fetch, 'fetch');
+      let fetchStub = sinon.stub(fetch, '_fetch');
       // POST /linodes/<id>/<action>
       fetchStub.onCall(0).returns({});
       // GET /linodes/<id>

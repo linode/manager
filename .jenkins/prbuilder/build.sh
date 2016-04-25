@@ -4,4 +4,4 @@ set -e -x
 
 npm install
 
-npm test -- -R xunit-file
+npm run-script coverage
