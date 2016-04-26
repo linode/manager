@@ -162,7 +162,7 @@
             background-color: lighten($brand-success, 10);
         }
 
-        &.provisioning {
+        &.provisioning, &.booting {
             background-color: lightgrey;
         }
 

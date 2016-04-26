@@ -70,7 +70,7 @@ class IndexPage extends Component {
     dispatch(rebootLinode(linode.id));
   }
 
-  renderGroup(linodes, group) {
+  renderGroup({ group, linodes }) {
     return (
       <div key={group} className="row linodes" style={{marginBottom: '2rem'}}>
         {group ? <div className="col-md-12 display-group">
@@ -97,7 +97,13 @@ class IndexPage extends Component {
           <i className="fa fa-plus"></i>
         </Link>
         <h1>Linodes</h1>
-        {_.map(_.groupBy(Object.values(linodes), l => l.group), this.renderGroup)}
+        {_.map(
+          _.sortBy(
+            _.map(
+              _.groupBy(Object.values(linodes), l => l.group),
+              (linodes, group) => ({ group, linodes })
+            ), lg => lg.group
+          ), this.renderGroup)}
       </div>
     );
   }
