@@ -9,7 +9,8 @@ import {
     updateLinodeUntil,
     powerOnLinode,
     powerOffLinode,
-    rebootLinode
+    rebootLinode,
+    deleteLinode
 } from '../actions/linodes';
 
 class IndexPage extends Component {
@@ -30,12 +31,12 @@ class IndexPage extends Component {
     dispatch(fetchLinodes());
     window.addEventListener('scroll', this.handleScroll);
     if (linodes.length > 0) {
-        linodes.map(l => {
-            const state = l.state;
-            if (LinodeStates.pending.indexOf(state) !== -1) {
-                updateLinodeUntil(l.id, ln => state);
-            }
-        });
+      linodes.map(l => {
+        const state = l.state;
+        if (LinodeStates.pending.indexOf(state) !== -1) {
+          updateLinodeUntil(l.id, ln => state);
+        }
+      });
     }
   }
 
@@ -77,16 +78,13 @@ class IndexPage extends Component {
         </div> : ''}
         {linodes.map(l => {
           return (
-          <div key={l.id} className="col-md-6">
+          <div key={l.id} className="col-md-4">
             <Linode linode={l}
               onPowerOn={() => this.powerOn(l)}
               onPowerOff={() => this.powerOff(l)}
               onReboot={() => this.reboot(l)} />
           </div>);
         })}
-        <div className="col-md-6">
-          <NewLinode />
-        </div>
       </div>
     );
   }
@@ -94,28 +92,9 @@ class IndexPage extends Component {
   render() {
     const { linodes } = this.props.linodes;
     return (
-      <div className="row">
-        <div className="col-md-9">
-          {_.map(_.groupBy(Object.values(linodes), l => l.group), this.renderGroup)}
-        </div>
-        <div className="col-md-3">
-          <div className="card" style={{padding: '1rem'}}>
-            <h4 className="text-centered">
-              Recent Events
-            </h4>
-            <ul className="list-unstyled">
-              <li>
-                <i className="fa fa-check text-success" style={{marginRight: '0.5rem'}}></i>
-                test_linode_15 booted
-              </li>
-              <li>
-                <i className="fa fa-check text-success" style={{marginRight: '0.5rem'}}></i>
-                test_linode_15 created
-              </li>
-            </ul>
-            <p className="text-muted text-centered">- fake data, not final design -</p>
-          </div>
-        </div>
+      <div>
+        <h1>Linodes</h1>
+        {_.map(_.groupBy(Object.values(linodes), l => l.group), this.renderGroup)}
       </div>
     );
   }

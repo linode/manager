@@ -44,7 +44,7 @@ export default function linodes(state=default_state, action) {
         const { id } = action;
         return {
             ...state,
-            linodes: _.omit(state.linodes.keys, id)
+            linodes: _.omit(state.linodes, id)
         };
     default:
         return state;
