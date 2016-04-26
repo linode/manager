@@ -162,8 +162,8 @@
             background-color: lighten($brand-success, 10);
         }
 
-        &.being_created {
-            background-color: lighten($brand-info, 10);
+        &.provisioning {
+            background-color: lightgrey;
         }
 
         &.offline {
