@@ -37,7 +37,7 @@ export class LinodePower extends Component {
     default:
       return (
         <div className="power">
-          <div>
+          <div className={cols ? 'col-md-12' : ''}>
             <button onClick={onPowerOn} className="btn btn-default btn-block btn-sm">
               <i className="fa fa-power-off"></i>
               <span className="hover">Start</span>
