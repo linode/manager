@@ -40,6 +40,18 @@ nav {
     }
 }
 
+.btn-add {
+    @extend .btn-success;
+    $size: 3rem;
+    color: white;
+    width: $size;
+    height: $size;
+    line-height: $size * 0.75;
+    text-align: center;
+    border-radius: $size / 2;
+    margin-top: -($size / 4);
+}
+
 .modal {
     z-index: 999999;
 

@@ -93,6 +93,9 @@ class IndexPage extends Component {
     const { linodes } = this.props.linodes;
     return (
       <div>
+        <Link to="/linodes/create" className="btn btn-add pull-right">
+          <i className="fa fa-plus"></i>
+        </Link>
         <h1>Linodes</h1>
         {_.map(_.groupBy(Object.values(linodes), l => l.group), this.renderGroup)}
       </div>
