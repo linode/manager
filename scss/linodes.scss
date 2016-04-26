@@ -76,14 +76,6 @@
 
 .power-management {
     padding: 1rem;
-
-    &.offline {
-        @extend .alert-danger;
-    }
-
-    &.running {
-        @extend .alert-success;
-    }
 }
 
 .pending {
@@ -94,10 +86,6 @@
 
 .linode {
     padding: 1rem;
-
-    &.offline {
-        @extend .alert-danger;
-    }
 
     h4 {
         font-size: 14pt;
