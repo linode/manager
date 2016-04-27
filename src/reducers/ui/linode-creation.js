@@ -1,10 +1,14 @@
-import { CHANGE_SOURCE_TAB, SELECT_DISTRO } from '~/actions/ui/linode-creation';
+import {
+  CHANGE_SOURCE_TAB,
+  SELECT_SOURCE,
+  SELECT_DATACENTER
+} from '~/actions/ui/linode-creation';
 
 const default_state = {
-    source: {
-        tab: 0,
-        distro: null
-    }
+    sourceTab: 0,
+    source: null,
+    datacenter: null,
+    service: null
 };
 
 export default function linodeCreation(state=default_state, action) {
@@ -12,18 +16,18 @@ export default function linodeCreation(state=default_state, action) {
     case CHANGE_SOURCE_TAB:
         return {
             ...state,
-            source: {
-                ...state.source,
-                tab: action.tab
-            }
+            sourceTab: action.tab
         };
-    case SELECT_DISTRO:
+    case SELECT_SOURCE:
         return {
             ...state,
-            source: {
-                ...state.source,
-                distro: action.distro
-            }
+            source: action.source
+        };
+        break;
+    case SELECT_DATACENTER:
+        return {
+            ...state,
+            datacenter: action.datacenter
         };
         break;
     default:

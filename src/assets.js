@@ -10,3 +10,13 @@ import openSUSE from 'file!../assets/distros/OpenSUSE.png';
 export const distros = {
     Arch, CentOS, Debian, Fedora, Gentoo, Slackware, Ubuntu, openSUSE
 };
+
+import us from 'file!../assets/flags/us.svg';
+import de from 'file!../assets/flags/de.svg';
+import gb from 'file!../assets/flags/gb.svg';
+import sg from 'file!../assets/flags/sg.svg';
+import jp from 'file!../assets/flags/jp.svg';
+
+export const flags = {
+  us, de, gb, sg, jp
+};
