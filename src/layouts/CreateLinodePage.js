@@ -6,6 +6,7 @@ import SourceSelection from '../containers/create-linode/SourceSelection';
 import DatacenterSelection from '../components/create-linode/DatacenterSelection';
 import { fetchDistros } from '../actions/distros';
 import { fetchDatacenters } from '../actions/datacenters';
+import { fetchServices } from '../actions/services';
 import {
     changeSourceTab,
     selectSource,
@@ -22,6 +23,7 @@ class CreateLinodePage extends Component {
       const { dispatch } = this.props;
       dispatch(fetchDistros());
       dispatch(fetchDatacenters());
+      dispatch(fetchServices());
   }
 
   render() {

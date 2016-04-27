@@ -19,8 +19,8 @@ export default class DatacenterSelection extends Component {
     super();
     this.render = this.render.bind(this);
     this.renderDC = this.renderDC.bind(this);
-    this.renderHeader = this.render.bind(this);
-    this.renderBack = this.render.bind(this);
+    this.renderHeader = this.renderHeader.bind(this);
+    this.renderBack = this.renderBack.bind(this);
   }
 
   renderDC(dc) {
@@ -37,13 +37,26 @@ export default class DatacenterSelection extends Component {
   }
 
   renderBack() {
-    const { onBack } = this.props;
-    return <a href="#" className="back pull-right"
-      onClick={e => { e.preventDefault(); onBack() }}>Back</a>;
+    const { onBack, ui } = this.props;
+    if (ui.datacenter === null) {
+      return <a href="#" className="back pull-right"
+        onClick={e => { e.preventDefault(); onBack() }}>Back</a>;
+    }
   }
 
   renderHeader() {
-    return <h2>Select a Datacenter</h2>;
+    const { ui, datacenters } = this.props;
+    if (ui.datacenter === null) {
+      return <h2>Select a Datacenter</h2>;
+    } else {
+      const dc = datacenters.find(d => d.id == ui.datacenter);
+      return <h2 className="text-right">
+        {dc.label}
+        <img className="dc-icon" src={flags[countryMap[dc.id]]
+          ? flags[countryMap[dc.id]] : '//placehold.it/24x24'}
+          width="24" height="24" alt={dc.label} />
+      </h2>;
+    }
   }
 
   render() {

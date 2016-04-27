@@ -51,11 +51,10 @@ export default class SourceSelection extends Component {
     if (ui.sourceTab === 0 && this.sourceSelected()) {
       const distro = distros.find(d => d.id === ui.source);
       return <h2 className="text-right">
-        <img src={distro_assets[distro.vendor]
-          ? distro_assets[distro.vendor] : '//placehold.it/50x50'}
-          width="24" height="24" alt={distro.vendor}
-          style={{marginRight: "0.25rem"}} />
         {distro.label}
+        <img className="header-icon" src={distro_assets[distro.vendor]
+          ? distro_assets[distro.vendor] : '//placehold.it/50x50'}
+          width="24" height="24" alt={distro.vendor} />
       </h2>;
     } else {
       return <h2>Select a Source</h2>;

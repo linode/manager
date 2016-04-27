@@ -70,6 +70,18 @@
         }
     }
 
+    .header-icon {
+        margin-left: 0.5rem;
+    }
+
+    .dc-icon {
+        border-radius: 12px;
+        display: inline-block;
+        border: 1px solid grey;
+        margin-left: 0.5rem;
+        margin-top: -0.15rem;
+    }
+
     .dc-list {
         display: flex;
         flex-wrap: wrap;

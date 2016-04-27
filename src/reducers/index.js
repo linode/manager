@@ -4,14 +4,13 @@ import authentication from './authentication';
 import linodes from './linodes';
 import distros from './distros';
 import datacenters from './datacenters';
+import services from './services';
 import ui from './ui';
 
 const rootReducer = combineReducers({
   routing: routeReducer,
-  linodes,
+  linodes, datacenters, distros, services,
   authentication,
-  datacenters,
-  distros,
   ui
 });
 
