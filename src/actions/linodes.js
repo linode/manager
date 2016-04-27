@@ -74,7 +74,3 @@ export function deleteLinode(id) {
     // Note: do we want to do anything at this point?
   };
 }
-
-export function toggleLinodeRecovery(id, recover) {
-  return { type: LINODE_RECOVER, linode: { id }, recover };
-}

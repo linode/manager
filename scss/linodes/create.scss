@@ -1,0 +1,68 @@
+.creation-step {
+    h2 {
+        background: $linode-green;
+        padding: 1rem;
+        color: white;
+        font-size: 14pt;
+        margin-bottom: 0;
+        font-weight: bold;
+    }
+
+    .list {
+        max-height: 25rem;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        margin-top: 1rem;
+
+        h3 {
+            border-bottom: 1px black solid;
+            padding-bottom: 0.2rem;
+            margin-bottom: 0;
+        }
+    }
+
+    .distro {
+        margin: 1rem 0;
+        border-bottom: 1px solid lightgrey;
+        cursor: pointer;
+        transition: background-color 0.2s linear;
+
+        &:hover, &.selected {
+            background-color: #eee;
+        }
+
+        img {
+            margin-right: 1rem;
+            padding: 2px;
+        }
+    }
+
+    & > div {
+        $selected-border: 2px;
+
+        .react-tabs {
+            [role="tablist"] {
+                border: none;
+                border-bottom: $selected-border transparent solid;
+                background: $linode-green;
+            }
+
+            [role="tab"] {
+                background: $linode-green;
+                padding: 0.25rem 1rem;
+                color: white;
+                border-radius: none;
+                border: none;
+                border-bottom: $selected-border transparent solid;
+
+                &[aria-selected="true"] {
+                    border-bottom: $selected-border black solid;
+                }
+            }
+
+            [role="tabpanel"] {
+                padding: 1rem 2rem;
+            }
+        }
+    }
+}

@@ -20,6 +20,7 @@ import OAuthCallbackPage from './containers/OAuth';
 import NotFound from './containers/NotFound';
 import IndexPage from './containers/IndexPage';
 import LinodeDetailPage from './containers/LinodeDetailPage';
+import CreateLinodePage from './containers/CreateLinodePage';
 
 const init = () => {
   let state = store.getState();
@@ -43,6 +44,7 @@ const init = () => {
         <Router history={history}>
           <Route onEnter={checkLogin} path="/">
             <IndexRoute component={IndexPage} />
+            <Route path="linodes/create" component={CreateLinodePage} />
             <Route path="linodes/:linodeId" component={LinodeDetailPage} />
             <Route path="oauth">
               <Route path="callback" component={OAuthCallbackPage} />
