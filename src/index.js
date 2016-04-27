@@ -15,12 +15,12 @@ const store = configureStore();
 const history = createHistory();
 syncReduxAndRouter(history, store);
 
-import Layout from './containers/Layout';
-import OAuthCallbackPage from './containers/OAuth';
-import NotFound from './containers/NotFound';
-import IndexPage from './containers/IndexPage';
-import LinodeDetailPage from './containers/LinodeDetailPage';
-import CreateLinodePage from './containers/CreateLinodePage';
+import Layout from './layouts/Layout';
+import OAuthCallbackPage from './layouts/OAuth';
+import NotFound from './layouts/NotFound';
+import IndexPage from './layouts/IndexPage';
+import LinodeDetailPage from './layouts/LinodeDetailPage';
+import CreateLinodePage from './layouts/CreateLinodePage';
 
 const init = () => {
   let state = store.getState();

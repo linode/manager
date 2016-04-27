@@ -8,10 +8,10 @@ export default class SourceSelection extends Component {
     this.render = this.render.bind(this);
   }
 
-  renderSourceTabs({ distros }) {
+  renderSourceTabs({ onSourceTab, distros, ui }) {
     return <Tabs
-        onSelect={(ix, last) => console.log('hey')}
-        selectedIndex={0}>
+        onSelect={(ix, last) => onSourceTab(ix)}
+        selectedIndex={ui.source.tab}>
         <TabList>
           <Tab>Distributions</Tab>
           <Tab>StackScripts</Tab>

@@ -5,7 +5,8 @@ import Fedora from 'file!../assets/distros/Fedora.png';
 import Gentoo from 'file!../assets/distros/Gentoo.png';
 import Slackware from 'file!../assets/distros/Slackware.png';
 import Ubuntu from 'file!../assets/distros/Ubuntu.png';
+import openSUSE from 'file!../assets/distros/OpenSUSE.png';
 
 export const distros = {
-    Arch, CentOS, Debian, Fedora, Gentoo, Slackware, Ubuntu
+    Arch, CentOS, Debian, Fedora, Gentoo, Slackware, Ubuntu, openSUSE
 };

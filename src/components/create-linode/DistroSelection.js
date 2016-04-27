@@ -11,7 +11,7 @@ export default class DistroSelection extends Component {
 
   renderDistro(distro) {
     return (
-      <div className="distro">
+      <div className="distro" key={distro.id}>
         <img src={distros[distro.vendor]
           ? distros[distro.vendor] : '//placehold.it/50x50'}
           width="50" height="50" alt={distro.vendor} />
