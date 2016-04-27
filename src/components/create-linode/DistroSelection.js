@@ -10,8 +10,10 @@ export default class DistroSelection extends Component {
   }
 
   renderDistro(distro) {
+    const { onSelection, selected } = this.props;
     return (
-      <div className="distro" key={distro.id}>
+      <div className={`distro ${selected == distro.id ? 'selected' : ''}`}
+          key={distro.id} onClick={() => onSelection(distro.id)}>
         <img src={distros[distro.vendor]
           ? distros[distro.vendor] : '//placehold.it/50x50'}
           width="50" height="50" alt={distro.vendor} />

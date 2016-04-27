@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import DistroSelection from './DistroSelection';
+import DistroSelection from '~/components/create-linode/DistroSelection';
+import { changeSourceTab, selectDistro } from '~/actions/ui/linode-creation';
 
 export default class SourceSelection extends Component {
   constructor() {
@@ -8,9 +9,9 @@ export default class SourceSelection extends Component {
     this.render = this.render.bind(this);
   }
 
-  renderSourceTabs({ onSourceTab, distros, ui }) {
+  renderSourceTabs({ dispatch, distros, ui }) {
     return <Tabs
-        onSelect={(ix, last) => onSourceTab(ix)}
+        onSelect={ix => dispatch(changeSourceTab(ix))}
         selectedIndex={ui.source.tab}>
         <TabList>
           <Tab>Distributions</Tab>
@@ -18,7 +19,10 @@ export default class SourceSelection extends Component {
           <Tab>Backups</Tab>
         </TabList>
         <TabPanel>
-          <DistroSelection distros={distros} />
+          <DistroSelection
+            onSelection={d => dispatch(selectDistro(d))}
+            selected={ui.source.distro}
+            distros={distros} />
         </TabPanel>
         <TabPanel>
           StackScript Selection

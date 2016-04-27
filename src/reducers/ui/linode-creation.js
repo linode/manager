@@ -1,4 +1,4 @@
-import { CHANGE_SOURCE_TAB } from '../../actions/ui/linode-creation';
+import { CHANGE_SOURCE_TAB, SELECT_DISTRO } from '~/actions/ui/linode-creation';
 
 const default_state = {
     source: {
@@ -17,6 +17,15 @@ export default function linodeCreation(state=default_state, action) {
                 tab: action.tab
             }
         };
+    case SELECT_DISTRO:
+        return {
+            ...state,
+            source: {
+                ...state.source,
+                distro: action.distro
+            }
+        };
+        break;
     default:
         return state;
     }
