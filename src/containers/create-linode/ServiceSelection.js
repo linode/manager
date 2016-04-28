@@ -109,7 +109,6 @@ export default class ServiceSelection extends Component {
   constructor() {
     super();
     this.render = this.render.bind(this);
-    this.renderService = this.renderService.bind(this);
     this.renderHeader = this.renderHeader.bind(this);
     this.renderBack = this.renderBack.bind(this);
   }
@@ -158,6 +157,7 @@ export default class ServiceSelection extends Component {
         {this.renderHeader()}
         <div className="service-list">
           {services.map(s => <Service
+                 key={s.id}
                  onSelection={onSelection}
                  service={s} />)}
         </div>

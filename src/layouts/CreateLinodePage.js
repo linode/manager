@@ -10,23 +10,34 @@ import { fetchDistros } from '../actions/distros';
 import { fetchDatacenters } from '../actions/datacenters';
 import { fetchServices } from '../actions/services';
 import {
-    changeSourceTab,
-    selectSource,
-    selectDatacenter,
-    selectService
+  changeSourceTab,
+  selectSource,
+  selectDatacenter,
+  selectService,
+  setLabel,
+  generatePassword,
+  toggleShowPassword,
+  createLinode
 } from '../actions/ui/linode-creation';
 
 class CreateLinodePage extends Component {
   constructor() {
     super();
     this.render = this.render.bind(this);
+    this.onLabelChange = this.onLabelChange.bind(this);
   }
 
   componentDidMount() {
-      const { dispatch } = this.props;
-      dispatch(fetchDistros());
-      dispatch(fetchDatacenters());
-      dispatch(fetchServices());
+    const { dispatch } = this.props;
+    dispatch(fetchDistros());
+    dispatch(fetchDatacenters());
+    dispatch(fetchServices());
+    dispatch(generatePassword());
+  }
+
+  onLabelChange(e) {
+    const { dispatch } = this.props;
+    dispatch(setLabel(e.target.value));
   }
 
   render() {
@@ -49,6 +60,9 @@ class CreateLinodePage extends Component {
             ui={ui} services={services} />
           <OrderSummary ui={ui}
             onBack={() => dispatch(selectService(null))}
+            onCreate={() => dispatch(createLinode())}
+            onLabelChange={this.onLabelChange}
+            onShowRootPassword={() => dispatch(toggleShowPassword())}
             services={services}
             datacenters={datacenters}
             distros={distros} />

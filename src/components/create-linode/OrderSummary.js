@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import { distros, flags } from '../../assets';
 import Service from './Service';
 import { countryMap } from './DatacenterSelection';
@@ -9,6 +10,7 @@ export default class Summary extends Component {
     this.render = this.render.bind(this);
     this.renderBack = this.renderBack.bind(this);
     this.renderHeader = this.renderHeader.bind(this);
+    this.componentDidUpdate = this.componentDidUpdate.bind(this);
   }
 
   renderBack() {
@@ -44,8 +46,29 @@ export default class Summary extends Component {
     </div>;
   }
 
+  componentDidUpdate() {
+    const { ui } = this.props;
+    if (ui.showPassword) {
+      const dom = ReactDOM.findDOMNode(this).querySelector('.pw');
+      const range = document.createRange();
+      range.selectNodeContents(dom);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+    }
+  }
+
   render() {
-    const { ui, services, distros, datacenters } = this.props;
+    const {
+      ui,
+      services,
+      distros,
+      datacenters,
+      onLabelChange,
+      onBackupChange,
+      onShowRootPassword,
+      onCreate
+    } = this.props;
     const done = ui.source && ui.datacenter && ui.service;
     if (!done) {
         return <div></div>;
@@ -63,35 +86,40 @@ export default class Summary extends Component {
           </div>
           <div className="col-md-9">
             <fieldset className="form-group">
-              <label for="label">Label</label>
+              <label htmlFor="label">Label</label>
               <input className="form-control" id="label"
+                value={ui.label} onChange={onLabelChange}
                 placeholder="Name this Linode..." />
             </fieldset>
             <div className="summary">
               {this.renderSourceSummary(distro)}
               {this.renderDCSummary(dc)}
+              <hr />
               <div className="row">
-                <div className="col-md-1">
-                  <i className="fa fa-key"></i>
-                </div>
-                <div className="col-md-11">
-                  Root password: <a href="#">show</a>
+                <div className="col-md-11 col-md-offset-1">
+                  Root password:
+                    {ui.showPassword ? <strong className="pw">
+                      {ui.password}
+                    </strong> : ' '}
+                    <a href="#" onClick={e => {
+                    e.preventDefault();
+                    onShowRootPassword()
+                  }}>{ui.showPassword ? '(hide)' : '(show)'}</a>
                 </div>
               </div>
               <div className="row">
-                <div className="col-md-1">
-                  <input type="checkbox" id="backups" />
-                </div>
-                <div className="col-md-11">
-                  <label for="backups" className="checkbox">
-                    Enable backups (+${
+                <div className="col-md-11 col-md-offset-1">
+                  <label htmlFor="backups" className="checkbox">
+                    <input type="checkbox" id="backups" />
+                    Enable backups for this Linode? (+${
                       (service.monthly_price / 4 / 100).toFixed(2)
                     }/mo)
                   </label>
                 </div>
               </div>
             </div>
-            <button className="btn btn-primary order-button">
+            <button className="btn btn-primary order-button"
+              onClick={onCreate}>
               <i className="fa fa-chevron-right"></i>&nbsp;
               Create Linode
             </button>

@@ -160,7 +160,7 @@
         & > .row {
             margin: 0.25rem 0;
 
-            img, .fa, input[type="checkbox"] {
+            img, .fa {
                 display: inline-block;
                 width: 24px;
                 height: 24px;
@@ -175,6 +175,10 @@
             }
         }
 
+        hr {
+            margin: 0.2rem 0;
+        }
+
         .summary-dc img {
             border-radius: 12px;
             border: 1px solid grey;
@@ -182,6 +186,10 @@
 
         .text-danger {
             padding-left: 1rem;
+        }
+
+        .pw {
+          padding: 0 1rem;
         }
     }
 
