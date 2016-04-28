@@ -3,7 +3,7 @@ import _ from 'underscore';
 import { flags } from '~/assets';
 
 // TODO: This is lame, we should extend the API to include country code
-const countryMap = {
+export const countryMap = {
   'datacenter_2': 'us', // Dallas
   'datacenter_3': 'us', // Fremont
   'datacenter_4': 'us', // Atlanta
@@ -79,9 +79,10 @@ export default class DatacenterSelection extends Component {
           ui.datacenter !== null ? 'step-done' : ''}`}>
         {this.renderBack()}
         {this.renderHeader()}
-        <div className="dc-list">
-          {datacenters.map(this.renderDC)}
-        </div>
+        {ui.datacenter !== null ? "" :
+          <div className="dc-list">
+            {datacenters.map(this.renderDC)}
+          </div>}
       </div>
     );
   }

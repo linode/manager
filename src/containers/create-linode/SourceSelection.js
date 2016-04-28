@@ -62,6 +62,7 @@ export default class SourceSelection extends Component {
   }
 
   render() {
+    const { done } = this.props;
     return (
       <div className={`card creation-step ${
           this.sourceSelected() ? 'step-done' : ''}`}>

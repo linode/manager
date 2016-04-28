@@ -7,7 +7,7 @@
         }
     }
 
-    h2 {
+    & > h2 {
         background: $linode-green;
         padding: 1rem;
         color: white;
@@ -82,11 +82,107 @@
         margin-top: -0.15rem;
     }
 
-    .dc-list {
+    .dc-list, .service-list {
         display: flex;
         flex-wrap: wrap;
-        justify-content: space-between;
-        padding: 0 0.5rem;
+        justify-content: space-around;
+        padding: 1rem;
+
+        .service {
+            width: 22%;
+        }
+    }
+
+    .dodsoncube {
+        display: inline-block;
+        overflow: visible;
+        width: 24px;
+        height: 14pt;
+        position: relative;
+        margin-left: 0.5rem;
+        margin-top: -0.15rem;
+    }
+
+    .dodsoncube::after {
+        content: "";
+        position: absolute;
+        top: 0; left: 0;
+        display: inline-block;
+        width: 24px;
+        height: 24px;
+        background: $linode-green;
+        border: 1px solid darken($linode-green, 10);
+        border-radius: 12px;
+    }
+
+    .service {
+        @extend .elevated;
+        cursor: pointer;
+        transition: background-color 0.2s linear;
+        margin: 1rem 0;
+        padding: 0.5rem 0;
+
+        &:hover, &.selected {
+            background-color: #eee;
+        }
+
+        hr {
+            margin: 0.5rem 0;
+            border-top-color: rgba(0,0,0,0.3);
+        }
+
+        ul {
+            margin: 0.5rem;
+            font-size: 10pt;
+        }
+
+        h2, h3, h4 {
+            margin: 0.5rem 0;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 12pt;
+        }
+
+        h3 {
+            font-size: 18pt;
+        }
+
+        h4 {
+            font-size: 14pt;
+        }
+    }
+
+    .summary {
+        margin-top: 1rem;
+
+        & > .row {
+            margin: 0.25rem 0;
+
+            img, .fa, input[type="checkbox"] {
+                display: inline-block;
+                width: 24px;
+                height: 24px;
+                text-align: center;
+                line-height: 24px;
+                float: right;
+            }
+
+            img {
+                position: relative;
+                top: -2px;
+            }
+        }
+
+        .summary-dc img {
+            border-radius: 12px;
+            border: 1px solid grey;
+        }
+
+        .text-danger {
+            padding-left: 1rem;
+        }
     }
 
     & > div {
