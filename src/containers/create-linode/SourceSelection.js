@@ -49,7 +49,7 @@ export default class SourceSelection extends Component {
   renderHeader() {
     const { ui, distros } = this.props;
     if (ui.sourceTab === 0 && this.sourceSelected()) {
-      const distro = distros.find(d => d.id === ui.source);
+      const distro = distros[ui.source];
       return <h2 className="text-right">
         {distro.label}
         <img className="header-icon" src={distro_assets[distro.vendor]

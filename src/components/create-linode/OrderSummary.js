@@ -74,8 +74,8 @@ export default class Summary extends Component {
         return <div></div>;
     }
     const service = services.find(s => s.id === ui.service);
-    const distro = distros.find(d => d.id === ui.source);
-    const dc = datacenters.find(d => d.id === ui.datacenter);
+    const distro = distros[ui.source];
+    const dc = datacenters[ui.datacenter];
     return <div className="card creation-step">
       {this.renderBack()}
       {this.renderHeader()}

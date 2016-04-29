@@ -75,8 +75,8 @@ class CreateLinodePage extends Component {
 function select(state) {
   return {
     datacenters: state.datacenters.datacenters,
-    distros: state.distros.distros,
-    services: state.services.services.filter(
+    distros: state.distros.distributions,
+    services: Object.values(state.services.services).filter(
         s => s.service_type === 'linode'),
     ui: state.ui.linodeCreation,
   };

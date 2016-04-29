@@ -22,7 +22,9 @@ export default function make_api_list(multiple, single,
   const default_state = {
     pagesFetched: [ ],
     totalPages: -1,
-    [multiple]: {}
+    [multiple]: {},
+    _single: single,
+    _multiple: multiple
   };
 
   actions = {

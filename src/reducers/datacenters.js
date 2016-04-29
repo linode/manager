@@ -1,20 +1,7 @@
-import { UPDATE_DATACENTERS } from '../actions/datacenters';
+import { UPDATE_DATACENTER, UPDATE_DATACENTERS } from '../actions/datacenters';
+import make_api_list from '~/api-store';
 
-const default_state = {
-    datacenters: [ ]
-};
-
-export default function datacenters(state=default_state, action) {
-    switch (action.type) {
-    case UPDATE_DATACENTERS:
-        return {
-            ...state,
-            datacenters: [
-                ...state.datacenters,
-                ...action.response.datacenters
-            ]
-        };
-    default:
-        return state;
-    }
-}
+export default make_api_list("datacenters", "datacenter", {
+    update_single: UPDATE_DATACENTER,
+    update_many: UPDATE_DATACENTERS
+});

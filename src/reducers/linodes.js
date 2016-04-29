@@ -2,7 +2,6 @@ import {
     UPDATE_LINODES, UPDATE_LINODE,
     DELETE_LINODE
 } from '../actions/linodes';
-import _ from 'underscore';
 import make_api_list from '~/api-store';
 
 function transform(linode) {

@@ -30,10 +30,12 @@ export default class DistroSelection extends Component {
           placeholder="Search images..." />
         <div className="list">
           <h3>Recommended Images</h3>
-          {_.sortBy(distros.filter(d => d.recommended), 'label')
+          {_.sortBy(Object.values(distros)
+            .filter(d => d.recommended), 'label')
             .map(this.renderDistro)}
           <h3>Legacy Images</h3>
-          {_.sortBy(distros.filter(d => !d.recommended), 'label')
+          {_.sortBy(Object.values(distros)
+            .filter(d => !d.recommended), 'label')
             .map(this.renderDistro)}
         </div>
       </div>
