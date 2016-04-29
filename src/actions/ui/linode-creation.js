@@ -11,7 +11,7 @@ export const GENERATE_PASSWORD = "@@ui@@linode-creation/GENERATE_PASSWORD";
 export const TOGGLE_SHOW_PASSWORD = "@@ui@@linode-creation/TOGGLE_SHOW_PASSWORD";
 export const TOGGLE_CREATING = "@@ui@@linode-creation/TOGGLE_CREATING";
 
-import { UPDATE_LINODE } from '../linodes';
+import { UPDATE_LINODE, updateLinodeUntil } from '../linodes';
 
 export function changeSourceTab(tab) {
   return { type: CHANGE_SOURCE_TAB, tab };
@@ -64,7 +64,7 @@ export function createLinode() {
     });
     const json = await response.json();
     // TODO: Error handling
-    dispatch({ type: UPDATE_LINODE, linode: json });
+    dispatch({ type: UPDATE_LINODE, linode: json.linode });
     dispatch(pushPath(`/linodes/${json.linode.id}`));
     dispatch({ type: TOGGLE_CREATING });
     dispatch(setLabel(null));
@@ -72,5 +72,7 @@ export function createLinode() {
     dispatch(selectDatacenter(null));
     dispatch(selectSource(null));
     dispatch(changeSourceTab(0));
+    dispatch(updateLinodeUntil(json.linode.id,
+      l => l.state !== "provisioning"));
   };
 }
