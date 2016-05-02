@@ -1,6 +1,7 @@
 import { fetch } from '../fetch';
 
 export const UPDATE_DATACENTERS = '@@datacenters/UPDATE_DATACENTERS';
+export const UPDATE_DATACENTER = '@@datacenters/UPDATE_DATACENTER';
 
 export function fetchDatacenters(page = 0) {
   return async (dispatch, getState) => {

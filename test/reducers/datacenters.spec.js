@@ -7,7 +7,7 @@ describe("datacenters reducer", () => {
   it('should handle initial state', () => {
     expect(
       datacenters(undefined, {})
-    ).to.be.eql({ datacenters: [] });
+    ).to.have.property('datacenters').that.deep.equals({});
   });
 
   it('should handle UPDATE_DATACENTERS', () => {
@@ -25,6 +25,7 @@ describe("datacenters reducer", () => {
           datacenters: [ dc ]
         }
       })
-    ).to.have.property('datacenters').which.has.length(1);
+    ).to.have.property('datacenters')
+    .which.has.property('datacenter_6');
   });
 });

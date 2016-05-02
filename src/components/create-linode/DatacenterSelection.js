@@ -49,7 +49,7 @@ export default class DatacenterSelection extends Component {
     if (ui.datacenter === null) {
       return <h2>Select a Datacenter</h2>;
     } else {
-      const dc = datacenters.find(d => d.id == ui.datacenter);
+      const dc = datacenters[ui.datacenter];
       return <h2 className="text-right">
         {dc.label}
         <img className="dc-icon" src={flags[countryMap[dc.id]]
@@ -64,16 +64,6 @@ export default class DatacenterSelection extends Component {
     if (ui.source === null) {
       return <div></div>;
     }
-    datacenters = [
-      { id: "datacenter_2", label: "Dallas, TX" },
-      { id: "datacenter_3", label: "Fremont, CA" },
-      { id: "datacenter_4", label: "Atlanta, GA" },
-      { id: "datacenter_6", label: "Newark, NJ" },
-      { id: "datacenter_7", label: "London, UK" },
-      { id: "datacenter_8", label: "Tokyo, JP" },
-      { id: "datacenter_9", label: "Singapore, SG" },
-      { id: "datacenter_10", label: "Frankfurt, DE" }
-    ];
     return (
       <div className={`card creation-step ${
           ui.datacenter !== null ? 'step-done' : ''}`}>
@@ -81,7 +71,7 @@ export default class DatacenterSelection extends Component {
         {this.renderHeader()}
         {ui.datacenter !== null ? "" :
           <div className="dc-list">
-            {datacenters.map(this.renderDC)}
+            {Object.values(datacenters).map(this.renderDC)}
           </div>}
       </div>
     );

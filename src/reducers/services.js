@@ -1,20 +1,6 @@
-import { UPDATE_SERVICES } from '~/actions/services';
+import { UPDATE_SERVICES } from '../actions/services';
+import make_api_list from '~/api-store';
 
-const default_state = {
-    services: [ ]
-};
-
-export default function services(state=default_state, action) {
-    switch (action.type) {
-    case UPDATE_SERVICES:
-        return {
-            ...state,
-            services: [
-                ...state.services,
-                ...action.response.services
-            ]
-        };
-    default:
-        return state;
-    }
-}
+export default make_api_list("services", "service", {
+    update_many: UPDATE_SERVICES
+});

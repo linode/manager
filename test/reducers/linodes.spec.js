@@ -7,7 +7,7 @@ describe("linodes reducer", () => {
   it('should handle initial state', () => {
     expect(
       linodes(undefined, {})
-    ).to.be.eql({ pagesFetched: [], totalPages: -1, linodes: {} });
+    ).to.have.property('linodes').that.deep.equals({});
   });
 
   it('should handle UPDATE_LINODES', () => {
