@@ -1,5 +1,12 @@
 import _ from 'underscore';
 
+function transformItem(item) {
+  return {
+    ...item,
+    _polling: false
+  };
+}
+
 /*
  * multiple: the name of several of the resource (i.e. "linodes")
  *
@@ -48,7 +55,7 @@ export default function make_api_list(multiple, single,
         [multiple]: {
           ...state[multiple],
           ...response[multiple].reduce((s, i) =>
-            ({ ...s, [i.id]: transform(i) }), { })
+            ({ ...s, [i.id]: transform(transformItem(i)) }), { })
         }
       };
     case actions.update_single:
@@ -70,4 +77,50 @@ export default function make_api_list(multiple, single,
       return state;
     }
   };
+}
+
+import { fetch } from './fetch';
+
+export function make_fetch_page(action, endpoint) {
+  return (page) => {
+    return async (dispatch, getState) => {
+      const { token } = getState().authentication;
+      const response = await fetch(token, `/${endpoint}?page=${page+1}`);
+      const json = await response.json();
+      dispatch({ type: action, response: json });
+    };
+  };
+}
+
+export function make_update_item(action, plural, singular) {
+  return (id) => {
+    return async (dispatch, getState) => {
+      const { token } = getState().authentication;
+      const response = await fetch(token, `/${plural}/${id}`);
+      const json = await response.json();
+      dispatch({ type: action, [singular]: json });
+    };
+  };
+}
+
+export function make_update_until(action, plural, singular) {
+  return (id, test, timeout=3000) => {
+    return async (dispatch, getState) => {
+      const { token } = getState().authentication;
+      const item = getState()[plural][plural][id];
+      if (item._polling) {
+          return;
+      }
+      dispatch({ type: action, [singular]: { id, _polling: true } });
+      while (true) {
+        const response = await fetch(token, `/${plural}/${id}`);
+        const json = await response.json();
+        dispatch({ type: action, [singular]: json });
+        if (test(json)) break;
+
+        await new Promise(r => setTimeout(r, timeout));
+      }
+      dispatch({ type: action, [singular]: { id, _polling: false } });
+    };
+  }
 }
