@@ -1,83 +1,322 @@
 $root: "/";
-@import 'base';
+$linode-blue: #4A90E2;
+$linode-green: #3BB877;
+$linode-red: #D0021B;
+$linode-black: #4b4b4b;
+$linode-gray: #777;
+$linode-border: 1px solid #ccc;
+
+$sidebar-width: 200px;
+$nav-link: white;
+$nav-link-hover: #eee;
+$nav-height: 84px;
+
 @import 'linodes/linodes';
+@import 'layout/linode-details';
+@import 'layout/linodes';
 
-/* TODO: move into styles repo */
-header {
-  position: relative;
-  top: 15px;
-  width: 100%;
-  z-index: 9999;
+body {
+    background: #f4f4f4;
+    height: 100%;
+    min-width: 1007px; /* can fix later */
+    color: $linode-black;
+    font-size: 15px;
 }
 
-.header {
-    position: relative;
-    padding-bottom: 2rem;
-    padding-top: 0;
+h1, h2 {
+    margin: 0;
+    font-weight: normal;
+    line-height: normal;
 }
 
-.layout > .container {
-  margin-top: 2.5rem;
+h1 {
+    font-size: 25px;
+    margin-bottom: 20px;
+}
+
+h2 {
+   font-size: 20px;
+   margin-bottom: 15px;
 }
 
 nav {
-  position: relative;
-}
+    height: $nav-height;
+    padding: 0 30px;
+    margin: 0 !important;
 
-.navbar-header .nav-text {
-    color: $linode-green;
-}
-/* /TODO */
-
-.pull-right {
-    float: right !important;
-}
-
-.login-info {
-    .btn {
-        color: white;
-        font-weight: bold;
+    &.navbar-default {
+        background: #333;
+        border: 0;
+        border-radius: 0;
     }
-}
 
-.btn-add {
-    @extend .btn-success;
-    $size: 3rem;
-    color: white;
-    width: $size;
-    height: $size;
-    line-height: $size * 0.75;
-    text-align: center;
-    border-radius: $size / 2;
-    margin-top: -($size / 4);
-}
+    .navbar-header {
+        width: 100%;
+        float: none;
+    }
 
-.modal {
-    z-index: 999999;
+    .navbar-linode {
+        display: inline-block;
+        margin-right: 30px;
+        position: relative;
+        top: -37.5px; /* 50 * .75 */
+    }
 
-    &.modal-large {
-        .modal-dialog {
-            width: map-get($container-max-widths, "xl");
+    .navbar-search {
+        display: inline-block;
+        position: relative;
+        top: -36px; /* magic number */
+        margin-right: 30px;
+
+        input {
+            width: 300px;
+            border: 0;
+            padding: 15px;
+            height: 30px;
+        }
+
+        input:focus {
+            border: 1px solid $linode-green;
+            outline: 0;
+        }
+
+        .navbar-search-icon {
+            position: absolute;
+            right: 0;
+            top: 0;
+            background: #fcfcfc;
+            height: 30px;
+            width: 30px;
+            color: $linode-gray;
+            border-left: 1px solid #eee;
+            text-align: center;
+            line-height: 30px;
         }
     }
 
-    &.fade.in {
-        background: rgba(0,0,0,0.25);
-        display: flex;
-        align-items: center;
-        justify-content: center;
+    .navbar-collapse {
+        &.navbar-collapse {
+            display: inline-block !important;
+            padding: 0;
+
+            a {
+                color: $nav-link;
+                font-size: 15px;
+                line-height: $nav-height;
+                padding: 0 15px 0 0;
+            }
+
+            a:hover,
+            a:active,
+            a:focus {
+                color: $linode-green;
+            }
+        }
     }
 
-    .modal-content {
-        padding: 1rem;
+    .navbar-session {
+        display: inline-block;
+        line-height: $nav-height;
+
+        .nav-notifications {
+            background: $linode-green;
+            padding: 3px 6px;
+            color: white;
+            font-size: 10px;
+            margin-right: 15px;
+        }
+
+        a {
+            color: $nav-link;
+            padding-right: 15px;
+        }
+
+        a:last-of-type {
+            padding-right: 0;
+        }
+
+        a:hover,
+        a:active,
+        a:focus {
+            text-decoration: none;
+            color: $linode-green;
+        }
+    }
+}
+
+.sidebar {
+    position: absolute;
+    top: 84px;
+    left: 0;
+    bottom: 0;
+    width: $sidebar-width;
+    background: white;
+    border-right: $linode-border;
+    text-align: center;
+
+    a {
+        color: black;
+        text-decoration: none !important;
     }
 
-    .modal-header {
-        border: none;
-        padding: 0;
+    ul {
+        display: inline-block;
+        text-align: left;
+
+        li.active,
+        li:hover,
+        li:active,
+        li:focus {
+            a {
+                color: $linode-green;
+                cursor: pointer;
+                cursor: hand;
+            }
+        }
+
+        li {
+            padding-top: 30px;
+        }
+
+        li span:last-of-type {
+            padding-left: 15px;
+        }
+    }
+}
+
+.li-breadcrumb {
+    span {
+        padding-right: 5px;
     }
 
-    .modal-body {
-        padding: 0;
+    span:last-of-type {
+        padding-right: 0;
+    }
+}
+
+.container {
+    margin-left: $sidebar-width;
+    width: calc(100% - #{$sidebar-width});
+    padding: 15px 30px;
+}
+
+
+.li-checkbox {
+    margin: 0;
+    position: relative;
+    top: 3px;
+    background: white;
+    cursor: pointer;
+    cursor: hand;
+
+    input {
+        display: none;
+    }
+
+    input:checked + span {
+        border: 0;
+        background: $linode-green;
+    }
+
+    span {
+        width: 15px;
+        height: 15px;
+        display: block;
+        border: $linode-border;
+    }
+}
+
+.li-dropdown {
+    position: relative;
+    display: inline-block;
+
+    .li-dropdown-target {
+        display: none;
+        background: #fafafa;
+        border: $linode-border;
+        z-index: 9999;
+        width: 101px;
+
+        .li-dropdown-item {
+            padding: 0 5px;
+            height: 30px;
+            line-height: 30px;
+        }
+
+        .li-dropdown-item:hover,
+        .li-dropdown-item:active,
+        .li-dropdown-item:focus {
+            background: #f0f0f0;
+            cursor: pointer;
+            cursor: hand;
+        }
+    }
+
+    &:hover,
+    &:active,
+    &:focus {
+        .li-dropdown-target {
+            display: block;
+            position: absolute;
+            top: 28px;
+            left: -71px;
+        }
+    }
+}
+
+.card {
+    background: white;
+    border: $linode-border;
+    padding: 15px;
+    position: relative;
+    transition: background-color 0.1s ease;
+
+    &:hover,
+    &:active,
+    &:focus {
+        background: #fcfcfc;
+    }
+
+    table {
+        td {
+            padding-top: 10px;
+        }
+
+        td:last-of-type {
+            padding-left: 15px;
+        }
+    }
+
+    .card-type {
+        position: absolute;
+        bottom: 15px;
+        right: 15px;
+    }
+}
+
+.grid-list {
+    span {
+        padding-right: 5px;
+    }
+
+    span:last-of-type {
+        padding-right: 0;
+    }
+
+    a {
+        text-decoration: underline;
+    }
+}
+
+#navicon {
+    font-size: 20px;
+    padding-left: 15px;
+    position: relative;
+    top: 2px;
+
+    &:hover,
+    &:active,
+    &:focus {
+        color: $linode-blue;
     }
 }

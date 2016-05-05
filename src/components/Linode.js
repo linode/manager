@@ -3,35 +3,59 @@ import { Link } from 'react-router';
 import { LinodePower } from './LinodePower';
 import { LinodeStates } from '../constants';
 
+
+export let readableStatus = {
+    shutting_down: "Shutting off",
+    offline: "Offline",
+    running: "Running",
+    booting: "Booting",
+    provisioning: "Provisioning",
+    rebooting: "Rebooting"
+};
+
 export class Linode extends Component {
   render() {
-    const { linode, onPowerOn, onPowerOff, onReboot } = this.props;
+    const { linode, onSelect } = this.props;
     const pending = LinodeStates.pending.indexOf(linode.state) !== -1;
+    const select = () => onSelect(linode);
+
+    const checkbox = !linode._isSelected ?
+      <input type="checkbox// " onClick={select} /> :
+      <input type="checkbox" onClick={select}
+       checked="checked"/>;
+
     return (
-      <div className={`linode card ${linode.state} ${pending ? 'pending' : ''}`}>
-        <div className="row">
-          <div className="col-md-9">
-            <h4>
-              <span data-title={linode.state} className={`status ${linode.state}`}></span>
-              <Link to={`/linodes/${linode.id}`}>
-                {linode.label}
-              </Link>
-            </h4>
-            <ul className="list-unstyled">
-              <li>{linode.datacenter.label}</li>
-              { linode.ip_addresses.public.ipv4.map(a => <li key={a}>{a}</li>) }
-              <li>{linode.ip_addresses.public.ipv6}</li>
-            </ul>
-          </div>
-          <div className="col-md-3">
-            <LinodePower
-              linode={linode}
-              pending={pending}
-              onPowerOn={onPowerOn}
-              onPowerOff={onPowerOff}
-              onReboot={onReboot} />
-          </div>
+      <div className={`linode card ${linode.state}`}>
+        <div className="linode-header">
+          <label className="li-checkbox">
+            { checkbox }
+            <span />
+          </label>
+          <Link to={`/linodes/${linode.id}`} className="linode-label">{linode.label}</Link>
+          <span className={`linode-status ${linode.state}`}>{readableStatus[linode.state]}</span>
+          <a href="/lish" target="_blank" className="linode-lish pull-right">Lish</a>
         </div>
+        <table className="linode-details">
+          <tbody>
+            <tr>
+              <td><span className="fa fa-server"></span></td>
+              <td>1 GB RAM / 20 GB SSD / 1 Core</td>
+            </tr>
+            <tr>
+              <td><span className="fa fa-link"></span></td>
+              <td>{linode.ip_addresses.public.ipv4[0]}</td>
+            </tr>
+            <tr>
+              <td><span className="fa fa-globe"></span></td>
+              <td>{linode.datacenter.label}</td>
+            </tr>
+            <tr>
+              <td><span className="fa fa-database"></span></td>
+              <td>Last backup: 1 hour ago</td>
+            </tr>
+          </tbody>
+        </table>
+        <span className="card-type fa fa-th" />
       </div>
     );
   }
