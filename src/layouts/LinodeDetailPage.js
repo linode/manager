@@ -6,7 +6,6 @@ import {
   rebootLinode
 } from '../actions/linodes';
 import { LinodePower } from '../components/LinodePower';
-import { RecoveryModal } from '../components/RecoveryModal';
 import { LinodeStates } from '../constants';
 
 class LinodeDetailPage extends Component {
@@ -181,7 +180,6 @@ class LinodeDetailPage extends Component {
             {this.renderEvents(linode)}
           </div>
         </div>
-        <RecoveryModal visible={false} />
       </div>
     );
   }
