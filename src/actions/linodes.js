@@ -14,9 +14,7 @@ export function fetchLinodes(page = 0) {
 }
 
 export function toggleLinode(linode) {
-  return async (dispatch, getState) => {
-    dispatch({ type: UPDATE_LINODE, linode: { ...linode, _isSelected: !linode._isSelected } });
-  };
+  return { type: UPDATE_LINODE, linode: { ...linode, _isSelected: !linode._isSelected } };
 }
 
 export function updateLinode(id) {
