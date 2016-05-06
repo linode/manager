@@ -18,6 +18,10 @@ $nav-height: 84px;
 @import 'layout/linode-details';
 @import 'layout/linodes';
 
+* {
+    transition: all 0.25s ease-in;
+}
+
 body {
     background: #f4f4f4;
     height: 100%;
@@ -276,7 +280,6 @@ nav {
     border: $linode-border;
     padding: 15px;
     position: relative;
-    transition: background-color 0.1s ease;
 
     &:hover,
     &:active,
