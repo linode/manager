@@ -5,12 +5,11 @@ import logo from 'file!../../styles/assets/linode-logo.svg';
 class Navigation extends Component {
   render() {
     const { username } = this.props;
-    const gotoIndex = () => {this.props.router.push("/")};
       
     return (
       <nav id="main-nav" className="navbar navbar-default" role="navigation">
         <div className="navbar-header">
-          <div className="navbar-linode" onClick={gotoIndex}>
+          <div className="navbar-linode">
             <Link to="/">
               <img id="navbar-logo" src={logo}
                width="128" height="50" />
