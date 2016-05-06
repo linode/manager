@@ -12,3 +12,13 @@ export const LinodeStates = {
         "deleting"
     ]
 };
+
+
+export const LinodeStatesReadable = {
+  shutting_down: "Shutting off",
+  offline: "Offline",
+  running: "Running",
+  booting: "Booting",
+  provisioning: "Provisioning",
+  rebooting: "Rebooting"
+};

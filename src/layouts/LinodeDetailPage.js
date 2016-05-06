@@ -6,8 +6,7 @@ import {
   rebootLinode
 } from '../actions/linodes';
 import { LinodePower } from '../components/LinodePower';
-import { LinodeStates } from '../constants';
-import { readableStatus } from '../components/Linode';
+import { LinodeStates, LinodeStatesReadable } from '../constants';
 
 class LinodeDetailPage extends Component {
   constructor() {
@@ -165,7 +164,8 @@ class LinodeDetailPage extends Component {
 
     let ipAddresses = linode.ip_addresses;
 
-    let sanitizeIps = (pubPriv, type) => {
+    // Convert ip groups into an array
+    let arrayifyIps = (pubPriv, type) => {
       let ips = ipAddresses[pubPriv][type];
       if (Array.isArray(pubPriv)) {
         return ips;
@@ -175,11 +175,11 @@ class LinodeDetailPage extends Component {
       return [];
     };
 
-    let pubIpv4 = sanitizeIps("public", "ipv4");
-    let pubIpv6 = sanitizeIps("public", "ipv6");
-    let privIpv4 = sanitizeIps("private", "ipv4");
-    let privIpv6 = sanitizeIps("private", "ipv6");
-    let linkLocal = sanitizeIps("private", "link_local");
+    let pubIpv4 = arrayifyIps("public", "ipv4");
+    let pubIpv6 = arrayifyIps("public", "ipv6");
+    let privIpv4 = arrayifyIps("private", "ipv4");
+    let privIpv6 = arrayifyIps("private", "ipv6");
+    let linkLocal = arrayifyIps("private", "link_local");
 
     let renderIps = (ips) => ips.map(i => <div>{i}</div>);
 
@@ -193,7 +193,7 @@ class LinodeDetailPage extends Component {
         <div className="card header">
           <header>
             <h1>{linode.label}</h1>
-            <span className={`linode-status ${linode.state}`}>{readableStatus[linode.state]}</span>
+            <span className={`linode-status ${linode.state}`}>{LinodeStatesReadable[linode.state]}</span>
           </header>
           <table className="linode-details">
             <tbody>

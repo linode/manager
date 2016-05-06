@@ -1,17 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
 import { LinodePower } from './LinodePower';
-import { LinodeStates } from '../constants';
-
-
-export let readableStatus = {
-    shutting_down: "Shutting off",
-    offline: "Offline",
-    running: "Running",
-    booting: "Booting",
-    provisioning: "Provisioning",
-    rebooting: "Rebooting"
-};
+import { LinodeStatesReadable, LinodeStates } from '../constants';
 
 export class Linode extends Component {
   render() {
@@ -32,7 +22,7 @@ export class Linode extends Component {
             <span />
           </label>
           <Link to={`/linodes/${linode.id}`} className="linode-label">{linode.label}</Link>
-          <span className={`linode-status ${linode.state}`}>{readableStatus[linode.state]}</span>
+          <span className={`linode-status ${linode.state}`}>{LinodeStatesReadable[linode.state]}</span>
           <a href="/lish" target="_blank" className="linode-lish pull-right">Lish</a>
         </div>
         <table className="linode-details">
