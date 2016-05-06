@@ -5,47 +5,45 @@ import logo from 'file!../../styles/assets/linode-logo.svg';
 class Navigation extends Component {
   render() {
     const { username } = this.props;
+      
     return (
-      <nav id="main-nav" className="navbar navbar-default navbar-dark container" role="navigation">
+      <nav id="main-nav" className="navbar navbar-default" role="navigation">
         <div className="navbar-header">
-          <Link className="navbar-brand" to="/">
+          <div className="navbar-linode">
+            <Link to="/">
               <img id="navbar-logo" src={logo}
-                  width="115" height="45" />
-          </Link>
-          <p className="nav-text">
-              <strong>Manager</strong>
-          </p>
-        </div>
-        <div className="navbar-collapse collapse">
-          <ul className="nav navbar-nav">
+               width="128" height="50" />
+            </Link>
+          </div>
+          <div className="navbar-search">
+            <input type="search" placeholder="Search..." id="navbar-search" />
+            <div className="navbar-search-icon fa fa-search" aria-hidden="true"></div>
+          </div>
+          <div className="navbar-collapse collapse">
+            <ul className="nav navbar-nav">
               <li className="nav-item">
-                  <Link className="nav-link" to="/">Linodes</Link>
+                <a href="https://www.linode.com/docs/" className="nav-link">Documentation</a>
               </li>
               <li className="nav-item">
-                  <Link className="nav-link" to="/dns">DNS</Link>
+                <a href="https://forum.linode.com/" className="nav-link">Community</a>
               </li>
               <li className="nav-item">
-                  <Link className="nav-link" to="/node-balancers">Node Balancers</Link>
+                  <a href="https://developers.linode.com" className="nav-link">Developers</a>
               </li>
-          </ul>
-        </div>
-        {username ?
-          <div className="login-info">
-            <div className="pull-right nav-text">
-              <a className="btn btn-success" href="https://login.alpha.linode.com/logout">
-                  Log Out &nbsp;
-                  <i className="fa fa-caret-right" />
+            </ul>
+          </div>
+          {username ?
+            <div className="navbar-session pull-right">
+              <a href="/account" className="nav-text nav-user">
+                {username}
+              </a>
+              <span className="nav-notifications">1</span>
+              <a href="/logout" className="nav-text nav-logout">
+                Logout
               </a>
             </div>
-            <div className="pull-right nav-text" style={{
-                textTransform: 'none',
-                color: 'white',
-                fontWeight: 'bold',
-                marginTop: '0.5rem' }}>
-              Hi {username}! &nbsp;
-            </div>
-          </div>
-        : <span />}
+           : ''}
+        </div>
       </nav>
     );
   }

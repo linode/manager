@@ -1,187 +1,24 @@
 @import 'create';
 
-.linodes {
-    .display-group {
-        text-align: center;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+.linode-status {
+    color: $linode-blue;
 
-        h2 {
-            font-size: 28pt;
-        }
+    &.running {
+        color: $linode-green;
+    }
+
+    &.offline {
+        color: $linode-red;
     }
 }
 
-.linode, .new-linode {
-    height: 8rem;
-}
-
-.info {
-    ul {
-        margin-bottom: 0;
+.linode.card {
+    .linode-label {
+        padding: 0 15px;
+        text-decoration: underline;
     }
 
-    h4 {
-        margin-bottom: 1rem;
-        text-align: center;
+    .linode-lish {
+        text-decoration: underline;
     }
-
-    h5 {
-        font-size: 14pt;
-        text-align: center;
-        margin-bottom: 0;
-        margin-top: 0.5rem;
-    }
-
-    progress {
-        margin-bottom: 0;
-        margin-top: 0.5rem;
-    }
-}
-
-.power {
-    button {
-        position: relative;
-
-        &.btn-default {
-            color: black;
-        }
-
-        i {
-            width: 100%;
-            left: 0;
-            top: 8px;
-            position: absolute;
-            opacity: 1;
-            transition: opacity 0.25s linear;
-        }
-
-        .hover {
-            width: 100%;
-            left: 0;
-            position: absolute;
-            opacity: 0;
-            transition: opacity 0.25s linear;
-        }
-
-        &:hover {
-            i {
-                opacity: 0;
-            }
-            .hover {
-                opacity: 1;
-            }
-        }
-    }
-}
-
-.power-management {
-    padding: 1rem;
-}
-
-.pending {
-    box-shadow: 0px $elevation-1 0 rgba(0, 0, 0, 0.12) inset, 0px $elevation-1 0 rgba(0, 0, 0, 0.24) inset;
-    background-color: rgba(0,0,0,0.05) !important;
-    color: black !important;
-}
-
-.linode {
-    padding: 1rem;
-
-    h4 {
-        font-size: 14pt;
-        margin-bottom: 0.5rem;
-    }
-
-    a {
-        color: black;
-    }
-
-    ul {
-        font-size: 10pt;
-        margin-bottom: 0;
-    }
-
-    .btn-default {
-        background-color: transparent;
-        margin-bottom: .5rem;
-    }
-
-    .status {
-        $size: 0.75rem;
-        $tooltip: rgba(0,0,0,0.75);
-
-        width: $size;
-        height: $size;
-        display: inline-block;
-        border-radius: $size / 2;
-        box-shadow: 0 0 1px 1px #444;
-        margin-right: 0.5rem;
-        position: relative;
-
-        &:hover {
-            &::after, &::before {
-                opacity: 1;
-                visibility: visible;
-            }
-        }
-
-        &::after {
-            content: attr(data-title);
-            position: absolute;
-            left: $size;
-            top: -($size * 0.35);
-            margin-left: 0.5rem;
-            background: $tooltip;
-            color: white;
-            padding: 0.25rem 0.5rem;
-            font-size: 10pt;
-            border-radius: 3px;
-            display: block;
-            opacity: 0;
-            transition: opacity 0.25s linear;
-            visibility: collapse;
-        }
-
-        &::before {
-            content: "";
-            position: absolute;
-            width: 0;
-            height: 0;
-            border-top: ($size * 0.5) solid transparent;
-            border-right: 0.5rem solid $tooltip;
-            border-bottom: ($size * 0.5) solid transparent;
-            left: $size;
-            top: ($size / 10);
-            display: block;
-            opacity: 0;
-            transition: opacity 0.25s linear;
-            visibility: collapse;
-        }
-        
-        &.running {
-            background-color: lighten($brand-success, 10);
-        }
-
-        &.provisioning, &.booting {
-            background-color: lightgrey;
-        }
-
-        &.offline {
-            background-color: red;
-        }
-    }
-}
-
-.new-linode {
-    button {
-        width: 100%;
-        height: 100%;
-        font-size: 24pt;
-    }
-}
-
-.btn-default {
-    background-color: white !important;
 }

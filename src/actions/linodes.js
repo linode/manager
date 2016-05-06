@@ -13,6 +13,10 @@ export function fetchLinodes(page = 0) {
   };
 }
 
+export function toggleLinode(linode) {
+  return { type: UPDATE_LINODE, linode: { ...linode, _isSelected: !linode._isSelected } };
+}
+
 export function updateLinode(id) {
   return async (dispatch, getState) => {
     const { token } = getState().authentication;

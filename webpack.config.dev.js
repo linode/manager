@@ -30,8 +30,5 @@ module.exports = {
         loaders: ["style", "css", "sass"]
       }
     ]
-  },
-  sassLoader: {
-    includePaths: [path.resolve(__dirname, "./styles")]
   }
 };

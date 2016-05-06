@@ -1,0 +1,24 @@
+.details-page {
+    .card {
+        width: 100%;
+        padding: 15px 30px;
+        margin-top: 15px;
+    }
+
+    header {
+        h1, h2 {
+            display: inline-block;
+        }
+
+        .linode-status,
+        .networking-full {
+            margin-left: 15px;
+        }
+    }
+
+    .graph {
+        width: 100%;
+        height: 200px;
+        border: $linode-border;
+    }
+}
