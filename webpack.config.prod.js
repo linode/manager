@@ -30,5 +30,8 @@ module.exports = {
       loaders: ['babel'],
       include: path.join(__dirname, 'src')
     }]
+  },
+  sassLoader: {
+    includePaths: [path.resolve(__dirname, "./node_modules/bootstrap/scss/")]
   }
 };

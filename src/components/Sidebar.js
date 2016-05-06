@@ -17,8 +17,8 @@ export default class Sidebar extends Component {
         <ul className="list-unstyled">
         {
           links.map(({icon, name, link}) =>
-            <li>
-              <Link to={link}>
+            <li key={name}>
+              <Link to="/">
                 <span className={`fa fa-${icon}`} />
                 <span>{name}</span>
               </Link>
@@ -29,8 +29,4 @@ export default class Sidebar extends Component {
       </div>
     );
   }
-};
-
-Sidebar.contextTypes = {
-  router: React.PropTypes.object.isRequired  
 };

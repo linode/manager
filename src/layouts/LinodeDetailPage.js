@@ -160,7 +160,7 @@ class LinodeDetailPage extends Component {
 
   render() {
     let linode = this.getLinode();
-    if (!linode) return "";
+    if (!linode) return <span></span>;
 
     let ipAddresses = linode.ip_addresses;
 
@@ -181,7 +181,7 @@ class LinodeDetailPage extends Component {
     let privIpv6 = arrayifyIps("private", "ipv6");
     let linkLocal = arrayifyIps("private", "link_local");
 
-    let renderIps = (ips) => ips.map(i => <div>{i}</div>);
+    let renderIps = (ips) => ips.map(i => <div key={i}>{i}</div>);
 
     return (
       <div className="details-page">

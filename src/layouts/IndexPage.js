@@ -119,7 +119,11 @@ class IndexPage extends Component {
     const [first, ...rest] = actions;
 
     const dropdownBody = rest.map(action =>
-      <div className="li-dropdown-item" onClick={ this.doToSelected(action.action) }>{ action.name }</div>
+      <div key={action.name}
+          className="li-dropdown-item"
+          onClick={ this.doToSelected(action.action) }>
+          { action.name }
+      </div>
     );
 
     return (
