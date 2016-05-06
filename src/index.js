@@ -40,9 +40,9 @@ const init = () => {
 
   render(
     <Provider store={store}>
-      <Layout>
+      <div>
         <Router history={history}>
-          <Route onEnter={checkLogin} path="/">
+          <Route onEnter={checkLogin} path="/" component={Layout}>
             <IndexRoute component={IndexPage} />
             <Route path="linodes/create" component={CreateLinodePage} />
             <Route path="linodes/:linodeId" component={LinodeDetailPage} />
@@ -53,7 +53,7 @@ const init = () => {
           </Route>
         </Router>
         <DevTools />
-      </Layout>
+      </div>
     </Provider>,
     document.getElementById('root')
   );

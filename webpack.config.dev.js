@@ -30,5 +30,8 @@ module.exports = {
         loaders: ["style", "css", "sass"]
       }
     ]
+  },
+  sassLoader: {
+    includePaths: [path.resolve(__dirname, "./node_modules/bootstrap/scss/")]
   }
 };

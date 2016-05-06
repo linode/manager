@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
-import logo from 'file!../../styles/assets/linode-logo.svg';
+import logo from 'file!../../assets/linode-logo.svg';
 
 class Navigation extends Component {
   render() {
