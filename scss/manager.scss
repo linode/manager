@@ -59,7 +59,7 @@ nav {
         display: inline-block;
         margin-right: 30px;
         position: relative;
-        top: -37.5px; /* 50 * .75 */
+        top: -37.5px; /* magic number */
     }
 
     .navbar-search {
