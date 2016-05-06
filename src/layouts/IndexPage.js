@@ -167,7 +167,7 @@ class IndexPage extends Component {
                 <span>|</span>
                 <span><a href="/">List</a></span>
               </span>
-              <span className="fa fa-navicon" id="navicon" />
+              <span className="fa fa-navicon" className="navicon" />
             </div>
           </div>
         </header>
