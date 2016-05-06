@@ -10,7 +10,7 @@ export class Linode extends Component {
     const select = () => onSelect(linode);
 
     const checkbox = !linode._isSelected ?
-      <input type="checkbox// " onClick={select} /> :
+      <input type="checkbox" onClick={select} /> :
       <input type="checkbox" onClick={select}
        checked="checked"/>;
 
