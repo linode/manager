@@ -8,12 +8,12 @@ function transformItem(item) {
 }
 
 /*
- * multiple: the name of several of the resource (i.e. "linodes")
+ * plural: the name of several of the resource (i.e. "linodes")
  *
- * single: the name of one of the resource (i.e. "linode")
+ * singular: the name of one of the resource (i.e. "linode")
  *
  * actions: {
- *  update_single,
+ *  update_singular,
  *  update_many,
  *  delete_one
  * }
@@ -23,19 +23,19 @@ function transformItem(item) {
  * transform: a function each object will be run through to add custom
  * properties and what-not
  */
-export default function make_api_list(multiple, single,
+export default function make_api_list(plural, singular,
     actions, transform=d => d) {
 
   const default_state = {
     pagesFetched: [ ],
     totalPages: -1,
-    [multiple]: {},
-    _single: single,
-    _multiple: multiple
+    [plural]: {},
+    _singular: singular,
+    _plural: plural
   };
 
   actions = {
-      update_single: -1,
+      update_singular: -1,
       update_many: -1,
       delete_one: -1,
       ...actions
@@ -52,26 +52,26 @@ export default function make_api_list(multiple, single,
           response.page
         ],
         totalPages: response.total_pages,
-        [multiple]: {
-          ...state[multiple],
-          ...response[multiple].reduce((s, i) =>
+        [plural]: {
+          ...state[plural],
+          ...response[plural].reduce((s, i) =>
             ({ ...s, [i.id]: transform(transformItem(i)) }), { })
         }
       };
-    case actions.update_single:
-      const item = action[single];
+    case actions.update_singular:
+      const item = action[singular];
       return {
         ...state,
-        [multiple]: {
-          ...state[multiple],
-          [item.id]: { ...state[multiple][item.id], ...item }
+        [plural]: {
+          ...state[plural],
+          [item.id]: { ...state[plural][item.id], ...item }
         }
       };
     case actions.delete_one:
       const { id } = action;
       return {
         ...state,
-        [multiple]: _.omit(state[multiple], id)
+        [plural]: _.omit(state[plural], id)
       };
     default:
       return state;
