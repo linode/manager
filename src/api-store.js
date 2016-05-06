@@ -81,11 +81,11 @@ export default function make_api_list(multiple, single,
 
 import { fetch } from './fetch';
 
-export function make_fetch_page(action, endpoint) {
-  return (page) => {
+export function make_fetch_page(action, plural) {
+  return (page = 0) => {
     return async (dispatch, getState) => {
       const { token } = getState().authentication;
-      const response = await fetch(token, `/${endpoint}?page=${page+1}`);
+      const response = await fetch(token, `/${plural}?page=${page+1}`);
       const json = await response.json();
       dispatch({ type: action, response: json });
     };
@@ -123,4 +123,17 @@ export function make_update_until(action, plural, singular) {
       dispatch({ type: action, [singular]: { id, _polling: false } });
     };
   }
+}
+
+export function make_delete_item(action, plural) {
+  return (id) => {
+    return async (dispatch, getState) => {
+      const state = getState();
+      const { token } = state.authentication;
+      dispatch({ type: action, id });
+      const response = await fetch(token, `/${plural}/${id}`, { method: 'DELETE' });
+      const json = await response.json();
+      // Note: do we want to do anything at this point?
+    };
+  };
 }
