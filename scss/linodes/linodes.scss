@@ -57,6 +57,10 @@ table.linodes {
         th {
             font-weight: normal;
         }
+
+        th:last-of-type {
+            border-right: $linode-border;
+        }
     }
 }
 

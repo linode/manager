@@ -28,6 +28,7 @@ body {
     min-width: 1007px; /* can fix later */
     color: $linode-black;
     font-size: 15px;
+    margin-top: $nav-height;
 }
 
 h1, h2 {
@@ -48,6 +49,13 @@ h2 {
 
 .selected {
     background: #fffcf0 !important;
+}
+
+.header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 9999;
 }
 
 nav {
@@ -153,8 +161,8 @@ nav {
 }
 
 .sidebar {
-    position: absolute;
-    top: 84px;
+    position: fixed;
+    top: $nav-height;
     left: 0;
     bottom: 0;
     width: $sidebar-width;

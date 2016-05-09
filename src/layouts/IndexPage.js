@@ -120,14 +120,16 @@ class IndexPage extends Component {
         {group ? <h2 className="display-group text-muted">{group}</h2> : ""}
         <table className="linodes">
           <thead>
-            <th></th>
-            <th>Label</th>
-            <th>Status</th>
-            <th>Plan</th>
-            <th>IP Address</th>
-            <th>Datacenter</th>
-            <th>Backups</th>
-            <th></th>
+            <tr>
+              <th>&nbsp;</th>
+              <th>Label</th>
+              <th>Status</th>
+              <th>Plan</th>
+              <th>IP Address</th>
+              <th>Datacenter</th>
+              <th>Backups</th>
+              <th>&nbsp;</th>
+            </tr>
           </thead>
           <tbody>
             {linodes.map(l => {
