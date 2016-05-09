@@ -11,8 +11,10 @@ class Layout extends Component {
       <div className="layout">
         <Header username={username} />
         <Sidebar />
-        <div className="container">
-          {this.props.children}
+        <div className="main">
+          <div className="container">
+            {this.props.children}
+          </div>
         </div>
       </div>
     );

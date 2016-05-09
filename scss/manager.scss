@@ -19,7 +19,7 @@ $nav-height: 84px;
 @import 'layout/linodes';
 
 * {
-    transition: all 0.25s ease-in;
+    transition: all 0.2s ease-in;
 }
 
 body {
@@ -46,6 +46,10 @@ h2 {
    margin-bottom: 15px;
 }
 
+.selected {
+    background: #fffcf0 !important;
+}
+
 nav {
     height: $nav-height;
     padding: 0 30px;
@@ -55,6 +59,7 @@ nav {
         background: #333;
         border: 0;
         border-radius: 0;
+        padding: 0 15px;
     }
 
     .navbar-header {
@@ -205,7 +210,7 @@ nav {
     }
 }
 
-.container {
+.main {
     margin-left: $sidebar-width;
     width: calc(100% - #{$sidebar-width});
     padding: 15px 30px;
@@ -224,9 +229,11 @@ nav {
         display: none;
     }
 
-    input:checked + span {
-        border: 0;
-        background: $linode-green;
+    input:checked + span:after {
+        content: "\02713";
+        position: absolute;
+        top: -8px;
+        left: 1px;
     }
 
     span {
@@ -242,25 +249,11 @@ nav {
     display: inline-block;
 
     .li-dropdown-target {
-        display: none;
+        display: none;  
         background: #fafafa;
         border: $linode-border;
         z-index: 9999;
         width: 101px;
-
-        .li-dropdown-item {
-            padding: 0 5px;
-            height: 30px;
-            line-height: 30px;
-        }
-
-        .li-dropdown-item:hover,
-        .li-dropdown-item:active,
-        .li-dropdown-item:focus {
-            background: #f0f0f0;
-            cursor: pointer;
-            cursor: hand;
-        }
     }
 
     &:hover,
@@ -275,26 +268,35 @@ nav {
     }
 }
 
+.li-dropdown-item {
+    padding: 0 5px;
+    height: 30px;
+    line-height: 30px;
+}
+
+.li-dropdown-item:hover,
+.li-dropdown-item:active,
+.li-dropdown-item:focus,
+.li-dropdown:hover .li-dropdown-activator,
+.li-dropdown:active .li-dropdown-activator,
+.li-dropdown:focus .li-dropdown-activator {
+    background: #f0f0f0;
+    cursor: pointer;
+    cursor: hand;
+}
+
+
 .card {
     background: white;
     border: $linode-border;
     padding: 15px;
     position: relative;
+    border-radius: 0;
 
     &:hover,
     &:active,
     &:focus {
         background: #fcfcfc;
-    }
-
-    table {
-        td {
-            padding-top: 10px;
-        }
-
-        td:last-of-type {
-            padding-left: 15px;
-        }
     }
 
     .card-type {
@@ -329,4 +331,10 @@ nav {
     &:focus {
         color: $linode-blue;
     }
+}
+
+@-webkit-keyframes pulse {
+    0% {opacity: 1.0;}
+    75% {opacity: 0.4;}
+    95% {opacity: 0.75;}
 }

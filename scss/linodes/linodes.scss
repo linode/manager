@@ -2,23 +2,94 @@
 
 .linode-status {
     color: $linode-blue;
+    animation: pulse 1.5s infinite;
 
     &.running {
         color: $linode-green;
+        animation: none;
     }
 
     &.offline {
         color: $linode-red;
+        animation: none;
     }
+}
+
+.linode .li-checkbox input:checked + span:after {
+    top: -3px;
+    left: 2px;
+}
+
+.linode-lish,
+.linode-label {
+    text-decoration: underline;
 }
 
 .linode.card {
     .linode-label {
-        padding: 0 15px;
-        text-decoration: underline;
+        display: inline-block;
+        margin: 0 15px 10px 15px;
+    }
+}
+
+ul.linode-details {
+    margin-bottom: 0;
+
+    li:not(:first-of-type) {
+        padding-top: 10px;
     }
 
-    .linode-lish {
-        text-decoration: underline;
+    li span:last-of-type {
+        padding-left: 15px;
+    }
+}
+
+table.linodes {
+    width: 100%;
+
+    thead {
+        background: white;
+        border: $linode-border;
+        border-bottom: 0;
+        height: 35px;
+        line-height: 35px;
+
+        th {
+            font-weight: normal;
+        }
+    }
+}
+
+.linode.row {
+    border: $linode-border;
+    background: white;
+    height: 35px;
+    line-height: 35px;
+    margin: 0 15px;
+
+    .li-checkbox span {
+        padding: 0 !important;
+    }
+
+    & .li-checkbox input:checked + span:after {
+        top: -10px;
+    }
+
+    .linode-header,
+    .linode-details {
+        display: inline-block;
+    }
+
+    td:first-of-type {
+        padding-left: 15px;
+    }
+
+    td:last-of-type {
+        padding-right: 15px;
+    }
+
+    td:not(:first-of-type) {
+        overflow: hidden;
+        word-wrap: nowrap;
     }
 }
