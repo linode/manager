@@ -106,22 +106,26 @@ nav {
         }
     }
 
+    a {
+        color: $nav-link;
+        font-size: 15px;
+        line-height: $nav-height;
+    }
+
+    a:hover,
+    a:active,
+    a:focus {
+        color: darken($nav-link, 15%);
+        text-decoration: none;
+    }
+
     .navbar-collapse {
         &.navbar-collapse {
             display: inline-block !important;
             padding: 0;
 
             a {
-                color: $nav-link;
-                font-size: 15px;
-                line-height: $nav-height;
                 padding: 0 15px 0 0;
-            }
-
-            a:hover,
-            a:active,
-            a:focus {
-                color: $linode-green;
             }
         }
     }
@@ -139,19 +143,11 @@ nav {
         }
 
         a {
-            color: $nav-link;
             padding-right: 15px;
         }
 
         a:last-of-type {
             padding-right: 0;
-        }
-
-        a:hover,
-        a:active,
-        a:focus {
-            text-decoration: none;
-            color: $linode-green;
         }
     }
 }
