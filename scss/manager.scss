@@ -338,10 +338,25 @@ nav {
     }
 }
 
-@keyframes pulse,
-@-moz-keyframes pulse,
-@-o-keyframes pulse,
+@-moz-keyframes pulse {
+    0% {opacity: 1.0;}
+    75% {opacity: 0.4;}
+    95% {opacity: 0.75;}
+}
+
+@-o-keyframes pulse {
+    0% {opacity: 1.0;}
+    75% {opacity: 0.4;}
+    95% {opacity: 0.75;}
+}
+
 @-webkit-keyframes pulse {
+    0% {opacity: 1.0;}
+    75% {opacity: 0.4;}
+    95% {opacity: 0.75;}
+}
+
+@keyframes pulse {
     0% {opacity: 1.0;}
     75% {opacity: 0.4;}
     95% {opacity: 0.75;}
