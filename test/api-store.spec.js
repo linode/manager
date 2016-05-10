@@ -4,7 +4,10 @@ import deepFreeze from 'deep-freeze';
 import * as fetch from '~/fetch';
 import make_api_list from '../src/api-store';
 import {
-  make_fetch_page
+  make_fetch_page,
+  make_update_item,
+  make_update_until,
+  make_delete_item
 } from '../src/api-store';
 
 const mock_foobars_response = {
@@ -190,10 +193,11 @@ describe("api-store/make_api_list", () => {
 
 });
 
-const mock_context = async (f, rsp) => {
+const mock_context = async (f, rsp, state={}) => {
   const auth = { token: 'token' };
   let getState = sinon.stub().returns({
-    authentication: auth
+    authentication: auth,
+    ...state
   });
   let dispatch = sinon.spy();
   let fetchStub = sinon.stub(fetch, "fetch").returns({
@@ -210,7 +214,7 @@ describe("api-store/make_fetch_page", sinon.test(() => {
     expect(f()).to.be.a("function");
   });
 
-  it('performs an API request', async () => {
+  it('fetches a page of items from the API', async () => {
     await mock_context(async ({
         auth, dispatch, getState, fetchStub
       }) => {
@@ -240,5 +244,57 @@ describe("api-store/make_fetch_page", sinon.test(() => {
       sinon.assert.calledWith(fetchStub,
         auth.token, '/foobars?page=2');
     }, mock_foobars_response);
+  });
+}));
+
+describe("api-store/make_update_item", sinon.test(() => {
+  it('returns a function that itself returns a function', () => {
+    const f = make_update_item("UPDATE_FOOBAR", "foobars", "foobar");
+    expect(f).to.be.a("function");
+    expect(f()).to.be.a("function");
+  });
+
+  it('fetches an item from the API', async () => {
+    await mock_context(async ({
+        auth, dispatch, getState, fetchStub
+      }) => {
+      const f = make_update_item("UPDATE_FOOBAR", "foobars", "foobar");
+      const p = f("foobar_1");
+
+      await p(dispatch, getState);
+
+      sinon.assert.calledWith(fetchStub,
+        auth.token, '/foobars/foobar_1');
+      sinon.assert.calledWith(dispatch, {
+        type: "UPDATE_FOOBAR",
+        foobar: mock_foobars_response.foobars[0]
+      });
+    }, mock_foobars_response.foobars[0]);
+  });
+}));
+
+describe("api-store/make_delete_item", sinon.test(() => {
+  it('returns a function that itself returns a function', () => {
+    const f = make_delete_item("DELETE_FOOBAR", "foobars");
+    expect(f).to.be.a("function");
+    expect(f()).to.be.a("function");
+  });
+
+  it('performs the API request', async () => {
+    await mock_context(async ({
+        auth, dispatch, getState, fetchStub
+      }) => {
+      const f = make_delete_item("DELETE_FOOBAR", "foobars");
+      const p = f("foobar_1");
+
+      await p(dispatch, getState);
+
+      sinon.assert.calledWith(fetchStub,
+        auth.token, '/foobars/foobar_1', { method: "DELETE" });
+      sinon.assert.calledWith(dispatch, {
+        type: "DELETE_FOOBAR",
+        id: "foobar_1"
+      });
+    }, { });
   });
 }));
