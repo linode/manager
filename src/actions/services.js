@@ -1,12 +1,6 @@
-import { fetch } from '../fetch';
+import { make_fetch_page } from '~/api-store';
 
 export const UPDATE_SERVICES = '@@services/UPDATE_SERVICES';
 
-export function fetchServices(page = 0) {
-  return async (dispatch, getState) => {
-    const { token } = getState().authentication;
-    const response = await fetch(token, `/services?page=${page+1}`);
-    const json = await response.json();
-    dispatch({ type: UPDATE_SERVICES, response: json });
-  };
-}
+export const fetchServices = make_fetch_page(
+    UPDATE_SERVICES, "services");
