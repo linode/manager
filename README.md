@@ -62,3 +62,8 @@ Or:
 Testing using `devenv-test` without docker is not currently supported.
 
 TODO: Add info for when this repo becomes open source
+
+### Resources
+
+[React and Redux](https://egghead.io/series/getting-started-with-redux)
+[Chai](http://chaijs.com/)
