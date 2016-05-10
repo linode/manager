@@ -338,6 +338,9 @@ nav {
     }
 }
 
+@keyframes pulse,
+@-moz-keyframes pulse,
+@-o-keyframes pulse,
 @-webkit-keyframes pulse {
     0% {opacity: 1.0;}
     75% {opacity: 0.4;}
