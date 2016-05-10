@@ -26,8 +26,8 @@
         border: $linode-border;
         height: 30px;
         line-height: 30px;
-        margin-bottom: 15px;
         margin-left: 5px;
+        margin-bottom: 15px;
         background: #fafafa;
 
         label {
@@ -42,8 +42,8 @@
         .li-dropdown-first {
             display: inline-block;
             margin-left: 10px;
-            border-left: $linode-border;
-            border-right: $linode-border;
+            border: $linode-border;
+            border-top: 0;
             padding: 0 10px;
             cursor: pointer;
             cursor: hand;

@@ -195,22 +195,20 @@ class LinodeDetailPage extends Component {
             <h1>{linode.label}</h1>
             <span className={`linode-status ${linode.state}`}>{LinodeStatesReadable[linode.state]}</span>
           </header>
-          <table className="linode-details">
-            <tbody>
-              <tr>
-                <td><span className="fa fa-server"></span></td>
-                <td>1 GB RAM / 20 GB SSD / 1 Core</td>
-              </tr>
-              <tr>
-                <td><span className="fa fa-globe"></span></td>
-                <td>{linode.datacenter.label}</td>
-              </tr>
-              <tr>
-                <td><span className="fa fa-database"></span></td>
-                <td>Last backup: 1 hour ago</td>
-              </tr>
-            </tbody>
-          </table>
+          <ul className="linode-details list-unstyled">
+            <li>
+              <span className="fa fa-server"></span>
+              1 GB RAM / 20 GB SSD / 1 Core
+            </li>
+            <li>
+              <span className="fa fa-globe"></span>
+              {linode.datacenter.label}
+            </li>
+            <li>
+              <span className="fa fa-database"></span>
+              Last backup: 1 hour ago
+            </li>
+          </ul>
         </div>
         <div className="card performance">
           <h2>Performance</h2>
