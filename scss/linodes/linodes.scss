@@ -38,7 +38,7 @@
 .linode-power:active {
     border-color: #ddd;
     color: lighten($linode-green, 10%);
-    background: #f3f3f3;
+    background: darken($linode-light-gray, 1%);
 }
 
 .linode.card {
