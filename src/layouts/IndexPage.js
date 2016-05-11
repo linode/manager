@@ -124,7 +124,6 @@ class IndexPage extends Component {
               <th>&nbsp;</th>
               <th>Label</th>
               <th>Status</th>
-              <th>Plan</th>
               <th>IP Address</th>
               <th>Datacenter</th>
               <th>Backups</th>

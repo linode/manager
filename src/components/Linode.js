@@ -13,6 +13,9 @@ export class Linode extends Component {
         <input type="checkbox" checked="checked" onClick={select} /> :
         <input type="checkbox" onClick={select} />;
 
+    const power = linode.state == "running" ? "fa-refresh" :
+            linode.state == "offline" ? "fa-power-off" : "";
+
     return (
       <div className={`linode card ${linode.state} ${selectedClass}`}>
         <div className="linode-header">
@@ -22,16 +25,16 @@ export class Linode extends Component {
           </label>
           <Link to={`/linodes/${linode.id}`} className="linode-label">{linode.label}</Link>
           <span className={`linode-status ${linode.state}`}>{LinodeStatesReadable[linode.state]}</span>
-          <a href="/lish" className="linode-lish pull-right">Lish</a>
+          <span className={`linode-power fa ${power} pull-right`}></span>
         </div>
         <ul className="linode-details list-unstyled">
           <li>
-            <span className="fa fa-server"></span>
-            1 GB RAM / 20 GB SSD / 1 Core
-          </li>
-          <li>
             <span className="fa fa-link"></span>
             {linode.ip_addresses.public.ipv4[0]}
+          </li>
+          <li>
+            <span className="fa fa-link invisible"></span>
+            {linode.ip_addresses.public.ipv6}
           </li>
           <li>
             <span className="fa fa-globe"></span>
@@ -56,6 +59,9 @@ export class Linode extends Component {
         <input type="checkbox" checked="checked" onClick={select} /> :
         <input type="checkbox" onClick={select} />;
 
+    const power = linode.state == "running" ? "fa-refresh" :
+            linode.state == "offline" ? "fa-power-off" : "";
+
     return (
       <tr className={`linode row ${linode.state} ${selectedClass}`}>
         <td>
@@ -71,10 +77,7 @@ export class Linode extends Component {
           <span className={`linode-status ${linode.state}`}>{LinodeStatesReadable[linode.state]}</span>
         </td>
         <td>
-          1 GB RAM / 20 GB SSD / 1 Core
-        </td>
-        <td>
-          {linode.ip_addresses.public.ipv4[0]}
+          {linode.ip_addresses.public.ipv4[0]}, {linode.ip_addresses.public.ipv6}
         </td>
         <td>
           {linode.datacenter.label}
@@ -83,7 +86,7 @@ export class Linode extends Component {
           Last backup: 1 hour ago
         </td>
         <td>
-          <a href="/lish" className="linode-lish">Lish</a>
+          <span className={`fa ${power}`}></span>
         </td>
       </tr>
     );

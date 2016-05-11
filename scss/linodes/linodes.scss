@@ -1,5 +1,11 @@
 @import 'create';
 
+.linode {
+    .fa {
+        color: #ccc;
+    }
+}
+
 .linode-status {
     color: $linode-blue;
     animation: pulse 1.5s infinite;
@@ -26,9 +32,25 @@
 }
 
 .linode.card {
+    padding: 0;
+
+    .linode-header {
+        border-bottom: 1px solid #ccc;
+        padding: 15px;
+        background: #fcfcfc;
+
+        * {
+             line-height: 22px;
+        }
+    }
+
+    .linode-details {
+        padding: 15px;
+    }
+
     .linode-label {
         display: inline-block;
-        margin: 0 15px 10px 15px;
+        margin: 0 15px;
     }
 }
 
