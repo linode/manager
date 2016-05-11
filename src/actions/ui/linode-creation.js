@@ -11,7 +11,7 @@ export const GENERATE_PASSWORD = "@@ui@@linode-creation/GENERATE_PASSWORD";
 export const TOGGLE_SHOW_PASSWORD = "@@ui@@linode-creation/TOGGLE_SHOW_PASSWORD";
 export const TOGGLE_CREATING = "@@ui@@linode-creation/TOGGLE_CREATING";
 
-import { UPDATE_LINODE, updateLinodeUntil } from '../linodes';
+import { UPDATE_LINODE, updateLinodeUntil } from '~/actions/api/linodes';
 
 export function changeSourceTab(tab) {
   return { type: CHANGE_SOURCE_TAB, tab };

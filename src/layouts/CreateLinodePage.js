@@ -6,9 +6,9 @@ import SourceSelection from '../containers/create-linode/SourceSelection';
 import ServiceSelection from '../containers/create-linode/ServiceSelection';
 import DatacenterSelection from '../components/create-linode/DatacenterSelection';
 import OrderSummary from '../components/create-linode/OrderSummary';
-import { fetchDistros } from '../actions/distros';
-import { fetchDatacenters } from '../actions/datacenters';
-import { fetchServices } from '../actions/services';
+import { fetchDistros } from '~/actions/api/distros';
+import { fetchDatacenters } from '~/actions/api/datacenters';
+import { fetchServices } from '~/actions/api/services';
 import {
   changeSourceTab,
   selectSource,
@@ -18,7 +18,7 @@ import {
   generatePassword,
   toggleShowPassword,
   createLinode
-} from '../actions/ui/linode-creation';
+} from '~/actions/ui/linode-creation';
 
 class CreateLinodePage extends Component {
   constructor() {
@@ -74,9 +74,9 @@ class CreateLinodePage extends Component {
 
 function select(state) {
   return {
-    datacenters: state.datacenters.datacenters,
-    distros: state.distros.distributions,
-    services: Object.values(state.services.services).filter(
+    datacenters: state.api.datacenters.datacenters,
+    distros: state.api.distros.distributions,
+    services: Object.values(state.api.services.services).filter(
         s => s.service_type === 'linode'),
     ui: state.ui.linodeCreation,
   };
