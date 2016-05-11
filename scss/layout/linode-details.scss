@@ -18,9 +18,23 @@
            margin: 0;
         }
 
-        .linode-status,
-        .networking-full {
+        .linode-status {
             margin-left: 15px;
+        }
+
+        a {
+            padding-right: 30px;
+        }
+
+        .li-dropdown-body {
+            &:hover,
+            &:active,
+            &:focus {
+                .li-dropdown-target {
+                    top: 29px;
+                    left: -71px;
+                }
+            }
         }
     }
 

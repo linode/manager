@@ -40,26 +40,14 @@
         }
 
         .li-dropdown-first {
-            display: inline-block;
-            margin-left: 10px;
             border: $linode-border;
             border-top: 0;
-            padding: 0 10px;
-            cursor: pointer;
-            cursor: hand;
+            margin-left: 10px;
             height: 29px;
         }
 
         .li-dropdown-activator {
-            display: inline-block;
-            line-height: 29px;
-            font-size: 15px;
-            padding: 0 10px;
-
-            span {
-                position: relative;
-                top: -3px;
-            }
+            border: 0;
         }
     }
 }

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { Linode, NewLinode } from '../components/Linode';
+import Dropdown from '../components/Dropdown';
 import { LinodeStates } from '../constants';
 import _ from 'underscore';
 import {
@@ -154,33 +155,14 @@ class IndexPage extends Component {
   }
     
   renderActions() {
-    const actions = [
-      { action: this.reboot, name: "Reboot" },
-      { action: this.powerOn, name: "Power On" },
-      { action: this.powerOff, name: "Power Off" },
-      { action: this.remove, name: "Delete" }
-    ];
+    const elements = [
+      { _action: this.reboot, name: "Reboot" },
+      { _action: this.powerOn, name: "Power On" },
+      { _action: this.powerOff, name: "Power Off" },
+      { _action: this.remove, name: "Delete" }
+    ].map(element => ({ ...element, action: this.doToSelected(element._action) }));
 
-    const [first, ...rest] = actions;
-
-    const dropdownBody = rest.map(action =>
-      <div key={action.name}
-          className="li-dropdown-item"
-          onClick={ this.doToSelected(action.action) }>
-          { action.name }
-      </div>
-    );
-
-    return (
-      <span className="linode-actions">
-        <span onClick={ this.doToSelected(first.action) }
-         className="li-dropdown-item li-dropdown-first">{ first.name }</span>
-        <span className="li-dropdown">
-          <span className="li-dropdown-activator"><span className="fa fa-sort-down" /></span>
-          <div className="li-dropdown-target">{ dropdownBody }</div>
-        </span>
-      </span>
-    );
+    return <Dropdown elements={elements} />;
   }
 
   render() {

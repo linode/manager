@@ -18,6 +18,7 @@ $nav-height: 84px;
 @import 'linodes/linodes';
 @import 'layout/linode-details';
 @import 'layout/linodes';
+@import 'components/dropdown';
 
 * {
     transition: background .35s, color .2s, border .1s;
@@ -259,48 +260,6 @@ nav {
         border: $linode-border;
     }
 }
-
-.li-dropdown {
-    position: relative;
-    display: inline-block;
-
-    .li-dropdown-target {
-        display: none;  
-        background: #fafafa;
-        border: $linode-border;
-        z-index: 9999;
-        width: 101px;
-    }
-
-    &:hover,
-    &:active,
-    &:focus {
-        .li-dropdown-target {
-            display: block;
-            position: absolute;
-            top: 28px;
-            left: -71px;
-        }
-    }
-}
-
-.li-dropdown-item {
-    padding: 0 5px;
-    height: 30px;
-    line-height: 30px;
-}
-
-.li-dropdown-item:hover,
-.li-dropdown-item:active,
-.li-dropdown-item:focus,
-.li-dropdown:hover .li-dropdown-activator,
-.li-dropdown:active .li-dropdown-activator,
-.li-dropdown:focus .li-dropdown-activator {
-    background: #f0f0f0;
-    cursor: pointer;
-    cursor: hand;
-}
-
 
 .card {
     background: $linode-white;
