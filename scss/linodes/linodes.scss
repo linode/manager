@@ -32,7 +32,6 @@
 }
 
 .linode-power {
-    transition: none;
     cursor: pointer;
     cursor: hand;
     padding: 2px 5px;
@@ -43,8 +42,9 @@
 .linode-power:hover,
 .linode-power:focus,
 .linode-power:active {
-    border: $linode-border;
+    border-color: #ddd;
     color: lighten($linode-green, 10%);
+    background: #f3f3f3;
 }
 
 .linode.card {
@@ -52,11 +52,16 @@
 
     .linode-header {
         border-bottom: 1px solid #ccc;
-        padding: 15px;
+        padding: 10px 15px;
         background: #fcfcfc;
 
         * {
              line-height: 22px;
+        }
+
+        .linode-power {
+            position: relative;
+            top: -3px;
         }
     }
 

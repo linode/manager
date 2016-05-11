@@ -19,7 +19,7 @@ $nav-height: 84px;
 @import 'layout/linodes';
 
 * {
-    transition: all 0.2s ease-in;
+    transition: background .35s, color .2s, border .1s;
 }
 
 body {
@@ -298,12 +298,6 @@ nav {
     padding: 15px;
     position: relative;
     border-radius: 0;
-
-    &:hover,
-    &:active,
-    &:focus {
-        background: #fcfcfc;
-    }
 
     .card-type {
         position: absolute;
