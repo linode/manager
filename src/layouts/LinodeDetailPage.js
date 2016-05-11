@@ -75,10 +75,10 @@ class LinodeDetailPage extends Component {
     const renderIps = (ips) => ips.map(i => <div key={i}>{i}</div>);
 
     const dropdownElements = [
-      { name: "Reboot", action: this.reboot },
-      { name: "Power off", action: this.powerOff },
-      { name: "Power on", action: this.powerOn }
-    ];
+      { name: "Reboot", _action: this.reboot },
+      { name: "Power off", _action: this.powerOff },
+      { name: "Power on", _action: this.powerOn }
+    ].map(element => ({ ...element, action: () => element._action(linode) }));
 
     return (
       <div className="details-page">
