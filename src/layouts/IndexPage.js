@@ -99,7 +99,9 @@ class IndexPage extends Component {
       return <Linode linode={l} onSelect={this.toggle}
           isSelected={!!l._isSelected}
           displayClass={displayClass}
-          isCard={displayClass==="card"} />
+          isCard={displayClass==="card"}
+          powerOn={this.powerOn}
+          reboot={this.reboot} />
     };
 
     const grid = (

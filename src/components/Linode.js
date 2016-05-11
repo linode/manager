@@ -4,6 +4,21 @@ import { LinodePower } from './LinodePower';
 import { LinodeStatesReadable, LinodeStates } from '../constants';
 
 export class Linode extends Component {
+  renderPowerButton() {
+    const { linode, powerOn, reboot } = this.props;
+
+    let [powerIcon, powerAction] = ["", () => {}];
+    if (linode.state == "offline") {
+      [powerIcon, powerAction] = ["fa-power-off", powerOn];
+    } else if (linode.state == "running") {
+      [powerIcon, powerAction] = ["fa-refresh", reboot];
+    }
+    const powerActionF = () => powerAction(linode);
+
+    return powerIcon == "" ? <span /> :
+        <span className={`linode-power fa ${powerIcon} pull-right`} onClick={powerActionF} />;
+  }
+  
   renderCard() {
     const { linode, onSelect, isSelected } = this.props;
     const select = () => onSelect(linode);
@@ -12,9 +27,6 @@ export class Linode extends Component {
     const checkbox = isSelected ?
         <input type="checkbox" checked="checked" onClick={select} /> :
         <input type="checkbox" onClick={select} />;
-
-    const power = linode.state == "running" ? "fa-refresh" :
-            linode.state == "offline" ? "fa-power-off" : "";
 
     return (
       <div className={`linode card ${linode.state} ${selectedClass}`}>
@@ -25,7 +37,7 @@ export class Linode extends Component {
           </label>
           <Link to={`/linodes/${linode.id}`} className="linode-label">{linode.label}</Link>
           <span className={`linode-status ${linode.state}`}>{LinodeStatesReadable[linode.state]}</span>
-          <span className={`linode-power fa ${power} pull-right`}></span>
+          {this.renderPowerButton()}
         </div>
         <ul className="linode-details list-unstyled">
           <li>
@@ -59,9 +71,6 @@ export class Linode extends Component {
         <input type="checkbox" checked="checked" onClick={select} /> :
         <input type="checkbox" onClick={select} />;
 
-    const power = linode.state == "running" ? "fa-refresh" :
-            linode.state == "offline" ? "fa-power-off" : "";
-
     return (
       <tr className={`linode row ${linode.state} ${selectedClass}`}>
         <td>
@@ -86,7 +95,7 @@ export class Linode extends Component {
           Last backup: 1 hour ago
         </td>
         <td>
-          <span className={`fa ${power}`}></span>
+          {this.renderPowerButton()}
         </td>
       </tr>
     );

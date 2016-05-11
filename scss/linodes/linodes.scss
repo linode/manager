@@ -31,6 +31,22 @@
     text-decoration: underline;
 }
 
+.linode-power {
+    transition: none;
+    cursor: pointer;
+    cursor: hand;
+    padding: 2px 5px;
+    border: $linode-border;
+    border-color: transparent;
+}
+
+.linode-power:hover,
+.linode-power:focus,
+.linode-power:active {
+    border: $linode-border;
+    color: lighten($linode-green, 10%);
+}
+
 .linode.card {
     padding: 0;
 
