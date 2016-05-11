@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import {
   updateLinode, powerOnLinode, powerOffLinode,
   rebootLinode
-} from '../actions/linodes';
+} from '~/actions/api/linodes';
 import { LinodePower } from '../components/LinodePower';
 import { LinodeStates, LinodeStatesReadable } from '../constants';
 
@@ -240,7 +240,7 @@ class LinodeDetailPage extends Component {
 }
 
 function select(state) {
-  return { linodes: state.linodes };
+  return { linodes: state.api.linodes };
 }
 
 export default connect(select)(LinodeDetailPage);

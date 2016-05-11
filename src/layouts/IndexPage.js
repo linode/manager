@@ -12,7 +12,7 @@ import {
   rebootLinode,
   deleteLinode,
   toggleLinode
-} from '../actions/linodes';
+} from '~/actions/api/linodes';
 
 class IndexPage extends Component {
   constructor() {
@@ -242,7 +242,7 @@ class IndexPage extends Component {
 }
 
 function select(state) {
-  return { linodes: state.linodes };
+  return { linodes: state.api.linodes };
 }
 
 export default connect(select)(IndexPage);

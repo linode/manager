@@ -1,4 +1,4 @@
-import { fetch } from '../fetch';
+import { fetch } from '~/fetch';
 import {
     make_fetch_page,
     make_update_item,
