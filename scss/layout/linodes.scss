@@ -1,22 +1,22 @@
 .linode-add {
     background: $linode-blue;
-    color: white;
+    color: $linode-white;
     height: 30px;
     padding: 0 10px;
     line-height: 30px;
-    transition: background-color 0.2s ease;
+    text-decoration: none !important;
 
     .fa-plus {
         font-size: 15px;
         padding-right: 10px;
+        color: $linode-white;
     }
 
     &:hover,
     &:active,
     &:focus {
         background: darken($linode-blue, 10%);
-        text-decoration: none;
-        color: white;
+        color: $linode-white;
     }
 }
 

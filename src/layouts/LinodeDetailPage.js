@@ -190,48 +190,47 @@ class LinodeDetailPage extends Component {
           <span>></span>
           <span>{linode.label}</span>
         </div>
-        <div className="card header">
+        <div className="card">
           <header>
             <h1>{linode.label}</h1>
             <span className={`linode-status ${linode.state}`}>{LinodeStatesReadable[linode.state]}</span>
           </header>
-          <ul className="linode-details list-unstyled">
-            <li>
-              <span className="fa fa-server"></span>
-              1 GB RAM / 20 GB SSD / 1 Core
-            </li>
-            <li>
-              <span className="fa fa-globe"></span>
-              {linode.datacenter.label}
-            </li>
-            <li>
-              <span className="fa fa-database"></span>
-              Last backup: 1 hour ago
-            </li>
-          </ul>
-        </div>
-        <div className="card performance">
-          <h2>Performance</h2>
-          <div className="graph"></div>
-        </div>
-        <div className="card networking">
-          <header>
-            <h2>Networking</h2>
-            <a href="#show-full" className="networking-full">Show full</a>
-          </header>
-          <div className="row">
-            <div className="col-xs-6">
-              <strong>Public IP Addresses</strong>
-                <div>{renderIps(pubIpv4)}</div>
-                <div>{renderIps(pubIpv6)}</div>
-            </div>
-            <div className="col-xs-6">
-              <strong>Private IP Addresses</strong>
-              <div>{renderIps(privIpv4)}</div>
-              <div>{renderIps(privIpv6)}</div>
-              <strong>Link-Local IP Addresses</strong>
-              <div>{renderIps(linkLocal)}</div>
-            </div>
+          <nav>
+            <ul className="list-unstyled">
+              <li className="active">General</li>
+              <li>Backups</li>
+              <li>Rescue</li>
+              <li>Networking</li>
+              <li>Advanced</li>
+            </ul>
+          </nav>
+          <div className="linode-details">
+            <ul className="list-unstyled">
+                            <li>
+                <span className="fa fa-link"></span>
+                {linode.ip_addresses.public.ipv4[0]}
+              </li>
+              <li>
+                <span className="fa fa-link invisible"></span>
+                {linode.ip_addresses.public.ipv6}
+              </li>
+              <li>
+                <span className="fa fa-globe"></span>
+                {linode.datacenter.label}
+              </li>
+              <li>
+                <span className="fa fa-database"></span>
+                Last backup: 1 hour ago
+              </li>
+              <li>
+                <span className="fa fa-server"></span>
+                Linode 1024
+              </li>
+            </ul>
+          </div>
+          <div className="linode-performance">
+            <h2>Performance</h2>
+            <div className="graph"></div>
           </div>
         </div>
       </div>

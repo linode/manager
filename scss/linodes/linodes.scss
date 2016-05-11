@@ -1,11 +1,5 @@
 @import 'create';
 
-.linode {
-    .fa {
-        color: #ccc;
-    }
-}
-
 .linode-status {
     color: $linode-blue;
     animation: pulse 1.5s infinite;
@@ -51,9 +45,9 @@
     padding: 0;
 
     .linode-header {
-        border-bottom: 1px solid #ccc;
+        border-bottom: $linode-border;
         padding: 10px 15px;
-        background: #fcfcfc;
+        background: $linode-light-gray;
 
         * {
              line-height: 22px;
@@ -75,7 +69,7 @@
     }
 }
 
-ul.linode-details {
+.linode-details ul {
     margin-bottom: 0;
 
     li:not(:first-of-type) {
@@ -91,7 +85,7 @@ table.linodes {
     width: 100%;
 
     thead {
-        background: white;
+        background: $linode-white;
         border: $linode-border;
         border-bottom: 0;
         height: 35px;
@@ -109,7 +103,7 @@ table.linodes {
 
 .linode.row {
     border: $linode-border;
-    background: white;
+    background: $linode-white;
     height: 35px;
     line-height: 35px;
     margin: 0 15px;

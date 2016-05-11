@@ -39,24 +39,26 @@ export class Linode extends Component {
           <span className={`linode-status ${linode.state}`}>{LinodeStatesReadable[linode.state]}</span>
           {this.renderPowerButton()}
         </div>
-        <ul className="linode-details list-unstyled">
-          <li>
-            <span className="fa fa-link"></span>
-            {linode.ip_addresses.public.ipv4[0]}
-          </li>
-          <li>
-            <span className="fa fa-link invisible"></span>
-            {linode.ip_addresses.public.ipv6}
-          </li>
-          <li>
-            <span className="fa fa-globe"></span>
-            {linode.datacenter.label}
-          </li>
-          <li>
-            <span className="fa fa-database"></span>
-            Last backup: 1 hour ago
-          </li>
-        </ul>
+        <div className="linode-details">
+          <ul className="list-unstyled">
+            <li>
+              <span className="fa fa-link"></span>
+              {linode.ip_addresses.public.ipv4[0]}
+            </li>
+            <li>
+              <span className="fa fa-link invisible"></span>
+              {linode.ip_addresses.public.ipv6}
+            </li>
+            <li>
+              <span className="fa fa-globe"></span>
+              {linode.datacenter.label}
+            </li>
+            <li>
+              <span className="fa fa-database"></span>
+              Last backup: 1 hour ago
+            </li>
+          </ul>
+        </div>
         <span className="card-type fa fa-th" />
       </div>
     );

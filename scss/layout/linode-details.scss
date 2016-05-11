@@ -1,13 +1,21 @@
 .details-page {
+    $side-margin: 60px;
+
     .card {
         width: 100%;
-        padding: 15px 30px;
         margin-top: 15px;
+        padding: 0;
+    }
+
+    h1, h2 {
+        display: inline-block;
     }
 
     header {
-        h1, h2 {
-            display: inline-block;
+        padding: 30px $side-margin 15px $side-margin;
+
+        h1 {
+           margin: 0;
         }
 
         .linode-status,
@@ -16,9 +24,41 @@
         }
     }
 
+    nav {
+        padding: 0 $side-margin;
+
+        border-bottom: $linode-border;
+        height: 30px;
+        line-height: 30px;
+
+        ul {
+           padding: 0;
+        }
+
+        li {
+            display: inline-block;
+            color: $linode-dark-gray;
+            padding-right: 50px;
+        }
+
+        li:hover,
+        li:focus,
+        li:active,
+        li.active {
+            color: $linode-black;
+            cursor: pointer;
+            cursor: hand;
+        }
+    }
+
     .graph {
         width: 100%;
         height: 200px;
         border: $linode-border;
+    }
+
+    .linode-details,
+    .linode-performance {
+        padding: 15px $side-margin;
     }
 }
