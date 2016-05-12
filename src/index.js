@@ -4,7 +4,7 @@ import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import configureStore from './store/configureStore';
 import { createHistory } from 'history';
-import { Router, Route, IndexRoute } from 'react-router';
+import { Router, Route, IndexRedirect } from 'react-router';
 import DevTools from './components/DevTools';
 import { syncReduxAndRouter } from 'redux-simple-router'
 import styles from '../scss/manager.scss';
@@ -18,9 +18,7 @@ syncReduxAndRouter(history, store);
 import Layout from './layouts/Layout';
 import OAuthCallbackPage from './layouts/OAuth';
 import NotFound from './layouts/NotFound';
-import IndexPage from './layouts/IndexPage';
-import LinodeDetailPage from './layouts/LinodeDetailPage';
-import CreateLinodePage from './layouts/CreateLinodePage';
+import Linodes from './linodes';
 
 const init = () => {
   let state = store.getState();
@@ -43,9 +41,8 @@ const init = () => {
       <div>
         <Router history={history}>
           <Route onEnter={checkLogin} path="/" component={Layout}>
-            <IndexRoute component={IndexPage} />
-            <Route path="linodes/create" component={CreateLinodePage} />
-            <Route path="linodes/:linodeId" component={LinodeDetailPage} />
+            <IndexRedirect to="/linodes" />
+            {Linodes}
             <Route path="oauth">
               <Route path="callback" component={OAuthCallbackPage} />
             </Route>

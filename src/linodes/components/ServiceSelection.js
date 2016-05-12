@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import _ from 'underscore';
-import { toggleAllPlans } from '~/actions/ui/linode-creation';
-import Service from '~/components/create-linode/Service';
+import { toggleAllPlans } from '../actions/create';
+import Service from './Service';
 
 const test_services = [
   {

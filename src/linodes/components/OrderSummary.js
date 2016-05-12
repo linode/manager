@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { distros, flags } from '../../assets';
+import { distros, flags } from '~/assets';
 import Service from './Service';
 import { countryMap } from './DatacenterSelection';
 

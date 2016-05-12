@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { Linode, NewLinode } from '../components/Linode';
-import Dropdown from '../components/Dropdown';
-import { LinodeStates } from '../constants';
+import Dropdown from '~/components/Dropdown';
+import { LinodeStates } from '~/constants';
 import _ from 'underscore';
 import {
   fetchLinodes,
@@ -97,7 +97,8 @@ class IndexPage extends Component {
   
   renderGroup({ group, linodes }) {
     const renderLinode = (l, displayClass) => {
-      return <Linode linode={l} onSelect={this.toggle}
+      return <Linode key={l.id} linode={l}
+          onSelect={this.toggle}
           isSelected={!!l._isSelected}
           displayClass={displayClass}
           isCard={displayClass==="card"}
@@ -134,9 +135,7 @@ class IndexPage extends Component {
             </tr>
           </thead>
           <tbody>
-            {linodes.map(l => {
-              return renderLinode(l, "row");
-            })}
+            {linodes.map(l => renderLinode(l, "row"))}
           </tbody>
         </table>
       </div>

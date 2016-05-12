@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
 import { LinodePower } from './LinodePower';
-import { LinodeStatesReadable, LinodeStates } from '../constants';
+import { LinodeStatesReadable, LinodeStates } from '~/constants';
 
 export class Linode extends Component {
   renderPowerButton() {
