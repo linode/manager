@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import configureStore from './store/configureStore';
 import { createHistory } from 'history';
 import { Router, Route, IndexRoute } from 'react-router';
-import DevTools from './containers/DevTools';
+import DevTools from './components/DevTools';
 import { syncReduxAndRouter } from 'redux-simple-router'
 import styles from '../scss/manager.scss';
 import { client_id } from './secrets';
