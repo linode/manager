@@ -1,22 +1,22 @@
 .linode-add {
     background: $linode-blue;
-    color: white;
+    color: $linode-white;
     height: 30px;
     padding: 0 10px;
     line-height: 30px;
-    transition: background-color 0.2s ease;
+    text-decoration: none !important;
 
     .fa-plus {
         font-size: 15px;
         padding-right: 10px;
+        color: $linode-white;
     }
 
     &:hover,
     &:active,
     &:focus {
         background: darken($linode-blue, 10%);
-        text-decoration: none;
-        color: white;
+        color: $linode-white;
     }
 }
 
@@ -40,26 +40,14 @@
         }
 
         .li-dropdown-first {
-            display: inline-block;
-            margin-left: 10px;
             border: $linode-border;
             border-top: 0;
-            padding: 0 10px;
-            cursor: pointer;
-            cursor: hand;
+            margin-left: 10px;
             height: 29px;
         }
 
         .li-dropdown-activator {
-            display: inline-block;
-            line-height: 29px;
-            font-size: 15px;
-            padding: 0 10px;
-
-            span {
-                position: relative;
-                top: -3px;
-            }
+            border: 0;
         }
     }
 }

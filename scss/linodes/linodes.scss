@@ -25,14 +25,51 @@
     text-decoration: underline;
 }
 
+.linode-power {
+    cursor: pointer;
+    cursor: hand;
+    padding: 2px 5px;
+    border: $linode-border;
+    border-color: transparent;
+}
+
+.linode-power:hover,
+.linode-power:focus,
+.linode-power:active {
+    border-color: #ddd;
+    color: lighten($linode-green, 10%);
+    background: darken($linode-light-gray, 1%);
+}
+
 .linode.card {
+    padding: 0;
+
+    .linode-header {
+        border-bottom: $linode-border;
+        padding: 10px 15px;
+        background: $linode-light-gray;
+
+        * {
+             line-height: 22px;
+        }
+
+        .linode-power {
+            position: relative;
+            top: -3px;
+        }
+    }
+
+    .linode-details {
+        padding: 15px;
+    }
+
     .linode-label {
         display: inline-block;
-        margin: 0 15px 10px 15px;
+        margin: 0 15px;
     }
 }
 
-ul.linode-details {
+.linode-details ul {
     margin-bottom: 0;
 
     li:not(:first-of-type) {
@@ -48,7 +85,7 @@ table.linodes {
     width: 100%;
 
     thead {
-        background: white;
+        background: $linode-white;
         border: $linode-border;
         border-bottom: 0;
         height: 35px;
@@ -66,7 +103,7 @@ table.linodes {
 
 .linode.row {
     border: $linode-border;
-    background: white;
+    background: $linode-white;
     height: 35px;
     line-height: 35px;
     margin: 0 15px;

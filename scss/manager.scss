@@ -5,25 +5,27 @@
 $linode-blue: #4A90E2;
 $linode-green: #3BB877;
 $linode-red: #D0021B;
-$linode-black: #4b4b4b;
-$linode-gray: #777;
-$linode-border: 1px solid #ccc;
+$linode-gray: #bfbfbf;
+$linode-black: #666;
+$linode-dark-gray: #acacac;
+$linode-white: #fefefe;
+$linode-light-gray: #f9f9f9;
+$linode-border: 1px solid $linode-gray;
 
 $sidebar-width: 200px;
-$nav-link: white;
-$nav-link-hover: #eee;
 $nav-height: 84px;
 
 @import 'linodes/linodes';
 @import 'layout/linode-details';
 @import 'layout/linodes';
+@import 'components/dropdown';
 
 * {
-    transition: all 0.2s ease-in;
+    transition: background .35s, color .2s, border .1s;
 }
 
 body {
-    background: #f4f4f4;
+    background: $linode-light-gray;
     height: 100%;
     min-width: 1007px; /* can fix later */
     color: $linode-black;
@@ -47,8 +49,17 @@ h2 {
    margin-bottom: 15px;
 }
 
+a {
+    color: $linode-blue;
+    text-decoration: underline;
+}
+
 .selected {
     background: #fffcf0 !important;
+}
+
+.fa {
+    color: #bfbfbf;
 }
 
 .header {
@@ -108,7 +119,7 @@ nav {
             background: #fcfcfc;
             height: 30px;
             width: 30px;
-            color: $linode-gray;
+            color: $linode-dark-gray;
             border-left: 1px solid #eee;
             text-align: center;
             line-height: 30px;
@@ -116,15 +127,16 @@ nav {
     }
 
     a {
-        color: $nav-link;
+        color: $linode-white;
         font-size: 15px;
         line-height: $nav-height;
+        text-decoration: none;
     }
 
     a:hover,
     a:active,
     a:focus {
-        color: darken($nav-link, 15%);
+        color: $linode-gray;
         text-decoration: none;
     }
 
@@ -146,7 +158,7 @@ nav {
         .nav-notifications {
             background: $linode-green;
             padding: 3px 6px;
-            color: white;
+            color: $linode-white;
             font-size: 10px;
             margin-right: 15px;
         }
@@ -167,17 +179,18 @@ nav {
     left: 0;
     bottom: 0;
     width: $sidebar-width;
-    background: white;
+    background: $linode-white;
     border-right: $linode-border;
     text-align: center;
 
     a {
-        color: black;
+        color: $linode-black;
         text-decoration: none !important;
     }
 
     .fa {
         width: 15px;
+        color: #777;
     }
 
     ul {
@@ -188,10 +201,9 @@ nav {
         li:hover,
         li:active,
         li:focus {
-            a {
+            a,
+            .fa {
                 color: $linode-green;
-                cursor: pointer;
-                cursor: hand;
             }
         }
 
@@ -226,7 +238,7 @@ nav {
     margin: 0;
     position: relative;
     top: 3px;
-    background: white;
+    background: $linode-white;
     cursor: pointer;
     cursor: hand;
 
@@ -249,60 +261,12 @@ nav {
     }
 }
 
-.li-dropdown {
-    position: relative;
-    display: inline-block;
-
-    .li-dropdown-target {
-        display: none;  
-        background: #fafafa;
-        border: $linode-border;
-        z-index: 9999;
-        width: 101px;
-    }
-
-    &:hover,
-    &:active,
-    &:focus {
-        .li-dropdown-target {
-            display: block;
-            position: absolute;
-            top: 28px;
-            left: -71px;
-        }
-    }
-}
-
-.li-dropdown-item {
-    padding: 0 5px;
-    height: 30px;
-    line-height: 30px;
-}
-
-.li-dropdown-item:hover,
-.li-dropdown-item:active,
-.li-dropdown-item:focus,
-.li-dropdown:hover .li-dropdown-activator,
-.li-dropdown:active .li-dropdown-activator,
-.li-dropdown:focus .li-dropdown-activator {
-    background: #f0f0f0;
-    cursor: pointer;
-    cursor: hand;
-}
-
-
 .card {
-    background: white;
+    background: $linode-white;
     border: $linode-border;
     padding: 15px;
     position: relative;
     border-radius: 0;
-
-    &:hover,
-    &:active,
-    &:focus {
-        background: #fcfcfc;
-    }
 
     .card-type {
         position: absolute;
@@ -318,10 +282,6 @@ nav {
 
     span:last-of-type {
         padding-right: 0;
-    }
-
-    a {
-        text-decoration: underline;
     }
 }
 
