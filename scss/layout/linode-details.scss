@@ -26,12 +26,17 @@
             padding-right: 30px;
         }
 
+        .li-dropdown-item.li-dropdown-first {
+            height: 30px;
+        }
+
         .li-dropdown-body {
             &:hover,
             &:active,
             &:focus {
                 .li-dropdown-target {
                     top: 29px;
+                    left: -71px;
                 }
             }
         }
@@ -52,6 +57,16 @@
             display: inline-block;
             color: $linode-dark-gray;
             padding-right: 50px;
+
+            &.linode-lish {
+                float: right;
+                padding: 0;
+
+                a {
+                    color: $linode-blue;
+                    line-height: normal;
+                }
+            }
         }
 
         li:hover,

@@ -92,7 +92,6 @@ class LinodeDetailPage extends Component {
             <h1>{linode.label}</h1>
             <span className={`linode-status ${linode.state}`}>{LinodeStatesReadable[linode.state]}</span>
             <span className="pull-right">
-              <a href="/lish">Lish</a>
               <Dropdown elements={dropdownElements} />
             </span>
           </header>
@@ -103,31 +102,38 @@ class LinodeDetailPage extends Component {
               <li>Rescue</li>
               <li>Networking</li>
               <li>Advanced</li>
+              <li className="linode-lish"><a href="/lish">Lish</a></li>
             </ul>
           </nav>
-          <div className="linode-details">
-            <ul className="list-unstyled">
-                            <li>
-                <span className="fa fa-link"></span>
-                {pubIpv4[0]}
-              </li>
-              <li>
-                <span className="fa fa-link invisible"></span>
-                {pubIpv6[0]}
-              </li>
-              <li>
-                <span className="fa fa-globe"></span>
-                {linode.datacenter.label}
-              </li>
-              <li>
-                <span className="fa fa-database"></span>
-                Last backup: 1 hour ago
-              </li>
-              <li>
-                <span className="fa fa-server"></span>
-                Linode 1024
-              </li>
-            </ul>
+          <div className="linode-details row">
+            <div className="col-sm-6">
+              <ul className="list-unstyled">
+                <li>
+                  <span className="fa fa-link"></span>
+                  {pubIpv4[0]}
+                </li>
+                <li>
+                  <span className="fa fa-link invisible"></span>
+                  {pubIpv6[0]}
+                </li>
+              </ul>
+            </div>
+            <div className="col-sm-6">
+              <ul className="list-unstyled">
+                <li>
+                  <span className="fa fa-globe"></span>
+                  {linode.datacenter.label}
+                </li>
+                <li>
+                  <span className="fa fa-database"></span>
+                  Last backup: 1 hour ago
+                </li>
+                <li>
+                  <span className="fa fa-server"></span>
+                  Linode 1024
+                </li>
+              </ul>
+            </div>
           </div>
           <div className="linode-performance">
             <h2>Performance</h2>
