@@ -1,14 +1,17 @@
 import { combineReducers } from 'redux';
-import create from './create';
 import _ from 'underscore';
+import { getStorage, setStorage } from '~/storage';
+import create from './create';
 
 import {
   CHANGE_VIEW,
   TOGGLE_SELECTED
 } from '../actions/index';
 
+const view = getStorage("linodes/view") || "grid";
+
 const default_state = {
-  view: "grid",
+  view,
   selected: { } // set
 };
 
@@ -18,6 +21,7 @@ export function index(state=default_state, action) {
   switch (action.type) {
   case CHANGE_VIEW:
     const { view } = action;
+    setStorage("linodes/view", view);
     return { ...state, view };
   case TOGGLE_SELECTED:
     const { selected } = action;
