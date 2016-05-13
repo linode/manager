@@ -14,14 +14,13 @@ import {
   deleteLinode,
   toggleLinode
 } from '~/actions/api/linodes';
+import {
+  changeView
+} from '../actions';
 
 class IndexPage extends Component {
   constructor() {
     super();
-    this.state = {
-      displayGrid: true
-    };
-
     this.componentDidMount = this.componentDidMount.bind(this);
     this.componentWillUnmount = this.componentWillUnmount.bind(this);
     this.renderGroup = this.renderGroup.bind(this);
@@ -89,10 +88,10 @@ class IndexPage extends Component {
     dispatch(toggleLinode(linode));
   }
 
-  toggleDisplay() {
-    this.setState({
-      displayGrid: !this.state.displayGrid
-    })
+  toggleDisplay(e) {
+    e.preventDefault();
+    const { dispatch, view } = this.props;
+    dispatch(changeView(view === "grid" ? "list" : "grid"));
   }
   
   renderGroup({ group, linodes }) {
@@ -141,7 +140,8 @@ class IndexPage extends Component {
       </div>
     );
 
-    return this.state.displayGrid ? grid : table;
+    const { view } = this.props;
+    return view === "grid" ? grid : table;
   }
 
   doToSelected(action) {
@@ -178,12 +178,12 @@ class IndexPage extends Component {
       <input type="checkbox" onClick={selectAll} checked="checked" /> :
       <input type="checkbox" onClick={selectAll} />;
 
-    const displayGrid = this.state.displayGrid;
+    const { view } = this.props;
     const gridListToggle = (
       <span className="grid-list">
-        <span>{!displayGrid ? <a href="#grid" onClick={this.toggleDisplay}>Grid</a> : "Grid"}</span>
+        <span>{view === "list" ? <a href="#" onClick={this.toggleDisplay}>Grid</a> : "Grid"}</span>
         <span>|</span>
-        <span>{displayGrid ? <a href="#list" onClick={this.toggleDisplay}>List</a> : "List"}</span>
+        <span>{view === "grid" ? <a href="#" onClick={this.toggleDisplay}>List</a> : "List"}</span>
       </span>
     );
 
@@ -224,7 +224,11 @@ class IndexPage extends Component {
 }
 
 function select(state) {
-  return { linodes: state.api.linodes };
+  return {
+    linodes: state.api.linodes,
+    view: state.linodes.index.view,
+    selected: state.linodes.index.selected
+  };
 }
 
 export default connect(select)(IndexPage);
