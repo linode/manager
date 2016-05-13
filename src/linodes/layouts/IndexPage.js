@@ -93,7 +93,7 @@ class IndexPage extends Component {
     const { dispatch, view } = this.props;
     dispatch(changeView(view === "grid" ? "list" : "grid"));
   }
-  
+
   renderGroup({ group, linodes }) {
     const { selected } = this.props;
 
@@ -106,23 +106,21 @@ class IndexPage extends Component {
           powerOn={this.powerOn}
           reboot={this.reboot} />
     };
-    // TODO: Refactor to avoid rendering both
 
-    const grid = (
-      <div key={group} className="row linodes">
-        {group ? <h2 className="text-muted display-group">{group}</h2> : ""}
-        {linodes.map(l => {
-          return (
-            <div key={l.id} className="col-md-4">
-              {renderLinode(l, "card")}
-            </div>
-          );
-        })}
-      </div>
-    );
-
-    const table = (
-      <div key={group} className="linodes">
+    const { view } = this.props;
+    if (view === "grid") {
+      return <div key={group} className="row linodes">
+          {group ? <h2 className="text-muted display-group">{group}</h2> : ""}
+          {linodes.map(l => {
+            return (
+              <div key={l.id} className="col-md-4">
+                {renderLinode(l, "card")}
+              </div>
+            );
+          })}
+        </div>;
+    } else {
+      return <div key={group} className="linodes">
         {group ? <h2 className="display-group text-muted">{group}</h2> : ""}
         <table className="linodes">
           <thead>
@@ -140,11 +138,8 @@ class IndexPage extends Component {
             {linodes.map(l => renderLinode(l, "row"))}
           </tbody>
         </table>
-      </div>
-    );
-
-    const { view } = this.props;
-    return view === "grid" ? grid : table;
+      </div>;
+    }
   }
 
   doToSelected(action) {
