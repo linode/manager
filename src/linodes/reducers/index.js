@@ -12,7 +12,7 @@ const default_state = {
   selected: { } // set
 };
 
-const array_to_set = arr => arr.reduce((s, v) => { s[v] = true; return s }, { });
+const array_to_set = arr => arr.reduce((s, v) => ({ ...s, [v]: true }), { });
 
 export function index(state=default_state, action) {
   switch (action.type) {
