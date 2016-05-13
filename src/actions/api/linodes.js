@@ -19,10 +19,6 @@ export const updateLinodeUntil = make_update_until(
 export const deleteLinode = make_delete_item(
     DELETE_LINODE, "linodes");
 
-export function toggleLinode(linode) {
-  return { type: UPDATE_LINODE, linode: { ...linode, _isSelected: !linode._isSelected } };
-}
-
 function linodeAction(id, action, temp, expected, timeout=undefined) {
   return async (dispatch, getState) => {
     const state = getState();

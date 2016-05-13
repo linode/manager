@@ -5,7 +5,7 @@ export function changeView(view) {
   return { type: CHANGE_VIEW, view };
 }
 
-export function toggleSelection(id) {
+export function toggleSelected(id) {
   return { type: TOGGLE_SELECTED, selected: [id] };
 }
 

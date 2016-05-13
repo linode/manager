@@ -11,11 +11,11 @@ import {
   powerOnLinode,
   powerOffLinode,
   rebootLinode,
-  deleteLinode,
-  toggleLinode
+  deleteLinode
 } from '~/actions/api/linodes';
 import {
-  changeView
+  changeView,
+  toggleSelected
 } from '../actions';
 
 class IndexPage extends Component {
@@ -85,7 +85,7 @@ class IndexPage extends Component {
 
   toggle(linode) {
     const { dispatch } = this.props;
-    dispatch(toggleLinode(linode));
+    dispatch(toggleSelected(linode.id));
   }
 
   toggleDisplay(e) {
@@ -95,15 +95,18 @@ class IndexPage extends Component {
   }
   
   renderGroup({ group, linodes }) {
+    const { selected } = this.props;
+
     const renderLinode = (l, displayClass) => {
       return <Linode key={l.id} linode={l}
           onSelect={this.toggle}
-          isSelected={!!l._isSelected}
+          isSelected={l.id in selected}
           displayClass={displayClass}
           isCard={displayClass==="card"}
           powerOn={this.powerOn}
           reboot={this.reboot} />
     };
+    // TODO: Refactor to avoid rendering both
 
     const grid = (
       <div key={group} className="row linodes">
@@ -147,9 +150,11 @@ class IndexPage extends Component {
   doToSelected(action) {
     return () => {
       const { linodes } = this.props.linodes;
-      let selected = Object.values(linodes).filter(l => l._isSelected);
-      selected.map(action);
-      if (action != this.toggle) selected.map(this.toggle);
+      const { selected } = this.props;
+      Object.keys(selected).map(id => action(linodes[id]));
+      if (action !== this.toggle) {
+        Object.keys(selected).map(id => this.toggle(linodes[id]));
+      }
     };
   }
     
@@ -166,8 +171,9 @@ class IndexPage extends Component {
 
   render() {
     const { linodes } = this.props.linodes;
+    const { selected } = this.props;
     const linodesList = Object.values(linodes);
-    const allSelected = linodesList.length && linodesList.every(l => l._isSelected);
+    const allSelected = Object.keys(selected).length == linodesList.length;
     const selectAll = () => {
       let cond = l => !l._isSelected;
       if (allSelected) cond = l => true;

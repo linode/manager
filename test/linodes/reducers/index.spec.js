@@ -30,7 +30,7 @@ describe("linodes/index reducer", () => {
     const state = { view: "grid", selected: { } };
     deepFreeze(state);
 
-    expect(index(state, actions.toggleSelection("linode_1234")))
+    expect(index(state, actions.toggleSelected("linode_1234")))
       .to.have.property("selected")
       .which.has.property("linode_1234");
 
@@ -48,11 +48,11 @@ describe("linodes/index reducer", () => {
     } };
     deepFreeze(state);
 
-    expect(index(state, actions.toggleSelection("linode_1234")))
+    expect(index(state, actions.toggleSelected("linode_1234")))
       .to.have.property("selected")
       .which./*does*/not.have.property("linode_1234");
 
-    expect(index(state, actions.toggleSelection("linode_1234")))
+    expect(index(state, actions.toggleSelected("linode_1234")))
       .to.have.property("selected")
       .which.has.keys("linode_1235");
   });
