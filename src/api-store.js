@@ -107,7 +107,7 @@ export function make_update_until(action, plural, singular) {
   return (id, test, timeout=3000) => {
     return async (dispatch, getState) => {
       const { token } = getState().authentication;
-      const item = getState()[plural][plural][id];
+      const item = getState().api[plural][plural][id];
       if (item._polling) {
           return;
       }

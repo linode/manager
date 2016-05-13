@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import DistroSelection from '~/components/create-linode/DistroSelection';
-import DatacenterSelection from '~/components/create-linode/DatacenterSelection';
-import { changeSourceTab, selectSource } from '~/actions/ui/linode-creation';
+import DistroSelection from './DistroSelection';
+import DatacenterSelection from './DatacenterSelection';
+import { changeSourceTab, selectSource } from '../actions/create';
 import { distros as distro_assets } from '~/assets';
 
 export default class SourceSelection extends Component {

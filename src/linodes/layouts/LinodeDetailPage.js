@@ -6,8 +6,8 @@ import {
   rebootLinode
 } from '~/actions/api/linodes';
 import { LinodePower } from '../components/LinodePower';
-import Dropdown from '../components/Dropdown';
-import { LinodeStates, LinodeStatesReadable } from '../constants';
+import Dropdown from '~/components/Dropdown';
+import { LinodeStates, LinodeStatesReadable } from '~/constants';
 
 class LinodeDetailPage extends Component {
   constructor() {
@@ -83,7 +83,7 @@ class LinodeDetailPage extends Component {
     return (
       <div className="details-page">
         <div className="li-breadcrumb">
-          <span><Link to="/">Linodes</Link></span>
+          <span><Link to="/linodes">Linodes</Link></span>
           <span>></span>
           <span>{linode.label}</span>
         </div>

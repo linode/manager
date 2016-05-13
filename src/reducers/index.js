@@ -2,13 +2,13 @@ import { combineReducers } from 'redux';
 import { routeReducer } from 'redux-simple-router';
 import authentication from './authentication';
 import api from './api';
-import ui from './ui';
+import linodes from '../linodes/reducers';
 
 const rootReducer = combineReducers({
   routing: routeReducer,
   authentication,
   api,
-  ui
+  linodes
 });
 
 export default rootReducer;

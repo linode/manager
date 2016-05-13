@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import SourceSelection from '../components/create-linode/SourceSelection';
-import ServiceSelection from '../components/create-linode/ServiceSelection';
-import DatacenterSelection from '../components/create-linode/DatacenterSelection';
-import OrderSummary from '../components/create-linode/OrderSummary';
+import SourceSelection from '../components/SourceSelection';
+import ServiceSelection from '../components/ServiceSelection';
+import DatacenterSelection from '../components/DatacenterSelection';
+import OrderSummary from '../components/OrderSummary';
 import { fetchDistros } from '~/actions/api/distros';
 import { fetchDatacenters } from '~/actions/api/datacenters';
 import { fetchServices } from '~/actions/api/services';
@@ -18,7 +18,7 @@ import {
   generatePassword,
   toggleShowPassword,
   createLinode
-} from '~/actions/ui/linode-creation';
+} from '../actions/create';
 
 class CreateLinodePage extends Component {
   constructor() {
@@ -78,7 +78,7 @@ function select(state) {
     distros: state.api.distros.distributions,
     services: Object.values(state.api.services.services).filter(
         s => s.service_type === 'linode'),
-    ui: state.ui.linodeCreation,
+    ui: state.linodes.create
   };
 }
 

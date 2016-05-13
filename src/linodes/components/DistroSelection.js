@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { distros } from '../../assets';
+import { distros } from '~/assets';
 import _ from 'underscore';
 
 export default class DistroSelection extends Component {

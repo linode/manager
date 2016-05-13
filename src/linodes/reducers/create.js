@@ -8,7 +8,7 @@ import {
   GENERATE_PASSWORD,
   TOGGLE_SHOW_PASSWORD,
   TOGGLE_CREATING
-} from '~/actions/ui/linode-creation';
+} from '../actions/create';
 
 const default_state = {
   sourceTab: 0,

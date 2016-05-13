@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { Linode, NewLinode } from '../components/Linode';
-import Dropdown from '../components/Dropdown';
-import { LinodeStates } from '../constants';
+import Dropdown from '~/components/Dropdown';
+import { LinodeStates } from '~/constants';
 import _ from 'underscore';
 import {
   fetchLinodes,
@@ -11,17 +11,16 @@ import {
   powerOnLinode,
   powerOffLinode,
   rebootLinode,
-  deleteLinode,
-  toggleLinode
+  deleteLinode
 } from '~/actions/api/linodes';
+import {
+  changeView,
+  toggleSelected
+} from '../actions';
 
 class IndexPage extends Component {
   constructor() {
     super();
-    this.state = {
-      displayGrid: true
-    };
-
     this.componentDidMount = this.componentDidMount.bind(this);
     this.componentWillUnmount = this.componentWillUnmount.bind(this);
     this.renderGroup = this.renderGroup.bind(this);
@@ -86,24 +85,28 @@ class IndexPage extends Component {
 
   toggle(linode) {
     const { dispatch } = this.props;
-    dispatch(toggleLinode(linode));
+    dispatch(toggleSelected(linode.id));
   }
 
-  toggleDisplay() {
-    this.setState({
-      displayGrid: !this.state.displayGrid
-    })
+  toggleDisplay(e) {
+    e.preventDefault();
+    const { dispatch, view } = this.props;
+    dispatch(changeView(view === "grid" ? "list" : "grid"));
   }
   
   renderGroup({ group, linodes }) {
+    const { selected } = this.props;
+
     const renderLinode = (l, displayClass) => {
-      return <Linode linode={l} onSelect={this.toggle}
-          isSelected={!!l._isSelected}
+      return <Linode key={l.id} linode={l}
+          onSelect={this.toggle}
+          isSelected={l.id in selected}
           displayClass={displayClass}
           isCard={displayClass==="card"}
           powerOn={this.powerOn}
           reboot={this.reboot} />
     };
+    // TODO: Refactor to avoid rendering both
 
     const grid = (
       <div key={group} className="row linodes">
@@ -134,23 +137,24 @@ class IndexPage extends Component {
             </tr>
           </thead>
           <tbody>
-            {linodes.map(l => {
-              return renderLinode(l, "row");
-            })}
+            {linodes.map(l => renderLinode(l, "row"))}
           </tbody>
         </table>
       </div>
     );
 
-    return this.state.displayGrid ? grid : table;
+    const { view } = this.props;
+    return view === "grid" ? grid : table;
   }
 
   doToSelected(action) {
     return () => {
       const { linodes } = this.props.linodes;
-      let selected = Object.values(linodes).filter(l => l._isSelected);
-      selected.map(action);
-      if (action != this.toggle) selected.map(this.toggle);
+      const { selected } = this.props;
+      Object.keys(selected).map(id => action(linodes[id]));
+      if (action !== this.toggle) {
+        Object.keys(selected).map(id => this.toggle(linodes[id]));
+      }
     };
   }
     
@@ -167,8 +171,9 @@ class IndexPage extends Component {
 
   render() {
     const { linodes } = this.props.linodes;
+    const { selected } = this.props;
     const linodesList = Object.values(linodes);
-    const allSelected = linodesList.length && linodesList.every(l => l._isSelected);
+    const allSelected = Object.keys(selected).length == linodesList.length;
     const selectAll = () => {
       let cond = l => !l._isSelected;
       if (allSelected) cond = l => true;
@@ -179,12 +184,12 @@ class IndexPage extends Component {
       <input type="checkbox" onClick={selectAll} checked="checked" /> :
       <input type="checkbox" onClick={selectAll} />;
 
-    const displayGrid = this.state.displayGrid;
+    const { view } = this.props;
     const gridListToggle = (
       <span className="grid-list">
-        <span>{!displayGrid ? <a href="#grid" onClick={this.toggleDisplay}>Grid</a> : "Grid"}</span>
+        <span>{view === "list" ? <a href="#" onClick={this.toggleDisplay}>Grid</a> : "Grid"}</span>
         <span>|</span>
-        <span>{displayGrid ? <a href="#list" onClick={this.toggleDisplay}>List</a> : "List"}</span>
+        <span>{view === "grid" ? <a href="#" onClick={this.toggleDisplay}>List</a> : "List"}</span>
       </span>
     );
 
@@ -225,7 +230,11 @@ class IndexPage extends Component {
 }
 
 function select(state) {
-  return { linodes: state.api.linodes };
+  return {
+    linodes: state.api.linodes,
+    view: state.linodes.index.view,
+    selected: state.linodes.index.selected
+  };
 }
 
 export default connect(select)(IndexPage);
