@@ -1,7 +1,6 @@
 import sinon from 'sinon';
 import { expect } from 'chai';
 import deepFreeze from 'deep-freeze';
-import * as fetch from '~/fetch';
 import make_api_list from '../src/api-store';
 import {
   make_fetch_page,
@@ -9,6 +8,7 @@ import {
   make_update_until,
   make_delete_item
 } from '../src/api-store';
+import { mock_context } from './mocks';
 
 const mock_foobars_response = {
   foobars: [
@@ -192,20 +192,6 @@ describe("api-store/make_api_list", () => {
   });
 
 });
-
-const mock_context = async (f, rsp, state={}) => {
-  const auth = { token: 'token' };
-  let getState = sinon.stub().returns({
-    authentication: auth,
-    ...state
-  });
-  let dispatch = sinon.spy();
-  let fetchStub = sinon.stub(fetch, "fetch").returns({
-    json: () => rsp
-  });
-  await f({auth, getState, dispatch, fetchStub});
-  fetchStub.restore();
-};
 
 describe("api-store/make_fetch_page", sinon.test(() => {
   it('returns a function that itself returns a function', () => {
