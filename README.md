@@ -1,6 +1,6 @@
 # Manager ![](https://img.shields.io/badge/license-BSD-lightgrey.svg)
 
-This is the new Linode Manager. It provides a web interface for manging your
+This is the new Linode Manager. It provides a web interface for managing your
 Linode account. Currently this software is *pre-alpha* and won't be released for
 a while.
 
