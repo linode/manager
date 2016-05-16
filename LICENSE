@@ -29,5 +29,11 @@ in this repository, not including vector graphics:
     OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
     OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Unless otherwise stated, other files/assets are not licensed for any use
-without explicit written approval from Linode, LLC.
+Other assets (files containing raster and vector graphics) are the proprietary
+property of Linode, LLC, and may not be used outside of the context of this
+project for any purpose without prior written approval from Linode, LLC.
+
+Some files or assets in this repository are not the intellectual property of
+Linode and are included under the terms of the licenses of the owners of that
+content. In such cases, such content is accompanied by a LICENSE file in the
+same directory explaining the license terms of that content.
