@@ -7,20 +7,7 @@ import {
   rebootLinode
 } from '../../../src/actions/api/linodes';
 import * as linode_actions from '../../../src/actions/api/linodes';
-
-const mock_context = async (f, rsp, state={}) => {
-  const auth = { token: 'token' };
-  let getState = sinon.stub().returns({
-    authentication: auth,
-    ...state
-  });
-  let dispatch = sinon.spy();
-  let fetchStub = sinon.stub(fetch, "fetch").returns({
-    json: () => rsp
-  });
-  await f({auth, getState, dispatch, fetchStub});
-  fetchStub.restore();
-};
+import { mock_context } from '../../api-store.spec.js';
 
 describe("actions/linodes/power", sinon.test(() => {
   it('returns linode power boot status', async () => {

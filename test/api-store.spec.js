@@ -193,7 +193,7 @@ describe("api-store/make_api_list", () => {
 
 });
 
-const mock_context = async (f, rsp, state={}) => {
+export const mock_context = async (f, rsp, state={}) => {
   const auth = { token: 'token' };
   let getState = sinon.stub().returns({
     authentication: auth,
