@@ -27,7 +27,7 @@ describe("actions/linodes/power", sinon.test(() => {
         type: UPDATE_LINODE,
         linode: { id: "foo", state: "booting" }
       });
-    }, mock_response);
+    }, mock_booting_response);
   });
 
   const mock_shutting_down_response = {
