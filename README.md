@@ -1,4 +1,4 @@
-# Manager [![Build Status](https://travis-ci.org/linode/manager.svg?branch=master)](https://travis-ci.org/linode/manager) ![](https://img.shields.io/badge/license-BSD-blue.svg)
+# Manager [![Build Status](https://travis-ci.org/linode/manager.svg?branch=master)](https://travis-ci.org/linode/manager) [![Coverage Status](https://coveralls.io/repos/github/linode/manager/badge.svg?branch=master)](https://coveralls.io/github/linode/manager?branch=master) ![](https://img.shields.io/badge/license-BSD-blue.svg)
 
 This is the new Linode Manager. It provides a web interface for managing your
 Linode account. Currently this software is *pre-alpha* and won't be released for
