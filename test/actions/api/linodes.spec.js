@@ -8,6 +8,11 @@ import {
 import { mock_context } from '../../mocks';
 
 describe("actions/linodes/power", sinon.test(() => {
+  const mock_booting_response = {
+    type: UPDATE_LINODE,
+    linode: { id: "foo", state: "booting" }
+  };
+
   it('returns linode power boot status', async () => {
     await mock_context(async ({
         auth, dispatch, getState, fetchStub
@@ -22,11 +27,13 @@ describe("actions/linodes/power", sinon.test(() => {
         type: UPDATE_LINODE,
         linode: { id: "foo", state: "booting" }
       });
-    }, {
-      type: UPDATE_LINODE,
-      linode: { id: "foo", state: "booting" }
-    });
+    }, mock_response);
   });
+
+  const mock_shutting_down_response = {
+    ...mock_booting_response,
+    linode: { ...mock_booting_response.linode, state: "shutting_down" }
+  };
 
   it('returns linode power shutdown status', async () => {
     await mock_context(async ({
@@ -42,11 +49,13 @@ describe("actions/linodes/power", sinon.test(() => {
         type: UPDATE_LINODE,
         linode: { id: "foo", state: "shutting_down" }
       });
-    }, {
-      type: UPDATE_LINODE,
-      linode: { id: "foo", state: "shutting_down" }
-    });
+    }, mock_shutting_down_response);
   });
+
+  const mock_rebooting_response = {
+    ...mock_booting_response,
+    linode: { ...mock_booting_response.linode, state: "rebooting" }
+  };
 
   it('returns linode power reboot status', async () => {
     await mock_context(async ({
@@ -62,9 +71,6 @@ describe("actions/linodes/power", sinon.test(() => {
         type: UPDATE_LINODE,
         linode: { id: "foo", state: "rebooting" }
       });
-    }, {
-      type: UPDATE_LINODE,
-      linode: { id: "foo", state: "rebooting" }
-    });
+    }, mock_rebooting_response);
   });
 }));
