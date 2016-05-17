@@ -1,5 +1,3 @@
-const window = window ? window : { };
-
 const getItem = window.localStorage ?
   window.localStorage.getItem.bind(window.localStorage) : k => null;
 const setItem = window.localStorage ?

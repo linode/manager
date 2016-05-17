@@ -55,5 +55,4 @@ const init = () => {
     document.getElementById('root')
   );
 };
-
-init();
+window.init = init;
