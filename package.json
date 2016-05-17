@@ -10,7 +10,7 @@
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
     "test": "NODE_ENV=test mocha --require test/setup.js --recursive --compilers js:babel-core/register",
-    "coverage": "NODE_ENV=test node_modules/.bin/babel-node node_modules/.bin/babel-istanbul cover --report cobertura node_modules/.bin/_mocha -- --require test/setup.js --recursive -R xunit-file",
+    "coverage": "NODE_ENV=test node_modules/.bin/babel-node node_modules/.bin/babel-istanbul cover --report lcovonly node_modules/.bin/_mocha -- --require test/setup.js --recursive -R xunit-file",
     "test:watch": "npm test -- --watch"
   },
   "repository": {
@@ -35,6 +35,7 @@
     "babel-preset-react-hmre": "^1.0.0",
     "babel-root-import": "^3.2.2",
     "chai": "^3.4.1",
+    "coveralls": "^2.11.9",
     "cross-env": "^1.0.6",
     "eslint": "^1.10.3",
     "eslint-plugin-babel": "^3.0.0",
@@ -42,8 +43,10 @@
     "eventsource-polyfill": "^0.9.6",
     "express": "^4.13.3",
     "imports-loader": "^0.6.5",
+    "istanbul": "^0.4.3",
     "jsdom": "^7.2.2",
     "mocha": "^2.3.4",
+    "mocha-lcov-reporter": "^1.2.0",
     "redux-devtools": "^3.0.1",
     "redux-devtools-dock-monitor": "^1.0.1",
     "redux-devtools-log-monitor": "^1.0.1",
