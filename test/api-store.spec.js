@@ -266,6 +266,7 @@ describe("api-store/make_delete_item", sinon.test(() => {
     expect(f()).to.be.a("function");
   });
 
+  const no_response = {};
   it('performs the API request', async () => {
     await mock_context(async ({
         auth, dispatch, getState, fetchStub
@@ -281,6 +282,6 @@ describe("api-store/make_delete_item", sinon.test(() => {
         type: "DELETE_FOOBAR",
         id: "foobar_1"
       });
-    }, { });
+    }, no_response);
   });
 }));
