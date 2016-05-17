@@ -3,8 +3,8 @@ node_js:
     - "5"
 script: |
     env NODE_ENV=test \
-        node_modules/.bin/babel-node node_modules/.bin/babel-istanbulcover \
+        node_modules/.bin/babel-node node_modules/.bin/babel-istanbul cover \
         --report lcovonly \
         node_modules/.bin/_mocha \
         --report lcovonly -- -R test/setup.js
-    cat ./coverage/lcov.info | ./node_modules/bin/coveralls
+    cat ./coverage/lcov.info | ./node_modules/.bin/coveralls
