@@ -9,7 +9,7 @@
     "start": "node devServer.js",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
-    "test": "NODE_ENV=test mocha-webpack --colors --webpack-config webpack.config.test.js --require source-map-support/register --recursive --include test/setup.js test",
+    "test": "NODE_ENV=test mocha --require test/setup.js --recursive --compilers js:babel-core/register",
     "coverage": "NODE_ENV=test node_modules/.bin/babel-node node_modules/.bin/babel-istanbul cover --report lcovonly node_modules/.bin/_mocha -- --require test/setup.js --recursive -R xunit-file",
     "test:watch": "npm test -- --watch"
   },
@@ -47,17 +47,14 @@
     "jsdom": "^7.2.2",
     "mocha": "^2.3.4",
     "mocha-lcov-reporter": "^1.2.0",
-    "mocha-webpack": "^0.3.1",
     "redux-devtools": "^3.0.1",
     "redux-devtools-dock-monitor": "^1.0.1",
     "redux-devtools-log-monitor": "^1.0.1",
     "rimraf": "^2.4.3",
     "sinon": "^1.17.3",
-    "source-map-support": "^0.4.0",
     "webpack": "^1.12.9",
     "webpack-dev-middleware": "^1.4.0",
     "webpack-hot-middleware": "^2.6.0",
-    "webpack-node-externals": "^1.2.0",
     "xunit-file": "^0.0.9"
   },
   "dependencies": {

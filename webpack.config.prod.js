@@ -4,8 +4,6 @@ var webpack = require('webpack');
 module.exports = {
   devtool: 'source-map',
   entry: [
-    'eventsource-polyfill', // necessary for hot reloading with IE
-    'webpack-hot-middleware/client',
     './src/index'
   ],
   output: {
@@ -15,13 +13,21 @@ module.exports = {
   },
   plugins: [
     new webpack.optimize.OccurenceOrderPlugin(),
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin()
+    new webpack.DefinePlugin({
+      'process.env': {
+        'NODE_ENV': JSON.stringify('production')
+      }
+    }),
+    new webpack.optimize.UglifyJsPlugin({
+      compressor: {
+        warnings: false
+      }
+    })
   ],
   module: {
     loaders: [
       {
-        test: /\.jsx?/,
+        test: /\.js$/,
         loaders: ['babel'],
         include: path.join(__dirname, 'src')
       },
