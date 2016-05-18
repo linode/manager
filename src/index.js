@@ -56,4 +56,4 @@ const init = () => {
   );
 };
 
-init();
+window.init = init;

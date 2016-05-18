@@ -7,11 +7,13 @@ module.exports = function(config) {
     browsers: ['PhantomJS'],
     files: [
       './node_modules/phantomjs-polyfill/bind-polyfill.js',
-      'test/**/*.spec.js'
+      'test/**/*.spec.js',
+      'test/setup.js'
     ],
     preprocessors: {
       'test/**/*.js': ['webpack', 'sourcemap'],
       'src/**/*.js': ['webpack', 'sourcemap'],
+      'test/setup.js': ['webpack']
     },
     webpack: {
       devtool: 'inline-source-map',
@@ -29,6 +31,11 @@ module.exports = function(config) {
           {
             test: /\.scss$/,
             loaders: ["style", "css", "sass"]
+          },
+          {
+            test: /\.jsx?/,
+            include: path.join(__dirname, 'src'),
+            loader: 'isparta'
           }
         ]
       },
@@ -42,15 +49,18 @@ module.exports = function(config) {
       },
       noInfo: true
     },
-    // possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
-    reporters: ['spec'],
+    reporters: ['spec', 'coverage'],
+    coverageReporter: {
+      type: 'text'
+    },
     plugins: [
       webpack,
       require("karma-mocha"),
       require("karma-spec-reporter"),
       require("karma-chrome-launcher"),
       require("karma-phantomjs-launcher"),
-      require("karma-sourcemap-loader")
+      require("karma-sourcemap-loader"),
+      require("karma-coverage")
     ]
   });
 };
