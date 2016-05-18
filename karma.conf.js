@@ -7,7 +7,7 @@ module.exports = function(config) {
     browsers: ['PhantomJS'],
     files: [
       './node_modules/phantomjs-polyfill/bind-polyfill.js',
-      'test/*.spec.js'
+      'test/**/*.spec.js'
     ],
     preprocessors: {
       'test/**/*.js': ['webpack', 'sourcemap'],
