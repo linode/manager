@@ -10,8 +10,7 @@
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
     "test": "NODE_ENV=test karma start karma.conf.js --single-run",
-    "test:watch": "NODE_ENV=test karma start karma.conf.js",
-    "coverage": "NODE_ENV=test node_modules/.bin/babel-node node_modules/.bin/babel-istanbul cover --report lcovonly node_modules/.bin/_mocha -- --require test/setup.js --recursive -R xunit-file"
+    "test:watch": "NODE_ENV=test karma start karma.conf.js"
   },
   "repository": {
     "type": "git",
