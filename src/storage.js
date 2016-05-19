@@ -1,9 +1,5 @@
-const window = window ? window : { };
-
-const getItem = window.localStorage ?
-  window.localStorage.getItem.bind(window.localStorage) : k => null;
-const setItem = window.localStorage ?
-  window.localStorage.setItem.bind(window.localStorage) : (k, v) => null;
+const getItem = window.localStorage.getItem.bind(window.localStorage);
+const setItem = window.localStorage.setItem.bind(window.localStorage);
 
 export function getStorage(key) {
   const item = getItem(key);
