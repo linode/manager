@@ -25,7 +25,7 @@ describe("api-store/make_api_list", () => {
     const s = make_api_list("foobars", "foobar", {
       update_singular: "UPDATE_ONE",
       update_many: "UPDATE_MANY",
-      delete_one: "DELETE_ONE"
+      delete_one: "DELETE_ONE",
     });
 
     expect(
