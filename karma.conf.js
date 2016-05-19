@@ -51,7 +51,9 @@ module.exports = function(config) {
     },
     reporters: ['spec', 'coverage'],
     coverageReporter: {
-      type: 'text'
+      type: 'lcovonly',
+      dir: 'coverage',
+      subdir: '.'
     },
     plugins: [
       webpack,
