@@ -10,9 +10,9 @@ describe('Dropdown', () => {
   it('renders dropdown component', () => {
     const dropdown = renderIntoDocument(
       <Dropdown elements={[
-        { _action: "ready", name: "Drew" },
-        { _action: "set", name: "Phil" },
-        { _action: "go", name: "Will" }
+        { name: "Drew" },
+        { name: "Phil" },
+        { name: "Will" }
       ]} />
     );
 
