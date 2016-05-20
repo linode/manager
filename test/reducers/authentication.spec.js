@@ -5,12 +5,14 @@ import * as actions from '../../src/actions/authentication';
 
 describe("authentication reducer", () => {
   it('should handle initial state', () => {
+    window.localStorage.clear();
     expect(
       authentication(undefined, {})
     ).to.be.eql({ token: null });
   });
 
   it('should handle SET_TOKEN', () => {
+    window.localStorage.clear();
     const state = authentication(undefined, {});
     const auth = { token: null };
 
@@ -33,6 +35,7 @@ describe("authentication reducer", () => {
   });
 
   it('should handle anything else', () => {
+    window.localStorage.clear();
     const state = authentication(undefined, {});
     const auth = { token: null };
 

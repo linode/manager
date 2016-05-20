@@ -8,16 +8,14 @@ import {
   TOGGLE_SELECTED
 } from '../actions/index';
 
-const view = getStorage("linodes/view") || "grid";
-
-const default_state = {
-  view,
-  selected: { } // set
-};
-
 const array_to_set = arr => arr.reduce((s, v) => ({ ...s, [v]: true }), { });
 
-export function index(state=default_state, action) {
+export function index(state=null, action) {
+  if (state === null) {
+    const view = getStorage("linodes/view") || "grid";
+    state = { view, selected: { } };
+  }
+
   switch (action.type) {
   case CHANGE_VIEW:
     const { view } = action;
