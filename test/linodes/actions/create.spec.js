@@ -91,10 +91,6 @@ describe("linodes/actions/create", () => {
       /* TODO */
     });
 
-    it("should perform an HTTP POST to /linodes", () => {
-      /* TODO */
-    });
-
     it("should dispatch an UPDATE_LINODE action with the new linode", () => {
       /* TODO */
     });
