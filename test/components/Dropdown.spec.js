@@ -1,29 +1,23 @@
 import React from 'react';
 import sinon from 'sinon';
 import { mount } from 'enzyme';
-import {
-    renderIntoDocument,
-    scryRenderedDOMComponentsWithClass
-} from 'react-addons-test-utils';
-import { expect } from 'chai';
+import { expect, assert } from 'chai';
 import Dropdown from '../../src/components/Dropdown';
 
 describe('Dropdown', () => {
-  it('renders dropdown component', () => {
-    const dropdown = renderIntoDocument(
+  it('renders dropdown component 2', () => {
+    const dropdown = mount(
       <Dropdown elements={[
-        { action: function test(){}, name: "Drew" },
-        { action: function test(){}, name: "Phil" },
-        { action: function test(){}, name: "Will" }
+        { action() {}, name: "Drew" },
+        { action() {}, name: "Phil" },
+        { action() {}, name: "Will" }
       ]} />
     );
 
-    const list = scryRenderedDOMComponentsWithClass(dropdown, 'li-dropdown-item');
-
-    expect(list.length).to.equal(3);
-    expect(list[0].textContent).to.equal('Drew');
-    expect(list[1].textContent).to.equal('Phil');
-    expect(list[2].textContent).to.equal('Will');
+    expect(dropdown.find('.li-dropdown-item').length).to.equal(3);
+    expect(dropdown.find('.li-dropdown-item').at(0).text()).to.equal('Drew');
+    expect(dropdown.find('.li-dropdown-item').at(1).text()).to.equal('Phil');
+    expect(dropdown.find('.li-dropdown-item').at(2).text()).to.equal('Will');
   });
 
   it('clickable dropdown', () => {
@@ -41,8 +35,8 @@ describe('Dropdown', () => {
     dropdown.find('.li-dropdown-first').first().simulate('click');
     dropdown.find('.li-dropdown-body').find('.li-dropdown-item').first().simulate('click');
 
-    expect(clickFirst.calledOnce).to.equal(true);
-    expect(clickBodyItem.calledOnce).to.equal(true);
-    expect(unclicked.calledOnce).to.equal(false);
+    assert.isTrue(clickFirst.calledOnce);
+    assert.isTrue(clickBodyItem.calledOnce);
+    assert.isFalse(unclicked.calledOnce);
   });
 });

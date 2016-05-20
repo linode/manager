@@ -1,34 +1,32 @@
 import React from 'react';
-import {
-    renderIntoDocument,
-    scryRenderedDOMComponentsWithTag
-} from 'react-addons-test-utils';
 import sinon from 'sinon';
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 import Sidebar from '../../src/components/Sidebar';
 
 describe('Sidebar', () => {
   it('renders sidebar component', () => {
-    const sidebar = renderIntoDocument(
-      <Sidebar />
-    );
-
-    const list = scryRenderedDOMComponentsWithTag(sidebar, 'li');
-
-    expect(list.length).to.equal(5);
-    expect(list[0].textContent).to.equal('Linodes');
-    expect(list[1].textContent).to.equal('NodeBalancers');
-    expect(list[2].textContent).to.equal('Longview');
-    expect(list[3].textContent).to.equal('DNS Manager');
-    expect(list[4].textContent).to.equal('Support');
-  });
-
-  it('renders sidebar links', () => {
     const sidebar = mount(
       <Sidebar />
     );
 
-    expect(sidebar.find('a').first().href).to.be.defined;
+    expect(sidebar.find('li').length).to.equal(5);
+    expect(sidebar.find('li').at(0).text()).to.equal('Linodes');
+    expect(sidebar.find('li').at(1).text()).to.equal('NodeBalancers');
+    expect(sidebar.find('li').at(2).text()).to.equal('Longview');
+    expect(sidebar.find('li').at(3).text()).to.equal('DNS Manager');
+    expect(sidebar.find('li').at(4).text()).to.equal('Support');
+  });
+
+  it('renders sidebar links', () => {
+    const sidebar = shallow(
+      <Sidebar />
+    );
+
+    expect(sidebar.find({ to: '/linodes' }).length).to.equal(1);
+    expect(sidebar.find({ to: '/nodebalancers' }).length).to.equal(1);
+    expect(sidebar.find({ to: '/longview' }).length).to.equal(1);
+    expect(sidebar.find({ to: '/dnsmanager' }).length).to.equal(1);
+    expect(sidebar.find({ to: '/support' }).length).to.equal(1);
   });
 });
