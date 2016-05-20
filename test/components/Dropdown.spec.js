@@ -8,9 +8,9 @@ describe('Dropdown', () => {
   it('renders dropdown component 2', () => {
     const dropdown = mount(
       <Dropdown elements={[
-        { action() {}, name: "Drew" },
-        { action() {}, name: "Phil" },
-        { action() {}, name: "Will" }
+        { action: () => {}, name: "Drew" },
+        { action: () => {}, name: "Phil" },
+        { action: () => {}, name: "Will" }
       ]} />
     );
 
