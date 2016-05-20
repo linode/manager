@@ -25,7 +25,7 @@ class Navigation extends Component {
                 <a href="https://www.linode.com/docs/" className="nav-link">Documentation</a>
               </li>
               <li className="nav-item">
-                <a href="https://forum.linode.com/" className="nav-link">Community</a>
+                <a href="https://forum.linode.com" className="nav-link">Community</a>
               </li>
               <li className="nav-item">
                   <a href="https://developers.linode.com" className="nav-link">Developers</a>

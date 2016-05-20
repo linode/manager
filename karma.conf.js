@@ -41,6 +41,12 @@ module.exports = function(config) {
       },
       sassLoader: {
         includePaths: [path.resolve(__dirname, "./node_modules/bootstrap/scss/")]
+      },
+      externals: {
+        'cheerio': 'window',
+        'react/addons': true,
+        'react/lib/ExecutionEnvironment': true,
+        'react/lib/ReactContext': true
       }
     },
     webpackMiddleware: {
