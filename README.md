@@ -2,7 +2,7 @@
 
 This is the new Linode Manager. It provides a web interface for managing your
 Linode account. Currently this software is *pre-alpha* and won't be released for
-a while.
+a while. [Read the blog post](https://engineering.linode.com/2016/05/16/Announcing-the-new-open-source-manager.html).
 
 The following buzzwords are involved in this project:
 
