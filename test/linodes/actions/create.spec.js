@@ -1,6 +1,9 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 import * as actions from '~/linodes/actions/create';
+import * as linode_actions from '~/actions/api/linodes';
+import { mock_context } from '~/../test/mocks';
+import { pushPath } from 'redux-simple-router'
 
 describe("linodes/actions/create", () => {
   describe("changeSourceTab", () => {
@@ -75,36 +78,121 @@ describe("linodes/actions/create", () => {
   });
 
   describe("createLinode", () => {
+    const state = {
+      authentication: {
+        token: 'token'
+      },
+      linodes: {
+        create: {
+          label: "label",
+          datacenter: "datacenter_123",
+          service: "service_123",
+          source: "distro_123",
+          password: "password"
+        }
+      }
+    };
+    const response = {
+      linode: {
+        id: "linode_1234",
+        label: "label"
+      }
+    };
+
     it("should return a function", () => {
       expect(actions.createLinode()).to.be.a("function");
     });
 
-    it("should call getState() once", () => {
-      /* TODO */
-    });
+    it("should call getState() once", sinon.test(async () => {
+      await mock_context(async ({
+          auth, dispatch, getState, fetchStub
+        }) => {
+          const func = actions.createLinode();
+          await func(dispatch, getState);
+          expect(getState.calledOnce).to.be.true;
+        }, response, state);
+    }));
 
-    it("should dispatch a TOGGLE_CREATING action twice", () => {
-      /* TODO */
-    });
+    it("should dispatch a TOGGLE_CREATING action", sinon.test(async () => {
+      await mock_context(async ({
+          auth, dispatch, getState, fetchStub
+        }) => {
+          const func = actions.createLinode();
+          await func(dispatch, getState);
+          expect(dispatch.calledWith({
+            type: actions.TOGGLE_CREATING
+          })).to.be.true;
+        }, response, state);
+    }));
 
-    it("should perform an HTTP POST to /linodes", () => {
-      /* TODO */
-    });
+    it("should perform an HTTP POST to /linodes", sinon.test(async () => {
+      await mock_context(async ({
+          auth, dispatch, getState, fetchStub
+        }) => {
+          const func = actions.createLinode();
+          await func(dispatch, getState);
+          expect(fetchStub.calledWith(
+            'token', "/linodes", {
+              method: 'POST',
+              body: JSON.stringify({
+                label: "label",
+                datacenter: "datacenter_123",
+                service: "service_123",
+                source: "distro_123",
+                root_pass: "password"
+              })
+            }
+          )).to.be.true;
+        }, response, state);
+    }));
 
-    it("should dispatch an UPDATE_LINODE action with the new linode", () => {
-      /* TODO */
-    });
+    it("should dispatch an UPDATE_LINODE action with the new linode",
+       sinon.test(async () => {
+      await mock_context(async ({
+          auth, dispatch, getState, fetchStub
+        }) => {
+          const func = actions.createLinode();
+          await func(dispatch, getState);
+          expect(dispatch.calledWith({
+            type: linode_actions.UPDATE_LINODE,
+            linode: response.linode
+          })).to.be.true;
+        }, response, state);
+    }));
 
-    it("should dispatch a routing action to navigate to the detail page", () => {
-      /* TODO */
-    });
+    it("should dispatch a routing action to navigate to the detail page",
+       sinon.test(async () => {
+      await mock_context(async ({
+          auth, dispatch, getState, fetchStub
+        }) => {
+          const func = actions.createLinode();
+          await func(dispatch, getState);
+          expect(dispatch.calledWith(
+            pushPath(`/linodes/${response.linode.id}`)
+          )).to.be.true;
+        }, response, state);
+    }));
 
-    it("should dispatch a CLEAR_CREATE_FORM action", () => {
-      /* TODO */
-    });
+    it("should dispatch a CLEAR_CREATE_FORM action", sinon.test(async () => {
+      await mock_context(async ({
+          auth, dispatch, getState, fetchStub
+        }) => {
+          const func = actions.createLinode();
+          await func(dispatch, getState);
+          expect(dispatch.calledWith({ type: actions.CLEAR_FORM })).to.be.true;
+        }, response, state);
+    }));
 
-    it("should update the linode until it finishes provisioning", () => {
-      /* TODO */
-    });
+    it("should update the linode until it finishes provisioning", sinon.test(async () => {
+      await mock_context(async ({
+          auth, dispatch, getState, fetchStub
+        }) => {
+          const func = actions.createLinode();
+          const update = sinon.spy(() => { });
+          const _update = sinon.stub(linode_actions, "updateLinodeUntil", update);
+          await func(dispatch, getState);
+          expect(update.calledWith(response.linode.id)).to.be.true;
+        }, response, state);
+    }));
   });
 });

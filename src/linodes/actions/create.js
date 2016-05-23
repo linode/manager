@@ -10,6 +10,7 @@ export const SET_LABEL = "@@ui@@linode-creation/SET_LABEL";
 export const GENERATE_PASSWORD = "@@ui@@linode-creation/GENERATE_PASSWORD";
 export const TOGGLE_SHOW_PASSWORD = "@@ui@@linode-creation/TOGGLE_SHOW_PASSWORD";
 export const TOGGLE_CREATING = "@@ui@@linode-creation/TOGGLE_CREATING";
+export const CLEAR_FORM = "@@ui@@linode-creation/CLEAR_FORM";
 
 import { UPDATE_LINODE, updateLinodeUntil } from '~/actions/api/linodes';
 
@@ -67,11 +68,7 @@ export function createLinode() {
     dispatch({ type: UPDATE_LINODE, linode: json.linode });
     dispatch(pushPath(`/linodes/${json.linode.id}`));
     dispatch({ type: TOGGLE_CREATING });
-    dispatch(setLabel(null));
-    dispatch(selectService(null));
-    dispatch(selectDatacenter(null));
-    dispatch(selectSource(null));
-    dispatch(changeSourceTab(0));
+    dispatch({ type: CLEAR_FORM });
     dispatch(updateLinodeUntil(json.linode.id,
       l => l.state !== "provisioning"));
   };
