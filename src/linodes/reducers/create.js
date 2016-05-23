@@ -7,7 +7,8 @@ import {
   SET_LABEL,
   GENERATE_PASSWORD,
   TOGGLE_SHOW_PASSWORD,
-  TOGGLE_CREATING
+  TOGGLE_CREATING,
+  CLEAR_FORM
 } from '../actions/create';
 
 const default_state = {
@@ -61,6 +62,8 @@ export default function linodeCreation(state=default_state, action) {
         ...state,
         creating: !state.creating
       };
+    case CLEAR_FORM:
+      return default_state;
     default:
       return state;
   }
