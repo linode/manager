@@ -192,6 +192,9 @@ describe("linodes/actions/create", () => {
           const _update = sinon.stub(linode_actions, "updateLinodeUntil", update);
           await func(dispatch, getState);
           expect(update.calledWith(response.linode.id)).to.be.true;
+          expect(update.args[0][1]).to.be.a("function");
+          expect(update.args[0][1]({ state: "provisioning" })).to.be.false;
+          expect(update.args[0][1]({ state: "powered_off" })).to.be.true;
         }, response, state);
     }));
   });
