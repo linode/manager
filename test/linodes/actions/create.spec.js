@@ -173,7 +173,7 @@ describe("linodes/actions/create", () => {
         }, response, state);
     }));
 
-    it("should dispatch a CLEAR_CREATE_FORM action", sinon.test(async () => {
+    it("should dispatch a CLEAR_FORM action", sinon.test(async () => {
       await mock_context(async ({
           auth, dispatch, getState, fetchStub
         }) => {
