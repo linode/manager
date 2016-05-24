@@ -1,7 +1,7 @@
 import sinon from 'sinon';
 import * as fetch from '~/fetch';
 
-export const mock_context = async (f, rsp, state={}) => {
+export const mock_context = async (sandbox, f, rsp, state={}) => {
   const auth = { token: 'token' };
   let getState = sinon.stub().returns({
     authentication: auth,

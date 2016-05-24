@@ -1,4 +1,5 @@
 import sinon from 'sinon';
+import { expect } from 'chai';
 import {
   powerOnLinode,
   powerOffLinode,
@@ -13,20 +14,30 @@ describe("actions/linodes/power", sinon.test(() => {
     linode: { id: "foo", state: "booting" }
   };
 
+  let sandbox = null;
+
+  beforeEach(() => {
+    sandbox = sinon.sandbox.create();
+  });
+
+  afterEach(() => {
+    sandbox.restore();
+  });
+
   it('returns linode power boot status', async () => {
-    await mock_context(async ({
+    await mock_context(sandbox, async ({
         auth, dispatch, getState, fetchStub
       }) => {
       const f = powerOnLinode("foo");
 
       await f(dispatch, getState);
 
-      sinon.assert.calledWith(fetchStub,
-        auth.token, '/linodes/foo/boot', { method: "POST" });
-      sinon.assert.calledWith(dispatch, {
+      expect(fetchStub.calledWith(
+        auth.token, '/linodes/foo/boot', { method: "POST" })).to.be.true;
+      expect(dispatch.calledWith({
         type: UPDATE_LINODE,
         linode: { id: "foo", state: "booting" }
-      });
+      })).to.be.true;
     }, mock_booting_response);
   });
 
@@ -36,19 +47,19 @@ describe("actions/linodes/power", sinon.test(() => {
   };
 
   it('returns linode power shutdown status', async () => {
-    await mock_context(async ({
+    await mock_context(sandbox, async ({
         auth, dispatch, getState, fetchStub
       }) => {
       const f = powerOffLinode("foo");
 
       await f(dispatch, getState);
 
-      sinon.assert.calledWith(fetchStub,
-        auth.token, '/linodes/foo/shutdown', { method: "POST" });
-      sinon.assert.calledWith(dispatch, {
+      expect(fetchStub.calledWith(
+        auth.token, '/linodes/foo/shutdown', { method: "POST" })).to.be.true;
+      expect(dispatch.calledWith({
         type: UPDATE_LINODE,
         linode: { id: "foo", state: "shutting_down" }
-      });
+      })).to.be.true;
     }, mock_shutting_down_response);
   });
 
@@ -58,19 +69,19 @@ describe("actions/linodes/power", sinon.test(() => {
   };
 
   it('returns linode power reboot status', async () => {
-    await mock_context(async ({
+    await mock_context(sandbox, async ({
         auth, dispatch, getState, fetchStub
       }) => {
       const f = rebootLinode("foo");
 
       await f(dispatch, getState);
 
-      sinon.assert.calledWith(fetchStub,
-        auth.token, '/linodes/foo/reboot', { method: "POST" });
-      sinon.assert.calledWith(dispatch, {
+      expect(fetchStub.calledWith(
+        auth.token, '/linodes/foo/reboot', { method: "POST" })).to.be.true;
+      expect(dispatch.calledWith({
         type: UPDATE_LINODE,
         linode: { id: "foo", state: "rebooting" }
-      });
+      })).to.be.true;
     }, mock_rebooting_response);
   });
 }));
