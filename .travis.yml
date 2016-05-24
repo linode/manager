@@ -9,7 +9,7 @@ script:
         EOF
     - npm test
     - cat ./coverage/lcov.info | ./node_modules/.bin/coveralls
-    - cat ./coverage/lcov.info | ./node_modules/.bin/codeclimate-coverage-reporter
+    - cat ./coverage/lcov.info | ./node_modules/.bin/codeclimate-test-reporter
 addons:
     code_climate:
         repo_token:
