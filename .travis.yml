@@ -9,3 +9,7 @@ script:
         EOF
     - npm test
     - cat ./coverage/lcov.info | ./node_modules/.bin/coveralls
+addons:
+    code_climate:
+        repo_token:
+            secure: "Lg8zs5uo64rhVPTv0Tjvh2J+MI1Snu2wUl+jdYo3w1865xZuVvbivH7HIvdwFCHGfKZV7OcoS5UZ2bKG8k1F8e4/c9Qff4zPq/kcC3b1X+pDAtJRUecVu/SuwTb74fDo2SbCGfs69o7WjLn2J3jMJKqJRdtMW+/lsQ22FbgH4EY8n7L/NiLWx8erY3cDnNd0SWhLQ5BHFnau4jpyDrqg0PCEV3gyGYGAvonRv6Td9YoOHWNUqHsvCYuls1RNU1X7dqbSrnOXoMaSE4oD2/tmDgrHoUaTzdMceeul45mwdNLfhkjxB59/geoRO1QsMVn3r1WFgpCT48FbWXYqsfa58A7I6MNqmMUngfshBdpRjOTbnOuPh2ZTdfYXCBlG6cj1xYHjjm2CVeFVhL2hVNeNqLS/GwR/WSqNA0BzACz7BA5Yt31PKefoCTMHDAoDb6+IXK+AdeyL9fQ0+BIEoyWCtKmelLbDOy6AlU8JzeVPsLmwuNrx3aOdQy9MWARFFWFHqOkvBVB5cGJ4Af/Zi/pThwlaBWrlwowK4uUN7d8ZYQv1/orlE3JcD+hDO/8ch6+fGyWN97pOpUdo+9JMQQmcykqDScWRHvtENxq3qLoglbtwkBkVXLHdEIjSAHwUh7fU0bfnq9PfDAR3ccIiaiPMvfDRvDe2ttKO2B6GaAUBCUI="
