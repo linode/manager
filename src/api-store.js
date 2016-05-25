@@ -23,7 +23,7 @@ function transformItem(item) {
  * transform: a function each object will be run through to add custom
  * properties and what-not
  */
-export default function make_api_list(plural, singular,
+export default function makeApiList(plural, singular,
     actions, transform=d => d) {
 
   const default_state = {
@@ -81,7 +81,7 @@ export default function make_api_list(plural, singular,
 
 import { fetch } from './fetch';
 
-export function make_fetch_page(action, plural) {
+export function makeFetchPage(action, plural) {
   return (page = 0) => {
     return async (dispatch, getState) => {
       const { token } = getState().authentication;

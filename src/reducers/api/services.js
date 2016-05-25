@@ -1,6 +1,6 @@
 import { UPDATE_SERVICES } from '~/actions/api/services';
-import make_api_list from '~/api-store';
+import makeApiList from '~/api-store';
 
-export default make_api_list('services', 'service', {
+export default makeApiList('services', 'service', {
   update_many: UPDATE_SERVICES,
 });

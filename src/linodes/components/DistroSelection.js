@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { distros } from '~/assets';
+import { distroAssets } from '~/assets';
 import _ from 'underscore';
 
 export default class DistroSelection extends Component {
@@ -12,11 +12,13 @@ export default class DistroSelection extends Component {
   renderDistro(distro) {
     const { onSelection, selected } = this.props;
     return (
-      <div className={`distro ${selected == distro.id ? 'selected' : ''}`}
+      <div
+        className={`distro ${selected === distro.id ? 'selected' : ''}`}
         key={distro.id} onClick={() => onSelection(distro.id)}
       >
-        <img src={distros[distro.vendor]
-          ? distros[distro.vendor] : '//placehold.it/50x50'}
+        <img
+          src={distroAssets[distro.vendor]
+            ? distroAssets[distro.vendor] : '//placehold.it/50x50'}
           width="50" height="50" alt={distro.vendor}
         />
         {distro.label}
@@ -28,7 +30,8 @@ export default class DistroSelection extends Component {
     const { distros } = this.props;
     return (
       <div className="creation-step">
-        <input className="form-control"
+        <input
+          className="form-control"
           placeholder="Search images..."
         />
         <div className="list">

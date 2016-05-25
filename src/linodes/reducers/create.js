@@ -11,7 +11,7 @@ import {
   CLEAR_FORM,
 } from '../actions/create';
 
-const default_state = {
+const defaultState = {
   sourceTab: 0,
   showAllPlans: false,
   password: null,
@@ -23,7 +23,7 @@ const default_state = {
   service: null,
 };
 
-export default function linodeCreation(state = default_state, action) {
+export default function linodeCreation(state = defaultState, action) {
   switch (action.type) {
     case CHANGE_SOURCE_TAB:
       return { ...state, sourceTab: action.tab };
@@ -63,7 +63,7 @@ export default function linodeCreation(state = default_state, action) {
         creating: !state.creating,
       };
     case CLEAR_FORM:
-      return default_state;
+      return defaultState;
     default:
       return state;
   }

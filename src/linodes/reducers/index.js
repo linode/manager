@@ -8,34 +8,36 @@ import {
   TOGGLE_SELECTED,
 } from '../actions/index';
 
-const array_to_set = arr => arr.reduce((s, v) => ({ ...s, [v]: true }), { });
+const arrayToSet = arr => arr.reduce((s, v) => ({ ...s, [v]: true }), { });
 
-export function index(state = null, action) {
-  if (state === null) {
-    const view = getStorage('linodes/view') || 'grid';
-    state = { view, selected: { } };
-  }
+export function index(_state = null, action) {
+  const state = _state === null ? {
+    view: getStorage('linodes/view') || 'grid',
+    selected: { },
+  } : _state;
 
   switch (action.type) {
-    case CHANGE_VIEW:
+    case CHANGE_VIEW: {
       const { view } = action;
       setStorage('linodes/view', view);
       return { ...state, view };
-    case TOGGLE_SELECTED:
+    }
+    case TOGGLE_SELECTED: {
       const { selected } = action;
-      const new_selections = _.omit.apply(this, [
-        array_to_set(selected), ...Object.keys(state.selected),
+      const newSelections = _.omit.apply(this, [
+        arrayToSet(selected), ...Object.keys(state.selected),
       ]);
-      const persistent_selections = _.omit.apply(this, [
+      const persistentSelections = _.omit.apply(this, [
         state.selected, ...selected,
       ]);
       return {
         ...state,
         selected: {
-          ...persistent_selections,
-          ...new_selections,
+          ...persistentSelections,
+          ...newSelections,
         },
       };
+    }
     default:
       return state;
   }

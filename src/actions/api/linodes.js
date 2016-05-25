@@ -1,6 +1,6 @@
 import { fetch } from '~/fetch';
 import {
-    make_fetch_page,
+    makeFetchPage,
     make_update_item,
     make_update_until,
     make_delete_item
@@ -10,7 +10,7 @@ export const UPDATE_LINODES = '@@linodes/UPDATE_LINODES';
 export const UPDATE_LINODE = '@@linodes/UPDATE_LINODE';
 export const DELETE_LINODE = '@@linodes/DELETE_LINODE';
 
-export const fetchLinodes = make_fetch_page(
+export const fetchLinodes = makeFetchPage(
     UPDATE_LINODES, "linodes");
 export const updateLinode = make_update_item(
     UPDATE_LINODE, "linodes", "linode");

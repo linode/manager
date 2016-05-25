@@ -5,9 +5,8 @@ import {
   updateLinode, powerOnLinode, powerOffLinode,
   rebootLinode,
 } from '~/actions/api/linodes';
-import { LinodePower } from '../components/LinodePower';
 import Dropdown from '~/components/Dropdown';
-import { LinodeStates, LinodeStatesReadable } from '~/constants';
+import { LinodeStatesReadable } from '~/constants';
 
 class LinodeDetailPage extends Component {
   constructor() {
@@ -19,12 +18,6 @@ class LinodeDetailPage extends Component {
     this.reboot = this.reboot.bind(this);
   }
 
-  getLinode() {
-    const { linodes } = this.props.linodes;
-    const { linodeId } = this.props.params;
-    return linodes[linodeId];
-  }
-
   componentDidMount() {
     const { dispatch } = this.props;
     const linode = this.getLinode();
@@ -32,6 +25,12 @@ class LinodeDetailPage extends Component {
       const { linodeId } = this.props.params;
       dispatch(updateLinode(linodeId));
     }
+  }
+
+  getLinode() {
+    const { linodes } = this.props.linodes;
+    const { linodeId } = this.props.params;
+    return linodes[linodeId];
   }
 
   powerOn(linode) {
@@ -57,7 +56,7 @@ class LinodeDetailPage extends Component {
 
     // Convert ip groups into an array
     const arrayifyIps = (pubPriv, type) => {
-      let ips = ipAddresses[pubPriv][type];
+      const ips = ipAddresses[pubPriv][type];
       if (Array.isArray(pubPriv)) {
         return ips;
       } else if (!!ips) {
@@ -68,11 +67,6 @@ class LinodeDetailPage extends Component {
 
     const pubIpv4 = arrayifyIps('public', 'ipv4');
     const pubIpv6 = arrayifyIps('public', 'ipv6');
-    const privIpv4 = arrayifyIps('private', 'ipv4');
-    const privIpv6 = arrayifyIps('private', 'ipv6');
-    const linkLocal = arrayifyIps('private', 'link_local');
-
-    const renderIps = (ips) => ips.map(i => <div key={i}>{i}</div>);
 
     const dropdownElements = [
       { name: 'Reboot', _action: this.reboot },
@@ -90,7 +84,9 @@ class LinodeDetailPage extends Component {
         <div className="card">
           <header>
             <h1>{linode.label}</h1>
-            <span className={`linode-status ${linode.state}`}>{LinodeStatesReadable[linode.state]}</span>
+            <span className={`linode-status ${linode.state}`}>
+              {LinodeStatesReadable[linode.state]}
+            </span>
             <span className="pull-right">
               <Dropdown elements={dropdownElements} />
             </span>

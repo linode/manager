@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import DistroSelection from './DistroSelection';
-import DatacenterSelection from './DatacenterSelection';
 import { changeSourceTab, selectSource } from '../actions/create';
-import { distros as distro_assets } from '~/assets';
+import { distros as distroAssets } from '~/assets';
 
 export default class SourceSelection extends Component {
   constructor() {
@@ -20,32 +19,32 @@ export default class SourceSelection extends Component {
   }
 
   renderSourceTabs({ dispatch, distros, ui }) {
-    if (this.sourceSelected()) return;
+    if (this.sourceSelected()) return null;
     return (<div>
-        <Tabs
-          onSelect={ix => dispatch(changeSourceTab(ix))}
-          selectedIndex={ui.sourceTab}
-        >
-          <TabList>
-            <Tab>Distributions</Tab>
-            <Tab>StackScripts</Tab>
-            <Tab>Backups</Tab>
-          </TabList>
-          <TabPanel>
-            <DistroSelection
-              onSelection={d => dispatch(selectSource(d))}
-              selected={ui.source}
-              distros={distros}
-            />
-          </TabPanel>
-          <TabPanel>
-            StackScript Selection
-          </TabPanel>
-          <TabPanel>
-            Backups Selection
-          </TabPanel>
-        </Tabs>
-      </div>);
+      <Tabs
+        onSelect={ix => dispatch(changeSourceTab(ix))}
+        selectedIndex={ui.sourceTab}
+      >
+        <TabList>
+          <Tab>Distributions</Tab>
+          <Tab>StackScripts</Tab>
+          <Tab>Backups</Tab>
+        </TabList>
+        <TabPanel>
+          <DistroSelection
+            onSelection={d => dispatch(selectSource(d))}
+            selected={ui.source}
+            distros={distros}
+          />
+        </TabPanel>
+        <TabPanel>
+          StackScript Selection
+        </TabPanel>
+        <TabPanel>
+          Backups Selection
+        </TabPanel>
+      </Tabs>
+    </div>);
   }
 
   renderHeader() {
@@ -54,20 +53,20 @@ export default class SourceSelection extends Component {
       const distro = distros[ui.source];
       return (<h2 className="text-right">
         {distro.label}
-        <img className="header-icon" src={distro_assets[distro.vendor]
-          ? distro_assets[distro.vendor] : '//placehold.it/50x50'}
+        <img
+          className="header-icon" src={distroAssets[distro.vendor]
+            ? distroAssets[distro.vendor] : '//placehold.it/50x50'}
           width="24" height="24" alt={distro.vendor}
         />
       </h2>);
-    } else {
-      return <h2>Select a Source</h2>;
     }
+    return <h2>Select a Source</h2>;
   }
 
   render() {
-    const { done } = this.props;
     return (
-      <div className={`card creation-step ${
+      <div
+        className={`card creation-step ${
           this.sourceSelected() ? 'step-done' : ''}`}
       >
         {this.renderHeader()}

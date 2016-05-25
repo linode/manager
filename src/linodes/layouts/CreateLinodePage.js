@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router';
 import { connect } from 'react-redux';
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import SourceSelection from '../components/SourceSelection';
 import ServiceSelection from '../components/ServiceSelection';
 import DatacenterSelection from '../components/DatacenterSelection';
@@ -10,7 +8,6 @@ import { fetchDistros } from '~/actions/api/distros';
 import { fetchDatacenters } from '~/actions/api/datacenters';
 import { fetchServices } from '~/actions/api/services';
 import {
-  changeSourceTab,
   selectSource,
   selectDatacenter,
   selectService,
@@ -61,7 +58,8 @@ class CreateLinodePage extends Component {
             onBack={() => dispatch(selectDatacenter(null))}
             ui={ui} services={services}
           />
-          <OrderSummary ui={ui}
+          <OrderSummary
+            ui={ui}
             onBack={() => dispatch(selectService(null))}
             onCreate={() => dispatch(createLinode())}
             onLabelChange={this.onLabelChange}

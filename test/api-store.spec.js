@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import deepFreeze from 'deep-freeze';
 import make_api_list from '../src/api-store';
 import {
-  make_fetch_page,
+  makeFetchPage,
   make_update_item,
   make_update_until,
   make_delete_item
@@ -204,9 +204,9 @@ describe("api-store", () => {
 
   });
 
-  describe("api-store/make_fetch_page", () => {
+  describe("api-store/makeFetchPage", () => {
     it('returns a function that itself returns a function', () => {
-      const f = make_fetch_page("FETCH_FOOBARS", "foobars");
+      const f = makeFetchPage("FETCH_FOOBARS", "foobars");
       expect(f).to.be.a("function");
       expect(f()).to.be.a("function");
     });
@@ -215,7 +215,7 @@ describe("api-store", () => {
       await mock_context(sandbox, async ({
           auth, dispatch, getState, fetchStub
         }) => {
-        const f = make_fetch_page("FETCH_FOOBARS", "foobars");
+        const f = makeFetchPage("FETCH_FOOBARS", "foobars");
         const p = f();
 
         await p(dispatch, getState);
@@ -233,7 +233,7 @@ describe("api-store", () => {
       await mock_context(sandbox, async ({
           auth, dispatch, getState, fetchStub
         }) => {
-        const f = make_fetch_page("FETCH_FOOBARS", "foobars");
+        const f = makeFetchPage("FETCH_FOOBARS", "foobars");
         const p = f(1);
 
         await p(dispatch, getState);

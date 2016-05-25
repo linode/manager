@@ -8,7 +8,7 @@ import { Router, Route, IndexRedirect } from 'react-router';
 import DevTools from './components/DevTools';
 import { syncReduxAndRouter } from 'redux-simple-router';
 import styles from '../scss/manager.scss';
-import { client_id } from './secrets';
+import { clientId } from './secrets';
 import { APP_ROOT, LOGIN_ROOT } from './constants';
 
 const store = configureStore();
@@ -28,7 +28,7 @@ const init = () => {
       const query = Object.keys(next.location.query)
               .reduce((a, k) => [...a, `${k}=${encodeURIComponent(next.location.query[k])}`], []).join('%26');
       window.location = `${LOGIN_ROOT}/oauth/authorize?` +
-        `client_id=${client_id}` +
+        `clientId=${clientId}` +
         '&scopes=*' +
         `&redirect_uri=${encodeURIComponent(APP_ROOT)}/oauth/callback?return=` +
               encodeURIComponent(next.location.pathname + (query ? '%3F' + query : ''));

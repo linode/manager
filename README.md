@@ -26,8 +26,8 @@ client](https://developers.linode.com/reference/#authentication) in the alpha
 environment, then create a file at `src/secrets.js` with your client ID and
 client secret set appropriately:
 
-    export const client_id = "change me";
-    export const client_secret = "change me";
+    export const clientId = "change me";
+    export const clientSecret = "change me";
 
 ## Development
 

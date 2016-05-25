@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { set_token } from '../actions/authentication';
-import { client_id, client_secret } from '../secrets';
+import { setToken } from '../actions/authentication';
+import { clientId, clientSecret } from '../secrets';
 import { pushPath } from 'redux-simple-router';
 
 class OAuthCallbackPage extends Component {
@@ -14,12 +14,12 @@ class OAuthCallbackPage extends Component {
       let xhr = new XMLHttpRequest();
       xhr.open('POST', 'https://login.alpha.linode.com/oauth/token');
       let data = new FormData();
-      data.append('client_id', client_id);
-      data.append('client_secret', client_secret);
+      data.append('clientId', clientId);
+      data.append('clientSecret', clientSecret);
       data.append('code', code);
       xhr.onload = () => {
         let json = JSON.parse(xhr.response);
-        dispatch(set_token(json.access_token, json.scopes, username, email));
+        dispatch(setToken(json.access_token, json.scopes, username, email));
         dispatch(pushPath(returnTo ? returnTo : '/'));
       };
       xhr.send(data);

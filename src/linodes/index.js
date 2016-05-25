@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { Router, Route, IndexRoute } from 'react-router';
+import React from 'react';
+import { Route, IndexRoute } from 'react-router';
 
 import IndexPage from './layouts/IndexPage';
 import LinodeDetailPage from './layouts/LinodeDetailPage';

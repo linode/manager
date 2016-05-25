@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import _ from 'underscore';
 import { toggleAllPlans } from '../actions/create';
 import Service from './Service';
 
-const test_services = [
+const testServices = [
   {
     label: 'Linode 1024',
     ram: 1024,
@@ -116,23 +115,26 @@ export default class ServiceSelection extends Component {
   renderBack() {
     const { onBack, ui } = this.props;
     if (ui.service === null) {
-      return (<a href="#" className="back pull-right"
+      return (<a
+        href="#" className="back pull-right"
         onClick={e => { e.preventDefault(); onBack(); }}
       >Back</a>);
     }
+    return null;
   }
 
   renderHeader() {
     const { ui, services } = this.props;
     if (ui.service === null) {
       return <h2>Select a Plan</h2>;
-    } else {
-      const s = services.find(s => s.id == ui.service);
-      return (<h2 className="text-right">
-        {s.label}
-        <span className="dodsoncube" width="24" height="24"></span>
-      </h2>);
     }
+    const s = services.find(_ => _.id === ui.service);
+    return (<h2
+      className="text-right"
+    >
+      {s.label}
+      <span className="dodsoncube" width="24" height="24"></span>
+    </h2>);
   }
 
   render() {
@@ -143,7 +145,7 @@ export default class ServiceSelection extends Component {
     }
 
     const services = ui.showAllPlans ? /* this.props.services*/
-      test_services : test_services.slice(0, 4);
+      testServices : testServices.slice(0, 4);
 
     if (ui.service !== null) {
       return (<div className="card creation-step step-done">
@@ -163,7 +165,8 @@ export default class ServiceSelection extends Component {
             service={s}
           />)}
         </div>
-        <button className="btn btn-success btn-block"
+        <button
+          className="btn btn-success btn-block"
           onClick={() => dispatch(toggleAllPlans())}
         >
           {ui.showAllPlans ? 'Show Fewer' : 'Show More'}
