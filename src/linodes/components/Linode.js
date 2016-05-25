@@ -7,22 +7,22 @@ export class Linode extends Component {
   renderPowerButton() {
     const { linode, powerOn, reboot } = this.props;
 
-    let [powerIcon, powerAction] = ["", () => {}];
-    if (linode.state == "offline") {
-      [powerIcon, powerAction] = ["fa-power-off", powerOn];
-    } else if (linode.state == "running") {
-      [powerIcon, powerAction] = ["fa-refresh", reboot];
+    let [powerIcon, powerAction] = ['', () => {}];
+    if (linode.state == 'offline') {
+      [powerIcon, powerAction] = ['fa-power-off', powerOn];
+    } else if (linode.state == 'running') {
+      [powerIcon, powerAction] = ['fa-refresh', reboot];
     }
     const powerActionF = () => powerAction(linode);
 
-    return powerIcon == "" ? <span /> :
+    return powerIcon == '' ? <span /> :
         <span className={`linode-power fa ${powerIcon} pull-right`} onClick={powerActionF} />;
   }
-  
+
   renderCard() {
     const { linode, onSelect, isSelected } = this.props;
     const select = () => onSelect(linode);
-    const selectedClass = isSelected ? "selected" : "";
+    const selectedClass = isSelected ? 'selected' : '';
 
     const checkbox = isSelected ?
         <input type="checkbox" checked="checked" onClick={select} /> :
@@ -67,7 +67,7 @@ export class Linode extends Component {
   renderRow() {
     const { linode, onSelect, isSelected } = this.props;
     const select = () => onSelect(linode);
-    const selectedClass = isSelected ? "selected" : "";
+    const selectedClass = isSelected ? 'selected' : '';
 
     const checkbox = isSelected ?
         <input type="checkbox" checked="checked" onClick={select} /> :
@@ -102,7 +102,7 @@ export class Linode extends Component {
       </tr>
     );
   }
-  
+
   render() {
     const { isCard } = this.props;
     return isCard ? this.renderCard() : this.renderRow();
@@ -114,7 +114,7 @@ export class NewLinode extends Component {
     return (
       <div className="card new-linode">
         <button className="btn btn-success">
-          <i className="fa fa-plus" style={{marginLeft: '1rem'}}></i>
+          <i className="fa fa-plus" style={{ marginLeft: '1rem' }}></i>
         </button>
       </div>
     );

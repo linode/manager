@@ -17,7 +17,7 @@ import {
   setLabel,
   generatePassword,
   toggleShowPassword,
-  createLinode
+  createLinode,
 } from '../actions/create';
 
 class CreateLinodePage extends Component {
@@ -48,16 +48,19 @@ class CreateLinodePage extends Component {
           <h1>Create a Linode</h1>
           <SourceSelection
             dispatch={dispatch}
-            ui={ui} distros={distros} />
+            ui={ui} distros={distros}
+          />
           <DatacenterSelection
             onSelection={dc => dispatch(selectDatacenter(dc))}
             onBack={() => dispatch(selectSource(null))}
-            ui={ui} datacenters={datacenters} />
+            ui={ui} datacenters={datacenters}
+          />
           <ServiceSelection
             dispatch={dispatch}
             onSelection={s => dispatch(selectService(s))}
             onBack={() => dispatch(selectDatacenter(null))}
-            ui={ui} services={services} />
+            ui={ui} services={services}
+          />
           <OrderSummary ui={ui}
             onBack={() => dispatch(selectService(null))}
             onCreate={() => dispatch(createLinode())}
@@ -65,7 +68,8 @@ class CreateLinodePage extends Component {
             onShowRootPassword={() => dispatch(toggleShowPassword())}
             services={services}
             datacenters={datacenters}
-            distros={distros} />
+            distros={distros}
+          />
         </div>
       </div>
     );
@@ -78,7 +82,7 @@ function select(state) {
     distros: state.api.distros.distributions,
     services: Object.values(state.api.services.services).filter(
         s => s.service_type === 'linode'),
-    ui: state.linodes.create
+    ui: state.linodes.create,
   };
 }
 

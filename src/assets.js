@@ -8,7 +8,7 @@ import Ubuntu from 'file!../assets/distros/Ubuntu.png';
 import openSUSE from 'file!../assets/distros/OpenSUSE.png';
 
 export const distros = {
-    Arch, CentOS, Debian, Fedora, Gentoo, Slackware, Ubuntu, openSUSE
+  Arch, CentOS, Debian, Fedora, Gentoo, Slackware, Ubuntu, openSUSE,
 };
 
 import us from 'file!../assets/flags/us.svg';
@@ -18,5 +18,5 @@ import sg from 'file!../assets/flags/sg.svg';
 import jp from 'file!../assets/flags/jp.svg';
 
 export const flags = {
-  us, de, gb, sg, jp
+  us, de, gb, sg, jp,
 };

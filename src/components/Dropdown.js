@@ -7,8 +7,9 @@ export default class Dropdown extends Component {
 
     const dropdownBody = rest.map(element =>
       <div key={element.name}
-          className="li-dropdown-item"
-          onClick={element.action}>
+        className="li-dropdown-item"
+        onClick={element.action}
+      >
           {element.name}
       </div>
     );
@@ -16,7 +17,8 @@ export default class Dropdown extends Component {
     return (
       <span className="li-dropdown">
         <span onClick={first.action}
-         className="li-dropdown-item li-dropdown-first">{first.name}</span>
+          className="li-dropdown-item li-dropdown-first"
+        >{first.name}</span>
         <span className="li-dropdown-body">
           <span className="li-dropdown-activator"><span className="fa fa-sort-down" /></span>
           <div className="li-dropdown-target">{dropdownBody}</div>

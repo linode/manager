@@ -5,14 +5,15 @@ import logo from 'file!../../assets/linode-logo.svg';
 class Navigation extends Component {
   render() {
     const { username } = this.props;
-      
+
     return (
       <nav id="main-nav" className="navbar navbar-default" role="navigation">
         <div className="navbar-header">
           <div className="navbar-linode">
             <Link to="/">
               <img id="navbar-logo" src={logo}
-               width="128" height="50" />
+                width="128" height="50"
+              />
             </Link>
           </div>
           <div className="navbar-search">

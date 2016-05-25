@@ -21,10 +21,11 @@ export default class SourceSelection extends Component {
 
   renderSourceTabs({ dispatch, distros, ui }) {
     if (this.sourceSelected()) return;
-    return <div>
+    return (<div>
         <Tabs
           onSelect={ix => dispatch(changeSourceTab(ix))}
-          selectedIndex={ui.sourceTab}>
+          selectedIndex={ui.sourceTab}
+        >
           <TabList>
             <Tab>Distributions</Tab>
             <Tab>StackScripts</Tab>
@@ -34,7 +35,8 @@ export default class SourceSelection extends Component {
             <DistroSelection
               onSelection={d => dispatch(selectSource(d))}
               selected={ui.source}
-              distros={distros} />
+              distros={distros}
+            />
           </TabPanel>
           <TabPanel>
             StackScript Selection
@@ -43,19 +45,20 @@ export default class SourceSelection extends Component {
             Backups Selection
           </TabPanel>
         </Tabs>
-      </div>;
+      </div>);
   }
 
   renderHeader() {
     const { ui, distros } = this.props;
     if (ui.sourceTab === 0 && this.sourceSelected()) {
       const distro = distros[ui.source];
-      return <h2 className="text-right">
+      return (<h2 className="text-right">
         {distro.label}
         <img className="header-icon" src={distro_assets[distro.vendor]
           ? distro_assets[distro.vendor] : '//placehold.it/50x50'}
-          width="24" height="24" alt={distro.vendor} />
-      </h2>;
+          width="24" height="24" alt={distro.vendor}
+        />
+      </h2>);
     } else {
       return <h2>Select a Source</h2>;
     }
@@ -65,7 +68,8 @@ export default class SourceSelection extends Component {
     const { done } = this.props;
     return (
       <div className={`card creation-step ${
-          this.sourceSelected() ? 'step-done' : ''}`}>
+          this.sourceSelected() ? 'step-done' : ''}`}
+      >
         {this.renderHeader()}
         {this.renderSourceTabs(this.props)}
       </div>

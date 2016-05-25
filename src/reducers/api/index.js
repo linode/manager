@@ -10,5 +10,5 @@ export default combineReducers({
   linodes,
   datacenters,
   distros,
-  services
+  services,
 });

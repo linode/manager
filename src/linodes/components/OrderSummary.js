@@ -15,8 +15,9 @@ export default class Summary extends Component {
 
   renderBack() {
     const { onBack } = this.props;
-    return <a href="#" className="back pull-right"
-      onClick={e => { e.preventDefault(); onBack() }}>Back</a>;
+    return (<a href="#" className="back pull-right"
+      onClick={e => { e.preventDefault(); onBack(); }}
+    >Back</a>);
   }
 
   renderHeader() {
@@ -25,25 +26,27 @@ export default class Summary extends Component {
 
   renderSourceSummary(distro) {
     // TODO: other source types
-    return <div className="row summary-source">
+    return (<div className="row summary-source">
         <div className="col-md-1">
           <img src={distros[distro.vendor]
             ? distros[distro.vendor] : '//placehold.it/50x50'}
-            width="24" height="24" alt={distro.vendor} />
+            width="24" height="24" alt={distro.vendor}
+          />
         </div>
         <div className="col-md-11">{distro.label}</div>
-      </div>;
+      </div>);
   }
 
   renderDCSummary(dc) {
-    return <div className="row summary-dc">
+    return (<div className="row summary-dc">
       <div className="col-md-1">
         <img src={flags[countryMap[dc.id]]
           ? flags[countryMap[dc.id]] : '//placehold.it/50x50'}
-          width="24" height="24" alt={dc.label} />
+          width="24" height="24" alt={dc.label}
+        />
       </div>
       <div className="col-md-11">{dc.label}</div>
-    </div>;
+    </div>);
   }
 
   componentDidUpdate() {
@@ -67,16 +70,16 @@ export default class Summary extends Component {
       onLabelChange,
       onBackupChange,
       onShowRootPassword,
-      onCreate
+      onCreate,
     } = this.props;
     const done = ui.source && ui.datacenter && ui.service;
     if (!done) {
-        return <div></div>;
+      return <div></div>;
     }
     const service = services.find(s => s.id === ui.service);
     const distro = distros[ui.source];
     const dc = datacenters[ui.datacenter];
-    return <div className="card creation-step">
+    return (<div className="card creation-step">
       {this.renderBack()}
       {this.renderHeader()}
       <div className="summary">
@@ -89,7 +92,8 @@ export default class Summary extends Component {
               <label htmlFor="label">Label</label>
               <input className="form-control" id="label"
                 value={ui.label} onChange={onLabelChange}
-                placeholder="Name this Linode..." />
+                placeholder="Name this Linode..."
+              />
             </fieldset>
             <div className="summary">
               {this.renderSourceSummary(distro)}
@@ -102,9 +106,10 @@ export default class Summary extends Component {
                       {ui.password}
                     </strong> : ' '}
                     <a href="#" onClick={e => {
-                    e.preventDefault();
-                    onShowRootPassword()
-                  }}>{ui.showPassword ? '(hide)' : '(show)'}</a>
+                      e.preventDefault();
+                      onShowRootPassword();
+                    }}
+                    >{ui.showPassword ? '(hide)' : '(show)'}</a>
                 </div>
               </div>
               <div className="row">
@@ -119,13 +124,14 @@ export default class Summary extends Component {
               </div>
             </div>
             <button className="btn btn-primary order-button"
-              onClick={onCreate}>
+              onClick={onCreate}
+            >
               <i className="fa fa-chevron-right"></i>&nbsp;
               Create Linode
             </button>
           </div>
         </div>
       </div>
-    </div>;
+    </div>);
   }
-};
+}

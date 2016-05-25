@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { set_token } from '../actions/authentication';
 import { client_id, client_secret } from '../secrets';
-import { pushPath } from 'redux-simple-router'
+import { pushPath } from 'redux-simple-router';
 
 class OAuthCallbackPage extends Component {
   componentDidMount() {

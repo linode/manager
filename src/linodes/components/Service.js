@@ -17,7 +17,8 @@ export default class Service extends Component {
     const { service, onSelection } = this.props;
     return (
       <div key={service.id} onClick={() => onSelection(service.id)}
-        className="service">
+        className="service"
+      >
         <h2>{service.label}</h2>
         <h3>${service.hourly_price / 100}/hr</h3>
         <h4>(${service.monthly_price / 100}/mo)</h4>
