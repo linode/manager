@@ -103,10 +103,8 @@ describe("linodes/actions/create", () => {
       }
     };
     const response = {
-      linode: {
-        id: "linode_1234",
-        label: "label"
-      }
+      id: "linode_1234",
+      label: "label"
     };
 
     it("should return a function", () => {
@@ -164,7 +162,7 @@ describe("linodes/actions/create", () => {
           await func(dispatch, getState);
           expect(dispatch.calledWith({
             type: linode_actions.UPDATE_LINODE,
-            linode: response.linode
+            linode: response
           })).to.be.true;
         }, response, state);
     });
@@ -176,7 +174,7 @@ describe("linodes/actions/create", () => {
           const func = actions.createLinode();
           await func(dispatch, getState);
           expect(dispatch.calledWith(
-            pushPath(`/linodes/${response.linode.id}`)
+            pushPath(`/linodes/${response.id}`)
           )).to.be.true;
         }, response, state);
     });
@@ -199,7 +197,7 @@ describe("linodes/actions/create", () => {
           const update = sandbox.spy(() => { });
           const _update = sandbox.stub(linode_actions, "updateLinodeUntil", update);
           await func(dispatch, getState);
-          expect(update.calledWith(response.linode.id)).to.be.true;
+          expect(update.calledWith(response.id)).to.be.true;
           expect(update.args[0][1]).to.be.a("function");
           expect(update.args[0][1]({ state: "provisioning" })).to.be.false;
           expect(update.args[0][1]({ state: "powered_off" })).to.be.true;

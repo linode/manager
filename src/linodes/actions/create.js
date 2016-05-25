@@ -65,11 +65,11 @@ export function createLinode() {
     });
     const json = await response.json();
     // TODO: Error handling
-    dispatch({ type: UPDATE_LINODE, linode: json.linode });
-    dispatch(pushPath(`/linodes/${json.linode.id}`));
+    dispatch({ type: UPDATE_LINODE, linode: json });
+    dispatch(pushPath(`/linodes/${json.id}`));
     dispatch({ type: TOGGLE_CREATING });
     dispatch({ type: CLEAR_FORM });
-    dispatch(updateLinodeUntil(json.linode.id,
+    dispatch(updateLinodeUntil(json.id,
       l => l.state !== "provisioning"));
   };
 }
