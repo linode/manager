@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import {
   updateLinode, powerOnLinode, powerOffLinode,
-  rebootLinode
+  rebootLinode,
 } from '~/actions/api/linodes';
 import { LinodePower } from '../components/LinodePower';
 import Dropdown from '~/components/Dropdown';
@@ -66,18 +66,18 @@ class LinodeDetailPage extends Component {
       return [];
     };
 
-    const pubIpv4 = arrayifyIps("public", "ipv4");
-    const pubIpv6 = arrayifyIps("public", "ipv6");
-    const privIpv4 = arrayifyIps("private", "ipv4");
-    const privIpv6 = arrayifyIps("private", "ipv6");
-    const linkLocal = arrayifyIps("private", "link_local");
+    const pubIpv4 = arrayifyIps('public', 'ipv4');
+    const pubIpv6 = arrayifyIps('public', 'ipv6');
+    const privIpv4 = arrayifyIps('private', 'ipv4');
+    const privIpv6 = arrayifyIps('private', 'ipv6');
+    const linkLocal = arrayifyIps('private', 'link_local');
 
     const renderIps = (ips) => ips.map(i => <div key={i}>{i}</div>);
 
     const dropdownElements = [
-      { name: "Reboot", _action: this.reboot },
-      { name: "Power off", _action: this.powerOff },
-      { name: "Power on", _action: this.powerOn }
+      { name: 'Reboot', _action: this.reboot },
+      { name: 'Power off', _action: this.powerOff },
+      { name: 'Power on', _action: this.powerOn },
     ].map(element => ({ ...element, action: () => element._action(linode) }));
 
     return (

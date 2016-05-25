@@ -1,6 +1,26 @@
 {
   "extends": "airbnb",
+  "plugins": [
+    "babel"
+  ],
   "env": {
     "browser": true
+  },
+  parserOptions: {
+    "emcaVersion": 7,
+    "sourceType": "module",
+    "ecmaFeatures": {
+        "jsx": true,
+        "experimentalObjectRestSpread": true
+    }
+  },
+  rules: {
+    "babel/generator-star-spacing": 2,
+    "babel/new-cap": 2,
+    "babel/array-bracket-spacing": 2,
+    "babel/object-shorthand": 2,
+    "babel/no-await-in-loop": 2,
+    "babel/flow-object-type": 2,
+    "import/no-unresolved": 0
   }
 }

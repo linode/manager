@@ -11,11 +11,11 @@ import {
   powerOnLinode,
   powerOffLinode,
   rebootLinode,
-  deleteLinode
+  deleteLinode,
 } from '~/actions/api/linodes';
 import {
   changeView,
-  toggleSelected
+  toggleSelected,
 } from '../actions';
 
 class IndexPage extends Component {
@@ -91,37 +91,38 @@ class IndexPage extends Component {
   toggleDisplay(e) {
     e.preventDefault();
     const { dispatch, view } = this.props;
-    dispatch(changeView(view === "grid" ? "list" : "grid"));
+    dispatch(changeView(view === 'grid' ? 'list' : 'grid'));
   }
 
   renderGroup({ group, linodes }) {
     const { selected } = this.props;
 
     const renderLinode = (l, displayClass) => {
-      return <Linode key={l.id} linode={l}
-          onSelect={this.toggle}
-          isSelected={l.id in selected}
-          displayClass={displayClass}
-          isCard={displayClass==="card"}
-          powerOn={this.powerOn}
-          reboot={this.reboot} />
+      return (<Linode key={l.id} linode={l}
+        onSelect={this.toggle}
+        isSelected={l.id in selected}
+        displayClass={displayClass}
+        isCard={displayClass === 'card'}
+        powerOn={this.powerOn}
+        reboot={this.reboot}
+      />);
     };
 
     const { view } = this.props;
-    if (view === "grid") {
-      return <div key={group} className="row linodes">
-          {group ? <h2 className="text-muted display-group">{group}</h2> : ""}
+    if (view === 'grid') {
+      return (<div key={group} className="row linodes">
+          {group ? <h2 className="text-muted display-group">{group}</h2> : ''}
           {linodes.map(l => {
             return (
               <div key={l.id} className="col-md-4">
-                {renderLinode(l, "card")}
+                {renderLinode(l, 'card')}
               </div>
             );
           })}
-        </div>;
+        </div>);
     } else {
-      return <div key={group} className="linodes">
-        {group ? <h2 className="display-group text-muted">{group}</h2> : ""}
+      return (<div key={group} className="linodes">
+        {group ? <h2 className="display-group text-muted">{group}</h2> : ''}
         <table className="linodes">
           <thead>
             <tr>
@@ -135,10 +136,10 @@ class IndexPage extends Component {
             </tr>
           </thead>
           <tbody>
-            {linodes.map(l => renderLinode(l, "row"))}
+            {linodes.map(l => renderLinode(l, 'row'))}
           </tbody>
         </table>
-      </div>;
+      </div>);
     }
   }
 
@@ -152,13 +153,13 @@ class IndexPage extends Component {
       }
     };
   }
-    
+
   renderActions() {
     const elements = [
-      { _action: this.reboot, name: "Reboot" },
-      { _action: this.powerOn, name: "Power On" },
-      { _action: this.powerOff, name: "Power Off" },
-      { _action: this.remove, name: "Delete" }
+      { _action: this.reboot, name: 'Reboot' },
+      { _action: this.powerOn, name: 'Power On' },
+      { _action: this.powerOff, name: 'Power Off' },
+      { _action: this.remove, name: 'Delete' },
     ].map(element => ({ ...element, action: this.doToSelected(element._action) }));
 
     return <Dropdown elements={elements} />;
@@ -182,9 +183,9 @@ class IndexPage extends Component {
     const { view } = this.props;
     const gridListToggle = (
       <span className="grid-list">
-        <span>{view === "list" ? <a href="#" onClick={this.toggleDisplay}>Grid</a> : "Grid"}</span>
+        <span>{view === 'list' ? <a href="#" onClick={this.toggleDisplay}>Grid</a> : 'Grid'}</span>
         <span>|</span>
-        <span>{view === "grid" ? <a href="#" onClick={this.toggleDisplay}>List</a> : "List"}</span>
+        <span>{view === 'grid' ? <a href="#" onClick={this.toggleDisplay}>List</a> : 'List'}</span>
       </span>
     );
 
@@ -200,11 +201,11 @@ class IndexPage extends Component {
           </div>
           <div className="submenu">
             <div className="selectall">
-              <label className ="li-checkbox">
+              <label className="li-checkbox">
                 {selectAllCheckbox}
-                <span />{/*do not delete*/}
+                <span />{/* do not delete*/}
               </label>
-              { this.renderActions() }
+              {this.renderActions()}
             </div>
             <div className="pull-right">
               {gridListToggle}
@@ -228,7 +229,7 @@ function select(state) {
   return {
     linodes: state.api.linodes,
     view: state.linodes.index.view,
-    selected: state.linodes.index.selected
+    selected: state.linodes.index.selected,
   };
 }
 
