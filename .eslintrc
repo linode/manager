@@ -12,10 +12,13 @@
     "babel/new-cap": 2,
     "babel/array-bracket-spacing": 2,
     "babel/object-shorthand": 2,
-    "babel/no-await-in-loop": 2,
     "babel/flow-object-type": 2,
+    "babel/no-await-in-loop": 0,
     "import/no-unresolved": 0,
     "no-underscore-dangle": 0,
-    "react/no-multi-comp": 0
+    "react/no-multi-comp": 0,
+    "dot-notation": [
+      "error", { "allowKeywords": false }
+    ]
   }
 }

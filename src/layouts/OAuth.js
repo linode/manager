@@ -11,16 +11,16 @@ class OAuthCallbackPage extends Component {
     const returnTo = location.query['return'];
 
     if (code) {
-      let xhr = new XMLHttpRequest();
+      const xhr = new XMLHttpRequest();
       xhr.open('POST', 'https://login.alpha.linode.com/oauth/token');
-      let data = new FormData();
+      const data = new FormData();
       data.append('clientId', clientId);
       data.append('clientSecret', clientSecret);
       data.append('code', code);
       xhr.onload = () => {
-        let json = JSON.parse(xhr.response);
+        const json = JSON.parse(xhr.response);
         dispatch(setToken(json.access_token, json.scopes, username, email));
-        dispatch(pushPath(returnTo ? returnTo : '/'));
+        dispatch(pushPath(returnTo || '/'));
       };
       xhr.send(data);
     }
@@ -31,8 +31,4 @@ class OAuthCallbackPage extends Component {
   }
 }
 
-function select(state) {
-  return {};
-}
-
-export default connect(select)(OAuthCallbackPage);
+export default connect(() => ({}))(OAuthCallbackPage);

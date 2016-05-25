@@ -4,9 +4,9 @@ import deepFreeze from 'deep-freeze';
 import make_api_list from '../src/api-store';
 import {
   makeFetchPage,
-  make_update_item,
-  make_update_until,
-  make_delete_item
+  makeUpdateItem,
+  makeUpdateUntil,
+  makeDeleteItem
 } from '../src/api-store';
 import { mock_context } from './mocks';
 
@@ -244,9 +244,9 @@ describe("api-store", () => {
     });
   });
 
-  describe("api-store/make_update_item", () => {
+  describe("api-store/makeUpdateItem", () => {
     it('returns a function that itself returns a function', () => {
-      const f = make_update_item("UPDATE_FOOBAR", "foobars", "foobar");
+      const f = makeUpdateItem("UPDATE_FOOBAR", "foobars", "foobar");
       expect(f).to.be.a("function");
       expect(f()).to.be.a("function");
     });
@@ -255,7 +255,7 @@ describe("api-store", () => {
       await mock_context(sandbox, async ({
           auth, dispatch, getState, fetchStub
         }) => {
-        const f = make_update_item("UPDATE_FOOBAR", "foobars", "foobar");
+        const f = makeUpdateItem("UPDATE_FOOBAR", "foobars", "foobar");
         const p = f("foobar_1");
 
         await p(dispatch, getState);
@@ -270,9 +270,9 @@ describe("api-store", () => {
     });
   });
 
-  describe("api-store/make_delete_item", () => {
+  describe("api-store/makeDeleteItem", () => {
     it('returns a function that itself returns a function', () => {
-      const f = make_delete_item("DELETE_FOOBAR", "foobars");
+      const f = makeDeleteItem("DELETE_FOOBAR", "foobars");
       expect(f).to.be.a("function");
       expect(f()).to.be.a("function");
     });
@@ -282,7 +282,7 @@ describe("api-store", () => {
       await mock_context(sandbox, async ({
           auth, dispatch, getState, fetchStub
         }) => {
-        const f = make_delete_item("DELETE_FOOBAR", "foobars");
+        const f = makeDeleteItem("DELETE_FOOBAR", "foobars");
         const p = f("foobar_1");
 
         await p(dispatch, getState);

@@ -1,9 +1,9 @@
 import { fetch } from '~/fetch';
 import {
     makeFetchPage,
-    make_update_item,
-    make_update_until,
-    make_delete_item,
+    makeUpdateItem,
+    makeUpdateUntil,
+    makeDeleteItem,
 } from '~/api-store';
 
 export const UPDATE_LINODES = '@@linodes/UPDATE_LINODES';
@@ -12,11 +12,11 @@ export const DELETE_LINODE = '@@linodes/DELETE_LINODE';
 
 export const fetchLinodes = makeFetchPage(
     UPDATE_LINODES, 'linodes');
-export const updateLinode = make_update_item(
+export const updateLinode = makeUpdateItem(
     UPDATE_LINODE, 'linodes', 'linode');
-export const updateLinodeUntil = make_update_until(
+export const updateLinodeUntil = makeUpdateUntil(
     UPDATE_LINODE, 'linodes', 'linode');
-export const deleteLinode = make_delete_item(
+export const deleteLinode = makeDeleteItem(
     DELETE_LINODE, 'linodes');
 
 function linodeAction(id, action, temp, expected, timeout = undefined) {
@@ -24,7 +24,7 @@ function linodeAction(id, action, temp, expected, timeout = undefined) {
     const state = getState();
     const { token } = state.authentication;
     dispatch({ type: UPDATE_LINODE, linode: { id, state: temp } });
-    const response = await fetch(token, `/linodes/${id}/${action}`, { method: 'POST' });
+    await fetch(token, `/linodes/${id}/${action}`, { method: 'POST' });
     await dispatch(updateLinodeUntil(id, l => l.state === expected, timeout));
   };
 }

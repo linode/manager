@@ -43,11 +43,11 @@ function renderCard(props) {
         <ul className="list-unstyled">
           <li>
             <span className="fa fa-link"></span>
-            {linode.ip_addresses.public.ipv4[0]}
+            {linode.ip_addresses['public'].ipv4[0]}
           </li>
           <li>
             <span className="fa fa-link invisible"></span>
-            {linode.ip_addresses.public.ipv6}
+            {linode.ip_addresses['public'].ipv6}
           </li>
           <li>
             <span className="fa fa-globe"></span>
@@ -90,7 +90,7 @@ function renderRow(props) {
         >{LinodeStatesReadable[linode.state]}</span>
       </td>
       <td>
-        {linode.ip_addresses.public.ipv4[0]}, {linode.ip_addresses.public.ipv6}
+        {linode.ip_addresses['public'].ipv4[0]}, {linode.ip_addresses['public'].ipv6}
       </td>
       <td>
         {linode.datacenter.label}

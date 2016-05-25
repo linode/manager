@@ -52,7 +52,7 @@ export function createLinode() {
     const { token } = state.authentication;
     const ui = state.linodes.create;
     dispatch({ type: TOGGLE_CREATING });
-    let data = {
+    const data = {
       label: ui.label,
       datacenter: ui.datacenter,
       service: ui.service,
