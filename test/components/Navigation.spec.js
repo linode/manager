@@ -7,7 +7,7 @@ import Navigation from '../../src/components/Navigation';
 describe('Navigation', () => {
   it('renders username', () => {
     const navigation = mount(
-      <Navigation username={ 'peanut' } />
+      <Navigation username={'peanut'} />
     );
 
     expect(navigation.find('.nav-user').text()).to.equal('peanut');
@@ -15,7 +15,7 @@ describe('Navigation', () => {
 
   it('renders username account link', () => {
     const navigation = shallow(
-      <Navigation username={ 'peanut' } />
+      <Navigation username={'peanut'} />
     );
 
     expect(navigation.find({ href: '/account' }).length).to.equal(1);
@@ -23,7 +23,7 @@ describe('Navigation', () => {
 
   it('renders logout', () => {
     const navigation = mount(
-      <Navigation username={ 'peanut' } />
+      <Navigation username={'peanut'} />
     );
 
     expect(navigation.find('.nav-logout').text()).to.equal('Logout');
@@ -31,7 +31,7 @@ describe('Navigation', () => {
 
   it('renders logout link', () => {
     const navigation = shallow(
-      <Navigation username={ 'peanut' } />
+      <Navigation username={'peanut'} />
     );
 
     expect(navigation.find({ href: '/logout' }).length).to.equal(1);
@@ -39,15 +39,15 @@ describe('Navigation', () => {
 
   it('renders logo image', () => {
     const navigation = mount(
-      <Navigation username={ 'peanut' } />
+      <Navigation username={'peanut'} />
     );
-    
+
     expect(navigation.find('img').src).to.be.defined;
   });
 
   it('renders logo image home link', () => {
     const navigation = shallow(
-      <Navigation username={ 'peanut' } />
+      <Navigation username={'peanut'} />
     );
 
     expect(navigation.find({ to: '/' }).length).to.equal(1);
@@ -55,7 +55,7 @@ describe('Navigation', () => {
 
   it('renders navigation links', () => {
     const navigation = shallow(
-      <Navigation username={ 'peanut' } />
+      <Navigation username={'peanut'} />
     );
 
     expect(navigation.find({ href: 'https://www.linode.com/docs/' }).length).to.equal(1);

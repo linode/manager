@@ -3,7 +3,7 @@ import deepFreeze from 'deep-freeze';
 import authentication from '../../src/reducers/authentication';
 import * as actions from '../../src/actions/authentication';
 
-describe("authentication reducer", () => {
+describe('authentication reducer', () => {
   it('should handle initial state', () => {
     window.localStorage.clear();
     expect(
@@ -24,13 +24,13 @@ describe("authentication reducer", () => {
         scopes: [],
         username: 'me',
         email: 'me@example.org',
-        token: 'token'
+        token: 'token',
       })
     ).to.be.eql({
       scopes: [],
       username: 'me',
       email: 'me@example.org',
-      token: 'token'
+      token: 'token',
     });
   });
 
@@ -44,7 +44,7 @@ describe("authentication reducer", () => {
         scopes: [],
         username: 'me',
         email: 'me@example.org',
-        token: 'token'
+        token: 'token',
       })
     ).to.be.eql({ token: null });
   });

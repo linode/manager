@@ -8,10 +8,11 @@ describe('Dropdown', () => {
   it('renders dropdown component 2', () => {
     const dropdown = mount(
       <Dropdown elements={[
-        { action: () => {}, name: "Drew" },
-        { action: () => {}, name: "Phil" },
-        { action: () => {}, name: "Will" }
-      ]} />
+        { action: () => {}, name: 'Drew' },
+        { action: () => {}, name: 'Phil' },
+        { action: () => {}, name: 'Will' },
+      ]}
+      />
     );
 
     expect(dropdown.find('.li-dropdown-item').length).to.equal(3);
@@ -26,10 +27,11 @@ describe('Dropdown', () => {
     const unclicked = sinon.spy();
     const dropdown = mount(
       <Dropdown elements={[
-        { action: clickFirst, name: "Drew" },
-        { action: clickBodyItem, name: "Phil" },
-        { action: unclicked, name: "Will" }
-      ]} />
+        { action: clickFirst, name: 'Drew' },
+        { action: clickBodyItem, name: 'Phil' },
+        { action: unclicked, name: 'Will' },
+      ]}
+      />
     );
 
     dropdown.find('.li-dropdown-first').first().simulate('click');
