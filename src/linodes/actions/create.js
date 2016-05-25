@@ -1,16 +1,16 @@
 import { fetch } from '~/fetch';
-import { pushPath } from 'redux-simple-router'
+import { pushPath } from 'redux-simple-router';
 
-export const CHANGE_SOURCE_TAB = "@@ui@@linode-creation/CHANGE_SOURCE_TAB";
-export const TOGGLE_ALL_PLANS = "@@ui@@linode-creation/TOGGLE_ALL_PLANS";
-export const SELECT_SOURCE = "@@ui@@linode-creation/SELECT_SOURCE";
-export const SELECT_DATACENTER = "@@ui@@linode-creation/SELECT_DATACENTER";
-export const SELECT_SERVICE = "@@ui@@linode-creation/SELECT_SERVICE";
-export const SET_LABEL = "@@ui@@linode-creation/SET_LABEL";
-export const GENERATE_PASSWORD = "@@ui@@linode-creation/GENERATE_PASSWORD";
-export const TOGGLE_SHOW_PASSWORD = "@@ui@@linode-creation/TOGGLE_SHOW_PASSWORD";
-export const TOGGLE_CREATING = "@@ui@@linode-creation/TOGGLE_CREATING";
-export const CLEAR_FORM = "@@ui@@linode-creation/CLEAR_FORM";
+export const CHANGE_SOURCE_TAB = '@@ui@@linode-creation/CHANGE_SOURCE_TAB';
+export const TOGGLE_ALL_PLANS = '@@ui@@linode-creation/TOGGLE_ALL_PLANS';
+export const SELECT_SOURCE = '@@ui@@linode-creation/SELECT_SOURCE';
+export const SELECT_DATACENTER = '@@ui@@linode-creation/SELECT_DATACENTER';
+export const SELECT_SERVICE = '@@ui@@linode-creation/SELECT_SERVICE';
+export const SET_LABEL = '@@ui@@linode-creation/SET_LABEL';
+export const GENERATE_PASSWORD = '@@ui@@linode-creation/GENERATE_PASSWORD';
+export const TOGGLE_SHOW_PASSWORD = '@@ui@@linode-creation/TOGGLE_SHOW_PASSWORD';
+export const TOGGLE_CREATING = '@@ui@@linode-creation/TOGGLE_CREATING';
+export const CLEAR_FORM = '@@ui@@linode-creation/CLEAR_FORM';
 
 import { UPDATE_LINODE, updateLinodeUntil } from '~/actions/api/linodes';
 
@@ -52,16 +52,16 @@ export function createLinode() {
     const { token } = state.authentication;
     const ui = state.linodes.create;
     dispatch({ type: TOGGLE_CREATING });
-    let data = {
+    const data = {
       label: ui.label,
       datacenter: ui.datacenter,
       service: ui.service,
       source: ui.source,
-      root_pass: ui.password
+      root_pass: ui.password,
     };
-    const response = await fetch(token, `/linodes`, {
+    const response = await fetch(token, '/linodes', {
       method: 'POST',
-      body: JSON.stringify(data)
+      body: JSON.stringify(data),
     });
     const json = await response.json();
     // TODO: Error handling
@@ -70,6 +70,6 @@ export function createLinode() {
     dispatch({ type: TOGGLE_CREATING });
     dispatch({ type: CLEAR_FORM });
     dispatch(updateLinodeUntil(json.id,
-      l => l.state !== "provisioning"));
+      l => l.state !== 'provisioning'));
   };
 }

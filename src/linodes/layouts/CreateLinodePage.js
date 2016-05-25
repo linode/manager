@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router';
 import { connect } from 'react-redux';
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import SourceSelection from '../components/SourceSelection';
 import ServiceSelection from '../components/ServiceSelection';
 import DatacenterSelection from '../components/DatacenterSelection';
@@ -10,14 +8,13 @@ import { fetchDistros } from '~/actions/api/distros';
 import { fetchDatacenters } from '~/actions/api/datacenters';
 import { fetchServices } from '~/actions/api/services';
 import {
-  changeSourceTab,
   selectSource,
   selectDatacenter,
   selectService,
   setLabel,
   generatePassword,
   toggleShowPassword,
-  createLinode
+  createLinode,
 } from '../actions/create';
 
 class CreateLinodePage extends Component {
@@ -48,24 +45,29 @@ class CreateLinodePage extends Component {
           <h1>Create a Linode</h1>
           <SourceSelection
             dispatch={dispatch}
-            ui={ui} distros={distros} />
+            ui={ui} distros={distros}
+          />
           <DatacenterSelection
             onSelection={dc => dispatch(selectDatacenter(dc))}
             onBack={() => dispatch(selectSource(null))}
-            ui={ui} datacenters={datacenters} />
+            ui={ui} datacenters={datacenters}
+          />
           <ServiceSelection
             dispatch={dispatch}
             onSelection={s => dispatch(selectService(s))}
             onBack={() => dispatch(selectDatacenter(null))}
-            ui={ui} services={services} />
-          <OrderSummary ui={ui}
+            ui={ui} services={services}
+          />
+          <OrderSummary
+            ui={ui}
             onBack={() => dispatch(selectService(null))}
             onCreate={() => dispatch(createLinode())}
             onLabelChange={this.onLabelChange}
             onShowRootPassword={() => dispatch(toggleShowPassword())}
             services={services}
             datacenters={datacenters}
-            distros={distros} />
+            distros={distros}
+          />
         </div>
       </div>
     );
@@ -78,7 +80,7 @@ function select(state) {
     distros: state.api.distros.distributions,
     services: Object.values(state.api.services.services).filter(
         s => s.service_type === 'linode'),
-    ui: state.linodes.create
+    ui: state.linodes.create,
   };
 }
 

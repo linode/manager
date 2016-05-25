@@ -1,5 +1,5 @@
-export const CHANGE_VIEW = "@@linodes@@index/CHANGE_VIEW";
-export const TOGGLE_SELECTED = "@@linodes@@index/TOGGLE_SELECTED";
+export const CHANGE_VIEW = '@@linodes@@index/CHANGE_VIEW';
+export const TOGGLE_SELECTED = '@@linodes@@index/TOGGLE_SELECTED';
 
 export function changeView(view) {
   return { type: CHANGE_VIEW, view };

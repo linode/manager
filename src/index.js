@@ -6,9 +6,10 @@ import configureStore from './store/configureStore';
 import { createHistory } from 'history';
 import { Router, Route, IndexRedirect } from 'react-router';
 import DevTools from './components/DevTools';
-import { syncReduxAndRouter } from 'redux-simple-router'
+import { syncReduxAndRouter } from 'redux-simple-router';
+// eslint-disable-next-line no-unused-vars
 import styles from '../scss/manager.scss';
-import { client_id } from './secrets';
+import { clientId } from './secrets';
 import { APP_ROOT, LOGIN_ROOT } from './constants';
 
 const store = configureStore();
@@ -21,17 +22,21 @@ import NotFound from './layouts/NotFound';
 import Linodes from './linodes';
 
 const init = () => {
-  let state = store.getState();
-  // TODO: Persist your session in a cookie or localStorage or something?
-  function checkLogin(next, replace) {
+  const state = store.getState();
+  function checkLogin(next) {
     if (next.location.pathname !== '/oauth/callback' && state.authentication.token === null) {
       const query = Object.keys(next.location.query)
-              .reduce((a,k) => [...a, `${k}=${encodeURIComponent(next.location.query[k])}`], []).join('%26');
-      window.location = `${LOGIN_ROOT}/oauth/authorize?`+
-        `client_id=${client_id}` +
-        `&scopes=*` +
+              .reduce((a, k) => [
+                ...a,
+                `${k}=${encodeURIComponent(next.location.query[k])}`,
+              ], []).join('%26');
+      /* eslint-disable prefer-template */
+      window.location = `${LOGIN_ROOT}/oauth/authorize?` +
+        `clientId=${clientId}` +
+        '&scopes=*' +
         `&redirect_uri=${encodeURIComponent(APP_ROOT)}/oauth/callback?return=` +
               encodeURIComponent(next.location.pathname + (query ? '%3F' + query : ''));
+      /* eslint-enable prefer-template */
       return;
     }
   }

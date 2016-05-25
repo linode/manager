@@ -1,27 +1,24 @@
 {
-  "ecmaFeatures": {
-    "jsx": true,
-    "modules": true
-  },
+  "extends": "airbnb",
+  "plugins": [
+    "babel"
+  ],
   "env": {
-    "browser": true,
-    "node": true
+    "browser": true
   },
   "parser": "babel-eslint",
-  "rules": {
-    "quotes": [2, "single"],
-    "strict": [2, "never"],
-    "babel/generator-star-spacing": 1,
-    "babel/new-cap": 1,
-    "babel/object-shorthand": 1,
-    "babel/arrow-parens": 1,
-    "babel/no-await-in-loop": 1,
-    "react/jsx-uses-react": 2,
-    "react/jsx-uses-vars": 2,
-    "react/react-in-jsx-scope": 2
-  },
-  "plugins": [
-    "babel",
-    "react"
-  ]
+  rules: {
+    "babel/generator-star-spacing": 2,
+    "babel/new-cap": 2,
+    "babel/array-bracket-spacing": 2,
+    "babel/object-shorthand": 2,
+    "babel/flow-object-type": 2,
+    "babel/no-await-in-loop": 0,
+    "import/no-unresolved": 0,
+    "no-underscore-dangle": 0,
+    "react/no-multi-comp": 0,
+    "dot-notation": [
+      "error", { "allowKeywords": false }
+    ]
+  }
 }

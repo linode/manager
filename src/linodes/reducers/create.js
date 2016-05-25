@@ -8,10 +8,10 @@ import {
   GENERATE_PASSWORD,
   TOGGLE_SHOW_PASSWORD,
   TOGGLE_CREATING,
-  CLEAR_FORM
+  CLEAR_FORM,
 } from '../actions/create';
 
-const default_state = {
+const defaultState = {
   sourceTab: 0,
   showAllPlans: false,
   password: null,
@@ -20,10 +20,10 @@ const default_state = {
   label: null,
   source: null,
   datacenter: null,
-  service: null
+  service: null,
 };
 
-export default function linodeCreation(state=default_state, action) {
+export default function linodeCreation(state = defaultState, action) {
   switch (action.type) {
     case CHANGE_SOURCE_TAB:
       return { ...state, sourceTab: action.tab };
@@ -41,29 +41,29 @@ export default function linodeCreation(state=default_state, action) {
       return {
         ...state,
         password: (() => {
-          const chars = "0123456789abcdefghijklmnopqrstuvwxyz" +
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+          const chars = '0123456789abcdefghijklmnopqrstuvwxyz' +
+            'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
           const len = 20;
-          let pw = "";
+          let pw = '';
           for (let i = 0; i < len; i++) {
             pw += chars.charAt(Math.floor(
               Math.random() * chars.length));
           }
           return pw;
-        })()
+        })(),
       };
     case TOGGLE_SHOW_PASSWORD:
       return {
         ...state,
-        showPassword: !state.showPassword
+        showPassword: !state.showPassword,
       };
     case TOGGLE_CREATING:
       return {
         ...state,
-        creating: !state.creating
+        creating: !state.creating,
       };
     case CLEAR_FORM:
-      return default_state;
+      return defaultState;
     default:
       return state;
   }

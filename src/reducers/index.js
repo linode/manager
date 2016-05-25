@@ -8,7 +8,7 @@ const rootReducer = combineReducers({
   routing: routeReducer,
   authentication,
   api,
-  linodes
+  linodes,
 });
 
 export default rootReducer;

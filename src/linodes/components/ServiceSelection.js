@@ -1,108 +1,107 @@
 import React, { Component } from 'react';
-import _ from 'underscore';
 import { toggleAllPlans } from '../actions/create';
 import Service from './Service';
 
-const test_services = [
+const testServices = [
   {
-    label: "Linode 1024",
+    label: 'Linode 1024',
     ram: 1024,
     mbits_out: 25,
     disk: 24,
-    id: "service_112",
+    id: 'service_112',
     vcpus: 1,
     monthly_price: 1000,
     transfer: 2000,
-    hourly_price: 1
+    hourly_price: 1,
   },
   {
-    label: "Linode 2048",
+    label: 'Linode 2048',
     ram: 2048,
     mbits_out: 250,
     disk: 48,
-    id: "service_113",
+    id: 'service_113',
     vcpus: 2,
     monthly_price: 2000,
     transfer: 3000,
-    hourly_price: 3
+    hourly_price: 3,
   },
   {
-    label: "Linode 4096",
+    label: 'Linode 4096',
     ram: 4096,
     mbits_out: 500,
     disk: 96,
-    id: "service_114",
+    id: 'service_114',
     vcpus: 4,
     monthly_price: 4000,
     transfer: 4000,
-    hourly_price: 6
+    hourly_price: 6,
   },
   {
-    label: "Linode 8192",
+    label: 'Linode 8192',
     ram: 8192,
     mbits_out: 1000,
     disk: 192,
-    id: "service_115",
+    id: 'service_115',
     vcpus: 6,
     monthly_price: 8000,
     transfer: 8000,
-    hourly_price: 12
+    hourly_price: 12,
   },
   {
-    label: "Linode 16384",
+    label: 'Linode 16384',
     ram: 16384,
     mbits_out: 2000,
     disk: 384,
-    id: "service_116",
+    id: 'service_116',
     vcpus: 8,
     monthly_price: 16000,
     transfer: 16000,
-    hourly_price: 24
+    hourly_price: 24,
   },
   {
-    label: "Linode 32768",
+    label: 'Linode 32768',
     ram: 32768,
     mbits_out: 4000,
     disk: 768,
-    id: "service_117",
+    id: 'service_117',
     vcpus: 12,
     monthly_price: 32000,
     transfer: 20000,
-    hourly_price: 48
+    hourly_price: 48,
   },
   {
-    label: "Linode 49152",
+    label: 'Linode 49152',
     ram: 49152,
     mbits_out: 6000,
     disk: 1152,
-    id: "service_118",
+    id: 'service_118',
     vcpus: 16,
     monthly_price: 48000,
     transfer: 20000,
-    hourly_price: 72
+    hourly_price: 72,
   },
   {
-    label: "Linode 65536",
+    label: 'Linode 65536',
     ram: 65536,
     mbits_out: 8000,
     disk: 1536,
-    id: "service_119",
+    id: 'service_119',
     vcpus: 20,
     monthly_price: 64000,
     transfer: 20000,
-    hourly_price: 96
+    hourly_price: 96,
   },
   {
-    label: "Linode 98304",
+    label: 'Linode 98304',
     ram: 98304,
     mbits_out: 10000,
     disk: 1920,
-    id: "service_120",
+    id: 'service_120',
     vcpus: 20,
     monthly_price: 96000,
     transfer: 20000,
-    hourly_price: 144
-  }
+    hourly_price: 144,
+  },
 ];
 
 export default class ServiceSelection extends Component {
@@ -116,22 +115,26 @@ export default class ServiceSelection extends Component {
   renderBack() {
     const { onBack, ui } = this.props;
     if (ui.service === null) {
-      return <a href="#" className="back pull-right"
-        onClick={e => { e.preventDefault(); onBack() }}>Back</a>;
+      return (<a
+        href="#" className="back pull-right"
+        onClick={e => { e.preventDefault(); onBack(); }}
+      >Back</a>);
     }
+    return null;
   }
 
   renderHeader() {
     const { ui, services } = this.props;
     if (ui.service === null) {
       return <h2>Select a Plan</h2>;
-    } else {
-      const s = services.find(s => s.id == ui.service);
-      return <h2 className="text-right">
-        {s.label}
-        <span className="dodsoncube" width="24" height="24"></span>
-      </h2>;
     }
+    const s = services.find(_ => _.id === ui.service);
+    return (<h2
+      className="text-right"
+    >
+      {s.label}
+      <span className="dodsoncube" width="24" height="24"></span>
+    </h2>);
   }
 
   render() {
@@ -141,14 +144,14 @@ export default class ServiceSelection extends Component {
       return <div></div>;
     }
 
-    const services = ui.showAllPlans ? /*this.props.services*/
-      test_services : test_services.slice(0, 4);
+    const services = ui.showAllPlans ? /* this.props.services*/
+      testServices : testServices.slice(0, 4);
 
     if (ui.service !== null) {
-      return <div className="card creation-step step-done">
+      return (<div className="card creation-step step-done">
         {this.renderBack()}
         {this.renderHeader()}
-      </div>;
+      </div>);
     }
 
     return (
@@ -157,12 +160,15 @@ export default class ServiceSelection extends Component {
         {this.renderHeader()}
         <div className="service-list">
           {services.map(s => <Service
-                 key={s.id}
-                 onSelection={onSelection}
-                 service={s} />)}
+            key={s.id}
+            onSelection={onSelection}
+            service={s}
+          />)}
         </div>
-        <button className="btn btn-success btn-block"
-          onClick={() => dispatch(toggleAllPlans())}>
+        <button
+          className="btn btn-success btn-block"
+          onClick={() => dispatch(toggleAllPlans())}
+        >
           {ui.showAllPlans ? 'Show Fewer' : 'Show More'}
         </button>
       </div>

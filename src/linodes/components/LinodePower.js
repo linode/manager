@@ -1,20 +1,19 @@
-import React, { Component } from 'react';
-import { findDOMNode } from 'react-dom';
-import { Link } from 'react-router';
+import React from 'react';
 
-export class LinodePower extends Component {
-  constructor() {
-    super();
+export function LinodePower({
+  linode,
+  pending,
+  cols,
+  onPowerOn,
+  onPowerOff,
+  onReboot,
+}) {
+  if (pending) {
+    return (<div className={`${cols ? 'text-centered' : 'pull-right'}`}>
+      <i className="fa fa-spinner fa-spin"></i>
+    </div>);
   }
-
-  render() {
-    const { linode, pending, cols, onPowerOn, onPowerOff, onReboot } = this.props;
-    if (pending) {
-      return <div className={`${cols ? 'text-centered' : 'pull-right'}`}>
-        <i className="fa fa-spinner fa-spin"></i>
-      </div>;
-    }
-    switch (linode.state) {
+  switch (linode.state) {
     case 'running':
       return (
         <div className="power">
@@ -32,8 +31,7 @@ export class LinodePower extends Component {
               &nbsp;
             </button>
           </div>
-        </div>
-      );
+        </div>);
     default:
       return (
         <div className="power">
@@ -44,8 +42,6 @@ export class LinodePower extends Component {
               &nbsp;
             </button>
           </div>
-        </div>
-      );
-    }
+        </div>);
   }
 }
