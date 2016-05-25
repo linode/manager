@@ -3,7 +3,7 @@ import _ from 'underscore';
 function transformItem(item) {
   return {
     ...item,
-    _polling: false
+    _polling: false,
   };
 }
 
@@ -24,57 +24,57 @@ function transformItem(item) {
  * properties and what-not
  */
 export default function makeApiList(plural, singular,
-    actions, transform=d => d) {
+    actions, transform = d => d) {
 
   const default_state = {
-    pagesFetched: [ ],
+    pagesFetched: [],
     totalPages: -1,
     [plural]: {},
     _singular: singular,
-    _plural: plural
+    _plural: plural,
   };
 
   actions = {
-      update_singular: -1,
-      update_many: -1,
-      delete_one: -1,
-      ...actions
+    update_singular: -1,
+    update_many: -1,
+    delete_one: -1,
+    ...actions,
   };
 
-  return (state=default_state, action) => {
+  return (state = default_state, action) => {
     switch (action.type) {
-    case actions.update_many:
-      const { response } = action;
-      return {
-        ...state,
-        pagesFetched: [
-          ...state.pagesFetched.filter(p => p !== response.page),
-          response.page
-        ],
-        totalPages: response.total_pages,
-        [plural]: {
-          ...state[plural],
-          ...response[plural].reduce((s, i) =>
-            ({ ...s, [i.id]: transform(transformItem(i)) }), { })
-        }
-      };
-    case actions.update_singular:
-      const item = action[singular];
-      return {
-        ...state,
-        [plural]: {
-          ...state[plural],
-          [item.id]: { ...state[plural][item.id], ...item }
-        }
-      };
-    case actions.delete_one:
-      const { id } = action;
-      return {
-        ...state,
-        [plural]: _.omit(state[plural], id)
-      };
-    default:
-      return state;
+      case actions.update_many:
+        const { response } = action;
+        return {
+          ...state,
+          pagesFetched: [
+            ...state.pagesFetched.filter(p => p !== response.page),
+            response.page,
+          ],
+          totalPages: response.total_pages,
+          [plural]: {
+            ...state[plural],
+            ...response[plural].reduce((s, i) =>
+            ({ ...s, [i.id]: transform(transformItem(i)) }), { }),
+          },
+        };
+      case actions.update_singular:
+        const item = action[singular];
+        return {
+          ...state,
+          [plural]: {
+            ...state[plural],
+            [item.id]: { ...state[plural][item.id], ...item },
+          },
+        };
+      case actions.delete_one:
+        const { id } = action;
+        return {
+          ...state,
+          [plural]: _.omit(state[plural], id),
+        };
+      default:
+        return state;
     }
   };
 }
@@ -85,7 +85,7 @@ export function makeFetchPage(action, plural) {
   return (page = 0) => {
     return async (dispatch, getState) => {
       const { token } = getState().authentication;
-      const response = await fetch(token, `/${plural}?page=${page+1}`);
+      const response = await fetch(token, `/${plural}?page=${page + 1}`);
       const json = await response.json();
       dispatch({ type: action, response: json });
     };
@@ -104,12 +104,12 @@ export function make_update_item(action, plural, singular) {
 }
 
 export function make_update_until(action, plural, singular) {
-  return (id, test, timeout=3000) => {
+  return (id, test, timeout = 3000) => {
     return async (dispatch, getState) => {
       const { token } = getState().authentication;
       const item = getState().api[plural][plural][id];
       if (item._polling) {
-          return;
+        return;
       }
       dispatch({ type: action, [singular]: { id, _polling: true } });
       while (true) {
@@ -122,7 +122,7 @@ export function make_update_until(action, plural, singular) {
       }
       dispatch({ type: action, [singular]: { id, _polling: false } });
     };
-  }
+  };
 }
 
 export function make_delete_item(action, plural) {
