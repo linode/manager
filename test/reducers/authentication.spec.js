@@ -3,7 +3,7 @@ import deepFreeze from 'deep-freeze';
 import authentication from '../../src/reducers/authentication';
 import * as actions from '../../src/actions/authentication';
 
-describe("authentication reducer", () => {
+describe('authentication reducer', () => {
   it('should handle initial state', () => {
     window.localStorage.clear();
     expect(
@@ -14,7 +14,6 @@ describe("authentication reducer", () => {
   it('should handle SET_TOKEN', () => {
     window.localStorage.clear();
     const state = authentication(undefined, {});
-    const auth = { token: null };
 
     deepFreeze(state);
 
@@ -24,27 +23,26 @@ describe("authentication reducer", () => {
         scopes: [],
         username: 'me',
         email: 'me@example.org',
-        token: 'token'
+        token: 'token',
       })
     ).to.be.eql({
       scopes: [],
       username: 'me',
       email: 'me@example.org',
-      token: 'token'
+      token: 'token',
     });
   });
 
   it('should handle anything else', () => {
     window.localStorage.clear();
     const state = authentication(undefined, {});
-    const auth = { token: null };
 
     expect(
       authentication(state, {
         scopes: [],
         username: 'me',
         email: 'me@example.org',
-        token: 'token'
+        token: 'token',
       })
     ).to.be.eql({ token: null });
   });

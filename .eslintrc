@@ -4,7 +4,8 @@
     "babel"
   ],
   "env": {
-    "browser": true
+    "browser": true,
+    "mocha": true
   },
   "parser": "babel-eslint",
   rules: {
@@ -16,6 +17,7 @@
     "babel/no-await-in-loop": 0,
     "import/no-unresolved": 0,
     "no-underscore-dangle": 0,
+    "no-unused-expressions": 0,
     "react/no-multi-comp": 0,
     "dot-notation": [
       "error", { "allowKeywords": false }

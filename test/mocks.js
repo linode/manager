@@ -1,16 +1,16 @@
 import sinon from 'sinon';
 import * as fetch from '~/fetch';
 
-export const mock_context = async (sandbox, f, rsp, state={}) => {
+export const mockContext = async (sandbox, f, rsp, state = {}) => {
   const auth = { token: 'token' };
-  let getState = sinon.stub().returns({
+  const getState = sinon.stub().returns({
     authentication: auth,
-    ...state
+    ...state,
   });
-  let dispatch = sinon.spy();
-  let fetchStub = sinon.stub(fetch, "fetch").returns({
-    json: () => rsp
+  const dispatch = sinon.spy();
+  const fetchStub = sinon.stub(fetch, 'fetch').returns({
+    json: () => rsp,
   });
-  await f({auth, getState, dispatch, fetchStub});
+  await f({ auth, getState, dispatch, fetchStub });
   fetchStub.restore();
 };
