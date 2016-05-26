@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { Linode } from '../components/Linode';
@@ -174,8 +174,8 @@ class IndexPage extends Component {
     };
 
     const selectAllCheckbox = allSelected ?
-      <input type="checkbox" onClick={selectAll} checked="checked" /> :
-      <input type="checkbox" onClick={selectAll} />;
+      <input type="checkbox" onChange={selectAll} checked="checked" /> :
+      <input type="checkbox" onChange={selectAll} />;
 
     const { view } = this.props;
     const gridListToggle = (
@@ -221,6 +221,13 @@ class IndexPage extends Component {
     );
   }
 }
+
+IndexPage.propTypes = {
+  dispatch: PropTypes.func,
+  linodes: PropTypes.object,
+  view: PropTypes.oneOf(['list', 'grid']),
+  selected: PropTypes.object,
+};
 
 function select(state) {
   return {

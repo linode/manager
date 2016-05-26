@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import {
@@ -140,6 +140,14 @@ class LinodeDetailPage extends Component {
     );
   }
 }
+
+LinodeDetailPage.propTypes = {
+  dispatch: PropTypes.func,
+  linodes: PropTypes.object,
+  params: PropTypes.shape({
+    linodeId: PropTypes.string,
+  }),
+};
 
 function select(state) {
   return { linodes: state.api.linodes };

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { setToken } from '../actions/authentication';
 import { clientId, clientSecret } from '../secrets';
@@ -31,4 +31,9 @@ class OAuthCallbackPage extends Component {
   }
 }
 
-export default connect(() => ({}))(OAuthCallbackPage);
+OAuthCallbackPage.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+  location: PropTypes.string.isRequired,
+};
+
+export default connect()(OAuthCallbackPage);

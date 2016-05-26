@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import SourceSelection from '../components/SourceSelection';
 import ServiceSelection from '../components/ServiceSelection';
@@ -73,6 +73,14 @@ class CreateLinodePage extends Component {
     );
   }
 }
+
+CreateLinodePage.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+  ui: PropTypes.object.isRequired,
+  distros: PropTypes.object.isRequired,
+  datacenters: PropTypes.object.isRequired,
+  services: PropTypes.array.isRequired,
+};
 
 function select(state) {
   return {

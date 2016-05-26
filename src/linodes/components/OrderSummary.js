@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import { distros as distroAssets, flags } from '~/assets';
 import Service from './Service';
@@ -144,3 +144,14 @@ export default class Summary extends Component {
     </div>);
   }
 }
+
+Summary.propTypes = {
+  ui: PropTypes.object.isRequired,
+  services: PropTypes.array.isRequired,
+  distros: PropTypes.object.isRequired,
+  datacenters: PropTypes.object.isRequired,
+  onBack: PropTypes.func,
+  onLabelChange: PropTypes.func,
+  onShowRootPassword: PropTypes.func,
+  onCreate: PropTypes.func,
+};

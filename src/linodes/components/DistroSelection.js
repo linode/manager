@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { distros as distroAssets } from '~/assets';
 import _ from 'underscore';
 
@@ -48,3 +48,9 @@ export default class DistroSelection extends Component {
     );
   }
 }
+
+DistroSelection.propTypes = {
+  distros: PropTypes.object.isRequired,
+  selected: PropTypes.string,
+  onSelection: PropTypes.func,
+};

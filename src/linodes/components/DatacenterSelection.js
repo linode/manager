@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { flags } from '~/assets';
 
 // TODO: This is lame, we should extend the API to include country code
@@ -86,3 +86,11 @@ export default class DatacenterSelection extends Component {
     );
   }
 }
+
+DatacenterSelection.propTypes = {
+  datacenters: PropTypes.object.isRequired,
+  selected: PropTypes.string,
+  ui: PropTypes.object.isRequired,
+  onBack: PropTypes.func,
+  onSelection: PropTypes.func,
+};

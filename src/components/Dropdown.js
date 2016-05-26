@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 
 export default function Dropdown(props) {
   const { elements } = props;
@@ -27,3 +27,10 @@ export default function Dropdown(props) {
     </span>
   );
 }
+
+Dropdown.propTypes = {
+  elements: PropTypes.arrayOf(PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    action: PropTypes.func,
+  })).isRequired,
+};
