@@ -1,16 +1,14 @@
 import sinon from 'sinon';
 import { expect } from 'chai';
 import deepFreeze from 'deep-freeze';
-import make_api_list from '../src/api-store';
-import {
+import makeApiList, {
   makeFetchPage,
   makeUpdateItem,
-  makeUpdateUntil,
   makeDeleteItem,
 } from '../src/api-store';
-import { mock_context } from './mocks';
+import { mockContext } from './mocks';
 
-const mock_foobars_response = {
+const mockFoobarsResponse = {
   foobars: [
     { id: 'foobar_1' },
     { id: 'foobar_2' },
@@ -31,9 +29,9 @@ describe('api-store', () => {
     sandbox.restore();
   });
 
-  describe('api-store/make_api_list', () => {
+  describe('api-store/makeApiList', () => {
     it('should handle initial state', () => {
-      const s = make_api_list('foobars', 'foobar', {
+      const s = makeApiList('foobars', 'foobar', {
         update_singular: 'UPDATE_ONE',
         update_many: 'UPDATE_MANY',
         delete_one: 'DELETE_ONE',
@@ -48,7 +46,7 @@ describe('api-store', () => {
     });
 
     it('should not handle actions not specified', () => {
-      const s = make_api_list('foobars', 'foobar', {
+      const s = makeApiList('foobars', 'foobar', {
         update_singular: 'UPDATE_ONE',
       });
       const state = s(undefined, {});
@@ -60,7 +58,7 @@ describe('api-store', () => {
     });
 
     it('should handle updating many records', () => {
-      const s = make_api_list('foobars', 'foobar', {
+      const s = makeApiList('foobars', 'foobar', {
         update_many: 'UPDATE_MANY',
       });
 
@@ -69,16 +67,16 @@ describe('api-store', () => {
 
       const result = s(state, {
         type: 'UPDATE_MANY',
-        response: mock_foobars_response,
+        response: mockFoobarsResponse,
       });
 
-      const foobars = expect(result)
+      expect(result)
         .to.have.property('foobars')
         .which.has.keys('foobar_1', 'foobar_2');
     });
 
     it('should add internal properties to objects', () => {
-      const s = make_api_list('foobars', 'foobar', {
+      const s = makeApiList('foobars', 'foobar', {
         update_many: 'UPDATE_MANY',
       });
 
@@ -98,14 +96,14 @@ describe('api-store', () => {
         },
       });
 
-      const foobars = expect(result)
+      expect(result)
         .to.have.property('foobars')
         .which.has.property('foobar_1')
         .which.has.property('_polling');
     });
 
     it('should invoke custom transforms', () => {
-      const s = make_api_list('foobars', 'foobar', {
+      const s = makeApiList('foobars', 'foobar', {
         update_many: 'UPDATE_MANY',
       }, o => ({ ...o, test: 1234 }));
 
@@ -125,7 +123,7 @@ describe('api-store', () => {
         },
       });
 
-      const foobars = expect(result)
+      expect(result)
         .to.have.property('foobars')
         .which.has.property('foobar_1')
         .which.has.property('test')
@@ -133,15 +131,15 @@ describe('api-store', () => {
     });
 
     it('should handle adding a single resource', () => {
-      const s = make_api_list('foobars', 'foobar', {
-        update_singular: 'FUCK_WILL_SMITH (the actor)',
+      const s = makeApiList('foobars', 'foobar', {
+        update_singular: 'UPDATE_SINGLE',
       });
 
       const state = s(undefined, {});
       deepFreeze(state);
 
       const result = s(state, {
-        type: 'FUCK_WILL_SMITH (the actor)',
+        type: 'UPDATE_SINGLE',
         foobar: { id: 'foobar_1' },
       });
 
@@ -151,8 +149,8 @@ describe('api-store', () => {
     });
 
     it('should handle updating a single resource', () => {
-      const s = make_api_list('foobars', 'foobar', {
-        update_singular: 'FUCK_DODSON (the jurrasic park guy)',
+      const s = makeApiList('foobars', 'foobar', {
+        update_singular: 'UPDATE_SINGLE',
       });
 
       let state = s(undefined, {});
@@ -166,7 +164,7 @@ describe('api-store', () => {
       deepFreeze(state);
 
       const result = s(state, {
-        type: 'FUCK_DODSON (the jurrasic park guy)',
+        type: 'UPDATE_SINGLE',
         foobar: { id: 'foobar_1', name: 'hello' },
       });
 
@@ -178,8 +176,8 @@ describe('api-store', () => {
     });
 
     it('should handle deleting a single resource', () => {
-      const s = make_api_list('foobars', 'foobar', {
-        delete_one: 'FUCK_MARQUES (the R&B artist)',
+      const s = makeApiList('foobars', 'foobar', {
+        delete_one: 'DELETE_ONE',
       });
 
       let state = s(undefined, {});
@@ -193,7 +191,7 @@ describe('api-store', () => {
       deepFreeze(state);
 
       const result = s(state, {
-        type: 'FUCK_MARQUES (the R&B artist)',
+        type: 'DELETE_ONE',
         id: 'foobar_1',
       });
 
@@ -201,7 +199,6 @@ describe('api-store', () => {
         .to.have.property('foobars')
         .which/* .does*/.not.have.property('foobar_1');
     });
-
   });
 
   describe('api-store/makeFetchPage', () => {
@@ -212,7 +209,7 @@ describe('api-store', () => {
     });
 
     it('fetches a page of items from the API', async () => {
-      await mock_context(sandbox, async ({
+      await mockContext(sandbox, async ({
           auth, dispatch, getState, fetchStub,
         }) => {
         const f = makeFetchPage('FETCH_FOOBARS', 'foobars');
@@ -221,16 +218,16 @@ describe('api-store', () => {
         await p(dispatch, getState);
 
         expect(fetchStub.calledWith(
-          auth.token, '/foobars?page=1')).to.be.true;
+          auth.token, '/foobars?page=1')).to.equal(true);
         expect(dispatch.calledWith({
           type: 'FETCH_FOOBARS',
-          response: mock_foobars_response,
-        })).to.be.true;
-      }, mock_foobars_response);
+          response: mockFoobarsResponse,
+        })).to.equal(true);
+      }, mockFoobarsResponse);
     });
 
     it('fetches the requested page', async () => {
-      await mock_context(sandbox, async ({
+      await mockContext(sandbox, async ({
           auth, dispatch, getState, fetchStub,
         }) => {
         const f = makeFetchPage('FETCH_FOOBARS', 'foobars');
@@ -239,8 +236,8 @@ describe('api-store', () => {
         await p(dispatch, getState);
 
         expect(fetchStub.calledWith(
-          auth.token, '/foobars?page=2')).to.be.true;
-      }, mock_foobars_response);
+          auth.token, '/foobars?page=2')).to.equal(true);
+      }, mockFoobarsResponse);
     });
   });
 
@@ -252,7 +249,7 @@ describe('api-store', () => {
     });
 
     it('fetches an item from the API', async () => {
-      await mock_context(sandbox, async ({
+      await mockContext(sandbox, async ({
           auth, dispatch, getState, fetchStub,
         }) => {
         const f = makeUpdateItem('UPDATE_FOOBAR', 'foobars', 'foobar');
@@ -261,12 +258,12 @@ describe('api-store', () => {
         await p(dispatch, getState);
 
         expect(fetchStub.calledWith(
-          auth.token, '/foobars/foobar_1')).to.be.true;
+          auth.token, '/foobars/foobar_1')).to.equal(true);
         expect(dispatch.calledWith({
           type: 'UPDATE_FOOBAR',
-          foobar: mock_foobars_response.foobars[0],
-        })).to.be.true;
-      }, mock_foobars_response.foobars[0]);
+          foobar: mockFoobarsResponse.foobars[0],
+        })).to.equal(true);
+      }, mockFoobarsResponse.foobars[0]);
     });
   });
 
@@ -277,9 +274,9 @@ describe('api-store', () => {
       expect(f()).to.be.a('function');
     });
 
-    const no_response = {};
+    const emptyResponse = {};
     it('performs the API request', async () => {
-      await mock_context(sandbox, async ({
+      await mockContext(sandbox, async ({
           auth, dispatch, getState, fetchStub,
         }) => {
         const f = makeDeleteItem('DELETE_FOOBAR', 'foobars');
@@ -288,13 +285,18 @@ describe('api-store', () => {
         await p(dispatch, getState);
 
         expect(fetchStub.calledWith(
-          auth.token, '/foobars/foobar_1', { method: 'DELETE' })).to.be.true;
+          auth.token, '/foobars/foobar_1', { method: 'DELETE' })).to.equal(true);
         expect(dispatch.calledWith({
           type: 'DELETE_FOOBAR',
           id: 'foobar_1',
-        })).to.be.true;
-      }, no_response);
+        })).to.equal(true);
+      }, emptyResponse);
     });
+  });
+
+  describe('api-store/makeUpdateUntil', () => {
+    it('should perform API requests until a condition is met');
+    it('should submit update actions for each request performed');
   });
 });
 

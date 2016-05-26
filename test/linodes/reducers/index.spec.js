@@ -43,8 +43,8 @@ describe('linodes/index reducer', () => {
 
   it('should remove from the selection on TOGGLE_SELECTED', () => {
     const state = { view: 'grid', selected: {
-      'linode_1234': true,
-      'linode_1235': true,
+      linode_1234: true,
+      linode_1235: true,
     } };
     deepFreeze(state);
 

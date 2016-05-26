@@ -7,11 +7,12 @@ import Dropdown from '../../src/components/Dropdown';
 describe('Dropdown', () => {
   it('renders dropdown component 2', () => {
     const dropdown = mount(
-      <Dropdown elements={[
-        { action: () => {}, name: 'Drew' },
-        { action: () => {}, name: 'Phil' },
-        { action: () => {}, name: 'Will' },
-      ]}
+      <Dropdown
+        elements={[
+          { action: () => {}, name: 'Drew' },
+          { action: () => {}, name: 'Phil' },
+          { action: () => {}, name: 'Will' },
+        ]}
       />
     );
 
@@ -26,16 +27,20 @@ describe('Dropdown', () => {
     const clickBodyItem = sinon.spy();
     const unclicked = sinon.spy();
     const dropdown = mount(
-      <Dropdown elements={[
-        { action: clickFirst, name: 'Drew' },
-        { action: clickBodyItem, name: 'Phil' },
-        { action: unclicked, name: 'Will' },
-      ]}
+      <Dropdown
+        elements={[
+          { action: clickFirst, name: 'Drew' },
+          { action: clickBodyItem, name: 'Phil' },
+          { action: unclicked, name: 'Will' },
+        ]}
       />
     );
 
     dropdown.find('.li-dropdown-first').first().simulate('click');
-    dropdown.find('.li-dropdown-body').find('.li-dropdown-item').first().simulate('click');
+    dropdown.find('.li-dropdown-body')
+      .find('.li-dropdown-item')
+      .first()
+      .simulate('click');
 
     assert.isTrue(clickFirst.calledOnce);
     assert.isTrue(clickBodyItem.calledOnce);

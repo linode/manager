@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 import * as actions from '~/linodes/actions/create';
-import * as linode_actions from '~/actions/api/linodes';
-import { mock_context } from '~/../test/mocks';
+import * as linodeActions from '~/actions/api/linodes';
+import { mockContext } from '~/../test/mocks';
 import { pushPath } from 'redux-simple-router';
 
 describe('linodes/actions/create', () => {
@@ -112,31 +112,25 @@ describe('linodes/actions/create', () => {
     });
 
     it('should call getState() once', async () => {
-      await mock_context(sandbox, async ({
-          auth, dispatch, getState, fetchStub,
-        }) => {
+      await mockContext(sandbox, async ({ dispatch, getState }) => {
         const func = actions.createLinode();
         await func(dispatch, getState);
-        expect(getState.calledOnce).to.be.true;
+        expect(getState.calledOnce).to.equal(true);
       }, response, state);
     });
 
     it('should dispatch a TOGGLE_CREATING action', async () => {
-      await mock_context(sandbox, async ({
-          auth, dispatch, getState, fetchStub,
-        }) => {
+      await mockContext(sandbox, async ({ dispatch, getState }) => {
         const func = actions.createLinode();
         await func(dispatch, getState);
         expect(dispatch.calledWith({
           type: actions.TOGGLE_CREATING,
-        })).to.be.true;
+        })).to.equal(true);
       }, response, state);
     });
 
     it('should perform an HTTP POST to /linodes', async () => {
-      await mock_context(sandbox, async ({
-          auth, dispatch, getState, fetchStub,
-        }) => {
+      await mockContext(sandbox, async ({ dispatch, getState, fetchStub }) => {
         const func = actions.createLinode();
         await func(dispatch, getState);
         expect(fetchStub.calledWith(
@@ -150,57 +144,49 @@ describe('linodes/actions/create', () => {
                 root_pass: 'password',
               }),
             }
-          )).to.be.true;
+          )).to.equal(true);
       }, response, state);
     });
 
     it('should dispatch an UPDATE_LINODE action with the new linode', async () => {
-      await mock_context(sandbox, async ({
-          auth, dispatch, getState, fetchStub,
-        }) => {
+      await mockContext(sandbox, async ({ dispatch, getState }) => {
         const func = actions.createLinode();
         await func(dispatch, getState);
         expect(dispatch.calledWith({
-          type: linode_actions.UPDATE_LINODE,
+          type: linodeActions.UPDATE_LINODE,
           linode: response,
-        })).to.be.true;
+        })).to.equal(true);
       }, response, state);
     });
 
     it('should dispatch a routing action to navigate to the detail page', async () => {
-      await mock_context(sandbox, async ({
-          auth, dispatch, getState, fetchStub,
-        }) => {
+      await mockContext(sandbox, async ({ dispatch, getState }) => {
         const func = actions.createLinode();
         await func(dispatch, getState);
         expect(dispatch.calledWith(
             pushPath(`/linodes/${response.id}`)
-          )).to.be.true;
+          )).to.equal(true);
       }, response, state);
     });
 
     it('should dispatch a CLEAR_FORM action', async () => {
-      await mock_context(sandbox, async ({
-          auth, dispatch, getState, fetchStub,
-        }) => {
+      await mockContext(sandbox, async ({ dispatch, getState }) => {
         const func = actions.createLinode();
         await func(dispatch, getState);
-        expect(dispatch.calledWith({ type: actions.CLEAR_FORM })).to.be.true;
+        expect(dispatch.calledWith({ type: actions.CLEAR_FORM })).to.equal(true);
       }, response, state);
     });
 
     it('should update the linode until it finishes provisioning', async () => {
-      await mock_context(sandbox, async ({
-          auth, dispatch, getState, fetchStub,
-        }) => {
+      await mockContext(sandbox, async ({ dispatch, getState }) => {
         const func = actions.createLinode();
         const update = sandbox.spy(() => { });
-        const _update = sandbox.stub(linode_actions, 'updateLinodeUntil', update);
+        sandbox.stub(linodeActions, 'updateLinodeUntil', update);
         await func(dispatch, getState);
-        expect(update.calledWith(response.id)).to.be.true;
+        expect(update.calledWith(response.id)).to.equal(true);
         expect(update.args[0][1]).to.be.a('function');
-        expect(update.args[0][1]({ state: 'provisioning' })).to.be.false;
-        expect(update.args[0][1]({ state: 'powered_off' })).to.be.true;
+        expect(update.args[0][1]({ state: 'provisioning' })).to.equal(false);
+        expect(update.args[0][1]({ state: 'powered_off' })).to.equal(true);
       }, response, state);
     });
   });

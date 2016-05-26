@@ -1,5 +1,4 @@
 import React from 'react';
-import sinon from 'sinon';
 import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 import Navigation from '../../src/components/Navigation';

@@ -14,7 +14,6 @@ describe('authentication reducer', () => {
   it('should handle SET_TOKEN', () => {
     window.localStorage.clear();
     const state = authentication(undefined, {});
-    const auth = { token: null };
 
     deepFreeze(state);
 
@@ -37,7 +36,6 @@ describe('authentication reducer', () => {
   it('should handle anything else', () => {
     window.localStorage.clear();
     const state = authentication(undefined, {});
-    const auth = { token: null };
 
     expect(
       authentication(state, {
