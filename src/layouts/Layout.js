@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
@@ -17,6 +17,11 @@ function Layout(props) {
     </div>
   );
 }
+
+Layout.propTypes = {
+  username: PropTypes.string,
+  children: PropTypes.node.isRequired,
+};
 
 function select(state) {
   return { username: state.authentication.username };

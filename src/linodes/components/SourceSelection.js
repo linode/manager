@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import DistroSelection from './DistroSelection';
 import { changeSourceTab, selectSource } from '../actions/create';
@@ -75,3 +75,8 @@ export default class SourceSelection extends Component {
     );
   }
 }
+
+SourceSelection.propTypes = {
+  ui: PropTypes.object.isRequired,
+  distros: PropTypes.object.isRequired,
+};

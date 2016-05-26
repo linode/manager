@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import Navigation from './Navigation';
 
 export default function Header(props) {
@@ -11,3 +11,8 @@ export default function Header(props) {
     </div>
   );
 }
+
+Header.propTypes = {
+  username: PropTypes.string,
+  style: PropTypes.object,
+};

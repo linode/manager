@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 import { LinodeStatesReadable } from '~/constants';
 
@@ -16,6 +16,12 @@ function renderPowerButton(props) {
   return powerIcon === '' ? <span /> :
     <span className={`linode-power fa ${powerIcon} pull-right`} onClick={powerActionF} />;
 }
+
+renderPowerButton.propTypes = {
+  linode: PropTypes.object.isRequired,
+  powerOn: PropTypes.func,
+  reboot: PropTypes.func,
+};
 
 function renderCard(props) {
   const { linode, onSelect, isSelected } = props;
@@ -64,6 +70,12 @@ function renderCard(props) {
   );
 }
 
+renderCard.propTypes = {
+  linode: PropTypes.object.isRequired,
+  onSelect: PropTypes.func,
+  isSelected: PropTypes.bool.isRequired,
+};
+
 function renderRow(props) {
   const { linode, onSelect, isSelected } = props;
   const select = () => onSelect(linode);
@@ -105,7 +117,22 @@ function renderRow(props) {
   );
 }
 
+renderRow.propTypes = {
+  linode: PropTypes.object.isRequired,
+  isSelected: PropTypes.bool.isRequired,
+  onSelect: PropTypes.func,
+};
+
 export function Linode(props) {
   const { isCard } = props;
   return isCard ? renderCard(props) : renderRow(props);
 }
+
+Linode.propTypes = {
+  isCard: PropTypes.bool,
+  ...renderPowerButton.propTypes,
+  ...renderCard.propTypes,
+  ...renderRow.propTypes,
+};
+
+Linode.defaultProps = { isCard: true };

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 
 export default class Service extends Component {
   constructor() {
@@ -39,3 +39,8 @@ export default class Service extends Component {
     );
   }
 }
+
+Service.propTypes = {
+  service: PropTypes.object.isRequired,
+  onSelection: PropTypes.func,
+};

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 
 export function LinodePower({
   linode,
@@ -45,3 +45,12 @@ export function LinodePower({
         </div>);
   }
 }
+
+LinodePower.propTypes = {
+  linode: PropTypes.object.isRequired,
+  pending: PropTypes.bool.isRequired,
+  cols: PropTypes.number.isRequired,
+  onPowerOn: PropTypes.func,
+  onPowerOff: PropTypes.func,
+  onReboot: PropTypes.func,
+};

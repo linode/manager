@@ -4,8 +4,9 @@ node_js:
 script:
     - |
         cat <<EOF > src/secrets.js
-        export const client_id = "placeholder";
-        export const client_secret = "placeholder";
+        export const clientId = 'placeholder';
+        export const clientSecret = 'placeholder';
         EOF
     - npm test
     - cat ./coverage/lcov.info | ./node_modules/.bin/coveralls
+    - npm run lint

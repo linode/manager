@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { toggleAllPlans } from '../actions/create';
 import Service from './Service';
 
@@ -175,3 +175,11 @@ export default class ServiceSelection extends Component {
     );
   }
 }
+
+ServiceSelection.propTypes = {
+  onBack: PropTypes.func,
+  onSelection: PropTypes.func,
+  ui: PropTypes.object.isRequired,
+  services: PropTypes.array.isRequired,
+  dispatch: PropTypes.func.isRequired,
+};
