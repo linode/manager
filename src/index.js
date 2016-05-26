@@ -32,7 +32,7 @@ const init = () => {
               ], []).join('%26');
       /* eslint-disable prefer-template */
       window.location = `${LOGIN_ROOT}/oauth/authorize?` +
-        `clientId=${clientId}` +
+        `client_id=${clientId}` +
         '&scopes=*' +
         `&redirect_uri=${encodeURIComponent(APP_ROOT)}/oauth/callback?return=` +
               encodeURIComponent(next.location.pathname + (query ? '%3F' + query : ''));

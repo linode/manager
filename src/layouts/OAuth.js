@@ -14,8 +14,8 @@ class OAuthCallbackPage extends Component {
       const xhr = new XMLHttpRequest();
       xhr.open('POST', 'https://login.alpha.linode.com/oauth/token');
       const data = new FormData();
-      data.append('clientId', clientId);
-      data.append('clientSecret', clientSecret);
+      data.append('client_id', clientId);
+      data.append('client_secret', clientSecret);
       data.append('code', code);
       xhr.onload = () => {
         const json = JSON.parse(xhr.response);
