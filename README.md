@@ -71,7 +71,7 @@ the right patterns - some large scale refactorings may be in order.
 
 ## License
 
-The Linode manager's code is distributed under the terms of the [BSD 3-clause
+The Linode Manager's code is distributed under the terms of the [BSD 3-clause
 license](https://github.com/linode/manager/blob/master/LICENSE). The assets are
 not licensed for any purpose without prior written approval from Linode, unless
 otherwise noted.
