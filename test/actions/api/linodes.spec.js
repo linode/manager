@@ -5,15 +5,16 @@ import {
   powerOffLinode,
   rebootLinode,
   UPDATE_LINODE,
+  UPDATE_LINODES,
+  DELETE_LINODE,
+  fetchLinodes,
+  updateLinode,
+  updateLinodeUntil,
+  deleteLinode
 } from '../../../src/actions/api/linodes';
 import { mockContext } from '../../mocks';
 
-describe('actions/linodes/power', sinon.test(() => {
-  const mockBootingResponse = {
-    type: UPDATE_LINODE,
-    linode: { id: 'foo', state: 'booting' },
-  };
-
+describe('actions/api/linodes', sinon.test(() => {
   let sandbox = null;
 
   beforeEach(() => {
@@ -23,6 +24,69 @@ describe('actions/linodes/power', sinon.test(() => {
   afterEach(() => {
     sandbox.restore();
   });
+
+  const mockFetchResponse = 'foobar';
+
+  it('should fetch linodes', async () => {
+    await mockContext(sandbox, async ({
+        auth, dispatch, getState, fetchStub
+      }) => {
+      const f = fetchLinodes();
+
+      await f(dispatch, getState);
+
+      expect(fetchStub.calledWith(
+        auth.token, '/linodes?page=1')).to.be.true;
+      expect(dispatch.calledWith({
+        type: UPDATE_LINODES,
+        response: mockFetchResponse
+      })).to.be.true;
+    }, mockFetchResponse);
+  });
+
+  const mockUpdateLinode = { id: 'linode_1' };
+
+  it('should update linode', async () => {
+    await mockContext(sandbox, async ({
+        auth, dispatch, getState, fetchStub
+      }) => {
+      const f = updateLinode('linode_1');
+
+      await f(dispatch, getState);
+
+      expect(fetchStub.calledWith(
+        auth.token, '/linodes/linode_1')).to.be.true;
+      expect(dispatch.calledWith({
+        type: UPDATE_LINODE,
+        linode: mockUpdateLinode
+      })).to.be.true;
+    }, mockUpdateLinode);
+  });
+
+  it('should preform request update linode until condition is met');
+
+  it('should delete linode', async () => {
+    const f = deleteLinode('linode_1');
+
+    expect(f).to.be.a('function');
+  });
+}));
+
+describe('actions/linodes/power', sinon.test(() => {
+  let sandbox = null;
+
+  beforeEach(() => {
+    sandbox = sinon.sandbox.create();
+  });
+
+  afterEach(() => {
+    sandbox.restore();
+  });
+
+  const mockBootingResponse = {
+    type: UPDATE_LINODE,
+    linode: { id: 'foo', state: 'booting' },
+  };
 
   it('returns linode power boot status', async () => {
     await mockContext(sandbox, async ({

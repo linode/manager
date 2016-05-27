@@ -4,7 +4,7 @@ import { mount } from 'enzyme';
 import { expect, assert } from 'chai';
 import Dropdown from '../../src/components/Dropdown';
 
-describe('Dropdown', () => {
+describe('components/Dropdown', () => {
   it('renders dropdown component 2', () => {
     const dropdown = mount(
       <Dropdown
