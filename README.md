@@ -29,6 +29,10 @@ client secret set appropriately:
     export const clientId = "change me";
     export const clientSecret = "change me";
 
+Note: if you pick a callback url that is not on localhost:3000, you will need to
+update the APP_ROOT variable in src/constants.js to point to the different
+server.
+
 ## Development
 
 Run:
@@ -71,7 +75,7 @@ the right patterns - some large scale refactorings may be in order.
 
 ## License
 
-The Linode manager's code is distributed under the terms of the [BSD 3-clause
+The Linode Manager's code is distributed under the terms of the [BSD 3-clause
 license](https://github.com/linode/manager/blob/master/LICENSE). The assets are
 not licensed for any purpose without prior written approval from Linode, unless
 otherwise noted.
