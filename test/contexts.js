@@ -31,7 +31,7 @@ export const mockFetchContext = async (sandbox, f, rsp, state = {}) => {
 
 export const mockInternalFetchContext = async (sandbox, f) => {
   const stubInfo = [
-    { obj: fetch, accessor: '_fetch', rsp: null },
+    { obj: fetch, accessor: 'rawFetch', rsp: null },
   ];
   const fCurried = async ([fetchStub]) => {
     await f({ fetchStub });
