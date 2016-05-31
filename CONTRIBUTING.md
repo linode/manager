@@ -12,17 +12,18 @@ don't, however, allow me to make a suggestion: feature branches pulled from
 upstream. Try this:
 
 1. Fork manager
-2. Clone your fork
-3. git remote add upstream git://github.com/Linode/manager.git
+1. Clone your fork
+1. git remote add upstream git://github.com/Linode/manager.git
 
 You only need to do this once. You're never going to use your fork's master
 branch. Instead, when you start working on a feature, do this:
 
 1. git fetch upstream
-2. git checkout -b add-so-and-so-feature upstream/master
-3. work
-4. git push -u origin add-so-and-so-feature
-5. Make pull request from your feature branch
+1. git checkout -b add-so-and-so-feature upstream/master
+1. work
+1. git push -u origin add-so-and-so-feature
+1. Run `npm run lint` to lint your code and `npm test` to test your code
+1. Make pull request from your feature branch
 
 ### Coding Style
 
