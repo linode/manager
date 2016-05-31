@@ -108,16 +108,15 @@ class IndexPage extends Component {
   renderGroup({ group, linodes }) {
     const { selected } = this.props;
 
-    const renderLinode = (l, displayClass) =>
+    const renderLinode = (l, card) =>
       <Linode
         key={l.id}
         linode={l}
         onSelect={this.toggle}
         isSelected={l.id in selected}
-        displayClass={displayClass}
-        isCard={displayClass === 'card'}
-        powerOn={this.powerOn}
-        reboot={this.reboot}
+        isCard={card}
+        onPowerOn={this.powerOn}
+        onReboot={this.reboot}
       />;
 
     const { view } = this.props;
@@ -126,7 +125,7 @@ class IndexPage extends Component {
         {group ? <h2 className="text-muted display-group">{group}</h2> : ''}
         {linodes.map(l =>
           <div key={l.id} className="col-md-4">
-            {renderLinode(l, 'card')}
+            {renderLinode(l, true)}
           </div>)}
       </div>);
     }
@@ -145,7 +144,7 @@ class IndexPage extends Component {
           </tr>
         </thead>
         <tbody>
-          {linodes.map(l => renderLinode(l, 'row'))}
+          {linodes.map(l => renderLinode(l, false))}
         </tbody>
       </table>
     </div>);
