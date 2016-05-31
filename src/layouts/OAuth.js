@@ -4,6 +4,7 @@ import { setToken } from '../actions/authentication';
 import { clientId, clientSecret } from '../secrets';
 import { pushPath } from 'redux-simple-router';
 import { LOGIN_ROOT } from '../constants';
+import { _fetch as fetch } from '../fetch';
 
 export class OAuthCallbackPage extends Component {
   async componentDidMount() {
@@ -19,11 +20,13 @@ export class OAuthCallbackPage extends Component {
 
       const resp = await fetch(`${LOGIN_ROOT}/oauth/token`, {
         method: 'POST',
-        body: data
+        body: data,
       });
       const json = await resp.json();
       dispatch(setToken(json.access_token, json.scopes, username, email));
       dispatch(pushPath(returnTo || '/'));
+    } else {
+      dispatch(pushPath('/'));
     }
   }
 

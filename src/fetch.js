@@ -14,3 +14,5 @@ export function fetch(token, _input, _init) {
   const input = API_ROOT + _input;
   return _fetch(input, init);
 }
+
+export { _fetch };
