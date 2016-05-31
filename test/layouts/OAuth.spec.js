@@ -43,7 +43,7 @@ describe('layouts/OAuth', () => {
   };
 
   it('exchanges the code for an OAuth token', async () => {
-    const fetchStub = sandbox.stub(fetch, '_fetch').returns({
+    const fetchStub = sandbox.stub(fetch, 'rawFetch').returns({
       json: () => exchangeResponse,
     });
     const dispatch = sandbox.spy();
@@ -65,7 +65,7 @@ describe('layouts/OAuth', () => {
   });
 
   it('dispatches a setToken action', async () => {
-    sandbox.stub(fetch, '_fetch').returns({
+    sandbox.stub(fetch, 'rawFetch').returns({
       json: () => exchangeResponse,
     });
     const dispatch = sandbox.spy();
@@ -88,7 +88,7 @@ describe('layouts/OAuth', () => {
   });
 
   it('supports the return query string option', async () => {
-    sandbox.stub(fetch, '_fetch').returns({
+    sandbox.stub(fetch, 'rawFetch').returns({
       json: () => exchangeResponse,
     });
     const dispatch = sandbox.spy();

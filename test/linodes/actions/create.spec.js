@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import * as actions from '~/linodes/actions/create';
 import * as linodeActions from '~/actions/api/linodes';
-import { mockContext } from '~/../test/mocks';
+import { mockFetchContext } from '~/../test/contexts';
 import { pushPath } from 'redux-simple-router';
 
 describe('linodes/actions/create', () => {
@@ -112,7 +112,7 @@ describe('linodes/actions/create', () => {
     });
 
     it('should call getState() once', async () => {
-      await mockContext(sandbox, async ({ dispatch, getState }) => {
+      await mockFetchContext(sandbox, async ({ dispatch, getState }) => {
         const func = actions.createLinode();
         await func(dispatch, getState);
         expect(getState.calledOnce).to.equal(true);
@@ -120,7 +120,7 @@ describe('linodes/actions/create', () => {
     });
 
     it('should dispatch a TOGGLE_CREATING action', async () => {
-      await mockContext(sandbox, async ({ dispatch, getState }) => {
+      await mockFetchContext(sandbox, async ({ dispatch, getState }) => {
         const func = actions.createLinode();
         await func(dispatch, getState);
         expect(dispatch.calledWith({
@@ -130,7 +130,7 @@ describe('linodes/actions/create', () => {
     });
 
     it('should perform an HTTP POST to /linodes', async () => {
-      await mockContext(sandbox, async ({ dispatch, getState, fetchStub }) => {
+      await mockFetchContext(sandbox, async ({ dispatch, getState, fetchStub }) => {
         const func = actions.createLinode();
         await func(dispatch, getState);
         expect(fetchStub.calledWith(
@@ -149,7 +149,7 @@ describe('linodes/actions/create', () => {
     });
 
     it('should dispatch an UPDATE_LINODE action with the new linode', async () => {
-      await mockContext(sandbox, async ({ dispatch, getState }) => {
+      await mockFetchContext(sandbox, async ({ dispatch, getState }) => {
         const func = actions.createLinode();
         await func(dispatch, getState);
         expect(dispatch.calledWith({
@@ -160,7 +160,7 @@ describe('linodes/actions/create', () => {
     });
 
     it('should dispatch a routing action to navigate to the detail page', async () => {
-      await mockContext(sandbox, async ({ dispatch, getState }) => {
+      await mockFetchContext(sandbox, async ({ dispatch, getState }) => {
         const func = actions.createLinode();
         await func(dispatch, getState);
         expect(dispatch.calledWith(
@@ -170,7 +170,7 @@ describe('linodes/actions/create', () => {
     });
 
     it('should dispatch a CLEAR_FORM action', async () => {
-      await mockContext(sandbox, async ({ dispatch, getState }) => {
+      await mockFetchContext(sandbox, async ({ dispatch, getState }) => {
         const func = actions.createLinode();
         await func(dispatch, getState);
         expect(dispatch.calledWith({ type: actions.CLEAR_FORM })).to.equal(true);
@@ -178,7 +178,7 @@ describe('linodes/actions/create', () => {
     });
 
     it('should update the linode until it finishes provisioning', async () => {
-      await mockContext(sandbox, async ({ dispatch, getState }) => {
+      await mockFetchContext(sandbox, async ({ dispatch, getState }) => {
         const func = actions.createLinode();
         const update = sandbox.spy(() => { });
         sandbox.stub(linodeActions, 'updateLinodeUntil', update);

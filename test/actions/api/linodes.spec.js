@@ -6,7 +6,7 @@ import {
   rebootLinode,
   UPDATE_LINODE,
 } from '../../../src/actions/api/linodes';
-import { mockContext } from '../../mocks';
+import { mockFetchContext } from '../../contexts';
 
 describe('actions/linodes/power', sinon.test(() => {
   const mockBootingResponse = {
@@ -25,7 +25,7 @@ describe('actions/linodes/power', sinon.test(() => {
   });
 
   it('returns linode power boot status', async () => {
-    await mockContext(sandbox, async ({
+    await mockFetchContext(sandbox, async ({
         auth, dispatch, getState, fetchStub,
       }) => {
       const f = powerOnLinode('foo');
@@ -47,7 +47,7 @@ describe('actions/linodes/power', sinon.test(() => {
   };
 
   it('returns linode power shutdown status', async () => {
-    await mockContext(sandbox, async ({
+    await mockFetchContext(sandbox, async ({
         auth, dispatch, getState, fetchStub,
       }) => {
       const f = powerOffLinode('foo');
@@ -69,7 +69,7 @@ describe('actions/linodes/power', sinon.test(() => {
   };
 
   it('returns linode power reboot status', async () => {
-    await mockContext(sandbox, async ({
+    await mockFetchContext(sandbox, async ({
         auth, dispatch, getState, fetchStub,
       }) => {
       const f = rebootLinode('foo');

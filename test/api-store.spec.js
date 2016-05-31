@@ -6,7 +6,7 @@ import makeApiList, {
   makeUpdateItem,
   makeDeleteItem,
 } from '../src/api-store';
-import { mockContext } from './mocks';
+import { mockFetchContext } from './contexts';
 
 const mockFoobarsResponse = {
   foobars: [
@@ -209,7 +209,7 @@ describe('api-store', () => {
     });
 
     it('fetches a page of items from the API', async () => {
-      await mockContext(sandbox, async ({
+      await mockFetchContext(sandbox, async ({
           auth, dispatch, getState, fetchStub,
         }) => {
         const f = makeFetchPage('FETCH_FOOBARS', 'foobars');
@@ -227,7 +227,7 @@ describe('api-store', () => {
     });
 
     it('fetches the requested page', async () => {
-      await mockContext(sandbox, async ({
+      await mockFetchContext(sandbox, async ({
           auth, dispatch, getState, fetchStub,
         }) => {
         const f = makeFetchPage('FETCH_FOOBARS', 'foobars');
@@ -249,7 +249,7 @@ describe('api-store', () => {
     });
 
     it('fetches an item from the API', async () => {
-      await mockContext(sandbox, async ({
+      await mockFetchContext(sandbox, async ({
           auth, dispatch, getState, fetchStub,
         }) => {
         const f = makeUpdateItem('UPDATE_FOOBAR', 'foobars', 'foobar');
@@ -276,7 +276,7 @@ describe('api-store', () => {
 
     const emptyResponse = {};
     it('performs the API request', async () => {
-      await mockContext(sandbox, async ({
+      await mockFetchContext(sandbox, async ({
           auth, dispatch, getState, fetchStub,
         }) => {
         const f = makeDeleteItem('DELETE_FOOBAR', 'foobars');
