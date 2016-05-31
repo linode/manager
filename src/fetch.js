@@ -1,18 +1,31 @@
 import { API_ROOT } from './constants';
-import _fetch from 'isomorphic-fetch';
+import * as isomorphicFetch from 'isomorphic-fetch';
 
-export function fetch(token, _input, _init) {
-  const init = {
+/*
+ * Sinon cannot stub out a function in a function-only module.
+ * https://github.com/sinonjs/sinon/issues/664
+ */
+export function _fetch(...args) {
+  return isomorphicFetch['default'](...args);
+}
+
+export function fetch(token, _path, _options) {
+  /*
+   * Get updated reference in case _fetch is a stub (during testing).
+   * See comment on _fetch.
+   */
+  const fetchRef = module.exports._fetch;
+  const options = {
     mode: 'cors',
-    ..._init,
+    ..._options,
     headers: {
       Accept: 'application/json',
       Authorization: `token ${token}`,
       'Content-Type': 'application/json',
     },
   };
-  const input = API_ROOT + _input;
-  return _fetch(input, init);
+  const path = API_ROOT + _path;
+  return fetchRef(path, options);
 }
 
 export { _fetch };
