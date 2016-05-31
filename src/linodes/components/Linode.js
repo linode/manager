@@ -3,13 +3,13 @@ import { Link } from 'react-router';
 import { LinodeStatesReadable } from '~/constants';
 
 function renderPowerButton(props) {
-  const { linode, powerOn, reboot } = props;
+  const { linode, onPowerOn, onReboot } = props;
 
-  let [powerIcon, powerAction] = ['', () => {}];
+  let [powerIcon, powerAction] = ['', null];
   if (linode.state === 'offline') {
-    [powerIcon, powerAction] = ['fa-power-off', powerOn];
+    [powerIcon, powerAction] = ['fa-power-off', onPowerOn];
   } else if (linode.state === 'running') {
-    [powerIcon, powerAction] = ['fa-refresh', reboot];
+    [powerIcon, powerAction] = ['fa-refresh', onReboot];
   }
   const powerActionF = () => powerAction(linode);
 
@@ -19,8 +19,8 @@ function renderPowerButton(props) {
 
 renderPowerButton.propTypes = {
   linode: PropTypes.object.isRequired,
-  powerOn: PropTypes.func,
-  reboot: PropTypes.func,
+  onPowerOn: PropTypes.func,
+  onReboot: PropTypes.func,
 };
 
 function renderCard(props) {
@@ -49,19 +49,19 @@ function renderCard(props) {
         <ul className="list-unstyled">
           <li>
             <span className="fa fa-link"></span>
-            {linode.ip_addresses['public'].ipv4[0]}
+            <span>{linode.ip_addresses['public'].ipv4[0]}</span>
           </li>
           <li>
             <span className="fa fa-link invisible"></span>
-            {linode.ip_addresses['public'].ipv6}
+            <span>{linode.ip_addresses['public'].ipv6}</span>
           </li>
           <li>
             <span className="fa fa-globe"></span>
-            {linode.datacenter.label}
+            <span>{linode.datacenter.label}</span>
           </li>
           <li>
             <span className="fa fa-database"></span>
-            Last backup: 1 hour ago
+            <span>Last backup: 1 hour ago</span>
           </li>
         </ul>
       </div>
