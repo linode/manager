@@ -3,7 +3,7 @@ import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 import Sidebar from '../../src/components/Sidebar';
 
-describe('Sidebar', () => {
+describe('components/Sidebar', () => {
   it('renders sidebar component', () => {
     const sidebar = mount(
       <Sidebar />

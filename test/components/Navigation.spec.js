@@ -3,7 +3,7 @@ import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 import Navigation from '../../src/components/Navigation';
 
-describe('Navigation', () => {
+describe('components/Navigation', () => {
   it('renders username', () => {
     const navigation = mount(
       <Navigation username={'peanut'} />
