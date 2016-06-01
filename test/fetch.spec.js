@@ -1,15 +1,10 @@
 import sinon from 'sinon';
 import { expect } from 'chai';
-import { mockInternalFetchContext } from './contexts';
-import { fetch } from '~/fetch';
+import * as fetch from '~/fetch';
 import { API_ROOT } from '~/constants';
 
 describe('fetch', () => {
-  let sandbox = null;
-
-  beforeEach(() => {
-    sandbox = sinon.sandbox.create();
-  });
+  const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
     sandbox.restore();
@@ -25,40 +20,39 @@ describe('fetch', () => {
     },
   };
 
-  it('should default to cors mode and headers for token', async () => {
-    await mockInternalFetchContext(sandbox, async ({ fetchStub }) => {
-      await fetch(token, '');
+  const getFetchStub = (rsp) => sandbox.stub(fetch, 'rawFetch').returns(rsp);
 
-      expect(fetchStub.calledWith(
-        API_ROOT,
-        defaultHeaders,
-      )).to.equal(true);
-    });
+  it('should default to cors mode and headers for token', async () => {
+    const fetchStub = getFetchStub();
+    await fetch.fetch(token, '');
+
+    expect(fetchStub.calledWith(
+      API_ROOT,
+      defaultHeaders,
+    )).to.equal(true);
   });
 
   it('should fetch the correct path', async () => {
-    await mockInternalFetchContext(sandbox, async ({ fetchStub }) => {
-      await fetch(token, 'path');
+    const fetchStub = getFetchStub();
+    await fetch.fetch(token, 'path');
 
-      expect(fetchStub.calledWith(
-        `${API_ROOT}path`,
-        defaultHeaders,
-      ));
-    });
+    expect(fetchStub.calledWith(
+      `${API_ROOT}path`,
+      defaultHeaders,
+    ));
   });
 
   it('should include data', async () => {
-    await mockInternalFetchContext(sandbox, async ({ fetchStub }) => {
-      const data = { data: { foo: 'bar' } };
-      await fetch(token, '', data);
+    const fetchStub = getFetchStub();
+    const data = { data: { foo: 'bar' } };
+    await fetch.fetch(token, '', data);
 
-      expect(fetchStub.calledWith(
-        API_ROOT,
-        {
-          ...defaultHeaders,
-          ...data,
-        }
-      ));
-    });
+    expect(fetchStub.calledWith(
+      API_ROOT,
+      {
+        ...defaultHeaders,
+        ...data,
+      }
+    ));
   });
 });

@@ -6,7 +6,7 @@ import makeApiList, {
   makeUpdateItem,
   makeDeleteItem,
 } from '../src/api-store';
-import { mockFetchContext } from './contexts';
+import * as fetch from '~/fetch';
 
 const mockFoobarsResponse = {
   foobars: [
@@ -19,17 +19,15 @@ const mockFoobarsResponse = {
 };
 
 describe('api-store', () => {
-  let sandbox = null;
+  const auth = { token: 'token' };
 
-  beforeEach(() => {
-    sandbox = sinon.sandbox.create();
-  });
-
-  afterEach(() => {
-    sandbox.restore();
-  });
+  const sandbox = sinon.sandbox.create();
 
   describe('api-store/makeApiList', () => {
+    afterEach(() => {
+      sandbox.restore();
+    });
+
     it('should handle initial state', () => {
       const s = makeApiList('foobars', 'foobar', {
         update_singular: 'UPDATE_ONE',
@@ -202,6 +200,17 @@ describe('api-store', () => {
   });
 
   describe('api-store/makeFetchPage', () => {
+    afterEach(() => {
+      sandbox.restore();
+    });
+
+    const getGetState = (state = {}) => sandbox.stub().returns({
+      authentication: auth,
+      ...state,
+    });
+    const getDispatch = () => sandbox.spy();
+    const getFetchStub = (rsp) => sandbox.stub(fetch, 'fetch').returns({ json() { return rsp; } });
+
     it('returns a function that itself returns a function', () => {
       const f = makeFetchPage('FETCH_FOOBARS', 'foobars');
       expect(f).to.be.a('function');
@@ -209,39 +218,48 @@ describe('api-store', () => {
     });
 
     it('fetches a page of items from the API', async () => {
-      await mockFetchContext(sandbox, async ({
-          auth, dispatch, getState, fetchStub,
-        }) => {
-        const f = makeFetchPage('FETCH_FOOBARS', 'foobars');
-        const p = f();
+      const dispatch = getDispatch();
+      const fetchStub = getFetchStub(mockFoobarsResponse);
+      const getState = getGetState();
+      const f = makeFetchPage('FETCH_FOOBARS', 'foobars');
+      const p = f();
 
-        await p(dispatch, getState);
+      await p(dispatch, getState);
 
-        expect(fetchStub.calledWith(
-          auth.token, '/foobars?page=1')).to.equal(true);
-        expect(dispatch.calledWith({
-          type: 'FETCH_FOOBARS',
-          response: mockFoobarsResponse,
-        })).to.equal(true);
-      }, mockFoobarsResponse);
+      expect(fetchStub.calledWith(
+        auth.token, '/foobars?page=1')).to.equal(true);
+      expect(dispatch.calledWith({
+        type: 'FETCH_FOOBARS',
+        response: mockFoobarsResponse,
+      })).to.equal(true);
     });
 
     it('fetches the requested page', async () => {
-      await mockFetchContext(sandbox, async ({
-          auth, dispatch, getState, fetchStub,
-        }) => {
-        const f = makeFetchPage('FETCH_FOOBARS', 'foobars');
-        const p = f(1);
+      const dispatch = getDispatch();
+      const fetchStub = getFetchStub(mockFoobarsResponse);
+      const getState = getGetState();
+      const f = makeFetchPage('FETCH_FOOBARS', 'foobars');
+      const p = f(1);
 
-        await p(dispatch, getState);
+      await p(dispatch, getState);
 
-        expect(fetchStub.calledWith(
-          auth.token, '/foobars?page=2')).to.equal(true);
-      }, mockFoobarsResponse);
+      expect(fetchStub.calledWith(
+        auth.token, '/foobars?page=2')).to.equal(true);
     });
   });
 
   describe('api-store/makeUpdateItem', () => {
+    afterEach(() => {
+      sandbox.restore();
+    });
+
+    const getGetState = (state = {}) => sandbox.stub().returns({
+      authentication: auth,
+      ...state,
+    });
+    const getDispatch = () => sandbox.spy();
+    const getFetchStub = (rsp) => sandbox.stub(fetch, 'fetch').returns({ json() { return rsp; } });
+
     it('returns a function that itself returns a function', () => {
       const f = makeUpdateItem('UPDATE_FOOBAR', 'foobars', 'foobar');
       expect(f).to.be.a('function');
@@ -249,48 +267,57 @@ describe('api-store', () => {
     });
 
     it('fetches an item from the API', async () => {
-      await mockFetchContext(sandbox, async ({
-          auth, dispatch, getState, fetchStub,
-        }) => {
-        const f = makeUpdateItem('UPDATE_FOOBAR', 'foobars', 'foobar');
-        const p = f('foobar_1');
+      const dispatch = getDispatch();
+      const fetchStub = getFetchStub(mockFoobarsResponse.foobars[0]);
+      const getState = getGetState();
+      const f = makeUpdateItem('UPDATE_FOOBAR', 'foobars', 'foobar');
+      const p = f('foobar_1');
 
-        await p(dispatch, getState);
+      await p(dispatch, getState);
 
-        expect(fetchStub.calledWith(
-          auth.token, '/foobars/foobar_1')).to.equal(true);
-        expect(dispatch.calledWith({
-          type: 'UPDATE_FOOBAR',
-          foobar: mockFoobarsResponse.foobars[0],
-        })).to.equal(true);
-      }, mockFoobarsResponse.foobars[0]);
+      expect(fetchStub.calledWith(
+        auth.token, '/foobars/foobar_1')).to.equal(true);
+      expect(dispatch.calledWith({
+        type: 'UPDATE_FOOBAR',
+        foobar: mockFoobarsResponse.foobars[0],
+      })).to.equal(true);
     });
   });
 
   describe('api-store/makeDeleteItem', () => {
+    afterEach(() => {
+      sandbox.restore();
+    });
+
     it('returns a function that itself returns a function', () => {
       const f = makeDeleteItem('DELETE_FOOBAR', 'foobars');
       expect(f).to.be.a('function');
       expect(f()).to.be.a('function');
     });
 
+    const getGetState = (state = {}) => sandbox.stub().returns({
+      authentication: auth,
+      ...state,
+    });
+    const getDispatch = () => sandbox.spy();
+    const getFetchStub = (rsp) => sandbox.stub(fetch, 'fetch').returns({ json() { return rsp; } });
+
     const emptyResponse = {};
     it('performs the API request', async () => {
-      await mockFetchContext(sandbox, async ({
-          auth, dispatch, getState, fetchStub,
-        }) => {
-        const f = makeDeleteItem('DELETE_FOOBAR', 'foobars');
-        const p = f('foobar_1');
+      const dispatch = getDispatch();
+      const fetchStub = getFetchStub(emptyResponse);
+      const getState = getGetState();
+      const f = makeDeleteItem('DELETE_FOOBAR', 'foobars');
+      const p = f('foobar_1');
 
-        await p(dispatch, getState);
+      await p(dispatch, getState);
 
-        expect(fetchStub.calledWith(
-          auth.token, '/foobars/foobar_1', { method: 'DELETE' })).to.equal(true);
-        expect(dispatch.calledWith({
-          type: 'DELETE_FOOBAR',
-          id: 'foobar_1',
-        })).to.equal(true);
-      }, emptyResponse);
+      expect(fetchStub.calledWith(
+        auth.token, '/foobars/foobar_1', { method: 'DELETE' })).to.equal(true);
+      expect(dispatch.calledWith({
+        type: 'DELETE_FOOBAR',
+        id: 'foobar_1',
+      })).to.equal(true);
     });
   });
 

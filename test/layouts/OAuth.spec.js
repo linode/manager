@@ -8,11 +8,7 @@ import { LOGIN_ROOT } from '~/constants';
 import * as fetch from '~/fetch';
 
 describe('layouts/OAuth', () => {
-  let sandbox = null;
-
-  beforeEach(() => {
-    sandbox = sinon.sandbox.create();
-  });
+  const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
     sandbox.restore();

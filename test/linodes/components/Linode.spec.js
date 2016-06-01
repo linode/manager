@@ -6,11 +6,7 @@ import { Linode } from '~/linodes/components/Linode';
 import { testLinode } from '~/../test/data';
 
 describe('linodes/components/Linode', () => {
-  let sandbox = null;
-
-  beforeEach(() => {
-    sandbox = sinon.sandbox.create();
-  });
+  const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
     sandbox.restore();

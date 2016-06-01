@@ -6,39 +6,43 @@ import {
   rebootLinode,
   UPDATE_LINODE,
 } from '../../../src/actions/api/linodes';
-import { mockFetchContext } from '../../contexts';
+import * as fetch from '~/fetch';
 
 describe('actions/linodes/power', sinon.test(() => {
-  const mockBootingResponse = {
-    type: UPDATE_LINODE,
-    linode: { id: 'foo', state: 'booting' },
-  };
-
-  let sandbox = null;
-
-  beforeEach(() => {
-    sandbox = sinon.sandbox.create();
-  });
+  const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
     sandbox.restore();
   });
 
+  const auth = { token: 'token' };
+  const getGetState = (state = {}) => sandbox.stub().returns({
+    authentication: auth,
+    ...state,
+  });
+  const getDispatch = () => sandbox.spy();
+  const getFetchStub = (rsp) => sandbox.stub(fetch, 'fetch').returns({ json() { return rsp; } });
+
+  const mockBootingResponse = {
+    type: UPDATE_LINODE,
+    linode: { id: 'foo', state: 'booting' },
+  };
+
+
   it('returns linode power boot status', async () => {
-    await mockFetchContext(sandbox, async ({
-        auth, dispatch, getState, fetchStub,
-      }) => {
-      const f = powerOnLinode('foo');
+    const dispatch = getDispatch();
+    const getState = getGetState();
+    const fetchStub = getFetchStub(mockBootingResponse);
+    const f = powerOnLinode('foo');
 
-      await f(dispatch, getState);
+    await f(dispatch, getState);
 
-      expect(fetchStub.calledWith(
-        auth.token, '/linodes/foo/boot', { method: 'POST' })).to.equal(true);
-      expect(dispatch.calledWith({
-        type: UPDATE_LINODE,
-        linode: { id: 'foo', state: 'booting' },
-      })).to.equal(true);
-    }, mockBootingResponse);
+    expect(fetchStub.calledWith(
+      auth.token, '/linodes/foo/boot', { method: 'POST' })).to.equal(true);
+    expect(dispatch.calledWith({
+      type: UPDATE_LINODE,
+      linode: { id: 'foo', state: 'booting' },
+    })).to.equal(true);
   });
 
   const mockShuttingDownResponse = {
@@ -47,20 +51,19 @@ describe('actions/linodes/power', sinon.test(() => {
   };
 
   it('returns linode power shutdown status', async () => {
-    await mockFetchContext(sandbox, async ({
-        auth, dispatch, getState, fetchStub,
-      }) => {
-      const f = powerOffLinode('foo');
+    const dispatch = getDispatch();
+    const getState = getGetState();
+    const fetchStub = getFetchStub(mockShuttingDownResponse);
+    const f = powerOffLinode('foo');
 
-      await f(dispatch, getState);
+    await f(dispatch, getState);
 
-      expect(fetchStub.calledWith(
-        auth.token, '/linodes/foo/shutdown', { method: 'POST' })).to.equal(true);
-      expect(dispatch.calledWith({
-        type: UPDATE_LINODE,
-        linode: { id: 'foo', state: 'shutting_down' },
-      })).to.equal(true);
-    }, mockShuttingDownResponse);
+    expect(fetchStub.calledWith(
+      auth.token, '/linodes/foo/shutdown', { method: 'POST' })).to.equal(true);
+    expect(dispatch.calledWith({
+      type: UPDATE_LINODE,
+      linode: { id: 'foo', state: 'shutting_down' },
+    })).to.equal(true);
   });
 
   const mockRebootingResponse = {
@@ -69,19 +72,18 @@ describe('actions/linodes/power', sinon.test(() => {
   };
 
   it('returns linode power reboot status', async () => {
-    await mockFetchContext(sandbox, async ({
-        auth, dispatch, getState, fetchStub,
-      }) => {
-      const f = rebootLinode('foo');
+    const dispatch = getDispatch();
+    const getState = getGetState();
+    const fetchStub = getFetchStub(mockRebootingResponse);
+    const f = rebootLinode('foo');
 
-      await f(dispatch, getState);
+    await f(dispatch, getState);
 
-      expect(fetchStub.calledWith(
-        auth.token, '/linodes/foo/reboot', { method: 'POST' })).to.equal(true);
-      expect(dispatch.calledWith({
-        type: UPDATE_LINODE,
-        linode: { id: 'foo', state: 'rebooting' },
-      })).to.equal(true);
-    }, mockRebootingResponse);
+    expect(fetchStub.calledWith(
+      auth.token, '/linodes/foo/reboot', { method: 'POST' })).to.equal(true);
+    expect(dispatch.calledWith({
+      type: UPDATE_LINODE,
+      linode: { id: 'foo', state: 'rebooting' },
+    })).to.equal(true);
   });
 }));
