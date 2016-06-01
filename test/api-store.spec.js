@@ -21,13 +21,13 @@ const mockFoobarsResponse = {
 describe('api-store', () => {
   const auth = { token: 'token' };
 
+  let sandbox = null;
+
+  beforeEach(() => {
+    sandbox = sinon.sandbox.create();
+  });
+
   describe('api-store/makeApiList', () => {
-    let sandbox = null;
-
-    beforeEach(() => {
-      sandbox = sinon.sandbox.create();
-    });
-
     afterEach(() => {
       sandbox.restore();
     });
@@ -204,12 +204,6 @@ describe('api-store', () => {
   });
 
   describe('api-store/makeFetchPage', () => {
-    let sandbox = null;
-
-    beforeEach(() => {
-      sandbox = sinon.sandbox.create();
-    });
-
     afterEach(() => {
       sandbox.restore();
     });
@@ -259,12 +253,6 @@ describe('api-store', () => {
   });
 
   describe('api-store/makeUpdateItem', () => {
-    let sandbox = null;
-
-    beforeEach(() => {
-      sandbox = sinon.sandbox.create();
-    });
-
     afterEach(() => {
       sandbox.restore();
     });
@@ -301,12 +289,6 @@ describe('api-store', () => {
   });
 
   describe('api-store/makeDeleteItem', () => {
-    let sandbox = null;
-
-    beforeEach(() => {
-      sandbox = sinon.sandbox.create();
-    });
-
     afterEach(() => {
       sandbox.restore();
     });

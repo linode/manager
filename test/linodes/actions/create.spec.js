@@ -6,6 +6,12 @@ import { pushPath } from 'redux-simple-router';
 import * as fetch from '~/fetch';
 
 describe('linodes/actions/create', () => {
+  let sandbox = null;
+
+  beforeEach(() => {
+    sandbox = sinon.sandbox.create();
+  });
+
   describe('changeSourceTab', () => {
     it('should return a CHANGE_SOURCE_TAB action', () => {
       expect(actions.changeSourceTab(1))
@@ -78,12 +84,6 @@ describe('linodes/actions/create', () => {
   });
 
   describe('createLinode', () => {
-    let sandbox = null;
-
-    beforeEach(() => {
-      sandbox = sinon.sandbox.create();
-    });
-
     afterEach(() => {
       sandbox.restore();
     });
