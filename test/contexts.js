@@ -1,9 +1,8 @@
-import sinon from 'sinon';
 import * as fetch from '~/fetch';
 
 export const mockContext = async (sandbox, stubInfo, f) => {
   const stubs = stubInfo.map(({ obj, accessor, rsp }) =>
-    sinon.stub(obj, accessor).returns(rsp));
+    sandbox.stub(obj, accessor).returns(rsp));
 
   await f(stubs);
 
@@ -14,11 +13,11 @@ export const mockContext = async (sandbox, stubInfo, f) => {
 
 export const mockFetchContext = async (sandbox, f, rsp, state = {}) => {
   const auth = { token: 'token' };
-  const getState = sinon.stub().returns({
+  const getState = sandbox.stub().returns({
     authentication: auth,
     ...state,
   });
-  const dispatch = sinon.spy();
+  const dispatch = sandbox.spy();
   const stubInfo = [
     { obj: fetch, accessor: 'fetch', rsp: { json: () => rsp } },
   ];
