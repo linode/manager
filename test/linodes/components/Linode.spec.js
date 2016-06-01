@@ -14,7 +14,7 @@ describe('linodes/components/Linode', () => {
   afterEach(() => {
     sandbox.restore();
   });
-  
+
   const testLinode = {
     label: 'Test Linode',
     ip_addresses: {
