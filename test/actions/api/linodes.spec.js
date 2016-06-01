@@ -9,11 +9,7 @@ import {
 import * as fetch from '~/fetch';
 
 describe('actions/linodes/power', sinon.test(() => {
-  let sandbox = null;
-
-  beforeEach(() => {
-    sandbox = sinon.sandbox.create();
-  });
+  const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
     sandbox.restore();

@@ -5,11 +5,7 @@ import { expect, assert } from 'chai';
 import Dropdown from '../../src/components/Dropdown';
 
 describe('Dropdown', () => {
-  let sandbox = null;
-
-  beforeEach(() => {
-    sandbox = sinon.sandbox.create();
-  });
+  const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
     sandbox.restore();

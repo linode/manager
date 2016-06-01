@@ -21,11 +21,7 @@ const mockFoobarsResponse = {
 describe('api-store', () => {
   const auth = { token: 'token' };
 
-  let sandbox = null;
-
-  beforeEach(() => {
-    sandbox = sinon.sandbox.create();
-  });
+  const sandbox = sinon.sandbox.create();
 
   describe('api-store/makeApiList', () => {
     afterEach(() => {

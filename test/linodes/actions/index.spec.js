@@ -39,11 +39,7 @@ describe('linodes/actions', () => {
   };
 
   describe('toggleSelectAll', () => {
-    let sandbox = null;
-
-    beforeEach(() => {
-      sandbox = sinon.sandbox.create();
-    });
+    const sandbox = sinon.sandbox.create();
 
     afterEach(() => {
       sandbox.restore();

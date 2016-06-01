@@ -6,11 +6,7 @@ import { pushPath } from 'redux-simple-router';
 import * as fetch from '~/fetch';
 
 describe('linodes/actions/create', () => {
-  let sandbox = null;
-
-  beforeEach(() => {
-    sandbox = sinon.sandbox.create();
-  });
+  const sandbox = sinon.sandbox.create();
 
   describe('changeSourceTab', () => {
     it('should return a CHANGE_SOURCE_TAB action', () => {

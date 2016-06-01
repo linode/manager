@@ -4,11 +4,7 @@ import * as fetch from '~/fetch';
 import { API_ROOT } from '~/constants';
 
 describe('fetch', () => {
-  let sandbox = null;
-
-  beforeEach(() => {
-    sandbox = sinon.sandbox.create();
-  });
+  const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
     sandbox.restore();
