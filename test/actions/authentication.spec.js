@@ -2,7 +2,7 @@ import sinon from 'sinon';
 import { expect } from 'chai';
 import {
   SET_TOKEN,
-  setToken
+  setToken,
 } from '../../src/actions/authentication';
 
 describe('actions/authentication', sinon.test(() => {

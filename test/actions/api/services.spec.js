@@ -2,11 +2,11 @@ import sinon from 'sinon';
 import { expect } from 'chai';
 import {
   UPDATE_SERVICES,
-  fetchServices
-}from '../../../src/actions/api/services';
-import { mockContext } from '../../mocks';
+  fetchServices,
+} from '~/actions/api/services';
+import { mockContext } from '~/../test/mocks';
 
-describe("actions/api/services", sinon.test(() => {
+describe('actions/api/services', sinon.test(() => {
   let sandbox = null;
 
   beforeEach(() => {
@@ -17,22 +17,22 @@ describe("actions/api/services", sinon.test(() => {
     sandbox.restore();
   });
 
-  const mockFetchResponse = "foobar";
+  const mockFetchResponse = 'foobar';
 
   it('should fetch services', async () => {
     await mockContext(sandbox, async ({
-        auth, dispatch, getState, fetchStub
+        auth, dispatch, getState, fetchStub,
       }) => {
       const f = fetchServices();
 
       await f(dispatch, getState);
 
       expect(fetchStub.calledWith(
-        auth.token, '/services?page=1')).to.be.true;
+        auth.token, '/services?page=1')).to.equal(true);
       expect(dispatch.calledWith({
         type: UPDATE_SERVICES,
-        response: mockFetchResponse
-      })).to.be.true;
+        response: mockFetchResponse,
+      })).to.equal(true);
     }, mockFetchResponse);
   });
 }));
