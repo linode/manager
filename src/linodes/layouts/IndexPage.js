@@ -18,7 +18,7 @@ import {
   toggleSelected,
 } from '../actions';
 
-class IndexPage extends Component {
+export class IndexPage extends Component {
   constructor() {
     super();
     this.componentDidMount = this.componentDidMount.bind(this);
