@@ -5,6 +5,16 @@ import { expect } from 'chai';
 import { Linode } from '~/linodes/components/Linode';
 
 describe('linodes/components/Linode', () => {
+  let sandbox = null;
+
+  beforeEach(() => {
+    sandbox = sinon.sandbox.create();
+  });
+
+  afterEach(() => {
+    sandbox.restore();
+  });
+
   const testLinode = {
     label: 'Test Linode',
     ip_addresses: {
@@ -93,7 +103,7 @@ describe('linodes/components/Linode', () => {
   });
 
   it('invokes the onSelect function when the checkbox is toggled', () => {
-    const onSelect = sinon.spy();
+    const onSelect = sandbox.spy();
     const linode = shallow(
       <Linode
         linode={testLinode}
@@ -107,7 +117,7 @@ describe('linodes/components/Linode', () => {
   });
 
   it('invokes the onReboot function when the button is pressed', () => {
-    const onReboot = sinon.spy();
+    const onReboot = sandbox.spy();
     const linode = shallow(
       <Linode
         linode={testLinode}
@@ -121,7 +131,7 @@ describe('linodes/components/Linode', () => {
   });
 
   it('invokes the onPowerOn function when the button is pressed', () => {
-    const onPowerOn = sinon.spy();
+    const onPowerOn = sandbox.spy();
     const testLinodeOff = { ...testLinode, state: 'offline' };
     const linode = shallow(
       <Linode
