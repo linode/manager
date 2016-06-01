@@ -1,9 +1,11 @@
 import React from 'react';
 import sinon from 'sinon';
+import { mount } from 'enzyme';
 import { expect } from 'chai';
 import { IndexPage } from '~/linodes/layouts/IndexPage';
 import { UPDATE_LINODES } from '~/actions/api/linodes';
 import * as fetch from '~/fetch';
+import { testLinode } from '~/../test/data';
 
 describe('linodes/layouts/IndexPage', () => {
   let sandbox = null;
@@ -16,18 +18,13 @@ describe('linodes/layouts/IndexPage', () => {
     sandbox.restore();
   });
 
-  const componentDidMount = IndexPage.prototype.componentDidMount;
-  IndexPage.prototype.componentDidMount = () => {};
-
   const linodes = {
     pagesFetched: [0],
     totalPages: 1,
     linodes: [
-      {
-        id: 'linode_123',
-        state: 'running',
-        label: 'Test Linode',
-      },
+      testLinode,
+      { ...testLinode, id: 'linode_1235' },
+      { ...testLinode, id: 'linode_1236', state: 'offline' },
     ],
     _singular: 'linode',
     _plural: 'linodes',
@@ -35,14 +32,13 @@ describe('linodes/layouts/IndexPage', () => {
 
   it('dispatches a linodes fetch action when mounted', async () => {
     const dispatch = sandbox.spy();
-    const component = (
+    mount(
       <IndexPage
         dispatch={dispatch}
         view={'grid'}
         selected={{}}
         linodes={linodes}
       />);
-    componentDidMount.call(component);
     expect(dispatch.calledOnce).to.equal(true);
     const dispatched = dispatch.firstCall.args[0];
     // Assert that dispatched is a function that fetches linodes
