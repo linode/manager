@@ -65,7 +65,8 @@ describe('linodes/layouts/IndexPage', () => {
 
     const gridRow = page.find('.linodes-page > .row');
     expect(gridRow.length).to.equal(1);
-    expect(gridRow.find('.col-md-4').length).to.equal(linodes.linodes.length);
+    expect(gridRow.find('.col-md-4').length).to.equal(
+      Object.keys(linodes.linodes).length);
   });
 
   it('renders a list of Linodes', () => {
@@ -80,7 +81,8 @@ describe('linodes/layouts/IndexPage', () => {
 
     const table = page.find('.linodes-page > .linodes > table');
     expect(table.length).to.equal(1);
-    expect(table.find('tbody tr').length).to.equal(linodes.linodes.length);
+    expect(table.find('tbody tr').length).to.equal(
+      Object.keys(linodes.linodes).length);
   });
 
   it('renders a power management dropdown', () => {
