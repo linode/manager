@@ -25,6 +25,10 @@ branch. Instead, when you start working on a feature, do this:
 1. Run `npm run lint` to lint your code and `npm test` to test your code
 1. Make pull request from your feature branch
 
+**Tip**: automatically lint your commits by running this snippet:
+
+    printf '%s\n%s' '#!/usr/bin/env bash' 'npm run lint' > .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit
+
 ### Coding Style
 
 The manager is written in ES6, with some ES7 in use as well. A general guideline
