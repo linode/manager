@@ -105,7 +105,6 @@ describe('linodes/layouts/IndexPage', () => {
 
   function makePowerTest(dropdown, endpoint) {
     return async () => {
-      const dispatch = sinon.spy();
       const page = mount(
         <IndexPage
           dispatch={dispatch}
@@ -135,7 +134,17 @@ describe('linodes/layouts/IndexPage', () => {
     ['deletes selected linodes when deletes is pressed', 'Delete', ''],
   ].map(([name, button, endpoint]) => it(name, makePowerTest(button, endpoint)));
 
-  it('renders a "select all" checkbox');
+  it('renders a "select all" checkbox', () => {
+    const page = shallow(
+      <IndexPage
+        dispatch={() => {}}
+        view={'grid'}
+        selected={{}}
+        linodes={linodes}
+      />);
+    const selectAll = page.find('.selectall');
+    expect(selectAll.find('input[type="checkbox"]')).to.exist;
+  });
 
   it('renders an "add a linode" button'); // should also confirm Link.to == /linodes/create
 
