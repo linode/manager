@@ -4,7 +4,7 @@ import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 import { IndexPage } from '~/linodes/layouts/IndexPage';
 import { UPDATE_LINODES } from '~/actions/api/linodes';
-import { TOGGLE_SELECTED } from '~/linodes/actions/index';
+import { TOGGLE_SELECTED, CHANGE_VIEW } from '~/linodes/actions/index';
 import * as fetch from '~/fetch';
 import { testLinode } from '~/../test/data';
 import Dropdown from '~/components/Dropdown';
@@ -185,5 +185,24 @@ describe('linodes/layouts/IndexPage', () => {
     expect(Object.keys(selected)).to.deep.equal(Object.keys(linodes.linodes));
   });
 
-  it('changes the view when the grid or list links are clicked');
+  function testViewChange(initial, final) {
+    return () => {
+      const page = mount(
+        <IndexPage
+          dispatch={dispatch}
+          view={initial}
+          selected={{}}
+          linodes={linodes}
+        />
+      );
+
+      const listButton = page.find(`.grid-list .${final}`);
+      listButton.simulate('click');
+      expect(dispatch.calledWith({ type: CHANGE_VIEW, view: final }))
+        .to.equal(true);
+    };
+  }
+
+  it('should switch view to list when list is clicked', testViewChange('grid', 'list'));
+  it('should switch view to grid when grid is clicked', testViewChange('list', 'grid'));
 });
