@@ -16,7 +16,7 @@ describe('linodes/layouts/IndexPage', () => {
     sandbox.restore();
   });
 
-  let dispatch = sandbox.spy();
+  const dispatch = sandbox.spy();
 
   const linodes = {
     pagesFetched: [0],
@@ -154,7 +154,7 @@ describe('linodes/layouts/IndexPage', () => {
 
   it('selects all linodes when "select all" is checked', () => {
     const selected = {};
-    dispatch = sandbox.spy(action => {
+    const localDispatch = sandbox.spy(action => {
       if (action.type === TOGGLE_SELECTED) {
         selected[action.selected[0]] = true;
       }
@@ -162,7 +162,7 @@ describe('linodes/layouts/IndexPage', () => {
 
     const page = mount(
       <IndexPage
-        dispatch={dispatch}
+        dispatch={localDispatch}
         view={'grid'}
         selected={{}}
         linodes={linodes}
