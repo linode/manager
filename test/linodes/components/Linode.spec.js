@@ -81,7 +81,7 @@ describe('linodes/components/Linode', () => {
         onSelect={onSelect}
       />);
 
-    linode.find('input[type="checkbox"]').simulate('click');
+    linode.find('input[type="checkbox"]').simulate('change');
 
     expect(onSelect.calledOnce).to.equal(true);
   });
