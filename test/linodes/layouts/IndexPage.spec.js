@@ -187,16 +187,9 @@ describe('linodes/layouts/IndexPage', () => {
 
   function testViewChange(initial, final) {
     return () => {
-      const viewChangeType = {};
-      const localDispatch = sandbox.spy(action => {
-        if (action.type === CHANGE_VIEW) {
-          viewChangeType[action.view] = true;
-        }
-      });
-
       const page = mount(
         <IndexPage
-          dispatch={localDispatch}
+          dispatch={dispatch}
           view={initial}
           selected={{}}
           linodes={linodes}
@@ -205,7 +198,8 @@ describe('linodes/layouts/IndexPage', () => {
 
       const listButton = page.find(`.grid-list .${final}`);
       listButton.simulate('click');
-      expect(viewChangeType).to.have.property(final);
+      expect(dispatch.calledWith({ type: CHANGE_VIEW, view: final }))
+        .to.equal(true);
     };
   }
 

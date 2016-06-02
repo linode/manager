@@ -179,9 +179,21 @@ export class IndexPage extends Component {
     const { view } = this.props;
     const gridListToggle = (
       <span className="grid-list">
-        <span>{view === 'list' ? <a href="#" className="grid" onClick={this.toggleDisplay}>Grid</a> : 'Grid'}</span>
+        <span>
+        {
+          view === 'list' ?
+            <a href="#" className="grid" onClick={this.toggleDisplay}>Grid</a> :
+            'Grid'
+        }
+        </span>
         <span>|</span>
-        <span>{view === 'grid' ? <a href="#" className="list" onClick={this.toggleDisplay}>List</a> : 'List'}</span>
+        <span>
+        {
+          view === 'grid' ?
+            <a href="#" className="list" onClick={this.toggleDisplay}>List</a> :
+          'List'
+        }
+        </span>
       </span>
     );
 
