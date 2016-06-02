@@ -108,7 +108,7 @@ describe('linodes/layouts/IndexPage', () => {
     ['shuts down selected linodes when power off is pressed', 'Power Off', '/shutdown'],
     ['boots selected linodes when boot is pressed', 'Power On', '/boot'],
     ['deletes selected linodes when deletes is pressed', 'Delete', ''],
-  ].map(n => it(n[0], makePowerTest(n[1], n[2])));
+  ].map(([name, button, endpoint]) => it(name, makePowerTest(button, endpoint)));
 
   it('renders a "select all" checkbox');
 
