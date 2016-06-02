@@ -4,7 +4,7 @@ import { mount } from 'enzyme';
 import { expect, assert } from 'chai';
 import Dropdown from '../../src/components/Dropdown';
 
-describe('Dropdown', () => {
+describe('components/Dropdown', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {

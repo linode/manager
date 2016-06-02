@@ -4,8 +4,9 @@ import deepFreeze from 'deep-freeze';
 import makeApiList, {
   makeFetchPage,
   makeUpdateItem,
+  makeUpdateUntil,
   makeDeleteItem,
-} from '../src/api-store';
+} from '~/api-store';
 import * as fetch from '~/fetch';
 
 const mockFoobarsResponse = {
@@ -322,8 +323,55 @@ describe('api-store', () => {
   });
 
   describe('api-store/makeUpdateUntil', () => {
-    it('should perform API requests until a condition is met');
-    it('should submit update actions for each request performed');
+    afterEach(() => {
+      sandbox.restore();
+    });
+
+    it('should perform API requests until a condition is met', async () => {
+      const fetchStub = sandbox.stub(fetch, 'fetch');
+      fetchStub.onCall(0).returns({ json: () => ({ state: 'wait' }) });
+      fetchStub.onCall(1).returns({ json: () => ({ state: 'wait' }) });
+      fetchStub.returns({ json: () => ({ state: 'done' }) });
+
+      const f = makeUpdateUntil('UPDATE_FOOBAR', 'foobars', 'foobar');
+      const p = f('foobar_1', v => v.state === 'done', 1);
+
+      const state = {
+        authentication: { token: 'token' },
+        api: { foobars: { foobars: { foobar_1: { state: 'wait' } } } },
+      };
+
+      await p(() => { }, () => state);
+      expect(fetchStub.calledThrice).to.equal(true);
+      expect(fetchStub.calledWith('token', '/foobars/foobar_1'));
+    });
+
+    it('should submit update actions for each request performed', async () => {
+      const fetchStub = sandbox.stub(fetch, 'fetch');
+      fetchStub.onCall(0).returns({ json: () => ({ state: 'wait' }) });
+      fetchStub.onCall(1).returns({ json: () => ({ state: 'wait' }) });
+      fetchStub.returns({ json: () => ({ state: 'done' }) });
+
+      const dispatch = sandbox.spy();
+      const getState = sandbox.stub();
+
+      const f = makeUpdateUntil('UPDATE_FOOBAR', 'foobars', 'foobar');
+      const p = f('foobar_1', v => v.state === 'done', 1);
+
+      const state = {
+        authentication: { token: 'token' },
+        api: { foobars: { foobars: { foobar_1: { state: 'wait' } } } },
+      };
+      getState.returns(state);
+
+      await p(dispatch, getState);
+
+      expect(getState.callCount).to.equal(2);
+      expect(dispatch.calledWith({
+        type: 'UPDATE_FOOBAR',
+        foobar: { state: 'done' },
+      })).to.equal(true);
+      expect(dispatch.callCount).to.equal(5);
+    });
   });
 });
-
