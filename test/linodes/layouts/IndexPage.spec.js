@@ -105,7 +105,6 @@ describe('linodes/layouts/IndexPage', () => {
 
   function makePowerTest(dropdown, endpoint) {
     return async () => {
-      const dispatch = sinon.spy();
       const page = mount(
         <IndexPage
           dispatch={dispatch}
