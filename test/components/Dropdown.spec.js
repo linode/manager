@@ -5,6 +5,12 @@ import { expect, assert } from 'chai';
 import Dropdown from '../../src/components/Dropdown';
 
 describe('components/Dropdown', () => {
+  const sandbox = sinon.sandbox.create();
+
+  afterEach(() => {
+    sandbox.restore();
+  });
+
   it('renders dropdown component 2', () => {
     const dropdown = mount(
       <Dropdown
@@ -23,9 +29,9 @@ describe('components/Dropdown', () => {
   });
 
   it('clickable dropdown', () => {
-    const clickFirst = sinon.spy();
-    const clickBodyItem = sinon.spy();
-    const unclicked = sinon.spy();
+    const clickFirst = sandbox.spy();
+    const clickBodyItem = sandbox.spy();
+    const unclicked = sandbox.spy();
     const dropdown = mount(
       <Dropdown
         elements={[

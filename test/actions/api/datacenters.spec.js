@@ -4,35 +4,48 @@ import {
   UPDATE_DATACENTERS,
   fetchDatacenters,
 } from '~/actions/api/datacenters';
-import { mockContext } from '~/../test/mocks';
+import * as fetch from '~/fetch';
 
 describe('actions/api/datacenters', sinon.test(() => {
-  let sandbox = null;
+  const auth = { token: 'token' };
 
-  beforeEach(() => {
-    sandbox = sinon.sandbox.create();
-  });
+  const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
     sandbox.restore();
   });
 
-  const mockFetchResponse = 'foobar';
+  const getGetState = (state = {}) => sandbox.stub().returns({
+    authentication: auth,
+    ...state,
+  });
+  const getDispatch = () => sandbox.spy();
+  const getFetchStub = (rsp) => sandbox.stub(fetch, 'fetch').returns({ json() { return rsp; } });
+
+  const mockResponse = {
+    datacenters: [
+      { id: 'datacenter_1' },
+      { id: 'datacenter_2' },
+    ],
+    total_pages: 3,
+    total_results: 25 * 3 - 4,
+    page: 1,
+  };
 
   it('should fetch datacenters', async () => {
-    await mockContext(sandbox, async ({
-        auth, dispatch, getState, fetchStub,
-      }) => {
-      const f = fetchDatacenters();
+    const dispatch = getDispatch();
+    const fetchStub = getFetchStub(mockResponse);
+    const getState = getGetState();
 
-      await f(dispatch, getState);
+    const f = fetchDatacenters();
 
-      expect(fetchStub.calledWith(
-        auth.token, '/datacenters?page=1')).to.equal(true);
-      expect(dispatch.calledWith({
-        type: UPDATE_DATACENTERS,
-        response: mockFetchResponse,
-      })).to.equal(true);
-    }, mockFetchResponse);
+    await f(dispatch, getState);
+
+    expect(fetchStub.calledWith(
+      auth.token, '/datacenters?page=1')).to.equal(true);
+    expect(dispatch.calledWith({
+      type: UPDATE_DATACENTERS,
+      response: mockResponse,
+    })).to.equal(true);
   });
 }));

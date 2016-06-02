@@ -39,22 +39,28 @@ describe('linodes/actions', () => {
   };
 
   describe('toggleSelectAll', () => {
+    const sandbox = sinon.sandbox.create();
+
+    afterEach(() => {
+      sandbox.restore();
+    });
+
     it('returns a function', () => {
       const func = toggleSelectAll();
       expect(func).to.be.a('function');
     });
 
     it('should call getState() once', () => {
-      const getState = sinon.stub().returns(linodesApiState);
-      const dispatch = sinon.spy();
+      const getState = sandbox.stub().returns(linodesApiState);
+      const dispatch = sandbox.spy();
       const func = toggleSelectAll();
       func(dispatch, getState);
       expect(getState.calledOnce).to.equal(true);
     });
 
     it('should call dispatch({ action }) once', () => {
-      const getState = sinon.stub().returns(linodesApiState);
-      const dispatch = sinon.spy();
+      const getState = sandbox.stub().returns(linodesApiState);
+      const dispatch = sandbox.spy();
       const func = toggleSelectAll();
       func(dispatch, getState);
       expect(dispatch.calledWith({

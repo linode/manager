@@ -12,56 +12,66 @@ import {
   updateLinodeUntil,
   deleteLinode,
 } from '~/actions/api/linodes';
-import { mockContext } from '~/../test/mocks';
 import * as fetch from '~/fetch';
 
 describe('actions/api/linodes', sinon.test(() => {
-  let sandbox = null;
+  const auth = { token: 'token' };
 
-  beforeEach(() => {
-    sandbox = sinon.sandbox.create();
-  });
+  const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
     sandbox.restore();
   });
 
-  const mockFetchResponse = 'foobar';
+  const getGetState = (state = {}) => sandbox.stub().returns({
+    authentication: auth,
+    ...state,
+  });
+  const getDispatch = () => sandbox.spy();
+  const getFetchStub = (rsp) => sandbox.stub(fetch, 'fetch').returns({ json() { return rsp; } });
+
+  const mockResponse = {
+    linodes: [
+      { id: 'linode_1' },
+      { id: 'linode_2' },
+    ],
+    total_pages: 3,
+    total_results: 25 * 3 - 4,
+    page: 1,
+  };
 
   it('should fetch linodes', async () => {
-    await mockContext(sandbox, async ({
-        auth, dispatch, getState, fetchStub,
-      }) => {
-      const f = fetchLinodes();
+    const dispatch = getDispatch();
+    const fetchStub = getFetchStub(mockResponse);
+    const getState = getGetState();
 
-      await f(dispatch, getState);
+    const f = fetchLinodes();
 
-      expect(fetchStub.calledWith(
-        auth.token, '/linodes?page=1')).to.equal(true);
-      expect(dispatch.calledWith({
-        type: UPDATE_LINODES,
-        response: mockFetchResponse,
-      })).to.equal(true);
-    }, mockFetchResponse);
+    await f(dispatch, getState);
+
+    expect(fetchStub.calledWith(
+      auth.token, '/linodes?page=1')).to.equal(true);
+    expect(dispatch.calledWith({
+      type: UPDATE_LINODES,
+      response: mockResponse,
+    })).to.equal(true);
   });
 
-  const mockUpdateLinode = { id: 'linode_1' };
-
   it('should update linode', async () => {
-    await mockContext(sandbox, async ({
-        auth, dispatch, getState, fetchStub,
-      }) => {
-      const f = updateLinode('linode_1');
+    const dispatch = getDispatch();
+    const fetchStub = getFetchStub(mockResponse.linodes[0]);
+    const getState = getGetState();
 
-      await f(dispatch, getState);
+    const f = updateLinode('linode_1');
 
-      expect(fetchStub.calledWith(
-        auth.token, '/linodes/linode_1')).to.equal(true);
-      expect(dispatch.calledWith({
-        type: UPDATE_LINODE,
-        linode: mockUpdateLinode,
-      })).to.equal(true);
-    }, mockUpdateLinode);
+    await f(dispatch, getState);
+
+    expect(fetchStub.calledWith(
+      auth.token, '/linodes/linode_1')).to.equal(true);
+    expect(dispatch.calledWith({
+      type: UPDATE_LINODE,
+      linode: mockResponse.linodes[0],
+    })).to.equal(true);
   });
 
   it('should preform request update linode until condition is met', async () => {
@@ -101,54 +111,58 @@ describe('actions/api/linodes', sinon.test(() => {
   const emptyResponse = {};
 
   it('should call delete linode endpoint', async () => {
-    await mockContext(sandbox, async ({
-        auth, dispatch, getState, fetchStub,
-      }) => {
-      const f = deleteLinode('linode_1');
+    const dispatch = getDispatch();
+    const fetchStub = getFetchStub(emptyResponse);
+    const getState = getGetState();
 
-      await f(dispatch, getState);
+    const f = deleteLinode('linode_1');
 
-      expect(fetchStub.calledWith(
-        auth.token, '/linodes/linode_1', { method: 'DELETE' })).to.equal(true);
-      expect(dispatch.calledWith({
-        type: DELETE_LINODE,
-        id: 'linode_1',
-      })).to.equal(true);
-    }, emptyResponse);
+    await f(dispatch, getState);
+
+    expect(fetchStub.calledWith(
+      auth.token, '/linodes/linode_1', { method: 'DELETE' })).to.equal(true);
+    expect(dispatch.calledWith({
+      type: DELETE_LINODE,
+      id: 'linode_1',
+    })).to.equal(true);
   });
 }));
 
 describe('actions/linodes/power', sinon.test(() => {
-  let sandbox = null;
-
-  beforeEach(() => {
-    sandbox = sinon.sandbox.create();
-  });
+  const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
     sandbox.restore();
   });
+
+  const auth = { token: 'token' };
+  const getGetState = (state = {}) => sandbox.stub().returns({
+    authentication: auth,
+    ...state,
+  });
+  const getDispatch = () => sandbox.spy();
+  const getFetchStub = (rsp) => sandbox.stub(fetch, 'fetch').returns({ json() { return rsp; } });
 
   const mockBootingResponse = {
     type: UPDATE_LINODE,
     linode: { id: 'foo', state: 'booting' },
   };
 
+
   it('returns linode power boot status', async () => {
-    await mockContext(sandbox, async ({
-        auth, dispatch, getState, fetchStub,
-      }) => {
-      const f = powerOnLinode('foo');
+    const dispatch = getDispatch();
+    const getState = getGetState();
+    const fetchStub = getFetchStub(mockBootingResponse);
+    const f = powerOnLinode('foo');
 
-      await f(dispatch, getState);
+    await f(dispatch, getState);
 
-      expect(fetchStub.calledWith(
-        auth.token, '/linodes/foo/boot', { method: 'POST' })).to.equal(true);
-      expect(dispatch.calledWith({
-        type: UPDATE_LINODE,
-        linode: { id: 'foo', state: 'booting' },
-      })).to.equal(true);
-    }, mockBootingResponse);
+    expect(fetchStub.calledWith(
+      auth.token, '/linodes/foo/boot', { method: 'POST' })).to.equal(true);
+    expect(dispatch.calledWith({
+      type: UPDATE_LINODE,
+      linode: { id: 'foo', state: 'booting' },
+    })).to.equal(true);
   });
 
   const mockShuttingDownResponse = {
@@ -157,20 +171,19 @@ describe('actions/linodes/power', sinon.test(() => {
   };
 
   it('returns linode power shutdown status', async () => {
-    await mockContext(sandbox, async ({
-        auth, dispatch, getState, fetchStub,
-      }) => {
-      const f = powerOffLinode('foo');
+    const dispatch = getDispatch();
+    const getState = getGetState();
+    const fetchStub = getFetchStub(mockShuttingDownResponse);
+    const f = powerOffLinode('foo');
 
-      await f(dispatch, getState);
+    await f(dispatch, getState);
 
-      expect(fetchStub.calledWith(
-        auth.token, '/linodes/foo/shutdown', { method: 'POST' })).to.equal(true);
-      expect(dispatch.calledWith({
-        type: UPDATE_LINODE,
-        linode: { id: 'foo', state: 'shutting_down' },
-      })).to.equal(true);
-    }, mockShuttingDownResponse);
+    expect(fetchStub.calledWith(
+      auth.token, '/linodes/foo/shutdown', { method: 'POST' })).to.equal(true);
+    expect(dispatch.calledWith({
+      type: UPDATE_LINODE,
+      linode: { id: 'foo', state: 'shutting_down' },
+    })).to.equal(true);
   });
 
   const mockRebootingResponse = {
@@ -179,19 +192,18 @@ describe('actions/linodes/power', sinon.test(() => {
   };
 
   it('returns linode power reboot status', async () => {
-    await mockContext(sandbox, async ({
-        auth, dispatch, getState, fetchStub,
-      }) => {
-      const f = rebootLinode('foo');
+    const dispatch = getDispatch();
+    const getState = getGetState();
+    const fetchStub = getFetchStub(mockRebootingResponse);
+    const f = rebootLinode('foo');
 
-      await f(dispatch, getState);
+    await f(dispatch, getState);
 
-      expect(fetchStub.calledWith(
-        auth.token, '/linodes/foo/reboot', { method: 'POST' })).to.equal(true);
-      expect(dispatch.calledWith({
-        type: UPDATE_LINODE,
-        linode: { id: 'foo', state: 'rebooting' },
-      })).to.equal(true);
-    }, mockRebootingResponse);
+    expect(fetchStub.calledWith(
+      auth.token, '/linodes/foo/reboot', { method: 'POST' })).to.equal(true);
+    expect(dispatch.calledWith({
+      type: UPDATE_LINODE,
+      linode: { id: 'foo', state: 'rebooting' },
+    })).to.equal(true);
   });
 }));

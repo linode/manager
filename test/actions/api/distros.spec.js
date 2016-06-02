@@ -4,35 +4,48 @@ import {
   UPDATE_DISTROS,
   fetchDistros,
 } from '~/actions/api/distros';
-import { mockContext } from '~/../test/mocks';
+import * as fetch from '~/fetch';
 
 describe('actions/api/distros', sinon.test(() => {
-  let sandbox = null;
+  const auth = { token: 'token' };
 
-  beforeEach(() => {
-    sandbox = sinon.sandbox.create();
-  });
+  const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
     sandbox.restore();
   });
 
-  const mockFetchResponse = 'foobar';
+  const getGetState = (state = {}) => sandbox.stub().returns({
+    authentication: auth,
+    ...state,
+  });
+  const getDispatch = () => sandbox.spy();
+  const getFetchStub = (rsp) => sandbox.stub(fetch, 'fetch').returns({ json() { return rsp; } });
+
+  const mockResponse = {
+    distributions: [
+      { id: 'distro_1' },
+      { id: 'distro_2' },
+    ],
+    total_pages: 3,
+    total_results: 25 * 3 - 4,
+    page: 1,
+  };
 
   it('should fetch distros', async () => {
-    await mockContext(sandbox, async ({
-        auth, dispatch, getState, fetchStub,
-      }) => {
-      const f = fetchDistros();
+    const dispatch = getDispatch();
+    const fetchStub = getFetchStub(mockResponse);
+    const getState = getGetState();
 
-      await f(dispatch, getState);
+    const f = fetchDistros();
 
-      expect(fetchStub.calledWith(
-        auth.token, '/distributions?page=1')).to.equal(true);
-      expect(dispatch.calledWith({
-        type: UPDATE_DISTROS,
-        response: mockFetchResponse,
-      })).to.equal(true);
-    }, mockFetchResponse);
+    await f(dispatch, getState);
+
+    expect(fetchStub.calledWith(
+      auth.token, '/distributions?page=1')).to.equal(true);
+    expect(dispatch.calledWith({
+      type: UPDATE_DISTROS,
+      response: mockResponse,
+    })).to.equal(true);
   });
 }));
