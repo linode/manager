@@ -99,15 +99,15 @@ describe('linodes/layouts/IndexPage', () => {
       });
       await dispatched(dispatch, () => ({ authentication: { token: 'token' } }));
       expect(fetchStub.calledOnce).to.equal(true);
-      expect(fetchStub.firstCall.args[1]).to.equal(`/linodes/linode_1234/${endpoint}`);
+      expect(fetchStub.firstCall.args[1]).to.equal(`/linodes/linode_1234${endpoint}`);
     };
   }
 
   [
-    ['reboots selected linodes when reboot is pressed', 'Reboot', 'reboot'],
-    ['shuts down selected linodes when power off is pressed', 'Power Off', 'shutdown'],
-    ['boots selected linodes when boot is pressed', 'Power On', 'boot'],
-    ['deletes selected linodes when deletes is pressed', 'Delete', 'delete'],
+    ['reboots selected linodes when reboot is pressed', 'Reboot', '/reboot'],
+    ['shuts down selected linodes when power off is pressed', 'Power Off', '/shutdown'],
+    ['boots selected linodes when boot is pressed', 'Power On', '/boot'],
+    ['deletes selected linodes when deletes is pressed', 'Delete', ''],
   ].map(n => it(n[0], makePowerTest(n[1], n[2])));
 
   it('renders a "select all" checkbox');
@@ -117,6 +117,4 @@ describe('linodes/layouts/IndexPage', () => {
   it('selects all linodes when "select all" is checked');
 
   it('changes the view when the grid or list links are clicked');
-
-  it('dispatches the appropriate action for selected linodes when dropdown is clicked');
 });
