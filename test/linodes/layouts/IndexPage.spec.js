@@ -8,15 +8,13 @@ import * as fetch from '~/fetch';
 import { testLinode } from '~/../test/data';
 
 describe('linodes/layouts/IndexPage', () => {
-  let sandbox = null;
-
-  beforeEach(() => {
-    sandbox = sinon.sandbox.create();
-  });
+  const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
     sandbox.restore();
   });
+
+  const dispatch = sandbox.spy();
 
   const linodes = {
     pagesFetched: [0],
@@ -31,7 +29,6 @@ describe('linodes/layouts/IndexPage', () => {
   };
 
   it('dispatches a linodes fetch action when mounted', async () => {
-    const dispatch = sandbox.spy();
     mount(
       <IndexPage
         dispatch={dispatch}
@@ -55,9 +52,35 @@ describe('linodes/layouts/IndexPage', () => {
     expect(dispatch.firstCall.args[0].type).to.equal(UPDATE_LINODES);
   });
 
-  it('renders a grid of Linodes');
+  it('renders a grid of Linodes', () => {
+    const page = mount(
+      <IndexPage
+        dispatch={dispatch}
+        view={'grid'}
+        selected={{}}
+        linodes={linodes}
+      />
+    );
 
-  it('renders a list of Linodes');
+    const gridRow = page.find('.linodes-page > .row');
+    expect(gridRow.length).to.equal(1);
+    expect(gridRow.find('.col-md-4').length).to.equal(linodes.linodes.length);
+  });
+
+  it('renders a list of Linodes', () => {
+    const page = mount(
+      <IndexPage
+        dispatch={dispatch}
+        view={'list'}
+        selected={{}}
+        linodes={linodes}
+      />
+    );
+
+    const table = page.find('.linodes-page > .linodes > table');
+    expect(table.length).to.equal(1);
+    expect(table.find('tbody tr').length).to.equal(linodes.linodes.length);
+  });
 
   it('renders a power management dropdown');
 
