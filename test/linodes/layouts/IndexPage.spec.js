@@ -4,6 +4,7 @@ import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 import { IndexPage } from '~/linodes/layouts/IndexPage';
 import { UPDATE_LINODES } from '~/actions/api/linodes';
+import { TOGGLE_SELECTED } from '~/linodes/actions/index';
 import * as fetch from '~/fetch';
 import { testLinode } from '~/../test/data';
 import Dropdown from '~/components/Dropdown';
@@ -15,7 +16,7 @@ describe('linodes/layouts/IndexPage', () => {
     sandbox.restore();
   });
 
-  const dispatch = sandbox.spy();
+  let dispatch = sandbox.spy();
 
   const linodes = {
     pagesFetched: [0],
@@ -105,7 +106,6 @@ describe('linodes/layouts/IndexPage', () => {
 
   function makePowerTest(dropdown, endpoint) {
     return async () => {
-      const dispatch = sinon.spy();
       const page = mount(
         <IndexPage
           dispatch={dispatch}
@@ -137,9 +137,43 @@ describe('linodes/layouts/IndexPage', () => {
 
   it('renders a "select all" checkbox');
 
-  it('renders an "add a linode" button'); // should also confirm Link.to == /linodes/create
+  it('renders an "add a linode" button', () => {
+    const page = mount(
+      <IndexPage
+        dispatch={dispatch}
+        view={'grid'}
+        selected={{}}
+        linodes={linodes}
+      />
+    );
 
-  it('selects all linodes when "select all" is checked');
+    expect(page.find('.mainmenu Link').props())
+      .to.have.property('to')
+      .which.equals('/linodes/create');
+  });
+
+  it('selects all linodes when "select all" is checked', () => {
+    const selected = {};
+    dispatch = sandbox.spy(action => {
+      if (action.type === TOGGLE_SELECTED) {
+        selected[action.selected[0]] = true;
+      }
+    });
+
+    const page = mount(
+      <IndexPage
+        dispatch={dispatch}
+        view={'grid'}
+        selected={{}}
+        linodes={linodes}
+      />
+    );
+
+    const checkButton = page.find('.selectall input[type="checkbox"]');
+    expect(checkButton.length).to.equal(1);
+    checkButton.simulate('change');
+    expect(Object.keys(selected)).to.deep.equal(Object.keys(linodes.linodes));
+  });
 
   it('changes the view when the grid or list links are clicked');
 });
