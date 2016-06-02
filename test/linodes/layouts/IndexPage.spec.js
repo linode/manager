@@ -4,6 +4,7 @@ import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 import { IndexPage } from '~/linodes/layouts/IndexPage';
 import { UPDATE_LINODES } from '~/actions/api/linodes';
+import { TOGGLE_SELECTED } from '~/linodes/actions/index';
 import * as fetch from '~/fetch';
 import { testLinode } from '~/../test/data';
 import Dropdown from '~/components/Dropdown';
@@ -146,9 +147,43 @@ describe('linodes/layouts/IndexPage', () => {
     expect(selectAll.find('input[type="checkbox"]')).to.exist;
   });
 
-  it('renders an "add a linode" button'); // should also confirm Link.to == /linodes/create
+  it('renders an "add a linode" button', () => {
+    const page = mount(
+      <IndexPage
+        dispatch={dispatch}
+        view={'grid'}
+        selected={{}}
+        linodes={linodes}
+      />
+    );
 
-  it('selects all linodes when "select all" is checked');
+    expect(page.find('.mainmenu Link').props())
+      .to.have.property('to')
+      .which.equals('/linodes/create');
+  });
+
+  it('selects all linodes when "select all" is checked', () => {
+    const selected = {};
+    const localDispatch = sandbox.spy(action => {
+      if (action.type === TOGGLE_SELECTED) {
+        selected[action.selected[0]] = true;
+      }
+    });
+
+    const page = mount(
+      <IndexPage
+        dispatch={localDispatch}
+        view={'grid'}
+        selected={{}}
+        linodes={linodes}
+      />
+    );
+
+    const checkButton = page.find('.selectall input[type="checkbox"]');
+    expect(checkButton.length).to.equal(1);
+    checkButton.simulate('change');
+    expect(Object.keys(selected)).to.deep.equal(Object.keys(linodes.linodes));
+  });
 
   it('changes the view when the grid or list links are clicked');
 });
