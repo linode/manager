@@ -8,13 +8,17 @@
         [role=tablist] {
             background: $linode-lightish-gray;
             padding: 0 2rem;
+            border-color: $linode-gray;
         }
 
         [role=tab] {
             border-radius: 0;
             margin-right: 1.5rem;
-            border-color: $linode-border;
             padding: 3px 12px;
+
+            &[selected] {
+                border-color: $linode-gray;
+            }
         }
 
         [role=tabpanel] {

@@ -3,9 +3,11 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import Dropdown from '~/components/Dropdown';
-import { LinodeStatesReadable } from '~/constants';
+import { LinodeStates, LinodeStatesReadable } from '~/constants';
 import { changeDetailTab } from '../actions/detail';
-import { updateLinode } from '~/actions/api/linodes';
+import {
+  updateLinode, powerOnLinode, powerOffLinode, rebootLinode,
+} from '~/actions/api/linodes';
 
 class LinodeDetailPage extends Component {
   constructor() {
@@ -31,15 +33,30 @@ class LinodeDetailPage extends Component {
   }
 
   renderHeader(linode) {
+    const { dispatch } = this.props;
     const label = linode.group ?
       <span>{linode.group}/{linode.label}</span> :
       <span>{linode.label}</span>;
 
     const dropdownElements = [
-      { name: <span><i className="fa fa-refresh"></i> Reboot</span>, _action: this.reboot },
-      { name: 'Power off', _action: this.powerOff },
-      { name: 'Power on', _action: this.powerOn },
-    ].map(element => ({ ...element, action: () => element._action(linode) }));
+      {
+        name: <span><i className="fa fa-refresh"></i> Reboot</span>,
+        _action: rebootLinode,
+        _condition: () => true,
+      },
+      {
+        name: <span><i className="fa fa-power-off"></i> Power Off</span>,
+        _action: powerOffLinode,
+        _condition: () => linode.state === 'running',
+      },
+      {
+        name: <span><i className="fa fa-power-off"></i> Power On</span>,
+        _action: powerOnLinode,
+        _condition: () => linode.state === 'offline',
+      },
+    ]
+    .filter(element => element._condition())
+    .map(element => ({ ...element, action: () => dispatch(element._action(linode.id)) }));
 
     return (
       <header>
@@ -52,9 +69,10 @@ class LinodeDetailPage extends Component {
         <span className={`linode-status ${linode.state}`}>
           {LinodeStatesReadable[linode.state]}
         </span>
-        <span className="pull-right">
-          <Dropdown elements={dropdownElements} />
-        </span>
+        {LinodeStates.pending.indexOf(linode.state) !== -1 ? null :
+          <span className="pull-right">
+            <Dropdown elements={dropdownElements} />
+          </span>}
       </header>
     );
   }
