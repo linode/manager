@@ -62,17 +62,17 @@ class LinodeDetailPage extends Component {
       <header>
         <h1>
           {label}
-          <a href="#" className="edit-icon">
-            <i className="fa fa-pencil"></i>
-          </a>
         </h1>
-        <span className={`linode-status ${linode.state}`}>
-          {LinodeStatesReadable[linode.state]}
-        </span>
+        <a href="#" className="edit-icon">
+          <i className="fa fa-pencil"></i>
+        </a>
         {LinodeStates.pending.indexOf(linode.state) !== -1 ? null :
           <span className="pull-right">
             <Dropdown elements={dropdownElements} />
           </span>}
+        <span className={`pull-right linode-status ${linode.state}`}>
+          {LinodeStatesReadable[linode.state]}
+        </span>
       </header>
     );
   }
