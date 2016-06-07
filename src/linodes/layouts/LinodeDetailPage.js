@@ -1,10 +1,15 @@
 import React, { Component, PropTypes } from 'react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import Dropdown from '~/components/Dropdown';
 import { LinodeStates, LinodeStatesReadable } from '~/constants';
-import { changeDetailTab } from '../actions/detail';
+import {
+  changeDetailTab,
+  toggleEditMode,
+  setLinodeLabel,
+  setLinodeGroup,
+  commitChanges,
+} from '../actions/detail';
 import {
   updateLinode, powerOnLinode, powerOffLinode, rebootLinode,
 } from '~/actions/api/linodes';
@@ -15,6 +20,9 @@ class LinodeDetailPage extends Component {
     this.getLinode = this.getLinode.bind(this);
     this.render = this.render.bind(this);
     this.renderHeader = this.renderHeader.bind(this);
+    this.renderEditUI = this.renderEditUI.bind(this);
+    this.renderLabel = this.renderLabel.bind(this);
+    this.handleLabelKeyUp = this.handleLabelKeyUp.bind(this);
   }
 
   componentDidMount() {
@@ -32,11 +40,81 @@ class LinodeDetailPage extends Component {
     return linodes[linodeId];
   }
 
-  renderHeader(linode) {
+  handleLabelKeyUp(e, linode) {
+    const { dispatch } = this.props;
+    if (e.keyCode === 13 /* Enter */) {
+      dispatch(commitChanges(linode.id));
+    }
+  }
+
+  renderEditUI(linode) {
+    const { label, group } = this.props.detail;
+    const { dispatch } = this.props;
+    return (
+      <div className="edit-details">
+        <input
+          type="text"
+          value={group}
+          placeholder="Group..."
+          onChange={e => dispatch(setLinodeGroup(e.target.value))}
+          onKeyUp={e => this.handleLabelKeyUp(e, linode)}
+        />
+        <span>/</span>
+        <input
+          type="text"
+          value={label}
+          placeholder="Label..."
+          onChange={e => dispatch(setLinodeLabel(e.target.value))}
+          onKeyUp={e => this.handleLabelKeyUp(e, linode)}
+        />
+        <a
+          href="#"
+          className="btn btn-primary"
+          onClick={e => {
+            e.preventDefault();
+            dispatch(commitChanges(linode.id));
+          }}
+        >Save</a>
+        <a
+          href="#"
+          className="btn btn-default"
+          onClick={e => {
+            e.preventDefault();
+            dispatch(toggleEditMode());
+          }}
+        >Cancel</a>
+      </div>
+    );
+  }
+
+  renderLabel(linode) {
     const { dispatch } = this.props;
     const label = linode.group ?
-      <span>{linode.group}/{linode.label}</span> :
+      <span>{linode.group} / {linode.label}</span> :
       <span>{linode.label}</span>;
+
+    return (
+      <div style={{ display: 'inline-block' }}>
+        <h1>{label}</h1>
+        <a
+          href="#"
+          className="edit-icon"
+          onClick={e => {
+            e.preventDefault();
+            dispatch(setLinodeLabel(linode.label));
+            dispatch(setLinodeGroup(linode.group));
+            dispatch(toggleEditMode());
+          }}
+        >
+          <i className="fa fa-pencil"></i>
+        </a>
+      </div>
+    );
+  }
+
+  renderHeader(linode) {
+    const { dispatch } = this.props;
+    const { editing } = this.props.detail;
 
     const dropdownElements = [
       {
@@ -60,12 +138,7 @@ class LinodeDetailPage extends Component {
 
     return (
       <header>
-        <h1>
-          {label}
-        </h1>
-        <a href="#" className="edit-icon">
-          <i className="fa fa-pencil"></i>
-        </a>
+        {editing ? this.renderEditUI(linode) : this.renderLabel(linode)}
         {LinodeStates.pending.indexOf(linode.state) !== -1 ? null :
           <span className="pull-right">
             <Dropdown elements={dropdownElements} />
@@ -84,11 +157,6 @@ class LinodeDetailPage extends Component {
 
     return (
       <div className="details-page">
-        <div className="li-breadcrumb">
-          <span><Link to="/linodes">Linodes</Link></span>
-          <span>></span>
-          <span>{linode.label}</span>
-        </div>
         <div className="card">
           {this.renderHeader(linode)}
           <Tabs
