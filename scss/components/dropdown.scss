@@ -1,5 +1,6 @@
 .li-dropdown {
     color: #555;
+    position: relative;
 }
 
 .li-dropdown-item.li-dropdown-first,
@@ -26,7 +27,6 @@
 }
 
 .li-dropdown-body {
-    position: relative;
     display: inline-block;
 
     .li-dropdown-target {
@@ -34,7 +34,6 @@
         background: #fafafa;
         border: $linode-border;
         z-index: 9999;
-        width: 101px;                                        
     }
 
     &:hover,
@@ -43,8 +42,9 @@
         .li-dropdown-target {
             display: block;
             position: absolute;
-            top: 31px;
-            left: -71px;                                                                    
+            top: 22px;
+            left: 0;                                                                    
+            right: 0;                                                                    
         }
     }
 }
