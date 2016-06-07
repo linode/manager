@@ -14,7 +14,7 @@ import {
   updateLinode, powerOnLinode, powerOffLinode, rebootLinode,
 } from '~/actions/api/linodes';
 
-class LinodeDetailPage extends Component {
+export class LinodeDetailPage extends Component {
   constructor() {
     super();
     this.getLinode = this.getLinode.bind(this);

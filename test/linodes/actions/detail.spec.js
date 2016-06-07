@@ -40,4 +40,16 @@ describe('linodes/actions/detail', () => {
         });
     });
   });
+
+  describe('commitChanges', () => {
+    it('should return a function');
+
+    it('toggles the loading state twice');
+
+    it('performs the HTTP request');
+
+    it('dispatches an UPDATE_LINODE action with the new linode details');
+
+    it('leaves edit mode');
+  });
 });

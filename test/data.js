@@ -1,4 +1,5 @@
 export const testLinode = {
+  group: 'Test Group',
   label: 'Test Linode',
   ip_addresses: {
     public: {
