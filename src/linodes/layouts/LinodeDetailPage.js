@@ -48,7 +48,7 @@ class LinodeDetailPage extends Component {
   }
 
   renderEditUI(linode) {
-    const { label, group } = this.props.detail;
+    const { label, group, loading } = this.props.detail;
     const { dispatch } = this.props;
     return (
       <div className="edit-details">
@@ -67,22 +67,16 @@ class LinodeDetailPage extends Component {
           onChange={e => dispatch(setLinodeLabel(e.target.value))}
           onKeyUp={e => this.handleLabelKeyUp(e, linode)}
         />
-        <a
-          href="#"
+        <button
           className="btn btn-primary"
-          onClick={e => {
-            e.preventDefault();
-            dispatch(commitChanges(linode.id));
-          }}
-        >Save</a>
-        <a
-          href="#"
+          onClick={() => dispatch(commitChanges(linode.id))}
+          disabled={loading}
+        >Save</button>
+        <button
           className="btn btn-default"
-          onClick={e => {
-            e.preventDefault();
-            dispatch(toggleEditMode());
-          }}
-        >Cancel</a>
+          onClick={() => dispatch(toggleEditMode())}
+          disabled={loading}
+        >Cancel</button>
       </div>
     );
   }

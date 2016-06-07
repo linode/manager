@@ -12,6 +12,7 @@ describe('linodes/detail reducer', () => {
       editing: false,
       label: '',
       group: '',
+      loading: false,
     });
   });
 
@@ -32,13 +33,13 @@ describe('linodes/detail reducer', () => {
   });
 
   it('should handle TOGGLE_EDIT_MODE', () => {
-    const state = { tab: 0, editing: false, label: '', group: '' };
+    const state = { editing: false };
     deepFreeze(state);
 
     expect(detail(state, actions.toggleEditMode()))
       .to.have.property('editing').that.equals(true);
 
-    const stateEditing = { tab: 0, editing: true, label: '', group: '' };
+    const stateEditing = { editing: true };
     deepFreeze(stateEditing);
 
     expect(detail(stateEditing, actions.toggleEditMode()))
@@ -46,7 +47,7 @@ describe('linodes/detail reducer', () => {
   });
 
   it('should handle SET_LINODE_LABEL', () => {
-    const state = { tab: 0, editing: false, label: '', group: '' };
+    const state = { label: '' };
     deepFreeze(state);
 
     expect(detail(state, actions.setLinodeLabel('asdf')))
@@ -54,10 +55,24 @@ describe('linodes/detail reducer', () => {
   });
 
   it('should handle SET_LINODE_GROUP', () => {
-    const state = { tab: 0, editing: false, label: '', group: '' };
+    const state = { group: '' };
     deepFreeze(state);
 
     expect(detail(state, actions.setLinodeGroup('asdf')))
       .to.have.property('group').that.equals('asdf');
+  });
+
+  it('should handle TOGGLE_LOADING', () => {
+    const state = { loading: false };
+    deepFreeze(state);
+
+    expect(detail(state, { type: actions.TOGGLE_LOADING }))
+      .to.have.property('loading').that.equals(true);
+
+    const stateLoading = { loading: true };
+    deepFreeze(state);
+
+    expect(detail(stateLoading, { type: actions.TOGGLE_LOADING }))
+      .to.have.property('loading').that.equals(false);
   });
 });

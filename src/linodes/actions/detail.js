@@ -5,6 +5,7 @@ export const CHANGE_DETAIL_TAB = '@@linodes@@detail/CHANGE_DETAIL_TAB';
 export const TOGGLE_EDIT_MODE = '@@linodes@@detail/TOGGLE_EDIT_MODE';
 export const SET_LINODE_LABEL = '@@linodes@@detail/SET_LINODE_LABEL';
 export const SET_LINODE_GROUP = '@@linodes@@detail/SET_LINODE_GROUP';
+export const TOGGLE_LOADING = '@@linodes@@detail/TOGGLE_LOADING';
 
 export function changeDetailTab(index) {
   return { type: CHANGE_DETAIL_TAB, index };
@@ -27,7 +28,7 @@ export function commitChanges(id) {
     const state = getState();
     const { label, group } = state.linodes.detail;
     const { token } = state.authentication;
-    // TODO: Dispatch some sort of pending state
+    dispatch({ type: TOGGLE_LOADING });
     // TODO: Error handling
     const resp = await fetch(token, `/linodes/${id}`, {
       method: 'PUT',
@@ -35,6 +36,7 @@ export function commitChanges(id) {
     });
     const json = await resp.json();
     dispatch({ type: UPDATE_LINODE, linode: json });
+    dispatch({ type: TOGGLE_LOADING });
     dispatch(toggleEditMode());
   };
 }
