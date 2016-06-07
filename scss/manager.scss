@@ -10,6 +10,7 @@ $linode-black: #4b4b4b;
 $linode-dark-gray: #acacac;
 $linode-white: #fefefe;
 $linode-light-gray: #f9f9f9;
+$linode-lightish-gray: #f3f3f3;
 $linode-border: 1px solid $linode-gray;
 
 $sidebar-width: 200px;
@@ -19,6 +20,7 @@ $nav-height: 84px;
 @import 'layout/linode-details';
 @import 'layout/linodes';
 @import 'components/dropdown';
+@import 'components/card';
 
 * {
     transition: background .35s, color .2s, border .1s;
@@ -296,6 +298,13 @@ nav {
     &:focus {
         color: $linode-blue;
     }
+}
+
+.edit-icon {
+    margin-left: 0.75rem;
+    font-size: 16px;
+    position: relative;
+    top: -4px;
 }
 
 @-moz-keyframes pulse {

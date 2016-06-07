@@ -1,0 +1,24 @@
+.card {
+    header {
+        background-color: $linode-lightish-gray;
+        padding: 2rem;
+    }
+
+    .react-tabs {
+        [role=tablist] {
+            background: $linode-lightish-gray;
+            padding: 0 2rem;
+        }
+
+        [role=tab] {
+            border-radius: 0;
+            margin-right: 1.5rem;
+            border-color: $linode-border;
+            padding: 3px 12px;
+        }
+
+        [role=tabpanel] {
+            padding: 2rem;
+        }
+    }
+}

@@ -13,17 +13,17 @@
 
     header {
         padding: 30px $side-margin 15px $side-margin;
+        line-height: 2.2rem;
 
         h1 {
            margin: 0;
+           font-size: 2.2rem;
         }
 
         .linode-status {
             margin-left: 15px;
-        }
-
-        a {
-            padding-right: 30px;
+            position: relative;
+            top: -5px;
         }
 
         .li-dropdown-item.li-dropdown-first {

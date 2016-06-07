@@ -1,21 +1,18 @@
 import React, { Component, PropTypes } from 'react';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
-import {
-  updateLinode, powerOnLinode, powerOffLinode,
-  rebootLinode,
-} from '~/actions/api/linodes';
 import Dropdown from '~/components/Dropdown';
 import { LinodeStatesReadable } from '~/constants';
+import { changeDetailTab } from '../actions/detail';
+import { updateLinode } from '~/actions/api/linodes';
 
 class LinodeDetailPage extends Component {
   constructor() {
     super();
     this.getLinode = this.getLinode.bind(this);
     this.render = this.render.bind(this);
-    this.powerOn = this.powerOn.bind(this);
-    this.powerOff = this.powerOff.bind(this);
-    this.reboot = this.reboot.bind(this);
+    this.renderHeader = this.renderHeader.bind(this);
   }
 
   componentDidMount() {
@@ -33,46 +30,39 @@ class LinodeDetailPage extends Component {
     return linodes[linodeId];
   }
 
-  powerOn(linode) {
-    const { dispatch } = this.props;
-    dispatch(powerOnLinode(linode.id));
-  }
+  renderHeader(linode) {
+    const label = linode.group ?
+      <span>{linode.group}/{linode.label}</span> :
+      <span>{linode.label}</span>;
 
-  powerOff(linode) {
-    const { dispatch } = this.props;
-    dispatch(powerOffLinode(linode.id));
-  }
+    const dropdownElements = [
+      { name: <span><i className="fa fa-refresh"></i> Reboot</span>, _action: this.reboot },
+      { name: 'Power off', _action: this.powerOff },
+      { name: 'Power on', _action: this.powerOn },
+    ].map(element => ({ ...element, action: () => element._action(linode) }));
 
-  reboot(linode) {
-    const { dispatch } = this.props;
-    dispatch(rebootLinode(linode.id));
+    return (
+      <header>
+        <h1>
+          {label}
+          <a href="#" className="edit-icon">
+            <i className="fa fa-pencil"></i>
+          </a>
+        </h1>
+        <span className={`linode-status ${linode.state}`}>
+          {LinodeStatesReadable[linode.state]}
+        </span>
+        <span className="pull-right">
+          <Dropdown elements={dropdownElements} />
+        </span>
+      </header>
+    );
   }
 
   render() {
     const linode = this.getLinode();
     if (!linode) return <span></span>;
-
-    const ipAddresses = linode.ip_addresses;
-
-    // Convert ip groups into an array
-    const arrayifyIps = (pubPriv, type) => {
-      const ips = ipAddresses[pubPriv][type];
-      if (Array.isArray(pubPriv)) {
-        return ips;
-      } else if (!!ips) {
-        return [ips];
-      }
-      return [];
-    };
-
-    const pubIpv4 = arrayifyIps('public', 'ipv4');
-    const pubIpv6 = arrayifyIps('public', 'ipv6');
-
-    const dropdownElements = [
-      { name: 'Reboot', _action: this.reboot },
-      { name: 'Power off', _action: this.powerOff },
-      { name: 'Power on', _action: this.powerOn },
-    ].map(element => ({ ...element, action: () => element._action(linode) }));
+    const { dispatch, detail } = this.props;
 
     return (
       <div className="details-page">
@@ -82,59 +72,38 @@ class LinodeDetailPage extends Component {
           <span>{linode.label}</span>
         </div>
         <div className="card">
-          <header>
-            <h1>{linode.label}</h1>
-            <span className={`linode-status ${linode.state}`}>
-              {LinodeStatesReadable[linode.state]}
-            </span>
-            <span className="pull-right">
-              <Dropdown elements={dropdownElements} />
-            </span>
-          </header>
-          <nav>
-            <ul className="list-unstyled">
-              <li className="active">General</li>
-              <li>Backups</li>
-              <li>Rescue</li>
-              <li>Networking</li>
-              <li>Advanced</li>
-              <li className="linode-lish"><a href="/lish">Lish</a></li>
-            </ul>
-          </nav>
-          <div className="linode-details row">
-            <div className="col-sm-6">
-              <ul className="list-unstyled">
-                <li>
-                  <span className="fa fa-link"></span>
-                  {pubIpv4[0]}
-                </li>
-                <li>
-                  <span className="fa fa-link invisible"></span>
-                  {pubIpv6[0]}
-                </li>
-              </ul>
-            </div>
-            <div className="col-sm-6">
-              <ul className="list-unstyled">
-                <li>
-                  <span className="fa fa-globe"></span>
-                  {linode.datacenter.label}
-                </li>
-                <li>
-                  <span className="fa fa-database"></span>
-                  Last backup: 1 hour ago
-                </li>
-                <li>
-                  <span className="fa fa-server"></span>
-                  Linode 1024
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div className="linode-performance">
-            <h2>Performance</h2>
-            <div className="graph"></div>
-          </div>
+          {this.renderHeader(linode)}
+          <Tabs
+            onSelect={ix => dispatch(changeDetailTab(ix))}
+            selectedIndex={detail.tab}
+          >
+            <TabList>
+              <Tab>General</Tab>
+              <Tab>Networking</Tab>
+              <Tab>Resize</Tab>
+              <Tab>Repair</Tab>
+              <Tab>Backups</Tab>
+              <Tab>Settings</Tab>
+            </TabList>
+            <TabPanel>
+              <h2>Summary</h2>
+            </TabPanel>
+            <TabPanel>
+              Networking Tab
+            </TabPanel>
+            <TabPanel>
+              Resize Tab
+            </TabPanel>
+            <TabPanel>
+              Repair Tab
+            </TabPanel>
+            <TabPanel>
+              Backups Tab
+            </TabPanel>
+            <TabPanel>
+              Settings Tab
+            </TabPanel>
+          </Tabs>
         </div>
       </div>
     );
@@ -147,10 +116,11 @@ LinodeDetailPage.propTypes = {
   params: PropTypes.shape({
     linodeId: PropTypes.string,
   }),
+  detail: PropTypes.object,
 };
 
 function select(state) {
-  return { linodes: state.api.linodes };
+  return { linodes: state.api.linodes, detail: state.linodes.detail };
 }
 
 export default connect(select)(LinodeDetailPage);

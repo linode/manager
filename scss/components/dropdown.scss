@@ -1,5 +1,5 @@
 .li-dropdown {
-    color: #999;
+    color: #555;
 }
 
 .li-dropdown-item.li-dropdown-first,
@@ -11,6 +11,7 @@
     cursor: hand;
     height: 29px;
     line-height: 30px;
+    background: $linode-white;
 }
 
 .li-dropdown-activator {

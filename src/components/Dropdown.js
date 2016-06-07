@@ -30,7 +30,7 @@ export default function Dropdown(props) {
 
 Dropdown.propTypes = {
   elements: PropTypes.arrayOf(PropTypes.shape({
-    name: PropTypes.string.isRequired,
+    name: PropTypes.node.isRequired,
     action: PropTypes.func,
   })).isRequired,
 };
