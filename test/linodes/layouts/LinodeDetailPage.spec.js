@@ -1,11 +1,14 @@
 import React from 'react';
 import sinon from 'sinon';
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 import * as fetch from '~/fetch';
 import { testLinode } from '~/../test/data';
 import { LinodeDetailPage } from '~/linodes/layouts/LinodeDetailPage';
 import { UPDATE_LINODE } from '~/actions/api/linodes';
+import { Tabs, Tab } from 'react-tabs';
+import * as actions from '~/linodes/actions/detail';
+import Dropdown from '~/components/Dropdown';
 
 describe('linodes/layouts/LinodeDetailPage', () => {
   const sandbox = sinon.sandbox.create();
@@ -24,6 +27,7 @@ describe('linodes/layouts/LinodeDetailPage', () => {
       [testLinode.id]: testLinode,
       linode_1235: { ...testLinode, id: 'linode_1235', group: '' },
       linode_1236: { ...testLinode, id: 'linode_1236', state: 'offline' },
+      linode_1237: { ...testLinode, id: 'linode_1236', state: 'booting' },
     },
     _singular: 'linode',
     _plural: 'linodes',
@@ -96,19 +100,101 @@ describe('linodes/layouts/LinodeDetailPage', () => {
       .to.equal(true);
   });
 
-  it('renders detail tabs');
+  it('renders detail tabs', () => {
+    const page = shallow(
+      <LinodeDetailPage
+        dispatch={dispatch}
+        linodes={linodes}
+        params={{ linodeId: 'linode_1234' }}
+        detail={detail}
+      />);
+    const tabs = page.find(Tabs);
+    expect(tabs).to.exist;
+    const expectedTabs = [
+      'General', 'Networking', 'Resize', 'Repair', 'Backups', 'Settings',
+    ];
+    expectedTabs.map(t => expect(tabs.contains(<Tab>{t}</Tab>)).to.equal(true));
+  });
 
-  it('dispatches a tab change action when tabs are clicked');
+  it('dispatches a tab change action when tabs are clicked', () => {
+    const page = shallow(
+      <LinodeDetailPage
+        dispatch={dispatch}
+        linodes={linodes}
+        params={{ linodeId: 'linode_1234' }}
+        detail={detail}
+      />);
+    const tabs = page.find(Tabs);
+    tabs.props().onSelect(2);
+    expect(dispatch.calledWith(actions.changeDetailTab(2))).to.equal(true);
+  });
 
-  it('renders a power management dropdown');
+  it('renders a power management dropdown', () => {
+    const page = shallow(
+      <LinodeDetailPage
+        dispatch={dispatch}
+        linodes={linodes}
+        params={{ linodeId: 'linode_1234' }}
+        detail={detail}
+      />);
+    const dropdown = page.find(Dropdown);
+    expect(dropdown).to.exist;
+  });
 
-  it('renders the appropriate items when linode is running');
+  it('renders the appropriate items when linode is running', () => {
+    const page = shallow(
+      <LinodeDetailPage
+        dispatch={dispatch}
+        linodes={linodes}
+        params={{ linodeId: 'linode_1234' }}
+        detail={detail}
+      />);
+    const dropdown = page.find(Dropdown).props();
+    const expected = ['Reboot', 'Power Off'];
+    for (let i = 0; i < expected.length; ++i) {
+      const elem = shallow(dropdown.elements[i].name);
+      expect(elem.text()).to.contain(expected[i]);
+    }
+  });
 
-  it('renders the appropriate items when linode is powered off');
+  it('renders the appropriate items when linode is powered off', () => {
+    const page = shallow(
+      <LinodeDetailPage
+        dispatch={dispatch}
+        linodes={linodes}
+        params={{ linodeId: 'linode_1236' }}
+        detail={detail}
+      />);
+    const dropdown = page.find(Dropdown).props();
+    const expected = ['Reboot', 'Power On'];
+    for (let i = 0; i < expected.length; ++i) {
+      const elem = shallow(dropdown.elements[i].name);
+      expect(elem.text()).to.contain(expected[i]);
+    }
+  });
 
-  it('does not render power management dropdown when linode is transitioning');
+  it('does not render power management dropdown when linode is transitioning', () => {
+    const page = mount(
+      <LinodeDetailPage
+        dispatch={dispatch}
+        linodes={linodes}
+        params={{ linodeId: 'linode_1237' }}
+        detail={detail}
+      />);
+    expect(page.contains(Dropdown)).to.equal(false);
+  });
 
-  it('renders the current state of the linode');
+  it('renders the current state of the linode', () => {
+    const page = mount(
+      <LinodeDetailPage
+        dispatch={dispatch}
+        linodes={linodes}
+        params={{ linodeId: 'linode_1234' }}
+        detail={detail}
+      />);
+    expect(page.contains(<span className="pull-right linode-status running">Running</span>))
+      .to.equal(true);
+  });
 
   describe('edit mode', () => {
     it('renders an edit button');
