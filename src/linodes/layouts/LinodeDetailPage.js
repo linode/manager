@@ -1,10 +1,11 @@
 import React, { Component, PropTypes } from 'react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
+import { pushPath } from 'redux-simple-router';
 import Dropdown from '~/components/Dropdown';
 import { LinodeStates, LinodeStatesReadable } from '~/constants';
 import {
-  changeDetailTab,
   toggleEditMode,
   setLinodeLabel,
   setLinodeGroup,
@@ -147,42 +148,40 @@ export class LinodeDetailPage extends Component {
   render() {
     const linode = this.getLinode();
     if (!linode) return <span></span>;
-    const { dispatch, detail } = this.props;
+    const { dispatch, location } = this.props;
+    const tabList = [
+      { name: 'General', link: '' },
+      { name: 'Networking', link: '/networking' },
+      { name: 'Resize', link: '/resize' },
+      { name: 'Repair', link: '/repair' },
+      { name: 'Backups', link: '/backups' },
+      { name: 'Settings', link: '/settings' },
+    ].map(t => ({ ...t, link: `/linodes/${linode.id}${t.link}` }));
+
+    const pathname = location ? location.pathname : tabList[0].link;
+    const selected = tabList.reduce((last, current) =>
+      (pathname === current.link ? current : last));
 
     return (
       <div className="details-page">
         <div className="card">
           {this.renderHeader(linode)}
           <Tabs
-            onSelect={ix => dispatch(changeDetailTab(ix))}
-            selectedIndex={detail.tab}
+            onSelect={ix => dispatch(pushPath(tabList[ix].link))}
+            selectedIndex={tabList.indexOf(selected)}
           >
             <TabList>
-              <Tab>General</Tab>
-              <Tab>Networking</Tab>
-              <Tab>Resize</Tab>
-              <Tab>Repair</Tab>
-              <Tab>Backups</Tab>
-              <Tab>Settings</Tab>
+              {tabList.map(t => (
+                <Tab key={t.name}>
+                  <Link to={t.link} onClick={e => e.preventDefault()}>{t.name}</Link>
+                </Tab>
+              ))}
             </TabList>
-            <TabPanel>
-              <h2>Summary</h2>
-            </TabPanel>
-            <TabPanel>
-              Networking Tab
-            </TabPanel>
-            <TabPanel>
-              Resize Tab
-            </TabPanel>
-            <TabPanel>
-              Repair Tab
-            </TabPanel>
-            <TabPanel>
-              Backups Tab
-            </TabPanel>
-            <TabPanel>
-              Settings Tab
-            </TabPanel>
+            {tabList.map(t => (
+              <TabPanel key={t.name}>
+                {t === selected ? this.props.children : null}
+              </TabPanel>
+            ))}
           </Tabs>
         </div>
       </div>
@@ -197,6 +196,8 @@ LinodeDetailPage.propTypes = {
     linodeId: PropTypes.string,
   }),
   detail: PropTypes.object,
+  children: PropTypes.node,
+  location: PropTypes.object,
 };
 
 function select(state) {

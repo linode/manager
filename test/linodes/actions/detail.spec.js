@@ -5,16 +5,6 @@ import { UPDATE_LINODE } from '~/actions/api/linodes';
 import * as fetch from '~/fetch';
 
 describe('linodes/actions/detail', () => {
-  describe('changeDetailTab', () => {
-    it('should return a CHANGE_DETAIL_TAB action', () => {
-      expect(actions.changeDetailTab(1))
-        .to.deep.equal({
-          type: actions.CHANGE_DETAIL_TAB,
-          index: 1,
-        });
-    });
-  });
-
   describe('toggleEditMode', () => {
     it('should return a TOGGLE_EDIT_MODE action', () => {
       expect(actions.toggleEditMode())

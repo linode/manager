@@ -1,5 +1,6 @@
 import React from 'react';
 import sinon from 'sinon';
+import { pushPath } from 'redux-simple-router';
 import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 import * as fetch from '~/fetch';
@@ -34,7 +35,6 @@ describe('linodes/layouts/LinodeDetailPage', () => {
   };
 
   const detail = {
-    tab: 0,
     editing: false,
     label: '',
     group: '',
@@ -113,10 +113,11 @@ describe('linodes/layouts/LinodeDetailPage', () => {
     const expectedTabs = [
       'General', 'Networking', 'Resize', 'Repair', 'Backups', 'Settings',
     ];
-    expectedTabs.map(t => expect(tabs.contains(<Tab>{t}</Tab>)).to.equal(true));
+    expect(tabs.find(Tab).length).to.equal(expectedTabs.length);
+    expect(tabs.find(Tab).filter(t => t.text() === t)).to.exist;
   });
 
-  it('dispatches a tab change action when tabs are clicked', () => {
+  it('dispatches a pushPath action when tabs are clicked', () => {
     const page = shallow(
       <LinodeDetailPage
         dispatch={dispatch}
@@ -126,7 +127,7 @@ describe('linodes/layouts/LinodeDetailPage', () => {
       />);
     const tabs = page.find(Tabs);
     tabs.props().onSelect(2);
-    expect(dispatch.calledWith(actions.changeDetailTab(2))).to.equal(true);
+    expect(dispatch.calledWith(pushPath('/linodes/linode_1234/resize'))).to.equal(true);
   });
 
   it('renders a power management dropdown', () => {
