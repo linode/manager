@@ -197,20 +197,154 @@ describe('linodes/layouts/LinodeDetailPage', () => {
   });
 
   describe('edit mode', () => {
-    it('renders an edit button');
+    it('renders an edit button', () => {
+      const page = shallow(
+        <LinodeDetailPage
+          dispatch={dispatch}
+          linodes={linodes}
+          params={{ linodeId: 'linode_1234' }}
+          detail={detail}
+        />);
+      expect(page.find('.edit-icon')).to.exist;
+    });
 
-    it('toggles edit mode when edit is pressed');
+    it('toggles edit mode when edit is pressed', () => {
+      const page = shallow(
+        <LinodeDetailPage
+          dispatch={dispatch}
+          linodes={linodes}
+          params={{ linodeId: 'linode_1234' }}
+          detail={detail}
+        />);
+      const icon = page.find('.edit-icon');
+      icon.simulate('click', { preventDefault: () => {} });
+      expect(dispatch.calledWith(actions.toggleEditMode())).to.equal(true);
+    });
 
-    it('renders group/label text boxes in edit mode');
+    it('copies the current group/label to the state', () => {
+      const page = shallow(
+        <LinodeDetailPage
+          dispatch={dispatch}
+          linodes={linodes}
+          params={{ linodeId: 'linode_1234' }}
+          detail={detail}
+        />);
+      const icon = page.find('.edit-icon');
+      icon.simulate('click', { preventDefault: () => {} });
+      expect(dispatch.calledWith(actions.setLinodeLabel(testLinode.label)))
+        .to.equal(true);
+      expect(dispatch.calledWith(actions.setLinodeGroup(testLinode.group)))
+        .to.equal(true);
+    });
 
-    it('renders save and cancel buttons');
+    it('renders group/label text boxes in edit mode', () => {
+      const page = shallow(
+        <LinodeDetailPage
+          dispatch={dispatch}
+          linodes={linodes}
+          params={{ linodeId: 'linode_1234' }}
+          detail={{ ...detail, editing: true }}
+        />);
+      const editor = page.find('.edit-details');
+      expect(editor).to.exist;
+      expect(editor.find('input[type="text"]').length)
+        .to.equal(2);
+      expect(editor.find('input[type="text"]').get(0).props.placeholder)
+        .to.equal('Group...');
+      expect(editor.find('input[type="text"]').get(1).props.placeholder)
+        .to.equal('Label...');
+    });
 
-    it('disables save and cancel buttons when loading');
+    it('renders save and cancel buttons', () => {
+      const page = shallow(
+        <LinodeDetailPage
+          dispatch={dispatch}
+          linodes={linodes}
+          params={{ linodeId: 'linode_1234' }}
+          detail={{ ...detail, editing: true }}
+        />);
+      const editor = page.find('.edit-details');
+      expect(editor).to.exist;
+      expect(editor.find('button').length).to.equal(2);
+      expect(editor.find('button.btn-primary').text()).to.equal('Save');
+      expect(editor.find('button.btn-default').text()).to.equal('Cancel');
+    });
 
-    it('leaves edit mode when cancel is pressed');
+    it('disables save and cancel buttons when loading', () => {
+      const page = shallow(
+        <LinodeDetailPage
+          dispatch={dispatch}
+          linodes={linodes}
+          params={{ linodeId: 'linode_1234' }}
+          detail={{ ...detail, editing: true, loading: true }}
+        />);
+      const editor = page.find('.edit-details');
+      expect(editor).to.exist;
+      expect(editor.find('button').length).to.equal(2);
+      expect(editor.find('button.btn-primary').props())
+        .to.have.property('disabled').which.equals(true);
+      expect(editor.find('button.btn-default').props())
+        .to.have.property('disabled').which.equals(true);
+    });
 
-    it('commits changes to the API when save is pressed');
+    it('leaves edit mode when cancel is pressed', () => {
+      const page = shallow(
+        <LinodeDetailPage
+          dispatch={dispatch}
+          linodes={linodes}
+          params={{ linodeId: 'linode_1234' }}
+          detail={{ ...detail, editing: true }}
+        />);
+      const editor = page.find('.edit-details');
+      const cancel = editor.find('button.btn-default');
+      cancel.simulate('click');
+      expect(dispatch.calledOnce).to.equal(true);
+      expect(dispatch.calledWith(actions.toggleEditMode())).to.equal(true);
+    });
 
-    it('commits changes to the API when the enter key is pressed');
+    async function assertCommittedChanges() {
+      expect(dispatch.calledOnce).to.equal(true);
+      const dispatched = dispatch.firstCall.args[0];
+      // Assert that dispatched is a function that commits the changes
+      const fetchStub = sandbox.stub(fetch, 'fetch').returns({
+        json: () => {},
+      });
+      dispatch.reset();
+      const getState = () => ({
+        authentication: { token: 'token' },
+        linodes: { detail: { label: 'test', group: 'test' } },
+      });
+      await dispatched(dispatch, getState);
+      expect(fetchStub.calledOnce).to.equal(true);
+      expect(fetchStub.firstCall.args[1]).to.equal('/linodes/linode_1234');
+    }
+
+    it('commits changes to the API when save is pressed', async () => {
+      const page = shallow(
+        <LinodeDetailPage
+          dispatch={dispatch}
+          linodes={linodes}
+          params={{ linodeId: 'linode_1234' }}
+          detail={{ ...detail, editing: true, label: 'test', group: 'test' }}
+        />);
+      const editor = page.find('.edit-details');
+      const cancel = editor.find('button.btn-primary');
+      cancel.simulate('click');
+      await assertCommittedChanges();
+    });
+
+    it('commits changes to the API when the enter key is pressed', async () => {
+      const page = shallow(
+        <LinodeDetailPage
+          dispatch={dispatch}
+          linodes={linodes}
+          params={{ linodeId: 'linode_1234' }}
+          detail={{ ...detail, editing: true, label: 'test', group: 'test' }}
+        />);
+      const editor = page.find('.edit-details');
+      const text = editor.find('input[type="text"]').first();
+      text.simulate('keyUp', { keyCode: 13 /* Enter */ });
+      await assertCommittedChanges();
+    });
   });
 });
