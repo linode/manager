@@ -1,12 +1,12 @@
 .card {
     header {
-        background-color: $linode-light-gray;
+        background-color: $linode-lightish-gray;
         padding: 2rem;
     }
 
     .react-tabs {
         [role=tablist] {
-            background: $linode-light-gray;
+            background-color: $linode-lightish-gray;
             padding: 0 2rem;
             border-color: $linode-gray;
         }
