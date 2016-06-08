@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Route, IndexRoute } from 'react-router';
 
 import IndexPage from './layouts/IndexPage';
@@ -6,16 +6,9 @@ import LinodeDetailPage from './layouts/LinodeDetailPage';
 import CreateLinodePage from './layouts/CreateLinodePage';
 
 /* eslint-disable react/prop-types */
-class Placeholder extends Component {
-  constructor() {
-    super();
-    this.render = this.render.bind(this);
-  }
-
-  render() {
-    const { pathname } = this.props.location;
-    return <div>{pathname} placeholder</div>;
-  }
+function Placeholder(props) {
+  const { pathname } = props.location;
+  return <div>{pathname} placeholder</div>;
 }
 
 export default (
