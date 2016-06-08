@@ -203,7 +203,7 @@ LinodeDetailPage.propTypes = {
   }),
   detail: PropTypes.object,
   children: PropTypes.node,
-  location: PropTypes.object.optional,
+  location: PropTypes.object,
 };
 
 function select(state) {
