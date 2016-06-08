@@ -285,6 +285,24 @@ button {
         text-decoration: none;
         font-size: 10pt;
         border-radius: 0;
+        border: $linode-border;
+        background: $linode-lightish-gray;
+    }
+
+    &.btn-primary.good {
+        background: $linode-blue;
+        border: 0;
+    }
+
+    &.btn-primary bad {
+        background: $linode-red;
+        border: 0;
+    }
+
+    &.btn-primary bad-secondary {
+        border-color: $linode-red;
+        background: transparent;
+        color: $linode-red;
     }
 }
 
