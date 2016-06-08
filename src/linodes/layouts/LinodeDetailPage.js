@@ -159,14 +159,8 @@ export class LinodeDetailPage extends Component {
     ].map(t => ({ ...t, link: `/linodes/${linode.id}${t.link}` }));
 
     const pathname = location ? location.pathname : tabList[0].link;
-
-    let selected = tabList[0];
-    for (let i = 1; i < tabList.length; ++i) {
-      if (pathname === tabList[i].link) {
-        selected = tabList[i];
-        break;
-      }
-    }
+    const selected = tabList.reduce((last, current) =>
+      (pathname === current.link ? current : last));
 
     return (
       <div className="details-page">
