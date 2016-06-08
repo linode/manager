@@ -277,6 +277,17 @@ nav {
     }
 }
 
+button {
+    font-size: 2rem;
+    margin: 0 0.5rem;
+
+    &.btn {
+        text-decoration: none;
+        font-size: 10pt;
+        border-radius: 0;
+    }
+}
+
 .grid-list {
     span {
         padding-right: 5px;
