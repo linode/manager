@@ -8,7 +8,6 @@ describe('linodes/detail reducer', () => {
     expect(
       detail(undefined, {})
     ).to.be.eql({
-      tab: 0,
       editing: false,
       label: '',
       group: '',
@@ -17,19 +16,11 @@ describe('linodes/detail reducer', () => {
   });
 
   it('should no-op on arbitrary actions', () => {
-    const state = { tab: 0 };
+    const state = { };
     deepFreeze(state);
 
     expect(detail(state, { type: 'foobar' }))
       .to.deep.equal(state);
-  });
-
-  it('should handle CHANGE_DETAIL_TAB', () => {
-    const state = { tab: 0 };
-    deepFreeze(state);
-
-    expect(detail(state, actions.changeDetailTab(3)))
-      .to.have.property('tab').that.equals(3);
   });
 
   it('should handle TOGGLE_EDIT_MODE', () => {
