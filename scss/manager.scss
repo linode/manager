@@ -5,11 +5,12 @@
 $linode-blue: #4A90E2;
 $linode-green: #3BB877;
 $linode-red: #D0021B;
-$linode-gray: #bfbfbf;
+$linode-gray: #cccccc;
 $linode-black: #4b4b4b;
 $linode-dark-gray: #acacac;
 $linode-white: #fefefe;
 $linode-light-gray: #f9f9f9;
+$linode-lightish-gray: #f3f3f3;
 $linode-border: 1px solid $linode-gray;
 
 $sidebar-width: 200px;
@@ -19,6 +20,7 @@ $nav-height: 84px;
 @import 'layout/linode-details';
 @import 'layout/linodes';
 @import 'components/dropdown';
+@import 'components/card';
 
 * {
     transition: background .35s, color .2s, border .1s;
@@ -272,6 +274,35 @@ nav {
         position: absolute;
         bottom: 15px;
         right: 15px;
+    }
+}
+
+button {
+    font-size: 2rem;
+    margin: 0 0.5rem;
+
+    &.btn {
+        text-decoration: none;
+        font-size: 10pt;
+        border-radius: 0;
+        border: $linode-border;
+        background: $linode-lightish-gray;
+    }
+
+    &.btn-primary.good {
+        background: $linode-blue;
+        border: 0;
+    }
+
+    &.btn-primary bad {
+        background: $linode-red;
+        border: 0;
+    }
+
+    &.btn-primary bad-secondary {
+        border-color: $linode-red;
+        background: transparent;
+        color: $linode-red;
     }
 }
 

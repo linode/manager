@@ -5,3 +5,4 @@ dist
 src/secrets.js
 xunit.xml
 coverage
+.sass-cache/

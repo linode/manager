@@ -1,21 +1,28 @@
 import React, { Component, PropTypes } from 'react';
-import { Link } from 'react-router';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { connect } from 'react-redux';
-import {
-  updateLinode, powerOnLinode, powerOffLinode,
-  rebootLinode,
-} from '~/actions/api/linodes';
 import Dropdown from '~/components/Dropdown';
-import { LinodeStatesReadable } from '~/constants';
+import { LinodeStates, LinodeStatesReadable } from '~/constants';
+import {
+  changeDetailTab,
+  toggleEditMode,
+  setLinodeLabel,
+  setLinodeGroup,
+  commitChanges,
+} from '../actions/detail';
+import {
+  updateLinode, powerOnLinode, powerOffLinode, rebootLinode,
+} from '~/actions/api/linodes';
 
-class LinodeDetailPage extends Component {
+export class LinodeDetailPage extends Component {
   constructor() {
     super();
     this.getLinode = this.getLinode.bind(this);
     this.render = this.render.bind(this);
-    this.powerOn = this.powerOn.bind(this);
-    this.powerOff = this.powerOff.bind(this);
-    this.reboot = this.reboot.bind(this);
+    this.renderHeader = this.renderHeader.bind(this);
+    this.renderEditUI = this.renderEditUI.bind(this);
+    this.renderLabel = this.renderLabel.bind(this);
+    this.handleLabelKeyUp = this.handleLabelKeyUp.bind(this);
   }
 
   componentDidMount() {
@@ -33,108 +40,150 @@ class LinodeDetailPage extends Component {
     return linodes[linodeId];
   }
 
-  powerOn(linode) {
+  handleLabelKeyUp(e, linode) {
     const { dispatch } = this.props;
-    dispatch(powerOnLinode(linode.id));
+    if (e.keyCode === 13 /* Enter */) {
+      dispatch(commitChanges(linode.id));
+    }
   }
 
-  powerOff(linode) {
+  renderEditUI(linode) {
+    const { label, group, loading } = this.props.detail;
     const { dispatch } = this.props;
-    dispatch(powerOffLinode(linode.id));
+    return (
+      <div className="edit-details">
+        <input
+          type="text"
+          value={group}
+          placeholder="Group..."
+          onChange={e => dispatch(setLinodeGroup(e.target.value))}
+          onKeyUp={e => this.handleLabelKeyUp(e, linode)}
+        />
+        <span>/</span>
+        <input
+          type="text"
+          value={label}
+          placeholder="Label..."
+          onChange={e => dispatch(setLinodeLabel(e.target.value))}
+          onKeyUp={e => this.handleLabelKeyUp(e, linode)}
+        />
+        <button
+          className="btn btn-primary good"
+          onClick={() => dispatch(commitChanges(linode.id))}
+          disabled={loading}
+        >Save</button>
+        <button
+          className="btn btn-default"
+          onClick={() => dispatch(toggleEditMode())}
+          disabled={loading}
+        >Cancel</button>
+      </div>
+    );
   }
 
-  reboot(linode) {
+  renderLabel(linode) {
     const { dispatch } = this.props;
-    dispatch(rebootLinode(linode.id));
+    const label = linode.group ?
+      <span>{linode.group} / {linode.label}</span> :
+      <span>{linode.label}</span>;
+
+    return (
+      <div style={{ display: 'inline-block' }}>
+        <h1>{label}</h1>
+        <a
+          href="#"
+          className="edit-icon"
+          onClick={e => {
+            e.preventDefault();
+            dispatch(setLinodeLabel(linode.label));
+            dispatch(setLinodeGroup(linode.group));
+            dispatch(toggleEditMode());
+          }}
+        >
+          <i className="fa fa-pencil"></i>
+        </a>
+      </div>
+    );
+  }
+
+  renderHeader(linode) {
+    const { dispatch } = this.props;
+    const { editing } = this.props.detail;
+
+    const dropdownElements = [
+      {
+        name: <span><i className="fa fa-refresh"></i> Reboot</span>,
+        _action: rebootLinode,
+        _condition: () => true,
+      },
+      {
+        name: <span><i className="fa fa-power-off"></i> Power Off</span>,
+        _action: powerOffLinode,
+        _condition: () => linode.state === 'running',
+      },
+      {
+        name: <span><i className="fa fa-power-off"></i> Power On</span>,
+        _action: powerOnLinode,
+        _condition: () => linode.state === 'offline',
+      },
+    ]
+    .filter(element => element._condition())
+    .map(element => ({ ...element, action: () => dispatch(element._action(linode.id)) }));
+
+    return (
+      <header>
+        {editing ? this.renderEditUI(linode) : this.renderLabel(linode)}
+        {LinodeStates.pending.indexOf(linode.state) !== -1 ? null :
+          <span className="pull-right">
+            <Dropdown elements={dropdownElements} />
+          </span>}
+        <span className={`pull-right linode-status ${linode.state}`}>
+          {LinodeStatesReadable[linode.state]}
+        </span>
+      </header>
+    );
   }
 
   render() {
     const linode = this.getLinode();
     if (!linode) return <span></span>;
-
-    const ipAddresses = linode.ip_addresses;
-
-    // Convert ip groups into an array
-    const arrayifyIps = (pubPriv, type) => {
-      const ips = ipAddresses[pubPriv][type];
-      if (Array.isArray(pubPriv)) {
-        return ips;
-      } else if (!!ips) {
-        return [ips];
-      }
-      return [];
-    };
-
-    const pubIpv4 = arrayifyIps('public', 'ipv4');
-    const pubIpv6 = arrayifyIps('public', 'ipv6');
-
-    const dropdownElements = [
-      { name: 'Reboot', _action: this.reboot },
-      { name: 'Power off', _action: this.powerOff },
-      { name: 'Power on', _action: this.powerOn },
-    ].map(element => ({ ...element, action: () => element._action(linode) }));
+    const { dispatch, detail } = this.props;
 
     return (
       <div className="details-page">
-        <div className="li-breadcrumb">
-          <span><Link to="/linodes">Linodes</Link></span>
-          <span>></span>
-          <span>{linode.label}</span>
-        </div>
         <div className="card">
-          <header>
-            <h1>{linode.label}</h1>
-            <span className={`linode-status ${linode.state}`}>
-              {LinodeStatesReadable[linode.state]}
-            </span>
-            <span className="pull-right">
-              <Dropdown elements={dropdownElements} />
-            </span>
-          </header>
-          <nav>
-            <ul className="list-unstyled">
-              <li className="active">General</li>
-              <li>Backups</li>
-              <li>Rescue</li>
-              <li>Networking</li>
-              <li>Advanced</li>
-              <li className="linode-lish"><a href="/lish">Lish</a></li>
-            </ul>
-          </nav>
-          <div className="linode-details row">
-            <div className="col-sm-6">
-              <ul className="list-unstyled">
-                <li>
-                  <span className="fa fa-link"></span>
-                  {pubIpv4[0]}
-                </li>
-                <li>
-                  <span className="fa fa-link invisible"></span>
-                  {pubIpv6[0]}
-                </li>
-              </ul>
-            </div>
-            <div className="col-sm-6">
-              <ul className="list-unstyled">
-                <li>
-                  <span className="fa fa-globe"></span>
-                  {linode.datacenter.label}
-                </li>
-                <li>
-                  <span className="fa fa-database"></span>
-                  Last backup: 1 hour ago
-                </li>
-                <li>
-                  <span className="fa fa-server"></span>
-                  Linode 1024
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div className="linode-performance">
-            <h2>Performance</h2>
-            <div className="graph"></div>
-          </div>
+          {this.renderHeader(linode)}
+          <Tabs
+            onSelect={ix => dispatch(changeDetailTab(ix))}
+            selectedIndex={detail.tab}
+          >
+            <TabList>
+              <Tab>General</Tab>
+              <Tab>Networking</Tab>
+              <Tab>Resize</Tab>
+              <Tab>Repair</Tab>
+              <Tab>Backups</Tab>
+              <Tab>Settings</Tab>
+            </TabList>
+            <TabPanel>
+              <h2>Summary</h2>
+            </TabPanel>
+            <TabPanel>
+              Networking Tab
+            </TabPanel>
+            <TabPanel>
+              Resize Tab
+            </TabPanel>
+            <TabPanel>
+              Repair Tab
+            </TabPanel>
+            <TabPanel>
+              Backups Tab
+            </TabPanel>
+            <TabPanel>
+              Settings Tab
+            </TabPanel>
+          </Tabs>
         </div>
       </div>
     );
@@ -147,10 +196,11 @@ LinodeDetailPage.propTypes = {
   params: PropTypes.shape({
     linodeId: PropTypes.string,
   }),
+  detail: PropTypes.object,
 };
 
 function select(state) {
-  return { linodes: state.api.linodes };
+  return { linodes: state.api.linodes, detail: state.linodes.detail };
 }
 
 export default connect(select)(LinodeDetailPage);

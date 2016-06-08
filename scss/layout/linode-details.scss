@@ -13,30 +13,43 @@
 
     header {
         padding: 30px $side-margin 15px $side-margin;
+        line-height: 2.2rem;
 
         h1 {
            margin: 0;
+           font-size: 2.2rem;
         }
 
         .linode-status {
-            margin-left: 15px;
-        }
-
-        a {
-            padding-right: 30px;
+            margin-right: 1rem;
         }
 
         .li-dropdown-item.li-dropdown-first {
             height: 30px;
         }
 
-        .li-dropdown-body {
-            &:hover,
-            &:active,
-            &:focus {
-                .li-dropdown-target {
-                    top: 29px;
-                    left: -71px;
+        .edit-icon {
+            margin-left: 0.75rem;
+            font-size: 16px;
+            position: relative;
+            top: -6px;
+        }
+
+        .edit-details {
+            font-size: 2.2rem;
+            display: inline-block;
+
+            input {
+                background: transparent;
+                margin: 0 0.5rem;
+                padding: 0;
+                width: 12rem;
+                border: none;
+                border-bottom: $linode-border;
+
+                &:focus {
+                    outline: none;
+                    border-bottom-color: $linode-dark-gray;
                 }
             }
         }
