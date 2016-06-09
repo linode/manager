@@ -292,25 +292,57 @@ input, .btn {
     }
 }
 
-button {
-    &.btn {
-        text-decoration: none;
-        border-radius: 0;
-        border: $linode-border;
-        background: $button-gray;
+hr {
+    width: 300px;
+    margin: 2rem 0;
+}
+
+.text-muted {
+    font-size: 12px;
+}
+
+.btn {
+    text-decoration: none;
+    font-size: 10pt;
+    border-radius: 0;
+    border: $linode-border;
+    background: $linode-gray;
+
+    &.btn-help {
+        $size: 24px;
+        background-color: $linode-gray;
+        font-size: $size / 2;
+        line-height: $size - 2px;
+        padding: 0;
+        margin: 0 1rem;
+        display: inline-block;
+        width: $size;
+        height: $size;
+        border-radius: $size / 2;
+        color: $linode-white;
+        font-weight: bold;
+        text-indent: -0.5px;
+
+        &:hover {
+            background-color: $linode-blue;
+        }
+
+        h1 &, h2 &, h3 & {
+            margin-top: -0.25rem;
+        }
     }
 
-    &.btn-primary.good {
+    &.btn-primary {
         background: $linode-blue;
-        border: 0;
+        border: 1px solid $linode-blue;
     }
 
-    &.btn-primary bad {
+    &.btn-danger {
         background: $linode-red;
-        border: 0;
+        border: 1px solid $linode-red;
     }
 
-    &.btn-primary bad-secondary {
+    &.btn-danger-outline {
         border-color: $linode-red;
         background: transparent;
         color: $linode-red;

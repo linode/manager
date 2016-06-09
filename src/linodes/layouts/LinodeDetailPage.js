@@ -69,12 +69,12 @@ export class LinodeDetailPage extends Component {
           onKeyUp={e => this.handleLabelKeyUp(e, linode)}
         />
         <button
-          className="btn btn-primary good"
+          className="btn btn-primary"
           onClick={() => dispatch(commitChanges(linode.id))}
           disabled={loading}
         >Save</button>
         <button
-          className="btn btn-default"
+          className="btn btn-secondary"
           onClick={() => dispatch(toggleEditMode())}
           disabled={loading}
         >Cancel</button>
