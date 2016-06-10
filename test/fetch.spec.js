@@ -21,13 +21,14 @@ describe('fetch', () => {
     },
   };
 
-  const getFetchStub = () => sandbox.stub(fetch, 'rawFetch')
+  const getFetchStub = (status = 200) => sandbox.stub(fetch, 'rawFetch')
     .returns(new Promise((accept) => accept({
       headers: {
         get() {
-          return 200;
+          return status;
         },
       },
+      status: 200,
     })));
 
   it('should default to cors mode and headers for token', async () => {
@@ -62,5 +63,21 @@ describe('fetch', () => {
         ...data,
       }
     ));
+  });
+
+  it('should handle X-Status', async () => {
+    getFetchStub(201);
+    const resp = await fetch.fetch(token, 'path');
+    expect(resp.statusCode).to.equal(201);
+  });
+
+  it('should handle X-Status errors', async () => {
+    getFetchStub(400);
+    try {
+      await fetch.fetch(token, 'path');
+      expect(true).to.equal(false);
+    } catch (resp) {
+      expect(resp.statusCode).to.equal(400);
+    }
   });
 });
