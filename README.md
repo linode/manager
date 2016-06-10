@@ -26,7 +26,7 @@ The following buzzwords are involved in this project:
 
     git clone https://github.com/Linode/manager.git
     cd manager
-    node --version # should be 5.x or better
+    node --version # should be 6.x or better
     npm install
 
 Currently the codebase is hardcoded to point to our [alpha
