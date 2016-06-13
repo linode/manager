@@ -15,10 +15,15 @@ import {
   updateLinode, powerOnLinode, powerOffLinode, rebootLinode,
 } from '~/actions/api/linodes';
 
+export function getLinode() {
+    const { linodes } = this.props.linodes;
+    const { linodeId } = this.props.params;
+    return linodes[linodeId];
+}
 export class LinodeDetailPage extends Component {
   constructor() {
     super();
-    this.getLinode = this.getLinode.bind(this);
+    this.getLinode = getLinode.bind(this);
     this.render = this.render.bind(this);
     this.renderHeader = this.renderHeader.bind(this);
     this.renderEditUI = this.renderEditUI.bind(this);
@@ -35,11 +40,6 @@ export class LinodeDetailPage extends Component {
     }
   }
 
-  getLinode() {
-    const { linodes } = this.props.linodes;
-    const { linodeId } = this.props.params;
-    return linodes[linodeId];
-  }
 
   handleLabelKeyUp(e, linode) {
     const { dispatch } = this.props;
@@ -191,6 +191,7 @@ export class LinodeDetailPage extends Component {
 
 LinodeDetailPage.propTypes = {
   dispatch: PropTypes.func,
+  username: PropTypes.string,
   linodes: PropTypes.object,
   params: PropTypes.shape({
     linodeId: PropTypes.string,
