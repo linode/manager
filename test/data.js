@@ -20,7 +20,7 @@ export const testLinode = {
   },
   backups: {
     last_backup: null,
-    enabled: false
+    enabled: false,
   },
   state: 'running',
   datacenter: {
@@ -28,9 +28,9 @@ export const testLinode = {
     label: 'Newark, NJ',
   },
   distribution: {
-    id: "distro_123",
-    vendor: "Ubuntu",
-    label: "Ubuntu 15.10",
+    id: 'distro_123',
+    vendor: 'Ubuntu',
+    label: 'Ubuntu 15.10',
   },
   _polling: false,
 };

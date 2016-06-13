@@ -16,9 +16,9 @@ import {
 } from '~/actions/api/linodes';
 
 export function getLinode() {
-    const { linodes } = this.props.linodes;
-    const { linodeId } = this.props.params;
-    return linodes[linodeId];
+  const { linodes } = this.props.linodes;
+  const { linodeId } = this.props.params;
+  return linodes[linodeId];
 }
 export class LinodeDetailPage extends Component {
   constructor() {

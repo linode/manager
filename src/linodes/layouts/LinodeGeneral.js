@@ -23,9 +23,9 @@ export class LinodeGeneral extends Component {
     };
 
     const ipv4 = arrayifyIps('public', 'ipv4');
-    const ipv6 = arrayifyIps('public', 'ipv6'); 
+    const ipv6 = arrayifyIps('public', 'ipv6');
 
-    const username = "caker";
+    const username = 'caker';
     return (
       <div className="row">
         <div className="col-sm-6 left">
@@ -47,7 +47,7 @@ export class LinodeGeneral extends Component {
               Backups
             </div>
             <div className="col-sm-8 right">
-              {linode.backups.enabled ? linode.backups.last_backup : `Backups not enabled.`}
+              {linode.backups.enabled ? linode.backups.last_backup : 'Backups not enabled.'}
             </div>
           </div>
           <div className="row">
@@ -83,7 +83,7 @@ export class LinodeGeneral extends Component {
             </div>
             <div className="col-sm-8 right">
               <div className="input-group">
-                <input type="text" className="form-control" value={`ssh root@${ipv4}`} readOnly/>
+                <input type="text" className="form-control" value={`ssh root@${ipv4}`} readOnly />
                 <span className="input-group-btn">
                   <button type="button" className="btn btn-default">SSH</button>
                 </span>
@@ -96,8 +96,17 @@ export class LinodeGeneral extends Component {
             </div>
             <div className="col-sm-8 right">
               <div className="input-group">
-                <input type="text" className="form-control" 
-                  value={`ssh -t ${username}@lish-${linode.datacenter.datacenter}.linode.com`} readOnly/>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={
+                    `ssh -t ${
+                      username
+                    }@lish-${
+                      linode.datacenter.datacenter
+                    }.linode.com`}
+                  readOnly
+                />
                 <span className="input-group-btn">
                   <button type="button" className="btn btn-default">Open</button>
                 </span>
@@ -115,9 +124,9 @@ export class LinodeGeneral extends Component {
               <div className="input-group">
                 <button type="button" className="btn btn-default">Open</button>
               </div>
-            <small className="text-muted">
-              Equivalent to plugging a monitor and keyboard into your server.
-            </small>
+              <small className="text-muted">
+                Equivalent to plugging a monitor and keyboard into your server.
+              </small>
             </div>
           </div>
         </div>
