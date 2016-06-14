@@ -33,6 +33,7 @@ body {
     color: $linode-black;
     margin-top: $nav-height;
     font-family: "Heebo", sans-serif;
+    font-size: .9rem;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -131,7 +132,6 @@ nav {
         color: $linode-white;
         line-height: $nav-height;
         text-decoration: none;
-        font-weight: 100;
     }
 
     a:hover,
@@ -231,7 +231,7 @@ nav {
 .main {
     margin-left: $sidebar-width;
     width: calc(100% - #{$sidebar-width});
-    padding: 15px 30px;
+    padding: 1.5rem 2rem;
 }
 
 
