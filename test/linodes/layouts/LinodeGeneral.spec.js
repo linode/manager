@@ -1,6 +1,6 @@
 import React from 'react';
 import sinon from 'sinon';
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 import { testLinode } from '~/../test/data';
 import { LinodeGeneral } from '~/linodes/layouts/LinodeGeneral';
@@ -60,19 +60,16 @@ describe('linodes/layouts/LinodeGeneral', () => {
   });
 
   it('renders link to networking', async () => {
-    const page = mount(
+    const path = `/linodes/${testLinode.id}/networking`;
+    const page = shallow(
       <LinodeGeneral
         linodes={linodes}
         params={params}
       />);
 
-    expect(
-      page.find('.row')
-      .at(0)
-      .find('a')
-      .at(0)
-      .text())
-      .to.equal('(...)');
+    expect(page.find('Link').props())
+      .to.have.property('to')
+      .which.equals(path);
   });
 
   it('renders backups not enabled', async () => {
@@ -82,7 +79,7 @@ describe('linodes/layouts/LinodeGeneral', () => {
         params={params}
       />);
 
-    expect(page.contains(<div className="col-sm-8 right">Backups not enabled.</div>))
+    expect(page.contains(<div className="col-sm-8 right">Backups not enabled. ( ! )</div>))
       .to.equal(true);
   });
 
@@ -114,8 +111,7 @@ describe('linodes/layouts/LinodeGeneral', () => {
         params={params}
       />);
 
-    expect(page.contains(<div className="col-sm-8 right">{testLinode.datacenter.label}</div>))
-      .to.equal(true);
+    expect(page.find('.col-sm-8').at(3).text()).to.equal(testLinode.datacenter.label);
   });
 
   it('renders distribution', async () => {
@@ -125,8 +121,7 @@ describe('linodes/layouts/LinodeGeneral', () => {
         params={params}
       />);
 
-    expect(page.contains(<div className="col-sm-8 right">{testLinode.distribution.label}</div>))
-      .to.equal(true);
+    expect(page.find('.col-sm-8').at(4).text()).to.equal(testLinode.distribution.label);
   });
 
   it('renders ssh input elements', async () => {
@@ -142,15 +137,16 @@ describe('linodes/layouts/LinodeGeneral', () => {
 
   it('renders shh path', async () => {
     const ipv4 = testLinode.ip_addresses['public'].ipv4[0];
+    const sshPath = `ssh root@${ipv4}`;
     const page = mount(
       <LinodeGeneral
         linodes={linodes}
         params={params}
       />);
 
-    expect(page.find('.input-group').at(0).contains(
-      <input type="text" className="form-control" value={`ssh root@${ipv4}`} readOnly />
-    )).to.equal(true);
+    expect(page.find('#ssh-input').props())
+      .to.have.property('value')
+      .to.equal(sshPath);
   });
 
   it('renders lish input elements', async () => {
@@ -161,30 +157,28 @@ describe('linodes/layouts/LinodeGeneral', () => {
       />);
 
     expect(page.find('.input-group').at(1).find('input')).to.exist;
-    expect(page.find('.input-group').at(1).find('button')).to.exist;
+    expect(page.find('.input-group').at(1).find('button')
+      .at(0)).to.exist;
+    expect(page.find('.input-group').at(1).find('button')
+      .at(1)).to.exist;
   });
 
   it('renders lish path', async () => {
+    const lishLink = `ssh -t caker@lish-${
+        testLinode.datacenter.datacenter
+      }.linode.com`;
     const page = mount(
       <LinodeGeneral
         linodes={linodes}
         params={params}
       />);
 
-    expect(page.find('.input-group').at(1).contains(
-      <input
-        type="text"
-        className="form-control"
-        value={
-          `ssh -t caker@lish-${
-            testLinode.datacenter.datacenter
-          }.linode.com`
-        }
-        readOnly
-      />
-    )).to.equal(true);
+    expect(page.find('#lish-input').props())
+      .to.have.property('value')
+      .to.equal(lishLink);
   });
-  it('renders glish input element', async () => {
+
+  it('renders glish button element', async () => {
     const page = mount(
       <LinodeGeneral
         linodes={linodes}
