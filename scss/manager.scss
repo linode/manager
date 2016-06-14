@@ -13,6 +13,9 @@ $linode-light-gray: #f9f9f9;
 $linode-lightish-gray: #f3f3f3;
 $linode-border: 1px solid $linode-gray;
 
+$main-padding-tb: 1.5rem;
+$main-padding-lr: 2rem;
+
 $sidebar-width: 200px;
 $nav-height: 84px;
 
@@ -231,7 +234,7 @@ nav {
 .main {
     margin-left: $sidebar-width;
     width: calc(100% - #{$sidebar-width});
-    padding: 1.5rem 2rem;
+    padding: $main-padding-tb $main-padding-lr;
 }
 
 
