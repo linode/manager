@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { updateLinode, fetchLinodes } from '~/actions/api/linodes';
+import { selectBackup } from '~/linodes/actions/detail/backups';
 import { connect } from 'react-redux';
 import HelpButton from '~/components/HelpButton';
 import _ from 'lodash';
@@ -19,7 +20,7 @@ const backups = [
   },
   {
     type: 'daily',
-    id: 'backup_24',
+    id: 'backup_25',
     created: '2016-06-09T15:05:55',
     finished: '2016-06-09T15:06:55',
     status: 'successful',
@@ -30,7 +31,7 @@ const backups = [
   },
   {
     type: 'weekly',
-    id: 'backup_24',
+    id: 'backup_26',
     created: '2016-06-08T15:05:55',
     finished: '2016-06-08T15:06:55',
     status: 'successful',
@@ -41,7 +42,7 @@ const backups = [
   },
   {
     type: 'weekly',
-    id: 'backup_24',
+    id: 'backup_27',
     created: '2016-06-01T15:05:55',
     finished: '2016-06-01T15:06:55',
     status: 'successful',
@@ -60,6 +61,7 @@ export class BackupsPage extends Component {
     this.renderNotEnabled = this.renderNotEnabled.bind(this);
     this.renderEnabled = this.renderEnabled.bind(this);
     this.renderSchedule = this.renderSchedule.bind(this);
+    this.renderBackup = this.renderBackup.bind(this);
     this.renderBackups = this.renderBackups.bind(this);
     this.renderLastManualBackup = this.renderLastManualBackup.bind(this);
   }
@@ -89,9 +91,14 @@ export class BackupsPage extends Component {
       lastWeek: 'dddd',
       sameElse: ISO_8601,
     };
+    const { dispatch } = this.props;
+    const { selectedBackup } = this.props.backups;
     const cardTitle = title || backup.created.calendar(null, calendar);
     return (
-      <div className="backup">
+      <div
+        className={`backup ${selectedBackup === backup.id ? 'selected' : ''}`}
+        onClick={() => dispatch(selectBackup(backup.id))}
+      >
         <h3>{cardTitle}</h3>
         <dl className="dl-horizontal row">
           <dt className="col-sm-2">Date</dt>
@@ -112,6 +119,7 @@ export class BackupsPage extends Component {
         </p>
       );
     }
+    const { selectedBackup } = this.props.backups;
     const { linodes } = this.props;
     const datedBackups = _.map(backups, b => _.reduce(b, (a, v, k) =>
       ({ ...a, [k]: k === 'created' || k === 'finished' ? moment(v) : v }), { }));
@@ -158,7 +166,10 @@ export class BackupsPage extends Component {
             </div>
           </div>
         </div>
-        <button className="btn btn-primary">Restore backup</button>
+        <button
+          className="btn btn-primary"
+          disabled={selectedBackup === null}
+        >Restore backup</button>
       </div>
     );
   }
@@ -278,13 +289,17 @@ export class BackupsPage extends Component {
 BackupsPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   linodes: PropTypes.object.isRequired,
+  backups: PropTypes.object.isRequired,
   params: PropTypes.shape({
     linodeId: PropTypes.string.isRequired,
   }).isRequired,
 };
 
 function select(state) {
-  return { linodes: state.api.linodes };
+  return {
+    linodes: state.api.linodes,
+    backups: state.linodes.detail.backups,
+  };
 }
 
 export default connect(select)(BackupsPage);

@@ -21,7 +21,7 @@ export function setLinodeGroup(group) {
 export function commitChanges(id) {
   return async (dispatch, getState) => {
     const state = getState();
-    const { label, group } = state.linodes.detail;
+    const { label, group } = state.linodes.detail.index;
     const { token } = state.authentication;
     dispatch({ type: TOGGLE_LOADING });
     // TODO: Error handling

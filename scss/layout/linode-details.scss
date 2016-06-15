@@ -11,6 +11,10 @@
         padding: 30px $side-margin 15px $side-margin;
         line-height: 2.2rem;
 
+        h1 {
+            display: inline-block;
+        }
+
         .linode-status {
             margin-right: 1rem;
         }

@@ -47,8 +47,10 @@ describe('linodes/actions/detail', () => {
       },
       linodes: {
         detail: {
-          label: 'new label',
-          group: 'new group',
+          index: {
+            label: 'new label',
+            group: 'new group',
+          },
         },
       },
     };

@@ -313,7 +313,7 @@ describe('linodes/layouts/LinodeDetailPage', () => {
       dispatch.reset();
       const getState = () => ({
         authentication: { token: 'token' },
-        linodes: { detail: { label: 'test', group: 'test' } },
+        linodes: { detail: { index: { label: 'test', group: 'test' } } },
       });
       await dispatched(dispatch, getState);
       expect(fetchStub.calledOnce).to.equal(true);
