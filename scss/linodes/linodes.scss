@@ -15,25 +15,21 @@
     }
 }
 
-.linode-lish,
-.linode-label {
-    text-decoration: underline;
-}
-
 .linode-power {
     cursor: pointer;
     cursor: hand;
-    padding: 2px 5px;
     border: $linode-border;
     border-color: transparent;
+
+    &.fa {
+        color: $linode-lightest-black;
+    }
 }
 
 .linode-power:hover,
 .linode-power:focus,
 .linode-power:active {
-    border-color: #ddd;
-    color: lighten($linode-green, 10%);
-    background: darken($linode-light-gray, 1%);
+    color: $linode-light-black;
 }
 
 .linode.card {

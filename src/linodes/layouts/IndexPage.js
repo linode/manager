@@ -181,17 +181,17 @@ export class IndexPage extends Component {
       <span className="grid-list">
         <span>
         {
-          view === 'list' ?
-            <a href="#" className="grid" onClick={this.toggleDisplay}>Grid</a> :
-            'Grid'
+          view === 'grid' ?
+            <a href="#" className="list" onClick={this.toggleDisplay}>List</a> :
+          'List'
         }
         </span>
         <span>|</span>
         <span>
         {
-          view === 'grid' ?
-            <a href="#" className="list" onClick={this.toggleDisplay}>List</a> :
-          'List'
+          view === 'list' ?
+            <a href="#" className="grid" onClick={this.toggleDisplay}>Grid</a> :
+            'Grid'
         }
         </span>
       </span>
@@ -201,7 +201,7 @@ export class IndexPage extends Component {
       <div className="linodes-page">
         <header>
           <div className="mainmenu">
-            <Link to="/linodes/create" className="pull-right linode-add">
+            <Link to="/linodes/create" className="pull-right linode-add btn">
               <span className="fa fa-plus"></span>
               Add a Linode
             </Link>
