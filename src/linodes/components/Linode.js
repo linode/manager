@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 import { LinodeStatesReadable } from '~/constants';
+import moment from 'moment';
 
 function renderPowerButton(props) {
   const { linode, onPowerOn, onReboot } = props;
@@ -22,6 +23,24 @@ renderPowerButton.propTypes = {
   onPowerOn: PropTypes.func,
   onReboot: PropTypes.func,
 };
+
+function renderBackupStatus(linode) {
+  return (
+    <span className="backup-status">
+      {linode.backups.enabled
+        ?
+        <span>
+          Last backup: {moment(linode.backups.last_backup).fromNow()}
+        </span>
+        :
+        <span>
+          <Link
+            to={`/linodes/${linode.id}/backups`}
+          >Enable backups</Link>
+        </span>}
+    </span>
+  );
+}
 
 function renderCard(props) {
   const { linode, onSelect, isSelected } = props;
@@ -58,7 +77,7 @@ function renderCard(props) {
           </li>
           <li>
             <span className="fa fa-database"></span>
-            <span>Last backup: 1 hour ago</span>
+            {renderBackupStatus(linode)}
           </li>
         </ul>
       </div>
@@ -100,7 +119,7 @@ function renderRow(props) {
         {linode.datacenter.label}
       </td>
       <td>
-        Last backup: 1 hour ago
+        {renderBackupStatus(linode)}
       </td>
       <td>
         {renderPowerButton(props)}
