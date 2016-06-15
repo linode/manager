@@ -79,8 +79,7 @@ describe('linodes/layouts/LinodeGeneral', () => {
         params={params}
       />);
 
-    expect(page.contains(<div className="col-sm-8 right">Backups not enabled. ( ! )</div>))
-      .to.equal(true);
+    expect(page.find('.col-sm-8').at(1).text()).to.equal('Backups not enabled. ');
   });
 
   it('renders backups enabled', async () => {

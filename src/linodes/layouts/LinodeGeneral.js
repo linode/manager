@@ -55,7 +55,9 @@ export class LinodeGeneral extends Component {
               Backups
             </div>
             <div className="col-sm-8 right">
-              {linode.backups.enabled ? linode.backups.last_backup : 'Backups not enabled. ( ! )'}
+              {linode.backups.enabled
+                ? linode.backups.last_backup
+                : <span>Backups not enabled. <i className="fa fa-exclamation-circle"></i></span>}
             </div>
           </div>
           <div className="row">
