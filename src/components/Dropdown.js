@@ -38,7 +38,7 @@ export default class Dropdown extends Component {
       >{name}</button>
     );
 
-    const orientation = this.props.leftOriented ? '' : 'dropdown-menu-right';
+    const orientation = this.props.leftOriented === false ? 'dropdown-menu-right' : '';
 
     return (
       <div className="btn-group">
