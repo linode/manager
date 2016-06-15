@@ -134,4 +134,44 @@
             margin-right: 1rem;
         }
     }
+
+    .backups {
+        display: flex;
+        align-items: stretch;
+
+        .col-md-3 {
+            display: flex;
+            align-items: stretch;
+        }
+    }
+
+    .restore {
+        margin-top: 1rem;
+
+        select {
+            display: inline;
+            width: auto;
+            margin-left: 1rem;
+        }
+    }
+
+    .backup {
+        border: $linode-border;
+        padding: 1rem;
+        font-size: 14px;
+        cursor: pointer;
+
+        &.selected {
+            background-color: $linode-blue;
+            color: $linode-white;
+        }
+
+        dl, dd:last-child {
+            margin-bottom: 0;
+        }
+
+        h3 {
+            text-align: center;
+        }
+    }
 }

@@ -1,6 +1,6 @@
 import sinon from 'sinon';
 import { expect } from 'chai';
-import * as actions from '~/linodes/actions/detail';
+import * as actions from '~/linodes/actions/detail/index';
 import { UPDATE_LINODE } from '~/actions/api/linodes';
 import * as fetch from '~/fetch';
 

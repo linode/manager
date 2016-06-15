@@ -10,7 +10,7 @@ import {
   setLinodeLabel,
   setLinodeGroup,
   commitChanges,
-} from '../actions/detail';
+} from '../actions/detail/index';
 import {
   updateLinode, powerOnLinode, powerOffLinode, rebootLinode,
 } from '~/actions/api/linodes';
@@ -202,7 +202,7 @@ LinodeDetailPage.propTypes = {
 };
 
 function select(state) {
-  return { linodes: state.api.linodes, detail: state.linodes.detail };
+  return { linodes: state.api.linodes, detail: state.linodes.detail.index };
 }
 
 export default connect(select)(LinodeDetailPage);

@@ -2,6 +2,55 @@ import React, { Component, PropTypes } from 'react';
 import { updateLinode } from '~/actions/api/linodes';
 import { connect } from 'react-redux';
 import HelpButton from '~/components/HelpButton';
+import _ from 'lodash';
+import moment, { ISO_8601 } from 'moment';
+
+const backups = [
+  {
+    type: 'manual',
+    id: 'backup_24',
+    created: '2016-06-09T15:05:55',
+    finished: '2016-06-09T15:06:55',
+    status: 'successful',
+    datacenter: {
+      label: 'Newark, NJ',
+      id: 'datacenter_6',
+    },
+  },
+  {
+    type: 'daily',
+    id: 'backup_24',
+    created: '2016-06-09T15:05:55',
+    finished: '2016-06-09T15:06:55',
+    status: 'successful',
+    datacenter: {
+      label: 'Newark, NJ',
+      id: 'datacenter_6',
+    },
+  },
+  {
+    type: 'weekly',
+    id: 'backup_24',
+    created: '2016-06-08T15:05:55',
+    finished: '2016-06-08T15:06:55',
+    status: 'successful',
+    datacenter: {
+      label: 'Newark, NJ',
+      id: 'datacenter_6',
+    },
+  },
+  {
+    type: 'weekly',
+    id: 'backup_24',
+    created: '2016-06-01T15:05:55',
+    finished: '2016-06-01T15:06:55',
+    status: 'successful',
+    datacenter: {
+      label: 'Newark, NJ',
+      id: 'datacenter_6',
+    },
+  },
+];
 
 export class BackupsPage extends Component {
   constructor() {
@@ -11,7 +60,7 @@ export class BackupsPage extends Component {
     this.renderNotEnabled = this.renderNotEnabled.bind(this);
     this.renderEnabled = this.renderEnabled.bind(this);
     this.renderSchedule = this.renderSchedule.bind(this);
-    this.renderBackupsTable = this.renderBackupsTable.bind(this);
+    this.renderBackups = this.renderBackups.bind(this);
     this.renderLastManualBackup = this.renderLastManualBackup.bind(this);
   }
 
@@ -30,8 +79,30 @@ export class BackupsPage extends Component {
     return linodes[linodeId];
   }
 
-  renderBackupsTable() {
-    const backups = [/* temp */];
+  renderBackup(backup, title = null) {
+    const calendar = {
+      sameDay: '[Today]',
+      nextDay: '[Tomorrow]',
+      nextWeek: 'dddd',
+      lastDay: 'Yesterday',
+      lastWeek: 'dddd',
+      sameElse: ISO_8601,
+    };
+    const cardTitle = title || backup.created.calendar(null, calendar);
+    return (
+      <div className="backup">
+        <h3>{cardTitle}</h3>
+        <dl className="dl-horizontal row">
+          <dt className="col-sm-2">Date</dt>
+          <dd className="col-sm-10">{backup.created.format('dddd, MMMM D YYYY')}</dd>
+          <dt className="col-sm-2">Time</dt>
+          <dd className="col-sm-10">{backup.created.format('LT')}</dd>
+        </dl>
+      </div>
+    );
+  }
+
+  renderBackups() {
     if (backups.length === 0) {
       return (
         <p>
@@ -40,8 +111,54 @@ export class BackupsPage extends Component {
         </p>
       );
     }
+    const { linodes } = this.props;
+    const datedBackups = _.map(backups, b => _.reduce(b, (a, v, k) =>
+      ({ ...a, [k]: k === 'created' || k === 'finished' ? moment(v) : v }), { }));
+    const daily = datedBackups.find(b => b.type === 'daily');
+    const thisweek = _.sortBy(datedBackups, b => b.date).find(b => b.type === 'weekly');
+    const lastweek = _.reverse(_.sortBy(datedBackups, b => b.date)).find(b => b.type === 'weekly');
+    const manual = datedBackups.find(b => b.type === 'manual');
     return (
-      <div>TODO</div>
+      <div>
+        <div className="row backups">
+          <div className="col-md-3">
+            {this.renderBackup(daily)}
+          </div>
+          <div className="col-md-3">
+            {this.renderBackup(thisweek, 'This week')}
+          </div>
+          <div className="col-md-3">
+            {this.renderBackup(lastweek, 'Last week')}
+          </div>
+          <div className="col-md-3">
+            {this.renderBackup(manual, 'Manual')}
+          </div>
+        </div>
+        <div className="row restore">
+          <div className="col-md-1">
+            Restore to:
+          </div>
+          <div className="col-md-4">
+            <div className="radio">
+              <label>
+                <input type="radio" name="restore-target" checked />
+                New Linode
+              </label>
+            </div>
+            <div className="radio">
+              <label>
+                <input type="radio" name="restore-target" />
+                Existing Linode
+              </label>
+              <select className="form-control">
+                {Object.values(linodes.linodes).filter(l => l.id !== this.getLinode().id)
+                  .map(l => <option value={l.id} key={l.id}>{l.label}</option>)}
+              </select>
+            </div>
+          </div>
+        </div>
+        <button className="btn btn-primary">Restore backup</button>
+      </div>
     );
   }
 
@@ -97,7 +214,7 @@ export class BackupsPage extends Component {
             >Save</button>
             <button
               className="btn btn-danger-outline"
-            >Cancel Backups</button>
+            >Cancel backups</button>
           </div>
         </div>
       </div>
@@ -118,7 +235,7 @@ export class BackupsPage extends Component {
     return (
       <div>
         <h2>Details and restore</h2>
-        {this.renderBackupsTable()}
+        {this.renderBackups()}
         <hr />
         <div className="row">
           <div className="col-md-6">
@@ -133,7 +250,7 @@ export class BackupsPage extends Component {
             {this.renderLastManualBackup()}
             <button
               className="btn btn-primary"
-            >Take Backup</button>
+            >Take backup</button>
           </div>
         </div>
       </div>
@@ -159,7 +276,7 @@ export class BackupsPage extends Component {
 
 BackupsPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  linodes: PropTypes.array.isRequired,
+  linodes: PropTypes.object.isRequired,
   params: PropTypes.shape({
     linodeId: PropTypes.string.isRequired,
   }).isRequired,

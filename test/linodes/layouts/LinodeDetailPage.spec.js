@@ -8,7 +8,7 @@ import { testLinode } from '~/../test/data';
 import { LinodeDetailPage } from '~/linodes/layouts/LinodeDetailPage';
 import { UPDATE_LINODE } from '~/actions/api/linodes';
 import { Tabs, Tab } from 'react-tabs';
-import * as actions from '~/linodes/actions/detail';
+import * as actions from '~/linodes/actions/detail/index';
 import Dropdown from '~/components/Dropdown';
 
 describe('linodes/layouts/LinodeDetailPage', () => {

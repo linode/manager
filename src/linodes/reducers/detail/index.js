@@ -1,9 +1,11 @@
+import { combineReducers } from 'redux';
 import {
   TOGGLE_EDIT_MODE,
   SET_LINODE_LABEL,
   SET_LINODE_GROUP,
   TOGGLE_LOADING,
-} from '../actions/detail';
+} from '../../actions/detail/index';
+import backups from './backups';
 
 const defaultState = {
   editing: false,
@@ -12,7 +14,7 @@ const defaultState = {
   loading: false,
 };
 
-export default function detail(state = defaultState, action) {
+export function detail(state = defaultState, action) {
   switch (action.type) {
     case TOGGLE_EDIT_MODE:
       return { ...state, editing: !state.editing };
@@ -26,3 +28,8 @@ export default function detail(state = defaultState, action) {
       return state;
   }
 }
+
+export default combineReducers({
+  index: detail,
+  backups,
+});

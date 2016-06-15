@@ -67,13 +67,17 @@ h2 {
    font-size: 1.5rem;
 }
 
+h3 {
+    font-size: 18px;
+}
+
 a {
     color: $linode-blue;
     text-decoration: underline;
 }
 
 .selected {
-    background: #fffcf0 !important;
+    background: #fffcf0;
 }
 
 .fa {

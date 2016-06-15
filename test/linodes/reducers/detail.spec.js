@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import deepFreeze from 'deep-freeze';
-import detail from '~/linodes/reducers/detail';
-import * as actions from '~/linodes/actions/detail';
+import { detail } from '~/linodes/reducers/detail';
+import * as actions from '~/linodes/actions/detail/index';
 
 describe('linodes/detail reducer', () => {
   it('should handle initial state', () => {
