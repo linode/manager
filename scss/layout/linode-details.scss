@@ -125,7 +125,7 @@
         }
     }
 
-    .col-sm-8, .col-sm-9 {
+    .linode-content-col {
         color: $linode-black;
         margin: 0rem 0rem 0.75rem 0rem;
         .text-muted {
@@ -140,10 +140,10 @@
         }
     }
 
-    .col-sm-4, .col-sm-3 {
+    .linode-label-col {
         color: $linode-black;
         margin: 0;
-        label {
+        .form-label {
             margin: 0.25rem 0 0 0;
         }
     }

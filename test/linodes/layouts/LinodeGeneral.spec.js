@@ -89,7 +89,7 @@ describe('linodes/layouts/LinodeGeneral', () => {
         params={{ linodeId: 'linode_1235' }}
       />);
 
-    expect(page.contains(<div className="col-sm-8 right">1 hour ago</div>)).to.equal(true);
+    expect(page.find('.col-sm-8').at(1).text()).to.equal('1 hour ago');
   });
 
   it('renders plan', async () => {
@@ -99,8 +99,7 @@ describe('linodes/layouts/LinodeGeneral', () => {
         params={params}
       />);
 
-    expect(page.contains(<div className="col-sm-8 right">{testLinode.services.linode}</div>))
-      .to.equal(true);
+    expect(page.find('.col-sm-8').at(2).text()).to.equal(testLinode.services.linode);
   });
 
   it('renders datacenter', async () => {
