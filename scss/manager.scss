@@ -14,11 +14,15 @@ $linode-light-gray: #f9f9f9;
 $linode-lightish-gray: #f3f3f3;
 $linode-border: 1px solid $linode-gray;
 
-$main-padding-tb: 1.5rem;
+$main-padding-tb: 1rem;
 $main-padding-lr: 2rem;
 
 $sidebar-width: 200px;
 $nav-height: 84px;
+
+$input-height: 30px;
+$input-padding: 0 .5rem;
+$font-size: .9rem;
 
 @import 'linodes/linodes';
 @import 'layout/linode-details';
@@ -42,7 +46,7 @@ body {
     color: $linode-black;
     margin-top: $nav-height;
     font-family: "Heebo", sans-serif;
-    font-size: .9rem;
+    font-size: $font-size;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -241,6 +245,10 @@ nav {
     margin-left: $sidebar-width;
     width: calc(100% - #{$sidebar-width});
     padding: $main-padding-tb $main-padding-lr;
+
+    div, span {
+        color: $linode-light-black;
+    }
 }
 
 
@@ -285,13 +293,43 @@ nav {
     }
 }
 
-button {
-    font-size: 2rem;
-    margin: 0 0.5rem;
+.form-control {
+    font-size: $font-size;
+}
 
+input, .btn {
+    height: $input-height;
+    line-height: $input-height;
+    font-size: $font-size;
+    padding: $input-padding;
+}
+
+.input-group {
+    input {
+        margin: 0;
+        border: $linode-border;
+        border-radius: 0;
+        &[readonly] {
+            background-color: $linode-white;
+            width: 12.5rem;
+        }
+    }
+
+    .input-group-btn {
+        float: left;
+        .btn {
+            z-index: initial;
+        }
+    }
+
+    .btn {
+        margin: 0;
+    }
+}
+
+button {
     &.btn {
         text-decoration: none;
-        font-size: 10pt;
         border-radius: 0;
         border: $linode-border;
         background: $linode-lightish-gray;
@@ -336,6 +374,7 @@ button {
         color: $linode-blue;
     }
 }
+
 
 @-moz-keyframes pulse {
     0% {opacity: 1.0;}
