@@ -7,18 +7,9 @@
         padding: 0;
     }
 
-    h1, h2 {
-        display: inline-block;
-    }
-
     header {
         padding: 30px $side-margin 15px $side-margin;
         line-height: 2.2rem;
-
-        h1 {
-           margin: 0;
-           font-size: 2.2rem;
-        }
 
         .linode-status {
             margin-right: 1rem;

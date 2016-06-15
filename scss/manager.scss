@@ -13,6 +13,9 @@ $linode-light-gray: #f9f9f9;
 $linode-lightish-gray: #f3f3f3;
 $linode-border: 1px solid $linode-gray;
 
+$main-padding-tb: 1.5rem;
+$main-padding-lr: 2rem;
+
 $sidebar-width: 200px;
 $nav-height: 84px;
 
@@ -21,6 +24,11 @@ $nav-height: 84px;
 @import 'layout/linodes';
 @import 'components/dropdown';
 @import 'components/card';
+
+@font-face {
+    font-family: Heebo;
+    src: url('/assets/fonts/heebo/Heebo-Light.ttf') format('truetype');
+}
 
 * {
     transition: background .35s, color .2s, border .1s;
@@ -31,24 +39,24 @@ body {
     height: 100%;
     min-width: 1007px; /* can fix later */
     color: $linode-black;
-    font-size: 15px;
     margin-top: $nav-height;
+    font-family: "Heebo", sans-serif;
+    font-size: .9rem;
 }
 
-h1, h2 {
+h1, h2, h3, h4, h5, h6 {
+    display: inline-block;
     margin: 0;
     font-weight: normal;
     line-height: normal;
 }
 
 h1 {
-    font-size: 25px;
-    margin-bottom: 20px;
+    font-size: 2.2rem;
 }
 
 h2 {
-   font-size: 20px;
-   margin-bottom: 15px;
+   font-size: 1.5rem;
 }
 
 a {
@@ -130,7 +138,6 @@ nav {
 
     a {
         color: $linode-white;
-        font-size: 15px;
         line-height: $nav-height;
         text-decoration: none;
     }
@@ -232,7 +239,7 @@ nav {
 .main {
     margin-left: $sidebar-width;
     width: calc(100% - #{$sidebar-width});
-    padding: 15px 30px;
+    padding: $main-padding-tb $main-padding-lr;
 }
 
 

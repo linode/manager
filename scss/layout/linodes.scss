@@ -21,6 +21,10 @@
 }
 
 .linodes-page {
+    .mainmenu {
+        margin-bottom: $main-padding-tb;
+    }
+
     .selectall {
         display: inline-block;
         border: $linode-border;
