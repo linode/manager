@@ -18,10 +18,19 @@ export const testLinode = {
   services: {
     linode: 'Linode 1024',
   },
+  backups: {
+    last_backup: null,
+    enabled: false,
+  },
   state: 'running',
   datacenter: {
     id: 'datacenter_6',
     label: 'Newark, NJ',
+  },
+  distribution: {
+    id: 'distro_123',
+    vendor: 'Ubuntu',
+    label: 'Ubuntu 15.10',
   },
   _polling: false,
 };
