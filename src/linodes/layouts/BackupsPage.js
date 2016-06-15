@@ -282,7 +282,8 @@ export class BackupsPage extends Component {
   }
 
   render() {
-    return this.renderEnabled();
+    const linode = this.getLinode();
+    return linode.backups.enabled ? this.renderEnabled() : this.renderNotEnabled();
   }
 }
 
