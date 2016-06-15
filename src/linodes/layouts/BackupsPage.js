@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { updateLinode } from '~/actions/api/linodes';
+import { updateLinode, fetchLinodes } from '~/actions/api/linodes';
 import { connect } from 'react-redux';
 import HelpButton from '~/components/HelpButton';
 import _ from 'lodash';
@@ -71,6 +71,7 @@ export class BackupsPage extends Component {
       const { linodeId } = this.props.params;
       dispatch(updateLinode(linodeId));
     }
+    dispatch(fetchLinodes());
   }
 
   getLinode() {
