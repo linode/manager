@@ -22,10 +22,11 @@ describe('components/Dropdown', () => {
       />
     );
 
-    expect(dropdown.find('.li-dropdown-item').length).to.equal(3);
-    expect(dropdown.find('.li-dropdown-item').at(0).text()).to.equal('Drew');
-    expect(dropdown.find('.li-dropdown-item').at(1).text()).to.equal('Phil');
-    expect(dropdown.find('.li-dropdown-item').at(2).text()).to.equal('Will');
+    expect(dropdown.find('.dropdown-first').text()).to.equal('Drew');
+
+    expect(dropdown.find('.dropdown-item').length).to.equal(2);
+    expect(dropdown.find('.dropdown-item').at(0).text()).to.equal('Phil');
+    expect(dropdown.find('.dropdown-item').at(1).text()).to.equal('Will');
   });
 
   it('clickable dropdown', () => {
@@ -42,9 +43,10 @@ describe('components/Dropdown', () => {
       />
     );
 
-    dropdown.find('.li-dropdown-first').first().simulate('click');
-    dropdown.find('.li-dropdown-body')
-      .find('.li-dropdown-item')
+    dropdown.find('.dropdown-first').simulate('click');
+    dropdown.find('.dropdown-toggle').simulate('click');
+    dropdown.find('.dropdown-menu')
+      .find('.dropdown-item')
       .first()
       .simulate('click');
 

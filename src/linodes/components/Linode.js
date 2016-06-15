@@ -35,10 +35,7 @@ function renderCard(props) {
   return (
     <div className={`linode card ${linode.state} ${selectedClass}`}>
       <div className="linode-header">
-        <label className="li-checkbox">
-          {checkbox}
-          <span />{/* do not delete */}
-        </label>
+        {checkbox}
         <Link to={`/linodes/${linode.id}`} className="linode-label">{linode.label}</Link>
         <span
           className={`linode-status ${linode.state}`}
@@ -87,12 +84,7 @@ function renderRow(props) {
 
   return (
     <tr className={`linode row ${linode.state} ${selectedClass}`}>
-      <td>
-        <label className="li-checkbox">
-          {checkbox}
-          <span />
-        </label>
-      </td>
+      <td>{checkbox}</td>
       <td>
         <Link to={`/linodes/${linode.id}`} className="linode-label">{linode.label}</Link>
       </td>

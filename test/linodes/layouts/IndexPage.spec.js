@@ -143,7 +143,7 @@ describe('linodes/layouts/IndexPage', () => {
         selected={{}}
         linodes={linodes}
       />);
-    const selectAll = page.find('.selectall');
+    const selectAll = page.find('.submenu');
     expect(selectAll.find('input[type="checkbox"]')).to.exist;
   });
 
@@ -179,7 +179,7 @@ describe('linodes/layouts/IndexPage', () => {
       />
     );
 
-    const checkButton = page.find('.selectall input[type="checkbox"]');
+    const checkButton = page.find('.submenu input[type="checkbox"]');
     expect(checkButton.length).to.equal(1);
     checkButton.simulate('change');
     expect(Object.keys(selected)).to.deep.equal(Object.keys(linodes.linodes));

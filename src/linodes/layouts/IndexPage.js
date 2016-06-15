@@ -207,17 +207,18 @@ export class IndexPage extends Component {
             </Link>
             <h1>Linodes</h1>
           </div>
-          <div className="submenu">
-            <div className="selectall">
-              <label className="li-checkbox">
-                {selectAllCheckbox}
-                <span />{/* do not delete*/}
-              </label>
-              {this.renderActions()}
+          <div className="submenu row">
+            <div className="col-xs-10">
+              <div className="input-group">
+                <span className="input-group-addon">{selectAllCheckbox}</span>
+                {this.renderActions()}
+              </div>
             </div>
-            <div className="pull-right">
-              {gridListToggle}
-              <span className="fa fa-navicon" className="navicon" />
+            <div className="col-xs-2">
+              <div className="pull-right">
+                {gridListToggle}
+                <span className="fa fa-navicon" className="navicon" />
+              </div>
             </div>
           </div>
         </header>

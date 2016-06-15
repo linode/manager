@@ -136,7 +136,7 @@ export class LinodeDetailPage extends Component {
         {editing ? this.renderEditUI(linode) : this.renderLabel(linode)}
         {LinodeStates.pending.indexOf(linode.state) !== -1 ? null :
           <span className="pull-right">
-            <Dropdown elements={dropdownElements} />
+            <Dropdown elements={dropdownElements} leftOriented={false} />
           </span>}
         <span className={`pull-right linode-status ${linode.state}`}>
           {LinodeStatesReadable[linode.state]}

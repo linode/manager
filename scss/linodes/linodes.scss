@@ -15,11 +15,6 @@
     }
 }
 
-.linode .li-checkbox input:checked + span:after {
-    top: -3px;
-    left: 2px;
-}
-
 .linode-lish,
 .linode-label {
     text-decoration: underline;
@@ -107,14 +102,6 @@ table.linodes {
     height: 35px;
     line-height: 35px;
     margin: 0 15px;
-
-    .li-checkbox span {
-        padding: 0 !important;
-    }
-
-    & .li-checkbox input:checked + span:after {
-        top: -10px;
-    }
 
     .linode-header,
     .linode-details {
