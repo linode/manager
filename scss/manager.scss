@@ -7,6 +7,7 @@ $linode-green: #3BB877;
 $linode-red: #D0021B;
 $linode-gray: #cccccc;
 $linode-black: #4b4b4b;
+$linode-light-black: #666666;
 $linode-dark-gray: #acacac;
 $linode-white: #fefefe;
 $linode-light-gray: #f9f9f9;
@@ -27,7 +28,7 @@ $nav-height: 84px;
 
 @font-face {
     font-family: Heebo;
-    src: url('/assets/fonts/heebo/Heebo-Light.ttf') format('truetype');
+    src: url('/assets/fonts/heebo/Heebo-Regular.ttf') format('truetype');
 }
 
 * {

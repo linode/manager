@@ -1,5 +1,9 @@
 @import 'create';
 
+.linode {
+    color: $linode-light-black;
+}
+
 .linode-status {
     color: $linode-blue;
     animation: pulse 1.5s infinite;
