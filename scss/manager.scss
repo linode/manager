@@ -25,6 +25,11 @@ $nav-height: 84px;
 @import 'components/dropdown';
 @import 'components/card';
 
+@font-face {
+    font-family: Heebo;
+    src: url('/assets/fonts/heebo/Heebo-Light.ttf') format('truetype');
+}
+
 * {
     transition: background .35s, color .2s, border .1s;
 }

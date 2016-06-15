@@ -2,9 +2,17 @@ var path = require('path');
 var express = require('express');
 var webpack = require('webpack');
 var config = require('./webpack.config.dev');
+var mime = require('mime');
+
+express.static.mime.define({
+  'application/x-font-ttf': ['ttf'],
+  'application/font-ttf': ['ttf']
+});
 
 var app = express();
 var compiler = webpack(config);
+
+app.use('/assets', express.static('assets'));
 
 app.use(require('webpack-dev-middleware')(compiler, {
   noInfo: true,
