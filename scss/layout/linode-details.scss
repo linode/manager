@@ -94,30 +94,7 @@
         padding: 15px $side-margin;
     }
 
-    .input-group {
-        input {
-            margin: 0;
-            padding: 0.225rem 0rem 0.225rem 0.75rem;
-            border: $linode-border;
-            border-radius: 0;
-            &[readonly] {
-                background-color: $linode-white;
-                width: 12.5rem;
-            }
-        }
-        .input-group-btn {
-            float: left;
-            button {
-                border-left: 0px solid #000;
-            }
-        }
-        .btn {
-            margin: 0;
-        }
-    }
-
     .linode-content-col {
-        color: $linode-black;
         margin: 0rem 0rem 0.75rem 0rem;
         .text-muted {
             font-size: 70%;
@@ -132,7 +109,7 @@
     }
 
     .linode-label-col {
-        color: $linode-black;
+        color: #333;
         margin: 0;
         .form-label {
             margin: 0.25rem 0 0 0;
