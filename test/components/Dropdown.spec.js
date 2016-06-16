@@ -54,4 +54,19 @@ describe('components/Dropdown', () => {
     assert.isTrue(clickBodyItem.calledOnce);
     assert.isFalse(unclicked.calledOnce);
   });
+
+  it('closes on second click', () => {
+    const noAction = () => {};
+    const dropdown = mount(<Dropdown
+      elements={[
+        { action: noAction, name: '' },
+        { action: noAction, name: '' },
+      ]}
+    />);
+
+    dropdown.find('.dropdown-toggle').simulate('click');
+    expect(dropdown.find('.btn-group.open').length).to.equal(1);
+    dropdown.find('.dropdown-toggle').simulate('click');
+    expect(dropdown.find('.btn-group.open').length).to.equal(0);
+  });
 });
