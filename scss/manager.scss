@@ -346,6 +346,7 @@ hr {
         $size: 24px;
         .fa {
             color: $linode-lightest-black;
+            line-height: $size;
         }
         background-color: $linode-gray;
         font-size: $size / 2;
@@ -361,9 +362,11 @@ hr {
 
         &:hover {
             background-color: $linode-blue;
+            border: $linode-blue;
 
             .fa {
                 color: $linode-white;
+                line-height: $size + 2px;
             }
         }
 
@@ -375,6 +378,19 @@ hr {
     &.btn-primary {
         background: $linode-blue;
         border: 1px solid $linode-blue;
+
+        &:hover,
+        &:active,
+        &:focus {
+            color: white;
+        }
+
+        &:not([disabled]):hover,
+        &:not([disabled]):active,
+        &:not([disabled]):focus {
+            background: white;
+            color: $linode-blue;
+        }
     }
 
     &.btn-danger {
@@ -386,6 +402,13 @@ hr {
         border-color: $linode-red;
         background: transparent;
         color: $linode-red;
+
+        &:hover,
+        &:active,
+        &:focus {
+            background: $linode-red;
+            color: white;
+        }
     }
 }
 
