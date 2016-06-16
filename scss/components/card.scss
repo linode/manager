@@ -1,18 +1,18 @@
 .card {
     header {
-        background-color: $linode-lightish-gray;
+        background-color: $linode-light-gray;
         padding: $main-padding-tb $main-padding-lr;
     }
 
     .react-tabs {
         [role=tablist] {
-            background-color: $linode-lightish-gray;
+            background-color: $linode-light-gray;
             padding: 0 $main-padding-lr;
-            border-color: $linode-gray;
+            border-color: $border-gray;
         }
 
         [role=tab] {
-            color: $linode-dark-gray;
+            color: $linode-lightest-black;
             border-radius: 0;
             margin-right: $main-padding-tb;
             padding: 3px 12px;
@@ -20,7 +20,7 @@
             &[selected],
             &:hover {
                 color: $linode-black;
-                border-color: $linode-gray;
+                border-color: $border-gray;
                 background: white;
                 border-bottom: 0;
             }
