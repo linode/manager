@@ -10,7 +10,7 @@ import {
   setLinodeLabel,
   setLinodeGroup,
   commitChanges,
-} from '../actions/detail';
+} from '../actions/detail/index';
 import {
   updateLinode, powerOnLinode, powerOffLinode, rebootLinode,
 } from '~/actions/api/linodes';
@@ -69,12 +69,12 @@ export class LinodeDetailPage extends Component {
           onKeyUp={e => this.handleLabelKeyUp(e, linode)}
         />
         <button
-          className="btn btn-primary good"
+          className="btn btn-primary"
           onClick={() => dispatch(commitChanges(linode.id))}
           disabled={loading}
         >Save</button>
         <button
-          className="btn btn-default"
+          className="btn btn-secondary"
           onClick={() => dispatch(toggleEditMode())}
           disabled={loading}
         >Cancel</button>
@@ -202,7 +202,7 @@ LinodeDetailPage.propTypes = {
 };
 
 function select(state) {
-  return { linodes: state.api.linodes, detail: state.linodes.detail };
+  return { linodes: state.api.linodes, detail: state.linodes.detail.index };
 }
 
 export default connect(select)(LinodeDetailPage);

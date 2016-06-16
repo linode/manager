@@ -11,8 +11,20 @@
         padding: 30px $side-margin 15px $side-margin;
         line-height: 2.2rem;
 
+        h1 {
+            display: inline-block;
+        }
+
         .linode-status {
             margin-right: 1rem;
+        }
+
+        .li-dropdown-item.li-dropdown-first {
+            height: 30px;
+        }
+
+        button {
+            margin: 0 0.5rem;
         }
 
         .edit-icon {
@@ -119,5 +131,51 @@
     .fa-exclamation-circle {
         /* delete this after style functions are created #85 */
         color: #ff0000;
+    }
+
+    .backup-schedule {
+        .btn {
+            margin-right: 1rem;
+        }
+    }
+
+    .backups {
+        display: flex;
+        align-items: stretch;
+
+        .col-md-3 {
+            display: flex;
+            align-items: stretch;
+        }
+    }
+
+    .restore {
+        margin-top: 1rem;
+
+        select {
+            display: inline;
+            width: auto;
+            margin-left: 1rem;
+        }
+    }
+
+    .backup {
+        border: $linode-border;
+        padding: 1rem;
+        font-size: 14px;
+        cursor: pointer;
+
+        &.selected {
+            background-color: $linode-blue;
+            color: $linode-white;
+        }
+
+        dl, dd:last-child {
+            margin-bottom: 0;
+        }
+
+        h3 {
+            text-align: center;
+        }
     }
 }

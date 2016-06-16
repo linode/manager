@@ -8,7 +8,7 @@ import { testLinode } from '~/../test/data';
 import { LinodeDetailPage } from '~/linodes/layouts/LinodeDetailPage';
 import { UPDATE_LINODE } from '~/actions/api/linodes';
 import { Tabs, Tab } from 'react-tabs';
-import * as actions from '~/linodes/actions/detail';
+import * as actions from '~/linodes/actions/detail/index';
 import Dropdown from '~/components/Dropdown';
 
 describe('linodes/layouts/LinodeDetailPage', () => {
@@ -268,7 +268,7 @@ describe('linodes/layouts/LinodeDetailPage', () => {
       expect(editor).to.exist;
       expect(editor.find('button').length).to.equal(2);
       expect(editor.find('button.btn-primary').text()).to.equal('Save');
-      expect(editor.find('button.btn-default').text()).to.equal('Cancel');
+      expect(editor.find('button.btn-secondary').text()).to.equal('Cancel');
     });
 
     it('disables save and cancel buttons when loading', () => {
@@ -284,7 +284,7 @@ describe('linodes/layouts/LinodeDetailPage', () => {
       expect(editor.find('button').length).to.equal(2);
       expect(editor.find('button.btn-primary').props())
         .to.have.property('disabled').which.equals(true);
-      expect(editor.find('button.btn-default').props())
+      expect(editor.find('button.btn-secondary').props())
         .to.have.property('disabled').which.equals(true);
     });
 
@@ -297,7 +297,7 @@ describe('linodes/layouts/LinodeDetailPage', () => {
           detail={{ ...detail, editing: true }}
         />);
       const editor = page.find('.edit-details');
-      const cancel = editor.find('button.btn-default');
+      const cancel = editor.find('button.btn-secondary');
       cancel.simulate('click');
       expect(dispatch.calledOnce).to.equal(true);
       expect(dispatch.calledWith(actions.toggleEditMode())).to.equal(true);
@@ -313,7 +313,7 @@ describe('linodes/layouts/LinodeDetailPage', () => {
       dispatch.reset();
       const getState = () => ({
         authentication: { token: 'token' },
-        linodes: { detail: { label: 'test', group: 'test' } },
+        linodes: { detail: { index: { label: 'test', group: 'test' } } },
       });
       await dispatched(dispatch, getState);
       expect(fetchStub.calledOnce).to.equal(true);

@@ -13,7 +13,7 @@ module.exports = function(config) {
     preprocessors: {
       'test/**/*.js': ['webpack', 'sourcemap'],
       'src/**/*.js': ['webpack', 'sourcemap'],
-      'test/setup.js': ['webpack']
+      'test/setup.js': ['webpack', 'sourcemap']
     },
     webpack: {
       devtool: 'inline-source-map',

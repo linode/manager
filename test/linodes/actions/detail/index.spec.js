@@ -1,10 +1,10 @@
 import sinon from 'sinon';
 import { expect } from 'chai';
-import * as actions from '~/linodes/actions/detail';
+import * as actions from '~/linodes/actions/detail/index';
 import { UPDATE_LINODE } from '~/actions/api/linodes';
 import * as fetch from '~/fetch';
 
-describe('linodes/actions/detail', () => {
+describe('linodes/actions/detail/index', () => {
   describe('toggleEditMode', () => {
     it('should return a TOGGLE_EDIT_MODE action', () => {
       expect(actions.toggleEditMode())
@@ -47,8 +47,10 @@ describe('linodes/actions/detail', () => {
       },
       linodes: {
         detail: {
-          label: 'new label',
-          group: 'new group',
+          index: {
+            label: 'new label',
+            group: 'new group',
+          },
         },
       },
     };
