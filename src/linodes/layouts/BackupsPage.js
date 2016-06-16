@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { updateLinode, fetchLinodes } from '~/actions/api/linodes';
-import { selectBackup } from '~/linodes/actions/detail/backups';
+import { selectBackup, selectTargetLinode } from '~/linodes/actions/detail/backups';
 import { connect } from 'react-redux';
 import HelpButton from '~/components/HelpButton';
 import _ from 'lodash';
@@ -119,8 +119,8 @@ export class BackupsPage extends Component {
         </p>
       );
     }
-    const { selectedBackup } = this.props.backups;
-    const { linodes } = this.props;
+    const { selectedBackup, targetLinode } = this.props.backups;
+    const { linodes, dispatch } = this.props;
     const datedBackups = _.map(backups, b => _.reduce(b, (a, v, k) =>
       ({ ...a, [k]: k === 'created' || k === 'finished' ? moment(v) : v }), { }));
     const daily = datedBackups.find(b => b.type === 'daily');
@@ -150,16 +150,39 @@ export class BackupsPage extends Component {
           <div className="col-md-4">
             <div className="radio">
               <label>
-                <input type="radio" name="restore-target" checked />
+                <input
+                  type="radio"
+                  name="restore-target"
+                  checked={targetLinode === ''}
+                  onChange={e =>
+                    dispatch(e.target.checked
+                      ? selectTargetLinode('')
+                      : selectTargetLinode(Object.values(linodes.linodes)[0].id))
+                  }
+                />
                 New Linode
               </label>
             </div>
             <div className="radio">
               <label>
-                <input type="radio" name="restore-target" />
+                <input
+                  type="radio"
+                  name="restore-target"
+                  checked={targetLinode !== ''}
+                  onChange={e =>
+                    dispatch(e.target.checked
+                      ? selectTargetLinode(Object.values(linodes.linodes)[0].id)
+                      : selectTargetLinode(''))
+                  }
+                />
                 Existing Linode
               </label>
-              <select className="form-control">
+              <select
+                className="form-control"
+                value={targetLinode}
+                onChange={e => dispatch(selectTargetLinode(e.target.value))}
+              >
+                <option value={''}>Pick a Linode...</option>
                 {Object.values(linodes.linodes).filter(l => l.id !== this.getLinode().id)
                   .map(l => <option value={l.id} key={l.id}>{l.label}</option>)}
               </select>
