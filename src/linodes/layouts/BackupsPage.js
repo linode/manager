@@ -1,6 +1,11 @@
 import React, { Component, PropTypes } from 'react';
 import { updateLinode, fetchLinodes } from '~/actions/api/linodes';
-import { selectBackup, selectTargetLinode } from '~/linodes/actions/detail/backups';
+import {
+  selectBackup,
+  selectTargetLinode,
+  setTimeOfDay,
+  setDayOfWeek,
+} from '~/linodes/actions/detail/backups';
 import { connect } from 'react-redux';
 import HelpButton from '~/components/HelpButton';
 import _ from 'lodash';
@@ -198,6 +203,8 @@ export class BackupsPage extends Component {
   }
 
   renderSchedule() {
+    const { dayOfWeek, timeOfDay } = this.props.backups;
+    const { dispatch } = this.props;
     return (
       <div className="backup-schedule">
         <div className="form-group row">
@@ -206,19 +213,24 @@ export class BackupsPage extends Component {
             Time of Day (EST):
           </label>
           <div className="col-md-4">
-            <select className="form-control" id="schedule">
-              <option>12-2 AM</option>
-              <option>2-4 AM</option>
-              <option>4-6 AM</option>
-              <option>6-8 AM</option>
-              <option>8-10 AM</option>
-              <option>10 AM-12 PM</option>
-              <option>12-2 PM</option>
-              <option>2-4 PM</option>
-              <option>4-6 PM</option>
-              <option>6-8 PM</option>
-              <option>8-10 PM</option>
-              <option>10 PM-12 AM</option>
+            <select
+              value={timeOfDay}
+              className="form-control"
+              id="schedule"
+              onChange={e => dispatch(setTimeOfDay(e.target.value))}
+            >
+              <option value="0000-0200">12-2 AM</option>
+              <option value="0200-0400">2-4 AM</option>
+              <option value="0400-0600">4-6 AM</option>
+              <option value="0600-0800">6-8 AM</option>
+              <option value="0800-1000">8-10 AM</option>
+              <option value="1000-1200">10 AM-12 PM</option>
+              <option value="1200-1400">12-2 PM</option>
+              <option value="1400-1600">2-4 PM</option>
+              <option value="1600-1800">4-6 PM</option>
+              <option value="1800-2000">6-8 PM</option>
+              <option value="2000-2200">8-10 PM</option>
+              <option value="2200-0000">10 PM-12 AM</option>
             </select>
           </div>
         </div>
@@ -227,14 +239,19 @@ export class BackupsPage extends Component {
             Day of week:
           </label>
           <div className="col-md-4">
-            <select className="form-control" id="dow">
-              <option>Sunday</option>
-              <option>Monday</option>
-              <option>Tuesday</option>
-              <option>Wednesday</option>
-              <option>Thursday</option>
-              <option>Friday</option>
-              <option>Saturday</option>
+            <select
+              value={dayOfWeek}
+              className="form-control"
+              id="dow"
+              onChange={e => dispatch(setDayOfWeek(e.target.value))}
+            >
+              <option value="sunday">Sunday</option>
+              <option value="monday">Monday</option>
+              <option value="tuesday">Tuesday</option>
+              <option value="wednesday">Wednesday</option>
+              <option value="thursday">Thursday</option>
+              <option value="friday">Friday</option>
+              <option value="saturday">Saturday</option>
             </select>
           </div>
         </div>
