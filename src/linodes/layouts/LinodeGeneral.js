@@ -57,7 +57,7 @@ export class LinodeGeneral extends Component {
             <div className="col-sm-8 linode-content-col right">
               {linode.backups.enabled
                 ? linode.backups.last_backup
-                : <span>Backups not enabled. <i className="fa fa-exclamation-circle"></i></span>}
+                : <span>Backups not enabled.</span>}
             </div>
           </div>
           <div className="row">
@@ -136,7 +136,6 @@ export class LinodeGeneral extends Component {
                 <span className="input-group-btn">
                   <button type="button" className="btn btn-default">SSH</button>
                   <button type="button" className="btn btn-default">Open</button>
-                  <span className="btn question">( ? )</span>
                 </span>
               </div>
               <small className="text-muted">
@@ -151,9 +150,8 @@ export class LinodeGeneral extends Component {
               </label>
             </div>
             <div className="col-sm-9 linode-content-col right">
-              <div className="input-group">
+              <div className="input-group-btn">
                 <button type="button" id="glish-button" className="btn btn-default">Open</button>
-                <span className="btn question">( ? )</span>
               </div>
               <small className="text-muted">
                 Equivalent to plugging a monitor and keyboard into your server.

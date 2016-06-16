@@ -108,13 +108,13 @@ export class IndexPage extends Component {
   renderGroup({ group, linodes }) {
     const { selected } = this.props;
 
-    const renderLinode = (l, card) =>
+    const renderLinode = (l, row) =>
       <Linode
         key={l.id}
         linode={l}
         onSelect={this.toggle}
         isSelected={l.id in selected}
-        isCard={card}
+        isRow={row}
         onPowerOn={this.powerOn}
         onReboot={this.reboot}
       />;
@@ -125,7 +125,7 @@ export class IndexPage extends Component {
         {group ? <h2 className="text-muted display-group">{group}</h2> : ''}
         {linodes.map(l =>
           <div key={l.id} className="col-md-4">
-            {renderLinode(l, true)}
+            {renderLinode(l, false)}
           </div>)}
       </div>);
     }
@@ -144,7 +144,7 @@ export class IndexPage extends Component {
           </tr>
         </thead>
         <tbody>
-          {linodes.map(l => renderLinode(l, false))}
+          {linodes.map(l => renderLinode(l, true))}
         </tbody>
       </table>
     </div>);
@@ -181,17 +181,17 @@ export class IndexPage extends Component {
       <span className="grid-list">
         <span>
         {
-          view === 'list' ?
-            <a href="#" className="grid" onClick={this.toggleDisplay}>Grid</a> :
-            'Grid'
+          view === 'grid' ?
+            <a href="#" className="list" onClick={this.toggleDisplay}>List</a> :
+          'List'
         }
         </span>
         <span>|</span>
         <span>
         {
-          view === 'grid' ?
-            <a href="#" className="list" onClick={this.toggleDisplay}>List</a> :
-          'List'
+          view === 'list' ?
+            <a href="#" className="grid" onClick={this.toggleDisplay}>Grid</a> :
+            'Grid'
         }
         </span>
       </span>
@@ -201,7 +201,7 @@ export class IndexPage extends Component {
       <div className="linodes-page">
         <header>
           <div className="mainmenu">
-            <Link to="/linodes/create" className="pull-right linode-add">
+            <Link to="/linodes/create" className="pull-right linode-add btn">
               <span className="fa fa-plus"></span>
               Add a Linode
             </Link>

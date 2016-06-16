@@ -29,6 +29,7 @@ describe('linodes/components/Linode', () => {
       <Linode
         linode={testLinode}
         isSelected={false}
+        isRow={false}
       />);
 
     expect(linode.contains(<span>97.107.143.56</span>))
@@ -42,6 +43,7 @@ describe('linodes/components/Linode', () => {
       <Linode
         linode={testLinode}
         isSelected={false}
+        isRow={false}
       />);
 
     expect(linode.contains(<span>Newark, NJ</span>))
@@ -64,7 +66,6 @@ describe('linodes/components/Linode', () => {
       <Linode
         linode={testLinode}
         isSelected={false}
-        isCard={false}
       />);
 
     expect(linode.find('tr').props().className)
@@ -79,8 +80,10 @@ describe('linodes/components/Linode', () => {
         linode={testLinode}
         isSelected={false}
         onSelect={onSelect}
+        isRow={false}
       />);
 
+    expect(linode.find('input[type="checkbox"]').length).to.equal(1);
     linode.find('input[type="checkbox"]').simulate('change');
 
     expect(onSelect.calledOnce).to.equal(true);

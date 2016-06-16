@@ -12,14 +12,18 @@ export default function Navigation(props) {
           <Link to="/">
             <img
               id="navbar-logo" src={logo}
-              width="128" height="50"
+              width="102" height="40"
               alt="Linode"
             />
           </Link>
         </div>
         <div className="navbar-search">
-          <input type="search" placeholder="Search..." id="navbar-search" />
-          <div className="navbar-search-icon fa fa-search" aria-hidden="true"></div>
+          <input
+            className="form-control"
+            type="search"
+            placeholder="Search..."
+            id="navbar-search"
+          />
         </div>
         <div className="navbar-collapse collapse">
           <ul className="nav navbar-nav">

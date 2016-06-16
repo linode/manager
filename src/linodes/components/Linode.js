@@ -81,7 +81,6 @@ function renderCard(props) {
           </li>
         </ul>
       </div>
-      <span className="card-type fa fa-th" />
     </div>
   );
 }
@@ -135,15 +134,15 @@ renderRow.propTypes = {
 };
 
 export function Linode(props) {
-  const { isCard } = props;
-  return isCard ? renderCard(props) : renderRow(props);
+  const { isRow } = props;
+  return isRow ? renderRow(props) : renderCard(props);
 }
 
 Linode.propTypes = {
-  isCard: PropTypes.bool,
+  isRow: PropTypes.bool,
   ...renderPowerButton.propTypes,
   ...renderCard.propTypes,
   ...renderRow.propTypes,
 };
 
-Linode.defaultProps = { isCard: true };
+Linode.defaultProps = { isRow: true };

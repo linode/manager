@@ -3,19 +3,18 @@
 //@import "bower_components/font-awesome/scss/font-awesome";
 
 $linode-blue: #4A90E2;
+$linode-dark-blue: darken($linode-blue, 10%);
 $linode-green: #38D377;
 $linode-red: #F24C2B;
 $linode-black: #4B4B4B;
 $linode-light-black: #666666;
 $linode-lightest-black: #ACACAC;
 $linode-dark-gray: #CCCCCC;
-$linode-gray: #F9F9F9;
+$linode-gray: #F3F3F3;
 $linode-light-gray: #FBFBFB;
 $linode-white: #FEFEFE;
 
 $border-gray: $linode-dark-gray;
-$button-gray: $linode-gray;
-
 $linode-border: 1px solid $border-gray;
 
 $main-padding-tb: 1rem;
@@ -23,6 +22,8 @@ $main-padding-lr: 2rem;
 
 $sidebar-width: 200px;
 $nav-height: 84px;
+$info-nav-height: 25px;
+$main-nav-height: calc(#{$nav-height} - #{$info-nav-height});
 
 $input-height: 30px;
 $input-padding: 0 .5rem;
@@ -59,7 +60,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1 {
-    font-size: 2.2rem;
+    font-size: 1.8rem;
 }
 
 h2 {
@@ -72,7 +73,13 @@ h3 {
 
 a {
     color: $linode-blue;
-    text-decoration: underline;
+    text-decoration: none;
+
+    &:hover,
+    &:active,
+    &:focus {
+        color: $linode-dark-blue;
+    }
 }
 
 .selected {
@@ -90,8 +97,34 @@ a {
     z-index: 9999;
 }
 
-nav {
-    height: $nav-height;
+.header-info nav {
+    padding: 0 $main-padding-lr;
+    height: $info-nav-height;
+    background: $linode-black;
+    font-size: .75rem;
+    line-height: $info-nav-height;
+
+    .new {
+        color: $linode-black;
+        text-transform: uppercase;
+        background: $linode-white;
+        padding: 1px 4px;
+        font-size: .6rem;
+    }
+
+    a, .fa {
+        color: $linode-white;
+        text-decoration: none;
+        padding-left: 10px;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+}
+
+.header-main nav {
+    height: $main-nav-height;
     padding: 0 30px;
     margin: 0 !important;
 
@@ -99,27 +132,27 @@ nav {
         background: #333;
         border: 0;
         border-radius: 0;
-        padding: 0 15px;
+        padding: 0 $main-padding-lr;
     }
 
     .navbar-header {
         width: 100%;
         float: none;
-        height: $nav-height;
+        height: $main-nav-height;
     }
 
     .navbar-linode {
         display: inline-block;
         margin-right: 30px;
         position: relative;
-        top: -37.5px; /* magic number */
+        top: -25px;
     }
 
     .navbar-search {
         display: inline-block;
         position: relative;
-        top: -36px; /* magic number */
         margin-right: 30px;
+        top: -25px;
 
         input {
             width: 300px;
@@ -129,27 +162,14 @@ nav {
         }
 
         input:focus {
-            border: 1px solid $linode-green;
+            border: 0;
             outline: 0;
-        }
-
-        .navbar-search-icon {
-            position: absolute;
-            right: 0;
-            top: 0;
-            background: #fcfcfc;
-            height: 30px;
-            width: 30px;
-            color: $linode-dark-gray;
-            border-left: 1px solid #eee;
-            text-align: center;
-            line-height: 30px;
         }
     }
 
     a {
         color: $linode-white;
-        line-height: $nav-height;
+        line-height: $main-nav-height;
         text-decoration: none;
     }
 
@@ -173,7 +193,7 @@ nav {
 
     .navbar-session {
         display: inline-block;
-        line-height: $nav-height;
+        line-height: $main-nav-height;
 
         .nav-notifications {
             background: $linode-green;
@@ -263,6 +283,7 @@ nav {
 
 .form-control {
     font-size: $font-size;
+    border-radius: 2px;
 }
 
 input, .btn {
@@ -306,15 +327,26 @@ hr {
 
 .btn {
     text-decoration: none;
-    font-size: 10pt;
     border-radius: 0;
     border: $linode-border;
-    background: $linode-gray;
+    background: $linode-light-gray;
+
+    .fa {
+        line-height: $input-height;
+    }
+
+    &:hover,
+    &:active,
+    &:focus {
+        background: $linode-gray;
+        color: $linode-black;
+    }
 
     &.btn-help {
         $size: 24px;
-        & .fa {
+        .fa {
             color: $linode-lightest-black;
+            line-height: $size;
         }
         background-color: $linode-gray;
         font-size: $size / 2;
@@ -330,9 +362,11 @@ hr {
 
         &:hover {
             background-color: $linode-blue;
+            border: $linode-blue;
 
-            & .fa {
+            .fa {
                 color: $linode-white;
+                line-height: $size + 2px;
             }
         }
 
@@ -344,6 +378,19 @@ hr {
     &.btn-primary {
         background: $linode-blue;
         border: 1px solid $linode-blue;
+
+        &:hover,
+        &:active,
+        &:focus {
+            color: white;
+        }
+
+        &:not([disabled]):hover,
+        &:not([disabled]):active,
+        &:not([disabled]):focus {
+            background: white;
+            color: $linode-blue;
+        }
     }
 
     &.btn-danger {
@@ -355,6 +402,13 @@ hr {
         border-color: $linode-red;
         background: transparent;
         color: $linode-red;
+
+        &:hover,
+        &:active,
+        &:focus {
+            background: $linode-red;
+            color: white;
+        }
     }
 }
 
