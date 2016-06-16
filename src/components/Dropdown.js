@@ -1,31 +1,59 @@
-import React, { PropTypes } from 'react';
+import React, { Component, PropTypes } from 'react';
 
-export default function Dropdown(props) {
-  const { elements } = props;
-  const [first, ...rest] = elements;
+export default class Dropdown extends Component {
+  constructor() {
+    super();
+    this.open = this.open.bind(this);
+    this.close = this.close.bind(this);
+    this.state = {
+      open: false,
+    };
+  }
 
-  const dropdownBody = rest.map(element =>
-    <div
-      key={element.name}
-      className="li-dropdown-item"
-      onClick={element.action}
-    >{element.name}</div>
-  );
+  open() {
+    this.setState({ open: !this.state.open });
+  }
 
-  return (
-    <span className="li-dropdown">
-      <span
-        onClick={first.action}
-        className="li-dropdown-item li-dropdown-first"
-      >{first.name}</span>
-      <span className="li-dropdown-body">
-        <span className="li-dropdown-activator">
-          <span className="fa fa-sort-down" />
-        </span>
-        <div className="li-dropdown-target">{dropdownBody}</div>
-      </span>
-    </span>
-  );
+  close() {
+    this.setState({ open: false });
+  }
+
+  render() {
+    const [first, ...rest] = this.props.elements;
+
+    const dropdownMenu = rest.map(({ name, action }) =>
+      <button
+        type="button"
+        key={name}
+        className="btn dropdown-item"
+        onClick={action}
+      >{name}</button>
+    );
+
+    const orientation = this.props.leftOriented === false ? 'dropdown-menu-right' : '';
+
+    return (
+      <div className={`btn-group ${this.state.open ? 'open' : ''}`}>
+        <button
+          type="button"
+          className="btn dropdown-first"
+          onClick={first.action}
+        >{first.name}</button>
+        <button
+          type="button"
+          className="btn dropdown-toggle"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded={this.state.open}
+          onClick={this.open}
+          onBlur={this.close}
+        >
+          <span className="sr-only">Toggle dropdown</span>
+        </button>
+        <div className={`dropdown-menu ${orientation}`}>{dropdownMenu}</div>
+      </div>
+    );
+  }
 }
 
 Dropdown.propTypes = {
@@ -33,4 +61,5 @@ Dropdown.propTypes = {
     name: PropTypes.node.isRequired,
     action: PropTypes.func,
   })).isRequired,
+  leftOriented: PropTypes.bool,
 };

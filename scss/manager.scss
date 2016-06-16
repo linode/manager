@@ -31,7 +31,6 @@ $font-size: .9rem;
 @import 'linodes/linodes';
 @import 'layout/linode-details';
 @import 'layout/linodes';
-@import 'components/dropdown';
 @import 'components/card';
 
 @font-face {
@@ -235,16 +234,6 @@ nav {
     }
 }
 
-.li-breadcrumb {
-    span {
-        padding-right: 5px;
-    }
-
-    span:last-of-type {
-        padding-right: 0;
-    }
-}
-
 .main {
     margin-left: $sidebar-width;
     width: calc(100% - #{$sidebar-width});
@@ -252,34 +241,6 @@ nav {
 
     div, span {
         color: $linode-light-black;
-    }
-}
-
-
-.li-checkbox {
-    margin: 0;
-    position: relative;
-    top: 3px;
-    background: $linode-white;
-    cursor: pointer;
-    cursor: hand;
-
-    input {
-        display: none;
-    }
-
-    input:checked + span:after {
-        content: "\02713";
-        position: absolute;
-        top: -8px;
-        left: 1px;
-    }
-
-    span {
-        width: 15px;
-        height: 15px;
-        display: block;
-        border: $linode-border;
     }
 }
 
@@ -353,6 +314,46 @@ button {
         border-color: $linode-red;
         background: transparent;
         color: $linode-red;
+    }
+}
+
+input[type=checkbox] {
+    padding: 0;
+    margin: 0;
+    height: 15px;
+    width: 15px;
+}
+
+.input-group-addon {
+    background: $linode-light-gray;
+    height: $input-height;
+    line-height: calc(#{$input-height}-2px});
+    padding: $input-padding;
+
+    input[type=checkbox] {
+        position: relative;
+        top: 1px;
+    }
+}
+
+.dropdown-menu {
+    padding: 0;
+    border: 0;
+    margin-top: -1px;
+    margin-left: 1px;
+
+    &.dropdown-menu-right {
+        left: initial;
+        right: 0;
+        margin-right: -1px;
+    }
+
+    .dropdown-item:first-of-type {
+        margin-left: -1px;
+    }
+
+    .dropdown-item:not(:first-of-type) {
+        border-top: 0;
     }
 }
 

@@ -28,33 +28,7 @@
         margin-bottom: $main-padding-tb;
     }
 
-    .selectall {
-        display: inline-block;
-        border: $linode-border;
-        height: 30px;
-        line-height: 30px;
-        margin-left: 5px;
-        margin-bottom: 15px;
-        background: #fafafa;
-
-        label {
-            margin-left: 10px;
-
-            span {
-                position: relative;
-                top: -1px;
-            }
-        }
-
-        .li-dropdown-first {
-            border: $linode-border;
-            border-top: 0;
-            margin-left: 10px;
-            height: 29px;
-        }
-
-        .li-dropdown-activator {
-            border: 0;
-        }
+    .submenu {
+        margin-bottom: calc(#{$main-padding-tb} / 2);
     }
 }
