@@ -5,25 +5,17 @@ export default class Dropdown extends Component {
     super();
     this.open = this.open.bind(this);
     this.close = this.close.bind(this);
+    this.state = {
+      open: false,
+    };
   }
 
-  open(evt) {
-    const event = evt || window.event;
-    const target = event.currentTarget || event.srcElement;
-    target.parentElement.classList.toggle('open');
-    return false;
+  open() {
+    this.setState({ open: !this.state.open });
   }
 
-  close(evt) {
-    // Adapted from https://github.com/tagawa/bootstrap-without-jquery
-    const event = evt || window.event;
-    const target = event.currentTarget || event.srcElement;
-    target.parentElement.classList.remove('open');
-
-    if (event.relatedTarget && event.relatedTarget.getAttribute('data-toggle') !== 'dropdown') {
-      event.relatedTarget.click();
-    }
-    return false;
+  close() {
+    this.setState({ open: false });
   }
 
   render() {
@@ -41,7 +33,7 @@ export default class Dropdown extends Component {
     const orientation = this.props.leftOriented === false ? 'dropdown-menu-right' : '';
 
     return (
-      <div className="btn-group">
+      <div className={`btn-group ${this.state.open ? 'open' : ''}`}>
         <button
           type="button"
           className="btn dropdown-first"
