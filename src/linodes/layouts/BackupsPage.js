@@ -290,14 +290,14 @@ export class BackupsPage extends Component {
         {this.renderBackups()}
         <hr />
         <div className="row">
-          <div className="col-md-6">
+          <div className="col-md-6 backup-schedule">
             <h2>
               Schedule
               <HelpButton to="http://example.org" />
             </h2>
             {this.renderSchedule()}
           </div>
-          <div className="col-md-6">
+          <div className="col-md-6 manual-backups">
             <h2>Manual Backup</h2>
             {this.renderLastManualBackup()}
             <button
@@ -323,6 +323,7 @@ export class BackupsPage extends Component {
 
   render() {
     const linode = this.getLinode();
+    if (!linode) return null;
     return linode.backups.enabled ? this.renderEnabled() : this.renderNotEnabled();
   }
 }
