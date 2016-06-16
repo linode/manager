@@ -69,4 +69,19 @@ describe('components/Dropdown', () => {
     dropdown.find('.dropdown-toggle').simulate('click');
     expect(dropdown.find('.btn-group.open').length).to.equal(0);
   });
+
+  it('closes on blur', () => {
+    const noAction = () => {};
+    const dropdown = mount(<Dropdown
+      elements={[
+        { action: noAction, name: '' },
+        { action: noAction, name: '' },
+      ]}
+    />);
+
+    dropdown.find('.dropdown-toggle').simulate('click');
+    expect(dropdown.find('.btn-group.open').length).to.equal(1);
+    dropdown.find('.dropdown-toggle').simulate('blur');
+    expect(dropdown.find('.btn-group.open').length).to.equal(0);
+  });
 });
