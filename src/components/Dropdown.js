@@ -44,7 +44,7 @@ export default class Dropdown extends Component {
           className="btn dropdown-toggle"
           data-toggle="dropdown"
           aria-haspopup="true"
-          aria-expanded="false"
+          aria-expanded={this.state.open}
           onClick={this.open}
           onBlur={this.close}
         >
