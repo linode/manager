@@ -7,7 +7,7 @@ export default function HelpButton(props) {
       to={props.to}
       className="btn btn-help"
       target="_blank"
-    >?</Link>
+    ><i className="fa fa-question"></i></Link>
   );
 }
 

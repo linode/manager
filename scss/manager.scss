@@ -313,6 +313,9 @@ hr {
 
     &.btn-help {
         $size: 24px;
+        & .fa {
+            color: $linode-lightest-black;
+        }
         background-color: $linode-gray;
         font-size: $size / 2;
         line-height: $size - 2px;
@@ -322,12 +325,15 @@ hr {
         width: $size;
         height: $size;
         border-radius: $size / 2;
-        color: $linode-white;
         font-weight: bold;
         text-indent: -0.5px;
 
         &:hover {
             background-color: $linode-blue;
+
+            & .fa {
+                color: $linode-white;
+            }
         }
 
         h1 &, h2 &, h3 & {
