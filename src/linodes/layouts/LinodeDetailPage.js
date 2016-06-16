@@ -90,19 +90,20 @@ export class LinodeDetailPage extends Component {
 
     return (
       <div style={{ display: 'inline-block' }}>
-        <h1>{label}</h1>
-        <a
-          href="#"
-          className="edit-icon"
-          onClick={e => {
-            e.preventDefault();
-            dispatch(setLinodeLabel(linode.label));
-            dispatch(setLinodeGroup(linode.group));
-            dispatch(toggleEditMode());
-          }}
-        >
-          <i className="fa fa-pencil"></i>
-        </a>
+        <h1>{label}
+          <a
+            href="#"
+            className="edit-icon"
+            onClick={e => {
+              e.preventDefault();
+              dispatch(setLinodeLabel(linode.label));
+              dispatch(setLinodeGroup(linode.group));
+              dispatch(toggleEditMode());
+            }}
+          >
+            <i className="fa fa-pencil"></i>
+          </a>
+        </h1>
       </div>
     );
   }

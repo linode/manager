@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function Info() {
+export default function Infobar() {
   return (
     <nav>
       <div className="pull-right">

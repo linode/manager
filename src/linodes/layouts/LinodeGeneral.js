@@ -150,7 +150,9 @@ export class LinodeGeneral extends Component {
               </label>
             </div>
             <div className="col-sm-9 linode-content-col right">
-              <button type="button" id="glish-button" className="btn btn-default">Open</button>
+              <div className="input-group-btn">
+                <button type="button" id="glish-button" className="btn btn-default">Open</button>
+              </div>
               <small className="text-muted">
                 Equivalent to plugging a monitor and keyboard into your server.
               </small>

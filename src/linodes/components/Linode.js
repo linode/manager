@@ -134,15 +134,15 @@ renderRow.propTypes = {
 };
 
 export function Linode(props) {
-  const { isCard } = props;
-  return isCard ? renderCard(props) : renderRow(props);
+  const { isRow } = props;
+  return isRow ? renderRow(props) : renderCard(props);
 }
 
 Linode.propTypes = {
-  isCard: PropTypes.bool,
+  isRow: PropTypes.bool,
   ...renderPowerButton.propTypes,
   ...renderCard.propTypes,
   ...renderRow.propTypes,
 };
 
-Linode.defaultProps = { isCard: false };
+Linode.defaultProps = { isRow: true };

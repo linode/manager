@@ -79,7 +79,7 @@ describe('linodes/layouts/LinodeGeneral', () => {
         params={params}
       />);
 
-    expect(page.find('.col-sm-8').at(1).text()).to.equal('Backups not enabled. ');
+    expect(page.find('.col-sm-8').at(1).text()).to.equal('Backups not enabled.');
   });
 
   it('renders backups enabled', async () => {
@@ -183,6 +183,6 @@ describe('linodes/layouts/LinodeGeneral', () => {
         params={params}
       />);
 
-    expect(page.find('.input-group').at(2).find('button')).to.exist;
+    expect(page.find('#glish-button')).to.exist;
   });
 });
