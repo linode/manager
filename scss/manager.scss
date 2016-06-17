@@ -123,6 +123,11 @@ a {
     }
 }
 
+.header-main {
+    position: relative;
+    top: -1px; /* Deal with 1px element created by .header-info clearfix :after */
+}
+
 .header-main nav {
     height: $main-nav-height;
     padding: 0 30px;
