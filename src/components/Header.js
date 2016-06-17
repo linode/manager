@@ -6,10 +6,10 @@ export default function Header(props) {
   const { username } = props;
   return (
     <div className="header" style={props.style}>
-      <header className="header-info">
+      <header className="header-info clearfix">
         <Infobar />
       </header>
-      <header className="header-main">
+      <header className="header-main clearfix">
         <Navigation username={username} />
       </header>
     </div>

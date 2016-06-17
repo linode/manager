@@ -172,9 +172,7 @@ export class IndexPage extends Component {
       linodesList.filter(cond).map(this.toggle);
     };
 
-    const selectAllCheckbox = allSelected ?
-      <input type="checkbox" onChange={selectAll} checked="checked" /> :
-      <input type="checkbox" onChange={selectAll} />;
+    const selectAllCheckbox = <input type="checkbox" onChange={selectAll} checked={allSelected} />;
 
     const { view } = this.props;
     const gridListToggle = (
@@ -201,7 +199,7 @@ export class IndexPage extends Component {
       <div className="linodes-page">
         <header>
           <div className="mainmenu">
-            <Link to="/linodes/create" className="pull-right linode-add btn">
+            <Link to="/linodes/create" className="linode-add btn btn-primary pull-right">
               <span className="fa fa-plus"></span>
               Add a Linode
             </Link>

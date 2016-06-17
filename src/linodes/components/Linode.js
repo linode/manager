@@ -47,9 +47,7 @@ function renderCard(props) {
   const select = () => onSelect(linode);
   const selectedClass = isSelected ? 'selected' : '';
 
-  const checkbox = isSelected ?
-    <input type="checkbox" checked="checked" onChange={select} /> :
-    <input type="checkbox" onChange={select} />;
+  const checkbox = <input type="checkbox" checked={isSelected} onChange={select} />;
 
   return (
     <div className={`linode card ${linode.state} ${selectedClass}`}>
@@ -96,9 +94,7 @@ function renderRow(props) {
   const select = () => onSelect(linode);
   const selectedClass = isSelected ? 'selected' : '';
 
-  const checkbox = isSelected ?
-    <input type="checkbox" checked="checked" onClick={select} /> :
-    <input type="checkbox" onClick={select} />;
+  const checkbox = <input type="checkbox" checked={isSelected} onClick={select} />;
 
   return (
     <tr className={`linode row ${linode.state} ${selectedClass}`}>
