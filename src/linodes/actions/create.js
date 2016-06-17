@@ -1,5 +1,5 @@
 import { fetch } from '~/fetch';
-import { pushPath } from 'redux-simple-router';
+import { push } from 'react-router-redux';
 
 export const CHANGE_SOURCE_TAB = '@@ui@@linode-creation/CHANGE_SOURCE_TAB';
 export const TOGGLE_ALL_PLANS = '@@ui@@linode-creation/TOGGLE_ALL_PLANS';
@@ -66,7 +66,7 @@ export function createLinode() {
     const json = await response.json();
     // TODO: Error handling
     dispatch({ type: UPDATE_LINODE, linode: json });
-    dispatch(pushPath(`/linodes/${json.id}`));
+    dispatch(push(`/linodes/${json.id}`));
     dispatch({ type: TOGGLE_CREATING });
     dispatch({ type: CLEAR_FORM });
     dispatch(updateLinodeUntil(json.id,

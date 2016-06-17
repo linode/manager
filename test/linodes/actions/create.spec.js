@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import * as actions from '~/linodes/actions/create';
 import * as linodeActions from '~/actions/api/linodes';
-import { pushPath } from 'redux-simple-router';
+import { push } from 'react-router-redux';
 import * as fetch from '~/fetch';
 
 describe('linodes/actions/create', () => {
@@ -174,7 +174,7 @@ describe('linodes/actions/create', () => {
       const func = actions.createLinode();
       await func(dispatch, getState);
       expect(dispatch.calledWith(
-        pushPath(`/linodes/${response.id}`)
+        push(`/linodes/${response.id}`)
       )).to.equal(true);
     });
 

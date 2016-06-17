@@ -3,18 +3,16 @@ import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import configureStore from './store/configureStore';
-import { createHistory } from 'history';
-import { Router, Route, IndexRedirect } from 'react-router';
+import { Router, Route, IndexRedirect, browserHistory } from 'react-router';
 import DevTools from './components/DevTools';
-import { syncReduxAndRouter } from 'redux-simple-router';
+import { syncHistoryWithStore } from 'react-router-redux';
 // eslint-disable-next-line no-unused-vars
 import styles from '../scss/manager.scss';
 import { clientId } from './secrets';
 import { APP_ROOT, LOGIN_ROOT } from './constants';
 
 const store = configureStore();
-const history = createHistory();
-syncReduxAndRouter(history, store);
+const history = syncHistoryWithStore(browserHistory, store);
 
 import Layout from './layouts/Layout';
 import OAuthCallbackPage from './layouts/OAuth';
