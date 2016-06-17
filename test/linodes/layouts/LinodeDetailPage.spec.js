@@ -1,6 +1,6 @@
 import React from 'react';
 import sinon from 'sinon';
-import { pushPath } from 'redux-simple-router';
+import { push } from 'react-router-redux';
 import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 import * as fetch from '~/fetch';
@@ -15,6 +15,8 @@ describe('linodes/layouts/LinodeDetailPage', () => {
   const sandbox = sinon.sandbox.create();
 
   const dispatch = sandbox.spy();
+
+  const router = { setRouteLeaveHook: sandbox.spy() };
 
   afterEach(() => {
     dispatch.reset();
@@ -48,6 +50,7 @@ describe('linodes/layouts/LinodeDetailPage', () => {
         linodes={{ linodes: { } }}
         params={{ linodeId: 'linode_1234' }}
         detail={detail}
+        router={router}
       />);
     expect(dispatch.calledOnce).to.equal(true);
     const dispatched = dispatch.firstCall.args[0];
@@ -72,6 +75,7 @@ describe('linodes/layouts/LinodeDetailPage', () => {
         linodes={linodes}
         params={{ linodeId: testLinode.id }}
         detail={detail}
+        router={router}
       />);
     expect(dispatch.calledOnce).to.equal(false);
   });
@@ -83,6 +87,7 @@ describe('linodes/layouts/LinodeDetailPage', () => {
         linodes={linodes}
         params={{ linodeId: testLinode.id }}
         detail={detail}
+        router={router}
       />);
     expect(page.contains(<span>{testLinode.group} / {testLinode.label}</span>))
       .to.equal(true);
@@ -95,6 +100,7 @@ describe('linodes/layouts/LinodeDetailPage', () => {
         linodes={linodes}
         params={{ linodeId: 'linode_1235' }}
         detail={detail}
+        router={router}
       />);
     expect(page.contains(<span>{testLinode.label}</span>))
       .to.equal(true);
@@ -117,7 +123,7 @@ describe('linodes/layouts/LinodeDetailPage', () => {
     expect(tabs.find(Tab).filter(t => t.text() === t)).to.exist;
   });
 
-  it('dispatches a pushPath action when tabs are clicked', () => {
+  it('dispatches a push action when tabs are clicked', () => {
     const page = shallow(
       <LinodeDetailPage
         dispatch={dispatch}
@@ -127,7 +133,7 @@ describe('linodes/layouts/LinodeDetailPage', () => {
       />);
     const tabs = page.find(Tabs);
     tabs.props().onSelect(2);
-    expect(dispatch.calledWith(pushPath('/linodes/linode_1234/resize'))).to.equal(true);
+    expect(dispatch.calledWith(push('/linodes/linode_1234/resize'))).to.equal(true);
   });
 
   it('renders a power management dropdown', () => {
@@ -181,6 +187,7 @@ describe('linodes/layouts/LinodeDetailPage', () => {
         linodes={linodes}
         params={{ linodeId: 'linode_1237' }}
         detail={detail}
+        router={router}
       />);
     expect(page.contains(Dropdown)).to.equal(false);
   });
@@ -192,6 +199,7 @@ describe('linodes/layouts/LinodeDetailPage', () => {
         linodes={linodes}
         params={{ linodeId: 'linode_1234' }}
         detail={detail}
+        router={router}
       />);
     expect(page.contains(<span className="pull-right linode-status running">Running</span>))
       .to.equal(true);
@@ -346,6 +354,22 @@ describe('linodes/layouts/LinodeDetailPage', () => {
       const text = editor.find('input[type="text"]').first();
       text.simulate('keyUp', { keyCode: 13 /* Enter */ });
       await assertCommittedChanges();
+    });
+
+    it('does not reproduce #95', () => {
+      router.setRouteLeaveHook.reset();
+      mount(
+        <LinodeDetailPage
+          dispatch={dispatch}
+          linodes={linodes}
+          params={{ linodeId: 'linode_1234' }}
+          detail={{ ...detail, editing: true, label: 'test', group: 'test' }}
+          router={router}
+        />);
+      expect(router.setRouteLeaveHook.calledOnce).to.equal(true);
+      const handler = router.setRouteLeaveHook.firstCall.args[1];
+      handler();
+      expect(dispatch.calledWith(actions.toggleEditMode())).to.equal(true);
     });
   });
 });

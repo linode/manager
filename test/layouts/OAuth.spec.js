@@ -2,7 +2,7 @@ import React from 'react';
 import sinon from 'sinon';
 import { expect } from 'chai';
 import { OAuthCallbackPage } from '../../src/layouts/OAuth';
-import { pushPath } from 'redux-simple-router';
+import { push } from 'react-router-redux';
 import { setToken } from '~/actions/authentication';
 import { LOGIN_ROOT } from '~/constants';
 import * as fetch from '~/fetch';
@@ -28,7 +28,7 @@ describe('layouts/OAuth', () => {
       />);
     await componentDidMount.call(component);
     expect(dispatch.calledOnce).to.equal(true);
-    expect(dispatch.calledWith(pushPath('/'))).to.equal(true);
+    expect(dispatch.calledWith(push('/'))).to.equal(true);
   });
 
   const exchangeResponse = {
@@ -80,7 +80,7 @@ describe('layouts/OAuth', () => {
     expect(dispatch.calledTwice).to.equal(true);
     expect(dispatch.calledWith(
       setToken('access_token', '*', 'username', 'email'))).to.equal(true);
-    expect(dispatch.calledWith(pushPath('/'))).to.equal(true);
+    expect(dispatch.calledWith(push('/'))).to.equal(true);
   });
 
   it('supports the return query string option', async () => {
@@ -101,6 +101,6 @@ describe('layouts/OAuth', () => {
         }}
       />);
     await componentDidMount.call(component);
-    expect(dispatch.calledWith(pushPath('/asdf'))).to.equal(true);
+    expect(dispatch.calledWith(push('/asdf'))).to.equal(true);
   });
 });

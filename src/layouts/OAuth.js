@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { setToken } from '../actions/authentication';
 import { clientId, clientSecret } from '../secrets';
-import { pushPath } from 'redux-simple-router';
+import { push } from 'react-router-redux';
 import { LOGIN_ROOT } from '../constants';
 import { rawFetch } from '../fetch';
 
@@ -24,9 +24,9 @@ export class OAuthCallbackPage extends Component {
       });
       const json = await resp.json();
       dispatch(setToken(json.access_token, json.scopes, username, email));
-      dispatch(pushPath(returnTo || '/'));
+      dispatch(push(returnTo || '/'));
     } else {
-      dispatch(pushPath('/'));
+      dispatch(push('/'));
     }
   }
 

@@ -1,11 +1,11 @@
 import { combineReducers } from 'redux';
-import { routeReducer } from 'redux-simple-router';
+import { routerReducer } from 'react-router-redux';
 import authentication from './authentication';
 import api from './api';
 import linodes from '../linodes/reducers';
 
 const rootReducer = combineReducers({
-  routing: routeReducer,
+  routing: routerReducer,
   authentication,
   api,
   linodes,

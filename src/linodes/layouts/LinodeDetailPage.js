@@ -1,8 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
-import { pushPath } from 'redux-simple-router';
+import { Link, withRouter } from 'react-router';
+import { push } from 'react-router-redux';
 import Dropdown from '~/components/Dropdown';
 import { LinodeStates, LinodeStatesReadable } from '~/constants';
 import {
@@ -29,17 +29,25 @@ export class LinodeDetailPage extends Component {
     this.renderEditUI = this.renderEditUI.bind(this);
     this.renderLabel = this.renderLabel.bind(this);
     this.handleLabelKeyUp = this.handleLabelKeyUp.bind(this);
+    this.routerWillLeave = this.routerWillLeave.bind(this);
   }
 
   componentDidMount() {
-    const { dispatch } = this.props;
+    const { dispatch, router } = this.props;
     const linode = this.getLinode();
     if (!linode) {
       const { linodeId } = this.props.params;
       dispatch(updateLinode(linodeId));
     }
+    router.setRouteLeaveHook(this.props.route, this.routerWillLeave);
   }
 
+  routerWillLeave() {
+    const { dispatch, detail } = this.props;
+    if (detail.editing) {
+      dispatch(toggleEditMode());
+    }
+  }
 
   handleLabelKeyUp(e, linode) {
     const { dispatch } = this.props;
@@ -168,7 +176,7 @@ export class LinodeDetailPage extends Component {
         <div className="card">
           {this.renderHeader(linode)}
           <Tabs
-            onSelect={ix => dispatch(pushPath(tabList[ix].link))}
+            onSelect={ix => dispatch(push(tabList[ix].link))}
             selectedIndex={tabList.indexOf(selected)}
           >
             <TabList>
@@ -200,10 +208,12 @@ LinodeDetailPage.propTypes = {
   detail: PropTypes.object,
   children: PropTypes.node,
   location: PropTypes.object,
+  router: PropTypes.object,
+  route: PropTypes.object,
 };
 
 function select(state) {
   return { linodes: state.api.linodes, detail: state.linodes.detail.index };
 }
 
-export default connect(select)(LinodeDetailPage);
+export default withRouter(connect(select)(LinodeDetailPage));
