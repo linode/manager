@@ -5,7 +5,28 @@ successful with your contribution if you visit the [IRC
 channel](https://webchat.oftc.net/?channels=linode-next&uio=d4) upfront and discuss
 your plans.
 
-## Making Pull Requests
+## Development Flow
+
+Changes to the Linode Manager usually follow this flow:
+
+1. If required, make a mockup
+1. Review and approve the mockup with peers (and sometimes stakeholders)
+1. Implement the change, with tests
+1. Merge the change
+
+This usually implicates two GitHub issues: the design issue, and the
+implementation issue. For some changes, a design issue is of course not always
+necessary.
+
+## Making design changes
+
+If a mockup is necessary for your change, find the relevant GitHub issue or open
+one yourself if it's not there. Our design repository is
+[manager-design](https://github.com/linode/manager-design) and contains Sketch
+files for our mockups. Base yours off of what we have here, then comment on the
+GitHub issue with screenshots for discussion.
+
+## Making pull requests
 
 If you already have your own pull request habits, feel free to use them. If you
 don't, however, allow me to make a suggestion: feature branches pulled from
@@ -37,4 +58,11 @@ apply the [Airbnb style guide](https://github.com/airbnb/javascript).
 
 ## Reporting Bugs
 
-Don't.
+First, remember that this is a work in progress. Please don't report bugs for
+features that aren't present, links that lead to 404's, buttons that don't
+appear to do anything - these are all likely in-progress or not started
+features. Instead, report bugs for regressions or problems with things that are
+already implemented. Please search the GitHub issues to see if there's already a
+bug filed for your problem - if so, leave a comment mentioning that you can
+reproduce it. Otherwise, go ahead and open an issue with as much detail as you
+can provide. Thanks!
