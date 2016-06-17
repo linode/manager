@@ -1,5 +1,21 @@
 @import 'create';
 
+.linodes-page {
+    h2 {
+        font-size: 1.2rem;
+        margin: 1rem 0;
+        padding: 0;
+        clear: both;
+        margin-top: -0.25rem;
+    }
+
+    &.list {
+        h2 {
+            margin-top: 1rem;
+        }
+    }
+}
+
 .linode-status {
     color: $linode-blue;
     animation: pulse 1.5s infinite;

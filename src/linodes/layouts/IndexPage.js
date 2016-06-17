@@ -196,7 +196,7 @@ export class IndexPage extends Component {
     );
 
     return (
-      <div className="linodes-page">
+      <div className={`linodes-page ${view}`}>
         <header>
           <div className="mainmenu">
             <Link to="/linodes/create" className="linode-add btn btn-primary pull-right">
