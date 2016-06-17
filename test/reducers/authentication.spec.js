@@ -2,13 +2,14 @@ import { expect } from 'chai';
 import deepFreeze from 'deep-freeze';
 import authentication from '../../src/reducers/authentication';
 import * as actions from '../../src/actions/authentication';
+import { getStorage } from '~/storage';
 
 describe('authentication reducer', () => {
   it('should handle initial state', () => {
     window.localStorage.clear();
     expect(
       authentication(undefined, {})
-    ).to.be.eql({ token: null });
+    ).to.be.eql({ token: null, username: null, email: null, scopes: null });
   });
 
   it('should handle SET_TOKEN', () => {
@@ -36,6 +37,7 @@ describe('authentication reducer', () => {
   it('should handle anything else', () => {
     window.localStorage.clear();
     const state = authentication(undefined, {});
+    deepFreeze(state);
 
     expect(
       authentication(state, {
@@ -44,6 +46,29 @@ describe('authentication reducer', () => {
         email: 'me@example.org',
         token: 'token',
       })
-    ).to.be.eql({ token: null });
+    ).to.be.deep.eql(state);
+  });
+
+  it('should not reproduce #12', () => {
+    window.localStorage.clear();
+    const state = authentication(undefined, {});
+    deepFreeze(state);
+
+    expect(
+      authentication(state, {
+        type: actions.SET_TOKEN,
+        scopes: [],
+        username: 'me',
+        email: 'me@example.org',
+        token: 'token',
+      })
+    ).to.be.eql({
+      scopes: [],
+      username: 'me',
+      email: 'me@example.org',
+      token: 'token',
+    });
+    expect(getStorage('authentication/email')).to.equal('me@example.org');
+    expect(getStorage('authentication/username')).to.equal('me');
   });
 });
