@@ -18,6 +18,12 @@ This usually implicates two GitHub issues: the design issue, and the
 implementation issue. For some changes, a design issue is of course not always
 necessary.
 
+We label issues as "ready" when one of our developers has committed to
+resolving it during the current 1-2 week sprint. You're welcome to take these on
+if you want, but we might finish it first. We merge pull requests on a
+first-come-first-serve basis; the first PR that adequately solves the problem
+will be merged.
+
 ## Making design changes
 
 If a mockup is necessary for your change, find the relevant GitHub issue or open
