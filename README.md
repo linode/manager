@@ -68,10 +68,12 @@ To automatically re-run tests when you make changes:
 
     npm run test:watch
 
-Our tests live in test/**.spec.js. They're run with
-[Mocha](https://mochajs.org/) and do assertions with [Chai](http://chaijs.com/).
-We're aiming for as close to 100% test coverage as possible, but we're still
-figuring out what patterns to use for testing in this project.
+Our tests live in test/**.spec.js. They're based on
+[Mocha](https://mochajs.org/) and do assertions with
+[Chai](http://chaijs.com/) plus DOM/React testing with
+[enzyme](http://airbnb.io/enzyme/). We run them with
+[Karma](https://news.ycombinator.com/item?id=11927891).
+We're aiming for 95%+ test coverage.
 
 ## Contributing
 
