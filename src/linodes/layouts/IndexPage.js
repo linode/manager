@@ -54,7 +54,8 @@ export class IndexPage extends Component {
         }
       });
     }
-    if (linodes.totalPages !== -1 && _linodes.length === 0) {
+    const linodesLoaded = linodes.totalPages !== -1;
+    if (linodesLoaded && _linodes.length === 0) {
       dispatch(push('/linodes/create'));
     }
   }
