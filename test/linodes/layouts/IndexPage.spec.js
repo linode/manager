@@ -2,6 +2,7 @@ import React from 'react';
 import sinon from 'sinon';
 import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
+import { push } from 'react-router-redux';
 import { IndexPage } from '~/linodes/layouts/IndexPage';
 import { UPDATE_LINODES } from '~/actions/api/linodes';
 import { TOGGLE_SELECTED, CHANGE_VIEW } from '~/linodes/actions/index';
@@ -52,6 +53,22 @@ describe('linodes/layouts/IndexPage', () => {
     expect(fetchStub.firstCall.args[1]).to.equal('/linodes?page=1');
     expect(dispatch.calledOnce).to.equal(true);
     expect(dispatch.firstCall.args[0].type).to.equal(UPDATE_LINODES);
+  });
+
+  it('redirects to /linodes/create when you have no Linodes', async () => {
+    const noLinodes = {
+      ...linodes,
+      linodes: { },
+    };
+    mount(
+      <IndexPage
+        dispatch={dispatch}
+        view={'grid'}
+        selected={{}}
+        linodes={noLinodes}
+      />);
+    expect(dispatch.calledWith(push('/linodes/create')))
+      .to.equal(true);
   });
 
   it('renders a grid of Linodes', () => {
