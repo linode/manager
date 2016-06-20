@@ -1,0 +1,34 @@
+.modal-overlay {
+    display: none;
+    z-index: 9999;
+    position: absolute;
+    top: $nav-height - 1px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: $linode-transparent;
+
+    &.open {
+        display: initial;
+    }
+}
+
+.modal {
+    position: absolute;
+    left: 50%;
+    width: 400px;
+    margin-left: -200px;
+    margin-top: $main-padding-tb;
+    box-shadow: $box-shadow;
+    background: $linode-white;
+}
+
+.modal-header {
+    background: $linode-gray;
+    padding: $main-padding-tb $main-padding-lr;
+    border-bottom: 1px solid #ccc;
+}
+
+.modal-body {
+    padding: $main-padding-tb $main-padding-lr;
+}

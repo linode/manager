@@ -1,4 +1,16 @@
 .card {
+    background: $linode-white;
+    border: $linode-border;
+    padding: 15px;
+    position: relative;
+    border-radius: 0;
+
+    .card-type {
+        position: absolute;
+        bottom: 15px;
+        right: 15px;
+    }
+
     header {
         background-color: $linode-light-gray;
         padding: $main-padding-tb $main-padding-lr;

@@ -13,9 +13,11 @@ $linode-dark-gray: #CCCCCC;
 $linode-gray: #F3F3F3;
 $linode-light-gray: #FBFBFB;
 $linode-white: #FEFEFE;
+$linode-transparent: rgba(0, 0, 0, 0.5);
 
 $border-gray: $linode-dark-gray;
 $linode-border: 1px solid $border-gray;
+$box-shadow: 0px 2px 4px 0px $linode-transparent;
 
 $main-padding-tb: 1rem;
 $main-padding-lr: 2rem;
@@ -33,6 +35,7 @@ $font-size: .9rem;
 @import 'layout/linode-details';
 @import 'layout/linodes';
 @import 'components/card';
+@import 'components/modal';
 
 @font-face {
     font-family: Heebo;
@@ -272,20 +275,6 @@ a {
     }
 }
 
-.card {
-    background: $linode-white;
-    border: $linode-border;
-    padding: 15px;
-    position: relative;
-    border-radius: 0;
-
-    .card-type {
-        position: absolute;
-        bottom: 15px;
-        right: 15px;
-    }
-}
-
 .form-control {
     font-size: $font-size;
     border-radius: 2px;
@@ -480,6 +469,9 @@ input[type=checkbox] {
     }
 }
 
+.text-danger {
+    color: $linode-red;
+}
 
 @-moz-keyframes pulse {
     0% {opacity: 1.0;}
