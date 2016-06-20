@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 import { Linode } from '../components/Linode';
 import Dropdown from '~/components/Dropdown';
 import { LinodeStates } from '~/constants';
@@ -22,6 +23,7 @@ export class IndexPage extends Component {
   constructor() {
     super();
     this.componentDidMount = this.componentDidMount.bind(this);
+    this.componentDidUpdate = this.componentDidUpdate.bind(this);
     this.componentWillUnmount = this.componentWillUnmount.bind(this);
     this.renderGroup = this.renderGroup.bind(this);
     this.render = this.render.bind(this);
@@ -35,16 +37,26 @@ export class IndexPage extends Component {
   }
 
   componentDidMount() {
-    const { dispatch, linodes } = this.props;
+    const { dispatch } = this.props;
     dispatch(fetchLinodes());
     window.addEventListener('scroll', this.handleScroll);
-    if (linodes.length > 0) {
-      linodes.forEach(l => {
+    this.componentDidUpdate();
+  }
+
+  componentDidUpdate() {
+    const { dispatch, linodes } = this.props;
+    const _linodes = Object.values(linodes.linodes);
+    if (_linodes.length > 0) {
+      _linodes.forEach(l => {
         const state = l.state;
         if (LinodeStates.pending.indexOf(state) !== -1) {
           updateLinodeUntil(l.id, ln => ln.state !== state);
         }
       });
+    }
+    const linodesLoaded = linodes.totalPages !== -1;
+    if (linodesLoaded && _linodes.length === 0) {
+      dispatch(push('/linodes/create'));
     }
   }
 
