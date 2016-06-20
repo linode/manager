@@ -50,7 +50,7 @@ export class IndexPage extends Component {
       _linodes.forEach(l => {
         const state = l.state;
         if (LinodeStates.pending.indexOf(state) !== -1) {
-          updateLinodeUntil(l.id, ln => ln.state !== state);
+          dispatch(updateLinodeUntil(l.id, ln => ln.state !== state));
         }
       });
     }
