@@ -1,12 +1,13 @@
 import React from 'react';
 import sinon from 'sinon';
 import { push } from 'react-router-redux';
-import { shallow } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 import { Tabs, Tab } from 'react-tabs';
 
 import { testLinode } from '~/../test/data';
 import { SettingsPage } from '~/linodes/layouts/SettingsPage';
+import * as LinodeDetailPage from '~/linodes/layouts/LinodeDetailPage';
 
 describe('linodes/layouts/SettingsPage', () => {
   const sandbox = sinon.sandbox.create();
@@ -29,6 +30,20 @@ describe('linodes/layouts/SettingsPage', () => {
     _singular: 'linode',
     _plural: 'linodes',
   };
+
+  it('calls updateLinode during mount', async() => {
+    LinodeDetailPage.updateLinode = sinon.spy();
+    mount(
+      <SettingsPage
+        dispatch={dispatch}
+        linodes={linodes}
+        params={{ linodeId: testLinode.id }}
+      />
+    );
+
+    expect(LinodeDetailPage.updateLinode.calledOnce).to.equal(true);
+    LinodeDetailPage.updateLinode.reset();
+  });
 
   it('renders settings tabs', () => {
     const page = shallow(

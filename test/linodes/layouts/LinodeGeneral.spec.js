@@ -4,6 +4,7 @@ import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 import { testLinode } from '~/../test/data';
 import { LinodeGeneral } from '~/linodes/layouts/LinodeGeneral';
+import * as LinodeDetailPage from '~/linodes/layouts/LinodeDetailPage';
 
 describe('linodes/layouts/LinodeGeneral', () => {
   const sandbox = sinon.sandbox.create();
@@ -36,6 +37,18 @@ describe('linodes/layouts/LinodeGeneral', () => {
   const params = {
     linodeId: testLinode.id,
   };
+
+  it('calls updateLinode on mount', async () => {
+    LinodeDetailPage.updateLinode = sinon.spy();
+    mount(
+      <LinodeGeneral
+        linodes={linodes}
+        params={params}
+      />
+    );
+
+    expect(LinodeDetailPage.updateLinode.calledOnce).to.equal(true);
+  });
 
   it('renders public ipv4', async () => {
     const ipv4 = testLinode.ip_addresses['public'].ipv4[0];

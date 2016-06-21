@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import { getLinode } from './LinodeDetailPage';
+import { getLinode, updateLinode } from './LinodeDetailPage';
 import { countryMap } from '../components/DatacenterSelection';
 import { flags, distros as distroAssets } from '~/assets';
 
@@ -9,6 +9,7 @@ export class LinodeGeneral extends Component {
   constructor() {
     super();
     this.getLinode = getLinode.bind(this);
+    this.componentDidMount = updateLinode.bind(this);
   }
 
   render() {

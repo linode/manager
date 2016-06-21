@@ -12,13 +12,22 @@ import {
   commitChanges,
 } from '../actions/detail/index';
 import {
-  updateLinode, powerOnLinode, powerOffLinode, rebootLinode,
+  updateLinode as updateLinodeAction, powerOnLinode, powerOffLinode, rebootLinode,
 } from '~/actions/api/linodes';
 
 export function getLinode() {
   const { linodes } = this.props.linodes;
   const { linodeId } = this.props.params;
   return linodes[linodeId];
+}
+
+export function updateLinode() {
+  const { dispatch } = this.props;
+  const linode = this.getLinode();
+  if (!linode) {
+    const { linodeId } = this.props.params;
+    dispatch(updateLinodeAction(linodeId));
+  }
 }
 
 export function renderTabs(tabList) {
@@ -60,15 +69,13 @@ export class LinodeDetailPage extends Component {
     this.renderTabs = renderTabs.bind(this);
     this.handleLabelKeyUp = this.handleLabelKeyUp.bind(this);
     this.routerWillLeave = this.routerWillLeave.bind(this);
+    this.updateLinode = module.exports.updateLinode.bind(this);
+    this.componentDidMount = this.componentDidMount.bind(this);
   }
 
   componentDidMount() {
-    const { dispatch, router } = this.props;
-    const linode = this.getLinode();
-    if (!linode) {
-      const { linodeId } = this.props.params;
-      dispatch(updateLinode(linodeId));
-    }
+    this.updateLinode(); // Make sure Linode data is available
+    const { router } = this.props;
     router.setRouteLeaveHook(this.props.route, this.routerWillLeave);
   }
 

@@ -1,57 +1,59 @@
-import React from 'react';
+import React, { Component } from 'react';
 import sinon from 'sinon';
 import { push } from 'react-router-redux';
 import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 import * as fetch from '~/fetch';
 import { testLinode } from '~/../test/data';
-import { LinodeDetailPage } from '~/linodes/layouts/LinodeDetailPage';
+import * as LinodeDetailPageWrapper from '~/linodes/layouts/LinodeDetailPage';
 import { UPDATE_LINODE } from '~/actions/api/linodes';
 import { Tabs, Tab } from 'react-tabs';
 import * as actions from '~/linodes/actions/detail/index';
 import Dropdown from '~/components/Dropdown';
 
-describe('linodes/layouts/LinodeDetailPage', () => {
+const { LinodeDetailPage, updateLinode, getLinode } = LinodeDetailPageWrapper;
+
+const linodes = {
+  pagesFetched: [0],
+  totalPages: 1,
+  linodes: {
+    [testLinode.id]: testLinode,
+    linode_1235: { ...testLinode, id: 'linode_1235', group: '' },
+    linode_1236: { ...testLinode, id: 'linode_1236', state: 'offline' },
+    linode_1237: { ...testLinode, id: 'linode_1236', state: 'booting' },
+  },
+  _singular: 'linode',
+  _plural: 'linodes',
+};
+
+describe('linodes/layouts/LinodeDetailPage/updateLinode', async () => {
+  class Test extends Component {
+    constructor() {
+      super();
+      this.getLinode = getLinode.bind(this);
+      this.componentDidMount = updateLinode.bind(this);
+    }
+
+    render() {
+      return <span></span>;
+    }
+  }
+
   const sandbox = sinon.sandbox.create();
-
   const dispatch = sandbox.spy();
-
-  const router = { setRouteLeaveHook: sandbox.spy() };
-
   afterEach(() => {
     dispatch.reset();
     sandbox.restore();
   });
 
-  const linodes = {
-    pagesFetched: [0],
-    totalPages: 1,
-    linodes: {
-      [testLinode.id]: testLinode,
-      linode_1235: { ...testLinode, id: 'linode_1235', group: '' },
-      linode_1236: { ...testLinode, id: 'linode_1236', state: 'offline' },
-      linode_1237: { ...testLinode, id: 'linode_1236', state: 'booting' },
-    },
-    _singular: 'linode',
-    _plural: 'linodes',
-  };
-
-  const detail = {
-    editing: false,
-    label: '',
-    group: '',
-    loading: false,
-  };
-
   it('fetches a linode when mounted with an unknown linode', async () => {
     mount(
-      <LinodeDetailPage
+      <Test
         dispatch={dispatch}
         linodes={{ linodes: { } }}
         params={{ linodeId: 'linode_1234' }}
-        detail={detail}
-        router={router}
-      />);
+      />
+    );
     expect(dispatch.calledOnce).to.equal(true);
     const dispatched = dispatch.firstCall.args[0];
     // Assert that dispatched is a function that fetches a linode
@@ -70,14 +72,48 @@ describe('linodes/layouts/LinodeDetailPage', () => {
 
   it('does not fetch when mounted with a known linode', async () => {
     mount(
+      <Test
+        dispatch={dispatch}
+        linodes={linodes}
+        params={{ linodeId: testLinode.id }}
+      />);
+    expect(dispatch.calledOnce).to.equal(false);
+  });
+});
+
+describe('linodes/layouts/LinodeDetailPage', () => {
+  const sandbox = sinon.sandbox.create();
+
+  const dispatch = sandbox.spy();
+
+  const router = { setRouteLeaveHook: sandbox.spy() };
+
+  afterEach(() => {
+    dispatch.reset();
+    sandbox.restore();
+  });
+
+  const detail = {
+    editing: false,
+    label: '',
+    group: '',
+    loading: false,
+  };
+
+  it('calls updateLinode during mount', async() => {
+    LinodeDetailPageWrapper.updateLinode = sinon.spy();
+    mount(
       <LinodeDetailPage
         dispatch={dispatch}
         linodes={linodes}
         params={{ linodeId: testLinode.id }}
         detail={detail}
         router={router}
-      />);
-    expect(dispatch.calledOnce).to.equal(false);
+      />
+    );
+
+    expect(LinodeDetailPageWrapper.updateLinode.calledOnce).to.equal(true);
+    LinodeDetailPageWrapper.updateLinode.reset();
   });
 
   it('renders the linode label and group', async () => {

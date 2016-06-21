@@ -1,25 +1,15 @@
 import { Component, PropTypes } from 'react';
-import { updateLinode } from '~/actions/api/linodes';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { getLinode, renderTabs } from '../layouts/LinodeDetailPage';
+import { getLinode, updateLinode, renderTabs } from '../layouts/LinodeDetailPage';
 
 export class SettingsPage extends Component {
   constructor() {
     super();
-    this.componentDidMount = this.componentDidMount.bind(this);
     this.getLinode = getLinode.bind(this);
     this.renderTabs = renderTabs.bind(this);
-  }
-
-  componentDidMount() {
-    const { dispatch } = this.props;
-    const linode = this.getLinode();
-    if (!linode) {
-      const { linodeId } = this.props.params;
-      dispatch(updateLinode(linodeId));
-    }
+    this.componentDidMount = updateLinode.bind(this);
   }
 
   render() {
