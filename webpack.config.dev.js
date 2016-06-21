@@ -27,11 +27,16 @@ module.exports = {
       },
       {
         test: /\.scss$/,
-        loaders: ["style", "css", "sass"]
+        loaders: ['style', 'css', 'sass']
+      },
+      {
+        test: /\.svg$/,
+        loaders: ['file'],
+        include: path.join(__dirname, 'node_modules')
       }
     ]
   },
   sassLoader: {
-    includePaths: [path.resolve(__dirname, "./node_modules/bootstrap/scss/")]
+    includePaths: [path.resolve(__dirname, './node_modules/bootstrap/scss/')]
   }
 };
