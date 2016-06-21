@@ -6,6 +6,7 @@ import LinodeDetailPage from './layouts/LinodeDetailPage';
 import LinodeGeneral from './layouts/LinodeGeneral';
 import CreateLinodePage from './layouts/CreateLinodePage';
 import BackupsPage from './layouts/BackupsPage';
+import SettingsPage from './layouts/SettingsPage';
 
 /* eslint-disable react/prop-types */
 function Placeholder(props) {
@@ -23,7 +24,7 @@ export default (
       <Route path="resize" component={Placeholder} />
       <Route path="repair" component={Placeholder} />
       <Route path="backups" component={BackupsPage} />
-      <Route path="settings" component={Placeholder} />
+      <Route path="settings" component={SettingsPage} />
     </Route>
   </Route>
 );

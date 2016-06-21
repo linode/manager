@@ -12,15 +12,16 @@
     }
 
     header {
-        background-color: $linode-light-gray;
+        background-color: $linode-gray;
         padding: $main-padding-tb $main-padding-lr;
     }
 
     .react-tabs {
         [role=tablist] {
-            background-color: $linode-light-gray;
+            background-color: $linode-gray;
             padding: 0 $main-padding-lr;
             border-color: $border-gray;
+            margin-bottom: 0;
         }
 
         [role=tab] {
@@ -48,6 +49,26 @@
 
             h2 {
                 margin-bottom: calc(#{$main-padding-tb}/2);
+            }
+        }
+
+        .react-tabs {
+            margin-left: -$main-padding-lr;
+            margin-top: -$main-padding-tb;
+            width: calc(100% + #{$main-padding-lr * 2});
+
+            [role=tablist] {
+                background-color: transparent;
+            }
+
+            [role=tab] {
+                border: none;
+                background: transparent;
+                color: $linode-blue;
+
+                &[selected] {
+                    color: $linode-black;
+                }
             }
         }
     }
