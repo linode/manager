@@ -69,6 +69,8 @@
                 background: transparent;
                 color: $linode-blue;
 
+                /* There must be a bug in scss because when this was [selected]
+                 * it duplicated the code in line 36 and this code did not show up. */
                 &[aria-selected=true] {
                     color: $linode-black;
                 }

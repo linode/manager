@@ -42,6 +42,7 @@ SettingsPage.propTypes = {
   params: PropTypes.shape({
     linodeId: PropTypes.string.isRequired,
   }).isRequired,
+  children: PropTypes.object,
   location: PropTypes.object,
   router: PropTypes.object,
   route: PropTypes.object,
