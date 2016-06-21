@@ -39,6 +39,9 @@ client secret set appropriately:
     export const clientId = 'change me';
     export const clientSecret = 'change me';
 
+Be sure to set your callback URL to something like
+`http://localhost:3000/oauth/callback` when you register your OAuth client.
+
 Note: if you pick a callback url that is not on localhost:3000, you will need to
 update the APP_ROOT variable in src/constants.js to point to the different
 server.
