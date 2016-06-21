@@ -12,7 +12,7 @@ import {
   commitChanges,
 } from '../actions/detail/index';
 import {
-  updateLinode, powerOnLinode, powerOffLinode, rebootLinode,
+  updateLinode as updateLinodeAction, powerOnLinode, powerOffLinode, rebootLinode,
 } from '~/actions/api/linodes';
 
 export function getLinode() {
@@ -20,6 +20,44 @@ export function getLinode() {
   const { linodeId } = this.props.params;
   return linodes[linodeId];
 }
+
+export function updateLinode() {
+  const { dispatch } = this.props;
+  const linode = this.getLinode();
+  if (!linode) {
+    const { linodeId } = this.props.params;
+    dispatch(updateLinodeAction(linodeId));
+  }
+}
+
+export function renderTabs(tabList) {
+  const { dispatch, location } = this.props;
+
+  const pathname = location ? location.pathname : tabList[0].link;
+  const selected = tabList.reduce((last, current) =>
+    (pathname.indexOf(current.link) === 0 ? current : last));
+
+  return (
+    <Tabs
+      onSelect={ix => dispatch(push(tabList[ix].link))}
+      selectedIndex={tabList.indexOf(selected)}
+    >
+      <TabList>
+        {tabList.map(t => (
+          <Tab key={t.name}>
+            <Link to={t.link} onClick={e => e.preventDefault()}>{t.name}</Link>
+          </Tab>
+        ))}
+      </TabList>
+      {tabList.map(t => (
+        <TabPanel key={t.name}>
+          {t === selected ? this.props.children : null}
+        </TabPanel>
+      ))}
+    </Tabs>
+  );
+}
+
 export class LinodeDetailPage extends Component {
   constructor() {
     super();
@@ -28,17 +66,16 @@ export class LinodeDetailPage extends Component {
     this.renderHeader = this.renderHeader.bind(this);
     this.renderEditUI = this.renderEditUI.bind(this);
     this.renderLabel = this.renderLabel.bind(this);
+    this.renderTabs = renderTabs.bind(this);
     this.handleLabelKeyUp = this.handleLabelKeyUp.bind(this);
     this.routerWillLeave = this.routerWillLeave.bind(this);
+    this.updateLinode = module.exports.updateLinode.bind(this);
+    this.componentDidMount = this.componentDidMount.bind(this);
   }
 
   componentDidMount() {
-    const { dispatch, router } = this.props;
-    const linode = this.getLinode();
-    if (!linode) {
-      const { linodeId } = this.props.params;
-      dispatch(updateLinode(linodeId));
-    }
+    this.updateLinode(); // Make sure Linode data is available
+    const { router } = this.props;
     router.setRouteLeaveHook(this.props.route, this.routerWillLeave);
   }
 
@@ -157,7 +194,6 @@ export class LinodeDetailPage extends Component {
   render() {
     const linode = this.getLinode();
     if (!linode) return <span></span>;
-    const { dispatch, location } = this.props;
     const tabList = [
       { name: 'General', link: '' },
       { name: 'Networking', link: '/networking' },
@@ -167,31 +203,11 @@ export class LinodeDetailPage extends Component {
       { name: 'Settings', link: '/settings' },
     ].map(t => ({ ...t, link: `/linodes/${linode.id}${t.link}` }));
 
-    const pathname = location ? location.pathname : tabList[0].link;
-    const selected = tabList.reduce((last, current) =>
-      (pathname === current.link ? current : last));
-
     return (
       <div className="details-page">
         <div className="card">
           {this.renderHeader(linode)}
-          <Tabs
-            onSelect={ix => dispatch(push(tabList[ix].link))}
-            selectedIndex={tabList.indexOf(selected)}
-          >
-            <TabList>
-              {tabList.map(t => (
-                <Tab key={t.name}>
-                  <Link to={t.link} onClick={e => e.preventDefault()}>{t.name}</Link>
-                </Tab>
-              ))}
-            </TabList>
-            {tabList.map(t => (
-              <TabPanel key={t.name}>
-                {t === selected ? this.props.children : null}
-              </TabPanel>
-            ))}
-          </Tabs>
+          {this.renderTabs(tabList)}
         </div>
       </div>
     );

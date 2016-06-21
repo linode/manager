@@ -21,13 +21,17 @@
             background-color: $linode-light-gray;
             padding: 0 $main-padding-lr;
             border-color: $border-gray;
+            margin-bottom: 0;
         }
 
         [role=tab] {
             color: $linode-light-black;
             border-radius: 0;
-            margin-right: $main-padding-tb;
             padding: 3px 12px;
+
+            &:not(:last-of-type) {
+                margin-right: $main-padding-tb;
+            }
 
             &[selected],
             &:hover {
@@ -48,6 +52,28 @@
 
             h2 {
                 margin-bottom: calc(#{$main-padding-tb}/2);
+            }
+        }
+
+        .react-tabs {
+            margin-left: -$main-padding-lr;
+            margin-top: -$main-padding-tb;
+            width: calc(100% + #{$main-padding-lr * 2});
+
+            [role=tablist] {
+                background-color: transparent;
+            }
+
+            [role=tab] {
+                border: none;
+                background: transparent;
+                color: $linode-blue;
+
+                /* There must be a bug in scss because when this was [selected]
+                 * it duplicated the code in line 36 and this code did not show up. */
+                &[aria-selected=true] {
+                    color: $linode-black;
+                }
             }
         }
     }
