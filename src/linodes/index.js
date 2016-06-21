@@ -24,7 +24,11 @@ export default (
       <Route path="resize" component={Placeholder} />
       <Route path="repair" component={Placeholder} />
       <Route path="backups" component={BackupsPage} />
-      <Route path="settings" component={SettingsPage} />
+      <Route path="settings" component={SettingsPage}>
+        <IndexRoute component={Placeholder} />
+        <Route path="alerts" component={Placeholder} />
+        <Route path="advanced" component={Placeholder} />
+      </Route>
     </Route>
   </Route>
 );

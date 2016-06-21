@@ -12,13 +12,13 @@
     }
 
     header {
-        background-color: $linode-gray;
+        background-color: $linode-light-gray;
         padding: $main-padding-tb $main-padding-lr;
     }
 
     .react-tabs {
         [role=tablist] {
-            background-color: $linode-gray;
+            background-color: $linode-light-gray;
             padding: 0 $main-padding-lr;
             border-color: $border-gray;
             margin-bottom: 0;
@@ -27,8 +27,11 @@
         [role=tab] {
             color: $linode-light-black;
             border-radius: 0;
-            margin-right: $main-padding-tb;
             padding: 3px 12px;
+
+            &:not(:last-of-type) {
+                margin-right: $main-padding-tb;
+            }
 
             &[selected],
             &:hover {
@@ -66,7 +69,7 @@
                 background: transparent;
                 color: $linode-blue;
 
-                &[selected] {
+                &[aria-selected=true] {
                     color: $linode-black;
                 }
             }

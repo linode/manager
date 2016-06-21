@@ -1,13 +1,16 @@
-import React, { Component, PropTypes } from 'react';
+import { Component, PropTypes } from 'react';
 import { updateLinode } from '~/actions/api/linodes';
 import { connect } from 'react-redux';
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import { withRouter } from 'react-router';
+
+import { getLinode, renderTabs } from '../layouts/LinodeDetailPage';
 
 export class SettingsPage extends Component {
   constructor() {
     super();
     this.componentDidMount = this.componentDidMount.bind(this);
-    this.getLinode = this.getLinode.bind(this);
+    this.getLinode = getLinode.bind(this);
+    this.renderTabs = renderTabs.bind(this);
   }
 
   componentDidMount() {
@@ -19,27 +22,17 @@ export class SettingsPage extends Component {
     }
   }
 
-  getLinode() {
-    const { linodes } = this.props.linodes;
-    const { linodeId } = this.props.params;
-    return linodes[linodeId];
-  }
-
   render() {
     const linode = this.getLinode();
     if (!linode) return null;
-    return (
-      <Tabs>
-        <TabList>
-          <Tab>Boot Settings</Tab>
-          <Tab>Alerts</Tab>
-          <Tab>Advanced</Tab>
-        </TabList>
-        <TabPanel>Boot Settings</TabPanel>
-        <TabPanel>Alerts</TabPanel>
-        <TabPanel>Advanced</TabPanel>
-      </Tabs>
-    );
+
+    const tabList = [
+      { name: 'Boot settings', link: '' },
+      { name: 'Alerts', link: '/alerts' },
+      { name: 'Advanced', link: '/advanced' },
+    ].map(t => ({ ...t, link: `/linodes/${linode.id}/settings${t.link}` }));
+
+    return this.renderTabs(tabList);
   }
 }
 
@@ -49,6 +42,9 @@ SettingsPage.propTypes = {
   params: PropTypes.shape({
     linodeId: PropTypes.string.isRequired,
   }).isRequired,
+  location: PropTypes.object,
+  router: PropTypes.object,
+  route: PropTypes.object,
 };
 
 function select(state) {
@@ -57,4 +53,4 @@ function select(state) {
   };
 }
 
-export default connect(select)(SettingsPage);
+export default withRouter(connect(select)(SettingsPage));
