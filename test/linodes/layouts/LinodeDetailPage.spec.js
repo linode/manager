@@ -11,7 +11,12 @@ import { Tabs, Tab } from 'react-tabs';
 import * as actions from '~/linodes/actions/detail/index';
 import Dropdown from '~/components/Dropdown';
 
-const { LinodeDetailPage, updateLinode, getLinode } = LinodeDetailPageWrapper;
+const {
+  LinodeDetailPage,
+  updateLinode,
+  getLinode,
+  renderTabs,
+} = LinodeDetailPageWrapper;
 
 const linodes = {
   pagesFetched: [0],
@@ -81,6 +86,62 @@ describe('linodes/layouts/LinodeDetailPage/updateLinode', async () => {
   });
 });
 
+describe('linodes/layouts/LinodeDetailPage/updateLinode', async () => {
+  class Test extends Component {
+    constructor() {
+      super();
+      this.renderTabs = renderTabs.bind(this);
+    }
+
+    render() {
+      // eslint-disable-next-line react/prop-types
+      return this.renderTabs(this.props.tabList);
+    }
+  }
+
+  const sandbox = sinon.sandbox.create();
+  const dispatch = sandbox.spy();
+  afterEach(() => {
+    dispatch.reset();
+    sandbox.restore();
+  });
+
+  const tabList = [
+    { name: 'One', link: '/one' },
+    { name: 'Two', link: '/two' },
+  ];
+
+  it('renders tabs', () => {
+    const page = shallow(
+      <Test
+        dispatch={dispatch}
+        linodes={linodes}
+        params={{ linodeId: 'linode_1234' }}
+        tabList={tabList}
+      />);
+    const tabs = page.find(Tabs);
+    expect(tabs).to.exist;
+    tabList.forEach(({ name, link }) => {
+      expect(tabs.find(Tab).filter(t => t.text() === name)).to.exist;
+      expect(tabs.find(Tab).filter(t => t.To === link)).to.exist;
+    });
+  });
+
+  it('dispatches a push action when tabs are clicked', () => {
+    const page = shallow(
+      <Test
+        dispatch={dispatch}
+        linodes={linodes}
+        params={{ linodeId: 'linode_1234' }}
+        tabList={tabList}
+      />
+    );
+    const tabs = page.find(Tabs);
+    tabs.props().onSelect(1);
+    expect(dispatch.calledWith(push('/two'))).to.equal(true);
+  });
+});
+
 describe('linodes/layouts/LinodeDetailPage', () => {
   const sandbox = sinon.sandbox.create();
 
@@ -142,34 +203,30 @@ describe('linodes/layouts/LinodeDetailPage', () => {
       .to.equal(true);
   });
 
-  it('renders detail tabs', () => {
+  it('renders tabs with correct names and links', () => {
     const page = shallow(
       <LinodeDetailPage
         dispatch={dispatch}
         linodes={linodes}
-        params={{ linodeId: 'linode_1234' }}
+        params={{ linodeId: 'linode_1235' }}
         detail={detail}
-      />);
-    const tabs = page.find(Tabs);
-    expect(tabs).to.exist;
-    const expectedTabs = [
-      'General', 'Networking', 'Resize', 'Repair', 'Backups', 'Settings',
-    ];
-    expect(tabs.find(Tab).length).to.equal(expectedTabs.length);
-    expect(tabs.find(Tab).filter(t => t.text() === t)).to.exist;
-  });
+      />
+    );
 
-  it('dispatches a push action when tabs are clicked', () => {
-    const page = shallow(
-      <LinodeDetailPage
-        dispatch={dispatch}
-        linodes={linodes}
-        params={{ linodeId: 'linode_1234' }}
-        detail={detail}
-      />);
+    const tabList = [
+      { name: 'General', link: '' },
+      { name: 'Networking', link: '/networking' },
+      { name: 'Resize', link: '/resize' },
+      { name: 'Repair', link: '/repair' },
+      { name: 'Backups', link: '/backups' },
+      { name: 'Settings', link: '/settings' },
+    ].map(t => ({ ...t, link: `/linodes/linode_1235${t.link}` }));
+
     const tabs = page.find(Tabs);
-    tabs.props().onSelect(2);
-    expect(dispatch.calledWith(push('/linodes/linode_1234/resize'))).to.equal(true);
+    tabList.forEach(({ name, link }) => {
+      expect(tabs.find(Tab).filter(t => t.text() === name)).to.exist;
+      expect(tabs.find(Tab).filter(t => t.To === link)).to.exist;
+    });
   });
 
   it('renders a power management dropdown', () => {

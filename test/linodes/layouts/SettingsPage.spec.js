@@ -1,6 +1,5 @@
 import React from 'react';
 import sinon from 'sinon';
-import { push } from 'react-router-redux';
 import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 import { Tabs, Tab } from 'react-tabs';
@@ -45,31 +44,25 @@ describe('linodes/layouts/SettingsPage', () => {
     LinodeDetailPage.updateLinode.reset();
   });
 
-  it('renders settings tabs', () => {
+  it('renders tabs with correct names and links', () => {
     const page = shallow(
       <SettingsPage
         dispatch={dispatch}
         linodes={linodes}
-        params={{ linodeId: 'linode_1234' }}
-      />);
-    const tabs = page.find(Tabs);
-    expect(tabs).to.exist;
-    const expectedTabs = [
-      'Boot settings', 'Alerts', 'Advanced',
-    ];
-    expect(tabs.find(Tab).length).to.equal(expectedTabs.length);
-    expect(tabs.find(Tab).filter(t => t.text() === t)).to.exist;
-  });
+        params={{ linodeId: 'linode_1235' }}
+      />
+    );
 
-  it('dispatches a push action when tabs are clicked', () => {
-    const page = shallow(
-      <SettingsPage
-        dispatch={dispatch}
-        linodes={linodes}
-        params={{ linodeId: 'linode_1234' }}
-      />);
+    const tabList = [
+      { name: 'Boot settings', link: '' },
+      { name: 'Alerts', link: '/alerts' },
+      { name: 'Advanced', link: '/advanced' },
+    ].map(t => ({ ...t, link: `/linodes/linode_1235/settings${t.link}` }));
+
     const tabs = page.find(Tabs);
-    tabs.props().onSelect(2);
-    expect(dispatch.calledWith(push('/linodes/linode_1234/settings/advanced'))).to.equal(true);
+    tabList.forEach(({ name, link }) => {
+      expect(tabs.find(Tab).filter(t => t.text() === name)).to.exist;
+      expect(tabs.find(Tab).filter(t => t.To === link)).to.exist;
+    });
   });
 });
