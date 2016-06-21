@@ -4,15 +4,63 @@ import { Link } from 'react-router';
 import { getLinode, updateLinode } from './LinodeDetailPage';
 import { countryMap } from '../components/DatacenterSelection';
 import { flags, distros as distroAssets } from '~/assets';
+import { ResponsiveLineChart } from '~/components/ResponsiveCharts';
+import _ from 'lodash';
 
 export class LinodeGeneral extends Component {
   constructor() {
     super();
     this.getLinode = getLinode.bind(this);
     this.componentDidMount = updateLinode.bind(this);
+    this.renderDetails = this.renderDetails.bind(this);
+    this.renderGraphs = this.renderGraphs.bind(this);
   }
 
-  render() {
+  renderGraphs() {
+    const now = new Date().getTime() / 1000;
+    const data = [
+      {
+        name: 'CPU Usage',
+        values: _.range(now - 86400, now, 30 * 60)
+          .map(ts => ({ x: ts, y: Math.random() * 5 })),
+        strokeWidth: 2,
+      },
+    ];
+    return (
+      <div className="graphs">
+        <h2>Performance</h2>
+        <div className="card">
+          <div className="row">
+            <div className="col-md-2">
+              <select className="form-control">
+                <option>CPU Usage</option>
+                <option>Memory Usage</option>
+                <option>Swap</option>
+                <option>Network</option>
+              </select>
+            </div>
+            <div className="col-md-offset-8 col-md-2">
+              <select className="form-control">
+                <option>Last 24 hours</option>
+                <option>Last 48 hours</option>
+                <option>Last week</option>
+              </select>
+            </div>
+          </div>
+          <ResponsiveLineChart
+            yAxisLabel="CPU Usage %"
+            xAxisLabel="Sample Time"
+            xAccessor={d => new Date(d.x)}
+            data={data}
+            domain={{ y: [0, 100] }}
+            gridHorizontal
+          />
+        </div>
+      </div>
+    );
+  }
+
+  renderDetails() {
     const username = 'caker';
     const linode = this.getLinode();
     const ipAddresses = linode.ip_addresses;
@@ -160,6 +208,15 @@ export class LinodeGeneral extends Component {
             </div>
           </div>
         </div>
+      </div>
+    );
+  }
+
+  render() {
+    return (
+      <div>
+        {this.renderDetails()}
+        {this.renderGraphs()}
       </div>
     );
   }

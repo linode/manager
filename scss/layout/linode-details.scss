@@ -1,10 +1,22 @@
 .details-page {
     $side-margin: 60px;
 
+    .chart-wrapper {
+        height: 300px;
+        width: calc(100% + 2rem);
+        margin-top: 1rem;
+    }
+
     .card {
         width: 100%;
         margin-top: 15px;
         padding: 0;
+    }
+
+    .graphs {
+        .card {
+            padding: 1rem;
+        }
     }
 
     header {
