@@ -86,7 +86,7 @@ describe('linodes/layouts/LinodeGeneral', () => {
   });
 
   it('renders backups not enabled', async () => {
-    const page = mount(
+    const page = shallow(
       <LinodeGeneral
         linodes={linodes}
         params={params}
@@ -96,7 +96,7 @@ describe('linodes/layouts/LinodeGeneral', () => {
   });
 
   it('renders backups enabled', async () => {
-    const page = mount(
+    const page = shallow(
       <LinodeGeneral
         linodes={linodes}
         params={{ linodeId: 'linode_1235' }}
@@ -106,7 +106,7 @@ describe('linodes/layouts/LinodeGeneral', () => {
   });
 
   it('renders plan', async () => {
-    const page = mount(
+    const page = shallow(
       <LinodeGeneral
         linodes={linodes}
         params={params}
@@ -116,7 +116,7 @@ describe('linodes/layouts/LinodeGeneral', () => {
   });
 
   it('renders datacenter', async () => {
-    const page = mount(
+    const page = shallow(
       <LinodeGeneral
         linodes={linodes}
         params={params}
@@ -126,7 +126,7 @@ describe('linodes/layouts/LinodeGeneral', () => {
   });
 
   it('renders distribution', async () => {
-    const page = mount(
+    const page = shallow(
       <LinodeGeneral
         linodes={linodes}
         params={params}
@@ -136,7 +136,7 @@ describe('linodes/layouts/LinodeGeneral', () => {
   });
 
   it('renders ssh input elements', async () => {
-    const page = mount(
+    const page = shallow(
       <LinodeGeneral
         linodes={linodes}
         params={params}
@@ -149,7 +149,7 @@ describe('linodes/layouts/LinodeGeneral', () => {
   it('renders shh path', async () => {
     const ipv4 = testLinode.ip_addresses['public'].ipv4[0];
     const sshPath = `ssh root@${ipv4}`;
-    const page = mount(
+    const page = shallow(
       <LinodeGeneral
         linodes={linodes}
         params={params}
@@ -161,7 +161,7 @@ describe('linodes/layouts/LinodeGeneral', () => {
   });
 
   it('renders lish input elements', async () => {
-    const page = mount(
+    const page = shallow(
       <LinodeGeneral
         linodes={linodes}
         params={params}
@@ -178,7 +178,7 @@ describe('linodes/layouts/LinodeGeneral', () => {
     const lishLink = `ssh -t caker@lish-${
         testLinode.datacenter.datacenter
       }.linode.com`;
-    const page = mount(
+    const page = shallow(
       <LinodeGeneral
         linodes={linodes}
         params={params}
@@ -190,7 +190,7 @@ describe('linodes/layouts/LinodeGeneral', () => {
   });
 
   it('renders glish button element', async () => {
-    const page = mount(
+    const page = shallow(
       <LinodeGeneral
         linodes={linodes}
         params={params}
