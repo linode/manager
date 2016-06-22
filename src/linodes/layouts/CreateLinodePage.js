@@ -5,7 +5,7 @@ import ServiceSelection from '../components/ServiceSelection';
 import DatacenterSelection from '../components/DatacenterSelection';
 import OrderSummary from '../components/OrderSummary';
 
-class CreateLinodePage extends Component {
+export class CreateLinodePage extends Component {
   constructor() {
     super();
     this.render = this.render.bind(this);
