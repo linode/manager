@@ -5,15 +5,67 @@
     position: relative;
     border-radius: 0;
 
+    &.page-card {
+        width: 100%;
+        margin-top: 15px;
+        padding: 0;
+    }
+
     .card-type {
         position: absolute;
         bottom: 15px;
         right: 15px;
     }
 
+    .card-body {
+        padding: 2rem;
+    }
+
     header {
+        $padding: $main-padding-tb * 1.5;
         background-color: $linode-light-gray;
-        padding: $main-padding-tb $main-padding-lr;
+        padding: $padding $main-padding-lr;
+        border-bottom: $linode-border;
+        line-height: 2.2rem;
+
+        &.tabs {
+            padding: $padding $main-padding-lr ($padding / 2);
+            border-bottom: 0;
+        }
+
+        h1 {
+            display: inline-block;
+        }
+
+        .linode-status {
+            margin-right: 1rem;
+        }
+
+        .edit-icon {
+            margin-left: 0.75rem;
+            font-size: 16px;
+            position: relative;
+            top: -6px;
+        }
+
+        .edit-details {
+            font-size: 2.2rem;
+            display: inline-block;
+
+            input {
+                background: transparent;
+                margin: 0 0.5rem;
+                padding: 0;
+                width: 12rem;
+                border: none;
+                border-bottom: $linode-border;
+
+                &:focus {
+                    outline: none;
+                    border-bottom-color: $linode-dark-gray;
+                }
+            }
+        }
     }
 
     .react-tabs {

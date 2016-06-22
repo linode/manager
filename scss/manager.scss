@@ -31,11 +31,11 @@ $input-height: 30px;
 $input-padding: 0 .5rem;
 $font-size: .9rem;
 
+@import 'components/card';
+@import 'components/modal';
 @import 'linodes/linodes';
 @import 'layout/linode-details';
 @import 'layout/linodes';
-@import 'components/card';
-@import 'components/modal';
 
 @font-face {
     font-family: Heebo;
