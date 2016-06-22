@@ -178,7 +178,7 @@ export class LinodeDetailPage extends Component {
     .map(element => ({ ...element, action: () => dispatch(element._action(linode.id)) }));
 
     return (
-      <header>
+      <header className="tabs">
         {editing ? this.renderEditUI(linode) : this.renderLabel(linode)}
         {LinodeStates.pending.indexOf(linode.state) !== -1 ? null :
           <span className="pull-right">
@@ -205,7 +205,7 @@ export class LinodeDetailPage extends Component {
 
     return (
       <div className="details-page">
-        <div className="card">
+        <div className="card page-card">
           {this.renderHeader(linode)}
           {this.renderTabs(tabList)}
         </div>

@@ -1,7 +1,6 @@
 import { combineReducers } from 'redux';
 import _ from 'underscore';
 import { getStorage, setStorage } from '~/storage';
-import create from './create';
 import detail from './detail';
 
 import {
@@ -46,7 +45,6 @@ export function index(_state = null, action) {
 
 const rootReducer = combineReducers({
   index,
-  create,
   detail,
 });
 

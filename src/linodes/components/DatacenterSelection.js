@@ -1,7 +1,5 @@
-import React, { Component, PropTypes } from 'react';
-import { flags } from '~/assets';
+import React, { Component } from 'react';
 
-// TODO: This is lame, we should extend the API to include country code
 export const countryMap = {
   datacenter_2: 'us', // Dallas
   datacenter_3: 'us', // Fremont
@@ -17,80 +15,23 @@ export default class DatacenterSelection extends Component {
   constructor() {
     super();
     this.render = this.render.bind(this);
-    this.renderDC = this.renderDC.bind(this);
     this.renderHeader = this.renderHeader.bind(this);
-    this.renderBack = this.renderBack.bind(this);
-  }
-
-  renderDC(dc) {
-    const { onSelection, selected } = this.props;
-    return (
-      <div
-        className={`dc ${selected === dc.id ? 'selected' : ''}`}
-        key={dc.id} onClick={() => onSelection(dc.id)}
-      >
-        <img
-          src={flags[countryMap[dc.id]]
-            ? flags[countryMap[dc.id]] : '//placehold.it/50x50'}
-          width="96" height="96" alt={dc.label}
-        />
-        {dc.label}
-      </div>
-    );
-  }
-
-  renderBack() {
-    const { onBack, ui } = this.props;
-    if (ui.datacenter === null) {
-      return (<a
-        href="#" className="back pull-right"
-        onClick={e => { e.preventDefault(); onBack(); }}
-      >Back</a>);
-    }
-    return null;
   }
 
   renderHeader() {
-    const { ui, datacenters } = this.props;
-    if (ui.datacenter === null) {
-      return <h2>Select a Datacenter</h2>;
-    }
-    const dc = datacenters[ui.datacenter];
-    return (<h2 className="text-right">
-      {dc.label}
-      <img
-        className="dc-icon" src={flags[countryMap[dc.id]]
-          ? flags[countryMap[dc.id]] : '//placehold.it/24x24'}
-        width="24" height="24" alt={dc.label}
-      />
-    </h2>);
+    return (
+      <header>
+        <h2>Select a datacenter</h2>
+      </header>
+    );
   }
 
   render() {
-    const { datacenters, ui } = this.props;
-    if (ui.source === null) {
-      return <div></div>;
-    }
     return (
-      <div
-        className={`card creation-step ${
-          ui.datacenter !== null ? 'step-done' : ''}`}
-      >
-        {this.renderBack()}
+      <div>
         {this.renderHeader()}
-        {ui.datacenter !== null ? '' :
-          <div className="dc-list">
-            {Object.values(datacenters).map(this.renderDC)}
-          </div>}
+        <div className="card-body">TODO</div>
       </div>
     );
   }
 }
-
-DatacenterSelection.propTypes = {
-  datacenters: PropTypes.object.isRequired,
-  selected: PropTypes.string,
-  ui: PropTypes.object.isRequired,
-  onBack: PropTypes.func,
-  onSelection: PropTypes.func,
-};
