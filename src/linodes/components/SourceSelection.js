@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
 export default class SourceSelection extends Component {
@@ -10,8 +10,12 @@ export default class SourceSelection extends Component {
   }
 
   renderSourceTabs() {
+    const { selectedTab, onTabChange } = this.props;
     return (
-      <Tabs>
+      <Tabs
+        onSelect={onTabChange}
+        selectedIndex={selectedTab}
+      >
         <TabList>
           <Tab>Distributions</Tab>
           <Tab>StackScripts</Tab>
@@ -47,3 +51,10 @@ export default class SourceSelection extends Component {
     );
   }
 }
+
+SourceSelection.propTypes = {
+  distros: PropTypes.object.isRequired,
+  selectedTab: PropTypes.number.isRequired,
+  onTabChange: PropTypes.func,
+  source: PropTypes.object,
+};
