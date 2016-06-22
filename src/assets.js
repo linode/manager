@@ -11,11 +11,11 @@ export const distros = {
   Arch, CentOS, Debian, Fedora, Gentoo, Slackware, Ubuntu, openSUSE,
 };
 
-import us from 'file!../assets/flags/us.svg';
-import de from 'file!../assets/flags/de.svg';
-import gb from 'file!../assets/flags/gb.svg';
-import sg from 'file!../assets/flags/sg.svg';
-import jp from 'file!../assets/flags/jp.svg';
+import us from 'file!flag-icon-css/flags/4x3/us.svg';
+import de from 'file!flag-icon-css/flags/4x3/de.svg';
+import gb from 'file!flag-icon-css/flags/4x3/gb.svg';
+import sg from 'file!flag-icon-css/flags/4x3/sg.svg';
+import jp from 'file!flag-icon-css/flags/4x3/jp.svg';
 
 export const flags = {
   us, de, gb, sg, jp,

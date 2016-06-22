@@ -126,7 +126,7 @@ export class LinodeGeneral extends Component {
               <img
                 src={flags[countryMap[linode.datacenter.id]]
                   ? flags[countryMap[linode.datacenter.id]] : '//placehold.it/50x50'}
-                width="12" height="12" alt={linode.datacenter.label}
+                height="15" width="20" alt={linode.datacenter.label}
               />
             </div>
           </div>
