@@ -49,7 +49,12 @@ export class LinodeNetworking extends Component {
       <div className="col-sm-6 left">
         <div className="row">
           <div className="col-sm-12 left">
-            <h3>IPv4</h3>
+            <h3>
+              IPv4
+              <HelpButton
+                to="https://www.linode.com/docs/networking/linux-static-ip-configuration"
+              />
+            </h3>
           </div>
         </div>
         <div className="row">
@@ -83,7 +88,12 @@ export class LinodeNetworking extends Component {
       <div className="col-sm-6 right">
         <div className="row">
           <div className="col-sm-12 left">
-            <h3>IPv6</h3>
+            <h3>
+              IPv6
+              <HelpButton
+                to="https://www.linode.com/docs/networking/native-ipv6-networking"
+              />
+            </h3>
           </div>
         </div>
         <div className="row">
@@ -119,11 +129,7 @@ export class LinodeNetworking extends Component {
         <div className="col-xl-12">
           <div className="row">
             <div className="col-sm-6 left">
-              <h2>Public network
-                <HelpButton
-                  to="https://www.linode.com/docs/networking/linux-static-ip-configuration"
-                />
-              </h2>
+              <h2>Public network</h2>
             </div>
             <div className="col-sm-6 right">
               <div className="input-group-btn">

@@ -91,6 +91,14 @@
         margin-bottom: 0;
     }
 
+    .network-content h3 {
+        margin-bottom: $main-padding-tb/2; 
+    }
+
+    .network-content ul {
+        margin: 0px;
+    }
+
     hr {
         margin: $main-padding-tb 0;
     }
