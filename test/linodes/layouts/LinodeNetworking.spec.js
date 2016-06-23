@@ -3,7 +3,8 @@ import sinon from 'sinon';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
 import { testLinode } from '~/../test/data';
-import { LinodeNetworking, ipv4ns, ipv6ns, ipv6nsSuffix } from '~/linodes/layouts/LinodeNetworking';
+import { LinodeNetworking } from '~/linodes/layouts/LinodeNetworking';
+import { ipv4ns, ipv6ns, ipv6nsSuffix } from '~/constants';
 
 describe('linodes/layouts/LinodeNetworking', () => {
   const sandbox = sinon.sandbox.create();
@@ -36,9 +37,7 @@ describe('linodes/layouts/LinodeNetworking', () => {
             ipv6: '2600:3c03::f03c:91ff:fe96:0f13',
           },
           private: {
-            ipv4: [
-              '321.456.789.1',
-            ],
+            ipv4: [],
             link_local: 'fe80::f03c:91ff:fe96:0f13',
           },
         },
@@ -52,6 +51,19 @@ describe('linodes/layouts/LinodeNetworking', () => {
   };
 
   describe('public network', () => {
+    it('renders help button', async () => {
+      const path = 'https://www.linode.com/docs/networking/linux-static-ip-configuration';
+      const page = shallow(
+        <LinodeNetworking
+          linodes={linodes}
+          params={params}
+        />);
+
+      expect(page.find('HelpButton').at(0).props())
+        .to.have.property('to')
+        .which.equals(path);
+    });
+
     it('renders add ip button', async () => {
       const page = shallow(
         <LinodeNetworking
@@ -65,19 +77,6 @@ describe('linodes/layouts/LinodeNetworking', () => {
     });
 
     describe('IPv4', () => {
-      it('renders help button', async () => {
-        const path = 'https://www.linode.com/docs/networking/linux-static-ip-configuration';
-        const page = shallow(
-          <LinodeNetworking
-            linodes={linodes}
-            params={params}
-          />);
-
-        expect(page.find('HelpButton').at(0).props())
-          .to.have.property('to')
-          .which.equals(path);
-      });
-
       it('renders inet ip and url', async () => {
         const ipv4 = testLinode.ip_addresses['public'].ipv4[0];
         const inet = `${ipv4} / 24 ( li-${ipv4.split('.')[3]}.members.linode.com )`;
@@ -123,19 +122,6 @@ describe('linodes/layouts/LinodeNetworking', () => {
     });
 
     describe('IPv6', () => {
-      it('renders help button', async () => {
-        const path = 'https://www.linode.com/docs/networking/native-ipv6-networking';
-        const page = shallow(
-          <LinodeNetworking
-            linodes={linodes}
-            params={params}
-          />);
-
-        expect(page.find('HelpButton').at(1).props())
-          .to.have.property('to')
-          .which.equals(path);
-      });
-
       it('renders inet ip', async () => {
         const ipv6 = testLinode.ip_addresses['public'].ipv6;
         const page = shallow(
@@ -187,6 +173,19 @@ describe('linodes/layouts/LinodeNetworking', () => {
   });
 
   describe('private network', () => {
+    it('renders help button', async () => {
+      const path = 'https://www.linode.com/docs/networking/linux-static-ip-configuration';
+      const page = shallow(
+        <LinodeNetworking
+          linodes={linodes}
+          params={params}
+        />);
+
+      expect(page.find('HelpButton').at(1).props())
+        .to.have.property('to')
+        .which.equals(path);
+    });
+
     it('renders add ip button', async () => {
       const page = shallow(
         <LinodeNetworking
@@ -199,24 +198,11 @@ describe('linodes/layouts/LinodeNetworking', () => {
       expect(button.text()).to.equal('Add IP address');
     });
 
-    it('renders help button', async () => {
-      const path = 'https://www.linode.com/docs/networking/linux-static-ip-configuration';
-      const page = shallow(
-        <LinodeNetworking
-          linodes={linodes}
-          params={params}
-        />);
-
-      expect(page.find('HelpButton').at(2).props())
-        .to.have.property('to')
-        .which.equals(path);
-    });
-
     it('renders no private ips', async () => {
       const page = shallow(
         <LinodeNetworking
           linodes={linodes}
-          params={params}
+          params={{ linodeId: 'linode_1235' }}
         />);
 
       const content = page.find('.network-content').at(1);
@@ -225,11 +211,11 @@ describe('linodes/layouts/LinodeNetworking', () => {
     });
 
     it('renders private ips', async () => {
-      const ipv4 = linodes.linodes.linode_1235.ip_addresses['private'].ipv4[0];
+      const ipv4 = testLinode.ip_addresses['private'].ipv4[0];
       const page = shallow(
         <LinodeNetworking
           linodes={linodes}
-          params={{ linodeId: 'linode_1235' }}
+          params={params}
         />);
 
       const content = page.find('.network-content').at(1);
