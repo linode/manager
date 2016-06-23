@@ -58,8 +58,8 @@ describe('linodes/components/SourceSelection', () => {
     const c = shallow(
       <SourceSelection
         distros={state.distros.distributions}
-        source={state.create.source}
-        selectedTab={state.create.sourceTab}
+        source={state.create.source.source}
+        selectedTab={state.create.source.sourceTab}
       />
     );
     expect(c.contains(<h2>Select a source</h2>)).to.equal(true);
@@ -69,8 +69,8 @@ describe('linodes/components/SourceSelection', () => {
     const c = shallow(
       <SourceSelection
         distros={state.distros.distributions}
-        source={state.create.source}
-        selectedTab={state.create.sourceTab}
+        source={state.create.source.source}
+        selectedTab={state.create.source.sourceTab}
       />
     );
     expect(c.contains(<Tab>Distributions</Tab>)).to.equal(true);
@@ -83,13 +83,22 @@ describe('linodes/components/SourceSelection', () => {
     const c = shallow(
       <SourceSelection
         distros={state.distros.distributions}
-        source={state.create.source}
-        selectedTab={state.create.sourceTab}
+        source={state.create.source.source}
+        selectedTab={state.create.source.sourceTab}
         onTabChange={onTabChange}
-      />
-    );
+      />);
     c.find('Tabs').props().onSelect(2);
     expect(onTabChange.calledOnce).to.equal(true);
     expect(onTabChange.calledWith(2)).to.equal(true);
+  });
+
+  it('renders DistroVendors', () => {
+    const c = shallow(
+      <SourceSelection
+        distros={state.distros.distributions}
+        source={state.create.source.source}
+        selectedTab={state.create.source.sourceTab}
+      />);
+    expect(c.find('DistroVendor').length).to.equal(2);
   });
 });
