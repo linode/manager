@@ -1,5 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import DistroVendor from './DistroVendor';
+import _ from 'lodash';
 
 export default class SourceSelection extends Component {
   constructor() {
@@ -7,6 +9,30 @@ export default class SourceSelection extends Component {
     this.render = this.render.bind(this);
     this.renderSourceTabs = this.renderSourceTabs.bind(this);
     this.renderHeader = this.renderHeader.bind(this);
+    this.renderDistros = this.renderDistros.bind(this);
+  }
+
+  renderDistros() {
+    const { distros, source, onSourceSelected } = this.props;
+    const vendors = _.sortBy(
+      _.map(
+        _.groupBy(Object.values(distros), d => d.vendor),
+        (v, k) => ({
+          name: k,
+          versions: _.orderBy(v, ['recommended', 'created'], ['desc', 'desc']),
+        })
+      ), vendor => vendor.name);
+    return (
+      <div className="distros">
+        {vendors.map(v =>
+          <DistroVendor
+            selected={source}
+            vendor={v}
+            key={v.name}
+            onClick={s => onSourceSelected(s)}
+          />)}
+      </div>
+    );
   }
 
   renderSourceTabs() {
@@ -22,7 +48,7 @@ export default class SourceSelection extends Component {
           <Tab>Backups</Tab>
         </TabList>
         <TabPanel>
-          Distro selection
+          {this.renderDistros()}
         </TabPanel>
         <TabPanel>
           StackScript Selection
@@ -56,5 +82,11 @@ SourceSelection.propTypes = {
   distros: PropTypes.object.isRequired,
   selectedTab: PropTypes.number.isRequired,
   onTabChange: PropTypes.func,
-  source: PropTypes.object,
+  onSourceSelected: PropTypes.func,
+  source: PropTypes.string,
+};
+
+SourceSelection.defaultProps = {
+  onTabChange: () => {},
+  onSourceSelected: () => {},
 };

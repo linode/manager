@@ -5,7 +5,7 @@ import ServiceSelection from '../components/ServiceSelection';
 import DatacenterSelection from '../components/DatacenterSelection';
 import OrderSummary from '../components/OrderSummary';
 import { fetchDistros } from '~/actions/api/distros';
-import { changeSourceTab } from '~/linodes/actions/create/source';
+import { changeSourceTab, selectSource } from '~/linodes/actions/create/source';
 
 export class CreateLinodePage extends Component {
   componentDidMount() {
@@ -28,6 +28,7 @@ export class CreateLinodePage extends Component {
             selectedTab={create.source.sourceTab}
             distros={distros.distributions}
             onTabChange={ix => dispatch(changeSourceTab(ix))}
+            onSourceSelected={source => dispatch(selectSource(source.id))}
           />
         </div>
         <div className="card page-card">
