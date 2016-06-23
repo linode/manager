@@ -1,8 +1,8 @@
 .distro {
-    $width: 12rem;
+    $width: 11rem;
     border: $linode-border;
     width: $width;
-    margin: 0.5rem;
+    margin: 1rem;
     cursor: pointer;
 
     header {
@@ -29,7 +29,7 @@
     }
 
     & > div {
-        height: 7rem;
+        height: 6rem;
         display: flex;
         justify-content: center;
         align-items: center;
