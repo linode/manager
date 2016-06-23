@@ -26,6 +26,7 @@ export const testLinode = {
   datacenter: {
     id: 'datacenter_6',
     label: 'Newark, NJ',
+    datacenter: 'newark',
   },
   distribution: {
     id: 'distro_123',
