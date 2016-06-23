@@ -5,7 +5,7 @@ import { shallow } from 'enzyme';
 import SourceSelection from '~/linodes/components/SourceSelection';
 import { Tab } from 'react-tabs';
 
-describe('linodes/components/DatacenterSelection', () => {
+describe('linodes/components/SourceSelection', () => {
   const sandbox = sinon.sandbox.create();
   afterEach(() => {
     sandbox.restore();
@@ -57,8 +57,9 @@ describe('linodes/components/DatacenterSelection', () => {
   it('renders the card header', () => {
     const c = shallow(
       <SourceSelection
+        distros={state.distros.distributions}
         source={state.create.source}
-        sourceTab={state.create.sourceTab}
+        selectedTab={state.create.sourceTab}
       />
     );
     expect(c.contains(<h2>Select a source</h2>)).to.equal(true);
@@ -67,8 +68,9 @@ describe('linodes/components/DatacenterSelection', () => {
   it('renders the source tabs', () => {
     const c = shallow(
       <SourceSelection
+        distros={state.distros.distributions}
         source={state.create.source}
-        sourceTab={state.create.sourceTab}
+        selectedTab={state.create.sourceTab}
       />
     );
     expect(c.contains(<Tab>Distributions</Tab>)).to.equal(true);
@@ -80,8 +82,9 @@ describe('linodes/components/DatacenterSelection', () => {
     const onTabChange = sandbox.spy();
     const c = shallow(
       <SourceSelection
+        distros={state.distros.distributions}
         source={state.create.source}
-        sourceTab={state.create.sourceTab}
+        selectedTab={state.create.sourceTab}
         onTabChange={onTabChange}
       />
     );
