@@ -1,0 +1,22 @@
+.linode-alerts {
+    .input-container {
+        display: inline-block;
+    }
+
+    .checkbox {
+        display: inline-block;
+
+        input {
+            margin-top: 2px;
+        }
+
+        span {
+            padding: 0 10px;
+        }
+    }
+    
+    input[type=number] {
+        width: auto;
+        margin-right: 5px;
+    }
+}

@@ -131,3 +131,15 @@ export function makeDeleteItem(action, plural) {
     // Note: do we want to do anything at this point?
   };
 }
+
+export function makePutItem(action, plural) {
+  return ({ id, data }) => async (dispatch, getState) => {
+    const state = getState();
+    const { token } = state.authentication;
+    dispatch({ type: action, id, data });
+    const response = await fetch(token, `/${plural}/${id}`, {
+      method: 'PUT', body: JSON.stringify(data),
+    });
+    await response.json();
+  };
+}

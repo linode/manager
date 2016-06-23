@@ -1,17 +1,19 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import { getLinode, updateLinode } from './LinodeDetailPage';
-import { countryMap } from '~/constants';
+import _ from 'lodash';
+
+import { getLinode, loadLinode } from './LinodeDetailPage';
+import { countryMap } from '../components/DatacenterSelection';
 import { flags, distros as distroAssets } from '~/assets';
 import { ResponsiveLineChart } from '~/components/ResponsiveCharts';
-import _ from 'lodash';
+
 
 export class LinodeGeneral extends Component {
   constructor() {
     super();
     this.getLinode = getLinode.bind(this);
-    this.componentDidMount = updateLinode.bind(this);
+    this.componentDidMount = loadLinode.bind(this);
     this.renderDetails = this.renderDetails.bind(this);
     this.renderGraphs = this.renderGraphs.bind(this);
   }

@@ -61,8 +61,13 @@
         padding: 15px $side-margin;
     }
 
+    .row:last-of-type > .linode-content-col {
+        margin-bottom: 0;
+    }
+
     .linode-content-col {
-        margin: 0rem 0rem 0.75rem 0rem;
+        margin-bottom: .75rem;
+
         .text-muted {
             font-size: 70%;
         }
@@ -147,5 +152,9 @@
         h3 {
             text-align: center;
         }
+    }
+
+    .graphs {
+        margin-top: $main-padding-tb;
     }
 }

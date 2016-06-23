@@ -6,8 +6,10 @@ import configureStore from './store/configureStore';
 import { Router, Route, IndexRedirect, browserHistory } from 'react-router';
 import DevTools from './components/DevTools';
 import { syncHistoryWithStore } from 'react-router-redux';
+
 // eslint-disable-next-line no-unused-vars
 import styles from '../scss/manager.scss';
+
 import { clientId } from './secrets';
 import { APP_ROOT, LOGIN_ROOT } from './constants';
 

@@ -38,8 +38,8 @@ describe('linodes/layouts/LinodeGeneral', () => {
     linodeId: testLinode.id,
   };
 
-  it('calls updateLinode on mount', async () => {
-    LinodeDetailPage.updateLinode = sinon.spy();
+  it('calls loadLinode on mount', async () => {
+    LinodeDetailPage.loadLinode = sinon.spy();
     mount(
       <LinodeGeneral
         linodes={linodes}
@@ -47,7 +47,7 @@ describe('linodes/layouts/LinodeGeneral', () => {
       />
     );
 
-    expect(LinodeDetailPage.updateLinode.calledOnce).to.equal(true);
+    expect(LinodeDetailPage.loadLinode.calledOnce).to.equal(true);
   });
 
   it('renders public ipv4', async () => {

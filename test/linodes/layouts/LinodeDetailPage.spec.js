@@ -4,7 +4,7 @@ import { push } from 'react-router-redux';
 import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 import * as fetch from '~/fetch';
-import { testLinode } from '~/../test/data';
+import { testLinode, linodes } from '~/../test/data';
 import * as LinodeDetailPageWrapper from '~/linodes/layouts/LinodeDetailPage';
 import { UPDATE_LINODE } from '~/actions/api/linodes';
 import { Tabs, Tab } from 'react-tabs';
@@ -13,30 +13,17 @@ import Dropdown from '~/components/Dropdown';
 
 const {
   LinodeDetailPage,
-  updateLinode,
+  loadLinode,
   getLinode,
   renderTabs,
 } = LinodeDetailPageWrapper;
 
-const linodes = {
-  pagesFetched: [0],
-  totalPages: 1,
-  linodes: {
-    [testLinode.id]: testLinode,
-    linode_1235: { ...testLinode, id: 'linode_1235', group: '' },
-    linode_1236: { ...testLinode, id: 'linode_1236', state: 'offline' },
-    linode_1237: { ...testLinode, id: 'linode_1236', state: 'booting' },
-  },
-  _singular: 'linode',
-  _plural: 'linodes',
-};
-
-describe('linodes/layouts/LinodeDetailPage/updateLinode', async () => {
+describe('linodes/layouts/LinodeDetailPage/loadLinode', async () => {
   class Test extends Component {
     constructor() {
       super();
       this.getLinode = getLinode.bind(this);
-      this.componentDidMount = updateLinode.bind(this);
+      this.componentDidMount = loadLinode.bind(this);
     }
 
     render() {
@@ -86,7 +73,7 @@ describe('linodes/layouts/LinodeDetailPage/updateLinode', async () => {
   });
 });
 
-describe('linodes/layouts/LinodeDetailPage/updateLinode', async () => {
+describe('linodes/layouts/LinodeDetailPage/renderTabs', async () => {
   class Test extends Component {
     constructor() {
       super();
@@ -161,8 +148,8 @@ describe('linodes/layouts/LinodeDetailPage', () => {
     loading: false,
   };
 
-  it('calls updateLinode during mount', async() => {
-    LinodeDetailPageWrapper.updateLinode = sinon.spy();
+  it('calls loadLinode during mount', async() => {
+    LinodeDetailPageWrapper.loadLinode = sinon.spy();
     mount(
       <LinodeDetailPage
         dispatch={dispatch}
@@ -173,8 +160,8 @@ describe('linodes/layouts/LinodeDetailPage', () => {
       />
     );
 
-    expect(LinodeDetailPageWrapper.updateLinode.calledOnce).to.equal(true);
-    LinodeDetailPageWrapper.updateLinode.reset();
+    expect(LinodeDetailPageWrapper.loadLinode.calledOnce).to.equal(true);
+    LinodeDetailPageWrapper.loadLinode.reset();
   });
 
   it('renders the linode label and group', async () => {
