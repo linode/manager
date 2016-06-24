@@ -46,7 +46,7 @@ describe('linodes/components/SourceSelection', () => {
     expect(c.contains(<Tab>Backups</Tab>)).to.equal(true);
   });
 
-  it('raises the onTabChange function as necessary', () => {
+  it('invokes the onTabChange function as necessary', () => {
     const onTabChange = sandbox.spy();
     const c = shallow(
       <SourceSelection
@@ -68,5 +68,21 @@ describe('linodes/components/SourceSelection', () => {
         selectedTab={state.create.source.sourceTab}
       />);
     expect(c.find('DistroVendor').length).to.equal(2);
+  });
+
+  it('invokes the onSourceSelected function as necessary', () => {
+    const onSourceSelected = sandbox.spy();
+    const c = shallow(
+      <SourceSelection
+        distros={state.distros.distributions}
+        source={state.create.source.source}
+        selectedTab={state.create.source.sourceTab}
+        onSourceSelected={onSourceSelected}
+      />);
+    const distro = state.distros.distributions.distro_1234;
+    c.find('DistroVendor').first().props()
+      .onClick(distro);
+    expect(onSourceSelected.calledOnce).to.equal(true);
+    expect(onSourceSelected.calledWith(distro)).to.equal(true);
   });
 });
