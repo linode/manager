@@ -6,6 +6,7 @@ $linode-blue: #4A90E2;
 $linode-dark-blue: darken($linode-blue, 10%);
 $linode-green: #38D377;
 $linode-red: #F24C2B;
+$linode-yellow: #FFFCF0;
 $linode-black: #4B4B4B;
 $linode-light-black: #666666;
 $linode-lightest-black: #ACACAC;
@@ -33,6 +34,7 @@ $font-size: .9rem;
 
 @import 'components/card';
 @import 'components/modal';
+@import 'components/distro';
 @import 'linodes/linodes';
 @import 'layout/linode-details';
 @import 'layout/linodes';
@@ -86,7 +88,7 @@ a {
 }
 
 .selected {
-    background: #fffcf0;
+    background: $linode-yellow;
 }
 
 .fa {

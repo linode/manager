@@ -1,0 +1,58 @@
+.distro {
+    $width: 11rem;
+    border: $linode-border;
+    width: $width;
+    margin: 1rem;
+    cursor: pointer;
+
+    header {
+        border-bottom: $linode-border;
+        background-color: $linode-light-gray;
+        line-height: inherit;
+        padding: inherit;
+
+        h3 {
+            text-align: center;
+            overflow: hidden;
+
+            button {
+                float: right;
+                border-right: none;
+                border-top: none;
+                border-bottom: none;
+            }
+        }
+
+        .dropdown-toggle::after {
+            display: none;
+        }
+    }
+
+    & > div {
+        height: 6rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        &:hover {
+            background-color: $linode-gray;
+        }
+    }
+
+    &.selected {
+        background-color: $linode-yellow;
+    }
+
+    .dropdown-menu {
+        border: $linode-border;
+        border-radius: 0;
+        min-width: $width;
+        left: -2px;
+    }
+}
+
+.distros {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: left;
+}
