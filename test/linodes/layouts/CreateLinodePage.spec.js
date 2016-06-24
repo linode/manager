@@ -56,4 +56,19 @@ describe('linodes/layout/CreateLinodePage', () => {
     expect(dispatch.calledWith(sourceActions.changeSourceTab(2)))
       .to.equal(true);
   });
+
+  it('selects a source when appropriate', () => {
+    const dispatch = sandbox.spy();
+    const page = shallow(
+      <CreateLinodePage
+        dispatch={dispatch}
+        distros={state.distros}
+        create={state.create}
+      />);
+    dispatch.reset();
+    page.find('SourceSelection').props().onSourceSelected('distro_1234');
+    expect(dispatch.calledOnce).to.equal(true);
+    expect(dispatch.calledWith(sourceActions.selectSource('distro_1234')))
+      .to.equal(true);
+  });
 });
