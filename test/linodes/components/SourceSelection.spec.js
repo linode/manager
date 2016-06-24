@@ -4,6 +4,7 @@ import { expect } from 'chai';
 import { shallow } from 'enzyme';
 import SourceSelection from '~/linodes/components/SourceSelection';
 import { Tab } from 'react-tabs';
+import { testDistros } from '~/../test/data';
 
 describe('linodes/components/SourceSelection', () => {
   const sandbox = sinon.sandbox.create();
@@ -18,40 +19,7 @@ describe('linodes/components/SourceSelection', () => {
         sourceTab: 0,
       },
     },
-    distros: {
-      distributions: {
-        distro_1234: {
-          recommended: true,
-          vendor: 'Arch',
-          label: 'Arch Linux 2016.05',
-          created: '2009-08-17T00:00:00',
-        },
-        distro_1235: {
-          recommended: false,
-          vendor: 'Arch',
-          label: 'Arch Linux 2015.05',
-          created: '2009-08-17T00:00:00',
-        },
-        distro_1236: {
-          recommended: true,
-          vendor: 'Debian',
-          label: 'Debian 7',
-          created: '2009-08-17T00:00:00',
-        },
-        distro_1237: {
-          recommended: true,
-          vendor: 'Debian',
-          label: 'Debian 8.1',
-          created: '2009-08-17T00:00:00',
-        },
-        distro_1238: {
-          recommended: false,
-          vendor: 'Debian',
-          label: 'Debian 6',
-          created: '2009-08-17T00:00:00',
-        },
-      },
-    },
+    distros: { distributions: { ...testDistros } },
   };
 
   it('renders the card header', () => {

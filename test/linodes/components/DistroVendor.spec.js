@@ -3,6 +3,7 @@ import sinon from 'sinon';
 import { expect } from 'chai';
 import { shallow } from 'enzyme';
 import { distros } from '~/assets';
+import { testDistros } from '~/../test/data';
 import DistroVendor from '~/linodes/components/DistroVendor';
 
 describe('linodes/components/DistroVendor', () => {
@@ -14,27 +15,9 @@ describe('linodes/components/DistroVendor', () => {
   const vendor = {
     name: 'Debian',
     versions: [
-      {
-        id: 'distro_1234',
-        recommended: true,
-        vendor: 'Debian',
-        label: 'Debian 8.1',
-        created: '2009-08-17T00:00:00',
-      },
-      {
-        id: 'distro_1235',
-        recommended: true,
-        vendor: 'Debian',
-        label: 'Debian 7',
-        created: '2009-08-17T00:00:00',
-      },
-      {
-        id: 'distro_1236',
-        recommended: false,
-        vendor: 'Debian',
-        label: 'Debian 6',
-        created: '2009-08-17T00:00:00',
-      },
+      testDistros.distro_1237,
+      testDistros.distro_1236,
+      testDistros.distro_1238,
     ],
   };
 
