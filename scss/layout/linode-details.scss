@@ -82,6 +82,26 @@
             margin: 0.25rem 0 0 0;
         }
     }
+    
+    .graphs {
+        margin-top: $main-padding-tb;
+    }
+
+    .row:last-of-type > .linode-content-col {
+        margin-bottom: 0;
+    }
+
+    .network-content h3 {
+        margin-bottom: $main-padding-tb/2; 
+    }
+
+    .network-content ul {
+        margin: 0px;
+    }
+
+    hr {
+        margin: $main-padding-tb 0;
+    }
 
     .backup-schedule {
         .btn {

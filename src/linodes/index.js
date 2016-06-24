@@ -4,6 +4,7 @@ import { Route, IndexRoute } from 'react-router';
 import IndexPage from './layouts/IndexPage';
 import LinodeDetailPage from './layouts/LinodeDetailPage';
 import LinodeGeneral from './layouts/LinodeGeneral';
+import LinodeNetworking from './layouts/LinodeNetworking';
 import CreateLinodePage from './layouts/CreateLinodePage';
 import BackupsPage from './layouts/BackupsPage';
 import SettingsPage from './layouts/SettingsPage';
@@ -20,7 +21,7 @@ export default (
     <Route path="create" component={CreateLinodePage} />
     <Route path=":linodeId" component={LinodeDetailPage}>
       <IndexRoute component={LinodeGeneral} />
-      <Route path="networking" component={Placeholder} />
+      <Route path="networking" component={LinodeNetworking} />
       <Route path="resize" component={Placeholder} />
       <Route path="repair" component={Placeholder} />
       <Route path="backups" component={BackupsPage} />
