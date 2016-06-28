@@ -84,6 +84,6 @@ module.exports = function(config) {
   });
 
   if (process.env.TRAVIS) {
-    config.browsers = ['Firefox'];
+    config.browsers = ['FirefoxWithMoreMem'];
   }    
 };
