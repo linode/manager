@@ -5,6 +5,15 @@ module.exports = function(config) {
   config.set({
     frameworks: ['mocha'],
     browsers: ['Phantomjs', 'Chrome', 'Firefox'],
+    customLaunchers: {
+      FirefoxWithMoreMem: {
+        base: 'Firefox',
+        prefs: {
+          'browser.cache.memory.enable': true,
+          'browser.cache.memory.capacity': 32768
+        },
+      }
+    },
     files: [
       './node_modules/phantomjs-polyfill/bind-polyfill.js',
       'test/**/*.spec.js',
