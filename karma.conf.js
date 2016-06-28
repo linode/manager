@@ -4,7 +4,16 @@ var path = require("path");
 module.exports = function(config) {
   config.set({
     frameworks: ['mocha'],
-    browsers: ['PhantomJS'],
+    browsers: ['Phantomjs', 'Chrome', 'Firefox'],
+    customLaunchers: {
+      FirefoxWithMoreMem: {
+        base: 'Firefox',
+        prefs: {
+          'browser.cache.memory.enable': true,
+          'browser.cache.memory.capacity': 32768
+        },
+      }
+    },
     files: [
       './node_modules/phantomjs-polyfill/bind-polyfill.js',
       'test/**/*.spec.js',
@@ -66,9 +75,15 @@ module.exports = function(config) {
       require("karma-mocha"),
       require("karma-spec-reporter"),
       require("karma-chrome-launcher"),
+      require("karma-firefox-launcher"),
       require("karma-phantomjs-launcher"),
       require("karma-sourcemap-loader"),
       require("karma-coverage")
-    ]
+    ],
+    browserNoActivityTimeout: 100000
   });
+
+  if (process.env.TRAVIS) {
+    config.browsers = ['FirefoxWithMoreMem'];
+  }    
 };
