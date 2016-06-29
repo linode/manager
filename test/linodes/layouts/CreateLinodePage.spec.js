@@ -5,6 +5,7 @@ import { shallow, mount } from 'enzyme';
 
 import { CreateLinodePage } from '~/linodes/layouts/CreateLinodePage';
 import * as sourceActions from '~/linodes/actions/create/source';
+import * as datacenterActions from '~/linodes/actions/create/datacenter';
 import * as fetch from '~/fetch';
 import { UPDATE_DISTROS } from '~/actions/api/distros';
 import { UPDATE_DATACENTERS } from '~/actions/api/datacenters';
@@ -125,6 +126,22 @@ describe('linodes/layout/CreateLinodePage', () => {
     page.find('SourceSelection').props().onSourceSelected({ id: 'distro_1234' });
     expect(dispatch.calledOnce).to.equal(true);
     expect(dispatch.calledWith(sourceActions.selectSource('distro_1234')))
+      .to.equal(true);
+  });
+
+  it('selects a datacenter when appropriate', () => {
+    const dispatch = sandbox.spy();
+    const page = shallow(
+      <CreateLinodePage
+        dispatch={dispatch}
+        distros={state.distros}
+        create={state.create}
+        datacenters={state.datacenters}
+      />);
+    dispatch.reset();
+    page.find('DatacenterSelection').props().onDatacenterSelected({ id: 'datacenter_2' });
+    expect(dispatch.calledOnce).to.equal(true);
+    expect(dispatch.calledWith(datacenterActions.selectDatacenter('datacenter_2')))
       .to.equal(true);
   });
 });

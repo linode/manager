@@ -1,4 +1,5 @@
 import React from 'react';
+import sinon from 'sinon';
 import { expect } from 'chai';
 import { mount } from 'enzyme';
 
@@ -7,11 +8,9 @@ import { flags } from '~/assets';
 
 describe('linodes/components/DatacenterSelection', () => {
   const datacenters = {
-    datacenters: {
-      datacenter_2: {
-        id: 'datacenter_2',
-        label: 'Newark, NJ',
-      },
+    datacenter_2: {
+      id: 'datacenter_2',
+      label: 'Newark, NJ',
     },
   };
 
@@ -25,6 +24,7 @@ describe('linodes/components/DatacenterSelection', () => {
 
     expect(c.find(<h2>Select a datacenter</h2>)).to.exist;
     expect(c.find(<h3>North America</h3>)).to.exist;
+    expect(c.find('.datacenter').length).to.equal(1);
     expect(c.find(<header><div>Newark, NJ</div></header>)).to.exist;
     expect(c.find(
       <img
@@ -34,5 +34,20 @@ describe('linodes/components/DatacenterSelection', () => {
         alt="Newark, NJ"
       />
     )).to.exist;
+  });
+
+  it('dispatches the appropriate event on select', () => {
+    const env = { onSelect: () => {} };
+    const onSelect = sinon.stub(env, 'onSelect');
+    const c = mount(
+      <DatacenterSelection
+        datacenters={datacenters}
+        onDatacenterSelected={onSelect}
+      />
+    );
+
+    c.find('.datacenter').simulate('click');
+    expect(onSelect.calledOnce).to.equal(true);
+    expect(onSelect.firstCall.args[0]).to.equal(datacenters.datacenter_2);
   });
 });
