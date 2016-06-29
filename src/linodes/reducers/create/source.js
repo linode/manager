@@ -8,7 +8,7 @@ const defaultState = {
   source: null,
 };
 
-export default function create(state = defaultState, action) {
+export default function source(state = defaultState, action) {
   switch (action.type) {
     case CHANGE_SOURCE_TAB:
       return { ...state, sourceTab: action.tab };
