@@ -36,6 +36,11 @@ module.exports = function(config) {
             test: /\.jsx?/,
             include: path.join(__dirname, 'src'),
             loader: 'isparta'
+          },
+          {
+            test: /\.svg$/,
+            loaders: ['file'],
+            include: path.join(__dirname, 'node_modules')
           }
         ]
       },
