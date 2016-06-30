@@ -35,7 +35,7 @@ export default class ServiceSelection extends Component {
         onClick={() => onServiceSelected(plan)}
       >
         <header>
-          <div>{label}</div>
+          <div className="title">{label}</div>
         </header>
         <div>
           <div className="pricing">${hourlyPrice / 100}/hr (${monthlyPrice / 100}/mo)</div>
