@@ -37,7 +37,7 @@ export default class ServiceSelection extends Component {
         <header>
           <div className="title">{label}</div>
         </header>
-        <div>
+        <div className="plan-contents">
           <div className="pricing">${hourlyPrice / 100}/hr (${monthlyPrice / 100}/mo)</div>
           <hr />
           <div className="cpu-ram">{ram} GB / {vcpus} CPU</div>
