@@ -11,7 +11,7 @@ const createStoreWithMiddleware = compose(
   DevTools.instrument()
 )(createStore);
 
-export default function configureStore(initialState) {
+export function configureStore(initialState) {
   const store = createStoreWithMiddleware(reducer, initialState);
 
   if (module.hot) {
@@ -23,3 +23,7 @@ export default function configureStore(initialState) {
 
   return store;
 }
+
+const store = configureStore();
+
+export default store;
