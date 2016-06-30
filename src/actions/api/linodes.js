@@ -12,16 +12,11 @@ export const UPDATE_LINODE = '@@linodes/UPDATE_LINODE';
 export const DELETE_LINODE = '@@linodes/DELETE_LINODE';
 export const PUT_LINODE = '@@linodes/PUT_LINODE';
 
-export const fetchLinodes = makeFetchPage(
-  UPDATE_LINODES, 'linodes');
-export const updateLinode = makeUpdateItem(
-  UPDATE_LINODE, 'linodes', 'linode');
-export const updateLinodeUntil = makeUpdateUntil(
-  UPDATE_LINODE, 'linodes', 'linode');
-export const deleteLinode = makeDeleteItem(
-  DELETE_LINODE, 'linodes');
-export const putLinode = makePutItem(
-  PUT_LINODE, 'linodes');
+export const fetchLinodes = makeFetchPage(UPDATE_LINODES, 'linodes');
+export const updateLinode = makeUpdateItem(UPDATE_LINODE, 'linodes', 'linode');
+export const updateLinodeUntil = makeUpdateUntil(UPDATE_LINODE, 'linodes', 'linode');
+export const deleteLinode = makeDeleteItem(DELETE_LINODE, 'linodes');
+export const putLinode = makePutItem(PUT_LINODE, 'linodes');
 
 
 function linodeAction(id, action, temp, expected, timeout = undefined) {
