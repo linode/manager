@@ -1,3 +1,57 @@
+export const state = {
+  create: {
+    source: {
+      source: null,
+      sourceTab: 0,
+    },
+    datacenter: {
+      datacenter: null,
+    },
+    service: {
+      service: null,
+    },
+  },
+  distros: {
+    distributions: { },
+  },
+  datacenters: {
+    datacenters: {
+      datacenter_2: {
+        id: 'datacenter_2',
+        label: 'Newark, NJ',
+      },
+    },
+  },
+  services: {
+    services: {
+      service_112: {
+        disk: 24,
+        hourly_price: 1,
+        id: 'service_112',
+        label: 'Linode 1024',
+        mbits_out: 25,
+        monthly_price: 1000,
+        ram: 1024,
+        service_type: 'linode',
+        transfer: 2000,
+        vcpus: 1,
+      },
+      service_114: {
+        disk: 48,
+        hourly_price: 2,
+        id: 'service_114',
+        label: 'Linode 2048',
+        mbits_out: 25,
+        monthly_price: 2000,
+        ram: 2024,
+        service_type: 'linode',
+        transfer: 3000,
+        vcpus: 2,
+      },
+    },
+  },
+};
+
 export const testLinode = {
   group: 'Test Group',
   label: 'Test Linode',
