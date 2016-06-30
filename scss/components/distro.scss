@@ -11,7 +11,7 @@
         line-height: inherit;
         padding: inherit;
 
-        label {
+        .title {
             text-align: center;
             overflow: hidden;
             line-height: $input-height;
@@ -52,7 +52,7 @@
     }
 }
 
-.distros, .datacenters {
+.distros, .datacenter-group {
     display: flex;
     flex-wrap: wrap;
     justify-content: left;

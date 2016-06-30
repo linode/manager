@@ -31,7 +31,7 @@ describe('linodes/layout/CreateLinodePage', () => {
     },
     datacenters: {
       datacenters: {
-        datacenter_1: {
+        datacenter_2: {
           id: 'datacenter_2',
           label: 'Newark, NJ',
         },

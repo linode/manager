@@ -28,7 +28,7 @@ export default class DatacenterSelection extends Component {
         onClick={() => onDatacenterSelected(datacenter)}
       >
         <header>
-          <label>{datacenter.label}</label>
+          <div className="title">{datacenter.label}</div>
         </header>
         <div>
           <img
@@ -48,9 +48,11 @@ export default class DatacenterSelection extends Component {
       datacentersInRegion.indexOf(id) !== -1);
 
     return datacenters.length ? (
-      <div className="datacenter-group col-lg-4" key={region}>
+      <div key={region}>
         <h3>{region}</h3>
-        {datacenters.map(this.renderDatacenter.bind(this))}
+        <div className="datacenter-group">
+          {datacenters.map(this.renderDatacenter.bind(this))}
+        </div>
       </div>
     ) : null;
   }
