@@ -3,7 +3,8 @@ import sinon from 'sinon';
 import { expect } from 'chai';
 import { mount } from 'enzyme';
 
-import DatacenterSelection, { countryMap } from '~/linodes/components/DatacenterSelection';
+import DatacenterSelection from '~/linodes/components/DatacenterSelection';
+import { countryMap } from '~/constants';
 import { flags } from '~/assets';
 
 describe('linodes/components/DatacenterSelection', () => {
@@ -25,7 +26,7 @@ describe('linodes/components/DatacenterSelection', () => {
     expect(c.find(<h2>Select a datacenter</h2>)).to.exist;
     expect(c.find(<h3>North America</h3>)).to.exist;
     expect(c.find('.datacenter').length).to.equal(1);
-    expect(c.find(<header><div>Newark, NJ</div></header>)).to.exist;
+    expect(c.find(<header><label>Newark, NJ</label></header>)).to.exist;
     expect(c.find(
       <img
         src={flags[countryMap.datacenter_2]}

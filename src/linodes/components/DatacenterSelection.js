@@ -2,23 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import _ from 'lodash';
 
 import { flags } from '~/assets';
-
-export const countryMap = {
-  datacenter_2: 'us', // Dallas
-  datacenter_3: 'us', // Fremont
-  datacenter_4: 'us', // Atlanta
-  datacenter_6: 'us', // Newark
-  datacenter_7: 'gb', // London
-  datacenter_8: 'jp', // Tokyo
-  datacenter_9: 'sg', // Singapore
-  datacenter_10: 'de', // Frankfurt
-};
-
-export const regionMap = {
-  'North America': ['datacenter_2', 'datacenter_3', 'datacenter_4', 'datacenter_6'],
-  Europe: ['datacenter_7', 'datacenter_10'],
-  Asia: ['datacenter_8', 'datacenter_9'],
-};
+import { countryMap, regionMap } from '~/constants';
 
 export default class DatacenterSelection extends Component {
   constructor() {
@@ -44,7 +28,7 @@ export default class DatacenterSelection extends Component {
         onClick={() => onDatacenterSelected(datacenter)}
       >
         <header>
-          <div>{datacenter.label}</div>
+          <label>{datacenter.label}</label>
         </header>
         <div>
           <img
