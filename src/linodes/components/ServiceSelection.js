@@ -1,9 +1,11 @@
 import React, { Component, PropTypes } from 'react';
+import { renderPlanStyle } from '~/linodes/components/Linode';
 
 export default class ServiceSelection extends Component {
   constructor() {
     super();
     this.renderPlan = this.renderPlan.bind(this);
+    this.renderPlanStyle = renderPlanStyle.bind(this);
   }
 
   renderHeader() {
@@ -15,34 +17,26 @@ export default class ServiceSelection extends Component {
   }
 
   renderPlan(plan) {
-    const {
-      label,
-      transfer,
-      disk,
-      monthly_price: monthlyPrice,
-      hourly_price: hourlyPrice,
-      ram,
-      vcpus,
-      id,
-    } = plan;
+    const monthlyPrice = plan.monthly_price;
+    const hourlyPrice = plan.hourly_price;
     const { selected, onServiceSelected } = this.props;
-    const planClass = id === selected ? 'selected' : '';
+    const planClass = plan.id === selected ? 'selected' : '';
 
     return (
       <div
         className={`plan ${planClass}`}
-        key={label}
+        key={plan.label}
         onClick={() => onServiceSelected(plan)}
       >
         <header>
-          <div className="title">{label}</div>
+          <div className="title">{this.renderPlanStyle(plan.label)}</div>
         </header>
         <div className="plan-contents">
           <div className="pricing">${hourlyPrice / 100}/hr (${monthlyPrice / 100}/mo)</div>
           <hr />
-          <div className="cpu-ram">{ram} GB / {vcpus} CPU</div>
-          <div className="hdd">{disk} GB SSD</div>
-          <div className="transfer">{transfer / 1000} TB Transfer</div>
+          <div className="cpu-ram">{plan.ram} GB / {plan.vcpus} CPU</div>
+          <div className="hdd">{plan.disk} GB SSD</div>
+          <div className="transfer">{plan.transfer / 1000} TB Transfer</div>
         </div>
       </div>
     );

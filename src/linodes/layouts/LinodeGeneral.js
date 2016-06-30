@@ -120,7 +120,7 @@ export class LinodeGeneral extends Component {
               Plan
             </div>
             <div className="col-sm-8 linode-content-col right">
-              {this.renderPlanStyle(linode)}
+              {this.renderPlanStyle(linode.services.linode)}
             </div>
           </div>
           <div className="row">

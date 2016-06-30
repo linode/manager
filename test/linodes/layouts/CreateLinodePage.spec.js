@@ -11,54 +11,13 @@ import * as fetch from '~/fetch';
 import { UPDATE_DISTROS } from '~/actions/api/distros';
 import { UPDATE_DATACENTERS } from '~/actions/api/datacenters';
 import { UPDATE_SERVICES } from '~/actions/api/services';
+import { state } from '~/../test/data';
 
 describe('linodes/layout/CreateLinodePage', () => {
   const sandbox = sinon.sandbox.create();
   afterEach(() => {
     sandbox.restore();
   });
-
-  const state = {
-    create: {
-      source: {
-        source: null,
-        sourceTab: 0,
-      },
-      datacenter: {
-        datacenter: null,
-      },
-      service: {
-        service: null,
-      },
-    },
-    distros: {
-      distributions: { },
-    },
-    datacenters: {
-      datacenters: {
-        datacenter_2: {
-          id: 'datacenter_2',
-          label: 'Newark, NJ',
-        },
-      },
-    },
-    services: {
-      services: {
-        service_112: {
-          disk: 24,
-          hourly_price: 1,
-          id: 'service_112',
-          label: 'Linode 1024',
-          mbits_out: 25,
-          monthly_price: 1000,
-          ram: 1024,
-          service_type: 'linode',
-          transfer: 2000,
-          vcpus: 1,
-        },
-      },
-    },
-  };
 
   function assertContains(thing) {
     return () => {
