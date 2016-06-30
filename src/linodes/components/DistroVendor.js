@@ -20,7 +20,7 @@ export default class DistroVendor extends Component {
         }`}
       >
         <header className={`dropdown ${open ? 'open' : ''}`}>
-          <label>
+          <div className="title">
             {label(selectedVersion.label)}
             <button
               className="dropdown-toggle btn btn-secondary"
@@ -29,7 +29,7 @@ export default class DistroVendor extends Component {
               id={`distro-dropdown-${selectedVersion.id}`}
               onClick={() => this.setState({ open: !open })}
             ><i className="fa fa-caret-down"></i></button>
-          </label>
+          </div>
           <div
             className="dropdown-menu"
             aria-labelledby={`distro-dropdown-${selectedVersion.id}`}
