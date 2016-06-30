@@ -6,6 +6,7 @@ import { push } from 'react-router-redux';
 
 import Dropdown from '~/components/Dropdown';
 import { LinodeStates, LinodeStatesReadable } from '~/constants';
+import { setError } from '~/actions/errors';
 import {
   toggleEditMode,
   setLinodeLabel,
@@ -27,7 +28,8 @@ export function loadLinode() {
   const linode = this.getLinode();
   if (!linode) {
     const { linodeId } = this.props.params;
-    dispatch(updateLinode(linodeId));
+    dispatch(updateLinode(linodeId))
+      .catch(response => dispatch(setError(response)));
   }
 }
 

@@ -20,7 +20,9 @@
     "no-unused-expressions": 0,
     "react/no-multi-comp": 0,
     "dot-notation": [
-      "error", { "allowKeywords": false }
+      "error", {
+        "allowPattern": "^(default|public|private|return)$"
+      }
     ]
   }
 }
