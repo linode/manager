@@ -9,6 +9,7 @@ import * as datacenterActions from '~/linodes/actions/create/datacenter';
 import * as fetch from '~/fetch';
 import { UPDATE_DISTROS } from '~/actions/api/distros';
 import { UPDATE_DATACENTERS } from '~/actions/api/datacenters';
+import { UPDATE_SERVICES } from '~/actions/api/services';
 
 describe('linodes/layout/CreateLinodePage', () => {
   const sandbox = sinon.sandbox.create();
@@ -25,6 +26,9 @@ describe('linodes/layout/CreateLinodePage', () => {
       datacenter: {
         datacenter: null,
       },
+      service: {
+        service: null,
+      },
     },
     distros: {
       distributions: { },
@@ -34,6 +38,22 @@ describe('linodes/layout/CreateLinodePage', () => {
         datacenter_2: {
           id: 'datacenter_2',
           label: 'Newark, NJ',
+        },
+      },
+    },
+    services: {
+      services: {
+        service_112: {
+          disk: 24,
+          hourly_price: 1,
+          id: 'service_112',
+          label: 'Linode 1024',
+          mbits_out: 25,
+          monthly_price: 1000,
+          ram: 1024,
+          service_type: 'linode',
+          transfer: 2000,
+          vcpus: 1,
         },
       },
     },
@@ -47,6 +67,7 @@ describe('linodes/layout/CreateLinodePage', () => {
           create={state.create}
           distros={state.distros}
           datacenters={state.datacenters}
+          services={state.services}
         />);
       expect(page.find(thing).length).to.equal(1);
     };
@@ -67,6 +88,7 @@ describe('linodes/layout/CreateLinodePage', () => {
         distros={state.distros}
         create={state.create}
         datacenters={state.datacenters}
+        services={state.services}
       />);
     dispatch.reset();
     page.find('SourceSelection').props().onTabChange(2);
@@ -75,7 +97,7 @@ describe('linodes/layout/CreateLinodePage', () => {
       .to.equal(true);
   });
 
-  it('fetches distros and datacenters when mounted', async () => {
+  it('fetches distros, datacenters, and services when mounted', async () => {
     const dispatch = sandbox.spy();
     mount(
       <CreateLinodePage
@@ -83,11 +105,13 @@ describe('linodes/layout/CreateLinodePage', () => {
         distros={state.distros}
         create={state.create}
         datacenters={state.datacenters}
+        services={state.services}
       />);
-    expect(dispatch.calledTwice).to.equal(true);
+    expect(dispatch.calledThrice).to.equal(true);
 
     const dispatchedDistros = dispatch.firstCall.args[0];
     const dispatchedDatacenters = dispatch.secondCall.args[0];
+    const dispatchedServices = dispatch.thirdCall.args[0];
 
     // Assert that dispatchedDistros is a function that fetches distros
     dispatch.reset();
@@ -111,6 +135,16 @@ describe('linodes/layout/CreateLinodePage', () => {
     expect(fetchStub.secondCall.args[1]).to.equal('/datacenters?page=1');
     expect(dispatch.calledOnce).to.equal(true);
     expect(dispatch.firstCall.args[0].type).to.equal(UPDATE_DATACENTERS);
+
+    // Assert that dispatchedServices is a function that fetches services
+    dispatch.reset();
+    await dispatchedServices(dispatch, () => ({
+      authentication: { token: 'token' },
+    }));
+    expect(fetchStub.calledThrice).to.equal(true);
+    expect(fetchStub.thirdCall.args[1]).to.equal('/services?page=1');
+    expect(dispatch.calledOnce).to.equal(true);
+    expect(dispatch.firstCall.args[0].type).to.equal(UPDATE_SERVICES);
   });
 
   it('selects a source when appropriate', () => {
@@ -121,6 +155,7 @@ describe('linodes/layout/CreateLinodePage', () => {
         distros={state.distros}
         create={state.create}
         datacenters={state.datacenters}
+        services={state.services}
       />);
     dispatch.reset();
     page.find('SourceSelection').props().onSourceSelected({ id: 'distro_1234' });
@@ -137,6 +172,7 @@ describe('linodes/layout/CreateLinodePage', () => {
         distros={state.distros}
         create={state.create}
         datacenters={state.datacenters}
+        services={state.services}
       />);
     dispatch.reset();
     page.find('DatacenterSelection').props().onDatacenterSelected({ id: 'datacenter_2' });
