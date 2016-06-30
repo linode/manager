@@ -19,6 +19,18 @@ describe('linodes/components/ServiceSelection', () => {
       transfer: 2000,
       vcpus: 1,
     },
+    service_114: {
+      disk: 24,
+      hourly_price: 1,
+      id: 'service_114',
+      label: 'Linode 2048',
+      mbits_out: 25,
+      monthly_price: 1000,
+      ram: 2048, // larger plan
+      service_type: 'linode',
+      transfer: 2000,
+      vcpus: 1,
+    },
   };
 
   it('renders the card header', () => {
@@ -30,8 +42,13 @@ describe('linodes/components/ServiceSelection', () => {
     );
 
     expect(c.contains(<h2>Select a plan</h2>)).to.equal(true);
-    expect(c.find('.plan').length).to.equal(1);
-    expect(c.find(<header><div>Linode 1024</div></header>)).to.exist;
+    expect(c.find('.plan').length).to.equal(2);
+    expect(c.find('.plan').first().find(
+      <header><div>Linode 1024</div></header>
+    )).to.exist;
+    expect(c.find('.plan').at(1).find(
+      <header><div>Linode 2048</div></header>
+    )).to.exist;
   });
 
   it('dispatched the appropriate event on select', () => {
@@ -44,7 +61,7 @@ describe('linodes/components/ServiceSelection', () => {
       />
     );
 
-    c.find('.plan').simulate('click');
+    c.find('.plan').first().simulate('click');
     expect(onSelect.calledOnce).to.equal(true);
     expect(onSelect.firstCall.args[0]).to.equal(services.service_112);
   });
