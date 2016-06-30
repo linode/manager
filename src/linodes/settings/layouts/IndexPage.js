@@ -9,7 +9,11 @@ export class IndexPage extends Component {
     super();
     this.getLinode = getLinode.bind(this);
     this.renderTabs = renderTabs.bind(this);
-    this.componentDidMount = loadLinode.bind(this);
+    this.loadLinode = loadLinode.bind(this);
+  }
+
+  componentDidMount() {
+    this.loadLinode();
   }
 
   render() {

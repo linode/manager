@@ -13,7 +13,6 @@ import Dropdown from '~/components/Dropdown';
 
 const {
   LinodeDetailPage,
-  loadLinode,
   getLinode,
   renderTabs,
 } = LinodeDetailPageWrapper;
@@ -23,7 +22,7 @@ describe('linodes/layouts/LinodeDetailPage/loadLinode', async () => {
     constructor() {
       super();
       this.getLinode = getLinode.bind(this);
-      this.componentDidMount = loadLinode.bind(this);
+      this.componentDidMount = LinodeDetailPageWrapper.loadLinode.bind(this);
     }
 
     render() {
@@ -148,8 +147,8 @@ describe('linodes/layouts/LinodeDetailPage', () => {
     loading: false,
   };
 
-  it('calls loadLinode during mount', async() => {
-    LinodeDetailPageWrapper.loadLinode = sinon.spy();
+  it('calls loadLinode during mount', () => {
+    const loadLinode = sinon.stub(LinodeDetailPageWrapper, 'loadLinode');
     mount(
       <LinodeDetailPage
         dispatch={dispatch}
@@ -160,11 +159,11 @@ describe('linodes/layouts/LinodeDetailPage', () => {
       />
     );
 
-    expect(LinodeDetailPageWrapper.loadLinode.calledOnce).to.equal(true);
-    LinodeDetailPageWrapper.loadLinode.reset();
+    expect(loadLinode.calledOnce).to.equal(true);
+    loadLinode.restore();
   });
 
-  it('renders the linode label and group', async () => {
+  it('renders the linode label and group', () => {
     const page = mount(
       <LinodeDetailPage
         dispatch={dispatch}
@@ -177,7 +176,7 @@ describe('linodes/layouts/LinodeDetailPage', () => {
       .to.equal(true);
   });
 
-  it('renders the linode label alone when ungrouped', async () => {
+  it('renders the linode label alone when ungrouped', () => {
     const page = mount(
       <LinodeDetailPage
         dispatch={dispatch}

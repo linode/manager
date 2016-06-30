@@ -30,8 +30,8 @@ describe('linodes/settings/layouts/IndexPage', () => {
     _plural: 'linodes',
   };
 
-  it('calls loadLinode during mount', async() => {
-    LinodeDetailPage.loadLinode = sinon.spy();
+  it('calls loadLinode during mount', () => {
+    const loadLinode = sinon.stub(LinodeDetailPage, 'loadLinode');
     mount(
       <IndexPage
         dispatch={dispatch}
@@ -40,8 +40,8 @@ describe('linodes/settings/layouts/IndexPage', () => {
       />
     );
 
-    expect(LinodeDetailPage.loadLinode.calledOnce).to.equal(true);
-    LinodeDetailPage.loadLinode.reset();
+    expect(loadLinode.calledOnce).to.equal(true);
+    loadLinode.restore();
   });
 
   it('renders tabs with correct names and links', () => {

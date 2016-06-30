@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 import _ from 'lodash';
 
 import { getLinode, loadLinode } from './LinodeDetailPage';
-import { countryMap } from '../components/DatacenterSelection';
+import { countryMap } from '~/constants';
 import { flags, distros as distroAssets } from '~/assets';
 import { ResponsiveLineChart } from '~/components/ResponsiveCharts';
 
@@ -13,9 +13,13 @@ export class LinodeGeneral extends Component {
   constructor() {
     super();
     this.getLinode = getLinode.bind(this);
-    this.componentDidMount = loadLinode.bind(this);
+    this.loadLinode = loadLinode.bind(this);
     this.renderDetails = this.renderDetails.bind(this);
     this.renderGraphs = this.renderGraphs.bind(this);
+  }
+
+  componentDidMount() {
+    this.loadLinode();
   }
 
   renderGraphs() {
