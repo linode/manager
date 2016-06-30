@@ -1,4 +1,22 @@
-.distro, .datacenter {
+.distros, .datacenters, .plans {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: left;
+}
+
+.datacenters, .plans {
+    padding: $main-padding-tb $main-padding-lr;
+
+    h3 {
+        margin-left: 1rem;
+    }
+
+    .col-lg-4 {
+        padding-left: 0;
+    }
+}
+
+.distro, .datacenter, .plan {
     $width: 11rem;
     border: $linode-border;
     width: $width;
@@ -29,7 +47,7 @@
         }
     }
 
-    & > div {
+    &:not(.plan) > div {
         height: 6rem;
         display: flex;
         justify-content: center;
@@ -52,20 +70,15 @@
     }
 }
 
-.distros, .datacenter-group {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: left;
-}
+.plan {
+    text-align: center;
 
-.datacenters {
-    padding: $main-padding-tb $main-padding-lr;
-
-    h3 {
-        margin-left: 1rem;
+    & > div {
+        padding: 1rem 0;
     }
 
-    .col-lg-4 {
-        padding-left: 0;
+    hr {
+        width: 80%;
+        margin: .5rem auto;
     }
 }
