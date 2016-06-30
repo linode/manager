@@ -1,4 +1,4 @@
-.distro {
+.distro, .datacenter {
     $width: 11rem;
     border: $linode-border;
     width: $width;
@@ -11,9 +11,10 @@
         line-height: inherit;
         padding: inherit;
 
-        h3 {
+        label {
             text-align: center;
             overflow: hidden;
+            line-height: $input-height;
 
             button {
                 float: right;
@@ -33,10 +34,10 @@
         display: flex;
         justify-content: center;
         align-items: center;
+    }
 
-        &:hover {
-            background-color: $linode-gray;
-        }
+    &:not(.selected) > div:hover {
+        background-color: $linode-gray;
     }
 
     &.selected {
@@ -51,8 +52,20 @@
     }
 }
 
-.distros {
+.distros, .datacenters {
     display: flex;
     flex-wrap: wrap;
     justify-content: left;
+}
+
+.datacenters {
+    padding: $main-padding-tb $main-padding-lr;
+
+    h3 {
+        margin-left: 1rem;
+    }
+
+    .col-lg-4 {
+        padding-left: 0;
+    }
 }

@@ -23,7 +23,7 @@ describe('linodes/components/DistroVendor', () => {
 
   it('renders the selected distro name', () => {
     const dv = shallow(<DistroVendor vendor={vendor} />);
-    expect(dv.find('h3').text()).to.equal('Debian 8.1');
+    expect(dv.find(<div>Debian 8.1</div>)).to.exist;
   });
 
   it('renders the vendor logo', () => {

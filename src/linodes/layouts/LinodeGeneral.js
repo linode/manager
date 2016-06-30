@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { getLinode, updateLinode } from './LinodeDetailPage';
-import { countryMap } from '../components/DatacenterSelection';
+import { countryMap } from '~/constants';
 import { flags, distros as distroAssets } from '~/assets';
 import { ResponsiveLineChart } from '~/components/ResponsiveCharts';
 import _ from 'lodash';
