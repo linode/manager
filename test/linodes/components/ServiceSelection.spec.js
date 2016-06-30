@@ -4,34 +4,10 @@ import { expect } from 'chai';
 import { mount } from 'enzyme';
 
 import ServiceSelection from '~/linodes/components/ServiceSelection';
+import { state } from '~/../test/data';
 
 describe('linodes/components/ServiceSelection', () => {
-  const services = {
-    service_112: {
-      disk: 24,
-      hourly_price: 1,
-      id: 'service_112',
-      label: 'Linode 1024',
-      mbits_out: 25,
-      monthly_price: 1000,
-      ram: 1024,
-      service_type: 'linode',
-      transfer: 2000,
-      vcpus: 1,
-    },
-    service_114: {
-      disk: 24,
-      hourly_price: 1,
-      id: 'service_114',
-      label: 'Linode 2048',
-      mbits_out: 25,
-      monthly_price: 1000,
-      ram: 2048, // larger plan
-      service_type: 'linode',
-      transfer: 2000,
-      vcpus: 1,
-    },
-  };
+  const { services } = state.services;
 
   it('renders the card header', () => {
     const c = mount(
