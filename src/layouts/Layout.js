@@ -3,18 +3,71 @@ import { connect } from 'react-redux';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
 import Modal from '../components/Modal';
+import { toggleDetails } from '~/actions/errors';
 
 function Layout(props) {
-  const { username } = props;
+  const { dispatch, username, errors } = props;
   return (
     <div className="layout">
       <Header username={username} />
       <Sidebar />
       <div className="main">
-        <div className="container">
-          <Modal />
-          {props.children}
-        </div>
+        {errors.status === null ?
+          <div className="container">
+            <Modal />
+            {props.children}
+          </div>
+          :
+          <div
+            className="container centered"
+            style={{ marginTop: '5rem' }}
+          >
+            <h1>{errors.status} {errors.statusText}</h1>
+            <p>
+              Something broke. Sorry about that.
+            </p>
+            <div>
+              <button
+                style={{ margin: '0 0.51rem' }}
+                className="btn btn-default"
+                onClick={() => window.location.reload(true)}
+              >Refresh</button>
+              <a
+                style={{ margin: '0 0.5rem' }}
+                href={`mailto:support@linode.com?subject=${
+                  encodeURIComponent(`${errors.status} ${errors.statusText}`)
+                }&body=${
+                  encodeURIComponent(
+                    `I'm getting the following error on ${
+                      window.location.href
+                    }:\n\n${
+                      JSON.stringify(errors.json, null, 4)
+                    }`
+                  )
+                }`}
+                className="btn btn-default"
+              >Contact Support</a>
+            </div>
+            <div style={{ marginTop: '1rem' }}>
+              <a
+                href="#"
+                onClick={e => {
+                  e.preventDefault();
+                  dispatch(toggleDetails());
+                }}
+              >{errors.details ? 'Hide' : 'Show'} Response JSON</a>
+              {errors.details ?
+                <pre
+                  style={{
+                    textAlign: 'left',
+                    maxHeight: '20rem',
+                    width: '40rem',
+                    margin: '0 auto',
+                  }}
+                >{JSON.stringify(errors.json, null, 4)}</pre>
+              : null}
+            </div>
+          </div>}
       </div>
     </div>
   );
@@ -23,10 +76,15 @@ function Layout(props) {
 Layout.propTypes = {
   username: PropTypes.string,
   children: PropTypes.node.isRequired,
+  errors: PropTypes.object.isRequired,
+  dispatch: PropTypes.func.isRequired,
 };
 
 function select(state) {
-  return { username: state.authentication.username };
+  return {
+    username: state.authentication.username,
+    errors: state.errors,
+  };
 }
 
 export default connect(select)(Layout);
