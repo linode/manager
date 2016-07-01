@@ -24,7 +24,7 @@ export function getLinode() {
   return linodes[linodeId];
 }
 
-export async function updateLinode() {
+export async function loadLinode() {
   const { dispatch } = this.props;
   const linode = this.getLinode();
   if (!linode) {
