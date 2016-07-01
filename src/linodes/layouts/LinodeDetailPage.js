@@ -23,13 +23,16 @@ export function getLinode() {
   return linodes[linodeId];
 }
 
-export function loadLinode() {
+export async function updateLinode() {
   const { dispatch } = this.props;
   const linode = this.getLinode();
   if (!linode) {
     const { linodeId } = this.props.params;
-    dispatch(updateLinode(linodeId))
-      .catch(response => dispatch(setError(response)));
+    try {
+      await dispatch(updateLinode(linodeId));
+    } catch (response) {
+      dispatch(setError(response));
+    }
   }
 }
 
