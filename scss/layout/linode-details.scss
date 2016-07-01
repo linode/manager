@@ -66,12 +66,21 @@
         .text-muted {
             font-size: 70%;
         }
-        a {
+        li a {
             color: $linode-black;
             text-decoration: none;
         }
         img {
             margin-left: 0.5rem;
+        }
+    }
+
+    .backups-status a {
+        color: $linode-blue;
+        text-decoration: none;
+        &:hover {
+            color: $linode-dark-blue;
+            text-decoration: underline;
         }
     }
 

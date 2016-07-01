@@ -5,6 +5,7 @@ import { expect } from 'chai';
 import { testLinode } from '~/../test/data';
 import { LinodeGeneral } from '~/linodes/layouts/LinodeGeneral';
 import * as LinodeDetailPage from '~/linodes/layouts/LinodeDetailPage';
+import moment from 'moment';
 
 describe('linodes/layouts/LinodeGeneral', () => {
   const sandbox = sinon.sandbox.create();
@@ -26,7 +27,7 @@ describe('linodes/layouts/LinodeGeneral', () => {
         id: 'linode_1235',
         group: '',
         backups: {
-          last_backup: '1 hour ago',
+          last_backup: '2016-06-28T14:19:37',
           enabled: true,
         },
       },
@@ -72,47 +73,41 @@ describe('linodes/layouts/LinodeGeneral', () => {
     expect(page.contains(<li> {ipv6} </li>)).to.equal(true);
   });
 
-  it('renders link to networking', async () => {
-    const path = `/linodes/${testLinode.id}/networking`;
-    const page = shallow(
-      <LinodeGeneral
-        linodes={linodes}
-        params={params}
-      />);
-
-    expect(page.find('Link').props())
-      .to.have.property('to')
-      .which.equals(path);
-  });
-
   it('renders backups not enabled', async () => {
+    const path = `/linodes/${testLinode.id}/backups`;
     const page = shallow(
       <LinodeGeneral
         linodes={linodes}
         params={params}
       />);
 
-    expect(page.find('.col-sm-8').at(1).text()).to.equal('Backups not enabled.');
+    expect(page.find('.col-sm-8').at(1).find('Link')
+      .props())
+      .have.property('to')
+      .which.equal(path);
   });
 
   it('renders backups enabled', async () => {
+    const backupTime = linodes.linodes.linode_1235.backups.last_backup;
     const page = shallow(
       <LinodeGeneral
         linodes={linodes}
         params={{ linodeId: 'linode_1235' }}
       />);
 
-    expect(page.find('.col-sm-8').at(1).text()).to.equal('1 hour ago');
+    expect(page.find('.col-sm-8').at(1).text()).to.equal(moment(backupTime).fromNow());
   });
 
   it('renders plan', async () => {
+    const planArray = testLinode.services.linode.split(' ');
+    const planText = `${planArray[0]} ${planArray[1] / 1024}G`;
     const page = shallow(
       <LinodeGeneral
         linodes={linodes}
         params={params}
       />);
 
-    expect(page.find('.col-sm-8').at(2).text()).to.equal(testLinode.services.linode);
+    expect(page.find('.col-sm-8').at(2).text()).to.equal(planText);
   });
 
   it('renders datacenter', async () => {

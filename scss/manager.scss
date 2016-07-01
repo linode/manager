@@ -338,7 +338,7 @@ hr {
         color: $linode-black;
     }
 
-    &.btn-help {
+    &.btn-help, &.btn-warning {
         $size: 24px;
         .fa {
             color: $linode-lightest-black;
@@ -347,7 +347,7 @@ hr {
         background-color: $linode-gray;
         font-size: $size / 2;
         line-height: $size - 2px;
-        padding: 0;
+        padding: 0 0 0 0.1rem;
         margin: 0 1rem;
         display: inline-block;
         width: $size;
@@ -368,6 +368,23 @@ hr {
 
         h1 &, h2 &, h3 & {
             margin-top: -0.25rem;
+        }
+    }
+
+    &.btn-warning {
+        .fa {
+            color: $linode-white;
+        }
+        background-color: $linode-red;
+        border-color: $linode-red;
+
+        &:hover {
+            background-color: $linode-white;
+            border: $linode-white;
+
+            .fa {
+                color: $linode-red;
+            }
         }
     }
 
@@ -406,6 +423,13 @@ hr {
             color: white;
         }
     }
+}
+
+.datacenter-style img {
+    margin-left: 0.5rem;
+    -webkit-filter: contrast(70%) saturate(90%);
+    filter: contrast(70%) saturate(90%);
+    opacity: 0.7;
 }
 
 input[type=checkbox] {
