@@ -65,6 +65,16 @@ Checkbox.defaultProps = {
 
 const supportedInputs = [Input, Checkbox];
 
+/*
+ * This component wraps a basic html form. Before it renders
+ * the children the first time, it iterates over the children
+ * and creates the form state by associating child inputs' names
+ * with their initial value. Then it clones the element making the
+ * value dependent on the Form state rather than the initial value.
+ * Form also passes onChange to the inputs. When an input receives
+ * a change, it called onChange to update Form state which causes
+ * a re-render.
+ */
 export class Form extends Component {
   constructor(props) {
     super(props);
@@ -75,9 +85,9 @@ export class Form extends Component {
     this.onSubmit = this.onSubmit.bind(this);
   }
 
-  onSubmit() {
+  onSubmit(e) {
+    e.preventDefault();
     this.props.onSubmit(this.props.mapInputs(this.state));
-    return false;
   }
 
   makeChildOnChange(name, type) {
