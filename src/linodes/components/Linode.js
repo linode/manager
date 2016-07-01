@@ -28,8 +28,8 @@ renderPowerButton.propTypes = {
   onReboot: PropTypes.func,
 };
 
-export function renderPlanStyle(linode) {
-  const plan = linode.services.linode.split(' ');
+export function renderPlanStyle(planStr) {
+  const plan = planStr.split(' ');
 
   return `${plan[0]} ${plan[1] / 1024}G`;
 }
