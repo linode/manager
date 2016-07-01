@@ -74,19 +74,6 @@ describe('linodes/layouts/LinodeGeneral', async () => {
     expect(page.contains(<li> {ipv6} </li>)).to.equal(true);
   });
 
-  it('renders link to networking', () => {
-    const path = `/linodes/${testLinode.id}/networking`;
-    const page = shallow(
-      <LinodeGeneral
-        linodes={linodes}
-        params={params}
-      />);
-
-    expect(page.find('Link').props())
-      .to.have.property('to')
-      .which.equals(path);
-  });
-
   it('renders backups not enabled', () => {
     const path = `/linodes/${testLinode.id}/backups`;
     const page = shallow(

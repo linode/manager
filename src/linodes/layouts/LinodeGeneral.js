@@ -24,7 +24,7 @@ export class LinodeGeneral extends Component {
     this.renderDistroStyle = renderDistroStyle.bind(this);
     this.renderDatacenterStyle = renderDatacenterStyle.bind(this);
     this.renderPlanStyle = renderPlanStyle.bind(this);
-    this.componentDidMount = updateLinode.bind(this);
+    this.componentDidMount = loadLinode.bind(this);
     this.renderDetails = this.renderDetails.bind(this);
     this.renderGraphs = this.renderGraphs.bind(this);
   }
