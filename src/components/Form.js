@@ -1,30 +1,19 @@
-import React, { PropTypes } from 'react';
-import Formsy, { HOC } from 'formsy-react';
+import React, { Component, Children, PropTypes } from 'react';
 
-function BareInput(props) {
+export function Input(props) {
   return (
     <div className={`input-container ${props.className}`}>
       <input
         className="form-control"
         name={props.name}
-        onChange={e => props.setValue(e.target.value)}
+        onChange={props.onChange}
         placeholder={props.placeholder}
         type={props.type}
-        value={props.getValue()}
+        value={props.value}
       />
     </div>
   );
 }
-
-BareInput.propTypes = {
-  setValue: PropTypes.func.isRequired,
-  placeholder: PropTypes.string.isRequired,
-  type: PropTypes.string.isRequired,
-  getValue: PropTypes.func.isRequired,
-};
-
-// eslint-disable-next-line new-cap, babel/new-cap
-export const Input = HOC(BareInput);
 
 Input.propTypes = {
   className: PropTypes.string,
@@ -32,23 +21,25 @@ Input.propTypes = {
   placeholder: PropTypes.string,
   type: PropTypes.string,
   value: PropTypes.any.isRequired,
+  onChange: PropTypes.func.isRequired,
 };
 
 Input.defaultProps = {
   className: '',
   placeholder: '',
   type: 'text',
+  onChange: () => {},
 };
 
-function BareCheckbox(props) {
+export function Checkbox(props) {
   return (
     <div className={`checkbox ${props.className}`}>
       <label>
         <input
-          onChange={() => props.setValue(!props.getValue())}
+          onChange={(e) => props.onChange({ ...e, target: { ...e.target, value: !props.value } })}
           type="checkbox"
-          value={props.getValue()}
-          checked={props.getValue()}
+          value={props.value}
+          checked={props.value}
           name={props.name}
         />
         <span>{props.label}</span>
@@ -57,39 +48,86 @@ function BareCheckbox(props) {
   );
 }
 
-BareCheckbox.propTypes = {
-  setValue: PropTypes.func.isRequired,
-  label: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  getValue: PropTypes.func.isRequired,
-};
-
-// eslint-disable-next-line new-cap, babel/new-cap
-export const Checkbox = HOC(BareCheckbox);
-
 Checkbox.propTypes = {
   className: PropTypes.string,
   label: PropTypes.string,
   name: PropTypes.string.isRequired,
   value: PropTypes.bool,
+  onChange: PropTypes.func.isRequired,
 };
 
 Checkbox.defaultProps = {
   className: '',
   label: '',
   value: false,
+  onChange: () => {},
 };
 
-export function Form(props) {
-  return (
-    <Formsy.Form
-      className={props.className}
-      mapping={props.mapInputs}
-      onSubmit={props.onSubmit}
-    >
-      {props.children}
-    </Formsy.Form>
-  );
+const supportedInputs = [Input, Checkbox];
+
+export class Form extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+    this.setInitialState(props.children);
+
+    this.onSubmit = this.onSubmit.bind(this);
+  }
+
+  onSubmit() {
+    return this.props.onSubmit(this.props.mapInputs(this.state));
+  }
+
+  makeOnChange(name, type) {
+    return ({ target: { value } }) => {
+      let typedValue = value;
+      if (type === 'number') {
+        typedValue = parseFloat(value);
+      }
+
+      if (this.state[name] !== typedValue) {
+        this.setState({ ...this.state, [name]: typedValue });
+        this.forceUpdate();
+      }
+    };
+  }
+
+  setInitialState(children) {
+    Children.forEach(children, ({ type, props = null }) => {
+      if (supportedInputs.indexOf(type) !== -1) {
+        this.state[props.name] = props.value;
+      } else if (props && props.children) {
+        this.setInitialState(props.children);
+      }
+    });
+  }
+
+  renderChildren(children) {
+    return Children.map(children, child => {
+      if (supportedInputs.indexOf(child.type) !== -1) {
+        return React.cloneElement(child, {
+          ...child.props,
+          value: this.state[child.props.name],
+          onChange: this.makeOnChange(child.props.name, child.props.type),
+        });
+      } else if (child.props && child.props.children) {
+        return React.cloneElement(child, {
+          ...child.props,
+          children: this.renderChildren(child.props.children),
+        });
+      }
+
+      return child;
+    });
+  }
+
+  render() {
+    return (
+      <form className={this.props.className} onSubmit={this.onSubmit}>
+        {this.renderChildren(this.props.children)}
+      </form>
+    );
+  }
 }
 
 Form.propTypes = {

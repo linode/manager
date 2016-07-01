@@ -86,15 +86,16 @@ describe('components/Form', () => {
       expect(checkbox.find('.foo')).to.exist;
     });
 
-    it('changes value onclick', () => {
-      const checkbox = mount(
+    it('changes checkbox value on change', () => {
+      const form = mount(
         <Form onSubmit={onSubmit}>
           <Checkbox name="1" />
         </Form>
       );
 
-      checkbox.find('input[type="checkbox"]').simulate('change');
-      expect(checkbox.find('input').props().value).to.equal(true);
+      const c = form.find('input[type="checkbox"]');
+      c.simulate('change');
+      expect(c.props().value).to.equal(true);
     });
   });
 
