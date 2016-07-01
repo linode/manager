@@ -36,7 +36,7 @@ export function Checkbox(props) {
     <div className={`checkbox ${props.className}`}>
       <label>
         <input
-          onChange={(e) => props.onChange({ ...e, target: { ...e.target, value: !props.value } })}
+          onChange={(e) => props.onChange({ ...e, target: { value: e.target.value !== 'true' } })}
           type="checkbox"
           value={props.value}
           checked={props.value}
@@ -68,17 +68,19 @@ const supportedInputs = [Input, Checkbox];
 export class Form extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.initialState = {};
     this.setInitialState(props.children);
+    this.state = this.initialState;
 
     this.onSubmit = this.onSubmit.bind(this);
   }
 
   onSubmit() {
-    return this.props.onSubmit(this.props.mapInputs(this.state));
+    this.props.onSubmit(this.props.mapInputs(this.state));
+    return false;
   }
 
-  makeOnChange(name, type) {
+  makeChildOnChange(name, type) {
     return ({ target: { value } }) => {
       let typedValue = value;
       if (type === 'number') {
@@ -86,8 +88,10 @@ export class Form extends Component {
       }
 
       if (this.state[name] !== typedValue) {
-        this.setState({ ...this.state, [name]: typedValue });
-        this.forceUpdate();
+        this.setState({ [name]: typedValue }, () => {
+          const result = this.props.mapInputs(this.state);
+          this.props.onChange(result);
+        });
       }
     };
   }
@@ -95,7 +99,7 @@ export class Form extends Component {
   setInitialState(children) {
     Children.forEach(children, ({ type, props = null }) => {
       if (supportedInputs.indexOf(type) !== -1) {
-        this.state[props.name] = props.value;
+        this.initialState[props.name] = props.value;
       } else if (props && props.children) {
         this.setInitialState(props.children);
       }
@@ -108,7 +112,7 @@ export class Form extends Component {
         return React.cloneElement(child, {
           ...child.props,
           value: this.state[child.props.name],
-          onChange: this.makeOnChange(child.props.name, child.props.type),
+          onChange: this.makeChildOnChange(child.props.name, child.props.type),
         });
       } else if (child.props && child.props.children) {
         return React.cloneElement(child, {
@@ -133,11 +137,13 @@ export class Form extends Component {
 Form.propTypes = {
   children: PropTypes.node.isRequired,
   className: PropTypes.string,
-  mapInputs: PropTypes.func,
+  mapInputs: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
+  onChange: PropTypes.func.isRequired,
 };
 
 Form.defaultProps = {
   className: '',
   mapInputs: x => x,
+  onChange: () => {},
 };

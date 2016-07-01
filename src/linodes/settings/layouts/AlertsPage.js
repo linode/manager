@@ -62,7 +62,7 @@ export class AlertsPage extends Component {
         <div className="col-sm-10 linode-content-col">
           <div>
             <Checkbox label="Enable" name={`${name}-enable`} value={enabled} />
-            <Input type="number" min={0} value={threshold} name={name} />
+            <Input type="number" value={threshold} name={name} />
             {label}
           </div>
           <small>Triggered by: {text} exceeding this value</small>
