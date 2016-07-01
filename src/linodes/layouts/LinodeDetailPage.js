@@ -147,7 +147,7 @@ export class LinodeDetailPage extends Component {
               {errors.group ?
                 <div className="alert alert-danger">
                   <ul>
-                    {errors.group.map(e => <li>{e}</li>)}
+                    {errors.group.map(e => <li key={e}>{e}</li>)}
                   </ul>
                 </div> : null}
             </div>
@@ -155,7 +155,7 @@ export class LinodeDetailPage extends Component {
               {errors.label ?
                 <div className="alert alert-danger">
                   <ul>
-                    {errors.label.map(e => <li>{e}</li>)}
+                    {errors.label.map(e => <li key={e}>{e}</li>)}
                   </ul>
                 </div> : null}
             </div>
