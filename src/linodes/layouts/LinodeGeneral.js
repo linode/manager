@@ -11,7 +11,7 @@ import {
   renderDatacenterStyle,
   renderPlanStyle,
 } from '~/linodes/components/Linode';
-import { getLinode, updateLinode } from './LinodeDetailPage';
+import { getLinode, loadLinode } from './LinodeDetailPage';
 import { ResponsiveLineChart } from '~/components/ResponsiveCharts';
 
 
