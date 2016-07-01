@@ -39,6 +39,7 @@ describe('linodes/components/Linode', () => {
   });
 
   it('renders the datacenter', () => {
+    const datacenter = 'Newark, NJ';
     const linode = shallow(
       <Linode
         linode={testLinode}
@@ -46,8 +47,11 @@ describe('linodes/components/Linode', () => {
         isRow={false}
       />);
 
-    expect(linode.contains(<span>Newark, NJ</span>))
+    expect(linode.contains(datacenter))
       .to.equal(true);
+    expect(linode.find('.datacenter-style').find('img').props())
+      .to.have.property('alt')
+      .to.equal(datacenter);
   });
 
   it('renders the selected class', () => {
