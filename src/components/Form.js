@@ -68,11 +68,11 @@ const supportedInputs = [Input, Checkbox];
 /*
  * This component wraps a basic html form. Before it renders
  * the children the first time, it iterates over the children
- * and creates the form state by associating child inputs' names
+ * and creates Form state by associating child inputs' names
  * with their initial value. Then it clones the element making the
  * value dependent on the Form state rather than the initial value.
  * Form also passes onChange to the inputs. When an input receives
- * a change, it called onChange to update Form state which causes
+ * a change, it calls onChange to update Form state which causes
  * a re-render.
  */
 export class Form extends Component {
