@@ -51,19 +51,45 @@
         .edit-details {
             font-size: 2.2rem;
             display: inline-block;
+            width: 70%;
+            position: relative;
+
+            button {
+                margin: 0 0.5rem;
+            }
 
             input {
                 background: transparent;
-                margin: 0 0.5rem;
                 padding: 0;
-                width: 12rem;
                 border: none;
                 border-bottom: $linode-border;
+                display: block;
+                width: 100%;
 
                 &:focus {
                     outline: none;
                     border-bottom-color: $linode-dark-gray;
                 }
+
+                &.has-error {
+                    border-bottom-color: $linode-red;
+                }
+            }
+
+            .alert {
+                font-size: $font-size;
+                line-height: $font-size * 1.5;
+
+                ul {
+                    @extend .list-unstyled;
+                }
+            }
+
+            .errors {
+                position: absolute;
+                z-index: 99999;
+                // Constant from bootstrap
+                width: calc(100% + 1.875rem);
             }
         }
     }

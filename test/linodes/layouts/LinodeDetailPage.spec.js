@@ -145,6 +145,11 @@ describe('linodes/layouts/LinodeDetailPage', () => {
     label: '',
     group: '',
     loading: false,
+    errors: {
+      label: null,
+      group: null,
+      _: null,
+    },
   };
 
   it('calls loadLinode during mount', () => {

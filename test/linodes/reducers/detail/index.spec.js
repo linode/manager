@@ -12,6 +12,11 @@ describe('linodes/reducers/detail/index', () => {
       label: '',
       group: '',
       loading: false,
+      errors: {
+        label: null,
+        group: null,
+        _: null,
+      },
     });
   });
 
