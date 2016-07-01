@@ -5,10 +5,10 @@ import { expect } from 'chai';
 import { Tabs, Tab } from 'react-tabs';
 
 import { testLinode } from '~/../test/data';
-import { SettingsPage } from '~/linodes/layouts/SettingsPage';
+import { IndexPage } from '~/linodes/settings/layouts/IndexPage';
 import * as LinodeDetailPage from '~/linodes/layouts/LinodeDetailPage';
 
-describe('linodes/layouts/SettingsPage', () => {
+describe('linodes/settings/layouts/IndexPage', () => {
   const sandbox = sinon.sandbox.create();
   const dispatch = sandbox.spy();
 
@@ -30,23 +30,23 @@ describe('linodes/layouts/SettingsPage', () => {
     _plural: 'linodes',
   };
 
-  it('calls updateLinode during mount', async() => {
-    LinodeDetailPage.updateLinode = sinon.spy();
+  it('calls loadLinode during mount', () => {
+    const loadLinode = sinon.stub(LinodeDetailPage, 'loadLinode');
     mount(
-      <SettingsPage
+      <IndexPage
         dispatch={dispatch}
         linodes={linodes}
         params={{ linodeId: testLinode.id }}
       />
     );
 
-    expect(LinodeDetailPage.updateLinode.calledOnce).to.equal(true);
-    LinodeDetailPage.updateLinode.reset();
+    expect(loadLinode.calledOnce).to.equal(true);
+    loadLinode.restore();
   });
 
   it('renders tabs with correct names and links', () => {
     const page = shallow(
-      <SettingsPage
+      <IndexPage
         dispatch={dispatch}
         linodes={linodes}
         params={{ linodeId: 'linode_1235' }}

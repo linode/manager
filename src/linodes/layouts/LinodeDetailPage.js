@@ -3,6 +3,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router';
 import { push } from 'react-router-redux';
+
 import Dropdown from '~/components/Dropdown';
 import { LinodeStates, LinodeStatesReadable } from '~/constants';
 import {
@@ -12,7 +13,7 @@ import {
   commitChanges,
 } from '../actions/detail/index';
 import {
-  updateLinode as updateLinodeAction, powerOnLinode, powerOffLinode, rebootLinode,
+  updateLinode, powerOnLinode, powerOffLinode, rebootLinode,
 } from '~/actions/api/linodes';
 
 export function getLinode() {
@@ -21,12 +22,12 @@ export function getLinode() {
   return linodes[linodeId];
 }
 
-export function updateLinode() {
+export function loadLinode() {
   const { dispatch } = this.props;
   const linode = this.getLinode();
   if (!linode) {
     const { linodeId } = this.props.params;
-    dispatch(updateLinodeAction(linodeId));
+    dispatch(updateLinode(linodeId));
   }
 }
 
@@ -69,12 +70,12 @@ export class LinodeDetailPage extends Component {
     this.renderTabs = renderTabs.bind(this);
     this.handleLabelKeyUp = this.handleLabelKeyUp.bind(this);
     this.routerWillLeave = this.routerWillLeave.bind(this);
-    this.updateLinode = module.exports.updateLinode.bind(this);
+    this.loadLinode = module.exports.loadLinode.bind(this);
     this.componentDidMount = this.componentDidMount.bind(this);
   }
 
   componentDidMount() {
-    this.updateLinode(); // Make sure Linode data is available
+    this.loadLinode(); // Make sure Linode data is available
     const { router } = this.props;
     router.setRouteLeaveHook(this.props.route, this.routerWillLeave);
   }

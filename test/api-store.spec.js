@@ -6,20 +6,21 @@ import makeApiList, {
   makeUpdateItem,
   makeUpdateUntil,
   makeDeleteItem,
+  makePutItem,
 } from '~/api-store';
 import * as fetch from '~/fetch';
 
-const mockFoobarsResponse = {
-  foobars: [
-    { id: 'foobar_1' },
-    { id: 'foobar_2' },
-  ],
-  total_pages: 3,
-  total_results: 25 * 3 - 4,
-  page: 1,
-};
-
 describe('api-store', () => {
+  const mockFoobarsResponse = {
+    foobars: [
+      { id: 'foobar_1' },
+      { id: 'foobar_2' },
+    ],
+    total_pages: 3,
+    total_results: 25 * 3 - 4,
+    page: 1,
+  };
+
   const auth = { token: 'token' };
 
   const sandbox = sinon.sandbox.create();
@@ -318,6 +319,45 @@ describe('api-store', () => {
       expect(dispatch.calledWith({
         type: 'DELETE_FOOBAR',
         id: 'foobar_1',
+      })).to.equal(true);
+    });
+  });
+
+  describe('api-store/makePutItem', () => {
+    afterEach(() => {
+      sandbox.restore();
+    });
+
+    it('returns a function that itself returns a function', () => {
+      const f = makePutItem('PUT_FOOBAR', 'foobars');
+      expect(f).to.be.a('function');
+      expect(f({ id: '', data: {} })).to.be.a('function');
+    });
+
+    const getGetState = (state = {}) => sandbox.stub().returns({
+      authentication: auth,
+      ...state,
+    });
+    const getDispatch = () => sandbox.spy();
+    const getFetchStub = (rsp) => sandbox.stub(fetch, 'fetch').returns({ json() { return rsp; } });
+
+    const emptyResponse = {};
+    it('performs the API request', async () => {
+      const dispatch = getDispatch();
+      const fetchStub = getFetchStub(emptyResponse);
+      const getState = getGetState();
+      const f = makePutItem('PUT_FOOBAR', 'foobars');
+      const p = f({ id: 'foobar_1', data: { foo: 'bar' } });
+
+      await p(dispatch, getState);
+
+      expect(fetchStub.calledWith(
+        auth.token, '/foobars/foobar_1', { method: 'PUT', body: JSON.stringify({ foo: 'bar' }) }
+      )).to.equal(true);
+      expect(dispatch.calledWith({
+        type: 'PUT_FOOBAR',
+        id: 'foobar_1',
+        data: { foo: 'bar' },
       })).to.equal(true);
     });
   });

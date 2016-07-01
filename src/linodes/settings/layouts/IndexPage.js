@@ -2,14 +2,18 @@ import { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { getLinode, updateLinode, renderTabs } from '../layouts/LinodeDetailPage';
+import { getLinode, loadLinode, renderTabs } from '~/linodes/layouts/LinodeDetailPage';
 
-export class SettingsPage extends Component {
+export class IndexPage extends Component {
   constructor() {
     super();
     this.getLinode = getLinode.bind(this);
     this.renderTabs = renderTabs.bind(this);
-    this.componentDidMount = updateLinode.bind(this);
+    this.loadLinode = loadLinode.bind(this);
+  }
+
+  componentDidMount() {
+    this.loadLinode();
   }
 
   render() {
@@ -26,7 +30,7 @@ export class SettingsPage extends Component {
   }
 }
 
-SettingsPage.propTypes = {
+IndexPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   linodes: PropTypes.object.isRequired,
   params: PropTypes.shape({
@@ -44,4 +48,4 @@ function select(state) {
   };
 }
 
-export default withRouter(connect(select)(SettingsPage));
+export default withRouter(connect(select)(IndexPage));

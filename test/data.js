@@ -90,6 +90,41 @@ export const testLinode = {
     label: 'Ubuntu 15.10',
   },
   _polling: false,
+  alerts: {
+    cpu: {
+      enabled: true,
+      threshold: 90,
+    },
+    io: {
+      enabled: true,
+      threshold: 5000,
+    },
+    transfer_in: {
+      enabled: true,
+      threshold: 5,
+    },
+    transfer_out: {
+      enabled: true,
+      threshold: 5,
+    },
+    transfer_quota: {
+      enabled: true,
+      threshold: 80,
+    },
+  },
+};
+
+export const linodes = {
+  pagesFetched: [0],
+  totalPages: 1,
+  linodes: {
+    [testLinode.id]: testLinode,
+    linode_1235: { ...testLinode, id: 'linode_1235', group: '' },
+    linode_1236: { ...testLinode, id: 'linode_1236', state: 'offline' },
+    linode_1237: { ...testLinode, id: 'linode_1236', state: 'booting' },
+  },
+  _singular: 'linode',
+  _plural: 'linodes',
 };
 
 export const testDistros = {

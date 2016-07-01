@@ -6,7 +6,7 @@ import { testLinode } from '~/../test/data';
 import { LinodeGeneral } from '~/linodes/layouts/LinodeGeneral';
 import * as LinodeDetailPage from '~/linodes/layouts/LinodeDetailPage';
 
-describe('linodes/layouts/LinodeGeneral', () => {
+describe('linodes/layouts/LinodeGeneral', async () => {
   const sandbox = sinon.sandbox.create();
 
   const dispatch = sandbox.spy();
@@ -38,8 +38,8 @@ describe('linodes/layouts/LinodeGeneral', () => {
     linodeId: testLinode.id,
   };
 
-  it('calls updateLinode on mount', async () => {
-    LinodeDetailPage.updateLinode = sinon.spy();
+  it('calls loadLinode on mount', () => {
+    const loadLinode = sinon.stub(LinodeDetailPage, 'loadLinode');
     mount(
       <LinodeGeneral
         linodes={linodes}
@@ -47,10 +47,11 @@ describe('linodes/layouts/LinodeGeneral', () => {
       />
     );
 
-    expect(LinodeDetailPage.updateLinode.calledOnce).to.equal(true);
+    expect(loadLinode.calledOnce).to.equal(true);
+    loadLinode.restore();
   });
 
-  it('renders public ipv4', async () => {
+  it('renders public ipv4', () => {
     const ipv4 = testLinode.ip_addresses['public'].ipv4[0];
     const page = mount(
       <LinodeGeneral
@@ -61,7 +62,7 @@ describe('linodes/layouts/LinodeGeneral', () => {
     expect(page.contains(<li> {ipv4} </li>)).to.equal(true);
   });
 
-  it('renders public ipv6', async () => {
+  it('renders public ipv6', () => {
     const ipv6 = testLinode.ip_addresses['public'].ipv6;
     const page = mount(
       <LinodeGeneral
@@ -72,7 +73,7 @@ describe('linodes/layouts/LinodeGeneral', () => {
     expect(page.contains(<li> {ipv6} </li>)).to.equal(true);
   });
 
-  it('renders link to networking', async () => {
+  it('renders link to networking', () => {
     const path = `/linodes/${testLinode.id}/networking`;
     const page = shallow(
       <LinodeGeneral
@@ -85,7 +86,7 @@ describe('linodes/layouts/LinodeGeneral', () => {
       .which.equals(path);
   });
 
-  it('renders backups not enabled', async () => {
+  it('renders backups not enabled', () => {
     const page = shallow(
       <LinodeGeneral
         linodes={linodes}
@@ -95,7 +96,7 @@ describe('linodes/layouts/LinodeGeneral', () => {
     expect(page.find('.col-sm-8').at(1).text()).to.equal('Backups not enabled.');
   });
 
-  it('renders backups enabled', async () => {
+  it('renders backups enabled', () => {
     const page = shallow(
       <LinodeGeneral
         linodes={linodes}
@@ -105,7 +106,7 @@ describe('linodes/layouts/LinodeGeneral', () => {
     expect(page.find('.col-sm-8').at(1).text()).to.equal('1 hour ago');
   });
 
-  it('renders plan', async () => {
+  it('renders plan', () => {
     const page = shallow(
       <LinodeGeneral
         linodes={linodes}
@@ -115,7 +116,7 @@ describe('linodes/layouts/LinodeGeneral', () => {
     expect(page.find('.col-sm-8').at(2).text()).to.equal(testLinode.services.linode);
   });
 
-  it('renders datacenter', async () => {
+  it('renders datacenter', () => {
     const page = shallow(
       <LinodeGeneral
         linodes={linodes}
@@ -125,7 +126,7 @@ describe('linodes/layouts/LinodeGeneral', () => {
     expect(page.find('.col-sm-8').at(3).text()).to.equal(testLinode.datacenter.label);
   });
 
-  it('renders distribution', async () => {
+  it('renders distribution', () => {
     const page = shallow(
       <LinodeGeneral
         linodes={linodes}
@@ -135,7 +136,7 @@ describe('linodes/layouts/LinodeGeneral', () => {
     expect(page.find('.col-sm-8').at(4).text()).to.equal(testLinode.distribution.label);
   });
 
-  it('renders ssh input elements', async () => {
+  it('renders ssh input elements', () => {
     const page = shallow(
       <LinodeGeneral
         linodes={linodes}
@@ -146,7 +147,7 @@ describe('linodes/layouts/LinodeGeneral', () => {
     expect(page.find('.input-group').at(0).find('button')).to.exist;
   });
 
-  it('renders shh path', async () => {
+  it('renders shh path', () => {
     const ipv4 = testLinode.ip_addresses['public'].ipv4[0];
     const sshPath = `ssh root@${ipv4}`;
     const page = shallow(
@@ -160,7 +161,7 @@ describe('linodes/layouts/LinodeGeneral', () => {
       .to.equal(sshPath);
   });
 
-  it('renders lish input elements', async () => {
+  it('renders lish input elements', () => {
     const page = shallow(
       <LinodeGeneral
         linodes={linodes}
@@ -174,7 +175,7 @@ describe('linodes/layouts/LinodeGeneral', () => {
       .at(1)).to.exist;
   });
 
-  it('renders lish path', async () => {
+  it('renders lish path', () => {
     const lishLink = `ssh -t caker@lish-${
         testLinode.datacenter.datacenter
       }.linode.com`;
@@ -189,7 +190,7 @@ describe('linodes/layouts/LinodeGeneral', () => {
       .to.equal(lishLink);
   });
 
-  it('renders glish button element', async () => {
+  it('renders glish button element', () => {
     const page = shallow(
       <LinodeGeneral
         linodes={linodes}

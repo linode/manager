@@ -116,10 +116,19 @@
                 background-color: transparent;
             }
 
+            [role=tabpanel] {
+                padding-bottom: 0;
+            }
+
+
             [role=tab] {
                 border: none;
                 background: transparent;
                 color: $linode-blue;
+
+                &:first-of-type {
+                    padding-left: 0;
+                }
 
                 /* There must be a bug in scss because when this was [selected]
                  * it duplicated the code in line 36 and this code did not show up. */
