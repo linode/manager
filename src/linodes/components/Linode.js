@@ -1,6 +1,10 @@
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
-import { LinodeStatesReadable } from '~/constants';
+import { flags, distros as distroAssets } from '~/assets';
+import {
+  LinodeStatesReadable,
+  countryMap,
+} from '~/constants';
 import moment from 'moment';
 
 function renderPowerButton(props) {
@@ -24,13 +28,46 @@ renderPowerButton.propTypes = {
   onReboot: PropTypes.func,
 };
 
-function renderBackupStatus(linode) {
+export function renderPlanStyle(linode) {
+  const plan = linode.services.linode.split(' ');
+
+  return `${plan[0]} ${plan[1] / 1024}G`;
+}
+
+export function renderDistroStyle(linode) {
+  return (
+    <span className="distro-style">
+      {linode.distribution.label}
+      <img
+        src={distroAssets[linode.distribution.vendor]
+          ? distroAssets[linode.distribution.vendor] : '//placehold.it/50x50'}
+        alt={linode.distribution.vendor}
+        width="12" height="12"
+      />
+    </span>
+  );
+}
+
+export function renderDatacenterStyle(linode) {
+  return (
+    <span className="datacenter-style">
+      {linode.datacenter.label}
+      <img
+        src={flags[countryMap[linode.datacenter.id]]
+          ? flags[countryMap[linode.datacenter.id]] : '//placehold.it/50x50'}
+        height="15" width="20" alt={linode.datacenter.label}
+      />
+    </span>
+  );
+}
+
+export function renderBackupStatus(linode) {
   return (
     <span className="backup-status">
       {linode.backups.enabled
         ?
         <span>
-          Last backup: {moment(linode.backups.last_backup).fromNow()}
+          {moment(linode.backups.last_backup).fromNow()}
         </span>
         :
         <span>
@@ -71,10 +108,11 @@ function renderCard(props) {
           </li>
           <li>
             <span className="fa fa-globe"></span>
-            <span>{linode.datacenter.label}</span>
+            <span>{renderDatacenterStyle(linode)}</span>
           </li>
           <li>
             <span className="fa fa-database"></span>
+            {linode.backups.enabled ? 'Last backup: ' : null}
             {renderBackupStatus(linode)}
           </li>
         </ul>
@@ -111,9 +149,10 @@ function renderRow(props) {
         {linode.ip_addresses['public'].ipv4[0]}, {linode.ip_addresses['public'].ipv6}
       </td>
       <td>
-        {linode.datacenter.label}
+        {renderDatacenterStyle(linode)}
       </td>
       <td>
+        {linode.backups.enabled ? 'Last backup: ' : null}
         {renderBackupStatus(linode)}
       </td>
       <td>
