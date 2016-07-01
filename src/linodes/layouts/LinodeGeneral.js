@@ -3,9 +3,13 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import _ from 'lodash';
 
+import {
+  renderBackupStatus,
+  renderDistroStyle,
+  renderDatacenterStyle,
+  renderPlanStyle,
+} from '~/linodes/components/Linode';
 import { getLinode, loadLinode } from './LinodeDetailPage';
-import { countryMap } from '~/constants';
-import { flags, distros as distroAssets } from '~/assets';
 import { ResponsiveLineChart } from '~/components/ResponsiveCharts';
 
 
@@ -14,6 +18,11 @@ export class LinodeGeneral extends Component {
     super();
     this.getLinode = getLinode.bind(this);
     this.loadLinode = loadLinode.bind(this);
+    this.renderBackupStatus = renderBackupStatus.bind(this);
+    this.renderDistroStyle = renderDistroStyle.bind(this);
+    this.renderDatacenterStyle = renderDatacenterStyle.bind(this);
+    this.renderPlanStyle = renderPlanStyle.bind(this);
+    this.componentDidMount = loadLinode.bind(this);
     this.renderDetails = this.renderDetails.bind(this);
     this.renderGraphs = this.renderGraphs.bind(this);
   }
@@ -110,9 +119,7 @@ export class LinodeGeneral extends Component {
               Backups
             </div>
             <div className="col-sm-8 linode-content-col right">
-              {linode.backups.enabled
-                ? linode.backups.last_backup
-                : <span>Backups not enabled.</span>}
+              {this.renderBackupStatus(linode)}
             </div>
           </div>
           <div className="row">
@@ -120,7 +127,7 @@ export class LinodeGeneral extends Component {
               Plan
             </div>
             <div className="col-sm-8 linode-content-col right">
-              {linode.services.linode}
+              {this.renderPlanStyle(linode.services.linode)}
             </div>
           </div>
           <div className="row">
@@ -128,27 +135,20 @@ export class LinodeGeneral extends Component {
               Datacenter
             </div>
             <div className="col-sm-8 linode-content-col right">
-              {linode.datacenter.label}
-              <img
-                src={flags[countryMap[linode.datacenter.id]]
-                  ? flags[countryMap[linode.datacenter.id]] : '//placehold.it/50x50'}
-                height="15" width="20" alt={linode.datacenter.label}
-              />
+              {this.renderDatacenterStyle(linode)}
             </div>
           </div>
-          <div className="row">
-            <div className="col-sm-4 linode-label-col left">
-              Distribution
+          {linode.distribution != null ?
+            <div className="row">
+              <div className="col-sm-4 linode-label-col left">
+                Distribution
+              </div>
+              <div className="col-sm-8 linode-content-col right">
+                {this.renderDistroStyle(linode)}
+              </div>
             </div>
-            <div className="col-sm-8 linode-content-col right">
-              {linode.distribution.label}
-              <img
-                src={distroAssets[linode.distribution.vendor]
-                  ? distroAssets[linode.distribution.vendor] : '//placehold.it/50x50'}
-                width="12" height="12" alt={linode.distribution.vendor}
-              />
-            </div>
-          </div>
+            : null
+          }
         </div>
         <div className="col-sm-7 right">
           <h2>Access</h2>

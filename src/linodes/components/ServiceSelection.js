@@ -1,9 +1,11 @@
 import React, { Component, PropTypes } from 'react';
+import { renderPlanStyle } from '~/linodes/components/Linode';
 
 export default class ServiceSelection extends Component {
   constructor() {
     super();
     this.renderPlan = this.renderPlan.bind(this);
+    this.renderPlanStyle = renderPlanStyle.bind(this);
   }
 
   renderHeader() {
@@ -27,7 +29,7 @@ export default class ServiceSelection extends Component {
         onClick={() => onServiceSelected(plan)}
       >
         <header>
-          <div className="title">{plan.label}</div>
+          <div className="title">{this.renderPlanStyle(plan.label)}</div>
         </header>
         <div className="plan-contents">
           <div className="pricing">${hourlyPrice / 100}/hr (${monthlyPrice / 100}/mo)</div>
