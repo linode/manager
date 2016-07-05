@@ -41,7 +41,10 @@ export function commitChanges(id) {
       dispatch(toggleEditMode());
     } catch (resp) {
       if (resp.statusCode !== 400) {
-        dispatch({ SET_ERRORS, _: `Error: ${resp.statusCode} ${resp.statusText}` });
+        dispatch({
+          type: SET_ERRORS,
+          _: [`Error: ${resp.statusCode} ${resp.statusText}`],
+        });
       } else {
         const json = await resp.json();
         const reducer = f => (s, e) => {
