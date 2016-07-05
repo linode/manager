@@ -3,6 +3,7 @@ import sinon from 'sinon';
 import { expect } from 'chai';
 import { shallow } from 'enzyme';
 import { Layout } from '../../src/layouts/Layout';
+import { toggleDetails } from '~/actions/errors';
 
 describe('layouts/Layout', () => {
   const sandbox = sinon.sandbox.create();
@@ -107,5 +108,19 @@ describe('layouts/Layout', () => {
     const pre = component.find('pre');
     expect(pre).to.exist;
     expect(JSON.parse(pre.text())).to.deep.equal(errorsPopulated.json);
+  });
+
+  it('toggles response JSON when link is clicked', () => {
+    const component = shallow(
+      <Layout
+        dispatch={dispatch}
+        errors={{ ...errorsPopulated, details: true }}
+      ><p>Hello world!</p></Layout>);
+    const link = component.find('.toggle-error-response');
+    expect(link).to.exist;
+    dispatch.reset();
+    link.simulate('click', { preventDefault: () => {} });
+    expect(dispatch.calledOnce).to.equal(true);
+    expect(dispatch.calledWith(toggleDetails())).to.equal(true);
   });
 });

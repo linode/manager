@@ -31,7 +31,7 @@ export class Layout extends Component {
             style={{ margin: '0 0.51rem' }}
             className="btn btn-default"
             onClick={() => window.location.reload(true)}
-          >Refresh</button>
+          >Reload</button>
           <a
             style={{ margin: '0 0.5rem' }}
             href={`mailto:support@linode.com?subject=${
@@ -50,6 +50,7 @@ export class Layout extends Component {
         </div>
         <div style={{ marginTop: '1rem' }}>
           <a
+            className="toggle-error-response"
             href="#"
             onClick={e => {
               e.preventDefault();
