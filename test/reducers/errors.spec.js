@@ -13,7 +13,6 @@ describe('reducers/errors', () => {
   deepFreeze(defaultState);
 
   it('should handle initial state', () => {
-    window.localStorage.clear();
     expect(
       errors(undefined, {})
     ).to.deep.equal(defaultState);
