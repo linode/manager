@@ -19,7 +19,10 @@ export default class DistroVendor extends Component {
           vendor.versions.find(v => v.id === selected) ? 'selected' : ''
         }`}
       >
-        <header className={`dropdown ${open ? 'open' : ''}`}>
+        <header
+          className={`dropdown ${open ? 'open' : ''}`}
+          onBlur={() => this.setState({ open: false })}
+        >
           <div className="title">
             {label(selectedVersion.label)}
             <button
@@ -39,7 +42,7 @@ export default class DistroVendor extends Component {
                 key={v.id}
                 className="dropdown-item"
                 href="#"
-                onClick={e => {
+                onMouseDown={e => {
                   e.preventDefault();
                   e.stopPropagation();
                   onClick(v);

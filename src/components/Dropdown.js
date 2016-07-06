@@ -26,14 +26,17 @@ export default class Dropdown extends Component {
         type="button"
         key={name}
         className="btn dropdown-item"
-        onClick={action}
+        onMouseDown={action}
       >{name}</button>
     );
 
     const orientation = this.props.leftOriented === false ? 'dropdown-menu-right' : '';
 
     return (
-      <div className={`btn-group ${this.state.open ? 'open' : ''}`}>
+      <div
+        className={`btn-group ${this.state.open ? 'open' : ''}`}
+        onBlur={this.close}
+      >
         <button
           type="button"
           className="btn dropdown-first"
@@ -46,7 +49,6 @@ export default class Dropdown extends Component {
           aria-haspopup="true"
           aria-expanded={this.state.open}
           onClick={this.open}
-          onBlur={this.close}
         >
           <span className="sr-only">Toggle dropdown</span>
         </button>
