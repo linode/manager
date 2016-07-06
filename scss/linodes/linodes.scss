@@ -114,7 +114,7 @@ table.linodes {
     line-height: 35px;
     margin: 0 15px;
 
-    .linode.row:not(.selected) {
+    &:not(.selected) {
         background: $linode-white;
     }
 
