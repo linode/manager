@@ -15,10 +15,13 @@
     "babel/object-shorthand": 2,
     "babel/flow-object-type": 2,
     "babel/no-await-in-loop": 0,
+    "babel/arrow-parens": 0,
     "import/no-unresolved": 0,
     "no-underscore-dangle": 0,
     "no-unused-expressions": 0,
     "no-confusing-arrow": 0,
+    "array-callback-return": 0,
+    "consistent-return": 0,
     "react/no-multi-comp": 0,
     "dot-notation": [
       "error", {

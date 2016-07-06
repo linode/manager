@@ -12,6 +12,14 @@ export const UPDATE_LINODE = '@@linodes/UPDATE_LINODE';
 export const DELETE_LINODE = '@@linodes/DELETE_LINODE';
 export const PUT_LINODE = '@@linodes/PUT_LINODE';
 
+export const UPDATE_LINODE_CONFIG = '@@linodes/UPDATE_LINODE_CONFIG ';
+export const UPDATE_LINODE_CONFIGS = '@@linodes/UPDATE_LINODE_CONFIGS ';
+export const DELETE_LINODE_CONFIG = '@@linodes/DELETE_LINODE_CONFIG ';
+
+export const UPDATE_LINODE_DISK = '@@linodes/UPDATE_LINODE_DISK ';
+export const UPDATE_LINODE_DISKS = '@@linodes/UPDATE_LINODE_DISKS ';
+export const DELETE_LINODE_DISK = '@@linodes/DELETE_LINODE_DISK ';
+
 export const fetchLinodes = makeFetchPage(UPDATE_LINODES, 'linodes');
 export const updateLinode = makeUpdateItem(UPDATE_LINODE, 'linodes', 'linode');
 export const updateLinodeUntil = makeUpdateUntil(UPDATE_LINODE, 'linodes', 'linode');
