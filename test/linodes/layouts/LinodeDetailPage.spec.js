@@ -62,7 +62,7 @@ describe('linodes/layouts/LinodeDetailPage/loadLinode', async () => {
     expect(dispatch.firstCall.args[0].type).to.equal(linodeActions.UPDATE_LINODE);
   });
 
-  it('handles errors from updateLinode', async () => {
+  it('handles errors from updateLinode', () => {
     sandbox.stub(linodeActions, 'updateLinode').throws({
       json: () => ({ foo: 'bar' }),
       headers: { get() { return 'application/json'; } },

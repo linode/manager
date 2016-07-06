@@ -56,7 +56,7 @@ describe('linodes/layouts/IndexPage', () => {
     expect(dispatch.firstCall.args[0].type).to.equal(linodeActions.UPDATE_LINODES);
   });
 
-  it('handles errors from fetchLinodes', async () => {
+  it('handles errors from fetchLinodes', () => {
     sandbox.stub(linodeActions, 'fetchLinodes').throws({
       json: () => ({ foo: 'bar' }),
       headers: { get() { return 'application/json'; } },
