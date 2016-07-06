@@ -13,7 +13,7 @@ import { changeSourceTab, selectSource } from '~/linodes/actions/create/source';
 import { selectDatacenter } from '~/linodes/actions/create/datacenter';
 import { selectService } from '~/linodes/actions/create/service';
 
-export class CreateLinodePage extends Component {
+export class IndexPage extends Component {
   async componentDidMount() {
     const { dispatch } = this.props;
     try {
@@ -69,7 +69,7 @@ export class CreateLinodePage extends Component {
   }
 }
 
-CreateLinodePage.propTypes = {
+IndexPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   distros: PropTypes.object,
   services: PropTypes.object,
@@ -86,4 +86,4 @@ function select(state) {
   };
 }
 
-export default connect(select)(CreateLinodePage);
+export default connect(select)(IndexPage);

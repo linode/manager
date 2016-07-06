@@ -3,11 +3,11 @@ import sinon from 'sinon';
 import { expect } from 'chai';
 import { mount } from 'enzyme';
 
-import DatacenterSelection from '~/linodes/components/DatacenterSelection';
+import DatacenterSelection from '~/linodes/create/components/DatacenterSelection';
 import { countryMap } from '~/constants';
 import { flags } from '~/assets';
 
-describe('linodes/components/DatacenterSelection', () => {
+describe('linodes/create/components/DatacenterSelection', () => {
   const datacenters = {
     datacenter_2: {
       id: 'datacenter_2',

@@ -18,11 +18,9 @@ export default class DistroVendor extends Component {
         className={`distro ${
           vendor.versions.find(v => v.id === selected) ? 'selected' : ''
         }`}
+        onBlur={() => this.setState({ open: false })}
       >
-        <header
-          className={`dropdown ${open ? 'open' : ''}`}
-          onBlur={() => this.setState({ open: false })}
-        >
+        <header className={`dropdown ${open ? 'open' : ''}`}>
           <div className="title">
             {label(selectedVersion.label)}
             <button
@@ -30,7 +28,11 @@ export default class DistroVendor extends Component {
               aria-haspopup
               aria-expanded={open}
               id={`distro-dropdown-${selectedVersion.id}`}
-              onClick={() => this.setState({ open: !open })}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this.setState({ open: !open });
+              }}
             ><i className="fa fa-caret-down"></i></button>
           </div>
           <div

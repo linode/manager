@@ -5,7 +5,7 @@ import IndexPage from './layouts/IndexPage';
 import LinodeDetailPage from './layouts/LinodeDetailPage';
 import LinodeGeneral from './layouts/LinodeGeneral';
 import LinodeNetworking from './layouts/LinodeNetworking';
-import CreateLinodePage from './layouts/CreateLinodePage';
+import CreatePage from './create/layouts/IndexPage';
 import BackupsPage from './layouts/BackupsPage';
 import SettingsPage from './settings';
 
@@ -18,7 +18,7 @@ export function Placeholder(props) {
 export default (
   <Route path="/linodes">
     <IndexRoute component={IndexPage} />
-    <Route path="create" component={CreateLinodePage} />
+    <Route path="create" component={CreatePage} />
     <Route path=":linodeId" component={LinodeDetailPage}>
       <IndexRoute component={LinodeGeneral} />
       <Route path="networking" component={LinodeNetworking} />

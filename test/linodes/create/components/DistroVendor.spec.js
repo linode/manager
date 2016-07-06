@@ -4,9 +4,9 @@ import { expect } from 'chai';
 import { shallow } from 'enzyme';
 import { distros } from '~/assets';
 import { testDistros } from '~/../test/data';
-import DistroVendor from '~/linodes/components/DistroVendor';
+import DistroVendor from '~/linodes/create/components/DistroVendor';
 
-describe('linodes/components/DistroVendor', () => {
+describe('linodes/create/components/DistroVendor', () => {
   const sandbox = sinon.sandbox.create();
   afterEach(() => {
     sandbox.restore();

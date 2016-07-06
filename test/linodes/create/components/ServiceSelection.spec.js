@@ -3,10 +3,10 @@ import sinon from 'sinon';
 import { expect } from 'chai';
 import { mount } from 'enzyme';
 
-import ServiceSelection from '~/linodes/components/ServiceSelection';
+import ServiceSelection from '~/linodes/create/components/ServiceSelection';
 import { state } from '~/../test/data';
 
-describe('linodes/components/ServiceSelection', () => {
+describe('linodes/create/components/ServiceSelection', () => {
   const { services } = state.services;
 
   it('renders the card header', () => {
