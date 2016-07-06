@@ -1,7 +1,7 @@
 import React from 'react';
 import sinon from 'sinon';
 import { mount } from 'enzyme';
-import { expect, assert } from 'chai';
+import { expect } from 'chai';
 import Dropdown from '../../src/components/Dropdown';
 
 describe('components/Dropdown', () => {
@@ -43,16 +43,24 @@ describe('components/Dropdown', () => {
       />
     );
 
+    // Click first item should trigger clickFirst
     dropdown.find('.dropdown-first').simulate('click');
+    // Click toggle should open body
     dropdown.find('.dropdown-toggle').simulate('click');
-    dropdown.find('.dropdown-menu')
-      .find('.dropdown-item')
-      .first()
-      .simulate('click');
+    // Click first menu item should trigger clickBodyItem
+    dropdown.find('.dropdown-item').first().simulate('mousedown');
+    // Last menu item goes unclicked
 
-    assert.isTrue(clickFirst.calledOnce);
-    assert.isTrue(clickBodyItem.calledOnce);
-    assert.isFalse(unclicked.calledOnce);
+    expect(clickFirst.calledOnce).to.equal(true);
+    expect(dropdown.find('.btn-group.open')).to.exist;
+    expect(clickBodyItem.calledOnce).to.equal(true);
+    expect(unclicked.callCount).to.equal(0);
+
+    // Mousedown did not hide dropdown
+    expect(dropdown.find('.btn-group.open')).to.exist;
+    // But onblur does
+    dropdown.find('.btn-group').simulate('blur');
+    expect(dropdown.find('.btn-group.open').length).to.equal(0);
   });
 
   it('closes on second click', () => {
@@ -65,7 +73,7 @@ describe('components/Dropdown', () => {
     />);
 
     dropdown.find('.dropdown-toggle').simulate('click');
-    expect(dropdown.find('.btn-group.open').length).to.equal(1);
+    expect(dropdown.find('.btn-group.open')).to.exist;
     dropdown.find('.dropdown-toggle').simulate('click');
     expect(dropdown.find('.btn-group.open').length).to.equal(0);
   });
@@ -80,7 +88,7 @@ describe('components/Dropdown', () => {
     />);
 
     dropdown.find('.dropdown-toggle').simulate('click');
-    expect(dropdown.find('.btn-group.open').length).to.equal(1);
+    expect(dropdown.find('.btn-group.open')).to.exist;
     dropdown.find('.dropdown-toggle').simulate('blur');
     expect(dropdown.find('.btn-group.open').length).to.equal(0);
   });

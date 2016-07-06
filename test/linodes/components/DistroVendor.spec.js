@@ -65,7 +65,7 @@ describe('linodes/components/DistroVendor', () => {
         onClick={onClick}
       />
     );
-    dv.find('.dropdown-item').at(2).simulate('click', {
+    dv.find('.dropdown-item').at(2).simulate('mousedown', {
       preventDefault: () => {},
       stopPropagation: () => {},
     });
