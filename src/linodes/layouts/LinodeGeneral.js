@@ -76,7 +76,7 @@ export class LinodeGeneral extends Component {
   }
 
   renderDetails() {
-    const username = 'caker';
+    const { username } = this.props;
     const linode = this.getLinode();
     const ipAddresses = linode.ip_addresses;
     const arrayifyIps = (pubPriv, type) => {
@@ -233,10 +233,14 @@ LinodeGeneral.propTypes = {
   params: PropTypes.shape({
     linodeId: PropTypes.string,
   }),
+  username: PropTypes.string,
 };
 
 function select(state) {
-  return { linodes: state.api.linodes };
+  return {
+    linodes: state.api.linodes,
+    username: state.authentication.username,
+  };
 }
 
 export default connect(select)(LinodeGeneral);
