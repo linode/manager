@@ -110,10 +110,13 @@ table.linodes {
 
 .linode.row {
     border: $linode-border;
-    background: $linode-white;
     height: 35px;
     line-height: 35px;
     margin: 0 15px;
+
+    .linode.row:not(.selected) {
+        background: $linode-white;
+    }
 
     .linode-header,
     .linode-details {
