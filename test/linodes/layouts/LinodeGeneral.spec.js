@@ -171,13 +171,14 @@ describe('linodes/layouts/LinodeGeneral', async () => {
   });
 
   it('renders lish path', () => {
-    const lishLink = `ssh -t caker@lish-${
+    const lishLink = `ssh -t tdude@lish-${
         testLinode.datacenter.datacenter
       }.linode.com`;
     const page = shallow(
       <LinodeGeneral
         linodes={linodes}
         params={params}
+        username="tdude"
       />);
 
     expect(page.find('#lish-input').props())
