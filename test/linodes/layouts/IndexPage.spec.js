@@ -4,11 +4,12 @@ import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 import { push } from 'react-router-redux';
 import { IndexPage } from '~/linodes/layouts/IndexPage';
-import { UPDATE_LINODES } from '~/actions/api/linodes';
+import * as linodeActions from '~/actions/api/linodes';
 import { TOGGLE_SELECTED, CHANGE_VIEW } from '~/linodes/actions/index';
 import * as fetch from '~/fetch';
 import { testLinode } from '~/../test/data';
 import Dropdown from '~/components/Dropdown';
+import { SET_ERROR } from '~/actions/errors';
 
 describe('linodes/layouts/IndexPage', () => {
   const sandbox = sinon.sandbox.create();
@@ -52,7 +53,29 @@ describe('linodes/layouts/IndexPage', () => {
     expect(fetchStub.calledOnce).to.equal(true);
     expect(fetchStub.firstCall.args[1]).to.equal('/linodes?page=1');
     expect(dispatch.calledOnce).to.equal(true);
-    expect(dispatch.firstCall.args[0].type).to.equal(UPDATE_LINODES);
+    expect(dispatch.firstCall.args[0].type).to.equal(linodeActions.UPDATE_LINODES);
+  });
+
+  it('handles errors from fetchLinodes', () => {
+    sandbox.stub(linodeActions, 'fetchLinodes').throws({
+      json: () => ({ foo: 'bar' }),
+      headers: { get() { return 'application/json'; } },
+      statusCode: 400,
+      statusText: 'Bad Request',
+    });
+    mount(
+      <IndexPage
+        dispatch={dispatch}
+        view={'grid'}
+        selected={{}}
+        linodes={linodes}
+      />);
+    expect(dispatch.calledWith({
+      type: SET_ERROR,
+      json: { foo: 'bar' },
+      status: 400,
+      statusText: 'Bad Request',
+    }));
   });
 
   it('redirects to /linodes/create when you have no Linodes', async () => {

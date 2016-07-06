@@ -6,11 +6,13 @@ import { push } from 'react-router-redux';
 
 import Dropdown from '~/components/Dropdown';
 import { LinodeStates, LinodeStatesReadable } from '~/constants';
+import { setError } from '~/actions/errors';
 import {
   toggleEditMode,
   setLinodeLabel,
   setLinodeGroup,
   commitChanges,
+  clearErrors,
 } from '../actions/detail/index';
 import {
   updateLinode, powerOnLinode, powerOffLinode, rebootLinode,
@@ -22,12 +24,16 @@ export function getLinode() {
   return linodes[linodeId];
 }
 
-export function loadLinode() {
+export async function loadLinode() {
   const { dispatch } = this.props;
   const linode = this.getLinode();
   if (!linode) {
     const { linodeId } = this.props.params;
-    dispatch(updateLinode(linodeId));
+    try {
+      await dispatch(updateLinode(linodeId));
+    } catch (response) {
+      dispatch(setError(response));
+    }
   }
 }
 
@@ -95,35 +101,65 @@ export class LinodeDetailPage extends Component {
   }
 
   renderEditUI(linode) {
-    const { label, group, loading } = this.props.detail;
+    const { label, group, loading, errors } = this.props.detail;
     const { dispatch } = this.props;
+    const hasErrors = errors.label || errors.group || errors._;
     return (
       <div className="edit-details">
-        <input
-          type="text"
-          value={group}
-          placeholder="Group..."
-          onChange={e => dispatch(setLinodeGroup(e.target.value))}
-          onKeyUp={e => this.handleLabelKeyUp(e, linode)}
-        />
-        <span>/</span>
-        <input
-          type="text"
-          value={label}
-          placeholder="Label..."
-          onChange={e => dispatch(setLinodeLabel(e.target.value))}
-          onKeyUp={e => this.handleLabelKeyUp(e, linode)}
-        />
-        <button
-          className="btn btn-primary"
-          onClick={() => dispatch(commitChanges(linode.id))}
-          disabled={loading}
-        >Save</button>
-        <button
-          className="btn btn-secondary"
-          onClick={() => dispatch(toggleEditMode())}
-          disabled={loading}
-        >Cancel</button>
+        <div className="row">
+          <div className="col-md-4">
+            <input
+              type="text"
+              value={group}
+              placeholder="Group..."
+              onChange={e => dispatch(setLinodeGroup(e.target.value))}
+              onKeyUp={e => this.handleLabelKeyUp(e, linode)}
+              className={errors.group ? 'has-error' : ''}
+            />
+          </div>
+          <div className="col-md-1 centered">/</div>
+          <div className="col-md-4">
+            <input
+              type="text"
+              value={label}
+              placeholder="Label..."
+              onChange={e => dispatch(setLinodeLabel(e.target.value))}
+              onKeyUp={e => this.handleLabelKeyUp(e, linode)}
+              className={errors.label ? 'has-error' : ''}
+            />
+          </div>
+          <div className="col-md-3">
+            <button
+              className="btn btn-primary"
+              onClick={() => dispatch(commitChanges(linode.id))}
+              disabled={loading}
+            >Save</button>
+            <button
+              className="btn btn-secondary"
+              onClick={() => dispatch(toggleEditMode())}
+              disabled={loading}
+            >Cancel</button>
+          </div>
+        </div>
+        {hasErrors ?
+          <div className="row errors">
+            <div className="col-md-4">
+              {errors.group ?
+                <div className="alert alert-danger">
+                  <ul>
+                    {errors.group.map(e => <li key={e}>{e}</li>)}
+                  </ul>
+                </div> : null}
+            </div>
+            <div className="col-md-4 col-md-offset-1">
+              {errors.label ?
+                <div className="alert alert-danger">
+                  <ul>
+                    {errors.label.map(e => <li key={e}>{e}</li>)}
+                  </ul>
+                </div> : null}
+            </div>
+          </div> : null}
       </div>
     );
   }
@@ -144,6 +180,7 @@ export class LinodeDetailPage extends Component {
               e.preventDefault();
               dispatch(setLinodeLabel(linode.label));
               dispatch(setLinodeGroup(linode.group));
+              dispatch(clearErrors());
               dispatch(toggleEditMode());
             }}
           >

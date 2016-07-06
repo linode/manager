@@ -18,9 +18,12 @@
     "import/no-unresolved": 0,
     "no-underscore-dangle": 0,
     "no-unused-expressions": 0,
+    "no-confusing-arrow": 0,
     "react/no-multi-comp": 0,
     "dot-notation": [
-      "error", { "allowKeywords": false }
+      "error", {
+        "allowPattern": "^(default|public|private|return)$"
+      }
     ]
   }
 }

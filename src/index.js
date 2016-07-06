@@ -2,18 +2,16 @@ import 'babel-polyfill';
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import configureStore from './store/configureStore';
+import store from './store';
 import { Router, Route, IndexRedirect, browserHistory } from 'react-router';
 import DevTools from './components/DevTools';
 import { syncHistoryWithStore } from 'react-router-redux';
 
+import checkLogin from './session';
+
 // eslint-disable-next-line no-unused-vars
 import styles from '../scss/manager.scss';
 
-import { clientId } from './secrets';
-import { APP_ROOT, LOGIN_ROOT } from './constants';
-
-const store = configureStore();
 const history = syncHistoryWithStore(browserHistory, store);
 
 import Layout from './layouts/Layout';
@@ -22,25 +20,6 @@ import NotFound from './layouts/NotFound';
 import Linodes from './linodes';
 
 const init = () => {
-  const state = store.getState();
-  function checkLogin(next) {
-    if (next.location.pathname !== '/oauth/callback' && state.authentication.token === null) {
-      const query = Object.keys(next.location.query)
-              .reduce((a, k) => [
-                ...a,
-                `${k}=${encodeURIComponent(next.location.query[k])}`,
-              ], []).join('%26');
-      /* eslint-disable prefer-template */
-      window.location = `${LOGIN_ROOT}/oauth/authorize?` +
-        `client_id=${clientId}` +
-        '&scopes=*' +
-        `&redirect_uri=${encodeURIComponent(APP_ROOT)}/oauth/callback?return=` +
-              encodeURIComponent(next.location.pathname + (query ? '%3F' + query : ''));
-      /* eslint-enable prefer-template */
-      return;
-    }
-  }
-
   render(
     <Provider store={store}>
       <div>

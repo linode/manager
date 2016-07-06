@@ -12,6 +12,11 @@ describe('linodes/reducers/detail/index', () => {
       label: '',
       group: '',
       loading: false,
+      errors: {
+        label: null,
+        group: null,
+        _: null,
+      },
     });
   });
 
@@ -65,5 +70,21 @@ describe('linodes/reducers/detail/index', () => {
 
     expect(detail(stateLoading, { type: actions.TOGGLE_LOADING }))
       .to.have.property('loading').that.equals(false);
+  });
+
+  it('should handle SET_ERRORS', () => {
+    const state = { };
+    deepFreeze(state);
+
+    expect(detail(state, {
+      type: actions.SET_ERRORS,
+      label: ['a', 'b', 'c'],
+      group: ['a', 'b', 'c'],
+      _: null,
+    })).to.have.property('errors').that.deep.equals({
+      label: ['a', 'b', 'c'],
+      group: ['a', 'b', 'c'],
+      _: null,
+    });
   });
 });

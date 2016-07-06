@@ -3,6 +3,7 @@ import { routerReducer } from 'react-router-redux';
 import authentication from './authentication';
 import modal from './modal';
 import api from './api';
+import errors from './errors';
 import linodes from '../linodes/reducers';
 
 const rootReducer = combineReducers({
@@ -11,6 +12,7 @@ const rootReducer = combineReducers({
   modal,
   api,
   linodes,
+  errors,
 });
 
 export default rootReducer;

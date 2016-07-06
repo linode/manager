@@ -5,7 +5,8 @@ import { push } from 'react-router-redux';
 import { Linode } from '../components/Linode';
 import Dropdown from '~/components/Dropdown';
 import { LinodeStates } from '~/constants';
-import _ from 'underscore';
+import { setError } from '~/actions/errors';
+import _ from 'lodash';
 import {
   fetchLinodes,
   updateLinodeUntil,
@@ -36,11 +37,15 @@ export class IndexPage extends Component {
     this.handleScroll = this.handleScroll.bind(this);
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const { dispatch } = this.props;
-    dispatch(fetchLinodes());
     window.addEventListener('scroll', this.handleScroll);
     this.componentDidUpdate();
+    try {
+      await dispatch(fetchLinodes());
+    } catch (response) {
+      dispatch(setError(response));
+    }
   }
 
   componentDidUpdate() {

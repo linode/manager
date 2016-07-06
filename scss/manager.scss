@@ -327,6 +327,10 @@ hr {
     border: $linode-border;
     background: $linode-light-gray;
 
+    &.btn-default {
+        color: $linode-black;
+    }
+
     .fa {
         line-height: $input-height;
     }
@@ -497,6 +501,10 @@ input[type=checkbox] {
 
 .text-danger {
     color: $linode-red;
+}
+
+.centered {
+    text-align: center;
 }
 
 @-moz-keyframes pulse {

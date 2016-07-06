@@ -8,16 +8,23 @@ import OrderSummary from '../components/OrderSummary';
 import { fetchDistros } from '~/actions/api/distros';
 import { fetchDatacenters } from '~/actions/api/datacenters';
 import { fetchServices } from '~/actions/api/services';
+import { setError } from '~/actions/errors';
 import { changeSourceTab, selectSource } from '~/linodes/actions/create/source';
 import { selectDatacenter } from '~/linodes/actions/create/datacenter';
 import { selectService } from '~/linodes/actions/create/service';
 
 export class CreateLinodePage extends Component {
-  componentDidMount() {
+  async componentDidMount() {
     const { dispatch } = this.props;
-    dispatch(fetchDistros());
-    dispatch(fetchDatacenters());
-    dispatch(fetchServices());
+    try {
+      await Promise.all([
+        dispatch(fetchDistros()),
+        dispatch(fetchDatacenters()),
+        dispatch(fetchServices()),
+      ]);
+    } catch (response) {
+      dispatch(setError(response));
+    }
   }
 
   render() {

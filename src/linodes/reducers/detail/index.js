@@ -4,6 +4,7 @@ import {
   SET_LINODE_LABEL,
   SET_LINODE_GROUP,
   TOGGLE_LOADING,
+  SET_ERRORS,
 } from '../../actions/detail/index';
 import backups from './backups';
 
@@ -12,6 +13,11 @@ const defaultState = {
   label: '',
   group: '',
   loading: false,
+  errors: {
+    label: null,
+    group: null,
+    _: null,
+  },
 };
 
 export function detail(state = defaultState, action) {
@@ -24,6 +30,15 @@ export function detail(state = defaultState, action) {
       return { ...state, group: action.group };
     case TOGGLE_LOADING:
       return { ...state, loading: !state.loading };
+    case SET_ERRORS:
+      return {
+        ...state,
+        errors: {
+          label: action.label,
+          group: action.group,
+          _: action._,
+        },
+      };
     default:
       return state;
   }

@@ -6,10 +6,11 @@ import { expect } from 'chai';
 import * as fetch from '~/fetch';
 import { testLinode, linodes } from '~/../test/data';
 import * as LinodeDetailPageWrapper from '~/linodes/layouts/LinodeDetailPage';
-import { UPDATE_LINODE } from '~/actions/api/linodes';
+import * as linodeActions from '~/actions/api/linodes';
 import { Tabs, Tab } from 'react-tabs';
 import * as actions from '~/linodes/actions/detail/index';
 import Dropdown from '~/components/Dropdown';
+import { SET_ERROR } from '~/actions/errors';
 
 const {
   LinodeDetailPage,
@@ -58,7 +59,28 @@ describe('linodes/layouts/LinodeDetailPage/loadLinode', async () => {
     expect(fetchStub.calledOnce).to.equal(true);
     expect(fetchStub.firstCall.args[1]).to.equal('/linodes/linode_1234');
     expect(dispatch.calledOnce).to.equal(true);
-    expect(dispatch.firstCall.args[0].type).to.equal(UPDATE_LINODE);
+    expect(dispatch.firstCall.args[0].type).to.equal(linodeActions.UPDATE_LINODE);
+  });
+
+  it('handles errors from updateLinode', () => {
+    sandbox.stub(linodeActions, 'updateLinode').throws({
+      json: () => ({ foo: 'bar' }),
+      headers: { get() { return 'application/json'; } },
+      statusCode: 400,
+      statusText: 'Bad Request',
+    });
+    mount(
+      <Test
+        dispatch={dispatch}
+        linodes={{ linodes: { } }}
+        params={{ linodeId: 'linode_1234' }}
+      />);
+    expect(dispatch.calledWith({
+      type: SET_ERROR,
+      json: { foo: 'bar' },
+      status: 400,
+      statusText: 'Bad Request',
+    }));
   });
 
   it('does not fetch when mounted with a known linode', async () => {
@@ -145,6 +167,11 @@ describe('linodes/layouts/LinodeDetailPage', () => {
     label: '',
     group: '',
     loading: false,
+    errors: {
+      label: null,
+      group: null,
+      _: null,
+    },
   };
 
   it('calls loadLinode during mount', () => {

@@ -93,6 +93,51 @@ describe('linodes/actions/detail/index', () => {
         })).to.equal(true);
     });
 
+    it('handles non-400 errors', async () => {
+      const action = actions.commitChanges('linode_1234');
+      expect(action).to.be.a('function');
+      const dispatch = getDispatch();
+      const getState = getGetState(state);
+      sandbox.stub(fetch, 'fetch')
+        .throws({
+          json: () => ({}),
+          statusCode: 401,
+          statusText: 'Unauthorized',
+        });
+      await action(dispatch, getState);
+      expect(dispatch.calledWith({
+        type: actions.SET_ERRORS,
+        _: ['Error: 401 Unauthorized'],
+      })).to.equal(true);
+    });
+
+    it('handles 400 errors', async () => {
+      const action = actions.commitChanges('linode_1234');
+      expect(action).to.be.a('function');
+      const dispatch = getDispatch();
+      const getState = getGetState(state);
+      sandbox.stub(fetch, 'fetch')
+        .throws({
+          json: () => ({
+            errors: [
+              {
+                field: 'label',
+                reason: 'This is a silly name for a Linode',
+              },
+            ],
+          }),
+          statusCode: 400,
+          statusText: 'Bad Request',
+        });
+      await action(dispatch, getState);
+      expect(dispatch.calledWith({
+        type: actions.SET_ERRORS,
+        label: ['This is a silly name for a Linode'],
+        group: null,
+        _: null,
+      })).to.equal(true);
+    });
+
     it('dispatches an UPDATE_LINODE action with the new linode details', async () => {
       const action = actions.commitChanges('linode_1234');
       expect(action).to.be.a('function');
