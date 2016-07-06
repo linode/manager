@@ -21,11 +21,10 @@ export const UPDATE_LINODE_DISKS = '@@linodes/UPDATE_LINODE_DISKS ';
 export const DELETE_LINODE_DISK = '@@linodes/DELETE_LINODE_DISK ';
 
 export const fetchLinodes = makeFetchPage(UPDATE_LINODES, 'linodes');
-export const updateLinode = makeUpdateItem(UPDATE_LINODE, 'linodes', 'linode');
+export const updateLinode = makeUpdateItem(UPDATE_LINODE, 'linode', 'linodes');
 export const updateLinodeUntil = makeUpdateUntil(UPDATE_LINODE, 'linodes', 'linode');
 export const deleteLinode = makeDeleteItem(DELETE_LINODE, 'linodes');
 export const putLinode = makePutItem(PUT_LINODE, 'linodes');
-
 
 function linodeAction(id, action, temp, expected, timeout = undefined) {
   return async (dispatch, getState) => {

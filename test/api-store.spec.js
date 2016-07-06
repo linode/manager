@@ -308,7 +308,7 @@ describe('api-store', () => {
       await p(dispatch, getState);
 
       expect(fetchStub.calledWith(
-        auth.token, '/foobars?page=1')).to.equal(true);
+        auth.token, '/foobars/?page=1')).to.equal(true);
       expect(dispatch.calledWith({
         type: 'FETCH_FOOBARS',
         response: mockFoobarsResponse,
@@ -325,7 +325,7 @@ describe('api-store', () => {
       await p(dispatch, getState);
 
       expect(fetchStub.calledWith(
-        auth.token, '/foobars?page=2')).to.equal(true);
+        auth.token, '/foobars/?page=2')).to.equal(true);
     });
   });
 
@@ -342,7 +342,7 @@ describe('api-store', () => {
     const getFetchStub = (rsp) => sandbox.stub(fetch, 'fetch').returns({ json() { return rsp; } });
 
     it('returns a function that itself returns a function', () => {
-      const f = makeUpdateItem('UPDATE_FOOBAR', 'foobars', 'foobar');
+      const f = makeUpdateItem('UPDATE_FOOBAR', 'foobar', 'foobars');
       expect(f).to.be.a('function');
       expect(f()).to.be.a('function');
     });
@@ -351,7 +351,7 @@ describe('api-store', () => {
       const dispatch = getDispatch();
       const fetchStub = getFetchStub(mockFoobarsResponse.foobars[0]);
       const getState = getGetState();
-      const f = makeUpdateItem('UPDATE_FOOBAR', 'foobars', 'foobar');
+      const f = makeUpdateItem('UPDATE_FOOBAR', 'foobar', 'foobars');
       const p = f('foobar_1');
 
       await p(dispatch, getState);

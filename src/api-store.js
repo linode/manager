@@ -111,19 +111,23 @@ export default function makeApiList(config, transform = d => d) {
 
 import { fetch } from './fetch';
 
-export function makeFetchPage(action, plural) {
-  return (page = 0) => async (dispatch, getState) => {
+export function makeFetchPage(action, ...plurals) {
+  return (page = 0, ...ids) => async (dispatch, getState) => {
+    const pairs = _.zip(plurals, ids);
     const { token } = getState().authentication;
-    const response = await fetch(token, `/${plural}?page=${page + 1}`);
+    const url = _.reduce(pairs, (u, [plural, id]) => `${u}/${plural}/${id || ''}`, '');
+    const response = await fetch(token, `${url}?page=${page + 1}`);
     const json = await response.json();
     dispatch({ type: action, response: json });
   };
 }
 
-export function makeUpdateItem(action, plural, singular) {
-  return id => async (dispatch, getState) => {
+export function makeUpdateItem(action, singular, ...plurals) {
+  return (...ids) => async (dispatch, getState) => {
+    const pairs = _.zip(plurals, ids);
     const { token } = getState().authentication;
-    const response = await fetch(token, `/${plural}/${id}`);
+    const url = _.reduce(pairs, (u, [plural, id]) => `${u}/${plural}/${id}`, '');
+    const response = await fetch(token, url);
     const json = await response.json();
     dispatch({ type: action, [singular]: json });
   };

@@ -42,7 +42,7 @@ describe('actions/api/services', () => {
     await f(dispatch, getState);
 
     expect(fetchStub.calledWith(
-      auth.token, '/services?page=1')).to.equal(true);
+      auth.token, '/services/?page=1')).to.equal(true);
     expect(dispatch.calledWith({
       type: UPDATE_SERVICES,
       response: mockResponse,

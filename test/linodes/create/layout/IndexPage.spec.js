@@ -82,7 +82,7 @@ describe('linodes/create/layout/IndexPage', () => {
       authentication: { token: 'token' },
     }));
     expect(fetchStub.calledOnce).to.equal(true);
-    expect(fetchStub.firstCall.args[1]).to.equal('/distributions?page=1');
+    expect(fetchStub.firstCall.args[1]).to.equal('/distributions/?page=1');
     expect(dispatch.calledOnce).to.equal(true);
     expect(dispatch.firstCall.args[0].type).to.equal(UPDATE_DISTROS);
 
@@ -92,7 +92,7 @@ describe('linodes/create/layout/IndexPage', () => {
       authentication: { token: 'token' },
     }));
     expect(fetchStub.calledTwice).to.equal(true);
-    expect(fetchStub.secondCall.args[1]).to.equal('/datacenters?page=1');
+    expect(fetchStub.secondCall.args[1]).to.equal('/datacenters/?page=1');
     expect(dispatch.calledOnce).to.equal(true);
     expect(dispatch.firstCall.args[0].type).to.equal(UPDATE_DATACENTERS);
 
@@ -102,7 +102,7 @@ describe('linodes/create/layout/IndexPage', () => {
       authentication: { token: 'token' },
     }));
     expect(fetchStub.calledThrice).to.equal(true);
-    expect(fetchStub.thirdCall.args[1]).to.equal('/services?page=1');
+    expect(fetchStub.thirdCall.args[1]).to.equal('/services/?page=1');
     expect(dispatch.calledOnce).to.equal(true);
     expect(dispatch.firstCall.args[0].type).to.equal(UPDATE_SERVICES);
   });

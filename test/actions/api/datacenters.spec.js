@@ -42,7 +42,7 @@ describe('actions/api/datacenters', async () => {
     await f(dispatch, getState);
 
     expect(fetchStub.calledWith(
-      auth.token, '/datacenters?page=1')).to.equal(true);
+      auth.token, '/datacenters/?page=1')).to.equal(true);
     expect(dispatch.calledWith({
       type: UPDATE_DATACENTERS,
       response: mockResponse,
