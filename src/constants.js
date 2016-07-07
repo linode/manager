@@ -13,7 +13,6 @@ export const LinodeStates = {
   ],
 };
 
-
 export const countryMap = {
   datacenter_2: 'us', // Dallas
   datacenter_3: 'us', // Fremont

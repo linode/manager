@@ -70,6 +70,7 @@ export const testLinode = {
       ],
     },
   },
+  created: '2016-07-06T16:47:27',
   id: 'linode_1234',
   services: {
     linode: 'Linode 1024',
@@ -119,9 +120,27 @@ export const linodes = {
   totalPages: 1,
   linodes: {
     [testLinode.id]: testLinode,
-    linode_1235: { ...testLinode, id: 'linode_1235', group: '' },
-    linode_1236: { ...testLinode, id: 'linode_1236', state: 'offline' },
-    linode_1237: { ...testLinode, id: 'linode_1236', state: 'booting' },
+    linode_1235: {
+      ...testLinode,
+      id: 'linode_1235',
+      label: 'Test Linode 1',
+      group: '',
+      created: '2016-07-06T16:50:27',
+    },
+    linode_1236: {
+      ...testLinode,
+      id: 'linode_1236',
+      label: 'Test Linode 2',
+      state: 'offline',
+      created: '2016-07-06T16:48:27',
+    },
+    linode_1237: {
+      ...testLinode,
+      id: 'linode_1237',
+      label: 'Test Linode 3',
+      state: 'booting',
+      created: '2016-07-06T16:49:27',
+    },
   },
   _singular: 'linode',
   _plural: 'linodes',

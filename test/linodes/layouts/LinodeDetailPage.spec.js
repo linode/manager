@@ -3,6 +3,8 @@ import sinon from 'sinon';
 import { push } from 'react-router-redux';
 import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
+import _ from 'lodash';
+
 import * as fetch from '~/fetch';
 import { testLinode, linodes } from '~/../test/data';
 import * as LinodeDetailPageWrapper from '~/linodes/layouts/LinodeDetailPage';
@@ -204,15 +206,19 @@ describe('linodes/layouts/LinodeDetailPage', () => {
   });
 
   it('renders the linode label alone when ungrouped', () => {
+    const testLinodes = {
+      linodes: _.mapValues(linodes.linodes, l => ({ ...l, group: '' })),
+    };
+
     const page = mount(
       <LinodeDetailPage
         dispatch={dispatch}
-        linodes={linodes}
+        linodes={testLinodes}
         params={{ linodeId: 'linode_1235' }}
         detail={detail}
         router={router}
       />);
-    expect(page.contains(<span>{testLinode.label}</span>))
+    expect(page.contains(<span>{testLinodes.linodes.linode_1235.label}</span>))
       .to.equal(true);
   });
 

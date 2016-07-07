@@ -6,7 +6,7 @@ import {
 } from '~/actions/api/distros';
 import * as fetch from '~/fetch';
 
-describe('actions/api/distros', () => {
+describe('actions/api/distros', async () => {
   const auth = { token: 'token' };
 
   const sandbox = sinon.sandbox.create();
