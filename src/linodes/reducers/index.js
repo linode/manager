@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import _ from 'underscore';
+import _ from 'lodash';
 import { getStorage, setStorage } from '~/storage';
 import detail from './detail';
 import create from './create';
