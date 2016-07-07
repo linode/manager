@@ -14,7 +14,7 @@ import {
 } from '~/actions/api/linodes';
 import * as fetch from '~/fetch';
 
-describe('actions/api/linodes', () => {
+describe('actions/api/linodes', async () => {
   const auth = { token: 'token' };
 
   const sandbox = sinon.sandbox.create();
@@ -128,7 +128,7 @@ describe('actions/api/linodes', () => {
   });
 });
 
-describe('actions/linodes/power', () => {
+describe('actions/linodes/power', async () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {

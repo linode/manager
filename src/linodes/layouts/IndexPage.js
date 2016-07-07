@@ -2,6 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
+import moment from 'moment';
+
 import { Linode } from '../components/Linode';
 import Dropdown from '~/components/Dropdown';
 import { LinodeStates } from '~/constants';
@@ -120,7 +122,7 @@ export class IndexPage extends Component {
 
   renderGroup({ group, linodes }) {
     const { selected } = this.props;
-    const sortedLinodes = linodes.sort((a, b) => a.updated > b.updated);
+    const sortedLinodes = _.sortBy(linodes, l => moment(l.created));
 
     const renderLinode = (l, row) =>
       <Linode
