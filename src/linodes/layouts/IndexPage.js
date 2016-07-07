@@ -23,11 +23,7 @@ import {
 export class IndexPage extends Component {
   constructor() {
     super();
-    this.componentDidMount = this.componentDidMount.bind(this);
-    this.componentDidUpdate = this.componentDidUpdate.bind(this);
-    this.componentWillUnmount = this.componentWillUnmount.bind(this);
     this.renderGroup = this.renderGroup.bind(this);
-    this.render = this.render.bind(this);
     this.powerOn = this.powerOn.bind(this);
     this.powerOff = this.powerOff.bind(this);
     this.reboot = this.reboot.bind(this);
@@ -124,6 +120,7 @@ export class IndexPage extends Component {
 
   renderGroup({ group, linodes }) {
     const { selected } = this.props;
+    const sortedLinodes = linodes.sort((a, b) => a.updated > b.updated);
 
     const renderLinode = (l, row) =>
       <Linode
@@ -140,7 +137,7 @@ export class IndexPage extends Component {
     if (view === 'grid') {
       return (<div key={group} className="row linodes">
         {group ? <h2 className="text-muted display-group">{group}</h2> : ''}
-        {linodes.map(l =>
+        {sortedLinodes.map(l =>
           <div key={l.id} className="col-md-4">
             {renderLinode(l, false)}
           </div>)}
@@ -161,7 +158,7 @@ export class IndexPage extends Component {
           </tr>
         </thead>
         <tbody>
-          {linodes.map(l => renderLinode(l, true))}
+          {sortedLinodes.map(l => renderLinode(l, true))}
         </tbody>
       </table>
     </div>);
