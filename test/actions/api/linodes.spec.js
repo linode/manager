@@ -14,7 +14,7 @@ import {
 } from '~/actions/api/linodes';
 import * as fetch from '~/fetch';
 
-describe('actions/api/linodes', sinon.test(() => {
+describe('actions/api/linodes', () => {
   const auth = { token: 'token' };
 
   const sandbox = sinon.sandbox.create();
@@ -126,9 +126,9 @@ describe('actions/api/linodes', sinon.test(() => {
       id: 'linode_1',
     })).to.equal(true);
   });
-}));
+});
 
-describe('actions/linodes/power', sinon.test(() => {
+describe('actions/linodes/power', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
@@ -206,4 +206,4 @@ describe('actions/linodes/power', sinon.test(() => {
       linode: { id: 'foo', state: 'rebooting' },
     })).to.equal(true);
   });
-}));
+});

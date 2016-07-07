@@ -1,4 +1,3 @@
-import sinon from 'sinon';
 import { expect } from 'chai';
 import {
   SHOW_MODAL,
@@ -7,7 +6,7 @@ import {
   hideModal,
 } from '~/actions/modal';
 
-describe('actions/modal', sinon.test(() => {
+describe('actions/modal', () => {
   const title = 'title';
   const body = 'body';
 
@@ -26,4 +25,4 @@ describe('actions/modal', sinon.test(() => {
     expect(f.title).to.equal(title);
     expect(f.body).to.equal(body);
   });
-}));
+});

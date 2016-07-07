@@ -6,7 +6,7 @@ import {
 } from '~/actions/api/datacenters';
 import * as fetch from '~/fetch';
 
-describe('actions/api/datacenters', sinon.test(() => {
+describe('actions/api/datacenters', () => {
   const auth = { token: 'token' };
 
   const sandbox = sinon.sandbox.create();
@@ -48,4 +48,4 @@ describe('actions/api/datacenters', sinon.test(() => {
       response: mockResponse,
     })).to.equal(true);
   });
-}));
+});

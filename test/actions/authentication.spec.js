@@ -1,11 +1,10 @@
-import sinon from 'sinon';
 import { expect } from 'chai';
 import {
   SET_TOKEN,
   setToken,
 } from '~/actions/authentication';
 
-describe('actions/authentication', sinon.test(() => {
+describe('actions/authentication', () => {
   it('should return set token', () => {
     const token = 'token';
     const scopes = 'scopes';
@@ -20,4 +19,4 @@ describe('actions/authentication', sinon.test(() => {
     expect(f.username).to.equal(username);
     expect(f.email).to.equal(email);
   });
-}));
+});
