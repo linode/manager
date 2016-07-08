@@ -24,7 +24,7 @@ export const state = {
   },
   services: {
     services: {
-      ['linode1024.5']: {
+      'linode1024.5': {
         disk: 24,
         hourly_price: 1,
         id: 'linode1024.5',
@@ -36,7 +36,7 @@ export const state = {
         transfer: 2000,
         vcpus: 1,
       },
-      ['linode2048.5']: {
+      'linode2048.5': {
         disk: 48,
         hourly_price: 2,
         id: 'linode2048.5',
