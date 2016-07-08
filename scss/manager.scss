@@ -62,6 +62,7 @@ h1, h2, h3, h4, h5, h6 {
     margin: 0;
     font-weight: normal;
     line-height: normal;
+    color: $linode-black;
 }
 
 h1 {
@@ -271,10 +272,6 @@ a {
     margin-left: $sidebar-width;
     width: calc(100% - #{$sidebar-width});
     padding: $main-padding-tb $main-padding-lr;
-
-    div, span {
-        color: $linode-light-black;
-    }
 }
 
 .form-control {

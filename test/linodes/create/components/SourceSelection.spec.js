@@ -2,11 +2,11 @@ import React from 'react';
 import sinon from 'sinon';
 import { expect } from 'chai';
 import { shallow } from 'enzyme';
-import SourceSelection from '~/linodes/components/SourceSelection';
+import SourceSelection from '~/linodes/create/components/SourceSelection';
 import { Tab } from 'react-tabs';
 import { testDistros } from '~/../test/data';
 
-describe('linodes/components/SourceSelection', () => {
+describe('linodes/create/components/SourceSelection', () => {
   const sandbox = sinon.sandbox.create();
   afterEach(() => {
     sandbox.restore();

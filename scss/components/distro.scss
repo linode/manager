@@ -29,10 +29,23 @@
         line-height: inherit;
         padding: inherit;
 
-        .title {
+        .title,
+        .dropdown-item {
             text-align: center;
             overflow: hidden;
             line-height: $input-height;
+            color: $linode-black;
+
+            &.dropdown-item {
+                font-size: $font-size;
+                text-align: left !important;
+                font-weight: inherit;
+                padding: 0 inherit;
+             
+                &:first-of-type {
+                    margin-left: 0;
+                }
+            }
 
             button {
                 float: right;

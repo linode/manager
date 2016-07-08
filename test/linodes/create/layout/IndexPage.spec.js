@@ -3,7 +3,7 @@ import sinon from 'sinon';
 import { expect } from 'chai';
 import { shallow, mount } from 'enzyme';
 
-import { CreateLinodePage } from '~/linodes/layouts/CreateLinodePage';
+import { IndexPage } from '~/linodes/create/layouts/IndexPage';
 import * as sourceActions from '~/linodes/actions/create/source';
 import * as datacenterActions from '~/linodes/actions/create/datacenter';
 import * as serviceActions from '~/linodes/actions/create/service';
@@ -13,7 +13,7 @@ import { UPDATE_DATACENTERS } from '~/actions/api/datacenters';
 import { UPDATE_SERVICES } from '~/actions/api/services';
 import { state } from '~/../test/data';
 
-describe('linodes/layout/CreateLinodePage', () => {
+describe('linodes/create/layout/IndexPage', () => {
   const sandbox = sinon.sandbox.create();
   afterEach(() => {
     sandbox.restore();
@@ -22,7 +22,7 @@ describe('linodes/layout/CreateLinodePage', () => {
   function assertContains(thing) {
     return () => {
       const page = shallow(
-        <CreateLinodePage
+        <IndexPage
           dispatch={() => {}}
           create={state.create}
           distros={state.distros}
@@ -43,7 +43,7 @@ describe('linodes/layout/CreateLinodePage', () => {
   it('changes the source tab when clicked', () => {
     const dispatch = sandbox.spy();
     const page = shallow(
-      <CreateLinodePage
+      <IndexPage
         dispatch={dispatch}
         distros={state.distros}
         create={state.create}
@@ -60,7 +60,7 @@ describe('linodes/layout/CreateLinodePage', () => {
   it('fetches distros, datacenters, and services when mounted', async () => {
     const dispatch = sandbox.spy();
     mount(
-      <CreateLinodePage
+      <IndexPage
         dispatch={dispatch}
         distros={state.distros}
         create={state.create}
@@ -110,7 +110,7 @@ describe('linodes/layout/CreateLinodePage', () => {
   it('selects a source when appropriate', () => {
     const dispatch = sandbox.spy();
     const page = shallow(
-      <CreateLinodePage
+      <IndexPage
         dispatch={dispatch}
         distros={state.distros}
         create={state.create}
@@ -127,7 +127,7 @@ describe('linodes/layout/CreateLinodePage', () => {
   it('selects a datacenter when appropriate', () => {
     const dispatch = sandbox.spy();
     const page = shallow(
-      <CreateLinodePage
+      <IndexPage
         dispatch={dispatch}
         distros={state.distros}
         create={state.create}
@@ -144,7 +144,7 @@ describe('linodes/layout/CreateLinodePage', () => {
   it('selects a service when appropriate', () => {
     const dispatch = sandbox.spy();
     const page = shallow(
-      <CreateLinodePage
+      <IndexPage
         dispatch={dispatch}
         distros={state.distros}
         create={state.create}

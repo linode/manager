@@ -3,14 +3,14 @@ import sinon from 'sinon';
 import { expect } from 'chai';
 import { mount } from 'enzyme';
 
-import DatacenterSelection from '~/linodes/components/DatacenterSelection';
+import DatacenterSelection from '~/linodes/create/components/DatacenterSelection';
 import { countryMap } from '~/constants';
 import { flags } from '~/assets';
 
-describe('linodes/components/DatacenterSelection', () => {
+describe('linodes/create/components/DatacenterSelection', () => {
   const datacenters = {
-    datacenter_2: {
-      id: 'datacenter_2',
+    newark: {
+      id: 'newark',
       label: 'Newark, NJ',
     },
   };
@@ -29,7 +29,7 @@ describe('linodes/components/DatacenterSelection', () => {
     expect(c.find(<header><label>Newark, NJ</label></header>)).to.exist;
     expect(c.find(
       <img
-        src={flags[countryMap.datacenter_2]}
+        src={flags[countryMap.newark]}
         width={64}
         height={64}
         alt="Newark, NJ"
@@ -49,6 +49,6 @@ describe('linodes/components/DatacenterSelection', () => {
 
     c.find('.datacenter').simulate('click');
     expect(onSelect.calledOnce).to.equal(true);
-    expect(onSelect.firstCall.args[0]).to.equal(datacenters.datacenter_2);
+    expect(onSelect.firstCall.args[0]).to.equal(datacenters.newark);
   });
 });
