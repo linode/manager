@@ -33,7 +33,7 @@ export function renderPlanStyle(services) {
   return _.filter(services, s => s.service_type === 'linode')
     .reduce((a, s) => {
       const plan = s.label.split(' ');
-      return `${plan[0]} ${plan[1] / 1024}G`;
+      return `${plan[0]} ${parseInt(plan[1], 10) / 1024}G`;
     }, '');
 }
 

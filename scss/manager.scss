@@ -32,9 +32,7 @@ $input-height: 30px;
 $input-padding: 0 .5rem;
 $font-size: .9rem;
 
-@import 'components/card';
-@import 'components/modal';
-@import 'components/distro';
+@import 'components/components';
 @import 'linodes/linodes';
 @import 'layout/linode-details';
 @import 'layout/linodes';
@@ -493,6 +491,25 @@ input[type=checkbox] {
     &:active,
     &:focus {
         color: $linode-blue;
+    }
+}
+
+.row:last-of-type > .linode-content-col {
+    margin-bottom: 0;
+}
+
+.linode-content-col {
+    margin-bottom: .75rem;
+
+    .text-muted {
+        font-size: 70%;
+    }
+    li a {
+        color: $linode-black;
+        text-decoration: none;
+    }
+    img {
+        margin-left: 0.5rem;
     }
 }
 

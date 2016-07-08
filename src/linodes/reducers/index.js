@@ -2,7 +2,6 @@ import { combineReducers } from 'redux';
 import _ from 'lodash';
 import { getStorage, setStorage } from '~/storage';
 import detail from './detail';
-import create from './create';
 
 import {
   CHANGE_VIEW,
@@ -47,7 +46,6 @@ export function index(_state = null, action) {
 const rootReducer = combineReducers({
   index,
   detail,
-  create,
 });
 
 export default rootReducer;

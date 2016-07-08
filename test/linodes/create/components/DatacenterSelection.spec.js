@@ -49,6 +49,6 @@ describe('linodes/create/components/DatacenterSelection', () => {
 
     c.find('.datacenter').simulate('click');
     expect(onSelect.calledOnce).to.equal(true);
-    expect(onSelect.firstCall.args[0]).to.equal(datacenters.newark);
+    expect(onSelect.firstCall.args[0]).to.equal(datacenters.newark.id);
   });
 });

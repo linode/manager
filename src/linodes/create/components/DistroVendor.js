@@ -14,7 +14,7 @@ export default class DistroVendor extends Component {
     const selectedVersion = vendor.versions[version];
     return (
       <div
-        onClick={() => onClick(selectedVersion)}
+        onClick={() => onClick(selectedVersion.id)}
         className={`distro ${
           vendor.versions.find(v => v.id === selected) ? 'selected' : ''
         }`}
@@ -47,7 +47,7 @@ export default class DistroVendor extends Component {
                 onMouseDown={e => {
                   e.preventDefault();
                   e.stopPropagation();
-                  onClick(v);
+                  onClick(v.id);
                   this.setState({ open: false, version: vendor.versions.indexOf(v) });
                 }}
               >{v.label}</a>

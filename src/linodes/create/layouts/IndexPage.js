@@ -1,19 +1,33 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 
 import SourceSelection from '../components/SourceSelection';
 import ServiceSelection from '../components/ServiceSelection';
 import DatacenterSelection from '../components/DatacenterSelection';
-import OrderSummary from '../components/OrderSummary';
+import Details from '../components/Details';
 import { fetchDistros } from '~/actions/api/distros';
 import { fetchDatacenters } from '~/actions/api/datacenters';
 import { fetchServices } from '~/actions/api/services';
 import { setError } from '~/actions/errors';
-import { changeSourceTab, selectSource } from '~/linodes/actions/create/source';
-import { selectDatacenter } from '~/linodes/actions/create/datacenter';
-import { selectService } from '~/linodes/actions/create/service';
+import { addLinode } from '~/actions/api/linodes';
 
 export class IndexPage extends Component {
+  constructor() {
+    super();
+    this.onSubmit = this.onSubmit.bind(this);
+    this.state = {
+      label: '',
+      password: '',
+      service: '',
+      backups: false,
+      datacenter: '',
+      source: '',
+      sourceTab: 0,
+      errors: {},
+    };
+  }
+
   async componentDidMount() {
     const { dispatch } = this.props;
     try {
@@ -27,42 +41,66 @@ export class IndexPage extends Component {
     }
   }
 
+  async onSubmit({ label, password }) {
+    const { dispatch } = this.props;
+    const { service, source, datacenter } = this.state;
+    try {
+      await dispatch(addLinode({
+        root_pass: password, service, source, datacenter, label,
+      }));
+      // TODO: show user introductory stuff
+      dispatch(push('/'));
+    } catch (response) {
+      const { errors } = await response.json();
+      const errorsByField = {};
+      errors.forEach(({ field, reason }) => {
+        if (!(field in errorsByField)) errorsByField[field] = [];
+        errorsByField[field].push(reason);
+      });
+      this.setState({ errors: errorsByField });
+    }
+  }
+
   render() {
     const {
       distros,
       datacenters,
       services,
-      create,
-      dispatch,
     } = this.props;
+    const { source, datacenter, service, sourceTab } = this.state;
+
     return (
       <div className="create-page">
         <h1>Add a Linode</h1>
         <div className="card page-card">
           <SourceSelection
-            source={create.source.source}
-            selectedTab={create.source.sourceTab}
+            source={source}
+            selectedTab={sourceTab}
             distros={distros.distributions}
-            onTabChange={ix => dispatch(changeSourceTab(ix))}
-            onSourceSelected={source => dispatch(selectSource(source.id))}
+            onTabChange={ix => this.setState({ sourceTab: ix })}
+            onSourceSelected={id => this.setState({ source: id })}
           />
         </div>
         <div className="card page-card">
           <DatacenterSelection
-            selected={create.datacenter.id}
+            selected={datacenter}
             datacenters={datacenters.datacenters}
-            onDatacenterSelected={dc => dispatch(selectDatacenter(dc.id))}
+            onDatacenterSelected={id => this.setState({ datacenter: id })}
           />
         </div>
         <div className="card page-card">
           <ServiceSelection
-            selected={create.service.service}
+            selected={service}
             services={services.services}
-            onServiceSelected={svc => dispatch(selectService(svc.id))}
+            onServiceSelected={id => this.setState({ service: id })}
           />
         </div>
         <div className="card page-card">
-          <OrderSummary />
+          <Details
+            onSubmit={this.onSubmit}
+            submitEnabled={!!source && !!datacenter && !!service}
+            errors={this.state.errors}
+          />
         </div>
       </div>
     );
@@ -73,7 +111,6 @@ IndexPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   distros: PropTypes.object,
   services: PropTypes.object,
-  create: PropTypes.object,
   datacenters: PropTypes.object,
 };
 
@@ -82,7 +119,6 @@ function select(state) {
     distros: state.api.distros,
     datacenters: state.api.datacenters,
     services: state.api.services,
-    create: state.linodes.create,
   };
 }
 

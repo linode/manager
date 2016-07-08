@@ -54,7 +54,7 @@ describe('linodes/create/components/DistroVendor', () => {
     );
     dv.find('div').first().simulate('click');
     expect(onClick.calledOnce).to.equal(true);
-    expect(onClick.calledWith(vendor.versions[0])).to.equal(true);
+    expect(onClick.calledWith(vendor.versions[0].id)).to.equal(true);
   });
 
   it('invokes the selectedVersion function with the correct version', () => {
@@ -72,6 +72,23 @@ describe('linodes/create/components/DistroVendor', () => {
     onClick.reset();
     dv.find('div').first().simulate('click');
     expect(onClick.calledOnce).to.equal(true);
-    expect(onClick.calledWith(vendor.versions[2])).to.equal(true);
+    expect(onClick.calledWith(vendor.versions[2].id)).to.equal(true);
+  });
+
+  it('hides the dropdown on blur', () => {
+    const dv = shallow(
+      <DistroVendor
+        vendor={vendor}
+        onClick={() => {}}
+      />
+    );
+    dv.find('.dropdown-toggle').simulate('click', {
+      preventDefault() {},
+      stopPropagation() {},
+    });
+    expect(dv.find('.dropdown.open')).to.exist;
+
+    dv.simulate('blur');
+    expect(dv.find('.dropdown.open').length).to.equal(0);
   });
 });

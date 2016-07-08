@@ -7,6 +7,7 @@ import makeApiList, {
   makeFetchUntil,
   makeDeleteItem,
   makePutItem,
+  makeAddItem,
 } from '~/api-store';
 import * as fetch from '~/fetch';
 
@@ -469,6 +470,45 @@ describe('api-store', () => {
         type: 'PUT_FOOBAR',
         id: 'foobar_1',
         data: { foo: 'bar' },
+      })).to.equal(true);
+    });
+  });
+
+  describe('api-store/makeAddItem', () => {
+    afterEach(() => {
+      sandbox.restore();
+    });
+
+    it('returns a function that itself returns a function', () => {
+      const f = makeAddItem('ADD_FOOBAR', 'foobars');
+      expect(f).to.be.a('function');
+      expect(f({ data: {} })).to.be.a('function');
+    });
+
+    const getGetState = (state = {}) => sandbox.stub().returns({
+      authentication: auth,
+      ...state,
+    });
+    const getDispatch = () => sandbox.spy();
+    const getFetchStub = (rsp) => sandbox.stub(fetch, 'fetch').returns({
+      json() { return rsp; },
+    });
+
+    it('performs the API request', async () => {
+      const dispatch = getDispatch();
+      const fetchStub = getFetchStub({ name: 'foobar' });
+      const getState = getGetState();
+      const f = makeAddItem('ADD_FOOBAR', 'foobars');
+      const p = f({ name: 'foobar' });
+
+      await p(dispatch, getState);
+
+      expect(fetchStub.calledWith(
+        auth.token, '/foobars', { method: 'POST', body: JSON.stringify({ name: 'foobar' }) }
+      )).to.equal(true);
+      expect(dispatch.calledWith({
+        type: 'ADD_FOOBAR',
+        json: { name: 'foobar' },
       })).to.equal(true);
     });
   });

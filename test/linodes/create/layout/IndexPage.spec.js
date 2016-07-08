@@ -4,13 +4,12 @@ import { expect } from 'chai';
 import { shallow, mount } from 'enzyme';
 
 import { IndexPage } from '~/linodes/create/layouts/IndexPage';
-import * as sourceActions from '~/linodes/actions/create/source';
-import * as datacenterActions from '~/linodes/actions/create/datacenter';
-import * as serviceActions from '~/linodes/actions/create/service';
 import * as fetch from '~/fetch';
 import { UPDATE_DISTROS } from '~/actions/api/distros';
 import { UPDATE_DATACENTERS } from '~/actions/api/datacenters';
 import { UPDATE_SERVICES } from '~/actions/api/services';
+import * as errors from '~/actions/errors';
+import * as apiLinodes from '~/actions/api/linodes';
 import { state } from '~/../test/data';
 
 describe('linodes/create/layout/IndexPage', () => {
@@ -24,12 +23,11 @@ describe('linodes/create/layout/IndexPage', () => {
       const page = shallow(
         <IndexPage
           dispatch={() => {}}
-          create={state.create}
           distros={state.distros}
           datacenters={state.datacenters}
           services={state.services}
         />);
-      expect(page.find(thing).length).to.equal(1);
+      expect(page.find(thing)).to.exist;
     };
   }
 
@@ -37,23 +35,20 @@ describe('linodes/create/layout/IndexPage', () => {
     'SourceSelection',
     'DatacenterSelection',
     'ServiceSelection',
-    'OrderSummary',
+    'Details',
   ].map(t => it(`renders a ${t}`, assertContains(t)));
 
   it('changes the source tab when clicked', () => {
-    const dispatch = sandbox.spy();
-    const page = shallow(
+    const page = mount(
       <IndexPage
-        dispatch={dispatch}
+        dispatch={() => {}}
         distros={state.distros}
-        create={state.create}
         datacenters={state.datacenters}
         services={state.services}
       />);
-    dispatch.reset();
-    page.find('SourceSelection').props().onTabChange(2);
-    expect(dispatch.calledOnce).to.equal(true);
-    expect(dispatch.calledWith(sourceActions.changeSourceTab(2)))
+    const ss = page.find('SourceSelection');
+    ss.props().onTabChange(2);
+    expect(ss.find('Tab').at(2).props().selected)
       .to.equal(true);
   });
 
@@ -63,7 +58,6 @@ describe('linodes/create/layout/IndexPage', () => {
       <IndexPage
         dispatch={dispatch}
         distros={state.distros}
-        create={state.create}
         datacenters={state.datacenters}
         services={state.services}
       />);
@@ -107,54 +101,131 @@ describe('linodes/create/layout/IndexPage', () => {
     expect(dispatch.firstCall.args[0].type).to.equal(UPDATE_SERVICES);
   });
 
-  it('selects a source when appropriate', () => {
-    const dispatch = sandbox.spy();
-    const page = shallow(
+  it('dispatches an error if fetching when mounted fails', async () => {
+    sandbox.stub(errors, 'setError', e => e);
+    const env = { dispatch() {} };
+    const error = 'this is my error string';
+    const dispatch = sandbox.stub(env, 'dispatch');
+    dispatch.onCall(0).throws(new Error(error));
+
+    await mount(
       <IndexPage
         dispatch={dispatch}
         distros={state.distros}
-        create={state.create}
+        datacenters={state.datacenters}
+        services={state.services}
+      />
+    );
+
+    expect(dispatch.calledTwice).to.equal(true);
+    expect(dispatch.secondCall.args[0].message).to.equal(error);
+  });
+
+  it('selects a source when appropriate', () => {
+    const page = shallow(
+      <IndexPage
+        dispatch={() => {}}
+        distros={state.distros}
         datacenters={state.datacenters}
         services={state.services}
       />);
-    dispatch.reset();
-    page.find('SourceSelection').props().onSourceSelected({ id: 'distro_1234' });
-    expect(dispatch.calledOnce).to.equal(true);
-    expect(dispatch.calledWith(sourceActions.selectSource('distro_1234')))
-      .to.equal(true);
+    const ss = page.find('SourceSelection');
+    ss.props().onSourceSelected({ id: 'distro_1234' });
+    expect(ss.find('.distro.selected').find(<div className="title">Arch 2016.05</div>))
+      .to.exist;
   });
 
   it('selects a datacenter when appropriate', () => {
-    const dispatch = sandbox.spy();
     const page = shallow(
       <IndexPage
-        dispatch={dispatch}
+        dispatch={() => {}}
         distros={state.distros}
-        create={state.create}
         datacenters={state.datacenters}
         services={state.services}
       />);
-    dispatch.reset();
-    page.find('DatacenterSelection').props().onDatacenterSelected({ id: 'datacenter_2' });
-    expect(dispatch.calledOnce).to.equal(true);
-    expect(dispatch.calledWith(datacenterActions.selectDatacenter('datacenter_2')))
-      .to.equal(true);
+    const ds = page.find('DatacenterSelection');
+    ds.props().onDatacenterSelected({ id: 'datacenter_2' });
+    expect(ds.find('.datacenter.selected').find(<div className="title">Newark, NJ</div>))
+      .to.exist;
   });
 
   it('selects a service when appropriate', () => {
-    const dispatch = sandbox.spy();
     const page = shallow(
       <IndexPage
-        dispatch={dispatch}
+        dispatch={() => {}}
         distros={state.distros}
-        create={state.create}
         datacenters={state.datacenters}
         services={state.services}
       />);
+    const ss = page.find('ServiceSelection');
+    ss.props().onServiceSelected({ id: 'linode1024.5' });
+    expect(ss.find('.service.selected').find(<div className="title">Linode 1G</div>));
+  });
+
+  it('creates a linode when the form is submitted', async () => {
+    const dispatch = sandbox.spy();
+    sandbox.stub(apiLinodes, 'addLinode', d => d);
+    const page = mount(
+      <IndexPage
+        dispatch={dispatch}
+        distros={state.distros}
+        datacenters={state.datacenters}
+        services={state.services}
+      />
+    );
     dispatch.reset();
-    page.find('ServiceSelection').props().onServiceSelected({ id: 'service_112' });
-    expect(dispatch.calledOnce).to.equal(true);
-    expect(dispatch.calledWith(serviceActions.selectService('service_112')))
+
+    const expectIsDisabled = () => expect(page.find('button[type="submit"]').props().disabled)
       .to.equal(true);
+
+    expectIsDisabled();
+    page.find('ServiceSelection').props().onServiceSelected('service');
+    expectIsDisabled();
+    page.find('DatacenterSelection').props().onDatacenterSelected('datacenter');
+    expectIsDisabled();
+    page.find('SourceSelection').props().onSourceSelected('source');
+    expectIsDisabled();
+    await page.find('Details').props().onSubmit({ label: 'label', password: 'password' });
+    expect(dispatch.calledTwice).to.equal(true);
+    expect(dispatch.firstCall.args[0]).to.deep.equal({
+      root_pass: 'password',
+      service: 'service',
+      source: 'source',
+      datacenter: 'datacenter',
+      label: 'label',
+    });
+  });
+
+  it('sets errors on create a linode failure', async () => {
+    const error = 'The error';
+    function ResponseError() {
+      return { json() {
+        return new Promise((accept) => accept({
+          errors: [{ field: 'label', reason: error }],
+        }));
+      } };
+    }
+
+    const env = { dispatch() {} };
+    const dispatch = sandbox.stub(env, 'dispatch');
+    const page = mount(
+      <IndexPage
+        dispatch={dispatch}
+        distros={state.distros}
+        datacenters={state.datacenters}
+        services={state.services}
+      />
+    );
+    dispatch.reset();
+    dispatch.onCall(0).throws(new ResponseError());
+
+    page.find('ServiceSelection').props().onServiceSelected('service');
+    page.find('DatacenterSelection').props().onDatacenterSelected('datacenter');
+    page.find('SourceSelection').props().onSourceSelected('source');
+    await page.find('Details').props().onSubmit({ label: '', password: '' });
+
+    expect(page.find('Details').props().errors).to.deep.equal({
+      label: [error],
+    });
   });
 });

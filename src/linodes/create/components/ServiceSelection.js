@@ -26,10 +26,10 @@ export default class ServiceSelection extends Component {
       <div
         className={`plan ${planClass}`}
         key={plan.label}
-        onClick={() => onServiceSelected(plan)}
+        onClick={() => onServiceSelected(plan.id)}
       >
         <header>
-          <div className="title">{this.renderPlanStyle(plan.label)}</div>
+          <div className="title">{this.renderPlanStyle([plan])}</div>
         </header>
         <div className="plan-contents">
           <div className="pricing">${hourlyPrice / 100}/hr (${monthlyPrice / 100}/mo)</div>
