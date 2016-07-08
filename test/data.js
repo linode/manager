@@ -84,7 +84,7 @@ export const testLinode = {
   },
   state: 'running',
   datacenter: {
-    id: 'datacenter_6',
+    id: 'newark',
     label: 'Newark, NJ',
     datacenter: 'newark',
   },

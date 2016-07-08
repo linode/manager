@@ -1,10 +1,19 @@
-import _ from 'underscore';
+import _ from 'lodash';
 
-function transformItem(item) {
+function makeDefaultState(config) {
   return {
-    ...item,
-    _polling: false,
+    pagesFetched: [],
+    totalPages: -1,
+    [config.plural]: {},
+    singular: config.singular,
+    plural: config.plural,
   };
+}
+
+function transformItem(subresources, item) {
+  const subs = _.reduce(subresources, (acc, config, key) => (
+      { ...acc, [key]: { ...makeDefaultState(config) } }), { });
+  return { ...item, _polling: false, ...subs };
 }
 
 /*
@@ -23,26 +32,17 @@ function transformItem(item) {
  * transform: a function each object will be run through to add custom
  * properties and what-not
  */
-export default function makeApiList(plural, singular,
-    _actions, transform = d => d) {
-  const defaultState = {
-    pagesFetched: [],
-    totalPages: -1,
-    [plural]: {},
-    _singular: singular,
-    _plural: plural,
-  };
-
+export default function makeApiList(config, transform = d => d) {
   const actions = {
     update_singular: -1,
     update_many: -1,
     delete_one: -1,
-    ..._actions,
+    ...config.actions,
   };
 
-  return (state = defaultState, action) => {
+  function handleAction(_config, state, action) {
     switch (action.type) {
-      case actions.update_many: {
+      case _config.actions.update_many: {
         const { response } = action;
         return {
           ...state,
@@ -51,57 +51,89 @@ export default function makeApiList(plural, singular,
             response.page,
           ],
           totalPages: response.total_pages,
-          [plural]: {
-            ...state[plural],
-            ...response[plural].reduce((s, i) =>
-            ({ ...s, [i.id]: transform(transformItem(i)) }), { }),
+          [_config.plural]: {
+            ...state[_config.plural],
+            ...response[_config.plural].reduce((s, i) =>
+              ({ ...s, [i.id]: transform(
+                 transformItem(_config.subresources, i)) }), { }),
           },
         };
       }
-      case actions.update_singular: {
-        const item = action[singular];
+      case _config.actions.update_singular: {
+        const item = action[_config.singular];
         return {
           ...state,
-          [plural]: {
-            ...state[plural],
-            [item.id]: { ...state[plural][item.id], ...item },
+          [_config.plural]: {
+            ...state[_config.plural],
+            [item.id]: { ...state[_config.plural][item.id], ...item },
           },
         };
       }
-      case actions.delete_one: {
+      case _config.actions.delete_one: {
         const { id } = action;
         return {
           ...state,
-          [plural]: _.omit(state[plural], id),
+          [_config.plural]: _.omit(state[_config.plural], id),
         };
       }
       default:
+        if (_config.subresources) {
+          for (let i = 0; i < Object.keys(_config.subresources).length; i++) {
+            const key = Object.keys(_config.subresources)[i];
+            const subresource = _config.subresources[key];
+            if (_.includes(subresource.actions, action.type)) {
+              const id = action[_config.singular];
+              const parentItem = state[_config.plural][id];
+              const childState = parentItem[key];
+              const newState = handleAction(subresource, childState, action);
+              return {
+                ...state,
+                [_config.plural]: {
+                  ...state[_config.plural],
+                  [parentItem.id]: {
+                    ...state[_config.plural][parentItem.id],
+                    [key]: newState,
+                  },
+                },
+              };
+            }
+          }
+        }
         return state;
     }
-  };
+  }
+
+  const mergedConfig = { ...config, actions };
+  const defaultState = makeDefaultState(mergedConfig);
+  return (state = defaultState, action) =>
+    handleAction(mergedConfig, state, action);
 }
 
 import { fetch } from './fetch';
 
-export function makeFetchPage(action, plural) {
-  return (page = 0) => async (dispatch, getState) => {
+export function makeFetchPage(action, ...plurals) {
+  return (page = 0, ...ids) => async (dispatch, getState) => {
+    const pairs = _.zip(plurals, ids);
     const { token } = getState().authentication;
-    const response = await fetch(token, `/${plural}?page=${page + 1}`);
+    const url = _.reduce(pairs, (u, [plural, id]) => `${u}/${plural}/${id || ''}`, '');
+    const response = await fetch(token, `${url}?page=${page + 1}`);
     const json = await response.json();
     dispatch({ type: action, response: json });
   };
 }
 
-export function makeUpdateItem(action, plural, singular) {
-  return id => async (dispatch, getState) => {
+export function makeFetchItem(action, singular, ...plurals) {
+  return (...ids) => async (dispatch, getState) => {
+    const pairs = _.zip(plurals, ids);
     const { token } = getState().authentication;
-    const response = await fetch(token, `/${plural}/${id}`);
+    const url = _.reduce(pairs, (u, [plural, id]) => `${u}/${plural}/${id}`, '');
+    const response = await fetch(token, url);
     const json = await response.json();
     dispatch({ type: action, [singular]: json });
   };
 }
 
-export function makeUpdateUntil(action, plural, singular) {
+export function makeFetchUntil(action, plural, singular) {
   return (id, test, timeout = 3000) => async (dispatch, getState) => {
     const { token } = getState().authentication;
     const item = getState().api[plural][plural][id];
