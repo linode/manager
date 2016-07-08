@@ -3,8 +3,8 @@ import { expect } from 'chai';
 import deepFreeze from 'deep-freeze';
 import makeApiList, {
   makeFetchPage,
-  makeUpdateItem,
-  makeUpdateUntil,
+  makeFetchItem,
+  makeFetchUntil,
   makeDeleteItem,
   makePutItem,
 } from '~/api-store';
@@ -315,6 +315,23 @@ describe('api-store', () => {
       })).to.equal(true);
     });
 
+    it('fetches a sub resourse page of items from the API', async () => {
+      const dispatch = getDispatch();
+      const fetchStub = getFetchStub(mockFoobarsResponse);
+      const getState = getGetState();
+      const f = makeFetchPage('FETCH_FOOBAZES', 'foobars', 'foobazes');
+      const p = f(0, 'foobar_1');
+
+      await p(dispatch, getState);
+
+      expect(fetchStub.calledWith(
+        auth.token, '/foobars/foobar_1/foobazes/?page=1')).to.equal(true);
+      expect(dispatch.calledWith({
+        type: 'FETCH_FOOBAZES',
+        response: mockFoobarsResponse,
+      })).to.equal(true);
+    });
+
     it('fetches the requested page', async () => {
       const dispatch = getDispatch();
       const fetchStub = getFetchStub(mockFoobarsResponse);
@@ -329,7 +346,7 @@ describe('api-store', () => {
     });
   });
 
-  describe('api-store/makeUpdateItem', () => {
+  describe('api-store/makeFetchItem', () => {
     afterEach(() => {
       sandbox.restore();
     });
@@ -342,7 +359,7 @@ describe('api-store', () => {
     const getFetchStub = (rsp) => sandbox.stub(fetch, 'fetch').returns({ json() { return rsp; } });
 
     it('returns a function that itself returns a function', () => {
-      const f = makeUpdateItem('UPDATE_FOOBAR', 'foobar', 'foobars');
+      const f = makeFetchItem('UPDATE_FOOBAR', 'foobar', 'foobars');
       expect(f).to.be.a('function');
       expect(f()).to.be.a('function');
     });
@@ -351,7 +368,7 @@ describe('api-store', () => {
       const dispatch = getDispatch();
       const fetchStub = getFetchStub(mockFoobarsResponse.foobars[0]);
       const getState = getGetState();
-      const f = makeUpdateItem('UPDATE_FOOBAR', 'foobar', 'foobars');
+      const f = makeFetchItem('UPDATE_FOOBAR', 'foobar', 'foobars');
       const p = f('foobar_1');
 
       await p(dispatch, getState);
@@ -362,6 +379,21 @@ describe('api-store', () => {
         type: 'UPDATE_FOOBAR',
         foobar: mockFoobarsResponse.foobars[0],
       })).to.equal(true);
+    });
+
+    it('fetches a sub resource from the API', async () => {
+      const dispatch = getDispatch();
+      const foobaz = { id: 'foobaz_1234' };
+      const fetchStub = getFetchStub(foobaz);
+      const getState = getGetState();
+      const f = makeFetchItem('UPDATE_ONE_FOOBAZ', 'foobaz', 'foobars', 'foobazes');
+      const p = f('foobar_1', 'foobaz_1234');
+
+      await p(dispatch, getState);
+
+      expect(fetchStub.calledWith(
+        auth.token, '/foobars/foobar_1/foobazes/foobaz_1234')).to.equal(true);
+      expect(dispatch.calledWith({ type: 'UPDATE_ONE_FOOBAZ', foobaz })).to.equal(true);
     });
   });
 
@@ -441,7 +473,7 @@ describe('api-store', () => {
     });
   });
 
-  describe('api-store/makeUpdateUntil', () => {
+  describe('api-store/makeFetchUntil', () => {
     afterEach(() => {
       sandbox.restore();
     });
@@ -452,7 +484,7 @@ describe('api-store', () => {
       fetchStub.onCall(1).returns({ json: () => ({ state: 'wait' }) });
       fetchStub.returns({ json: () => ({ state: 'done' }) });
 
-      const f = makeUpdateUntil('UPDATE_FOOBAR', 'foobars', 'foobar');
+      const f = makeFetchUntil('UPDATE_FOOBAR', 'foobars', 'foobar');
       const p = f('foobar_1', v => v.state === 'done', 1);
 
       const state = {
@@ -474,7 +506,7 @@ describe('api-store', () => {
       const dispatch = sandbox.spy();
       const getState = sandbox.stub();
 
-      const f = makeUpdateUntil('UPDATE_FOOBAR', 'foobars', 'foobar');
+      const f = makeFetchUntil('UPDATE_FOOBAR', 'foobars', 'foobar');
       const p = f('foobar_1', v => v.state === 'done', 1);
 
       const state = {

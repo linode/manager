@@ -122,7 +122,7 @@ export function makeFetchPage(action, ...plurals) {
   };
 }
 
-export function makeUpdateItem(action, singular, ...plurals) {
+export function makeFetchItem(action, singular, ...plurals) {
   return (...ids) => async (dispatch, getState) => {
     const pairs = _.zip(plurals, ids);
     const { token } = getState().authentication;
@@ -133,7 +133,7 @@ export function makeUpdateItem(action, singular, ...plurals) {
   };
 }
 
-export function makeUpdateUntil(action, plural, singular) {
+export function makeFetchUntil(action, plural, singular) {
   return (id, test, timeout = 3000) => async (dispatch, getState) => {
     const { token } = getState().authentication;
     const item = getState().api[plural][plural][id];
