@@ -24,7 +24,7 @@ describe('linodes/layouts/LinodeNetworking', () => {
         ...testLinode,
         id: 'linode_1235',
         datacenter: {
-          datacenter: 'newark',
+          id: 'newark',
         },
         group: '',
         ip_addresses: {
@@ -117,7 +117,7 @@ describe('linodes/layouts/LinodeNetworking', () => {
         const content = page.find('.network-content').at(0);
         const ipv4Sect = content.find('.col-sm-6').at(0);
         const nsCol = ipv4Sect.find('.col-sm-8').at(2);
-        expect(nsCol.text()).to.equal(ipv4ns[testLinode.datacenter.datacenter].join(''));
+        expect(nsCol.text()).to.equal(ipv4ns[testLinode.datacenter.id].join(''));
       });
     });
 
@@ -176,7 +176,7 @@ describe('linodes/layouts/LinodeNetworking', () => {
         expect(nsCol.text())
           .to.equal(
             ipv6nsSuffix.map(
-              suffix => ipv6ns[testLinode.datacenter.datacenter] + suffix
+              suffix => ipv6ns[testLinode.datacenter.id] + suffix
             ).join('')
           );
       });

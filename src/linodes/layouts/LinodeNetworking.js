@@ -19,7 +19,7 @@ export class LinodeNetworking extends Component {
   }
 
   nameserversList(isIPv4, linode) {
-    const dc = linode.datacenter.datacenter;
+    const dc = linode.datacenter.id;
     const nameservers = (
       <div className="row">
         <div className="col-sm-4 linode-label-col left">

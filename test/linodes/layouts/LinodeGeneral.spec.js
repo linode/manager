@@ -196,7 +196,7 @@ describe('linodes/layouts/LinodeGeneral', async () => {
 
   it('renders lish path', () => {
     const lishLink = `ssh -t tdude@lish-${
-        testLinode.datacenter.datacenter
+        testLinode.datacenter.id
       }.linode.com`;
     const page = shallow(
       <LinodeGeneral
