@@ -78,6 +78,7 @@ export class LinodeGeneral extends Component {
   renderDetails() {
     const { username } = this.props;
     const linode = this.getLinode();
+    const plan = this.renderPlanStyle(linode.services);
     const ipAddresses = linode.ip_addresses;
     const arrayifyIps = (pubPriv, type) => {
       const ips = ipAddresses[pubPriv][type];
@@ -102,7 +103,7 @@ export class LinodeGeneral extends Component {
       <div className="row">
         <div className="col-sm-5 left">
           <h2>Summary</h2>
-          <div className="row">
+          <div className="row linode-ips">
             <div className="col-sm-4 linode-label-col left">
               IP Addresses
             </div>
@@ -114,7 +115,7 @@ export class LinodeGeneral extends Component {
               </ul>
             </div>
           </div>
-          <div className="row">
+          <div className="row linode-backups">
             <div className="col-sm-4 linode-label-col left">
               Backups
             </div>
@@ -122,15 +123,18 @@ export class LinodeGeneral extends Component {
               {this.renderBackupStatus(linode)}
             </div>
           </div>
-          <div className="row">
-            <div className="col-sm-4 linode-label-col left">
-              Plan
+          {plan ?
+            <div className="row linode-plan">
+              <div className="col-sm-4 linode-label-col left">
+                Plan
+              </div>
+              <div className="col-sm-8 linode-content-col right">
+                {plan}
+              </div>
             </div>
-            <div className="col-sm-8 linode-content-col right">
-              {this.renderPlanStyle(linode.services.linode)}
-            </div>
-          </div>
-          <div className="row">
+            : null
+          }
+          <div className="row linode-datacenter">
             <div className="col-sm-4 linode-label-col left">
               Datacenter
             </div>
@@ -139,7 +143,7 @@ export class LinodeGeneral extends Component {
             </div>
           </div>
           {linode.distribution != null ?
-            <div className="row">
+            <div className="row linode-distro">
               <div className="col-sm-4 linode-label-col left">
                 Distribution
               </div>
@@ -152,7 +156,7 @@ export class LinodeGeneral extends Component {
         </div>
         <div className="col-sm-7 right">
           <h2>Access</h2>
-          <div className="row">
+          <div className="row linode-ssh">
             <div className="col-sm-3 linode-label-col left">
               <label className="form-label" htmlFor="ssh-input">
                 SSH
@@ -173,7 +177,7 @@ export class LinodeGeneral extends Component {
               </div>
             </div>
           </div>
-          <div className="row">
+          <div className="row linode-lish">
             <div className="col-sm-3 linode-label-col left">
               <label className="form-label" htmlFor="lish-input">
                 Text console
@@ -198,7 +202,7 @@ export class LinodeGeneral extends Component {
               </small>
             </div>
           </div>
-          <div className="row">
+          <div className="row linode-glish">
             <div className="col-sm-3 linode-label-col left">
               <label className="form-label" htmlFor="glish-button">
                 Graphical console

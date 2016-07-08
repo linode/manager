@@ -28,10 +28,14 @@ renderPowerButton.propTypes = {
   onReboot: PropTypes.func,
 };
 
-export function renderPlanStyle(planStr) {
-  const plan = planStr.split(' ');
-
-  return `${plan[0]} ${plan[1] / 1024}G`;
+export function renderPlanStyle(services) {
+  for (const serv of services) {
+    if (serv.service_type && serv.service_type === 'linode') {
+      const plan = serv.label.split(' ');
+      return `${plan[0]} ${plan[1] / 1024}G`;
+    }
+  }
+  return false;
 }
 
 export function renderDistroStyle(linode) {

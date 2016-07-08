@@ -82,7 +82,10 @@ describe('linodes/layouts/LinodeGeneral', async () => {
         params={params}
       />);
 
-    expect(page.find('.col-sm-8').at(1).find('Link')
+    expect(page.find('.linode-backups').at(0)
+      .find('.col-sm-8')
+      .at(0)
+      .find('Link')
       .props())
       .have.property('to')
       .which.equal(path);
@@ -96,19 +99,23 @@ describe('linodes/layouts/LinodeGeneral', async () => {
         params={{ linodeId: 'linode_1235' }}
       />);
 
-    expect(page.find('.col-sm-8').at(1).text()).to.equal(moment(backupTime).fromNow());
+    expect(page.find('.linode-backups').at(0)
+      .find('.col-sm-8')
+      .at(0)
+      .text()).to.equal(moment(backupTime).fromNow());
   });
 
   it('renders plan', () => {
-    const planArray = testLinode.services.linode.split(' ');
-    const planText = `${planArray[0]} ${planArray[1] / 1024}G`;
     const page = shallow(
       <LinodeGeneral
         linodes={linodes}
         params={params}
       />);
 
-    expect(page.find('.col-sm-8').at(2).text()).to.equal(planText);
+    expect(page.find('.linode-plan').at(0)
+      .find('.col-sm-8')
+      .at(0)
+      .text()).to.equal('Linode 1G');
   });
 
   it('renders datacenter', () => {
@@ -118,7 +125,10 @@ describe('linodes/layouts/LinodeGeneral', async () => {
         params={params}
       />);
 
-    expect(page.find('.col-sm-8').at(3).text()).to.equal(testLinode.datacenter.label);
+    expect(page.find('.linode-datacenter').at(0)
+      .find('.col-sm-8')
+      .at(0)
+      .text()).to.equal(testLinode.datacenter.label);
   });
 
   it('renders distribution', () => {
@@ -128,7 +138,10 @@ describe('linodes/layouts/LinodeGeneral', async () => {
         params={params}
       />);
 
-    expect(page.find('.col-sm-8').at(4).text()).to.equal(testLinode.distribution.label);
+    expect(page.find('.linode-distro').at(0)
+      .find('.col-sm-8')
+      .at(0)
+      .text()).to.equal(testLinode.distribution.label);
   });
 
   it('renders ssh input elements', () => {
