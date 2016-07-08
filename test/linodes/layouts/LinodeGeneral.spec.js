@@ -30,6 +30,7 @@ describe('linodes/layouts/LinodeGeneral', async () => {
           last_backup: '2016-06-28T14:19:37',
           enabled: true,
         },
+        services: [],
       },
     },
     _singular: 'linode',
@@ -116,6 +117,16 @@ describe('linodes/layouts/LinodeGeneral', async () => {
       .find('.col-sm-8')
       .at(0)
       .text()).to.equal('Linode 1G');
+  });
+
+  it('renders linode without a linode service', () => {
+    const page = shallow(
+      <LinodeGeneral
+        linodes={linodes}
+        params={{ linodeId: 'linode_1235' }}
+      />);
+
+    expect(page.find('.linode-plan').length).to.equal(0);
   });
 
   it('renders datacenter', () => {
