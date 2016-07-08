@@ -49,7 +49,7 @@ export class IndexPage extends Component {
         </div>
         <div className="card page-card">
           <DatacenterSelection
-            selected={create.datacenter.datacenter}
+            selected={create.datacenter.id}
             datacenters={datacenters.datacenters}
             onDatacenterSelected={dc => dispatch(selectDatacenter(dc.id))}
           />

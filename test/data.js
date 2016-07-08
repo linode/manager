@@ -16,18 +16,18 @@ export const state = {
   },
   datacenters: {
     datacenters: {
-      datacenter_2: {
-        id: 'datacenter_2',
+      newark: {
+        id: 'newark',
         label: 'Newark, NJ',
       },
     },
   },
   services: {
     services: {
-      service_112: {
+      ['linode1024.5']: {
         disk: 24,
         hourly_price: 1,
-        id: 'service_112',
+        id: 'linode1024.5',
         label: 'Linode 1024',
         mbits_out: 25,
         monthly_price: 1000,
@@ -36,10 +36,10 @@ export const state = {
         transfer: 2000,
         vcpus: 1,
       },
-      service_114: {
+      ['linode2048.5']: {
         disk: 48,
         hourly_price: 2,
-        id: 'service_114',
+        id: 'linode2048.5',
         label: 'Linode 2048',
         mbits_out: 25,
         monthly_price: 2000,
@@ -86,10 +86,9 @@ export const testLinode = {
   datacenter: {
     id: 'newark',
     label: 'Newark, NJ',
-    datacenter: 'newark',
   },
   distribution: {
-    id: 'distro_123',
+    id: 'linode/ubuntu15.10',
     vendor: 'Ubuntu',
     label: 'Ubuntu 15.10',
   },
@@ -151,35 +150,35 @@ export const linodes = {
 
 export const testDistros = {
   distro_1234: {
-    id: 'distro_1234',
+    id: 'linode/arch2016.05',
     recommended: true,
     vendor: 'Arch',
     label: 'Arch Linux 2016.05',
     created: '2009-08-17T00:00:00',
   },
   distro_1235: {
-    id: 'distro_1235',
+    id: 'linode/arch2015.05',
     recommended: false,
     vendor: 'Arch',
     label: 'Arch Linux 2015.05',
     created: '2009-08-17T00:00:00',
   },
   distro_1236: {
-    id: 'distro_1236',
+    id: 'linode/debian7',
     recommended: true,
     vendor: 'Debian',
     label: 'Debian 7',
     created: '2009-08-17T00:00:00',
   },
   distro_1237: {
-    id: 'distro_1237',
+    id: 'linode/debian8.1',
     recommended: true,
     vendor: 'Debian',
     label: 'Debian 8.1',
     created: '2009-08-17T00:00:00',
   },
   distro_1238: {
-    id: 'distro_1238',
+    id: 'linode/debian6',
     recommended: false,
     vendor: 'Debian',
     label: 'Debian 6',

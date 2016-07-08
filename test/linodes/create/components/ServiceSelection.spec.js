@@ -39,6 +39,6 @@ describe('linodes/create/components/ServiceSelection', () => {
 
     c.find('.plan').first().simulate('click');
     expect(onSelect.calledOnce).to.equal(true);
-    expect(onSelect.firstCall.args[0]).to.equal(services.service_112);
+    expect(onSelect.firstCall.args[0]).to.equal(services['linode1024.5']);
   });
 });

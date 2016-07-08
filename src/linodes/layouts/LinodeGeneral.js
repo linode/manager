@@ -93,7 +93,7 @@ export class LinodeGeneral extends Component {
     const lishLink = `ssh -t ${
         username
       }@lish-${
-        linode.datacenter.datacenter
+        linode.datacenter.id
       }.linode.com`;
 
     const ipv4 = arrayifyIps('public', 'ipv4');
