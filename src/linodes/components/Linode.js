@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 import { flags, distros as distroAssets } from '~/assets';
+import _ from 'lodash';
 import {
   LinodeStatesReadable,
   countryMap,
@@ -28,10 +29,12 @@ renderPowerButton.propTypes = {
   onReboot: PropTypes.func,
 };
 
-export function renderPlanStyle(planStr) {
-  const plan = planStr.split(' ');
-
-  return `${plan[0]} ${plan[1] / 1024}G`;
+export function renderPlanStyle(services) {
+  return _.filter(services, s => s.service_type === 'linode')
+    .reduce((a, s) => {
+      const plan = s.label.split(' ');
+      return `${plan[0]} ${plan[1] / 1024}G`;
+    }, '');
 }
 
 export function renderDistroStyle(linode) {

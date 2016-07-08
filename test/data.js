@@ -72,9 +72,12 @@ export const testLinode = {
   },
   created: '2016-07-06T16:47:27',
   id: 'linode_1234',
-  services: {
-    linode: 'Linode 1024',
-  },
+  services: [
+    {
+      service_type: 'linode',
+      label: 'Linode 1024',
+    },
+  ],
   backups: {
     last_backup: null,
     enabled: false,
