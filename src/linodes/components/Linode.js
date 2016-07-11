@@ -82,19 +82,18 @@ export function renderBackupStatus(linode) {
         W20: moment().hour(20),
         W22: moment().hour(22),
       };
-      console.log(linode.backups.schedule.window);
       const nextBackup = windows[linode.backups.schedule.window];
       if (nextBackup < moment()) {
         nextBackup.add(1, 'day');
       }
       return (
         <span className="backup-status">
-          In approximately {nextBackup.fromNow(true)}
+          in approximately {nextBackup.fromNow(true)}
         </span>);
     }
     return (
       <span className="backup-status">
-        {moment(linode.backups.last_backup).fromNow()}
+        {moment.utc(linode.backups.last_backup).fromNow()}
       </span>);
   }
   return (
@@ -141,8 +140,12 @@ function renderCard(props) {
           </li>
           <li>
             <span className="fa fa-database"></span>
-            {linode.backups.enabled ? 'Last backup: ' : null}
-            {renderBackupStatus(linode)}
+            <span>
+              {linode.backups.enabled ?
+              `${linode.backups.last_backup !== null ? 'Last' : 'Next'} backup: `
+                : null}
+              {renderBackupStatus(linode)}
+            </span>
           </li>
         </ul>
       </div>
@@ -181,7 +184,9 @@ function renderRow(props) {
         {renderDatacenterStyle(linode)}
       </td>
       <td>
-        {linode.backups.enabled ? 'Last backup: ' : null}
+        {linode.backups.enabled ?
+        `${linode.backups.last_backup !== null ? 'Last' : 'Next'} backup: `
+          : null}
         {renderBackupStatus(linode)}
       </td>
       <td>
