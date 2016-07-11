@@ -142,7 +142,7 @@ function renderCard(props) {
             <span className="fa fa-database"></span>
             <span>
               {linode.backups.enabled ?
-              `${linode.backups.last_backup !== null ? 'Last' : 'Next'} backup: `
+              `${linode.backups.last_backup !== null ? 'Last' : 'First'} backup: `
                 : null}
               {renderBackupStatus(linode)}
             </span>
@@ -185,7 +185,7 @@ function renderRow(props) {
       </td>
       <td>
         {linode.backups.enabled ?
-        `${linode.backups.last_backup !== null ? 'Last' : 'Next'} backup: `
+        `${linode.backups.last_backup !== null ? 'Last' : 'First'} backup: `
           : null}
         {renderBackupStatus(linode)}
       </td>

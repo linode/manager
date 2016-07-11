@@ -236,7 +236,7 @@ describe('linodes/layouts/BackupsPage', () => {
       />);
     const existing = page.find('.restore')
       .find('input[type="radio"]')
-      .first();
+      .at(1);
     dispatch.reset();
     existing.simulate('change', { target: { checked: false } });
     expect(dispatch.calledOnce).to.equal(true);
@@ -254,7 +254,7 @@ describe('linodes/layouts/BackupsPage', () => {
       />);
     const existing = page.find('.restore')
       .find('input[type="radio"]')
-      .first();
+      .at(1);
     dispatch.reset();
     existing.simulate('change', { target: { checked: true } });
     expect(dispatch.calledOnce).to.equal(true);

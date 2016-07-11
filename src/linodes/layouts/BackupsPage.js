@@ -132,6 +132,7 @@ export class BackupsPage extends Component {
     const thisweek = _.sortBy(datedBackups, b => b.date).find(b => b.type === 'weekly');
     const lastweek = _.reverse(_.sortBy(datedBackups, b => b.date)).find(b => b.type === 'weekly');
     const manual = datedBackups.find(b => b.type === 'manual');
+    const thisLinode = this.getLinode();
     return (
       <div>
         <div className="row backups">
@@ -158,6 +159,21 @@ export class BackupsPage extends Component {
                 <input
                   type="radio"
                   name="restore-target"
+                  checked={targetLinode === thisLinode.id}
+                  onChange={e =>
+                    dispatch(e.target.checked
+                      ? selectTargetLinode(thisLinode.id)
+                      : selectTargetLinode(''))
+                  }
+                />
+                This Linode
+              </label>
+            </div>
+            <div className="radio">
+              <label>
+                <input
+                  type="radio"
+                  name="restore-target"
                   checked={targetLinode === ''}
                   onChange={e =>
                     dispatch(e.target.checked
@@ -173,7 +189,7 @@ export class BackupsPage extends Component {
                 <input
                   type="radio"
                   name="restore-target"
-                  checked={targetLinode !== ''}
+                  checked={targetLinode !== '' && targetLinode !== thisLinode.id}
                   onChange={e =>
                     dispatch(e.target.checked
                       ? selectTargetLinode(Object.values(linodes.linodes)[0].id)
@@ -188,7 +204,7 @@ export class BackupsPage extends Component {
                 onChange={e => dispatch(selectTargetLinode(e.target.value))}
               >
                 <option value={''}>Pick a Linode...</option>
-                {Object.values(linodes.linodes).filter(l => l.id !== this.getLinode().id)
+                {Object.values(linodes.linodes).filter(l => l.id !== thisLinode.id)
                   .map(l => <option value={l.id} key={l.id}>{l.label}</option>)}
               </select>
             </div>
