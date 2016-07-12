@@ -7,6 +7,7 @@ export default function Sidebar() {
     { icon: 'code-fork', name: 'NodeBalancers', link: '/nodebalancers' },
     { icon: 'bar-chart-o', name: 'Longview', link: '/longview' },
     { icon: 'share-alt', name: 'DNS Manager', link: '/dnsmanager' },
+    { icon: 'user', name: 'Account', link: '/account' },
     { icon: 'users', name: 'Support', link: '/support' },
   ];
 
