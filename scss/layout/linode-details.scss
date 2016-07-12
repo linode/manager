@@ -61,25 +61,6 @@
         padding: 15px $side-margin;
     }
 
-    .row:last-of-type > .linode-content-col {
-        margin-bottom: 0;
-    }
-
-    .linode-content-col {
-        margin-bottom: .75rem;
-
-        .text-muted {
-            font-size: 70%;
-        }
-        li a {
-            color: $linode-black;
-            text-decoration: none;
-        }
-        img {
-            margin-left: 0.5rem;
-        }
-    }
-
     .backups-status a {
         color: $linode-blue;
         text-decoration: none;
@@ -99,10 +80,6 @@
     
     .graphs {
         margin-top: $main-padding-tb;
-    }
-
-    .row:last-of-type > .linode-content-col {
-        margin-bottom: 0;
     }
 
     .network-content h3 {

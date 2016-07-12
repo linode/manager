@@ -25,7 +25,7 @@ export default class DatacenterSelection extends Component {
       <div
         className={`datacenter ${dcClass}`}
         key={datacenter.id}
-        onClick={() => onDatacenterSelected(datacenter)}
+        onClick={() => onDatacenterSelected(datacenter.id)}
       >
         <header>
           <div className="title">{datacenter.label}</div>

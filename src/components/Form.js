@@ -11,6 +11,7 @@ export function Input(props) {
         type={props.type}
         value={props.value}
       />
+      {props.children}
     </div>
   );
 }
@@ -22,6 +23,7 @@ Input.propTypes = {
   type: PropTypes.string,
   value: PropTypes.any.isRequired,
   onChange: PropTypes.func.isRequired,
+  children: PropTypes.node,
 };
 
 Input.defaultProps = {
@@ -29,6 +31,7 @@ Input.defaultProps = {
   placeholder: '',
   type: 'text',
   onChange: () => {},
+  children: null,
 };
 
 export function Checkbox(props) {
@@ -78,11 +81,13 @@ const supportedInputs = [Input, Checkbox];
 export class Form extends Component {
   constructor(props) {
     super(props);
-    this.initialState = {};
-    this.setInitialState(props.children);
-    this.state = this.initialState;
-
+    this.state = {};
+    this.initializeState(this.props.children);
     this.onSubmit = this.onSubmit.bind(this);
+  }
+
+  componentWillReceiveProps(props) {
+    this.initializeState(props.children, false);
   }
 
   onSubmit(e) {
@@ -106,12 +111,13 @@ export class Form extends Component {
     };
   }
 
-  setInitialState(children) {
+  initializeState(children, isConstructor = true) {
     Children.forEach(children, ({ type, props = null }) => {
       if (supportedInputs.indexOf(type) !== -1) {
-        this.initialState[props.name] = props.value;
+        if (isConstructor) this.state[props.name] = props.value;
+        else this.setState({ [props.name]: props.value });
       } else if (props && props.children) {
-        this.setInitialState(props.children);
+        this.initializeState(props.children);
       }
     });
   }
