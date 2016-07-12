@@ -25,6 +25,7 @@ export class IndexPage extends Component {
       source: '',
       sourceTab: 0,
       errors: {},
+      loading: false,
     };
   }
 
@@ -45,9 +46,11 @@ export class IndexPage extends Component {
     const { dispatch } = this.props;
     const { service, source, datacenter } = this.state;
     try {
+      this.setState({ loading: true });
       const linode = await dispatch(createLinode({
         root_pass: password, service, source, datacenter, label,
       }));
+      this.setState({ loading: false });
       // TODO: show user introductory stuff
       // TODO: enable backups
       dispatch(push(`/linodes/${linode.id}`));
@@ -68,7 +71,13 @@ export class IndexPage extends Component {
       datacenters,
       services,
     } = this.props;
-    const { source, datacenter, service, sourceTab } = this.state;
+    const {
+      source,
+      datacenter,
+      service,
+      sourceTab,
+      loading,
+    } = this.state;
 
     return (
       <div className="create-page">
@@ -99,7 +108,7 @@ export class IndexPage extends Component {
         <div className="card page-card">
           <Details
             onSubmit={this.onSubmit}
-            submitEnabled={!!source && !!datacenter && !!service}
+            submitEnabled={!!source && !!datacenter && !!service && !loading}
             errors={this.state.errors}
           />
         </div>
