@@ -7,7 +7,7 @@ import makeApiList, {
   makeFetchUntil,
   makeDeleteItem,
   makePutItem,
-  makeAddItem,
+  makeCreateItem,
 } from '~/api-store';
 import * as fetch from '~/fetch';
 
@@ -474,13 +474,13 @@ describe('api-store', () => {
     });
   });
 
-  describe('api-store/makeAddItem', () => {
+  describe('api-store/makeCreateItem', () => {
     afterEach(() => {
       sandbox.restore();
     });
 
     it('returns a function that itself returns a function', () => {
-      const f = makeAddItem('CREATE_FOOBAR', 'foobars');
+      const f = makeCreateItem('CREATE_FOOBAR', 'foobars', 'foobar');
       expect(f).to.be.a('function');
       expect(f({ data: {} })).to.be.a('function');
     });
@@ -498,7 +498,7 @@ describe('api-store', () => {
       const dispatch = getDispatch();
       const fetchStub = getFetchStub({ name: 'foobar' });
       const getState = getGetState();
-      const f = makeAddItem('CREATE_FOOBAR', 'foobars');
+      const f = makeCreateItem('CREATE_FOOBAR', 'foobars', 'foobar');
       const p = f({ name: 'foobar' });
 
       await p(dispatch, getState);
@@ -508,7 +508,7 @@ describe('api-store', () => {
       )).to.equal(true);
       expect(dispatch.calledWith({
         type: 'CREATE_FOOBAR',
-        json: { name: 'foobar' },
+        foobar: { name: 'foobar' },
       })).to.equal(true);
     });
   });

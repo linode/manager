@@ -176,7 +176,7 @@ export function makePutItem(action, plural) {
   };
 }
 
-export function makeAddItem(action, plural) {
+export function makeCreateItem(action, plural, singular) {
   return data => async (dispatch, getState) => {
     const state = getState();
     const { token } = state.authentication;
@@ -184,6 +184,6 @@ export function makeAddItem(action, plural) {
       method: 'POST', body: JSON.stringify(data),
     });
     const json = await response.json();
-    dispatch({ type: action, json });
+    dispatch({ type: action, [singular]: json });
   };
 }

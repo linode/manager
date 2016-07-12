@@ -50,6 +50,7 @@ export default class Details extends Component {
           onChange={e => this.setState({ label: e.target.value })}
           placeholder="my-label"
           className="form-control"
+          name="label"
         />
       </div>
     );
@@ -60,6 +61,7 @@ export default class Details extends Component {
           value={this.state.password}
           placeholder="Choose a strong password"
           className="form-control"
+          name="password"
           onChange={e => this.setState({ password: e.target.value })}
         />
         <button
@@ -83,6 +85,7 @@ export default class Details extends Component {
             type="checkbox"
             value={this.state.enableBackups}
             onChange={e => this.setState({ enableBackups: e.target.value })}
+            name="enableBackups"
           />
           Enable ($2.50/month)
         </label>

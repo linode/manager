@@ -10,7 +10,7 @@ import { fetchDistros } from '~/actions/api/distros';
 import { fetchDatacenters } from '~/actions/api/datacenters';
 import { fetchServices } from '~/actions/api/services';
 import { setError } from '~/actions/errors';
-import { addLinode } from '~/actions/api/linodes';
+import { createLinode } from '~/actions/api/linodes';
 
 export class IndexPage extends Component {
   constructor() {
@@ -45,12 +45,12 @@ export class IndexPage extends Component {
     const { dispatch } = this.props;
     const { service, source, datacenter } = this.state;
     try {
-      await dispatch(addLinode({
+      const { linode } = await dispatch(createLinode({
         root_pass: password, service, source, datacenter, label,
       }));
       // TODO: show user introductory stuff
       // TODO: enable backups
-      dispatch(push('/'));
+      dispatch(push(`/linodes/${linode.id}`));
     } catch (response) {
       const { errors } = await response.json();
       const errorsByField = {};

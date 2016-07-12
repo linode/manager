@@ -2,6 +2,7 @@ import React from 'react';
 import sinon from 'sinon';
 import { expect } from 'chai';
 import { shallow, mount } from 'enzyme';
+import { push } from 'react-router-redux';
 
 import { IndexPage } from '~/linodes/create/layouts/IndexPage';
 import * as fetch from '~/fetch';
@@ -163,7 +164,9 @@ describe('linodes/create/layout/IndexPage', () => {
   });
 
   it('creates a linode when the form is submitted', async () => {
-    const dispatch = sandbox.spy();
+    const env = { dispatch() {} };
+    const dispatch = sandbox.stub(env, 'dispatch');
+    const createdLinodeId = 1;
     sandbox.stub(apiLinodes, 'createLinode', d => d);
     const page = mount(
       <IndexPage
@@ -174,6 +177,7 @@ describe('linodes/create/layout/IndexPage', () => {
       />
     );
     dispatch.reset();
+    dispatch.onCall(0).returns(new Promise(accept => accept({ linode: { id: createdLinodeId } })));
 
     const expectIsDisabled = () => expect(page.find('button[type="submit"]').props().disabled)
       .to.equal(true);
@@ -194,18 +198,12 @@ describe('linodes/create/layout/IndexPage', () => {
       datacenter: 'datacenter',
       label: 'label',
     });
+
+    expect(dispatch.secondCall.args[0]).to.deep.equal(push(`/linodes/${createdLinodeId}`));
   });
 
   it('sets errors on create a linode failure', async () => {
     const error = 'The error';
-    function ResponseError() {
-      return { json() {
-        return new Promise((accept) => accept({
-          errors: [{ field: 'label', reason: error }],
-        }));
-      } };
-    }
-
     const env = { dispatch() {} };
     const dispatch = sandbox.stub(env, 'dispatch');
     const page = mount(
@@ -217,7 +215,7 @@ describe('linodes/create/layout/IndexPage', () => {
       />
     );
     dispatch.reset();
-    dispatch.onCall(0).throws(new ResponseError());
+    dispatch.onCall(0).throws({ json: () => ({ errors: [{ field: 'label', reason: error }] }) });
 
     page.find('ServiceSelection').props().onServiceSelected('service');
     page.find('DatacenterSelection').props().onDatacenterSelected('datacenter');

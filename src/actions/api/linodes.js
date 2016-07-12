@@ -5,7 +5,7 @@ import {
   makeFetchUntil,
   makeDeleteItem,
   makePutItem,
-  makeAddItem,
+  makeCreateItem,
 } from '~/api-store';
 
 export const UPDATE_LINODES = '@@linodes/UPDATE_LINODES';
@@ -27,7 +27,7 @@ export const updateLinode = makeFetchItem(UPDATE_LINODE, 'linode', 'linodes');
 export const updateLinodeUntil = makeFetchUntil(UPDATE_LINODE, 'linodes', 'linode');
 export const deleteLinode = makeDeleteItem(DELETE_LINODE, 'linodes');
 export const putLinode = makePutItem(PUT_LINODE, 'linodes');
-export const createLinode = makeAddItem(CREATE_LINODE, 'linodes');
+export const createLinode = makeCreateItem(CREATE_LINODE, 'linodes', 'linode');
 
 function linodeAction(id, action, temp, expected, timeout = undefined) {
   return async (dispatch, getState) => {
