@@ -71,6 +71,7 @@ describe('actions/api/linodes', async () => {
     expect(dispatch.calledWith({
       type: UPDATE_LINODE,
       linode: mockResponse.linodes[0],
+      linodes: 'linode_1',
     })).to.equal(true);
   });
 

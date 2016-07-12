@@ -269,7 +269,7 @@ describe('api-store', () => {
     const result = s(state, {
       type: 'UPDATE_ONE_FOOBAZ',
       foobaz: { id: 'foobaz_123', test: 'hello world' },
-      foobar: 'foobar_1',
+      foobars: 'foobar_1',
     });
 
     expect(result)
@@ -330,6 +330,7 @@ describe('api-store', () => {
       expect(dispatch.calledWith({
         type: 'FETCH_FOOBAZES',
         response: mockFoobarsResponse,
+        foobars: 'foobar_1',
       })).to.equal(true);
     });
 
@@ -379,6 +380,7 @@ describe('api-store', () => {
       expect(dispatch.calledWith({
         type: 'UPDATE_FOOBAR',
         foobar: mockFoobarsResponse.foobars[0],
+        foobars: 'foobar_1',
       })).to.equal(true);
     });
 
@@ -394,7 +396,12 @@ describe('api-store', () => {
 
       expect(fetchStub.calledWith(
         auth.token, '/foobars/foobar_1/foobazes/foobaz_1234')).to.equal(true);
-      expect(dispatch.calledWith({ type: 'UPDATE_ONE_FOOBAZ', foobaz })).to.equal(true);
+      expect(dispatch.calledWith({
+        type: 'UPDATE_ONE_FOOBAZ',
+        foobars: 'foobar_1',
+        foobazes: 'foobaz_1234',
+        foobaz,
+      })).to.equal(true);
     });
   });
 

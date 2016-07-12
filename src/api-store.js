@@ -118,7 +118,7 @@ export function makeFetchPage(action, ...plurals) {
     const url = _.reduce(pairs, (u, [plural, id]) => `${u}/${plural}/${id || ''}`, '');
     const response = await fetch(token, `${url}?page=${page + 1}`);
     const json = await response.json();
-    dispatch(_.reduce(pairs, (u, [plural, id]) => ({ ...u, [plural]: id }),
+    dispatch(_.reduce(pairs, (u, [plural, id]) => (id ? { ...u, [plural]: id } : u),
       { type: action, response: json }));
   };
 }
@@ -130,7 +130,7 @@ export function makeFetchItem(action, singular, ...plurals) {
     const url = _.reduce(pairs, (u, [plural, id]) => `${u}/${plural}/${id}`, '');
     const response = await fetch(token, url);
     const json = await response.json();
-    dispatch(_.reduce(pairs, (u, [plural, id]) => ({ ...u, [plural]: id }),
+    dispatch(_.reduce(pairs, (u, [plural, id]) => (id ? { ...u, [plural]: id } : u),
       { type: action, [singular]: json }));
   };
 }

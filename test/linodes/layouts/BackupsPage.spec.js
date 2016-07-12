@@ -187,7 +187,7 @@ describe('linodes/layouts/BackupsPage', () => {
     b.find('.backup').first().simulate('click');
     expect(dispatch.calledOnce).to.equal(true);
     expect(dispatch.firstCall.args[0])
-      .to.deep.equal(actions.selectBackup('backup_25'));
+      .to.deep.equal(actions.selectBackup('backup_54778593'));
   });
 
   it('dispatches a SELECT_TARGET_LINODE action when "existing linode" is checked', () => {
