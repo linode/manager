@@ -1,5 +1,8 @@
+import sinon from 'sinon';
 import { expect } from 'chai';
 import * as actions from '~/linodes/actions/detail/backups';
+import * as fetch from '~/fetch';
+import { testLinode } from '~/../test/data';
 
 describe('linodes/actions/detail/backups', () => {
   describe('selectBackup', () => {
@@ -39,6 +42,47 @@ describe('linodes/actions/detail/backups', () => {
           type: actions.SET_DAY_OF_WEEK,
           dayOfWeek: 'tuesday',
         });
+    });
+  });
+
+  describe('restoreBackup', () => {
+    const sandbox = sinon.sandbox.create();
+
+    afterEach(() => {
+      sandbox.restore();
+    });
+
+    const state = {
+      authentication: { token: 'token' },
+      api: {
+        linodes: {
+          linodes: { [testLinode.id]: testLinode },
+        },
+      },
+    };
+
+    it('returns a function', () => {
+      const func = actions.restoreBackup('linode_1234', 'linode_1235', 'backup_1234');
+      expect(func).to.be.a('function');
+    });
+
+    it('performs the HTTP request', async () => {
+      const fetchStub = sandbox.stub(fetch, 'fetch')
+        .returns({ json: () => 'asdf' });
+      const getState = sinon.stub().returns(state);
+      const dispatch = sinon.spy();
+      const func = actions.restoreBackup('linode_1234', 'linode_1235', 'backup_1234');
+      expect(await func(dispatch, getState)).to.equal('asdf');
+      expect(dispatch.callCount).to.equal(0);
+      expect(fetchStub.calledOnce).to.equal(true);
+      expect(fetchStub.calledWith(state.authentication.token,
+        '/linodes/linode_1234/backups/backup_1234/restore'));
+      const data = fetchStub.firstCall.args[2];
+      expect(data.method).to.equal('POST');
+      expect(JSON.parse(data.body)).to.deep.equal({
+        linode: 'linode_1235',
+        overwrite: false,
+      });
     });
   });
 });

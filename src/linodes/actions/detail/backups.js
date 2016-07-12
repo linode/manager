@@ -1,5 +1,4 @@
 import { fetch } from '~/fetch';
-import { updateLinode } from '~/actions/api/linodes';
 
 export const SELECT_BACKUP = '@@linodes@@detail/backups/SELECT_BACKUP';
 export const SELECT_TARGET_LINODE = '@@linodes@@detail/backups/SELECT_TARGET_LINODE';
@@ -26,12 +25,6 @@ export function restoreBackup(linodeId, targetLinode, backupId, overwrite = fals
   return async (dispatch, getState) => {
     const state = getState();
     const { token } = state.authentication;
-    const { linodes } = state.api.linodes;
-    let linode = linodes[linodeId];
-    if (!linode) {
-      await dispatch(updateLinode(linodeId));
-      linode = getState().api.linodes.linodes[linodeId];
-    }
     const response = await fetch(token,
       `/linodes/${linodeId}/backups/${backupId}/restore`, {
         method: 'POST',
