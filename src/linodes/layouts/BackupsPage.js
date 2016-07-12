@@ -1,10 +1,14 @@
 import React, { Component, PropTypes } from 'react';
+import { push } from 'react-router-redux';
 import { updateLinode, fetchLinodes } from '~/actions/api/linodes';
+import { showModal, hideModal } from '~/actions/modal';
+import { setError } from '~/actions/errors';
 import {
   selectBackup,
   selectTargetLinode,
   setTimeOfDay,
   setDayOfWeek,
+  restoreBackup,
 } from '~/linodes/actions/detail/backups';
 import { connect } from 'react-redux';
 import HelpButton from '~/components/HelpButton';
@@ -25,7 +29,7 @@ const backups = [
   },
   {
     type: 'daily',
-    id: 'backup_25',
+    id: 'backup_54778593',
     created: '2016-06-09T15:05:55',
     finished: '2016-06-09T15:06:55',
     status: 'successful',
@@ -69,6 +73,9 @@ export class BackupsPage extends Component {
     this.renderBackup = this.renderBackup.bind(this);
     this.renderBackups = this.renderBackups.bind(this);
     this.renderLastManualBackup = this.renderLastManualBackup.bind(this);
+    this.renderModal = this.renderModal.bind(this);
+    this.restore = this.restore.bind(this);
+    this.state = { loading: false };
   }
 
   componentDidMount() {
@@ -85,6 +92,24 @@ export class BackupsPage extends Component {
     const { linodes } = this.props.linodes;
     const { linodeId } = this.props.params;
     return linodes[linodeId];
+  }
+
+  async restore(target, backup, override = false) {
+    const { dispatch } = this.props;
+    this.setState({ loading: true });
+    try {
+      await dispatch(restoreBackup(target, backup, override));
+      dispatch(push(`/linodes/${target}`));
+    } catch (response) {
+      const json = await response.json();
+      if (json.errors && json.errors.length === 1
+          && json.errors[0].reason.indexOf('Not enough unallocated space') === 0) {
+        dispatch(showModal('Restore backup', this.renderModal(target, backup)));
+      } else {
+        dispatch(setError(response, json));
+      }
+    }
+    this.setState({ loading: false });
   }
 
   renderBackup(backup, title = null) {
@@ -113,6 +138,32 @@ export class BackupsPage extends Component {
         </dl>
       </div>
     );
+  }
+
+  renderModal(target, backup) {
+    const { dispatch } = this.props;
+    return (
+      <div>
+        <p>
+          <span className="text-danger">WARNING!</span> There is not enough
+          unallocated disk space left on this Linode to continue with this
+          restore. Confirm below to erase all disks from the Linode or go
+          back and select another Linode.
+        </p>
+        <div className="modal-footer">
+          <button
+            className="btn btn-primary"
+            onClick={() => {
+              this.restore(target, backup, true);
+              dispatch(hideModal());
+            }}
+          >Erase and restore</button>
+          <button
+            className="btn btn-default"
+            onClick={() => dispatch(hideModal())}
+          >Cancel</button>
+        </div>
+      </div>);
   }
 
   renderBackups() {
@@ -212,7 +263,8 @@ export class BackupsPage extends Component {
         </div>
         <button
           className="btn btn-primary"
-          disabled={selectedBackup === null}
+          disabled={this.state.loading || selectedBackup === null}
+          onClick={() => this.restore(targetLinode, selectedBackup)}
         >Restore backup</button>
       </div>
     );

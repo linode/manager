@@ -32,3 +32,12 @@
 .modal-body {
     padding: $main-padding-tb $main-padding-lr;
 }
+
+.modal-footer {
+    @extend .pull-right;
+    text-align: right;
+
+    .btn:not(:first-child) {
+        margin-left: 0.5rem;
+    }
+}
