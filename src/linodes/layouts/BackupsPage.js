@@ -96,9 +96,10 @@ export class BackupsPage extends Component {
 
   async restore(target, backup, override = false) {
     const { dispatch } = this.props;
+    const { linodeId } = this.props.params;
     this.setState({ loading: true });
     try {
-      await dispatch(restoreBackup(target, backup, override));
+      await dispatch(restoreBackup(linodeId, target, backup, override));
       dispatch(push(`/linodes/${target}`));
     } catch (response) {
       const json = await response.json();
@@ -109,7 +110,6 @@ export class BackupsPage extends Component {
         dispatch(setError(response, json));
       }
     }
-    this.setState({ loading: false });
   }
 
   renderBackup(backup, title = null) {

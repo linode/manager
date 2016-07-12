@@ -22,7 +22,7 @@ export function setDayOfWeek(dayOfWeek) {
   return { type: SET_DAY_OF_WEEK, dayOfWeek };
 }
 
-export function restoreBackup(linodeId, backupId, overwrite = false) {
+export function restoreBackup(linodeId, targetLinode, backupId, overwrite = false) {
   return async (dispatch, getState) => {
     const state = getState();
     const { token } = state.authentication;
@@ -35,7 +35,7 @@ export function restoreBackup(linodeId, backupId, overwrite = false) {
     const response = await fetch(token,
       `/linodes/${linodeId}/backups/${backupId}/restore`, {
         method: 'POST',
-        body: JSON.stringify({ overwrite }),
+        body: JSON.stringify({ linode: targetLinode, overwrite }),
       });
     return await response.json();
   };
