@@ -9,6 +9,7 @@
   <a href="https://coveralls.io/github/linode/manager?branch=master"><img src="https://coveralls.io/repos/github/linode/manager/badge.svg?branch=master" alt="Code coverage" /></a>
   <a href='https://dependencyci.com/github/linode/manager'><img src='https://dependencyci.com/github/linode/manager/badge' alt='Dependency Status'/></a>
   <a href="https://waffle.io/linode/manager"><img src="https://badge.waffle.io/linode/manager.svg?label=ready&title=Agile%20board" alt="Sprint status" /></a>
+  <img src="https://img.shields.io/badge/badges-many-brightgreen.svg" alt="much badges" />
 </p>
 
 This is the new Linode Manager. It provides a web interface for managing your
