@@ -6,7 +6,7 @@ $linode-blue: #4A90E2;
 $linode-dark-blue: darken($linode-blue, 10%);
 $linode-green: #38D377;
 $linode-red: #F24C2B;
-$linode-yellow: #FFFCF0;
+$linode-yellow: #fef2c0;
 $linode-black: #4B4B4B;
 $linode-light-black: #666666;
 $linode-lightest-black: #ACACAC;
@@ -37,11 +37,6 @@ $font-size: .9rem;
 @import 'layout/linode-details';
 @import 'layout/linodes';
 
-@font-face {
-    font-family: Heebo;
-    src: url('/assets/fonts/heebo/Heebo-Regular.ttf') format('truetype');
-}
-
 * {
     transition: background .35s, color .2s, border .1s;
 }
@@ -52,7 +47,6 @@ body {
     min-width: 1007px; /* can fix later */
     color: $linode-black;
     margin-top: $nav-height;
-    font-family: "Heebo", sans-serif;
     font-size: $font-size;
 }
 
