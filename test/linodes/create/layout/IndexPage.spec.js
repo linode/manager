@@ -164,7 +164,7 @@ describe('linodes/create/layout/IndexPage', () => {
 
   it('creates a linode when the form is submitted', async () => {
     const dispatch = sandbox.spy();
-    sandbox.stub(apiLinodes, 'addLinode', d => d);
+    sandbox.stub(apiLinodes, 'createLinode', d => d);
     const page = mount(
       <IndexPage
         dispatch={dispatch}
