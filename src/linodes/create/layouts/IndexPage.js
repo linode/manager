@@ -45,7 +45,7 @@ export class IndexPage extends Component {
     const { dispatch } = this.props;
     const { service, source, datacenter } = this.state;
     try {
-      const { linode } = await dispatch(createLinode({
+      const linode = await dispatch(createLinode({
         root_pass: password, service, source, datacenter, label,
       }));
       // TODO: show user introductory stuff

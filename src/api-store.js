@@ -185,5 +185,6 @@ export function makeCreateItem(action, plural, singular) {
     });
     const json = await response.json();
     dispatch({ type: action, [singular]: json });
+    return json;
   };
 }

@@ -177,7 +177,7 @@ describe('linodes/create/layout/IndexPage', () => {
       />
     );
     dispatch.reset();
-    dispatch.onCall(0).returns(new Promise(accept => accept({ linode: { id: createdLinodeId } })));
+    dispatch.onCall(0).returns({ id: createdLinodeId });
 
     const expectIsDisabled = () => expect(page.find('button[type="submit"]').props().disabled)
       .to.equal(true);
