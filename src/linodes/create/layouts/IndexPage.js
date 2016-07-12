@@ -20,7 +20,7 @@ export class IndexPage extends Component {
       label: '',
       password: '',
       service: '',
-      backups: false,
+      enableBackups: false,
       datacenter: '',
       source: '',
       sourceTab: 0,
@@ -49,6 +49,7 @@ export class IndexPage extends Component {
         root_pass: password, service, source, datacenter, label,
       }));
       // TODO: show user introductory stuff
+      // TODO: enable backups
       dispatch(push('/'));
     } catch (response) {
       const { errors } = await response.json();

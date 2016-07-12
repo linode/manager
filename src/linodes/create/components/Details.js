@@ -6,7 +6,7 @@ export default class Details extends Component {
     super();
     this.renderRow = this.renderRow.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
-    this.state = { password: '', label: '', backups: false };
+    this.state = { password: '', label: '', enableBackups: false };
   }
 
   onSubmit(e) {
@@ -16,7 +16,7 @@ export default class Details extends Component {
     this.props.onSubmit({
       password: this.state.password,
       label: this.state.label,
-      backups: this.state.backups,
+      enableBackups: this.state.enableBackups,
     });
   }
 
@@ -81,8 +81,8 @@ export default class Details extends Component {
         <label>
           <input
             type="checkbox"
-            value={this.state.backups}
-            onChange={e => this.setState({ backups: e.target.value })}
+            value={this.state.enableBackups}
+            onChange={e => this.setState({ enableBackups: e.target.value })}
           />
           Enable ($2.50/month)
         </label>
