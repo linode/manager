@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { Form, Input, Checkbox } from '~/components/Form';
 import HelpButton from '~/components/HelpButton';
 import { getLinode, loadLinode } from '~/linodes/layouts/LinodeDetailPage';
 import { putLinode } from '~/actions/api/linodes';
@@ -12,48 +11,35 @@ export class AlertsPage extends Component {
     this.getLinode = getLinode.bind(this);
     this.loadLinode = loadLinode.bind(this);
     this.renderAlertRow = this.renderAlertRow.bind(this);
-    this.mapInputs = this.mapInputs.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
-  }
-
-  componentDidMount() {
-    this.loadLinode();
-  }
-
-  onSubmit(alerts) {
-    const { dispatch } = this.props;
-    const { id } = this.getLinode();
-    dispatch(putLinode({ id, data: { alerts } }));
-  }
-
-  mapInputs(inputs) {
-    const int = i => parseInt(i, 10);
-    const bool = b => !!b;
-    return {
-      cpu: {
-        threshold: int(inputs['CPU usage']),
-        enabled: bool(inputs['CPU usage-enable']),
-      },
-      io: {
-        threshold: int(inputs['Disk IO rate']),
-        enabled: bool(inputs['Disk IO rate-enable']),
-      },
-      transfer_in: {
-        threshold: int(inputs['Incoming traffic']),
-        enabled: bool(inputs['Incoming traffic-enable']),
-      },
-      transfer_out: {
-        threshold: int(inputs['Outbound traffic']),
-        enabled: bool(inputs['Outbound traffic-enable']),
-      },
-      transfer_quota: {
-        threshold: int(inputs['Transfer quota']),
-        enabled: bool(inputs['Transfer quota-enable']),
-      },
+    this.state = {
+      cpu: { threshold: 0, enabled: false },
+      io: { threshold: 0, enabled: false },
+      transfer_in: { threshold: 0, enabled: false },
+      transfer_out: { threshold: 0, enabled: false },
+      transfer_quota: { threshold: 0, enabled: false },
     };
   }
 
-  renderAlertRow({ name, value: { threshold, enabled }, label, text }) {
+  componentWillMount() {
+    this.loadLinode();
+    this.setState(this.getLinode().alerts);
+  }
+
+  onSubmit() {
+    const { dispatch } = this.props;
+    const { id } = this.getLinode();
+    dispatch(putLinode({ id, data: { alerts: this.state } }));
+  }
+
+  renderAlertRow({ name, value, label, text }) {
+    const { threshold, enabled } = value;
+    const int = i => parseInt(i, 10);
+    const thresholdChange = e =>
+      this.setState({ [value]: { ...value, threshold: int(e.target.value) } });
+    const enabledChange = () =>
+      this.setState({ [value]: { ...value, enabled: !enabled } });
+
     return (
       <div className="row" key={name}>
         <div className="col-sm-2 linode-label-col">
@@ -61,8 +47,23 @@ export class AlertsPage extends Component {
         </div>
         <div className="col-sm-10 linode-content-col">
           <div>
-            <Checkbox label="Enable" name={`${name}-enable`} value={enabled} />
-            <Input type="number" value={threshold} name={name} />
+            <div className="checkbox">
+              <label>
+                <input
+                  type="checkbox"
+                  value={enabled}
+                  onClick={enabledChange}
+                />
+                <span>
+                  Enable
+                </span>
+              </label>
+            </div>
+            <input
+              type="number"
+              value={threshold}
+              onChange={thresholdChange}
+            />
             {label}
           </div>
           <small>Triggered by: {text} exceeding this value</small>
@@ -102,10 +103,10 @@ export class AlertsPage extends Component {
           Alerts
           <HelpButton to="https://google.com" />
         </h2>
-        <Form mapInputs={this.mapInputs} onSubmit={this.onSubmit}>
+        <form onSubmit={this.onSubmit}>
           {alerts.map(this.renderAlertRow)}
           <button type="submit" className="btn btn-primary">Save</button>
-        </Form>
+        </form>
       </div>
     );
   }
