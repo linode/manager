@@ -2,11 +2,12 @@
 //$fa-font-path: "//netdna.bootstrapcdn.com/font-awesome/4.4.0/fonts";
 //@import "bower_components/font-awesome/scss/font-awesome";
 
+$linode-light-blue: #DEEFF5;
 $linode-blue: #4A90E2;
 $linode-dark-blue: darken($linode-blue, 10%);
 $linode-green: #38D377;
 $linode-red: #F24C2B;
-$linode-yellow: #fef2c0;
+$linode-yellow: #FFFCF0;
 $linode-black: #4B4B4B;
 $linode-light-black: #666666;
 $linode-lightest-black: #ACACAC;
@@ -81,7 +82,7 @@ a {
 }
 
 .selected {
-    background: $linode-yellow;
+    background: $linode-light-blue;
 }
 
 .fa {
