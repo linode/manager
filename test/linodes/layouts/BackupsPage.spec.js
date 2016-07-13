@@ -8,7 +8,7 @@ import { testLinode } from '~/../test/data';
 import { BackupsPage } from '~/linodes/layouts/BackupsPage';
 import { UPDATE_LINODE } from '~/actions/api/linodes';
 import * as actions from '~/linodes/actions/detail/backups';
-import { SHOW_MODAL } from '~/actions/modal';
+import { SHOW_MODAL, hideModal } from '~/actions/modal';
 import { SET_ERROR } from '~/actions/errors';
 
 describe('linodes/layouts/BackupsPage', () => {
@@ -416,5 +416,42 @@ describe('linodes/layouts/BackupsPage', () => {
     const restore = sandbox.stub(page.instance(), 'restore');
     page.find('.btn-primary').at(0).simulate('click');
     expect(restore.calledOnce).to.equal(true);
+  });
+
+  describe('overwrite modal', () => {
+    it('dismisses the modal when cancel is pressed', () => {
+      const page = shallow(<BackupsPage
+        dispatch={dispatch}
+        linodes={linodes}
+        params={{ linodeId: 'linode_1235' }}
+        backups={backups}
+      />);
+      const modal = shallow(
+        page.instance().renderModal('linode_1235', 'backup_1234'));
+      const cancel = modal.find('.btn-default');
+      dispatch.reset();
+      cancel.simulate('click');
+      expect(dispatch.calledOnce).to.equal(true);
+      expect(dispatch.calledWith(hideModal())).to.equal(true);
+    });
+
+    it('attempts to restore when continue is clicked', () => {
+      const page = shallow(<BackupsPage
+        dispatch={dispatch}
+        linodes={linodes}
+        params={{ linodeId: 'linode_1235' }}
+        backups={backups}
+      />);
+      const restore = sandbox.stub(page.instance(), 'restore');
+      const modal = shallow(
+        page.instance().renderModal('linode_1235', 'backup_1234'));
+      const proceed = modal.find('.btn-primary');
+      dispatch.reset();
+      proceed.simulate('click');
+      expect(dispatch.calledOnce).to.equal(true);
+      expect(dispatch.calledWith(hideModal())).to.equal(true);
+      expect(restore.calledOnce).to.equal(true);
+      expect(restore.calledWith('linode_1235', 'backup_1234', true)).to.equal(true);
+    });
   });
 });
