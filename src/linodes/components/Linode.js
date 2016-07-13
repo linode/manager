@@ -88,12 +88,12 @@ export function renderBackupStatus(linode) {
       }
       return (
         <span className="backup-status">
-          in approximately {nextBackup.fromNow(true)}
+          First backup in approximately {nextBackup.fromNow(true)}
         </span>);
     }
     return (
       <span className="backup-status">
-        {moment.utc(linode.backups.last_backup).fromNow()}
+        Last backup taken {moment.utc(linode.backups.last_backup).fromNow()}
       </span>);
   }
   return (
@@ -141,9 +141,6 @@ function renderCard(props) {
           <li>
             <span className="fa fa-database"></span>
             <span>
-              {linode.backups.enabled ?
-              `${linode.backups.last_backup !== null ? 'Last' : 'First'} backup: `
-                : null}
               {renderBackupStatus(linode)}
             </span>
           </li>
@@ -184,9 +181,6 @@ function renderRow(props) {
         {renderDatacenterStyle(linode)}
       </td>
       <td>
-        {linode.backups.enabled ?
-        `${linode.backups.last_backup !== null ? 'Last' : 'First'} backup: `
-          : null}
         {renderBackupStatus(linode)}
       </td>
       <td>
