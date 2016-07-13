@@ -82,7 +82,7 @@ export default function makeApiList(config, transform = d => d) {
             const key = Object.keys(_config.subresources)[i];
             const subresource = _config.subresources[key];
             if (_.includes(subresource.actions, action.type)) {
-              const id = action[_config.singular];
+              const id = action[_config.plural];
               const parentItem = state[_config.plural][id];
               const childState = parentItem[key];
               const newState = handleAction(subresource, childState, action);
@@ -118,7 +118,8 @@ export function makeFetchPage(action, ...plurals) {
     const url = _.reduce(pairs, (u, [plural, id]) => `${u}/${plural}/${id || ''}`, '');
     const response = await fetch(token, `${url}?page=${page + 1}`);
     const json = await response.json();
-    dispatch({ type: action, response: json });
+    dispatch(_.reduce(pairs, (u, [plural, id]) => (id ? { ...u, [plural]: id } : u),
+      { type: action, response: json }));
   };
 }
 
@@ -129,7 +130,8 @@ export function makeFetchItem(action, singular, ...plurals) {
     const url = _.reduce(pairs, (u, [plural, id]) => `${u}/${plural}/${id}`, '');
     const response = await fetch(token, url);
     const json = await response.json();
-    dispatch({ type: action, [singular]: json });
+    dispatch(_.reduce(pairs, (u, [plural, id]) => (id ? { ...u, [plural]: id } : u),
+      { type: action, [singular]: json }));
   };
 }
 

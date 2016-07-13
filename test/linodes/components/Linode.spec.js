@@ -1,8 +1,10 @@
 import React from 'react';
 import sinon from 'sinon';
+import moment from 'moment';
+import mockdate from 'mockdate';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
-import { Linode } from '~/linodes/components/Linode';
+import { Linode, renderBackupStatus } from '~/linodes/components/Linode';
 import { testLinode } from '~/../test/data';
 
 describe('linodes/components/Linode', () => {
@@ -120,5 +122,71 @@ describe('linodes/components/Linode', () => {
     linode.find('.linode-power').simulate('click');
 
     expect(onPowerOn.calledOnce).to.equal(true);
+  });
+
+  describe('renderBackupStatus', () => {
+    const linode = {
+      id: 'linode_1234',
+      backups: {
+        enabled: true,
+        last_backup: '2016-07-13T12:30:18',
+        schedule: {
+          day: 'Monday',
+          window: 'W12',
+        },
+      },
+    };
+
+    afterEach(() => {
+      mockdate.reset();
+    });
+
+    it('renders an enable backups button when disabled', () => {
+      const item = shallow(renderBackupStatus({
+        ...linode,
+        backups: {
+          ...linode.backups,
+          enabled: false,
+        },
+      }));
+      expect(item.find('Link')).to.exist;
+      expect(item.find('Link').props().to)
+        .to.equal('/linodes/linode_1234/backups');
+    });
+
+    it('renders the last backup taken', () => {
+      const item = shallow(renderBackupStatus(linode));
+      expect(item.contains(<span className="backup-status">
+        Last backup taken {moment.utc(linode.backups.last_backup).fromNow()}
+      </span>)).to.equal(true);
+    });
+
+    it('renders the projected time of the first backup', () => {
+      const time = '2016-07-13T10:00:00';
+      mockdate.set(moment.utc(time));
+      const item = shallow(renderBackupStatus({
+        ...linode,
+        backups: {
+          ...linode.backups,
+          last_backup: null,
+        },
+      }));
+      expect(item.find('span').text()).to.equal(
+        `First backup in approximately ${moment('2016-07-13T12:00:00').fromNow(true)}`);
+    });
+
+    it('renders the projected time of the first backup when its window is < $NOW', () => {
+      const time = '2016-07-13T18:00:00';
+      mockdate.set(moment.utc(time));
+      const item = shallow(renderBackupStatus({
+        ...linode,
+        backups: {
+          ...linode.backups,
+          last_backup: null,
+        },
+      }));
+      expect(item.find('span').text()).to.equal(
+        `First backup in approximately ${moment('2016-07-14T12:00:00').fromNow(true)}`);
+    });
   });
 });

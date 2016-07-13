@@ -1,5 +1,6 @@
 import React from 'react';
 import sinon from 'sinon';
+import { push } from 'react-router-redux';
 import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 import * as fetch from '~/fetch';
@@ -7,6 +8,8 @@ import { testLinode } from '~/../test/data';
 import { BackupsPage } from '~/linodes/layouts/BackupsPage';
 import { UPDATE_LINODE } from '~/actions/api/linodes';
 import * as actions from '~/linodes/actions/detail/backups';
+import { SHOW_MODAL, hideModal } from '~/actions/modal';
+import { SET_ERROR } from '~/actions/errors';
 
 describe('linodes/layouts/BackupsPage', () => {
   const sandbox = sinon.sandbox.create();
@@ -187,7 +190,7 @@ describe('linodes/layouts/BackupsPage', () => {
     b.find('.backup').first().simulate('click');
     expect(dispatch.calledOnce).to.equal(true);
     expect(dispatch.firstCall.args[0])
-      .to.deep.equal(actions.selectBackup('backup_25'));
+      .to.deep.equal(actions.selectBackup('backup_54778593'));
   });
 
   it('dispatches a SELECT_TARGET_LINODE action when "existing linode" is checked', () => {
@@ -226,6 +229,42 @@ describe('linodes/layouts/BackupsPage', () => {
       .to.deep.equal(actions.selectTargetLinode(''));
   });
 
+  it('dispatches a SELECT_TARGET_LINODE action when "this linode" is checked', () => {
+    const page = shallow(
+      <BackupsPage
+        dispatch={dispatch}
+        linodes={linodes}
+        params={{ linodeId: 'linode_1235' }}
+        backups={backups}
+      />);
+    const existing = page.find('.restore')
+      .find('input[type="radio"]')
+      .at(0);
+    dispatch.reset();
+    existing.simulate('change', { target: { checked: true } });
+    expect(dispatch.calledOnce).to.equal(true);
+    expect(dispatch.firstCall.args[0])
+      .to.deep.equal(actions.selectTargetLinode('linode_1235'));
+  });
+
+  it('dispatches a SELECT_TARGET_LINODE action when "this linode" is unchecked', () => {
+    const page = shallow(
+      <BackupsPage
+        dispatch={dispatch}
+        linodes={linodes}
+        params={{ linodeId: 'linode_1235' }}
+        backups={backups}
+      />);
+    const existing = page.find('.restore')
+      .find('input[type="radio"]')
+      .at(0);
+    dispatch.reset();
+    existing.simulate('change', { target: { checked: false } });
+    expect(dispatch.calledOnce).to.equal(true);
+    expect(dispatch.firstCall.args[0])
+      .to.deep.equal(actions.selectTargetLinode(''));
+  });
+
   it('dispatches a SELECT_TARGET_LINODE action when "new linode" is unchecked', () => {
     const page = shallow(
       <BackupsPage
@@ -236,7 +275,7 @@ describe('linodes/layouts/BackupsPage', () => {
       />);
     const existing = page.find('.restore')
       .find('input[type="radio"]')
-      .first();
+      .at(1);
     dispatch.reset();
     existing.simulate('change', { target: { checked: false } });
     expect(dispatch.calledOnce).to.equal(true);
@@ -254,7 +293,7 @@ describe('linodes/layouts/BackupsPage', () => {
       />);
     const existing = page.find('.restore')
       .find('input[type="radio"]')
-      .first();
+      .at(1);
     dispatch.reset();
     existing.simulate('change', { target: { checked: true } });
     expect(dispatch.calledOnce).to.equal(true);
@@ -276,5 +315,143 @@ describe('linodes/layouts/BackupsPage', () => {
     expect(dispatch.calledOnce).to.equal(true);
     expect(dispatch.firstCall.args[0])
       .to.deep.equal(actions.selectTargetLinode('linode_1236'));
+  });
+
+  it('restores backups when asked to', async () => {
+    const page = shallow(<BackupsPage
+      dispatch={dispatch}
+      linodes={linodes}
+      params={{ linodeId: 'linode_1235' }}
+      backups={{
+        ...backups,
+        selectedBackup: 'backup_26',
+      }}
+    />);
+    await page.instance().restore('linode_1234', 'backup_26');
+    expect(dispatch.calledTwice);
+    expect(dispatch.secondCall.args[0]).to.deep.equal(push('/linodes/linode_1234'));
+    const func = dispatch.firstCall.args[0];
+    expect(func).to.be.a('function');
+    // Assert that func does the needful
+    const fetchStub = sandbox.stub(fetch, 'fetch')
+      .returns({ json: () => 'asdf' });
+    const getState = sinon.stub().returns({ authentication: { token: 'token' } });
+    dispatch.reset();
+    expect(await func(dispatch, getState)).to.equal('asdf');
+    expect(dispatch.callCount).to.equal(0);
+    expect(fetchStub.calledOnce).to.equal(true);
+    expect(fetchStub.calledWith('token',
+      '/linodes/linode_1235/backups/backup_1234/restore'));
+    const data = fetchStub.firstCall.args[2];
+    expect(data.method).to.equal('POST');
+    expect(JSON.parse(data.body)).to.deep.equal({
+      linode: 'linode_1234',
+      overwrite: false,
+    });
+  });
+
+  it('handles overwrite errors restoring backups', async () => {
+    const _dispatch = sandbox.stub();
+    const page = shallow(<BackupsPage
+      dispatch={_dispatch}
+      linodes={linodes}
+      params={{ linodeId: 'linode_1235' }}
+      backups={{
+        ...backups,
+        selectedBackup: 'backup_26',
+      }}
+    />);
+    _dispatch.onCall(0).throws({
+      json: () => ({
+        errors: [
+          {
+            reason: 'Not enough unallocated space',
+          },
+        ],
+      }),
+    });
+    await page.instance().restore('linode_1234', 'backup_26');
+    expect(_dispatch.callCount).to.equal(2);
+    expect(_dispatch.secondCall.args[0]).to.have.property('type')
+      .which.equals(SHOW_MODAL);
+  });
+
+  it('handles other kinds of errors restoring backups', async () => {
+    const _dispatch = sandbox.stub();
+    const page = shallow(<BackupsPage
+      dispatch={_dispatch}
+      linodes={linodes}
+      params={{ linodeId: 'linode_1235' }}
+      backups={{
+        ...backups,
+        selectedBackup: 'backup_26',
+      }}
+    />);
+    _dispatch.onCall(0).throws({
+      headers: { get: () => 'application/json' },
+      json: () => ({
+        errors: [],
+      }),
+    });
+    await page.instance().restore('linode_1234', 'backup_26');
+    expect(_dispatch.callCount).to.equal(2);
+    const func = _dispatch.secondCall.args[0];
+    expect(func).to.be.a('function');
+    _dispatch.reset();
+    await func(_dispatch);
+    expect(_dispatch.firstCall.args[0]).to.have.property('type')
+      .which.equals(SET_ERROR);
+  });
+
+  it('restores backups when asked to', async () => {
+    const page = shallow(<BackupsPage
+      dispatch={dispatch}
+      linodes={linodes}
+      params={{ linodeId: 'linode_1235' }}
+      backups={{
+        ...backups,
+        selectedBackup: 'backup_26',
+      }}
+    />);
+    const restore = sandbox.stub(page.instance(), 'restore');
+    page.find('.btn-primary').at(0).simulate('click');
+    expect(restore.calledOnce).to.equal(true);
+  });
+
+  describe('overwrite modal', () => {
+    it('dismisses the modal when cancel is pressed', () => {
+      const page = shallow(<BackupsPage
+        dispatch={dispatch}
+        linodes={linodes}
+        params={{ linodeId: 'linode_1235' }}
+        backups={backups}
+      />);
+      const modal = shallow(
+        page.instance().renderModal('linode_1235', 'backup_1234'));
+      const cancel = modal.find('.btn-default');
+      dispatch.reset();
+      cancel.simulate('click');
+      expect(dispatch.calledOnce).to.equal(true);
+      expect(dispatch.calledWith(hideModal())).to.equal(true);
+    });
+
+    it('attempts to restore when continue is clicked', () => {
+      const page = shallow(<BackupsPage
+        dispatch={dispatch}
+        linodes={linodes}
+        params={{ linodeId: 'linode_1235' }}
+        backups={backups}
+      />);
+      const restore = sandbox.stub(page.instance(), 'restore');
+      const modal = shallow(
+        page.instance().renderModal('linode_1235', 'backup_1234'));
+      const proceed = modal.find('.btn-primary');
+      dispatch.reset();
+      proceed.simulate('click');
+      expect(dispatch.calledOnce).to.equal(true);
+      expect(dispatch.calledWith(hideModal())).to.equal(true);
+      expect(restore.calledOnce).to.equal(true);
+      expect(restore.calledWith('linode_1235', 'backup_1234', true)).to.equal(true);
+    });
   });
 });
