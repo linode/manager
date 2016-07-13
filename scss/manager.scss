@@ -2,6 +2,7 @@
 //$fa-font-path: "//netdna.bootstrapcdn.com/font-awesome/4.4.0/fonts";
 //@import "bower_components/font-awesome/scss/font-awesome";
 
+$linode-light-blue: #DEEFF5;
 $linode-blue: #4A90E2;
 $linode-dark-blue: darken($linode-blue, 10%);
 $linode-green: #38D377;
@@ -37,11 +38,6 @@ $font-size: .9rem;
 @import 'layout/linode-details';
 @import 'layout/linodes';
 
-@font-face {
-    font-family: Heebo;
-    src: url('/assets/fonts/heebo/Heebo-Regular.ttf') format('truetype');
-}
-
 * {
     transition: background .35s, color .2s, border .1s;
 }
@@ -52,7 +48,6 @@ body {
     min-width: 1007px; /* can fix later */
     color: $linode-black;
     margin-top: $nav-height;
-    font-family: "Heebo", sans-serif;
     font-size: $font-size;
 }
 
@@ -87,7 +82,7 @@ a {
 }
 
 .selected {
-    background: $linode-yellow;
+    background: $linode-light-blue;
 }
 
 .fa {
