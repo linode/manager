@@ -4,20 +4,18 @@ export const TOGGLE_DETAILS = '@@errors/TOGGLE_DETAILS';
 /**
  * Sets the global error state from the given HTTP response.
  * @param {Response} response - the HTTP response from the server.
- * @param {Object} _json - Set this if you've already read the JSON from the response.
+ * @param {Object} json - Set this if you've already read the JSON from the response.
  */
-export function setError(response, _json = null) {
+export function setError(response, json = null) {
   return async (dispatch) => {
     const type = response.headers.get('Content-Type');
-    let json = _json;
-    if (!_json && type === 'application/json') {
-      json = await response.json();
-    }
+    const _json = !json && type === 'application/json'
+      ? await response.json() : null;
     dispatch({
       type: SET_ERROR,
       status: response.statusCode,
       statusText: response.statusText,
-      json,
+      json: _json,
     });
   };
 }
