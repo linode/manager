@@ -18,14 +18,14 @@
 
 .distro, .datacenter, .plan {
     $width: 11rem;
-    border: $linode-border;
+    border: $border;
     width: $width;
     margin: 1rem;
     cursor: pointer;
 
     header {
-        border-bottom: $linode-border;
-        background-color: $linode-light-gray;
+        border-bottom: $border;
+        background-color: $light-gray;
         line-height: inherit;
         padding: inherit;
 
@@ -34,7 +34,7 @@
             text-align: center;
             overflow: hidden;
             line-height: $input-height;
-            color: $linode-black;
+            color: $black;
 
             &.dropdown-item {
                 font-size: $font-size;
@@ -68,15 +68,15 @@
     }
 
     &:not(.selected) > div:hover {
-        background-color: $linode-gray;
+        background-color: $gray;
     }
 
     &.selected {
-        background-color: $linode-light-blue;
+        background-color: $light-blue;
     }
 
     .dropdown-menu {
-        border: $linode-border;
+        border: $border;
         border-radius: 0;
         min-width: $width;
         left: -2px;

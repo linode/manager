@@ -104,10 +104,10 @@ export class LinodeGeneral extends Component {
         <div className="col-sm-5 left">
           <h2>Summary</h2>
           <div className="row linode-ips">
-            <div className="col-sm-4 linode-label-col left">
+            <div className="col-sm-4 label-col left">
               IP Addresses
             </div>
-            <div className="col-sm-8 linode-content-col right">
+            <div className="col-sm-8 content-col right">
               <ul className="list-unstyled">
                 <li> {ipv4} </li>
                 <li> {ipv6} </li>
@@ -116,38 +116,38 @@ export class LinodeGeneral extends Component {
             </div>
           </div>
           <div className="row linode-backups">
-            <div className="col-sm-4 linode-label-col left">
+            <div className="col-sm-4 label-col left">
               Backups
             </div>
-            <div className="col-sm-8 linode-content-col right">
+            <div className="col-sm-8 content-col right">
               {this.renderBackupStatus(linode)}
             </div>
           </div>
           {plan ?
             <div className="row linode-plan">
-              <div className="col-sm-4 linode-label-col left">
+              <div className="col-sm-4 label-col left">
                 Plan
               </div>
-              <div className="col-sm-8 linode-content-col right">
+              <div className="col-sm-8 content-col right">
                 {plan}
               </div>
             </div>
             : null
           }
           <div className="row linode-datacenter">
-            <div className="col-sm-4 linode-label-col left">
+            <div className="col-sm-4 label-col left">
               Datacenter
             </div>
-            <div className="col-sm-8 linode-content-col right">
+            <div className="col-sm-8 content-col right">
               {this.renderDatacenterStyle(linode)}
             </div>
           </div>
           {linode.distribution != null ?
             <div className="row linode-distro">
-              <div className="col-sm-4 linode-label-col left">
+              <div className="col-sm-4 label-col left">
                 Distribution
               </div>
-              <div className="col-sm-8 linode-content-col right">
+              <div className="col-sm-8 content-col right">
                 {this.renderDistroStyle(linode)}
               </div>
             </div>
@@ -157,12 +157,12 @@ export class LinodeGeneral extends Component {
         <div className="col-sm-7 right">
           <h2>Access</h2>
           <div className="row linode-ssh">
-            <div className="col-sm-3 linode-label-col left">
+            <div className="col-sm-3 label-col left">
               <label className="form-label" htmlFor="ssh-input">
                 SSH
               </label>
             </div>
-            <div className="col-sm-9 linode-content-col right">
+            <div className="col-sm-9 content-col right">
               <div className="input-group">
                 <input
                   type="text"
@@ -178,12 +178,12 @@ export class LinodeGeneral extends Component {
             </div>
           </div>
           <div className="row linode-lish">
-            <div className="col-sm-3 linode-label-col left">
+            <div className="col-sm-3 label-col left">
               <label className="form-label" htmlFor="lish-input">
                 Text console
               </label>
             </div>
-            <div className="col-sm-9 linode-content-col right">
+            <div className="col-sm-9 content-col right">
               <div className="input-group">
                 <input
                   type="text"
@@ -203,12 +203,12 @@ export class LinodeGeneral extends Component {
             </div>
           </div>
           <div className="row linode-glish">
-            <div className="col-sm-3 linode-label-col left">
+            <div className="col-sm-3 label-col left">
               <label className="form-label" htmlFor="glish-button">
                 Graphical console
               </label>
             </div>
-            <div className="col-sm-9 linode-content-col right">
+            <div className="col-sm-9 content-col right">
               <div className="input-group-btn">
                 <button type="button" id="glish-button" className="btn btn-default">Open</button>
               </div>

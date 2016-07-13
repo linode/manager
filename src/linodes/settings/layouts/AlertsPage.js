@@ -42,10 +42,10 @@ export class AlertsPage extends Component {
 
     return (
       <div className="row" key={name}>
-        <div className="col-sm-2 linode-label-col">
+        <div className="col-sm-2 label-col">
           <span>{name}:</span>
         </div>
-        <div className="col-sm-10 linode-content-col">
+        <div className="col-sm-10 content-col">
           <div>
             <div className="checkbox">
               <label>

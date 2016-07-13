@@ -2,24 +2,24 @@
 //$fa-font-path: "//netdna.bootstrapcdn.com/font-awesome/4.4.0/fonts";
 //@import "bower_components/font-awesome/scss/font-awesome";
 
-$linode-light-blue: #DEEFF5;
-$linode-blue: #4A90E2;
-$linode-dark-blue: darken($linode-blue, 10%);
-$linode-green: #38D377;
-$linode-red: #F24C2B;
-$linode-yellow: #FFFCF0;
-$linode-black: #4B4B4B;
-$linode-light-black: #666666;
-$linode-lightest-black: #ACACAC;
-$linode-dark-gray: #CCCCCC;
-$linode-gray: #F3F3F3;
-$linode-light-gray: #FBFBFB;
-$linode-white: #FEFEFE;
-$linode-transparent: rgba(0, 0, 0, 0.5);
+$light-blue: #DEEFF5;
+$blue: #4A90E2;
+$dark-blue: darken($blue, 10%);
+$green: #38D377;
+$red: #F24C2B;
+$yellow: #FFFCF0;
+$black: #4B4B4B;
+$light-black: #666666;
+$lightest-black: #ACACAC;
+$dark-gray: #CCCCCC;
+$gray: #F3F3F3;
+$light-gray: #FBFBFB;
+$white: #FEFEFE;
+$transparent: rgba(0, 0, 0, 0.5);
 
-$border-gray: $linode-dark-gray;
-$linode-border: 1px solid $border-gray;
-$box-shadow: 0px 2px 4px 0px $linode-transparent;
+$border-gray: $dark-gray;
+$border: 1px solid $border-gray;
+$box-shadow: 0px 2px 4px 0px $transparent;
 
 $main-padding-tb: 1rem;
 $main-padding-lr: 2rem;
@@ -43,10 +43,10 @@ $font-size: .9rem;
 }
 
 body {
-    background: $linode-gray;
+    background: $gray;
     height: 100%;
     min-width: 1007px; /* can fix later */
-    color: $linode-black;
+    color: $black;
     margin-top: $nav-height;
     font-size: $font-size;
 }
@@ -55,7 +55,7 @@ h1, h2, h3, h4, h5, h6 {
     margin: 0;
     font-weight: normal;
     line-height: normal;
-    color: $linode-black;
+    color: $black;
 }
 
 h1 {
@@ -71,18 +71,18 @@ h3 {
 }
 
 a {
-    color: $linode-blue;
+    color: $blue;
     text-decoration: none;
 
     &:hover,
     &:active,
     &:focus {
-        color: $linode-dark-blue;
+        color: $dark-blue;
     }
 }
 
 .selected {
-    background: $linode-light-blue;
+    background: $light-blue;
 }
 
 .fa {
@@ -99,20 +99,20 @@ a {
 .header-info nav {
     padding: 0 $main-padding-lr;
     height: $info-nav-height;
-    background: $linode-black;
+    background: $black;
     font-size: .75rem;
     line-height: $info-nav-height;
 
     .new {
-        color: $linode-black;
+        color: $black;
         text-transform: uppercase;
-        background: $linode-white;
+        background: $white;
         padding: 1px 4px;
         font-size: .6rem;
     }
 
     a, .fa {
-        color: $linode-white;
+        color: $white;
         text-decoration: none;
         padding-left: 10px;
     }
@@ -172,7 +172,7 @@ a {
     }
 
     a {
-        color: $linode-white;
+        color: $white;
         line-height: $main-nav-height;
         text-decoration: none;
     }
@@ -180,7 +180,7 @@ a {
     a:hover,
     a:active,
     a:focus {
-        color: $linode-gray;
+        color: $gray;
         text-decoration: none;
     }
 
@@ -200,9 +200,9 @@ a {
         line-height: $main-nav-height;
 
         .nav-notifications {
-            background: $linode-green;
+            background: $green;
             padding: 3px 6px;
-            color: $linode-white;
+            color: $white;
             font-size: 10px;
             margin-right: 15px;
         }
@@ -223,12 +223,12 @@ a {
     left: 0;
     bottom: 0;
     width: $sidebar-width;
-    background: $linode-white;
-    border-right: $linode-border;
+    background: $white;
+    border-right: $border;
     text-align: center;
 
     a {
-        color: $linode-black;
+        color: $black;
         text-decoration: none !important;
     }
 
@@ -247,7 +247,7 @@ a {
         li:focus {
             a,
             .fa {
-                color: $linode-green;
+                color: $green;
             }
         }
 
@@ -282,10 +282,10 @@ input, .btn {
 .input-group {
     input {
         margin: 0;
-        border: $linode-border;
+        border: $border;
         border-radius: 0;
         &[readonly] {
-            background-color: $linode-white;
+            background-color: $white;
             width: 12.5rem;
         }
     }
@@ -314,11 +314,11 @@ hr {
 .btn {
     text-decoration: none;
     border-radius: 0;
-    border: $linode-border;
-    background: $linode-light-gray;
+    border: $border;
+    background: $light-gray;
 
     &.btn-default {
-        color: $linode-black;
+        color: $black;
     }
 
     .fa {
@@ -328,17 +328,17 @@ hr {
     &:hover,
     &:active,
     &:focus {
-        background: $linode-gray;
-        color: $linode-black;
+        background: $gray;
+        color: $black;
     }
 
     &.btn-help, &.btn-warning {
         $size: 24px;
         .fa {
-            color: $linode-lightest-black;
+            color: $lightest-black;
             line-height: $size;
         }
-        background-color: $linode-gray;
+        background-color: $gray;
         font-size: $size / 2;
         line-height: $size - 2px;
         padding: 0 0 0 0.1rem;
@@ -351,11 +351,11 @@ hr {
         text-indent: -0.5px;
 
         &:hover {
-            background-color: $linode-blue;
-            border: $linode-blue;
+            background-color: $blue;
+            border: $blue;
 
             .fa {
-                color: $linode-white;
+                color: $white;
                 line-height: $size + 2px;
             }
         }
@@ -367,24 +367,24 @@ hr {
 
     &.btn-warning {
         .fa {
-            color: $linode-white;
+            color: $white;
         }
-        background-color: $linode-red;
-        border-color: $linode-red;
+        background-color: $red;
+        border-color: $red;
 
         &:hover {
-            background-color: $linode-white;
-            border: $linode-white;
+            background-color: $white;
+            border: $white;
 
             .fa {
-                color: $linode-red;
+                color: $red;
             }
         }
     }
 
     &.btn-primary {
-        background: $linode-blue;
-        border: 1px solid $linode-blue;
+        background: $blue;
+        border: 1px solid $blue;
 
         &:hover,
         &:active,
@@ -396,24 +396,24 @@ hr {
         &:not([disabled]):active,
         &:not([disabled]):focus {
             background: white;
-            color: $linode-blue;
+            color: $blue;
         }
     }
 
     &.btn-danger {
-        background: $linode-red;
-        border: 1px solid $linode-red;
+        background: $red;
+        border: 1px solid $red;
     }
 
     &.btn-danger-outline {
-        border-color: $linode-red;
+        border-color: $red;
         background: transparent;
-        color: $linode-red;
+        color: $red;
 
         &:hover,
         &:active,
         &:focus {
-            background: $linode-red;
+            background: $red;
             color: white;
         }
     }
@@ -438,7 +438,7 @@ input[type=checkbox] {
 }
 
 .input-group-addon {
-    background: $linode-light-gray;
+    background: $light-gray;
     height: $input-height;
     line-height: calc(#{$input-height}-2px});
     padding: $input-padding;
@@ -489,22 +489,22 @@ input[type=checkbox] {
     &:hover,
     &:active,
     &:focus {
-        color: $linode-blue;
+        color: $blue;
     }
 }
 
-.row:last-of-type > .linode-content-col {
+.row:last-of-type > .content-col {
     margin-bottom: 0;
 }
 
-.linode-content-col {
+.content-col {
     margin-bottom: .75rem;
 
     .text-muted {
         font-size: 70%;
     }
     li a {
-        color: $linode-black;
+        color: $black;
         text-decoration: none;
     }
     img {
@@ -513,7 +513,7 @@ input[type=checkbox] {
 }
 
 .text-danger {
-    color: $linode-red;
+    color: $red;
 }
 
 .centered {

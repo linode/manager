@@ -1,6 +1,6 @@
 .card {
-    background: $linode-white;
-    border: $linode-border;
+    background: $white;
+    border: $border;
     padding: 15px;
     position: relative;
     border-radius: 0;
@@ -23,9 +23,9 @@
 
     header {
         $padding: $main-padding-tb * 1.5;
-        background-color: $linode-light-gray;
+        background-color: $light-gray;
         padding: $padding $main-padding-lr;
-        border-bottom: $linode-border;
+        border-bottom: $border;
         line-height: 2.2rem;
 
         &.tabs {
@@ -62,17 +62,17 @@
                 background: transparent;
                 padding: 0;
                 border: none;
-                border-bottom: $linode-border;
+                border-bottom: $border;
                 display: block;
                 width: 100%;
 
                 &:focus {
                     outline: none;
-                    border-bottom-color: $linode-dark-gray;
+                    border-bottom-color: $dark-gray;
                 }
 
                 &.has-error {
-                    border-bottom-color: $linode-red;
+                    border-bottom-color: $red;
                 }
             }
 
@@ -96,14 +96,14 @@
 
     .react-tabs {
         [role=tablist] {
-            background-color: $linode-light-gray;
+            background-color: $light-gray;
             padding: 0 $main-padding-lr;
             border-color: $border-gray;
             margin-bottom: 0;
         }
 
         [role=tab] {
-            color: $linode-light-black;
+            color: $light-black;
             border-radius: 0;
             padding: 3px 12px;
 
@@ -113,7 +113,7 @@
 
             &[selected],
             &:hover {
-                color: $linode-black;
+                color: $black;
                 border-color: $border-gray;
                 background: white;
                 border-bottom: 0;
@@ -150,7 +150,7 @@
             [role=tab] {
                 border: none;
                 background: transparent;
-                color: $linode-blue;
+                color: $blue;
 
                 &:first-of-type {
                     padding-left: 0;
@@ -159,7 +159,7 @@
                 /* There must be a bug in scss because when this was [selected]
                  * it duplicated the code in line 36 and this code did not show up. */
                 &[aria-selected=true] {
-                    color: $linode-black;
+                    color: $black;
                 }
             }
         }

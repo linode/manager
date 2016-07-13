@@ -1,19 +1,19 @@
 .linode-add {
     &.btn {
-        background: $linode-blue;
-        border-color: $linode-blue;
+        background: $blue;
+        border-color: $blue;
     }
 
     &:hover,
     &:active,
     &:focus {
-        background: $linode-dark-blue !important;
+        background: $dark-blue !important;
     }
 
     span {
         position: relative;
         top: -1px;
-        color: $linode-white !important;
+        color: $white !important;
     }
 
     .fa-plus {

@@ -6,7 +6,7 @@
     bottom: 0;
     left: 0;
     right: 0;
-    background: $linode-transparent;
+    background: $transparent;
 
     &.open {
         display: initial;
@@ -20,11 +20,11 @@
     margin-left: -200px;
     margin-top: $main-padding-tb;
     box-shadow: $box-shadow;
-    background: $linode-white;
+    background: $white;
 }
 
 .modal-header {
-    background: $linode-gray;
+    background: $gray;
     padding: $main-padding-tb $main-padding-lr;
     border-bottom: 1px solid #ccc;
 }
