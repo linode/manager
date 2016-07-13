@@ -22,10 +22,10 @@ export class LinodeNetworking extends Component {
     const dc = linode.datacenter.id;
     const nameservers = (
       <div className="row">
-        <div className="col-sm-4 linode-label-col left">
+        <div className="col-sm-4 label-col left">
           Nameservers
         </div>
-        <div className="col-sm-8 linode-content-col right">
+        <div className="col-sm-8 content-col right">
           <ul className="list-unstyled">
             {
               isIPv4 ?
@@ -58,10 +58,10 @@ export class LinodeNetworking extends Component {
           </div>
         </div>
         <div className="row">
-          <div className="col-sm-4 linode-label-col left">
+          <div className="col-sm-4 label-col left">
             Inet
           </div>
-          <div className="col-sm-8 linode-content-col right">
+          <div className="col-sm-8 content-col right">
             <ul className="list-unstyled">
               {this.ipList(ipv4.map(
                 ip => `${ip} / 24 ( li-${ip.split('.')[3]}.members.linode.com )`
@@ -70,10 +70,10 @@ export class LinodeNetworking extends Component {
           </div>
         </div>
         <div className="row">
-          <div className="col-sm-4 linode-label-col left">
+          <div className="col-sm-4 label-col left">
             Gateway
           </div>
-          <div className="col-sm-8 linode-content-col right">
+          <div className="col-sm-8 content-col right">
             {ipv4[0].substring(0, ipv4[0].lastIndexOf('.'))}.1
           </div>
         </div>
@@ -97,18 +97,18 @@ export class LinodeNetworking extends Component {
           </div>
         </div>
         <div className="row">
-          <div className="col-sm-4 linode-label-col left">
+          <div className="col-sm-4 label-col left">
             Inet
           </div>
-          <div className="col-sm-8 linode-content-col right">
+          <div className="col-sm-8 content-col right">
             {this.getLinode().ip_addresses['public'].ipv6} / 64
           </div>
         </div>
         <div className="row">
-          <div className="col-sm-4 linode-label-col left">
+          <div className="col-sm-4 label-col left">
             Gateway
           </div>
-          <div className="col-sm-8 linode-content-col right">
+          <div className="col-sm-8 content-col right">
             {linkLocal.split(':')[0]}::1
           </div>
         </div>
@@ -169,10 +169,10 @@ export class LinodeNetworking extends Component {
             <div className="col-sm-6 left">
               {ipPrivate[0] ? (
                 <div className="row">
-                  <div className="col-sm-4 linode-label-col left">
+                  <div className="col-sm-4 label-col left">
                     Inet
                   </div>
-                  <div className="col-sm-8 linode-content-col right">
+                  <div className="col-sm-8 content-col right">
                     {this.ipList(ipPrivate.map(
                       ip => `${ip} / 17`
                     ))}
@@ -180,16 +180,16 @@ export class LinodeNetworking extends Component {
                 </div>
               ) : (
                 <div className="row">
-                  <div className="col-sm-12 linode-content-col right">
+                  <div className="col-sm-12 content-col right">
                     {"No private IP addresses."}
                   </div>
                 </div>
               )}
               <div className="row">
-                <div className="col-sm-4 linode-label-col left">
+                <div className="col-sm-4 label-col left">
                   Link-local IP
                 </div>
-                <div className="col-sm-8 linode-content-col right">
+                <div className="col-sm-8 content-col right">
                   {linkLocal}
                 </div>
               </div>

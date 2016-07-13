@@ -18,16 +18,16 @@
 }
 
 .linode-status {
-    color: $linode-blue;
+    color: $blue;
     animation: pulse 1.5s infinite;
 
     &.running {
-        color: $linode-green;
+        color: $green;
         animation: none;
     }
 
     &.offline {
-        color: $linode-red;
+        color: $red;
         animation: none;
     }
 }
@@ -35,27 +35,27 @@
 .linode-power {
     cursor: pointer;
     cursor: hand;
-    border: $linode-border;
+    border: $border;
     border-color: transparent;
 
     &.fa {
-        color: $linode-lightest-black;
+        color: $lightest-black;
     }
 }
 
 .linode-power:hover,
 .linode-power:focus,
 .linode-power:active {
-    color: $linode-light-black;
+    color: $light-black;
 }
 
 .linode.card {
     padding: 0;
 
     .linode-header {
-        border-bottom: $linode-border;
+        border-bottom: $border;
         padding: 10px 15px;
-        background: $linode-light-gray;
+        background: $light-gray;
 
         * {
              line-height: 22px;
@@ -93,8 +93,8 @@ table.linodes {
     width: 100%;
 
     thead {
-        background: $linode-white;
-        border: $linode-border;
+        background: $white;
+        border: $border;
         border-bottom: 0;
         height: 35px;
         line-height: 35px;
@@ -104,19 +104,19 @@ table.linodes {
         }
 
         th:last-of-type {
-            border-right: $linode-border;
+            border-right: $border;
         }
     }
 }
 
 .linode.row {
-    border: $linode-border;
+    border: $border;
     height: 35px;
     line-height: 35px;
     margin: 0 15px;
 
     &:not(.selected) {
-        background: $linode-white;
+        background: $white;
     }
 
     .linode-header,

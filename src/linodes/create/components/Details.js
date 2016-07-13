@@ -23,8 +23,8 @@ export default class Details extends Component {
   renderRow({ label, content, errors }) {
     return (
       <div className="row" key={label}>
-        <div className="col-sm-2 linode-label-col">{label}:</div>
-        <div className="col-sm-10 linode-content-col">
+        <div className="col-sm-2 label-col">{label}:</div>
+        <div className="col-sm-10 content-col">
           {content}
           {errors ? (
             <div className="text-right">
