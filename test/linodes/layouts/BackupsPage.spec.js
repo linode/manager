@@ -109,22 +109,7 @@ describe('linodes/layouts/BackupsPage', () => {
     enableLinodeBackup.restore();
   });
 
-  it('calls cancel backups on click', () => {
-    const page = mount(
-      <BackupsPage
-        dispatch={dispatch}
-        linodes={linodes}
-        params={{ linodeId: 'linode_1235' }}
-        backups={backups}
-      />);
-
-    const cancelLinodeBackup = sandbox.stub(page.instance(), 'cancelLinodeBackup');
-    const cancelButton = page.find('.btn-danger-outline');
-    cancelButton.simulate('click');
-
-    expect(cancelLinodeBackup.calledOnce).to.equal(true);
-    cancelLinodeBackup.restore();
-  });
+  it('calls cancel backups on click');
 
   it('renders the manual backup UI', () => {
     const page = shallow(

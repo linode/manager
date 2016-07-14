@@ -8,7 +8,7 @@ export const UPDATE_BACKUPS = '@@backups/UPDATE_BACKUPS';
 export const UPDATE_BACKUP = '@@backups/UPDATE_BACKUP';
 
 export const fetchBackups = makeFetchPage(UPDATE_BACKUPS, 'linodes', 'backups');
-export const updateBackup = makeFetchItem(UPDATE_BACKUP, 'backup', 'linodes', 'backups');
+export const fetchBackup = makeFetchItem(UPDATE_BACKUP, 'backup', 'linodes', 'backups');
 
 function makeBackupAction(action) {
   return (id) => async (dispatch, getState) => {

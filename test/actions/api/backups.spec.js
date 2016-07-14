@@ -4,7 +4,7 @@ import {
   UPDATE_BACKUP,
   UPDATE_BACKUPS,
   fetchBackups,
-  updateBackup,
+  fetchBackup,
   enableBackup,
   cancelBackup,
 } from '~/actions/api/backups';
@@ -47,16 +47,17 @@ describe('actions/api/backups', async () => {
       auth.token, '/linodes/foo_1/backups/?page=1')).to.equal(true);
     expect(dispatch.calledWith({
       type: UPDATE_BACKUPS,
+      linodes: 'foo_1',
       response: mockResponse,
     })).to.equal(true);
   });
 
-  it('should update backup', async () => {
+  it('should fetch backup', async () => {
     const dispatch = getDispatch();
     const fetchStub = getFetchStub(mockResponse.backups[0]);
     const getState = getGetState();
 
-    const f = updateBackup('linode_1', 'backup_1');
+    const f = fetchBackup('linode_1', 'backup_1');
 
     await f(dispatch, getState);
 
@@ -64,7 +65,9 @@ describe('actions/api/backups', async () => {
       auth.token, '/linodes/linode_1/backups/backup_1')).to.equal(true);
     expect(dispatch.calledWith({
       type: UPDATE_BACKUP,
+      linodes: 'linode_1',
       backup: mockResponse.backups[0],
+      backups: 'backup_1',
     })).to.equal(true);
   });
 
