@@ -217,7 +217,7 @@ export class BackupsPage extends Component {
                       : selectTargetLinode(''))
                   }
                 />
-                This Linode
+                <span>This Linode</span>
               </label>
             </div>
             <div className="radio">
