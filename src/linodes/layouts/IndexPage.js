@@ -11,7 +11,7 @@ import { setError } from '~/actions/errors';
 import _ from 'lodash';
 import {
   fetchLinodes,
-  updateLinodeUntil,
+  fetchLinodeUntil,
   powerOnLinode,
   powerOffLinode,
   rebootLinode,
@@ -53,7 +53,7 @@ export class IndexPage extends Component {
       _linodes.forEach(l => {
         const state = l.state;
         if (LinodeStates.pending.indexOf(state) !== -1) {
-          dispatch(updateLinodeUntil(l.id, ln => ln.state !== state));
+          dispatch(fetchLinodeUntil(l.id, ln => ln.state !== state));
         }
       });
     }

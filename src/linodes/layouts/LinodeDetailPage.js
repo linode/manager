@@ -15,7 +15,7 @@ import {
   clearErrors,
 } from '../actions/detail/index';
 import {
-  updateLinode, powerOnLinode, powerOffLinode, rebootLinode,
+  fetchLinode, powerOnLinode, powerOffLinode, rebootLinode,
 } from '~/actions/api/linodes';
 
 export function getLinode() {
@@ -30,7 +30,7 @@ export async function loadLinode() {
   if (!linode) {
     const { linodeId } = this.props.params;
     try {
-      await dispatch(updateLinode(linodeId));
+      await dispatch(fetchLinode(linodeId));
     } catch (response) {
       dispatch(setError(response));
     }

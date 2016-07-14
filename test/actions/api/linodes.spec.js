@@ -8,8 +8,8 @@ import {
   UPDATE_LINODES,
   DELETE_LINODE,
   fetchLinodes,
-  updateLinode,
-  updateLinodeUntil,
+  fetchLinode,
+  fetchLinodeUntil,
   deleteLinode,
 } from '~/actions/api/linodes';
 import * as fetch from '~/fetch';
@@ -62,7 +62,7 @@ describe('actions/api/linodes', async () => {
     const fetchStub = getFetchStub(mockResponse.linodes[0]);
     const getState = getGetState();
 
-    const f = updateLinode('linode_1');
+    const f = fetchLinode('linode_1');
 
     await f(dispatch, getState);
 
@@ -84,7 +84,7 @@ describe('actions/api/linodes', async () => {
     const dispatch = sandbox.spy();
     const getState = sandbox.stub();
 
-    const f = updateLinodeUntil('linode_1', v => v.state === 'running', 1);
+    const f = fetchLinodeUntil('linode_1', v => v.state === 'running', 1);
 
     const state = {
       authentication: { token: 'token' },

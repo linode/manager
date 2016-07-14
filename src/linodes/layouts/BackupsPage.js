@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { push } from 'react-router-redux';
-import { updateLinode, fetchLinodes } from '~/actions/api/linodes';
+import { fetchLinode, fetchLinodes } from '~/actions/api/linodes';
 import { showModal, hideModal } from '~/actions/modal';
 import { setError } from '~/actions/errors';
 import {
@@ -83,7 +83,7 @@ export class BackupsPage extends Component {
     const linode = this.getLinode();
     if (!linode) {
       const { linodeId } = this.props.params;
-      dispatch(updateLinode(linodeId));
+      dispatch(fetchLinode(linodeId));
     }
     dispatch(fetchLinodes());
   }

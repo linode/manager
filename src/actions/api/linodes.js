@@ -23,8 +23,8 @@ export const UPDATE_LINODE_DISKS = '@@linodes/UPDATE_LINODE_DISKS';
 export const DELETE_LINODE_DISK = '@@linodes/DELETE_LINODE_DISK';
 
 export const fetchLinodes = makeFetchPage(UPDATE_LINODES, 'linodes');
-export const updateLinode = makeFetchItem(UPDATE_LINODE, 'linode', 'linodes');
-export const updateLinodeUntil = makeFetchUntil(UPDATE_LINODE, 'linodes', 'linode');
+export const fetchLinode = makeFetchItem(UPDATE_LINODE, 'linode', 'linodes');
+export const fetchLinodeUntil = makeFetchUntil(UPDATE_LINODE, 'linodes', 'linode');
 export const deleteLinode = makeDeleteItem(DELETE_LINODE, 'linodes');
 export const putLinode = makePutItem(PUT_LINODE, 'linodes');
 export const createLinode = makeCreateItem(CREATE_LINODE, 'linodes', 'linode');
@@ -40,7 +40,7 @@ function linodeAction(id, action, temp, expected, timeout = undefined) {
     const { token } = state.authentication;
     dispatch({ type: UPDATE_LINODE, linode: { id, state: temp } });
     await fetch(token, `/linodes/${id}/${action}`, { method: 'POST' });
-    await dispatch(updateLinodeUntil(id, l => l.state === expected, timeout));
+    await dispatch(fetchLinodeUntil(id, l => l.state === expected, timeout));
   };
 }
 

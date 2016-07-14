@@ -64,8 +64,8 @@ describe('linodes/layouts/LinodeDetailPage/loadLinode', async () => {
     expect(dispatch.firstCall.args[0].type).to.equal(linodeActions.UPDATE_LINODE);
   });
 
-  it('handles errors from updateLinode', () => {
-    sandbox.stub(linodeActions, 'updateLinode').throws({
+  it('handles errors from fetchLinode', () => {
+    sandbox.stub(linodeActions, 'fetchLinode').throws({
       json: () => ({ foo: 'bar' }),
       headers: { get() { return 'application/json'; } },
       statusCode: 400,
