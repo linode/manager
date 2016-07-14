@@ -42,16 +42,17 @@ export default class Dropdown extends Component {
           className="btn dropdown-first"
           onClick={first.action}
         >{first.name}</button>
-        <button
-          type="button"
-          className="btn dropdown-toggle"
-          data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded={this.state.open}
-          onClick={this.open}
-        >
-          <span className="sr-only">Toggle dropdown</span>
-        </button>
+        {rest.length !== 0 ?
+          <button
+            type="button"
+            className="btn dropdown-toggle"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded={this.state.open}
+            onClick={this.open}
+          >
+            <span className="sr-only">Toggle dropdown</span>
+          </button> : null}
         <div className={`dropdown-menu ${orientation}`}>{dropdownMenu}</div>
       </div>
     );

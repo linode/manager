@@ -285,7 +285,7 @@ describe('linodes/layouts/LinodeDetailPage', () => {
         detail={detail}
       />);
     const dropdown = page.find(Dropdown).props();
-    const expected = ['Reboot', 'Power On'];
+    const expected = ['Power On'];
     for (let i = 0; i < expected.length; ++i) {
       const elem = shallow(dropdown.elements[i].name);
       expect(elem.text()).to.contain(expected[i]);

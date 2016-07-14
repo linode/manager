@@ -199,7 +199,7 @@ export class LinodeDetailPage extends Component {
       {
         name: <span><i className="fa fa-refresh"></i> Reboot</span>,
         _action: rebootLinode,
-        _condition: () => true,
+        _condition: () => linode.state !== 'offline',
       },
       {
         name: <span><i className="fa fa-power-off"></i> Power Off</span>,
