@@ -72,10 +72,10 @@ export class Layout extends Component {
   }
 
   render() {
-    const { username, errors } = this.props;
+    const { username, emailHash, errors } = this.props;
     return (
       <div className="layout">
-        <Header username={username} />
+        <Header username={username} emailHash={emailHash} />
         <Sidebar />
         <div className="main">
           {errors.status === null ?
@@ -91,6 +91,7 @@ export class Layout extends Component {
 
 Layout.propTypes = {
   username: PropTypes.string,
+  emailHash: PropTypes.string,
   children: PropTypes.node.isRequired,
   errors: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
@@ -99,6 +100,7 @@ Layout.propTypes = {
 function select(state) {
   return {
     username: state.authentication.username,
+    emailHash: state.authentication.emailHash,
     errors: state.errors,
   };
 }

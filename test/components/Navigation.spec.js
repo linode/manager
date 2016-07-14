@@ -6,7 +6,7 @@ import Navigation from '../../src/components/Navigation';
 describe('components/Navigation', () => {
   it('renders username', () => {
     const navigation = mount(
-      <Navigation username={'peanut'} />
+      <Navigation username={'peanut'} email={'peanut@example.com'} />
     );
 
     expect(navigation.find('.nav-user').text()).to.equal('peanut');
@@ -14,31 +14,39 @@ describe('components/Navigation', () => {
 
   it('renders username account link', () => {
     const navigation = shallow(
-      <Navigation username={'peanut'} />
+      <Navigation username={'peanut'} email={'peanut@example.com'} />
     );
 
     expect(navigation.find({ href: '/account' }).length).to.equal(1);
   });
 
-  it('renders logout', () => {
+  it('renders badge', () => {
     const navigation = mount(
-      <Navigation username={'peanut'} />
+      <Navigation username={'peanut'} email={'peanut@example.com'} />
     );
 
-    expect(navigation.find('.nav-logout').text()).to.equal('Logout');
+    expect(navigation.find('.nav-gravatar-badge').text()).to.equal('3');
   });
 
-  it('renders logout link', () => {
-    const navigation = shallow(
-      <Navigation username={'peanut'} />
+  it('renders gravatar', () => {
+    const navigation = mount(
+      <Navigation username={'peanut'} email={'peanut@example.com'} />
     );
 
-    expect(navigation.find({ href: '/logout' }).length).to.equal(1);
+    expect(navigation.find('.nav-gravatar-img').src).to.be.defined;
+  });
+
+  it('renders username account link', () => {
+    const navigation = shallow(
+      <Navigation username={'peanut'} email={'peanut@example.com'} />
+    );
+
+    expect(navigation.find({ href: '/account' }).length).to.equal(1);
   });
 
   it('renders logo image', () => {
     const navigation = mount(
-      <Navigation username={'peanut'} />
+      <Navigation username={'peanut'} email={'peanut@example.com'} />
     );
 
     expect(navigation.find('img').src).to.be.defined;
@@ -46,7 +54,7 @@ describe('components/Navigation', () => {
 
   it('renders logo image home link', () => {
     const navigation = shallow(
-      <Navigation username={'peanut'} />
+      <Navigation username={'peanut'} email={'peanut@example.com'} />
     );
 
     expect(navigation.find({ to: '/' }).length).to.equal(1);
@@ -54,7 +62,7 @@ describe('components/Navigation', () => {
 
   it('renders navigation links', () => {
     const navigation = shallow(
-      <Navigation username={'peanut'} />
+      <Navigation username={'peanut'} email={'peanut@example.com'} />
     );
 
     expect(navigation.find({ href: 'https://www.linode.com/docs/' }).length).to.equal(1);
