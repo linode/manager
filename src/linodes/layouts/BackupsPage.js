@@ -2,7 +2,6 @@ import React, { Component, PropTypes } from 'react';
 import { push } from 'react-router-redux';
 import { fetchLinode, fetchLinodes } from '~/actions/api/linodes';
 import { showModal, hideModal } from '~/actions/modal';
-import { setError } from '~/actions/errors';
 import { enableBackup, cancelBackup } from '~/actions/api/backups';
 import {
   selectBackup,
@@ -64,31 +63,14 @@ const backups = [
   },
 ];
 
-export async function enableLinodeBackup(linode) {
-  const { dispatch } = this.props;
-  try {
-    await dispatch(enableBackup(linode.id));
-  } catch (response) {
-    dispatch(setError(response));
-  }
-}
-
-export async function cancelLinodeBackup(linode) {
-  const { dispatch } = this.props;
-  try {
-    await dispatch(cancelBackup(linode.id));
-  } catch (response) {
-    dispatch(setError(response));
-  }
-}
-
 export class BackupsPage extends Component {
   constructor() {
     super();
     this.componentDidMount = this.componentDidMount.bind(this);
     this.getLinode = this.getLinode.bind(this);
-    this.enableLinodeBackup = module.exports.enableLinodeBackup.bind(this);
-    this.cancelLinodeBackup = module.exports.cancelLinodeBackup.bind(this);
+    this.enableLinodeBackup = this.enableLinodeBackup.bind(this);
+    this.cancelLinodeBackup = this.cancelLinodeBackup.bind(this);
+    this.renderCancelBackupModal = this.renderCancelBackupModal.bind(this);
     this.renderNotEnabled = this.renderNotEnabled.bind(this);
     this.renderEnabled = this.renderEnabled.bind(this);
     this.renderSchedule = this.renderSchedule.bind(this);
@@ -132,6 +114,48 @@ export class BackupsPage extends Component {
         dispatch(setError(response, json));
       }
     }
+  }
+
+  async enableLinodeBackup(linode) {
+    const { dispatch } = this.props;
+    try {
+      await dispatch(enableBackup(linode.id));
+    } catch (response) {
+      dispatch(setError(response));
+    }
+  }
+
+  async cancelLinodeBackup(linode) {
+    const { dispatch } = this.props;
+    try {
+      await dispatch(cancelBackup(linode.id));
+    } catch (response) {
+      dispatch(setError(response));
+    }
+  }
+
+  renderCancelBackupModal(linode) {
+    const { dispatch } = this.props;
+    return (
+      <div>
+        <p>
+          <span className="text-danger">WARNING!</span> Your backups will
+          immediately and irrevecoably be deleted if you continue.
+        </p>
+        <div className="modal-footer">
+          <button
+            className="btn btn-primary"
+            onClick={() => {
+              this.cancelLinodeBackup(linode);
+              dispatch(hideModal());
+            }}
+          >Cancel backups</button>
+          <button
+            className="btn btn-default"
+            onClick={() => dispatch(hideModal())}
+          >Abort</button>
+        </div>
+      </div>);
   }
 
   renderBackup(backup, title = null) {
@@ -294,7 +318,6 @@ export class BackupsPage extends Component {
 
   renderSchedule() {
     const linode = this.getLinode();
-    const cancelBackupF = () => this.cancelLinodeBackup(linode);
     const { dayOfWeek, timeOfDay } = this.props.backups;
     const { dispatch } = this.props;
     return (
@@ -358,7 +381,12 @@ export class BackupsPage extends Component {
             >Save</button>
             <button
               className="btn btn-danger-outline"
-              onClick={cancelBackupF}
+              onClick={
+                () => dispatch(showModal(
+                  'Cancel backups',
+                  this.renderCancelBackupModal(linode)
+                ))
+              }
             >Cancel backups</button>
           </div>
         </div>
@@ -404,13 +432,12 @@ export class BackupsPage extends Component {
 
   renderNotEnabled() {
     const linode = this.getLinode();
-    const enableBackupF = () => this.enableLinodeBackup(linode);
     return (
       <div>
         <p>Backups are not enabled for this Linode.</p>
         <button
           className="btn btn-primary"
-          onClick={enableBackupF}
+          onClick={() => this.enableLinodeBackup(linode)}
         >Enable backups</button>
         <HelpButton to="http://example.org" />
       </div>

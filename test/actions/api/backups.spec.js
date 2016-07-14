@@ -7,7 +7,6 @@ import {
   updateBackup,
   enableBackup,
   cancelBackup,
-  restoreBackup,
 } from '~/actions/api/backups';
 import * as fetch from '~/fetch';
 
@@ -95,23 +94,6 @@ describe('actions/api/backups', async () => {
 
     expect(fetchStub.calledWith(
       auth.token, '/linodes/foo_1/backups/cancel', { method: 'POST' })).to.equal(true);
-    expect(dispatch.calledWith({
-      type: UPDATE_BACKUP,
-      backup: { id: 'backup_1' },
-    })).to.equal(true);
-  });
-
-  it('should restore backups', async () => {
-    const dispatch = getDispatch();
-    const getState = getGetState();
-    const fetchStub = getFetchStub(mockResponse.backups[0]);
-    const f = restoreBackup('foo_1', 'bar_1');
-
-    await f(dispatch, getState);
-
-    expect(fetchStub.calledWith(
-      auth.token, '/linodes/foo_1/backups/restore?linode=bar_1',
-      { method: 'POST' })).to.equal(true);
     expect(dispatch.calledWith({
       type: UPDATE_BACKUP,
       backup: { id: 'backup_1' },

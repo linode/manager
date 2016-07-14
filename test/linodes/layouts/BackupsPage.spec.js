@@ -5,15 +5,11 @@ import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 import * as fetch from '~/fetch';
 import { testLinode } from '~/../test/data';
-import * as BackupsPageWrapper from '~/linodes/layouts/BackupsPage';
+import { BackupsPage } from '~/linodes/layouts/BackupsPage';
 import { UPDATE_LINODE } from '~/actions/api/linodes';
 import * as actions from '~/linodes/actions/detail/backups';
 import { SHOW_MODAL, hideModal } from '~/actions/modal';
 import { SET_ERROR } from '~/actions/errors';
-
-const {
-  BackupsPage,
-} = BackupsPageWrapper;
 
 describe('linodes/layouts/BackupsPage', () => {
   const sandbox = sinon.sandbox.create();
@@ -97,7 +93,6 @@ describe('linodes/layouts/BackupsPage', () => {
   });
 
   it('calls enable backups on click', () => {
-    const enableLinodeBackup = sinon.stub(BackupsPageWrapper, 'enableLinodeBackup');
     const page = mount(
       <BackupsPage
         dispatch={dispatch}
@@ -106,6 +101,7 @@ describe('linodes/layouts/BackupsPage', () => {
         backups={backups}
       />);
 
+    const enableLinodeBackup = sandbox.stub(page.instance(), 'enableLinodeBackup');
     const enableButton = page.find('.btn-primary');
     enableButton.simulate('click');
 
@@ -114,7 +110,6 @@ describe('linodes/layouts/BackupsPage', () => {
   });
 
   it('calls cancel backups on click', () => {
-    const cancelLinodeBackup = sinon.stub(BackupsPageWrapper, 'cancelLinodeBackup');
     const page = mount(
       <BackupsPage
         dispatch={dispatch}
@@ -123,6 +118,7 @@ describe('linodes/layouts/BackupsPage', () => {
         backups={backups}
       />);
 
+    const cancelLinodeBackup = sandbox.stub(page.instance(), 'cancelLinodeBackup');
     const cancelButton = page.find('.btn-danger-outline');
     cancelButton.simulate('click');
 
