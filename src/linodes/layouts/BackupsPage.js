@@ -232,7 +232,7 @@ export class BackupsPage extends Component {
                       : selectTargetLinode(Object.values(linodes.linodes)[0].id))
                   }
                 />
-                New Linode
+                <span>New Linode</span>
               </label>
             </div>
             <div className="radio">
@@ -247,7 +247,7 @@ export class BackupsPage extends Component {
                       : selectTargetLinode(''))
                   }
                 />
-                Existing Linode
+                <span>Existing Linode</span>
               </label>
               <select
                 className="form-control"
