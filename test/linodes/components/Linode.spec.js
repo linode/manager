@@ -172,7 +172,7 @@ describe('linodes/components/Linode', () => {
         },
       }));
       expect(item.find('span').text()).to.equal(
-        `First backup in approximately ${moment('2016-07-13T12:00:00').fromNow(true)}`);
+        `First backup in ~${moment('2016-07-13T12:00:00').fromNow(true)}`);
     });
 
     it('renders the projected time of the first backup when its window is < $NOW', () => {
@@ -186,7 +186,7 @@ describe('linodes/components/Linode', () => {
         },
       }));
       expect(item.find('span').text()).to.equal(
-        `First backup in approximately ${moment('2016-07-14T12:00:00').fromNow(true)}`);
+        `First backup in ~${moment('2016-07-14T12:00:00').fromNow(true)}`);
     });
   });
 });

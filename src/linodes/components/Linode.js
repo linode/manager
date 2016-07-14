@@ -88,7 +88,7 @@ export function renderBackupStatus(linode) {
       }
       return (
         <span className="backup-status">
-          First backup in approximately {nextBackup.fromNow(true)}
+          First backup in ~{nextBackup.fromNow(true)}
         </span>);
     }
     return (
