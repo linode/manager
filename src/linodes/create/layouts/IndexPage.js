@@ -61,7 +61,7 @@ export class IndexPage extends Component {
         if (!(field in errorsByField)) errorsByField[field] = [];
         errorsByField[field].push(reason);
       });
-      this.setState({ errors: errorsByField });
+      this.setState({ loading: false, errors: errorsByField });
     }
   }
 
