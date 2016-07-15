@@ -28,6 +28,13 @@
         border-bottom: $border;
         line-height: 2.2rem;
 
+        .title {
+            text-align: center;
+            overflow: hidden;
+            line-height: $input-height;
+            color: $black;
+        }
+        
         &.tabs {
             padding: $padding $main-padding-lr ($padding / 2);
             border-bottom: 0;

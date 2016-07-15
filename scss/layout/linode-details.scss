@@ -124,26 +124,6 @@
         }
     }
 
-    .backup {
-        border: $border;
-        padding: 1rem;
-        font-size: 14px;
-        cursor: pointer;
-
-        &.selected {
-            background-color: $blue;
-            color: $white;
-        }
-
-        dl, dd:last-child {
-            margin-bottom: 0;
-        }
-
-        h3 {
-            text-align: center;
-        }
-    }
-
     .graphs {
         margin-top: $main-padding-tb;
     }

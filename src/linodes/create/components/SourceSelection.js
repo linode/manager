@@ -1,7 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import DistroVendor from './DistroVendor';
 import _ from 'lodash';
+
+import DistroVendor from './DistroVendor';
+import Backup from '~/linodes/components/Backup';
 
 export default class SourceSelection extends Component {
   constructor() {
@@ -13,7 +15,7 @@ export default class SourceSelection extends Component {
   }
 
   renderDistros() {
-    const { distros, source, onSourceSelected } = this.props;
+    const { distros, selected, onSourceSelected } = this.props;
     const vendors = _.sortBy(
       _.map(
         _.groupBy(Object.values(distros), d => d.vendor),
@@ -26,11 +28,40 @@ export default class SourceSelection extends Component {
       <div className="distros">
         {vendors.map(v =>
           <DistroVendor
-            selected={source}
+            selected={selected}
             vendor={v}
             key={v.name}
             onClick={s => onSourceSelected(s)}
           />)}
+      </div>
+    );
+  }
+
+  renderBackups() {
+    const { linodes, selected, onSourceSelected } = this.props;
+    const hasBackups = (linode) =>
+      linode._backups && Object.values(linode._backups.backups).length;
+    const linodesWithBackups = _.filter(linodes.linodes, hasBackups);
+
+    const backupOptions = _.map(linodesWithBackups, l =>
+      <div key={l.label}>
+        <h3>{l.label}</h3>
+        <div className="backup-group">
+          {_.map(l._backups.backups, backup =>
+            <Backup
+              backup={backup}
+              selected={selected}
+              onSelect={() => onSourceSelected(backup.id)}
+              key={backup.created}
+            />
+           )}
+        </div>
+      </div>
+    );
+
+    return (
+      <div className="backups">
+        {linodesWithBackups.length ? backupOptions : <span>No backups available.</span>}
       </div>
     );
   }
@@ -44,17 +75,13 @@ export default class SourceSelection extends Component {
       >
         <TabList>
           <Tab>Distributions</Tab>
-          <Tab>StackScripts</Tab>
           <Tab>Backups</Tab>
         </TabList>
         <TabPanel>
           {this.renderDistros()}
         </TabPanel>
         <TabPanel>
-          StackScript Selection
-        </TabPanel>
-        <TabPanel>
-          Backups Selection
+          {this.renderBackups()}
         </TabPanel>
       </Tabs>
     );
@@ -80,10 +107,11 @@ export default class SourceSelection extends Component {
 
 SourceSelection.propTypes = {
   distros: PropTypes.object.isRequired,
+  linodes: PropTypes.object.isRequired,
   selectedTab: PropTypes.number.isRequired,
   onTabChange: PropTypes.func,
   onSourceSelected: PropTypes.func,
-  source: PropTypes.string,
+  selected: PropTypes.string,
 };
 
 SourceSelection.defaultProps = {

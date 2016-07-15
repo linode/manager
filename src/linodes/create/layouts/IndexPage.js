@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
+import _ from 'lodash';
 
 import SourceSelection from '../components/SourceSelection';
 import ServiceSelection from '../components/ServiceSelection';
@@ -8,9 +9,10 @@ import DatacenterSelection from '../components/DatacenterSelection';
 import Details from '../components/Details';
 import { fetchDistros } from '~/actions/api/distros';
 import { fetchDatacenters } from '~/actions/api/datacenters';
+import { fetchLinodes, createLinode } from '~/actions/api/linodes';
 import { fetchServices } from '~/actions/api/services';
+import { fetchBackups } from '~/actions/api/backups';
 import { setError } from '~/actions/errors';
-import { createLinode } from '~/actions/api/linodes';
 
 export class IndexPage extends Component {
   constructor() {
@@ -33,10 +35,18 @@ export class IndexPage extends Component {
     const { dispatch } = this.props;
     try {
       await Promise.all([
+        dispatch(fetchLinodes()),
         dispatch(fetchDistros()),
         dispatch(fetchDatacenters()),
         dispatch(fetchServices()),
       ]);
+
+      const { linodes } = this.props;
+      _.forEach(linodes.linodes, async l => {
+        if (l.backups.enabled && l._backups.totalPages === -1) {
+          await dispatch(fetchBackups(0, l.id));
+        }
+      });
     } catch (response) {
       dispatch(setError(response));
     }
@@ -68,6 +78,7 @@ export class IndexPage extends Component {
   render() {
     const {
       distros,
+      linodes,
       datacenters,
       services,
     } = this.props;
@@ -84,11 +95,12 @@ export class IndexPage extends Component {
         <h1>Add a Linode</h1>
         <div className="card page-card">
           <SourceSelection
-            source={source}
+            selected={source}
             selectedTab={sourceTab}
             distros={distros.distributions}
             onTabChange={ix => this.setState({ sourceTab: ix })}
             onSourceSelected={id => this.setState({ source: id })}
+            linodes={linodes}
           />
         </div>
         <div className="card page-card">
@@ -120,6 +132,7 @@ export class IndexPage extends Component {
 IndexPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   distros: PropTypes.object,
+  linodes: PropTypes.object,
   services: PropTypes.object,
   datacenters: PropTypes.object,
 };
@@ -127,6 +140,7 @@ IndexPage.propTypes = {
 function select(state) {
   return {
     distros: state.api.distros,
+    linodes: state.api.linodes,
     datacenters: state.api.datacenters,
     services: state.api.services,
   };
