@@ -64,28 +64,33 @@ export function renderDatacenterStyle(linode) {
   );
 }
 
+export function getNextBackup(linode) {
+  const windows = {
+    W0: moment().hour(0),
+    W2: moment().hour(2),
+    W4: moment().hour(4),
+    W6: moment().hour(6),
+    W8: moment().hour(8),
+    W10: moment().hour(10),
+    W12: moment().hour(12),
+    W14: moment().hour(14),
+    W16: moment().hour(16),
+    W18: moment().hour(18),
+    W20: moment().hour(20),
+    W22: moment().hour(22),
+  };
+  const nextBackup = windows[linode.backups.schedule.window];
+  if (nextBackup < moment()) {
+    nextBackup.add(1, 'day');
+  }
+  return nextBackup;
+}
+
 export function renderBackupStatus(linode) {
   if (linode.backups.enabled) {
     const lastBackup = linode.backups.last_backup;
     if (!lastBackup) {
-      const windows = {
-        W0: moment().hour(0),
-        W2: moment().hour(2),
-        W4: moment().hour(4),
-        W6: moment().hour(6),
-        W8: moment().hour(8),
-        W10: moment().hour(10),
-        W12: moment().hour(12),
-        W14: moment().hour(14),
-        W16: moment().hour(16),
-        W18: moment().hour(18),
-        W20: moment().hour(20),
-        W22: moment().hour(22),
-      };
-      const nextBackup = windows[linode.backups.schedule.window];
-      if (nextBackup < moment()) {
-        nextBackup.add(1, 'day');
-      }
+      const nextBackup = getNextBackup(linode);
       return (
         <span className="backup-status">
           First backup in ~{nextBackup.fromNow(true)}

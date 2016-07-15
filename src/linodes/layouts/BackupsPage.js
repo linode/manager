@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { push } from 'react-router-redux';
 import { fetchLinode, fetchLinodes } from '~/actions/api/linodes';
 import { showModal, hideModal } from '~/actions/modal';
+import { getNextBackup } from '~/linodes/components/Linode';
 import { enableBackup, cancelBackup, fetchBackups } from '~/actions/api/backups';
 import {
   selectBackup,
@@ -176,18 +177,19 @@ export class BackupsPage extends Component {
   }
 
   renderBackups() {
-    const backups = Object.values(this.getLinode()._backups.backups);
+    const thisLinode = this.getLinode();
+    const backups = Object.values(thisLinode._backups.backups);
     if (backups.length === 0) {
+      const next = getNextBackup(thisLinode);
       return (
         <p>
           No backups yet.
-          First automated backup is scheduled for {'8 hours'/* TODO */} from now.
+          First automated backup is scheduled for {next.fromNow(true)} from now.
         </p>
       );
     }
     const { selectedBackup, targetLinode } = this.props.backups;
     const { linodes, dispatch } = this.props;
-    const thisLinode = this.getLinode();
     return (
       <div>
         <div className="row backups">
