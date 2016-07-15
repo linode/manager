@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { push } from 'react-router-redux';
 import { fetchLinode, fetchLinodes } from '~/actions/api/linodes';
 import { showModal, hideModal } from '~/actions/modal';
-import { enableBackup, cancelBackup } from '~/actions/api/backups';
+import { enableBackup, cancelBackup, fetchBackups } from '~/actions/api/backups';
 import {
   selectBackup,
   selectTargetLinode,
@@ -67,6 +67,7 @@ export class BackupsPage extends Component {
   constructor() {
     super();
     this.componentDidMount = this.componentDidMount.bind(this);
+    this.componentDidUpdate = this.componentDidMount.bind(this);
     this.getLinode = this.getLinode.bind(this);
     this.enableLinodeBackup = this.enableLinodeBackup.bind(this);
     this.cancelLinodeBackup = this.cancelLinodeBackup.bind(this);
@@ -83,13 +84,19 @@ export class BackupsPage extends Component {
   }
 
   componentDidMount() {
-    const { dispatch } = this.props;
+    const { dispatch, linodes } = this.props;
     const linode = this.getLinode();
     if (!linode) {
       const { linodeId } = this.props.params;
       dispatch(fetchLinode(linodeId));
+    } else {
+      if (linode._backups.totalPages === -1) {
+        dispatch(fetchBackups(0, linode.id));
+      }
+      if (linodes.totalPages === -1) {
+        dispatch(fetchLinodes());
+      }
     }
-    dispatch(fetchLinodes());
   }
 
   getLinode() {
