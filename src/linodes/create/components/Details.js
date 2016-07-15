@@ -115,7 +115,7 @@ export default class Details extends Component {
             onChange={e => this.setState({ enableBackups: e.target.value })}
             name="enableBackups"
           />
-          Enable ($2.50/month)
+          <span>Enable ($2.50/month)</span>
         </label>
       </div>
     );
