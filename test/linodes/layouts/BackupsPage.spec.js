@@ -92,6 +92,25 @@ describe('linodes/layouts/BackupsPage', () => {
       .to.equal('Enable backups');
   });
 
+  it('calls enable backups on click', () => {
+    const page = mount(
+      <BackupsPage
+        dispatch={dispatch}
+        linodes={linodes}
+        params={{ linodeId: testLinode.id }}
+        backups={backups}
+      />);
+
+    const enableLinodeBackup = sandbox.stub(page.instance(), 'enableLinodeBackup');
+    const enableButton = page.find('.btn-primary');
+    enableButton.simulate('click');
+
+    expect(enableLinodeBackup.calledOnce).to.equal(true);
+    enableLinodeBackup.restore();
+  });
+
+  it('calls cancel backups on click');
+
   it('renders the manual backup UI', () => {
     const page = shallow(
       <BackupsPage
@@ -128,9 +147,8 @@ describe('linodes/layouts/BackupsPage', () => {
     expect(schedule.find('#dow')).to.exist;
     expect(schedule.contains(<button className="btn btn-primary">Save</button>))
       .to.equal(true);
-    expect(schedule.contains(
-      <button className="btn btn-danger-outline">Cancel backups</button>))
-      .to.equal(true);
+    expect(schedule.find('.btn-danger-outline').at(0).text())
+      .to.equal('Cancel backups');
   });
 
   it('dispatches a SET_TIME_OF_DAY action when time of day changes', () => {
