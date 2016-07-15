@@ -79,6 +79,9 @@ export function getNextBackup(linode) {
     W20: moment().hour(20),
     W22: moment().hour(22),
   };
+  if (!linode.backups || !linode.backups.schedule) {
+    return moment.invalid();
+  }
   const nextBackup = windows[linode.backups.schedule.window];
   if (nextBackup < moment()) {
     nextBackup.add(1, 'day');

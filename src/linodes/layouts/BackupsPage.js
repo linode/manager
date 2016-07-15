@@ -178,8 +178,8 @@ export class BackupsPage extends Component {
 
   renderBackups() {
     const thisLinode = this.getLinode();
-    const backups = Object.values(thisLinode._backups.backups);
-    if (backups.length === 0) {
+    const backups = thisLinode._backups && Object.values(thisLinode._backups.backups);
+    if (!backups || backups.length === 0) {
       const next = getNextBackup(thisLinode);
       return (
         <p>

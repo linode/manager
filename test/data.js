@@ -78,10 +78,6 @@ export const testLinode = {
       label: 'Linode 1024',
     },
   ],
-  backups: {
-    last_backup: null,
-    enabled: false,
-  },
   state: 'running',
   datacenter: {
     id: 'newark',
@@ -113,6 +109,30 @@ export const testLinode = {
     transfer_quota: {
       enabled: true,
       threshold: 80,
+    },
+  },
+  backups: {
+    enabled: true,
+    last_backup: '2016-06-09T15:05:55',
+    schedule: {
+      day: 'Monday',
+      window: 'W10',
+    },
+  },
+  _backups: {
+    totalPages: 1,
+    backups: {
+      backup_54778593: {
+        type: 'auto',
+        id: 'backup_54778593',
+        created: '2016-06-09T15:05:55',
+        finished: '2016-06-09T15:06:55',
+        status: 'successful',
+        datacenter: {
+          label: 'Newark, NJ',
+          id: 'datacenter_6',
+        },
+      },
     },
   },
 };

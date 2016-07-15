@@ -79,7 +79,14 @@ describe('linodes/layouts/LinodeGeneral', async () => {
     const path = `/linodes/${testLinode.id}/backups`;
     const page = shallow(
       <LinodeGeneral
-        linodes={linodes}
+        linodes={{ ...linodes,
+          linodes: {
+            ...linodes.linodes,
+            [testLinode.id]: {
+              ...testLinode,
+              backups: { enabled: false },
+            },
+          } }}
         params={params}
       />);
 
