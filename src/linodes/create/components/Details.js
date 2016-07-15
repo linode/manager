@@ -95,7 +95,7 @@ export default class Details extends Component {
           take {this.state.strength.crack_times_display.offline_fast_hashing_1e10_per_second} to
           crack.<br />
         </p> : null}
-        <div className="alert-danger">
+        <div className="alert alert-info">
           Write this password down. We won't display it again.
         </div>
       </div>
