@@ -3,7 +3,8 @@ import { Link } from 'react-router';
 import logo from 'file!../../assets/linode-logo.svg';
 
 export default function Navigation(props) {
-  const { username } = props;
+  const { username, emailHash } = props;
+  const gravatarLink = `https://gravatar.com/avatar/${emailHash}`;
 
   return (
     <nav id="main-nav" className="navbar navbar-default" role="navigation">
@@ -43,10 +44,14 @@ export default function Navigation(props) {
             <a href="/account" className="nav-text nav-user">
               {username}
             </a>
-            <span className="nav-notifications">1</span>
-            <a href="/logout" className="nav-text nav-logout">
-              Logout
-            </a>
+            <div className="nav-gravatar">
+              <img
+                className="nav-gravatar-img"
+                src={gravatarLink}
+                alt="User Avatar"
+              />
+              <div className="nav-gravatar-badge">3</div>
+            </div>
           </div>
          : ''}
       </div>
@@ -54,4 +59,4 @@ export default function Navigation(props) {
   );
 }
 
-Navigation.propTypes = { username: PropTypes.string };
+Navigation.propTypes = { username: PropTypes.string, emailHash: PropTypes.string };

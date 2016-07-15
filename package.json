@@ -93,6 +93,7 @@
     "fontawesome": "^4.5.0",
     "history": "^3.0.0",
     "isomorphic-fetch": "^2.2.0",
+    "md5": "^2.1.0",
     "moment": "^2.13.0",
     "node-sass": "^3.4.2",
     "rd3": "^0.6.3",
