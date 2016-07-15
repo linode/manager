@@ -29,7 +29,7 @@ describe('linodes/layouts/BackupsPage', () => {
       linode_1235: {
         ...testLinode,
         id: 'linode_1235',
-        backups: { enabled: true },
+        backups: { enabled: false },
       },
     },
     _singular: 'linode',
@@ -51,7 +51,6 @@ describe('linodes/layouts/BackupsPage', () => {
         params={{ linodeId: 'linode_1234' }}
         backups={backups}
       />);
-    expect(dispatch.calledTwice).to.equal(true);
     const dispatched = dispatch.firstCall.args[0];
     // Assert that dispatched is a function that fetches a linode
     const fetchStub = sandbox.stub(fetch, 'fetch').returns({
@@ -83,7 +82,7 @@ describe('linodes/layouts/BackupsPage', () => {
       <BackupsPage
         dispatch={dispatch}
         linodes={linodes}
-        params={{ linodeId: testLinode.id }}
+        params={{ linodeId: 'linode_1235' }}
         backups={backups}
       />);
     expect(page.contains(<p>Backups are not enabled for this Linode.</p>))
@@ -97,7 +96,7 @@ describe('linodes/layouts/BackupsPage', () => {
       <BackupsPage
         dispatch={dispatch}
         linodes={linodes}
-        params={{ linodeId: testLinode.id }}
+        params={{ linodeId: 'linode_1235' }}
         backups={backups}
       />);
 
@@ -116,7 +115,7 @@ describe('linodes/layouts/BackupsPage', () => {
       <BackupsPage
         dispatch={dispatch}
         linodes={linodes}
-        params={{ linodeId: 'linode_1235' }}
+        params={{ linodeId: 'linode_1234' }}
         backups={backups}
       />);
     const manual = page.find('.manual-backups');
@@ -136,7 +135,7 @@ describe('linodes/layouts/BackupsPage', () => {
       <BackupsPage
         dispatch={dispatch}
         linodes={linodes}
-        params={{ linodeId: 'linode_1235' }}
+        params={{ linodeId: 'linode_1234' }}
         backups={backups}
       />);
     const schedule = page.find('.backup-schedule');
@@ -156,7 +155,7 @@ describe('linodes/layouts/BackupsPage', () => {
       <BackupsPage
         dispatch={dispatch}
         linodes={linodes}
-        params={{ linodeId: 'linode_1235' }}
+        params={{ linodeId: 'linode_1234' }}
         backups={backups}
       />);
     const schedule = page.find('.backup-schedule');
@@ -172,7 +171,7 @@ describe('linodes/layouts/BackupsPage', () => {
       <BackupsPage
         dispatch={dispatch}
         linodes={linodes}
-        params={{ linodeId: 'linode_1235' }}
+        params={{ linodeId: 'linode_1234' }}
         backups={backups}
       />);
     const schedule = page.find('.backup-schedule');
@@ -188,11 +187,11 @@ describe('linodes/layouts/BackupsPage', () => {
       <BackupsPage
         dispatch={dispatch}
         linodes={linodes}
-        params={{ linodeId: 'linode_1235' }}
+        params={{ linodeId: 'linode_1234' }}
         backups={backups}
       />);
     const b = page.find('.backups');
-    expect(b.find('.backup').length).to.equal(4);
+    expect(b.find('.backup').length).to.equal(1);
   });
 
   it('dispatches a SELECT_BACKUP action when one is clicked', () => {
@@ -200,7 +199,7 @@ describe('linodes/layouts/BackupsPage', () => {
       <BackupsPage
         dispatch={dispatch}
         linodes={linodes}
-        params={{ linodeId: 'linode_1235' }}
+        params={{ linodeId: 'linode_1234' }}
         backups={backups}
       />);
     const b = page.find('.backups');
@@ -216,7 +215,7 @@ describe('linodes/layouts/BackupsPage', () => {
       <BackupsPage
         dispatch={dispatch}
         linodes={linodes}
-        params={{ linodeId: 'linode_1235' }}
+        params={{ linodeId: 'linode_1234' }}
         backups={backups}
       />);
     const existing = page.find('.restore')
@@ -234,7 +233,7 @@ describe('linodes/layouts/BackupsPage', () => {
       <BackupsPage
         dispatch={dispatch}
         linodes={linodes}
-        params={{ linodeId: 'linode_1235' }}
+        params={{ linodeId: 'linode_1234' }}
         backups={backups}
       />);
     const existing = page.find('.restore')
@@ -252,7 +251,7 @@ describe('linodes/layouts/BackupsPage', () => {
       <BackupsPage
         dispatch={dispatch}
         linodes={linodes}
-        params={{ linodeId: 'linode_1235' }}
+        params={{ linodeId: 'linode_1234' }}
         backups={backups}
       />);
     const existing = page.find('.restore')
@@ -262,7 +261,7 @@ describe('linodes/layouts/BackupsPage', () => {
     existing.simulate('change', { target: { checked: true } });
     expect(dispatch.calledOnce).to.equal(true);
     expect(dispatch.firstCall.args[0])
-      .to.deep.equal(actions.selectTargetLinode('linode_1235'));
+      .to.deep.equal(actions.selectTargetLinode('linode_1234'));
   });
 
   it('dispatches a SELECT_TARGET_LINODE action when "this linode" is unchecked', () => {
@@ -270,7 +269,7 @@ describe('linodes/layouts/BackupsPage', () => {
       <BackupsPage
         dispatch={dispatch}
         linodes={linodes}
-        params={{ linodeId: 'linode_1235' }}
+        params={{ linodeId: 'linode_1234' }}
         backups={backups}
       />);
     const existing = page.find('.restore')
@@ -288,7 +287,7 @@ describe('linodes/layouts/BackupsPage', () => {
       <BackupsPage
         dispatch={dispatch}
         linodes={linodes}
-        params={{ linodeId: 'linode_1235' }}
+        params={{ linodeId: 'linode_1234' }}
         backups={backups}
       />);
     const existing = page.find('.restore')
@@ -306,7 +305,7 @@ describe('linodes/layouts/BackupsPage', () => {
       <BackupsPage
         dispatch={dispatch}
         linodes={linodes}
-        params={{ linodeId: 'linode_1235' }}
+        params={{ linodeId: 'linode_1234' }}
         backups={backups}
       />);
     const existing = page.find('.restore')
@@ -324,7 +323,7 @@ describe('linodes/layouts/BackupsPage', () => {
       <BackupsPage
         dispatch={dispatch}
         linodes={linodes}
-        params={{ linodeId: 'linode_1235' }}
+        params={{ linodeId: 'linode_1234' }}
         backups={backups}
       />);
     const select = page.find('.restore').find('select');
@@ -339,7 +338,7 @@ describe('linodes/layouts/BackupsPage', () => {
     const page = shallow(<BackupsPage
       dispatch={dispatch}
       linodes={linodes}
-      params={{ linodeId: 'linode_1235' }}
+      params={{ linodeId: 'linode_1234' }}
       backups={{
         ...backups,
         selectedBackup: 'backup_26',
@@ -359,7 +358,7 @@ describe('linodes/layouts/BackupsPage', () => {
     expect(dispatch.callCount).to.equal(0);
     expect(fetchStub.calledOnce).to.equal(true);
     expect(fetchStub.calledWith('token',
-      '/linodes/linode_1235/backups/backup_1234/restore'));
+      '/linodes/linode_1234/backups/backup_1234/restore'));
     const data = fetchStub.firstCall.args[2];
     expect(data.method).to.equal('POST');
     expect(JSON.parse(data.body)).to.deep.equal({
@@ -373,7 +372,7 @@ describe('linodes/layouts/BackupsPage', () => {
     const page = shallow(<BackupsPage
       dispatch={_dispatch}
       linodes={linodes}
-      params={{ linodeId: 'linode_1235' }}
+      params={{ linodeId: 'linode_1234' }}
       backups={{
         ...backups,
         selectedBackup: 'backup_26',
@@ -399,7 +398,7 @@ describe('linodes/layouts/BackupsPage', () => {
     const page = shallow(<BackupsPage
       dispatch={_dispatch}
       linodes={linodes}
-      params={{ linodeId: 'linode_1235' }}
+      params={{ linodeId: 'linode_1234' }}
       backups={{
         ...backups,
         selectedBackup: 'backup_26',
@@ -425,7 +424,7 @@ describe('linodes/layouts/BackupsPage', () => {
     const page = shallow(<BackupsPage
       dispatch={dispatch}
       linodes={linodes}
-      params={{ linodeId: 'linode_1235' }}
+      params={{ linodeId: 'linode_1234' }}
       backups={{
         ...backups,
         selectedBackup: 'backup_26',
@@ -441,11 +440,11 @@ describe('linodes/layouts/BackupsPage', () => {
       const page = shallow(<BackupsPage
         dispatch={dispatch}
         linodes={linodes}
-        params={{ linodeId: 'linode_1235' }}
+        params={{ linodeId: 'linode_1234' }}
         backups={backups}
       />);
       const modal = shallow(
-        page.instance().renderModal('linode_1235', 'backup_1234'));
+        page.instance().renderModal('linode_1234', 'backup_1234'));
       const cancel = modal.find('.btn-default');
       dispatch.reset();
       cancel.simulate('click');
@@ -457,19 +456,19 @@ describe('linodes/layouts/BackupsPage', () => {
       const page = shallow(<BackupsPage
         dispatch={dispatch}
         linodes={linodes}
-        params={{ linodeId: 'linode_1235' }}
+        params={{ linodeId: 'linode_1234' }}
         backups={backups}
       />);
       const restore = sandbox.stub(page.instance(), 'restore');
       const modal = shallow(
-        page.instance().renderModal('linode_1235', 'backup_1234'));
+        page.instance().renderModal('linode_1234', 'backup_1234'));
       const proceed = modal.find('.btn-primary');
       dispatch.reset();
       proceed.simulate('click');
       expect(dispatch.calledOnce).to.equal(true);
       expect(dispatch.calledWith(hideModal())).to.equal(true);
       expect(restore.calledOnce).to.equal(true);
-      expect(restore.calledWith('linode_1235', 'backup_1234', true)).to.equal(true);
+      expect(restore.calledWith('linode_1234', 'backup_1234', true)).to.equal(true);
     });
   });
 });

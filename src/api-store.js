@@ -65,7 +65,10 @@ export default function makeApiList(config, transform = d => d) {
           ...state,
           [_config.plural]: {
             ...state[_config.plural],
-            [item.id]: { ...state[_config.plural][item.id], ...item },
+            [item.id]: {
+              ...state[_config.plural][item.id],
+              ...transform(transformItem(_config.subresources, item)),
+            },
           },
         };
       }
@@ -132,6 +135,7 @@ export function makeFetchItem(action, singular, ...plurals) {
     const json = await response.json();
     dispatch(_.reduce(pairs, (u, [plural, id]) => (id ? { ...u, [plural]: id } : u),
       { type: action, [singular]: json }));
+    return json;
   };
 }
 
