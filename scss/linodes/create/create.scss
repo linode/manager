@@ -8,3 +8,47 @@
         display: inline-block;
     }
 }
+
+.password-input {
+    .strength {
+        width: 300px;
+        height: 10px;
+
+        span {
+            display: inline-block;
+            width: 75px;
+            height: 100%;
+            border: 1px solid $gray;
+        }
+
+        &.strength-1 {
+            span:nth-child(1) {
+                background: $dark-gray;
+            }
+        }
+
+        &.strength-2 {
+            span:nth-child(1), span:nth-child(2) {
+                background: $red;
+            }
+        }
+
+        &.strength-3 {
+            span:nth-child(1), span:nth-child(2), span:nth-child(3) {
+                background: darken($yellow, 20);
+            }
+        }
+
+        &.strength-4 {
+            span {
+                background: $green;
+            }
+        }
+
+        margin-bottom: 1rem;
+    }
+
+    .alert-danger {
+        padding: 1rem;
+    }
+}

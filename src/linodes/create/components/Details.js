@@ -1,12 +1,19 @@
 import React, { Component, PropTypes } from 'react';
 import generatePassword from 'password-generator';
+import zxcvbn from 'zxcvbn';
 
 export default class Details extends Component {
   constructor() {
     super();
     this.renderRow = this.renderRow.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
-    this.state = { password: '', label: '', enableBackups: false };
+    this.onPasswordChange = this.onPasswordChange.bind(this);
+    this.state = {
+      password: '',
+      strength: zxcvbn(''),
+      label: '',
+      enableBackups: false,
+    };
   }
 
   onSubmit(e) {
@@ -18,6 +25,12 @@ export default class Details extends Component {
       label: this.state.label,
       enableBackups: this.state.enableBackups,
     });
+  }
+
+  onPasswordChange(e) {
+    const password = e.target.value;
+    const strength = zxcvbn(password);
+    this.setState({ password, strength });
   }
 
   renderRow({ label, content, errors }) {
@@ -56,20 +69,35 @@ export default class Details extends Component {
     );
 
     const passwordInput = (
-      <div className="input-container input-group">
+      <div className="input-container input-group password-input">
         <input
           value={this.state.password}
           placeholder="Choose a strong password"
           className="form-control"
           name="password"
-          onChange={e => this.setState({ password: e.target.value })}
+          onChange={this.onPasswordChange}
+          autoComplete="off"
         />
         <button
           type="button"
           className="btn btn-secondary"
           onClick={() =>
-            this.setState({ password: generatePassword(30, false) })}
+            this.onPasswordChange({ target: { value: generatePassword(30, false) } })}
         >Generate</button>
+        <div className={`strength strength-${this.state.strength.score}`}>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        {this.state.password !== '' ? <p>
+          We estimate that an offline attack on this password would
+          take {this.state.strength.crack_times_display.offline_fast_hashing_1e10_per_second} to
+          crack.<br />
+        </p> : null}
+        <div className="alert-danger">
+          Write this password down. We won't display it again.
+        </div>
       </div>
     );
 
