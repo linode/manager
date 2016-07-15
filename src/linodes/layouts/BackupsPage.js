@@ -12,56 +12,8 @@ import {
 } from '~/linodes/actions/detail/backups';
 import { connect } from 'react-redux';
 import HelpButton from '~/components/HelpButton';
-import _ from 'lodash';
 import { setError } from '~/actions/errors';
 import moment, { ISO_8601 } from 'moment';
-
-const backups = [
-  {
-    type: 'manual',
-    id: 'backup_24',
-    created: '2016-06-09T15:05:55',
-    finished: '2016-06-09T15:06:55',
-    status: 'successful',
-    datacenter: {
-      label: 'Newark, NJ',
-      id: 'datacenter_6',
-    },
-  },
-  {
-    type: 'daily',
-    id: 'backup_54778593',
-    created: '2016-06-09T15:05:55',
-    finished: '2016-06-09T15:06:55',
-    status: 'successful',
-    datacenter: {
-      label: 'Newark, NJ',
-      id: 'datacenter_6',
-    },
-  },
-  {
-    type: 'weekly',
-    id: 'backup_26',
-    created: '2016-06-08T15:05:55',
-    finished: '2016-06-08T15:06:55',
-    status: 'successful',
-    datacenter: {
-      label: 'Newark, NJ',
-      id: 'datacenter_6',
-    },
-  },
-  {
-    type: 'weekly',
-    id: 'backup_27',
-    created: '2016-06-01T15:05:55',
-    finished: '2016-06-01T15:06:55',
-    status: 'successful',
-    datacenter: {
-      label: 'Newark, NJ',
-      id: 'datacenter_6',
-    },
-  },
-];
 
 export class BackupsPage extends Component {
   constructor() {
@@ -165,7 +117,10 @@ export class BackupsPage extends Component {
       </div>);
   }
 
-  renderBackup(backup, title = null) {
+  renderBackup(backup) {
+    if (!backup) {
+      return null;
+    }
     const calendar = {
       sameDay: '[Today]',
       nextDay: '[Tomorrow]',
@@ -176,7 +131,8 @@ export class BackupsPage extends Component {
     };
     const { dispatch } = this.props;
     const { selectedBackup } = this.props.backups;
-    const cardTitle = title || backup.created.calendar(null, calendar);
+    const created = moment(backup.created);
+    const cardTitle = created.calendar(null, calendar);
     return (
       <div
         className={`backup ${selectedBackup === backup.id ? 'selected' : ''}`}
@@ -185,9 +141,9 @@ export class BackupsPage extends Component {
         <h3>{cardTitle}</h3>
         <dl className="dl-horizontal row">
           <dt className="col-sm-2">Date</dt>
-          <dd className="col-sm-10">{backup.created.format('dddd, MMMM D YYYY')}</dd>
+          <dd className="col-sm-10">{created.format('dddd, MMMM D YYYY')}</dd>
           <dt className="col-sm-2">Time</dt>
-          <dd className="col-sm-10">{backup.created.format('LT')}</dd>
+          <dd className="col-sm-10">{created.format('LT')}</dd>
         </dl>
       </div>
     );
@@ -220,6 +176,7 @@ export class BackupsPage extends Component {
   }
 
   renderBackups() {
+    const backups = Object.values(this.getLinode()._backups.backups);
     if (backups.length === 0) {
       return (
         <p>
@@ -230,28 +187,15 @@ export class BackupsPage extends Component {
     }
     const { selectedBackup, targetLinode } = this.props.backups;
     const { linodes, dispatch } = this.props;
-    const datedBackups = _.map(backups, b => _.reduce(b, (a, v, k) =>
-      ({ ...a, [k]: k === 'created' || k === 'finished' ? moment(v) : v }), { }));
-    const daily = datedBackups.find(b => b.type === 'daily');
-    const thisweek = _.sortBy(datedBackups, b => b.date).find(b => b.type === 'weekly');
-    const lastweek = _.reverse(_.sortBy(datedBackups, b => b.date)).find(b => b.type === 'weekly');
-    const manual = datedBackups.find(b => b.type === 'manual');
     const thisLinode = this.getLinode();
     return (
       <div>
         <div className="row backups">
-          <div className="col-md-3">
-            {this.renderBackup(daily)}
-          </div>
-          <div className="col-md-3">
-            {this.renderBackup(thisweek, 'This week')}
-          </div>
-          <div className="col-md-3">
-            {this.renderBackup(lastweek, 'Last week')}
-          </div>
-          <div className="col-md-3">
-            {this.renderBackup(manual, 'Manual')}
-          </div>
+          {backups.map(b =>
+            <div className="col-md-3">
+              {this.renderBackup(b)}
+            </div>
+          )}
         </div>
         <div className="row restore">
           <div className="col-md-1">
