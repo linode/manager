@@ -35,7 +35,7 @@
 
         &.strength-3 {
             span:nth-child(1), span:nth-child(2), span:nth-child(3) {
-                background: darken($yellow, 20);
+                background: $dark-yellow;
             }
         }
 
