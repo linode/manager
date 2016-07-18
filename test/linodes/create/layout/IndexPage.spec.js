@@ -9,7 +9,6 @@ import * as fetch from '~/fetch';
 import { UPDATE_DISTROS } from '~/actions/api/distros';
 import { UPDATE_DATACENTERS } from '~/actions/api/datacenters';
 import { UPDATE_SERVICES } from '~/actions/api/services';
-import { UPDATE_LINODES } from '~/actions/api/linodes';
 import * as errors from '~/actions/errors';
 import * as apiLinodes from '~/actions/api/linodes';
 import { state, linodes } from '~/../test/data';
@@ -100,7 +99,7 @@ describe('linodes/create/layout/IndexPage', () => {
     await expectDispatched(dispatchedServices, '/services/?page=1', UPDATE_SERVICES);
 
     // Assert that dispatchedServices is a function that fetches services
-    await expectDispatched(dispatchedLinodes, '/linodes/?page=1', UPDATE_LINODES);
+    await expectDispatched(dispatchedLinodes, '/linodes/?page=1', apiLinodes.UPDATE_LINODES);
   });
 
   it('dispatches an error if fetching when mounted fails', async () => {
