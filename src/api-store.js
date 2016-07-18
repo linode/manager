@@ -60,14 +60,17 @@ export default function makeApiList(config, transform = d => d) {
         };
       }
       case _config.actions.update_singular: {
-        const item = action[_config.singular];
+        let item = action[_config.singular];
+        if (!state[_config.plural][item.id]) {
+          item = transform(transformItem(_config.subresources, item));
+        }
         return {
           ...state,
           [_config.plural]: {
             ...state[_config.plural],
             [item.id]: {
               ...state[_config.plural][item.id],
-              ...transform(transformItem(_config.subresources, item)),
+              ...item,
             },
           },
         };
