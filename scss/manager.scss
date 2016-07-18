@@ -28,7 +28,7 @@ $main-padding-lr: 2rem;
 $sidebar-width: 200px;
 $nav-height: 84px;
 $info-nav-height: 25px;
-$main-nav-height: calc(#{$nav-height} - #{$info-nav-height});
+$main-nav-height: $nav-height - $info-nav-height;
 
 $input-height: 30px;
 $input-padding: 0 .5rem;
@@ -129,8 +129,9 @@ a {
 }
 
 .header-main nav {
+    $margin-lr: 30px;
     height: $main-nav-height;
-    padding: 0 30px;
+    padding: 0 $margin-lr;
     margin: 0 !important;
 
     &.navbar-default {
@@ -146,24 +147,21 @@ a {
         height: $main-nav-height;
     }
 
-    .navbar-linode {
-        display: inline-block;
-        margin-right: 30px;
-        position: relative;
-        top: -25px;
+    .nav-item {
+        float: left;
+        line-height: $main-nav-height;
+        margin-right: $margin-lr;
+        margin-left: 0 !important; /* override bootstrap styles */
     }
 
     .navbar-search {
-        display: inline-block;
-        position: relative;
-        margin-right: 30px;
-        top: -25px;
+        $margin-tb: ($main-nav-height - $input-height) / 2;
+        height: $input-height;
+        margin: $margin-tb $margin-lr $margin-tb 0;
 
         input {
             width: 300px;
             border: 0;
-            padding: 15px;
-            height: 30px;
         }
 
         input:focus {
@@ -199,39 +197,29 @@ a {
     .navbar-session {
         display: inline-block;
         line-height: $main-nav-height;
+
+        .nav-user {
+            padding-right: $margin-lr;
+        }
+
         .nav-gravatar {
             display: inline-block;
             position: relative;
-            width: 20px;
-            height: 20px;
-            padding-left: 5px;
-            padding-right: 40px;
-            .nav-gravatar-img {
-                width: 40px;
-                height: 40px;
-            }
+
             .nav-gravatar-badge {
+                $height: 20px;
                 position: absolute;
-                top: 2px;
-                right: -8px;
-                font-size: .7em;
+                top: $height / 4;
+                right: -1 * ($height / 2);
+                font-size: 12px;
                 background: $red;
                 color: $white;
-                width: 18px;
-                height: 18px;
+                width: $height;
+                height: $height;
+                line-height: $height;
                 text-align: center;
-                line-height: 18px;
                 border-radius: 50%;
-                box-shadow: 0 0 1px #333;
             }
-        }
-
-        a {
-            padding-right: 15px;
-        }
-
-        a:last-of-type {
-            padding-right: 0;
         }
     }
 }
@@ -295,7 +283,11 @@ input, .btn {
     height: $input-height;
     line-height: $input-height;
     font-size: $font-size;
-    padding: $input-padding;
+    padding: 0 $input-padding;
+
+    &.btn {
+        padding: $input-padding;
+    }
 }
 
 .input-group {
