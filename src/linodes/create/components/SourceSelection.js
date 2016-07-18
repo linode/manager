@@ -40,6 +40,7 @@ export default class SourceSelection extends Component {
   renderBackups() {
     const { linodes, selected, onSourceSelected } = this.props;
     const hasBackups = (linode) =>
+      linode.backups && linode.backups.enabled &&
       linode._backups && Object.values(linode._backups.backups).length;
     const linodesWithBackups = _.filter(linodes.linodes, hasBackups);
 
