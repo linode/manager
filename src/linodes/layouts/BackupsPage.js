@@ -126,7 +126,7 @@ export class BackupsPage extends Component {
       sameDay: '[Today]',
       nextDay: '[Tomorrow]',
       nextWeek: 'dddd',
-      lastDay: 'Yesterday',
+      lastDay: '[Yesterday]',
       lastWeek: 'dddd',
       sameElse: ISO_8601,
     };
