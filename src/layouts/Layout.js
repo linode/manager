@@ -72,11 +72,11 @@ export class Layout extends Component {
   }
 
   render() {
-    const { username, emailHash, errors } = this.props;
+    const { username, emailHash, currentPath, errors } = this.props;
     return (
       <div className="layout">
         <Header username={username} emailHash={emailHash} />
-        <Sidebar />
+        <Sidebar path={currentPath} />
         <div className="main">
           {errors.status === null ?
             <div className="container">
@@ -92,6 +92,7 @@ export class Layout extends Component {
 Layout.propTypes = {
   username: PropTypes.string,
   emailHash: PropTypes.string,
+  currentPath: PropTypes.string,
   children: PropTypes.node.isRequired,
   errors: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
@@ -101,6 +102,7 @@ function select(state) {
   return {
     username: state.authentication.username,
     emailHash: state.authentication.emailHash,
+    currentPath: state.routing.locationBeforeTransitions.pathname,
     errors: state.errors,
   };
 }

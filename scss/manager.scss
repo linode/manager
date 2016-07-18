@@ -277,6 +277,22 @@ a {
             padding-left: 15px;
         }
     }
+    .highlight {
+        background-color: $gray;
+        width: $sidebar-width - 1;
+        height: 33px;
+        border-top: $border;
+        border-bottom: $border;
+        position: absolute;
+        left: 0px;
+        margin-top: -6px;
+        z-index: -100;
+
+    }
+    .no-highlight {
+        background-color: inherit;
+    }
+
 }
 
 .main {

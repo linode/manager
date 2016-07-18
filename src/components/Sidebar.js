@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 
-export default function Sidebar() {
+export default function Sidebar(props) {
+  const { path } = props;
+
   const links = [
     { icon: 'th', name: 'Linodes', link: '/linodes' },
     { icon: 'code-fork', name: 'NodeBalancers', link: '/nodebalancers' },
@@ -17,6 +19,8 @@ export default function Sidebar() {
       {
         links.map(({ icon, name, link }) =>
           <li key={name}>
+            <div className={path.includes(link) ? 'highlight' : 'no-highlight'}>
+            </div>
             <Link to={link}>
               <span className={`fa fa-${icon}`} />
               <span>{name}</span>
@@ -28,3 +32,7 @@ export default function Sidebar() {
     </div>
   );
 }
+
+Sidebar.propTypes = {
+  path: PropTypes.string,
+};
