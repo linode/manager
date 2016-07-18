@@ -8,6 +8,7 @@ import {
   enableBackup,
   cancelBackup,
 } from '~/actions/api/backups';
+import { UPDATE_LINODE } from '~/actions/api/linodes';
 import * as fetch from '~/fetch';
 
 describe('actions/api/backups', async () => {
@@ -82,8 +83,8 @@ describe('actions/api/backups', async () => {
     expect(fetchStub.calledWith(
       auth.token, '/linodes/foo_1/backups/enable', { method: 'POST' })).to.equal(true);
     expect(dispatch.calledWith({
-      type: UPDATE_BACKUP,
-      backup: { id: 'backup_1' },
+      type: UPDATE_LINODE,
+      linode: { id: 'backup_1' },
     })).to.equal(true);
   });
 
@@ -98,8 +99,8 @@ describe('actions/api/backups', async () => {
     expect(fetchStub.calledWith(
       auth.token, '/linodes/foo_1/backups/cancel', { method: 'POST' })).to.equal(true);
     expect(dispatch.calledWith({
-      type: UPDATE_BACKUP,
-      backup: { id: 'backup_1' },
+      type: UPDATE_LINODE,
+      linode: { id: 'backup_1' },
     })).to.equal(true);
   });
 });
