@@ -199,11 +199,11 @@ export class BackupsPage extends Component {
             </div>
           )}
         </div>
-        <div className="row restore">
-          <div className="col-md-1">
+        <div className="restore">
+          <div className="restore-col">
             Restore to:
           </div>
-          <div className="col-md-4">
+          <div className="restore-col">
             <div className="radio">
               <label>
                 <input
@@ -283,7 +283,7 @@ export class BackupsPage extends Component {
           <div className="col-md-4">
             <select
               value={timeOfDay}
-              className="form-control"
+              className="form-control vcenter"
               id="schedule"
               onChange={e => dispatch(setTimeOfDay(e.target.value))}
             >
@@ -309,7 +309,7 @@ export class BackupsPage extends Component {
           <div className="col-md-4">
             <select
               value={dayOfWeek}
-              className="form-control"
+              className="form-control vcenter"
               id="dow"
               onChange={e => dispatch(setDayOfWeek(e.target.value))}
             >
@@ -323,7 +323,7 @@ export class BackupsPage extends Component {
             </select>
           </div>
         </div>
-        <div className="row">
+        <div className="form-group">
           <div className="col-md-8">
             <p className="text-muted">
               The weekly and bi-weekly backups store the one

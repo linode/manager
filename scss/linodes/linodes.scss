@@ -137,3 +137,14 @@ table.linodes {
         word-wrap: nowrap;
     }
 }
+
+.restore {
+    .restore-col {
+        display: inline-block;
+        vertical-align: top;
+
+        &:first-of-type {
+            margin-right: 1rem;
+        }
+    }
+}
