@@ -64,7 +64,14 @@ export class LinodeNetworking extends Component {
           <div className="col-sm-8 content-col right">
             <ul className="list-unstyled">
               {this.ipList(ipv4.map(
-                ip => `${ip} / 24 ( li-${ip.split('.')[3]}.members.linode.com )`
+                 ip => (
+                   <span>
+                     <span>{ip} / 24 </span>
+                     <span className="text-nowrap">
+                       ( {`li-${ip.split('.')[3]}.members.linode.com`} )
+                     </span>
+                   </span>
+                 )
               ))}
             </ul>
           </div>
