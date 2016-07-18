@@ -111,7 +111,7 @@ describe('linodes/layouts/BackupsPage', () => {
   it('calls cancel backups on click');
 
   it('renders the manual backup UI', () => {
-    const page = shallow(
+    const page = mount(
       <BackupsPage
         dispatch={dispatch}
         linodes={linodes}
@@ -120,7 +120,7 @@ describe('linodes/layouts/BackupsPage', () => {
       />);
     const manual = page.find('.manual-backups');
     expect(manual).to.exist;
-    expect(manual.contains(<h2>Manual Backup</h2>))
+    expect(manual.contains(<h2>Manual backup</h2>))
       .to.equal(true);
     expect(manual.find('button').props().className)
       .to.equal('btn btn-primary');
@@ -183,7 +183,7 @@ describe('linodes/layouts/BackupsPage', () => {
   });
 
   it('renders the latest backups', () => {
-    const page = shallow(
+    const page = mount(
       <BackupsPage
         dispatch={dispatch}
         linodes={linodes}
@@ -195,7 +195,7 @@ describe('linodes/layouts/BackupsPage', () => {
   });
 
   it('dispatches a SELECT_BACKUP action when one is clicked', () => {
-    const page = shallow(
+    const page = mount(
       <BackupsPage
         dispatch={dispatch}
         linodes={linodes}
@@ -218,32 +218,12 @@ describe('linodes/layouts/BackupsPage', () => {
         params={{ linodeId: 'linode_1234' }}
         backups={backups}
       />);
-    const existing = page.find('.restore')
-      .find('input[type="radio"]')
-      .last();
+    const existing = page.find('.restore .radio').last().find('input');
     dispatch.reset();
     existing.simulate('change', { target: { checked: true } });
     expect(dispatch.calledOnce).to.equal(true);
     expect(dispatch.firstCall.args[0])
       .to.deep.equal(actions.selectTargetLinode('linode_1234'));
-  });
-
-  it('dispatches a SELECT_TARGET_LINODE action when "existing linode" is unchecked', () => {
-    const page = shallow(
-      <BackupsPage
-        dispatch={dispatch}
-        linodes={linodes}
-        params={{ linodeId: 'linode_1234' }}
-        backups={backups}
-      />);
-    const existing = page.find('.restore')
-      .find('input[type="radio"]')
-      .last();
-    dispatch.reset();
-    existing.simulate('change', { target: { checked: false } });
-    expect(dispatch.calledOnce).to.equal(true);
-    expect(dispatch.firstCall.args[0])
-      .to.deep.equal(actions.selectTargetLinode(''));
   });
 
   it('dispatches a SELECT_TARGET_LINODE action when "this linode" is checked', () => {
@@ -254,9 +234,7 @@ describe('linodes/layouts/BackupsPage', () => {
         params={{ linodeId: 'linode_1234' }}
         backups={backups}
       />);
-    const existing = page.find('.restore')
-      .find('input[type="radio"]')
-      .at(0);
+    const existing = page.find('.restore .radio').at(0).find('input');
     dispatch.reset();
     existing.simulate('change', { target: { checked: true } });
     expect(dispatch.calledOnce).to.equal(true);
@@ -264,53 +242,15 @@ describe('linodes/layouts/BackupsPage', () => {
       .to.deep.equal(actions.selectTargetLinode('linode_1234'));
   });
 
-  it('dispatches a SELECT_TARGET_LINODE action when "this linode" is unchecked', () => {
-    const page = shallow(
-      <BackupsPage
-        dispatch={dispatch}
-        linodes={linodes}
-        params={{ linodeId: 'linode_1234' }}
-        backups={backups}
-      />);
-    const existing = page.find('.restore')
-      .find('input[type="radio"]')
-      .at(0);
-    dispatch.reset();
-    existing.simulate('change', { target: { checked: false } });
-    expect(dispatch.calledOnce).to.equal(true);
-    expect(dispatch.firstCall.args[0])
-      .to.deep.equal(actions.selectTargetLinode(''));
-  });
-
-  it('dispatches a SELECT_TARGET_LINODE action when "new linode" is unchecked', () => {
-    const page = shallow(
-      <BackupsPage
-        dispatch={dispatch}
-        linodes={linodes}
-        params={{ linodeId: 'linode_1234' }}
-        backups={backups}
-      />);
-    const existing = page.find('.restore')
-      .find('input[type="radio"]')
-      .at(1);
-    dispatch.reset();
-    existing.simulate('change', { target: { checked: false } });
-    expect(dispatch.calledOnce).to.equal(true);
-    expect(dispatch.firstCall.args[0])
-      .to.deep.equal(actions.selectTargetLinode('linode_1234'));
-  });
-
   it('dispatches a SELECT_TARGET_LINODE action when "new linode" is checked', () => {
-    const page = shallow(
+    const page = mount(
       <BackupsPage
         dispatch={dispatch}
         linodes={linodes}
         params={{ linodeId: 'linode_1234' }}
         backups={backups}
       />);
-    const existing = page.find('.restore')
-      .find('input[type="radio"]')
-      .at(1);
+    const existing = page.find('.restore .radio').at(1).find('input');
     dispatch.reset();
     existing.simulate('change', { target: { checked: true } });
     expect(dispatch.calledOnce).to.equal(true);
@@ -319,7 +259,7 @@ describe('linodes/layouts/BackupsPage', () => {
   });
 
   it('dispatches a SELECT_TARGET_LINODE action when a Linode is selected', () => {
-    const page = shallow(
+    const page = mount(
       <BackupsPage
         dispatch={dispatch}
         linodes={linodes}
@@ -335,7 +275,7 @@ describe('linodes/layouts/BackupsPage', () => {
   });
 
   it('restores backups when asked to', async () => {
-    const page = shallow(<BackupsPage
+    const page = mount(<BackupsPage
       dispatch={dispatch}
       linodes={linodes}
       params={{ linodeId: 'linode_1234' }}

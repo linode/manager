@@ -4,7 +4,7 @@ import { expect } from 'chai';
 import { shallow } from 'enzyme';
 import SourceSelection from '~/linodes/create/components/SourceSelection';
 import { Tab } from 'react-tabs';
-import { testDistros } from '~/../test/data';
+import { testDistros, linodes } from '~/../test/data';
 
 describe('linodes/create/components/SourceSelection', () => {
   const sandbox = sinon.sandbox.create();
@@ -20,6 +20,7 @@ describe('linodes/create/components/SourceSelection', () => {
       },
     },
     distros: { distributions: { ...testDistros } },
+    linodes: { linodes },
   };
 
   it('renders the card header', () => {
@@ -28,6 +29,7 @@ describe('linodes/create/components/SourceSelection', () => {
         distros={state.distros.distributions}
         source={state.create.source.source}
         selectedTab={state.create.source.sourceTab}
+        linodes={state.linodes}
       />
     );
     expect(c.contains(<h2>Select a source</h2>)).to.equal(true);
@@ -39,10 +41,10 @@ describe('linodes/create/components/SourceSelection', () => {
         distros={state.distros.distributions}
         source={state.create.source.source}
         selectedTab={state.create.source.sourceTab}
+        linodes={linodes}
       />
     );
     expect(c.contains(<Tab>Distributions</Tab>)).to.equal(true);
-    expect(c.contains(<Tab>StackScripts</Tab>)).to.equal(true);
     expect(c.contains(<Tab>Backups</Tab>)).to.equal(true);
   });
 
@@ -54,6 +56,7 @@ describe('linodes/create/components/SourceSelection', () => {
         source={state.create.source.source}
         selectedTab={state.create.source.sourceTab}
         onTabChange={onTabChange}
+        linodes={linodes}
       />);
     c.find('Tabs').props().onSelect(2);
     expect(onTabChange.calledOnce).to.equal(true);
@@ -66,6 +69,7 @@ describe('linodes/create/components/SourceSelection', () => {
         distros={state.distros.distributions}
         source={state.create.source.source}
         selectedTab={state.create.source.sourceTab}
+        linodes={linodes}
       />);
     expect(c.find('DistroVendor').length).to.equal(2);
   });
@@ -78,6 +82,7 @@ describe('linodes/create/components/SourceSelection', () => {
         source={state.create.source.source}
         selectedTab={state.create.source.sourceTab}
         onSourceSelected={onSourceSelected}
+        linodes={linodes}
       />);
     const distro = state.distros.distributions.distro_1234;
     c.find('DistroVendor').first().props()

@@ -1,0 +1,20 @@
+.backup {
+    border: $border;
+    cursor: pointer;
+    cursor: hand;
+
+    header {
+        padding: 0;
+        height: $input-height;
+        line-height: $input-height;
+    }
+
+    > :not(header) {
+        padding: 15px;
+    }
+
+    
+    .content-col:last-of-type {
+        margin: 0;
+    }
+}

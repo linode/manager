@@ -35,18 +35,18 @@ export class IndexPage extends Component {
     const { dispatch } = this.props;
     try {
       await Promise.all([
-        dispatch(fetchLinodes()),
         dispatch(fetchDistros()),
         dispatch(fetchDatacenters()),
         dispatch(fetchServices()),
+        dispatch(fetchLinodes()),
       ]);
 
       const { linodes } = this.props;
-      _.forEach(linodes.linodes, async l => {
+      await Promise.all(_.map(linodes.linodes, async l => {
         if (l.backups.enabled && l._backups.totalPages === -1) {
           await dispatch(fetchBackups(0, l.id));
         }
-      });
+      }));
     } catch (response) {
       dispatch(setError(response));
     }

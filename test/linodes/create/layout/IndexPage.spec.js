@@ -9,9 +9,10 @@ import * as fetch from '~/fetch';
 import { UPDATE_DISTROS } from '~/actions/api/distros';
 import { UPDATE_DATACENTERS } from '~/actions/api/datacenters';
 import { UPDATE_SERVICES } from '~/actions/api/services';
+import { UPDATE_LINODES } from '~/actions/api/linodes';
 import * as errors from '~/actions/errors';
 import * as apiLinodes from '~/actions/api/linodes';
-import { state } from '~/../test/data';
+import { state, linodes } from '~/../test/data';
 
 describe('linodes/create/layout/IndexPage', () => {
   const sandbox = sinon.sandbox.create();
@@ -27,6 +28,7 @@ describe('linodes/create/layout/IndexPage', () => {
           distros={state.distros}
           datacenters={state.datacenters}
           services={state.services}
+          linodes={{ linodes }}
         />);
       expect(page.find(thing)).to.exist;
     };
@@ -46,10 +48,11 @@ describe('linodes/create/layout/IndexPage', () => {
         distros={state.distros}
         datacenters={state.datacenters}
         services={state.services}
+        linodes={{ linodes }}
       />);
     const ss = page.find('SourceSelection');
-    ss.props().onTabChange(2);
-    expect(ss.find('Tab').at(2).props().selected)
+    ss.props().onTabChange(1);
+    expect(ss.find('Tab').at(1).props().selected)
       .to.equal(true);
   });
 
@@ -61,45 +64,43 @@ describe('linodes/create/layout/IndexPage', () => {
         distros={state.distros}
         datacenters={state.datacenters}
         services={state.services}
+        linodes={{ linodes }}
       />);
-    expect(dispatch.calledThrice).to.equal(true);
+    expect(dispatch.callCount).to.equal(4);
 
     const dispatchedDistros = dispatch.firstCall.args[0];
     const dispatchedDatacenters = dispatch.secondCall.args[0];
     const dispatchedServices = dispatch.thirdCall.args[0];
+    const dispatchedLinodes = dispatch.getCall(3).args[0];
 
-    // Assert that dispatchedDistros is a function that fetches distros
-    dispatch.reset();
     const fetchStub = sandbox.stub(fetch, 'fetch').returns({
       json: () => {},
     });
-    await dispatchedDistros(dispatch, () => ({
-      authentication: { token: 'token' },
-    }));
-    expect(fetchStub.calledOnce).to.equal(true);
-    expect(fetchStub.firstCall.args[1]).to.equal('/distributions/?page=1');
-    expect(dispatch.calledOnce).to.equal(true);
-    expect(dispatch.firstCall.args[0].type).to.equal(UPDATE_DISTROS);
+
+    async function expectDispatched(call, endpoint, type) {
+      dispatch.reset();
+      fetchStub.resetHistory();
+      await call(dispatch, () => ({
+        authentication: { token: 'token' },
+      }));
+
+      expect(fetchStub.calledOnce).to.equal(true);
+      expect(fetchStub.firstCall.args[1]).to.equal(endpoint);
+      expect(dispatch.calledOnce).to.equal(true);
+      expect(dispatch.firstCall.args[0].type).to.equal(type);
+    }
+
+    // Assert that dispatchedDistros is a function that fetches distros
+    await expectDispatched(dispatchedDistros, '/distributions/?page=1', UPDATE_DISTROS);
 
     // Assert that dispatchedDatacenters is a function that fetches datacenters
-    dispatch.reset();
-    await dispatchedDatacenters(dispatch, () => ({
-      authentication: { token: 'token' },
-    }));
-    expect(fetchStub.calledTwice).to.equal(true);
-    expect(fetchStub.secondCall.args[1]).to.equal('/datacenters/?page=1');
-    expect(dispatch.calledOnce).to.equal(true);
-    expect(dispatch.firstCall.args[0].type).to.equal(UPDATE_DATACENTERS);
+    await expectDispatched(dispatchedDatacenters, '/datacenters/?page=1', UPDATE_DATACENTERS);
 
     // Assert that dispatchedServices is a function that fetches services
-    dispatch.reset();
-    await dispatchedServices(dispatch, () => ({
-      authentication: { token: 'token' },
-    }));
-    expect(fetchStub.calledThrice).to.equal(true);
-    expect(fetchStub.thirdCall.args[1]).to.equal('/services/?page=1');
-    expect(dispatch.calledOnce).to.equal(true);
-    expect(dispatch.firstCall.args[0].type).to.equal(UPDATE_SERVICES);
+    await expectDispatched(dispatchedServices, '/services/?page=1', UPDATE_SERVICES);
+
+    // Assert that dispatchedServices is a function that fetches services
+    await expectDispatched(dispatchedLinodes, '/linodes/?page=1', UPDATE_LINODES);
   });
 
   it('dispatches an error if fetching when mounted fails', async () => {
@@ -115,6 +116,7 @@ describe('linodes/create/layout/IndexPage', () => {
         distros={state.distros}
         datacenters={state.datacenters}
         services={state.services}
+        linodes={{ linodes }}
       />
     );
 
@@ -129,6 +131,7 @@ describe('linodes/create/layout/IndexPage', () => {
         distros={state.distros}
         datacenters={state.datacenters}
         services={state.services}
+        linodes={{ linodes }}
       />);
     const ss = page.find('SourceSelection');
     ss.props().onSourceSelected({ id: 'distro_1234' });
@@ -143,6 +146,7 @@ describe('linodes/create/layout/IndexPage', () => {
         distros={state.distros}
         datacenters={state.datacenters}
         services={state.services}
+        linodes={{ linodes }}
       />);
     const ds = page.find('DatacenterSelection');
     ds.props().onDatacenterSelected({ id: 'datacenter_2' });
@@ -157,6 +161,7 @@ describe('linodes/create/layout/IndexPage', () => {
         distros={state.distros}
         datacenters={state.datacenters}
         services={state.services}
+        linodes={{ linodes }}
       />);
     const ss = page.find('ServiceSelection');
     ss.props().onServiceSelected({ id: 'linode1024.5' });
@@ -174,6 +179,7 @@ describe('linodes/create/layout/IndexPage', () => {
         distros={state.distros}
         datacenters={state.datacenters}
         services={state.services}
+        linodes={{ linodes }}
       />
     );
     dispatch.reset();
@@ -212,6 +218,7 @@ describe('linodes/create/layout/IndexPage', () => {
         distros={state.distros}
         datacenters={state.datacenters}
         services={state.services}
+        linodes={{ linodes }}
       />
     );
     dispatch.reset();
