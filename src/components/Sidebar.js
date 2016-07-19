@@ -19,7 +19,7 @@ export default function Sidebar(props) {
       {
         links.map(({ icon, name, link }) =>
           <Link key={name} to={link}>
-            <li className={path.includes(link) ? 'active' : ''}>
+            <li className={path.indexOf(link) === 0 ? 'active' : ''}>
               <span className={`fa fa-${icon}`} />
               <span>{name}</span>
             </li>
