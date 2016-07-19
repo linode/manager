@@ -93,6 +93,10 @@ export default function makeApiList(config, transform = d => d) {
     };
   }
 
+  function invalidate(_config, state) {
+    return { ...state, [_config.plural]: { }, totalPages: -1, pagesFetched: [] };
+  }
+
   function passToSubresource(_config, state, action) {
     for (let i = 0; i < Object.keys(_config.subresources).length; i++) {
       const key = Object.keys(_config.subresources)[i];
@@ -126,6 +130,8 @@ export default function makeApiList(config, transform = d => d) {
         return updateSingular(_config, state, action);
       case _config.actions.delete_one:
         return deleteOne(_config, state, action);
+      case `@@${_config.plural}/INVALIDATE_CACHE`:
+        return invalidate(_config, state, action);
       default:
         if (_config.subresources) {
           return passToSubresource(_config, state, action);
@@ -272,4 +278,11 @@ export function makeCreateItem(action, plural, singular) {
     dispatch({ type: action, [singular]: json });
     return json;
   };
+}
+
+/**
+ * Returns a cache invalidation action for the specified resource.
+ */
+export function invalidateCache(plural) {
+  return { type: `@@${plural}/INVALIDATE_CACHE` };
 }
