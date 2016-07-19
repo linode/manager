@@ -87,7 +87,7 @@ export default class SourceSelection extends Component {
     const currentIndex = backupsPage * perPageLimit;
     const linodesOnPage = linodesWithBackups.slice(currentIndex, currentIndex + perPageLimit);
 
-    const maxPage = Math.floor(linodesWithBackups.length / perPageLimit);
+    const maxPage = Math.ceil(linodesWithBackups.length / perPageLimit) - 1;
     const gotoPage = page => e => {
       e.preventDefault();
       this.setState({ backupsPage: page });
@@ -143,7 +143,7 @@ export default class SourceSelection extends Component {
                   <span aria-hidden="true">&laquo;</span>
                 </a>
               </li>
-              {_.range(maxPage).map(pageIndex =>
+              {_.range(maxPage + 1).map(pageIndex =>
                 <li className="page-item" key={pageIndex}>
                   <a href="#" onClick={gotoPage(pageIndex)} className="page-link">
                     {pageIndex + 1}

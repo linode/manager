@@ -76,22 +76,6 @@ describe('linodes/create/components/SourceSelection', () => {
     expect(c.find('DistroVendor').length).to.equal(2);
   });
 
-  it('renders Backups', () => {
-    const c = mount(
-      <SourceSelection
-        distros={state.distros.distributions}
-        source={state.create.source.source}
-        selectedTab={1}
-        linodes={state.linodes}
-      />
-    );
-
-    expect(c.find('h3').length).to.equal(1);
-    expect(c.find(<h3>Test Linode</h3>)).to.exist;
-    expect(c.find('.backup-group').length).to.equal(1);
-    expect(c.find('Backup').length).to.equal(1);
-  });
-
   it('invokes the onSourceSelected function as necessary for Distros', () => {
     const onSourceSelected = sandbox.spy();
     const c = mount(
@@ -110,22 +94,6 @@ describe('linodes/create/components/SourceSelection', () => {
     expect(onSourceSelected.calledWith(distro)).to.equal(true);
   });
 
-  it('invokes the onSourceSelected function as necessary for Backups', () => {
-    const onSourceSelected = sandbox.spy();
-    const c = mount(
-      <SourceSelection
-        distros={state.distros.distributions}
-        source={state.create.source.source}
-        selectedTab={1}
-        onSourceSelected={onSourceSelected}
-        linodes={state.linodes}
-      />
-    );
-    c.find('Backup').first().simulate('click');
-    expect(onSourceSelected.calledOnce).to.equal(true);
-    expect(onSourceSelected.calledWith('backup_54778593')).to.equal(true);
-  });
-
   const moreBackupsLinodes = {
     ...state.linodes,
     linodes: {
@@ -139,6 +107,21 @@ describe('linodes/create/components/SourceSelection', () => {
     },
   };
 
+  it('renders Backups', () => {
+    const c = mount(
+      <SourceSelection
+        distros={state.distros.distributions}
+        source={state.create.source.source}
+        selectedTab={1}
+        linodes={moreBackupsLinodes}
+      />
+    );
+
+    expect(c.find('table tbody tr').length).to.equal(2);
+    // Pagination not shown because the number of rows is less than rowsPerPage(=20)
+    expect(c.find('.pagination').length).to.equal(0);
+  });
+
   it('only shows shows n linodes per page of Backups', () => {
     const c = mount(
       <SourceSelection
@@ -151,7 +134,14 @@ describe('linodes/create/components/SourceSelection', () => {
       />
     );
 
-    expect(c.find('Backup').length).to.equal(1);
+    // Only 1 row
+    expect(c.find('table tbody tr').length).to.equal(1);
+    // Four buttons (Previous, 1st page, 2nd page, Next)
+    expect(c.find('.page-item').length).to.equal(4);
+    expect(c.find('.page-item').at(0).text()).to.equal('«');
+    expect(c.find('.page-item').at(1).text()).to.equal('1');
+    expect(c.find('.page-item').at(2).text()).to.equal('2');
+    expect(c.find('.page-item').at(3).text()).to.equal('»');
   });
 
   it('changes pages when requested', () => {
@@ -166,19 +156,34 @@ describe('linodes/create/components/SourceSelection', () => {
       />
     );
 
+    const expectOnly = label => {
+      expect(c.find('table tbody tr').length).to.equal(1);
+      expect(c.find('tbody td').at(0).text()).to.equal(label);
+    };
+    const clickNth = n =>
+      c.find('.pagination .page-item').at(n).find('a')
+       .simulate('click', { preventDefault() {} });
+
     // Initial backup is the Test Backup
-    expect(c.find('h3').length).to.equal(1);
-    expect(c.find('h3').text()).to.equal('Test Linode');
-    // Next page
-    c.find('.next').simulate('click', { preventDefault() {} });
-    // First backup is the second backup
-    expect(c.find('h3').length).to.equal(1);
-    expect(c.find('h3').text()).to.equal('More backups');
-    // Previous page
-    c.find('.previous').simulate('click', { preventDefault() {} });
-    // First backup is original
-    expect(c.find('h3').length).to.equal(1);
-    expect(c.find('h3').text()).to.equal('Test Linode');
+    expectOnly('Test Linode');
+    // Previous does nothing
+    clickNth(0);
+    expectOnly('Test Linode');
+    // First page does nothing
+    clickNth(1);
+    expectOnly('Test Linode');
+    // Second page shows second linode
+    clickNth(2);
+    expectOnly('More backups');
+    // Next page does nothing
+    clickNth(3);
+    expectOnly('More backups');
+    // Previous goes to first page
+    clickNth(0);
+    expectOnly('Test Linode');
+    // Next goes to second page
+    clickNth(3);
+    expectOnly('More backups');
   });
 
   it('filters backups when updating filter', () => {
@@ -192,17 +197,35 @@ describe('linodes/create/components/SourceSelection', () => {
       />
     );
 
-    // Starts out with both backups
-    expect(c.find('.backup-group').length).to.equal(2);
+    // Show all linodes
+    expect(c.find('table tbody tr').length).to.equal(2);
     // Filter on 'More'
     c.find('.filter input').simulate('change', { target: { value: 'More' } });
     // Only show 'More backups' linode
-    expect(c.find('.backup-group').length).to.equal(1);
-    expect(c.find('h3').text()).to.equal('More backups');
+    expect(c.find('table tbody tr').length).to.equal(1);
+    expect(c.find('tbody tr td').at(0).text()).to.equal('More backups');
 
     // Reset filter
     c.find('.filter input').simulate('change', { target: { value: '' } });
-    // All backups should be shown
-    expect(c.find('.backup-group').length).to.equal(2);
+    // Show all linodes
+    expect(c.find('table tbody tr').length).to.equal(2);
+  });
+
+  it('invokes the onSourceSelected function as necessary for Backups', () => {
+    const onSourceSelected = sandbox.spy();
+    const c = mount(
+      <SourceSelection
+        distros={state.distros.distributions}
+        source={state.create.source.source}
+        selectedTab={1}
+        onSourceSelected={onSourceSelected}
+        linodes={state.linodes}
+      />
+    );
+
+    c.find('tbody tr td a').simulate('click', { preventDefault() {} });
+    c.find('Backup').first().simulate('click');
+    expect(onSourceSelected.calledOnce).to.equal(true);
+    expect(onSourceSelected.calledWith('backup_54778593')).to.equal(true);
   });
 });
