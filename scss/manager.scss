@@ -513,6 +513,52 @@ input[type=checkbox], input[type=radio] {
     }
 }
 
+table {
+    width: 100%;
+
+    td:first-of-type {
+        padding-left: 15px;
+    }
+
+    td:last-of-type {
+        padding-right: 15px;
+    }
+
+    td:not(:first-of-type) {
+        overflow: hidden;
+        word-wrap: nowrap;
+    }
+
+    thead {
+        background: $light-gray;
+        border: $border;
+        border-bottom: 0;
+        height: 35px;
+        line-height: 35px;
+
+        th {
+            font-weight: normal;
+        }
+
+        th:last-of-type {
+            border-right: $border;
+        }
+    }
+
+    tbody {
+        tr {
+            height: 35px;
+            line-height: 35px;
+            border: $border;
+            margin: 0 15px;
+            
+            &:not(.selected) {
+                background: $white;
+            }
+        }
+    }
+}
+
 .row:last-of-type > .content-col {
     margin-bottom: 0;
 }
