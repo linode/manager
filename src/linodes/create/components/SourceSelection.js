@@ -12,6 +12,7 @@ export default class SourceSelection extends Component {
     this.renderSourceTabs = this.renderSourceTabs.bind(this);
     this.renderHeader = this.renderHeader.bind(this);
     this.renderDistros = this.renderDistros.bind(this);
+    this.state = { backupsPage: 0, backupsFilter: '' };
   }
 
   renderDistros() {
@@ -38,13 +39,17 @@ export default class SourceSelection extends Component {
   }
 
   renderBackups() {
-    const { linodes, selected, onSourceSelected } = this.props;
+    const { linodes, selected, onSourceSelected, perPageLimit } = this.props;
+    const { backupsPage, backupsFilter } = this.state;
     const hasBackups = (linode) =>
       linode.backups && linode.backups.enabled &&
-      linode._backups && Object.values(linode._backups.backups).length;
-    const linodesWithBackups = _.filter(linodes.linodes, hasBackups);
+      linode._backups && Object.values(linode._backups.backups).length &&
+      linode.label.indexOf(backupsFilter) !== -1;
+    const linodesWithBackups = Object.values(_.filter(linodes.linodes, hasBackups));
 
-    const backupOptions = _.map(linodesWithBackups, l =>
+    const currentIndex = backupsPage * perPageLimit;
+    const linodesOnPage = linodesWithBackups.slice(currentIndex, currentIndex + perPageLimit);
+    const backupOptions = _.map(linodesOnPage, l =>
       <div key={l.label}>
         <h3>{l.label}</h3>
         <div className="backup-group">
@@ -60,9 +65,45 @@ export default class SourceSelection extends Component {
       </div>
     );
 
+
+    const decreaseCount = e => {
+      e.preventDefault();
+      this.setState({ backupsPage: Math.max(backupsPage - 1, 0) });
+    };
+    const increaseCount = e => {
+      e.preventDefault();
+      const maxPage = Math.floor(linodesWithBackups.length / perPageLimit);
+      this.setState({
+        backupsPage: Math.min(backupsPage + 1, maxPage),
+      });
+    };
+
     return (
       <div className="backups">
+        <div>
+          <div className="filter input-container">
+            <input
+              type="text"
+              onChange={e => this.setState({ backupsFilter: e.target.value, backupsPage: 0 })}
+              value={this.state.backupsFilter}
+              placeholder="Filter..."
+              className="form-control"
+            />
+          </div>
+        </div>
         {linodesWithBackups.length ? backupOptions : <span>No backups available.</span>}
+        <div className="clearfix">
+          <div className="nav pull-right">
+            <a
+              href="#"
+              onClick={decreaseCount}
+            >Previous</a>
+            <a
+              href="#"
+              onClick={increaseCount}
+            >Next</a>
+          </div>
+        </div>
       </div>
     );
   }
@@ -113,9 +154,11 @@ SourceSelection.propTypes = {
   onTabChange: PropTypes.func,
   onSourceSelected: PropTypes.func,
   selected: PropTypes.string,
+  perPageLimit: PropTypes.number,
 };
 
 SourceSelection.defaultProps = {
   onTabChange: () => {},
   onSourceSelected: () => {},
+  perPageLimit: 5,
 };
