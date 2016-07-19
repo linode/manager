@@ -6,7 +6,7 @@ import Sidebar from '../../src/components/Sidebar';
 describe('components/Sidebar', () => {
   it('renders sidebar component', () => {
     const sidebar = mount(
-      <Sidebar />
+      <Sidebar path="/linodes" />
     );
 
     expect(sidebar.find('li').length).to.equal(6);
@@ -16,11 +16,12 @@ describe('components/Sidebar', () => {
     expect(sidebar.find('li').at(3).text()).to.equal('DNS Manager');
     expect(sidebar.find('li').at(4).text()).to.equal('Account');
     expect(sidebar.find('li').at(5).text()).to.equal('Support');
+    expect(sidebar.find('li').at(0).find('.active')).to.exist;
   });
 
   it('renders sidebar links', () => {
     const sidebar = shallow(
-      <Sidebar />
+      <Sidebar path="/linodes" />
     );
 
     expect(sidebar.find({ to: '/linodes' }).length).to.equal(1);
