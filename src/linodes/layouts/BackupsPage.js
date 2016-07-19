@@ -203,11 +203,11 @@ export class BackupsPage extends Component {
     ];
 
     return (
-      <div className="row restore">
-        <div className="col-md-1">
+      <div className="restore">
+        <div className="restore-col">
           Restore to:
         </div>
-        <div className="col-md-4">
+        <div className="restore-col">
           {_.map(restoreData, this.renderRestoreRadio)}
         </div>
       </div>
@@ -259,7 +259,7 @@ export class BackupsPage extends Component {
     return (
       <div className="backup-schedule">
         <div className="form-group row">
-          <label htmlFor="schedule" className="col-md-4 form-control-label">
+          <label htmlFor="schedule" className="col-md-4">
             {/* TODO: Use user time settings */}
             Time of Day (EST):
           </label>
@@ -286,7 +286,7 @@ export class BackupsPage extends Component {
           </div>
         </div>
         <div className="form-group row">
-          <label htmlFor="dow" className="col-md-4 form-control-label">
+          <label htmlFor="dow" className="col-md-4">
             Day of week:
           </label>
           <div className="col-md-4">
@@ -306,7 +306,7 @@ export class BackupsPage extends Component {
             </select>
           </div>
         </div>
-        <div className="form-group">
+        <div className="form-group row">
           <div className="col-md-8">
             <p className="text-muted">
               The weekly and bi-weekly backups store the one
