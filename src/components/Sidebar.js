@@ -18,14 +18,12 @@ export default function Sidebar(props) {
       <ul className="list-unstyled">
       {
         links.map(({ icon, name, link }) =>
-          <li key={name}>
-            <div className={path.includes(link) ? 'highlight' : 'no-highlight'}>
-            </div>
-            <Link to={link}>
+          <Link key={name} to={link}>
+            <li className={path.includes(link) ? 'active' : ''}>
               <span className={`fa fa-${icon}`} />
               <span>{name}</span>
-            </Link>
-          </li>
+            </li>
+          </Link>
         )
       }
       </ul>

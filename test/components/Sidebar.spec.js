@@ -16,12 +16,7 @@ describe('components/Sidebar', () => {
     expect(sidebar.find('li').at(3).text()).to.equal('DNS Manager');
     expect(sidebar.find('li').at(4).text()).to.equal('Account');
     expect(sidebar.find('li').at(5).text()).to.equal('Support');
-    expect(sidebar.find('li').at(0).find('.highlight')).to.exist;
-    expect(sidebar.find('li').at(1).find('.no-highlight')).to.exist;
-    expect(sidebar.find('li').at(2).find('.no-highlight')).to.exist;
-    expect(sidebar.find('li').at(3).find('.no-highlight')).to.exist;
-    expect(sidebar.find('li').at(4).find('.no-highlight')).to.exist;
-    expect(sidebar.find('li').at(5).find('.no-highlight')).to.exist;
+    expect(sidebar.find('li').at(0).find('.active')).to.exist;
   });
 
   it('renders sidebar links', () => {

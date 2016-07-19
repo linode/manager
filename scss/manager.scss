@@ -243,11 +243,11 @@ a {
     width: $sidebar-width;
     background: $white;
     border-right: $border;
-    text-align: center;
 
     a {
         color: $black;
         text-decoration: none !important;
+        line-height: 34px;
     }
 
     .fa {
@@ -256,43 +256,29 @@ a {
     }
 
     ul {
-        display: inline-block;
         text-align: left;
 
-        li.active,
-        li:hover,
-        li:active,
-        li:focus {
-            a,
-            .fa {
-                color: $green;
+        li {
+            margin-top: 30px;
+            padding-left: 34px;
+            height: 34px;
+            border-top: $border;
+            border-bottom: $border;
+            border-color: transparent;
+
+            &.active,
+            &:hover,
+            &:active,
+            &:focus {
+                background-color: $gray;
+                border-color: $border-gray;
+            }
+
+            span:last-of-type {
+                padding-left: 15px;
             }
         }
-
-        li {
-            padding-top: 30px;
-        }
-
-        li span:last-of-type {
-            padding-left: 15px;
-        }
     }
-    .highlight {
-        background-color: $gray;
-        width: $sidebar-width - 1;
-        height: 33px;
-        border-top: $border;
-        border-bottom: $border;
-        position: absolute;
-        left: 0px;
-        margin-top: -6px;
-        z-index: -100;
-    }
-
-    .no-highlight {
-        background-color: inherit;
-    }
-
 }
 
 .main {
