@@ -65,7 +65,6 @@ export default class SourceSelection extends Component {
       </div>
     );
 
-
     const decreaseCount = e => {
       e.preventDefault();
       this.setState({ backupsPage: Math.max(backupsPage - 1, 0) });
@@ -84,7 +83,8 @@ export default class SourceSelection extends Component {
           <div className="filter input-container">
             <input
               type="text"
-              onChange={e => this.setState({ backupsFilter: e.target.value, backupsPage: 0 })}
+              onChange={e =>
+                  this.setState({ backupsFilter: e.target.value, backupsPage: 0 })}
               value={this.state.backupsFilter}
               placeholder="Filter..."
               className="form-control"
@@ -92,18 +92,21 @@ export default class SourceSelection extends Component {
           </div>
         </div>
         {linodesWithBackups.length ? backupOptions : <span>No backups available.</span>}
-        <div className="clearfix">
-          <div className="nav pull-right">
-            <a
-              href="#"
-              onClick={decreaseCount}
-            >Previous</a>
-            <a
-              href="#"
-              onClick={increaseCount}
-            >Next</a>
-          </div>
-        </div>
+        {linodesWithBackups.length > perPageLimit ? (
+          <div className="clearfix">
+            <div className="nav pull-right">
+              <a
+                href="#"
+                onClick={decreaseCount}
+                className="previous"
+              >Previous</a>
+              <a
+                href="#"
+                onClick={increaseCount}
+                className="next"
+              >Next</a>
+            </div>
+          </div>) : null}
       </div>
     );
   }
