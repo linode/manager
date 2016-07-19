@@ -290,6 +290,13 @@ input, .btn {
     }
 }
 
+.vcenter {
+    display: inline-block;
+    vertical-align: middle;
+    float: none;
+    position: relative;
+}
+
 .input-group {
     input {
         margin: 0;

@@ -95,6 +95,10 @@
     }
 
     .backup-schedule {
+        #schedule, #dow {
+            top: 4px;
+        }
+
         .btn {
             margin-right: 1rem;
         }
