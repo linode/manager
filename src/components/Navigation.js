@@ -9,7 +9,7 @@ export default function Navigation(props) {
   return (
     <nav id="main-nav" className="navbar navbar-default" role="navigation">
       <div className="navbar-header">
-        <div className="navbar-linode">
+        <div className="navbar-linode nav-item">
           <Link to="/">
             <img
               id="navbar-logo" src={logo}
@@ -18,7 +18,7 @@ export default function Navigation(props) {
             />
           </Link>
         </div>
-        <div className="navbar-search">
+        <div className="navbar-search nav-item">
           <input
             className="form-control"
             type="search"
@@ -26,7 +26,7 @@ export default function Navigation(props) {
             id="navbar-search"
           />
         </div>
-        <div className="navbar-collapse collapse">
+        <div className="navbar-collapse collapse nav-item">
           <ul className="nav navbar-nav">
             <li className="nav-item">
               <a href="https://www.linode.com/docs/" className="nav-link">Documentation</a>
@@ -49,6 +49,8 @@ export default function Navigation(props) {
                 className="nav-gravatar-img"
                 src={gravatarLink}
                 alt="User Avatar"
+                height={35}
+                width={35}
               />
               <div className="nav-gravatar-badge">3</div>
             </div>
@@ -59,4 +61,7 @@ export default function Navigation(props) {
   );
 }
 
-Navigation.propTypes = { username: PropTypes.string, emailHash: PropTypes.string };
+Navigation.propTypes = {
+  username: PropTypes.string,
+  emailHash: PropTypes.string,
+};
