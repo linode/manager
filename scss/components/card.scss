@@ -105,7 +105,7 @@
         [role=tab] {
             color: $light-black;
             border-radius: 0;
-            padding: 3px 12px;
+            padding: 3px 12px 5px 12px;
 
             &:not(:last-of-type) {
                 margin-right: $main-padding-tb;
