@@ -96,7 +96,7 @@ export function renderBackupStatus(linode) {
       const nextBackup = getNextBackup(linode);
       return (
         <span className="backup-status">
-          First backup in ~{nextBackup.fromNow(true)}
+          Auto backup in ~{nextBackup.fromNow(true)}
         </span>);
     }
     return (
