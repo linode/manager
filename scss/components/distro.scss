@@ -1,11 +1,13 @@
-.distros, .datacenters, .plans {
+.distros, .datacenter-group, .plans, .backup-group {
     display: flex;
     flex-wrap: wrap;
     justify-content: left;
 }
 
-.datacenters, .plans {
-    padding: $main-padding-tb $main-padding-lr;
+.datacenters, .plans, .backups {
+    &:not(.backups) {
+        padding: $main-padding-tb $main-padding-lr;
+    }
 
     h3 {
         margin-left: 1rem;
@@ -16,12 +18,12 @@
     }
 }
 
-.distro, .datacenter, .plan {
+.distro, .datacenter, .plan, .backup {
     $width: 11rem;
     border: $border;
-    width: $width;
     margin: 1rem;
     cursor: pointer;
+    width: $width;
 
     header {
         border-bottom: $border;
@@ -60,7 +62,7 @@
         }
     }
 
-    &:not(.plan) > div {
+    &:not(.plan):not(.backup) > div {
         height: 6rem;
         display: flex;
         justify-content: center;

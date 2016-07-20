@@ -148,6 +148,7 @@ export const linodes = {
       label: 'Test Linode 1',
       group: '',
       created: '2016-07-06T16:50:27',
+      backups: { ...testLinode.backups, enabled: false },
     },
     linode_1236: {
       ...testLinode,
@@ -155,6 +156,7 @@ export const linodes = {
       label: 'Test Linode 2',
       state: 'offline',
       created: '2016-07-06T16:48:27',
+      backups: { ...testLinode.backups, enabled: false },
     },
     linode_1237: {
       ...testLinode,
@@ -162,6 +164,7 @@ export const linodes = {
       label: 'Test Linode 3',
       state: 'booting',
       created: '2016-07-06T16:49:27',
+      backups: { ...testLinode.backups, enabled: false },
     },
   },
   _singular: 'linode',

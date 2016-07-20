@@ -7,6 +7,16 @@
         margin: $main-padding-tb 0;
         display: inline-block;
     }
+
+    .filter {
+        padding-bottom: 1rem;
+    }
+
+    .nav {
+        a:last-of-type {
+            margin-left: 1rem;
+        }
+    }
 }
 
 .password-input {

@@ -13,8 +13,10 @@ import {
 } from '~/linodes/actions/detail/backups';
 import { connect } from 'react-redux';
 import HelpButton from '~/components/HelpButton';
+import Backup from '~/linodes/components/Backup';
+import _ from 'lodash';
 import { setError } from '~/actions/errors';
-import moment, { ISO_8601 } from 'moment';
+import moment from 'moment';
 
 export class BackupsPage extends Component {
   constructor() {
@@ -28,8 +30,8 @@ export class BackupsPage extends Component {
     this.renderNotEnabled = this.renderNotEnabled.bind(this);
     this.renderEnabled = this.renderEnabled.bind(this);
     this.renderSchedule = this.renderSchedule.bind(this);
-    this.renderBackup = this.renderBackup.bind(this);
     this.renderBackups = this.renderBackups.bind(this);
+    this.renderRestoreRadio = this.renderRestoreRadio.bind(this);
     this.renderLastManualBackup = this.renderLastManualBackup.bind(this);
     this.renderModal = this.renderModal.bind(this);
     this.restore = this.restore.bind(this);
@@ -118,38 +120,6 @@ export class BackupsPage extends Component {
       </div>);
   }
 
-  renderBackup(backup) {
-    if (!backup) {
-      return null;
-    }
-    const calendar = {
-      sameDay: '[Today]',
-      nextDay: '[Tomorrow]',
-      nextWeek: 'dddd',
-      lastDay: '[Yesterday]',
-      lastWeek: 'dddd',
-      sameElse: ISO_8601,
-    };
-    const { dispatch } = this.props;
-    const { selectedBackup } = this.props.backups;
-    const created = moment(backup.created);
-    const cardTitle = created.calendar(null, calendar);
-    return (
-      <div
-        className={`backup ${selectedBackup === backup.id ? 'selected' : ''}`}
-        onClick={() => dispatch(selectBackup(backup.id))}
-      >
-        <h3>{cardTitle}</h3>
-        <dl className="dl-horizontal row">
-          <dt className="col-sm-2">Date</dt>
-          <dd className="col-sm-10">{created.format('dddd, MMMM D YYYY')}</dd>
-          <dt className="col-sm-2">Time</dt>
-          <dd className="col-sm-10">{created.format('LT')}</dd>
-        </dl>
-      </div>
-    );
-  }
-
   renderModal(target, backup) {
     const { dispatch } = this.props;
     return (
@@ -176,90 +146,103 @@ export class BackupsPage extends Component {
       </div>);
   }
 
+  renderRestoreRadio({ checked, label, onChange, rest = null }) {
+    return (
+      <div className="radio" key={label}>
+        <label>
+          <input
+            type="radio"
+            name="restore-target"
+            checked={checked}
+            onChange={onChange}
+          />
+          <span>{label}</span>
+          {rest}
+        </label>
+      </div>
+    );
+  }
+
+  renderRestore() {
+    const thisLinode = this.getLinode();
+    const { targetLinode } = this.props.backups;
+    const { linodes, dispatch } = this.props;
+    const existingLinodeSelect = (
+      <select
+        className="form-control"
+        value={targetLinode}
+        onChange={e => dispatch(selectTargetLinode(e.target.value))}
+      >
+        <option value={''}>Pick a Linode...</option>
+        {Object.values(linodes.linodes).filter(l => l.id !== thisLinode.id)
+           .map(l => <option value={l.id} key={l.id}>{l.label}</option>)}
+      </select>
+    );
+
+    const makeOnChange = (target) => (e) => {
+      if (e.target.checked) dispatch(selectTargetLinode(target));
+    };
+
+    const restoreData = [
+      {
+        checked: targetLinode === thisLinode.id,
+        onChange: makeOnChange(thisLinode.id),
+        label: 'This Linode',
+      },
+      {
+        checked: targetLinode === '',
+        onChange: makeOnChange(''),
+        label: 'New Linode',
+      },
+      {
+        checked: targetLinode !== '' && targetLinode !== thisLinode.id,
+        onChange: makeOnChange(Object.values(linodes.linodes)[0].id),
+        label: 'Existing Linode',
+        rest: existingLinodeSelect,
+      },
+    ];
+
+    return (
+      <div className="restore">
+        <div className="restore-col">
+          Restore to:
+        </div>
+        <div className="restore-col">
+          {_.map(restoreData, this.renderRestoreRadio)}
+        </div>
+      </div>
+    );
+  }
+
   renderBackups() {
     const thisLinode = this.getLinode();
     const backups = thisLinode._backups && Object.values(thisLinode._backups.backups);
+
     if (!backups || backups.length === 0) {
       const next = getNextBackup(thisLinode);
       return (
         <p>
-          No backups yet.
-          First automated backup is scheduled for {next.fromNow(true)} from now.
+          No backups yet. First automated backup is scheduled for {next.fromNow(true)} from now.
         </p>
       );
     }
+
     const { selectedBackup, targetLinode } = this.props.backups;
-    const { linodes, dispatch } = this.props;
+    const { dispatch } = this.props;
     return (
       <div>
         <div className="row backups">
-          {backups.map(b =>
-            <div className="col-md-3">
-              {this.renderBackup(b)}
+          {backups.map(backup =>
+            <div className="col-md-3" key={moment(backup.created)}>
+              <Backup
+                backup={backup}
+                selected={selectedBackup}
+                onSelect={() => dispatch(selectBackup(backup.id))}
+              />
             </div>
-          )}
+           )}
         </div>
-        <div className="restore">
-          <div className="restore-col">
-            Restore to:
-          </div>
-          <div className="restore-col">
-            <div className="radio">
-              <label>
-                <input
-                  type="radio"
-                  name="restore-target"
-                  checked={targetLinode === thisLinode.id}
-                  onChange={e =>
-                    dispatch(e.target.checked
-                      ? selectTargetLinode(thisLinode.id)
-                      : selectTargetLinode(''))
-                  }
-                />
-                <span>This Linode</span>
-              </label>
-            </div>
-            <div className="radio">
-              <label>
-                <input
-                  type="radio"
-                  name="restore-target"
-                  checked={targetLinode === ''}
-                  onChange={e =>
-                    dispatch(e.target.checked
-                      ? selectTargetLinode('')
-                      : selectTargetLinode(Object.values(linodes.linodes)[0].id))
-                  }
-                />
-                <span>New Linode</span>
-              </label>
-            </div>
-            <div className="radio">
-              <label>
-                <input
-                  type="radio"
-                  name="restore-target"
-                  checked={targetLinode !== '' && targetLinode !== thisLinode.id}
-                  onChange={e =>
-                    dispatch(e.target.checked
-                      ? selectTargetLinode(Object.values(linodes.linodes)[0].id)
-                      : selectTargetLinode(''))
-                  }
-                />
-                <span>Existing Linode</span>
-              </label>
-              <select
-                className="form-control"
-                value={targetLinode}
-                onChange={e => dispatch(selectTargetLinode(e.target.value))}
-              >
-                <option value={''}>Pick a Linode...</option>
-                {Object.values(linodes.linodes).filter(l => l.id !== thisLinode.id)
-                  .map(l => <option value={l.id} key={l.id}>{l.label}</option>)}
-              </select>
-            </div>
-          </div>
-        </div>
+        {this.renderRestore()}
         <button
           className="btn btn-primary"
           disabled={this.state.loading || selectedBackup === null}
@@ -276,7 +259,7 @@ export class BackupsPage extends Component {
     return (
       <div className="backup-schedule">
         <div className="form-group row">
-          <label htmlFor="schedule" className="col-md-4 form-control-label">
+          <label htmlFor="schedule" className="col-md-4">
             {/* TODO: Use user time settings */}
             Time of Day (EST):
           </label>
@@ -303,7 +286,7 @@ export class BackupsPage extends Component {
           </div>
         </div>
         <div className="form-group row">
-          <label htmlFor="dow" className="col-md-4 form-control-label">
+          <label htmlFor="dow" className="col-md-4">
             Day of week:
           </label>
           <div className="col-md-4">
@@ -323,7 +306,7 @@ export class BackupsPage extends Component {
             </select>
           </div>
         </div>
-        <div className="form-group">
+        <div className="form-group row">
           <div className="col-md-8">
             <p className="text-muted">
               The weekly and bi-weekly backups store the one
@@ -360,7 +343,7 @@ export class BackupsPage extends Component {
   renderEnabled() {
     return (
       <div>
-        <h2>Details and restore</h2>
+        <h2>Restore</h2>
         {this.renderBackups()}
         <hr />
         <div className="row">
@@ -372,7 +355,7 @@ export class BackupsPage extends Component {
             {this.renderSchedule()}
           </div>
           <div className="col-md-6 manual-backups">
-            <h2>Manual Backup</h2>
+            <h2>Manual backup</h2>
             {this.renderLastManualBackup()}
             <button
               className="btn btn-primary"
