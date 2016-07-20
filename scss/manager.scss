@@ -356,7 +356,7 @@ hr {
         $size: 24px;
         .fa {
             color: $lightest-black;
-            line-height: $size;
+            line-height: $size - 2px;
         }
         background-color: $gray;
         font-size: $size / 2;
@@ -368,7 +368,7 @@ hr {
         height: $size;
         border-radius: $size / 2;
         font-weight: bold;
-        text-indent: -0.5px;
+        text-indent: -1px;
 
         &:hover {
             background-color: $blue;
@@ -391,6 +391,7 @@ hr {
         }
         background-color: $red;
         border-color: $red;
+        text-indent: -0.5px;
 
         &:hover {
             background-color: $white;
