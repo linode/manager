@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import _ from 'lodash';
 
 import SourceSelection from '../components/SourceSelection';
 import ServiceSelection from '../components/ServiceSelection';
@@ -11,7 +10,6 @@ import { fetchDistros } from '~/actions/api/distros';
 import { fetchDatacenters } from '~/actions/api/datacenters';
 import { fetchLinodes, createLinode } from '~/actions/api/linodes';
 import { fetchServices } from '~/actions/api/services';
-import { fetchBackups } from '~/actions/api/backups';
 import { setError } from '~/actions/errors';
 
 export class IndexPage extends Component {
@@ -40,13 +38,6 @@ export class IndexPage extends Component {
         dispatch(fetchServices()),
         dispatch(fetchLinodes()),
       ]);
-
-      const { linodes } = this.props;
-      await Promise.all(_.map(linodes.linodes, async l => {
-        if (l.backups.enabled && l._backups.totalPages === -1) {
-          await dispatch(fetchBackups(0, l.id));
-        }
-      }));
     } catch (response) {
       dispatch(setError(response));
     }

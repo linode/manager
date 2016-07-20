@@ -1,7 +1,7 @@
 import React from 'react';
 import sinon from 'sinon';
 import { expect } from 'chai';
-import { mount, shallow } from 'enzyme';
+import { shallow } from 'enzyme';
 import { Tab } from 'react-tabs';
 import moment from 'moment';
 
@@ -78,7 +78,7 @@ describe('linodes/create/components/SourceSelection', () => {
 
   it('invokes the onSourceSelected function as necessary for Distros', () => {
     const onSourceSelected = sandbox.spy();
-    const c = mount(
+    const c = shallow(
       <SourceSelection
         distros={state.distros.distributions}
         source={state.create.source.source}
@@ -107,8 +107,8 @@ describe('linodes/create/components/SourceSelection', () => {
     },
   };
 
-  it('renders Backups', () => {
-    const c = mount(
+  it('renders Linodes', () => {
+    const c = shallow(
       <SourceSelection
         distros={state.distros.distributions}
         source={state.create.source.source}
@@ -123,7 +123,7 @@ describe('linodes/create/components/SourceSelection', () => {
   });
 
   it('only shows shows n linodes per page of Backups', () => {
-    const c = mount(
+    const c = shallow(
       <SourceSelection
         distros={state.distros.distributions}
         source={state.create.source.source}
@@ -145,7 +145,7 @@ describe('linodes/create/components/SourceSelection', () => {
   });
 
   it('changes pages when requested', () => {
-    const c = mount(
+    const c = shallow(
       <SourceSelection
         distros={state.distros.distributions}
         source={state.create.source.source}
@@ -187,7 +187,7 @@ describe('linodes/create/components/SourceSelection', () => {
   });
 
   it('filters backups when updating filter', () => {
-    const c = mount(
+    const c = shallow(
       <SourceSelection
         distros={state.distros.distributions}
         source={state.create.source.source}
@@ -211,21 +211,18 @@ describe('linodes/create/components/SourceSelection', () => {
     expect(c.find('table tbody tr').length).to.equal(2);
   });
 
-  it('invokes the onSourceSelected function as necessary for Backups', () => {
-    const onSourceSelected = sandbox.spy();
-    const c = mount(
+  it('shows the BackupSelection when a Linode is clicked', () => {
+    const c = shallow(
       <SourceSelection
         distros={state.distros.distributions}
         source={state.create.source.source}
         selectedTab={1}
-        onSourceSelected={onSourceSelected}
+        onSourceSelected={() => {}}
         linodes={state.linodes}
       />
     );
 
     c.find('tbody tr td a').simulate('click', { preventDefault() {} });
-    c.find('Backup').first().simulate('click');
-    expect(onSourceSelected.calledOnce).to.equal(true);
-    expect(onSourceSelected.calledWith('backup_54778593')).to.equal(true);
+    expect(c.find('BackupSelection')).to.exist;
   });
 });

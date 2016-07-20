@@ -24,7 +24,6 @@ export default function Backup(props) {
       </header>
       <div>
         <div className="content-col">{created.format('dddd, MMMM D YYYY LT')}</div>
-
       </div>
     </div>
   );

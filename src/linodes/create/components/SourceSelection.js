@@ -4,7 +4,7 @@ import _ from 'lodash';
 import moment from 'moment';
 
 import DistroVendor from './DistroVendor';
-import Backup from '~/linodes/components/Backup';
+import BackupSelection from '~/linodes/create/components/BackupSelection';
 
 export default class SourceSelection extends Component {
   constructor() {
@@ -39,45 +39,14 @@ export default class SourceSelection extends Component {
     );
   }
 
-  renderBackupSelection() {
-    const { linodes, selected, onSourceSelected } = this.props;
-    const id = this.state.selectedLinode;
-    const l = linodes.linodes[id];
-    return (
-      <div className="clearfix">
-        <div className="pull-right">
-          <a
-            href="#"
-            onClick={e => {
-              e.preventDefault();
-              this.setState({ selectedLinode: -1 });
-            }}
-          >Back</a>
-        </div>
-        <div key={l.label}>
-          <h3>{l.label}</h3>
-          <div className="backup-group">
-            {_.map(l._backups.backups, backup =>
-              <Backup
-                backup={backup}
-                selected={selected}
-                onSelect={() => onSourceSelected(backup.id)}
-                key={backup.created}
-              />
-             )}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   renderLinodeSelection() {
     const { linodes, perPageLimit } = this.props;
     const { backupsPage, backupsFilter } = this.state;
-    const hasBackups = (linode) =>
+    const hasBackups = linode => (
       linode.backups && linode.backups.enabled &&
-      linode._backups && Object.values(linode._backups.backups).length &&
-      linode.label.indexOf(backupsFilter) !== -1;
+      linode.backups.last_backup && linode.label.indexOf(backupsFilter) !== -1
+    );
+
     const linodesWithBackups = Object.values(_.filter(linodes.linodes, hasBackups));
 
     if (!linodesWithBackups.length) {
@@ -113,7 +82,6 @@ export default class SourceSelection extends Component {
           <thead>
             <tr>
               <td>Label</td>
-              <td>Backups available</td>
               <td>Last backup</td>
             </tr>
           </thead>
@@ -129,7 +97,6 @@ export default class SourceSelection extends Component {
                     }}
                   >{l.label}</a>
                 </td>
-                <td>{Object.values(l._backups.backups).length}</td>
                 <td>{moment(l.backups.last_backup).format('dddd, MMMM D YYYY LT')}</td>
               </tr>
              )}
@@ -163,12 +130,21 @@ export default class SourceSelection extends Component {
 
   renderBackups() {
     const { selectedLinode } = this.state;
+    const { onSourceSelected, selected } = this.props;
 
     return (
       <div className="backups">
         {selectedLinode === -1 ?
-         this.renderLinodeSelection() :
-         this.renderBackupSelection()}
+          this.renderLinodeSelection() :
+          <BackupSelection
+            goBack={e => {
+              e.preventDefault();
+              this.setState({ selectedLinode: -1 });
+            }}
+            onSourceSelected={onSourceSelected}
+            selectedLinode={selectedLinode}
+            selected={selected}
+          />}
       </div>
     );
   }
