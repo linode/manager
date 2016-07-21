@@ -10,27 +10,37 @@ function makeDefaultState(config) {
   };
 }
 
+/**
+ * Adds subresource metadata to the given item, plus polling state.
+ */
 function transformItem(subresources, item) {
   const subs = _.reduce(subresources, (acc, config, key) => (
       { ...acc, [key]: { ...makeDefaultState(config) } }), { });
   return { ...item, _polling: false, ...subs };
 }
 
-/*
- * plural: the name of several of the resource (i.e. "linodes")
- *
- * singular: the name of one of the resource (i.e. "linode")
- *
- * actions: {
- *  update_singular,
- *  update_many,
- *  delete_one
- * }
- *
- * Leave any action NULL and it'll be unsupported
- *
- * transform: a function each object will be run through to add custom
- * properties and what-not
+/**
+ * Creates a reducer function for the specified API list endpoint. See
+ * https://developers.linode.com/reference/#lists-and-objects for details on
+ * such API endpoints. This will return a reducer function that handles one or
+ * more actions containing resource(s) to update.
+ * @param {Object} config - A configuration object for the reducer.
+ * @param {string} config.plural - The plural form of this resource (i.e.
+ * "linodes")
+ * @param {string} config.singular - The singular form of this resource (i.e.
+ * "linode")
+ * @param {Object} config.actions - A list of action names for the reducer to
+ * use
+ * @param {string} config.actions.update_singular - The action to use for
+ * updating a single item
+ * @param {string} config.actions.update_many - The action to use for updating
+ * several items
+ * @param {string} config.actions.delete_one - The action to use for deleting a
+ * single item
+ * @param {Object} config.subresources - An object of subresource configs (i.e.
+ * disks on a linode) keyed by their name in the state
+ * @param {Function} transform - A function that is passed a resource and
+ * returns a new version of that resource, which is persisted to the store
  */
 export default function makeApiList(config, transform = d => d) {
   const actions = {
@@ -40,70 +50,91 @@ export default function makeApiList(config, transform = d => d) {
     ...config.actions,
   };
 
-  function handleAction(_config, state, action) {
-    switch (action.type) {
-      case _config.actions.update_many: {
-        const { response } = action;
+  function updateMany(_config, state, action) {
+    const { response } = action;
+    return {
+      ...state,
+      pagesFetched: [
+        ...state.pagesFetched.filter(p => p !== response.page),
+        response.page,
+      ],
+      totalPages: response.total_pages,
+      [_config.plural]: {
+        ...state[_config.plural],
+        ...response[_config.plural].reduce((s, i) =>
+          ({ ...s, [i.id]: transform(
+             transformItem(_config.subresources, i)) }), { }),
+      },
+    };
+  }
+
+  function updateSingular(_config, state, action) {
+    let item = action[_config.singular];
+    if (!state[_config.plural][item.id]) {
+      item = transform(transformItem(_config.subresources, item));
+    }
+    return {
+      ...state,
+      [_config.plural]: {
+        ...state[_config.plural],
+        [item.id]: {
+          ...state[_config.plural][item.id],
+          ...item,
+        },
+      },
+    };
+  }
+
+  function deleteOne(_config, state, action) {
+    const { id } = action;
+    return {
+      ...state,
+      [_config.plural]: _.omit(state[_config.plural], id),
+    };
+  }
+
+  function invalidate(_config, state) {
+    return { ...state, [_config.plural]: { }, totalPages: -1, pagesFetched: [] };
+  }
+
+  function passToSubresource(_config, state, action) {
+    for (let i = 0; i < Object.keys(_config.subresources).length; i++) {
+      const key = Object.keys(_config.subresources)[i];
+      const subresource = _config.subresources[key];
+      if (_.includes(subresource.actions, action.type)) {
+        const id = action[_config.plural];
+        const parentItem = state[_config.plural][id];
+        const childState = parentItem[key];
+        // eslint-disable-next-line no-use-before-define
+        const newState = handleAction(subresource, childState, action);
         return {
           ...state,
-          pagesFetched: [
-            ...state.pagesFetched.filter(p => p !== response.page),
-            response.page,
-          ],
-          totalPages: response.total_pages,
           [_config.plural]: {
             ...state[_config.plural],
-            ...response[_config.plural].reduce((s, i) =>
-              ({ ...s, [i.id]: transform(
-                 transformItem(_config.subresources, i)) }), { }),
-          },
-        };
-      }
-      case _config.actions.update_singular: {
-        let item = action[_config.singular];
-        if (!state[_config.plural][item.id]) {
-          item = transform(transformItem(_config.subresources, item));
-        }
-        return {
-          ...state,
-          [_config.plural]: {
-            ...state[_config.plural],
-            [item.id]: {
-              ...state[_config.plural][item.id],
-              ...item,
+            [parentItem.id]: {
+              ...state[_config.plural][parentItem.id],
+              [key]: newState,
             },
           },
         };
       }
-      case _config.actions.delete_one: {
-        const { id } = action;
-        return {
-          ...state,
-          [_config.plural]: _.omit(state[_config.plural], id),
-        };
-      }
+    }
+    return state;
+  }
+
+  function handleAction(_config, state, action) {
+    switch (action.type) {
+      case _config.actions.update_many:
+        return updateMany(_config, state, action);
+      case _config.actions.update_singular:
+        return updateSingular(_config, state, action);
+      case _config.actions.delete_one:
+        return deleteOne(_config, state, action);
+      case `@@${_config.plural}/INVALIDATE_CACHE`:
+        return invalidate(_config, state, action);
       default:
         if (_config.subresources) {
-          for (let i = 0; i < Object.keys(_config.subresources).length; i++) {
-            const key = Object.keys(_config.subresources)[i];
-            const subresource = _config.subresources[key];
-            if (_.includes(subresource.actions, action.type)) {
-              const id = action[_config.plural];
-              const parentItem = state[_config.plural][id];
-              const childState = parentItem[key];
-              const newState = handleAction(subresource, childState, action);
-              return {
-                ...state,
-                [_config.plural]: {
-                  ...state[_config.plural],
-                  [parentItem.id]: {
-                    ...state[_config.plural][parentItem.id],
-                    [key]: newState,
-                  },
-                },
-              };
-            }
-          }
+          return passToSubresource(_config, state, action);
         }
         return state;
     }
@@ -117,6 +148,15 @@ export default function makeApiList(config, transform = d => d) {
 
 import { fetch } from './fetch';
 
+/**
+ * Returns an action creator that fetches a page of resources when invoked and
+ * dispatched. The action creator returns a thunk, and is invoked with a page
+ * index and a list of IDs of parent resources.
+ * @param {string} action - The name of the action to use when dispatching the
+ * results
+ * @param {string...} plurals - The plural form of the resources involved,
+ * starting with the topmost and continuing with any subresources.
+ */
 export function makeFetchPage(action, ...plurals) {
   return (page = 0, ...ids) => async (dispatch, getState) => {
     const pairs = _.zip(plurals, ids);
@@ -129,6 +169,16 @@ export function makeFetchPage(action, ...plurals) {
   };
 }
 
+/**
+ * Returns an action creator that fetches a single resource when dispatched.
+ * The action creator returns a thunk, and is invoked with a page index and a
+ * list of IDs, starting with the topmost and continuing down any subresources.
+ * @param {string} action - The name of the action to use when dispatching the
+ * results
+ * @param {string} singular - The singular form of the resource being fetched
+ * @param {string...} plurals - The plural form of the resources involved,
+ * starting with the topmost and continuing with any subresources.
+ */
 export function makeFetchItem(action, singular, ...plurals) {
   return (...ids) => async (dispatch, getState) => {
     const pairs = _.zip(plurals, ids);
@@ -142,7 +192,17 @@ export function makeFetchItem(action, singular, ...plurals) {
   };
 }
 
+/*
+ * Returns an action creator that fetches a single resource until it passes a
+ * test. The action creator returns a thunk, and is invoked with the ID, a test
+ * function, and a timeout between requests (which defaults to 3000).
+ * @param {string} action - The name of the action to use when dispatching the
+ * results
+ * @param {string} plural - The plural form of the resource being fetched
+ * @param {string} singular - The singular form of the resource being fetched
+ */
 export function makeFetchUntil(action, plural, singular) {
+  // TODO: Support subresources here
   return (id, test, timeout = 3000) => async (dispatch, getState) => {
     const { token } = getState().authentication;
     const item = getState().api[plural][plural][id];
@@ -162,6 +222,13 @@ export function makeFetchUntil(action, plural, singular) {
   };
 }
 
+/**
+ * Returns an action creator that deletes a single resource. The action
+ * creator returns a thunk, and is invoked with the ID.
+ * @param {string} action - The name of the action to use when dispatching the
+ * results
+ * @param {string} plural - The plural form of the resource being deleted
+ */
 export function makeDeleteItem(action, plural) {
   return id => async (dispatch, getState) => {
     const state = getState();
@@ -173,6 +240,13 @@ export function makeDeleteItem(action, plural) {
   };
 }
 
+/**
+ * Returns an action creator that puts a single resource to the API. The action
+ * creator returns a thunk, and is invoked with { id, data }.
+ * @param {string} action - The name of the action to use when dispatching the
+ * results
+ * @param {string} plural - The plural form of the resource being updated
+ */
 export function makePutItem(action, plural) {
   return ({ id, data }) => async (dispatch, getState) => {
     const state = getState();
@@ -185,6 +259,14 @@ export function makePutItem(action, plural) {
   };
 }
 
+/**
+ * Returns an action creator that creates a single resource with the API. The
+ * action creator returns a thunk, and is invoked with the POST data to submit.
+ * @param {string} action - The name of the action to use when dispatching the
+ * new resource
+ * @param {string} plural - The plural form of the resource being created
+ * @param {string} singular - The singular form of the resource being created
+ */
 export function makeCreateItem(action, plural, singular) {
   return data => async (dispatch, getState) => {
     const state = getState();
@@ -196,4 +278,11 @@ export function makeCreateItem(action, plural, singular) {
     dispatch({ type: action, [singular]: json });
     return json;
   };
+}
+
+/**
+ * Returns a cache invalidation action for the specified resource.
+ */
+export function invalidateCache(plural) {
+  return { type: `@@${plural}/INVALIDATE_CACHE` };
 }

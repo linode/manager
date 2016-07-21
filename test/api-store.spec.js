@@ -8,6 +8,7 @@ import makeApiList, {
   makeDeleteItem,
   makePutItem,
   makeCreateItem,
+  invalidateCache,
 } from '~/api-store';
 import * as fetch from '~/fetch';
 
@@ -217,6 +218,40 @@ describe('api-store', () => {
       expect(result)
         .to.have.property('foobars')
         .which/* .does*/.not.have.property('foobar_1');
+    });
+
+    it('should handle invalidate cache actions', () => {
+      const s = makeApiList({
+        plural: 'foobars',
+        singular: 'foobar',
+        actions: { },
+      });
+
+      let state = s(undefined, {});
+      state = {
+        ...state,
+        foobars: {
+          ...state.foobars,
+          foobar_1: { id: 'foobar_1' },
+        },
+        totalPages: 2,
+        pagesFetched: [0],
+      };
+      deepFreeze(state);
+
+      const result = s(state, { type: '@@foobars/INVALIDATE_CACHE' });
+
+      expect(result)
+        .to.have.property('totalPages')
+        .which.equals(-1);
+
+      expect(result)
+        .to.have.property('pagesFetched')
+        .which.has.length(0);
+
+      expect(result)
+        .to.have.property('foobars')
+        .which.deep.equals({ });
     });
   });
 
@@ -570,6 +605,15 @@ describe('api-store', () => {
         foobar: { state: 'done' },
       })).to.equal(true);
       expect(dispatch.callCount).to.equal(5);
+    });
+  });
+
+  describe('api-store/invalidateCache', () => {
+    it('should return a cache invalidation action', () => {
+      const action = invalidateCache('foobars');
+      expect(action).to.deep.equal({
+        type: '@@foobars/INVALIDATE_CACHE',
+      });
     });
   });
 });
