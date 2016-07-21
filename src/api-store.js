@@ -7,6 +7,7 @@ function makeDefaultState(config) {
     [config.plural]: {},
     singular: config.singular,
     plural: config.plural,
+    filter: null,
   };
 }
 
@@ -97,6 +98,11 @@ export default function makeApiList(config, transform = d => d) {
     return { ...state, [_config.plural]: { }, totalPages: -1, pagesFetched: [] };
   }
 
+  function setFilter(_config, state, action) {
+    const { filter } = action;
+    return { ...state, filter };
+  }
+
   function passToSubresource(_config, state, action) {
     for (let i = 0; i < Object.keys(_config.subresources).length; i++) {
       const key = Object.keys(_config.subresources)[i];
@@ -132,6 +138,8 @@ export default function makeApiList(config, transform = d => d) {
         return deleteOne(_config, state, action);
       case `@@${_config.plural}/INVALIDATE_CACHE`:
         return invalidate(_config, state, action);
+      case `@@${_config.plural}/SET_FILTER`:
+        return setFilter(_config, state, action);
       default:
         if (_config.subresources) {
           return passToSubresource(_config, state, action);

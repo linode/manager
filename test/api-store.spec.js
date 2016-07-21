@@ -47,7 +47,7 @@ describe('api-store', () => {
         s(undefined, {})
       ).to.be.eql({
         pagesFetched: [], totalPages: -1, foobars: {},
-        singular: 'foobar', plural: 'foobars',
+        filter: null, singular: 'foobar', plural: 'foobars',
       });
     });
 
@@ -227,7 +227,7 @@ describe('api-store', () => {
         actions: { },
       });
 
-      let state = s(undefined, {});
+      let state = s(undefined, { });
       state = {
         ...state,
         foobars: {
@@ -252,6 +252,17 @@ describe('api-store', () => {
       expect(result)
         .to.have.property('foobars')
         .which.deep.equals({ });
+    });
+
+    it('should handle set filter actions', () => {
+      const s = makeApiList({ plural: 'foobars', singular: 'foobar', actions: { } });
+      const state = s(undefined, { });
+      deepFreeze(state);
+      const action = { type: '@@foobars/SET_FILTER', filter: { foo: 'bar' } };
+      const result = s(state, action);
+      expect(result)
+        .to.have.property('filter')
+        .that.deep.equals({ foo: 'bar' });
     });
   });
 
@@ -287,6 +298,7 @@ describe('api-store', () => {
       .which.has.keys(
         'totalPages',
         'foobazes',
+        'filter',
         'pagesFetched',
         'singular',
         'plural');
