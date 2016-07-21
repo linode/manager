@@ -130,7 +130,7 @@ IndexPage.propTypes = {
 
 function select(state) {
   return {
-    distros: state.api.distros,
+    distros: state.api.distributions,
     linodes: state.api.linodes,
     datacenters: state.api.datacenters,
     services: state.api.services,

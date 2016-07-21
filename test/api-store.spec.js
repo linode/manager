@@ -9,6 +9,7 @@ import makeApiList, {
   makePutItem,
   makeCreateItem,
   invalidateCache,
+  setFilter,
 } from '~/api-store';
 import * as fetch from '~/fetch';
 
@@ -625,6 +626,16 @@ describe('api-store', () => {
       const action = invalidateCache('foobars');
       expect(action).to.deep.equal({
         type: '@@foobars/INVALIDATE_CACHE',
+      });
+    });
+  });
+
+  describe('api-store/setFilter', () => {
+    it('should return a set filter action', () => {
+      const action = setFilter('foobars', { foo: 'bar' });
+      expect(action).to.deep.equal({
+        type: '@@foobars/SET_FILTER',
+        filter: { foo: 'bar' },
       });
     });
   });

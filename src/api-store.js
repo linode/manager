@@ -98,7 +98,7 @@ export default function makeApiList(config, transform = d => d) {
     return { ...state, [_config.plural]: { }, totalPages: -1, pagesFetched: [] };
   }
 
-  function setFilter(_config, state, action) {
+  function handleSetFilter(_config, state, action) {
     const { filter } = action;
     return { ...state, filter };
   }
@@ -139,7 +139,7 @@ export default function makeApiList(config, transform = d => d) {
       case `@@${_config.plural}/INVALIDATE_CACHE`:
         return invalidate(_config, state, action);
       case `@@${_config.plural}/SET_FILTER`:
-        return setFilter(_config, state, action);
+        return handleSetFilter(_config, state, action);
       default:
         if (_config.subresources) {
           return passToSubresource(_config, state, action);
@@ -168,9 +168,13 @@ import { fetch } from './fetch';
 export function makeFetchPage(action, ...plurals) {
   return (page = 0, ...ids) => async (dispatch, getState) => {
     const pairs = _.zip(plurals, ids);
-    const { token } = getState().authentication;
+    const state = getState();
+    const { token } = state.authentication;
+    const { filter } = pairs.reduce(
+      (s, [plural, id]) => s && (id ? s[plural][id] : s[plural]), state.api) || { };
     const url = _.reduce(pairs, (u, [plural, id]) => `${u}/${plural}/${id || ''}`, '');
-    const response = await fetch(token, `${url}?page=${page + 1}`);
+    const options = filter ? { headers: { 'X-Filter': JSON.stringify(filter) } } : { };
+    const response = await fetch(token, `${url}?page=${page + 1}`, options);
     const json = await response.json();
     dispatch(_.reduce(pairs, (u, [plural, id]) => (id ? { ...u, [plural]: id } : u),
       { type: action, response: json }));
@@ -293,4 +297,11 @@ export function makeCreateItem(action, plural, singular) {
  */
 export function invalidateCache(plural) {
   return { type: `@@${plural}/INVALIDATE_CACHE` };
+}
+
+/**
+ * Returns a set filter action for the specified resource.
+ */
+export function setFilter(plural, filter = null) {
+  return { type: `@@${plural}/SET_FILTER`, filter };
 }
