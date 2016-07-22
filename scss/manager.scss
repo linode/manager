@@ -421,6 +421,24 @@ hr {
         }
     }
 
+    &.btn-primary-outline {
+        background: white;
+        border: 1px solid $blue;
+
+        &:hover,
+        &:active,
+        &:focus {
+            color: $blue;
+        }
+
+        &:not([disabled]):hover,
+        &:not([disabled]):active,
+        &:not([disabled]):focus {
+            background: $blue;
+            color: white;
+        }
+    }
+
     &.btn-danger {
         background: $red;
         border: 1px solid $red;
