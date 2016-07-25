@@ -111,7 +111,7 @@ describe('linodes/layouts/BackupsPage', () => {
   it('calls cancel backups on click');
 
   it('renders the manual backup UI', () => {
-    const page = mount(
+    const page = shallow(
       <BackupsPage
         dispatch={dispatch}
         linodes={linodes}
@@ -182,8 +182,8 @@ describe('linodes/layouts/BackupsPage', () => {
       .to.deep.equal(actions.setDayOfWeek('monday'));
   });
 
-  it('renders the latest backups', () => {
-    const page = mount(
+  it('renders the latest Backup', () => {
+    const page = shallow(
       <BackupsPage
         dispatch={dispatch}
         linodes={linodes}
@@ -191,7 +191,7 @@ describe('linodes/layouts/BackupsPage', () => {
         backups={backups}
       />);
     const b = page.find('.backups');
-    expect(b.find('.backup').length).to.equal(1);
+    expect(b.find('Backup').length).to.equal(2);
   });
 
   it('dispatches a SELECT_BACKUP action when one is clicked', () => {

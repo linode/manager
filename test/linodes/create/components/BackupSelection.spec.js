@@ -34,7 +34,7 @@ describe('linodes/create/components/BackupSelection', () => {
       />
     );
 
-    expect(c.find('Backup').length).to.equal(1);
+    expect(c.find('Backup').length).to.equal(2);
   });
 
   it('invokes the onSourceSelected function as necessary for Backups', () => {

@@ -3,7 +3,12 @@ import { push } from 'react-router-redux';
 import { fetchLinode, fetchLinodes } from '~/actions/api/linodes';
 import { showModal, hideModal } from '~/actions/modal';
 import { getNextBackup } from '~/linodes/components/Linode';
-import { enableBackup, cancelBackup, fetchBackups } from '~/actions/api/backups';
+import {
+  enableBackup,
+  cancelBackup,
+  fetchBackups,
+  takeBackup,
+} from '~/actions/api/backups';
 import {
   selectBackup,
   selectTargetLinode,
@@ -341,6 +346,8 @@ export class BackupsPage extends Component {
   }
 
   renderEnabled() {
+    const linode = this.getLinode();
+    const { dispatch } = this.props;
     return (
       <div>
         <h2>Restore</h2>
@@ -359,6 +366,7 @@ export class BackupsPage extends Component {
             {this.renderLastManualBackup()}
             <button
               className="btn btn-primary"
+              onClick={() => dispatch(takeBackup(linode.id))}
             >Take backup</button>
           </div>
         </div>

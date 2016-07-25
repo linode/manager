@@ -1,12 +1,14 @@
+import _ from 'lodash';
+
 import {
     UPDATE_LINODES, UPDATE_LINODE, DELETE_LINODE,
     UPDATE_LINODE_CONFIG, UPDATE_LINODE_CONFIGS, DELETE_LINODE_CONFIG,
     UPDATE_LINODE_DISK, UPDATE_LINODE_DISKS, DELETE_LINODE_DISK,
 } from '~/actions/api/linodes';
-import { UPDATE_BACKUP, UPDATE_BACKUPS } from '~/actions/api/backups';
+import { UPDATE_BACKUP, UPDATE_BACKUPS, TAKE_BACKUP } from '~/actions/api/backups';
 import makeApiList from '~/api-store';
 
-export default makeApiList({
+const linodes = makeApiList({
   plural: 'linodes',
   singular: 'linode',
   actions: {
@@ -43,3 +45,28 @@ export default makeApiList({
     },
   },
 });
+
+export default function (state = undefined, action) {
+  switch (action.type) {
+    case TAKE_BACKUP:
+      return {
+        ...state,
+        linodes: {
+          ...state.linodes,
+          [action.linodes]: {
+            ...state.linodes[action.linodes],
+            _backups: {
+              ...state.linodes[action.linodes]._backups,
+              backups: {
+                ..._.filter(state.linodes[action.linodes]._backups.backups, (backup) =>
+                  backup.type !== 'snapshot'),
+                [action.backup.id]: action.backup,
+              },
+            },
+          },
+        },
+      };
+    default:
+      return linodes(state, action);
+  }
+}

@@ -22,3 +22,14 @@ function makeBackupAction(action) {
 
 export const enableBackup = makeBackupAction('enable');
 export const cancelBackup = makeBackupAction('cancel');
+
+export const TAKE_BACKUP = '@@backups/TAKE_BACKUP';
+
+export function takeBackup(id) {
+  return async (dispatch, getState) => {
+    const { token } = getState().authentication;
+    const response = await fetch(token, `/linodes/${id}/backups`, { method: 'POST' });
+    const json = await response.json();
+    dispatch({ type: TAKE_BACKUP, backup: json, linodes: id });
+  };
+}

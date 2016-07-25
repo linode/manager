@@ -3,10 +3,12 @@ import { expect } from 'chai';
 import {
   UPDATE_BACKUP,
   UPDATE_BACKUPS,
+  TAKE_BACKUP,
   fetchBackups,
   fetchBackup,
   enableBackup,
   cancelBackup,
+  takeBackup,
 } from '~/actions/api/backups';
 import { UPDATE_LINODE } from '~/actions/api/linodes';
 import * as fetch from '~/fetch';
@@ -101,6 +103,38 @@ describe('actions/api/backups', async () => {
     expect(dispatch.calledWith({
       type: UPDATE_LINODE,
       linode: { id: 'backup_1' },
+    })).to.equal(true);
+  });
+
+  const takeBackupResponse = {
+    type: 'snapshot',
+    created: '2016-07-25T16:59:32',
+    datacenter: {
+      label: 'Newark, NJ',
+      datacenter: 'newark',
+      id: 'newark',
+    },
+    updated: '2016-07-25T16:59:32',
+    finished: null,
+    status: 'pending',
+    id: 'backup_123',
+    label: '',
+  };
+
+  it('should take a backup', async () => {
+    const dispatch = getDispatch();
+    const getState = getGetState();
+    const fetchStub = getFetchStub(takeBackupResponse);
+    const f = takeBackup('foo_1');
+
+    await f(dispatch, getState);
+
+    expect(fetchStub.calledWith(
+      auth.token, '/linodes/foo_1/backups', { method: 'POST' })).to.equal(true);
+    expect(dispatch.calledWith({
+      type: TAKE_BACKUP,
+      linodes: 'foo_1',
+      backup: takeBackupResponse,
     })).to.equal(true);
   });
 });
