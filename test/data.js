@@ -130,7 +130,7 @@ export const testLinode = {
         status: 'successful',
         datacenter: {
           label: 'Newark, NJ',
-          id: 'datacenter_6',
+          id: 'newark',
         },
       },
       backup_54778596: {
@@ -141,7 +141,7 @@ export const testLinode = {
         status: 'successful',
         datacenter: {
           label: 'Newark, NJ',
-          id: 'datacenter_6',
+          id: 'newark',
         },
       },
     },
