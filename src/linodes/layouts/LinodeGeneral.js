@@ -25,49 +25,119 @@ export class LinodeGeneral extends Component {
     this.componentDidMount = loadLinode.bind(this);
     this.renderDetails = this.renderDetails.bind(this);
     this.renderGraphs = this.renderGraphs.bind(this);
+    this.graphSelection = this.graphSelection.bind(this);
+    this.graphUpdate = this.graphUpdate.bind(this);
+    this.graphRangeUpdate = this.graphRangeUpdate.bind(this);
+    this.graphSourceUpdate = this.graphSourceUpdate.bind(this);
+    this.state = {
+      source: 'cpu',
+      range: 'last1day',
+    };
   }
 
   componentDidMount() {
     this.loadLinode();
   }
 
-  renderGraphs() {
-    const now = new Date().getTime() / 1000;
-    const data = [
-      {
-        name: 'CPU Usage',
-        values: _.range(now - 86400, now, 30 * 60)
-          .map(ts => ({ x: ts, y: Math.random() * 5 })),
-        strokeWidth: 2,
+  graphRangeUpdate(value) {
+    this.setState({ range: value });
+  }
+  graphSourceUpdate(value) {
+    this.setState({ source: value });
+  }
+
+  graphSelection() {
+    const source = this.state.source;
+    const range = this.state.range;
+    const now = new Date().getTime();
+    const timeRange = {
+      last1day: _.range(now - (1000 * 60 * 60 * 24 * 1), now, 5 * 60 * 1000),
+      last2day: _.range(now - (1000 * 60 * 60 * 24 * 2), now, 15 * 60 * 1000),
+      last7day: _.range(now - (1000 * 60 * 60 * 24 * 7), now, 60 * 60 * 1000),
+    };
+    const dataSource = {
+      cpu: {
+        name: 'CPU Useage',
+        yLabel: 'CPU Useage %',
+        xLabel: 'Sample Time',
+        yDomain: { y: [0, 100] },
+        range: 40,
       },
-    ];
+      disk: {
+        name: 'Disk IO',
+        yLabel: 'Block/sec',
+        xLabel: 'Sample Time',
+        yDomain: { y: [0, 70] },
+        range: 40,
+      },
+      ipv4: {
+        name: 'Networking IPv4',
+        yLabel: 'bits/sec',
+        xLabel: 'Sample Time',
+        yDomain: { y: [0, 2] },
+        range: 2,
+      },
+      ipv6: {
+        name: 'Networking IPv6',
+        yLabel: 'bits/sec',
+        xLabel: 'Sample Time',
+        yDomain: { y: [0, 60] },
+        range: 40,
+      },
+    };
+    return this.graphUpdate(dataSource[source], timeRange[range]);
+  }
+
+  graphUpdate(source, range) {
+    const data = {
+      data: [{
+        name: source.name,
+        values: range.map(ts => ({ x: ts, y: Math.random() * source.range })),
+        strokeWidth: 2,
+      }],
+      yLabel: source.yLabel,
+      xLabel: source.xLabel,
+      yDomain: source.yDomain,
+      xDomain: d => new Date(d.x),
+    };
+    return data;
+  }
+
+  renderGraphs() {
+    const graph = this.graphSelection();
     return (
       <div className="graphs">
         <h2>Performance</h2>
         <div className="card">
           <div className="row">
             <div className="col-md-2">
-              <select className="form-control">
-                <option>CPU Usage</option>
-                <option>Memory Usage</option>
-                <option>Swap</option>
-                <option>Network</option>
+              <select
+                onChange={e => this.graphSourceUpdate(e.target.value)}
+                className="form-control select-source"
+              >
+                <option value="cpu">CPU Usage</option>
+                <option value="disk">Memory Usage</option>
+                <option value="ipv4">IPv4 Network</option>
+                <option value="ipv6">IPv6 Network</option>
               </select>
             </div>
             <div className="col-md-offset-8 col-md-2">
-              <select className="form-control">
-                <option>Last 24 hours</option>
-                <option>Last 48 hours</option>
-                <option>Last week</option>
+              <select
+                onChange={e => this.graphRangeUpdate(e.target.value)}
+                className="form-control select-range"
+              >
+                <option key={1} value="last1day">Last 24 hours</option>
+                <option key={2} value="last2day">Last 48 hours</option>
+                <option key={3} value="last7day">Last week</option>
               </select>
             </div>
           </div>
           <ResponsiveLineChart
-            yAxisLabel="CPU Usage %"
-            xAxisLabel="Sample Time"
-            xAccessor={d => new Date(d.x)}
-            data={data}
-            domain={{ y: [0, 100] }}
+            yAxisLabel={graph.yLabel}
+            xAxisLabel={graph.xLabel}
+            xAccessor={graph.xDomain}
+            data={graph.data}
+            domain={graph.yDomain}
             gridHorizontal
           />
         </div>
