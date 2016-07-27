@@ -130,7 +130,18 @@ export const testLinode = {
         status: 'successful',
         datacenter: {
           label: 'Newark, NJ',
-          id: 'datacenter_6',
+          id: 'newark',
+        },
+      },
+      backup_54778596: {
+        type: 'snapshot',
+        id: 'backup_54778593',
+        created: '2016-06-09T15:11:55',
+        finished: '2016-06-09T15:12:55',
+        status: 'successful',
+        datacenter: {
+          label: 'Newark, NJ',
+          id: 'newark',
         },
       },
     },
