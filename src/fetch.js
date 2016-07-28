@@ -28,6 +28,7 @@ export function fetch(token, _path, _options) {
     mode: 'cors',
     ..._options,
     headers: {
+      ...(_options && _options.headers),
       Accept: 'application/json',
       Authorization: `token ${token}`,
       'Content-Type': 'application/json',
