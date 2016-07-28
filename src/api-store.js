@@ -175,7 +175,9 @@ export function makeFetchAll(fetchPage, ...plurals) {
     }
 
     for (let i = 1; i < state.totalPages; i++) {
-      await dispatch(fetchPage(i, ...ids));
+      if (state.pagesFetched.indexOf(i) === -1) {
+        await dispatch(fetchPage(i, ...ids));
+      }
     }
   };
 }
