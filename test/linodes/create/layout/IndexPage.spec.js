@@ -194,7 +194,11 @@ describe('linodes/create/layout/IndexPage', () => {
     expectIsDisabled();
     page.find('SourceSelection').props().onSourceSelected('source');
     expectIsDisabled();
-    await page.find('Details').props().onSubmit({ label: 'label', password: 'password' });
+    await page.find('Details').props().onSubmit({
+      label: 'label',
+      password: 'password',
+      backups: false,
+    });
     expect(dispatch.calledTwice).to.equal(true);
     expect(dispatch.firstCall.args[0]).to.deep.equal({
       root_pass: 'password',
@@ -202,6 +206,7 @@ describe('linodes/create/layout/IndexPage', () => {
       source: 'source',
       datacenter: 'datacenter',
       label: 'label',
+      backups: false,
     });
 
     expect(dispatch.secondCall.args[0]).to.deep.equal(push(`/linodes/${createdLinodeId}`));

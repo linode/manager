@@ -43,17 +43,16 @@ export class IndexPage extends Component {
     }
   }
 
-  async onSubmit({ label, password }) {
+  async onSubmit({ label, password, backups }) {
     const { dispatch } = this.props;
     const { service, source, datacenter } = this.state;
     try {
       this.setState({ loading: true });
       const linode = await dispatch(createLinode({
-        root_pass: password, service, source, datacenter, label,
+        root_pass: password, service, source, datacenter, label, backups,
       }));
       this.setState({ loading: false });
       // TODO: show user introductory stuff
-      // TODO: enable backups
       dispatch(push(`/linodes/${linode.id}`));
     } catch (response) {
       const { errors } = await response.json();

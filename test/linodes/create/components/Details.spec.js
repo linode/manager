@@ -45,7 +45,7 @@ describe('linodes/create/components/Details', () => {
     expect(onSubmit.firstCall.args[0]).to.deep.equal({
       password: 'my-password',
       label: 'my-label',
-      enableBackups: true,
+      backups: true,
     });
   });
 });
