@@ -23,7 +23,7 @@ export default class Details extends Component {
     this.props.onSubmit({
       password: this.state.password,
       label: this.state.label,
-      enableBackups: this.state.enableBackups,
+      backups: this.state.enableBackups,
     });
   }
 
