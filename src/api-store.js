@@ -156,6 +156,30 @@ export default function makeApiList(config, transform = d => d) {
 
 import { fetch } from './fetch';
 
+export function makeFetchAll(fetchPage, ...plurals) {
+  return (...ids) => async (dispatch, getState) => {
+    function refineState() {
+      const pairs = _.zip(plurals, ids);
+      const state = getState().api;
+      let refined = state;
+      pairs.forEach(([plural, id]) => {
+        refined = id ? refined[plural][id] : refined[plural];
+      });
+      return refined;
+    }
+
+    let state = refineState();
+    if (state.totalPages === -1) {
+      await dispatch(fetchPage(0, ...ids));
+      state = refineState();
+    }
+
+    for (let i = 1; i < state.totalPages; i++) {
+      await dispatch(fetchPage(i, ...ids));
+    }
+  };
+}
+
 /**
  * Returns an action creator that fetches a page of resources when invoked and
  * dispatched. The action creator returns a thunk, and is invoked with a page
@@ -178,6 +202,7 @@ export function makeFetchPage(action, ...plurals) {
     const json = await response.json();
     dispatch(_.reduce(pairs, (u, [plural, id]) => (id ? { ...u, [plural]: id } : u),
       { type: action, response: json }));
+    return json;
   };
 }
 

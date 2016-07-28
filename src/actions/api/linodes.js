@@ -1,6 +1,7 @@
 import { fetch } from '~/fetch';
 import {
   makeFetchPage,
+  makeFetchAll,
   makeFetchItem,
   makeFetchUntil,
   makeDeleteItem,
@@ -23,6 +24,7 @@ export const UPDATE_LINODE_DISKS = '@@linodes/UPDATE_LINODE_DISKS';
 export const DELETE_LINODE_DISK = '@@linodes/DELETE_LINODE_DISK';
 
 export const fetchLinodes = makeFetchPage(UPDATE_LINODES, 'linodes');
+export const fetchAllLinodes = makeFetchAll(fetchLinodes, 'linodes');
 export const fetchLinode = makeFetchItem(UPDATE_LINODE, 'linode', 'linodes');
 export const fetchLinodeUntil = makeFetchUntil(UPDATE_LINODE, 'linodes', 'linode');
 export const deleteLinode = makeDeleteItem(DELETE_LINODE, 'linodes');
