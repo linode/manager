@@ -35,7 +35,9 @@ describe('actions/api/datacenters', async () => {
   it('should fetch datacenters', async () => {
     const dispatch = getDispatch();
     const fetchStub = getFetchStub(mockResponse);
-    const getState = getGetState();
+    const getState = getGetState({
+      api: { datacenters: { totalPages: -1 } },
+    });
 
     const f = fetchDatacenters();
 

@@ -156,26 +156,25 @@ export default function makeApiList(config, transform = d => d) {
 
 import { fetch } from './fetch';
 
+function refineState(pairs, state) {
+  let refined = state.api;
+  pairs.forEach(([plural, id]) => {
+    refined = id ? refined[plural][plural][id] : refined[plural];
+  });
+  return refined;
+}
+
 export function makeFetchAll(fetchPage, ...plurals) {
   return (...ids) => async (dispatch, getState) => {
-    function refineState() {
-      const pairs = _.zip(plurals, ids);
-      const state = getState().api;
-      let refined = state;
-      pairs.forEach(([plural, id]) => {
-        refined = id ? refined[plural][id] : refined[plural];
-      });
-      return refined;
-    }
-
-    let state = refineState();
+    const pairs = _.zip(plurals, ids);
+    let state = refineState(pairs, getState());
     if (state.totalPages === -1) {
       await dispatch(fetchPage(0, ...ids));
-      state = refineState();
+      state = refineState(pairs, getState());
     }
 
     for (let i = 1; i < state.totalPages; i++) {
-      if (state.pagesFetched.indexOf(i) === -1) {
+      if (state.pagesFetched.indexOf(i + 1) === -1) {
         await dispatch(fetchPage(i, ...ids));
       }
     }
@@ -195,6 +194,11 @@ export function makeFetchPage(action, ...plurals) {
   return (page = 0, ...ids) => async (dispatch, getState) => {
     const pairs = _.zip(plurals, ids);
     const state = getState();
+    const refined = refineState(pairs, state);
+    if (refined.totalPages !== -1 &&
+        refined.pagesFetched.indexOf(page + 1) !== -1) {
+      return;
+    }
     const { token } = state.authentication;
     const { filter } = pairs.reduce(
       (s, [plural, id]) => s && (id ? s[plural][id] : s[plural]), state.api) || { };

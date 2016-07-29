@@ -40,10 +40,12 @@ describe('actions/api/backups', async () => {
 
   it('should fetch backups', async () => {
     const dispatch = getDispatch();
-    const getState = getGetState();
     const fetchStub = getFetchStub(mockResponse);
-    const f = fetchBackups(0, 'foo_1');
+    const getState = getGetState({
+      api: { backups: { totalPages: -1 } },
+    });
 
+    const f = fetchBackups(0, 'foo_1');
     await f(dispatch, getState);
 
     expect(fetchStub.calledWith(

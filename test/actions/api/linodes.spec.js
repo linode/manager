@@ -43,7 +43,9 @@ describe('actions/api/linodes', async () => {
   it('should fetch linodes', async () => {
     const dispatch = getDispatch();
     const fetchStub = getFetchStub(mockResponse);
-    const getState = getGetState();
+    const getState = getGetState({
+      api: { linodes: { totalPages: -1 } },
+    });
 
     const f = fetchLinodes();
 

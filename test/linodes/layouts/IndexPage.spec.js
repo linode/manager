@@ -21,6 +21,12 @@ describe('linodes/layouts/IndexPage', () => {
   });
 
   const dispatch = sandbox.spy();
+  const getState = () => ({
+    authentication: { token: 'token' },
+    api: {
+      linodes: { totalPages: -1, pagesFetched: [] },
+    },
+  });
 
   it('dispatches a linodes fetch action when mounted', async () => {
     const testLinodes = {
@@ -41,9 +47,7 @@ describe('linodes/layouts/IndexPage', () => {
       json: () => {},
     });
     dispatch.reset();
-    await dispatched(dispatch, () => ({
-      authentication: { token: 'token' },
-    }));
+    await dispatched(dispatch, getState);
     expect(fetchStub.calledOnce).to.equal(true);
     expect(fetchStub.firstCall.args[1]).to.equal('/linodes/?page=1');
     expect(dispatch.calledOnce).to.equal(true);
@@ -166,7 +170,7 @@ describe('linodes/layouts/IndexPage', () => {
       const fetchStub = sandbox.stub(fetch, 'fetch').returns({
         json: () => {},
       });
-      await dispatched(dispatch, () => ({ authentication: { token: 'token' } }));
+      await dispatched(dispatch, getState);
       expect(fetchStub.calledOnce).to.equal(true);
       expect(fetchStub.firstCall.args[1]).to.equal(`/linodes/linode_1234${endpoint}`);
     };

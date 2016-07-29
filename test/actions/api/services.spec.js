@@ -35,7 +35,9 @@ describe('actions/api/services', () => {
   it('should fetch services', async () => {
     const dispatch = getDispatch();
     const fetchStub = getFetchStub(mockResponse);
-    const getState = getGetState();
+    const getState = getGetState({
+      api: { services: { totalPages: -1 } },
+    });
 
     const f = fetchServices();
 

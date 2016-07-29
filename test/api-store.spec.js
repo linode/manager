@@ -350,7 +350,9 @@ describe('api-store', () => {
     it('fetches a page of items from the API', async () => {
       const dispatch = getDispatch();
       const fetchStub = getFetchStub(mockFoobarsResponse);
-      const getState = getGetState();
+      const getState = getGetState({
+        api: { foobars: { totalPages: -1 } },
+      });
       const f = makeFetchPage('FETCH_FOOBARS', 'foobars');
       const p = f();
 
@@ -367,7 +369,15 @@ describe('api-store', () => {
     it('fetches a sub resourse page of items from the API', async () => {
       const dispatch = getDispatch();
       const fetchStub = getFetchStub(mockFoobarsResponse);
-      const getState = getGetState();
+      const getState = getGetState({
+        api: {
+          foobars: {
+            foobars: {
+              foobar_1: { foobazes: { totalPages: -1 } },
+            },
+          },
+        },
+      });
       const f = makeFetchPage('FETCH_FOOBAZES', 'foobars', 'foobazes');
       const p = f(0, 'foobar_1');
 
@@ -385,7 +395,9 @@ describe('api-store', () => {
     it('fetches the requested page', async () => {
       const dispatch = getDispatch();
       const fetchStub = getFetchStub(mockFoobarsResponse);
-      const getState = getGetState();
+      const getState = getGetState({
+        api: { foobars: { totalPages: -1 } },
+      });
       const f = makeFetchPage('FETCH_FOOBARS', 'foobars');
       const p = f(1);
 

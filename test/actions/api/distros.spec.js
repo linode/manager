@@ -35,7 +35,9 @@ describe('actions/api/distros', async () => {
   it('should fetch distros', async () => {
     const dispatch = getDispatch();
     const fetchStub = getFetchStub(mockResponse);
-    const getState = getGetState();
+    const getState = getGetState({
+      api: { distributions: { totalPages: -1 } },
+    });
 
     const f = fetchDistros();
 
