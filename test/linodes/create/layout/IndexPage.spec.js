@@ -5,10 +5,6 @@ import { shallow, mount } from 'enzyme';
 import { push } from 'react-router-redux';
 
 import { IndexPage } from '~/linodes/create/layouts/IndexPage';
-import * as fetch from '~/fetch';
-import { UPDATE_DISTROS } from '~/actions/api/distros';
-import { UPDATE_DATACENTERS } from '~/actions/api/datacenters';
-import { UPDATE_SERVICES } from '~/actions/api/services';
 import * as errors from '~/actions/errors';
 import * as apiLinodes from '~/actions/api/linodes';
 import { state, linodes } from '~/../test/data';
@@ -53,53 +49,6 @@ describe('linodes/create/layout/IndexPage', () => {
     ss.props().onTabChange(1);
     expect(ss.find('Tab').at(1).props().selected)
       .to.equal(true);
-  });
-
-  it('fetches distros, datacenters, and services when mounted', async () => {
-    const dispatch = sandbox.spy();
-    mount(
-      <IndexPage
-        dispatch={dispatch}
-        distros={state.distros}
-        datacenters={state.datacenters}
-        services={state.services}
-        linodes={{ linodes }}
-      />);
-    expect(dispatch.callCount).to.equal(4);
-
-    const dispatchedDistros = dispatch.firstCall.args[0];
-    const dispatchedDatacenters = dispatch.secondCall.args[0];
-    const dispatchedServices = dispatch.thirdCall.args[0];
-    const dispatchedLinodes = dispatch.getCall(3).args[0];
-
-    const fetchStub = sandbox.stub(fetch, 'fetch').returns({
-      json: () => {},
-    });
-
-    async function expectDispatched(call, endpoint, type) {
-      dispatch.reset();
-      fetchStub.resetHistory();
-      await call(dispatch, () => ({
-        authentication: { token: 'token' },
-      }));
-
-      expect(fetchStub.calledOnce).to.equal(true);
-      expect(fetchStub.firstCall.args[1]).to.equal(endpoint);
-      expect(dispatch.calledOnce).to.equal(true);
-      expect(dispatch.firstCall.args[0].type).to.equal(type);
-    }
-
-    // Assert that dispatchedDistros is a function that fetches distros
-    await expectDispatched(dispatchedDistros, '/distributions/?page=1', UPDATE_DISTROS);
-
-    // Assert that dispatchedDatacenters is a function that fetches datacenters
-    await expectDispatched(dispatchedDatacenters, '/datacenters/?page=1', UPDATE_DATACENTERS);
-
-    // Assert that dispatchedServices is a function that fetches services
-    await expectDispatched(dispatchedServices, '/services/?page=1', UPDATE_SERVICES);
-
-    // Assert that dispatchedServices is a function that fetches services
-    await expectDispatched(dispatchedLinodes, '/linodes/?page=1', apiLinodes.UPDATE_LINODES);
   });
 
   it('dispatches an error if fetching when mounted fails', async () => {
