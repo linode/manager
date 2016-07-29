@@ -1,16 +1,13 @@
 import sinon from 'sinon';
 import { expect } from 'chai';
 import {
-  UPDATE_BACKUP,
-  UPDATE_BACKUPS,
-  TAKE_BACKUP,
   fetchBackups,
   fetchBackup,
   enableBackup,
   cancelBackup,
   takeBackup,
 } from '~/actions/api/backups';
-import { UPDATE_LINODE } from '~/actions/api/linodes';
+import { UPDATE_LINODE, UPDATE_BACKUP, UPDATE_BACKUPS } from '~/actions/api/linodes';
 import * as fetch from '~/fetch';
 
 describe('actions/api/backups', async () => {
@@ -42,17 +39,23 @@ describe('actions/api/backups', async () => {
     const dispatch = getDispatch();
     const fetchStub = getFetchStub(mockResponse);
     const getState = getGetState({
-      api: { backups: { totalPages: -1 } },
+      api: {
+        linodes: {
+          linodes: {
+            linode_1: { _backups: { totalPages: -1 } },
+          },
+        },
+      },
     });
 
-    const f = fetchBackups(0, 'foo_1');
+    const f = fetchBackups(0, 'linode_1');
     await f(dispatch, getState);
 
     expect(fetchStub.calledWith(
-      auth.token, '/linodes/foo_1/backups/?page=1')).to.equal(true);
+      auth.token, '/linodes/linode_1/backups/?page=1')).to.equal(true);
     expect(dispatch.calledWith({
       type: UPDATE_BACKUPS,
-      linodes: 'foo_1',
+      linodes: 'linode_1',
       response: mockResponse,
     })).to.equal(true);
   });
@@ -127,15 +130,16 @@ describe('actions/api/backups', async () => {
     const dispatch = getDispatch();
     const getState = getGetState();
     const fetchStub = getFetchStub(takeBackupResponse);
-    const f = takeBackup('foo_1');
+    const f = takeBackup('linode_1');
 
     await f(dispatch, getState);
 
     expect(fetchStub.calledWith(
-      auth.token, '/linodes/foo_1/backups', { method: 'POST' })).to.equal(true);
+      auth.token, '/linodes/linode_1/backups',
+      { method: 'POST' })).to.equal(true);
     expect(dispatch.calledWith({
-      type: TAKE_BACKUP,
-      linodes: 'foo_1',
+      type: UPDATE_BACKUP,
+      linodes: 'linode_1',
       backup: takeBackupResponse,
     })).to.equal(true);
   });

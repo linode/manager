@@ -23,6 +23,47 @@ export const UPDATE_LINODE_DISK = '@@linodes/UPDATE_LINODE_DISK';
 export const UPDATE_LINODE_DISKS = '@@linodes/UPDATE_LINODE_DISKS';
 export const DELETE_LINODE_DISK = '@@linodes/DELETE_LINODE_DISK';
 
+export const UPDATE_BACKUPS = '@@backups/UPDATE_BACKUPS';
+export const UPDATE_BACKUP = '@@backups/UPDATE_BACKUP';
+
+export const linodeConfig = {
+  plural: 'linodes',
+  singular: 'linode',
+  actions: {
+    update_singular: UPDATE_LINODE,
+    update_many: UPDATE_LINODES,
+    delete_one: DELETE_LINODE,
+  },
+  subresources: {
+    _configs: {
+      plural: 'configs',
+      singular: 'config',
+      actions: {
+        update_singular: UPDATE_LINODE_CONFIG,
+        update_many: UPDATE_LINODE_CONFIGS,
+        delete_one: DELETE_LINODE_CONFIG,
+      },
+    },
+    _disks: {
+      plural: 'disks',
+      singular: 'disk',
+      actions: {
+        update_singular: UPDATE_LINODE_DISK,
+        update_many: UPDATE_LINODE_DISKS,
+        delete_one: DELETE_LINODE_DISK,
+      },
+    },
+    _backups: {
+      plural: 'backups',
+      singular: 'backup',
+      actions: {
+        update_singular: UPDATE_BACKUP,
+        update_many: UPDATE_BACKUPS,
+      },
+    },
+  },
+};
+
 export const fetchLinodes = makeFetchPage(UPDATE_LINODES, 'linodes');
 export const fetchAllLinodes = makeFetchAll(fetchLinodes, 'linodes');
 export const fetchLinode = makeFetchItem(UPDATE_LINODE, 'linode', 'linodes');
