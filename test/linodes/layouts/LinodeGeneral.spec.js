@@ -226,4 +226,63 @@ describe('linodes/layouts/LinodeGeneral', async () => {
 
     expect(page.find('#glish-button')).to.exist;
   });
+
+  describe('performance graph', () => {
+    it('renders source options', () => {
+      const page = shallow(
+        <LinodeGeneral
+          linodes={linodes}
+          params={params}
+        />);
+
+
+      const sourceInput = page.find('.select-source');
+      expect(sourceInput.find('option').length).to.equal(4);
+    });
+
+    it('renders range options', () => {
+      const page = shallow(
+        <LinodeGeneral
+          linodes={linodes}
+          params={params}
+        />);
+
+      const rangeInput = page.find('.select-range');
+      expect(rangeInput.find('option').length).to.equal(3);
+    });
+
+    it('changes source on change', () => {
+      const page = shallow(
+        <LinodeGeneral
+          linodes={linodes}
+          params={params}
+        />);
+
+      const sourceInput = page.find('.select-source');
+      sourceInput.simulate('change', { target: { value: 'disk' } });
+      expect(page.state('source')).to.equal('disk');
+    });
+
+    it('changes range on change', () => {
+      const page = shallow(
+        <LinodeGeneral
+          linodes={linodes}
+          params={params}
+        />);
+
+      const rangeInput = page.find('.select-range');
+      rangeInput.simulate('change', { target: { value: 'last2day' } });
+      expect(page.state('range')).to.equal('last2day');
+    });
+
+    it('renders the chart', () => {
+      const page = shallow(
+        <LinodeGeneral
+          linodes={linodes}
+          params={params}
+        />);
+
+      expect(page.find('ResponsiveLineChart')).to.exist;
+    });
+  });
 });
