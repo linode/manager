@@ -342,7 +342,11 @@ describe('api-store', () => {
     const getFetchStub = (rsp) => sandbox.stub(fetch, 'fetch').returns({ json() { return rsp; } });
 
     it('returns a function that itself returns a function', () => {
-      const f = makeFetchPage('FETCH_FOOBARS', 'foobars');
+      const config = {
+        plural: 'foobars',
+        actions: { update_many: 'FETCH_FOOBARS' },
+      };
+      const f = makeFetchPage(config, 'foobars');
       expect(f).to.be.a('function');
       expect(f()).to.be.a('function');
     });
@@ -353,7 +357,11 @@ describe('api-store', () => {
       const getState = getGetState({
         api: { foobars: { totalPages: -1 } },
       });
-      const f = makeFetchPage('FETCH_FOOBARS', 'foobars');
+      const config = {
+        plural: 'foobars',
+        actions: { update_many: 'FETCH_FOOBARS' },
+      };
+      const f = makeFetchPage(config);
       const p = f();
 
       await p(dispatch, getState);
@@ -398,7 +406,11 @@ describe('api-store', () => {
       const getState = getGetState({
         api: { foobars: { totalPages: -1 } },
       });
-      const f = makeFetchPage('FETCH_FOOBARS', 'foobars');
+      const config = {
+        plural: 'foobars',
+        actions: { update_many: 'FETCH_FOOBARS' },
+      };
+      const f = makeFetchPage(config);
       const p = f(1);
 
       await p(dispatch, getState);

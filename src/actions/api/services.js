@@ -8,8 +8,5 @@ export const servicesConfig = {
   actions: { update_many: UPDATE_SERVICES },
 };
 
-export const fetchServices = makeFetchPage(
-    UPDATE_SERVICES, 'services');
-
-export const fetchAllServices = makeFetchAll(
-    fetchServices, 'services');
+export const fetchServices = makeFetchPage(servicesConfig);
+export const fetchAllServices = makeFetchAll(servicesConfig, fetchServices);

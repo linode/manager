@@ -64,18 +64,19 @@ export const linodeConfig = {
   },
 };
 
-export const fetchLinodes = makeFetchPage(UPDATE_LINODES, 'linodes');
-export const fetchAllLinodes = makeFetchAll(fetchLinodes, 'linodes');
+export const fetchLinodes = makeFetchPage(linodeConfig);
+export const fetchAllLinodes = makeFetchAll(linodeConfig, fetchLinodes);
+
 export const fetchLinode = makeFetchItem(UPDATE_LINODE, 'linode', 'linodes');
 export const fetchLinodeUntil = makeFetchUntil(UPDATE_LINODE, 'linodes', 'linode');
+
 export const deleteLinode = makeDeleteItem(DELETE_LINODE, 'linodes');
 export const putLinode = makePutItem(PUT_LINODE, 'linodes');
 export const createLinode = makeCreateItem(CREATE_LINODE, 'linodes', 'linode');
 
 export const fetchLinodeDisk = makeFetchItem(UPDATE_LINODE_DISK,
   'disk', 'linodes', 'disks');
-export const fetchLinodeDisks = makeFetchPage(UPDATE_LINODE_DISKS,
-  'linodes', 'disks');
+export const fetchLinodeDisks = makeFetchPage(linodeConfig, '_disks');
 
 function linodeAction(id, action, temp, expected, timeout = undefined) {
   return async (dispatch, getState) => {

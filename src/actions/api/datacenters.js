@@ -12,8 +12,5 @@ export const datacenterConfig = {
   },
 };
 
-export const fetchDatacenters = makeFetchPage(
-    UPDATE_DATACENTERS, 'datacenters');
-
-export const fetchAllDatacenters = makeFetchAll(
-    fetchDatacenters, 'datacenters');
+export const fetchDatacenters = makeFetchPage(datacenterConfig);
+export const fetchAllDatacenters = makeFetchAll(datacenterConfig, fetchDatacenters);

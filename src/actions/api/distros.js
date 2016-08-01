@@ -8,8 +8,5 @@ export const distroConfig = {
   actions: { update_many: UPDATE_DISTROS },
 };
 
-export const fetchDistros = makeFetchPage(
-    UPDATE_DISTROS, 'distributions');
-
-export const fetchAllDistros = makeFetchAll(
-    fetchDistros, 'distributions');
+export const fetchDistros = makeFetchPage(distroConfig);
+export const fetchAllDistros = makeFetchAll(distroConfig, fetchDistros);

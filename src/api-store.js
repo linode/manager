@@ -156,21 +156,83 @@ export default function makeApiList(config, transform = d => d) {
 
 import { fetch } from './fetch';
 
-function refineState(pairs, state) {
-  let refined = state.api;
-  pairs.forEach(([plural, id]) => {
-    refined = id ? refined[plural][plural][id] : refined[plural];
-  });
-  return refined;
+/**
+ * As the name might imply, this function refines the state. It also is nice
+ * enough to reduce the config for you as well. Basically it takes your config
+ * and your state and, given a list of subresources and ids, refines the
+ * config/state to the config/state of the specified subresource.
+ * @param {Object} state - getState().api
+ * @param {Object} config - the config of the top level resource
+ * @param {string[]} subresources - a list of subresource names to drill down
+ * into. Note that this is the name of the subresource in the config, not the
+ * server's name. For example, the subresource config for Linodes is { _backups:
+ * { ... } }, so you'd pass '_backups' in for that.
+ * @param {string{}} ids - a list of IDs to drill down with. This starts with
+ * the top level ID and continues for all but the deepest subresource.
+ */
+function refineState(state, config, subresources, ids) {
+  let refinedState = state[config.plural];
+  let refinedConfig = config;
+  let path = `/${config.plural}`;
+  const plurals = [[config.plural]];
+  for (let i = 0; i < subresources.length; i++) {
+    refinedConfig = refinedConfig[subresources[i]];
+    refinedState = refinedState[ids[i]][subresources[i]];
+    path += `/${ids[i]}/${refinedConfig.plural}`;
+    plurals[plurals.length - 1].push(ids[i]);
+    plurals.push([refinedConfig.plural]);
+  }
+  return { state: refinedState, config: refinedConfig, path, plurals };
 }
 
-export function makeFetchAll(fetchPage, ...plurals) {
+/**
+ * Returns an action creator that fetches a page of resources when invoked and
+ * dispatched. The action creator returns a thunk, and is invoked with a page
+ * index and a list of IDs of parent resources.
+ * @param {Object} _config - the top-level resource configuration
+ * @param {string[]} subresources - a list of subresource names. The returned
+ * function will fetch pages of the bottom-most resource included in this list.
+ * Do not include the top-level resource. Use the name of the subresource as
+ * provided in the configuration, not the plural name given by the server.
+ */
+export function makeFetchPage(_config, ...subresources) {
+  return (page = 0, ...ids) => async (dispatch, getState) => {
+    const { token } = getState().authentication;
+    const { state, config, path, plurals } = refineState(
+      getState().api, _config, subresources, ids);
+    const { filter } = state;
+    const options = filter ? {
+      headers: { 'X-Filter': JSON.stringify(filter) },
+    } : {};
+    const response = await fetch(token, `${path}?page=${page + 1}`, options);
+    const json = await response.json();
+    dispatch({
+      type: config.actions.update_many,
+      response: json,
+      ..._.reduce(plurals, (a, [plural, id]) =>
+        id ? { ...a, [plural]: id } : a, {}),
+    });
+    return json;
+  };
+}
+
+/**
+ * Given a resource config and a function returned from makeFetchPage, this
+ * returns a function that will fetch all pages for the given resource.
+ * @param {Object} _config - the top level resource configuration
+ * @param {Function} fetchPage - a function returned by makeFetchPage for this
+ * resource
+ * @param {string[]} subresources - a list of subresource names. The returned
+ * function will fetch pages of the bottom-most resource included in this list.
+ * Do not include the top-level resource. Use the name of the subresource as
+ * provided in the configuration, not the plural name given by the server.
+ */
+export function makeFetchAll(_config, fetchPage, ...subresources) {
   return (...ids) => async (dispatch, getState) => {
-    const pairs = _.zip(plurals, ids);
-    let state = refineState(pairs, getState());
+    let { state } = refineState(getState().api, _config, subresources, ids);
     if (state.totalPages === -1) {
       await dispatch(fetchPage(0, ...ids));
-      state = refineState(pairs, getState());
+      state = refineState(getState().api, _config, subresources, ids).state;
     }
 
     for (let i = 1; i < state.totalPages; i++) {
@@ -178,37 +240,6 @@ export function makeFetchAll(fetchPage, ...plurals) {
         await dispatch(fetchPage(i, ...ids));
       }
     }
-  };
-}
-
-/**
- * Returns an action creator that fetches a page of resources when invoked and
- * dispatched. The action creator returns a thunk, and is invoked with a page
- * index and a list of IDs of parent resources.
- * @param {string} action - The name of the action to use when dispatching the
- * results
- * @param {string...} plurals - The plural form of the resources involved,
- * starting with the topmost and continuing with any subresources.
- */
-export function makeFetchPage(action, ...plurals) {
-  return (page = 0, ...ids) => async (dispatch, getState) => {
-    const pairs = _.zip(plurals, ids);
-    const state = getState();
-    const refined = refineState(pairs, state);
-    if (refined.totalPages !== -1 &&
-        refined.pagesFetched.indexOf(page + 1) !== -1) {
-      return;
-    }
-    const { token } = state.authentication;
-    const { filter } = pairs.reduce(
-      (s, [plural, id]) => s && (id ? s[plural][id] : s[plural]), state.api) || { };
-    const url = _.reduce(pairs, (u, [plural, id]) => `${u}/${plural}/${id || ''}`, '');
-    const options = filter ? { headers: { 'X-Filter': JSON.stringify(filter) } } : { };
-    const response = await fetch(token, `${url}?page=${page + 1}`, options);
-    const json = await response.json();
-    dispatch(_.reduce(pairs, (u, [plural, id]) => (id ? { ...u, [plural]: id } : u),
-      { type: action, response: json }));
-    return json;
   };
 }
 
