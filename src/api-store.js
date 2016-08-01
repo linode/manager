@@ -209,7 +209,7 @@ export function makeFetchPage(_config, ...subresources) {
     dispatch({
       type: config.actions.update_many,
       response: json,
-      ..._.reduce(plurals, (a, [plural, id]) =>
+      ...plurals.reduce((a, [plural, id]) =>
         id ? { ...a, [plural]: id } : a, {}),
     });
     return json;
