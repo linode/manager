@@ -52,7 +52,7 @@ describe('actions/api/backups', async () => {
     await f(dispatch, getState);
 
     expect(fetchStub.calledWith(
-      auth.token, '/linodes/linode_1/backups/?page=1')).to.equal(true);
+      auth.token, '/linodes/linode_1/backups?page=1')).to.equal(true);
     expect(dispatch.calledWith({
       type: UPDATE_BACKUPS,
       linodes: 'linode_1',

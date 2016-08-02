@@ -176,8 +176,9 @@ function refineState(state, config, subresources, ids) {
   let path = `/${config.plural}`;
   const plurals = [[config.plural]];
   for (let i = 0; i < subresources.length; i++) {
-    refinedConfig = refinedConfig[subresources[i]];
-    refinedState = refinedState[ids[i]][subresources[i]];
+    const newConfig = refinedConfig.subresources[subresources[i]];
+    refinedState = refinedState[refinedConfig.plural][ids[i]][subresources[i]];
+    refinedConfig = newConfig;
     path += `/${ids[i]}/${refinedConfig.plural}`;
     plurals[plurals.length - 1].push(ids[i]);
     plurals.push([refinedConfig.plural]);

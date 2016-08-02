@@ -367,14 +367,14 @@ describe('api-store', () => {
       await p(dispatch, getState);
 
       expect(fetchStub.calledWith(
-        auth.token, '/foobars/?page=1')).to.equal(true);
+        auth.token, '/foobars?page=1')).to.equal(true);
       expect(dispatch.calledWith({
         type: 'FETCH_FOOBARS',
         response: mockFoobarsResponse,
       })).to.equal(true);
     });
 
-    it('fetches a sub resourse page of items from the API', async () => {
+    it('fetches a sub resource page of items from the API', async () => {
       const dispatch = getDispatch();
       const fetchStub = getFetchStub(mockFoobarsResponse);
       const getState = getGetState({
@@ -386,13 +386,23 @@ describe('api-store', () => {
           },
         },
       });
-      const f = makeFetchPage('FETCH_FOOBAZES', 'foobars', 'foobazes');
+      const config = {
+        plural: 'foobars',
+        actions: { update_many: 'FETCH_FOOBARS' },
+        subresources: {
+          foobazes: {
+            plural: 'foobazes',
+            actions: { update_many: 'FETCH_FOOBAZES' },
+          },
+        },
+      };
+      const f = makeFetchPage(config, 'foobazes');
       const p = f(0, 'foobar_1');
 
       await p(dispatch, getState);
 
       expect(fetchStub.calledWith(
-        auth.token, '/foobars/foobar_1/foobazes/?page=1')).to.equal(true);
+        auth.token, '/foobars/foobar_1/foobazes?page=1')).to.equal(true);
       expect(dispatch.calledWith({
         type: 'FETCH_FOOBAZES',
         response: mockFoobarsResponse,
@@ -416,7 +426,7 @@ describe('api-store', () => {
       await p(dispatch, getState);
 
       expect(fetchStub.calledWith(
-        auth.token, '/foobars/?page=2')).to.equal(true);
+        auth.token, '/foobars?page=2')).to.equal(true);
     });
   });
 

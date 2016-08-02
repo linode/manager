@@ -52,7 +52,7 @@ describe('actions/api/linodes', async () => {
     await f(dispatch, getState);
 
     expect(fetchStub.calledWith(
-      auth.token, '/linodes/?page=1')).to.equal(true);
+      auth.token, '/linodes?page=1')).to.equal(true);
     expect(dispatch.calledWith({
       type: UPDATE_LINODES,
       response: mockResponse,

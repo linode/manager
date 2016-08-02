@@ -49,7 +49,7 @@ describe('linodes/layouts/IndexPage', () => {
     dispatch.reset();
     await dispatched(dispatch, getState);
     expect(fetchStub.calledOnce).to.equal(true);
-    expect(fetchStub.firstCall.args[1]).to.equal('/linodes/?page=1');
+    expect(fetchStub.firstCall.args[1]).to.equal('/linodes?page=1');
     expect(dispatch.calledOnce).to.equal(true);
     expect(dispatch.firstCall.args[0].type).to.equal(linodeActions.UPDATE_LINODES);
   });
