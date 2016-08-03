@@ -6,7 +6,7 @@ export default function checkLogin(next) {
   const state = store.getState();
   if (next.location.pathname !== '/oauth/callback'
       && state.authentication.token === null) {
-    const query = Object.keys(next.location.query)
+    const query = Object.keys(next.location.query || {})
             .reduce((a, k) => [
               ...a,
               `${k}=${encodeURIComponent(next.location.query[k])}`,
