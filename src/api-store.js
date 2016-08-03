@@ -154,6 +154,20 @@ export default function makeApiList(config, transform = d => d) {
     handleAction(mergedConfig, state, action);
 }
 
+/**
+ * Returns a cache invalidation action for the specified resource.
+ */
+export function invalidateCache(plural) {
+  return { type: `@@${plural}/INVALIDATE_CACHE` };
+}
+
+/**
+ * Returns a set filter action for the specified resource.
+ */
+export function setFilter(plural, filter = null) {
+  return { type: `@@${plural}/SET_FILTER`, filter };
+}
+
 import { fetch } from './fetch';
 
 /**
@@ -211,6 +225,9 @@ export function makeFetchPage(_config, ...subresources) {
     } : {};
     const response = await fetch(token, `${path}?page=${page + 1}`, options);
     const json = await response.json();
+    if (state.totalPages !== -1 && state.totalPages !== json.totalPages) {
+      dispatch(invalidateCache(config.plural));
+    }
     dispatch({
       type: config.actions.updateItems,
       response: json,
@@ -373,18 +390,4 @@ export function makeCreateItem(config) {
     });
     return json;
   };
-}
-
-/**
- * Returns a cache invalidation action for the specified resource.
- */
-export function invalidateCache(plural) {
-  return { type: `@@${plural}/INVALIDATE_CACHE` };
-}
-
-/**
- * Returns a set filter action for the specified resource.
- */
-export function setFilter(plural, filter = null) {
-  return { type: `@@${plural}/SET_FILTER`, filter };
 }
