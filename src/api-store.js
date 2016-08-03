@@ -336,16 +336,14 @@ export function makeDeleteItem(config) {
 /**
  * Returns an action creator that puts a single resource to the API. The action
  * creator returns a thunk, and is invoked with { id, data }.
- * @param {string} action - The name of the action to use when dispatching the
- * results
- * @param {string} plural - The plural form of the resource being updated
+ * @param {string} config - the top level config for this resource
  */
-export function makePutItem(action, plural) {
+export function makePutItem(config) {
   return ({ id, data }) => async (dispatch, getState) => {
     const state = getState();
     const { token } = state.authentication;
-    dispatch({ type: action, id, data });
-    const response = await fetch(token, `/${plural}/${id}`, {
+    dispatch({ type: config.actions.update_singular, id, data });
+    const response = await fetch(token, `/${config.plural}/${id}`, {
       method: 'PUT', body: JSON.stringify(data),
     });
     await response.json();

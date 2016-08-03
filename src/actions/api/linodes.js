@@ -12,7 +12,6 @@ import {
 export const UPDATE_LINODES = '@@linodes/UPDATE_LINODES';
 export const UPDATE_LINODE = '@@linodes/UPDATE_LINODE';
 export const DELETE_LINODE = '@@linodes/DELETE_LINODE';
-export const PUT_LINODE = '@@linodes/PUT_LINODE';
 export const CREATE_LINODE = '@@linodes/CREATE_LINODE';
 
 export const UPDATE_LINODE_CONFIG = '@@linodes/UPDATE_LINODE_CONFIG';
@@ -71,7 +70,7 @@ export const fetchLinode = makeFetchItem(linodeConfig);
 export const fetchLinodeUntil = makeFetchUntil(linodeConfig);
 
 export const deleteLinode = makeDeleteItem(linodeConfig);
-export const putLinode = makePutItem(PUT_LINODE, 'linodes');
+export const putLinode = makePutItem(linodeConfig);
 export const createLinode = makeCreateItem(CREATE_LINODE, 'linodes', 'linode');
 
 export const fetchLinodeDisk = makeFetchItem(linodeConfig, 'disks');

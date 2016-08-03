@@ -4,7 +4,7 @@ import { mount } from 'enzyme';
 import { expect } from 'chai';
 
 import * as fetch from '~/fetch';
-import { PUT_LINODE } from '~/actions/api/linodes';
+import { UPDATE_LINODE } from '~/actions/api/linodes';
 import { linodes } from '~/../test/data';
 import { AlertsPage } from '~/linodes/settings/layouts/AlertsPage';
 
@@ -58,7 +58,7 @@ describe('linodes/settings/layouts/AlertsPage', async () => {
     expect(fetchStub.calledOnce).to.equal(true);
     expect(fetchStub.firstCall.args[1]).to.equal('/linodes/linode_1235');
     expect(dispatch.calledOnce).to.equal(true);
-    expect(dispatch.firstCall.args[0].type).to.equal(PUT_LINODE);
+    expect(dispatch.firstCall.args[0].type).to.equal(UPDATE_LINODE);
     expect(dispatch.firstCall.args[0].id).to.equal('linode_1235');
     expect(dispatch.firstCall.args[0].data.alerts).to.deep.equal({
       cpu: { enabled: true, threshold: 90 },

@@ -485,7 +485,7 @@ describe('api-store', () => {
     });
 
     it('returns a function that itself returns a function', () => {
-      const f = makePutItem('PUT_FOOBAR', 'foobars');
+      const f = makePutItem(config);
       expect(f).to.be.a('function');
       expect(f({ id: '', data: {} })).to.be.a('function');
     });
@@ -502,7 +502,7 @@ describe('api-store', () => {
       const dispatch = getDispatch();
       const fetchStub = getFetchStub(emptyResponse);
       const getState = getGetState();
-      const f = makePutItem('PUT_FOOBAR', 'foobars');
+      const f = makePutItem(config);
       const p = f({ id: 'foobar_1', data: { foo: 'bar' } });
 
       await p(dispatch, getState);
@@ -511,7 +511,7 @@ describe('api-store', () => {
         auth.token, '/foobars/foobar_1', { method: 'PUT', body: JSON.stringify({ foo: 'bar' }) }
       )).to.equal(true);
       expect(dispatch.calledWith({
-        type: 'PUT_FOOBAR',
+        type: config.actions.update_singular,
         id: 'foobar_1',
         data: { foo: 'bar' },
       })).to.equal(true);
