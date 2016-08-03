@@ -211,31 +211,39 @@ function refineState(state, config, subresources, ids) {
  * provided in the configuration, not the plural name given by the server.
  */
 export function makeFetchPage(_config, ...subresources) {
-  return (page = 0, ...ids) => async (dispatch, getState) => {
-    const { token } = getState().authentication;
-    const { state, config, path, plurals } = refineState(
-      getState().api, _config, subresources, ids);
-    if (state.totalPages !== -1 &&
-        state.pagesFetched.indexOf(page + 1) !== -1) {
-      return;
-    }
-    const { filter } = state;
-    const options = filter ? {
-      headers: { 'X-Filter': JSON.stringify(filter) },
-    } : {};
-    const response = await fetch(token, `${path}?page=${page + 1}`, options);
-    const json = await response.json();
-    if (state.totalPages !== -1 && state.totalPages !== json.totalPages) {
-      dispatch(invalidateCache(config.plural));
-    }
-    dispatch({
-      type: config.actions.updateItems,
-      response: json,
-      ...plurals.reduce((a, [plural, id]) =>
-        id ? { ...a, [plural]: id } : a, {}),
-    });
-    return json;
-  };
+  function fetchPage(page = 0, ...ids) {
+    return async (dispatch, getState) => {
+      const { token } = getState().authentication;
+      const { state, config, path, plurals } = refineState(
+        getState().api, _config, subresources, ids);
+      if (state.totalPages !== -1 &&
+          state.pagesFetched.indexOf(page + 1) !== -1) {
+        return;
+      }
+      const { filter } = state;
+      const options = filter ? {
+        headers: { 'X-Filter': JSON.stringify(filter) },
+      } : {};
+      const response = await fetch(token, `${path}?page=${page + 1}`, options);
+      const json = await response.json();
+      if (state.totalPages !== -1 && state.totalPages !== json.totalPages) {
+        dispatch(invalidateCache(config.plural));
+        for (let i = 0; i < state.pagesFetched; ++i) {
+          if (state.pagesFetched[i] !== page) {
+            await dispatch(fetchPage(state.pagesFetched[i], ...ids));
+          }
+        }
+      }
+      dispatch({
+        type: config.actions.updateItems,
+        response: json,
+        ...plurals.reduce((a, [plural, id]) =>
+          id ? { ...a, [plural]: id } : a, {}),
+      });
+      return json;
+    };
+  }
+  return fetchPage;
 }
 
 /**
