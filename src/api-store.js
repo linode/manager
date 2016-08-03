@@ -284,29 +284,35 @@ export function makeFetchItem(_config, ...subresources) {
  * Returns an action creator that fetches a single resource until it passes a
  * test. The action creator returns a thunk, and is invoked with the ID, a test
  * function, and a timeout between requests (which defaults to 3000).
- * @param {string} action - The name of the action to use when dispatching the
- * results
- * @param {string} plural - The plural form of the resource being fetched
- * @param {string} singular - The singular form of the resource being fetched
+ * @param {Object} config - the top level config for this resource
  */
-export function makeFetchUntil(action, plural, singular) {
+export function makeFetchUntil(config) {
   // TODO: Support subresources here
   return (id, test, timeout = 3000) => async (dispatch, getState) => {
     const { token } = getState().authentication;
-    const item = getState().api[plural][plural][id];
+    const item = getState().api[config.plural][config.plural][id];
     if (item._polling) {
       return;
     }
-    dispatch({ type: action, [singular]: { id, _polling: true } });
+    dispatch({
+      type: config.actions.update_singular,
+      [config.singular]: { id, _polling: true },
+    });
     for (;;) {
-      const response = await fetch(token, `/${plural}/${id}`);
+      const response = await fetch(token, `/${config.plural}/${id}`);
       const json = await response.json();
-      dispatch({ type: action, [singular]: json });
+      dispatch({
+        type: config.actions.update_singular,
+        [config.singular]: json,
+      });
       if (test(json)) break;
 
       await new Promise(r => setTimeout(r, timeout));
     }
-    dispatch({ type: action, [singular]: { id, _polling: false } });
+    dispatch({
+      type: config.actions.update_singular,
+      [config.singular]: { id, _polling: false },
+    });
   };
 }
 

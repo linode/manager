@@ -642,7 +642,13 @@ describe('api-store', () => {
       fetchStub.onCall(1).returns({ json: () => ({ state: 'wait' }) });
       fetchStub.returns({ json: () => ({ state: 'done' }) });
 
-      const f = makeFetchUntil('UPDATE_FOOBAR', 'foobars', 'foobar');
+      const config = {
+        singular: 'foobar',
+        plural: 'foobars',
+        actions: { update_singular: 'UPDATE_FOOBAR' },
+      };
+
+      const f = makeFetchUntil(config);
       const p = f('foobar_1', v => v.state === 'done', 1);
 
       const state = {
@@ -664,7 +670,13 @@ describe('api-store', () => {
       const dispatch = sandbox.spy();
       const getState = sandbox.stub();
 
-      const f = makeFetchUntil('UPDATE_FOOBAR', 'foobars', 'foobar');
+      const config = {
+        singular: 'foobar',
+        plural: 'foobars',
+        actions: { update_singular: 'UPDATE_FOOBAR' },
+      };
+
+      const f = makeFetchUntil(config);
       const p = f('foobar_1', v => v.state === 'done', 1);
 
       const state = {
