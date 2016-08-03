@@ -28,21 +28,33 @@ describe('api-store', () => {
 
   const sandbox = sinon.sandbox.create();
 
+  const config = {
+    singular: 'foobar',
+    plural: 'foobars',
+    actions: {
+      update_many: 'UPDATE_FOOBARS',
+      update_singular: 'UPDATE_FOOBAR',
+      delete_one: 'DELETE_FOOBAR',
+    },
+    subresources: {
+      foobazes: {
+        singular: 'foobaz',
+        plural: 'foobazes',
+        actions: {
+          update_many: 'UPDATE_FOOBAZES',
+          update_singular: 'UPDATE_FOOBAZ',
+        },
+      },
+    },
+  };
+
   describe('api-store/makeApiList', () => {
     afterEach(() => {
       sandbox.restore();
     });
 
     it('should handle initial state', () => {
-      const s = makeApiList({
-        plural: 'foobars',
-        singular: 'foobar',
-        actions: {
-          update_singular: 'UPDATE_ONE',
-          update_many: 'UPDATE_MANY',
-          delete_one: 'DELETE_ONE',
-        },
-      });
+      const s = makeApiList(config);
 
       expect(
         s(undefined, {})
@@ -53,31 +65,23 @@ describe('api-store', () => {
     });
 
     it('should not handle actions not specified', () => {
-      const s = makeApiList({
-        plural: 'foobars',
-        singular: 'foobar',
-        actions: { update_singular: 'UPDATE_ONE' },
-      });
+      const s = makeApiList(config);
       const state = s(undefined, {});
       deepFreeze(state);
 
       expect(
-        s(state, { type: 'DELETE_ONE' })
+        s(state, { type: 'buttslol' })
       ).to.be.eql(state);
     });
 
     it('should handle updating many records', () => {
-      const s = makeApiList({
-        plural: 'foobars',
-        singular: 'foobar',
-        actions: { update_many: 'UPDATE_MANY' },
-      });
+      const s = makeApiList(config);
 
       const state = s(undefined, {});
       deepFreeze(state);
 
       const result = s(state, {
-        type: 'UPDATE_MANY',
+        type: config.actions.update_many,
         response: mockFoobarsResponse,
       });
 
@@ -87,17 +91,13 @@ describe('api-store', () => {
     });
 
     it('should add internal properties to objects', () => {
-      const s = makeApiList({
-        plural: 'foobars',
-        singular: 'foobar',
-        actions: { update_many: 'UPDATE_MANY' },
-      });
+      const s = makeApiList(config);
 
       const state = s(undefined, {});
       deepFreeze(state);
 
       const result = s(state, {
-        type: 'UPDATE_MANY',
+        type: config.actions.update_many,
         response: {
           foobars: [
             { id: 'foobar_1' },
@@ -116,17 +116,13 @@ describe('api-store', () => {
     });
 
     it('should invoke custom transforms', () => {
-      const s = makeApiList({
-        plural: 'foobars',
-        singular: 'foobar',
-        actions: { update_many: 'UPDATE_MANY' },
-      }, o => ({ ...o, test: 1234 }));
+      const s = makeApiList(config, o => ({ ...o, test: 1234 }));
 
       const state = s(undefined, {});
       deepFreeze(state);
 
       const result = s(state, {
-        type: 'UPDATE_MANY',
+        type: config.actions.update_many,
         response: {
           foobars: [
             { id: 'foobar_1' },
@@ -146,17 +142,13 @@ describe('api-store', () => {
     });
 
     it('should handle adding a single resource', () => {
-      const s = makeApiList({
-        plural: 'foobars',
-        singular: 'foobar',
-        actions: { update_singular: 'UPDATE_SINGLE' },
-      });
+      const s = makeApiList(config);
 
       const state = s(undefined, {});
       deepFreeze(state);
 
       const result = s(state, {
-        type: 'UPDATE_SINGLE',
+        type: config.actions.update_singular,
         foobar: { id: 'foobar_1' },
       });
 
@@ -166,11 +158,7 @@ describe('api-store', () => {
     });
 
     it('should handle updating a single resource', () => {
-      const s = makeApiList({
-        plural: 'foobars',
-        singular: 'foobar',
-        actions: { update_singular: 'UPDATE_SINGLE' },
-      });
+      const s = makeApiList(config);
 
       let state = s(undefined, {});
       state = {
@@ -183,7 +171,7 @@ describe('api-store', () => {
       deepFreeze(state);
 
       const result = s(state, {
-        type: 'UPDATE_SINGLE',
+        type: config.actions.update_singular,
         foobar: { id: 'foobar_1', name: 'hello' },
       });
 
@@ -195,11 +183,7 @@ describe('api-store', () => {
     });
 
     it('should handle deleting a single resource', () => {
-      const s = makeApiList({
-        plural: 'foobars',
-        singular: 'foobar',
-        actions: { delete_one: 'DELETE_ONE' },
-      });
+      const s = makeApiList(config);
 
       let state = s(undefined, {});
       state = {
@@ -212,7 +196,7 @@ describe('api-store', () => {
       deepFreeze(state);
 
       const result = s(state, {
-        type: 'DELETE_ONE',
+        type: config.actions.delete_one,
         id: 'foobar_1',
       });
 
@@ -222,11 +206,7 @@ describe('api-store', () => {
     });
 
     it('should handle invalidate cache actions', () => {
-      const s = makeApiList({
-        plural: 'foobars',
-        singular: 'foobar',
-        actions: { },
-      });
+      const s = makeApiList(config);
 
       let state = s(undefined, { });
       state = {
@@ -256,7 +236,7 @@ describe('api-store', () => {
     });
 
     it('should handle set filter actions', () => {
-      const s = makeApiList({ plural: 'foobars', singular: 'foobar', actions: { } });
+      const s = makeApiList(config);
       const state = s(undefined, { });
       deepFreeze(state);
       const action = { type: '@@foobars/SET_FILTER', filter: { foo: 'bar' } };
@@ -267,28 +247,13 @@ describe('api-store', () => {
     });
   });
 
-  function makeApiListWithSub() {
-    return makeApiList({
-      plural: 'foobars',
-      singular: 'foobar',
-      actions: { update_many: 'UPDATE_MANY' },
-      subresources: {
-        foobazes: {
-          singular: 'foobaz',
-          plural: 'foobazes',
-          actions: { update_singular: 'UPDATE_ONE_FOOBAZ' },
-        },
-      },
-    });
-  }
-
   it('should wire up subresources for items', () => {
-    const s = makeApiListWithSub();
+    const s = makeApiList(config);
     const state = s(undefined, {});
     deepFreeze(state);
 
     const result = s(state, {
-      type: 'UPDATE_MANY',
+      type: config.actions.update_many,
       response: mockFoobarsResponse,
     });
 
@@ -306,16 +271,16 @@ describe('api-store', () => {
   });
 
   it('should handle subresource update singular', () => {
-    const s = makeApiListWithSub();
+    const s = makeApiList(config);
 
     const state = s(undefined, {
-      type: 'UPDATE_MANY',
+      type: config.actions.update_many,
       response: mockFoobarsResponse,
     });
     deepFreeze(state);
 
     const result = s(state, {
-      type: 'UPDATE_ONE_FOOBAZ',
+      type: config.subresources.foobazes.actions.update_singular,
       foobaz: { id: 'foobaz_123', test: 'hello world' },
       foobars: 'foobar_1',
     });
@@ -342,10 +307,6 @@ describe('api-store', () => {
     const getFetchStub = (rsp) => sandbox.stub(fetch, 'fetch').returns({ json() { return rsp; } });
 
     it('returns a function that itself returns a function', () => {
-      const config = {
-        plural: 'foobars',
-        actions: { update_many: 'FETCH_FOOBARS' },
-      };
       const f = makeFetchPage(config, 'foobars');
       expect(f).to.be.a('function');
       expect(f()).to.be.a('function');
@@ -357,10 +318,6 @@ describe('api-store', () => {
       const getState = getGetState({
         api: { foobars: { totalPages: -1 } },
       });
-      const config = {
-        plural: 'foobars',
-        actions: { update_many: 'FETCH_FOOBARS' },
-      };
       const f = makeFetchPage(config);
       const p = f();
 
@@ -369,7 +326,7 @@ describe('api-store', () => {
       expect(fetchStub.calledWith(
         auth.token, '/foobars?page=1')).to.equal(true);
       expect(dispatch.calledWith({
-        type: 'FETCH_FOOBARS',
+        type: config.actions.update_many,
         response: mockFoobarsResponse,
       })).to.equal(true);
     });
@@ -386,16 +343,6 @@ describe('api-store', () => {
           },
         },
       });
-      const config = {
-        plural: 'foobars',
-        actions: { update_many: 'FETCH_FOOBARS' },
-        subresources: {
-          foobazes: {
-            plural: 'foobazes',
-            actions: { update_many: 'FETCH_FOOBAZES' },
-          },
-        },
-      };
       const f = makeFetchPage(config, 'foobazes');
       const p = f(0, 'foobar_1');
 
@@ -404,7 +351,7 @@ describe('api-store', () => {
       expect(fetchStub.calledWith(
         auth.token, '/foobars/foobar_1/foobazes?page=1')).to.equal(true);
       expect(dispatch.calledWith({
-        type: 'FETCH_FOOBAZES',
+        type: config.subresources.foobazes.actions.update_many,
         response: mockFoobarsResponse,
         foobars: 'foobar_1',
       })).to.equal(true);
@@ -416,10 +363,6 @@ describe('api-store', () => {
       const getState = getGetState({
         api: { foobars: { totalPages: -1 } },
       });
-      const config = {
-        plural: 'foobars',
-        actions: { update_many: 'FETCH_FOOBARS' },
-      };
       const f = makeFetchPage(config);
       const p = f(1);
 
@@ -443,7 +386,7 @@ describe('api-store', () => {
     const getFetchStub = (rsp) => sandbox.stub(fetch, 'fetch').returns({ json() { return rsp; } });
 
     it('returns a function that itself returns a function', () => {
-      const f = makeFetchItem('UPDATE_FOOBAR', 'foobar', 'foobars');
+      const f = makeFetchItem(config.actions.update_singular, 'foobar', 'foobars');
       expect(f).to.be.a('function');
       expect(f()).to.be.a('function');
     });
@@ -454,11 +397,6 @@ describe('api-store', () => {
       const getState = getGetState({
         api: { foobars: { totalPages: -1, foobars: { } } },
       });
-      const config = {
-        plural: 'foobars',
-        singular: 'foobar',
-        actions: { update_singular: 'UPDATE_FOOBAR' },
-      };
       const f = makeFetchItem(config);
       const p = f('foobar_1');
 
@@ -467,7 +405,7 @@ describe('api-store', () => {
       expect(fetchStub.calledWith(
         auth.token, '/foobars/foobar_1')).to.equal(true);
       expect(dispatch.calledWith({
-        type: 'UPDATE_FOOBAR',
+        type: config.actions.update_singular,
         foobar: mockFoobarsResponse.foobars[0],
         foobars: 'foobar_1',
       })).to.equal(true);
@@ -488,18 +426,6 @@ describe('api-store', () => {
           },
         },
       });
-      const config = {
-        plural: 'foobars',
-        singular: 'foobar',
-        actions: { update_many: 'UPDATE_MANY' },
-        subresources: {
-          foobazes: {
-            singular: 'foobaz',
-            plural: 'foobazes',
-            actions: { update_singular: 'UPDATE_ONE_FOOBAZ' },
-          },
-        },
-      };
       const f = makeFetchItem(config, 'foobazes');
       const p = f('foobar_1', 'foobaz_1234');
 
@@ -508,7 +434,7 @@ describe('api-store', () => {
       expect(fetchStub.calledWith(
         auth.token, '/foobars/foobar_1/foobazes/foobaz_1234')).to.equal(true);
       expect(dispatch.calledWith({
-        type: 'UPDATE_ONE_FOOBAZ',
+        type: config.subresources.foobazes.actions.update_singular,
         foobars: 'foobar_1',
         foobazes: 'foobaz_1234',
         foobaz,
@@ -522,7 +448,7 @@ describe('api-store', () => {
     });
 
     it('returns a function that itself returns a function', () => {
-      const f = makeDeleteItem('DELETE_FOOBAR', 'foobars');
+      const f = makeDeleteItem(config);
       expect(f).to.be.a('function');
       expect(f()).to.be.a('function');
     });
@@ -539,7 +465,7 @@ describe('api-store', () => {
       const dispatch = getDispatch();
       const fetchStub = getFetchStub(emptyResponse);
       const getState = getGetState();
-      const f = makeDeleteItem('DELETE_FOOBAR', 'foobars');
+      const f = makeDeleteItem(config);
       const p = f('foobar_1');
 
       await p(dispatch, getState);
@@ -547,7 +473,7 @@ describe('api-store', () => {
       expect(fetchStub.calledWith(
         auth.token, '/foobars/foobar_1', { method: 'DELETE' })).to.equal(true);
       expect(dispatch.calledWith({
-        type: 'DELETE_FOOBAR',
+        type: config.actions.delete_one,
         id: 'foobar_1',
       })).to.equal(true);
     });
@@ -642,12 +568,6 @@ describe('api-store', () => {
       fetchStub.onCall(1).returns({ json: () => ({ state: 'wait' }) });
       fetchStub.returns({ json: () => ({ state: 'done' }) });
 
-      const config = {
-        singular: 'foobar',
-        plural: 'foobars',
-        actions: { update_singular: 'UPDATE_FOOBAR' },
-      };
-
       const f = makeFetchUntil(config);
       const p = f('foobar_1', v => v.state === 'done', 1);
 
@@ -670,12 +590,6 @@ describe('api-store', () => {
       const dispatch = sandbox.spy();
       const getState = sandbox.stub();
 
-      const config = {
-        singular: 'foobar',
-        plural: 'foobars',
-        actions: { update_singular: 'UPDATE_FOOBAR' },
-      };
-
       const f = makeFetchUntil(config);
       const p = f('foobar_1', v => v.state === 'done', 1);
 
@@ -689,7 +603,7 @@ describe('api-store', () => {
 
       expect(getState.callCount).to.equal(2);
       expect(dispatch.calledWith({
-        type: 'UPDATE_FOOBAR',
+        type: config.actions.update_singular,
         foobar: { state: 'done' },
       })).to.equal(true);
       expect(dispatch.callCount).to.equal(5);

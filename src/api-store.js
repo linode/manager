@@ -319,16 +319,15 @@ export function makeFetchUntil(config) {
 /**
  * Returns an action creator that deletes a single resource. The action
  * creator returns a thunk, and is invoked with the ID.
- * @param {string} action - The name of the action to use when dispatching the
- * results
- * @param {string} plural - The plural form of the resource being deleted
+ * @param {Object} config - the top level config for this resource
  */
-export function makeDeleteItem(action, plural) {
+export function makeDeleteItem(config) {
   return id => async (dispatch, getState) => {
     const state = getState();
     const { token } = state.authentication;
-    dispatch({ type: action, id });
-    const response = await fetch(token, `/${plural}/${id}`, { method: 'DELETE' });
+    dispatch({ type: config.actions.delete_one, id });
+    const response = await fetch(token,
+      `/${config.plural}/${id}`, { method: 'DELETE' });
     await response.json();
     // Note: do we want to do anything at this point?
   };

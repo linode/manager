@@ -70,7 +70,7 @@ export const fetchAllLinodes = makeFetchAll(linodeConfig, fetchLinodes);
 export const fetchLinode = makeFetchItem(linodeConfig);
 export const fetchLinodeUntil = makeFetchUntil(linodeConfig);
 
-export const deleteLinode = makeDeleteItem(DELETE_LINODE, 'linodes');
+export const deleteLinode = makeDeleteItem(linodeConfig);
 export const putLinode = makePutItem(PUT_LINODE, 'linodes');
 export const createLinode = makeCreateItem(CREATE_LINODE, 'linodes', 'linode');
 
