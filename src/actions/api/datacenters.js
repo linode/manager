@@ -8,7 +8,7 @@ export const datacenterConfig = {
   plural: 'datacenters',
   actions: {
     update_single: UPDATE_DATACENTER,
-    update_many: UPDATE_DATACENTERS,
+    updateItems: UPDATE_DATACENTERS,
   },
 };
 

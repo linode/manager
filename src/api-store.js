@@ -32,11 +32,11 @@ function transformItem(subresources, item) {
  * "linode")
  * @param {Object} config.actions - A list of action names for the reducer to
  * use
- * @param {string} config.actions.update_singular - The action to use for
+ * @param {string} config.actions.updateItem - The action to use for
  * updating a single item
- * @param {string} config.actions.update_many - The action to use for updating
+ * @param {string} config.actions.updateItems - The action to use for updating
  * several items
- * @param {string} config.actions.delete_one - The action to use for deleting a
+ * @param {string} config.actions.deleteItem - The action to use for deleting a
  * single item
  * @param {Object} config.subresources - An object of subresource configs (i.e.
  * disks on a linode) keyed by their name in the state
@@ -45,9 +45,9 @@ function transformItem(subresources, item) {
  */
 export default function makeApiList(config, transform = d => d) {
   const actions = {
-    update_singular: -1,
-    update_many: -1,
-    delete_one: -1,
+    updateItem: -1,
+    updateItems: -1,
+    deleteItem: -1,
     ...config.actions,
   };
 
@@ -69,7 +69,7 @@ export default function makeApiList(config, transform = d => d) {
     };
   }
 
-  function updateSingular(_config, state, action) {
+  function updateItem(_config, state, action) {
     let item = action[_config.singular];
     if (!state[_config.plural][item.id]) {
       item = transform(transformItem(_config.subresources, item));
@@ -130,11 +130,11 @@ export default function makeApiList(config, transform = d => d) {
 
   function handleAction(_config, state, action) {
     switch (action.type) {
-      case _config.actions.update_many:
+      case _config.actions.updateItems:
         return updateMany(_config, state, action);
-      case _config.actions.update_singular:
-        return updateSingular(_config, state, action);
-      case _config.actions.delete_one:
+      case _config.actions.updateItem:
+        return updateItem(_config, state, action);
+      case _config.actions.deleteItem:
         return deleteOne(_config, state, action);
       case `@@${_config.plural}/INVALIDATE_CACHE`:
         return invalidate(_config, state, action);
@@ -208,7 +208,7 @@ export function makeFetchPage(_config, ...subresources) {
     const response = await fetch(token, `${path}?page=${page + 1}`, options);
     const json = await response.json();
     dispatch({
-      type: config.actions.update_many,
+      type: config.actions.updateItems,
       response: json,
       ...plurals.reduce((a, [plural, id]) =>
         id ? { ...a, [plural]: id } : a, {}),
@@ -270,7 +270,7 @@ export function makeFetchItem(_config, ...subresources) {
     const json = await response.json();
 
     dispatch({
-      type: config.actions.update_singular,
+      type: config.actions.updateItem,
       [config.singular]: json,
       ...plurals.reduce((u, [plural, id]) =>
         (id ? { ...u, [plural]: id } : u), { }),
@@ -295,14 +295,14 @@ export function makeFetchUntil(config) {
       return;
     }
     dispatch({
-      type: config.actions.update_singular,
+      type: config.actions.updateItem,
       [config.singular]: { id, _polling: true },
     });
     for (;;) {
       const response = await fetch(token, `/${config.plural}/${id}`);
       const json = await response.json();
       dispatch({
-        type: config.actions.update_singular,
+        type: config.actions.updateItem,
         [config.singular]: json,
       });
       if (test(json)) break;
@@ -310,7 +310,7 @@ export function makeFetchUntil(config) {
       await new Promise(r => setTimeout(r, timeout));
     }
     dispatch({
-      type: config.actions.update_singular,
+      type: config.actions.updateItem,
       [config.singular]: { id, _polling: false },
     });
   };
@@ -325,7 +325,7 @@ export function makeDeleteItem(config) {
   return id => async (dispatch, getState) => {
     const state = getState();
     const { token } = state.authentication;
-    dispatch({ type: config.actions.delete_one, id });
+    dispatch({ type: config.actions.deleteItem, id });
     const response = await fetch(token,
       `/${config.plural}/${id}`, { method: 'DELETE' });
     await response.json();
@@ -342,7 +342,7 @@ export function makePutItem(config) {
   return ({ id, data }) => async (dispatch, getState) => {
     const state = getState();
     const { token } = state.authentication;
-    dispatch({ type: config.actions.update_singular, id, data });
+    dispatch({ type: config.actions.updateItem, id, data });
     const response = await fetch(token, `/${config.plural}/${id}`, {
       method: 'PUT', body: JSON.stringify(data),
     });
@@ -364,7 +364,7 @@ export function makeCreateItem(config) {
     });
     const json = await response.json();
     dispatch({
-      type: config.actions.update_singular,
+      type: config.actions.updateItem,
       [config.singular]: json,
     });
     return json;

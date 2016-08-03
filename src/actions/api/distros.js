@@ -5,7 +5,7 @@ export const UPDATE_DISTROS = '@@distributions/UPDATE_DISTROS';
 export const distroConfig = {
   singular: 'distribution',
   plural: 'distributions',
-  actions: { update_many: UPDATE_DISTROS },
+  actions: { updateItems: UPDATE_DISTROS },
 };
 
 export const fetchDistros = makeFetchPage(distroConfig);

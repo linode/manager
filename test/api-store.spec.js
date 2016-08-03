@@ -32,17 +32,17 @@ describe('api-store', () => {
     singular: 'foobar',
     plural: 'foobars',
     actions: {
-      update_many: 'UPDATE_FOOBARS',
-      update_singular: 'UPDATE_FOOBAR',
-      delete_one: 'DELETE_FOOBAR',
+      updateItems: 'UPDATE_FOOBARS',
+      updateItem: 'UPDATE_FOOBAR',
+      deleteItem: 'DELETE_FOOBAR',
     },
     subresources: {
       foobazes: {
         singular: 'foobaz',
         plural: 'foobazes',
         actions: {
-          update_many: 'UPDATE_FOOBAZES',
-          update_singular: 'UPDATE_FOOBAZ',
+          updateItems: 'UPDATE_FOOBAZES',
+          updateItem: 'UPDATE_FOOBAZ',
         },
       },
     },
@@ -81,7 +81,7 @@ describe('api-store', () => {
       deepFreeze(state);
 
       const result = s(state, {
-        type: config.actions.update_many,
+        type: config.actions.updateItems,
         response: mockFoobarsResponse,
       });
 
@@ -97,7 +97,7 @@ describe('api-store', () => {
       deepFreeze(state);
 
       const result = s(state, {
-        type: config.actions.update_many,
+        type: config.actions.updateItems,
         response: {
           foobars: [
             { id: 'foobar_1' },
@@ -122,7 +122,7 @@ describe('api-store', () => {
       deepFreeze(state);
 
       const result = s(state, {
-        type: config.actions.update_many,
+        type: config.actions.updateItems,
         response: {
           foobars: [
             { id: 'foobar_1' },
@@ -148,7 +148,7 @@ describe('api-store', () => {
       deepFreeze(state);
 
       const result = s(state, {
-        type: config.actions.update_singular,
+        type: config.actions.updateItem,
         foobar: { id: 'foobar_1' },
       });
 
@@ -171,7 +171,7 @@ describe('api-store', () => {
       deepFreeze(state);
 
       const result = s(state, {
-        type: config.actions.update_singular,
+        type: config.actions.updateItem,
         foobar: { id: 'foobar_1', name: 'hello' },
       });
 
@@ -196,7 +196,7 @@ describe('api-store', () => {
       deepFreeze(state);
 
       const result = s(state, {
-        type: config.actions.delete_one,
+        type: config.actions.deleteItem,
         id: 'foobar_1',
       });
 
@@ -253,7 +253,7 @@ describe('api-store', () => {
     deepFreeze(state);
 
     const result = s(state, {
-      type: config.actions.update_many,
+      type: config.actions.updateItems,
       response: mockFoobarsResponse,
     });
 
@@ -274,13 +274,13 @@ describe('api-store', () => {
     const s = makeApiList(config);
 
     const state = s(undefined, {
-      type: config.actions.update_many,
+      type: config.actions.updateItems,
       response: mockFoobarsResponse,
     });
     deepFreeze(state);
 
     const result = s(state, {
-      type: config.subresources.foobazes.actions.update_singular,
+      type: config.subresources.foobazes.actions.updateItem,
       foobaz: { id: 'foobaz_123', test: 'hello world' },
       foobars: 'foobar_1',
     });
@@ -326,7 +326,7 @@ describe('api-store', () => {
       expect(fetchStub.calledWith(
         auth.token, '/foobars?page=1')).to.equal(true);
       expect(dispatch.calledWith({
-        type: config.actions.update_many,
+        type: config.actions.updateItems,
         response: mockFoobarsResponse,
       })).to.equal(true);
     });
@@ -351,7 +351,7 @@ describe('api-store', () => {
       expect(fetchStub.calledWith(
         auth.token, '/foobars/foobar_1/foobazes?page=1')).to.equal(true);
       expect(dispatch.calledWith({
-        type: config.subresources.foobazes.actions.update_many,
+        type: config.subresources.foobazes.actions.updateItems,
         response: mockFoobarsResponse,
         foobars: 'foobar_1',
       })).to.equal(true);
@@ -386,7 +386,7 @@ describe('api-store', () => {
     const getFetchStub = (rsp) => sandbox.stub(fetch, 'fetch').returns({ json() { return rsp; } });
 
     it('returns a function that itself returns a function', () => {
-      const f = makeFetchItem(config.actions.update_singular, 'foobar', 'foobars');
+      const f = makeFetchItem(config.actions.updateItem, 'foobar', 'foobars');
       expect(f).to.be.a('function');
       expect(f()).to.be.a('function');
     });
@@ -405,7 +405,7 @@ describe('api-store', () => {
       expect(fetchStub.calledWith(
         auth.token, '/foobars/foobar_1')).to.equal(true);
       expect(dispatch.calledWith({
-        type: config.actions.update_singular,
+        type: config.actions.updateItem,
         foobar: mockFoobarsResponse.foobars[0],
         foobars: 'foobar_1',
       })).to.equal(true);
@@ -434,7 +434,7 @@ describe('api-store', () => {
       expect(fetchStub.calledWith(
         auth.token, '/foobars/foobar_1/foobazes/foobaz_1234')).to.equal(true);
       expect(dispatch.calledWith({
-        type: config.subresources.foobazes.actions.update_singular,
+        type: config.subresources.foobazes.actions.updateItem,
         foobars: 'foobar_1',
         foobazes: 'foobaz_1234',
         foobaz,
@@ -473,7 +473,7 @@ describe('api-store', () => {
       expect(fetchStub.calledWith(
         auth.token, '/foobars/foobar_1', { method: 'DELETE' })).to.equal(true);
       expect(dispatch.calledWith({
-        type: config.actions.delete_one,
+        type: config.actions.deleteItem,
         id: 'foobar_1',
       })).to.equal(true);
     });
@@ -511,7 +511,7 @@ describe('api-store', () => {
         auth.token, '/foobars/foobar_1', { method: 'PUT', body: JSON.stringify({ foo: 'bar' }) }
       )).to.equal(true);
       expect(dispatch.calledWith({
-        type: config.actions.update_singular,
+        type: config.actions.updateItem,
         id: 'foobar_1',
         data: { foo: 'bar' },
       })).to.equal(true);
@@ -551,7 +551,7 @@ describe('api-store', () => {
         auth.token, '/foobars', { method: 'POST', body: JSON.stringify({ name: 'foobar' }) }
       )).to.equal(true);
       expect(dispatch.calledWith({
-        type: config.actions.update_singular,
+        type: config.actions.updateItem,
         foobar: { name: 'foobar' },
       })).to.equal(true);
     });
@@ -603,7 +603,7 @@ describe('api-store', () => {
 
       expect(getState.callCount).to.equal(2);
       expect(dispatch.calledWith({
-        type: config.actions.update_singular,
+        type: config.actions.updateItem,
         foobar: { state: 'done' },
       })).to.equal(true);
       expect(dispatch.callCount).to.equal(5);
