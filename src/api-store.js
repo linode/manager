@@ -4,6 +4,7 @@ function makeDefaultState(config) {
   return {
     pagesFetched: [],
     totalPages: -1,
+    totalResults: -1,
     [config.plural]: {},
     singular: config.singular,
     plural: config.plural,
@@ -60,6 +61,7 @@ export default function makeApiList(config, transform = d => d) {
         response.page,
       ],
       totalPages: response.total_pages,
+      totalResults: response.total_results,
       [_config.plural]: {
         ...state[_config.plural],
         ...response[_config.plural].reduce((s, i) =>
@@ -95,7 +97,13 @@ export default function makeApiList(config, transform = d => d) {
   }
 
   function invalidate(_config, state) {
-    return { ...state, [_config.plural]: { }, totalPages: -1, pagesFetched: [] };
+    return {
+      ...state,
+      [_config.plural]: { },
+      totalPages: -1,
+      totalResults: -1,
+      pagesFetched: [],
+    };
   }
 
   function handleSetFilter(_config, state, action) {
@@ -226,7 +234,7 @@ export function makeFetchPage(_config, ...subresources) {
       } : {};
       const response = await fetch(token, `${path}?page=${page + 1}`, options);
       const json = await response.json();
-      if (state.totalPages !== -1 && state.totalPages !== json.totalPages) {
+      if (state.totalPages !== -1 && state.totalResults !== json.totalResults) {
         dispatch(invalidateCache(config.plural));
         for (let i = 0; i < state.pagesFetched.length; ++i) {
           if (state.pagesFetched[i] - 1 !== page) {
