@@ -42,7 +42,7 @@ describe('actions/api/backups', async () => {
       api: {
         linodes: {
           linodes: {
-            linode_1: { _backups: { totalPages: -1 } },
+            linode_1: { _backups: { backups: { }, totalPages: -1 } },
           },
         },
       },
@@ -63,7 +63,15 @@ describe('actions/api/backups', async () => {
   it('should fetch backup', async () => {
     const dispatch = getDispatch();
     const fetchStub = getFetchStub(mockResponse.backups[0]);
-    const getState = getGetState();
+    const getState = getGetState({
+      api: {
+        linodes: {
+          linodes: {
+            linode_1: { _backups: { backups: { }, totalPages: -1 } },
+          },
+        },
+      },
+    });
 
     const f = fetchBackup('linode_1', 'backup_1');
 

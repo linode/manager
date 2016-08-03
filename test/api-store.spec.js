@@ -451,8 +451,15 @@ describe('api-store', () => {
     it('fetches an item from the API', async () => {
       const dispatch = getDispatch();
       const fetchStub = getFetchStub(mockFoobarsResponse.foobars[0]);
-      const getState = getGetState();
-      const f = makeFetchItem('UPDATE_FOOBAR', 'foobar', 'foobars');
+      const getState = getGetState({
+        api: { foobars: { totalPages: -1, foobars: { } } },
+      });
+      const config = {
+        plural: 'foobars',
+        singular: 'foobar',
+        actions: { update_singular: 'UPDATE_FOOBAR' },
+      };
+      const f = makeFetchItem(config);
       const p = f('foobar_1');
 
       await p(dispatch, getState);
@@ -470,8 +477,30 @@ describe('api-store', () => {
       const dispatch = getDispatch();
       const foobaz = { id: 'foobaz_1234' };
       const fetchStub = getFetchStub(foobaz);
-      const getState = getGetState();
-      const f = makeFetchItem('UPDATE_ONE_FOOBAZ', 'foobaz', 'foobars', 'foobazes');
+      const getState = getGetState({
+        api: {
+          foobars: {
+            foobars: {
+              foobar_1: {
+                foobazes: { totalPages: -1, foobazes: { } },
+              },
+            },
+          },
+        },
+      });
+      const config = {
+        plural: 'foobars',
+        singular: 'foobar',
+        actions: { update_many: 'UPDATE_MANY' },
+        subresources: {
+          foobazes: {
+            singular: 'foobaz',
+            plural: 'foobazes',
+            actions: { update_singular: 'UPDATE_ONE_FOOBAZ' },
+          },
+        },
+      };
+      const f = makeFetchItem(config, 'foobazes');
       const p = f('foobar_1', 'foobaz_1234');
 
       await p(dispatch, getState);

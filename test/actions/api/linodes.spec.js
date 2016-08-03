@@ -62,7 +62,9 @@ describe('actions/api/linodes', async () => {
   it('should update linode', async () => {
     const dispatch = getDispatch();
     const fetchStub = getFetchStub(mockResponse.linodes[0]);
-    const getState = getGetState();
+    const getState = getGetState({
+      api: { linodes: { totalPages: -1 } },
+    });
 
     const f = fetchLinode('linode_1');
 

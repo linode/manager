@@ -248,21 +248,34 @@ export function makeFetchAll(_config, fetchPage, ...subresources) {
  * Returns an action creator that fetches a single resource when dispatched.
  * The action creator returns a thunk, and is invoked with a page index and a
  * list of IDs, starting with the topmost and continuing down any subresources.
- * @param {string} action - The name of the action to use when dispatching the
- * results
- * @param {string} singular - The singular form of the resource being fetched
- * @param {string...} plurals - The plural form of the resources involved,
- * starting with the topmost and continuing with any subresources.
+ * @param {string} config - the top level resource configuration
+ * @param {string[]} subresources - a list of subresource names. The returned
+ * function will fetch items of the bottom-most resource included in this list.
+ * Do not include the top-level resource. Use the name of the subresource as
+ * provided in the configuration, not the plural name given by the server.
  */
-export function makeFetchItem(action, singular, ...plurals) {
+export function makeFetchItem(_config, ...subresources) {
   return (...ids) => async (dispatch, getState) => {
-    const pairs = _.zip(plurals, ids);
     const { token } = getState().authentication;
-    const url = _.reduce(pairs, (u, [plural, id]) => `${u}/${plural}/${id}`, '');
-    const response = await fetch(token, url);
+    const refined = refineState(getState().api, _config, subresources, ids);
+
+    const { config, plurals } = refined;
+    let { path } = refined;
+
+    const id = ids[ids.length - 1];
+    plurals[plurals.length - 1].push(id);
+    path += `/${id}`;
+
+    const response = await fetch(token, path);
     const json = await response.json();
-    dispatch(_.reduce(pairs, (u, [plural, id]) => (id ? { ...u, [plural]: id } : u),
-      { type: action, [singular]: json }));
+
+    dispatch({
+      type: config.actions.update_singular,
+      [config.singular]: json,
+      ...plurals.reduce((u, [plural, id]) =>
+        (id ? { ...u, [plural]: id } : u), { }),
+    });
+
     return json;
   };
 }
