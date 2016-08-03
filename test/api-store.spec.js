@@ -90,6 +90,26 @@ describe('api-store', () => {
         .which.has.keys('foobar_1', 'foobar_2');
     });
 
+    it('should update the pagesFetched property appropriately', () => {
+      const s = makeApiList(config);
+
+      const state = {
+        ...s(undefined, {}),
+        totalPages: 3,
+        pagesFetched: [2],
+      };
+      deepFreeze(state);
+
+      const result = s(state, {
+        type: config.actions.updateItems,
+        response: mockFoobarsResponse,
+      });
+
+      expect(result)
+        .to.have.property('pagesFetched')
+        .which.includes(1, 2);
+    });
+
     it('should add internal properties to objects', () => {
       const s = makeApiList(config);
 
@@ -368,6 +388,37 @@ describe('api-store', () => {
 
       await p(dispatch, getState);
 
+      expect(fetchStub.calledWith(
+        auth.token, '/foobars?page=2')).to.equal(true);
+    });
+
+    it('invalidates and refetches on inconsistent results', async () => {
+      const fetchStub = getFetchStub(mockFoobarsResponse);
+      const getState = getGetState({
+        api: { foobars: { totalPages: 1, pagesFetched: [2] } },
+      });
+      const dispatch = sandbox.spy(
+        a => typeof a === 'function' ? a(dispatch, getState) : null);
+      const f = makeFetchPage(config);
+      const p = f();
+
+      fetchStub.onCall(1).returns({
+        json: () => ({
+          ...mockFoobarsResponse,
+          page: 2,
+        }),
+      });
+      getState.onCall(3).returns({
+        authentication: { token: 'token' },
+        api: { foobars: { totalPages: -1, pagesFetched: [] } },
+      });
+
+      await p(dispatch, getState);
+
+      expect(dispatch.calledWith(invalidateCache('foobars')))
+        .to.equal(true);
+      expect(fetchStub.calledWith(
+        auth.token, '/foobars?page=1')).to.equal(true);
       expect(fetchStub.calledWith(
         auth.token, '/foobars?page=2')).to.equal(true);
     });

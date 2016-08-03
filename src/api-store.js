@@ -228,9 +228,9 @@ export function makeFetchPage(_config, ...subresources) {
       const json = await response.json();
       if (state.totalPages !== -1 && state.totalPages !== json.totalPages) {
         dispatch(invalidateCache(config.plural));
-        for (let i = 0; i < state.pagesFetched; ++i) {
-          if (state.pagesFetched[i] !== page) {
-            await dispatch(fetchPage(state.pagesFetched[i], ...ids));
+        for (let i = 0; i < state.pagesFetched.length; ++i) {
+          if (state.pagesFetched[i] - 1 !== page) {
+            await dispatch(fetchPage(state.pagesFetched[i] - 1, ...ids));
           }
         }
       }
