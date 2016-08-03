@@ -59,6 +59,7 @@ describe('linodes/layouts/BackupsPage', () => {
     dispatch.reset();
     await dispatched(dispatch, () => ({
       authentication: { token: 'token' },
+      api: { linodes: { totalPages: -1, linodes: { } } },
     }));
     expect(fetchStub.calledOnce).to.equal(true);
     expect(fetchStub.firstCall.args[1]).to.equal('/linodes/linode_1234');

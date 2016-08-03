@@ -43,14 +43,16 @@ describe('actions/api/linodes', async () => {
   it('should fetch linodes', async () => {
     const dispatch = getDispatch();
     const fetchStub = getFetchStub(mockResponse);
-    const getState = getGetState();
+    const getState = getGetState({
+      api: { linodes: { totalPages: -1 } },
+    });
 
     const f = fetchLinodes();
 
     await f(dispatch, getState);
 
     expect(fetchStub.calledWith(
-      auth.token, '/linodes/?page=1')).to.equal(true);
+      auth.token, '/linodes?page=1')).to.equal(true);
     expect(dispatch.calledWith({
       type: UPDATE_LINODES,
       response: mockResponse,
@@ -60,7 +62,9 @@ describe('actions/api/linodes', async () => {
   it('should update linode', async () => {
     const dispatch = getDispatch();
     const fetchStub = getFetchStub(mockResponse.linodes[0]);
-    const getState = getGetState();
+    const getState = getGetState({
+      api: { linodes: { totalPages: -1 } },
+    });
 
     const f = fetchLinode('linode_1');
 

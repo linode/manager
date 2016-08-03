@@ -35,14 +35,16 @@ describe('actions/api/distros', async () => {
   it('should fetch distros', async () => {
     const dispatch = getDispatch();
     const fetchStub = getFetchStub(mockResponse);
-    const getState = getGetState();
+    const getState = getGetState({
+      api: { distributions: { totalPages: -1 } },
+    });
 
     const f = fetchDistros();
 
     await f(dispatch, getState);
 
     expect(fetchStub.calledWith(
-      auth.token, '/distributions/?page=1')).to.equal(true);
+      auth.token, '/distributions?page=1')).to.equal(true);
     expect(dispatch.calledWith({
       type: UPDATE_DISTROS,
       response: mockResponse,

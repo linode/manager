@@ -6,10 +6,10 @@ import SourceSelection from '../components/SourceSelection';
 import ServiceSelection from '../components/ServiceSelection';
 import DatacenterSelection from '../components/DatacenterSelection';
 import Details from '../components/Details';
-import { fetchDistros } from '~/actions/api/distros';
-import { fetchDatacenters } from '~/actions/api/datacenters';
+import { fetchAllDistros } from '~/actions/api/distros';
+import { fetchAllDatacenters } from '~/actions/api/datacenters';
+import { fetchAllServices } from '~/actions/api/services';
 import { fetchLinodes, createLinode } from '~/actions/api/linodes';
-import { fetchServices } from '~/actions/api/services';
 import { setError } from '~/actions/errors';
 
 export class IndexPage extends Component {
@@ -33,9 +33,9 @@ export class IndexPage extends Component {
     const { dispatch } = this.props;
     try {
       await Promise.all([
-        dispatch(fetchDistros()),
-        dispatch(fetchDatacenters()),
-        dispatch(fetchServices()),
+        dispatch(fetchAllDistros()),
+        dispatch(fetchAllDatacenters()),
+        dispatch(fetchAllServices()),
         dispatch(fetchLinodes()),
       ]);
     } catch (response) {

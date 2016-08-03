@@ -1,15 +1,9 @@
 import { fetch } from '~/fetch';
-import {
-  makeFetchPage,
-  makeFetchItem,
-} from '~/api-store';
-import { UPDATE_LINODE } from './linodes';
+import { makeFetchPage, makeFetchItem } from '~/api-store';
+import { linodeConfig, UPDATE_LINODE, UPDATE_BACKUP } from './linodes';
 
-export const UPDATE_BACKUPS = '@@backups/UPDATE_BACKUPS';
-export const UPDATE_BACKUP = '@@backups/UPDATE_BACKUP';
-
-export const fetchBackups = makeFetchPage(UPDATE_BACKUPS, 'linodes', 'backups');
-export const fetchBackup = makeFetchItem(UPDATE_BACKUP, 'backup', 'linodes', 'backups');
+export const fetchBackups = makeFetchPage(linodeConfig, '_backups');
+export const fetchBackup = makeFetchItem(linodeConfig, '_backups');
 
 function makeBackupAction(action) {
   return (id) => async (dispatch, getState) => {
@@ -23,13 +17,11 @@ function makeBackupAction(action) {
 export const enableBackup = makeBackupAction('enable');
 export const cancelBackup = makeBackupAction('cancel');
 
-export const TAKE_BACKUP = '@@backups/TAKE_BACKUP';
-
 export function takeBackup(id) {
   return async (dispatch, getState) => {
     const { token } = getState().authentication;
     const response = await fetch(token, `/linodes/${id}/backups`, { method: 'POST' });
     const json = await response.json();
-    dispatch({ type: TAKE_BACKUP, backup: json, linodes: id });
+    dispatch({ type: UPDATE_BACKUP, backup: json, linodes: id });
   };
 }

@@ -28,21 +28,33 @@ describe('api-store', () => {
 
   const sandbox = sinon.sandbox.create();
 
+  const config = {
+    singular: 'foobar',
+    plural: 'foobars',
+    actions: {
+      updateItems: 'UPDATE_FOOBARS',
+      updateItem: 'UPDATE_FOOBAR',
+      deleteItem: 'DELETE_FOOBAR',
+    },
+    subresources: {
+      foobazes: {
+        singular: 'foobaz',
+        plural: 'foobazes',
+        actions: {
+          updateItems: 'UPDATE_FOOBAZES',
+          updateItem: 'UPDATE_FOOBAZ',
+        },
+      },
+    },
+  };
+
   describe('api-store/makeApiList', () => {
     afterEach(() => {
       sandbox.restore();
     });
 
     it('should handle initial state', () => {
-      const s = makeApiList({
-        plural: 'foobars',
-        singular: 'foobar',
-        actions: {
-          update_singular: 'UPDATE_ONE',
-          update_many: 'UPDATE_MANY',
-          delete_one: 'DELETE_ONE',
-        },
-      });
+      const s = makeApiList(config);
 
       expect(
         s(undefined, {})
@@ -53,31 +65,23 @@ describe('api-store', () => {
     });
 
     it('should not handle actions not specified', () => {
-      const s = makeApiList({
-        plural: 'foobars',
-        singular: 'foobar',
-        actions: { update_singular: 'UPDATE_ONE' },
-      });
+      const s = makeApiList(config);
       const state = s(undefined, {});
       deepFreeze(state);
 
       expect(
-        s(state, { type: 'DELETE_ONE' })
+        s(state, { type: 'buttslol' })
       ).to.be.eql(state);
     });
 
     it('should handle updating many records', () => {
-      const s = makeApiList({
-        plural: 'foobars',
-        singular: 'foobar',
-        actions: { update_many: 'UPDATE_MANY' },
-      });
+      const s = makeApiList(config);
 
       const state = s(undefined, {});
       deepFreeze(state);
 
       const result = s(state, {
-        type: 'UPDATE_MANY',
+        type: config.actions.updateItems,
         response: mockFoobarsResponse,
       });
 
@@ -86,18 +90,34 @@ describe('api-store', () => {
         .which.has.keys('foobar_1', 'foobar_2');
     });
 
-    it('should add internal properties to objects', () => {
-      const s = makeApiList({
-        plural: 'foobars',
-        singular: 'foobar',
-        actions: { update_many: 'UPDATE_MANY' },
+    it('should update the pagesFetched property appropriately', () => {
+      const s = makeApiList(config);
+
+      const state = {
+        ...s(undefined, {}),
+        totalPages: 3,
+        pagesFetched: [2],
+      };
+      deepFreeze(state);
+
+      const result = s(state, {
+        type: config.actions.updateItems,
+        response: mockFoobarsResponse,
       });
+
+      expect(result)
+        .to.have.property('pagesFetched')
+        .which.includes(1, 2);
+    });
+
+    it('should add internal properties to objects', () => {
+      const s = makeApiList(config);
 
       const state = s(undefined, {});
       deepFreeze(state);
 
       const result = s(state, {
-        type: 'UPDATE_MANY',
+        type: config.actions.updateItems,
         response: {
           foobars: [
             { id: 'foobar_1' },
@@ -116,17 +136,13 @@ describe('api-store', () => {
     });
 
     it('should invoke custom transforms', () => {
-      const s = makeApiList({
-        plural: 'foobars',
-        singular: 'foobar',
-        actions: { update_many: 'UPDATE_MANY' },
-      }, o => ({ ...o, test: 1234 }));
+      const s = makeApiList(config, o => ({ ...o, test: 1234 }));
 
       const state = s(undefined, {});
       deepFreeze(state);
 
       const result = s(state, {
-        type: 'UPDATE_MANY',
+        type: config.actions.updateItems,
         response: {
           foobars: [
             { id: 'foobar_1' },
@@ -146,17 +162,13 @@ describe('api-store', () => {
     });
 
     it('should handle adding a single resource', () => {
-      const s = makeApiList({
-        plural: 'foobars',
-        singular: 'foobar',
-        actions: { update_singular: 'UPDATE_SINGLE' },
-      });
+      const s = makeApiList(config);
 
       const state = s(undefined, {});
       deepFreeze(state);
 
       const result = s(state, {
-        type: 'UPDATE_SINGLE',
+        type: config.actions.updateItem,
         foobar: { id: 'foobar_1' },
       });
 
@@ -166,11 +178,7 @@ describe('api-store', () => {
     });
 
     it('should handle updating a single resource', () => {
-      const s = makeApiList({
-        plural: 'foobars',
-        singular: 'foobar',
-        actions: { update_singular: 'UPDATE_SINGLE' },
-      });
+      const s = makeApiList(config);
 
       let state = s(undefined, {});
       state = {
@@ -183,7 +191,7 @@ describe('api-store', () => {
       deepFreeze(state);
 
       const result = s(state, {
-        type: 'UPDATE_SINGLE',
+        type: config.actions.updateItem,
         foobar: { id: 'foobar_1', name: 'hello' },
       });
 
@@ -195,11 +203,7 @@ describe('api-store', () => {
     });
 
     it('should handle deleting a single resource', () => {
-      const s = makeApiList({
-        plural: 'foobars',
-        singular: 'foobar',
-        actions: { delete_one: 'DELETE_ONE' },
-      });
+      const s = makeApiList(config);
 
       let state = s(undefined, {});
       state = {
@@ -212,7 +216,7 @@ describe('api-store', () => {
       deepFreeze(state);
 
       const result = s(state, {
-        type: 'DELETE_ONE',
+        type: config.actions.deleteItem,
         id: 'foobar_1',
       });
 
@@ -222,11 +226,7 @@ describe('api-store', () => {
     });
 
     it('should handle invalidate cache actions', () => {
-      const s = makeApiList({
-        plural: 'foobars',
-        singular: 'foobar',
-        actions: { },
-      });
+      const s = makeApiList(config);
 
       let state = s(undefined, { });
       state = {
@@ -256,7 +256,7 @@ describe('api-store', () => {
     });
 
     it('should handle set filter actions', () => {
-      const s = makeApiList({ plural: 'foobars', singular: 'foobar', actions: { } });
+      const s = makeApiList(config);
       const state = s(undefined, { });
       deepFreeze(state);
       const action = { type: '@@foobars/SET_FILTER', filter: { foo: 'bar' } };
@@ -267,28 +267,13 @@ describe('api-store', () => {
     });
   });
 
-  function makeApiListWithSub() {
-    return makeApiList({
-      plural: 'foobars',
-      singular: 'foobar',
-      actions: { update_many: 'UPDATE_MANY' },
-      subresources: {
-        foobazes: {
-          singular: 'foobaz',
-          plural: 'foobazes',
-          actions: { update_singular: 'UPDATE_ONE_FOOBAZ' },
-        },
-      },
-    });
-  }
-
   it('should wire up subresources for items', () => {
-    const s = makeApiListWithSub();
+    const s = makeApiList(config);
     const state = s(undefined, {});
     deepFreeze(state);
 
     const result = s(state, {
-      type: 'UPDATE_MANY',
+      type: config.actions.updateItems,
       response: mockFoobarsResponse,
     });
 
@@ -306,16 +291,16 @@ describe('api-store', () => {
   });
 
   it('should handle subresource update singular', () => {
-    const s = makeApiListWithSub();
+    const s = makeApiList(config);
 
     const state = s(undefined, {
-      type: 'UPDATE_MANY',
+      type: config.actions.updateItems,
       response: mockFoobarsResponse,
     });
     deepFreeze(state);
 
     const result = s(state, {
-      type: 'UPDATE_ONE_FOOBAZ',
+      type: config.subresources.foobazes.actions.updateItem,
       foobaz: { id: 'foobaz_123', test: 'hello world' },
       foobars: 'foobar_1',
     });
@@ -342,7 +327,7 @@ describe('api-store', () => {
     const getFetchStub = (rsp) => sandbox.stub(fetch, 'fetch').returns({ json() { return rsp; } });
 
     it('returns a function that itself returns a function', () => {
-      const f = makeFetchPage('FETCH_FOOBARS', 'foobars');
+      const f = makeFetchPage(config, 'foobars');
       expect(f).to.be.a('function');
       expect(f()).to.be.a('function');
     });
@@ -350,33 +335,43 @@ describe('api-store', () => {
     it('fetches a page of items from the API', async () => {
       const dispatch = getDispatch();
       const fetchStub = getFetchStub(mockFoobarsResponse);
-      const getState = getGetState();
-      const f = makeFetchPage('FETCH_FOOBARS', 'foobars');
+      const getState = getGetState({
+        api: { foobars: { totalPages: -1 } },
+      });
+      const f = makeFetchPage(config);
       const p = f();
 
       await p(dispatch, getState);
 
       expect(fetchStub.calledWith(
-        auth.token, '/foobars/?page=1')).to.equal(true);
+        auth.token, '/foobars?page=1')).to.equal(true);
       expect(dispatch.calledWith({
-        type: 'FETCH_FOOBARS',
+        type: config.actions.updateItems,
         response: mockFoobarsResponse,
       })).to.equal(true);
     });
 
-    it('fetches a sub resourse page of items from the API', async () => {
+    it('fetches a sub resource page of items from the API', async () => {
       const dispatch = getDispatch();
       const fetchStub = getFetchStub(mockFoobarsResponse);
-      const getState = getGetState();
-      const f = makeFetchPage('FETCH_FOOBAZES', 'foobars', 'foobazes');
+      const getState = getGetState({
+        api: {
+          foobars: {
+            foobars: {
+              foobar_1: { foobazes: { totalPages: -1 } },
+            },
+          },
+        },
+      });
+      const f = makeFetchPage(config, 'foobazes');
       const p = f(0, 'foobar_1');
 
       await p(dispatch, getState);
 
       expect(fetchStub.calledWith(
-        auth.token, '/foobars/foobar_1/foobazes/?page=1')).to.equal(true);
+        auth.token, '/foobars/foobar_1/foobazes?page=1')).to.equal(true);
       expect(dispatch.calledWith({
-        type: 'FETCH_FOOBAZES',
+        type: config.subresources.foobazes.actions.updateItems,
         response: mockFoobarsResponse,
         foobars: 'foobar_1',
       })).to.equal(true);
@@ -385,14 +380,47 @@ describe('api-store', () => {
     it('fetches the requested page', async () => {
       const dispatch = getDispatch();
       const fetchStub = getFetchStub(mockFoobarsResponse);
-      const getState = getGetState();
-      const f = makeFetchPage('FETCH_FOOBARS', 'foobars');
+      const getState = getGetState({
+        api: { foobars: { totalPages: -1 } },
+      });
+      const f = makeFetchPage(config);
       const p = f(1);
 
       await p(dispatch, getState);
 
       expect(fetchStub.calledWith(
-        auth.token, '/foobars/?page=2')).to.equal(true);
+        auth.token, '/foobars?page=2')).to.equal(true);
+    });
+
+    it('invalidates and refetches on inconsistent results', async () => {
+      const fetchStub = getFetchStub(mockFoobarsResponse);
+      const getState = getGetState({
+        api: { foobars: { totalPages: 1, pagesFetched: [2] } },
+      });
+      const dispatch = sandbox.spy(
+        a => typeof a === 'function' ? a(dispatch, getState) : null);
+      const f = makeFetchPage(config);
+      const p = f();
+
+      fetchStub.onCall(1).returns({
+        json: () => ({
+          ...mockFoobarsResponse,
+          page: 2,
+        }),
+      });
+      getState.onCall(3).returns({
+        authentication: { token: 'token' },
+        api: { foobars: { totalPages: -1, pagesFetched: [] } },
+      });
+
+      await p(dispatch, getState);
+
+      expect(dispatch.calledWith(invalidateCache('foobars')))
+        .to.equal(true);
+      expect(fetchStub.calledWith(
+        auth.token, '/foobars?page=1')).to.equal(true);
+      expect(fetchStub.calledWith(
+        auth.token, '/foobars?page=2')).to.equal(true);
     });
   });
 
@@ -409,7 +437,7 @@ describe('api-store', () => {
     const getFetchStub = (rsp) => sandbox.stub(fetch, 'fetch').returns({ json() { return rsp; } });
 
     it('returns a function that itself returns a function', () => {
-      const f = makeFetchItem('UPDATE_FOOBAR', 'foobar', 'foobars');
+      const f = makeFetchItem(config.actions.updateItem, 'foobar', 'foobars');
       expect(f).to.be.a('function');
       expect(f()).to.be.a('function');
     });
@@ -417,8 +445,10 @@ describe('api-store', () => {
     it('fetches an item from the API', async () => {
       const dispatch = getDispatch();
       const fetchStub = getFetchStub(mockFoobarsResponse.foobars[0]);
-      const getState = getGetState();
-      const f = makeFetchItem('UPDATE_FOOBAR', 'foobar', 'foobars');
+      const getState = getGetState({
+        api: { foobars: { totalPages: -1, foobars: { } } },
+      });
+      const f = makeFetchItem(config);
       const p = f('foobar_1');
 
       await p(dispatch, getState);
@@ -426,7 +456,7 @@ describe('api-store', () => {
       expect(fetchStub.calledWith(
         auth.token, '/foobars/foobar_1')).to.equal(true);
       expect(dispatch.calledWith({
-        type: 'UPDATE_FOOBAR',
+        type: config.actions.updateItem,
         foobar: mockFoobarsResponse.foobars[0],
         foobars: 'foobar_1',
       })).to.equal(true);
@@ -436,8 +466,18 @@ describe('api-store', () => {
       const dispatch = getDispatch();
       const foobaz = { id: 'foobaz_1234' };
       const fetchStub = getFetchStub(foobaz);
-      const getState = getGetState();
-      const f = makeFetchItem('UPDATE_ONE_FOOBAZ', 'foobaz', 'foobars', 'foobazes');
+      const getState = getGetState({
+        api: {
+          foobars: {
+            foobars: {
+              foobar_1: {
+                foobazes: { totalPages: -1, foobazes: { } },
+              },
+            },
+          },
+        },
+      });
+      const f = makeFetchItem(config, 'foobazes');
       const p = f('foobar_1', 'foobaz_1234');
 
       await p(dispatch, getState);
@@ -445,7 +485,7 @@ describe('api-store', () => {
       expect(fetchStub.calledWith(
         auth.token, '/foobars/foobar_1/foobazes/foobaz_1234')).to.equal(true);
       expect(dispatch.calledWith({
-        type: 'UPDATE_ONE_FOOBAZ',
+        type: config.subresources.foobazes.actions.updateItem,
         foobars: 'foobar_1',
         foobazes: 'foobaz_1234',
         foobaz,
@@ -459,7 +499,7 @@ describe('api-store', () => {
     });
 
     it('returns a function that itself returns a function', () => {
-      const f = makeDeleteItem('DELETE_FOOBAR', 'foobars');
+      const f = makeDeleteItem(config);
       expect(f).to.be.a('function');
       expect(f()).to.be.a('function');
     });
@@ -476,7 +516,7 @@ describe('api-store', () => {
       const dispatch = getDispatch();
       const fetchStub = getFetchStub(emptyResponse);
       const getState = getGetState();
-      const f = makeDeleteItem('DELETE_FOOBAR', 'foobars');
+      const f = makeDeleteItem(config);
       const p = f('foobar_1');
 
       await p(dispatch, getState);
@@ -484,7 +524,7 @@ describe('api-store', () => {
       expect(fetchStub.calledWith(
         auth.token, '/foobars/foobar_1', { method: 'DELETE' })).to.equal(true);
       expect(dispatch.calledWith({
-        type: 'DELETE_FOOBAR',
+        type: config.actions.deleteItem,
         id: 'foobar_1',
       })).to.equal(true);
     });
@@ -496,7 +536,7 @@ describe('api-store', () => {
     });
 
     it('returns a function that itself returns a function', () => {
-      const f = makePutItem('PUT_FOOBAR', 'foobars');
+      const f = makePutItem(config);
       expect(f).to.be.a('function');
       expect(f({ id: '', data: {} })).to.be.a('function');
     });
@@ -513,7 +553,7 @@ describe('api-store', () => {
       const dispatch = getDispatch();
       const fetchStub = getFetchStub(emptyResponse);
       const getState = getGetState();
-      const f = makePutItem('PUT_FOOBAR', 'foobars');
+      const f = makePutItem(config);
       const p = f({ id: 'foobar_1', data: { foo: 'bar' } });
 
       await p(dispatch, getState);
@@ -522,7 +562,7 @@ describe('api-store', () => {
         auth.token, '/foobars/foobar_1', { method: 'PUT', body: JSON.stringify({ foo: 'bar' }) }
       )).to.equal(true);
       expect(dispatch.calledWith({
-        type: 'PUT_FOOBAR',
+        type: config.actions.updateItem,
         id: 'foobar_1',
         data: { foo: 'bar' },
       })).to.equal(true);
@@ -535,7 +575,7 @@ describe('api-store', () => {
     });
 
     it('returns a function that itself returns a function', () => {
-      const f = makeCreateItem('CREATE_FOOBAR', 'foobars', 'foobar');
+      const f = makeCreateItem(config);
       expect(f).to.be.a('function');
       expect(f({ data: {} })).to.be.a('function');
     });
@@ -553,7 +593,7 @@ describe('api-store', () => {
       const dispatch = getDispatch();
       const fetchStub = getFetchStub({ name: 'foobar' });
       const getState = getGetState();
-      const f = makeCreateItem('CREATE_FOOBAR', 'foobars', 'foobar');
+      const f = makeCreateItem(config);
       const p = f({ name: 'foobar' });
 
       await p(dispatch, getState);
@@ -562,7 +602,7 @@ describe('api-store', () => {
         auth.token, '/foobars', { method: 'POST', body: JSON.stringify({ name: 'foobar' }) }
       )).to.equal(true);
       expect(dispatch.calledWith({
-        type: 'CREATE_FOOBAR',
+        type: config.actions.updateItem,
         foobar: { name: 'foobar' },
       })).to.equal(true);
     });
@@ -579,7 +619,7 @@ describe('api-store', () => {
       fetchStub.onCall(1).returns({ json: () => ({ state: 'wait' }) });
       fetchStub.returns({ json: () => ({ state: 'done' }) });
 
-      const f = makeFetchUntil('UPDATE_FOOBAR', 'foobars', 'foobar');
+      const f = makeFetchUntil(config);
       const p = f('foobar_1', v => v.state === 'done', 1);
 
       const state = {
@@ -601,7 +641,7 @@ describe('api-store', () => {
       const dispatch = sandbox.spy();
       const getState = sandbox.stub();
 
-      const f = makeFetchUntil('UPDATE_FOOBAR', 'foobars', 'foobar');
+      const f = makeFetchUntil(config);
       const p = f('foobar_1', v => v.state === 'done', 1);
 
       const state = {
@@ -614,7 +654,7 @@ describe('api-store', () => {
 
       expect(getState.callCount).to.equal(2);
       expect(dispatch.calledWith({
-        type: 'UPDATE_FOOBAR',
+        type: config.actions.updateItem,
         foobar: { state: 'done' },
       })).to.equal(true);
       expect(dispatch.callCount).to.equal(5);
