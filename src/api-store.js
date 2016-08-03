@@ -201,6 +201,10 @@ export function makeFetchPage(_config, ...subresources) {
     const { token } = getState().authentication;
     const { state, config, path, plurals } = refineState(
       getState().api, _config, subresources, ids);
+    if (state.totalPages !== -1 &&
+        state.pagesFetched.indexOf(page + 1) !== -1) {
+      return;
+    }
     const { filter } = state;
     const options = filter ? {
       headers: { 'X-Filter': JSON.stringify(filter) },
