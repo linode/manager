@@ -353,20 +353,20 @@ export function makePutItem(config) {
 /**
  * Returns an action creator that creates a single resource with the API. The
  * action creator returns a thunk, and is invoked with the POST data to submit.
- * @param {string} action - The name of the action to use when dispatching the
- * new resource
- * @param {string} plural - The plural form of the resource being created
- * @param {string} singular - The singular form of the resource being created
+ * @param {string} config - the top level config for this resource
  */
-export function makeCreateItem(action, plural, singular) {
+export function makeCreateItem(config) {
   return data => async (dispatch, getState) => {
     const state = getState();
     const { token } = state.authentication;
-    const response = await fetch(token, `/${plural}`, {
+    const response = await fetch(token, `/${config.plural}`, {
       method: 'POST', body: JSON.stringify(data),
     });
     const json = await response.json();
-    dispatch({ type: action, [singular]: json });
+    dispatch({
+      type: config.actions.update_singular,
+      [config.singular]: json,
+    });
     return json;
   };
 }
