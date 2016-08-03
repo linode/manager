@@ -428,12 +428,7 @@ hr {
     &.btn-primary-outline {
         background: white;
         border: 1px solid $blue;
-
-        &:hover,
-        &:active,
-        &:focus {
-            color: $blue;
-        }
+        color: $blue;
 
         &:not([disabled]):hover,
         &:not([disabled]):active,
