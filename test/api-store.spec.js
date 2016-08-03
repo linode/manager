@@ -59,7 +59,7 @@ describe('api-store', () => {
       expect(
         s(undefined, {})
       ).to.be.eql({
-        pagesFetched: [], totalPages: -1, foobars: {},
+        pagesFetched: [], totalResults: -1, totalPages: -1, foobars: {},
         filter: null, singular: 'foobar', plural: 'foobars',
       });
     });
@@ -283,6 +283,7 @@ describe('api-store', () => {
       .which.has.property('foobazes')
       .which.has.keys(
         'totalPages',
+        'totalResults',
         'foobazes',
         'filter',
         'pagesFetched',
@@ -395,7 +396,7 @@ describe('api-store', () => {
     it('invalidates and refetches on inconsistent results', async () => {
       const fetchStub = getFetchStub(mockFoobarsResponse);
       const getState = getGetState({
-        api: { foobars: { totalPages: 1, pagesFetched: [2] } },
+        api: { foobars: { totalPages: 1, totalResults: 25 * 3 - 2, pagesFetched: [2] } },
       });
       const dispatch = sandbox.spy(
         a => typeof a === 'function' ? a(dispatch, getState) : null);
@@ -410,7 +411,7 @@ describe('api-store', () => {
       });
       getState.onCall(3).returns({
         authentication: { token: 'token' },
-        api: { foobars: { totalPages: -1, pagesFetched: [] } },
+        api: { foobars: { totalPages: -1, totalResults: -1, pagesFetched: [] } },
       });
 
       await p(dispatch, getState);
