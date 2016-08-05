@@ -12,6 +12,7 @@ export default class Details extends Component {
       password: '',
       strength: zxcvbn(''),
       label: '',
+      group: '',
       enableBackups: false,
     };
   }
@@ -23,6 +24,7 @@ export default class Details extends Component {
     this.props.onSubmit({
       password: this.state.password,
       label: this.state.label,
+      group: this.state.group,
       backups: this.state.enableBackups,
     });
   }
@@ -55,6 +57,18 @@ export default class Details extends Component {
 
   render() {
     const { errors } = this.props;
+
+    const groupInput = (
+      <div className="input-container">
+        <input
+          value={this.state.group}
+          onChange={e => this.setState({ group: e.target.value })}
+          placeholder="my-group (optional)"
+          className="form-control"
+          name="group"
+        />
+      </div>
+    );
 
     const labelInput = (
       <div className="input-container">
@@ -102,6 +116,7 @@ export default class Details extends Component {
     );
 
     const inputRows = [
+      { label: 'Group', content: groupInput, errors: errors.group },
       { label: 'Label', content: labelInput, errors: errors.label },
       { label: 'Root password', content: passwordInput },
     ];
