@@ -99,6 +99,22 @@ export function renderBackupStatus(linode) {
           First backup in ~{nextBackup.fromNow(true)}
         </span>);
     }
+
+    const backupStatus = linode.backups.last_backup.status;
+    if (backupStatus === 'running') {
+      return (
+        <span className="backup-status">
+          Backup running
+        </span>);
+    }
+
+    if (backupStatus === 'pending') {
+      return (
+        <span className="backup-status">
+          Backup pending
+        </span>);
+    }
+
     return (
       <span className="backup-status">
         Last backup taken {moment.utc(linode.backups.last_backup).fromNow()}

@@ -188,5 +188,43 @@ describe('linodes/components/Linode', () => {
       expect(item.find('span').text()).to.equal(
         `First backup in ~${moment('2016-07-14T12:00:00').fromNow(true)}`);
     });
+
+    it('renders running backup', () => {
+      const item = shallow(renderBackupStatus({
+        ...linode,
+        backups: {
+          ...linode.backups,
+          last_backup: {
+            create_dt: '2015-10-06T00:27:08',
+            duration: 0,
+            finish_dt: '2015-10-06T01:09:08',
+            id: 'backup_26083011',
+            status: 'running',
+            type: 'auto',
+          },
+        },
+      }));
+
+      expect(item.find('.backup-status').text()).to.equal('Backup running');
+    });
+
+    it('renders pending backup', () => {
+      const item = shallow(renderBackupStatus({
+        ...linode,
+        backups: {
+          ...linode.backups,
+          last_backup: {
+            create_dt: '2015-10-06T00:27:08',
+            duration: 0,
+            finish_dt: '2015-10-06T01:09:08',
+            id: 'backup_26083011',
+            status: 'pending',
+            type: 'auto',
+          },
+        },
+      }));
+
+      expect(item.find('.backup-status').text()).to.equal('Backup pending');
+    });
   });
 });
