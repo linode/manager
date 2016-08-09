@@ -37,7 +37,7 @@ export class BackupsPage extends Component {
     this.renderSchedule = this.renderSchedule.bind(this);
     this.renderBackups = this.renderBackups.bind(this);
     this.renderRestoreRadio = this.renderRestoreRadio.bind(this);
-    this.renderLastManualBackup = this.renderLastManualBackup.bind(this);
+    this.renderLastSnapshot = this.renderLastSnapshot.bind(this);
     this.renderModal = this.renderModal.bind(this);
     this.restore = this.restore.bind(this);
     this.state = { loading: false };
@@ -222,7 +222,7 @@ export class BackupsPage extends Component {
   renderBackups() {
     const thisLinode = this.getLinode();
     const backups = thisLinode._backups && Object.values(thisLinode._backups.backups);
-
+    const { selectedBackup, targetLinode } = this.props.backups;
     if (!backups || backups.length === 0) {
       const next = getNextBackup(thisLinode);
       return (
@@ -232,7 +232,6 @@ export class BackupsPage extends Component {
       );
     }
 
-    const { selectedBackup, targetLinode } = this.props.backups;
     const { dispatch } = this.props;
     return (
       <div>
@@ -335,14 +334,14 @@ export class BackupsPage extends Component {
     );
   }
 
-  renderLastManualBackup() {
-    const lastManualBackup = null; // TODO
-    if (lastManualBackup) {
+  renderLastSnapshot() {
+    const lastSnapshot = null; // TODO
+    if (lastSnapshot) {
       return (
         <p>TODO</p>
       );
     }
-    return <p>No manual backups have been taken yet.</p>;
+    return <p>No Snapshots have been taken yet.</p>;
   }
 
   renderEnabled() {
@@ -361,13 +360,13 @@ export class BackupsPage extends Component {
             </h2>
             {this.renderSchedule()}
           </div>
-          <div className="col-md-6 manual-backups">
-            <h2>Manual backup</h2>
-            {this.renderLastManualBackup()}
+          <div className="col-md-6 snapshots">
+            <h2>Snapshot</h2>
+            {this.renderLastSnapshot()}
             <button
               className="btn btn-primary"
               onClick={() => dispatch(takeBackup(linode.id))}
-            >Take backup</button>
+            >Take Snapshot</button>
           </div>
         </div>
       </div>

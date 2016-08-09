@@ -14,6 +14,18 @@ export default function Backup(props) {
   const { backup, selected, onSelect } = props;
   const created = moment(backup.created);
   const cardTitle = created.calendar(null, calendar);
+  let content = created.format('dddd, MMMM D YYYY LT');
+
+  if (backup.status !== 'successful') {
+    if (backup.status === 'needsPostProcessing') {
+      content = 'Backup running';
+    } else if (backup.status === 'userAborted') {
+      content = 'User aborted backup';
+    } else {
+      content = `Backup ${backup.status}`;
+    }
+  }
+
   return (
     <div
       className={`backup ${selected === backup.id ? 'selected' : ''}`}
@@ -23,7 +35,7 @@ export default function Backup(props) {
         <div className="title">{cardTitle}</div>
       </header>
       <div>
-        <div className="content-col">{created.format('dddd, MMMM D YYYY LT')}</div>
+        <div className="content-col">{content}</div>
       </div>
     </div>
   );

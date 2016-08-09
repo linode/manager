@@ -111,7 +111,7 @@ describe('linodes/layouts/BackupsPage', () => {
 
   it('calls cancel backups on click');
 
-  it('renders the manual backup UI', () => {
+  it('renders the Snapshot UI', () => {
     const page = shallow(
       <BackupsPage
         dispatch={dispatch}
@@ -119,17 +119,17 @@ describe('linodes/layouts/BackupsPage', () => {
         params={{ linodeId: 'linode_1234' }}
         backups={backups}
       />);
-    const manual = page.find('.manual-backups');
-    expect(manual).to.exist;
-    expect(manual.contains(<h2>Manual backup</h2>))
+    const snapshot = page.find('.snapshots');
+    expect(snapshot).to.exist;
+    expect(snapshot.contains(<h2>Snapshot</h2>))
       .to.equal(true);
-    expect(manual.find('button').props().className)
+    expect(snapshot.find('button').props().className)
       .to.equal('btn btn-primary');
-    expect(manual.find('button').text())
-      .to.equal('Take backup');
+    expect(snapshot.find('button').text())
+      .to.equal('Take Snapshot');
   });
 
-  it('requests a manual backup when "Take backup" is pressed');
+  it('requests a Snapshot when "Take Snapshot" is pressed');
 
   it('renders the schedule UI', () => {
     const page = shallow(
