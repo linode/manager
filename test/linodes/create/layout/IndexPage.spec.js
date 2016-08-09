@@ -180,7 +180,7 @@ describe('linodes/create/layout/IndexPage', () => {
     page.find('ServiceSelection').props().onServiceSelected('service');
     page.find('DatacenterSelection').props().onDatacenterSelected('datacenter');
     page.find('SourceSelection').props().onSourceSelected('source');
-    await page.find('Details').props().onSubmit({ label: '', password: '' });
+    await page.find('Details').props().onSubmit({ labels: [''], password: '' });
 
     expect(page.find('Details').props().errors).to.deep.equal({
       label: [error],

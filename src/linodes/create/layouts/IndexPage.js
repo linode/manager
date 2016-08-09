@@ -45,37 +45,23 @@ export class IndexPage extends Component {
 
   async onSubmit({ group, labels, password, backups }) {
     const { dispatch } = this.props;
-    if (labels.length === 1) {
-      this.setState({ loading: true });
-      const [label] = labels;
-      const linode = await this.createLinode({ group, label, password, backups });
-      this.setState({ loading: false });
-      dispatch(push(`/linodes/${linode.id}`));
-    } else {
-      this.setState({ loading: true, progress: 0 });
-      for (let i = 0; i < labels.length; ++i) {
-        const label = labels[i] || `${labels[0]}-${i + 1}`;
-        await this.createLinode({ group, label, password, backups });
-        this.setState({ progress: (i + 1) / labels.length });
-      }
-      this.setState({ loading: false });
-      dispatch(push('/linodes'));
-    }
-  }
-
-  async createLinode({ group, label, password, backups }) {
-    const { dispatch } = this.props;
-    const { service, source, datacenter } = this.state;
     try {
-      return await dispatch(createLinode({
-        root_pass: password,
-        service,
-        source,
-        datacenter,
-        label,
-        group,
-        backups,
-      }));
+      if (labels.length === 1) {
+        this.setState({ loading: true });
+        const [label] = labels;
+        const linode = await this.createLinode({ group, label, password, backups });
+        this.setState({ loading: false });
+        dispatch(push(`/linodes/${linode.id}`));
+      } else {
+        this.setState({ loading: true, progress: 0 });
+        for (let i = 0; i < labels.length; ++i) {
+          const label = labels[i] || `${labels[0]}-${i + 1}`;
+          await this.createLinode({ group, label, password, backups });
+          this.setState({ progress: (i + 1) / labels.length });
+        }
+        this.setState({ loading: false });
+        dispatch(push('/linodes'));
+      }
     } catch (response) {
       const { errors } = await response.json();
       const errorsByField = {};
@@ -83,8 +69,22 @@ export class IndexPage extends Component {
         if (!(field in errorsByField)) errorsByField[field] = [];
         errorsByField[field].push(reason);
       });
-      this.setState({ loading: false, errors: errorsByField });
+      this.setState({ progress: -1, loading: false, errors: errorsByField });
     }
+  }
+
+  async createLinode({ group, label, password, backups }) {
+    const { dispatch } = this.props;
+    const { service, source, datacenter } = this.state;
+    return await dispatch(createLinode({
+      root_pass: password,
+      service,
+      source,
+      datacenter,
+      label,
+      group,
+      backups,
+    }));
   }
 
   renderProgress() {
