@@ -3,7 +3,6 @@ import deepFreeze from 'deep-freeze';
 import authentication from '../../src/reducers/authentication';
 import * as actions from '../../src/actions/authentication';
 import { getStorage } from '~/storage';
-import md5 from 'md5';
 
 describe('authentication reducer', () => {
   it('should handle initial state', () => {
@@ -25,7 +24,6 @@ describe('authentication reducer', () => {
         scopes: [],
         username: 'me',
         email: 'me@example.org',
-        emailHash: md5('me@example.org'.trim().toLowerCase()),
         token: 'token',
       })
     ).to.be.eql({
@@ -63,7 +61,6 @@ describe('authentication reducer', () => {
         scopes: [],
         username: 'me',
         email: 'me@example.org',
-        emailHash: 'cd11923284fc0f904c4732bb8f7d7e3c',
         token: 'token',
       })
     ).to.be.eql({
