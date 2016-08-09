@@ -144,9 +144,10 @@ describe('linodes/create/layout/IndexPage', () => {
     page.find('SourceSelection').props().onSourceSelected('source');
     expectIsDisabled();
     await page.find('Details').props().onSubmit({
-      label: 'label',
+      labels: ['label'],
       password: 'password',
       backups: false,
+      group: 'group',
     });
     expect(dispatch.calledTwice).to.equal(true);
     expect(dispatch.firstCall.args[0]).to.deep.equal({
@@ -156,6 +157,7 @@ describe('linodes/create/layout/IndexPage', () => {
       datacenter: 'datacenter',
       label: 'label',
       backups: false,
+      group: 'group',
     });
 
     expect(dispatch.secondCall.args[0]).to.deep.equal(push(`/linodes/${createdLinodeId}`));

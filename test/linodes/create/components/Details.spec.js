@@ -15,7 +15,7 @@ describe('linodes/create/components/Details', () => {
   it('renders the card', () => {
     const c = mount(<Details />);
     expect(c.contains(<h2>Details</h2>)).to.equal(true);
-    expect(c.find('input').length).to.equal(3);
+    expect(c.find('input').length).to.equal(5);
   });
 
   it('renders errors', () => {
@@ -44,8 +44,9 @@ describe('linodes/create/components/Details', () => {
     expect(onSubmit.calledOnce).to.equal(true);
     expect(onSubmit.firstCall.args[0]).to.deep.equal({
       password: 'my-password',
-      label: 'my-label',
+      labels: ['my-label'],
       backups: true,
+      group: '',
     });
   });
 });
