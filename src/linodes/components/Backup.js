@@ -18,7 +18,7 @@ export default function Backup(props) {
 
   if (backup.status !== 'successful') {
     if (backup.status === 'needsPostProcessing') {
-      content = 'Awaiting integration';
+      content = 'Backup running';
     } else if (backup.status === 'userAborted') {
       content = 'User aborted backup';
     } else {

@@ -90,6 +90,6 @@ describe('linodes/components/Backup', () => {
       />
     );
 
-    expect(backup.find('.content-col').text()).to.equal('Awaiting integration');
+    expect(backup.find('.content-col').text()).to.equal('Backup running');
   });
 });
