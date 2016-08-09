@@ -55,7 +55,7 @@ export class IndexPage extends Component {
       } else {
         this.setState({ loading: true, progress: 0 });
         for (let i = 0; i < labels.length; ++i) {
-          const label = labels[i] || `${labels[0]}-${i + 1}`;
+          const label = labels[i] || `${labels[0]}-${i}`;
           await this.createLinode({ group, label, password, backups });
           this.setState({ progress: (i + 1) / labels.length });
         }
