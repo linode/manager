@@ -152,7 +152,7 @@ export default class Details extends Component {
           crack.<br />
         </p> : null}
         <div className="alert alert-info">
-          Write this password down. We won't display it again.
+          Save this password somewhere safe. We can't display it again.
         </div>
       </div>
     );
