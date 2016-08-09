@@ -163,6 +163,55 @@ describe('linodes/create/layout/IndexPage', () => {
     expect(dispatch.secondCall.args[0]).to.deep.equal(push(`/linodes/${createdLinodeId}`));
   });
 
+  it('creates multiple linodes when the form is submitted', async () => {
+    const env = { dispatch() {} };
+    const dispatch = sandbox.stub(env, 'dispatch');
+    const createdLinodeId = 1;
+    sandbox.stub(apiLinodes, 'createLinode', d => d);
+    const page = mount(
+      <IndexPage
+        dispatch={dispatch}
+        distros={state.distros}
+        datacenters={state.datacenters}
+        services={state.services}
+        linodes={{ linodes }}
+      />
+    );
+    dispatch.reset();
+    dispatch.onCall(0).returns({ id: createdLinodeId });
+    dispatch.onCall(1).returns({ id: createdLinodeId + 1 });
+
+    page.find('ServiceSelection').props().onServiceSelected('service');
+    page.find('DatacenterSelection').props().onDatacenterSelected('datacenter');
+    page.find('SourceSelection').props().onSourceSelected('source');
+    await page.find('Details').props().onSubmit({
+      labels: ['label', 'label-2'],
+      password: 'password',
+      backups: false,
+      group: 'group',
+    });
+    expect(dispatch.callCount).to.equal(3);
+    expect(dispatch.firstCall.args[0]).to.deep.equal({
+      root_pass: 'password',
+      service: 'service',
+      source: 'source',
+      datacenter: 'datacenter',
+      label: 'label',
+      backups: false,
+      group: 'group',
+    });
+    expect(dispatch.secondCall.args[0]).to.deep.equal({
+      root_pass: 'password',
+      service: 'service',
+      source: 'source',
+      datacenter: 'datacenter',
+      label: 'label-2',
+      backups: false,
+      group: 'group',
+    });
+    expect(dispatch.thirdCall.args[0]).to.deep.equal(push('/linodes'));
+  });
+
   it('sets errors on create a linode failure', async () => {
     const error = 'The error';
     const env = { dispatch() {} };

@@ -18,6 +18,13 @@ describe('linodes/create/components/Details', () => {
     expect(c.find('input').length).to.equal(5);
   });
 
+  it('renders multiple labels', () => {
+    const c = mount(<Details />);
+    c.find('[name="quantity"]').simulate('change', { target: { value: 2 } });
+    expect(c.find('input').length).to.equal(6);
+    expect(c.state('labels')).to.have.lengthOf(2);
+  });
+
   it('renders errors', () => {
     const error = 'There was an error';
     const errors = { label: [error] };
