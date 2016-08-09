@@ -43,31 +43,36 @@ export class IndexPage extends Component {
     }
   }
 
-  async onSubmit({ group, label, password, backups }) {
+  async onSubmit({ group, labels, password, backups }) {
     const { dispatch } = this.props;
     const { service, source, datacenter } = this.state;
-    try {
-      this.setState({ loading: true });
-      const linode = await dispatch(createLinode({
-        root_pass: password,
-        service,
-        source,
-        datacenter,
-        label,
-        group,
-        backups,
-      }));
-      this.setState({ loading: false });
-      // TODO: show user introductory stuff
-      dispatch(push(`/linodes/${linode.id}`));
-    } catch (response) {
-      const { errors } = await response.json();
-      const errorsByField = {};
-      errors.forEach(({ field, reason }) => {
-        if (!(field in errorsByField)) errorsByField[field] = [];
-        errorsByField[field].push(reason);
-      });
-      this.setState({ loading: false, errors: errorsByField });
+    if (labels.length === 1) {
+      const [label] = labels;
+      try {
+        this.setState({ loading: true });
+        const linode = await dispatch(createLinode({
+          root_pass: password,
+          service,
+          source,
+          datacenter,
+          label,
+          group,
+          backups,
+        }));
+        this.setState({ loading: false });
+        // TODO: show user introductory stuff
+        dispatch(push(`/linodes/${linode.id}`));
+      } catch (response) {
+        const { errors } = await response.json();
+        const errorsByField = {};
+        errors.forEach(({ field, reason }) => {
+          if (!(field in errorsByField)) errorsByField[field] = [];
+          errorsByField[field].push(reason);
+        });
+        this.setState({ loading: false, errors: errorsByField });
+      }
+    } else {
+      // TODO: multi creation
     }
   }
 

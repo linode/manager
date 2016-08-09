@@ -27,7 +27,7 @@ export default class Details extends Component {
 
     this.props.onSubmit({
       password: this.state.password,
-      label: this.state.label,
+      labels: this.state.labels,
       group: this.state.group,
       backups: this.state.enableBackups,
     });
@@ -200,9 +200,11 @@ export default class Details extends Component {
             <hr />
             <button
               type="submit"
-              disabled={!(this.props.submitEnabled && this.state.label && this.state.password)}
+              disabled={!(this.props.submitEnabled
+                && this.state.labels[0]
+                && this.state.password)}
               className="btn btn-primary"
-            >Create Linode</button>
+            >Create Linode{this.state.quantity > 1 ? 's' : null}</button>
           </form>
         </div>
       </div>
