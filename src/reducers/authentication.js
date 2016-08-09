@@ -16,7 +16,7 @@ export default function authentication(_state = null, action) {
       if (action.email && !action.emailHash) {
         emailHash = md5(action.email.trim().toLowerCase());
       } else {
-        emailHash = state.emailHash;
+        emailHash = action.emailHash;
       }
       setStorage('authentication/oauth-token', action.token);
       setStorage('authentication/username', action.username);
