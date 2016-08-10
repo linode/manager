@@ -9,6 +9,7 @@ export default class PasswordInput extends Component {
     this.state = {
       password: '',
       strength: zxcvbn(''),
+      type: 'password',
     };
   }
 
@@ -31,12 +32,15 @@ export default class PasswordInput extends Component {
           name="password"
           onChange={this.onPasswordChange}
           autoComplete="off"
+          type={this.state.type}
         />
         <button
           type="button"
           className="btn btn-secondary"
-          onClick={() =>
-            this.onPasswordChange({ target: { value: generatePassword(30, false) } })}
+          onClick={() => {
+            this.onPasswordChange({ target: { value: generatePassword(30, false) } });
+            this.setState({ type: 'text' });
+          }}
         >Generate</button>
         <div className={`strength strength-${this.state.strength.score}`}>
           <span></span>

@@ -81,4 +81,4 @@ RepairPage.propTypes = {
   }),
 };
 
-export default connect(() => {})(RepairPage);
+export default connect(() => ({}))(RepairPage);
