@@ -53,16 +53,19 @@ export class RepairPage extends Component {
     const powered = linode.state === 'running' || linode.state === 'booting';
     try {
       this.setState({ applying: true, result: null });
+      const promises = [];
 
       if (powered) {
-        await dispatch(powerOffLinode(linode.id));
+        promises.push(dispatch(powerOffLinode(linode.id)));
       }
 
-      await resetPassword(linode.id, disk, password);
+      promises.push(dispatch(resetPassword(linode.id, disk, password)));
 
       if (powered) {
-        await dispatch(powerOnLinode(linode.id));
+        promises.push(dispatch(powerOnLinode(linode.id)));
       }
+
+      await Promise.all(promises);
 
       this.setState({
         applying: false,
