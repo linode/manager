@@ -23,6 +23,8 @@ describe('linodes/create/components/Details', () => {
     c.find('[name="quantity"]').simulate('change', { target: { value: 2 } });
     expect(c.find('input').length).to.equal(6);
     expect(c.state('labels')).to.have.lengthOf(2);
+    expect(c.find('[name="label"]').at(0).props().placeholder).to.equal('my-label');
+    expect(c.find('[name="label"]').at(1).props().placeholder).to.equal('my-label-1');
   });
 
   it('renders errors', () => {
