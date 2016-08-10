@@ -23,6 +23,7 @@
     "array-callback-return": 0,
     "consistent-return": 0,
     "react/no-multi-comp": 0,
+    "react/no-did-mount-set-state": 0,
     "no-shadow": 0,
     "dot-notation": [
       "error", {
