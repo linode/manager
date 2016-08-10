@@ -15,7 +15,22 @@ describe('linodes/create/components/Details', () => {
   it('renders the card', () => {
     const c = mount(<Details />);
     expect(c.contains(<h2>Details</h2>)).to.equal(true);
-    expect(c.find('input').length).to.equal(3);
+    expect(c.find('input').length).to.equal(5);
+  });
+
+  it('renders multiple labels', () => {
+    const c = mount(<Details />);
+    c.find('[name="quantity"]').simulate('change', { target: { value: 3 } });
+    expect(c.find('input').length).to.equal(7);
+    expect(c.state('labels')).to.have.lengthOf(3);
+    expect(c.state('labels')).to.have.members(['', null, null]);
+    expect(c.find('[name="label"]').at(0).props().placeholder).to.equal('my-label');
+    expect(c.find('[name="label"]').at(1).props().placeholder).to.equal('my-label-1');
+    expect(c.find('[name="label"]').at(2).props().placeholder).to.equal('my-label-2');
+
+    c.find('[name="quantity"]').simulate('change', { target: { value: 2 } });
+    expect(c.state('labels')).to.have.lengthOf(2);
+    expect(c.state('labels')).to.have.members(['', null]);
   });
 
   it('renders errors', () => {
@@ -44,8 +59,9 @@ describe('linodes/create/components/Details', () => {
     expect(onSubmit.calledOnce).to.equal(true);
     expect(onSubmit.firstCall.args[0]).to.deep.equal({
       password: 'my-password',
-      label: 'my-label',
+      labels: ['my-label'],
       backups: true,
+      group: '',
     });
   });
 });
