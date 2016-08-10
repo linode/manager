@@ -97,3 +97,15 @@ export function powerOffLinode(id, timeout = undefined) {
 export function rebootLinode(id, timeout = undefined) {
   return linodeAction(id, 'reboot', 'rebooting', 'running', timeout);
 }
+
+export function resetPassword(linodeId, diskId, password) {
+  return async (dispatch, getState) => {
+    const state = getState();
+    const { token } = state.authentication;
+    await fetch(token, `/linodes/${linodeId}/disks/${diskId}/rootpass`,
+      {
+        method: 'POST',
+        body: JSON.stringify({ password }),
+      });
+  };
+}

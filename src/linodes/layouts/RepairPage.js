@@ -1,7 +1,14 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { getLinode } from './LinodeDetailPage';
-import { fetchLinode, fetchAllLinodeDisks } from '~/actions/api/linodes';
+import {
+  fetchLinode,
+  fetchLinodeUntil,
+  fetchAllLinodeDisks,
+  powerOnLinode,
+  powerOffLinode,
+  resetPassword,
+} from '~/actions/api/linodes';
 import PasswordInput from '~/components/PasswordInput';
 import HelpButton from '~/components/HelpButton';
 
@@ -9,9 +16,16 @@ export class RepairPage extends Component {
   constructor() {
     super();
     this.getLinode = getLinode.bind(this);
+    this.resetRootPassword = this.resetRootPassword.bind(this);
     this.renderRescueMode = this.renderRescueMode.bind(this);
     this.renderResetRootPassword = this.renderResetRootPassword.bind(this);
-    this.state = { password: '', disk: null, loading: true };
+    this.state = {
+      password: '',
+      disk: null,
+      loading: true,
+      applying: false,
+      result: null,
+    };
   }
 
   async componentDidMount() {
@@ -23,11 +37,44 @@ export class RepairPage extends Component {
     }
     await dispatch(fetchAllLinodeDisks(linodeId));
     linode = this.getLinode();
+    const disk = Object.values(linode._disks.disks)
+        .filter(d => d.filesystem !== 'swap')[0];
     this.setState({
       loading: false,
-      disk: Object.values(linode._disks.disks)
-        .filter(d => d.filesystem !== 'swap')[0],
+      disk: disk && disk.id || null,
     });
+  }
+
+  async resetRootPassword() {
+    const { password, disk } = this.state;
+    const { dispatch } = this.props;
+    const linode = this.getLinode();
+    const state = linode.state;
+    const powered = linode.state === 'running' || linode.state === 'booting';
+    try {
+      this.setState({ applying: true, result: null });
+
+      if (powered) {
+        await dispatch(powerOffLinode(linode.id));
+      }
+
+      await resetPassword(linode.id, disk, password);
+
+      if (powered) {
+        await dispatch(powerOnLinode(linode.id));
+      }
+
+      this.setState({
+        applying: false,
+        result: <span className="text-success">Success!</span>,
+      });
+    } catch (response) {
+      this.setState({
+        applying: false,
+        result: <span className="text-danger">An error occured.</span>,
+      });
+    }
+    dispatch(fetchLinodeUntil(linode.id, l => l.state === state));
   }
 
   renderRescueMode() {
@@ -80,8 +127,12 @@ export class RepairPage extends Component {
           </p>
           <button
             className="btn btn-danger"
-            disabled={!this.state.password}
+            disabled={!this.state.password || this.state.applying}
+            onClick={this.resetRootPassword}
           >Reset Password</button>
+          <span style={{ marginLeft: '0.5rem' }}>
+            {this.state.result}
+          </span>
         </div>
       );
     }
@@ -125,13 +176,14 @@ export class RepairPage extends Component {
 
 RepairPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
+  token: PropTypes.string.isRequired,
   params: PropTypes.shape({
     linodeId: PropTypes.string,
   }),
 };
 
 function select(state) {
-  return { linodes: state.api.linodes };
+  return { token: state.authentication.token, linodes: state.api.linodes };
 }
 
 export default connect(select)(RepairPage);
