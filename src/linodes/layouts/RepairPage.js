@@ -179,14 +179,13 @@ export class RepairPage extends Component {
 
 RepairPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  token: PropTypes.string.isRequired,
   params: PropTypes.shape({
     linodeId: PropTypes.string,
   }),
 };
 
 function select(state) {
-  return { token: state.authentication.token, linodes: state.api.linodes };
+  return { linodes: state.api.linodes };
 }
 
 export default connect(select)(RepairPage);
