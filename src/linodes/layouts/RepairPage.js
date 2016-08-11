@@ -107,7 +107,7 @@ export class RepairPage extends Component {
         Object.values(linode._disks.disks)
           .filter(d => d.filesystem !== 'swap').length > 1 : false;
       body = (
-        <div>
+        <div className="root-pw">
           {showDisks ?
             <div className="input-group input-container">
               <select
