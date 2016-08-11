@@ -107,10 +107,8 @@ describe('linodes/layouts/LinodeGeneral', async () => {
         params={{ linodeId: 'linode_1235' }}
       />);
 
-    expect(page.find('.linode-backups').at(0)
-      .find('.col-sm-8')
-      .at(0)
-      .text()).to.equal(`Last backup taken ${moment(backupTime).fromNow()}`);
+    expect(page.find('.backup-status')
+      .text()).to.equal(`Taken ${moment(backupTime).fromNow()}`);
   });
 
   it('renders plan', () => {

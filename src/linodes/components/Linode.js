@@ -96,7 +96,7 @@ export function renderBackupStatus(linode) {
       const nextBackup = getNextBackup(linode);
       return (
         <span className="backup-status">
-          First backup in ~{nextBackup.fromNow(true)}
+          In ~{nextBackup.fromNow(true)}
         </span>);
     }
 
@@ -104,20 +104,19 @@ export function renderBackupStatus(linode) {
     if (backupStatus === 'running') {
       return (
         <span className="backup-status">
-          Backup running
+          Running
         </span>);
     }
 
     if (backupStatus === 'pending') {
       return (
         <span className="backup-status">
-          Backup pending
+          Pending
         </span>);
     }
-
     return (
       <span className="backup-status">
-        Last backup taken {moment.utc(linode.backups.last_backup).fromNow()}
+        Taken {moment.utc(linode.backups.last_backup).fromNow()}
       </span>);
   }
   return (
@@ -148,27 +147,26 @@ function renderCard(props) {
         >{LinodeStatesReadable[linode.state]}</span>
         {renderPowerButton(props)}
       </div>
-      <div className="linode-details">
-        <ul className="list-unstyled">
-          <li>
-            <span className="fa fa-link"></span>
-            <span>{linode.ip_addresses['public'].ipv4[0]}</span>
-          </li>
-          <li>
-            <span className="fa fa-link invisible"></span>
-            <span>{linode.ip_addresses['public'].ipv6}</span>
-          </li>
-          <li>
-            <span className="fa fa-globe"></span>
-            <span>{renderDatacenterStyle(linode)}</span>
-          </li>
-          <li>
-            <span className="fa fa-database"></span>
-            <span>
+      <div className="linode-details clearfix">
+        <div className="row">
+          <div className="col-sm-12 content-col ip-addresses">
+            <span className="label-col">IP Addresses</span>
+            <div>{linode.ip_addresses['public'].ipv4[0]}</div>
+            <div>{linode.ip_addresses['public'].ipv6}</div>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-sm-6">
+            <span className="label-col">Datacenter</span>
+            <div className="content-col">{renderDatacenterStyle(linode)}</div>
+          </div>
+          <div className="col-sm-6">
+            <span className="label-col">Backup</span>
+            <div className="content-col backup-status">
               {renderBackupStatus(linode)}
-            </span>
-          </li>
-        </ul>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
