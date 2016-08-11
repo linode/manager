@@ -187,7 +187,7 @@ export class LinodeGeneral extends Component {
           </div>
           <div className="row linode-backups">
             <div className="col-sm-4 label-col left">
-              Backups
+              Backup
             </div>
             <div className="col-sm-8 content-col right">
               {this.renderBackupStatus(linode)}

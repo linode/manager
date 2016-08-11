@@ -587,12 +587,11 @@ table {
 
 .content-col {
     margin-bottom: .75rem;
-
+    color: #666;
     .text-muted {
         font-size: 70%;
     }
     li a {
-        color: $black;
         text-decoration: none;
     }
     img {

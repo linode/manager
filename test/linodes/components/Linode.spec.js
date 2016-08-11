@@ -156,9 +156,9 @@ describe('linodes/components/Linode', () => {
 
     it('renders the last backup taken', () => {
       const item = shallow(renderBackupStatus(linode));
-      expect(item.contains(<span className="backup-status">
-        Last backup taken {moment.utc(linode.backups.last_backup).fromNow()}
-      </span>)).to.equal(true);
+      expect(item.find('.backup-status')
+        .contains(moment.utc(linode.backups.last_backup)
+        .fromNow())).to.equal(true);
     });
 
     it('renders the projected time of the first backup', () => {
@@ -171,8 +171,8 @@ describe('linodes/components/Linode', () => {
           last_backup: null,
         },
       }));
-      expect(item.find('span').text()).to.equal(
-        `First backup in ~${moment('2016-07-13T12:00:00').fromNow(true)}`);
+      expect(item.find('.backup-status').text()).to.equal(
+        `In ~${moment('2016-07-13T12:00:00').fromNow(true)}`);
     });
 
     it('renders the projected time of the first backup when its window is < $NOW', () => {
@@ -185,8 +185,8 @@ describe('linodes/components/Linode', () => {
           last_backup: null,
         },
       }));
-      expect(item.find('span').text()).to.equal(
-        `First backup in ~${moment('2016-07-14T12:00:00').fromNow(true)}`);
+      expect(item.find('.backup-status').text()).to.equal(
+        `In ~${moment('2016-07-14T12:00:00').fromNow(true)}`);
     });
 
     it('renders running backup', () => {
@@ -205,7 +205,7 @@ describe('linodes/components/Linode', () => {
         },
       }));
 
-      expect(item.find('.backup-status').text()).to.equal('Backup running');
+      expect(item.find('.backup-status').text()).to.equal('Running');
     });
 
     it('renders pending backup', () => {
@@ -224,7 +224,7 @@ describe('linodes/components/Linode', () => {
         },
       }));
 
-      expect(item.find('.backup-status').text()).to.equal('Backup pending');
+      expect(item.find('.backup-status').text()).to.equal('Pending');
     });
   });
 });

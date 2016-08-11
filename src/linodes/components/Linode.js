@@ -96,7 +96,7 @@ export function renderBackupStatus(linode) {
       const nextBackup = getNextBackup(linode);
       return (
         <span className="backup-status">
-          First backup in ~{nextBackup.fromNow(true)}
+          In ~{nextBackup.fromNow(true)}
         </span>);
     }
 
@@ -104,20 +104,19 @@ export function renderBackupStatus(linode) {
     if (backupStatus === 'running') {
       return (
         <span className="backup-status">
-          Backup running
+          Running
         </span>);
     }
 
     if (backupStatus === 'pending') {
       return (
         <span className="backup-status">
-          Backup pending
+          Pending
         </span>);
     }
-
     return (
       <span className="backup-status">
-        Last backup taken {moment.utc(linode.backups.last_backup).fromNow()}
+        Taken {moment.utc(linode.backups.last_backup).fromNow()}
       </span>);
   }
   return (
@@ -159,11 +158,11 @@ function renderCard(props) {
         <div className="row">
           <div className="col-sm-6">
             <span className="label-col">Datacenter</span>
-            <div>{renderDatacenterStyle(linode)}</div>
+            <div className="content-col">{renderDatacenterStyle(linode)}</div>
           </div>
           <div className="col-sm-6">
-            <span className="label-col">Backups</span>
-            <div>
+            <span className="label-col">Backup</span>
+            <div className="content-col backup-status">
               {renderBackupStatus(linode)}
             </div>
           </div>
