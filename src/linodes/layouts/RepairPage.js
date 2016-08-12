@@ -150,27 +150,12 @@ export class RepairPage extends Component {
     );
   }
 
-  renderRebuild() {
-    return (
-      <div className="col-xl-6">
-        <h2>
-          Rebuild
-          <HelpButton to="http://example.org" />
-        </h2>
-        <p>TODO</p>
-      </div>
-    );
-  }
-
   render() {
     return (
       <div>
         <div className="row">
           {this.renderRescueMode()}
           {this.renderResetRootPassword()}
-        </div>
-        <div className="row">
-          {this.renderRebuild()}
         </div>
       </div>
     );
