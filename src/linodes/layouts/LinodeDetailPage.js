@@ -35,7 +35,8 @@ export async function loadLinode() {
     } catch (response) {
       dispatch(setError(response));
     }
-  } else if (!linode._configs || linode._configs.totalPages === -1) {
+  }
+  if (linode && (!linode._configs || linode._configs.totalPages === -1)) {
     await dispatch(fetchAllLinodeConfigs(linode.id));
   }
 }
@@ -81,12 +82,15 @@ export class LinodeDetailPage extends Component {
     this.routerWillLeave = this.routerWillLeave.bind(this);
     this.loadLinode = module.exports.loadLinode.bind(this);
     this.componentDidMount = this.componentDidMount.bind(this);
+    this.state = { config: '' };
   }
 
-  componentDidMount() {
-    this.loadLinode(); // Make sure Linode data is available
+  async componentDidMount() {
     const { router } = this.props;
     router.setRouteLeaveHook(this.props.route, this.routerWillLeave);
+    await this.loadLinode();
+    const defaultConfig = Object.values(this.getLinode()._configs.configs)[0];
+    this.setState({ config: defaultConfig ? defaultConfig.id : '' });
   }
 
   routerWillLeave() {
@@ -229,7 +233,11 @@ export class LinodeDetailPage extends Component {
           </span>}
         {!renderConfigSelect ? null :
           <span className="pull-right configs">
-            <select className="form-control">
+            <select
+              className="form-control"
+              value={this.state.config}
+              onChange={e => this.setState({ config: e.target.value })}
+            >
               {Object.values(linode._configs.configs).map(config =>
                 <option key={config.id} value={config.id}>{config.label}</option>)}
             </select>
