@@ -220,7 +220,10 @@ export class LinodeDetailPage extends Component {
       },
     ]
     .filter(element => element._condition())
-    .map(element => ({ ...element, action: () => dispatch(element._action(linode.id)) }));
+    .map(element => ({
+      ...element,
+      action: () => dispatch(element._action(linode.id, this.state.config || null)),
+    }));
 
     const renderConfigSelect = linode._configs.totalResults > 1;
 

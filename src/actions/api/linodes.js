@@ -80,26 +80,29 @@ export const fetchLinodeConfig = makeFetchItem(linodeConfig, 'configs');
 export const fetchLinodeConfigs = makeFetchPage(linodeConfig, '_configs');
 export const fetchAllLinodeConfigs = makeFetchAll(linodeConfig, fetchLinodeConfigs, '_configs');
 
-function linodeAction(id, action, temp, expected, timeout = undefined) {
+function linodeAction(id, action, temp, expected, timeout = undefined, body = undefined) {
   return async (dispatch, getState) => {
     const state = getState();
     const { token } = state.authentication;
     dispatch({ type: UPDATE_LINODE, linode: { id, state: temp } });
-    await fetch(token, `/linodes/${id}/${action}`, { method: 'POST' });
+    await fetch(token, `/linodes/${id}/${action}`, { method: 'POST', body });
     await dispatch(fetchLinodeUntil(id, l => l.state === expected, timeout));
   };
 }
 
-export function powerOnLinode(id, timeout = undefined) {
-  return linodeAction(id, 'boot', 'booting', 'running', timeout);
+export function powerOnLinode(id, config = null, timeout = undefined) {
+  return linodeAction(id, 'boot', 'booting', 'running', timeout,
+    JSON.stringify({ config }));
 }
 
-export function powerOffLinode(id, timeout = undefined) {
-  return linodeAction(id, 'shutdown', 'shutting_down', 'offline', timeout);
+export function powerOffLinode(id, config = null, timeout = undefined) {
+  return linodeAction(id, 'shutdown', 'shutting_down', 'offline', timeout,
+    JSON.stringify({ config }));
 }
 
-export function rebootLinode(id, timeout = undefined) {
-  return linodeAction(id, 'reboot', 'rebooting', 'running', timeout);
+export function rebootLinode(id, config = null, timeout = undefined) {
+  return linodeAction(id, 'reboot', 'rebooting', 'running', timeout,
+    JSON.stringify({ config }));
 }
 
 export function resetPassword(linodeId, diskId, password) {
