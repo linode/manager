@@ -218,12 +218,21 @@ export class LinodeDetailPage extends Component {
     .filter(element => element._condition())
     .map(element => ({ ...element, action: () => dispatch(element._action(linode.id)) }));
 
+    const renderConfigSelect = linode._configs.totalResults > 1;
+
     return (
       <header className="tabs">
         {editing ? this.renderEditUI(linode) : this.renderLabel(linode)}
         {LinodeStates.pending.indexOf(linode.state) !== -1 ? null :
           <span className="pull-right">
             <Dropdown elements={dropdownElements} leftOriented={false} />
+          </span>}
+        {!renderConfigSelect ? null :
+          <span className="pull-right configs">
+            <select className="form-control">
+              {Object.values(linode._configs.configs).map(config =>
+                <option key={config.id} value={config.id}>{config.label}</option>)}
+            </select>
           </span>}
         <span className={`pull-right linode-status ${linode.state}`}>
           {LinodeStatesReadable[linode.state]}
