@@ -74,6 +74,7 @@ export const createLinode = makeCreateItem(linodeConfig);
 
 export const fetchLinodeDisk = makeFetchItem(linodeConfig, 'disks');
 export const fetchLinodeDisks = makeFetchPage(linodeConfig, '_disks');
+export const fetchAllLinodeDisks = makeFetchAll(linodeConfig, fetchLinodeDisks, '_disks');
 
 function linodeAction(id, action, temp, expected, timeout = undefined) {
   return async (dispatch, getState) => {
@@ -95,4 +96,16 @@ export function powerOffLinode(id, timeout = undefined) {
 
 export function rebootLinode(id, timeout = undefined) {
   return linodeAction(id, 'reboot', 'rebooting', 'running', timeout);
+}
+
+export function resetPassword(linodeId, diskId, password) {
+  return async (dispatch, getState) => {
+    const state = getState();
+    const { token } = state.authentication;
+    await fetch(token, `/linodes/${linodeId}/disks/${diskId}/rootpass`,
+      {
+        method: 'POST',
+        body: JSON.stringify({ password }),
+      });
+  };
 }

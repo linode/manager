@@ -1,19 +1,16 @@
 import React, { Component, PropTypes } from 'react';
-import generatePassword from 'password-generator';
-import zxcvbn from 'zxcvbn';
 import _ from 'lodash';
+import PasswordInput from '~/components/PasswordInput';
 
 export default class Details extends Component {
   constructor() {
     super();
     this.renderRow = this.renderRow.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
-    this.onPasswordChange = this.onPasswordChange.bind(this);
     this.onLabelChange = this.onLabelChange.bind(this);
     this.onQuantityChange = this.onQuantityChange.bind(this);
     this.state = {
       password: '',
-      strength: zxcvbn(''),
       quantity: 1,
       group: '',
       labels: [''],
@@ -31,12 +28,6 @@ export default class Details extends Component {
       group: this.state.group,
       backups: this.state.enableBackups,
     });
-  }
-
-  onPasswordChange(e) {
-    const password = e.target.value;
-    const strength = zxcvbn(password);
-    this.setState({ password, strength });
   }
 
   onLabelChange(v, i) {
@@ -125,32 +116,11 @@ export default class Details extends Component {
     };
 
     const passwordInput = (
-      <div className="input-container input-group password-input">
-        <input
-          value={this.state.password}
-          placeholder="Choose a strong password"
-          className="form-control"
-          name="password"
-          onChange={this.onPasswordChange}
-          autoComplete="off"
+      <div>
+        <PasswordInput
+          passwordType="offline_fast_hashing_1e10_per_second"
+          onChange={password => this.setState({ password })}
         />
-        <button
-          type="button"
-          className="btn btn-secondary"
-          onClick={() =>
-            this.onPasswordChange({ target: { value: generatePassword(30, false) } })}
-        >Generate</button>
-        <div className={`strength strength-${this.state.strength.score}`}>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-        {this.state.password !== '' ? <p>
-          We estimate that an offline attack on this password would
-          take {this.state.strength.crack_times_display.offline_fast_hashing_1e10_per_second} to
-          crack.<br />
-        </p> : null}
         <div className="alert alert-info">
           Save this password somewhere safe. We can't display it again.
         </div>

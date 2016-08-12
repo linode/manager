@@ -7,6 +7,7 @@ import LinodeGeneral from './layouts/LinodeGeneral';
 import LinodeNetworking from './layouts/LinodeNetworking';
 import CreatePage from './create/layouts/IndexPage';
 import BackupsPage from './layouts/BackupsPage';
+import RepairPage from './layouts/RepairPage';
 import SettingsPage from './settings';
 
 export default (
@@ -17,7 +18,7 @@ export default (
       <IndexRoute component={LinodeGeneral} />
       <Route path="networking" component={LinodeNetworking} />
       <Route path="resize" component={null} />
-      <Route path="repair" component={null} />
+      <Route path="repair" component={RepairPage} />
       <Route path="backups" component={BackupsPage} />
       {SettingsPage}
     </Route>

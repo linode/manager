@@ -21,7 +21,7 @@ import {
 export function getLinode() {
   const { linodes } = this.props.linodes;
   const { linodeId } = this.props.params;
-  return linodes[linodeId];
+  return linodes ? linodes[linodeId] : null;
 }
 
 export async function loadLinode() {
