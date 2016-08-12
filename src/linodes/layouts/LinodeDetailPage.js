@@ -15,7 +15,7 @@ import {
   clearErrors,
 } from '../actions/detail/index';
 import {
-  fetchLinode, powerOnLinode, powerOffLinode, rebootLinode,
+  fetchLinode, fetchAllLinodeConfigs, powerOnLinode, powerOffLinode, rebootLinode,
 } from '~/actions/api/linodes';
 
 export function getLinode() {
@@ -26,14 +26,17 @@ export function getLinode() {
 
 export async function loadLinode() {
   const { dispatch } = this.props;
-  const linode = this.getLinode();
+  let linode = this.getLinode();
   if (!linode) {
     const { linodeId } = this.props.params;
     try {
       await dispatch(fetchLinode(linodeId));
+      linode = this.getLinode();
     } catch (response) {
       dispatch(setError(response));
     }
+  } else if (!linode._configs || linode._configs.totalPages === -1) {
+    await dispatch(fetchAllLinodeConfigs(linode.id));
   }
 }
 

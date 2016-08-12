@@ -76,6 +76,10 @@ export const fetchLinodeDisk = makeFetchItem(linodeConfig, 'disks');
 export const fetchLinodeDisks = makeFetchPage(linodeConfig, '_disks');
 export const fetchAllLinodeDisks = makeFetchAll(linodeConfig, fetchLinodeDisks, '_disks');
 
+export const fetchLinodeConfig = makeFetchItem(linodeConfig, 'configs');
+export const fetchLinodeConfigs = makeFetchPage(linodeConfig, '_configs');
+export const fetchAllLinodeConfigs = makeFetchAll(linodeConfig, fetchLinodeConfigs, '_configs');
+
 function linodeAction(id, action, temp, expected, timeout = undefined) {
   return async (dispatch, getState) => {
     const state = getState();
