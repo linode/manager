@@ -21,8 +21,7 @@ export class IndexPage extends Component {
     if (!linode) return null;
 
     const tabList = [
-      { name: 'Boot settings', link: '' },
-      { name: 'Alerts', link: '/alerts' },
+      { name: 'Alerts', link: '' },
       { name: 'Advanced', link: '/advanced' },
     ].map(t => ({ ...t, link: `/linodes/${linode.id}/settings${t.link}` }));
 
