@@ -235,6 +235,7 @@ export class LinodeDetailPage extends Component {
     const tabList = [
       { name: 'General', link: '' },
       { name: 'Networking', link: '/networking' },
+      { name: 'Rebuild', link: '/rebuild' },
       { name: 'Resize', link: '/resize' },
       { name: 'Repair', link: '/repair' },
       { name: 'Backups', link: '/backups' },
