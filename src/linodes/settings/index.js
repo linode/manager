@@ -6,6 +6,6 @@ import { IndexPage, AlertsPage } from './layouts';
 export default (
   <Route path="settings" component={IndexPage}>
     <IndexRoute component={AlertsPage} />
-    <Route path="advanced" component={null} />
+    <Route path="advanced" component={() => <p>TODO</p>} />
   </Route>
 );

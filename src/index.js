@@ -18,6 +18,11 @@ import Layout from './layouts/Layout';
 import OAuthCallbackPage from './layouts/OAuth';
 import NotFound from './layouts/NotFound';
 import Linodes from './linodes';
+import NodeBalancers from './nodebalancers';
+import Longview from './longview';
+import DNSManager from './dnsmanager';
+import Account from './account';
+import Support from './support';
 
 const init = () => {
   render(
@@ -27,6 +32,11 @@ const init = () => {
           <Route onEnter={checkLogin} path="/" component={Layout}>
             <IndexRedirect to="/linodes" />
             {Linodes}
+            {NodeBalancers}
+            {Longview}
+            {DNSManager}
+            {Account}
+            {Support}
             <Route path="oauth">
               <Route path="callback" component={OAuthCallbackPage} />
             </Route>

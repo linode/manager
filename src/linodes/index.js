@@ -17,7 +17,8 @@ export default (
     <Route path=":linodeId" component={LinodeDetailPage}>
       <IndexRoute component={LinodeGeneral} />
       <Route path="networking" component={LinodeNetworking} />
-      <Route path="resize" component={null} />
+      <Route path="rebuild" component={() => <p>TODO</p>} />
+      <Route path="resize" component={() => <p>TODO</p>} />
       <Route path="repair" component={RepairPage} />
       <Route path="backups" component={BackupsPage} />
       {SettingsPage}
