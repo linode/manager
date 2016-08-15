@@ -122,6 +122,7 @@ export const testLinode = {
   _backups: {
     totalPages: 1,
     pagesFetched: [0],
+    totalResults: 2,
     backups: {
       backup_54778593: {
         type: 'auto',
@@ -150,6 +151,7 @@ export const testLinode = {
   _disks: {
     totalPages: 1,
     pagesFetched: [0],
+    totalResults: 2,
     disks: {
       disk_12345: {
         id: 'disk_12345',
@@ -166,6 +168,17 @@ export const testLinode = {
         updated: '2016-08-09T19:47:11',
         filesystem: 'swap',
         label: 'Swap Disk',
+      },
+    },
+  },
+  _configs: {
+    totalPages: 1,
+    pagesFetched: [0],
+    totalResults: 1,
+    configs: {
+      config_12345: {
+        id: 'config_12345',
+        // TODO: Fill this out more
       },
     },
   },

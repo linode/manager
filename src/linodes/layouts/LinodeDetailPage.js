@@ -225,7 +225,8 @@ export class LinodeDetailPage extends Component {
       action: () => dispatch(element._action(linode.id, this.state.config || null)),
     }));
 
-    const renderConfigSelect = linode._configs.totalResults > 1;
+    const renderConfigSelect = linode._configs.totalResults > 1 &&
+      LinodeStates.pending.indexOf(linode.state) === -1;
 
     return (
       <header className="tabs">
