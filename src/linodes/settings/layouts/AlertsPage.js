@@ -13,6 +13,7 @@ export class AlertsPage extends Component {
     this.renderAlertRow = this.renderAlertRow.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.state = {
+      loading: true,
       cpu: { threshold: 0, enabled: false },
       io: { threshold: 0, enabled: false },
       transfer_in: { threshold: 0, enabled: false },
@@ -21,24 +22,28 @@ export class AlertsPage extends Component {
     };
   }
 
-  componentWillMount() {
-    this.loadLinode();
-    this.setState(this.getLinode().alerts);
+  async componentWillMount() {
+    await this.loadLinode();
+    this.setState({ ...this.getLinode().alerts, loading: false });
   }
 
-  onSubmit() {
+  async onSubmit(e) {
+    e.preventDefault();
     const { dispatch } = this.props;
     const { id } = this.getLinode();
-    dispatch(putLinode({ id, data: { alerts: this.state } }));
+    this.setState({ loading: true });
+    await dispatch(putLinode({ id, data: { alerts: this.state } }));
+    this.setState({ loading: false });
   }
 
-  renderAlertRow({ name, value, label, text }) {
+  renderAlertRow({ key, name, value, label, text }) {
+    const { loading } = this.state;
     const { threshold, enabled } = value;
     const int = i => parseInt(i, 10);
     const thresholdChange = e =>
-      this.setState({ [value]: { ...value, threshold: int(e.target.value) } });
-    const enabledChange = () =>
-      this.setState({ [value]: { ...value, enabled: !enabled } });
+      this.setState({ [key]: { ...value, threshold: int(e.target.value) } });
+    const enabledChange = e =>
+      this.setState({ [key]: { ...value, enabled: e.target.checked } });
 
     return (
       <div className="row" key={name}>
@@ -51,8 +56,9 @@ export class AlertsPage extends Component {
               <label>
                 <input
                   type="checkbox"
-                  value={enabled}
-                  onClick={enabledChange}
+                  checked={enabled}
+                  onChange={enabledChange}
+                  disabled={loading}
                 />
                 <span>
                   Enable
@@ -63,6 +69,7 @@ export class AlertsPage extends Component {
               type="number"
               value={threshold}
               onChange={thresholdChange}
+              disabled={loading}
             />
             {label}
           </div>
@@ -73,27 +80,28 @@ export class AlertsPage extends Component {
   }
 
   render() {
-    const { cpu, io, transfer_in, transfer_out, transfer_quota } = this.getLinode().alerts;
+    const { cpu, io, transfer_in, transfer_out, transfer_quota } = this.state;
+    const { loading } = this.state;
     const alerts = [
       {
-        name: 'CPU usage', value: cpu, label: '%',
+        name: 'CPU usage', key: 'cpu', value: cpu, label: '%',
         text: 'average CPU usage over 2 hours',
       },
       {
-        name: 'Disk IO rate', value: io, label: 'IOPS',
+        name: 'Disk IO rate', key: 'io', value: io, label: 'IOPS',
         text: 'average disk IOPS over 2 hours',
       },
       {
-        name: 'Incoming traffic', value: transfer_in, label: 'Mbit/s',
-        text: 'average incoming traffic over a 2 hour period',
+        name: 'Incoming traffic', key: 'transfer_in', value: transfer_in,
+        label: 'Mbit/s', text: 'average incoming traffic over a 2 hour period',
       },
       {
-        name: 'Outbound traffic', value: transfer_out, label: 'Mbit/s',
-        text: 'average outbound traffic over a 2 hour period',
+        name: 'Outbound traffic', key: 'transfer_out', value: transfer_out,
+        label: 'Mbit/s', text: 'average outbound traffic over a 2 hour period',
       },
       {
-        name: 'Transfer quota', value: transfer_quota, label: '%',
-        text: 'percentage of network transfer quota used',
+        name: 'Transfer quota', key: 'transfer_quota', value: transfer_quota,
+        label: '%', text: 'percentage of network transfer quota used',
       },
     ];
 
@@ -105,7 +113,11 @@ export class AlertsPage extends Component {
         </h2>
         <form onSubmit={this.onSubmit}>
           {alerts.map(this.renderAlertRow)}
-          <button type="submit" className="btn btn-primary">Save</button>
+          <button
+            type="submit"
+            className="btn btn-primary"
+            disabled={loading}
+          >Save</button>
         </form>
       </div>
     );
