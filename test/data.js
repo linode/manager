@@ -55,7 +55,7 @@ export const state = {
 export const testLinode = {
   group: 'Test Group',
   label: 'Test Linode',
-  ip_addresses: {
+  ips: {
     public: {
       ipv6: '2600:3c03::f03c:91ff:fe96:43e7',
       failover: [],

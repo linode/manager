@@ -43,7 +43,7 @@ export class LinodeNetworking extends Component {
   }
 
   renderIPv4Public() {
-    const ipv4 = this.getLinode().ip_addresses['public'].ipv4;
+    const ipv4 = this.getLinode().ips['public'].ipv4;
 
     return (
       <div className="col-sm-6 left">
@@ -90,7 +90,7 @@ export class LinodeNetworking extends Component {
   }
 
   renderIPv6Public() {
-    const linkLocal = this.getLinode().ip_addresses['private'].link_local;
+    const linkLocal = this.getLinode().ips['private'].link_local;
     return (
       <div className="col-sm-6 right">
         <div className="row">
@@ -108,7 +108,7 @@ export class LinodeNetworking extends Component {
             Inet
           </div>
           <div className="col-sm-8 content-col right">
-            {this.getLinode().ip_addresses['public'].ipv6} / 64
+            {this.getLinode().ips['public'].ipv6} / 64
           </div>
         </div>
         <div className="row">
@@ -128,8 +128,8 @@ export class LinodeNetworking extends Component {
     /* TODO: Global Pool - IPv6
      * TODO: members.linode.com
      */
-    const linkLocal = this.getLinode().ip_addresses['private'].link_local;
-    const ipPrivate = this.getLinode().ip_addresses['private'].ipv4;
+    const linkLocal = this.getLinode().ips['private'].link_local;
+    const ipPrivate = this.getLinode().ips['private'].ipv4;
 
     return (
       <div className="row">
