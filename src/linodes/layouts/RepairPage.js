@@ -115,8 +115,9 @@ export class RepairPage extends Component {
                 className="form-control"
                 onChange={e => this.setState({ disk: e.target.value })}
               >
-                {Object.values(linode._disks.disks).map(d =>
-                  <option value={d.id} key={d.id}>{d.label}</option>)}
+                {Object.values(linode._disks.disks)
+                  .filter(d => d.filesystem !== 'swap')
+                  .map(d => <option value={d.id} key={d.id}>{d.label}</option>)}
               </select>
             </div>
           : null}
