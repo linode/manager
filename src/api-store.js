@@ -379,11 +379,20 @@ export function makePutItem(config) {
   return ({ id, data }) => async (dispatch, getState) => {
     const state = getState();
     const { token } = state.authentication;
-    dispatch({ type: config.actions.updateItem, id, data });
+    dispatch({
+      type: config.actions.updateItem,
+      [config.singular]: data,
+      [config.plural]: id,
+    });
     const response = await fetch(token, `/${config.plural}/${id}`, {
       method: 'PUT', body: JSON.stringify(data),
     });
-    await response.json();
+    const json = await response.json();
+    dispatch({
+      type: config.actions.updateItem,
+      [config.singular]: json,
+      [config.plural]: id,
+    });
   };
 }
 
