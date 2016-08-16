@@ -9,6 +9,7 @@ $green: #38D377;
 $red: #F24C2B;
 $yellow: #FFFCF0;
 $dark-yellow: darken($yellow, 20);
+$darkest-yellow: darken($yellow, 40);
 $black: #4B4B4B;
 $light-black: #666666;
 $lightest-black: #ACACAC;
@@ -39,7 +40,7 @@ $font-size: .9rem;
 @import 'layout/linode-details';
 @import 'layout/linodes';
 
-* {
+.btn, a {
     transition: background .35s, color .2s, border .1s;
 }
 
@@ -183,7 +184,7 @@ a {
     a:hover,
     a:active,
     a:focus {
-        color: $gray;
+        color: $dark-gray;
         text-decoration: none;
     }
 
@@ -605,6 +606,14 @@ table {
 
 .centered {
     text-align: center;
+}
+
+.alert {
+    &.alert-info {
+        background: $yellow;
+        border-color: $dark-gray;
+        color: $light-black;
+    }
 }
 
 @-moz-keyframes pulse {
