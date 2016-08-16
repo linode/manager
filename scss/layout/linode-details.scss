@@ -126,4 +126,16 @@
     .graphs {
         margin-top: $main-padding-tb;
     }
+
+    header {
+        .configs {
+            margin-right: 0.5rem;
+        }
+        
+        select {
+            height: 1.95rem !important;
+            margin-top: 0.25rem;
+            padding-top: 0.25rem;
+        }
+    }
 }

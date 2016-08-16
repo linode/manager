@@ -15,7 +15,7 @@ import {
   clearErrors,
 } from '../actions/detail/index';
 import {
-  fetchLinode, powerOnLinode, powerOffLinode, rebootLinode,
+  fetchLinode, fetchAllLinodeConfigs, powerOnLinode, powerOffLinode, rebootLinode,
 } from '~/actions/api/linodes';
 
 export function getLinode() {
@@ -26,14 +26,18 @@ export function getLinode() {
 
 export async function loadLinode() {
   const { dispatch } = this.props;
-  const linode = this.getLinode();
+  let linode = this.getLinode();
   if (!linode) {
     const { linodeId } = this.props.params;
     try {
       await dispatch(fetchLinode(linodeId));
+      linode = this.getLinode();
     } catch (response) {
       dispatch(setError(response));
     }
+  }
+  if (linode && (!linode._configs || linode._configs.totalPages === -1)) {
+    await dispatch(fetchAllLinodeConfigs(linode.id));
   }
 }
 
@@ -78,12 +82,15 @@ export class LinodeDetailPage extends Component {
     this.routerWillLeave = this.routerWillLeave.bind(this);
     this.loadLinode = module.exports.loadLinode.bind(this);
     this.componentDidMount = this.componentDidMount.bind(this);
+    this.state = { config: '' };
   }
 
-  componentDidMount() {
-    this.loadLinode(); // Make sure Linode data is available
+  async componentDidMount() {
     const { router } = this.props;
     router.setRouteLeaveHook(this.props.route, this.routerWillLeave);
+    await this.loadLinode();
+    const defaultConfig = Object.values(this.getLinode()._configs.configs)[0];
+    this.setState({ config: defaultConfig ? defaultConfig.id : '' });
   }
 
   routerWillLeave() {
@@ -213,7 +220,13 @@ export class LinodeDetailPage extends Component {
       },
     ]
     .filter(element => element._condition())
-    .map(element => ({ ...element, action: () => dispatch(element._action(linode.id)) }));
+    .map(element => ({
+      ...element,
+      action: () => dispatch(element._action(linode.id, this.state.config || null)),
+    }));
+
+    const renderConfigSelect = linode._configs.totalResults > 1 &&
+      LinodeStates.pending.indexOf(linode.state) === -1;
 
     return (
       <header className="tabs">
@@ -221,6 +234,17 @@ export class LinodeDetailPage extends Component {
         {LinodeStates.pending.indexOf(linode.state) !== -1 ? null :
           <span className="pull-right">
             <Dropdown elements={dropdownElements} leftOriented={false} />
+          </span>}
+        {!renderConfigSelect ? null :
+          <span className="pull-right configs">
+            <select
+              className="form-control"
+              value={this.state.config}
+              onChange={e => this.setState({ config: e.target.value })}
+            >
+              {Object.values(linode._configs.configs).map(config =>
+                <option key={config.id} value={config.id}>{config.label}</option>)}
+            </select>
           </span>}
         <span className={`pull-right linode-status ${linode.state}`}>
           {LinodeStatesReadable[linode.state]}

@@ -163,7 +163,11 @@ describe('actions/linodes/power', async () => {
     await f(dispatch, getState);
 
     expect(fetchStub.calledWith(
-      auth.token, '/linodes/foo/boot', { method: 'POST' })).to.equal(true);
+      auth.token, '/linodes/foo/boot',
+      {
+        method: 'POST',
+        body: '{"config":null}',
+      })).to.equal(true);
     expect(dispatch.calledWith({
       type: UPDATE_LINODE,
       linode: { id: 'foo', state: 'booting' },
@@ -184,7 +188,10 @@ describe('actions/linodes/power', async () => {
     await f(dispatch, getState);
 
     expect(fetchStub.calledWith(
-      auth.token, '/linodes/foo/shutdown', { method: 'POST' })).to.equal(true);
+      auth.token, '/linodes/foo/shutdown', {
+        method: 'POST',
+        body: '{"config":null}',
+      })).to.equal(true);
     expect(dispatch.calledWith({
       type: UPDATE_LINODE,
       linode: { id: 'foo', state: 'shutting_down' },
@@ -205,7 +212,10 @@ describe('actions/linodes/power', async () => {
     await f(dispatch, getState);
 
     expect(fetchStub.calledWith(
-      auth.token, '/linodes/foo/reboot', { method: 'POST' })).to.equal(true);
+      auth.token, '/linodes/foo/reboot', {
+        method: 'POST',
+        body: '{"config":null}',
+      })).to.equal(true);
     expect(dispatch.calledWith({
       type: UPDATE_LINODE,
       linode: { id: 'foo', state: 'rebooting' },
