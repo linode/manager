@@ -178,6 +178,7 @@ export const testLinode = {
     configs: {
       config_12345: {
         id: 'config_12345',
+        label: 'Test config',
         // TODO: Fill this out more
       },
     },
@@ -212,6 +213,24 @@ export const linodes = {
       state: 'booting',
       created: '2016-07-06T16:49:27',
       backups: { ...testLinode.backups, enabled: false },
+    },
+    linode_1238: {
+      ...testLinode,
+      id: 'linode_1238',
+      label: 'Test Linode 4',
+      state: 'running',
+      backups: { ...testLinode.backups, enabled: false },
+      _configs: {
+        ...testLinode._configs,
+        totalResults: 2,
+        configs: {
+          ...testLinode._configs.configs,
+          config_12346: {
+            id: 'config_12346',
+            label: 'Test config 2',
+          },
+        },
+      },
     },
   },
   _singular: 'linode',

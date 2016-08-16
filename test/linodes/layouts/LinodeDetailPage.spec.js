@@ -261,6 +261,36 @@ describe('linodes/layouts/LinodeDetailPage', () => {
     expect(dropdown).to.exist;
   });
 
+  it('renders a config profile selection dropdown', () => {
+    const page = shallow(
+      <LinodeDetailPage
+        dispatch={dispatch}
+        linodes={linodes}
+        params={{ linodeId: 'linode_1238' }}
+        detail={detail}
+      />);
+    const select = page.find('.tabs').find('.configs');
+    expect(select.contains(
+      <option key={'config_12345'} value={'config_12345'}>Test config</option>))
+      .to.equal(true);
+    expect(select.contains(
+      <option key={'config_12346'} value={'config_12346'}>Test config 2</option>))
+      .to.equal(true);
+  });
+
+  it('switches the selected config when clicked', () => {
+    const page = shallow(
+      <LinodeDetailPage
+        dispatch={dispatch}
+        linodes={linodes}
+        params={{ linodeId: 'linode_1238' }}
+        detail={detail}
+      />);
+    const select = page.find('.tabs').find('.configs select');
+    select.simulate('change', { target: { value: 'config_12346' } });
+    expect(page.state('config')).to.equal('config_12346');
+  });
+
   it('renders the appropriate items when linode is running', () => {
     const page = shallow(
       <LinodeDetailPage
