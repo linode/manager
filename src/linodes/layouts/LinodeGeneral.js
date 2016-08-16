@@ -149,7 +149,7 @@ export class LinodeGeneral extends Component {
     const { username } = this.props;
     const linode = this.getLinode();
     const plan = this.renderPlanStyle(linode.services);
-    const ipAddresses = linode.ip_addresses;
+    const ipAddresses = linode.ips;
     const arrayifyIps = (pubPriv, type) => {
       const ips = ipAddresses[pubPriv][type];
       if (Array.isArray(pubPriv)) {

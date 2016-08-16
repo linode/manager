@@ -27,7 +27,7 @@ describe('linodes/layouts/LinodeNetworking', () => {
           id: 'newark',
         },
         group: '',
-        ip_addresses: {
+        ips: {
           public: {
             ipv4: [
               '123.456.789.1',
@@ -78,7 +78,7 @@ describe('linodes/layouts/LinodeNetworking', () => {
       });
 
       it('renders inet ip and url', async () => {
-        const ipv4 = testLinode.ip_addresses['public'].ipv4[0];
+        const ipv4 = testLinode.ips['public'].ipv4[0];
         const inet = `${ipv4} / 24 ( li-${ipv4.split('.')[3]}.members.linode.com )`;
         const page = shallow(
           <LinodeNetworking
@@ -93,7 +93,7 @@ describe('linodes/layouts/LinodeNetworking', () => {
       });
 
       it('renders gateway', async () => {
-        const ipv4 = testLinode.ip_addresses['public'].ipv4[0];
+        const ipv4 = testLinode.ips['public'].ipv4[0];
         const gateway = `${ipv4.substring(0, ipv4.lastIndexOf('.'))}.1`;
         const page = shallow(
           <LinodeNetworking
@@ -136,7 +136,7 @@ describe('linodes/layouts/LinodeNetworking', () => {
       });
 
       it('renders inet ip', async () => {
-        const ipv6 = testLinode.ip_addresses['public'].ipv6;
+        const ipv6 = testLinode.ips['public'].ipv6;
         const page = shallow(
           <LinodeNetworking
             linodes={linodes}
@@ -160,7 +160,7 @@ describe('linodes/layouts/LinodeNetworking', () => {
         const ipv6Sect = content.find('.col-sm-6').at(1);
         const gatewayCol = ipv6Sect.find('.col-sm-8').at(1);
         expect(gatewayCol.text())
-          .to.equal(`${testLinode.ip_addresses['private'].link_local.split(':')[0]}::1`);
+          .to.equal(`${testLinode.ips['private'].link_local.split(':')[0]}::1`);
       });
 
       it('renders nameservers', async () => {
@@ -224,7 +224,7 @@ describe('linodes/layouts/LinodeNetworking', () => {
     });
 
     it('renders private ips', async () => {
-      const ipv4 = testLinode.ip_addresses['private'].ipv4[0];
+      const ipv4 = testLinode.ips['private'].ipv4[0];
       const page = shallow(
         <LinodeNetworking
           linodes={linodes}
@@ -247,7 +247,7 @@ describe('linodes/layouts/LinodeNetworking', () => {
       const localLinkRow = content.find('.row').at(2);
       const localLinkCol = localLinkRow.find('.col-sm-8').at(0);
       expect(localLinkCol.text())
-        .to.equal(testLinode.ip_addresses['private'].link_local);
+        .to.equal(testLinode.ips['private'].link_local);
     });
   });
 });
