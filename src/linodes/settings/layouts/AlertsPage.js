@@ -14,17 +14,19 @@ export class AlertsPage extends Component {
     this.onSubmit = this.onSubmit.bind(this);
     this.state = {
       loading: true,
-      cpu: { threshold: 0, enabled: false },
-      io: { threshold: 0, enabled: false },
-      transfer_in: { threshold: 0, enabled: false },
-      transfer_out: { threshold: 0, enabled: false },
-      transfer_quota: { threshold: 0, enabled: false },
+      alerts: {
+        cpu: { threshold: 0, enabled: false },
+        io: { threshold: 0, enabled: false },
+        transfer_in: { threshold: 0, enabled: false },
+        transfer_out: { threshold: 0, enabled: false },
+        transfer_quota: { threshold: 0, enabled: false },
+      },
     };
   }
 
   async componentWillMount() {
     await this.loadLinode();
-    this.setState({ ...this.getLinode().alerts, loading: false });
+    this.setState({ loading: false, alerts: this.getLinode().alerts });
   }
 
   async onSubmit(e) {
@@ -32,7 +34,7 @@ export class AlertsPage extends Component {
     const { dispatch } = this.props;
     const { id } = this.getLinode();
     this.setState({ loading: true });
-    await dispatch(putLinode({ id, data: { alerts: this.state } }));
+    await dispatch(putLinode({ id, data: { alerts: this.state.alerts } }));
     this.setState({ loading: false });
   }
 
@@ -41,9 +43,15 @@ export class AlertsPage extends Component {
     const { threshold, enabled } = value;
     const int = i => parseInt(i, 10);
     const thresholdChange = e =>
-      this.setState({ [key]: { ...value, threshold: int(e.target.value) } });
+      this.setState({ alerts: {
+        ...this.state.alerts,
+        [key]: { ...value, threshold: int(e.target.value) } },
+      });
     const enabledChange = e =>
-      this.setState({ [key]: { ...value, enabled: e.target.checked } });
+      this.setState({ alerts: {
+        ...this.state.alerts,
+        [key]: { ...value, enabled: e.target.checked } },
+      });
 
     return (
       <div className="row" key={name}>
@@ -80,7 +88,7 @@ export class AlertsPage extends Component {
   }
 
   render() {
-    const { cpu, io, transfer_in, transfer_out, transfer_quota } = this.state;
+    const { cpu, io, transfer_in, transfer_out, transfer_quota } = this.state.alerts;
     const { loading } = this.state;
     const alerts = [
       {

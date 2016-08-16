@@ -44,6 +44,8 @@ describe('linodes/settings/layouts/AlertsPage', async () => {
       />
     );
 
+    await new Promise(r => setTimeout(r, 0));
+
     page.find('form').simulate('submit');
     expect(dispatch.calledOnce).to.equal(true);
     const dispatched = dispatch.firstCall.args[0];
@@ -57,10 +59,10 @@ describe('linodes/settings/layouts/AlertsPage', async () => {
     }));
     expect(fetchStub.calledOnce).to.equal(true);
     expect(fetchStub.firstCall.args[1]).to.equal('/linodes/linode_1235');
-    expect(dispatch.calledOnce).to.equal(true);
+    expect(dispatch.calledTwice).to.equal(true);
     expect(dispatch.firstCall.args[0].type).to.equal(UPDATE_LINODE);
-    expect(dispatch.firstCall.args[0].id).to.equal('linode_1235');
-    expect(dispatch.firstCall.args[0].data.alerts).to.deep.equal({
+    expect(dispatch.firstCall.args[0].linodes).to.equal('linode_1235');
+    expect(dispatch.firstCall.args[0].linode.alerts).to.deep.equal({
       cpu: { enabled: true, threshold: 90 },
       io: { enabled: true, threshold: 5000 },
       transfer_in: { enabled: true, threshold: 5 },

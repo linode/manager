@@ -560,12 +560,14 @@ describe('api-store', () => {
       await p(dispatch, getState);
 
       expect(fetchStub.calledWith(
-        auth.token, '/foobars/foobar_1', { method: 'PUT', body: JSON.stringify({ foo: 'bar' }) }
+        auth.token,
+        '/foobars/foobar_1',
+        { method: 'PUT', body: JSON.stringify({ foo: 'bar' }) }
       )).to.equal(true);
       expect(dispatch.calledWith({
         type: config.actions.updateItem,
-        id: 'foobar_1',
-        data: { foo: 'bar' },
+        foobars: 'foobar_1',
+        foobar: { foo: 'bar' },
       })).to.equal(true);
     });
   });
