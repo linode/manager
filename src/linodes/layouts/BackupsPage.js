@@ -335,13 +335,34 @@ export class BackupsPage extends Component {
   }
 
   renderLastSnapshot() {
-    const lastSnapshot = null; // TODO
-    if (lastSnapshot) {
-      return (
-        <p>TODO</p>
-      );
+    const thisLinode = this.getLinode();
+    const backups = thisLinode._backups && Object.values(thisLinode._backups.backups);
+    if (backups && backups.length !== 0) {
+      const snapshots = backups.filter(b => b.type === 'snapshot');
+      const snapshot = snapshots && snapshots[0];
+      const { selectedBackup } = this.props.backups;
+      const { dispatch } = this.props;
+      if (snapshot) {
+        return (
+          <div className="row snapshot-details">
+            <div className="col-md-7">
+              <p>
+                <span className="text-danger">Warning!</span> Taking a new snapshot
+                will overwrite your latest snapshot.
+              </p>
+            </div>
+            <div className="col-md-5">
+              <Backup
+                backup={snapshot}
+                selected={selectedBackup}
+                onSelect={() => dispatch(selectBackup(snapshot.id))}
+              />
+            </div>
+          </div>
+        );
+      }
     }
-    return <p>No Snapshots have been taken yet.</p>;
+    return <p>No snapshots have been taken yet.</p>;
   }
 
   renderEnabled() {
