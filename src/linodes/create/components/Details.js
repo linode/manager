@@ -145,8 +145,8 @@ export default class Details extends Component {
         <label>
           <input
             type="checkbox"
-            value={this.state.enableBackups}
-            onChange={e => this.setState({ enableBackups: e.target.value })}
+            checked={this.state.enableBackups}
+            onChange={e => this.setState({ enableBackups: e.target.checked })}
             name="enableBackups"
           />
           <span>Enable ($2.50/month)</span>
