@@ -53,7 +53,8 @@ describe('linodes/create/components/Details', () => {
       c.find(`input[name="${name}"]`).simulate('change', { target: { value } });
     updateInput('label', 'my-label');
     updateInput('password', 'my-password');
-    updateInput('enableBackups', true);
+    c.find('input[name="enableBackups"]').simulate('change',
+      { target: { checked: true } });
     c.find('form').simulate('submit');
 
     expect(onSubmit.calledOnce).to.equal(true);
