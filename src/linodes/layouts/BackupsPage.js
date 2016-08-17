@@ -111,16 +111,16 @@ export class BackupsPage extends Component {
         </p>
         <div className="modal-footer">
           <button
+            className="btn btn-default"
+            onClick={() => dispatch(hideModal())}
+          >Nevermind</button>
+          <button
             className="btn btn-primary"
             onClick={() => {
               this.cancelLinodeBackup(linode);
               dispatch(hideModal());
             }}
           >Cancel backups</button>
-          <button
-            className="btn btn-default"
-            onClick={() => dispatch(hideModal())}
-          >Abort</button>
         </div>
       </div>);
   }
@@ -137,16 +137,16 @@ export class BackupsPage extends Component {
         </p>
         <div className="modal-footer">
           <button
+            className="btn btn-default"
+            onClick={() => dispatch(hideModal())}
+          >Nevermind</button>
+          <button
             className="btn btn-primary"
             onClick={() => {
               this.restore(target, backup, true);
               dispatch(hideModal());
             }}
           >Erase and restore</button>
-          <button
-            className="btn btn-default"
-            onClick={() => dispatch(hideModal())}
-          >Cancel</button>
         </div>
       </div>);
   }

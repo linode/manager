@@ -21,6 +21,11 @@
     margin-top: $main-padding-tb;
     box-shadow: $box-shadow;
     background: $white;
+
+    .open & {
+        display: block;
+        bottom: auto;
+    }
 }
 
 .modal-header {
@@ -34,8 +39,10 @@
 }
 
 .modal-footer {
-    @extend .pull-right;
     text-align: right;
+    padding-left: 0;
+    padding-right: 0;
+    padding-bottom: 0;
 
     .btn:not(:first-child) {
         margin-left: 0.5rem;
