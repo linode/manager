@@ -32,7 +32,9 @@ export default function Backup(props) {
       onClick={onSelect}
     >
       <header>
-        <div className="title">{cardTitle}</div>
+        <div className="title">
+          {backup.type === 'snapshot' ? 'Snapshot' : cardTitle}
+        </div>
       </header>
       <div>
         <div className="content-col">{content}</div>
