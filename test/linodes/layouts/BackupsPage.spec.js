@@ -179,6 +179,31 @@ describe('linodes/layouts/BackupsPage', () => {
       .to.have.property('dayOfWeek').that.equals('Wednesday');
   });
 
+  it('submits new backup schedule to the API', async () => {
+    const page = shallow(
+      <BackupsPage
+        dispatch={dispatch}
+        linodes={linodes}
+        params={{ linodeId: 'linode_1234' }}
+        backups={backups}
+      />);
+    await new Promise(r => setTimeout(r, 0));
+    const schedule = page.find('.backup-schedule');
+    dispatch.reset();
+    schedule.find('.btn-primary').simulate('click');
+    await new Promise(r => setTimeout(r, 0));
+    expect(dispatch.calledOnce).to.equal(true);
+    const func = dispatch.firstCall.args[0];
+    expect(func).to.be.a('function');
+    dispatch.reset();
+    const fetchStub = sandbox.stub(fetch, 'fetch').returns({
+      json: () => {},
+    });
+    await func(dispatch, () => ({ authentication: { token: 'token' } }));
+    expect(fetchStub.calledOnce).to.equal(true);
+    expect(fetchStub.calledWith('token', '/linodes/linode_1234')).to.equal(true);
+  });
+
   it('renders the latest Backup', () => {
     const page = shallow(
       <BackupsPage
