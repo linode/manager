@@ -144,8 +144,9 @@ describe('linodes/layouts/BackupsPage', () => {
       .to.equal('Schedule<HelpButton />');
     expect(schedule.find('#schedule')).to.exist;
     expect(schedule.find('#dow')).to.exist;
-    expect(schedule.contains(<button className="btn btn-primary" disabled>Save</button>))
-      .to.equal(true);
+    expect(schedule.find('button.btn-primary')).to.exist;
+    expect(schedule.find('button.btn-primary').text())
+      .to.equal('Save');
     expect(schedule.find('.btn-danger-outline').at(0).text())
       .to.equal('Cancel backups');
   });
