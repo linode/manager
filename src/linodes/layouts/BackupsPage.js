@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { push } from 'react-router-redux';
-import { fetchLinode, fetchLinodes } from '~/actions/api/linodes';
+import { fetchLinode, fetchLinodes, putLinode } from '~/actions/api/linodes';
 import { showModal, hideModal } from '~/actions/modal';
 import { getNextBackup } from '~/linodes/components/Linode';
 import {
@@ -22,6 +22,7 @@ export class BackupsPage extends Component {
     super();
     this.componentDidMount = this.componentDidMount.bind(this);
     this.getLinode = this.getLinode.bind(this);
+    this.saveSchedule = this.saveSchedule.bind(this);
     this.enableLinodeBackup = this.enableLinodeBackup.bind(this);
     this.cancelLinodeBackup = this.cancelLinodeBackup.bind(this);
     this.renderCancelBackupModal = this.renderCancelBackupModal.bind(this);
@@ -71,6 +72,23 @@ export class BackupsPage extends Component {
     const { linodes } = this.props.linodes;
     const { linodeId } = this.props.params;
     return linodes[linodeId];
+  }
+
+  async saveSchedule() {
+    const { dispatch } = this.props;
+    this.setState({ loading: true });
+    await dispatch(putLinode({
+      id: this.getLinode().id,
+      data: {
+        backups: {
+          schedule: {
+            window: this.state.schedule.timeOfDay,
+            day: this.state.schedule.dayOfWeek,
+          },
+        },
+      },
+    }));
+    this.setState({ loading: false });
   }
 
   async restore(target, backup, override = false) {
@@ -342,6 +360,7 @@ export class BackupsPage extends Component {
             <button
               className="btn btn-primary"
               disabled={loading}
+              onClick={this.saveSchedule}
             >Save</button>
             <button
               className="btn btn-danger-outline"
