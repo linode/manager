@@ -7,7 +7,6 @@ import * as fetch from '~/fetch';
 import { testLinode } from '~/../test/data';
 import { BackupsPage } from '~/linodes/layouts/BackupsPage';
 import { UPDATE_LINODE } from '~/actions/api/linodes';
-import * as actions from '~/linodes/actions/detail/backups';
 import { SHOW_MODAL, hideModal } from '~/actions/modal';
 import { SET_ERROR } from '~/actions/errors';
 
@@ -145,13 +144,13 @@ describe('linodes/layouts/BackupsPage', () => {
       .to.equal('Schedule<HelpButton />');
     expect(schedule.find('#schedule')).to.exist;
     expect(schedule.find('#dow')).to.exist;
-    expect(schedule.contains(<button className="btn btn-primary">Save</button>))
+    expect(schedule.contains(<button className="btn btn-primary" disabled>Save</button>))
       .to.equal(true);
     expect(schedule.find('.btn-danger-outline').at(0).text())
       .to.equal('Cancel backups');
   });
 
-  it('dispatches a SET_TIME_OF_DAY action when time of day changes', () => {
+  it('updates state when time of day changes', () => {
     const page = shallow(
       <BackupsPage
         dispatch={dispatch}
@@ -160,14 +159,12 @@ describe('linodes/layouts/BackupsPage', () => {
         backups={backups}
       />);
     const schedule = page.find('.backup-schedule');
-    dispatch.reset();
-    schedule.find('#schedule').simulate('change', { target: { value: '0200-0400' } });
-    expect(dispatch.calledOnce).to.equal(true);
-    expect(dispatch.firstCall.args[0])
-      .to.deep.equal(actions.setTimeOfDay('0200-0400'));
+    schedule.find('#schedule').simulate('change', { target: { value: 'W4' } });
+    expect(page.state('schedule'))
+      .to.have.property('timeOfDay').that.equals('W4');
   });
 
-  it('dispatches a SET_DAY_OF_WEEK action when day of week changes', () => {
+  it('updates state when day of week changes', () => {
     const page = shallow(
       <BackupsPage
         dispatch={dispatch}
@@ -176,11 +173,9 @@ describe('linodes/layouts/BackupsPage', () => {
         backups={backups}
       />);
     const schedule = page.find('.backup-schedule');
-    dispatch.reset();
-    schedule.find('#dow').simulate('change', { target: { value: 'monday' } });
-    expect(dispatch.calledOnce).to.equal(true);
-    expect(dispatch.firstCall.args[0])
-      .to.deep.equal(actions.setDayOfWeek('monday'));
+    schedule.find('#dow').simulate('change', { target: { value: 'Wednesday' } });
+    expect(page.state('schedule'))
+      .to.have.property('dayOfWeek').that.equals('Wednesday');
   });
 
   it('renders the latest Backup', () => {
@@ -195,7 +190,7 @@ describe('linodes/layouts/BackupsPage', () => {
     expect(b.find('Backup').length).to.equal(2);
   });
 
-  it('dispatches a SELECT_BACKUP action when one is clicked', () => {
+  it('updates state when a backup is clicked', () => {
     const page = mount(
       <BackupsPage
         dispatch={dispatch}
@@ -206,12 +201,10 @@ describe('linodes/layouts/BackupsPage', () => {
     const b = page.find('.backups');
     dispatch.reset();
     b.find('.backup').first().simulate('click');
-    expect(dispatch.calledOnce).to.equal(true);
-    expect(dispatch.firstCall.args[0])
-      .to.deep.equal(actions.selectBackup('backup_54778593'));
+    expect(page.state('selectedBackup')).to.equal('backup_54778593');
   });
 
-  it('dispatches a SELECT_TARGET_LINODE action when "existing linode" is checked', () => {
+  it('updates state when "existing linode" is checked', () => {
     const page = shallow(
       <BackupsPage
         dispatch={dispatch}
@@ -222,12 +215,10 @@ describe('linodes/layouts/BackupsPage', () => {
     const existing = page.find('.restore .radio').last().find('input');
     dispatch.reset();
     existing.simulate('change', { target: { checked: true } });
-    expect(dispatch.calledOnce).to.equal(true);
-    expect(dispatch.firstCall.args[0])
-      .to.deep.equal(actions.selectTargetLinode('linode_1234'));
+    expect(page.state('targetLinode')).to.equal('linode_1234');
   });
 
-  it('dispatches a SELECT_TARGET_LINODE action when "this linode" is checked', () => {
+  it('updates state when "this linode" is checked', () => {
     const page = shallow(
       <BackupsPage
         dispatch={dispatch}
@@ -238,12 +229,10 @@ describe('linodes/layouts/BackupsPage', () => {
     const existing = page.find('.restore .radio').at(0).find('input');
     dispatch.reset();
     existing.simulate('change', { target: { checked: true } });
-    expect(dispatch.calledOnce).to.equal(true);
-    expect(dispatch.firstCall.args[0])
-      .to.deep.equal(actions.selectTargetLinode('linode_1234'));
+    expect(page.state('targetLinode')).to.equal('linode_1234');
   });
 
-  it('dispatches a SELECT_TARGET_LINODE action when "new linode" is checked', () => {
+  it('updates state when "new linode" is checked', () => {
     const page = mount(
       <BackupsPage
         dispatch={dispatch}
@@ -254,12 +243,10 @@ describe('linodes/layouts/BackupsPage', () => {
     const existing = page.find('.restore .radio').at(1).find('input');
     dispatch.reset();
     existing.simulate('change', { target: { checked: true } });
-    expect(dispatch.calledOnce).to.equal(true);
-    expect(dispatch.firstCall.args[0])
-      .to.deep.equal(actions.selectTargetLinode(''));
+    expect(page.state('targetLinode')).to.equal('');
   });
 
-  it('dispatches a SELECT_TARGET_LINODE action when a Linode is selected', () => {
+  it('updates state when a Linode is selected', () => {
     const page = mount(
       <BackupsPage
         dispatch={dispatch}
@@ -270,9 +257,7 @@ describe('linodes/layouts/BackupsPage', () => {
     const select = page.find('.restore').find('select');
     dispatch.reset();
     select.simulate('change', { target: { value: 'linode_1236' } });
-    expect(dispatch.calledOnce).to.equal(true);
-    expect(dispatch.firstCall.args[0])
-      .to.deep.equal(actions.selectTargetLinode('linode_1236'));
+    expect(page.state('targetLinode')).to.equal('linode_1236');
   });
 
   it('restores backups when asked to', async () => {

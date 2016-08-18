@@ -8,8 +8,8 @@ import {
   cancelBackup,
   fetchBackups,
   takeBackup,
+  restoreBackup,
 } from '~/actions/api/backups';
-import { restoreBackup } from '~/linodes/actions/detail/backups';
 import { connect } from 'react-redux';
 import HelpButton from '~/components/HelpButton';
 import Backup from '~/linodes/components/Backup';

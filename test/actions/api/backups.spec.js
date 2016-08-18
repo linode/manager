@@ -6,9 +6,11 @@ import {
   enableBackup,
   cancelBackup,
   takeBackup,
+  restoreBackup,
 } from '~/actions/api/backups';
 import { UPDATE_LINODE, UPDATE_BACKUP, UPDATE_BACKUPS } from '~/actions/api/linodes';
 import * as fetch from '~/fetch';
+import { testLinode } from '~/../test/data';
 
 describe('actions/api/backups', async () => {
   const auth = { token: 'token' };
@@ -150,5 +152,46 @@ describe('actions/api/backups', async () => {
       linodes: 'linode_1',
       backup: takeBackupResponse,
     })).to.equal(true);
+  });
+
+  describe('restoreBackup', () => {
+    const sandbox = sinon.sandbox.create();
+
+    afterEach(() => {
+      sandbox.restore();
+    });
+
+    const state = {
+      authentication: { token: 'token' },
+      api: {
+        linodes: {
+          linodes: { [testLinode.id]: testLinode },
+        },
+      },
+    };
+
+    it('returns a function', () => {
+      const func = restoreBackup('linode_1234', 'linode_1235', 'backup_1234');
+      expect(func).to.be.a('function');
+    });
+
+    it('performs the HTTP request', async () => {
+      const fetchStub = sandbox.stub(fetch, 'fetch')
+        .returns({ json: () => 'asdf' });
+      const getState = sinon.stub().returns(state);
+      const dispatch = sinon.spy();
+      const func = restoreBackup('linode_1234', 'linode_1235', 'backup_1234');
+      expect(await func(dispatch, getState)).to.equal('asdf');
+      expect(dispatch.callCount).to.equal(0);
+      expect(fetchStub.calledOnce).to.equal(true);
+      expect(fetchStub.calledWith(state.authentication.token,
+        '/linodes/linode_1234/backups/backup_1234/restore'));
+      const data = fetchStub.firstCall.args[2];
+      expect(data.method).to.equal('POST');
+      expect(JSON.parse(data.body)).to.deep.equal({
+        linode: 'linode_1235',
+        overwrite: false,
+      });
+    });
   });
 });
