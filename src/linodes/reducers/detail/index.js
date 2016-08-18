@@ -6,7 +6,6 @@ import {
   TOGGLE_LOADING,
   SET_ERRORS,
 } from '../../actions/detail/index';
-import backups from './backups';
 
 const defaultState = {
   editing: false,
@@ -46,5 +45,4 @@ export function detail(state = defaultState, action) {
 
 export default combineReducers({
   index: detail,
-  backups,
 });
