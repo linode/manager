@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { push } from 'react-router-redux';
-import { fetchLinode, fetchLinodes } from '~/actions/api/linodes';
+import { fetchLinode, fetchLinodes, putLinode } from '~/actions/api/linodes';
 import { showModal, hideModal } from '~/actions/modal';
 import { getNextBackup } from '~/linodes/components/Linode';
 import {
@@ -8,14 +8,8 @@ import {
   cancelBackup,
   fetchBackups,
   takeBackup,
-} from '~/actions/api/backups';
-import {
-  selectBackup,
-  selectTargetLinode,
-  setTimeOfDay,
-  setDayOfWeek,
   restoreBackup,
-} from '~/linodes/actions/detail/backups';
+} from '~/actions/api/backups';
 import { connect } from 'react-redux';
 import HelpButton from '~/components/HelpButton';
 import Backup from '~/linodes/components/Backup';
@@ -27,8 +21,8 @@ export class BackupsPage extends Component {
   constructor() {
     super();
     this.componentDidMount = this.componentDidMount.bind(this);
-    this.componentDidUpdate = this.componentDidMount.bind(this);
     this.getLinode = this.getLinode.bind(this);
+    this.saveSchedule = this.saveSchedule.bind(this);
     this.enableLinodeBackup = this.enableLinodeBackup.bind(this);
     this.cancelLinodeBackup = this.cancelLinodeBackup.bind(this);
     this.renderCancelBackupModal = this.renderCancelBackupModal.bind(this);
@@ -40,29 +34,61 @@ export class BackupsPage extends Component {
     this.renderLastSnapshot = this.renderLastSnapshot.bind(this);
     this.renderModal = this.renderModal.bind(this);
     this.restore = this.restore.bind(this);
-    this.state = { loading: false };
+    this.state = {
+      loading: true,
+      schedule: {
+        dayOfWeek: 'Monday',
+        timeOfDay: '000-0200',
+      },
+      selectedBackup: null,
+      targetLinode: '',
+    };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const { dispatch, linodes } = this.props;
-    const linode = this.getLinode();
+    if (linodes.totalPages === -1) {
+      await dispatch(fetchLinodes());
+    }
+    let linode = this.getLinode();
     if (!linode) {
       const { linodeId } = this.props.params;
-      dispatch(fetchLinode(linodeId));
-    } else {
-      if (linode._backups.totalPages === -1) {
-        dispatch(fetchBackups(0, linode.id));
-      }
-      if (linodes.totalPages === -1) {
-        dispatch(fetchLinodes());
-      }
+      await dispatch(fetchLinode(linodeId));
     }
+    linode = this.getLinode();
+    if (linode._backups.totalPages === -1) {
+      await dispatch(fetchBackups(0, linode.id));
+    }
+    this.setState({
+      schedule: {
+        dayOfWeek: linode.backups.schedule.day,
+        timeOfDay: linode.backups.schedule.window,
+      },
+      loading: false,
+    });
   }
 
   getLinode() {
     const { linodes } = this.props.linodes;
     const { linodeId } = this.props.params;
     return linodes[linodeId];
+  }
+
+  async saveSchedule() {
+    const { dispatch } = this.props;
+    this.setState({ loading: true });
+    await dispatch(putLinode({
+      id: this.getLinode().id,
+      data: {
+        backups: {
+          schedule: {
+            window: this.state.schedule.timeOfDay,
+            day: this.state.schedule.dayOfWeek,
+          },
+        },
+      },
+    }));
+    this.setState({ loading: false });
   }
 
   async restore(target, backup, override = false) {
@@ -170,13 +196,13 @@ export class BackupsPage extends Component {
 
   renderRestore() {
     const thisLinode = this.getLinode();
-    const { targetLinode } = this.props.backups;
-    const { linodes, dispatch } = this.props;
+    const { targetLinode } = this.state;
+    const { linodes } = this.props;
     const existingLinodeSelect = (
       <select
         className="form-control"
         value={targetLinode}
-        onChange={e => dispatch(selectTargetLinode(e.target.value))}
+        onChange={e => this.setState({ targetLinode: e.target.value })}
       >
         <option value={''}>Pick a Linode...</option>
         {Object.values(linodes.linodes).filter(l => l.id !== thisLinode.id)
@@ -185,7 +211,7 @@ export class BackupsPage extends Component {
     );
 
     const makeOnChange = (target) => (e) => {
-      if (e.target.checked) dispatch(selectTargetLinode(target));
+      if (e.target.checked) this.setState({ targetLinode: target });
     };
 
     const restoreData = [
@@ -222,7 +248,7 @@ export class BackupsPage extends Component {
   renderBackups() {
     const thisLinode = this.getLinode();
     const backups = thisLinode._backups && Object.values(thisLinode._backups.backups);
-    const { selectedBackup, targetLinode } = this.props.backups;
+    const { selectedBackup, targetLinode } = this.state;
     if (!backups || backups.length === 0) {
       const next = getNextBackup(thisLinode);
       return (
@@ -232,7 +258,6 @@ export class BackupsPage extends Component {
       );
     }
 
-    const { dispatch } = this.props;
     return (
       <div>
         <div className="row backups">
@@ -241,7 +266,7 @@ export class BackupsPage extends Component {
               <Backup
                 backup={backup}
                 selected={selectedBackup}
-                onSelect={() => dispatch(selectBackup(backup.id))}
+                onSelect={() => this.setState({ selectedBackup: backup.id })}
               />
             </div>
            )}
@@ -258,7 +283,8 @@ export class BackupsPage extends Component {
 
   renderSchedule() {
     const linode = this.getLinode();
-    const { dayOfWeek, timeOfDay } = this.props.backups;
+    const { dayOfWeek, timeOfDay } = this.state.schedule;
+    const { loading } = this.state;
     const { dispatch } = this.props;
     return (
       <div className="backup-schedule">
@@ -272,20 +298,26 @@ export class BackupsPage extends Component {
               value={timeOfDay}
               className="form-control vcenter"
               id="schedule"
-              onChange={e => dispatch(setTimeOfDay(e.target.value))}
+              disabled={loading}
+              onChange={e => this.setState({
+                schedule: {
+                  ...this.state.schedule,
+                  timeOfDay: e.target.value,
+                },
+              })}
             >
-              <option value="0000-0200">12-2 AM</option>
-              <option value="0200-0400">2-4 AM</option>
-              <option value="0400-0600">4-6 AM</option>
-              <option value="0600-0800">6-8 AM</option>
-              <option value="0800-1000">8-10 AM</option>
-              <option value="1000-1200">10 AM-12 PM</option>
-              <option value="1200-1400">12-2 PM</option>
-              <option value="1400-1600">2-4 PM</option>
-              <option value="1600-1800">4-6 PM</option>
-              <option value="1800-2000">6-8 PM</option>
-              <option value="2000-2200">8-10 PM</option>
-              <option value="2200-0000">10 PM-12 AM</option>
+              <option value="W0">12-2 AM</option>
+              <option value="W2">2-4 AM</option>
+              <option value="W4">4-6 AM</option>
+              <option value="W6">6-8 AM</option>
+              <option value="W8">8-10 AM</option>
+              <option value="W10">10 AM-12 PM</option>
+              <option value="W12">12-2 PM</option>
+              <option value="W14">2-4 PM</option>
+              <option value="W16">4-6 PM</option>
+              <option value="W18">6-8 PM</option>
+              <option value="W20">8-10 PM</option>
+              <option value="W22">10 PM-12 AM</option>
             </select>
           </div>
         </div>
@@ -298,15 +330,24 @@ export class BackupsPage extends Component {
               value={dayOfWeek}
               className="form-control vcenter"
               id="dow"
-              onChange={e => dispatch(setDayOfWeek(e.target.value))}
+              disabled={loading}
+              onChange={e => this.setState({
+                schedule: {
+                  ...this.state.schedule,
+                  dayOfWeek: e.target.value,
+                },
+              })}
             >
-              <option value="sunday">Sunday</option>
-              <option value="monday">Monday</option>
-              <option value="tuesday">Tuesday</option>
-              <option value="wednesday">Wednesday</option>
-              <option value="thursday">Thursday</option>
-              <option value="friday">Friday</option>
-              <option value="saturday">Saturday</option>
+              {dayOfWeek === 'Scheduling' ?
+                <option value="Scheduling">TBD</option>
+                : null}
+              <option value="Sunday">Sunday</option>
+              <option value="Monday">Monday</option>
+              <option value="Tuesday">Tuesday</option>
+              <option value="Wednesday">Wednesday</option>
+              <option value="Thursday">Thursday</option>
+              <option value="Friday">Friday</option>
+              <option value="Saturday">Saturday</option>
             </select>
           </div>
         </div>
@@ -318,9 +359,12 @@ export class BackupsPage extends Component {
             </p>
             <button
               className="btn btn-primary"
+              disabled={loading}
+              onClick={this.saveSchedule}
             >Save</button>
             <button
               className="btn btn-danger-outline"
+              disabled={loading}
               onClick={
                 () => dispatch(showModal(
                   'Cancel backups',
@@ -340,8 +384,7 @@ export class BackupsPage extends Component {
     if (backups && backups.length !== 0) {
       const snapshots = backups.filter(b => b.type === 'snapshot');
       const snapshot = snapshots && snapshots[0];
-      const { selectedBackup } = this.props.backups;
-      const { dispatch } = this.props;
+      const { selectedBackup } = this.state;
       if (snapshot) {
         return (
           <div className="row snapshot-details">
@@ -355,7 +398,7 @@ export class BackupsPage extends Component {
               <Backup
                 backup={snapshot}
                 selected={selectedBackup}
-                onSelect={() => dispatch(selectBackup(snapshot.id))}
+                onSelect={() => this.setState({ selectedBackup: snapshot.id })}
               />
             </div>
           </div>
@@ -418,17 +461,13 @@ export class BackupsPage extends Component {
 BackupsPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   linodes: PropTypes.object.isRequired,
-  backups: PropTypes.object.isRequired,
   params: PropTypes.shape({
     linodeId: PropTypes.string.isRequired,
   }).isRequired,
 };
 
 function select(state) {
-  return {
-    linodes: state.api.linodes,
-    backups: state.linodes.detail.backups,
-  };
+  return { linodes: state.api.linodes };
 }
 
 export default connect(select)(BackupsPage);
