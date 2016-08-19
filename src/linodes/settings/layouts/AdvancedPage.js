@@ -1,35 +1,30 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
+import HelpButton from '~/components/HelpButton';
+import ConfigPanel from '~/linodes/settings/components/ConfigPanel';
 
-import { getLinode, loadLinode } from '~/linodes/layouts/LinodeDetailPage';
-
-export class AdvancedPage extends Component {
-  constructor() {
-    super();
-    this.getLinode = getLinode.bind(this);
-    this.loadLinode = loadLinode.bind(this);
-  }
-
-  render() {
-    const profileModule = '[Profile Module Here]';
-    const diskModule = '[Disk Module Here]';
-    return (
-      <div>
-        <div className="content-col">
-          <span className="text-danger">WARNING! </span>
-          Changes to this section can force Linode to skip some usability optimizations.
-        </div>
-        {profileModule}
-        <hr />
-        {diskModule}
-      </div >
-    );
-  }
+export function AdvancedPage(props) {
+  const diskModule = (<h3>Disks<HelpButton to="http://example.org" /></h3>);
+  return (
+    <div>
+      <div className="content-col">
+        <span className="text-danger">WARNING! </span>
+        This section is intended for advanced users. Proceed with caution.
+      </div>
+      <ConfigPanel params={props.params} />
+      <hr />
+      {diskModule}
+      TODO
+    </div >
+  );
 }
 
 AdvancedPage.propTypes = {
   linodes: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
+  params: PropTypes.shape({
+    linodeId: PropTypes.string,
+  }),
 };
 
 function select(state) {
@@ -37,4 +32,3 @@ function select(state) {
 }
 
 export default connect(select)(AdvancedPage);
-

@@ -562,6 +562,19 @@ table {
         th:last-of-type {
             border-right: $border;
         }
+
+        &.clear-thead {
+            background-color: transparent;
+            border: 0;
+            th {
+                border: 0;
+                border-top: 0;
+                border-bottom: 0;
+            }
+            th:last-of-type {
+                border-right: 0;
+            }
+        }
     }
 
     tbody {
@@ -573,6 +586,11 @@ table {
             
             &:not(.selected) {
                 background: $white;
+            }
+        }
+        &.hard-border {
+            td {
+                border: 0;
             }
         }
     }
@@ -613,6 +631,14 @@ table {
         background: $yellow;
         border-color: $dark-gray;
         color: $light-black;
+    }
+}
+
+.action-link {
+    color: $light-black;
+    &:hover {
+        color: $dark-blue;
+        text-decoration: none;
     }
 }
 
