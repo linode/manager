@@ -157,7 +157,7 @@ describe('linodes/layouts/LinodeGeneral', async () => {
     expect(page.find('.linode-distro').at(0)
       .find('.col-sm-8')
       .at(0)
-      .text()).to.equal(testLinode.distribution.label);
+      .text()).to.equal(testLinode.distribution.vendor);
   });
 
   it('renders ssh input elements', () => {

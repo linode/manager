@@ -40,7 +40,7 @@ export function renderPlanStyle(services) {
 export function renderDistroStyle(linode) {
   return (
     <span className="distro-style">
-      {linode.distribution.label}
+      {linode.distribution.vendor}
       <img
         src={distroAssets[linode.distribution.vendor]
           ? distroAssets[linode.distribution.vendor] : '//placehold.it/50x50'}
