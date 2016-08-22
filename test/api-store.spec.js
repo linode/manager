@@ -43,6 +43,7 @@ describe('api-store', () => {
         actions: {
           updateItems: 'UPDATE_FOOBAZES',
           updateItem: 'UPDATE_FOOBAZ',
+          deleteItem: 'DELETE_FOOBAZ',
         },
       },
     },
@@ -217,7 +218,7 @@ describe('api-store', () => {
 
       const result = s(state, {
         type: config.actions.deleteItem,
-        id: 'foobar_1',
+        foobars: 'foobar_1',
       });
 
       expect(result)
@@ -313,6 +314,29 @@ describe('api-store', () => {
       .which.has.property('foobazes')
       .which.has.property('foobaz_123')
       .which.has.property('test').that.equals('hello world');
+  });
+
+  it('should handle subresource delete', () => {
+    const s = makeApiList(config);
+
+    const state = s(undefined, {
+      type: config.actions.updateItems,
+      response: mockFoobarsResponse,
+    });
+    deepFreeze(state);
+
+    const result = s(state, {
+      type: config.subresources.foobazes.actions.deleteItem,
+      foobaz: 'foobaz_123',
+      foobars: 'foobar_1',
+    });
+
+    expect(result)
+      .to.have.property('foobars')
+      .which.has.property('foobar_1')
+      .which.has.property('foobazes')
+      .which.has.property('foobazes')
+      .which./* does */not.have.property('foobaz_123');
   });
 
   describe('api-store/makeFetchPage', () => {
@@ -516,7 +540,9 @@ describe('api-store', () => {
     it('performs the API request', async () => {
       const dispatch = getDispatch();
       const fetchStub = getFetchStub(emptyResponse);
-      const getState = getGetState();
+      const getState = getGetState({
+        api: { foobars: { totalPages: -1, foobars: { } } },
+      });
       const f = makeDeleteItem(config);
       const p = f('foobar_1');
 
@@ -526,7 +552,35 @@ describe('api-store', () => {
         auth.token, '/foobars/foobar_1', { method: 'DELETE' })).to.equal(true);
       expect(dispatch.calledWith({
         type: config.actions.deleteItem,
-        id: 'foobar_1',
+        foobars: 'foobar_1',
+      })).to.equal(true);
+    });
+
+    it('supports subresources', async () => {
+      const dispatch = getDispatch();
+      const fetchStub = getFetchStub(emptyResponse);
+      const getState = getGetState({
+        api: { foobars: { totalPages: -1, foobars: {
+          foobar_1: {
+            foobazes: {
+              totalPages: -1,
+              foobazes: { },
+            },
+          },
+        } } },
+      });
+      const f = makeDeleteItem(config, 'foobazes');
+      const p = f('foobar_1', 'foobaz_1');
+
+      await p(dispatch, getState);
+
+      expect(fetchStub.calledWith(
+        auth.token, '/foobars/foobar_1/foobazes/foobaz_1',
+        { method: 'DELETE' })).to.equal(true);
+      expect(dispatch.calledWith({
+        type: config.subresources.foobazes.actions.deleteItem,
+        foobars: 'foobar_1',
+        foobazes: 'foobaz_1',
       })).to.equal(true);
     });
   });

@@ -118,7 +118,9 @@ describe('actions/api/linodes', async () => {
   it('should call delete linode endpoint', async () => {
     const dispatch = getDispatch();
     const fetchStub = getFetchStub(emptyResponse);
-    const getState = getGetState();
+    const getState = getGetState({
+      api: { linodes: { totalPages: -1, linodes: { } } },
+    });
 
     const f = deleteLinode('linode_1');
 
@@ -128,7 +130,7 @@ describe('actions/api/linodes', async () => {
       auth.token, '/linodes/linode_1', { method: 'DELETE' })).to.equal(true);
     expect(dispatch.calledWith({
       type: DELETE_LINODE,
-      id: 'linode_1',
+      linodes: 'linode_1',
     })).to.equal(true);
   });
 });
