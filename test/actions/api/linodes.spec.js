@@ -7,10 +7,12 @@ import {
   UPDATE_LINODE,
   UPDATE_LINODES,
   DELETE_LINODE,
+  DELETE_LINODE_CONFIG,
   fetchLinodes,
   fetchLinode,
   fetchLinodeUntil,
   deleteLinode,
+  deleteLinodeConfig,
 } from '~/actions/api/linodes';
 import * as fetch from '~/fetch';
 
@@ -131,6 +133,56 @@ describe('actions/api/linodes', async () => {
     expect(dispatch.calledWith({
       type: DELETE_LINODE,
       linodes: 'linode_1',
+    })).to.equal(true);
+  });
+});
+
+describe('actions/linodes/configs', async () => {
+  const sandbox = sinon.sandbox.create();
+
+  afterEach(() => {
+    sandbox.restore();
+  });
+
+  const auth = { token: 'token' };
+  const getGetState = (state = {}) => sandbox.stub().returns({
+    authentication: auth,
+    ...state,
+  });
+  const getDispatch = () => sandbox.spy();
+  const getFetchStub = (rsp) => sandbox.stub(fetch, 'fetch').returns({ json() { return rsp; } });
+
+  it('should return function with deleteLinodeConfig', async () => {
+    const f = deleteLinodeConfig('linode_1', 'config_1');
+
+    expect(f).to.be.a('function');
+  });
+
+  const emptyResponse = {};
+
+  it('should call delete linode config endpoint', async () => {
+    const dispatch = getDispatch();
+    const fetchStub = getFetchStub(emptyResponse);
+    const getState = getGetState({
+      api: {
+        linodes: {
+          linodes: {
+            linode_1: { _configs: { configs: {}, totalPages: -1 } },
+          },
+        },
+      },
+    });
+
+    const f = deleteLinodeConfig('linode_1', 'config_1');
+
+    await f(dispatch, getState);
+
+    expect(fetchStub.calledWith(
+      auth.token, '/linodes/linode_1/configs/config_1', { method: 'DELETE' })).to.equal(true);
+    expect(dispatch.calledWith({
+      type: DELETE_LINODE_CONFIG,
+      linodes: 'linode_1',
+      configs: 'config_1',
     })).to.equal(true);
   });
 });

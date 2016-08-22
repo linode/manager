@@ -3,13 +3,17 @@ import sinon from 'sinon';
 import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 
+import * as fetch from '~/fetch';
 import { ConfigPanel } from '~/linodes/settings/components/ConfigPanel';
+import { DELETE_LINODE_CONFIG } from '~/actions/api/linodes';
 import { linodes } from '~/../test/data';
 
 describe('linodes/settings/components/ConfigPanel', () => {
   const sandbox = sinon.sandbox.create();
+  const dispatch = sandbox.spy();
 
   afterEach(() => {
+    dispatch.reset();
     sandbox.restore();
   });
 
@@ -115,5 +119,46 @@ describe('linodes/settings/components/ConfigPanel', () => {
       .at(1)
       .text())
       .to.equal('Delete');
+  });
+
+  it('attempts to delete config', async () => {
+    const panel = mount(
+      <ConfigPanel
+        params={{ linodeId: 'linode_1234' }}
+        dispatch={dispatch}
+        linodes={linodes}
+      />
+    );
+
+    const actionBtn = panel.find('.action-link');
+    actionBtn.simulate('click');
+    expect(dispatch.calledOnce).to.equal(true);
+    const fn = dispatch.firstCall.args[0];
+    // Assert that fn is a function that invokes DELETE /linodes/linode_1234/configs/config_12345
+    const fetchStub = sandbox.stub(fetch, 'fetch').returns({
+      json: () => {},
+    });
+    dispatch.reset();
+    await fn(dispatch, () => ({
+      authentication: { token: 'token' },
+      api: {
+        linodes: {
+          linodes: {
+            linode_1234: {
+              _configs: {
+                configs: {
+                  config_12345: { },
+                },
+                totalPages: -1,
+              },
+            },
+          },
+        },
+      },
+    }));
+    expect(fetchStub.calledOnce).to.equal(true);
+    expect(fetchStub.firstCall.args[1]).to.equal('/linodes/linode_1234/configs/config_12345');
+    expect(dispatch.calledOnce).to.equal(true);
+    expect(dispatch.firstCall.args[0].type).to.equal(DELETE_LINODE_CONFIG);
   });
 });

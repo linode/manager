@@ -72,11 +72,12 @@ export const deleteLinode = makeDeleteItem(linodeConfig);
 export const putLinode = makePutItem(linodeConfig);
 export const createLinode = makeCreateItem(linodeConfig);
 
-export const fetchLinodeDisk = makeFetchItem(linodeConfig, 'disks');
+export const fetchLinodeDisk = makeFetchItem(linodeConfig, '_disks');
 export const fetchLinodeDisks = makeFetchPage(linodeConfig, '_disks');
 export const fetchAllLinodeDisks = makeFetchAll(linodeConfig, fetchLinodeDisks, '_disks');
 
-export const fetchLinodeConfig = makeFetchItem(linodeConfig, 'configs');
+export const deleteLinodeConfig = makeDeleteItem(linodeConfig, '_configs');
+export const fetchLinodeConfig = makeFetchItem(linodeConfig, '_configs');
 export const fetchLinodeConfigs = makeFetchPage(linodeConfig, '_configs');
 export const fetchAllLinodeConfigs = makeFetchAll(linodeConfig, fetchLinodeConfigs, '_configs');
 

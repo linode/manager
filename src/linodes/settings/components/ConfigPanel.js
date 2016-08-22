@@ -1,11 +1,15 @@
 import React, { Component, PropTypes } from 'react';
-import { fetchLinode, fetchAllLinodeConfigs } from '~/actions/api/linodes';
+import {
+  fetchLinode,
+  fetchAllLinodeConfigs,
+  deleteLinodeConfig,
+} from '~/actions/api/linodes';
 import HelpButton from '~/components/HelpButton';
 import { Link } from 'react-router';
 import { getLinode, loadLinode } from '~/linodes/layouts/LinodeDetailPage';
 import { connect } from 'react-redux';
 
-function configTable(linode, configs) {
+function configContent(linode, configs, dispatch) {
   if (!linode && linode._configs.totalPages === -1) {
     return null;
   }
@@ -27,8 +31,24 @@ function configTable(linode, configs) {
       <tbody className="hard-border">
         {configs.map(config =>
           <tr>
-            <td><Link to={`/linodes/${linode.id}/configs/${config.id}`}>{config.label}</Link></td>
-            <td><a href="" className="action-link pull-right">Delete</a></td>
+            <td>
+              <Link
+                to={`/linodes/${linode.id}/configs/${config.id}`}
+              >
+                {config.label}
+              </Link>
+            </td>
+            <td>
+              <a
+                className="delete-button"
+                onClick={e => {
+                  e.preventDefault();
+                  dispatch(deleteLinodeConfig(linode.id, config.id));
+                }}
+                className="action-link pull-right"
+                href="#"
+              >Delete</a>
+            </td>
           </tr>
         )}
       </tbody>
@@ -59,7 +79,9 @@ export class ConfigPanel extends Component {
   render() {
     const linode = this.getLinode();
     const configs = Object.values(linode._configs.configs);
-    const content = configTable(linode, configs);
+    const { dispatch } = this.props;
+
+    const content = configContent(linode, configs, dispatch);
 
     return (
       <div className="linode-configs sm-col-12">
@@ -69,22 +91,25 @@ export class ConfigPanel extends Component {
           </div>
           <div className="col-sm-6 content-col right">
             <div className="input-group pull-right">
-              <a href={`/linodes/${linode.id}/configs/create`} className="btn btn-default">
+              <a
+                href={`/linodes/${linode.id}/configs/create`}
+                className="btn btn-default"
+              >
                 Add a config
               </a>
             </div>
           </div>
+          {content}
         </div>
-        {content}
       </div>
     );
   }
 }
 
 ConfigPanel.propTypes = {
+  dispatch: PropTypes.func.isRequired,
   linode: PropTypes.object.isRequired,
   linodeId: PropTypes.string.isRequired,
-  dispatch: PropTypes.func.isRequired,
   params: PropTypes.shape({
     linodeId: PropTypes.string,
   }),

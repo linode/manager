@@ -352,8 +352,12 @@ export function makeFetchUntil(config) {
 
 /**
  * Returns an action creator that deletes a single resource. The action
- * creator returns a thunk, and is invoked with the ID.
+ * creator returns a thunk, and is invoked with the IDs.
  * @param {Object} config - the top level config for this resource
+ * @param {string[]} subresources - a list of subresource names. The returned
+ * function will fetch pages of the bottom-most resource included in this list.
+ * Do not include the top-level resource. Use the name of the subresource as
+ * provided in the configuration, not the plural name given by the server.
  */
 export function makeDeleteItem(_config, ...subresources) {
   return (...ids) => async (dispatch, getState) => {

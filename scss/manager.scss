@@ -635,10 +635,9 @@ table {
 }
 
 .action-link {
-    color: $light-black;
+    color: $lightest-black;
     &:hover {
         color: $dark-blue;
-        text-decoration: none;
     }
 }
 
