@@ -89,10 +89,9 @@ export default function makeApiList(config, transform = d => d) {
   }
 
   function deleteOne(_config, state, action) {
-    const { id } = action;
     return {
       ...state,
-      [_config.plural]: _.omit(state[_config.plural], id),
+      [_config.plural]: _.omit(state[_config.plural], action[_config.plural]),
     };
   }
 
@@ -296,14 +295,12 @@ export function makeFetchItem(_config, ...subresources) {
     const { token } = getState().authentication;
     const refined = refineState(getState().api, _config, subresources, ids);
 
-    const { config, plurals } = refined;
-    let { path } = refined;
+    const { path, config, plurals } = refined;
 
     const id = ids[ids.length - 1];
     plurals[plurals.length - 1].push(id);
-    path += `/${id}`;
 
-    const response = await fetch(token, path);
+    const response = await fetch(token, `${path}/${id}`);
     const json = await response.json();
 
     dispatch({
@@ -358,13 +355,21 @@ export function makeFetchUntil(config) {
  * creator returns a thunk, and is invoked with the ID.
  * @param {Object} config - the top level config for this resource
  */
-export function makeDeleteItem(config) {
-  return id => async (dispatch, getState) => {
-    const state = getState();
-    const { token } = state.authentication;
-    dispatch({ type: config.actions.deleteItem, id });
-    const response = await fetch(token,
-      `/${config.plural}/${id}`, { method: 'DELETE' });
+export function makeDeleteItem(_config, ...subresources) {
+  return (...ids) => async (dispatch, getState) => {
+    const { token } = getState().authentication;
+    const refined = refineState(getState().api, _config, subresources, ids);
+    const { path, config, plurals } = refined;
+
+    const id = ids[ids.length - 1];
+    plurals[plurals.length - 1].push(id);
+
+    dispatch({
+      type: config.actions.deleteItem,
+      ...plurals.reduce((u, [plural, id]) =>
+        (id ? { ...u, [plural]: id } : u), { }),
+    });
+    const response = await fetch(token, `${path}/${id}`, { method: 'DELETE' });
     await response.json();
     // Note: do we want to do anything at this point?
   };

@@ -281,6 +281,7 @@ describe('linodes/create/layout/IndexPage', () => {
         linodes={{ linodes }}
       />
     );
+    await new Promise(a => setTimeout(a, 0));
     dispatch.reset();
     dispatch.onCall(0).throws({ json: () => ({ errors: [{ field: 'label', reason: error }] }) });
 

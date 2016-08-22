@@ -67,6 +67,7 @@ describe('linodes/layouts/RepairPage', () => {
         linodes={{ linodes: { } }}
         params={{ linodeId: 'linode_1234' }}
       />);
+    await new Promise(a => setTimeout(a, 0));
     const dispatched = dispatch.firstCall.args[0];
     // Assert that dispatched is a function that fetches a linode
     const fetchStub = sandbox.stub(fetch, 'fetch').returns({
