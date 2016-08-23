@@ -13,16 +13,6 @@ export const LinodeStates = {
   ],
 };
 
-export const countryMap = {
-  newark: 'us',
-  fremont: 'us',
-  atlanta: 'us',
-  dallas: 'us',
-  london: 'uk',
-  singapore: 'sg',
-  frankfurt: 'de',
-};
-
 export const regionMap = {
   'North America': ['newark'],
   Europe: ['frankfurt', 'london'],
