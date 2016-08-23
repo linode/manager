@@ -8,10 +8,10 @@ import _ from 'lodash';
 import { IndexPage } from '~/linodes/layouts/IndexPage';
 import * as linodeActions from '~/actions/api/linodes';
 import { TOGGLE_SELECTED, CHANGE_VIEW } from '~/linodes/actions/index';
-import * as fetch from '~/fetch';
 import { linodes } from '~/../test/data';
 import Dropdown from '~/components/Dropdown';
 import { SET_ERROR } from '~/actions/errors';
+import { expectRequest } from '@/common.js';
 
 describe('linodes/layouts/IndexPage', () => {
   const sandbox = sinon.sandbox.create();
@@ -41,17 +41,11 @@ describe('linodes/layouts/IndexPage', () => {
         linodes={testLinodes}
       />);
     expect(dispatch.calledOnce).to.equal(true);
-    const dispatched = dispatch.firstCall.args[0];
-    // Assert that dispatched is a function that fetches linodes
-    const fetchStub = sandbox.stub(fetch, 'fetch').returns({
-      json: () => {},
-    });
-    dispatch.reset();
-    await dispatched(dispatch, getState);
-    expect(fetchStub.calledOnce).to.equal(true);
-    expect(fetchStub.firstCall.args[1]).to.equal('/linodes?page=1');
-    expect(dispatch.calledOnce).to.equal(true);
-    expect(dispatch.firstCall.args[0].type).to.equal(linodeActions.UPDATE_LINODES);
+    const fn = dispatch.firstCall.args[0];
+    await expectRequest(fn, '/linodes?page=1', getState(),
+      d => expect(d.args[0])
+        .to.have.property('type')
+        .that.equals(linodeActions.UPDATE_LINODES));
   });
 
   it('handles errors from fetchLinodes', () => {
@@ -164,15 +158,8 @@ describe('linodes/layouts/IndexPage', () => {
       dispatch.reset();
       const actions = page.find(Dropdown).props().elements;
       actions.find(a => a.name === dropdown).action();
-      expect(dispatch.firstCall.args[0]).to.be.a('function');
-      // Assert that dispatch was given a function that does the API request
-      const dispatched = dispatch.firstCall.args[0];
-      const fetchStub = sandbox.stub(fetch, 'fetch').returns({
-        json: () => {},
-      });
-      await dispatched(dispatch, getState);
-      expect(fetchStub.calledOnce).to.equal(true);
-      expect(fetchStub.firstCall.args[1]).to.equal(`/linodes/linode_1234${endpoint}`);
+      const fn = dispatch.firstCall.args[0];
+      expectRequest(fn, `/linodes/linode_1234${endpoint}`, getState());
     };
   }
 

@@ -33,7 +33,7 @@
     "babel-preset-es2015": "^6.3.13",
     "babel-preset-react": "^6.3.13",
     "babel-preset-react-hmre": "^1.0.0",
-    "babel-root-import": "^3.2.2",
+    "babel-root-import": "^4.1.0",
     "chai": "^3.5.0",
     "coveralls": "^2.11.9",
     "cross-env": "^1.0.6",
