@@ -19,6 +19,7 @@ export const state = {
       newark: {
         id: 'newark',
         label: 'Newark, NJ',
+        country: 'us',
       },
     },
   },
@@ -82,6 +83,7 @@ export const testLinode = {
   datacenter: {
     id: 'newark',
     label: 'Newark, NJ',
+    country: 'us',
   },
   distribution: {
     id: 'linode/ubuntu15.10',
@@ -133,6 +135,7 @@ export const testLinode = {
         datacenter: {
           label: 'Newark, NJ',
           id: 'newark',
+          country: 'us',
         },
       },
       backup_54778596: {
@@ -144,6 +147,7 @@ export const testLinode = {
         datacenter: {
           label: 'Newark, NJ',
           id: 'newark',
+          country: 'us',
         },
       },
     },
