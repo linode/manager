@@ -13,8 +13,20 @@
         padding: 15px;
     }
 
-    
     .content-col:last-of-type {
         margin: 0;
     }
+
+    &.future {
+      opacity: 0.70;
+      cursor: default;
+      .future-disabled {
+        &:hover {
+          background-color: $white;
+        }
+      }
+    }
+
 }
+
+

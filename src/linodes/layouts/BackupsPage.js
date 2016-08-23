@@ -2,7 +2,6 @@ import React, { Component, PropTypes } from 'react';
 import { push } from 'react-router-redux';
 import { fetchLinode, fetchLinodes, putLinode } from '~/actions/api/linodes';
 import { showModal, hideModal } from '~/actions/modal';
-import { getNextBackup } from '~/linodes/components/Linode';
 import {
   enableBackup,
   cancelBackup,
@@ -246,16 +245,56 @@ export class BackupsPage extends Component {
   renderBackups() {
     const thisLinode = this.getLinode();
     const backups = thisLinode._backups && Object.values(thisLinode._backups.backups);
-    const { selectedBackup, targetLinode } = this.state;
+    const { selectedBackup, targetLinode, schedule } = this.state;
+    const futureBackups = [];
     if (!backups || backups.length === 0) {
-      const next = getNextBackup(thisLinode);
-      return (
-        <p>
-          No backups yet. First automated backup is scheduled for {next.fromNow(true)} from now.
-        </p>
-      );
+      futureBackups[0] = {};
+      futureBackups[0].created = 'Snapshot';
+      futureBackups[0].content = 'User discretion';
+      futureBackups[0].id = 0 + Math.random();
     }
-
+    const numOfFutureBackups = 4 - backups.length;
+    const timeslot = (timeslot) => {
+      switch (timeslot) {
+        case 'W0':
+          return '12-2 AM';
+        case 'W2':
+          return '2-4 AM';
+        case 'W4':
+          return '4-6 AM';
+        case 'W6':
+          return '6-8 AM';
+        case 'W8':
+          return '8-10 AM';
+        case 'W10':
+          return '10 AM-12 PM';
+        case 'W12':
+          return '12-2 PM';
+        case 'W14':
+          return '2-4 PM';
+        case 'W16':
+          return '4-6 PM';
+        case 'W18':
+          return '6-8 PM';
+        case 'W20':
+          return '8-10 PM';
+        case 'W22':
+          return '10 PM-12 AM';
+        default:
+          return '12-2 AM';
+      }
+    };
+    const backupDay = !!schedule.dayOfWeek ? schedule.dayOfWeek : 'Sunday';
+    let days = 14;
+    for (let i = numOfFutureBackups; i > 1; i--) {
+      futureBackups[i] = {};
+      const willBeDone = Date.now() + (days * 24 * 60 * 60 * 1000);
+      futureBackups[i].created = moment(willBeDone).fromNow();
+      futureBackups[i].content = `${backupDay} ${moment(willBeDone).format(', MMMM D YYYY, ')}`;
+      futureBackups[i].content = `${futureBackups[i].content} ${timeslot(schedule.timeOfDay)}`;
+      days = days - 6.98;
+      futureBackups[i].id = i + Math.random();
+    }
     return (
       <div>
         <div className="row backups">
@@ -267,7 +306,19 @@ export class BackupsPage extends Component {
                 onSelect={() => this.setState({ selectedBackup: backup.id })}
               />
             </div>
-           )}
+          )}
+          {futureBackups.map(backup =>
+            <div className="col-md-3">
+              <div className="backup future">
+                <header>
+                  <div className="title">Backup {backup.created}</div>
+                </header>
+                <div className="future-disabled">
+                  <div className="content-col">{backup.content}</div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
         {this.renderRestore()}
         <button
