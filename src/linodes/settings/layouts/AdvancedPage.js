@@ -15,7 +15,7 @@ export function AdvancedPage(props) {
       <hr />
       {diskModule}
       TODO
-    </div >
+    </div>
   );
 }
 

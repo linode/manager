@@ -101,7 +101,7 @@ export class ConfigPanel extends Component {
           </div>
         </div>
         <div className="row">
-          <div className="sm-col-12">
+          <div className="col-sm-12">
             {content}
           </div>
         </div>
@@ -112,8 +112,6 @@ export class ConfigPanel extends Component {
 
 ConfigPanel.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  linode: PropTypes.object.isRequired,
-  linodeId: PropTypes.string.isRequired,
   params: PropTypes.shape({
     linodeId: PropTypes.string,
   }),
