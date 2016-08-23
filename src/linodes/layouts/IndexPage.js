@@ -138,7 +138,11 @@ export class IndexPage extends Component {
     const { view } = this.props;
     if (view === 'grid') {
       return (<div key={group} className="row linodes">
-        {group ? <h2 className="text-muted display-group">{group}</h2> : ''}
+        {group ?
+          <div className="col-md-12">
+            <h2 className="text-muted display-group">{group}</h2>
+          </div>
+        : ''}
         {sortedLinodes.map(l =>
           <div key={l.id} className="col-md-4">
             {renderLinode(l, false)}
