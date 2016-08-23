@@ -99,7 +99,11 @@ export class ConfigPanel extends Component {
               </a>
             </div>
           </div>
-          {content}
+        </div>
+        <div className="row">
+          <div className="sm-col-12">
+            {content}
+          </div>
         </div>
       </div>
     );

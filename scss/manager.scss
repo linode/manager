@@ -570,6 +570,7 @@ table {
                 border: 0;
                 border-top: 0;
                 border-bottom: 0;
+                padding-bottom: 0.1rem;
             }
             th:last-of-type {
                 border-right: 0;
@@ -589,8 +590,14 @@ table {
             }
         }
         &.hard-border {
-            td {
-                border: 0;
+            tr {
+                background: $light-gray;
+
+                td {
+                    border: 0;
+                    padding: 0 15px;
+                    line-height: 35px;
+                }
             }
         }
     }
