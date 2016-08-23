@@ -179,4 +179,15 @@ export const linodes = {
       },
     },
   },
+  linode_1239: {
+    ...testLinode,
+    id: 'linode_1239',
+    label: 'Test Linode 5',
+    state: 'running',
+    backups: { ...testLinode.backups, enabled: false },
+    _configs: {
+      totalResults: 0,
+      configs: [],
+    },
+  },
 };
