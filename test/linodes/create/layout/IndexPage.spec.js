@@ -7,7 +7,7 @@ import { push } from 'react-router-redux';
 import { IndexPage } from '~/linodes/create/layouts/IndexPage';
 import * as errors from '~/actions/errors';
 import * as apiLinodes from '~/actions/api/linodes';
-import { state, linodes } from '~/../test/data';
+import { api } from '@/data';
 
 describe('linodes/create/layout/IndexPage', () => {
   const sandbox = sinon.sandbox.create();
@@ -20,10 +20,10 @@ describe('linodes/create/layout/IndexPage', () => {
       const page = shallow(
         <IndexPage
           dispatch={() => {}}
-          distros={state.distros}
-          datacenters={state.datacenters}
-          services={state.services}
-          linodes={{ linodes }}
+          distros={api.distributions}
+          datacenters={api.datacenters}
+          services={api.services}
+          linodes={api.linodes}
         />);
       expect(page.find(thing)).to.exist;
     };
@@ -40,10 +40,10 @@ describe('linodes/create/layout/IndexPage', () => {
     const page = mount(
       <IndexPage
         dispatch={() => {}}
-        distros={state.distros}
-        datacenters={state.datacenters}
-        services={state.services}
-        linodes={{ linodes }}
+        distros={api.distributions}
+        datacenters={api.datacenters}
+        services={api.services}
+        linodes={api.linodes}
       />);
     const ss = page.find('SourceSelection');
     ss.props().onTabChange(1);
@@ -61,10 +61,10 @@ describe('linodes/create/layout/IndexPage', () => {
     await mount(
       <IndexPage
         dispatch={dispatch}
-        distros={state.distros}
-        datacenters={state.datacenters}
-        services={state.services}
-        linodes={{ linodes }}
+        distros={api.distributions}
+        datacenters={api.datacenters}
+        services={api.services}
+        linodes={api.linodes}
       />
     );
 
@@ -76,10 +76,10 @@ describe('linodes/create/layout/IndexPage', () => {
     const page = shallow(
       <IndexPage
         dispatch={() => {}}
-        distros={state.distros}
-        datacenters={state.datacenters}
-        services={state.services}
-        linodes={{ linodes }}
+        distros={api.distributions}
+        datacenters={api.datacenters}
+        services={api.services}
+        linodes={api.linodes}
       />);
     const ss = page.find('SourceSelection');
     ss.props().onSourceSelected({ id: 'distro_1234' });
@@ -91,10 +91,10 @@ describe('linodes/create/layout/IndexPage', () => {
     const page = shallow(
       <IndexPage
         dispatch={() => {}}
-        distros={state.distros}
-        datacenters={state.datacenters}
-        services={state.services}
-        linodes={{ linodes }}
+        distros={api.distributions}
+        datacenters={api.datacenters}
+        services={api.services}
+        linodes={api.linodes}
       />);
     const ds = page.find('DatacenterSelection');
     ds.props().onDatacenterSelected({ id: 'datacenter_2' });
@@ -106,10 +106,10 @@ describe('linodes/create/layout/IndexPage', () => {
     const page = shallow(
       <IndexPage
         dispatch={() => {}}
-        distros={state.distros}
-        datacenters={state.datacenters}
-        services={state.services}
-        linodes={{ linodes }}
+        distros={api.distributions}
+        datacenters={api.datacenters}
+        services={api.services}
+        linodes={api.linodes}
       />);
     const ss = page.find('ServiceSelection');
     ss.props().onServiceSelected({ id: 'linode1024.5' });
@@ -124,10 +124,10 @@ describe('linodes/create/layout/IndexPage', () => {
     const page = mount(
       <IndexPage
         dispatch={dispatch}
-        distros={state.distros}
-        datacenters={state.datacenters}
-        services={state.services}
-        linodes={{ linodes }}
+        distros={api.distributions}
+        datacenters={api.datacenters}
+        services={api.services}
+        linodes={api.linodes}
       />
     );
     dispatch.reset();
@@ -171,10 +171,10 @@ describe('linodes/create/layout/IndexPage', () => {
     const page = mount(
       <IndexPage
         dispatch={dispatch}
-        distros={state.distros}
-        datacenters={state.datacenters}
-        services={state.services}
-        linodes={{ linodes }}
+        distros={api.distributions}
+        datacenters={api.datacenters}
+        services={api.services}
+        linodes={api.linodes}
       />
     );
     dispatch.reset();
@@ -220,10 +220,10 @@ describe('linodes/create/layout/IndexPage', () => {
     const page = mount(
       <IndexPage
         dispatch={dispatch}
-        distros={state.distros}
-        datacenters={state.datacenters}
-        services={state.services}
-        linodes={{ linodes }}
+        distros={api.distributions}
+        datacenters={api.datacenters}
+        services={api.services}
+        linodes={api.linodes}
       />
     );
     dispatch.reset();
@@ -275,10 +275,10 @@ describe('linodes/create/layout/IndexPage', () => {
     const page = mount(
       <IndexPage
         dispatch={dispatch}
-        distros={state.distros}
-        datacenters={state.datacenters}
-        services={state.services}
-        linodes={{ linodes }}
+        distros={api.distributions}
+        datacenters={api.datacenters}
+        services={api.services}
+        linodes={api.linodes}
       />
     );
     await new Promise(a => setTimeout(a, 0));

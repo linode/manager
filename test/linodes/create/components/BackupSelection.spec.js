@@ -4,7 +4,7 @@ import { expect } from 'chai';
 import { shallow, mount } from 'enzyme';
 
 import { BackupSelection } from '~/linodes/create/components/BackupSelection';
-import { testDistros, linodes } from '~/../test/data';
+import { api } from '@/data';
 
 describe('linodes/create/components/BackupSelection', () => {
   const sandbox = sinon.sandbox.create();
@@ -12,22 +12,11 @@ describe('linodes/create/components/BackupSelection', () => {
     sandbox.restore();
   });
 
-  const state = {
-    linodes,
-    create: {
-      source: {
-        source: null,
-        sourceTab: 0,
-      },
-    },
-    distros: { distributions: { ...testDistros } },
-  };
-
   it('renders the Backups', () => {
     const c = shallow(
       <BackupSelection
         onSourceSelected={() => {}}
-        linodes={state.linodes}
+        linodes={api.linodes}
         goBack={() => {}}
         selectedLinode="linode_1234"
         dispatch={() => {}}
@@ -42,7 +31,7 @@ describe('linodes/create/components/BackupSelection', () => {
     const c = mount(
       <BackupSelection
         onSourceSelected={onSourceSelected}
-        linodes={state.linodes}
+        linodes={api.linodes}
         goBack={() => {}}
         selectedLinode="linode_1234"
         dispatch={() => {}}
@@ -59,7 +48,7 @@ describe('linodes/create/components/BackupSelection', () => {
     const c = shallow(
       <BackupSelection
         onSourceSelected={() => {}}
-        linodes={state.linodes}
+        linodes={api.linodes}
         goBack={goBack}
         selectedLinode="linode_1234"
         dispatch={() => {}}

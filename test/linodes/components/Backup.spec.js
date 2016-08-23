@@ -4,7 +4,7 @@ import { mount } from 'enzyme';
 import { expect } from 'chai';
 
 import Backup from '~/linodes/components/Backup';
-import { testLinode } from '~/../test/data';
+import { testLinode } from '@/data/linodes';
 
 describe('linodes/components/Backup', () => {
   const sandbox = sinon.sandbox.create();

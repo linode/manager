@@ -4,7 +4,7 @@ import { push } from 'react-router-redux';
 import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 import * as fetch from '~/fetch';
-import { testLinode } from '~/../test/data';
+import { testLinode } from '@/data/linodes';
 import { BackupsPage } from '~/linodes/layouts/BackupsPage';
 import { UPDATE_LINODE } from '~/actions/api/linodes';
 import { SHOW_MODAL, hideModal } from '~/actions/modal';

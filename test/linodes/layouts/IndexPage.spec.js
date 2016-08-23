@@ -3,15 +3,17 @@ import sinon from 'sinon';
 import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 import { push } from 'react-router-redux';
-import _ from 'lodash';
 
 import { IndexPage } from '~/linodes/layouts/IndexPage';
 import * as linodeActions from '~/actions/api/linodes';
 import { TOGGLE_SELECTED, CHANGE_VIEW } from '~/linodes/actions/index';
-import { linodes } from '~/../test/data';
+import { api, freshState } from '@/data';
+import { testLinode } from '@/data/linodes';
 import Dropdown from '~/components/Dropdown';
 import { SET_ERROR } from '~/actions/errors';
 import { expectRequest } from '@/common.js';
+
+const { linodes } = api;
 
 describe('linodes/layouts/IndexPage', () => {
   const sandbox = sinon.sandbox.create();
@@ -21,31 +23,21 @@ describe('linodes/layouts/IndexPage', () => {
   });
 
   const dispatch = sandbox.spy();
-  const getState = () => ({
-    authentication: { token: 'token' },
-    api: {
-      linodes: { totalPages: -1, pagesFetched: [] },
-    },
-  });
 
   it('dispatches a linodes fetch action when mounted', async () => {
-    const testLinodes = {
-      linodes: _.map(linodes.linodes, l => ({ ...l, state: 'running' })),
-    };
-
     mount(
       <IndexPage
         dispatch={dispatch}
         view={'grid'}
         selected={{}}
-        linodes={testLinodes}
+        linodes={freshState.api.linodes}
       />);
     expect(dispatch.calledOnce).to.equal(true);
     const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, '/linodes?page=1', getState(),
+    await expectRequest(fn, '/linodes?page=1',
       d => expect(d.args[0])
         .to.have.property('type')
-        .that.equals(linodeActions.UPDATE_LINODES));
+        .that.equals(linodeActions.UPDATE_LINODES), null, null, freshState);
   });
 
   it('handles errors from fetchLinodes', () => {
@@ -71,54 +63,59 @@ describe('linodes/layouts/IndexPage', () => {
   });
 
   it('redirects to /linodes/create when you have no Linodes', async () => {
-    const noLinodes = {
-      ...linodes,
-      linodes: { },
-    };
     mount(
       <IndexPage
         dispatch={dispatch}
         view={'grid'}
         selected={{}}
-        linodes={noLinodes}
+        linodes={{
+          ...freshState.api.linodes,
+          totalPages: 1,
+        }}
       />);
     expect(dispatch.calledWith(push('/linodes/create')))
       .to.equal(true);
   });
 
   it('renders a grid of Linodes', () => {
-    const testLinodes = {
-      linodes: _.mapValues(linodes.linodes, l => ({ ...l, group: '' })),
-    };
     const page = mount(
       <IndexPage
         dispatch={dispatch}
         view={'grid'}
         selected={{}}
-        linodes={testLinodes}
+        linodes={{
+          totalPages: 1,
+          totalResults: 2,
+          linodes: {
+            [testLinode.id]: testLinode,
+            linode_1235: {
+              ...testLinode,
+              id: 'linode_1235',
+              label: 'asdfasdf',
+            },
+          },
+        }}
       />
     );
 
-    const gridRow = page.find('.linodes-page > .row');
-    expect(gridRow.length).to.equal(1);
-    expect(gridRow.find('.col-md-4').length).to.equal(
-      Object.keys(linodes.linodes).length);
-    expect(gridRow.find('.col-md-4').first().find('.linode-label')
-                  .text()).to.equal('Test Linode');
-    expect(gridRow.find('.col-md-4').last().find('.linode-label')
-                  .text()).to.equal('Test Linode 1');
+    const linodesPage = page.find('.linodes-page > .row');
+
+    expect(linodesPage.find('.col-md-4').length).to.equal(2);
+
+    expect(linodesPage.find('.col-md-4').first().find('.linode-label')
+                  .text()).to.equal(testLinode.label);
+
+    expect(linodesPage.find('.col-md-4').last().find('.linode-label')
+                  .text()).to.equal('asdfasdf');
   });
 
   it('renders a list of Linodes', () => {
-    const testLinodes = {
-      linodes: _.mapValues(linodes.linodes, l => ({ ...l, group: '' })),
-    };
     const page = mount(
       <IndexPage
         dispatch={dispatch}
         view={'list'}
         selected={{}}
-        linodes={testLinodes}
+        linodes={linodes}
       />
     );
 
@@ -159,7 +156,7 @@ describe('linodes/layouts/IndexPage', () => {
       const actions = page.find(Dropdown).props().elements;
       actions.find(a => a.name === dropdown).action();
       const fn = dispatch.firstCall.args[0];
-      expectRequest(fn, `/linodes/linode_1234${endpoint}`, getState());
+      await expectRequest(fn, `/linodes/linode_1234${endpoint}`);
     };
   }
 

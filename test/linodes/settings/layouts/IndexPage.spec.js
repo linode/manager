@@ -3,8 +3,9 @@ import sinon from 'sinon';
 import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 import { Tabs, Tab } from 'react-tabs';
+import { api } from '@/data';
 
-import { testLinode } from '~/../test/data';
+import { testLinode } from '@/data/linodes';
 import { IndexPage } from '~/linodes/settings/layouts/IndexPage';
 import * as LinodeDetailPage from '~/linodes/layouts/LinodeDetailPage';
 
@@ -17,25 +18,12 @@ describe('linodes/settings/layouts/IndexPage', () => {
     sandbox.restore();
   });
 
-  const linodes = {
-    pagesFetched: [0],
-    totalPages: 1,
-    linodes: {
-      [testLinode.id]: testLinode,
-      linode_1235: { ...testLinode, id: 'linode_1235', group: '' },
-      linode_1236: { ...testLinode, id: 'linode_1236', state: 'offline' },
-      linode_1237: { ...testLinode, id: 'linode_1236', state: 'booting' },
-    },
-    _singular: 'linode',
-    _plural: 'linodes',
-  };
-
   it('calls loadLinode during mount', () => {
-    const loadLinode = sinon.stub(LinodeDetailPage, 'loadLinode');
+    const loadLinode = sandbox.stub(LinodeDetailPage, 'loadLinode');
     mount(
       <IndexPage
         dispatch={dispatch}
-        linodes={linodes}
+        linodes={api.linodes}
         params={{ linodeId: testLinode.id }}
       />
     );
@@ -48,7 +36,7 @@ describe('linodes/settings/layouts/IndexPage', () => {
     const page = shallow(
       <IndexPage
         dispatch={dispatch}
-        linodes={linodes}
+        linodes={api.linodes}
         params={{ linodeId: 'linode_1235' }}
       />
     );

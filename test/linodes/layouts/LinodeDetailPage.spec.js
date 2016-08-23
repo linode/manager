@@ -3,10 +3,10 @@ import sinon from 'sinon';
 import { push } from 'react-router-redux';
 import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
-import _ from 'lodash';
 
-import * as fetch from '~/fetch';
-import { testLinode, linodes } from '~/../test/data';
+import { api, freshState } from '@/data';
+import { testLinode } from '@/data/linodes';
+import { expectRequest } from '@/common';
 import * as LinodeDetailPageWrapper from '~/linodes/layouts/LinodeDetailPage';
 import * as linodeActions from '~/actions/api/linodes';
 import { Tabs, Tab } from 'react-tabs';
@@ -19,6 +19,8 @@ const {
   getLinode,
   renderTabs,
 } = LinodeDetailPageWrapper;
+
+const { linodes } = api;
 
 describe('linodes/layouts/LinodeDetailPage/loadLinode', async () => {
   class Test extends Component {
@@ -44,25 +46,14 @@ describe('linodes/layouts/LinodeDetailPage/loadLinode', async () => {
     mount(
       <Test
         dispatch={dispatch}
-        linodes={{ linodes: { } }}
-        params={{ linodeId: 'linode_1234' }}
+        linodes={freshState.api.linodes}
+        params={{ linodeId: 'linode_does_not_exist' }}
       />
     );
     expect(dispatch.calledOnce).to.equal(true);
-    const dispatched = dispatch.firstCall.args[0];
-    // Assert that dispatched is a function that fetches a linode
-    const fetchStub = sandbox.stub(fetch, 'fetch').returns({
-      json: () => {},
-    });
-    dispatch.reset();
-    await dispatched(dispatch, () => ({
-      authentication: { token: 'token' },
-      api: { linodes: { totalPages: -1, linodes: { } } },
-    }));
-    expect(fetchStub.calledOnce).to.equal(true);
-    expect(fetchStub.firstCall.args[1]).to.equal('/linodes/linode_1234');
-    expect(dispatch.calledOnce).to.equal(true);
-    expect(dispatch.firstCall.args[0].type).to.equal(linodeActions.UPDATE_LINODE);
+    const fn = dispatch.firstCall.args[0];
+    expectRequest(fn, `/linodes/${testLinode.id}`,
+      d => expect(d.args[0].type).to.equal(linodeActions.UPDATE_LINODE));
   });
 
   it('handles errors from fetchLinode', () => {
@@ -75,8 +66,8 @@ describe('linodes/layouts/LinodeDetailPage/loadLinode', async () => {
     mount(
       <Test
         dispatch={dispatch}
-        linodes={{ linodes: { } }}
-        params={{ linodeId: 'linode_1234' }}
+        linodes={freshState.api.linodes}
+        params={{ linodeId: testLinode.id }}
       />);
     expect(dispatch.calledWith({
       type: SET_ERROR,
@@ -127,7 +118,7 @@ describe('linodes/layouts/LinodeDetailPage/renderTabs', async () => {
       <Test
         dispatch={dispatch}
         linodes={linodes}
-        params={{ linodeId: 'linode_1234' }}
+        params={{ linodeId: testLinode.id }}
         tabList={tabList}
       />);
     const tabs = page.find(Tabs);
@@ -143,7 +134,7 @@ describe('linodes/layouts/LinodeDetailPage/renderTabs', async () => {
       <Test
         dispatch={dispatch}
         linodes={linodes}
-        params={{ linodeId: 'linode_1234' }}
+        params={{ linodeId: testLinode.id }}
         tabList={tabList}
       />
     );
@@ -207,19 +198,15 @@ describe('linodes/layouts/LinodeDetailPage', () => {
   });
 
   it('renders the linode label alone when ungrouped', () => {
-    const testLinodes = {
-      linodes: _.mapValues(linodes.linodes, l => ({ ...l, group: '' })),
-    };
-
     const page = mount(
       <LinodeDetailPage
         dispatch={dispatch}
-        linodes={testLinodes}
+        linodes={linodes}
         params={{ linodeId: 'linode_1235' }}
         detail={detail}
         router={router}
       />);
-    expect(page.contains(<span>{testLinodes.linodes.linode_1235.label}</span>))
+    expect(page.contains(<span>{linodes.linodes.linode_1235.label}</span>))
       .to.equal(true);
   });
 
@@ -254,7 +241,7 @@ describe('linodes/layouts/LinodeDetailPage', () => {
       <LinodeDetailPage
         dispatch={dispatch}
         linodes={linodes}
-        params={{ linodeId: 'linode_1234' }}
+        params={{ linodeId: testLinode.id }}
         detail={detail}
       />);
     const dropdown = page.find(Dropdown);
@@ -296,7 +283,7 @@ describe('linodes/layouts/LinodeDetailPage', () => {
       <LinodeDetailPage
         dispatch={dispatch}
         linodes={linodes}
-        params={{ linodeId: 'linode_1234' }}
+        params={{ linodeId: testLinode.id }}
         detail={detail}
       />);
     const dropdown = page.find(Dropdown).props();
@@ -340,7 +327,7 @@ describe('linodes/layouts/LinodeDetailPage', () => {
       <LinodeDetailPage
         dispatch={dispatch}
         linodes={linodes}
-        params={{ linodeId: 'linode_1234' }}
+        params={{ linodeId: testLinode.id }}
         detail={detail}
         router={router}
       />);
@@ -354,7 +341,7 @@ describe('linodes/layouts/LinodeDetailPage', () => {
         <LinodeDetailPage
           dispatch={dispatch}
           linodes={linodes}
-          params={{ linodeId: 'linode_1234' }}
+          params={{ linodeId: testLinode.id }}
           detail={detail}
         />);
       expect(page.find('.edit-icon')).to.exist;
@@ -365,7 +352,7 @@ describe('linodes/layouts/LinodeDetailPage', () => {
         <LinodeDetailPage
           dispatch={dispatch}
           linodes={linodes}
-          params={{ linodeId: 'linode_1234' }}
+          params={{ linodeId: testLinode.id }}
           detail={detail}
         />);
       const icon = page.find('.edit-icon');
@@ -378,7 +365,7 @@ describe('linodes/layouts/LinodeDetailPage', () => {
         <LinodeDetailPage
           dispatch={dispatch}
           linodes={linodes}
-          params={{ linodeId: 'linode_1234' }}
+          params={{ linodeId: testLinode.id }}
           detail={detail}
         />);
       const icon = page.find('.edit-icon');
@@ -394,7 +381,7 @@ describe('linodes/layouts/LinodeDetailPage', () => {
         <LinodeDetailPage
           dispatch={dispatch}
           linodes={linodes}
-          params={{ linodeId: 'linode_1234' }}
+          params={{ linodeId: testLinode.id }}
           detail={{ ...detail, editing: true }}
         />);
       const editor = page.find('.edit-details');
@@ -412,7 +399,7 @@ describe('linodes/layouts/LinodeDetailPage', () => {
         <LinodeDetailPage
           dispatch={dispatch}
           linodes={linodes}
-          params={{ linodeId: 'linode_1234' }}
+          params={{ linodeId: testLinode.id }}
           detail={{ ...detail, editing: true }}
         />);
       const editor = page.find('.edit-details');
@@ -427,7 +414,7 @@ describe('linodes/layouts/LinodeDetailPage', () => {
         <LinodeDetailPage
           dispatch={dispatch}
           linodes={linodes}
-          params={{ linodeId: 'linode_1234' }}
+          params={{ linodeId: testLinode.id }}
           detail={{ ...detail, editing: true, loading: true }}
         />);
       const editor = page.find('.edit-details');
@@ -444,7 +431,7 @@ describe('linodes/layouts/LinodeDetailPage', () => {
         <LinodeDetailPage
           dispatch={dispatch}
           linodes={linodes}
-          params={{ linodeId: 'linode_1234' }}
+          params={{ linodeId: testLinode.id }}
           detail={{ ...detail, editing: true }}
         />);
       const editor = page.find('.edit-details');
@@ -454,35 +441,19 @@ describe('linodes/layouts/LinodeDetailPage', () => {
       expect(dispatch.calledWith(actions.toggleEditMode())).to.equal(true);
     });
 
-    async function assertCommittedChanges() {
-      expect(dispatch.calledOnce).to.equal(true);
-      const dispatched = dispatch.firstCall.args[0];
-      // Assert that dispatched is a function that commits the changes
-      const fetchStub = sandbox.stub(fetch, 'fetch').returns({
-        json: () => {},
-      });
-      dispatch.reset();
-      const getState = () => ({
-        authentication: { token: 'token' },
-        linodes: { detail: { index: { label: 'test', group: 'test' } } },
-      });
-      await dispatched(dispatch, getState);
-      expect(fetchStub.calledOnce).to.equal(true);
-      expect(fetchStub.firstCall.args[1]).to.equal('/linodes/linode_1234');
-    }
-
     it('commits changes to the API when save is pressed', async () => {
       const page = shallow(
         <LinodeDetailPage
           dispatch={dispatch}
           linodes={linodes}
-          params={{ linodeId: 'linode_1234' }}
+          params={{ linodeId: testLinode.id }}
           detail={{ ...detail, editing: true, label: 'test', group: 'test' }}
         />);
       const editor = page.find('.edit-details');
       const cancel = editor.find('button.btn-primary');
       cancel.simulate('click');
-      await assertCommittedChanges();
+      const fn = dispatch.firstCall.args[0];
+      await expectRequest(fn, `/linodes/${testLinode.id}`);
     });
 
     it('commits changes to the API when the enter key is pressed', async () => {
@@ -490,13 +461,15 @@ describe('linodes/layouts/LinodeDetailPage', () => {
         <LinodeDetailPage
           dispatch={dispatch}
           linodes={linodes}
-          params={{ linodeId: 'linode_1234' }}
+          params={{ linodeId: testLinode.id }}
           detail={{ ...detail, editing: true, label: 'test', group: 'test' }}
         />);
       const editor = page.find('.edit-details');
       const text = editor.find('input[type="text"]').first();
       text.simulate('keyUp', { keyCode: 13 /* Enter */ });
-      await assertCommittedChanges();
+      expect(dispatch.calledOnce).to.equal(true);
+      const fn = dispatch.firstCall.args[0];
+      await expectRequest(fn, `/linodes/${testLinode.id}`);
     });
 
     it('does not reproduce #95', () => {
@@ -505,7 +478,7 @@ describe('linodes/layouts/LinodeDetailPage', () => {
         <LinodeDetailPage
           dispatch={dispatch}
           linodes={linodes}
-          params={{ linodeId: 'linode_1234' }}
+          params={{ linodeId: testLinode.id }}
           detail={{ ...detail, editing: true, label: 'test', group: 'test' }}
           router={router}
         />);

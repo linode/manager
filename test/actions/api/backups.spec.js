@@ -10,7 +10,9 @@ import {
 } from '~/actions/api/backups';
 import { UPDATE_LINODE, UPDATE_BACKUP, UPDATE_BACKUPS } from '~/actions/api/linodes';
 import * as fetch from '~/fetch';
-import { testLinode } from '~/../test/data';
+import { testLinode } from '@/data/linodes';
+import { expectRequest } from '@/common';
+import { state } from '@/data';
 
 describe('actions/api/backups', async () => {
   const auth = { token: 'token' };
@@ -38,28 +40,34 @@ describe('actions/api/backups', async () => {
   };
 
   it('should fetch backups', async () => {
-    const dispatch = getDispatch();
-    const fetchStub = getFetchStub(mockResponse);
-    const getState = getGetState({
+    const testState = {
+      ...state,
       api: {
+        ...state.api,
         linodes: {
+          ...state.api.linodes,
           linodes: {
-            linode_1: { _backups: { backups: { }, totalPages: -1 } },
+            ...state.api.linodes.linodes,
+            [testLinode.id]: {
+              ...testLinode,
+              _backups: {
+                totalPages: -1,
+                totalResults: -1,
+                pagesFetched: [],
+                backups: { },
+              },
+            },
           },
         },
       },
-    });
-
-    const f = fetchBackups(0, 'linode_1');
-    await f(dispatch, getState);
-
-    expect(fetchStub.calledWith(
-      auth.token, '/linodes/linode_1/backups?page=1')).to.equal(true);
-    expect(dispatch.calledWith({
-      type: UPDATE_BACKUPS,
-      linodes: 'linode_1',
-      response: mockResponse,
-    })).to.equal(true);
+    };
+    const fn = fetchBackups(0, 'linode_1234');
+    await expectRequest(fn, '/linodes/linode_1234/backups?page=1',
+      d => expect(d.args[0]).to.deep.equal({
+        type: UPDATE_BACKUPS,
+        linodes: 'linode_1234',
+        response: mockResponse,
+      }), mockResponse, null, testState);
   });
 
   it('should fetch backup', async () => {
