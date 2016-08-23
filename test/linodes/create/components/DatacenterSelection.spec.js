@@ -4,7 +4,6 @@ import { expect } from 'chai';
 import { mount } from 'enzyme';
 
 import DatacenterSelection from '~/linodes/create/components/DatacenterSelection';
-import { countryMap } from '~/constants';
 import { flags } from '~/assets';
 
 describe('linodes/create/components/DatacenterSelection', () => {
@@ -12,6 +11,7 @@ describe('linodes/create/components/DatacenterSelection', () => {
     newark: {
       id: 'newark',
       label: 'Newark, NJ',
+      country: 'us',
     },
   };
 
@@ -29,7 +29,7 @@ describe('linodes/create/components/DatacenterSelection', () => {
     expect(c.find(<header><label>Newark, NJ</label></header>)).to.exist;
     expect(c.find(
       <img
-        src={flags[countryMap.newark]}
+        src={flags[datacenters.newark.country]}
         width={64}
         height={64}
         alt="Newark, NJ"

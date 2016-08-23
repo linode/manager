@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import _ from 'lodash';
 
 import { flags } from '~/assets';
-import { countryMap, regionMap } from '~/constants';
+import { regionMap } from '~/constants';
 
 export default class DatacenterSelection extends Component {
   constructor() {
@@ -32,7 +32,7 @@ export default class DatacenterSelection extends Component {
         </header>
         <div>
           <img
-            src={flags[countryMap[datacenter.id]]}
+            src={flags[datacenter.country]}
             width={64}
             height={64}
             alt={datacenter.label}

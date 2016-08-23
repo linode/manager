@@ -2,10 +2,7 @@ import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 import { flags, distros as distroAssets } from '~/assets';
 import _ from 'lodash';
-import {
-  LinodeStatesReadable,
-  countryMap,
-} from '~/constants';
+import { LinodeStatesReadable } from '~/constants';
 import moment from 'moment';
 
 function renderPowerButton(props) {
@@ -56,8 +53,8 @@ export function renderDatacenterStyle(linode) {
     <span className="datacenter-style">
       {linode.datacenter.label}
       <img
-        src={flags[countryMap[linode.datacenter.id]]
-          ? flags[countryMap[linode.datacenter.id]] : '//placehold.it/50x50'}
+        src={flags[linode.datacenter.country]
+          ? flags[linode.datacenter.country] : '//placehold.it/50x50'}
         height="15" width="20" alt={linode.datacenter.label}
       />
     </span>
