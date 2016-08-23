@@ -5,7 +5,7 @@ export default function Sidebar(props) {
   const { path } = props;
 
   const links = [
-    { icon: 'th', name: 'Linodes', link: '/linodes' },
+    { icon: 'cubes', name: 'Linodes', link: '/linodes' },
     { icon: 'code-fork', name: 'NodeBalancers', link: '/nodebalancers' },
     { icon: 'bar-chart-o', name: 'Longview', link: '/longview' },
     { icon: 'share-alt', name: 'DNS Manager', link: '/dnsmanager' },
