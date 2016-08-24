@@ -18,14 +18,6 @@ export default function Navigation(props) {
             />
           </Link>
         </div>
-        <div className="navbar-search nav-item">
-          <input
-            className="form-control"
-            type="search"
-            placeholder="Search..."
-            id="navbar-search"
-          />
-        </div>
         <div className="navbar-collapse collapse nav-item">
           <ul className="nav navbar-nav">
             <li className="nav-item">
