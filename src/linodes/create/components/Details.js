@@ -117,12 +117,20 @@ export default class Details extends Component {
 
     const passwordInput = (
       <div>
-        <PasswordInput
-          passwordType="offline_fast_hashing_1e10_per_second"
-          onChange={password => this.setState({ password })}
-        />
-        <div className="alert alert-info">
-          Save this password somewhere safe. We can't display it again.
+        <div className="row">
+          <div className="col-sm-12">
+            <PasswordInput
+              passwordType="offline_fast_hashing_1e10_per_second"
+              onChange={password => this.setState({ password })}
+            />
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-sm-12">
+            <div className="alert alert-info">
+              Save this password somewhere safe. We can't display it again.
+            </div>
+          </div>
         </div>
       </div>
     );
