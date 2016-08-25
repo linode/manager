@@ -12,7 +12,7 @@ import {
 import PasswordInput from '~/components/PasswordInput';
 import HelpButton from '~/components/HelpButton';
 
-export class RepairPage extends Component {
+export class RescuePage extends Component {
   constructor() {
     super();
     this.getLinode = getLinode.bind(this);
@@ -163,7 +163,7 @@ export class RepairPage extends Component {
   }
 }
 
-RepairPage.propTypes = {
+RescuePage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   params: PropTypes.shape({
     linodeId: PropTypes.string,
@@ -174,4 +174,4 @@ function select(state) {
   return { linodes: state.api.linodes };
 }
 
-export default connect(select)(RepairPage);
+export default connect(select)(RescuePage);

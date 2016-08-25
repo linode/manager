@@ -261,7 +261,7 @@ export class LinodeDetailPage extends Component {
       { name: 'Networking', link: '/networking' },
       { name: 'Rebuild', link: '/rebuild' },
       { name: 'Resize', link: '/resize' },
-      { name: 'Repair', link: '/repair' },
+      { name: 'Rescue', link: '/rescue' },
       { name: 'Backups', link: '/backups' },
       { name: 'Settings', link: '/settings' },
     ].map(t => ({ ...t, link: `/linodes/${linode.id}${t.link}` }));
