@@ -246,14 +246,15 @@ export class BackupsPage extends Component {
     const thisLinode = this.getLinode();
     const backups = thisLinode._backups && Object.values(thisLinode._backups.backups);
     const { selectedBackup, targetLinode, schedule } = this.state;
+
+    // this attempts to predict when future backups will be scehduled
     const futureBackups = [];
     if (!backups || backups.length === 0) {
       futureBackups[0] = {};
       futureBackups[0].created = 'Snapshot';
-      futureBackups[0].content = 'User discretion';
+      futureBackups[0].content = "You haven't taken any snapshots yet";
       futureBackups[0].id = 0 + Math.random();
     }
-    const numOfFutureBackups = 4 - backups.length;
     const timeslot = (timeslot) => {
       switch (timeslot) {
         case 'W0':
@@ -284,17 +285,36 @@ export class BackupsPage extends Component {
           return '12-2 AM';
       }
     };
-    const backupDay = !!schedule.dayOfWeek ? schedule.dayOfWeek : 'Sunday';
-    let days = 14;
-    for (let i = numOfFutureBackups; i > 1; i--) {
+    let backupDay = 'Sunday';
+    if (schedule.dayOfWeek) {
+      if (schedule.dayOfWeek === 'Scheduling') {
+        backupDay = 'TBD';
+      } else {
+        backupDay = schedule.dayOfWeek;
+      }
+    }
+    let nextBackupDay = moment().day(backupDay).add(7, 'days');
+    const backupList = ['Snapshot', 'Daily', 'Weekly', 'Fortnightly'];
+    const futureSlots = backups.length === 0 ? 1 : backups.length;
+    for (let i = futureSlots; i < 4; i++) {
       futureBackups[i] = {};
-      const willBeDone = Date.now() + (days * 24 * 60 * 60 * 1000);
-      futureBackups[i].created = moment(willBeDone).fromNow();
-      futureBackups[i].content = `${backupDay} ${moment(willBeDone).format(', MMMM D YYYY, ')}`;
+      futureBackups[i].created = backupList[i];
+      futureBackups[i].content = `${backupDay}${nextBackupDay.format(', MMMM D YYYY, ')}`;
       futureBackups[i].content = `${futureBackups[i].content} ${timeslot(schedule.timeOfDay)}`;
-      days = days - 6.98;
+      nextBackupDay = nextBackupDay.add(6.5, 'days');
       futureBackups[i].id = i + Math.random();
     }
+
+    // This makes the snapshot appear first in the list of completed backups
+    let index = 0;
+    for (const backup of backups) {
+      if (backup.type === 'snapshot' && index !== 0) {
+        backups[index] = backups[0];
+        backups[0] = backup;
+      }
+      index++;
+    }
+
     return (
       <div>
         <div className="row backups">
@@ -311,7 +331,7 @@ export class BackupsPage extends Component {
             <div className="col-md-3">
               <div className="backup future">
                 <header>
-                  <div className="title">Backup {backup.created}</div>
+                  <div className="title">{backup.created}</div>
                 </header>
                 <div className="future-disabled">
                   <div className="content-col">{backup.content}</div>
