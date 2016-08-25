@@ -4,9 +4,9 @@ import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 import * as fetch from '~/fetch';
 import { testLinode } from '~/../test/data';
-import { RepairPage } from '~/linodes/layouts/RepairPage';
+import { RescuePage } from '~/linodes/layouts/RescuePage';
 
-describe('linodes/layouts/RepairPage', () => {
+describe('linodes/layouts/RescuePage', () => {
   const sandbox = sinon.sandbox.create();
 
   const dispatch = sandbox.spy();
@@ -62,7 +62,7 @@ describe('linodes/layouts/RepairPage', () => {
 
   it('fetches a linode when mounted with an unknown linode', async () => {
     mount(
-      <RepairPage
+      <RescuePage
         dispatch={dispatch}
         linodes={{ linodes: { } }}
         params={{ linodeId: 'linode_1234' }}
@@ -84,7 +84,7 @@ describe('linodes/layouts/RepairPage', () => {
 
   it('fetches linode disks', async () => {
     mount(
-      <RepairPage
+      <RescuePage
         dispatch={dispatch}
         linodes={linodes}
         params={{ linodeId: 'linode_1234' }}
@@ -124,7 +124,7 @@ describe('linodes/layouts/RepairPage', () => {
 
   it('does not fetch when mounted with a known linode', () => {
     mount(
-      <RepairPage
+      <RescuePage
         dispatch={dispatch}
         linodes={linodes}
         params={{ linodeId: testLinode.id }}
@@ -135,7 +135,7 @@ describe('linodes/layouts/RepairPage', () => {
   describe('reset root password', () => {
     it('renders the appropriate message for Linodes without eligible disks', () => {
       const page = shallow(
-        <RepairPage
+        <RescuePage
           dispatch={dispatch}
           linodes={linodes}
           params={{ linodeId: 'linode_1235' }}
@@ -148,7 +148,7 @@ describe('linodes/layouts/RepairPage', () => {
 
     it('renders a PasswordInput component', () => {
       const page = shallow(
-        <RepairPage
+        <RescuePage
           dispatch={dispatch}
           linodes={linodes}
           params={{ linodeId: 'linode_1234' }}
@@ -159,7 +159,7 @@ describe('linodes/layouts/RepairPage', () => {
 
     it('renders disk selection for appropriate Linodes', () => {
       const page = shallow(
-        <RepairPage
+        <RescuePage
           dispatch={dispatch}
           linodes={linodes}
           params={{ linodeId: 'linode_1236' }}
@@ -175,7 +175,7 @@ describe('linodes/layouts/RepairPage', () => {
 
     it('updates state when selecting disks', () => {
       const page = shallow(
-        <RepairPage
+        <RescuePage
           dispatch={dispatch}
           linodes={linodes}
           params={{ linodeId: 'linode_1236' }}
@@ -189,7 +189,7 @@ describe('linodes/layouts/RepairPage', () => {
 
     it('updates state when password changes', () => {
       const page = shallow(
-        <RepairPage
+        <RescuePage
           dispatch={dispatch}
           linodes={linodes}
           params={{ linodeId: 'linode_1234' }}
@@ -202,7 +202,7 @@ describe('linodes/layouts/RepairPage', () => {
 
     it('resets root password when button is pressed', async () => {
       const page = shallow(
-        <RepairPage
+        <RescuePage
           dispatch={dispatch}
           linodes={linodes}
           params={{ linodeId: 'linode_1237' }}
@@ -221,7 +221,7 @@ describe('linodes/layouts/RepairPage', () => {
 
     it('power cycles running Linodes when resetting password', async () => {
       const page = shallow(
-        <RepairPage
+        <RescuePage
           dispatch={dispatch}
           linodes={linodes}
           params={{ linodeId: 'linode_1234' }}
