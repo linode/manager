@@ -183,7 +183,7 @@ function renderRow(props) {
   const checkbox = <input type="checkbox" checked={isSelected} onClick={select} />;
 
   return (
-    <tr className={`linode row ${linode.state} ${selectedClass}`}>
+    <tr className={`linode ${linode.state} ${selectedClass}`}>
       <td>{checkbox}</td>
       <td>
         <Link to={`/linodes/${linode.id}`} className="linode-label">{linode.label}</Link>
