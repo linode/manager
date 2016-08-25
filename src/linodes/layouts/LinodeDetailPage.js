@@ -3,12 +3,18 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { push } from 'react-router-redux';
+import { showModal, hideModal } from '~/actions/modal';
 
 import Dropdown from '~/components/Dropdown';
 import { LinodeStates, LinodeStatesReadable } from '~/constants';
 import { setError } from '~/actions/errors';
 import {
-  fetchLinode, fetchAllLinodeConfigs, powerOnLinode, powerOffLinode, rebootLinode,
+  fetchLinode,
+  fetchAllLinodeConfigs,
+  putLinode,
+  powerOnLinode,
+  powerOffLinode,
+  rebootLinode,
 } from '~/actions/api/linodes';
 
 export function getLinode() {
@@ -62,6 +68,85 @@ export function renderTabs(tabList) {
   );
 }
 
+class EditModal extends Component {
+  constructor() {
+    super();
+    this.state = {
+      loading: false,
+      errors: [],
+      label: '',
+      group: '',
+    };
+  }
+
+  componentDidMount() {
+    const { label, group } = this.props;
+    this.setState({ label, group });
+  }
+
+  render() {
+    const { dispatch, linodeId } = this.props;
+    const { loading, label, group } = this.state;
+    return (
+      <div>
+        <div className="form-group">
+          <label htmlFor="group">Group</label>
+          <input
+            className="form-control"
+            id="group"
+            placeholder="Group"
+            value={group}
+            disabled={loading}
+            onChange={e => this.setState({ group: e.target.value })}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="label">Label</label>
+          <input
+            className="form-control"
+            id="label"
+            placeholder="Label"
+            value={label}
+            disabled={loading}
+            onChange={e => this.setState({ label: e.target.value })}
+          />
+        </div>
+        <div className="modal-footer">
+          <button
+            className="btn btn-default"
+            disabled={loading}
+            onClick={() => dispatch(hideModal())}
+          >Nevermind</button>
+          <button
+            className="btn btn-primary"
+            disabled={loading}
+            onClick={async () => {
+              this.setState({ loading: true });
+              try {
+                await dispatch(putLinode({
+                  id: linodeId,
+                  data: { label, group }
+                }));
+                this.setState({ loading: false });
+                dispatch(hideModal());
+              } catch (response) {
+                // TODO
+                this.setState({ loading: false });
+                console.log(response);
+              }
+            }}
+          >Save changes</button>
+        </div>
+      </div>);
+  }
+}
+
+EditModal.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+  group: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+};
+
 export class LinodeDetailPage extends Component {
   constructor() {
     super();
@@ -72,13 +157,18 @@ export class LinodeDetailPage extends Component {
     this.renderTabs = renderTabs.bind(this);
     this.loadLinode = module.exports.loadLinode.bind(this);
     this.componentDidMount = this.componentDidMount.bind(this);
-    this.state = { config: '' };
+    this.state = { config: '', label: '', group: '' };
   }
 
   async componentDidMount() {
     await this.loadLinode();
-    const defaultConfig = Object.values(this.getLinode()._configs.configs)[0];
-    this.setState({ config: defaultConfig ? defaultConfig.id : '' });
+    const linode = this.getLinode();
+    const defaultConfig = Object.values(linode._configs.configs)[0];
+    this.setState({
+      config: defaultConfig ? defaultConfig.id : '',
+      label: linode.label,
+      group: linode.group,
+    });
   }
 
   renderLabel(linode) {
@@ -95,7 +185,13 @@ export class LinodeDetailPage extends Component {
             className="btn btn-sm btn-primary-outline edit-button"
             onClick={e => {
               e.preventDefault();
-              // TODO: Open modal
+              dispatch(showModal('Edit Linode information',
+                <EditModal
+                  label={linode.label}
+                  group={linode.group}
+                  dispatch={dispatch}
+                  linodeId={linode.id}
+                />));
             }}
           >Edit</a>
         </h1>

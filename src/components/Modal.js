@@ -11,7 +11,6 @@ export function Modal(props) {
     <div
       className={`modal-overlay ${open ? 'open' : ''}`}
       onClick={close}
-      onBlur={close}
     >
       <div className="modal" onClick={(e) => e.stopPropagation()}>
         <header className="modal-header">
