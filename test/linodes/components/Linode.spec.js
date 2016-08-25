@@ -75,8 +75,7 @@ describe('linodes/components/Linode', () => {
       />);
 
     expect(linode.find('tr').props().className)
-      .to.contain('linode')
-      .and.contain('row');
+      .to.contain('linode');
   });
 
   it('invokes the onSelect function when the checkbox is toggled', () => {
