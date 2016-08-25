@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
-import logo from 'file!../../assets/linode-logo.svg';
 
 export default function Navigation(props) {
   const { username, emailHash } = props;
@@ -12,7 +11,7 @@ export default function Navigation(props) {
         <div className="navbar-linode nav-item">
           <Link to="/">
             <img
-              id="navbar-logo" src={logo}
+              id="navbar-logo" src="https://www.linode.com/media/images/header/linode-logo.svg"
               width="102" height="40"
               alt="Linode"
             />
