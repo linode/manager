@@ -1,5 +1,6 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
+import Footer from '../components/Footer';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
 import Modal from '../components/Modal';
@@ -19,7 +20,7 @@ export class Layout extends Component {
     }
     return (
       <div
-        className="container centered"
+        className="container text-xs-center"
         style={{ marginTop: '5rem' }}
       >
         <h1>{errors.status} {errors.statusText}</h1>
@@ -73,6 +74,7 @@ export class Layout extends Component {
 
   render() {
     const { username, emailHash, currentPath, errors } = this.props;
+    const year = new Date().getFullYear();
     return (
       <div className="layout">
         <Header username={username} emailHash={emailHash} />
@@ -82,6 +84,7 @@ export class Layout extends Component {
             <div className="container">
               <Modal />
               {this.props.children}
+              <Footer year={year} />
             </div> : this.renderError()}
         </div>
       </div>

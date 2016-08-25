@@ -124,7 +124,7 @@ export class LinodeDetailPage extends Component {
               className={errors.group ? 'has-error' : ''}
             />
           </div>
-          <div className="col-md-1 centered">/</div>
+          <div className="col-md-1 text-xs-center">/</div>
           <div className="col-md-4">
             <input
               type="text"

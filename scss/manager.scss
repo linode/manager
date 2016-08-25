@@ -34,6 +34,7 @@ $main-nav-height: $nav-height - $info-nav-height;
 $input-height: 30px;
 $input-padding: 0 .5rem;
 $font-size: .9rem;
+$font-size-small: 12px;
 
 @import 'components/components';
 @import 'linodes/linodes';
@@ -216,7 +217,7 @@ a {
                 position: absolute;
                 top: $height / 4;
                 right: -1 * ($height / 2);
-                font-size: 12px;
+                font-size: $font-size-small;
                 background: $red;
                 color: $white;
                 width: $height;
@@ -333,7 +334,7 @@ hr {
 }
 
 .text-muted {
-    font-size: 12px;
+    font-size: $font-size-small;
 }
 
 .btn {
@@ -621,9 +622,6 @@ table {
 .content-col {
     margin-bottom: .75rem;
     color: #666;
-    .text-muted {
-        font-size: 70%;
-    }
     li a {
         text-decoration: none;
     }
@@ -634,10 +632,6 @@ table {
 
 .text-danger {
     color: $red;
-}
-
-.centered {
-    text-align: center;
 }
 
 .alert {
@@ -653,6 +647,10 @@ table {
     &:hover {
         color: $dark-blue;
     }
+}
+
+footer span {
+    padding: 0 10px;
 }
 
 @-moz-keyframes pulse {
