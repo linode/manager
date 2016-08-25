@@ -603,9 +603,11 @@ table {
     }
 }
 
-.linodes h2 {
-    margin-top: 0.2rem;
-    margin-bottom: 0.5rem;
+.linodes {
+    margin-top: 1rem;
+    h2 {
+        margin-bottom: 0.5rem;
+    }
 }
 
 .row:last-of-type > .content-col {
