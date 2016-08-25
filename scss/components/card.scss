@@ -48,11 +48,14 @@
             margin-right: 1rem;
         }
 
-        .edit-icon {
+        .edit-button {
+            $height: 0.75rem * 2;
             margin-left: 0.75rem;
-            font-size: 16px;
-            position: relative;
-            top: -6px;
+            font-size: $height / 2;
+            line-height: $height;
+            height: $height;
+            padding-top: 0;
+            padding-bottom: 0;
         }
 
         .edit-details {
