@@ -29,8 +29,12 @@ export async function expectRequest(fn, path, dispatched = () => {},
     expect(fetchStub.firstCall.args[1]).to.equal(path);
     if (options) {
       const o = fetchStub.firstCall.args[2];
-      Object.keys(options).map(k =>
-        expect(options[k]).to.equal(o[k]));
+      if (typeof options === 'function') {
+        options(o);
+      } else {
+        Object.keys(options).map(k =>
+          expect(options[k]).to.equal(o[k]));
+      }
     }
     for (let i = 0; i < dispatch.callCount; ++i) {
       dispatched(dispatch.getCall(i), i);

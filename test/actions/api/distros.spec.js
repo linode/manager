@@ -1,27 +1,12 @@
-import sinon from 'sinon';
 import { expect } from 'chai';
 import {
   UPDATE_DISTROS,
   fetchDistros,
 } from '~/actions/api/distros';
-import * as fetch from '~/fetch';
+import { expectRequest } from '@/common';
+import { freshState } from '@/data';
 
 describe('actions/api/distros', async () => {
-  const auth = { token: 'token' };
-
-  const sandbox = sinon.sandbox.create();
-
-  afterEach(() => {
-    sandbox.restore();
-  });
-
-  const getGetState = (state = {}) => sandbox.stub().returns({
-    authentication: auth,
-    ...state,
-  });
-  const getDispatch = () => sandbox.spy();
-  const getFetchStub = (rsp) => sandbox.stub(fetch, 'fetch').returns({ json() { return rsp; } });
-
   const mockResponse = {
     distributions: [
       { id: 'distro_1' },
@@ -33,21 +18,11 @@ describe('actions/api/distros', async () => {
   };
 
   it('should fetch distros', async () => {
-    const dispatch = getDispatch();
-    const fetchStub = getFetchStub(mockResponse);
-    const getState = getGetState({
-      api: { distributions: { totalPages: -1 } },
-    });
-
-    const f = fetchDistros();
-
-    await f(dispatch, getState);
-
-    expect(fetchStub.calledWith(
-      auth.token, '/distributions?page=1')).to.equal(true);
-    expect(dispatch.calledWith({
-      type: UPDATE_DISTROS,
-      response: mockResponse,
-    })).to.equal(true);
+    const fn = fetchDistros();
+    await expectRequest(fn, '/distributions?page=1',
+      d => expect(d.args[0]).to.deep.equal({
+        type: UPDATE_DISTROS,
+        response: mockResponse,
+      }), mockResponse, null, freshState);
   });
 });
