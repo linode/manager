@@ -73,10 +73,11 @@ class EditModal extends Component {
     super();
     this.state = {
       loading: false,
-      errors: [],
+      errors: { label: null, group: null, _: null },
       label: '',
       group: '',
     };
+    this.saveChanges = this.saveChanges.bind(this);
   }
 
   componentDidMount() {
@@ -84,12 +85,46 @@ class EditModal extends Component {
     this.setState({ label, group });
   }
 
+  async saveChanges() {
+    const { dispatch, linodeId } = this.props;
+    const { label, group } = this.state;
+    this.setState({
+      loading: true,
+      errors: { label: null, group: null, _: null },
+    });
+    try {
+      await dispatch(putLinode({
+        id: linodeId,
+        data: { label, group }
+      }));
+      this.setState({ loading: false });
+      dispatch(hideModal());
+    } catch (response) {
+      const json = await response.json();
+      const reducer = f => (s, e) => {
+        if (e.field === f) {
+          return s ? [...s, e.reason] : [e.reason];
+        }
+        return s;
+      };
+      this.setState({
+        loading: false,
+        errors: {
+          label: json.errors.reduce(reducer('label'), null),
+          group: json.errors.reduce(reducer('group'), null),
+          _: json.errors.reduce((s, e) => e.field ? s : [...s, e.reason], null),
+        },
+      });
+      console.log(this.state);
+    }
+  }
+
   render() {
     const { dispatch, linodeId } = this.props;
-    const { loading, label, group } = this.state;
+    const { loading, label, group, errors } = this.state;
     return (
       <div>
-        <div className="form-group">
+        <div className={`form-group ${errors.group ? 'has-danger' : ''}`}>
           <label htmlFor="group">Group</label>
           <input
             className="form-control"
@@ -99,8 +134,12 @@ class EditModal extends Component {
             disabled={loading}
             onChange={e => this.setState({ group: e.target.value })}
           />
+          {errors.group ?
+            <div className="form-control-feedback">
+              {errors.group.map(error => <div>{error}</div>)}
+            </div> : null}
         </div>
-        <div className="form-group">
+        <div className={`form-group ${errors.label ? 'has-danger' : ''}`}>
           <label htmlFor="label">Label</label>
           <input
             className="form-control"
@@ -110,6 +149,16 @@ class EditModal extends Component {
             disabled={loading}
             onChange={e => this.setState({ label: e.target.value })}
           />
+          {errors.label ?
+            <div className="form-control-feedback">
+              {errors.label.map(error => <div>{error}</div>)}
+            </div> : null}
+        </div>
+        <div className="form-group">
+          {errors._ ?
+            <div className="form-control-feedback">
+              {errors._.map(error => <div>{error}</div>)}
+            </div> : null}
         </div>
         <div className="modal-footer">
           <button
@@ -120,21 +169,7 @@ class EditModal extends Component {
           <button
             className="btn btn-primary"
             disabled={loading}
-            onClick={async () => {
-              this.setState({ loading: true });
-              try {
-                await dispatch(putLinode({
-                  id: linodeId,
-                  data: { label, group }
-                }));
-                this.setState({ loading: false });
-                dispatch(hideModal());
-              } catch (response) {
-                // TODO
-                this.setState({ loading: false });
-                console.log(response);
-              }
-            }}
+            onClick={this.saveChanges}
           >Save changes</button>
         </div>
       </div>);
