@@ -90,10 +90,10 @@ export class ConfigPanel extends Component {
             <h3>Configs<HelpButton to="http://example.org" /></h3>
           </div>
           <div className="col-sm-6 content-col right">
-            <div className="input-group pull-right">
+            <div className="input-group">
               <a
                 href={`/linodes/${linode.id}/configs/create`}
-                className="btn btn-default"
+                className="btn btn-default pull-right"
               >
                 Add a config
               </a>
