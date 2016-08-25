@@ -106,10 +106,10 @@ describe('linodes/settings/components/ConfigPanel', () => {
       .to.equal('Test config');
   });
 
-  it('renders delete button', () => {
+  it('renders delete button when multiple configs are present', () => {
     const panel = mount(
       <ConfigPanel
-        params={{ linodeId: 'linode_1234' }}
+        params={{ linodeId: 'linode_1238' }}
         dispatch={() => {}}
         linodes={linodes}
       />
@@ -121,16 +121,28 @@ describe('linodes/settings/components/ConfigPanel', () => {
       .to.equal('Delete');
   });
 
-  it('attempts to delete config', async () => {
+  it('does not render delete button for one config', () => {
     const panel = mount(
       <ConfigPanel
         params={{ linodeId: 'linode_1234' }}
+        dispatch={() => {}}
+        linodes={linodes}
+      />
+    );
+
+    expect(panel.find('.delete-button').length).to.equal(0);
+  });
+
+  it('attempts to delete config', async () => {
+    const panel = mount(
+      <ConfigPanel
+        params={{ linodeId: 'linode_1238' }}
         dispatch={dispatch}
         linodes={linodes}
       />
     );
 
-    const actionBtn = panel.find('.action-link');
+    const actionBtn = panel.find('.action-link').at(0);
     actionBtn.simulate('click');
     expect(dispatch.calledOnce).to.equal(true);
     const fn = dispatch.firstCall.args[0];
@@ -144,7 +156,7 @@ describe('linodes/settings/components/ConfigPanel', () => {
       api: {
         linodes: {
           linodes: {
-            linode_1234: {
+            linode_1238: {
               _configs: {
                 configs: {
                   config_12345: { },
@@ -157,7 +169,7 @@ describe('linodes/settings/components/ConfigPanel', () => {
       },
     }));
     expect(fetchStub.calledOnce).to.equal(true);
-    expect(fetchStub.firstCall.args[1]).to.equal('/linodes/linode_1234/configs/config_12345');
+    expect(fetchStub.firstCall.args[1]).to.equal('/linodes/linode_1238/configs/config_12345');
     expect(dispatch.calledOnce).to.equal(true);
     expect(dispatch.firstCall.args[0].type).to.equal(DELETE_LINODE_CONFIG);
   });
