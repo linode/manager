@@ -39,7 +39,7 @@ function configContent(linode, configs, dispatch) {
               </Link>
             </td>
             <td>
-              <a
+              {configs.length > 1 ? <a
                 className="delete-button"
                 onClick={e => {
                   e.preventDefault();
@@ -47,7 +47,7 @@ function configContent(linode, configs, dispatch) {
                 }}
                 className="action-link pull-right"
                 href="#"
-              >Delete</a>
+              >Delete</a> : null}
             </td>
           </tr>
         )}
