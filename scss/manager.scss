@@ -45,7 +45,7 @@ $font-size-small: 12px;
     transition: background .35s, color .2s, border .1s;
 }
 
-html, [data-reactroot] {
+html, #root > [data-reactroot] {
     height: 100%;
 }
 

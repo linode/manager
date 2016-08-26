@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import { Link } from 'react-router';
+import { Link } from '~/components/Link';
 
 export default function Navigation(props) {
   const { username, emailHash } = props;
