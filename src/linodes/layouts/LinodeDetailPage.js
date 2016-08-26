@@ -169,7 +169,7 @@ class EditModal extends Component {
             className="btn btn-primary"
             disabled={loading}
             onClick={this.saveChanges}
-          >Save changes</button>
+          >Save</button>
         </div>
       </div>);
   }
