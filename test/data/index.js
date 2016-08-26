@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import reducer from '~/reducers';
+import deepFreeze from 'deep-freeze';
 
 import { linodes } from './linodes';
 import { distros } from './distros';
@@ -38,7 +39,7 @@ export const api = {
   },
 };
 
-export const state = {
+export const state = deepFreeze({
   authentication,
   api,
   linodes: {
@@ -55,6 +56,6 @@ export const state = {
       },
     },
   },
-};
+});
 
 export const freshState = reducer(undefined, { });

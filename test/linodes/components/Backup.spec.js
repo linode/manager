@@ -29,10 +29,9 @@ describe('linodes/components/Backup', () => {
   });
 
   it('renders a Backup pending', () => {
-    testBackup.status = 'pending';
     const backup = mount(
       <Backup
-        backup={testBackup}
+        backup={{ ...testBackup, status: 'pending' }}
         selected={false}
         onSelect={() => {}}
       />
@@ -42,10 +41,9 @@ describe('linodes/components/Backup', () => {
   });
 
   it('renders a Backup running', () => {
-    testBackup.status = 'running';
     const backup = mount(
       <Backup
-        backup={testBackup}
+        backup={{ ...testBackup, status: 'running' }}
         selected={false}
         onSelect={() => {}}
       />
@@ -55,10 +53,9 @@ describe('linodes/components/Backup', () => {
   });
 
   it('renders a Backup failed', () => {
-    testBackup.status = 'failed';
     const backup = mount(
       <Backup
-        backup={testBackup}
+        backup={{ ...testBackup, status: 'failed' }}
         selected={false}
         onSelect={() => {}}
       />
@@ -68,10 +65,9 @@ describe('linodes/components/Backup', () => {
   });
 
   it('renders a Backup user aborted', () => {
-    testBackup.status = 'userAborted';
     const backup = mount(
       <Backup
-        backup={testBackup}
+        backup={{ ...testBackup, status: 'userAborted' }}
         selected={false}
         onSelect={() => {}}
       />
@@ -81,10 +77,9 @@ describe('linodes/components/Backup', () => {
   });
 
   it('renders a Backup post processing', () => {
-    testBackup.status = 'needsPostProcessing';
     const backup = mount(
       <Backup
-        backup={testBackup}
+        backup={{ ...testBackup, status: 'needsPostProcessing' }}
         selected={false}
         onSelect={() => {}}
       />

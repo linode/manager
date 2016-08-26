@@ -187,7 +187,8 @@ export const linodes = {
     backups: { ...testLinode.backups, enabled: false },
     _configs: {
       totalResults: 0,
-      configs: [],
+      totalPages: 1,
+      configs: {},
     },
   },
 };
