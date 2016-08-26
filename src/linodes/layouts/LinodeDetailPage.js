@@ -112,7 +112,6 @@ export class EditModal extends Component {
         errors: {
           label: json.errors.reduce(reducer('label'), null),
           group: json.errors.reduce(reducer('group'), null),
-          _: json.errors.reduce((s, e) => e.field ? s : [...s, e.reason], null),
         },
       });
     }
@@ -135,7 +134,7 @@ export class EditModal extends Component {
           />
           {errors.group ?
             <div className="form-control-feedback">
-              {errors.group.map(error => <div>{error}</div>)}
+              {errors.group.map(error => <div key={error}>{error}</div>)}
             </div> : null}
         </div>
         <div className={`form-group ${errors.label ? 'has-danger' : ''}`}>
@@ -150,13 +149,7 @@ export class EditModal extends Component {
           />
           {errors.label ?
             <div className="form-control-feedback">
-              {errors.label.map(error => <div>{error}</div>)}
-            </div> : null}
-        </div>
-        <div className="form-group">
-          {errors._ ?
-            <div className="form-control-feedback">
-              {errors._.map(error => <div>{error}</div>)}
+              {errors.label.map(error => <div key={error}>{error}</div>)}
             </div> : null}
         </div>
         <div className="modal-footer">

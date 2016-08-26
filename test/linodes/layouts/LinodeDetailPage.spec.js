@@ -393,7 +393,7 @@ describe('linodes/layouts/LinodeDetailPage EditModal', () => {
   });
 
   describe('saveChanges', () => {
-    it('save changes when "Save" is clicked', async () => {
+    it('performs the HTTP request', async () => {
       const dispatch = sandbox.spy();
       const modal = shallow(
         <EditModal
@@ -419,6 +419,48 @@ describe('linodes/layouts/LinodeDetailPage EditModal', () => {
             group: 'new group',
           }));
         });
+    });
+
+    it('handles exceptions', async () => {
+      const dispatch = sandbox.stub();
+      const modal = mount(
+        <EditModal
+          dispatch={dispatch}
+          label="test label"
+          group="test group"
+          linodeId="linode_1234"
+        />);
+      modal.find('input#group').simulate('change', {
+        target: { value: 'new group' },
+      });
+      modal.find('input#label').simulate('change', {
+        target: { value: 'new label' },
+      });
+      const { saveChanges } = modal.instance();
+      dispatch.reset();
+      dispatch.throws({
+        json() {
+          return {
+            errors: [
+              { field: 'label', reason: 'some label error' },
+              { field: 'group', reason: 'some group error' },
+            ],
+          };
+        },
+      });
+      await saveChanges();
+      expect(modal.find('.form-group').at(0).hasClass('has-danger'))
+        .to.equal(true);
+      expect(modal.find('.form-group').at(1).hasClass('has-danger'))
+        .to.equal(true);
+      expect(modal.contains(
+        <div
+          key={'some label error'}
+        >some label error</div>)).to.equal(true);
+      expect(modal.contains(
+        <div
+          key={'some group error'}
+        >some group error</div>)).to.equal(true);
     });
   });
 });
