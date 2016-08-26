@@ -2,9 +2,12 @@
   "presets": ["stage-0", "react", "es2015"],
   "plugins": [
     "transform-runtime",
-    ["babel-root-import", {
+    ["babel-root-import", [{
         "rootPathSuffix": "src"
-    }]
+    }, {
+        "rootPathSuffix": "test",
+        "rootPathPrefix": "@",
+    }]]
   ],
   "env": {
     "development": {

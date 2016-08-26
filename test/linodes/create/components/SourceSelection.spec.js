@@ -4,9 +4,10 @@ import { expect } from 'chai';
 import { shallow } from 'enzyme';
 import { Tab } from 'react-tabs';
 import moment from 'moment';
+import _ from 'lodash';
 
 import SourceSelection from '~/linodes/create/components/SourceSelection';
-import { testDistros, linodes } from '~/../test/data';
+import { api } from '@/data';
 
 describe('linodes/create/components/SourceSelection', () => {
   const sandbox = sinon.sandbox.create();
@@ -14,24 +15,13 @@ describe('linodes/create/components/SourceSelection', () => {
     sandbox.restore();
   });
 
-  const state = {
-    linodes,
-    create: {
-      source: {
-        source: null,
-        sourceTab: 0,
-      },
-    },
-    distros: { distributions: { ...testDistros } },
-  };
-
   it('renders the card header', () => {
     const c = shallow(
       <SourceSelection
-        distros={state.distros.distributions}
-        source={state.create.source.source}
-        selectedTab={state.create.source.sourceTab}
-        linodes={state.linodes}
+        distros={api.distributions}
+        linodes={api.linodes}
+        source={null}
+        selectedTab={0}
       />
     );
     expect(c.contains(<h2>Select a source</h2>)).to.equal(true);
@@ -40,10 +30,10 @@ describe('linodes/create/components/SourceSelection', () => {
   it('renders the source tabs', () => {
     const c = shallow(
       <SourceSelection
-        distros={state.distros.distributions}
-        source={state.create.source.source}
-        selectedTab={state.create.source.sourceTab}
-        linodes={state.linodes}
+        distros={api.distributions}
+        linodes={api.linodes}
+        source={null}
+        selectedTab={0}
       />
     );
     expect(c.contains(<Tab>Distributions</Tab>)).to.equal(true);
@@ -54,11 +44,11 @@ describe('linodes/create/components/SourceSelection', () => {
     const onTabChange = sandbox.spy();
     const c = shallow(
       <SourceSelection
-        distros={state.distros.distributions}
-        source={state.create.source.source}
-        selectedTab={state.create.source.sourceTab}
+        distros={api.distributions}
+        linodes={api.linodes}
+        source={null}
+        selectedTab={0}
         onTabChange={onTabChange}
-        linodes={state.linodes}
       />);
     c.find('Tabs').props().onSelect(1);
     expect(onTabChange.calledOnce).to.equal(true);
@@ -68,26 +58,30 @@ describe('linodes/create/components/SourceSelection', () => {
   it('renders DistroVendors', () => {
     const c = shallow(
       <SourceSelection
-        distros={state.distros.distributions}
-        source={state.create.source.source}
+        distros={api.distributions.distributions}
+        linodes={api.linodes}
+        source={null}
         selectedTab={0}
-        linodes={state.linodes}
       />);
-    expect(c.find('DistroVendor').length).to.equal(2);
+    expect(c.find('DistroVendor').length)
+      .to.equal(Object.values(
+        _.groupBy(Object.values(api.distributions.distributions),
+          d => d.vendor)).length
+      );
   });
 
   it('invokes the onSourceSelected function as necessary for Distros', () => {
     const onSourceSelected = sandbox.spy();
     const c = shallow(
       <SourceSelection
-        distros={state.distros.distributions}
-        source={state.create.source.source}
+        distros={api.distributions}
+        linodes={api.linodes}
+        source={null}
         selectedTab={0}
         onSourceSelected={onSourceSelected}
-        linodes={state.linodes}
       />
     );
-    const distro = state.distros.distributions.distro_1234;
+    const distro = api.distributions.distributions.distro_1234;
     c.find('DistroVendor').first().props()
      .onClick(distro);
     expect(onSourceSelected.calledOnce).to.equal(true);
@@ -95,13 +89,13 @@ describe('linodes/create/components/SourceSelection', () => {
   });
 
   const moreBackupsLinodes = {
-    ...state.linodes,
+    ...api.linodes,
     linodes: {
-      ...state.linodes.linodes,
+      ...api.linodes.linodes,
       linode_1240: {
-        ...state.linodes.linodes.linode_1234,
+        ...api.linodes.linodes.linode_1234,
         id: 'linode_1240',
-        created: moment(state.linodes.linodes.linode_1234.created) + 60,
+        created: moment(api.linodes.linodes.linode_1234.created) + 60,
         label: 'More backups',
       },
     },
@@ -110,10 +104,10 @@ describe('linodes/create/components/SourceSelection', () => {
   it('renders Linodes', () => {
     const c = shallow(
       <SourceSelection
-        distros={state.distros.distributions}
-        source={state.create.source.source}
-        selectedTab={1}
+        distros={api.distributions}
         linodes={moreBackupsLinodes}
+        source={null}
+        selectedTab={1}
       />
     );
 
@@ -125,11 +119,11 @@ describe('linodes/create/components/SourceSelection', () => {
   it('only shows shows n linodes per page of Backups', () => {
     const c = shallow(
       <SourceSelection
-        distros={state.distros.distributions}
-        source={state.create.source.source}
+        distros={api.distributions}
+        linodes={moreBackupsLinodes}
+        source={null}
         selectedTab={1}
         onSourceSelected={() => {}}
-        linodes={moreBackupsLinodes}
         perPageLimit={1}
       />
     );
@@ -147,11 +141,11 @@ describe('linodes/create/components/SourceSelection', () => {
   it('changes pages when requested', () => {
     const c = shallow(
       <SourceSelection
-        distros={state.distros.distributions}
-        source={state.create.source.source}
+        distros={api.distributions}
+        linodes={moreBackupsLinodes}
+        source={null}
         selectedTab={1}
         onSourceSelected={() => {}}
-        linodes={moreBackupsLinodes}
         perPageLimit={1}
       />
     );
@@ -189,11 +183,11 @@ describe('linodes/create/components/SourceSelection', () => {
   it('filters backups when updating filter', () => {
     const c = shallow(
       <SourceSelection
-        distros={state.distros.distributions}
-        source={state.create.source.source}
+        distros={api.distributions}
+        linodes={moreBackupsLinodes}
+        source={null}
         selectedTab={1}
         onSourceSelected={() => {}}
-        linodes={moreBackupsLinodes}
       />
     );
 
@@ -214,11 +208,11 @@ describe('linodes/create/components/SourceSelection', () => {
   it('shows the BackupSelection when a Linode is clicked', () => {
     const c = shallow(
       <SourceSelection
-        distros={state.distros.distributions}
-        source={state.create.source.source}
+        distros={api.distributions}
+        linodes={api.linodes}
+        source={null}
         selectedTab={1}
         onSourceSelected={() => {}}
-        linodes={state.linodes}
       />
     );
 

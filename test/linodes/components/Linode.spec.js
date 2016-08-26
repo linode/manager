@@ -5,7 +5,7 @@ import mockdate from 'mockdate';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
 import { Linode, renderBackupStatus } from '~/linodes/components/Linode';
-import { testLinode } from '~/../test/data';
+import { testLinode } from '@/data/linodes';
 
 describe('linodes/components/Linode', () => {
   const sandbox = sinon.sandbox.create();

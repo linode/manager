@@ -3,6 +3,8 @@ import { expect } from 'chai';
 import * as actions from '~/linodes/actions/detail/index';
 import { UPDATE_LINODE } from '~/actions/api/linodes';
 import * as fetch from '~/fetch';
+import { state } from '@/data';
+import { expectRequest } from '@/common';
 
 describe('linodes/actions/detail/index', () => {
   describe('toggleEditMode', () => {
@@ -41,23 +43,6 @@ describe('linodes/actions/detail/index', () => {
       sandbox.restore();
     });
 
-    const state = {
-      authentication: {
-        token: 'token',
-      },
-      linodes: {
-        detail: {
-          index: {
-            label: 'new label',
-            group: 'new group',
-          },
-        },
-      },
-    };
-    const getGetState = (_state = {}) => sandbox.stub().returns(_state);
-    const getDispatch = () => sandbox.spy();
-    const getFetchStub = (rsp) => sandbox.stub(fetch, 'fetch').returns({ json() { return rsp; } });
-
     it('should return a function', () => {
       const action = actions.commitChanges('linode_1234');
       expect(action).to.be.a('function');
@@ -66,38 +51,31 @@ describe('linodes/actions/detail/index', () => {
     it('toggles the loading state twice', async () => {
       const action = actions.commitChanges('linode_1234');
       expect(action).to.be.a('function');
-      const dispatch = getDispatch();
-      const getState = getGetState(state);
-      getFetchStub();
+      const dispatch = sandbox.spy();
+      const getState = sandbox.stub().returns(state);
+      sandbox.stub(fetch, 'fetch').returns({ json: () => {} });
       await action(dispatch, getState);
       expect(dispatch.withArgs({ type: actions.TOGGLE_LOADING }).calledTwice)
         .to.equal(true);
     });
 
     it('performs the HTTP request', async () => {
-      const action = actions.commitChanges('linode_1234');
-      expect(action).to.be.a('function');
-      const dispatch = getDispatch();
-      const getState = getGetState(state);
-      const fetchStub = getFetchStub();
-      await action(dispatch, getState);
-      expect(fetchStub.calledOnce).to.equal(true);
-      expect(fetchStub.calledWith(
-        state.authentication.token,
-        '/linodes/linode_1234', {
+      const fn = actions.commitChanges('linode_1234');
+      expectRequest(fn, '/linodes/linode_1234', () => {}, null,
+        o => expect(o).to.deep.equal({
           method: 'PUT',
           body: JSON.stringify({
             label: 'new label',
             group: 'new group',
           }),
-        })).to.equal(true);
+        }));
     });
 
     it('handles non-400 errors', async () => {
       const action = actions.commitChanges('linode_1234');
       expect(action).to.be.a('function');
-      const dispatch = getDispatch();
-      const getState = getGetState(state);
+      const dispatch = sandbox.spy();
+      const getState = sandbox.stub().returns(state);
       sandbox.stub(fetch, 'fetch')
         .throws({
           json: () => ({}),
@@ -114,8 +92,8 @@ describe('linodes/actions/detail/index', () => {
     it('handles 400 errors', async () => {
       const action = actions.commitChanges('linode_1234');
       expect(action).to.be.a('function');
-      const dispatch = getDispatch();
-      const getState = getGetState(state);
+      const dispatch = sandbox.spy();
+      const getState = sandbox.stub().returns(state);
       sandbox.stub(fetch, 'fetch')
         .throws({
           json: () => ({
@@ -139,24 +117,20 @@ describe('linodes/actions/detail/index', () => {
     });
 
     it('dispatches an UPDATE_LINODE action with the new linode details', async () => {
-      const action = actions.commitChanges('linode_1234');
-      expect(action).to.be.a('function');
-      const dispatch = getDispatch();
-      const getState = getGetState(state);
-      getFetchStub({ fake: 'linode' });
-      await action(dispatch, getState);
-      expect(dispatch.withArgs({
-        type: UPDATE_LINODE,
-        linode: { fake: 'linode' },
-      }).calledOnce).to.equal(true);
+      const fn = actions.commitChanges('linode_1234');
+      expect(fn, '/linodes/linode_1234',
+        d => expect(d.args[0]).to.deep.equal({
+          type: UPDATE_LINODE,
+          linode: { fake: 'linode' },
+        }));
     });
 
     it('leaves edit mode', async () => {
       const action = actions.commitChanges('linode_1234');
       expect(action).to.be.a('function');
-      const dispatch = getDispatch();
-      const getState = getGetState(state);
-      getFetchStub();
+      const dispatch = sandbox.spy();
+      const getState = sandbox.stub().returns(state);
+      sandbox.stub(fetch, 'fetch').returns({ json: () => {} });
       await action(dispatch, getState);
       expect(dispatch.withArgs({ type: actions.TOGGLE_EDIT_MODE }).calledOnce).to.equal(true);
     });

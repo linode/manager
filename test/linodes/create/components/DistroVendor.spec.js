@@ -3,7 +3,7 @@ import sinon from 'sinon';
 import { expect } from 'chai';
 import { shallow } from 'enzyme';
 import { distros } from '~/assets';
-import { testDistros } from '~/../test/data';
+import { distros as testDistros } from '@/data/distros';
 import DistroVendor from '~/linodes/create/components/DistroVendor';
 
 describe('linodes/create/components/DistroVendor', () => {

@@ -2,7 +2,7 @@ import React from 'react';
 import sinon from 'sinon';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
-import { testLinode } from '~/../test/data';
+import { testLinode } from '@/data/linodes';
 import { LinodeNetworking } from '~/linodes/layouts/LinodeNetworking';
 import { ipv4ns, ipv6ns, ipv6nsSuffix } from '~/constants';
 

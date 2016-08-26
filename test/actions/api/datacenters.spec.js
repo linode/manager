@@ -1,27 +1,12 @@
-import sinon from 'sinon';
 import { expect } from 'chai';
 import {
   UPDATE_DATACENTERS,
   fetchDatacenters,
 } from '~/actions/api/datacenters';
-import * as fetch from '~/fetch';
+import { expectRequest } from '@/common';
+import { freshState } from '@/data';
 
 describe('actions/api/datacenters', async () => {
-  const auth = { token: 'token' };
-
-  const sandbox = sinon.sandbox.create();
-
-  afterEach(() => {
-    sandbox.restore();
-  });
-
-  const getGetState = (state = {}) => sandbox.stub().returns({
-    authentication: auth,
-    ...state,
-  });
-  const getDispatch = () => sandbox.spy();
-  const getFetchStub = (rsp) => sandbox.stub(fetch, 'fetch').returns({ json() { return rsp; } });
-
   const mockResponse = {
     datacenters: [
       { id: 'datacenter_1' },
@@ -33,21 +18,11 @@ describe('actions/api/datacenters', async () => {
   };
 
   it('should fetch datacenters', async () => {
-    const dispatch = getDispatch();
-    const fetchStub = getFetchStub(mockResponse);
-    const getState = getGetState({
-      api: { datacenters: { totalPages: -1 } },
-    });
-
-    const f = fetchDatacenters();
-
-    await f(dispatch, getState);
-
-    expect(fetchStub.calledWith(
-      auth.token, '/datacenters?page=1')).to.equal(true);
-    expect(dispatch.calledWith({
-      type: UPDATE_DATACENTERS,
-      response: mockResponse,
-    })).to.equal(true);
+    const fn = fetchDatacenters();
+    await expectRequest(fn, '/datacenters?page=1',
+      d => expect(d.args[0]).to.deep.equal({
+        type: UPDATE_DATACENTERS,
+        response: mockResponse,
+      }), mockResponse, null, freshState);
   });
 });

@@ -4,11 +4,11 @@ import { push } from 'react-router-redux';
 import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 import * as fetch from '~/fetch';
-import { testLinode } from '~/../test/data';
+import { testLinode } from '@/data/linodes';
 import { BackupsPage } from '~/linodes/layouts/BackupsPage';
-import { UPDATE_LINODE } from '~/actions/api/linodes';
 import { SHOW_MODAL, hideModal } from '~/actions/modal';
 import { SET_ERROR } from '~/actions/errors';
+import { expectRequest } from '@/common';
 
 describe('linodes/layouts/BackupsPage', () => {
   const sandbox = sinon.sandbox.create();
@@ -51,20 +51,8 @@ describe('linodes/layouts/BackupsPage', () => {
         backups={backups}
       />);
     await new Promise(a => setTimeout(a, 0));
-    const dispatched = dispatch.firstCall.args[0];
-    // Assert that dispatched is a function that fetches a linode
-    const fetchStub = sandbox.stub(fetch, 'fetch').returns({
-      json: () => {},
-    });
-    dispatch.reset();
-    await dispatched(dispatch, () => ({
-      authentication: { token: 'token' },
-      api: { linodes: { totalPages: -1, linodes: { } } },
-    }));
-    expect(fetchStub.calledOnce).to.equal(true);
-    expect(fetchStub.firstCall.args[1]).to.equal('/linodes/linode_1234');
-    expect(dispatch.calledOnce).to.equal(true);
-    expect(dispatch.firstCall.args[0].type).to.equal(UPDATE_LINODE);
+    const fn = dispatch.firstCall.args[0];
+    await expectRequest(fn, '/linodes/linode_1234');
   });
 
   it('does not fetch when mounted with a known linode', () => {

@@ -15,22 +15,15 @@ import {
   deleteLinodeConfig,
 } from '~/actions/api/linodes';
 import * as fetch from '~/fetch';
+import { expectRequest } from '@/common';
+import { freshState } from '@/data';
 
 describe('actions/api/linodes', async () => {
-  const auth = { token: 'token' };
-
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
     sandbox.restore();
   });
-
-  const getGetState = (state = {}) => sandbox.stub().returns({
-    authentication: auth,
-    ...state,
-  });
-  const getDispatch = () => sandbox.spy();
-  const getFetchStub = (rsp) => sandbox.stub(fetch, 'fetch').returns({ json() { return rsp; } });
 
   const mockResponse = {
     linodes: [
@@ -43,42 +36,22 @@ describe('actions/api/linodes', async () => {
   };
 
   it('should fetch linodes', async () => {
-    const dispatch = getDispatch();
-    const fetchStub = getFetchStub(mockResponse);
-    const getState = getGetState({
-      api: { linodes: { totalPages: -1 } },
-    });
-
-    const f = fetchLinodes();
-
-    await f(dispatch, getState);
-
-    expect(fetchStub.calledWith(
-      auth.token, '/linodes?page=1')).to.equal(true);
-    expect(dispatch.calledWith({
-      type: UPDATE_LINODES,
-      response: mockResponse,
-    })).to.equal(true);
+    const fn = fetchLinodes();
+    await expectRequest(fn, '/linodes?page=1',
+      d => expect(d.args[0]).to.deep.equal({
+        type: UPDATE_LINODES,
+        response: mockResponse,
+      }), mockResponse, null, freshState);
   });
 
   it('should update linode', async () => {
-    const dispatch = getDispatch();
-    const fetchStub = getFetchStub(mockResponse.linodes[0]);
-    const getState = getGetState({
-      api: { linodes: { totalPages: -1 } },
-    });
-
-    const f = fetchLinode('linode_1');
-
-    await f(dispatch, getState);
-
-    expect(fetchStub.calledWith(
-      auth.token, '/linodes/linode_1')).to.equal(true);
-    expect(dispatch.calledWith({
-      type: UPDATE_LINODE,
-      linode: mockResponse.linodes[0],
-      linodes: 'linode_1',
-    })).to.equal(true);
+    const fn = fetchLinode('linode_1');
+    await expectRequest(fn, '/linodes/linode_1',
+      d => expect(d.args[0]).to.deep.equal({
+        type: UPDATE_LINODE,
+        linode: mockResponse.linodes[0],
+        linodes: 'linode_1',
+      }), mockResponse.linodes[0], null, freshState);
   });
 
   it('should preform request update linode until condition is met', async () => {
@@ -111,168 +84,49 @@ describe('actions/api/linodes', async () => {
 
   it('should return function with deleteLinode', async () => {
     const f = deleteLinode('linode_1');
-
     expect(f).to.be.a('function');
   });
 
-  const emptyResponse = {};
-
   it('should call delete linode endpoint', async () => {
-    const dispatch = getDispatch();
-    const fetchStub = getFetchStub(emptyResponse);
-    const getState = getGetState({
-      api: { linodes: { totalPages: -1, linodes: { } } },
-    });
-
-    const f = deleteLinode('linode_1');
-
-    await f(dispatch, getState);
-
-    expect(fetchStub.calledWith(
-      auth.token, '/linodes/linode_1', { method: 'DELETE' })).to.equal(true);
-    expect(dispatch.calledWith({
-      type: DELETE_LINODE,
-      linodes: 'linode_1',
-    })).to.equal(true);
+    const fn = deleteLinode('linode_1');
+    await expectRequest(fn, '/linodes/linode_1',
+      d => expect(d.args[0]).to.deep.equal({
+        type: DELETE_LINODE,
+        linodes: 'linode_1',
+      }));
   });
 });
 
 describe('actions/linodes/configs', async () => {
-  const sandbox = sinon.sandbox.create();
-
-  afterEach(() => {
-    sandbox.restore();
-  });
-
-  const auth = { token: 'token' };
-  const getGetState = (state = {}) => sandbox.stub().returns({
-    authentication: auth,
-    ...state,
-  });
-  const getDispatch = () => sandbox.spy();
-  const getFetchStub = (rsp) => sandbox.stub(fetch, 'fetch').returns({ json() { return rsp; } });
-
   it('should return function with deleteLinodeConfig', async () => {
     const f = deleteLinodeConfig('linode_1', 'config_1');
-
     expect(f).to.be.a('function');
   });
 
-  const emptyResponse = {};
-
   it('should call delete linode config endpoint', async () => {
-    const dispatch = getDispatch();
-    const fetchStub = getFetchStub(emptyResponse);
-    const getState = getGetState({
-      api: {
-        linodes: {
-          linodes: {
-            linode_1: { _configs: { configs: {}, totalPages: -1 } },
-          },
-        },
-      },
-    });
-
-    const f = deleteLinodeConfig('linode_1', 'config_1');
-
-    await f(dispatch, getState);
-
-    expect(fetchStub.calledWith(
-      auth.token, '/linodes/linode_1/configs/config_1', { method: 'DELETE' })).to.equal(true);
-    expect(dispatch.calledWith({
-      type: DELETE_LINODE_CONFIG,
-      linodes: 'linode_1',
-      configs: 'config_1',
-    })).to.equal(true);
+    const fn = deleteLinodeConfig('linode_1234', 'config_12345');
+    await expectRequest(fn, '/linodes/linode_1234/configs/config_12345',
+      d => expect(d.args[0]).to.deep.equal({
+        type: DELETE_LINODE_CONFIG,
+        linodes: 'linode_1234',
+        configs: 'config_12345',
+      }), null, { method: 'DELETE' });
   });
 });
 
 describe('actions/linodes/power', async () => {
-  const sandbox = sinon.sandbox.create();
+  function power(testFn, name, path, state) {
+    it(name, async () => {
+      const fn = testFn('linode_1234');
+      await expectRequest(fn, `/linodes/linode_1234/${path}`,
+        (d, n) => n === 0 && expect(d.args[0]).to.deep.equal({
+          type: UPDATE_LINODE,
+          linode: { id: 'linode_1234', state },
+        }), null, { method: 'POST', body: '{"config":null}' });
+    });
+  }
 
-  afterEach(() => {
-    sandbox.restore();
-  });
-
-  const auth = { token: 'token' };
-  const getGetState = (state = {}) => sandbox.stub().returns({
-    authentication: auth,
-    ...state,
-  });
-  const getDispatch = () => sandbox.spy();
-  const getFetchStub = (rsp) => sandbox.stub(fetch, 'fetch').returns({ json() { return rsp; } });
-
-  const mockBootingResponse = {
-    type: UPDATE_LINODE,
-    linode: { id: 'foo', state: 'booting' },
-  };
-
-
-  it('returns linode power boot status', async () => {
-    const dispatch = getDispatch();
-    const getState = getGetState();
-    const fetchStub = getFetchStub(mockBootingResponse);
-    const f = powerOnLinode('foo');
-
-    await f(dispatch, getState);
-
-    expect(fetchStub.calledWith(
-      auth.token, '/linodes/foo/boot',
-      {
-        method: 'POST',
-        body: '{"config":null}',
-      })).to.equal(true);
-    expect(dispatch.calledWith({
-      type: UPDATE_LINODE,
-      linode: { id: 'foo', state: 'booting' },
-    })).to.equal(true);
-  });
-
-  const mockShuttingDownResponse = {
-    ...mockBootingResponse,
-    linode: { ...mockBootingResponse.linode, state: 'shutting_down' },
-  };
-
-  it('returns linode power shutdown status', async () => {
-    const dispatch = getDispatch();
-    const getState = getGetState();
-    const fetchStub = getFetchStub(mockShuttingDownResponse);
-    const f = powerOffLinode('foo');
-
-    await f(dispatch, getState);
-
-    expect(fetchStub.calledWith(
-      auth.token, '/linodes/foo/shutdown', {
-        method: 'POST',
-        body: '{"config":null}',
-      })).to.equal(true);
-    expect(dispatch.calledWith({
-      type: UPDATE_LINODE,
-      linode: { id: 'foo', state: 'shutting_down' },
-    })).to.equal(true);
-  });
-
-  const mockRebootingResponse = {
-    ...mockBootingResponse,
-    linode: { ...mockBootingResponse.linode, state: 'rebooting' },
-  };
-
-  it('returns linode power reboot status', async () => {
-    const dispatch = getDispatch();
-    const getState = getGetState();
-    const fetchStub = getFetchStub(mockRebootingResponse);
-    const f = rebootLinode('foo');
-
-    await f(dispatch, getState);
-
-    expect(fetchStub.calledWith(
-      auth.token, '/linodes/foo/reboot', {
-        method: 'POST',
-        body: '{"config":null}',
-      })).to.equal(true);
-    expect(dispatch.calledWith({
-      type: UPDATE_LINODE,
-      linode: { id: 'foo', state: 'rebooting' },
-    })).to.equal(true);
-  });
+  power(powerOnLinode, 'powerOnLinode', 'boot', 'booting');
+  power(powerOffLinode, 'powerOffLinode', 'shutdown', 'shutting_down');
+  power(rebootLinode, 'rebootLinode', 'reboot', 'rebooting');
 });

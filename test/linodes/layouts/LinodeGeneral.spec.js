@@ -2,7 +2,7 @@ import React from 'react';
 import sinon from 'sinon';
 import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
-import { testLinode } from '~/../test/data';
+import { testLinode } from '@/data/linodes';
 import { LinodeGeneral } from '~/linodes/layouts/LinodeGeneral';
 import * as LinodeDetailPage from '~/linodes/layouts/LinodeDetailPage';
 import moment from 'moment';

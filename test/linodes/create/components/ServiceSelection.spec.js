@@ -4,10 +4,10 @@ import { expect } from 'chai';
 import { mount } from 'enzyme';
 
 import ServiceSelection from '~/linodes/create/components/ServiceSelection';
-import { state } from '~/../test/data';
+import { api } from '@/data';
 
 describe('linodes/create/components/ServiceSelection', () => {
-  const { services } = state.services;
+  const { services } = api.services;
 
   it('renders the card header', () => {
     const c = mount(
@@ -18,11 +18,8 @@ describe('linodes/create/components/ServiceSelection', () => {
     );
 
     expect(c.contains(<h2>Select a plan</h2>)).to.equal(true);
-    expect(c.find('.plan').length).to.equal(2);
+    expect(c.find('.plan').length).to.equal(1);
     expect(c.find('.plan').first().find(
-      <header><div>Linode 1024</div></header>
-    )).to.exist;
-    expect(c.find('.plan').at(1).find(
       <header><div>Linode 2048</div></header>
     )).to.exist;
   });
@@ -39,6 +36,6 @@ describe('linodes/create/components/ServiceSelection', () => {
 
     c.find('.plan').first().simulate('click');
     expect(onSelect.calledOnce).to.equal(true);
-    expect(onSelect.firstCall.args[0]).to.equal('linode1024.5');
+    expect(onSelect.firstCall.args[0]).to.equal('linode2048.5');
   });
 });
