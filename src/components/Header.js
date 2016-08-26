@@ -6,9 +6,9 @@ export default function Header(props) {
   const { username, emailHash } = props;
 
   return (
-    <div className="header" style={props.style}>
+    <div className="header">
       <header className="header-info clearfix">
-        <Infobar />
+        <Infobar title={props.title} link={props.link} />
       </header>
       <header className="header-main clearfix">
         <Navigation username={username} emailHash={emailHash} />
@@ -20,5 +20,6 @@ export default function Header(props) {
 Header.propTypes = {
   username: PropTypes.string,
   emailHash: PropTypes.string,
-  style: PropTypes.object,
+  title: PropTypes.string.isRequired,
+  link: PropTypes.string.isRequired,
 };
