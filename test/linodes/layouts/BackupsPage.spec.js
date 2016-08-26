@@ -194,7 +194,7 @@ describe('linodes/layouts/BackupsPage', () => {
     expect(fetchStub.calledWith('token', '/linodes/1234')).to.equal(true);
   });
 
-  it('renders the latest Backup', () => {
+  it('renders the restore UI', () => {
     const page = shallow(
       <BackupsPage
         dispatch={dispatch}
@@ -203,7 +203,7 @@ describe('linodes/layouts/BackupsPage', () => {
         backups={backups}
       />);
     const b = page.find('.backups');
-    expect(b.find('Backup').length).to.equal(2);
+    expect(b.find('Backup').length).to.equal(4);
   });
 
   it('updates state when a backup is clicked', () => {

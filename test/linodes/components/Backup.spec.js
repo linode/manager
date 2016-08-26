@@ -20,6 +20,7 @@ describe('linodes/components/Backup', () => {
       <Backup
         backup={testBackup}
         selected={false}
+        future={false}
         onSelect={() => {}}
       />
     );
@@ -33,6 +34,7 @@ describe('linodes/components/Backup', () => {
       <Backup
         backup={{ ...testBackup, status: 'pending' }}
         selected={false}
+        future={false}
         onSelect={() => {}}
       />
     );
@@ -45,6 +47,7 @@ describe('linodes/components/Backup', () => {
       <Backup
         backup={{ ...testBackup, status: 'running' }}
         selected={false}
+        future={false}
         onSelect={() => {}}
       />
     );
@@ -57,6 +60,7 @@ describe('linodes/components/Backup', () => {
       <Backup
         backup={{ ...testBackup, status: 'failed' }}
         selected={false}
+        future={false}
         onSelect={() => {}}
       />
     );
@@ -69,6 +73,7 @@ describe('linodes/components/Backup', () => {
       <Backup
         backup={{ ...testBackup, status: 'userAborted' }}
         selected={false}
+        future={false}
         onSelect={() => {}}
       />
     );
@@ -81,6 +86,7 @@ describe('linodes/components/Backup', () => {
       <Backup
         backup={{ ...testBackup, status: 'needsPostProcessing' }}
         selected={false}
+        future={false}
         onSelect={() => {}}
       />
     );

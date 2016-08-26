@@ -294,7 +294,7 @@ export class BackupsPage extends Component {
       }
     }
     let nextBackupDay = moment().day(backupDay).add(7, 'days');
-    const backupList = ['Snapshot', 'Daily', 'Weekly', 'Fortnightly'];
+    const backupList = ['Snapshot', 'Daily', 'Weekly', 'Biweekly'];
     const futureSlots = backups.length === 0 ? 1 : backups.length;
     for (let i = futureSlots; i < 4; i++) {
       futureBackups[i] = {};
@@ -302,7 +302,6 @@ export class BackupsPage extends Component {
       futureBackups[i].content = `${backupDay}${nextBackupDay.format(', MMMM D YYYY, ')}`;
       futureBackups[i].content = `${futureBackups[i].content} ${timeslot(schedule.timeOfDay)}`;
       nextBackupDay = nextBackupDay.add(6.5, 'days');
-      futureBackups[i].id = i + Math.random();
     }
 
     // This makes the snapshot appear first in the list of completed backups
@@ -329,14 +328,12 @@ export class BackupsPage extends Component {
           )}
           {futureBackups.map(backup =>
             <div className="col-md-3">
-              <div className="backup future">
-                <header>
-                  <div className="title">{backup.created}</div>
-                </header>
-                <div className="future-disabled">
-                  <div className="content-col">{backup.content}</div>
-                </div>
-              </div>
+              <Backup
+                backup={backup}
+                selected={selectedBackup}
+                future
+                onSelect={() => this.setState({ selectedBackup: backup.id })}
+              />
             </div>
           )}
         </div>
