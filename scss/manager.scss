@@ -34,6 +34,7 @@ $main-nav-height: $nav-height - $info-nav-height;
 $input-height: 30px;
 $input-padding: 0 .5rem;
 $font-size: .9rem;
+$font-size-small: 12px;
 
 @import 'components/components';
 @import 'linodes/linodes';
@@ -44,9 +45,13 @@ $font-size: .9rem;
     transition: background .35s, color .2s, border .1s;
 }
 
-body {
-    background: $gray;
+html, [data-reactroot] {
     height: 100%;
+}
+
+body {
+    height: calc(100% - #{$nav-height});
+    background: $gray;
     min-width: 1007px; /* can fix later */
     color: $black;
     margin-top: $nav-height;
@@ -216,7 +221,7 @@ a {
                 position: absolute;
                 top: $height / 4;
                 right: -1 * ($height / 2);
-                font-size: 12px;
+                font-size: $font-size-small;
                 background: $red;
                 color: $white;
                 width: $height;
@@ -281,6 +286,16 @@ a {
     padding: $main-padding-tb $main-padding-lr;
 }
 
+.container {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .container-inner {
+        flex: 1;
+    }
+}
+
 .form-control {
     font-size: $font-size;
     border-radius: 2px;
@@ -333,7 +348,7 @@ hr {
 }
 
 .text-muted {
-    font-size: 12px;
+    font-size: $font-size-small;
 }
 
 .btn {
@@ -621,9 +636,6 @@ table {
 .content-col {
     margin-bottom: .75rem;
     color: #666;
-    .text-muted {
-        font-size: 70%;
-    }
     li a {
         text-decoration: none;
     }
@@ -634,10 +646,6 @@ table {
 
 .text-danger {
     color: $red;
-}
-
-.centered {
-    text-align: center;
 }
 
 .alert {
@@ -652,6 +660,16 @@ table {
     color: $lightest-black;
     &:hover {
         color: $dark-blue;
+    }
+}
+
+.full-height {
+    height: 100%;
+}
+
+footer {
+    span {
+        padding: 0 10px;
     }
 }
 
