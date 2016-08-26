@@ -95,7 +95,7 @@ class EditModal extends Component {
     try {
       await dispatch(putLinode({
         id: linodeId,
-        data: { label, group }
+        data: { label, group },
       }));
       this.setState({ loading: false });
       dispatch(hideModal());
@@ -115,12 +115,11 @@ class EditModal extends Component {
           _: json.errors.reduce((s, e) => e.field ? s : [...s, e.reason], null),
         },
       });
-      console.log(this.state);
     }
   }
 
   render() {
-    const { dispatch, linodeId } = this.props;
+    const { dispatch } = this.props;
     const { loading, label, group, errors } = this.state;
     return (
       <div>
@@ -180,6 +179,7 @@ EditModal.propTypes = {
   dispatch: PropTypes.func.isRequired,
   group: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
+  linodeId: PropTypes.string.isRequired,
 };
 
 export class LinodeDetailPage extends Component {

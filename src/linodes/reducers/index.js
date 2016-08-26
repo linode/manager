@@ -42,4 +42,4 @@ export function index(_state = null, action) {
   }
 }
 
-export default index;
+export default combineReducers({ index });
