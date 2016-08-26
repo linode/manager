@@ -45,9 +45,13 @@ $font-size-small: 12px;
     transition: background .35s, color .2s, border .1s;
 }
 
-body {
-    background: $gray;
+html, [data-reactroot] {
     height: 100%;
+}
+
+body {
+    height: calc(100% - #{$nav-height});
+    background: $gray;
     min-width: 1007px; /* can fix later */
     color: $black;
     margin-top: $nav-height;
@@ -280,6 +284,16 @@ a {
     margin-left: $sidebar-width;
     width: calc(100% - #{$sidebar-width});
     padding: $main-padding-tb $main-padding-lr;
+}
+
+.container {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .container-inner {
+        flex: 1;
+    }
 }
 
 .form-control {
@@ -649,8 +663,14 @@ table {
     }
 }
 
-footer span {
-    padding: 0 10px;
+.full-height {
+    height: 100%;
+}
+
+footer {
+    span {
+        padding: 0 10px;
+    }
 }
 
 @-moz-keyframes pulse {

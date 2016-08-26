@@ -74,16 +74,18 @@ export class Layout extends Component {
 
   render() {
     const { username, emailHash, currentPath, errors } = this.props;
-    const year = new Date().getFullYear();
+    const year = (new Date()).getFullYear().toString();
     return (
-      <div className="layout">
+      <div className="layout full-height">
         <Header username={username} emailHash={emailHash} />
         <Sidebar path={currentPath} />
-        <div className="main">
+        <div className="main full-height">
           {errors.status === null ?
             <div className="container">
               <Modal />
-              {this.props.children}
+              <div className="container-inner">
+                {this.props.children}
+              </div>
               <Footer year={year} />
             </div> : this.renderError()}
         </div>
