@@ -2,9 +2,9 @@ import React, { PropTypes } from 'react';
 import { Link } from '~/components/Link';
 
 export default function Sidebar(props) {
-  const { path } = props;
+  const { path, links } = props;
 
-  const links = [
+  const defaultLinks = [
     { icon: 'cubes', name: 'Linodes', link: '/linodes' },
     { icon: 'code-fork', name: 'NodeBalancers', link: '/nodebalancers' },
     { icon: 'bar-chart-o', name: 'Longview', link: '/longview' },
@@ -13,11 +13,12 @@ export default function Sidebar(props) {
     { icon: 'users', name: 'Support', link: '/support' },
   ];
 
+  const sidebarLinks = links || defaultLinks;
   return (
     <div className="sidebar">
       <ul className="list-unstyled">
       {
-        links.map(({ icon, name, link }) =>
+        sidebarLinks.map(({ icon, name, link }) =>
           <Link key={name} to={link}>
             <li className={path.indexOf(link) === 0 ? 'active' : ''}>
               <span className={`fa fa-${icon}`} />
@@ -33,4 +34,5 @@ export default function Sidebar(props) {
 
 Sidebar.propTypes = {
   path: PropTypes.string,
+  links: PropTypes.array,
 };

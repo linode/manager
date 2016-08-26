@@ -1,5 +1,7 @@
 import React, { PropTypes } from 'react';
+
 import { Link } from '~/components/Link';
+import { LOGIN_ROOT } from '~/constants';
 
 export default function Navigation(props) {
   const { username, emailHash } = props;
@@ -25,14 +27,11 @@ export default function Navigation(props) {
             <li className="nav-item">
               <a href="https://forum.linode.com" className="nav-link">Community</a>
             </li>
-            <li className="nav-item">
-              <a href="https://developers.linode.com" className="nav-link">Developers</a>
-            </li>
           </ul>
         </div>
         {username ?
           <div className="navbar-session pull-right">
-            <a href="/account" className="nav-text nav-user">
+            <a href={`${LOGIN_ROOT}/profile`} className="nav-text nav-user">
               {username}
             </a>
             <div className="nav-gravatar">
@@ -43,7 +42,7 @@ export default function Navigation(props) {
                 height={35}
                 width={35}
               />
-              <div className="nav-gravatar-badge">3</div>
+              {/* <div className="nav-gravatar-badge">3</div> */}
             </div>
           </div>
          : ''}
