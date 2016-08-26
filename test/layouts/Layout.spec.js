@@ -4,6 +4,7 @@ import { expect } from 'chai';
 import { shallow } from 'enzyme';
 import { Layout } from '../../src/layouts/Layout';
 import { toggleDetails } from '~/actions/errors';
+import * as fetch from '~/fetch';
 
 describe('layouts/Layout', () => {
   const sandbox = sinon.sandbox.create();
@@ -122,5 +123,27 @@ describe('layouts/Layout', () => {
     link.simulate('click', { preventDefault: () => {} });
     expect(dispatch.calledOnce).to.equal(true);
     expect(dispatch.calledWith(toggleDetails())).to.equal(true);
+  });
+
+  it('fetches the blog RSS feed', async () => {
+    /* eslint-disable prefer-template */
+    const fetchStub = sandbox.stub(fetch, 'rawFetch').returns({
+      text: () => '<?xml version="1.0" encoding="UTF-8"?><rss version="2.0">' +
+          '<channel>' +
+            '<item>' +
+              '<title>Introducing Fedora 24</title>' +
+              '<link>https://example.org</link>' +
+            '</item>' +
+          '</channel>' +
+        '</rss>',
+    });
+
+    /* eslint-enable prefer-template */
+    const layout = shallow(<Layout errors={errors} dispatch={dispatch} />);
+    await layout.instance().componentDidMount();
+    expect(fetchStub.calledWith('https://blog.linode.com/feed/'))
+      .to.equal(true);
+    expect(layout.state('title')).to.equal('Introducing Fedora 24');
+    expect(layout.state('link')).to.equal('https://example.org');
   });
 });

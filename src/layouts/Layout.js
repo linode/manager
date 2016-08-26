@@ -5,12 +5,33 @@ import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
 import Modal from '../components/Modal';
 import { toggleDetails } from '~/actions/errors';
+import { rawFetch as fetch } from '~/fetch';
 import NotFound from './NotFound';
 
 export class Layout extends Component {
   constructor() {
     super();
     this.renderError = this.renderError.bind(this);
+    this.state = { title: '', link: '' };
+  }
+
+  /* eslint-disable react/no-did-mount-set-state */
+  async componentDidMount() {
+    if (this.state.title === '') {
+      try {
+        const resp = await fetch('https://blog.linode.com/feed/', {
+          mode: 'cors',
+        });
+        const parser = new DOMParser();
+        const xml = parser.parseFromString(await resp.text(), 'text/xml');
+        const latest = xml.querySelector('channel item');
+        const title = latest.querySelector('title').textContent;
+        const link = latest.querySelector('link').textContent;
+        this.setState({ title, link });
+      } catch (ex) {
+        // Whatever
+      }
+    }
   }
 
   renderError() {
@@ -74,10 +95,16 @@ export class Layout extends Component {
 
   render() {
     const { username, emailHash, currentPath, errors } = this.props;
+    const { title, link } = this.state;
     const year = (new Date()).getFullYear().toString();
     return (
       <div className="layout full-height">
-        <Header username={username} emailHash={emailHash} />
+        <Header
+          username={username}
+          emailHash={emailHash}
+          link={link}
+          title={title}
+        />
         <Sidebar path={currentPath} />
         <div className="main full-height">
           {errors.status === null ?
