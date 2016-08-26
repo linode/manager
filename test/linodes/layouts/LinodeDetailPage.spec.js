@@ -11,10 +11,12 @@ import * as LinodeDetailPageWrapper from '~/linodes/layouts/LinodeDetailPage';
 import * as linodeActions from '~/actions/api/linodes';
 import { Tabs, Tab } from 'react-tabs';
 import Dropdown from '~/components/Dropdown';
+import { hideModal } from '~/actions/modal';
 import { SET_ERROR } from '~/actions/errors';
 
 const {
   LinodeDetailPage,
+  EditModal,
   getLinode,
   renderTabs,
 } = LinodeDetailPageWrapper;
@@ -332,5 +334,91 @@ describe('linodes/layouts/LinodeDetailPage', () => {
       />);
     expect(page.contains(<span className="pull-right linode-status running">Running</span>))
       .to.equal(true);
+  });
+});
+
+describe('linodes/layouts/LinodeDetailPage EditModal', () => {
+  const sandbox = sinon.sandbox.create();
+  afterEach(() => {
+    sandbox.restore();
+  });
+
+  it('should render group and label inputs', () => {
+    const modal = mount(
+      <EditModal
+        dispatch={() => {}}
+        label="test label"
+        group="test group"
+        linodeId="linode_1234"
+      />);
+    expect(modal.find('input#group')).to.exist;
+    expect(modal.find('input#group').props().value).to.equal('test group');
+    expect(modal.find('input#label')).to.exist;
+    expect(modal.find('input#label').props().value).to.equal('test label');
+  });
+
+  it('hide modal when "Nevermind" is clicked', () => {
+    const dispatch = sandbox.spy();
+    const modal = shallow(
+      <EditModal
+        dispatch={dispatch}
+        label="test label"
+        group="test group"
+        linodeId="linode_1234"
+      />);
+    modal.find('.btn-default').simulate('click');
+    expect(dispatch.calledOnce).to.equal(true);
+    expect(dispatch.firstCall.args[0]).to.deep.equal(hideModal());
+  });
+
+  it('save changes when "Save" is clicked', () => {
+    const dispatch = sandbox.spy();
+    const modal = shallow(
+      <EditModal
+        dispatch={dispatch}
+        label="test label"
+        group="test group"
+        linodeId="linode_1234"
+      />);
+    const saveStub = sandbox.stub(modal.instance(), 'saveChanges');
+    modal.find('input#group').simulate('change', {
+      target: { value: 'new group' },
+    });
+    modal.find('input#label').simulate('change', {
+      target: { value: 'new label' },
+    });
+    modal.find('.btn-primary').simulate('click');
+    expect(saveStub.calledOnce).to.equal(true);
+    saveStub.restore();
+  });
+
+  describe('saveChanges', () => {
+    it('save changes when "Save" is clicked', async () => {
+      const dispatch = sandbox.spy();
+      const modal = shallow(
+        <EditModal
+          dispatch={dispatch}
+          label="test label"
+          group="test group"
+          linodeId="linode_1234"
+        />);
+      modal.find('input#group').simulate('change', {
+        target: { value: 'new group' },
+      });
+      modal.find('input#label').simulate('change', {
+        target: { value: 'new label' },
+      });
+      const { saveChanges } = modal.instance();
+      await saveChanges();
+      const fn = dispatch.firstCall.args[0];
+      await expectRequest(fn, '/linodes/linode_1234',
+        () => {}, null, o => {
+          expect(o.method).to.equal('PUT');
+          expect(o.body).to.equal(JSON.stringify({
+            label: 'new label',
+            group: 'new group',
+          }));
+        });
+    });
   });
 });

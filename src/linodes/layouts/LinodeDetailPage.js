@@ -68,7 +68,7 @@ export function renderTabs(tabList) {
   );
 }
 
-class EditModal extends Component {
+export class EditModal extends Component {
   constructor() {
     super();
     this.state = {
