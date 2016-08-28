@@ -5,14 +5,13 @@ import DevTools from '../components/DevTools';
 import { routerMiddleware } from 'react-router-redux';
 import { browserHistory } from 'react-router';
 
-const createStoreWithMiddleware = compose(
-  applyMiddleware(thunk),
-  applyMiddleware(routerMiddleware(browserHistory)),
+const composedEnhancers = compose(
+  applyMiddleware(thunk, routerMiddleware(browserHistory)),
   DevTools.instrument()
-)(createStore);
+);
 
 export function configureStore(initialState) {
-  const store = createStoreWithMiddleware(reducer, initialState);
+  const store = createStore(reducer, initialState, composedEnhancers);
 
   if (module.hot) {
     module.hot.accept('../reducers', () =>
