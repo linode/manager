@@ -10,12 +10,13 @@ import { expectRequest } from '@/common';
 import * as LinodeDetailPageWrapper from '~/linodes/layouts/LinodeDetailPage';
 import * as linodeActions from '~/actions/api/linodes';
 import { Tabs, Tab } from 'react-tabs';
-import * as actions from '~/linodes/actions/detail/index';
 import Dropdown from '~/components/Dropdown';
+import { hideModal } from '~/actions/modal';
 import { SET_ERROR } from '~/actions/errors';
 
 const {
   LinodeDetailPage,
+  EditModal,
   getLinode,
   renderTabs,
 } = LinodeDetailPageWrapper;
@@ -334,158 +335,132 @@ describe('linodes/layouts/LinodeDetailPage', () => {
     expect(page.contains(<span className="pull-right linode-status running">Running</span>))
       .to.equal(true);
   });
+});
 
-  describe('edit mode', () => {
-    it('renders an edit button', () => {
-      const page = shallow(
-        <LinodeDetailPage
-          dispatch={dispatch}
-          linodes={linodes}
-          params={{ linodeId: testLinode.id }}
-          detail={detail}
-        />);
-      expect(page.find('.edit-icon')).to.exist;
+describe('linodes/layouts/LinodeDetailPage EditModal', () => {
+  const sandbox = sinon.sandbox.create();
+  afterEach(() => {
+    sandbox.restore();
+  });
+
+  it('should render group and label inputs', () => {
+    const modal = mount(
+      <EditModal
+        dispatch={() => {}}
+        label="test label"
+        group="test group"
+        linodeId="linode_1234"
+      />);
+    expect(modal.find('input#group')).to.exist;
+    expect(modal.find('input#group').props().value).to.equal('test group');
+    expect(modal.find('input#label')).to.exist;
+    expect(modal.find('input#label').props().value).to.equal('test label');
+  });
+
+  it('hide modal when "Nevermind" is clicked', () => {
+    const dispatch = sandbox.spy();
+    const modal = shallow(
+      <EditModal
+        dispatch={dispatch}
+        label="test label"
+        group="test group"
+        linodeId="linode_1234"
+      />);
+    modal.find('.btn-default').simulate('click');
+    expect(dispatch.calledOnce).to.equal(true);
+    expect(dispatch.firstCall.args[0]).to.deep.equal(hideModal());
+  });
+
+  it('save changes when "Save" is clicked', () => {
+    const dispatch = sandbox.spy();
+    const modal = shallow(
+      <EditModal
+        dispatch={dispatch}
+        label="test label"
+        group="test group"
+        linodeId="linode_1234"
+      />);
+    const saveStub = sandbox.stub(modal.instance(), 'saveChanges');
+    modal.find('input#group').simulate('change', {
+      target: { value: 'new group' },
     });
-
-    it('toggles edit mode when edit is pressed', () => {
-      const page = shallow(
-        <LinodeDetailPage
-          dispatch={dispatch}
-          linodes={linodes}
-          params={{ linodeId: testLinode.id }}
-          detail={detail}
-        />);
-      const icon = page.find('.edit-icon');
-      icon.simulate('click', { preventDefault: () => {} });
-      expect(dispatch.calledWith(actions.toggleEditMode())).to.equal(true);
+    modal.find('input#label').simulate('change', {
+      target: { value: 'new label' },
     });
+    modal.find('.btn-primary').simulate('click');
+    expect(saveStub.calledOnce).to.equal(true);
+    saveStub.restore();
+  });
 
-    it('copies the current group/label to the state', () => {
-      const page = shallow(
-        <LinodeDetailPage
+  describe('saveChanges', () => {
+    it('performs the HTTP request', async () => {
+      const dispatch = sandbox.spy();
+      const modal = shallow(
+        <EditModal
           dispatch={dispatch}
-          linodes={linodes}
-          params={{ linodeId: testLinode.id }}
-          detail={detail}
+          label="test label"
+          group="test group"
+          linodeId="linode_1234"
         />);
-      const icon = page.find('.edit-icon');
-      icon.simulate('click', { preventDefault: () => {} });
-      expect(dispatch.calledWith(actions.setLinodeLabel(testLinode.label)))
-        .to.equal(true);
-      expect(dispatch.calledWith(actions.setLinodeGroup(testLinode.group)))
-        .to.equal(true);
-    });
-
-    it('renders group/label text boxes in edit mode', () => {
-      const page = shallow(
-        <LinodeDetailPage
-          dispatch={dispatch}
-          linodes={linodes}
-          params={{ linodeId: testLinode.id }}
-          detail={{ ...detail, editing: true }}
-        />);
-      const editor = page.find('.edit-details');
-      expect(editor).to.exist;
-      expect(editor.find('input[type="text"]').length)
-        .to.equal(2);
-      expect(editor.find('input[type="text"]').get(0).props.placeholder)
-        .to.equal('Group...');
-      expect(editor.find('input[type="text"]').get(1).props.placeholder)
-        .to.equal('Label...');
-    });
-
-    it('renders save and cancel buttons', () => {
-      const page = shallow(
-        <LinodeDetailPage
-          dispatch={dispatch}
-          linodes={linodes}
-          params={{ linodeId: testLinode.id }}
-          detail={{ ...detail, editing: true }}
-        />);
-      const editor = page.find('.edit-details');
-      expect(editor).to.exist;
-      expect(editor.find('button').length).to.equal(2);
-      expect(editor.find('button.btn-primary').text()).to.equal('Save');
-      expect(editor.find('button.btn-secondary').text()).to.equal('Cancel');
-    });
-
-    it('disables save and cancel buttons when loading', () => {
-      const page = shallow(
-        <LinodeDetailPage
-          dispatch={dispatch}
-          linodes={linodes}
-          params={{ linodeId: testLinode.id }}
-          detail={{ ...detail, editing: true, loading: true }}
-        />);
-      const editor = page.find('.edit-details');
-      expect(editor).to.exist;
-      expect(editor.find('button').length).to.equal(2);
-      expect(editor.find('button.btn-primary').props())
-        .to.have.property('disabled').which.equals(true);
-      expect(editor.find('button.btn-secondary').props())
-        .to.have.property('disabled').which.equals(true);
-    });
-
-    it('leaves edit mode when cancel is pressed', () => {
-      const page = shallow(
-        <LinodeDetailPage
-          dispatch={dispatch}
-          linodes={linodes}
-          params={{ linodeId: testLinode.id }}
-          detail={{ ...detail, editing: true }}
-        />);
-      const editor = page.find('.edit-details');
-      const cancel = editor.find('button.btn-secondary');
-      cancel.simulate('click');
-      expect(dispatch.calledOnce).to.equal(true);
-      expect(dispatch.calledWith(actions.toggleEditMode())).to.equal(true);
-    });
-
-    it('commits changes to the API when save is pressed', async () => {
-      const page = shallow(
-        <LinodeDetailPage
-          dispatch={dispatch}
-          linodes={linodes}
-          params={{ linodeId: testLinode.id }}
-          detail={{ ...detail, editing: true, label: 'test', group: 'test' }}
-        />);
-      const editor = page.find('.edit-details');
-      const cancel = editor.find('button.btn-primary');
-      cancel.simulate('click');
+      modal.find('input#group').simulate('change', {
+        target: { value: 'new group' },
+      });
+      modal.find('input#label').simulate('change', {
+        target: { value: 'new label' },
+      });
+      const { saveChanges } = modal.instance();
+      await saveChanges();
       const fn = dispatch.firstCall.args[0];
-      await expectRequest(fn, `/linodes/${testLinode.id}`);
+      await expectRequest(fn, '/linodes/linode_1234',
+        () => {}, null, o => {
+          expect(o.method).to.equal('PUT');
+          expect(o.body).to.equal(JSON.stringify({
+            label: 'new label',
+            group: 'new group',
+          }));
+        });
     });
 
-    it('commits changes to the API when the enter key is pressed', async () => {
-      const page = shallow(
-        <LinodeDetailPage
+    it('handles exceptions', async () => {
+      const dispatch = sandbox.stub();
+      const modal = mount(
+        <EditModal
           dispatch={dispatch}
-          linodes={linodes}
-          params={{ linodeId: testLinode.id }}
-          detail={{ ...detail, editing: true, label: 'test', group: 'test' }}
+          label="test label"
+          group="test group"
+          linodeId="linode_1234"
         />);
-      const editor = page.find('.edit-details');
-      const text = editor.find('input[type="text"]').first();
-      text.simulate('keyUp', { keyCode: 13 /* Enter */ });
-      expect(dispatch.calledOnce).to.equal(true);
-      const fn = dispatch.firstCall.args[0];
-      await expectRequest(fn, `/linodes/${testLinode.id}`);
-    });
-
-    it('does not reproduce #95', () => {
-      router.setRouteLeaveHook.reset();
-      mount(
-        <LinodeDetailPage
-          dispatch={dispatch}
-          linodes={linodes}
-          params={{ linodeId: testLinode.id }}
-          detail={{ ...detail, editing: true, label: 'test', group: 'test' }}
-          router={router}
-        />);
-      expect(router.setRouteLeaveHook.calledOnce).to.equal(true);
-      const handler = router.setRouteLeaveHook.firstCall.args[1];
-      handler();
-      expect(dispatch.calledWith(actions.toggleEditMode())).to.equal(true);
+      modal.find('input#group').simulate('change', {
+        target: { value: 'new group' },
+      });
+      modal.find('input#label').simulate('change', {
+        target: { value: 'new label' },
+      });
+      const { saveChanges } = modal.instance();
+      dispatch.reset();
+      dispatch.throws({
+        json() {
+          return {
+            errors: [
+              { field: 'label', reason: 'some label error' },
+              { field: 'group', reason: 'some group error' },
+            ],
+          };
+        },
+      });
+      await saveChanges();
+      expect(modal.find('.form-group').at(0).hasClass('has-danger'))
+        .to.equal(true);
+      expect(modal.find('.form-group').at(1).hasClass('has-danger'))
+        .to.equal(true);
+      expect(modal.contains(
+        <div
+          key={'some label error'}
+        >some label error</div>)).to.equal(true);
+      expect(modal.contains(
+        <div
+          key={'some group error'}
+        >some group error</div>)).to.equal(true);
     });
   });
 });

@@ -38,18 +38,4 @@ describe('components/Modal', () => {
     modal.find('.modal').simulate('click');
     expect(dispatch.callCount).to.equal(0);
   });
-
-  it('closes on overlay blur', () => {
-    const dispatch = sinon.spy();
-    const modal = mount(
-      <Modal open={true} dispatch={dispatch} /> // eslint-disable-line react/jsx-boolean-value
-    );
-
-    modal.simulate('blur');
-    expect(dispatch.calledWith({
-      type: HIDE_MODAL,
-      title: undefined,
-      body: undefined,
-    })).to.equal(true);
-  });
 });

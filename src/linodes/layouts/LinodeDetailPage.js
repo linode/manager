@@ -1,21 +1,20 @@
 import React, { Component, PropTypes } from 'react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { connect } from 'react-redux';
-import { Link, withRouter } from 'react-router';
+import { Link } from 'react-router';
 import { push } from 'react-router-redux';
+import { showModal, hideModal } from '~/actions/modal';
 
 import Dropdown from '~/components/Dropdown';
 import { LinodeStates, LinodeStatesReadable } from '~/constants';
 import { setError } from '~/actions/errors';
 import {
-  toggleEditMode,
-  setLinodeLabel,
-  setLinodeGroup,
-  commitChanges,
-  clearErrors,
-} from '../actions/detail/index';
-import {
-  fetchLinode, fetchAllLinodeConfigs, powerOnLinode, powerOffLinode, rebootLinode,
+  fetchLinode,
+  fetchAllLinodeConfigs,
+  putLinode,
+  powerOnLinode,
+  powerOffLinode,
+  rebootLinode,
 } from '~/actions/api/linodes';
 
 export function getLinode() {
@@ -69,106 +68,135 @@ export function renderTabs(tabList) {
   );
 }
 
+export class EditModal extends Component {
+  constructor() {
+    super();
+    this.state = {
+      loading: false,
+      errors: { label: null, group: null, _: null },
+      label: '',
+      group: '',
+    };
+    this.saveChanges = this.saveChanges.bind(this);
+  }
+
+  componentDidMount() {
+    const { label, group } = this.props;
+    this.setState({ label, group });
+  }
+
+  async saveChanges() {
+    const { dispatch, linodeId } = this.props;
+    const { label, group } = this.state;
+    this.setState({
+      loading: true,
+      errors: { label: null, group: null, _: null },
+    });
+    try {
+      await dispatch(putLinode({
+        id: linodeId,
+        data: { label, group },
+      }));
+      this.setState({ loading: false });
+      dispatch(hideModal());
+    } catch (response) {
+      const json = await response.json();
+      const reducer = f => (s, e) => {
+        if (e.field === f) {
+          return s ? [...s, e.reason] : [e.reason];
+        }
+        return s;
+      };
+      this.setState({
+        loading: false,
+        errors: {
+          label: json.errors.reduce(reducer('label'), null),
+          group: json.errors.reduce(reducer('group'), null),
+        },
+      });
+    }
+  }
+
+  render() {
+    const { dispatch } = this.props;
+    const { loading, label, group, errors } = this.state;
+    return (
+      <div>
+        <div className={`form-group ${errors.group ? 'has-danger' : ''}`}>
+          <label htmlFor="group">Group</label>
+          <input
+            className="form-control"
+            id="group"
+            placeholder="Group"
+            value={group}
+            disabled={loading}
+            onChange={e => this.setState({ group: e.target.value })}
+          />
+          {errors.group ?
+            <div className="form-control-feedback">
+              {errors.group.map(error => <div key={error}>{error}</div>)}
+            </div> : null}
+        </div>
+        <div className={`form-group ${errors.label ? 'has-danger' : ''}`}>
+          <label htmlFor="label">Label</label>
+          <input
+            className="form-control"
+            id="label"
+            placeholder="Label"
+            value={label}
+            disabled={loading}
+            onChange={e => this.setState({ label: e.target.value })}
+          />
+          {errors.label ?
+            <div className="form-control-feedback">
+              {errors.label.map(error => <div key={error}>{error}</div>)}
+            </div> : null}
+        </div>
+        <div className="modal-footer">
+          <button
+            className="btn btn-default"
+            disabled={loading}
+            onClick={() => dispatch(hideModal())}
+          >Nevermind</button>
+          <button
+            className="btn btn-primary"
+            disabled={loading}
+            onClick={this.saveChanges}
+          >Save</button>
+        </div>
+      </div>);
+  }
+}
+
+EditModal.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+  group: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+  linodeId: PropTypes.string.isRequired,
+};
+
 export class LinodeDetailPage extends Component {
   constructor() {
     super();
     this.getLinode = getLinode.bind(this);
     this.render = this.render.bind(this);
     this.renderHeader = this.renderHeader.bind(this);
-    this.renderEditUI = this.renderEditUI.bind(this);
     this.renderLabel = this.renderLabel.bind(this);
     this.renderTabs = renderTabs.bind(this);
-    this.handleLabelKeyUp = this.handleLabelKeyUp.bind(this);
-    this.routerWillLeave = this.routerWillLeave.bind(this);
     this.loadLinode = module.exports.loadLinode.bind(this);
     this.componentDidMount = this.componentDidMount.bind(this);
-    this.state = { config: '' };
+    this.state = { config: '', label: '', group: '' };
   }
 
   async componentDidMount() {
-    const { router } = this.props;
-    router.setRouteLeaveHook(this.props.route, this.routerWillLeave);
     await this.loadLinode();
-    const defaultConfig = Object.values(this.getLinode()._configs.configs)[0];
-    this.setState({ config: defaultConfig ? defaultConfig.id : '' });
-  }
-
-  routerWillLeave() {
-    const { dispatch, detail } = this.props;
-    if (detail.editing) {
-      dispatch(toggleEditMode());
-    }
-  }
-
-  handleLabelKeyUp(e, linode) {
-    const { dispatch } = this.props;
-    if (e.keyCode === 13 /* Enter */) {
-      dispatch(commitChanges(linode.id));
-    }
-  }
-
-  renderEditUI(linode) {
-    const { label, group, loading, errors } = this.props.detail;
-    const { dispatch } = this.props;
-    const hasErrors = errors.label || errors.group || errors._;
-    return (
-      <div className="edit-details">
-        <div className="row">
-          <div className="col-md-4">
-            <input
-              type="text"
-              value={group}
-              placeholder="Group..."
-              onChange={e => dispatch(setLinodeGroup(e.target.value))}
-              onKeyUp={e => this.handleLabelKeyUp(e, linode)}
-              className={errors.group ? 'has-error' : ''}
-            />
-          </div>
-          <div className="col-md-1 text-xs-center">/</div>
-          <div className="col-md-4">
-            <input
-              type="text"
-              value={label}
-              placeholder="Label..."
-              onChange={e => dispatch(setLinodeLabel(e.target.value))}
-              onKeyUp={e => this.handleLabelKeyUp(e, linode)}
-              className={errors.label ? 'has-error' : ''}
-            />
-          </div>
-          <div className="col-md-3">
-            <button
-              className="btn btn-primary"
-              onClick={() => dispatch(commitChanges(linode.id))}
-              disabled={loading}
-            >Save</button>
-            <button
-              className="btn btn-secondary"
-              onClick={() => dispatch(toggleEditMode())}
-              disabled={loading}
-            >Cancel</button>
-          </div>
-        </div>
-        {hasErrors ?
-          <div className="row errors">
-            <div className="col-md-4">
-              {errors.group ?
-                <div className="alert alert-danger">
-                  <ul>
-                    {errors.group.map(e => <li key={e}>{e}</li>)}
-                  </ul>
-                </div> : null}
-            </div>
-            <div className="col-md-4 col-md-offset-1">
-              {errors.label ?
-                <div className="alert alert-danger">
-                  <ul>
-                    {errors.label.map(e => <li key={e}>{e}</li>)}
-                  </ul>
-                </div> : null}
-            </div>
-          </div> : null}
-      </div>
-    );
+    const linode = this.getLinode();
+    const defaultConfig = Object.values(linode._configs.configs)[0];
+    this.setState({
+      config: defaultConfig ? defaultConfig.id : '',
+      label: linode.label,
+      group: linode.group,
+    });
   }
 
   renderLabel(linode) {
@@ -182,17 +210,18 @@ export class LinodeDetailPage extends Component {
         <h1>{label}
           <a
             href="#"
-            className="edit-icon"
+            className="btn btn-sm btn-primary-outline edit-button"
             onClick={e => {
               e.preventDefault();
-              dispatch(setLinodeLabel(linode.label));
-              dispatch(setLinodeGroup(linode.group));
-              dispatch(clearErrors());
-              dispatch(toggleEditMode());
+              dispatch(showModal('Edit Linode information',
+                <EditModal
+                  label={linode.label}
+                  group={linode.group}
+                  dispatch={dispatch}
+                  linodeId={linode.id}
+                />));
             }}
-          >
-            <i className="fa fa-pencil"></i>
-          </a>
+          >Edit</a>
         </h1>
       </div>
     );
@@ -200,7 +229,6 @@ export class LinodeDetailPage extends Component {
 
   renderHeader(linode) {
     const { dispatch } = this.props;
-    const { editing } = this.props.detail;
 
     const dropdownElements = [
       {
@@ -230,7 +258,7 @@ export class LinodeDetailPage extends Component {
 
     return (
       <header className="tabs">
-        {editing ? this.renderEditUI(linode) : this.renderLabel(linode)}
+        {this.renderLabel(linode)}
         {LinodeStates.pending.indexOf(linode.state) !== -1 ? null :
           <span className="pull-right">
             <Dropdown elements={dropdownElements} leftOriented={false} />
@@ -292,7 +320,7 @@ LinodeDetailPage.propTypes = {
 };
 
 function select(state) {
-  return { linodes: state.api.linodes, detail: state.linodes.detail.index };
+  return { linodes: state.api.linodes };
 }
 
-export default withRouter(connect(select)(LinodeDetailPage));
+export default connect(select)(LinodeDetailPage);
