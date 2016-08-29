@@ -22,7 +22,7 @@ export default function authentication(_state = null, action) {
       setStorage('authentication/oauth-token', action.token);
       setStorage('authentication/username', action.username);
       setStorage('authentication/email', action.email);
-      setStorage('authentication/email-hash', emailHash || null);
+      setStorage('authentication/email-hash', emailHash);
       setStorage('authentication/scopes', action.scopes);
       return {
         ...state,
