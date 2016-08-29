@@ -22,7 +22,7 @@ export class DiskPanel extends Component {
       await dispatch(fetchLinode(linodeId));
       linode = this.getLinode();
     }
-    if (linode._configs.totalPages === -1) {
+    if (linode._disks.totalPages === -1) {
       await dispatch(fetchAllLinodeDisks(linode.id));
     }
   }
