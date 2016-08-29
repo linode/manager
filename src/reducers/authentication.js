@@ -13,10 +13,11 @@ export default function authentication(_state = null, action) {
   let emailHash = null;
   switch (action.type) {
     case SET_TOKEN:
-      if (action.email && !action.emailHash) {
-        emailHash = md5(action.email.trim().toLowerCase());
-      } else {
+      if (action.emailHash) {
         emailHash = action.emailHash;
+      }
+      if (action.email && !emailHash) {
+        emailHash = md5(action.email.trim().toLowerCase());
       }
       setStorage('authentication/oauth-token', action.token);
       setStorage('authentication/username', action.username);
