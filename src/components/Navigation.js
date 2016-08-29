@@ -27,6 +27,9 @@ export default function Navigation(props) {
             <li className="nav-item">
               <a href="https://forum.linode.com" className="nav-link">Community</a>
             </li>
+            <li className="nav-item">
+              <a href={`${LOGIN_ROOT}/developers`} className="nav-link">Developers</a>
+            </li>
           </ul>
         </div>
         {username ?

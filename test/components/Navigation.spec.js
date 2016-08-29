@@ -64,5 +64,6 @@ describe('components/Navigation', () => {
 
     expect(navigation.find({ href: 'https://www.linode.com/docs/' }).length).to.equal(1);
     expect(navigation.find({ href: 'https://forum.linode.com' }).length).to.equal(1);
+    expect(navigation.find({ href: `${LOGIN_ROOT}/developers` }).length).to.equal(1);
   });
 });
