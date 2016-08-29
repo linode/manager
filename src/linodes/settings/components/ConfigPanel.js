@@ -30,7 +30,7 @@ function configContent(linode, configs, dispatch) {
       </thead>
       <tbody className="hard-border">
         {configs.map(config =>
-          <tr>
+          <tr key={config.id}>
             <td>
               <Link
                 to={`/linodes/${linode.id}/configs/${config.id}`}
