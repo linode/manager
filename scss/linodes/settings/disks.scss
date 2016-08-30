@@ -1,0 +1,39 @@
+.disk-layout {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0.5rem 0.25rem 0 0.25rem;
+    margin: 0.5rem auto;
+    background: $light-gray;
+    border: $border;
+    border-radius: 2px;
+
+    .disk {
+        margin: 0 0.25rem 0.5rem 0.25rem;
+        padding: 0.5rem;
+        background: $white;
+        border-size: 2px;
+        border-style: solid;
+        border-color: $border-gray;
+
+        &.free {
+            background: transparent;
+            border: 0.2rem dashed $border-gray;
+        }
+
+        h4 {
+            small {
+                color: $light-black;
+                font-size: 0.8rem;
+            }
+        }
+
+        p {
+            color: $light-black;
+            margin: 0;
+        }
+
+        button {
+            margin-top: 0.25rem;
+        }
+    }
+}

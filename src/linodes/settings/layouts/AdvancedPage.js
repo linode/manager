@@ -1,20 +1,18 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import HelpButton from '~/components/HelpButton';
-import ConfigPanel from '~/linodes/settings/components/ConfigPanel';
+import { ConfigPanel } from '~/linodes/settings/components/ConfigPanel';
+import { DiskPanel } from '~/linodes/settings/components/DiskPanel';
 
 export function AdvancedPage(props) {
-  const diskModule = (<h3>Disks<HelpButton to="http://example.org" /></h3>);
   return (
     <div>
       <div className="content-col">
         <span className="text-danger">WARNING! </span>
         This section is intended for advanced users. Proceed with caution.
       </div>
-      <ConfigPanel params={props.params} />
+      <DiskPanel {...props} />
       <hr />
-      {diskModule}
-      TODO
+      <ConfigPanel {...props} />
     </div>
   );
 }

@@ -1,12 +1,13 @@
 import React from 'react';
 import sinon from 'sinon';
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import { expect } from 'chai';
 
-import { linodes } from '~/../test/data';
+import { api } from '@/data';
 import { AdvancedPage } from '~/linodes/settings/layouts/AdvancedPage';
+const { linodes } = api;
 
-describe('linodes/settings/layouts/AdvancedPage', async () => {
+describe('linodes/settings/layouts/AdvancedPage', () => {
   const sandbox = sinon.sandbox.create();
   const dispatch = sandbox.spy();
 
@@ -16,7 +17,7 @@ describe('linodes/settings/layouts/AdvancedPage', async () => {
   });
 
   it('renders config panel component', () => {
-    const page = shallow(
+    const page = mount(
       <AdvancedPage
         linodes={linodes}
         params={{ linodeId: 'linode_1235' }}
@@ -24,6 +25,18 @@ describe('linodes/settings/layouts/AdvancedPage', async () => {
       />
     );
 
-    expect(page.find('ConfigPanel')).to.exist;
+    expect(page.find('ConfigPanel').length).to.equal(1);
+  });
+
+  it('renders disk panel component', () => {
+    const page = mount(
+      <AdvancedPage
+        linodes={linodes}
+        params={{ linodeId: 'linode_1235' }}
+        dispatch={() => {}}
+      />
+    );
+
+    expect(page.find('DiskPanel').length).to.equal(1);
   });
 });
