@@ -37,16 +37,17 @@ export default function Backup(props) {
     title = backup.created;
   }
 
+  const selectedClass = selected === backup.id ? 'selected' : '';
+  const futureClass = future === true ? 'future' : '';
+
   return (
     <div
-      className={`backup ${selected === backup.id ? 'selected' : ''}
-        ${future === true ? 'future' : ''}
-        `}
+      className={`backup ${selectedClass} ${futureClass}`}
       onClick={onSelect}
     >
       <header><div className="title">{title}</div></header>
-      <div>
-        <div className="content-col">{future === false ? content : backup.content}</div>
+      <div className={!!future ? 'future-disabled' : ''}>
+        <div className="content-col">{!!future ? backup.content : content}</div>
       </div>
     </div>
   );
