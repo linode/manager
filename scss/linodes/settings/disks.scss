@@ -1,14 +1,10 @@
 .disk-layout {
     display: flex;
     flex-wrap: wrap;
-    padding: 0.5rem 0.25rem 0 0.25rem;
-    margin: 0.5rem auto;
-    background: $light-gray;
-    border: $border;
-    border-radius: 2px;
+    margin: 0.5rem auto -0.25rem auto;
 
     .disk {
-        margin: 0 0.25rem 0.5rem 0.25rem;
+        margin: 0 0.25rem 0.25rem 0;
         padding: 0.5rem;
         background: $white;
         border-size: 2px;

@@ -10,31 +10,15 @@ import Slider from 'rc-slider';
 
 const borderColors = [
   '#1abc9c',
-  '#2ecc71',
   '#3498db',
   '#9b59b6',
   '#16a085',
+  '#f1c40f',
   '#27ae60',
   '#2980b9',
-  '#f1c40f',
+  '#2ecc71',
   '#e67e22',
-  '#e74c3c',
 ];
-
-function hash(str) {
-  let hash = 0;
-  if (str.length === 0) return hash;
-  for (let i = 0; i < str.length; i++) {
-    const char = str.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
-    hash = hash & hash; // Convert to 32bit integer
-  }
-  return hash;
-}
-
-function getBorderColor(seed) {
-  return borderColors[Math.abs(hash(seed)) % borderColors.length];
-}
 
 export class EditModal extends Component {
   constructor() {
@@ -148,7 +132,7 @@ export class DiskPanel extends Component {
                   key={d.id}
                   style={{
                     flexGrow: d.size,
-                    borderColor: getBorderColor(d.label),
+                    borderColor: borderColors[disks.indexOf(d) % borderColors.length],
                   }}
                 >
                   <h4>{d.label} <small>{d.filesystem}</small></h4>
