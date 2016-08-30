@@ -668,8 +668,16 @@ table {
 }
 
 footer {
+    margin-bottom: 0.75rem;
+
     span {
         padding: 0 10px;
+    }
+
+    .developers {
+        padding: 2px 5px;
+        border: $border;
+        border-radius: 3px;
     }
 }
 

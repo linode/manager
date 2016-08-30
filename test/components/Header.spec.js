@@ -9,7 +9,7 @@ import Infobar from '../../src/components/Infobar';
 describe('components/Header', () => {
   it('renders infobar and navigation components', () => {
     const header = shallow(
-      <Header username="user" />
+      <Header username="user" title="" link="" />
     );
 
     expect(header.find(<Navigation username="user" />)).to.exist;

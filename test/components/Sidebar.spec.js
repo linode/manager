@@ -1,7 +1,9 @@
 import React from 'react';
 import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
+
 import Sidebar from '../../src/components/Sidebar';
+import { LOGIN_ROOT } from '~/constants';
 
 describe('components/Sidebar', () => {
   it('renders sidebar component', () => {
@@ -37,7 +39,7 @@ describe('components/Sidebar', () => {
     expect(sidebar.find({ to: '/nodebalancers' }).length).to.equal(1);
     expect(sidebar.find({ to: '/longview' }).length).to.equal(1);
     expect(sidebar.find({ to: '/dnsmanager' }).length).to.equal(1);
-    expect(sidebar.find({ to: '/account' }).length).to.equal(1);
+    expect(sidebar.find({ href: `${LOGIN_ROOT}/account` }).length).to.equal(1);
     expect(sidebar.find({ to: '/support' }).length).to.equal(1);
   });
 });
