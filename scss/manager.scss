@@ -1,6 +1,7 @@
 @import "bootstrap";
 //$fa-font-path: "//netdna.bootstrapcdn.com/font-awesome/4.4.0/fonts";
 //@import "bower_components/font-awesome/scss/font-awesome";
+@import "../node_modules/rc-slider/assets/index.css";
 
 $light-blue: #DEEFF5;
 $blue: #4A90E2;
@@ -683,6 +684,14 @@ footer {
         border: $border;
         border-radius: 3px;
     }
+}
+
+.rc-slider {
+    margin-bottom: 2rem;
+}
+
+.rc-tooltip {
+    z-index: 999999;
 }
 
 @-moz-keyframes pulse {

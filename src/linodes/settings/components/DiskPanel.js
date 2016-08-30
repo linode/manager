@@ -5,6 +5,8 @@ import {
 } from '~/actions/api/linodes';
 import HelpButton from '~/components/HelpButton';
 import { getLinode, loadLinode } from '~/linodes/layouts/LinodeDetailPage';
+import { showModal, hideModal } from '~/actions/modal';
+import Slider from 'rc-slider';
 
 const borderColors = [
   '#1abc9c',
@@ -34,6 +36,73 @@ function getBorderColor(seed) {
   return borderColors[Math.abs(hash(seed)) % borderColors.length];
 }
 
+export class EditModal extends Component {
+  constructor() {
+    super();
+    this.state = {
+      loading: false,
+      size: -1,
+      label: '',
+    };
+  }
+
+  componentDidMount() {
+    const { disk } = this.props;
+    this.setState({ label: disk.label, size: disk.size });
+  }
+
+  render() {
+    const { disk } = this.props;
+    const { label, size, loading } = this.state;
+    const { free, dispatch } = this.props;
+    return (
+      <div>
+        <div className="form-group">
+          <label htmlFor="label">Label</label>
+          <input
+            className="form-control"
+            id="label"
+            placeholder="Label"
+            value={label}
+            disabled={loading}
+            onChange={e => this.setState({ group: e.target.value })}
+          />
+        </div>
+        <div className="form-group">
+          <label>Size ({size} MiB)</label>
+          <Slider
+            min={0}
+            max={free + disk.size}
+            step={256}
+            value={size}
+            onChange={v => this.setState({ size: v })}
+            tipFormatter={v => `${v} MiB`}
+            marks={{
+              [disk.size]: `Current (${disk.size} MiB)`,
+            }}
+          />
+        </div>
+        <div className="modal-footer">
+          <button
+            className="btn btn-default"
+            disabled={loading}
+            onClick={() => dispatch(hideModal())}
+          >Nevermind</button>
+          <button
+            className="btn btn-primary"
+            disabled={loading}
+          >Save</button>
+        </div>
+      </div>);
+  }
+}
+
+EditModal.propTypes = {
+  disk: PropTypes.object.isRequired,
+  free: PropTypes.number.isRequired,
+  dispatch: PropTypes.func.isRequired,
+};
+
 export class DiskPanel extends Component {
   constructor() {
     super();
@@ -55,6 +124,7 @@ export class DiskPanel extends Component {
   }
 
   render() {
+    const { dispatch } = this.props;
     const linode = this.getLinode();
     const disks = Object.values(linode._disks.disks);
     const total = linode.services.reduce((total, service) =>
@@ -85,7 +155,17 @@ export class DiskPanel extends Component {
                   <p>{d.size} MiB</p>
                   <button
                     className="btn btn-default"
-                  >Edit disk</button>
+                    style={{ marginRight: '0.5rem' }}
+                    onClick={() => dispatch(showModal(`Edit ${d.label}`,
+                      <EditModal
+                        free={free}
+                        disk={d}
+                        dispatch={dispatch}
+                      />))}
+                  >Edit</button>
+                  <button
+                    className="btn btn-default"
+                  >Delete</button>
                 </div>)}
               {free > 0 ?
                 <div
