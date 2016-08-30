@@ -32,7 +32,7 @@ describe('linodes/settings/components/DiskPanel', () => {
   it('renders disks', () => {
     const panel = shallow(
       <DiskPanel
-        params={{ linodeId: testLinode.id }}
+        params={{ linodeId: 'linode_1236' }}
         dispatch={() => {}}
         linodes={linodes}
       />
@@ -49,9 +49,24 @@ describe('linodes/settings/components/DiskPanel', () => {
       .to.have.property('style')
       .to.have.property('flexGrow')
       .which.equals(disks[1].size);
-    expect(firstDisk.find('.btn-default').length).to.equal(1); // has edit button
+    expect(firstDisk.find('button').length).to.equal(2); // has edit+delete buttons
     expect(firstDisk.contains(<p>{disks[0].size} MiB</p>)).to.equal(true);
     expect(firstDisk.contains(<small>{disks[0].filesystem}</small>)).to.equal(true);
+  });
+
+  it('renders offline message', () => {
+    const panel = shallow(
+      <DiskPanel
+        params={{ linodeId: testLinode.id }}
+        dispatch={() => {}}
+        linodes={linodes}
+      />
+    );
+
+    expect(panel.contains(
+      <div className="alert alert-info" style={{ marginTop: '1rem' }}>
+        Your Linode must be powered off to manage your disks.
+      </div>)).to.equal(true);
   });
 
   it('renders unallocated space', () => {

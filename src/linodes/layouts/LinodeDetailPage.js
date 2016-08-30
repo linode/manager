@@ -93,10 +93,7 @@ export class EditModal extends Component {
       errors: { label: null, group: null, _: null },
     });
     try {
-      await dispatch(putLinode({
-        id: linodeId,
-        data: { label, group },
-      }));
+      await dispatch(putLinode({ label, group }, linodeId));
       this.setState({ loading: false });
       dispatch(hideModal());
     } catch (response) {

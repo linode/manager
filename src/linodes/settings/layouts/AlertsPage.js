@@ -34,7 +34,7 @@ export class AlertsPage extends Component {
     const { dispatch } = this.props;
     const { id } = this.getLinode();
     this.setState({ loading: true });
-    await dispatch(putLinode({ id, data: { alerts: this.state.alerts } }));
+    await dispatch(putLinode({ alerts: this.state.alerts }, id));
     this.setState({ loading: false });
   }
 
