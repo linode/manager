@@ -340,11 +340,11 @@ export class BackupsPage extends Component {
         // eslint-disable-next-line max-len
         futureBackups[i].content = `${futureBackups[i].content}${getNextBackupDay(schedule.timeOfDay).format(', MMMM D YYYY, ')}`;
       } else if (backupList[i] === 'Weekly') {
-        futureBackups[i].content = `${schedule.dayOfWeek}`;
+        futureBackups[i].content = `${getBackupDayOfWeek(backupList[i])}`;
         // eslint-disable-next-line max-len
         futureBackups[i].content = `${futureBackups[i].content}${getNextBackupWeek(schedule.dayOfWeek, schedule.timeOfDay, false).format(', MMMM D YYYY, ')}`;
       } else if (backupList[i] === 'Biweekly') {
-        futureBackups[i].content = `${schedule.dayOfWeek}`;
+        futureBackups[i].content = `${getBackupDayOfWeek(backupList[i])}`;
         // eslint-disable-next-line max-len
         futureBackups[i].content = `${futureBackups[i].content}${getNextBackupWeek(schedule.dayOfWeek, schedule.timeOfDay, true).format(', MMMM D YYYY, ')}`;
       }
