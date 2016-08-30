@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import ConfigPanel from '~/linodes/settings/components/ConfigPanel';
-import DiskPanel from '~/linodes/settings/components/DiskPanel';
+import { ConfigPanel } from '~/linodes/settings/components/ConfigPanel';
+import { DiskPanel } from '~/linodes/settings/components/DiskPanel';
 
 export function AdvancedPage(props) {
   return (
@@ -10,9 +10,9 @@ export function AdvancedPage(props) {
         <span className="text-danger">WARNING! </span>
         This section is intended for advanced users. Proceed with caution.
       </div>
-      <DiskPanel params={props.params} />
+      <DiskPanel {...props} />
       <hr />
-      <ConfigPanel params={props.params} />
+      <ConfigPanel {...props} />
     </div>
   );
 }

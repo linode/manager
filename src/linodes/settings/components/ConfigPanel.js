@@ -7,7 +7,6 @@ import {
 import HelpButton from '~/components/HelpButton';
 import { Link } from 'react-router';
 import { getLinode, loadLinode } from '~/linodes/layouts/LinodeDetailPage';
-import { connect } from 'react-redux';
 
 function configContent(linode, configs, dispatch) {
   if (!linode && linode._configs.totalPages === -1) {
@@ -116,9 +115,3 @@ ConfigPanel.propTypes = {
     linodeId: PropTypes.string,
   }),
 };
-
-function select(state) {
-  return { linodes: state.api.linodes };
-}
-
-export default connect(select)(ConfigPanel);

@@ -5,7 +5,6 @@ import {
 } from '~/actions/api/linodes';
 import HelpButton from '~/components/HelpButton';
 import { getLinode, loadLinode } from '~/linodes/layouts/LinodeDetailPage';
-import { connect } from 'react-redux';
 
 export class DiskPanel extends Component {
   constructor() {
@@ -83,9 +82,3 @@ DiskPanel.propTypes = {
     linodeId: PropTypes.string,
   }),
 };
-
-function select(state) {
-  return { linodes: state.api.linodes };
-}
-
-export default connect(select)(DiskPanel);
