@@ -11,7 +11,9 @@
         margin: 0 0.25rem 0.5rem 0.25rem;
         padding: 0.5rem;
         background: $white;
-        border: 0.2rem solid $border-gray;
+        border-size: 2px;
+        border-style: solid;
+        border-color: $border-gray;
 
         &.free {
             background: transparent;
@@ -19,8 +21,6 @@
         }
 
         h4 {
-            font-size: 1rem;
-
             small {
                 color: $light-black;
                 font-size: 0.8rem;

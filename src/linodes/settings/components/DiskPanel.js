@@ -6,6 +6,34 @@ import {
 import HelpButton from '~/components/HelpButton';
 import { getLinode, loadLinode } from '~/linodes/layouts/LinodeDetailPage';
 
+const borderColors = [
+  '#1abc9c',
+  '#2ecc71',
+  '#3498db',
+  '#9b59b6',
+  '#16a085',
+  '#27ae60',
+  '#2980b9',
+  '#f1c40f',
+  '#e67e22',
+  '#e74c3c',
+];
+
+function hash(str) {
+  let hash = 0;
+  if (str.length === 0) return hash;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  return hash;
+}
+
+function getBorderColor(seed) {
+  return borderColors[Math.abs(hash(seed)) % borderColors.length];
+}
+
 export class DiskPanel extends Component {
   constructor() {
     super();
@@ -48,7 +76,10 @@ export class DiskPanel extends Component {
                 <div
                   className="disk"
                   key={d.id}
-                  style={{ flexGrow: d.size }}
+                  style={{
+                    flexGrow: d.size,
+                    borderColor: getBorderColor(d.label),
+                  }}
                 >
                   <h4>{d.label} <small>{d.filesystem}</small></h4>
                   <p>{d.size} MiB</p>
