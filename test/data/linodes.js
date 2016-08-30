@@ -22,6 +22,14 @@ export const apiTestLinode = {
     {
       service_type: 'linode',
       label: 'Linode 1024',
+      ram: 1024,
+      hourly_price: 1,
+      id: 'linode1024.5',
+      transfer: 2000,
+      monthly_price: 1000,
+      storage: 12,
+      mbits_out: 125,
+      vcpus: 1,
     },
   ],
   state: 'running',
@@ -105,7 +113,7 @@ export const testLinode = {
     disks: {
       disk_12345: {
         id: 'disk_12345',
-        size: 24064,
+        size: 6144,
         created: '2016-08-09T19:47:11',
         updated: '2016-08-09T19:47:11',
         filesystem: 'ext4',
@@ -113,7 +121,7 @@ export const testLinode = {
       },
       disk_12346: {
         id: 'disk_12346',
-        size: 24064,
+        size: 6144,
         created: '2016-08-09T19:47:11',
         updated: '2016-08-09T19:47:11',
         filesystem: 'swap',
@@ -189,6 +197,35 @@ export const linodes = {
       totalResults: 0,
       totalPages: 1,
       configs: {},
+    },
+  },
+  linode_1240: { // With unallocated space
+    ...testLinode,
+    id: 'linode_1240',
+    label: 'Test Linode 6',
+    state: 'running',
+    backups: { ...testLinode.backups, enabled: false },
+    _disks: {
+      totalResults: 2,
+      totalPages: 1,
+      disks: {
+        disk_12345: {
+          id: 'disk_12345',
+          size: 6144,
+          created: '2016-08-09T19:47:11',
+          updated: '2016-08-09T19:47:11',
+          filesystem: 'ext4',
+          label: 'Arch Linux 2015.08 Disk',
+        },
+        disk_12346: {
+          id: 'disk_12346',
+          size: 1024,
+          created: '2016-08-09T19:47:11',
+          updated: '2016-08-09T19:47:11',
+          filesystem: 'swap',
+          label: 'Swap Disk',
+        },
+      },
     },
   },
 };
