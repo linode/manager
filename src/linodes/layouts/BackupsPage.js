@@ -352,14 +352,28 @@ export class BackupsPage extends Component {
     }
 
     // This makes the snapshot appear first in the list of completed backups
+    // and checks if there is a snapshot currently
+    let snapshotCheck = false;
     let index = 0;
     for (const backup of backups) {
       if (backup.type === 'snapshot' && index !== 0) {
         backups[index] = backups[0];
         backups[0] = backup;
+        snapshotCheck = true;
+      } else if (backup.type === 'snapshot') {
+        snapshotCheck = true;
       }
       index++;
     }
+
+    const snapshotChecker = (snapshotCheck) => {
+      if (snapshotCheck) {
+        return () => dispatch(showModal('Take new snapshot',
+                                        this.renderOverwriteSnapshotModal(thisLinode)
+                                       ));
+      }
+      return () => dispatch(takeBackup(thisLinode.id));
+    };
 
     return (
       <div>
@@ -391,10 +405,35 @@ export class BackupsPage extends Component {
         >Restore backup</button>
         <button
           className="btn btn-primary-outline"
-          onClick={() => dispatch(takeBackup(thisLinode.id))}
+          onClick={snapshotChecker(snapshotCheck)}
         >Take Snapshot</button>
       </div>
     );
+  }
+
+  renderOverwriteSnapshotModal(linode) {
+    const { dispatch } = this.props;
+    return (
+      <div>
+        <p>
+          <span className="text-danger">WARNING!</span> This new snapshot will
+          overwrite the current snapshot.  Please confirm this is what you
+          really want.
+        </p>
+        <div className="modal-footer">
+          <button
+            className="btn btn-default"
+            onClick={() => dispatch(hideModal())}
+          >Nevermind</button>
+          <button
+            className="btn btn-primary"
+            onClick={() => {
+              dispatch(takeBackup(linode.id));
+              dispatch(hideModal());
+            }}
+          >Take new snapshot</button>
+        </div>
+      </div>);
   }
 
   renderSchedule() {
