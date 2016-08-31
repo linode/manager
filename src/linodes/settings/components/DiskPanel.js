@@ -93,7 +93,7 @@ export class EditModal extends Component {
           >Nevermind</button>
           <button
             className="btn btn-primary"
-            onClick={this.saveChanges}
+            onClick={() => this.saveChanges()}
             disabled={loading}
           >Save</button>
         </div>
@@ -162,7 +162,7 @@ export class DiskPanel extends Component {
                   {poweredOff ?
                     <div>
                       <button
-                        className="btn btn-default"
+                        className="btn btn-edit btn-default"
                         style={{ marginRight: '0.5rem' }}
                         onClick={() => dispatch(showModal(`Edit ${d.label}`,
                           <EditModal
@@ -173,7 +173,7 @@ export class DiskPanel extends Component {
                           />))}
                       >Edit</button>
                       <button
-                        className="btn btn-default"
+                        className="btn btn-delete btn-default"
                       >Delete</button>
                     </div>
                   : null}
@@ -188,7 +188,7 @@ export class DiskPanel extends Component {
                   <p>{free} MiB</p>
                   {poweredOff ?
                     <button
-                      className="btn btn-default"
+                      className="btn btn-add btn-default"
                     >Add a disk</button>
                   : null}
                 </div> : null}
