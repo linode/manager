@@ -72,15 +72,6 @@ export const deleteLinode = makeDeleteItem(linodeConfig);
 export const putLinode = makePutItem(linodeConfig);
 export const createLinode = makeCreateItem(linodeConfig);
 
-export const fetchLinodeDisk = makeFetchItem(linodeConfig, '_disks');
-export const fetchLinodeDisks = makeFetchPage(linodeConfig, '_disks');
-export const fetchAllLinodeDisks = makeFetchAll(linodeConfig, fetchLinodeDisks, '_disks');
-
-export const deleteLinodeConfig = makeDeleteItem(linodeConfig, '_configs');
-export const fetchLinodeConfig = makeFetchItem(linodeConfig, '_configs');
-export const fetchLinodeConfigs = makeFetchPage(linodeConfig, '_configs');
-export const fetchAllLinodeConfigs = makeFetchAll(linodeConfig, fetchLinodeConfigs, '_configs');
-
 function linodeAction(id, action, temp, expected, timeout = undefined, body = undefined) {
   return async (dispatch, getState) => {
     const state = getState();
@@ -117,3 +108,29 @@ export function resetPassword(linodeId, diskId, password) {
       });
   };
 }
+
+export const fetchLinodeDisk = makeFetchItem(linodeConfig, '_disks');
+export const fetchLinodeDisks = makeFetchPage(linodeConfig, '_disks');
+export const fetchAllLinodeDisks = makeFetchAll(linodeConfig, fetchLinodeDisks, '_disks');
+export const putLinodeDisk = makePutItem(linodeConfig, '_disks');
+
+export function resizeLinodeDisk(linodeId, diskId, size) {
+  return async (dispatch, getState) => {
+    const state = getState();
+    const { token } = state.authentication;
+    dispatch({
+      type: UPDATE_LINODE_DISK,
+      disk: { id: diskId, size },
+      linodes: linodeId,
+      disks: diskId,
+    });
+    await fetch(token, `/linodes/${linodeId}/disks/${diskId}/resize`,
+      { method: 'POST', body: JSON.stringify({ size }) });
+    // TODO: fetch until complete
+  };
+}
+
+export const deleteLinodeConfig = makeDeleteItem(linodeConfig, '_configs');
+export const fetchLinodeConfig = makeFetchItem(linodeConfig, '_configs');
+export const fetchLinodeConfigs = makeFetchPage(linodeConfig, '_configs');
+export const fetchAllLinodeConfigs = makeFetchAll(linodeConfig, fetchLinodeConfigs, '_configs');

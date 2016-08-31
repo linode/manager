@@ -2,6 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import {
   fetchLinode,
   fetchAllLinodeDisks,
+  putLinodeDisk,
+  resizeLinodeDisk,
 } from '~/actions/api/linodes';
 import HelpButton from '~/components/HelpButton';
 import { getLinode, loadLinode } from '~/linodes/layouts/LinodeDetailPage';
@@ -39,15 +41,16 @@ export class EditModal extends Component {
 
   async saveChanges() {
     const { size, label } = this.state;
-    const { disk } = this.props;
+    const { linode, disk, dispatch } = this.props;
     this.setState({ loading: true });
     if (label !== disk.label) {
-      // TODO
+      await dispatch(putLinodeDisk({ label }, linode.id, disk.id));
     }
     if (size !== disk.size) {
-      // TODO
+      await dispatch(resizeLinodeDisk(linode.id, disk.id, size));
     }
     this.setState({ loading: false });
+    dispatch(hideModal());
   }
 
   render() {
@@ -64,7 +67,7 @@ export class EditModal extends Component {
             placeholder="Label"
             value={label}
             disabled={loading}
-            onChange={e => this.setState({ group: e.target.value })}
+            onChange={e => this.setState({ label: e.target.value })}
           />
         </div>
         <div className="form-group">
@@ -99,6 +102,7 @@ export class EditModal extends Component {
 }
 
 EditModal.propTypes = {
+  linode: PropTypes.object.isRequired,
   disk: PropTypes.object.isRequired,
   free: PropTypes.number.isRequired,
   dispatch: PropTypes.func.isRequired,
@@ -163,6 +167,7 @@ export class DiskPanel extends Component {
                         onClick={() => dispatch(showModal(`Edit ${d.label}`,
                           <EditModal
                             free={free}
+                            linode={linode}
                             disk={d}
                             dispatch={dispatch}
                           />))}
