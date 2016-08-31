@@ -112,6 +112,8 @@ export function resetPassword(linodeId, diskId, password) {
 export const fetchLinodeDisk = makeFetchItem(linodeConfig, '_disks');
 export const fetchLinodeDisks = makeFetchPage(linodeConfig, '_disks');
 export const fetchAllLinodeDisks = makeFetchAll(linodeConfig, fetchLinodeDisks, '_disks');
+
+export const deleteLinodeDisk = makeDeleteItem(linodeConfig, '_disks');
 export const putLinodeDisk = makePutItem(linodeConfig, '_disks');
 
 export function resizeLinodeDisk(linodeId, diskId, size) {

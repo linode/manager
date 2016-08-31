@@ -11,9 +11,9 @@
         border-style: solid;
         border-color: $border-gray;
 
-        &.free {
+        &.free, &.disk-deleting {
             background: transparent;
-            border: 0.2rem dashed $border-gray;
+            border: 0.2rem dashed $border-gray !important;
         }
 
         h4 {

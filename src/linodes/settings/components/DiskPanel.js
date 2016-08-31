@@ -3,6 +3,7 @@ import {
   fetchLinode,
   fetchAllLinodeDisks,
   putLinodeDisk,
+  deleteLinodeDisk,
   resizeLinodeDisk,
 } from '~/actions/api/linodes';
 import HelpButton from '~/components/HelpButton';
@@ -108,6 +109,45 @@ EditModal.propTypes = {
   dispatch: PropTypes.func.isRequired,
 };
 
+export class DeleteModal extends Component {
+  constructor() {
+    super();
+    this.state = { loading: false };
+  }
+
+  render() {
+    const { dispatch, linode, disk } = this.props;
+    const { loading } = this.state;
+    return (
+      <div>
+        <p>Are you sure you want to delete this disk? This cannot be undone.</p>
+        <div className="modal-footer">
+          <button
+            className="btn btn-default"
+            disabled={loading}
+            onClick={() => dispatch(hideModal())}
+          >Nevermind</button>
+          <button
+            className="btn btn-danger"
+            disabled={loading}
+            onClick={async () => {
+              this.setState({ loading: true });
+              await dispatch(deleteLinodeDisk(linode.id, disk.id));
+              this.setState({ loading: false });
+              dispatch(hideModal());
+            }}
+          >Delete disk</button>
+        </div>
+      </div>);
+  }
+}
+
+DeleteModal.propTypes = {
+  linode: PropTypes.object.isRequired,
+  disk: PropTypes.object.isRequired,
+  dispatch: PropTypes.func.isRequired,
+};
+
 export class DiskPanel extends Component {
   constructor() {
     super();
@@ -150,7 +190,7 @@ export class DiskPanel extends Component {
             <div className="disk-layout">
               {disks.map(d =>
                 <div
-                  className="disk"
+                  className={`disk disk-${d.state}`}
                   key={d.id}
                   style={{
                     flexGrow: d.size,
@@ -159,7 +199,10 @@ export class DiskPanel extends Component {
                 >
                   <h4>{d.label} <small>{d.filesystem}</small></h4>
                   <p>{d.size} MiB</p>
-                  {poweredOff ?
+                  {d.state === 'deleting' ?
+                    <div className="text-muted">Being deleted</div>
+                  : null}
+                  {poweredOff && d.state !== 'deleting' ?
                     <div>
                       <button
                         className="btn btn-edit btn-default"
@@ -174,6 +217,12 @@ export class DiskPanel extends Component {
                       >Edit</button>
                       <button
                         className="btn btn-delete btn-default"
+                        onClick={() => dispatch(showModal(`Delete ${d.label}`,
+                          <DeleteModal
+                            linode={linode}
+                            disk={d}
+                            dispatch={dispatch}
+                          />))}
                       >Delete</button>
                     </div>
                   : null}
