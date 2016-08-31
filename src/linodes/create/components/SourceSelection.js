@@ -17,7 +17,7 @@ export default class SourceSelection extends Component {
   }
 
   renderDistros() {
-    const { distros, selected, onSourceSelected } = this.props;
+    const { distros, distribution, onSourceSelected } = this.props;
     const vendors = _.sortBy(
       _.map(
         _.groupBy(Object.values(distros), d => d.vendor),
@@ -30,10 +30,10 @@ export default class SourceSelection extends Component {
       <div className="distros">
         {vendors.map(v =>
           <DistroVendor
-            selected={selected}
+            selected={distribution}
             vendor={v}
             key={v.name}
-            onClick={s => onSourceSelected(s)}
+            onClick={s => onSourceSelected('distribution', s)}
           />)}
       </div>
     );
@@ -130,7 +130,7 @@ export default class SourceSelection extends Component {
 
   renderBackups() {
     const { selectedLinode } = this.state;
-    const { onSourceSelected, selected } = this.props;
+    const { onSourceSelected, backup } = this.props;
 
     return (
       <div className="backups">
@@ -141,9 +141,9 @@ export default class SourceSelection extends Component {
               e.preventDefault();
               this.setState({ selectedLinode: -1 });
             }}
-            onSourceSelected={onSourceSelected}
+            onSourceSelected={id => onSourceSelected('backup', id)}
             selectedLinode={selectedLinode}
-            selected={selected}
+            selected={backup}
           />}
       </div>
     );
@@ -194,7 +194,8 @@ SourceSelection.propTypes = {
   selectedTab: PropTypes.number.isRequired,
   onTabChange: PropTypes.func,
   onSourceSelected: PropTypes.func,
-  selected: PropTypes.string,
+  distribution: PropTypes.string,
+  backup: PropTypes.number,
   perPageLimit: PropTypes.number,
 };
 

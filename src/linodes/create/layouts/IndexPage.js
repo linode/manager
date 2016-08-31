@@ -19,9 +19,10 @@ export class IndexPage extends Component {
     this.createLinode = this.createLinode.bind(this);
     this.renderProgress = this.renderProgress.bind(this);
     this.state = {
-      service: '',
-      datacenter: '',
-      source: '',
+      service: null,
+      datacenter: null,
+      distribution: null,
+      backup: null,
       sourceTab: 0,
       errors: {},
       loading: false,
@@ -63,6 +64,7 @@ export class IndexPage extends Component {
         dispatch(push('/linodes'));
       }
     } catch (response) {
+      console.log(response);
       const { errors } = await response.json();
       const errorsByField = {};
       errors.forEach(({ field, reason }) => {
@@ -75,11 +77,12 @@ export class IndexPage extends Component {
 
   async createLinode({ group, label, password, backups }) {
     const { dispatch } = this.props;
-    const { service, source, datacenter } = this.state;
+    const { service, datacenter, distribution, backup } = this.state;
     return await dispatch(createLinode({
       root_pass: password,
       service,
-      source,
+      distribution,
+      backup,
       datacenter,
       label,
       group,
@@ -117,7 +120,8 @@ export class IndexPage extends Component {
       services,
     } = this.props;
     const {
-      source,
+      backup,
+      distribution,
       datacenter,
       service,
       sourceTab,
@@ -134,11 +138,12 @@ export class IndexPage extends Component {
         <h1>Add a Linode</h1>
         <div className="card page-card">
           <SourceSelection
-            selected={source}
+            distribution={distribution}
+            backup={backup}
             selectedTab={sourceTab}
             distros={distros.distributions}
             onTabChange={ix => this.setState({ sourceTab: ix })}
-            onSourceSelected={id => this.setState({ source: id })}
+            onSourceSelected={(type, id) => this.setState({ [type]: id })}
             linodes={linodes}
           />
         </div>
@@ -159,7 +164,7 @@ export class IndexPage extends Component {
         <div className="card page-card">
           <Details
             onSubmit={this.onSubmit}
-            submitEnabled={!!source && !!datacenter && !!service && !loading}
+            submitEnabled={!!(distribution || backup) && !!datacenter && !!service && !loading}
             errors={this.state.errors}
           />
         </div>

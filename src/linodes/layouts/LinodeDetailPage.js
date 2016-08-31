@@ -19,7 +19,7 @@ import {
 
 export function getLinode() {
   const { linodes } = this.props.linodes;
-  const { linodeId } = this.props.params;
+  const linodeId = parseInt(this.props.params.linodeId);
   return linodes ? linodes[linodeId] : null;
 }
 
@@ -27,7 +27,7 @@ export async function loadLinode() {
   const { dispatch } = this.props;
   let linode = this.getLinode();
   if (!linode) {
-    const { linodeId } = this.props.params;
+    const linodeId = parseInt(this.props.params.linodeId);
     try {
       await dispatch(fetchLinode(linodeId));
       linode = this.getLinode();
@@ -172,7 +172,7 @@ EditModal.propTypes = {
   dispatch: PropTypes.func.isRequired,
   group: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
-  linodeId: PropTypes.string.isRequired,
+  linodeId: PropTypes.number.isRequired,
 };
 
 export class LinodeDetailPage extends Component {
