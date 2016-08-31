@@ -8,7 +8,7 @@ export const TOGGLE_DETAILS = '@@errors/TOGGLE_DETAILS';
  */
 export function setError(response, json = null) {
   return async (dispatch) => {
-    const type = response.headers.get('Content-Type');
+    const type = response.headers && response.headers.get('Content-Type');
     const _json = !json && type === 'application/json'
       ? await response.json() : null;
     dispatch({
