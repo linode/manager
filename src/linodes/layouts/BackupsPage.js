@@ -52,8 +52,8 @@ export class BackupsPage extends Component {
     }
     let linode = this.getLinode();
     if (!linode) {
-      const { linodeId } = this.props.params;
-      await dispatch(fetchLinode(linodeId));
+      const linodeId = parseInt(this.props.params.linodeId);
+      await dispatch(fetchLinode(parseInt(linodeId)));
     }
     linode = this.getLinode();
     if (linode._backups.totalPages === -1) {
@@ -70,7 +70,7 @@ export class BackupsPage extends Component {
 
   getLinode() {
     const { linodes } = this.props.linodes;
-    const { linodeId } = this.props.params;
+    const linodeId = parseInt(this.props.params.linodeId);
     return linodes[linodeId];
   }
 
@@ -81,6 +81,7 @@ export class BackupsPage extends Component {
       id: this.getLinode().id,
       data: {
         backups: {
+          enabled: true,
           schedule: {
             window: this.state.schedule.timeOfDay,
             day: this.state.schedule.dayOfWeek,
@@ -93,7 +94,7 @@ export class BackupsPage extends Component {
 
   async restore(target, backup, override = false) {
     const { dispatch } = this.props;
-    const { linodeId } = this.props.params;
+    const linodeId = parseInt(this.props.params.linodeId);
     this.setState({ loading: true });
     try {
       await dispatch(restoreBackup(linodeId, target, backup, override));

@@ -88,9 +88,9 @@ describe('linodes/layouts/IndexPage', () => {
           totalResults: 2,
           linodes: {
             [testLinode.id]: testLinode,
-            linode_1235: {
+            1235: {
               ...testLinode,
-              id: 'linode_1235',
+              id: 1235,
               label: 'asdfasdf',
             },
           },
@@ -149,14 +149,14 @@ describe('linodes/layouts/IndexPage', () => {
         <IndexPage
           dispatch={dispatch}
           view={'grid'}
-          selected={{ linode_1234: true }}
+          selected={{ 1234: true }}
           linodes={linodes}
         />);
       dispatch.reset();
       const actions = page.find(Dropdown).props().elements;
       actions.find(a => a.name === dropdown).action();
       const fn = dispatch.firstCall.args[0];
-      await expectRequest(fn, `/linodes/linode_1234${endpoint}`);
+      await expectRequest(fn, `/linodes/1234${endpoint}`);
     };
   }
 

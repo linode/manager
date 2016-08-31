@@ -85,7 +85,7 @@ function linodeAction(id, action, temp, expected, timeout = undefined, body = un
   return async (dispatch, getState) => {
     const state = getState();
     const { token } = state.authentication;
-    dispatch({ type: UPDATE_LINODE, linode: { id, state: temp } });
+    dispatch({ type: UPDATE_LINODE, linode: { id, state: temp }, linodes: id });
     await fetch(token, `/linodes/${id}/${action}`, { method: 'POST', body });
     await dispatch(fetchLinodeUntil(id, l => l.state === expected, timeout));
   };

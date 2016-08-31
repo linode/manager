@@ -45,7 +45,7 @@ export class DiskPanel extends Component {
     const { dispatch } = this.props;
     let linode = this.getLinode();
     if (!linode) {
-      const { linodeId } = this.props.params;
+      const linodeId = parseInt(this.props.params.linodeId);
       await dispatch(fetchLinode(linodeId));
       linode = this.getLinode();
     }

@@ -16,8 +16,8 @@ import * as fetch from '~/fetch';
 describe('api-store', () => {
   const mockFoobarsResponse = {
     foobars: [
-      { id: 'foobar_1' },
-      { id: 'foobar_2' },
+      { id: 1 },
+      { id: 2 },
     ],
     total_pages: 3,
     total_results: 25 * 3 - 4,
@@ -88,7 +88,10 @@ describe('api-store', () => {
 
       expect(result)
         .to.have.property('foobars')
-        .which.has.keys('foobar_1', 'foobar_2');
+        .to.have.property(1);
+      expect(result)
+        .to.have.property('foobars')
+        .to.have.property(2);
     });
 
     it('should update the pagesFetched property appropriately', () => {
@@ -121,8 +124,8 @@ describe('api-store', () => {
         type: config.actions.updateItems,
         response: {
           foobars: [
-            { id: 'foobar_1' },
-            { id: 'foobar_2' },
+            { id: 1 },
+            { id: 2 },
           ],
           total_pages: 3,
           total_results: 25 * 3 - 4,
@@ -132,7 +135,7 @@ describe('api-store', () => {
 
       expect(result)
         .to.have.property('foobars')
-        .which.has.property('foobar_1')
+        .which.has.property(1)
         .which.has.property('_polling');
     });
 
@@ -146,8 +149,8 @@ describe('api-store', () => {
         type: config.actions.updateItems,
         response: {
           foobars: [
-            { id: 'foobar_1' },
-            { id: 'foobar_2' },
+            { id: 1 },
+            { id: 2 },
           ],
           total_pages: 3,
           total_results: 25 * 3 - 4,
@@ -157,7 +160,7 @@ describe('api-store', () => {
 
       expect(result)
         .to.have.property('foobars')
-        .which.has.property('foobar_1')
+        .which.has.property(1)
         .which.has.property('test')
         .which.equals(1234);
     });
@@ -170,12 +173,13 @@ describe('api-store', () => {
 
       const result = s(state, {
         type: config.actions.updateItem,
-        foobar: { id: 'foobar_1' },
+        foobar: { id: 1 },
+        foobars: 1,
       });
 
       expect(result)
         .to.have.property('foobars')
-        .which.has.keys('foobar_1');
+        .to.have.property(1);
     });
 
     it('should handle updating a single resource', () => {
@@ -186,19 +190,20 @@ describe('api-store', () => {
         ...state,
         foobars: {
           ...state.foobars,
-          foobar_1: { id: 'foobar_1' },
+          1: { id: 1 },
         },
       };
       deepFreeze(state);
 
       const result = s(state, {
         type: config.actions.updateItem,
-        foobar: { id: 'foobar_1', name: 'hello' },
+        foobar: { id: 1, name: 'hello' },
+        foobars: 1,
       });
 
       expect(result)
         .to.have.property('foobars')
-        .which.has.property('foobar_1')
+        .which.has.property(1)
         .which.has.property('name')
         .which.equals('hello');
     });
@@ -211,19 +216,19 @@ describe('api-store', () => {
         ...state,
         foobars: {
           ...state.foobars,
-          foobar_1: { id: 'foobar_1' },
+          1: { id: 1 },
         },
       };
       deepFreeze(state);
 
       const result = s(state, {
         type: config.actions.deleteItem,
-        foobars: 'foobar_1',
+        foobars: 1,
       });
 
       expect(result)
         .to.have.property('foobars')
-        .which/* .does*/.not.have.property('foobar_1');
+        .which/* .does*/.not.have.property(1);
     });
 
     it('should handle invalidate cache actions', () => {
@@ -234,7 +239,7 @@ describe('api-store', () => {
         ...state,
         foobars: {
           ...state.foobars,
-          foobar_1: { id: 'foobar_1' },
+          1: { id: 1 },
         },
         totalPages: 2,
         pagesFetched: [0],
@@ -280,7 +285,7 @@ describe('api-store', () => {
 
     expect(result)
       .to.have.property('foobars')
-      .which.has.property('foobar_1')
+      .which.has.property(1)
       .which.has.property('foobazes')
       .which.has.keys(
         'totalPages',
@@ -303,16 +308,17 @@ describe('api-store', () => {
 
     const result = s(state, {
       type: config.subresources.foobazes.actions.updateItem,
-      foobaz: { id: 'foobaz_123', test: 'hello world' },
-      foobars: 'foobar_1',
+      foobaz: { id: 123, test: 'hello world' },
+      foobars: 1,
+      foobazes: 123,
     });
 
     expect(result)
       .to.have.property('foobars')
-      .which.has.property('foobar_1')
+      .which.has.property(1)
       .which.has.property('foobazes')
       .which.has.property('foobazes')
-      .which.has.property('foobaz_123')
+      .which.has.property(123)
       .which.has.property('test').that.equals('hello world');
   });
 
@@ -327,16 +333,16 @@ describe('api-store', () => {
 
     const result = s(state, {
       type: config.subresources.foobazes.actions.deleteItem,
-      foobaz: 'foobaz_123',
-      foobars: 'foobar_1',
+      foobaz: 123,
+      foobars: 1,
     });
 
     expect(result)
       .to.have.property('foobars')
-      .which.has.property('foobar_1')
+      .which.has.property(1)
       .which.has.property('foobazes')
       .which.has.property('foobazes')
-      .which./* does */not.have.property('foobaz_123');
+      .which./* does */not.have.property(123);
   });
 
   describe('api-store/makeFetchPage', () => {
@@ -383,22 +389,22 @@ describe('api-store', () => {
         api: {
           foobars: {
             foobars: {
-              foobar_1: { foobazes: { totalPages: -1 } },
+              1: { foobazes: { totalPages: -1 } },
             },
           },
         },
       });
       const f = makeFetchPage(config, 'foobazes');
-      const p = f(0, 'foobar_1');
+      const p = f(0, 1);
 
       await p(dispatch, getState);
 
       expect(fetchStub.calledWith(
-        auth.token, '/foobars/foobar_1/foobazes?page=1')).to.equal(true);
+        auth.token, '/foobars/1/foobazes?page=1')).to.equal(true);
       expect(dispatch.calledWith({
         type: config.subresources.foobazes.actions.updateItems,
         response: mockFoobarsResponse,
-        foobars: 'foobar_1',
+        foobars: 1,
       })).to.equal(true);
     });
 
@@ -474,28 +480,28 @@ describe('api-store', () => {
         api: { foobars: { totalPages: -1, foobars: { } } },
       });
       const f = makeFetchItem(config);
-      const p = f('foobar_1');
+      const p = f(1);
 
       await p(dispatch, getState);
 
       expect(fetchStub.calledWith(
-        auth.token, '/foobars/foobar_1')).to.equal(true);
+        auth.token, '/foobars/1')).to.equal(true);
       expect(dispatch.calledWith({
         type: config.actions.updateItem,
         foobar: mockFoobarsResponse.foobars[0],
-        foobars: 'foobar_1',
+        foobars: 1,
       })).to.equal(true);
     });
 
     it('fetches a sub resource from the API', async () => {
       const dispatch = getDispatch();
-      const foobaz = { id: 'foobaz_1234' };
+      const foobaz = { id: 1234 };
       const fetchStub = getFetchStub(foobaz);
       const getState = getGetState({
         api: {
           foobars: {
             foobars: {
-              foobar_1: {
+              1: {
                 foobazes: { totalPages: -1, foobazes: { } },
               },
             },
@@ -503,16 +509,16 @@ describe('api-store', () => {
         },
       });
       const f = makeFetchItem(config, 'foobazes');
-      const p = f('foobar_1', 'foobaz_1234');
+      const p = f(1, 1234);
 
       await p(dispatch, getState);
 
       expect(fetchStub.calledWith(
-        auth.token, '/foobars/foobar_1/foobazes/foobaz_1234')).to.equal(true);
+        auth.token, '/foobars/1/foobazes/1234')).to.equal(true);
       expect(dispatch.calledWith({
         type: config.subresources.foobazes.actions.updateItem,
-        foobars: 'foobar_1',
-        foobazes: 'foobaz_1234',
+        foobars: 1,
+        foobazes: 1234,
         foobaz,
       })).to.equal(true);
     });
@@ -544,15 +550,15 @@ describe('api-store', () => {
         api: { foobars: { totalPages: -1, foobars: { } } },
       });
       const f = makeDeleteItem(config);
-      const p = f('foobar_1');
+      const p = f(1);
 
       await p(dispatch, getState);
 
       expect(fetchStub.calledWith(
-        auth.token, '/foobars/foobar_1', { method: 'DELETE' })).to.equal(true);
+        auth.token, '/foobars/1', { method: 'DELETE' })).to.equal(true);
       expect(dispatch.calledWith({
         type: config.actions.deleteItem,
-        foobars: 'foobar_1',
+        foobars: 1,
       })).to.equal(true);
     });
 
@@ -561,7 +567,7 @@ describe('api-store', () => {
       const fetchStub = getFetchStub(emptyResponse);
       const getState = getGetState({
         api: { foobars: { totalPages: -1, foobars: {
-          foobar_1: {
+          1: {
             foobazes: {
               totalPages: -1,
               foobazes: { },
@@ -570,17 +576,17 @@ describe('api-store', () => {
         } } },
       });
       const f = makeDeleteItem(config, 'foobazes');
-      const p = f('foobar_1', 'foobaz_1');
+      const p = f(1, 1);
 
       await p(dispatch, getState);
 
       expect(fetchStub.calledWith(
-        auth.token, '/foobars/foobar_1/foobazes/foobaz_1',
+        auth.token, '/foobars/1/foobazes/1',
         { method: 'DELETE' })).to.equal(true);
       expect(dispatch.calledWith({
         type: config.subresources.foobazes.actions.deleteItem,
-        foobars: 'foobar_1',
-        foobazes: 'foobaz_1',
+        foobars: 1,
+        foobazes: 1,
       })).to.equal(true);
     });
   });
@@ -593,7 +599,7 @@ describe('api-store', () => {
     it('returns a function that itself returns a function', () => {
       const f = makePutItem(config);
       expect(f).to.be.a('function');
-      expect(f({ id: '', data: {} })).to.be.a('function');
+      expect(f({ id: -1, data: {} })).to.be.a('function');
     });
 
     const getGetState = (state = {}) => sandbox.stub().returns({
@@ -609,18 +615,18 @@ describe('api-store', () => {
       const fetchStub = getFetchStub(emptyResponse);
       const getState = getGetState();
       const f = makePutItem(config);
-      const p = f({ id: 'foobar_1', data: { foo: 'bar' } });
+      const p = f({ id: 1, data: { foo: 'bar' } });
 
       await p(dispatch, getState);
 
       expect(fetchStub.calledWith(
         auth.token,
-        '/foobars/foobar_1',
+        '/foobars/1',
         { method: 'PUT', body: JSON.stringify({ foo: 'bar' }) }
       )).to.equal(true);
       expect(dispatch.calledWith({
         type: config.actions.updateItem,
-        foobars: 'foobar_1',
+        foobars: 1,
         foobar: { foo: 'bar' },
       })).to.equal(true);
     });
@@ -648,7 +654,7 @@ describe('api-store', () => {
 
     it('performs the API request', async () => {
       const dispatch = getDispatch();
-      const fetchStub = getFetchStub({ name: 'foobar' });
+      const fetchStub = getFetchStub({ id: 1234, name: 'foobar' });
       const getState = getGetState();
       const f = makeCreateItem(config);
       const p = f({ name: 'foobar' });
@@ -660,7 +666,8 @@ describe('api-store', () => {
       )).to.equal(true);
       expect(dispatch.calledWith({
         type: config.actions.updateItem,
-        foobar: { name: 'foobar' },
+        foobar: { id: 1234, name: 'foobar' },
+        foobars: 1234,
       })).to.equal(true);
     });
   });
@@ -677,16 +684,16 @@ describe('api-store', () => {
       fetchStub.returns({ json: () => ({ state: 'done' }) });
 
       const f = makeFetchUntil(config);
-      const p = f('foobar_1', v => v.state === 'done', 1);
+      const p = f(1, v => v.state === 'done', 1);
 
       const state = {
         authentication: { token: 'token' },
-        api: { foobars: { foobars: { foobar_1: { state: 'wait' } } } },
+        api: { foobars: { foobars: { 1: { state: 'wait' } } } },
       };
 
       await p(() => { }, () => state);
       expect(fetchStub.calledThrice).to.equal(true);
-      expect(fetchStub.calledWith('token', '/foobars/foobar_1'));
+      expect(fetchStub.calledWith('token', '/foobars/1'));
     });
 
     it('should submit update actions for each request performed', async () => {
@@ -699,11 +706,11 @@ describe('api-store', () => {
       const getState = sandbox.stub();
 
       const f = makeFetchUntil(config);
-      const p = f('foobar_1', v => v.state === 'done', 1);
+      const p = f(1, v => v.state === 'done', 1);
 
       const state = {
         authentication: { token: 'token' },
-        api: { foobars: { foobars: { foobar_1: { state: 'wait' } } } },
+        api: { foobars: { foobars: { 1: { state: 'wait' } } } },
       };
       getState.returns(state);
 
@@ -713,6 +720,7 @@ describe('api-store', () => {
       expect(dispatch.calledWith({
         type: config.actions.updateItem,
         foobar: { state: 'done' },
+        foobars: 1,
       })).to.equal(true);
       expect(dispatch.callCount).to.equal(5);
     });

@@ -135,7 +135,7 @@ function renderCard(props) {
   const checkbox = <input type="checkbox" checked={isSelected} onChange={select} />;
 
   return (
-    <div className={`linode card ${linode.state} ${selectedClass}`}>
+    <div key={linode.id} className={`linode card ${linode.state} ${selectedClass}`}>
       <div className="linode-header">
         {checkbox}
         <Link to={`/linodes/${linode.id}`} className="linode-label">{linode.label}</Link>

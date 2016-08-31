@@ -210,9 +210,6 @@ export class LinodeNetworking extends Component {
 
 LinodeNetworking.propTypes = {
   linodes: PropTypes.object,
-  params: PropTypes.shape({
-    linodeId: PropTypes.string,
-  }),
 };
 
 function select(state) {

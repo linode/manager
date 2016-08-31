@@ -82,7 +82,7 @@ describe('linodes/create/layout/IndexPage', () => {
         linodes={api.linodes}
       />);
     const ss = page.find('SourceSelection');
-    ss.props().onSourceSelected({ id: 'distro_1234' });
+    ss.props().onSourceSelected('distribution', { id: 'distro_1234' });
     expect(ss.find('.distro.selected').find(<div className="title">Arch 2016.05</div>))
       .to.exist;
   });
@@ -141,7 +141,7 @@ describe('linodes/create/layout/IndexPage', () => {
     expectIsDisabled();
     page.find('DatacenterSelection').props().onDatacenterSelected('datacenter');
     expectIsDisabled();
-    page.find('SourceSelection').props().onSourceSelected('source');
+    page.find('SourceSelection').props().onSourceSelected('distribution', 'source');
     expectIsDisabled();
     await page.find('Details').props().onSubmit({
       labels: ['label'],
@@ -153,7 +153,8 @@ describe('linodes/create/layout/IndexPage', () => {
     expect(dispatch.firstCall.args[0]).to.deep.equal({
       root_pass: 'password',
       service: 'service',
-      source: 'source',
+      distribution: 'source',
+      backup: null,
       datacenter: 'datacenter',
       label: 'label',
       backups: false,
@@ -183,7 +184,7 @@ describe('linodes/create/layout/IndexPage', () => {
 
     page.find('ServiceSelection').props().onServiceSelected('service');
     page.find('DatacenterSelection').props().onDatacenterSelected('datacenter');
-    page.find('SourceSelection').props().onSourceSelected('source');
+    page.find('SourceSelection').props().onSourceSelected('distribution', 'source');
     await page.find('Details').props().onSubmit({
       labels: ['label', 'label-2'],
       password: 'password',
@@ -194,7 +195,8 @@ describe('linodes/create/layout/IndexPage', () => {
     expect(dispatch.firstCall.args[0]).to.deep.equal({
       root_pass: 'password',
       service: 'service',
-      source: 'source',
+      distribution: 'source',
+      backup: null,
       datacenter: 'datacenter',
       label: 'label',
       backups: false,
@@ -203,7 +205,8 @@ describe('linodes/create/layout/IndexPage', () => {
     expect(dispatch.secondCall.args[0]).to.deep.equal({
       root_pass: 'password',
       service: 'service',
-      source: 'source',
+      distribution: 'source',
+      backup: null,
       datacenter: 'datacenter',
       label: 'label-2',
       backups: false,
@@ -232,7 +235,7 @@ describe('linodes/create/layout/IndexPage', () => {
 
     page.find('ServiceSelection').props().onServiceSelected('service');
     page.find('DatacenterSelection').props().onDatacenterSelected('datacenter');
-    page.find('SourceSelection').props().onSourceSelected('source');
+    page.find('SourceSelection').props().onSourceSelected('distribution', 'source');
     await page.find('Details').props().onSubmit({
       labels: ['label', null, null],
       password: 'password',
@@ -242,7 +245,8 @@ describe('linodes/create/layout/IndexPage', () => {
     expect(dispatch.firstCall.args[0]).to.deep.equal({
       root_pass: 'password',
       service: 'service',
-      source: 'source',
+      distribution: 'source',
+      backup: null,
       datacenter: 'datacenter',
       label: 'label',
       backups: false,
@@ -251,7 +255,8 @@ describe('linodes/create/layout/IndexPage', () => {
     expect(dispatch.secondCall.args[0]).to.deep.equal({
       root_pass: 'password',
       service: 'service',
-      source: 'source',
+      distribution: 'source',
+      backup: null,
       datacenter: 'datacenter',
       label: 'label-1',
       backups: false,
@@ -260,7 +265,8 @@ describe('linodes/create/layout/IndexPage', () => {
     expect(dispatch.thirdCall.args[0]).to.deep.equal({
       root_pass: 'password',
       service: 'service',
-      source: 'source',
+      distribution: 'source',
+      backup: null,
       datacenter: 'datacenter',
       label: 'label-2',
       backups: false,
@@ -287,7 +293,7 @@ describe('linodes/create/layout/IndexPage', () => {
 
     page.find('ServiceSelection').props().onServiceSelected('service');
     page.find('DatacenterSelection').props().onDatacenterSelected('datacenter');
-    page.find('SourceSelection').props().onSourceSelected('source');
+    page.find('SourceSelection').props().onSourceSelected('distribution', 'source');
     await page.find('Details').props().onSubmit({ labels: [''], password: '' });
 
     expect(page.find('Details').props().errors).to.deep.equal({

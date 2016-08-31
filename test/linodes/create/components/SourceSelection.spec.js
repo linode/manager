@@ -20,7 +20,8 @@ describe('linodes/create/components/SourceSelection', () => {
       <SourceSelection
         distros={api.distributions}
         linodes={api.linodes}
-        source={null}
+        distribution={null}
+        backup={null}
         selectedTab={0}
       />
     );
@@ -32,7 +33,8 @@ describe('linodes/create/components/SourceSelection', () => {
       <SourceSelection
         distros={api.distributions}
         linodes={api.linodes}
-        source={null}
+        distribution={null}
+        backup={null}
         selectedTab={0}
       />
     );
@@ -46,7 +48,8 @@ describe('linodes/create/components/SourceSelection', () => {
       <SourceSelection
         distros={api.distributions}
         linodes={api.linodes}
-        source={null}
+        distribution={null}
+        backup={null}
         selectedTab={0}
         onTabChange={onTabChange}
       />);
@@ -60,7 +63,8 @@ describe('linodes/create/components/SourceSelection', () => {
       <SourceSelection
         distros={api.distributions.distributions}
         linodes={api.linodes}
-        source={null}
+        distribution={null}
+        backup={null}
         selectedTab={0}
       />);
     expect(c.find('DistroVendor').length)
@@ -76,7 +80,8 @@ describe('linodes/create/components/SourceSelection', () => {
       <SourceSelection
         distros={api.distributions}
         linodes={api.linodes}
-        source={null}
+        distribution={null}
+        backup={null}
         selectedTab={0}
         onSourceSelected={onSourceSelected}
       />
@@ -85,17 +90,17 @@ describe('linodes/create/components/SourceSelection', () => {
     c.find('DistroVendor').first().props()
      .onClick(distro);
     expect(onSourceSelected.calledOnce).to.equal(true);
-    expect(onSourceSelected.calledWith(distro)).to.equal(true);
+    expect(onSourceSelected.calledWith('distribution', distro)).to.equal(true);
   });
 
   const moreBackupsLinodes = {
     ...api.linodes,
     linodes: {
       ...api.linodes.linodes,
-      linode_1240: {
-        ...api.linodes.linodes.linode_1234,
-        id: 'linode_1240',
-        created: moment(api.linodes.linodes.linode_1234.created) + 60,
+      1240: {
+        ...api.linodes.linodes[1234],
+        id: 1240,
+        created: moment(api.linodes.linodes[1234].created) + 60,
         label: 'More backups',
       },
     },
@@ -106,7 +111,8 @@ describe('linodes/create/components/SourceSelection', () => {
       <SourceSelection
         distros={api.distributions}
         linodes={moreBackupsLinodes}
-        source={null}
+        distribution={null}
+        backup={null}
         selectedTab={1}
       />
     );
@@ -121,7 +127,8 @@ describe('linodes/create/components/SourceSelection', () => {
       <SourceSelection
         distros={api.distributions}
         linodes={moreBackupsLinodes}
-        source={null}
+        distribution={null}
+        backup={null}
         selectedTab={1}
         onSourceSelected={() => {}}
         perPageLimit={1}
@@ -143,7 +150,8 @@ describe('linodes/create/components/SourceSelection', () => {
       <SourceSelection
         distros={api.distributions}
         linodes={moreBackupsLinodes}
-        source={null}
+        distribution={null}
+        backup={null}
         selectedTab={1}
         onSourceSelected={() => {}}
         perPageLimit={1}
@@ -185,7 +193,8 @@ describe('linodes/create/components/SourceSelection', () => {
       <SourceSelection
         distros={api.distributions}
         linodes={moreBackupsLinodes}
-        source={null}
+        distribution={null}
+        backup={null}
         selectedTab={1}
         onSourceSelected={() => {}}
       />
@@ -210,7 +219,8 @@ describe('linodes/create/components/SourceSelection', () => {
       <SourceSelection
         distros={api.distributions}
         linodes={api.linodes}
-        source={null}
+        distribution={null}
+        backup={null}
         selectedTab={1}
         onSourceSelected={() => {}}
       />

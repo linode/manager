@@ -73,15 +73,16 @@ export default function makeApiList(config, transform = d => d) {
 
   function updateItem(_config, state, action) {
     let item = action[_config.singular];
-    if (!state[_config.plural][item.id]) {
+    const id = action[_config.plural];
+    if (!state[_config.plural][id]) {
       item = transform(transformItem(_config.subresources, item));
     }
     return {
       ...state,
       [_config.plural]: {
         ...state[_config.plural],
-        [item.id]: {
-          ...state[_config.plural][item.id],
+        [id]: {
+          ...state[_config.plural][id],
           ...item,
         },
       },
@@ -330,7 +331,8 @@ export function makeFetchUntil(config) {
     }
     dispatch({
       type: config.actions.updateItem,
-      [config.singular]: { id, _polling: true },
+      [config.singular]: { _polling: true },
+      [config.plural]: id,
     });
     for (;;) {
       const response = await fetch(token, `/${config.plural}/${id}`);
@@ -338,6 +340,7 @@ export function makeFetchUntil(config) {
       dispatch({
         type: config.actions.updateItem,
         [config.singular]: json,
+        [config.plural]: id,
       });
       if (test(json)) break;
 
@@ -345,7 +348,8 @@ export function makeFetchUntil(config) {
     }
     dispatch({
       type: config.actions.updateItem,
-      [config.singular]: { id, _polling: false },
+      [config.singular]: { _polling: false },
+      [config.plural]: id,
     });
   };
 }
@@ -421,6 +425,7 @@ export function makeCreateItem(config) {
     dispatch({
       type: config.actions.updateItem,
       [config.singular]: json,
+      [config.plural]: json.id,
     });
     return json;
   };

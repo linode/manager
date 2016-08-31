@@ -10,7 +10,7 @@ function makeBackupAction(action) {
     const { token } = getState().authentication;
     const response = await fetch(token, `/linodes/${id}/backups/${action}`, { method: 'POST' });
     const json = await response.json();
-    dispatch({ type: UPDATE_LINODE, linode: json });
+    dispatch({ type: UPDATE_LINODE, linode: json, linodes: json.id });
   };
 }
 

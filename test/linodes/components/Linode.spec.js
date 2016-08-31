@@ -23,7 +23,7 @@ describe('linodes/components/Linode', () => {
 
     expect(linode.find('Link.linode-label').props())
       .to.have.property('to')
-      .which.equals('/linodes/linode_1234');
+      .which.equals('/linodes/1234');
   });
 
   it('renders the IP addresses', () => {
@@ -125,7 +125,7 @@ describe('linodes/components/Linode', () => {
 
   describe('renderBackupStatus', () => {
     const linode = {
-      id: 'linode_1234',
+      id: 1234,
       backups: {
         enabled: true,
         last_backup: '2016-07-13T12:30:18',
@@ -150,7 +150,7 @@ describe('linodes/components/Linode', () => {
       }));
       expect(item.find('Link')).to.exist;
       expect(item.find('Link').props().to)
-        .to.equal('/linodes/linode_1234/backups');
+        .to.equal('/linodes/1234/backups');
     });
 
     it('renders the last backup taken', () => {
@@ -197,7 +197,7 @@ describe('linodes/components/Linode', () => {
             create_dt: '2015-10-06T00:27:08',
             duration: 0,
             finish_dt: '2015-10-06T01:09:08',
-            id: 'backup_26083011',
+            id: 26083011,
             status: 'running',
             type: 'auto',
           },
@@ -216,7 +216,7 @@ describe('linodes/components/Linode', () => {
             create_dt: '2015-10-06T00:27:08',
             duration: 0,
             finish_dt: '2015-10-06T01:09:08',
-            id: 'backup_26083011',
+            id: 26083011,
             status: 'pending',
             type: 'auto',
           },

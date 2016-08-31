@@ -48,7 +48,7 @@ describe('linodes/layouts/LinodeDetailPage/loadLinode', async () => {
       <Test
         dispatch={dispatch}
         linodes={freshState.api.linodes}
-        params={{ linodeId: 'linode_does_not_exist' }}
+        params={{ linodeId: -1 }}
       />
     );
     expect(dispatch.calledOnce).to.equal(true);
@@ -203,11 +203,11 @@ describe('linodes/layouts/LinodeDetailPage', () => {
       <LinodeDetailPage
         dispatch={dispatch}
         linodes={linodes}
-        params={{ linodeId: 'linode_1235' }}
+        params={{ linodeId: 1235 }}
         detail={detail}
         router={router}
       />);
-    expect(page.contains(<span>{linodes.linodes.linode_1235.label}</span>))
+    expect(page.contains(<span>{linodes.linodes[1235].label}</span>))
       .to.equal(true);
   });
 
@@ -216,7 +216,7 @@ describe('linodes/layouts/LinodeDetailPage', () => {
       <LinodeDetailPage
         dispatch={dispatch}
         linodes={linodes}
-        params={{ linodeId: 'linode_1235' }}
+        params={{ linodeId: 1235 }}
         detail={detail}
       />
     );
@@ -228,7 +228,7 @@ describe('linodes/layouts/LinodeDetailPage', () => {
       { name: 'Repair', link: '/repair' },
       { name: 'Backups', link: '/backups' },
       { name: 'Settings', link: '/settings' },
-    ].map(t => ({ ...t, link: `/linodes/linode_1235${t.link}` }));
+    ].map(t => ({ ...t, link: `/linodes/1235${t.link}` }));
 
     const tabs = page.find(Tabs);
     tabList.forEach(({ name, link }) => {
@@ -254,15 +254,15 @@ describe('linodes/layouts/LinodeDetailPage', () => {
       <LinodeDetailPage
         dispatch={dispatch}
         linodes={linodes}
-        params={{ linodeId: 'linode_1238' }}
+        params={{ linodeId: 1238 }}
         detail={detail}
       />);
     const select = page.find('.tabs').find('.configs');
     expect(select.contains(
-      <option key={'config_12345'} value={'config_12345'}>Test config</option>))
+      <option key={12345} value={12345}>Test config</option>))
       .to.equal(true);
     expect(select.contains(
-      <option key={'config_12346'} value={'config_12346'}>Test config 2</option>))
+      <option key={12346} value={12346}>Test config 2</option>))
       .to.equal(true);
   });
 
@@ -271,12 +271,12 @@ describe('linodes/layouts/LinodeDetailPage', () => {
       <LinodeDetailPage
         dispatch={dispatch}
         linodes={linodes}
-        params={{ linodeId: 'linode_1238' }}
+        params={{ linodeId: 1238 }}
         detail={detail}
       />);
     const select = page.find('.tabs').find('.configs select');
-    select.simulate('change', { target: { value: 'config_12346' } });
-    expect(page.state('config')).to.equal('config_12346');
+    select.simulate('change', { target: { value: 12346 } });
+    expect(page.state('config')).to.equal(12346);
   });
 
   it('renders the appropriate items when linode is running', () => {
@@ -300,7 +300,7 @@ describe('linodes/layouts/LinodeDetailPage', () => {
       <LinodeDetailPage
         dispatch={dispatch}
         linodes={linodes}
-        params={{ linodeId: 'linode_1236' }}
+        params={{ linodeId: 1236 }}
         detail={detail}
       />);
     const dropdown = page.find(Dropdown).props();
@@ -316,7 +316,7 @@ describe('linodes/layouts/LinodeDetailPage', () => {
       <LinodeDetailPage
         dispatch={dispatch}
         linodes={linodes}
-        params={{ linodeId: 'linode_1237' }}
+        params={{ linodeId: 1237 }}
         detail={detail}
         router={router}
       />);
@@ -349,7 +349,7 @@ describe('linodes/layouts/LinodeDetailPage EditModal', () => {
         dispatch={() => {}}
         label="test label"
         group="test group"
-        linodeId="linode_1234"
+        linodeId={1234}
       />);
     expect(modal.find('input#group')).to.exist;
     expect(modal.find('input#group').props().value).to.equal('test group');
@@ -364,7 +364,7 @@ describe('linodes/layouts/LinodeDetailPage EditModal', () => {
         dispatch={dispatch}
         label="test label"
         group="test group"
-        linodeId="linode_1234"
+        linodeId={1234}
       />);
     modal.find('.btn-default').simulate('click');
     expect(dispatch.calledOnce).to.equal(true);
@@ -378,7 +378,7 @@ describe('linodes/layouts/LinodeDetailPage EditModal', () => {
         dispatch={dispatch}
         label="test label"
         group="test group"
-        linodeId="linode_1234"
+        linodeId={1234}
       />);
     const saveStub = sandbox.stub(modal.instance(), 'saveChanges');
     modal.find('input#group').simulate('change', {
@@ -400,7 +400,7 @@ describe('linodes/layouts/LinodeDetailPage EditModal', () => {
           dispatch={dispatch}
           label="test label"
           group="test group"
-          linodeId="linode_1234"
+          linodeId={1234}
         />);
       modal.find('input#group').simulate('change', {
         target: { value: 'new group' },
@@ -411,7 +411,7 @@ describe('linodes/layouts/LinodeDetailPage EditModal', () => {
       const { saveChanges } = modal.instance();
       await saveChanges();
       const fn = dispatch.firstCall.args[0];
-      await expectRequest(fn, '/linodes/linode_1234',
+      await expectRequest(fn, '/linodes/1234',
         () => {}, null, o => {
           expect(o.method).to.equal('PUT');
           expect(o.body).to.equal(JSON.stringify({
@@ -428,7 +428,7 @@ describe('linodes/layouts/LinodeDetailPage EditModal', () => {
           dispatch={dispatch}
           label="test label"
           group="test group"
-          linodeId="linode_1234"
+          linodeId={1234}
         />);
       modal.find('input#group').simulate('change', {
         target: { value: 'new group' },

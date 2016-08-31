@@ -28,7 +28,7 @@ export class BackupSelection extends Component {
         <div className="pull-right">
           <a href="#" className="back" onClick={goBack}>Back</a>
         </div>
-        <div key={l.label}>
+        <div key={l.id}>
           <h3>{l.label}</h3>
           <div className="backup-group">
             {_.map(l._backups.backups, backup =>
@@ -51,7 +51,7 @@ BackupSelection.propTypes = {
   selectedLinode: PropTypes.string,
   dispatch: PropTypes.func,
   onSourceSelected: PropTypes.func.isRequired,
-  selected: PropTypes.string,
+  selected: PropTypes.number,
   goBack: PropTypes.func,
 };
 

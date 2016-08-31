@@ -22,9 +22,9 @@ describe('linodes/layouts/LinodeGeneral', async () => {
     totalPages: 1,
     linodes: {
       [testLinode.id]: testLinode,
-      linode_1235: {
+      1235: {
         ...testLinode,
-        id: 'linode_1235',
+        id: 1235,
         group: '',
         backups: {
           last_backup: '2016-06-28T14:19:37',
@@ -100,11 +100,11 @@ describe('linodes/layouts/LinodeGeneral', async () => {
   });
 
   it('renders backups enabled', () => {
-    const backupTime = linodes.linodes.linode_1235.backups.last_backup;
+    const backupTime = linodes.linodes[1235].backups.last_backup;
     const page = shallow(
       <LinodeGeneral
         linodes={linodes}
-        params={{ linodeId: 'linode_1235' }}
+        params={{ linodeId: 1235 }}
       />);
 
     expect(page.find('.backup-status')
@@ -128,7 +128,7 @@ describe('linodes/layouts/LinodeGeneral', async () => {
     const page = shallow(
       <LinodeGeneral
         linodes={linodes}
-        params={{ linodeId: 'linode_1235' }}
+        params={{ linodeId: 1235 }}
       />);
 
     expect(page.find('.linode-plan').length).to.equal(0);

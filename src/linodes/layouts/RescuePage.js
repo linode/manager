@@ -30,7 +30,7 @@ export class RescuePage extends Component {
 
   async componentDidMount() {
     const { dispatch } = this.props;
-    const { linodeId } = this.props.params;
+    const linodeId = parseInt(this.props.params.linodeId);
     let linode = this.getLinode();
     if (!linode) {
       await dispatch(fetchLinode(linodeId));
