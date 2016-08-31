@@ -1,4 +1,5 @@
 var path = require('path');
+var process = require('process');
 var webpack = require('webpack');
 
 module.exports = {
@@ -16,7 +17,12 @@ module.exports = {
   plugins: [
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin()
+    new webpack.NoErrorsPlugin(),
+    new webpack.DefinePlugin({
+      'ENV_API_ROOT': JSON.stringify(process.env.API_ROOT),
+      'ENV_LOGIN_ROOT': JSON.stringify(process.env.LOGIN_ROOT),
+      'ENV_APP_ROOT': JSON.stringify(process.env.APP_ROOT)
+    })
   ],
   module: {
     loaders: [

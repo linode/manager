@@ -1,4 +1,5 @@
-var webpack = require("karma-webpack");
+var webpack = require("webpack");
+var webpackKarma = require("karma-webpack");
 var path = require("path");
 
 module.exports = function(config) {
@@ -52,7 +53,14 @@ module.exports = function(config) {
         'react/addons': true,
         'react/lib/ExecutionEnvironment': true,
         'react/lib/ReactContext': true
-      }
+      },
+      plugins: [
+        new webpack.DefinePlugin({
+          ENV_API_ROOT: null,
+          ENV_LOGIN_ROOT: null,
+          ENV_APP_ROOT: null
+        })
+      ]
     },
     webpackMiddleware: {
       stats: {
@@ -67,7 +75,7 @@ module.exports = function(config) {
       subdir: '.'
     },
     plugins: [
-      webpack,
+      webpackKarma,
       require("karma-mocha"),
       require("karma-spec-reporter"),
       require("karma-phantomjs-launcher"),
