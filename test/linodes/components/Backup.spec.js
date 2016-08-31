@@ -13,7 +13,7 @@ describe('linodes/components/Backup', () => {
     sandbox.restore();
   });
 
-  const testBackup = testLinode._backups.backups.backup_54778593;
+  const testBackup = testLinode._backups.backups[54778593];
 
   it('renders a Backup', () => {
     const backup = mount(

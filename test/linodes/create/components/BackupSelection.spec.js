@@ -18,7 +18,7 @@ describe('linodes/create/components/BackupSelection', () => {
         onSourceSelected={() => {}}
         linodes={api.linodes}
         goBack={() => {}}
-        selectedLinode="linode_1234"
+        selectedLinode={1234}
         dispatch={() => {}}
       />
     );
@@ -33,14 +33,14 @@ describe('linodes/create/components/BackupSelection', () => {
         onSourceSelected={onSourceSelected}
         linodes={api.linodes}
         goBack={() => {}}
-        selectedLinode="linode_1234"
+        selectedLinode={1234}
         dispatch={() => {}}
       />
     );
 
     c.find('Backup').first().simulate('click');
     expect(onSourceSelected.calledOnce).to.equal(true);
-    expect(onSourceSelected.calledWith('backup_54778593')).to.equal(true);
+    expect(onSourceSelected.calledWith(54778593)).to.equal(true);
   });
 
   it('calls the goBack function when the back button is pressed', () => {
@@ -50,7 +50,7 @@ describe('linodes/create/components/BackupSelection', () => {
         onSourceSelected={() => {}}
         linodes={api.linodes}
         goBack={goBack}
-        selectedLinode="linode_1234"
+        selectedLinode={1234}
         dispatch={() => {}}
       />
     );

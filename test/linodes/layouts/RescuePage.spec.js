@@ -21,9 +21,9 @@ describe('linodes/layouts/RescuePage', () => {
     totalPages: 1,
     linodes: {
       [testLinode.id]: testLinode,
-      linode_1235: {
+      1235: {
         ...testLinode,
-        id: 'linode_1235',
+        id: 1235,
         _disks: {
           totalPages: 1,
           totalResults: 0,
@@ -31,28 +31,28 @@ describe('linodes/layouts/RescuePage', () => {
           disks: { },
         },
       },
-      linode_1236: {
+      1236: {
         ...testLinode,
-        id: 'linode_1236',
+        id: 1236,
         _disks: {
           totalPages: 1,
           totalResults: 2,
           pagesFetched: [1],
           disks: {
-            disk_2234: {
-              ...testLinode._disks.disks.disk_1234,
-              id: 'disk_2234',
+            2234: {
+              ...testLinode._disks.disks[1234],
+              id: 2234,
             },
-            disk_2235: {
-              ...testLinode._disks.disks.disk_1234,
-              id: 'disk_2235',
+            2235: {
+              ...testLinode._disks.disks[1234],
+              id: 2235,
             },
           },
         },
       },
-      linode_1237: {
+      1237: {
         ...testLinode,
-        id: 'linode_1237',
+        id: 1237,
         state: 'powered_off',
       },
     },
@@ -65,7 +65,7 @@ describe('linodes/layouts/RescuePage', () => {
       <RescuePage
         dispatch={dispatch}
         linodes={{ linodes: { } }}
-        params={{ linodeId: 'linode_1234' }}
+        params={{ linodeId: 1234 }}
       />);
     await new Promise(a => setTimeout(a, 0));
     const dispatched = dispatch.firstCall.args[0];
@@ -79,7 +79,7 @@ describe('linodes/layouts/RescuePage', () => {
       api: { linodes: { totalPages: -1, linodes: { } } },
     }));
     expect(fetchStub.calledOnce).to.equal(true);
-    expect(fetchStub.firstCall.args[1]).to.equal('/linodes/linode_1234');
+    expect(fetchStub.firstCall.args[1]).to.equal('/linodes/1234');
   });
 
   it('fetches linode disks', async () => {
@@ -87,7 +87,7 @@ describe('linodes/layouts/RescuePage', () => {
       <RescuePage
         dispatch={dispatch}
         linodes={linodes}
-        params={{ linodeId: 'linode_1234' }}
+        params={{ linodeId: 1234 }}
       />);
     let dispatched = dispatch.firstCall.args[0];
     // Assert that dispatched is a function that fetches disks
@@ -119,7 +119,7 @@ describe('linodes/layouts/RescuePage', () => {
     dispatch.reset();
     await dispatched(dispatch, () => state);
     expect(fetchStub.calledOnce).to.equal(true);
-    expect(fetchStub.firstCall.args[1]).to.equal('/linodes/linode_1234/disks?page=1');
+    expect(fetchStub.firstCall.args[1]).to.equal('/linodes/1234/disks?page=1');
   });
 
   it('does not fetch when mounted with a known linode', () => {
@@ -138,7 +138,7 @@ describe('linodes/layouts/RescuePage', () => {
         <RescuePage
           dispatch={dispatch}
           linodes={linodes}
-          params={{ linodeId: 'linode_1235' }}
+          params={{ linodeId: 1235 }}
         />);
       page.setState({ loading: false });
       expect(page.contains(
@@ -151,7 +151,7 @@ describe('linodes/layouts/RescuePage', () => {
         <RescuePage
           dispatch={dispatch}
           linodes={linodes}
-          params={{ linodeId: 'linode_1234' }}
+          params={{ linodeId: 1234 }}
         />);
       page.setState({ loading: false });
       expect(page.find('PasswordInput')).to.exist;
@@ -162,13 +162,13 @@ describe('linodes/layouts/RescuePage', () => {
         <RescuePage
           dispatch={dispatch}
           linodes={linodes}
-          params={{ linodeId: 'linode_1236' }}
+          params={{ linodeId: 1236 }}
         />);
-      page.setState({ loading: false, disk: 'disk_2234' });
+      page.setState({ loading: false, disk: 2234 });
       const reset = page.find('.root-pw');
       const select = reset.find('select');
       expect(select).to.exist;
-      const d = linodes.linodes.linode_1236._disks.disks.disk_2234;
+      const d = linodes.linodes[1236]._disks.disks[2234];
       expect(select.contains(<option value={d.id} key={d.id}>{d.label}</option>))
         .to.equal(true);
     });
@@ -178,13 +178,13 @@ describe('linodes/layouts/RescuePage', () => {
         <RescuePage
           dispatch={dispatch}
           linodes={linodes}
-          params={{ linodeId: 'linode_1236' }}
+          params={{ linodeId: 1236 }}
         />);
-      page.setState({ loading: false, disk: 'disk_2234' });
+      page.setState({ loading: false, disk: 2234 });
       const reset = page.find('.root-pw');
       const select = reset.find('select');
-      select.simulate('change', { target: { value: 'disk_2235' } });
-      expect(page.state('disk')).to.equal('disk_2235');
+      select.simulate('change', { target: { value: 2235 } });
+      expect(page.state('disk')).to.equal(2235);
     });
 
     it('updates state when password changes', () => {
@@ -192,9 +192,9 @@ describe('linodes/layouts/RescuePage', () => {
         <RescuePage
           dispatch={dispatch}
           linodes={linodes}
-          params={{ linodeId: 'linode_1234' }}
+          params={{ linodeId: 1234 }}
         />);
-      page.setState({ loading: false, disk: 'disk_1234' });
+      page.setState({ loading: false, disk: 1234 });
       const reset = page.find('.root-pw');
       reset.find('PasswordInput').props().onChange('new password');
       expect(page.state('password')).to.equal('new password');
@@ -205,9 +205,9 @@ describe('linodes/layouts/RescuePage', () => {
         <RescuePage
           dispatch={dispatch}
           linodes={linodes}
-          params={{ linodeId: 'linode_1237' }}
+          params={{ linodeId: 1237 }}
         />);
-      page.setState({ loading: false, disk: 'disk_1234', password: 'new password' });
+      page.setState({ loading: false, disk: 1234, password: 'new password' });
       const { resetRootPassword } = page.instance();
       await resetRootPassword();
       const dispatched = dispatch.firstCall.args[0];
@@ -216,7 +216,7 @@ describe('linodes/layouts/RescuePage', () => {
       await dispatched(dispatch, () => ({ authentication: { token: 'hi' } }));
       expect(fetchStub.calledOnce).to.equal(true);
       expect(fetchStub.firstCall.args[1]).to.equal(
-        '/linodes/linode_1237/disks/disk_1234/rootpass');
+        '/linodes/1237/disks/1234/rootpass');
     });
 
     it('power cycles running Linodes when resetting password', async () => {
@@ -224,9 +224,9 @@ describe('linodes/layouts/RescuePage', () => {
         <RescuePage
           dispatch={dispatch}
           linodes={linodes}
-          params={{ linodeId: 'linode_1234' }}
+          params={{ linodeId: 1234 }}
         />);
-      page.setState({ loading: false, disk: 'disk_1234', password: 'new password' });
+      page.setState({ loading: false, disk: 1234, password: 'new password' });
       const { resetRootPassword } = page.instance();
       await resetRootPassword();
       let dispatched = dispatch.firstCall.args[0];
@@ -244,13 +244,13 @@ describe('linodes/layouts/RescuePage', () => {
       await dispatched(dispatch, () => state);
       expect(fetchStub.calledOnce).to.equal(true);
       expect(fetchStub.firstCall.args[1]).to.equal(
-        '/linodes/linode_1234/shutdown');
+        '/linodes/1234/shutdown');
       fetchStub.reset();
       dispatched = dispatch.thirdCall.args[0];
       await dispatched(dispatch, () => state);
       expect(fetchStub.calledOnce).to.equal(true);
       expect(fetchStub.firstCall.args[1]).to.equal(
-        '/linodes/linode_1234/boot');
+        '/linodes/1234/boot');
     });
   });
 });

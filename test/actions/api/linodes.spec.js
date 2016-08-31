@@ -27,8 +27,8 @@ describe('actions/api/linodes', async () => {
 
   const mockResponse = {
     linodes: [
-      { id: 'linode_1' },
-      { id: 'linode_2' },
+      { id: 1 },
+      { id: 2 },
     ],
     total_pages: 3,
     total_results: 25 * 3 - 4,
@@ -45,16 +45,16 @@ describe('actions/api/linodes', async () => {
   });
 
   it('should update linode', async () => {
-    const fn = fetchLinode('linode_1');
-    await expectRequest(fn, '/linodes/linode_1',
+    const fn = fetchLinode(1);
+    await expectRequest(fn, '/linodes/1',
       d => expect(d.args[0]).to.deep.equal({
         type: UPDATE_LINODE,
         linode: mockResponse.linodes[0],
-        linodes: 'linode_1',
+        linodes: 1,
       }), mockResponse.linodes[0], null, freshState);
   });
 
-  it('should preform request update linode until condition is met', async () => {
+  it('should perform request update linode until condition is met', async () => {
     const fetchStub = sandbox.stub(fetch, 'fetch');
     fetchStub.onCall(0).returns({ json: () => ({ state: 'provisioning' }) });
     fetchStub.onCall(1).returns({ json: () => ({ state: 'provisioning' }) });
@@ -63,21 +63,22 @@ describe('actions/api/linodes', async () => {
     const dispatch = sandbox.spy();
     const getState = sandbox.stub();
 
-    const f = fetchLinodeUntil('linode_1', v => v.state === 'running', 1);
+    const f = fetchLinodeUntil(1234, v => v.state === 'running', 1);
 
     const state = {
       authentication: { token: 'token' },
-      api: { linodes: { linodes: { linode_1: { state: 'provisioning' } } } },
+      api: { linodes: { linodes: { 1234: { state: 'provisioning' } } } },
     };
     getState.returns(state);
 
     await f(dispatch, getState);
     expect(fetchStub.calledThrice).to.equal(true);
-    expect(fetchStub.calledWith('token', '/linodes/linode_1'));
+    expect(fetchStub.calledWith('token', '/linodes/1234'));
 
     expect(dispatch.calledWith({
       type: UPDATE_LINODE,
       linode: { state: 'running' },
+      linodes: 1234,
     })).to.equal(true);
     expect(dispatch.callCount).to.equal(5);
   });
@@ -88,28 +89,28 @@ describe('actions/api/linodes', async () => {
   });
 
   it('should call delete linode endpoint', async () => {
-    const fn = deleteLinode('linode_1');
-    await expectRequest(fn, '/linodes/linode_1',
+    const fn = deleteLinode(1);
+    await expectRequest(fn, '/linodes/1',
       d => expect(d.args[0]).to.deep.equal({
         type: DELETE_LINODE,
-        linodes: 'linode_1',
+        linodes: 1,
       }));
   });
 });
 
 describe('actions/linodes/configs', async () => {
   it('should return function with deleteLinodeConfig', async () => {
-    const f = deleteLinodeConfig('linode_1', 'config_1');
+    const f = deleteLinodeConfig(1, 1);
     expect(f).to.be.a('function');
   });
 
   it('should call delete linode config endpoint', async () => {
-    const fn = deleteLinodeConfig('linode_1234', 'config_12345');
-    await expectRequest(fn, '/linodes/linode_1234/configs/config_12345',
+    const fn = deleteLinodeConfig(1234, 12345);
+    await expectRequest(fn, '/linodes/1234/configs/12345',
       d => expect(d.args[0]).to.deep.equal({
         type: DELETE_LINODE_CONFIG,
-        linodes: 'linode_1234',
-        configs: 'config_12345',
+        linodes: 1234,
+        configs: 12345,
       }), null, { method: 'DELETE' });
   });
 });
@@ -117,11 +118,12 @@ describe('actions/linodes/configs', async () => {
 describe('actions/linodes/power', async () => {
   function power(testFn, name, path, state) {
     it(name, async () => {
-      const fn = testFn('linode_1234');
-      await expectRequest(fn, `/linodes/linode_1234/${path}`,
+      const fn = testFn(1234);
+      await expectRequest(fn, `/linodes/1234/${path}`,
         (d, n) => n === 0 && expect(d.args[0]).to.deep.equal({
           type: UPDATE_LINODE,
-          linode: { id: 'linode_1234', state },
+          linode: { id: 1234, state },
+          linodes: 1234,
         }), null, { method: 'POST', body: '{"config":null}' });
     });
   }

@@ -57,13 +57,13 @@ describe('linodes/settings/components/DiskPanel', () => {
   it('renders unallocated space', () => {
     const panel = shallow(
       <DiskPanel
-        params={{ linodeId: 'linode_1240' }}
+        params={{ linodeId: 1240 }}
         dispatch={() => {}}
         linodes={linodes}
       />
     );
 
-    const linode = linodes.linodes.linode_1240;
+    const linode = linodes.linodes[1240];
     const disks = Object.values(linode._disks.disks);
     expect(panel.find('.disk').length).to.equal(3);
     const unallocated = panel.find('.disk').at(2);

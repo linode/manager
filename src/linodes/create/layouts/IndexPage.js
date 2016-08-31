@@ -64,7 +64,6 @@ export class IndexPage extends Component {
         dispatch(push('/linodes'));
       }
     } catch (response) {
-      console.log(response);
       const { errors } = await response.json();
       const errorsByField = {};
       errors.forEach(({ field, reason }) => {

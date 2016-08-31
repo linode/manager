@@ -17,7 +17,7 @@ export const apiTestLinode = {
     },
   },
   created: '2016-07-06T16:47:27',
-  id: 'linode_1234',
+  id: 1234,
   services: [
     {
       service_type: 'linode',
@@ -82,9 +82,9 @@ export const testLinode = {
     pagesFetched: [0],
     totalResults: 2,
     backups: {
-      backup_54778593: {
+      54778593: {
         type: 'auto',
-        id: 'backup_54778593',
+        id: 54778593,
         created: '2016-06-09T15:05:55',
         finished: '2016-06-09T15:06:55',
         status: 'successful',
@@ -93,9 +93,9 @@ export const testLinode = {
           id: 'newark',
         },
       },
-      backup_54778596: {
+      54778596: {
         type: 'snapshot',
-        id: 'backup_54778593',
+        id: 54778593,
         created: '2016-06-09T15:11:55',
         finished: '2016-06-09T15:12:55',
         status: 'successful',
@@ -111,16 +111,16 @@ export const testLinode = {
     pagesFetched: [0],
     totalResults: 2,
     disks: {
-      disk_12345: {
-        id: 'disk_12345',
+      12345: {
+        id: 12345,
         size: 6144,
         created: '2016-08-09T19:47:11',
         updated: '2016-08-09T19:47:11',
         filesystem: 'ext4',
         label: 'Arch Linux 2015.08 Disk',
       },
-      disk_12346: {
-        id: 'disk_12346',
+      12346: {
+        id: 12346,
         size: 6144,
         created: '2016-08-09T19:47:11',
         updated: '2016-08-09T19:47:11',
@@ -134,8 +134,8 @@ export const testLinode = {
     pagesFetched: [0],
     totalResults: 1,
     configs: {
-      config_12345: {
-        id: 'config_12345',
+      12345: {
+        id: 12345,
         label: 'Test config',
         // TODO: Fill this out more
       },
@@ -145,33 +145,33 @@ export const testLinode = {
 
 export const linodes = {
   [testLinode.id]: testLinode,
-  linode_1235: {
+  1235: {
     ...testLinode,
-    id: 'linode_1235',
+    id: 1235,
     label: 'Test Linode 1',
     group: '',
     created: '2016-07-06T16:50:27',
     backups: { ...testLinode.backups, enabled: false },
   },
-  linode_1236: {
+  1236: {
     ...testLinode,
-    id: 'linode_1236',
+    id: 1236,
     label: 'Test Linode 2',
     state: 'offline',
     created: '2016-07-06T16:48:27',
     backups: { ...testLinode.backups, enabled: false },
   },
-  linode_1237: {
+  1237: {
     ...testLinode,
-    id: 'linode_1237',
+    id: 1237,
     label: 'Test Linode 3',
     state: 'booting',
     created: '2016-07-06T16:49:27',
     backups: { ...testLinode.backups, enabled: false },
   },
-  linode_1238: {
+  1238: {
     ...testLinode,
-    id: 'linode_1238',
+    id: 1238,
     label: 'Test Linode 4',
     state: 'running',
     backups: { ...testLinode.backups, enabled: false },
@@ -180,16 +180,16 @@ export const linodes = {
       totalResults: 2,
       configs: {
         ...testLinode._configs.configs,
-        config_12346: {
-          id: 'config_12346',
+        12346: {
+          id: 12346,
           label: 'Test config 2',
         },
       },
     },
   },
-  linode_1239: {
+  1239: {
     ...testLinode,
-    id: 'linode_1239',
+    id: 1239,
     label: 'Test Linode 5',
     state: 'running',
     backups: { ...testLinode.backups, enabled: false },
@@ -199,9 +199,9 @@ export const linodes = {
       configs: {},
     },
   },
-  linode_1240: { // With unallocated space
+  1240: { // With unallocated space
     ...testLinode,
-    id: 'linode_1240',
+    id: 1240,
     label: 'Test Linode 6',
     state: 'running',
     backups: { ...testLinode.backups, enabled: false },
@@ -209,16 +209,16 @@ export const linodes = {
       totalResults: 2,
       totalPages: 1,
       disks: {
-        disk_12345: {
-          id: 'disk_12345',
+        12345: {
+          id: 12345,
           size: 6144,
           created: '2016-08-09T19:47:11',
           updated: '2016-08-09T19:47:11',
           filesystem: 'ext4',
           label: 'Arch Linux 2015.08 Disk',
         },
-        disk_12346: {
-          id: 'disk_12346',
+        12346: {
+          id: 12346,
           size: 1024,
           created: '2016-08-09T19:47:11',
           updated: '2016-08-09T19:47:11',

@@ -20,9 +20,9 @@ describe('linodes/layouts/LinodeNetworking', () => {
     totalPages: 1,
     linodes: {
       [testLinode.id]: testLinode,
-      linode_1235: {
+      1235: {
         ...testLinode,
-        id: 'linode_1235',
+        id: 1235,
         datacenter: {
           id: 'newark',
         },
@@ -215,7 +215,7 @@ describe('linodes/layouts/LinodeNetworking', () => {
       const page = shallow(
         <LinodeNetworking
           linodes={linodes}
-          params={{ linodeId: 'linode_1235' }}
+          params={{ linodeId: 1235 }}
         />);
 
       const content = page.find('.network-content').at(1);
