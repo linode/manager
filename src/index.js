@@ -16,7 +16,7 @@ const history = syncHistoryWithStore(browserHistory, store);
 
 import Layout from './layouts/Layout';
 import OAuthCallbackPage from './layouts/OAuth';
-import NotFound from './layouts/NotFound';
+import NotFound from './components/NotFound';
 import Linodes from './linodes';
 import NodeBalancers from './nodebalancers';
 import Longview from './longview';
