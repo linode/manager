@@ -1,15 +1,20 @@
 import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
 import {
   fetchLinode,
   fetchAllLinodeDisks,
   putLinodeDisk,
+  createLinodeDisk,
   deleteLinodeDisk,
   resizeLinodeDisk,
 } from '~/actions/api/linodes';
+import { fetchAllDistros } from '~/actions/api/distros';
 import HelpButton from '~/components/HelpButton';
+import PasswordInput from '~/components/PasswordInput';
 import { getLinode, loadLinode } from '~/linodes/layouts/LinodeDetailPage';
 import { showModal, hideModal } from '~/actions/modal';
 import Slider from 'rc-slider';
+import _ from 'lodash';
 
 const borderColors = [
   '#1abc9c',
@@ -148,6 +153,167 @@ DeleteModal.propTypes = {
   dispatch: PropTypes.func.isRequired,
 };
 
+export class AddModal extends Component {
+  constructor() {
+    super();
+    this.createDisk = this.createDisk.bind(this);
+    this.state = {
+      loading: true,
+      label: '',
+      size: 1024,
+      distro: '',
+      password: '',
+      filesystem: 'ext4',
+    };
+  }
+
+  async componentDidMount() {
+    const { dispatch, distributions, free } = this.props;
+    this.setState({ size: free });
+    if (distributions.totalPages === -1) {
+      await dispatch(fetchAllDistros());
+    }
+    this.setState({ loading: false });
+  }
+
+  async createDisk() {
+    const { dispatch, linode } = this.props;
+    const { label, size, distro, password, filesystem } = this.state;
+    this.setState({ loading: true });
+    try {
+      await dispatch(createLinodeDisk({
+        label,
+        size,
+        filesystem,
+        distribution: distro === '' ? null : distro,
+        root_pass: password,
+      }, linode.id));
+      this.setState({ loading: false });
+      dispatch(hideModal());
+    } catch (response) {
+      this.setState({ loading: false });
+      // TODO: Error handling
+    }
+  }
+
+  render() {
+    const { dispatch, free } = this.props;
+    const { distributions } = this.props;
+    const vendors = _.sortBy(
+      _.map(
+        _.groupBy(Object.values(distributions.distributions), d => d.vendor),
+        (v, k) => ({
+          name: k,
+          versions: _.orderBy(v, ['recommended', 'created'], ['desc', 'desc']),
+        })
+      ), vendor => vendor.name);
+    const options = [<option key={''} value={''}>None</option>];
+    for (let i = 0; i < vendors.length; ++i) {
+      const v = vendors[i];
+      if (i !== 0) {
+        options.push(<option key={v.name} disabled>──────────</option>);
+      }
+      v.versions.forEach(d =>
+        options.push(<option key={d.id} value={d.id}>{d.label}</option>));
+    }
+    const {
+      loading,
+      label,
+      size,
+      distro,
+      filesystem,
+      password,
+    } = this.state;
+    const ready = !(!loading && label &&
+      (distro ? password : filesystem));
+
+    return (
+      <div>
+        <div className="form-group">
+          <label htmlFor="label">Label</label>
+          <input
+            className="form-control"
+            id="label"
+            placeholder="Label"
+            value={label}
+            disabled={loading}
+            onChange={e => this.setState({ label: e.target.value })}
+          />
+        </div>
+        <div className="form-group">
+          <label>Distribution (optional)</label>
+          <select
+            className="form-control"
+            disabled={loading}
+            onChange={e => this.setState({ distro: e.target.value })}
+            value={distro}
+          >{options}</select>
+        </div>
+        {distro ?
+          <div className="form-group">
+            <label>Root password</label>
+            <PasswordInput
+              onChange={p => this.setState({ password: p })}
+              passwordType="offline_fast_hashing_1e10_per_second"
+            />
+          </div>
+            :
+          <div className="form-group">
+            <label>Filesystem</label>
+            <select
+              className="form-control"
+              onChange={e => this.setState({ filesystem: e.target.value })}
+              disabled={loading}
+              value={filesystem}
+            >
+              <option value="ext3">ext3</option>
+              <option value="ext4">ext4</option>
+              <option value="swap">swap</option>
+              <option value="raw">raw</option>
+            </select>
+          </div>
+        }
+        <div className="form-group">
+          <label>Size ({size} MiB)</label>
+          <Slider
+            min={256}
+            max={free}
+            step={256}
+            value={size}
+            disabled={loading}
+            onChange={v => this.setState({ size: v })}
+            tipFormatter={v => `${v} MiB`}
+          />
+        </div>
+        <div className="modal-footer">
+          <button
+            className="btn btn-default"
+            disabled={ready}
+            onClick={() => dispatch(hideModal())}
+          >Nevermind</button>
+          <button
+            className="btn btn-primary"
+            disabled={ready}
+            onClick={() => this.createDisk()}
+          >Add disk</button>
+        </div>
+      </div>);
+  }
+}
+
+AddModal.propTypes = {
+  distributions: PropTypes.object.isRequired,
+  linode: PropTypes.object.isRequired,
+  dispatch: PropTypes.func.isRequired,
+  free: PropTypes.number.isRequired,
+};
+
+function select(state) {
+  return { distributions: state.api.distributions };
+}
+
+const AddModalRedux = connect(select)(AddModal);
+
 export class DiskPanel extends Component {
   constructor() {
     super();
@@ -237,6 +403,8 @@ export class DiskPanel extends Component {
                   <p>{free} MiB</p>
                   {poweredOff ?
                     <button
+                      onClick={() => dispatch(showModal('Add a disk',
+                        <AddModalRedux free={free} linode={linode} />))}
                       className="btn btn-add btn-default"
                     >Add a disk</button>
                   : null}

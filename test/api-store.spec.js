@@ -657,7 +657,9 @@ describe('api-store', () => {
     it('performs the API request', async () => {
       const dispatch = getDispatch();
       const fetchStub = getFetchStub({ id: 1234, name: 'foobar' });
-      const getState = getGetState();
+      const getState = getGetState({
+        api: { foobars: { totalPages: -1, foobars: { } } },
+      });
       const f = makeCreateItem(config);
       const p = f({ name: 'foobar' });
 
