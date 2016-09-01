@@ -285,20 +285,30 @@ export class BackupsPage extends Component {
           return '12-2 AM';
       }
     };
-    const getNextBackupDay = (timeslot) => {
+    const getNextBackupDay = (timeslot = 'W2') => {
       const hour = moment().hour();
-      const selectedTime = parseInt(timeslot.replace(/W/, ''), 10);
+      let selectedTime = 2;
+      if (timeslot !== null) {
+        selectedTime = parseInt(timeslot.replace(/W/, ''), 10);
+      }
       if (hour > selectedTime) {
         return moment().add(1, 'days');
       }
       return moment().add(0, 'days');
     };
 
+    let backupDay = 'Sunday';
     const getNextBackupWeek = (backupDay, timeslot, extraWeek) => {
       const day = moment().day();
       const hour = moment().hour();
-      const selectedDay = moment().day(backupDay).weekday();
-      const selectedTime = parseInt(timeslot.replace(/W/, ''), 10);
+      let selectedDay = 1;
+      if (backupDay !== 'Sunday') {
+        selectedDay = moment().day(backupDay).weekday();
+      }
+      let selectedTime = 2;
+      if (timeslot !== null) {
+        selectedTime = parseInt(timeslot.replace(/W/, ''), 10);
+      }
       const biweek = extraWeek ? 7 : 0;
       const daysToAdd = 7 + biweek;
       const difference = selectedDay - day + biweek;
@@ -310,17 +320,15 @@ export class BackupsPage extends Component {
       return moment().add(difference, 'days');
     };
 
-    let backupDay = 'Sunday';
     const getBackupDayOfWeek = (backupType) => {
       if (schedule.dayOfWeek) {
         if (schedule.dayOfWeek === 'Scheduling') {
           backupDay = 'TBD';
         } else {
           if (backupType === 'Daily') {
-            backupDay = moment()
-                        ._locale
-                        ._weekdays[getNextBackupDay(schedule.timeOfDay,
-                                                   moment().weekday()).weekday()];
+            backupDay = moment()._locale
+                        ._weekdays[getNextBackupDay(schedule.timeOfDay)
+                                                   .weekday()];
           } else {
             backupDay = schedule.dayOfWeek;
           }
@@ -368,11 +376,12 @@ export class BackupsPage extends Component {
 
     const snapshotChecker = (snapshotCheck) => {
       if (snapshotCheck) {
-        return () => dispatch(showModal('Take new snapshot',
-                                        this.renderOverwriteSnapshotModal(thisLinode)
-                                       ));
+        dispatch(showModal('Take new snapshot',
+          this.renderOverwriteSnapshotModal(thisLinode)
+        ));
+        return;
       }
-      return () => dispatch(takeBackup(thisLinode.id));
+      dispatch(takeBackup(thisLinode.id));
     };
 
     return (
@@ -405,7 +414,7 @@ export class BackupsPage extends Component {
         >Restore backup</button>
         <button
           className="btn btn-primary-outline"
-          onClick={snapshotChecker(snapshotCheck)}
+          onClick={() => snapshotChecker(snapshotCheck)}
         >Take Snapshot</button>
       </div>
     );
