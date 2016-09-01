@@ -20,7 +20,7 @@ describe('linodes/settings/components/DiskPanel', () => {
   it('renders disk help button', () => {
     const panel = mount(
       <DiskPanel
-        params={{ linodeId: testLinode.id }}
+        params={{ linodeId: `${testLinode.id}` }}
         dispatch={() => {}}
         linodes={linodes}
       />);
@@ -31,7 +31,7 @@ describe('linodes/settings/components/DiskPanel', () => {
   it('renders disks', () => {
     const panel = shallow(
       <DiskPanel
-        params={{ linodeId: 'linode_1236' }}
+        params={{ linodeId: '1236' }}
         dispatch={() => {}}
         linodes={linodes}
       />);
@@ -55,7 +55,7 @@ describe('linodes/settings/components/DiskPanel', () => {
   it('renders offline message', () => {
     const panel = shallow(
       <DiskPanel
-        params={{ linodeId: testLinode.id }}
+        params={{ linodeId: `${testLinode.id}` }}
         dispatch={() => {}}
         linodes={linodes}
       />);
@@ -69,7 +69,7 @@ describe('linodes/settings/components/DiskPanel', () => {
   it('renders unallocated space', () => {
     const panel = shallow(
       <DiskPanel
-        params={{ linodeId: 1240 }}
+        params={{ linodeId: '1240' }}
         dispatch={() => {}}
         linodes={linodes}
       />);
@@ -92,7 +92,7 @@ describe('linodes/settings/components/DiskPanel', () => {
     const dispatch = sandbox.spy();
     const panel = shallow(
       <DiskPanel
-        params={{ linodeId: 'linode_1236' }}
+        params={{ linodeId: '1236' }}
         dispatch={dispatch}
         linodes={linodes}
       />);
@@ -105,8 +105,8 @@ describe('linodes/settings/components/DiskPanel', () => {
 
   describe('EditModal', () => {
     const props = {
-      linode: linodes.linodes.linode_1236,
-      disk: linodes.linodes.linode_1236._disks.disks.disk_12345,
+      linode: linodes.linodes[1236],
+      disk: linodes.linodes[1236]._disks.disks[12345],
       free: 0,
     };
 
@@ -176,12 +176,12 @@ describe('linodes/settings/components/DiskPanel', () => {
       expect(dispatch.calledThrice).to.equal(true);
       const put = dispatch.firstCall.args[0];
       const resize = dispatch.secondCall.args[0];
-      await expectRequest(put, '/linodes/linode_1236/disks/disk_12345',
+      await expectRequest(put, '/linodes/1236/disks/12345',
         () => {}, null, options => {
           expect(options.method).to.equal('PUT');
           expect(options.body).to.equal(JSON.stringify({ label: 'New label' }));
         });
-      await expectRequest(resize, '/linodes/linode_1236/disks/disk_12345/resize',
+      await expectRequest(resize, '/linodes/1236/disks/12345/resize',
         () => {}, null, options => {
           expect(options.method).to.equal('POST');
           expect(options.body).to.equal(JSON.stringify({ size: 1234 }));

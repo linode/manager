@@ -20,7 +20,7 @@ describe('linodes/settings/layouts/AdvancedPage', () => {
     const page = mount(
       <AdvancedPage
         linodes={linodes}
-        params={{ linodeId: 1235 }}
+        params={{ linodeId: '1235' }}
         dispatch={() => {}}
       />
     );
@@ -32,7 +32,7 @@ describe('linodes/settings/layouts/AdvancedPage', () => {
     const page = mount(
       <AdvancedPage
         linodes={linodes}
-        params={{ linodeId: 1235 }}
+        params={{ linodeId: '1235' }}
         dispatch={() => {}}
       />
     );

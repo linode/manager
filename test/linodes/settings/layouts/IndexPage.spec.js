@@ -24,7 +24,7 @@ describe('linodes/settings/layouts/IndexPage', () => {
       <IndexPage
         dispatch={dispatch}
         linodes={api.linodes}
-        params={{ linodeId: testLinode.id }}
+        params={{ linodeId: `${testLinode.id}` }}
       />
     );
 
