@@ -276,7 +276,9 @@ export class AddModal extends Component {
         <div className="form-group">
           <label>Size ({size} MiB)</label>
           <Slider
-            min={256}
+            min={distro
+              ? distributions.distributions[distro].minimum_storage_size
+              : 256}
             max={free}
             step={256}
             value={size}
