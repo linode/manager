@@ -420,6 +420,35 @@ describe('linodes/layouts/BackupsPage', () => {
     expect(restore.calledOnce).to.equal(true);
   });
 
+  it('renders predicted backups', () => {
+    const page = shallow(
+      <BackupsPage
+        dispatch={dispatch}
+        linodes={{
+          ...linodes,
+          linodes: {
+            ...linodes.linodes,
+            [testLinode.id]: {
+              ...testLinode,
+              _backups: {
+                ...testLinode._backups,
+                totalResults: 0,
+                backups: { },
+              },
+            },
+          },
+        }}
+        params={{ linodeId: testLinode.id }}
+      />);
+    const futureBackups = page.find('.backups');
+    expect(futureBackups).to.exist;
+    expect(futureBackups.html()).to.contain('Snapshot');
+    expect(futureBackups.html()).to.contain('You haven&#x27;t taken any snapshots yet');
+    expect(futureBackups.html()).to.contain('Daily');
+    expect(futureBackups.html()).to.contain('Weekly');
+    expect(futureBackups.html()).to.contain('Biweekly');
+  });
+
   describe('overwrite modal', () => {
     it('dismisses the modal when cancel is pressed', () => {
       const page = shallow(<BackupsPage
