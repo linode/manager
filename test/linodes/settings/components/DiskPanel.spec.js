@@ -3,7 +3,11 @@ import sinon from 'sinon';
 import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 
-import { EditModal, DiskPanel } from '~/linodes/settings/components/DiskPanel';
+import {
+  DeleteModal,
+  EditModal,
+  DiskPanel,
+} from '~/linodes/settings/components/DiskPanel';
 import { api } from '@/data';
 import { testLinode } from '@/data/linodes';
 import { SHOW_MODAL, hideModal } from '~/actions/modal';
@@ -186,6 +190,50 @@ describe('linodes/settings/components/DiskPanel', () => {
           expect(options.method).to.equal('POST');
           expect(options.body).to.equal(JSON.stringify({ size: 1234 }));
         });
+    });
+  });
+
+  describe('DeleteModal', () => {
+    const props = {
+      linode: linodes.linodes[1236],
+      disk: linodes.linodes[1236]._disks.disks[12345],
+    };
+
+    it('should render warning text and buttons', () => {
+      const modal = shallow(
+        <DeleteModal
+          {...props}
+          dispatch={() => {}}
+        />);
+
+      expect(modal.find('p').length).to.equal(1);
+      expect(modal.find('button').length).to.equal(2);
+    });
+
+    it('should close when Nevermind is clicked', () => {
+      const dispatch = sandbox.spy();
+      const modal = shallow(
+        <DeleteModal
+          {...props}
+          dispatch={dispatch}
+        />);
+      modal.find('.btn-default').simulate('click');
+      expect(dispatch.calledOnce).to.equal(true);
+      expect(dispatch.calledWith(hideModal())).to.equal(true);
+    });
+
+    it('should invoke the appropriate API endpoint', async () => {
+      const dispatch = sandbox.spy();
+      const modal = shallow(
+        <DeleteModal
+          {...props}
+          dispatch={dispatch}
+        />);
+      await modal.find('.btn-danger').props().onClick();
+      expect(dispatch.calledTwice).to.equal(true);
+      const fn = dispatch.firstCall.args[0];
+      await expectRequest(fn, '/linodes/1236/disks/12345',
+        () => {}, null, { method: 'DELETE' });
     });
   });
 });
