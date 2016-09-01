@@ -4,6 +4,7 @@ import { push } from 'react-router-redux';
 import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 import * as fetch from '~/fetch';
+import { state } from '@/data';
 import { testLinode } from '@/data/linodes';
 import { BackupsPage } from '~/linodes/layouts/BackupsPage';
 import { SHOW_MODAL, hideModal } from '~/actions/modal';
@@ -188,7 +189,7 @@ describe('linodes/layouts/BackupsPage', () => {
     const fetchStub = sandbox.stub(fetch, 'fetch').returns({
       json: () => {},
     });
-    await func(dispatch, () => ({ authentication: { token: 'token' } }));
+    await func(dispatch, () => state);
     expect(fetchStub.calledOnce).to.equal(true);
     expect(fetchStub.calledWith('token', '/linodes/1234')).to.equal(true);
   });

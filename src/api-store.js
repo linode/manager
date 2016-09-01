@@ -388,23 +388,31 @@ export function makeDeleteItem(_config, ...subresources) {
  * creator returns a thunk, and is invoked with { id, data }.
  * @param {string} config - the top level config for this resource
  */
-export function makePutItem(config) {
-  return ({ id, data }) => async (dispatch, getState) => {
-    const state = getState();
-    const { token } = state.authentication;
+export function makePutItem(_config, ...subresources) {
+  return (resource, ...ids) => async (dispatch, getState) => {
+    const { token } = getState().authentication;
+    const refined = refineState(getState().api, _config, subresources, ids);
+
+    const { path, config, plurals } = refined;
+
+    const id = ids[ids.length - 1];
+    plurals[plurals.length - 1].push(id);
+
     dispatch({
       type: config.actions.updateItem,
-      [config.singular]: data,
-      [config.plural]: id,
+      [config.singular]: resource,
+      ...plurals.reduce((a, [plural, id]) =>
+        id ? { ...a, [plural]: id } : a, {}),
     });
-    const response = await fetch(token, `/${config.plural}/${id}`, {
-      method: 'PUT', body: JSON.stringify(data),
+    const response = await fetch(token, `${path}/${id}`, {
+      method: 'PUT', body: JSON.stringify(resource),
     });
     const json = await response.json();
     dispatch({
       type: config.actions.updateItem,
       [config.singular]: json,
-      [config.plural]: id,
+      ...plurals.reduce((a, [plural, id]) =>
+        id ? { ...a, [plural]: id } : a, {}),
     });
   };
 }

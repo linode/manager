@@ -1,5 +1,6 @@
 {
   "presets": ["stage-0", "react", "es2015"],
+  "compact": true,
   "plugins": [
     "transform-runtime",
     ["babel-root-import", [{

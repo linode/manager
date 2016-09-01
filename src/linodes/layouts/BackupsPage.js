@@ -78,17 +78,14 @@ export class BackupsPage extends Component {
     const { dispatch } = this.props;
     this.setState({ loading: true });
     await dispatch(putLinode({
-      id: this.getLinode().id,
-      data: {
-        backups: {
-          enabled: true,
-          schedule: {
-            window: this.state.schedule.timeOfDay,
-            day: this.state.schedule.dayOfWeek,
-          },
+      backups: {
+        enabled: true,
+        schedule: {
+          window: this.state.schedule.timeOfDay,
+          day: this.state.schedule.dayOfWeek,
         },
       },
-    }));
+    }, this.getLinode().id));
     this.setState({ loading: false });
   }
 
