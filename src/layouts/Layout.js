@@ -1,12 +1,12 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
+
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
 import Modal from '../components/Modal';
-import { toggleDetails } from '~/actions/errors';
+import Error from '../components/Error';
 import { rawFetch as fetch } from '~/fetch';
-import NotFound from './NotFound';
 
 export class Layout extends Component {
   constructor() {
@@ -35,62 +35,16 @@ export class Layout extends Component {
   }
 
   renderError() {
-    const { dispatch, errors } = this.props;
-    if (errors.status === 404) {
-      return <div className="container"><NotFound /></div>;
-    }
+    const { errors } = this.props;
+    const subject = encodeURIComponent(`${errors.status} ${errors.statusText}`);
+    const location = window.location.href;
+    const json = JSON.stringify(errors.json, null, 4);
+    const body = encodeURIComponent(
+      `I'm getting the following error on ${location}:\n\n${json}`);
+    const href = `mailto:support@linode.com?subject=${subject}&body=${body}`;
     return (
-      <div
-        className="container text-xs-center"
-        style={{ marginTop: '5rem' }}
-      >
-        <h1>{errors.status} {errors.statusText}</h1>
-        <p>
-          Something broke. Sorry about that.
-        </p>
-        <div>
-          <button
-            style={{ margin: '0 0.51rem' }}
-            className="btn btn-default"
-            onClick={() => window.location.reload(true)}
-          >Reload</button>
-          <a
-            style={{ margin: '0 0.5rem' }}
-            href={`mailto:support@linode.com?subject=${
-              encodeURIComponent(`${errors.status} ${errors.statusText}`)
-            }&body=${
-              encodeURIComponent(
-                `I'm getting the following error on ${
-                  window.location.href
-                }:\n\n${
-                  JSON.stringify(errors.json, null, 4)
-                }`
-              )
-            }`}
-            className="btn btn-default"
-          >Contact Support</a>
-        </div>
-        <div style={{ marginTop: '1rem' }}>
-          <a
-            className="toggle-error-response"
-            href="#"
-            onClick={e => {
-              e.preventDefault();
-              dispatch(toggleDetails());
-            }}
-          >{errors.details ? 'Hide' : 'Show'} Response JSON</a>
-          {errors.details ?
-            <pre
-              style={{
-                textAlign: 'left',
-                maxHeight: '20rem',
-                width: '40rem',
-                margin: '0 auto',
-              }}
-            >{JSON.stringify(errors.json, null, 4)}</pre>
-          : null}
-        </div>
-      </div>);
+      <Error status={errors.status} href={href} />
+    );
   }
 
   render() {
@@ -107,14 +61,15 @@ export class Layout extends Component {
         />
         <Sidebar path={currentPath} />
         <div className="main full-height">
-          {errors.status === null ?
-            <div className="container">
-              <Modal />
-              <div className="container-inner">
-                {this.props.children}
-              </div>
-              <Footer year={year} />
-            </div> : this.renderError()}
+          <div className="container">
+            <Modal />
+            <div className="container-inner">
+              {errors.status === null ?
+                 this.props.children :
+                 this.renderError()}
+            </div>
+            <Footer year={year} />
+          </div>
         </div>
       </div>
     );
@@ -127,7 +82,6 @@ Layout.propTypes = {
   currentPath: PropTypes.string,
   children: PropTypes.node.isRequired,
   errors: PropTypes.object.isRequired,
-  dispatch: PropTypes.func.isRequired,
 };
 
 function select(state) {
