@@ -18,11 +18,15 @@ export class OAuthCallbackPage extends Component {
       data.append('client_secret', clientSecret);
       data.append('code', code);
 
+      console.log(2);
       const resp = await rawFetch(`${LOGIN_ROOT}/oauth/token`, {
         method: 'POST',
         body: data,
+        mode: 'cors',
       });
+
       const json = await resp.json();
+      console.log(0);
       dispatch(setToken(json.access_token, json.scopes, username, email));
       dispatch(push(returnTo || '/'));
     } else {
