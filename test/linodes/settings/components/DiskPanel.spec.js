@@ -4,11 +4,12 @@ import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 
 import {
+  AddModal,
   DeleteModal,
   EditModal,
   DiskPanel,
 } from '~/linodes/settings/components/DiskPanel';
-import { api } from '@/data';
+import { api, freshState } from '@/data';
 import { testLinode } from '@/data/linodes';
 import { SHOW_MODAL, hideModal } from '~/actions/modal';
 import { expectRequest } from '@/common';
@@ -235,5 +236,123 @@ describe('linodes/settings/components/DiskPanel', () => {
       await expectRequest(fn, '/linodes/1236/disks/12345',
         () => {}, null, { method: 'DELETE' });
     });
+  });
+
+  describe('AddModal', () => {
+    const props = {
+      distributions: api.distributions,
+      linode: linodes.linodes[1236],
+      free: 4096,
+    };
+
+    it('should fetch distros on mount', async () => {
+      const dispatch = sandbox.spy();
+      const modal = shallow(
+        <AddModal
+          {...props}
+          distributions={freshState.api.distributions}
+          dispatch={dispatch}
+        />);
+      await modal.instance().componentDidMount();
+      expect(dispatch.calledOnce).to.equal(true);
+      let fn = dispatch.firstCall.args[0];
+      dispatch.reset();
+      await fn(dispatch, () => freshState);
+      fn = dispatch.firstCall.args[0];
+      await expectRequest(fn, '/distributions?page=1',
+        () => {}, { totalPages: 1, distributions: [] },
+        null, freshState);
+    });
+
+    it('should render label, filesystem, distro, and size fields', () => {
+      const modal = shallow(
+        <AddModal
+          {...props}
+          dispatch={() => {}}
+        />);
+      expect(modal.find('#label').length).to.equal(1);
+      expect(modal.find('select').length).to.equal(2);
+      expect(modal.find('Slider').length).to.equal(1);
+    });
+
+    it('should drop filesystem and render password if a distro is selected', () => {
+      const modal = shallow(
+        <AddModal
+          {...props}
+          dispatch={() => {}}
+        />);
+      const distro = Object.keys(api.distributions.distributions)[0];
+      modal.find('select').at(0).simulate('change', { target: { value: distro } });
+      expect(modal.state('distro')).to.equal(distro);
+      expect(modal.find('select').length).to.equal(1);
+      expect(modal.find('PasswordInput').length).to.equal(1);
+    });
+
+    it('should enforce the min and max sizes contextually', () => {
+      const modal = shallow(
+        <AddModal
+          {...props}
+          dispatch={() => {}}
+        />);
+      expect(modal.find('Slider').props())
+        .to.have.property('min').that.equals(256);
+      expect(modal.find('Slider').props())
+        .to.have.property('max').that.equals(4096);
+      const distro = Object.values(api.distributions.distributions)[0];
+      modal.find('select').at(0).simulate('change', { target: { value: distro.id } });
+      expect(modal.find('Slider').props())
+        .to.have.property('min').that.equals(distro.minimum_storage_size);
+    });
+
+    it('should dismiss the modal when Nevermind is clicked', () => {
+      const dispatch = sandbox.spy();
+      const modal = shallow(
+        <AddModal
+          {...props}
+          dispatch={dispatch}
+        />);
+      modal.find('.btn-default').simulate('click');
+      expect(dispatch.calledOnce).to.equal(true);
+      expect(dispatch.calledWith(hideModal())).to.equal(true);
+    });
+
+    it('should call createDisk when Add disk is clicked', () => {
+      const modal = shallow(
+        <AddModal
+          {...props}
+          dispatch={() => {}}
+        />);
+      const createDisk = sandbox.stub(modal.instance(), 'createDisk');
+      modal.find('.btn-primary').simulate('click');
+      expect(createDisk.calledOnce).to.equal(true);
+    });
+
+    it('should POST /linodes/:id/disks when createDisk is called', async () => {
+      const dispatch = sandbox.spy();
+      const modal = shallow(
+        <AddModal
+          {...props}
+          dispatch={dispatch}
+        />);
+      modal.find('#label').simulate('change', { target: { value: 'Test disk' } });
+      dispatch.reset();
+      const { createDisk } = modal.instance();
+      await createDisk();
+      expect(dispatch.calledTwice).to.equal(true);
+      const fn = dispatch.firstCall.args[0];
+      await expectRequest(fn, '/linodes/1236/disks',
+        () => {}, null, options => {
+          expect(options.method).to.equal('POST');
+          expect(JSON.parse(options.body)).to.deep.equal({
+            label: 'Test disk',
+            size: 1024,
+            filesystem: 'ext4',
+            distribution: null,
+            root_pass: '',
+          });
+        });
+    });
+
+    it('should handle errors when createDisk is called');
   });
 });

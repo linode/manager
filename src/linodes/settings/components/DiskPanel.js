@@ -290,7 +290,7 @@ export class AddModal extends Component {
         <div className="modal-footer">
           <button
             className="btn btn-default"
-            disabled={ready}
+            disabled={loading}
             onClick={() => dispatch(hideModal())}
           >Nevermind</button>
           <button
