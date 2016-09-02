@@ -159,6 +159,7 @@ export class AddModal extends Component {
     this.createDisk = this.createDisk.bind(this);
     this.state = {
       loading: true,
+      errors: { label: [], size: [], _: [] },
       label: '',
       size: 1024,
       distro: '',
@@ -191,8 +192,23 @@ export class AddModal extends Component {
       this.setState({ loading: false });
       dispatch(hideModal());
     } catch (response) {
-      this.setState({ loading: false });
-      // TODO: Error handling
+      const json = await response.json();
+      const reducer = f => (s, e) => {
+        if (e.field === f) {
+          return s ? [...s, e.reason] : [e.reason];
+        }
+        return s;
+      };
+      this.setState({
+        loading: false,
+        errors: {
+          label: json.errors.reduce(reducer('label'), []),
+          size: json.errors.reduce(reducer('size'), []),
+          _: json.errors.reduce((s, e) =>
+            ['label', 'size'].indexOf(e.field) === -1 ?
+            [...s, e.reason] : [...s], []),
+        },
+      });
     }
   }
 
@@ -223,13 +239,14 @@ export class AddModal extends Component {
       distro,
       filesystem,
       password,
+      errors,
     } = this.state;
     const ready = !(!loading && label &&
       (distro ? password : filesystem));
 
     return (
       <div>
-        <div className="form-group">
+        <div className={`form-group ${errors.label.length ? 'has-danger' : ''}`}>
           <label htmlFor="label">Label</label>
           <input
             className="form-control"
@@ -239,6 +256,10 @@ export class AddModal extends Component {
             disabled={loading}
             onChange={e => this.setState({ label: e.target.value })}
           />
+          {errors.label.length ?
+            <div className="form-control-feedback">
+              {errors.label.map(error => <div key={error}>{error}</div>)}
+            </div> : null}
         </div>
         <div className="form-group">
           <label>Distribution (optional)</label>
@@ -287,6 +308,10 @@ export class AddModal extends Component {
             tipFormatter={v => `${v} MiB`}
           />
         </div>
+        {errors._.length ?
+          <div className="alert alert-danger">
+            {errors._.map(error => <div key={error}>{error}</div>)}
+          </div> : null}
         <div className="modal-footer">
           <button
             className="btn btn-default"
