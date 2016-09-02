@@ -21,6 +21,7 @@ export class OAuthCallbackPage extends Component {
       const resp = await rawFetch(`${LOGIN_ROOT}/oauth/token`, {
         method: 'POST',
         body: data,
+        mode: 'cors',
       });
       const json = await resp.json();
       dispatch(setToken(json.access_token, json.scopes, username, email));
