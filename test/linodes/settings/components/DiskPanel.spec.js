@@ -244,6 +244,38 @@ describe('linodes/settings/components/DiskPanel', () => {
           expect(options.body).to.equal(JSON.stringify({ label: 'New label' }));
         });
     });
+
+    it('should handle errors when createDisk is called', async () => {
+      const dispatch = sandbox.stub();
+      const modal = shallow(
+        <EditModal
+          {...props}
+          dispatch={dispatch}
+        />);
+      modal.find('input#label').simulate('change', {
+        target: { value: 'New label' },
+      });
+      modal.find('Slider').props().onChange(1234);
+      dispatch.onCall(0).throws({
+        json() {
+          return {
+            errors: [
+              { field: 'label', reason: 'You suck at naming things' },
+              { reason: 'You suck at things in general' },
+            ],
+          };
+        },
+      });
+      const { saveChanges } = modal.instance();
+      await saveChanges();
+      const errs = modal.state('errors');
+      expect(errs)
+        .to.have.property('label')
+        .which.includes('You suck at naming things');
+      expect(errs)
+        .to.have.property('_')
+        .which.includes('You suck at things in general');
+    });
   });
 
   describe('DeleteModal', () => {
