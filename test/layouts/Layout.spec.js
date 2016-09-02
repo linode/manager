@@ -3,7 +3,6 @@ import sinon from 'sinon';
 import { expect } from 'chai';
 import { shallow } from 'enzyme';
 import { Layout } from '../../src/layouts/Layout';
-import { toggleDetails } from '~/actions/errors';
 import * as fetch from '~/fetch';
 
 describe('layouts/Layout', () => {
@@ -87,42 +86,6 @@ describe('layouts/Layout', () => {
         errors={{ ...errorsPopulated, status: 404 }}
       ><p>Hello world!</p></Layout>);
     expect(component.find('NotFound')).to.exist;
-  });
-
-  it('renders error status code and text', () => {
-    const component = shallow(
-      <Layout
-        dispatch={dispatch}
-        errors={errorsPopulated}
-      ><p>Hello world!</p></Layout>);
-    expect(component.contains(
-      <h1>{errorsPopulated.status} {errorsPopulated.statusText}</h1>
-    )).to.equal(true);
-  });
-
-  it('renders response JSON', () => {
-    const component = shallow(
-      <Layout
-        dispatch={dispatch}
-        errors={{ ...errorsPopulated, details: true }}
-      ><p>Hello world!</p></Layout>);
-    const pre = component.find('pre');
-    expect(pre).to.exist;
-    expect(JSON.parse(pre.text())).to.deep.equal(errorsPopulated.json);
-  });
-
-  it('toggles response JSON when link is clicked', () => {
-    const component = shallow(
-      <Layout
-        dispatch={dispatch}
-        errors={{ ...errorsPopulated, details: true }}
-      ><p>Hello world!</p></Layout>);
-    const link = component.find('.toggle-error-response');
-    expect(link).to.exist;
-    dispatch.reset();
-    link.simulate('click', { preventDefault: () => {} });
-    expect(dispatch.calledOnce).to.equal(true);
-    expect(dispatch.calledWith(toggleDetails())).to.equal(true);
   });
 
   it('fetches the blog RSS feed', async () => {
