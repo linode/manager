@@ -231,17 +231,17 @@ describe('linodes/settings/components/DiskPanel', () => {
       const { saveChanges } = modal.instance();
       await saveChanges();
       expect(dispatch.calledThrice).to.equal(true);
-      const put = dispatch.firstCall.args[0];
-      const resize = dispatch.secondCall.args[0];
-      await expectRequest(put, '/linodes/1236/disks/12345',
-        () => {}, null, options => {
-          expect(options.method).to.equal('PUT');
-          expect(options.body).to.equal(JSON.stringify({ label: 'New label' }));
-        });
+      const resize = dispatch.firstCall.args[0];
+      const put = dispatch.secondCall.args[0];
       await expectRequest(resize, '/linodes/1236/disks/12345/resize',
         () => {}, null, options => {
           expect(options.method).to.equal('POST');
           expect(options.body).to.equal(JSON.stringify({ size: 1234 }));
+        });
+      await expectRequest(put, '/linodes/1236/disks/12345',
+        () => {}, null, options => {
+          expect(options.method).to.equal('PUT');
+          expect(options.body).to.equal(JSON.stringify({ label: 'New label' }));
         });
     });
   });
@@ -439,6 +439,37 @@ describe('linodes/settings/components/DiskPanel', () => {
         });
     });
 
-    it('should handle errors when createDisk is called');
+    it('should handle errors when createDisk is called', async () => {
+      const dispatch = sandbox.stub();
+      const modal = shallow(
+        <AddModal
+          {...props}
+          dispatch={dispatch}
+        />);
+      modal.find('#label').simulate('change', { target: { value: 'Test disk' } });
+      dispatch.onCall(0).throws({
+        json() {
+          return {
+            errors: [
+              { field: 'label', reason: 'You suck at naming things' },
+              { field: 'size', reason: 'You suck at sizing things' },
+              { reason: 'You suck at things in general' },
+            ],
+          };
+        },
+      });
+      const { createDisk } = modal.instance();
+      await createDisk();
+      const errs = modal.state('errors');
+      expect(errs)
+        .to.have.property('label')
+        .which.includes('You suck at naming things');
+      expect(errs)
+        .to.have.property('size')
+        .which.includes('You suck at sizing things');
+      expect(errs)
+        .to.have.property('_')
+        .which.includes('You suck at things in general');
+    });
   });
 });

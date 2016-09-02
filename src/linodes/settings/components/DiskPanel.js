@@ -49,11 +49,11 @@ export class EditModal extends Component {
     const { size, label } = this.state;
     const { linode, disk, dispatch } = this.props;
     this.setState({ loading: true });
-    if (label !== disk.label) {
-      await dispatch(putLinodeDisk({ label }, linode.id, disk.id));
-    }
     if (size !== disk.size) {
       await dispatch(resizeLinodeDisk(linode.id, disk.id, size));
+    }
+    if (label !== disk.label) {
+      await dispatch(putLinodeDisk({ label }, linode.id, disk.id));
     }
     this.setState({ loading: false });
     dispatch(hideModal());
@@ -246,7 +246,7 @@ export class AddModal extends Component {
 
     return (
       <div>
-        <div className={`form-group ${errors.label.length ? 'has-danger' : ''}`}>
+        <div className={`form-group label ${errors.label.length ? 'has-danger' : ''}`}>
           <label htmlFor="label">Label</label>
           <input
             className="form-control"
@@ -261,7 +261,7 @@ export class AddModal extends Component {
               {errors.label.map(error => <div key={error}>{error}</div>)}
             </div> : null}
         </div>
-        <div className="form-group">
+        <div className="form-group distribution">
           <label>Distribution (optional)</label>
           <select
             className="form-control"
@@ -271,7 +271,7 @@ export class AddModal extends Component {
           >{options}</select>
         </div>
         {distro ?
-          <div className="form-group">
+          <div className="form-group password">
             <label>Root password</label>
             <PasswordInput
               onChange={p => this.setState({ password: p })}
@@ -279,7 +279,7 @@ export class AddModal extends Component {
             />
           </div>
             :
-          <div className="form-group">
+          <div className="form-group filesystem">
             <label>Filesystem</label>
             <select
               className="form-control"
@@ -294,7 +294,7 @@ export class AddModal extends Component {
             </select>
           </div>
         }
-        <div className="form-group">
+        <div className={`form-group size ${errors.size.length ? 'has-danger' : ''}`}>
           <label>Size ({size} MiB)</label>
           <Slider
             min={distro
@@ -307,6 +307,10 @@ export class AddModal extends Component {
             onChange={v => this.setState({ size: v })}
             tipFormatter={v => `${v} MiB`}
           />
+          {errors.size.length ?
+            <div className="form-control-feedback">
+              {errors.size.map(error => <div key={error}>{error}</div>)}
+            </div> : null}
         </div>
         {errors._.length ?
           <div className="alert alert-danger">
