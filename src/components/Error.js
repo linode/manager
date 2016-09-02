@@ -1,49 +1,42 @@
 import React, { PropTypes } from 'react';
 
-import NotFound from './NotFound';
+const DEFAULT_TITLE = "Internal error";
+const DEFAULT_MSG = "Something broke. You can try again later or reach out to support.";
+
+const NOT_FOUND_TITLE = "Page not found";
+const NOT_FOUND_MSG = "The page you were looking for was not found. Bummer!";
+
+function renderGeneric(title=DEFAULT_TITLE, msg=DEFAULT_MSG, rest=null) {
+  return (
+    <div>
+      <h1>{title}</h1>
+      <p>{msg}</p>
+      {rest}
+    </div>
+  )
+}
 
 export default function Error(props) {
-  const { errors } = props;
-  if (errors.status === 404) {
-    return <NotFound />;
-  }
-
+  const { error } = props;
   return (
     <div className="error text-xs-center">
-      <h1>{`${errors.status} ${errors.statusText}`}</h1>
-      <p>Something broke. Sorry about that.</p>
-      <div>
-        <button
-          style={{ margin: '0 0.51rem' }}
-          className="btn btn-default"
-          onClick={() => window.location.reload(true)}
-        >Reload</button>
-        <a
-          style={{ margin: '0 0.5rem' }}
-          href={`mailto:support@linode.com?subject=${
-              encodeURIComponent(`${errors.status} ${errors.statusText}`)
-            }&body=${
-              encodeURIComponent(
-                `I'm getting the following error on ${
-                  window.location.href
-                }:\n\n${
-                  JSON.stringify(errors.json, null, 4)
-                }`
-              )
-            }`}
-          className="btn btn-default"
-        >Contact support</a>
-      </div>
-      {props.children}
+      {error.status === 404 ?
+        renderGeneric(NOT_FOUND_TITLE, NOT_FOUND_MSG) :
+        renderGeneric()
+      }
     </div>
   );
 }
 
 Error.propTypes = {
-  errors: PropTypes.shape({
+  error: PropTypes.shape({
     json: PropTypes.object,
     status: PropTypes.int,
     statusText: PropTypes.string,
   }),
   children: PropTypes.node,
 };
+
+export function NotFound() {
+  return <Error error={({ status: 404 })} />;
+}

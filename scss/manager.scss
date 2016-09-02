@@ -288,7 +288,7 @@ a {
 .main {
     margin-left: $sidebar-width;
     width: calc(100% - #{$sidebar-width});
-    padding: $main-padding-tb $main-padding-lr;
+    padding: $main-padding-tb $main-padding-lr 0 $main-padding-lr;
 }
 
 .container {
