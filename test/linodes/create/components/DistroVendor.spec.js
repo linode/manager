@@ -15,9 +15,9 @@ describe('linodes/create/components/DistroVendor', () => {
   const vendor = {
     name: 'Debian',
     versions: [
-      testDistros.distro_1237,
-      testDistros.distro_1236,
-      testDistros.distro_1238,
+      testDistros['linode/debian6'],
+      testDistros['linode/debian7'],
+      testDistros['linode/debian8.1'],
     ],
   };
 

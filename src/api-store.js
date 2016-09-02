@@ -422,11 +422,12 @@ export function makePutItem(_config, ...subresources) {
  * action creator returns a thunk, and is invoked with the POST data to submit.
  * @param {string} config - the top level config for this resource
  */
-export function makeCreateItem(config) {
-  return data => async (dispatch, getState) => {
-    const state = getState();
-    const { token } = state.authentication;
-    const response = await fetch(token, `/${config.plural}`, {
+export function makeCreateItem(_config, ...subresources) {
+  return (data, ...ids) => async (dispatch, getState) => {
+    const { token } = getState().authentication;
+    const refined = refineState(getState().api, _config, subresources, ids);
+    const { path, config, plurals } = refined;
+    const response = await fetch(token, path, {
       method: 'POST', body: JSON.stringify(data),
     });
     const json = await response.json();
@@ -434,6 +435,8 @@ export function makeCreateItem(config) {
       type: config.actions.updateItem,
       [config.singular]: json,
       [config.plural]: json.id,
+      ...plurals.reduce((a, [plural, id]) =>
+        id ? { ...a, [plural]: id } : a, {}),
     });
     return json;
   };

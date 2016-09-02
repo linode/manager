@@ -115,6 +115,7 @@ export const fetchAllLinodeDisks = makeFetchAll(linodeConfig, fetchLinodeDisks, 
 
 export const deleteLinodeDisk = makeDeleteItem(linodeConfig, '_disks');
 export const putLinodeDisk = makePutItem(linodeConfig, '_disks');
+export const createLinodeDisk = makeCreateItem(linodeConfig, '_disks');
 
 export function resizeLinodeDisk(linodeId, diskId, size) {
   return async (dispatch, getState) => {

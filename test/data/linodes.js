@@ -203,7 +203,7 @@ export const linodes = {
     ...testLinode,
     id: 1240,
     label: 'Test Linode 6',
-    state: 'running',
+    state: 'offline',
     backups: { ...testLinode.backups, enabled: false },
     _disks: {
       totalResults: 2,

@@ -4,11 +4,12 @@ import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 
 import {
+  AddModal,
   DeleteModal,
   EditModal,
   DiskPanel,
 } from '~/linodes/settings/components/DiskPanel';
-import { api } from '@/data';
+import { api, freshState } from '@/data';
 import { testLinode } from '@/data/linodes';
 import { SHOW_MODAL, hideModal } from '~/actions/modal';
 import { expectRequest } from '@/common';
@@ -107,6 +108,36 @@ describe('linodes/settings/components/DiskPanel', () => {
       .to.have.property('type').which.equals(SHOW_MODAL);
   });
 
+  it('shows the delete modal when appropriate', () => {
+    const dispatch = sandbox.spy();
+    const panel = shallow(
+      <DiskPanel
+        params={{ linodeId: '1236' }}
+        dispatch={dispatch}
+        linodes={linodes}
+      />);
+
+    panel.find('.btn-delete').at(0).simulate('click');
+    expect(dispatch.calledOnce).to.equal(true);
+    expect(dispatch.firstCall.args[0])
+      .to.have.property('type').which.equals(SHOW_MODAL);
+  });
+
+  it('shows the add modal when appropriate', () => {
+    const dispatch = sandbox.spy();
+    const panel = shallow(
+      <DiskPanel
+        params={{ linodeId: '1240' }}
+        dispatch={dispatch}
+        linodes={linodes}
+      />);
+
+    panel.find('.btn-add').simulate('click');
+    expect(dispatch.calledOnce).to.equal(true);
+    expect(dispatch.firstCall.args[0])
+      .to.have.property('type').which.equals(SHOW_MODAL);
+  });
+
   describe('EditModal', () => {
     const props = {
       linode: linodes.linodes[1236],
@@ -123,6 +154,28 @@ describe('linodes/settings/components/DiskPanel', () => {
 
       expect(modal.find('input#label').length).to.equal(1);
       expect(modal.find('Slider').length).to.equal(1);
+    });
+
+    it('should copy initial state from props on mount', () => {
+      const modal = shallow(
+        <EditModal
+          {...props}
+          dispatch={() => {}}
+        />);
+      modal.instance().componentDidMount();
+      const disk = linodes.linodes[1236]._disks.disks[12345];
+      expect(modal.state('label')).to.equal(disk.label);
+      expect(modal.state('size')).to.equal(disk.size);
+    });
+
+    it('should render slider tooltip appropriately', () => {
+      const modal = shallow(
+        <EditModal
+          {...props}
+          dispatch={() => {}}
+        />);
+      const { tipFormatter } = modal.find('Slider').props();
+      expect(tipFormatter(1234)).to.equal('1234 MiB');
     });
 
     it('update state when fields are edited', () => {
@@ -178,18 +231,50 @@ describe('linodes/settings/components/DiskPanel', () => {
       const { saveChanges } = modal.instance();
       await saveChanges();
       expect(dispatch.calledThrice).to.equal(true);
-      const put = dispatch.firstCall.args[0];
-      const resize = dispatch.secondCall.args[0];
-      await expectRequest(put, '/linodes/1236/disks/12345',
-        () => {}, null, options => {
-          expect(options.method).to.equal('PUT');
-          expect(options.body).to.equal(JSON.stringify({ label: 'New label' }));
-        });
+      const resize = dispatch.firstCall.args[0];
+      const put = dispatch.secondCall.args[0];
       await expectRequest(resize, '/linodes/1236/disks/12345/resize',
         () => {}, null, options => {
           expect(options.method).to.equal('POST');
           expect(options.body).to.equal(JSON.stringify({ size: 1234 }));
         });
+      await expectRequest(put, '/linodes/1236/disks/12345',
+        () => {}, null, options => {
+          expect(options.method).to.equal('PUT');
+          expect(options.body).to.equal(JSON.stringify({ label: 'New label' }));
+        });
+    });
+
+    it('should handle errors when createDisk is called', async () => {
+      const dispatch = sandbox.stub();
+      const modal = shallow(
+        <EditModal
+          {...props}
+          dispatch={dispatch}
+        />);
+      modal.find('input#label').simulate('change', {
+        target: { value: 'New label' },
+      });
+      modal.find('Slider').props().onChange(1234);
+      dispatch.onCall(0).throws({
+        json() {
+          return {
+            errors: [
+              { field: 'label', reason: 'You suck at naming things' },
+              { reason: 'You suck at things in general' },
+            ],
+          };
+        },
+      });
+      const { saveChanges } = modal.instance();
+      await saveChanges();
+      const errs = modal.state('errors');
+      expect(errs)
+        .to.have.property('label')
+        .which.includes('You suck at naming things');
+      expect(errs)
+        .to.have.property('_')
+        .which.includes('You suck at things in general');
     });
   });
 
@@ -234,6 +319,189 @@ describe('linodes/settings/components/DiskPanel', () => {
       const fn = dispatch.firstCall.args[0];
       await expectRequest(fn, '/linodes/1236/disks/12345',
         () => {}, null, { method: 'DELETE' });
+    });
+  });
+
+  describe('AddModal', () => {
+    const props = {
+      distributions: api.distributions,
+      linode: linodes.linodes[1236],
+      free: 4096,
+    };
+
+    it('should fetch distros on mount', async () => {
+      const dispatch = sandbox.spy();
+      const modal = shallow(
+        <AddModal
+          {...props}
+          distributions={freshState.api.distributions}
+          dispatch={dispatch}
+        />);
+      await modal.instance().componentDidMount();
+      expect(dispatch.calledOnce).to.equal(true);
+      let fn = dispatch.firstCall.args[0];
+      dispatch.reset();
+      await fn(dispatch, () => freshState);
+      fn = dispatch.firstCall.args[0];
+      await expectRequest(fn, '/distributions?page=1',
+        () => {}, { totalPages: 1, distributions: [] },
+        null, freshState);
+    });
+
+    it('should render label, filesystem, distro, and size fields', () => {
+      const modal = shallow(
+        <AddModal
+          {...props}
+          dispatch={() => {}}
+        />);
+      expect(modal.find('#label').length).to.equal(1);
+      expect(modal.find('select').length).to.equal(2);
+      expect(modal.find('Slider').length).to.equal(1);
+    });
+
+    it('should drop filesystem and render password if a distro is selected', () => {
+      const modal = shallow(
+        <AddModal
+          {...props}
+          dispatch={() => {}}
+        />);
+      const distro = Object.keys(api.distributions.distributions)[0];
+      modal.find('select').at(0).simulate('change', { target: { value: distro } });
+      expect(modal.state('distro')).to.equal(distro);
+      expect(modal.find('select').length).to.equal(1);
+      expect(modal.find('PasswordInput').length).to.equal(1);
+    });
+
+    it('should handle editing password', () => {
+      const modal = shallow(
+        <AddModal
+          {...props}
+          dispatch={() => {}}
+        />);
+      const distro = Object.keys(api.distributions.distributions)[0];
+      modal.find('select').at(0).simulate('change', { target: { value: distro } });
+      modal.find('PasswordInput').props().onChange('hunter2');
+      expect(modal.state('password')).to.equal('hunter2');
+    });
+
+    it('should handle editing filesystem', () => {
+      const modal = shallow(
+        <AddModal
+          {...props}
+          dispatch={() => {}}
+        />);
+      modal.find('select').at(1).simulate('change', { target: { value: 'swap' } });
+      expect(modal.state('filesystem')).to.equal('swap');
+    });
+
+    it('should handle editing size', () => {
+      const modal = shallow(
+        <AddModal
+          {...props}
+          dispatch={() => {}}
+        />);
+      modal.find('Slider').props().onChange(1234);
+      expect(modal.state('size')).to.equal(1234);
+      const { tipFormatter } = modal.find('Slider').props();
+      expect(tipFormatter(1234)).to.equal('1234 MiB');
+    });
+
+    it('should enforce the min and max sizes contextually', () => {
+      const modal = shallow(
+        <AddModal
+          {...props}
+          dispatch={() => {}}
+        />);
+      expect(modal.find('Slider').props())
+        .to.have.property('min').that.equals(256);
+      expect(modal.find('Slider').props())
+        .to.have.property('max').that.equals(4096);
+      const distro = Object.values(api.distributions.distributions)[0];
+      modal.find('select').at(0).simulate('change', { target: { value: distro.id } });
+      expect(modal.find('Slider').props())
+        .to.have.property('min').that.equals(distro.minimum_storage_size);
+    });
+
+    it('should dismiss the modal when Nevermind is clicked', () => {
+      const dispatch = sandbox.spy();
+      const modal = shallow(
+        <AddModal
+          {...props}
+          dispatch={dispatch}
+        />);
+      modal.find('.btn-default').simulate('click');
+      expect(dispatch.calledOnce).to.equal(true);
+      expect(dispatch.calledWith(hideModal())).to.equal(true);
+    });
+
+    it('should call createDisk when Add disk is clicked', () => {
+      const modal = shallow(
+        <AddModal
+          {...props}
+          dispatch={() => {}}
+        />);
+      const createDisk = sandbox.stub(modal.instance(), 'createDisk');
+      modal.find('.btn-primary').simulate('click');
+      expect(createDisk.calledOnce).to.equal(true);
+    });
+
+    it('should POST /linodes/:id/disks when createDisk is called', async () => {
+      const dispatch = sandbox.spy();
+      const modal = shallow(
+        <AddModal
+          {...props}
+          dispatch={dispatch}
+        />);
+      modal.find('#label').simulate('change', { target: { value: 'Test disk' } });
+      dispatch.reset();
+      const { createDisk } = modal.instance();
+      await createDisk();
+      expect(dispatch.calledTwice).to.equal(true);
+      const fn = dispatch.firstCall.args[0];
+      await expectRequest(fn, '/linodes/1236/disks',
+        () => {}, null, options => {
+          expect(options.method).to.equal('POST');
+          expect(JSON.parse(options.body)).to.deep.equal({
+            label: 'Test disk',
+            size: 1024,
+            filesystem: 'ext4',
+            distribution: null,
+            root_pass: '',
+          });
+        });
+    });
+
+    it('should handle errors when createDisk is called', async () => {
+      const dispatch = sandbox.stub();
+      const modal = shallow(
+        <AddModal
+          {...props}
+          dispatch={dispatch}
+        />);
+      modal.find('#label').simulate('change', { target: { value: 'Test disk' } });
+      dispatch.onCall(0).throws({
+        json() {
+          return {
+            errors: [
+              { field: 'label', reason: 'You suck at naming things' },
+              { field: 'size', reason: 'You suck at sizing things' },
+              { reason: 'You suck at things in general' },
+            ],
+          };
+        },
+      });
+      const { createDisk } = modal.instance();
+      await createDisk();
+      const errs = modal.state('errors');
+      expect(errs)
+        .to.have.property('label')
+        .which.includes('You suck at naming things');
+      expect(errs)
+        .to.have.property('size')
+        .which.includes('You suck at sizing things');
+      expect(errs)
+        .to.have.property('_')
+        .which.includes('You suck at things in general');
     });
   });
 });

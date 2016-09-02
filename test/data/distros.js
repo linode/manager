@@ -14,26 +14,26 @@ export const testDistro = {
 };
 
 export const distros = {
-  distro_1234: testDistro,
-  distro_1235: {
+  'linode/arch2016.05': testDistro,
+  'linode/arch2015.05': {
     ...testDistro,
     id: 'linode/arch2015.05',
     recommended: false,
     label: 'Arch Linux 2015.05',
   },
-  distro_1236: {
+  'linode/debian7': {
     ...testDistro,
     id: 'linode/debian7',
     vendor: 'Debian',
     label: 'Debian 7',
   },
-  distro_1237: {
+  'linode/debian8.1': {
     ...testDistro,
     id: 'linode/debian8.1',
     vendor: 'Debian',
     label: 'Debian 8.1',
   },
-  distro_1238: {
+  'linode/debian6': {
     ...testDistro,
     id: 'linode/debian6',
     recommended: false,
