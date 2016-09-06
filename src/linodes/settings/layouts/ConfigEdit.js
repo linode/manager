@@ -4,6 +4,7 @@ import { getLinode, loadLinode } from '~/linodes/layouts/LinodeDetailPage';
 import { fetchLinode, fetchLinodeConfig, putLinodeConfig } from '~/actions/api/linodes';
 import { fetchAllKernels } from '~/actions/api/kernels';
 import HelpButton from '~/components/HelpButton';
+import { ErrorSummary, FormGroup, reduceErrors } from '~/errors';
 import { Link } from '~/components/Link';
 import Slider from 'rc-slider';
 
@@ -16,6 +17,7 @@ export class ConfigEdit extends Component {
     this.saveChanges = this.saveChanges.bind(this);
     this.state = {
       loading: true,
+      errors: {},
       virt_mode: 'paravirt',
       run_level: 'default',
       comments: '',
@@ -65,7 +67,7 @@ export class ConfigEdit extends Component {
     const linode = this.getLinode();
     const config = this.getConfig();
 
-    this.setState({ loading: true });
+    this.setState({ loading: true, errors: {} });
     try {
       await dispatch(putLinodeConfig({
         label: state.label,
@@ -75,10 +77,10 @@ export class ConfigEdit extends Component {
         virt_mode: state.virt_mode,
         //kernel: { id: state.kernel }, // API bug
       }, linode.id, config.id));
+      this.setState({ loading: false });
     } catch (response) {
-      // TODO: error handling
+      this.setState({ loading: false, errors: await reduceErrors(response) });
     }
-    this.setState({ loading: false });
   }
 
   renderEditUI() {
@@ -87,13 +89,13 @@ export class ConfigEdit extends Component {
     const { kernels } = this.props;
     const state = this.state;
     const input = (display, field, control) => (
-      <div className="form-group row">
+      <FormGroup errors={state.errors} field={field} className="row">
         <label
           htmlFor={`config-${field}`}
           className="col-sm-1 col-form-label"
         >{display}</label>
         <div className="col-sm-5">{control}</div>
-      </div>);
+      </FormGroup>);
     const text = (display, field) => input(display, field,
       <input
         className="form-control"
@@ -122,7 +124,7 @@ export class ConfigEdit extends Component {
     return (
       <div style={{ marginTop: '2rem' }}>
         {text('Label', 'label')}
-        {input('Notes', 'notes',
+        {input('Notes', 'comments',
           <textarea
             className="form-control"
             id="config-comments"
@@ -187,6 +189,7 @@ export class ConfigEdit extends Component {
         </div>
         <hr />
         <p>TODO: block device assignment</p>
+        <ErrorSummary errors={state.errors} />
         <button
           className="btn btn-primary"
           disabled={state.loading}
