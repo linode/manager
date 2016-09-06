@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { getLinode, loadLinode } from '~/linodes/layouts/LinodeDetailPage';
-import { fetchLinode, fetchLinodeConfig } from '~/actions/api/linodes';
+import { fetchLinode, fetchLinodeConfig, putLinodeConfig } from '~/actions/api/linodes';
 import { fetchAllKernels } from '~/actions/api/kernels';
 import HelpButton from '~/components/HelpButton';
 import { Link } from '~/components/Link';
@@ -13,7 +13,16 @@ export class ConfigEdit extends Component {
     this.getLinode = getLinode.bind(this);
     this.loadLinode = loadLinode.bind(this);
     this.renderEditUI = this.renderEditUI.bind(this);
-    this.state = { loading: true };
+    this.saveChanges = this.saveChanges.bind(this);
+    this.state = {
+      loading: true,
+      virt_mode: 'paravirt',
+      run_level: 'default',
+      comments: '',
+      label: '',
+      ram_limit: 0,
+      kernel: '',
+    };
   }
 
   async componentDidMount() {
@@ -50,6 +59,28 @@ export class ConfigEdit extends Component {
     return linode._configs.configs[configId] || null;
   }
 
+  async saveChanges() {
+    const state = this.state;
+    const { dispatch } = this.props;
+    const linode = this.getLinode();
+    const config = this.getConfig();
+
+    this.setState({ loading: true });
+    try {
+      await dispatch(putLinodeConfig({
+        label: state.label,
+        comments: state.comments,
+        ram_limit: state.ram_limit,
+        run_level: state.run_level,
+        virt_mode: state.virt_mode,
+        //kernel: { id: state.kernel }, // API bug
+      }, linode.id, config.id));
+    } catch (response) {
+      // TODO: error handling
+    }
+    this.setState({ loading: false });
+  }
+
   renderEditUI() {
     const linode = this.getLinode();
     const totalRam = linode.services.reduce((t, s) => t + s.ram, 0);
@@ -67,6 +98,7 @@ export class ConfigEdit extends Component {
       <input
         className="form-control"
         id={`config-${field}`}
+        disabled={state.loading}
         placeholder={display}
         value={state[field]}
         onChange={e => this.setState({ [field]: e.target.value })}
@@ -79,6 +111,7 @@ export class ConfigEdit extends Component {
             type="radio"
             name={`config-${field}`}
             id={`config-${field}-${value}`}
+            disabled={state.loading}
             value={value}
             checked={state[field] === value}
             onChange={e => this.setState({ [field]: e.target.value })}
@@ -95,6 +128,7 @@ export class ConfigEdit extends Component {
             id="config-comments"
             placeholder="Notes"
             value={state.comments}
+            disabled={state.loading}
             onChange={e => this.setState({ comments: e.target.value })}
           />)}
         <hr />
@@ -118,6 +152,7 @@ export class ConfigEdit extends Component {
             <select
               className="form-control"
               value={this.state.kernel}
+              disabled={state.loading}
               onChange={e => this.setState({ kernel: e.target.value })}
             >{Object.values(kernels.kernels).map(kernel =>
               <option key={kernel.id} value={kernel.id}>{kernel.id}</option>
@@ -145,6 +180,7 @@ export class ConfigEdit extends Component {
               value={state.ram_limit}
               onChange={v => this.setState({ ram_limit: v })}
               tipFormatter={v => `${v} MiB`}
+              disabled={state.loading}
             />
           </div>
           <label className="col-sm-2 col-form-label">{state.ram_limit} MiB</label>
@@ -153,13 +189,14 @@ export class ConfigEdit extends Component {
         <p>TODO: block device assignment</p>
         <button
           className="btn btn-primary"
+          disabled={state.loading}
+          onClick={() => this.saveChanges()}
         >Save</button>
       </div>
     );
   }
 
   render() {
-    const { loading } = this.state;
     return (
       <div>
         <h3>
@@ -170,8 +207,7 @@ export class ConfigEdit extends Component {
             to={`/linodes/${this.props.params.linodeId}/settings/advanced`}
           >Cancel</Link>
         </h3>
-        {/* TODO: Consistent loading UI */}
-        {!loading ? this.renderEditUI() : <p>Loading</p>}
+        {this.renderEditUI()}
       </div>
     );
   }

@@ -137,3 +137,4 @@ export const deleteLinodeConfig = makeDeleteItem(linodeConfig, '_configs');
 export const fetchLinodeConfig = makeFetchItem(linodeConfig, '_configs');
 export const fetchLinodeConfigs = makeFetchPage(linodeConfig, '_configs');
 export const fetchAllLinodeConfigs = makeFetchAll(linodeConfig, fetchLinodeConfigs, '_configs');
+export const putLinodeConfig = makePutItem(linodeConfig, '_configs');
