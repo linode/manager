@@ -694,6 +694,21 @@ footer {
     z-index: 999999;
 }
 
+.error {
+    h1 {
+        font-size: 8rem;
+        color: $dark-gray;
+    }
+
+    h2 {
+        font-size: 1.8rem;
+    }
+
+    p {
+        margin: 1rem;
+    }
+}
+
 @-moz-keyframes pulse {
     0% {opacity: 1.0;}
     75% {opacity: 0.4;}
