@@ -709,6 +709,23 @@ footer {
     }
 }
 
+.col-form-label {
+    padding-top: 0.25rem;
+}
+
+.col-form-legend {
+    padding-top: 0.25rem;
+    font-size: 0.9rem;
+}
+
+.align-slider {
+    padding-top: 0.75rem;
+
+    .rc-slider {
+        margin-bottom: 0;
+    }
+}
+
 @-moz-keyframes pulse {
     0% {opacity: 1.0;}
     75% {opacity: 0.4;}
