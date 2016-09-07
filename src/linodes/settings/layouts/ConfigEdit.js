@@ -201,7 +201,6 @@ export class ConfigEdit extends Component {
             Virtualization mode
           </legend>
           <div className="col-sm-3">
-            <HelpButton className="pull-right" to="http://example.org" />
             {radio('Paravirtualization', 'virt_mode', 'paravirt')}
             {radio('Full virtualization', 'virt_mode', 'fullvirt')}
           </div>
