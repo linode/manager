@@ -5,6 +5,7 @@ import { Link } from 'react-router';
 import { push } from 'react-router-redux';
 import { showModal, hideModal } from '~/actions/modal';
 
+import { ErrorSummary, FormGroup, reduceErrors } from '~/errors';
 import Dropdown from '~/components/Dropdown';
 import { LinodeStates, LinodeStatesReadable } from '~/constants';
 import { setError } from '~/actions/errors';
@@ -73,7 +74,7 @@ export class EditModal extends Component {
     super();
     this.state = {
       loading: false,
-      errors: { label: null, group: null, _: null },
+      errors: {},
       label: '',
       group: '',
     };
@@ -90,27 +91,14 @@ export class EditModal extends Component {
     const { label, group } = this.state;
     this.setState({
       loading: true,
-      errors: { label: null, group: null, _: null },
+      errors: {},
     });
     try {
       await dispatch(putLinode({ label, group }, linodeId));
       this.setState({ loading: false });
       dispatch(hideModal());
     } catch (response) {
-      const json = await response.json();
-      const reducer = f => (s, e) => {
-        if (e.field === f) {
-          return s ? [...s, e.reason] : [e.reason];
-        }
-        return s;
-      };
-      this.setState({
-        loading: false,
-        errors: {
-          label: json.errors.reduce(reducer('label'), null),
-          group: json.errors.reduce(reducer('group'), null),
-        },
-      });
+      this.setState({ loading: false, errors: await reduceErrors(response) });
     }
   }
 
@@ -119,7 +107,7 @@ export class EditModal extends Component {
     const { loading, label, group, errors } = this.state;
     return (
       <div>
-        <div className={`form-group ${errors.group ? 'has-danger' : ''}`}>
+        <FormGroup errors={errors} field="group">
           <label htmlFor="group">Group</label>
           <input
             className="form-control"
@@ -129,12 +117,8 @@ export class EditModal extends Component {
             disabled={loading}
             onChange={e => this.setState({ group: e.target.value })}
           />
-          {errors.group ?
-            <div className="form-control-feedback">
-              {errors.group.map(error => <div key={error}>{error}</div>)}
-            </div> : null}
-        </div>
-        <div className={`form-group ${errors.label ? 'has-danger' : ''}`}>
+        </FormGroup>
+        <FormGroup errors={errors} field="label">
           <label htmlFor="label">Label</label>
           <input
             className="form-control"
@@ -144,11 +128,8 @@ export class EditModal extends Component {
             disabled={loading}
             onChange={e => this.setState({ label: e.target.value })}
           />
-          {errors.label ?
-            <div className="form-control-feedback">
-              {errors.label.map(error => <div key={error}>{error}</div>)}
-            </div> : null}
-        </div>
+        </FormGroup>
+        <ErrorSummary errors={errors} />
         <div className="modal-footer">
           <button
             className="btn btn-default"

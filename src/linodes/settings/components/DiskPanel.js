@@ -15,6 +15,7 @@ import { getLinode, loadLinode } from '~/linodes/layouts/LinodeDetailPage';
 import { showModal, hideModal } from '~/actions/modal';
 import Slider from 'rc-slider';
 import _ from 'lodash';
+import { ErrorSummary, FormGroup, reduceErrors } from '~/errors';
 
 const borderColors = [
   '#1abc9c',
@@ -37,7 +38,7 @@ export class EditModal extends Component {
       loading: false,
       size: -1,
       label: '',
-      errors: { label: [], _: [] },
+      errors: {},
     };
   }
 
@@ -49,7 +50,7 @@ export class EditModal extends Component {
   async saveChanges() {
     const { size, label } = this.state;
     const { linode, disk, dispatch } = this.props;
-    this.setState({ loading: true });
+    this.setState({ loading: true, errors: {} });
     try {
       if (size !== disk.size) {
         await dispatch(resizeLinodeDisk(linode.id, disk.id, size));
@@ -60,22 +61,7 @@ export class EditModal extends Component {
       this.setState({ loading: false });
       dispatch(hideModal());
     } catch (response) {
-      const json = await response.json();
-      const reducer = f => (s, e) => {
-        if (e.field === f) {
-          return s ? [...s, e.reason] : [e.reason];
-        }
-        return s;
-      };
-      this.setState({
-        loading: false,
-        errors: {
-          label: json.errors.reduce(reducer('label'), []),
-          _: json.errors.reduce((s, e) =>
-            ['label'].indexOf(e.field) === -1 ?
-            [...s, e.reason] : [...s], []),
-        },
-      });
+      this.setState({ loading: false, errors: await reduceErrors(response) });
     }
   }
 
@@ -85,7 +71,7 @@ export class EditModal extends Component {
     const { free, dispatch } = this.props;
     return (
       <div>
-        <div className={`form-group ${errors.label.length ? 'has-danger' : ''}`}>
+        <FormGroup errors={errors} field="label">
           <label htmlFor="label">Label</label>
           <input
             className="form-control"
@@ -95,12 +81,8 @@ export class EditModal extends Component {
             disabled={loading}
             onChange={e => this.setState({ label: e.target.value })}
           />
-          {errors.label.length ?
-            <div className="form-control-feedback">
-              {errors.label.map(error => <div key={error}>{error}</div>)}
-            </div> : null}
-        </div>
-        <div className="form-group">
+        </FormGroup>
+        <FormGroup errors={errors} field="size">
           <label>Size ({size} MiB)</label>
           <Slider
             min={256}
@@ -114,11 +96,8 @@ export class EditModal extends Component {
               [disk.size]: `Current (${disk.size} MiB)`,
             }}
           />
-        </div>
-        {errors._.length ?
-          <div className="alert alert-danger">
-            {errors._.map(error => <div key={error}>{error}</div>)}
-          </div> : null}
+        </FormGroup>
+        <ErrorSummary errors={errors} />
         <div className="modal-footer">
           <button
             className="btn btn-default"

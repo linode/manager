@@ -271,10 +271,13 @@ describe('linodes/settings/components/DiskPanel', () => {
       const errs = modal.state('errors');
       expect(errs)
         .to.have.property('label')
-        .which.includes('You suck at naming things');
+        .which.deep.includes({
+          field: 'label',
+          reason: 'You suck at naming things',
+        });
       expect(errs)
         .to.have.property('_')
-        .which.includes('You suck at things in general');
+        .which.deep.includes({ reason: 'You suck at things in general' });
     });
   });
 

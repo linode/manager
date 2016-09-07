@@ -72,7 +72,7 @@ describe('linodes/settings/components/ConfigPanel', () => {
   });
 
   it('renders config label link', () => {
-    const path = '/linodes/1234/configs/12345';
+    const path = '/linodes/1234/settings/advanced/configs/12345';
     const panel = shallow(
       <ConfigPanel
         params={{ linodeId: `${testLinode.id}` }}

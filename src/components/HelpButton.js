@@ -5,10 +5,13 @@ export default function HelpButton(props) {
   return (
     <Link
       to={props.to}
-      className="btn btn-help"
+      className={`btn btn-help ${props.className}`}
       target="_blank"
     ><i className="fa fa-question"></i></Link>
   );
 }
 
-HelpButton.propTypes = { to: PropTypes.string.isRequired };
+HelpButton.propTypes = {
+  to: PropTypes.string.isRequired,
+  className: PropTypes.string,
+};

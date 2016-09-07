@@ -32,7 +32,7 @@ function configContent(linode, configs, dispatch) {
           <tr key={config.id}>
             <td>
               <Link
-                to={`/linodes/${linode.id}/configs/${config.id}`}
+                to={`/linodes/${linode.id}/settings/advanced/configs/${config.id}`}
               >
                 {config.label}
               </Link>

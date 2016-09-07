@@ -79,7 +79,7 @@
     "babel-plugin-transform-runtime": "^6.4.0",
     "babel-polyfill": "^6.3.14",
     "babel-preset-stage-0": "^6.3.13",
-    "bootstrap": "^4.0.0-alpha.2",
+    "bootstrap": "^4.0.0-alpha.4",
     "css-loader": "^0.23.1",
     "d3": "^3.5.17",
     "deep-freeze": "0.0.1",

@@ -6,6 +6,7 @@ import { linodes } from './linodes';
 import { distros } from './distros';
 import { datacenters } from './datacenters';
 import { services } from './services';
+import { kernels } from './kernels';
 
 function fakeAPIStore(data, singular, plural) {
   const totalResults = Object.keys(data).length;
@@ -36,6 +37,10 @@ export const api = {
   services: {
     ...fakeAPIStore(services, 'service', 'services'),
     services,
+  },
+  kernels: {
+    ...fakeAPIStore(kernels, 'kernel', 'kernels'),
+    kernels,
   },
 };
 

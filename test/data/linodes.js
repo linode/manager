@@ -137,7 +137,25 @@ export const testLinode = {
       12345: {
         id: 12345,
         label: 'Test config',
-        // TODO: Fill this out more
+        comments: 'Test comments',
+        kernel: { id: 'linode/latest_64' },
+        virt_mode: 'paravirt',
+        run_level: 'default',
+        ram_limit: 1024,
+        root_device: '/dev/sda',
+        root_device_ro: false,
+        devtmpfs_automount: false,
+        disks: {
+          // TODO
+        },
+        helpers: {
+          disable_updatedb: true,
+          enable_distro_helper: true,
+          enable_modules_dep_helper: true,
+          enable_network_helper: true,
+        },
+        created: '2015-09-29 11:21:38 +0000',
+        updated: '2015-09-29 11:21:38 +0000',
       },
     },
   },
