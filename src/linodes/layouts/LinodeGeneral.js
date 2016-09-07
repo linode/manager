@@ -57,8 +57,8 @@ export class LinodeGeneral extends Component {
     };
     const dataSource = {
       cpu: {
-        name: 'CPU Useage',
-        yLabel: 'CPU Useage %',
+        name: 'CPU Usage',
+        yLabel: 'CPU Usage %',
         xLabel: 'Sample Time',
         yDomain: { y: [0, 100] },
         range: 40,
