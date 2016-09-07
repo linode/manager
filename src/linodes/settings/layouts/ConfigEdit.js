@@ -134,18 +134,6 @@ export class ConfigEdit extends Component {
             onChange={e => this.setState({ comments: e.target.value })}
           />)}
         <hr />
-        <fieldset className="form-group row">
-          <legend className="col-form-legend col-sm-2">
-            Virtualization mode
-          </legend>
-          <div className="col-sm-3">
-            <HelpButton className="pull-right" to="http://example.org" />
-            {radio('Paravirtualization', 'virt_mode', 'paravirt')}
-            {radio('Full virtualization', 'virt_mode', 'fullvirt')}
-          </div>
-        </fieldset>
-        <hr />
-        <h4>Boot settings</h4>
         <div className="form-group row">
           <label
             htmlFor="config-kernel"
@@ -166,6 +154,17 @@ export class ConfigEdit extends Component {
         <hr />
         <fieldset className="form-group row">
           <legend className="col-form-legend col-sm-2">
+            Virtualization mode
+          </legend>
+          <div className="col-sm-3">
+            <HelpButton className="pull-right" to="http://example.org" />
+            {radio('Paravirtualization', 'virt_mode', 'paravirt')}
+            {radio('Full virtualization', 'virt_mode', 'fullvirt')}
+          </div>
+        </fieldset>
+        <hr />
+        <fieldset className="form-group row">
+          <legend className="col-form-legend col-sm-2">
             Run level
           </legend>
           <div className="col-sm-3">
@@ -174,6 +173,7 @@ export class ConfigEdit extends Component {
             {radio('init=/bin/bash', 'run_level', 'binbash')}
           </div>
         </fieldset>
+        <hr />
         <div className="form-group row">
           <label className="col-sm-2 col-form-label">Memory limit</label>
           <div className="col-sm-3 align-slider">
