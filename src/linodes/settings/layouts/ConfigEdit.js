@@ -80,7 +80,13 @@ export class ConfigEdit extends Component {
         ram_limit: state.ram_limit,
         run_level: state.run_level,
         virt_mode: state.virt_mode,
-        //kernel: { id: state.kernel }, // API bug
+        // kernel: { id: state.kernel }, // API bug
+        helpers: {
+          disable_update_db: state.disable_update_db,
+          enable_distro_helper: state.enable_distro_helper,
+          enable_network_helper: state.enable_network_helper,
+          enable_modules_dep_helper: state.enable_modules_dep_helper,
+        },
       }, linode.id, config.id));
       this.setState({ loading: false });
     } catch (response) {
