@@ -24,6 +24,10 @@ export class ConfigEdit extends Component {
       label: '',
       ram_limit: 0,
       kernel: '',
+      disable_update_db: false,
+      enable_distro_helper: true,
+      enable_network_helper: true,
+      enable_modules_dep_helper: true,
     };
   }
 
@@ -43,6 +47,7 @@ export class ConfigEdit extends Component {
     }
     this.setState({
       ...config,
+      ...config.helpers,
       loading: false,
       kernel: config.kernel.id,
     });
@@ -120,6 +125,20 @@ export class ConfigEdit extends Component {
           /> {display}
         </label>
       </div>);
+    const checkbox = (display, field) => (
+      <div className="form-check">
+        <label className="form-check-label">
+          <input
+            className="form-check-input"
+            type="checkbox"
+            name={`config-${field}`}
+            id={`config-${field}`}
+            disabled={state.loading}
+            checked={state[field]}
+            onChange={e => this.setState({ [field]: e.target.checked })}
+          /> {display}
+        </label>
+      </div>);
 
     return (
       <div style={{ marginTop: '2rem' }}>
@@ -151,6 +170,18 @@ export class ConfigEdit extends Component {
             )}</select>
           </div>
         </div>
+        <hr />
+        <fieldset className="form-group row">
+          <legend className="col-sm-2 col-form-legend">
+            Helpers
+          </legend>
+          <div className="col-md-3">
+            {checkbox('Enable distro helper', 'enable_distro_helper')}
+            {checkbox('Enable network helper', 'enable_network_helper')}
+            {checkbox('Enable modules.dep helper', 'enable_modules_dep_helper')}
+            {checkbox('Disable updatedb', 'disable_update_db')}
+          </div>
+        </fieldset>
         <hr />
         <fieldset className="form-group row">
           <legend className="col-form-legend col-sm-2">
