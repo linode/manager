@@ -269,7 +269,6 @@ describe('linodes/settings/components/DiskPanel', () => {
       const { saveChanges } = modal.instance();
       await saveChanges();
       const errs = modal.state('errors');
-      console.log(errs);
       expect(errs)
         .to.have.property('label')
         .which.deep.includes({
