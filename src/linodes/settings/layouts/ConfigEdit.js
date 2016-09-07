@@ -195,6 +195,11 @@ export class ConfigEdit extends Component {
           disabled={state.loading}
           onClick={() => this.saveChanges()}
         >Save</button>
+        <Link
+          className="btn btn-default"
+          style={{ marginLeft: '0.5rem' }}
+          to={`/linodes/${this.props.params.linodeId}/settings/advanced`}
+        >Cancel</Link>
       </div>
     );
   }
@@ -205,10 +210,6 @@ export class ConfigEdit extends Component {
         <h3>
           Edit profile
           <HelpButton to="https://example.org" />
-          <Link
-            className="btn btn-default pull-right"
-            to={`/linodes/${this.props.params.linodeId}/settings/advanced`}
-          >Cancel</Link>
         </h3>
         {this.renderEditUI()}
       </div>
