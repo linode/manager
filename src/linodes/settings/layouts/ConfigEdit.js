@@ -148,11 +148,13 @@ export class ConfigEdit extends Component {
         <h4>Boot settings</h4>
         <div className="form-group row">
           <label
+            htmlFor="config-kernel"
             className="col-sm-2 col-form-label"
           >Kernel</label>
           <div className="col-sm-4">
             <select
               className="form-control"
+              id="config-kernel"
               value={this.state.kernel}
               disabled={state.loading}
               onChange={e => this.setState({ kernel: e.target.value })}
