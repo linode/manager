@@ -171,9 +171,16 @@ export class ConfigEdit extends Component {
               value={this.state.kernel}
               disabled={state.loading}
               onChange={e => this.setState({ kernel: e.target.value })}
-            >{Object.values(kernels.kernels).map(kernel =>
-              <option key={kernel.id} value={kernel.id}>{kernel.id}</option>
-            )}</select>
+            >{Object.values(kernels.kernels).map(kernel => {
+              const map = {
+                'linode/latest': 'Latest 32-bit kernel',
+                'linode/latest_64': 'Latest 64-bit kernel',
+              };
+              return (
+                <option key={kernel.id} value={kernel.id}>
+                  {map[kernel.id] || kernel.label}
+                </option>);
+            })}</select>
           </div>
         </div>
         <hr />
