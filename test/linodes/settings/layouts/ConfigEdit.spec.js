@@ -5,6 +5,7 @@ import { expect } from 'chai';
 
 import { api } from '@/data';
 import { testLinode } from '@/data/linodes';
+import { expectRequest } from '@/common';
 import { ConfigEdit } from '~/linodes/settings/layouts/ConfigEdit';
 const { linodes, kernels } = api;
 
@@ -103,8 +104,57 @@ describe('linodes/settings/layouts/ConfigEdit', () => {
   });
 
   describe('saveChanges', () => {
-    it('commits changes to the API');
+    it('commits changes to the API', async () => {
+      const dispatch = sandbox.spy();
+      const page = shallow(
+        <ConfigEdit
+          {...props}
+          dispatch={dispatch}
+        />);
+      const label = page.find('FormGroup[field="label"]');
+      label.find('input').simulate('change', { target: { value: 'new label' } });
+      await page.instance().saveChanges();
+      expect(dispatch.calledOnce).to.equal(true);
+      const fn = dispatch.firstCall.args[0];
+      await expectRequest(fn, `/linodes/${testLinode.id}/configs/12345`,
+        () => {}, null, options => {
+          expect(options.method).to.equal('PUT');
+          expect(JSON.parse(options.body)).to.deep.equal({
+            virt_mode: 'paravirt',
+            run_level: 'default',
+            comments: '',
+            label: 'new label',
+            ram_limit: 0,
+            // kernel: { id: '' }, // TODO
+            helpers: {
+              disable_update_db: false,
+              enable_distro_helper: true,
+              enable_network_helper: true,
+              enable_modules_dep_helper: true,
+            },
+          });
+        });
+    });
 
-    it('handles API errors');
+    it('handles API errors', async () => {
+      const dispatch = sandbox.stub();
+      const page = shallow(
+        <ConfigEdit
+          {...props}
+          dispatch={dispatch}
+        />);
+      dispatch.throws({
+        json: () => ({
+          errors: [{ field: 'label', reason: 'you suck at naming things' }],
+        }),
+      });
+      await page.instance().saveChanges();
+      expect(page.state('errors'))
+        .to.have.property('label')
+        .that.deep.equals([{
+          field: 'label',
+          reason: 'you suck at naming things',
+        }]);
+    });
   });
 });
