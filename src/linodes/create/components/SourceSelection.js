@@ -141,8 +141,9 @@ export default class SourceSelection extends Component {
             goBack={e => {
               e.preventDefault();
               this.setState({ selectedLinode: -1 });
+              onSourceSelected('backup', null);
             }}
-            onSourceSelected={id => onSourceSelected('backup', id)}
+            onSourceSelected={id => onSourceSelected('backup', id, selectedLinode)}
             selectedLinode={selectedLinode}
             selected={backup}
           />}

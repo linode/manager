@@ -48,7 +48,7 @@ export class BackupSelection extends Component {
 
 BackupSelection.propTypes = {
   linodes: PropTypes.object,
-  selectedLinode: PropTypes.string,
+  selectedLinode: PropTypes.number,
   dispatch: PropTypes.func,
   onSourceSelected: PropTypes.func.isRequired,
   selected: PropTypes.number,

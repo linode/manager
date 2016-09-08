@@ -142,7 +142,19 @@ export class IndexPage extends Component {
             selectedTab={sourceTab}
             distros={distros.distributions}
             onTabChange={ix => this.setState({ sourceTab: ix })}
-            onSourceSelected={(type, id) => this.setState({ [type]: id })}
+            onSourceSelected={(type, id, linodeId) => {
+              if (type === 'backup' && linodeId && id) {
+                const linode = linodes.linodes[linodeId];
+                const backup = linode._backups.backups[id];
+                this.setState({
+                  backup: id,
+                  datacenter: backup.datacenter.id,
+                  distribution: null,
+                });
+              } else {
+                this.setState({ [type]: id, backup: null });
+              }
+            }}
             linodes={linodes}
           />
         </div>
@@ -150,6 +162,7 @@ export class IndexPage extends Component {
           <DatacenterSelection
             selected={datacenter}
             datacenters={datacenters.datacenters}
+            disabled={backup !== null}
             onDatacenterSelected={id => this.setState({ datacenter: id })}
           />
         </div>

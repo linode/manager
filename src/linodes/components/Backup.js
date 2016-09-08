@@ -55,7 +55,7 @@ export default function Backup(props) {
 
 Backup.propTypes = {
   backup: PropTypes.object.isRequired,
-  selected: PropTypes.string,
   future: PropTypes.bool,
+  selected: PropTypes.number,
   onSelect: PropTypes.func.isRequired,
 };
