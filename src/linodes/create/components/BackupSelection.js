@@ -25,12 +25,16 @@ export class BackupSelection extends Component {
     const l = linodes.linodes[selectedLinode];
     return (
       <div className="clearfix">
-        <div className="pull-right">
-          <a href="#" className="back" onClick={goBack}>Back</a>
-        </div>
         <div key={l.id}>
-          <h3>{l.label}</h3>
-          <div className="backup-group">
+          <button
+            style={{ marginRight: '1rem' }}
+            className="btn btn-default pull-left"
+            onClick={goBack}
+          >Back</button>
+          <h3>
+            {l.label}
+          </h3>
+          <div className="backup-group" style={{ clear: 'both' }}>
             {_.map(l._backups.backups, backup =>
               <Backup
                 backup={backup}

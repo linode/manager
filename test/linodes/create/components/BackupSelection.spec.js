@@ -55,7 +55,7 @@ describe('linodes/create/components/BackupSelection', () => {
       />
     );
 
-    c.find('.back').simulate('click', { preventDefault() {} });
+    c.find('.btn-default').simulate('click', { preventDefault() {} });
     expect(goBack.calledOnce).to.equal(true);
   });
 });
