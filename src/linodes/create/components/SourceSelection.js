@@ -43,8 +43,7 @@ export default class SourceSelection extends Component {
     const { linodes, perPageLimit } = this.props;
     const { backupsPage, backupsFilter } = this.state;
     const hasBackups = linode => (
-      linode.backups && linode.backups.enabled &&
-      linode.backups.last_backup && linode.label.indexOf(backupsFilter) !== -1
+      linode.backups && linode.backups.enabled && linode.label.indexOf(backupsFilter) !== -1
     );
 
     const linodesWithBackups = Object.values(_.filter(linodes.linodes, hasBackups));
@@ -97,7 +96,9 @@ export default class SourceSelection extends Component {
                     }}
                   >{l.label}</a>
                 </td>
-                <td>{moment(l.backups.last_backup).format('dddd, MMMM D YYYY LT')}</td>
+                <td>{l.backups.last_backup ?
+                  moment(l.backups.last_backup).format('dddd, MMMM D YYYY LT')
+                  : 'Unknown'}</td>
               </tr>
              )}
           </tbody>
