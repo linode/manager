@@ -90,6 +90,11 @@ export class BackupsPage extends Component {
   async restore(target, backup, override = false) {
     const { dispatch } = this.props;
     const linodeId = parseInt(this.props.params.linodeId);
+    if (target === '') {
+      // New linode
+      dispatch(push(`/linodes/create?linode=${linodeId}&backup=${backup}`));
+      return;
+    }
     this.setState({ loading: true });
     try {
       await dispatch(restoreBackup(linodeId, target, backup, override));

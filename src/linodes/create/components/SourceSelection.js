@@ -131,7 +131,16 @@ export default class SourceSelection extends Component {
 
   renderBackups() {
     const { selectedLinode } = this.state;
-    const { onSourceSelected, backup } = this.props;
+    const { onSourceSelected, backup, linodes } = this.props;
+
+    if (backup && selectedLinode === -1) {
+      // Select a linode
+      const linode = Object.values(linodes.linodes)
+        .find(l => Object.values(l._backups.backups).find(b => b.id === backup));
+      if (linode) {
+        this.setState({ selectedLinode: linode.id });
+      }
+    }
 
     return (
       <div className="backups">
