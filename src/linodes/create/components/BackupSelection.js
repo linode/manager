@@ -26,11 +26,6 @@ export class BackupSelection extends Component {
     return (
       <div className="clearfix">
         <div key={l.id}>
-          <button
-            style={{ marginRight: '1rem' }}
-            className="btn btn-default pull-left"
-            onClick={goBack}
-          >Back</button>
           <h3>
             {l.label}
           </h3>
@@ -44,6 +39,11 @@ export class BackupSelection extends Component {
               />
              )}
           </div>
+          <a
+            href="#"
+            className="back"
+            onClick={goBack}
+          >Need a different Linode?</a>
         </div>
       </div>
     );
