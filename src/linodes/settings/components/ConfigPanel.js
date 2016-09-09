@@ -84,7 +84,7 @@ export class ConfigPanel extends Component {
 
     return (
       <div className="linode-configs sm-col-12">
-        <div className="row">
+        <div className="form-group row">
           <div className="col-sm-6 left">
             <h3>Configs<HelpButton to="http://example.org" /></h3>
           </div>

@@ -54,7 +54,7 @@ export class AlertsPage extends Component {
       });
 
     return (
-      <div className="row" key={name}>
+      <div className="form-group row" key={name}>
         <div className="col-sm-2 label-col">
           <span>{name}:</span>
         </div>

@@ -36,7 +36,7 @@ export default function Backup(props) {
           {backup.type === 'snapshot' ? 'Snapshot' : cardTitle}
         </div>
       </header>
-      <div>
+      <div className="form-group">
         <div className="content-col">{content}</div>
       </div>
     </div>

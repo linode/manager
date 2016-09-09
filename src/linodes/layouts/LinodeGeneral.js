@@ -173,7 +173,7 @@ export class LinodeGeneral extends Component {
       <div className="row">
         <div className="col-sm-5 left">
           <h2>Summary</h2>
-          <div className="row linode-ips">
+          <div className="form-group row linode-ips">
             <div className="col-sm-4 label-col left">
               IP Addresses
             </div>
@@ -185,7 +185,7 @@ export class LinodeGeneral extends Component {
               </ul>
             </div>
           </div>
-          <div className="row linode-backups">
+          <div className="form-group row linode-backups">
             <div className="col-sm-4 label-col left">
               Backup
             </div>
@@ -194,7 +194,7 @@ export class LinodeGeneral extends Component {
             </div>
           </div>
           {plan ?
-            <div className="row linode-plan">
+            <div className="form-group row linode-plan">
               <div className="col-sm-4 label-col left">
                 Plan
               </div>
@@ -204,7 +204,7 @@ export class LinodeGeneral extends Component {
             </div>
             : null
           }
-          <div className="row linode-datacenter">
+          <div className="form-group row linode-datacenter">
             <div className="col-sm-4 label-col left">
               Datacenter
             </div>
@@ -213,7 +213,7 @@ export class LinodeGeneral extends Component {
             </div>
           </div>
           {linode.distribution != null ?
-            <div className="row linode-distro">
+            <div className="form-group row linode-distro">
               <div className="col-sm-4 label-col left">
                 Distribution
               </div>
@@ -226,7 +226,7 @@ export class LinodeGeneral extends Component {
         </div>
         <div className="col-sm-7 right">
           <h2>Access</h2>
-          <div className="row linode-ssh">
+          <div className="form-group row linode-ssh">
             <div className="col-sm-3 label-col left">
               <label className="form-label" htmlFor="ssh-input">
                 SSH
@@ -247,7 +247,7 @@ export class LinodeGeneral extends Component {
               </div>
             </div>
           </div>
-          <div className="row linode-lish">
+          <div className="form-group row linode-lish">
             <div className="col-sm-3 label-col left">
               <label className="form-label" htmlFor="lish-input">
                 Text console
@@ -272,7 +272,7 @@ export class LinodeGeneral extends Component {
               </small>
             </div>
           </div>
-          <div className="row linode-glish">
+          <div className="form-group row linode-glish">
             <div className="col-sm-3 label-col left">
               <label className="form-label" htmlFor="glish-button">
                 Graphical console
