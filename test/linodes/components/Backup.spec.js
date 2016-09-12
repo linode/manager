@@ -3,7 +3,7 @@ import sinon from 'sinon';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
 
-import Backup from '~/linodes/components/Backup';
+import { Backup } from '~/linodes/components/Backup';
 import { testLinode } from '@/data/linodes';
 
 describe('linodes/components/Backup', () => {
@@ -19,8 +19,10 @@ describe('linodes/components/Backup', () => {
     const backup = mount(
       <Backup
         backup={testBackup}
+        linode={testLinode}
         selected={false}
         onSelect={() => {}}
+        dispatch={() => {}}
       />
     );
 
@@ -32,8 +34,10 @@ describe('linodes/components/Backup', () => {
     const backup = mount(
       <Backup
         backup={{ ...testBackup, status: 'pending' }}
+        linode={testLinode}
         selected={false}
         onSelect={() => {}}
+        dispatch={() => {}}
       />
     );
 
@@ -44,8 +48,10 @@ describe('linodes/components/Backup', () => {
     const backup = mount(
       <Backup
         backup={{ ...testBackup, status: 'running' }}
+        linode={testLinode}
         selected={false}
         onSelect={() => {}}
+        dispatch={() => {}}
       />
     );
 
@@ -56,8 +62,10 @@ describe('linodes/components/Backup', () => {
     const backup = mount(
       <Backup
         backup={{ ...testBackup, status: 'failed' }}
+        linode={testLinode}
         selected={false}
         onSelect={() => {}}
+        dispatch={() => {}}
       />
     );
 
@@ -68,8 +76,10 @@ describe('linodes/components/Backup', () => {
     const backup = mount(
       <Backup
         backup={{ ...testBackup, status: 'userAborted' }}
+        linode={testLinode}
         selected={false}
         onSelect={() => {}}
+        dispatch={() => {}}
       />
     );
 
@@ -80,8 +90,10 @@ describe('linodes/components/Backup', () => {
     const backup = mount(
       <Backup
         backup={{ ...testBackup, status: 'needsPostProcessing' }}
+        linode={testLinode}
         selected={false}
         onSelect={() => {}}
+        dispatch={() => {}}
       />
     );
 

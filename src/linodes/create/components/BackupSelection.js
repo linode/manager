@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 
 import { fetchBackups } from '~/actions/api/backups';
-import Backup from '~/linodes/components/Backup';
+import { Backup } from '~/linodes/components/Backup';
 
 export class BackupSelection extends Component {
   async componentDidMount() {
@@ -21,6 +21,7 @@ export class BackupSelection extends Component {
       selected,
       onSourceSelected,
       goBack,
+      dispatch,
     } = this.props;
     const l = linodes.linodes[selectedLinode];
     return (
@@ -34,9 +35,11 @@ export class BackupSelection extends Component {
             {_.map(l._backups.backups, backup =>
               <Backup
                 backup={backup}
+                linode={selectedLinode}
                 selected={selected}
                 onSelect={() => onSourceSelected(backup.id)}
                 key={backup.created}
+                dispatch={dispatch}
               />
              )}
           </div>

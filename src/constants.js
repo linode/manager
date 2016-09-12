@@ -28,6 +28,15 @@ export const LinodeStatesReadable = {
   rebooting: 'Rebooting',
 };
 
+export const BackupStatus = {
+  pending: [
+    'pending',
+    'running',
+    'needsPostProcessing',
+  ],
+};
+
+
 export const ipv4ns = {
   dallas: [
     '173.255.199.5',

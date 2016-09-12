@@ -321,36 +321,52 @@ export function makeFetchItem(_config, ...subresources) {
  * function, and a timeout between requests (which defaults to 3000).
  * @param {Object} config - the top level config for this resource
  */
-export function makeFetchUntil(config) {
+export function makeFetchUntil(_config, ...subresources) {
   // TODO: Support subresources here
-  return (id, test, timeout = 3000) => async (dispatch, getState) => {
+  return (test, timeout, ...ids) => async (dispatch, getState) => {
     const { token } = getState().authentication;
-    const item = getState().api[config.plural][config.plural][id];
-    if (item._polling) {
+    const refined = refineState(getState().api, _config, subresources, ids);
+
+    const { path, config, plurals, state } = refined;
+    const id = ids[ids.length - 1];
+    plurals[plurals.length - 1].push(id);
+
+    const item = state[config.plural][id];
+    console.log(state);
+    if (!ids.length || item._polling) {
       return;
     }
+
     dispatch({
       type: config.actions.updateItem,
-      [config.singular]: { _polling: true },
-      [config.plural]: id,
+      [config.singular]: { id, _polling: true },
+      ...plurals.reduce((u, [plural, id]) =>
+        (id ? { ...u, [plural]: id } : u), { }),
     });
+
     for (;;) {
-      const response = await fetch(token, `/${config.plural}/${id}`);
+      const response = await fetch(token, `/${path}/${id}`);
       const json = await response.json();
+      console.log(json);
       dispatch({
         type: config.actions.updateItem,
         [config.singular]: json,
-        [config.plural]: id,
+        ...plurals.reduce((u, [plural, id]) =>
+          (id ? { ...u, [plural]: id } : u), { }),
       });
+
       if (test(json)) break;
 
       await new Promise(r => setTimeout(r, timeout));
     }
+
     dispatch({
       type: config.actions.updateItem,
-      [config.singular]: { _polling: false },
-      [config.plural]: id,
+      [config.singular]: { id, _polling: false },
+      ...plurals.reduce((u, [plural, id]) =>
+        (id ? { ...u, [plural]: id } : u), { }),
     });
+
   };
 }
 

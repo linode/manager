@@ -688,11 +688,11 @@ describe('api-store', () => {
       fetchStub.returns({ json: () => ({ state: 'done' }) });
 
       const f = makeFetchUntil(config);
-      const p = f(1, v => v.state === 'done', 1);
+      const p = f(v => v.state === 'done', 1, 1);
 
       const state = {
         authentication: { token: 'token' },
-        api: { foobars: { foobars: { 1: { state: 'wait' } } } },
+        api: { foobars: { foobars: { 1: { _polling: false, state: 'wait' } } } },
       };
 
       await p(() => { }, () => state);
@@ -710,11 +710,11 @@ describe('api-store', () => {
       const getState = sandbox.stub();
 
       const f = makeFetchUntil(config);
-      const p = f(1, v => v.state === 'done', 1);
+      const p = f(v => v.state === 'done', 1, 1);
 
       const state = {
         authentication: { token: 'token' },
-        api: { foobars: { foobars: { 1: { state: 'wait' } } } },
+        api: { foobars: { foobars: { 1: { _pulling: false, state: 'wait' } } } },
       };
       getState.returns(state);
 

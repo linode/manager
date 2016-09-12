@@ -106,6 +106,7 @@ describe('actions/api/backups', async () => {
         type: UPDATE_BACKUP,
         linodes: 1234,
         backup: takeBackupResponse,
+        backups: 123,
       }), takeBackupResponse, { method: 'POST' });
   });
 
@@ -118,7 +119,7 @@ describe('actions/api/backups', async () => {
     it('performs the HTTP request', async () => {
       const fn = restoreBackup(1234, 1235, 1234);
       await expectRequest(fn, '/linodes/1234/backups/1234/restore',
-        () => expect(false).to.equal(true), null, { method: 'POST' });
+        () => expect(false).to.equal(true), null, { method: 'POST', body: '{"linode":1235,"overwrite":false}' });
     });
   });
 });
