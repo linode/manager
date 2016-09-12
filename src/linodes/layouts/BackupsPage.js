@@ -253,7 +253,7 @@ export class BackupsPage extends Component {
       futureBackups[0] = {
         created: 'Snapshot',
         content: "You haven't taken any snapshots yet",
-        id: 'this should never be selected 0'
+        id: 'this should never be selected 0',
       };
     }
     const timeslot = (timeslot) => {
