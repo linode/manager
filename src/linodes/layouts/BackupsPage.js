@@ -250,10 +250,11 @@ export class BackupsPage extends Component {
     // this attempts to predict when future backups will be scehduled
     const futureBackups = [];
     if (!backups || backups.length === 0) {
-      futureBackups[0] = {};
-      futureBackups[0].created = 'Snapshot';
-      futureBackups[0].content = "You haven't taken any snapshots yet";
-      futureBackups[0].id = 'this should never be selected 0';
+      futureBackups[0] = {
+        created: 'Snapshot',
+        content: "You haven't taken any snapshots yet",
+        id: 'this should never be selected 0'
+      };
     }
     const timeslot = (timeslot) => {
       switch (timeslot) {
@@ -326,9 +327,8 @@ export class BackupsPage extends Component {
           backupDay = 'TBD';
         } else {
           if (backupType === 'Daily') {
-            backupDay = moment()._locale
-                        ._weekdays[getNextBackupDay(schedule.timeOfDay)
-                                                   .weekday()];
+            const nextWeekDay = getNextBackupDay(schedule.timeOfDay).weekday();
+            backupDay = moment()._locale._weekdays[nextWeekDay];
           } else {
             backupDay = schedule.dayOfWeek;
           }
