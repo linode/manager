@@ -257,34 +257,23 @@ export class BackupsPage extends Component {
       };
     }
     const timeslot = (timeslot) => {
-      switch (timeslot) {
-        case 'W0':
-          return '12-2 AM';
-        case 'W2':
-          return '2-4 AM';
-        case 'W4':
-          return '4-6 AM';
-        case 'W6':
-          return '6-8 AM';
-        case 'W8':
-          return '8-10 AM';
-        case 'W10':
-          return '10 AM-12 PM';
-        case 'W12':
-          return '12-2 PM';
-        case 'W14':
-          return '2-4 PM';
-        case 'W16':
-          return '4-6 PM';
-        case 'W18':
-          return '6-8 PM';
-        case 'W20':
-          return '8-10 PM';
-        case 'W22':
-          return '10 PM-12 AM';
-        default:
-          return '12-2 AM';
+      if (!timeslot) {
+        return '12-2 AM';
       }
+      return {
+        W0: '12-2 AM',
+        W2: '2-4 AM',
+        W4: '4-6 AM',
+        W6: '6-8 AM',
+        W8: '8-10 AM',
+        W10: '10 AM-12 PM',
+        W12: '12-2 PM',
+        W14: '2-4 PM',
+        W16: '4-6 PM',
+        W18: '6-8 PM',
+        W20: '8-10 PM',
+        W22: '10 PM-12 AM',
+      }[timeslot];
     };
     const getNextBackupDay = (timeslot = 'W2') => {
       const hour = moment().hour();
@@ -546,6 +535,7 @@ export class BackupsPage extends Component {
     return (
       <div>
         <h2>Restore</h2>
+        Select a backup to restore from:
         {this.renderBackups()}
         <hr />
         <div className="row">
