@@ -51,7 +51,7 @@ export default class Details extends Component {
 
   renderRow({ label, content, errors, key }) {
     return (
-      <div className="row" key={key || label}>
+      <div className="form-group row" key={key || label}>
         <div className="col-sm-2 label-col">{label ? `${label}:` : null}</div>
         <div className="col-sm-10 content-col">
           {content}

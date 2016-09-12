@@ -145,14 +145,14 @@ function renderCard(props) {
         {renderPowerButton(props)}
       </div>
       <div className="linode-details clearfix">
-        <div className="row">
+        <div className="form-group row">
           <div className="col-sm-12 content-col ip-addresses">
             <span className="label-col">IP Addresses</span>
             <div>{linode.ips['public'].ipv4[0]}</div>
             <div>{linode.ips['public'].ipv6}</div>
           </div>
         </div>
-        <div className="row">
+        <div className="form-group row">
           <div className="col-sm-6">
             <span className="label-col">Datacenter</span>
             <div className="content-col">{renderDatacenterStyle(linode)}</div>

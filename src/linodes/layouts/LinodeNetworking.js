@@ -21,7 +21,7 @@ export class LinodeNetworking extends Component {
   nameserversList(isIPv4, linode) {
     const dc = linode.datacenter.id;
     const nameservers = (
-      <div className="row">
+      <div className="form-group row">
         <div className="col-sm-4 label-col left">
           Nameservers
         </div>
@@ -57,7 +57,7 @@ export class LinodeNetworking extends Component {
             </h3>
           </div>
         </div>
-        <div className="row">
+        <div className="form-group row">
           <div className="col-sm-4 label-col left">
             Inet
           </div>
@@ -76,7 +76,7 @@ export class LinodeNetworking extends Component {
             </ul>
           </div>
         </div>
-        <div className="row">
+        <div className="form-group row">
           <div className="col-sm-4 label-col left">
             Gateway
           </div>
@@ -103,7 +103,7 @@ export class LinodeNetworking extends Component {
             </h3>
           </div>
         </div>
-        <div className="row">
+        <div className="form-group row">
           <div className="col-sm-4 label-col left">
             Inet
           </div>
@@ -111,7 +111,7 @@ export class LinodeNetworking extends Component {
             {this.getLinode().ips['public'].ipv6} / 64
           </div>
         </div>
-        <div className="row">
+        <div className="form-group row">
           <div className="col-sm-4 label-col left">
             Gateway
           </div>
@@ -175,7 +175,7 @@ export class LinodeNetworking extends Component {
           <div className="row network-content">
             <div className="col-sm-6 left">
               {ipPrivate[0] ? (
-                <div className="row">
+                <div className="form-group row">
                   <div className="col-sm-4 label-col left">
                     Inet
                   </div>
@@ -186,13 +186,13 @@ export class LinodeNetworking extends Component {
                   </div>
                 </div>
               ) : (
-                <div className="row">
+                <div className="form-group row">
                   <div className="col-sm-12 content-col right">
                     {"No private IP addresses."}
                   </div>
                 </div>
               )}
-              <div className="row">
+              <div className="form-group row">
                 <div className="col-sm-4 label-col left">
                   Link-local IP
                 </div>

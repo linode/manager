@@ -304,6 +304,8 @@ a {
 .form-control {
     font-size: $font-size;
     border-radius: 2px;
+    height: 30px !important;
+    line-height: 30px;
 }
 
 input, .btn {
@@ -634,18 +636,27 @@ table {
     margin-bottom: 0;
 }
 
+.form-group {
+    margin-bottom: .75rem;
+}
+
 .label-col {
     color: #333;
 }
 
 .content-col {
-    margin-bottom: .75rem;
     color: #666;
+
     li a {
         text-decoration: none;
     }
+
     img {
         margin-left: 0.5rem;
+    }
+
+    p.text-muted {
+        margin-bottom: 0;
     }
 }
 
