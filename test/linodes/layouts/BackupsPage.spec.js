@@ -100,7 +100,36 @@ describe('linodes/layouts/BackupsPage', () => {
 
   it('calls cancel backups on click');
 
-  it('renders the Snapshot UI', () => {
+  it('requests a Snapshot when "Take Snapshot" is pressed', async () => {
+    const page = shallow(
+      <BackupsPage
+        dispatch={dispatch}
+        linodes={{
+          ...linodes,
+          linodes: {
+            ...linodes.linodes,
+            [testLinode.id]: {
+              ...testLinode,
+              _backups: {
+                ...testLinode._backups,
+                totalResults: 0,
+                backups: { },
+              },
+            },
+          },
+        }}
+        params={{ linodeId: testLinode.id }}
+      />);
+    const takeSnapshot = page.find('button.btn-primary-outline');
+    dispatch.reset();
+    takeSnapshot.simulate('click');
+    expect(dispatch.calledOnce).to.equal(true);
+    const fn = dispatch.firstCall.args[0];
+    await expectRequest(fn, `/linodes/${testLinode.id}/backups`,
+      () => {}, null, { method: 'POST' });
+  });
+
+  it('renders modal when "Take Snapshot" is pressed and backups exist', () => {
     const page = shallow(
       <BackupsPage
         dispatch={dispatch}
@@ -108,17 +137,31 @@ describe('linodes/layouts/BackupsPage', () => {
         params={{ linodeId: 1234 }}
         backups={backups}
       />);
-    const snapshot = page.find('.snapshots');
-    expect(snapshot).to.exist;
-    expect(snapshot.contains(<h2>Snapshot</h2>))
-      .to.equal(true);
-    expect(snapshot.find('button').props().className)
-      .to.equal('btn btn-primary');
-    expect(snapshot.find('button').text())
-      .to.equal('Take Snapshot');
+    const takeSnapshot = page.find('button.btn-primary-outline');
+    dispatch.reset();
+    takeSnapshot.simulate('click');
+    expect(dispatch.calledOnce).to.equal(true);
+    expect(dispatch.firstCall.args[0]).to.have.property('type')
+      .which.equals(SHOW_MODAL);
   });
 
-  it('requests a Snapshot when "Take Snapshot" is pressed');
+  it('requests Snapshot when "Take new snapshot" is pressed from modal', async () => {
+    const page = shallow(
+      <BackupsPage
+        dispatch={dispatch}
+        linodes={linodes}
+        params={{ linodeId: 1234 }}
+        backups={backups}
+      />);
+    const modal = shallow(
+      page.instance().renderOverwriteSnapshotModal(testLinode));
+    const takeSnapshot = modal.find('button.btn-primary');
+    dispatch.reset();
+    takeSnapshot.simulate('click');
+    const fn = dispatch.firstCall.args[0];
+    await expectRequest(fn, '/linodes/1234/backups',
+      () => {}, null, { method: 'POST' });
+  });
 
   it('renders the schedule UI', () => {
     const page = shallow(
@@ -194,7 +237,7 @@ describe('linodes/layouts/BackupsPage', () => {
     expect(fetchStub.calledWith('token', '/linodes/1234')).to.equal(true);
   });
 
-  it('renders the latest Backup', () => {
+  it('renders the restore UI', () => {
     const page = shallow(
       <BackupsPage
         dispatch={dispatch}
@@ -203,7 +246,7 @@ describe('linodes/layouts/BackupsPage', () => {
         backups={backups}
       />);
     const b = page.find('.backups');
-    expect(b.find('Backup').length).to.equal(2);
+    expect(b.find('Backup').length).to.equal(4);
   });
 
   it('updates state when a backup is clicked', () => {
@@ -375,6 +418,35 @@ describe('linodes/layouts/BackupsPage', () => {
     const restore = sandbox.stub(page.instance(), 'restore');
     page.find('.btn-primary').at(0).simulate('click');
     expect(restore.calledOnce).to.equal(true);
+  });
+
+  it('renders predicted backups', () => {
+    const page = shallow(
+      <BackupsPage
+        dispatch={dispatch}
+        linodes={{
+          ...linodes,
+          linodes: {
+            ...linodes.linodes,
+            [testLinode.id]: {
+              ...testLinode,
+              _backups: {
+                ...testLinode._backups,
+                totalResults: 0,
+                backups: { },
+              },
+            },
+          },
+        }}
+        params={{ linodeId: testLinode.id }}
+      />);
+    const futureBackups = page.find('.backups');
+    expect(futureBackups).to.exist;
+    expect(futureBackups.html()).to.contain('Snapshot');
+    expect(futureBackups.html()).to.contain('You haven&#x27;t taken any snapshots yet');
+    expect(futureBackups.html()).to.contain('Daily');
+    expect(futureBackups.html()).to.contain('Weekly');
+    expect(futureBackups.html()).to.contain('Biweekly');
   });
 
   describe('overwrite modal', () => {

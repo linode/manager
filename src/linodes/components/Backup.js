@@ -11,7 +11,7 @@ const calendar = {
 };
 
 export default function Backup(props) {
-  const { backup, selected, onSelect } = props;
+  const { backup, selected, future, onSelect } = props;
   const created = moment(backup.created);
   const cardTitle = created.calendar(null, calendar);
   let content = created.format('dddd, MMMM D YYYY LT');
@@ -26,18 +26,28 @@ export default function Backup(props) {
     }
   }
 
+  let title = '';
+  if (!future) {
+    if (backup.type === 'snapshot') {
+      title = 'Snapshot';
+    } else {
+      title = cardTitle;
+    }
+  } else {
+    title = backup.created;
+  }
+
+  const selectedClass = selected === backup.id ? 'selected' : '';
+  const futureClass = future === true ? 'future' : '';
+
   return (
     <div
-      className={`backup ${selected === backup.id ? 'selected' : ''}`}
+      className={`backup ${selectedClass} ${futureClass}`}
       onClick={onSelect}
     >
-      <header>
-        <div className="title">
-          {backup.type === 'snapshot' ? 'Snapshot' : cardTitle}
-        </div>
-      </header>
-      <div className="form-group">
-        <div className="content-col">{content}</div>
+      <header><div className="title">{title}</div></header>
+      <div className={!!future ? 'future-disabled' : ''}>
+        <div className="content-col">{!!future ? backup.content : content}</div>
       </div>
     </div>
   );
@@ -46,5 +56,6 @@ export default function Backup(props) {
 Backup.propTypes = {
   backup: PropTypes.object.isRequired,
   selected: PropTypes.string,
+  future: PropTypes.bool,
   onSelect: PropTypes.func.isRequired,
 };

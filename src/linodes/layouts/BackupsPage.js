@@ -2,7 +2,6 @@ import React, { Component, PropTypes } from 'react';
 import { push } from 'react-router-redux';
 import { fetchLinode, fetchLinodes, putLinode } from '~/actions/api/linodes';
 import { showModal, hideModal } from '~/actions/modal';
-import { getNextBackup } from '~/linodes/components/Linode';
 import {
   enableBackup,
   cancelBackup,
@@ -31,7 +30,6 @@ export class BackupsPage extends Component {
     this.renderSchedule = this.renderSchedule.bind(this);
     this.renderBackups = this.renderBackups.bind(this);
     this.renderRestoreRadio = this.renderRestoreRadio.bind(this);
-    this.renderLastSnapshot = this.renderLastSnapshot.bind(this);
     this.renderModal = this.renderModal.bind(this);
     this.restore = this.restore.bind(this);
     this.state = {
@@ -246,15 +244,134 @@ export class BackupsPage extends Component {
   renderBackups() {
     const thisLinode = this.getLinode();
     const backups = thisLinode._backups && Object.values(thisLinode._backups.backups);
-    const { selectedBackup, targetLinode } = this.state;
+    const { selectedBackup, targetLinode, schedule } = this.state;
+    const { dispatch } = this.props;
+
+    // this attempts to predict when future backups will be scehduled
+    const futureBackups = [];
     if (!backups || backups.length === 0) {
-      const next = getNextBackup(thisLinode);
-      return (
-        <p>
-          No backups yet. First automated backup is scheduled for {next.fromNow(true)} from now.
-        </p>
-      );
+      futureBackups[0] = {
+        created: 'Snapshot',
+        content: "You haven't taken any snapshots yet",
+        id: 'this should never be selected 0',
+      };
     }
+    const timeslot = (timeslot) => {
+      if (!timeslot) {
+        return '12-2 AM';
+      }
+      return {
+        W0: '12-2 AM',
+        W2: '2-4 AM',
+        W4: '4-6 AM',
+        W6: '6-8 AM',
+        W8: '8-10 AM',
+        W10: '10 AM-12 PM',
+        W12: '12-2 PM',
+        W14: '2-4 PM',
+        W16: '4-6 PM',
+        W18: '6-8 PM',
+        W20: '8-10 PM',
+        W22: '10 PM-12 AM',
+      }[timeslot];
+    };
+    const getNextBackupDay = (timeslot = 'W2') => {
+      const hour = moment().hour();
+      let selectedTime = 2;
+      if (timeslot !== null) {
+        selectedTime = parseInt(timeslot.replace(/W/, ''), 10);
+      }
+      if (hour > selectedTime) {
+        return moment().add(1, 'days');
+      }
+      return moment().add(0, 'days');
+    };
+
+    let backupDay = 'Sunday';
+    const getNextBackupWeek = (backupDay, timeslot, extraWeek) => {
+      const day = moment().day();
+      const hour = moment().hour();
+      let selectedDay = 1;
+      if (backupDay !== 'Sunday') {
+        selectedDay = moment().day(backupDay).weekday();
+      }
+      let selectedTime = 2;
+      if (timeslot !== null) {
+        selectedTime = parseInt(timeslot.replace(/W/, ''), 10);
+      }
+      const biweek = extraWeek ? 7 : 0;
+      const daysToAdd = 7 + biweek;
+      const difference = selectedDay - day + biweek;
+      if (day > selectedDay) {
+        return moment().day(backupDay).add(daysToAdd, 'days');
+      } else if (day === selectedDay && hour > selectedTime) {
+        return moment().add(daysToAdd, 'days');
+      }
+      return moment().add(difference, 'days');
+    };
+
+    const getBackupDayOfWeek = (backupType) => {
+      if (schedule.dayOfWeek) {
+        if (schedule.dayOfWeek === 'Scheduling') {
+          backupDay = 'TBD';
+        } else {
+          if (backupType === 'Daily') {
+            const nextWeekDay = getNextBackupDay(schedule.timeOfDay).weekday();
+            backupDay = moment()._locale._weekdays[nextWeekDay];
+          } else {
+            backupDay = schedule.dayOfWeek;
+          }
+        }
+      }
+      return backupDay;
+    };
+
+    const backupList = ['Snapshot', 'Daily', 'Weekly', 'Biweekly'];
+    const futureSlots = backups.length === 0 ? 1 : backups.length;
+    for (let i = futureSlots; i < 4; i++) {
+      futureBackups[i] = {};
+      futureBackups[i].id = `this should never be selected ${i}`;
+      futureBackups[i].created = backupList[i];
+      if (backupList[i] === 'Daily') {
+        futureBackups[i].content = `${getBackupDayOfWeek(backupList[i])}`;
+        // eslint-disable-next-line max-len
+        futureBackups[i].content = `${futureBackups[i].content}${getNextBackupDay(schedule.timeOfDay).format(', MMMM D YYYY, ')}`;
+      } else if (backupList[i] === 'Weekly') {
+        futureBackups[i].content = `${getBackupDayOfWeek(backupList[i])}`;
+        // eslint-disable-next-line max-len
+        futureBackups[i].content = `${futureBackups[i].content}${getNextBackupWeek(schedule.dayOfWeek, schedule.timeOfDay, false).format(', MMMM D YYYY, ')}`;
+      } else if (backupList[i] === 'Biweekly') {
+        futureBackups[i].content = `${getBackupDayOfWeek(backupList[i])}`;
+        // eslint-disable-next-line max-len
+        futureBackups[i].content = `${futureBackups[i].content}${getNextBackupWeek(schedule.dayOfWeek, schedule.timeOfDay, true).format(', MMMM D YYYY, ')}`;
+      }
+      futureBackups[i].content = `${futureBackups[i].content} ${timeslot(schedule.timeOfDay)}`;
+    }
+
+    // This makes the snapshot appear first in the list of completed backups
+    // and checks if there is a snapshot currently
+    let snapshotCheck = false;
+    let index = 0;
+    for (const backup of backups) {
+      if (backup.type === 'snapshot' && index !== 0) {
+        backups[index] = backups[0];
+        backups[0] = backup;
+        snapshotCheck = true;
+      } else if (backup.type === 'snapshot') {
+        snapshotCheck = true;
+      }
+      index++;
+    }
+
+    const snapshotChecker = (snapshotCheck) => {
+      if (snapshotCheck) {
+        dispatch(showModal('Take new snapshot',
+          this.renderOverwriteSnapshotModal(thisLinode)
+        ));
+        return;
+      }
+      dispatch(takeBackup(thisLinode.id));
+    };
 
     return (
       <div>
@@ -267,16 +384,54 @@ export class BackupsPage extends Component {
                 onSelect={() => this.setState({ selectedBackup: backup.id })}
               />
             </div>
-           )}
+          )}
+          {futureBackups.map(backup =>
+            <div className="col-md-3" key={backup.created}>
+              <Backup
+                backup={backup}
+                future
+                onSelect={() => this.setState({ selectedBackup: '' })}
+              />
+            </div>
+          )}
         </div>
         {this.renderRestore()}
         <button
-          className="btn btn-primary"
+          className="btn btn-primary restore-buttons"
           disabled={this.state.loading || selectedBackup === null}
           onClick={() => this.restore(targetLinode, selectedBackup)}
         >Restore backup</button>
+        <button
+          className="btn btn-primary-outline"
+          onClick={() => snapshotChecker(snapshotCheck)}
+        >Take Snapshot</button>
       </div>
     );
+  }
+
+  renderOverwriteSnapshotModal(linode) {
+    const { dispatch } = this.props;
+    return (
+      <div>
+        <p>
+          <span className="text-danger">WARNING!</span> This new snapshot will
+          overwrite the current snapshot.  Please confirm this is what you
+          really want.
+        </p>
+        <div className="modal-footer">
+          <button
+            className="btn btn-default"
+            onClick={() => dispatch(hideModal())}
+          >Nevermind</button>
+          <button
+            className="btn btn-primary"
+            onClick={() => {
+              dispatch(takeBackup(linode.id));
+              dispatch(hideModal());
+            }}
+          >Take new snapshot</button>
+        </div>
+      </div>);
   }
 
   renderSchedule() {
@@ -376,42 +531,11 @@ export class BackupsPage extends Component {
     );
   }
 
-  renderLastSnapshot() {
-    const thisLinode = this.getLinode();
-    const backups = thisLinode._backups && Object.values(thisLinode._backups.backups);
-    if (backups && backups.length !== 0) {
-      const snapshots = backups.filter(b => b.type === 'snapshot');
-      const snapshot = snapshots && snapshots[0];
-      const { selectedBackup } = this.state;
-      if (snapshot) {
-        return (
-          <div className="row snapshot-details">
-            <div className="col-md-7">
-              <p>
-                <span className="text-danger">Warning!</span> Taking a new snapshot
-                will overwrite your latest snapshot.
-              </p>
-            </div>
-            <div className="col-md-5">
-              <Backup
-                backup={snapshot}
-                selected={selectedBackup}
-                onSelect={() => this.setState({ selectedBackup: snapshot.id })}
-              />
-            </div>
-          </div>
-        );
-      }
-    }
-    return <p>No snapshots have been taken yet.</p>;
-  }
-
   renderEnabled() {
-    const linode = this.getLinode();
-    const { dispatch } = this.props;
     return (
       <div>
         <h2>Restore</h2>
+        Select a backup to restore from:
         {this.renderBackups()}
         <hr />
         <div className="row">
@@ -421,14 +545,6 @@ export class BackupsPage extends Component {
               <HelpButton to="http://example.org" />
             </h2>
             {this.renderSchedule()}
-          </div>
-          <div className="col-md-6 snapshots">
-            <h2>Snapshot</h2>
-            {this.renderLastSnapshot()}
-            <button
-              className="btn btn-primary"
-              onClick={() => dispatch(takeBackup(linode.id))}
-            >Take Snapshot</button>
           </div>
         </div>
       </div>

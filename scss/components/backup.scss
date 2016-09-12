@@ -2,6 +2,7 @@
     border: $border;
     cursor: pointer;
     cursor: hand;
+    text-align: center;
 
     header {
         padding: 0;
@@ -13,8 +14,20 @@
         padding: 15px;
     }
 
-    
     .content-col:last-of-type {
-        margin: 0;
+        margin: 0 auto;
     }
+
+    &.future {
+      opacity: 0.70;
+      cursor: default;
+      .future-disabled {
+        &:hover {
+          background-color: $white;
+        }
+      }
+    }
+
 }
+
+
