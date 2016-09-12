@@ -77,7 +77,7 @@ export class RescuePage extends Component {
         result: <span className="text-danger">An error occured.</span>,
       });
     }
-    dispatch(fetchLinodeUntil(linode.id, l => l.state === state));
+    dispatch(fetchLinodeUntil(l => l.state === state, 3000, linode.id));
   }
 
   renderRescueMode() {

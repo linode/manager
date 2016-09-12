@@ -18,6 +18,7 @@ export const apiTestLinode = {
   },
   created: '2016-07-06T16:47:27',
   id: 1234,
+  _polling: false,
   services: [
     {
       service_type: 'linode',

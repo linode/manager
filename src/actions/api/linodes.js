@@ -72,13 +72,13 @@ export const deleteLinode = makeDeleteItem(linodeConfig);
 export const putLinode = makePutItem(linodeConfig);
 export const createLinode = makeCreateItem(linodeConfig);
 
-function linodeAction(id, action, temp, expected, timeout = undefined, body = undefined) {
+function linodeAction(id, action, temp, expected, timeout = 3000, body = undefined) {
   return async (dispatch, getState) => {
     const state = getState();
     const { token } = state.authentication;
     dispatch({ type: UPDATE_LINODE, linode: { id, state: temp }, linodes: id });
     await fetch(token, `/linodes/${id}/${action}`, { method: 'POST', body });
-    await dispatch(fetchLinodeUntil(id, l => l.state === expected, timeout));
+    await dispatch(fetchLinodeUntil(l => l.state === expected, timeout, id));
   };
 }
 

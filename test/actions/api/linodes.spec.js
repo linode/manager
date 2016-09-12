@@ -63,7 +63,7 @@ describe('actions/api/linodes', async () => {
     const dispatch = sandbox.spy();
     const getState = sandbox.stub();
 
-    const f = fetchLinodeUntil(1234, v => v.state === 'running', 1);
+    const f = fetchLinodeUntil(v => v.state === 'running', 1, 1234);
 
     const state = {
       authentication: { token: 'token' },

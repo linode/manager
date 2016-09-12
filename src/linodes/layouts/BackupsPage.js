@@ -12,7 +12,7 @@ import {
 } from '~/actions/api/backups';
 import { connect } from 'react-redux';
 import HelpButton from '~/components/HelpButton';
-import Backup from '~/linodes/components/Backup';
+import { Backup } from '~/linodes/components/Backup';
 import _ from 'lodash';
 import { setError } from '~/actions/errors';
 import moment from 'moment';
@@ -244,6 +244,7 @@ export class BackupsPage extends Component {
   }
 
   renderBackups() {
+    const { dispatch } = this.props;
     const thisLinode = this.getLinode();
     const backups = thisLinode._backups && Object.values(thisLinode._backups.backups);
     const { selectedBackup, targetLinode } = this.state;
@@ -263,8 +264,10 @@ export class BackupsPage extends Component {
             <div className="col-md-3" key={moment(backup.created)}>
               <Backup
                 backup={backup}
+                linode={thisLinode}
                 selected={selectedBackup}
                 onSelect={() => this.setState({ selectedBackup: backup.id })}
+                dispatch={dispatch}
               />
             </div>
            )}
@@ -377,6 +380,7 @@ export class BackupsPage extends Component {
   }
 
   renderLastSnapshot() {
+    const { dispatch } = this.props;
     const thisLinode = this.getLinode();
     const backups = thisLinode._backups && Object.values(thisLinode._backups.backups);
     if (backups && backups.length !== 0) {
@@ -395,8 +399,10 @@ export class BackupsPage extends Component {
             <div className="col-md-5">
               <Backup
                 backup={snapshot}
+                linode={thisLinode}
                 selected={selectedBackup}
                 onSelect={() => this.setState({ selectedBackup: snapshot.id })}
+                dispatch={dispatch}
               />
             </div>
           </div>
