@@ -305,7 +305,11 @@ a {
     font-size: $font-size;
     border-radius: 2px;
     height: 30px !important;
-    line-height: 12px;
+    line-height: 30px;
+
+    &textarea {
+        line-height: 12px;
+    }
 }
 
 input, .btn {
