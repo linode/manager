@@ -159,9 +159,6 @@ export class LinodeNetworking extends Component {
             <div className="col-sm-6 left">
               <h2>
                 Private network
-                <HelpButton
-                  to="https://www.linode.com/docs/networking/linux-static-ip-configuration"
-                />
               </h2>
             </div>
             <div className="col-sm-6 right">
