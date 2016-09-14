@@ -186,19 +186,6 @@ describe('linodes/layouts/LinodeNetworking', () => {
   });
 
   describe('private network', () => {
-    it('renders help button', async () => {
-      const path = 'https://www.linode.com/docs/networking/linux-static-ip-configuration';
-      const page = shallow(
-        <LinodeNetworking
-          linodes={linodes}
-          params={params}
-        />);
-
-      expect(page.find('HelpButton').at(2).props())
-        .to.have.property('to')
-        .which.equals(path);
-    });
-
     it('renders add ip button', async () => {
       const page = shallow(
         <LinodeNetworking
