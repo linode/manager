@@ -306,8 +306,10 @@ a {
     border-radius: 2px;
     height: 30px !important;
     line-height: 30px;
+}
 
-    &textarea {
+textarea {
+    &.form-control {
         line-height: 12px;
     }
 }
