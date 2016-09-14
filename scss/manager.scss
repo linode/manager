@@ -308,6 +308,12 @@ a {
     line-height: 30px;
 }
 
+textarea {
+    &.form-control {
+        line-height: 12px;
+    }
+}
+
 input, .btn {
     height: $input-height;
     line-height: $input-height;
