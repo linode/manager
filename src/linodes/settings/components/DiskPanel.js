@@ -384,7 +384,7 @@ export class DiskPanel extends Component {
 
     return (
       <div className="linode-configs sm-col-12">
-        <div className="row">
+        <div className="row form-group">
           <div className="col-sm-6 left">
             <h3>Disks<HelpButton to="http://example.org" /></h3>
           </div>
