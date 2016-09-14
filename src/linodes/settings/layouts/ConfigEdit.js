@@ -253,7 +253,7 @@ export class ConfigEdit extends Component {
     return (
       <div>
         <h3>
-          Edit profile
+          Edit config
           <HelpButton to="https://example.org" />
         </h3>
         {this.renderEditUI()}
