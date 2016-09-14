@@ -212,14 +212,14 @@ export class LinodeGeneral extends Component {
               {this.renderDatacenterStyle(linode)}
             </div>
           </div>
-            <div className="form-group row linode-distro">
-              <div className="col-sm-4 label-col left">
-                Distribution
-              </div>
-              <div className="col-sm-8 content-col right">
-                { linode.distribution != null ? this.renderDistroStyle(linode) : 'Unknown' }
-              </div>
+          <div className="form-group row linode-distro">
+            <div className="col-sm-4 label-col left">
+              Distribution
             </div>
+            <div className="col-sm-8 content-col right">
+              {linode.distribution != null ? this.renderDistroStyle(linode) : 'Unknown'}
+            </div>
+          </div>
         </div>
         <div className="col-sm-7 right">
           <h2>Access</h2>
