@@ -83,7 +83,7 @@ export class EditModal extends Component {
           />
         </FormGroup>
         <FormGroup errors={errors} field="size">
-          <label>Size ({size} MiB)</label>
+          <label>Resize ({size} MiB)</label>
           <Slider
             min={256}
             max={free + disk.size}
@@ -93,9 +93,12 @@ export class EditModal extends Component {
             onChange={v => this.setState({ size: v })}
             tipFormatter={v => `${v} MiB`}
             marks={{
-              [disk.size]: `Current (${disk.size} MiB)`,
+              [disk.size]: '',
             }}
           />
+          <p className="text-muted">
+            Currently {disk.size} MiB
+          </p>
         </FormGroup>
         <ErrorSummary errors={errors} />
         <div className="modal-footer">
