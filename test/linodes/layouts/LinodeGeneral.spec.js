@@ -32,6 +32,17 @@ describe('linodes/layouts/LinodeGeneral', async () => {
         },
         services: [],
       },
+      1236: {
+        ...testLinode,
+        id: 1236,
+        distribution: null,
+        group: '',
+        backups: {
+          last_backup: '2016-06-28T14:19:37',
+          enabled: true,
+        },
+        services: [],
+      },
     },
     _singular: 'linode',
     _plural: 'linodes',
@@ -158,6 +169,19 @@ describe('linodes/layouts/LinodeGeneral', async () => {
       .find('.col-sm-8')
       .at(0)
       .text()).to.equal(testLinode.distribution.vendor);
+  });
+
+  it('renders unknown distribution', () => {
+    const page = shallow(
+      <LinodeGeneral
+        linodes={linodes}
+        params={{ linodeId: 1236 }}
+      />);
+
+    expect(page.find('.linode-distro').at(0)
+      .find('.col-sm-8')
+      .at(0)
+      .text()).to.equal('Unknown');
   });
 
   it('renders ssh input elements', () => {
