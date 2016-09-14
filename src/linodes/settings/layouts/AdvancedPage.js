@@ -6,13 +6,13 @@ import { DiskPanel } from '~/linodes/settings/components/DiskPanel';
 export function AdvancedPage(props) {
   return (
     <div className="form-group">
-      <div className="content-col">
+      <div className="content-col form-group">
         <span className="text-danger">WARNING! </span>
         This section is intended for advanced users. Proceed with caution.
       </div>
-      <DiskPanel {...props} />
-      <hr />
       <ConfigPanel {...props} />
+      <hr />
+      <DiskPanel {...props} />
     </div>
   );
 }
