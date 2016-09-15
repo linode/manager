@@ -185,14 +185,6 @@ export class LinodeGeneral extends Component {
               </ul>
             </div>
           </div>
-          <div className="form-group row linode-backups">
-            <div className="col-sm-4 label-col left">
-              Backup
-            </div>
-            <div className="col-sm-8 content-col right">
-              {this.renderBackupStatus(linode)}
-            </div>
-          </div>
           {plan ?
             <div className="form-group row linode-plan">
               <div className="col-sm-4 label-col left">
@@ -218,6 +210,14 @@ export class LinodeGeneral extends Component {
             </div>
             <div className="col-sm-8 content-col right">
               {linode.distribution != null ? this.renderDistroStyle(linode) : 'Unknown'}
+            </div>
+          </div>
+          <div className="form-group row linode-backups">
+            <div className="col-sm-4 label-col left">
+              Backup
+            </div>
+            <div className="col-sm-8 content-col right">
+              {this.renderBackupStatus(linode)}
             </div>
           </div>
         </div>
