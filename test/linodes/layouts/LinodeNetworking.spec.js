@@ -51,7 +51,7 @@ describe('linodes/layouts/LinodeNetworking', () => {
   };
 
   describe('public network', () => {
-    it('renders add ip button', async () => {
+    it('renders add public ip button', async () => {
       const page = shallow(
         <LinodeNetworking
           linodes={linodes}
@@ -60,7 +60,7 @@ describe('linodes/layouts/LinodeNetworking', () => {
 
       const content = page.find('.col-xl-12').at(0);
       const button = content.find('button').at(0);
-      expect(button.text()).to.equal('Add IP address');
+      expect(button.text()).to.equal('Add public IP address');
     });
 
     describe('IPv4', () => {
@@ -186,7 +186,7 @@ describe('linodes/layouts/LinodeNetworking', () => {
   });
 
   describe('private network', () => {
-    it('renders add ip button', async () => {
+    it('renders add private ip button', async () => {
       const page = shallow(
         <LinodeNetworking
           linodes={linodes}
@@ -195,7 +195,7 @@ describe('linodes/layouts/LinodeNetworking', () => {
 
       const content = page.find('.col-xl-12').at(0);
       const button = content.find('button').at(1);
-      expect(button.text()).to.equal('Add IP address');
+      expect(button.text()).to.equal('Add private IP address');
     });
 
     it('renders no private ips', async () => {

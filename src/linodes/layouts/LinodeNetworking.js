@@ -59,7 +59,7 @@ export class LinodeNetworking extends Component {
         </div>
         <div className="form-group row">
           <div className="col-sm-4 label-col left">
-            Inet
+            Address
           </div>
           <div className="col-sm-8 content-col right">
             <ul className="list-unstyled">
@@ -105,7 +105,7 @@ export class LinodeNetworking extends Component {
         </div>
         <div className="form-group row">
           <div className="col-sm-4 label-col left">
-            Inet
+            Address
           </div>
           <div className="col-sm-8 content-col right">
             {this.getLinode().ips['public'].ipv6} / 64
@@ -141,7 +141,7 @@ export class LinodeNetworking extends Component {
             <div className="col-sm-6 right">
               <div className="input-group-btn">
                 <button type="button" id="public-ip-button" className="btn btn-default pull-right">
-                  Add IP address
+                  Add public IP address
                 </button>
               </div>
             </div>
@@ -164,7 +164,7 @@ export class LinodeNetworking extends Component {
             <div className="col-sm-6 right">
               <div className="input-group-btn">
                 <button type="button" id="private-ip-button" className="btn btn-default pull-right">
-                  Add IP address
+                  Add private IP address
                 </button>
               </div>
             </div>
