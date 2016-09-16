@@ -310,6 +310,7 @@ a {
 
 textarea {
     &.form-control {
+        height: auto !important;
         line-height: 12px;
     }
 }
