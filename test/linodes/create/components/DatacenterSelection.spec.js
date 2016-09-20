@@ -1,7 +1,7 @@
 import React from 'react';
 import sinon from 'sinon';
 import { expect } from 'chai';
-import { mount } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 
 import DatacenterSelection from '~/linodes/create/components/DatacenterSelection';
 import { flags } from '~/assets';
@@ -35,6 +35,23 @@ describe('linodes/create/components/DatacenterSelection', () => {
         alt="Newark, NJ"
       />
     )).to.exist;
+  });
+
+  it('renders disabled', () => {
+    const c = shallow(
+      <DatacenterSelection
+        datacenters={datacenters}
+        selected={'newark'}
+        onDatacenterSelected={() => {}}
+        disabled
+      />
+    );
+
+    expect(c.contains(
+      <p>
+        The source you selected limits the datacenters you may deploy
+        your new Linode to.
+      </p>)).to.equal(true);
   });
 
   it('dispatches the appropriate event on select', () => {
