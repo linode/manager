@@ -131,7 +131,6 @@ function renderCard(props) {
   const { linode, onSelect, isSelected } = props;
   const select = () => onSelect(linode);
   const selectedClass = isSelected ? 'selected' : '';
-  const ipv6 = linode.ipv6.range;
 
   const checkbox = <input type="checkbox" checked={isSelected} onChange={select} />;
 
@@ -150,7 +149,7 @@ function renderCard(props) {
           <div className="col-sm-12 content-col ip-addresses">
             <span className="label-col">IP Addresses</span>
             <div>{linode.ipv4.address}</div>
-            <div>{ipv6.substring(0, ipv6.indexOf('/'))}</div>
+            <div>{linode.ipv6.range}</div>
           </div>
         </div>
         <div className="form-group row">
@@ -180,7 +179,6 @@ function renderRow(props) {
   const { linode, onSelect, isSelected } = props;
   const select = () => onSelect(linode);
   const selectedClass = isSelected ? 'selected' : '';
-  const ipv6 = linode.ipv6.range;
 
   const checkbox = <input type="checkbox" checked={isSelected} onClick={select} />;
 
@@ -196,7 +194,7 @@ function renderRow(props) {
         >{LinodeStatesReadable[linode.state]}</span>
       </td>
       <td>
-        {linode.ipv4.address}, {ipv6.substring(0, ipv6.indexOf('/'))}
+        {linode.ipv4.address}, {linode.ipv6.range}
       </td>
       <td>
         {renderDatacenterStyle(linode)}

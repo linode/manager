@@ -83,7 +83,7 @@ describe('linodes/layouts/LinodeGeneral', async () => {
         params={params}
       />);
 
-    expect(page.contains(<li> {ipv6.substring(0, ipv6.indexOf('/'))} </li>)).to.equal(true);
+    expect(page.contains(<li> {ipv6} </li>)).to.equal(true);
   });
 
   it('renders backups not enabled', () => {

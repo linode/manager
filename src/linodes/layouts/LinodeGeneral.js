@@ -154,7 +154,6 @@ export class LinodeGeneral extends Component {
       }@lish-${
         linode.datacenter.id
       }.linode.com`;
-    const ipv6 = linode.ipv6.range;
 
     return (
       <div className="row">
@@ -167,7 +166,7 @@ export class LinodeGeneral extends Component {
             <div className="col-sm-8 content-col right">
               <ul className="list-unstyled">
                 <li> {linode.ipv4.address} </li>
-                <li> {ipv6.substring(0, ipv6.indexOf('/'))} </li>
+                <li> {linode.ipv6.range} </li>
                 <li> <Link to={`/linodes/${linode.id}/networking`}>(...)</Link> </li>
               </ul>
             </div>
