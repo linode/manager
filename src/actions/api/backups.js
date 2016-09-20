@@ -8,7 +8,11 @@ export const fetchBackup = makeFetchItem(linodeConfig, '_backups');
 function makeBackupAction(action) {
   return (id) => async (dispatch, getState) => {
     const { token } = getState().authentication;
-    const response = await fetch(token, `/linode/instances/${id}/backups/${action}`, { method: 'POST' });
+    const response = await fetch(
+      token,
+      `/linode/instances/${id}/backups/${action}`,
+      { method: 'POST' }
+    );
     const json = await response.json();
     dispatch({ type: UPDATE_LINODE, linode: json, linodes: json.id });
   };

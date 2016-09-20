@@ -87,7 +87,9 @@ export class LinodeNetworking extends Component {
   }
 
   renderIPv6Public() {
-    //const linkLocal = this.getLinode().ips['private'].link_local; //FIXME add link-local
+    /* FIXME link-local missing from API
+     * const linkLocal = this.getLinode().ips['private'].link_local; FIXME add link-local
+     */
     return (
       <div className="col-sm-6 right">
         <div className="row">
@@ -125,8 +127,11 @@ export class LinodeNetworking extends Component {
     /* TODO: Global Pool - IPv6
      * TODO: members.linode.com
      */
-    const linkLocal = 'FIXME';//this.getLinode().ips['private'].link_local;
-    //const ipPrivate = this.getLinode().ipv4.address; // FIXME
+    const linkLocal = 'FIXME';
+    /* FIXME link-local and private IP not found in API
+     * const linkLocal = this.getLinode().ips['private'].link_local;
+     * const ipPrivate = this.getLinode().ipv4.address;
+     */
 
     return (
       <div className="row">
