@@ -77,9 +77,9 @@ describe('linodes/layouts/LinodeNetworking', () => {
           .which.equals(path);
       });
 
-      it('renders inet ip and url', async () => {
-        const ipv4 = testLinode.ips['public'].ipv4[0];
-        const inet = `${ipv4} / 24 ( li-${ipv4.split('.')[3]}.members.linode.com )`;
+      it('renders address ip and url', async () => {
+        const ipv4 = testLinode.ipv4.address;
+        const inet = `${ipv4} / 24 ( ${testLinode.ipv4.rdns} )`;
         const page = shallow(
           <LinodeNetworking
             linodes={linodes}
@@ -93,7 +93,7 @@ describe('linodes/layouts/LinodeNetworking', () => {
       });
 
       it('renders gateway', async () => {
-        const ipv4 = testLinode.ips['public'].ipv4[0];
+        const ipv4 = testLinode.ipv4.address;
         const gateway = `${ipv4.substring(0, ipv4.lastIndexOf('.'))}.1`;
         const page = shallow(
           <LinodeNetworking
@@ -135,8 +135,8 @@ describe('linodes/layouts/LinodeNetworking', () => {
           .which.equals(path);
       });
 
-      it('renders inet ip', async () => {
-        const ipv6 = testLinode.ips['public'].ipv6;
+      it('renders address ip', async () => {
+        const ipv6 = testLinode.ipv6.range;
         const page = shallow(
           <LinodeNetworking
             linodes={linodes}
@@ -146,22 +146,10 @@ describe('linodes/layouts/LinodeNetworking', () => {
         const content = page.find('.network-content').at(0);
         const ipv6Sect = content.find('.col-sm-6').at(1);
         const inetCol = ipv6Sect.find('.col-sm-8').at(0);
-        expect(inetCol.text()).to.equal(`${ipv6} / 64`);
+        expect(inetCol.text()).to.equal(`${ipv6}`);
       });
 
-      it('renders gateway', async () => {
-        const page = shallow(
-          <LinodeNetworking
-            linodes={linodes}
-            params={params}
-          />);
-
-        const content = page.find('.network-content').at(0);
-        const ipv6Sect = content.find('.col-sm-6').at(1);
-        const gatewayCol = ipv6Sect.find('.col-sm-8').at(1);
-        expect(gatewayCol.text())
-          .to.equal(`${testLinode.ips['private'].link_local.split(':')[0]}::1`);
-      });
+      it('renders gateway');
 
       it('renders nameservers', async () => {
         const page = shallow(
@@ -210,31 +198,8 @@ describe('linodes/layouts/LinodeNetworking', () => {
       expect(noIP.text()).to.equal('No private IP addresses.');
     });
 
-    it('renders private ips', async () => {
-      const ipv4 = testLinode.ips['private'].ipv4[0];
-      const page = shallow(
-        <LinodeNetworking
-          linodes={linodes}
-          params={params}
-        />);
+    it('renders private ips');
 
-      const content = page.find('.network-content').at(1);
-      const privIP = content.find('.col-sm-8').at(0);
-      expect(privIP.text()).to.equal(`${ipv4} / 17`);
-    });
-
-    it('renders link-local', async () => {
-      const page = shallow(
-        <LinodeNetworking
-          linodes={linodes}
-          params={params}
-        />);
-
-      const content = page.find('.network-content').at(1);
-      const localLinkRow = content.find('.row').at(2);
-      const localLinkCol = localLinkRow.find('.col-sm-8').at(0);
-      expect(localLinkCol.text())
-        .to.equal(testLinode.ips['private'].link_local);
-    });
+    it('renders link-local');
   });
 });

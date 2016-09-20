@@ -53,7 +53,7 @@ describe('linodes/layouts/LinodeDetailPage/loadLinode', async () => {
     );
     expect(dispatch.calledOnce).to.equal(true);
     const fn = dispatch.firstCall.args[0];
-    expectRequest(fn, `/linodes/${testLinode.id}`,
+    expectRequest(fn, `/linode/instances/${testLinode.id}`,
       d => expect(d.args[0].type).to.equal(linodeActions.UPDATE_LINODE));
   });
 
@@ -411,7 +411,7 @@ describe('linodes/layouts/LinodeDetailPage EditModal', () => {
       const { saveChanges } = modal.instance();
       await saveChanges();
       const fn = dispatch.firstCall.args[0];
-      await expectRequest(fn, '/linodes/1234',
+      await expectRequest(fn, '/linode/instances/1234',
         () => {}, null, o => {
           expect(o.method).to.equal('PUT');
           expect(o.body).to.equal(JSON.stringify({

@@ -34,7 +34,7 @@ describe('linodes/layouts/IndexPage', () => {
       />);
     expect(dispatch.calledOnce).to.equal(true);
     const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, '/linodes?page=1',
+    await expectRequest(fn, '/linode/instances/?page=1',
       d => expect(d.args[0])
         .to.have.property('type')
         .that.equals(linodeActions.UPDATE_LINODES), null, null, freshState);
@@ -156,7 +156,7 @@ describe('linodes/layouts/IndexPage', () => {
       const actions = page.find(Dropdown).props().elements;
       actions.find(a => a.name === dropdown).action();
       const fn = dispatch.firstCall.args[0];
-      await expectRequest(fn, `/linodes/1234${endpoint}`);
+      await expectRequest(fn, `/linode/instances/1234${endpoint}`);
     };
   }
 

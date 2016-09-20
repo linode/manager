@@ -27,6 +27,7 @@ export const UPDATE_BACKUP = '@@backups/UPDATE_BACKUP';
 export const linodeConfig = {
   plural: 'linodes',
   singular: 'linode',
+  endpoint: id => `/linode/instances/${id}`,
   actions: {
     updateItem: UPDATE_LINODE,
     updateItems: UPDATE_LINODES,
@@ -36,6 +37,7 @@ export const linodeConfig = {
     _configs: {
       plural: 'configs',
       singular: 'config',
+      endpoint: (linode, config) => `/linode/instances/${linode}/configs/${config}`,
       actions: {
         updateItem: UPDATE_LINODE_CONFIG,
         updateItems: UPDATE_LINODE_CONFIGS,
@@ -45,6 +47,7 @@ export const linodeConfig = {
     _disks: {
       plural: 'disks',
       singular: 'disk',
+      endpoint: (linode, disk) => `/linode/instances/${linode}/disks/${disk}`,
       actions: {
         updateItem: UPDATE_LINODE_DISK,
         updateItems: UPDATE_LINODE_DISKS,
@@ -54,6 +57,7 @@ export const linodeConfig = {
     _backups: {
       plural: 'backups',
       singular: 'backup',
+      endpoint: (linode, backup) => `/linode/instances/${linode}/backups/${backup}`,
       actions: {
         updateItem: UPDATE_BACKUP,
         updateItems: UPDATE_BACKUPS,
@@ -77,7 +81,7 @@ function linodeAction(id, action, temp, expected, timeout = undefined, body = un
     const state = getState();
     const { token } = state.authentication;
     dispatch({ type: UPDATE_LINODE, linode: { id, state: temp }, linodes: id });
-    await fetch(token, `/linodes/${id}/${action}`, { method: 'POST', body });
+    await fetch(token, `/linode/instances/${id}/${action}`, { method: 'POST', body });
     await dispatch(fetchLinodeUntil(id, l => l.state === expected, timeout));
   };
 }
@@ -101,7 +105,7 @@ export function resetPassword(linodeId, diskId, password) {
   return async (dispatch, getState) => {
     const state = getState();
     const { token } = state.authentication;
-    await fetch(token, `/linodes/${linodeId}/disks/${diskId}/rootpass`,
+    await fetch(token, `/linode/instances/${linodeId}/disks/${diskId}/rootpass`,
       {
         method: 'POST',
         body: JSON.stringify({ password }),
@@ -127,7 +131,7 @@ export function resizeLinodeDisk(linodeId, diskId, size) {
       linodes: linodeId,
       disks: diskId,
     });
-    await fetch(token, `/linodes/${linodeId}/disks/${diskId}/resize`,
+    await fetch(token, `/linode/instances/${linodeId}/disks/${diskId}/resize`,
       { method: 'POST', body: JSON.stringify({ size }) });
     // TODO: fetch until complete
   };

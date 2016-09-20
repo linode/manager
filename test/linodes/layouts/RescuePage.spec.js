@@ -79,7 +79,7 @@ describe('linodes/layouts/RescuePage', () => {
       api: { linodes: { totalPages: -1, linodes: { } } },
     }));
     expect(fetchStub.calledOnce).to.equal(true);
-    expect(fetchStub.firstCall.args[1]).to.equal('/linodes/1234');
+    expect(fetchStub.firstCall.args[1]).to.equal('/linode/instances/1234');
   });
 
   it('fetches linode disks', async () => {
@@ -119,7 +119,7 @@ describe('linodes/layouts/RescuePage', () => {
     dispatch.reset();
     await dispatched(dispatch, () => state);
     expect(fetchStub.calledOnce).to.equal(true);
-    expect(fetchStub.firstCall.args[1]).to.equal('/linodes/1234/disks?page=1');
+    expect(fetchStub.firstCall.args[1]).to.equal('/linode/instances/1234/disks/?page=1');
   });
 
   it('does not fetch when mounted with a known linode', () => {
@@ -216,7 +216,7 @@ describe('linodes/layouts/RescuePage', () => {
       await dispatched(dispatch, () => ({ authentication: { token: 'hi' } }));
       expect(fetchStub.calledOnce).to.equal(true);
       expect(fetchStub.firstCall.args[1]).to.equal(
-        '/linodes/1237/disks/1234/rootpass');
+        '/linode/instances/1237/disks/1234/rootpass');
     });
 
     it('power cycles running Linodes when resetting password', async () => {
@@ -244,13 +244,13 @@ describe('linodes/layouts/RescuePage', () => {
       await dispatched(dispatch, () => state);
       expect(fetchStub.calledOnce).to.equal(true);
       expect(fetchStub.firstCall.args[1]).to.equal(
-        '/linodes/1234/shutdown');
+        '/linode/instances/1234/shutdown');
       fetchStub.reset();
       dispatched = dispatch.thirdCall.args[0];
       await dispatched(dispatch, () => state);
       expect(fetchStub.calledOnce).to.equal(true);
       expect(fetchStub.firstCall.args[1]).to.equal(
-        '/linodes/1234/boot');
+        '/linode/instances/1234/boot');
     });
   });
 });

@@ -195,16 +195,15 @@ import { fetch } from './fetch';
 function refineState(state, config, subresources, ids) {
   let refinedState = state[config.plural];
   let refinedConfig = config;
-  let path = `/${config.plural}`;
   const plurals = [[config.plural]];
   for (let i = 0; i < subresources.length; i++) {
     const newConfig = refinedConfig.subresources[subresources[i]];
     refinedState = refinedState[refinedConfig.plural][ids[i]][subresources[i]];
     refinedConfig = newConfig;
-    path += `/${ids[i]}/${refinedConfig.plural}`;
     plurals[plurals.length - 1].push(ids[i]);
     plurals.push([refinedConfig.plural]);
   }
+  const path = refinedConfig.endpoint(...ids, ''); // '' in case we don't have an ID
   return { state: refinedState, config: refinedConfig, path, plurals };
 }
 
@@ -232,6 +231,7 @@ export function makeFetchPage(_config, ...subresources) {
       const options = filter ? {
         headers: { 'X-Filter': JSON.stringify(filter) },
       } : {};
+
       const response = await fetch(token, `${path}?page=${page + 1}`, options);
       const json = await response.json();
       if (state.totalPages !== -1 && state.totalResults !== json.totalResults) {
@@ -301,7 +301,7 @@ export function makeFetchItem(_config, ...subresources) {
     const id = ids[ids.length - 1];
     plurals[plurals.length - 1].push(id);
 
-    const response = await fetch(token, `${path}/${id}`);
+    const response = await fetch(token, path);
     const json = await response.json();
 
     dispatch({
@@ -335,7 +335,7 @@ export function makeFetchUntil(config) {
       [config.plural]: id,
     });
     for (;;) {
-      const response = await fetch(token, `/${config.plural}/${id}`);
+      const response = await fetch(token, config.endpoint(id, ''));
       const json = await response.json();
       dispatch({
         type: config.actions.updateItem,
@@ -377,7 +377,7 @@ export function makeDeleteItem(_config, ...subresources) {
       ...plurals.reduce((u, [plural, id]) =>
         (id ? { ...u, [plural]: id } : u), { }),
     });
-    const response = await fetch(token, `${path}/${id}`, { method: 'DELETE' });
+    const response = await fetch(token, path, { method: 'DELETE' });
     await response.json();
     // Note: do we want to do anything at this point?
   };
@@ -404,7 +404,7 @@ export function makePutItem(_config, ...subresources) {
       ...plurals.reduce((a, [plural, id]) =>
         id ? { ...a, [plural]: id } : a, {}),
     });
-    const response = await fetch(token, `${path}/${id}`, {
+    const response = await fetch(token, path, {
       method: 'PUT', body: JSON.stringify(resource),
     });
     const json = await response.json();

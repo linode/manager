@@ -52,7 +52,7 @@ describe('linodes/settings/layouts/AlertsPage', async () => {
     expect(dispatch.calledOnce).to.equal(true);
 
     const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, `/linodes/${testLinode.id}`,
+    await expectRequest(fn, `/linode/instances/${testLinode.id}`,
       (d, n) => {
         if (n === 0) {
           expect(d.args[0].type).to.equal(UPDATE_LINODE);

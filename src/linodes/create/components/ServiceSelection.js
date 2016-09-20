@@ -44,8 +44,7 @@ export default class ServiceSelection extends Component {
 
   render() {
     const { services } = this.props;
-    const sortedPlans = Object.values(services).filter(
-      s => s.service_type === 'linode').sort(
+    const sortedPlans = Object.values(services).sort(
         (a, b) => a.ram > b.ram);
     return (
       <div>

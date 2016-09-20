@@ -1,10 +1,11 @@
 import { makeFetchPage, makeFetchAll } from '~/api-store';
 
 export const UPDATE_SERVICES = '@@services/UPDATE_SERVICES';
-
+// FIXME Add in /linode/services/:id
 export const servicesConfig = {
   singular: 'service',
   plural: 'services',
+  endpoint: id => `/linode/services/${id}`,
   actions: { updateItems: UPDATE_SERVICES },
 };
 

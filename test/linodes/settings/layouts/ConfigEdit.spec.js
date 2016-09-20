@@ -116,7 +116,7 @@ describe('linodes/settings/layouts/ConfigEdit', () => {
       await page.instance().saveChanges();
       expect(dispatch.calledOnce).to.equal(true);
       const fn = dispatch.firstCall.args[0];
-      await expectRequest(fn, `/linodes/${testLinode.id}/configs/12345`,
+      await expectRequest(fn, `/linode/instances/${testLinode.id}/configs/12345`,
         () => {}, null, options => {
           expect(options.method).to.equal('PUT');
           expect(JSON.parse(options.body)).to.deep.equal({

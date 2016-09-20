@@ -233,12 +233,12 @@ describe('linodes/settings/components/DiskPanel', () => {
       expect(dispatch.calledThrice).to.equal(true);
       const resize = dispatch.firstCall.args[0];
       const put = dispatch.secondCall.args[0];
-      await expectRequest(resize, '/linodes/1236/disks/12345/resize',
+      await expectRequest(resize, '/linode/instances/1236/disks/12345/resize',
         () => {}, null, options => {
           expect(options.method).to.equal('POST');
           expect(options.body).to.equal(JSON.stringify({ size: 1234 }));
         });
-      await expectRequest(put, '/linodes/1236/disks/12345',
+      await expectRequest(put, '/linode/instances/1236/disks/12345',
         () => {}, null, options => {
           expect(options.method).to.equal('PUT');
           expect(options.body).to.equal(JSON.stringify({ label: 'New label' }));
@@ -320,7 +320,7 @@ describe('linodes/settings/components/DiskPanel', () => {
       await modal.find('.btn-danger').props().onClick();
       expect(dispatch.calledTwice).to.equal(true);
       const fn = dispatch.firstCall.args[0];
-      await expectRequest(fn, '/linodes/1236/disks/12345',
+      await expectRequest(fn, '/linode/instances/1236/disks/12345',
         () => {}, null, { method: 'DELETE' });
     });
   });
@@ -346,7 +346,7 @@ describe('linodes/settings/components/DiskPanel', () => {
       dispatch.reset();
       await fn(dispatch, () => freshState);
       fn = dispatch.firstCall.args[0];
-      await expectRequest(fn, '/distributions?page=1',
+      await expectRequest(fn, '/linode/distributions/?page=1',
         () => {}, { totalPages: 1, distributions: [] },
         null, freshState);
     });
@@ -448,7 +448,7 @@ describe('linodes/settings/components/DiskPanel', () => {
       expect(createDisk.calledOnce).to.equal(true);
     });
 
-    it('should POST /linodes/:id/disks when createDisk is called', async () => {
+    it('should POST /linode/instances/:id/disks/ when createDisk is called', async () => {
       const dispatch = sandbox.spy();
       const modal = shallow(
         <AddModal
@@ -461,7 +461,7 @@ describe('linodes/settings/components/DiskPanel', () => {
       await createDisk();
       expect(dispatch.calledTwice).to.equal(true);
       const fn = dispatch.firstCall.args[0];
-      await expectRequest(fn, '/linodes/1236/disks',
+      await expectRequest(fn, '/linode/instances/1236/disks/',
         () => {}, null, options => {
           expect(options.method).to.equal('POST');
           expect(JSON.parse(options.body)).to.deep.equal({
