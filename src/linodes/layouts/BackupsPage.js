@@ -378,10 +378,15 @@ export class BackupsPage extends Component {
       dispatch(takeBackup(thisLinode.id));
     };
 
+    const recentBackups = [
+      ...backups.filter(bu => bu.type === 'snapshot').slice(-1),
+      ...backups.filter(bu => bu.type === 'auto').slice(-3),
+    ];
+
     return (
       <div>
         <div className="row backups">
-          {backups.map(backup =>
+          {recentBackups.map(backup =>
             <div className="col-md-3" key={moment(backup.created)}>
               <Backup
                 backup={backup}
