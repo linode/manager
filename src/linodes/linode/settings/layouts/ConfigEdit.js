@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { getLinode, loadLinode } from '~/linodes/layouts/LinodeDetailPage';
+import { getLinode, loadLinode } from '~/linodes/linode/layouts/IndexPage';
 import { fetchLinode, fetchLinodeConfig, putLinodeConfig } from '~/actions/api/linodes';
 import { fetchAllKernels } from '~/actions/api/kernels';
 import HelpButton from '~/components/HelpButton';

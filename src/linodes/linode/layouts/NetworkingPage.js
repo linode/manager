@@ -1,10 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { getLinode } from './LinodeDetailPage';
+import { getLinode } from './IndexPage';
 import HelpButton from '~/components/HelpButton';
 import { ipv4ns, ipv6ns, ipv6nsSuffix } from '~/constants';
 
-export class LinodeNetworking extends Component {
+export class NetworkingPage extends Component {
   constructor() {
     super();
     this.getLinode = getLinode.bind(this);
@@ -134,8 +134,8 @@ export class LinodeNetworking extends Component {
      */
 
     return (
-      <div className="row">
-        <div className="col-xl-12">
+      <div>
+        <div className="card">
           <div className="row">
             <div className="col-sm-6 left">
               <h2>Public network</h2>
@@ -149,14 +149,12 @@ export class LinodeNetworking extends Component {
             </div>
           </div>
           <div className="row network-content">
-              {this.renderIPv4Public()}
-              {this.renderIPv6Public()}
+            {this.renderIPv4Public()}
+            {this.renderIPv6Public()}
           </div>
-          <div className="row">
-            <div className="col-sm-4 left">
-              <hr />
-            </div>
-          </div>
+        </div>
+
+        <div className="card">
           <div className="row">
             <div className="col-sm-6 left">
               <h2>
@@ -194,7 +192,7 @@ export class LinodeNetworking extends Component {
   }
 }
 
-LinodeNetworking.propTypes = {
+NetworkingPage.propTypes = {
   linodes: PropTypes.object,
 };
 
@@ -202,4 +200,4 @@ function select(state) {
   return { linodes: state.api.linodes };
 }
 
-export default connect(select)(LinodeNetworking);
+export default connect(select)(NetworkingPage);

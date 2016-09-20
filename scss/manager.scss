@@ -14,7 +14,7 @@ $darkest-yellow: darken($yellow, 40);
 $black: #4B4B4B;
 $light-black: #666666;
 $lightest-black: #ACACAC;
-$dark-gray: #CCCCCC;
+$dark-gray: #DDDDDD;
 $gray: #F3F3F3;
 $light-gray: #FBFBFB;
 $white: #FEFEFE;
@@ -288,16 +288,64 @@ a {
 .main {
     margin-left: $sidebar-width;
     width: calc(100% - #{$sidebar-width});
-    padding: $main-padding-tb $main-padding-lr 0 $main-padding-lr;
 }
 
 .container {
-    min-height: 100%;
-    display: flex;
-    flex-direction: column;
+    @extends .container;
+    padding: 0 $main-padding-lr;
 
-    .container-inner {
-        flex: 1;
+    .main > & {
+        padding-top: $main-padding-tb;
+    }
+}
+
+.main-header {
+    background: white;
+    padding: $main-padding-tb 0;
+}
+
+.react-tabs {
+    /* define subtab behavior */
+    .react-tabs {
+        [role="tablist"] {
+            margin-top: $main-padding-tb/2;
+            padding: 0;
+            background: transparent;
+        }
+
+        [role="tab"]:hover,
+        [role="tab"][aria-selected="true"] {
+            border: 0;
+            border-bottom: 3px solid $blue;
+        }
+    }
+
+    [role="tablist"] {
+        @extend .container;
+        background: white;
+        border-bottom: $border;
+        margin: 0;
+    }
+
+    [role="tab"] {
+        &:not(:last-of-type) {
+            margin-right: 15px;
+        }
+
+        &:hover,
+        &[aria-selected="true"] {
+            background: #f3f3f3;
+            border: 1px solid #aaa;
+            border-bottom: 0;
+            border-radius: 2px 2px 0 0;
+            -moz-border-radius: 2px 2px 0 0;
+            -webkit-border-radius: 2px 2px 0 0;
+        }
+
+        a {
+            color: $black;
+            text-decoration: none !important;
+        }
     }
 }
 

@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import HelpButton from '~/components/HelpButton';
-import { getLinode, loadLinode } from '~/linodes/layouts/LinodeDetailPage';
+import { getLinode, loadLinode } from '~/linodes/linode/layouts/IndexPage';
 import { putLinode } from '~/actions/api/linodes';
 
 export class AlertsPage extends Component {
@@ -114,7 +114,7 @@ export class AlertsPage extends Component {
     ];
 
     return (
-      <div className="linode-alerts">
+      <div className="card linode-alerts">
         <h2>
           Alerts
           <HelpButton to="https://google.com" />

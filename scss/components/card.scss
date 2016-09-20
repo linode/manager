@@ -4,12 +4,8 @@
     padding: 15px;
     position: relative;
     border-radius: 0;
-
-    &.page-card {
-        width: 100%;
-        margin-top: 15px;
-        padding: 0;
-    }
+    margin-bottom: 0;
+    margin-top: $main-padding-tb/2;
 
     .card-type {
         position: absolute;
@@ -100,77 +96,6 @@
                 z-index: 99999;
                 // Constant from bootstrap
                 width: calc(100% + 1.875rem);
-            }
-        }
-    }
-
-    .react-tabs {
-        [role=tablist] {
-            background-color: $light-gray;
-            padding: 0 $main-padding-lr;
-            border-color: $border-gray;
-            margin-bottom: 0;
-        }
-
-        [role=tab] {
-            color: $light-black;
-            border-radius: 0;
-            padding: 3px 12px 5px 12px;
-
-            &:not(:last-of-type) {
-                margin-right: $main-padding-tb;
-            }
-
-            &[selected],
-            &:hover {
-                color: $black;
-                border-color: $border-gray;
-                background: white;
-                border-bottom: 0;
-            }
-
-            a {
-                color: inherit;
-                text-decoration: inherit;
-            }
-        }
-
-        [role=tabpanel] {
-            padding: $main-padding-tb $main-padding-lr;
-
-            h2 {
-                margin-bottom: calc(#{$main-padding-tb}/2);
-            }
-        }
-
-        .react-tabs {
-            margin-left: -$main-padding-lr;
-            margin-top: -$main-padding-tb;
-            width: calc(100% + #{$main-padding-lr * 2});
-
-            [role=tablist] {
-                background-color: transparent;
-            }
-
-            [role=tabpanel] {
-                padding-bottom: 0;
-            }
-
-
-            [role=tab] {
-                border: none;
-                background: transparent;
-                color: $blue;
-
-                &:first-of-type {
-                    padding-left: 0;
-                }
-
-                /* There must be a bug in scss because when this was [selected]
-                 * it duplicated the code in line 36 and this code did not show up. */
-                &[aria-selected=true] {
-                    color: $black;
-                }
             }
         }
     }

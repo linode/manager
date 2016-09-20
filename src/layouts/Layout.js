@@ -61,15 +61,11 @@ export class Layout extends Component {
         />
         <Sidebar path={currentPath} />
         <div className="main full-height">
-          <div className="container">
-            <Modal />
-            <div className="container-inner">
-              {errors.status === null ?
-                 this.props.children :
-                 this.renderError()}
-            </div>
-            <Footer year={year} />
-          </div>
+          <Modal />
+          {errors.status === null ?
+           this.props.children :
+           this.renderError()}
+          <Footer year={year} />
         </div>
       </div>
     );

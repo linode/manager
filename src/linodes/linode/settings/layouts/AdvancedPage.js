@@ -1,18 +1,17 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { ConfigPanel } from '~/linodes/settings/components/ConfigPanel';
-import { DiskPanel } from '~/linodes/settings/components/DiskPanel';
+import { ConfigPanel } from '~/linodes/linode/settings/components/ConfigPanel';
+import { DiskPanel } from '~/linodes/linode/settings/components/DiskPanel';
 
 export function AdvancedPage(props) {
   return (
     <div>
-      <div className="content-col form-group">
-        <span className="text-danger">WARNING! </span>
-        This section is intended for advanced users. Proceed with caution.
+      <div className="card">
+        <ConfigPanel {...props} />
       </div>
-      <ConfigPanel {...props} />
-      <hr />
-      <DiskPanel {...props} />
+      <div className="card">
+        <DiskPanel {...props} />
+      </div>
     </div>
   );
 }

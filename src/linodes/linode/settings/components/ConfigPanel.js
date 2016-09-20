@@ -6,7 +6,7 @@ import {
 } from '~/actions/api/linodes';
 import HelpButton from '~/components/HelpButton';
 import { Link } from 'react-router';
-import { getLinode, loadLinode } from '~/linodes/layouts/LinodeDetailPage';
+import { getLinode, loadLinode } from '~/linodes/linode/layouts/IndexPage';
 
 function configContent(linode, configs, dispatch) {
   if (!linode && linode._configs.totalPages === -1) {

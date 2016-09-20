@@ -578,7 +578,11 @@ export class BackupsPage extends Component {
   render() {
     const linode = this.getLinode();
     if (!linode) return null;
-    return linode.backups.enabled ? this.renderEnabled() : this.renderNotEnabled();
+    return (
+      <div className="card">
+        {linode.backups.enabled ? this.renderEnabled() : this.renderNotEnabled()}
+      </div>
+    );
   }
 }
 

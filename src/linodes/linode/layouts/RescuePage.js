@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { getLinode } from './LinodeDetailPage';
+import { getLinode } from './IndexPage';
 import {
   fetchLinode,
   fetchLinodeUntil,
@@ -82,12 +82,14 @@ export class RescuePage extends Component {
 
   renderRescueMode() {
     return (
-      <div className="col-xl-6">
-        <h2>
-          Rescue mode
-          <HelpButton to="http://example.org" />
-        </h2>
-        <p>TODO</p>
+      <div className="col-sm-6">
+        <div className="card">
+          <h2>
+            Rescue mode
+            <HelpButton to="http://example.org" />
+          </h2>
+          <p>TODO</p>
+        </div>
       </div>
     );
   }
@@ -141,23 +143,23 @@ export class RescuePage extends Component {
       );
     }
     return (
-      <div className="col-xl-6">
-        <h2>
-          Reset root password
-          <HelpButton to="http://example.org" />
-        </h2>
-        {body}
+      <div className="col-sm-6">
+        <div className="card">
+          <h2>
+            Reset root password
+            <HelpButton to="http://example.org" />
+          </h2>
+          {body}
+        </div>
       </div>
     );
   }
 
   render() {
     return (
-      <div>
-        <div className="row">
-          {this.renderRescueMode()}
-          {this.renderResetRootPassword()}
-        </div>
+      <div className="row">
+        {this.renderRescueMode()}
+        {this.renderResetRootPassword()}
       </div>
     );
   }

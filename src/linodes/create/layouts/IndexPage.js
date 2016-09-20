@@ -152,7 +152,7 @@ export class IndexPage extends Component {
     }
 
     return (
-      <div className="create-page">
+      <div className="container create-page">
         <h1>Add a Linode</h1>
         <div className="card page-card">
           <SourceSelection

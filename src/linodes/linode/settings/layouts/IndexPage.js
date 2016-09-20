@@ -2,7 +2,7 @@ import { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { getLinode, loadLinode, renderTabs } from '~/linodes/layouts/LinodeDetailPage';
+import { getLinode, loadLinode, renderTabs } from '~/linodes/linode/layouts/IndexPage';
 
 export class IndexPage extends Component {
   constructor() {
@@ -21,11 +21,16 @@ export class IndexPage extends Component {
     if (!linode) return null;
 
     const tabList = [
-      { name: 'Alerts', link: '' },
+      { name: 'Display', link: '/' },
+      { name: 'Alerts', link: '/alerts' },
       { name: 'Advanced', link: '/advanced' },
     ].map(t => ({ ...t, link: `/linodes/${linode.id}/settings${t.link}` }));
 
-    return this.renderTabs(tabList);
+    const pathname = location ? location.pathname : tabList[0].link;
+    const selected = tabList.reduce((last, current) =>
+      (pathname.indexOf(current.link) === 0 ? current : last));
+
+    return this.renderTabs(tabList, selected, true);
   }
 }
 

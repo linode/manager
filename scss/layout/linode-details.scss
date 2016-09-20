@@ -7,12 +7,6 @@
         margin-top: 1rem;
     }
 
-    .graphs {
-        .card {
-            padding: 1rem;
-        }
-    }
-
     nav {
         padding: 0 $side-margin;
 
@@ -77,10 +71,6 @@
         }
     }
     
-    .graphs {
-        margin-top: $main-padding-tb;
-    }
-
     .network-content h3 {
         margin-bottom: $main-padding-tb/2; 
     }
@@ -128,10 +118,6 @@
     }
     .restore-buttons {
       margin-right: 1rem;
-    }
-
-    .graphs {
-        margin-top: $main-padding-tb;
     }
 
     header {

@@ -11,7 +11,7 @@ import {
 import { fetchAllDistros } from '~/actions/api/distros';
 import HelpButton from '~/components/HelpButton';
 import PasswordInput from '~/components/PasswordInput';
-import { getLinode, loadLinode } from '~/linodes/layouts/LinodeDetailPage';
+import { getLinode, loadLinode } from '~/linodes/linode/layouts/IndexPage';
 import { showModal, hideModal } from '~/actions/modal';
 import Slider from 'rc-slider';
 import _ from 'lodash';
