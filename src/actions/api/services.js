@@ -5,6 +5,7 @@ export const UPDATE_SERVICES = '@@services/UPDATE_SERVICES';
 export const servicesConfig = {
   singular: 'service',
   plural: 'services',
+  endpoint: id => `/linode/services/${id}`,
   actions: { updateItems: UPDATE_SERVICES },
 };
 

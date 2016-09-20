@@ -1,20 +1,15 @@
 export const apiTestLinode = {
   group: 'Test Group',
   label: 'Test Linode',
-  ips: {
-    public: {
-      ipv6: '2600:3c03::f03c:91ff:fe96:43e7',
-      failover: [],
-      ipv4: [
-        '97.107.143.56',
-      ],
-    },
-    private: {
-      link_local: 'fe80::f03c:91ff:fe96:43e7',
-      ipv4: [
-        '321.456.789.1',
-      ],
-    },
+  ipv4: {
+    id: 211347,
+    address: '97.107.143.99',
+    rdns: 'li100-99.members.linode.com',
+    type: 'public',
+  },
+  ipv6: {
+    type: 'slaac',
+    range: '2600:3c03::f03c:91ff:fe0a:1dbe/64',
   },
   created: '2016-07-06T16:47:27',
   id: 1234,

@@ -9,7 +9,7 @@ import { freshState } from '@/data';
 describe('actions/api/services', () => {
   it('should fetch services', async () => {
     const fn = fetchServices();
-    await expectRequest(fn, '/services?page=1',
+    await expectRequest(fn, '/linode/services/?page=1',
       d => expect(d.args[0]).to.deep.equal({
         type: UPDATE_SERVICES,
         response: { foo: 'bar' },

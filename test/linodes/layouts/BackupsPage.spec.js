@@ -53,7 +53,7 @@ describe('linodes/layouts/BackupsPage', () => {
       />);
     await new Promise(a => setTimeout(a, 0));
     const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, '/linodes/1234');
+    await expectRequest(fn, '/linode/instances/1234');
   });
 
   it('does not fetch when mounted with a known linode', () => {
@@ -125,7 +125,7 @@ describe('linodes/layouts/BackupsPage', () => {
     takeSnapshot.simulate('click');
     expect(dispatch.calledOnce).to.equal(true);
     const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, `/linodes/${testLinode.id}/backups`,
+    await expectRequest(fn, `/linode/instances/${testLinode.id}/backups`,
       () => {}, null, { method: 'POST' });
   });
 
@@ -159,7 +159,7 @@ describe('linodes/layouts/BackupsPage', () => {
     dispatch.reset();
     takeSnapshot.simulate('click');
     const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, '/linodes/1234/backups',
+    await expectRequest(fn, '/linode/instances/1234/backups',
       () => {}, null, { method: 'POST' });
   });
 
@@ -234,7 +234,7 @@ describe('linodes/layouts/BackupsPage', () => {
     });
     await func(dispatch, () => state);
     expect(fetchStub.calledOnce).to.equal(true);
-    expect(fetchStub.calledWith('token', '/linodes/1234')).to.equal(true);
+    expect(fetchStub.calledWith('token', '/linode/instances/1234')).to.equal(true);
   });
 
   it('renders the restore UI', () => {

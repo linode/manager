@@ -31,6 +31,7 @@ describe('api-store', () => {
   const config = {
     singular: 'foobar',
     plural: 'foobars',
+    endpoint: id => `/foobars/${id}`,
     actions: {
       updateItems: 'UPDATE_FOOBARS',
       updateItem: 'UPDATE_FOOBAR',
@@ -40,6 +41,7 @@ describe('api-store', () => {
       foobazes: {
         singular: 'foobaz',
         plural: 'foobazes',
+        endpoint: (one, two) => `/foobars/${one}/foobazes/${two}`,
         actions: {
           updateItems: 'UPDATE_FOOBAZES',
           updateItem: 'UPDATE_FOOBAZ',
@@ -375,7 +377,7 @@ describe('api-store', () => {
       await p(dispatch, getState);
 
       expect(fetchStub.calledWith(
-        auth.token, '/foobars?page=1')).to.equal(true);
+        auth.token, '/foobars/?page=1')).to.equal(true);
       expect(dispatch.calledWith({
         type: config.actions.updateItems,
         response: mockFoobarsResponse,
@@ -400,7 +402,7 @@ describe('api-store', () => {
       await p(dispatch, getState);
 
       expect(fetchStub.calledWith(
-        auth.token, '/foobars/1/foobazes?page=1')).to.equal(true);
+        auth.token, '/foobars/1/foobazes/?page=1')).to.equal(true);
       expect(dispatch.calledWith({
         type: config.subresources.foobazes.actions.updateItems,
         response: mockFoobarsResponse,
@@ -420,7 +422,7 @@ describe('api-store', () => {
       await p(dispatch, getState);
 
       expect(fetchStub.calledWith(
-        auth.token, '/foobars?page=2')).to.equal(true);
+        auth.token, '/foobars/?page=2')).to.equal(true);
     });
 
     it('invalidates and refetches on inconsistent results', async () => {
@@ -449,9 +451,9 @@ describe('api-store', () => {
       expect(dispatch.calledWith(invalidateCache('foobars')))
         .to.equal(true);
       expect(fetchStub.calledWith(
-        auth.token, '/foobars?page=1')).to.equal(true);
+        auth.token, '/foobars/?page=1')).to.equal(true);
       expect(fetchStub.calledWith(
-        auth.token, '/foobars?page=2')).to.equal(true);
+        auth.token, '/foobars/?page=2')).to.equal(true);
     });
   });
 
@@ -666,7 +668,7 @@ describe('api-store', () => {
       await p(dispatch, getState);
 
       expect(fetchStub.calledWith(
-        auth.token, '/foobars', { method: 'POST', body: JSON.stringify({ name: 'foobar' }) }
+        auth.token, '/foobars/', { method: 'POST', body: JSON.stringify({ name: 'foobar' }) }
       )).to.equal(true);
       expect(dispatch.calledWith({
         type: config.actions.updateItem,

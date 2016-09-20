@@ -37,7 +37,7 @@ describe('actions/api/linodes', async () => {
 
   it('should fetch linodes', async () => {
     const fn = fetchLinodes();
-    await expectRequest(fn, '/linodes?page=1',
+    await expectRequest(fn, '/linode/instances/?page=1',
       d => expect(d.args[0]).to.deep.equal({
         type: UPDATE_LINODES,
         response: mockResponse,
@@ -46,7 +46,7 @@ describe('actions/api/linodes', async () => {
 
   it('should update linode', async () => {
     const fn = fetchLinode(1);
-    await expectRequest(fn, '/linodes/1',
+    await expectRequest(fn, '/linode/instances/1',
       d => expect(d.args[0]).to.deep.equal({
         type: UPDATE_LINODE,
         linode: mockResponse.linodes[0],
@@ -90,7 +90,7 @@ describe('actions/api/linodes', async () => {
 
   it('should call delete linode endpoint', async () => {
     const fn = deleteLinode(1);
-    await expectRequest(fn, '/linodes/1',
+    await expectRequest(fn, '/linode/instances/1',
       d => expect(d.args[0]).to.deep.equal({
         type: DELETE_LINODE,
         linodes: 1,
@@ -106,7 +106,7 @@ describe('actions/linodes/configs', async () => {
 
   it('should call delete linode config endpoint', async () => {
     const fn = deleteLinodeConfig(1234, 12345);
-    await expectRequest(fn, '/linodes/1234/configs/12345',
+    await expectRequest(fn, '/linode/instances/1234/configs/12345',
       d => expect(d.args[0]).to.deep.equal({
         type: DELETE_LINODE_CONFIG,
         linodes: 1234,
@@ -119,7 +119,7 @@ describe('actions/linodes/power', async () => {
   function power(testFn, name, path, state) {
     it(name, async () => {
       const fn = testFn(1234);
-      await expectRequest(fn, `/linodes/1234/${path}`,
+      await expectRequest(fn, `/linode/instances/1234/${path}`,
         (d, n) => n === 0 && expect(d.args[0]).to.deep.equal({
           type: UPDATE_LINODE,
           linode: { id: 1234, state },

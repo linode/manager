@@ -19,7 +19,7 @@ describe('actions/api/datacenters', async () => {
 
   it('should fetch datacenters', async () => {
     const fn = fetchDatacenters();
-    await expectRequest(fn, '/datacenters?page=1',
+    await expectRequest(fn, '/datacenters/?page=1',
       d => expect(d.args[0]).to.deep.equal({
         type: UPDATE_DATACENTERS,
         response: mockResponse,

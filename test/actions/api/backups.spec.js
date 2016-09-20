@@ -53,7 +53,7 @@ describe('actions/api/backups', async () => {
       },
     };
     const fn = fetchBackups(0, 1234);
-    await expectRequest(fn, '/linodes/1234/backups?page=1',
+    await expectRequest(fn, '/linode/instances/1234/backups/?page=1',
       d => expect(d.args[0]).to.deep.equal({
         type: UPDATE_BACKUPS,
         linodes: 1234,
@@ -63,7 +63,7 @@ describe('actions/api/backups', async () => {
 
   it('should fetch backup', async () => {
     const fn = fetchBackup(1234, 1234);
-    await expectRequest(fn, '/linodes/1234/backups/1234',
+    await expectRequest(fn, '/linode/instances/1234/backups/1234',
       d => expect(d.args[0]).to.deep.equal({
         type: UPDATE_BACKUP,
         linodes: 1234,
@@ -74,13 +74,13 @@ describe('actions/api/backups', async () => {
 
   it('should enable backups', async () => {
     const fn = enableBackup(1234);
-    await expectRequest(fn, '/linodes/1234/backups/enable',
+    await expectRequest(fn, '/linode/instances/1234/backups/enable',
       () => {}, null, { method: 'POST' });
   });
 
   it('should cancel backups', async () => {
     const fn = cancelBackup(1234);
-    await expectRequest(fn, '/linodes/1234/backups/cancel',
+    await expectRequest(fn, '/linode/instances/1234/backups/cancel',
       () => {}, null, { method: 'POST' });
   });
 
@@ -101,7 +101,7 @@ describe('actions/api/backups', async () => {
 
   it('should take a backup', async () => {
     const fn = takeBackup(1234);
-    await expectRequest(fn, '/linodes/1234/backups',
+    await expectRequest(fn, '/linode/instances/1234/backups',
       d => expect(d.args[0]).to.deep.equal({
         type: UPDATE_BACKUP,
         linodes: 1234,
@@ -117,7 +117,7 @@ describe('actions/api/backups', async () => {
 
     it('performs the HTTP request', async () => {
       const fn = restoreBackup(1234, 1235, 1234);
-      await expectRequest(fn, '/linodes/1234/backups/1234/restore',
+      await expectRequest(fn, '/linode/instances/1234/backups/1234/restore',
         () => expect(false).to.equal(true), null, { method: 'POST' });
     });
   });

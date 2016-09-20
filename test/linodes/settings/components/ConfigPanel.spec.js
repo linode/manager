@@ -148,7 +148,7 @@ describe('linodes/settings/components/ConfigPanel', () => {
     actionBtn.simulate('click');
     expect(dispatch.calledOnce).to.equal(true);
     const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, '/linodes/1238/configs/12345',
+    await expectRequest(fn, '/linode/instances/1238/configs/12345',
       d => expect(d.args[0].type).to.equal(DELETE_LINODE_CONFIG), null,
       { method: 'DELETE' });
   });

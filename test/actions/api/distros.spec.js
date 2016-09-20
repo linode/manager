@@ -19,7 +19,7 @@ describe('actions/api/distros', async () => {
 
   it('should fetch distros', async () => {
     const fn = fetchDistros();
-    await expectRequest(fn, '/distributions?page=1',
+    await expectRequest(fn, '/linode/distributions/?page=1',
       d => expect(d.args[0]).to.deep.equal({
         type: UPDATE_DISTROS,
         response: mockResponse,

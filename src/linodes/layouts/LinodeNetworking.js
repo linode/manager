@@ -43,7 +43,8 @@ export class LinodeNetworking extends Component {
   }
 
   renderIPv4Public() {
-    const ipv4 = this.getLinode().ips['public'].ipv4;
+    const ipv4 = this.getLinode().ipv4.address;
+    const rdns = this.getLinode().ipv4.rdns;
 
     return (
       <div className="col-sm-6 left">
@@ -63,16 +64,12 @@ export class LinodeNetworking extends Component {
           </div>
           <div className="col-sm-8 content-col right">
             <ul className="list-unstyled">
-              {this.ipList(ipv4.map(
-                 ip => (
-                   <span>
-                     <span>{ip} / 24 </span>
-                     <span className="text-nowrap">
-                       ( {`li-${ip.split('.')[3]}.members.linode.com`} )
-                     </span>
-                   </span>
-                 )
-              ))}
+              <span>
+                <span>{ipv4} / 24 </span>
+                <span className="text-nowrap">
+                  ( {rdns} )
+                </span>
+              </span>
             </ul>
           </div>
         </div>
@@ -81,7 +78,7 @@ export class LinodeNetworking extends Component {
             Gateway
           </div>
           <div className="col-sm-8 content-col right">
-            {ipv4[0].substring(0, ipv4[0].lastIndexOf('.'))}.1
+            {ipv4.substring(0, ipv4.lastIndexOf('.'))}.1
           </div>
         </div>
         {this.nameserversList(true, this.getLinode())}
@@ -90,7 +87,9 @@ export class LinodeNetworking extends Component {
   }
 
   renderIPv6Public() {
-    const linkLocal = this.getLinode().ips['private'].link_local;
+    /* FIXME link-local missing from API
+     * const linkLocal = this.getLinode().ips['private'].link_local; FIXME add link-local
+     */
     return (
       <div className="col-sm-6 right">
         <div className="row">
@@ -108,7 +107,7 @@ export class LinodeNetworking extends Component {
             Address
           </div>
           <div className="col-sm-8 content-col right">
-            {this.getLinode().ips['public'].ipv6} / 64
+            {this.getLinode().ipv6.range}
           </div>
         </div>
         <div className="form-group row">
@@ -116,7 +115,7 @@ export class LinodeNetworking extends Component {
             Gateway
           </div>
           <div className="col-sm-8 content-col right">
-            {linkLocal.split(':')[0]}::1
+            FIXME::1
           </div>
         </div>
         {this.nameserversList(false, this.getLinode())}
@@ -128,8 +127,11 @@ export class LinodeNetworking extends Component {
     /* TODO: Global Pool - IPv6
      * TODO: members.linode.com
      */
-    const linkLocal = this.getLinode().ips['private'].link_local;
-    const ipPrivate = this.getLinode().ips['private'].ipv4;
+    const linkLocal = 'FIXME';
+    /* FIXME link-local and private IP not found in API
+     * const linkLocal = this.getLinode().ips['private'].link_local;
+     * const ipPrivate = this.getLinode().ipv4.address;
+     */
 
     return (
       <div className="row">
@@ -171,24 +173,11 @@ export class LinodeNetworking extends Component {
           </div>
           <div className="row network-content">
             <div className="col-sm-6 left">
-              {ipPrivate[0] ? (
-                <div className="form-group row">
-                  <div className="col-sm-4 label-col left">
-                    Inet
-                  </div>
-                  <div className="col-sm-8 content-col right">
-                    {this.ipList(ipPrivate.map(
-                      ip => `${ip} / 17`
-                    ))}
-                  </div>
+              <div className="form-group row">
+                <div className="col-sm-12 content-col right">
+                  {"No private IP addresses."}
                 </div>
-              ) : (
-                <div className="form-group row">
-                  <div className="col-sm-12 content-col right">
-                    {"No private IP addresses."}
-                  </div>
-                </div>
-              )}
+              </div>
               <div className="form-group row">
                 <div className="col-sm-4 label-col left">
                   Link-local IP

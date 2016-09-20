@@ -148,8 +148,8 @@ function renderCard(props) {
         <div className="form-group row">
           <div className="col-sm-12 content-col ip-addresses">
             <span className="label-col">IP Addresses</span>
-            <div>{linode.ips['public'].ipv4[0]}</div>
-            <div>{linode.ips['public'].ipv6}</div>
+            <div>{linode.ipv4.address}</div>
+            <div>{linode.ipv6.range}</div>
           </div>
         </div>
         <div className="form-group row">
@@ -194,7 +194,7 @@ function renderRow(props) {
         >{LinodeStatesReadable[linode.state]}</span>
       </td>
       <td>
-        {linode.ips['public'].ipv4[0]}, {linode.ips['public'].ipv6}
+        {linode.ipv4.address}, {linode.ipv6.range}
       </td>
       <td>
         {renderDatacenterStyle(linode)}

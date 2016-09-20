@@ -5,6 +5,7 @@ export const UPDATE_DISTROS = '@@distributions/UPDATE_DISTROS';
 export const distroConfig = {
   singular: 'distribution',
   plural: 'distributions',
+  endpoint: id => `/linode/distributions/${id}`,
   actions: { updateItems: UPDATE_DISTROS },
 };
 

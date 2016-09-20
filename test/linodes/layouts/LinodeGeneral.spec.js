@@ -65,7 +65,7 @@ describe('linodes/layouts/LinodeGeneral', async () => {
   });
 
   it('renders public ipv4', () => {
-    const ipv4 = testLinode.ips['public'].ipv4[0];
+    const ipv4 = testLinode.ipv4.address;
     const page = mount(
       <LinodeGeneral
         linodes={linodes}
@@ -76,7 +76,7 @@ describe('linodes/layouts/LinodeGeneral', async () => {
   });
 
   it('renders public ipv6', () => {
-    const ipv6 = testLinode.ips['public'].ipv6;
+    const ipv6 = testLinode.ipv6.range;
     const page = mount(
       <LinodeGeneral
         linodes={linodes}
@@ -196,7 +196,7 @@ describe('linodes/layouts/LinodeGeneral', async () => {
   });
 
   it('renders shh path', () => {
-    const ipv4 = testLinode.ips['public'].ipv4[0];
+    const ipv4 = testLinode.ipv4.address;
     const sshPath = `ssh root@${ipv4}`;
     const page = shallow(
       <LinodeGeneral

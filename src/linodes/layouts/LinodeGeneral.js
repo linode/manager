@@ -149,25 +149,11 @@ export class LinodeGeneral extends Component {
     const { username } = this.props;
     const linode = this.getLinode();
     const plan = this.renderPlanStyle(linode.services);
-    const ipAddresses = linode.ips;
-    const arrayifyIps = (pubPriv, type) => {
-      const ips = ipAddresses[pubPriv][type];
-      if (Array.isArray(pubPriv)) {
-        return ips;
-      } else if (!!ips) {
-        return [ips];
-      }
-      return [];
-    };
-
     const lishLink = `ssh -t ${
         username
       }@lish-${
         linode.datacenter.id
       }.linode.com`;
-
-    const ipv4 = arrayifyIps('public', 'ipv4');
-    const ipv6 = arrayifyIps('public', 'ipv6');
 
     return (
       <div className="row">
@@ -179,8 +165,8 @@ export class LinodeGeneral extends Component {
             </div>
             <div className="col-sm-8 content-col right">
               <ul className="list-unstyled">
-                <li> {ipv4} </li>
-                <li> {ipv6} </li>
+                <li> {linode.ipv4.address} </li>
+                <li> {linode.ipv6.range} </li>
                 <li> <Link to={`/linodes/${linode.id}/networking`}>(...)</Link> </li>
               </ul>
             </div>
@@ -235,7 +221,7 @@ export class LinodeGeneral extends Component {
                   type="text"
                   id="ssh-input"
                   className="form-control"
-                  value={`ssh root@${ipv4}`}
+                  value={`ssh root@${linode.ipv4.address}`}
                   readOnly
                 />
                 <span className="input-group-btn">
