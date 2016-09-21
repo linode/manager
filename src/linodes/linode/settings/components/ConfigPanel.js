@@ -20,7 +20,7 @@ function configContent(linode, configs, dispatch) {
   }
 
   return (
-    <table className="table configs">
+    <table>
       <thead className="clear-thead">
         <tr>
           <th>Label</th>
@@ -83,27 +83,19 @@ export class ConfigPanel extends Component {
     const content = configContent(linode, configs, dispatch);
 
     return (
-      <div className="linode-configs sm-col-12">
-        <div className="form-group row">
-          <div className="col-sm-6 left">
-            <h3>Configs<HelpButton to="http://example.org" /></h3>
+      <div>
+        <header className="clearfix">
+          <h3 className="pull-xs-left">Configs<HelpButton to="http://example.org" /></h3>
+          <div className="pull-xs-right">
+            <a
+              href={`/linodes/${linode.id}/configs/create`}
+              className="btn btn-default pull-right"
+            >
+              Add a config
+            </a>
           </div>
-          <div className="col-sm-6 content-col right">
-            <div className="input-group">
-              <a
-                href={`/linodes/${linode.id}/configs/create`}
-                className="btn btn-default pull-right"
-              >
-                Add a config
-              </a>
-            </div>
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-sm-12">
-            {content}
-          </div>
-        </div>
+        </header>
+        {content}
       </div>
     );
   }

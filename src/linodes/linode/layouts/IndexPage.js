@@ -148,7 +148,10 @@ export class IndexPage extends Component {
                    <option key={config.id} value={config.id}>{config.label}</option>)}
                </select>
              </span>}
-          <span className={`pull-right linode-status ${linode.state}`}>
+             <span
+               className={`pull-right linode-status ${linode.state}`}
+               style={{'padding-right': '15px', 'line-height': '30px'}}
+             >
             {LinodeStatesReadable[linode.state]}
           </span>
         </div>

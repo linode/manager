@@ -48,16 +48,12 @@ export class NetworkingPage extends Component {
 
     return (
       <div className="col-sm-6 left">
-        <div className="row">
-          <div className="col-sm-12 left">
-            <h3>
-              IPv4
-              <HelpButton
-                to="https://www.linode.com/docs/networking/linux-static-ip-configuration"
-              />
-            </h3>
-          </div>
-        </div>
+        <h4>
+          IPv4
+          <HelpButton
+            to="https://www.linode.com/docs/networking/linux-static-ip-configuration"
+          />
+        </h4>
         <div className="form-group row">
           <div className="col-sm-4 label-col left">
             Address
@@ -92,16 +88,12 @@ export class NetworkingPage extends Component {
      */
     return (
       <div className="col-sm-6 right">
-        <div className="row">
-          <div className="col-sm-12 left">
-            <h3>
-              IPv6
-              <HelpButton
-                to="https://www.linode.com/docs/networking/native-ipv6-networking"
-              />
-            </h3>
-          </div>
-        </div>
+        <h4>
+          IPv6
+          <HelpButton
+            to="https://www.linode.com/docs/networking/native-ipv6-networking"
+          />
+        </h4>
         <div className="form-group row">
           <div className="col-sm-4 label-col left">
             Address
@@ -135,58 +127,44 @@ export class NetworkingPage extends Component {
 
     return (
       <div>
-        <div className="card">
+        <section className="card">
+          <header className="clearfix">
+            <h3 className="pull-xs-left">Public network</h3>
+            <button type="button" id="public-ip-button" className="btn btn-default pull-xs-right">
+              Add public IP address
+            </button>
+          </header>
           <div className="row">
-            <div className="col-sm-6 left">
-              <h2>Public network</h2>
-            </div>
-            <div className="col-sm-6 right">
-              <div className="input-group-btn">
-                <button type="button" id="public-ip-button" className="btn btn-default pull-right">
-                  Add public IP address
-                </button>
-              </div>
-            </div>
-          </div>
-          <div className="row network-content">
             {this.renderIPv4Public()}
             {this.renderIPv6Public()}
           </div>
-        </div>
+        </section>
 
-        <div className="card">
+        <section className="card">
+          <header className="clearfix">
+            <h3 className="pull-xs-left">Private network</h3>
+            <button type="button" id="private-ip-button" className="btn btn-default pull-xs-right">
+              Add private IP address
+            </button>
+          </header>
           <div className="row">
             <div className="col-sm-6 left">
-              <h2>
-                Private network
-              </h2>
-            </div>
-            <div className="col-sm-6 right">
-              <div className="input-group-btn">
-                <button type="button" id="private-ip-button" className="btn btn-default pull-right">
-                  Add private IP address
-                </button>
-              </div>
-            </div>
-          </div>
-          <div className="row network-content">
-            <div className="col-sm-6 left">
               <div className="form-group row">
-                <div className="col-sm-12 content-col right">
+                <div className="col-sm-12">
                   {"No private IP addresses."}
                 </div>
               </div>
               <div className="form-group row">
-                <div className="col-sm-4 label-col left">
+                <div className="col-sm-4 label-col">
                   Link-local IP
                 </div>
-                <div className="col-sm-8 content-col right">
+                <div className="col-sm-8 content-col">
                   {linkLocal}
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        </section>
       </div>
     );
   }

@@ -6,12 +6,12 @@ import { DiskPanel } from '~/linodes/linode/settings/components/DiskPanel';
 export function AdvancedPage(props) {
   return (
     <div>
-      <div className="card">
+      <section className="card">
         <ConfigPanel {...props} />
-      </div>
-      <div className="card">
+      </section>
+      <section className="card">
         <DiskPanel {...props} />
-      </div>
+      </section>
     </div>
   );
 }

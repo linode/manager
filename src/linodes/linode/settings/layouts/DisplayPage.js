@@ -2,8 +2,8 @@ import React from 'react';
 
 export default function DisplayPage() {
   return (
-    <div className="card">
+    <section className="card">
       TODO
-    </div>
+    </section>
   );
 }

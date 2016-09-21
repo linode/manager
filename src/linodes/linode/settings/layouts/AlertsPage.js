@@ -114,11 +114,13 @@ export class AlertsPage extends Component {
     ];
 
     return (
-      <div className="card linode-alerts">
-        <h2>
-          Alerts
-          <HelpButton to="https://google.com" />
-        </h2>
+      <section className="card linode-alerts">
+        <header>
+          <h3>
+            Alerts
+            <HelpButton to="https://google.com" />
+          </h3>
+        </header>
         <form onSubmit={this.onSubmit}>
           {alerts.map(this.renderAlertRow)}
           <button
@@ -127,7 +129,7 @@ export class AlertsPage extends Component {
             disabled={loading}
           >Save</button>
         </form>
-      </div>
+      </section>
     );
   }
 }

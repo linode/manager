@@ -4,8 +4,7 @@
     padding: 15px;
     position: relative;
     border-radius: 0;
-    margin-bottom: 0;
-    margin-top: $main-padding-tb/2;
+    margin: 0;
 
     .card-type {
         position: absolute;
@@ -13,16 +12,14 @@
         right: 15px;
     }
 
-    .card-body {
-        padding: 2rem;
-    }
-
     header {
-        $padding: $main-padding-tb * 1.5;
-        background-color: $light-gray;
-        padding: $padding $main-padding-lr;
-        border-bottom: $border;
-        line-height: 2.2rem;
+        margin-bottom: $main-padding-tb/2;
+
+        &.header-secondary {
+            background-color: $light-gray;
+            padding: $main-padding-tb $main-padding-lr;
+            border-bottom: $border;
+        }
 
         .title {
             text-align: center;
@@ -30,73 +27,9 @@
             line-height: $input-height;
             color: $black;
         }
-        
-        &.tabs {
-            padding: $padding $main-padding-lr ($padding / 2);
-            border-bottom: 0;
-        }
 
         h1 {
             display: inline-block;
-        }
-
-        .linode-status {
-            margin-right: 1rem;
-        }
-
-        .edit-button {
-            $height: 0.75rem * 2;
-            margin-left: 0.75rem;
-            font-size: $height / 2;
-            line-height: $height;
-            height: $height;
-            padding-top: 0;
-            padding-bottom: 0;
-        }
-
-        .edit-details {
-            font-size: 2.2rem;
-            display: inline-block;
-            width: 70%;
-            position: relative;
-
-            button {
-                margin: 0 0.5rem;
-            }
-
-            input {
-                background: transparent;
-                padding: 0;
-                border: none;
-                border-bottom: $border;
-                display: block;
-                width: 100%;
-
-                &:focus {
-                    outline: none;
-                    border-bottom-color: $dark-gray;
-                }
-
-                &.has-error {
-                    border-bottom-color: $red;
-                }
-            }
-
-            .alert {
-                font-size: $font-size;
-                line-height: $font-size * 1.5;
-
-                ul {
-                    @extend .list-unstyled;
-                }
-            }
-
-            .errors {
-                position: absolute;
-                z-index: 99999;
-                // Constant from bootstrap
-                width: calc(100% + 1.875rem);
-            }
         }
     }
 }

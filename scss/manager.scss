@@ -11,6 +11,7 @@ $red: #F24C2B;
 $yellow: #FFFCF0;
 $dark-yellow: darken($yellow, 20);
 $darkest-yellow: darken($yellow, 40);
+$dark-black: #333333;
 $black: #4B4B4B;
 $light-black: #666666;
 $lightest-black: #ACACAC;
@@ -19,6 +20,23 @@ $gray: #F3F3F3;
 $light-gray: #FBFBFB;
 $white: #FEFEFE;
 $transparent: rgba(0, 0, 0, 0.5);
+
+.text-light-blue { color: $light-blue; }
+.text-blue { color: $blue; }
+.text-dark-blue { color: $dark-blue; }
+.text-green { color: $green; }
+.text-red { color: $red; }
+.text-yellow { color: $yellow; }
+.text-dark-yellow { color: $dark-yellow; }
+.text-darkest-yellow { color: $darkest-yellow; }
+.text-dark-black { color: $dark-black; }
+.text-black { color: $black; }
+.text-light-black { color: $light-black; }
+.text-lightest-black { color: $lightest-black; }
+.text-dark-gray { color: $dark-gray; }
+.text-gray { color: $gray; }
+.text-light-gray { color: $light-gray; }
+.text-white { color: $white; }
 
 $border-gray: $dark-gray;
 $border: 1px solid $border-gray;
@@ -305,21 +323,6 @@ a {
 }
 
 .react-tabs {
-    /* define subtab behavior */
-    .react-tabs {
-        [role="tablist"] {
-            margin-top: $main-padding-tb/2;
-            padding: 0;
-            background: transparent;
-        }
-
-        [role="tab"]:hover,
-        [role="tab"][aria-selected="true"] {
-            border: 0;
-            border-bottom: 3px solid $blue;
-        }
-    }
-
     [role="tablist"] {
         @extend .container;
         background: white;
@@ -335,7 +338,7 @@ a {
         &:hover,
         &[aria-selected="true"] {
             background: #f3f3f3;
-            border: 1px solid #aaa;
+            border: 1px solid #bbb;
             border-bottom: 0;
             border-radius: 2px 2px 0 0;
             -moz-border-radius: 2px 2px 0 0;
@@ -345,6 +348,21 @@ a {
         a {
             color: $black;
             text-decoration: none !important;
+        }
+    }
+
+    /* define subtab behavior */
+    .react-tabs {
+        [role="tablist"] {
+            margin-top: $main-padding-tb/2;
+            padding: 0;
+            background: transparent;
+        }
+
+        [role="tab"]:hover,
+        [role="tab"][aria-selected="true"] {
+            border: 0;
+            border-bottom: 3px solid $blue;
         }
     }
 }
@@ -370,6 +388,11 @@ input, select, .btn {
     vertical-align: middle;
     float: none;
     position: relative;
+}
+
+section,
+section.card {
+    margin-top: $main-padding-tb/2;
 }
 
 .input-group {
@@ -672,28 +695,21 @@ table {
     }
 }
 
-.linodes {
-    margin-top: 1rem;
-    h2 {
-        margin-bottom: 0.5rem;
+.form-group {
+    margin-bottom: 0;
+    &:not(:last-child) {
+        margin-bottom: $main-padding-tb/2;
     }
 }
 
-.row:last-of-type > .content-col {
-    margin-bottom: 0;
-}
-
-.form-group {
-    margin-bottom: .75rem;
-}
-
 .label-col {
-    color: #333;
+    color: $light-black;
+    &label {
+        color: $dark-black;
+    }
 }
 
 .content-col {
-    color: #666;
-
     li a {
         text-decoration: none;
     }
@@ -731,7 +747,7 @@ table {
 }
 
 footer {
-    margin-bottom: 0.75rem;
+    margin: $main-padding-tb/2 0;
 
     span {
         padding: 0 10px;
@@ -782,6 +798,21 @@ footer {
     .rc-slider {
         margin-bottom: 0;
     }
+}
+
+.linodes {
+    h2 {
+        font-size: 1.5rem;
+        margin: $main-padding-tb/2 0 $main-padding-tb/4 0;
+    }
+}
+
+.list-unstyled {
+    margin-bottom: 0;
+}
+
+p {
+    margin-bottom: $main-padding-tb/2;
 }
 
 @-moz-keyframes pulse {

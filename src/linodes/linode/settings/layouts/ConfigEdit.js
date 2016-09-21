@@ -103,7 +103,7 @@ export class ConfigEdit extends Component {
       <FormGroup errors={state.errors} field={field} className="row">
         <label
           htmlFor={`config-${field}`}
-          className="col-sm-1 col-form-label"
+          className="col-sm-2 col-form-label"
         >{display}</label>
         <div className="col-sm-5">{control}</div>
       </FormGroup>);
@@ -147,7 +147,7 @@ export class ConfigEdit extends Component {
       </div>);
 
     return (
-      <div style={{ marginTop: '2rem' }}>
+      <div>
         {text('Label', 'label')}
         {input('Notes', 'comments',
           <textarea
@@ -158,7 +158,6 @@ export class ConfigEdit extends Component {
             disabled={state.loading}
             onChange={e => this.setState({ comments: e.target.value })}
           />)}
-        <hr />
         <div className="form-group row">
           <label
             htmlFor="config-kernel"
@@ -183,7 +182,6 @@ export class ConfigEdit extends Component {
             })}</select>
           </div>
         </div>
-        <hr />
         <fieldset className="form-group row">
           <legend className="col-sm-2 col-form-legend">
             Helpers
@@ -195,7 +193,6 @@ export class ConfigEdit extends Component {
             {checkbox('Disable updatedb', 'disable_update_db')}
           </div>
         </fieldset>
-        <hr />
         <fieldset className="form-group row">
           <legend className="col-form-legend col-sm-2">
             Virtualization mode
@@ -205,7 +202,6 @@ export class ConfigEdit extends Component {
             {radio('Full virtualization', 'virt_mode', 'fullvirt')}
           </div>
         </fieldset>
-        <hr />
         <fieldset className="form-group row">
           <legend className="col-form-legend col-sm-2">
             Run level
@@ -216,7 +212,6 @@ export class ConfigEdit extends Component {
             {radio('init=/bin/bash', 'run_level', 'binbash')}
           </div>
         </fieldset>
-        <hr />
         <div className="form-group row">
           <label className="col-sm-2 col-form-label">Memory limit</label>
           <div className="col-sm-3 align-slider">
@@ -232,7 +227,6 @@ export class ConfigEdit extends Component {
           </div>
           <label className="col-sm-2 col-form-label">{state.ram_limit} MiB</label>
         </div>
-        <hr />
         <p>TODO: block device assignment</p>
         <ErrorSummary errors={state.errors} />
         <button
@@ -251,13 +245,13 @@ export class ConfigEdit extends Component {
 
   render() {
     return (
-      <div>
+      <section className="card">
         <h3>
           Edit config
           <HelpButton to="https://example.org" />
         </h3>
         {this.renderEditUI()}
-      </div>
+      </section>
     );
   }
 }

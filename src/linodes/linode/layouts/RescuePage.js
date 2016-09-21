@@ -83,13 +83,15 @@ export class RescuePage extends Component {
   renderRescueMode() {
     return (
       <div className="col-sm-6">
-        <div className="card">
-          <h2>
-            Rescue mode
-            <HelpButton to="http://example.org" />
-          </h2>
+        <section className="card">
+          <header>
+            <h3>
+              Rescue mode
+              <HelpButton to="http://example.org" />
+            </h3>
+          </header>
           <p>TODO</p>
-        </div>
+        </section>
       </div>
     );
   }
@@ -144,13 +146,15 @@ export class RescuePage extends Component {
     }
     return (
       <div className="col-sm-6">
-        <div className="card">
-          <h2>
-            Reset root password
-            <HelpButton to="http://example.org" />
-          </h2>
+        <section className="card">
+          <header>
+            <h3>
+              Reset root password
+              <HelpButton to="http://example.org" />
+            </h3>
+          </header>
           {body}
-        </div>
+        </section>
       </div>
     );
   }

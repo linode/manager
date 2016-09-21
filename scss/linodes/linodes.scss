@@ -1,22 +1,6 @@
 @import 'settings/settings.scss';
 @import 'create/create.scss';
 
-.linodes-page {
-    h2 {
-        font-size: 1.2rem;
-        margin: 1rem 0;
-        padding: 0;
-        clear: both;
-        margin-top: -0.25rem;
-    }
-
-    &.list {
-        h2 {
-            margin-top: 1rem;
-        }
-    }
-}
-
 .linode-status {
     color: $blue;
     animation: pulse 1.5s infinite;
@@ -47,54 +31,6 @@
 .linode-power:focus,
 .linode-power:active {
     color: $light-black;
-}
-
-.linode.card {
-    padding: 0;
-
-    .linode-header {
-        border-bottom: $border;
-        padding: 10px 15px;
-        background: $light-gray;
-
-        * {
-             line-height: 22px;
-        }
-
-        .linode-power {
-            position: relative;
-            top: -3px;
-        }
-    }
-
-    .linode-details {
-        padding: 15px;
-    }
-
-    .linode-label {
-        display: inline-block;
-        margin: 0 15px;
-        font-size: 1rem;
-    }
-}
-
-.linode-details ul {
-    margin-bottom: 0;
-
-    li:not(:first-of-type) {
-        padding-top: 10px;
-    }
-
-    li > span:last-of-type {
-        padding-left: 15px;
-    }
-}
-
-.linode.row {
-    .linode-header,
-    .linode-details {
-        display: inline-block;
-    }
 }
 
 .restore {

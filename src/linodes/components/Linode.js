@@ -136,14 +136,14 @@ function renderCard(props) {
 
   return (
     <div key={linode.id} className={`linode card ${linode.state} ${selectedClass}`}>
-      <div className="linode-header">
+      <header className="header-secondary">
         {checkbox}
-        <Link to={`/linodes/${linode.id}`} className="linode-label">{linode.label}</Link>
+        <Link to={`/linodes/${linode.id}`}>{linode.label}</Link>
         <span
           className={`linode-status ${linode.state}`}
         >{LinodeStatesReadable[linode.state]}</span>
         {renderPowerButton(props)}
-      </div>
+      </header>
       <div className="linode-details clearfix">
         <div className="form-group row">
           <div className="col-sm-12 content-col ip-addresses">

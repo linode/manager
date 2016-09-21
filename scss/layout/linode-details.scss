@@ -1,86 +1,14 @@
 .details-page {
-    $side-margin: 60px;
-
     .chart-wrapper {
         height: 300px;
         width: calc(100% + 2rem);
         margin-top: 1rem;
     }
 
-    nav {
-        padding: 0 $side-margin;
-
-        border-bottom: $border;
-        height: 30px;
-        line-height: 30px;
-
-        ul {
-           padding: 0;
-        }
-
-        li {
-            display: inline-block;
-            color: $dark-gray;
-            padding-right: 50px;
-
-            &.linode-lish {
-                float: right;
-                padding: 0;
-
-                a {
-                    color: $blue;
-                    line-height: normal;
-                }
-            }
-        }
-
-        li:hover,
-        li:focus,
-        li:active,
-        li.active {
-            color: $black;
-            cursor: pointer;
-            cursor: hand;
-        }
-    }
-
     .graph {
         width: 100%;
         height: 200px;
         border: $border;
-    }
-
-    .linode-details,
-    .linode-performance {
-        padding: 15px $side-margin;
-    }
-
-    .backups-status a {
-        color: $blue;
-        text-decoration: none;
-        &:hover {
-            color: $dark-blue;
-            text-decoration: underline;
-        }
-    }
-
-    .label-col {
-        margin: 0;
-        .form-label {
-            margin: 0.25rem 0 0 0;
-        }
-    }
-    
-    .network-content h3 {
-        margin-bottom: $main-padding-tb/2; 
-    }
-
-    .network-content ul {
-        margin: 0px;
-    }
-
-    hr {
-        margin: $main-padding-tb 0;
     }
 
     .backup-schedule {
@@ -114,21 +42,6 @@
             display: inline;
             width: auto;
             margin-left: 1rem;
-        }
-    }
-    .restore-buttons {
-      margin-right: 1rem;
-    }
-
-    header {
-        .configs {
-            margin-right: 0.5rem;
-        }
-        
-        select {
-            height: 1.95rem !important;
-            margin-top: 0.25rem;
-            padding-top: 0.25rem;
         }
     }
 }
