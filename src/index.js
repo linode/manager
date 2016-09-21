@@ -7,12 +7,13 @@ import { Router, Route, IndexRedirect, browserHistory } from 'react-router';
 import DevTools from './components/DevTools';
 import { syncHistoryWithStore } from 'react-router-redux';
 
-import checkLogin from './session';
+import checkLogin, { initializeAuthentication } from './session';
 
 // eslint-disable-next-line no-unused-vars
 import styles from '../scss/manager.scss';
 
 const history = syncHistoryWithStore(browserHistory, store);
+initializeAuthentication(store.dispatch);
 
 import Layout from './layouts/Layout';
 import OAuthCallbackPage from './layouts/OAuth';
