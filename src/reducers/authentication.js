@@ -1,6 +1,14 @@
 import { SET_TOKEN } from '../actions/authentication';
 
-export default function authentication(state = null, action) {
+const defaultState = {
+  token: null,
+  username: null,
+  email: null,
+  emailHash: null,
+  scopes: null,
+};
+
+export default function authentication(state = defaultState, action) {
   switch (action.type) {
     case SET_TOKEN:
       return {

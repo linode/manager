@@ -42,7 +42,8 @@ describe('layouts/OAuth', () => {
     const fetchStub = sandbox.stub(fetch, 'rawFetch').returns({
       json: () => exchangeResponse,
     });
-    const dispatch = sandbox.spy();
+    const dispatch = sandbox.stub();
+    dispatch.onFirstCall().returns({ scopes: '*', token: 'access_token' });
     const component = (
       <OAuthCallbackPage
         dispatch={dispatch}
@@ -64,7 +65,8 @@ describe('layouts/OAuth', () => {
     sandbox.stub(fetch, 'rawFetch').returns({
       json: () => exchangeResponse,
     });
-    const dispatch = sandbox.spy();
+    const dispatch = sandbox.stub();
+    dispatch.onFirstCall().returns({ scopes: '*', token: 'access_token' });
     const component = (
       <OAuthCallbackPage
         dispatch={dispatch}
@@ -79,7 +81,8 @@ describe('layouts/OAuth', () => {
     await componentDidMount.call(component);
     expect(dispatch.calledTwice).to.equal(true);
     expect(dispatch.calledWith(
-      setToken('access_token', '*', 'username', 'email'))).to.equal(true);
+      setToken('access_token', '*', 'username', 'email',
+        '0c83f57c786a0b4a39efab23731c7ebc'))).to.equal(true);
     expect(dispatch.calledWith(push('/'))).to.equal(true);
   });
 
@@ -87,7 +90,8 @@ describe('layouts/OAuth', () => {
     sandbox.stub(fetch, 'rawFetch').returns({
       json: () => exchangeResponse,
     });
-    const dispatch = sandbox.spy();
+    const dispatch = sandbox.stub();
+    dispatch.onFirstCall().returns({ scopes: '*', token: 'access_token' });
     const component = (
       <OAuthCallbackPage
         dispatch={dispatch}
