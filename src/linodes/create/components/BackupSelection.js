@@ -29,7 +29,7 @@ export class BackupSelection extends Component {
           <h3>
             {l.label}
           </h3>
-          <div className="backup-group" style={{ clear: 'both' }}>
+          <div className="backup-group clearfix">
             {_.map(l._backups.backups, backup =>
               <Backup
                 backup={backup}
