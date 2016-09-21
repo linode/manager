@@ -403,9 +403,9 @@ export class DiskPanel extends Component {
 
     return (
       <div>
-        <div className="clearfix">
-          <h3 className="pull-xs-left">Disks<HelpButton to="http://example.org" /></h3>
-        </div>
+        <header>
+          <h2>Disks<HelpButton to="http://example.org" /></h2>
+        </header>
         <div className="disk-layout">
           {disks.map(d =>
             <div

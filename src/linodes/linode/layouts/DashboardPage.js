@@ -107,7 +107,9 @@ export class DashboardPage extends Component {
     const graph = this.graphSelection();
     return (
       <section className="card graphs">
-        <h2>Performance</h2>
+        <header>
+          <h2>Performance</h2>
+        </header>
         <div className="row">
           <div className="col-md-2">
             <select
@@ -157,7 +159,9 @@ export class DashboardPage extends Component {
       <section className="card">
         <div className="row">
           <div className="col-sm-5 left">
-            <h2>Summary</h2>
+            <header>
+              <h2>Summary</h2>
+            </header>
             <div className="form-group row linode-ips">
               <div className="col-sm-4 label-col left">
                 IP Addresses
@@ -207,7 +211,9 @@ export class DashboardPage extends Component {
             </div>
           </div>
           <div className="col-sm-7 right">
-            <h2>Access</h2>
+            <header>
+              <h2>Access</h2>
+            </header>
             <div className="form-group row linode-ssh">
               <div className="col-sm-3 label-col left">
                 <label className="form-label" htmlFor="ssh-input">

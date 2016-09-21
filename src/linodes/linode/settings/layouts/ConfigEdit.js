@@ -118,7 +118,7 @@ export class ConfigEdit extends Component {
       />);
     const radio = (display, field, value) => (
       <div className="form-check">
-        <label className="form-check-label">
+        <label>
           <input
             className="form-check-input"
             type="radio"
@@ -133,7 +133,7 @@ export class ConfigEdit extends Component {
       </div>);
     const checkbox = (display, field) => (
       <div className="form-check">
-        <label className="form-check-label">
+        <label>
           <input
             className="form-check-input"
             type="checkbox"
@@ -246,10 +246,9 @@ export class ConfigEdit extends Component {
   render() {
     return (
       <section className="card">
-        <h3>
-          Edit config
-          <HelpButton to="https://example.org" />
-        </h3>
+        <header>
+          <h2>Edit config<HelpButton to="https://example.org" /></h2>
+        </header>
         {this.renderEditUI()}
       </section>
     );

@@ -116,10 +116,10 @@ export class AlertsPage extends Component {
     return (
       <section className="card linode-alerts">
         <header>
-          <h3>
+          <h2>
             Alerts
             <HelpButton to="https://google.com" />
-          </h3>
+          </h2>
         </header>
         <form onSubmit={this.onSubmit}>
           {alerts.map(this.renderAlertRow)}

@@ -85,10 +85,10 @@ export class RescuePage extends Component {
       <div className="col-sm-6">
         <section className="card">
           <header>
-            <h3>
+            <h2>
               Rescue mode
               <HelpButton to="http://example.org" />
-            </h3>
+            </h2>
           </header>
           <p>TODO</p>
         </section>
@@ -148,10 +148,10 @@ export class RescuePage extends Component {
       <div className="col-sm-6">
         <section className="card">
           <header>
-            <h3>
+            <h2>
               Reset root password
               <HelpButton to="http://example.org" />
-            </h3>
+            </h2>
           </header>
           {body}
         </section>

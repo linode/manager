@@ -48,12 +48,12 @@ export class NetworkingPage extends Component {
 
     return (
       <div className="col-sm-6 left">
-        <h4>
+        <h3>
           IPv4
           <HelpButton
             to="https://www.linode.com/docs/networking/linux-static-ip-configuration"
           />
-        </h4>
+        </h3>
         <div className="form-group row">
           <div className="col-sm-4 label-col left">
             Address
@@ -88,12 +88,12 @@ export class NetworkingPage extends Component {
      */
     return (
       <div className="col-sm-6 right">
-        <h4>
+        <h3>
           IPv6
           <HelpButton
             to="https://www.linode.com/docs/networking/native-ipv6-networking"
           />
-        </h4>
+        </h3>
         <div className="form-group row">
           <div className="col-sm-4 label-col left">
             Address
@@ -129,7 +129,7 @@ export class NetworkingPage extends Component {
       <div>
         <section className="card">
           <header className="clearfix">
-            <h3 className="pull-xs-left">Public network</h3>
+            <h2 className="pull-xs-left">Public network</h2>
             <button type="button" id="public-ip-button" className="btn btn-default pull-xs-right">
               Add public IP address
             </button>
@@ -142,7 +142,7 @@ export class NetworkingPage extends Component {
 
         <section className="card">
           <header className="clearfix">
-            <h3 className="pull-xs-left">Private network</h3>
+            <h2 className="pull-xs-left">Private network</h2>
             <button type="button" id="private-ip-button" className="btn btn-default pull-xs-right">
               Add private IP address
             </button>

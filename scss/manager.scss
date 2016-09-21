@@ -331,7 +331,7 @@ a {
     }
 
     [role="tab"] {
-        border: 0;
+        border-color: 1px solid transparent;
 
         &:not(:last-of-type) {
             margin-right: 15px;
@@ -362,6 +362,7 @@ a {
         }
 
         [role="tab"] {
+            border: 0; // reset from above
             border-bottom: 3px solid transparent;
 
             &:hover,
@@ -379,12 +380,11 @@ a {
     border-radius: 2px;
 }
 
-input, select, .btn {
-    height: $input-height;
-    line-height: $input-height;
-    font-size: $font-size;
-    padding: 0 $input-padding;
-
+input:not([type="checkbox"]):not([type="radio"]), select, .btn {
+    height: $input-height !important;
+    line-height: $input-height !important;
+    font-size: $font-size !important;
+    padding-left: $input-padding;
     &.btn {
         padding: $input-padding;
     }
@@ -399,7 +399,7 @@ input, select, .btn {
 
 section,
 section.card {
-    margin-top: $main-padding-tb/2;
+    margin-top: $main-padding-tb;
 }
 
 .input-group {
