@@ -4,6 +4,7 @@ const setItem = window.localStorage.setItem.bind(window.localStorage);
 export function getStorage(key) {
   const item = getItem(key);
   if (item === null) return item;
+  if (item === 'undefined') return null;
   return JSON.parse(item);
 }
 

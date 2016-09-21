@@ -5,6 +5,8 @@ import { clientId, clientSecret } from '../secrets';
 import { push } from 'react-router-redux';
 import { LOGIN_ROOT } from '../constants';
 import { rawFetch } from '../fetch';
+import { setStorage } from '~/storage';
+import md5 from 'md5';
 
 export class OAuthCallbackPage extends Component {
   async componentDidMount() {
@@ -24,7 +26,14 @@ export class OAuthCallbackPage extends Component {
         mode: 'cors',
       });
       const json = await resp.json();
-      dispatch(setToken(json.access_token, json.scopes, username, email));
+      const hash = md5(email.trim().toLowerCase());
+      const result = dispatch(setToken(
+        json.access_token, json.scopes, username, email, hash));
+      setStorage('authentication/oauth-token', result.token);
+      setStorage('authentication/scopes', result.scopes);
+      setStorage('authentication/username', result.username);
+      setStorage('authentication/email', result.email);
+      setStorage('authentication/email-hash', result.emailHash);
       dispatch(push(returnTo || '/'));
     } else {
       dispatch(push('/'));
