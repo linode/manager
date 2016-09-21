@@ -3,10 +3,10 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import _ from 'lodash';
 import moment from 'moment';
 
-import DistroVendor from './DistroVendor';
-import BackupSelection from '~/linodes/create/components/BackupSelection';
+import Distributions from './Distributions';
+import Backups from './Backups';
 
-export default class SourceSelection extends Component {
+export default class Source extends Component {
   constructor() {
     super();
     this.render = this.render.bind(this);
@@ -29,7 +29,7 @@ export default class SourceSelection extends Component {
     return (
       <div className="distros">
         {vendors.map(v =>
-          <DistroVendor
+          <Distributions
             selected={distribution}
             vendor={v}
             key={v.name}
@@ -49,7 +49,7 @@ export default class SourceSelection extends Component {
     const linodesWithBackups = Object.values(_.filter(linodes.linodes, hasBackups));
 
     if (!linodesWithBackups.length) {
-      return <span>No backups available.</span>;
+      return <section>No backups available.</section>;
     }
 
     const currentIndex = backupsPage * perPageLimit;
@@ -65,7 +65,7 @@ export default class SourceSelection extends Component {
 
     return (
       <div>
-        <div>
+        <section>
           <div className="filter input-container">
             <input
               type="text"
@@ -76,33 +76,36 @@ export default class SourceSelection extends Component {
               className="form-control"
             />
           </div>
-        </div>
-        <table>
-          <thead>
-            <tr>
-              <td>Label</td>
-              <td>Last backup</td>
-            </tr>
-          </thead>
-          <tbody>
-            {_.map(linodesOnPage, l =>
-              <tr key={l.created}>
-                <td>
-                  <a
-                    href="#"
-                    onClick={e => {
-                      e.preventDefault();
-                      this.setState({ selectedLinode: l.id });
-                    }}
-                  >{l.label}</a>
-                </td>
-                <td>{l.backups.last_backup ?
-                  moment(l.backups.last_backup).format('dddd, MMMM D YYYY LT')
-                  : 'Unknown'}</td>
+        </section>
+
+        <section>
+          <table>
+            <thead>
+              <tr>
+                <td>Label</td>
+                <td>Last backup</td>
               </tr>
-             )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {_.map(linodesOnPage, l =>
+                <tr key={l.created}>
+                  <td>
+                    <a
+                      href="#"
+                      onClick={e => {
+                        e.preventDefault();
+                        this.setState({ selectedLinode: l.id });
+                      }}
+                    >{l.label}</a>
+                  </td>
+                  <td>{l.backups.last_backup ?
+                       moment(l.backups.last_backup).format('dddd, MMMM D YYYY LT')
+                     : 'Unknown'}</td>
+                </tr>
+               )}
+            </tbody>
+          </table>
+        </section>
         {linodesWithBackups.length > perPageLimit ? (
           <nav className="text-xs-center">
             <ul className="pagination">
@@ -146,7 +149,7 @@ export default class SourceSelection extends Component {
       <div className="backups">
         {selectedLinode === -1 ?
           this.renderLinodeSelection() :
-          <BackupSelection
+          <Backups
             goBack={e => {
               e.preventDefault();
               this.setState({ selectedLinode: -1 });
@@ -163,28 +166,30 @@ export default class SourceSelection extends Component {
   renderSourceTabs() {
     const { selectedTab, onTabChange } = this.props;
     return (
-      <Tabs
-        onSelect={onTabChange}
-        selectedIndex={selectedTab}
-      >
-        <TabList>
-          <Tab>Distributions</Tab>
-          <Tab>Backups</Tab>
-        </TabList>
-        <TabPanel>
-          {this.renderDistros()}
-        </TabPanel>
-        <TabPanel>
-          {this.renderBackups()}
-        </TabPanel>
-      </Tabs>
+      <div className="react-tabs">
+        <Tabs
+          onSelect={onTabChange}
+          selectedIndex={selectedTab}
+        >
+          <TabList>
+            <Tab>Distributions</Tab>
+            <Tab>Backups</Tab>
+          </TabList>
+          <TabPanel>
+            {this.renderDistros()}
+          </TabPanel>
+          <TabPanel>
+            {this.renderBackups()}
+          </TabPanel>
+        </Tabs>
+      </div>
     );
   }
 
   renderHeader() {
     return (
       <header className="tabs">
-        <h2>Select a source</h2>
+        <h2>Source</h2>
       </header>
     );
   }
@@ -199,7 +204,7 @@ export default class SourceSelection extends Component {
   }
 }
 
-SourceSelection.propTypes = {
+Source.propTypes = {
   distros: PropTypes.object.isRequired,
   linodes: PropTypes.object.isRequired,
   selectedTab: PropTypes.number.isRequired,
@@ -210,7 +215,7 @@ SourceSelection.propTypes = {
   perPageLimit: PropTypes.number,
 };
 
-SourceSelection.defaultProps = {
+Source.defaultProps = {
   onTabChange: () => {},
   onSourceSelected: () => {},
   perPageLimit: 20,

@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { flags } from '~/assets';
 import { regionMap } from '~/constants';
 
-export default class DatacenterSelection extends Component {
+export default class Datacenters extends Component {
   constructor() {
     super();
     this.renderRegion = this.renderRegion.bind(this);
@@ -14,7 +14,7 @@ export default class DatacenterSelection extends Component {
   renderHeader() {
     return (
       <header>
-        <h2>Select a datacenter</h2>
+        <h2>Datacenter</h2>
       </header>
     );
   }
@@ -90,7 +90,7 @@ export default class DatacenterSelection extends Component {
   }
 }
 
-DatacenterSelection.propTypes = {
+Datacenters.propTypes = {
   selected: PropTypes.string,
   datacenters: PropTypes.object.isRequired,
   onDatacenterSelected: PropTypes.func.isRequired,

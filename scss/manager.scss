@@ -70,7 +70,7 @@ html, #root > [data-reactroot] {
 
 body {
     height: calc(100% - #{$nav-height});
-    background: $gray;
+    background: $light-gray;
     min-width: 1007px; /* can fix later */
     color: $black;
     margin-top: $nav-height;
@@ -331,13 +331,15 @@ a {
     }
 
     [role="tab"] {
+        border: 0;
+
         &:not(:last-of-type) {
             margin-right: 15px;
         }
 
         &:hover,
         &[aria-selected="true"] {
-            background: #f3f3f3;
+            background: $light-gray;
             border: 1px solid #bbb;
             border-bottom: 0;
             border-radius: 2px 2px 0 0;
@@ -359,10 +361,15 @@ a {
             background: transparent;
         }
 
-        [role="tab"]:hover,
-        [role="tab"][aria-selected="true"] {
-            border: 0;
-            border-bottom: 3px solid $blue;
+        [role="tab"] {
+            border-bottom: 3px solid transparent;
+
+            &:hover,
+            &[aria-selected="true"] {
+                border: 0;
+                border-bottom: 3px solid $blue;
+                background: transparent;
+            }
         }
     }
 }
@@ -420,7 +427,7 @@ section.card {
 
 hr {
     width: 300px;
-    margin: 2rem 0;
+    margin: $main-padding-tb/2 0;
 }
 
 .text-muted {
@@ -807,12 +814,55 @@ footer {
     }
 }
 
+.create-page .alert {
+    display: inline-block;
+    margin: $main-padding-tb/2 0 0 0;
+}
+
 .list-unstyled {
     margin-bottom: 0;
 }
 
 p {
     margin-bottom: $main-padding-tb/2;
+}
+
+.password-input {
+    .strength {
+        width: 300px;
+        height: 10px;
+
+        span {
+            display: inline-block;
+            width: 75px;
+            height: 100%;
+            border: 1px solid $gray;
+        }
+
+        &.strength-1 {
+            span:nth-child(1) {
+                background: $dark-gray;
+            }
+        }
+
+        &.strength-2 {
+            span:nth-child(1), span:nth-child(2) {
+                background: $red;
+            }
+        }
+
+        &.strength-3 {
+            span:nth-child(1), span:nth-child(2), span:nth-child(3) {
+                background: $dark-yellow;
+            }
+        }
+
+        &.strength-4 {
+            span {
+                background: $green;
+            }
+        }
+    }
 }
 
 @-moz-keyframes pulse {

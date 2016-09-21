@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { renderPlanStyle } from '~/linodes/components/Linode';
 
-export default class ServiceSelection extends Component {
+export default class Plan extends Component {
   constructor() {
     super();
     this.renderPlan = this.renderPlan.bind(this);
@@ -11,7 +11,7 @@ export default class ServiceSelection extends Component {
   renderHeader() {
     return (
       <header>
-        <h2>Select a plan</h2>
+        <h2>Plan</h2>
       </header>
     );
   }
@@ -29,7 +29,7 @@ export default class ServiceSelection extends Component {
         onClick={() => onServiceSelected(plan.id)}
       >
         <header>
-          <div className="title">{this.renderPlanStyle([plan])}</div>
+          <div className="title">{this.renderPlanStyle(plan)}</div>
         </header>
         <div className="plan-contents">
           <div className="pricing">${hourlyPrice / 100}/hr (${monthlyPrice / 100}/mo)</div>
@@ -57,7 +57,7 @@ export default class ServiceSelection extends Component {
   }
 }
 
-ServiceSelection.propTypes = {
+Plan.propTypes = {
   selected: PropTypes.string,
   onServiceSelected: PropTypes.func,
   services: PropTypes.object,

@@ -137,21 +137,21 @@ export class IndexPage extends Component {
             <span className="pull-right">
               <Dropdown elements={dropdownElements} leftOriented={false} />
             </span>}
-           {!renderConfigSelect ? null :
-             <span className="pull-right configs">
-               <select
-                 className="form-control"
-                 value={this.state.config}
-                 onChange={e => this.setState({ config: e.target.value })}
-               >
-                 {Object.values(linode._configs.configs).map(config =>
-                   <option key={config.id} value={config.id}>{config.label}</option>)}
-               </select>
-             </span>}
-             <span
-               className={`pull-right linode-status ${linode.state}`}
-               style={{'padding-right': '15px', 'line-height': '30px'}}
-             >
+          {!renderConfigSelect ? null :
+            <span className="pull-right configs">
+              <select
+                className="form-control"
+                value={this.state.config}
+                onChange={e => this.setState({ config: e.target.value })}
+              >
+                {Object.values(linode._configs.configs).map(config =>
+                  <option key={config.id} value={config.id}>{config.label}</option>)}
+              </select>
+            </span>}
+          <span
+            className={`pull-right linode-status ${linode.state}`}
+            style={{ paddingRight: '15px', lineHeight: '30px' }}
+          >
             {LinodeStatesReadable[linode.state]}
           </span>
         </div>

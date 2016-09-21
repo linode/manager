@@ -382,6 +382,25 @@ export class DiskPanel extends Component {
     const free = total - used;
     const poweredOff = linode.state === 'offline';
 
+    const addModal = <AddModalRedux free={free} linode={linode} />;
+
+    const editModal = d => (
+      <EditModal
+        free={free}
+        linode={linode}
+        disk={d}
+        dispatch={dispatch}
+      />
+    );
+
+    const deleteModal = d => (
+      <DeleteModal
+        linode={linode}
+        disk={d}
+        dispatch={dispatch}
+      />
+    );
+
     return (
       <div>
         <div className="clearfix">
@@ -403,46 +422,34 @@ export class DiskPanel extends Component {
                 <div className="text-muted">Being deleted</div>
                : null}
                {poweredOff && d.state !== 'deleting' ?
-                <div>
-                  <button
-                    className="btn btn-edit btn-default"
-                    style={{ marginRight: '0.5rem' }}
-                    onClick={() => dispatch(showModal(`Edit ${d.label}`,
-                                                      <EditModal
-                            free={free}
-                            linode={linode}
-                            disk={d}
-                            dispatch={dispatch}
-                                     />))}
-                  >Edit</button>
-                                                      <button
-                                                        className="btn btn-delete btn-default"
-                                                        onClick={() => dispatch(showModal(`Delete ${d.label}`,
-                                                                                          <DeleteModal
-                            linode={linode}
-                            disk={d}
-                            dispatch={dispatch}
-                                     />))}
-                                                      >Delete</button>
-                </div>
+                 <div>
+                   <button
+                     className="btn btn-edit btn-default"
+                     style={{ marginRight: '0.5rem' }}
+                     onClick={() => dispatch(showModal(`Edit ${d.label}`, editModal(d)))}
+                   >Edit</button>
+                   <button
+                     className="btn btn-delete btn-default"
+                     onClick={() => dispatch(showModal(`Delete ${d.label}`, deleteModal(d)))}
+                   >Delete</button>
+                 </div>
                 : null}
             </div>)}
             {free > 0 ?
-             <div
-               className="disk free"
-               key={'free'}
-               style={{ flexGrow: free }}
-             >
-               <h4>Unallocated</h4>
-               <p>{free} MiB</p>
-               {poweredOff ?
-                <button
-                  onClick={() => dispatch(showModal('Add a disk',
-                                                    <AddModalRedux free={free} linode={linode} />))}
-                  className="btn btn-add btn-default"
-                >Add a disk</button>
-                : null}
-             </div> : null}
+              <div
+                className="disk free"
+                key={'free'}
+                style={{ flexGrow: free }}
+              >
+                <h4>Unallocated</h4>
+                <p>{free} MiB</p>
+                {poweredOff ?
+                  <button
+                    onClick={() => dispatch(showModal('Add a disk', addModal))}
+                    className="btn btn-add btn-default"
+                  >Add a disk</button>
+                 : null}
+              </div> : null}
         </div>
         {!poweredOff ?
           <div className="alert alert-info" style={{ marginTop: '1rem' }}>

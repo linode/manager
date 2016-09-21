@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { distros } from '~/assets';
 
-export default class DistroVendor extends Component {
+export default class Distributions extends Component {
   constructor() {
     super();
     this.state = { open: false, version: 0 };
@@ -67,7 +67,7 @@ export default class DistroVendor extends Component {
   }
 }
 
-DistroVendor.propTypes = {
+Distributions.propTypes = {
   vendor: PropTypes.object.isRequired,
   onClick: PropTypes.func,
   selected: PropTypes.string,

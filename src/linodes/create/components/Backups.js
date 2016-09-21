@@ -5,7 +5,7 @@ import _ from 'lodash';
 import { fetchBackups } from '~/actions/api/backups';
 import Backup from '~/linodes/components/Backup';
 
-export class BackupSelection extends Component {
+export class Backups extends Component {
   async componentDidMount() {
     const { linodes, selectedLinode, dispatch } = this.props;
     const l = linodes.linodes[selectedLinode];
@@ -50,7 +50,7 @@ export class BackupSelection extends Component {
   }
 }
 
-BackupSelection.propTypes = {
+Backups.propTypes = {
   linodes: PropTypes.object,
   selectedLinode: PropTypes.number,
   dispatch: PropTypes.func,
@@ -65,4 +65,4 @@ function select(state) {
   };
 }
 
-export default connect(select)(BackupSelection);
+export default connect(select)(Backups);

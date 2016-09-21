@@ -117,20 +117,12 @@ export default class Details extends Component {
 
     const passwordInput = (
       <div>
-        <div className="row">
-          <div className="col-sm-12">
-            <PasswordInput
-              passwordType="offline_fast_hashing_1e10_per_second"
-              onChange={password => this.setState({ password })}
-            />
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-sm-12">
-            <div className="alert alert-info">
-              Save this password somewhere safe. We can't display it again.
-            </div>
-          </div>
+        <PasswordInput
+          passwordType="offline_fast_hashing_1e10_per_second"
+          onChange={password => this.setState({ password })}
+        />
+        <div className="alert alert-info">
+          Save this password somewhere safe. We can't display it again.
         </div>
       </div>
     );
@@ -172,10 +164,8 @@ export default class Details extends Component {
           <form onSubmit={this.onSubmit}>
             <section>
               {inputRows.map(this.renderRow)}
+              {backups}
             </section>
-            <hr />
-            {backups}
-            <hr />
             <button
               type="submit"
               disabled={!(this.props.submitEnabled

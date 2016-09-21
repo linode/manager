@@ -29,7 +29,7 @@ function configContent(linode, configs, dispatch) {
       </thead>
       <tbody className="hard-border">
         {configs.map(config =>
-          <tr key={config.id}>
+          <tr key={config.id} className="clearfix">
             <td>
               <Link
                 to={`/linodes/${linode.id}/settings/advanced/configs/${config.id}`}
@@ -86,14 +86,12 @@ export class ConfigPanel extends Component {
       <div>
         <header className="clearfix">
           <h3 className="pull-xs-left">Configs<HelpButton to="http://example.org" /></h3>
-          <div className="pull-xs-right">
-            <a
-              href={`/linodes/${linode.id}/configs/create`}
-              className="btn btn-default pull-right"
-            >
-              Add a config
-            </a>
-          </div>
+          <a
+            href={`/linodes/${linode.id}/configs/create`}
+            className="btn btn-default pull-xs-right"
+          >
+            Add a config
+          </a>
         </header>
         {content}
       </div>

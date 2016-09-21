@@ -81,7 +81,7 @@ export class AlertsPage extends Component {
             />
             {label}
           </div>
-          <small>Triggered by: {text} exceeding this value</small>
+          <div className="text-muted">Triggered by: {text} exceeding this value</div>
         </div>
       </div>
     );

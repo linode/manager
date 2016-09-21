@@ -4,20 +4,6 @@
     justify-content: left;
 }
 
-.datacenters, .plans, .backups {
-    &:not(.backups) {
-        padding: $main-padding-tb $main-padding-lr;
-    }
-
-    h3 {
-        margin-left: 1rem;
-    }
-
-    .col-lg-4 {
-        padding-left: 0;
-    }
-}
-
 .distro, .datacenter, .plan, .backup {
     $width: 11rem;
     border: $border;
@@ -26,6 +12,7 @@
     width: $width;
 
     header {
+        margin-bottom: 0;
         border-bottom: $border;
         background-color: $light-gray;
         line-height: inherit;
