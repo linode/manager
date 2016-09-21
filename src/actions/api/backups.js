@@ -1,9 +1,10 @@
 import { fetch } from '~/fetch';
-import { makeFetchPage, makeFetchItem } from '~/api-store';
+import { makeFetchPage, makeFetchItem, makeFetchAll } from '~/api-store';
 import { linodeConfig, UPDATE_LINODE, UPDATE_BACKUP } from './linodes';
 
 export const fetchBackups = makeFetchPage(linodeConfig, '_backups');
 export const fetchBackup = makeFetchItem(linodeConfig, '_backups');
+export const fetchAllBackups = makeFetchAll(linodeConfig, fetchBackups, '_backups');
 
 function makeBackupAction(action) {
   return (id) => async (dispatch, getState) => {

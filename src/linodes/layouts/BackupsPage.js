@@ -90,6 +90,11 @@ export class BackupsPage extends Component {
   async restore(target, backup, override = false) {
     const { dispatch } = this.props;
     const linodeId = parseInt(this.props.params.linodeId);
+    if (target === '') {
+      // New linode
+      dispatch(push(`/linodes/create?linode=${linodeId}&backup=${backup}`));
+      return;
+    }
     this.setState({ loading: true });
     try {
       await dispatch(restoreBackup(linodeId, target, backup, override));
@@ -373,10 +378,15 @@ export class BackupsPage extends Component {
       dispatch(takeBackup(thisLinode.id));
     };
 
+    const recentBackups = [
+      ...backups.filter(bu => bu.type === 'snapshot').slice(-1),
+      ...backups.filter(bu => bu.type === 'auto').slice(-3),
+    ];
+
     return (
       <div>
         <div className="row backups">
-          {backups.map(backup =>
+          {recentBackups.map(backup =>
             <div className="col-md-3" key={moment(backup.created)}>
               <Backup
                 backup={backup}

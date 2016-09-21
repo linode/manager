@@ -10,6 +10,7 @@ import { fetchAllDistros } from '~/actions/api/distros';
 import { fetchAllDatacenters } from '~/actions/api/datacenters';
 import { fetchAllServices } from '~/actions/api/services';
 import { fetchLinodes, createLinode } from '~/actions/api/linodes';
+import { fetchAllBackups } from '~/actions/api/backups';
 import { setError } from '~/actions/errors';
 
 export class IndexPage extends Component {
@@ -41,6 +42,24 @@ export class IndexPage extends Component {
       ]);
     } catch (response) {
       dispatch(setError(response));
+    }
+    const { location } = this.props;
+    if (location.query && location.query.linode && location.query.backup) {
+      let { linodes } = this.props;
+      let linode = linodes.linodes[location.query.linode];
+      if (linode) {
+        await dispatch(fetchAllBackups(location.query.linode, location.query.backup));
+        linodes = this.props.linodes;
+        linode = linodes.linodes[location.query.linode];
+        const backup = linode._backups.backups[location.query.backup];
+        if (backup) {
+          this.setState({
+            backup: backup.id,
+            datacenter: backup.datacenter.id,
+            sourceTab: 1,
+          });
+        }
+      }
     }
   }
 
@@ -142,7 +161,19 @@ export class IndexPage extends Component {
             selectedTab={sourceTab}
             distros={distros.distributions}
             onTabChange={ix => this.setState({ sourceTab: ix })}
-            onSourceSelected={(type, id) => this.setState({ [type]: id })}
+            onSourceSelected={(type, id, linodeId) => {
+              if (type === 'backup' && linodeId && id) {
+                const linode = linodes.linodes[linodeId];
+                const backup = linode._backups.backups[id];
+                this.setState({
+                  backup: id,
+                  datacenter: backup.datacenter.id,
+                  distribution: null,
+                });
+              } else {
+                this.setState({ [type]: id, backup: null });
+              }
+            }}
             linodes={linodes}
           />
         </div>
@@ -150,6 +181,7 @@ export class IndexPage extends Component {
           <DatacenterSelection
             selected={datacenter}
             datacenters={datacenters.datacenters}
+            disabled={backup !== null}
             onDatacenterSelected={id => this.setState({ datacenter: id })}
           />
         </div>
@@ -178,6 +210,7 @@ IndexPage.propTypes = {
   linodes: PropTypes.object,
   services: PropTypes.object,
   datacenters: PropTypes.object,
+  location: PropTypes.object,
 };
 
 function select(state) {

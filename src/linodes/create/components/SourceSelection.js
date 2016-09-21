@@ -43,8 +43,7 @@ export default class SourceSelection extends Component {
     const { linodes, perPageLimit } = this.props;
     const { backupsPage, backupsFilter } = this.state;
     const hasBackups = linode => (
-      linode.backups && linode.backups.enabled &&
-      linode.backups.last_backup && linode.label.indexOf(backupsFilter) !== -1
+      linode.backups && linode.backups.enabled && linode.label.indexOf(backupsFilter) !== -1
     );
 
     const linodesWithBackups = Object.values(_.filter(linodes.linodes, hasBackups));
@@ -97,7 +96,9 @@ export default class SourceSelection extends Component {
                     }}
                   >{l.label}</a>
                 </td>
-                <td>{moment(l.backups.last_backup).format('dddd, MMMM D YYYY LT')}</td>
+                <td>{l.backups.last_backup ?
+                  moment(l.backups.last_backup).format('dddd, MMMM D YYYY LT')
+                  : 'Unknown'}</td>
               </tr>
              )}
           </tbody>
@@ -130,7 +131,16 @@ export default class SourceSelection extends Component {
 
   renderBackups() {
     const { selectedLinode } = this.state;
-    const { onSourceSelected, backup } = this.props;
+    const { onSourceSelected, backup, linodes } = this.props;
+
+    if (backup && selectedLinode === -1) {
+      // Select a linode
+      const linode = Object.values(linodes.linodes)
+        .find(l => Object.values(l._backups.backups).find(b => b.id === backup));
+      if (linode) {
+        this.setState({ selectedLinode: linode.id });
+      }
+    }
 
     return (
       <div className="backups">
@@ -140,8 +150,9 @@ export default class SourceSelection extends Component {
             goBack={e => {
               e.preventDefault();
               this.setState({ selectedLinode: -1 });
+              onSourceSelected('backup', null);
             }}
-            onSourceSelected={id => onSourceSelected('backup', id)}
+            onSourceSelected={id => onSourceSelected('backup', id, selectedLinode)}
             selectedLinode={selectedLinode}
             selected={backup}
           />}

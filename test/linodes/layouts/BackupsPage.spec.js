@@ -352,6 +352,22 @@ describe('linodes/layouts/BackupsPage', () => {
     });
   });
 
+  it('redirects to create linode page when necessary', async () => {
+    const page = mount(<BackupsPage
+      dispatch={dispatch}
+      linodes={linodes}
+      params={{ linodeId: 1234 }}
+      backups={{
+        ...backups,
+        selectedBackup: 26,
+      }}
+    />);
+    await page.instance().restore('', 26);
+    expect(dispatch.calledOnce);
+    expect(dispatch.firstCall.args[0]).to.deep.equal(
+      push(`/linodes/create?linode=${1234}&backup=${26}`));
+  });
+
   it('handles overwrite errors restoring backups', async () => {
     const _dispatch = sandbox.stub();
     const page = shallow(<BackupsPage

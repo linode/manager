@@ -25,12 +25,11 @@ export class BackupSelection extends Component {
     const l = linodes.linodes[selectedLinode];
     return (
       <div className="clearfix">
-        <div className="pull-right">
-          <a href="#" className="back" onClick={goBack}>Back</a>
-        </div>
         <div key={l.id}>
-          <h3>{l.label}</h3>
-          <div className="backup-group">
+          <h3>
+            {l.label}
+          </h3>
+          <div className="backup-group clearfix">
             {_.map(l._backups.backups, backup =>
               <Backup
                 backup={backup}
@@ -40,6 +39,11 @@ export class BackupSelection extends Component {
               />
              )}
           </div>
+          <a
+            href="#"
+            className="back"
+            onClick={goBack}
+          >Need a different Linode?</a>
         </div>
       </div>
     );
@@ -48,7 +52,7 @@ export class BackupSelection extends Component {
 
 BackupSelection.propTypes = {
   linodes: PropTypes.object,
-  selectedLinode: PropTypes.string,
+  selectedLinode: PropTypes.number,
   dispatch: PropTypes.func,
   onSourceSelected: PropTypes.func.isRequired,
   selected: PropTypes.number,

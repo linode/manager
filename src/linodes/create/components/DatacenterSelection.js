@@ -8,6 +8,7 @@ export default class DatacenterSelection extends Component {
   constructor() {
     super();
     this.renderRegion = this.renderRegion.bind(this);
+    this.renderDisabled = this.renderDisabled.bind(this);
   }
 
   renderHeader() {
@@ -57,7 +58,27 @@ export default class DatacenterSelection extends Component {
     ) : null;
   }
 
+  renderDisabled() {
+    const { selected, datacenters } = this.props;
+    const dc = Object.values(datacenters).find(dc => dc.id === selected);
+    return (
+      <div>
+        {this.renderHeader()}
+        <div className="datacenters">
+          <p>
+            The source you selected limits the datacenters you may deploy
+            your new Linode to.
+          </p>
+          {this.renderDatacenter.bind(this)(dc)}
+        </div>
+      </div>
+    );
+  }
+
   render() {
+    if (this.props.disabled) {
+      return this.renderDisabled();
+    }
     return (
       <div>
         {this.renderHeader()}
@@ -73,4 +94,5 @@ DatacenterSelection.propTypes = {
   selected: PropTypes.string,
   datacenters: PropTypes.object.isRequired,
   onDatacenterSelected: PropTypes.func.isRequired,
+  disabled: PropTypes.bool,
 };
