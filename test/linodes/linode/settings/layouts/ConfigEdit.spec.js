@@ -6,10 +6,10 @@ import { expect } from 'chai';
 import { api } from '@/data';
 import { testLinode } from '@/data/linodes';
 import { expectRequest } from '@/common';
-import { ConfigEdit } from '~/linodes/settings/layouts/ConfigEdit';
+import { ConfigEdit } from '~/linodes/linode/settings/layouts/ConfigEdit';
 const { linodes, kernels } = api;
 
-describe('linodes/settings/layouts/ConfigEdit', () => {
+describe('linodes/linode/settings/layouts/ConfigEdit', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {

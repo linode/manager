@@ -8,14 +8,14 @@ import {
   DeleteModal,
   EditModal,
   DiskPanel,
-} from '~/linodes/settings/components/DiskPanel';
+} from '~/linodes/linode/settings/components/DiskPanel';
 import { api, freshState } from '@/data';
 import { testLinode } from '@/data/linodes';
 import { SHOW_MODAL, hideModal } from '~/actions/modal';
 import { expectRequest } from '@/common';
 const { linodes } = api;
 
-describe('linodes/settings/components/DiskPanel', () => {
+describe('linodes/linode/settings/components/DiskPanel', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
@@ -41,9 +41,9 @@ describe('linodes/settings/components/DiskPanel', () => {
         linodes={linodes}
       />);
 
-    const disks = Object.values(testLinode._disks.disks);
-    expect(panel.find('.disk').length).to.equal(2);
-    const firstDisk = panel.find('.disk').at(0);
+    const disks = Object.values(linodes.linodes[1236]._disks.disks);
+    expect(panel.find('.disk-layout .disk').length).to.equal(disks.length + 1); // has free space
+    const firstDisk = panel.find('.disk-layout .disk').at(0);
     expect(firstDisk.props())
       .to.have.property('style')
       .to.have.property('flexGrow')

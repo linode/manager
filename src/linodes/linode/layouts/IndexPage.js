@@ -138,7 +138,10 @@ export class IndexPage extends Component {
               <Dropdown elements={dropdownElements} leftOriented={false} />
             </span>}
           {!renderConfigSelect ? null :
-            <span className="pull-right configs">
+            <span
+              className="pull-right configs"
+              style={{ paddingRight: '15px', lineHeight: '30px' }}
+            >
               <select
                 className="form-control"
                 value={this.state.config}

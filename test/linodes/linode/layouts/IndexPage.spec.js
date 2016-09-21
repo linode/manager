@@ -7,28 +7,26 @@ import { expect } from 'chai';
 import { api, freshState } from '@/data';
 import { testLinode } from '@/data/linodes';
 import { expectRequest } from '@/common';
-import * as LinodeDetailPageWrapper from '~/linodes/layouts/LinodeDetailPage';
+import * as IndexPageWrapper from '~/linodes/linode/layouts/IndexPage';
 import * as linodeActions from '~/actions/api/linodes';
 import { Tabs, Tab } from 'react-tabs';
 import Dropdown from '~/components/Dropdown';
-import { hideModal } from '~/actions/modal';
 import { SET_ERROR } from '~/actions/errors';
 
 const {
-  LinodeDetailPage,
-  EditModal,
+  IndexPage,
   getLinode,
   renderTabs,
-} = LinodeDetailPageWrapper;
+} = IndexPageWrapper;
 
 const { linodes } = api;
 
-describe('linodes/layouts/LinodeDetailPage/loadLinode', async () => {
+describe('linodes/linode/layouts/IndexPage/loadLinode', async () => {
   class Test extends Component {
     constructor() {
       super();
       this.getLinode = getLinode.bind(this);
-      this.componentDidMount = LinodeDetailPageWrapper.loadLinode.bind(this);
+      this.componentDidMount = IndexPageWrapper.loadLinode.bind(this);
     }
 
     render() {
@@ -89,7 +87,7 @@ describe('linodes/layouts/LinodeDetailPage/loadLinode', async () => {
   });
 });
 
-describe('linodes/layouts/LinodeDetailPage/renderTabs', async () => {
+describe('linodes/linode/layouts/IndexPage/renderTabs', async () => {
   class Test extends Component {
     constructor() {
       super();
@@ -145,7 +143,7 @@ describe('linodes/layouts/LinodeDetailPage/renderTabs', async () => {
   });
 });
 
-describe('linodes/layouts/LinodeDetailPage', () => {
+describe('linodes/linode/layouts/IndexPage', () => {
   const sandbox = sinon.sandbox.create();
 
   const dispatch = sandbox.spy();
@@ -170,9 +168,9 @@ describe('linodes/layouts/LinodeDetailPage', () => {
   };
 
   it('calls loadLinode during mount', () => {
-    const loadLinode = sinon.stub(LinodeDetailPageWrapper, 'loadLinode');
+    const loadLinode = sinon.stub(IndexPageWrapper, 'loadLinode');
     mount(
-      <LinodeDetailPage
+      <IndexPage
         dispatch={dispatch}
         linodes={linodes}
         params={{ linodeId: testLinode.id }}
@@ -187,7 +185,7 @@ describe('linodes/layouts/LinodeDetailPage', () => {
 
   it('renders the linode label and group', () => {
     const page = mount(
-      <LinodeDetailPage
+      <IndexPage
         dispatch={dispatch}
         linodes={linodes}
         params={{ linodeId: testLinode.id }}
@@ -200,7 +198,7 @@ describe('linodes/layouts/LinodeDetailPage', () => {
 
   it('renders the linode label alone when ungrouped', () => {
     const page = mount(
-      <LinodeDetailPage
+      <IndexPage
         dispatch={dispatch}
         linodes={linodes}
         params={{ linodeId: 1235 }}
@@ -213,7 +211,7 @@ describe('linodes/layouts/LinodeDetailPage', () => {
 
   it('renders tabs with correct names and links', () => {
     const page = shallow(
-      <LinodeDetailPage
+      <IndexPage
         dispatch={dispatch}
         linodes={linodes}
         params={{ linodeId: 1235 }}
@@ -239,7 +237,7 @@ describe('linodes/layouts/LinodeDetailPage', () => {
 
   it('renders a power management dropdown', () => {
     const page = shallow(
-      <LinodeDetailPage
+      <IndexPage
         dispatch={dispatch}
         linodes={linodes}
         params={{ linodeId: testLinode.id }}
@@ -251,13 +249,13 @@ describe('linodes/layouts/LinodeDetailPage', () => {
 
   it('renders a config profile selection dropdown', () => {
     const page = shallow(
-      <LinodeDetailPage
+      <IndexPage
         dispatch={dispatch}
         linodes={linodes}
         params={{ linodeId: 1238 }}
         detail={detail}
       />);
-    const select = page.find('.tabs').find('.configs');
+    const select = page.find('header .configs');
     expect(select.contains(
       <option key={12345} value={12345}>Test config</option>))
       .to.equal(true);
@@ -268,20 +266,20 @@ describe('linodes/layouts/LinodeDetailPage', () => {
 
   it('switches the selected config when clicked', () => {
     const page = shallow(
-      <LinodeDetailPage
+      <IndexPage
         dispatch={dispatch}
         linodes={linodes}
         params={{ linodeId: 1238 }}
         detail={detail}
       />);
-    const select = page.find('.tabs').find('.configs select');
+    const select = page.find('header .configs select');
     select.simulate('change', { target: { value: 12346 } });
     expect(page.state('config')).to.equal(12346);
   });
 
   it('renders the appropriate items when linode is running', () => {
     const page = shallow(
-      <LinodeDetailPage
+      <IndexPage
         dispatch={dispatch}
         linodes={linodes}
         params={{ linodeId: testLinode.id }}
@@ -297,7 +295,7 @@ describe('linodes/layouts/LinodeDetailPage', () => {
 
   it('renders the appropriate items when linode is powered off', () => {
     const page = shallow(
-      <LinodeDetailPage
+      <IndexPage
         dispatch={dispatch}
         linodes={linodes}
         params={{ linodeId: 1236 }}
@@ -313,7 +311,7 @@ describe('linodes/layouts/LinodeDetailPage', () => {
 
   it('does not render power management dropdown when linode is transitioning', () => {
     const page = mount(
-      <LinodeDetailPage
+      <IndexPage
         dispatch={dispatch}
         linodes={linodes}
         params={{ linodeId: 1237 }}
@@ -325,142 +323,18 @@ describe('linodes/layouts/LinodeDetailPage', () => {
 
   it('renders the current state of the linode', () => {
     const page = mount(
-      <LinodeDetailPage
+      <IndexPage
         dispatch={dispatch}
         linodes={linodes}
         params={{ linodeId: testLinode.id }}
         detail={detail}
         router={router}
       />);
-    expect(page.contains(<span className="pull-right linode-status running">Running</span>))
+    expect(page.contains(
+      <span
+        className="pull-right linode-status running"
+        style={{ paddingRight: '15px', lineHeight: '30px' }}
+      >Running</span>))
       .to.equal(true);
-  });
-});
-
-describe('linodes/layouts/LinodeDetailPage EditModal', () => {
-  const sandbox = sinon.sandbox.create();
-  afterEach(() => {
-    sandbox.restore();
-  });
-
-  it('should render group and label inputs', () => {
-    const modal = mount(
-      <EditModal
-        dispatch={() => {}}
-        label="test label"
-        group="test group"
-        linodeId={1234}
-      />);
-    expect(modal.find('input#group')).to.exist;
-    expect(modal.find('input#group').props().value).to.equal('test group');
-    expect(modal.find('input#label')).to.exist;
-    expect(modal.find('input#label').props().value).to.equal('test label');
-  });
-
-  it('hide modal when "Nevermind" is clicked', () => {
-    const dispatch = sandbox.spy();
-    const modal = shallow(
-      <EditModal
-        dispatch={dispatch}
-        label="test label"
-        group="test group"
-        linodeId={1234}
-      />);
-    modal.find('.btn-default').simulate('click');
-    expect(dispatch.calledOnce).to.equal(true);
-    expect(dispatch.firstCall.args[0]).to.deep.equal(hideModal());
-  });
-
-  it('save changes when "Save" is clicked', () => {
-    const dispatch = sandbox.spy();
-    const modal = shallow(
-      <EditModal
-        dispatch={dispatch}
-        label="test label"
-        group="test group"
-        linodeId={1234}
-      />);
-    const saveStub = sandbox.stub(modal.instance(), 'saveChanges');
-    modal.find('input#group').simulate('change', {
-      target: { value: 'new group' },
-    });
-    modal.find('input#label').simulate('change', {
-      target: { value: 'new label' },
-    });
-    modal.find('.btn-primary').simulate('click');
-    expect(saveStub.calledOnce).to.equal(true);
-    saveStub.restore();
-  });
-
-  describe('saveChanges', () => {
-    it('performs the HTTP request', async () => {
-      const dispatch = sandbox.spy();
-      const modal = shallow(
-        <EditModal
-          dispatch={dispatch}
-          label="test label"
-          group="test group"
-          linodeId={1234}
-        />);
-      modal.find('input#group').simulate('change', {
-        target: { value: 'new group' },
-      });
-      modal.find('input#label').simulate('change', {
-        target: { value: 'new label' },
-      });
-      const { saveChanges } = modal.instance();
-      await saveChanges();
-      const fn = dispatch.firstCall.args[0];
-      await expectRequest(fn, '/linode/instances/1234',
-        () => {}, null, o => {
-          expect(o.method).to.equal('PUT');
-          expect(o.body).to.equal(JSON.stringify({
-            label: 'new label',
-            group: 'new group',
-          }));
-        });
-    });
-
-    it('handles exceptions', async () => {
-      const dispatch = sandbox.stub();
-      const modal = mount(
-        <EditModal
-          dispatch={dispatch}
-          label="test label"
-          group="test group"
-          linodeId={1234}
-        />);
-      modal.find('input#group').simulate('change', {
-        target: { value: 'new group' },
-      });
-      modal.find('input#label').simulate('change', {
-        target: { value: 'new label' },
-      });
-      const { saveChanges } = modal.instance();
-      dispatch.reset();
-      dispatch.throws({
-        json() {
-          return {
-            errors: [
-              { field: 'label', reason: 'some label error' },
-              { field: 'group', reason: 'some group error' },
-            ],
-          };
-        },
-      });
-      await saveChanges();
-      expect(modal.find('.form-group').at(0).hasClass('has-danger'))
-        .to.equal(true);
-      expect(modal.find('.form-group').at(1).hasClass('has-danger'))
-        .to.equal(true);
-      expect(modal.contains(
-        <div
-          key={'some label error'}
-        >some label error</div>)).to.equal(true);
-      expect(modal.contains(
-        <div
-          key={'some group error'}
-        >some group error</div>)).to.equal(true);
-    });
   });
 });

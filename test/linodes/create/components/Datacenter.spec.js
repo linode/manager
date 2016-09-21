@@ -3,10 +3,10 @@ import sinon from 'sinon';
 import { expect } from 'chai';
 import { shallow, mount } from 'enzyme';
 
-import DatacenterSelection from '~/linodes/create/components/DatacenterSelection';
+import Datacenter from '~/linodes/create/components/Datacenter';
 import { flags } from '~/assets';
 
-describe('linodes/create/components/DatacenterSelection', () => {
+describe('linodes/create/components/Datacenter', () => {
   const datacenters = {
     newark: {
       id: 'newark',
@@ -17,13 +17,13 @@ describe('linodes/create/components/DatacenterSelection', () => {
 
   it('renders the datacenters', () => {
     const c = mount(
-      <DatacenterSelection
+      <Datacenter
         datacenters={datacenters}
         onDatacenterSelected={() => {}}
       />
     );
 
-    expect(c.find(<h2>Select a datacenter</h2>)).to.exist;
+    expect(c.find(<h2>Datacenter</h2>)).to.exist;
     expect(c.find(<h3>North America</h3>)).to.exist;
     expect(c.find('.datacenter').length).to.equal(1);
     expect(c.find(<header><label>Newark, NJ</label></header>)).to.exist;
@@ -39,7 +39,7 @@ describe('linodes/create/components/DatacenterSelection', () => {
 
   it('renders disabled', () => {
     const c = shallow(
-      <DatacenterSelection
+      <Datacenter
         datacenters={datacenters}
         selected={'newark'}
         onDatacenterSelected={() => {}}
@@ -58,7 +58,7 @@ describe('linodes/create/components/DatacenterSelection', () => {
     const env = { onSelect: () => {} };
     const onSelect = sinon.stub(env, 'onSelect');
     const c = mount(
-      <DatacenterSelection
+      <Datacenter
         datacenters={datacenters}
         onDatacenterSelected={onSelect}
       />

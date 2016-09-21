@@ -3,10 +3,10 @@ import sinon from 'sinon';
 import { expect } from 'chai';
 import { shallow, mount } from 'enzyme';
 
-import { BackupSelection } from '~/linodes/create/components/BackupSelection';
+import { Backups } from '~/linodes/create/components/Backups';
 import { api } from '@/data';
 
-describe('linodes/create/components/BackupSelection', () => {
+describe('linodes/create/components/Backups', () => {
   const sandbox = sinon.sandbox.create();
   afterEach(() => {
     sandbox.restore();
@@ -14,7 +14,7 @@ describe('linodes/create/components/BackupSelection', () => {
 
   it('renders the Backups', () => {
     const c = shallow(
-      <BackupSelection
+      <Backups
         onSourceSelected={() => {}}
         linodes={api.linodes}
         goBack={() => {}}
@@ -29,7 +29,7 @@ describe('linodes/create/components/BackupSelection', () => {
   it('invokes the onSourceSelected function as necessary for Backups', () => {
     const onSourceSelected = sandbox.spy();
     const c = mount(
-      <BackupSelection
+      <Backups
         onSourceSelected={onSourceSelected}
         linodes={api.linodes}
         goBack={() => {}}
@@ -46,7 +46,7 @@ describe('linodes/create/components/BackupSelection', () => {
   it('calls the goBack function when the back button is pressed', () => {
     const goBack = sandbox.spy();
     const c = shallow(
-      <BackupSelection
+      <Backups
         onSourceSelected={() => {}}
         linodes={api.linodes}
         goBack={goBack}

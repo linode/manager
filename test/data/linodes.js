@@ -1,3 +1,5 @@
+import { testService } from './services';
+
 export const apiTestLinode = {
   group: 'Test Group',
   label: 'Test Linode',
@@ -13,20 +15,7 @@ export const apiTestLinode = {
   },
   created: '2016-07-06T16:47:27',
   id: 1234,
-  services: [
-    {
-      service_type: 'linode',
-      label: 'Linode 1024',
-      ram: 1024,
-      hourly_price: 1,
-      id: 'linode1024.5',
-      transfer: 2000,
-      monthly_price: 1000,
-      storage: 12,
-      mbits_out: 125,
-      vcpus: 1,
-    },
-  ],
+  services: [testService],
   state: 'running',
   datacenter: {
     id: 'newark',

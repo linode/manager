@@ -3,14 +3,14 @@ import sinon from 'sinon';
 import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 
-import { ConfigPanel } from '~/linodes/settings/components/ConfigPanel';
+import { ConfigPanel } from '~/linodes/linode/settings/components/ConfigPanel';
 import { DELETE_LINODE_CONFIG } from '~/actions/api/linodes';
 import { expectRequest } from '@/common';
 import { api } from '@/data';
 import { testLinode } from '@/data/linodes';
 const { linodes } = api;
 
-describe('linodes/settings/components/ConfigPanel', () => {
+describe('linodes/linode/settings/components/ConfigPanel', () => {
   const sandbox = sinon.sandbox.create();
   const dispatch = sandbox.spy();
 
@@ -40,9 +40,8 @@ describe('linodes/settings/components/ConfigPanel', () => {
       />
     );
 
-    expect(panel.find('.input-group').find('a')).to.exist;
-    expect(panel.find('.input-group').find('a').text()).to.equal('Add a config');
-    expect(panel.find('.input-group').find('a').props())
+    expect(panel.find('header a.btn').text()).to.equal('Add a config');
+    expect(panel.find('header a.btn').props())
       .to.have.property('href')
       .to.equal('/linodes/1239/configs/create');
   });

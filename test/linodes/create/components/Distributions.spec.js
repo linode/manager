@@ -4,9 +4,9 @@ import { expect } from 'chai';
 import { shallow } from 'enzyme';
 import { distros } from '~/assets';
 import { distros as testDistros } from '@/data/distros';
-import DistroVendor from '~/linodes/create/components/DistroVendor';
+import Distributions from '~/linodes/create/components/Distributions';
 
-describe('linodes/create/components/DistroVendor', () => {
+describe('linodes/create/components/Distributions', () => {
   const sandbox = sinon.sandbox.create();
   afterEach(() => {
     sandbox.restore();
@@ -22,19 +22,19 @@ describe('linodes/create/components/DistroVendor', () => {
   };
 
   it('renders the selected distro name', () => {
-    const dv = shallow(<DistroVendor vendor={vendor} />);
+    const dv = shallow(<Distributions vendor={vendor} />);
     expect(dv.find(<div>Debian 8.1</div>)).to.exist;
   });
 
   it('renders the vendor logo', () => {
-    const dv = shallow(<DistroVendor vendor={vendor} />);
+    const dv = shallow(<Distributions vendor={vendor} />);
     expect(dv.find('img').props())
       .to.have.property('src')
       .that.equals(distros.Debian);
   });
 
   it('renders a dropdown with all of the versions', () => {
-    const dv = shallow(<DistroVendor vendor={vendor} />);
+    const dv = shallow(<Distributions vendor={vendor} />);
     expect(dv.find('.dropdown-item').length).to.equal(3);
     expect(dv.find('.dropdown-item').at(0).text())
       .to.equal(vendor.versions[0].label);
@@ -47,7 +47,7 @@ describe('linodes/create/components/DistroVendor', () => {
   it('invokes the selectedVersion function when clicked', () => {
     const onClick = sandbox.spy();
     const dv = shallow(
-      <DistroVendor
+      <Distributions
         vendor={vendor}
         onClick={onClick}
       />
@@ -60,7 +60,7 @@ describe('linodes/create/components/DistroVendor', () => {
   it('invokes the selectedVersion function with the correct version', () => {
     const onClick = sandbox.spy();
     const dv = shallow(
-      <DistroVendor
+      <Distributions
         vendor={vendor}
         onClick={onClick}
       />
@@ -77,7 +77,7 @@ describe('linodes/create/components/DistroVendor', () => {
 
   it('hides the dropdown on blur', () => {
     const dv = shallow(
-      <DistroVendor
+      <Distributions
         vendor={vendor}
         onClick={() => {}}
       />

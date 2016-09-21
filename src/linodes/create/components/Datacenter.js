@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { flags } from '~/assets';
 import { regionMap } from '~/constants';
 
-export default class Datacenters extends Component {
+export default class Datacenter extends Component {
   constructor() {
     super();
     this.renderRegion = this.renderRegion.bind(this);
@@ -90,7 +90,7 @@ export default class Datacenters extends Component {
   }
 }
 
-Datacenters.propTypes = {
+Datacenter.propTypes = {
   selected: PropTypes.string,
   datacenters: PropTypes.object.isRequired,
   onDatacenterSelected: PropTypes.func.isRequired,

@@ -6,7 +6,7 @@ import { expect } from 'chai';
 import * as fetch from '~/fetch';
 import { state } from '@/data';
 import { testLinode } from '@/data/linodes';
-import { BackupsPage } from '~/linodes/layouts/BackupsPage';
+import { BackupsPage } from '~/linodes/linode/layouts/BackupsPage';
 import { SHOW_MODAL, hideModal } from '~/actions/modal';
 import { SET_ERROR } from '~/actions/errors';
 import { expectRequest } from '@/common';

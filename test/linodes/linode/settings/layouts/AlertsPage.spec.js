@@ -7,9 +7,9 @@ import { UPDATE_LINODE } from '~/actions/api/linodes';
 import { api } from '@/data';
 import { testLinode } from '@/data/linodes';
 import { expectRequest } from '@/common';
-import { AlertsPage } from '~/linodes/settings/layouts/AlertsPage';
+import { AlertsPage } from '~/linodes/linode/settings/layouts/AlertsPage';
 
-describe('linodes/settings/layouts/AlertsPage', async () => {
+describe('linodes/linode/settings/layouts/AlertsPage', async () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {

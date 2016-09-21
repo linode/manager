@@ -26,11 +26,15 @@ renderPowerButton.propTypes = {
 };
 
 export function renderPlanStyle(s) {
+  if (!s || !s.label) return null;
+
   const plan = s.label.split(' ');
   return `${plan[0]} ${parseInt(plan[1], 10) / 1024}G`;
 }
 
 export function renderDistroStyle(linode) {
+  if (!linode || !linode.distribution || !linode.distribution.vendor) return null;
+
   return (
     <span className="distro-style">
       {linode.distribution.vendor}

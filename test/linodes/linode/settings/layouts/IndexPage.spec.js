@@ -6,10 +6,10 @@ import { Tabs, Tab } from 'react-tabs';
 import { api } from '@/data';
 
 import { testLinode } from '@/data/linodes';
-import { IndexPage } from '~/linodes/settings/layouts/IndexPage';
-import * as LinodeDetailPage from '~/linodes/layouts/LinodeDetailPage';
+import { IndexPage } from '~/linodes/linode/settings/layouts/IndexPage';
+import * as LinodePage from '~/linodes/linode/layouts/IndexPage';
 
-describe('linodes/settings/layouts/IndexPage', () => {
+describe('linodes/linode/settings/layouts/IndexPage', () => {
   const sandbox = sinon.sandbox.create();
   const dispatch = sandbox.spy();
 
@@ -19,7 +19,7 @@ describe('linodes/settings/layouts/IndexPage', () => {
   });
 
   it('calls loadLinode during mount', () => {
-    const loadLinode = sandbox.stub(LinodeDetailPage, 'loadLinode');
+    const loadLinode = sandbox.stub(LinodePage, 'loadLinode');
     mount(
       <IndexPage
         dispatch={dispatch}

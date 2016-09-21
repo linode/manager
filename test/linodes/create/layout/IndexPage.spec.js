@@ -30,9 +30,9 @@ describe('linodes/create/layout/IndexPage', () => {
   }
 
   [
-    'SourceSelection',
-    'DatacenterSelection',
-    'ServiceSelection',
+    'Source',
+    'Datacenter',
+    'Plan',
     'Details',
   ].map(t => it(`renders a ${t}`, assertContains(t)));
 
@@ -45,7 +45,7 @@ describe('linodes/create/layout/IndexPage', () => {
         services={api.services}
         linodes={api.linodes}
       />);
-    const ss = page.find('SourceSelection');
+    const ss = page.find('Source');
     ss.props().onTabChange(1);
     expect(ss.find('Tab').at(1).props().selected)
       .to.equal(true);
@@ -105,7 +105,7 @@ describe('linodes/create/layout/IndexPage', () => {
         services={api.services}
         linodes={api.linodes}
       />);
-    const ss = page.find('SourceSelection');
+    const ss = page.find('Source');
     ss.props().onSourceSelected('distribution', { id: 'distro_1234' });
     expect(ss.find('.distro.selected').find(<div className="title">Arch 2016.05</div>))
       .to.exist;
@@ -120,8 +120,8 @@ describe('linodes/create/layout/IndexPage', () => {
         services={api.services}
         linodes={api.linodes}
       />);
-    const ds = page.find('DatacenterSelection');
-    ds.props().onDatacenterSelected({ id: 'datacenter_2' });
+    const ds = page.find('Datacenter');
+    ds.props().onDatacenterSelected({ id: 'newark' });
     expect(ds.find('.datacenter.selected').find(<div className="title">Newark, NJ</div>))
       .to.exist;
   });
@@ -135,7 +135,7 @@ describe('linodes/create/layout/IndexPage', () => {
         services={api.services}
         linodes={api.linodes}
       />);
-    const ss = page.find('ServiceSelection');
+    const ss = page.find('Plan');
     ss.props().onServiceSelected({ id: 'linode1024.5' });
     expect(ss.find('.service.selected').find(<div className="title">Linode 1G</div>));
   });
@@ -161,11 +161,11 @@ describe('linodes/create/layout/IndexPage', () => {
       .to.equal(true);
 
     expectIsDisabled();
-    page.find('ServiceSelection').props().onServiceSelected('service');
+    page.find('Plan').props().onServiceSelected('service');
     expectIsDisabled();
-    page.find('DatacenterSelection').props().onDatacenterSelected('datacenter');
+    page.find('Datacenter').props().onDatacenterSelected('datacenter');
     expectIsDisabled();
-    page.find('SourceSelection').props().onSourceSelected('distribution', 'source');
+    page.find('Source').props().onSourceSelected('distribution', 'source');
     expectIsDisabled();
     await page.find('Details').props().onSubmit({
       labels: ['label'],
@@ -206,9 +206,9 @@ describe('linodes/create/layout/IndexPage', () => {
     dispatch.onCall(0).returns({ id: createdLinodeId });
     dispatch.onCall(1).returns({ id: createdLinodeId + 1 });
 
-    page.find('ServiceSelection').props().onServiceSelected('service');
-    page.find('DatacenterSelection').props().onDatacenterSelected('datacenter');
-    page.find('SourceSelection').props().onSourceSelected('distribution', 'source');
+    page.find('Plan').props().onServiceSelected('service');
+    page.find('Datacenter').props().onDatacenterSelected('datacenter');
+    page.find('Source').props().onSourceSelected('distribution', 'source');
     await page.find('Details').props().onSubmit({
       labels: ['label', 'label-2'],
       password: 'password',
@@ -257,9 +257,9 @@ describe('linodes/create/layout/IndexPage', () => {
     dispatch.onCall(0).returns({ id: createdLinodeId });
     dispatch.onCall(1).returns({ id: createdLinodeId + 1 });
 
-    page.find('ServiceSelection').props().onServiceSelected('service');
-    page.find('DatacenterSelection').props().onDatacenterSelected('datacenter');
-    page.find('SourceSelection').props().onSourceSelected('distribution', 'source');
+    page.find('Plan').props().onServiceSelected('service');
+    page.find('Datacenter').props().onDatacenterSelected('datacenter');
+    page.find('Source').props().onSourceSelected('distribution', 'source');
     await page.find('Details').props().onSubmit({
       labels: ['label', null, null],
       password: 'password',
@@ -315,9 +315,9 @@ describe('linodes/create/layout/IndexPage', () => {
     dispatch.reset();
     dispatch.onCall(0).throws({ json: () => ({ errors: [{ field: 'label', reason: error }] }) });
 
-    page.find('ServiceSelection').props().onServiceSelected('service');
-    page.find('DatacenterSelection').props().onDatacenterSelected('datacenter');
-    page.find('SourceSelection').props().onSourceSelected('distribution', 'source');
+    page.find('Plan').props().onServiceSelected('service');
+    page.find('Datacenter').props().onDatacenterSelected('datacenter');
+    page.find('Source').props().onSourceSelected('distribution', 'source');
     await page.find('Details').props().onSubmit({ labels: [''], password: '' });
 
     expect(page.find('Details').props().errors).to.deep.equal({

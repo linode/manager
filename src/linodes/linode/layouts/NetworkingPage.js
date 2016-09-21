@@ -149,10 +149,8 @@ export class NetworkingPage extends Component {
           </header>
           <div className="row">
             <div className="col-sm-6 left">
-              <div className="form-group row">
-                <div className="col-sm-12">
-                  {"No private IP addresses."}
-                </div>
+              <div className="form-group">
+                {"No private IP addresses."}
               </div>
               <div className="form-group row">
                 <div className="col-sm-4 label-col">

@@ -3,11 +3,11 @@ import sinon from 'sinon';
 import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 import { testLinode } from '@/data/linodes';
-import { LinodeGeneral } from '~/linodes/layouts/LinodeGeneral';
-import * as LinodeDetailPage from '~/linodes/layouts/LinodeDetailPage';
+import { DashboardPage } from '~/linodes/linode/layouts/DashboardPage';
+import * as IndexPage from '~/linodes/linode/layouts/IndexPage';
 import moment from 'moment';
 
-describe('linodes/layouts/LinodeGeneral', async () => {
+describe('linodes/linode/layouts/DashboardPage', async () => {
   const sandbox = sinon.sandbox.create();
 
   const dispatch = sandbox.spy();
@@ -30,7 +30,6 @@ describe('linodes/layouts/LinodeGeneral', async () => {
           last_backup: '2016-06-28T14:19:37',
           enabled: true,
         },
-        services: [],
       },
       1236: {
         ...testLinode,
@@ -52,9 +51,9 @@ describe('linodes/layouts/LinodeGeneral', async () => {
   };
 
   it('calls loadLinode on mount', () => {
-    const loadLinode = sinon.stub(LinodeDetailPage, 'loadLinode');
+    const loadLinode = sinon.stub(IndexPage, 'loadLinode');
     mount(
-      <LinodeGeneral
+      <DashboardPage
         linodes={linodes}
         params={params}
       />
@@ -67,7 +66,7 @@ describe('linodes/layouts/LinodeGeneral', async () => {
   it('renders public ipv4', () => {
     const ipv4 = testLinode.ipv4.address;
     const page = mount(
-      <LinodeGeneral
+      <DashboardPage
         linodes={linodes}
         params={params}
       />);
@@ -78,7 +77,7 @@ describe('linodes/layouts/LinodeGeneral', async () => {
   it('renders public ipv6', () => {
     const ipv6 = testLinode.ipv6.range;
     const page = mount(
-      <LinodeGeneral
+      <DashboardPage
         linodes={linodes}
         params={params}
       />);
@@ -89,7 +88,7 @@ describe('linodes/layouts/LinodeGeneral', async () => {
   it('renders backups not enabled', () => {
     const path = `/linodes/${testLinode.id}/backups`;
     const page = shallow(
-      <LinodeGeneral
+      <DashboardPage
         linodes={{ ...linodes,
           linodes: {
             ...linodes.linodes,
@@ -113,7 +112,7 @@ describe('linodes/layouts/LinodeGeneral', async () => {
   it('renders backups enabled', () => {
     const backupTime = linodes.linodes[1235].backups.last_backup;
     const page = shallow(
-      <LinodeGeneral
+      <DashboardPage
         linodes={linodes}
         params={{ linodeId: 1235 }}
       />);
@@ -124,7 +123,7 @@ describe('linodes/layouts/LinodeGeneral', async () => {
 
   it('renders plan', () => {
     const page = shallow(
-      <LinodeGeneral
+      <DashboardPage
         linodes={linodes}
         params={params}
       />);
@@ -132,14 +131,14 @@ describe('linodes/layouts/LinodeGeneral', async () => {
     expect(page.find('.linode-plan').at(0)
       .find('.col-sm-8')
       .at(0)
-      .text()).to.equal('Linode 1G');
+      .text()).to.equal('Linode 2G');
   });
 
   it('renders linode without a linode service', () => {
     const page = shallow(
-      <LinodeGeneral
+      <DashboardPage
         linodes={linodes}
-        params={{ linodeId: 1235 }}
+        params={{ linodeId: 1236 }}
       />);
 
     expect(page.find('.linode-plan').length).to.equal(0);
@@ -147,7 +146,7 @@ describe('linodes/layouts/LinodeGeneral', async () => {
 
   it('renders datacenter', () => {
     const page = shallow(
-      <LinodeGeneral
+      <DashboardPage
         linodes={linodes}
         params={params}
       />);
@@ -160,7 +159,7 @@ describe('linodes/layouts/LinodeGeneral', async () => {
 
   it('renders distribution', () => {
     const page = shallow(
-      <LinodeGeneral
+      <DashboardPage
         linodes={linodes}
         params={params}
       />);
@@ -173,7 +172,7 @@ describe('linodes/layouts/LinodeGeneral', async () => {
 
   it('renders unknown distribution', () => {
     const page = shallow(
-      <LinodeGeneral
+      <DashboardPage
         linodes={linodes}
         params={{ linodeId: 1236 }}
       />);
@@ -186,7 +185,7 @@ describe('linodes/layouts/LinodeGeneral', async () => {
 
   it('renders ssh input elements', () => {
     const page = shallow(
-      <LinodeGeneral
+      <DashboardPage
         linodes={linodes}
         params={params}
       />);
@@ -199,7 +198,7 @@ describe('linodes/layouts/LinodeGeneral', async () => {
     const ipv4 = testLinode.ipv4.address;
     const sshPath = `ssh root@${ipv4}`;
     const page = shallow(
-      <LinodeGeneral
+      <DashboardPage
         linodes={linodes}
         params={params}
       />);
@@ -211,7 +210,7 @@ describe('linodes/layouts/LinodeGeneral', async () => {
 
   it('renders lish input elements', () => {
     const page = shallow(
-      <LinodeGeneral
+      <DashboardPage
         linodes={linodes}
         params={params}
       />);
@@ -228,7 +227,7 @@ describe('linodes/layouts/LinodeGeneral', async () => {
         testLinode.datacenter.id
       }.linode.com`;
     const page = shallow(
-      <LinodeGeneral
+      <DashboardPage
         linodes={linodes}
         params={params}
         username="tdude"
@@ -241,7 +240,7 @@ describe('linodes/layouts/LinodeGeneral', async () => {
 
   it('renders glish button element', () => {
     const page = shallow(
-      <LinodeGeneral
+      <DashboardPage
         linodes={linodes}
         params={params}
       />);
@@ -252,7 +251,7 @@ describe('linodes/layouts/LinodeGeneral', async () => {
   describe('performance graph', () => {
     it('renders source options', () => {
       const page = shallow(
-        <LinodeGeneral
+        <DashboardPage
           linodes={linodes}
           params={params}
         />);
@@ -264,7 +263,7 @@ describe('linodes/layouts/LinodeGeneral', async () => {
 
     it('renders range options', () => {
       const page = shallow(
-        <LinodeGeneral
+        <DashboardPage
           linodes={linodes}
           params={params}
         />);
@@ -275,7 +274,7 @@ describe('linodes/layouts/LinodeGeneral', async () => {
 
     it('changes source on change', () => {
       const page = shallow(
-        <LinodeGeneral
+        <DashboardPage
           linodes={linodes}
           params={params}
         />);
@@ -287,7 +286,7 @@ describe('linodes/layouts/LinodeGeneral', async () => {
 
     it('changes range on change', () => {
       const page = shallow(
-        <LinodeGeneral
+        <DashboardPage
           linodes={linodes}
           params={params}
         />);
@@ -299,7 +298,7 @@ describe('linodes/layouts/LinodeGeneral', async () => {
 
     it('renders the chart', () => {
       const page = shallow(
-        <LinodeGeneral
+        <DashboardPage
           linodes={linodes}
           params={params}
         />);

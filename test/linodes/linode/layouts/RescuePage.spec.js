@@ -4,7 +4,7 @@ import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 import * as fetch from '~/fetch';
 import { testLinode } from '@/data/linodes';
-import { RescuePage } from '~/linodes/layouts/RescuePage';
+import { RescuePage } from '~/linodes/linode/layouts/RescuePage';
 
 describe('linodes/layouts/RescuePage', () => {
   const sandbox = sinon.sandbox.create();
