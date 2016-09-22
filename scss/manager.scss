@@ -318,7 +318,7 @@ a {
 }
 
 .main-header {
-    background: white;
+    background: $white;
     padding: $main-padding-tb 0;
 }
 
@@ -810,7 +810,11 @@ footer {
 .linodes {
     h2 {
         font-size: 1.5rem;
-        margin: $main-padding-tb/2 0 $main-padding-tb/4 0;
+        margin: 0 0 $main-padding-tb/4 0;
+    }
+
+    .card {
+        margin-bottom: $main-padding-tb/2;
     }
 }
 

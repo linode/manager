@@ -42,11 +42,13 @@ export default class PasswordInput extends Component {
             this.setState({ type: 'text' });
           }}
         >Generate</button>
-        <div className={`strength strength-${this.state.strength.score}`}>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
+        <div className="form-group">
+          <div className={`strength strength-${this.state.strength.score}`}>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
         </div>
         {this.state.password !== '' ? <p>
           An offline attack would
