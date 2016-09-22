@@ -318,16 +318,25 @@ a {
 }
 
 .main-header {
-    background: white;
+    background: $white;
     padding: $main-padding-tb 0;
+}
+
+// Deals with the fact that tablist extends container which gives it a max-width
+.main-header-fix {
+    height: 35px;
+    width: 100%;
+    background: $white;
+    border-bottom: $border;
+    margin-bottom: -35px;
 }
 
 .react-tabs {
     [role="tablist"] {
         @extend .container;
-        background: white;
+        background: $white;
         border-bottom: $border;
-        margin: 0;
+        margin: 0 auto;
     }
 
     [role="tab"] {
@@ -810,7 +819,11 @@ footer {
 .linodes {
     h2 {
         font-size: 1.5rem;
-        margin: $main-padding-tb/2 0 $main-padding-tb/4 0;
+        margin: 0 0 $main-padding-tb/4 0;
+    }
+
+    .card {
+        margin-bottom: $main-padding-tb/2;
     }
 }
 
