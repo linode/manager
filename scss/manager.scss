@@ -322,12 +322,21 @@ a {
     padding: $main-padding-tb 0;
 }
 
+// Deals with the fact that tablist extends container which gives it a max-width
+.main-header-fix {
+    height: 35px;
+    width: 100%;
+    background: $white;
+    border-bottom: $border;
+    margin-bottom: -35px;
+}
+
 .react-tabs {
     [role="tablist"] {
         @extend .container;
-        background: white;
+        background: $white;
         border-bottom: $border;
-        margin: 0;
+        margin: 0 auto;
     }
 
     [role="tab"] {

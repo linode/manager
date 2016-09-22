@@ -183,6 +183,7 @@ export class IndexPage extends Component {
     return (
       <div className="details-page">
         {this.renderHeader(linode)}
+        <div className="main-header-fix"></div>
         {this.renderTabs(tabList, selected)}
       </div>
     );
