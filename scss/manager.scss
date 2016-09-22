@@ -11,14 +11,32 @@ $red: #F24C2B;
 $yellow: #FFFCF0;
 $dark-yellow: darken($yellow, 20);
 $darkest-yellow: darken($yellow, 40);
+$dark-black: #333333;
 $black: #4B4B4B;
 $light-black: #666666;
 $lightest-black: #ACACAC;
-$dark-gray: #CCCCCC;
+$dark-gray: #DDDDDD;
 $gray: #F3F3F3;
 $light-gray: #FBFBFB;
 $white: #FEFEFE;
 $transparent: rgba(0, 0, 0, 0.5);
+
+.text-light-blue { color: $light-blue; }
+.text-blue { color: $blue; }
+.text-dark-blue { color: $dark-blue; }
+.text-green { color: $green; }
+.text-red { color: $red; }
+.text-yellow { color: $yellow; }
+.text-dark-yellow { color: $dark-yellow; }
+.text-darkest-yellow { color: $darkest-yellow; }
+.text-dark-black { color: $dark-black; }
+.text-black { color: $black; }
+.text-light-black { color: $light-black; }
+.text-lightest-black { color: $lightest-black; }
+.text-dark-gray { color: $dark-gray; }
+.text-gray { color: $gray; }
+.text-light-gray { color: $light-gray; }
+.text-white { color: $white; }
 
 $border-gray: $dark-gray;
 $border: 1px solid $border-gray;
@@ -52,7 +70,7 @@ html, #root > [data-reactroot] {
 
 body {
     height: calc(100% - #{$nav-height});
-    background: $gray;
+    background: $light-gray;
     min-width: 1007px; /* can fix later */
     color: $black;
     margin-top: $nav-height;
@@ -288,16 +306,72 @@ a {
 .main {
     margin-left: $sidebar-width;
     width: calc(100% - #{$sidebar-width});
-    padding: $main-padding-tb $main-padding-lr 0 $main-padding-lr;
 }
 
 .container {
-    min-height: 100%;
-    display: flex;
-    flex-direction: column;
+    @extends .container;
+    padding: 0 $main-padding-lr;
 
-    .container-inner {
-        flex: 1;
+    .main > & {
+        padding-top: $main-padding-tb;
+    }
+}
+
+.main-header {
+    background: white;
+    padding: $main-padding-tb 0;
+}
+
+.react-tabs {
+    [role="tablist"] {
+        @extend .container;
+        background: white;
+        border-bottom: $border;
+        margin: 0;
+    }
+
+    [role="tab"] {
+        border-color: 1px solid transparent;
+
+        &:not(:last-of-type) {
+            margin-right: 15px;
+        }
+
+        &:hover,
+        &[aria-selected="true"] {
+            background: $light-gray;
+            border: 1px solid #bbb;
+            border-bottom: 0;
+            border-radius: 2px 2px 0 0;
+            -moz-border-radius: 2px 2px 0 0;
+            -webkit-border-radius: 2px 2px 0 0;
+        }
+
+        a {
+            color: $black;
+            text-decoration: none !important;
+        }
+    }
+
+    /* define subtab behavior */
+    .react-tabs {
+        [role="tablist"] {
+            margin-top: $main-padding-tb/2;
+            padding: 0;
+            background: transparent;
+        }
+
+        [role="tab"] {
+            border: 0; // reset from above
+            border-bottom: 3px solid transparent;
+
+            &:hover,
+            &[aria-selected="true"] {
+                border: 0;
+                border-bottom: 3px solid $blue;
+                background: transparent;
+            }
+        }
     }
 }
 
@@ -306,12 +380,11 @@ a {
     border-radius: 2px;
 }
 
-input, select, .btn {
-    height: $input-height;
-    line-height: $input-height;
-    font-size: $font-size;
-    padding: 0 $input-padding;
-
+input:not([type="checkbox"]):not([type="radio"]), select, .btn {
+    height: $input-height !important;
+    line-height: $input-height !important;
+    font-size: $font-size !important;
+    padding-left: $input-padding;
     &.btn {
         padding: $input-padding;
     }
@@ -322,6 +395,11 @@ input, select, .btn {
     vertical-align: middle;
     float: none;
     position: relative;
+}
+
+section,
+section.card {
+    margin-top: $main-padding-tb;
 }
 
 .input-group {
@@ -349,7 +427,7 @@ input, select, .btn {
 
 hr {
     width: 300px;
-    margin: 2rem 0;
+    margin: $main-padding-tb/2 0;
 }
 
 .text-muted {
@@ -624,28 +702,21 @@ table {
     }
 }
 
-.linodes {
-    margin-top: 1rem;
-    h2 {
-        margin-bottom: 0.5rem;
+.form-group {
+    margin-bottom: 0;
+    &:not(:last-child) {
+        margin-bottom: $main-padding-tb/2;
     }
 }
 
-.row:last-of-type > .content-col {
-    margin-bottom: 0;
-}
-
-.form-group {
-    margin-bottom: .75rem;
-}
-
 .label-col {
-    color: #333;
+    color: $light-black;
+    &label {
+        color: $dark-black;
+    }
 }
 
 .content-col {
-    color: #666;
-
     li a {
         text-decoration: none;
     }
@@ -683,7 +754,7 @@ table {
 }
 
 footer {
-    margin-bottom: 0.75rem;
+    margin: $main-padding-tb/2 0;
 
     span {
         padding: 0 10px;
@@ -733,6 +804,64 @@ footer {
 
     .rc-slider {
         margin-bottom: 0;
+    }
+}
+
+.linodes {
+    h2 {
+        font-size: 1.5rem;
+        margin: $main-padding-tb/2 0 $main-padding-tb/4 0;
+    }
+}
+
+.create-page .alert {
+    display: inline-block;
+    margin: $main-padding-tb/2 0 0 0;
+}
+
+.list-unstyled {
+    margin-bottom: 0;
+}
+
+p {
+    margin-bottom: $main-padding-tb/2;
+}
+
+.password-input {
+    .strength {
+        width: 300px;
+        height: 10px;
+
+        span {
+            display: inline-block;
+            width: 75px;
+            height: 100%;
+            border: 1px solid $gray;
+        }
+
+        &.strength-1 {
+            span:nth-child(1) {
+                background: $dark-gray;
+            }
+        }
+
+        &.strength-2 {
+            span:nth-child(1), span:nth-child(2) {
+                background: $red;
+            }
+        }
+
+        &.strength-3 {
+            span:nth-child(1), span:nth-child(2), span:nth-child(3) {
+                background: $dark-yellow;
+            }
+        }
+
+        &.strength-4 {
+            span {
+                background: $green;
+            }
+        }
     }
 }
 

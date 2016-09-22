@@ -2,9 +2,9 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import SourceSelection from '../components/SourceSelection';
-import ServiceSelection from '../components/ServiceSelection';
-import DatacenterSelection from '../components/DatacenterSelection';
+import Source from '../components/Source';
+import Plan from '../components/Plan';
+import Datacenter from '../components/Datacenter';
 import Details from '../components/Details';
 import { fetchAllDistros } from '~/actions/api/distros';
 import { fetchAllDatacenters } from '~/actions/api/datacenters';
@@ -152,10 +152,10 @@ export class IndexPage extends Component {
     }
 
     return (
-      <div className="create-page">
+      <div className="container create-page">
         <h1>Add a Linode</h1>
-        <div className="card page-card">
-          <SourceSelection
+        <section className="card">
+          <Source
             distribution={distribution}
             backup={backup}
             selectedTab={sourceTab}
@@ -176,29 +176,29 @@ export class IndexPage extends Component {
             }}
             linodes={linodes}
           />
-        </div>
-        <div className="card page-card">
-          <DatacenterSelection
+        </section>
+        <section className="card">
+          <Datacenter
             selected={datacenter}
             datacenters={datacenters.datacenters}
             disabled={backup !== null}
             onDatacenterSelected={id => this.setState({ datacenter: id })}
           />
-        </div>
-        <div className="card page-card">
-          <ServiceSelection
+        </section>
+        <section className="card">
+          <Plan
             selected={service}
             services={services.services}
             onServiceSelected={id => this.setState({ service: id })}
           />
-        </div>
-        <div className="card page-card">
+        </section>
+        <section className="card">
           <Details
             onSubmit={this.onSubmit}
             submitEnabled={!!(distribution || backup) && !!datacenter && !!service && !loading}
             errors={this.state.errors}
           />
-        </div>
+        </section>
       </div>
     );
   }

@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 import { flags, distros as distroAssets } from '~/assets';
-import _ from 'lodash';
 import { LinodeStatesReadable } from '~/constants';
 import moment from 'moment';
 
@@ -26,15 +25,16 @@ renderPowerButton.propTypes = {
   onReboot: PropTypes.func,
 };
 
-export function renderPlanStyle(services) {
-  return _.filter(services, s => s.service_type === 'linode')
-    .reduce((a, s) => {
-      const plan = s.label.split(' ');
-      return `${plan[0]} ${parseInt(plan[1], 10) / 1024}G`;
-    }, '');
+export function renderPlanStyle(s) {
+  if (!s || !s.label) return null;
+
+  const plan = s.label.split(' ');
+  return `${plan[0]} ${parseInt(plan[1], 10) / 1024}G`;
 }
 
 export function renderDistroStyle(linode) {
+  if (!linode || !linode.distribution || !linode.distribution.vendor) return null;
+
   return (
     <span className="distro-style">
       {linode.distribution.vendor}
@@ -136,14 +136,14 @@ function renderCard(props) {
 
   return (
     <div key={linode.id} className={`linode card ${linode.state} ${selectedClass}`}>
-      <div className="linode-header">
+      <header className="header-secondary">
         {checkbox}
-        <Link to={`/linodes/${linode.id}`} className="linode-label">{linode.label}</Link>
+        <Link to={`/linodes/${linode.id}`}>{linode.label}</Link>
         <span
           className={`linode-status ${linode.state}`}
         >{LinodeStatesReadable[linode.state]}</span>
         {renderPowerButton(props)}
-      </div>
+      </header>
       <div className="linode-details clearfix">
         <div className="form-group row">
           <div className="col-sm-12 content-col ip-addresses">

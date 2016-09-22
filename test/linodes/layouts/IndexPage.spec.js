@@ -102,10 +102,10 @@ describe('linodes/layouts/IndexPage', () => {
 
     expect(linodesPage.find('.col-md-4').length).to.equal(2);
 
-    expect(linodesPage.find('.col-md-4').first().find('.linode-label')
+    expect(linodesPage.find('.col-md-4').first().find('a')
                   .text()).to.equal(testLinode.label);
 
-    expect(linodesPage.find('.col-md-4').last().find('.linode-label')
+    expect(linodesPage.find('.col-md-4').last().find('a')
                   .text()).to.equal('asdfasdf');
   });
 
