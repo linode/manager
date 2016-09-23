@@ -9,10 +9,20 @@ import { setStorage } from '~/storage';
 import md5 from 'md5';
 
 export class OAuthCallbackPage extends Component {
+  constructor() {
+    super();
+    this.state = { error: null };
+  }
+
   async componentDidMount() {
     const { dispatch, location } = this.props;
-    const { code, username, email } = location.query;
+    const { error, code, username, email } = location.query;
     const returnTo = location.query['return'];
+
+    if (error) {
+      this.setState({ error: location.query.error_description });
+      return;
+    }
 
     if (code) {
       const data = new FormData();
@@ -41,6 +51,16 @@ export class OAuthCallbackPage extends Component {
   }
 
   render() {
+    const { error } = this.state;
+    if (error) {
+      return (
+        <div className="container">
+          <div className="alert alert-danger">
+            Error: {error}
+          </div>
+        </div>
+      );
+    }
     return <div></div>;
   }
 }
