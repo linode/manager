@@ -1,6 +1,7 @@
 import React from 'react';
 import sinon from 'sinon';
 import { expect } from 'chai';
+import { shallow, mount } from 'enzyme';
 import { OAuthCallbackPage } from '../../src/layouts/OAuth';
 import { push } from 'react-router-redux';
 import { setToken } from '~/actions/authentication';
@@ -14,19 +15,16 @@ describe('layouts/OAuth', () => {
     sandbox.restore();
   });
 
-  const componentDidMount = OAuthCallbackPage.prototype.componentDidMount;
-  OAuthCallbackPage.prototype.componentDidMount = () => {};
-
   it('redirects to / when no code is provided', async () => {
     const dispatch = sandbox.spy();
-    const component = (
+    const component = shallow(
       <OAuthCallbackPage
         dispatch={dispatch}
         location={{
           query: { },
         }}
       />);
-    await componentDidMount.call(component);
+    await component.instance().componentDidMount();
     expect(dispatch.calledOnce).to.equal(true);
     expect(dispatch.calledWith(push('/'))).to.equal(true);
   });
@@ -44,7 +42,7 @@ describe('layouts/OAuth', () => {
     });
     const dispatch = sandbox.stub();
     dispatch.onFirstCall().returns({ scopes: '*', token: 'access_token' });
-    const component = (
+    const component = shallow(
       <OAuthCallbackPage
         dispatch={dispatch}
         location={{
@@ -55,10 +53,28 @@ describe('layouts/OAuth', () => {
           },
         }}
       />);
-    await componentDidMount.call(component);
+    await component.instance().componentDidMount();
     expect(fetchStub.calledOnce).to.equal(true);
     expect(fetchStub.calledWith(`${LOGIN_ROOT}/oauth/token`)).to.equal(true);
     // TODO: Figure out how to test FormData, it's weird
+  });
+
+  it('handles OAuth redirect errors', async () => {
+    const fetchStub = sandbox.stub(fetch, 'rawFetch').returns({
+      json: () => exchangeResponse,
+    });
+    const component = mount(
+      <OAuthCallbackPage
+        dispatch={() => {}}
+        location={{
+          query: {
+            error: 'yes',
+            error_description: 'you done screwed up now',
+          },
+        }}
+      />);
+    expect(fetchStub.callCount).to.equal(0);
+    expect(component.find('.alert').text()).to.equal('Error: you done screwed up now');
   });
 
   it('dispatches a setToken action', async () => {
@@ -67,7 +83,7 @@ describe('layouts/OAuth', () => {
     });
     const dispatch = sandbox.stub();
     dispatch.onFirstCall().returns({ scopes: '*', token: 'access_token' });
-    const component = (
+    const component = shallow(
       <OAuthCallbackPage
         dispatch={dispatch}
         location={{
@@ -78,7 +94,7 @@ describe('layouts/OAuth', () => {
           },
         }}
       />);
-    await componentDidMount.call(component);
+    await component.instance().componentDidMount();
     expect(dispatch.calledTwice).to.equal(true);
     expect(dispatch.calledWith(
       setToken('access_token', '*', 'username', 'email',
@@ -92,7 +108,7 @@ describe('layouts/OAuth', () => {
     });
     const dispatch = sandbox.stub();
     dispatch.onFirstCall().returns({ scopes: '*', token: 'access_token' });
-    const component = (
+    const component = shallow(
       <OAuthCallbackPage
         dispatch={dispatch}
         location={{
@@ -104,7 +120,7 @@ describe('layouts/OAuth', () => {
           },
         }}
       />);
-    await componentDidMount.call(component);
+    await component.instance().componentDidMount();
     expect(dispatch.calledWith(push('/asdf'))).to.equal(true);
   });
 });
