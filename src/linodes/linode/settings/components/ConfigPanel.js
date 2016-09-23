@@ -24,12 +24,12 @@ function configContent(linode, configs, dispatch) {
       <thead className="clear-thead">
         <tr>
           <th>Label</th>
-          <th>&nbsp;</th>
+          {configs.length > 1 ? <th></th> : null}
         </tr>
       </thead>
-      <tbody className="hard-border">
+      <tbody>
         {configs.map(config =>
-          <tr key={config.id} className="clearfix">
+          <tr key={config.id}>
             <td>
               <Link
                 to={`/linodes/${linode.id}/settings/advanced/configs/${config.id}`}
@@ -37,8 +37,8 @@ function configContent(linode, configs, dispatch) {
                 {config.label}
               </Link>
             </td>
-            <td>
-              {configs.length > 1 ? <a
+            {configs.length > 1 ? <td className="text-xs-right">
+              <a
                 className="delete-button"
                 onClick={e => {
                   e.preventDefault();
@@ -46,8 +46,7 @@ function configContent(linode, configs, dispatch) {
                 }}
                 className="action-link pull-right"
                 href="#"
-              >Delete</a> : null}
-            </td>
+              >Delete</a></td> : null}
           </tr>
         )}
       </tbody>
