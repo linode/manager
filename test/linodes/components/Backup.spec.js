@@ -19,7 +19,7 @@ describe('linodes/components/Backup', () => {
     const backup = mount(
       <Backup
         backup={testBackup}
-        selected={false}
+        selected={testBackup.id}
         future={false}
         onSelect={() => {}}
       />
@@ -33,7 +33,7 @@ describe('linodes/components/Backup', () => {
     const backup = mount(
       <Backup
         backup={{ ...testBackup, status: 'pending' }}
-        selected={false}
+        selected={testBackup.id}
         future={false}
         onSelect={() => {}}
       />
@@ -46,7 +46,7 @@ describe('linodes/components/Backup', () => {
     const backup = mount(
       <Backup
         backup={{ ...testBackup, status: 'running' }}
-        selected={false}
+        selected={testBackup.id}
         future={false}
         onSelect={() => {}}
       />
@@ -59,7 +59,7 @@ describe('linodes/components/Backup', () => {
     const backup = mount(
       <Backup
         backup={{ ...testBackup, status: 'failed' }}
-        selected={false}
+        selected={testBackup.id}
         future={false}
         onSelect={() => {}}
       />
@@ -72,7 +72,7 @@ describe('linodes/components/Backup', () => {
     const backup = mount(
       <Backup
         backup={{ ...testBackup, status: 'userAborted' }}
-        selected={false}
+        selected={testBackup.id}
         future={false}
         onSelect={() => {}}
       />
@@ -85,7 +85,7 @@ describe('linodes/components/Backup', () => {
     const backup = mount(
       <Backup
         backup={{ ...testBackup, status: 'needsPostProcessing' }}
-        selected={false}
+        selected={testBackup.id}
         future={false}
         onSelect={() => {}}
       />

@@ -1,7 +1,7 @@
 import React from 'react';
 import sinon from 'sinon';
 import { expect } from 'chai';
-import { shallow, mount } from 'enzyme';
+import { shallow } from 'enzyme';
 import { push } from 'react-router-redux';
 
 import { IndexPage } from '~/linodes/create/layouts/IndexPage';
@@ -37,7 +37,7 @@ describe('linodes/create/layout/IndexPage', () => {
   ].map(t => it(`renders a ${t}`, assertContains(t)));
 
   it('changes the source tab when clicked', () => {
-    const page = mount(
+    const page = shallow(
       <IndexPage
         dispatch={() => {}}
         distros={api.distributions}
@@ -47,8 +47,7 @@ describe('linodes/create/layout/IndexPage', () => {
       />);
     const ss = page.find('Source');
     ss.props().onTabChange(1);
-    expect(ss.find('Tab').at(1).props().selected)
-      .to.equal(true);
+    expect(page.state('sourceTab')).to.equal(1);
   });
 
   it('autoselects a backup from query string info', async () => {
@@ -82,15 +81,17 @@ describe('linodes/create/layout/IndexPage', () => {
     const dispatch = sandbox.stub(env, 'dispatch');
     dispatch.onCall(0).throws(new Error(error));
 
-    await mount(
+    const page = shallow(
       <IndexPage
         dispatch={dispatch}
         distros={api.distributions}
         datacenters={api.datacenters}
         services={api.services}
         linodes={api.linodes}
-      />
-    );
+        location={{ query: {} }}
+      />);
+
+    await page.instance().componentDidMount();
 
     expect(dispatch.calledTwice).to.equal(true);
     expect(dispatch.secondCall.args[0].message).to.equal(error);
@@ -106,7 +107,7 @@ describe('linodes/create/layout/IndexPage', () => {
         linodes={api.linodes}
       />);
     const ss = page.find('Source');
-    ss.props().onSourceSelected('distribution', { id: 'distro_1234' });
+    ss.props().onSourceSelected('distribution', 'distro_1234');
     expect(ss.find('.distro.selected').find(<div className="title">Arch 2016.05</div>))
       .to.exist;
   });
@@ -121,7 +122,7 @@ describe('linodes/create/layout/IndexPage', () => {
         linodes={api.linodes}
       />);
     const ds = page.find('Datacenter');
-    ds.props().onDatacenterSelected({ id: 'newark' });
+    ds.props().onDatacenterSelected('newark');
     expect(ds.find('.datacenter.selected').find(<div className="title">Newark, NJ</div>))
       .to.exist;
   });
@@ -136,7 +137,7 @@ describe('linodes/create/layout/IndexPage', () => {
         linodes={api.linodes}
       />);
     const ss = page.find('Plan');
-    ss.props().onServiceSelected({ id: 'linode1024.5' });
+    ss.props().onServiceSelected('linode1024.5');
     expect(ss.find('.service.selected').find(<div className="title">Linode 1G</div>));
   });
 
@@ -145,7 +146,7 @@ describe('linodes/create/layout/IndexPage', () => {
     const dispatch = sandbox.stub(env, 'dispatch');
     const createdLinodeId = 1;
     sandbox.stub(apiLinodes, 'createLinode', d => d);
-    const page = mount(
+    const page = shallow(
       <IndexPage
         dispatch={dispatch}
         distros={api.distributions}
@@ -157,17 +158,10 @@ describe('linodes/create/layout/IndexPage', () => {
     dispatch.reset();
     dispatch.onCall(0).returns({ id: createdLinodeId });
 
-    const expectIsDisabled = () => expect(page.find('button[type="submit"]').props().disabled)
-      .to.equal(true);
-
-    expectIsDisabled();
     page.find('Plan').props().onServiceSelected('service');
-    expectIsDisabled();
     page.find('Datacenter').props().onDatacenterSelected('datacenter');
-    expectIsDisabled();
     page.find('Source').props().onSourceSelected('distribution', 'source');
-    expectIsDisabled();
-    await page.find('Details').props().onSubmit({
+    await page.instance().onSubmit({
       labels: ['label'],
       password: 'password',
       backups: false,
@@ -193,7 +187,7 @@ describe('linodes/create/layout/IndexPage', () => {
     const dispatch = sandbox.stub(env, 'dispatch');
     const createdLinodeId = 1;
     sandbox.stub(apiLinodes, 'createLinode', d => d);
-    const page = mount(
+    const page = shallow(
       <IndexPage
         dispatch={dispatch}
         distros={api.distributions}
@@ -209,7 +203,7 @@ describe('linodes/create/layout/IndexPage', () => {
     page.find('Plan').props().onServiceSelected('service');
     page.find('Datacenter').props().onDatacenterSelected('datacenter');
     page.find('Source').props().onSourceSelected('distribution', 'source');
-    await page.find('Details').props().onSubmit({
+    await page.instance().onSubmit({
       labels: ['label', 'label-2'],
       password: 'password',
       backups: false,
@@ -244,7 +238,7 @@ describe('linodes/create/layout/IndexPage', () => {
     const dispatch = sandbox.stub(env, 'dispatch');
     const createdLinodeId = 1;
     sandbox.stub(apiLinodes, 'createLinode', d => d);
-    const page = mount(
+    const page = shallow(
       <IndexPage
         dispatch={dispatch}
         distros={api.distributions}
@@ -260,7 +254,7 @@ describe('linodes/create/layout/IndexPage', () => {
     page.find('Plan').props().onServiceSelected('service');
     page.find('Datacenter').props().onDatacenterSelected('datacenter');
     page.find('Source').props().onSourceSelected('distribution', 'source');
-    await page.find('Details').props().onSubmit({
+    await page.instance().onSubmit({
       labels: ['label', null, null],
       password: 'password',
       backups: false,
@@ -302,7 +296,7 @@ describe('linodes/create/layout/IndexPage', () => {
     const error = 'The error';
     const env = { dispatch() {} };
     const dispatch = sandbox.stub(env, 'dispatch');
-    const page = mount(
+    const page = shallow(
       <IndexPage
         dispatch={dispatch}
         distros={api.distributions}
@@ -311,17 +305,19 @@ describe('linodes/create/layout/IndexPage', () => {
         linodes={api.linodes}
       />
     );
-    await new Promise(a => setTimeout(a, 0));
     dispatch.reset();
     dispatch.onCall(0).throws({ json: () => ({ errors: [{ field: 'label', reason: error }] }) });
 
     page.find('Plan').props().onServiceSelected('service');
     page.find('Datacenter').props().onDatacenterSelected('datacenter');
     page.find('Source').props().onSourceSelected('distribution', 'source');
-    await page.find('Details').props().onSubmit({ labels: [''], password: '' });
-
-    expect(page.find('Details').props().errors).to.deep.equal({
-      label: [error],
+    await page.instance().onSubmit({
+      group: 'group',
+      labels: ['label'],
+      password: 'password',
+      backups: false,
     });
+
+    expect(page.state('errors')).to.deep.equal({ label: [error] });
   });
 });

@@ -42,32 +42,34 @@ describe('linodes/linode/layouts/IndexPage/loadLinode', async () => {
   });
 
   it('fetches a linode when mounted with an unknown linode', async () => {
-    mount(
+    const page = shallow(
       <Test
         dispatch={dispatch}
         linodes={freshState.api.linodes}
         params={{ linodeId: -1 }}
       />
     );
+    await page.instance().componentDidMount();
     expect(dispatch.calledOnce).to.equal(true);
     const fn = dispatch.firstCall.args[0];
-    expectRequest(fn, `/linode/instances/${testLinode.id}`,
+    await expectRequest(fn, '/linode/instances/-1',
       d => expect(d.args[0].type).to.equal(linodeActions.UPDATE_LINODE));
   });
 
-  it('handles errors from fetchLinode', () => {
+  it('handles errors from fetchLinode', async () => {
     sandbox.stub(linodeActions, 'fetchLinode').throws({
       json: () => ({ foo: 'bar' }),
       headers: { get() { return 'application/json'; } },
       statusCode: 400,
       statusText: 'Bad Request',
     });
-    mount(
+    const page = shallow(
       <Test
         dispatch={dispatch}
         linodes={freshState.api.linodes}
-        params={{ linodeId: testLinode.id }}
+        params={{ linodeId: `${testLinode.id}` }}
       />);
+    await page.instance().componentDidMount();
     expect(dispatch.calledWith({
       type: SET_ERROR,
       json: { foo: 'bar' },
@@ -173,7 +175,7 @@ describe('linodes/linode/layouts/IndexPage', () => {
       <IndexPage
         dispatch={dispatch}
         linodes={linodes}
-        params={{ linodeId: testLinode.id }}
+        params={{ linodeId: `${testLinode.id}` }}
         detail={detail}
         router={router}
       />
@@ -188,7 +190,7 @@ describe('linodes/linode/layouts/IndexPage', () => {
       <IndexPage
         dispatch={dispatch}
         linodes={linodes}
-        params={{ linodeId: testLinode.id }}
+        params={{ linodeId: `${testLinode.id}` }}
         detail={detail}
         router={router}
       />);
@@ -201,7 +203,7 @@ describe('linodes/linode/layouts/IndexPage', () => {
       <IndexPage
         dispatch={dispatch}
         linodes={linodes}
-        params={{ linodeId: 1235 }}
+        params={{ linodeId: '1235' }}
         detail={detail}
         router={router}
       />);
@@ -214,7 +216,7 @@ describe('linodes/linode/layouts/IndexPage', () => {
       <IndexPage
         dispatch={dispatch}
         linodes={linodes}
-        params={{ linodeId: 1235 }}
+        params={{ linodeId: '1235' }}
         detail={detail}
       />
     );
@@ -240,7 +242,7 @@ describe('linodes/linode/layouts/IndexPage', () => {
       <IndexPage
         dispatch={dispatch}
         linodes={linodes}
-        params={{ linodeId: testLinode.id }}
+        params={{ linodeId: `${testLinode.id}` }}
         detail={detail}
       />);
     const dropdown = page.find(Dropdown);
@@ -252,7 +254,7 @@ describe('linodes/linode/layouts/IndexPage', () => {
       <IndexPage
         dispatch={dispatch}
         linodes={linodes}
-        params={{ linodeId: 1238 }}
+        params={{ linodeId: '1238' }}
         detail={detail}
       />);
     const select = page.find('header .configs');
@@ -269,7 +271,7 @@ describe('linodes/linode/layouts/IndexPage', () => {
       <IndexPage
         dispatch={dispatch}
         linodes={linodes}
-        params={{ linodeId: 1238 }}
+        params={{ linodeId: '1238' }}
         detail={detail}
       />);
     const select = page.find('header .configs select');
@@ -282,7 +284,7 @@ describe('linodes/linode/layouts/IndexPage', () => {
       <IndexPage
         dispatch={dispatch}
         linodes={linodes}
-        params={{ linodeId: testLinode.id }}
+        params={{ linodeId: `${testLinode.id}` }}
         detail={detail}
       />);
     const dropdown = page.find(Dropdown).props();
@@ -298,7 +300,7 @@ describe('linodes/linode/layouts/IndexPage', () => {
       <IndexPage
         dispatch={dispatch}
         linodes={linodes}
-        params={{ linodeId: 1236 }}
+        params={{ linodeId: '1236' }}
         detail={detail}
       />);
     const dropdown = page.find(Dropdown).props();
@@ -314,7 +316,7 @@ describe('linodes/linode/layouts/IndexPage', () => {
       <IndexPage
         dispatch={dispatch}
         linodes={linodes}
-        params={{ linodeId: 1237 }}
+        params={{ linodeId: '1237' }}
         detail={detail}
         router={router}
       />);
@@ -326,7 +328,7 @@ describe('linodes/linode/layouts/IndexPage', () => {
       <IndexPage
         dispatch={dispatch}
         linodes={linodes}
-        params={{ linodeId: testLinode.id }}
+        params={{ linodeId: `${testLinode.id}` }}
         detail={detail}
         router={router}
       />);

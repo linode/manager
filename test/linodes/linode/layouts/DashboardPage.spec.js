@@ -47,18 +47,18 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
     _plural: 'linodes',
   };
   const params = {
-    linodeId: testLinode.id,
+    linodeId: `${testLinode.id}`,
   };
 
-  it('calls loadLinode on mount', () => {
+  it('calls loadLinode on mount', async () => {
     const loadLinode = sinon.stub(IndexPage, 'loadLinode');
-    mount(
+    const page = shallow(
       <DashboardPage
         linodes={linodes}
         params={params}
       />
     );
-
+    await page.instance().componentDidMount();
     expect(loadLinode.calledOnce).to.equal(true);
     loadLinode.restore();
   });
@@ -114,7 +114,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
     const page = shallow(
       <DashboardPage
         linodes={linodes}
-        params={{ linodeId: 1235 }}
+        params={{ linodeId: '1235' }}
       />);
 
     expect(page.find('.backup-status')
@@ -138,7 +138,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
     const page = shallow(
       <DashboardPage
         linodes={linodes}
-        params={{ linodeId: 1236 }}
+        params={{ linodeId: '1236' }}
       />);
 
     expect(page.find('.linode-plan').length).to.equal(0);
@@ -174,7 +174,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
     const page = shallow(
       <DashboardPage
         linodes={linodes}
-        params={{ linodeId: 1236 }}
+        params={{ linodeId: '1236' }}
       />);
 
     expect(page.find('.linode-distro').at(0)

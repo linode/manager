@@ -102,7 +102,10 @@ describe('layouts/Layout', () => {
     });
 
     /* eslint-enable prefer-template */
-    const layout = shallow(<Layout errors={errors} dispatch={dispatch} />);
+    const layout = shallow(
+      <Layout errors={errors} dispatch={dispatch}>
+        <p>Hello world</p>
+      </Layout>);
     await layout.instance().componentDidMount();
     expect(fetchStub.calledWith('https://blog.linode.com/feed/'))
       .to.equal(true);
