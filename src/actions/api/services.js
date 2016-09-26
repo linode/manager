@@ -1,4 +1,4 @@
-import { makeFetchPage, makeFetchAll } from '~/api-store';
+import { makeFetchPage, makeFetchAll } from '~/api/store';
 
 export const UPDATE_SERVICES = '@@services/UPDATE_SERVICES';
 

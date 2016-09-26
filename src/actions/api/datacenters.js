@@ -1,4 +1,4 @@
-import { makeFetchPage, makeFetchAll } from '~/api-store';
+import { makeFetchPage, makeFetchAll } from '~/api/store';
 
 export const UPDATE_DATACENTER = '@@datacenters/UPDATE_DATACENTERS';
 export const UPDATE_DATACENTERS = '@@datacenters/UPDATE_DATACENTERS';

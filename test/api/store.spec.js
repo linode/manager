@@ -10,10 +10,10 @@ import makeApiList, {
   makeCreateItem,
   invalidateCache,
   setFilter,
-} from '~/api-store';
+} from '~/api/store';
 import * as fetch from '~/fetch';
 
-describe('api-store', () => {
+describe('api/store', () => {
   const mockFoobarsResponse = {
     foobars: [
       { id: 1 },

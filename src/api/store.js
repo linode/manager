@@ -176,7 +176,7 @@ export function setFilter(plural, filter = null) {
   return { type: `@@${plural}/SET_FILTER`, filter };
 }
 
-import { fetch } from './fetch';
+import { fetch } from '../fetch';
 
 /**
  * As the name might imply, this function refines the state. It also is nice

@@ -1,5 +1,5 @@
 import { fetch } from '~/fetch';
-import { makeFetchPage, makeFetchItem, makeFetchAll } from '~/api-store';
+import { makeFetchPage, makeFetchItem, makeFetchAll } from '~/api/store';
 import { linodeConfig, UPDATE_LINODE, UPDATE_BACKUP } from './linodes';
 
 export const fetchBackups = makeFetchPage(linodeConfig, '_backups');

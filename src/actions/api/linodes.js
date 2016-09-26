@@ -7,7 +7,7 @@ import {
   makeDeleteItem,
   makePutItem,
   makeCreateItem,
-} from '~/api-store';
+} from '~/api/store';
 
 export const UPDATE_LINODES = '@@linodes/UPDATE_LINODES';
 export const UPDATE_LINODE = '@@linodes/UPDATE_LINODE';
