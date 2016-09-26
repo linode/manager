@@ -19,10 +19,8 @@ describe('actions/modal', () => {
   });
 
   it('should return hide modal action', () => {
-    const f = hideModal(title, body);
+    const f = hideModal();
 
     expect(f.type).to.equal(HIDE_MODAL);
-    expect(f.title).to.equal(title);
-    expect(f.body).to.equal(body);
   });
 });

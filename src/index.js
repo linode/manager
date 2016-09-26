@@ -31,7 +31,12 @@ const init = () => {
     <Provider store={store}>
       <div>
         <Router history={history}>
-          <Route onEnter={checkLogin} onChange={() => store.dispatch(hideModal())} path="/" component={Layout}>
+          <Route
+            onEnter={checkLogin}
+            onChange={() => store.dispatch(hideModal())}
+            path="/"
+            component={Layout}
+          >
             <IndexRedirect to="/linodes" />
             {Linodes}
             {NodeBalancers}
