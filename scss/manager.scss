@@ -389,7 +389,9 @@ a {
     border-radius: 2px;
 }
 
-input:not([type="checkbox"]):not([type="radio"]), select, .btn {
+input:not([type="checkbox"]):not([type="radio"]),
+select,
+.btn:not(.btn-help) {
     height: $input-height !important;
     line-height: $input-height !important;
     font-size: $font-size !important;

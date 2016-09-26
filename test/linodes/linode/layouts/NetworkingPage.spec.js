@@ -78,7 +78,7 @@ describe('linodes/linode/layouts/NetworkingPage', () => {
 
       it('renders address ip and url', async () => {
         const ipv4 = testLinode.ipv4.address;
-        const inet = `${ipv4} / 24 ( ${testLinode.ipv4.rdns} )`;
+        const inet = `${ipv4}/24 ( ${testLinode.ipv4.rdns} )`;
         const page = shallow(
           <NetworkingPage
             linodes={linodes}

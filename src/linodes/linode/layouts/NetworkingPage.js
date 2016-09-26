@@ -61,7 +61,7 @@ export class NetworkingPage extends Component {
           <div className="col-sm-8 content-col right">
             <ul className="list-unstyled">
               <span>
-                <span>{ipv4} / 24 </span>
+                <span>{ipv4}/24 </span>
                 <span className="text-nowrap">
                   ( {rdns} )
                 </span>
