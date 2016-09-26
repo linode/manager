@@ -11,8 +11,8 @@ export default function modal(state = null, action) {
     case HIDE_MODAL:
       return {
         open: false,
-        title: action.title,
-        body: action.body,
+        title: null,
+        body: null,
       };
     default:
       return { ...state };
