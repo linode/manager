@@ -12,7 +12,7 @@ const calendar = {
 
 export default function Backup(props) {
   const { backup, selected, future, onSelect } = props;
-  const created = moment(backup.created);
+  const created = moment(backup.created, moment.ISO_8601);
   const cardTitle = created.calendar(null, calendar);
   let content = created.format('dddd, MMMM D YYYY LT');
 

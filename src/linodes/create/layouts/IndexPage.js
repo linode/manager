@@ -93,10 +93,10 @@ export class IndexPage extends Component {
     }
   }
 
-  async createLinode({ group, label, password, backups }) {
+  createLinode({ group, label, password, backups }) {
     const { dispatch } = this.props;
     const { service, datacenter, distribution, backup } = this.state;
-    return await dispatch(createLinode({
+    return dispatch(createLinode({
       root_pass: password,
       service,
       distribution,

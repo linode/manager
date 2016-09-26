@@ -387,7 +387,7 @@ export class BackupsPage extends Component {
       <div>
         <div className="row backups">
           {recentBackups.map(backup =>
-            <div className="col-md-3" key={moment(backup.created)}>
+            <div className="col-md-3" key={moment(backup.created, moment.ISO_8601)}>
               <Backup
                 backup={backup}
                 selected={selectedBackup}

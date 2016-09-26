@@ -3,8 +3,6 @@ import { shallow } from 'enzyme';
 import { expect } from 'chai';
 
 import Header from '../../src/components/Header';
-import Navigation from '../../src/components/Navigation';
-import Infobar from '../../src/components/Infobar';
 
 describe('components/Header', () => {
   it('renders infobar and navigation components', () => {
@@ -12,7 +10,7 @@ describe('components/Header', () => {
       <Header username="user" title="" link="" />
     );
 
-    expect(header.find(<Navigation username="user" />)).to.exist;
-    expect(header.find(<Infobar />)).to.exist;
+    expect(header.find('Navigation').length).to.equal(1);
+    expect(header.find('Infobar').length).to.equal(1);
   });
 });

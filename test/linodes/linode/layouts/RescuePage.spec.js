@@ -6,7 +6,7 @@ import * as fetch from '~/fetch';
 import { testLinode } from '@/data/linodes';
 import { RescuePage } from '~/linodes/linode/layouts/RescuePage';
 
-describe('linodes/layouts/RescuePage', () => {
+describe('linodes/linode/layouts/RescuePage', () => {
   const sandbox = sinon.sandbox.create();
 
   const dispatch = sandbox.spy();
@@ -61,13 +61,16 @@ describe('linodes/layouts/RescuePage', () => {
   };
 
   it('fetches a linode when mounted with an unknown linode', async () => {
-    mount(
+    const page = shallow(
       <RescuePage
         dispatch={dispatch}
         linodes={{ linodes: { } }}
-        params={{ linodeId: 1234 }}
+        params={{ linodeId: '1234' }}
       />);
-    await new Promise(a => setTimeout(a, 0));
+    const get = sandbox.stub(page.instance(), 'getLinode');
+    get.onFirstCall().returns(null);
+    get.onSecondCall().returns(testLinode);
+    await page.instance().componentDidMount();
     const dispatched = dispatch.firstCall.args[0];
     // Assert that dispatched is a function that fetches a linode
     const fetchStub = sandbox.stub(fetch, 'fetch').returns({
@@ -87,7 +90,7 @@ describe('linodes/layouts/RescuePage', () => {
       <RescuePage
         dispatch={dispatch}
         linodes={linodes}
-        params={{ linodeId: 1234 }}
+        params={{ linodeId: '1234' }}
       />);
     let dispatched = dispatch.firstCall.args[0];
     // Assert that dispatched is a function that fetches disks
@@ -127,7 +130,7 @@ describe('linodes/layouts/RescuePage', () => {
       <RescuePage
         dispatch={dispatch}
         linodes={linodes}
-        params={{ linodeId: testLinode.id }}
+        params={{ linodeId: `${testLinode.id}` }}
       />);
     expect(dispatch.calledTwice).to.equal(false);
   });
@@ -138,7 +141,7 @@ describe('linodes/layouts/RescuePage', () => {
         <RescuePage
           dispatch={dispatch}
           linodes={linodes}
-          params={{ linodeId: 1235 }}
+          params={{ linodeId: '1235' }}
         />);
       page.setState({ loading: false });
       expect(page.contains(
@@ -151,7 +154,7 @@ describe('linodes/layouts/RescuePage', () => {
         <RescuePage
           dispatch={dispatch}
           linodes={linodes}
-          params={{ linodeId: 1234 }}
+          params={{ linodeId: '1234' }}
         />);
       page.setState({ loading: false });
       expect(page.find('PasswordInput')).to.exist;
@@ -162,7 +165,7 @@ describe('linodes/layouts/RescuePage', () => {
         <RescuePage
           dispatch={dispatch}
           linodes={linodes}
-          params={{ linodeId: 1236 }}
+          params={{ linodeId: '1236' }}
         />);
       page.setState({ loading: false, disk: 2234 });
       const reset = page.find('.root-pw');
@@ -178,7 +181,7 @@ describe('linodes/layouts/RescuePage', () => {
         <RescuePage
           dispatch={dispatch}
           linodes={linodes}
-          params={{ linodeId: 1236 }}
+          params={{ linodeId: '1236' }}
         />);
       page.setState({ loading: false, disk: 2234 });
       const reset = page.find('.root-pw');
@@ -192,7 +195,7 @@ describe('linodes/layouts/RescuePage', () => {
         <RescuePage
           dispatch={dispatch}
           linodes={linodes}
-          params={{ linodeId: 1234 }}
+          params={{ linodeId: '1234' }}
         />);
       page.setState({ loading: false, disk: 1234 });
       const reset = page.find('.root-pw');
@@ -205,7 +208,7 @@ describe('linodes/layouts/RescuePage', () => {
         <RescuePage
           dispatch={dispatch}
           linodes={linodes}
-          params={{ linodeId: 1237 }}
+          params={{ linodeId: '1237' }}
         />);
       page.setState({ loading: false, disk: 1234, password: 'new password' });
       const { resetRootPassword } = page.instance();
@@ -224,7 +227,7 @@ describe('linodes/layouts/RescuePage', () => {
         <RescuePage
           dispatch={dispatch}
           linodes={linodes}
-          params={{ linodeId: 1234 }}
+          params={{ linodeId: '1234' }}
         />);
       page.setState({ loading: false, disk: 1234, password: 'new password' });
       const { resetRootPassword } = page.instance();

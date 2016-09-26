@@ -21,8 +21,8 @@ describe('linodes/linode/settings/layouts/ConfigEdit', () => {
     kernels,
     dispatch: () => {},
     params: {
-      linodeId: testLinode.id,
-      configId: 12345,
+      linodeId: `${testLinode.id}`,
+      configId: '12345',
     },
   };
 
