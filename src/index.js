@@ -24,13 +24,19 @@ import Longview from './longview';
 import DNSManager from './dnsmanager';
 import Account from './account';
 import Support from './support';
+import { hideModal } from '~/actions/modal';
 
 const init = () => {
   render(
     <Provider store={store}>
       <div>
         <Router history={history}>
-          <Route onEnter={checkLogin} path="/" component={Layout}>
+          <Route
+            onEnter={checkLogin}
+            onChange={() => store.dispatch(hideModal())}
+            path="/"
+            component={Layout}
+          >
             <IndexRedirect to="/linodes" />
             {Linodes}
             {NodeBalancers}

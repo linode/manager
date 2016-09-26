@@ -42,8 +42,6 @@ IndexPage.propTypes = {
   }).isRequired,
   children: PropTypes.object,
   location: PropTypes.object,
-  router: PropTypes.object,
-  route: PropTypes.object,
 };
 
 function select(state) {

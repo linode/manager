@@ -24,8 +24,6 @@ describe('components/Modal', () => {
     modal.simulate('click');
     expect(dispatch.calledWith({
       type: HIDE_MODAL,
-      title: undefined,
-      body: undefined,
     })).to.equal(true);
   });
 

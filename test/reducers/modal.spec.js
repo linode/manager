@@ -25,11 +25,11 @@ describe('reducers/modal', () => {
 
     expect(modal(state, {
       type: actions.HIDE_MODAL,
-      title: 'title',
-      body: 'body',
+      title: null,
+      body: null,
     })).to.be.eql({
-      title: 'title',
-      body: 'body',
+      title: null,
+      body: null,
       open: false,
     });
   });
