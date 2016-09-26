@@ -1,53 +1,37 @@
 import React, { PropTypes } from 'react';
-import moment, { ISO_8601 } from 'moment';
-
-const calendar = {
-  sameDay: '[Today]',
-  nextDay: '[Tomorrow]',
-  nextWeek: 'dddd',
-  lastDay: '[Yesterday]',
-  lastWeek: 'dddd',
-  sameElse: ISO_8601,
-};
+import moment from 'moment';
 
 export default function Backup(props) {
-  const { backup, selected, future, onSelect } = props;
+  const { backup, title, selected, onSelect } = props;
+  const { future } = backup;
+
+  let backupClass = (selected && selected === backup.id) ? 'selected' : '';
+  if (future) backupClass = 'future';
+
   const created = moment(backup.created, moment.ISO_8601);
-  const cardTitle = created.calendar(null, calendar);
-  let content = created.format('dddd, MMMM D YYYY LT');
 
-  if (backup.status !== 'successful') {
-    if (backup.status === 'needsPostProcessing') {
-      content = 'Backup running';
-    } else if (backup.status === 'userAborted') {
-      content = 'User aborted backup';
-    } else {
-      content = `Backup ${backup.status}`;
-    }
-  }
-
-  let title = '';
+  let content = backup.type === 'snapshot' && 'No snapshot taken.' || 'Pending';
   if (!future) {
-    if (backup.type === 'snapshot') {
-      title = 'Snapshot';
-    } else {
-      title = cardTitle;
+    content = created.format('dddd, MMMM D YYYY LT');
+    if (backup.status !== 'successful') {
+      if (backup.status === 'needsPostProcessing') {
+        content = 'Backup running';
+      } else if (backup.status === 'userAborted') {
+        content = 'User aborted backup';
+      } else {
+        content = `Backup ${backup.status}`;
+      }
     }
-  } else {
-    title = backup.created;
   }
-
-  const selectedClass = selected === backup.id ? 'selected' : '';
-  const futureClass = future === true ? 'future' : '';
 
   return (
     <div
-      className={`backup ${selectedClass} ${futureClass}`}
+      className={`backup ${backupClass}`}
       onClick={onSelect}
     >
       <header><div className="title">{title}</div></header>
-      <div className={!!future ? 'future-disabled' : ''}>
-        <div className="content-col">{!!future ? backup.content : content}</div>
+      <div className={future ? 'future-disabled' : ''}>
+        <div className="content-col">{content}</div>
       </div>
     </div>
   );
@@ -55,7 +39,7 @@ export default function Backup(props) {
 
 Backup.propTypes = {
   backup: PropTypes.object.isRequired,
-  future: PropTypes.bool,
+  title: PropTypes.string.isRequired,
   selected: PropTypes.number,
   onSelect: PropTypes.func.isRequired,
 };

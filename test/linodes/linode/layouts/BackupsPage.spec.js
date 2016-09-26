@@ -460,12 +460,10 @@ describe('linodes/linode/layouts/BackupsPage', () => {
         params={{ linodeId: `${testLinode.id}` }}
       />);
     const futureBackups = page.find('.backups');
-    expect(futureBackups).to.exist;
-    expect(futureBackups.html()).to.contain('Snapshot');
-    expect(futureBackups.html()).to.contain('You haven&#x27;t taken any snapshots yet');
-    expect(futureBackups.html()).to.contain('Daily');
-    expect(futureBackups.html()).to.contain('Weekly');
-    expect(futureBackups.html()).to.contain('Biweekly');
+    expect(futureBackups.find('Backup').length).to.equal(4);
+    ['Snapshot', 'Daily', 'Weekly', 'Biweekly'].map(title =>
+      expect(futureBackups.html()).to.contain(title));
+    expect(futureBackups.html()).to.contain('No snapshot taken.');
   });
 
   describe('overwrite modal', () => {
