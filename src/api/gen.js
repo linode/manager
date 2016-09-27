@@ -30,27 +30,6 @@ const actionGenerators = {
     ({ type: `GEN@${c.plural}/DELETE`, ids }),
 };
 
-function refineState(config, state, ids) {
-  let parent = config;
-  const names = [];
-  const match = key => {
-    if (parent.parent.subresources[key] === parent) {
-      names.push(key);
-    }
-  };
-  while (parent.parent) {
-    Object.keys(parent.parent.subresources).forEach(match);
-    parent = parent.parent;
-  }
-  let refined = state.api;
-  const _ids = [...ids];
-  while (parent !== config) {
-    refined = refined[parent.plural][_ids.shift()];
-    parent = parent.subresources[names.pop()];
-  }
-  return refined;
-}
-
 /**
  * Generates action creators for the provided config.
  */
@@ -74,6 +53,27 @@ export function genActions(config) {
     });
   }
   return actions;
+}
+
+function refineState(config, state, ids) {
+  let parent = config;
+  const names = [];
+  const match = key => {
+    if (parent.parent.subresources[key] === parent) {
+      names.push(key);
+    }
+  };
+  while (parent.parent) {
+    Object.keys(parent.parent.subresources).forEach(match);
+    parent = parent.parent;
+  }
+  let refined = state.api;
+  const _ids = [...ids];
+  while (parent !== config) {
+    refined = refined[parent.plural][_ids.shift()];
+    parent = parent.subresources[names.pop()];
+  }
+  return refined;
 }
 
 function genThunkOne(config, actions) {
