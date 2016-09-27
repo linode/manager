@@ -1,4 +1,5 @@
 import { fetch } from '../fetch';
+import _ from 'lodash';
 
 export const ONE = 'ONE';
 export const PUT = 'PUT';
@@ -77,6 +78,15 @@ export function genActions(config) {
 
 function genThunkOne(config, actions) {
   return (...ids) => async (dispatch, getState) => {
+    let overwrite = false;
+    if (typeof ids[ids.length - 1] === 'boolean') {
+      overwrite = ids.pop();
+    }
+    const state = refineState(config, getState(), ids);
+    const id = ids[ids.length - 1];
+    if (!overwrite && !_.isUndefined(state[config.plural][id])) {
+      return;
+    }
     const { token } = getState().authentication;
     const response = await fetch(token, config.endpoint(...ids));
     const resource = await response.json();
@@ -96,12 +106,14 @@ function genThunkPage(config, actions) {
     const endpoint = `${config.endpoint(...ids, '')}?page=${page + 1}`;
     const response = await fetch(token, endpoint);
     const resources = await response.json();
+    // TODO: Finish this
     actions.many();
     return resources;
   };
 }
 
 function genThunkAll() {
+  // TODO
 }
 
 /**
@@ -120,5 +132,78 @@ export function genThunks(config, actions) {
   return thunks;
 }
 
-export function genReducer() {
+function genDefaultState(config) {
+  return {
+    pagesFetched: [],
+    totalPages: -1,
+    totalResults: -1,
+    [config.plural]: {},
+  };
+}
+
+function addMeta(config, item) {
+  const subs = config.subresources ?
+    _.reduce(config.subresources, (acc, conf, key) => (
+      { ...acc, [key]: { ...genDefaultState(conf) } }), { })
+    : undefined;
+  return { ...item, _polling: false, ...subs };
+}
+
+export function genReducer(_config) {
+  function one(config, state, action) {
+    const { id } = action.resource;
+    const previous = state[config.plural][id];
+    const next = previous ? action.resource : addMeta(config, action.resource);
+    return {
+      ...state,
+      [config.plural]: {
+        ...state[config.plural],
+        [id]: {
+          ...previous,
+          ...next,
+        },
+      },
+    };
+  }
+
+  function many(config, state, action) {
+    config; action;
+    return state;
+  }
+
+  function del(config, state, action) {
+    const id = action.ids[action.ids.length - 1];
+    return {
+      ...state,
+      [config.plural]: _.omit(state[config.plural], id),
+    };
+  }
+
+  function invalidate(config, state) {
+    return {
+      ...state,
+      [config.plural]: { },
+      totalPages: -1,
+      totalResults: -1,
+      pagesFetched: [],
+    };
+  }
+
+  function reducer(config, state, action) {
+    switch (action.type) {
+      case `GEN@${config.plural}/ONE`:
+        return one(config, state, action);
+      case `GEN@${config.plural}/MANY`:
+        return many(config, state, action);
+      case `GEN@${config.plural}/DELETE`:
+        return del(config, state, action);
+      case `GEN@${config.plural}/INVALIDATE`:
+        return invalidate(config, state);
+      default:
+        return state;
+    }
+  }
+
+  const defaultState = genDefaultState(_config);
+  return (state = defaultState, action) => reducer(_config, state, action);
 }
