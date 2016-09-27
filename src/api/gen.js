@@ -167,8 +167,21 @@ export function genReducer(_config) {
   }
 
   function many(config, state, action) {
-    config; action;
-    return state;
+    const { page } = action;
+    return {
+      ...state,
+      pagesFetched: [
+        ...state.pagesFetched.filter(p => p !== page.page),
+        page.page,
+      ],
+      totalPages: page.total_pages,
+      totalResults: page.total_results,
+      [config.plural]: {
+        ...state[config.plural],
+        ...page[config.plural].reduce((s, i) =>
+          ({ ...s, [i.id]: addMeta(config, i) }), { }),
+      },
+    };
   }
 
   function del(config, state, action) {
