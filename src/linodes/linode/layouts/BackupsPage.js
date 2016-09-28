@@ -14,7 +14,6 @@ import HelpButton from '~/components/HelpButton';
 import Backup from '~/linodes/components/Backup';
 import _ from 'lodash';
 import { setError } from '~/actions/errors';
-import moment from 'moment';
 
 export class BackupsPage extends Component {
   constructor() {
@@ -249,158 +248,45 @@ export class BackupsPage extends Component {
   renderBackups() {
     const thisLinode = this.getLinode();
     const backups = thisLinode._backups && Object.values(thisLinode._backups.backups);
-    const { selectedBackup, targetLinode, schedule } = this.state;
+    const { selectedBackup, targetLinode } = this.state;
     const { dispatch } = this.props;
+    const titles = ['Snapshot', 'Daily', 'Weekly', 'Biweekly'];
 
-    // this attempts to predict when future backups will be scehduled
-    const futureBackups = [];
-    if (!backups || backups.length === 0) {
-      futureBackups[0] = {
-        created: 'Snapshot',
-        content: "You haven't taken any snapshots yet",
-        id: 'this should never be selected 0',
-      };
-    }
-    const timeslot = (timeslot) => {
-      if (!timeslot) {
-        return '12-2 AM';
-      }
-      return {
-        W0: '12-2 AM',
-        W2: '2-4 AM',
-        W4: '4-6 AM',
-        W6: '6-8 AM',
-        W8: '8-10 AM',
-        W10: '10 AM-12 PM',
-        W12: '12-2 PM',
-        W14: '2-4 PM',
-        W16: '4-6 PM',
-        W18: '6-8 PM',
-        W20: '8-10 PM',
-        W22: '10 PM-12 AM',
-      }[timeslot];
+    const noSnapshot = {
+      created: 'Snapshot',
+      content: "You haven't taken any snapshots yet",
+      id: 'this should never be selected 0',
+      future: true,
+      type: 'snapshot',
     };
-    const getNextBackupDay = (timeslot = 'W2') => {
-      const hour = moment().hour();
-      let selectedTime = 2;
-      if (timeslot !== null) {
-        selectedTime = parseInt(timeslot.replace(/W/, ''), 10);
-      }
-      if (hour > selectedTime) {
-        return moment().add(1, 'days');
-      }
-      return moment().add(0, 'days');
-    };
+    const snapshot = backups.filter(b => b.type === 'snapshot').slice(-1)[0] || noSnapshot;
 
-    let backupDay = 'Sunday';
-    const getNextBackupWeek = (backupDay, timeslot, extraWeek) => {
-      const day = moment().day();
-      const hour = moment().hour();
-      let selectedDay = 1;
-      if (backupDay !== 'Sunday') {
-        selectedDay = moment().day(backupDay).weekday();
-      }
-      let selectedTime = 2;
-      if (timeslot !== null) {
-        selectedTime = parseInt(timeslot.replace(/W/, ''), 10);
-      }
-      const biweek = extraWeek ? 7 : 0;
-      const daysToAdd = 7 + biweek;
-      const difference = selectedDay - day + biweek;
-      if (day > selectedDay) {
-        return moment().day(backupDay).add(daysToAdd, 'days');
-      } else if (day === selectedDay && hour > selectedTime) {
-        return moment().add(daysToAdd, 'days');
-      }
-      return moment().add(difference, 'days');
-    };
-
-    const getBackupDayOfWeek = (backupType) => {
-      if (schedule.dayOfWeek) {
-        if (schedule.dayOfWeek === 'Scheduling') {
-          backupDay = 'TBD';
-        } else {
-          if (backupType === 'Daily') {
-            const nextWeekDay = getNextBackupDay(schedule.timeOfDay).weekday();
-            backupDay = moment()._locale._weekdays[nextWeekDay];
-          } else {
-            backupDay = schedule.dayOfWeek;
-          }
-        }
-      }
-      return backupDay;
-    };
-
-    const backupList = ['Snapshot', 'Daily', 'Weekly', 'Biweekly'];
-    const futureSlots = backups.length === 0 ? 1 : backups.length;
-    for (let i = futureSlots; i < 4; i++) {
-      futureBackups[i] = {};
-      futureBackups[i].id = `this should never be selected ${i}`;
-      futureBackups[i].created = backupList[i];
-      if (backupList[i] === 'Daily') {
-        futureBackups[i].content = `${getBackupDayOfWeek(backupList[i])}`;
-        // eslint-disable-next-line max-len
-        futureBackups[i].content = `${futureBackups[i].content}${getNextBackupDay(schedule.timeOfDay).format(', MMMM D YYYY, ')}`;
-      } else if (backupList[i] === 'Weekly') {
-        futureBackups[i].content = `${getBackupDayOfWeek(backupList[i])}`;
-        // eslint-disable-next-line max-len
-        futureBackups[i].content = `${futureBackups[i].content}${getNextBackupWeek(schedule.dayOfWeek, schedule.timeOfDay, false).format(', MMMM D YYYY, ')}`;
-      } else if (backupList[i] === 'Biweekly') {
-        futureBackups[i].content = `${getBackupDayOfWeek(backupList[i])}`;
-        // eslint-disable-next-line max-len
-        futureBackups[i].content = `${futureBackups[i].content}${getNextBackupWeek(schedule.dayOfWeek, schedule.timeOfDay, true).format(', MMMM D YYYY, ')}`;
-      }
-      futureBackups[i].content = `${futureBackups[i].content} ${timeslot(schedule.timeOfDay)}`;
+    const autoBackups = backups.filter(b => b.type === 'auto').slice(-3);
+    for (let i = autoBackups.length; i < 3; i++) {
+      autoBackups.push({ future: true, created: i });
     }
 
-    // This makes the snapshot appear first in the list of completed backups
-    // and checks if there is a snapshot currently
-    let snapshotCheck = false;
-    let index = 0;
-    for (const backup of backups) {
-      if (backup.type === 'snapshot' && index !== 0) {
-        backups[index] = backups[0];
-        backups[0] = backup;
-        snapshotCheck = true;
-      } else if (backup.type === 'snapshot') {
-        snapshotCheck = true;
-      }
-      index++;
-    }
-
-    const snapshotChecker = (snapshotCheck) => {
-      if (snapshotCheck) {
+    const snapshotChecker = () => {
+      if (snapshot.id !== noSnapshot.id) {
         dispatch(showModal('Take new snapshot',
-          this.renderOverwriteSnapshotModal(thisLinode)
-        ));
+          this.renderOverwriteSnapshotModal(thisLinode)));
         return;
       }
       dispatch(takeBackup(thisLinode.id));
     };
 
-    const recentBackups = [
-      ...backups.filter(bu => bu.type === 'snapshot').slice(-1),
-      ...backups.filter(bu => bu.type === 'auto').slice(-3),
-    ];
+    const allBackups = [snapshot, ...autoBackups];
 
     return (
       <div>
         <div className="row backups">
-          {recentBackups.map(backup =>
-            <div className="col-md-3" key={moment(backup.created, moment.ISO_8601)}>
+          {allBackups.map((backup, i) =>
+            <div className="col-md-3" key={i}>
               <Backup
                 backup={backup}
+                title={titles[i]}
                 selected={selectedBackup}
                 onSelect={() => this.setState({ selectedBackup: backup.id })}
-              />
-            </div>
-          )}
-          {futureBackups.map(backup =>
-            <div className="col-md-3" key={backup.created}>
-              <Backup
-                backup={backup}
-                future
-                onSelect={() => this.setState({ selectedBackup: '' })}
               />
             </div>
           )}
@@ -413,7 +299,7 @@ export class BackupsPage extends Component {
         >Restore backup</button>
         <button
           className="btn btn-primary-outline"
-          onClick={() => snapshotChecker(snapshotCheck)}
+          onClick={() => snapshotChecker()}
         >Take Snapshot</button>
       </div>
     );
