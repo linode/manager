@@ -7,9 +7,7 @@ import Plan from '../components/Plan';
 import Datacenter from '../components/Datacenter';
 import Details from '../components/Details';
 import { parallel } from '~/api/util';
-import { thunks as distros } from '~/api/configs/distributions';
-import { fetchAllDatacenters } from '~/actions/api/datacenters';
-import { fetchAllServices } from '~/actions/api/services';
+import { distros, datacenters, services } from '~/api';
 import { fetchLinodes, createLinode } from '~/actions/api/linodes';
 import { fetchAllBackups } from '~/actions/api/backups';
 import { setError } from '~/actions/errors';
@@ -37,8 +35,8 @@ export class IndexPage extends Component {
     try {
       await dispatch(parallel(
         distros.all(),
-        fetchAllDatacenters(),
-        fetchAllServices(),
+        datacenters.all(),
+        services.all(),
         fetchLinodes(),
       ));
     } catch (response) {
