@@ -1,28 +1,28 @@
 import { fetch } from '~/fetch';
 import { actions, thunks } from './configs/linodes';
 
-function linodeAction(id, action, temp, expected, timeout = undefined, body = undefined) {
+function linodeAction(id, action, temp, expected, body = undefined) {
   return async (dispatch, getState) => {
     const state = getState();
     const { token } = state.authentication;
-    dispatch(actions.one({ id, state: temp }, id));
+    dispatch(actions.one({ state: temp }, id));
     await fetch(token, `/linode/instances/${id}/${action}`, { method: 'POST', body });
-    await dispatch(thunks.until(id, l => l.state === expected, timeout));
+    await dispatch(thunks.until(l => l.state === expected, id));
   };
 }
 
-export function powerOnLinode(id, config = null, timeout = undefined) {
-  return linodeAction(id, 'boot', 'booting', 'running', timeout,
+export function powerOnLinode(id, config = null) {
+  return linodeAction(id, 'boot', 'booting', 'running',
     JSON.stringify({ config }));
 }
 
-export function powerOffLinode(id, config = null, timeout = undefined) {
-  return linodeAction(id, 'shutdown', 'shutting_down', 'offline', timeout,
+export function powerOffLinode(id, config = null) {
+  return linodeAction(id, 'shutdown', 'shutting_down', 'offline',
     JSON.stringify({ config }));
 }
 
-export function rebootLinode(id, config = null, timeout = undefined) {
-  return linodeAction(id, 'reboot', 'rebooting', 'running', timeout,
+export function rebootLinode(id, config = null) {
+  return linodeAction(id, 'reboot', 'rebooting', 'running',
     JSON.stringify({ config }));
 }
 

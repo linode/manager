@@ -84,8 +84,9 @@ function genThunkOne(config, actions) {
     }
     const state = refineState(config, getState(), ids);
     const id = ids[ids.length - 1];
-    if (!overwrite && !_.isUndefined(state[config.plural][id])) {
-      return;
+    const prev = state[config.plural][id];
+    if (!overwrite && !_.isUndefined(prev)) {
+      return prev;
     }
     const { token } = getState().authentication;
     const response = await fetch(token, config.endpoint(...ids));
@@ -140,6 +141,18 @@ function genThunkAll(config, page) {
   };
 }
 
+function genThunkUntil(config, actions, one) {
+  return (test, ...ids) => async (dispatch) => {
+    dispatch(actions.one({ _polling: true }, ...ids));
+    for (;;) {
+      const resource = await dispatch(one(...ids, true));
+      if (test(resource)) break;
+      await new Promise(r => setTimeout(r, 3000));
+    }
+    dispatch(actions.one({ _polling: false }, ...ids));
+  };
+}
+
 /**
  * Generates thunks for the provided config.
  */
@@ -148,6 +161,7 @@ export function genThunks(config, actions) {
   const supports = a => config.supports.indexOf(a) !== -1;
   if (supports(ONE)) {
     thunks.one = genThunkOne(config, actions);
+    thunks.until = genThunkUntil(config, actions, thunks.one);
   }
   if (supports(MANY)) {
     thunks.page = genThunkPage(config, actions);
@@ -175,7 +189,7 @@ function addMeta(config, item) {
 
 export function genReducer(_config) {
   function one(config, state, action) {
-    const { id } = action.resource;
+    const id = action.ids[action.ids.length - 1];
     const previous = state[config.plural][id];
     const next = previous ? action.resource : addMeta(config, action.resource);
     return {
