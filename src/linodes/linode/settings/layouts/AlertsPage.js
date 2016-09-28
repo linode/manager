@@ -73,12 +73,15 @@ export class AlertsPage extends Component {
                 </span>
               </label>
             </div>
-            <input
-              type="number"
-              value={threshold}
-              onChange={thresholdChange}
-              disabled={loading}
-            />
+            <div className="input-container">
+              <input
+                type="number"
+                value={threshold}
+                onChange={thresholdChange}
+                disabled={loading}
+                className="form-control"
+              />
+            </div>
             {label}
           </div>
           <div className="text-muted">Triggered by: {text} exceeding this value</div>

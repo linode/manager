@@ -18,10 +18,10 @@ describe('linodes/actions', () => {
 
   describe('toggleSelected', () => {
     it('should return a TOGGLE_SELECTED action', () => {
-      expect(toggleSelected('linode_1234'))
+      expect(toggleSelected('1234'))
         .to.deep.equal({
           type: TOGGLE_SELECTED,
-          selected: ['linode_1234'],
+          selected: ['1234'],
         });
     });
   });
@@ -30,9 +30,9 @@ describe('linodes/actions', () => {
     api: {
       linodes: {
         linodes: {
-          linode_1234: { },
-          linode_1235: { },
-          linode_1236: { },
+          1234: { },
+          1235: { },
+          1236: { },
         },
       },
     },
@@ -65,7 +65,7 @@ describe('linodes/actions', () => {
       func(dispatch, getState);
       expect(dispatch.calledWith({
         type: TOGGLE_SELECTED,
-        selected: ['linode_1234', 'linode_1235', 'linode_1236'],
+        selected: ['1234', '1235', '1236'],
       })).to.equal(true);
     });
   });

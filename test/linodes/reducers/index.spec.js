@@ -30,30 +30,30 @@ describe('linodes/index reducer', () => {
     const state = { view: 'grid', selected: { } };
     deepFreeze(state);
 
-    expect(index(state, actions.toggleSelected('linode_1234')))
+    expect(index(state, actions.toggleSelected('1234')))
       .to.have.property('selected')
-      .which.has.property('linode_1234');
+      .which.has.property('1234');
 
     expect(index(state, {
       type: actions.TOGGLE_SELECTED,
-      selected: ['linode_1234', 'linode_1235'],
+      selected: ['1234', '1235'],
     })).to.have.property('selected')
-      .which.has.keys('linode_1234', 'linode_1235');
+      .which.has.keys('1234', '1235');
   });
 
   it('should remove from the selection on TOGGLE_SELECTED', () => {
     const state = { view: 'grid', selected: {
-      linode_1234: true,
-      linode_1235: true,
+      1234: true,
+      1235: true,
     } };
     deepFreeze(state);
 
-    expect(index(state, actions.toggleSelected('linode_1234')))
+    expect(index(state, actions.toggleSelected('1234')))
       .to.have.property('selected')
-      .which./* does*/not.have.property('linode_1234');
+      .which./* does*/not.have.property('1234');
 
-    expect(index(state, actions.toggleSelected('linode_1234')))
+    expect(index(state, actions.toggleSelected('1234')))
       .to.have.property('selected')
-      .which.has.keys('linode_1235');
+      .which.has.keys('1235');
   });
 });

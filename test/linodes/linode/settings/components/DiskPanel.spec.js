@@ -30,7 +30,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
         linodes={linodes}
       />);
 
-    expect(panel.find('HelpButton')).to.exist;
+    expect(panel.find('HelpButton').length).to.equal(1);
   });
 
   it('renders disks', () => {

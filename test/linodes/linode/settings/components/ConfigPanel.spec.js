@@ -28,7 +28,7 @@ describe('linodes/linode/settings/components/ConfigPanel', () => {
       />
     );
 
-    expect(panel.find('HelpButton')).to.exist;
+    expect(panel.find('HelpButton').length).to.equal(1);
   });
 
   it('renders add a config button', () => {
@@ -82,8 +82,8 @@ describe('linodes/linode/settings/components/ConfigPanel', () => {
 
     expect(panel.find('tr').at(1).find('td')
       .at(0)
-      .find('Link'))
-      .to.exist;
+      .find('Link').length)
+      .to.equal(1);
     expect(panel.find('tr').at(1).find('td')
       .at(0)
       .find('Link')

@@ -110,8 +110,8 @@ export class DashboardPage extends Component {
         <header>
           <h2>Performance</h2>
         </header>
-        <div className="row">
-          <div className="col-md-2">
+        <div className="clearfix">
+          <div className="pull-xs-left">
             <select
               onChange={e => this.graphSourceUpdate(e.target.value)}
               className="form-control select-source"
@@ -122,7 +122,7 @@ export class DashboardPage extends Component {
               <option value="ipv6">IPv6 Network</option>
             </select>
           </div>
-          <div className="col-md-offset-8 col-md-2">
+          <div className="pull-xs-right">
             <select
               onChange={e => this.graphRangeUpdate(e.target.value)}
               className="form-control select-range"

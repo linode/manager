@@ -19,9 +19,9 @@ describe('linodes/create/components/Plan', () => {
 
     expect(c.contains(<h2>Plan</h2>)).to.equal(true);
     expect(c.find('.plan').length).to.equal(1);
-    expect(c.find('.plan').first().find(
-      <header><div className="title">Linode 2G</div></header>
-    )).to.exist;
+    expect(c.find('.plan').first().find('header .title')
+            .text())
+      .to.equal('Linode 2G');
   });
 
   it('dispatched the appropriate event on select', () => {

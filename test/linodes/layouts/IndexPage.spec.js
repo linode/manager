@@ -120,7 +120,7 @@ describe('linodes/layouts/IndexPage', () => {
     );
 
     const table = page.find('table.linodes');
-    expect(table).to.exist;
+    expect(table.length).to.equal(2);
     expect(table.find('tbody tr').length).to.equal(
       Object.keys(linodes.linodes).length);
   });
@@ -133,14 +133,14 @@ describe('linodes/layouts/IndexPage', () => {
         selected={{}}
         linodes={linodes}
       />);
-    const dropdown = page.find(Dropdown);
+    const dropdown = page.find('Dropdown');
     expect(dropdown.length).to.equal(1);
     const elements = dropdown.props().elements;
-    expect(elements).to.be.a('array');
-    expect(elements.find(e => e.name === 'Power Off')).to.exist;
-    expect(elements.find(e => e.name === 'Power On')).to.exist;
-    expect(elements.find(e => e.name === 'Reboot')).to.exist;
-    expect(elements.find(e => e.name === 'Delete')).to.exist;
+    expect(elements.length).to.equal(4);
+    const options = ['Reboot', 'Power on', 'Power off', 'Delete'];
+    for (let i = 0; i < options.length; i++) {
+      expect(elements[i].name).to.equal(options[i]);
+    }
   });
 
   function makePowerTest(dropdown, endpoint) {
@@ -162,8 +162,8 @@ describe('linodes/layouts/IndexPage', () => {
 
   [
     ['reboots selected linodes when reboot is pressed', 'Reboot', '/reboot'],
-    ['shuts down selected linodes when power off is pressed', 'Power Off', '/shutdown'],
-    ['boots selected linodes when boot is pressed', 'Power On', '/boot'],
+    ['shuts down selected linodes when power off is pressed', 'Power off', '/shutdown'],
+    ['boots selected linodes when boot is pressed', 'Power on', '/boot'],
     ['deletes selected linodes when deletes is pressed', 'Delete', ''],
   ].map(([name, button, endpoint]) => it(name, makePowerTest(button, endpoint)));
 
@@ -176,7 +176,7 @@ describe('linodes/layouts/IndexPage', () => {
         linodes={linodes}
       />);
     const selectAll = page.find('.submenu');
-    expect(selectAll.find('input[type="checkbox"]')).to.exist;
+    expect(selectAll.find('input[type="checkbox"]').length).to.equal(1);
   });
 
   it('renders an "add a linode" button', () => {

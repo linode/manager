@@ -145,19 +145,19 @@ describe('linodes/linode/layouts/RescuePage', () => {
         />);
       page.setState({ loading: false });
       expect(page.contains(
-        <p>This Linode does not have any disks eligible for password reset.</p>))
+        'This Linode does not have any disks eligible for password reset.'))
         .to.equal(true);
     });
 
     it('renders a PasswordInput component', () => {
-      const page = shallow(
+      const page = mount(
         <RescuePage
           dispatch={dispatch}
           linodes={linodes}
           params={{ linodeId: '1234' }}
         />);
-      page.setState({ loading: false });
-      expect(page.find('PasswordInput')).to.exist;
+      page.setState({ loading: false, disk: true });
+      expect(page.find('PasswordInput').length).to.equal(1);
     });
 
     it('renders disk selection for appropriate Linodes', () => {
@@ -170,7 +170,7 @@ describe('linodes/linode/layouts/RescuePage', () => {
       page.setState({ loading: false, disk: 2234 });
       const reset = page.find('.root-pw');
       const select = reset.find('select');
-      expect(select).to.exist;
+      expect(select.length).to.equal(1);
       const d = linodes.linodes[1236]._disks.disks[2234];
       expect(select.contains(<option value={d.id} key={d.id}>{d.label}</option>))
         .to.equal(true);

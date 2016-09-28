@@ -15,12 +15,6 @@ export const testDistro = {
 
 export const distros = {
   'linode/arch2016.05': testDistro,
-  'linode/arch2015.05': {
-    ...testDistro,
-    id: 'linode/arch2015.05',
-    recommended: false,
-    label: 'Arch Linux 2015.05',
-  },
   'linode/debian7': {
     ...testDistro,
     id: 'linode/debian7',

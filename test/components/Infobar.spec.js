@@ -14,15 +14,15 @@ describe('components/Infobar', () => {
   it('renders Infobar nav component', () => {
     const infobar = shallow(<Infobar title="" link="" />);
 
-    expect(infobar.find('.fa-github')).to.exist;
-    expect(infobar.find('.fa-twitter')).to.exist;
+    expect(infobar.find('.fa-github').length).to.equal(1);
+    expect(infobar.find('.fa-twitter').length).to.equal(1);
   });
 
   it('renders links', () => {
     const infobar = shallow(<Infobar title="" link="" />);
 
-    expect(infobar.find({ to: 'https://github.com/linode' })).to.exist;
-    expect(infobar.find({ to: 'https://twitter.com/linode' })).to.exist;
+    expect(infobar.find({ href: 'https://github.com/linode' }).length).to.equal(1);
+    expect(infobar.find({ href: 'https://twitter.com/linode' }).length).to.equal(1);
   });
 
   it('renders the latest blog post', () => {

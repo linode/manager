@@ -25,7 +25,7 @@ describe('linodes/create/layout/IndexPage', () => {
           services={api.services}
           linodes={api.linodes}
         />);
-      expect(page.find(thing)).to.exist;
+      expect(page.find(thing).length).to.equal(1);
     };
   }
 
@@ -107,9 +107,8 @@ describe('linodes/create/layout/IndexPage', () => {
         linodes={api.linodes}
       />);
     const ss = page.find('Source');
-    ss.props().onSourceSelected('distribution', 'distro_1234');
-    expect(ss.find('.distro.selected').find(<div className="title">Arch 2016.05</div>))
-      .to.exist;
+    ss.props().onSourceSelected('distribution', 'linode/arch2016.05');
+    expect(page.instance().state.distribution).to.equal('linode/arch2016.05');
   });
 
   it('selects a datacenter when appropriate', () => {
@@ -123,8 +122,7 @@ describe('linodes/create/layout/IndexPage', () => {
       />);
     const ds = page.find('Datacenter');
     ds.props().onDatacenterSelected('newark');
-    expect(ds.find('.datacenter.selected').find(<div className="title">Newark, NJ</div>))
-      .to.exist;
+    expect(page.instance().state.datacenter).to.equal('newark');
   });
 
   it('selects a service when appropriate', () => {

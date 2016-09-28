@@ -17,7 +17,7 @@ describe('components/PasswordInput', () => {
         passwordType="offline_fast_hashing_1e10_per_second"
         onChange={() => {}}
       />);
-    expect(input.find('input[type="password"]')).to.exist;
+    expect(input.find('input[type="password"]').length).to.equal(1);
   });
 
   it('should render a generate button', () => {
@@ -26,7 +26,7 @@ describe('components/PasswordInput', () => {
         passwordType="offline_fast_hashing_1e10_per_second"
         onChange={() => {}}
       />);
-    expect(input.find('button')).to.exist;
+    expect(input.find('button').length).to.equal(1);
     expect(input.find('button').text()).to.equal('Generate');
   });
 
@@ -36,7 +36,7 @@ describe('components/PasswordInput', () => {
         passwordType="offline_fast_hashing_1e10_per_second"
         onChange={() => {}}
       />);
-    expect(input.find('.strength')).to.exist;
+    expect(input.find('.strength').length).to.equal(1);
     expect(input.find('.strength').children()).to.have.length(4);
   });
 
@@ -65,7 +65,7 @@ describe('components/PasswordInput', () => {
     input.find('input[type="password"]').simulate('change',
       { target: { value: 'correct horse battery staple' } });
     expect(input.find('.strength').hasClass('strength-4'));
-    expect(input.find('p')).to.exist;
+    expect(input.find('p').length).to.equal(1);
     expect(input.find('p').text())
       .to.equal('An offline attack would take centuries to crack this password.');
   });

@@ -9,7 +9,6 @@ import { testLinode } from '@/data/linodes';
 import { expectRequest } from '@/common';
 import * as IndexPageWrapper from '~/linodes/linode/layouts/IndexPage';
 import * as linodeActions from '~/actions/api/linodes';
-import { Tabs, Tab } from 'react-tabs';
 import Dropdown from '~/components/Dropdown';
 import { SET_ERROR } from '~/actions/errors';
 
@@ -122,11 +121,12 @@ describe('linodes/linode/layouts/IndexPage/renderTabs', async () => {
         params={{ linodeId: testLinode.id }}
         tabList={tabList}
       />);
-    const tabs = page.find(Tabs);
-    expect(tabs).to.exist;
-    tabList.forEach(({ name, link }) => {
-      expect(tabs.find(Tab).filter(t => t.text() === name)).to.exist;
-      expect(tabs.find(Tab).filter(t => t.To === link)).to.exist;
+
+    const tabs = page.find('Tabs').find('Tab');
+    expect(tabs.length).to.equal(tabList.length);
+    tabList.forEach(({ name, link }, i) => {
+      const a = tabs.at(i).find({ to: link });
+      expect(a.children().text()).to.equal(name);
     });
   });
 
@@ -139,7 +139,7 @@ describe('linodes/linode/layouts/IndexPage/renderTabs', async () => {
         tabList={tabList}
       />
     );
-    const tabs = page.find(Tabs);
+    const tabs = page.find('Tabs');
     tabs.props().onSelect(1);
     expect(dispatch.calledWith(push('/two'))).to.equal(true);
   });
@@ -222,18 +222,20 @@ describe('linodes/linode/layouts/IndexPage', () => {
     );
 
     const tabList = [
-      { name: 'General', link: '' },
+      { name: 'Dashboard', link: '' },
       { name: 'Networking', link: '/networking' },
+      { name: 'Rebuild', link: '/rebuild' },
       { name: 'Resize', link: '/resize' },
-      { name: 'Repair', link: '/repair' },
+      { name: 'Rescue', link: '/rescue' },
       { name: 'Backups', link: '/backups' },
       { name: 'Settings', link: '/settings' },
     ].map(t => ({ ...t, link: `/linodes/1235${t.link}` }));
 
-    const tabs = page.find(Tabs);
-    tabList.forEach(({ name, link }) => {
-      expect(tabs.find(Tab).filter(t => t.text() === name)).to.exist;
-      expect(tabs.find(Tab).filter(t => t.To === link)).to.exist;
+    const tabs = page.find('Tabs').find('Tab');
+    expect(tabs.length).to.equal(tabList.length);
+    tabList.forEach(({ name, link }, i) => {
+      const a = tabs.at(i).find({ to: link });
+      expect(a.children().text()).to.equal(name);
     });
   });
 
@@ -245,8 +247,8 @@ describe('linodes/linode/layouts/IndexPage', () => {
         params={{ linodeId: `${testLinode.id}` }}
         detail={detail}
       />);
-    const dropdown = page.find(Dropdown);
-    expect(dropdown).to.exist;
+    const dropdown = page.find('Dropdown');
+    expect(dropdown.length).to.equal(1);
   });
 
   it('renders a config profile selection dropdown', () => {
@@ -288,7 +290,7 @@ describe('linodes/linode/layouts/IndexPage', () => {
         detail={detail}
       />);
     const dropdown = page.find(Dropdown).props();
-    const expected = ['Reboot', 'Power Off'];
+    const expected = ['Reboot', 'Power off'];
     for (let i = 0; i < expected.length; ++i) {
       const elem = shallow(dropdown.elements[i].name);
       expect(elem.text()).to.contain(expected[i]);
@@ -304,7 +306,7 @@ describe('linodes/linode/layouts/IndexPage', () => {
         detail={detail}
       />);
     const dropdown = page.find(Dropdown).props();
-    const expected = ['Power On'];
+    const expected = ['Power on'];
     for (let i = 0; i < expected.length; ++i) {
       const elem = shallow(dropdown.elements[i].name);
       expect(elem.text()).to.contain(expected[i]);
@@ -331,7 +333,8 @@ describe('linodes/linode/layouts/IndexPage', () => {
         params={{ linodeId: `${testLinode.id}` }}
         detail={detail}
         router={router}
-      />);
+      />
+    );
     expect(page.contains(
       <span
         className="pull-right linode-status running"

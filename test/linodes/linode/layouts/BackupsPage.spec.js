@@ -175,12 +175,12 @@ describe('linodes/linode/layouts/BackupsPage', () => {
         backups={backups}
       />);
     const schedule = page.find('.backup-schedule');
-    expect(schedule).to.exist;
+    expect(schedule.length).to.equal(1);
     expect(schedule.find('h2').text())
       .to.equal('Schedule<HelpButton />');
-    expect(schedule.find('#schedule')).to.exist;
-    expect(schedule.find('#dow')).to.exist;
-    expect(schedule.find('button.btn-primary')).to.exist;
+    expect(schedule.find('#schedule').length).to.equal(1);
+    expect(schedule.find('#dow').length).to.equal(1);
+    expect(schedule.find('button.btn-primary').length).to.equal(1);
     expect(schedule.find('button.btn-primary').text())
       .to.equal('Save');
     expect(schedule.find('.btn-danger-outline').at(0).text())

@@ -37,7 +37,7 @@ describe('layouts/Layout', () => {
         dispatch={dispatch}
         errors={errors}
       ><p>Hello world!</p></Layout>);
-    expect(component.find('Sidebar')).to.exist;
+    expect(component.find('Sidebar').length).to.equal(1);
   });
 
   it('renders a header', () => {
@@ -46,16 +46,7 @@ describe('layouts/Layout', () => {
         dispatch={dispatch}
         errors={errors}
       ><p>Hello world!</p></Layout>);
-    expect(component.find('Header')).to.exist;
-  });
-
-  it('renders a modal', () => {
-    const component = shallow(
-      <Layout
-        dispatch={dispatch}
-        errors={errors}
-      ><p>Hello world!</p></Layout>);
-    expect(component.find('Modal')).to.exist;
+    expect(component.find('Header').length).to.equal(1);
   });
 
   const errorsPopulated = {
@@ -85,7 +76,7 @@ describe('layouts/Layout', () => {
         dispatch={dispatch}
         errors={{ ...errorsPopulated, status: 404 }}
       ><p>Hello world!</p></Layout>);
-    expect(component.find('NotFound')).to.exist;
+    expect(component.find('Error').length).to.equal(1);
   });
 
   it('fetches the blog RSS feed', async () => {

@@ -38,10 +38,10 @@ export class RescuePage extends Component {
     await dispatch(fetchAllLinodeDisks(linodeId));
     linode = this.getLinode();
     const disk = Object.values(linode._disks.disks)
-        .filter(d => d.filesystem !== 'swap')[0];
+                       .filter(d => d.filesystem !== 'swap')[0];
     this.setState({
       loading: false,
-      disk: disk && disk.id || null,
+      disk: disk ? disk.id : null,
     });
   }
 

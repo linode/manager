@@ -110,12 +110,12 @@ export class IndexPage extends Component {
         _condition: () => linode.state !== 'offline',
       },
       {
-        name: <span><i className="fa fa-power-off"></i> Power Off</span>,
+        name: <span><i className="fa fa-power-off"></i> Power off</span>,
         _action: powerOffLinode,
         _condition: () => linode.state === 'running',
       },
       {
-        name: <span><i className="fa fa-power-off"></i> Power On</span>,
+        name: <span><i className="fa fa-power-off"></i> Power on</span>,
         _action: powerOnLinode,
         _condition: () => linode.state === 'offline',
       },

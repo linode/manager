@@ -336,7 +336,7 @@ export class BackupsPage extends Component {
     const { loading } = this.state;
     const { dispatch } = this.props;
     return (
-      <div className="backup-schedule">
+      <div>
         <div className="form-group row">
           <label htmlFor="schedule" className="col-md-4">
             {/* TODO: Use user time settings */}
