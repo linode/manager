@@ -6,7 +6,8 @@ import Source from '../components/Source';
 import Plan from '../components/Plan';
 import Datacenter from '../components/Datacenter';
 import Details from '../components/Details';
-import { fetchAllDistros } from '~/actions/api/distros';
+import { parallel } from '~/api/util';
+import { thunks as distros } from '~/api/configs/distributions';
 import { fetchAllDatacenters } from '~/actions/api/datacenters';
 import { fetchAllServices } from '~/actions/api/services';
 import { fetchLinodes, createLinode } from '~/actions/api/linodes';
@@ -34,12 +35,12 @@ export class IndexPage extends Component {
   async componentDidMount() {
     const { dispatch } = this.props;
     try {
-      await Promise.all([
-        dispatch(fetchAllDistros()),
-        dispatch(fetchAllDatacenters()),
-        dispatch(fetchAllServices()),
-        dispatch(fetchLinodes()),
-      ]);
+      await dispatch(parallel(
+        distros.all(),
+        fetchAllDatacenters(),
+        fetchAllServices(),
+        fetchLinodes(),
+      ));
     } catch (response) {
       dispatch(setError(response));
     }

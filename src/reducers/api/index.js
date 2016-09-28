@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 
 import linodes from './linodes';
 import datacenters from './datacenters';
-import distributions from './distros';
+import { reducer as distributions } from '~/api/configs/distributions';
 import services from './services';
 import kernels from './kernels';
 

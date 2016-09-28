@@ -73,7 +73,7 @@ function refineState(config, state, ids) {
     refined = refined[parent.plural][_ids.shift()];
     parent = parent.subresources[names.pop()];
   }
-  return refined;
+  return refined[config.plural];
 }
 
 function genThunkOne(config, actions) {
@@ -96,24 +96,48 @@ function genThunkOne(config, actions) {
 }
 
 function genThunkPage(config, actions) {
-  return (page = 0, ...ids) => async (dispatch, getState) => {
-    const { token } = getState().authentication;
-    const state = refineState(config, getState(), ids);
-    if (state.totalPages !== -1
-        && state.pagesFetched.indexOf(page) !== -1) {
-      return;
-    }
-    const endpoint = `${config.endpoint(...ids, '')}?page=${page + 1}`;
-    const response = await fetch(token, endpoint);
-    const resources = await response.json();
-    // TODO: Finish this
-    actions.many();
-    return resources;
-  };
+  function fetchPage(page = 0, ...ids) {
+    return async (dispatch, getState) => {
+      const { token } = getState().authentication;
+      const state = refineState(config, getState(), ids);
+      if (state.totalPages !== -1 &&
+          state.pagesFetched.indexOf(page) !== -1) {
+        return;
+      }
+      const endpoint = `${config.endpoint(...ids, '')}?page=${page + 1}`;
+      const response = await fetch(token, endpoint);
+      const resources = await response.json();
+      actions.many();
+      if (state.totalPages !== -1 &&
+          state.totalResults !== resources.totalResults) {
+        dispatch(actions.invalidate());
+        for (let i = 0; i < state.pagesFetched.length; ++i) {
+          if (state.pagesFetched[i] - 1 !== page) {
+            await dispatch(fetchPage(state.pagesFetched[i] - 1, ...ids));
+          }
+        }
+      }
+      dispatch(actions.many(resources, ...ids));
+      return resources;
+    };
+  }
+  return fetchPage;
 }
 
-function genThunkAll() {
-  // TODO
+function genThunkAll(config, page) {
+  return (...ids) => async (dispatch, getState) => {
+    let state = refineState(config, getState(), ids);
+    if (state.totalPages === -1) {
+      await dispatch(page(0, ...ids));
+      state = refineState(config, getState(), ids);
+    }
+
+    for (let i = 1; i < state.totalPages; i++) {
+      if (state.pagesFetched.indexOf(i + 1) === -1) {
+        await dispatch(page(i, ...ids));
+      }
+    }
+  };
 }
 
 /**
@@ -127,7 +151,7 @@ export function genThunks(config, actions) {
   }
   if (supports(MANY)) {
     thunks.page = genThunkPage(config, actions);
-    thunks.all = genThunkAll(config, actions);
+    thunks.all = genThunkAll(config, thunks.page);
   }
   return thunks;
 }
