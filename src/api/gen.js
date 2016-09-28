@@ -23,11 +23,11 @@ export function genConfig(config, parent = undefined) {
 
 const actionGenerators = {
   [ONE]: c => (resource, ...ids) =>
-    ({ type: `GEN@${c.plural}/ONE`, resource, ids }),
+    ({ type: `GEN@${c.plural}/ONE`, resource, ids: ids.map(n => parseInt(n)) }),
   [MANY]: c => (page, ...ids) =>
-    ({ type: `GEN@${c.plural}/MANY`, page, ids }),
+    ({ type: `GEN@${c.plural}/MANY`, page, ids: ids.map(n => parseInt(n)) }),
   [DELETE]: c => (...ids) =>
-    ({ type: `GEN@${c.plural}/DELETE`, ids }),
+    ({ type: `GEN@${c.plural}/DELETE`, ids: ids.map(n => parseInt(n)) }),
 };
 
 /**
@@ -56,24 +56,28 @@ export function genActions(config) {
 }
 
 function refineState(config, state, ids) {
-  let parent = config;
-  const names = [];
-  const match = key => {
-    if (parent.parent.subresources[key] === parent) {
-      names.push(key);
+  const path = [];
+  let root = config;
+  const match = (sub, parent) => {
+    if (parent.subresources[sub] === root) {
+      path.push(sub);
     }
   };
-  while (parent.parent) {
-    Object.keys(parent.parent.subresources).forEach(match);
-    parent = parent.parent;
+  while (root.parent) {
+    const parent = root.parent;
+    Object.keys(parent.subresources).forEach(s => match(s, parent));
+    root = parent;
   }
-  let refined = state.api;
+  let refined = state.api[root.plural];
   const _ids = [...ids];
-  while (parent !== config) {
-    refined = refined[parent.plural][_ids.shift()];
-    parent = parent.subresources[names.pop()];
+  let current = root;
+  let name = null;
+  while (current !== config) {
+    name = path.pop();
+    refined = refined[current.plural][_ids.shift()][name];
+    current = current.subresources[name];
   }
-  return refined[config.plural];
+  return refined;
 }
 
 function genThunkOne(config, actions) {
@@ -166,6 +170,13 @@ export function genThunks(config, actions) {
   if (supports(MANY)) {
     thunks.page = genThunkPage(config, actions);
     thunks.all = genThunkAll(config, thunks.page);
+  }
+  if (config.subresources) {
+    Object.keys(config.subresources).forEach(key => {
+      const subr = config.subresources[key];
+      const plural = subr.plural;
+      thunks[plural] = genThunks(subr, actions[plural]);
+    });
   }
   return thunks;
 }
