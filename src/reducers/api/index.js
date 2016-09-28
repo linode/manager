@@ -4,7 +4,7 @@ import linodes from './linodes';
 import { reducer as distributions } from '~/api/configs/distributions';
 import { reducer as datacenters } from '~/api/configs/datacenters';
 import { reducer as services } from '~/api/configs/services';
-import kernels from './kernels';
+import { reducer as kernels } from '~/api/configs/kernels';
 
 export default combineReducers({
   linodes,

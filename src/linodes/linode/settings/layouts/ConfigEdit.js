@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { getLinode, loadLinode } from '~/linodes/linode/layouts/IndexPage';
 import { fetchLinode, fetchLinodeConfig, putLinodeConfig } from '~/actions/api/linodes';
-import { fetchAllKernels } from '~/actions/api/kernels';
+import { kernels } from '~/api';
 import HelpButton from '~/components/HelpButton';
 import { ErrorSummary, FormGroup, reduceErrors } from '~/errors';
 import { Link } from '~/components/Link';
@@ -33,6 +33,7 @@ export class ConfigEdit extends Component {
 
   async componentDidMount() {
     const { dispatch } = this.props;
+    await dispatch(kernels.all());
     let linode = this.getLinode();
     const linodeId = parseInt(this.props.params.linodeId);
     const configId = parseInt(this.props.params.configId);
@@ -51,10 +52,6 @@ export class ConfigEdit extends Component {
       loading: false,
       kernel: config.kernel.id,
     });
-    const { kernels } = this.props;
-    if (kernels.totalPages === -1) {
-      await dispatch(fetchAllKernels());
-    }
   }
 
   getConfig() {
