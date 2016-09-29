@@ -34,21 +34,14 @@ export class IndexPage extends Component {
 
   async componentDidMount() {
     const { dispatch } = this.props;
-    this.componentDidUpdate();
     try {
       await dispatch(linodes.all());
+      if (Object.keys(this.props.linodes.linodes).length === 0) {
+        dispatch(push('/linodes/create'));
+      }
       // TODO: Start until on transient linodes
     } catch (response) {
       dispatch(setError(response));
-    }
-  }
-
-  componentDidUpdate() {
-    const { dispatch, linodes } = this.props;
-    const _linodes = Object.values(linodes.linodes);
-    const linodesLoaded = linodes.totalPages !== -1;
-    if (linodesLoaded && _linodes.length === 0) {
-      dispatch(push('/linodes/create'));
     }
   }
 
