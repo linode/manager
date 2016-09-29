@@ -9,7 +9,6 @@ import { testLinode } from '@/data/linodes';
 import { expectRequest } from '@/common';
 import * as IndexPageWrapper from '~/linodes/linode/layouts/IndexPage';
 import { actions, thunks } from '~/api/configs/linodes';
-import { Tabs, Tab } from 'react-tabs';
 import Dropdown from '~/components/Dropdown';
 import { SET_ERROR } from '~/actions/errors';
 
