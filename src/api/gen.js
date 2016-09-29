@@ -184,6 +184,16 @@ function genThunkUntil(config, actions, one) {
   };
 }
 
+function genThunkDelete(config, actions) {
+  return (...ids) => async (dispatch, getState) => {
+    dispatch(actions.delete(...ids));
+    const { token } = getState().authentication;
+    const response = await fetch(token, config.endpoint(...ids),
+      { method: 'DELETE' });
+    return await response.json();
+  };
+}
+
 /**
  * Generates thunks for the provided config.
  */
@@ -197,6 +207,9 @@ export function genThunks(config, actions) {
   if (supports(MANY)) {
     thunks.page = genThunkPage(config, actions);
     thunks.all = genThunkAll(config, thunks.page);
+  }
+  if (supports(DELETE)) {
+    thunks.delete = genThunkDelete(config, actions);
   }
   if (config.subresources) {
     Object.keys(config.subresources).forEach(key => {

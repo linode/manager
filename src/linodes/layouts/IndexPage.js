@@ -9,12 +9,7 @@ import Dropdown from '~/components/Dropdown';
 import { setError } from '~/actions/errors';
 import _ from 'lodash';
 import { linodes } from '~/api';
-import {
-  powerOnLinode,
-  powerOffLinode,
-  rebootLinode,
-  deleteLinode,
-} from '~/api/linodes';
+import { powerOnLinode, powerOffLinode, rebootLinode } from '~/api/linodes';
 import {
   changeView,
   toggleSelected,
@@ -66,7 +61,7 @@ export class IndexPage extends Component {
 
   remove(linode) {
     const { dispatch } = this.props;
-    dispatch(deleteLinode(linode.id));
+    dispatch(linodes.delete(linode.id));
   }
 
   toggle(linode) {
