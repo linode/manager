@@ -325,7 +325,7 @@ export function genReducer(_config) {
       case `GEN@${fullyQualified(config)}/INVALIDATE`:
         return invalidate(config, state);
       default:
-        if (action.type.indexOf(`GEN@${config.plural}.`) === 0) {
+        if (action.type && action.type.indexOf(`GEN@${config.plural}.`) === 0) {
           return subresource(config, state, action);
         }
         return state;
