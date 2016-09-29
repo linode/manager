@@ -208,6 +208,19 @@ function genThunkPut(config, actions) {
   };
 }
 
+function genThunkPost(config, actions) {
+  return (resource, ...ids) => async (dispatch, getState) => {
+    const { token } = getState().authentication;
+    const response = await fetch(token, config.endpoint(...ids, ''), {
+      method: 'POST',
+      body: JSON.stringify(resource),
+    });
+    const json = await response.json();
+    dispatch(actions.one(json, ...ids));
+    return json;
+  };
+}
+
 /**
  * Generates thunks for the provided config.
  */
@@ -227,6 +240,9 @@ export function genThunks(config, actions) {
   }
   if (supports(PUT)) {
     thunks.put = genThunkPut(config, actions);
+  }
+  if (supports(POST)) {
+    thunks.post = genThunkPost(config, actions);
   }
   if (config.subresources) {
     Object.keys(config.subresources).forEach(key => {

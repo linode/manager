@@ -7,9 +7,7 @@ import Plan from '../components/Plan';
 import Datacenter from '../components/Datacenter';
 import Details from '../components/Details';
 import { parallel } from '~/api/util';
-import { distros, datacenters, services } from '~/api';
-import { fetchLinodes, createLinode } from '~/actions/api/linodes';
-import { fetchAllBackups } from '~/actions/api/backups';
+import { linodes, distros, datacenters, services } from '~/api';
 import { setError } from '~/actions/errors';
 
 export class IndexPage extends Component {
@@ -37,7 +35,7 @@ export class IndexPage extends Component {
         distros.all(),
         datacenters.all(),
         services.all(),
-        fetchLinodes(),
+        linodes.all(),
       ));
     } catch (response) {
       dispatch(setError(response));
@@ -47,7 +45,8 @@ export class IndexPage extends Component {
       let { linodes } = this.props;
       let linode = linodes.linodes[location.query.linode];
       if (linode) {
-        await dispatch(fetchAllBackups(location.query.linode, location.query.backup));
+        await dispatch(linodes.backups.all(
+          location.query.linode, location.query.backup));
         linodes = this.props.linodes;
         linode = linodes.linodes[location.query.linode];
         const backup = linode._backups.backups[location.query.backup];
@@ -95,7 +94,7 @@ export class IndexPage extends Component {
   createLinode({ group, label, password, backups }) {
     const { dispatch } = this.props;
     const { service, datacenter, distribution, backup } = this.state;
-    return dispatch(createLinode({
+    return dispatch(linodes.post({
       root_pass: password,
       service,
       distribution,
