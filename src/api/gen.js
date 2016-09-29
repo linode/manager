@@ -168,8 +168,16 @@ function genThunkUntil(config, actions, one) {
   return (test, ...ids) => async (dispatch) => {
     dispatch(actions.one({ _polling: true }, ...ids));
     for (;;) {
-      const resource = await dispatch(one(...ids, true));
-      if (test(resource)) break;
+      try {
+        const resource = await dispatch(one(...ids, true));
+        if (test(resource)) break;
+      } catch (ex) {
+        if (ex.statusCode === 404) {
+          dispatch(actions.delete(...ids));
+          return;
+        }
+        throw ex;
+      }
       await new Promise(r => setTimeout(r, 3000));
     }
     dispatch(actions.one({ _polling: false }, ...ids));
