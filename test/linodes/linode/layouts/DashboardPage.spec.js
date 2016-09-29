@@ -190,8 +190,8 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
         params={params}
       />);
 
-    expect(page.find('.input-group').at(0).find('input')).to.exist;
-    expect(page.find('.input-group').at(0).find('button')).to.exist;
+    expect(page.find('.input-group').at(0).find('input').length).to.equal(1);
+    expect(page.find('.input-group').at(0).find('button').length).to.equal(1);
   });
 
   it('renders shh path', () => {
@@ -215,11 +215,11 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
         params={params}
       />);
 
-    expect(page.find('.input-group').at(1).find('input')).to.exist;
+    expect(page.find('.input-group').at(1).find('input').length).to.equal(1);
     expect(page.find('.input-group').at(1).find('button')
-      .at(0)).to.exist;
+      .at(0).length).to.equal(1);
     expect(page.find('.input-group').at(1).find('button')
-      .at(1)).to.exist;
+      .at(1).length).to.equal(1);
   });
 
   it('renders lish path', () => {
@@ -245,7 +245,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
         params={params}
       />);
 
-    expect(page.find('#glish-button')).to.exist;
+    expect(page.find('#glish-button').length).to.equal(1);
   });
 
   describe('performance graph', () => {
@@ -255,7 +255,6 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
           linodes={linodes}
           params={params}
         />);
-
 
       const sourceInput = page.find('.select-source');
       expect(sourceInput.find('option').length).to.equal(4);
@@ -303,7 +302,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
           params={params}
         />);
 
-      expect(page.find('ResponsiveLineChart')).to.exist;
+      expect(page.find('Chart').length).to.equal(1);
     });
   });
 });

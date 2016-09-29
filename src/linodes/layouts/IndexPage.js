@@ -173,8 +173,8 @@ export class IndexPage extends Component {
   renderActions() {
     const elements = [
       { _action: this.reboot, name: 'Reboot' },
-      { _action: this.powerOn, name: 'Power On' },
-      { _action: this.powerOff, name: 'Power Off' },
+      { _action: this.powerOn, name: 'Power on' },
+      { _action: this.powerOff, name: 'Power off' },
       { _action: this.remove, name: 'Delete' },
     ].map(element => ({ ...element, action: this.doToSelected(element._action) }));
 

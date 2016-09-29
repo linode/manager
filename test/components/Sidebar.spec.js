@@ -18,7 +18,7 @@ describe('components/Sidebar', () => {
     expect(sidebar.find('li').at(3).text()).to.equal('DNS Manager');
     expect(sidebar.find('li').at(4).text()).to.equal('Account');
     expect(sidebar.find('li').at(5).text()).to.equal('Support');
-    expect(sidebar.find('li.active')).to.exist;
+    expect(sidebar.find('li.active').length).to.equal(1);
   });
 
   it('renders sidebar component highlight only once', () => {

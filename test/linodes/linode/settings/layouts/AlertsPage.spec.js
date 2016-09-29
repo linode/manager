@@ -1,6 +1,6 @@
 import React from 'react';
 import sinon from 'sinon';
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 
 import { UPDATE_LINODE } from '~/actions/api/linodes';
@@ -17,7 +17,7 @@ describe('linodes/linode/settings/layouts/AlertsPage', async () => {
   });
 
   it('renders all alerts', () => {
-    const page = mount(
+    const page = shallow(
       <AlertsPage
         linodes={api.linodes}
         params={{ linodeId: testLinode.id }}
@@ -31,7 +31,11 @@ describe('linodes/linode/settings/layouts/AlertsPage', async () => {
       'Incoming traffic',
       'Outbound traffic',
       'Transfer quota',
-    ].map(label => expect(page.find(<span>{label}</span>)).to.exist);
+    ].forEach((label, i) => {
+      expect(page.find('.form-group').at(i).find('.col-sm-2 span')
+                 .text())
+        .to.equal(`${label}:`);
+    });
   });
 
   it('maps form fields and dispatches a putLinode event', async () => {

@@ -12,6 +12,9 @@ const {
 } = rd3;
 
 const createClass = (chartType) => {
+  // NOTE: The class name as identified by enzyme will always be Chart
+  // for each generated class. It may be better to use es5 class creation
+  // here so the class's real name can be specified.
   class Chart extends React.Component {
     constructor(props) {
       super(props);

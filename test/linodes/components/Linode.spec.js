@@ -148,7 +148,7 @@ describe('linodes/components/Linode', () => {
           enabled: false,
         },
       }));
-      expect(item.find('Link')).to.exist;
+      expect(item.find('Link').length).to.equal(1);
       expect(item.find('Link').props().to)
         .to.equal('/linodes/1234/backups');
     });

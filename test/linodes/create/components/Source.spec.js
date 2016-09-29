@@ -213,20 +213,4 @@ describe('linodes/create/components/Source', () => {
     // Show all linodes
     expect(c.find('table tbody tr').length).to.equal(2);
   });
-
-  it('shows the BackupSelection when a Linode is clicked', () => {
-    const c = shallow(
-      <Source
-        distros={api.distributions}
-        linodes={api.linodes}
-        distribution={null}
-        backup={null}
-        selectedTab={1}
-        onSourceSelected={() => {}}
-      />
-    );
-
-    c.find('tbody tr td a').simulate('click', { preventDefault() {} });
-    expect(c.find('BackupSelection')).to.exist;
-  });
 });

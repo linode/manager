@@ -23,7 +23,7 @@ describe('linodes/create/components/Distributions', () => {
 
   it('renders the selected distro name', () => {
     const dv = shallow(<Distributions vendor={vendor} />);
-    expect(dv.find(<div>Debian 8.1</div>)).to.exist;
+    expect(dv.contains('Debian 8.1')).to.equal(true);
   });
 
   it('renders the vendor logo', () => {
@@ -86,7 +86,7 @@ describe('linodes/create/components/Distributions', () => {
       preventDefault() {},
       stopPropagation() {},
     });
-    expect(dv.find('.dropdown.open')).to.exist;
+    expect(dv.find('.dropdown.open').length).to.equal(1);
 
     dv.simulate('blur');
     expect(dv.find('.dropdown.open').length).to.equal(0);

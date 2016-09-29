@@ -23,18 +23,15 @@ describe('linodes/create/components/Datacenter', () => {
       />
     );
 
-    expect(c.find(<h2>Datacenter</h2>)).to.exist;
-    expect(c.find(<h3>North America</h3>)).to.exist;
+    expect(c.find('h2').text()).to.equal('Datacenter');
+    expect(c.find('h3').text()).to.equal('North America');
     expect(c.find('.datacenter').length).to.equal(1);
-    expect(c.find(<header><label>Newark, NJ</label></header>)).to.exist;
-    expect(c.find(
-      <img
-        src={flags[datacenters.newark.country]}
-        width={64}
-        height={64}
-        alt="Newark, NJ"
-      />
-    )).to.exist;
+    expect(c.find('.datacenter header .title').text()).to.equal('Newark, NJ');
+    const img = c.find('img').props();
+    expect(img.src).to.equal(flags[datacenters.newark.country]);
+    expect(img.width).to.equal(64);
+    expect(img.height).to.equal(64);
+    expect(img.alt).to.equal('Newark, NJ');
   });
 
   it('renders disabled', () => {

@@ -22,11 +22,12 @@ describe('linodes/components/Backup', () => {
         selected={testBackup.id}
         future={false}
         onSelect={() => {}}
+        title={'Daily'}
       />
     );
 
-    expect(backup.find(<div className="title">06/09/2016</div>)).to.exist;
-    expect(backup.find('<div>Thursday, June 9 2016 3:05 PM</div>')).to.exist;
+    expect(backup.find('.title').text()).to.equal('Daily');
+    expect(backup.find('.content-col').text()).to.equal('Thursday, June 9 2016 3:05 PM');
   });
 
   it('renders a Backup pending', () => {

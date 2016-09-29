@@ -1,7 +1,7 @@
 import React from 'react';
 import sinon from 'sinon';
 import { expect } from 'chai';
-import { mount } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 
 import Details from '~/linodes/create/components/Details';
 
@@ -13,15 +13,19 @@ describe('linodes/create/components/Details', () => {
   });
 
   it('renders the card', () => {
-    const c = mount(<Details />);
-    expect(c.contains(<h2>Details</h2>)).to.equal(true);
-    expect(c.find('input').length).to.equal(5);
+    const c = shallow(<Details />);
+    expect(c.find('h2').text()).to.equal('Details');
+    // 1 label + 1 group + 1 backup + 1 quantity = 4
+    // PasswordInput doesn't show up because shallow mount
+    expect(c.find('input').length).to.equal(4);
   });
 
   it('renders multiple labels', () => {
-    const c = mount(<Details />);
+    const c = shallow(<Details />);
     c.find('[name="quantity"]').simulate('change', { target: { value: 3 } });
-    expect(c.find('input').length).to.equal(7);
+    // 3 labels + 1 group + 1 backups + 1 quantity = 6
+    // PasswordInput input doesn't show up because shallow mount
+    expect(c.find('input').length).to.equal(6);
     expect(c.state('labels')).to.have.lengthOf(3);
     expect(c.state('labels')).to.have.members(['', null, null]);
     expect(c.find('[name="label"]').at(0).props().placeholder).to.equal('my-label');
@@ -36,10 +40,10 @@ describe('linodes/create/components/Details', () => {
   it('renders errors', () => {
     const error = 'There was an error';
     const errors = { label: [error] };
-    const c = mount(<Details errors={errors} />);
-    const a = c.find('.alert');
+    const c = shallow(<Details errors={errors} />);
+    const a = c.find('.alert.alert-danger');
 
-    expect(a).to.exist;
+    expect(a.length).to.equal(1);
     const errorList = a.find('ul');
     expect(errorList.find('li').length).to.equal(1);
     expect(errorList.find('li').text()).to.equal(error);
