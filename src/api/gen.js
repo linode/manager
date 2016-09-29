@@ -302,7 +302,13 @@ export function genReducer(_config) {
       [config.plural]: {
         ...state[config.plural],
         ...page[config.plural].reduce((s, i) =>
-          ({ ...s, [i.id]: addMeta(config, i) }), { }),
+          ({
+            ...s,
+            [i.id]: state[config.plural][i.id] ? {
+              ...state[config.plural][i.id],
+              ...i,
+            } : addMeta(config, i),
+          }), { }),
       },
     };
   }
