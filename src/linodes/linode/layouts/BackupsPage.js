@@ -1,14 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import { push } from 'react-router-redux';
-import { fetchLinode, fetchLinodes, putLinode } from '~/actions/api/linodes';
 import { showModal, hideModal } from '~/actions/modal';
-import {
-  enableBackup,
-  cancelBackup,
-  fetchBackups,
-  takeBackup,
-  restoreBackup,
-} from '~/actions/api/backups';
+import { enableBackup, cancelBackup, takeBackup, restoreBackup } from '~/api/backups';
+import { parallel } from '~/api/util';
+import { linodes } from '~/api';
 import { connect } from 'react-redux';
 import HelpButton from '~/components/HelpButton';
 import Backup from '~/linodes/components/Backup';
@@ -43,19 +38,12 @@ export class BackupsPage extends Component {
   }
 
   async componentDidMount() {
-    const { dispatch, linodes } = this.props;
-    if (linodes.totalPages === -1) {
-      await dispatch(fetchLinodes());
-    }
-    let linode = this.getLinode();
-    if (!linode) {
-      const linodeId = parseInt(this.props.params.linodeId);
-      await dispatch(fetchLinode(parseInt(linodeId)));
-    }
-    linode = this.getLinode();
-    if (linode._backups.totalPages === -1) {
-      await dispatch(fetchBackups(0, linode.id));
-    }
+    const { dispatch } = this.props;
+    const { linodeId } = this.props.params;
+    const linode = await dispatch(linodes.one(linodeId));
+    await dispatch(parallel(
+      linodes.backups.all(linodeId),
+      linodes.all()));
     this.setState({
       schedule: {
         dayOfWeek: linode.backups.schedule.day,
@@ -73,8 +61,9 @@ export class BackupsPage extends Component {
 
   async saveSchedule() {
     const { dispatch } = this.props;
+    const { linodeId } = this.props.params;
     this.setState({ loading: true });
-    await dispatch(putLinode({
+    await dispatch(linodes.put({
       backups: {
         enabled: true,
         schedule: {
@@ -82,7 +71,7 @@ export class BackupsPage extends Component {
           day: this.state.schedule.dayOfWeek,
         },
       },
-    }, this.getLinode().id));
+    }, linodeId));
     this.setState({ loading: false });
   }
 

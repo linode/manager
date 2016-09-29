@@ -1,9 +1,8 @@
 import React, { Component, PropTypes } from 'react';
-import { deleteLinodeConfig } from '~/actions/api/linodes';
-import { linodes } from '~/api';
 import HelpButton from '~/components/HelpButton';
 import { Link } from 'react-router';
 import { getLinode, loadLinode } from '~/linodes/linode/layouts/IndexPage';
+import { linodes } from '~/api';
 
 function configContent(linode, configs, dispatch) {
   if (!linode && linode._configs.totalPages === -1) {
@@ -39,7 +38,7 @@ function configContent(linode, configs, dispatch) {
                 className="delete-button"
                 onClick={e => {
                   e.preventDefault();
-                  dispatch(deleteLinodeConfig(linode.id, config.id));
+                  dispatch(linodes.configs.delete(linode.id, config.id));
                 }}
                 className="action-link pull-right"
                 href="#"

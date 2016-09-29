@@ -1,14 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { getLinode } from './IndexPage';
-import {
-  fetchLinode,
-  fetchLinodeUntil,
-  fetchAllLinodeDisks,
-  powerOnLinode,
-  powerOffLinode,
-  resetPassword,
-} from '~/actions/api/linodes';
+import { linodes } from '~/api';
+import { powerOnLinode, powerOffLinode, resetPassword } from '~/api/linodes';
 import PasswordInput from '~/components/PasswordInput';
 import HelpButton from '~/components/HelpButton';
 
@@ -30,13 +24,10 @@ export class RescuePage extends Component {
 
   async componentDidMount() {
     const { dispatch } = this.props;
-    const linodeId = parseInt(this.props.params.linodeId);
-    let linode = this.getLinode();
-    if (!linode) {
-      await dispatch(fetchLinode(linodeId));
-    }
-    await dispatch(fetchAllLinodeDisks(linodeId));
-    linode = this.getLinode();
+    const { linodeId } = this.props.params;
+    await dispatch(linodes.one(linodeId));
+    await dispatch(linodes.disks.all(linodeId));
+    const linode = this.getLinode();
     const disk = Object.values(linode._disks.disks)
                        .filter(d => d.filesystem !== 'swap')[0];
     this.setState({
@@ -51,21 +42,17 @@ export class RescuePage extends Component {
     const linode = this.getLinode();
     const state = linode.state;
     const powered = linode.state === 'running' || linode.state === 'booting';
+
     try {
       this.setState({ applying: true, result: null });
-      const promises = [];
 
-      if (powered) {
-        promises.push(dispatch(powerOffLinode(linode.id)));
-      }
+      const actions = powered ? [
+        powerOffLinode(linode.id),
+        resetPassword(linode.id, disk, password),
+        powerOnLinode(linode.id),
+      ] : [resetPassword(linode.id, disk, password)];
 
-      promises.push(dispatch(resetPassword(linode.id, disk, password)));
-
-      if (powered) {
-        promises.push(dispatch(powerOnLinode(linode.id)));
-      }
-
-      await Promise.all(promises);
+      await Promise.all(actions.map(dispatch));
 
       this.setState({
         applying: false,
@@ -77,7 +64,7 @@ export class RescuePage extends Component {
         result: <span className="text-danger">An error occured.</span>,
       });
     }
-    dispatch(fetchLinodeUntil(linode.id, l => l.state === state));
+    dispatch(linodes.until(l => l.state === state, linode.id));
   }
 
   renderRescueMode() {

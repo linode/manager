@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import HelpButton from '~/components/HelpButton';
 import { getLinode, loadLinode } from '~/linodes/linode/layouts/IndexPage';
-import { putLinode } from '~/actions/api/linodes';
+import { linodes } from '~/api';
 
 export class AlertsPage extends Component {
   constructor() {
@@ -34,7 +34,7 @@ export class AlertsPage extends Component {
     const { dispatch } = this.props;
     const { id } = this.getLinode();
     this.setState({ loading: true });
-    await dispatch(putLinode({ alerts: this.state.alerts }, id));
+    await dispatch(linodes.put({ alerts: this.state.alerts }, id));
     this.setState({ loading: false });
   }
 

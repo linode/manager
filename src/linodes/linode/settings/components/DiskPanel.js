@@ -1,12 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { linodes, distros } from '~/api';
-import {
-  putLinodeDisk,
-  createLinodeDisk,
-  deleteLinodeDisk,
-  resizeLinodeDisk,
-} from '~/actions/api/linodes';
+import { resizeLinodeDisk } from '~/api/linodes';
 import HelpButton from '~/components/HelpButton';
 import PasswordInput from '~/components/PasswordInput';
 import { getLinode, loadLinode } from '~/linodes/linode/layouts/IndexPage';
@@ -54,7 +49,7 @@ export class EditModal extends Component {
         await dispatch(resizeLinodeDisk(linode.id, disk.id, size));
       }
       if (label !== disk.label) {
-        await dispatch(putLinodeDisk({ label }, linode.id, disk.id));
+        await dispatch(linodes.disks.put({ label }, linode.id, disk.id));
       }
       this.setState({ loading: false });
       dispatch(hideModal());
@@ -142,7 +137,7 @@ export class DeleteModal extends Component {
             disabled={loading}
             onClick={async () => {
               this.setState({ loading: true });
-              await dispatch(deleteLinodeDisk(linode.id, disk.id));
+              await dispatch(linodes.disks.delete(linode.id, disk.id));
               this.setState({ loading: false });
               dispatch(hideModal());
             }}
@@ -185,7 +180,7 @@ export class AddModal extends Component {
     const { label, size, distro, password, filesystem } = this.state;
     this.setState({ loading: true });
     try {
-      await dispatch(createLinodeDisk({
+      await dispatch(linodes.disks.post({
         label,
         size,
         filesystem,

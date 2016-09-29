@@ -1,17 +1,13 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-
-import { fetchBackups } from '~/actions/api/backups';
+import { linodes } from '~/api';
 import Backup from '~/linodes/components/Backup';
 
 export class Backups extends Component {
   async componentDidMount() {
-    const { linodes, selectedLinode, dispatch } = this.props;
-    const l = linodes.linodes[selectedLinode];
-    if (l.backups.enabled && l._backups.totalPages === -1) {
-      await dispatch(fetchBackups(0, selectedLinode));
-    }
+    const { selectedLinode, dispatch } = this.props;
+    await dispatch(linodes.backups.all(selectedLinode));
   }
 
   render() {
