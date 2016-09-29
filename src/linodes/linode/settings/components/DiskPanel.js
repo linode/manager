@@ -1,14 +1,12 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { linodes, distros } from '~/api';
 import {
-  fetchLinode,
-  fetchAllLinodeDisks,
   putLinodeDisk,
   createLinodeDisk,
   deleteLinodeDisk,
   resizeLinodeDisk,
 } from '~/actions/api/linodes';
-import { fetchAllDistros } from '~/actions/api/distros';
 import HelpButton from '~/components/HelpButton';
 import PasswordInput from '~/components/PasswordInput';
 import { getLinode, loadLinode } from '~/linodes/linode/layouts/IndexPage';
@@ -176,11 +174,9 @@ export class AddModal extends Component {
   }
 
   async componentDidMount() {
-    const { dispatch, distributions, free } = this.props;
+    const { dispatch, free } = this.props;
     this.setState({ size: free });
-    if (distributions.totalPages === -1) {
-      await dispatch(fetchAllDistros());
-    }
+    await dispatch(distros.all());
     this.setState({ loading: false });
   }
 
@@ -361,15 +357,9 @@ export class DiskPanel extends Component {
 
   async componentDidMount() {
     const { dispatch } = this.props;
-    let linode = this.getLinode();
-    if (!linode) {
-      const linodeId = parseInt(this.props.params.linodeId);
-      await dispatch(fetchLinode(linodeId));
-      linode = this.getLinode();
-    }
-    if (linode._disks.totalPages === -1) {
-      await dispatch(fetchAllLinodeDisks(linode.id));
-    }
+    const { linodeId } = this.props.params;
+    await dispatch(linodes.one(linodeId));
+    await dispatch(linodes.disks.all(linodeId));
   }
 
   render() {

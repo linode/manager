@@ -118,8 +118,16 @@ function genThunkPage(config, actions) {
       const state = refineState(config, getState(), ids);
       if (state.totalPages !== -1 &&
           state.pagesFetched.indexOf(page) !== -1) {
+        // cache hit
         return;
       }
+      // Update the pages fetched first so we don't double-fetch this resource
+      dispatch(actions.many({
+        page: page + 1,
+        totalPages: -2,
+        totalResults: -2,
+        [config.plural]: [],
+      }, ...ids));
       const endpoint = `${config.endpoint(...ids, '')}?page=${page + 1}`;
       const response = await fetch(token, endpoint);
       const resources = await response.json();
@@ -290,12 +298,12 @@ export function genReducer(_config) {
         break;
       }
     }
-    const subaction = {
-      ...action,
-      ids: ids.splice(1),
-    };
-    // eslint-disable-next-line no-use-before-define
-    return [reducer(subconfig, item[subkey], subaction), subkey];
+    const subaction = { ...action, ids: ids.splice(1) };
+    return one(config, state, {
+      ids: action.ids,
+      // eslint-disable-next-line no-use-before-define
+      resource: { [subkey]: reducer(subconfig, item[subkey], subaction) },
+    });
   }
 
   function reducer(config, state, action) {
@@ -310,11 +318,7 @@ export function genReducer(_config) {
         return invalidate(config, state);
       default:
         if (action.type.indexOf(`GEN@${config.plural}.`) === 0) {
-          const [substate, subkey] = subresource(config, state, action);
-          return one(config, state, {
-            ids: action.ids,
-            resource: { [subkey]: substate },
-          });
+          return subresource(config, state, action);
         }
         return state;
     }
