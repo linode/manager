@@ -44,19 +44,17 @@ describe('linodes/linode/layouts/BackupsPage', () => {
   };
 
   it('fetches a linode when mounted with an unknown linode', async () => {
+    const d = sandbox.stub().returns(testLinode);
     const page = shallow(
       <BackupsPage
-        dispatch={dispatch}
+        dispatch={d}
         linodes={linodes}
-        params={{ linodeId: `${testLinode.id}` }}
+        params={{ linodeId: '-1' }}
         backups={backups}
       />);
-    const get = sandbox.stub(page.instance(), 'getLinode');
-    get.onFirstCall().returns(null);
-    get.returns(testLinode);
     await page.instance().componentDidMount();
-    const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, '/linode/instances/1234');
+    const fn = d.firstCall.args[0];
+    await expectRequest(fn, '/linode/instances/-1');
   });
 
   it('does not fetch when mounted with a known linode', () => {
@@ -322,41 +320,8 @@ describe('linodes/linode/layouts/BackupsPage', () => {
     expect(page.state('targetLinode')).to.equal(1236);
   });
 
-  it('restores backups when asked to', async () => {
-    const page = mount(<BackupsPage
-      dispatch={dispatch}
-      linodes={linodes}
-      params={{ linodeId: '1234' }}
-      backups={{
-        ...backups,
-        selectedBackup: 26,
-      }}
-    />);
-    await page.instance().restore(1234, 26);
-    expect(dispatch.calledTwice);
-    expect(dispatch.secondCall.args[0]).to.deep.equal(push('/linodes/1234'));
-    const func = dispatch.firstCall.args[0];
-    expect(func).to.be.a('function');
-    // Assert that func does the needful
-    const fetchStub = sandbox.stub(fetch, 'fetch')
-      .returns({ json: () => 'asdf' });
-    const getState = sinon.stub().returns({ authentication: { token: 'token' } });
-    dispatch.reset();
-    expect(await func(dispatch, getState)).to.equal('asdf');
-    expect(dispatch.callCount).to.equal(0);
-    expect(fetchStub.calledOnce).to.equal(true);
-    expect(fetchStub.calledWith('token',
-      '/linodes/1234/backups/1234/restore'));
-    const data = fetchStub.firstCall.args[2];
-    expect(data.method).to.equal('POST');
-    expect(JSON.parse(data.body)).to.deep.equal({
-      linode: 1234,
-      overwrite: false,
-    });
-  });
-
   it('redirects to create linode page when necessary', async () => {
-    const page = mount(<BackupsPage
+    const page = shallow(<BackupsPage
       dispatch={dispatch}
       linodes={linodes}
       params={{ linodeId: '1234' }}

@@ -11,7 +11,7 @@ import { testLinode } from '@/data/linodes';
 import Dropdown from '~/components/Dropdown';
 import { SET_ERROR } from '~/actions/errors';
 import { expectRequest } from '@/common.js';
-import { actions, thunks } from '~/api/configs/linodes';
+import { thunks } from '~/api/configs/linodes';
 
 const { linodes } = api;
 
@@ -23,21 +23,6 @@ describe('linodes/layouts/IndexPage', () => {
   });
 
   const dispatch = sandbox.spy();
-
-  it('dispatches a linodes fetch action when mounted', async () => {
-    mount(
-      <IndexPage
-        dispatch={dispatch}
-        view={'grid'}
-        selected={{}}
-        linodes={freshState.api.linodes}
-      />);
-    expect(dispatch.calledOnce).to.equal(true);
-    const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, '/linode/instances/?page=1',
-      d => expect(d.args[0])
-        .to.deep.equal(actions.many(null)), null, null, freshState);
-  });
 
   it('handles errors from fetchLinodes', () => {
     sandbox.stub(thunks, 'page').throws({
@@ -62,7 +47,7 @@ describe('linodes/layouts/IndexPage', () => {
   });
 
   it('redirects to /linodes/create when you have no Linodes', async () => {
-    mount(
+    const page = shallow(
       <IndexPage
         dispatch={dispatch}
         view={'grid'}
@@ -72,6 +57,7 @@ describe('linodes/layouts/IndexPage', () => {
           totalPages: 1,
         }}
       />);
+    await page.instance().componentDidMount();
     expect(dispatch.calledWith(push('/linodes/create')))
       .to.equal(true);
   });

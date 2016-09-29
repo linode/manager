@@ -50,10 +50,10 @@ describe('linodes/linode/layouts/IndexPage/loadLinode', async () => {
       />
     );
     await page.instance().componentDidMount();
-    expect(dispatch.calledOnce).to.equal(true);
+    expect(dispatch.calledTwice).to.equal(true);
     const fn = dispatch.firstCall.args[0];
     await expectRequest(fn, '/linode/instances/-1',
-      d => expect(d.args[0]).to.deep.equal(actions.one(null, -1)));
+      d => expect(d.args[0]).to.deep.equal(actions.one({ }, -1)));
   });
 
   it('handles errors from fetchLinode', async () => {
@@ -76,16 +76,6 @@ describe('linodes/linode/layouts/IndexPage/loadLinode', async () => {
       status: 400,
       statusText: 'Bad Request',
     }));
-  });
-
-  it('does not fetch when mounted with a known linode', async () => {
-    mount(
-      <Test
-        dispatch={dispatch}
-        linodes={linodes}
-        params={{ linodeId: testLinode.id }}
-      />);
-    expect(dispatch.calledOnce).to.equal(false);
   });
 });
 

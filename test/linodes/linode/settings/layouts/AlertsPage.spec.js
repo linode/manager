@@ -59,15 +59,7 @@ describe('linodes/linode/settings/layouts/AlertsPage', async () => {
     await expectRequest(fn, `/linode/instances/${testLinode.id}`,
       (d, n) => {
         if (n === 0) {
-          expect(d.args[0]).to.deep.equal(actions.one({
-            alerts: {
-              cpu: { enabled: true, threshold: 90 },
-              io: { enabled: true, threshold: 5000 },
-              transfer_in: { enabled: true, threshold: 5 },
-              transfer_out: { enabled: true, threshold: 5 },
-              transfer_quota: { enabled: true, threshold: 80 },
-            },
-          }, testLinode.id));
+          expect(d.args[0]).to.deep.equal(actions.one({ }, testLinode.id));
         }
       }, { }, { method: 'PUT' });
   });

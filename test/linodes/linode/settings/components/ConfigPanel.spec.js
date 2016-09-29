@@ -135,7 +135,7 @@ describe('linodes/linode/settings/components/ConfigPanel', () => {
   });
 
   it('attempts to delete config', async () => {
-    const panel = mount(
+    const panel = shallow(
       <ConfigPanel
         params={{ linodeId: '1238' }}
         dispatch={dispatch}
@@ -144,7 +144,7 @@ describe('linodes/linode/settings/components/ConfigPanel', () => {
     );
 
     const actionBtn = panel.find('.action-link').at(0);
-    actionBtn.simulate('click');
+    actionBtn.simulate('click', { preventDefault: () => {} });
     expect(dispatch.calledOnce).to.equal(true);
     const fn = dispatch.firstCall.args[0];
     await expectRequest(fn, '/linode/instances/1238/configs/12345',

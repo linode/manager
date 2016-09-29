@@ -42,13 +42,13 @@ export class IndexPage extends Component {
     }
     const { location } = this.props;
     if (location.query && location.query.linode && location.query.backup) {
-      let { linodes } = this.props;
-      let linode = linodes.linodes[location.query.linode];
+      let _linodes = this.props.linodes;
+      let linode = _linodes.linodes[location.query.linode];
       if (linode) {
         await dispatch(linodes.backups.all(
           location.query.linode, location.query.backup));
-        linodes = this.props.linodes;
-        linode = linodes.linodes[location.query.linode];
+        _linodes = this.props.linodes;
+        linode = _linodes.linodes[location.query.linode];
         const backup = linode._backups.backups[location.query.backup];
         if (backup) {
           this.setState({
