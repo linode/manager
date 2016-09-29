@@ -8,7 +8,8 @@ import { api, freshState } from '@/data';
 import { testLinode } from '@/data/linodes';
 import { expectRequest } from '@/common';
 import * as IndexPageWrapper from '~/linodes/linode/layouts/IndexPage';
-import * as linodeActions from '~/actions/api/linodes';
+import { actions, thunks } from '~/api/configs/linodes';
+import { Tabs, Tab } from 'react-tabs';
 import Dropdown from '~/components/Dropdown';
 import { SET_ERROR } from '~/actions/errors';
 
@@ -52,11 +53,11 @@ describe('linodes/linode/layouts/IndexPage/loadLinode', async () => {
     expect(dispatch.calledOnce).to.equal(true);
     const fn = dispatch.firstCall.args[0];
     await expectRequest(fn, '/linode/instances/-1',
-      d => expect(d.args[0].type).to.equal(linodeActions.UPDATE_LINODE));
+      d => expect(d.args[0]).to.deep.equal(actions.one(null, -1)));
   });
 
   it('handles errors from fetchLinode', async () => {
-    sandbox.stub(linodeActions, 'fetchLinode').throws({
+    sandbox.stub(thunks, 'one').throws({
       json: () => ({ foo: 'bar' }),
       headers: { get() { return 'application/json'; } },
       statusCode: 400,

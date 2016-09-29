@@ -3,7 +3,7 @@ import sinon from 'sinon';
 import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 
-import { UPDATE_LINODE } from '~/actions/api/linodes';
+import { actions } from '~/api/configs/linodes';
 import { api } from '@/data';
 import { testLinode } from '@/data/linodes';
 import { expectRequest } from '@/common';
@@ -59,15 +59,15 @@ describe('linodes/linode/settings/layouts/AlertsPage', async () => {
     await expectRequest(fn, `/linode/instances/${testLinode.id}`,
       (d, n) => {
         if (n === 0) {
-          expect(d.args[0].type).to.equal(UPDATE_LINODE);
-          expect(d.args[0].linodes).to.equal(testLinode.id);
-          expect(d.args[0].linode.alerts).to.deep.equal({
-            cpu: { enabled: true, threshold: 90 },
-            io: { enabled: true, threshold: 5000 },
-            transfer_in: { enabled: true, threshold: 5 },
-            transfer_out: { enabled: true, threshold: 5 },
-            transfer_quota: { enabled: true, threshold: 80 },
-          });
+          expect(d.args[0]).to.deep.equal(actions.one({
+            alerts: {
+              cpu: { enabled: true, threshold: 90 },
+              io: { enabled: true, threshold: 5000 },
+              transfer_in: { enabled: true, threshold: 5 },
+              transfer_out: { enabled: true, threshold: 5 },
+              transfer_quota: { enabled: true, threshold: 80 },
+            },
+          }, testLinode.id));
         }
       }, { }, { method: 'PUT' });
   });

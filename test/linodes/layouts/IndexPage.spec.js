@@ -5,13 +5,13 @@ import { expect } from 'chai';
 import { push } from 'react-router-redux';
 
 import { IndexPage } from '~/linodes/layouts/IndexPage';
-import * as linodeActions from '~/actions/api/linodes';
 import { TOGGLE_SELECTED, CHANGE_VIEW } from '~/linodes/actions/index';
 import { api, freshState } from '@/data';
 import { testLinode } from '@/data/linodes';
 import Dropdown from '~/components/Dropdown';
 import { SET_ERROR } from '~/actions/errors';
 import { expectRequest } from '@/common.js';
+import { actions, thunks } from '~/api/configs/linodes';
 
 const { linodes } = api;
 
@@ -36,12 +36,11 @@ describe('linodes/layouts/IndexPage', () => {
     const fn = dispatch.firstCall.args[0];
     await expectRequest(fn, '/linode/instances/?page=1',
       d => expect(d.args[0])
-        .to.have.property('type')
-        .that.equals(linodeActions.UPDATE_LINODES), null, null, freshState);
+        .to.deep.equal(actions.many(null)), null, null, freshState);
   });
 
   it('handles errors from fetchLinodes', () => {
-    sandbox.stub(linodeActions, 'fetchLinodes').throws({
+    sandbox.stub(thunks, 'page').throws({
       json: () => ({ foo: 'bar' }),
       headers: { get() { return 'application/json'; } },
       statusCode: 400,
