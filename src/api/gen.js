@@ -62,6 +62,7 @@ export function genActions(config) {
         genActions(config.subresources[key]);
     });
   }
+  actions.type = config.plural;
   return actions;
 }
 
@@ -188,6 +189,7 @@ export function genThunks(config, actions) {
       thunks[plural] = genThunks(subr, actions[plural]);
     });
   }
+  thunks.type = config.plural;
   return thunks;
 }
 
@@ -261,6 +263,41 @@ export function genReducer(_config) {
     };
   }
 
+  function subresource(config, state, action) {
+    let path = action.type.substr(action.type.indexOf('@') + 1);
+    path = path.substr(0, path.indexOf('/'));
+    const names = path.split('.');
+    const { ids } = action;
+
+    let name = null;
+    for (let i = 0; i < names.length; i++) {
+      if (names[i] === config.plural) {
+        name = names[i + 1];
+        break;
+      }
+    }
+
+    if (!name) return state;
+
+    const item = state[config.plural][ids[0]];
+    const keys = Object.keys(config.subresources);
+    let subkey = null;
+    let subconfig = null;
+    for (let i = 0; i < keys.length; i++) {
+      subkey = keys[i];
+      subconfig = config.subresources[subkey];
+      if (subconfig.plural === name) {
+        break;
+      }
+    }
+    const subaction = {
+      ...action,
+      ids: ids.splice(1),
+    };
+    // eslint-disable-next-line no-use-before-define
+    return [reducer(subconfig, item[subkey], subaction), subkey];
+  }
+
   function reducer(config, state, action) {
     switch (action.type) {
       case `GEN@${fullyQualified(config)}/ONE`:
@@ -272,6 +309,13 @@ export function genReducer(_config) {
       case `GEN@${fullyQualified(config)}/INVALIDATE`:
         return invalidate(config, state);
       default:
+        if (action.type.indexOf(`GEN@${config.plural}.`) === 0) {
+          const [substate, subkey] = subresource(config, state, action);
+          return one(config, state, {
+            ids: action.ids,
+            resource: { [subkey]: substate },
+          });
+        }
         return state;
     }
   }
