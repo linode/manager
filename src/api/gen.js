@@ -21,13 +21,23 @@ export function genConfig(config, parent = undefined) {
   return result;
 }
 
+function fullyQualified(resource) {
+  let path = resource.plural;
+  let res = resource;
+  while (res.parent) {
+    res = res.parent;
+    path = `${res.plural}.${path}`;
+  }
+  return path;
+}
+
 const actionGenerators = {
   [ONE]: c => (resource, ...ids) =>
-    ({ type: `GEN@${c.plural}/ONE`, resource, ids: ids.map(n => parseInt(n)) }),
+    ({ type: `GEN@${fullyQualified(c)}/ONE`, resource, ids: ids.map(n => parseInt(n)) }),
   [MANY]: c => (page, ...ids) =>
-    ({ type: `GEN@${c.plural}/MANY`, page, ids: ids.map(n => parseInt(n)) }),
+    ({ type: `GEN@${fullyQualified(c)}/MANY`, page, ids: ids.map(n => parseInt(n)) }),
   [DELETE]: c => (...ids) =>
-    ({ type: `GEN@${c.plural}/DELETE`, ids: ids.map(n => parseInt(n)) }),
+    ({ type: `GEN@${fullyQualified(c)}/DELETE`, ids: ids.map(n => parseInt(n)) }),
 };
 
 /**
@@ -253,13 +263,13 @@ export function genReducer(_config) {
 
   function reducer(config, state, action) {
     switch (action.type) {
-      case `GEN@${config.plural}/ONE`:
+      case `GEN@${fullyQualified(config)}/ONE`:
         return one(config, state, action);
-      case `GEN@${config.plural}/MANY`:
+      case `GEN@${fullyQualified(config)}/MANY`:
         return many(config, state, action);
-      case `GEN@${config.plural}/DELETE`:
+      case `GEN@${fullyQualified(config)}/DELETE`:
         return del(config, state, action);
-      case `GEN@${config.plural}/INVALIDATE`:
+      case `GEN@${fullyQualified(config)}/INVALIDATE`:
         return invalidate(config, state);
       default:
         return state;
