@@ -8,11 +8,7 @@ import Dropdown from '~/components/Dropdown';
 import { LinodeStates, LinodeStatesReadable } from '~/constants';
 import { setError } from '~/actions/errors';
 import { linodes } from '~/api';
-import {
-  powerOnLinode,
-  powerOffLinode,
-  rebootLinode,
-} from '~/api/linodes';
+import { powerOnLinode, powerOffLinode, rebootLinode } from '~/api/linodes';
 
 export function getLinode() {
   const { linodes } = this.props.linodes;

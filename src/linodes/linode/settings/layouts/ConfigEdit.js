@@ -1,8 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { getLinode, loadLinode } from '~/linodes/linode/layouts/IndexPage';
-import { fetchLinode, fetchLinodeConfig, putLinodeConfig } from '~/actions/api/linodes';
-import { kernels } from '~/api';
+import { linodes, kernels } from '~/api';
+import { parallel } from '~/api/util';
 import HelpButton from '~/components/HelpButton';
 import { ErrorSummary, FormGroup, reduceErrors } from '~/errors';
 import { Link } from '~/components/Link';
@@ -33,19 +33,9 @@ export class ConfigEdit extends Component {
 
   async componentDidMount() {
     const { dispatch } = this.props;
-    await dispatch(kernels.all());
-    let linode = this.getLinode();
-    const linodeId = parseInt(this.props.params.linodeId);
-    const configId = parseInt(this.props.params.configId);
-    if (!linode) {
-      await dispatch(fetchLinode(linodeId));
-      linode = this.getLinode();
-    }
-    let config = this.getConfig();
-    if (!config) {
-      await dispatch(fetchLinodeConfig(linodeId, configId));
-      config = this.getConfig();
-    }
+    const { linodeId, configId } = this.props.params;
+    await dispatch(parallel(kernels.all(), linodes.one(linodeId)));
+    const config = await dispatch(linodes.configs.one(linodeId, configId));
     this.setState({
       ...config,
       ...config.helpers,
@@ -71,7 +61,7 @@ export class ConfigEdit extends Component {
 
     this.setState({ loading: true, errors: {} });
     try {
-      await dispatch(putLinodeConfig({
+      await dispatch(linodes.configs.put({
         label: state.label,
         comments: state.comments,
         ram_limit: state.ram_limit,

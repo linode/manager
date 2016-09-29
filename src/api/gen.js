@@ -186,11 +186,25 @@ function genThunkUntil(config, actions, one) {
 
 function genThunkDelete(config, actions) {
   return (...ids) => async (dispatch, getState) => {
-    dispatch(actions.delete(...ids));
     const { token } = getState().authentication;
     const response = await fetch(token, config.endpoint(...ids),
       { method: 'DELETE' });
-    return await response.json();
+    const json = await response.json();
+    dispatch(actions.delete(...ids));
+    return json;
+  };
+}
+
+function genThunkPut(config, actions) {
+  return (resource, ...ids) => async (dispatch, getState) => {
+    const { token } = getState().authentication;
+    const response = await fetch(token, config.endpoint(...ids), {
+      method: 'PUT',
+      body: JSON.stringify(resource),
+    });
+    const json = await response.json();
+    dispatch(actions.one(json, ...ids));
+    return json;
   };
 }
 
@@ -210,6 +224,9 @@ export function genThunks(config, actions) {
   }
   if (supports(DELETE)) {
     thunks.delete = genThunkDelete(config, actions);
+  }
+  if (supports(PUT)) {
+    thunks.put = genThunkPut(config, actions);
   }
   if (config.subresources) {
     Object.keys(config.subresources).forEach(key => {
