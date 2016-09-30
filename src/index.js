@@ -26,6 +26,9 @@ import Account from './account';
 import Support from './support';
 import { hideModal } from '~/actions/modal';
 
+import { actions, thunks, reducer } from '~/api/configs/linodes';
+window.actions = actions; window.thunks = thunks; window.reducer = reducer;
+
 const init = () => {
   render(
     <Provider store={store}>

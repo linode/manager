@@ -4,7 +4,7 @@ import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 
 import { ConfigPanel } from '~/linodes/linode/settings/components/ConfigPanel';
-import { DELETE_LINODE_CONFIG } from '~/actions/api/linodes';
+import { actions } from '~/api/configs/linodes';
 import { expectRequest } from '@/common';
 import { api } from '@/data';
 import { testLinode } from '@/data/linodes';
@@ -135,7 +135,7 @@ describe('linodes/linode/settings/components/ConfigPanel', () => {
   });
 
   it('attempts to delete config', async () => {
-    const panel = mount(
+    const panel = shallow(
       <ConfigPanel
         params={{ linodeId: '1238' }}
         dispatch={dispatch}
@@ -144,11 +144,11 @@ describe('linodes/linode/settings/components/ConfigPanel', () => {
     );
 
     const actionBtn = panel.find('.action-link').at(0);
-    actionBtn.simulate('click');
+    actionBtn.simulate('click', { preventDefault: () => {} });
     expect(dispatch.calledOnce).to.equal(true);
     const fn = dispatch.firstCall.args[0];
     await expectRequest(fn, '/linode/instances/1238/configs/12345',
-      d => expect(d.args[0].type).to.equal(DELETE_LINODE_CONFIG), null,
-      { method: 'DELETE' });
+      d => expect(d.args[0]).to.deep.equal(actions.configs.delete(1238, 12345)),
+      null, { method: 'DELETE' });
   });
 });

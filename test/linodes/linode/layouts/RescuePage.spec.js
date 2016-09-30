@@ -68,8 +68,7 @@ describe('linodes/linode/layouts/RescuePage', () => {
         params={{ linodeId: '1234' }}
       />);
     const get = sandbox.stub(page.instance(), 'getLinode');
-    get.onFirstCall().returns(null);
-    get.onSecondCall().returns(testLinode);
+    get.onFirstCall().returns(testLinode);
     await page.instance().componentDidMount();
     const dispatched = dispatch.firstCall.args[0];
     // Assert that dispatched is a function that fetches a linode
@@ -86,13 +85,14 @@ describe('linodes/linode/layouts/RescuePage', () => {
   });
 
   it('fetches linode disks', async () => {
-    mount(
+    const page = shallow(
       <RescuePage
         dispatch={dispatch}
         linodes={linodes}
         params={{ linodeId: '1234' }}
       />);
-    let dispatched = dispatch.firstCall.args[0];
+    await page.instance().componentDidMount();
+    let dispatched = dispatch.secondCall.args[0];
     // Assert that dispatched is a function that fetches disks
     const fetchStub = sandbox.stub(fetch, 'fetch').returns({
       json: () => {},

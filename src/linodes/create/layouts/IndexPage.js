@@ -6,11 +6,8 @@ import Source from '../components/Source';
 import Plan from '../components/Plan';
 import Datacenter from '../components/Datacenter';
 import Details from '../components/Details';
-import { fetchAllDistros } from '~/actions/api/distros';
-import { fetchAllDatacenters } from '~/actions/api/datacenters';
-import { fetchAllServices } from '~/actions/api/services';
-import { fetchLinodes, createLinode } from '~/actions/api/linodes';
-import { fetchAllBackups } from '~/actions/api/backups';
+import { parallel } from '~/api/util';
+import { linodes, distros, datacenters, services } from '~/api';
 import { setError } from '~/actions/errors';
 
 export class IndexPage extends Component {
@@ -34,23 +31,24 @@ export class IndexPage extends Component {
   async componentDidMount() {
     const { dispatch } = this.props;
     try {
-      await Promise.all([
-        dispatch(fetchAllDistros()),
-        dispatch(fetchAllDatacenters()),
-        dispatch(fetchAllServices()),
-        dispatch(fetchLinodes()),
-      ]);
+      await dispatch(parallel(
+        distros.all(),
+        datacenters.all(),
+        services.all(),
+        linodes.all(),
+      ));
     } catch (response) {
       dispatch(setError(response));
     }
     const { location } = this.props;
     if (location.query && location.query.linode && location.query.backup) {
-      let { linodes } = this.props;
-      let linode = linodes.linodes[location.query.linode];
+      let _linodes = this.props.linodes;
+      let linode = _linodes.linodes[location.query.linode];
       if (linode) {
-        await dispatch(fetchAllBackups(location.query.linode, location.query.backup));
-        linodes = this.props.linodes;
-        linode = linodes.linodes[location.query.linode];
+        await dispatch(linodes.backups.all(
+          location.query.linode, location.query.backup));
+        _linodes = this.props.linodes;
+        linode = _linodes.linodes[location.query.linode];
         const backup = linode._backups.backups[location.query.backup];
         if (backup) {
           this.setState({
@@ -96,7 +94,7 @@ export class IndexPage extends Component {
   createLinode({ group, label, password, backups }) {
     const { dispatch } = this.props;
     const { service, datacenter, distribution, backup } = this.state;
-    return dispatch(createLinode({
+    return dispatch(linodes.post({
       root_pass: password,
       service,
       distribution,

@@ -5,13 +5,13 @@ import { expect } from 'chai';
 import { push } from 'react-router-redux';
 
 import { IndexPage } from '~/linodes/layouts/IndexPage';
-import * as linodeActions from '~/actions/api/linodes';
 import { TOGGLE_SELECTED, CHANGE_VIEW } from '~/linodes/actions/index';
 import { api, freshState } from '@/data';
 import { testLinode } from '@/data/linodes';
 import Dropdown from '~/components/Dropdown';
 import { SET_ERROR } from '~/actions/errors';
 import { expectRequest } from '@/common.js';
+import { thunks } from '~/api/configs/linodes';
 
 const { linodes } = api;
 
@@ -24,24 +24,8 @@ describe('linodes/layouts/IndexPage', () => {
 
   const dispatch = sandbox.spy();
 
-  it('dispatches a linodes fetch action when mounted', async () => {
-    mount(
-      <IndexPage
-        dispatch={dispatch}
-        view={'grid'}
-        selected={{}}
-        linodes={freshState.api.linodes}
-      />);
-    expect(dispatch.calledOnce).to.equal(true);
-    const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, '/linode/instances/?page=1',
-      d => expect(d.args[0])
-        .to.have.property('type')
-        .that.equals(linodeActions.UPDATE_LINODES), null, null, freshState);
-  });
-
   it('handles errors from fetchLinodes', () => {
-    sandbox.stub(linodeActions, 'fetchLinodes').throws({
+    sandbox.stub(thunks, 'page').throws({
       json: () => ({ foo: 'bar' }),
       headers: { get() { return 'application/json'; } },
       statusCode: 400,
@@ -63,7 +47,7 @@ describe('linodes/layouts/IndexPage', () => {
   });
 
   it('redirects to /linodes/create when you have no Linodes', async () => {
-    mount(
+    const page = shallow(
       <IndexPage
         dispatch={dispatch}
         view={'grid'}
@@ -73,6 +57,7 @@ describe('linodes/layouts/IndexPage', () => {
           totalPages: 1,
         }}
       />);
+    await page.instance().componentDidMount();
     expect(dispatch.calledWith(push('/linodes/create')))
       .to.equal(true);
   });

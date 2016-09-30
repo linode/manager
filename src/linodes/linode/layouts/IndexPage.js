@@ -7,13 +7,8 @@ import { push } from 'react-router-redux';
 import Dropdown from '~/components/Dropdown';
 import { LinodeStates, LinodeStatesReadable } from '~/constants';
 import { setError } from '~/actions/errors';
-import {
-  fetchLinode,
-  fetchAllLinodeConfigs,
-  powerOnLinode,
-  powerOffLinode,
-  rebootLinode,
-} from '~/actions/api/linodes';
+import { linodes } from '~/api';
+import { powerOnLinode, powerOffLinode, rebootLinode } from '~/api/linodes';
 
 export function getLinode() {
   const { linodes } = this.props.linodes;
@@ -23,18 +18,12 @@ export function getLinode() {
 
 export async function loadLinode() {
   const { dispatch } = this.props;
-  let linode = this.getLinode();
-  if (!linode) {
-    const linodeId = parseInt(this.props.params.linodeId);
-    try {
-      await dispatch(fetchLinode(linodeId));
-      linode = this.getLinode();
-    } catch (response) {
-      dispatch(setError(response));
-    }
-  }
-  if (linode && (!linode._configs || linode._configs.totalPages === -1)) {
-    await dispatch(fetchAllLinodeConfigs(linode.id));
+  try {
+    const { linodeId } = this.props.params;
+    await dispatch(linodes.one(linodeId));
+    await dispatch(linodes.configs.all(linodeId));
+  } catch (response) {
+    dispatch(setError(response));
   }
 }
 

@@ -1,12 +1,8 @@
 import React, { Component, PropTypes } from 'react';
-import {
-  fetchLinode,
-  fetchAllLinodeConfigs,
-  deleteLinodeConfig,
-} from '~/actions/api/linodes';
 import HelpButton from '~/components/HelpButton';
 import { Link } from 'react-router';
 import { getLinode, loadLinode } from '~/linodes/linode/layouts/IndexPage';
+import { linodes } from '~/api';
 
 function configContent(linode, configs, dispatch) {
   if (!linode && linode._configs.totalPages === -1) {
@@ -42,7 +38,7 @@ function configContent(linode, configs, dispatch) {
                 className="delete-button"
                 onClick={e => {
                   e.preventDefault();
-                  dispatch(deleteLinodeConfig(linode.id, config.id));
+                  dispatch(linodes.configs.delete(linode.id, config.id));
                 }}
                 className="action-link pull-right"
                 href="#"
@@ -63,15 +59,9 @@ export class ConfigPanel extends Component {
 
   async componentDidMount() {
     const { dispatch } = this.props;
-    let linode = this.getLinode();
-    if (!linode) {
-      const linodeId = parseInt(this.props.params.linodeId);
-      await dispatch(fetchLinode(linodeId));
-      linode = this.getLinode();
-    }
-    if (linode._configs.totalPages === -1) {
-      await dispatch(fetchAllLinodeConfigs(linode.id));
-    }
+    const { linodeId } = this.props.params;
+    await dispatch(linodes.one(linodeId));
+    await dispatch(linodes.configs.all(linodeId));
   }
 
   render() {

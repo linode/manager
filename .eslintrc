@@ -24,6 +24,8 @@
     "consistent-return": 0,
     "react/no-multi-comp": 0,
     "react/no-did-mount-set-state": 0,
+    "import/no-duplicates": 0,
+    "no-duplicate-imports": 0,
     "no-shadow": 0,
     "radix": 0,
     "dot-notation": [

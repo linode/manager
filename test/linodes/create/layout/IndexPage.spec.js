@@ -6,7 +6,7 @@ import { push } from 'react-router-redux';
 
 import { IndexPage } from '~/linodes/create/layouts/IndexPage';
 import * as errors from '~/actions/errors';
-import * as apiLinodes from '~/actions/api/linodes';
+import { thunks } from '~/api/configs/linodes';
 import { api } from '@/data';
 
 describe('linodes/create/layout/IndexPage', () => {
@@ -143,7 +143,7 @@ describe('linodes/create/layout/IndexPage', () => {
     const env = { dispatch() {} };
     const dispatch = sandbox.stub(env, 'dispatch');
     const createdLinodeId = 1;
-    sandbox.stub(apiLinodes, 'createLinode', d => d);
+    sandbox.stub(thunks, 'post', d => d);
     const page = shallow(
       <IndexPage
         dispatch={dispatch}
@@ -184,7 +184,7 @@ describe('linodes/create/layout/IndexPage', () => {
     const env = { dispatch() {} };
     const dispatch = sandbox.stub(env, 'dispatch');
     const createdLinodeId = 1;
-    sandbox.stub(apiLinodes, 'createLinode', d => d);
+    sandbox.stub(thunks, 'post', d => d);
     const page = shallow(
       <IndexPage
         dispatch={dispatch}
@@ -235,7 +235,7 @@ describe('linodes/create/layout/IndexPage', () => {
     const env = { dispatch() {} };
     const dispatch = sandbox.stub(env, 'dispatch');
     const createdLinodeId = 1;
-    sandbox.stub(apiLinodes, 'createLinode', d => d);
+    sandbox.stub(thunks, 'post', d => d);
     const page = shallow(
       <IndexPage
         dispatch={dispatch}

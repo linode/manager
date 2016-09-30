@@ -8,7 +8,7 @@ import { api, freshState } from '@/data';
 import { testLinode } from '@/data/linodes';
 import { expectRequest } from '@/common';
 import * as IndexPageWrapper from '~/linodes/linode/layouts/IndexPage';
-import * as linodeActions from '~/actions/api/linodes';
+import { actions, thunks } from '~/api/configs/linodes';
 import Dropdown from '~/components/Dropdown';
 import { SET_ERROR } from '~/actions/errors';
 
@@ -49,14 +49,14 @@ describe('linodes/linode/layouts/IndexPage/loadLinode', async () => {
       />
     );
     await page.instance().componentDidMount();
-    expect(dispatch.calledOnce).to.equal(true);
+    expect(dispatch.calledTwice).to.equal(true);
     const fn = dispatch.firstCall.args[0];
     await expectRequest(fn, '/linode/instances/-1',
-      d => expect(d.args[0].type).to.equal(linodeActions.UPDATE_LINODE));
+      d => expect(d.args[0]).to.deep.equal(actions.one({ }, -1)));
   });
 
   it('handles errors from fetchLinode', async () => {
-    sandbox.stub(linodeActions, 'fetchLinode').throws({
+    sandbox.stub(thunks, 'one').throws({
       json: () => ({ foo: 'bar' }),
       headers: { get() { return 'application/json'; } },
       statusCode: 400,
@@ -75,16 +75,6 @@ describe('linodes/linode/layouts/IndexPage/loadLinode', async () => {
       status: 400,
       statusText: 'Bad Request',
     }));
-  });
-
-  it('does not fetch when mounted with a known linode', async () => {
-    mount(
-      <Test
-        dispatch={dispatch}
-        linodes={linodes}
-        params={{ linodeId: testLinode.id }}
-      />);
-    expect(dispatch.calledOnce).to.equal(false);
   });
 });
 

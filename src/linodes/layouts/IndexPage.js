@@ -6,17 +6,10 @@ import moment from 'moment';
 
 import { Linode } from '../components/Linode';
 import Dropdown from '~/components/Dropdown';
-import { LinodeStates } from '~/constants';
 import { setError } from '~/actions/errors';
 import _ from 'lodash';
-import {
-  fetchLinodes,
-  fetchLinodeUntil,
-  powerOnLinode,
-  powerOffLinode,
-  rebootLinode,
-  deleteLinode,
-} from '~/actions/api/linodes';
+import { linodes } from '~/api';
+import { powerOnLinode, powerOffLinode, rebootLinode } from '~/api/linodes';
 import {
   changeView,
   toggleSelected,
@@ -32,50 +25,23 @@ export class IndexPage extends Component {
     this.remove = this.remove.bind(this);
     this.toggle = this.toggle.bind(this);
     this.toggleDisplay = this.toggleDisplay.bind(this);
-    this.handleScroll = this.handleScroll.bind(this);
   }
 
   async componentDidMount() {
     const { dispatch } = this.props;
-    window.addEventListener('scroll', this.handleScroll);
-    this.componentDidUpdate();
     try {
-      await dispatch(fetchLinodes());
+      await dispatch(linodes.all());
+      if (Object.keys(this.props.linodes.linodes).length === 0) {
+        dispatch(push('/linodes/create'));
+      }
+      // TODO: Start until on transient linodes
     } catch (response) {
       dispatch(setError(response));
     }
   }
 
-  componentDidUpdate() {
-    const { dispatch, linodes } = this.props;
-    const _linodes = Object.values(linodes.linodes);
-    if (_linodes.length > 0) {
-      _linodes.forEach(l => {
-        const state = l.state;
-        if (LinodeStates.pending.indexOf(state) !== -1) {
-          dispatch(fetchLinodeUntil(l.id, ln => ln.state !== state));
-        }
-      });
-    }
-    const linodesLoaded = linodes.totalPages !== -1;
-    if (linodesLoaded && _linodes.length === 0) {
-      dispatch(push('/linodes/create'));
-    }
-  }
-
   componentWillUnmount() {
     window.removeEventListener('scroll', this.handleScroll);
-  }
-
-  handleScroll() {
-    const { dispatch, linodes } = this.props;
-    if (document.body.scrollTop + window.innerHeight
-        >= document.body.offsetHeight) {
-      const page = Math.max.apply(this, linodes.pagesFetched);
-      if (page <= linodes.totalPages) {
-        dispatch(fetchLinodes(page));
-      }
-    }
   }
 
   powerOn(linode) {
@@ -95,7 +61,7 @@ export class IndexPage extends Component {
 
   remove(linode) {
     const { dispatch } = this.props;
-    dispatch(deleteLinode(linode.id));
+    dispatch(linodes.delete(linode.id));
   }
 
   toggle(linode) {
