@@ -78,7 +78,7 @@ export class EditModal extends Component {
         <FormGroup errors={errors} field="size">
           <label>Size ({size} MiB)</label>
           <Slider
-            min={256}
+            min={8}
             max={free + disk.size}
             step={256}
             value={size}
@@ -297,7 +297,7 @@ export class AddModal extends Component {
           <Slider
             min={distro
               ? distributions.distributions[distro].minimum_storage_size
-              : 256}
+              : 8}
             max={free}
             step={256}
             value={size}
