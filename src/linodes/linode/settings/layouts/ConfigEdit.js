@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 import { getLinode, loadLinode } from '~/linodes/linode/layouts/IndexPage';
 import { linodes, kernels } from '~/api';
 import { parallel } from '~/api/util';
@@ -76,6 +77,7 @@ export class ConfigEdit extends Component {
         },
       }, linode.id, config.id));
       this.setState({ loading: false });
+      dispatch(push(`/linodes/${linode.id}/settings/advanced`));
     } catch (response) {
       this.setState({ loading: false, errors: await reduceErrors(response) });
     }

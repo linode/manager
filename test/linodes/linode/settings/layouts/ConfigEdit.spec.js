@@ -2,6 +2,7 @@ import React from 'react';
 import sinon from 'sinon';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
+import { push } from 'react-router-redux';
 
 import { api } from '@/data';
 import { testLinode } from '@/data/linodes';
@@ -114,7 +115,7 @@ describe('linodes/linode/settings/layouts/ConfigEdit', () => {
       const label = page.find('FormGroup[field="label"]');
       label.find('input').simulate('change', { target: { value: 'new label' } });
       await page.instance().saveChanges();
-      expect(dispatch.calledOnce).to.equal(true);
+      expect(dispatch.calledTwice).to.equal(true);
       const fn = dispatch.firstCall.args[0];
       await expectRequest(fn, `/linode/instances/${testLinode.id}/configs/12345`,
         () => {}, null, options => {
@@ -155,6 +156,21 @@ describe('linodes/linode/settings/layouts/ConfigEdit', () => {
           field: 'label',
           reason: 'you suck at naming things',
         }]);
+    });
+
+    it('redirects to advanced page after call', async () => {
+      const dispatch = sandbox.stub();
+      const page = shallow(
+        <ConfigEdit
+          {...props}
+          dispatch={dispatch}
+        />
+      );
+
+      await page.instance().saveChanges();
+      expect(dispatch.calledTwice).to.equal(true);
+      const arg = dispatch.secondCall.args[0];
+      expect(arg).to.deep.equal(push(`/linodes/${props.params.linodeId}/settings/advanced`));
     });
   });
 });
