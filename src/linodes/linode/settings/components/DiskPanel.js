@@ -6,7 +6,6 @@ import HelpButton from '~/components/HelpButton';
 import PasswordInput from '~/components/PasswordInput';
 import { getLinode, loadLinode } from '~/linodes/linode/layouts/IndexPage';
 import { showModal, hideModal } from '~/actions/modal';
-import Slider from 'rc-slider';
 import _ from 'lodash';
 import { ErrorSummary, FormGroup, reduceErrors } from '~/errors';
 
@@ -59,9 +58,8 @@ export class EditModal extends Component {
   }
 
   render() {
-    const { disk } = this.props;
+    const { disk, free, dispatch } = this.props;
     const { label, size, errors, loading } = this.state;
-    const { free, dispatch } = this.props;
     return (
       <div>
         <FormGroup errors={errors} field="label">
@@ -75,19 +73,24 @@ export class EditModal extends Component {
             onChange={e => this.setState({ label: e.target.value })}
           />
         </FormGroup>
+        <div className="form-group">
+          <label htmlFor="format">Format</label>
+          <input disabled className="form-control" value={disk.filesystem} />
+        </div>
+        <div className="form-group">
+          <label htmlFor="current-size">Current size (MB)</label>
+          <input disabled className="form-control" value={disk.size} />
+        </div>
         <FormGroup errors={errors} field="size">
-          <label>Size ({size} MiB)</label>
-          <Slider
-            min={256}
+          <label htmlFor="size">New size (MB)</label>
+          <input
+            type="number"
+            min={8} /* TODO: can't/don't calculate distro min size requirement */
             max={free + disk.size}
-            step={256}
+            className="form-control"
             value={size}
-            disabled={loading}
-            onChange={v => this.setState({ size: v })}
-            tipFormatter={v => `${v} MiB`}
-            marks={{
-              [disk.size]: `Current (${disk.size} MiB)`,
-            }}
+            name="size"
+            onChange={e => this.setState({ size: parseInt(e.target.value, 10) })}
           />
         </FormGroup>
         <ErrorSummary errors={errors} />
@@ -211,8 +214,7 @@ export class AddModal extends Component {
   }
 
   render() {
-    const { dispatch, free } = this.props;
-    const { distributions } = this.props;
+    const { dispatch, free, distributions } = this.props;
     const vendors = _.sortBy(
       _.map(
         _.groupBy(Object.values(distributions.distributions), d => d.vendor),
@@ -240,7 +242,10 @@ export class AddModal extends Component {
       errors,
     } = this.state;
     const ready = !(!loading && label &&
-      (distro ? password : filesystem));
+                    (distro ? password : filesystem));
+
+    const minimumStorageSize = () =>
+      distributions.distributions[distro].minimum_storage_size;
 
     return (
       <div>
@@ -293,17 +298,14 @@ export class AddModal extends Component {
           </div>
         }
         <div className={`form-group ${errors.size.length ? 'has-danger' : ''}`}>
-          <label>Size ({size} MiB)</label>
-          <Slider
-            min={distro
-              ? distributions.distributions[distro].minimum_storage_size
-              : 256}
+          <label>Size (MB)</label>
+          <input
+            type="number"
+            min={distro ? minimumStorageSize() : 8}
             max={free}
-            step={256}
+            className="form-control"
             value={size}
-            disabled={loading}
-            onChange={v => this.setState({ size: v })}
-            tipFormatter={v => `${v} MiB`}
+            onChange={e => this.setState({ size: parseInt(e.target.value, 10) })}
           />
           {errors.size.length ?
             <div className="form-control-feedback">
@@ -326,7 +328,8 @@ export class AddModal extends Component {
             onClick={() => this.createDisk()}
           >Add disk</button>
         </div>
-      </div>);
+      </div>
+    );
   }
 }
 
@@ -362,7 +365,7 @@ export class DiskPanel extends Component {
     const linode = this.getLinode();
     const disks = Object.values(linode._disks.disks);
     const total = linode.type.reduce((total, service) =>
-      total + service.storage, 0) * 1024;
+      total + service.storage, 0);
     const used = disks.reduce((total, disk) => total + disk.size, 0);
     const free = total - used;
     const poweredOff = linode.status === 'offline';
@@ -402,7 +405,7 @@ export class DiskPanel extends Component {
               }}
             >
               <h4>{d.label} <small>{d.filesystem}</small></h4>
-              <p>{d.size} MiB</p>
+              <p>{d.size} MB</p>
               {d.state === 'deleting' ?
                 <div className="text-muted">Being deleted</div>
                : null}
@@ -411,11 +414,11 @@ export class DiskPanel extends Component {
                    <button
                      className="btn btn-edit btn-default"
                      style={{ marginRight: '0.5rem' }}
-                     onClick={() => dispatch(showModal(`Edit ${d.label}`, editModal(d)))}
+                     onClick={() => dispatch(showModal('Edit disk', editModal(d)))}
                    >Edit</button>
                    <button
                      className="btn btn-delete btn-default"
-                     onClick={() => dispatch(showModal(`Delete ${d.label}`, deleteModal(d)))}
+                     onClick={() => dispatch(showModal('Delete disk', deleteModal(d)))}
                    >Delete</button>
                  </div>
                 : null}
@@ -427,7 +430,7 @@ export class DiskPanel extends Component {
                 style={{ flexGrow: free }}
               >
                 <h4>Unallocated</h4>
-                <p>{free} MiB</p>
+                <p>{free} MB</p>
                 {poweredOff ?
                   <button
                     onClick={() => dispatch(showModal('Add a disk', addModal))}

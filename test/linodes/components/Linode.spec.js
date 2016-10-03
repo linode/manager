@@ -103,7 +103,6 @@ describe('linodes/components/Linode', () => {
         onReboot={onReboot}
       />);
 
-    console.log(linode.html());
     linode.find('.linode-power').simulate('click');
 
     expect(onReboot.calledOnce).to.equal(true);

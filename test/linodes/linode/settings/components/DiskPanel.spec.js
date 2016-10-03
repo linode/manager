@@ -53,7 +53,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
       .to.have.property('flexGrow')
       .which.equals(disks[1].size);
     expect(firstDisk.find('button').length).to.equal(2); // has edit+delete buttons
-    expect(firstDisk.contains(<p>{disks[0].size} MiB</p>)).to.equal(true);
+    expect(firstDisk.contains(<p>{disks[0].size} MB</p>)).to.equal(true);
     expect(firstDisk.contains(<small>{disks[0].filesystem}</small>)).to.equal(true);
   });
 
@@ -83,7 +83,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
     const disks = Object.values(linode._disks.disks);
     expect(panel.find('.disk').length).to.equal(3);
     const unallocated = panel.find('.disk').at(2);
-    const free = linode.type[0].storage * 1024 -
+    const free = linode.type[0].storage -
       disks.reduce((s, d) => s + d.size, 0);
     expect(unallocated.props())
       .to.have.property('style')
@@ -153,7 +153,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
         />);
 
       expect(modal.find('input#label').length).to.equal(1);
-      expect(modal.find('Slider').length).to.equal(1);
+      expect(modal.find('[type="number"]').length).to.equal(1);
     });
 
     it('should copy initial state from props on mount', () => {
@@ -168,16 +168,6 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
       expect(modal.state('size')).to.equal(disk.size);
     });
 
-    it('should render slider tooltip appropriately', () => {
-      const modal = shallow(
-        <EditModal
-          {...props}
-          dispatch={() => {}}
-        />);
-      const { tipFormatter } = modal.find('Slider').props();
-      expect(tipFormatter(1234)).to.equal('1234 MiB');
-    });
-
     it('update state when fields are edited', () => {
       const modal = shallow(
         <EditModal
@@ -188,7 +178,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
       modal.find('input#label').simulate('change', {
         target: { value: 'New label' },
       });
-      modal.find('Slider').props().onChange(1234);
+      modal.find('[type="number"]').props().onChange({ target: { value: 1234 } });
 
       expect(modal.state('label')).to.equal('New label');
       expect(modal.state('size')).to.equal(1234);
@@ -227,7 +217,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
       modal.find('input#label').simulate('change', {
         target: { value: 'New label' },
       });
-      modal.find('Slider').props().onChange(1234);
+      modal.find('[type="number"]').props().onChange({ target: { value: 1234 } });
       const { saveChanges } = modal.instance();
       await saveChanges();
       expect(dispatch.calledThrice).to.equal(true);
@@ -255,7 +245,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
       modal.find('input#label').simulate('change', {
         target: { value: 'New label' },
       });
-      modal.find('Slider').props().onChange(1234);
+      modal.find('[type="number"]').props().onChange({ target: { value: 1234 } });
       dispatch.onCall(0).throws({
         json() {
           return {
@@ -359,7 +349,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
         />);
       expect(modal.find('#label').length).to.equal(1);
       expect(modal.find('select').length).to.equal(2);
-      expect(modal.find('Slider').length).to.equal(1);
+      expect(modal.find('[type="number"]').length).to.equal(1);
     });
 
     it('should drop filesystem and render password if a distro is selected', () => {
@@ -398,15 +388,15 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
     });
 
     it('should handle editing size', () => {
-      const modal = shallow(
+      const modal = mount(
         <AddModal
           {...props}
           dispatch={() => {}}
         />);
-      modal.find('Slider').props().onChange(1234);
+      const size = modal.find('[type="number"]');
+      size.props().onChange({ target: { value: '1234' } });
       expect(modal.state('size')).to.equal(1234);
-      const { tipFormatter } = modal.find('Slider').props();
-      expect(tipFormatter(1234)).to.equal('1234 MiB');
+      expect(size.props().value).to.equal(1234);
     });
 
     it('should enforce the min and max sizes contextually', () => {
@@ -415,13 +405,13 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
           {...props}
           dispatch={() => {}}
         />);
-      expect(modal.find('Slider').props())
-        .to.have.property('min').that.equals(256);
-      expect(modal.find('Slider').props())
+      expect(modal.find('[type="number"]').props())
+        .to.have.property('min').that.equals(8);
+      expect(modal.find('[type="number"]').props())
         .to.have.property('max').that.equals(4096);
       const distro = Object.values(api.distributions.distributions)[0];
       modal.find('select').at(0).simulate('change', { target: { value: distro.id } });
-      expect(modal.find('Slider').props())
+      expect(modal.find('[type="number"]').props())
         .to.have.property('min').that.equals(distro.minimum_storage_size);
     });
 

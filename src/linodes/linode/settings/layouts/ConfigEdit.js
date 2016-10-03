@@ -210,11 +210,11 @@ export class ConfigEdit extends Component {
               step={128}
               value={state.ram_limit}
               onChange={v => this.setState({ ram_limit: v })}
-              tipFormatter={v => `${v} MiB`}
+              tipFormatter={v => `${v} MB`}
               disabled={state.loading}
             />
           </div>
-          <label className="col-sm-2 col-form-label">{state.ram_limit} MiB</label>
+          <label className="col-sm-2 col-form-label">{state.ram_limit} MB</label>
         </div>
         <p>TODO: block device assignment</p>
         <ErrorSummary errors={state.errors} />

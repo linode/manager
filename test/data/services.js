@@ -6,9 +6,9 @@ export const apiTestService = {
   monthly_price: 1000,
   ram: 2048,
   service_type: 'linode',
-  storage: 24,
+  storage: 24576,
   transfer: 2000,
-  vcpus: 1,
+  vcpus: 2,
 };
 
 export const testService = {
