@@ -40,12 +40,12 @@ export class RescuePage extends Component {
     const { password, disk } = this.state;
     const { dispatch } = this.props;
     const linode = this.getLinode();
-    const state = linode.state;
-    const powered = linode.state === 'running' || linode.state === 'booting';
+    const powered = linode.status === 'running' || linode.status === 'booting';
 
     try {
       this.setState({ applying: true, result: null });
 
+      console.log(111, powered, linode.status, linode.id);
       const actions = powered ? [
         powerOffLinode(linode.id),
         resetPassword(linode.id, disk, password),
@@ -64,7 +64,7 @@ export class RescuePage extends Component {
         result: <span className="text-danger">An error occured.</span>,
       });
     }
-    dispatch(linodes.until(l => l.state === state, linode.id));
+    dispatch(linodes.until(l => l.state === linode.status, linode.id));
   }
 
   renderRescueMode() {

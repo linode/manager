@@ -7,10 +7,10 @@ import moment from 'moment';
 function renderPowerButton(props) {
   const { linode, onPowerOn, onReboot } = props;
 
-  let [powerIcon, powerAction] = ['', null];
-  if (linode.state === 'offline') {
+  let [powerIcon, powerAction] = ['', () => {}];
+  if (linode.status === 'offline') {
     [powerIcon, powerAction] = ['fa-power-off', onPowerOn];
-  } else if (linode.state === 'running') {
+  } else if (linode.status === 'running') {
     [powerIcon, powerAction] = ['fa-refresh', onReboot];
   }
   const powerActionF = () => powerAction(linode);
@@ -135,13 +135,13 @@ function renderCard(props) {
   const checkbox = <input type="checkbox" checked={isSelected} onChange={select} />;
 
   return (
-    <div key={linode.id} className={`linode card ${linode.state} ${selectedClass}`}>
+    <div key={linode.id} className={`linode card ${linode.status} ${selectedClass}`}>
       <header className="header-secondary">
         {checkbox}
         <Link to={`/linodes/${linode.id}`}>{linode.label}</Link>
         <span
-          className={`linode-status ${linode.state}`}
-        >{LinodeStatesReadable[linode.state]}</span>
+          className={`linode-status ${linode.status}`}
+        >{LinodeStatesReadable[linode.status]}</span>
         {renderPowerButton(props)}
       </header>
       <div className="linode-details clearfix">
@@ -183,15 +183,15 @@ function renderRow(props) {
   const checkbox = <input type="checkbox" checked={isSelected} onClick={select} />;
 
   return (
-    <tr className={`linode ${linode.state} ${selectedClass}`}>
+    <tr className={`linode ${linode.status} ${selectedClass}`}>
       <td>{checkbox}</td>
       <td>
         <Link to={`/linodes/${linode.id}`} className="linode-label">{linode.label}</Link>
       </td>
       <td>
         <span
-          className={`linode-status ${linode.state}`}
-        >{LinodeStatesReadable[linode.state]}</span>
+          className={`linode-status ${linode.status}`}
+        >{LinodeStatesReadable[linode.status]}</span>
       </td>
       <td>
         {linode.ipv4.address}, {linode.ipv6.range}

@@ -103,6 +103,7 @@ describe('linodes/components/Linode', () => {
         onReboot={onReboot}
       />);
 
+    console.log(linode.html());
     linode.find('.linode-power').simulate('click');
 
     expect(onReboot.calledOnce).to.equal(true);
@@ -110,7 +111,7 @@ describe('linodes/components/Linode', () => {
 
   it('invokes the onPowerOn function when the button is pressed', () => {
     const onPowerOn = sandbox.spy();
-    const testLinodeOff = { ...testLinode, state: 'offline' };
+    const testLinodeOff = { ...testLinode, status: 'offline' };
     const linode = shallow(
       <Linode
         linode={testLinodeOff}
