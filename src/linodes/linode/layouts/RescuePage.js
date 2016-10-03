@@ -45,7 +45,6 @@ export class RescuePage extends Component {
     try {
       this.setState({ applying: true, result: null });
 
-      console.log(111, powered, linode.status, linode.id);
       const actions = powered ? [
         powerOffLinode(linode.id),
         resetPassword(linode.id, disk, password),
