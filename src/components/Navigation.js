@@ -34,7 +34,7 @@ export default function Navigation(props) {
         </div>
         {username ?
           <div className="navbar-session pull-right">
-            <a href={`${LOGIN_ROOT}/profile`} className="nav-text nav-user">
+            <a href={`${LOGIN_ROOT}/account/profile`} className="nav-text nav-user">
               {username}
             </a>
             <div className="nav-gravatar">

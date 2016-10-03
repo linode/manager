@@ -19,7 +19,7 @@ describe('components/Navigation', () => {
       <Navigation username={'peanut'} emailHash={'24afd9bad4cf41b3c07d61fa0df03768'} />
     );
 
-    expect(navigation.find({ href: `${LOGIN_ROOT}/profile` }).length).to.equal(1);
+    expect(navigation.find({ href: `${LOGIN_ROOT}/account/profile` }).length).to.equal(1);
   });
 
   /*
