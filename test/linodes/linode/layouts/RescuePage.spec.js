@@ -2,9 +2,11 @@ import React from 'react';
 import sinon from 'sinon';
 import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
+
 import * as fetch from '~/fetch';
 import { testLinode } from '@/data/linodes';
 import { RescuePage } from '~/linodes/linode/layouts/RescuePage';
+import { expectRequest } from '@/common';
 
 describe('linodes/linode/layouts/RescuePage', () => {
   const sandbox = sinon.sandbox.create();
@@ -16,6 +18,7 @@ describe('linodes/linode/layouts/RescuePage', () => {
     sandbox.restore();
   });
 
+  // TODO: Please, somebody, remove this
   const linodes = {
     pagesFetched: [0],
     totalPages: 1,
@@ -53,7 +56,7 @@ describe('linodes/linode/layouts/RescuePage', () => {
       1237: {
         ...testLinode,
         id: 1237,
-        state: 'powered_off',
+        status: 'offline',
       },
     },
     _singular: 'linode',
@@ -213,13 +216,11 @@ describe('linodes/linode/layouts/RescuePage', () => {
       page.setState({ loading: false, disk: 1234, password: 'new password' });
       const { resetRootPassword } = page.instance();
       await resetRootPassword();
-      const dispatched = dispatch.firstCall.args[0];
-      dispatch.reset();
-      const fetchStub = sandbox.stub(fetch, 'fetch').returns({ json: () => {} });
-      await dispatched(dispatch, () => ({ authentication: { token: 'hi' } }));
-      expect(fetchStub.calledOnce).to.equal(true);
-      expect(fetchStub.firstCall.args[1]).to.equal(
-        '/linode/instances/1237/disks/1234/rootpass');
+      const fn = dispatch.firstCall.args[0];
+
+      const dispatched = () => ({ authentication: { token: 'hi' } });
+      await expectRequest(fn, '/linode/instances/1237/disks/1234/rootpass', dispatched,
+                         { }, { method: 'POST' });
     });
 
     it('power cycles running Linodes when resetting password', async () => {
@@ -240,7 +241,7 @@ describe('linodes/linode/layouts/RescuePage', () => {
           ...linodes,
           linodes: {
             ...linodes.linodes,
-            [testLinode.id]: { ...testLinode, state: 'powered_off' },
+            [testLinode.id]: { ...testLinode, status: 'offline' },
           },
         },
       };

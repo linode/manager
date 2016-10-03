@@ -134,16 +134,6 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
       .text()).to.equal('Linode 2G');
   });
 
-  it('renders linode without a linode service', () => {
-    const page = shallow(
-      <DashboardPage
-        linodes={linodes}
-        params={{ linodeId: '1236' }}
-      />);
-
-    expect(page.find('.linode-plan').length).to.equal(0);
-  });
-
   it('renders datacenter', () => {
     const page = shallow(
       <DashboardPage

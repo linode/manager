@@ -96,17 +96,17 @@ export class IndexPage extends Component {
       {
         name: <span><i className="fa fa-refresh"></i> Reboot</span>,
         _action: rebootLinode,
-        _condition: () => linode.state !== 'offline',
+        _condition: () => linode.status !== 'offline',
       },
       {
         name: <span><i className="fa fa-power-off"></i> Power off</span>,
         _action: powerOffLinode,
-        _condition: () => linode.state === 'running',
+        _condition: () => linode.status === 'running',
       },
       {
         name: <span><i className="fa fa-power-off"></i> Power on</span>,
         _action: powerOnLinode,
-        _condition: () => linode.state === 'offline',
+        _condition: () => linode.status === 'offline',
       },
     ]
     .filter(element => element._condition())
@@ -116,13 +116,13 @@ export class IndexPage extends Component {
     }));
 
     const renderConfigSelect = linode._configs.totalResults > 1 &&
-      LinodeStates.pending.indexOf(linode.state) === -1;
+      LinodeStates.pending.indexOf(linode.status) === -1;
 
     return (
       <header className="main-header">
         <div className="container">
           {this.renderLabel(linode)}
-          {LinodeStates.pending.indexOf(linode.state) !== -1 ? null :
+          {LinodeStates.pending.indexOf(linode.status) !== -1 ? null :
             <span className="pull-right">
               <Dropdown elements={dropdownElements} leftOriented={false} />
             </span>}
@@ -141,10 +141,10 @@ export class IndexPage extends Component {
               </select>
             </span>}
           <span
-            className={`pull-right linode-status ${linode.state}`}
+            className={`pull-right linode-status ${linode.status}`}
             style={{ paddingRight: '15px', lineHeight: '30px' }}
           >
-            {LinodeStatesReadable[linode.state]}
+            {LinodeStatesReadable[linode.status]}
           </span>
         </div>
       </header>
