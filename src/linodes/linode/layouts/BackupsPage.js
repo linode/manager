@@ -127,7 +127,7 @@ export class BackupsPage extends Component {
         </p>
         <div className="modal-footer">
           <Link
-            href="javascript:void(0)"
+            className="btn btn-cancel"
             onClick={() => dispatch(hideModal())}
           >Nevermind</Link>
           <button
@@ -153,7 +153,7 @@ export class BackupsPage extends Component {
         </p>
         <div className="modal-footer">
           <Link
-            href="javascript:void(0)"
+            className="btn btn-cancel"
             onClick={() => dispatch(hideModal())}
           >Nevermind</Link>
           <button
@@ -306,7 +306,7 @@ export class BackupsPage extends Component {
         </p>
         <div className="modal-footer">
           <Link
-            href="javascript:void(0)"
+            className="btn btn-cancel"
             onClick={() => dispatch(hideModal())}
           >Nevermind</Link>
           <button

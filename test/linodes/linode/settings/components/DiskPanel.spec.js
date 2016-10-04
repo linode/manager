@@ -191,7 +191,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
           {...props}
           dispatch={dispatch}
         />);
-      modal.find('.btn-default').simulate('click');
+      modal.find('.btn-cancel').simulate('click');
       expect(dispatch.calledOnce).to.equal(true);
       expect(dispatch.calledWith(hideModal())).to.equal(true);
     });
@@ -285,7 +285,8 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
         />);
 
       expect(modal.find('p').length).to.equal(1);
-      expect(modal.find('button').length).to.equal(2);
+      expect(modal.find('.btn-cancel').length).to.equal(1);
+      expect(modal.find('button').length).to.equal(1);
     });
 
     it('should close when Nevermind is clicked', () => {
@@ -295,7 +296,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
           {...props}
           dispatch={dispatch}
         />);
-      modal.find('.btn-default').simulate('click');
+      modal.find('.btn-cancel').simulate('click');
       expect(dispatch.calledOnce).to.equal(true);
       expect(dispatch.calledWith(hideModal())).to.equal(true);
     });
@@ -422,7 +423,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
           {...props}
           dispatch={dispatch}
         />);
-      modal.find('.btn-default').simulate('click');
+      modal.find('.btn-cancel').simulate('click');
       expect(dispatch.calledOnce).to.equal(true);
       expect(dispatch.calledWith(hideModal())).to.equal(true);
     });

@@ -441,7 +441,7 @@ describe('linodes/linode/layouts/BackupsPage', () => {
       />);
       const modal = shallow(
         page.instance().renderModal(1234, 1234));
-      const cancel = modal.find('.btn-default');
+      const cancel = modal.find('.btn-cancel');
       dispatch.reset();
       cancel.simulate('click');
       expect(dispatch.calledOnce).to.equal(true);

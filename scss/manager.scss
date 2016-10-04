@@ -548,6 +548,19 @@ hr {
         }
     }
 
+    &.btn-cancel, &.btn-cancel:not([href]) {
+        background: transparent;
+        border: 0;
+        color: $blue;
+
+        &:not([disabled]):hover,
+        &:not([disabled]):active,
+        &:not([disabled]):focus {
+            color: $dark-blue;
+            text-decoration: underline;
+        }
+    }
+
     &.btn-danger {
         background: $red;
         border: 1px solid $red;

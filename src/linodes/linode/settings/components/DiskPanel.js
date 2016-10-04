@@ -97,7 +97,7 @@ export class EditModal extends Component {
         <ErrorSummary errors={errors} />
         <div className="modal-footer">
           <Link
-            href="javascript:void(0)"
+            className="btn btn-cancel"
             disabled={loading}
             onClick={() => dispatch(hideModal())}
           >Nevermind</Link>
@@ -132,7 +132,7 @@ export class DeleteModal extends Component {
         <p>Are you sure you want to delete this disk? This cannot be undone.</p>
         <div className="modal-footer">
           <Link
-            href="javascript:void(0)"
+            className="btn btn-cancel"
             disabled={loading}
             onClick={() => dispatch(hideModal())}
           >Nevermind</Link>
@@ -319,7 +319,7 @@ export class AddModal extends Component {
           </div> : null}
         <div className="modal-footer">
           <Link
-            href="javascript:void(0)"
+            className="btn btn-cancel"
             disabled={loading}
             onClick={() => dispatch(hideModal())}
           >Nevermind</Link>
