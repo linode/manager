@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { linodes, distros } from '~/api';
 import { resizeLinodeDisk } from '~/api/linodes';
@@ -95,11 +96,11 @@ export class EditModal extends Component {
         </FormGroup>
         <ErrorSummary errors={errors} />
         <div className="modal-footer">
-          <button
-            className="btn btn-default"
+          <Link
+            className="btn btn-cancel"
             disabled={loading}
             onClick={() => dispatch(hideModal())}
-          >Nevermind</button>
+          >Nevermind</Link>
           <button
             className="btn btn-primary"
             onClick={() => this.saveChanges()}
@@ -130,11 +131,11 @@ export class DeleteModal extends Component {
       <div>
         <p>Are you sure you want to delete this disk? This cannot be undone.</p>
         <div className="modal-footer">
-          <button
-            className="btn btn-default"
+          <Link
+            className="btn btn-cancel"
             disabled={loading}
             onClick={() => dispatch(hideModal())}
-          >Nevermind</button>
+          >Nevermind</Link>
           <button
             className="btn btn-danger"
             disabled={loading}
@@ -317,11 +318,11 @@ export class AddModal extends Component {
             {errors._.map(error => <div key={error}>{error}</div>)}
           </div> : null}
         <div className="modal-footer">
-          <button
-            className="btn btn-default"
+          <Link
+            className="btn btn-cancel"
             disabled={loading}
             onClick={() => dispatch(hideModal())}
-          >Nevermind</button>
+          >Nevermind</Link>
           <button
             className="btn btn-primary"
             disabled={ready}
