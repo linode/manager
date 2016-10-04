@@ -1,4 +1,4 @@
-export const apiTestService = {
+export const apiTestType = {
   hourly_price: 1,
   id: 'linode2048.5',
   label: 'Linode 2048',
@@ -11,11 +11,11 @@ export const apiTestService = {
   vcpus: 2,
 };
 
-export const testService = {
-  ...apiTestService,
+export const testType = {
+  ...apiTestType,
   _polling: false,
 };
 
-export const services = {
-  'linode2048.5': testService,
+export const types = {
+  'linode2048.5': testType,
 };

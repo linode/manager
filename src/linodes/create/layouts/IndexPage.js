@@ -7,7 +7,7 @@ import Plan from '../components/Plan';
 import Datacenter from '../components/Datacenter';
 import Details from '../components/Details';
 import { parallel } from '~/api/util';
-import { linodes, distros, datacenters, services } from '~/api';
+import { linodes, distros, datacenters, types } from '~/api';
 import { setError } from '~/actions/errors';
 
 export class IndexPage extends Component {
@@ -17,7 +17,7 @@ export class IndexPage extends Component {
     this.createLinode = this.createLinode.bind(this);
     this.renderProgress = this.renderProgress.bind(this);
     this.state = {
-      service: null,
+      type: null,
       datacenter: null,
       distribution: null,
       backup: null,
@@ -34,7 +34,7 @@ export class IndexPage extends Component {
       await dispatch(parallel(
         distros.all(),
         datacenters.all(),
-        services.all(),
+        types.all(),
         linodes.all(),
       ));
     } catch (response) {
@@ -93,10 +93,10 @@ export class IndexPage extends Component {
 
   createLinode({ group, label, password, backups }) {
     const { dispatch } = this.props;
-    const { service, datacenter, distribution, backup } = this.state;
+    const { type, datacenter, distribution, backup } = this.state;
     return dispatch(linodes.post({
       root_pass: password,
-      service,
+      type,
       distribution,
       backup,
       datacenter,
@@ -133,13 +133,13 @@ export class IndexPage extends Component {
       distros,
       linodes,
       datacenters,
-      services,
+      types,
     } = this.props;
     const {
       backup,
       distribution,
       datacenter,
-      service,
+      type,
       sourceTab,
       loading,
       progress,
@@ -185,15 +185,15 @@ export class IndexPage extends Component {
         </section>
         <section className="card">
           <Plan
-            selected={service}
-            services={services.services}
-            onServiceSelected={id => this.setState({ service: id })}
+            selected={type}
+            services={types.types}
+            onServiceSelected={id => this.setState({ type: id })}
           />
         </section>
         <section className="card">
           <Details
             onSubmit={this.onSubmit}
-            submitEnabled={!!(distribution || backup) && !!datacenter && !!service && !loading}
+            submitEnabled={!!(distribution || backup) && !!datacenter && !!type && !loading}
             errors={this.state.errors}
           />
         </section>
@@ -206,7 +206,7 @@ IndexPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   distros: PropTypes.object,
   linodes: PropTypes.object,
-  services: PropTypes.object,
+  types: PropTypes.object,
   datacenters: PropTypes.object,
   location: PropTypes.object,
 };
@@ -216,7 +216,7 @@ function select(state) {
     distros: state.api.distributions,
     linodes: state.api.linodes,
     datacenters: state.api.datacenters,
-    services: state.api.services,
+    types: state.api.types,
   };
 }
 

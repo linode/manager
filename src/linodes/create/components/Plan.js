@@ -43,8 +43,8 @@ export default class Plan extends Component {
   }
 
   render() {
-    const { services } = this.props;
-    const sortedPlans = Object.values(services).sort(
+    const { types } = this.props;
+    const sortedPlans = Object.values(types).sort(
         (a, b) => a.ram > b.ram);
     return (
       <div>
@@ -60,5 +60,5 @@ export default class Plan extends Component {
 Plan.propTypes = {
   selected: PropTypes.string,
   onServiceSelected: PropTypes.func,
-  services: PropTypes.object,
+  types: PropTypes.object,
 };

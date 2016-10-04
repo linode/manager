@@ -62,7 +62,7 @@ export class Layout extends Component {
         <Sidebar path={currentPath} />
         <div className="main full-height">
           <Modal />
-          {errors.status === null ?
+          {!errors.status ?
            this.props.children :
            this.renderError()}
           <Footer year={year} />
