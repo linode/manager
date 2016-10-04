@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import { Link } from 'react-router';
 import { push } from 'react-router-redux';
 import { showModal, hideModal } from '~/actions/modal';
 import { enableBackup, cancelBackup, takeBackup, restoreBackup } from '~/api/backups';
@@ -125,10 +126,10 @@ export class BackupsPage extends Component {
           immediately and irrevecoably be deleted if you continue.
         </p>
         <div className="modal-footer">
-          <button
-            className="btn btn-default"
+          <Link
+            href="javascript:void(0)"
             onClick={() => dispatch(hideModal())}
-          >Nevermind</button>
+          >Nevermind</Link>
           <button
             className="btn btn-primary"
             onClick={() => {
@@ -151,10 +152,10 @@ export class BackupsPage extends Component {
           back and select another Linode.
         </p>
         <div className="modal-footer">
-          <button
-            className="btn btn-default"
+          <Link
+            href="javascript:void(0)"
             onClick={() => dispatch(hideModal())}
-          >Nevermind</button>
+          >Nevermind</Link>
           <button
             className="btn btn-primary"
             onClick={() => {
@@ -304,10 +305,10 @@ export class BackupsPage extends Component {
           really want.
         </p>
         <div className="modal-footer">
-          <button
-            className="btn btn-default"
+          <Link
+            href="javascript:void(0)"
             onClick={() => dispatch(hideModal())}
-          >Nevermind</button>
+          >Nevermind</Link>
           <button
             className="btn btn-primary"
             onClick={() => {
