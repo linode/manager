@@ -85,7 +85,7 @@ export class ConfigEdit extends Component {
 
   renderEditUI() {
     const linode = this.getLinode();
-    const totalRam = linode.types.reduce((t, s) => t + s.ram, 0);
+    const totalRam = linode.type[0].ram;
     const { kernels } = this.props;
     const state = this.state;
     const input = (display, field, control) => (
