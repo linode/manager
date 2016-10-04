@@ -1,4 +1,4 @@
-import { testService } from './services';
+import { testType } from './types';
 
 export const apiTestLinode = {
   group: 'Test Group',
@@ -15,7 +15,7 @@ export const apiTestLinode = {
   },
   created: '2016-07-06T16:47:27',
   id: 1234,
-  type: [testService],
+  types: [testType],
   status: 'running',
   datacenter: {
     id: 'newark',

@@ -22,7 +22,7 @@ describe('linodes/create/layout/IndexPage', () => {
           dispatch={() => {}}
           distros={api.distributions}
           datacenters={api.datacenters}
-          services={api.services}
+          types={api.types}
           linodes={api.linodes}
         />);
       expect(page.find(thing).length).to.equal(1);
@@ -42,7 +42,7 @@ describe('linodes/create/layout/IndexPage', () => {
         dispatch={() => {}}
         distros={api.distributions}
         datacenters={api.datacenters}
-        services={api.services}
+        types={api.types}
         linodes={api.linodes}
       />);
     const ss = page.find('Source');
@@ -57,7 +57,7 @@ describe('linodes/create/layout/IndexPage', () => {
         dispatch={dispatch}
         distros={api.distributions}
         datacenters={api.datacenters}
-        services={api.services}
+        types={api.types}
         linodes={api.linodes}
         location={{ query: { linode: 1234, backup: 54778593 } }}
       />);
@@ -86,7 +86,7 @@ describe('linodes/create/layout/IndexPage', () => {
         dispatch={dispatch}
         distros={api.distributions}
         datacenters={api.datacenters}
-        services={api.services}
+        types={api.types}
         linodes={api.linodes}
         location={{ query: {} }}
       />);
@@ -103,7 +103,7 @@ describe('linodes/create/layout/IndexPage', () => {
         dispatch={() => {}}
         distros={api.distributions}
         datacenters={api.datacenters}
-        services={api.services}
+        types={api.types}
         linodes={api.linodes}
       />);
     const ss = page.find('Source');
@@ -117,7 +117,7 @@ describe('linodes/create/layout/IndexPage', () => {
         dispatch={() => {}}
         distros={api.distributions}
         datacenters={api.datacenters}
-        services={api.services}
+        types={api.types}
         linodes={api.linodes}
       />);
     const ds = page.find('Datacenter');
@@ -125,18 +125,18 @@ describe('linodes/create/layout/IndexPage', () => {
     expect(page.instance().state.datacenter).to.equal('newark');
   });
 
-  it('selects a service when appropriate', () => {
+  it('selects a type when appropriate', () => {
     const page = shallow(
       <IndexPage
         dispatch={() => {}}
         distros={api.distributions}
         datacenters={api.datacenters}
-        services={api.services}
+        types={api.types}
         linodes={api.linodes}
       />);
     const ss = page.find('Plan');
     ss.props().onServiceSelected('linode1024.5');
-    expect(ss.find('.service.selected').find(<div className="title">Linode 1G</div>));
+    expect(ss.find('.type.selected').find(<div className="title">Linode 1G</div>));
   });
 
   it('creates a linode when the form is submitted', async () => {
@@ -149,14 +149,14 @@ describe('linodes/create/layout/IndexPage', () => {
         dispatch={dispatch}
         distros={api.distributions}
         datacenters={api.datacenters}
-        services={api.services}
+        types={api.types}
         linodes={api.linodes}
       />
     );
     dispatch.reset();
     dispatch.onCall(0).returns({ id: createdLinodeId });
 
-    page.find('Plan').props().onServiceSelected('service');
+    page.find('Plan').props().onServiceSelected('type');
     page.find('Datacenter').props().onDatacenterSelected('datacenter');
     page.find('Source').props().onSourceSelected('distribution', 'source');
     await page.instance().onSubmit({
@@ -168,7 +168,7 @@ describe('linodes/create/layout/IndexPage', () => {
     expect(dispatch.calledTwice).to.equal(true);
     expect(dispatch.firstCall.args[0]).to.deep.equal({
       root_pass: 'password',
-      service: 'service',
+      type: 'type',
       distribution: 'source',
       backup: null,
       datacenter: 'datacenter',
@@ -190,7 +190,7 @@ describe('linodes/create/layout/IndexPage', () => {
         dispatch={dispatch}
         distros={api.distributions}
         datacenters={api.datacenters}
-        services={api.services}
+        types={api.types}
         linodes={api.linodes}
       />
     );
@@ -198,7 +198,7 @@ describe('linodes/create/layout/IndexPage', () => {
     dispatch.onCall(0).returns({ id: createdLinodeId });
     dispatch.onCall(1).returns({ id: createdLinodeId + 1 });
 
-    page.find('Plan').props().onServiceSelected('service');
+    page.find('Plan').props().onServiceSelected('type');
     page.find('Datacenter').props().onDatacenterSelected('datacenter');
     page.find('Source').props().onSourceSelected('distribution', 'source');
     await page.instance().onSubmit({
@@ -210,7 +210,7 @@ describe('linodes/create/layout/IndexPage', () => {
     expect(dispatch.callCount).to.equal(3);
     expect(dispatch.firstCall.args[0]).to.deep.equal({
       root_pass: 'password',
-      service: 'service',
+      type: 'type',
       distribution: 'source',
       backup: null,
       datacenter: 'datacenter',
@@ -220,7 +220,7 @@ describe('linodes/create/layout/IndexPage', () => {
     });
     expect(dispatch.secondCall.args[0]).to.deep.equal({
       root_pass: 'password',
-      service: 'service',
+      type: 'type',
       distribution: 'source',
       backup: null,
       datacenter: 'datacenter',
@@ -241,7 +241,7 @@ describe('linodes/create/layout/IndexPage', () => {
         dispatch={dispatch}
         distros={api.distributions}
         datacenters={api.datacenters}
-        services={api.services}
+        types={api.types}
         linodes={api.linodes}
       />
     );
@@ -249,7 +249,7 @@ describe('linodes/create/layout/IndexPage', () => {
     dispatch.onCall(0).returns({ id: createdLinodeId });
     dispatch.onCall(1).returns({ id: createdLinodeId + 1 });
 
-    page.find('Plan').props().onServiceSelected('service');
+    page.find('Plan').props().onServiceSelected('type');
     page.find('Datacenter').props().onDatacenterSelected('datacenter');
     page.find('Source').props().onSourceSelected('distribution', 'source');
     await page.instance().onSubmit({
@@ -260,7 +260,7 @@ describe('linodes/create/layout/IndexPage', () => {
     });
     expect(dispatch.firstCall.args[0]).to.deep.equal({
       root_pass: 'password',
-      service: 'service',
+      type: 'type',
       distribution: 'source',
       backup: null,
       datacenter: 'datacenter',
@@ -270,7 +270,7 @@ describe('linodes/create/layout/IndexPage', () => {
     });
     expect(dispatch.secondCall.args[0]).to.deep.equal({
       root_pass: 'password',
-      service: 'service',
+      type: 'type',
       distribution: 'source',
       backup: null,
       datacenter: 'datacenter',
@@ -280,7 +280,7 @@ describe('linodes/create/layout/IndexPage', () => {
     });
     expect(dispatch.thirdCall.args[0]).to.deep.equal({
       root_pass: 'password',
-      service: 'service',
+      type: 'type',
       distribution: 'source',
       backup: null,
       datacenter: 'datacenter',
@@ -299,14 +299,14 @@ describe('linodes/create/layout/IndexPage', () => {
         dispatch={dispatch}
         distros={api.distributions}
         datacenters={api.datacenters}
-        services={api.services}
+        types={api.types}
         linodes={api.linodes}
       />
     );
     dispatch.reset();
     dispatch.onCall(0).throws({ json: () => ({ errors: [{ field: 'label', reason: error }] }) });
 
-    page.find('Plan').props().onServiceSelected('service');
+    page.find('Plan').props().onServiceSelected('type');
     page.find('Datacenter').props().onDatacenterSelected('datacenter');
     page.find('Source').props().onSourceSelected('distribution', 'source');
     await page.instance().onSubmit({

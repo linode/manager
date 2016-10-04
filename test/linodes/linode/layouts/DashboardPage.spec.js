@@ -40,7 +40,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
           last_backup: '2016-06-28T14:19:37',
           enabled: true,
         },
-        services: [],
+        types: [],
       },
     },
     _singular: 'linode',

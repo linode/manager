@@ -7,12 +7,12 @@ import Plan from '~/linodes/create/components/Plan';
 import { api } from '@/data';
 
 describe('linodes/create/components/Plan', () => {
-  const { services } = api.services;
+  const { types } = api.types;
 
   it('renders the card header', () => {
     const c = mount(
       <Plan
-        services={services}
+        types={types}
         onServiceSelected={() => {}}
       />
     );
@@ -29,7 +29,7 @@ describe('linodes/create/components/Plan', () => {
     const onSelect = sinon.stub(env, 'onSelect');
     const c = mount(
       <Plan
-        services={services}
+        types={types}
         onServiceSelected={onSelect}
       />
     );

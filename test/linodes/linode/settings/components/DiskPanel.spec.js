@@ -83,7 +83,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
     const disks = Object.values(linode._disks.disks);
     expect(panel.find('.disk').length).to.equal(3);
     const unallocated = panel.find('.disk').at(2);
-    const free = linode.type[0].storage -
+    const free = linode.types[0].storage -
       disks.reduce((s, d) => s + d.size, 0);
     expect(unallocated.props())
       .to.have.property('style')

@@ -364,7 +364,7 @@ export class DiskPanel extends Component {
     const { dispatch } = this.props;
     const linode = this.getLinode();
     const disks = Object.values(linode._disks.disks);
-    const total = linode.type.reduce((total, service) =>
+    const total = linode.types.reduce((total, service) =>
       total + service.storage, 0);
     const used = disks.reduce((total, disk) => total + disk.size, 0);
     const free = total - used;

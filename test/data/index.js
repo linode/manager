@@ -5,7 +5,7 @@ import deepFreeze from 'deep-freeze';
 import { linodes } from './linodes';
 import { distros } from './distros';
 import { datacenters } from './datacenters';
-import { services } from './services';
+import { types } from './types';
 import { kernels } from './kernels';
 
 function fakeAPIStore(data, singular, plural) {
@@ -34,9 +34,9 @@ export const api = {
     ...fakeAPIStore(datacenters, 'datacenter', 'datacenters'),
     datacenters,
   },
-  services: {
-    ...fakeAPIStore(services, 'service', 'services'),
-    services,
+  types: {
+    ...fakeAPIStore(types, 'type', 'types'),
+    types,
   },
   kernels: {
     ...fakeAPIStore(kernels, 'kernel', 'kernels'),

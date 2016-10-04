@@ -2,9 +2,9 @@ import { genConfig, genThunks, genReducer, genActions } from '~/api/gen';
 import { ONE, MANY } from '~/api/gen';
 
 export const config = genConfig({
-  plural: 'services',
-  singular: 'service',
-  endpoint: id => `/linode/services/${id}`,
+  plural: 'types',
+  singular: 'type',
+  endpoint: id => `/linode/types/${id}`,
   supports: [ONE, MANY],
 });
 
