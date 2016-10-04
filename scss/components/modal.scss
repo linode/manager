@@ -1,7 +1,7 @@
 .modal-overlay {
     display: none;
     z-index: 9999;
-    position: absolute;
+    position: fixed;
     top: $nav-height - 1px;
     bottom: 0;
     left: 0;
