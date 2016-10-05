@@ -105,11 +105,11 @@ export class IndexPage extends Component {
     if (view === 'grid') {
       return (
         <div key={group} className="row linodes">
-          {group ?
-           <div className="col-md-12">
-             <h2 className="text-muted display-group">{group}</h2>
-           </div>
-           : ''}
+          {!group ? null : (
+            <div className="col-md-12">
+              <h2 className="text-muted display-group">{group}</h2>
+            </div>
+           )}
            {sortedLinodes.map(l =>
              <div key={l.id} className="col-md-4">
                {renderLinode(l, false)}
@@ -166,21 +166,21 @@ export class IndexPage extends Component {
     const selectAllCheckbox = <input type="checkbox" onChange={selectAll} checked={allSelected} />;
 
     const { view } = this.props;
-    const listIcon = <span className="fa fa-align-justify list"></span>;
-    const gridIcon = <span className="fa fa-th-large grid"></span>;
+    const listIcon = <span className="fa fa-align-justify"></span>;
+    const gridIcon = <span className="fa fa-th-large"></span>;
     const gridListToggle = (
       <span className="grid-list">
         <span>Toggle view:</span>
         <span>
         {
           view === 'list' ? listIcon :
-          <a className="list" onClick={this.toggleDisplay}>{listIcon}</a>
+            <a className="list" onClick={this.toggleDisplay}>{listIcon}</a>
         }
         </span>
         <span>
         {
           view === 'grid' ? gridIcon :
-          <a className="grid" onClick={this.toggleDisplay}>{gridIcon}</a>
+            <a className="grid" onClick={this.toggleDisplay}>{gridIcon}</a>
         }
         </span>
       </span>

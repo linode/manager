@@ -66,7 +66,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
       />);
 
     expect(panel.contains(
-      <div className="alert alert-info" style={{ marginTop: '1rem' }}>
+      <div className="alert alert-info">
         Your Linode must be powered off to manage your disks.
       </div>)).to.equal(true);
   });
