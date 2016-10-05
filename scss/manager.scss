@@ -204,7 +204,7 @@ a {
     }
 
     a {
-        color: $white;
+        color: $dark-gray;
         line-height: $main-nav-height;
         text-decoration: none;
     }
@@ -212,7 +212,7 @@ a {
     a:hover,
     a:active,
     a:focus {
-        color: $dark-gray;
+        color: $white;
         text-decoration: none;
     }
 
