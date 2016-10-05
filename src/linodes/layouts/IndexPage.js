@@ -103,37 +103,42 @@ export class IndexPage extends Component {
 
     const { view } = this.props;
     if (view === 'grid') {
-      return (<div key={group} className="row linodes">
-        {group ?
-          <div className="col-md-12">
-            <h2 className="text-muted display-group">{group}</h2>
-          </div>
-        : ''}
-        {sortedLinodes.map(l =>
-          <div key={l.id} className="col-md-4">
-            {renderLinode(l, false)}
-          </div>)}
-      </div>);
+      return (
+        <div key={group} className="row linodes">
+          {!group ? null : (
+            <div className="col-md-12">
+              <h2 className="text-muted display-group">{group}</h2>
+            </div>
+           )}
+           {sortedLinodes.map(l =>
+             <div key={l.id} className="col-md-4">
+               {renderLinode(l, false)}
+             </div>)}
+        </div>
+      );
     }
-    return (<div key={group} className="linodes">
-      {group ? <h2 className="display-group text-muted">{group}</h2> : ''}
-      <table className="linodes">
-        <thead>
-          <tr>
-            <th>&nbsp;</th>
-            <th>Label</th>
-            <th>Status</th>
-            <th>IP Address</th>
-            <th>Datacenter</th>
-            <th>Backups</th>
-            <th>&nbsp;</th>
-          </tr>
-        </thead>
-        <tbody>
-          {sortedLinodes.map(l => renderLinode(l, true))}
-        </tbody>
-      </table>
-    </div>);
+
+    return (
+      <section key={group} className="linodes">
+        {group ? <h2 className="display-group text-muted">{group}</h2> : ''}
+        <table className="linodes">
+          <thead>
+            <tr>
+              <th>&nbsp;</th>
+              <th>Label</th>
+              <th>Status</th>
+              <th>IP Address</th>
+              <th>Datacenter</th>
+              <th>Backups</th>
+              <th>&nbsp;</th>
+            </tr>
+          </thead>
+          <tbody>
+            {sortedLinodes.map(l => renderLinode(l, true))}
+          </tbody>
+        </table>
+      </section>
+    );
   }
 
   renderActions() {
@@ -161,21 +166,21 @@ export class IndexPage extends Component {
     const selectAllCheckbox = <input type="checkbox" onChange={selectAll} checked={allSelected} />;
 
     const { view } = this.props;
+    const listIcon = <span className="fa fa-align-justify"></span>;
+    const gridIcon = <span className="fa fa-th-large"></span>;
     const gridListToggle = (
       <span className="grid-list">
+        <div>Toggle view:</div>
         <span>
         {
-          view === 'grid' ?
-            <a href="#" className="list" onClick={this.toggleDisplay}>List</a> :
-          'List'
+          view === 'list' ? listIcon :
+            <a className="list" onClick={this.toggleDisplay}>{listIcon}</a>
         }
         </span>
-        <span>|</span>
         <span>
         {
-          view === 'list' ?
-            <a href="#" className="grid" onClick={this.toggleDisplay}>Grid</a> :
-            'Grid'
+          view === 'grid' ? gridIcon :
+            <a className="grid" onClick={this.toggleDisplay}>{gridIcon}</a>
         }
         </span>
       </span>
@@ -191,18 +196,16 @@ export class IndexPage extends Component {
             </Link>
             <h1>Linodes</h1>
           </div>
-          <div className="submenu row">
-            <div className="col-xs-10">
+          <div className="submenu clearfix">
+            <div className="pull-xs-left">
               <div className="input-group">
                 <span className="input-group-addon">{selectAllCheckbox}</span>
                 {this.renderActions()}
               </div>
             </div>
-            <div className="col-xs-2">
-              <div className="pull-right">
-                {gridListToggle}
-                <span className="fa fa-navicon" className="navicon" />
-              </div>
+            <div className="pull-xs-right">
+              {gridListToggle}
+              <span className="fa fa-navicon" className="navicon" />
             </div>
           </div>
         </header>

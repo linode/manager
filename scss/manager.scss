@@ -204,7 +204,7 @@ a {
     }
 
     a {
-        color: $white;
+        color: $dark-gray;
         line-height: $main-nav-height;
         text-decoration: none;
     }
@@ -212,7 +212,7 @@ a {
     a:hover,
     a:active,
     a:focus {
-        color: $dark-gray;
+        color: $white;
         text-decoration: none;
     }
 
@@ -565,6 +565,20 @@ hr {
     &.btn-danger {
         background: $red;
         border: 1px solid $red;
+
+        &[disabled]:hover,
+        &[disabled]:active,
+        &[disabled]:focus {
+            color: white;
+            background: $red;
+        }
+
+        &:hover,
+        &:active,
+        &:focus {
+            color: red;
+            background: transparent;
+        }
     }
 
     &.btn-danger-outline {
@@ -633,8 +647,26 @@ input[type=checkbox], input[type=radio] {
 }
 
 .grid-list {
-    span {
-        padding-right: 5px;
+    a .fa {
+        color: $lightest-black;
+        cursor: pointer;
+        cursor: hand;
+    }
+
+    .fa {
+        font-size: 20px;
+        color: $light-black;
+    }
+
+    span, div {
+        padding-right: 15px;
+        line-height: $input-height;
+        display: inline-block;
+    }
+
+    div {
+        position: relative;
+        top: -3px;
     }
 
     span:last-of-type {

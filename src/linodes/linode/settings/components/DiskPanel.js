@@ -394,55 +394,61 @@ export class DiskPanel extends Component {
         <header>
           <h2>Disks<HelpButton to="http://example.org" /></h2>
         </header>
-        <div className="disk-layout">
-          {disks.map(d =>
-            <div
-              className={`disk disk-${d.state}`}
-              key={d.id}
-              style={{
-                flexGrow: d.size,
-                borderColor: borderColors[disks.indexOf(d) % borderColors.length],
-              }}
-            >
-              <h4>{d.label} <small>{d.filesystem}</small></h4>
-              <p>{d.size} MB</p>
-              {d.state === 'deleting' ?
-                <div className="text-muted">Being deleted</div>
-               : null}
-               {poweredOff && d.state !== 'deleting' ?
-                 <div>
-                   <button
-                     className="btn btn-edit btn-default"
-                     style={{ marginRight: '0.5rem' }}
-                     onClick={() => dispatch(showModal('Edit disk', editModal(d)))}
-                   >Edit</button>
-                   <button
-                     className="btn btn-delete btn-default"
-                     onClick={() => dispatch(showModal('Delete disk', deleteModal(d)))}
-                   >Delete</button>
-                 </div>
-                : null}
-            </div>)}
-            {free > 0 ?
+        <div>
+          <section>
+            {poweredOff ? null : (
+              <div className="alert alert-info">
+                Your Linode must be powered off to manage your disks.
+              </div>
+             )}
+          </section>
+          <section className="disk-layout">
+            {disks.map(d =>
               <div
-                className="disk free"
-                key={'free'}
-                style={{ flexGrow: free }}
+                className={`disk disk-${d.state}`}
+                key={d.id}
+                style={{
+                  flexGrow: d.size,
+                  borderColor: borderColors[disks.indexOf(d) % borderColors.length],
+                }}
               >
-                <h4>Unallocated</h4>
-                <p>{free} MB</p>
-                {poweredOff ?
-                  <button
-                    onClick={() => dispatch(showModal('Add a disk', addModal))}
-                    className="btn btn-add btn-default"
-                  >Add a disk</button>
-                 : null}
-              </div> : null}
+                <h4>{d.label} <small>{d.filesystem}</small></h4>
+                <p>{d.size} MB</p>
+                {d.state !== 'deleting' ? null :
+                  <div className="text-muted">Being deleted</div>}
+                {!poweredOff || d.state === 'deleting' ? null : (
+                  <div>
+                    <button
+                      className="btn btn-edit btn-default"
+                      style={{ marginRight: '0.5rem' }}
+                      onClick={() => dispatch(showModal('Edit disk', editModal(d)))}
+                    >Edit</button>
+                    <button
+                      className="btn btn-delete btn-default"
+                      onClick={() => dispatch(showModal('Delete disk', deleteModal(d)))}
+                    >Delete</button>
+                  </div>
+                 )}
+              </div>
+             )}
+              {free <= 0 ? null : (
+                <div
+                  className="disk free"
+                  key={'free'}
+                  style={{ flexGrow: free }}
+                >
+                  <h4>Unallocated</h4>
+                  <p>{free} MB</p>
+                  {!poweredOff ? null : (
+                    <button
+                      onClick={() => dispatch(showModal('Add a disk', addModal))}
+                      className="btn btn-add btn-default"
+                    >Add a disk</button>
+                   )}
+                </div>
+               )}
+          </section>
         </div>
-        {!poweredOff ?
-          <div className="alert alert-info" style={{ marginTop: '1rem' }}>
-            Your Linode must be powered off to manage your disks.
-          </div> : null}
       </div>
     );
   }

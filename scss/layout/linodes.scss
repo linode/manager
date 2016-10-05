@@ -15,6 +15,10 @@
 
     .submenu {
         margin-bottom: $main-padding-tb/2;
+
+        .pull-xs-left {
+            max-width: 50%;
+        }
     }
 }
 
