@@ -51,7 +51,7 @@ $info-nav-height: 25px;
 $main-nav-height: $nav-height - $info-nav-height;
 
 $input-height: 30px;
-$input-padding: 0 .5rem;
+$input-padding: .5rem;
 $font-size: .9rem;
 $font-size-small: 12px;
 
@@ -396,11 +396,9 @@ select.form-control,
     height: $input-height !important;
     line-height: $input-height !important;
     font-size: $font-size !important;
-    padding-left: $input-padding;
-    padding-top: 0px;
-    padding-bottom: 0px;
+    padding: 0 0 0 $input-padding;
     &.btn {
-        padding: $input-padding;
+        padding: 0 $input-padding;
     }
 }
 
@@ -605,7 +603,7 @@ input[type=checkbox], input[type=radio] {
     background: $light-gray;
     height: $input-height;
     line-height: calc(#{$input-height}-2px});
-    padding: $input-padding;
+    padding: 0 $input-padding;
 
     input[type=checkbox] {
         position: relative;
