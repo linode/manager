@@ -646,8 +646,26 @@ input[type=checkbox], input[type=radio] {
 }
 
 .grid-list {
+    a .fa {
+        color: $lightest-black;
+        cursor: pointer;
+        cursor: hand;
+    }
+
+    .fa {
+        font-size: 20px;
+        color: $light-black;
+    }
+
     span {
-        padding-right: 5px;
+        padding-right: 15px;
+        line-height: $input-height;
+        display: inline-block;
+    }
+
+    span:first-of-type {
+        position: relative;
+        top: -2px;
     }
 
     span:last-of-type {
