@@ -564,6 +564,20 @@ hr {
     &.btn-danger {
         background: $red;
         border: 1px solid $red;
+
+        &[disabled]:hover,
+        &[disabled]:active,
+        &[disabled]:focus {
+            color: white;
+            background: $red;
+        }
+
+        &:hover,
+        &:active,
+        &:focus {
+            color: red;
+            background: transparent;
+        }
     }
 
     &.btn-danger-outline {

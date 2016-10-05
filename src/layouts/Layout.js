@@ -1,7 +1,6 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 
-import Footer from '../components/Footer';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
 import Modal from '../components/Modal';
@@ -50,7 +49,6 @@ export class Layout extends Component {
   render() {
     const { username, emailHash, currentPath, errors } = this.props;
     const { title, link } = this.state;
-    const year = (new Date()).getFullYear().toString();
     return (
       <div className="layout full-height">
         <Header
@@ -65,7 +63,6 @@ export class Layout extends Component {
           {!errors.status ?
            this.props.children :
            this.renderError()}
-          <Footer year={year} />
         </div>
       </div>
     );

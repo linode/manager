@@ -123,7 +123,7 @@ export class BackupsPage extends Component {
       <div>
         <p>
           <span className="text-danger">WARNING!</span> Your backups will
-          immediately and irrevecoably be deleted if you continue.
+          immediately and irrevocably be deleted if you continue.
         </p>
         <div className="modal-footer">
           <Link
