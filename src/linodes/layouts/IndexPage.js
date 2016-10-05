@@ -170,7 +170,7 @@ export class IndexPage extends Component {
     const gridIcon = <span className="fa fa-th-large"></span>;
     const gridListToggle = (
       <span className="grid-list">
-        <span>Toggle view:</span>
+        <div>Toggle view:</div>
         <span>
         {
           view === 'list' ? listIcon :

@@ -657,15 +657,15 @@ input[type=checkbox], input[type=radio] {
         color: $light-black;
     }
 
-    span {
+    span, div {
         padding-right: 15px;
         line-height: $input-height;
         display: inline-block;
     }
 
-    span:first-of-type {
+    div {
         position: relative;
-        top: -2px;
+        top: -3px;
     }
 
     span:last-of-type {
