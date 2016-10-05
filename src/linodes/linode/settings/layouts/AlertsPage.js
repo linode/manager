@@ -24,7 +24,7 @@ export class AlertsPage extends Component {
     };
   }
 
-  async componentWillMount() {
+  async componentDidMount() {
     await this.loadLinode();
     this.setState({ loading: false, alerts: this.getLinode().alerts });
   }

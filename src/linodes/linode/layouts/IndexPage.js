@@ -17,6 +17,8 @@ export function getLinode() {
 }
 
 export async function loadLinode() {
+  if (this.getLinode()) return;
+
   const { dispatch } = this.props;
   try {
     const { linodeId } = this.props.params;
