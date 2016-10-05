@@ -140,6 +140,10 @@ export default class Details extends Component {
       { label: 'Root password', content: passwordInput },
     ];
 
+    const backupsPrice = this.props.selected === null ? "" :
+      "($" + (this.props.types[this.props.selected].backups_price / 100).
+              toFixed(2) + "/month)";
+
     const backupInput = (
       <div className="checkbox">
         <label>
@@ -148,8 +152,9 @@ export default class Details extends Component {
             checked={this.state.enableBackups}
             onChange={e => this.setState({ enableBackups: e.target.checked })}
             name="enableBackups"
+            disabled={this.props.selected === null}
           />
-          <span>Enable ($2.50/month)</span>
+          <span>Enable {backupsPrice}</span>
         </label>
       </div>
     );

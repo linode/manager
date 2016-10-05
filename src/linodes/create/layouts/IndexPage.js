@@ -192,6 +192,8 @@ export class IndexPage extends Component {
         </section>
         <section className="card">
           <Details
+            selected={type}
+            types={types.types}
             onSubmit={this.onSubmit}
             submitEnabled={!!(distribution || backup) && !!datacenter && !!type && !loading}
             errors={this.state.errors}
