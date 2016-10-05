@@ -186,7 +186,7 @@ export class IndexPage extends Component {
         <section className="card">
           <Plan
             selected={type}
-            services={types.types}
+            types={types.types}
             onServiceSelected={id => this.setState({ type: id })}
           />
         </section>
