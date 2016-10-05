@@ -391,11 +391,14 @@ a {
 
 input:not([type="checkbox"]):not([type="radio"]),
 select,
+select.form-control,
 .btn:not(.btn-help) {
     height: $input-height !important;
     line-height: $input-height !important;
     font-size: $font-size !important;
     padding-left: $input-padding;
+    padding-top: 0px;
+    padding-bottom: 0px;
     &.btn {
         padding: $input-padding;
     }
