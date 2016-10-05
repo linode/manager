@@ -140,9 +140,11 @@ export default class Details extends Component {
       { label: 'Root password', content: passwordInput },
     ];
 
-    const backupsPrice = this.props.selected === null ? "" :
-      "($" + (this.props.types[this.props.selected].backups_price / 100).
-              toFixed(2) + "/month)";
+    const renderBackupsPrice = () => {
+      const serviceType = this.props.types[this.props.selected];
+      const price = (serviceType.backups_price / 100).toFixed(2);
+      return `($${price}`;
+    };
 
     const backupInput = (
       <div className="checkbox">
@@ -154,7 +156,10 @@ export default class Details extends Component {
             name="enableBackups"
             disabled={this.props.selected === null}
           />
-          <span>Enable {backupsPrice}</span>
+          <span>
+            Enable
+            {this.props.selected === null ? '' : renderBackupsPrice()}
+          </span>
         </label>
       </div>
     );
@@ -186,6 +191,8 @@ export default class Details extends Component {
 }
 
 Details.propTypes = {
+  selected: PropTypes.string,
+  types: PropTypes.object,
   onSubmit: PropTypes.func,
   submitEnabled: PropTypes.bool,
   errors: PropTypes.object,
