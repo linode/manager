@@ -76,10 +76,8 @@ describe('linodes/linode/layouts/BackupsPage', () => {
         params={{ linodeId: '1235' }}
         backups={backups}
       />);
-    expect(page.contains(
-      <p>Backups not enabled. Enable backups for $2.50/month.</p>));
-    expect(page.find('button.btn-primary').text())
-      .to.equal('Enable backups');
+    expect(page.find('p').text()).to.contain('2.50');
+    expect(page.find('button.btn-primary').text()).to.equal('Enable backups');
   });
 
   it('calls enable backups on click', () => {
