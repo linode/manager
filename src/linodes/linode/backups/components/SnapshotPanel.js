@@ -1,42 +1,17 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import { fetchBackups, takeBackup } from '~/actions/api/backups';
-import { fetchLinode, fetchLinodes, putLinode } from '~/actions/api/linodes';
 import moment from 'moment';
 
-export class SnapshotPanel extends Component {
-  constructor() {
-    super();
-    this.componentDidMount = this.componentDidMount.bind(this);
-  }
-
-  async componentDidMount() { 
-    const { dispatch, linodes } = this.props;
-    if (linodes.totalPages === -1) {
-      await dispatch(fetchLinodes());
-    }
-    let linode = this.getLinode();
-    if (!linode) {
-      const linodeId = parseInt(this.props.params.linodeId);
-      await dispatch(fetchLinode(parseInt(linodeId)));
-    }
-    linode = this.getLinode();
-    if (linode._backups.totalPages === -1) {
-      await dispatch(fetchBackups(0, linode.id));
-    }
-  }
-
-  render() {
-    const { snapshot } = this.props;
+export function SnapshotPanel(snapshot) {
     /* TODO:
      * Waiting on endpoint update for:
      * - Config Profiles
      * - Disks
      * - Space Required
-        dispatch(takeBackup(thisLinode.id));
+     * - Take Snapshot Submit
      */
-    if(!snapshot) { 
+    //if(!snapshot) { 
       return (
         <section className="card">
           <header>
@@ -53,9 +28,9 @@ export class SnapshotPanel extends Component {
           </div>
         </section>
       );
-    }
+    //}
 
-    const duration = moment(snapshot.finished).diff(moment(snapshot.created));
+    /*const duration = moment(snapshot.finished).diff(moment(snapshot.created));
     const durationMinutes = moment.duration(duration).asMinutes();
 
     let durationText = `${Math.round(durationMinutes)} minutes`;
@@ -101,7 +76,7 @@ export class SnapshotPanel extends Component {
         </div>
         <div className="form-group row snapshot-button">
           <div className="col-sm-12 label-col left">
-            <form onSubmit={onSubmit(linodeId)}>
+            <form>
               <button type="submit" className="btn btn-primary">
                 Take Snapshot
               </button>
@@ -109,21 +84,5 @@ export class SnapshotPanel extends Component {
           </div>
         </div>
       </section>
-    );
-  }
+    );*/
 }
-
-SnapshotPanel.propTypes = {
-  dispatch: PropTypes.func.isRequired,
-  linodes: PropTypes.object.isRequired,
-  params: PropTypes.shape({
-    linodeId: PropTypes.string.isRequired,
-  }).isRequired,
-  snapshot: PropTypes.object.isRequired,
-};
-
-function select(state) {
-  return { linodes: state.api.linodes };
-}
-
-export default connect(select)(SnapshotPanel);

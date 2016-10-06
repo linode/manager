@@ -3,7 +3,6 @@ import { Route, IndexRoute } from 'react-router';
 
 import IndexPage from './layouts/IndexPage';
 import NetworkingPage from './layouts/NetworkingPage';
-//import BackupsPage from './layouts/BackupsPage';
 import RescuePage from './layouts/RescuePage';
 import DashboardPage from './layouts/DashboardPage';
 import SettingsPage from './settings';

@@ -1,10 +1,9 @@
 import { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-
 import { getLinode, loadLinode, renderTabs } from '~/linodes/linode/layouts/IndexPage';
-import { fetchLinode, fetchLinodes, putLinode } from '~/actions/api/linodes';
-import { fetchBackups } from '~/actions/api/backups';
+import { parallel } from '~/api/util';
+import { linodes } from '~/api';
 import _ from 'lodash';
 
 export class IndexPage extends Component {
@@ -17,19 +16,12 @@ export class IndexPage extends Component {
   }
 
   async componentDidMount() {
-    const { dispatch, linodes } = this.props;
-    if (linodes.totalPages === -1) {
-      await dispatch(fetchLinodes());
-    }
-    let linode = this.getLinode();
-    if (!linode) {
-      const linodeId = parseInt(this.props.params.linodeId);
-      await dispatch(fetchLinode(parseInt(linodeId)));
-    }
-    linode = this.getLinode();
-    if (linode._backups.totalPages === -1) {
-      await dispatch(fetchBackups(0, linode.id));
-    }
+    const { dispatch } = this.props;
+    const { linodeId } = this.props.params;
+    const linode = await dispatch(linodes.one(linodeId));
+    await dispatch(parallel(
+      linodes.backups.all(linodeId),
+      linodes.all()));
   }
 
   render() {

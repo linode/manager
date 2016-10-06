@@ -13,7 +13,7 @@ export function RestorePanel() {
       </header>
       <form>
         <div className="form-group row restore-backup">
-            <div className="col-sm-2 label-col left">Restore:</div>
+            <div className="col-sm-2 label-col left">Restore to:</div>
             <div className="col-sm-2 content-col right">
               <select className="form-control select-backup">
                 <option key={1} value="id1">Snapshot</option>

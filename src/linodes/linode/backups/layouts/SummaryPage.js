@@ -1,13 +1,14 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { getLinode } from './IndexPage';
-import { fetchLinode, fetchLinodes, putLinode } from '~/actions/api/linodes';
-import SnapshotPanel from '~/linodes/linode/backups/components/SnapshotPanel';
+import { linodes } from '~/api';
+import { SnapshotPanel } from '~/linodes/linode/backups/components/SnapshotPanel';
 import { RestorePanel } from '~/linodes/linode/backups/components/RestorePanel';
 import moment from 'moment';
 
 export function getBackupsByType(linodes, linodeId, type) {
   const backups = linodes.linodes[linodeId]._backups;
+  console.log(backups);
   let backupsList = [];
   for (var backupIds in backups.backups) {
     const backup = backups.backups[backupIds];
