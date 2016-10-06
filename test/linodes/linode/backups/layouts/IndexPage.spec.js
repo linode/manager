@@ -1,12 +1,10 @@
 import React from 'react';
 import sinon from 'sinon';
-import { mount, shallow } from 'enzyme';
+import { shallow } from 'enzyme';
 import { expect } from 'chai';
 
 import { api } from '@/data';
-import { testLinode } from '@/data/linodes';
 import { IndexPage } from '~/linodes/linode/backups/layouts/IndexPage';
-import * as LinodePage from '~/linodes/linode/layouts/IndexPage';
 
 describe('linodes/linode/backups/layouts/IndexPage', () => {
   const sandbox = sinon.sandbox.create();

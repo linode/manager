@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, IndexRoute, IndexRedirect } from 'react-router';
+import { Route, IndexRoute } from 'react-router';
 import {
   IndexPage,
   HistoryPage,

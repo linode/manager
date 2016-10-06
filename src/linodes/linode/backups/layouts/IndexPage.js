@@ -4,7 +4,6 @@ import { withRouter } from 'react-router';
 import { getLinode, loadLinode, renderTabs } from '~/linodes/linode/layouts/IndexPage';
 import { parallel } from '~/api/util';
 import { linodes } from '~/api';
-import _ from 'lodash';
 
 export class IndexPage extends Component {
   constructor() {
@@ -18,7 +17,6 @@ export class IndexPage extends Component {
   async componentDidMount() {
     const { dispatch } = this.props;
     const { linodeId } = this.props.params;
-    const linode = await dispatch(linodes.one(linodeId));
     await dispatch(parallel(
       linodes.backups.all(linodeId),
       linodes.all()));

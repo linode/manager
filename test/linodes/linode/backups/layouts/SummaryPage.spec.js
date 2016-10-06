@@ -3,9 +3,7 @@ import sinon from 'sinon';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
 
-import { api } from '@/data';
 import { SummaryPage } from '~/linodes/linode/backups/layouts/SummaryPage';
-const { linodes } = api;
 
 describe('linodes/linode/backups/layouts/SummaryPage', () => {
   const sandbox = sinon.sandbox.create();
@@ -18,11 +16,7 @@ describe('linodes/linode/backups/layouts/SummaryPage', () => {
 
   it('renders snapshot panel component', () => {
     const page = mount(
-      <SummaryPage
-        linodes={linodes}
-        params={{ linodeId: '1235' }}
-        dispatch={() => {}}
-      />
+      <SummaryPage />
     );
 
     expect(page.find('.card').at(0).text()).to.contain('Snapshot');
@@ -30,11 +24,7 @@ describe('linodes/linode/backups/layouts/SummaryPage', () => {
 
   it('renders restore panel component', () => {
     const page = mount(
-      <SummaryPage
-        linodes={linodes}
-        params={{ linodeId: '1235' }}
-        dispatch={() => {}}
-      />
+      <SummaryPage />
     );
 
     expect(page.find('.card').at(1).text()).to.contain('Restore');
