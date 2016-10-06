@@ -141,9 +141,8 @@ export default class Details extends Component {
     ];
 
     const renderBackupsPrice = () => {
-      const serviceType = this.props.types[this.props.selected];
-      const price = (serviceType.backups_price / 100).toFixed(2);
-      return `($${price}`;
+      const price = (this.props.selectedType.backups_price / 100).toFixed(2);
+      return ` ($${price})`;
     };
 
     const backupInput = (
@@ -154,11 +153,11 @@ export default class Details extends Component {
             checked={this.state.enableBackups}
             onChange={e => this.setState({ enableBackups: e.target.checked })}
             name="enableBackups"
-            disabled={this.props.selected === null}
+            disabled={this.props.selectedType === null}
           />
           <span>
             Enable
-            {this.props.selected === null ? '' : renderBackupsPrice()}
+            {this.props.selectedType === null ? '' : renderBackupsPrice()}
           </span>
         </label>
       </div>
@@ -191,8 +190,7 @@ export default class Details extends Component {
 }
 
 Details.propTypes = {
-  selected: PropTypes.string,
-  types: PropTypes.object,
+  selectedType: PropTypes.object,
   onSubmit: PropTypes.func,
   submitEnabled: PropTypes.bool,
   errors: PropTypes.object,

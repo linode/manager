@@ -149,6 +149,8 @@ export class IndexPage extends Component {
       return this.renderProgress();
     }
 
+    const selectedType = type === null ? null : types.types[type];
+
     return (
       <div className="container create-page">
         <h1>Add a Linode</h1>
@@ -192,8 +194,7 @@ export class IndexPage extends Component {
         </section>
         <section className="card">
           <Details
-            selected={type}
-            types={types.types}
+            selectedType={selectedType}
             onSubmit={this.onSubmit}
             submitEnabled={!!(distribution || backup) && !!datacenter && !!type && !loading}
             errors={this.state.errors}

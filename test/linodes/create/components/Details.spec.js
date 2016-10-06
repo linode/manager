@@ -4,8 +4,10 @@ import { expect } from 'chai';
 import { shallow, mount } from 'enzyme';
 
 import Details from '~/linodes/create/components/Details';
+import { api } from '@/data';
 
 describe('linodes/create/components/Details', () => {
+  const { types } = api.types;
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
@@ -13,7 +15,7 @@ describe('linodes/create/components/Details', () => {
   });
 
   it('renders the card', () => {
-    const c = shallow(<Details />);
+    const c = shallow(<Details selectedType={null} />);
     expect(c.find('h2').text()).to.equal('Details');
     // 1 label + 1 group + 1 backup + 1 quantity = 4
     // PasswordInput doesn't show up because shallow mount
@@ -21,7 +23,7 @@ describe('linodes/create/components/Details', () => {
   });
 
   it('renders multiple labels', () => {
-    const c = shallow(<Details />);
+    const c = shallow(<Details selectedType={null} />);
     c.find('[name="quantity"]').simulate('change', { target: { value: 3 } });
     // 3 labels + 1 group + 1 backups + 1 quantity = 6
     // PasswordInput input doesn't show up because shallow mount
@@ -40,7 +42,7 @@ describe('linodes/create/components/Details', () => {
   it('renders errors', () => {
     const error = 'There was an error';
     const errors = { label: [error] };
-    const c = shallow(<Details errors={errors} />);
+    const c = shallow(<Details errors={errors} selectedType={null} />);
     const a = c.find('.alert.alert-danger');
 
     expect(a.length).to.equal(1);
@@ -52,7 +54,9 @@ describe('linodes/create/components/Details', () => {
   it('submits inputs when submitted', () => {
     const onSubmit = sandbox.spy();
     // eslint-disable-next-line react/jsx-boolean-value
-    const c = mount(<Details submitEnabled={true} onSubmit={onSubmit} />);
+    const c = mount(
+      <Details submitEnabled onSubmit={onSubmit} selectedType={null} />
+    );
     const updateInput = (name, value) =>
       c.find(`input[name="${name}"]`).simulate('change', { target: { value } });
     updateInput('label', 'my-label');
@@ -68,5 +72,10 @@ describe('linodes/create/components/Details', () => {
       backups: true,
       group: '',
     });
+  });
+
+  it('pulls backups price from selectedType', () => {
+    const c = shallow(<Details selectedType={types['linode2048.5']} />);
+    expect(c.find('.checkbox label span').text()).to.contain('$2.50');
   });
 });
