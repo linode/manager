@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { push } from 'react-router-redux';
 
-import Dropdown from '~/components/Dropdown';
+import StatusDropdown from '~/components/StatusDropdown';
 import { LinodeStates, LinodeStatesReadable } from '~/constants';
 import { setError } from '~/actions/errors';
 import { linodes } from '~/api';
@@ -93,20 +93,22 @@ export class IndexPage extends Component {
   renderHeader() {
     const linode = this.getLinode();
     const { dispatch } = this.props;
-
     const dropdownElements = [
       {
         name: <span><i className="fa fa-refresh"></i> Reboot</span>,
+        _key: 'reboot',
         _action: rebootLinode,
         _condition: () => linode.status !== 'offline',
       },
       {
         name: <span><i className="fa fa-power-off"></i> Power off</span>,
+        _key: 'power-off',
         _action: powerOffLinode,
         _condition: () => linode.status === 'running',
       },
       {
         name: <span><i className="fa fa-power-off"></i> Power on</span>,
+        _key: 'power-on',
         _action: powerOnLinode,
         _condition: () => linode.status === 'offline',
       },
@@ -126,7 +128,14 @@ export class IndexPage extends Component {
           {this.renderLabel(linode)}
           {LinodeStates.pending.indexOf(linode.status) !== -1 ? null :
             <span className="pull-right">
-              <Dropdown elements={dropdownElements} leftOriented={false} />
+              <StatusDropdown
+                elements={dropdownElements}
+                leftOriented={false}
+              >
+                <span className={`linode-status ${linode.status}`}>
+                  {LinodeStatesReadable[linode.status]}
+                </span>
+              </StatusDropdown>
             </span>}
           {!renderConfigSelect ? null :
             <span
@@ -142,12 +151,6 @@ export class IndexPage extends Component {
                   <option key={config.id} value={config.id}>{config.label}</option>)}
               </select>
             </span>}
-          <span
-            className={`pull-right linode-status ${linode.status}`}
-            style={{ paddingRight: '15px', lineHeight: '30px' }}
-          >
-            {LinodeStatesReadable[linode.status]}
-          </span>
         </div>
       </header>
     );
