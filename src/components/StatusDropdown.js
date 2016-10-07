@@ -47,9 +47,10 @@ export default class StatusDropdown extends Component {
     .map(element => ({
       ...element,
       action: () => {
-       this.close();
-       dispatch(element._action(linode.id, this.state.config || null));
-      }
+        this.close();
+        console.log(element._action(linode.id, this.state.config || null));
+        dispatch(element._action(linode.id, this.state.config || null));
+      },
     }));
 
     const dropdownMenu = dropdownElements.map(({ name, action, _key }) =>
@@ -66,14 +67,12 @@ export default class StatusDropdown extends Component {
 
     return (
       <div
-        className={`btn-group ${this.state.open ? 'open' : ''}`}
+        className={`btn-group status-dropdown ${this.state.open ? 'open' : ''}`}
         onBlur={this.close}
       >
-        <div className="status-dropdown pull-left">
-          <span className={`linode-status ${linode.status}`}>
-            {LinodeStatesReadable[linode.status]}
-          </span>
-        </div>
+        <span className={`pull-left linode-status ${linode.status}`}>
+          {LinodeStatesReadable[linode.status]}
+        </span>
         <button
           type="button"
           className="btn dropdown-toggle"

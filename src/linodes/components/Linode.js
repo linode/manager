@@ -3,7 +3,6 @@ import { Link } from 'react-router';
 import { flags, distros as distroAssets } from '~/assets';
 import moment from 'moment';
 
-import { LinodeStatesReadable } from '~/constants';
 import StatusDropdown from '~/components/StatusDropdown';
 
 function renderPowerButton(props) {
