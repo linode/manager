@@ -238,7 +238,7 @@ describe('linodes/linode/layouts/IndexPage', () => {
         params={{ linodeId: `${testLinode.id}` }}
         detail={detail}
       />);
-    const dropdown = page.find('Dropdown');
+    const dropdown = page.find('StatusDropdown');
     expect(dropdown.length).to.equal(1);
   });
 
@@ -272,38 +272,6 @@ describe('linodes/linode/layouts/IndexPage', () => {
     expect(page.state('config')).to.equal(12346);
   });
 
-  it('renders the appropriate items when linode is running', () => {
-    const page = shallow(
-      <IndexPage
-        dispatch={dispatch}
-        linodes={linodes}
-        params={{ linodeId: `${testLinode.id}` }}
-        detail={detail}
-      />);
-    const dropdown = page.find(Dropdown).props();
-    const expected = ['Reboot', 'Power off'];
-    for (let i = 0; i < expected.length; ++i) {
-      const elem = shallow(dropdown.elements[i].name);
-      expect(elem.text()).to.contain(expected[i]);
-    }
-  });
-
-  it('renders the appropriate items when linode is powered off', () => {
-    const page = shallow(
-      <IndexPage
-        dispatch={dispatch}
-        linodes={linodes}
-        params={{ linodeId: '1236' }}
-        detail={detail}
-      />);
-    const dropdown = page.find(Dropdown).props();
-    const expected = ['Power on'];
-    for (let i = 0; i < expected.length; ++i) {
-      const elem = shallow(dropdown.elements[i].name);
-      expect(elem.text()).to.contain(expected[i]);
-    }
-  });
-
   it('does not render power management dropdown when linode is transitioning', () => {
     const page = mount(
       <IndexPage
@@ -314,23 +282,5 @@ describe('linodes/linode/layouts/IndexPage', () => {
         router={router}
       />);
     expect(page.contains(Dropdown)).to.equal(false);
-  });
-
-  it('renders the current state of the linode', () => {
-    const page = mount(
-      <IndexPage
-        dispatch={dispatch}
-        linodes={linodes}
-        params={{ linodeId: `${testLinode.id}` }}
-        detail={detail}
-        router={router}
-      />
-    );
-    expect(page.contains(
-      <span
-        className="pull-right linode-status running"
-        style={{ paddingRight: '15px', lineHeight: '30px' }}
-      >Running</span>))
-      .to.equal(true);
   });
 });
