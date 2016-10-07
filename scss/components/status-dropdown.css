@@ -1,7 +1,7 @@
 .status-dropdown {
   border: $border;
+  border-right: 0;
   line-height: 30px;
   height: 30px;
   padding: 0 $input-padding;
-  background-color: $light-gray;
 }
