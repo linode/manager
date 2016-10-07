@@ -1,8 +1,10 @@
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 import { flags, distros as distroAssets } from '~/assets';
-import { LinodeStatesReadable } from '~/constants';
 import moment from 'moment';
+
+import { LinodeStatesReadable } from '~/constants';
+import StatusDropdown from '~/components/StatusDropdown';
 
 function renderPowerButton(props) {
   const { linode, onPowerOn, onReboot } = props;
@@ -139,10 +141,13 @@ function renderCard(props) {
       <header className="header-secondary">
         {checkbox}
         <Link to={`/linodes/${linode.id}`}>{linode.label}</Link>
-        <span
-          className={`linode-status ${linode.status}`}
-        >{LinodeStatesReadable[linode.status]}</span>
-        {renderPowerButton(props)}
+        <span className="pull-right">
+          <StatusDropdown
+            linode={linode}
+            leftOriented={false}
+            dispatch={props.dispatch}
+          />
+        </span>
       </header>
       <div className="linode-details clearfix">
         <div className="form-group row">
@@ -189,11 +194,6 @@ function renderRow(props) {
         <Link to={`/linodes/${linode.id}`} className="linode-label">{linode.label}</Link>
       </td>
       <td>
-        <span
-          className={`linode-status ${linode.status}`}
-        >{LinodeStatesReadable[linode.status]}</span>
-      </td>
-      <td>
         {linode.ipv4.address}, {linode.ipv6.range}
       </td>
       <td>
@@ -202,8 +202,12 @@ function renderRow(props) {
       <td>
         {renderBackupStatus(linode)}
       </td>
-      <td>
-        {renderPowerButton(props)}
+      <td className="pull-right">
+        <StatusDropdown
+          linode={linode}
+          leftOriented={false}
+          dispatch={props.dispatch}
+        />
       </td>
     </tr>
   );
@@ -213,6 +217,7 @@ renderRow.propTypes = {
   linode: PropTypes.object.isRequired,
   isSelected: PropTypes.bool.isRequired,
   onSelect: PropTypes.func,
+  dispatch: PropTypes.func,
 };
 
 export function Linode(props) {
