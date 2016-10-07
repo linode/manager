@@ -9,6 +9,7 @@ export const apiTestType = {
   storage: 24576,
   transfer: 2000,
   vcpus: 2,
+  backups_price: 250,
 };
 
 export const testType = {

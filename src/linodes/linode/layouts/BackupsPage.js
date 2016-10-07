@@ -439,9 +439,10 @@ export class BackupsPage extends Component {
 
   renderNotEnabled() {
     const linode = this.getLinode();
+    const price = (linode.type[0].backups_price / 100).toFixed(2);
     return (
       <div>
-        <p>Backups are not enabled for this Linode.</p>
+        <p>Backups not enabled. Enable backups for ${price}/month.</p>
         <button
           className="btn btn-primary"
           onClick={() => this.enableLinodeBackup(linode)}
