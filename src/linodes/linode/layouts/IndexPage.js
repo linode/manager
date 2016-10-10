@@ -158,9 +158,6 @@ IndexPage.propTypes = {
   }),
   detail: PropTypes.object,
   children: PropTypes.node,
-  location: PropTypes.object,
-  router: PropTypes.object,
-  route: PropTypes.object,
 };
 
 function select(state) {

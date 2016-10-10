@@ -7,6 +7,7 @@ import { distributions } from './distributions';
 import { datacenters } from './datacenters';
 import { types } from './types';
 import { kernels } from './kernels';
+import { dnszones } from './dnszones';
 
 function fakeAPIStore(data, singular, plural) {
   const totalResults = Object.keys(data).length;
@@ -41,6 +42,10 @@ export const api = {
   kernels: {
     ...fakeAPIStore(kernels, 'kernel', 'kernels'),
     kernels,
+  },
+  dnszones: {
+    ...fakeAPIStore(dnszones, 'dnszone', 'dnszones'),
+    dnszones,
   },
 };
 
