@@ -10,7 +10,7 @@ export default function Sidebar(props) {
     { icon: 'cubes', name: 'Linodes', link: '/linodes' },
     { icon: 'code-fork', name: 'NodeBalancers', link: '/nodebalancers' },
     { icon: 'bar-chart-o', name: 'Longview', link: '/longview' },
-    { icon: 'share-alt', name: 'DNS Manager', link: '/dnsmanager' },
+    { icon: 'share-alt', name: 'DNS Zones', link: '/dnszones' },
     { icon: 'user', name: 'Account', link: `${LOGIN_ROOT}/account` },
     { icon: 'users', name: 'Support', link: '/support' },
   ];
