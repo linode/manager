@@ -39,7 +39,7 @@ export function renderTabs(tabList, selected, isSubtab = false) {
     >
       <TabList>
         {tabList.map(t => (
-          <Tab key={t.name}>
+          <Tab key={t.name} onClick={() => dispatch(push(t.link))}>
             <Link to={t.link} onClick={e => e.preventDefault()}>{t.name}</Link>
           </Tab>
         ))}
