@@ -79,6 +79,14 @@ describe('linodes/linode/layouts/IndexPage/loadLinode', async () => {
 });
 
 describe('linodes/linode/layouts/IndexPage/renderTabs', async () => {
+  const tabList = [
+    { name: 'One', link: '/one' },
+    { name: 'Two', link: '/two' },
+  ];
+  const tabList2 = [
+    { name: 'Three', link: '/three' },
+    { name: 'Four', link: '/four' },
+  ];
   class Test extends Component {
     constructor() {
       super();
@@ -90,18 +98,38 @@ describe('linodes/linode/layouts/IndexPage/renderTabs', async () => {
       return this.renderTabs(this.props.tabList);
     }
   }
+  class Other extends Component {
+    constructor() {
+      super();
+      this.getLinode = getLinode.bind(this);
+      this.componentDidMount = IndexPageWrapper.loadLinode.bind(this);
+    }
 
+    render() {
+      return (
+        <Test
+          dispatch={dispatch}
+          linodes={linodes}
+          params={{ linodeId: testLinode.id }}
+          tabList={tabList}
+        >
+          <Test
+            dispatch={dispatch}
+            linodes={linodes}
+            params={{ linodeId: testLinode.id }}
+            tabList={tabList2}
+            isSubTab={true}
+          />
+        </Test>
+      );
+    }
+  }
   const sandbox = sinon.sandbox.create();
   const dispatch = sandbox.spy();
   afterEach(() => {
     dispatch.reset();
     sandbox.restore();
   });
-
-  const tabList = [
-    { name: 'One', link: '/one' },
-    { name: 'Two', link: '/two' },
-  ];
 
   it('renders tabs', () => {
     const page = shallow(
@@ -127,11 +155,28 @@ describe('linodes/linode/layouts/IndexPage/renderTabs', async () => {
         linodes={linodes}
         params={{ linodeId: testLinode.id }}
         tabList={tabList}
-      />
-    );
+      />);
     const tabs = page.find('Tabs');
     tabs.props().onSelect(1);
     expect(dispatch.calledWith(push('/two'))).to.equal(true);
+  });
+
+  it('goes back to the starting tab after a subtab is clicked', () => {
+    const page = shallow(
+      <Other />
+    );
+    const tabs = page.find('Tabs');
+    tabs.props().onSelect(1);
+    console.log('here are the tabs');
+    console.log(tabs);
+    //console.log(tabs.html());
+    const subtabs = page.find('Tabs').find('Tab').at(1);
+    console.log('---- the subtabs ---');
+    console.log(subtabs);
+    console.log(subtabs.html());
+    console.log('---- here is the page ----');
+    console.log(page.html());
+
   });
 });
 
