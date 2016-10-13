@@ -1,8 +1,9 @@
 import { expect } from 'chai';
 import deepFreeze from 'deep-freeze';
+import md5 from 'md5';
+
 import authentication from '../../src/reducers/authentication';
 import * as actions from '../../src/actions/authentication';
-import md5 from 'md5';
 
 describe('authentication reducer', () => {
   it('should handle initial state', () => {

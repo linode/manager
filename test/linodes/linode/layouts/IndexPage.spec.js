@@ -30,7 +30,7 @@ describe('linodes/linode/layouts/IndexPage/loadLinode', async () => {
     }
 
     render() {
-      return <span></span>;
+      return <span />;
     }
   }
 
@@ -282,7 +282,7 @@ describe('linodes/linode/layouts/IndexPage', () => {
       />);
     const dropdown = page.find(Dropdown).props();
     const expected = ['Reboot', 'Power off'];
-    for (let i = 0; i < expected.length; ++i) {
+    for (let i = 0; i < expected.length; i += 1) {
       const elem = shallow(dropdown.elements[i].name);
       expect(elem.text()).to.contain(expected[i]);
     }
@@ -298,7 +298,7 @@ describe('linodes/linode/layouts/IndexPage', () => {
       />);
     const dropdown = page.find(Dropdown).props();
     const expected = ['Power on'];
-    for (let i = 0; i < expected.length; ++i) {
+    for (let i = 0; i < expected.length; i += 1) {
       const elem = shallow(dropdown.elements[i].name);
       expect(elem.text()).to.contain(expected[i]);
     }

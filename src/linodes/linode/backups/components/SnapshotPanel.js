@@ -1,6 +1,6 @@
 import React from 'react';
 
-export function snapshotPanel() {
+export default function snapshotPanel() {
   /* TODO:
    * Waiting on endpoint update for:
    * - Config Profiles

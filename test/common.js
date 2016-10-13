@@ -14,7 +14,7 @@ import { state as defaultState } from '@/data';
  * @param {Object} state - State to be returned by getState
  * occured to dispatch
  */
-export async function expectRequest(fn, path, dispatched = () => {},
+export default async function expectRequest(fn, path, dispatched = () => {},
     response = null, options = null, _state = null) {
   const state = _state || defaultState;
   const sandbox = sinon.sandbox.create();
@@ -36,7 +36,7 @@ export async function expectRequest(fn, path, dispatched = () => {},
           expect(options[k]).to.equal(o[k]));
       }
     }
-    for (let i = 0; i < dispatch.callCount; ++i) {
+    for (let i = 0; i < dispatch.callCount; i += 1) {
       dispatched(dispatch.getCall(i), i);
     }
   } finally {

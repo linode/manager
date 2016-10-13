@@ -35,11 +35,10 @@ export class Backups extends Component {
               />
              )}
           </div>
-          <a
-            href="#"
-            className="back"
+          <button
+            className="btn btn-cancel back"
             onClick={goBack}
-          >Need a different Linode?</a>
+          >Need a different Linode?</button>
         </div>
       </div>
     );

@@ -1,8 +1,8 @@
 import store from '~/store';
+import { getStorage } from '~/storage';
 import { APP_ROOT, LOGIN_ROOT } from './constants';
 import { clientId } from './secrets';
 import { SET_TOKEN } from './actions/authentication';
-import { getStorage } from '~/storage';
 
 export function initializeAuthentication(dispatch) {
   const token = getStorage('authentication/oauth-token') || null;
@@ -11,8 +11,7 @@ export function initializeAuthentication(dispatch) {
   const emailHash = getStorage('authentication/email-hash') || null;
   const scopes = getStorage('authentication/scopes') || null;
   const action = {
-    type: SET_TOKEN,
-    token, username, email, emailHash, scopes,
+    type: SET_TOKEN, token, username, email, emailHash, scopes,
   };
   dispatch(action);
 }

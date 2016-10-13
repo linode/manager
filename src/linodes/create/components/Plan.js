@@ -1,19 +1,19 @@
 import React, { Component, PropTypes } from 'react';
 import { renderPlanStyle } from '~/linodes/components/Linode';
 
+function renderHeader() {
+  return (
+    <header>
+      <h2>Plan</h2>
+    </header>
+  );
+}
+
 export default class Plan extends Component {
   constructor() {
     super();
     this.renderPlan = this.renderPlan.bind(this);
     this.renderPlanStyle = renderPlanStyle.bind(this);
-  }
-
-  renderHeader() {
-    return (
-      <header>
-        <h2>Plan</h2>
-      </header>
-    );
   }
 
   renderPlan(plan) {
@@ -23,7 +23,7 @@ export default class Plan extends Component {
     const planClass = plan.id === selected ? 'selected' : '';
 
     return (
-      <div
+      <div // eslint-disable-line jsx-a11y/no-static-element-interactions
         className={`plan ${planClass}`}
         key={plan.label}
         onClick={() => onServiceSelected(plan.id)}
@@ -48,7 +48,7 @@ export default class Plan extends Component {
         (a, b) => a.ram > b.ram);
     return (
       <div>
-        {this.renderHeader()}
+        {renderHeader()}
         <div className="plans">
           {sortedPlans.map(this.renderPlan)}
         </div>

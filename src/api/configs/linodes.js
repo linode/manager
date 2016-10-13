@@ -1,5 +1,9 @@
 import {
+<<<<<<< HEAD
   genConfig, genReducer, genActions,
+=======
+  genConfig, genThunks, genReducer, genActions,
+>>>>>>> a4d16bb... Fix eslint after eslint update
   ONE, MANY, PUT, DELETE, POST,
 } from '~/api/gen';
 

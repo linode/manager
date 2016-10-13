@@ -1,17 +1,33 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { getLinode } from './IndexPage';
+
 import { linodes } from '~/api';
 import { powerOnLinode, powerOffLinode, resetPassword } from '~/api/linodes';
 import PasswordInput from '~/components/PasswordInput';
 import HelpButton from '~/components/HelpButton';
+import { getLinode } from './IndexPage';
+
+function renderRescueMode() {
+  return (
+    <div className="col-sm-6">
+      <section className="card">
+        <header>
+          <h2>
+            Rescue mode
+            <HelpButton to="http://example.org" />
+          </h2>
+        </header>
+        <p>TODO</p>
+      </section>
+    </div>
+  );
+}
 
 export class RescuePage extends Component {
   constructor() {
     super();
     this.getLinode = getLinode.bind(this);
     this.resetRootPassword = this.resetRootPassword.bind(this);
-    this.renderRescueMode = this.renderRescueMode.bind(this);
     this.renderResetRootPassword = this.renderResetRootPassword.bind(this);
     this.state = {
       password: '',
@@ -64,22 +80,6 @@ export class RescuePage extends Component {
       });
     }
     dispatch(linodes.until(l => l.state === linode.status, linode.id));
-  }
-
-  renderRescueMode() {
-    return (
-      <div className="col-sm-6">
-        <section className="card">
-          <header>
-            <h2>
-              Rescue mode
-              <HelpButton to="http://example.org" />
-            </h2>
-          </header>
-          <p>TODO</p>
-        </section>
-      </div>
-    );
   }
 
   renderResetRootPassword() {
@@ -148,7 +148,7 @@ export class RescuePage extends Component {
   render() {
     return (
       <div className="row">
-        {this.renderRescueMode()}
+        {renderRescueMode()}
         {this.renderResetRootPassword()}
       </div>
     );

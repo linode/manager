@@ -1,4 +1,4 @@
-export function parallel(...thunks) {
+export default function parallel(...thunks) {
   return async (dispatch, getState) =>
     await Promise.all(thunks.map(t => t(dispatch, getState)));
 }

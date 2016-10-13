@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import _ from 'lodash';
 
+import { ResponsiveLineChart } from '~/components/ResponsiveCharts';
 import {
   renderBackupStatus,
   renderDistroStyle,
@@ -10,8 +11,21 @@ import {
   renderPlanStyle,
 } from '~/linodes/components/Linode';
 import { getLinode, loadLinode } from './IndexPage';
-import { ResponsiveLineChart } from '~/components/ResponsiveCharts';
 
+function graphUpdate(source, range) {
+  const data = {
+    data: [{
+      name: source.name,
+      values: range.map(ts => ({ x: ts, y: Math.random() * source.range })),
+      strokeWidth: 2,
+    }],
+    yLabel: source.yLabel,
+    xLabel: source.xLabel,
+    yDomain: source.yDomain,
+    xDomain: d => new Date(d.x),
+  };
+  return data;
+}
 
 export class DashboardPage extends Component {
   constructor() {
@@ -26,7 +40,6 @@ export class DashboardPage extends Component {
     this.renderDetails = this.renderDetails.bind(this);
     this.renderGraphs = this.renderGraphs.bind(this);
     this.graphSelection = this.graphSelection.bind(this);
-    this.graphUpdate = this.graphUpdate.bind(this);
     this.graphRangeUpdate = this.graphRangeUpdate.bind(this);
     this.graphSourceUpdate = this.graphSourceUpdate.bind(this);
     this.state = {
@@ -85,22 +98,7 @@ export class DashboardPage extends Component {
         range: 40,
       },
     };
-    return this.graphUpdate(dataSource[source], timeRange[range]);
-  }
-
-  graphUpdate(source, range) {
-    const data = {
-      data: [{
-        name: source.name,
-        values: range.map(ts => ({ x: ts, y: Math.random() * source.range })),
-        strokeWidth: 2,
-      }],
-      yLabel: source.yLabel,
-      xLabel: source.xLabel,
-      yDomain: source.yDomain,
-      xDomain: d => new Date(d.x),
-    };
-    return data;
+    return graphUpdate(dataSource[source], timeRange[range]);
   }
 
   renderGraphs() {
@@ -292,9 +290,9 @@ export class DashboardPage extends Component {
 }
 
 DashboardPage.propTypes = {
-  linodes: PropTypes.object,
+  linodes: PropTypes.object, // eslint-disable-line react/no-unused-prop-types
   params: PropTypes.shape({
-    linodeId: PropTypes.string,
+    linodeId: PropTypes.string, // eslint-disable-line react/no-unused-prop-types
   }),
   username: PropTypes.string,
 };

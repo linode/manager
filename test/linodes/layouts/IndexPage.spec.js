@@ -123,7 +123,7 @@ describe('linodes/layouts/IndexPage', () => {
     const elements = dropdown.props().elements;
     expect(elements.length).to.equal(4);
     const options = ['Reboot', 'Power on', 'Power off', 'Delete'];
-    for (let i = 0; i < options.length; i++) {
+    for (let i = 0; i < options.length; i += 1) {
       expect(elements[i].name).to.equal(options[i]);
     }
   });
@@ -181,7 +181,7 @@ describe('linodes/layouts/IndexPage', () => {
 
   it('selects all linodes when "select all" is checked', () => {
     const selected = {};
-    const localDispatch = sandbox.spy(action => {
+    const localDispatch = sandbox.spy((action) => {
       if (action.type === TOGGLE_SELECTED) {
         selected[action.selected[0]] = true;
       }

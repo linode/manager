@@ -61,8 +61,8 @@ export default class Dropdown extends Component {
 
 Dropdown.propTypes = {
   elements: PropTypes.arrayOf(PropTypes.shape({
-    name: PropTypes.node.isRequired,
-    action: PropTypes.func,
+    name: PropTypes.node.isRequired, // eslint-disable-line react/no-unused-prop-types
+    action: PropTypes.func, // eslint-disable-line react/no-unused-prop-types
   })).isRequired,
   leftOriented: PropTypes.bool,
 };

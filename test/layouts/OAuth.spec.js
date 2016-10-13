@@ -1,12 +1,13 @@
 import React from 'react';
+import { push } from 'react-router-redux';
 import sinon from 'sinon';
 import { expect } from 'chai';
 import { shallow, mount } from 'enzyme';
-import { OAuthCallbackPage } from '../../src/layouts/OAuth';
-import { push } from 'react-router-redux';
+
 import { setToken } from '~/actions/authentication';
 import { LOGIN_ROOT } from '~/constants';
 import * as fetch from '~/fetch';
+import { OAuthCallbackPage } from '../../src/layouts/OAuth';
 
 describe('layouts/OAuth', () => {
   const sandbox = sinon.sandbox.create();

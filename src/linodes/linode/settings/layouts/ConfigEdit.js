@@ -139,7 +139,7 @@ export class ConfigEdit extends Component {
       />);
     const radio = (display, field, value) => (
       <div className="form-check">
-        <label>
+        <label htmlFor={`config-${field}-${value}`}>
           <input
             className="form-check-input"
             type="radio"
@@ -154,7 +154,7 @@ export class ConfigEdit extends Component {
       </div>);
     const checkbox = (display, field) => (
       <div className="form-check">
-        <label>
+        <label htmlFor={`config-${field}`}>
           <input
             className="form-check-input"
             type="checkbox"
@@ -191,7 +191,7 @@ export class ConfigEdit extends Component {
               value={this.state.kernel}
               disabled={state.loading}
               onChange={e => this.setState({ kernel: e.target.value })}
-            >{Object.values(kernels.kernels).map(kernel => {
+            >{Object.values(kernels.kernels).map((kernel) => {
               const map = {
                 'linode/latest': 'Latest 32-bit kernel',
                 'linode/latest_64': 'Latest 64-bit kernel',
@@ -234,9 +234,10 @@ export class ConfigEdit extends Component {
           </div>
         </fieldset>
         <div className="form-group row">
-          <label className="col-sm-2 col-form-label">Memory limit</label>
+          <label className="col-sm-2 col-form-label" htmlFor="memory-limit">Memory limit</label>
           <div className="col-sm-3 align-slider">
             <Slider
+              id="memory-limit"
               min={0}
               max={totalRam}
               step={128}
@@ -246,7 +247,7 @@ export class ConfigEdit extends Component {
               disabled={state.loading}
             />
           </div>
-          <label className="col-sm-2 col-form-label">{state.ram_limit} MB</label>
+          <div className="col-sm-2">{state.ram_limit} MB</div>
         </div>
         <p>TODO: block device assignment</p>
         <ErrorSummary errors={state.errors} />
@@ -283,7 +284,6 @@ export class ConfigEdit extends Component {
 }
 
 ConfigEdit.propTypes = {
-  linodes: PropTypes.object.isRequired,
   kernels: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   params: PropTypes.shape({
@@ -294,7 +294,6 @@ ConfigEdit.propTypes = {
 
 function select(state) {
   return {
-    linodes: state.api.linodes,
     kernels: state.api.kernels,
   };
 }

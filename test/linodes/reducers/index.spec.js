@@ -42,10 +42,13 @@ describe('linodes/index reducer', () => {
   });
 
   it('should remove from the selection on TOGGLE_SELECTED', () => {
-    const state = { view: 'grid', selected: {
-      1234: true,
-      1235: true,
-    } };
+    const state = {
+      view: 'grid',
+      selected: {
+        1234: true,
+        1235: true,
+      },
+    };
     deepFreeze(state);
 
     expect(index(state, actions.toggleSelected('1234')))

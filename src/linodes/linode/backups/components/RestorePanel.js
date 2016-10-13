@@ -1,6 +1,6 @@
 import React from 'react';
 
-export function restorePanel() {
+export default function restorePanel() {
   /* TODO:
    * Linode Endpoint needs to be updated for specifying
    *  which backups will be in dropdown
@@ -25,8 +25,8 @@ export function restorePanel() {
         </div>
         <div className="form-group row destroy-current">
           <div className="col-sm-12 checkbox">
-            <label>
-              <input type="checkbox" name="destroy-all" value="true" />
+            <label htmlFor="destroy-all">
+              <input type="checkbox" name="destroy-all" value="true" id="destroy-all" />
               <span>
                 Destroy all current disks and backups
               </span>

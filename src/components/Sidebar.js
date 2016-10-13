@@ -18,22 +18,22 @@ export default function Sidebar(props) {
   const makeLink = (link, child) => (
     link.indexOf('http') === 0 ?
       <a key={link} href={link}>{child}</a> :
-      <Link key={link} to={link}>{child}</Link>
+        <Link key={link} to={link}>{child}</Link>
   );
 
   const sidebarLinks = links || defaultLinks;
   return (
     <div className="sidebar">
       <ul className="list-unstyled">
-      {
-        sidebarLinks.map(({ icon, name, link }) =>
-          makeLink(link, (
-            <li className={path.indexOf(link) === 0 ? 'active' : ''}>
-              <span className={`fa fa-${icon}`} />
-              <span>{name}</span>
-            </li>
-          )))
-      }
+        {
+          sidebarLinks.map(({ icon, name, link }) =>
+            makeLink(link, (
+              <li className={path.indexOf(link) === 0 ? 'active' : ''}>
+                <span className={`fa fa-${icon}`} />
+                <span>{name}</span>
+              </li>
+            )))
+        }
       </ul>
     </div>
   );

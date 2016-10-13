@@ -11,6 +11,30 @@ const {
   Treemap,
 } = rd3;
 
+function getChartClass(chartType) {
+  switch (chartType) {
+    case 'AreaChart':
+      return AreaChart;
+    case 'BarChart':
+      return BarChart;
+    case 'CandleStickChart':
+      return CandleStickChart;
+    case 'LineChart':
+      return LineChart;
+    case 'PieChart':
+      return PieChart;
+    case 'ScatterChart':
+      return ScatterChart;
+    case 'Treemap':
+      return Treemap;
+    default:
+      console.error('Invalid Chart Type name.'); // eslint-disable-line no-console
+      break;
+  }
+  return <span />;
+}
+
+
 const createClass = (chartType) => {
   // NOTE: The class name as identified by enzyme will always be Chart
   // for each generated class. It may be better to use es5 class creation
@@ -30,39 +54,10 @@ const createClass = (chartType) => {
       window.removeEventListener('resize', ::this.fitToParentSize);
     }
 
-    getChartClass() {
-      let Component;
-      switch (chartType) {
-        case 'AreaChart':
-          Component = AreaChart;
-          break;
-        case 'BarChart':
-          Component = BarChart;
-          break;
-        case 'CandleStickChart':
-          Component = CandleStickChart;
-          break;
-        case 'LineChart':
-          Component = LineChart;
-          break;
-        case 'PieChart':
-          Component = PieChart;
-          break;
-        case 'ScatterChart':
-          Component = ScatterChart;
-          break;
-        case 'Treemap':
-          Component = Treemap;
-          break;
-        default:
-          console.error('Invalid Chart Type name.'); // eslint-disable-line no-console
-          break;
-      }
-      return Component;
-    }
-
     fitToParentSize() {
+      // eslint-disable-next-line react/no-string-refs
       const w = this.refs.wrapper.offsetWidth - 20;
+      // eslint-disable-next-line react/no-string-refs
       const h = this.refs.wrapper.offsetHeight - 20;
       const currentSize = this.state.size;
       if (w !== currentSize.w || h !== currentSize.h) {
@@ -74,11 +69,12 @@ const createClass = (chartType) => {
 
     render() {
       const { margin, ...others } = this.props;
-      let Component = this.getChartClass();
+      const Component = getChartClass(chartType);
       let width = this.props.width;
       let height = this.props.height;
       width = this.state.size.w || 100;
       height = this.state.size.h || 100;
+      /* eslint-disable react/no-string-refs */
       return (
         <div className="chart-wrapper" ref="wrapper">
           <Component
@@ -89,6 +85,7 @@ const createClass = (chartType) => {
           />
         </div>
       );
+      /* eslint-enable react/no-string-refs */
     }
   }
   Chart.defaultProps = {

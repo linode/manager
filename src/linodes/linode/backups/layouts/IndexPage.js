@@ -1,6 +1,5 @@
 import { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import { getLinode, loadLinode, renderTabs } from '~/linodes/linode/layouts/IndexPage';
 import { parallel } from '~/api/util';
 import { linodes } from '~/api';
@@ -42,14 +41,11 @@ export class IndexPage extends Component {
 
 IndexPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  linodes: PropTypes.object.isRequired,
+  linodes: PropTypes.object.isRequired, // eslint-disable-line react/no-unused-prop-types
   params: PropTypes.shape({
-    linodeId: PropTypes.string.isRequired,
+    linodeId: PropTypes.string.isRequired, // eslint-disable-line react/no-unused-prop-types
   }).isRequired,
-  children: PropTypes.object,
-  location: PropTypes.object,
-  router: PropTypes.object,
-  route: PropTypes.object,
+  children: PropTypes.object, // eslint-disable-line react/no-unused-prop-types
 };
 
 function select(state) {
@@ -58,4 +54,4 @@ function select(state) {
   };
 }
 
-export default withRouter(connect(select)(IndexPage));
+export default connect(select)(IndexPage);

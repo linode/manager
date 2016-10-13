@@ -20,7 +20,7 @@ function configContent(linode, configs, dispatch) {
       <thead className="clear-thead">
         <tr>
           <th>Label</th>
-          {configs.length > 1 ? <th></th> : null}
+          {configs.length > 1 ? <th /> : null}
         </tr>
       </thead>
       <tbody>
@@ -34,15 +34,13 @@ function configContent(linode, configs, dispatch) {
               </Link>
             </td>
             {configs.length > 1 ? <td className="text-xs-right">
-              <a
-                className="delete-button"
-                onClick={e => {
+              <button
+                className="btn btn-cancel delete-button"
+                onClick={(e) => {
                   e.preventDefault();
                   dispatch(linodes.configs.delete(linode.id, config.id));
                 }}
-                className="action-link pull-right"
-                href="#"
-              >Delete</a></td> : null}
+              >Delete</button></td> : null}
           </tr>
         )}
       </tbody>
@@ -50,7 +48,7 @@ function configContent(linode, configs, dispatch) {
   );
 }
 
-export class ConfigPanel extends Component {
+export default class ConfigPanel extends Component {
   constructor() {
     super();
     this.getLinode = getLinode.bind(this);

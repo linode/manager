@@ -2,10 +2,36 @@ import React, { Component, PropTypes } from 'react';
 import _ from 'lodash';
 import PasswordInput from '~/components/PasswordInput';
 
+function renderRow({ label, content, errors, key }) {
+  return (
+    <div className="form-group row" key={key || label}>
+      <div className="col-sm-2 label-col">{label ? `${label}:` : null}</div>
+      <div className="col-sm-10 content-col">
+        {content}
+        {!errors ? null :
+          <div className="text-right">
+            <div className="alert alert-danger">
+              <ul>
+                {errors.map(e => <li key={e}>{e}</li>)}
+              </ul>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  );
+}
+
+renderRow.propTypes = {
+  label: PropTypes.string.isRequired,
+  content: PropTypes.object.isRequired,
+  errors: PropTypes.object,
+  key: PropTypes.any,
+};
+
 export default class Details extends Component {
   constructor() {
     super();
-    this.renderRow = this.renderRow.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.onLabelChange = this.onLabelChange.bind(this);
     this.onQuantityChange = this.onQuantityChange.bind(this);
@@ -49,26 +75,6 @@ export default class Details extends Component {
     this.setState({ quantity: v, labels });
   }
 
-  renderRow({ label, content, errors, key }) {
-    return (
-      <div className="form-group row" key={key || label}>
-        <div className="col-sm-2 label-col">{label ? `${label}:` : null}</div>
-        <div className="col-sm-10 content-col">
-          {content}
-          {errors ? (
-            <div className="text-right">
-              <div className="alert alert-danger">
-                <ul>
-                  {errors.map(e => <li key={e}>{e}</li>)}
-                </ul>
-              </div>
-            </div>
-          ) : null}
-        </div>
-      </div>
-    );
-  }
-
   render() {
     const { errors } = this.props;
 
@@ -101,19 +107,19 @@ export default class Details extends Component {
       </div>
     );
 
-    const labelInput = i => {
-      const defaultLabel = this.state.labels[0] || 'my-label';
-      return (<div className="input-container" key={`label-${i}`}>
+    const defaultLabel = this.state.labels[0] || 'my-label';
+    const defaultPlaceholder = i => `${defaultLabel}${i !== 0 ? `-${i}` : ''}`;
+    const labelInput = i => (
+      <div className="input-container" key={`label-${i}`}>
         <input
           value={this.state.label}
           onChange={e => this.onLabelChange(e.target.value, i)}
-          placeholder={this.state.labels[i] ?
-            this.state.labels[i] : `${defaultLabel}${i !== 0 ? `-${i}` : ''}`}
+          placeholder={this.state.labels[i] ? this.state.labels[i] : defaultPlaceholder(i)}
           className="form-control"
           name="label"
         />
-      </div>);
-    };
+      </div>
+    );
 
     const passwordInput = (
       <div>
@@ -122,7 +128,7 @@ export default class Details extends Component {
           onChange={password => this.setState({ password })}
         />
         <div className="alert alert-info">
-          Save this password somewhere safe. We can't display it again.
+          Save this password somewhere safe. We can&apos;t display it again.
         </div>
       </div>
     );
@@ -147,12 +153,13 @@ export default class Details extends Component {
 
     const backupInput = (
       <div className="checkbox">
-        <label>
+        <label htmlFor="enable-backups">
           <input
             type="checkbox"
             checked={this.state.enableBackups}
             onChange={e => this.setState({ enableBackups: e.target.checked })}
             name="enableBackups"
+            id="enable-backups"
             disabled={this.props.selectedType === null}
           />
           <span>
@@ -162,7 +169,7 @@ export default class Details extends Component {
         </label>
       </div>
     );
-    const backups = this.renderRow({ label: 'Backups', content: backupInput });
+    const backups = renderRow({ label: 'Backups', content: backupInput });
 
     return (
       <div>
@@ -172,7 +179,7 @@ export default class Details extends Component {
         <div className="card-body">
           <form onSubmit={this.onSubmit}>
             <section>
-              {inputRows.map(this.renderRow)}
+              {inputRows.map(renderRow)}
               {backups}
             </section>
             <button

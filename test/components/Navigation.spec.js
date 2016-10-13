@@ -2,8 +2,8 @@ import React from 'react';
 import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 
-import Navigation from '../../src/components/Navigation';
 import { LOGIN_ROOT } from '~/constants';
+import Navigation from '../../src/components/Navigation';
 
 describe('components/Navigation', () => {
   it('renders username', () => {

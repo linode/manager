@@ -61,12 +61,13 @@ export class AlertsPage extends Component {
         <div className="col-sm-10 content-col">
           <div>
             <div className="checkbox">
-              <label>
+              <label htmlFor={`enable-${name}`}>
                 <input
                   type="checkbox"
                   checked={enabled}
                   onChange={enabledChange}
                   disabled={loading}
+                  id={`enable-${name}`}
                 />
                 <span>
                   Enable
@@ -95,24 +96,39 @@ export class AlertsPage extends Component {
     const { loading } = this.state;
     const alerts = [
       {
-        name: 'CPU usage', key: 'cpu', value: cpu, label: '%',
+        name: 'CPU usage',
+        key: 'cpu',
+        value: cpu,
+        label: '%',
         text: 'average CPU usage over 2 hours',
       },
       {
-        name: 'Disk IO rate', key: 'io', value: io, label: 'IOPS',
+        name: 'Disk IO rate',
+        key: 'io',
+        value: io,
+        label: 'IOPS',
         text: 'average disk IOPS over 2 hours',
       },
       {
-        name: 'Incoming traffic', key: 'transfer_in', value: transfer_in,
-        label: 'Mbit/s', text: 'average incoming traffic over a 2 hour period',
+        name: 'Incoming traffic',
+        key: 'transfer_in',
+        value: transfer_in,
+        label: 'Mbit/s',
+        text: 'average incoming traffic over a 2 hour period',
       },
       {
-        name: 'Outbound traffic', key: 'transfer_out', value: transfer_out,
-        label: 'Mbit/s', text: 'average outbound traffic over a 2 hour period',
+        name: 'Outbound traffic',
+        key: 'transfer_out',
+        value: transfer_out,
+        label: 'Mbit/s',
+        text: 'average outbound traffic over a 2 hour period',
       },
       {
-        name: 'Transfer quota', key: 'transfer_quota', value: transfer_quota,
-        label: '%', text: 'percentage of network transfer quota used',
+        name: 'Transfer quota',
+        key: 'transfer_quota',
+        value: transfer_quota,
+        label: '%',
+        text: 'percentage of network transfer quota used',
       },
     ];
 
@@ -138,12 +154,7 @@ export class AlertsPage extends Component {
 }
 
 AlertsPage.propTypes = {
-  linodes: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
 };
 
-function select(state) {
-  return { linodes: state.api.linodes };
-}
-
-export default connect(select)(AlertsPage);
+export default connect()(AlertsPage);

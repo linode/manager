@@ -2,7 +2,7 @@ import { fetch } from '~/fetch';
 import { actions } from './configs/linodes';
 
 function makeBackupAction(action) {
-  return (id) => async (dispatch, getState) => {
+  return id => async (dispatch, getState) => {
     const { token } = getState().authentication;
     const response = await fetch(
       token,

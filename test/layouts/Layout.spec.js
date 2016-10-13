@@ -2,8 +2,10 @@ import React from 'react';
 import sinon from 'sinon';
 import { expect } from 'chai';
 import { shallow } from 'enzyme';
-import { Layout } from '../../src/layouts/Layout';
+
 import * as fetch from '~/fetch';
+import { Layout } from '../../src/layouts/Layout';
+
 
 describe('layouts/Layout', () => {
   const sandbox = sinon.sandbox.create();

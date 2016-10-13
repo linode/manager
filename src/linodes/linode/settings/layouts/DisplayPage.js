@@ -43,10 +43,11 @@ export class DisplayPage extends Component {
         <form>
           <FormGroup errors={errors} className="row" field="group">
             <div className="col-sm-2">
-              <label htmlFor="">Group</label>
+              <label htmlFor="group">Group</label>
             </div>
             <div className="col-sm-4">
               <input
+                id="group"
                 className="form-control"
                 name="group"
                 value={group}
@@ -76,12 +77,7 @@ export class DisplayPage extends Component {
 }
 
 DisplayPage.propTypes = {
-  linodes: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
 };
 
-function select(state) {
-  return { linodes: state.api.linodes };
-}
-
-export default connect(select)(DisplayPage);
+export default connect()(DisplayPage);

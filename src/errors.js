@@ -3,7 +3,7 @@ import React, { PropTypes } from 'react';
 export async function reduceErrors(response) {
   const json = await response.json();
   const errors = {};
-  json.errors.forEach(error => {
+  json.errors.forEach((error) => {
     const key = error.field || '_';
     const list = errors[key] || [];
     list.push(error);

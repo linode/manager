@@ -8,6 +8,7 @@ import { api } from '@/data';
 import { testLinode } from '@/data/linodes';
 import { expectRequest } from '@/common';
 import { ConfigEdit } from '~/linodes/linode/settings/layouts/ConfigEdit';
+
 const { linodes, kernels } = api;
 
 describe('linodes/linode/settings/layouts/ConfigEdit', () => {
@@ -167,7 +168,7 @@ describe('linodes/linode/settings/layouts/ConfigEdit', () => {
       expect(dispatch.calledTwice).to.equal(true);
       const fn = dispatch.firstCall.args[0];
       await expectRequest(fn, `/linode/instances/${testLinode.id}/configs/12345`,
-        () => {}, null, options => {
+        () => {}, null, (options) => {
           expect(options.method).to.equal('PUT');
           expect(JSON.parse(options.body)).to.deep.equal({
             virt_mode: 'paravirt',

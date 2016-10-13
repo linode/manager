@@ -13,6 +13,7 @@ import { api, freshState } from '@/data';
 import { testLinode } from '@/data/linodes';
 import { SHOW_MODAL, hideModal } from '~/actions/modal';
 import { expectRequest } from '@/common';
+
 const { linodes } = api;
 
 describe('linodes/linode/settings/components/DiskPanel', () => {
@@ -224,12 +225,12 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
       const resize = dispatch.firstCall.args[0];
       const put = dispatch.secondCall.args[0];
       await expectRequest(resize, '/linode/instances/1236/disks/12345/resize',
-        () => {}, null, options => {
+        () => {}, null, (options) => {
           expect(options.method).to.equal('POST');
           expect(options.body).to.equal(JSON.stringify({ size: 1234 }));
         });
       await expectRequest(put, '/linode/instances/1236/disks/12345',
-        () => {}, null, options => {
+        () => {}, null, (options) => {
           expect(options.method).to.equal('PUT');
           expect(options.body).to.equal(JSON.stringify({ label: 'New label' }));
         });
@@ -453,7 +454,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
       expect(dispatch.calledTwice).to.equal(true);
       const fn = dispatch.firstCall.args[0];
       await expectRequest(fn, '/linode/instances/1236/disks/',
-        () => {}, null, options => {
+        () => {}, null, (options) => {
           expect(options.method).to.equal('POST');
           expect(JSON.parse(options.body)).to.deep.equal({
             label: 'Test disk',

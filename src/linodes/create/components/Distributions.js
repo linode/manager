@@ -13,7 +13,7 @@ export default class Distributions extends Component {
     const label = l => l.replace('Arch Linux', 'Arch'); // bleh
     const selectedVersion = vendor.versions[version];
     return (
-      <div
+      <div // eslint-disable-line jsx-a11y/no-static-element-interactions
         onClick={() => onClick(selectedVersion.id)}
         className={`distro ${
           vendor.versions.find(v => v.id === selected) ? 'selected' : ''
@@ -33,24 +33,24 @@ export default class Distributions extends Component {
                 e.stopPropagation();
                 this.setState({ open: !open });
               }}
-            ><i className="fa fa-caret-down"></i></button>
+            ><i className="fa fa-caret-down" /></button>
           </div>
           <div
             className="dropdown-menu"
             aria-labelledby={`distro-dropdown-${selectedVersion.id}`}
           >
             {vendor.versions.map(v =>
-              <a
+              <button
                 key={v.id}
                 className="dropdown-item"
                 href="#"
-                onMouseDown={e => {
+                onMouseDown={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
                   onClick(v.id);
                   this.setState({ open: false, version: vendor.versions.indexOf(v) });
                 }}
-              >{v.label}</a>
+              >{v.label}</button>
             )}
           </div>
         </header>
