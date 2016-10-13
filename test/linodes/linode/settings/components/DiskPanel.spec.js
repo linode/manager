@@ -323,7 +323,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
       free: 4096,
     };
 
-    it('should fetch distros on mount', async () => {
+    it('should fetch distributions on mount', async () => {
       const dispatch = sandbox.spy();
       const modal = shallow(
         <AddModal

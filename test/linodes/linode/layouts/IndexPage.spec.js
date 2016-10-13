@@ -8,7 +8,8 @@ import { api, freshState } from '@/data';
 import { testLinode } from '@/data/linodes';
 import { expectRequest } from '@/common';
 import * as IndexPageWrapper from '~/linodes/linode/layouts/IndexPage';
-import { actions, thunks } from '~/api/configs/linodes';
+import { actions } from '~/api/configs/linodes';
+import { linodes as thunks } from '~/api';
 import Dropdown from '~/components/Dropdown';
 import { SET_ERROR } from '~/actions/errors';
 

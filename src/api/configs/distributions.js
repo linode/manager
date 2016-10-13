@@ -1,5 +1,7 @@
-import { genConfig, genThunks, genReducer, genActions } from '~/api/gen';
-import { ONE, MANY } from '~/api/gen';
+import {
+  genConfig, genReducer, genActions,
+  ONE, MANY,
+} from '~/api/gen';
 
 export const config = genConfig({
   plural: 'distributions',
@@ -9,5 +11,4 @@ export const config = genConfig({
 });
 
 export const actions = genActions(config);
-export const thunks = genThunks(config, actions);
 export const reducer = genReducer(config);

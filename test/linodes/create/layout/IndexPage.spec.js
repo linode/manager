@@ -6,7 +6,7 @@ import { push } from 'react-router-redux';
 
 import { IndexPage } from '~/linodes/create/layouts/IndexPage';
 import * as errors from '~/actions/errors';
-import { thunks } from '~/api/configs/linodes';
+import { linodes as thunks } from '~/api';
 import { api } from '@/data';
 
 describe('linodes/create/layout/IndexPage', () => {
@@ -20,7 +20,7 @@ describe('linodes/create/layout/IndexPage', () => {
       const page = shallow(
         <IndexPage
           dispatch={() => {}}
-          distros={api.distributions}
+          distributions={api.distributions}
           datacenters={api.datacenters}
           types={api.types}
           linodes={api.linodes}
@@ -40,7 +40,7 @@ describe('linodes/create/layout/IndexPage', () => {
     const page = shallow(
       <IndexPage
         dispatch={() => {}}
-        distros={api.distributions}
+        distributions={api.distributions}
         datacenters={api.datacenters}
         types={api.types}
         linodes={api.linodes}
@@ -55,7 +55,7 @@ describe('linodes/create/layout/IndexPage', () => {
     const page = shallow(
       <IndexPage
         dispatch={dispatch}
-        distros={api.distributions}
+        distributions={api.distributions}
         datacenters={api.datacenters}
         types={api.types}
         linodes={api.linodes}
@@ -84,7 +84,7 @@ describe('linodes/create/layout/IndexPage', () => {
     const page = shallow(
       <IndexPage
         dispatch={dispatch}
-        distros={api.distributions}
+        distributions={api.distributions}
         datacenters={api.datacenters}
         types={api.types}
         linodes={api.linodes}
@@ -101,7 +101,7 @@ describe('linodes/create/layout/IndexPage', () => {
     const page = shallow(
       <IndexPage
         dispatch={() => {}}
-        distros={api.distributions}
+        distributions={api.distributions}
         datacenters={api.datacenters}
         types={api.types}
         linodes={api.linodes}
@@ -115,7 +115,7 @@ describe('linodes/create/layout/IndexPage', () => {
     const page = shallow(
       <IndexPage
         dispatch={() => {}}
-        distros={api.distributions}
+        distributions={api.distributions}
         datacenters={api.datacenters}
         types={api.types}
         linodes={api.linodes}
@@ -129,7 +129,7 @@ describe('linodes/create/layout/IndexPage', () => {
     const page = shallow(
       <IndexPage
         dispatch={() => {}}
-        distros={api.distributions}
+        distributions={api.distributions}
         datacenters={api.datacenters}
         types={api.types}
         linodes={api.linodes}
@@ -147,7 +147,7 @@ describe('linodes/create/layout/IndexPage', () => {
     const page = shallow(
       <IndexPage
         dispatch={dispatch}
-        distros={api.distributions}
+        distributions={api.distributions}
         datacenters={api.datacenters}
         types={api.types}
         linodes={api.linodes}
@@ -188,7 +188,7 @@ describe('linodes/create/layout/IndexPage', () => {
     const page = shallow(
       <IndexPage
         dispatch={dispatch}
-        distros={api.distributions}
+        distributions={api.distributions}
         datacenters={api.datacenters}
         types={api.types}
         linodes={api.linodes}
@@ -239,7 +239,7 @@ describe('linodes/create/layout/IndexPage', () => {
     const page = shallow(
       <IndexPage
         dispatch={dispatch}
-        distros={api.distributions}
+        distributions={api.distributions}
         datacenters={api.datacenters}
         types={api.types}
         linodes={api.linodes}
@@ -297,7 +297,7 @@ describe('linodes/create/layout/IndexPage', () => {
     const page = shallow(
       <IndexPage
         dispatch={dispatch}
-        distros={api.distributions}
+        distributions={api.distributions}
         datacenters={api.datacenters}
         types={api.types}
         linodes={api.linodes}

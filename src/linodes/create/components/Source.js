@@ -12,22 +12,22 @@ export default class Source extends Component {
     this.render = this.render.bind(this);
     this.renderSourceTabs = this.renderSourceTabs.bind(this);
     this.renderHeader = this.renderHeader.bind(this);
-    this.renderDistros = this.renderDistros.bind(this);
+    this.renderDistributions = this.renderDistributions.bind(this);
     this.state = { backupsPage: 0, backupsFilter: '', selectedLinode: -1 };
   }
 
-  renderDistros() {
-    const { distros, distribution, onSourceSelected } = this.props;
+  renderDistributions() {
+    const { distributions, distribution, onSourceSelected } = this.props;
     const vendors = _.sortBy(
       _.map(
-        _.groupBy(Object.values(distros), d => d.vendor),
+        _.groupBy(Object.values(distributions), d => d.vendor),
         (v, k) => ({
           name: k,
           versions: _.orderBy(v, ['recommended', 'created'], ['desc', 'desc']),
         })
       ), vendor => vendor.name);
     return (
-      <div className="distros">
+      <div className="distributions">
         {vendors.map(v =>
           <Distributions
             selected={distribution}
@@ -176,7 +176,7 @@ export default class Source extends Component {
             <Tab>Backups</Tab>
           </TabList>
           <TabPanel>
-            {this.renderDistros()}
+            {this.renderDistributions()}
           </TabPanel>
           <TabPanel>
             {this.renderBackups()}
@@ -205,7 +205,7 @@ export default class Source extends Component {
 }
 
 Source.propTypes = {
-  distros: PropTypes.object.isRequired,
+  distributions: PropTypes.object.isRequired,
   linodes: PropTypes.object.isRequired,
   selectedTab: PropTypes.number.isRequired,
   onTabChange: PropTypes.func,

@@ -3,7 +3,7 @@ import reducer from '~/reducers';
 import deepFreeze from 'deep-freeze';
 
 import { linodes } from './linodes';
-import { distros } from './distros';
+import { distributions } from './distributions';
 import { datacenters } from './datacenters';
 import { types } from './types';
 import { kernels } from './kernels';
@@ -27,8 +27,8 @@ export const api = {
     linodes,
   },
   distributions: {
-    ...fakeAPIStore(distros, 'distribution', 'distributions'),
-    distributions: distros,
+    ...fakeAPIStore(distributions, 'distribution', 'distributions'),
+    distributions,
   },
   datacenters: {
     ...fakeAPIStore(datacenters, 'datacenter', 'datacenters'),

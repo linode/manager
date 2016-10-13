@@ -7,7 +7,7 @@ import Plan from '../components/Plan';
 import Datacenter from '../components/Datacenter';
 import Details from '../components/Details';
 import { parallel } from '~/api/util';
-import { linodes, distros, datacenters, types } from '~/api';
+import { linodes, distributions, datacenters, types } from '~/api';
 import { setError } from '~/actions/errors';
 
 export class IndexPage extends Component {
@@ -32,7 +32,7 @@ export class IndexPage extends Component {
     const { dispatch } = this.props;
     try {
       await dispatch(parallel(
-        distros.all(),
+        distributions.all(),
         datacenters.all(),
         types.all(),
         linodes.all(),
@@ -130,7 +130,7 @@ export class IndexPage extends Component {
 
   render() {
     const {
-      distros,
+      distributions,
       linodes,
       datacenters,
       types,
@@ -159,7 +159,7 @@ export class IndexPage extends Component {
             distribution={distribution}
             backup={backup}
             selectedTab={sourceTab}
-            distros={distros.distributions}
+            distributions={distributions.distributions}
             onTabChange={ix => this.setState({ sourceTab: ix })}
             onSourceSelected={(type, id, linodeId) => {
               if (type === 'backup' && linodeId && id) {
@@ -207,7 +207,7 @@ export class IndexPage extends Component {
 
 IndexPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  distros: PropTypes.object,
+  distributions: PropTypes.object,
   linodes: PropTypes.object,
   types: PropTypes.object,
   datacenters: PropTypes.object,
@@ -216,7 +216,7 @@ IndexPage.propTypes = {
 
 function select(state) {
   return {
-    distros: state.api.distributions,
+    distributions: state.api.distributions,
     linodes: state.api.linodes,
     datacenters: state.api.datacenters,
     types: state.api.types,

@@ -1,13 +1,14 @@
 import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
-import { linodes, distros } from '~/api';
+import _ from 'lodash';
+
+import { linodes, distributions } from '~/api';
 import { resizeLinodeDisk } from '~/api/linodes';
 import HelpButton from '~/components/HelpButton';
 import PasswordInput from '~/components/PasswordInput';
 import { getLinode, loadLinode } from '~/linodes/linode/layouts/IndexPage';
 import { showModal, hideModal } from '~/actions/modal';
-import _ from 'lodash';
 import { ErrorSummary, FormGroup, reduceErrors } from '~/errors';
 
 const borderColors = [
@@ -175,7 +176,7 @@ export class AddModal extends Component {
   async componentDidMount() {
     const { dispatch, free } = this.props;
     this.setState({ size: free });
-    await dispatch(distros.all());
+    await dispatch(distributions.all());
     this.setState({ loading: false });
   }
 

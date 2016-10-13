@@ -11,7 +11,7 @@ import { testLinode } from '@/data/linodes';
 import Dropdown from '~/components/Dropdown';
 import { SET_ERROR } from '~/actions/errors';
 import { expectRequest } from '@/common.js';
-import { thunks } from '~/api/configs/linodes';
+import { linodes as thunks } from '~/api';
 
 const { linodes } = api;
 
