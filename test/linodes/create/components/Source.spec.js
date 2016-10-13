@@ -18,7 +18,7 @@ describe('linodes/create/components/Source', () => {
   it('renders the card header', () => {
     const c = shallow(
       <Source
-        distros={api.distributions}
+        distributions={api.distributions}
         linodes={api.linodes}
         distribution={null}
         backup={null}
@@ -31,7 +31,7 @@ describe('linodes/create/components/Source', () => {
   it('renders the source tabs', () => {
     const c = shallow(
       <Source
-        distros={api.distributions}
+        distributions={api.distributions}
         linodes={api.linodes}
         distribution={null}
         backup={null}
@@ -46,7 +46,7 @@ describe('linodes/create/components/Source', () => {
     const onTabChange = sandbox.spy();
     const c = shallow(
       <Source
-        distros={api.distributions}
+        distributions={api.distributions}
         linodes={api.linodes}
         distribution={null}
         backup={null}
@@ -61,7 +61,7 @@ describe('linodes/create/components/Source', () => {
   it('renders Distributions', () => {
     const c = shallow(
       <Source
-        distros={api.distributions.distributions}
+        distributions={api.distributions.distributions}
         linodes={api.linodes}
         distribution={null}
         backup={null}
@@ -78,7 +78,7 @@ describe('linodes/create/components/Source', () => {
     const onSourceSelected = sandbox.spy();
     const c = shallow(
       <Source
-        distros={api.distributions}
+        distributions={api.distributions}
         linodes={api.linodes}
         distribution={null}
         backup={null}
@@ -109,7 +109,7 @@ describe('linodes/create/components/Source', () => {
   it('renders Linodes', () => {
     const c = shallow(
       <Source
-        distros={api.distributions}
+        distributions={api.distributions}
         linodes={moreBackupsLinodes}
         distribution={null}
         backup={null}
@@ -125,7 +125,7 @@ describe('linodes/create/components/Source', () => {
   it('only shows shows n linodes per page of Backups', () => {
     const c = shallow(
       <Source
-        distros={api.distributions}
+        distributions={api.distributions}
         linodes={moreBackupsLinodes}
         distribution={null}
         backup={null}
@@ -148,7 +148,7 @@ describe('linodes/create/components/Source', () => {
   it('changes pages when requested', () => {
     const c = shallow(
       <Source
-        distros={api.distributions}
+        distributions={api.distributions}
         linodes={moreBackupsLinodes}
         distribution={null}
         backup={null}
@@ -191,7 +191,7 @@ describe('linodes/create/components/Source', () => {
   it('filters backups when updating filter', () => {
     const c = shallow(
       <Source
-        distros={api.distributions}
+        distributions={api.distributions}
         linodes={moreBackupsLinodes}
         distribution={null}
         backup={null}

@@ -13,7 +13,7 @@ export const testDistro = {
   _polling: false,
 };
 
-export const distros = {
+export const distributions = {
   'linode/arch2016.05': testDistro,
   'linode/debian7': {
     ...testDistro,
