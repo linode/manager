@@ -1,5 +1,6 @@
 import { fetch } from '~/fetch';
-import { actions, thunks } from './configs/linodes';
+import { linodes as thunks } from '~/api';
+import { actions } from './configs/linodes';
 
 function linodeAction(id, action, temp, expected, body = undefined) {
   return async (dispatch, getState) => {
