@@ -5,7 +5,7 @@ var CircularDependencyPlugin = require('circular-dependency-plugin');
 module.exports = function(config) {
   config.set({
     frameworks: ['mocha'],
-    browsers: ['PhantomJS', 'Chrome'],
+    browsers: ['PhantomJS'],
     files: [
       './node_modules/phantomjs-polyfill/bind-polyfill.js',
       'test/index.js',
