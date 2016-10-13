@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { getLinode, loadLinode } from '~/linodes/linode/layouts/IndexPage';
-import { linodes, kernels } from '~/api';
+import { linodes, kernels, configs } from '~/api';
 import { parallel } from '~/api/util';
 import HelpButton from '~/components/HelpButton';
 import { ErrorSummary, FormGroup, reduceErrors } from '~/errors';
@@ -14,7 +14,7 @@ export class ConfigEdit extends Component {
     super();
     this.getLinode = getLinode.bind(this);
     this.loadLinode = loadLinode.bind(this);
-    this.renderEditUI = this.renderEditUI.bind(this);
+    this.renderUI = this.renderUI.bind(this);
     this.saveChanges = this.saveChanges.bind(this);
     this.state = {
       loading: true,
@@ -35,14 +35,28 @@ export class ConfigEdit extends Component {
   async componentDidMount() {
     const { dispatch } = this.props;
     const { linodeId, configId } = this.props.params;
-    await dispatch(parallel(kernels.all(), linodes.one(linodeId)));
-    const config = await dispatch(linodes.configs.one(linodeId, configId));
-    this.setState({
-      ...config,
-      ...config.helpers,
-      loading: false,
-      kernel: config.kernel.id,
-    });
+    await dispatch(parallel(
+      kernels.all(),
+      linodes.one(linodeId),
+      linodes.configs.all(linodeId),
+    ));
+
+    const linode = this.getLinode();
+    const configs = Object.values(linode._configs.configs);
+    const configIds = configs.map(config => config.id); 
+    if (configIds.indexOf(parseInt(configId)) > -1) {
+      const config = await dispatch(linodes.configs.one(linodeId, configId));
+      this.setState({
+        ...config,
+        ...config.helpers,
+        loading: false,
+        kernel: config.kernel.id,
+      });
+    } else if (configId != 'create') {
+      dispatch(push(`/linodes/${linodeId}/settings/advanced`));
+    } else {
+      this.setState({ loading: false });
+    }
   }
 
   getConfig() {
@@ -54,28 +68,46 @@ export class ConfigEdit extends Component {
     return linode._configs.configs[configId] || null;
   }
 
-  async saveChanges() {
+  async saveChanges(isCreate) {
     const state = this.state;
     const { dispatch } = this.props;
     const linode = this.getLinode();
     const config = this.getConfig();
 
     this.setState({ loading: true, errors: {} });
+    console.log(state);
     try {
-      await dispatch(linodes.configs.put({
-        label: state.label,
-        comments: state.comments,
-        ram_limit: state.ram_limit,
-        run_level: state.run_level,
-        virt_mode: state.virt_mode,
-        // kernel: { id: state.kernel }, // API bug
-        helpers: {
-          disable_update_db: state.disable_update_db,
-          enable_distro_helper: state.enable_distro_helper,
-          enable_network_helper: state.enable_network_helper,
-          enable_modules_dep_helper: state.enable_modules_dep_helper,
-        },
-      }, linode.id, config.id));
+      if(isCreate) {
+        await dispatch(linodes.configs.post({
+          label: state.label,
+          comments: state.comments,
+          ram_limit: state.ram_limit,
+          run_level: state.run_level,
+          virt_mode: state.virt_mode,
+          kernel: state.kernel,
+          helpers: {
+            disable_update_db: state.disable_update_db,
+            enable_distro_helper: state.enable_distro_helper,
+            enable_network_helper: state.enable_network_helper,
+            enable_modules_dep_helper: state.enable_modules_dep_helper,
+          },
+        }, linode.id));
+      } else {
+        await dispatch(linodes.configs.put({
+          label: state.label,
+          comments: state.comments,
+          ram_limit: state.ram_limit,
+          run_level: state.run_level,
+          virt_mode: state.virt_mode,
+          kernel: state.kernel,
+          helpers: {
+            disable_update_db: state.disable_update_db,
+            enable_distro_helper: state.enable_distro_helper,
+            enable_network_helper: state.enable_network_helper,
+            enable_modules_dep_helper: state.enable_modules_dep_helper,
+          },
+        }, linode.id, config.id));
+      }
       this.setState({ loading: false });
       dispatch(push(`/linodes/${linode.id}/settings/advanced`));
     } catch (response) {
@@ -83,7 +115,7 @@ export class ConfigEdit extends Component {
     }
   }
 
-  renderEditUI() {
+  renderUI(isCreate) {
     const linode = this.getLinode();
     const totalRam = linode.type[0].ram;
     const { kernels } = this.props;
@@ -221,8 +253,8 @@ export class ConfigEdit extends Component {
         <button
           className="btn btn-primary"
           disabled={state.loading}
-          onClick={() => this.saveChanges()}
-        >Save</button>
+          onClick={() => this.saveChanges(isCreate)}
+        >{ isCreate ? 'Add config' :  'Save' }</button>
         <Link
           className="btn btn-default"
           style={{ marginLeft: '0.5rem' }}
@@ -233,12 +265,18 @@ export class ConfigEdit extends Component {
   }
 
   render() {
+    const { configId } = this.props.params;
+    const isCreate = configId === 'create';
+
     return (
       <section className="card">
         <header>
-          <h2>Edit config<HelpButton to="https://example.org" /></h2>
+          <h2>
+            { isCreate ? 'Add config' : 'Edit config' }
+            <HelpButton to="https://example.org" />
+          </h2>
         </header>
-        {this.renderEditUI()}
+        {this.renderUI(isCreate)}
       </section>
     );
   }

@@ -104,6 +104,55 @@ describe('linodes/linode/settings/layouts/ConfigEdit', () => {
     expect(saveChanges.calledOnce).to.equal(true);
   });
 
+  describe('config detection', () => {
+    it('create new config', async () => {
+      const createProps = {
+        ...props,
+        params: {
+          linodeId: `${testLinode.id}`,
+          configId: 'create',
+        },
+      };
+      
+      const page = shallow(
+        <ConfigEdit
+          {...createProps}
+        />);
+
+      expect(page.find('h2').at(0).text()).to.equal('Add config<HelpButton />');
+    });
+
+    it('change config', async () => {
+      const page = shallow(
+        <ConfigEdit
+          {...props}
+        />);
+
+      expect(page.find('h2').at(0).text()).to.equal('Edit config<HelpButton />');
+    });
+
+    it('config not exist', async () => {
+      const dispatch = sandbox.stub();
+      const badProps = {
+        ...props,
+        params: {
+          linodeId: `${testLinode.id}`,
+          configId: '999999999999999',
+        },
+      };
+      const path = `/linodes/${testLinode.id}/settings/advanced`;
+      
+      const page = shallow(
+        <ConfigEdit
+          {...badProps}
+          dispatch={dispatch}
+        />);
+
+      await page.instance().componentDidMount();
+      expect(dispatch.calledWith(push(path))).to.equal(true);
+    });
+  });
+
   describe('saveChanges', () => {
     it('commits changes to the API', async () => {
       const dispatch = sandbox.spy();
@@ -126,7 +175,7 @@ describe('linodes/linode/settings/layouts/ConfigEdit', () => {
             comments: '',
             label: 'new label',
             ram_limit: 0,
-            // kernel: { id: '' }, // TODO
+            kernel: '',
             helpers: {
               disable_update_db: false,
               enable_distro_helper: true,

@@ -76,7 +76,7 @@ export class ConfigPanel extends Component {
         <header className="clearfix">
           <h2 className="pull-xs-left">Configs<HelpButton to="http://example.org" /></h2>
           <a
-            href={`/linodes/${linode.id}/configs/create`}
+            href={`/linodes/${linode.id}/settings/advanced/configs/create`}
             className="btn btn-default pull-xs-right"
           >
             Add a config
