@@ -113,7 +113,7 @@ describe('linodes/linode/settings/layouts/ConfigEdit', () => {
           configId: 'create',
         },
       };
-      
+
       const page = shallow(
         <ConfigEdit
           {...createProps}
@@ -141,7 +141,7 @@ describe('linodes/linode/settings/layouts/ConfigEdit', () => {
         },
       };
       const path = `/linodes/${testLinode.id}/settings/advanced`;
-      
+
       const page = shallow(
         <ConfigEdit
           {...badProps}

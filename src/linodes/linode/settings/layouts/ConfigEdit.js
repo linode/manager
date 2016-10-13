@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { getLinode, loadLinode } from '~/linodes/linode/layouts/IndexPage';
-import { linodes, kernels, configs } from '~/api';
+import { linodes, kernels } from '~/api';
 import { parallel } from '~/api/util';
 import HelpButton from '~/components/HelpButton';
 import { ErrorSummary, FormGroup, reduceErrors } from '~/errors';
@@ -43,7 +43,7 @@ export class ConfigEdit extends Component {
 
     const linode = this.getLinode();
     const configs = Object.values(linode._configs.configs);
-    const configIds = configs.map(config => config.id); 
+    const configIds = configs.map(config => config.id);
     if (configIds.indexOf(parseInt(configId)) > -1) {
       const config = await dispatch(linodes.configs.one(linodeId, configId));
       this.setState({
@@ -52,7 +52,7 @@ export class ConfigEdit extends Component {
         loading: false,
         kernel: config.kernel.id,
       });
-    } else if (configId != 'create') {
+    } else if (configId !== 'create') {
       dispatch(push(`/linodes/${linodeId}/settings/advanced`));
     } else {
       this.setState({ loading: false });
@@ -75,9 +75,9 @@ export class ConfigEdit extends Component {
     const config = this.getConfig();
 
     this.setState({ loading: true, errors: {} });
-    console.log(state);
+
     try {
-      if(isCreate) {
+      if (isCreate) {
         await dispatch(linodes.configs.post({
           label: state.label,
           comments: state.comments,
@@ -254,7 +254,7 @@ export class ConfigEdit extends Component {
           className="btn btn-primary"
           disabled={state.loading}
           onClick={() => this.saveChanges(isCreate)}
-        >{ isCreate ? 'Add config' :  'Save' }</button>
+        >{isCreate ? 'Add config' : 'Save'}</button>
         <Link
           className="btn btn-default"
           style={{ marginLeft: '0.5rem' }}
@@ -272,7 +272,7 @@ export class ConfigEdit extends Component {
       <section className="card">
         <header>
           <h2>
-            { isCreate ? 'Add config' : 'Edit config' }
+            {isCreate ? 'Add config' : 'Edit config'}
             <HelpButton to="https://example.org" />
           </h2>
         </header>
