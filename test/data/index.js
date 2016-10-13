@@ -28,7 +28,7 @@ export const api = {
   },
   distributions: {
     ...fakeAPIStore(distributions, 'distribution', 'distributions'),
-    distributions: distributions,
+    distributions,
   },
   datacenters: {
     ...fakeAPIStore(datacenters, 'datacenter', 'datacenters'),
