@@ -1,8 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
-import { push, withRouter } from 'react-router-redux';
+import { Link, withRouter } from 'react-router';
+import { push } from 'react-router-redux';
 
 import Dropdown from '~/components/Dropdown';
 import { LinodeStates, LinodeStatesReadable } from '~/constants';
