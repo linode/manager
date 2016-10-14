@@ -5,6 +5,7 @@ import { expect } from 'chai';
 
 import { api } from '@/data';
 import { AdvancedPage } from '~/linodes/linode/settings/layouts/AdvancedPage';
+
 const { linodes } = api;
 
 describe('linodes/linode/settings/layouts/AdvancedPage', () => {

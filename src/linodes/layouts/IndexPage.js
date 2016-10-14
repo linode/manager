@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import moment from 'moment';
 
-import { Linode } from '../components/Linode';
 import Dropdown from '~/components/Dropdown';
 import { setError } from '~/actions/errors';
 import _ from 'lodash';
@@ -14,6 +13,7 @@ import {
   changeView,
   toggleSelected,
 } from '../actions';
+import { Linode } from '../components/Linode';
 
 export class IndexPage extends Component {
   constructor() {
@@ -110,10 +110,10 @@ export class IndexPage extends Component {
               <h2 className="text-muted display-group">{group}</h2>
             </div>
            )}
-           {sortedLinodes.map(l =>
-             <div key={l.id} className="col-md-4">
-               {renderLinode(l, false)}
-             </div>)}
+          {sortedLinodes.map(l =>
+            <div key={l.id} className="col-md-4">
+              {renderLinode(l, false)}
+            </div>)}
         </div>
       );
     }
@@ -166,22 +166,24 @@ export class IndexPage extends Component {
     const selectAllCheckbox = <input type="checkbox" onChange={selectAll} checked={allSelected} />;
 
     const { view } = this.props;
-    const listIcon = <span className="fa fa-align-justify"></span>;
-    const gridIcon = <span className="fa fa-th-large"></span>;
+    const listIcon = <span className="fa fa-align-justify" />;
+    const gridIcon = <span className="fa fa-th-large" />;
     const gridListToggle = (
       <span className="grid-list">
         <div>Toggle view:</div>
         <span>
-        {
-          view === 'list' ? listIcon :
-            <a className="list" onClick={this.toggleDisplay}>{listIcon}</a>
-        }
+          {
+            view === 'list' ? listIcon :
+              // eslint-disable-next-line jsx-a11y/no-static-element-interactions
+              <a className="list" onClick={this.toggleDisplay}>{listIcon}</a>
+          }
         </span>
         <span>
-        {
-          view === 'grid' ? gridIcon :
-            <a className="grid" onClick={this.toggleDisplay}>{gridIcon}</a>
-        }
+          {
+            view === 'grid' ? gridIcon :
+              // eslint-disable-next-line jsx-a11y/no-static-element-interactions
+              <a className="grid" onClick={this.toggleDisplay}>{gridIcon}</a>
+          }
         </span>
       </span>
     );
@@ -191,7 +193,7 @@ export class IndexPage extends Component {
         <header>
           <div className="mainmenu">
             <Link to="/linodes/create" className="linode-add btn btn-primary pull-right">
-              <span className="fa fa-plus"></span>
+              <span className="fa fa-plus" />
               Add a Linode
             </Link>
             <h1>Linodes</h1>
@@ -205,7 +207,7 @@ export class IndexPage extends Component {
             </div>
             <div className="pull-xs-right">
               {gridListToggle}
-              <span className="fa fa-navicon" className="navicon" />
+              <span className="fa fa-navicon navicon" />
             </div>
           </div>
         </header>

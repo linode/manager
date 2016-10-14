@@ -2,19 +2,16 @@ import 'babel-polyfill';
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import store from './store';
 import { Router, Route, IndexRedirect, browserHistory } from 'react-router';
-import DevTools from './components/DevTools';
 import { syncHistoryWithStore } from 'react-router-redux';
 
+import { hideModal } from '~/actions/modal';
+import { actions, thunks, reducer } from '~/api/configs/linodes';
+import store from './store';
+import DevTools from './components/DevTools';
 import checkLogin, { initializeAuthentication } from './session';
-
 // eslint-disable-next-line no-unused-vars
 import styles from '../scss/manager.scss';
-
-const history = syncHistoryWithStore(browserHistory, store);
-initializeAuthentication(store.dispatch);
-
 import Layout from './layouts/Layout';
 import OAuthCallbackPage from './layouts/OAuth';
 import { NotFound } from './components/Error';
@@ -24,9 +21,10 @@ import Longview from './longview';
 import DNSManager from './dnsmanager';
 import Account from './account';
 import Support from './support';
-import { hideModal } from '~/actions/modal';
 
-import { actions, thunks, reducer } from '~/api/configs/linodes';
+const history = syncHistoryWithStore(browserHistory, store);
+initializeAuthentication(store.dispatch);
+
 window.actions = actions; window.thunks = thunks; window.reducer = reducer;
 
 const init = () => {

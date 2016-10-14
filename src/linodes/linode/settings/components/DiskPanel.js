@@ -226,7 +226,7 @@ export class AddModal extends Component {
         })
       ), vendor => vendor.name);
     const options = [<option key={''} value={''}>None</option>];
-    for (let i = 0; i < vendors.length; ++i) {
+    for (let i = 0; i < vendors.length; i += 1) {
       const v = vendors[i];
       if (i !== 0) {
         options.push(<option key={v.name} disabled>──────────</option>);
@@ -267,40 +267,42 @@ export class AddModal extends Component {
             </div> : null}
         </div>
         <div className="form-group">
-          <label>Distribution (optional)</label>
+          <label htmlFor="distribution">Distribution (optional)</label>
           <select
             className="form-control"
             disabled={loading}
             onChange={e => this.setState({ distro: e.target.value })}
             value={distro}
+            id="distribution"
           >{options}</select>
         </div>
         {distro ?
           <div className="form-group">
-            <label>Root password</label>
+            <label htmlFor="root-password">Root password</label>
             <PasswordInput
               onChange={p => this.setState({ password: p })}
               passwordType="offline_fast_hashing_1e10_per_second"
+              id="root-password"
             />
-          </div>
-            :
-          <div className="form-group">
-            <label>Filesystem</label>
-            <select
-              className="form-control"
-              onChange={e => this.setState({ filesystem: e.target.value })}
-              disabled={loading}
-              value={filesystem}
-            >
-              <option value="ext3">ext3</option>
-              <option value="ext4">ext4</option>
-              <option value="swap">swap</option>
-              <option value="raw">raw</option>
-            </select>
-          </div>
+          </div> :
+            <div className="form-group">
+              <label htmlFor="filesystem">Filesystem</label>
+              <select
+                className="form-control"
+                onChange={e => this.setState({ filesystem: e.target.value })}
+                disabled={loading}
+                value={filesystem}
+                id="filesystem"
+              >
+                <option value="ext3">ext3</option>
+                <option value="ext4">ext4</option>
+                <option value="swap">swap</option>
+                <option value="raw">raw</option>
+              </select>
+            </div>
         }
         <div className={`form-group ${errors.size.length ? 'has-danger' : ''}`}>
-          <label>Size (MB)</label>
+          <label htmlFor="size">Size (MB)</label>
           <input
             type="number"
             min={distro ? minimumStorageSize() : 8}
@@ -308,6 +310,7 @@ export class AddModal extends Component {
             className="form-control"
             value={size}
             onChange={e => this.setState({ size: parseInt(e.target.value, 10) })}
+            id="size"
           />
           {errors.size.length ?
             <div className="form-control-feedback">
@@ -432,22 +435,22 @@ export class DiskPanel extends Component {
                  )}
               </div>
              )}
-              {free <= 0 ? null : (
-                <div
-                  className="disk free"
-                  key={'free'}
-                  style={{ flexGrow: free }}
-                >
-                  <h4>Unallocated</h4>
-                  <p>{free} MB</p>
-                  {!poweredOff ? null : (
-                    <button
-                      onClick={() => dispatch(showModal('Add a disk', addModal))}
-                      className="btn btn-add btn-default"
-                    >Add a disk</button>
-                   )}
-                </div>
-               )}
+            {free <= 0 ? null :
+              <div
+                className="disk free"
+                key={'free'}
+                style={{ flexGrow: free }}
+              >
+                <h4>Unallocated</h4>
+                <p>{free} MB</p>
+                {!poweredOff ? null :
+                  <button
+                    onClick={() => dispatch(showModal('Add a disk', addModal))}
+                    className="btn btn-add btn-default"
+                  >Add a disk</button>
+                }
+              </div>
+            }
           </section>
         </div>
       </div>

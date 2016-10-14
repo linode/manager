@@ -7,7 +7,7 @@ export default function WarningButton(props) {
       to={props.to}
       className="btn btn-warning"
       target={props.target ? props.target : ''}
-    ><i className="fa fa-exclamation"></i></Link>
+    ><i className="fa fa-exclamation" /></Link>
   );
 }
 

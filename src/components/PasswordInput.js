@@ -44,10 +44,10 @@ export default class PasswordInput extends Component {
         >Generate</button>
         <div className="form-group">
           <div className={`strength strength-${this.state.strength.score}`}>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
+            <span />
+            <span />
+            <span />
+            <span />
           </div>
         </div>
         {this.state.password !== '' ? <p>

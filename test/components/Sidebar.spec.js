@@ -2,8 +2,8 @@ import React from 'react';
 import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 
-import Sidebar from '../../src/components/Sidebar';
 import { LOGIN_ROOT } from '~/constants';
+import Sidebar from '../../src/components/Sidebar';
 
 describe('components/Sidebar', () => {
   it('renders sidebar component', () => {

@@ -1,12 +1,13 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
+import md5 from 'md5';
+
+import { setStorage } from '~/storage';
 import { setToken } from '../actions/authentication';
 import { clientId, clientSecret } from '../secrets';
-import { push } from 'react-router-redux';
 import { LOGIN_ROOT } from '../constants';
 import { rawFetch } from '../fetch';
-import { setStorage } from '~/storage';
-import md5 from 'md5';
 
 export class OAuthCallbackPage extends Component {
   constructor() {
@@ -61,7 +62,7 @@ export class OAuthCallbackPage extends Component {
         </div>
       );
     }
-    return <div></div>;
+    return <span />;
   }
 }
 

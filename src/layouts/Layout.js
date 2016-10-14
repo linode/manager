@@ -1,11 +1,11 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 
+import { rawFetch as fetch } from '~/fetch';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
 import Modal from '../components/Modal';
 import Error from '../components/Error';
-import { rawFetch as fetch } from '~/fetch';
 
 export class Layout extends Component {
   constructor() {

@@ -10,7 +10,7 @@ export default function Backup(props) {
 
   const created = moment(backup.created, moment.ISO_8601);
 
-  let content = backup.type === 'snapshot' && 'No snapshot taken.' || 'Pending';
+  let content = backup.type === ('snapshot' && 'No snapshot taken.') || 'Pending';
   if (!future) {
     content = created.format('dddd, MMMM D YYYY LT');
     if (backup.status !== 'successful') {
@@ -25,7 +25,7 @@ export default function Backup(props) {
   }
 
   return (
-    <div
+    <div // eslint-disable-line jsx-a11y/no-static-element-interactions
       className={`backup ${backupClass}`}
       onClick={onSelect}
     >

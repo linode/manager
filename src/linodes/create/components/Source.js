@@ -6,12 +6,19 @@ import moment from 'moment';
 import Distributions from './Distributions';
 import Backups from './Backups';
 
+function renderHeader() {
+  return (
+    <header className="tabs">
+      <h2>Source</h2>
+    </header>
+  );
+}
+
 export default class Source extends Component {
   constructor() {
     super();
     this.render = this.render.bind(this);
     this.renderSourceTabs = this.renderSourceTabs.bind(this);
-    this.renderHeader = this.renderHeader.bind(this);
     this.renderDistributions = this.renderDistributions.bind(this);
     this.state = { backupsPage: 0, backupsFilter: '', selectedLinode: -1 };
   }
@@ -56,7 +63,7 @@ export default class Source extends Component {
     const linodesOnPage = linodesWithBackups.slice(currentIndex, currentIndex + perPageLimit);
 
     const maxPage = Math.ceil(linodesWithBackups.length / perPageLimit) - 1;
-    const gotoPage = page => e => {
+    const gotoPage = page => (e) => {
       e.preventDefault();
       this.setState({ backupsPage: page });
     };
@@ -90,13 +97,13 @@ export default class Source extends Component {
               {_.map(linodesOnPage, l =>
                 <tr key={l.created}>
                   <td>
-                    <a
-                      href="#"
-                      onClick={e => {
+                    <button
+                      className="btn btn-cancel"
+                      onClick={(e) => {
                         e.preventDefault();
                         this.setState({ selectedLinode: l.id });
                       }}
-                    >{l.label}</a>
+                    >{l.label}</button>
                   </td>
                   <td>{l.backups.last_backup ?
                        moment(l.backups.last_backup).format('dddd, MMMM D YYYY LT')
@@ -110,20 +117,20 @@ export default class Source extends Component {
           <nav className="text-xs-center">
             <ul className="pagination">
               <li className="page-item">
-                <a href="#" aria-label="Previous" onClick={decreaseCount} className="page-link">
+                <button aria-label="Previous" onClick={decreaseCount} className="btn btn-cancel page-link">
                   <span aria-hidden="true">&laquo;</span>
-                </a>
+                </button>
               </li>
               {_.range(maxPage + 1).map(pageIndex =>
                 <li className="page-item" key={pageIndex}>
-                  <a href="#" onClick={gotoPage(pageIndex)} className="page-link">
+                  <button onClick={gotoPage(pageIndex)} className="btn btn-cancel page-link">
                     {pageIndex + 1}
-                  </a>
+                  </button>
                 </li>)}
               <li className="page-item">
-                <a href="#" aria-label="Next" onClick={increaseCount} className="page-link">
+                <button aria-label="Next" onClick={increaseCount} className="btn btn-cancel page-link">
                   <span aria-hidden="true">&raquo;</span>
-                </a>
+                </button>
               </li>
             </ul>
           </nav>
@@ -149,16 +156,16 @@ export default class Source extends Component {
       <div className="backups">
         {selectedLinode === -1 ?
           this.renderLinodeSelection() :
-          <Backups
-            goBack={e => {
-              e.preventDefault();
-              this.setState({ selectedLinode: -1 });
-              onSourceSelected('backup', null);
-            }}
-            onSourceSelected={id => onSourceSelected('backup', id, selectedLinode)}
-            selectedLinode={selectedLinode}
-            selected={backup}
-          />}
+            <Backups
+              goBack={(e) => {
+                e.preventDefault();
+                this.setState({ selectedLinode: -1 });
+                onSourceSelected('backup', null);
+              }}
+              onSourceSelected={id => onSourceSelected('backup', id, selectedLinode)}
+              selectedLinode={selectedLinode}
+              selected={backup}
+            />}
       </div>
     );
   }
@@ -186,18 +193,10 @@ export default class Source extends Component {
     );
   }
 
-  renderHeader() {
-    return (
-      <header className="tabs">
-        <h2>Source</h2>
-      </header>
-    );
-  }
-
   render() {
     return (
       <div>
-        {this.renderHeader()}
+        {renderHeader()}
         {this.renderSourceTabs()}
       </div>
     );

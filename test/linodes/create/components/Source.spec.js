@@ -158,7 +158,7 @@ describe('linodes/create/components/Source', () => {
       />
     );
 
-    const expectOnly = label => {
+    const expectOnly = (label) => {
       expect(c.find('table tbody tr').length).to.equal(1);
       expect(c.find('tbody td').at(0).text()).to.equal(label);
     };

@@ -24,14 +24,16 @@
     "consistent-return": 0,
     "react/no-multi-comp": 0,
     "react/no-did-mount-set-state": 0,
-    "import/no-duplicates": 0,
-    "no-duplicate-imports": 0,
+    "import/extensions": 0,
+    "import/no-named-as-default": 0,
     "no-shadow": 0,
     "radix": 0,
     "dot-notation": [
       "error", {
         "allowPattern": "^(default|public|private|return)$"
       }
-    ]
+    ],
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "react/forbid-prop-types": 0,
   }
 }

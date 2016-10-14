@@ -16,7 +16,7 @@ function renderPowerButton(props) {
   const powerActionF = () => powerAction(linode);
 
   return powerIcon === '' ? <span /> :
-    <span className={`linode-power fa ${powerIcon} pull-right`} onClick={powerActionF} />;
+    <button className={`btn btn-cancel linode-power fa ${powerIcon} pull-right`} onClick={powerActionF} />;
 }
 
 renderPowerButton.propTypes = {

@@ -8,6 +8,7 @@ import { actions } from '~/api/configs/linodes';
 import { expectRequest } from '@/common';
 import { api } from '@/data';
 import { testLinode } from '@/data/linodes';
+
 const { linodes } = api;
 
 describe('linodes/linode/settings/components/ConfigPanel', () => {

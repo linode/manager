@@ -22,7 +22,7 @@ describe('fetch', () => {
   };
 
   const getFetchStub = (status = 200) => sandbox.stub(fetch, 'rawFetch')
-    .returns(new Promise((accept) => accept({
+    .returns(new Promise(accept => accept({
       headers: {
         get() {
           return status;

@@ -1,8 +1,38 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { getLinode } from './IndexPage';
+
 import HelpButton from '~/components/HelpButton';
 import { ipv4ns, ipv6ns, ipv6nsSuffix } from '~/constants';
+import { getLinode } from './IndexPage';
+
+function renderIpList(ips) {
+  return ips.map(ip => <li key={ip}>{ip}</li>);
+}
+
+function renderNameserversList(isIPv4, linode) {
+  const dc = linode.datacenter.id;
+  const nameservers = (
+    <div className="form-group row">
+      <div className="col-sm-4 label-col left">
+        Nameservers
+      </div>
+      <div className="col-sm-8 content-col right">
+        <ul className="list-unstyled">
+          {
+            isIPv4 ?
+            renderIpList(ipv4ns[dc]) :
+            renderIpList(ipv6nsSuffix.map(
+              suffix => ipv6ns[dc] + suffix
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  );
+
+  return nameservers;
+}
+
 
 export class NetworkingPage extends Component {
   constructor() {
@@ -10,36 +40,6 @@ export class NetworkingPage extends Component {
     this.getLinode = getLinode.bind(this);
     this.renderIPv4Public = this.renderIPv4Public.bind(this);
     this.renderIPv6Public = this.renderIPv6Public.bind(this);
-    this.nameserversList = this.nameserversList.bind(this);
-    this.ipList = this.ipList.bind(this);
-  }
-
-  ipList(ips) {
-    return ips.map(ip => <li key={ip}>{ip}</li>);
-  }
-
-  nameserversList(isIPv4, linode) {
-    const dc = linode.datacenter.id;
-    const nameservers = (
-      <div className="form-group row">
-        <div className="col-sm-4 label-col left">
-          Nameservers
-        </div>
-        <div className="col-sm-8 content-col right">
-          <ul className="list-unstyled">
-            {
-              isIPv4 ?
-              this.ipList(ipv4ns[dc]) :
-              this.ipList(ipv6nsSuffix.map(
-                suffix => ipv6ns[dc] + suffix
-              ))
-            }
-          </ul>
-        </div>
-      </div>
-    );
-
-    return nameservers;
   }
 
   renderIPv4Public() {
@@ -77,7 +77,7 @@ export class NetworkingPage extends Component {
             {ipv4.substring(0, ipv4.lastIndexOf('.'))}.1
           </div>
         </div>
-        {this.nameserversList(true, this.getLinode())}
+        {renderNameserversList(true, this.getLinode())}
       </div>
     );
   }
@@ -110,7 +110,7 @@ export class NetworkingPage extends Component {
             FIXME::1
           </div>
         </div>
-        {this.nameserversList(false, this.getLinode())}
+        {renderNameserversList(false, this.getLinode())}
       </div>
     );
   }
@@ -150,7 +150,7 @@ export class NetworkingPage extends Component {
           <div className="row">
             <div className="col-sm-6 left">
               <div className="form-group">
-                {"No private IP addresses."}
+                No private IP addresses.
               </div>
               <div className="form-group row">
                 <div className="col-sm-4 label-col">

@@ -4,6 +4,14 @@ import _ from 'lodash';
 import { flags } from '~/assets';
 import { regionMap } from '~/constants';
 
+function renderHeader() {
+  return (
+    <header>
+      <h2>Datacenter</h2>
+    </header>
+  );
+}
+
 export default class Datacenter extends Component {
   constructor() {
     super();
@@ -11,19 +19,11 @@ export default class Datacenter extends Component {
     this.renderDisabled = this.renderDisabled.bind(this);
   }
 
-  renderHeader() {
-    return (
-      <header>
-        <h2>Datacenter</h2>
-      </header>
-    );
-  }
-
   renderDatacenter(datacenter) {
     const { selected, onDatacenterSelected } = this.props;
     const dcClass = datacenter.id === selected ? 'selected' : '';
     return (
-      <div
+      <div // eslint-disable-line jsx-a11y/no-static-element-interactions
         className={`datacenter ${dcClass}`}
         key={datacenter.id}
         onClick={() => onDatacenterSelected(datacenter.id)}
@@ -63,7 +63,7 @@ export default class Datacenter extends Component {
     const dc = Object.values(datacenters).find(dc => dc.id === selected);
     return (
       <div>
-        {this.renderHeader()}
+        {renderHeader()}
         <div className="datacenters">
           <p>
             The source you selected limits the datacenters you may deploy
@@ -81,7 +81,7 @@ export default class Datacenter extends Component {
     }
     return (
       <div>
-        {this.renderHeader()}
+        {renderHeader()}
         <div className="datacenters">
           {_.map(regionMap, this.renderRegion)}
         </div>
