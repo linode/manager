@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import { push } from 'react-router-redux';
+import { push, withRouter } from 'react-router-redux';
 
 import Dropdown from '~/components/Dropdown';
 import { LinodeStates, LinodeStatesReadable } from '~/constants';
@@ -55,12 +55,23 @@ export function renderTabs(tabList, selected, isSubtab = false) {
   );
 }
 
+function renderLabel(linode) {
+  const label = linode.group ?
+    <span>{linode.group} / {linode.label}</span> :
+      <span>{linode.label}</span>;
+
+  return (
+    <div style={{ display: 'inline-block' }}>
+      <h1>{label}</h1>
+    </div>
+  );
+}
+
 export class IndexPage extends Component {
   constructor() {
     super();
     this.getLinode = getLinode.bind(this);
     this.render = this.render.bind(this);
-    this.renderLabel = this.renderLabel.bind(this);
     this.renderTabs = renderTabs.bind(this);
     this.loadLinode = module.exports.loadLinode.bind(this);
     this.componentDidMount = this.componentDidMount.bind(this);
@@ -78,35 +89,23 @@ export class IndexPage extends Component {
     });
   }
 
-  renderLabel(linode) {
-    const label = linode.group ?
-      <span>{linode.group} / {linode.label}</span> :
-      <span>{linode.label}</span>;
-
-    return (
-      <div style={{ display: 'inline-block' }}>
-        <h1>{label}</h1>
-      </div>
-    );
-  }
-
   renderHeader() {
     const linode = this.getLinode();
     const { dispatch } = this.props;
 
     const dropdownElements = [
       {
-        name: <span><i className="fa fa-refresh"></i> Reboot</span>,
+        name: <span><i className="fa fa-refresh" /> Reboot</span>,
         _action: rebootLinode,
         _condition: () => linode.status !== 'offline',
       },
       {
-        name: <span><i className="fa fa-power-off"></i> Power off</span>,
+        name: <span><i className="fa fa-power-off" /> Power off</span>,
         _action: powerOffLinode,
         _condition: () => linode.status === 'running',
       },
       {
-        name: <span><i className="fa fa-power-off"></i> Power on</span>,
+        name: <span><i className="fa fa-power-off" /> Power on</span>,
         _action: powerOnLinode,
         _condition: () => linode.status === 'offline',
       },
@@ -123,7 +122,7 @@ export class IndexPage extends Component {
     return (
       <header className="main-header">
         <div className="container">
-          {this.renderLabel(linode)}
+          {renderLabel(linode)}
           {LinodeStates.pending.indexOf(linode.status) !== -1 ? null :
             <span className="pull-right">
               <Dropdown elements={dropdownElements} leftOriented={false} />
@@ -155,7 +154,8 @@ export class IndexPage extends Component {
 
   render() {
     const linode = this.getLinode();
-    if (!linode) return <span></span>;
+    const { location } = this.props;
+    if (!linode) return <span />;
 
     const tabList = [
       { name: 'Dashboard', link: '' },
@@ -174,7 +174,7 @@ export class IndexPage extends Component {
     return (
       <div className="details-page">
         {this.renderHeader(linode)}
-        <div className="main-header-fix"></div>
+        <div className="main-header-fix" />
         {this.renderTabs(tabList, selected)}
       </div>
     );
@@ -183,20 +183,16 @@ export class IndexPage extends Component {
 
 IndexPage.propTypes = {
   dispatch: PropTypes.func,
-  username: PropTypes.string,
-  linodes: PropTypes.object,
+  linodes: PropTypes.object, // eslint-disable-line react/no-unused-prop-types
   params: PropTypes.shape({
-    linodeId: PropTypes.string,
+    linodeId: PropTypes.string, // eslint-disable-line react/no-unused-prop-types
   }),
-  detail: PropTypes.object,
-  children: PropTypes.node,
-  location: PropTypes.object,
-  router: PropTypes.object,
-  route: PropTypes.object,
+  children: PropTypes.node, // eslint-disable-line react/no-unused-prop-types
+  location: PropTypes.string,
 };
 
 function select(state) {
   return { linodes: state.api.linodes };
 }
 
-export default connect(select)(IndexPage);
+export default withRouter(connect(select)(IndexPage));

@@ -2,13 +2,13 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
+import { parallel } from '~/api/util';
+import { linodes, distributions, datacenters, types } from '~/api';
+import { setError } from '~/actions/errors';
 import Source from '../components/Source';
 import Plan from '../components/Plan';
 import Datacenter from '../components/Datacenter';
 import Details from '../components/Details';
-import { parallel } from '~/api/util';
-import { linodes, distributions, datacenters, types } from '~/api';
-import { setError } from '~/actions/errors';
 
 export class IndexPage extends Component {
   constructor() {
@@ -72,7 +72,7 @@ export class IndexPage extends Component {
         dispatch(push(`/linodes/${linode.id}`));
       } else {
         this.setState({ loading: true, progress: 0 });
-        for (let i = 0; i < labels.length; ++i) {
+        for (let i = 0; i < labels.length; i += 1) {
           const label = labels[i] || `${labels[0]}-${i}`;
           await this.createLinode({ group, label, password, backups });
           this.setState({ progress: (i + 1) / labels.length });
@@ -121,7 +121,7 @@ export class IndexPage extends Component {
               className="progress"
               value={progress}
               max="1"
-            ></progress>
+            />
           </div>
         </div>
       </div>
