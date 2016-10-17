@@ -139,6 +139,7 @@ export class IndexPage extends Component {
         </table>
       </section>
     );
+  }
 
   renderActions() {
     const elements = [
