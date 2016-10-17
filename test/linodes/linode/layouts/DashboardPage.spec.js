@@ -184,7 +184,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
     expect(page.find('.input-group').at(0).find('button').length).to.equal(1);
   });
 
-  it('renders shh path', () => {
+  it('renders ssh path', () => {
     const ipv4 = testLinode.ipv4.address;
     const sshPath = `ssh root@${ipv4}`;
     const page = shallow(
@@ -238,6 +238,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
     expect(page.find('#glish-button').length).to.equal(1);
   });
 
+  /*
   describe('performance graph', () => {
     it('renders source options', () => {
       const page = shallow(
@@ -295,4 +296,5 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
       expect(page.find('Chart').length).to.equal(1);
     });
   });
+  */
 });
