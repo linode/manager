@@ -48,7 +48,6 @@ export default class StatusDropdown extends Component {
       ...element,
       action: () => {
         this.close();
-        console.log(element._action(linode.id, this.state.config || null));
         dispatch(element._action(linode.id, this.state.config || null));
       },
     }));
