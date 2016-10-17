@@ -104,6 +104,13 @@ export class DashboardPage extends Component {
   }
 
   renderGraphs() {
+    return (
+      <section className="card graphs">
+        Todo
+      </section>
+    );
+
+    /* Wait until the data exists because displaying this for not reals is too confusing.
     const graph = this.graphSelection();
     return (
       <section className="card graphs">
@@ -143,6 +150,7 @@ export class DashboardPage extends Component {
         />
       </section>
     );
+    */
   }
 
   renderDetails() {
