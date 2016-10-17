@@ -4,7 +4,7 @@ import { mount } from 'enzyme';
 import { expect } from 'chai';
 import StatusDropdown from '../../src/components/StatusDropdown';
 
-import { api, freshState } from '@/data';
+import { api } from '@/data';
 
 const { linodes } = api;
 
@@ -44,49 +44,52 @@ describe('components/StatusDropdown', () => {
       to.contain(' Power off');
   });
 
-  it('has a clickable dropdown', () => {
-    const dispatch = sinon.spy();
+  it('closes on second click', () => {
     const dropdown = mount(
-      <StatusDropdown linode={linodes.linodes[1235]} jdispatch={dispatch} />
+      <StatusDropdown linode={linodes.linodes[1235]} dispatch={() => {}} />
     );
 
     dropdown.find('.dropdown-toggle').simulate('click');
-    dropdown.find('.dropdown-item').at(0).simulate('click');
-    console.log(dispatch.getCall(0).args);
-    expect(dispatch.calledWith({
-      type: HIDE_MODAL, // ??
-    })).to.equal(true);
-  });
-
-/*
-  it('closes on second click', () => {
-    const noAction = () => {};
-    const dropdown = mount(<StatusDropdown
-      elements={[
-        { action: noAction, name: '' },
-        { action: noAction, name: '' },
-      ]}
-    />);
-
-    dropdown.find('.dropdown-toggle').simulate('click');
     expect(dropdown.find('.btn-group.open').length).to.equal(1);
+
     dropdown.find('.dropdown-toggle').simulate('click');
     expect(dropdown.find('.btn-group.open').length).to.equal(0);
   });
 
   it('closes on blur', () => {
-    const noAction = () => {};
-    const dropdown = mount(<StatusDropdown
-      elements={[
-        { action: noAction, name: '' },
-        { action: noAction, name: '' },
-      ]}
-    />);
+    const dropdown = mount(
+      <StatusDropdown linode={linodes.linodes[1235]} dispatch={() => {}} />
+    );
 
     dropdown.find('.dropdown-toggle').simulate('click');
     expect(dropdown.find('.btn-group.open').length).to.equal(1);
+
     dropdown.find('.dropdown-toggle').simulate('blur');
     expect(dropdown.find('.btn-group.open').length).to.equal(0);
   });
-*/
+
+  it('closes on item click', () => {
+    const dropdown = mount(
+      <StatusDropdown linode={linodes.linodes[1235]} dispatch={() => {}} />
+    );
+
+    dropdown.find('.dropdown-toggle').simulate('click');
+    expect(dropdown.find('.btn-group.open').length).to.equal(1);
+
+    dropdown.find('.dropdown-item').first().simulate('mousedown');
+    expect(dropdown.find('.btn-group.open').length).to.equal(0);
+  });
+
+  it('dispatches on item click', () => {
+    const dispatch = sinon.spy();
+    const dropdown = mount(
+      <StatusDropdown linode={linodes.linodes[1235]} dispatch={dispatch} />
+    );
+
+    dropdown.find('.dropdown-toggle').simulate('click');
+    expect(dropdown.find('.btn-group.open').length).to.equal(1);
+
+    dropdown.find('.dropdown-item').first().simulate('mousedown');
+    expect(dispatch.calledOnce).to.equal(true);
+  });
 });
