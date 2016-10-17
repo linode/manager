@@ -10,8 +10,6 @@ import {
   renderPlanStyle,
 } from '~/linodes/components/Linode';
 import { getLinode, loadLinode } from './IndexPage';
-import { ResponsiveLineChart } from '~/components/ResponsiveCharts';
-
 
 export class DashboardPage extends Component {
   constructor() {
