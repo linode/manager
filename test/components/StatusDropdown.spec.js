@@ -1,9 +1,10 @@
 import React from 'react';
 import sinon from 'sinon';
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 import StatusDropdown from '../../src/components/StatusDropdown';
 
+import { expectRequest } from '@/common';
 import { api } from '@/data';
 
 const { linodes } = api;
@@ -16,7 +17,7 @@ describe('components/StatusDropdown', () => {
   });
 
   it('renders correct options for offline Linodes', () => {
-    const dropdown = mount(
+    const dropdown = shallow(
       <StatusDropdown linode={linodes.linodes[1236]} dispatch={() => {}} />
     );
 
@@ -30,7 +31,7 @@ describe('components/StatusDropdown', () => {
   });
 
   it('renders correct options for online Linodes', () => {
-    const dropdown = mount(
+    const dropdown = shallow(
       <StatusDropdown linode={linodes.linodes[1235]} dispatch={() => {}} />
     );
 
@@ -45,7 +46,7 @@ describe('components/StatusDropdown', () => {
   });
 
   it('closes on second click', () => {
-    const dropdown = mount(
+    const dropdown = shallow(
       <StatusDropdown linode={linodes.linodes[1235]} dispatch={() => {}} />
     );
 
@@ -69,7 +70,7 @@ describe('components/StatusDropdown', () => {
   });
 
   it('closes on item click', () => {
-    const dropdown = mount(
+    const dropdown = shallow(
       <StatusDropdown linode={linodes.linodes[1235]} dispatch={() => {}} />
     );
 
@@ -80,9 +81,9 @@ describe('components/StatusDropdown', () => {
     expect(dropdown.find('.btn-group.open').length).to.equal(0);
   });
 
-  it('dispatches on item click', () => {
+  it('dispatches on item click', async () => {
     const dispatch = sinon.spy();
-    const dropdown = mount(
+    const dropdown = shallow(
       <StatusDropdown linode={linodes.linodes[1235]} dispatch={dispatch} />
     );
 
@@ -90,6 +91,10 @@ describe('components/StatusDropdown', () => {
     expect(dropdown.find('.btn-group.open').length).to.equal(1);
 
     dropdown.find('.dropdown-item').first().simulate('mousedown');
-    expect(dispatch.calledOnce).to.equal(true);
+    const reboot = dispatch.firstCall.args[0];
+    await expectRequest(reboot, '/linode/instances/1235/reboot',
+      () => {}, null, options => {
+        expect(options.method).to.equal('POST');
+      });
   });
 });
