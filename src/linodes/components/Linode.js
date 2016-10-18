@@ -62,6 +62,15 @@ export function renderDatacenterStyle(linode) {
   );
 }
 
+export function launchWeblishConsole(linode) {
+  const weblishRef = window.open(
+    `${window.location.protocol}//${window.location.host}/linodes/${linode.id}/weblish`,
+    `weblish_con_${linode.username}`,
+    'left=100,top=100,width=990,height=590,toolbar=0,resizable=1'
+  );
+}
+
+
 export function getNextBackup(linode) {
   const windows = {
     W0: moment().hour(0),
