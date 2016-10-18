@@ -94,35 +94,6 @@ describe('linodes/components/Linode', () => {
     expect(onSelect.calledOnce).to.equal(true);
   });
 
-  it('invokes the onReboot function when the button is pressed', () => {
-    const onReboot = sandbox.spy();
-    const linode = shallow(
-      <Linode
-        linode={testLinode}
-        isSelected={false}
-        onReboot={onReboot}
-      />);
-
-    linode.find('.linode-power').simulate('click');
-
-    expect(onReboot.calledOnce).to.equal(true);
-  });
-
-  it('invokes the onPowerOn function when the button is pressed', () => {
-    const onPowerOn = sandbox.spy();
-    const testLinodeOff = { ...testLinode, status: 'offline' };
-    const linode = shallow(
-      <Linode
-        linode={testLinodeOff}
-        isSelected={false}
-        onPowerOn={onPowerOn}
-      />);
-
-    linode.find('.linode-power').simulate('click');
-
-    expect(onPowerOn.calledOnce).to.equal(true);
-  });
-
   describe('renderBackupStatus', () => {
     const linode = {
       id: 1234,

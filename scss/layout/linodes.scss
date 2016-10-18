@@ -32,10 +32,12 @@
 
     .header-secondary {
         margin-bottom: 0;
+        height: 45px;
         & > * {
             display: inline-block;
             &:not(:last-child) {
                 margin-left: 5px;
+                line-height: 30px;
             }
         }
 
