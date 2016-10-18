@@ -99,6 +99,7 @@ export class IndexPage extends Component {
         isRow={row}
         onPowerOn={this.powerOn}
         onReboot={this.reboot}
+        dispatch={this.props.dispatch}
       />;
 
     const { view } = this.props;
@@ -126,7 +127,6 @@ export class IndexPage extends Component {
             <tr>
               <th>&nbsp;</th>
               <th>Label</th>
-              <th>Status</th>
               <th>IP Address</th>
               <th>Datacenter</th>
               <th>Backups</th>

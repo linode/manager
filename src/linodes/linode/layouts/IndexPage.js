@@ -4,11 +4,10 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { push } from 'react-router-redux';
 
-import Dropdown from '~/components/Dropdown';
-import { LinodeStates, LinodeStatesReadable } from '~/constants';
+import StatusDropdown from '~/components/StatusDropdown';
+import { LinodeStates } from '~/constants';
 import { setError } from '~/actions/errors';
 import { linodes } from '~/api';
-import { powerOnLinode, powerOffLinode, rebootLinode } from '~/api/linodes';
 
 export function getLinode() {
   const { linodes } = this.props.linodes;
@@ -92,30 +91,6 @@ export class IndexPage extends Component {
 
   renderHeader() {
     const linode = this.getLinode();
-    const { dispatch } = this.props;
-
-    const dropdownElements = [
-      {
-        name: <span><i className="fa fa-refresh"></i> Reboot</span>,
-        _action: rebootLinode,
-        _condition: () => linode.status !== 'offline',
-      },
-      {
-        name: <span><i className="fa fa-power-off"></i> Power off</span>,
-        _action: powerOffLinode,
-        _condition: () => linode.status === 'running',
-      },
-      {
-        name: <span><i className="fa fa-power-off"></i> Power on</span>,
-        _action: powerOnLinode,
-        _condition: () => linode.status === 'offline',
-      },
-    ]
-    .filter(element => element._condition())
-    .map(element => ({
-      ...element,
-      action: () => dispatch(element._action(linode.id, this.state.config || null)),
-    }));
 
     const renderConfigSelect = linode._configs.totalResults > 1 &&
       LinodeStates.pending.indexOf(linode.status) === -1;
@@ -124,10 +99,9 @@ export class IndexPage extends Component {
       <header className="main-header">
         <div className="container">
           {this.renderLabel(linode)}
-          {LinodeStates.pending.indexOf(linode.status) !== -1 ? null :
-            <span className="pull-right">
-              <Dropdown elements={dropdownElements} leftOriented={false} />
-            </span>}
+          <span className="pull-right">
+            <StatusDropdown linode={linode} leftOriented={false} dispatch={this.props.dispatch} />
+          </span>
           {!renderConfigSelect ? null :
             <span
               className="pull-right configs"
@@ -142,12 +116,6 @@ export class IndexPage extends Component {
                   <option key={config.id} value={config.id}>{config.label}</option>)}
               </select>
             </span>}
-          <span
-            className={`pull-right linode-status ${linode.status}`}
-            style={{ paddingRight: '15px', lineHeight: '30px' }}
-          >
-            {LinodeStatesReadable[linode.status]}
-          </span>
         </div>
       </header>
     );
