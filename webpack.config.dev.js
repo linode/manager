@@ -21,7 +21,8 @@ module.exports = {
     new webpack.DefinePlugin({
       'ENV_API_ROOT': JSON.stringify(process.env.API_ROOT),
       'ENV_LOGIN_ROOT': JSON.stringify(process.env.LOGIN_ROOT),
-      'ENV_APP_ROOT': JSON.stringify(process.env.APP_ROOT)
+      'ENV_APP_ROOT': JSON.stringify(process.env.APP_ROOT),
+      'ENV_GA_ID': JSON.stringify(process.env.GA_ID)
     })
   ],
   module: {
