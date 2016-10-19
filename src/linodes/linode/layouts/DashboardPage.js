@@ -262,7 +262,8 @@ export class DashboardPage extends Component {
                     <button
                       type="button"
                       className="btn btn-default"
-                      onClick={() => launchWeblishConsole(linode)}>
+                      onClick={() => launchWeblishConsole(linode)}
+                    >
                       Open
                     </button>
                   </span>
