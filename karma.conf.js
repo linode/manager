@@ -58,7 +58,8 @@ module.exports = function(config) {
         new webpack.DefinePlugin({
           ENV_API_ROOT: null,
           ENV_LOGIN_ROOT: null,
-          ENV_APP_ROOT: null
+          ENV_APP_ROOT: null,
+          ENV_GA_ID: null
         }),
         new CircularDependencyPlugin({
           failOnError: true,
