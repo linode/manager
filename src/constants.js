@@ -2,6 +2,7 @@ export const API_ROOT = ENV_API_ROOT || 'https://api.alpha.linode.com/v4'; // es
 export const LOGIN_ROOT = ENV_LOGIN_ROOT || 'https://login.alpha.linode.com'; // eslint-disable-line no-undef
 export const APP_ROOT = ENV_APP_ROOT || 'http://localhost:3000'; // eslint-disable-line no-undef
 export const GA_ID = ENV_GA_ID || '000000'; // eslint-disable-line no-undef
+export const WEBENGAGE_ID = ENV_WEBENGAGE_ID || ''; // eslint-disable-line no-undef
 
 export const LinodeStates = {
   pending: [
