@@ -6,6 +6,9 @@ import store from './store';
 import { Router, Route, IndexRedirect, browserHistory } from 'react-router';
 import DevTools from './components/DevTools';
 import { syncHistoryWithStore } from 'react-router-redux';
+import { ReactGA } from 'react-ga';
+import { GA_ID } from './constants';
+ReactGA.initialize(GA_ID);
 
 import checkLogin, { initializeAuthentication } from './session';
 
@@ -29,11 +32,16 @@ import { hideModal } from '~/actions/modal';
 import { actions, thunks, reducer } from '~/api/configs/linodes';
 window.actions = actions; window.thunks = thunks; window.reducer = reducer;
 
+function logPageView() {
+  ReactGA.set({ page: window.location.pathname });
+  ReactGA.pageview(window.location.pathname);
+}
+
 const init = () => {
   render(
     <Provider store={store}>
       <div>
-        <Router history={history}>
+        <Router history={history} onUpdate={logPageView}>
           <Route
             onEnter={checkLogin}
             onChange={() => store.dispatch(hideModal())}
