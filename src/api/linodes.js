@@ -27,11 +27,21 @@ export function rebootLinode(id, config = null) {
     JSON.stringify({ config }));
 }
 
+export function lishToken(linodeId) {
+  return async (dispatch, getState) => {
+    const state = getState();
+    const { token } = state.authentication;
+    const result = await fetch(token, `/linode/instances/${linodeId}/lish_token`,
+                                      { method: 'POST' });
+    return await result.json();
+  };
+}
+
 export function resetPassword(linodeId, diskId, password) {
   return async (dispatch, getState) => {
     const state = getState();
     const { token } = state.authentication;
-    await fetch(token, `/linode/instances/${linodeId}/disks/${diskId}/rootpass`,
+    await fetch(token, `/linode/instances/${linodeId}/disks/${diskId}/password`,
       {
         method: 'POST',
         body: JSON.stringify({ password }),
