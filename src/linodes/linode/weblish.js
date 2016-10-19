@@ -6,6 +6,15 @@ import { Terminal } from 'term.js';
 import { LISH_ROOT } from '~/constants';
 import { lishToken } from '~/api/linodes';
 
+function addCSSLink(url) {
+  const head = window.document.querySelector('head');
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.type = 'text/css';
+  link.href = url;
+  head.appendChild(link);
+}
+
 export class Weblish extends Component {
   constructor() {
     super();
@@ -50,13 +59,13 @@ export class Weblish extends Component {
     });
     window.terminal = terminal;
     window.document.title = 'Linode Lish Console';
+    addCSSLink("/assets/weblish/weblish-fonts.css");
+    addCSSLink("/assets/weblish/weblish.css");
   }
 
   render() {
     return this.state.renderingLish ? null : (
       <div>
-        <link rel="stylesheet" href="/linodes/linode/weblish/PowerlineFonts.css" />
-        <link rel="stylesheet" href="/linodes/linode/weblish/weblish.css" />
         <div id="disconnected">
           <h2>Connection Lost</h2>
           <p>Lish appears to be temporarily unavailable.</p>
