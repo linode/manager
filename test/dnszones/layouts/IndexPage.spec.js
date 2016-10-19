@@ -47,6 +47,12 @@ describe('dnszones/layouts/IndexPage', () => {
     expect(table.length).to.equal(1);
     expect(table.find('tbody tr').length).to.equal(
       Object.keys(dnszones.dnszones).length);
+    expect(table.find('tbody tr td').at(1).find('Link').props().to)
+      .to.equal('/dnszones/1');
+    expect(table.find('tbody tr td').at(2).text())
+    .to.equal('master');
+    expect(table.find('tbody tr td').at(3).find('a').text())
+      .to.equal('Delete');
   });
 
   it('shows the delete modal when delete is pressed', () => {
@@ -58,7 +64,8 @@ describe('dnszones/layouts/IndexPage', () => {
       />
     );
 
-    const zoneDelete = page.find('table tbody tr a').at(1);
+    const zoneDelete = page.find('tbody tr a').at(0);
+    dispatch.reset();
     zoneDelete.simulate('click');
     expect(dispatch.calledOnce).to.equal(true);
     expect(dispatch.firstCall.args[0])
