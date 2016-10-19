@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router'; 
+import { withRouter } from 'react-router';
 import { Terminal } from 'term.js';
 
 import { LISH_ROOT } from '~/constants';
@@ -13,6 +13,18 @@ export class Weblish extends Component {
       token: '',
       renderingLish: false,
     };
+  }
+
+  componentWillMount() {
+    this.connect();
+  }
+
+  async connect() {
+    const { dispatch, params: { linodeId } } = this.props;
+    const { lish_token: token } = await dispatch(lishToken(linodeId));
+    const socket = new WebSocket(`${LISH_ROOT}:8181/${token}/weblish`);
+    socket.addEventListener('open', () =>
+      this.setState({ renderingLish: true }, this.renderTerminal(socket)));
   }
 
   renderTerminal(socket) {
@@ -40,18 +52,6 @@ export class Weblish extends Component {
     window.document.title = 'Linode Lish Console';
   }
 
-  async connect() {
-    const { dispatch, params: { linodeId } } = this.props;
-    const { lish_token } = await dispatch(lishToken(linodeId));
-    const socket = new WebSocket(`${LISH_ROOT}:8181/${lish_token}/weblish`);
-    socket.addEventListener('open', () =>
-      this.setState({ renderingLish: true }, this.renderTerminal(socket)));
-  }
-  
-  componentWillMount() {
-    this.connect();
-  }
-
   render() {
     return this.state.renderingLish ? null : (
       <div>
@@ -72,6 +72,6 @@ Weblish.propTypes = {
   params: PropTypes.shape({
     linodeId: PropTypes.string.isRequired,
   }).isRequired,
-}
+};
 
 export default withRouter(connect()(Weblish));
