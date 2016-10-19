@@ -47,11 +47,14 @@ describe('dnszones/layouts/IndexPage', () => {
     expect(table.length).to.equal(1);
     expect(table.find('tbody tr').length).to.equal(
       Object.keys(dnszones.dnszones).length);
-    expect(table.find('tbody tr td').at(1).find('Link').props().to)
+    expect(table.find('tbody tr td').at(1).find('Link')
+                .props().to)
       .to.equal('/dnszones/1');
-    expect(table.find('tbody tr td').at(2).text())
+    expect(table.find('tbody tr td').at(2)
+                .text())
     .to.equal('master');
-    expect(table.find('tbody tr td').at(3).find('a').text())
+    expect(table.find('tbody tr td').at(3).find('a')
+                .text())
       .to.equal('Delete');
   });
 
