@@ -46,7 +46,7 @@ const init = () => {
         <Router history={history} onUpdate={logPageView}>
           <Route
             onEnter={checkLogin}
-            path="/linodes/:linodeid/weblish"
+            path="/linodes/:linodeId/weblish"
             component={Weblish}
           />
           <Route

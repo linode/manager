@@ -94,6 +94,7 @@
     "fontawesome": "^4.5.0",
     "history": "^2.1.2",
     "isomorphic-fetch": "^2.2.0",
+    "knockout": "^3.4.0",
     "md5": "^2.1.0",
     "moment": "^2.13.0",
     "node-sass": "^3.4.2",
@@ -111,6 +112,7 @@
     "redux-thunk": "^2.1.0",
     "sass-loader": "^3.1.2",
     "style-loader": "^0.13.0",
+    "term.js": "^0.0.7",
     "zxcvbn": "^4.3.0"
   }
 }
