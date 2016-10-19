@@ -1,6 +1,6 @@
 import {
-  genConfig, genThunks, genReducer, genActions,
-  ONE, MANY, PUT, DELETE, POST
+  genConfig, genReducer, genActions,
+  ONE, MANY, PUT, DELETE, POST,
 } from '~/api/gen';
 
 export const config = genConfig({
