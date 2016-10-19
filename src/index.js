@@ -21,7 +21,7 @@ import { NotFound } from './components/Error';
 import Linodes from './linodes';
 import NodeBalancers from './nodebalancers';
 import Longview from './longview';
-import DNSManager from './dnsmanager';
+import DNSZones from './dnszones';
 import Account from './account';
 import Support from './support';
 import { hideModal } from '~/actions/modal';
@@ -44,7 +44,7 @@ const init = () => {
             {Linodes}
             {NodeBalancers}
             {Longview}
-            {DNSManager}
+            {DNSZones}
             {Account}
             {Support}
             <Route path="oauth">
