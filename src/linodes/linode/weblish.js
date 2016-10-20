@@ -59,8 +59,8 @@ export class Weblish extends Component {
     });
     window.terminal = terminal;
     window.document.title = 'Linode Lish Console';
-    addCSSLink("/assets/weblish/weblish-fonts.css");
-    addCSSLink("/assets/weblish/weblish.css");
+    addCSSLink('/assets/weblish/weblish-fonts.css');
+    addCSSLink('/assets/weblish/weblish.css');
   }
 
   render() {
