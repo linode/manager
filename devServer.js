@@ -8,7 +8,7 @@ var mime = require('mime');
 var app = express();
 var compiler = webpack(config);
 
-app.use('/assets', express.static('assets'));
+app.use('/assets', express.static(__dirname + '/assets'));
 
 app.use(require('webpack-dev-middleware')(compiler, {
   noInfo: true,

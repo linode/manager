@@ -219,7 +219,7 @@ describe('linodes/linode/layouts/RescuePage', () => {
       const fn = dispatch.firstCall.args[0];
 
       const dispatched = () => ({ authentication: { token: 'hi' } });
-      await expectRequest(fn, '/linode/instances/1237/disks/1234/rootpass', dispatched,
+      await expectRequest(fn, '/linode/instances/1237/disks/1234/password', dispatched,
                          { }, { method: 'POST' });
     });
 

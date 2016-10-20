@@ -111,6 +111,7 @@
     "redux-thunk": "^2.1.0",
     "sass-loader": "^3.1.2",
     "style-loader": "^0.13.0",
+    "xterm": "^2.0.1",
     "zxcvbn": "^4.3.0"
   }
 }

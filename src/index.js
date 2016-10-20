@@ -22,6 +22,7 @@ import Layout from './layouts/Layout';
 import OAuthCallbackPage from './layouts/OAuth';
 import { NotFound } from './components/Error';
 import Linodes from './linodes';
+import Weblish from './linodes/linode/layouts/Weblish';
 import NodeBalancers from './nodebalancers';
 import Longview from './longview';
 import DNSZones from './dnszones';
@@ -43,6 +44,11 @@ const init = () => {
     <Provider store={store}>
       <div>
         <Router history={history} onUpdate={logPageView}>
+          <Route
+            onEnter={checkLogin}
+            path="/linodes/:linodeId/weblish"
+            component={Weblish}
+          />
           <Route
             onEnter={checkLogin}
             onChange={() => store.dispatch(hideModal())}
