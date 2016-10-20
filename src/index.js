@@ -22,7 +22,7 @@ import Layout from './layouts/Layout';
 import OAuthCallbackPage from './layouts/OAuth';
 import { NotFound } from './components/Error';
 import Linodes from './linodes';
-import Weblish from './linodes/linode/weblish';
+import Weblish from './linodes/linode/layouts/Weblish';
 import NodeBalancers from './nodebalancers';
 import Longview from './longview';
 import DNSZones from './dnszones';
