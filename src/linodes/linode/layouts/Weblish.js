@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { Terminal } from 'term.js';
 
 import { LISH_ROOT } from '~/secrets';
 import { lishToken } from '~/api/linodes';
@@ -15,6 +14,13 @@ function addCSSLink(url) {
   head.appendChild(link);
 }
 
+function addJSScript(url) {
+  const head = window.document.querySelector('head');
+  const script = document.createElement('script');
+  script.src = url;
+  head.appendChild(script);
+}
+
 export class Weblish extends Component {
   constructor() {
     super();
@@ -22,6 +28,11 @@ export class Weblish extends Component {
       token: '',
       renderingLish: false,
     };
+
+    addCSSLink('/assets/weblish/weblish-fonts.css');
+    addCSSLink('/assets/weblish/weblish.css');
+    addJSScript('/assets/weblish/xterm.js');
+    addCSSLink('/assets/weblish/xterm.css');
   }
 
   componentWillMount() {
@@ -37,18 +48,16 @@ export class Weblish extends Component {
   }
 
   renderTerminal(socket) {
-    const terminal = new Terminal({
+    const terminal = new window.Terminal({
       cols: 120,
       rows: 32,
-      screenKeys: false,
-      debug: true,
-      useStyle: true,
     });
 
-    terminal.on('data', data => socket.send(data));
+    terminal.on('data', data =>
+      socket.send(data));
     terminal.open(document.body);
 
-    terminal.write('\x1b[32mLinode Lish Console\x1b[m\r\n');
+    terminal.writeln('\x1b[32mLinode Lish Console\x1b[m');
 
     socket.addEventListener('message', evt =>
       terminal.write(evt.data));
@@ -59,8 +68,6 @@ export class Weblish extends Component {
     });
     window.terminal = terminal;
     window.document.title = 'Linode Lish Console';
-    addCSSLink('/assets/weblish/weblish-fonts.css');
-    addCSSLink('/assets/weblish/weblish.css');
   }
 
   render() {
