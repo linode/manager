@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Terminal } from 'term.js';
 
-import { LISH_ROOT } from '~/constants';
+import { LISH_ROOT } from '~/secrets';
 import { lishToken } from '~/api/linodes';
 
 function addCSSLink(url) {

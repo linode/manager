@@ -14,8 +14,7 @@ _.plugins = [
     'ENV_API_ROOT': JSON.stringify(process.env.API_ROOT),
     'ENV_LOGIN_ROOT': JSON.stringify(process.env.LOGIN_ROOT),
     'ENV_GA_ID': JSON.stringify(process.env.GA_ID),
-    'ENV_WEBENGAGE_ID': JSON.stringify(process.env.WEBENGAGE_ID),
-    'ENV_LISH_ROOT': JSON.stringify(process.env.LISH_ROOT)
+    'ENV_WEBENGAGE_ID': JSON.stringify(process.env.WEBENGAGE_ID)
   }),
   new webpack.optimize.UglifyJsPlugin({
     compressor: {
