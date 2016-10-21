@@ -18,7 +18,13 @@
     "url": "https://github.com/Linode/manager.git"
   },
   "keywords": [],
-  "author": "Drew DeVault <ddevault@linode.com> et al",
+  "author": "Linode",
+  "contributors": [
+    {
+      "name": "Phil Eaton",
+      "email": "peaton@linode.com"
+    }
+  ],
   "license": "BSD-3-Clause",
   "bugs": {
     "url": "https://github.com/Linode/manager/issues"
