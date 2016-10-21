@@ -129,8 +129,8 @@ export class NetworkingPage extends Component {
       <div>
         <section className="card">
           <header className="clearfix">
-            <h2 className="pull-xs-left">Public network</h2>
-            <button type="button" id="public-ip-button" className="btn btn-default pull-xs-right">
+            <h2 className="float-xs-left">Public network</h2>
+            <button type="button" id="public-ip-button" className="btn btn-default float-xs-right">
               Add public IP address
             </button>
           </header>
@@ -142,8 +142,8 @@ export class NetworkingPage extends Component {
 
         <section className="card">
           <header className="clearfix">
-            <h2 className="pull-xs-left">Private network</h2>
-            <button type="button" id="private-ip-button" className="btn btn-default pull-xs-right">
+            <h2 className="float-xs-left">Private network</h2>
+            <button type="button" id="private-ip-button" className="btn btn-default float-xs-right">
               Add private IP address
             </button>
           </header>

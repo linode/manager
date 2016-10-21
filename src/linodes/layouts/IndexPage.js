@@ -108,7 +108,7 @@ export class IndexPage extends Component {
         <div key={group} className="row linodes">
           {!group ? null : (
             <div className="col-md-12">
-              <h2 className="text-muted display-group">{group}</h2>
+              <h3 className="display-group">{group}</h3>
             </div>
            )}
            {sortedLinodes.map(l =>
@@ -121,7 +121,7 @@ export class IndexPage extends Component {
 
     return (
       <section key={group} className="linodes">
-        {group ? <h2 className="display-group text-muted">{group}</h2> : ''}
+        {group ? <h3 className="display-group">{group}</h3> : ''}
         <table className="linodes">
           <thead>
             <tr>
@@ -190,20 +190,20 @@ export class IndexPage extends Component {
       <div className={`container linodes-page ${view}`}>
         <header>
           <div className="mainmenu">
-            <Link to="/linodes/create" className="linode-add btn btn-primary pull-right">
+            <Link to="/linodes/create" className="linode-add btn btn-primary float-xs-right">
               <span className="fa fa-plus"></span>
               Add a Linode
             </Link>
             <h1>Linodes</h1>
           </div>
           <div className="submenu clearfix">
-            <div className="pull-xs-left">
+            <div className="float-xs-left">
               <div className="input-group">
                 <span className="input-group-addon">{selectAllCheckbox}</span>
                 {this.renderActions()}
               </div>
             </div>
-            <div className="pull-xs-right">
+            <div className="float-xs-right">
               {gridListToggle}
               <span className="fa fa-navicon" className="navicon" />
             </div>

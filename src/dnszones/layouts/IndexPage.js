@@ -60,10 +60,10 @@ export class IndexPage extends Component {
     return (
       <div className="container">
         <header className="clearfix">
-          <div className="pull-xs-left">
+          <div className="float-xs-left">
             <h1>DNS Zones</h1>
           </div>
-          <div className="pull-xs-right">
+          <div className="float-xs-right">
             <Link to="/dnszones/create" className="btn btn-primary">Add a DNS Zone</Link>
           </div>
         </header>

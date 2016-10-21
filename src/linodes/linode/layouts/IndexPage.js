@@ -99,12 +99,17 @@ export class IndexPage extends Component {
       <header className="main-header">
         <div className="container">
           {this.renderLabel(linode)}
-          <span className="pull-right">
-            <StatusDropdown linode={linode} leftOriented={false} dispatch={this.props.dispatch} />
+          <span className="float-xs-right">
+            <StatusDropdown
+              linode={linode}
+              leftOriented={false}
+              noBorder={false}
+              dispatch={this.props.dispatch}
+            />
           </span>
           {!renderConfigSelect ? null :
             <span
-              className="pull-right configs"
+              className="float-xs-right configs"
               style={{ paddingRight: '15px', lineHeight: '30px' }}
             >
               <select
