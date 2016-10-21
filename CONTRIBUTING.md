@@ -14,9 +14,8 @@ Changes to the Linode Manager usually follow this flow:
 1. Implement the change, with tests
 1. Merge the change
 
-This usually implicates two GitHub issues: the design issue, and the
-implementation issue. For some changes, a design issue is of course not always
-necessary.
+This usually requires two GitHub issues: the design issue, and the
+implementation issue. But some may not require the initial design issue.
 
 We label issues as "ready" when one of our developers has committed to
 resolving it during the current 1-2 week sprint. You're welcome to take these on
@@ -29,7 +28,7 @@ will be merged.
 Mockups are necessary when making changes to the existing look and feel or when
 adding features/elements/components that don't have a clear precedent. If this
 is the case, you will need to submit an issue with a mockup and send a request
-from comments to the #linode-api IRC channel on Freenode.
+for comments to the #linode-api IRC channel on Freenode.
 
 ## Making pull requests
 
@@ -48,14 +47,14 @@ When you start working on a feature, do this:
 echo "#!/usr/bin/env bash" > .git/hooks/pre-commit
 echo "npm run lint" >> .git/hooks/pre-commit
 chmod +x .git/hooks/pre-commit
-```sh
+```
 
 ### Coding Style
 
 The manager is written in ES6, with some ES7 in use as well. A general guideline
 for the coding style is "imitate the code that's already there". When in doubt,
-apply the [Airbnb style guide](https://github.com/airbnb/javascript) or just the
-linter do its thing.
+apply the [Airbnb style guide](https://github.com/airbnb/javascript) or just let
+the linter do its thing.
 
 ## Reporting Bugs
 
