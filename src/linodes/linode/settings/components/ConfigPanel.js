@@ -40,7 +40,7 @@ function configContent(linode, configs, dispatch) {
                   e.preventDefault();
                   dispatch(linodes.configs.delete(linode.id, config.id));
                 }}
-                className="action-link pull-right"
+                className="action-link float-xs-right"
                 href="#"
               >Delete</a></td> : null}
           </tr>
@@ -74,10 +74,10 @@ export class ConfigPanel extends Component {
     return (
       <div>
         <header className="clearfix">
-          <h2 className="pull-xs-left">Configs<HelpButton to="http://example.org" /></h2>
+          <h2 className="float-xs-left">Configs<HelpButton to="http://example.org" /></h2>
           <a
             href={`/linodes/${linode.id}/settings/advanced/configs/create`}
-            className="btn btn-default pull-xs-right"
+            className="btn btn-default float-xs-right"
           >
             Add a config
           </a>

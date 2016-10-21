@@ -64,12 +64,14 @@ export default class StatusDropdown extends Component {
     const orientation = this.props.leftOriented === false ?
                         'dropdown-menu-right' : '';
 
+    const openClass = this.state.open ? 'open' : '';
+    const borderClass = this.props.noBorder ? '' : 'status-dropdown-border';
     return (
       <div
-        className={`btn-group status-dropdown ${this.state.open ? 'open' : ''}`}
+        className={`btn-group status-dropdown ${openClass} ${borderClass}`}
         onBlur={this.close}
       >
-        <span className={`pull-left linode-status ${linode.status}`}>
+        <span className={`float-xs-left linode-status ${linode.status}`}>
           {LinodeStatesReadable[linode.status]}
         </span>
         <button
@@ -93,4 +95,9 @@ StatusDropdown.propTypes = {
   linode: PropTypes.object,
   dispatch: PropTypes.func,
   leftOriented: PropTypes.bool,
+  noBorder: PropTypes.bool,
+};
+
+StatusDropdown.defaultProps = {
+  noBorder: true,
 };

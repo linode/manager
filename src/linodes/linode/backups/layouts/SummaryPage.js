@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 
 export function SummaryPage() {
   return (
-    <div>
+    <section className="card graphs">
       TODO
-    </div>
+    </section>
   );
 }
 

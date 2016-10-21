@@ -105,7 +105,7 @@ export class DashboardPage extends Component {
   renderGraphs() {
     return (
       <section className="card graphs">
-        Todo
+        TODO
       </section>
     );
 
@@ -117,7 +117,7 @@ export class DashboardPage extends Component {
           <h2>Performance</h2>
         </header>
         <div className="clearfix">
-          <div className="pull-xs-left">
+          <div className="float-xs-left">
             <select
               onChange={e => this.graphSourceUpdate(e.target.value)}
               className="form-control select-source"
@@ -128,7 +128,7 @@ export class DashboardPage extends Component {
               <option value="ipv6">IPv6 Network</option>
             </select>
           </div>
-          <div className="pull-xs-right">
+          <div className="float-xs-right">
             <select
               onChange={e => this.graphRangeUpdate(e.target.value)}
               className="form-control select-range"
