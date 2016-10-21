@@ -15,6 +15,7 @@ export default class Details extends Component {
       group: '',
       labels: [''],
       enableBackups: false,
+      showAdvanced: false,
     };
   }
 
@@ -72,23 +73,6 @@ export default class Details extends Component {
   render() {
     const { errors } = this.props;
 
-    const quantityInput = (
-      <div className="input-container">
-        <input
-          type="number"
-          min="1"
-          max="15"
-          step="1"
-          value={this.state.quantity}
-          onChange={e => this.onQuantityChange(
-            Math.min(Math.max(e.target.value, 1), 15)
-          )}
-          className="form-control"
-          name="quantity"
-        />
-      </div>
-    );
-
     const groupInput = (
       <div className="input-container">
         <input
@@ -100,6 +84,7 @@ export default class Details extends Component {
         />
       </div>
     );
+    const group = this.renderRow({ label: 'Group', content: groupInput });
 
     const labelInput = i => {
       const defaultLabel = this.state.labels[0] || 'my-label';
@@ -128,8 +113,6 @@ export default class Details extends Component {
     );
 
     const inputRows = [
-      { label: 'Quantity', content: quantityInput },
-      { label: 'Group', content: groupInput, errors: errors.group },
       ..._.range(this.state.quantity).map(i =>
         ({
           label: i === 0 ? 'Label' : null,
@@ -164,6 +147,12 @@ export default class Details extends Component {
     );
     const backups = this.renderRow({ label: 'Backups', content: backupInput });
 
+    const showAdvancedOrHide = this.state.showAdvanced ? (
+      <span>Hide additional details <span className="fa fa-angle-up" /></span>
+    ) : (
+      <span>Show additional details <span className="fa fa-angle-down" /></span>
+    );
+
     return (
       <div>
         <header>
@@ -173,15 +162,26 @@ export default class Details extends Component {
           <form onSubmit={this.onSubmit}>
             <section>
               {inputRows.map(this.renderRow)}
-              {backups}
+              <button
+                className="btn btn-cancel"
+                onClick={() => this.setState({ showAdvanced: !this.state.showAdvanced })}
+              >{showAdvancedOrHide}</button>
+              {!this.state.showAdvanced ? null : (
+                <span>
+                  {group}
+                  {backups}
+                </span>
+               )}
             </section>
-            <button
-              type="submit"
-              disabled={!(this.props.submitEnabled
-                && this.state.labels[0]
-                && this.state.password)}
-              className="btn btn-primary"
-            >Create Linode{this.state.quantity > 1 ? 's' : null}</button>
+            <section>
+              <button
+                type="submit"
+                disabled={!(this.props.submitEnabled
+                         && this.state.labels[0]
+                         && this.state.password)}
+                className="btn btn-primary"
+              >Create Linode{this.state.quantity > 1 ? 's' : null}</button>
+            </section>
           </form>
         </div>
       </div>

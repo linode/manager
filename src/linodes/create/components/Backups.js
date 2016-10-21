@@ -20,7 +20,7 @@ export class Backups extends Component {
     } = this.props;
     const l = linodes.linodes[selectedLinode];
     return (
-      <div className="clearfix">
+      <section>
         <div key={l.id}>
           <h3>
             {l.label}
@@ -41,7 +41,7 @@ export class Backups extends Component {
             onClick={goBack}
           >Need a different Linode?</a>
         </div>
-      </div>
+      </section>
     );
   }
 }

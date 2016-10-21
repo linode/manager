@@ -17,7 +17,7 @@ function renderPowerButton(props) {
   const powerActionF = () => powerAction(linode);
 
   return powerIcon === '' ? <span /> :
-    <span className={`linode-power fa ${powerIcon} pull-right`} onClick={powerActionF} />;
+    <span className={`linode-power fa ${powerIcon} float-xs-right`} onClick={powerActionF} />;
 }
 
 renderPowerButton.propTypes = {
@@ -149,7 +149,7 @@ function renderCard(props) {
       <header className="header-secondary">
         {checkbox}
         <Link to={`/linodes/${linode.id}`}>{linode.label}</Link>
-        <span className="pull-right">
+        <span className="float-xs-right">
           <StatusDropdown
             linode={linode}
             leftOriented={false}
@@ -210,7 +210,7 @@ function renderRow(props) {
       <td>
         {renderBackupStatus(linode)}
       </td>
-      <td className="pull-right">
+      <td className="float-xs-right">
         <StatusDropdown
           linode={linode}
           leftOriented={false}

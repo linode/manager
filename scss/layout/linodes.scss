@@ -16,7 +16,7 @@
     .submenu {
         margin-bottom: $main-padding-tb/2;
 
-        .pull-xs-left {
+        .float-xs-left {
             max-width: 50%;
         }
     }
@@ -25,7 +25,6 @@
 .linode.card {
     padding: 0;
 
-    .header-secondary,
     .linode-details {
         padding: $main-padding-tb/2 $main-padding-lr/2;
     }
