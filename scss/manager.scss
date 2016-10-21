@@ -353,6 +353,18 @@ a {
             -webkit-border-radius: 2px 2px 0 0;
         }
 
+        &:hover,
+        &:focus,
+        &:active,
+        &:active:focus {
+            outline: 0;
+            box-shadow: none;
+
+            &::after {
+                display: none;
+            }
+        }
+
         a {
             color: $black;
             text-decoration: none !important;
