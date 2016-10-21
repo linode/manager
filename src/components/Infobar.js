@@ -4,7 +4,7 @@ export default function Infobar(props) {
   const { title, link } = props;
   return (
     <nav>
-      <div className="pull-right">
+      <div className="float-xs-right">
         {title ?
           <span>
             <span className="new">New</span>

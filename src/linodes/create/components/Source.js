@@ -82,7 +82,7 @@ export default class Source extends Component {
           <table>
             <thead>
               <tr>
-                <td>Label</td>
+                <td>Linode</td>
                 <td>Last backup</td>
               </tr>
             </thead>
@@ -188,7 +188,7 @@ export default class Source extends Component {
 
   renderHeader() {
     return (
-      <header className="tabs">
+      <header>
         <h2>Source</h2>
       </header>
     );

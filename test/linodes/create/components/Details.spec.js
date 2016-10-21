@@ -17,26 +17,16 @@ describe('linodes/create/components/Details', () => {
   it('renders the card', () => {
     const c = shallow(<Details selectedType={null} />);
     expect(c.find('h2').text()).to.equal('Details');
-    // 1 label + 1 group + 1 backup + 1 quantity = 4
     // PasswordInput doesn't show up because shallow mount
-    expect(c.find('input').length).to.equal(4);
+    expect(c.find('input').length).to.equal(1);
   });
 
   it('renders multiple labels', () => {
     const c = shallow(<Details selectedType={null} />);
-    c.find('[name="quantity"]').simulate('change', { target: { value: 3 } });
-    // 3 labels + 1 group + 1 backups + 1 quantity = 6
     // PasswordInput input doesn't show up because shallow mount
-    expect(c.find('input').length).to.equal(6);
-    expect(c.state('labels')).to.have.lengthOf(3);
-    expect(c.state('labels')).to.have.members(['', null, null]);
+    expect(c.find('input').length).to.equal(1);
     expect(c.find('[name="label"]').at(0).props().placeholder).to.equal('my-label');
-    expect(c.find('[name="label"]').at(1).props().placeholder).to.equal('my-label-1');
-    expect(c.find('[name="label"]').at(2).props().placeholder).to.equal('my-label-2');
-
-    c.find('[name="quantity"]').simulate('change', { target: { value: 2 } });
-    expect(c.state('labels')).to.have.lengthOf(2);
-    expect(c.state('labels')).to.have.members(['', null]);
+    expect(c.state('labels')).to.have.lengthOf(1);
   });
 
   it('renders errors', () => {
@@ -61,6 +51,7 @@ describe('linodes/create/components/Details', () => {
       c.find(`input[name="${name}"]`).simulate('change', { target: { value } });
     updateInput('label', 'my-label');
     updateInput('password', 'my-password');
+    c.find('.btn.btn-cancel').simulate('click');
     c.find('input[name="enableBackups"]').simulate('change',
       { target: { checked: true } });
     c.find('form').simulate('submit');
@@ -76,6 +67,7 @@ describe('linodes/create/components/Details', () => {
 
   it('pulls backups price from selectedType', () => {
     const c = shallow(<Details selectedType={types['linode2048.5']} />);
+    c.find('.btn.btn-cancel').simulate('click');
     expect(c.find('.checkbox label span').text()).to.contain('$2.50');
   });
 });
