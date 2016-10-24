@@ -13,10 +13,10 @@ const defaultLinks = [
     { icon: 'share-alt', name: 'DNS Manager', link: '/dnszones' },
   ]],
   ['account', [
-    { icon: 'user', name: 'My profile', link: `${LOGIN_ROOT}/account/profile` },
-    { icon: 'users', name: 'Users', link: `${LOGIN_ROOT}/account/users` },
-    { icon: 'dollar', name: 'Billing', link: `${LOGIN_ROOT}/account/billing` },
-    { icon: 'gear', name: 'Settings', link: `${LOGIN_ROOT}/account/settings` },
+    { icon: 'user', name: 'My profile', link: `${LOGIN_ROOT}/profile` },
+    { icon: 'users', name: 'Users', link: `${LOGIN_ROOT}/users` },
+    { icon: 'dollar', name: 'Billing', link: `${LOGIN_ROOT}/billing` },
+    { icon: 'gear', name: 'Settings', link: `${LOGIN_ROOT}/settings` },
     { icon: 'support', name: 'Support', link: '/support' },
   ]],
   ['community', [
