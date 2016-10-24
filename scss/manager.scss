@@ -699,10 +699,12 @@ input[type=checkbox], input[type=radio] {
 table {
     width: 100%;
 
+    th:first-of-type,
     td:first-of-type {
         padding-left: 15px;
     }
 
+    th:last-of-type,
     td:last-of-type {
         padding-right: 15px;
     }
