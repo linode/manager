@@ -1,5 +1,4 @@
 import React, { PropTypes } from 'react';
-import _ from 'lodash';
 
 import { Link } from '~/components/Link';
 import { LOGIN_ROOT } from '~/constants';
@@ -7,26 +6,26 @@ import { LOGIN_ROOT } from '~/constants';
 export default function Sidebar(props) {
   const { path, links } = props;
 
-  const defaultLinks = {
-    services: [
+  const defaultLinks = [
+    ['services', [
       { icon: 'cubes', name: 'Linodes', link: '/linodes' },
       { icon: 'code-fork', name: 'NodeBalancers', link: '/nodebalancers' },
       { icon: 'bar-chart-o', name: 'Longview', link: '/longview' },
       { icon: 'share-alt', name: 'DNS Manager', link: '/dnszones' },
-    ],
-    account: [
+    ]],
+    ['account', [
       { icon: 'user', name: 'My profile', link: `${LOGIN_ROOT}/account/profile` },
       { icon: 'users', name: 'Users', link: `${LOGIN_ROOT}/account/users` },
       { icon: 'dollar', name: 'Billing', link: `${LOGIN_ROOT}/account/billing` },
       { icon: 'gear', name: 'Settings', link: `${LOGIN_ROOT}/account/settings` },
       { icon: 'support', name: 'Support', link: '/support' },
-    ],
-    community: [
+    ]],
+    ['community', [
       { icon: 'university', name: 'Guides', link: 'https://linode.com/docs' },
       { icon: 'comments', name: 'Forum', link: 'https://forum.linode.com' },
       { icon: 'book', name: 'Developers', link: 'https://developers.linode.com' },
-    ],
-  };
+    ]],
+  ];
 
   const makeLink = (link, child) => (
     link.indexOf('http') === 0 ?
@@ -39,22 +38,21 @@ export default function Sidebar(props) {
     <div className="sidebar">
       <ul className="list-unstyled">
         {
-          _.map(sidebarLinks, (links, section) =>
-            <section>
+          sidebarLinks.map(([section, links]) =>
+            <section key={section}>
               <header>
                 <h3>{section}</h3>
               </header>
               {
                 links.map(({ icon, name, link }) =>
                   makeLink(link, (
-                    <li className={path.indexOf(link) === 0 ? 'active' : ''}>
+                    <li className={path.indexOf(link) === 0 ? 'active' : ''} key={link}>
                       <span className={`fa fa-${icon}`} />
                       <span>{name}</span>
                     </li>
                   )))
               }
-            </section>
-          )
+            </section>)
         }
       </ul>
     </div>
