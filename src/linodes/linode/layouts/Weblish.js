@@ -3,7 +3,9 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
 import { LISH_ROOT } from '~/secrets';
+import { linodes } from '~/api';
 import { lishToken } from '~/api/linodes';
+import { getLinode } from './IndexPage';
 
 function addCSSLink(url) {
   const head = window.document.querySelector('head');
@@ -24,6 +26,8 @@ function addJSScript(url) {
 export class Weblish extends Component {
   constructor() {
     super();
+    this.getLinode = getLinode.bind(this);
+
     this.state = {
       token: '',
       renderingLish: false,
@@ -35,8 +39,10 @@ export class Weblish extends Component {
     addCSSLink('/assets/weblish/xterm.css');
   }
 
-  componentWillMount() {
-    this.connect();
+  async componentWillMount() {
+    const { dispatch, params: { linodeId } } = this.props;
+    await dispatch(linodes.one(linodeId));
+    await this.connect();
   }
 
   async connect() {
@@ -48,6 +54,7 @@ export class Weblish extends Component {
   }
 
   renderTerminal(socket) {
+    const { group, label } = this.getLinode();
     const terminal = new window.Terminal({
       cols: 120,
       rows: 32,
@@ -67,7 +74,9 @@ export class Weblish extends Component {
       this.setState({ renderingLish: false });
     });
     window.terminal = terminal;
-    window.document.title = 'Linode Lish Console';
+
+    const linodeLabel = group ? `${group}/${label}` : label;
+    window.document.title = `${linodeLabel} - Linode Lish Console`;
   }
 
   render() {
@@ -85,9 +94,14 @@ export class Weblish extends Component {
 
 Weblish.propTypes = {
   dispatch: PropTypes.func.isRequired,
+  linodes: PropTypes.object,
   params: PropTypes.shape({
     linodeId: PropTypes.string.isRequired,
   }).isRequired,
 };
 
-export default withRouter(connect()(Weblish));
+function select(state) {
+  return { linodes: state.api.linodes };
+}
+
+export default withRouter(connect(select)(Weblish));
