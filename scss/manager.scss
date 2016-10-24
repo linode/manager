@@ -261,35 +261,62 @@ a {
     width: $sidebar-width;
     background: $white;
     border-right: $border;
+    overflow-y: scroll;
+    padding-bottom: 15px;
+
+    & section:first-of-type {
+        margin-top: 0;
+
+        header h3 {
+            border-top: 0;
+        }
+    }
+
+    header {
+        h3 {
+            text-transform: uppercase;
+            background-color: $gray;
+            border-bottom: $border;
+            border-top: $border;
+            border-color: $border-gray;
+            font-size: .8rem;
+            color: #777;
+            padding: 10px 0;
+            padding-left: 34px;
+        }
+    }
 
     a {
-        color: $black;
+        color: $light-black;
         text-decoration: none !important;
         line-height: 34px;
     }
 
     .fa {
         width: 15px;
-        color: #777;
+        color: #acacac;
     }
 
     ul {
         text-align: left;
 
         li {
-            margin-top: 20px;
-            padding-left: 34px;
-            height: 34px;
-            border-top: $border;
-            border-bottom: $border;
-            border-color: transparent;
+            margin-top: 15px;
+            padding-left: 20px;
+            margin-left: 15px;
+            margin-right: 15px;
+            border-radius: 3px;
 
             &.active,
             &:hover,
             &:active,
             &:focus {
-                background-color: $gray;
-                border-color: $border-gray;
+                background-color: $green;
+                color: white;
+
+                .fa {
+                    color: white;
+                }
             }
 
             span:last-of-type {
