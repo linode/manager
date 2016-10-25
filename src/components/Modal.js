@@ -25,12 +25,12 @@ export function Modal(props) {
 Modal.propTypes = {
   title: PropTypes.string,
   body: PropTypes.node,
-  open: PropTypes.bool,
-  dispatch: PropTypes.func,
+  open: PropTypes.bool.isRequired,
+  dispatch: PropTypes.func.isRequired,
 };
 
 function select(state) {
-  return state.modal ? state.modal : {};
+  return state.modal;
 }
 
 export default connect(select)(Modal);
