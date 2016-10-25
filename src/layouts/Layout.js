@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
+import Notifications from '../components/Notifications';
 import Modal from '../components/Modal';
 import Error from '../components/Error';
 import { rawFetch as fetch } from '~/fetch';
@@ -58,6 +59,7 @@ export class Layout extends Component {
           title={title}
         />
         <Sidebar path={currentPath} />
+        <Notifications />
         <div className="main full-height">
           <Modal />
           {!errors.status ?
