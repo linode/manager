@@ -9,6 +9,7 @@ import Details from '../components/Details';
 import { parallel } from '~/api/util';
 import { linodes, distributions, datacenters, types } from '~/api';
 import { setError } from '~/actions/errors';
+import { setSource } from '~/actions/source';
 
 export class IndexPage extends Component {
   constructor() {
@@ -30,6 +31,7 @@ export class IndexPage extends Component {
 
   async componentDidMount() {
     const { dispatch } = this.props;
+    dispatch(setSource(__filename));
     try {
       await dispatch(parallel(
         distributions.all(),

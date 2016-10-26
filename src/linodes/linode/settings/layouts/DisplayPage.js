@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { getLinode, loadLinode } from '~/linodes/linode/layouts/IndexPage';
 import { linodes } from '~/api';
 import { ErrorSummary, FormGroup, reduceErrors } from '~/errors';
+import { setSource } from '~/actions/source';
 
 export class DisplayPage extends Component {
   constructor() {
@@ -15,6 +16,8 @@ export class DisplayPage extends Component {
   }
 
   async componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch(setSource(__filename));
     await this.loadLinode();
     const { group, label } = this.getLinode();
     this.setState({ group, label });

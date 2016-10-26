@@ -1,6 +1,6 @@
 import React from 'react';
 import sinon from 'sinon';
-import { mount } from 'enzyme';
+import { shallow } from 'enzyme';
 import { expect } from 'chai';
 
 import { api } from '@/data';
@@ -17,7 +17,7 @@ describe('linodes/linode/settings/layouts/AdvancedPage', () => {
   });
 
   it('renders config panel component', () => {
-    const page = mount(
+    const page = shallow(
       <AdvancedPage
         linodes={linodes}
         params={{ linodeId: '1235' }}
@@ -29,7 +29,7 @@ describe('linodes/linode/settings/layouts/AdvancedPage', () => {
   });
 
   it('renders disk panel component', () => {
-    const page = mount(
+    const page = shallow(
       <AdvancedPage
         linodes={linodes}
         params={{ linodeId: '1235' }}
