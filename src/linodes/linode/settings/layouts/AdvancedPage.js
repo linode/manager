@@ -2,8 +2,11 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { ConfigPanel } from '~/linodes/linode/settings/components/ConfigPanel';
 import { DiskPanel } from '~/linodes/linode/settings/components/DiskPanel';
+import { setSource } from '~/actions/source';
 
 export function AdvancedPage(props) {
+  const { dispatch } = props;
+  dispatch(setSource(__filename));
   return (
     <div>
       <section className="card">

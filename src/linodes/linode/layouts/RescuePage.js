@@ -5,6 +5,7 @@ import { linodes } from '~/api';
 import { powerOnLinode, powerOffLinode, resetPassword } from '~/api/linodes';
 import PasswordInput from '~/components/PasswordInput';
 import HelpButton from '~/components/HelpButton';
+import { setSource } from '~/actions/source';
 
 export class RescuePage extends Component {
   constructor() {
@@ -24,6 +25,7 @@ export class RescuePage extends Component {
 
   async componentDidMount() {
     const { dispatch } = this.props;
+    dispatch(setSource(__filename));
     const { linodeId } = this.props.params;
     await dispatch(linodes.one(linodeId));
     await dispatch(linodes.disks.all(linodeId));

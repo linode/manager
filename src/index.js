@@ -26,7 +26,6 @@ import Weblish from './linodes/linode/layouts/Weblish';
 import NodeBalancers from './nodebalancers';
 import Longview from './longview';
 import DNSZones from './dnszones';
-import Account from './account';
 import Support from './support';
 import { hideModal } from '~/actions/modal';
 
@@ -60,7 +59,6 @@ const init = () => {
             {NodeBalancers}
             {Longview}
             {DNSZones}
-            {Account}
             {Support}
             <Route path="oauth">
               <Route path="callback" component={OAuthCallbackPage} />

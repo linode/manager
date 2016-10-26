@@ -8,6 +8,7 @@ import HelpButton from '~/components/HelpButton';
 import { ErrorSummary, FormGroup, reduceErrors } from '~/errors';
 import { Link } from '~/components/Link';
 import Slider from 'rc-slider';
+import { setSource } from '~/actions/source';
 
 export class ConfigEdit extends Component {
   constructor() {
@@ -34,6 +35,7 @@ export class ConfigEdit extends Component {
 
   async componentDidMount() {
     const { dispatch } = this.props;
+    dispatch(setSource(__filename));
     const { linodeId, configId } = this.props.params;
     await dispatch(parallel(
       kernels.all(),

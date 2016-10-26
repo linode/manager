@@ -3,6 +3,10 @@ var process = require('process');
 var webpack = require('webpack');
 
 module.exports = {
+  context: __dirname,
+  node: {
+    __filename: true,
+  },
   devtool: 'source-map',
   entry: [
     'eventsource-polyfill', // necessary for hot reloading with IE
