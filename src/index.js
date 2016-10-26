@@ -20,6 +20,7 @@ initializeAuthentication(store.dispatch);
 
 import Layout from './layouts/Layout';
 import OAuthCallbackPage from './layouts/OAuth';
+import Logout from './layouts/Logout';
 import { NotFound } from './components/Error';
 import Linodes from './linodes';
 import Weblish from './linodes/linode/layouts/Weblish';
@@ -44,6 +45,10 @@ const init = () => {
     <Provider store={store}>
       <div>
         <Router history={history} onUpdate={logPageView}>
+          <Route
+            path="/logout"
+            component={Logout}
+          />
           <Route
             onEnter={checkLogin}
             path="/linodes/:linodeId/weblish"
