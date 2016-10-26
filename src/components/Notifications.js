@@ -38,6 +38,10 @@ Notifications.propTypes = {
   open: PropTypes.bool.isRequired,
 };
 
+Notifications.defaultProps = {
+  open: false,
+};
+
 function select(state) {
   return state.notifications;
 }

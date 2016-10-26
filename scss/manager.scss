@@ -188,7 +188,7 @@ a {
         line-height: $main-nav-height;
 
         .fa {
-            color: $white;
+            color: #bbb;
         }
     }
 
@@ -237,6 +237,7 @@ a {
         display: inline-block;
         line-height: $main-nav-height;
         padding: 0 15px;
+        margin-right: -15px;
 
         &.active,
         &:active,
@@ -1045,9 +1046,9 @@ p {
         z-index: 1001;
 
         header {
-            height: $input-height;
+            background: $white;
             border-bottom: $border;
-            padding: 0 15px;
+            padding: 10px 15px;
 
             a {
                 line-height: $input-height;
