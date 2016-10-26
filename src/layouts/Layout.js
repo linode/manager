@@ -8,7 +8,7 @@ import Modal from '../components/Modal';
 import Error from '../components/Error';
 import { rawFetch as fetch } from '~/fetch';
 import { hideModal } from '~/actions/modal';
-import { showNotifications } from '~/actions/notifications';
+import { showNotifications, hideNotifications } from '~/actions/notifications';
 
 export class Layout extends Component {
   constructor() {
@@ -38,9 +38,13 @@ export class Layout extends Component {
   }
 
   async hideShowNotifications() {
-    const { dispatch } = this.props;
-    await dispatch(hideModal());
-    await dispatch(showNotifications());
+    const { dispatch, notifications: { open } } = this.props;
+    if (open) {
+      await dispatch(hideNotifications());
+    } else {
+      await dispatch(hideModal());
+      await dispatch(showNotifications());
+    }
   }
 
   renderError() {
@@ -88,6 +92,7 @@ Layout.propTypes = {
   children: PropTypes.node.isRequired,
   errors: PropTypes.object.isRequired,
   dispatch: PropTypes.object.isRequired,
+  notifications: PropTypes.object.isRequired,
 };
 
 function select(state) {
@@ -95,6 +100,7 @@ function select(state) {
     username: state.authentication.username,
     emailHash: state.authentication.emailHash,
     currentPath: state.routing.locationBeforeTransitions.pathname,
+    notifications: state.notifications,
     errors: state.errors,
   };
 }
