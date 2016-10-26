@@ -7,11 +7,14 @@ import Notifications from '../components/Notifications';
 import Modal from '../components/Modal';
 import Error from '../components/Error';
 import { rawFetch as fetch } from '~/fetch';
+import { hideModal } from '~/actions/modal';
+import { showNotifications } from '~/actions/notifications';
 
 export class Layout extends Component {
   constructor() {
     super();
     this.renderError = this.renderError.bind(this);
+    this.hideShowNotifications = this.hideShowNotifications.bind(this);
     this.state = { title: '', link: '' };
   }
 
@@ -32,6 +35,12 @@ export class Layout extends Component {
         // Whatever
       }
     }
+  }
+
+  async hideShowNotifications() {
+    const { dispatch } = this.props;
+    await dispatch(hideModal());
+    await dispatch(showNotifications());
   }
 
   renderError() {
@@ -57,6 +66,7 @@ export class Layout extends Component {
           emailHash={emailHash}
           link={link}
           title={title}
+          hideShowNotifications={this.hideShowNotifications}
         />
         <Sidebar path={currentPath} />
         <Notifications />
@@ -77,6 +87,7 @@ Layout.propTypes = {
   currentPath: PropTypes.string,
   children: PropTypes.node.isRequired,
   errors: PropTypes.object.isRequired,
+  dispatch: PropTypes.object.isRequired,
 };
 
 function select(state) {
