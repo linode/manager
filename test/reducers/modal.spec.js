@@ -38,6 +38,6 @@ describe('reducers/modal', () => {
     const state = {};
     deepFreeze(state);
 
-    expect(modal(state, {})).to.equal({});
+    expect(modal(state, {})).to.deep.equal({});
   });
 });
