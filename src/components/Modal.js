@@ -29,6 +29,10 @@ Modal.propTypes = {
   dispatch: PropTypes.func.isRequired,
 };
 
+Modal.defaultProps = {
+  open: false,
+};
+
 function select(state) {
   return state.modal;
 }

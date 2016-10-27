@@ -91,7 +91,7 @@ Layout.propTypes = {
   currentPath: PropTypes.string,
   children: PropTypes.node.isRequired,
   errors: PropTypes.object.isRequired,
-  dispatch: PropTypes.object.isRequired,
+  dispatch: PropTypes.func.isRequired,
   notifications: PropTypes.object.isRequired,
 };
 
