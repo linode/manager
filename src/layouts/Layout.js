@@ -3,14 +3,18 @@ import { connect } from 'react-redux';
 
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
+import Notifications from '../components/Notifications';
 import Modal from '../components/Modal';
 import Error from '../components/Error';
 import { rawFetch as fetch } from '~/fetch';
+import { hideModal } from '~/actions/modal';
+import { showNotifications, hideNotifications } from '~/actions/notifications';
 
 export class Layout extends Component {
   constructor() {
     super();
     this.renderError = this.renderError.bind(this);
+    this.hideShowNotifications = this.hideShowNotifications.bind(this);
     this.state = { title: '', link: '' };
   }
 
@@ -30,6 +34,16 @@ export class Layout extends Component {
       } catch (ex) {
         // Whatever
       }
+    }
+  }
+
+  async hideShowNotifications() {
+    const { dispatch, notifications: { open } } = this.props;
+    if (open) {
+      await dispatch(hideNotifications());
+    } else {
+      await dispatch(hideModal());
+      await dispatch(showNotifications());
     }
   }
 
@@ -56,8 +70,10 @@ export class Layout extends Component {
           emailHash={emailHash}
           link={link}
           title={title}
+          hideShowNotifications={this.hideShowNotifications}
         />
         <Sidebar path={currentPath} />
+        <Notifications />
         <div className="main full-height">
           <Modal />
           {!errors.status ?
@@ -75,6 +91,8 @@ Layout.propTypes = {
   currentPath: PropTypes.string,
   children: PropTypes.node.isRequired,
   errors: PropTypes.object.isRequired,
+  dispatch: PropTypes.object.isRequired,
+  notifications: PropTypes.object.isRequired,
 };
 
 function select(state) {
@@ -82,6 +100,7 @@ function select(state) {
     username: state.authentication.username,
     emailHash: state.authentication.emailHash,
     currentPath: state.routing.locationBeforeTransitions.pathname,
+    notifications: state.notifications,
     errors: state.errors,
   };
 }
