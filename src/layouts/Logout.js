@@ -1,22 +1,27 @@
 import { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { setStorage } from '~/storage';
 import { changeView } from '~/linodes/actions';
 import { LOGIN_ROOT } from '~/constants';
+import { logout } from '~/actions/authentication';
+import { setSession } from './OAuth';
 
 export class Logout extends Component {
+  constructor() {
+    super();
+    this.setSession = setSession.bind(this);
+  }
+
   componentDidMount() {
     const { dispatch, redirect } = this.props;
     // Reset defaults
     dispatch(changeView('list'));
 
     // Drop session info
-    setStorage('authentication/oauth-token', undefined);
-    setStorage('authentication/scopes', undefined);
-    setStorage('authentication/username', undefined);
-    setStorage('authentication/email', undefined);
-    setStorage('authentication/email-hash', undefined);
+    this.setSession();
+
+    // Reset state
+    dispatch(logout());
 
     redirect(`${LOGIN_ROOT}/logout`);
   }
