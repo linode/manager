@@ -30,6 +30,6 @@ describe('reducers/notifications', () => {
     const state = {};
     deepFreeze(state);
 
-    expect(notifications(state, {})).to.equal({});
+    expect(notifications(state, {})).to.deep.equal({});
   });
 });
