@@ -55,6 +55,6 @@ describe('layouts/Logout', () => {
     );
 
     await component.instance().componentDidMount();
-    expect(redirect.calledWith).to.equal(`${LOGIN_ROOT}/logout`);
+    expect(redirect.args[0][0]).to.equal(`${LOGIN_ROOT}/logout`);
   });
 });
