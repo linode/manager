@@ -4,9 +4,11 @@ import { expect } from 'chai';
 import { shallow } from 'enzyme';
 
 import { Logout } from '../../src/layouts/Logout';
+import { logout } from '~/actions/authentication';
 import { changeView } from '~/linodes/actions';
 import { LOGIN_ROOT } from '~/constants';
 import * as storage from '~/storage';
+import { setToken } from '~/actions/authentication';
 
 describe('layouts/Logout', () => {
   const sandbox = sinon.sandbox.create();
@@ -26,8 +28,10 @@ describe('layouts/Logout', () => {
       />
     );
     await component.instance().componentDidMount();
-    expect(dispatch.calledOnce).to.equal(true);
-    expect(dispatch.calledWith(changeView('list'))).to.equal(true);
+    expect(dispatch.callCount).to.equal(3);
+    expect(dispatch.args[0][0]).to.deep.equal(changeView('list'));
+    expect(dispatch.args[1][0]).to.deep.equal(setToken('', '', '', '', ''));
+    expect(dispatch.args[2][0]).to.deep.equal(logout());
 
     const sessionValues = [
       'authentication/oauth-token',
@@ -40,7 +44,7 @@ describe('layouts/Logout', () => {
     expect(setStorage.callCount).to.equal(sessionValues.length);
     sessionValues.map((name, i) => {
       expect(setStorage.args[i][0]).to.equal(name);
-      expect(setStorage.args[i][1]).to.equal(undefined);
+      expect(setStorage.args[i][1]).to.equal('');
     });
   });
 

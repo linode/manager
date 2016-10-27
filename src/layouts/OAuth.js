@@ -1,17 +1,31 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { setToken } from '../actions/authentication';
-import { clientId, clientSecret } from '../secrets';
 import { push } from 'react-router-redux';
-import { LOGIN_ROOT } from '../constants';
-import { rawFetch } from '../fetch';
+
+import { setToken } from '~/actions/authentication';
+import { clientId, clientSecret } from '~/secrets';
+import { LOGIN_ROOT } from '~/constants';
+import { rawFetch } from '~/fetch';
 import { setStorage } from '~/storage';
 import md5 from 'md5';
+
+export function setSession(oauthToken = '', scopes = '', username = '', email = '') {
+  const { dispatch } = this.props;
+  const hash = email && md5(email.trim().toLowerCase());
+  dispatch(setToken(
+    oauthToken, scopes, username, email, hash));
+  setStorage('authentication/oauth-token', oauthToken);
+  setStorage('authentication/scopes', scopes);
+  setStorage('authentication/username', username);
+  setStorage('authentication/email', email);
+  setStorage('authentication/email-hash', hash);
+}
 
 export class OAuthCallbackPage extends Component {
   constructor() {
     super();
     this.state = { error: null };
+    this.setSession = setSession.bind(this);
   }
 
   async componentDidMount() {
@@ -36,14 +50,7 @@ export class OAuthCallbackPage extends Component {
         mode: 'cors',
       });
       const json = await resp.json();
-      const hash = md5(email.trim().toLowerCase());
-      const result = dispatch(setToken(
-        json.access_token, json.scopes, username, email, hash));
-      setStorage('authentication/oauth-token', result.token);
-      setStorage('authentication/scopes', result.scopes);
-      setStorage('authentication/username', result.username);
-      setStorage('authentication/email', result.email);
-      setStorage('authentication/email-hash', result.emailHash);
+      this.setSession(json.access_token, json.scopes, username, email);
       dispatch(push(returnTo || '/'));
     } else {
       dispatch(push('/'));
