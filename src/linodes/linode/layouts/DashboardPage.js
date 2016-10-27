@@ -11,6 +11,7 @@ import {
   renderPlanStyle,
 } from '~/linodes/components/Linode';
 import { getLinode, loadLinode } from './IndexPage';
+import { setSource } from '~/actions/source';
 
 export class DashboardPage extends Component {
   constructor() {
@@ -35,6 +36,8 @@ export class DashboardPage extends Component {
   }
 
   componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch(setSource(__filename));
     this.loadLinode();
   }
 
@@ -310,6 +313,7 @@ DashboardPage.propTypes = {
     linodeId: PropTypes.string,
   }),
   username: PropTypes.string,
+  dispatch: PropTypes.func.isRequired,
 };
 
 function select(state) {

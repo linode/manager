@@ -8,6 +8,7 @@ import StatusDropdown from '~/components/StatusDropdown';
 import { LinodeStates } from '~/constants';
 import { setError } from '~/actions/errors';
 import { linodes } from '~/api';
+import { setSource } from '~/actions/source';
 
 export function getLinode() {
   const { linodes } = this.props.linodes;
@@ -67,6 +68,8 @@ export class IndexPage extends Component {
   }
 
   async componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch(setSource(__filename));
     await this.loadLinode();
     const linode = this.getLinode();
     const defaultConfig = Object.values(linode._configs.configs)[0];

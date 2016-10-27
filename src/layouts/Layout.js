@@ -61,8 +61,9 @@ export class Layout extends Component {
   }
 
   render() {
-    const { username, emailHash, currentPath, errors } = this.props;
+    const { username, emailHash, currentPath, errors, source } = this.props;
     const { title, link } = this.state;
+    const githubRoot = 'https://github.com/linode/manager/blob/master/';
     return (
       <div className="layout full-height">
         <Header
@@ -79,6 +80,17 @@ export class Layout extends Component {
           {!errors.status ?
            this.props.children :
            this.renderError()}
+          <footer className="text-xs-center">
+            {!source || !source.source ? null :
+              <a
+                target="__blank"
+                rel="noopener"
+                href={`${githubRoot}${source.source}`}
+              >
+                Source
+              </a>
+            }
+          </footer>
         </div>
       </div>
     );
@@ -93,6 +105,7 @@ Layout.propTypes = {
   errors: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   notifications: PropTypes.object.isRequired,
+  source: PropTypes.object,
 };
 
 function select(state) {
@@ -102,6 +115,7 @@ function select(state) {
     currentPath: state.routing.locationBeforeTransitions.pathname,
     notifications: state.notifications,
     errors: state.errors,
+    source: state.source,
   };
 }
 

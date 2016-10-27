@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { getLinode } from './IndexPage';
 import HelpButton from '~/components/HelpButton';
 import { ipv4ns, ipv6ns, ipv6nsSuffix } from '~/constants';
+import { setSource } from '~/actions/source';
 
 export class NetworkingPage extends Component {
   constructor() {
@@ -12,6 +13,11 @@ export class NetworkingPage extends Component {
     this.renderIPv6Public = this.renderIPv6Public.bind(this);
     this.nameserversList = this.nameserversList.bind(this);
     this.ipList = this.ipList.bind(this);
+  }
+
+  componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch(setSource(__filename));
   }
 
   ipList(ips) {
@@ -170,6 +176,7 @@ export class NetworkingPage extends Component {
 
 NetworkingPage.propTypes = {
   linodes: PropTypes.object,
+  dispatch: PropTypes.func.isRequired,
 };
 
 function select(state) {

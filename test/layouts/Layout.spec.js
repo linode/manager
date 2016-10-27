@@ -49,10 +49,22 @@ describe('layouts/Layout', () => {
     expect(component.find('Header').length).to.equal(1);
   });
 
+  it('renders a footer', () => {
+    const component = shallow(
+      <Layout dispatch={dispatch} errors={errors} source={{ source: 'foobar.html' }}>
+        <p>Hello world!</p>
+      </Layout>
+    );
+    const sourceLink = component.find('footer a');
+    expect(sourceLink.text()).to.equal('Source');
+    expect(sourceLink.props().href)
+      .to.equal('https://github.com/linode/manager/blob/master/foobar.html');
+  });
+
   const errorsPopulated = {
     json: {
       errors: [
-        { reason: 'You done fucked up' },
+        { reason: 'You done screwed up' },
       ],
     },
     status: 400,

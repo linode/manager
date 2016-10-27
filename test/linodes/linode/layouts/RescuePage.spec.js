@@ -73,7 +73,7 @@ describe('linodes/linode/layouts/RescuePage', () => {
     const get = sandbox.stub(page.instance(), 'getLinode');
     get.onFirstCall().returns(testLinode);
     await page.instance().componentDidMount();
-    const dispatched = dispatch.firstCall.args[0];
+    const dispatched = dispatch.secondCall.args[0];
     // Assert that dispatched is a function that fetches a linode
     const fetchStub = sandbox.stub(fetch, 'fetch').returns({
       json: () => {},
@@ -95,7 +95,7 @@ describe('linodes/linode/layouts/RescuePage', () => {
         params={{ linodeId: '1234' }}
       />);
     await page.instance().componentDidMount();
-    let dispatched = dispatch.secondCall.args[0];
+    let dispatched = dispatch.thirdCall.args[0];
     // Assert that dispatched is a function that fetches disks
     const fetchStub = sandbox.stub(fetch, 'fetch').returns({
       json: () => {},
@@ -128,14 +128,15 @@ describe('linodes/linode/layouts/RescuePage', () => {
     expect(fetchStub.firstCall.args[1]).to.equal('/linode/instances/1234/disks/?page=1');
   });
 
-  it('does not fetch when mounted with a known linode', () => {
-    mount(
+  it('does not fetch when mounted with a known linode', async () => {
+    const page = shallow(
       <RescuePage
         dispatch={dispatch}
         linodes={linodes}
         params={{ linodeId: `${testLinode.id}` }}
       />);
-    expect(dispatch.calledTwice).to.equal(false);
+    await page.instance().componentDidMount();
+    expect(dispatch.callCount).to.equal(3);
   });
 
   describe('reset root password', () => {
