@@ -5,6 +5,7 @@ import { LOGOUT } from '~/actions/authentication';
 import authentication from './authentication';
 import modal from './modal';
 import notifications from './notifications';
+import source from './source';
 import api from '../api/reducer';
 import errors from './errors';
 import linodes from '../linodes/reducers';
@@ -14,6 +15,7 @@ const appReducer = combineReducers({
   authentication,
   modal,
   notifications,
+  source,
   api,
   linodes,
   errors,

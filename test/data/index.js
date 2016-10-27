@@ -52,6 +52,7 @@ export const api = {
 export const state = deepFreeze({
   authentication,
   api,
+  source: { source: 'foobar.html' },
   linodes: {
     index: {
       view: 'grid',

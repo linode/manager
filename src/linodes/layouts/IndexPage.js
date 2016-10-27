@@ -14,6 +14,7 @@ import {
   changeView,
   toggleSelected,
 } from '../actions';
+import { setSource } from '~/actions/source';
 
 export class IndexPage extends Component {
   constructor() {
@@ -29,6 +30,8 @@ export class IndexPage extends Component {
 
   async componentDidMount() {
     const { dispatch } = this.props;
+
+    dispatch(setSource(__filename));
     try {
       await dispatch(linodes.all());
       if (Object.keys(this.props.linodes.linodes).length === 0) {

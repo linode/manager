@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import HelpButton from '~/components/HelpButton';
 import { getLinode, loadLinode } from '~/linodes/linode/layouts/IndexPage';
 import { linodes } from '~/api';
+import { setSource } from '~/actions/source';
 
 export class AlertsPage extends Component {
   constructor() {
@@ -25,6 +26,8 @@ export class AlertsPage extends Component {
   }
 
   async componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch(setSource(__filename));
     await this.loadLinode();
     this.setState({ loading: false, alerts: this.getLinode().alerts });
   }
