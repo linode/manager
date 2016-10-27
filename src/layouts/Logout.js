@@ -7,7 +7,7 @@ import { LOGIN_ROOT } from '~/constants';
 
 export class Logout extends Component {
   componentDidMount() {
-    const { dispatch } = this.props;
+    const { dispatch, redirect } = this.props;
     // Reset defaults
     dispatch(changeView('list'));
 
@@ -18,7 +18,7 @@ export class Logout extends Component {
     setStorage('authentication/email', undefined);
     setStorage('authentication/email-hash', undefined);
 
-    window.location = `${LOGIN_ROOT}/logout`;
+    redirect(`${LOGIN_ROOT}/logout`);
   }
 
   render() {
