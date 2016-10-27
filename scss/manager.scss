@@ -13,7 +13,7 @@ $dark-yellow: darken($yellow, 20);
 $darkest-yellow: darken($yellow, 40);
 $dark-black: #333333;
 $black: #4B4B4B;
-$light-black: #666666;
+$light-black: #777;
 $lightest-black: #ACACAC;
 $dark-gray: #DDDDDD;
 $gray: #F3F3F3;
@@ -183,19 +183,29 @@ a {
         margin-left: 0 !important; /* override bootstrap styles */
     }
 
+    .navbar-linode {
+        font-size: 40px;
+        line-height: $main-nav-height;
+
+        .fa {
+            color: #bbb;
+        }
+    }
+
     .navbar-search {
         $margin-tb: ($main-nav-height - $input-height) / 2;
         height: $input-height;
-        margin: $margin-tb $margin-lr $margin-tb 0;
+        margin: 0 $margin-lr 0 0;
 
-        input {
-            width: 300px;
-            border: 0;
-        }
-
+        input,
         input:focus {
-            border: 0;
+            background: $black;
+            width: 250px;
+            border: $border;
+            border-color: black;
+            border-radius: 2px;
             outline: 0;
+            color: #ccc;
         }
     }
 
@@ -223,12 +233,25 @@ a {
         }
     }
 
-    .navbar-session {
+    .navbar-session {        
         display: inline-block;
         line-height: $main-nav-height;
+        padding: 0 15px;
+        margin-right: -15px;
+
+        &.active,
+        &:active,
+        &:hover,
+        &:focus {
+            background: #3c3c3c;
+            cursor: pointer;
+            cursor: hand;
+        }
+
 
         .nav-user {
             padding-right: $margin-lr;
+            color: $white;
         }
 
         .nav-gravatar {
@@ -484,7 +507,7 @@ hr {
 
 .btn {
     text-decoration: none;
-    border-radius: 0;
+    border-radius: 2px;
     border: $border;
     background: $light-gray;
 
@@ -533,6 +556,7 @@ hr {
             }
         }
 
+        /* TODO: Remove this. */
         h1 &, h2 &, h3 & {
             margin-top: -0.25rem;
         }
@@ -595,6 +619,7 @@ hr {
 
         &:not([disabled]):hover {
             text-decoration: underline;
+            color: $blue;
         }
     }
 
@@ -977,6 +1002,67 @@ p {
             span {
                 background: $green;
             }
+        }
+    }
+}
+
+.notifications {
+    $notifications-width: 400px;
+
+    &.open {
+        .notifications-overlay {
+            display: inline;
+        }
+
+        .notifications-body {
+            right: 0;
+        }
+    }
+
+    .notifications-overlay {
+        display: none;
+        position: fixed;
+        height: 100%;
+        width: 100%;
+        left: 0;
+        top: $nav-height - 1;
+        background: $transparent;
+        z-index: 1000;
+    }
+
+    .notifications-body {
+        -webkit-transition: all .3s ease-out;
+        -moz-transition: all .3s ease-out;
+        -o-transition: all .3s ease-out;
+        -ms-transition: all .3s ease-out;
+        position: fixed;
+        top: $nav-height - 1;
+        right: -$notifications-width;
+        width: $notifications-width;
+        max-width: 100%;
+        height: 100%;
+        background: $gray;
+        border-left: $border;
+        z-index: 1001;
+
+        header {
+            background: $white;
+            border-bottom: $border;
+            padding: 10px 15px;
+
+            a {
+                line-height: $input-height;
+            }
+
+            .fa {
+                padding-left: 5px;
+                color: $blue;
+            }
+        }
+
+        h3 {
+            padding: 15px;
+            color: $light-black;
         }
     }
 }
