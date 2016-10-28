@@ -4,13 +4,13 @@ import { shallow } from 'enzyme';
 import { expect } from 'chai';
 import { push } from 'react-router-redux';
 
-import { IndexPage } from '~/dnszones/layouts/IndexPage';
+import { IndexPage } from '~/dnsmanager/layouts/IndexPage';
 import { api, freshState } from '@/data';
 import { SHOW_MODAL } from '~/actions/modal';
 
 const { dnszones } = api;
 
-describe('dnszones/layouts/IndexPage', () => {
+describe('dnsmanager/layouts/IndexPage', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
@@ -19,7 +19,7 @@ describe('dnszones/layouts/IndexPage', () => {
 
   const dispatch = sandbox.spy();
 
-  it('redirects to /dnszones/create when you have no DNS Zones', async () => {
+  it('redirects to /dnsmanager/create when you have no DNS Zones', async () => {
     const page = shallow(
       <IndexPage
         dispatch={dispatch}
@@ -30,7 +30,7 @@ describe('dnszones/layouts/IndexPage', () => {
         }}
       />);
     await page.instance().componentDidMount();
-    expect(dispatch.calledWith(push('/dnszones/create')))
+    expect(dispatch.calledWith(push('/dnsmanager/create')))
       .to.equal(true);
   });
 
@@ -49,7 +49,7 @@ describe('dnszones/layouts/IndexPage', () => {
       Object.keys(dnszones.dnszones).length);
     expect(table.find('tbody tr td').at(1).find('Link')
                 .props().to)
-      .to.equal('/dnszones/1');
+      .to.equal('/dnsmanager/1');
     expect(table.find('tbody tr td').at(2)
                 .text())
     .to.equal('master');
