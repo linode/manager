@@ -34,17 +34,26 @@ function genThunkOne(config, actions) {
     if (typeof ids[ids.length - 1] === 'boolean') {
       overwrite = ids.pop();
     }
+    let progressReset = false;
+    if (typeof ids[ids.length - 1] === 'boolean') {
+      progressReset = ids.pop();
+    }
     const state = refineState(config, getState(), ids);
     const id = ids[ids.length - 1];
     const prev = state[config.plural][id];
-    if (!overwrite && !_.isUndefined(prev)) {
-      return prev;
+
+    if (overwrite || _.isUndefined(prev)) {
+      const { token } = getState().authentication;
+      const response = await fetch(token, config.endpoint(...ids));
+      // TODO: delete this when progress is implemented in the API
+      const progressCheck = prev && prev.progress && !progressReset;
+      const progress = progressCheck ? Math.min(prev.progress + 7, 99) : 7;
+      const resource = { ...(await response.json()), progress };
+      dispatch(actions.one(resource, ...ids));
+      return resource;
     }
-    const { token } = getState().authentication;
-    const response = await fetch(token, config.endpoint(...ids));
-    const resource = await response.json();
-    dispatch(actions.one(resource, ...ids));
-    return resource;
+
+    return prev;
   };
 }
 
@@ -104,9 +113,12 @@ function genThunkAll(config, page) {
 function genThunkUntil(config, actions, one) {
   return (test, ...ids) => async (dispatch) => {
     dispatch(actions.one({ _polling: true }, ...ids));
+    let progressReset = true;
     for (;;) {
       try {
-        const resource = await dispatch(one(...ids, true));
+        // TODO: remove progressReset when progress is implemented in the API
+        const resource = await dispatch(one(...ids, progressReset, true));
+        progressReset = false;
         if (test(resource)) break;
       } catch (ex) {
         if (ex.statusCode === 404) {

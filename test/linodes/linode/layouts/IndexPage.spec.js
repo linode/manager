@@ -52,8 +52,13 @@ describe('linodes/linode/layouts/IndexPage/loadLinode', async () => {
     await page.instance().componentDidMount();
     expect(dispatch.calledTwice).to.equal(true);
     const fn = dispatch.firstCall.args[0];
+    // TODO: remove when API supports progress
     await expectRequest(fn, '/linode/instances/-1',
-      d => expect(d.args[0]).to.deep.equal(actions.one({ }, -1)));
+      d => expect(d.args[0]).to.deep.equal({
+        ...(actions.one({ }, -1)),
+        resource: { progress: 7 },
+      })
+    );
   });
 
   it('handles errors from fetchLinode', async () => {
