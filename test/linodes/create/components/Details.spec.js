@@ -18,13 +18,13 @@ describe('linodes/create/components/Details', () => {
     const c = shallow(<Details selectedType={null} />);
     expect(c.find('h2').text()).to.equal('Details');
     // PasswordInput doesn't show up because shallow mount
-    expect(c.find('input').length).to.equal(1);
+    expect(c.find('input').length).to.equal(2);
   });
 
   it('renders multiple labels', () => {
     const c = shallow(<Details selectedType={null} />);
     // PasswordInput input doesn't show up because shallow mount
-    expect(c.find('input').length).to.equal(1);
+    expect(c.find('input').length).to.equal(2);
     expect(c.find('[name="label"]').at(0).props().placeholder).to.equal('my-label');
     expect(c.state('labels')).to.have.lengthOf(1);
   });
