@@ -1,5 +1,7 @@
 .status-dropdown {
+    $input-height: 20px;
     position: relative;
+    border: $border;
 
     span {
         height: $input-height;
@@ -7,10 +9,12 @@
         padding: 0 $input-padding;
     }
 
-    .dropdown-toggle {
+    .btn.dropdown-toggle {
         background: transparent;
         padding: 0;
         border: 0 !important;
+        height: $input-height !important;
+        line-height: $input-height !important;
 
         &:active,
         &:hover,
@@ -20,11 +24,26 @@
         }
     }
 
-    &.status-dropdown-border {
-        border: $border;
-    }
-
     .dropdown-item {
         border: $border;
     }
+
+    .progress-cont, .progress-cont-long {
+        width: 100px;
+        height: $input-height;
+        position: relative;
+
+        &.progress-cont-long {
+            width: 400px;
+        }
+    }
+
+    .progress {
+        position: absolute;
+        top: -1px;
+        left: -1px;
+        background-color: $green;
+        height: $input-height + 2px;
+    }
+
 }
