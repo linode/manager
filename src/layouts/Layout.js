@@ -1,20 +1,25 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 
-import Header from '../components/Header';
-import Sidebar from '../components/Sidebar';
-import Notifications from '../components/Notifications';
-import Modal from '../components/Modal';
-import Error from '../components/Error';
+import Header from '~/components/Header';
+import Sidebar from '~/components/Sidebar';
+import Notifications from '~/components/Notifications';
+import Modal from '~/components/Modal';
+import Error from '~/components/Error';
+import Feedback from '~/components/Feedback';
 import { rawFetch as fetch } from '~/fetch';
 import { hideModal } from '~/actions/modal';
 import { showNotifications, hideNotifications } from '~/actions/notifications';
+import { showFeedback, hideFeedback } from '~/actions/feedback';
 
 export class Layout extends Component {
   constructor() {
     super();
     this.renderError = this.renderError.bind(this);
-    this.hideShowNotifications = this.hideShowNotifications.bind(this);
+    this.hideShowNotifications = this.hideShow(
+      'notifications', hideNotifications, showNotifications);
+    this.hideShowFeedback = this.hideShow(
+      'feedback', hideFeedback, showFeedback);
     this.state = { title: '', link: '' };
   }
 
@@ -37,14 +42,18 @@ export class Layout extends Component {
     }
   }
 
-  async hideShowNotifications() {
-    const { dispatch, notifications: { open } } = this.props;
-    if (open) {
-      await dispatch(hideNotifications());
-    } else {
-      await dispatch(hideModal());
-      await dispatch(showNotifications());
-    }
+  hideShow(type, hide, show) {
+    return async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const { dispatch, [type]: { open } } = this.props;
+      if (open) {
+        await dispatch(hide());
+      } else {
+        await dispatch(hideModal());
+        await dispatch(show());
+      }
+    };
   }
 
   renderError() {
@@ -61,7 +70,7 @@ export class Layout extends Component {
   }
 
   render() {
-    const { username, emailHash, currentPath, errors, source } = this.props;
+    const { username, email, emailHash, currentPath, errors, source } = this.props;
     const { title, link } = this.state;
     const githubRoot = 'https://github.com/linode/manager/blob/master/';
     return (
@@ -74,7 +83,16 @@ export class Layout extends Component {
           hideShowNotifications={this.hideShowNotifications}
         />
         <Sidebar path={currentPath} />
-        <Notifications />
+        <Notifications
+          open={this.props.notifications.open}
+          hideShowNotifications={this.hideShowNotifications}
+        />
+        <Feedback
+          email={email}
+          open={this.props.feedback.open}
+          hideShowFeedback={this.hideShowFeedback}
+          submitFeedback={() => {}}
+        />
         <div className="main full-height">
           <Modal />
           {!errors.status ?
@@ -100,11 +118,13 @@ export class Layout extends Component {
 Layout.propTypes = {
   username: PropTypes.string,
   emailHash: PropTypes.string,
+  email: PropTypes.string.isRequired,
   currentPath: PropTypes.string,
   children: PropTypes.node.isRequired,
   errors: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   notifications: PropTypes.object.isRequired,
+  feedback: PropTypes.object.isRequired,
   source: PropTypes.object,
 };
 
@@ -112,8 +132,10 @@ function select(state) {
   return {
     username: state.authentication.username,
     emailHash: state.authentication.emailHash,
+    email: state.authentication.email,
     currentPath: state.routing.locationBeforeTransitions.pathname,
     notifications: state.notifications,
+    feedback: state.feedback,
     errors: state.errors,
     source: state.source,
   };
