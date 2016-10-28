@@ -106,9 +106,6 @@ export default class Details extends Component {
           passwordType="offline_fast_hashing_1e10_per_second"
           onChange={password => this.setState({ password })}
         />
-        <div className="alert alert-info">
-          Save this password somewhere safe. We can't display it again.
-        </div>
       </div>
     );
 
