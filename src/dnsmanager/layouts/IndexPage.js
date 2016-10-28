@@ -20,7 +20,7 @@ export class IndexPage extends Component {
     try {
       await dispatch(dnszones.all());
       if (Object.keys(this.props.dnszones.dnszones).length === 0) {
-        dispatch(push('/dnszones/create'));
+        dispatch(push('/dnsmanager/create'));
       }
     } catch (response) {
       dispatch(setError(response));
@@ -63,10 +63,10 @@ export class IndexPage extends Component {
       <div className="container">
         <header className="clearfix">
           <div className="float-xs-left">
-            <h1>DNS Zones</h1>
+            <h1>DNS Manager</h1>
           </div>
           <div className="float-xs-right">
-            <Link to="/dnszones/create" className="btn btn-primary">Add a DNS Zone</Link>
+            <Link to="/dnsmanager/create" className="btn btn-primary">Add a DNS Zone</Link>
           </div>
         </header>
         <section>
@@ -86,7 +86,7 @@ export class IndexPage extends Component {
                     <input type="checkbox" />
                   </td>
                   <td>
-                    <Link to={`/dnszones/${z.id}`}>{z.dnszone}</Link>
+                    <Link to={`/dnsmanager/${z.id}`}>{z.dnszone}</Link>
                   </td>
                   <td>{z.type}</td>
                   <td className="text-xs-right">
