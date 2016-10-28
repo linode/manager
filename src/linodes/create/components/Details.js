@@ -106,22 +106,8 @@ export default class Details extends Component {
           passwordType="offline_fast_hashing_1e10_per_second"
           onChange={password => this.setState({ password })}
         />
-        <div className="alert alert-info">
-          Save this password somewhere safe. We can't display it again.
-        </div>
       </div>
     );
-
-    const inputRows = [
-      ..._.range(this.state.quantity).map(i =>
-        ({
-          label: i === 0 ? 'Label' : null,
-          content: labelInput(i),
-          errors: errors.label,
-          key: i,
-        })),
-      { label: 'Root password', content: passwordInput },
-    ];
 
     const renderBackupsPrice = () => {
       const price = (this.props.selectedType.backups_price / 100).toFixed(2);
@@ -145,7 +131,18 @@ export default class Details extends Component {
         </label>
       </div>
     );
-    const backups = this.renderRow({ label: 'Backups', content: backupInput });
+
+    const inputRows = [
+      ..._.range(this.state.quantity).map(i =>
+        ({
+          label: i === 0 ? 'Label' : null,
+          content: labelInput(i),
+          errors: errors.label,
+          key: i,
+        })),
+      { label: 'Root password', content: passwordInput },
+      { label: 'Backups', content: backupInput },
+    ];
 
     const showAdvancedOrHide = this.state.showAdvanced ? (
       <span>Hide additional details <span className="fa fa-angle-up" /></span>
@@ -169,7 +166,6 @@ export default class Details extends Component {
               {!this.state.showAdvanced ? null : (
                 <span>
                   {group}
-                  {backups}
                 </span>
                )}
             </section>
