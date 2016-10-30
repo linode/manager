@@ -17,9 +17,9 @@ export class Layout extends Component {
     super();
     this.renderError = this.renderError.bind(this);
     this.hideShowNotifications = this.hideShow(
-      'notifications', hideNotifications, showNotifications);
+      'notifications', hideNotifications, showNotifications).bind(this);
     this.hideShowFeedback = this.hideShow(
-      'feedback', hideFeedback, showFeedback);
+      'feedback', hideFeedback, showFeedback).bind(this);
     this.state = { title: '', link: '' };
   }
 
