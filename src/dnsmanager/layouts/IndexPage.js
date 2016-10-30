@@ -1,12 +1,12 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import { push } from 'react-router-redux';
 
 import { setError } from '~/actions/errors';
 import { showModal, hideModal } from '~/actions/modal';
 import { dnszones } from '~/api';
 import { setSource } from '~/actions/source';
+import { renderCreateHelper } from '~/linodes/layouts/IndexPage';
 
 export class IndexPage extends Component {
   constructor() {
@@ -19,9 +19,6 @@ export class IndexPage extends Component {
     dispatch(setSource(__filename));
     try {
       await dispatch(dnszones.all());
-      if (Object.keys(this.props.dnszones.dnszones).length === 0) {
-        dispatch(push('/dnsmanager/create'));
-      }
     } catch (response) {
       dispatch(setError(response));
     }
@@ -59,6 +56,38 @@ export class IndexPage extends Component {
 
   render() {
     const { dnszones } = this.props;
+
+    const renderZones = () => (
+      <section>
+        <table>
+          <thead>
+            <tr>
+              <th>&nbsp;</th>
+              <th>Name</th>
+              <th>Type</th>
+              <th>&nbsp;</th>
+            </tr>
+          </thead>
+          <tbody>
+            {Object.values(dnszones.dnszones).map(z => (
+              <tr key={z.id}>
+                <td>
+                  <input type="checkbox" />
+                </td>
+                <td>
+                  <Link to={`/dnsmanager/${z.id}`}>{z.dnszone}</Link>
+                </td>
+                <td>{z.type}</td>
+                <td className="text-xs-right">
+                  <a href="#" onClick={() => this.deleteZone(z.id)}>Delete</a>
+                </td>
+              </tr>
+             ))}
+          </tbody>
+        </table>
+      </section>
+    );
+
     return (
       <div className="container">
         <header className="clearfix">
@@ -66,37 +95,11 @@ export class IndexPage extends Component {
             <h1>DNS Manager</h1>
           </div>
           <div className="float-xs-right">
-            <Link to="/dnsmanager/create" className="btn btn-primary">Add a DNS Zone</Link>
+            <Link to="/dnsmanager/create" className="btn btn-primary">Add a zone</Link>
           </div>
         </header>
-        <section>
-          <table>
-            <thead>
-              <tr>
-                <th>&nbsp;</th>
-                <th>Name</th>
-                <th>Type</th>
-                <th>&nbsp;</th>
-              </tr>
-            </thead>
-            <tbody>
-              {Object.values(dnszones.dnszones).map(z => (
-                <tr key={z.id}>
-                  <td>
-                    <input type="checkbox" />
-                  </td>
-                  <td>
-                    <Link to={`/dnsmanager/${z.id}`}>{z.dnszone}</Link>
-                  </td>
-                  <td>{z.type}</td>
-                  <td className="text-xs-right">
-                    <a href="#" onClick={() => this.deleteZone(z.id)}>Delete</a>
-                  </td>
-                </tr>
-               ))}
-            </tbody>
-          </table>
-        </section>
+        {Object.keys(this.props.dnszones.dnszones).length ? renderZones() :
+           renderCreateHelper('zones', '/dnsmanager/create', 'Add a zone')}
       </div>
     );
   }

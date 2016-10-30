@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
-import { push } from 'react-router-redux';
 import moment from 'moment';
 
 import { Linode } from '../components/Linode';
@@ -15,6 +14,19 @@ import {
   toggleSelected,
 } from '../actions';
 import { setSource } from '~/actions/source';
+
+
+export function renderCreateHelper(object, link, linkText) {
+  return (
+    <section className="text-xs-center">
+      <h3 className="text-light-black">
+        You've got no {object}! Click&nbsp;
+        <Link to={link}>{linkText}</Link>
+        &nbsp;in the top-right corner to get started.
+      </h3>
+    </section>
+  );
+}
 
 export class IndexPage extends Component {
   constructor() {
@@ -34,9 +46,6 @@ export class IndexPage extends Component {
     dispatch(setSource(__filename));
     try {
       await dispatch(linodes.all());
-      if (Object.keys(this.props.linodes.linodes).length === 0) {
-        dispatch(push('/linodes/create'));
-      }
       // TODO: Start until on transient linodes
     } catch (response) {
       dispatch(setError(response));
@@ -173,7 +182,6 @@ export class IndexPage extends Component {
     const gridIcon = <span className="fa fa-th-large"></span>;
     const gridListToggle = (
       <span className="grid-list">
-        <div>Toggle view:</div>
         <span>
         {
           view === 'list' ? listIcon :
@@ -188,6 +196,14 @@ export class IndexPage extends Component {
         </span>
       </span>
     );
+
+    const renderLinodes = () => _.map(
+      _.sortBy(
+        _.map(
+          _.groupBy(Object.values(linodes), l => l.group),
+          (_linodes, _group) => ({ group: _group, linodes: _linodes })
+        ), lg => lg.group
+      ), this.renderGroup);
 
     return (
       <div className={`container linodes-page ${view}`}>
@@ -212,13 +228,8 @@ export class IndexPage extends Component {
             </div>
           </div>
         </header>
-        {_.map(
-          _.sortBy(
-            _.map(
-              _.groupBy(Object.values(linodes), l => l.group),
-              (_linodes, _group) => ({ group: _group, linodes: _linodes })
-            ), lg => lg.group
-          ), this.renderGroup)}
+        {Object.keys(this.props.linodes.linodes).length ? renderLinodes() :
+           renderCreateHelper('Linodes', '/linodes/create', 'Add a Linode')}
       </div>
     );
   }
