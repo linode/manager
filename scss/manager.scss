@@ -239,6 +239,12 @@ a {
         padding: 0 15px;
         margin-right: -15px;
 
+        /* Disable double click highlight */
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -khtml-user-select: none;
+        -ms-user-select: none;
+
         &.active,
         &:active,
         &:hover,
@@ -686,6 +692,18 @@ input[type=checkbox], input[type=radio] {
     }
 }
 
+:not(.btn-group) .btn.float-xs-right + .btn.float-xs-right,
+.btn.float-xs-right + label.float-xs-right {
+    display: inline-block;
+    margin-right: 15px;
+}
+
+:not(.btn-group) .btn.float-xs-left + .btn.float-xs-left,
+.btn.float-xs-left + label.float-xs-left {
+    display: inline-block;
+    margin-left: 15px;
+}
+
 .dropdown-menu {
     padding: 0;
     border: 0;
@@ -1067,6 +1085,37 @@ p {
     }
 }
 
+.feedback {
+    position: fixed;
+    right: -400px;
+    top: 300px;
+    z-index: 999;
+    -webkit-transition: all .3s ease-out;
+    -moz-transition: all .3s ease-out;
+    -o-transition: all .3s ease-out;
+    -ms-transition: all .3s ease-out;
+
+    &.open {
+        right: 0;
+    }
+
+    .feedback-button {
+        $rotation: -90deg;
+        position: absolute;
+        left: -1 * $input-height * 2 + 4px;
+        top: 50%;
+        -webkit-transform: rotate($rotation);
+        -moz-transform: rotate($rotation);
+        -o-transform: rotate($rotation);
+        -ms-transform: rotate($rotation);
+        transform: rotate($rotation);
+    }
+
+    .card {
+        width: 400px;
+    }
+}
+
 @-moz-keyframes pulse {
     0% {opacity: 1.0;}
     75% {opacity: 0.4;}
@@ -1089,4 +1138,5 @@ p {
     0% {opacity: 1.0;}
     75% {opacity: 0.4;}
     95% {opacity: 0.75;}
+
 }

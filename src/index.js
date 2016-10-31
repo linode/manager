@@ -7,8 +7,7 @@ import { Router, Route, IndexRedirect, browserHistory } from 'react-router';
 import DevTools from './components/DevTools';
 import { syncHistoryWithStore } from 'react-router-redux';
 import ReactGA from 'react-ga';
-import { GA_ID, WEBENGAGE_ID } from './constants';
-import { getStorage } from './storage';
+import { GA_ID } from './constants';
 
 import checkLogin, { initializeAuthentication } from './session';
 
@@ -77,13 +76,5 @@ const init = () => {
     document.getElementById('root')
   );
 };
-if (window.webengage) { // eslint-disable-line no-undef
-  webengage.init(WEBENGAGE_ID); // eslint-disable-line no-undef
-  webengage.feedback.options('formData', [ // eslint-disable-line no-undef
-    {
-      name: 'email',
-      value: getStorage('authentication/email'),
-    },
-  ]);
-}
+
 window.init = init;
