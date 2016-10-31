@@ -7,8 +7,6 @@ import { parallel } from '~/api/util';
 import HelpButton from '~/components/HelpButton';
 import { ErrorSummary, FormGroup, reduceErrors } from '~/errors';
 import { Link } from '~/components/Link';
-import Slider from 'rc-slider';
-import { setSource } from '~/actions/source';
 
 export class ConfigEdit extends Component {
   constructor() {
@@ -24,11 +22,26 @@ export class ConfigEdit extends Component {
       comments: '',
       label: '',
       ram_limit: 0,
-      kernel: '',
-      disable_update_db: false,
-      enable_distro_helper: true,
-      enable_network_helper: true,
-      enable_modules_dep_helper: true,
+      kernel: 'linode/latest',
+      root_device: '/dev/sda',
+      root_device_custom: '',
+      boot_device: 'standard',
+      disks: {
+        sda: { id: 'none' },
+        sdb: null,
+        sdc: null,
+        sdd: null,
+        sde: null,
+        sdf: null,
+        sdg: null,
+        sdh: null,
+      },
+      helpers: {
+        disable_updatedb: true,
+        enable_distro_helper: true,
+        enable_network_helper: true,
+        enable_modules_dep_helper: true,
+      },
     };
   }
 
@@ -40,23 +53,29 @@ export class ConfigEdit extends Component {
       kernels.all(),
       linodes.one(linodeId),
       linodes.configs.all(linodeId),
+      linodes.disks.all(linodeId),
     ));
-
     const linode = this.getLinode();
-    const configs = Object.values(linode._configs.configs);
-    const configIds = configs.map(config => config.id);
-    if (configIds.indexOf(parseInt(configId)) > -1) {
-      const config = await dispatch(linodes.configs.one(linodeId, configId));
+    if (linode._configs.configs[Number.parseInt(configId)]) {
+      const config = linode._configs.configs[configId];
+      const disks = Object.keys(config.disks);
+      const diskIndex = disks.indexOf(config.root_device.replace('/dev/', ''));
+      const bootDevice = diskIndex >= 0 ? 'standard' : 'custom';
       this.setState({
         ...config,
-        ...config.helpers,
         loading: false,
-        kernel: config.kernel.id,
+        disks: config.disks,
+        kernel: config.kernel,
+        boot_device: bootDevice,
+        root_device_custom: (bootDevice === 'custom' ? config.root_device : ''),
       });
     } else if (configId !== 'create') {
       dispatch(push(`/linodes/${linodeId}/settings/advanced`));
     } else {
-      this.setState({ loading: false });
+      this.setState({
+        loading: false,
+        ram_limit: linode.type[0].ram,
+      });
     }
   }
 
@@ -69,11 +88,34 @@ export class ConfigEdit extends Component {
     return linode._configs.configs[configId] || null;
   }
 
+  addDisk(disk) {
+    const disks = Object.keys(this.state.disks);
+    const newDisk = disks[disks.indexOf(disk) + 1];
+    if (newDisk) {
+      this.setState({
+        disks: { ...this.state.disks, [newDisk]: { id: 'none' } },
+      });
+    }
+  }
+
+  deleteDisk(disk) {
+    const disks = Object.keys(this.state.disks);
+
+    if (disk !== disks[0]) {
+      this.setState({
+        disks: { ...this.state.disks, [disk]: null },
+      });
+    }
+  }
+
   async saveChanges(isCreate) {
     const state = this.state;
     const { dispatch } = this.props;
+    const { configId } = this.props.params;
     const linode = this.getLinode();
-    const config = this.getConfig();
+
+    const rootDevice = state.boot_device === 'custom'
+      ? state.root_device_custom : state.root_device;
 
     this.setState({ loading: true, errors: {} });
 
@@ -86,11 +128,13 @@ export class ConfigEdit extends Component {
           run_level: state.run_level,
           virt_mode: state.virt_mode,
           kernel: state.kernel,
+          disks: state.disks,
+          root_device: rootDevice,
           helpers: {
-            disable_update_db: state.disable_update_db,
-            enable_distro_helper: state.enable_distro_helper,
-            enable_network_helper: state.enable_network_helper,
-            enable_modules_dep_helper: state.enable_modules_dep_helper,
+            disable_updatedb: state.helpers.disable_updatedb,
+            enable_distro_helper: state.helpers.enable_distro_helper,
+            enable_network_helper: state.helpers.enable_network_helper,
+            enable_modules_dep_helper: state.helpers.enable_modules_dep_helper,
           },
         }, linode.id));
       } else {
@@ -101,13 +145,15 @@ export class ConfigEdit extends Component {
           run_level: state.run_level,
           virt_mode: state.virt_mode,
           kernel: state.kernel,
+          disks: state.disks,
+          root_device: rootDevice,
           helpers: {
-            disable_update_db: state.disable_update_db,
-            enable_distro_helper: state.enable_distro_helper,
-            enable_network_helper: state.enable_network_helper,
-            enable_modules_dep_helper: state.enable_modules_dep_helper,
+            disable_updatedb: state.helpers.disable_updatedb,
+            enable_distro_helper: state.helpers.enable_distro_helper,
+            enable_network_helper: state.helpers.enable_network_helper,
+            enable_modules_dep_helper: state.helpers.enable_modules_dep_helper,
           },
-        }, linode.id, config.id));
+        }, linode.id, configId));
       }
       this.setState({ loading: false });
       dispatch(push(`/linodes/${linode.id}/settings/advanced`));
@@ -116,10 +162,12 @@ export class ConfigEdit extends Component {
     }
   }
 
-  renderUI(isCreate) {
-    const linode = this.getLinode();
-    const totalRam = linode.type[0].ram;
+  renderUI() {
     const { kernels } = this.props;
+    const { configId } = this.props.params;
+    const isCreate = configId === 'create';
+    const linode = this.getLinode();
+    const disks = linode._disks.disks;
     const state = this.state;
     const input = (display, field, control) => (
       <FormGroup errors={state.errors} field={field} className="row">
@@ -157,13 +205,15 @@ export class ConfigEdit extends Component {
       <div className="form-check">
         <label>
           <input
-            className="form-check-input"
+            className={`form-check-input ${field}-checkbox`}
             type="checkbox"
             name={`config-${field}`}
             id={`config-${field}`}
             disabled={state.loading}
-            checked={state[field]}
-            onChange={e => this.setState({ [field]: e.target.checked })}
+            checked={!!state.helpers[field]}
+            onChange={e => this.setState({
+              helpers: { ...state.helpers, [field]: e.target.checked },
+            })}
           /> {display}
         </label>
       </div>);
@@ -189,7 +239,7 @@ export class ConfigEdit extends Component {
             <select
               className="form-control"
               id="config-kernel"
-              value={this.state.kernel}
+              value={state.kernel}
               disabled={state.loading}
               onChange={e => this.setState({ kernel: e.target.value })}
             >{Object.values(kernels.kernels).map(kernel => {
@@ -212,7 +262,7 @@ export class ConfigEdit extends Component {
             {checkbox('Enable distro helper', 'enable_distro_helper')}
             {checkbox('Enable network helper', 'enable_network_helper')}
             {checkbox('Enable modules.dep helper', 'enable_modules_dep_helper')}
-            {checkbox('Disable updatedb', 'disable_update_db')}
+            {checkbox('Disable updatedb', 'disable_updatedb')}
           </div>
         </fieldset>
         <fieldset className="form-group row">
@@ -234,22 +284,111 @@ export class ConfigEdit extends Component {
             {radio('init=/bin/bash', 'run_level', 'binbash')}
           </div>
         </fieldset>
-        <div className="form-group row">
-          <label className="col-sm-2 col-form-label">Memory limit</label>
-          <div className="col-sm-3 align-slider">
-            <Slider
-              min={0}
-              max={totalRam}
-              step={128}
-              value={state.ram_limit}
-              onChange={v => this.setState({ ram_limit: v })}
-              tipFormatter={v => `${v} MB`}
+        {input('Memory limit', 'ram_limit',
+          <div className="content-col">
+            <input
+              className="col-sm-3"
+              id="config-ram_limit"
               disabled={state.loading}
+              placeholder="Memory limit"
+              value={state.ram_limit}
+              onChange={e => this.setState({ ram_limit: e.target.value })}
             />
+            <span className="measure-unit">MB</span>
+          </div>)}
+        {Object.keys(state.disks).map(device => {
+          if (state.disks[device]) {
+            return (
+              <disks
+                className={`form-group row disk-slots ${device}`}
+                key={`config-device-row-${device}`}
+              >
+                <label className="col-sm-2 col-form-label" key={`config-device-label-${device}`}>
+                  /dev/{device}
+                </label>
+                <div className="col-sm-6" key={`config-device-field-${device}`}>
+                  <select
+                    className="form-control disk-select pull-left"
+                    id={`config-device-${device}`}
+                    value={state.disks[device].id}
+                    disabled={state.loading}
+                    onChange={e => this.setState({
+                      disks: { ...state.disks, [device]: { id: Number.parseInt(e.target.value) } },
+                    })}
+                  >
+                    <option key="none" value="none" disabled>None</option>
+                    {Object.keys(disks).map(disk => (
+                      <option key={disk} value={disk}>
+                        {disks[disk].label}
+                      </option>)
+                    )}
+                  </select>
+                  <buttons className="disk-slot-btns">
+                    <button
+                      className="add-disk-btn"
+                      disabled={state.loading}
+                      onClick={() => this.addDisk(device)}
+                    >Add disk</button>
+                    <button
+                      className="delete-disk-btn"
+                      disabled={state.loading}
+                      onClick={() => this.deleteDisk(device)}
+                    >Delete disk</button>
+                  </buttons>
+                </div>
+              </disks>
+            );
+          }
+        })}
+        <div className="form-group row">
+          <label className="col-sm-2 col-form-label">root / boot device</label>
+          <div className="col-sm-8">
+            {radio((
+              <div>
+                <span className="col-sm-3 custom-label-root">
+                  Standard
+                </span>
+                <div className="col-sm-7 custom-root-device">
+                  <select
+                    className="form-control root-device-select"
+                    id="config-root-device-select"
+                    value={state.root_device}
+                    disabled={state.loading}
+                    onChange={e => this.setState({ root_device: e.target.value })}
+                  >
+                    {Object.keys(state.disks).map(device => {
+                      if (state.disks[device]) {
+                        return (
+                          <option key={`/dev/${device}`} value={`/dev/${device}`}>
+                            /dev/{device}
+                          </option>
+                        );
+                      }
+                    })}
+                  </select>
+                </div>
+              </div>
+            ), 'boot_device', 'standard')}
+            {radio((
+              <div>
+                <span className="col-sm-3 custom-label-root">
+                  Custom
+                </span>
+                <div className="col-sm-7 custom-root-device">
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="config-custom-root-device"
+                    disabled={state.loading}
+                    placeholder={state.root_device}
+                    value={state.root_device_custom}
+                    onChange={e => this.setState({ root_device_custom: e.target.value })}
+                  />
+                </div>
+              </div>
+            ), 'boot_device', 'custom')}
           </div>
-          <label className="col-sm-2 col-form-label">{state.ram_limit} MB</label>
         </div>
-        <p>TODO: block device assignment</p>
         <ErrorSummary errors={state.errors} />
         <button
           className="btn btn-primary"
@@ -267,17 +406,16 @@ export class ConfigEdit extends Component {
 
   render() {
     const { configId } = this.props.params;
-    const isCreate = configId === 'create';
 
     return (
       <section className="card">
         <header>
           <h2>
-            {isCreate ? 'Add config' : 'Edit config'}
+            {configId === 'create' ? 'Add config' : 'Edit config'}
             <HelpButton to="https://example.org" />
           </h2>
         </header>
-        {this.renderUI(isCreate)}
+        {this.renderUI()}
       </section>
     );
   }

@@ -20,6 +20,7 @@ export const kernels = {
   'linode/latest': {
     ...testKernel,
     id: 'linode/latest',
+    label: '4.0.1-x86-linode55',
     x64: false,
   },
 };

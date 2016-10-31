@@ -1,2 +1,69 @@
 @import 'alerts';
 @import 'disks';
+
+.measure-unit {
+    display: inline-block;
+    padding-top: 3px;
+    padding-left: 5px;
+}
+
+disks {
+    display: block;
+}
+
+.disk-select {
+    width: 15rem;
+}
+
+.disk-slots {
+    .disk-slot-btns {
+        display: none;
+        button {
+            background-color: #ffffff;
+            margin-top: 0.25rem;
+            margin-left: 0.75rem;
+            padding: 0 0.25rem;
+            border-radius: 0.2rem;
+        }
+    }
+    &:first-of-type {
+        .delete-disk-btn {
+            display: none;
+        }
+    }
+    &:nth-of-type(8) {
+        .add-disk-btn {
+            display: none;
+        }
+    }
+    &:last-of-type {
+        .disk-slot-btns {
+            display: inline-block;
+        }
+    }
+}
+
+.add-disk-btn {
+    border: 1px solid #4A90E2;
+    color: #4A90E2;
+}
+
+.delete-disk-btn {
+    border: 1px solid #F24C2B;
+    color: #F24C2B;
+}
+
+.root-device-select {
+    margin-left: 0.25rem;
+    width: 9rem;
+}
+
+.custom-label-root {
+    padding-top: 0px;
+    padding-left: 1.2rem;
+    margin-top: -0.2rem;
+}
+
+.custom-root-device {
+    margin-top: -0.4rem;
+}
