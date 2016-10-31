@@ -1,6 +1,10 @@
 import { SHOW_FEEDBACK, HIDE_FEEDBACK } from '../actions/feedback';
 
-export default function feedback(state = null, action) {
+const defaultState = {
+  open: false,
+};
+
+export default function feedback(state = defaultState, action) {
   switch (action.type) {
     case SHOW_FEEDBACK:
       return {
