@@ -2,17 +2,13 @@ import React from 'react';
 import sinon from 'sinon';
 import { expect } from 'chai';
 import { shallow } from 'enzyme';
-import { Layout } from '../../src/layouts/Layout';
+
+import { Layout } from '~/layouts/Layout';
 import * as fetch from '~/fetch';
 
 describe('layouts/Layout', () => {
   const sandbox = sinon.sandbox.create();
   let dispatch = sandbox.spy();
-
-  afterEach(() => {
-    sandbox.restore();
-    dispatch = sandbox.spy();
-  });
 
   const errors = {
     json: null,
@@ -21,40 +17,44 @@ describe('layouts/Layout', () => {
     details: false,
   };
 
-  it('renders its children', () => {
-    const component = shallow(
+  function makeLayout(_dispatch = dispatch,
+                      _errors = errors,
+                      source = { source: 'foobar.html' },
+                      children = <p>Hello world!</p>) {
+    return (
       <Layout
-        dispatch={dispatch}
-        errors={errors}
-      ><p>Hello world!</p></Layout>);
+        dispatch={_dispatch}
+        errors={_errors}
+        source={source}
+        notifications={{ open: false }}
+        feedback={{ open: false }}
+      >{children}</Layout>
+    );
+  }
+
+  afterEach(() => {
+    sandbox.restore();
+    dispatch = sandbox.spy();
+  });
+
+  it('renders its children', () => {
+    const component = shallow(makeLayout());
     expect(component.contains(<p>Hello world!</p>))
       .to.equal(true);
   });
 
   it('renders a sidebar', () => {
-    const component = shallow(
-      <Layout
-        dispatch={dispatch}
-        errors={errors}
-      ><p>Hello world!</p></Layout>);
+    const component = shallow(makeLayout());
     expect(component.find('Sidebar').length).to.equal(1);
   });
 
   it('renders a header', () => {
-    const component = shallow(
-      <Layout
-        dispatch={dispatch}
-        errors={errors}
-      ><p>Hello world!</p></Layout>);
+    const component = shallow(makeLayout());
     expect(component.find('Header').length).to.equal(1);
   });
 
   it('renders a footer', () => {
-    const component = shallow(
-      <Layout dispatch={dispatch} errors={errors} source={{ source: 'foobar.html' }}>
-        <p>Hello world!</p>
-      </Layout>
-    );
+    const component = shallow(makeLayout());
     const sourceLink = component.find('footer a');
     expect(sourceLink.text()).to.equal('Source');
     expect(sourceLink.props().href)
@@ -73,21 +73,14 @@ describe('layouts/Layout', () => {
   };
 
   it('does not render children on error', () => {
-    const component = shallow(
-      <Layout
-        dispatch={dispatch}
-        errors={errorsPopulated}
-      ><p>Hello world!</p></Layout>);
+    const component = shallow(makeLayout(dispatch, errorsPopulated));
     expect(component.contains(<p>Hello world!</p>))
       .to.equal(false);
   });
 
   it('renders a 404 page when appropriate', () => {
-    const component = shallow(
-      <Layout
-        dispatch={dispatch}
-        errors={{ ...errorsPopulated, status: 404 }}
-      ><p>Hello world!</p></Layout>);
+    const component = shallow(makeLayout(
+      dispatch, { ...errorsPopulated, status: 404 }));
     expect(component.find('Error').length).to.equal(1);
   });
 
@@ -105,10 +98,7 @@ describe('layouts/Layout', () => {
     });
 
     /* eslint-enable prefer-template */
-    const layout = shallow(
-      <Layout errors={errors} dispatch={dispatch}>
-        <p>Hello world</p>
-      </Layout>);
+    const layout = shallow(makeLayout());
     await layout.instance().componentDidMount();
     expect(fetchStub.calledWith('https://blog.linode.com/feed/'))
       .to.equal(true);

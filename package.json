@@ -6,9 +6,10 @@
     "clean": "rimraf dist",
     "build:webpack": "cross-env NODE_ENV=production webpack --config webpack.config.prod.js",
     "build": "npm run clean && npm run build:webpack",
-    "start": "node devServer.js",
+    "kill": "lsof -i :3000 | grep node | tr -s ' ' | cut -d ' ' -f2 | xargs kill",
     "lint": "eslint src test",
     "lint:fix": "eslint src test --fix",
+    "start": "node devServer.js",
     "test": "NODE_ENV=test karma start karma.conf.js --single-run",
     "test:watch": "NODE_ENV=test karma start karma.conf.js",
     "test:debug": "NODE_ENV=test karma start karma.conf.js --browsers=Chrome --debug"
