@@ -1,6 +1,12 @@
 import { SHOW_MODAL, HIDE_MODAL } from '../actions/modal';
 
-export default function modal(state = null, action) {
+const defaultState = {
+  open: false,
+  title: null,
+  body: null,
+};
+
+export default function modal(state = defaultState, action) {
   switch (action.type) {
     case SHOW_MODAL:
       return {

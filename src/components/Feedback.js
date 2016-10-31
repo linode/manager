@@ -31,6 +31,7 @@ export default class Feedback extends Component {
                 <div>
                   <input
                     value={email}
+                    name="email"
                     className="form-control"
                     onChange={e => this.setState({ email: e.target.value })}
                   />
@@ -45,6 +46,7 @@ export default class Feedback extends Component {
                   <textarea
                     ref={textarea => textarea && textarea.focus()}
                     value={message}
+                    name="message"
                     className="form-control"
                     onChange={e => this.setState({ message: e.target.value })}
                   />
@@ -77,5 +79,5 @@ Feedback.propTypes = {
 };
 
 Feedback.defaultProps = {
-  open: false,
+  open: true,
 };

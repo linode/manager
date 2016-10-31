@@ -1,6 +1,10 @@
 import { SHOW_NOTIFICATIONS, HIDE_NOTIFICATIONS } from '../actions/notifications';
 
-export default function notifications(state = null, action) {
+const defaultState = {
+  open: false,
+};
+
+export default function notifications(state = defaultState, action) {
   switch (action.type) {
     case SHOW_NOTIFICATIONS:
       return {
