@@ -28,7 +28,11 @@ app.use(require('webpack-dev-middleware')(compiler, {
 app.use(require('webpack-hot-middleware')(compiler));
 
 app.get('*', function(req, res) {
-  res.sendFile(path.join(__dirname, 'index.html'));
+  if (req.url === "/static/common.js") {
+    res.send('');
+  } else {
+    res.sendFile(path.join(__dirname, 'index.html'));
+  }
 });
 
 var port = process.env.MANAGER_PORT || 3000;
