@@ -28,7 +28,7 @@ describe('component/Feedback', () => {
     );
 
     feedback.instance().state.message = 'My message';
-    feedback.find('button[type="submit"]').simulate('click');
+    feedback.find('form').simulate('submit');
     expect(submitFeedback.calledOnce).to.equal(true);
     expect(submitFeedback.firstCall.args[0]).to.deep.equal({
       email: 'foo@gmail.com',
