@@ -2,11 +2,10 @@ import React from 'react';
 import sinon from 'sinon';
 import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
-import { push } from 'react-router-redux';
 
 import { IndexPage } from '~/linodes/layouts/IndexPage';
 import { TOGGLE_SELECTED, CHANGE_VIEW } from '~/linodes/actions/index';
-import { api, freshState } from '@/data';
+import { api } from '@/data';
 import { testLinode } from '@/data/linodes';
 import Dropdown from '~/components/Dropdown';
 import { SET_ERROR } from '~/actions/errors';
@@ -44,22 +43,6 @@ describe('linodes/layouts/IndexPage', () => {
       status: 400,
       statusText: 'Bad Request',
     }));
-  });
-
-  it('redirects to /linodes/create when you have no Linodes', async () => {
-    const page = shallow(
-      <IndexPage
-        dispatch={dispatch}
-        view={'grid'}
-        selected={{}}
-        linodes={{
-          ...freshState.api.linodes,
-          totalPages: 1,
-        }}
-      />);
-    await page.instance().componentDidMount();
-    expect(dispatch.calledWith(push('/linodes/create')))
-      .to.equal(true);
   });
 
   it('renders a grid of Linodes', () => {
