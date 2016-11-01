@@ -130,7 +130,6 @@ export class AlertsPage extends Component {
         <form onSubmit={this.onSubmit}>
           {alerts.map(this.renderAlertRow)}
           <button
-            type="submit"
             className="btn btn-primary"
             disabled={loading}
           >Save</button>

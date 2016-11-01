@@ -56,10 +56,10 @@ export default class Feedback extends Component {
                 <button
                   className="btn btn-primary float-xs-left"
                   onClick={() => submitFeedback(this.state)}
-                  type="submit"
                 >Submit</button>
                 <button
                   className="btn btn-cancel float-xs-left"
+                  type="button"
                   onClick={hideShowFeedback}
                 >Nevermind</button>
               </div>

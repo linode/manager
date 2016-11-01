@@ -71,7 +71,7 @@ export class DisplayPage extends Component {
             </div>
           </FormGroup>
           <ErrorSummary errors={errors} />
-          <button className="btn btn-primary" type="submit" onClick={this.onSubmit}>Save</button>
+          <button className="btn btn-primary" onClick={this.onSubmit}>Save</button>
         </form>
       </section>
     );
