@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import { getLinode, loadLinode } from '~/linodes/linode/layouts/IndexPage';
+import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import { linodes, kernels } from '~/api';
 import { parallel } from '~/api/util';
 import HelpButton from '~/components/HelpButton';
@@ -14,7 +14,6 @@ export class ConfigEdit extends Component {
   constructor() {
     super();
     this.getLinode = getLinode.bind(this);
-    this.loadLinode = loadLinode.bind(this);
     this.renderUI = this.renderUI.bind(this);
     this.saveChanges = this.saveChanges.bind(this);
     this.state = {

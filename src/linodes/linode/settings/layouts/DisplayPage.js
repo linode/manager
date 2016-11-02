@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { getLinode, loadLinode } from '~/linodes/linode/layouts/IndexPage';
+import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import { linodes } from '~/api';
 import { ErrorSummary, FormGroup, reduceErrors } from '~/errors';
 import { setSource } from '~/actions/source';
@@ -10,17 +10,14 @@ export class DisplayPage extends Component {
   constructor() {
     super();
     this.getLinode = getLinode.bind(this);
-    this.loadLinode = loadLinode.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
-    this.state = { group: '', label: '', errors: {} };
+    const { group, label } = this.getLinode();
+    this.state = { group, label, errors: {} };
   }
 
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
-    await this.loadLinode();
-    const { group, label } = this.getLinode();
-    this.setState({ group, label });
   }
 
   async onSubmit(e) {
