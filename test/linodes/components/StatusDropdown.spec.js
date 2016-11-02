@@ -2,7 +2,7 @@ import React from 'react';
 import sinon from 'sinon';
 import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
-import StatusDropdown from '../../src/components/StatusDropdown';
+import StatusDropdown from '~/linodes/components/StatusDropdown';
 
 import { expectRequest } from '@/common';
 import { api } from '@/data';
@@ -25,7 +25,7 @@ describe('components/StatusDropdown', () => {
 
     dropdown.find('.dropdown-toggle').simulate('click');
 
-    expect(dropdown.find('.dropdown-item').length).to.equal(1);
+    expect(dropdown.find('.dropdown-item').length).to.equal(2);
     expect(dropdown.find('.dropdown-item').at(0).text()).
       to.contain('Power on');
   });
@@ -39,10 +39,10 @@ describe('components/StatusDropdown', () => {
 
     dropdown.find('.dropdown-toggle').simulate('click');
 
-    expect(dropdown.find('.dropdown-item').length).to.equal(2);
-    expect(dropdown.find('.dropdown-item').at(0).text()).to.contain(' Reboot');
+    expect(dropdown.find('.dropdown-item').length).to.equal(3);
+    expect(dropdown.find('.dropdown-item').at(0).text()).to.contain('Reboot');
     expect(dropdown.find('.dropdown-item').at(1).text()).
-      to.contain(' Power off');
+      to.contain('Power off');
   });
 
   it('closes on second click', () => {

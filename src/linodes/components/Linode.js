@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 import { flags, distros as distroAssets } from '~/assets';
 import moment from 'moment';
 
-import StatusDropdown from '~/components/StatusDropdown';
+import StatusDropdown from './StatusDropdown';
 
 function renderPowerButton(props) {
   const { linode, onPowerOn, onReboot } = props;
@@ -61,15 +61,6 @@ export function renderDatacenterStyle(linode) {
     </span>
   );
 }
-
-export function launchWeblishConsole(linode) {
-  window.open(
-    `${window.location.protocol}//${window.location.host}/linodes/${linode.id}/weblish`,
-    `weblish_con_${linode.username}`,
-    'left=100,top=100,width=1024,height=655,toolbar=0,resizable=1'
-  );
-}
-
 
 export function getNextBackup(linode) {
   const windows = {
@@ -212,7 +203,6 @@ function renderRow(props) {
       <td className="float-xs-right">
         <StatusDropdown
           linode={linode}
-          leftOriented={false}
           dispatch={props.dispatch}
         />
       </td>
