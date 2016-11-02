@@ -185,6 +185,24 @@ describe('linodes/layouts/IndexPage', () => {
     expect(Object.keys(selected)).to.deep.equal(Object.keys(linodes.linodes));
   });
 
+  it('does not check "select all" if there are no Linodes', () => {
+    const page = shallow(
+      <IndexPage
+        dispatch={dispatch}
+        view={'grid'}
+        selected={{}}
+        linodes={{
+          linodes: {},
+          totalPages: 1,
+          totalResults: 0
+        }}
+      />
+    );
+
+    const checkbox = page.find('.input-group-addon input[type="checkbox"]');
+    expect(checkbox.props().checked).to.equal(false);
+  });
+
   function testViewChange(initial, final) {
     return () => {
       const page = mount(

@@ -168,7 +168,8 @@ export class IndexPage extends Component {
     const { linodes } = this.props.linodes;
     const { selected } = this.props;
     const linodesList = Object.values(linodes);
-    const allSelected = Object.keys(selected).length === linodesList.length;
+    const allSelected = linodesList.length > 0 &&
+      Object.keys(selected).length === linodesList.length;
     const selectAll = () => {
       let cond = l => !l._isSelected;
       if (allSelected) cond = () => true;
