@@ -22,7 +22,7 @@ export function renderCreateHelper(object, link, linkText) {
       <h3 className="text-light-black">
         You've got no {object}! Click&nbsp;
         <Link to={link}>{linkText}</Link>
-        &nbsp;in the top-right corner to get started.
+        &nbsp;to get started.
       </h3>
     </section>
   );
