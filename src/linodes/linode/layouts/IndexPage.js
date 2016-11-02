@@ -104,8 +104,8 @@ export class IndexPage extends Component {
           {this.renderLabel(linode)}
           <span className="float-xs-right">
             <StatusDropdown
+              shortcuts={false}
               linode={linode}
-              leftOriented={false}
               noBorder={false}
               dispatch={this.props.dispatch}
             />

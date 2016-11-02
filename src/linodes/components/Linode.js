@@ -152,7 +152,6 @@ function renderCard(props) {
         <span className="float-xs-right">
           <StatusDropdown
             linode={linode}
-            leftOriented={false}
             dispatch={props.dispatch}
           />
         </span>

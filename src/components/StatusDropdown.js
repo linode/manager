@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 
 import { powerOnLinode, powerOffLinode, rebootLinode } from '~/api/linodes';
 import { LinodeStates, LinodeStatesReadable } from '~/constants';
+import { launchWeblishConsole } from '~/linodes/components/Linode';
 
 export default class StatusDropdown extends Component {
   constructor() {
@@ -22,25 +23,31 @@ export default class StatusDropdown extends Component {
   }
 
   render() {
-    const { linode, dispatch } = this.props;
+    const { linode, dispatch, shortcuts } = this.props;
     const dropdownElements = [
       {
-        name: <span><i className="fa fa-refresh"></i> Reboot</span>,
+        name: <span>Reboot</span>,
         _key: 'reboot',
         _action: rebootLinode,
         _condition: () => linode.status !== 'offline',
       },
       {
-        name: <span><i className="fa fa-power-off"></i> Power off</span>,
+        name: <span>Power off</span>,
         _key: 'power-off',
         _action: powerOffLinode,
         _condition: () => linode.status === 'running',
       },
       {
-        name: <span><i className="fa fa-power-off"></i> Power on</span>,
+        name: <span>Power on</span>,
         _key: 'power-on',
         _action: powerOnLinode,
         _condition: () => linode.status === 'offline',
+      },
+      {
+        name: <span>Launch Console</span>,
+        _key: 'text-console',
+        _action: () => launchWeblishConsole(linode),
+        _condition: () => shortcuts,
       },
     ]
     .filter(element => element._condition())
@@ -60,9 +67,6 @@ export default class StatusDropdown extends Component {
         onMouseDown={action}
       >{name}</button>
     );
-
-    const orientation = this.props.leftOriented === false ?
-                        'dropdown-menu-right' : '';
 
     const openClass = this.state.open ? 'open' : '';
     const borderClass = this.props.noBorder ? '' : 'status-dropdown-border';
@@ -85,7 +89,7 @@ export default class StatusDropdown extends Component {
         >
           <span className="sr-only">Toggle dropdown</span>
         </button>
-        <div className={`dropdown-menu ${orientation}`}>{dropdownMenu}</div>
+        <div className="dropdown-menu">{dropdownMenu}</div>
       </div>
     );
   }
@@ -94,10 +98,11 @@ export default class StatusDropdown extends Component {
 StatusDropdown.propTypes = {
   linode: PropTypes.object,
   dispatch: PropTypes.func,
-  leftOriented: PropTypes.bool,
   noBorder: PropTypes.bool,
+  shortcuts: PropTypes.bool,
 };
 
 StatusDropdown.defaultProps = {
   noBorder: true,
+  shortcuts: true,
 };
