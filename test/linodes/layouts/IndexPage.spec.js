@@ -194,7 +194,7 @@ describe('linodes/layouts/IndexPage', () => {
         linodes={{
           linodes: {},
           totalPages: 1,
-          totalResults: 0
+          totalResults: 0,
         }}
       />
     );
