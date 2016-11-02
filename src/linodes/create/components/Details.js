@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import _ from 'lodash';
+
 import PasswordInput from '~/components/PasswordInput';
 
 export default class Details extends Component {
@@ -160,6 +161,7 @@ export default class Details extends Component {
             <section>
               {inputRows.map(this.renderRow)}
               <button
+                type="button"
                 className="btn btn-cancel"
                 onClick={() => this.setState({ showAdvanced: !this.state.showAdvanced })}
               >{showAdvancedOrHide}</button>
@@ -171,7 +173,6 @@ export default class Details extends Component {
             </section>
             <section>
               <button
-                type="submit"
                 disabled={!(this.props.submitEnabled
                          && this.state.labels[0]
                          && this.state.password)}

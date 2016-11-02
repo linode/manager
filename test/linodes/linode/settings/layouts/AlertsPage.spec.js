@@ -1,6 +1,6 @@
 import React from 'react';
 import sinon from 'sinon';
-import { mount, shallow } from 'enzyme';
+import { shallow } from 'enzyme';
 import { expect } from 'chai';
 
 import { actions } from '~/api/configs/linodes';
@@ -40,19 +40,18 @@ describe('linodes/linode/settings/layouts/AlertsPage', async () => {
 
   it('maps form fields and dispatches a putLinode event', async () => {
     const dispatch = sandbox.spy();
-    const page = mount(
+    const page = shallow(
       <AlertsPage
         linodes={api.linodes}
         params={{ linodeId: testLinode.id }}
         dispatch={dispatch}
       />
     );
-    await new Promise(r => setTimeout(r, 0));
+    await page.instance().componentDidMount();
 
     dispatch.reset();
-    page.find('form').simulate('submit');
+    page.find('form').simulate('submit', { preventDefault() {} });
 
-    await new Promise(r => setTimeout(r, 0));
     expect(dispatch.calledOnce).to.equal(true);
 
     const fn = dispatch.firstCall.args[0];
