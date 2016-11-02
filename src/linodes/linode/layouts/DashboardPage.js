@@ -7,9 +7,9 @@ import {
   renderBackupStatus,
   renderDistroStyle,
   renderDatacenterStyle,
-  launchWeblishConsole,
   renderPlanStyle,
 } from '~/linodes/components/Linode';
+import { launchWeblishConsole } from '~/linodes/components/StatusDropdown';
 import { getLinode, loadLinode } from './IndexPage';
 import { setSource } from '~/actions/source';
 

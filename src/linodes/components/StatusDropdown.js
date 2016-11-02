@@ -2,7 +2,14 @@ import React, { Component, PropTypes } from 'react';
 
 import { powerOnLinode, powerOffLinode, rebootLinode } from '~/api/linodes';
 import { LinodeStates, LinodeStatesReadable } from '~/constants';
-import { launchWeblishConsole } from '~/linodes/components/Linode';
+
+export function launchWeblishConsole(linode) {
+  window.open(
+    `${window.location.protocol}//${window.location.host}/linodes/${linode.id}/weblish`,
+    `weblish_con_${linode.username}`,
+    'left=100,top=100,width=1024,height=655,toolbar=0,resizable=1'
+  );
+}
 
 export default class StatusDropdown extends Component {
   constructor() {
