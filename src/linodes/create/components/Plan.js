@@ -35,7 +35,7 @@ export default class Plan extends Component {
           <div className="pricing">${hourlyPrice / 100}/hr (${monthlyPrice / 100}/mo)</div>
           <hr />
           <div className="cpu-ram">{plan.ram} GB / {plan.vcpus} CPU</div>
-          <div className="hdd">{plan.disk} GB SSD</div>
+          <div className="hdd">{Math.round(plan.storage / 1024)} GB SSD</div>
           <div className="transfer">{plan.transfer / 1000} TB Transfer</div>
         </div>
       </div>
