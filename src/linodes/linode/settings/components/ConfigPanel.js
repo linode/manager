@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import HelpButton from '~/components/HelpButton';
 import { Link } from 'react-router';
-import { getLinode, loadLinode } from '~/linodes/linode/layouts/IndexPage';
+import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import { linodes } from '~/api';
 
 function configContent(linode, configs, dispatch) {
@@ -54,7 +54,6 @@ export class ConfigPanel extends Component {
   constructor() {
     super();
     this.getLinode = getLinode.bind(this);
-    this.loadLinode = loadLinode.bind(this);
   }
 
   async componentDidMount() {

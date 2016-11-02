@@ -1,11 +1,12 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { getLinode } from './IndexPage';
+
+import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import HelpButton from '~/components/HelpButton';
 import { ipv4ns, ipv6ns, ipv6nsSuffix } from '~/constants';
 import { setSource } from '~/actions/source';
 
-export class NetworkingPage extends Component {
+export class SummaryPage extends Component {
   constructor() {
     super();
     this.getLinode = getLinode.bind(this);
@@ -174,7 +175,7 @@ export class NetworkingPage extends Component {
   }
 }
 
-NetworkingPage.propTypes = {
+SummaryPage.propTypes = {
   linodes: PropTypes.object,
   dispatch: PropTypes.func.isRequired,
 };
@@ -183,4 +184,4 @@ function select(state) {
   return { linodes: state.api.linodes };
 }
 
-export default connect(select)(NetworkingPage);
+export default connect(select)(SummaryPage);
