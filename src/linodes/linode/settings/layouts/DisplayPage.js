@@ -7,8 +7,8 @@ import { ErrorSummary, FormGroup, reduceErrors } from '~/errors';
 import { setSource } from '~/actions/source';
 
 export class DisplayPage extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.getLinode = getLinode.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     const { group, label } = this.getLinode();

@@ -19,13 +19,15 @@ describe('linodes/linode/settings/layouts/DisplayPage', () => {
   });
 
   const props = {
-    linodes,
     dispatch,
+    linodes,
     params: { linodeId: '1234' },
   };
 
   it('renders display page', async () => {
-    const page = await mount(<DisplayPage {...props} />);
+    const page = shallow(
+      <DisplayPage {...props} />
+    );
 
     expect(page.find('header h2').text()).to.equal('Display');
     expect(page.find('[name="group"]').props().value).to.equal('Test Group');

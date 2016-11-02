@@ -7,8 +7,8 @@ import { linodes } from '~/api';
 import { setSource } from '~/actions/source';
 
 export class AlertsPage extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.getLinode = getLinode.bind(this);
     this.renderAlertRow = this.renderAlertRow.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
