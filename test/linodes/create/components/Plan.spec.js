@@ -22,6 +22,7 @@ describe('linodes/create/components/Plan', () => {
     expect(c.find('.plan').first().find('header .title')
             .text())
       .to.equal('Linode 2G');
+    expect(c.find('.hdd').first().text()).to.equal('24 GB SSD');
   });
 
   it('dispatched the appropriate event on select', () => {
