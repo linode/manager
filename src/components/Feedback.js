@@ -23,7 +23,9 @@ export default class Feedback extends Component {
             <h3>Submit feedback</h3>
           </header>
           <div className="card-body">
-            <form>
+            <form
+              onSubmit={() => submitFeedback(this.state)}
+            >
               <div className="form-group">
                 <div>
                   <label>Email:</label>
@@ -55,11 +57,10 @@ export default class Feedback extends Component {
               <div className="form-group clearfix">
                 <button
                   className="btn btn-primary float-xs-left"
-                  onClick={() => submitFeedback(this.state)}
-                  type="submit"
                 >Submit</button>
                 <button
                   className="btn btn-cancel float-xs-left"
+                  type="button"
                   onClick={hideShowFeedback}
                 >Nevermind</button>
               </div>
