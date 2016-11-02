@@ -2,10 +2,9 @@ import React from 'react';
 import sinon from 'sinon';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
-import { push } from 'react-router-redux';
 
 import { IndexPage } from '~/dnsmanager/layouts/IndexPage';
-import { api, freshState } from '@/data';
+import { api } from '@/data';
 import { SHOW_MODAL } from '~/actions/modal';
 
 const { dnszones } = api;
@@ -18,21 +17,6 @@ describe('dnsmanager/layouts/IndexPage', () => {
   });
 
   const dispatch = sandbox.spy();
-
-  it('redirects to /dnsmanager/create when you have no DNS Zones', async () => {
-    const page = shallow(
-      <IndexPage
-        dispatch={dispatch}
-        selected={{}}
-        dnszones={{
-          ...freshState.api.dnszones,
-          totalPages: 1,
-        }}
-      />);
-    await page.instance().componentDidMount();
-    expect(dispatch.calledWith(push('/dnsmanager/create')))
-      .to.equal(true);
-  });
 
   it('renders a list of DNS Zones', () => {
     const page = shallow(
