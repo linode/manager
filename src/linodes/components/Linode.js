@@ -52,12 +52,12 @@ export function renderDistroStyle(linode) {
 export function renderDatacenterStyle(linode) {
   return (
     <span className="datacenter-style">
-      {linode.datacenter.label}
       <img
         src={flags[linode.datacenter.country]
           ? flags[linode.datacenter.country] : '//placehold.it/50x50'}
         height="15" width="20" alt={linode.datacenter.label}
       />
+      {linode.datacenter.label}
     </span>
   );
 }
@@ -139,7 +139,12 @@ function renderCard(props) {
     <div key={linode.id} className={`linode card ${linode.status} ${selectedClass}`}>
       <header className="header-secondary">
         {checkbox}
-        <Link to={`/linodes/${linode.id}`}>{linode.label}</Link>
+        <div>
+          <Link className="linode-label" to={`/linodes/${linode.id}`}>{linode.label}</Link>
+          <div className="text-muted">
+            Uptime: 2 weeks
+          </div>
+        </div>
         <span className="float-xs-right">
           <StatusDropdown
             linode={linode}
@@ -147,26 +152,15 @@ function renderCard(props) {
           />
         </span>
       </header>
-      <div className="linode-details clearfix">
-        <div className="form-group row">
-          <div className="col-sm-12 content-col ip-addresses">
-            <span className="label-col">IP Addresses</span>
-            <div>{linode.ipv4.address}</div>
-            <div>{linode.ipv6.range}</div>
-          </div>
-        </div>
-        <div className="form-group row">
-          <div className="col-sm-6">
-            <span className="label-col">Datacenter</span>
-            <div className="content-col">{renderDatacenterStyle(linode)}</div>
-          </div>
-          <div className="col-sm-6">
-            <span className="label-col">Backup</span>
-            <div className="content-col backup-status">
-              {renderBackupStatus(linode)}
-            </div>
-          </div>
-        </div>
+      <div className="linode-details">
+        <div>{linode.ipv4.address}</div>
+        <div>{linode.ipv6.range}</div>
+        <section>
+          {renderDatacenterStyle(linode)}
+        </section>
+        <section>
+          {renderBackupStatus(linode)}
+        </section>
       </div>
     </div>
   );
@@ -190,9 +184,15 @@ function renderRow(props) {
       <td>{checkbox}</td>
       <td>
         <Link to={`/linodes/${linode.id}`} className="linode-label">{linode.label}</Link>
+        <div className="text-muted">
+          Uptime: 2 weeks
+        </div>
       </td>
       <td>
-        {linode.ipv4.address}, {linode.ipv6.range}
+        {linode.ipv4.address}
+        <div className="color-light-black">
+          {linode.ipv6.range}
+        </div>
       </td>
       <td>
         {renderDatacenterStyle(linode)}

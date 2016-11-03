@@ -124,7 +124,7 @@ export class IndexPage extends Component {
             </div>
            )}
            {sortedLinodes.map(l =>
-             <div key={l.id} className="col-md-4">
+             <div key={l.id} className="col-sm-12 col-md-6 col-lg-4">
                {renderLinode(l, false)}
              </div>)}
         </div>
