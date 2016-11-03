@@ -17,6 +17,7 @@ export default class StatusDropdown extends Component {
     this.open = this.open.bind(this);
     this.close = this.close.bind(this);
     this.state = {
+      progress: 1,
       open: false,
     };
   }
@@ -28,6 +29,7 @@ export default class StatusDropdown extends Component {
   close() {
     this.setState({ open: false });
   }
+
 
   render() {
     const { linode, dispatch, shortcuts } = this.props;
@@ -76,10 +78,25 @@ export default class StatusDropdown extends Component {
     );
 
     const openClass = this.state.open ? 'open' : '';
-    const borderClass = this.props.noBorder ? '' : 'status-dropdown-border';
+    const progressContainer = this.props.short ? 'progress-cont' : 'progress-cont-long';
+    if (LinodeStates.pending.indexOf(linode.status) !== -1) {
+      return (
+        <div
+          className={`btn-group status-dropdown ${openClass}`}
+          onBlur={this.close}
+        >
+          <div className={`${progressContainer}`}>
+            <div
+              style={{ width: `${linode.progress}%` }}
+              className="progress"
+            />
+          </div>
+        </div>
+      );
+    }
     return (
       <div
-        className={`btn-group status-dropdown ${openClass} ${borderClass}`}
+        className={`clearfix btn-group status-dropdown ${openClass}`}
         onBlur={this.close}
       >
         <span className={`float-xs-left linode-status ${linode.status}`}>
@@ -105,11 +122,11 @@ export default class StatusDropdown extends Component {
 StatusDropdown.propTypes = {
   linode: PropTypes.object,
   dispatch: PropTypes.func,
-  noBorder: PropTypes.bool,
   shortcuts: PropTypes.bool,
+  short: PropTypes.bool,
 };
 
 StatusDropdown.defaultProps = {
-  noBorder: true,
   shortcuts: true,
+  short: true,
 };

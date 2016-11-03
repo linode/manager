@@ -97,4 +97,12 @@ describe('components/StatusDropdown', () => {
         expect(options.method).to.equal('POST');
       });
   });
+
+  it('is in a rebooting state, progressbar should show up', async () => {
+    const dispatch = sinon.spy();
+    const progress = shallow(
+      <StatusDropdown linode={linodes.linodes[1237]} dispatch={dispatch} />
+    );
+    expect(progress.find('.progress').length).to.equal(1);
+  });
 });
