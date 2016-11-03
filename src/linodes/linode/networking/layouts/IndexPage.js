@@ -17,10 +17,8 @@ export class IndexPage extends Component {
 
     const tabList = [
       { name: 'Summary', link: '/' },
-      { name: 'IP removal', link: '/ipremoval' },
-      { name: 'IP transfer', link: '/iptransfer' },
       { name: 'Reverse DNS', link: '/reversedns' },
-      { name: 'IP sharing', link: '/ipsharing' },
+      { name: 'IP Management', link: '/ipmanagement' },
     ].map(t => ({ ...t, link: `/linodes/${linode.id}/networking${t.link}` }));
 
     const pathname = location ? location.pathname : tabList[0].link;
