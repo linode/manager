@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { push } from 'react-router-redux';
 
-import StatusDropdown from '~/components/StatusDropdown';
+import StatusDropdown from '~/linodes/components/StatusDropdown';
 import { LinodeStates } from '~/constants';
 import { setError } from '~/actions/errors';
 import { linodes } from '~/api';
@@ -104,8 +104,8 @@ export class IndexPage extends Component {
           {this.renderLabel(linode)}
           <span className="float-xs-right">
             <StatusDropdown
+              shortcuts={false}
               linode={linode}
-              leftOriented={false}
               noBorder={false}
               dispatch={this.props.dispatch}
             />
