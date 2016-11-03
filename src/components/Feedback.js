@@ -44,9 +44,7 @@ export default class Feedback extends Component {
                   <label>Message:</label>
                 </div>
                 <div>
-                  {/* http://stackoverflow.com/a/40235334/1507139 */}
                   <textarea
-                    ref={textarea => textarea && textarea.focus()}
                     value={message}
                     name="message"
                     className="form-control"

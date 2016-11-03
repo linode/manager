@@ -14,7 +14,7 @@
     }
 
     .submenu {
-        margin-bottom: $main-padding-tb/2;
+        margin-bottom: $main-padding-tb;
 
         .float-xs-left {
             max-width: 50%;
@@ -26,16 +26,16 @@
     padding: 0;
 
     .linode-details {
-        padding: $main-padding-tb/2 $main-padding-lr/2;
+        padding: 15px 20px;
     }
 
     .header-secondary {
         margin-bottom: 0;
-        height: 45px;
+
         & > * {
             display: inline-block;
-            &:not(:last-child) {
-                margin-left: 5px;
+            &:not(:first-child) {
+                margin-left: 15px;
                 line-height: 30px;
             }
         }
