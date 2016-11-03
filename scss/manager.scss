@@ -709,12 +709,6 @@ input[type=checkbox], input[type=radio] {
     border: 0;
     margin-top: -1px;
     margin-left: 1px;
-    
-    &.dropdown-menu-right {
-        left: initial;
-        right: 0;
-        margin-right: -1px;
-    }
 
     .dropdown-item:first-of-type {
         margin-left: -1px;
