@@ -16,10 +16,10 @@ export class IndexPage extends Component {
     if (!linode) return null;
 
     const tabList = [
-      { name: 'Display', link: '/' },
-      { name: 'Alerts', link: '/alerts' },
-      { name: 'Advanced', link: '/advanced' },
-    ].map(t => ({ ...t, link: `/linodes/${linode.id}/settings${t.link}` }));
+      { name: 'Summary', link: '/' },
+      { name: 'Reverse DNS', link: '/reversedns' },
+      { name: 'IP Management', link: '/ipmanagement' },
+    ].map(t => ({ ...t, link: `/linodes/${linode.id}/networking${t.link}` }));
 
     const pathname = location ? location.pathname : tabList[0].link;
     const selected = tabList.reduce((last, current) =>

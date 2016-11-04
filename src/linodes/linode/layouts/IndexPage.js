@@ -12,7 +12,7 @@ import { setSource } from '~/actions/source';
 
 export function getLinode() {
   const { linodes } = this.props.linodes;
-  const linodeId = parseInt(this.props.params.linodeId);
+  const linodeId = parseInt(this.props.params.linodeId, 10);
   return linodes ? linodes[linodeId] : null;
 }
 
