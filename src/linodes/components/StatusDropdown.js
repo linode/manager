@@ -99,9 +99,6 @@ export default class StatusDropdown extends Component {
         className={`clearfix btn-group status-dropdown ${openClass}`}
         onBlur={this.close}
       >
-        <span className={`float-xs-left linode-status ${linode.status}`}>
-          {LinodeStatesReadable[linode.status]}
-        </span>
         <button
           type="button"
           className="btn dropdown-toggle"
@@ -111,7 +108,10 @@ export default class StatusDropdown extends Component {
           onClick={this.open}
           disabled={LinodeStates.pending.indexOf(linode.status) !== -1}
         >
-          <span className="sr-only">Toggle dropdown</span>
+          <span>
+            {LinodeStatesReadable[linode.status]}
+          </span>
+          <i className="fa fa-caret-down" />
         </button>
         <div className="dropdown-menu">{dropdownMenu}</div>
       </div>
