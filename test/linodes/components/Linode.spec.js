@@ -34,9 +34,9 @@ describe('linodes/components/Linode', () => {
         isRow={false}
       />);
 
-    expect(linode.find('.ip-addresses').contains('97.107.143.99'))
+    expect(linode.find('.linode-details').contains('97.107.143.99'))
       .to.equal(true);
-    expect(linode.find('.ip-addresses').contains('2600:3c03::f03c:91ff:fe0a:1dbe/64'))
+    expect(linode.find('.linode-details').contains('2600:3c03::f03c:91ff:fe0a:1dbe/64'))
       .to.equal(true);
   });
 
