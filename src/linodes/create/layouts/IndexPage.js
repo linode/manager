@@ -104,7 +104,7 @@ export class IndexPage extends Component {
       datacenter,
       label,
       group,
-      backups,
+      with_backups: backups,
     }));
   }
 

@@ -173,7 +173,7 @@ describe('linodes/create/layout/IndexPage', () => {
       backup: null,
       datacenter: 'datacenter',
       label: 'label',
-      backups: false,
+      with_backups: false,
       group: null,
     });
 
@@ -215,7 +215,7 @@ describe('linodes/create/layout/IndexPage', () => {
       backup: null,
       datacenter: 'datacenter',
       label: 'label',
-      backups: false,
+      with_backups: false,
       group: 'group',
     });
     expect(dispatch.secondCall.args[0]).to.deep.equal({
@@ -225,7 +225,7 @@ describe('linodes/create/layout/IndexPage', () => {
       backup: null,
       datacenter: 'datacenter',
       label: 'label-2',
-      backups: false,
+      with_backups: false,
       group: 'group',
     });
     expect(dispatch.thirdCall.args[0]).to.deep.equal(push('/linodes'));
@@ -265,7 +265,7 @@ describe('linodes/create/layout/IndexPage', () => {
       backup: null,
       datacenter: 'datacenter',
       label: 'label',
-      backups: false,
+      with_backups: false,
       group: 'group',
     });
     expect(dispatch.secondCall.args[0]).to.deep.equal({
@@ -275,7 +275,7 @@ describe('linodes/create/layout/IndexPage', () => {
       backup: null,
       datacenter: 'datacenter',
       label: 'label-1',
-      backups: false,
+      with_backups: false,
       group: 'group',
     });
     expect(dispatch.thirdCall.args[0]).to.deep.equal({
@@ -285,7 +285,7 @@ describe('linodes/create/layout/IndexPage', () => {
       backup: null,
       datacenter: 'datacenter',
       label: 'label-2',
-      backups: false,
+      with_backups: false,
       group: 'group',
     });
   });
