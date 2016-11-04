@@ -9,7 +9,7 @@ import { api } from '@/data';
 
 const { linodes } = api;
 
-describe('components/StatusDropdown', () => {
+describe('linodes/components/StatusDropdown', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
@@ -21,7 +21,7 @@ describe('components/StatusDropdown', () => {
       <StatusDropdown linode={linodes.linodes[1236]} dispatch={() => {}} />
     );
 
-    expect(dropdown.find('span.linode-status').text()).to.equal('Offline');
+    expect(dropdown.find('.dropdown-toggle span').text()).to.equal('Offline');
 
     dropdown.find('.dropdown-toggle').simulate('click');
 
@@ -35,7 +35,7 @@ describe('components/StatusDropdown', () => {
       <StatusDropdown linode={linodes.linodes[1235]} dispatch={() => {}} />
     );
 
-    expect(dropdown.find('span.linode-status').text()).to.equal('Running');
+    expect(dropdown.find('.dropdown-toggle span').text()).to.equal('Running');
 
     dropdown.find('.dropdown-toggle').simulate('click');
 
