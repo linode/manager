@@ -3,10 +3,10 @@ import sinon from 'sinon';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
 import { testLinode } from '@/data/linodes';
-import { NetworkingPage } from '~/linodes/linode/layouts/NetworkingPage';
+import { SummaryPage } from '~/linodes/linode/networking/layouts/SummaryPage';
 import { ipv4ns, ipv6ns, ipv6nsSuffix } from '~/constants';
 
-describe('linodes/linode/layouts/NetworkingPage', () => {
+describe('linodes/linode/layouts/SummaryPage', () => {
   const sandbox = sinon.sandbox.create();
   const dispatch = sandbox.spy();
 
@@ -53,7 +53,7 @@ describe('linodes/linode/layouts/NetworkingPage', () => {
   describe('public network', () => {
     it('renders add public ip button', async () => {
       const page = shallow(
-        <NetworkingPage
+        <SummaryPage
           linodes={linodes}
           params={params}
         />);
@@ -66,7 +66,7 @@ describe('linodes/linode/layouts/NetworkingPage', () => {
       it('renders help button', async () => {
         const path = 'https://www.linode.com/docs/networking/linux-static-ip-configuration';
         const page = shallow(
-          <NetworkingPage
+          <SummaryPage
             linodes={linodes}
             params={params}
           />);
@@ -80,7 +80,7 @@ describe('linodes/linode/layouts/NetworkingPage', () => {
         const ipv4 = testLinode.ipv4.address;
         const inet = `${ipv4}/24 ( ${testLinode.ipv4.rdns} )`;
         const page = shallow(
-          <NetworkingPage
+          <SummaryPage
             linodes={linodes}
             params={params}
           />);
@@ -95,7 +95,7 @@ describe('linodes/linode/layouts/NetworkingPage', () => {
         const ipv4 = testLinode.ipv4.address;
         const gateway = `${ipv4.substring(0, ipv4.lastIndexOf('.'))}.1`;
         const page = shallow(
-          <NetworkingPage
+          <SummaryPage
             linodes={linodes}
             params={params}
           />);
@@ -108,7 +108,7 @@ describe('linodes/linode/layouts/NetworkingPage', () => {
 
       it('renders nameservers', async () => {
         const page = shallow(
-          <NetworkingPage
+          <SummaryPage
             linodes={linodes}
             params={params}
           />);
@@ -124,7 +124,7 @@ describe('linodes/linode/layouts/NetworkingPage', () => {
       it('renders help button', async () => {
         const path = 'https://www.linode.com/docs/networking/native-ipv6-networking';
         const page = shallow(
-          <NetworkingPage
+          <SummaryPage
             linodes={linodes}
             params={params}
           />);
@@ -137,7 +137,7 @@ describe('linodes/linode/layouts/NetworkingPage', () => {
       it('renders address ip', async () => {
         const ipv6 = testLinode.ipv6.range;
         const page = shallow(
-          <NetworkingPage
+          <SummaryPage
             linodes={linodes}
             params={params}
           />);
@@ -152,7 +152,7 @@ describe('linodes/linode/layouts/NetworkingPage', () => {
 
       it('renders nameservers', async () => {
         const page = shallow(
-          <NetworkingPage
+          <SummaryPage
             linodes={linodes}
             params={params}
           />);
@@ -175,7 +175,7 @@ describe('linodes/linode/layouts/NetworkingPage', () => {
   describe('private network', () => {
     it('renders add private ip button', async () => {
       const page = shallow(
-        <NetworkingPage
+        <SummaryPage
           linodes={linodes}
           params={params}
         />);
@@ -186,7 +186,7 @@ describe('linodes/linode/layouts/NetworkingPage', () => {
 
     it('renders no private ips', async () => {
       const page = shallow(
-        <NetworkingPage
+        <SummaryPage
           linodes={linodes}
           params={{ linodeId: 1235 }}
         />);

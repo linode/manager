@@ -1,12 +1,10 @@
 import React from 'react';
 import sinon from 'sinon';
-import { mount, shallow } from 'enzyme';
+import { shallow } from 'enzyme';
 import { expect } from 'chai';
 
 import { api } from '@/data';
-import { testLinode } from '@/data/linodes';
 import { IndexPage } from '~/linodes/linode/settings/layouts/IndexPage';
-import * as LinodePage from '~/linodes/linode/layouts/IndexPage';
 
 describe('linodes/linode/settings/layouts/IndexPage', () => {
   const sandbox = sinon.sandbox.create();
@@ -15,20 +13,6 @@ describe('linodes/linode/settings/layouts/IndexPage', () => {
   afterEach(() => {
     dispatch.reset();
     sandbox.restore();
-  });
-
-  it('calls loadLinode during mount', () => {
-    const loadLinode = sandbox.stub(LinodePage, 'loadLinode');
-    mount(
-      <IndexPage
-        dispatch={dispatch}
-        linodes={api.linodes}
-        params={{ linodeId: `${testLinode.id}` }}
-      />
-    );
-
-    expect(loadLinode.calledOnce).to.equal(true);
-    loadLinode.restore();
   });
 
   it('renders tabs with correct names and links', () => {

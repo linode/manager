@@ -7,7 +7,7 @@ import { linodes, distributions } from '~/api';
 import { resizeLinodeDisk } from '~/api/linodes';
 import HelpButton from '~/components/HelpButton';
 import PasswordInput from '~/components/PasswordInput';
-import { getLinode, loadLinode } from '~/linodes/linode/layouts/IndexPage';
+import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import { showModal, hideModal } from '~/actions/modal';
 import { ErrorSummary, FormGroup, reduceErrors } from '~/errors';
 
@@ -352,7 +352,6 @@ export class DiskPanel extends Component {
   constructor() {
     super();
     this.getLinode = getLinode.bind(this);
-    this.loadLinode = loadLinode.bind(this);
   }
 
   async componentDidMount() {

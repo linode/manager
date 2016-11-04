@@ -2,20 +2,19 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import HelpButton from '~/components/HelpButton';
-import { getLinode, loadLinode } from '~/linodes/linode/layouts/IndexPage';
+import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import { linodes } from '~/api';
 import { setSource } from '~/actions/source';
 
 export class AlertsPage extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.getLinode = getLinode.bind(this);
-    this.loadLinode = loadLinode.bind(this);
     this.renderAlertRow = this.renderAlertRow.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.state = {
-      loading: true,
-      alerts: {
+      loading: false,
+      alerts: this.getLinode().alerts || {
         cpu: { threshold: 0, enabled: false },
         io: { threshold: 0, enabled: false },
         transfer_in: { threshold: 0, enabled: false },
@@ -28,8 +27,6 @@ export class AlertsPage extends Component {
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
-    await this.loadLinode();
-    this.setState({ loading: false, alerts: this.getLinode().alerts });
   }
 
   async onSubmit(e) {
