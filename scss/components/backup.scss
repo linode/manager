@@ -30,4 +30,23 @@
 
 }
 
+.backup-block {
+  text-align: center;
+  margin: 13px;
+  border: $border;
+  color: $black;
 
+  &.clickable:hover {
+    background-color: $light-gray;
+  }
+
+  .title {
+    background-color: $light-gray;
+    border-bottom: $border;
+    padding: 3px 0px 3px 0px;
+  }
+
+  .description {
+    margin: 19px 0px 25px 0px;
+  }
+}
