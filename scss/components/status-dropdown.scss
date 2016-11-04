@@ -1,20 +1,33 @@
 .status-dropdown {
-    $input-height: 20px;
+    $input-height: 30px;
     position: relative;
     border: $border;
 
     span {
+        position: relative;
+        top: -1px;
         height: $input-height;
         line-height: $input-height;
-        padding: 0 $input-padding;
+        padding-right: 10px;
+        font-size: 14px;
+        color: #777;
     }
-
+    
     .btn.dropdown-toggle {
         background: transparent;
         padding: 0;
         border: 0 !important;
         height: $input-height !important;
         line-height: $input-height !important;
+
+        .fa {
+            font-size: 15px !important;
+        }
+
+        /* Hide default bootstrap dropdown icon */
+        &:after {
+            display: none;
+        }
 
         &:active,
         &:hover,
@@ -24,13 +37,19 @@
         }
     }
 
+    .dropdown-menu {
+        right: -2px;
+        left: initial;
+        margin-top: 0;
+    }
+
     .dropdown-item {
         border: $border;
     }
 
     .progress-cont, .progress-cont-long {
-        width: 100px;
-        height: $input-height;
+        width: 75px;
+        height: 20px;
         position: relative;
 
         &.progress-cont-long {
@@ -43,7 +62,7 @@
         top: -1px;
         left: -1px;
         background-color: $green;
-        height: $input-height + 2px;
+        height: 22px;
     }
 
 }
