@@ -6,7 +6,7 @@ import { LinodeStates, LinodeStatesReadable } from '~/constants';
 export function launchWeblishConsole(linode) {
   window.open(
     `${window.location.protocol}//${window.location.host}/linodes/${linode.id}/weblish`,
-    `weblish_con_${linode.username}`,
+    `weblish_con_${linode.id}`,
     'left=100,top=100,width=1024,height=655,toolbar=0,resizable=1'
   );
 }
