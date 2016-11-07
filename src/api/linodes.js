@@ -8,7 +8,7 @@ function linodeAction(id, action, temp, expected, body = undefined) {
     const { token } = state.authentication;
     dispatch(actions.one({ state: temp }, id));
     await fetch(token, `/linode/instances/${id}/${action}`, { method: 'POST', body });
-    await dispatch(thunks.until(l => l.state === expected, id));
+    await dispatch(thunks.until(l => l.status === expected, id));
   };
 }
 
