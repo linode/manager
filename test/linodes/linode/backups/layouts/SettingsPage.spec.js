@@ -5,10 +5,10 @@ import { expect } from 'chai';
 import { expectRequest } from '@/common';
 
 import { api } from '@/data';
-import { showModal, SHOW_MODAL } from '~/actions/modal';
+import { SHOW_MODAL } from '~/actions/modal';
 import {
   SettingsPage,
-  CancelBackupsModal
+  CancelBackupsModal,
 } from '~/linodes/linode/backups/layouts/SettingsPage';
 
 describe('linodes/linode/backups/layouts/SettingsPage', () => {
@@ -49,8 +49,8 @@ describe('linodes/linode/backups/layouts/SettingsPage', () => {
           schedule: {
             day: 'Monday',
             window: 'W10',
-          }
-        }
+          },
+        },
       }))
     );
   });

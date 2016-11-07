@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { ErrorSummary, FormGroup, reduceErrors } from '~/errors';
 import { linodes } from '~/api';
 import { cancelBackup } from '~/api/backups';
-import { getLinode, loadLinode } from '~/linodes/linode/layouts/IndexPage';
+import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import { setSource } from '~/actions/source';
 import { showModal, hideModal } from '~/actions/modal';
 
@@ -31,8 +31,8 @@ export class SettingsPage extends Component {
     try {
       await dispatch(linodes.put({
         backups: {
-          schedule: { day, window }
-        }
+          schedule: { day, window },
+        },
       }, linode.id));
     } catch (response) {
       const errors = await reduceErrors(response);
