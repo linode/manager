@@ -9,6 +9,47 @@ import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import { setSource } from '~/actions/source';
 import { showModal, hideModal } from '~/actions/modal';
 
+export class CancelBackupsModal extends Component {
+  constructor() {
+    super();
+    this.state = { loading: false };
+  }
+
+  render() {
+    const { dispatch, linodeId } = this.props;
+    const { loading } = this.state;
+    return (
+      <div>
+        <p>
+          Are you sure you want to cancel backup service for this Linode?
+          This cannot be undone.
+        </p>
+        <div className="modal-footer">
+          <Link
+            className="btn btn-cancel"
+            disabled={loading}
+            onClick={() => dispatch(hideModal())}
+          >Nevermind</Link>
+          <button
+            className="btn btn-danger"
+            disabled={loading}
+            onClick={async () => {
+              this.setState({ loading: true });
+              await dispatch(cancelBackup(linodeId));
+              this.setState({ loading: false });
+              dispatch(hideModal());
+            }}
+          >Cancel backups service</button>
+        </div>
+      </div>);
+  }
+}
+
+CancelBackupsModal.propTypes = {
+  linodeId: PropTypes.string.isRequired,
+  dispatch: PropTypes.func.isRequired,
+};
+
 export class SettingsPage extends Component {
   constructor(props) {
     super(props);
@@ -139,44 +180,3 @@ function select(state) {
 }
 
 export default connect(select)(SettingsPage);
-
-export class CancelBackupsModal extends Component {
-  constructor() {
-    super();
-    this.state = { loading: false };
-  }
-
-  render() {
-    const { dispatch, linodeId } = this.props;
-    const { loading } = this.state;
-    return (
-      <div>
-        <p>
-          Are you sure you want to cancel backup service for this Linode?
-          This cannot be undone.
-        </p>
-        <div className="modal-footer">
-          <Link
-            className="btn btn-cancel"
-            disabled={loading}
-            onClick={() => dispatch(hideModal())}
-          >Nevermind</Link>
-          <button
-            className="btn btn-danger"
-            disabled={loading}
-            onClick={async () => {
-              this.setState({ loading: true });
-              await dispatch(cancelBackup(linodeId));
-              this.setState({ loading: false });
-              dispatch(hideModal());
-            }}
-          >Cancel backups service</button>
-        </div>
-      </div>);
-  }
-}
-
-CancelBackupsModal.propTypes = {
-  linodeId: PropTypes.string.isRequired,
-  dispatch: PropTypes.func.isRequired,
-};
