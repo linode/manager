@@ -61,4 +61,33 @@ describe('linodes/linode/backups/layouts/IndexPage', () => {
     const fn = dispatch.firstCall.args[0];
     await expectRequest(fn, '/linode/instances/1235/backups/enable');
   });
+
+  it('renders errors when enable backups fails', async () => {
+    const errorDispatch = sandbox.stub().throws({
+      json() {
+        return {
+          errors: [
+            { reason: 'Nooo!' },
+          ],
+        };
+      },
+    });
+
+    const page = mount(
+      <IndexPage
+        dispatch={errorDispatch}
+        linodes={api.linodes}
+        params={{ linodeId: '1235' }}
+      />
+    );
+
+    const { enableBackups } = page.instance();
+    await enableBackups({
+      preventDefault: () => {},
+    });
+
+    const errorOutput = page.find('.alert-danger');
+    expect(errorOutput.length).to.equal(1);
+    expect(errorOutput.text()).to.equal('Nooo!');
+  });
 });

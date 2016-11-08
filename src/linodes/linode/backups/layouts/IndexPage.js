@@ -6,6 +6,7 @@ import { parallel } from '~/api/util';
 import { linodes } from '~/api';
 import { enableBackup } from '~/api/backups';
 import { setSource } from '~/actions/source';
+import { ErrorSummary, reduceErrors } from '~/errors';
 
 export class IndexPage extends Component {
   constructor() {
@@ -15,6 +16,7 @@ export class IndexPage extends Component {
     this.componentDidMount = this.componentDidMount.bind(this);
     this.renderTabs = renderTabs.bind(this);
     this.loadLinode = loadLinode.bind(this);
+    this.state = { errors: {} };
   }
 
   async componentDidMount() {
@@ -26,9 +28,15 @@ export class IndexPage extends Component {
       linodes.all()));
   }
 
-  enableBackups() {
+  async enableBackups(e) {
+    e.preventDefault();
     const { dispatch } = this.props;
-    dispatch(enableBackup(this.getLinode().id));
+    try {
+      await dispatch(enableBackup(this.getLinode().id));
+    } catch (response) {
+      const errors = await reduceErrors(response);
+      this.setState({ errors });
+    }
   }
 
   render() {
@@ -36,6 +44,8 @@ export class IndexPage extends Component {
     if (!linode) return null;
 
     if (!linode.backups.enabled) {
+      const { errors } = this.state;
+
       return (
         <section className="card">
           <form onSubmit={this.enableBackups}>
@@ -43,6 +53,7 @@ export class IndexPage extends Component {
               Backups not enabled. Enable backups for
               ${(linode.type[0].backups_price / 100).toFixed(2)}.
             </p>
+            <ErrorSummary errors={errors} />
             <button className="btn btn-primary">Enable backups</button>
           </form>
         </section>
