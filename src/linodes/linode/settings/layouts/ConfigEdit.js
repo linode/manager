@@ -15,6 +15,7 @@ export class ConfigEdit extends Component {
     this.getLinode = getLinode.bind(this);
     this.renderUI = this.renderUI.bind(this);
     this.saveChanges = this.saveChanges.bind(this);
+    this.renderDiskSlot = this.renderDiskSlot.bind(this);
     this.state = {
       loading: true,
       errors: {},
@@ -107,6 +108,75 @@ export class ConfigEdit extends Component {
         disks: { ...this.state.disks, [disk]: null },
       });
     }
+  }
+
+  renderDiskSlot(device, index) {
+    const { disks, loading } = this.state;
+    if (!disks[device]) {
+      return null;
+    }
+
+    const slotsInUse = [];
+    Object.values(disks).forEach(disk => {
+      if (disk) {
+        slotsInUse.push(disk);
+      }
+    });
+  
+    const numDisks = Object.values(disks).length;
+    const oneDiskInUse = index === 0 && slotsInUse.length === 0;
+    const currentDisk = index === slotsInUse.length - 1;
+    const allDisksInUse = index === numDisks - 1;
+
+    const addButton = oneDiskInUse || currentDisk && !allDisksInUse ?
+      <button
+        className="add-disk-btn"
+        disabled={loading}
+        onClick={() => this.addDisk(device)}
+      >Add disk</button> : null;
+
+    const deleteButton = index > 0 && index === slotsInUse.length - 1 ?
+      <button
+        className="delete-disk-btn"
+        disabled={loading}
+        onClick={() => this.deleteDisk(device)}
+      >Delete disk</button> : null;
+
+    const addDeleteButtons = (
+      <div className="disk-slot-btns">
+        { addButton }
+        { deleteButton }
+      </div>);
+
+    return (
+      <div
+        className={`form-group row disk-slots ${device}`}
+        key={`config-device-row-${device}`}
+      >
+        <label className="col-sm-2 col-form-label" key={`config-device-label-${device}`}>
+          /dev/{device}
+        </label>
+        <div className="col-sm-6" key={`config-device-field-${device}`}>
+          <select
+            className="form-control disk-select pull-left"
+            id={`config-device-${device}`}
+            value={device}
+            disabled={loading}
+            onChange={e => this.setState({
+              disks: { ...disks, [device]: { id: parseInt(e.target.value) } },
+            })}
+          >
+            <option key="none" value="none" disabled>None</option>
+            {Object.keys(disks).map(disk =>
+              <option key={disk} value={disk}>
+                {disks[disk] ? disks[disk].label : null}
+              </option>
+            )}
+          </select>
+          { addDeleteButtons }
+        </div>
+      </div>
+    );
   }
 
   async saveChanges(isCreate) {
@@ -219,6 +289,8 @@ export class ConfigEdit extends Component {
         </label>
       </div>);
 
+
+
     return (
       <div>
         {text('Label', 'label')}
@@ -297,50 +369,7 @@ export class ConfigEdit extends Component {
             />
             <span className="measure-unit">MB</span>
           </div>)}
-        {Object.keys(state.disks).map(device => {
-          if (state.disks[device]) {
-            return (
-              <disks
-                className={`form-group row disk-slots ${device}`}
-                key={`config-device-row-${device}`}
-              >
-                <label className="col-sm-2 col-form-label" key={`config-device-label-${device}`}>
-                  /dev/{device}
-                </label>
-                <div className="col-sm-6" key={`config-device-field-${device}`}>
-                  <select
-                    className="form-control disk-select pull-left"
-                    id={`config-device-${device}`}
-                    value={state.disks[device].id}
-                    disabled={state.loading}
-                    onChange={e => this.setState({
-                      disks: { ...state.disks, [device]: { id: Number.parseInt(e.target.value) } },
-                    })}
-                  >
-                    <option key="none" value="none" disabled>None</option>
-                    {Object.keys(disks).map(disk => (
-                      <option key={disk} value={disk}>
-                        {disks[disk].label}
-                      </option>)
-                    )}
-                  </select>
-                  <buttons className="disk-slot-btns">
-                    <button
-                      className="add-disk-btn"
-                      disabled={state.loading}
-                      onClick={() => this.addDisk(device)}
-                    >Add disk</button>
-                    <button
-                      className="delete-disk-btn"
-                      disabled={state.loading}
-                      onClick={() => this.deleteDisk(device)}
-                    >Delete disk</button>
-                  </buttons>
-                </div>
-              </disks>
-            );
-          }
-        })}
+        {Object.keys(state.disks).map(this.renderDiskSlot)}
         <div className="form-group row">
           <label className="col-sm-2 col-form-label">root / boot device</label>
           <div className="col-sm-8">

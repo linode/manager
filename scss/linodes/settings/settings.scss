@@ -7,38 +7,18 @@
     padding-left: 5px;
 }
 
-disks {
-    display: block;
-}
-
 .disk-select {
     width: 15rem;
 }
 
 .disk-slots {
     .disk-slot-btns {
-        display: none;
         button {
             background-color: #ffffff;
             margin-top: 0.25rem;
             margin-left: 0.75rem;
             padding: 0 0.25rem;
             border-radius: 0.2rem;
-        }
-    }
-    &:first-of-type {
-        .delete-disk-btn {
-            display: none;
-        }
-    }
-    &:nth-of-type(8) {
-        .add-disk-btn {
-            display: none;
-        }
-    }
-    &:last-of-type {
-        .disk-slot-btns {
-            display: inline-block;
         }
     }
 }
