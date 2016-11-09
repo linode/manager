@@ -7,6 +7,7 @@ import { parallel } from '~/api/util';
 import HelpButton from '~/components/HelpButton';
 import { ErrorSummary, FormGroup, reduceErrors } from '~/errors';
 import { Link } from '~/components/Link';
+import { setSource } from '~/actions/source';
 
 export class ConfigEdit extends Component {
   constructor() {
