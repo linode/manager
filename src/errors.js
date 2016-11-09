@@ -43,7 +43,10 @@ export function ErrorSummary(props) {
   if (errors._ && errors._.length) {
     return (
       <div className="alert alert-danger">
-        {errors._.map(error => <div key={error}>{error}</div>)}
+        {errors._.map(error => {
+          const text = error.hasOwnProperty('reason') ? error.reason : error;
+          return (<div key={text}>{text}</div>);
+        })}
       </div>
     );
   }
