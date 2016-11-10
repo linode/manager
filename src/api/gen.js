@@ -85,7 +85,7 @@ function addMeta(config, item) {
 export function genReducer(_config) {
   function one(config, state, action) {
     const previousId = action.ids[action.ids.length - 1];
-    const previous = state[config.plural][previous_id];
+    const previous = state[config.plural][previousId];
     const next = previous ? action.resource : addMeta(config, action.resource);
     const id = previousId !== undefined ? previousId : next.id;
     return {
