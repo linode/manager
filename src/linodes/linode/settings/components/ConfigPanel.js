@@ -74,12 +74,12 @@ export class ConfigPanel extends Component {
       <div>
         <header className="clearfix">
           <h2 className="float-xs-left">Configs<HelpButton to="http://example.org" /></h2>
-          <a
-            href={`/linodes/${linode.id}/settings/advanced/configs/create`}
+          <Link
+            to={`/linodes/${linode.id}/settings/advanced/configs/create`}
             className="btn btn-default float-xs-right"
           >
             Add a config
-          </a>
+          </Link>
         </header>
         {content}
       </div>
