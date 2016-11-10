@@ -84,6 +84,13 @@ export class EditConfigPage extends Component {
 
     // If not creating a new config, populate the state with the config values.
     const config = this.getConfig();
+
+    // Config not found. Should we 404?
+    if (!config) {
+      await dispatch(push(`/linodes/${this.getLinode().id}/settings/advanced`));
+      return;
+    }
+
     const diskSlots = this.getDiskSlots(true);
 
     let isCustomRoot = true;
@@ -102,7 +109,7 @@ export class EditConfigPage extends Component {
       comments: config.comments,
       label: config.label,
       ramLimit: config.ram_limit,
-      kernel: config.kernel.id,
+      kernel: config.kernel,
       rootDevice: config.root_device,
       helpers: {
         disableUpdatedb: config.helpers.disable_updatedb,
@@ -155,7 +162,7 @@ export class EditConfigPage extends Component {
     this.setState({ diskSlots });
   }
 
-  deleteDisk() {
+  removeDiskSlot() {
     const { diskSlots } = this.state;
     diskSlots.pop();
     this.setState({ diskSlots });
@@ -174,7 +181,7 @@ export class EditConfigPage extends Component {
         type="button"
         className="btn btn-cancel"
         disabled={loading}
-        onClick={this.addDiskSlot}
+        onClick={() => this.addDiskSlot()}
       >Add slot</button>
     ) : null;
 
@@ -183,7 +190,7 @@ export class EditConfigPage extends Component {
         type="button"
         className="btn btn-cancel"
         disabled={loading}
-        onClick={() => this.deleteDisk(device)}
+        onClick={() => this.removeDiskSlot(device)}
       >Remove slot</button>
     ) : null;
 
@@ -198,7 +205,7 @@ export class EditConfigPage extends Component {
         <div className="col-xs-9 input-container">
           <select
             className="form-control"
-            id={`config-device-${device}`}
+            id={`config-device-${AVAILABLE_DISK_SLOTS[index]}`}
             value={device}
             disabled={loading}
             onChange={e => {
@@ -318,8 +325,8 @@ export class EditConfigPage extends Component {
               id={`config-${field}`}
               disabled={this.state.loading}
               checked={this.state.helpers[field]}
-              onChange={e => this.setState({
-                helpers: { ...this.state.helpers, [field]: e.target.checked },
+              onChange={() => this.setState({
+                helpers: { ...this.state.helpers, [field]: !this.state.helpers[field] },
               })}
             /> {label}
           </label>
@@ -442,8 +449,9 @@ export class EditConfigPage extends Component {
                     Standard
                   </span>
                   <select
+                    id="config-root-device-select"
                     className="form-control float-xs-right"
-                    value={rootDevice}
+                    value={isCustomRoot ? '/dev/sda' : rootDevice}
                     disabled={loading || isCustomRoot}
                     onChange={e => this.setState({ rootDevice: e.target.value })}
                   >

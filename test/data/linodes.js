@@ -158,6 +158,24 @@ export const testLinode = {
 
 export const linodes = {
   [testLinode.id]: testLinode,
+  1233: {
+    ...testLinode,
+    id: 1233,
+    _configs: {
+      ...testLinode._configs,
+      configs: {
+        ...testLinode._configs.configs,
+        12346: {
+          ...testLinode._configs.configs[12345],
+          id: 12346,
+          disks: {
+            ...testLinode._configs.configs[12345].disks,
+            sdb: null,
+          },
+        },
+      },
+    },
+  },
   1235: {
     ...testLinode,
     id: 1235,

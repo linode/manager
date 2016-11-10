@@ -40,10 +40,9 @@ describe('linodes/linode/settings/components/ConfigPanel', () => {
       />
     );
 
-    expect(panel.find('header a.btn').text()).to.equal('Add a config');
-    expect(panel.find('header a.btn').props())
-      .to.have.property('href')
-      .to.equal('/linodes/1239/settings/advanced/configs/create');
+    expect(panel.find('header Link').props().children).to.equal('Add a config');
+    expect(panel.find('header Link').props().to)
+      .equal('/linodes/1239/settings/advanced/configs/create');
   });
 
   it('renders with no config', () => {
