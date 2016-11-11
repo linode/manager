@@ -153,8 +153,8 @@ function renderCard(props) {
         </span>
       </header>
       <div className="linode-details">
-        <div>{linode.ipv4.address}</div>
-        <div>{linode.ipv6.range}</div>
+        <div>{linode.ipv4}</div>
+        <div>{linode.ipv6}</div>
         <section>
           {renderDatacenterStyle(linode)}
         </section>
@@ -189,9 +189,9 @@ function renderRow(props) {
         </div>
       </td>
       <td>
-        {linode.ipv4.address}
+        {linode.ipv4}
         <div className="color-light-black">
-          {linode.ipv6.range}
+          {linode.ipv6}
         </div>
       </td>
       <td>
