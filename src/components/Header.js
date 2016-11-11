@@ -27,6 +27,7 @@ export default function Header(props) {
         <div className="navbar-linode nav-item">
           <Link to="/">
             <span className="fa fa-linode" />
+            <span className="nav-brand">Linode Manager</span>
           </Link>
         </div>
         <div className="navbar-search nav-item">
