@@ -3,47 +3,20 @@
 
 .measure-unit {
     display: inline-block;
-    padding-top: 3px;
+    line-height: $input-height;
     padding-left: 5px;
 }
 
-.disk-select {
-    width: 15rem;
-}
+.multi-radio {
+    display: inline-block;
+    line-height: $input-height;
 
-.disk-slots {
-    .disk-slot-btns {
-        button {
-            background-color: #ffffff;
-            margin-top: 0.25rem;
-            margin-left: 0.75rem;
-            padding: 0 0.25rem;
-            border-radius: 0.2rem;
-        }
+    span {
+        padding-right: 10px;
     }
 }
 
-.add-disk-btn {
-    border: 1px solid #4A90E2;
-    color: #4A90E2;
-}
-
-.delete-disk-btn {
-    border: 1px solid #F24C2B;
-    color: #F24C2B;
-}
-
-.root-device-select {
-    margin-left: 0.25rem;
-    width: 9rem;
-}
-
-.custom-label-root {
-    padding-top: 0px;
-    padding-left: 1.2rem;
-    margin-top: -0.2rem;
-}
-
-.custom-root-device {
-    margin-top: -0.4rem;
+.btn-cancel + .btn-cancel {
+    padding-left: 15px !important;
+    font-size: 12px;
 }

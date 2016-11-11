@@ -70,6 +70,7 @@ export class IndexPage extends Component {
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
+
     await this.loadLinode();
     const linode = this.getLinode();
     const defaultConfig = Object.values(linode._configs.configs)[0];
