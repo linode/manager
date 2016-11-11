@@ -27,20 +27,8 @@ describe('linodes/linode/layouts/SummaryPage', () => {
           id: 'newark',
         },
         group: '',
-        ips: {
-          public: {
-            ipv4: [
-              '123.456.789.1',
-              '123.456.789.2',
-              '123.456.789.3',
-            ],
-            ipv6: '2600:3c03::f03c:91ff:fe96:0f13',
-          },
-          private: {
-            ipv4: [],
-            link_local: 'fe80::f03c:91ff:fe96:0f13',
-          },
-        },
+        ipv4: '123.456.789.1',
+        ipv6: '2600:3c03::f03c:91ff:fe96:0f13',
       },
     },
     _singular: 'linode',
@@ -77,8 +65,8 @@ describe('linodes/linode/layouts/SummaryPage', () => {
       });
 
       it('renders address ip and url', async () => {
-        const ipv4 = testLinode.ipv4.address;
-        const inet = `${ipv4}/24 ( ${testLinode.ipv4.rdns} )`;
+        const ipv4 = testLinode.ipv4;
+        const inet = `${ipv4}/24 ( TO DO )`;
         const page = shallow(
           <SummaryPage
             linodes={linodes}
@@ -92,7 +80,7 @@ describe('linodes/linode/layouts/SummaryPage', () => {
       });
 
       it('renders gateway', async () => {
-        const ipv4 = testLinode.ipv4.address;
+        const ipv4 = testLinode.ipv4;
         const gateway = `${ipv4.substring(0, ipv4.lastIndexOf('.'))}.1`;
         const page = shallow(
           <SummaryPage
@@ -135,7 +123,7 @@ describe('linodes/linode/layouts/SummaryPage', () => {
       });
 
       it('renders address ip', async () => {
-        const ipv6 = testLinode.ipv6.range;
+        const ipv6 = testLinode.ipv6;
         const page = shallow(
           <SummaryPage
             linodes={linodes}
