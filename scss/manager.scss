@@ -1,5 +1,6 @@
-$sidebar-width: 200px;
+$sidebar-width: 220px;
 
+/* Bootstrap overrides */
 $grid-breakpoints: (
   xs: 0,
   sm: 576px + $sidebar-width,
@@ -7,6 +8,10 @@ $grid-breakpoints: (
   lg: 992px + $sidebar-width,
   xl: 1200px + $sidebar-width
 );
+
+$grid-gutter-width-base: 15px;
+
+/* End bootstrap overrides */
 
 @import "bootstrap";
 //$fa-font-path: "//netdna.bootstrapcdn.com/font-awesome/4.4.0/fonts";
@@ -80,7 +85,6 @@ html, #root > [data-reactroot] {
 body {
     height: calc(100% - #{$nav-height});
     background: $light-gray;
-    min-width: 1007px; /* can fix later */
     color: $black;
     margin-top: $nav-height;
     font-size: $font-size;
@@ -192,13 +196,19 @@ a {
         margin-left: 0 !important; /* override bootstrap styles */
     }
 
-    .navbar-linode {
-        font-size: 40px;
+    .fa-linode {
+        font-size: 35px;
+        padding-right: 15px;
         line-height: $main-nav-height;
+    }
 
-        .fa {
-            color: #bbb;
-        }
+    .nav-brand {
+        color: $dark-gray !important;
+        display: inline-block;
+        vertical-align: top;
+        line-height: $main-nav-height;
+        font-size: 18px;
+
     }
 
     .navbar-search {
@@ -371,11 +381,9 @@ a {
 
 .container {
     @extends .container;
-    padding: 0 $main-padding-lr;
 
     .main > & {
         padding-top: $main-padding-tb;
-        padding-bottom: $main-padding-tb;
     }
 }
 
@@ -607,7 +615,9 @@ hr {
 
         &:not([disabled]):hover,
         &:not([disabled]):active,
-        &:not([disabled]):focus {
+        &:not([disabled]):focus,
+        &:not([disabled]):focus:active {
+            border-color: $blue; /* :focus:active needs this */
             background: white;
             color: $blue;
         }
@@ -894,16 +904,11 @@ table {
 }
 
 footer {
-    margin: $main-padding-tb/2 0;
+    margin-top: 5px;
+    margin-bottom: 15px;
 
-    span {
-        padding: 0 10px;
-    }
-
-    .developers {
-        padding: 2px 5px;
-        border: $border;
-        border-radius: 3px;
+    a {
+        font-size: .9rem;
     }
 }
 
