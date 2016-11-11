@@ -16,7 +16,6 @@ $grid-gutter-width-base: 15px;
 @import "bootstrap";
 //$fa-font-path: "//netdna.bootstrapcdn.com/font-awesome/4.4.0/fonts";
 //@import "bower_components/font-awesome/scss/font-awesome";
-@import "../node_modules/rc-slider/assets/index.css";
 
 $light-blue: #DEEFF5;
 $blue: #4A90E2;
@@ -912,14 +911,6 @@ footer {
     }
 }
 
-.rc-slider {
-    margin-bottom: 2rem;
-}
-
-.rc-tooltip {
-    z-index: 999999;
-}
-
 .error {
     h1 {
         font-size: 8rem;
@@ -942,14 +933,6 @@ footer {
 .col-form-legend {
     padding-top: 0.25rem;
     font-size: 0.9rem;
-}
-
-.align-slider {
-    padding-top: 0.75rem;
-
-    .rc-slider {
-        margin-bottom: 0;
-    }
 }
 
 .linodes {
