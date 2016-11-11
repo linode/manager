@@ -122,7 +122,7 @@ export const testLinode = {
         id: 12345,
         label: 'Test config',
         comments: 'Test comments',
-        kernel: { id: 'linode/latest_64' },
+        kernel: 'linode/latest_64',
         virt_mode: 'paravirt',
         run_level: 'default',
         ram_limit: 1024,
@@ -130,7 +130,18 @@ export const testLinode = {
         root_device_ro: false,
         devtmpfs_automount: false,
         disks: {
-          // TODO
+          sda: {
+            id: 12345,
+          },
+          sdb: {
+            id: 12346,
+          },
+          sdc: null,
+          sdd: null,
+          sde: null,
+          sdf: null,
+          sdg: null,
+          sdh: null,
         },
         helpers: {
           disable_updatedb: true,
@@ -147,6 +158,24 @@ export const testLinode = {
 
 export const linodes = {
   [testLinode.id]: testLinode,
+  1233: {
+    ...testLinode,
+    id: 1233,
+    _configs: {
+      ...testLinode._configs,
+      configs: {
+        ...testLinode._configs.configs,
+        12346: {
+          ...testLinode._configs.configs[12345],
+          id: 12346,
+          disks: {
+            ...testLinode._configs.configs[12345].disks,
+            sdb: null,
+          },
+        },
+      },
+    },
+  },
   1235: {
     ...testLinode,
     id: 1235,

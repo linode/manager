@@ -56,7 +56,7 @@ describe('linodes/linode/settings/layouts/DisplayPage', () => {
     const fn = dispatch.firstCall.args[0];
     const dispatched = () => ({ authentication: { token: 'hi' } });
     await expectRequest(fn, `/linode/instances/${linode.id}`, dispatched,
-                        { group: linode.group, lable: linode.label }, { method: 'PUT' });
+                        { group: linode.group, label: linode.label }, { method: 'PUT' });
   });
 
   it('shows error if label is invalid', async () => {
