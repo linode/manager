@@ -124,6 +124,17 @@ a {
     }
 }
 
+.row-eq-height {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+
+    .card {
+        height: 100%;
+    }
+}
+
 .selected {
     background: $light-blue;
 }
@@ -793,7 +804,7 @@ table {
     }
 
     td:not(:first-of-type) {
-        word-wrap: nowrap;
+        white-space: nowrap;
     }
 
     thead {
@@ -969,6 +980,11 @@ footer {
     .card {
         margin-bottom: $main-padding-tb;
 
+        header {
+            padding-top: 15px;
+            padding-bottom: 15px;
+        }
+
         header input[type="checkbox"] {
             margin-top: 8px;
         }
@@ -980,12 +996,16 @@ footer {
 
     td {
         padding-top: 10px;
-        padding-bottom: 10px;
+        padding-bottom: 15px;
         vertical-align: top;
 
         .linode-label + .text-muted {
             margin-top: -5px;
         }
+
+        &.ips div {
+            line-height: initial;
+        }        
     }
 
     .display-group {
