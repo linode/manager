@@ -99,7 +99,6 @@
     "md5": "^2.1.0",
     "moment": "^2.13.0",
     "node-sass": "^3.4.2",
-    "rc-slider": "^4.0.1",
     "rd3": "^0.6.3",
     "react": "^15.1.0",
     "react-addons-test-utils": "^15.1.0",
