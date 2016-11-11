@@ -64,7 +64,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
   });
 
   it('renders public ipv4', () => {
-    const ipv4 = testLinode.ipv4.address;
+    const ipv4 = testLinode.ipv4;
     const page = mount(
       <DashboardPage
         linodes={linodes}
@@ -75,7 +75,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
   });
 
   it('renders public ipv6', () => {
-    const ipv6 = testLinode.ipv6.range;
+    const ipv6 = testLinode.ipv6;
     const page = mount(
       <DashboardPage
         linodes={linodes}
@@ -185,7 +185,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
   });
 
   it('renders ssh path', () => {
-    const ipv4 = testLinode.ipv4.address;
+    const ipv4 = testLinode.ipv4;
     const sshPath = `ssh root@${ipv4}`;
     const page = shallow(
       <DashboardPage

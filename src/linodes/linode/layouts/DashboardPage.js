@@ -178,8 +178,8 @@ export class DashboardPage extends Component {
               </div>
               <div className="col-sm-8 content-col right">
                 <ul className="list-unstyled">
-                  <li> {linode.ipv4.address} </li>
-                  <li> {linode.ipv6.range} </li>
+                  <li> {linode.ipv4} </li>
+                  <li> {linode.ipv6} </li>
                   <li> <Link to={`/linodes/${linode.id}/networking`}>(...)</Link> </li>
                 </ul>
               </div>
@@ -236,7 +236,7 @@ export class DashboardPage extends Component {
                     type="text"
                     id="ssh-input"
                     className="form-control"
-                    value={`ssh root@${linode.ipv4.address}`}
+                    value={`ssh root@${linode.ipv4}`}
                     readOnly
                   />
                   <span className="input-group-btn">

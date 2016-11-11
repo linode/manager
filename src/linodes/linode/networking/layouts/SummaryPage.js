@@ -50,8 +50,7 @@ export class SummaryPage extends Component {
   }
 
   renderIPv4Public() {
-    const ipv4 = this.getLinode().ipv4.address;
-    const rdns = this.getLinode().ipv4.rdns;
+    const ipv4 = this.getLinode().ipv4;
 
     return (
       <div className="col-sm-6 left">
@@ -70,7 +69,7 @@ export class SummaryPage extends Component {
               <span>
                 <span>{ipv4}/24 </span>
                 <span className="text-nowrap">
-                  ( {rdns} )
+                  ( TO DO )
                 </span>
               </span>
             </ul>
@@ -106,7 +105,7 @@ export class SummaryPage extends Component {
             Address
           </div>
           <div className="col-sm-8 content-col right">
-            {this.getLinode().ipv6.range}
+            {this.getLinode().ipv6}
           </div>
         </div>
         <div className="form-group row">
