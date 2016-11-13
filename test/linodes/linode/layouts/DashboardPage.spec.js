@@ -63,26 +63,17 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
     loadLinode.restore();
   });
 
-  it('renders public ipv4', () => {
-    const ipv4 = testLinode.ipv4;
+  it('renders public ipv4 and ipv6', () => {
+    const { ipv4, ipv6 } = testLinode;
     const page = mount(
       <DashboardPage
         linodes={linodes}
         params={params}
       />);
 
-    expect(page.contains(<li> {ipv4} </li>)).to.equal(true);
-  });
-
-  it('renders public ipv6', () => {
-    const ipv6 = testLinode.ipv6;
-    const page = mount(
-      <DashboardPage
-        linodes={linodes}
-        params={params}
-      />);
-
-    expect(page.contains(<li> {ipv6} </li>)).to.equal(true);
+    const ipSection = page.find('.linode-ips');
+    expect(ipSection.find('li').at(0).text()).to.equal(ipv4);
+    expect(ipSection.find('li').at(1).text()).to.equal(ipv6);
   });
 
   it('renders backups not enabled', () => {
