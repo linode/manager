@@ -393,11 +393,14 @@ a {
 
 // Deals with the fact that tablist extends container which gives it a max-width
 .main-header-fix {
-    height: 35px;
-    width: 100%;
-    background: $white;
     border-bottom: $border;
-    margin-bottom: -37px;
+
+    &:not(.no-tabs) {
+        margin-bottom: -37px;
+        height: 35px;
+        width: 100%;
+        background: $white;
+     }
 }
 
 .react-tabs {
