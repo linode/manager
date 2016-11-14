@@ -46,7 +46,7 @@ export class CancelBackupsModal extends Component {
 }
 
 CancelBackupsModal.propTypes = {
-  linodeId: PropTypes.string.isRequired,
+  linodeId: PropTypes.number.isRequired,
   dispatch: PropTypes.func.isRequired,
 };
 
