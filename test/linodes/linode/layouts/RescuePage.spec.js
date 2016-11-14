@@ -223,39 +223,5 @@ describe('linodes/linode/layouts/RescuePage', () => {
       await expectRequest(fn, '/linode/instances/1237/disks/1234/password', dispatched,
                          { }, { method: 'POST' });
     });
-
-    it('power cycles running Linodes when resetting password', async () => {
-      const page = shallow(
-        <RescuePage
-          dispatch={dispatch}
-          linodes={linodes}
-          params={{ linodeId: '1234' }}
-        />);
-      page.setState({ loading: false, disk: 1234, password: 'new password' });
-      const { resetRootPassword } = page.instance();
-      await resetRootPassword();
-      let dispatched = dispatch.firstCall.args[0];
-      const fetchStub = sandbox.stub(fetch, 'fetch').returns({ json: () => {} });
-      const state = {
-        authentication: { token: 'hi' },
-        linodes: {
-          ...linodes,
-          linodes: {
-            ...linodes.linodes,
-            [testLinode.id]: { ...testLinode, status: 'offline' },
-          },
-        },
-      };
-      await dispatched(dispatch, () => state);
-      expect(fetchStub.calledOnce).to.equal(true);
-      expect(fetchStub.firstCall.args[1]).to.equal(
-        '/linode/instances/1234/shutdown');
-      fetchStub.reset();
-      dispatched = dispatch.thirdCall.args[0];
-      await dispatched(dispatch, () => state);
-      expect(fetchStub.calledOnce).to.equal(true);
-      expect(fetchStub.firstCall.args[1]).to.equal(
-        '/linode/instances/1234/boot');
-    });
   });
 });
