@@ -274,7 +274,7 @@ export class EditConfigPage extends Component {
 
         // PUT endpoint accepts kernels differently.
         data.kernel = {
-          id: data.kernel
+          id: data.kernel,
         };
 
         await dispatch(linodes.configs.put(data, linode.id, configId));
