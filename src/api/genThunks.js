@@ -63,7 +63,7 @@ function genThunkPage(config, actions) {
       const { token } = getState().authentication;
       const state = refineState(config, getState(), ids);
       if (state.totalPages !== -1 &&
-          state.pagesFetched.indexOf(page) !== -1) {
+          state.pagesFetched.indexOf(page + 1) !== -1) {
         // cache hit
         return;
       }
@@ -79,7 +79,7 @@ function genThunkPage(config, actions) {
       const resources = await response.json();
       actions.many();
       if (state.totalPages !== -1 &&
-          state.totalResults !== resources.totalResults) {
+          state.totalResults !== resources.total_results) {
         dispatch(actions.invalidate());
         for (let i = 0; i < state.pagesFetched.length; i += 1) {
           if (state.pagesFetched[i] - 1 !== page) {
