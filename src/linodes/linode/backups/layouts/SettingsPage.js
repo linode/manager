@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-import { Link } from 'react-router';
 import { connect } from 'react-redux';
 
 import { ErrorSummary, FormGroup, reduceErrors } from '~/errors';
@@ -25,11 +24,11 @@ export class CancelBackupsModal extends Component {
           This cannot be undone.
         </p>
         <div className="modal-footer">
-          <Link
+          <button
             className="btn btn-cancel"
             disabled={loading}
             onClick={() => dispatch(hideModal())}
-          >Nevermind</Link>
+          >Nevermind</button>
           <button
             className="btn btn-danger"
             disabled={loading}
