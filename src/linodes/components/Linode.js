@@ -154,7 +154,7 @@ function renderCard(props) {
       </header>
       <div className="linode-details">
         <div>{linode.ipv4}</div>
-        <div>{linode.ipv6}</div>
+        <div className="text-light-black">{linode.ipv6}</div>
         <section>
           {renderDatacenterStyle(linode)}
         </section>
@@ -188,9 +188,9 @@ function renderRow(props) {
           Uptime: 2 weeks
         </div>
       </td>
-      <td>
+      <td className="ips">
         {linode.ipv4}
-        <div className="color-light-black">
+        <div className="text-light-black">
           {linode.ipv6}
         </div>
       </td>

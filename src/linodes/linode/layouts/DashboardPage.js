@@ -166,27 +166,27 @@ export class DashboardPage extends Component {
       }.linode.com`;
 
     return (
-      <section className="card">
-        <div className="row">
-          <div className="col-sm-5 left">
+      <div className="row row-eq-height">
+        <section className="col-lg-6 col-md-12">
+          <div className="card">
             <header>
               <h2>Summary</h2>
             </header>
             <div className="form-group row linode-ips">
-              <div className="col-sm-4 label-col left">
+              <div className="col-sm-4 label-col">
                 IP Addresses
               </div>
               <div className="col-sm-8 content-col right">
                 <ul className="list-unstyled">
-                  <li> {linode.ipv4} </li>
-                  <li> {linode.ipv6} </li>
-                  <li> <Link to={`/linodes/${linode.id}/networking`}>(...)</Link> </li>
+                  <li>{linode.ipv4}</li>
+                  <li className="text-light-black">{linode.ipv6}</li>
+                  <li><Link to={`/linodes/${linode.id}/networking`}>(...)</Link></li>
                 </ul>
               </div>
             </div>
             {plan ?
               <div className="form-group row linode-plan">
-                <div className="col-sm-4 label-col left">
+                <div className="col-sm-4 label-col">
                   Plan
                 </div>
                 <div className="col-sm-8 content-col right">
@@ -196,7 +196,7 @@ export class DashboardPage extends Component {
               : null
             }
             <div className="form-group row linode-datacenter">
-              <div className="col-sm-4 label-col left">
+              <div className="col-sm-4 label-col">
                 Datacenter
               </div>
               <div className="col-sm-8 content-col right">
@@ -204,7 +204,7 @@ export class DashboardPage extends Component {
               </div>
             </div>
             <div className="form-group row linode-distro">
-              <div className="col-sm-4 label-col left">
+              <div className="col-sm-4 label-col">
                 Distribution
               </div>
               <div className="col-sm-8 content-col right">
@@ -212,7 +212,7 @@ export class DashboardPage extends Component {
               </div>
             </div>
             <div className="form-group row linode-backups">
-              <div className="col-sm-4 label-col left">
+              <div className="col-sm-4 label-col">
                 Backup
               </div>
               <div className="col-sm-8 content-col right">
@@ -220,12 +220,14 @@ export class DashboardPage extends Component {
               </div>
             </div>
           </div>
-          <div className="col-sm-7 right">
+        </section>
+        <section className="col-lg-6 col-md-12">
+          <div className="card">
             <header>
               <h2>Access</h2>
             </header>
             <div className="form-group row linode-ssh">
-              <div className="col-sm-3 label-col left">
+              <div className="col-sm-3 label-col">
                 <label className="form-label" htmlFor="ssh-input">
                   SSH
                 </label>
@@ -246,7 +248,7 @@ export class DashboardPage extends Component {
               </div>
             </div>
             <div className="form-group row linode-lish">
-              <div className="col-sm-3 label-col left">
+              <div className="col-sm-3 label-col">
                 <label className="form-label" htmlFor="lish-input">
                   Text console
                 </label>
@@ -277,7 +279,7 @@ export class DashboardPage extends Component {
               </div>
             </div>
             <div className="form-group row linode-glish">
-              <div className="col-sm-3 label-col left">
+              <div className="col-sm-3 label-col">
                 <label className="form-label" htmlFor="glish-button">
                   Graphical console
                 </label>
@@ -292,8 +294,8 @@ export class DashboardPage extends Component {
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
     );
   }
 
