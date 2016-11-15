@@ -1,18 +1,64 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { getLinode } from './IndexPage';
+import { showModal, hideModal } from '~/actions/modal';
 import { linodes } from '~/api';
-import { powerOnLinode, powerOffLinode, resetPassword } from '~/api/linodes';
+import { resetPassword } from '~/api/linodes';
 import PasswordInput from '~/components/PasswordInput';
 import HelpButton from '~/components/HelpButton';
 import { setSource } from '~/actions/source';
+
+
+export class ResetRootPwModal extends Component {
+  constructor() {
+    super();
+    this.state = { loading: false };
+  }
+
+
+  render() {
+    const { dispatch, resetRootPassword } = this.props;
+    const { loading } = this.state;
+    return (
+      <div>
+        <p>
+          Are you sure you want to reset the root password for this Linode?
+          This cannot be undone.
+        </p>
+        <div className="modal-footer">
+          <button
+            className="btn btn-cancel"
+            type="button"
+            disabled={loading}
+            onClick={() => dispatch(hideModal())}
+          >Nevermind</button>
+          <button
+            className="btn btn-danger"
+            disabled={loading}
+            onClick={async () => {
+              this.setState({ loading: true });
+              await resetRootPassword();
+              this.setState({ loading: false });
+              dispatch(hideModal());
+            }}
+          >Reset Password</button>
+        </div>
+      </div>);
+  }
+}
+
+ResetRootPwModal.propTypes = {
+  linodeId: PropTypes.number.isRequired,
+  resetRootPassword: PropTypes.func.isRequired,
+  dispatch: PropTypes.func.isRequired,
+};
 
 export class RescuePage extends Component {
   constructor() {
     super();
     this.getLinode = getLinode.bind(this);
-    this.resetRootPassword = this.resetRootPassword.bind(this);
     this.renderRescueMode = this.renderRescueMode.bind(this);
+    this.resetRootPassword = this.resetRootPassword.bind(this);
     this.renderResetRootPassword = this.renderResetRootPassword.bind(this);
     this.state = {
       password: '',
@@ -42,16 +88,10 @@ export class RescuePage extends Component {
     const { password, disk } = this.state;
     const { dispatch } = this.props;
     const linode = this.getLinode();
-    const powered = linode.status === 'running' || linode.status === 'booting';
 
     try {
       this.setState({ applying: true, result: null });
-
-      const actions = powered ? [
-        powerOffLinode(linode.id),
-        resetPassword(linode.id, disk, password),
-        powerOnLinode(linode.id),
-      ] : [resetPassword(linode.id, disk, password)];
+      const actions = [resetPassword(linode.id, disk, password)];
 
       await Promise.all(actions.map(dispatch));
 
@@ -86,6 +126,17 @@ export class RescuePage extends Component {
 
   renderResetRootPassword() {
     const { disk, loading } = this.state;
+    const { dispatch } = this.props;
+    const linode = this.getLinode();
+    if (!linode) {
+      return null;
+    }
+    const resetRootPwModal = (
+      <ResetRootPwModal
+        linodeId={linode.id}
+        dispatch={dispatch}
+        resetRootPassword={this.resetRootPassword}
+      />);
     let body = null;
     if (loading) {
       body = null;
@@ -94,7 +145,6 @@ export class RescuePage extends Component {
         <p>This Linode does not have any disks eligible for password reset.</p>
       );
     } else {
-      const linode = this.getLinode();
       const showDisks = linode && linode._disks.totalPages !== -1 ?
         Object.values(linode._disks.disks)
           .filter(d => d.filesystem !== 'swap').length > 1 : false;
@@ -117,14 +167,14 @@ export class RescuePage extends Component {
             passwordType="offline_fast_hashing_1e10_per_second"
             onChange={password => this.setState({ password })}
           />
-          <p>
-            <span className="text-danger">Warning!</span> Your Linode
-            will be shut down during this process.
-          </p>
+          {linode.status === 'offline' ? null :
+            <div className="alert alert-info">Your Linode must
+              be powered off to reset your root password.
+            </div>}
           <button
             className="btn btn-danger"
-            disabled={!this.state.password || this.state.applying}
-            onClick={this.resetRootPassword}
+            disabled={!this.state.password || this.state.applying || linode.status !== 'offline'}
+            onClick={() => dispatch(showModal('Reset root password', resetRootPwModal))}
           >Reset Password</button>
           <span style={{ marginLeft: '0.5rem' }}>
             {this.state.result}

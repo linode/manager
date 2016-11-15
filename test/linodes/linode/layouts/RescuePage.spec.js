@@ -5,6 +5,7 @@ import { expect } from 'chai';
 
 import * as fetch from '~/fetch';
 import { testLinode } from '@/data/linodes';
+import { SHOW_MODAL } from '~/actions/modal';
 import { RescuePage } from '~/linodes/linode/layouts/RescuePage';
 import { expectRequest } from '@/common';
 
@@ -224,38 +225,18 @@ describe('linodes/linode/layouts/RescuePage', () => {
                          { }, { method: 'POST' });
     });
 
-    it('power cycles running Linodes when resetting password', async () => {
+    it('shows a modal when reset root password button is pressed', async () => {
       const page = shallow(
         <RescuePage
           dispatch={dispatch}
           linodes={linodes}
-          params={{ linodeId: '1234' }}
+          params={{ linodeId: '1237' }}
         />);
       page.setState({ loading: false, disk: 1234, password: 'new password' });
-      const { resetRootPassword } = page.instance();
-      await resetRootPassword();
-      let dispatched = dispatch.firstCall.args[0];
-      const fetchStub = sandbox.stub(fetch, 'fetch').returns({ json: () => {} });
-      const state = {
-        authentication: { token: 'hi' },
-        linodes: {
-          ...linodes,
-          linodes: {
-            ...linodes.linodes,
-            [testLinode.id]: { ...testLinode, status: 'offline' },
-          },
-        },
-      };
-      await dispatched(dispatch, () => state);
-      expect(fetchStub.calledOnce).to.equal(true);
-      expect(fetchStub.firstCall.args[1]).to.equal(
-        '/linode/instances/1234/shutdown');
-      fetchStub.reset();
-      dispatched = dispatch.thirdCall.args[0];
-      await dispatched(dispatch, () => state);
-      expect(fetchStub.calledOnce).to.equal(true);
-      expect(fetchStub.firstCall.args[1]).to.equal(
-        '/linode/instances/1234/boot');
+      page.find('button').simulate('click');
+      expect(dispatch.calledOnce).to.equal(true);
+      expect(dispatch.firstCall.args[0])
+        .to.have.property('type').which.equals(SHOW_MODAL);
     });
   });
 });
