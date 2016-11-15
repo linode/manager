@@ -272,6 +272,11 @@ export class EditConfigPage extends Component {
         });
         data.disks = disksByDevice;
 
+        // PUT endpoint accepts kernels differently.
+        data.kernel = {
+          id: data.kernel,
+        };
+
         await dispatch(linodes.configs.put(data, linode.id, configId));
       }
 

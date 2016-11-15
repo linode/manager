@@ -400,7 +400,9 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
           ram_limit: 1024,
           run_level: 'default',
           virt_mode: 'paravirt',
-          kernel: 'linode/latest_64',
+          kernel: {
+            id: 'linode/latest_64',
+          },
           disks: {
             sda: { id: 12345 },
             sdb: { id: 12346 },
