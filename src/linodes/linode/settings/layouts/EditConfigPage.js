@@ -109,7 +109,7 @@ export class EditConfigPage extends Component {
       comments: config.comments,
       label: config.label,
       ramLimit: config.ram_limit,
-      kernel: config.kernel,
+      kernel: config.kernel.id,
       rootDevice: config.root_device,
       helpers: {
         disableUpdatedb: config.helpers.disable_updatedb,
@@ -237,8 +237,8 @@ export class EditConfigPage extends Component {
   async saveChanges() {
     const { dispatch } = this.props;
     const linode = this.getLinode();
-    const { label, comments, ramLimit, runLevel, virtMode, kernel, diskSlots, rootDevice,
-            helpers } = this.state;
+    const { label, comments, ramLimit, runLevel, virtMode, kernel, diskSlots,
+            rootDevice, helpers } = this.state;
 
     this.setState({ loading: true, errors: {} });
 
@@ -271,11 +271,6 @@ export class EditConfigPage extends Component {
           disksByDevice[AVAILABLE_DISK_SLOTS[i]] = { id };
         });
         data.disks = disksByDevice;
-
-        // PUT endpoint accepts kernels differently.
-        data.kernel = {
-          id: data.kernel,
-        };
 
         await dispatch(linodes.configs.put(data, linode.id, configId));
       }
@@ -343,8 +338,8 @@ export class EditConfigPage extends Component {
   render() {
     const { create, kernels } = this.props;
     const {
-      loading, label, comments, kernel, isCustomRoot, ramLimit, rootDevice, errors,
-      diskSlots } = this.state;
+      loading, label, comments, kernel, isCustomRoot, ramLimit, rootDevice,
+      errors, diskSlots } = this.state;
 
     return (
       <section className="card">
