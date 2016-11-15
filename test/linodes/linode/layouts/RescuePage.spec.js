@@ -5,6 +5,7 @@ import { expect } from 'chai';
 
 import * as fetch from '~/fetch';
 import { testLinode } from '@/data/linodes';
+import { SHOW_MODAL } from '~/actions/modal';
 import { RescuePage } from '~/linodes/linode/layouts/RescuePage';
 import { expectRequest } from '@/common';
 
@@ -222,6 +223,20 @@ describe('linodes/linode/layouts/RescuePage', () => {
       const dispatched = () => ({ authentication: { token: 'hi' } });
       await expectRequest(fn, '/linode/instances/1237/disks/1234/password', dispatched,
                          { }, { method: 'POST' });
+    });
+
+    it('shows a modal when reset root password button is pressed', async () => {
+      const page = shallow(
+        <RescuePage
+          dispatch={dispatch}
+          linodes={linodes}
+          params={{ linodeId: '1237' }}
+        />);
+      page.setState({ loading: false, disk: 1234, password: 'new password' });
+      page.find('button').simulate('click');
+      expect(dispatch.calledOnce).to.equal(true);
+      expect(dispatch.firstCall.args[0])
+        .to.have.property('type').which.equals(SHOW_MODAL);
     });
   });
 });
