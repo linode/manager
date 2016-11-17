@@ -153,7 +153,7 @@ export class RescuePage extends Component {
             {showDisks ?
               <div className="form-group row">
                 <div className="col-sm-2">
-                  <label htmlFor="reset-root-password-select">Disk: </label>
+                  <label htmlFor="reset-root-password-select" className="label-col">Disk:</label>
                 </div>
                 <div className="input-container col-sm-9">
                   <select
@@ -172,7 +172,7 @@ export class RescuePage extends Component {
           <div className="form-group row">
               {showDisks ?
                 <div className="col-sm-2">
-                  <label htmlFor="password">Password: </label>
+                  <label htmlFor="password" className="label-col">Password:</label>
                 </div>
               : null}
             <div className="col-sm-10">
