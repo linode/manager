@@ -1,0 +1,101 @@
+.Notification {
+    padding: 10px 15px;
+    border-bottom: $border;
+    cursor: pointer;
+    cursor: hand;
+
+    &--unseen {
+        background: white;
+    }
+
+    &--unseen &-title {
+        font-weight: bold;
+    }
+    &--unseen &-header {
+        padding: 0;
+    }
+
+    &-header {
+        // TODO: remove after updating generic <header> css
+        background: initial !important;
+        border: 0 !important;
+        padding: 0 0 5px 0;
+    }
+
+    &-title {
+        font-size: 1rem;
+    }
+
+    &-time {
+        color: $light-black;
+        font-size: 12px;
+        vertical-align: middle;
+    }
+
+    &-subject {
+        font-weight: 600;
+    }
+}
+
+.Notifications {
+    $notifications-width: 400px;
+
+    &--open & {
+        &-overlay {
+            display: inline;
+        }
+
+        &-body {
+            right: 0;
+        }
+    }
+
+    &-overlay {
+        display: none;
+        position: fixed;
+        height: 100%;
+        width: 100%;
+        left: 0;
+        top: $nav-height - 1;
+        background: $transparent;
+        z-index: 1000;
+    }
+
+    &-header {
+        background: $white;
+        border-bottom: $border;
+        padding: 10px 15px;
+        
+        a {
+            line-height: $input-height;
+        }
+        
+        .fa {
+            padding-left: 5px;
+            color: $blue;
+        }
+    }
+
+    &-body {
+        -webkit-transition: all .05s ease-out;
+        -moz-transition: all .05s ease-out;
+        -o-transition: all .05s ease-out;
+        -ms-transition: all .05s ease-out;
+        position: fixed;
+        top: $nav-height - 1;
+        bottom: 0;
+        right: -$notifications-width;
+        width: $notifications-width;
+        max-width: 100%;
+        background: $gray;
+        border-left: $border;
+        z-index: 1001;
+        overflow-y: auto;
+        font-size: .9rem;
+    }
+
+    &-end {
+        padding: 15px;
+        color: $light-black;
+    }
+}

@@ -77,7 +77,7 @@ describe('linodes/linode/backups/layouts/SettingsPage', () => {
 
   it('cancels backups when button on modal is pressed', async () => {
     const modal = shallow(
-      <CancelBackupsModal linodeId={'1234'} dispatch={dispatch} />
+      <CancelBackupsModal linodeId="1234" dispatch={dispatch} />
     );
 
     const confirmButton = modal.find('.btn-danger');

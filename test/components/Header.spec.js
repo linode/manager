@@ -3,92 +3,60 @@ import { shallow } from 'enzyme';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
+import { api } from '@/data';
 import Header from '../../src/components/Header';
 
 describe('components/Header', () => {
-  describe('main', () => {
-    it('renders username', () => {
-      const navigation = shallow(
-        <Header username={'peanut'} emailHash={'24afd9bad4cf41b3c07d61fa0df03768'} />
-      );
+  it('renders username', () => {
+    const navigation = shallow(
+      <Header
+        username="peanut"
+        emailHash="24afd9bad4cf41b3c07d61fa0df03768"
+        events={api.events}
+      />
+    );
 
-      expect(navigation.find('.nav-user').text()).to.equal('peanut');
-    });
-
-    it('renders gravatar', () => {
-      const navigation = shallow(
-        <Header username={'peanut'} emailHash={'24afd9bad4cf41b3c07d61fa0df03768'} />
-      );
-
-      expect(navigation.find('.nav-gravatar-img').src).to.be.defined;
-    });
-
-    it('renders logo image', () => {
-      const navigation = shallow(
-        <Header username={'peanut'} emailHash={'24afd9bad4cf41b3c07d61fa0df03768'} />
-      );
-
-      expect(navigation.find('img').src).to.be.defined;
-    });
-
-    it('renders logo image home link', () => {
-      const navigation = shallow(
-        <Header username={'peanut'} emailHash={'24afd9bad4cf41b3c07d61fa0df03768'} />
-      );
-
-      expect(navigation.find({ to: '/' }).length).to.equal(1);
-    });
-
-    it('renders search', () => {
-      const navigation = shallow(
-        <Header username={'peanut'} emailHash={'24afd9bad4cf41b3c07d61fa0df03768'} />
-      );
-
-      expect(navigation.find('input').length).to.equal(1);
-    });
-
-    it('opens notifications sidebar on profile click', () => {
-      const hideShowNotifications = sinon.spy();
-      const navigation = shallow(
-        <Header
-          username={'peanut'}
-          emailHash={'24afd9bad4cf41b3c07d61fa0df03768'}
-          hideShowNotifications={hideShowNotifications}
-        />
-      );
-
-      const profileButton = navigation.find('.navbar-session');
-      profileButton.simulate('click');
-      expect(hideShowNotifications.calledOnce).to.equal(true);
-    });
+    expect(navigation.find('.MainHeader-username').text()).to.equal('peanut');
   });
 
-  describe('infobar', () => {
-    const sandbox = sinon.sandbox.create();
+  it('renders gravatar', () => {
+    const navigation = shallow(
+      <Header
+        username="peanut"
+        emailHash="24afd9bad4cf41b3c07d61fa0df03768"
+        events={api.events}
+      />
+    );
 
-    afterEach(() => {
-      sandbox.restore();
-    });
+    expect(navigation.find('.MainHeader-gravatar').props().src)
+      .to.equal('https://gravatar.com/avatar/24afd9bad4cf41b3c07d61fa0df03768');
+  });
 
-    it('renders nav component', () => {
-      const infobar = shallow(<Header title="" link="" />);
+  it('toggles notifications sidebar on profile click', () => {
+    const hideShowNotifications = sinon.spy();
+    const navigation = shallow(
+      <Header
+        username="peanut"
+        emailHash="24afd9bad4cf41b3c07d61fa0df03768"
+        hideShowNotifications={hideShowNotifications}
+        events={api.events}
+      />
+    );
 
-      expect(infobar.find('.fa-github').length).to.equal(1);
-      expect(infobar.find('.fa-twitter').length).to.equal(1);
-    });
+    const profileButton = navigation.find('.MainHeader-session');
+    profileButton.simulate('click');
+    expect(hideShowNotifications.calledOnce).to.equal(true);
+  });
 
-    it('renders links', () => {
-      const infobar = shallow(<Header title="" link="" />);
+  it('displays a bubble with the number of unseen notifications', () => {
+    const navigation = shallow(
+      <Header
+        username="peanut"
+        emailHash="24afd9bad4cf41b3c07d61fa0df03768"
+        events={api.events}
+      />
+    );
 
-      expect(infobar.find({ href: 'https://github.com/linode' }).length).to.equal(1);
-      expect(infobar.find({ href: 'https://twitter.com/linode' }).length).to.equal(1);
-    });
-
-    it('renders the latest blog post', () => {
-      const infobar = shallow(<Header title="hello" link="https://example.org" />);
-
-      const link = infobar.find('a').first();
-      expect(link.text()).to.equal('hello');
-    });
+    expect(navigation.find('.MainHeader-badge').text()).to.equal('1');
   });
 });

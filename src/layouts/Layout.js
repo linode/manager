@@ -1,6 +1,9 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 
+import { events } from '~/api';
+import { eventRead } from '~/api/events';
 import Header from '~/components/Header';
 import Sidebar from '~/components/Sidebar';
 import Notifications from '~/components/Notifications';
@@ -11,6 +14,8 @@ import { rawFetch as fetch } from '~/fetch';
 import { hideModal } from '~/actions/modal';
 import { showNotifications, hideNotifications } from '~/actions/notifications';
 import { showFeedback, hideFeedback } from '~/actions/feedback';
+
+const EVENT_LOOKUP_DELAY = 5000; // seconds
 
 export class Layout extends Component {
   constructor() {
@@ -23,8 +28,16 @@ export class Layout extends Component {
     this.state = { title: '', link: '' };
   }
 
-  /* eslint-disable react/no-did-mount-set-state */
-  async componentDidMount() {
+  componentDidMount() {
+    this.fetchBlog();
+    this.attachEventTimeout();
+  }
+
+  componentWillUnmount() {
+    clearInterval(this._eventTimeout);
+  }
+
+  async fetchBlog() {
     if (this.state.title === '') {
       try {
         const resp = await fetch('https://blog.linode.com/feed/', {
@@ -37,9 +50,26 @@ export class Layout extends Component {
         const link = latest.querySelector('link').textContent;
         this.setState({ title, link });
       } catch (ex) {
-        // Whatever
+        // TODO
       }
     }
+  }
+
+  async attachEventTimeout(firstTime = true) {
+    const { dispatch } = this.props;
+
+    // Grab events first time right away
+    if (firstTime) {
+      await dispatch(events.all(true));
+    }
+
+    // And every N seconds
+    await new Promise(resolve => {
+      this._eventTimeout = setTimeout(resolve, EVENT_LOOKUP_DELAY);
+    });
+
+    await dispatch(events.all(true));
+    this.attachEventTimeout(false);
   }
 
   hideShow(type, hide, show) {
@@ -70,7 +100,7 @@ export class Layout extends Component {
   }
 
   render() {
-    const { username, email, emailHash, currentPath, errors, source } = this.props;
+    const { username, email, emailHash, currentPath, errors, source, dispatch } = this.props;
     const { title, link } = this.state;
     const githubRoot = 'https://github.com/linode/manager/blob/master/';
     return (
@@ -81,11 +111,16 @@ export class Layout extends Component {
           link={link}
           title={title}
           hideShowNotifications={this.hideShowNotifications}
+          events={this.props.events}
         />
         <Sidebar path={currentPath} />
         <Notifications
           open={this.props.notifications.open}
           hideShowNotifications={this.hideShowNotifications}
+          gotoPage={async (page) => await dispatch(push(page))}
+          readNotification={async (id) => await dispatch(eventRead(id))}
+          events={this.props.events}
+          linodes={this.props.linodes}
         />
         <Feedback
           email={email}
@@ -126,6 +161,8 @@ Layout.propTypes = {
   notifications: PropTypes.object.isRequired,
   feedback: PropTypes.object.isRequired,
   source: PropTypes.object,
+  events: PropTypes.object,
+  linodes: PropTypes.object,
 };
 
 function select(state) {
@@ -138,6 +175,8 @@ function select(state) {
     feedback: state.feedback,
     errors: state.errors,
     source: state.source,
+    events: state.api.events,
+    linodes: state.api.linodes,
   };
 }
 
