@@ -4,6 +4,12 @@
     justify-content: left;
 }
 
+.distro-style {
+    img {
+        margin-right: 1.45rem;
+    }
+}
+
 .distro, .datacenter, .plan, .backup {
     $width: 11rem;
     border: $border;
