@@ -33,7 +33,7 @@ describe('linodes/layouts/IndexPage', () => {
     mount(
       <IndexPage
         dispatch={dispatch}
-        view={'grid'}
+        view="grid"
         selected={{}}
         linodes={linodes}
       />);
@@ -49,7 +49,7 @@ describe('linodes/layouts/IndexPage', () => {
     const page = mount(
       <IndexPage
         dispatch={dispatch}
-        view={'grid'}
+        view="grid"
         selected={{}}
         linodes={{
           totalPages: 1,
@@ -79,7 +79,7 @@ describe('linodes/layouts/IndexPage', () => {
     const page = mount(
       <IndexPage
         dispatch={dispatch}
-        view={'list'}
+        view="list"
         selected={{}}
         linodes={linodes}
       />
@@ -95,7 +95,7 @@ describe('linodes/layouts/IndexPage', () => {
     const page = shallow(
       <IndexPage
         dispatch={() => {}}
-        view={'grid'}
+        view="grid"
         selected={{}}
         linodes={linodes}
       />);
@@ -114,7 +114,7 @@ describe('linodes/layouts/IndexPage', () => {
       const page = mount(
         <IndexPage
           dispatch={dispatch}
-          view={'grid'}
+          view="grid"
           selected={{ 1234: true }}
           linodes={linodes}
         />);
@@ -137,7 +137,7 @@ describe('linodes/layouts/IndexPage', () => {
     const page = shallow(
       <IndexPage
         dispatch={() => {}}
-        view={'grid'}
+        view="grid"
         selected={{}}
         linodes={linodes}
       />);
@@ -149,7 +149,7 @@ describe('linodes/layouts/IndexPage', () => {
     const page = mount(
       <IndexPage
         dispatch={dispatch}
-        view={'grid'}
+        view="grid"
         selected={{}}
         linodes={linodes}
       />
@@ -171,7 +171,7 @@ describe('linodes/layouts/IndexPage', () => {
     const page = mount(
       <IndexPage
         dispatch={localDispatch}
-        view={'grid'}
+        view="grid"
         selected={{}}
         linodes={linodes}
       />
@@ -187,7 +187,7 @@ describe('linodes/layouts/IndexPage', () => {
     const page = shallow(
       <IndexPage
         dispatch={dispatch}
-        view={'grid'}
+        view="grid"
         selected={{}}
         linodes={{
           linodes: {},

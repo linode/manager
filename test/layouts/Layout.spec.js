@@ -5,6 +5,7 @@ import { shallow } from 'enzyme';
 
 import { Layout } from '~/layouts/Layout';
 import * as fetch from '~/fetch';
+import { api } from '@/data';
 
 describe('layouts/Layout', () => {
   const sandbox = sinon.sandbox.create();
@@ -19,6 +20,8 @@ describe('layouts/Layout', () => {
 
   function makeLayout(_dispatch = dispatch,
                       _errors = errors,
+                      events = api.events,
+                      linodes = api.linodes,
                       source = { source: 'foobar.html' },
                       children = <p>Hello world!</p>) {
     return (
@@ -99,7 +102,7 @@ describe('layouts/Layout', () => {
 
     /* eslint-enable prefer-template */
     const layout = shallow(makeLayout());
-    await layout.instance().componentDidMount();
+    await layout.instance().fetchBlog();
     expect(fetchStub.calledWith('https://blog.linode.com/feed/'))
       .to.equal(true);
     expect(layout.state('title')).to.equal('Introducing Fedora 24');

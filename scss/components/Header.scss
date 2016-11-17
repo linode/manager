@@ -1,0 +1,123 @@
+$header-padding: 30px;
+
+.Header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 9999;
+}
+
+.MiniHeader {
+    padding: 0 $header-padding;
+    height: $info-nav-height;
+    background: $black;
+    font-size: .75rem;
+    line-height: $info-nav-height;
+
+    &-new {
+        color: $black;
+        text-transform: uppercase;
+        background: $white;
+        padding: 1px 4px;
+        font-size: .6rem;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    &-github .fa, &-twitter .fa {
+        color: $white;
+        text-decoration: none;
+        padding-left: $header-padding / 2;
+    }
+}
+
+.MainHeader {
+    height: $main-nav-height;
+    background: #333;
+    padding: 0 $header-padding;
+
+    &-brand, &-search, &-session {
+        float: left;
+        display: inline-block;
+        line-height: $main-nav-height;
+        margin-right: $header-padding;
+    }
+
+    &-logo {
+        font-size: 35px;
+        line-height: $main-nav-height;
+        padding-right: $header-padding / 2;
+    }
+
+    &-title {
+        color: $dark-gray;
+        display: inline-block;
+        vertical-align: top;
+        line-height: $main-nav-height;
+        font-size: 18px;
+    }
+
+    &-search {
+        $margin-tb: ($main-nav-height - $input-height) / 2;
+        height: $input-height;
+        margin: 0 $header-padding 0 0;
+
+        input,
+        input:focus {
+            background: $black;
+            width: 250px;
+            border: $border;
+            border-color: black;
+            border-radius: 2px;
+            outline: 0;
+            color: #ccc;
+        }
+    }
+
+    &-session {        
+        padding: 0 15px;
+        margin-right: -15px;
+        position: relative; /* Give the badge something to relate to */
+
+        /* Disable double click highlight */
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -khtml-user-select: none;
+        -ms-user-select: none;
+
+        &.active,
+        &:active,
+        &:hover,
+        &:focus {
+            background: #3c3c3c;
+            cursor: pointer;
+            cursor: hand;
+        }
+    }
+    
+    &-username {
+        padding-right: $header-padding / 2;
+        color: $white;
+    }
+
+    &-badge {
+        display: inline-block;
+        $height: 24px;
+        position: absolute;
+        top: $height / 4;
+        right: $height / 4;
+        font-size: 12px;
+        background: $red;
+        color: $white;
+        height: $height;
+        line-height: $height;
+        text-align: center;
+        border-radius: 50%;
+
+        /* These settings are so that it looks circular generally and decent in other cases. */
+        min-width: $height;
+        padding: 0 3px;
+    }
+}
