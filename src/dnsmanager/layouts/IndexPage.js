@@ -41,7 +41,7 @@ export class IndexPage extends Component {
           <Link
             className="btn btn-cancel"
             onClick={() => dispatch(hideModal())}
-          >Nevermind</Link>
+          >Cancel</Link>
           <button
             className="btn btn-primary"
             onClick={() => {

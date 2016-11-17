@@ -28,7 +28,7 @@ export class CancelBackupsModal extends Component {
             className="btn btn-cancel"
             disabled={loading}
             onClick={() => dispatch(hideModal())}
-          >Nevermind</button>
+          >Cancel</button>
           <button
             className="btn btn-danger"
             disabled={loading}
