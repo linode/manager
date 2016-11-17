@@ -31,7 +31,7 @@ export class ResetRootPwModal extends Component {
             type="button"
             disabled={loading}
             onClick={() => dispatch(hideModal())}
-          >Nevermind</button>
+          >Cancel</button>
           <button
             className="btn btn-danger"
             disabled={loading}
