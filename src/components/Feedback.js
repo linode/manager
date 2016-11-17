@@ -60,7 +60,7 @@ export default class Feedback extends Component {
                   className="btn btn-cancel float-xs-left"
                   type="button"
                   onClick={hideShowFeedback}
-                >Nevermind</button>
+                >Cancel</button>
               </div>
             </form>
           </div>

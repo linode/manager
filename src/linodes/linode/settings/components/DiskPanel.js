@@ -101,7 +101,7 @@ export class EditModal extends Component {
             className="btn btn-cancel"
             disabled={loading}
             onClick={() => dispatch(hideModal())}
-          >Nevermind</Link>
+          >Cancel</Link>
           <button
             className="btn btn-primary"
             onClick={() => this.saveChanges()}
@@ -136,7 +136,7 @@ export class DeleteModal extends Component {
             className="btn btn-cancel"
             disabled={loading}
             onClick={() => dispatch(hideModal())}
-          >Nevermind</Link>
+          >Cancel</Link>
           <button
             className="btn btn-danger"
             disabled={loading}
@@ -323,7 +323,7 @@ export class AddModal extends Component {
             className="btn btn-cancel"
             disabled={loading}
             onClick={() => dispatch(hideModal())}
-          >Nevermind</Link>
+          >Cancel</Link>
           <button
             className="btn btn-primary"
             disabled={ready}
