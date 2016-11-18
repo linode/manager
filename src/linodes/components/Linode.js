@@ -42,7 +42,7 @@ export function renderDistroStyle(linode) {
         src={distroAssets[linode.distribution.vendor]
           ? distroAssets[linode.distribution.vendor] : '//placehold.it/50x50'}
         alt={linode.distribution.vendor}
-        width="12" height="12"
+        width="15" height="15"
       />
       {linode.distribution.vendor}
     </span>
