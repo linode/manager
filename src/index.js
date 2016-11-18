@@ -3,9 +3,10 @@ import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import store from './store';
-import { Router, Route, IndexRedirect, browserHistory } from 'react-router';
+import { Router, Route, RouterContext, IndexRedirect, browserHistory } from 'react-router';
 import DevTools from './components/DevTools';
 import { syncHistoryWithStore } from 'react-router-redux';
+import { match } from 'react-router';
 import ReactGA from 'react-ga';
 import { GA_ID } from './constants';
 
@@ -38,11 +39,53 @@ function logPageView() {
   ReactGA.pageview(window.location.pathname);
 }
 
+class LoadingRouterContext extends RouterContext {
+  constructor() {
+    super();
+    this.fetching = false;
+  }
+
+  componentWillReceiveProps(newProps) {
+    if (super.componentWillReceiveProps) {
+      super.componentWillReceiveProps(newProps);
+    }
+
+    // Suppress component update until after route preloads have finished
+    this.fetching = true;
+
+    match({
+      routes: newProps.routes,
+      location: newProps.location.pathname,
+    }, async (error, redirectLocation, redirectParams) => {
+      // Call any route preload functions
+      for (let i = 0; i < redirectParams.routes.length; i++) {
+        if (redirectParams.routes[i].hasOwnProperty('preload')) {
+          await redirectParams.routes[i].preload(store.dispatch,
+                                                 newProps.params);
+        }
+      }
+
+      // Allow component update now that preloads are done
+      this.fetching = false;
+
+      // Set anything at all to force an update
+      this.setState({
+        updateNow: 'please',
+      });
+    });
+  }
+
+  shouldComponentUpdate(newProps, newState) {
+    return !this.fetching;
+  }
+}
+
 const init = () => {
   render(
     <Provider store={store}>
       <div>
-        <Router history={history} onUpdate={logPageView}>
+        <Router history={history} onUpdate={logPageView}
+          render={props => <LoadingRouterContext {...props} />}>
           <Route
             path="/logout"
             component={Logout}
