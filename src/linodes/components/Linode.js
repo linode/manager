@@ -38,13 +38,13 @@ export function renderDistroStyle(linode) {
 
   return (
     <span className="distro-style">
-      {linode.distribution.vendor}
       <img
         src={distroAssets[linode.distribution.vendor]
           ? distroAssets[linode.distribution.vendor] : '//placehold.it/50x50'}
         alt={linode.distribution.vendor}
-        width="12" height="12"
+        width="15" height="15"
       />
+      {linode.distribution.vendor}
     </span>
   );
 }
