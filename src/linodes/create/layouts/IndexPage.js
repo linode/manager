@@ -16,7 +16,6 @@ export class IndexPage extends Component {
     super();
     this.onSubmit = this.onSubmit.bind(this);
     this.createLinode = this.createLinode.bind(this);
-    this.renderProgress = this.renderProgress.bind(this);
     this.state = {
       type: null,
       datacenter: null,
@@ -25,7 +24,6 @@ export class IndexPage extends Component {
       sourceTab: 0,
       errors: {},
       loading: false,
-      progress: -1,
     };
   }
 
@@ -66,22 +64,14 @@ export class IndexPage extends Component {
   async onSubmit({ group, labels, password, backups }) {
     const { dispatch } = this.props;
     try {
-      if (labels.length === 1) {
-        this.setState({ loading: true });
-        const [label] = labels;
-        const linode = await this.createLinode({ group, label, password, backups });
-        this.setState({ loading: false });
-        dispatch(push(`/linodes/${linode.id}`));
-      } else {
-        this.setState({ loading: true, progress: 0 });
-        for (let i = 0; i < labels.length; ++i) {
-          const label = labels[i] || `${labels[0]}-${i}`;
-          await this.createLinode({ group, label, password, backups });
-          this.setState({ progress: (i + 1) / labels.length });
-        }
-        this.setState({ loading: false });
-        dispatch(push('/linodes'));
-      }
+      this.setState({ loading: true });
+      const [label] = labels;
+      const linode = await this.createLinode({ group, label, password, backups });
+      dispatch(linodes.until(l => l.status !== 'provisioning', linode.id));
+      this.setState({ loading: false });
+      dispatch(push(`/linodes/${linode.id}`));
+      // TODO: handle creating multiple linodes at once ? refer to
+      // TODO: previous commit history for example
     } catch (response) {
       const { errors } = await response.json();
       const errorsByField = {};
@@ -89,7 +79,7 @@ export class IndexPage extends Component {
         if (!(field in errorsByField)) errorsByField[field] = [];
         errorsByField[field].push(reason);
       });
-      this.setState({ progress: -1, loading: false, errors: errorsByField });
+      this.setState({ loading: false, errors: errorsByField });
     }
   }
 
@@ -108,28 +98,6 @@ export class IndexPage extends Component {
     }));
   }
 
-  renderProgress() {
-    const { progress } = this.state;
-    return (
-      <div className="create-page">
-        <h1>Add a Linode</h1>
-        <div className="card page-card">
-          <header>
-            <h2>Provisioning Linodes</h2>
-          </header>
-          <div className="card-body">
-            <p>Your Linodes are being provisioned.</p>
-            <progress
-              className="progress"
-              value={progress}
-              max="1"
-            ></progress>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   render() {
     const {
       distributions,
@@ -144,12 +112,8 @@ export class IndexPage extends Component {
       type,
       sourceTab,
       loading,
-      progress,
     } = this.state;
 
-    if (progress !== -1) {
-      return this.renderProgress();
-    }
 
     const selectedType = type === null ? null : types.types[type];
 

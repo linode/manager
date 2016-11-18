@@ -165,7 +165,7 @@ describe('linodes/create/layout/IndexPage', () => {
       backups: false,
       group: null,
     });
-    expect(dispatch.calledTwice).to.equal(true);
+    expect(dispatch.calledThrice).to.equal(true);
     expect(dispatch.firstCall.args[0]).to.deep.equal({
       root_pass: 'password',
       type: 'type',
@@ -176,118 +176,7 @@ describe('linodes/create/layout/IndexPage', () => {
       with_backups: false,
       group: null,
     });
-
-    expect(dispatch.secondCall.args[0]).to.deep.equal(push(`/linodes/${createdLinodeId}`));
-  });
-
-  it('creates multiple linodes when the form is submitted', async () => {
-    const env = { dispatch() {} };
-    const dispatch = sandbox.stub(env, 'dispatch');
-    const createdLinodeId = 1;
-    sandbox.stub(thunks, 'post', d => d);
-    const page = shallow(
-      <IndexPage
-        dispatch={dispatch}
-        distributions={api.distributions}
-        datacenters={api.datacenters}
-        types={api.types}
-        linodes={api.linodes}
-      />
-    );
-    dispatch.reset();
-    dispatch.onCall(0).returns({ id: createdLinodeId });
-    dispatch.onCall(1).returns({ id: createdLinodeId + 1 });
-
-    page.find('Plan').props().onServiceSelected('type');
-    page.find('Datacenter').props().onDatacenterSelected('datacenter');
-    page.find('Source').props().onSourceSelected('distribution', 'source');
-    await page.instance().onSubmit({
-      labels: ['label', 'label-2'],
-      password: 'password',
-      backups: false,
-      group: 'group',
-    });
-    expect(dispatch.callCount).to.equal(3);
-    expect(dispatch.firstCall.args[0]).to.deep.equal({
-      root_pass: 'password',
-      type: 'type',
-      distribution: 'source',
-      backup: null,
-      datacenter: 'datacenter',
-      label: 'label',
-      with_backups: false,
-      group: 'group',
-    });
-    expect(dispatch.secondCall.args[0]).to.deep.equal({
-      root_pass: 'password',
-      type: 'type',
-      distribution: 'source',
-      backup: null,
-      datacenter: 'datacenter',
-      label: 'label-2',
-      with_backups: false,
-      group: 'group',
-    });
-    expect(dispatch.thirdCall.args[0]).to.deep.equal(push('/linodes'));
-  });
-
-  it('generates labels when submitting multiple linodes', async () => {
-    const env = { dispatch() {} };
-    const dispatch = sandbox.stub(env, 'dispatch');
-    const createdLinodeId = 1;
-    sandbox.stub(thunks, 'post', d => d);
-    const page = shallow(
-      <IndexPage
-        dispatch={dispatch}
-        distributions={api.distributions}
-        datacenters={api.datacenters}
-        types={api.types}
-        linodes={api.linodes}
-      />
-    );
-    dispatch.reset();
-    dispatch.onCall(0).returns({ id: createdLinodeId });
-    dispatch.onCall(1).returns({ id: createdLinodeId + 1 });
-
-    page.find('Plan').props().onServiceSelected('type');
-    page.find('Datacenter').props().onDatacenterSelected('datacenter');
-    page.find('Source').props().onSourceSelected('distribution', 'source');
-    await page.instance().onSubmit({
-      labels: ['label', null, null],
-      password: 'password',
-      backups: false,
-      group: 'group',
-    });
-    expect(dispatch.firstCall.args[0]).to.deep.equal({
-      root_pass: 'password',
-      type: 'type',
-      distribution: 'source',
-      backup: null,
-      datacenter: 'datacenter',
-      label: 'label',
-      with_backups: false,
-      group: 'group',
-    });
-    expect(dispatch.secondCall.args[0]).to.deep.equal({
-      root_pass: 'password',
-      type: 'type',
-      distribution: 'source',
-      backup: null,
-      datacenter: 'datacenter',
-      label: 'label-1',
-      with_backups: false,
-      group: 'group',
-    });
-    expect(dispatch.thirdCall.args[0]).to.deep.equal({
-      root_pass: 'password',
-      type: 'type',
-      distribution: 'source',
-      backup: null,
-      datacenter: 'datacenter',
-      label: 'label-2',
-      with_backups: false,
-      group: 'group',
-    });
+    expect(dispatch.thirdCall.args[0]).to.deep.equal(push(`/linodes/${createdLinodeId}`));
   });
 
   it('sets errors on create a linode failure', async () => {
@@ -315,7 +204,6 @@ describe('linodes/create/layout/IndexPage', () => {
       password: 'password',
       backups: false,
     });
-
     expect(page.state('errors')).to.deep.equal({ label: [error] });
   });
 });
