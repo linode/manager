@@ -8,10 +8,11 @@ import AddConfigPage from './layouts/AddConfigPage';
 
 import { linodes } from '~/api';
 
-async function advanced_preload(dispatch, params) {
+async function advancedPreload(dispatch, params) {
   const { linodeId } = params;
   await dispatch(linodes.one(linodeId));
   await dispatch(linodes.configs.all(linodeId));
+  await dispatch(linodes.disks.all(linodeId));
 }
 
 export default (
@@ -19,7 +20,7 @@ export default (
     <IndexRoute component={DisplayPage} />
     <Route path="alerts" component={AlertsPage} />
     <Route path="advanced">
-      <IndexRoute component={AdvancedPage} preload={advanced_preload} />
+      <IndexRoute component={AdvancedPage} preload={advancedPreload} />
       <Route path="configs">
         <IndexRedirect to=".." />
         <Route path="create" component={AddConfigPage} />

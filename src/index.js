@@ -75,7 +75,7 @@ class LoadingRouterContext extends RouterContext {
     });
   }
 
-  shouldComponentUpdate(newProps, newState) {
+  shouldComponentUpdate() {
     return !this.fetching;
   }
 }
@@ -84,8 +84,11 @@ const init = () => {
   render(
     <Provider store={store}>
       <div>
-        <Router history={history} onUpdate={logPageView}
-          render={props => <LoadingRouterContext {...props} />}>
+        <Router
+          history={history}
+          onUpdate={logPageView}
+          render={props => <LoadingRouterContext {...props} />}
+        >
           <Route
             path="/logout"
             component={Logout}
