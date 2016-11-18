@@ -150,27 +150,42 @@ export class RescuePage extends Component {
           .filter(d => d.filesystem !== 'swap').length > 1 : false;
       body = (
         <div className="root-pw">
-          {showDisks ?
-            <div className="input-group input-container">
-              <select
-                value={disk}
-                className="form-control"
-                onChange={e => this.setState({ disk: e.target.value })}
-              >
-                {Object.values(linode._disks.disks)
-                  .filter(d => d.filesystem !== 'swap')
-                  .map(d => <option value={d.id} key={d.id}>{d.label}</option>)}
-              </select>
+            {showDisks ?
+              <div className="form-group row">
+                <div className="col-sm-2">
+                  <label htmlFor="reset-root-password-select" className="label-col">Disk:</label>
+                </div>
+                <div className="input-container col-sm-9">
+                  <select
+                    name="reset-root-password-select"
+                    value={disk}
+                    className="form-control"
+                    onChange={e => this.setState({ disk: e.target.value })}
+                  >
+                    {Object.values(linode._disks.disks)
+                      .filter(d => d.filesystem !== 'swap')
+                      .map(d => <option value={d.id} key={d.id}>{d.label}</option>)}
+                  </select>
+                </div>
+              </div>
+            : null}
+          <div className="form-group row">
+              {showDisks ?
+                <div className="col-sm-2">
+                  <label htmlFor="password" className="label-col">Password:</label>
+                </div>
+              : null}
+            <div className="col-sm-10">
+              <PasswordInput
+                passwordType="offline_fast_hashing_1e10_per_second"
+                onChange={password => this.setState({ password })}
+              />
             </div>
-          : null}
-          <PasswordInput
-            passwordType="offline_fast_hashing_1e10_per_second"
-            onChange={password => this.setState({ password })}
-          />
-          {linode.status === 'offline' ? null :
-            <div className="alert alert-info">Your Linode must
-              be powered off to reset your root password.
-            </div>}
+          </div>
+            {linode.status === 'offline' ? null :
+              <div className="alert alert-info">Your Linode must
+                be powered off to reset your root password.
+              </div>}
           <button
             className="btn btn-danger"
             disabled={!this.state.password || this.state.applying || linode.status !== 'offline'}
