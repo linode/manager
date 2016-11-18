@@ -141,9 +141,6 @@ function renderCard(props) {
         {checkbox}
         <div>
           <Link className="linode-label" to={`/linodes/${linode.id}`}>{linode.label}</Link>
-          <div className="text-muted">
-            Uptime: 2 weeks
-          </div>
         </div>
         <span className="float-xs-right">
           <StatusDropdown
@@ -184,9 +181,6 @@ function renderRow(props) {
       <td>{checkbox}</td>
       <td>
         <Link to={`/linodes/${linode.id}`} className="linode-label">{linode.label}</Link>
-        <div className="text-muted">
-          Uptime: 2 weeks
-        </div>
       </td>
       <td className="ips">
         {linode.ipv4}

@@ -199,10 +199,10 @@ export class EditConfigPage extends Component {
         className="form-group row disk-slot"
         key={index}
       >
-        <label className="col-xs-3">
-          /dev/{AVAILABLE_DISK_SLOTS[index]}
-        </label>
-        <div className="col-xs-9 input-container">
+        <div className="col-sm-2 label-col">
+          <label>/dev/{AVAILABLE_DISK_SLOTS[index]}</label>
+        </div>
+        <div className="col-sm-10 input-container">
           <select
             className="form-control"
             id={`config-device-${AVAILABLE_DISK_SLOTS[index]}`}
@@ -286,51 +286,48 @@ export class EditConfigPage extends Component {
     const { errors } = this.state;
     return (
       <FormGroup errors={errors} field={field} className="row">
-        <label
-          htmlFor={`config-${field}`}
-          className="col-xs-3 col-form-label"
-        >{label}</label>
-        <div className="col-xs-6">{element}</div>
+        <div className="col-sm-2 label-col">
+          <label
+            htmlFor={`config-${field}`}
+          >{label}</label>
+        </div>
+        <div className="col-sm-6">{element}</div>
       </FormGroup>
     );
   }
 
   renderRadio(label, field, value) {
     return (
-      <div>
-        <div className="checkbox">
-          <label>
-            <input
-              type="radio"
-              name={`config-${field}`}
-              id={`config-${field}-${value}`}
-              disabled={this.state.loading}
-              checked={this.state[field] === value}
-              onChange={() => this.setState({ [field]: value })}
-            /> {label}
-          </label>
-        </div>
+      <div className="checkbox">
+        <label>
+          <input
+            type="radio"
+            name={`config-${field}`}
+            id={`config-${field}-${value}`}
+            disabled={this.state.loading}
+            checked={this.state[field] === value}
+            onChange={() => this.setState({ [field]: value })}
+          /> {label}
+        </label>
       </div>
     );
   }
 
   renderCheckbox(label, field) {
     return (
-      <div>
-        <div className="checkbox">
-          <label>
-            <input
-              type="checkbox"
-              name={`config-${field}`}
-              id={`config-${field}`}
-              disabled={this.state.loading}
-              checked={this.state.helpers[field]}
-              onChange={() => this.setState({
-                helpers: { ...this.state.helpers, [field]: !this.state.helpers[field] },
-              })}
-            /> {label}
-          </label>
-        </div>
+      <div className="checkbox">
+        <label>
+          <input
+            type="checkbox"
+            name={`config-${field}`}
+            id={`config-${field}`}
+            disabled={this.state.loading}
+            checked={this.state.helpers[field]}
+            onChange={() => this.setState({
+              helpers: { ...this.state.helpers, [field]: !this.state.helpers[field] },
+            })}
+          /> {label}
+        </label>
       </div>
     );
   }
@@ -360,22 +357,23 @@ export class EditConfigPage extends Component {
               onChange={e => this.setState({ label: e.target.value })}
             />
            ))}
-           {this.renderFormElement('Notes', 'comments', (
-             <textarea
-               className="form-control"
-               id="config-comments"
-               placeholder="Notes"
-               value={comments}
-               disabled={loading}
-               onChange={e => this.setState({ comments: e.target.value })}
-             />
-            ))}
+          {this.renderFormElement('Notes', 'comments', (
+            <textarea
+              className="form-control"
+              id="config-comments"
+              placeholder="Notes"
+              value={comments}
+              disabled={loading}
+              onChange={e => this.setState({ comments: e.target.value })}
+            />
+           ))}
           <div className="form-group row">
-            <label
-              htmlFor="config-kernel"
-              className="col-xs-3 col-form-label"
-            >Kernel</label>
-            <div className="col-xs-6">
+            <div className="col-sm-2 label-col">
+              <label
+                htmlFor="config-kernel"
+              >Kernel</label>
+            </div>
+            <div className="col-sm-6">
               <select
                 className="form-control"
                 id="config-kernel"
@@ -396,9 +394,11 @@ export class EditConfigPage extends Component {
             </div>
           </div>
           <fieldset className="form-group row">
-            <legend className="col-xs-3 col-form-legend">
-              Boot helpers
-            </legend>
+            <div className="col-sm-2 label-col">
+              <legend>
+                Boot helpers
+              </legend>
+            </div>
             <div className="col-md-6">
               {this.renderCheckbox('Enable distro helper', 'enableDistroHelper')}
               {this.renderCheckbox('Enable network helper', 'enableNetworkHelper')}
@@ -407,19 +407,21 @@ export class EditConfigPage extends Component {
             </div>
           </fieldset>
           <fieldset className="form-group row">
-            <legend className="col-form-legend col-xs-3">
-              Virtualization mode
-            </legend>
-            <div className="col-xs-6">
+            <div className="col-sm-2 label-col">
+              <legend>Virtualization mode</legend>
+            </div>
+            <div className="col-sm-6">
               {this.renderRadio('Paravirtualization', 'virtMode', 'paravirt')}
               {this.renderRadio('Full virtualization', 'virtMode', 'fullvirt')}
             </div>
           </fieldset>
           <fieldset className="form-group row">
-            <legend className="col-form-legend col-xs-3">
-              Run level
-            </legend>
-            <div className="col-xs-6">
+            <div className="col-sm-2 label-col">
+              <legend>
+                Run level
+              </legend>
+            </div>
+            <div className="col-sm-6">
               {this.renderRadio('Default', 'runLevel', 'default')}
               {this.renderRadio('Single-user mode', 'runLevel', 'single')}
               {this.renderRadio('init=/bin/bash', 'runLevel', 'binbash')}
@@ -428,12 +430,13 @@ export class EditConfigPage extends Component {
           {this.renderFormElement('Memory limit', 'ramLimit', (
             <div>
               <input
-                className="col-xs-3"
+                className="col-sm-2"
                 id="config-ramLimit"
                 disabled={loading}
                 placeholder="Memory limit"
                 type="number"
                 value={ramLimit}
+                className="form-control"
                 onChange={e => this.setState({ ramLimit: e.target.value })}
               />
               <span className="measure-unit">MB</span>
@@ -441,8 +444,10 @@ export class EditConfigPage extends Component {
            ))}
           {diskSlots.map(this.renderDiskSlot)}
           <div className="form-group row">
-            <label className="col-xs-3 col-form-label">root / boot device</label>
-            <div className="input-container col-xs-6">
+            <div className="col-sm-2 label-col">
+              <label>root / boot device</label>
+            </div>
+            <div className="input-container col-sm-6">
               {this.renderRadio(
                 <span className="multi-radio clearfix">
                   <span>
@@ -480,15 +485,19 @@ export class EditConfigPage extends Component {
             </div>
           </div>
           <ErrorSummary errors={errors} />
-          <button
-            className="btn btn-primary"
-            disabled={loading}
-            onClick={() => this.saveChanges()}
-          >{this.props.create ? 'Add config' : 'Save'}</button>
-          <Link
-            className="btn btn-cancel"
-            to={`/linodes/${this.props.params.linodeId}/settings/advanced`}
-          >Cancel</Link>
+          <div className="row">
+            <div className="offset-sm-2 col-sm-10">
+              <button
+                className="btn btn-primary"
+                disabled={loading}
+                onClick={() => this.saveChanges()}
+              >{this.props.create ? 'Add config' : 'Save'}</button>
+              <Link
+                className="btn btn-cancel"
+                to={`/linodes/${this.props.params.linodeId}/settings/advanced`}
+              >Cancel</Link>
+            </div>
+          </div>
         </div>
       </section>
     );
