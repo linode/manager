@@ -135,16 +135,6 @@ export class IndexPage extends Component {
       <section key={group} className="linodes">
         {group ? <h3 className="display-group">{group}</h3> : ''}
         <table className="linodes">
-          <thead>
-            <tr>
-              <th>&nbsp;</th>
-              <th>Label</th>
-              <th>IP Address</th>
-              <th>Datacenter</th>
-              <th>Backups</th>
-              <th>&nbsp;</th>
-            </tr>
-          </thead>
           <tbody>
             {sortedLinodes.map(l => renderLinode(l, true))}
           </tbody>

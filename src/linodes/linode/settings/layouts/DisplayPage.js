@@ -42,7 +42,7 @@ export class DisplayPage extends Component {
         </header>
         <form>
           <FormGroup errors={errors} className="row" field="group">
-            <div className="col-sm-2">
+            <div className="col-sm-1 label-col">
               <label htmlFor="">Group</label>
             </div>
             <div className="col-sm-4">
@@ -55,7 +55,7 @@ export class DisplayPage extends Component {
             </div>
           </FormGroup>
           <FormGroup errors={errors} className="row" field="label">
-            <div className="col-sm-2">
+            <div className="col-sm-1 label-col">
               <label htmlFor="label">Label</label>
             </div>
             <div className="col-sm-4">
@@ -68,7 +68,11 @@ export class DisplayPage extends Component {
             </div>
           </FormGroup>
           <ErrorSummary errors={errors} />
-          <button className="btn btn-primary" onClick={this.onSubmit}>Save</button>
+          <div className="row">
+            <div className="offset-sm-1 col-sm-4">
+              <button className="btn btn-primary" onClick={this.onSubmit}>Save</button>
+            </div>
+          </div>
         </form>
       </section>
     );
