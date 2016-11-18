@@ -692,9 +692,14 @@ hr {
 }
 
 .datacenter-style img {
+    margin-right: 15px;
     -webkit-filter: contrast(70%) saturate(90%);
     filter: contrast(70%) saturate(90%);
     opacity: 0.7;
+}
+
+.distro-style img {
+    margin-right: 15px;
 }
 
 input[type=checkbox], input[type=radio] {
@@ -882,7 +887,6 @@ table {
 
     img {
         margin-left: 0.5rem;
-        margin-right: 15px;
     }
 
     p.text-muted {
