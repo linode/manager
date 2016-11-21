@@ -29,7 +29,7 @@ export class SummaryPage extends Component {
     const dc = linode.datacenter.id;
     const nameservers = (
       <div className="form-group row">
-        <div className="col-sm-4 label-col left">
+        <div className="col-sm-3 label-col left">
           Nameservers
         </div>
         <div className="col-sm-8 content-col right">
@@ -61,7 +61,7 @@ export class SummaryPage extends Component {
           />
         </h3>
         <div className="form-group row">
-          <div className="col-sm-4 label-col left">
+          <div className="col-sm-3 label-col left">
             Address
           </div>
           <div className="col-sm-8 content-col right">
@@ -76,7 +76,7 @@ export class SummaryPage extends Component {
           </div>
         </div>
         <div className="form-group row">
-          <div className="col-sm-4 label-col left">
+          <div className="col-sm-3 label-col left">
             Gateway
           </div>
           <div className="col-sm-8 content-col right">
@@ -101,7 +101,7 @@ export class SummaryPage extends Component {
           />
         </h3>
         <div className="form-group row">
-          <div className="col-sm-4 label-col left">
+          <div className="col-sm-3 label-col left">
             Address
           </div>
           <div className="col-sm-8 content-col right">
@@ -109,7 +109,7 @@ export class SummaryPage extends Component {
           </div>
         </div>
         <div className="form-group row">
-          <div className="col-sm-4 label-col left">
+          <div className="col-sm-3 label-col left">
             Gateway
           </div>
           <div className="col-sm-8 content-col right">
@@ -159,7 +159,7 @@ export class SummaryPage extends Component {
                 {"No private IP addresses."}
               </div>
               <div className="form-group row">
-                <div className="col-sm-4 label-col">
+                <div className="col-sm-3 label-col">
                   Link-local IP
                 </div>
                 <div className="col-sm-8 content-col">
