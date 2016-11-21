@@ -1,7 +1,10 @@
 import _ from 'lodash';
 
 import { ONE, MANY, DELETE, POST, PUT } from './gen';
-import { fetch } from '../fetch';
+import { fetch } from '~/fetch';
+import { getStorage, setStorage } from '~/storage';
+
+const CROSS_USER_CACHE_HOURS = 1;
 
 function refineState(config, state, ids) {
   const path = [];
@@ -66,7 +69,17 @@ function genThunkPage(config, actions) {
           state.pagesFetched.indexOf(page + 1) !== -1) {
         // cache hit
         return;
+      } else if (config.crossUserCache && getStorage(`crossUserCache/${config.plural}`)) {
+        // localstorage cache hit
+        const resource = getStorage(`crossUserCache/${config.plural}`);
+        const cacheValid = new Date(resource.__cacheUntil) > new Date();
+        if (cacheValid) {
+          // localstorage still valid
+          delete resource.__cacheUntil;
+          return resource;
+        }
       }
+
       // Update the pages fetched first so we don't double-fetch this resource
       dispatch(actions.many({
         page: page + 1,
@@ -77,7 +90,7 @@ function genThunkPage(config, actions) {
       const endpoint = `${config.endpoint(...ids, '')}?page=${page + 1}`;
       const response = await fetch(token, endpoint);
       const resources = await response.json();
-      actions.many();
+
       if (state.totalPages !== -1 &&
           state.totalResults !== resources.total_results) {
         dispatch(actions.invalidate());
@@ -88,6 +101,16 @@ function genThunkPage(config, actions) {
         }
       }
       dispatch(actions.many(resources, ...ids));
+
+      // Cache response for all users
+      if (config.crossUserCache) {
+        // Set cache time limit in hours.
+        const now = new Date();
+        resources.__cacheUntil = new Date(
+          now.getTime() + CROSS_USER_CACHE_HOURS * 3600000);
+        setStorage(`crossUserCache/${config.plural}`, resources);
+      }
+
       return resources;
     };
   }
