@@ -6,6 +6,7 @@ import {
 export const config = genConfig({
   plural: 'types',
   singular: 'type',
+  crossUserCache: true,
   endpoint: id => `/linode/types/${id}`,
   supports: [ONE, MANY],
 });
