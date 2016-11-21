@@ -174,7 +174,6 @@ describe('linodes/components/Linode', () => {
         },
       }));
 
-      console.log(item.html());
       expect(item.find('.backup-status').text()).to.equal('Running');
     });
 
