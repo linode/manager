@@ -1,15 +1,15 @@
 $sidebar-width: 220px;
 
 /* Bootstrap overrides */
+$grid-gutter-width-base: 15px;
+
 $grid-breakpoints: (
-  xs: 0,
+  xs: 0 + $sidebar-width,
   sm: 576px + $sidebar-width,
   md: 768px + $sidebar-width,
   lg: 992px + $sidebar-width,
   xl: 1200px + $sidebar-width
 );
-
-$grid-gutter-width-base: 15px;
 
 /* End bootstrap overrides */
 
@@ -124,6 +124,10 @@ a {
     }
 }
 
+label {
+    margin-bottom: 0;
+}
+
 .row-eq-height {
     display: -webkit-box;
     display: -webkit-flex;
@@ -177,7 +181,7 @@ a {
     }
 
     a {
-        color: $light-black;
+        color: $black;
         text-decoration: none !important;
         line-height: 34px;
     }
@@ -219,12 +223,8 @@ a {
 .main {
     margin-left: $sidebar-width;
     width: calc(100% - #{$sidebar-width});
-}
 
-.container {
-    @extends .container;
-
-    .main > & {
+    & > .container {
         padding-top: $main-padding-tb;
     }
 }
@@ -700,15 +700,18 @@ table {
 
 .form-group {
     margin-bottom: 0;
+
     &:not(:last-child) {
-        margin-bottom: $main-padding-tb/2;
+        margin-bottom: 10px;
     }
 }
 
 .label-col {
-    color: $light-black;
-    &label {
-        color: $dark-black;
+    color: $lightest-black;
+    text-align: right;
+
+    legend {
+        font-size: initial;
     }
 }
 
@@ -772,20 +775,10 @@ footer {
         margin: 1rem;
     }
 }
-
-.col-form-label {
-    padding-top: 0.25rem;
-}
-
-.col-form-legend {
-    padding-top: 0.25rem;
-    font-size: 0.9rem;
-}
-
 .linodes {
     .linode-label {
         color: $black !important;
-        font-size: 1.2rem;
+        font-size: 1.4rem;
 
         & + .text-muted {
             line-height: 15px;
@@ -816,14 +809,13 @@ footer {
     td {
         padding-top: 10px;
         padding-bottom: 15px;
-        vertical-align: top;
-
-        .linode-label + .text-muted {
-            margin-top: -5px;
-        }
+        vertical-align: middle;
 
         &.ips div {
             line-height: initial;
+            margin-top: -5px;
+            font-size: 14px;
+            color: $lightest-black;
         }        
     }
 
@@ -933,27 +925,6 @@ p {
     }
 }
 
-@-moz-keyframes pulse {
-    0% {opacity: 1.0;}
-    75% {opacity: 0.4;}
-    95% {opacity: 0.75;}
-}
-
-@-o-keyframes pulse {
-    0% {opacity: 1.0;}
-    75% {opacity: 0.4;}
-    95% {opacity: 0.75;}
-}
-
-@-webkit-keyframes pulse {
-    0% {opacity: 1.0;}
-    75% {opacity: 0.4;}
-    95% {opacity: 0.75;}
-}
-
-@keyframes pulse {
-    0% {opacity: 1.0;}
-    75% {opacity: 0.4;}
-    95% {opacity: 0.75;}
-
+.checkbox + .checkbox {
+    margin-top: 5px;
 }
