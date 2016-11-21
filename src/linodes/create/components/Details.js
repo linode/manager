@@ -112,7 +112,7 @@ export default class Details extends Component {
 
     const renderBackupsPrice = () => {
       const price = (this.props.selectedType.backups_price / 100).toFixed(2);
-      return ` ($${price})`;
+      return ` ($${price}/mo)`;
     };
 
     const backupInput = (
