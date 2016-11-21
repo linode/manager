@@ -21,7 +21,7 @@ describe('components/Error', () => {
   });
 
   it('renders a 400 component', () => {
-    const error = shallow(<Error status={400} description={'foobar'} />);
+    const error = shallow(<Error status={400} description="foobar" />);
 
     expect(error.find('h1').text()).to.equal('400');
     expect(error.find('h2').text()).to.equal('Doh!');
@@ -30,7 +30,7 @@ describe('components/Error', () => {
   });
 
   it('renders a 500 component', () => {
-    const error = shallow(<Error status={500} href={'foobar'} />);
+    const error = shallow(<Error status={500} href="foobar" />);
 
     expect(error.find('h1').text()).to.equal('500');
     expect(error.find('h2').text()).to.equal('Uh-oh!');

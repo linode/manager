@@ -8,6 +8,7 @@ import { datacenters } from './datacenters';
 import { types } from './types';
 import { kernels } from './kernels';
 import { dnszones } from './dnszones';
+import { events } from './events';
 
 function fakeAPIStore(data, singular, plural) {
   const totalResults = Object.keys(data).length;
@@ -22,32 +23,25 @@ function fakeAPIStore(data, singular, plural) {
 }
 
 export const authentication = { token: 'token' };
-export const api = {
-  linodes: {
-    ...fakeAPIStore(linodes, 'linode', 'linodes'),
-    linodes,
-  },
-  distributions: {
-    ...fakeAPIStore(distributions, 'distribution', 'distributions'),
-    distributions,
-  },
-  datacenters: {
-    ...fakeAPIStore(datacenters, 'datacenter', 'datacenters'),
-    datacenters,
-  },
-  types: {
-    ...fakeAPIStore(types, 'type', 'types'),
-    types,
-  },
-  kernels: {
-    ...fakeAPIStore(kernels, 'kernel', 'kernels'),
-    kernels,
-  },
-  dnszones: {
-    ...fakeAPIStore(dnszones, 'dnszone', 'dnszones'),
-    dnszones,
-  },
-};
+
+export const api = (apiObjects => {
+  const _api = {};
+  apiObjects.forEach(([object, singular, plural]) => {
+    _api[plural] = {
+      ...fakeAPIStore(object, singular, plural),
+      [plural]: object,
+    };
+  });
+  return _api;
+})([
+  [linodes, 'linode', 'linodes'],
+  [distributions, 'distribution', 'distributions'],
+  [datacenters, 'datacenter', 'datacenters'],
+  [types, 'type', 'types'],
+  [kernels, 'kernel', 'kernels'],
+  [dnszones, 'dnszone', 'dnszones'],
+  [events, 'event', 'events'],
+]);
 
 export const state = deepFreeze({
   authentication,

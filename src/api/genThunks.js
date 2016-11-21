@@ -96,7 +96,17 @@ function genThunkPage(config, actions) {
 
 function genThunkAll(config, page) {
   return (...ids) => async (dispatch, getState) => {
+    let overwrite = false;
+    if (typeof ids[ids.length - 1] === 'boolean') {
+      overwrite = ids.pop();
+    }
+
     let state = refineState(config, getState(), ids);
+    if (overwrite) {
+      state.totalPages = -1;
+      state.pagesFetched = [];
+    }
+
     if (state.totalPages === -1) {
       await dispatch(page(0, ...ids));
       state = refineState(config, getState(), ids);

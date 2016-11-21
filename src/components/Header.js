@@ -7,65 +7,62 @@ export default function Header(props) {
   const gravatarLink = `https://gravatar.com/avatar/${emailHash}`;
 
   const infobar = (
-    <nav>
-      <div className="float-xs-right">
+    <div className="MiniHeader clearfix">
+      <div className="MiniHeader-content float-xs-right">
         {!title ? null :
           <span>
-            <span className="new">New</span>
-            <a href={link} target="_blank">{title}</a>
-          </span>
-        }
-        <a href="https://github.com/linode" target="_blank"><span className="fa fa-github"></span></a>
-        <a href="https://twitter.com/linode" target="_blank"><span className="fa fa-twitter"></span></a>
+            <span className="MiniHeader-new">New</span>
+            <a href={link} target="_blank" className="MiniHeader-blog">{title}</a>
+          </span>}
+        <a href="https://github.com/linode" target="_blank" className="MiniHeader-github">
+          <i className="fa fa-github" />
+        </a>
+        <a href="https://twitter.com/linode" target="_blank" className="MiniHeader-twitter">
+          <i className="fa fa-twitter" />
+        </a>
       </div>
-    </nav>
+    </div>
   );
 
+  const unseenNotifications = Object.values(props.events.events).reduce((unseen, e) =>
+    e.read ? unseen : unseen + 1, 0);
   const main = (
-    <nav id="main-nav" className="navbar navbar-default" role="navigation">
-      <div className="navbar-header">
-        <div className="navbar-linode nav-item">
-          <Link to="/">
-            <span className="fa fa-linode" />
-            <span className="nav-brand">Linode Manager</span>
-          </Link>
-        </div>
-        <div className="navbar-search nav-item">
-          <input placeholder="Search..." />
-        </div>
-        {!username ? null :
-          <div
-            className="navbar-session float-xs-right"
-            onClick={hideShowNotifications}
-          >
-            <span className="nav-text nav-user">
-              {username}
-            </span>
-            <div className="nav-gravatar">
-              <img
-                className="nav-gravatar-img"
-                src={gravatarLink}
-                alt="User Avatar"
-                height={35}
-                width={35}
-              />
-            </div>
-          </div>
-        }
+    <div className="MainHeader clearfix">
+      <div className="MainHeader-brand">
+        <Link to="/">
+          <span className="MainHeader-logo fa fa-linode" />
+          <span className="MainHeader-title">Linode Manager</span>
+        </Link>
       </div>
-    </nav>
+      <div className="MainHeader-search">
+        <input placeholder="Search..." />
+      </div>
+      {!username ? null :
+        <div
+          className="MainHeader-session float-xs-right"
+          onClick={hideShowNotifications}
+        >
+          <span className="MainHeader-username">
+            {username}
+          </span>
+          <img
+            className="MainHeader-gravatar"
+            src={gravatarLink}
+            alt="User Avatar"
+            height={35}
+            width={35}
+          />
+          {!unseenNotifications ? null :
+            <span className="MainHeader-badge">{unseenNotifications}</span>}
+        </div>
+      }
+    </div>
   );
 
   return (
-    <div className="header">
-      {!showInfobar ? null :
-        <header className="header-info clearfix">
-          {infobar}
-        </header>
-      }
-      <header className="header-main clearfix">
-        {main}
-      </header>
+    <div className="Header">
+      {!showInfobar ? null : infobar}
+      {main}
     </div>
   );
 }
@@ -77,6 +74,7 @@ Header.propTypes = {
   link: PropTypes.string.isRequired,
   showInfobar: PropTypes.bool.isRequired,
   hideShowNotifications: PropTypes.func,
+  events: PropTypes.object,
 };
 
 Header.defaultProps = {
