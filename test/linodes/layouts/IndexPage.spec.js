@@ -69,11 +69,9 @@ describe('linodes/layouts/IndexPage', () => {
     const linodesPage = page.find('.linodes-page > .row');
 
     expect(linodesPage.find('.col-md-6').length).to.equal(2);
-
-    expect(linodesPage.find('.col-md-6').first().find('a')
+    expect(linodesPage.find('.linode-label').first()
                   .text()).to.equal(testLinode.label);
-
-    expect(linodesPage.find('.col-md-6').last().find('a')
+    expect(linodesPage.find('.linode-label').last()
                   .text()).to.equal('asdfasdf');
   });
 

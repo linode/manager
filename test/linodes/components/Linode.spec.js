@@ -126,9 +126,8 @@ describe('linodes/components/Linode', () => {
 
     it('renders the last backup taken', () => {
       const item = shallow(renderBackupStatus(linode));
-      expect(item.find('.backup-status')
-        .contains(moment.utc(linode.backups.last_backup)
-        .fromNow())).to.equal(true);
+      expect(item.find('.backup-status').text()).to.equal(
+        `Taken ${moment.utc(linode.backups.last_backup).fromNow()}`);
     });
 
     it('renders the projected time of the first backup', () => {
@@ -175,6 +174,7 @@ describe('linodes/components/Linode', () => {
         },
       }));
 
+      console.log(item.html());
       expect(item.find('.backup-status').text()).to.equal('Running');
     });
 
