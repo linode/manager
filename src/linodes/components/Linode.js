@@ -93,29 +93,31 @@ export function renderBackupStatus(linode) {
     if (!lastBackup) {
       const nextBackup = getNextBackup(linode);
       return (
-        <span className="backup-status">
+        <Link className="backup-status" to={`/linodes/${linode.id}/backups`}>
           In ~{nextBackup.fromNow(true)}
-        </span>);
+        </Link>);
     }
 
     const backupStatus = linode.backups.last_backup.status;
     if (backupStatus === 'running') {
       return (
-        <span className="backup-status">
+        <Link className="backup-status" to={`/linodes/${linode.id}/backups`}>
           Running
-        </span>);
+        </Link>);
     }
 
     if (backupStatus === 'pending') {
       return (
-        <span className="backup-status">
+        <Link className="backup-status" to={`/linodes/${linode.id}/backups`}>
           Pending
-        </span>);
+        </Link>);
     }
     return (
-      <span className="backup-status">
-        Taken {moment.utc(linode.backups.last_backup).fromNow()}
-      </span>);
+      <Link to={`/linodes/${linode.id}/backups`}>
+        <span className="backup-status">
+          Taken {moment.utc(linode.backups.last_backup).fromNow()}
+        </span>
+      </Link>);
   }
   return (
     <span className="backup-status">
