@@ -38,7 +38,7 @@ describe('linodes/create/components/Datacenter', () => {
     const c = shallow(
       <Datacenter
         datacenters={datacenters}
-        selected={'newark'}
+        selected="newark"
         onDatacenterSelected={() => {}}
         disabled
       />

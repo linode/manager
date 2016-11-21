@@ -7,11 +7,9 @@ const defaultState = {
 export default function notifications(state = defaultState, action) {
   switch (action.type) {
     case SHOW_NOTIFICATIONS:
-      return {
-        open: true,
-      };
+      return { ...state, open: true };
     case HIDE_NOTIFICATIONS:
-      return { open: false };
+      return { ...state, open: false };
     default:
       return { ...state };
   }

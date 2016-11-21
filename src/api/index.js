@@ -4,6 +4,7 @@ import * as typesModule from './configs/types';
 import * as linodesModule from './configs/linodes';
 import * as kernelsModule from './configs/kernels';
 import * as dnszonesModule from './configs/dnszones';
+import * as eventsModule from './configs/events';
 
 import genThunks from './genThunks';
 
@@ -13,3 +14,4 @@ export const types = genThunks(typesModule.config, typesModule.actions);
 export const linodes = genThunks(linodesModule.config, linodesModule.actions);
 export const kernels = genThunks(kernelsModule.config, kernelsModule.actions);
 export const dnszones = genThunks(dnszonesModule.config, dnszonesModule.actions);
+export const events = genThunks(eventsModule.config, eventsModule.actions);

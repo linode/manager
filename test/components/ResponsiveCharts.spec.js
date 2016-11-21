@@ -28,8 +28,8 @@ describe('components/ResponsiveCharts', async () => {
 
     const graph = mount(
       <ResponsiveLineChart
-        yAxisLabel={'Y Label'}
-        xAxisLabel={'X Label'}
+        yAxisLabel="Y Label"
+        xAxisLabel="X Label"
         xAccessor={d => new Date(d.x)}
         data={chart.data}
         domain={{ y: [0, 60] }}

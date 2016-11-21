@@ -13,7 +13,7 @@ describe('component/Feedback', () => {
   });
 
   it('it prefills with email', () => {
-    const feedback = shallow(<Feedback email={'email@gmail.com'} />);
+    const feedback = shallow(<Feedback email="email@gmail.com" />);
 
     expect(feedback.find('input[name="email"]').props().value).to.equal('email@gmail.com');
   });
@@ -22,7 +22,7 @@ describe('component/Feedback', () => {
     const submitFeedback = sandbox.spy();
     const feedback = shallow(
       <Feedback
-        email={'foo@gmail.com'}
+        email="foo@gmail.com"
         submitFeedback={submitFeedback}
       />
     );

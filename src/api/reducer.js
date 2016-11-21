@@ -6,6 +6,7 @@ import { reducer as datacenters } from './configs/datacenters';
 import { reducer as types } from './configs/types';
 import { reducer as kernels } from './configs/kernels';
 import { reducer as dnszones } from './configs/dnszones';
+import { reducer as events } from './configs/events';
 
 export default combineReducers({
   linodes,
@@ -14,4 +15,5 @@ export default combineReducers({
   types,
   kernels,
   dnszones,
+  events,
 });
