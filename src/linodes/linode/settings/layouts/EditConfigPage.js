@@ -382,17 +382,36 @@ export class EditConfigPage extends Component {
                 value={kernel}
                 disabled={loading}
                 onChange={e => this.setState({ kernel: e.target.value })}
-              >{Object.values(kernels.kernels).map(kernel => {
-                const map = {
-                  'linode/latest': 'Latest 32-bit kernel',
-                  'linode/latest_64': 'Latest 64-bit kernel',
-                };
-                return (
-                  <option key={kernel.id} value={kernel.id}>
-                    {map[kernel.id] || kernel.label}
-                  </option>
-                );
-              })}</select>
+              >
+                <optgroup label="Current">
+                  {Object.values(kernels.kernels).map(kernel => {
+                    const map = {
+                      'linode/latest': 'Latest 32-bit kernel',
+                      'linode/latest_64': 'Latest 64-bit kernel',
+                    };
+                    if (kernel.deprecated) return;
+                    return (
+                      <option key={kernel.id} value={kernel.id}>
+                        {map[kernel.id] || kernel.label}
+                      </option>
+                    );
+                  })}
+                </optgroup>
+                <optgroup label="Deprecated">
+                  {Object.values(kernels.kernels).map(kernel => {
+                    const map = {
+                      'linode/latest': 'Latest 32-bit kernel',
+                      'linode/latest_64': 'Latest 64-bit kernel',
+                    };
+                    if (!kernel.deprecated) return;
+                    return (
+                      <option key={kernel.id} value={kernel.id}>
+                        {map[kernel.id] || kernel.label}
+                      </option>
+                    );
+                  })}
+                </optgroup>
+              </select>
             </div>
           </div>
           <fieldset className="form-group row">
