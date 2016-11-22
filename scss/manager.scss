@@ -1,78 +1,10 @@
-$sidebar-width: 220px;
+@import './variables';
 
-/* Bootstrap overrides */
-$grid-gutter-width-base: 15px;
+@import 'bootstrap';
 
-$grid-breakpoints: (
-  xs: 0 + $sidebar-width,
-  sm: 576px + $sidebar-width,
-  md: 768px + $sidebar-width,
-  lg: 992px + $sidebar-width,
-  xl: 1200px + $sidebar-width
-);
-
-/* End bootstrap overrides */
-
-@import "bootstrap";
-//$fa-font-path: "//netdna.bootstrapcdn.com/font-awesome/4.4.0/fonts";
-//@import "bower_components/font-awesome/scss/font-awesome";
-
-$light-blue: #DEEFF5;
-$blue: #4A90E2;
-$dark-blue: darken($blue, 10%);
-$green: #38D377;
-$red: #F24C2B;
-$yellow: #FFFCF0;
-$dark-yellow: darken($yellow, 20);
-$darkest-yellow: darken($yellow, 40);
-$darkest-black: #111;
-$dark-black: #333333;
-$black: #4b4b4b;
-$light-black: #777;
-$lightest-black: #ACACAC;
-$dark-gray: #DDDDDD;
-$gray: #F3F3F3;
-$light-gray: #FBFBFB;
-$white: #FEFEFE;
-$transparent: rgba(0, 0, 0, 0.5);
-
-.text-light-blue { color: $light-blue; }
-.text-blue { color: $blue; }
-.text-dark-blue { color: $dark-blue; }
-.text-green { color: $green; }
-.text-red { color: $red; }
-.text-yellow { color: $yellow; }
-.text-dark-yellow { color: $dark-yellow; }
-.text-darkest-yellow { color: $darkest-yellow; }
-.text-dark-black { color: $dark-black; }
-.text-black { color: $black; }
-.text-light-black { color: $light-black; }
-.text-lightest-black { color: $lightest-black; }
-.text-dark-gray { color: $dark-gray; }
-.text-gray { color: $gray; }
-.text-light-gray { color: $light-gray; }
-.text-white { color: $white; }
-
-$border-gray: $dark-gray;
-$border: 1px solid $border-gray;
-$box-shadow: 0px 2px 4px 0px $transparent;
-
-$main-padding-tb: 1rem;
-$main-padding-lr: 2rem;
-
-$nav-height: 84px;
-$info-nav-height: 25px;
-$main-nav-height: $nav-height - $info-nav-height;
-
-$input-height: 30px;
-$input-padding: .5rem;
-$font-size: .975rem;
-$font-size-small: 12px;
-
-@import 'components/components';
-@import 'linodes/linodes';
-@import 'layout/linode-details';
-@import 'layout/linodes';
+@import 'components/index.scss';
+@import 'linodes/index.scss';
+@import 'layout/index.scss';
 
 .btn, a {
     transition: background .35s, color .2s, border .1s;
@@ -87,7 +19,7 @@ body {
     background: $light-gray;
     color: $black;
     margin-top: $nav-height;
-    font-size: $font-size;
+    font-size: $font-normal;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -98,19 +30,15 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1 {
-    font-size: 1.8rem;
+    font-size: $font-large;
 }
 
 h2 {
-   font-size: 1.4rem;
+   font-size: $font-medium;
 }
 
 h3 {
-    font-size: 1.1rem;
-}
-
-h4 {
-    font-size: 1rem;
+    font-size: $font-small;
 }
 
 a {
@@ -173,7 +101,7 @@ label {
             border-bottom: $border;
             border-top: $border;
             border-color: $border-gray;
-            font-size: .8rem;
+            font-size: $font-xs-small;
             color: #777;
             padding: 10px 0;
             padding-left: 34px;
@@ -309,8 +237,13 @@ label {
 }
 
 .form-control {
-    font-size: $font-size;
+    font-size: $font-normal;
     border-radius: 2px;
+    color: $black;
+
+    &:focus {
+        color: $black;
+    }
 }
 
 input:not([type="checkbox"]):not([type="radio"]),
@@ -319,8 +252,9 @@ select.form-control,
 .btn:not(.btn-help) {
     height: $input-height !important;
     line-height: $input-height !important;
-    font-size: $font-size !important;
+    font-size: $font-normal !important;
     padding: 0 0 0 $input-padding;
+
     &.btn {
         padding: 0 $input-padding;
     }
@@ -367,7 +301,7 @@ hr {
 }
 
 .text-muted {
-    font-size: $font-size-small;
+    font-size: $font-xs-small;
 }
 
 .btn {
@@ -592,7 +526,7 @@ input[type=checkbox], input[type=radio] {
     }
 
     .fa {
-        font-size: 20px;
+        font-size: $font-small;
         color: $light-black;
     }
 
@@ -613,7 +547,7 @@ input[type=checkbox], input[type=radio] {
 }
 
 .navicon {
-    font-size: 20px;
+    font-size: $font-small;
     padding-left: 15px;
     position: relative;
     top: 2px;
@@ -757,18 +691,18 @@ footer {
     margin-bottom: 15px;
 
     a {
-        font-size: .9rem;
+        font-size: $font-xs-normal;
     }
 }
 
 .error {
     h1 {
-        font-size: 8rem;
+        font-size: 8rem; /* Special font-size case */
         color: $dark-gray;
     }
 
     h2 {
-        font-size: 1.8rem;
+        font-size: $font-large;
     }
 
     p {
@@ -778,15 +712,11 @@ footer {
 .linodes {
     .linode-label {
         color: $black !important;
-        font-size: 1.4rem;
+        font-size: $font-medium;
 
         & + .text-muted {
             line-height: 15px;
         }
-    }
-
-    .linode-status {
-        font-size: .9rem;
     }
 
     .card {
@@ -804,19 +734,23 @@ footer {
         header > * {
             vertical-align: top;
         }
+
+        .linode-ipv6 {
+            margin-top: 0;
+        }
     }
 
     td {
         padding-top: 10px;
         padding-bottom: 15px;
         vertical-align: middle;
+    }
 
-        &.ips div {
-            line-height: initial;
-            margin-top: -5px;
-            font-size: 14px;
-            color: $lightest-black;
-        }        
+    .linode-ipv6 {
+        line-height: initial;
+        margin-top: -7px;
+        font-size: $font-xs-normal;
+        color: $lightest-black;
     }
 
     .display-group {

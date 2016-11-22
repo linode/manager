@@ -2,11 +2,12 @@ import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import moment from 'moment';
+import _ from 'lodash';
 
 import { Linode } from '../components/Linode';
 import Dropdown from '~/components/Dropdown';
+import CreateHelper from '~/components/CreateHelper';
 import { setError } from '~/actions/errors';
-import _ from 'lodash';
 import { linodes } from '~/api';
 import { powerOnLinode, powerOffLinode, rebootLinode } from '~/api/linodes';
 import {
@@ -14,19 +15,6 @@ import {
   toggleSelected,
 } from '../actions';
 import { setSource } from '~/actions/source';
-
-
-export function renderCreateHelper(object, link, linkText) {
-  return (
-    <section className="text-xs-center">
-      <h3 className="text-light-black">
-        You've got no {object}! Click&nbsp;
-        <Link to={link}>{linkText}</Link>
-        &nbsp;to get started.
-      </h3>
-    </section>
-  );
-}
 
 export class IndexPage extends Component {
   constructor() {
@@ -215,12 +203,11 @@ export class IndexPage extends Component {
             </div>
             <div className="float-xs-right">
               {gridListToggle}
-              <span className="fa fa-navicon" className="navicon" />
             </div>
           </div>
         </header>
         {Object.keys(this.props.linodes.linodes).length ? renderLinodes() :
-           renderCreateHelper('Linodes', '/linodes/create', 'Add a Linode')}
+          <CreateHelper label="Linodes" href="/linodes/create" linkText="Add a Linode" />}
       </div>
     );
   }

@@ -16,10 +16,11 @@
             border: 0.2rem dashed $border-gray !important;
         }
 
-        h4 {
+        h3 {
+            color: $light-black;
+
             small {
-                color: $light-black;
-                font-size: 0.8rem;
+                font-size: $font-xs-small;
             }
         }
 

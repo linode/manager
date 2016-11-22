@@ -27,7 +27,7 @@ export default class PasswordInput extends Component {
       <div className="input-container input-group password-input">
         <input
           value={this.state.password}
-          placeholder="Choose a strong password"
+          placeholder="**********"
           className="form-control"
           name="password"
           onChange={this.onPasswordChange}
