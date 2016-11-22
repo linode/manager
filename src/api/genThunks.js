@@ -76,7 +76,8 @@ function genThunkPage(config, actions) {
         if (cacheValid) {
           // localstorage still valid
           delete resource.__cacheUntil;
-          return resource;
+          dispatch(actions.many(resource)); // add to redux state
+          return;
         }
       }
 
@@ -111,7 +112,7 @@ function genThunkPage(config, actions) {
         setStorage(`crossUserCache/${config.plural}`, resources);
       }
 
-      return resources;
+      return;
     };
   }
   return fetchPage;
