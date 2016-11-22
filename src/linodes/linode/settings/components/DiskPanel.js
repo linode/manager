@@ -412,7 +412,7 @@ export class DiskPanel extends Component {
                   borderColor: borderColors[disks.indexOf(d) % borderColors.length],
                 }}
               >
-                <h4>{d.label} <small>{d.filesystem}</small></h4>
+                <h3>{d.label} <small>{d.filesystem}</small></h3>
                 <p>{d.size} MB</p>
                 {d.state !== 'deleting' ? null :
                   <div className="text-muted">Being deleted</div>}
@@ -437,7 +437,7 @@ export class DiskPanel extends Component {
                   key={'free'}
                   style={{ flexGrow: free }}
                 >
-                  <h4>Unallocated</h4>
+                  <h3>Unallocated</h3>
                   <p>{free} MB</p>
                   {!poweredOff ? null : (
                     <button

@@ -26,6 +26,7 @@ export default class Source extends Component {
           versions: _.orderBy(v, ['recommended', 'created'], ['desc', 'desc']),
         })
       ), vendor => vendor.name);
+
     return (
       <div className="distributions">
         {vendors.map(v =>
@@ -35,6 +36,11 @@ export default class Source extends Component {
             key={v.name}
             onClick={s => onSourceSelected('distribution', s)}
           />)}
+        <Distributions
+          noDistribution
+          selected={distribution}
+          onClick={() => onSourceSelected('distribution', 'none')}
+        />
       </div>
     );
   }

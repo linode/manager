@@ -4,8 +4,7 @@ import { connect } from 'react-redux';
 import { EditConfigPage, select } from './EditConfigPage';
 
 export function AddConfigPage(props) {
-  // eslint-disable-next-line react/jsx-boolean-value
-  return <EditConfigPage create={true} {...props} />;
+  return <EditConfigPage create {...props} />;
 }
 
 AddConfigPage.propTypes = {

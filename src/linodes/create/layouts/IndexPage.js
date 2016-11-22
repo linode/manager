@@ -86,7 +86,8 @@ export class IndexPage extends Component {
   createLinode({ group, label, password, backups }) {
     const { dispatch } = this.props;
     const { type, datacenter, distribution, backup } = this.state;
-    return dispatch(linodes.post({
+
+    const data = {
       root_pass: password,
       type,
       distribution,
@@ -95,7 +96,14 @@ export class IndexPage extends Component {
       label,
       group,
       with_backups: backups,
-    }));
+    };
+
+    if (distribution === 'none') {
+      delete data.root_pass;
+      delete data.distribution;
+    }
+
+    return dispatch(linodes.post(data));
   }
 
   render() {
@@ -162,7 +170,8 @@ export class IndexPage extends Component {
           <Details
             selectedType={selectedType}
             onSubmit={this.onSubmit}
-            submitEnabled={!!(distribution || backup) && !!datacenter && !!type && !loading}
+            selectedDistribution={distribution}
+            submitEnabled={(distribution || backup) && datacenter && type && !loading}
             errors={this.state.errors}
           />
         </section>

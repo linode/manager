@@ -11,6 +11,13 @@
     cursor: pointer;
     width: $width;
 
+    &.noDistribution {
+        & > div {
+            padding: 0 10px;
+            font-size: $font-xs-small;
+        }
+    }
+
     header {
         margin-bottom: 0;
         border-bottom: $border;
@@ -26,7 +33,7 @@
             color: $black;
 
             &.dropdown-item {
-                font-size: $font-size;
+                font-size: $font-normal;
                 text-align: left !important;
                 font-weight: inherit;
                 padding: 0 inherit;
