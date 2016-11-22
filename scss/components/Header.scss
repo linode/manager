@@ -11,7 +11,7 @@ $header-padding: 30px;
     padding: 0 $header-padding;
     height: $info-nav-height;
     background: $black;
-    font-size: .75rem;
+    font-size: $font-xs-small;
     line-height: $info-nav-height;
 
     &-new {
@@ -19,7 +19,7 @@ $header-padding: 30px;
         text-transform: uppercase;
         background: $white;
         padding: 1px 4px;
-        font-size: .6rem;
+        font-size: $font-xs-small;
 
         &:hover {
             text-decoration: underline;
@@ -46,7 +46,7 @@ $header-padding: 30px;
     }
 
     &-logo {
-        font-size: 35px;
+        font-size: 35px; /* Special font-size case */
         line-height: $main-nav-height;
         padding-right: $header-padding / 2;
     }
@@ -56,7 +56,7 @@ $header-padding: 30px;
         display: inline-block;
         vertical-align: top;
         line-height: $main-nav-height;
-        font-size: 18px;
+        font-size: 18px; /* Special font-size case */
     }
 
     &-search {
@@ -108,7 +108,7 @@ $header-padding: 30px;
         position: absolute;
         top: $height / 4;
         right: $height / 4;
-        font-size: 12px;
+        font-size: $font-xs-small;
         background: $red;
         color: $white;
         height: $height;

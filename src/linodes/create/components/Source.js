@@ -27,7 +27,6 @@ export default class Source extends Component {
         })
       ), vendor => vendor.name);
 
-    /* eslint-disable react/jsx-boolean-value */
     return (
       <div className="distributions">
         {vendors.map(v =>
@@ -38,13 +37,12 @@ export default class Source extends Component {
             onClick={s => onSourceSelected('distribution', s)}
           />)}
         <Distributions
+          noDistribution
           selected={distribution}
-          noDistribution={true}
           onClick={() => onSourceSelected('distribution', 'none')}
         />
       </div>
     );
-    /* eslint-enable react/jsx-boolean-value */
   }
 
   renderLinodeSelection() {
