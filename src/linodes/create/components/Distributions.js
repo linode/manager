@@ -8,59 +8,79 @@ export default class Distributions extends Component {
   }
 
   render() {
-    const { onClick, vendor, selected } = this.props;
+    const { onClick, vendor, selected, noDistribution } = this.props;
     const { open, version } = this.state;
-    const label = l => l.replace('Arch Linux', 'Arch'); // bleh
-    const selectedVersion = vendor.versions[version];
+
+    const label = () => {
+      if (noDistribution) {
+        return 'No distribution';
+      }
+
+      const selectedVersion = vendor.versions[version];
+      return selectedVersion.label.replace('Arch Linux', 'Arch');
+    };
+
+    const handleOnClick = () => {
+      if (noDistribution) {
+        onClick('none');
+        return;
+      }
+
+      const selectedVersion = vendor.versions[version];
+      onClick(selectedVersion.id);
+    };
+
+    const isSelected = selected === 'none' && noDistribution ||
+                       !noDistribution && vendor.versions.find(v => v.id === selected);
+
+    const isSelectedClass = isSelected ? 'selected' : '';
+    const noDistributionClass = noDistribution ? 'noDistribution' : '';
     return (
       <div
-        onClick={() => onClick(selectedVersion.id)}
-        className={`distro ${
-          vendor.versions.find(v => v.id === selected) ? 'selected' : ''
-        }`}
+        onClick={handleOnClick}
+        className={`distro ${isSelectedClass} ${noDistributionClass}`}
         onBlur={() => this.setState({ open: false })}
       >
         <header className={`dropdown ${open ? 'open' : ''}`}>
           <div className="title">
-            {label(selectedVersion.label)}
-            <button
+            {label()}
+            {noDistribution ? null : <button
               className="dropdown-toggle btn btn-secondary"
               aria-haspopup
               aria-expanded={open}
-              id={`distro-dropdown-${selectedVersion.id}`}
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
                 this.setState({ open: !open });
               }}
-            ><i className="fa fa-caret-down"></i></button>
+            ><i className="fa fa-caret-down"></i></button>}
           </div>
-          <div
-            className="dropdown-menu"
-            aria-labelledby={`distro-dropdown-${selectedVersion.id}`}
-          >
-            {vendor.versions.map(v =>
-              <a
-                key={v.id}
-                className="dropdown-item"
-                href="#"
-                onMouseDown={e => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  onClick(v.id);
-                  this.setState({ open: false, version: vendor.versions.indexOf(v) });
-                }}
-              >{v.label}</a>
-            )}
-          </div>
+          {vendor ? (
+            <div
+              className="dropdown-menu"
+            >
+              {vendor.versions.map(v =>
+                <a
+                  key={v.id}
+                  className="dropdown-item"
+                  href="#"
+                  onMouseDown={e => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    onClick(v.id);
+                    this.setState({ open: false, version: vendor.versions.indexOf(v) });
+                  }}
+                >{v.label}</a>)}
+            </div>
+          ) : null}
         </header>
         <div>
-          <img
+          {vendor ? <img
             src={distros[vendor.name]}
             width={64}
             height={64}
             alt={vendor.name}
-          />
+          /> : <span>Customize your configs and disks manually after creation.</span>}
         </div>
       </div>
     );
@@ -68,7 +88,8 @@ export default class Distributions extends Component {
 }
 
 Distributions.propTypes = {
-  vendor: PropTypes.object.isRequired,
+  vendor: PropTypes.object,
   onClick: PropTypes.func,
   selected: PropTypes.string,
+  noDistribution: PropTypes.bool,
 };

@@ -145,6 +145,10 @@ export default class Details extends Component {
       { label: 'Backups', content: backupInput },
     ];
 
+    if (this.props.selectedDistribution === 'none') {
+      inputRows.splice(1);
+    }
+
     const showAdvancedOrHide = this.state.showAdvanced ? (
       <span>Hide additional details <span className="fa fa-angle-up" /></span>
     ) : (
@@ -175,7 +179,7 @@ export default class Details extends Component {
               <button
                 disabled={!(this.props.submitEnabled
                          && this.state.labels[0]
-                         && this.state.password)}
+                         && (this.state.password || this.props.selectedDistribution === 'none'))}
                 className="btn btn-primary"
               >Create Linode{this.state.quantity > 1 ? 's' : null}</button>
             </section>
@@ -188,6 +192,7 @@ export default class Details extends Component {
 
 Details.propTypes = {
   selectedType: PropTypes.object,
+  selectedDistribution: PropTypes.string,
   onSubmit: PropTypes.func,
   submitEnabled: PropTypes.bool,
   errors: PropTypes.object,

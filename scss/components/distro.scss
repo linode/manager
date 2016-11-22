@@ -11,6 +11,13 @@
     cursor: pointer;
     width: $width;
 
+    &.noDistribution {
+        & > div {
+            padding: 0 10px;
+            font-size: 12px;
+        }
+    }
+
     header {
         margin-bottom: 0;
         border-bottom: $border;
