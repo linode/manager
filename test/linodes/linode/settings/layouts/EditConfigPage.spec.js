@@ -338,6 +338,11 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
 
       await page.instance().componentDidMount();
       const kernel = page.find('#config-kernel');
+      expect(kernel.find('optgroup').length).to.equal(2);
+      expect(kernel.find('optgroup').at(0).props()).to.have.property('label')
+        .which.equals('Current');
+      expect(kernel.find('optgroup').at(1).props()).to.have.property('label')
+        .which.equals('Deprecated');
       expect(kernel.find('option').length).to.equal(2);
       expect(kernel.find('option').at('0').text()).to.equal('Latest 64-bit kernel');
       expect(kernel.find('option[value="linode/latest_64"]').length).to.equal(1);
