@@ -70,8 +70,7 @@ describe('linodes/create/components/Source', () => {
     expect(c.find('Distributions').length)
       .to.equal(Object.values(
         _.groupBy(Object.values(api.distributions.distributions),
-          d => d.vendor)).length
-      );
+          d => d.vendor)).length + 1); // + 1 is for no distribution option
   });
 
   it('invokes the onSourceSelected function as necessary for Distros', () => {

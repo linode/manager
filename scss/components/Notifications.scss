@@ -23,12 +23,12 @@
     }
 
     &-title {
-        font-size: 1rem;
+        font-size: $font-small;
     }
 
     &-time {
         color: $light-black;
-        font-size: 12px;
+        font-size: $font-xs-small;
         vertical-align: middle;
     }
 
@@ -91,7 +91,7 @@
         border-left: $border;
         z-index: 1001;
         overflow-y: auto;
-        font-size: .9rem;
+        font-size: $font-xs-normal;
     }
 
     &-end {

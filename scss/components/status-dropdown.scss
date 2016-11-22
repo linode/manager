@@ -9,7 +9,7 @@
         height: $input-height;
         line-height: $input-height;
         padding-right: 10px;
-        font-size: 14px;
+        font-size: $font-xs-normal;
         color: #777;
     }
     
@@ -21,7 +21,7 @@
         line-height: $input-height !important;
 
         .fa {
-            font-size: 15px !important;
+            font-size: $font-xs-normal !important;
         }
 
         /* Hide default bootstrap dropdown icon */

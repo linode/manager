@@ -6,7 +6,7 @@ import { setError } from '~/actions/errors';
 import { showModal, hideModal } from '~/actions/modal';
 import { dnszones } from '~/api';
 import { setSource } from '~/actions/source';
-import { renderCreateHelper } from '~/linodes/layouts/IndexPage';
+import CreateHelper from '~/components/CreateHelper';
 
 export class IndexPage extends Component {
   constructor() {
@@ -99,7 +99,7 @@ export class IndexPage extends Component {
           </div>
         </header>
         {Object.keys(this.props.dnszones.dnszones).length ? renderZones() :
-           renderCreateHelper('zones', '/dnsmanager/create', 'Add a zone')}
+          <CreateHelper label="zones" href="/dnsmanager/create" linkText="Add a zone" />}
       </div>
     );
   }
