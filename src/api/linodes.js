@@ -2,13 +2,16 @@ import { fetch } from '~/fetch';
 import { linodes as thunks } from '~/api';
 import { actions } from './configs/linodes';
 
-function linodeAction(id, action, temp, expected, body = undefined) {
+function linodeAction(id, action, temp, expected, body = undefined, handleRsp = null) {
   return async (dispatch, getState) => {
     const state = getState();
     const { token } = state.authentication;
     dispatch(actions.one({ state: temp }, id));
-    await fetch(token, `/linode/instances/${id}/${action}`, { method: 'POST', body });
+    const rsp = await fetch(token, `/linode/instances/${id}/${action}`, { method: 'POST', body });
     await dispatch(thunks.until(l => l.status === expected, id));
+    if (handleRsp) {
+      await dispatch(handleRsp(await rsp.json()));
+    }
   };
 }
 
@@ -25,6 +28,29 @@ export function powerOffLinode(id, config = null) {
 export function rebootLinode(id, config = null) {
   return linodeAction(id, 'reboot', 'rebooting', 'running',
     JSON.stringify({ config }));
+}
+
+export function rebuildLinode(id, config = null) {
+  function makeNormalResponse(rsp, resource) {
+    return {
+      page: 1,
+      totalPages: 1,
+      totalResults: rsp[resource].length,
+      [resource]: rsp[resource],
+    };
+  }
+
+  function handleRsp(rsp) {
+    return async (dispatch) => {
+      await dispatch(actions.disks.invalidate([id], false));
+      await dispatch(actions.disks.many(makeNormalResponse(rsp, 'disks'), id));
+      await dispatch(actions.configs.invalidate([id], false));
+      await dispatch(actions.configs.many(makeNormalResponse(rsp, 'configs'), id));
+    };
+  }
+
+  return linodeAction(id, 'rebuild', 'rebuilding', 'offline',
+                      JSON.stringify(config), handleRsp);
 }
 
 export function lishToken(linodeId) {
