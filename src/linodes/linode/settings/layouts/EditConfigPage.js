@@ -519,9 +519,9 @@ export class EditConfigPage extends Component {
             </div>
             <div className="col-md-6">
               {this.renderCheckbox('Enable distro helper', 'enableDistroHelper')}
-              {this.renderCheckbox('Enable network helper', 'enableNetworkHelper')}
-              {this.renderCheckbox('Enable modules.dep helper', 'enableModulesdepHelper')}
               {this.renderCheckbox('Disable updatedb', 'disableUpdatedb')}
+              {this.renderCheckbox('Enable modules.dep helper', 'enableModulesdepHelper')}
+              {this.renderCheckbox('Enable network helper', 'enableNetworkHelper')}
             </div>
           </fieldset>
           <ErrorSummary errors={errors} />
