@@ -372,6 +372,15 @@ export class EditConfigPage extends Component {
               onChange={e => this.setState({ comments: e.target.value })}
             />
            ))}
+          <fieldset className="form-group row">
+            <div className="col-sm-2 label-col">
+              <legend>Virtualization mode</legend>
+            </div>
+            <div className="col-sm-6">
+              {this.renderRadio('Paravirtualization', 'virtMode', 'paravirt')}
+              {this.renderRadio('Full virtualization', 'virtMode', 'fullvirt')}
+            </div>
+          </fieldset>
           <div className="form-group row">
             <div className="col-sm-2 label-col">
               <label
@@ -417,28 +426,6 @@ export class EditConfigPage extends Component {
               </select>
             </div>
           </div>
-          <fieldset className="form-group row">
-            <div className="col-sm-2 label-col">
-              <legend>
-                Boot helpers
-              </legend>
-            </div>
-            <div className="col-md-6">
-              {this.renderCheckbox('Enable distro helper', 'enableDistroHelper')}
-              {this.renderCheckbox('Enable network helper', 'enableNetworkHelper')}
-              {this.renderCheckbox('Enable modules.dep helper', 'enableModulesdepHelper')}
-              {this.renderCheckbox('Disable updatedb', 'disableUpdatedb')}
-            </div>
-          </fieldset>
-          <fieldset className="form-group row">
-            <div className="col-sm-2 label-col">
-              <legend>Virtualization mode</legend>
-            </div>
-            <div className="col-sm-6">
-              {this.renderRadio('Paravirtualization', 'virtMode', 'paravirt')}
-              {this.renderRadio('Full virtualization', 'virtMode', 'fullvirt')}
-            </div>
-          </fieldset>
           <fieldset className="form-group row">
             <div className="col-sm-2 label-col">
               <legend>
@@ -524,6 +511,19 @@ export class EditConfigPage extends Component {
                 </span>, 'isCustomRoot', true)}
             </div>
           </div>
+          <fieldset className="form-group row">
+            <div className="col-sm-2 label-col">
+              <legend>
+                Boot helpers
+              </legend>
+            </div>
+            <div className="col-md-6">
+              {this.renderCheckbox('Enable distro helper', 'enableDistroHelper')}
+              {this.renderCheckbox('Enable network helper', 'enableNetworkHelper')}
+              {this.renderCheckbox('Enable modules.dep helper', 'enableModulesdepHelper')}
+              {this.renderCheckbox('Disable updatedb', 'disableUpdatedb')}
+            </div>
+          </fieldset>
           <ErrorSummary errors={errors} />
           <div className="row">
             <div className="offset-sm-2 col-sm-10">
