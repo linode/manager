@@ -290,6 +290,19 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
       expect(disk.props().value).to.equal(12346);
     });
 
+    it('change initrd', async () => {
+      const page = await mount(
+        <EditConfigPage
+          {...props}
+          dispatch={dispatch}
+        />
+      );
+
+      const initrd = page.find('#config-initrd');
+      initrd.simulate('change', { target: { value: '25669' } });
+      expect(initrd.props().value).to.equal('25669');
+    });
+
     it('change root device standard select', async () => {
       const page = await mount(
         <EditConfigPage
@@ -410,6 +423,7 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
             sda: { id: 12345 },
             sdb: { id: 12346 },
           },
+          initrd: '',
           root_device: '/dev/sda',
           helpers: {
             disable_updatedb: true,

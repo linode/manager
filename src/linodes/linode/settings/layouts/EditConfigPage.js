@@ -31,6 +31,7 @@ export class EditConfigPage extends Component {
       isCustomRoot: false,
       rootDevice: '/dev/sda',
       diskSlots: [],
+      initrd: '',
       helpers: {
         disableUpdatedb: true,
         enableDistroHelper: true,
@@ -94,8 +95,10 @@ export class EditConfigPage extends Component {
     const diskSlots = this.getDiskSlots(true);
 
     let isCustomRoot = true;
+    let initrd = '';
     try {
       isCustomRoot = AVAILABLE_DISK_SLOTS.indexOf(config.root_device.replace('/dev/', '')) === -1;
+      initrd = config.initrd;
     } catch (e) {
       // do nothing.
     }
@@ -103,6 +106,7 @@ export class EditConfigPage extends Component {
     this.setState({
       diskSlots,
       isCustomRoot,
+      initrd,
       loading: false,
       virtMode: config.virt_mode,
       runLevel: config.run_level,
@@ -238,7 +242,7 @@ export class EditConfigPage extends Component {
     const { dispatch } = this.props;
     const linode = this.getLinode();
     const { label, comments, ramLimit, runLevel, virtMode, kernel, diskSlots,
-            rootDevice, helpers } = this.state;
+            initrd, rootDevice, helpers } = this.state;
 
     this.setState({ loading: true, errors: {} });
 
@@ -246,6 +250,7 @@ export class EditConfigPage extends Component {
       label,
       comments,
       kernel,
+      initrd,
       ram_limit: parseInt(ramLimit, 10),
       run_level: runLevel,
       virt_mode: virtMode,
@@ -336,7 +341,7 @@ export class EditConfigPage extends Component {
     const { create, kernels } = this.props;
     const {
       loading, label, comments, kernel, isCustomRoot, ramLimit, rootDevice,
-      errors, diskSlots } = this.state;
+      initrd, errors, diskSlots } = this.state;
 
     return (
       <section className="card">
@@ -449,19 +454,35 @@ export class EditConfigPage extends Component {
           {this.renderFormElement('Memory limit', 'ramLimit', (
             <div>
               <input
-                className="col-sm-2"
+                className="col-sm-2 form-control"
                 id="config-ramLimit"
                 disabled={loading}
                 placeholder="Memory limit"
                 type="number"
                 value={ramLimit}
-                className="form-control"
                 onChange={e => this.setState({ ramLimit: e.target.value })}
               />
               <span className="measure-unit">MB</span>
             </div>
            ))}
           {diskSlots.map(this.renderDiskSlot)}
+          <div className="form-group row">
+            <div className="col-sm-2 label-col">
+              <legend>initrd</legend>
+            </div>
+            <div className="input-container col-sm-6">
+              <select
+                id="config-initrd"
+                disabled={loading}
+                value={initrd}
+                className="form-control"
+                onChange={e => this.setState({ initrd: e.target.value })}
+              >
+                <option value="">No initrd</option>
+                <option value="25669">Recovery - Finnix (initrd)</option>
+              </select>
+            </div>
+          </div>
           <div className="form-group row">
             <div className="col-sm-2 label-col">
               <label>root / boot device</label>

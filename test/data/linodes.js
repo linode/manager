@@ -117,6 +117,7 @@ export const testLinode = {
         kernel: {
           id: 'linode/latest_64',
         },
+        initrd: '',
         virt_mode: 'paravirt',
         run_level: 'default',
         ram_limit: 1024,
