@@ -13,6 +13,146 @@ import { setError } from '~/actions/errors';
 export const AVAILABLE_DISK_SLOTS =
   ['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg', 'sdh'];
 
+export function getConfig() {
+  const linode = this.getLinode();
+  const configId = parseInt(this.props.params.configId);
+  return linode._configs.configs[configId];
+}
+
+export function getDisks() {
+  const linode = this.getLinode();
+  return linode._disks.totalResults === -1 ? null : linode._disks.disks;
+}
+
+export async function getDiskSlots(fromConfig = false) {
+  const disks = fromConfig ? this.getConfig().disks : this.getDisks();
+  const diskSlots = [];
+  Object.values(disks).forEach(disk => {
+    if (disk) {
+      diskSlots.push(disk.id);
+    }
+  });
+  return diskSlots;
+}
+
+export function fillDiskSlots(slotToKeep, slotToKeepOldValue) {
+  const { diskSlots } = this.state;
+  const newSlotValue = diskSlots[slotToKeep];
+
+  diskSlots.forEach((slot, i) => {
+    if (i === slotToKeep) {
+      return;
+    }
+
+    if (newSlotValue === slot) {
+      diskSlots[i] = slotToKeepOldValue;
+    }
+  });
+
+  this.setState({ diskSlots });
+}
+
+export async function addDiskSlot() {
+  const { diskSlots } = this.state;
+  const allDiskSlots = await this.getDiskSlots();
+
+  for (const diskSlot of allDiskSlots) {
+    if (diskSlots.indexOf(diskSlot) === -1) {
+      diskSlots.push(diskSlot);
+      break;
+    }
+  }
+
+  this.setState({ diskSlots });
+}
+
+export function removeDiskSlot() {
+  const { diskSlots } = this.state;
+  diskSlots.pop();
+  this.setState({ diskSlots });
+}
+
+export function renderDiskSlot(device, index) {
+  const { diskSlots, loading } = this.state;
+  const disks = this.getDisks();
+
+  const oneDiskSlotInUse = index === 0 && diskSlots.length === 1;
+  const currentDisk = index === diskSlots.length - 1;
+  const allDisksInUse = index === Math.max(diskSlots.length, Object.keys(disks).length) - 1;
+
+  const addButton = oneDiskSlotInUse || currentDisk && !allDisksInUse ? (
+    <button
+      type="button"
+      className="btn btn-cancel"
+      disabled={loading}
+      onClick={() => this.addDiskSlot()}
+    >Add slot</button>
+  ) : null;
+
+  const deleteButton = index > 0 && index === diskSlots.length - 1 ? (
+    <button
+      type="button"
+      className="btn btn-cancel"
+      disabled={loading}
+      onClick={() => this.removeDiskSlot(device)}
+    >Remove slot</button>
+  ) : null;
+
+  return (
+    <div
+      className="form-group row disk-slot"
+      key={index}
+    >
+      <label className="col-xs-3">
+        /dev/{AVAILABLE_DISK_SLOTS[index]}:
+      </label>
+      <div className="col-xs-9 input-container">
+        <select
+          className="form-control"
+          id={`config-device-${AVAILABLE_DISK_SLOTS[index]}`}
+          value={device}
+          disabled={loading}
+          onChange={e => {
+            diskSlots[index] = parseInt(e.target.value, 10);
+            this.setState({ diskSlots });
+            this.fillDiskSlots(index, device);
+          }}
+        >
+          {Object.keys(disks).map((disk, i) => {
+            if (disks[disk]) {
+              const { id, label } = disks[disk];
+              return (
+                <option key={i} value={id}>
+                  {label}
+                </option>
+              );
+            }
+          })}
+        </select>
+        <div>
+          {addButton}
+          {deleteButton}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// eslint-disable-next-line react/sort-comp
+export async function loadDisks() {
+  const { dispatch } = this.props;
+  if (this.getDisks()) return;
+
+  const { linodeId } = this.props.params;
+  try {
+    await dispatch(linodes.disks.all(linodeId));
+  } catch (e) {
+    // TODO: handle errors
+    // eslint-disable-next-line no-console
+    console.error(e);
+  }
+}
+
 export class EditConfigPage extends Component {
   static async preload(store, newParams) {
     const { linodeId } = newParams;
@@ -34,8 +174,16 @@ export class EditConfigPage extends Component {
     super();
     this.getLinode = getLinode.bind(this);
     this.saveChanges = this.saveChanges.bind(this);
-    this.addDiskSlot = this.addDiskSlot.bind(this);
-    this.renderDiskSlot = this.renderDiskSlot.bind(this);
+    this.renderDiskSlot = renderDiskSlot.bind(this);
+    this.getConfig = getConfig.bind(this);
+    this.getDisks = getDisks.bind(this);
+    this.addDiskSlot = addDiskSlot.bind(this);
+    this.getDiskSlots = getDiskSlots.bind(this);
+    this.fillDiskSlots = fillDiskSlots.bind(this);
+    this.loadDisks = loadDisks.bind(this);
+    this.addDiskSlot = addDiskSlot.bind(this);
+    this.removeDiskSlot = removeDiskSlot.bind(this);
+
     this.state = {
       loading: true,
       errors: {},
@@ -78,7 +226,7 @@ export class EditConfigPage extends Component {
       return;
     }
 
-    const diskSlots = this.getDiskSlots(true);
+    const diskSlots = await this.getDiskSlots(true);
 
     let isCustomRoot = true;
     let initrd = '';
@@ -108,65 +256,6 @@ export class EditConfigPage extends Component {
         enableModulesdepHelper: config.helpers.enable_modules_dep_helper,
       },
     });
-  }
-
-  getConfig() {
-    const linode = this.getLinode();
-    const configId = parseInt(this.props.params.configId);
-    return linode._configs.configs[configId];
-  }
-
-  getDisks() {
-    const linode = this.getLinode();
-    return linode._disks.totalResults === -1 ? null : linode._disks.disks;
-  }
-
-  getDiskSlots(fromConfig = false) {
-    const disks = fromConfig ? this.getConfig().disks : this.getDisks();
-    const diskSlots = [];
-    Object.values(disks).forEach(disk => {
-      if (disk) {
-        diskSlots.push(disk.id);
-      }
-    });
-    return diskSlots;
-  }
-
-  fillDiskSlots(slotToKeep, slotToKeepOldValue) {
-    const { diskSlots } = this.state;
-    const newSlotValue = diskSlots[slotToKeep];
-
-    diskSlots.forEach((slot, i) => {
-      if (i === slotToKeep) {
-        return;
-      }
-
-      if (newSlotValue === slot) {
-        diskSlots[i] = slotToKeepOldValue;
-      }
-    });
-
-    this.setState({ diskSlots });
-  }
-
-  addDiskSlot() {
-    const { diskSlots } = this.state;
-    const allDiskSlots = this.getDiskSlots();
-
-    for (const diskSlot of allDiskSlots) {
-      if (diskSlots.indexOf(diskSlot) === -1) {
-        diskSlots.push(diskSlot);
-        break;
-      }
-    }
-
-    this.setState({ diskSlots });
-  }
-
-  removeDiskSlot() {
-    const { diskSlots } = this.state;
-    diskSlots.pop();
-    this.setState({ diskSlots });
   }
 
   async saveChanges() {
@@ -216,72 +305,6 @@ export class EditConfigPage extends Component {
     } catch (response) {
       this.setState({ loading: false, errors: await reduceErrors(response) });
     }
-  }
-
-  renderDiskSlot(device, index) {
-    const { diskSlots, loading } = this.state;
-    const disks = this.getDisks();
-
-    const oneDiskSlotInUse = index === 0 && diskSlots.length === 1;
-    const currentDisk = index === diskSlots.length - 1;
-    const allDisksInUse = index === Math.max(diskSlots.length, Object.keys(disks).length) - 1;
-
-    const addButton = oneDiskSlotInUse || currentDisk && !allDisksInUse ? (
-      <button
-        type="button"
-        className="btn btn-cancel"
-        disabled={loading}
-        onClick={() => this.addDiskSlot()}
-      >Add slot</button>
-    ) : null;
-
-    const deleteButton = index > 0 && index === diskSlots.length - 1 ? (
-      <button
-        type="button"
-        className="btn btn-cancel"
-        disabled={loading}
-        onClick={() => this.removeDiskSlot(device)}
-      >Remove slot</button>
-    ) : null;
-
-    return (
-      <div
-        className="form-group row disk-slot"
-        key={index}
-      >
-        <div className="col-sm-2 label-col">
-          <label>/dev/{AVAILABLE_DISK_SLOTS[index]}</label>
-        </div>
-        <div className="col-sm-10 input-container">
-          <select
-            className="form-control"
-            id={`config-device-${AVAILABLE_DISK_SLOTS[index]}`}
-            value={device}
-            disabled={loading}
-            onChange={e => {
-              diskSlots[index] = parseInt(e.target.value, 10);
-              this.setState({ diskSlots });
-              this.fillDiskSlots(index, device);
-            }}
-          >
-            {Object.keys(disks).map((disk, i) => {
-              if (disks[disk]) {
-                const { id, label } = disks[disk];
-                return (
-                  <option key={i} value={id}>
-                    {label}
-                  </option>
-                );
-              }
-            })}
-          </select>
-          <div>
-            {addButton}
-            {deleteButton}
-          </div>
-        </div>
-      </div>
-    );
   }
 
   renderFormElement(label, field, element) {

@@ -3,18 +3,26 @@ import { connect } from 'react-redux';
 import { getLinode } from './IndexPage';
 import { showModal, hideModal } from '~/actions/modal';
 import { linodes } from '~/api';
-import { resetPassword } from '~/api/linodes';
+import { resetPassword, rebootLinode } from '~/api/linodes';
 import PasswordInput from '~/components/PasswordInput';
 import HelpButton from '~/components/HelpButton';
 import { setSource } from '~/actions/source';
-
+import { getConfig,
+  getDisks,
+  getDiskSlots,
+  renderDiskSlot,
+  fillDiskSlots,
+  addDiskSlot,
+  removeDiskSlot,
+  loadDisks,
+  AVAILABLE_DISK_SLOTS,
+} from '~/linodes/linode/settings/layouts/EditConfigPage.js';
 
 export class ResetRootPwModal extends Component {
   constructor() {
     super();
     this.state = { loading: false };
   }
-
 
   render() {
     const { dispatch, resetRootPassword } = this.props;
@@ -47,6 +55,7 @@ export class ResetRootPwModal extends Component {
   }
 }
 
+
 ResetRootPwModal.propTypes = {
   linodeId: PropTypes.number.isRequired,
   resetRootPassword: PropTypes.func.isRequired,
@@ -60,9 +69,18 @@ export class RescuePage extends Component {
     await store.dispatch(linodes.disks.all(linodeId));
   }
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.getLinode = getLinode.bind(this);
+    this.getConfig = getConfig.bind(this);
+    this.getDisks = getDisks.bind(this);
+    this.getDiskSlots = getDiskSlots.bind(this);
+    this.fillDiskSlots = fillDiskSlots.bind(this);
+    this.removeDiskSlot = removeDiskSlot.bind(this);
+    this.addDiskSlot = addDiskSlot.bind(this);
+    this.loadDisks = loadDisks.bind(this);
+    this.renderDiskSlot = renderDiskSlot.bind(this);
+    this.renderDiskSlotNoEdit = this.renderDiskSlotNoEdit.bind(this);
     this.renderRescueMode = this.renderRescueMode.bind(this);
     this.resetRootPassword = this.resetRootPassword.bind(this);
     this.renderResetRootPassword = this.renderResetRootPassword.bind(this);
@@ -79,9 +97,12 @@ export class RescuePage extends Component {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
     const linode = this.getLinode();
+    await this.loadDisks();
+    const diskSlots = await this.getDiskSlots(false);
     const disk = Object.values(linode._disks.disks)
                        .filter(d => d.filesystem !== 'swap')[0];
     this.setState({
+      diskSlots,
       loading: false,
       disk: disk ? disk.id : null,
     });
@@ -111,7 +132,41 @@ export class RescuePage extends Component {
     dispatch(linodes.until(l => l.state === linode.status, linode.id));
   }
 
+  renderDiskSlotNoEdit(device, index) {
+    const disks = this.getDisks();
+
+    return (
+      <div
+        className="form-group row disk-slot"
+        key={index}
+      >
+        <label className="col-xs-3">
+          /dev/{AVAILABLE_DISK_SLOTS[index]}
+        </label>
+        <div className="col-xs-9 input-container">
+          {disks[device].label}
+        </div>
+      </div>
+    );
+  }
+
+
   renderRescueMode() {
+    const { diskSlots } = this.state;
+    const { dispatch } = this.props;
+    const linode = this.getLinode();
+    if (!linode) {
+      return null;
+    }
+    const showDisks = linode && linode._disks.totalPages !== -1 ?
+      Object.values(linode._disks.disks)
+      .filter(d => d.filesystem !== 'swap').length > 1 : false;
+    let slots = null;
+    if (showDisks && diskSlots) {
+      slots = diskSlots.map(this.renderDiskSlot);
+    } else if (diskSlots) {
+      slots = diskSlots.map(this.renderDiskSlotNoEdit);
+    }
     return (
       <div className="col-sm-6">
         <section className="card">
@@ -120,8 +175,20 @@ export class RescuePage extends Component {
               Rescue mode
               <HelpButton to="http://example.org" />
             </h2>
+            <p></p>
           </header>
-          <p>TODO</p>
+          {slots}
+          <div className="form-group row disk-slot">
+            <label className="col-xs-3">
+              /dev/sdh
+            </label>
+            <div className="col-xs-9 input-container">Finnix Media</div>
+          </div>
+          <button
+            className="btn btn-danger"
+            onClick={() => dispatch(rebootLinode)}
+          >Reboot</button>
+
         </section>
       </div>
     );
@@ -237,3 +304,4 @@ function select(state) {
 }
 
 export default connect(select)(RescuePage);
+
