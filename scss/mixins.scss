@@ -1,0 +1,14 @@
+@mixin flex($justify-content: space-between) {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: $justify-content;
+}
+
+@mixin clearfix() {
+    clear: both;
+}
+
+@mixin pointer() {
+    cursor: pointer;
+    cursor: hand;
+}

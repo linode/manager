@@ -3,46 +3,13 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import _ from 'lodash';
 import moment from 'moment';
 
-import Distributions from './Distributions';
+import Distributions from '~/linodes/components/Distributions';
 import Backups from './Backups';
 
 export default class Source extends Component {
   constructor() {
     super();
-    this.render = this.render.bind(this);
-    this.renderSourceTabs = this.renderSourceTabs.bind(this);
-    this.renderHeader = this.renderHeader.bind(this);
-    this.renderDistributions = this.renderDistributions.bind(this);
     this.state = { backupsPage: 0, backupsFilter: '', selectedLinode: -1 };
-  }
-
-  renderDistributions() {
-    const { distributions, distribution, onSourceSelected } = this.props;
-    const vendors = _.sortBy(
-      _.map(
-        _.groupBy(Object.values(distributions), d => d.vendor),
-        (v, k) => ({
-          name: k,
-          versions: _.orderBy(v, ['recommended', 'created'], ['desc', 'desc']),
-        })
-      ), vendor => vendor.name);
-
-    return (
-      <div className="distributions">
-        {vendors.map(v =>
-          <Distributions
-            selected={distribution}
-            vendor={v}
-            key={v.name}
-            onClick={s => onSourceSelected('distribution', s)}
-          />)}
-        <Distributions
-          noDistribution
-          selected={distribution}
-          onClick={() => onSourceSelected('distribution', 'none')}
-        />
-      </div>
-    );
   }
 
   renderLinodeSelection() {
@@ -138,9 +105,13 @@ export default class Source extends Component {
     );
   }
 
-  renderBackups() {
+  render() {
+    const {
+      selectedTab, onTabChange, distributions, distribution, onSourceSelected, backup,
+      linodes,
+    } = this.props;
+
     const { selectedLinode } = this.state;
-    const { onSourceSelected, backup, linodes } = this.props;
 
     if (backup && selectedLinode === -1) {
       // Select a linode
@@ -152,59 +123,46 @@ export default class Source extends Component {
     }
 
     return (
-      <div className="backups">
-        {selectedLinode === -1 ?
-          this.renderLinodeSelection() :
-          <Backups
-            goBack={e => {
-              e.preventDefault();
-              this.setState({ selectedLinode: -1 });
-              onSourceSelected('backup', null);
-            }}
-            onSourceSelected={id => onSourceSelected('backup', id, selectedLinode)}
-            selectedLinode={selectedLinode}
-            selected={backup}
-          />}
-      </div>
-    );
-  }
-
-  renderSourceTabs() {
-    const { selectedTab, onTabChange } = this.props;
-    return (
-      <div className="react-tabs">
-        <Tabs
-          onSelect={onTabChange}
-          selectedIndex={selectedTab}
-        >
-          <TabList>
-            <Tab>Distributions</Tab>
-            <Tab>Backups</Tab>
-          </TabList>
-          <TabPanel>
-            {this.renderDistributions()}
-          </TabPanel>
-          <TabPanel>
-            {this.renderBackups()}
-          </TabPanel>
-        </Tabs>
-      </div>
-    );
-  }
-
-  renderHeader() {
-    return (
-      <header>
-        <h2>Source</h2>
-      </header>
-    );
-  }
-
-  render() {
-    return (
       <div>
-        {this.renderHeader()}
-        {this.renderSourceTabs()}
+        <header>
+          <h2>Source</h2>
+        </header>
+        <div className="react-tabs">
+          <Tabs
+            onSelect={onTabChange}
+            selectedIndex={selectedTab}
+          >
+            <TabList>
+              <Tab>Distributions</Tab>
+              <Tab>Backups</Tab>
+            </TabList>
+            <TabPanel>
+              <section>
+                <Distributions
+                  distributions={distributions}
+                  distribution={distribution}
+                  onSelected={d => onSourceSelected('distribution', d)}
+                />
+              </section>
+            </TabPanel>
+            <TabPanel>
+              <div className="backups">
+                {selectedLinode === -1 ?
+                 this.renderLinodeSelection() :
+                  <Backups
+                    goBack={e => {
+                      e.preventDefault();
+                      this.setState({ selectedLinode: -1 });
+                      onSourceSelected('backup', null);
+                    }}
+                    onSourceSelected={id => onSourceSelected('backup', id, selectedLinode)}
+                    selectedLinode={selectedLinode}
+                    selected={backup}
+                  />}
+              </div>
+            </TabPanel>
+          </Tabs>
+        </div>
       </div>
     );
   }

@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
 import { events } from '~/api';
+import { actions as eventsActions } from '~/api/configs/events';
 import { eventRead } from '~/api/events';
 import Header from '~/components/Header';
 import Sidebar from '~/components/Sidebar';
@@ -15,7 +16,7 @@ import { hideModal } from '~/actions/modal';
 import { showNotifications, hideNotifications } from '~/actions/notifications';
 import { showFeedback, hideFeedback } from '~/actions/feedback';
 
-const EVENT_LOOKUP_DELAY = 5000; // seconds
+const EVENT_LOOKUP_DELAY = 5 * 1000; // milliseconds
 
 export class Layout extends Component {
   constructor() {
@@ -60,7 +61,7 @@ export class Layout extends Component {
 
     // Grab events first time right away
     if (firstTime) {
-      await dispatch(events.all(true));
+      await dispatch(events.all());
     }
 
     // And every N seconds
@@ -68,7 +69,8 @@ export class Layout extends Component {
       this._eventTimeout = setTimeout(resolve, EVENT_LOOKUP_DELAY);
     });
 
-    await dispatch(events.all(true));
+    await dispatch(eventsActions.invalidate([], true));
+    await dispatch(events.all());
     this.attachEventTimeout(false);
   }
 

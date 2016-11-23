@@ -54,7 +54,8 @@ export function genActions(config) {
       actions[fns[feature]] = actionGenerators[feature](config);
     }
   });
-  actions.invalidate = () => ({ type: `GEN@${config.plural}/INVALIDATE` });
+  actions.invalidate = (ids, partial) =>
+    ({ type: `GEN@${fullyQualified(config)}/INVALIDATE`, ids, partial });
   if (config.subresources) {
     Object.keys(config.subresources).forEach((key) => {
       actions[config.subresources[key].plural] =
@@ -65,13 +66,21 @@ export function genActions(config) {
   return actions;
 }
 
-function genDefaultState(config) {
-  return {
+export function genDefaultState(config, currentState) {
+  const defaultState = {
     pagesFetched: [],
     totalPages: -1,
     totalResults: -1,
     [config.plural]: {},
   };
+
+  // Preserve some of the currentState so we don't get UI flashes while resources
+  // are being refetched. With the downside that mutable data would break this.
+  if (currentState) {
+    defaultState[config.plural] = currentState[config.plural];
+  }
+
+  return defaultState;
 }
 
 function addMeta(config, item) {
@@ -132,13 +141,18 @@ export function genReducer(_config) {
     };
   }
 
-  function invalidate(config, state) {
+  function invalidate(config, state, action) {
+    // Partial invalidation keeps the existing state around
+    // This is useful to make sure the events data does not
+    // get wiped every 5 seconds for a second while new
+    // data is fetched. This might be a problem if the events
+    // data is not immutable.
+
+    // Furthermore, this does not support invalidating invidual top-level
+    // states like a single Linode.
     return {
       ...state,
-      [config.plural]: { },
-      totalPages: -1,
-      totalResults: -1,
-      pagesFetched: [],
+      ...genDefaultState(config, action.partial && state),
     };
   }
 
@@ -149,7 +163,8 @@ export function genReducer(_config) {
     const { ids } = action;
 
     let name = null;
-    for (let i = 0; i < names.length; i += 1) {
+    let i;
+    for (i = 0; i < names.length; i += 1) {
       if (names[i] === config.plural) {
         name = names[i + 1];
         break;
@@ -158,7 +173,10 @@ export function genReducer(_config) {
 
     if (!name) return state;
 
-    const item = state[config.plural][ids[0]];
+    if (i !== names.length - 2) {
+      throw new Error('3-layer configs not supported');
+    }
+
     const keys = Object.keys(config.subresources);
     let subkey = null;
     let subconfig = null;
@@ -169,7 +187,9 @@ export function genReducer(_config) {
         break;
       }
     }
+
     const subaction = { ...action, ids: ids.splice(1) };
+    const item = state[config.plural][ids[0]];
     return one(config, state, {
       ids: action.ids,
       // eslint-disable-next-line no-use-before-define
@@ -186,7 +206,7 @@ export function genReducer(_config) {
       case `GEN@${fullyQualified(config)}/DELETE`:
         return del(config, state, action);
       case `GEN@${fullyQualified(config)}/INVALIDATE`:
-        return invalidate(config, state);
+        return invalidate(config, state, action);
       default:
         if (action.type && action.type.indexOf(`GEN@${config.plural}.`) === 0) {
           return subresource(config, state, action);
