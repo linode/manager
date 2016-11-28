@@ -135,6 +135,8 @@ export default class Source extends Component {
             <TabList>
               <Tab>Distributions</Tab>
               <Tab>Backups</Tab>
+              <Tab>Clone</Tab>
+              <Tab>StackScripts</Tab>
             </TabList>
             <TabPanel>
               <section>
@@ -161,6 +163,8 @@ export default class Source extends Component {
                   />}
               </div>
             </TabPanel>
+            <TabPanel>TODO</TabPanel>
+            <TabPanel>TODO</TabPanel>
           </Tabs>
         </div>
       </div>
