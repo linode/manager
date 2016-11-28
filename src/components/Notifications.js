@@ -56,7 +56,7 @@ function notificationMessage(event) {
   const [category, action] = notificationCategoryAndAction(event);
 
   if (event.linode_id) {
-    const linodeIfCached = event.linodes.linodes[event.linode_id];
+    const linodeIfCached = event.linodes && event.linodes.linodes[event.linode_id];
     const linodeName = linodeIfCached && linodeIfCached.label || hostJobTitle.split(' ')[2];
     if (category === 'linode') {
       return (

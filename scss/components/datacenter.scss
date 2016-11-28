@@ -1,22 +1,15 @@
-.distributions, .datacenter-group, .plans, .backup-group {
+.datacenter-group, .plans, .backup-group {
     display: flex;
     flex-wrap: wrap;
     justify-content: left;
 }
 
-.distro, .datacenter, .plan, .backup {
+.datacenter, .plan, .backup {
     $width: 11rem;
     border: $border;
     margin: 1rem;
     cursor: pointer;
     width: $width;
-
-    &.noDistribution {
-        & > div {
-            padding: 0 10px;
-            font-size: $font-xs-small;
-        }
-    }
 
     header {
         margin-bottom: 0;
