@@ -353,14 +353,12 @@ export class DiskPanel extends Component {
     super();
     this.getLinode = getLinode.bind(this);
   }
-/*
-  async componentDidMount() {
-    const { dispatch } = this.props;
-    const { linodeId } = this.props.params;
+
+  static async preload(dispatch, params) {
+    const { linodeId } = params;
     await dispatch(linodes.one(linodeId));
     await dispatch(linodes.disks.all(linodeId));
   }
-*/
 
   render() {
     const { dispatch } = this.props;
