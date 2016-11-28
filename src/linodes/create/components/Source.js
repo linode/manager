@@ -180,12 +180,18 @@ export default class Source extends Component {
           <TabList>
             <Tab>Distributions</Tab>
             <Tab>Backups</Tab>
+            <Tab>Clone</Tab>
+            <Tab>StackScripts</Tab>
           </TabList>
           <TabPanel>
             {this.renderDistributions()}
           </TabPanel>
           <TabPanel>
             {this.renderBackups()}
+          </TabPanel>
+          <TabPanel>
+          </TabPanel>
+          <TabPanel>
           </TabPanel>
         </Tabs>
       </div>

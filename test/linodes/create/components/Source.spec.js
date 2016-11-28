@@ -40,6 +40,8 @@ describe('linodes/create/components/Source', () => {
     );
     expect(c.contains(<Tab>Distributions</Tab>)).to.equal(true);
     expect(c.contains(<Tab>Backups</Tab>)).to.equal(true);
+    expect(c.contains(<Tab>Clone</Tab>)).to.equal(true);
+    expect(c.contains(<Tab>StackScripts</Tab>)).to.equal(true);
   });
 
   it('invokes the onTabChange function as necessary', () => {
