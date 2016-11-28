@@ -3,8 +3,16 @@ import { connect } from 'react-redux';
 import { ConfigPanel } from '~/linodes/linode/settings/components/ConfigPanel';
 import { DiskPanel } from '~/linodes/linode/settings/components/DiskPanel';
 import { setSource } from '~/actions/source';
+import { linodes } from '~/api';
 
 export class AdvancedPage extends Component {
+  static async preload(dispatch, params) {
+    const { linodeId } = params;
+    await dispatch(linodes.one(linodeId));
+    await dispatch(linodes.configs.all(linodeId));
+    await dispatch(linodes.disks.all(linodeId));
+  }
+
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
