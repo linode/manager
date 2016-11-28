@@ -40,16 +40,7 @@ function logPageView() {
 }
 
 class LoadingRouterContext extends RouterContext {
-  constructor() {
-    super();
-    this.fetching = false;
-  }
-
-  componentWillReceiveProps(newProps) {
-    if (super.componentWillReceiveProps) {
-      super.componentWillReceiveProps(newProps);
-    }
-
+  runPreload(newProps) {
     // Suppress component update until after route preloads have finished
     this.fetching = true;
 
@@ -59,7 +50,7 @@ class LoadingRouterContext extends RouterContext {
     }, async (error, redirectLocation, redirectParams) => {
       // Call any route preload functions
       for (let i = 0; i < redirectParams.routes.length; i++) {
-        let component = redirectParams.routes[i].component;
+        const component = redirectParams.routes[i].component;
         if (component !== undefined && component.hasOwnProperty('preload')) {
           await component.preload(store.dispatch, newProps.params);
         }
@@ -75,8 +66,35 @@ class LoadingRouterContext extends RouterContext {
     });
   }
 
+  constructor(props) {
+    super();
+    this.fetching = false;
+    this.initialLoad = true;
+    this.runPreload(props);
+  }
+
+  componentWillReceiveProps(newProps) {
+    if (super.componentWillReceiveProps) {
+      super.componentWillReceiveProps(newProps);
+    }
+
+    this.runPreload(newProps);
+  }
+
   shouldComponentUpdate() {
     return !this.fetching;
+  }
+
+  render() {
+    if (this.initialLoad) {
+      this.initialLoad = false;
+
+      if (this.fetching) {
+        return null;
+      }
+    }
+
+    return super.render();
   }
 }
 
