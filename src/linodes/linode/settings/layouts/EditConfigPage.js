@@ -161,12 +161,12 @@ export class EditConfigPage extends Component {
     const { linodeId } = newParams;
 
     try {
-      await store.dispatch(linodes.one(linodeId));
+      await store.dispatch(linodes.one([linodeId]));
 
       await Promise.all([
         store.dispatch(kernels.all()),
-        store.dispatch(linodes.configs.all(linodeId)),
-        store.dispatch(linodes.disks.all(linodeId)),
+        store.dispatch(linodes.configs.all([linodeId])),
+        store.dispatch(linodes.disks.all([linodeId])),
       ]);
     } catch (e) {
       store.dispatch(setError(e));

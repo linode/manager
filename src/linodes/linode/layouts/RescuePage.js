@@ -65,8 +65,8 @@ ResetRootPwModal.propTypes = {
 export class RescuePage extends Component {
   static async preload(store, newParams) {
     const { linodeId } = newParams;
-    await store.dispatch(linodes.one(linodeId));
-    await store.dispatch(linodes.disks.all(linodeId));
+    await store.dispatch(linodes.one([linodeId]));
+    await store.dispatch(linodes.disks.all([linodeId]));
   }
 
   constructor(props) {
@@ -115,9 +115,7 @@ export class RescuePage extends Component {
 
     try {
       this.setState({ applying: true, result: null });
-      const actions = [resetPassword(linode.id, disk, password)];
-
-      await Promise.all(actions.map(dispatch));
+      await dispatch(resetPassword(linode.id, disk, password));
 
       this.setState({
         applying: false,
@@ -129,7 +127,6 @@ export class RescuePage extends Component {
         result: <span className="text-danger">An error occured.</span>,
       });
     }
-    dispatch(linodes.until(l => l.state === linode.status, linode.id));
   }
 
   renderDiskSlotNoEdit(device, index) {

@@ -54,7 +54,7 @@ export function genActions(config) {
       actions[fns[feature]] = actionGenerators[feature](config);
     }
   });
-  actions.invalidate = (ids, partial) =>
+  actions.invalidate = (ids = [], partial = false) =>
     ({ type: `GEN@${fullyQualified(config)}/INVALIDATE`, ids, partial });
   if (config.subresources) {
     Object.keys(config.subresources).forEach((key) => {
@@ -66,21 +66,12 @@ export function genActions(config) {
   return actions;
 }
 
-export function genDefaultState(config, currentState) {
-  const defaultState = {
-    pagesFetched: [],
+export function genDefaultState(config) {
+  return {
     totalPages: -1,
     totalResults: -1,
     [config.plural]: {},
   };
-
-  // Preserve some of the currentState so we don't get UI flashes while resources
-  // are being refetched. With the downside that mutable data would break this.
-  if (currentState) {
-    defaultState[config.plural] = currentState[config.plural];
-  }
-
-  return defaultState;
 }
 
 function addMeta(config, item) {
@@ -111,12 +102,9 @@ export function genReducer(_config) {
 
   function many(config, state, action) {
     const { page } = action;
+
     return {
       ...state,
-      pagesFetched: [
-        ...state.pagesFetched.filter(p => p !== page.page),
-        page.page,
-      ],
       totalPages: page.total_pages,
       totalResults: page.total_results,
       [config.plural]: {
@@ -142,18 +130,26 @@ export function genReducer(_config) {
   }
 
   function invalidate(config, state, action) {
-    // Partial invalidation keeps the existing state around
-    // This is useful to make sure the events data does not
-    // get wiped every 5 seconds for a second while new
-    // data is fetched. This might be a problem if the events
-    // data is not immutable.
+    let newState = { ...state };
+    if (action.partial) {
+      // Keep data but mark as invalid to be overwritten
+      // when new data is available by thunks.all.
+      if (action.ids.length) {
+        // action.ids should only ever be just 1 id
+        newState[config.plural][action.ids[0]].invalid = true;
+      } else {
+        newState.invalid = true;
+      }
+    } else {
+      if (action.ids.length) {
+        // action.ids should only ever be just 1 id
+        delete newState[config.plural][action.ids[0]];
+      } else {
+        newState = genDefaultState(config);
+      }
+    }
 
-    // Furthermore, this does not support invalidating invidual top-level
-    // states like a single Linode.
-    return {
-      ...state,
-      ...genDefaultState(config, action.partial && state),
-    };
+    return newState;
   }
 
   function subresource(config, state, action) {

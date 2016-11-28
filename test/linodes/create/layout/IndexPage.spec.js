@@ -150,7 +150,7 @@ describe('linodes/create/layout/IndexPage', () => {
     page.find('Datacenter').props().onDatacenterSelected('datacenter');
     page.find('Source').props().onSourceSelected('distribution', 'source');
     await page.instance().onSubmit({
-      labels: ['label'],
+      label: 'label',
       password: 'password',
       backups: false,
       group: null,

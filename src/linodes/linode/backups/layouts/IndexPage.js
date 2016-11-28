@@ -23,7 +23,7 @@ export class IndexPage extends Component {
     dispatch(setSource(__filename));
     const { linodeId } = this.props.params;
     await dispatch(parallel(
-      linodes.backups.all(linodeId),
+      linodes.backups.all([linodeId]),
       linodes.all()));
   }
 
