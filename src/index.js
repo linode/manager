@@ -59,9 +59,9 @@ class LoadingRouterContext extends RouterContext {
     }, async (error, redirectLocation, redirectParams) => {
       // Call any route preload functions
       for (let i = 0; i < redirectParams.routes.length; i++) {
-        if (redirectParams.routes[i].hasOwnProperty('preload')) {
-          await redirectParams.routes[i].preload(store.dispatch,
-                                                 newProps.params);
+        let component = redirectParams.routes[i].component;
+        if (component !== undefined && component.hasOwnProperty('preload')) {
+          await component.preload(store.dispatch, newProps.params);
         }
       }
 
