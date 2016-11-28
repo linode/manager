@@ -1,0 +1,14 @@
+.FormRow {
+    @extend .row;
+    @extend .form-group;
+
+    &-label {
+        @extend .label-col;
+        @extend .col-sm-2;
+    }
+
+    &-content {
+        @extend .content-col;
+        @extend .col-sm-10;
+    }
+}

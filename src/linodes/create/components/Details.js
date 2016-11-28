@@ -1,11 +1,11 @@
 import React, { Component, PropTypes } from 'react';
 
 import PasswordInput from '~/components/PasswordInput';
+import FormRow from '~/components/FormRow';
 
 export default class Details extends Component {
   constructor() {
     super();
-    this.renderRow = this.renderRow.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.state = {
       password: '',
@@ -26,28 +26,6 @@ export default class Details extends Component {
       group: this.state.group,
       backups: this.state.enableBackups,
     });
-  }
-
-  renderRow({ label, errors, children, showIf = true }) {
-    if (!showIf) {
-      return null;
-    }
-
-    return (
-      <div className="form-group row">
-        <div className="col-sm-2 label-col">{label ? `${label}:` : null}</div>
-        <div className="col-sm-10 content-col">
-          {children}
-          {!errors ? null : (
-            <div className="alert alert-danger">
-              <ul>
-                {errors.map(e => <li key={e}>{e}</li>)}
-              </ul>
-            </div>
-           )}
-        </div>
-      </div>
-    );
   }
 
   render() {
@@ -75,7 +53,7 @@ export default class Details extends Component {
         <div className="LinodesCreateDetails-body">
           <form onSubmit={this.onSubmit}>
             <section>
-              <this.renderRow label="Label" errors={errors.label}>
+              <FormRow label="Label" errors={errors.label}>
                 <div className="LinodesCreateDetails-label">
                   <input
                     value={this.state.label}
@@ -84,8 +62,8 @@ export default class Details extends Component {
                     className="form-control"
                   />
                 </div>
-              </this.renderRow>
-              <this.renderRow
+              </FormRow>
+              <FormRow
                 label="Root password"
                 errors={errors.root_password}
                 showIf={selectedDistribution !== 'none'}
@@ -96,8 +74,8 @@ export default class Details extends Component {
                     onChange={password => this.setState({ password })}
                   />
                 </div>
-              </this.renderRow>
-              <this.renderRow
+              </FormRow>
+              <FormRow
                 label="Enable backups"
                 errors={errors.backups}
                 showIf={selectedDistribution !== 'none'}
@@ -115,13 +93,13 @@ export default class Details extends Component {
                     </span>
                   </label>
                 </div>
-              </this.renderRow>
+              </FormRow>
               <button
                 type="button"
                 className="LinodesCreateDetails-toggleAdvanced"
                 onClick={() => this.setState({ showAdvanced: !this.state.showAdvanced })}
               >{showAdvancedOrHide}</button>
-              <this.renderRow
+              <FormRow
                 label="Group"
                 showIf={this.state.showAdvanced && selectedDistribution !== 'none'}
               >
@@ -134,7 +112,7 @@ export default class Details extends Component {
                     name="group"
                   />
                 </div>
-              </this.renderRow>
+              </FormRow>
             </section>
             <section>
               <button

@@ -4,7 +4,6 @@ import { expect } from 'chai';
 import { shallow } from 'enzyme';
 import { Tab } from 'react-tabs';
 import moment from 'moment';
-import _ from 'lodash';
 
 import Source from '~/linodes/create/components/Source';
 import { api } from '@/data';
@@ -67,13 +66,10 @@ describe('linodes/create/components/Source', () => {
         backup={null}
         selectedTab={0}
       />);
-    expect(c.find('Distributions').length)
-      .to.equal(Object.values(
-        _.groupBy(Object.values(api.distributions.distributions),
-          d => d.vendor)).length + 1); // + 1 is for no distribution option
+    expect(c.find('Distributions').length).to.equal(1);
   });
 
-  it('invokes the onSourceSelected function as necessary for Distros', () => {
+  it('invokes the onSourceSelected function as necessary for Distributions', () => {
     const onSourceSelected = sandbox.spy();
     const c = shallow(
       <Source
@@ -86,8 +82,8 @@ describe('linodes/create/components/Source', () => {
       />
     );
     const distro = api.distributions.distributions.distro_1234;
-    c.find('Distributions').first().props()
-     .onClick(distro);
+    c.find('Distributions').props()
+     .onSelected(distro);
     expect(onSourceSelected.calledOnce).to.equal(true);
     expect(onSourceSelected.calledWith('distribution', distro)).to.equal(true);
   });
