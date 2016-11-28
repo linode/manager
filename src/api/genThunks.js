@@ -1,12 +1,25 @@
 import _ from 'lodash';
 
-import { ONE, MANY, DELETE, POST, PUT } from './gen';
+import { ONE, MANY, DELETE, POST, PUT, genDefaultState } from './gen';
 import { fetch } from '~/fetch';
 import { getStorage, setStorage } from '~/storage';
 
 const CROSS_USER_CACHE_HOURS = 1;
 
-function refineState(config, state, ids) {
+/*
+ * This function applies the ids to the config to try to find
+ * the particular object we are talking about.
+ *
+ * Examples:
+ *   getStateOfSpecificResource(require('~/api/configs/linodes').config.configs,
+ *                              store.api, ['1234'])
+ *   returns store.api.linodes.linodes['1234']._configs.configs
+ *
+ *   getStateOfSpecificResource(require('~/api/configs/linodes').config.configs,
+ *                              store.api, ['1234', '1'])
+ *   returns store.api.linodes.linodes['1234']._configs.configs['1']
+ */
+function getStateOfSpecificResource(config, state, ids) {
   const path = [];
   let root = config;
   const match = (sub, parent) => {
@@ -31,21 +44,37 @@ function refineState(config, state, ids) {
   return refined;
 }
 
+/*
+ * Apply a filter to all returned objects so only selected fields (or none)
+ * will be updated.
+ */
+function filterResources(config, resources, resourceFilter = x => x) {
+  const filteredResources = { ...resources };
+
+  for (let i = 0; i < filteredResources[config.plural].length; i += 1) {
+    const object = filteredResources[config.plural][i];
+    const filteredObject = resourceFilter(object);
+    if (!filteredObject || !Object.keys(filteredObject).length) {
+      filteredResources[config.plural].splice(i, 1);
+    }
+  }
+
+  const oldObjects = resources[config.plural];
+  const newObjects = filteredResources[config.plural];
+  if (oldObjects.length !== newObjects.length) {
+    filteredResources.totalResults -= (oldObjects.length - newObjects.length);
+  }
+
+  return filteredResources;
+}
+
 function genThunkOne(config, actions) {
-  return (...ids) => async (dispatch, getState) => {
-    let overwrite = false;
-    if (typeof ids[ids.length - 1] === 'boolean') {
-      overwrite = ids.pop();
-    }
-    let progressReset = false;
-    if (typeof ids[ids.length - 1] === 'boolean') {
-      progressReset = ids.pop();
-    }
-    const state = refineState(config, getState(), ids);
+  return (ids, progressReset = false) => async (dispatch, getState) => {
+    const state = getStateOfSpecificResource(config, getState(), ids);
     const id = ids[ids.length - 1];
     const prev = state[config.plural][id];
 
-    if (overwrite || _.isUndefined(prev)) {
+    if (_.isUndefined(prev) || prev.invalid) {
       const { token } = getState().authentication;
       const response = await fetch(token, config.endpoint(...ids));
       // TODO: delete this when progress is implemented in the API
@@ -60,77 +89,115 @@ function genThunkOne(config, actions) {
   };
 }
 
+/*
+ * This function fetches a single page and stores it into the redux state by default.
+ * All results are optionally filtered so only certain fields (or none) are updated.
+ * The results are returned.
+ */
 function genThunkPage(config, actions) {
-  function fetchPage(page = 0, ...ids) {
+  function fetchPage(page = 0, ids, resourceFilter, storeInState = true) {
     return async (dispatch, getState) => {
       const { token } = getState().authentication;
-      const state = refineState(config, getState(), ids);
-      if (state.totalPages !== -1 &&
-          state.pagesFetched.indexOf(page + 1) !== -1) {
-        // cache hit
-        return;
-      } else if (config.crossUserCache && getStorage(`crossUserCache/${config.plural}`)) {
-        // localstorage cache hit
-        const resource = getStorage(`crossUserCache/${config.plural}`);
-        const cacheValid = new Date(resource.__cacheUntil) > new Date();
-        if (cacheValid) {
-          // localstorage still valid
-          delete resource.__cacheUntil;
-          dispatch(actions.many(resource)); // add to redux state
-          return;
-        }
-      }
-
-      // Update the pages fetched first so we don't double-fetch this resource
-      dispatch(actions.many({
-        page: page + 1,
-        totalPages: -2,
-        totalResults: -2,
-        [config.plural]: [],
-      }, ...ids));
       const endpoint = `${config.endpoint(...ids, '')}?page=${page + 1}`;
       const response = await fetch(token, endpoint);
       const resources = await response.json();
 
-      if (state.totalPages !== -1 &&
-          state.totalResults !== resources.total_results) {
-        dispatch(actions.invalidate());
-        for (let i = 0; i < state.pagesFetched.length; i += 1) {
-          if (state.pagesFetched[i] - 1 !== page) {
-            await dispatch(fetchPage(state.pagesFetched[i] - 1, ...ids));
-          }
-        }
-      }
-      dispatch(actions.many(resources, ...ids));
+      const filteredResources = filterResources(config, resources, resourceFilter);
 
-      // Cache response for all users
-      if (config.crossUserCache) {
-        // Set cache time limit in hours.
-        const now = new Date();
-        resources.__cacheUntil = new Date(
-          now.getTime() + CROSS_USER_CACHE_HOURS * 3600000);
-        setStorage(`crossUserCache/${config.plural}`, resources);
+      if (storeInState) {
+        dispatch(actions.many(filteredResources, ...ids));
       }
-
-      return;
+      return filteredResources;
     };
   }
   return fetchPage;
 }
 
-function genThunkAll(config, page) {
-  return (...ids) => async (dispatch, getState) => {
-    let state = refineState(config, getState(), ids);
-    if (state.totalPages === -1) {
-      await dispatch(page(0, ...ids));
-      state = refineState(config, getState(), ids);
-    }
+/*
+ * This function fetches all pages. If the final page indicates the total results
+ * were not fetched, it restarts the process. If it is fixing partial invalidation,
+ * it waits to invalidate and store the new data into the store until all the
+ * pages have been fetched.
+ */
+function genThunkAll(config, actions, page) {
+  function fetchAll(ids = [], resourceFilter) {
+    return async (dispatch, getState) => {
+      let state = getStateOfSpecificResource(config, getState(), ids) || genDefaultState(config);
+      const resources = [state];
 
-    for (let i = 1; i < state.totalPages; i += 1) {
-      if (state.pagesFetched.indexOf(i + 1) === -1) {
-        await dispatch(page(i, ...ids));
+      // Grab first page so we know how many there are.
+      if (state.totalPages === -1 || state.invalid) {
+        const storeInState = !state.invalid; // Store the fetched results later
+        const resource = await dispatch(
+          page(0, ids, resourceFilter, storeInState));
+        resources[0] = resource;
+        state = getStateOfSpecificResource(config, getState(), ids);
+      }
+
+      // Grab all pages we know about. If state.invalid, don't save the result
+      // in the redux store until we've got all the results.
+      for (let i = 1; i < resources[0].total_pages; i += 1) {
+        const resource = await dispatch(page(i, ids, resourceFilter, !state.invalid));
+        resources.push(resource);
+      }
+
+      // If the number of total results returned by the last page is different
+      // than the total number of results we have, restart.
+      const numFetchedResources = resources.map(
+        resource => resource[config.plural].length
+      ).reduce((a, b) => a + b);
+      const numExpectedResources = resources[resources.length - 1].total_results;
+      if (numFetchedResources !== numExpectedResources) {
+        return dispatch(fetchAll(ids, resourceFilter));
+      }
+
+      // Waits till all events have been fetched so we don't have UI flashes
+      // while we wait for requests to be made and the results saved in the redux store.
+      if (state.invalid) {
+        dispatch(actions.invalidate());
+
+        await Promise.all(resources.map(resources =>
+          dispatch(actions.many(resources, ...ids))));
+      }
+
+      // The resulting object will look like this, return it so we can store it in localStorage.
+      const res = {
+        ...resources[resources.length - 1],
+        [config.plural]: resources.reduce((a, b) => [...a, ...b[config.plural]], []),
+      };
+
+      return res;
+    };
+  }
+
+  return fetchAll;
+}
+
+/*
+ * This function will fetch all pages unless they are available in local storage.
+ * If they are fetched, it will add them to local storage with a validity timestamp.
+ */
+function genThunkAllCacheable(config, actions, fetchAllPages) {
+  return (ids = [], resourceFilter) => async (dispatch) => {
+    if (getStorage(`localStorageCacheable/${config.plural}`)) {
+      // localStorage cache hit
+      const resource = getStorage(`localStorageCacheable/${config.plural}`);
+      const cacheValid = new Date(resource.__cacheUntil) > new Date();
+      if (cacheValid) {
+        // localStorage still valid
+        delete resource.__cacheUntil;
+        dispatch(actions.many(resource, ...ids));
+        return;
       }
     }
+
+    const state = await dispatch(fetchAllPages(ids, resourceFilter));
+
+    // Set cache time limit in hours.
+    const now = new Date();
+    state.__cacheUntil = new Date(
+      now.getTime() + CROSS_USER_CACHE_HOURS * 3600000);
+    setStorage(`localStorageCacheable/${config.plural}`, state);
   };
 }
 
@@ -141,7 +208,8 @@ function genThunkUntil(config, actions, one) {
     for (;;) {
       try {
         // TODO: remove progressReset when progress is implemented in the API
-        const resource = await dispatch(one(...ids, progressReset, true));
+        await dispatch(actions.invalidate([ids], true));
+        const resource = await dispatch(one(ids, progressReset));
         progressReset = false;
         if (test(resource)) break;
       } catch (ex) {
@@ -206,7 +274,10 @@ export default function genThunks(config, actions) {
   }
   if (supports(MANY)) {
     thunks.page = genThunkPage(config, actions);
-    thunks.all = genThunkAll(config, thunks.page);
+    thunks.all = genThunkAll(config, actions, thunks.page);
+    if (config.localStorageCacheable) {
+      thunks.all = genThunkAllCacheable(config, actions, thunks.all);
+    }
   }
   if (supports(DELETE)) {
     thunks.delete = genThunkDelete(config, actions);

@@ -324,7 +324,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
     };
 
     it('should fetch distributions on mount', async () => {
-      const dispatch = sandbox.spy();
+      const dispatch = sandbox.stub();
       const modal = shallow(
         <AddModal
           {...props}
@@ -335,11 +335,22 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
       expect(dispatch.calledOnce).to.equal(true);
       let fn = dispatch.firstCall.args[0];
       dispatch.reset();
+      dispatch.returns({ total_pages: 1, distributions: [], total_results: 0 });
+
+      // Call to fetch cacheable
       await fn(dispatch, () => freshState);
+      expect(dispatch.calledOnce).to.equal(true);
       fn = dispatch.firstCall.args[0];
-      await expectRequest(fn, '/linode/distributions/?page=1',
-        () => {}, { totalPages: 1, distributions: [] },
-        null, freshState);
+
+      // Call to fetch all
+      await fn(dispatch, () => freshState);
+      expect(dispatch.calledTwice).to.equal(true);
+      fn = dispatch.secondCall.args[0];
+      dispatch.reset();
+
+      await expectRequest(fn, '/linode/distributions/?page=1', undefined, {
+        distributions: [],
+      });
     });
 
     it('should render label, filesystem, distro, and size fields', () => {

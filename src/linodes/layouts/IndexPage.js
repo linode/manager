@@ -9,7 +9,12 @@ import Dropdown from '~/components/Dropdown';
 import CreateHelper from '~/components/CreateHelper';
 import { setError } from '~/actions/errors';
 import { linodes } from '~/api';
-import { powerOnLinode, powerOffLinode, rebootLinode } from '~/api/linodes';
+import {
+  LINODE_STATUS_TRANSITION_RESULT,
+  powerOnLinode,
+  powerOffLinode,
+  rebootLinode,
+} from '~/api/linodes';
 import {
   changeView,
   toggleSelected,
@@ -17,12 +22,13 @@ import {
 import { setSource } from '~/actions/source';
 import Confirm from '~/components/Confirm';
 import { showModal, hideModal } from '~/actions/modal';
+import { actions as linodeActions } from '~/api/configs/linodes';
+import { OBJECT_POLLING_INTERVAL } from '~/constants';
 
 export class IndexPage extends Component {
   static async preload(store) {
     try {
       await store.dispatch(linodes.all());
-      // TODO: Start until on transient linodes
     } catch (response) {
       store.dispatch(setError(response));
     }
@@ -39,14 +45,70 @@ export class IndexPage extends Component {
     this.toggleDisplay = this.toggleDisplay.bind(this);
   }
 
-  async componentDidMount() {
-    const { dispatch } = this.props;
-
-    dispatch(setSource(__filename));
+  componentDidMount() {
+    this.setSourceLink();
+    this.attachLinodesTimeout();
   }
 
   componentWillUnmount() {
-    window.removeEventListener('scroll', this.handleScroll);
+    clearTimeout(this._eventTimeout);
+  }
+
+  setSourceLink() {
+    const { dispatch } = this.props;
+    dispatch(setSource(__filename));
+  }
+
+  filterLinodeUpdates(deletedLinodes) {
+    const { dispatch } = this.props;
+
+    return ({ id, status }) => {
+      if (Object.keys(deletedLinodes).indexOf(id.toString()) !== -1) {
+        // This disable is important, we actually want to remove the id from the real object.
+        // eslint-disable-next-line no-param-reassign
+        delete deletedLinodes[id];
+
+        const linode = this.props.linodes.linodes[id.toString()];
+        // Start polling for changes if the linode status changed and it's not already polling.
+        if (linode.status !== status && !linode._polling) {
+          try {
+            dispatch(linodes.until(
+              l => l.status === LINODE_STATUS_TRANSITION_RESULT[linode.status], id));
+          } catch (response) {
+            // TODO: handle polling error
+            // eslint-disable-next-line no-console
+            console.error(response, response.stack);
+          }
+        }
+
+        return { status };
+      }
+
+      // New linode, fetch its data
+      dispatch(linodes.one([id.toString()]));
+      return null;
+    };
+  }
+
+  async attachLinodesTimeout() {
+    const { dispatch } = this.props;
+
+    // Fetch linode status every N seconds
+    await new Promise(resolve => {
+      this._eventTimeout = setTimeout(resolve, OBJECT_POLLING_INTERVAL);
+    });
+
+    const deletedLinodes = { ...this.props.linodes.linodes };
+    await dispatch(linodeActions.invalidate([], true));
+    const filter = this.filterLinodeUpdates(deletedLinodes);
+    await dispatch(linodes.all([], filter));
+
+    // Remove any deleted linodes from the store
+    Object.keys(deletedLinodes).map(id =>
+      dispatch(linodeActions.delete(id)));
+
+    // Start over
+    this.attachLinodesTimeout();
   }
 
   powerOn(linode) {
