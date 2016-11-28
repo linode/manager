@@ -349,15 +349,15 @@ function select(state) {
 const AddModalRedux = connect(select)(AddModal);
 
 export class DiskPanel extends Component {
-  constructor() {
-    super();
-    this.getLinode = getLinode.bind(this);
-  }
-
   static async preload(dispatch, params) {
     const { linodeId } = params;
     await dispatch(linodes.one(linodeId));
     await dispatch(linodes.disks.all(linodeId));
+  }
+
+  constructor() {
+    super();
+    this.getLinode = getLinode.bind(this);
   }
 
   render() {

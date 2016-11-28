@@ -13,6 +13,28 @@ export const AVAILABLE_DISK_SLOTS =
   ['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg', 'sdh'];
 
 export class EditConfigPage extends Component {
+  static async preload(dispatch, params) {
+    const { linodeId } = params;
+
+    try {
+      await dispatch(linodes.one(linodeId));
+
+      const promises = [
+        dispatch(kernels.all()),
+        dispatch(linodes.configs.all(linodeId)),
+        dispatch(linodes.disks.all(linodeId)),
+      ];
+
+      for (const promise of promises) {
+        await promise;
+      }
+    } catch (e) {
+      // TODO: handle errors
+      // eslint-disable-next-line no-console
+      console.error(e);
+    }
+  }
+
   constructor() {
     super();
     this.getLinode = getLinode.bind(this);
@@ -41,41 +63,10 @@ export class EditConfigPage extends Component {
     };
   }
 
-  getConfig() {
-    const linode = this.getLinode();
-    const configId = parseInt(this.props.params.configId);
-    return linode._configs.configs[configId];
-  }
-
-  getDisks() {
-    const linode = this.getLinode();
-    return linode._disks.totalResults === -1 ? null : linode._disks.disks;
-  }
-
-  // eslint-disable-next-line react/sort-comp
-  async loadDisks() {
-    const { dispatch } = this.props;
-    if (this.getDisks()) return;
-
-    const { linodeId } = this.props.params;
-    try {
-      await dispatch(linodes.disks.all(linodeId));
-    } catch (e) {
-      // TODO: handle errors
-      // eslint-disable-next-line no-console
-      console.error(e);
-    }
-  }
-
   async componentDidMount() {
     const { create, dispatch } = this.props;
     dispatch(setSource(__filename));
 
-    if (this.props.kernels.totalResults === -1) {
-      await dispatch(kernels.all());
-    }
-
-    await this.loadDisks();
     if (create) {
       const disks = this.getDisks();
       const diskSlots = Object.values(disks).map(disk => disk.id).slice(0, 1) || [];
@@ -124,6 +115,17 @@ export class EditConfigPage extends Component {
     });
   }
 
+  getConfig() {
+    const linode = this.getLinode();
+    const configId = parseInt(this.props.params.configId);
+    return linode._configs.configs[configId];
+  }
+
+  getDisks() {
+    const linode = this.getLinode();
+    return linode._disks.totalResults === -1 ? null : linode._disks.disks;
+  }
+
   getDiskSlots(fromConfig = false) {
     const disks = fromConfig ? this.getConfig().disks : this.getDisks();
     const diskSlots = [];
@@ -170,6 +172,55 @@ export class EditConfigPage extends Component {
     const { diskSlots } = this.state;
     diskSlots.pop();
     this.setState({ diskSlots });
+  }
+
+  async saveChanges() {
+    const { dispatch } = this.props;
+    const linode = this.getLinode();
+    const { label, comments, ramLimit, runLevel, virtMode, kernel, diskSlots,
+            initrd, rootDevice, helpers } = this.state;
+
+    this.setState({ loading: true, errors: {} });
+
+    const data = {
+      label,
+      comments,
+      kernel,
+      initrd,
+      ram_limit: parseInt(ramLimit, 10),
+      run_level: runLevel,
+      virt_mode: virtMode,
+      disks: diskSlots,
+      root_device: rootDevice,
+      helpers: {
+        disable_updatedb: helpers.disableUpdatedb,
+        enable_distro_helper: helpers.enableDistroHelper,
+        enable_network_helper: helpers.enableNetworkHelper,
+        enable_modules_dep_helper: helpers.enableModulesdepHelper,
+      },
+    };
+
+    try {
+      if (this.props.create) {
+        await dispatch(linodes.configs.post(data, linode.id));
+      } else {
+        const configId = this.getConfig().id;
+
+        // PUT endpoint accepts disks differently.
+        const disksByDevice = {};
+        data.disks.forEach((id, i) => {
+          disksByDevice[AVAILABLE_DISK_SLOTS[i]] = { id };
+        });
+        data.disks = disksByDevice;
+
+        await dispatch(linodes.configs.put(data, linode.id, configId));
+      }
+
+      this.setState({ loading: false });
+      dispatch(push(`/linodes/${linode.id}/settings/advanced`));
+    } catch (response) {
+      this.setState({ loading: false, errors: await reduceErrors(response) });
+    }
   }
 
   renderDiskSlot(device, index) {
@@ -236,55 +287,6 @@ export class EditConfigPage extends Component {
         </div>
       </div>
     );
-  }
-
-  async saveChanges() {
-    const { dispatch } = this.props;
-    const linode = this.getLinode();
-    const { label, comments, ramLimit, runLevel, virtMode, kernel, diskSlots,
-            initrd, rootDevice, helpers } = this.state;
-
-    this.setState({ loading: true, errors: {} });
-
-    const data = {
-      label,
-      comments,
-      kernel,
-      initrd,
-      ram_limit: parseInt(ramLimit, 10),
-      run_level: runLevel,
-      virt_mode: virtMode,
-      disks: diskSlots,
-      root_device: rootDevice,
-      helpers: {
-        disable_updatedb: helpers.disableUpdatedb,
-        enable_distro_helper: helpers.enableDistroHelper,
-        enable_network_helper: helpers.enableNetworkHelper,
-        enable_modules_dep_helper: helpers.enableModulesdepHelper,
-      },
-    };
-
-    try {
-      if (this.props.create) {
-        await dispatch(linodes.configs.post(data, linode.id));
-      } else {
-        const configId = this.getConfig().id;
-
-        // PUT endpoint accepts disks differently.
-        const disksByDevice = {};
-        data.disks.forEach((id, i) => {
-          disksByDevice[AVAILABLE_DISK_SLOTS[i]] = { id };
-        });
-        data.disks = disksByDevice;
-
-        await dispatch(linodes.configs.put(data, linode.id, configId));
-      }
-
-      this.setState({ loading: false });
-      dispatch(push(`/linodes/${linode.id}/settings/advanced`));
-    } catch (response) {
-      this.setState({ loading: false, errors: await reduceErrors(response) });
-    }
   }
 
   renderFormElement(label, field, element) {
