@@ -55,14 +55,12 @@ export class ConfigPanel extends Component {
     super();
     this.getLinode = getLinode.bind(this);
   }
-/*
-  async componentDidMount() {
-    const { dispatch } = this.props;
-    const { linodeId } = this.props.params;
+
+  static async preload(dispatch, params) {
+    const { linodeId } = params;
     await dispatch(linodes.one(linodeId));
     await dispatch(linodes.configs.all(linodeId));
   }
-*/
 
   render() {
     const linode = this.getLinode();
