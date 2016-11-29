@@ -21,7 +21,16 @@ export function getConfig() {
 
 export function getDisks() {
   const linode = this.getLinode();
-  return linode._disks.totalResults === -1 ? null : linode._disks.disks;
+  console.log('from edit config page');
+  console.log('linode', linode);
+  console.log('getLinode', getLinode);
+  console.log('this.getLinode', this.getLinode);
+  console.log('this.getLinode()', this.getLinode());
+  console.log('end logging from edit config page');
+  if (linode) {
+    return linode._disks.totalResults === -1 ? null : linode._disks.disks;
+  }
+  return;
 }
 
 export async function getDiskSlots(fromConfig = false) {
@@ -103,7 +112,7 @@ export function renderDiskSlot(device, index) {
       className="form-group row disk-slot"
       key={index}
     >
-      <label className="col-xs-3">
+      <label className="col-sm-2 label-col">
         /dev/{AVAILABLE_DISK_SLOTS[index]}:
       </label>
       <div className="col-xs-9 input-container">
@@ -212,8 +221,10 @@ export class EditConfigPage extends Component {
 
     if (create) {
       const disks = this.getDisks();
-      const diskSlots = Object.values(disks).map(disk => disk.id).slice(0, 1) || [];
-      this.setState({ diskSlots, loading: false });
+      if (disks) {
+        const diskSlots = Object.values(disks).map(disk => disk.id).slice(0, 1) || [];
+        this.setState({ diskSlots, loading: false });
+      }
       return;
     }
 
