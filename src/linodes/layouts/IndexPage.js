@@ -17,12 +17,12 @@ import {
 import { setSource } from '~/actions/source';
 
 export class IndexPage extends Component {
-  static async preload(dispatch) {
+  static async preload(store) {
     try {
-      await dispatch(linodes.all());
+      await store.dispatch(linodes.all());
       // TODO: Start until on transient linodes
     } catch (response) {
-      dispatch(setError(response));
+      store.dispatch(setError(response));
     }
   }
 

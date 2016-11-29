@@ -13,16 +13,16 @@ export const AVAILABLE_DISK_SLOTS =
   ['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg', 'sdh'];
 
 export class EditConfigPage extends Component {
-  static async preload(dispatch, params) {
+  static async preload(store, params) {
     const { linodeId } = params;
 
     try {
-      await dispatch(linodes.one(linodeId));
+      await store.dispatch(linodes.one(linodeId));
 
       const promises = [
-        dispatch(kernels.all()),
-        dispatch(linodes.configs.all(linodeId)),
-        dispatch(linodes.disks.all(linodeId)),
+        store.dispatch(kernels.all()),
+        store.dispatch(linodes.configs.all(linodeId)),
+        store.dispatch(linodes.disks.all(linodeId)),
       ];
 
       for (const promise of promises) {
