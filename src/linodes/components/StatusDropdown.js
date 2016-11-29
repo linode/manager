@@ -101,7 +101,7 @@ export default class StatusDropdown extends Component {
       >
         <button
           type="button"
-          className="btn dropdown-toggle"
+          className="btn dropdown-toggle float-xs-right"
           data-toggle="dropdown"
           aria-haspopup="true"
           aria-expanded={this.state.open}
