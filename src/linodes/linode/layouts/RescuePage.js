@@ -97,6 +97,7 @@ export class RescuePage extends Component {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
     const linode = this.getLinode();
+    console.log('linode from rescue page', linode);
     await this.loadDisks();
     const diskSlots = await this.getDiskSlots(false);
     const disk = Object.values(linode._disks.disks)
@@ -140,7 +141,7 @@ export class RescuePage extends Component {
         className="form-group row disk-slot"
         key={index}
       >
-        <label className="col-xs-3">
+        <label className="col-sm-2 label-col">
           /dev/{AVAILABLE_DISK_SLOTS[index]}
         </label>
         <div className="col-xs-9 input-container">
@@ -179,7 +180,7 @@ export class RescuePage extends Component {
           </header>
           {slots}
           <div className="form-group row disk-slot">
-            <label className="col-xs-3">
+            <label className="col-sm-2 label-col">
               /dev/sdh
             </label>
             <div className="col-xs-9 input-container">Finnix Media</div>
