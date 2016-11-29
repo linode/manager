@@ -54,10 +54,10 @@ ResetRootPwModal.propTypes = {
 };
 
 export class RescuePage extends Component {
-  static async preload(dispatch, params) {
+  static async preload(store, params) {
     const { linodeId } = params;
-    await dispatch(linodes.one(linodeId));
-    await dispatch(linodes.disks.all(linodeId));
+    await store.dispatch(linodes.one(linodeId));
+    await store.dispatch(linodes.disks.all(linodeId));
   }
 
   constructor() {

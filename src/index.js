@@ -52,7 +52,7 @@ class LoadingRouterContext extends RouterContext {
       for (let i = 0; i < redirectParams.routes.length; i++) {
         const component = redirectParams.routes[i].component;
         if (component !== undefined && component.hasOwnProperty('preload')) {
-          await component.preload(store.dispatch, newProps.params);
+          await component.preload(store, newProps.params);
         }
       }
 

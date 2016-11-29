@@ -51,10 +51,10 @@ function configContent(linode, configs, dispatch) {
 }
 
 export class ConfigPanel extends Component {
-  static async preload(dispatch, params) {
+  static async preload(store, params) {
     const { linodeId } = params;
-    await dispatch(linodes.one(linodeId));
-    await dispatch(linodes.configs.all(linodeId));
+    await store.dispatch(linodes.one(linodeId));
+    await store.dispatch(linodes.configs.all(linodeId));
   }
 
   constructor() {
