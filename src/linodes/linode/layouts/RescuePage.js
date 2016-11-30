@@ -257,7 +257,7 @@ export class RescuePage extends Component {
                 be powered off to reset your root password.
               </div>}
           <button
-            className="btn btn-danger"
+            className="btn btn-danger reset-root-pw-button"
             disabled={!this.state.password || this.state.applying || linode.status !== 'offline'}
             onClick={() => dispatch(showModal('Reset root password', resetRootPwModal))}
           >Reset Password</button>

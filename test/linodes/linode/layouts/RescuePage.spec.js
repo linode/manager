@@ -65,14 +65,8 @@ describe('linodes/linode/layouts/RescuePage', () => {
   };
 
   it('fetches linode disks', async () => {
-    const page = shallow(
-      <RescuePage
-        dispatch={dispatch}
-        linodes={linodes}
-        params={{ linodeId: '1234' }}
-      />);
-    await page.instance().componentDidMount();
-    let dispatched = dispatch.thirdCall.args[0];
+    await RescuePage.preload({ dispatch }, { linodeId: '1234' });
+    let dispatched = dispatch.secondCall.args[0];
     // Assert that dispatched is a function that fetches disks
     const fetchStub = sandbox.stub(fetch, 'fetch').returns({
       json: () => {},
@@ -103,17 +97,6 @@ describe('linodes/linode/layouts/RescuePage', () => {
     await dispatched(dispatch, () => state);
     expect(fetchStub.calledOnce).to.equal(true);
     expect(fetchStub.firstCall.args[1]).to.equal('/linode/instances/1234/disks/?page=1');
-  });
-
-  it('does not fetch when mounted with a known linode', async () => {
-    const page = shallow(
-      <RescuePage
-        dispatch={dispatch}
-        linodes={linodes}
-        params={{ linodeId: `${testLinode.id}` }}
-      />);
-    await page.instance().componentDidMount();
-    expect(dispatch.callCount).to.equal(3);
   });
 
   describe('reset root password', () => {
@@ -209,10 +192,25 @@ describe('linodes/linode/layouts/RescuePage', () => {
           params={{ linodeId: '1237' }}
         />);
       page.setState({ loading: false, disk: 1234, password: 'new password' });
-      page.find('button').simulate('click');
+      page.find('.reset-root-pw-button').simulate('click');
       expect(dispatch.calledOnce).to.equal(true);
       expect(dispatch.firstCall.args[0])
         .to.have.property('type').which.equals(SHOW_MODAL);
+    });
+
+    it('shows disks in rescue mode', async () => {
+      const page = mount(
+        <RescuePage
+          dispatch={dispatch}
+          linodes={linodes}
+          params={{ linodeId: '1234' }}
+        />);
+      page.setState({ diskSlots: [12345, 12346] });
+      expect(page.find('.label-col').map(node => node.text())).to.deep.equal([
+        '/dev/sda',
+        '/dev/sdb',
+        '/dev/sdh',
+      ]);
     });
   });
 });
