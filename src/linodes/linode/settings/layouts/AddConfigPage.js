@@ -7,6 +7,8 @@ export function AddConfigPage(props) {
   return <EditConfigPage create {...props} />;
 }
 
+AddConfigPage.preload = EditConfigPage.preload;
+
 AddConfigPage.propTypes = {
   ...EditConfigPage.propTypes,
 };

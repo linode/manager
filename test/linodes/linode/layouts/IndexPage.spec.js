@@ -4,85 +4,18 @@ import { push } from 'react-router-redux';
 import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 
-import { api, freshState } from '@/data';
+import { api, state } from '@/data';
 import { testLinode } from '@/data/linodes';
 import { expectRequest } from '@/common';
 import * as IndexPageWrapper from '~/linodes/linode/layouts/IndexPage';
-import { actions } from '~/api/configs/linodes';
-import { linodes as thunks } from '~/api';
 import Dropdown from '~/components/Dropdown';
-import { SET_ERROR } from '~/actions/errors';
 
 const {
   IndexPage,
-  getLinode,
   renderTabs,
 } = IndexPageWrapper;
 
 const { linodes } = api;
-
-describe('linodes/linode/layouts/IndexPage/loadLinode', async () => {
-  class Test extends Component {
-    constructor() {
-      super();
-      this.getLinode = getLinode.bind(this);
-      this.componentDidMount = IndexPageWrapper.loadLinode.bind(this);
-    }
-
-    render() {
-      return <span></span>;
-    }
-  }
-
-  const sandbox = sinon.sandbox.create();
-  const dispatch = sandbox.spy();
-  afterEach(() => {
-    dispatch.reset();
-    sandbox.restore();
-  });
-
-  it('fetches a linode when mounted with an unknown linode', async () => {
-    const page = shallow(
-      <Test
-        dispatch={dispatch}
-        linodes={freshState.api.linodes}
-        params={{ linodeId: -1 }}
-      />
-    );
-    await page.instance().componentDidMount();
-    expect(dispatch.calledTwice).to.equal(true);
-    const fn = dispatch.firstCall.args[0];
-    // TODO: remove when API supports progress
-    await expectRequest(fn, '/linode/instances/-1',
-      d => expect(d.args[0]).to.deep.equal({
-        ...(actions.one({ }, -1)),
-        resource: { progress: 7 },
-      })
-    );
-  });
-
-  it('handles errors from fetchLinode', async () => {
-    sandbox.stub(thunks, 'one').throws({
-      json: () => ({ foo: 'bar' }),
-      headers: { get() { return 'application/json'; } },
-      statusCode: 400,
-      statusText: 'Bad Request',
-    });
-    const page = shallow(
-      <Test
-        dispatch={dispatch}
-        linodes={freshState.api.linodes}
-        params={{ linodeId: `${testLinode.id}` }}
-      />);
-    await page.instance().componentDidMount();
-    expect(dispatch.calledWith({
-      type: SET_ERROR,
-      json: { foo: 'bar' },
-      status: 400,
-      statusText: 'Bad Request',
-    }));
-  });
-});
 
 describe('linodes/linode/layouts/IndexPage/renderTabs', async () => {
   class Test extends Component {
@@ -165,20 +98,21 @@ describe('linodes/linode/layouts/IndexPage', () => {
     },
   };
 
-  it('calls loadLinode during mount', () => {
-    const loadLinode = sinon.stub(IndexPageWrapper, 'loadLinode');
-    mount(
-      <IndexPage
-        dispatch={dispatch}
-        linodes={linodes}
-        params={{ linodeId: `${testLinode.id}` }}
-        detail={detail}
-        router={router}
-      />
-    );
+  it('preloads the linode', async () => {
+    await IndexPage.preload({ dispatch }, { linodeId: '-1' });
 
-    expect(loadLinode.calledOnce).to.equal(true);
-    loadLinode.restore();
+    const fn = dispatch.firstCall.args[0];
+    await expectRequest(fn, '/linode/instances/-1');
+  });
+
+  it('preloads the configs', async () => {
+    await IndexPage.preload({ dispatch }, { linodeId: '1241' });
+
+    let fn = dispatch.secondCall.args[0];
+    dispatch.reset();
+    await fn(dispatch, () => state);
+    fn = dispatch.firstCall.args[0];
+    await expectRequest(fn, '/linode/instances/1241/configs/?page=1');
   });
 
   it('renders the linode label and group', () => {
