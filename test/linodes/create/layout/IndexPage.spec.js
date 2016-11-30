@@ -79,22 +79,12 @@ describe('linodes/create/layout/IndexPage', () => {
     const env = { dispatch() {} };
     const error = 'this is my error string';
     const dispatch = sandbox.stub(env, 'dispatch');
-    dispatch.onCall(1).throws(new Error(error));
+    dispatch.onCall(0).throws(new Error(error));
 
-    const page = shallow(
-      <IndexPage
-        dispatch={dispatch}
-        distributions={api.distributions}
-        datacenters={api.datacenters}
-        types={api.types}
-        linodes={api.linodes}
-        location={{ query: {} }}
-      />);
+    await IndexPage.preload({ dispatch }, { });
 
-    await page.instance().componentDidMount();
-
-    expect(dispatch.callCount).to.equal(3);
-    expect(dispatch.args[2][0].message).to.equal(error);
+    expect(dispatch.callCount).to.equal(2);
+    expect(dispatch.args[1][0].message).to.equal(error);
   });
 
   it('selects a source when appropriate', () => {
