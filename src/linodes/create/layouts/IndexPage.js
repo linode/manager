@@ -12,7 +12,7 @@ import { setError } from '~/actions/errors';
 import { setSource } from '~/actions/source';
 
 export class IndexPage extends Component {
-  static async preload(store, newParams) {
+  static async preload(store) {
     const { dispatch } = store;
     try {
       await dispatch(parallel(
