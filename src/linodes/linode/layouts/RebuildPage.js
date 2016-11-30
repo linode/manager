@@ -11,6 +11,16 @@ import { distributions } from '~/api';
 import { rebuildLinode } from '~/api/linodes';
 
 export class RebuildPage extends Component {
+  static async preload(store) {
+    const { dispatch } = store;
+
+    try {
+      await dispatch(distributions.all());
+    } catch (response) {
+      dispatch(setError(response));
+    }
+  }
+
   constructor() {
     super();
     this.onSubmit = this.onSubmit.bind(this);
@@ -20,12 +30,6 @@ export class RebuildPage extends Component {
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
-
-    try {
-      await dispatch(distributions.all());
-    } catch (response) {
-      dispatch(setError(response));
-    }
   }
 
   async onSubmit() {
