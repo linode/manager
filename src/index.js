@@ -48,7 +48,8 @@ class LoadingRouterContext extends RouterContext {
       routes: newProps.routes,
       location: newProps.location.pathname,
     }, async (error, redirectLocation, redirectParams) => {
-      // Call any route preload functions
+      // Call preload (if present) on any components rendered by the route,
+      // down to the page level (Layout -> IndexPage -> EditConfigPage)
       for (let i = 0; i < redirectParams.routes.length; i++) {
         const component = redirectParams.routes[i].component;
         if (component !== undefined && component.hasOwnProperty('preload')) {
