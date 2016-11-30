@@ -16,19 +16,6 @@ export function getLinode() {
   return linodes ? linodes[linodeId] : null;
 }
 
-export async function loadLinode() {
-  if (this.getLinode()) return;
-
-  const { dispatch } = this.props;
-  try {
-    const { linodeId } = this.props.params;
-    await dispatch(linodes.one(linodeId));
-    await dispatch(linodes.configs.all(linodeId));
-  } catch (response) {
-    dispatch(setError(response));
-  }
-}
-
 export function renderTabs(tabList, selected, isSubtab = false) {
   const { dispatch } = this.props;
 
@@ -56,13 +43,23 @@ export function renderTabs(tabList, selected, isSubtab = false) {
 }
 
 export class IndexPage extends Component {
+  static async preload(store, newParams) {
+    const { linodeId } = newParams;
+
+    try {
+      await store.dispatch(linodes.one(linodeId));
+      await store.dispatch(linodes.configs.all(linodeId));
+    } catch (e) {
+      store.dispatch(setError(e));
+    }
+  }
+
   constructor() {
     super();
     this.getLinode = getLinode.bind(this);
     this.render = this.render.bind(this);
     this.renderLabel = this.renderLabel.bind(this);
     this.renderTabs = renderTabs.bind(this);
-    this.loadLinode = module.exports.loadLinode.bind(this);
     this.componentDidMount = this.componentDidMount.bind(this);
     this.state = { config: '', label: '', group: '' };
   }
@@ -71,7 +68,6 @@ export class IndexPage extends Component {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
 
-    await this.loadLinode();
     const linode = this.getLinode();
     const defaultConfig = Object.values(linode._configs.configs)[0];
     this.setState({

@@ -10,19 +10,17 @@ import {
   renderPlanStyle,
 } from '~/linodes/components/Linode';
 import { launchWeblishConsole } from '~/linodes/components/StatusDropdown';
-import { getLinode, loadLinode } from './IndexPage';
+import { getLinode } from './IndexPage';
 import { setSource } from '~/actions/source';
 
 export class DashboardPage extends Component {
   constructor() {
     super();
     this.getLinode = getLinode.bind(this);
-    this.loadLinode = loadLinode.bind(this);
     this.renderBackupStatus = renderBackupStatus.bind(this);
     this.renderDistroStyle = renderDistroStyle.bind(this);
     this.renderDatacenterStyle = renderDatacenterStyle.bind(this);
     this.renderPlanStyle = renderPlanStyle.bind(this);
-    this.componentDidMount = loadLinode.bind(this);
     this.renderDetails = this.renderDetails.bind(this);
     this.renderGraphs = this.renderGraphs.bind(this);
     this.graphSelection = this.graphSelection.bind(this);
@@ -38,7 +36,6 @@ export class DashboardPage extends Component {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
-    this.loadLinode();
   }
 
   graphRangeUpdate(value) {
