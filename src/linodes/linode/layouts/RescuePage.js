@@ -97,7 +97,6 @@ export class RescuePage extends Component {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
     const linode = this.getLinode();
-    console.log('linode from rescue page', linode);
     await this.loadDisks();
     const diskSlots = await this.getDiskSlots(false);
     const disk = Object.values(linode._disks.disks)

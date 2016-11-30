@@ -21,16 +21,10 @@ export function getConfig() {
 
 export function getDisks() {
   const linode = this.getLinode();
-  console.log('from edit config page');
-  console.log('linode', linode);
-  console.log('getLinode', getLinode);
-  console.log('this.getLinode', this.getLinode);
-  console.log('this.getLinode()', this.getLinode());
-  console.log('end logging from edit config page');
   if (linode) {
     return linode._disks.totalResults === -1 ? null : linode._disks.disks;
   }
-  return;
+  return null;
 }
 
 export async function getDiskSlots(fromConfig = false) {
