@@ -5,6 +5,11 @@ import { DiskPanel } from '~/linodes/linode/settings/components/DiskPanel';
 import { setSource } from '~/actions/source';
 
 export class AdvancedPage extends Component {
+  static async preload(store, params) {
+    await ConfigPanel.preload(store, params);
+    await DiskPanel.preload(store, params);
+  }
+
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));

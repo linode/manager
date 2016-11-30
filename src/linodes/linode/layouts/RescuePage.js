@@ -54,6 +54,12 @@ ResetRootPwModal.propTypes = {
 };
 
 export class RescuePage extends Component {
+  static async preload(store, newParams) {
+    const { linodeId } = newParams;
+    await store.dispatch(linodes.one(linodeId));
+    await store.dispatch(linodes.disks.all(linodeId));
+  }
+
   constructor() {
     super();
     this.getLinode = getLinode.bind(this);
@@ -72,9 +78,6 @@ export class RescuePage extends Component {
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
-    const { linodeId } = this.props.params;
-    await dispatch(linodes.one(linodeId));
-    await dispatch(linodes.disks.all(linodeId));
     const linode = this.getLinode();
     const disk = Object.values(linode._disks.disks)
                        .filter(d => d.filesystem !== 'swap')[0];

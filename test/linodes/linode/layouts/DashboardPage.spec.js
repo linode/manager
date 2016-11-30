@@ -4,7 +4,6 @@ import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 import { testLinode } from '@/data/linodes';
 import { DashboardPage } from '~/linodes/linode/layouts/DashboardPage';
-import * as IndexPage from '~/linodes/linode/layouts/IndexPage';
 import moment from 'moment';
 
 describe('linodes/linode/layouts/DashboardPage', async () => {
@@ -50,23 +49,11 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
     linodeId: `${testLinode.id}`,
   };
 
-  it('calls loadLinode on mount', async () => {
-    const loadLinode = sinon.stub(IndexPage, 'loadLinode');
-    const page = shallow(
-      <DashboardPage
-        linodes={linodes}
-        params={params}
-      />
-    );
-    await page.instance().componentDidMount();
-    expect(loadLinode.calledOnce).to.equal(true);
-    loadLinode.restore();
-  });
-
   it('renders public ipv4 and ipv6', () => {
     const { ipv4, ipv6 } = testLinode;
     const page = mount(
       <DashboardPage
+        dispatch={dispatch}
         linodes={linodes}
         params={params}
       />);

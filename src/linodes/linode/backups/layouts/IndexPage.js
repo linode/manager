@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { getLinode, loadLinode, renderTabs } from '~/linodes/linode/layouts/IndexPage';
+import { getLinode, renderTabs } from '~/linodes/linode/layouts/IndexPage';
 import { parallel } from '~/api/util';
 import { linodes } from '~/api';
 import { enableBackup } from '~/api/backups';
@@ -15,7 +15,6 @@ export class IndexPage extends Component {
     this.enableBackups = this.enableBackups.bind(this);
     this.componentDidMount = this.componentDidMount.bind(this);
     this.renderTabs = renderTabs.bind(this);
-    this.loadLinode = loadLinode.bind(this);
     this.state = { errors: {} };
   }
 

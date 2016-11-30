@@ -17,6 +17,15 @@ import {
 import { setSource } from '~/actions/source';
 
 export class IndexPage extends Component {
+  static async preload(store) {
+    try {
+      await store.dispatch(linodes.all());
+      // TODO: Start until on transient linodes
+    } catch (response) {
+      store.dispatch(setError(response));
+    }
+  }
+
   constructor() {
     super();
     this.renderGroup = this.renderGroup.bind(this);
@@ -32,12 +41,6 @@ export class IndexPage extends Component {
     const { dispatch } = this.props;
 
     dispatch(setSource(__filename));
-    try {
-      await dispatch(linodes.all());
-      // TODO: Start until on transient linodes
-    } catch (response) {
-      dispatch(setError(response));
-    }
   }
 
   componentWillUnmount() {
