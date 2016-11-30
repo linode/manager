@@ -60,9 +60,11 @@ class LoadingRouterContext extends RouterContext {
       this.fetching = false;
 
       // Set anything at all to force an update
-      this.setState({
-        updateNow: 'please',
-      });
+      if (!this.initialLoad) {
+        this.setState({
+          updateNow: 'please',
+        });
+      }
     });
   }
 
