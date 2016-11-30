@@ -46,7 +46,7 @@
         }
 
         &-body {
-            right: 0;
+            height: calc(100% - #{$nav-height});
         }
     }
 
@@ -77,14 +77,16 @@
     }
 
     &-body {
-        -webkit-transition: all .05s ease-out;
-        -moz-transition: all .05s ease-out;
-        -o-transition: all .05s ease-out;
-        -ms-transition: all .05s ease-out;
+        $speed: .3s;
+
+        -webkit-transition: all $speed ease-in;
+        -moz-transition: all $speed ease-in;
+        -o-transition: all $speed ease-in;
+        -ms-transition: all $speed ease-in;
         position: fixed;
         top: $nav-height - 1;
-        bottom: 0;
-        right: -$notifications-width;
+        height: 0;
+        right: 0;
         width: $notifications-width;
         max-width: 100%;
         background: $gray;
