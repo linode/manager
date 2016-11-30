@@ -12,6 +12,20 @@ import { setError } from '~/actions/errors';
 import { setSource } from '~/actions/source';
 
 export class IndexPage extends Component {
+  static async preload(store, newParams) {
+    const { dispatch } = store;
+    try {
+      await dispatch(parallel(
+        distributions.all(),
+        datacenters.all(),
+        types.all(),
+        linodes.all(),
+      ));
+    } catch (response) {
+      dispatch(setError(response));
+    }
+  }
+
   constructor() {
     super();
     this.onSubmit = this.onSubmit.bind(this);
@@ -30,16 +44,6 @@ export class IndexPage extends Component {
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
-    try {
-      await dispatch(parallel(
-        distributions.all(),
-        datacenters.all(),
-        types.all(),
-        linodes.all(),
-      ));
-    } catch (response) {
-      dispatch(setError(response));
-    }
     const { location } = this.props;
     if (location.query && location.query.linode && location.query.backup) {
       let _linodes = this.props.linodes;
