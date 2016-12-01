@@ -64,6 +64,23 @@
         left: -1px;
         background-color: $green;
         height: 22px;
+        background-image: linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);
+        background-size: 30px 30px;
+        -webkit-animation-name: spin; /* Safari 4.0 - 8.0 */
+        -webkit-animation-duration: 2s; /* Safari 4.0 - 8.0 */
+        -webkit-animation-iteration-count: infinite;
+        -webkit-animation-timing-function: linear;
+        animation-name: spin;
+        animation-duration: 2s;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear;
     }
-
+    @-webkit-keyframes spin {
+        0% {background-position: 0px 0px;}
+        100% {background-position: 0px 60px;}
+    }
+    @keyframes spin {
+        0% {background-position: 0px 0px;}
+        100% {background-position: 0px 60px;}
+    }
 }
