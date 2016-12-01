@@ -15,6 +15,8 @@ import {
   toggleSelected,
 } from '../actions';
 import { setSource } from '~/actions/source';
+import Confirm from '~/components/Confirm';
+import { showModal, hideModal } from '~/actions/modal';
 
 export class IndexPage extends Component {
   static async preload(store) {
@@ -79,13 +81,36 @@ export class IndexPage extends Component {
   }
 
   doToSelected(action) {
+    const { linodes } = this.props.linodes;
+    const { selected } = this.props;
+    Object.keys(selected).map(id => action(linodes[id]));
+    if (action !== this.toggle) {
+      Object.keys(selected).map(id => this.toggle(linodes[id]));
+    }
+  }
+
+  massAction(action) {
     return () => {
-      const { linodes } = this.props.linodes;
-      const { selected } = this.props;
-      Object.keys(selected).map(id => action(linodes[id]));
-      if (action !== this.toggle) {
-        Object.keys(selected).map(id => this.toggle(linodes[id]));
+      if (action !== this.remove) {
+        this.doToSelected(action);
+        return;
       }
+
+      const { dispatch } = this.props;
+
+      dispatch(showModal('Confirm deletion',
+        <Confirm
+          buttonText="Delete all selected Linodes"
+          onOk={() => {
+            this.doToSelected(action);
+            dispatch(hideModal());
+          }}
+          onCancel={() => dispatch(hideModal())}
+        >
+          Are you sure you want to delete all selected Linodes?
+          This operation cannot be undone.
+        </Confirm>
+      ));
     };
   }
 
@@ -140,7 +165,7 @@ export class IndexPage extends Component {
       { _action: this.powerOn, name: 'Power on' },
       { _action: this.powerOff, name: 'Power off' },
       { _action: this.remove, name: 'Delete' },
-    ].map(element => ({ ...element, action: this.doToSelected(element._action) }));
+    ].map(element => ({ ...element, action: this.massAction(element._action) }));
 
     return <Dropdown elements={elements} />;
   }
