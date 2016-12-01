@@ -3,7 +3,7 @@ import sinon from 'sinon';
 import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 
-import * as fetch from '~/fetch';
+import { state } from '@/data';
 import { testLinode } from '@/data/linodes';
 import { SHOW_MODAL } from '~/actions/modal';
 import { RescuePage } from '~/linodes/linode/layouts/RescuePage';
@@ -65,38 +65,17 @@ describe('linodes/linode/layouts/RescuePage', () => {
   };
 
   it('fetches linode disks', async () => {
-    await RescuePage.preload({ dispatch }, { linodeId: '1234' });
-    let dispatched = dispatch.secondCall.args[0];
-    // Assert that dispatched is a function that fetches disks
-    const fetchStub = sandbox.stub(fetch, 'fetch').returns({
-      json: () => {},
+    const _dispatch = sinon.stub();
+    await RescuePage.preload({ dispatch: _dispatch }, { linodeId: '1242' });
+
+    let fn = _dispatch.secondCall.args[0];
+    _dispatch.reset();
+    _dispatch.returns({ total_pages: 1, disks: [], total_results: 0 });
+    await fn(_dispatch, () => state);
+    fn = _dispatch.firstCall.args[0];
+    await expectRequest(fn, '/linode/instances/1242/disks/?page=1', undefined, {
+      disks: [],
     });
-    dispatch.reset();
-    const state = {
-      authentication: { token: 'token' },
-      api: {
-        linodes: {
-          ...linodes,
-          linodes: {
-            ...linodes.linodes,
-            [testLinode.id]: {
-              ...testLinode,
-              _disks: {
-                ...testLinode._disks,
-                totalPages: -1,
-                pagesFetched: [],
-              },
-            },
-          },
-        },
-      },
-    };
-    await dispatched(dispatch, () => state);
-    dispatched = dispatch.firstCall.args[0];
-    dispatch.reset();
-    await dispatched(dispatch, () => state);
-    expect(fetchStub.calledOnce).to.equal(true);
-    expect(fetchStub.firstCall.args[1]).to.equal('/linode/instances/1234/disks/?page=1');
   });
 
   describe('reset root password', () => {

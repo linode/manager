@@ -50,7 +50,7 @@ export class IndexPage extends Component {
       let linode = _linodes.linodes[location.query.linode];
       if (linode) {
         await dispatch(linodes.backups.all(
-          location.query.linode, location.query.backup));
+          [location.query.linode], [location.query.backup]));
         _linodes = this.props.linodes;
         linode = _linodes.linodes[location.query.linode];
         const backup = linode._backups.backups[location.query.backup];
@@ -65,11 +65,10 @@ export class IndexPage extends Component {
     }
   }
 
-  async onSubmit({ group, labels, password, backups }) {
+  async onSubmit({ group, label, password, backups }) {
     const { dispatch } = this.props;
     try {
       this.setState({ loading: true });
-      const [label] = labels;
       const linode = await this.createLinode({ group, label, password, backups });
       dispatch(linodes.until(l => l.status !== 'provisioning', linode.id));
       this.setState({ loading: false });

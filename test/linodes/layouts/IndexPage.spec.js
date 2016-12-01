@@ -2,15 +2,18 @@ import React from 'react';
 import sinon from 'sinon';
 import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
+import _ from 'lodash';
 
 import { IndexPage } from '~/linodes/layouts/IndexPage';
 import { TOGGLE_SELECTED, CHANGE_VIEW } from '~/linodes/actions/index';
-import { api } from '@/data';
+import { api, state, freshState } from '@/data';
 import { testLinode } from '@/data/linodes';
 import Dropdown from '~/components/Dropdown';
 import { SET_ERROR } from '~/actions/errors';
 import { expectRequest } from '@/common.js';
 import { linodes as thunks } from '~/api';
+import { actions as linodeActions } from '~/api/configs/linodes';
+import { OBJECT_POLLING_INTERVAL } from '~/constants';
 
 const { linodes } = api;
 
@@ -43,6 +46,132 @@ describe('linodes/layouts/IndexPage', () => {
       status: 400,
       statusText: 'Bad Request',
     }));
+  });
+
+  it('calls attachLinodesTimeout and setSourceLink on mount', () => {
+    const page = shallow(
+      <IndexPage
+        dispatch={dispatch}
+        view="grid"
+        selected={{}}
+        linodes={linodes}
+      />
+    );
+
+    const attachLinodesTimeoutStub = sandbox.stub(page.instance(), 'attachLinodesTimeout');
+    const setSourceLinkStub = sandbox.stub(page.instance(), 'setSourceLink');
+
+    page.instance().componentDidMount();
+
+    expect(attachLinodesTimeoutStub.calledOnce).to.equal(true);
+    expect(setSourceLinkStub.calledOnce).to.equal(true);
+  });
+
+  it('clears the timeout on unmount', () => {
+    const clearTimeoutStub = sandbox.stub(window, 'clearTimeout');
+
+    const page = shallow(
+      <IndexPage
+        dispatch={dispatch}
+        view="grid"
+        selected={{}}
+        linodes={linodes}
+      />
+    );
+
+    page.instance()._eventTimeout = 12;
+    page.instance().componentWillUnmount();
+
+    expect(clearTimeoutStub.calledOnce).to.equal(true);
+    expect(clearTimeoutStub.firstCall.args[0]).to.equal(12);
+  });
+
+  it('attaches the linode timeout', async () => {
+    const _dispatch = sandbox.stub();
+
+    const page = shallow(
+      <IndexPage
+        dispatch={_dispatch}
+        view="grid"
+        selected={{}}
+        linodes={linodes}
+      />
+    );
+
+    const setTimeoutStub = sandbox.stub(window, 'setTimeout', (resolve, delay) => {
+      expect(delay).to.equal(OBJECT_POLLING_INTERVAL);
+      resolve();
+    });
+
+    // Save the original function for future use.
+    const originalAttachLinodesTimeout = page.instance().attachLinodesTimeout.bind(page.instance());
+
+    let firstTime = true;
+    let attachLinodesTimeoutStub;
+    // Wrapper to promisify the non-async stub
+    const r = new Promise(resolve => {
+      attachLinodesTimeoutStub = sandbox.stub(page.instance(), 'attachLinodesTimeout', async () => {
+        // Prevent this function from looping.
+        if (firstTime) {
+          firstTime = false;
+          await originalAttachLinodesTimeout();
+          resolve();
+        }
+      });
+    });
+
+    _dispatch.reset();
+    page.instance().attachLinodesTimeout();
+    await r;
+
+    expect(setTimeoutStub.calledOnce).to.equal(true);
+    // call to invalidate + call to linodes.all + calls to delete all linodes
+    const numCalls = 2 + Object.keys(state.api.linodes.linodes).length;
+    expect(_dispatch.callCount).to.equal(numCalls);
+
+    // We'll reset _dispatch later
+    const oldArgs = _dispatch.args;
+
+    // invalidate call was made
+    expect(oldArgs[0][0]).to.deep.equal(linodeActions.invalidate([], true));
+
+    // fetch all call was made
+    let fn = _dispatch.args[1][0];
+    _dispatch.reset();
+    _dispatch.returns({ total_pages: 1, linodes: [], total_results: 0 });
+    await fn(_dispatch, () => freshState);
+    fn = _dispatch.firstCall.args[0];
+    await expectRequest(fn, '/linode/instances/?page=1', undefined, {
+      linodes: [],
+    });
+
+    // N delete calls were made
+    const sortedLinodes = _.sortBy(Object.values(state.api.linodes.linodes), 'id');
+    for (let i = 2; i < numCalls; i += 1) {
+      const linodeAtIndex = sortedLinodes[i - 2];
+      expect(oldArgs[i][0]).to.deep.equal(linodeActions.delete(linodeAtIndex.id));
+    }
+
+    expect(attachLinodesTimeoutStub.calledTwice).to.equal(true);
+  });
+
+  it('filters fetched linodes', () => {
+    const page = shallow(
+      <IndexPage
+        dispatch={dispatch}
+        view="grid"
+        selected={{}}
+        linodes={linodes}
+      />
+    );
+
+    const deletedLinodes = { 1234: 1 };
+    const filterClosure = page.instance().filterLinodeUpdates(deletedLinodes);
+    dispatch.reset();
+
+    filterClosure({ id: 1234, status: 'booting' });
+    expect(deletedLinodes['1234']).to.equal(undefined);
+    expect(dispatch.calledOnce).to.equal(true);
   });
 
   it('renders a grid of Linodes', () => {
