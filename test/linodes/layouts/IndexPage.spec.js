@@ -130,8 +130,34 @@ describe('linodes/layouts/IndexPage', () => {
     ['reboots selected linodes when reboot is pressed', 'Reboot', '/reboot'],
     ['shuts down selected linodes when power off is pressed', 'Power off', '/shutdown'],
     ['boots selected linodes when boot is pressed', 'Power on', '/boot'],
-    ['deletes selected linodes when deletes is pressed', 'Delete', ''],
   ].map(([name, button, endpoint]) => it(name, makePowerTest(button, endpoint)));
+
+  it('deletes selected linodes when delete is pressed', async () => {
+    const page = mount(
+      <IndexPage
+        dispatch={dispatch}
+        view="grid"
+        selected={{ 1234: true }}
+        linodes={linodes}
+      />);
+
+    dispatch.reset();
+
+    const actions = page.find(Dropdown).props().elements;
+    actions.find(a => a.name === 'Delete').action();
+
+    const modal = mount(dispatch.firstCall.args[0].body);
+
+    dispatch.reset();
+    modal.find('.btn-danger').simulate('click');
+
+    const fn = dispatch.firstCall.args[0];
+    await expectRequest(fn, '/linode/instances/1234', () => {}, null,
+      options => {
+        expect(options.method).to.equal('DELETE');
+      }
+    );
+  });
 
   it('renders a "select all" checkbox', () => {
     const page = shallow(
