@@ -47,8 +47,8 @@ export class IndexPage extends Component {
     const { linodeId } = newParams;
 
     try {
-      await store.dispatch(linodes.one(linodeId));
-      await store.dispatch(linodes.configs.all(linodeId));
+      await store.dispatch(linodes.one([linodeId]));
+      await store.dispatch(linodes.configs.all([linodeId]));
     } catch (e) {
       store.dispatch(setError(e));
     }

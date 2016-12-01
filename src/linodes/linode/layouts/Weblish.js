@@ -41,7 +41,7 @@ export class Weblish extends Component {
 
   async componentWillMount() {
     const { dispatch, params: { linodeId } } = this.props;
-    await dispatch(linodes.one(linodeId));
+    await dispatch(linodes.one([linodeId]));
     await this.connect();
   }
 

@@ -266,4 +266,16 @@ export const linodes = {
       configs: {},
     },
   },
+  1242: {
+    ...testLinode,
+    id: 1242,
+    label: 'Test Linode 1242',
+    status: 'running',
+    backups: { ...testLinode.backups, enabled: false },
+    _disks: {
+      totalResults: 0,
+      totalPages: -1,
+      disks: {},
+    },
+  },
 };

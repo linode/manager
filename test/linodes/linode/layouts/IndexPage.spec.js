@@ -106,13 +106,17 @@ describe('linodes/linode/layouts/IndexPage', () => {
   });
 
   it('preloads the configs', async () => {
-    await IndexPage.preload({ dispatch }, { linodeId: '1241' });
+    const _dispatch = sinon.stub();
+    await IndexPage.preload({ dispatch: _dispatch }, { linodeId: '1241' });
 
-    let fn = dispatch.secondCall.args[0];
-    dispatch.reset();
-    await fn(dispatch, () => state);
-    fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, '/linode/instances/1241/configs/?page=1');
+    let fn = _dispatch.secondCall.args[0];
+    _dispatch.reset();
+    _dispatch.returns({ total_pages: 1, configs: [], total_results: 0 });
+    await fn(_dispatch, () => state);
+    fn = _dispatch.firstCall.args[0];
+    await expectRequest(fn, '/linode/instances/1241/configs/?page=1', undefined, {
+      configs: [],
+    });
   });
 
   it('renders the linode label and group', () => {
