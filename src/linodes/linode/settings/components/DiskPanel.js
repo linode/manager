@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 
@@ -97,11 +96,11 @@ export class EditModal extends Component {
         </FormGroup>
         <ErrorSummary errors={errors} />
         <div className="modal-footer">
-          <Link
+          <button
             className="btn btn-cancel"
             disabled={loading}
             onClick={() => dispatch(hideModal())}
-          >Cancel</Link>
+          >Cancel</button>
           <button
             className="btn btn-primary"
             onClick={() => this.saveChanges()}
@@ -136,11 +135,11 @@ export class DeleteModal extends Component {
             {errors._.map(error => <div key={error}>{error}</div>)}
           </div> : null}
         <div className="modal-footer">
-          <Link
+          <button
             className="btn btn-cancel"
             disabled={loading}
             onClick={() => dispatch(hideModal())}
-          >Cancel</Link>
+          >Cancel</button>
           <button
             className="btn btn-danger"
             disabled={loading}
@@ -323,11 +322,11 @@ export class AddModal extends Component {
             {errors._.map(error => <div key={error}>{error}</div>)}
           </div> : null}
         <div className="modal-footer">
-          <Link
+          <button
             className="btn btn-cancel"
             disabled={loading}
             onClick={() => dispatch(hideModal())}
-          >Cancel</Link>
+          >Cancel</button>
           <button
             className="btn btn-primary"
             disabled={ready}
