@@ -107,7 +107,7 @@ export class IndexPage extends Component {
             <StatusDropdown
               shortcuts={false}
               linode={linode}
-              short={false}
+              short
               dispatch={this.props.dispatch}
             />
           </span>
