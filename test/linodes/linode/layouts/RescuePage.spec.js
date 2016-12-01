@@ -192,10 +192,27 @@ describe('linodes/linode/layouts/RescuePage', () => {
           params={{ linodeId: '1237' }}
         />);
       page.setState({ loading: false, disk: 1234, password: 'new password' });
-      page.find('button').simulate('click');
+      page.find('.reset-root-pw-button').simulate('click');
       expect(dispatch.calledOnce).to.equal(true);
       expect(dispatch.firstCall.args[0])
         .to.have.property('type').which.equals(SHOW_MODAL);
     });
+
+    it('shows disks in rescue mode', async () => {
+      const page = mount(
+        <RescuePage
+          dispatch={dispatch}
+          linodes={linodes}
+          params={{ linodeId: '1234' }}
+        />);
+      page.setState({ diskSlots: [12345, 12346] });
+      // iterate through the labels, there should be two disks and one for Finnix
+      expect(page.find('.label-col').map(node => node.text())).to.deep.equal([
+        '/dev/sda',
+        '/dev/sdb',
+        '/dev/sdh',
+      ]);
+    });
   });
 });
+
