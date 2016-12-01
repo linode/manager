@@ -76,7 +76,6 @@ export default class StatusDropdown extends Component {
         onMouseDown={action}
       >{name}</button>
     );
-
     const openClass = this.state.open ? 'open' : '';
     const progressContainer = this.props.short ? 'progress-cont' : 'progress-cont-long';
     if (LinodeStates.pending.indexOf(linode.status) !== -1) {
