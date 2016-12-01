@@ -122,15 +122,19 @@ EditModal.propTypes = {
 export class DeleteModal extends Component {
   constructor() {
     super();
-    this.state = { loading: false };
+    this.state = { loading: false, errors: { label: [], size: [], _: [] } };
   }
 
   render() {
     const { dispatch, linode, disk } = this.props;
-    const { loading } = this.state;
+    const { loading, errors } = this.state;
     return (
       <div>
         <p>Are you sure you want to delete this disk? This cannot be undone.</p>
+        {errors._.length ?
+          <div className="alert alert-danger">
+            {errors._.map(error => <div key={error}>{error}</div>)}
+          </div> : null}
         <div className="modal-footer">
           <Link
             className="btn btn-cancel"
