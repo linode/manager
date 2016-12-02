@@ -105,4 +105,12 @@ describe('linodes/components/StatusDropdown', () => {
     );
     expect(progress.find('.progress').length).to.equal(1);
   });
+
+  it('shows unrecognized status as offline', async () => {
+    const dispatch = sinon.spy();
+    const dropdown = shallow(
+      <StatusDropdown linode={linodes.linodes[1243]} dispatch={dispatch} />
+    );
+    expect(dropdown.find('.dropdown-toggle span').text()).to.equal('Offline');
+  });
 });
