@@ -279,7 +279,7 @@ export class EditConfigPage extends Component {
       ram_limit: parseInt(ramLimit, 10),
       run_level: runLevel,
       virt_mode: virtMode,
-      disks: diskSlots,
+      disks: {},
       root_device: rootDevice,
       helpers: {
         disable_updatedb: helpers.disableUpdatedb,
@@ -289,19 +289,18 @@ export class EditConfigPage extends Component {
       },
     };
 
+    diskSlots.forEach((id, i) => {
+      data.disks[AVAILABLE_DISK_SLOTS[i]] = id;
+    });
+
     try {
       if (this.props.create) {
         await dispatch(linodes.configs.post(data, linode.id));
       } else {
         const configId = this.getConfig().id;
-
-        // PUT endpoint accepts disks differently.
-        const disksByDevice = {};
-        data.disks.forEach((id, i) => {
-          disksByDevice[AVAILABLE_DISK_SLOTS[i]] = { id };
+        diskSlots.forEach((id, i) => {
+          data.disks[AVAILABLE_DISK_SLOTS[i]] = { id };
         });
-        data.disks = disksByDevice;
-
         await dispatch(linodes.configs.put(data, linode.id, configId));
       }
 
