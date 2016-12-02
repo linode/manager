@@ -278,4 +278,11 @@ export const linodes = {
       disks: {},
     },
   },
+  1243: {
+    ...testLinode,
+    id: 1243,
+    label: 'Test Linode 1243',
+    status: 'unrecognized',
+    backups: { ...testLinode.backups, enabled: false },
+  },
 };
