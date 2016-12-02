@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 
@@ -97,11 +96,11 @@ export class EditModal extends Component {
         </FormGroup>
         <ErrorSummary errors={errors} />
         <div className="modal-footer">
-          <Link
+          <button
             className="btn btn-cancel"
             disabled={loading}
             onClick={() => dispatch(hideModal())}
-          >Cancel</Link>
+          >Cancel</button>
           <button
             className="btn btn-primary"
             onClick={() => this.saveChanges()}
@@ -122,30 +121,58 @@ EditModal.propTypes = {
 export class DeleteModal extends Component {
   constructor() {
     super();
-    this.state = { loading: false };
+    this.state = { loading: false, errors: { label: [], size: [], _: [] } };
   }
 
-  render() {
+  async deleteDisk() {
     const { dispatch, linode, disk } = this.props;
-    const { loading } = this.state;
+    this.setState({ loading: true });
+    try {
+      await dispatch(linodes.disks.delete(linode.id, disk.id));
+      this.setState({ loading: false });
+      dispatch(hideModal());
+    } catch (response) {
+      const json = await response.json();
+      const reducer = f => (s, e) => {
+        if (e.field === f) {
+          return s ? [...s, e.reason] : [e.reason];
+        }
+        return s;
+      };
+      this.setState({
+        loading: false,
+        errors: {
+          label: json.errors.reduce(reducer('label'), []),
+          size: json.errors.reduce(reducer('size'), []),
+          _: json.errors.reduce((s, e) =>
+            ['label', 'size'].indexOf(e.field) === -1 ?
+            [...s, e.reason] : [...s], []),
+        },
+      });
+    }
+  }
+
+
+  render() {
+    const { dispatch } = this.props;
+    const { loading, errors } = this.state;
     return (
       <div>
         <p>Are you sure you want to delete this disk? This cannot be undone.</p>
+        {errors._.length ?
+          <div className="alert alert-danger">
+            {errors._.map(error => <div key={error}>{error}</div>)}
+          </div> : null}
         <div className="modal-footer">
-          <Link
+          <button
             className="btn btn-cancel"
             disabled={loading}
             onClick={() => dispatch(hideModal())}
-          >Cancel</Link>
+          >Cancel</button>
           <button
             className="btn btn-danger"
             disabled={loading}
-            onClick={async () => {
-              this.setState({ loading: true });
-              await dispatch(linodes.disks.delete(linode.id, disk.id));
-              this.setState({ loading: false });
-              dispatch(hideModal());
-            }}
+            onClick={() => this.deleteDisk()}
           >Delete disk</button>
         </div>
       </div>);
@@ -319,11 +346,11 @@ export class AddModal extends Component {
             {errors._.map(error => <div key={error}>{error}</div>)}
           </div> : null}
         <div className="modal-footer">
-          <Link
+          <button
             className="btn btn-cancel"
             disabled={loading}
             onClick={() => dispatch(hideModal())}
-          >Cancel</Link>
+          >Cancel</button>
           <button
             className="btn btn-primary"
             disabled={ready}

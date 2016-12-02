@@ -283,10 +283,9 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
           {...props}
           dispatch={() => {}}
         />);
-
       expect(modal.find('p').length).to.equal(1);
       expect(modal.find('.btn-cancel').length).to.equal(1);
-      expect(modal.find('button').length).to.equal(1);
+      expect(modal.find('button').length).to.equal(2);
     });
 
     it('should close when Nevermind is clicked', () => {
