@@ -108,7 +108,7 @@ export default class StatusDropdown extends Component {
           disabled={LinodeStates.pending.indexOf(linode.status) !== -1}
         >
           <span>
-            {LinodeStatesReadable[linode.status]}
+            {LinodeStatesReadable[linode.status] || 'Offline'}
           </span>
           <i className="fa fa-caret-down" />
         </button>
