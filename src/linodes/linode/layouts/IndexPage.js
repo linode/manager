@@ -91,8 +91,7 @@ export class IndexPage extends Component {
 
   renderHeader() {
     const linode = this.getLinode();
-
-    const renderConfigSelect = linode._configs.totalResults > 1 &&
+    const renderConfigSelect = Object.keys(linode._configs.configs).length > 1 &&
       LinodeStates.pending.indexOf(linode.status) === -1;
 
     return (
