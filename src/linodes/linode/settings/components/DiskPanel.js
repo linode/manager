@@ -124,8 +124,37 @@ export class DeleteModal extends Component {
     this.state = { loading: false, errors: { label: [], size: [], _: [] } };
   }
 
-  render() {
+  async deleteDisk() {
     const { dispatch, linode, disk } = this.props;
+    this.setState({ loading: true });
+    try {
+      await dispatch(linodes.disks.delete(linode.id, disk.id));
+      this.setState({ loading: false });
+      dispatch(hideModal());
+    } catch (response) {
+      const json = await response.json();
+      const reducer = f => (s, e) => {
+        if (e.field === f) {
+          return s ? [...s, e.reason] : [e.reason];
+        }
+        return s;
+      };
+      this.setState({
+        loading: false,
+        errors: {
+          label: json.errors.reduce(reducer('label'), []),
+          size: json.errors.reduce(reducer('size'), []),
+          _: json.errors.reduce((s, e) =>
+            ['label', 'size'].indexOf(e.field) === -1 ?
+            [...s, e.reason] : [...s], []),
+        },
+      });
+    }
+  }
+
+
+  render() {
+    const { dispatch } = this.props;
     const { loading, errors } = this.state;
     return (
       <div>
@@ -143,12 +172,7 @@ export class DeleteModal extends Component {
           <button
             className="btn btn-danger"
             disabled={loading}
-            onClick={async () => {
-              this.setState({ loading: true });
-              await dispatch(linodes.disks.delete(linode.id, disk.id));
-              this.setState({ loading: false });
-              dispatch(hideModal());
-            }}
+            onClick={() => this.deleteDisk()}
           >Delete disk</button>
         </div>
       </div>);
