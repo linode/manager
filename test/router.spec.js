@@ -39,11 +39,13 @@ describe('loading router context', () => {
   });
 
   it('should prevent updates while preload is running', async () => {
+    let resolvePreload = null;
+
     const preload = async (store, params) => {
       expect(params).to.equal('some params');
 
       return new Promise((resolve) => {
-        setTimeout(() => resolve(), 100);
+        resolvePreload = resolve;
       });
     };
 
@@ -60,8 +62,9 @@ describe('loading router context', () => {
 
     expect(rc.shouldComponentUpdate()).to.equal(false);
 
+    resolvePreload();
     await new Promise((resolve) => {
-      setTimeout(() => resolve(), 200);
+      setTimeout(resolve, 0);
     });
 
     expect(rc.shouldComponentUpdate()).to.equal(true);

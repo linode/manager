@@ -2,7 +2,7 @@ import { RouterContext } from 'react-router';
 import store from './store';
 
 export class LoadingRouterContext extends RouterContext {
-  runPreload(newProps) {
+  async runPreload(newProps) {
     // Suppress component update until after route preloads have finished
     this.fetching = true;
 
