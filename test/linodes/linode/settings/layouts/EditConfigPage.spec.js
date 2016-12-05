@@ -109,7 +109,7 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
     const removeDiskSlot = sandbox.stub(page.instance(), 'removeDiskSlot');
 
     const removeBtn = page.find('.disk-slot .btn-cancel').at(0);
-    expect(removeBtn.text()).to.equal('Remove slot');
+    expect(removeBtn.text()).to.equal('Remove');
     removeBtn.simulate('click');
     expect(removeDiskSlot.calledOnce).to.equal(true);
   });
@@ -132,7 +132,7 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
     const addDiskSlot = sandbox.stub(page.instance(), 'addDiskSlot');
 
     const addBtn = page.find('.disk-slot .btn-cancel').at(0);
-    expect(addBtn.text()).to.equal('Add slot');
+    expect(addBtn.text()).to.equal('Add');
     addBtn.simulate('click');
     expect(addDiskSlot.calledOnce).to.equal(true);
   });

@@ -89,7 +89,7 @@ export function renderDiskSlot(device, index) {
       className="btn btn-cancel"
       disabled={loading}
       onClick={() => this.addDiskSlot()}
-    >Add slot</button>
+    >Add</button>
   ) : null;
 
   const deleteButton = index > 0 && index === diskSlots.length - 1 ? (
@@ -98,7 +98,7 @@ export function renderDiskSlot(device, index) {
       className="btn btn-cancel"
       disabled={loading}
       onClick={() => this.removeDiskSlot(device)}
-    >Remove slot</button>
+    >Remove</button>
   ) : null;
 
   return (
