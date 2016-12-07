@@ -79,7 +79,7 @@ function addMeta(config, item) {
     _.reduce(config.subresources, (acc, conf, key) => (
       { ...acc, [key]: { ...genDefaultState(conf) } }), { })
     : undefined;
-  return { ...item, _polling: false, ...subs };
+  return { ...item, _polling: false, ...subs, __updatedAt: new Date() };
 }
 
 export function genReducer(_config) {
@@ -95,6 +95,7 @@ export function genReducer(_config) {
         [id]: {
           ...previous,
           ...next,
+          __updatedAt: new Date(),
         },
       },
     };
@@ -115,6 +116,7 @@ export function genReducer(_config) {
             [i.id]: state[config.plural][i.id] ? {
               ...state[config.plural][i.id],
               ...i,
+              __updatedAt: new Date(),
             } : addMeta(config, i),
           }), { }),
       },
@@ -125,6 +127,7 @@ export function genReducer(_config) {
     const id = action.ids[action.ids.length - 1];
     return {
       ...state,
+      __updatedAt: new Date(),
       [config.plural]: _.omit(state[config.plural], id),
     };
   }
@@ -149,6 +152,7 @@ export function genReducer(_config) {
       }
     }
 
+    newState.__updatedAt = new Date();
     return newState;
   }
 
