@@ -68,12 +68,12 @@ export class IndexPage extends Component {
         // eslint-disable-next-line no-param-reassign
         delete deletedLinodes[id];
 
-        const linode = this.props.linodes.linodes[id.toString()];
+        const linodeInLocalState = this.props.linodes.linodes[id.toString()];
         // Start polling for changes if the linode status changed and it's not already polling.
-        if (linode.status !== status && !linode._polling) {
+        if (linodeInLocalState.status !== status && !linodeInLocalState._polling) {
           try {
             dispatch(linodes.until(
-              l => l.status === LINODE_STATUS_TRANSITION_RESULT[linode.status], id));
+              l => l.status === LINODE_STATUS_TRANSITION_RESULT[linodeInLocalState.status], id));
           } catch (response) {
             // TODO: handle polling error
             // eslint-disable-next-line no-console
@@ -99,6 +99,7 @@ export class IndexPage extends Component {
     });
 
     const deletedLinodes = { ...this.props.linodes.linodes };
+    // Mark for invalidation later
     await dispatch(linodeActions.invalidate([], true));
     const filter = this.filterLinodeUpdates(deletedLinodes);
     await dispatch(linodes.all([], filter));
