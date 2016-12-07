@@ -29,9 +29,9 @@ export class LoadingRouterContext extends RouterContext {
         });
       }
 
-      const preload_indicator = document.getElementById('preload_indicator');
-      if (preload_indicator) {
-        preload_indicator.className = 'preload_indicator_done';
+      const preloadIndicator = document.getElementById('preload_indicator');
+      if (preloadIndicator) {
+        preloadIndicator.className = 'preload_indicator_done';
       }
     });
   }
@@ -51,14 +51,14 @@ export class LoadingRouterContext extends RouterContext {
 
     this.fetching = true;
 
-    const preload_indicator = document.getElementById('preload_indicator');
-    if (preload_indicator) {
-      preload_indicator.className = 'preload_indicator';
+    const preloadIndicator = document.getElementById('preload_indicator');
+    if (preloadIndicator) {
+      preloadIndicator.className = 'preload_indicator';
 
       // Timeout to let the default (reset) className take effect before
       // starting the running transition
       setTimeout(() => {
-        preload_indicator.className = 'preload_indicator_running';
+        preloadIndicator.className = 'preload_indicator_running';
         this.runPreload(newProps);
       }, 0);
 
