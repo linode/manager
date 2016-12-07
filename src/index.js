@@ -2,14 +2,14 @@ import 'babel-polyfill';
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import store from './store';
-import { Router, Route, match, IndexRedirect, browserHistory } from 'react-router';
-import DevTools from './components/DevTools';
+import { Router, Route, IndexRedirect, browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import ReactGA from 'react-ga';
-import { GA_ID } from './constants';
 
-import checkLogin, { initializeAuthentication } from './session';
+import { store } from './store';
+import DevTools from './components/DevTools';
+import { GA_ID } from './constants';
+import { initializeAuthentication } from './session';
 
 // eslint-disable-next-line no-unused-vars
 import styles from '../scss/manager.scss';
@@ -48,19 +48,17 @@ const init = () => {
         <Router
           history={history}
           onUpdate={logPageView}
-          render={props => <LoadingRouterContext match={match} {...props} />}
+          render={props => <LoadingRouterContext {...props} />}
         >
           <Route
             path="/logout"
             component={Logout}
           />
           <Route
-            onEnter={checkLogin}
             path="/linodes/:linodeId/weblish"
             component={Weblish}
           />
           <Route
-            onEnter={checkLogin}
             onChange={() => store.dispatch(hideModal())}
             path="/"
             component={Layout}

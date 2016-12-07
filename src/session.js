@@ -1,4 +1,4 @@
-import store from '~/store';
+import { store } from '~/store';
 import { APP_ROOT, LOGIN_ROOT } from './constants';
 import { clientId } from './secrets';
 import { SET_TOKEN } from './actions/authentication';
@@ -17,7 +17,20 @@ export function initializeAuthentication(dispatch) {
   dispatch(action);
 }
 
-export default function checkLogin(next) {
+export function redirect(location) {
+  window.location = location;
+}
+
+export function loginAuthorizePath(returnTo) {
+  /* eslint-disable prefer-template */
+  return `${LOGIN_ROOT}/oauth/authorize?` +
+         `client_id=${clientId}` +
+         '&scopes=*' +
+         `&redirect_uri=${encodeURIComponent(APP_ROOT)}/oauth/callback?return=${returnTo}`;
+  /* eslint-enable prefer-template */
+}
+
+export function checkLogin(next) {
   const state = store.getState();
   if (next.location.pathname !== '/oauth/callback'
       && state.authentication.token === null) {
@@ -26,12 +39,10 @@ export default function checkLogin(next) {
               ...a,
               `${k}=${encodeURIComponent(next.location.query[k])}`,
             ], []).join('%26');
-    /* eslint-disable prefer-template */
-    window.location = `${LOGIN_ROOT}/oauth/authorize?` +
-      `client_id=${clientId}` +
-      '&scopes=*' +
-      `&redirect_uri=${encodeURIComponent(APP_ROOT)}/oauth/callback?return=` +
-            encodeURIComponent(next.location.pathname + (query ? '%3F' + query : ''));
-    /* eslint-enable prefer-template */
+
+    // During testing we'll need to be able to replace this.
+    const { redirect } = module.exports;
+    redirect(loginAuthorizePath(
+      encodeURIComponent(`${next.location.pathname}${query ? `%3F${query}` : ''}`)));
   }
 }
