@@ -162,14 +162,14 @@ export class IndexPage extends Component {
 
       dispatch(showModal('Confirm deletion',
         <Confirm
-          buttonText="Delete all selected Linodes"
+          buttonText="Delete selected Linodes"
           onOk={() => {
             this.doToSelected(action);
             dispatch(hideModal());
           }}
           onCancel={() => dispatch(hideModal())}
         >
-          Are you sure you want to delete all selected Linodes?
+          Are you sure you want to delete selected Linodes?
           This operation cannot be undone.
         </Confirm>
       ));
