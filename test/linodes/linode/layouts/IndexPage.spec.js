@@ -54,8 +54,7 @@ describe('linodes/linode/layouts/IndexPage/renderTabs', async () => {
     const tabs = page.find('Tabs').find('Tab');
     expect(tabs.length).to.equal(tabList.length);
     tabList.forEach(({ name, link }, i) => {
-      const a = tabs.at(i).find({ to: link });
-      expect(a.children().text()).to.equal(name);
+      expect(tabs.at(i).children().text()).to.equal(name);
     });
   });
 
@@ -68,8 +67,8 @@ describe('linodes/linode/layouts/IndexPage/renderTabs', async () => {
         tabList={tabList}
       />
     );
-    const tabs = page.find('Tabs');
-    tabs.props().onSelect(1);
+    const tabs = page.find('Tabs').find('Tab');
+    tabs.at(1).simulate('click');
     expect(dispatch.calledWith(push('/two'))).to.equal(true);
   });
 });
@@ -168,8 +167,7 @@ describe('linodes/linode/layouts/IndexPage', () => {
     const tabs = page.find('Tabs').find('Tab');
     expect(tabs.length).to.equal(tabList.length);
     tabList.forEach(({ name, link }, i) => {
-      const a = tabs.at(i).find({ to: link });
-      expect(a.children().text()).to.equal(name);
+      expect(tabs.at(i).children().text()).to.equal(name);
     });
   });
 

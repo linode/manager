@@ -28,6 +28,11 @@ export class LoadingRouterContext extends RouterContext {
           updateNow: 'please',
         });
       }
+
+      const preload_indicator = document.getElementById('preload_indicator');
+      if (preload_indicator) {
+        preload_indicator.className = 'preload_indicator_done';
+      }
     });
   }
 
@@ -42,6 +47,22 @@ export class LoadingRouterContext extends RouterContext {
   componentWillReceiveProps(newProps) {
     if (super.componentWillReceiveProps) {
       super.componentWillReceiveProps(newProps);
+    }
+
+    this.fetching = true;
+
+    const preload_indicator = document.getElementById('preload_indicator');
+    if (preload_indicator) {
+      preload_indicator.className = 'preload_indicator';
+
+      // Timeout to let the default (reset) className take effect before
+      // starting the running transition
+      setTimeout(() => {
+        preload_indicator.className = 'preload_indicator_running';
+        this.runPreload(newProps);
+      }, 0);
+
+      return;
     }
 
     this.runPreload(newProps);

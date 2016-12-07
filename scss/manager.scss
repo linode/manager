@@ -7,6 +7,36 @@
 @import 'linodes/index.scss';
 @import 'layout/index.scss';
 
+#preload_indicator {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    right: 100%;
+    background-color: $green;
+    height: 3px;
+    z-index: 1000;
+    opacity: 0;
+
+    &.preload_indicator_running {
+        opacity: 100;
+        right: 65%;
+
+        -webkit-transition: right 2s ease-out;
+        -moz-transition: right 2s ease-out;
+        -o-transition: right 2s ease-out;
+        -ms-transition: right 2s ease-out;
+    }
+
+    &.preload_indicator_done {
+        right: 0px;
+
+        -webkit-transition: right .2s ease-in, opacity 1s ease-out .2s;
+        -moz-transition: right .2s ease-in, opacity 1s ease-out .2s;
+        -o-transition: right .2s ease-in, opacity 1s ease-out .2s;
+        -ms-transition: right .2s ease-in, opacity 1s ease-out .2s;
+    }
+}
+
 .btn, a {
     transition: background .35s, color .2s, border .1s;
 }
