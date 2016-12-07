@@ -65,7 +65,6 @@
     "mocha": "^2.3.4",
     "mocha-lcov-reporter": "^1.2.0",
     "mockdate": "^1.0.4",
-    "password-generator": "^2.0.2",
     "phantomjs-polyfill": "0.0.2",
     "phantomjs-prebuilt": "^2.1.7",
     "redux-devtools": "^3.3.1",

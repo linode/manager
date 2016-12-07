@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-import generatePassword from 'password-generator';
 import zxcvbn from 'zxcvbn';
 
 export default class PasswordInput extends Component {
@@ -34,14 +33,6 @@ export default class PasswordInput extends Component {
           autoComplete="off"
           type={this.state.type}
         />
-        <button
-          type="button"
-          className="btn btn-secondary"
-          onClick={() => {
-            this.onPasswordChange({ target: { value: generatePassword(30, false) } });
-            this.setState({ type: 'text' });
-          }}
-        >Generate</button>
         <div className="form-group">
           <div className={`strength strength-${this.state.strength.score}`}>
             <span></span>

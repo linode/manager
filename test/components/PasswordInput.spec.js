@@ -20,16 +20,6 @@ describe('components/PasswordInput', () => {
     expect(input.find('input[type="password"]').length).to.equal(1);
   });
 
-  it('should render a generate button', () => {
-    const input = shallow(
-      <PasswordInput
-        passwordType="offline_fast_hashing_1e10_per_second"
-        onChange={() => {}}
-      />);
-    expect(input.find('button').length).to.equal(1);
-    expect(input.find('button').text()).to.equal('Generate');
-  });
-
   it('should render a password strength meter', () => {
     const input = shallow(
       <PasswordInput
