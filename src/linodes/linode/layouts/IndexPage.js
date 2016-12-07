@@ -16,18 +16,28 @@ export function getLinode() {
   return linodes ? linodes[linodeId] : null;
 }
 
+class LinodeTabs extends Tabs {
+  constructor(props) {
+    super(props);
+
+    // By default, when a tab is clicked, the body of the control changes to
+    // blank before anything's actually been loaded to replace it. This just
+    // prevents that.
+    this.handleClick = () => {};
+  }
+}
+
 export function renderTabs(tabList, selected, isSubtab = false) {
   const { dispatch } = this.props;
 
   return (
-    <Tabs
-      onSelect={ix => dispatch(push(tabList[ix].link))}
+    <LinodeTabs
       selectedIndex={tabList.indexOf(selected)}
     >
       <TabList>
         {tabList.map(t => (
           <Tab key={t.name} onClick={() => dispatch(push(t.link))}>
-            <Link to={t.link} onClick={e => e.preventDefault()}>{t.name}</Link>
+            {t.name}
           </Tab>
         ))}
       </TabList>
@@ -38,7 +48,7 @@ export function renderTabs(tabList, selected, isSubtab = false) {
           </div>
         </TabPanel>
        ))}
-    </Tabs>
+    </LinodeTabs>
   );
 }
 
