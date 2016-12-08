@@ -49,13 +49,11 @@ export class SummaryPage extends Component {
     const daily = backups.find(b => b.availability === 'daily');
     const snapshot = backups.find(b => b.type === 'snapshot');
 
-    var weeklies = backups.filter(b => b.availability === 'weekly');
-    weeklies.sort((a, b) => {
-      return Date.parse(a.created) - Date.parse(b.created);
-    });
+    const weeklies = backups.filter(b => b.availability === 'weekly');
+    weeklies.sort((a, b) => Date.parse(b.created) - Date.parse(a.created));
 
-    const weekly = backups.length >= 1 ? backups[0] : undefined;
-    const biweekly = backups.length >= 2 ? backups[1] : undefined;
+    const weekly = weeklies.length >= 1 ? weeklies[0] : undefined;
+    const biweekly = weeklies.length >= 2 ? weeklies[1] : undefined;
 
     const blocks = [
       this.renderBlock('Daily', daily),
