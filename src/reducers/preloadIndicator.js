@@ -1,14 +1,14 @@
 import {
   PRELOAD_RESET,
   PRELOAD_START,
-  PRELOAD_STOP
-} from '../actions/preload_indicator.js';
+  PRELOAD_STOP,
+} from '../actions/preloadIndicator.js';
 
 const defaultState = {
   mode: 'reset',
 };
 
-export default function preload_indicator(state = defaultState, action) {
+export default function preloadIndicator(state = defaultState, action) {
   switch (action.type) {
     case PRELOAD_RESET:
       return { ...state, mode: 'reset' };

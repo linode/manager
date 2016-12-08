@@ -1,6 +1,6 @@
-export const PRELOAD_RESET = '@@preload_indicator/PRELOAD_RESET';
-export const PRELOAD_START = '@@preload_indicator/PRELOAD_START';
-export const PRELOAD_STOP = '@@preload_indicator/PRELOAD_STOP';
+export const PRELOAD_RESET = '@@preloadIndicator/PRELOAD_RESET';
+export const PRELOAD_START = '@@preloadIndicator/PRELOAD_START';
+export const PRELOAD_STOP = '@@preloadIndicator/PRELOAD_STOP';
 
 export function preloadReset() {
   return { type: PRELOAD_RESET };

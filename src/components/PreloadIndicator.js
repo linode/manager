@@ -1,14 +1,10 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { preloadStart } from '~/actions/preload_indicator';
-
-export class PreloadIndicator extends Component {
-  render() {
-    const { mode } = this.props;
-    const cls = mode === 'reset' ? '' : `PreloadIndicator--${mode}`;
-    return <div className={ `PreloadIndicator ${cls}` } />;
-  }
+export function PreloadIndicator(props) {
+  const { mode } = props;
+  const cls = mode === 'reset' ? '' : `PreloadIndicator--${mode}`;
+  return <div className={`PreloadIndicator ${cls}`} />;
 }
 
 PreloadIndicator.propTypes = {
@@ -17,7 +13,7 @@ PreloadIndicator.propTypes = {
 
 function select(state) {
   return {
-    mode: state.preload_indicator.mode,
+    mode: state.preloadIndicator.mode,
   };
 }
 

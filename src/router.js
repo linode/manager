@@ -4,8 +4,8 @@ import store from './store';
 import {
   preloadReset,
   preloadStart,
-  preloadStop
-} from '~/actions/preload_indicator';
+  preloadStop,
+} from '~/actions/preloadIndicator';
 
 export class LoadingRouterContext extends RouterContext {
   async runPreload(newProps) {
