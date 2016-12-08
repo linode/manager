@@ -1,6 +1,12 @@
 import { RouterContext } from 'react-router';
 import store from './store';
 
+import {
+  preloadReset,
+  preloadStart,
+  preloadStop
+} from '~/actions/preload_indicator';
+
 export class LoadingRouterContext extends RouterContext {
   async runPreload(newProps) {
     // Suppress component update until after route preloads have finished
@@ -29,11 +35,7 @@ export class LoadingRouterContext extends RouterContext {
         });
       }
 
-      const preloadIndicator = document.getElementById('preload_indicator');
-      if (preloadIndicator) {
-        preloadIndicator.className =
-          'PreloadIndicator PreloadIndicator--done';
-      }
+      setTimeout(() => store.dispatch(preloadStop()), 0);
     });
   }
 
@@ -45,27 +47,15 @@ export class LoadingRouterContext extends RouterContext {
     this.runPreload(props);
   }
 
-  componentWillReceiveProps(newProps) {
+  async componentWillReceiveProps(newProps) {
     if (super.componentWillReceiveProps) {
       super.componentWillReceiveProps(newProps);
     }
 
     this.fetching = true;
 
-    const preloadIndicator = document.getElementById('preload_indicator');
-    if (preloadIndicator) {
-      preloadIndicator.className = 'PreloadIndicator';
-
-      // Timeout to let the default (reset) className take effect before
-      // starting the running transition
-      setTimeout(() => {
-        preloadIndicator.className =
-          'PreloadIndicator PreloadIndicator--running';
-        this.runPreload(newProps);
-      }, 0);
-
-      return;
-    }
+    store.dispatch(preloadReset());
+    setTimeout(() => store.dispatch(preloadStart()), 0);
 
     this.runPreload(newProps);
   }

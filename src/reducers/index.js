@@ -10,6 +10,7 @@ import source from './source';
 import api from '../api/reducer';
 import errors from './errors';
 import linodes from '../linodes/reducers';
+import preload_indicator from './preload_indicator';
 
 const appReducer = combineReducers({
   routing: routerReducer,
@@ -21,6 +22,7 @@ const appReducer = combineReducers({
   api,
   linodes,
   errors,
+  preload_indicator,
 });
 
 export default function rootReducer(state, action) {
