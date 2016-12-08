@@ -7,7 +7,7 @@
 @import 'linodes/index.scss';
 @import 'layout/index.scss';
 
-#preload_indicator {
+.PreloadIndicator {
     position: absolute;
     left: 0px;
     top: 0px;
@@ -17,7 +17,7 @@
     z-index: 1000;
     opacity: 0;
 
-    &.preload_indicator_running {
+    &--running {
         opacity: 100;
         right: 65%;
 
@@ -27,7 +27,7 @@
         -ms-transition: right 2s ease-out;
     }
 
-    &.preload_indicator_done {
+    &--done {
         right: 0px;
 
         -webkit-transition: right .2s ease-in, opacity 1s ease-out .2s;

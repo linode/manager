@@ -63,7 +63,7 @@ export default function Header(props) {
     <div className="Header">
       {!showInfobar ? null : infobar}
       {main}
-      <div id="preload_indicator" />
+      <div id="preload_indicator" className="PreloadIndicator" />
     </div>
   );
 }

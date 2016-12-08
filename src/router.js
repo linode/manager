@@ -31,7 +31,8 @@ export class LoadingRouterContext extends RouterContext {
 
       const preloadIndicator = document.getElementById('preload_indicator');
       if (preloadIndicator) {
-        preloadIndicator.className = 'preload_indicator_done';
+        preloadIndicator.className =
+          'PreloadIndicator PreloadIndicator--done';
       }
     });
   }
@@ -53,12 +54,13 @@ export class LoadingRouterContext extends RouterContext {
 
     const preloadIndicator = document.getElementById('preload_indicator');
     if (preloadIndicator) {
-      preloadIndicator.className = 'preload_indicator';
+      preloadIndicator.className = 'PreloadIndicator';
 
       // Timeout to let the default (reset) className take effect before
       // starting the running transition
       setTimeout(() => {
-        preloadIndicator.className = 'preload_indicator_running';
+        preloadIndicator.className =
+          'PreloadIndicator PreloadIndicator--running';
         this.runPreload(newProps);
       }, 0);
 
