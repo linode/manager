@@ -788,6 +788,17 @@ footer {
         color: $light-black;
         margin-bottom: $main-padding-tb/3;
     }
+
+    tr.display-group {
+        border-left: 0;
+        font-size: $font-small;
+
+        td {
+            background: $light-gray;
+            padding-bottom: 0;
+            padding-left: 0;
+        }
+    }
 }
 
 section.card header + .react-tabs {
