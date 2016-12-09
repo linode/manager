@@ -210,15 +210,40 @@ export class IndexPage extends Component {
       );
     }
 
+    const ret = sortedLinodes.map(l => renderLinode(l, true));
+
+    if (group) {
+      ret.splice(0, 0, (
+        <tr className="display-group">
+          <td>{group}</td>
+        </tr>
+      ));
+    }
+
+    return ret;
+  }
+
+  renderLinodes(linodes) {
+    const groups = _.map(
+      _.sortBy(
+        _.map(
+          _.groupBy(Object.values(linodes), l => l.group),
+          (_linodes, _group) => ({ group: _group, linodes: _linodes })
+        ), lg => lg.group
+      ), this.renderGroup);
+
+    const { view } = this.props;
+
+    if (view === 'grid') {
+      return groups;
+    }
+
     return (
-      <section key={group} className="linodes">
-        {group ? <h3 className="display-group">{group}</h3> : ''}
-        <table className="linodes">
-          <tbody>
-            {sortedLinodes.map(l => renderLinode(l, true))}
-          </tbody>
-        </table>
-      </section>
+      <table className="linodes">
+        <tbody>
+          {groups}
+        </tbody>
+      </table>
     );
   }
 
@@ -267,14 +292,6 @@ export class IndexPage extends Component {
       </span>
     );
 
-    const renderLinodes = () => _.map(
-      _.sortBy(
-        _.map(
-          _.groupBy(Object.values(linodes), l => l.group),
-          (_linodes, _group) => ({ group: _group, linodes: _linodes })
-        ), lg => lg.group
-      ), this.renderGroup);
-
     return (
       <div className={`container linodes-page ${view}`}>
         <header>
@@ -297,7 +314,7 @@ export class IndexPage extends Component {
             </div>
           </div>
         </header>
-        {Object.keys(this.props.linodes.linodes).length ? renderLinodes() :
+        {Object.keys(this.props.linodes.linodes).length ? this.renderLinodes(linodes) :
           <CreateHelper label="Linodes" href="/linodes/create" linkText="Add a Linode" />}
       </div>
     );
