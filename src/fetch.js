@@ -1,7 +1,7 @@
 import * as isomorphicFetch from 'isomorphic-fetch';
 
-import store from '~/store';
-import checkLogin from '~/session';
+import { store } from '~/store';
+import { checkLogin } from '~/session';
 import { setToken } from '~/actions/authentication';
 import { API_ROOT } from './constants';
 

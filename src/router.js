@@ -1,22 +1,34 @@
-import { RouterContext } from 'react-router';
-import store from './store';
+import { RouterContext, match } from 'react-router';
 
+import { store } from './store';
+import { checkLogin } from './session';
 import {
   preloadReset,
   preloadStart,
   preloadStop,
 } from '~/actions/preloadIndicator';
 
+
+// This wraps the react-router match function so that we can await it
+// and replace it easily in tests.
+function matchPromise(_ref, callback) {
+  return new Promise(resolve => {
+    match(_ref, (...args) => {
+      callback(...args, resolve);
+    });
+  });
+}
+
 export class LoadingRouterContext extends RouterContext {
   async runPreload(newProps) {
     // Suppress component update until after route preloads have finished
     this.fetching = true;
 
-    this.match({
+    await this.match({
       routes: newProps.routes,
       location: newProps.location.pathname,
-    }, async (error, redirectLocation, redirectParams) => {
-      // Call preload (if present) on any components rendered by the route,
+    }, async (error, redirectLocation, redirectParams, done) => {
+      // Call preload if present on any components rendered by the route,
       // down to the page level (Layout -> IndexPage -> EditConfigPage)
       for (let i = 0; i < redirectParams.routes.length; i++) {
         const component = redirectParams.routes[i].component;
@@ -36,15 +48,25 @@ export class LoadingRouterContext extends RouterContext {
       }
 
       setTimeout(() => store.dispatch(preloadStop()), 0);
+      done();
     });
   }
 
   constructor(props) {
-    super();
+    super(props);
     this.match = props.match;
-    this.fetching = false;
+    this.fetching = true;
     this.initialLoad = true;
-    this.runPreload(props);
+  }
+
+  async componentWillMount() {
+    const ret = checkLogin(this.props);
+    if (ret) {
+      return;
+    }
+
+    // Necessary to await this for testing
+    await this.runPreload(this.props);
   }
 
   async componentWillReceiveProps(newProps) {
@@ -76,3 +98,7 @@ export class LoadingRouterContext extends RouterContext {
     return super.render();
   }
 }
+
+LoadingRouterContext.defaultProps = {
+  match: matchPromise,
+};

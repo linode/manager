@@ -5,6 +5,7 @@ import { changeView } from '~/linodes/actions';
 import { LOGIN_ROOT } from '~/constants';
 import { logout } from '~/actions/authentication';
 import { setSession } from './OAuth';
+import { redirect } from '~/session';
 
 export class Logout extends Component {
   constructor() {
@@ -37,7 +38,7 @@ Logout.propTypes = {
 };
 
 Logout.defaultProps = {
-  redirect: (location) => { window.location = location; },
+  redirect,
 };
 
 export default connect()(Logout);
