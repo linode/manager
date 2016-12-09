@@ -2,6 +2,12 @@ import { RouterContext, match } from 'react-router';
 
 import { store } from './store';
 import { checkLogin } from './session';
+import {
+  preloadReset,
+  preloadStart,
+  preloadStop,
+} from '~/actions/preloadIndicator';
+
 
 // This wraps the react-router match function so that we can await it
 // and replace it easily in tests.
@@ -12,12 +18,6 @@ function matchPromise(_ref, callback) {
     });
   });
 }
-
-import {
-  preloadReset,
-  preloadStart,
-  preloadStop,
-} from '~/actions/preloadIndicator';
 
 export class LoadingRouterContext extends RouterContext {
   async runPreload(newProps) {
@@ -53,14 +53,18 @@ export class LoadingRouterContext extends RouterContext {
   }
 
   constructor(props) {
-    super();
+    super(props);
     this.match = props.match;
-    this.fetching = false;
+    this.fetching = true;
     this.initialLoad = true;
   }
 
   async componentWillMount() {
-    checkLogin(this.props);
+    const ret = checkLogin(this.props);
+    if (ret) {
+      return;
+    }
+
     // Necessary to await this for testing
     await this.runPreload(this.props);
   }

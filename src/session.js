@@ -42,7 +42,11 @@ export function checkLogin(next) {
 
     // During testing we'll need to be able to replace this.
     const { redirect } = module.exports;
-    redirect(loginAuthorizePath(
-      encodeURIComponent(`${next.location.pathname}${query ? `%3F${query}` : ''}`)));
+    const redirectTo = loginAuthorizePath(
+      encodeURIComponent(`${next.location.pathname}${query ? `%3F${query}` : ''}`));
+    redirect(redirectTo);
+    return redirectTo;
   }
+
+  return null;
 }

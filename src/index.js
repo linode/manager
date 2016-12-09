@@ -40,6 +40,15 @@ function logPageView() {
   ReactGA.pageview(window.location.pathname);
 }
 
+function fillInMissingProps(props) {
+  // This randomly started not being passed in but is required by RouterContext.
+  if (!props.createElement) {
+    return { ...props, createElement: (C, props) => <C {...props} /> };
+  }
+
+  return props;
+}
+
 const init = () => {
   render(
     <Provider store={store}>
@@ -48,7 +57,7 @@ const init = () => {
         <Router
           history={history}
           onUpdate={logPageView}
-          render={props => <LoadingRouterContext {...props} />}
+          render={props => <LoadingRouterContext {...fillInMissingProps(props)} />}
         >
           <Route
             path="/logout"

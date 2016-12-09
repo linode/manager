@@ -15,9 +15,9 @@ export function configureStore(initialState) {
   const store = createStore(reducer, initialState, composedEnhancers);
 
   if (module.hot) {
-    module.hot.accept('../reducers', () =>
+    module.hot.accept('./reducers', () =>
       // eslint-disable-next-line global-require
-      store.replaceReducer(require('../reducers')['default'])
+      store.replaceReducer(require('./reducers')['default'])
     );
   }
 
