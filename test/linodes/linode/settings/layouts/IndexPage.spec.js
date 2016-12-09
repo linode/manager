@@ -33,8 +33,7 @@ describe('linodes/linode/settings/layouts/IndexPage', () => {
     const tabs = page.find('Tabs').find('Tab');
     expect(tabs.length).to.equal(tabList.length);
     tabList.forEach(({ name, link }, i) => {
-      const a = tabs.at(i).find({ to: link });
-      expect(a.children().text()).to.equal(name);
+      expect(tabs.at(i).children().text()).to.equal(name);
     });
   });
 });
