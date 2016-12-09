@@ -1,6 +1,12 @@
 import { RouterContext } from 'react-router';
 import store from './store';
 
+import {
+  preloadReset,
+  preloadStart,
+  preloadStop,
+} from '~/actions/preloadIndicator';
+
 export class LoadingRouterContext extends RouterContext {
   async runPreload(newProps) {
     // Suppress component update until after route preloads have finished
@@ -28,6 +34,8 @@ export class LoadingRouterContext extends RouterContext {
           updateNow: 'please',
         });
       }
+
+      setTimeout(() => store.dispatch(preloadStop()), 0);
     });
   }
 
@@ -39,10 +47,15 @@ export class LoadingRouterContext extends RouterContext {
     this.runPreload(props);
   }
 
-  componentWillReceiveProps(newProps) {
+  async componentWillReceiveProps(newProps) {
     if (super.componentWillReceiveProps) {
       super.componentWillReceiveProps(newProps);
     }
+
+    this.fetching = true;
+
+    store.dispatch(preloadReset());
+    setTimeout(() => store.dispatch(preloadStart()), 0);
 
     this.runPreload(newProps);
   }
