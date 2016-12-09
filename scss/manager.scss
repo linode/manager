@@ -14,7 +14,7 @@
     right: 100%;
     background-color: $green;
     height: 3px;
-    z-index: 10000;
+    z-index: $preload-z-index;
     opacity: 0;
 
     &--running {
