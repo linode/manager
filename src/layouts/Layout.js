@@ -16,7 +16,7 @@ import { hideModal } from '~/actions/modal';
 import { showNotifications, hideNotifications } from '~/actions/notifications';
 import { showFeedback, hideFeedback } from '~/actions/feedback';
 
-const EVENT_LOOKUP_DELAY = 50000 * 1000; // milliseconds
+const EVENT_LOOKUP_DELAY = 5 * 1000; // milliseconds
 
 export class Layout extends Component {
   constructor() {
