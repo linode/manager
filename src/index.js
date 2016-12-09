@@ -2,14 +2,14 @@ import 'babel-polyfill';
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import store from './store';
-import { Router, Route, match, IndexRedirect, browserHistory } from 'react-router';
-import DevTools from './components/DevTools';
+import { Router, Route, IndexRedirect, browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import ReactGA from 'react-ga';
-import { GA_ID } from './constants';
 
-import checkLogin, { initializeAuthentication } from './session';
+import { store } from './store';
+import DevTools from './components/DevTools';
+import { GA_ID } from './constants';
+import { initializeAuthentication } from './session';
 
 // eslint-disable-next-line no-unused-vars
 import styles from '../scss/manager.scss';
@@ -40,6 +40,15 @@ function logPageView() {
   ReactGA.pageview(window.location.pathname);
 }
 
+function fillInMissingProps(props) {
+  // This randomly started not being passed in but is required by RouterContext.
+  if (!props.createElement) {
+    return { ...props, createElement: (C, props) => <C {...props} /> };
+  }
+
+  return props;
+}
+
 const init = () => {
   render(
     <Provider store={store}>
@@ -48,19 +57,17 @@ const init = () => {
         <Router
           history={history}
           onUpdate={logPageView}
-          render={props => <LoadingRouterContext match={match} {...props} />}
+          render={props => <LoadingRouterContext {...fillInMissingProps(props)} />}
         >
           <Route
             path="/logout"
             component={Logout}
           />
           <Route
-            onEnter={checkLogin}
             path="/linodes/:linodeId/weblish"
             component={Weblish}
           />
           <Route
-            onEnter={checkLogin}
             onChange={() => store.dispatch(hideModal())}
             path="/"
             component={Layout}
