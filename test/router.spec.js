@@ -28,8 +28,10 @@ describe('router/LoadingRouterContext', () => {
       />
     );
 
+    match.reset();
+    checkLoginStub.reset();
     await rc.instance().componentWillMount();
-    expect(match.callCount).to.equal(2); // We call it once, react-router will also call it once.
+    expect(match.callCount).to.equal(1);
     expect(checkLoginStub.callCount).to.equal(1);
   });
 
