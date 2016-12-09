@@ -790,9 +790,8 @@ footer {
     }
 
     tr.display-group {
-        color: $light-black;
         border-left: 0;
-        font-size: 1.15rem;
+        font-size: $font-small;
 
         td {
             background: $light-gray;
