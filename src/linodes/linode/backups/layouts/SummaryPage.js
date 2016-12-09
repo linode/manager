@@ -32,7 +32,7 @@ export class SummaryPage extends Component {
 
     return (
       <div className="col-sm-3" key={title}>
-        <Link to={`backups/${backup.id}`}>
+        <Link to={`${backup.id}`}>
           <div className="backup-block clickable">
             <div className="title">{title}</div>
             <div className="description">{`${days} ${unit}`}</div>
@@ -46,12 +46,19 @@ export class SummaryPage extends Component {
     const backups = Object.values(this.getLinode()._backups.backups);
     backups.sort((a, b) => a.created > b.created);
 
+    const daily = backups.find(b => b.availability === 'daily');
     const snapshot = backups.find(b => b.type === 'snapshot');
 
+    const weeklies = backups.filter(b => b.availability === 'weekly');
+    weeklies.sort((a, b) => Date.parse(b.created) - Date.parse(a.created));
+
+    const weekly = weeklies.length >= 1 ? weeklies[0] : undefined;
+    const biweekly = weeklies.length >= 2 ? weeklies[1] : undefined;
+
     const blocks = [
-      this.renderBlock('Daily', undefined),
-      this.renderBlock('Weekly', undefined),
-      this.renderBlock('Biweekly', undefined),
+      this.renderBlock('Daily', daily),
+      this.renderBlock('Weekly', weekly),
+      this.renderBlock('Biweekly', biweekly),
       this.renderBlock('Snapshot', snapshot),
     ];
 

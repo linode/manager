@@ -15,12 +15,12 @@ describe('linodes/linode/backups/layouts/SummaryPage', () => {
     sandbox.restore();
   });
 
-  it('renders backup blocks', () => {
+  it('renders backup blocks with no backups present', () => {
     const page = shallow(
       <SummaryPage
         dispatch={dispatch}
         linodes={api.linodes}
-        params={{ linodeId: '1234' }}
+        params={{ linodeId: '1236' }}
       />
     );
 
@@ -35,10 +35,30 @@ describe('linodes/linode/backups/layouts/SummaryPage', () => {
     testBlock(blocks.at(0), 'Daily', 'Pending');
     testBlock(blocks.at(1), 'Weekly', 'Pending');
     testBlock(blocks.at(2), 'Biweekly', 'Pending');
-    testBlock(blocks.at(3), 'Snapshot', 'days');
+    testBlock(blocks.at(3), 'Snapshot', 'Pending');
+  });
 
-    const snapshotLink = page.find({ to: 'backups/54778593' });
-    expect(snapshotLink.length).to.equal(1);
-    expect(snapshotLink.find('.title').text()).to.equal('Snapshot');
+  it('renders backup blocks with all backups present', () => {
+    const page = shallow(
+      <SummaryPage
+        dispatch={dispatch}
+        linodes={api.linodes}
+        params={{ linodeId: '1235' }}
+      />
+    );
+
+    const blocks = page.find('.backup-block');
+    expect(blocks.length).to.equal(4);
+
+    const testBlock = (block, title, description, id) => {
+      expect(block.parent().props().to).to.equal(id);
+      expect(block.find('.title').text()).to.equal(title);
+      expect(block.find('.description').text()).to.contain(description);
+    };
+
+    testBlock(blocks.at(0), 'Daily', 'days', '54778593');
+    testBlock(blocks.at(1), 'Weekly', 'days', '54778594');
+    testBlock(blocks.at(2), 'Biweekly', 'days', '54778595');
+    testBlock(blocks.at(3), 'Snapshot', 'days', '54778596');
   });
 });
