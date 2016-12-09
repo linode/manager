@@ -64,6 +64,7 @@ export const testLinode = {
         created: '2016-06-09T15:05:55',
         finished: '2016-06-09T15:06:55',
         status: 'successful',
+        availability: 'daily',
         datacenter: {
           label: 'Newark, NJ',
           id: 'newark',
@@ -71,7 +72,7 @@ export const testLinode = {
       },
       54778596: {
         type: 'snapshot',
-        id: 54778593,
+        id: 54778596,
         created: '2016-06-09T15:11:55',
         finished: '2016-06-09T15:12:55',
         status: 'successful',
@@ -178,6 +179,37 @@ export const linodes = {
     group: '',
     created: '2016-07-06T16:50:27',
     backups: { ...testLinode.backups, enabled: false },
+    _backups: {
+      ...testLinode._backups,
+      totalResults: 4,
+      backups: {
+        ...testLinode._backups.backups,
+        54778594: {
+          type: 'auto',
+          id: 54778594,
+          created: '2016-06-08T15:05:55',
+          finished: '2016-06-08T15:06:55',
+          status: 'successful',
+          availability: 'weekly',
+          datacenter: {
+            label: 'Newark, NJ',
+            id: 'newark',
+          },
+        },
+        54778595: {
+          type: 'auto',
+          id: 54778595,
+          created: '2016-06-01T15:05:55',
+          finished: '2016-06-01T15:06:55',
+          status: 'successful',
+          availability: 'weekly',
+          datacenter: {
+            label: 'Newark, NJ',
+            id: 'newark',
+          },
+        },
+      },
+    },
   },
   1236: {
     ...testLinode,
@@ -186,6 +218,11 @@ export const linodes = {
     status: 'offline',
     created: '2016-07-06T16:48:27',
     backups: { ...testLinode.backups, enabled: false },
+    _backups: {
+      ...testLinode._backups,
+      totalResults: 0,
+      backups: {},
+    },
   },
   1237: {
     ...testLinode,
