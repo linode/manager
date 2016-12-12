@@ -56,7 +56,7 @@ export function rebuildLinode(id, config = null) {
     };
   }
 
-  return linodeAction(id, 'rebuild', 'rebuilding', 'offline',
+  return linodeAction(id, 'rebuild', 'rebuilding',
                       JSON.stringify(config), handleRsp);
 }
 
