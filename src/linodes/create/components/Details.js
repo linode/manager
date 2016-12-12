@@ -114,6 +114,14 @@ export default class Details extends Component {
                 </div>
               </FormRow>
             </section>
+            {errors.__form ?
+              <section>
+                <div>
+                  <div className="alert alert-danger">
+                    {errors.__form}
+                  </div>
+                </div>
+              </section> : null}
             <section>
               <button
                 disabled={formDisabled}
