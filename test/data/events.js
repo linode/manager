@@ -3,7 +3,7 @@ export const apiTestEvent = {
   status: 'finished',
   stackscript_id: null,
   updated: '2016-11-21T20:03:40',
-  linode_id: 2019675,
+  linode_id: 1237,
   read: false,
   finished: null,
   percent_complete: 100,
@@ -26,6 +26,6 @@ export const events = {
     id: 386,
     read: true,
     updated: '2016-11-21T20:12:40',
-    linode_id: 2019677,
+    linode_id: 1237,
   },
 };

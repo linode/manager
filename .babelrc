@@ -2,7 +2,8 @@
   "presets": ["stage-0", "react", "es2015"],
   "compact": true,
   "plugins": [
-    "transform-runtime",
+  "transform-runtime",
+  "transform-class-properties",
     ["babel-root-import", [{
         "rootPathSuffix": "src"
     }, {
