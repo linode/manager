@@ -70,7 +70,7 @@ export class DisplayPage extends Component {
           <ErrorSummary errors={errors} />
           <div className="row">
             <div className="offset-sm-1 col-sm-4">
-              <button className="btn btn-primary" onClick={this.onSubmit}>Save</button>
+              <button className="btn" onClick={this.onSubmit}>Save</button>
             </div>
           </div>
         </form>

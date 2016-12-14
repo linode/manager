@@ -97,12 +97,12 @@ export class EditModal extends Component {
         <ErrorSummary errors={errors} />
         <div className="modal-footer">
           <button
-            className="btn btn-cancel"
+            className="btn"
             disabled={loading}
             onClick={() => dispatch(hideModal())}
           >Cancel</button>
           <button
-            className="btn btn-primary"
+            className="btn"
             onClick={() => this.saveChanges()}
             disabled={loading}
           >Save</button>
@@ -165,12 +165,12 @@ export class DeleteModal extends Component {
           </div> : null}
         <div className="modal-footer">
           <button
-            className="btn btn-cancel"
+            className="btn"
             disabled={loading}
             onClick={() => dispatch(hideModal())}
           >Cancel</button>
           <button
-            className="btn btn-danger"
+            className="btn"
             disabled={loading}
             onClick={() => this.deleteDisk()}
           >Delete disk</button>
@@ -347,12 +347,12 @@ export class AddModal extends Component {
           </div> : null}
         <div className="modal-footer">
           <button
-            className="btn btn-cancel"
+            className="btn"
             disabled={loading}
             onClick={() => dispatch(hideModal())}
           >Cancel</button>
           <button
-            className="btn btn-primary"
+            className="btn"
             disabled={ready}
             onClick={() => this.createDisk()}
           >Add disk</button>

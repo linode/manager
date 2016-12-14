@@ -54,10 +54,10 @@ export default class Feedback extends Component {
               </div>
               <div className="form-group clearfix">
                 <button
-                  className="btn btn-primary float-xs-left"
+                  className="btn float-xs-left"
                 >Submit</button>
                 <button
-                  className="btn btn-cancel float-xs-left"
+                  className="btn float-xs-left"
                   type="button"
                   onClick={hideShowFeedback}
                 >Cancel</button>

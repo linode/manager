@@ -24,7 +24,7 @@ export default class ConfirmModal extends Component {
         </p>
         <div className="modal-footer">
           <button
-            className="btn btn-cancel"
+            className="btn"
             disabled={loading}
             onClick={onCancel}
           >Cancel</button>

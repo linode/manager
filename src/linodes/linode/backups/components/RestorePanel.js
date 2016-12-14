@@ -35,7 +35,7 @@ export function restorePanel() {
         </div>
         <div className="form-group row restore-button">
           <div className="col-sm-12 label-col left">
-            <button type="submit" className="btn btn-primary">
+            <button type="submit" className="btn">
               Restore
             </button>
           </div>

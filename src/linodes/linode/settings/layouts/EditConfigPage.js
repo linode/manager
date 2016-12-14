@@ -86,7 +86,7 @@ export function renderDiskSlot(device, index) {
   const addButton = oneDiskSlotInUse || currentDisk && !allDisksInUse ? (
     <button
       type="button"
-      className="btn btn-cancel"
+      className="btn"
       disabled={loading}
       onClick={() => this.addDiskSlot()}
     >Add</button>
@@ -95,7 +95,7 @@ export function renderDiskSlot(device, index) {
   const deleteButton = index > 0 && index === diskSlots.length - 1 ? (
     <button
       type="button"
-      className="btn btn-cancel"
+      className="btn"
       disabled={loading}
       onClick={() => this.removeDiskSlot(device)}
     >Remove</button>
@@ -552,12 +552,12 @@ export class EditConfigPage extends Component {
           <div className="row">
             <div className="offset-sm-2 col-sm-10">
               <button
-                className="btn btn-primary"
+                className="btn"
                 disabled={loading}
                 onClick={() => this.saveChanges()}
               >{this.props.create ? 'Add config' : 'Save'}</button>
               <Link
-                className="btn btn-cancel"
+                className="btn"
                 to={`/linodes/${this.props.params.linodeId}/settings/advanced`}
               >Cancel</Link>
             </div>
