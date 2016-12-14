@@ -135,7 +135,7 @@ export class Layout extends Component {
           {!errors.status ?
            this.props.children :
            this.renderError()}
-          <footer className="text-xs-center navbar-fixed-bottom">
+          <footer className="text-xs-center">
             {!source || !source.source ? null :
               <a
                 target="__blank"
