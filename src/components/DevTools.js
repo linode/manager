@@ -13,4 +13,4 @@ const DevTools = createDevTools(
   </DockMonitor>
 );
 
-export default DevTools;
+export default process.env.NODE_ENV === 'production' ? () => null : DevTools;
