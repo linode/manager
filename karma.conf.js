@@ -56,6 +56,9 @@ module.exports = function(config) {
       },
       plugins: [
         new webpack.DefinePlugin({
+          'process.env': {
+            'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+          },
           ENV_API_ROOT: null,
           ENV_LOGIN_ROOT: null,
           ENV_APP_ROOT: null,

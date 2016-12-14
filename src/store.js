@@ -6,10 +6,12 @@ import { browserHistory } from 'react-router';
 import reducer from '~/reducers';
 import DevTools from '~/components/DevTools';
 
-const composedEnhancers = compose(
-  applyMiddleware(thunk, routerMiddleware(browserHistory)),
-  DevTools.instrument()
-);
+const enhancers = [applyMiddleware(thunk, routerMiddleware(browserHistory))];
+if (DevTools.instrument) {
+  enhancers.push(DevTools.instrument());
+}
+
+const composedEnhancers = compose(...enhancers);
 
 export function configureStore(initialState) {
   const store = createStore(reducer, initialState, composedEnhancers);
