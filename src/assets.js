@@ -8,7 +8,7 @@ import Ubuntu from 'file!../assets/distros/Ubuntu.png';
 import openSUSE from 'file!../assets/distros/OpenSUSE.png';
 
 export const distros = {
-  'Arch Linux': Arch, CentOS, Debian, Fedora, Gentoo, Slackware, Ubuntu, openSUSE,
+  Arch, CentOS, Debian, Fedora, Gentoo, Slackware, Ubuntu, openSUSE,
 };
 
 import us from 'flag-icon-css/flags/4x3/us.svg';
