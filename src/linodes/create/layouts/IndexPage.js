@@ -79,8 +79,15 @@ export class IndexPage extends Component {
       const { errors } = await response.json();
       const errorsByField = {};
       errors.forEach(({ field, reason }) => {
-        if (!(field in errorsByField)) errorsByField[field] = [];
-        errorsByField[field].push(reason);
+        // if the field is not defined the error response from the api
+        // corresponds to the whole form
+        if (typeof field === 'undefined') {
+          if (!('__form' in errorsByField)) errorsByField.__form = [];
+          errorsByField.__form.push(reason);
+        } else {
+          if (!(field in errorsByField)) errorsByField[field] = [];
+          errorsByField[field].push(reason);
+        }
       });
       this.setState({ loading: false, errors: errorsByField });
     }
