@@ -102,7 +102,7 @@ export class BackupPage extends Component {
         <div className="col-sm-3 label-col">
           Restore to
         </div>
-        <div className="col-sm-8 content-col right">
+        <div className="col-sm-9 content-col right">
           <select
             value={targetLinode}
             onChange={e => this.setState({ targetLinode: e.target.value })}
@@ -116,14 +116,14 @@ export class BackupPage extends Component {
     const takeSnapshot = [(
       <div className="form-group row" key="errors">
         <div className="col-sm-3 label-col"></div>
-        <div className="col-sm-8 content-col right">
+        <div className="col-sm-9 content-col right">
           <ErrorSummary errors={takeSnapshotErrors} />
         </div>
       </div>
     ), (
       <div className="form-group row" key="button">
         <div className="col-sm-3 label-col"></div>
-        <div className="col-sm-8 content-col right">
+        <div className="col-sm-9 content-col right">
           <button
             type="button"
             className="btn btn-default"
@@ -137,7 +137,7 @@ export class BackupPage extends Component {
     )];
 
     const bemField = name =>
-      `col-sm-8 content-col right LinodesLinodeBackupsBackupPage-${name}`;
+      `col-sm-9 content-col right LinodesLinodeBackupsBackupPage-${name}`;
 
     const label = (
       <div className="form-group row">
@@ -222,7 +222,7 @@ export class BackupPage extends Component {
           {restoreToField}
           <div className="form-group row">
             <div className="col-sm-3 label-col"></div>
-            <div className="col-sm-8 content-col right">
+            <div className="col-sm-9 content-col right checkbox">
               <label>
                 <input
                   id="destroy-all"
@@ -231,19 +231,19 @@ export class BackupPage extends Component {
                   name="overwrite"
                   onChange={() => this.setState({ overwrite: !overwrite })}
                 />
-                Destroy all current disks and backups
+                <span>Destroy all current disks and backups</span>
               </label>
             </div>
           </div>
           <div className="form-group row">
             <div className="col-sm-3 label-col"></div>
-            <div className="col-sm-8 content-col right">
+            <div className="col-sm-9 content-col right">
               <ErrorSummary errors={restoreErrors} />
             </div>
           </div>
           <div className="form-group row">
             <div className="col-sm-3 label-col"></div>
-            <div className="col-sm-8 content-col right">
+            <div className="col-sm-9 content-col right">
               <button
                 type="button"
                 className="btn btn-default"
