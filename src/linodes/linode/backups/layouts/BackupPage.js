@@ -41,7 +41,7 @@ export class BackupPage extends Component {
     const { dispatch } = this.props;
     const { linodeId } = this.props.params;
     try {
-      dispatch(takeBackup(linodeId));
+      await dispatch(takeBackup(linodeId));
     } catch (response) {
       const takeSnapshotErrors = await reduceErrors(response);
       this.setState({ takeSnapshotErrors });
@@ -53,7 +53,8 @@ export class BackupPage extends Component {
     const { linodeId, backupId } = this.props.params;
     const { targetLinode, overwrite } = this.state;
     try {
-      dispatch(restoreBackup(linodeId, targetLinode, backupId, overwrite));
+      await dispatch(
+        restoreBackup(linodeId, targetLinode, backupId, overwrite));
     } catch (response) {
       const restoreErrors = await reduceErrors(response);
       this.setState({ restoreErrors });
@@ -82,7 +83,7 @@ export class BackupPage extends Component {
     // TODO: key={d.id} when disk IDs are added to API
     const disks = backup.disks.map(d =>
       <div key={d.label}>
-        {d.id} {d.label} ({d.filesystem}) - {d.size}MB
+        {d.label} ({d.filesystem}) - {d.size}MB
       </div>
     );
 
