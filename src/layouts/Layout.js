@@ -2,7 +2,7 @@ import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { EVENT_LOOKUP_DELAY } from '~/constants';
+import { EVENT_POLLING_DELAY } from '~/constants';
 import { events } from '~/api';
 import { Event } from '~/api/objects/Event';
 import { actions as eventsActions } from '~/api/configs/events';
@@ -127,7 +127,7 @@ export class Layout extends Component {
 
     // And every N seconds
     await new Promise(resolve => {
-      this._eventTimeout = setTimeout(resolve, EVENT_LOOKUP_DELAY);
+      this._eventTimeout = setTimeout(resolve, EVENT_POLLING_DELAY);
     });
 
     const processedEvents = await this.fetchEventsPage(0);
