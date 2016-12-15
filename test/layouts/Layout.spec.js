@@ -125,16 +125,12 @@ describe('layouts/Layout', () => {
     expect(fetchBlogStub.callCount).to.equal(1);
   });
 
-  it('clears the timeout on unmount', () => {
-    const clearTimeoutStub = sandbox.stub(window, 'clearTimeout');
-
+  it('disables polling on unmount', () => {
     const page = shallow(makeLayout(dispatch));
 
-    page.instance()._eventTimeout = 12;
     page.instance().componentWillUnmount();
 
-    expect(clearTimeoutStub.callCount).to.equal(1);
-    expect(clearTimeoutStub.firstCall.args[0]).to.equal(12);
+    expect(page.instance()._shouldPoll).to.equal(false);
   });
 
   it('deals with individual events', () => {

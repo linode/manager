@@ -37,7 +37,7 @@ export class Layout extends Component {
   }
 
   componentWillUnmount() {
-    clearTimeout(this._eventTimeout);
+    this._shouldPoll = false;
   }
 
   async fetchBlog() {
@@ -122,13 +122,12 @@ export class Layout extends Component {
 
     // Grab events first time right away
     if (firstTime) {
+      this._shouldPoll = true;
       dispatch(events.all([], this.eventHandler));
     }
 
     // And every N seconds
-    await new Promise(resolve => {
-      this._eventTimeout = setTimeout(resolve, EVENT_POLLING_DELAY);
-    });
+    await new Promise(resolve => setTimeout(resolve, EVENT_POLLING_DELAY));
 
     const processedEvents = await this.fetchEventsPage(0);
     try {
@@ -137,7 +136,10 @@ export class Layout extends Component {
       // eslint-disable-next-line no-console
       console.error(e);
     }
-    this.attachEventTimeout(false);
+
+    if (this._shouldPoll) {
+      this.attachEventTimeout(false);
+    }
   }
 
   hideShow(type, hide, show) {
