@@ -50,6 +50,19 @@ export const apiTestLinode = {
   },
 };
 
+const testBackupDisks = [
+  {
+    label: 'root',
+    filesystem: 'ext4',
+    size: 2048,
+  },
+  {
+    label: 'swap',
+    filesystem: 'swap',
+    size: 1024,
+  },
+];
+
 export const testLinode = {
   ...apiTestLinode,
   _polling: false,
@@ -69,6 +82,10 @@ export const testLinode = {
           label: 'Newark, NJ',
           id: 'newark',
         },
+        configs: [
+          'Some config',
+        ],
+        disks: testBackupDisks,
       },
       54778596: {
         type: 'snapshot',
@@ -76,10 +93,15 @@ export const testLinode = {
         created: '2016-06-09T15:11:55',
         finished: '2016-06-09T15:12:55',
         status: 'successful',
+        label: 'Some snapshot',
         datacenter: {
           label: 'Newark, NJ',
           id: 'newark',
         },
+        configs: [
+          'Some config',
+        ],
+        disks: testBackupDisks,
       },
     },
   },

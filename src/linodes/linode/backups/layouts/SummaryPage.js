@@ -22,6 +22,8 @@ export class SummaryPage extends Component {
   }
 
   renderBlock(title, backup) {
+    const { linodeId } = this.props.params;
+
     if (backup === undefined || backup.finished === null) {
       return this.renderEmpty(title);
     }
@@ -32,7 +34,7 @@ export class SummaryPage extends Component {
 
     return (
       <div className="col-sm-3" key={title}>
-        <Link to={`${backup.id}`}>
+        <Link to={`/linodes/${linodeId}/backups/${backup.id}`}>
           <div className="backup-block clickable">
             <div className="title">{title}</div>
             <div className="description">{`${days} ${unit}`}</div>

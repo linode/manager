@@ -51,7 +51,8 @@ describe('linodes/linode/backups/layouts/SummaryPage', () => {
     expect(blocks.length).to.equal(4);
 
     const testBlock = (block, title, description, id) => {
-      expect(block.parent().props().to).to.equal(id);
+      expect(block.parent().props().to).to.equal(
+        `/linodes/1235/backups/${id}`);
       expect(block.find('.title').text()).to.equal(title);
       expect(block.find('.description').text()).to.contain(description);
     };
