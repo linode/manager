@@ -59,6 +59,7 @@ module.exports = function(config) {
           'process.env': {
             'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
           },
+          ENV_DEVTOOLS_ENABLED: null,
           ENV_API_ROOT: null,
           ENV_LOGIN_ROOT: null,
           ENV_APP_ROOT: null,

@@ -3,6 +3,8 @@ import { createDevTools } from 'redux-devtools';
 import LogMonitor from 'redux-devtools-log-monitor';
 import DockMonitor from 'redux-devtools-dock-monitor';
 
+import { DEVTOOLS_ENABLED } from '~/constants';
+
 const DevTools = createDevTools(
   <DockMonitor
     defaultIsVisible={false}
@@ -13,4 +15,4 @@ const DevTools = createDevTools(
   </DockMonitor>
 );
 
-export default process.env.NODE_ENV === 'production' ? () => null : DevTools;
+export default DEVTOOLS_ENABLED ? () => null : DevTools;

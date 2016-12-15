@@ -1,7 +1,12 @@
-export const API_ROOT = ENV_API_ROOT || 'https://api.alpha.linode.com/v4'; // eslint-disable-line no-undef
-export const LOGIN_ROOT = ENV_LOGIN_ROOT || 'https://login.alpha.linode.com'; // eslint-disable-line no-undef
-export const APP_ROOT = ENV_APP_ROOT || 'http://localhost:3000'; // eslint-disable-line no-undef
-export const GA_ID = ENV_GA_ID || '000000'; // eslint-disable-line no-undef
+/* eslint-disable no-undef */
+export const API_ROOT = ENV_API_ROOT || 'https://api.alpha.linode.com/v4';
+export const LOGIN_ROOT = ENV_LOGIN_ROOT || 'https://login.alpha.linode.com';
+export const APP_ROOT = ENV_APP_ROOT || 'http://localhost:3000';
+export const GA_ID = ENV_GA_ID || '000000';
+
+export const DEVTOOLS_ENABLED = ENV_DEVTOOLS_ENABLED || process.env.NODE_ENV !== 'production';
+
+/* eslint-enable no-undef */
 
 export const EVENT_POLLING_DELAY = 3000; // milliseconds
 
