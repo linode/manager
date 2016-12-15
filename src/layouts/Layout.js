@@ -117,28 +117,26 @@ export class Layout extends Component {
     return allProcessedEvents;
   }
 
-  async attachEventTimeout(firstTime = true) {
+  async attachEventTimeout() {
     const { dispatch } = this.props;
 
     // Grab events first time right away
-    if (firstTime) {
-      this._shouldPoll = true;
-      dispatch(events.all([], this.eventHandler));
-    }
+    this._shouldPoll = true;
+    dispatch(events.all([], this.eventHandler));
 
-    // And every N seconds
-    await new Promise(resolve => setTimeout(resolve, EVENT_POLLING_DELAY));
+    while (true) {
+      if (this._shouldPoll) {
+        // And every N seconds
+        await new Promise(resolve => setTimeout(resolve, EVENT_POLLING_DELAY));
 
-    const processedEvents = await this.fetchEventsPage(0);
-    try {
-      dispatch(eventsActions.many(processedEvents));
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.error(e);
-    }
-
-    if (this._shouldPoll) {
-      this.attachEventTimeout(false);
+        const processedEvents = await this.fetchEventsPage(0);
+        try {
+          dispatch(eventsActions.many(processedEvents));
+        } catch (e) {
+          // eslint-disable-next-line no-console
+          console.error(e);
+        }
+      }
     }
   }
 
