@@ -3,7 +3,7 @@ import React, { PropTypes } from 'react';
 import { Link } from '~/components/Link';
 
 export default function Header(props) {
-  const { username, emailHash, title, link, showInfobar, hideShowNotifications } = props;
+  const { username, emailHash, title, link, showInfobar, hideShowNotifications, events } = props;
   const gravatarLink = `https://gravatar.com/avatar/${emailHash}`;
 
   const infobar = (
@@ -24,7 +24,7 @@ export default function Header(props) {
     </div>
   );
 
-  const unseenNotifications = Object.values(props.events.events).reduce((unseen, e) =>
+  const unseenNotifications = Object.values(events.events).reduce((unseen, e) =>
     e.read ? unseen : unseen + 1, 0);
   const main = (
     <div className="MainHeader clearfix">

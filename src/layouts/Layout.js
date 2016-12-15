@@ -2,7 +2,9 @@ import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
+import { EVENT_POLLING_DELAY } from '~/constants';
 import { events } from '~/api';
+import { Event } from '~/api/objects/Event';
 import { actions as eventsActions } from '~/api/configs/events';
 import { eventRead } from '~/api/events';
 import Header from '~/components/Header';
@@ -15,12 +17,12 @@ import { rawFetch as fetch } from '~/fetch';
 import { hideModal } from '~/actions/modal';
 import { showNotifications, hideNotifications } from '~/actions/notifications';
 import { showFeedback, hideFeedback } from '~/actions/feedback';
-
-const EVENT_LOOKUP_DELAY = 5 * 1000; // milliseconds
+import { actions as linodeActions } from '~/api/configs/linodes';
 
 export class Layout extends Component {
   constructor() {
     super();
+    this.eventHandler = this.eventHandler.bind(this);
     this.renderError = this.renderError.bind(this);
     this.hideShowNotifications = this.hideShow(
       'notifications', hideNotifications, showNotifications).bind(this);
@@ -35,7 +37,7 @@ export class Layout extends Component {
   }
 
   componentWillUnmount() {
-    clearInterval(this._eventTimeout);
+    this._shouldPoll = false;
   }
 
   async fetchBlog() {
@@ -56,22 +58,87 @@ export class Layout extends Component {
     }
   }
 
-  async attachEventTimeout(firstTime = true) {
+  eventHandler(_event) {
+    const { dispatch, linodes } = this.props;
+    const event = new Event(_event);
+
+    switch (event.getType()) {
+      case Event.LINODE_REBOOT:
+      case Event.LINODE_BOOT:
+      case Event.LINODE_POWER_OFF: {
+        const linode = linodes.linodes[event.getLinodeId()];
+        if (linode) {
+          // Give a 1 second allowance.
+          linode.__updatedAt.setSeconds(linode.__updatedAt.getSeconds() - 1);
+          const newEvent = event.getUpdatedAt() > linode.__updatedAt;
+          const statusChanged = linode.status !== event.getStatus();
+          const changeInProgress = event.getProgress() < 100;
+          const progressMade = linode.__progress < event.getProgress();
+
+          if (newEvent && (statusChanged || changeInProgress && progressMade)) {
+            dispatch(linodeActions.one({
+              ...linode,
+              __progress: event.getProgress(),
+            }, linode.id));
+
+            setTimeout(() => dispatch(linodeActions.one({
+              ...linode,
+              status: event.getStatus(),
+              // For best UX, keep the below timeout length the same as the width transition for
+              // this component.
+            }, linode.id)), 1000);
+          }
+        }
+        break;
+      }
+      default:
+        break;
+    } // TODO: handle other cases
+
+    return _event;
+  }
+
+  async fetchEventsPage(page = 0, processedEvents = { events: [] }) {
+    const { dispatch } = this.props;
+    const nextProcessedEvents = await dispatch(events.page(page, [], this.eventHandler, false));
+    // If all the events are new, we want to fetch another page.
+    // TODO: probably only need to check for seen events not read
+    const allUnread = nextProcessedEvents.events.reduce((allUnreadEvents, { read }) =>
+      !read && allUnreadEvents, true) && nextProcessedEvents.events.length;
+
+    const allProcessedEvents = {
+      ...nextProcessedEvents,
+      events: processedEvents.events.concat(nextProcessedEvents.events),
+    };
+    if (allUnread) {
+      return this.fetchEventsPage(page + 1, allProcessedEvents);
+    }
+
+    return allProcessedEvents;
+  }
+
+  async attachEventTimeout() {
     const { dispatch } = this.props;
 
     // Grab events first time right away
-    if (firstTime) {
-      await dispatch(events.all());
+    this._shouldPoll = true;
+    dispatch(events.all([], this.eventHandler));
+
+    // eslint-disable-next-line no-constant-condition
+    while (true) {
+      if (this._shouldPoll) {
+        // And every N seconds
+        await new Promise(resolve => setTimeout(resolve, EVENT_POLLING_DELAY));
+
+        const processedEvents = await this.fetchEventsPage(0);
+        try {
+          dispatch(eventsActions.many(processedEvents));
+        } catch (e) {
+          // eslint-disable-next-line no-console
+          console.error(e);
+        }
+      }
     }
-
-    // And every N seconds
-    await new Promise(resolve => {
-      this._eventTimeout = setTimeout(resolve, EVENT_LOOKUP_DELAY);
-    });
-
-    await dispatch(eventsActions.invalidate([], true));
-    await dispatch(events.all());
-    this.attachEventTimeout(false);
   }
 
   hideShow(type, hide, show) {

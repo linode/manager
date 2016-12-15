@@ -17,7 +17,6 @@ export default class StatusDropdown extends Component {
     this.open = this.open.bind(this);
     this.close = this.close.bind(this);
     this.state = {
-      progress: 1,
       open: false,
     };
   }
@@ -72,47 +71,47 @@ export default class StatusDropdown extends Component {
       <button
         type="button"
         key={_key}
-        className="btn dropdown-item"
+        className="StatusDropdown-item"
         onMouseDown={action}
       >{name}</button>
     );
-    const openClass = this.state.open ? 'open' : '';
-    const progressContainer = this.props.short ? 'progress-cont' : 'progress-cont-long';
+    const openClass = this.state.open ? 'StatusDropdown--open' : '';
+
     if (LinodeStates.pending.indexOf(linode.status) !== -1) {
       return (
-        <div
-          className={`btn-group status-dropdown ${openClass}`}
-          onBlur={this.close}
-        >
-          <div className={`${progressContainer}`}>
+        <div className="StatusDropdown">
+          <div className="StatusDropdown-container">
             <div
-              style={{ width: `${linode.progress}%` }}
-              className="progress"
-            />
+              style={{ width: `${linode.__progress}%` }}
+              className="StatusDropdown-progress"
+            >
+              <span className="StatusDropdown-percent">{Math.round(linode.__progress)}%</span>
+            </div>
           </div>
         </div>
       );
     }
+
     return (
       <div
-        className={`clearfix btn-group status-dropdown ${openClass}`}
+        className={`StatusDropdown ${openClass}`}
         onBlur={this.close}
       >
         <button
           type="button"
-          className="btn dropdown-toggle float-xs-right"
+          className="StatusDropdown-toggle"
           data-toggle="dropdown"
           aria-haspopup="true"
           aria-expanded={this.state.open}
           onClick={this.open}
           disabled={LinodeStates.pending.indexOf(linode.status) !== -1}
         >
-          <span>
+          <span className="StatusDropdown-status">
             {LinodeStatesReadable[linode.status] || 'Offline'}
           </span>
           <i className="fa fa-caret-down" />
         </button>
-        <div className="dropdown-menu">{dropdownMenu}</div>
+        <div className="StatusDropdown-menu">{dropdownMenu}</div>
       </div>
     );
   }

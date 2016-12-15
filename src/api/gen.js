@@ -66,7 +66,7 @@ export function genActions(config) {
   return actions;
 }
 
-export function genDefaultState(config) {
+export function generateDefaultStateMany(config) {
   return {
     totalPages: -1,
     totalResults: -1,
@@ -74,52 +74,47 @@ export function genDefaultState(config) {
   };
 }
 
-function addMeta(config, item) {
-  const subs = config.subresources ?
-    _.reduce(config.subresources, (acc, conf, key) => (
-      { ...acc, [key]: { ...genDefaultState(conf) } }), { })
-    : undefined;
-  return { ...item, _polling: false, ...subs, __updatedAt: new Date() };
+function generateDefaultStateOne(config, one) {
+  const subresources = _.reduce(
+    config.subresources, (accumulated, subresourceConfig, subresourceName) => ({
+      ...accumulated,
+      [subresourceName]: { ...generateDefaultStateMany(subresourceConfig) },
+    }), {});
+  return { ...one, ...subresources, __updatedAt: new Date() };
 }
 
 export function genReducer(_config) {
-  function one(config, state, action) {
-    const previousId = action.ids[action.ids.length - 1];
-    const previous = state[config.plural][previousId];
-    const next = previous ? action.resource : addMeta(config, action.resource);
-    const id = previousId !== undefined ? previousId : next.id;
-    return {
-      ...state,
+  function one(config, oldStateMany, action) {
+    const id = action.ids ? action.ids.pop() : action.resource.id;
+    const oldStateOne = oldStateMany[config.plural][id];
+    const newStateOne = oldStateOne ? action.resource :
+                        generateDefaultStateOne(config, action.resource);
+
+    const newStateMany = {
+      ...oldStateMany,
       [config.plural]: {
-        ...state[config.plural],
+        ...oldStateMany[config.plural],
         [id]: {
-          ...previous,
-          ...next,
+          ...oldStateOne,
+          ...newStateOne,
           __updatedAt: new Date(),
         },
       },
     };
+
+    return newStateMany;
   }
 
-  function many(config, state, action) {
+  function many(config, oldState, action) {
     const { page } = action;
 
+    const newState = page[config.plural].reduce((stateAccumulator, oneObject) =>
+      one(config, stateAccumulator, { ids: [oneObject.id], resource: oneObject }), oldState);
+
     return {
-      ...state,
+      ...newState,
       totalPages: page.total_pages,
       totalResults: page.total_results,
-      [config.plural]: {
-        ...state[config.plural],
-        ...page[config.plural].reduce((s, i) =>
-          ({
-            ...s,
-            [i.id]: state[config.plural][i.id] ? {
-              ...state[config.plural][i.id],
-              ...i,
-              __updatedAt: new Date(),
-            } : addMeta(config, i),
-          }), { }),
-      },
     };
   }
 
@@ -127,7 +122,6 @@ export function genReducer(_config) {
     const id = action.ids[action.ids.length - 1];
     return {
       ...state,
-      __updatedAt: new Date(),
       [config.plural]: _.omit(state[config.plural], id),
     };
   }
@@ -148,7 +142,7 @@ export function genReducer(_config) {
         // action.ids should only ever be just 1 id
         delete newState[config.plural][action.ids[0]];
       } else {
-        newState = genDefaultState(config);
+        newState = generateDefaultStateMany(config);
       }
     }
 
@@ -215,6 +209,6 @@ export function genReducer(_config) {
     }
   }
 
-  const defaultState = genDefaultState(_config);
+  const defaultState = generateDefaultStateMany(_config);
   return (state = defaultState, action) => reducer(_config, state, action);
 }

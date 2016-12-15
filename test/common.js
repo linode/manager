@@ -43,3 +43,62 @@ export async function expectRequest(fn, path, dispatched = () => {},
     sandbox.restore();
   }
 }
+
+class InternalAssertionError extends Error {
+  constructor(aVal, bVal, keyPath) {
+    super();
+    const keyPathString = `.${keyPath.join('.')}`;
+    this.message =
+      `Expected 'a' at ${keyPathString} (${aVal}) to equal 'b' at ${keyPathString} (${bVal})`;
+  }
+}
+
+class InternalAssertionTypeError extends Error {
+  constructor(aVal, bVal, keyPath) {
+    super();
+    const keyPathString = `.${keyPath.join('.')}`;
+    this.message =
+      (`Expected type of 'a' at ${keyPathString} (${aVal}) ` +
+       `to equal type of 'b' at ${keyPathString} (${bVal})`);
+  }
+}
+
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object
+function isObject(o) {
+  return o === Object(o);
+}
+
+export function expectObjectDeepEquals(a, b, keyPath = []) {
+  if (isObject(a)) {
+    if (!isObject(b)) {
+      throw new InternalAssertionTypeError(a, b, keyPath);
+    }
+
+    Object.keys(a).forEach(aKey => {
+      const aVal = a[aKey];
+      const bVal = b[aKey];
+
+      expectObjectDeepEquals(aVal, bVal, [...keyPath, aKey]);
+    });
+
+    Object.keys(b).forEach(bKey => {
+      if (a[bKey] === undefined) {
+        throw new InternalAssertionError(a[bKey], b[bKey], keyPath);
+      }
+    });
+  } else if (Array.isArray(a)) {
+    if (!Array.isArray(b)) {
+      throw new InternalAssertionTypeError(a, b, keyPath);
+    } else if (a.length !== b.length) {
+      throw new InternalAssertionError(a, b, keyPath);
+    }
+
+    a.forEach((aVal, i) => {
+      expectObjectDeepEquals(aVal, b[i], [...keyPath, i]);
+    });
+  } else {
+    if (a !== b) {
+      throw new InternalAssertionError(a, b, keyPath);
+    }
+  }
+}

@@ -96,7 +96,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
       />);
 
     expect(page.find('.backup-status')
-      .text()).to.equal(`Taken ${moment(backupTime).fromNow()}`);
+      .text()).to.equal(`Taken ${moment.utc(backupTime).fromNow()}`);
   });
 
   it('renders plan', () => {
