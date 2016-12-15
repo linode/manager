@@ -103,7 +103,7 @@ function genThunkOne(config, actions) {
  * The results are returned.
  */
 function genThunkPage(config, actions) {
-  function fetchPage(page = 0, ids, resourceFilter, storeInState = true,
+  function fetchPage(page = 0, ids = [], resourceFilter, storeInState = true,
                      fetchBeganAt = new Date()) {
     return async (dispatch, getState) => {
       const { token } = getState().authentication;
@@ -118,7 +118,8 @@ function genThunkPage(config, actions) {
       // Refetch any existing results that have been updated since fetchBeganAt.
       const fetchOne = genThunkOne(config, actions);
       const objects = await Promise.all(filteredResources[config.plural].map(async (resource) => {
-        const existingResourceState = getStateOfSpecificResource(config, getState(), [resource.id]);
+        const existingResourceState = getStateOfSpecificResource(
+          config, getState(), [...ids, resource.id]);
         if (existingResourceState) {
           existingResourceState.__updatedAt = existingResourceState.__updatedAt || new Date();
           if (existingResourceState.__updatedAt > fetchBeganAt) {
