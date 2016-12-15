@@ -80,17 +80,20 @@ function filterResources(config, resources, resourceFilter = x => x) {
 
 function genThunkOne(config, actions) {
   return (ids) => async (dispatch, getState) => {
-    const prev = getStateOfSpecificResource(config, getState(), ids);
+    const oldState = getStateOfSpecificResource(config, getState(), ids);
 
-    if (_.isUndefined(prev) || prev.invalid) {
+    if (_.isUndefined(oldState) || oldState.invalid) {
       const { token } = getState().authentication;
       const response = await fetch(token, config.endpoint(...ids));
-      const resource = { ...(await response.json()), __progress: prev && prev.__progress || 100 };
+      const resource = {
+        ...(await response.json()),
+        __progress: oldState && oldState.__progress || 100,
+      };
       dispatch(actions.one(resource, ...ids));
       return resource;
     }
 
-    return prev;
+    return oldState;
   };
 }
 
