@@ -60,19 +60,6 @@ export class BackupPage extends Component {
     }
   }
 
-  renderField(label, value) {
-    return (
-      <div className="form-group row">
-        <div className="col-sm-3 label-col">
-          {label}
-        </div>
-        <div className="col-sm-8 content-col right">
-          {value}
-        </div>
-      </div>
-    );
-  }
-
   render() {
     const { linodes } = this.props;
     const { backupId } = this.props.params;
@@ -110,14 +97,21 @@ export class BackupPage extends Component {
     restoreTo.splice(0, 0,
       <option value={linode.id} key={linode.id}>This Linode</option>);
 
-    const restoreToField = this.renderField('Restore to', (
-      <select
-        value={targetLinode}
-        onChange={e => this.setState({ targetLinode: e.target.value })}
-      >
-        {restoreTo}
-      </select>
-    ));
+    const restoreToField = (
+      <div className="form-group row">
+        <div className="col-sm-3 label-col">
+          Restore to
+        </div>
+        <div className="col-sm-8 content-col right">
+          <select
+            value={targetLinode}
+            onChange={e => this.setState({ targetLinode: e.target.value })}
+          >
+            {restoreTo}
+          </select>
+        </div>
+      </div>
+    );
 
     const takeSnapshot = [(
       <div className="form-group row" key="errors">
