@@ -1,4 +1,5 @@
 import React from 'react';
+import { push } from 'react-router-redux';
 import sinon from 'sinon';
 import { shallow, mount } from 'enzyme';
 import { expect } from 'chai';
@@ -151,6 +152,8 @@ describe('linodes/linode/backups/layouts/BackupPage', () => {
         }));
       },
     );
+
+    expect(dispatch.calledWith(push('/linodes/1234'))).to.equal(true);
   });
 
   it('renders errors when restore fails', async () => {

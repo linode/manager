@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 
 import { ErrorSummary, reduceErrors } from '~/errors';
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
@@ -55,6 +56,7 @@ export class BackupPage extends Component {
     try {
       await dispatch(
         restoreBackup(linodeId, targetLinode, backupId, overwrite));
+      dispatch(push(`/linodes/${linodeId}`));
     } catch (response) {
       const restoreErrors = await reduceErrors(response);
       this.setState({ restoreErrors });
