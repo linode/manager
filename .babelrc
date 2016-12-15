@@ -3,6 +3,7 @@
   "compact": true,
   "plugins": [
     "transform-runtime",
+    "transform-class-properties",
     ["babel-root-import", [{
         "rootPathSuffix": "src"
     }, {

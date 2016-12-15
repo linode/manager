@@ -70,7 +70,7 @@ export class IndexPage extends Component {
     try {
       this.setState({ loading: true });
       const linode = await this.createLinode({ group, label, password, backups });
-      dispatch(linodes.until(l => l.status !== 'provisioning', linode.id));
+
       this.setState({ loading: false });
       dispatch(push(`/linodes/${linode.id}`));
       // TODO: handle creating multiple linodes at once ? refer to

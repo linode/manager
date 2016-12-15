@@ -1,5 +1,4 @@
 import { fetch } from '~/fetch';
-import { linodes as thunks } from '~/api';
 import { actions } from './configs/linodes';
 
 export const LINODE_STATUS_TRANSITION_RESULT = {
@@ -12,12 +11,15 @@ function linodeAction(id, action, temp, body, handleRsp) {
   return async (dispatch, getState) => {
     const state = getState();
     const { token } = state.authentication;
-    dispatch(actions.one({ state: temp }, id));
+    dispatch(actions.one({ ...state, status: temp, __progress: 1 }, id));
+    await new Promise(resolve => setTimeout(resolve, 0));
+    const randomProgress = ((min, max) => Math.random() * (max - min) + min)(75, 40);
+    dispatch(actions.one({ ...state, __progress: randomProgress }, id));
 
     const rsp = await fetch(token, `/linode/instances/${id}/${action}`, { method: 'POST', body });
-    await dispatch(thunks.until(l => l.status === LINODE_STATUS_TRANSITION_RESULT[temp], id));
+    dispatch(actions.one({ ...body }, id));
     if (handleRsp) {
-      await dispatch(handleRsp(await rsp.json()));
+      dispatch(handleRsp(await rsp.json()));
     }
   };
 }
