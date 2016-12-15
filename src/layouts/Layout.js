@@ -124,6 +124,7 @@ export class Layout extends Component {
     this._shouldPoll = true;
     dispatch(events.all([], this.eventHandler));
 
+    // eslint-disable-next-line no-constant-condition
     while (true) {
       if (this._shouldPoll) {
         // And every N seconds
