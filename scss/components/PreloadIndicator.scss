@@ -1,0 +1,29 @@
+.PreloadIndicator {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    right: 100%;
+    background-color: $green;
+    height: 3px;
+    z-index: $preload-z-index;
+    opacity: 0;
+
+    &--running {
+        opacity: 100;
+        right: 65%;
+
+        -webkit-transition: right 2s ease-out;
+        -moz-transition: right 2s ease-out;
+        -o-transition: right 2s ease-out;
+        -ms-transition: right 2s ease-out;
+    }
+
+    &--done {
+        right: 0px;
+
+        -webkit-transition: right .2s ease-in, opacity 1s ease-out .2s;
+        -moz-transition: right .2s ease-in, opacity 1s ease-out .2s;
+        -o-transition: right .2s ease-in, opacity 1s ease-out .2s;
+        -ms-transition: right .2s ease-in, opacity 1s ease-out .2s;
+    }
+}
