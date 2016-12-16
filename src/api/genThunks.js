@@ -2,9 +2,6 @@ import _ from 'lodash';
 
 import { ONE, MANY, DELETE, POST, PUT, generateDefaultStateMany } from './gen';
 import { fetch } from '~/fetch';
-import { getStorage, setStorage } from '~/storage';
-
-const CROSS_USER_CACHE_HOURS = 1;
 
 /*
  * This function applies the ids to the config to try to find
@@ -209,34 +206,6 @@ function genThunkAll(config, actions, fetchPage) {
   return fetchAll;
 }
 
-/*
- * This function will fetch all pages unless they are available in local storage.
- * If they are fetched, it will add them to local storage with a validity timestamp.
- */
-function genThunkAllCacheable(config, actions, fetchAllPages) {
-  return (ids = [], resourceFilter) => async (dispatch) => {
-    if (getStorage(`localStorageCacheable/${config.plural}`)) {
-      // localStorage cache hit
-      const resource = getStorage(`localStorageCacheable/${config.plural}`);
-      const cacheValid = new Date(resource.__cacheUntil) > new Date();
-      if (cacheValid) {
-        // localStorage still valid
-        delete resource.__cacheUntil;
-        dispatch(actions.many(resource, ...ids));
-        return;
-      }
-    }
-
-    const state = await dispatch(fetchAllPages(ids, resourceFilter));
-
-    // Set cache time limit in hours.
-    const now = new Date();
-    state.__cacheUntil = new Date(
-      now.getTime() + CROSS_USER_CACHE_HOURS * 3600000);
-    setStorage(`localStorageCacheable/${config.plural}`, state);
-  };
-}
-
 function genThunkDelete(config, actions) {
   return (...ids) => async (dispatch, getState) => {
     const { token } = getState().authentication;
@@ -286,9 +255,6 @@ export default function genThunks(config, actions) {
   if (supports(MANY)) {
     thunks.page = genThunkPage(config, actions);
     thunks.all = genThunkAll(config, actions, thunks.page);
-    if (config.localStorageCacheable) {
-      thunks.all = genThunkAllCacheable(config, actions, thunks.all);
-    }
   }
   if (supports(DELETE)) {
     thunks.delete = genThunkDelete(config, actions);

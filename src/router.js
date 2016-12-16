@@ -7,6 +7,7 @@ import {
   preloadStart,
   preloadStop,
 } from '~/actions/preloadIndicator';
+import { kernels, types, datacenters, distributions } from '~/api';
 
 
 // This wraps the react-router match function so that we can await it
@@ -57,6 +58,11 @@ export class LoadingRouterContext extends RouterContext {
     this.match = props.match;
     this.fetching = true;
     this.initialLoad = true;
+
+    this.props.dispatch(kernels.all());
+    this.props.dispatch(types.all());
+    this.props.dispatch(datacenters.all());
+    this.props.dispatch(distributions.all());
   }
 
   async componentWillMount() {

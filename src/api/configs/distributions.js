@@ -6,7 +6,6 @@ import {
 export const config = genConfig({
   plural: 'distributions',
   singular: 'distribution',
-  localStorageCacheable: true,
   endpoint: id => `/linode/distributions/${id}`,
   supports: [ONE, MANY],
 });

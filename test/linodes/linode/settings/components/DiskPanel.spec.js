@@ -336,15 +336,10 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
       dispatch.reset();
       dispatch.returns({ total_pages: 1, distributions: [], total_results: 0 });
 
-      // Call to fetch cacheable
+       // Call to fetch all
       await fn(dispatch, () => freshState);
-      expect(dispatch.calledOnce).to.equal(true);
+      expect(dispatch.callCount).to.equal(1);
       fn = dispatch.firstCall.args[0];
-
-      // Call to fetch all
-      await fn(dispatch, () => freshState);
-      expect(dispatch.calledTwice).to.equal(true);
-      fn = dispatch.secondCall.args[0];
       dispatch.reset();
 
       await expectRequest(fn, '/linode/distributions/?page=1', undefined, {
