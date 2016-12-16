@@ -3,7 +3,7 @@ import { createDevTools } from 'redux-devtools';
 import LogMonitor from 'redux-devtools-log-monitor';
 import DockMonitor from 'redux-devtools-dock-monitor';
 
-import { DEVTOOLS_ENABLED } from '~/constants';
+import { DEVTOOLS_DISABLED } from '~/constants';
 
 const DevTools = createDevTools(
   <DockMonitor
@@ -15,4 +15,4 @@ const DevTools = createDevTools(
   </DockMonitor>
 );
 
-export default DEVTOOLS_ENABLED ? () => null : DevTools;
+export default DEVTOOLS_DISABLED ? () => null : DevTools;
