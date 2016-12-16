@@ -120,6 +120,11 @@ export class Layout extends Component {
   async attachEventTimeout() {
     const { dispatch } = this.props;
 
+    // OAuth token is not available during the callback
+    while (window.location.pathname === '/oauth/callback') {
+      await new Promise(r => setTimeout(r, 100));
+    }
+
     // Grab events first time right away
     this._shouldPoll = true;
     dispatch(events.all([], this.eventHandler));
