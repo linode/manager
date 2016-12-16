@@ -43,7 +43,7 @@ describe('linodes/components/StatusDropdown/ConfigSelectModal', () => {
     const modal = shallow(<ConfigSelectModal linode={linode} />);
 
     const configs = Object.values(linode._configs.configs);
-    const elements = modal.find('label.radio');
+    const elements = modal.find('div.radio label');
     expect(elements.length).to.equal(configs.length);
 
     for (let i = 0; i < configs.length; i++) {
@@ -67,7 +67,7 @@ describe('linodes/components/StatusDropdown/ConfigSelectModal', () => {
       />
     );
 
-    const configElement = modal.find('label.radio input').at(1);
+    const configElement = modal.find('div.radio label input').at(1);
     configElement.simulate('change', { target: { value: 321321 } });
 
     modal.find('.btn-default').simulate('click');

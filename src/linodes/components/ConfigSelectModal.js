@@ -28,16 +28,18 @@ export default class ConfigSelectModal extends Component {
         </p>
         <div className="ConfigSelectModal-configs">
           {Object.values(linode._configs.configs).map(config =>
-            <label key={config.id} className="radio">
-              <input
-                type="radio"
-                name="configs"
-                value={config.id}
-                checked={config.id.toString() === configId}
-                onChange={e => this.setState({ configId: e.target.value })}
-              />
-              <span>{config.label}</span>
-            </label>
+            <div key={config.id} className="radio">
+              <label>
+                <input
+                  type="radio"
+                  name="configs"
+                  value={config.id}
+                  checked={config.id.toString() === configId}
+                  onChange={e => this.setState({ configId: e.target.value })}
+                />
+                <span>{config.label}</span>
+              </label>
+            </div>
           )}
         </div>
         <div className="modal-footer">

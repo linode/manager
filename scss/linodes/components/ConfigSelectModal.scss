@@ -2,12 +2,10 @@
     &-configs {
         border: $border;
         height: 200px;
-        overflow-y: scroll;
-        overflow-x: hidden;
+        overflow: auto;
         padding: $input-padding;
 
         label {
-            display: block;
             white-space: nowrap;
         }
     }
