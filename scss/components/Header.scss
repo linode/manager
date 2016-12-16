@@ -1,4 +1,4 @@
-$header-padding: 30px;
+$header-padding: $grid-gutter-width-base / 2;
 
 .Header {
     position: fixed;

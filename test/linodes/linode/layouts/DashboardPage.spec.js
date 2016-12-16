@@ -79,7 +79,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
       />);
 
     expect(page.find('.linode-backups').at(0)
-      .find('.col-sm-8')
+      .find('.col-sm-9')
       .at(0)
       .find('Link')
       .props())
@@ -107,7 +107,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
       />);
 
     expect(page.find('.linode-plan').at(0)
-      .find('.col-sm-8')
+      .find('.col-sm-9')
       .at(0)
       .text()).to.equal('Linode 2G');
   });
@@ -120,7 +120,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
       />);
 
     expect(page.find('.linode-datacenter').at(0)
-      .find('.col-sm-8')
+      .find('.col-sm-9')
       .at(0)
       .text()).to.equal(testLinode.datacenter.label);
   });
@@ -133,7 +133,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
       />);
 
     expect(page.find('.linode-distro').at(0)
-      .find('.col-sm-8')
+      .find('.col-sm-9')
       .at(0)
       .text()).to.equal(testLinode.distribution.vendor);
   });
@@ -146,7 +146,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
       />);
 
     expect(page.find('.linode-distro').at(0)
-      .find('.col-sm-8')
+      .find('.col-sm-9')
       .at(0)
       .text()).to.equal('Unknown');
   });

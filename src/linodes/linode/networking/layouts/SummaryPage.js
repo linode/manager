@@ -32,7 +32,7 @@ export class SummaryPage extends Component {
         <div className="col-sm-3 label-col left">
           Nameservers
         </div>
-        <div className="col-sm-8 content-col right">
+        <div className="col-sm-9 content-col right">
           <ul className="list-unstyled">
             {
               isIPv4 ?
@@ -64,7 +64,7 @@ export class SummaryPage extends Component {
           <div className="col-sm-3 label-col left">
             Address
           </div>
-          <div className="col-sm-8 content-col right">
+          <div className="col-sm-9 content-col right">
             <ul className="list-unstyled">
               <span>
                 <span>{ipv4}/24 </span>
@@ -79,7 +79,7 @@ export class SummaryPage extends Component {
           <div className="col-sm-3 label-col left">
             Gateway
           </div>
-          <div className="col-sm-8 content-col right">
+          <div className="col-sm-9 content-col right">
             {ipv4.substring(0, ipv4.lastIndexOf('.'))}.1
           </div>
         </div>
@@ -104,7 +104,7 @@ export class SummaryPage extends Component {
           <div className="col-sm-3 label-col left">
             Address
           </div>
-          <div className="col-sm-8 content-col right">
+          <div className="col-sm-9 content-col right">
             {this.getLinode().ipv6}
           </div>
         </div>
@@ -112,7 +112,7 @@ export class SummaryPage extends Component {
           <div className="col-sm-3 label-col left">
             Gateway
           </div>
-          <div className="col-sm-8 content-col right">
+          <div className="col-sm-9 content-col right">
             FIXME::1
           </div>
         </div>
@@ -162,7 +162,7 @@ export class SummaryPage extends Component {
                 <div className="col-sm-3 label-col">
                   Link-local IP
                 </div>
-                <div className="col-sm-8 content-col">
+                <div className="col-sm-9 content-col">
                   {linkLocal}
                 </div>
               </div>

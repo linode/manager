@@ -6,7 +6,7 @@ import { testLinode } from '@/data/linodes';
 import { SummaryPage } from '~/linodes/linode/networking/layouts/SummaryPage';
 import { ipv4ns, ipv6ns, ipv6nsSuffix } from '~/constants';
 
-describe('linodes/linode/layouts/SummaryPage', () => {
+describe('linodes/linode/networking/layouts/SummaryPage', () => {
   const sandbox = sinon.sandbox.create();
   const dispatch = sandbox.spy();
 
@@ -75,7 +75,7 @@ describe('linodes/linode/layouts/SummaryPage', () => {
 
         const content = page.find('section').at(0);
         const ipv4Sect = content.find('.col-sm-6').at(0);
-        const inetCol = ipv4Sect.find('.col-sm-8').at(0);
+        const inetCol = ipv4Sect.find('.col-sm-9').at(0);
         expect(inetCol.text()).to.equal(inet);
       });
 
@@ -90,7 +90,7 @@ describe('linodes/linode/layouts/SummaryPage', () => {
 
         const content = page.find('section').at(0);
         const ipv4Sect = content.find('.col-sm-6').at(0);
-        const gatewayCol = ipv4Sect.find('.col-sm-8').at(1);
+        const gatewayCol = ipv4Sect.find('.col-sm-9').at(1);
         expect(gatewayCol.text()).to.equal(gateway);
       });
 
@@ -103,7 +103,7 @@ describe('linodes/linode/layouts/SummaryPage', () => {
 
         const content = page.find('section').at(0);
         const ipv4Sect = content.find('.col-sm-6').at(0);
-        const nsCol = ipv4Sect.find('.col-sm-8').at(2);
+        const nsCol = ipv4Sect.find('.col-sm-9').at(2);
         expect(nsCol.text()).to.equal(ipv4ns[testLinode.datacenter.id].join(''));
       });
     });
@@ -132,7 +132,7 @@ describe('linodes/linode/layouts/SummaryPage', () => {
 
         const content = page.find('section').at(0);
         const ipv6Sect = content.find('.col-sm-6').at(1);
-        const inetCol = ipv6Sect.find('.col-sm-8').at(0);
+        const inetCol = ipv6Sect.find('.col-sm-9').at(0);
         expect(inetCol.text()).to.equal(`${ipv6}`);
       });
 
@@ -147,7 +147,7 @@ describe('linodes/linode/layouts/SummaryPage', () => {
 
         const content = page.find('section').at(0);
         const ipv6Sect = content.find('.col-sm-6').at(1);
-        const nsCol = ipv6Sect.find('.col-sm-8').at(2);
+        const nsCol = ipv6Sect.find('.col-sm-9').at(2);
         expect(nsCol.text())
           .to.equal(
             ipv6nsSuffix.map(
