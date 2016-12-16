@@ -4,7 +4,7 @@ export const LOGIN_ROOT = ENV_LOGIN_ROOT || 'https://login.alpha.linode.com';
 export const APP_ROOT = ENV_APP_ROOT || 'http://localhost:3000';
 export const GA_ID = ENV_GA_ID || '000000';
 
-export const DEVTOOLS_ENABLED = ENV_DEVTOOLS_ENABLED || process.env.NODE_ENV !== 'production';
+export const DEVTOOLS_DISABLED = ENV_DEVTOOLS_DISABLED || process.env.NODE_ENV === 'production';
 
 /* eslint-enable no-undef */
 

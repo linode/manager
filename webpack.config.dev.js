@@ -26,7 +26,7 @@ module.exports = {
       'process.env': {
         'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
       },
-      'ENV_DEVTOOLS_ENABLED': JSON.stringify(process.env.DEVTOOLS_ENABLED),
+      'ENV_DEVTOOLS_DISABLED': JSON.stringify(process.env.DEVTOOLS_DISABLED),
       'ENV_API_ROOT': JSON.stringify(process.env.API_ROOT),
       'ENV_LOGIN_ROOT': JSON.stringify(process.env.LOGIN_ROOT),
       'ENV_APP_ROOT': JSON.stringify(process.env.APP_ROOT),
