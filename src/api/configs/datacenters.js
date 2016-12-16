@@ -6,7 +6,6 @@ import {
 export const config = genConfig({
   plural: 'datacenters',
   singular: 'datacenter',
-  localStorageCacheable: true,
   endpoint: id => `/datacenters/${id}`,
   supports: [ONE, MANY],
 });

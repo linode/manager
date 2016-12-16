@@ -6,7 +6,6 @@ import {
 export const config = genConfig({
   plural: 'kernels',
   singular: 'kernel',
-  localStorageCacheable: true,
   endpoint: id => `/linode/kernels/${id}`,
   supports: [ONE, MANY],
 });
