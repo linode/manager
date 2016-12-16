@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
 import StatusDropdown from '~/linodes/components/StatusDropdown';
-import { LinodeStates } from '~/constants';
 import { setError } from '~/actions/errors';
 import { linodes } from '~/api';
 import { setSource } from '~/actions/source';
@@ -100,8 +99,6 @@ export class IndexPage extends Component {
 
   renderHeader() {
     const linode = this.getLinode();
-    const renderConfigSelect = Object.keys(linode._configs.configs).length > 1 &&
-      LinodeStates.pending.indexOf(linode.status) === -1;
 
     return (
       <header className="main-header">
@@ -115,20 +112,6 @@ export class IndexPage extends Component {
               dispatch={this.props.dispatch}
             />
           </span>
-          {!renderConfigSelect ? null :
-            <span
-              className="float-xs-right configs"
-              style={{ paddingRight: '15px', lineHeight: '30px' }}
-            >
-              <select
-                className="form-control"
-                value={this.state.config}
-                onChange={e => this.setState({ config: e.target.value })}
-              >
-                {Object.values(linode._configs.configs).map(config =>
-                  <option key={config.id} value={config.id}>{config.label}</option>)}
-              </select>
-            </span>}
         </div>
       </header>
     );

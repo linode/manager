@@ -1,3 +1,19 @@
+.LinodesComponentsStatusDropdown {
+    &-configs {
+        border: $border;
+        height: 200px;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        padding: $input-padding;
+
+        label {
+            display: block;
+            padding-bottom: $input-padding / 2;
+            white-space: nowrap;
+        }
+    }
+}
+
 .StatusDropdown {
     @extend .btn-group;
 
@@ -42,7 +58,7 @@
             background: transparent;
         }
     }
-    
+
     .fa {
         font-size: $font-xs-normal !important;
     }
@@ -93,7 +109,7 @@
         -moz-transition: width 1s ease-in;
         -o-transition: width 1s ease-in;
         -ms-transition: width 1s ease-in;
-    }    
+    }
 
     @-webkit-keyframes spin {
        0% {background-position: 0px 0px;}
