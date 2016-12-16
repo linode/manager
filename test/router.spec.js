@@ -25,7 +25,6 @@ describe('router/LoadingRouterContext', () => {
         location={{ pathname: '/' }}
         history={{}}
         params={{}}
-        dispatch={() => {}}
       />
     );
 
@@ -48,7 +47,6 @@ describe('router/LoadingRouterContext', () => {
       location: { pathname: 'a path' },
       history: {},
       params: {},
-      dispatch() {},
     };
 
     const rc = shallow(
@@ -96,7 +94,6 @@ describe('router/LoadingRouterContext', () => {
         location={{ pathname: '/' }}
         history={{}}
         params={{ myParam: 2 }}
-        dispatch={() => {}}
       />
     );
 
@@ -122,7 +119,6 @@ describe('router/LoadingRouterContext', () => {
         location={{ pathname: '/' }}
         history={{}}
         params={{}}
-        dispatch={() => {}}
       />
     );
 
