@@ -59,10 +59,10 @@ export class LoadingRouterContext extends RouterContext {
     this.fetching = true;
     this.initialLoad = true;
 
-    this.props.dispatch(kernels.all());
-    this.props.dispatch(types.all());
-    this.props.dispatch(datacenters.all());
-    this.props.dispatch(distributions.all());
+    store.dispatch(kernels.all());
+    store.dispatch(types.all());
+    store.dispatch(datacenters.all());
+    store.dispatch(distributions.all());
   }
 
   async componentWillMount() {
