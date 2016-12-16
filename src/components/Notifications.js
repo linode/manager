@@ -2,110 +2,102 @@ import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 import moment from 'moment';
 
-function pastTensify(verb) {
-  // TODO: complete this
+import { Event } from '~/api/objects/Event';
 
-  // Special cases:
-  if (verb === 'shutdown') {
-    // Pulled from power dropdown
-    return 'powered off';
-  } else if (verb === 'boot') {
-    // Pulled from power dropdown
-    return 'powered on';
-  } else if (verb === 'scheduled') {
-    return 'was scheduled';
+function getLinodeName(event, linodes) {
+  const linodeIfCached = linodes && linodes.linodes[event.getLinodeId()];
+  if (linodeIfCached) {
+    return linodeIfCached.label;
   }
 
-  if (verb.charAt(verb.length - 1) === 'e') {
-    return `${verb}d`;
-  } else if (verb.lastIndexOf('ed') === verb.length - 2) {
-    return verb;
+  switch (event.getType()) {
+    case Event.LINODE_BACKUPS_ENABLE:
+    case Event.LINODE_BACKUPS_DISABLE:
+      return event._event.label.split(' ')[3];
+    default:
+      return event._event.label.split(' ')[2];
   }
-
-  return `${verb}ed`;
 }
 
-function notificationCategoryAndAction(event) {
-  return event.event_type.split('_').map(s => s.toLowerCase());
+function linodeNotificationMessage(event, linodes, objectType, tempText, doneText) {
+  const linodeName = getLinodeName(event, linodes);
+  const eventFinished = event.getProgress() === 100;
+
+  return (
+    <span>
+      <span className="Notification-subject">
+        {linodeName}
+      </span>
+      {objectType}&nbsp;
+      {eventFinished ? doneText : tempText}&nbsp;
+      {event._event.status === 'failed' ? 'failed' : ''}
+    </span>
+  );
 }
 
-function notificationTitle(event) {
-  // TODO: more consistent wording
-  const [category, action] = notificationCategoryAndAction(event);
+function notificationMessage(event, linodes) {
+  switch (event.getType()) {
+    case Event.LINODE_REBOOT:
+      return linodeNotificationMessage(event, linodes, 'Linode', 'rebooting', 'rebooted');
+    case Event.LINODE_BOOT:
+      return linodeNotificationMessage(event, linodes, 'Linode', 'booting', 'booted');
+    case Event.LINODE_POWER_OFF:
+      return linodeNotificationMessage(event, linodes, 'Linode', 'being shut down', 'shut down');
+    case Event.LINODE_CREATE:
+      return linodeNotificationMessage(event, linodes, 'Linode', 'provisioning', 'created');
+    case Event.LINODE_DELETE:
+      return linodeNotificationMessage(event, linodes, 'Linode', 'being deleted', 'deleted');
 
-  if (event.linode_id) {
-    if (category === 'linode') {
-      return `Linode ${pastTensify(action)}`;
-    } else if (category === 'disk') {
-      return `Disk ${pastTensify(action)}`;
-    } else if (category === 'backups') {
-      return `Backups ${pastTensify(action)}`;
-    }
-  } else if (event.nodebalancer_id) {
-    // TODO: support nodebalancer events
-  } else if (event.stackscript_id) {
-    // TODO: support stackscript events
+    case Event.LINODE_BACKUPS_ENABLE:
+      return linodeNotificationMessage(event, linodes, 'Backups', 'enabled', 'enabled');
+    case Event.LINODE_BACKUPS_DISABLE:
+      return linodeNotificationMessage(event, linodes, 'Backups', 'disabled', 'disabled');
+
+    case Event.LINODE_DISK_DELETE:
+      return linodeNotificationMessage(event, linodes, 'Disk', 'being deleted', 'deleted');
+    case Event.LINODE_DISK_CREATE:
+      return linodeNotificationMessage(event, linodes, 'Disk', 'being created', 'created');
+    case Event.LINODE_DISK_RESIZE:
+      return linodeNotificationMessage(event, linodes, 'Disk', 'being resized', 'resized');
+
+    default:
+      return '';
   }
-
-  return '';
-}
-
-function notificationMessage(event) {
-  // TODO: more consistent wording
-  const hostJobTitle = event.label;
-  const [category, action] = notificationCategoryAndAction(event);
-
-  if (event.linode_id) {
-    const linodeIfCached = event.linodes && event.linodes.linodes[event.linode_id];
-    const linodeName = linodeIfCached && linodeIfCached.label || hostJobTitle.split(' ')[2];
-    if (category === 'linode') {
-      return (
-        <span>
-          The requested {action} for <span className="Notification-subject">{linodeName}</span>
-          &nbsp;{pastTensify(event.status)} successfully.
-        </span>
-      );
-    } else if (category === 'disk') {
-      return (
-        <span>
-          The requested disk {action} for <span className="Notification-subject">{linodeName}</span>
-          &nbsp;{pastTensify(event.status)} successfully.
-        </span>
-      );
-    } else if (category === 'backups') {
-      return (
-        <span>
-          Backups for <span className="Notification-subject">{linodeName}</span>
-          &nbsp;were {pastTensify(action)} sucessfully.
-        </span>
-      );
-    }
-  } if (event.nodebalancer_id) {
-    // TODO: support nodebalancer events
-  } else if (event.stackscript_id) {
-    // TODO: support stackscript events
-  }
-
-  return '';
 }
 
 export function Notification(props) {
+  const event = new Event(props);
+
   function handleNotificationClick() {
     if (props.read) {
       let page = `/linodes/${props.linode_id}`;
 
-      if (props.linode_id) {
-        const [category] = notificationCategoryAndAction(props);
-        if (category === 'backups') {
-          page = `${page}/backups`;
-        } else if (category === 'disk') {
+      switch (event.getType()) {
+        case Event.LINODE_DELETE:
+          // No page to change to.
+          return;
+
+        case Event.LINODE_REBOOT:
+        case Event.LINODE_BOOT:
+        case Event.LINODE_POWER_OFF:
+        case Event.LINODE_CREATE:
+          break; // Default is good
+
+        case Event.LINODE_DISK_DELETE:
+        case Event.LINODE_DISK_CREATE:
+        case Event.LINODE_DISK_RESIZE:
           page = `${page}/settings/advanced`;
-        }
-      } else if (props.stackscript_id) {
-        page = `/stackscripts/${props.stackscript_id}`;
-      } else if (props.nodebalancer_id) {
-        page = `/nodebalancer/${props.nodebalancer_id}`;
+          break;
+
+        case Event.LINODE_BACKUPS_ENABLE:
+        case Event.LINODE_BACKUPS_DISABLE:
+          page = `${page}/backups`;
+          break;
+
+        default:
+          break;
       }
+
       return props.gotoPage(page);
     }
 
@@ -117,13 +109,12 @@ export function Notification(props) {
       className={`Notification ${props.read ? '' : 'Notification--unseen'}`}
       onClick={handleNotificationClick}
     >
-      <header className="Notification-header clearfix">
-        <div className="Notification-title float-xs-left">{notificationTitle(props)}</div>
-        <div className="Notification-time float-xs-right">
+      <header className="Notification-header">
+        <div className="Notification-text">{notificationMessage(event, props.linodes)}</div>
+        <div className="Notification-time">
           {moment.utc(props.updated, moment.ISO_8601).fromNow()}
         </div>
       </header>
-      <div className="Notification-text">{notificationMessage(props)}</div>
     </div>
   );
 }
@@ -139,6 +130,7 @@ Notification.propTypes = {
   linode_id: PropTypes.number,
   nodebalancer_id: PropTypes.number,
   stackscript_id: PropTypes.number,
+  linodes: PropTypes.object.isRequired,
 };
 
 function sortNotifications(eventsDict) {
