@@ -372,7 +372,7 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
       );
 
       const sda = page.find('#config-device-sda');
-      expect(sda.find('option').length).to.equal(2);
+      expect(sda.find('option').length).to.equal(3);
       expect(sda.find('option').at(0).text()).to.equal('Arch Linux 2015.08 Disk');
       expect(sda.find('option').at(0).props().value).to.equal(12345);
       expect(sda.find('option').at(1).text()).to.equal('Swap Disk');
