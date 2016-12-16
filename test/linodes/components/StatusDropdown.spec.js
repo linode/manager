@@ -123,8 +123,7 @@ describe('linodes/components/StatusDropdown', () => {
 
     dropdown.find('.StatusDropdown-toggle').simulate('click');
     dropdown.find('.StatusDropdown-item').first().simulate('mousedown');
-    expect(dispatch.firstCall.args[0])
-      .to.have.property('type').which.equals(SHOW_MODAL);
+    expect(dispatch.firstCall.args[0].type).to.equal(SHOW_MODAL);
   });
 
   it('renders modal on power on if multiple configs', () => {
@@ -135,7 +134,6 @@ describe('linodes/components/StatusDropdown', () => {
 
     dropdown.find('.StatusDropdown-toggle').simulate('click');
     dropdown.find('.StatusDropdown-item').first().simulate('mousedown');
-    expect(dispatch.firstCall.args[0])
-      .to.have.property('type').which.equals(SHOW_MODAL);
+    expect(dispatch.firstCall.args[0].type).to.equal(SHOW_MODAL);
   });
 });

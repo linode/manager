@@ -67,16 +67,16 @@ describe('linodes/components/StatusDropdown/ConfigSelectModal', () => {
       />
     );
 
-    const configElement = modal.find('label.radio').at(1);
-    configElement.simulate('click');
+    const configElement = modal.find('label.radio input').at(1);
+    configElement.simulate('change', { target: { value: 321321 } });
 
     modal.find('.btn-default').simulate('click');
 
     expect(action.callCount).to.equal(1);
-    expect(
-      action.calledWith(linode, configElement.find('input').props().value));
+    expect(action.firstCall.args[0]).to.equal(linode.id);
+    expect(action.firstCall.args[1]).to.equal(321321);
 
     expect(dispatch.callCount).to.equal(1);
-    expect(dispatch.calledWith(42));
+    expect(dispatch.firstCall.args[0]).to.equal(42);
   });
 });
