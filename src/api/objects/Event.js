@@ -2,11 +2,16 @@ import { LINODE_STATUS_TRANSITION_RESULT } from '~/api/linodes';
 
 export class Event {
   static UNKNOWN = Symbol('unknown');
+  static LINODE_DELETE = Symbol('linodeDelete');
+  static LINODE_CREATE = Symbol('linodeCreate');
   static LINODE_REBOOT = Symbol('linodeReboot');
   static LINODE_BOOT = Symbol('linodeBoot');
   static LINODE_POWER_OFF = Symbol('linodePowerOff');
-  static LINODE_DISK = Symbol('linodeDisk');
-  static LINODE_BACKUP = Symbol('linodeBackup');
+  static LINODE_DISK_DELETE = Symbol('linodeDiskDelete');
+  static LINODE_DISK_CREATE = Symbol('linodeDiskCreate');
+  static LINODE_DISK_RESIZE = Symbol('linodeDiskResize');
+  static LINODE_BACKUPS_ENABLE = Symbol('linodeBackupsEnable');
+  static LINODE_BACKUPS_DISABLE = Symbol('linodeBackupsDisable');
 
   constructor(rawEvent) {
     this._event = rawEvent;
@@ -70,15 +75,36 @@ export class Event {
               return Event.LINODE_REBOOT;
             case 'boot':
               return Event.LINODE_BOOT;
+            case 'delete':
+              return Event.LINODE_DELETE;
+            case 'create':
+              return Event.LINODE_CREATE;
             default:
               return Event.UNKNOWN;
           }
+
         case 'disk':
-          // TODO: refine this
-          return Event.LINODE_DISK;
+          switch (action) {
+            case 'delete':
+              return Event.LINODE_DISK_DELETE;
+            case 'create':
+              return Event.LINODE_DISK_CREATE;
+            case 'resize':
+              return Event.LINODE_DISK_RESIZE;
+            default:
+              return Event.UNKNOWN;
+          }
+
         case 'backups':
-          // TODO: refine this
-          return Event.LINODE_BACKUPS;
+          switch (action) {
+            case 'enable':
+              return Event.LINODE_BACKUPS_ENABLE;
+            case 'cancel':
+              return Event.LINODE_BACKUPS_DISABLE;
+            default:
+              return Event.UNKNOWN;
+          }
+
         default:
           return Event.UNKNOWN;
       }

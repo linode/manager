@@ -19,11 +19,7 @@
         // TODO: remove after updating generic <header> css
         background: initial !important;
         border: 0 !important;
-        padding: 0 0 5px 0;
-    }
-
-    &-title {
-        font-size: $font-small;
+        padding: 0;
     }
 
     &-time {
@@ -33,12 +29,14 @@
     }
 
     &-subject {
+        font-size: $font-normal;
         font-weight: 600;
+        padding-right: 5px;
     }
 }
 
 .Notifications {
-    $notifications-width: 400px;
+    $notifications-width: 350px;
 
     &--open & {
         &-overlay {
