@@ -257,7 +257,7 @@ select,
 select.form-control,
 .btn:not(.btn-help) {
     height: $input-height !important;
-    line-height: $input-height !important;
+    line-height: $input-height - 1px !important;
     font-size: $font-normal !important;
     padding: 0 0 0 $input-padding;
 
