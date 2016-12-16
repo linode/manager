@@ -344,4 +344,22 @@ export const linodes = {
     status: 'unrecognized',
     backups: { ...testLinode.backups, enabled: false },
   },
+  1244: {
+    ...testLinode,
+    id: 1244,
+    label: 'Test Linode, offline with multiple configs',
+    status: 'offline',
+    backups: { ...testLinode.backups, enabled: false },
+    _configs: {
+      ...testLinode._configs,
+      totalResults: 2,
+      configs: {
+        ...testLinode._configs.configs,
+        12346: {
+          id: 12346,
+          label: 'Test config 2',
+        },
+      },
+    },
+  },
 };

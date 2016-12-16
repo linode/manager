@@ -7,6 +7,7 @@ import StatusDropdown from '~/linodes/components/StatusDropdown';
 import { expectRequest } from '@/common';
 import { api } from '@/data';
 
+import { SHOW_MODAL } from '~/actions/modal';
 const { linodes } = api;
 
 describe('linodes/components/StatusDropdown', () => {
@@ -112,5 +113,27 @@ describe('linodes/components/StatusDropdown', () => {
       <StatusDropdown linode={linodes.linodes[1243]} dispatch={dispatch} />
     );
     expect(dropdown.find('.StatusDropdown-status').text()).to.equal('Offline');
+  });
+
+  it('renders modal on reboot if multiple configs', () => {
+    const dispatch = sinon.spy();
+    const dropdown = shallow(
+      <StatusDropdown linode={linodes.linodes[1238]} dispatch={dispatch} />
+    );
+
+    dropdown.find('.StatusDropdown-toggle').simulate('click');
+    dropdown.find('.StatusDropdown-item').first().simulate('mousedown');
+    expect(dispatch.firstCall.args[0].type).to.equal(SHOW_MODAL);
+  });
+
+  it('renders modal on power on if multiple configs', () => {
+    const dispatch = sinon.spy();
+    const dropdown = shallow(
+      <StatusDropdown linode={linodes.linodes[1244]} dispatch={dispatch} />
+    );
+
+    dropdown.find('.StatusDropdown-toggle').simulate('click');
+    dropdown.find('.StatusDropdown-item').first().simulate('mousedown');
+    expect(dispatch.firstCall.args[0].type).to.equal(SHOW_MODAL);
   });
 });

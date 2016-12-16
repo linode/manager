@@ -1,0 +1,13 @@
+.ConfigSelectModal {
+    &-configs {
+        border: $border;
+        height: 200px;
+        overflow: auto;
+        padding: $input-padding;
+
+        label {
+            white-space: nowrap;
+        }
+    }
+}
+
