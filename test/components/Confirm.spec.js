@@ -22,7 +22,7 @@ describe('components/Confirm', () => {
       </Confirm>
     );
 
-    expect(modal.find('.btn-danger').text()).to.equal('OK button text');
+    expect(modal.find('.btn').at(1).text()).to.equal('OK button text');
     expect(modal.find('.bodytext').length).to.equal(1);
   });
 
@@ -39,7 +39,7 @@ describe('components/Confirm', () => {
       </Confirm>
     );
 
-    modal.find('.btn-danger').simulate('click');
+    modal.find('.btn').at(1).simulate('click');
     expect(onOk.callCount).to.equal(1);
   });
 
@@ -56,7 +56,7 @@ describe('components/Confirm', () => {
       </Confirm>
     );
 
-    modal.find('.btn-cancel').simulate('click');
+    modal.find('.btn').at(0).simulate('click');
     expect(onCancel.callCount).to.equal(1);
   });
 
@@ -65,6 +65,6 @@ describe('components/Confirm', () => {
       <Confirm onOk={() => {}} onCancel={() => {}} />
     );
 
-    expect(modal.find('.btn-danger').text()).to.equal('Confirm');
+    expect(modal.find('.btn').at(1).text()).to.equal('Confirm');
   });
 });

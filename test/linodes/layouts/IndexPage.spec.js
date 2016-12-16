@@ -283,7 +283,7 @@ describe('linodes/layouts/IndexPage', () => {
     const modal = mount(dispatch.firstCall.args[0].body);
 
     dispatch.reset();
-    modal.find('.btn-danger').simulate('click');
+    modal.find('.btn').at(1).simulate('click');
 
     const fn = dispatch.firstCall.args[0];
     await expectRequest(fn, '/linode/instances/1234', () => {}, null,

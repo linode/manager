@@ -24,12 +24,12 @@ export default class ConfirmModal extends Component {
         </p>
         <div className="modal-footer">
           <button
-            className="btn"
+            className="btn btn-default"
             disabled={loading}
             onClick={onCancel}
           >Cancel</button>
           <button
-            className="btn btn-danger"
+            className="btn btn-default"
             disabled={loading}
             onClick={this.handleOk}
           >{buttonText || 'Confirm'}</button>
