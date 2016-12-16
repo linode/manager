@@ -183,36 +183,6 @@ describe('linodes/linode/layouts/IndexPage', () => {
     expect(dropdown.length).to.equal(1);
   });
 
-  it('renders a config profile selection dropdown', () => {
-    const page = shallow(
-      <IndexPage
-        dispatch={dispatch}
-        linodes={linodes}
-        params={{ linodeId: '1238' }}
-        detail={detail}
-      />);
-    const select = page.find('header .configs');
-    expect(select.contains(
-      <option key={12345} value={12345}>Test config</option>))
-      .to.equal(true);
-    expect(select.contains(
-      <option key={12346} value={12346}>Test config 2</option>))
-      .to.equal(true);
-  });
-
-  it('switches the selected config when clicked', () => {
-    const page = shallow(
-      <IndexPage
-        dispatch={dispatch}
-        linodes={linodes}
-        params={{ linodeId: '1238' }}
-        detail={detail}
-      />);
-    const select = page.find('header .configs select');
-    select.simulate('change', { target: { value: 12346 } });
-    expect(page.state('config')).to.equal(12346);
-  });
-
   it('does not render power management dropdown when linode is transitioning', () => {
     const page = mount(
       <IndexPage

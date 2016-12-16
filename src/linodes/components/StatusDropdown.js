@@ -2,6 +2,8 @@ import React, { Component, PropTypes } from 'react';
 
 import { powerOnLinode, powerOffLinode, rebootLinode } from '~/api/linodes';
 import { LinodeStates, LinodeStatesReadable } from '~/constants';
+import { showModal } from '~/actions/modal';
+import ConfigSelectModal from '~/linodes/components/ConfigSelectModal';
 
 export function launchWeblishConsole(linode) {
   window.open(
@@ -38,6 +40,7 @@ export default class StatusDropdown extends Component {
         _key: 'reboot',
         _action: rebootLinode,
         _condition: () => linode.status !== 'offline',
+        _configs: true,
       },
       {
         name: <span>Power off</span>,
@@ -50,6 +53,7 @@ export default class StatusDropdown extends Component {
         _key: 'power-on',
         _action: powerOnLinode,
         _condition: () => linode.status === 'offline',
+        _configs: true,
       },
       {
         name: <span>Launch Console</span>,
@@ -63,7 +67,20 @@ export default class StatusDropdown extends Component {
       ...element,
       action: () => {
         this.close();
-        dispatch(element._action(linode.id, this.state.config || null));
+
+        const configCount = Object.keys(linode._configs.configs).length;
+        if (!element._configs || configCount <= 1) {
+          dispatch(element._action(linode.id));
+          return;
+        }
+
+        dispatch(showModal('Select configuration profile',
+          <ConfigSelectModal
+            linode={linode}
+            dispatch={dispatch}
+            action={element._action}
+          />
+        ));
       },
     }));
 
