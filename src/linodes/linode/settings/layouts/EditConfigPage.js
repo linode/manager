@@ -131,6 +131,9 @@ export function renderDiskSlot(device, index) {
               );
             }
           })}
+          <option value="25665">
+            Recovery - Finnix (iso)
+          </option>
         </select>
         <div>
           {addButton}
