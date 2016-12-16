@@ -100,7 +100,7 @@ export function renderDiskSlot(device, index) {
       onClick={() => this.removeDiskSlot(device)}
     >Remove</button>
   ) : null;
-  let maxDiskKey = 0;
+
   return (
     <div
       className="form-group row disk-slot"
@@ -122,7 +122,6 @@ export function renderDiskSlot(device, index) {
           }}
         >
           {Object.keys(disks).map((disk, i) => {
-            maxDiskKey = i;
             if (disks[disk]) {
               const { id, label } = disks[disk];
               return (
@@ -132,7 +131,7 @@ export function renderDiskSlot(device, index) {
               );
             }
           })}
-          <option key={maxDiskKey} value="25665">
+          <option value="25665">
             Recovery - Finnix (iso)
           </option>
         </select>
