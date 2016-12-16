@@ -68,13 +68,9 @@ export default class StatusDropdown extends Component {
       action: () => {
         this.close();
 
-        const commit = () => {
-          dispatch(element._action(linode.id, this.state.config || null));
-        };
-
         const configCount = Object.keys(linode._configs.configs).length;
         if (!element._configs || configCount <= 1) {
-          commit();
+          dispatch(element._action(linode.id));
           return;
         }
 
