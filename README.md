@@ -63,9 +63,9 @@ restart it.
 While running the manager in development mode, you may press Ctrl+H to view the
 redux dev tools to track the state of the application, and Ctrl+Q to move them
 around the screen if necessary. If you'd rather disable the devtools, you can
-set the NODE_ENV flag to "production" or set the DEVTOOLS_ENABLED flag to false:
+set the NODE_ENV flag to "production" or set the DEVTOOLS_DISABLED flag to false:
 
-    DEVTOOLS_ENABLED=false npm start
+    DEVTOOLS_DISABLED=true npm start
 
 ## Tests
 

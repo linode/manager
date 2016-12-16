@@ -12,7 +12,7 @@ _.plugins = [
     'process.env': {
       'NODE_ENV': JSON.stringify('production')
     },
-    'ENV_DEVTOOLS_ENABLED': JSON.stringify(process.env.DEVTOOLS_ENABLED),
+    'ENV_DEVTOOLS_DISABLED': JSON.stringify(process.env.DEVTOOLS_DISBLED),
     'ENV_APP_ROOT': JSON.stringify(process.env.APP_ROOT),
     'ENV_API_ROOT': JSON.stringify(process.env.API_ROOT),
     'ENV_LOGIN_ROOT': JSON.stringify(process.env.LOGIN_ROOT),
