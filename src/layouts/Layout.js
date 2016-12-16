@@ -6,10 +6,10 @@ import { EVENT_POLLING_DELAY } from '~/constants';
 import { events } from '~/api';
 import { Event } from '~/api/objects/Event';
 import { actions as eventsActions } from '~/api/configs/events';
-import { eventRead } from '~/api/events';
+import { eventRead, eventSeen } from '~/api/events';
 import Header from '~/components/Header';
 import Sidebar from '~/components/Sidebar';
-import Notifications from '~/components/Notifications';
+import Notifications, { sortNotifications } from '~/components/Notifications';
 import Modal from '~/components/Modal';
 import Error from '~/components/Error';
 import Feedback from '~/components/Feedback';
@@ -102,15 +102,14 @@ export class Layout extends Component {
     const { dispatch } = this.props;
     const nextProcessedEvents = await dispatch(events.page(page, [], this.eventHandler, false));
     // If all the events are new, we want to fetch another page.
-    // TODO: probably only need to check for seen events not read
-    const allUnread = nextProcessedEvents.events.reduce((allUnreadEvents, { read }) =>
-      !read && allUnreadEvents, true) && nextProcessedEvents.events.length;
+    const allUnseen = nextProcessedEvents.events.reduce((allUnseenEvents, { seen }) =>
+      !seen && allUnseenEvents, true) && nextProcessedEvents.events.length;
 
     const allProcessedEvents = {
       ...nextProcessedEvents,
       events: processedEvents.events.concat(nextProcessedEvents.events),
     };
-    if (allUnread) {
+    if (allUnseen) {
       return this.fetchEventsPage(page + 1, allProcessedEvents);
     }
 
@@ -150,10 +149,14 @@ export class Layout extends Component {
     return async (e) => {
       e.preventDefault();
       e.stopPropagation();
-      const { dispatch, [type]: { open } } = this.props;
+      const { dispatch, [type]: { open }, events } = this.props;
       if (open) {
         await dispatch(hide());
       } else {
+        const sortedEvents = sortNotifications(events);
+        if (sortedEvents[0] && !sortedEvents[0].seen) {
+          dispatch(eventSeen(sortedEvents[0].id));
+        }
         await dispatch(hideModal());
         await dispatch(show());
       }

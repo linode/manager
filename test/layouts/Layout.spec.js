@@ -169,8 +169,8 @@ describe('layouts/Layout', () => {
 
     const fetchPageResponse = {
       events: [
-        { read: true },
-        { read: true },
+        { seen: true },
+        { seen: true },
       ],
     };
     const dispatchStub = sandbox.stub({ dispatch() {} }, 'dispatch', () => fetchPageResponse);
@@ -187,8 +187,8 @@ describe('layouts/Layout', () => {
 
     const fetchPageResponse = {
       events: [
-        { read: false },
-        { read: false },
+        { seen: false },
+        { seen: false },
       ],
     };
     let firstCall = true;
@@ -198,7 +198,7 @@ describe('layouts/Layout', () => {
         return fetchPageResponse;
       }
 
-      return { events: [{ read: true }] };
+      return { events: [{ seen: true }] };
     });
     const page = shallow(makeLayout(dispatchStub));
 
@@ -207,9 +207,9 @@ describe('layouts/Layout', () => {
     expect(dispatchStub.callCount).to.equal(2);
     expectObjectDeepEquals(results, {
       events: [
-        { read: false },
-        { read: false },
-        { read: true },
+        { seen: false },
+        { seen: false },
+        { seen: true },
       ],
     });
   });
