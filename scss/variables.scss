@@ -59,7 +59,7 @@ $box-shadow: 0px 2px 4px 0px $transparent;
 
 
 /* BEGIN bootstrap overrides */
-$grid-gutter-width-base: 15px;
+$grid-gutter-width-base: 40px;
 
 $grid-breakpoints: (
   xs: 0 + $sidebar-width,
@@ -67,6 +67,14 @@ $grid-breakpoints: (
   md: 768px + $sidebar-width,
   lg: 992px + $sidebar-width,
   xl: 1200px + $sidebar-width
+);
+
+// Basically just sets each max width to 100%
+$container-max-widths: (
+  sm: map-get($grid-breakpoints, sm) + $sidebar-width - $grid-gutter-width-base / 2,
+  md: map-get($grid-breakpoints, md) + $sidebar-width - $grid-gutter-width-base / 2,
+  lg: map-get($grid-breakpoints, lg) + $sidebar-width - $grid-gutter-width-base / 2,
+  xl: map-get($grid-breakpoints, xl) + $sidebar-width - $grid-gutter-width-base / 2
 );
 
 /* END bootstrap overrides */

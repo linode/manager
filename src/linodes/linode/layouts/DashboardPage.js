@@ -163,7 +163,7 @@ export class DashboardPage extends Component {
       }.linode.com`;
 
     return (
-      <div className="row row-eq-height">
+      <div className="row-justify row-eq-height">
         <section className="col-lg-6 col-md-12">
           <div className="card">
             <header>
@@ -173,7 +173,7 @@ export class DashboardPage extends Component {
               <div className="col-sm-3 label-col">
                 IP Addresses
               </div>
-              <div className="col-sm-8 content-col right">
+              <div className="col-sm-9 content-col right">
                 <ul className="list-unstyled">
                   <li>{linode.ipv4}</li>
                   <li className="text-light-black">{linode.ipv6}</li>
@@ -186,7 +186,7 @@ export class DashboardPage extends Component {
                 <div className="col-sm-3 label-col">
                   Plan
                 </div>
-                <div className="col-sm-8 content-col right">
+                <div className="col-sm-9 content-col right">
                   {plan}
                 </div>
               </div>
@@ -196,7 +196,7 @@ export class DashboardPage extends Component {
               <div className="col-sm-3 label-col">
                 Datacenter
               </div>
-              <div className="col-sm-8 content-col right">
+              <div className="col-sm-9 content-col right">
                 {this.renderDatacenterStyle(linode)}
               </div>
             </div>
@@ -204,7 +204,7 @@ export class DashboardPage extends Component {
               <div className="col-sm-3 label-col">
                 Distribution
               </div>
-              <div className="col-sm-8 content-col right">
+              <div className="col-sm-9 content-col right">
                 {linode.distribution != null ? this.renderDistroStyle(linode) : 'Unknown'}
               </div>
             </div>
@@ -212,7 +212,7 @@ export class DashboardPage extends Component {
               <div className="col-sm-3 label-col">
                 Backup
               </div>
-              <div className="col-sm-8 content-col right">
+              <div className="col-sm-9 content-col right">
                 {this.renderBackupStatus(linode)}
               </div>
             </div>

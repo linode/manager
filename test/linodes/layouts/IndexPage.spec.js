@@ -66,7 +66,7 @@ describe('linodes/layouts/IndexPage', () => {
       />
     );
 
-    const linodesPage = page.find('.linodes-page > .row');
+    const linodesPage = page.find('.linodes-page > .row-justify');
 
     expect(linodesPage.find('.col-md-6').length).to.equal(2);
     expect(linodesPage.find('.linode-label').first()

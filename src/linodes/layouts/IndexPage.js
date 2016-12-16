@@ -131,14 +131,14 @@ export class IndexPage extends Component {
     const { view } = this.props;
     if (view === 'grid') {
       return (
-        <div key={group} className="row linodes">
+        <div key={group} className="row-justify linodes">
           {!group ? null : (
             <div className="col-md-12">
               <h3 className="display-group">{group}</h3>
             </div>
            )}
            {sortedLinodes.map(l =>
-             <div key={l.id} className="col-sm-12 col-md-6 col-lg-4">
+             <div key={l.id} className="col-sm-12 col-md-6 col-lg-6 col-xl-4">
                {renderLinode(l, false)}
              </div>)}
         </div>
