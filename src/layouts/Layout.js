@@ -151,14 +151,14 @@ export class Layout extends Component {
       e.stopPropagation();
       const { dispatch, [type]: { open }, events } = this.props;
       if (open) {
-        await dispatch(hide());
+        dispatch(hide());
       } else {
         const sortedEvents = sortNotifications(events);
-        if (sortedEvents[0] && !sortedEvents[0].seen) {
+        if (type === 'notifications' && sortedEvents[0] && !sortedEvents[0].seen) {
           dispatch(eventSeen(sortedEvents[0].id));
         }
-        await dispatch(hideModal());
-        await dispatch(show());
+        dispatch(hideModal());
+        dispatch(show());
       }
     };
   }

@@ -57,6 +57,6 @@ describe('components/Header', () => {
       />
     );
 
-    expect(navigation.find('.MainHeader-badge').text()).to.equal('1');
+    expect(navigation.find('.MainHeader-badge').text()).to.equal('2');
   });
 });
