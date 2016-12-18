@@ -44,7 +44,7 @@ describe('component/Feedback', () => {
       />
     );
 
-    feedback.find('.btn.btn-cancel').simulate('click');
+    feedback.find('.btn').at(2).simulate('click');
     expect(hideShowFeedback.calledOnce).to.equal(true);
 
     feedback.find('.feedback-button').simulate('click');

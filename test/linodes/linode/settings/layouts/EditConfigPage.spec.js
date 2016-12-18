@@ -38,7 +38,7 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
 
     await page.instance().componentDidMount();
     const saveChanges = sandbox.stub(page.instance(), 'saveChanges');
-    page.find('.btn-primary').simulate('click');
+    page.find('.btn').at(0).simulate('click');
     expect(saveChanges.calledOnce).to.equal(true);
   });
 
@@ -108,7 +108,7 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
 
     const removeDiskSlot = sandbox.stub(page.instance(), 'removeDiskSlot');
 
-    const removeBtn = page.find('.disk-slot .btn-cancel').at(0);
+    const removeBtn = page.find('.disk-slot .btn').at(0);
     expect(removeBtn.text()).to.equal('Remove');
     removeBtn.simulate('click');
     expect(removeDiskSlot.calledOnce).to.equal(true);
@@ -131,7 +131,7 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
 
     const addDiskSlot = sandbox.stub(page.instance(), 'addDiskSlot');
 
-    const addBtn = page.find('.disk-slot .btn-cancel').at(0);
+    const addBtn = page.find('.disk-slot .btn').at(0);
     expect(addBtn.text()).to.equal('Add');
     addBtn.simulate('click');
     expect(addDiskSlot.calledOnce).to.equal(true);

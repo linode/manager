@@ -191,7 +191,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
           {...props}
           dispatch={dispatch}
         />);
-      modal.find('.btn-cancel').simulate('click');
+      modal.find('.btn').at(0).simulate('click');
       expect(dispatch.calledOnce).to.equal(true);
       expect(dispatch.calledWith(hideModal())).to.equal(true);
     });
@@ -203,7 +203,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
           dispatch={() => {}}
         />);
       const saveChanges = sandbox.stub(modal.instance(), 'saveChanges');
-      modal.find('.btn-primary').simulate('click');
+      modal.find('.btn').at(1).simulate('click');
       expect(saveChanges.calledOnce).to.equal(true);
     });
 
@@ -284,7 +284,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
           dispatch={() => {}}
         />);
       expect(modal.find('p').length).to.equal(1);
-      expect(modal.find('.btn-cancel').length).to.equal(1);
+      expect(modal.find('.btn').at(0).length).to.equal(1);
       expect(modal.find('button').length).to.equal(2);
     });
 
@@ -295,7 +295,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
           {...props}
           dispatch={dispatch}
         />);
-      modal.find('.btn-cancel').simulate('click');
+      modal.find('.btn').at(0).simulate('click');
       expect(dispatch.calledOnce).to.equal(true);
       expect(dispatch.calledWith(hideModal())).to.equal(true);
     });
@@ -307,7 +307,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
           {...props}
           dispatch={dispatch}
         />);
-      await modal.find('.btn-danger').props().onClick();
+      await modal.find('.btn').at(1).props().onClick();
       expect(dispatch.calledTwice).to.equal(true);
       const fn = dispatch.firstCall.args[0];
       await expectRequest(fn, '/linode/instances/1236/disks/12345',
@@ -428,7 +428,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
           {...props}
           dispatch={dispatch}
         />);
-      modal.find('.btn-cancel').simulate('click');
+      modal.find('.btn').at(0).simulate('click');
       expect(dispatch.calledOnce).to.equal(true);
       expect(dispatch.calledWith(hideModal())).to.equal(true);
     });
@@ -440,7 +440,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
           dispatch={() => {}}
         />);
       const createDisk = sandbox.stub(modal.instance(), 'createDisk');
-      modal.find('.btn-primary').simulate('click');
+      modal.find('.btn').at(1).simulate('click');
       expect(createDisk.calledOnce).to.equal(true);
     });
 

@@ -129,7 +129,7 @@ export class AlertsPage extends Component {
           <div className="row">
             <div className="offset-sm-2 col-sm-10">
               <button
-                className="btn btn-primary"
+                className="btn"
                 disabled={loading}
               >Save</button>
             </div>

@@ -25,12 +25,12 @@ export class CancelBackupsModal extends Component {
         </p>
         <div className="modal-footer">
           <button
-            className="btn btn-cancel"
+            className="btn"
             disabled={loading}
             onClick={() => dispatch(hideModal())}
           >Cancel</button>
           <button
-            className="btn btn-danger"
+            className="btn"
             disabled={loading}
             onClick={async () => {
               this.setState({ loading: true });
@@ -144,7 +144,7 @@ export class SettingsPage extends Component {
               </div>
             </FormGroup>
             <ErrorSummary errors={errors} />
-            <button className="btn btn-primary" onClick={this.onSubmit}>
+            <button className="btn" onClick={this.onSubmit}>
               Save
             </button>
           </form>
