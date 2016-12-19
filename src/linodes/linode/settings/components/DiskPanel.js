@@ -102,7 +102,7 @@ export class EditModal extends Component {
             onClick={() => dispatch(hideModal())}
           >Cancel</button>
           <button
-            className="btn btn-primary"
+            className="btn btn-default"
             onClick={() => this.saveChanges()}
             disabled={loading}
           >Save</button>
@@ -170,7 +170,7 @@ export class DeleteModal extends Component {
             onClick={() => dispatch(hideModal())}
           >Cancel</button>
           <button
-            className="btn btn-danger"
+            className="btn btn-default"
             disabled={loading}
             onClick={() => this.deleteDisk()}
           >Delete disk</button>
@@ -352,7 +352,7 @@ export class AddModal extends Component {
             onClick={() => dispatch(hideModal())}
           >Cancel</button>
           <button
-            className="btn btn-primary"
+            className="btn btn-default"
             disabled={ready}
             onClick={() => this.createDisk()}
           >Add disk</button>

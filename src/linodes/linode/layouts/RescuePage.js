@@ -41,7 +41,7 @@ export class ResetRootPwModal extends Component {
             onClick={() => dispatch(hideModal())}
           >Cancel</button>
           <button
-            className="btn btn-danger"
+            className="btn btn-default"
             disabled={loading}
             onClick={async () => {
               this.setState({ loading: true });
@@ -182,7 +182,7 @@ export class RescuePage extends Component {
             <div className="col-xs-9 input-container">Finnix Media</div>
           </div>
           <button
-            className="btn btn-danger"
+            className="btn btn-default"
             onClick={() => dispatch(rebootLinode)}
           >Reboot</button>
 
@@ -254,7 +254,7 @@ export class RescuePage extends Component {
                 be powered off to reset your root password.
               </div>}
           <button
-            className="btn btn-danger reset-root-pw-button"
+            className="btn reset-root-pw-button"
             disabled={!this.state.password || this.state.applying || linode.status !== 'offline'}
             onClick={() => dispatch(showModal('Reset root password', resetRootPwModal))}
           >Reset Password</button>
