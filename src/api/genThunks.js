@@ -16,7 +16,7 @@ import { fetch } from '~/fetch';
  *                              store.api, ['1234', '1'])
  *   returns store.api.linodes.linodes['1234']._configs.configs['1']
  */
-function getStateOfSpecificResource(config, state, ids) {
+export function getStateOfSpecificResource(config, state, ids) {
   const path = [];
   let root = config;
   const match = (sub, parent) => {
