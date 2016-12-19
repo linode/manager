@@ -24,4 +24,17 @@ describe('api/genThunks', () => {
     const specResource = thunks.getStateOfSpecificResource(config, state, id);
     expect(specResource.foo).to.equal('bar');
   });
+
+  it('filters resources', () => {
+    const config = gen.genConfig({
+      plural: 'linodes',
+      singular: 'linode',
+      localStorageCacheable: true,
+      endpoint: id => `/linode/instances/${id}`,
+      supports: [gen.ONE, gen.MANY, gen.PUT, gen.DELETE, gen.POST],
+    });
+    const resources = { linodes: { foo: 'bar' }, totalPages: 1, totalResults: 1 };
+    const filteredResources = thunks.filterResources(config, resources);
+    expect(filteredResources.linodes.foo).to.equal('bar');
+  });
 });

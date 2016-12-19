@@ -49,7 +49,7 @@ export function getStateOfSpecificResource(config, state, ids) {
  * Apply a filter to all returned objects so only selected fields (or none)
  * will be updated.
  */
-function filterResources(config, resources, resourceFilter = x => x) {
+export function filterResources(config, resources, resourceFilter = x => x) {
   const filteredResources = { ...resources };
 
   for (let i = 0; i < filteredResources[config.plural].length; i += 1) {
