@@ -34,7 +34,7 @@ describe('api/gen', () => {
       endpoint: id => `/datacenters/${id}`,
       supports: [gen.ONE, gen.MANY],
     });
-    const df = gen.genDefaultState(config);
+    const df = gen.generateDefaultStateMany(config);
     expect(df).to.deep.equal({
       totalPages: -1,
       totalResults: -1,
@@ -42,7 +42,7 @@ describe('api/gen', () => {
     });
   });
 
-  it('should add meta', () => {
+  it('should add one', () => {
     const config = gen.genConfig({
       plural: 'datacenters',
       singular: 'datacenter',
@@ -50,10 +50,9 @@ describe('api/gen', () => {
       endpoint: id => `/datacenters/${id}`,
       supports: [gen.ONE, gen.MANY],
     });
-    const addMeta = gen.addMeta(config, 'ph');
-    expect(addMeta[0]).to.equal('p');
-    expect(addMeta[1]).to.equal('h');
-    expect(addMeta._polling).to.equal(false);
+    const addOne = gen.generateDefaultStateOne(config, 'ph');
+    expect(addOne[0]).to.equal('p');
+    expect(addOne[1]).to.equal('h');
   });
 
   it('should run invalidate', () => {
@@ -82,7 +81,6 @@ describe('api/gen', () => {
     const state = { linodes: { foo: 'bar' }, totalPages: 1, totalResults: 1 };
     const action = { ids: [testLinode.id], type: 'GEN@linodes/ONE' };
     const output = gen.ReducerGenerator.one(config, state, action);
-    expect(output.linodes[testLinode.id]._polling).to.equal(false);
     expect(output.linodes.foo).to.equal('bar');
     expect(output.totalPages).to.equal(1);
     expect(output.totalResults).to.equal(1);

@@ -74,7 +74,7 @@ export function generateDefaultStateMany(config) {
   };
 }
 
-function generateDefaultStateOne(config, one) {
+export function generateDefaultStateOne(config, one) {
   const subresources = _.reduce(
     config.subresources, (accumulated, subresourceConfig, subresourceName) => ({
       ...accumulated,
@@ -110,7 +110,10 @@ export class ReducerGenerator {
     const { page } = action;
 
     const newState = page[config.plural].reduce((stateAccumulator, oneObject) =>
-      one(config, stateAccumulator, { ids: [oneObject.id], resource: oneObject }), oldState);
+      ReducerGenerator.one(config, stateAccumulator, {
+        ids: [oneObject.id],
+        resource: oneObject,
+      }), oldState);
 
     return {
       ...newState,
