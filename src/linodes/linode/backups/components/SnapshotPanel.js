@@ -17,7 +17,7 @@ export function snapshotPanel() {
       <div className="form-group row snapshot-button">
         <div className="col-sm-12 label-col left">
           <form>
-            <button type="submit" className="btn btn-primary">
+            <button type="submit" className="btn btn-default">
               Take Snapshot
             </button>
           </form>
@@ -75,7 +75,7 @@ export function snapshotPanel() {
       <div className="form-group row snapshot-button">
         <div className="col-sm-12 label-col left">
           <form>
-            <button type="submit" className="btn btn-primary">
+            <button type="submit" className="btn btn-default">
               Take Snapshot
             </button>
           </form>

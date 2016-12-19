@@ -40,7 +40,7 @@ describe('linodes/linode/backups/layouts/SettingsPage', () => {
     expect(settingsForm.length).to.equal(1);
 
     dispatch.reset();
-    page.find('.btn-primary').simulate('click');
+    page.find('.btn-default').at(0).simulate('click');
 
     const fn = dispatch.firstCall.args[0];
     await expectRequest(fn, '/linode/instances/1234', () => {}, null,
@@ -80,7 +80,7 @@ describe('linodes/linode/backups/layouts/SettingsPage', () => {
       <CancelBackupsModal linodeId="1234" dispatch={dispatch} />
     );
 
-    const confirmButton = modal.find('.btn-danger');
+    const confirmButton = modal.find('.btn-default');
     expect(confirmButton.length).to.equal(1);
 
     dispatch.reset();

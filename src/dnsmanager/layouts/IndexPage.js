@@ -43,7 +43,7 @@ export class IndexPage extends Component {
             onClick={() => dispatch(hideModal())}
           >Cancel</Link>
           <button
-            className="btn btn-primary"
+            className="btn btn-default"
             onClick={() => {
               dispatch(dnszones.delete(zoneId));
               dispatch(hideModal());
@@ -95,7 +95,7 @@ export class IndexPage extends Component {
             <h1>DNS Manager</h1>
           </div>
           <div className="float-xs-right">
-            <Link to="/dnsmanager/create" className="btn btn-primary">Add a zone</Link>
+            <Link to="/dnsmanager/create" className="btn btn-default">Add a zone</Link>
           </div>
         </header>
         {Object.keys(this.props.dnszones.dnszones).length ? renderZones() :

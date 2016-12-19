@@ -29,7 +29,7 @@ export default class ConfirmModal extends Component {
             onClick={onCancel}
           >Cancel</button>
           <button
-            className="btn btn-danger"
+            className="btn btn-default"
             disabled={loading}
             onClick={this.handleOk}
           >{buttonText || 'Confirm'}</button>

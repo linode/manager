@@ -203,7 +203,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
           dispatch={() => {}}
         />);
       const saveChanges = sandbox.stub(modal.instance(), 'saveChanges');
-      modal.find('.btn-primary').simulate('click');
+      modal.find('.btn-default').simulate('click');
       expect(saveChanges.calledOnce).to.equal(true);
     });
 
@@ -307,7 +307,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
           {...props}
           dispatch={dispatch}
         />);
-      await modal.find('.btn-danger').props().onClick();
+      await modal.find('.btn-default').props().onClick();
       expect(dispatch.calledTwice).to.equal(true);
       const fn = dispatch.firstCall.args[0];
       await expectRequest(fn, '/linode/instances/1236/disks/12345',
@@ -440,7 +440,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
           dispatch={() => {}}
         />);
       const createDisk = sandbox.stub(modal.instance(), 'createDisk');
-      modal.find('.btn-primary').simulate('click');
+      modal.find('.btn-default').simulate('click');
       expect(createDisk.calledOnce).to.equal(true);
     });
 

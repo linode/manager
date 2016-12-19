@@ -32,7 +32,7 @@ describe('linodes/linode/settings/layouts/DisplayPage', () => {
     expect(page.find('header h2').text()).to.equal('Display');
     expect(page.find('[name="group"]').props().value).to.equal('Test Group');
     expect(page.find('[name="label"]').props().value).to.equal('Test Linode');
-    expect(page.find('button.btn.btn-primary').text()).to.equal('Save');
+    expect(page.find('button.btn.btn-default').text()).to.equal('Save');
   });
 
   it('changes group and label values onChange', async () => {
