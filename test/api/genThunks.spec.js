@@ -33,8 +33,8 @@ describe('api/genThunks', () => {
       endpoint: id => `/linode/instances/${id}`,
       supports: [gen.ONE, gen.MANY, gen.PUT, gen.DELETE, gen.POST],
     });
-    const resources = { linodes: { foo: 'bar' }, totalPages: 1, totalResults: 1 };
+    const resources = { linodes: [{ foo: 'bar' }], totalPages: 1, totalResults: 1 };
     const filteredResources = thunks.filterResources(config, resources);
-    expect(filteredResources.linodes.foo).to.equal('bar');
+    expect(filteredResources.linodes[0].foo).to.equal('bar');
   });
 });
