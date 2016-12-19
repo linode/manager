@@ -25,7 +25,7 @@ export default function Header(props) {
   );
 
   const unseenNotifications = Object.values(events.events).reduce((unseen, e) =>
-    e.read ? unseen : unseen + 1, 0);
+    e.seen ? unseen : unseen + 1, 0);
   const main = (
     <div className="MainHeader clearfix">
       <div className="MainHeader-brand">

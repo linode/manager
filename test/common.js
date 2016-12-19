@@ -68,37 +68,44 @@ function isObject(o) {
   return o === Object(o);
 }
 
-export function expectObjectDeepEquals(a, b, keyPath = []) {
-  if (isObject(a)) {
-    if (!isObject(b)) {
-      throw new InternalAssertionTypeError(a, b, keyPath);
-    }
+export function expectObjectDeepEquals(initialA, initialB) {
+  const stackA = [{ a: initialA, path: [] }];
+  const stackB = [initialB];
 
-    Object.keys(a).forEach(aKey => {
-      const aVal = a[aKey];
-      const bVal = b[aKey];
+  while (stackA.length) {
+    const { a, path } = stackA.pop();
+    const b = stackB.pop();
 
-      expectObjectDeepEquals(aVal, bVal, [...keyPath, aKey]);
-    });
-
-    Object.keys(b).forEach(bKey => {
-      if (a[bKey] === undefined) {
-        throw new InternalAssertionError(a[bKey], b[bKey], keyPath);
+    if (isObject(a)) {
+      if (!isObject(b)) {
+        throw new InternalAssertionTypeError(a, b, path);
       }
-    });
-  } else if (Array.isArray(a)) {
-    if (!Array.isArray(b)) {
-      throw new InternalAssertionTypeError(a, b, keyPath);
-    } else if (a.length !== b.length) {
-      throw new InternalAssertionError(a, b, keyPath);
-    }
 
-    a.forEach((aVal, i) => {
-      expectObjectDeepEquals(aVal, b[i], [...keyPath, i]);
-    });
-  } else {
-    if (a !== b) {
-      throw new InternalAssertionError(a, b, keyPath);
+      Object.keys(a).forEach(aKey => {
+        stackA.push({ a: a[aKey], path: [...path, aKey] });
+        stackB.push(b[aKey]);
+      });
+
+      Object.keys(b).forEach(bKey => {
+        if (a[bKey] === undefined) {
+          throw new InternalAssertionError(a[bKey], b[bKey], path);
+        }
+      });
+    } else if (Array.isArray(a)) {
+      if (!Array.isArray(b)) {
+        throw new InternalAssertionTypeError(a, b, path);
+      } else if (a.length !== b.length) {
+        throw new InternalAssertionError(a, b, path);
+      }
+
+      a.forEach((aVal, i) => {
+        stackA.push({ a: aVal, path: [...path, i] });
+        stackB.push(b[i]);
+      });
+    } else {
+      if (a !== b) {
+        throw new InternalAssertionError(a, b, path);
+      }
     }
   }
 }

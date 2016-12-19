@@ -5,6 +5,7 @@ export const apiTestEvent = {
   updated: '2016-11-21T20:03:40',
   linode_id: 1237,
   read: false,
+  seen: false,
   finished: null,
   percent_complete: 100,
   created: '2016-11-21T20:03:40',

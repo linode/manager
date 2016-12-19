@@ -1,17 +1,22 @@
 import { fetch } from '~/fetch';
-import { events } from '~/api';
 import { actions } from './configs/events';
 
-export function eventRead(eventId) {
-  return async (dispatch, getState) => {
+export function eventAction(action) {
+  return (eventId) => async (dispatch, getState) => {
     const state = getState();
 
     const event = state.api.events.events[eventId];
-    await dispatch(actions.one({ ...event, read: true }, eventId));
+    await dispatch(actions.one({ ...event, [action]: true }, eventId));
+
+    if (action === 'seen') {
+      Object.keys(state.api.events.events).forEach(eventId =>
+        dispatch(actions.one({ ...event, seen: true }, eventId)));
+    }
 
     const { token } = state.authentication;
-    await fetch(token, `/account/events/${eventId}/read`, { method: 'POST' });
-    await dispatch(actions.invalidate([eventId], true));
-    await dispatch(events.one([eventId]));
+    fetch(token, `/account/events/${eventId}/${action}`, { method: 'POST' });
   };
 }
+
+export const eventRead = eventAction('read');
+export const eventSeen = eventAction('seen');
