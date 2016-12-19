@@ -552,7 +552,7 @@ export class EditConfigPage extends Component {
           <div className="row">
             <div className="offset-sm-2 col-sm-10">
               <button
-                className="btn btn-primary"
+                className="btn btn-default"
                 disabled={loading}
                 onClick={() => this.saveChanges()}
               >{this.props.create ? 'Add config' : 'Save'}</button>

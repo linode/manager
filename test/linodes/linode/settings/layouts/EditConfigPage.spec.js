@@ -38,7 +38,7 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
 
     await page.instance().componentDidMount();
     const saveChanges = sandbox.stub(page.instance(), 'saveChanges');
-    page.find('.btn-primary').simulate('click');
+    page.find('.btn-default').simulate('click');
     expect(saveChanges.calledOnce).to.equal(true);
   });
 

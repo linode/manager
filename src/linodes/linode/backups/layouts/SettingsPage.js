@@ -30,7 +30,7 @@ export class CancelBackupsModal extends Component {
             onClick={() => dispatch(hideModal())}
           >Cancel</button>
           <button
-            className="btn btn-danger"
+            className="btn btn-default"
             disabled={loading}
             onClick={async () => {
               this.setState({ loading: true });
@@ -144,7 +144,7 @@ export class SettingsPage extends Component {
               </div>
             </FormGroup>
             <ErrorSummary errors={errors} />
-            <button className="btn btn-primary" onClick={this.onSubmit}>
+            <button className="btn btn-default" onClick={this.onSubmit}>
               Save
             </button>
           </form>
