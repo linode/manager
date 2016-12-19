@@ -4,6 +4,7 @@ import moment from 'moment';
 import mockdate from 'mockdate';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
+
 import { Linode, renderBackupStatus } from '~/linodes/components/Linode';
 import { testLinode } from '@/data/linodes';
 
@@ -21,9 +22,7 @@ describe('linodes/components/Linode', () => {
         isSelected={false}
       />);
 
-    expect(linode.find('Link.linode-label').props())
-      .to.have.property('to')
-      .which.equals('/linodes/1234');
+    expect(linode.find('Link.linode-label').props().to).to.equal('/linodes/test-linode');
   });
 
   it('renders the IP addresses', () => {
@@ -97,6 +96,7 @@ describe('linodes/components/Linode', () => {
   describe('renderBackupStatus', () => {
     const linode = {
       id: 1234,
+      label: 'test-linode',
       backups: {
         enabled: true,
         last_backup: '2016-07-13T12:30:18',
@@ -121,7 +121,7 @@ describe('linodes/components/Linode', () => {
       }));
       expect(item.find('Link').length).to.equal(1);
       expect(item.find('Link').props().to)
-        .to.equal('/linodes/1234/backups');
+        .to.equal('/linodes/test-linode/backups');
     });
 
     it('renders the last backup taken', () => {

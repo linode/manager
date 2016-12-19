@@ -25,7 +25,7 @@ export async function expectRequest(fn, path, dispatched = () => {},
     });
     const dispatch = sinon.spy();
     await fn(dispatch, () => state);
-    expect(fetchStub.calledOnce).to.equal(true);
+    expect(fetchStub.callCount).to.equal(1);
     expect(fetchStub.firstCall.args[1]).to.equal(path);
     if (options) {
       const o = fetchStub.firstCall.args[2];

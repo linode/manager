@@ -19,7 +19,7 @@ export class IndexPage extends Component {
       { name: 'Display', link: '/' },
       { name: 'Alerts', link: '/alerts' },
       { name: 'Advanced', link: '/advanced' },
-    ].map(t => ({ ...t, link: `/linodes/${linode.id}/settings${t.link}` }));
+    ].map(t => ({ ...t, link: `/linodes/${linode.label}/settings${t.link}` }));
 
     const pathname = location ? location.pathname : tabList[0].link;
     const selected = tabList.reduce((last, current) =>
@@ -33,7 +33,7 @@ IndexPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   linodes: PropTypes.object.isRequired,
   params: PropTypes.shape({
-    linodeId: PropTypes.string.isRequired,
+    linodeLabel: PropTypes.string.isRequired,
   }).isRequired,
   children: PropTypes.object,
   location: PropTypes.object,

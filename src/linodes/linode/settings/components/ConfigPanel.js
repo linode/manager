@@ -28,7 +28,7 @@ function configContent(linode, configs, dispatch) {
           <tr key={config.id}>
             <td>
               <Link
-                to={`/linodes/${linode.id}/settings/advanced/configs/${config.id}`}
+                to={`/linodes/${linode.label}/settings/advanced/configs/${config.id}`}
               >
                 {config.label}
               </Link>
@@ -51,10 +51,10 @@ function configContent(linode, configs, dispatch) {
 }
 
 export class ConfigPanel extends Component {
-  static async preload(store, newParams) {
-    const { linodeId } = newParams;
-    await store.dispatch(linodes.one([linodeId]));
-    await store.dispatch(linodes.configs.all([linodeId]));
+  static async preload({ dispatch, getState }, { linodeLabel }) {
+    const { id } = Object.values(getState().api.linodes.linodes).reduce(
+      (match, linode) => linode.label === linodeLabel ? linode : match);
+    await dispatch(linodes.configs.all([id]));
   }
 
   constructor() {
@@ -74,7 +74,7 @@ export class ConfigPanel extends Component {
         <header className="clearfix">
           <h2 className="float-xs-left">Configs<HelpButton to="http://example.org" /></h2>
           <Link
-            to={`/linodes/${linode.id}/settings/advanced/configs/create`}
+            to={`/linodes/${linode.label}/settings/advanced/configs/create`}
             className="btn btn-default float-xs-right"
           >
             Add a config
@@ -89,6 +89,6 @@ export class ConfigPanel extends Component {
 ConfigPanel.propTypes = {
   dispatch: PropTypes.func.isRequired,
   params: PropTypes.shape({
-    linodeId: PropTypes.string,
+    linodeLabel: PropTypes.string,
   }),
 };

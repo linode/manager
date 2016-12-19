@@ -7,7 +7,7 @@ import ConfigSelectModal from '~/linodes/components/ConfigSelectModal';
 
 export function launchWeblishConsole(linode) {
   window.open(
-    `${window.location.protocol}//${window.location.host}/linodes/${linode.id}/weblish`,
+    `${window.location.protocol}//${window.location.host}/linodes/${linode.label}/weblish`,
     `weblish_con_${linode.id}`,
     'left=100,top=100,width=1024,height=655,toolbar=0,resizable=1'
   );

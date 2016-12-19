@@ -2,7 +2,7 @@ import { testType } from './types';
 
 export const apiTestLinode = {
   group: 'Test Group',
-  label: 'Test Linode',
+  label: 'test-linode',
   ipv4: '97.107.143.99',
   ipv6: '2600:3c03::f03c:91ff:fe0a:1dbe/64',
   created: '2016-07-06T16:47:27',
@@ -202,16 +202,17 @@ export const linodes = {
   [testLinode.id]: testLinode,
   1233: {
     ...testLinode,
+    label: 'test-linode-1233',
     id: 1233,
     _configs: {
       ...testLinode._configs,
       configs: {
         ...testLinode._configs.configs,
         12346: {
-          ...testLinode._configs.configs[12345],
+          ...testLinode._configs.configs['12345'],
           id: 12346,
           disks: {
-            ...testLinode._configs.configs[12345].disks,
+            ...testLinode._configs.configs['12345'].disks,
             sdb: null,
           },
         },
@@ -221,7 +222,7 @@ export const linodes = {
   1235: {
     ...testLinode,
     id: 1235,
-    label: 'Test Linode 1',
+    label: 'test-linode-1',
     group: '',
     created: '2016-07-06T16:50:27',
     backups: { ...testLinode.backups, enabled: false },
@@ -260,7 +261,7 @@ export const linodes = {
   1236: {
     ...testLinode,
     id: 1236,
-    label: 'Test Linode 2',
+    label: 'test-linode-2',
     status: 'offline',
     created: '2016-07-06T16:48:27',
     backups: { ...testLinode.backups, enabled: false },
@@ -273,7 +274,7 @@ export const linodes = {
   1237: {
     ...testLinode,
     id: 1237,
-    label: 'Test Linode 3',
+    label: 'test-linode-3',
     status: 'booting',
     created: '2016-07-06T16:49:27',
     backups: { ...testLinode.backups, enabled: false },
@@ -281,8 +282,8 @@ export const linodes = {
   1238: {
     ...testLinode,
     id: 1238,
-    label: 'Test Linode 4',
-    status: 'running',
+    label: 'test-linode-4',
+    status: 'offline',
     backups: { ...testLinode.backups, enabled: false },
     _configs: {
       ...testLinode._configs,
@@ -290,6 +291,7 @@ export const linodes = {
       configs: {
         ...testLinode._configs.configs,
         12346: {
+          ...testLinode._configs.configs['12345'],
           id: 12346,
           label: 'Test config 2',
         },
@@ -299,7 +301,7 @@ export const linodes = {
   1239: {
     ...testLinode,
     id: 1239,
-    label: 'Test Linode 5',
+    label: 'test-linode-5',
     status: 'running',
     backups: { ...testLinode.backups, enabled: false },
     _configs: {
@@ -311,7 +313,7 @@ export const linodes = {
   1240: { // With unallocated space
     ...testLinode,
     id: 1240,
-    label: 'Test Linode 6',
+    label: 'test-linode-6',
     status: 'offline',
     backups: { ...testLinode.backups, enabled: false },
     _disks: {
@@ -340,7 +342,7 @@ export const linodes = {
   1241: {
     ...testLinode,
     id: 1241,
-    label: 'Test Linode 7',
+    label: 'test-linode-7',
     status: 'running',
     backups: { ...testLinode.backups, enabled: false },
     _configs: {
@@ -352,7 +354,7 @@ export const linodes = {
   1242: {
     ...testLinode,
     id: 1242,
-    label: 'Test Linode 1242',
+    label: 'test-linode-1242',
     status: 'running',
     backups: { ...testLinode.backups, enabled: false },
     _disks: {
@@ -364,33 +366,18 @@ export const linodes = {
   1243: {
     ...testLinode,
     id: 1243,
-    label: 'Test Linode 1243',
+    label: 'test-linode-1243',
     status: 'unrecognized',
     backups: { ...testLinode.backups, enabled: false },
-  },
-  1244: {
-    ...testLinode,
-    id: 1244,
-    label: 'Test Linode, offline with multiple configs',
-    status: 'offline',
-    backups: { ...testLinode.backups, enabled: false },
-    _configs: {
-      ...testLinode._configs,
-      totalResults: 2,
-      configs: {
-        ...testLinode._configs.configs,
-        12346: {
-          id: 12346,
-          label: 'Test config 2',
-        },
-      },
-    },
   },
   1245: {
     ...testLinode,
     id: 1245,
-    label: 'no_private_ipv4',
-    backups: { ...testLinode.backups, enabled: false },
+    label: 'test-linode-1245',
+    backups: {
+      ...testLinode.backups,
+      last_backup: '2016-06-28T14:19:37',
+    },
     _ips: {
       ...testLinode._ips,
       ipv4: {
@@ -398,5 +385,11 @@ export const linodes = {
         private: [],
       },
     },
+  },
+  1246: {
+    ...testLinode,
+    id: 1246,
+    label: 'test-linode-1246',
+    distribution: null,
   },
 };

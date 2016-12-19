@@ -118,7 +118,7 @@ describe('linodes/components/StatusDropdown', () => {
   it('renders modal on reboot if multiple configs', () => {
     const dispatch = sinon.spy();
     const dropdown = shallow(
-      <StatusDropdown linode={linodes.linodes[1238]} dispatch={dispatch} />
+      <StatusDropdown linode={linodes.linodes['1233']} dispatch={dispatch} />
     );
 
     dropdown.find('.StatusDropdown-toggle').simulate('click');
@@ -129,7 +129,7 @@ describe('linodes/components/StatusDropdown', () => {
   it('renders modal on power on if multiple configs', () => {
     const dispatch = sinon.spy();
     const dropdown = shallow(
-      <StatusDropdown linode={linodes.linodes[1244]} dispatch={dispatch} />
+      <StatusDropdown linode={linodes.linodes['1238']} dispatch={dispatch} />
     );
 
     dropdown.find('.StatusDropdown-toggle').simulate('click');

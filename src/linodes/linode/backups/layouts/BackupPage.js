@@ -13,24 +13,27 @@ function renderDateTime(dt) {
 }
 
 export class BackupPage extends Component {
-  static async preload(store, newParams) {
-    const { linodeId } = newParams;
+  static async preload({ dispatch, getState }, { linodeLabel }) {
+    const { id } = Object.values(getState().api.linodes.linodes).reduce(
+      (match, linode) => linode.label === linodeLabel ? linode : match);
 
     try {
-      await store.dispatch(linodes.one([linodeId]));
-      await store.dispatch(linodes.backups.all([linodeId]));
+      await dispatch(linodes.backups.all([id]));
+      // All linodes are in-fact needed for restore dialog.
+      await dispatch(linodes.all());
     } catch (e) {
-      store.dispatch(setError(e));
+      dispatch(setError(e));
     }
   }
 
   constructor(props) {
-    super();
+    super(props);
     this.getLinode = getLinode.bind(this);
     this.takeSnapshot = this.takeSnapshot.bind(this);
     this.restore = this.restore.bind(this);
-    const { linodeId } = props.params;
+    const { id: linodeId } = this.getLinode();
     this.state = {
+      linodeId,
       targetLinode: linodeId,
       overwrite: false,
       restoreErrors: {},
@@ -40,7 +43,7 @@ export class BackupPage extends Component {
 
   async takeSnapshot() {
     const { dispatch } = this.props;
-    const { linodeId } = this.props.params;
+    const { id: linodeId } = this.getLinode();
     try {
       await dispatch(takeBackup(linodeId));
     } catch (response) {
@@ -51,12 +54,13 @@ export class BackupPage extends Component {
 
   async restore() {
     const { dispatch } = this.props;
-    const { linodeId, backupId } = this.props.params;
+    const { backupId, linodeLabel } = this.props.params;
+    const { id: linodeId } = this.getLinode();
     const { targetLinode, overwrite } = this.state;
     try {
       await dispatch(
         restoreBackup(linodeId, targetLinode, backupId, overwrite));
-      dispatch(push(`/linodes/${linodeId}`));
+      dispatch(push(`/linodes/${linodeLabel}`));
     } catch (response) {
       const restoreErrors = await reduceErrors(response);
       this.setState({ restoreErrors });
@@ -267,7 +271,7 @@ BackupPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   linodes: PropTypes.object.isRequired,
   params: PropTypes.shape({
-    linodeId: PropTypes.string.isRequired,
+    linodeLabel: PropTypes.string.isRequired,
     backupId: PropTypes.string.isRequired,
   }).isRequired,
 };
