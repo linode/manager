@@ -2,6 +2,7 @@ import React from 'react';
 import sinon from 'sinon';
 import { expect } from 'chai';
 import { shallow } from 'enzyme';
+import { expectRequest } from '@/common';
 
 import { expectObjectDeepEquals } from '@/common';
 import { Layout } from '~/layouts/Layout';
@@ -9,6 +10,9 @@ import * as fetch from '~/fetch';
 import { api } from '@/data';
 import { testEvent } from '@/data/events';
 import { actions as linodeActions } from '~/api/configs/linodes';
+import { hideModal } from '~/actions/modal';
+import { sortNotifications } from '~/components/Notifications';
+import { showNotifications } from '~/actions/notifications';
 
 describe('layouts/Layout', () => {
   const sandbox = sinon.sandbox.create();
@@ -34,6 +38,7 @@ describe('layouts/Layout', () => {
         source={source}
         notifications={{ open: false }}
         linodes={linodes}
+        events={events}
         feedback={{ open: false }}
       >{children}</Layout>
     );
@@ -169,8 +174,8 @@ describe('layouts/Layout', () => {
 
     const fetchPageResponse = {
       events: [
-        { read: true },
-        { read: true },
+        { seen: true },
+        { seen: true },
       ],
     };
     const dispatchStub = sandbox.stub({ dispatch() {} }, 'dispatch', () => fetchPageResponse);
@@ -187,8 +192,8 @@ describe('layouts/Layout', () => {
 
     const fetchPageResponse = {
       events: [
-        { read: false },
-        { read: false },
+        { seen: false },
+        { seen: false },
       ],
     };
     let firstCall = true;
@@ -198,7 +203,7 @@ describe('layouts/Layout', () => {
         return fetchPageResponse;
       }
 
-      return { events: [{ read: true }] };
+      return { events: [{ seen: true }] };
     });
     const page = shallow(makeLayout(dispatchStub));
 
@@ -207,10 +212,35 @@ describe('layouts/Layout', () => {
     expect(dispatchStub.callCount).to.equal(2);
     expectObjectDeepEquals(results, {
       events: [
-        { read: false },
-        { read: false },
-        { read: true },
+        { seen: false },
+        { seen: false },
+        { seen: true },
       ],
     });
+  });
+
+  it('marks all events as seen when the notifications is opened', async () => {
+    const page = shallow(
+      <Layout
+        dispatch={dispatch}
+        errors={errors}
+        source={{ source: 'foobar.html' }}
+        notifications={{ open: false }}
+        linodes={api.linodes}
+        feedback={{ open: false }}
+        events={api.events}
+      ><span /></Layout>
+    );
+
+    page.instance().hideShowNotifications({ stopPropagation() {}, preventDefault() {} });
+
+    const sortedEvents = sortNotifications(api.events);
+    expect(dispatch.callCount).to.equal(3);
+
+    const fn = dispatch.firstCall.args[0];
+    await expectRequest(fn, `/account/events/${sortedEvents[0].id}/seen`);
+
+    expectObjectDeepEquals(dispatch.secondCall.args[0], hideModal());
+    expectObjectDeepEquals(dispatch.thirdCall.args[0], showNotifications());
   });
 });

@@ -133,7 +133,7 @@ Notification.propTypes = {
   linodes: PropTypes.object.isRequired,
 };
 
-function sortNotifications(eventsDict) {
+export function sortNotifications(eventsDict) {
   const events = Object.values(eventsDict.events);
   if (!events.length) {
     return [];
