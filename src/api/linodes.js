@@ -109,7 +109,7 @@ export function addIP(linodeId, type) {
   return async (dispatch, getState) => {
     const state = getState();
     const { token } = state.authentication;
-    const response = await fetch(token, `/linode/instances/${linodeId}/ips`,
+    await fetch(token, `/linode/instances/${linodeId}/ips`,
       { method: 'POST', body: JSON.stringify({ type }) });
     dispatch(linodeIPs(linodeId));
   };

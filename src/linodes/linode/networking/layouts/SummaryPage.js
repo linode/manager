@@ -214,8 +214,6 @@ export class SummaryPage extends Component {
   }
 
   render() {
-    const ips = this.getLinode()._ips;
-
     return (
       <div>
         <section className="card">
@@ -248,6 +246,9 @@ export class SummaryPage extends Component {
 SummaryPage.propTypes = {
   linodes: PropTypes.object,
   dispatch: PropTypes.func.isRequired,
+  params: PropTypes.shape({
+    linodeId: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 function select(state) {

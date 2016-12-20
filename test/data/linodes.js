@@ -396,7 +396,7 @@ export const linodes = {
       ipv4: {
         ...testLinode._ips.ipv4,
         private: [],
-      }
+      },
     },
   },
 };
