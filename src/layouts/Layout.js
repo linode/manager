@@ -207,10 +207,12 @@ export class Layout extends Component {
         />
         <div className="main full-height">
           <Modal />
-          {!errors.status ?
-           this.props.children :
-           this.renderError()}
-          <footer className="text-xs-center">
+          <div className="main-inner">
+            {!errors.status ?
+              this.props.children :
+              this.renderError()}
+          </div>
+          <footer className="footer text_muted text-xs-center">
             {!source || !source.source ? null :
               <a
                 target="__blank"
