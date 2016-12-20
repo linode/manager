@@ -20,5 +20,13 @@ describe('linodes/linode/layouts/Weblish', () => {
     const after = window.document.querySelector('head').querySelector('link').outerHTML;
     expect(after).to.equal('<link rel="stylesheet" type="text/css" href="http://example.com">');
   });
+
+  it('tests addJSScript', () => {
+    const before = window.document.querySelector('head').querySelector('script');
+    expect(before).to.equal(null);
+    weblish.addJSScript('http://example.com');
+    const after = window.document.querySelector('head').querySelector('script').outerHTML;
+    expect(after).to.equal('<script src="http://example.com"></script>');
+  });
 });
 
