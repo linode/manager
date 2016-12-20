@@ -4,15 +4,28 @@ import { connect } from 'react-redux';
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import HelpButton from '~/components/HelpButton';
 import { ipv4ns, ipv6ns, ipv6nsSuffix } from '~/constants';
+import { linodeIPs, addIP } from '~/api/linodes';
 import { setSource } from '~/actions/source';
+import { setError } from '~/actions/errors';
 
 export class SummaryPage extends Component {
+  static async preload(store, newParams) {
+    const { linodeId } = newParams;
+
+    try {
+      await store.dispatch(linodeIPs(linodeId));
+    } catch (e) {
+      store.dispatch(setError(e));
+    }
+  }
+
   constructor() {
     super();
     this.getLinode = getLinode.bind(this);
     this.renderIPv4Public = this.renderIPv4Public.bind(this);
     this.renderIPv6Public = this.renderIPv6Public.bind(this);
     this.nameserversList = this.nameserversList.bind(this);
+    this.addPrivateIP = this.addPrivateIP.bind(this);
     this.ipList = this.ipList.bind(this);
   }
 
@@ -23,6 +36,16 @@ export class SummaryPage extends Component {
 
   ipList(ips) {
     return ips.map(ip => <li key={ip}>{ip}</li>);
+  }
+
+  async addPrivateIP() {
+    const { linodeId } = this.props.params;
+    const { dispatch } = this.props;
+    try {
+      await dispatch(addIP(linodeId, 'private'));
+    } catch (e) {
+      dispatch(setError(e));
+    }
   }
 
   nameserversList(isIPv4, linode) {
@@ -50,7 +73,7 @@ export class SummaryPage extends Component {
   }
 
   renderIPv4Public() {
-    const ipv4 = this.getLinode().ipv4;
+    const ipv4 = this.getLinode()._ips.ipv4.public[0];
 
     return (
       <div className="col-sm-6 left">
@@ -67,9 +90,9 @@ export class SummaryPage extends Component {
           <div className="col-sm-9 content-col right">
             <ul className="list-unstyled">
               <span>
-                <span>{ipv4}/24 </span>
+                <span>{ipv4.address}/24 </span>
                 <span className="text-nowrap">
-                  ( TO DO )
+                  ({ipv4.rdns})
                 </span>
               </span>
             </ul>
@@ -80,7 +103,7 @@ export class SummaryPage extends Component {
             Gateway
           </div>
           <div className="col-sm-9 content-col right">
-            {ipv4.substring(0, ipv4.lastIndexOf('.'))}.1
+            {ipv4.address.substring(0, ipv4.address.lastIndexOf('.'))}.1
           </div>
         </div>
         {this.nameserversList(true, this.getLinode())}
@@ -89,9 +112,6 @@ export class SummaryPage extends Component {
   }
 
   renderIPv6Public() {
-    /* FIXME link-local missing from API
-     * const linkLocal = this.getLinode().ips['private'].link_local; FIXME add link-local
-     */
     return (
       <div className="col-sm-6 right">
         <h3>
@@ -113,7 +133,7 @@ export class SummaryPage extends Component {
             Gateway
           </div>
           <div className="col-sm-9 content-col right">
-            FIXME::1
+            fe80::1
           </div>
         </div>
         {this.nameserversList(false, this.getLinode())}
@@ -121,15 +141,80 @@ export class SummaryPage extends Component {
     );
   }
 
+  renderIPv4Private() {
+    let content = null;
+
+    if (!this.getLinode()._ips.ipv4.private.length) {
+      content = (
+        <button
+          type="button"
+          id="private-ip-button"
+          className="btn btn-default"
+          onClick={this.addPrivateIP}
+        >
+          Add private IP address
+        </button>
+      );
+    } else {
+      const ipv4 = this.getLinode()._ips.ipv4.private[0];
+
+      content = (
+        <div className="LinodesLinodeNetworkingSummaryPage-privateIpv4">
+          <span>{ipv4.address}/17 </span>
+          <span className="text-nowrap">
+            ({ipv4.rdns})
+          </span>
+        </div>
+      );
+    }
+
+    return (
+      <div className="col-sm-6 left">
+        <h3>
+          IPv4
+        </h3>
+        <div className="form-group row">
+          <div>
+            <div className="col-sm-3 label-col left">
+              Address
+            </div>
+            <div className="col-sm-9 content-col right">
+              {content}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  renderIPv6Private() {
+    const linkLocal = this.getLinode()._ips.ipv6_ranges['link-local'];
+
+    return (
+      <div className="col-sm-6 left">
+        <h3>
+          IPv6
+        </h3>
+        <div className="form-group row">
+          <div className="col-sm-3 label-col left">
+            Link-local IP:
+          </div>
+          <div className="col-sm-9 content-col right">
+            <ul className="list-unstyled">
+              <span>
+                <span className="LinodesLinodeNetworkingSummaryPage-linkLocal">
+                  {linkLocal}
+                </span>
+              </span>
+            </ul>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   render() {
-    /* TODO: Global Pool - IPv6
-     * TODO: members.linode.com
-     */
-    const linkLocal = 'FIXME';
-    /* FIXME link-local and private IP not found in API
-     * const linkLocal = this.getLinode().ips['private'].link_local;
-     * const ipPrivate = this.getLinode().ipv4.address;
-     */
+    const ips = this.getLinode()._ips;
 
     return (
       <div>
@@ -149,24 +234,10 @@ export class SummaryPage extends Component {
         <section className="card">
           <header className="clearfix">
             <h2 className="float-xs-left">Private network</h2>
-            <button type="button" id="private-ip-button" className="btn btn-default float-xs-right">
-              Add private IP address
-            </button>
           </header>
           <div className="row">
-            <div className="col-sm-6 left">
-              <div className="form-group">
-                {"No private IP addresses."}
-              </div>
-              <div className="form-group row">
-                <div className="col-sm-3 label-col">
-                  Link-local IP
-                </div>
-                <div className="col-sm-9 content-col">
-                  {linkLocal}
-                </div>
-              </div>
-            </div>
+            {this.renderIPv4Private()}
+            {this.renderIPv6Private()}
           </div>
         </section>
       </div>
