@@ -172,6 +172,30 @@ export const testLinode = {
       },
     },
   },
+  _ips: {
+    ipv4: {
+      private: [
+        {
+          linode_id: 1234,
+          address: '192.168.1.2',
+          rdns: 'p1-1.members.linode.com',
+        },
+      ],
+      public: [
+        {
+          linode_id: 1234,
+          address: '97.107.143.99',
+          rdns: 'li1-1.members.linode.com',
+        },
+      ],
+    },
+    ipv6: [],
+    ipv6_ranges: {
+      global: [],
+      'link-local': 'fe80::f03c:91ff:fe0a:181f/64',
+      slaac: '2600:3c03::f03c:91ff:fe0a:1dbe/64',
+    },
+  },
 };
 
 export const linodes = {
@@ -359,6 +383,19 @@ export const linodes = {
           id: 12346,
           label: 'Test config 2',
         },
+      },
+    },
+  },
+  1245: {
+    ...testLinode,
+    id: 1245,
+    label: 'no_private_ipv4',
+    backups: { ...testLinode.backups, enabled: false },
+    _ips: {
+      ...testLinode._ips,
+      ipv4: {
+        ...testLinode._ips.ipv4,
+        private: [],
       },
     },
   },

@@ -2,9 +2,11 @@ import React from 'react';
 import sinon from 'sinon';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
-import { testLinode } from '@/data/linodes';
 import { SummaryPage } from '~/linodes/linode/networking/layouts/SummaryPage';
 import { ipv4ns, ipv6ns, ipv6nsSuffix } from '~/constants';
+import { testLinode } from '@/data/linodes';
+import { api } from '@/data';
+const { linodes } = api;
 
 describe('linodes/linode/networking/layouts/SummaryPage', () => {
   const sandbox = sinon.sandbox.create();
@@ -15,27 +17,8 @@ describe('linodes/linode/networking/layouts/SummaryPage', () => {
     sandbox.restore();
   });
 
-  const linodes = {
-    pagesFetched: [0],
-    totalPages: 1,
-    linodes: {
-      [testLinode.id]: testLinode,
-      1235: {
-        ...testLinode,
-        id: 1235,
-        datacenter: {
-          id: 'newark',
-        },
-        group: '',
-        ipv4: '123.456.789.1',
-        ipv6: '2600:3c03::f03c:91ff:fe96:0f13',
-      },
-    },
-    _singular: 'linode',
-    _plural: 'linodes',
-  };
   const params = {
-    linodeId: testLinode.id,
+    linodeId: 1234,
   };
 
   describe('public network', () => {
@@ -66,7 +49,7 @@ describe('linodes/linode/networking/layouts/SummaryPage', () => {
 
       it('renders address ip and url', async () => {
         const ipv4 = testLinode.ipv4;
-        const inet = `${ipv4}/24 ( TO DO )`;
+        const inet = `${ipv4}/24 (li1-1.members.linode.com)`;
         const page = shallow(
           <SummaryPage
             linodes={linodes}
@@ -161,31 +144,45 @@ describe('linodes/linode/networking/layouts/SummaryPage', () => {
   });
 
   describe('private network', () => {
-    it('renders add private ip button', async () => {
+    it('renders add private ip button when no ipv4s are present', async () => {
       const page = shallow(
         <SummaryPage
           linodes={linodes}
-          params={params}
+          params={{ linodeId: 1245 }}
         />);
 
-      const button = page.find('section').at(1).find('header .btn');
-      expect(button.text()).to.equal('Add private IP address');
+      const button = page.find(
+        '.LinodesLinodeNetworkingSummaryPage-addPrivateIp');
+      expect(button.text()).to.equal('Enable private IP address');
     });
 
-    it('renders no private ips', async () => {
+    it('renders private ip', async () => {
       const page = shallow(
         <SummaryPage
           linodes={linodes}
-          params={{ linodeId: 1235 }}
+          params={{ linodeId: 1234 }}
         />);
 
-      const content = page.find('section').at(1);
-      const noIP = content.find('.form-group').at(0);
-      expect(noIP.text()).to.equal('No private IP addresses.');
+      const p = page.find(
+        '.LinodesLinodeNetworkingSummaryPage-privateIpv4 span');
+      expect(p.length).to.equal(2);
+
+      const privateIp = linodes.linodes[1234]._ips.ipv4.private[0];
+
+      expect(p.at(0).text()).to.equal(`${privateIp.address}/17 `);
+      expect(p.at(1).text()).to.equal(`(${privateIp.rdns})`);
     });
 
-    it('renders private ips');
+    it('renders link-local', async () => {
+      const page = shallow(
+        <SummaryPage
+          linodes={linodes}
+          params={{ linodeId: 1234 }}
+        />);
 
-    it('renders link-local');
+      const label = page.find('.LinodesLinodeNetworkingSummaryPage-linkLocal');
+      expect(label.text()).to.equal(
+        linodes.linodes[1234]._ips.ipv6_ranges['link-local']);
+    });
   });
 });

@@ -94,3 +94,23 @@ export function resizeLinodeDisk(linodeId, diskId, size) {
     // TODO: fetch until complete
   };
 }
+
+export function linodeIPs(linodeId) {
+  return async (dispatch, getState) => {
+    const state = getState();
+    const { token } = state.authentication;
+    const response = await fetch(token, `/linode/instances/${linodeId}/ips`);
+    const json = { _ips: await response.json() };
+    dispatch(actions.one(json, linodeId));
+  };
+}
+
+export function addIP(linodeId, type) {
+  return async (dispatch, getState) => {
+    const state = getState();
+    const { token } = state.authentication;
+    await fetch(token, `/linode/instances/${linodeId}/ips`,
+      { method: 'POST', body: JSON.stringify({ type }) });
+    dispatch(linodeIPs(linodeId));
+  };
+}
