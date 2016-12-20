@@ -151,8 +151,9 @@ describe('linodes/linode/networking/layouts/SummaryPage', () => {
           params={{ linodeId: 1245 }}
         />);
 
-      const button = page.find('section').at(1).find('.btn');
-      expect(button.text()).to.equal('Add private IP address');
+      const button = page.find(
+        '.LinodesLinodeNetworkingSummaryPage-addPrivateIp');
+      expect(button.text()).to.equal('Enable private IP address');
     });
 
     it('renders private ip', async () => {

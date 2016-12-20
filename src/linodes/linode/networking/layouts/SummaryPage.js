@@ -22,8 +22,8 @@ export class SummaryPage extends Component {
   constructor() {
     super();
     this.getLinode = getLinode.bind(this);
-    this.renderIPv4Public = this.renderIPv4Public.bind(this);
-    this.renderIPv6Public = this.renderIPv6Public.bind(this);
+    this.renderIPv4 = this.renderIPv4.bind(this);
+    this.renderIPv6 = this.renderIPv6.bind(this);
     this.nameserversList = this.nameserversList.bind(this);
     this.addPrivateIP = this.addPrivateIP.bind(this);
     this.ipList = this.ipList.bind(this);
@@ -72,8 +72,35 @@ export class SummaryPage extends Component {
     return nameservers;
   }
 
-  renderIPv4Public() {
+  renderIPv4() {
     const ipv4 = this.getLinode()._ips.ipv4.public[0];
+
+    let content = null;
+
+    if (!this.getLinode()._ips.ipv4.private.length) {
+      const bemPrefix = 'LinodesLinodeNetworkingSummaryPage-';
+      content = (
+        <button
+          type="button"
+          id="private-ip-button"
+          className={`btn btn-default ${bemPrefix}addPrivateIp`}
+          onClick={this.addPrivateIP}
+        >
+          Enable private IP address
+        </button>
+      );
+    } else {
+      const ipv4 = this.getLinode()._ips.ipv4.private[0];
+
+      content = (
+        <div className="LinodesLinodeNetworkingSummaryPage-privateIpv4">
+          <span>{ipv4.address}/17 </span>
+          <span className="text-nowrap">
+            ({ipv4.rdns})
+          </span>
+        </div>
+      );
+    }
 
     return (
       <div className="col-sm-6 left">
@@ -107,11 +134,23 @@ export class SummaryPage extends Component {
           </div>
         </div>
         {this.nameserversList(true, this.getLinode())}
+        <div className="form-group row">
+          <div>
+            <div className="col-sm-3 label-col left">
+              Private address
+            </div>
+            <div className="col-sm-9 content-col right">
+              {content}
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
 
-  renderIPv6Public() {
+  renderIPv6() {
+    const linkLocal = this.getLinode()._ips.ipv6_ranges['link-local'];
+
     return (
       <div className="col-sm-6 right">
         <h3>
@@ -137,67 +176,9 @@ export class SummaryPage extends Component {
           </div>
         </div>
         {this.nameserversList(false, this.getLinode())}
-      </div>
-    );
-  }
-
-  renderIPv4Private() {
-    let content = null;
-
-    if (!this.getLinode()._ips.ipv4.private.length) {
-      content = (
-        <button
-          type="button"
-          id="private-ip-button"
-          className="btn btn-default"
-          onClick={this.addPrivateIP}
-        >
-          Add private IP address
-        </button>
-      );
-    } else {
-      const ipv4 = this.getLinode()._ips.ipv4.private[0];
-
-      content = (
-        <div className="LinodesLinodeNetworkingSummaryPage-privateIpv4">
-          <span>{ipv4.address}/17 </span>
-          <span className="text-nowrap">
-            ({ipv4.rdns})
-          </span>
-        </div>
-      );
-    }
-
-    return (
-      <div className="col-sm-6 left">
-        <h3>
-          IPv4
-        </h3>
-        <div className="form-group row">
-          <div>
-            <div className="col-sm-3 label-col left">
-              Address
-            </div>
-            <div className="col-sm-9 content-col right">
-              {content}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  renderIPv6Private() {
-    const linkLocal = this.getLinode()._ips.ipv6_ranges['link-local'];
-
-    return (
-      <div className="col-sm-6 left">
-        <h3>
-          IPv6
-        </h3>
         <div className="form-group row">
           <div className="col-sm-3 label-col left">
-            Link-local IP:
+            Link-local IP
           </div>
           <div className="col-sm-9 content-col right">
             <ul className="list-unstyled">
@@ -219,23 +200,17 @@ export class SummaryPage extends Component {
         <section className="card">
           <header className="clearfix">
             <h2 className="float-xs-left">Public network</h2>
-            <button type="button" id="public-ip-button" className="btn btn-default float-xs-right">
+            <button
+              type="button"
+              id="public-ip-button"
+              className="btn btn-default float-xs-right"
+            >
               Add public IP address
             </button>
           </header>
           <div className="row">
-            {this.renderIPv4Public()}
-            {this.renderIPv6Public()}
-          </div>
-        </section>
-
-        <section className="card">
-          <header className="clearfix">
-            <h2 className="float-xs-left">Private network</h2>
-          </header>
-          <div className="row">
-            {this.renderIPv4Private()}
-            {this.renderIPv6Private()}
+            {this.renderIPv4()}
+            {this.renderIPv6()}
           </div>
         </section>
       </div>
