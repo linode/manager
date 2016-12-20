@@ -199,7 +199,7 @@ export class SummaryPage extends Component {
       <div>
         <section className="card">
           <header className="clearfix">
-            <h2 className="float-xs-left">Public network</h2>
+            <h2 className="float-xs-left">Summary</h2>
             <button
               type="button"
               id="public-ip-button"
