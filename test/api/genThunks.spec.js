@@ -20,6 +20,7 @@ describe('api/genThunks', () => {
       supports: [gen.ONE, gen.MANY, gen.PUT, gen.DELETE, gen.POST],
     });
     const state = { api: { linodes: { foo: 'bar' } }, totalPages: 1, totalResults: 1 };
+    // TODO: make this test more clear by including testLinode.id in state
     const id = { ids: [testLinode.id] };
     const specResource = thunks.getStateOfSpecificResource(config, state, id);
     expect(specResource.foo).to.equal('bar');
@@ -35,6 +36,7 @@ describe('api/genThunks', () => {
     });
     const resources = { linodes: [{ foo: 'bar' }], totalPages: 1, totalResults: 1 };
     const filteredResources = thunks.filterResources(config, resources);
+    // TODO: test using the resourceFilter parameter
     expect(filteredResources.linodes[0].foo).to.equal('bar');
   });
 });

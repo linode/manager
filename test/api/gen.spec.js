@@ -53,6 +53,8 @@ describe('api/gen', () => {
     const addOne = gen.generateDefaultStateOne(config, 'ph');
     expect(addOne[0]).to.equal('p');
     expect(addOne[1]).to.equal('h');
+    // TODO: Make this test more clear by replacing this string with an
+    // actual object such as a linode or a disk
   });
 
   it('should run invalidate', () => {
@@ -68,6 +70,7 @@ describe('api/gen', () => {
     const invalid = gen.ReducerGenerator.invalidate(config, state, action);
     expect(invalid.placeholder).to.equal('placeholder');
     expect(invalid.invalid).to.equal(true);
+    // TODO: test updatedAt
   });
 
   it('should run one', () => {
