@@ -698,11 +698,14 @@ table {
     flex-direction: column;
 
     .main-inner {
+        padding-top: 15px;
         flex: 1;
     }
 }
 
 footer {
+    padding-bottom: 15px;
+
     a {
         font-size: $font-xs-normal;
         color: $lightest-black;
