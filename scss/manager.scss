@@ -692,13 +692,21 @@ table {
     height: 100%;
 }
 
-footer {
-    margin-top: 5px;
-    margin-bottom: 15px;
+.main {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
 
+    .main-inner {
+        flex: 1;
+    }
+}
+
+footer {
     a {
         font-size: $font-xs-normal;
         color: $lightest-black;
+        padding: 0 10px;
     }
 }
 
