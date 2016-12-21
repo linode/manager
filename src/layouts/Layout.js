@@ -212,7 +212,7 @@ export class Layout extends Component {
               this.props.children :
               this.renderError()}
           </div>
-          <footer className="footer text_muted text-xs-center">
+          <footer className="footer text-xs-center">
             {!source || !source.source ? null :
               <a
                 target="__blank"
