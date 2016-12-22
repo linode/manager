@@ -698,7 +698,6 @@ table {
     flex-direction: column;
 
     .main-inner {
-        padding-top: 15px;
         flex: 1;
     }
 }
@@ -806,6 +805,8 @@ section.card header + .react-tabs {
 }
 
 .create-page {
+    padding-top: 15px;
+
     section.card:not(:last-of-type) {
         padding-bottom: 0;
     }
