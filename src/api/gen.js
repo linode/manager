@@ -80,7 +80,7 @@ function generateDefaultStateOne(config, one) {
       ...accumulated,
       [subresourceName]: { ...generateDefaultStateMany(subresourceConfig) },
     }), {});
-  return { ...one, ...subresources, __updatedAt: new Date() };
+  return { ...one, ...subresources };
 }
 
 export function genReducer(_config) {
@@ -146,8 +146,7 @@ export function genReducer(_config) {
       }
     }
 
-    newState.__updatedAt = new Date();
-    return newState;
+    return { ...newState, __updatedAt: new Date() };
   }
 
   function subresource(config, state, action) {

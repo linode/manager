@@ -2,13 +2,18 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { getLinode, renderTabs } from '~/linodes/linode/layouts/IndexPage';
-import { parallel } from '~/api/util';
 import { linodes } from '~/api';
 import { enableBackup } from '~/api/backups';
 import { setSource } from '~/actions/source';
 import { ErrorSummary, reduceErrors } from '~/errors';
 
 export class IndexPage extends Component {
+  static async preload({ dispatch, getState }, { linodeLabel }) {
+    const { id } = Object.values(getState().api.linodes.linodes).reduce(
+      (match, linode) => linode.label === linodeLabel ? linode : match);
+    dispatch(linodes.backups.all([id]));
+  }
+
   constructor() {
     super();
     this.getLinode = getLinode.bind(this);
@@ -18,13 +23,9 @@ export class IndexPage extends Component {
     this.state = { errors: {} };
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
-    const { linodeId } = this.props.params;
-    await dispatch(parallel(
-      linodes.backups.all([linodeId]),
-      linodes.all()));
   }
 
   async enableBackups(e) {
@@ -34,13 +35,13 @@ export class IndexPage extends Component {
       await dispatch(enableBackup(this.getLinode().id));
     } catch (response) {
       const errors = await reduceErrors(response);
-      this.setState({ errors });
+      // Promisify result for tests.
+      await new Promise(resolve => this.setState({ errors }, resolve));
     }
   }
 
   render() {
     const linode = this.getLinode();
-    if (!linode) return null;
 
     if (!linode.backups.enabled) {
       const { errors } = this.state;
@@ -63,7 +64,7 @@ export class IndexPage extends Component {
       { name: 'Summary', link: '/' },
       { name: 'History', link: '/history' },
       { name: 'Settings', link: '/settings' },
-    ].map(t => ({ ...t, link: `/linodes/${linode.id}/backups${t.link}` }));
+    ].map(t => ({ ...t, link: `/linodes/${linode.label}/backups${t.link}` }));
 
     const pathname = location ? location.pathname : tabList[0].link;
     const selected = tabList.reduce((last, current) =>
@@ -77,7 +78,7 @@ IndexPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   linodes: PropTypes.object.isRequired,
   params: PropTypes.shape({
-    linodeId: PropTypes.string.isRequired,
+    linodeLabel: PropTypes.string.isRequired,
   }).isRequired,
   children: PropTypes.object,
   location: PropTypes.object,

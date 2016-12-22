@@ -20,7 +20,7 @@ describe('linodes/linode/settings/layouts/AlertsPage', async () => {
     const page = shallow(
       <AlertsPage
         linodes={api.linodes}
-        params={{ linodeId: testLinode.id }}
+        params={{ linodeLabel: testLinode.label }}
         dispatch={() => {}}
       />
     );
@@ -43,7 +43,7 @@ describe('linodes/linode/settings/layouts/AlertsPage', async () => {
     const page = shallow(
       <AlertsPage
         linodes={api.linodes}
-        params={{ linodeId: testLinode.id }}
+        params={{ linodeLabel: testLinode.label }}
         dispatch={dispatch}
       />
     );

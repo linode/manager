@@ -376,10 +376,10 @@ function select(state) {
 const AddModalRedux = connect(select)(AddModal);
 
 export class DiskPanel extends Component {
-  static async preload(store, newParams) {
-    const { linodeId } = newParams;
-    await store.dispatch(linodes.one([linodeId]));
-    await store.dispatch(linodes.disks.all([linodeId]));
+  static async preload({ dispatch, getState }, { linodeLabel }) {
+    const { id } = Object.values(getState().api.linodes.linodes).reduce(
+      (match, linode) => linode.label === linodeLabel ? linode : match);
+    await dispatch(linodes.disks.all([id]));
   }
 
   constructor() {
@@ -483,6 +483,6 @@ export class DiskPanel extends Component {
 DiskPanel.propTypes = {
   dispatch: PropTypes.func.isRequired,
   params: PropTypes.shape({
-    linodeId: PropTypes.string,
+    linodeLabel: PropTypes.string,
   }),
 };

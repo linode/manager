@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 import { ONE, MANY, DELETE, POST, PUT, generateDefaultStateMany } from './gen';
 import { fetch } from '~/fetch';
 
@@ -76,21 +74,17 @@ function filterResources(config, resources, resourceFilter = x => x) {
 }
 
 function genThunkOne(config, actions) {
-  return (ids) => async (dispatch, getState) => {
+  return (ids = [], options) => async (dispatch, getState) => {
     const oldState = getStateOfSpecificResource(config, getState(), ids);
 
-    if (_.isUndefined(oldState) || oldState.invalid) {
-      const { token } = getState().authentication;
-      const response = await fetch(token, config.endpoint(...ids));
-      const resource = {
-        ...(await response.json()),
-        __progress: oldState && oldState.__progress || 100,
-      };
-      dispatch(actions.one(resource, ...ids));
-      return resource;
-    }
-
-    return oldState;
+    const { token } = getState().authentication;
+    const response = await fetch(token, config.endpoint(...ids), options);
+    const resource = {
+      ...(await response.json()),
+      __progress: oldState && oldState.__progress || 100,
+    };
+    dispatch(actions.one(resource, ...ids));
+    return resource;
   };
 }
 
@@ -101,12 +95,14 @@ function genThunkOne(config, actions) {
  */
 function genThunkPage(config, actions) {
   function fetchPage(page = 0, ids = [], resourceFilter, storeInState = true,
-                     fetchBeganAt = new Date()) {
+                     fetchBeganAt, options) {
     return async (dispatch, getState) => {
       const { token } = getState().authentication;
       const endpoint = `${config.endpoint(...ids, '')}?page=${page + 1}`;
-      const response = await fetch(token, endpoint);
+      const response = await fetch(token, endpoint, options);
       const resources = await response.json();
+
+      const now = fetchBeganAt || new Date();
 
       // The filterResources function must acknowledge that it may not be getting
       // the most up-to-date results.
@@ -118,8 +114,8 @@ function genThunkPage(config, actions) {
         const existingResourceState = getStateOfSpecificResource(
           config, getState(), [...ids, resource.id]);
         if (existingResourceState) {
-          existingResourceState.__updatedAt = existingResourceState.__updatedAt || new Date();
-          if (existingResourceState.__updatedAt > fetchBeganAt) {
+          const updatedAt = existingResourceState.__updatedAt || new Date();
+          if (updatedAt > now) {
             return await dispatch(fetchOne([resource.id.toString()]));
           }
         }
@@ -132,7 +128,7 @@ function genThunkPage(config, actions) {
       };
 
       if (storeInState) {
-        dispatch(actions.many(updatedResources, ...ids));
+        await dispatch(actions.many(updatedResources, ...ids));
       }
 
       return updatedResources;
@@ -149,28 +145,25 @@ function genThunkPage(config, actions) {
  * pages have been fetched.
  */
 function genThunkAll(config, actions, fetchPage) {
-  function fetchAll(ids = [], resourceFilter) {
+  function fetchAll(ids = [], resourceFilter, options) {
     return async (dispatch, getState) => {
       let state = getStateOfSpecificResource(config, getState(), ids) ||
                   generateDefaultStateMany(config);
-      const resources = [state];
 
       const fetchBeganAt = new Date();
 
       // Grab first page so we know how many there are.
-      if (state.totalPages === -1 || state.invalid) {
-        const storeInState = !state.invalid; // Store the fetched results later
-        const resource = await dispatch(
-          fetchPage(0, ids, resourceFilter, storeInState, fetchBeganAt));
-        resources[0] = resource;
-        state = getStateOfSpecificResource(config, getState(), ids);
-      }
+      const storeInState = !state.invalid; // Store the fetched results later
+      const resource = await dispatch(
+        fetchPage(0, ids, resourceFilter, storeInState, fetchBeganAt, options));
+      const resources = [resource];
+      state = getStateOfSpecificResource(config, getState(), ids);
 
       // Grab all pages we know about. If state.invalid, don't save the result
       // in the redux store until we've got all the results.
       for (let i = 1; i < resources[0].total_pages; i += 1) {
         const resource = await dispatch(
-          fetchPage(i, ids, resourceFilter, !state.invalid, fetchBeganAt));
+          fetchPage(i, ids, resourceFilter, !state.invalid, fetchBeganAt, options));
         resources.push(resource);
       }
 
@@ -181,7 +174,7 @@ function genThunkAll(config, actions, fetchPage) {
       ).reduce((a, b) => a + b);
       const numExpectedResources = resources[resources.length - 1].total_results;
       if (numFetchedResources !== numExpectedResources) {
-        return dispatch(fetchAll(ids, resourceFilter));
+        return await dispatch(fetchAll(ids, resourceFilter));
       }
 
       // Waits until all things have been fetched so we don't have UI flashes

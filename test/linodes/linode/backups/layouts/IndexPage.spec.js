@@ -2,8 +2,8 @@ import React from 'react';
 import sinon from 'sinon';
 import { shallow, mount } from 'enzyme';
 import { expect } from 'chai';
-import { expectRequest } from '@/common';
 
+import { expectRequest, expectObjectDeepEquals } from '@/common';
 import { api } from '@/data';
 import { IndexPage } from '~/linodes/linode/backups/layouts/IndexPage';
 
@@ -21,7 +21,7 @@ describe('linodes/linode/backups/layouts/IndexPage', () => {
       <IndexPage
         dispatch={dispatch}
         linodes={api.linodes}
-        params={{ linodeId: '1234' }}
+        params={{ linodeLabel: 'test-linode' }}
       />
     );
 
@@ -29,7 +29,7 @@ describe('linodes/linode/backups/layouts/IndexPage', () => {
       { name: 'Summary', link: '/' },
       { name: 'History', link: '/history' },
       { name: 'Settings', link: '/settings' },
-    ].map(t => ({ ...t, link: `/linodes/1234/backups${t.link}` }));
+    ].map(t => ({ ...t, link: `/linodes/test-linode/backups${t.link}` }));
 
     const tabs = page.find('Tabs').find('Tab');
     expect(tabs.length).to.equal(tabList.length);
@@ -43,7 +43,7 @@ describe('linodes/linode/backups/layouts/IndexPage', () => {
       <IndexPage
         dispatch={dispatch}
         linodes={api.linodes}
-        params={{ linodeId: '1235' }}
+        params={{ linodeLabel: 'test-linode-1' }}
       />
     );
 
@@ -62,31 +62,24 @@ describe('linodes/linode/backups/layouts/IndexPage', () => {
   });
 
   it('renders errors when enable backups fails', async () => {
-    const errorDispatch = sandbox.stub().throws({
-      json() {
-        return {
-          errors: [
-            { reason: 'Nooo!' },
-          ],
-        };
-      },
-    });
+    const errorDispatch = sandbox.stub();
 
-    const page = mount(
+    const page = await mount(
       <IndexPage
         dispatch={errorDispatch}
         linodes={api.linodes}
-        params={{ linodeId: '1235' }}
+        params={{ linodeLabel: 'test-linode-1' }}
       />
     );
 
-    const { enableBackups } = page.instance();
-    await enableBackups({
-      preventDefault: () => {},
+    errorDispatch.reset();
+    errorDispatch.throws({
+      json: () => ({ errors: [{ reason: 'Nooo!' }] }),
     });
+    await page.instance().enableBackups({ preventDefault() {} });
 
-    const errorOutput = page.find('.alert-danger');
-    expect(errorOutput.length).to.equal(1);
-    expect(errorOutput.text()).to.equal('Nooo!');
+    expectObjectDeepEquals(page.instance().state.errors, {
+      _: [{ reason: 'Nooo!' }],
+    });
   });
 });

@@ -40,13 +40,15 @@ export class Weblish extends Component {
   }
 
   async componentWillMount() {
-    const { dispatch, params: { linodeId } } = this.props;
-    await dispatch(linodes.one([linodeId]));
+    const { dispatch } = this.props;
+    const { id } = this.getLinode();
+    await dispatch(linodes.one([id]));
     await this.connect();
   }
 
   async connect() {
-    const { dispatch, params: { linodeId } } = this.props;
+    const { dispatch } = this.props;
+    const { id: linodeId } = this.getLinode();
     const { lish_token: token } = await dispatch(lishToken(linodeId));
     const socket = new WebSocket(`${LISH_ROOT}:8181/${token}/weblish`);
     socket.addEventListener('open', () =>
@@ -96,7 +98,7 @@ Weblish.propTypes = {
   dispatch: PropTypes.func.isRequired,
   linodes: PropTypes.object,
   params: PropTypes.shape({
-    linodeId: PropTypes.string.isRequired,
+    linodeLabel: PropTypes.string.isRequired,
   }).isRequired,
 };
 

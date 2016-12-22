@@ -20,7 +20,7 @@ describe('linodes/linode/settings/layouts/IndexPage', () => {
       <IndexPage
         dispatch={dispatch}
         linodes={api.linodes}
-        params={{ linodeId: '1235' }}
+        params={{ linodeLabel: 'test-linode-1' }}
       />
     );
 
@@ -28,7 +28,7 @@ describe('linodes/linode/settings/layouts/IndexPage', () => {
       { name: 'Display', link: '/' },
       { name: 'Alerts', link: '/alerts' },
       { name: 'Advanced', link: '/advanced' },
-    ].map(t => ({ ...t, link: `/linodes/1235/settings${t.link}` }));
+    ].map(t => ({ ...t, link: `/linodes/test-linode-1/settings${t.link}` }));
 
     const tabs = page.find('Tabs').find('Tab');
     expect(tabs.length).to.equal(tabList.length);

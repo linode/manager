@@ -16,7 +16,7 @@ const todo = (
 );
 
 export default (
-  <Route path=":linodeId" component={IndexPage}>
+  <Route path=":linodeLabel" component={IndexPage}>
     <IndexRoute component={DashboardPage} />
     <Route path="rebuild" component={RebuildPage} />
     <Route path="resize" component={() => todo} />

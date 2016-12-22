@@ -19,7 +19,7 @@ export class IndexPage extends Component {
       { name: 'Summary', link: '/' },
       { name: 'Reverse DNS', link: '/reversedns' },
       { name: 'IP Management', link: '/ipmanagement' },
-    ].map(t => ({ ...t, link: `/linodes/${linode.id}/networking${t.link}` }));
+    ].map(t => ({ ...t, link: `/linodes/${linode.label}/networking${t.link}` }));
 
     const pathname = location ? location.pathname : tabList[0].link;
     const selected = tabList.reduce((last, current) =>
@@ -33,7 +33,7 @@ IndexPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   linodes: PropTypes.object.isRequired,
   params: PropTypes.shape({
-    linodeId: PropTypes.string.isRequired,
+    linodeLabel: PropTypes.string.isRequired,
   }).isRequired,
   children: PropTypes.object,
   location: PropTypes.object,
