@@ -188,9 +188,7 @@ function renderRow(props) {
       </td>
       <td className="ips">
         {linode.ipv4}
-        <div className="linode-ipv6">
-          {linode.ipv6}
-        </div>
+        <div className="linode-ipv6">{linode.ipv6}</div>
       </td>
       <td>
         {renderDatacenterStyle(linode)}
