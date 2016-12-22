@@ -10,13 +10,10 @@
     }
 
     &-status {
-        position: relative;
-        top: -1px;
         height: $input-height;
-        line-height: $input-height;
         padding-right: 10px;
         font-size: $font-xs-normal;
-        color: #777;
+        color: $light-black;
     }
 
     &-toggle {
