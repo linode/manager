@@ -180,7 +180,7 @@ function renderRow(props) {
 
   return (
     <tr className={`linode ${linode.status} ${selectedClass}`}>
-      <td>{checkbox}</td>
+      <td className="linode-checkbox">{checkbox}</td>
       <td>
         <Link to={`/linodes/${linode.id}`} className="linode-label">{linode.label}</Link>
       </td>
