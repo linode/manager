@@ -34,7 +34,9 @@ export function renderPlanStyle(s) {
 }
 
 export function renderDistroStyle(linode) {
-  if (!linode || !linode.distribution || !linode.distribution.vendor) return null;
+  if (!linode || !linode.distribution || !linode.distribution.vendor) {
+    return 'Unknown';
+  }
 
   return (
     <span className="distro-style">
@@ -93,7 +95,7 @@ export function renderBackupStatus(linode) {
     if (!lastBackup) {
       const nextBackup = getNextBackup(linode);
       return (
-        <Link className="backup-status" to={`/linodes/${linode.id}/backups`}>
+        <Link className="backup-status" to={`/linodes/${linode.label}/backups`}>
           In ~{nextBackup.fromNow(true)}
         </Link>);
     }
@@ -101,19 +103,19 @@ export function renderBackupStatus(linode) {
     const backupStatus = linode.backups.last_backup.status;
     if (backupStatus === 'running') {
       return (
-        <Link className="backup-status" to={`/linodes/${linode.id}/backups`}>
+        <Link className="backup-status" to={`/linodes/${linode.label}/backups`}>
           Running
         </Link>);
     }
 
     if (backupStatus === 'pending') {
       return (
-        <Link className="backup-status" to={`/linodes/${linode.id}/backups`}>
+        <Link className="backup-status" to={`/linodes/${linode.label}/backups`}>
           Pending
         </Link>);
     }
     return (
-      <Link to={`/linodes/${linode.id}/backups`}>
+      <Link to={`/linodes/${linode.label}/backups`}>
         <span className="backup-status">
           Taken {moment.utc(linode.backups.last_backup).fromNow()}
         </span>
@@ -123,7 +125,7 @@ export function renderBackupStatus(linode) {
     <span className="backup-status">
       <span>
         <Link
-          to={`/linodes/${linode.id}/backups`}
+          to={`/linodes/${linode.label}/backups`}
         >Enable backups</Link>
       </span>
     </span>
@@ -142,7 +144,7 @@ function renderCard(props) {
       <header className="header-secondary">
         {checkbox}
         <div>
-          <Link className="linode-label" to={`/linodes/${linode.id}`}>{linode.label}</Link>
+          <Link className="linode-label" to={`/linodes/${linode.label}`}>{linode.label}</Link>
         </div>
         <span className="float-xs-right">
           <StatusDropdown
@@ -182,7 +184,7 @@ function renderRow(props) {
     <tr className={`linode ${linode.status} ${selectedClass}`}>
       <td className="linode-checkbox">{checkbox}</td>
       <td>
-        <Link to={`/linodes/${linode.id}`} className="linode-label">{linode.label}</Link>
+        <Link to={`/linodes/${linode.label}`} className="linode-label">{linode.label}</Link>
       </td>
       <td className="ips">
         {linode.ipv4}
@@ -196,7 +198,7 @@ function renderRow(props) {
       <td>
         {renderBackupStatus(linode)}
       </td>
-      <td className="float-xs-right">
+      <td>
         <StatusDropdown
           linode={linode}
           dispatch={props.dispatch}

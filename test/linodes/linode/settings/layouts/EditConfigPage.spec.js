@@ -7,8 +7,9 @@ import deepFreeze from 'deep-freeze';
 
 import { api } from '@/data';
 import { testLinode } from '@/data/linodes';
-import { expectRequest } from '@/common';
+import { expectRequest, expectObjectDeepEquals } from '@/common';
 import { EditConfigPage } from '~/linodes/linode/settings/layouts/EditConfigPage';
+
 const { kernels, linodes } = api;
 
 describe('linodes/linode/settings/layouts/EditConfigPage', () => {
@@ -24,22 +25,21 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
     linodes,
     kernels,
     params: {
-      linodeId: `${testLinode.id}`,
+      linodeLabel: `${testLinode.label}`,
       configId: '12345',
     },
   });
 
-  it('calls saveChanges when save is pressed', async () => {
+  it('calls saveChanges when save is pressed', () => {
     const page = shallow(
       <EditConfigPage
         {...props}
         dispatch={dispatch}
       />);
 
-    await page.instance().componentDidMount();
     const saveChanges = sandbox.stub(page.instance(), 'saveChanges');
     page.find('.btn-default').simulate('click');
-    expect(saveChanges.calledOnce).to.equal(true);
+    expect(saveChanges.callCount).to.equal(1);
   });
 
   it('handles API errors', async () => {
@@ -56,12 +56,9 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
     });
 
     await page.instance().saveChanges();
-    expect(page.state('errors'))
-      .to.have.property('label')
-      .that.deep.equals([{
-        field: 'label',
-        reason: 'because of fail',
-      }]);
+    expectObjectDeepEquals(page.instance().state.errors, {
+      label: [{ field: 'label', reason: 'because of fail' }],
+    });
   });
 
   it('redirects to advanced page after call', async () => {
@@ -75,14 +72,15 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
     await page.instance().saveChanges();
     expect(dispatch.calledTwice).to.equal(true);
     const arg = dispatch.secondCall.args[0];
-    expect(arg).to.deep.equal(push(`/linodes/${props.params.linodeId}/settings/advanced`));
+    expectObjectDeepEquals(
+      arg, push(`/linodes/${props.params.linodeLabel}/settings/advanced`));
   });
 
   it('config not exist', async () => {
     const badProps = {
       ...props,
       params: {
-        linodeId: `${testLinode.id}`,
+        linodeLabel: `${testLinode.label}`,
         configId: '999999999999999',
       },
     };
@@ -115,16 +113,10 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
   });
 
   it('add disk slot', async () => {
-    const otherConfigProps = {
-      ...props,
-      params: {
-        linodeId: 1233,
-        configId: 12346,
-      },
-    };
     const page = await mount(
       <EditConfigPage
-        {...otherConfigProps}
+        {...props}
+        params={{ linodeLabel: 'test-linode-1233', configId: '12346' }}
         dispatch={dispatch}
       />
     );
@@ -413,7 +405,7 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
 
       function expectRequestOptions({ method, body }) {
         expect(method).to.equal('PUT');
-        expect(JSON.parse(body)).to.deep.equal({
+        expectObjectDeepEquals(JSON.parse(body), {
           label: 'new label',
           comments: 'Test comments',
           ram_limit: 1024,

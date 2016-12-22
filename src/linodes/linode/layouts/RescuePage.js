@@ -14,7 +14,6 @@ import { getConfig,
   fillDiskSlots,
   addDiskSlot,
   removeDiskSlot,
-  loadDisks,
   AVAILABLE_DISK_SLOTS,
 } from '~/linodes/linode/settings/layouts/EditConfigPage.js';
 
@@ -63,10 +62,10 @@ ResetRootPwModal.propTypes = {
 };
 
 export class RescuePage extends Component {
-  static async preload(store, newParams) {
-    const { linodeId } = newParams;
-    await store.dispatch(linodes.one([linodeId]));
-    await store.dispatch(linodes.disks.all([linodeId]));
+  static async preload({ dispatch, getState }, { linodeLabel }) {
+    const { id } = Object.values(getState().api.linodes.linodes).reduce(
+      (match, linode) => linode.label === linodeLabel ? linode : match);
+    await dispatch(linodes.disks.all([id]));
   }
 
   constructor(props) {
@@ -78,7 +77,6 @@ export class RescuePage extends Component {
     this.fillDiskSlots = fillDiskSlots.bind(this);
     this.removeDiskSlot = removeDiskSlot.bind(this);
     this.addDiskSlot = addDiskSlot.bind(this);
-    this.loadDisks = loadDisks.bind(this);
     this.renderDiskSlot = renderDiskSlot.bind(this);
     this.renderDiskSlotNoEdit = this.renderDiskSlotNoEdit.bind(this);
     this.renderRescueMode = this.renderRescueMode.bind(this);
@@ -87,7 +85,6 @@ export class RescuePage extends Component {
     this.state = {
       password: '',
       disk: null,
-      loading: true,
       applying: false,
       result: null,
     };
@@ -97,13 +94,11 @@ export class RescuePage extends Component {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
     const linode = this.getLinode();
-    await this.loadDisks();
     const diskSlots = await this.getDiskSlots(false);
     const disk = Object.values(linode._disks.disks)
                        .filter(d => d.filesystem !== 'swap')[0];
     this.setState({
       diskSlots,
-      loading: false,
       disk: disk ? disk.id : null,
     });
   }
@@ -152,12 +147,10 @@ export class RescuePage extends Component {
     const { diskSlots } = this.state;
     const { dispatch } = this.props;
     const linode = this.getLinode();
-    if (!linode) {
-      return null;
-    }
-    const showDisks = linode && linode._disks.totalPages !== -1 ?
-      Object.values(linode._disks.disks)
-      .filter(d => d.filesystem !== 'swap').length > 1 : false;
+
+    const showDisks = linode && linode._disks ? Object.values(linode._disks.disks).filter(
+      d => d.filesystem !== 'swap').length > 1 : false;
+
     let slots = null;
     if (showDisks && diskSlots) {
       slots = diskSlots.map(this.renderDiskSlot);
@@ -192,29 +185,24 @@ export class RescuePage extends Component {
   }
 
   renderResetRootPassword() {
-    const { disk, loading } = this.state;
+    const { disk } = this.state;
     const { dispatch } = this.props;
     const linode = this.getLinode();
-    if (!linode) {
-      return null;
-    }
+
     const resetRootPwModal = (
       <ResetRootPwModal
         linodeId={linode.id}
         dispatch={dispatch}
         resetRootPassword={this.resetRootPassword}
       />);
-    let body = null;
-    if (loading) {
-      body = null;
-    } else if (disk === null) {
-      body = (
-        <p>This Linode does not have any disks eligible for password reset.</p>
-      );
-    } else {
-      const showDisks = linode && linode._disks.totalPages !== -1 ?
-        Object.values(linode._disks.disks)
-          .filter(d => d.filesystem !== 'swap').length > 1 : false;
+    let body = (
+      <p>This Linode does not have any disks eligible for password reset.</p>
+    );
+
+    if (disk) {
+      const showDisks = Object.values(linode._disks.disks).reduce(
+        (showDisks, d) => showDisks || d.filesystem !== 'swap', false);
+
       body = (
         <div className="root-pw">
             {showDisks ?
@@ -264,6 +252,7 @@ export class RescuePage extends Component {
         </div>
       );
     }
+
     return (
       <div className="col-sm-6">
         <section className="card">
@@ -292,7 +281,7 @@ export class RescuePage extends Component {
 RescuePage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   params: PropTypes.shape({
-    linodeId: PropTypes.string,
+    linodeLabel: PropTypes.string,
   }),
 };
 
@@ -301,4 +290,3 @@ function select(state) {
 }
 
 export default connect(select)(RescuePage);
-

@@ -74,17 +74,18 @@ export function generateDefaultStateMany(config) {
   };
 }
 
-function generateDefaultStateOne(config, one) {
+export function generateDefaultStateOne(config, one) {
   const subresources = _.reduce(
     config.subresources, (accumulated, subresourceConfig, subresourceName) => ({
       ...accumulated,
       [subresourceName]: { ...generateDefaultStateMany(subresourceConfig) },
     }), {});
-  return { ...one, ...subresources, __updatedAt: new Date() };
+  return { ...one, ...subresources };
 }
 
-export function genReducer(_config) {
-  function one(config, oldStateMany, action) {
+export class ReducerGenerator {
+
+  static one(config, oldStateMany, action) {
     const id = action.ids ? action.ids.pop() : action.resource.id;
     const oldStateOne = oldStateMany[config.plural][id];
     const newStateOne = oldStateOne ? action.resource :
@@ -105,11 +106,14 @@ export function genReducer(_config) {
     return newStateMany;
   }
 
-  function many(config, oldState, action) {
+  static many(config, oldState, action) {
     const { page } = action;
 
     const newState = page[config.plural].reduce((stateAccumulator, oneObject) =>
-      one(config, stateAccumulator, { ids: [oneObject.id], resource: oneObject }), oldState);
+      ReducerGenerator.one(config, stateAccumulator, {
+        ids: [oneObject.id],
+        resource: oneObject,
+      }), oldState);
 
     return {
       ...newState,
@@ -118,7 +122,7 @@ export function genReducer(_config) {
     };
   }
 
-  function del(config, state, action) {
+  static del(config, state, action) {
     const id = action.ids[action.ids.length - 1];
     return {
       ...state,
@@ -126,7 +130,7 @@ export function genReducer(_config) {
     };
   }
 
-  function invalidate(config, state, action) {
+  static invalidate(config, state, action) {
     let newState = { ...state };
     if (action.partial) {
       // Keep data but mark as invalid to be overwritten
@@ -146,11 +150,10 @@ export function genReducer(_config) {
       }
     }
 
-    newState.__updatedAt = new Date();
-    return newState;
+    return { ...newState, __updatedAt: new Date() };
   }
 
-  function subresource(config, state, action) {
+  static subresource(config, state, action) {
     let path = action.type.substr(action.type.indexOf('@') + 1);
     path = path.substr(0, path.indexOf('/'));
     const names = path.split('.');
@@ -184,31 +187,34 @@ export function genReducer(_config) {
 
     const subaction = { ...action, ids: ids.splice(1) };
     const item = state[config.plural][ids[0]];
-    return one(config, state, {
+    return ReducerGenerator.one(config, state, {
       ids: action.ids,
       // eslint-disable-next-line no-use-before-define
-      resource: { [subkey]: reducer(subconfig, item[subkey], subaction) },
+      resource: { [subkey]: ReducerGenerator.reducer(subconfig, item[subkey], subaction) },
     });
   }
 
-  function reducer(config, state, action) {
+  static reducer(config, state, action) {
     switch (action.type) {
       case `GEN@${fullyQualified(config)}/ONE`:
-        return one(config, state, action);
+        return ReducerGenerator.one(config, state, action);
       case `GEN@${fullyQualified(config)}/MANY`:
-        return many(config, state, action);
+        return ReducerGenerator.many(config, state, action);
       case `GEN@${fullyQualified(config)}/DELETE`:
-        return del(config, state, action);
+        return ReducerGenerator.del(config, state, action);
       case `GEN@${fullyQualified(config)}/INVALIDATE`:
-        return invalidate(config, state, action);
+        return ReducerGenerator.invalidate(config, state, action);
       default:
         if (action.type && action.type.indexOf(`GEN@${config.plural}.`) === 0) {
-          return subresource(config, state, action);
+          return ReducerGenerator.subresource(config, state, action);
         }
         return state;
     }
   }
 
-  const defaultState = generateDefaultStateMany(_config);
-  return (state = defaultState, action) => reducer(_config, state, action);
+  constructor(_config) {
+    const defaultState = generateDefaultStateMany(_config);
+    this.reducer = (state = defaultState, action) =>
+      ReducerGenerator.reducer(_config, state, action);
+  }
 }

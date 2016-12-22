@@ -69,10 +69,10 @@ export class IndexPage extends Component {
     const { dispatch } = this.props;
     try {
       this.setState({ loading: true });
-      const linode = await this.createLinode({ group, label, password, backups });
+      await this.createLinode({ group, label, password, backups });
 
       this.setState({ loading: false });
-      dispatch(push(`/linodes/${linode.id}`));
+      dispatch(push(`/linodes/${label}`));
       // TODO: handle creating multiple linodes at once ? refer to
       // TODO: previous commit history for example
     } catch (response) {

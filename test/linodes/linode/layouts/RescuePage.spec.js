@@ -3,11 +3,12 @@ import sinon from 'sinon';
 import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 
-import { state } from '@/data';
-import { testLinode } from '@/data/linodes';
 import { SHOW_MODAL } from '~/actions/modal';
 import { RescuePage } from '~/linodes/linode/layouts/RescuePage';
 import { expectRequest } from '@/common';
+import { state } from '@/data';
+
+const { linodes } = state.api;
 
 describe('linodes/linode/layouts/RescuePage', () => {
   const sandbox = sinon.sandbox.create();
@@ -19,56 +20,13 @@ describe('linodes/linode/layouts/RescuePage', () => {
     sandbox.restore();
   });
 
-  // TODO: Please, somebody, remove this
-  const linodes = {
-    pagesFetched: [0],
-    totalPages: 1,
-    linodes: {
-      [testLinode.id]: testLinode,
-      1235: {
-        ...testLinode,
-        id: 1235,
-        _disks: {
-          totalPages: 1,
-          totalResults: 0,
-          pagesFetched: [1],
-          disks: { },
-        },
-      },
-      1236: {
-        ...testLinode,
-        id: 1236,
-        _disks: {
-          totalPages: 1,
-          totalResults: 2,
-          pagesFetched: [1],
-          disks: {
-            2234: {
-              ...testLinode._disks.disks[1234],
-              id: 2234,
-            },
-            2235: {
-              ...testLinode._disks.disks[1234],
-              id: 2235,
-            },
-          },
-        },
-      },
-      1237: {
-        ...testLinode,
-        id: 1237,
-        status: 'offline',
-      },
-    },
-    _singular: 'linode',
-    _plural: 'linodes',
-  };
-
   it('fetches linode disks', async () => {
     const _dispatch = sinon.stub();
-    await RescuePage.preload({ dispatch: _dispatch }, { linodeId: '1242' });
+    await RescuePage.preload({ dispatch: _dispatch, getState: () => state },
+                             { linodeLabel: 'test-linode-1242' });
 
-    let fn = _dispatch.secondCall.args[0];
+    expect(_dispatch.callCount).to.equal(1);
+    let fn = _dispatch.firstCall.args[0];
     _dispatch.reset();
     _dispatch.returns({ total_pages: 1, disks: [], total_results: 0 });
     await fn(_dispatch, () => state);
@@ -84,7 +42,7 @@ describe('linodes/linode/layouts/RescuePage', () => {
         <RescuePage
           dispatch={dispatch}
           linodes={linodes}
-          params={{ linodeId: '1235' }}
+          params={{ linodeLabel: 'test-linode-1' }}
         />);
       page.setState({ loading: false });
       expect(page.contains(
@@ -97,7 +55,7 @@ describe('linodes/linode/layouts/RescuePage', () => {
         <RescuePage
           dispatch={dispatch}
           linodes={linodes}
-          params={{ linodeId: '1234' }}
+          params={{ linodeLabel: 'test-linode' }}
         />);
       page.setState({ loading: false, disk: true });
       expect(page.find('PasswordInput').length).to.equal(1);
@@ -108,15 +66,14 @@ describe('linodes/linode/layouts/RescuePage', () => {
         <RescuePage
           dispatch={dispatch}
           linodes={linodes}
-          params={{ linodeId: '1236' }}
+          params={{ linodeLabel: 'test-linode-1233' }}
         />);
-      page.setState({ loading: false, disk: 2234 });
+      page.setState({ loading: false, disk: 12345 });
       const reset = page.find('.root-pw');
       const select = reset.find('select');
       expect(select.length).to.equal(1);
-      const d = linodes.linodes[1236]._disks.disks[2234];
-      expect(select.contains(<option value={d.id} key={d.id}>{d.label}</option>))
-        .to.equal(true);
+      const { label } = linodes.linodes['1233']._disks.disks['12345'];
+      expect(select.find('option').text()).to.equal(label);
     });
 
     it('updates state when selecting disks', () => {
@@ -124,13 +81,13 @@ describe('linodes/linode/layouts/RescuePage', () => {
         <RescuePage
           dispatch={dispatch}
           linodes={linodes}
-          params={{ linodeId: '1236' }}
+          params={{ linodeLabel: 'test-linode-1233' }}
         />);
       page.setState({ loading: false, disk: 2234 });
       const reset = page.find('.root-pw');
       const select = reset.find('select');
       select.simulate('change', { target: { value: 2235 } });
-      expect(page.state('disk')).to.equal(2235);
+      expect(page.instance().state.disk).to.equal(2235);
     });
 
     it('updates state when password changes', () => {
@@ -138,7 +95,7 @@ describe('linodes/linode/layouts/RescuePage', () => {
         <RescuePage
           dispatch={dispatch}
           linodes={linodes}
-          params={{ linodeId: '1234' }}
+          params={{ linodeLabel: 'test-linode' }}
         />);
       page.setState({ loading: false, disk: 1234 });
       const reset = page.find('.root-pw');
@@ -151,7 +108,7 @@ describe('linodes/linode/layouts/RescuePage', () => {
         <RescuePage
           dispatch={dispatch}
           linodes={linodes}
-          params={{ linodeId: '1237' }}
+          params={{ linodeLabel: 'test-linode-3' }}
         />);
       page.setState({ loading: false, disk: 1234, password: 'new password' });
       const { resetRootPassword } = page.instance();
@@ -168,7 +125,7 @@ describe('linodes/linode/layouts/RescuePage', () => {
         <RescuePage
           dispatch={dispatch}
           linodes={linodes}
-          params={{ linodeId: '1237' }}
+          params={{ linodeLabel: 'test-linode-3' }}
         />);
       page.setState({ loading: false, disk: 1234, password: 'new password' });
       page.find('.reset-root-pw-button').simulate('click');
@@ -182,7 +139,7 @@ describe('linodes/linode/layouts/RescuePage', () => {
         <RescuePage
           dispatch={dispatch}
           linodes={linodes}
-          params={{ linodeId: '1234' }}
+          params={{ linodeLabel: 'test-linode' }}
         />);
       page.setState({ diskSlots: [12345, 12346] });
       // iterate through the labels, there should be two disks and one for Finnix

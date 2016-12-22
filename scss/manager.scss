@@ -760,8 +760,12 @@ footer {
 
     td {
         padding-top: 10px;
-        padding-bottom: 15px;
+        padding-bottom: 10px;
         vertical-align: middle;
+    }
+
+    .linode .StatusDropdown {
+        @extend .float-xs-right;
     }
 
     td.linode-checkbox {

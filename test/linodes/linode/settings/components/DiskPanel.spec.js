@@ -13,6 +13,7 @@ import { api, freshState } from '@/data';
 import { testLinode } from '@/data/linodes';
 import { SHOW_MODAL, hideModal } from '~/actions/modal';
 import { expectRequest } from '@/common';
+
 const { linodes } = api;
 
 describe('linodes/linode/settings/components/DiskPanel', () => {
@@ -25,7 +26,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
   it('renders disk help button', () => {
     const panel = mount(
       <DiskPanel
-        params={{ linodeId: `${testLinode.id}` }}
+        params={{ linodeLabel: `${testLinode.label}` }}
         dispatch={() => {}}
         linodes={linodes}
       />);
@@ -36,7 +37,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
   it('renders disks', () => {
     const panel = shallow(
       <DiskPanel
-        params={{ linodeId: '1236' }}
+        params={{ linodeLabel: 'test-linode-2' }}
         dispatch={() => {}}
         linodes={linodes}
       />);
@@ -60,7 +61,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
   it('renders offline message', () => {
     const panel = shallow(
       <DiskPanel
-        params={{ linodeId: `${testLinode.id}` }}
+        params={{ linodeLabel: `${testLinode.label}` }}
         dispatch={() => {}}
         linodes={linodes}
       />);
@@ -74,7 +75,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
   it('renders unallocated space', () => {
     const panel = shallow(
       <DiskPanel
-        params={{ linodeId: '1240' }}
+        params={{ linodeLabel: 'test-linode-6' }}
         dispatch={() => {}}
         linodes={linodes}
       />);
@@ -97,7 +98,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
     const dispatch = sandbox.spy();
     const panel = shallow(
       <DiskPanel
-        params={{ linodeId: '1236' }}
+        params={{ linodeLabel: 'test-linode-2' }}
         dispatch={dispatch}
         linodes={linodes}
       />);
@@ -112,11 +113,12 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
     const dispatch = sandbox.spy();
     const panel = shallow(
       <DiskPanel
-        params={{ linodeId: '1236' }}
+        params={{ linodeLabel: 'test-linode-2' }}
         dispatch={dispatch}
         linodes={linodes}
       />);
 
+    // Two disks available to delete, delete the first disk
     panel.find('.btn-delete').at(0).simulate('click');
     expect(dispatch.calledOnce).to.equal(true);
     expect(dispatch.firstCall.args[0])
@@ -127,7 +129,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
     const dispatch = sandbox.spy();
     const panel = shallow(
       <DiskPanel
-        params={{ linodeId: '1240' }}
+        params={{ linodeLabel: 'test-linode-6' }}
         dispatch={dispatch}
         linodes={linodes}
       />);

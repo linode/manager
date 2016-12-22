@@ -36,6 +36,7 @@ export function fetch(token, _path, _options) {
       'X-CORS-Status': 'true',
     },
   };
+
   const path = API_ROOT + _path;
   const promise = fetchRef(path, options);
   return new Promise((accept, reject) => {

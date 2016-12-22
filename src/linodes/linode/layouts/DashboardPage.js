@@ -177,7 +177,7 @@ export class DashboardPage extends Component {
                 <ul className="list-unstyled">
                   <li>{linode.ipv4}</li>
                   <li className="text-light-black">{linode.ipv6}</li>
-                  <li><Link to={`/linodes/${linode.id}/networking`}>(...)</Link></li>
+                  <li><Link to={`/linodes/${linode.label}/networking`}>(...)</Link></li>
                 </ul>
               </div>
             </div>
@@ -205,7 +205,7 @@ export class DashboardPage extends Component {
                 Distribution
               </div>
               <div className="col-sm-9 content-col right">
-                {linode.distribution != null ? this.renderDistroStyle(linode) : 'Unknown'}
+                {this.renderDistroStyle(linode)}
               </div>
             </div>
             <div className="form-group row linode-backups">
@@ -309,7 +309,7 @@ export class DashboardPage extends Component {
 DashboardPage.propTypes = {
   linodes: PropTypes.object,
   params: PropTypes.shape({
-    linodeId: PropTypes.string,
+    linodeLabel: PropTypes.string,
   }),
   username: PropTypes.string,
   dispatch: PropTypes.func.isRequired,

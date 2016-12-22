@@ -8,6 +8,7 @@ import { IndexPage } from '~/linodes/create/layouts/IndexPage';
 import * as errors from '~/actions/errors';
 import { linodes as thunks } from '~/api';
 import { api } from '@/data';
+import { expectObjectDeepEquals } from '@/common';
 
 describe('linodes/create/layout/IndexPage', () => {
   const sandbox = sinon.sandbox.create();
@@ -156,7 +157,7 @@ describe('linodes/create/layout/IndexPage', () => {
       group: null,
     });
     expect(dispatch.callCount).to.equal(2);
-    expect(dispatch.firstCall.args[0]).to.deep.equal({
+    expectObjectDeepEquals(dispatch.firstCall.args[0], {
       root_pass: 'password',
       type: 'type',
       distribution: 'source',
@@ -166,7 +167,7 @@ describe('linodes/create/layout/IndexPage', () => {
       with_backups: false,
       group: null,
     });
-    expect(dispatch.secondCall.args[0]).to.deep.equal(push(`/linodes/${createdLinodeId}`));
+    expectObjectDeepEquals(dispatch.secondCall.args[0], push('/linodes/label'));
   });
 
   it('sets errors on create a linode failure', async () => {

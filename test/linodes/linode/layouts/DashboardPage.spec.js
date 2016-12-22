@@ -2,9 +2,13 @@ import React from 'react';
 import sinon from 'sinon';
 import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
-import { testLinode } from '@/data/linodes';
-import { DashboardPage } from '~/linodes/linode/layouts/DashboardPage';
 import moment from 'moment';
+
+import { DashboardPage } from '~/linodes/linode/layouts/DashboardPage';
+import { testLinode } from '@/data/linodes';
+import { api } from '@/data';
+
+const { linodes } = api;
 
 describe('linodes/linode/layouts/DashboardPage', async () => {
   const sandbox = sinon.sandbox.create();
@@ -16,37 +20,8 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
     sandbox.restore();
   });
 
-  const linodes = {
-    pagesFetched: [0],
-    totalPages: 1,
-    linodes: {
-      [testLinode.id]: testLinode,
-      1235: {
-        ...testLinode,
-        id: 1235,
-        group: '',
-        backups: {
-          last_backup: '2016-06-28T14:19:37',
-          enabled: true,
-        },
-      },
-      1236: {
-        ...testLinode,
-        id: 1236,
-        distribution: null,
-        group: '',
-        backups: {
-          last_backup: '2016-06-28T14:19:37',
-          enabled: true,
-        },
-        types: [],
-      },
-    },
-    _singular: 'linode',
-    _plural: 'linodes',
-  };
   const params = {
-    linodeId: `${testLinode.id}`,
+    linodeLabel: testLinode.label,
   };
 
   it('renders public ipv4 and ipv6', () => {
@@ -64,7 +39,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
   });
 
   it('renders backups not enabled', () => {
-    const path = `/linodes/${testLinode.id}/backups`;
+    const path = `/linodes/${testLinode.label}/backups`;
     const page = shallow(
       <DashboardPage
         linodes={{ ...linodes,
@@ -82,17 +57,15 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
       .find('.col-sm-9')
       .at(0)
       .find('Link')
-      .props())
-      .have.property('to')
-      .which.equal(path);
+      .props().to).to.equal(path);
   });
 
   it('renders backups enabled', () => {
-    const backupTime = linodes.linodes[1235].backups.last_backup;
+    const backupTime = linodes.linodes[1245].backups.last_backup;
     const page = shallow(
       <DashboardPage
         linodes={linodes}
-        params={{ linodeId: '1235' }}
+        params={{ linodeLabel: 'test-linode-1245' }}
       />);
 
     expect(page.find('.backup-status')
@@ -142,7 +115,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
     const page = shallow(
       <DashboardPage
         linodes={linodes}
-        params={{ linodeId: '1236' }}
+        params={{ linodeLabel: 'test-linode-1246' }}
       />);
 
     expect(page.find('.linode-distro').at(0)
