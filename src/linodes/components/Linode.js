@@ -196,7 +196,7 @@ function renderRow(props) {
       <td>
         {renderBackupStatus(linode)}
       </td>
-      <td className="float-xs-right">
+      <td>
         <StatusDropdown
           linode={linode}
           dispatch={props.dispatch}
