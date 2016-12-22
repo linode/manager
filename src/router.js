@@ -58,17 +58,21 @@ export class LoadingRouterContext extends RouterContext {
     this.match = props.match;
     this.fetching = true;
     this.initialLoad = true;
-
-    store.dispatch(kernels.all());
-    store.dispatch(types.all());
-    store.dispatch(datacenters.all());
-    store.dispatch(distributions.all());
   }
 
   async componentWillMount() {
     const ret = checkLogin(this.props);
     if (ret) {
       return;
+    }
+
+    const { location: { pathname }, params } = this.props;
+    // No need to fetch these in weblish.
+    if (!(pathname.endsWith('/weblish') && params.linodeLabel)) {
+      store.dispatch(kernels.all());
+      store.dispatch(types.all());
+      store.dispatch(datacenters.all());
+      store.dispatch(distributions.all());
     }
 
     // Necessary to await this for testing
