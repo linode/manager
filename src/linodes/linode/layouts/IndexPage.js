@@ -55,14 +55,13 @@ export class IndexPage extends Component {
   static async preload({ dispatch, getState }, { linodeLabel }) {
     const { linodes: _linodes } = getState().api.linodes;
     const oldLinodeState = Object.values(_linodes).length && Object.values(_linodes).reduce(
-      (match, linode) => linode.label === linodeLabel ? linode : match);
+      (match, linode) => linode.label === linodeLabel ? linode : match, undefined);
 
     try {
       let id = null;
 
       if (oldLinodeState && oldLinodeState.id) {
         ({ id } = oldLinodeState);
-        await dispatch(linodes.one([id]));
       } else {
         ({ id } = (await dispatch(linodes.all([], undefined, {
           headers: {

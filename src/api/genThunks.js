@@ -95,12 +95,14 @@ function genThunkOne(config, actions) {
  */
 function genThunkPage(config, actions) {
   function fetchPage(page = 0, ids = [], resourceFilter, storeInState = true,
-                     fetchBeganAt = new Date(), options) {
+                     fetchBeganAt, options) {
     return async (dispatch, getState) => {
       const { token } = getState().authentication;
       const endpoint = `${config.endpoint(...ids, '')}?page=${page + 1}`;
       const response = await fetch(token, endpoint, options);
       const resources = await response.json();
+
+      const now = fetchBeganAt || new Date();
 
       // The filterResources function must acknowledge that it may not be getting
       // the most up-to-date results.
@@ -112,8 +114,8 @@ function genThunkPage(config, actions) {
         const existingResourceState = getStateOfSpecificResource(
           config, getState(), [...ids, resource.id]);
         if (existingResourceState) {
-          existingResourceState.__updatedAt = existingResourceState.__updatedAt || new Date();
-          if (existingResourceState.__updatedAt > fetchBeganAt) {
+          const updatedAt = existingResourceState.__updatedAt || new Date();
+          if (updatedAt > now) {
             return await dispatch(fetchOne([resource.id.toString()]));
           }
         }
@@ -147,7 +149,6 @@ function genThunkAll(config, actions, fetchPage) {
     return async (dispatch, getState) => {
       let state = getStateOfSpecificResource(config, getState(), ids) ||
                   generateDefaultStateMany(config);
-      const resources = [state];
 
       const fetchBeganAt = new Date();
 
@@ -155,7 +156,7 @@ function genThunkAll(config, actions, fetchPage) {
       const storeInState = !state.invalid; // Store the fetched results later
       const resource = await dispatch(
         fetchPage(0, ids, resourceFilter, storeInState, fetchBeganAt, options));
-      resources[0] = resource;
+      const resources = [resource];
       state = getStateOfSpecificResource(config, getState(), ids);
 
       // Grab all pages we know about. If state.invalid, don't save the result
