@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
-import { linodes, kernels } from '~/api';
+import { linodes } from '~/api';
 import HelpButton from '~/components/HelpButton';
 import { ErrorSummary, FormGroup, reduceErrors } from '~/errors';
 import { Link } from '~/components/Link';
@@ -27,7 +27,7 @@ export function getDisks() {
   return null;
 }
 
-export async function getDiskSlots(fromConfig = false) {
+export function getDiskSlots(fromConfig = false) {
   const disks = fromConfig ? this.getConfig().disks : this.getDisks();
   const diskSlots = [];
   Object.values(disks).forEach(disk => {
@@ -55,9 +55,9 @@ export function fillDiskSlots(slotToKeep, slotToKeepOldValue) {
   this.setState({ diskSlots });
 }
 
-export async function addDiskSlot() {
+export function addDiskSlot() {
   const { diskSlots } = this.state;
-  const allDiskSlots = await this.getDiskSlots();
+  const allDiskSlots = this.getDiskSlots();
 
   for (const diskSlot of allDiskSlots) {
     if (diskSlots.indexOf(diskSlot) === -1) {
@@ -144,49 +144,28 @@ export function renderDiskSlot(device, index) {
   );
 }
 
-// eslint-disable-next-line react/sort-comp
-export async function loadDisks() {
-  const { dispatch } = this.props;
-  if (this.getDisks()) return;
-
-  const { linodeId } = this.props.params;
-  try {
-    await dispatch(linodes.disks.all(linodeId));
-  } catch (e) {
-    // TODO: handle errors
-    // eslint-disable-next-line no-console
-    console.error(e);
-  }
-}
-
 export class EditConfigPage extends Component {
-  static async preload(store, newParams) {
-    const { linodeId } = newParams;
+  static async preload({ dispatch, getState }, { linodeLabel }) {
+    const { id } = Object.values(getState().api.linodes.linodes).reduce(
+      (match, linode) => linode.label === linodeLabel ? linode : match);
 
     try {
-      await store.dispatch(linodes.one([linodeId]));
-
-      await Promise.all([
-        store.dispatch(kernels.all()),
-        store.dispatch(linodes.configs.all([linodeId])),
-        store.dispatch(linodes.disks.all([linodeId])),
-      ]);
+      await dispatch(linodes.configs.all([id]));
+      await dispatch(linodes.disks.all([id]));
     } catch (e) {
-      store.dispatch(setError(e));
+      dispatch(setError(e));
     }
   }
 
   constructor() {
     super();
     this.getLinode = getLinode.bind(this);
-    this.saveChanges = this.saveChanges.bind(this);
     this.renderDiskSlot = renderDiskSlot.bind(this);
     this.getConfig = getConfig.bind(this);
     this.getDisks = getDisks.bind(this);
     this.addDiskSlot = addDiskSlot.bind(this);
     this.getDiskSlots = getDiskSlots.bind(this);
     this.fillDiskSlots = fillDiskSlots.bind(this);
-    this.loadDisks = loadDisks.bind(this);
     this.addDiskSlot = addDiskSlot.bind(this);
     this.removeDiskSlot = removeDiskSlot.bind(this);
 
@@ -212,7 +191,7 @@ export class EditConfigPage extends Component {
     };
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     const { create, dispatch } = this.props;
     dispatch(setSource(__filename));
 
@@ -230,11 +209,11 @@ export class EditConfigPage extends Component {
 
     // Config not found. Should we 404?
     if (!config) {
-      await dispatch(push(`/linodes/${this.getLinode().id}/settings/advanced`));
+      dispatch(push(`/linodes/${this.getLinode().id}/settings/advanced`));
       return;
     }
 
-    const diskSlots = await this.getDiskSlots(true);
+    const diskSlots = this.getDiskSlots(true);
 
     let isCustomRoot = true;
     let initrd = '';
@@ -308,9 +287,13 @@ export class EditConfigPage extends Component {
       }
 
       this.setState({ loading: false });
-      dispatch(push(`/linodes/${linode.id}/settings/advanced`));
+      dispatch(push(`/linodes/${linode.label}/settings/advanced`));
     } catch (response) {
-      this.setState({ loading: false, errors: await reduceErrors(response) });
+      // Promisify the setState call so we can await it in tests.
+      await new Promise(async (resolve) => this.setState({
+        loading: false,
+        errors: await reduceErrors(response),
+      }, resolve));
     }
   }
 
@@ -365,7 +348,7 @@ export class EditConfigPage extends Component {
   }
 
   render() {
-    const { create, kernels } = this.props;
+    const { create, kernels, params: { linodeLabel } } = this.props;
     const {
       loading, label, comments, kernel, isCustomRoot, ramLimit, rootDevice,
       initrd, errors, diskSlots } = this.state;
@@ -557,11 +540,11 @@ export class EditConfigPage extends Component {
               <button
                 className="btn btn-default"
                 disabled={loading}
-                onClick={() => this.saveChanges()}
+                onClick={() => this.saveChanges()} // Look this up onClick for testing purposes
               >{this.props.create ? 'Add config' : 'Save'}</button>
               <Link
                 className="btn btn-cancel"
-                to={`/linodes/${this.props.params.linodeId}/settings/advanced`}
+                to={`/linodes/${linodeLabel}/settings/advanced`}
               >Cancel</Link>
             </div>
           </div>
@@ -576,7 +559,7 @@ EditConfigPage.propTypes = {
   kernels: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   params: PropTypes.shape({
-    linodeId: PropTypes.string,
+    linodeLabel: PropTypes.string,
     configId: PropTypes.string,
   }),
   create: PropTypes.bool.isRequired,

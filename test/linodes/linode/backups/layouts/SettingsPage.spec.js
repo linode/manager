@@ -25,7 +25,7 @@ describe('linodes/linode/backups/layouts/SettingsPage', () => {
       <SettingsPage
         dispatch={dispatch}
         linodes={api.linodes}
-        params={{ linodeId: '1234' }}
+        params={{ linodeLabel: 'test-linode' }}
       />
     );
     await page.instance().componentDidMount();
@@ -60,7 +60,7 @@ describe('linodes/linode/backups/layouts/SettingsPage', () => {
       <SettingsPage
         dispatch={dispatch}
         linodes={api.linodes}
-        params={{ linodeId: '1234' }}
+        params={{ linodeLabel: 'test-linode' }}
       />
     );
     await page.instance().componentDidMount();

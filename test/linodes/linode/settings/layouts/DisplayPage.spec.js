@@ -21,7 +21,7 @@ describe('linodes/linode/settings/layouts/DisplayPage', () => {
   const props = {
     dispatch,
     linodes,
-    params: { linodeId: '1234' },
+    params: { linodeLabel: 'test-linode' },
   };
 
   it('renders display page', async () => {
@@ -31,7 +31,8 @@ describe('linodes/linode/settings/layouts/DisplayPage', () => {
 
     expect(page.find('header h2').text()).to.equal('Display');
     expect(page.find('[name="group"]').props().value).to.equal('Test Group');
-    expect(page.find('[name="label"]').props().value).to.equal('Test Linode');
+
+    expect(page.find('[name="label"]').props().value).to.equal('test-linode');
     expect(page.find('button.btn.btn-default').text()).to.equal('Save');
   });
 
@@ -50,12 +51,12 @@ describe('linodes/linode/settings/layouts/DisplayPage', () => {
   it('makes request to save changes', async () => {
     const page = shallow(<DisplayPage {...props} />);
 
-    const linode = linodes.linodes[props.params.linodeId];
+    const linode = linodes.linodes['1234'];
     page.find('button').simulate('click', { preventDefault() {} });
     expect(dispatch.calledOnce).to.equal(true);
     const fn = dispatch.firstCall.args[0];
     const dispatched = () => ({ authentication: { token: 'hi' } });
-    await expectRequest(fn, `/linode/instances/${linode.id}`, dispatched,
+    await expectRequest(fn, '/linode/instances/1234', dispatched,
                         { group: linode.group, label: linode.label }, { method: 'PUT' });
   });
 

@@ -22,7 +22,7 @@ export class SummaryPage extends Component {
   }
 
   renderBlock(title, backup) {
-    const { linodeId } = this.props.params;
+    const { params: { linodeLabel } } = this.props;
 
     if (backup === undefined || backup.finished === null) {
       return this.renderEmpty(title);
@@ -34,7 +34,7 @@ export class SummaryPage extends Component {
 
     return (
       <div className="col-sm-3" key={title}>
-        <Link to={`/linodes/${linodeId}/backups/${backup.id}`}>
+        <Link to={`/linodes/${linodeLabel}/backups/${backup.id}`}>
           <div className="backup-block clickable">
             <div className="title">{title}</div>
             <div className="description">{`${days} ${unit}`}</div>
@@ -84,7 +84,7 @@ SummaryPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   linodes: PropTypes.object.isRequired,
   params: PropTypes.shape({
-    linodeId: PropTypes.string.isRequired,
+    linodeLabel: PropTypes.string.isRequired,
   }).isRequired,
 };
 

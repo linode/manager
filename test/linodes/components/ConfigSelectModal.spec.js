@@ -19,7 +19,7 @@ describe('linodes/components/StatusDropdown/ConfigSelectModal', () => {
   it('renders power on button text', () => {
     const modal = shallow(
       <ConfigSelectModal
-        linode={linodes.linodes[1244]}
+        linode={linodes.linodes['1238']}
         action={powerOnLinode}
       />
     );
@@ -30,7 +30,7 @@ describe('linodes/components/StatusDropdown/ConfigSelectModal', () => {
   it('renders reboot button text', () => {
     const modal = shallow(
       <ConfigSelectModal
-        linode={linodes.linodes[1244]}
+        linode={linodes.linodes['1238']}
         action={rebootLinode}
       />
     );
@@ -39,7 +39,7 @@ describe('linodes/components/StatusDropdown/ConfigSelectModal', () => {
   });
 
   it('renders config list', () => {
-    const linode = linodes.linodes[1244];
+    const linode = linodes.linodes['1238'];
     const modal = shallow(<ConfigSelectModal linode={linode} />);
 
     const configs = Object.values(linode._configs.configs);
@@ -57,7 +57,7 @@ describe('linodes/components/StatusDropdown/ConfigSelectModal', () => {
     const dispatch = sandbox.spy();
     const action = sandbox.stub().returns(42);
 
-    const linode = linodes.linodes[1244];
+    const linode = linodes.linodes['1238'];
 
     const modal = shallow(
       <ConfigSelectModal

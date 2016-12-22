@@ -23,7 +23,7 @@ describe('linodes/linode/backups/layouts/BackupPage', () => {
         dispatch={dispatch}
         linodes={api.linodes}
         params={{
-          linodeId: '1234',
+          linodeLabel: 'test-linode',
           backupId: '54778593',
         }}
       />
@@ -31,7 +31,7 @@ describe('linodes/linode/backups/layouts/BackupPage', () => {
 
     const restoreTo = page.find('select');
     expect(restoreTo.length).to.equal(1);
-    expect(restoreTo.props().value).to.equal('1234');
+    expect(restoreTo.props().value).to.equal(1234);
 
     const options = restoreTo.find('option');
     expect(options.length).to.equal(Object.keys(api.linodes.linodes).length);
@@ -74,7 +74,7 @@ describe('linodes/linode/backups/layouts/BackupPage', () => {
         dispatch={dispatch}
         linodes={api.linodes}
         params={{
-          linodeId: '1234',
+          linodeLabel: 'test-linode',
           backupId: '54778596',
         }}
       />
@@ -90,7 +90,7 @@ describe('linodes/linode/backups/layouts/BackupPage', () => {
         dispatch={dispatch}
         linodes={api.linodes}
         params={{
-          linodeId: '1234',
+          linodeLabel: 'test-linode',
           backupId: '54778593',
         }}
       />
@@ -106,7 +106,7 @@ describe('linodes/linode/backups/layouts/BackupPage', () => {
         dispatch={dispatch}
         linodes={api.linodes}
         params={{
-          linodeId: '1234',
+          linodeLabel: 'test-linode',
           backupId: '54778596',
         }}
       />
@@ -130,7 +130,7 @@ describe('linodes/linode/backups/layouts/BackupPage', () => {
         dispatch={dispatch}
         linodes={api.linodes}
         params={{
-          linodeId: '1234',
+          linodeLabel: 'test-linode',
           backupId: '54778593',
         }}
       />
@@ -153,7 +153,7 @@ describe('linodes/linode/backups/layouts/BackupPage', () => {
       },
     );
 
-    expect(dispatch.calledWith(push('/linodes/1234'))).to.equal(true);
+    expect(dispatch.calledWith(push('/linodes/test-linode'))).to.equal(true);
   });
 
   it('renders errors when restore fails', async () => {
@@ -172,7 +172,7 @@ describe('linodes/linode/backups/layouts/BackupPage', () => {
         dispatch={errorDispatch}
         linodes={api.linodes}
         params={{
-          linodeId: '1234',
+          linodeLabel: 'test-linode',
           backupId: '54778593',
         }}
       />
@@ -201,7 +201,7 @@ describe('linodes/linode/backups/layouts/BackupPage', () => {
         dispatch={errorDispatch}
         linodes={api.linodes}
         params={{
-          linodeId: '1234',
+          linodeLabel: 'test-linode',
           backupId: '54778596',
         }}
       />

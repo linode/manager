@@ -64,7 +64,7 @@ const init = () => {
             component={Logout}
           />
           <Route
-            path="/linodes/:linodeId/weblish"
+            path="/linodes/:linodeLabel/weblish"
             component={Weblish}
           />
           <Route

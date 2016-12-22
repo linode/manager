@@ -9,13 +9,14 @@ import { setSource } from '~/actions/source';
 import { setError } from '~/actions/errors';
 
 export class SummaryPage extends Component {
-  static async preload(store, newParams) {
-    const { linodeId } = newParams;
+  static async preload({ dispatch, getState }, { linodeLabel }) {
+    const { id } = Object.values(getState().api.linodes.linodes).reduce(
+      (match, linode) => linode.label === linodeLabel ? linode : match);
 
     try {
-      await store.dispatch(linodeIPs(linodeId));
+      await dispatch(linodeIPs(id));
     } catch (e) {
-      store.dispatch(setError(e));
+      dispatch(setError(e));
     }
   }
 
@@ -39,10 +40,10 @@ export class SummaryPage extends Component {
   }
 
   async addPrivateIP() {
-    const { linodeId } = this.props.params;
+    const { id } = this.getLinode();
     const { dispatch } = this.props;
     try {
-      await dispatch(addIP(linodeId, 'private'));
+      await dispatch(addIP(id, 'private'));
     } catch (e) {
       dispatch(setError(e));
     }
@@ -222,7 +223,7 @@ SummaryPage.propTypes = {
   linodes: PropTypes.object,
   dispatch: PropTypes.func.isRequired,
   params: PropTypes.shape({
-    linodeId: PropTypes.string.isRequired,
+    linodeLabel: PropTypes.string.isRequired,
   }).isRequired,
 };
 

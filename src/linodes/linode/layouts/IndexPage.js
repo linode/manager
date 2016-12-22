@@ -10,8 +10,9 @@ import { setSource } from '~/actions/source';
 
 export function getLinode() {
   const { linodes } = this.props.linodes;
-  const linodeId = parseInt(this.props.params.linodeId, 10);
-  return linodes ? linodes[linodeId] : null;
+  const { linodeLabel } = this.props.params;
+  return Object.values(linodes).reduce(
+    (match, linode) => linode.label === linodeLabel ? linode : match, null);
 }
 
 class LinodeTabs extends Tabs {
@@ -51,14 +52,29 @@ export function renderTabs(tabList, selected, isSubtab = false) {
 }
 
 export class IndexPage extends Component {
-  static async preload(store, newParams) {
-    const { linodeId } = newParams;
+  static async preload({ dispatch, getState }, { linodeLabel }) {
+    const { linodes: _linodes } = getState().api.linodes;
+    const oldLinodeState = Object.values(_linodes).length && Object.values(_linodes).reduce(
+      (match, linode) => linode.label === linodeLabel ? linode : match, undefined);
 
     try {
-      await store.dispatch(linodes.one([linodeId]));
-      await store.dispatch(linodes.configs.all([linodeId]));
+      let id = null;
+
+      if (oldLinodeState && oldLinodeState.id) {
+        ({ id } = oldLinodeState);
+      } else {
+        ({ id } = (await dispatch(linodes.all([], undefined, {
+          headers: {
+            'X-Filter': JSON.stringify({ label: linodeLabel }),
+          },
+        }))).linodes[0]);
+      }
+
+      await dispatch(linodes.configs.all([id.toString()]));
     } catch (e) {
-      store.dispatch(setError(e));
+      // eslint-disable-next-line no-console
+      console.error(e);
+      dispatch(setError(e));
     }
   }
 
@@ -129,7 +145,7 @@ export class IndexPage extends Component {
       { name: 'Rescue', link: '/rescue' },
       { name: 'Backups', link: '/backups' },
       { name: 'Settings', link: '/settings' },
-    ].map(t => ({ ...t, link: `/linodes/${linode.id}${t.link}` }));
+    ].map(t => ({ ...t, link: `/linodes/${linode.label}${t.link}` }));
 
     const pathname = location ? location.pathname : tabList[0].link;
     const selected = tabList.reduce((last, current) =>
@@ -150,7 +166,7 @@ IndexPage.propTypes = {
   username: PropTypes.string,
   linodes: PropTypes.object,
   params: PropTypes.shape({
-    linodeId: PropTypes.string,
+    linodeLabel: PropTypes.string,
   }),
   detail: PropTypes.object,
   children: PropTypes.node,

@@ -114,7 +114,7 @@ describe('linodes/create/components/Source', () => {
       />
     );
 
-    expect(c.find('table tbody tr').length).to.equal(3);
+    expect(c.find('table tbody tr').length).to.equal(5);
     // Pagination not shown because the number of rows is less than rowsPerPage(=20)
     expect(c.find('.pagination').length).to.equal(0);
   });
@@ -135,12 +135,14 @@ describe('linodes/create/components/Source', () => {
     // Only 1 row
     expect(c.find('table tbody tr').length).to.equal(1);
     // Four buttons (Previous, 1st page, 2nd page, Next)
-    expect(c.find('.page-item').length).to.equal(5);
+    expect(c.find('.page-item').length).to.equal(7);
     expect(c.find('.page-item').at(0).text()).to.equal('«');
     expect(c.find('.page-item').at(1).text()).to.equal('1');
     expect(c.find('.page-item').at(2).text()).to.equal('2');
     expect(c.find('.page-item').at(3).text()).to.equal('3');
-    expect(c.find('.page-item').at(4).text()).to.equal('»');
+    expect(c.find('.page-item').at(4).text()).to.equal('4');
+    expect(c.find('.page-item').at(5).text()).to.equal('5');
+    expect(c.find('.page-item').at(6).text()).to.equal('»');
   });
 
   it('changes pages when requested', () => {
@@ -165,28 +167,31 @@ describe('linodes/create/components/Source', () => {
        .simulate('click', { preventDefault() {} });
 
     // Initial backup is the Test Backup
-    expectOnly('Test Linode');
+    expectOnly('test-linode-1233');
     // Previous does nothing
     clickNth(0);
-    expectOnly('Test Linode');
+    expectOnly('test-linode-1233');
     // First page does nothing
     clickNth(1);
-    expectOnly('Test Linode');
+    expectOnly('test-linode-1233');
     // Second page shows second linode
     clickNth(2);
-    expectOnly('Test Linode');
+    expectOnly('test-linode');
     // Third page shows third linode
     clickNth(3);
     expectOnly('More backups');
-    // Next page does nothing
+    // Fourth page shows fourth linode
     clickNth(4);
-    expectOnly('More backups');
-    // Previous goes to first page
+    expectOnly('test-linode-1245');
+    // Fifth page shows fifth linode
+    clickNth(5);
+    expectOnly('test-linode-1246');
+    // Previous goes to previous page
     clickNth(0);
-    expectOnly('Test Linode');
-    // Next goes to second page
-    clickNth(3);
-    expectOnly('More backups');
+    expectOnly('test-linode-1245');
+    // Next goes to last page
+    clickNth(5);
+    expectOnly('test-linode-1246');
   });
 
   it('filters backups when updating filter', () => {
@@ -202,7 +207,7 @@ describe('linodes/create/components/Source', () => {
     );
 
     // Show all linodes
-    expect(c.find('table tbody tr').length).to.equal(3);
+    expect(c.find('table tbody tr').length).to.equal(5);
     // Filter on 'More'
     c.find('.filter input').simulate('change', { target: { value: 'More' } });
     // Only show 'More backups' linode
@@ -212,6 +217,6 @@ describe('linodes/create/components/Source', () => {
     // Reset filter
     c.find('.filter input').simulate('change', { target: { value: '' } });
     // Show all linodes
-    expect(c.find('table tbody tr').length).to.equal(3);
+    expect(c.find('table tbody tr').length).to.equal(5);
   });
 });

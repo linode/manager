@@ -23,11 +23,13 @@ import Confirm from '~/components/Confirm';
 import { showModal, hideModal } from '~/actions/modal';
 
 export class IndexPage extends Component {
-  static async preload(store) {
+  static async preload({ dispatch }) {
     try {
-      await store.dispatch(linodes.all());
+      await dispatch(linodes.all());
     } catch (response) {
-      store.dispatch(setError(response));
+      // eslint-disable-next-line no-console
+      console.error(response);
+      dispatch(setError(response));
     }
   }
 

@@ -33,7 +33,7 @@ AdvancedPage.propTypes = {
   linodes: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   params: PropTypes.shape({
-    linodeId: PropTypes.string,
+    linodeLabel: PropTypes.string,
   }),
 };
 

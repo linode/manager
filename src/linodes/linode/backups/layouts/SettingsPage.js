@@ -170,7 +170,7 @@ SettingsPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   linodes: PropTypes.object.isRequired,
   params: PropTypes.shape({
-    linodeId: PropTypes.string.isRequired,
+    linodeLabel: PropTypes.string.isRequired,
   }).isRequired,
 };
 

@@ -5,22 +5,10 @@ import { push } from 'react-router-redux';
 import PasswordInput from '~/components/PasswordInput';
 import FormRow from '~/components/FormRow';
 import Distributions from '~/linodes/components/Distributions';
-import { setError } from '~/actions/errors';
 import { setSource } from '~/actions/source';
-import { distributions } from '~/api';
 import { rebuildLinode } from '~/api/linodes';
 
 export class RebuildPage extends Component {
-  static async preload(store) {
-    const { dispatch } = store;
-
-    try {
-      await dispatch(distributions.all());
-    } catch (response) {
-      dispatch(setError(response));
-    }
-  }
-
   constructor() {
     super();
     this.onSubmit = this.onSubmit.bind(this);
@@ -33,13 +21,14 @@ export class RebuildPage extends Component {
   }
 
   async onSubmit() {
-    const { dispatch, params: { linodeId } } = this.props;
+    const { dispatch, params: { linodeLabel } } = this.props;
+    const { id: linodeId } = this.getLinode();
     try {
       dispatch(rebuildLinode(linodeId, {
         distribution: this.state.distribution,
         root_pass: this.state.password,
       }));
-      dispatch(push(`/linodes/${linodeId}`));
+      dispatch(push(`/linodes/${linodeLabel}`));
     } catch (e) {
       // TODO: handle errors
     }
@@ -91,7 +80,7 @@ RebuildPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   distributions: PropTypes.object.isRequired,
   params: PropTypes.shape({
-    linodeId: PropTypes.string.isRequired,
+    linodeLabel: PropTypes.string.isRequired,
   }).isRequired,
 };
 

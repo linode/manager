@@ -20,7 +20,7 @@ describe('linodes/linode/backups/layouts/SummaryPage', () => {
       <SummaryPage
         dispatch={dispatch}
         linodes={api.linodes}
-        params={{ linodeId: '1236' }}
+        params={{ linodeLabel: 'test-linode-2' }}
       />
     );
 
@@ -43,7 +43,7 @@ describe('linodes/linode/backups/layouts/SummaryPage', () => {
       <SummaryPage
         dispatch={dispatch}
         linodes={api.linodes}
-        params={{ linodeId: '1235' }}
+        params={{ linodeLabel: 'test-linode-1' }}
       />
     );
 
@@ -52,7 +52,7 @@ describe('linodes/linode/backups/layouts/SummaryPage', () => {
 
     const testBlock = (block, title, description, id) => {
       expect(block.parent().props().to).to.equal(
-        `/linodes/1235/backups/${id}`);
+        `/linodes/test-linode-1/backups/${id}`);
       expect(block.find('.title').text()).to.equal(title);
       expect(block.find('.description').text()).to.contain(description);
     };

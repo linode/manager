@@ -20,7 +20,7 @@ describe('linodes/linode/settings/layouts/AdvancedPage', () => {
     const page = shallow(
       <AdvancedPage
         linodes={linodes}
-        params={{ linodeId: '1235' }}
+        params={{ linodeLabel: 'test-linode-1' }}
         dispatch={() => {}}
       />
     );
@@ -32,7 +32,7 @@ describe('linodes/linode/settings/layouts/AdvancedPage', () => {
     const page = shallow(
       <AdvancedPage
         linodes={linodes}
-        params={{ linodeId: '1235' }}
+        params={{ linodeLabel: 'test-linode-1' }}
         dispatch={() => {}}
       />
     );

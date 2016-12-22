@@ -2,11 +2,13 @@ import React from 'react';
 import sinon from 'sinon';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
+
 import { SummaryPage } from '~/linodes/linode/networking/layouts/SummaryPage';
 import { ipv4ns, ipv6ns, ipv6nsSuffix } from '~/constants';
 import { testLinode } from '@/data/linodes';
-import { api } from '@/data';
-const { linodes } = api;
+import { state } from '@/data';
+
+const { linodes } = state.api;
 
 describe('linodes/linode/networking/layouts/SummaryPage', () => {
   const sandbox = sinon.sandbox.create();
@@ -18,7 +20,7 @@ describe('linodes/linode/networking/layouts/SummaryPage', () => {
   });
 
   const params = {
-    linodeId: 1234,
+    linodeLabel: testLinode.label,
   };
 
   describe('public network', () => {
@@ -148,7 +150,7 @@ describe('linodes/linode/networking/layouts/SummaryPage', () => {
       const page = shallow(
         <SummaryPage
           linodes={linodes}
-          params={{ linodeId: 1245 }}
+          params={{ linodeLabel: 'test-linode-1245' }}
         />);
 
       const button = page.find(
@@ -160,7 +162,7 @@ describe('linodes/linode/networking/layouts/SummaryPage', () => {
       const page = shallow(
         <SummaryPage
           linodes={linodes}
-          params={{ linodeId: 1234 }}
+          params={{ linodeLabel: 'test-linode' }}
         />);
 
       const p = page.find(
@@ -177,7 +179,7 @@ describe('linodes/linode/networking/layouts/SummaryPage', () => {
       const page = shallow(
         <SummaryPage
           linodes={linodes}
-          params={{ linodeId: 1234 }}
+          params={{ linodeLabel: 'test-linode' }}
         />);
 
       const label = page.find('.LinodesLinodeNetworkingSummaryPage-linkLocal');
