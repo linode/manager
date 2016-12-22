@@ -7,7 +7,7 @@ import { linodes } from '~/api';
 import { lishToken } from '~/api/linodes';
 import { getLinode } from './IndexPage';
 
-function addCSSLink(url) {
+export function addCSSLink(url) {
   const head = window.document.querySelector('head');
   const link = document.createElement('link');
   link.rel = 'stylesheet';
@@ -16,7 +16,7 @@ function addCSSLink(url) {
   head.appendChild(link);
 }
 
-function addJSScript(url) {
+export function addJSScript(url) {
   const head = window.document.querySelector('head');
   const script = document.createElement('script');
   script.src = url;
