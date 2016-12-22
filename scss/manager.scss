@@ -751,10 +751,6 @@ footer {
         header > * {
             vertical-align: top;
         }
-
-        .linode-ipv6 {
-            margin-top: 0;
-        }
     }
 
     td {
@@ -776,9 +772,11 @@ footer {
         cursor: pointer;
     }
 
-    .linode-ipv6 {
+    .ips {
         line-height: initial;
-        margin-top: -7px;
+    }
+
+    .linode-ipv6 {
         font-size: $font-xs-normal;
         color: $lightest-black;
     }
