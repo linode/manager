@@ -187,7 +187,7 @@ function renderRow(props) {
         <Link to={`/linodes/${linode.label}`} className="linode-label">{linode.label}</Link>
       </td>
       <td className="ips">
-        <div>{linode.ipv4}</div>
+        {linode.ipv4}
         <div className="linode-ipv6">{linode.ipv6}</div>
       </td>
       <td>
