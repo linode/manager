@@ -768,6 +768,15 @@ footer {
         @extend .float-xs-right;
     }
 
+    td.linode-checkbox {
+        padding: 0 15px;
+        width: 46px;
+    }
+
+    td.linode-checkbox > input:hover {
+        cursor: pointer;
+    }
+
     .linode-ipv6 {
         line-height: initial;
         margin-top: -7px;
