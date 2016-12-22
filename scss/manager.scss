@@ -805,6 +805,8 @@ section.card header + .react-tabs {
 }
 
 .create-page {
+    padding-top: 15px;
+
     section.card:not(:last-of-type) {
         padding-bottom: 0;
     }
