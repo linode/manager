@@ -45,7 +45,7 @@ describe('linodes/linode/layouts/IndexPage/renderTabs', async () => {
   ];
 
   it('renders tabs', () => {
-    const page = shallow(
+    const page = mount(
       <Test
         dispatch={dispatch}
         linodes={linodes}
@@ -171,7 +171,7 @@ describe('linodes/linode/layouts/IndexPage', () => {
   });
 
   it('renders tabs with correct names and links', () => {
-    const page = shallow(
+    const page = mount(
       <IndexPage
         dispatch={dispatch}
         linodes={linodes}

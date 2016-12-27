@@ -187,6 +187,7 @@ label {
 
     [role="tab"] {
         border-color: 1px solid transparent;
+        padding: 0;
 
         &:not(:last-of-type) {
             margin-right: 15px;
@@ -216,6 +217,8 @@ label {
 
         a {
             color: $black;
+            display: block;
+            padding: 6px 12px;
             text-decoration: none !important;
         }
     }
