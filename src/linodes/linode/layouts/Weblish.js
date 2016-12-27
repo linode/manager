@@ -40,16 +40,19 @@ export class Weblish extends Component {
   }
 
   async componentWillMount() {
-    const { dispatch } = this.props;
-    const { id } = this.getLinode();
-    await dispatch(linodes.one([id]));
+    const { dispatch, params: { linodeLabel } } = this.props;
+    await dispatch(linodes.all([], undefined, {
+      headers: {
+        'X-Filter': JSON.stringify({ label: linodeLabel }),
+      },
+    }));
     await this.connect();
   }
 
   async connect() {
     const { dispatch } = this.props;
-    const { id: linodeId } = this.getLinode();
-    const { lish_token: token } = await dispatch(lishToken(linodeId));
+    const { id } = this.getLinode();
+    const { lish_token: token } = await dispatch(lishToken(id));
     const socket = new WebSocket(`${LISH_ROOT}:8181/${token}/weblish`);
     socket.addEventListener('open', () =>
       this.setState({ renderingLish: true }, this.renderTerminal(socket)));
