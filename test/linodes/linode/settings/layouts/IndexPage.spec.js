@@ -1,6 +1,6 @@
 import React from 'react';
 import sinon from 'sinon';
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import { expect } from 'chai';
 
 import { api } from '@/data';
@@ -16,7 +16,7 @@ describe('linodes/linode/settings/layouts/IndexPage', () => {
   });
 
   it('renders tabs with correct names and links', () => {
-    const page = shallow(
+    const page = mount(
       <IndexPage
         dispatch={dispatch}
         linodes={api.linodes}
