@@ -17,7 +17,7 @@ describe('linodes/linode/backups/layouts/IndexPage', () => {
   });
 
   it('renders tabs with correct names and links with backups enabled', () => {
-    const page = shallow(
+    const page = mount(
       <IndexPage
         dispatch={dispatch}
         linodes={api.linodes}
