@@ -9,7 +9,7 @@ import {
   EditModal,
   DiskPanel,
 } from '~/linodes/linode/settings/components/DiskPanel';
-import { api, freshState } from '@/data';
+import { api } from '@/data';
 import { testLinode } from '@/data/linodes';
 import { SHOW_MODAL, hideModal } from '~/actions/modal';
 import { expectRequest } from '@/common';
@@ -127,7 +127,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
 
   it('shows the add modal when appropriate', () => {
     const dispatch = sandbox.spy();
-    const panel = shallow(
+    const panel = mount(
       <DiskPanel
         params={{ linodeLabel: 'test-linode-6' }}
         dispatch={dispatch}
@@ -186,9 +186,9 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
       expect(modal.state('size')).to.equal(1234);
     });
 
-    it('should close when Nevermind is clicked', () => {
+    it('should dismiss the modal when Cancel is clicked', () => {
       const dispatch = sandbox.spy();
-      const modal = shallow(
+      const modal = mount(
         <EditModal
           {...props}
           dispatch={dispatch}
@@ -198,14 +198,14 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
       expect(dispatch.calledWith(hideModal())).to.equal(true);
     });
 
-    it('should call saveChanges when Save is clicked', () => {
-      const modal = shallow(
+    it('should call saveChanges when Edit Disk form is submitted', () => {
+      const modal = mount(
         <EditModal
           {...props}
           dispatch={() => {}}
         />);
       const saveChanges = sandbox.stub(modal.instance(), 'saveChanges');
-      modal.find('.btn-default').simulate('click');
+      modal.find('.btn-default').simulate('submit');
       expect(saveChanges.calledOnce).to.equal(true);
     });
 
@@ -280,7 +280,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
     };
 
     it('should render warning text and buttons', () => {
-      const modal = shallow(
+      const modal = mount(
         <DeleteModal
           {...props}
           dispatch={() => {}}
@@ -290,9 +290,9 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
       expect(modal.find('button').length).to.equal(2);
     });
 
-    it('should close when Nevermind is clicked', () => {
+    it('should dismiss the modal when Cancel is clicked', () => {
       const dispatch = sandbox.spy();
-      const modal = shallow(
+      const modal = mount(
         <DeleteModal
           {...props}
           dispatch={dispatch}
@@ -304,12 +304,12 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
 
     it('should invoke the appropriate API endpoint', async () => {
       const dispatch = sandbox.spy();
-      const modal = shallow(
+      const modal = mount(
         <DeleteModal
           {...props}
           dispatch={dispatch}
         />);
-      await modal.find('.btn-default').props().onClick();
+      await modal.find('.btn-default').simulate('submit');
       expect(dispatch.calledTwice).to.equal(true);
       const fn = dispatch.firstCall.args[0];
       await expectRequest(fn, '/linode/instances/1236/disks/12345',
@@ -323,31 +323,6 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
       linode: linodes.linodes[1236],
       free: 4096,
     };
-
-    it('should fetch distributions on mount', async () => {
-      const dispatch = sandbox.stub();
-      const modal = shallow(
-        <AddModal
-          {...props}
-          distributions={freshState.api.distributions}
-          dispatch={dispatch}
-        />);
-      await modal.instance().componentDidMount();
-      expect(dispatch.calledOnce).to.equal(true);
-      let fn = dispatch.firstCall.args[0];
-      dispatch.reset();
-      dispatch.returns({ total_pages: 1, distributions: [], total_results: 0 });
-
-       // Call to fetch all
-      await fn(dispatch, () => freshState);
-      expect(dispatch.callCount).to.equal(1);
-      fn = dispatch.firstCall.args[0];
-      dispatch.reset();
-
-      await expectRequest(fn, '/linode/distributions/?page=1', undefined, {
-        distributions: [],
-      });
-    });
 
     it('should render label, filesystem, distro, and size fields', () => {
       const modal = shallow(
@@ -423,9 +398,9 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
         .to.have.property('min').that.equals(distro.minimum_storage_size);
     });
 
-    it('should dismiss the modal when Nevermind is clicked', () => {
+    it('should dismiss the modal when Cancel is clicked', async () => {
       const dispatch = sandbox.spy();
-      const modal = shallow(
+      const modal = mount(
         <AddModal
           {...props}
           dispatch={dispatch}
@@ -435,14 +410,14 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
       expect(dispatch.calledWith(hideModal())).to.equal(true);
     });
 
-    it('should call createDisk when Add disk is clicked', () => {
-      const modal = shallow(
+    it('should call createDisk when Add Disk form is submitted', () => {
+      const modal = mount(
         <AddModal
           {...props}
           dispatch={() => {}}
         />);
       const createDisk = sandbox.stub(modal.instance(), 'createDisk');
-      modal.find('.btn-default').simulate('click');
+      modal.find('.btn-default').simulate('submit');
       expect(createDisk.calledOnce).to.equal(true);
     });
 

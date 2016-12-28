@@ -2,8 +2,9 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 
-import { linodes, distributions } from '~/api';
+import { linodes } from '~/api';
 import { resizeLinodeDisk } from '~/api/linodes';
+import { CancelButton, Form, SubmitButton } from '~/components/form';
 import HelpButton from '~/components/HelpButton';
 import PasswordInput from '~/components/PasswordInput';
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
@@ -62,16 +63,21 @@ export class EditModal extends Component {
     const { disk, free, dispatch } = this.props;
     const { label, size, errors, loading } = this.state;
     return (
-      <div>
+      <Form
+        onSubmit={() => this.saveChanges()}
+      >
         <FormGroup errors={errors} field="label">
           <label htmlFor="label">Label</label>
           <input
+            name="label"
             className="form-control"
             id="label"
             placeholder="Label"
             value={label}
             disabled={loading}
-            onChange={e => this.setState({ label: e.target.value })}
+            onChange={e => {
+              this.setState({ label: e.target.value });
+            }}
           />
         </FormGroup>
         <div className="form-group">
@@ -91,23 +97,22 @@ export class EditModal extends Component {
             className="form-control"
             value={size}
             name="size"
-            onChange={e => this.setState({ size: parseInt(e.target.value, 10) })}
+            onChange={e => {
+              this.setState({ size: parseInt(e.target.value, 10) });
+            }}
           />
         </FormGroup>
         <ErrorSummary errors={errors} />
         <div className="modal-footer">
-          <button
-            className="btn btn-cancel"
+          <CancelButton
             disabled={loading}
             onClick={() => dispatch(hideModal())}
-          >Cancel</button>
-          <button
-            className="btn btn-default"
-            onClick={() => this.saveChanges()}
+          />
+          <SubmitButton
             disabled={loading}
-          >Save</button>
+          />
         </div>
-      </div>);
+      </Form>);
   }
 }
 
@@ -157,25 +162,25 @@ export class DeleteModal extends Component {
     const { dispatch } = this.props;
     const { loading, errors } = this.state;
     return (
-      <div>
+      <Form
+        onSubmit={() => this.deleteDisk()}
+      >
         <p>Are you sure you want to delete this disk? This cannot be undone.</p>
         {errors._.length ?
           <div className="alert alert-danger">
             {errors._.map(error => <div key={error}>{error}</div>)}
           </div> : null}
         <div className="modal-footer">
-          <button
-            className="btn btn-cancel"
+          <CancelButton
             disabled={loading}
             onClick={() => dispatch(hideModal())}
-          >Cancel</button>
-          <button
-            className="btn btn-default"
+          />
+          <SubmitButton
+            text="Delete Disk"
             disabled={loading}
-            onClick={() => this.deleteDisk()}
-          >Delete disk</button>
+          />
         </div>
-      </div>);
+      </Form>);
   }
 }
 
@@ -190,7 +195,7 @@ export class AddModal extends Component {
     super();
     this.createDisk = this.createDisk.bind(this);
     this.state = {
-      loading: true,
+      loading: false,
       errors: { label: [], size: [], _: [] },
       label: '',
       size: 1024,
@@ -200,11 +205,9 @@ export class AddModal extends Component {
     };
   }
 
-  async componentDidMount() {
-    const { dispatch, free } = this.props;
+  componentDidMount() {
+    const { free } = this.props;
     this.setState({ size: free });
-    await dispatch(distributions.all());
-    this.setState({ loading: false });
   }
 
   async createDisk() {
@@ -277,7 +280,9 @@ export class AddModal extends Component {
       distributions.distributions[distro].minimum_storage_size;
 
     return (
-      <div>
+      <Form
+        onSubmit={() => this.createDisk()}
+      >
         <div className={`form-group ${errors.label.length ? 'has-danger' : ''}`}>
           <label htmlFor="label">Label</label>
           <input
@@ -346,18 +351,16 @@ export class AddModal extends Component {
             {errors._.map(error => <div key={error}>{error}</div>)}
           </div> : null}
         <div className="modal-footer">
-          <button
-            className="btn btn-cancel"
+          <CancelButton
             disabled={loading}
             onClick={() => dispatch(hideModal())}
-          >Cancel</button>
-          <button
-            className="btn btn-default"
+          />
+          <SubmitButton
+            text="Add Disk"
             disabled={ready}
-            onClick={() => this.createDisk()}
-          >Add disk</button>
+          />
         </div>
-      </div>
+      </Form>
     );
   }
 }
