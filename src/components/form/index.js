@@ -1,3 +1,3 @@
-export { default as CancelButton } from './CancelButton';
-export { default as Form } from './form';
-export { default as SubmitButton } from './SubmitButton';
+export { default as CancelButton } from '~/components/form/CancelButton';
+export { default as Form } from '~/components/form/form';
+export { default as SubmitButton } from '~/components/form/SubmitButton';

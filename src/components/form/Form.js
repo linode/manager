@@ -15,5 +15,5 @@ export default function Form(props) {
 
 Form.propTypes = {
   onSubmit: PropTypes.func.isRequired,
-  children: PropTypes.element.isRequired,
+  children: PropTypes.node.isRequired,
 };
