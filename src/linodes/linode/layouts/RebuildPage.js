@@ -7,11 +7,13 @@ import FormRow from '~/components/FormRow';
 import Distributions from '~/linodes/components/Distributions';
 import { setSource } from '~/actions/source';
 import { rebuildLinode } from '~/api/linodes';
+import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 
 export class RebuildPage extends Component {
   constructor() {
     super();
     this.onSubmit = this.onSubmit.bind(this);
+    this.getLinode = getLinode.bind(this);
     this.state = { distribution: null, password: '' };
   }
 
@@ -79,6 +81,7 @@ export class RebuildPage extends Component {
 RebuildPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   distributions: PropTypes.object.isRequired,
+  linodes: PropTypes.object.isRequired,
   params: PropTypes.shape({
     linodeLabel: PropTypes.string.isRequired,
   }).isRequired,
@@ -87,6 +90,7 @@ RebuildPage.propTypes = {
 function select(state) {
   return {
     distributions: state.api.distributions,
+    linodes: state.api.linodes,
   };
 }
 

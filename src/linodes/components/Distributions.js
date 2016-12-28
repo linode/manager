@@ -21,16 +21,20 @@ export default function Distributions(props) {
   const vendorByName = name =>
     vendorsUnsorted.find(v => v.name.toLowerCase().indexOf(name) !== -1);
 
-  const vendors = [
-    vendorByName('ubuntu'),
-    vendorByName('debian'),
-    vendorByName('centos'),
-    vendorByName('fedora'),
-    vendorByName('arch'),
-    vendorByName('opensuse'),
-    vendorByName('gentoo'),
-    vendorByName('slackware'),
+  const vendorNames = [
+    'ubuntu', 'debian', 'centos', 'fedora', 'arch', 'opensuse', 'gentoo',
+    'slackware',
   ];
+
+  const vendors = [];
+
+  for (const vendorName of vendorNames) {
+    const byName = vendorByName(vendorName);
+
+    if (byName) {
+      vendors.push(byName);
+    }
+  }
 
   return (
     <div className="LinodesDistributions">
