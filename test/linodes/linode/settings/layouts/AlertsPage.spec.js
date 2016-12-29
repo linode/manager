@@ -1,6 +1,6 @@
 import React from 'react';
 import sinon from 'sinon';
-import { shallow } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 import { expect } from 'chai';
 
 import { actions } from '~/api/configs/linodes';
@@ -40,7 +40,7 @@ describe('linodes/linode/settings/layouts/AlertsPage', async () => {
 
   it('maps form fields and dispatches a putLinode event', async () => {
     const dispatch = sandbox.spy();
-    const page = shallow(
+    const page = mount(
       <AlertsPage
         linodes={api.linodes}
         params={{ linodeLabel: testLinode.label }}
@@ -63,3 +63,4 @@ describe('linodes/linode/settings/layouts/AlertsPage', async () => {
       }, { }, { method: 'PUT' });
   });
 });
+

@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import HelpButton from '~/components/HelpButton';
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
+import { Form, SubmitButton } from '~/components/form';
 import { linodes } from '~/api';
 import { setSource } from '~/actions/source';
 
@@ -11,7 +12,6 @@ export class AlertsPage extends Component {
     super(props);
     this.getLinode = getLinode.bind(this);
     this.renderAlertRow = this.renderAlertRow.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
     this.state = {
       loading: false,
       alerts: this.getLinode().alerts || {
@@ -29,8 +29,7 @@ export class AlertsPage extends Component {
     dispatch(setSource(__filename));
   }
 
-  async onSubmit(e) {
-    e.preventDefault();
+  async saveChanges() {
     const { dispatch } = this.props;
     const { id } = this.getLinode();
     this.setState({ loading: true });
@@ -124,17 +123,14 @@ export class AlertsPage extends Component {
             <HelpButton to="https://google.com" />
           </h2>
         </header>
-        <form onSubmit={this.onSubmit}>
+        <Form onSubmit={() => this.saveChanges()}>
           {alerts.map(this.renderAlertRow)}
           <div className="row">
             <div className="offset-sm-2 col-sm-10">
-              <button
-                className="btn btn-default"
-                disabled={loading}
-              >Save</button>
+              <SubmitButton disabled={loading} />
             </div>
           </div>
-        </form>
+        </Form>
       </section>
     );
   }
