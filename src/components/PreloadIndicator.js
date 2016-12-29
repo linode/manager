@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 
 export function PreloadIndicator(props) {
   const { mode } = props;
-  const cls = mode === 'reset' ? '' : `PreloadIndicator--${mode}`;
-  return <div className={`PreloadIndicator ${cls}`} />;
+  const cls = mode === 'reset' ? '' : ` PreloadIndicator--${mode}`;
+  return <div className={`PreloadIndicator${cls}`} />;
 }
 
 PreloadIndicator.propTypes = {
