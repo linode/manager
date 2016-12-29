@@ -12,7 +12,6 @@ export class AlertsPage extends Component {
     super(props);
     this.getLinode = getLinode.bind(this);
     this.renderAlertRow = this.renderAlertRow.bind(this);
-    this.saveChanges = this.saveChanges.bind(this);
     this.state = {
       loading: false,
       alerts: this.getLinode().alerts || {
