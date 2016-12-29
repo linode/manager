@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { ErrorSummary, FormGroup, reduceErrors } from '~/errors';
 import { linodes } from '~/api';
 import { cancelBackup } from '~/api/backups';
+import { Form, SubmitButton } from '~/components/form';
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import { setSource } from '~/actions/source';
 import { showModal, hideModal } from '~/actions/modal';
@@ -53,7 +54,6 @@ export class SettingsPage extends Component {
   constructor(props) {
     super(props);
     this.getLinode = getLinode.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
     const { day, window } = this.getLinode().backups.schedule;
     this.state = { day, window, errors: {} };
   }
@@ -63,8 +63,7 @@ export class SettingsPage extends Component {
     dispatch(setSource(__filename));
   }
 
-  async onSubmit(e) {
-    e.preventDefault();
+  async saveChanges() {
     const { dispatch } = this.props;
     const linode = this.getLinode();
     const { day, window } = this.state;
@@ -95,7 +94,7 @@ export class SettingsPage extends Component {
           <header>
             <h2>Schedule</h2>
           </header>
-          <form>
+          <Form onSubmit={() => this.saveChanges()}>
             <FormGroup errors={errors} className="row" field="window">
               <div className="col-sm-2">
                 <label htmlFor="window">Time of day (EST):</label>
@@ -144,10 +143,8 @@ export class SettingsPage extends Component {
               </div>
             </FormGroup>
             <ErrorSummary errors={errors} />
-            <button className="btn btn-default" onClick={this.onSubmit}>
-              Save
-            </button>
-          </form>
+            <SubmitButton />
+          </Form>
         </section>
         <section className="card">
           <header>
