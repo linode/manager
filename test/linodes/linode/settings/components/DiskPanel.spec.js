@@ -252,8 +252,8 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
         json() {
           return {
             errors: [
-              { field: 'label', reason: 'You suck at naming things' },
-              { reason: 'You suck at things in general' },
+              { field: 'label', reason: 'Name error' },
+              { reason: 'General error' },
             ],
           };
         },
@@ -265,11 +265,11 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
         .to.have.property('label')
         .which.deep.includes({
           field: 'label',
-          reason: 'You suck at naming things',
+          reason: 'Name error',
         });
       expect(errs)
         .to.have.property('_')
-        .which.deep.includes({ reason: 'You suck at things in general' });
+        .which.deep.includes({ reason: 'General error' });
     });
   });
 
@@ -459,9 +459,9 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
         json() {
           return {
             errors: [
-              { field: 'label', reason: 'You suck at naming things' },
-              { field: 'size', reason: 'You suck at sizing things' },
-              { reason: 'You suck at things in general' },
+              { field: 'label', reason: 'Name error' },
+              { field: 'size', reason: 'Size error' },
+              { reason: 'General error' },
             ],
           };
         },
@@ -471,13 +471,13 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
       const errs = modal.state('errors');
       expect(errs)
         .to.have.property('label')
-        .which.includes('You suck at naming things');
+        .which.includes('Name error');
       expect(errs)
         .to.have.property('size')
-        .which.includes('You suck at sizing things');
+        .which.includes('Size error');
       expect(errs)
         .to.have.property('_')
-        .which.includes('You suck at things in general');
+        .which.includes('General error');
     });
   });
 });
