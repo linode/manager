@@ -20,6 +20,17 @@ export const testEvent = {
   _polling: false,
 };
 
+export function makeEvent(eventType) {
+  return {
+    ...testEvent,
+    event_type: eventType,
+  };
+}
+
+export const linodeShutdownEvent = makeEvent('linode_shutdown');
+export const linodeBootEvent = makeEvent('linode_boot');
+export const unrecognizedEvent = makeEvent('unknown_unrecognized');
+
 export const events = {
   385: testEvent,
   386: {
@@ -29,4 +40,6 @@ export const events = {
     updated: '2016-11-21T20:12:40',
     linode_id: 1237,
   },
+  387: linodeShutdownEvent,
+  388: linodeBootEvent,
 };

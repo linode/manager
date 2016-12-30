@@ -4,6 +4,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { api } from '@/data';
+import { makeEvent } from '@/data/events';
 import Notifications, { Notification } from '~/components/Notifications';
 
 describe('components/Notification', () => {
@@ -54,6 +55,60 @@ describe('components/Notification', () => {
     expect(gotoPage.calledOnce).to.equal(true);
     expect(gotoPage.args[0][0]).to.equal(`/linodes/${api.events.events[386].linode_id}`);
   });
+
+  function testNotificationText(eventType, expectedText) {
+    const event = makeEvent(eventType);
+    const notification = shallow(makeNotification(event));
+    const text = notification.find('.Notification-text').text();
+    expect(text).to.contain(expectedText);
+  }
+
+  it('renders linode_reboot notification', () => {
+    testNotificationText('linode_reboot', 'rebooted');
+  });
+
+  it('renders linode_boot notification', () => {
+    testNotificationText('linode_boot', 'booted');
+  });
+
+  it('renders linode_shutdown notification', () => {
+    testNotificationText('linode_shutdown', 'shut down');
+  });
+
+  it('renders linode_create notification', () => {
+    testNotificationText('linode_create', 'created');
+  });
+
+  it('renders linode_delete notification', () => {
+    testNotificationText('linode_delete', 'deleted');
+  });
+
+  it('renders backups_enable notification', () => {
+    testNotificationText('backups_enable', 'enabled');
+  });
+
+  it('renders backups_cancel notification', () => {
+    testNotificationText('backups_cancel', 'disabled');
+  });
+
+  it('renders disk_delete notification', () => {
+    testNotificationText('disk_delete', 'deleted');
+  });
+
+  it('renders disk_create notification', () => {
+    testNotificationText('disk_create', 'created');
+  });
+
+  it('renders disk_resize notification', () => {
+    testNotificationText('disk_resize', 'resized');
+  });
+
+  it('renders empty for unrecognized event type', () => {
+    const event = makeEvent('unknown_unrecognized');
+    const notification = shallow(makeNotification(event));
+    const children = notification.find('.Notification-text').children();
+    expect(children.length).to.equal(0);
+  });
 });
 
 
@@ -89,7 +144,8 @@ describe('components/Notifications', () => {
 
   it('renders events and in updated order', () => {
     const notifications = shallow(makeNotifications());
-    expect(notifications.find('Notification').length).to.equal(2);
+    const count = Object.values(api.events.events).filter(e => !e.seen).length;
+    expect(notifications.find('Notification').length).to.equal(count);
 
     // This event was updated last.
     expect(notifications.find('Notification').at(0).props().id).to.equal(386);

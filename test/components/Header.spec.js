@@ -57,6 +57,9 @@ describe('components/Header', () => {
       />
     );
 
-    expect(navigation.find('.MainHeader-badge').text()).to.equal('2');
+    const count = Object.values(api.events.events).filter(e => !e.seen).length;
+
+    expect(navigation.find('.MainHeader-badge').text()).
+      to.equal(count.toString());
   });
 });
