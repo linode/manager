@@ -1,8 +1,13 @@
 import sinon from 'sinon';
 import { expect } from 'chai';
 
-import { testEvent } from '@/data/events';
 import { Event } from '~/api/objects/Event';
+import {
+  testEvent,
+  linodeShutdownEvent,
+  linodeBootEvent,
+  unrecognizedEvent,
+} from '@/data/events';
 
 describe('api/objects/Event', () => {
   const sandbox = sinon.sandbox.create();
@@ -37,5 +42,20 @@ describe('api/objects/Event', () => {
   it('should return the linode id', () => {
     const event = new Event(testEvent);
     expect(event.getLinodeId()).to.equal(testEvent.linode_id);
+  });
+
+  it('should return the offline status for linode_shutdown', () => {
+    const event = new Event(linodeShutdownEvent);
+    expect(event.getStatus()).to.equal('offline');
+  });
+
+  it('should return the running status for linode_boot', () => {
+    const event = new Event(linodeBootEvent);
+    expect(event.getStatus()).to.equal('running');
+  });
+
+  it('should return empty string for unrecognized status', () => {
+    const event = new Event(unrecognizedEvent);
+    expect(event.getStatus()).to.equal('');
   });
 });
