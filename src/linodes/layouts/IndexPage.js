@@ -19,7 +19,7 @@ import {
   toggleSelected,
 } from '../actions';
 import { setSource } from '~/actions/source';
-import Confirm from '~/components/Confirm';
+import { ConfirmModal } from '~/components/modal';
 import { showModal, hideModal } from '~/actions/modal';
 
 export class IndexPage extends Component {
