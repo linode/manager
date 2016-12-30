@@ -40,8 +40,7 @@ describe('linodes/linode/backups/layouts/SettingsPage', () => {
     expect(settingsForm.length).to.equal(1);
 
     dispatch.reset();
-    page.find('.btn-default').at(0).simulate('click');
-
+    page.find('.btn-default').at(0).simulate('submit');
     const fn = dispatch.firstCall.args[0];
     await expectRequest(fn, '/linode/instances/1234', () => {}, null,
       d => expect(d.body).to.equal(JSON.stringify({
