@@ -2,7 +2,7 @@ import React from 'react';
 import sinon from 'sinon';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
-import Confirm from '../../src/components/Confirm';
+import { ConfirmModal } from '../../src/components/modal/Modal';
 
 describe('components/Confirm', () => {
   const sandbox = sinon.sandbox.create();
