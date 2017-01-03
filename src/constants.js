@@ -135,7 +135,7 @@ export const ipv4ns = {
     '139.162.72.5',
     '139.162.73.5',
     '139.162.74.5',
-    '139.162.75.5'],
+    '139.162.75.5',
   ],
 };
 export const ipv6ns = {
@@ -147,5 +147,6 @@ export const ipv6ns = {
   tokyo: '2400:8900::',
   singapore: '2400:8901::',
   frankfurt: '2a01:7e01::',
+  'tokyo 2': '2400:8902::',
 };
 export const ipv6nsSuffix = ['5', '6', '7', '8', '9', 'b', 'c'];
