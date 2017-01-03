@@ -1,5 +1,4 @@
 import React, { PropTypes } from 'react';
-import { logo } from '~/assets';
 import { Link } from '~/components/Link';
 
 export default function Header(props) {
@@ -36,7 +35,7 @@ export default function Header(props) {
               alt="linode logo"
               height={40}
               width={35}
-            /> 
+            />
           </span>
           <span className="MainHeader-title">Linode Manager</span>
         </Link>
