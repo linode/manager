@@ -22,9 +22,9 @@ export const LinodeStates = {
 };
 
 export const regionMap = {
-  'North America': ['newark'],
+  'North America': ['newark', 'dallas', 'fremont', 'atlanta'],
   Europe: ['frankfurt', 'london'],
-  Asia: ['singapore'],
+  Asia: ['tokyo', 'singapore', 'tokyo 2'],
 };
 
 export const LinodeStatesReadable = {
@@ -114,7 +114,7 @@ export const ipv4ns = {
     '103.3.60.18',
     '103.3.60.19',
     '103.3.60.20'],
-  frankfort: [
+  frankfurt: [
     '139.162.130.5',
     '139.162.131.5',
     '139.162.132.5',
@@ -125,6 +125,17 @@ export const ipv4ns = {
     '139.162.137.5',
     '139.162.138.5',
     '139.162.139.5'],
+  'tokyo 2': [
+    '139.162.66.5',
+    '139.162.67.5',
+    '139.162.68.5',
+    '139.162.69.5',
+    '139.162.70.5',
+    '139.162.71.5',
+    '139.162.72.5',
+    '139.162.73.5',
+    '139.162.74.5',
+    '139.162.75.5'],
 };
 export const ipv6ns = {
   dallas: '2600:3c00::',
@@ -134,6 +145,7 @@ export const ipv6ns = {
   london: '2a01:7e00::',
   tokyo: '2400:8900::',
   singapore: '2400:8901::',
-  frankfort: '2a01:7e01::',
+  frankfurt: '2a01:7e01::',
+  'tokyo 2': '2400:8902::',
 };
 export const ipv6nsSuffix = ['5', '6', '7', '8', '9', 'b', 'c'];
