@@ -22,9 +22,9 @@ export const LinodeStates = {
 };
 
 export const regionMap = {
-  'North America': ['newark'],
+  'North America': ['newark', 'dallas', 'fremont', 'atlanta'],
   Europe: ['frankfurt', 'london'],
-  Asia: ['singapore'],
+  Asia: ['tokyo', 'singapore', 'tokyo 2'],
 };
 
 export const LinodeStatesReadable = {
@@ -125,6 +125,18 @@ export const ipv4ns = {
     '139.162.137.5',
     '139.162.138.5',
     '139.162.139.5'],
+  'tokyo 2': [
+    '139.162.66.5',
+    '139.162.67.5',
+    '139.162.68.5',
+    '139.162.69.5',
+    '139.162.70.5',
+    '139.162.71.5',
+    '139.162.72.5',
+    '139.162.73.5',
+    '139.162.74.5',
+    '139.162.75.5'],
+  ],
 };
 export const ipv6ns = {
   dallas: '2600:3c00::',
