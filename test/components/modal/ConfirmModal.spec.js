@@ -2,9 +2,9 @@ import React from 'react';
 import sinon from 'sinon';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
-import { ConfirmModal } from '../../src/components/modal/Modal';
+import { ConfirmModal } from '../../../src/components/modal';
 
-describe('components/Confirm', () => {
+describe('components/modal/ConfirmModal', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
@@ -13,13 +13,13 @@ describe('components/Confirm', () => {
 
   it('renders customizable content', () => {
     const modal = mount(
-      <Confirm
+      <ConfirmModal
         buttonText="OK button text"
         onOk={() => {}}
         onCancel={() => {}}
       >
         <span className="bodytext">a child element</span>
-      </Confirm>
+      </ConfirmModal>
     );
 
     expect(modal.find('.btn-default').text()).to.equal('OK button text');
@@ -30,13 +30,13 @@ describe('components/Confirm', () => {
     const onOk = sandbox.spy();
 
     const modal = mount(
-      <Confirm
+      <ConfirmModal
         buttonText="OK button text"
         onOk={onOk}
         onCancel={() => {}}
       >
         Some text
-      </Confirm>
+      </ConfirmModal>
     );
 
     modal.find('.btn-default').simulate('click');
@@ -47,13 +47,13 @@ describe('components/Confirm', () => {
     const onCancel = sandbox.spy();
 
     const modal = mount(
-      <Confirm
+      <ConfirmModal
         buttonText="OK button text"
         onOk={() => {}}
         onCancel={onCancel}
       >
         <span className="bodytext">a child element</span>
-      </Confirm>
+      </ConfirmModal>
     );
 
     modal.find('.btn-cancel').simulate('click');
@@ -62,7 +62,7 @@ describe('components/Confirm', () => {
 
   it('uses a default confirm button text', () => {
     const modal = mount(
-      <Confirm onOk={() => {}} onCancel={() => {}} />
+      <ConfirmModal onOk={() => {}} onCancel={() => {}} />
     );
 
     expect(modal.find('.btn-default').text()).to.equal('Confirm');

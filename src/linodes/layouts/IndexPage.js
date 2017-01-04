@@ -99,7 +99,7 @@ export class IndexPage extends Component {
       const { dispatch } = this.props;
 
       dispatch(showModal('Confirm deletion',
-        <Confirm
+        <ConfirmModal
           buttonText="Delete selected Linodes"
           onOk={() => {
             this.doToSelected(action);
@@ -109,7 +109,7 @@ export class IndexPage extends Component {
         >
           Are you sure you want to delete selected Linodes?
           This operation cannot be undone.
-        </Confirm>
+        </ConfirmModal>
       ));
     };
   }

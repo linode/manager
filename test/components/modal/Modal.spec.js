@@ -3,7 +3,7 @@ import sinon from 'sinon';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
 import { HIDE_MODAL } from '~/actions/modal';
-import { Modal } from '~/components/Modal';
+import { Modal } from '~/components/modal';
 
 describe('components/Modal', () => {
   it('renders Modal component', () => {
