@@ -86,7 +86,7 @@ export function generateDefaultStateOne(config, one) {
 export class ReducerGenerator {
 
   static one(config, oldStateMany, action) {
-    const id = action.ids ? action.ids.pop() : action.resource.id;
+    const id = action.ids.length ? action.ids.pop() : action.resource.id;
     const oldStateOne = oldStateMany[config.plural][id];
     const newStateOne = oldStateOne ? action.resource :
                         generateDefaultStateOne(config, action.resource);
