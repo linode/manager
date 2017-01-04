@@ -27,25 +27,26 @@ export default class PasswordInput extends Component {
         <input
           value={this.state.password}
           placeholder="**********"
-          className="form-control"
+          className="form-control PasswordInput-input"
           name="password"
           onChange={this.onPasswordChange}
           autoComplete="off"
           type={this.state.type}
         />
+        <br />
         <div className="form-group">
-          <div className={`strength strength-${this.state.strength.score}`}>
+          <div className={`PasswordInput-strength strength strength-${this.state.strength.score}`}>
             <span></span>
             <span></span>
             <span></span>
             <span></span>
           </div>
+          {this.state.password !== '' ? <div className="PasswordInput-cracktime">
+            An offline attack would
+            take {this.state.strength.crack_times_display[passwordType]} to
+            crack this password.<br />
+          </div> : null}
         </div>
-        {this.state.password !== '' ? <p>
-          An offline attack would
-          take {this.state.strength.crack_times_display[passwordType]} to
-          crack this password.<br />
-        </p> : null}
       </div>
     );
   }
