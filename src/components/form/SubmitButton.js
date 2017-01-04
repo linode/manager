@@ -7,17 +7,16 @@ export default function SubmitButton(props) {
       className="btn btn-default"
       disabled={props.disabled}
       onClick={props.onClick}
-    >{props.text}</button>
+    >{props.children}</button>
   );
 }
 
 SubmitButton.propTypes = {
-  text: PropTypes.string,
   disabled: PropTypes.bool,
   onClick: PropTypes.func,
 };
 
 SubmitButton.defaultProps = {
-  text: 'Save',
+  children: 'Save',
   disabled: false,
 };

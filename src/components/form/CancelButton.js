@@ -7,17 +7,16 @@ export default function CancelButton(props) {
       className="btn btn-cancel"
       disabled={props.disabled}
       onClick={props.onClick}
-    >{props.text}</button>
+    >{props.children}</button>
   );
 }
 
 CancelButton.propTypes = {
-  text: PropTypes.string,
   disabled: PropTypes.bool,
   onClick: PropTypes.func.isRequired,
 };
 
 CancelButton.defaultProps = {
-  text: 'Cancel',
+  children: 'Cancel',
   disabled: false,
 };
