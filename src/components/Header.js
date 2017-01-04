@@ -38,8 +38,8 @@ export default function Header(props) {
       e.seen ? unseen : unseen + 1, 0);
 
   const main = (
-    <div className="MainHeader clearfix">
-      <div className="MainHeader-brand">
+    <nav className="MainHeader navbar">
+      <div className="MainHeader-brand navbar-brand">
         <Link to="/">
           <span className="MainHeader-logo">
             <img
@@ -57,7 +57,7 @@ export default function Header(props) {
       </div>
       {!username ? null :
         <div
-          className="MainHeader-session float-xs-right"
+          className="MainHeader-session navbar-right"
           onClick={hideShowNotifications}
         >
           <span className="MainHeader-username">
@@ -74,7 +74,7 @@ export default function Header(props) {
             <span className="MainHeader-badge">{unseenNotifications}</span>}
         </div>
       }
-    </div>
+    </nav>
   );
 
   return (

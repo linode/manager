@@ -12,7 +12,6 @@ $header-padding: $grid-gutter-width-base / 2;
     height: $info-nav-height;
     background: $black;
     font-size: $font-xs-small;
-    line-height: $info-nav-height;
 
     &-new {
         color: $black;
@@ -36,34 +35,59 @@ $header-padding: $grid-gutter-width-base / 2;
 .MainHeader {
     height: $main-nav-height;
     background: #333;
-    padding: 0 $header-padding;
+    border-radius: 0;
+    padding: 0;
 
-    &-brand, &-search, &-session {
-        float: left;
-        display: inline-block;
-        line-height: $main-nav-height;
-        margin-right: $header-padding;
+    &-brand,
+    &-brand > a,
+    &-brand > a > span {
+        height: 100%;
     }
 
-    &-logo {
-        font-size: 35px; /* Special font-size case */
-        line-height: 50px;
-        padding-right: $header-padding / 2;
+    &-brand {
+        //max-width: 200px;
     }
+
+    &-brand > a,
+    &-session {
+        padding: 14px $header-padding 7px $header-padding;
+    }
+
+    &-search {
+        padding: 14px $header-padding 7px $header-padding;
+    }
+
+    &-brand > a {
+        display: block;
+    }
+
+    &-brand > a > img {
+        margin-top: -4px;
+    }
+
+    &-brand > a > span {
+        padding: 2px 6px;
+    }
+
+    //&-brand, &-search, &-session {
+    //    float: left;
+    //    display: inline-block;
+    //    margin-right: $header-padding;
+    //}
+
+    //&-logo {
+    //    font-size: 35px; /* Special font-size case */
+    //    padding-right: $header-padding / 2;
+    //}
 
     &-title {
         color: $dark-gray;
         display: inline-block;
         vertical-align: top;
-        line-height: $main-nav-height;
         font-size: 18px; /* Special font-size case */
     }
 
     &-search {
-        $margin-tb: ($main-nav-height - $input-height) / 2;
-        height: $input-height;
-        margin: 0 $header-padding 0 0;
-
         input,
         input:focus {
             background: $black;
@@ -76,11 +100,7 @@ $header-padding: $grid-gutter-width-base / 2;
         }
     }
 
-    &-session {        
-        padding: 0 15px;
-        margin-right: -15px;
-        position: relative; /* Give the badge something to relate to */
-
+    &-session {
         /* Disable double click highlight */
         -webkit-user-select: none;
         -moz-user-select: none;
@@ -112,7 +132,6 @@ $header-padding: $grid-gutter-width-base / 2;
         background: $red;
         color: $white;
         height: $height;
-        line-height: $height;
         text-align: center;
         border-radius: 50%;
 
