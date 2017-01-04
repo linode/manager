@@ -31,7 +31,7 @@ export default function Header(props) {
         <Link to="/">
           <span className="MainHeader-logo">
             <img
-              src="../assets/logo/logo.svg"
+              src="/assets/logo/logo.svg"
               alt="linode logo"
               height={40}
               width={35}
