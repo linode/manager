@@ -360,6 +360,7 @@ export class EditConfigPage extends Component {
             {create ? 'Add config' : 'Edit config'}
             <HelpButton to="https://example.org" />
           </h2>
+          <h3 className="sub-header">Label and Note</h3>
         </header>
         <div>
           {this.renderFormElement('Label', 'label', (
@@ -382,6 +383,9 @@ export class EditConfigPage extends Component {
               onChange={e => this.setState({ comments: e.target.value })}
             />
            ))}
+        </div>
+        <h3 className="sub-header">Virtual Machine Mode</h3>
+        <div>
           <fieldset className="form-group row">
             <div className="col-sm-2 label-col">
               <legend>Virtualization mode</legend>
@@ -391,6 +395,9 @@ export class EditConfigPage extends Component {
               {this.renderRadio('Full virtualization', 'virtMode', 'fullvirt')}
             </div>
           </fieldset>
+        </div>
+        <h3 className="sub-header">Block Device Assignment</h3>
+        <div>
           <div className="form-group row">
             <div className="col-sm-2 label-col">
               <label
@@ -521,6 +528,9 @@ export class EditConfigPage extends Component {
                 </span>, 'isCustomRoot', true)}
             </div>
           </div>
+        </div>
+        <h3 className="sub-header">Filesystem/Boot Helpers</h3>
+        <div>
           <fieldset className="form-group row">
             <div className="col-sm-2 label-col">
               <legend>
