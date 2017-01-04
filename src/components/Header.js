@@ -53,7 +53,11 @@ export default function Header(props) {
         </Link>
       </div>
       <div className="MainHeader-search">
+<<<<<<< HEAD
         <input placeholder="Search..." disabled />
+=======
+        <input placeholder="Search..." />
+>>>>>>> Move the preload indicator to the main app layout
       </div>
       {!username ? null :
         <div
