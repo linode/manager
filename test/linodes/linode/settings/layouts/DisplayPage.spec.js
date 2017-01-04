@@ -1,9 +1,10 @@
 import React from 'react';
+import { push } from 'react-router-redux';
 import sinon from 'sinon';
 import { shallow, mount } from 'enzyme';
 import { expect } from 'chai';
 
-import { expectRequest } from '@/common';
+import { expectRequest, expectObjectDeepEquals } from '@/common';
 import { api } from '@/data';
 import { DisplayPage } from '~/linodes/linode/settings/layouts/DisplayPage';
 
@@ -84,5 +85,18 @@ describe('linodes/linode/settings/layouts/DisplayPage', () => {
 
     const label = page.find('FormGroup').at(1);
     expect(label.find('.form-control-feedback > div').text()).to.equal(error);
+  });
+
+  it('redirects if the label changed', async () => {
+    const page = shallow(<DisplayPage {...props} />);
+
+    page.find('.LinodesLinodeSettingsDisplay-label').simulate('change',
+      { target: { value: 'newlabel' } });
+
+    await page.find('button').simulate('click', { preventDefault() {} });
+
+    expect(dispatch.callCount).to.equal(2);
+    const fn = dispatch.secondCall.args[0];
+    expectObjectDeepEquals(fn, push('/linodes/newlabel/settings'));
   });
 });

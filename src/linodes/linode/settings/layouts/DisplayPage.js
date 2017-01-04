@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import { linodes } from '~/api';
@@ -25,8 +26,12 @@ export class DisplayPage extends Component {
     const { dispatch } = this.props;
     const { id } = this.getLinode();
     const { group, label } = this.state;
+    const labelChanged = this.getLinode().label !== label;
     try {
       await dispatch(linodes.put({ group, label }, id));
+      if (labelChanged) {
+        await dispatch(push(`/linodes/${label}/settings`));
+      }
     } catch (response) {
       const errors = await reduceErrors(response);
       this.setState({ errors });
@@ -60,7 +65,7 @@ export class DisplayPage extends Component {
             </div>
             <div className="col-sm-4">
               <input
-                className="form-control"
+                className="form-control LinodesLinodeSettingsDisplay-label"
                 name="label"
                 value={label}
                 onChange={e => this.setState({ label: e.target.value })}
