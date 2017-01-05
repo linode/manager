@@ -2,7 +2,9 @@ import React, { Component, PropTypes } from 'react';
 import HelpButton from '~/components/HelpButton';
 import { Link } from 'react-router';
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
+import ConfirmModal from '~/components/ConfirmModal';
 import { linodes } from '~/api';
+import { showModal, hideModal } from '~/actions/modal';
 
 function configContent(linode, configs, dispatch) {
   if (!linode && linode._configs.totalPages === -1) {
@@ -38,7 +40,19 @@ function configContent(linode, configs, dispatch) {
                 className="delete-button"
                 onClick={e => {
                   e.preventDefault();
-                  dispatch(linodes.configs.delete(linode.id, config.id));
+                  dispatch(showModal('Confirm deletion',
+                    <ConfirmModal
+                      buttonText="Delete config"
+                      onOk={async () => {
+                        await dispatch(linodes.configs.delete(linode.id, config.id));
+                        dispatch(hideModal());
+                      }}
+                      onCancel={() => dispatch(hideModal())}
+                    >
+                      Are you sure you want to delete this config?
+                      This operation cannot be undone.
+                    </ConfirmModal>
+                  ));
                 }}
                 className="action-link float-xs-right"
                 href="#"

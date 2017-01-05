@@ -4,7 +4,7 @@ import { getLinode } from './IndexPage';
 import { showModal, hideModal } from '~/actions/modal';
 import { linodes } from '~/api';
 import { resetPassword, rebootLinode } from '~/api/linodes';
-import { ConfirmModal } from '~/components/modal';
+import { ConfirmModal } from '~/components/ConfirmModal';
 import { Form, SubmitButton } from '~/components/form';
 import PasswordInput from '~/components/PasswordInput';
 import HelpButton from '~/components/HelpButton';

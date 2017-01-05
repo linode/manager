@@ -141,11 +141,12 @@ describe('linodes/linode/settings/components/ConfigPanel', () => {
         linodes={linodes}
       />
     );
-
     const actionBtn = panel.find('.action-link').at(0);
     actionBtn.simulate('click', { preventDefault: () => {} });
     expect(dispatch.calledOnce).to.equal(true);
-    const fn = dispatch.firstCall.args[0];
+    await dispatch.args[0][0].body.props.onOk();
+    const fn = dispatch.secondCall.args[0];
+    dispatch.reset();
     await expectRequest(fn, '/linode/instances/1238/configs/12345',
       d => expect(d.args[0]).to.deep.equal(actions.configs.delete(1238, 12345)),
       null, { method: 'DELETE' });
