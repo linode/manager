@@ -1,12 +1,5 @@
 $header-padding: $grid-gutter-width-base / 2;
 
-.Header {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    z-index: 9999;
-}
-
 .MiniHeader {
     padding: 0 $header-padding;
     height: $info-nav-height;

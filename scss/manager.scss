@@ -95,11 +95,11 @@ label {
     position: fixed;
     top: $nav-height;
     left: 0;
-    bottom: 0;
     width: $sidebar-width;
     background: $white;
     border-right: $border;
     overflow-y: scroll;
+    min-height: $main-height;
     padding-bottom: 15px;
 
     & section:first-of-type {
