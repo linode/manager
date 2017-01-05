@@ -11,7 +11,7 @@ export class IndexPage extends Component {
   static async preload({ dispatch, getState }, { linodeLabel }) {
     const { id } = Object.values(getState().api.linodes.linodes).reduce(
       (match, linode) => linode.label === linodeLabel ? linode : match);
-    dispatch(linodes.backups.all([id]));
+    await dispatch(linodes.backups.all([id]));
   }
 
   constructor() {
