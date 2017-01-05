@@ -3,12 +3,12 @@ import sinon from 'sinon';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
 import { HIDE_MODAL } from '~/actions/modal';
-import { ModalComponent } from '~/components/modal';
+import { Modal } from '~/layouts/Modal';
 
 describe('components/Modal', () => {
   it('renders Modal component', () => {
     const modal = mount(
-      <ModalComponent title="title" body="body" />
+      <Modal title="title" body="body" />
     );
 
     expect(modal.find('.modal-header h3').text()).to.equal('title');
@@ -18,7 +18,7 @@ describe('components/Modal', () => {
   it('closes when clicking on the overlay', () => {
     const dispatch = sinon.spy();
     const modal = mount(
-      <ModalComponent
+      <Modal
         open={true} // eslint-disable-line react/jsx-boolean-value
         dispatch={dispatch}
       />
@@ -33,7 +33,7 @@ describe('components/Modal', () => {
   it('does not close when clicking inside the modal', () => {
     const dispatch = sinon.spy();
     const modal = mount(
-      <ModalComponent
+      <Modal
         open={true} // eslint-disable-line react/jsx-boolean-value
         dispatch={dispatch}
       />
