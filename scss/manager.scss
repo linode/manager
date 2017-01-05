@@ -809,6 +809,16 @@ section.card header + .react-tabs {
     margin-top: -10px;
 }
 
+.sub-header {
+    color: $light-black;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+header .sub-header {
+    padding-bottom: 0px;
+}
+
 .create-page {
     padding-top: 15px;
 
