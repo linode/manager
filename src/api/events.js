@@ -10,7 +10,7 @@ export function eventAction(action) {
 
     if (action === 'seen') {
       Object.keys(state.api.events.events).forEach(eventId =>
-        dispatch(actions.one({ ...event, seen: true }, eventId)));
+        dispatch(actions.one({ seen: true }, eventId)));
     }
 
     const { token } = state.authentication;
