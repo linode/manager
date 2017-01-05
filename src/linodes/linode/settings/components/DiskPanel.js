@@ -176,9 +176,8 @@ export class DeleteModal extends Component {
             onClick={() => dispatch(hideModal())}
           />
           <SubmitButton
-            text="Delete Disk"
             disabled={loading}
-          />
+          >Delete Disk</SubmitButton>
         </div>
       </Form>);
   }
@@ -356,9 +355,8 @@ export class AddModal extends Component {
             onClick={() => dispatch(hideModal())}
           />
           <SubmitButton
-            text="Add Disk"
             disabled={ready}
-          />
+          >Add Disk</SubmitButton>
         </div>
       </Form>
     );
