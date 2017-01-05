@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import HelpButton from '~/components/HelpButton';
 import { Link } from 'react-router';
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
-import ConfirmModal from '~/components/ConfirmModal';
+import { ConfirmModal } from '~/components/modal';
 import { linodes } from '~/api';
 import { showModal, hideModal } from '~/actions/modal';
 

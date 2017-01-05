@@ -1,22 +1,39 @@
-import React, { PropTypes } from 'react';
+import React, { Component, PropTypes } from 'react';
 
-import { CancelButton } from '~/components/form';
+export default class ConfirmModal extends Component {
+  constructor() {
+    super();
+    this.state = { loading: false };
+  }
 
-export default function ConfirmModal(props) {
-  return (
-    <div>
-      <p>
-        {props.children}
-      </p>
-      <div className="modal-footer">
-        <CancelButton onClick={props.onCancel} />
-        <button
-          className="btn btn-default"
-          onClick={props.onOk}
-        >{props.buttonText || 'Confirm'}</button>
-      </div>
-    </div>
-  );
+  handleOk = async () => {
+    const { onOk } = this.props;
+    this.setState({ loading: true });
+    await onOk();
+  }
+
+  render() {
+    const { buttonText, onCancel } = this.props;
+    const { loading } = this.state;
+    return (
+      <div>
+        <p>
+          {this.props.children}
+        </p>
+        <div className="modal-footer">
+          <button
+            className="btn btn-cancel"
+            disabled={loading}
+            onClick={onCancel}
+          >Cancel</button>
+          <button
+            className="btn btn-default"
+            disabled={loading}
+            onClick={this.handleOk}
+          >{buttonText || 'Confirm'}</button>
+        </div>
+      </div>);
+  }
 }
 
 ConfirmModal.propTypes = {
