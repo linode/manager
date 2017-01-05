@@ -30,12 +30,12 @@ describe('components/Notification', () => {
 
   it('renders unread notification', () => {
     const notification = shallow(makeNotification(api.events.events[385]));
-    expect(notification.find('.Notification--unseen').length).to.equal(1);
+    expect(notification.find('.Notification--unread').length).to.equal(1);
   });
 
   it('renders read notifications', () => {
     const notification = shallow(makeNotification());
-    expect(notification.find('.Notification--unseen').length).to.equal(0);
+    expect(notification.find('.Notification--unread').length).to.equal(0);
   });
 
   it('marks unread notification as read onclick', () => {
