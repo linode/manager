@@ -21,10 +21,7 @@ export function getConfig() {
 
 export function getDisks() {
   const linode = this.getLinode();
-  if (linode) {
-    return linode._disks.totalResults === -1 ? null : linode._disks.disks;
-  }
-  return null;
+  return linode._disks.totalResults === -1 ? null : linode._disks.disks;
 }
 
 export function getDiskSlots(fromConfig = false) {
