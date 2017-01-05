@@ -211,13 +211,14 @@ export class RescuePage extends Component {
             onSubmit={() => {
               dispatch(showModal('Reset root password', <ConfirmModal
                 buttonText="Reset Password"
-                children="Are you sure you want to reset the root password for this Linode? This cannot be undone."
+                children="Are you sure you want to reset the root password for this Linode?
+                This cannot be undone."
                 onCancel={() => dispatch(hideModal())}
                 onOk={() => {
-                  dispatch(hideModal())
+                  dispatch(hideModal());
                   this.resetRootPassword();
                 }}
-              ></ConfirmModal>));
+              />));
             }}
           >
             <header>

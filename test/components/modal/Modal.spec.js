@@ -18,7 +18,10 @@ describe('components/Modal', () => {
   it('closes when clicking on the overlay', () => {
     const dispatch = sinon.spy();
     const modal = mount(
-      <ModalComponent open={true} dispatch={dispatch} /> // eslint-disable-line react/jsx-boolean-value
+      <ModalComponent
+        open={true} // eslint-disable-line react/jsx-boolean-value
+        dispatch={dispatch}
+      />
     );
 
     modal.simulate('click');
@@ -30,7 +33,10 @@ describe('components/Modal', () => {
   it('does not close when clicking inside the modal', () => {
     const dispatch = sinon.spy();
     const modal = mount(
-      <ModalComponent open={true} dispatch={dispatch} /> // eslint-disable-line react/jsx-boolean-value
+      <ModalComponent
+        open={true} // eslint-disable-line react/jsx-boolean-value
+        dispatch={dispatch}
+      />
     );
 
     modal.find('.modal').simulate('click');

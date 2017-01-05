@@ -12,6 +12,7 @@ export default function CancelButton(props) {
 }
 
 CancelButton.propTypes = {
+  children: PropTypes.node,
   disabled: PropTypes.bool,
   onClick: PropTypes.func.isRequired,
 };

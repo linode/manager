@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 
 import { CancelButton } from '~/components/form';
 
@@ -9,13 +9,14 @@ export default function ConfirmModal(props) {
         {props.children}
       </p>
       <div className="modal-footer">
-        <CancelButton onClick={props.onCancel}/>
+        <CancelButton onClick={props.onCancel} />
         <button
           className="btn btn-default"
           onClick={props.onOk}
         >{props.buttonText || 'Confirm'}</button>
+      </div>
     </div>
-  </div>);
+  );
 }
 
 ConfirmModal.propTypes = {

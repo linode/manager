@@ -12,6 +12,7 @@ export default function SubmitButton(props) {
 }
 
 SubmitButton.propTypes = {
+  children: PropTypes.node,
   disabled: PropTypes.bool,
   onClick: PropTypes.func,
 };

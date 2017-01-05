@@ -1,8 +1,8 @@
 export {
   default as Modal,
-  Modal as ModalComponent
+  Modal as ModalComponent,
 } from '~/components/modal/Modal';
 
 export {
-  default as ConfirmModal
+  default as ConfirmModal,
 } from '~/components/modal/ConfirmModal';
