@@ -128,13 +128,10 @@ export class Layout extends Component {
     this._shouldPoll = true;
     dispatch(events.all([], this.eventHandler));
 
-    // eslint-disable-next-line no-constant-condition
-    while (true) {
+    setInterval(async () => {
       if (this._shouldPoll) {
-        // And every N seconds
-        await new Promise(resolve => setTimeout(resolve, EVENT_POLLING_DELAY));
-
         const processedEvents = await this.fetchEventsPage(0);
+
         try {
           dispatch(eventsActions.many(processedEvents));
         } catch (e) {
@@ -142,7 +139,7 @@ export class Layout extends Component {
           console.error(e);
         }
       }
-    }
+    }, EVENT_POLLING_DELAY);
   }
 
   hideShow(type, hide, show) {
