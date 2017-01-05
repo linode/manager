@@ -11,6 +11,10 @@
     transition: background .35s, color .2s, border .1s;
 }
 
+*:disabled {
+    pointer-events: none;
+}
+
 html, #root > [data-reactroot] {
     height: 100%;
 }
