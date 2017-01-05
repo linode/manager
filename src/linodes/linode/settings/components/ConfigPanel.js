@@ -49,7 +49,7 @@ function configContent(linode, configs, dispatch) {
                       }}
                       onCancel={() => dispatch(hideModal())}
                     >
-                      Are you sure you want to delete the config?
+                      Are you sure you want to delete this config?
                       This operation cannot be undone.
                     </ConfirmModal>
                   ));
