@@ -20,3 +20,7 @@ import jp from 'flag-icon-css/flags/4x3/jp.svg';
 export const flags = {
   us, de, gb, sg, jp,
 };
+
+import logo from 'file!../assets/logo/logo.svg';
+
+export const logoOnly = logo;
