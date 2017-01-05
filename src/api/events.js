@@ -9,8 +9,18 @@ export function eventAction(action) {
     await dispatch(actions.one({ ...event, [action]: true }, eventId));
 
     if (action === 'seen') {
-      Object.keys(state.api.events.events).forEach(eventId =>
-        dispatch(actions.one({ seen: true }, eventId)));
+      // Mark all events seen. Using many to avoid a dispatch per event.
+      const page = {
+        events: [],
+        total_pages: state.api.events.totalPages,
+        total_results: state.api.events.totalResults,
+      };
+      Object.values(state.api.events.events).forEach(e => {
+        if (!e.seen) {
+          page.events.push({ ...e, seen: true});
+        }
+      });
+      dispatch(actions.many(page));
     }
 
     const { token } = state.authentication;
