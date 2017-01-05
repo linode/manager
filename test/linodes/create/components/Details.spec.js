@@ -37,8 +37,6 @@ describe('linodes/create/components/Details', () => {
     find('label').find('input').simulate('change', { target: { value: 'my-label' } });
     find('password').find('input').simulate('change', { target: { value: 'my-password' } });
     find('enableBackups').find('input').simulate('change', { target: { checked: true } });
-    find('toggleAdvanced').find('button').simulate('click');
-    find('group').find('input').simulate('change', { target: { value: 'my-group' } });
 
     details.find('form').simulate('submit');
 
@@ -47,7 +45,6 @@ describe('linodes/create/components/Details', () => {
       password: 'my-password',
       label: 'my-label',
       backups: true,
-      group: 'my-group',
     });
   });
 

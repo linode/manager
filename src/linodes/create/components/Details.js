@@ -9,7 +9,6 @@ export default class Details extends Component {
     this.onSubmit = this.onSubmit.bind(this);
     this.state = {
       password: '',
-      group: '',
       label: '',
       enableBackups: false,
       showAdvanced: false,
@@ -23,7 +22,6 @@ export default class Details extends Component {
     this.props.onSubmit({
       password: this.state.password,
       label: this.state.label,
-      group: this.state.group,
       backups: this.state.enableBackups,
     });
   }
@@ -35,12 +33,6 @@ export default class Details extends Component {
       const price = (selectedType.backups_price / 100).toFixed(2);
       return `($${price}/mo)`;
     };
-
-    const showAdvancedOrHide = this.state.showAdvanced ? (
-      <span>Hide additional details <span className="fa fa-angle-up" /></span>
-    ) : (
-      <span>Show additional details <span className="fa fa-angle-down" /></span>
-    );
 
     const formDisabled = !(submitEnabled && this.state.label &&
                            (this.state.password || selectedDistribution === 'none'));
@@ -92,25 +84,6 @@ export default class Details extends Component {
                       {selectedType === null ? '' : renderBackupsPrice()}
                     </span>
                   </label>
-                </div>
-              </FormRow>
-              <button
-                type="button"
-                className="LinodesCreateDetails-toggleAdvanced"
-                onClick={() => this.setState({ showAdvanced: !this.state.showAdvanced })}
-              >{showAdvancedOrHide}</button>
-              <FormRow
-                label="Group"
-                showIf={this.state.showAdvanced && selectedDistribution !== 'none'}
-              >
-                <div className="LinodesCreateDetails-group">
-                  <input
-                    value={this.state.group}
-                    onChange={e => this.setState({ group: e.target.value })}
-                    placeholder="my-group"
-                    className="form-control"
-                    name="group"
-                  />
                 </div>
               </FormRow>
             </section>
