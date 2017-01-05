@@ -26,6 +26,7 @@ import Weblish from './linodes/linode/layouts/Weblish';
 import NodeBalancers from './nodebalancers';
 import Longview from './longview';
 import DNSManager from './dnsmanager';
+import Styleguide from './styleguide';
 import Support from './support';
 import { hideModal } from '~/actions/modal';
 import { LoadingRouterContext } from '~/router';
@@ -67,6 +68,7 @@ const init = () => {
             path="/linodes/:linodeLabel/weblish"
             component={Weblish}
           />
+          {Styleguide}
           <Route
             onChange={() => store.dispatch(hideModal())}
             path="/"

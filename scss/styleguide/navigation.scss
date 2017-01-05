@@ -1,0 +1,17 @@
+.Styleguide-nav {
+  min-width: 200px;
+  padding: 8px 4px;
+}
+
+.Styleguide-nav ul {
+  list-style-type: none;
+}
+
+.Styleguide-nav li {
+  line-height: normal;
+  margin-bottom: 10px;
+}
+
+.Styleguide-nav li > a:hover {
+  cursor: pointer;
+}

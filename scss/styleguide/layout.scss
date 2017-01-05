@@ -1,0 +1,35 @@
+.Styleguide-container > .MainHeader {
+  height: $main-nav-height;
+}
+
+.Styleguide-container > .sidebar {
+  min-height: calc(100% - #{$main-nav-height});
+  top: $main-nav-height;
+}
+
+.Styleguide-container .container {
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.Styleguide-container .content {
+  display: flex;
+}
+
+.Styleguide-header {
+  background: $black;
+}
+
+.Styleguide-main {
+  padding: 40px 10px 0 10px;
+}
+
+.Styleguide-main h1 {
+  font-size: 32px;
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.Styleguide-content {
+  display: flex;
+}

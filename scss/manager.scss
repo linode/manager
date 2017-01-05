@@ -6,20 +6,23 @@
 @import 'components/index.scss';
 @import 'linodes/index.scss';
 @import 'layout/index.scss';
+@import 'styleguide/index.scss';
 
 .btn, a {
     transition: background .35s, color .2s, border .1s;
 }
 
-html, #root > [data-reactroot] {
+html,
+body,
+#root,
+#root > [data-reactroot],
+.layout {
     height: 100%;
 }
 
 body {
-    height: calc(100% - #{$nav-height});
     background: $light-gray;
     color: $black;
-    margin-top: $nav-height;
     font-size: $font-normal;
     // TODO: min-width considerations:
     // * linode cards need > 700px;
@@ -85,11 +88,11 @@ label {
     position: fixed;
     top: $nav-height;
     left: 0;
-    bottom: 0;
     width: $sidebar-width;
     background: $white;
     border-right: $border;
     overflow-y: scroll;
+    min-height: $main-height;
     padding-bottom: 15px;
 
     & section:first-of-type {
@@ -154,13 +157,21 @@ label {
     }
 }
 
-.main {
-    margin-left: $sidebar-width;
-    width: calc(100% - #{$sidebar-width});
 
-    & > .container {
-        padding-top: $main-padding-tb;
-    }
+.main {
+    display: flex;
+    flex-direction: column;
+    margin-left: $sidebar-width;
+    min-height: $main-height;
+    width: calc(100% - #{$sidebar-width});
+}
+
+.main > .container {
+    padding-top: $main-padding-tb;
+}
+
+.main .main-inner {
+    flex: 1;
 }
 
 .main-header {
@@ -692,20 +703,6 @@ table {
     color: $lightest-black;
     &:hover {
         color: $dark-blue;
-    }
-}
-
-.full-height {
-    height: 100%;
-}
-
-.main {
-    min-height: 100%;
-    display: flex;
-    flex-direction: column;
-
-    .main-inner {
-        flex: 1;
     }
 }
 

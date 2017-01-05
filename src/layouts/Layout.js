@@ -1,5 +1,6 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
 import { push } from 'react-router-redux';
 
 import { EVENT_POLLING_DELAY } from '~/constants';
@@ -228,6 +229,7 @@ export class Layout extends Component {
                 Source
               </a>
             }
+            <Link to='/styleguide'>Styleguide</Link>
           </footer>
         </div>
       </div>
