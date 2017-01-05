@@ -4,6 +4,8 @@ import { getLinode } from './IndexPage';
 import { showModal, hideModal } from '~/actions/modal';
 import { linodes } from '~/api';
 import { resetPassword, rebootLinode } from '~/api/linodes';
+import { ConfirmModal } from '~/components/modal';
+import { Form, SubmitButton } from '~/components/form';
 import PasswordInput from '~/components/PasswordInput';
 import HelpButton from '~/components/HelpButton';
 import { setSource } from '~/actions/source';
@@ -17,49 +19,6 @@ import { getConfig,
   AVAILABLE_DISK_SLOTS,
 } from '~/linodes/linode/settings/layouts/EditConfigPage.js';
 
-export class ResetRootPwModal extends Component {
-  constructor() {
-    super();
-    this.state = { loading: false };
-  }
-
-  render() {
-    const { dispatch, resetRootPassword } = this.props;
-    const { loading } = this.state;
-    return (
-      <div>
-        <p>
-          Are you sure you want to reset the root password for this Linode?
-          This cannot be undone.
-        </p>
-        <div className="modal-footer">
-          <button
-            className="btn btn-cancel"
-            type="button"
-            disabled={loading}
-            onClick={() => dispatch(hideModal())}
-          >Cancel</button>
-          <button
-            className="btn btn-default"
-            disabled={loading}
-            onClick={async () => {
-              this.setState({ loading: true });
-              await resetRootPassword();
-              this.setState({ loading: false });
-              dispatch(hideModal());
-            }}
-          >Reset Password</button>
-        </div>
-      </div>);
-  }
-}
-
-
-ResetRootPwModal.propTypes = {
-  linodeId: PropTypes.number.isRequired,
-  resetRootPassword: PropTypes.func.isRequired,
-  dispatch: PropTypes.func.isRequired,
-};
 
 export class RescuePage extends Component {
   static async preload({ dispatch, getState }, { linodeLabel }) {
@@ -178,7 +137,6 @@ export class RescuePage extends Component {
             className="btn btn-default"
             onClick={() => dispatch(rebootLinode)}
           >Reboot</button>
-
         </section>
       </div>
     );
@@ -189,12 +147,6 @@ export class RescuePage extends Component {
     const { dispatch } = this.props;
     const linode = this.getLinode();
 
-    const resetRootPwModal = (
-      <ResetRootPwModal
-        linodeId={linode.id}
-        dispatch={dispatch}
-        resetRootPassword={this.resetRootPassword}
-      />);
     let body = (
       <p>This Linode does not have any disks eligible for password reset.</p>
     );
@@ -241,11 +193,9 @@ export class RescuePage extends Component {
               <div className="alert alert-info">Your Linode must
                 be powered off to reset your root password.
               </div>}
-          <button
-            className="btn reset-root-pw-button"
+          <SubmitButton
             disabled={!this.state.password || this.state.applying || linode.status !== 'offline'}
-            onClick={() => dispatch(showModal('Reset root password', resetRootPwModal))}
-          >Reset Password</button>
+          >Reset Password</SubmitButton>
           <span style={{ marginLeft: '0.5rem' }}>
             {this.state.result}
           </span>
@@ -256,13 +206,29 @@ export class RescuePage extends Component {
     return (
       <div className="col-sm-6">
         <section className="card">
-          <header>
-            <h2>
-              Reset root password
-              <HelpButton to="http://example.org" />
-            </h2>
-          </header>
-          {body}
+          <Form
+            className="ResetRootPassword-form"
+            onSubmit={() => {
+              dispatch(showModal('Reset root password', <ConfirmModal
+                buttonText="Reset Password"
+                children="Are you sure you want to reset the root password for this Linode?
+                This cannot be undone."
+                onCancel={() => dispatch(hideModal())}
+                onOk={() => {
+                  dispatch(hideModal());
+                  this.resetRootPassword();
+                }}
+              />));
+            }}
+          >
+            <header>
+              <h2>
+                Reset root password
+                <HelpButton to="http://example.org" />
+              </h2>
+            </header>
+            {body}
+          </Form>
         </section>
       </div>
     );

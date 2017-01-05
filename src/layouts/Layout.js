@@ -10,7 +10,7 @@ import { eventRead, eventSeen } from '~/api/events';
 import Header from '~/components/Header';
 import Sidebar from '~/components/Sidebar';
 import Notifications, { sortNotifications } from '~/components/Notifications';
-import Modal from '~/components/Modal';
+import { Modal } from '~/components/modal';
 import Error from '~/components/Error';
 import Feedback from '~/components/Feedback';
 import { rawFetch as fetch } from '~/fetch';

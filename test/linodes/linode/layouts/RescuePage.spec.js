@@ -120,17 +120,17 @@ describe('linodes/linode/layouts/RescuePage', () => {
                          { }, { method: 'POST' });
     });
 
-    it('shows a modal when reset root password button is pressed', async () => {
-      const page = shallow(
+    it('shows a modal for confirmation when reset root password form is submitted', () => {
+      const page = mount(
         <RescuePage
           dispatch={dispatch}
           linodes={linodes}
           params={{ linodeLabel: 'test-linode-3' }}
         />);
       page.setState({ loading: false, disk: 1234, password: 'new password' });
-      page.find('.reset-root-pw-button').simulate('click');
-      expect(dispatch.calledOnce).to.equal(true);
-      expect(dispatch.firstCall.args[0])
+      page.find('.ResetRootPassword-form').simulate('submit');
+      expect(dispatch.calledTwice).to.equal(true);
+      expect(dispatch.secondCall.args[0])
         .to.have.property('type').which.equals(SHOW_MODAL);
     });
 
