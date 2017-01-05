@@ -5,7 +5,7 @@ import { expect } from 'chai';
 import { push } from 'react-router-redux';
 import deepFreeze from 'deep-freeze';
 
-import { api } from '@/data';
+import { api, state } from '@/data';
 import { testLinode } from '@/data/linodes';
 import { expectRequest, expectObjectDeepEquals } from '@/common';
 import { EditConfigPage } from '~/linodes/linode/settings/layouts/EditConfigPage';
@@ -28,6 +28,33 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
       linodeLabel: `${testLinode.label}`,
       configId: '12345',
     },
+  });
+
+  it('preloads configs and disks', async () => {
+    const _dispatch = sandbox.stub();
+
+    await EditConfigPage.preload(
+      { dispatch: _dispatch, getState: () => state },
+      { linodeLabel: 'test-linode-1242' });
+
+    expect(_dispatch.callCount).to.equal(2);
+
+    const configs = _dispatch.firstCall.args[0];
+    const disks = _dispatch.secondCall.args[0];
+
+    _dispatch.reset();
+    _dispatch.returns({ total_pages: 1, configs: [], total_results: 0 });
+    await configs(_dispatch, () => state);
+    const fn = _dispatch.firstCall.args[0];
+    await expectRequest(fn, '/linode/instances/1242/configs/?page=1',
+      undefined, { configs: [] });
+
+    _dispatch.reset();
+    _dispatch.returns({ total_pages: 1, disks: [], total_results: 0 });
+    await disks(_dispatch, () => state);
+    const fn2 = _dispatch.firstCall.args[0];
+    await expectRequest(fn2, '/linode/instances/1242/disks/?page=1',
+      undefined, { disks: [] });
   });
 
   it('calls saveChanges when save is pressed', () => {
@@ -104,12 +131,13 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
       />
     );
 
-    const removeDiskSlot = sandbox.stub(page.instance(), 'removeDiskSlot');
+    expect(page.find('#config-device-sdb').length).to.equal(1);
 
     const removeBtn = page.find('.disk-slot .btn-cancel').at(0);
     expect(removeBtn.text()).to.equal('Remove');
     removeBtn.simulate('click');
-    expect(removeDiskSlot.calledOnce).to.equal(true);
+
+    expect(page.find('#config-device-sdb').length).to.equal(0);
   });
 
   it('add disk slot', async () => {
@@ -121,12 +149,26 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
       />
     );
 
-    const addDiskSlot = sandbox.stub(page.instance(), 'addDiskSlot');
+    expect(page.find('#config-device-sdb').length).to.equal(0);
 
     const addBtn = page.find('.disk-slot .btn-cancel').at(0);
     expect(addBtn.text()).to.equal('Add');
     addBtn.simulate('click');
-    expect(addDiskSlot.calledOnce).to.equal(true);
+
+    expect(page.find('#config-device-sdb').length).to.equal(1);
+  });
+
+  it('generates a default disk slot on create', async () => {
+    const page = await mount(
+      <EditConfigPage
+        {...props}
+        create
+        params={{ linodeLabel: 'test-linode-1233' }}
+        dispatch={dispatch}
+      />
+    );
+
+    expect(page.find('#config-device-sda').props().value).to.equal(12345);
   });
 
   describe('UI changes state values', () => {
