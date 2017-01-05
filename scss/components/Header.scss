@@ -1,7 +1,7 @@
-$header-padding: $grid-gutter-width-base / 2;
+$header-gutter-padding: $grid-gutter-width-base / 2;
 
 .MiniHeader {
-    padding: 0 $header-padding;
+    padding: 4px $header-gutter-padding;
     height: $info-nav-height;
     background: $black;
     font-size: $font-xs-small;
@@ -21,7 +21,7 @@ $header-padding: $grid-gutter-width-base / 2;
     &-github .fa, &-twitter .fa {
         color: $white;
         text-decoration: none;
-        padding-left: $header-padding / 2;
+        padding-left: $header-gutter-padding / 2;
     }
 }
 
@@ -37,17 +37,21 @@ $header-padding: $grid-gutter-width-base / 2;
         height: 100%;
     }
 
-    &-brand {
-        //max-width: 200px;
+    &-brand > a {
+        padding: 12px 9px 12px $header-gutter-padding;
     }
 
-    &-brand > a,
     &-session {
-        padding: 14px $header-padding 7px $header-padding;
+        padding: 12px $header-gutter-padding 12px $header-gutter-padding;
     }
 
     &-search {
-        padding: 14px $header-padding 7px $header-padding;
+        padding: 16px 0 12px 0;
+    }
+
+    &-brand.navbar-brand {
+        padding: 0;
+        margin-right: 0;
     }
 
     &-brand > a {
@@ -55,23 +59,12 @@ $header-padding: $grid-gutter-width-base / 2;
     }
 
     &-brand > a > img {
-        margin-top: -4px;
+        margin-top: -3px;
     }
 
     &-brand > a > span {
-        padding: 2px 6px;
+        padding: 4px 10px;
     }
-
-    //&-brand, &-search, &-session {
-    //    float: left;
-    //    display: inline-block;
-    //    margin-right: $header-padding;
-    //}
-
-    //&-logo {
-    //    font-size: 35px; /* Special font-size case */
-    //    padding-right: $header-padding / 2;
-    //}
 
     &-title {
         color: $dark-gray;
@@ -94,6 +87,7 @@ $header-padding: $grid-gutter-width-base / 2;
     }
 
     &-session {
+        max-width: 200px;
         /* Disable double click highlight */
         -webkit-user-select: none;
         -moz-user-select: none;
@@ -111,7 +105,7 @@ $header-padding: $grid-gutter-width-base / 2;
     }
     
     &-username {
-        padding-right: $header-padding / 2;
+        padding-right: $header-gutter-padding / 2;
         color: $white;
     }
 
@@ -119,8 +113,8 @@ $header-padding: $grid-gutter-width-base / 2;
         display: inline-block;
         $height: 24px;
         position: absolute;
-        top: $height / 4;
-        right: $height / 4;
+        top: 4px;
+        right: 10px;
         font-size: $font-xs-small;
         background: $red;
         color: $white;
@@ -130,6 +124,6 @@ $header-padding: $grid-gutter-width-base / 2;
 
         /* These settings are so that it looks circular generally and decent in other cases. */
         min-width: $height;
-        padding: 0 3px;
+        padding: 3px 0;
     }
 }
