@@ -106,7 +106,7 @@ export function Notification(props) {
 
   return (
     <div
-      className={`Notification ${props.read ? '' : 'Notification--unseen'}`}
+      className={`Notification ${props.read ? '' : 'Notification--unread'}`}
       onClick={handleNotificationClick}
     >
       <header className="Notification-header">

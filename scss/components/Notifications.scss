@@ -4,14 +4,15 @@
     cursor: pointer;
     cursor: hand;
 
-    &--unseen {
+    &--unread {
         background: white;
     }
 
-    &--unseen &-title {
-        font-weight: bold;
+    &--unread &-subject {
+        font-weight: 600;
     }
-    &--unseen &-header {
+
+    &--unread &-header {
         padding: 0;
     }
 
@@ -30,7 +31,6 @@
 
     &-subject {
         font-size: $font-normal;
-        font-weight: 600;
         padding-right: 5px;
     }
 }
