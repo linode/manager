@@ -28,6 +28,7 @@ export class Layout extends Component {
       'notifications', hideNotifications, showNotifications).bind(this);
     this.hideShowFeedback = this.hideShow(
       'feedback', hideFeedback, showFeedback).bind(this);
+    this._pollingIntervalId = null;
     this.state = { title: '', link: '' };
   }
 
@@ -37,7 +38,7 @@ export class Layout extends Component {
   }
 
   componentWillUnmount() {
-    this._shouldPoll = false;
+    this.stopPollingForEvents();
   }
 
   async fetchBlog() {
@@ -116,6 +117,26 @@ export class Layout extends Component {
     return allProcessedEvents;
   }
 
+  startPollingForEvents() {
+    const { dispatch } = this.props;
+
+    this._pollingIntervalId = setInterval(async () => {
+      const processedEvents = await this.fetchEventsPage(0);
+
+      try {
+        dispatch(eventsActions.many(processedEvents));
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error(e);
+      }
+    }, EVENT_POLLING_DELAY);
+  }
+
+  stopPollingForEvents() {
+    clearInterval(this._pollingIntervalId);
+    this._pollingIntervalId = null;
+  }
+
   async attachEventTimeout() {
     const { dispatch } = this.props;
 
@@ -125,21 +146,9 @@ export class Layout extends Component {
     }
 
     // Grab events first time right away
-    this._shouldPoll = true;
     dispatch(events.all([], this.eventHandler));
 
-    setInterval(async () => {
-      if (this._shouldPoll) {
-        const processedEvents = await this.fetchEventsPage(0);
-
-        try {
-          dispatch(eventsActions.many(processedEvents));
-        } catch (e) {
-          // eslint-disable-next-line no-console
-          console.error(e);
-        }
-      }
-    }, EVENT_POLLING_DELAY);
+    this.startPollingForEvents();
   }
 
   hideShow(type, hide, show) {
