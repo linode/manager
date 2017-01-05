@@ -46,7 +46,7 @@ export default function Header(props) {
       </div>
       {!username ? null :
         <div
-          className="MainHeader-session navbar-right"
+          className="MainHeader-session float-xs-right"
           onClick={hideShowNotifications}
         >
           <span className="MainHeader-username">
