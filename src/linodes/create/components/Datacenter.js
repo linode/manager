@@ -5,12 +5,6 @@ import { flags } from '~/assets';
 import { regionMap } from '~/constants';
 
 export default class Datacenter extends Component {
-  constructor() {
-    super();
-    this.renderRegion = this.renderRegion.bind(this);
-    this.renderDisabled = this.renderDisabled.bind(this);
-  }
-
   renderHeader() {
     return (
       <header>
@@ -19,9 +13,10 @@ export default class Datacenter extends Component {
     );
   }
 
-  renderDatacenter(datacenter) {
+  renderDatacenter = (datacenter) => {
     const { selected, onDatacenterSelected } = this.props;
     const dcClass = datacenter.id === selected ? 'selected' : '';
+
     return (
       <div
         className={`datacenter ${dcClass}`}
@@ -43,7 +38,7 @@ export default class Datacenter extends Component {
     );
   }
 
-  renderRegion(datacentersInRegion, region) {
+  renderRegion = (datacentersInRegion, region) => {
     const allRealDatacenters = this.props.datacenters;
     const datacenters = Object.values(allRealDatacenters).filter(({ id }) =>
       datacentersInRegion.indexOf(id) !== -1);
@@ -52,7 +47,7 @@ export default class Datacenter extends Component {
       <div key={region}>
         <h3>{region}</h3>
         <div className="datacenter-group">
-          {datacenters.map(this.renderDatacenter.bind(this))}
+          {datacenters.map(this.renderDatacenter)}
         </div>
       </div>
     ) : null;
@@ -69,7 +64,7 @@ export default class Datacenter extends Component {
             The source you selected limits the datacenters you may deploy
             your new Linode to.
           </p>
-          {this.renderDatacenter.bind(this)(dc)}
+          {this.renderDatacenter(dc)}
         </div>
       </div>
     );

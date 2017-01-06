@@ -11,7 +11,7 @@ export default function Distributions(props) {
   }
 
   const vendorsUnsorted = _.map(
-    _.groupBy(Object.values(distributions), d => d.vendor),
+    _.groupBy(distributions, 'vendor'),
     (v, k) => ({
       name: k,
       versions: _.orderBy(v, ['recommended', 'created'], ['desc', 'desc']),

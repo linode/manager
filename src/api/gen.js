@@ -32,11 +32,11 @@ function fullyQualified(resource) {
 
 const actionGenerators = {
   [ONE]: c => (resource, ...ids) =>
-    ({ type: `GEN@${fullyQualified(c)}/ONE`, resource, ids: ids.map(n => parseInt(n)) }),
+    ({ type: `GEN@${fullyQualified(c)}/ONE`, resource, ids: ids.map(n => parseInt(n) || n) }),
   [MANY]: c => (page, ...ids) =>
-    ({ type: `GEN@${fullyQualified(c)}/MANY`, page, ids: ids.map(n => parseInt(n)) }),
+    ({ type: `GEN@${fullyQualified(c)}/MANY`, page, ids: ids.map(n => parseInt(n) || n) }),
   [DELETE]: c => (...ids) =>
-    ({ type: `GEN@${fullyQualified(c)}/DELETE`, ids: ids.map(n => parseInt(n)) }),
+    ({ type: `GEN@${fullyQualified(c)}/DELETE`, ids: ids.map(n => parseInt(n) || n) }),
 };
 
 /**
@@ -84,9 +84,8 @@ export function generateDefaultStateOne(config, one) {
 }
 
 export class ReducerGenerator {
-
   static one(config, oldStateMany, action) {
-    const id = action.ids.length ? action.ids.pop() : action.resource.id;
+    const id = action.ids.length ? action.ids[action.ids.length - 1] : action.resource.id;
     const oldStateOne = oldStateMany[config.plural][id];
     const newStateOne = oldStateOne ? action.resource :
                         generateDefaultStateOne(config, action.resource);

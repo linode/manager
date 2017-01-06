@@ -5,19 +5,23 @@ export const LINODE_STATUS_TRANSITION_RESULT = {
   booting: 'running',
   shutting_down: 'offline',
   rebooting: 'running',
+  creating: 'offline', // Technically this is "finished", but offline is more useful to us.
 };
 
 export const RANDOM_PROGRESS_MAX = 75;
+export const RANDOM_PROGRESS_MIN = 40;
+
+export function randomInitialProgress() {
+  return Math.random() * (RANDOM_PROGRESS_MAX - RANDOM_PROGRESS_MIN) + RANDOM_PROGRESS_MIN;
+}
 
 function linodeAction(id, action, temp, body, handleRsp) {
   return async (dispatch, getState) => {
     const state = getState();
     const { token } = state.authentication;
-    dispatch(actions.one({ ...state, status: temp, __progress: 1 }, id));
+    dispatch(actions.one({ status: temp, __progress: 1 }, id));
     await new Promise(resolve => setTimeout(resolve, 0));
-    const randomProgress = ((min, max) =>
-      Math.random() * (max - min) + min)(RANDOM_PROGRESS_MAX, 40);
-    dispatch(actions.one({ ...state, __progress: randomProgress }, id));
+    dispatch(actions.one({ __progress: randomInitialProgress() }, id));
 
     const rsp = await fetch(token, `/linode/instances/${id}/${action}`, { method: 'POST', body });
     dispatch(actions.one({ ...body }, id));

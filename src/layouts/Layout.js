@@ -64,6 +64,7 @@ export class Layout extends Component {
     const event = new Event(_event);
 
     switch (event.getType()) {
+      case Event.LINODE_CREATE:
       case Event.LINODE_REBOOT:
       case Event.LINODE_BOOT:
       case Event.LINODE_POWER_OFF: {
@@ -78,12 +79,10 @@ export class Layout extends Component {
 
           if (newEvent && (statusChanged || changeInProgress && progressMade)) {
             dispatch(linodeActions.one({
-              ...linode,
               __progress: event.getProgress(),
             }, linode.id));
 
             setTimeout(() => dispatch(linodeActions.one({
-              ...linode,
               status: event.getStatus(),
               // For best UX, keep the below timeout length the same as the width transition for
               // this component.
