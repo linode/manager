@@ -11,7 +11,7 @@
     transition: background .35s, color .2s, border .1s;
 }
 
-*:disabled {
+:disabled {
     pointer-events: none;
 }
 
