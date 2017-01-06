@@ -35,6 +35,7 @@
   margin: 13px;
   border: $border;
   color: $black;
+  height: 120px;
 
   &.clickable:hover {
     background-color: $light-gray;
@@ -47,6 +48,10 @@
   }
 
   .description {
-    margin: 19px 0px 25px 0px;
+    margin: 29px 0px 15px 0px;
+  }
+
+  .no-snapshot {
+    margin-top: 18px;
   }
 }
