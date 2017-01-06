@@ -23,4 +23,4 @@ export const flags = {
 
 import logo from 'file!../assets/logo/logo.svg';
 
-export const logoOnly = logo;
+export const LinodeLogoImgSrc = logo;

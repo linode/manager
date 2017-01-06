@@ -3,7 +3,7 @@ import React, { PropTypes } from 'react';
 export default function Section(props) {
   return (
     <div className="Styleguide-section row" name={props.name}>
-      <h3>{props.title}</h3>
+      <h2>{props.title}</h2>
       {props.children}
     </div>
   );

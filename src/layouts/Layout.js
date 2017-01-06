@@ -14,6 +14,7 @@ import Notifications, { sortNotifications } from '~/components/Notifications';
 import Modal from './Modal';
 import Error from '~/components/Error';
 import Feedback from '~/components/Feedback';
+import PreloadIndicator from '~/components/PreloadIndicator.js';
 import { rawFetch as fetch } from '~/fetch';
 import { hideModal } from '~/actions/modal';
 import { showNotifications, hideNotifications } from '~/actions/notifications';
@@ -189,6 +190,7 @@ export class Layout extends Component {
     const githubRoot = 'https://github.com/linode/manager/blob/master/';
     return (
       <div className="layout full-height">
+        <PreloadIndicator />
         <Header
           username={username}
           emailHash={emailHash}

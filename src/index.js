@@ -30,7 +30,6 @@ import Styleguide from './styleguide';
 import Support from './support';
 import { hideModal } from '~/actions/modal';
 import { LoadingRouterContext } from '~/router';
-import PreloadIndicator from '~/components/PreloadIndicator.js';
 
 import { actions, thunks, reducer } from '~/api/configs/linodes';
 window.actions = actions; window.thunks = thunks; window.reducer = reducer;
@@ -54,7 +53,6 @@ const init = () => {
   render(
     <Provider store={store}>
       <div>
-        <PreloadIndicator />
         <Router
           history={history}
           onUpdate={logPageView}
@@ -74,7 +72,7 @@ const init = () => {
             path="/"
             component={Layout}
           >
-            <IndexRedirect to="/linodes" />
+          <IndexRedirect to="/linodes" />
             {Linodes}
             {NodeBalancers}
             {Longview}
