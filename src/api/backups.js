@@ -24,6 +24,7 @@ export function takeBackup(id) {
       { method: 'POST' });
     const json = await response.json();
     dispatch(actions.backups.one(json, id, json.id));
+    return json;
   };
 }
 
