@@ -283,7 +283,7 @@ export class DashboardPage extends Component {
               </div>
               <div className="col-sm-8 content-col right">
                 <div className="input-group-btn">
-                  <button type="button" id="glish-button" className="btn btn-default">Open</button>
+                  <button type="button" id="glish-button" className="btn btn-default" disabled>Open</button>
                 </div>
                 <small className="text-muted">
                   Equivalent to plugging a monitor and keyboard into your server.
