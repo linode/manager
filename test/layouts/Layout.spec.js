@@ -135,7 +135,7 @@ describe('layouts/Layout', () => {
 
     page.instance().componentWillUnmount();
 
-    expect(page.instance()._pollingIntervalId).to.equal(null);
+    expect(page.instance()._pollingTimeoutId).to.equal(null);
   });
 
   it('deals with individual events', () => {
