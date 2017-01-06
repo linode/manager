@@ -253,6 +253,7 @@ label {
     font-size: $font-normal;
     border-radius: 2px;
     color: $black;
+    display: inline-block;
 
     &:focus {
         color: $black;
