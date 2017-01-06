@@ -72,7 +72,7 @@ const init = () => {
             path="/"
             component={Layout}
           >
-            <IndexRedirect to="/linodes" />
+          <IndexRedirect to="/linodes" />
             {Linodes}
             {NodeBalancers}
             {Longview}

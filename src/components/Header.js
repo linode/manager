@@ -38,8 +38,8 @@ export default function Header(props) {
       e.seen ? unseen : unseen + 1, 0);
 
   const main = (
-    <nav className="MainHeader navbar">
-      <div className="MainHeader-brand navbar-brand">
+    <div className="MainHeader clearfix">
+      <div className="MainHeader-brand">
         <Link to="/">
           <span className="MainHeader-logo">
             <img
@@ -74,7 +74,7 @@ export default function Header(props) {
             <span className="MainHeader-badge">{unseenNotifications}</span>}
         </div>
       }
-    </nav>
+    </div>
   );
 
   return (
