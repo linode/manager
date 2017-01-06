@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 
-import { powerOnLinode, powerOffLinode, rebootLinode } from '~/api/linodes';
+import { RANDOM_PROGRESS_MAX, powerOnLinode, powerOffLinode, rebootLinode } from '~/api/linodes';
 import { LinodeStates, LinodeStatesReadable } from '~/constants';
 import { showModal } from '~/actions/modal';
 import ConfigSelectModal from '~/linodes/components/ConfigSelectModal';
@@ -95,14 +95,15 @@ export default class StatusDropdown extends Component {
     const openClass = this.state.open ? 'StatusDropdown--open' : '';
 
     if (LinodeStates.pending.indexOf(linode.status) !== -1) {
+      const safeProgress = linode.__progress || RANDOM_PROGRESS_MAX;
       return (
         <div className="StatusDropdown">
           <div className="StatusDropdown-container">
             <div
-              style={{ width: `${linode.__progress}%` }}
+              style={{ width: `${safeProgress}%` }}
               className="StatusDropdown-progress"
             >
-              <span className="StatusDropdown-percent">{Math.round(linode.__progress)}%</span>
+              <span className="StatusDropdown-percent">{Math.round(safeProgress)}%</span>
             </div>
           </div>
         </div>

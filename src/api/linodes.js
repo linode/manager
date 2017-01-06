@@ -7,13 +7,16 @@ export const LINODE_STATUS_TRANSITION_RESULT = {
   rebooting: 'running',
 };
 
+export const RANDOM_PROGRESS_MAX = 75;
+
 function linodeAction(id, action, temp, body, handleRsp) {
   return async (dispatch, getState) => {
     const state = getState();
     const { token } = state.authentication;
     dispatch(actions.one({ ...state, status: temp, __progress: 1 }, id));
     await new Promise(resolve => setTimeout(resolve, 0));
-    const randomProgress = ((min, max) => Math.random() * (max - min) + min)(75, 40);
+    const randomProgress = ((min, max) =>
+      Math.random() * (max - min) + min)(RANDOM_PROGRESS_MAX, 40);
     dispatch(actions.one({ ...state, __progress: randomProgress }, id));
 
     const rsp = await fetch(token, `/linode/instances/${id}/${action}`, { method: 'POST', body });
