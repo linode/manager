@@ -86,6 +86,7 @@ export class SummaryPage extends Component {
           id="private-ip-button"
           className={`btn btn-default ${bemPrefix}addPrivateIp`}
           onClick={this.addPrivateIP}
+          disabled
         >
           Enable private IP address
         </button>
@@ -205,6 +206,7 @@ export class SummaryPage extends Component {
               type="button"
               id="public-ip-button"
               className="btn btn-default float-xs-right"
+              disabled
             >
               Add public IP address
             </button>

@@ -136,6 +136,7 @@ export class RescuePage extends Component {
           <button
             className="btn btn-default"
             onClick={() => dispatch(rebootLinode)}
+            disabled
           >Reboot</button>
         </section>
       </div>
