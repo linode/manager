@@ -121,16 +121,16 @@ export class Layout extends Component {
     const { dispatch } = this.props;
 
     this._pollingTimeoutId = setTimeout(async () => {
-      //const processedEvents = await this.fetchEventsPage(0);
+      const processedEvents = await this.fetchEventsPage(0);
 
       try {
-        //dispatch(eventsActions.many(processedEvents));
+        dispatch(eventsActions.many(processedEvents));
         this.pollForEvents();
       } catch (e) {
         // eslint-disable-next-line no-console
         console.error(e);
       }
-    }, 10);
+    }, EVENT_POLLING_DELAY);
   }
 
   stopPollingForEvents() {
