@@ -28,7 +28,7 @@ export class Layout extends Component {
       'notifications', hideNotifications, showNotifications).bind(this);
     this.hideShowFeedback = this.hideShow(
       'feedback', hideFeedback, showFeedback).bind(this);
-    this._pollingIntervalId = null;
+    this._pollingTimeoutId = null;
     this.state = { title: '', link: '' };
   }
 
@@ -121,16 +121,16 @@ export class Layout extends Component {
     const { dispatch } = this.props;
 
     this._pollingTimeoutId = setTimeout(async () => {
-      const processedEvents = await this.fetchEventsPage(0);
+      //const processedEvents = await this.fetchEventsPage(0);
 
       try {
-        dispatch(eventsActions.many(processedEvents));
+        //dispatch(eventsActions.many(processedEvents));
         this.pollForEvents();
       } catch (e) {
         // eslint-disable-next-line no-console
         console.error(e);
       }
-    }, EVENT_POLLING_DELAY);
+    }, 10);
   }
 
   stopPollingForEvents() {
