@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, IndexRoute, IndexRedirect } from 'react-router';
+import { Route, IndexRedirect } from 'react-router';
 
 import StyleguideIndex from '~/styleguide/layouts/StyleguideIndex';
 import {
@@ -12,7 +12,7 @@ import {
   Tabs,
   Navigation,
   Forms,
-  Modals
+  Modals,
 } from '~/styleguide/components/sections';
 
 

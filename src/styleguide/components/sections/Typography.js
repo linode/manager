@@ -1,15 +1,11 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 
 import Section from '~/styleguide/components/Section';
 
-export default function Typography(props) {
+export default function Typography() {
   return (
     <Section name="typography" title="Typography">
       <p></p>
     </Section>
   );
 }
-
-Typography.propTypes = {
-
-};

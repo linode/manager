@@ -1,15 +1,11 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 
 import Section from '~/styleguide/components/Section';
 
-export default function Forms(props) {
+export default function Forms() {
   return (
     <Section name="forms" title="Forms">
       <p></p>
     </Section>
   );
 }
-
-Forms.propTypes = {
-
-};

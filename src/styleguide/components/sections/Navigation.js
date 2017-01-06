@@ -1,15 +1,11 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 
 import Section from '~/styleguide/components/Section';
 
-export default function Navigation(props) {
+export default function Navigation() {
   return (
     <Section name="navigation" title="Navigation">
       <p></p>
     </Section>
   );
 }
-
-Navigation.propTypes = {
-
-};

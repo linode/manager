@@ -231,7 +231,7 @@ export class Layout extends Component {
                 Source
               </a>
             }
-            <Link to='/styleguide'>Styleguide</Link>
+            <Link to="/styleguide">Styleguide</Link>
           </footer>
         </div>
       </div>
