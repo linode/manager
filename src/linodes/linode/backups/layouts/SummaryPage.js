@@ -1,13 +1,32 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 import { Link } from '~/components/Link';
 
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
+import { takeBackup } from '~/api/backups';
+import { ErrorSummary, reduceErrors } from '~/errors';
 
 export class SummaryPage extends Component {
   constructor() {
     super();
     this.getLinode = getLinode.bind(this);
+    this.takeBackup = takeBackup.bind(this);
+    this.state = {
+      errors: {},
+    };
+  }
+
+  async takeSnapshot() {
+    const { id, label } = this.getLinode();
+    const { dispatch } = this.props;
+    try {
+      const backup = await dispatch(takeBackup(id));
+      dispatch(push(`/linodes/${label}/backups/${backup.id}`));
+    } catch (response) {
+      const errors = await reduceErrors(response);
+      this.setState({ errors });
+    }
   }
 
   renderEmpty(title) {
@@ -21,11 +40,30 @@ export class SummaryPage extends Component {
     );
   }
 
+  renderEmptySnapshot() {
+    return (
+      <div className="col-sm-3" key="Snapshot">
+        <div className="backup-block">
+          <div className="title">Snapshot</div>
+          <div className="no-snapshot text-dark-gray">
+            No snapshots taken
+          </div>
+          <button
+            type="button"
+            className="btn btn-cancel"
+            onClick={() => this.takeSnapshot()}
+          >Take first snapshot</button>
+        </div>
+      </div>
+    );
+  }
+
   renderBlock(title, backup) {
     const { params: { linodeLabel } } = this.props;
 
     if (backup === undefined || backup.finished === null) {
-      return this.renderEmpty(title);
+      return title === 'Snapshot' ? this.renderEmptySnapshot() :
+        this.renderEmpty(title);
     }
 
     const elapsed = Date.now() - Date.parse(backup.finished);
@@ -45,6 +83,8 @@ export class SummaryPage extends Component {
   }
 
   render() {
+    const { errors } = this.state;
+
     const backups = Object.values(this.getLinode()._backups.backups);
     backups.sort((a, b) => a.created > b.created);
 
@@ -75,6 +115,7 @@ export class SummaryPage extends Component {
         <div className="form-group row">
           {blocks}
         </div>
+        <ErrorSummary errors={errors} />
       </section>
     );
   }
