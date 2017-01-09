@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React, { PropTypes, Component } from 'react';
 import { Link } from 'react-router';
 import moment from 'moment';
 
@@ -146,35 +146,54 @@ export function sortNotifications(eventsDict) {
   return events;
 }
 
-export default function Notifications(props) {
-  const {
-    open, hideShowNotifications, readNotification, events, linodes, gotoPage,
-  } = props;
+export default class Notifications extends Component {
+  constructor() {
+    super();
+  }
 
-  return (
-    <div className={`Notifications ${open ? 'Notifications--open' : ''}`}>
-      <div
-        className="Notifications-overlay"
-        onClick={hideShowNotifications}
-      />
-      <div className="Notifications-body">
-        <header className="Notifications-header text-xs-right">
-          <Link to="/logout">Logout</Link>
-        </header>
-        <div>
-          {sortNotifications(events).map((e, index) =>
-            <Notification
-              key={index}
-              readNotification={readNotification}
-              gotoPage={gotoPage}
-              linodes={linodes}
-              {...e}
-            />)}
-          <div className="Notifications-end text-xs-center">No more notifications.</div>
+  componentWillUpdate(nextProps, nextState) {
+    const { open, events, eventSeen } = nextProps;
+    const sortedEvents = sortNotifications(events);
+
+    if (open && sortedEvents[0] && !sortedEvents[0].seen) {
+      eventSeen(sortedEvents[0].id);
+    }
+  }
+
+  render() {
+    const {
+      open, hideShowNotifications, readNotification, events, linodes, gotoPage,
+    } = this.props;
+
+    const sortedEvents = sortNotifications(events);
+
+    return (
+      <div className={`Notifications ${open ? 'Notifications--open' : ''}`}>
+        <div
+          className="Notifications-overlay"
+          onClick={hideShowNotifications}
+        />
+        <div className="Notifications-body">
+          <header className="Notifications-header text-xs-right">
+            <Link to="/logout">Logout</Link>
+          </header>
+          <div>
+            {sortedEvents.map((e, index) =>
+              <Notification
+                key={index}
+                readNotification={readNotification}
+                gotoPage={gotoPage}
+                linodes={linodes}
+                {...e}
+              />)}
+            <div className="Notifications-end text-xs-center">
+              No more notifications.
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  }
 }
 
 Notifications.propTypes = {
@@ -184,6 +203,7 @@ Notifications.propTypes = {
   gotoPage: PropTypes.func.isRequired,
   events: PropTypes.object,
   linodes: PropTypes.object,
+  eventSeen: PropTypes.func.isRequired,
 };
 
 Notifications.defaultProps = {

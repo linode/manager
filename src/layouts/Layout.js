@@ -160,10 +160,6 @@ export class Layout extends Component {
       if (open) {
         dispatch(hide());
       } else {
-        const sortedEvents = sortNotifications(events);
-        if (type === 'notifications' && sortedEvents[0] && !sortedEvents[0].seen) {
-          dispatch(eventSeen(sortedEvents[0].id));
-        }
         dispatch(hideModal());
         dispatch(show());
       }
@@ -196,6 +192,7 @@ export class Layout extends Component {
           title={title}
           hideShowNotifications={this.hideShowNotifications}
           events={this.props.events}
+          notificationsOpen={this.props.notifications.open}
         />
         <Sidebar path={currentPath} />
         <Notifications
@@ -205,6 +202,7 @@ export class Layout extends Component {
           readNotification={async (id) => await dispatch(eventRead(id))}
           events={this.props.events}
           linodes={this.props.linodes}
+          eventSeen={(id) => dispatch(eventSeen(id))}
         />
         <Feedback
           email={email}
