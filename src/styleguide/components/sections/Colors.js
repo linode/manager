@@ -11,7 +11,6 @@ export default function Colors() {
 =======
     <Section name="colors" title="Color Pallete">
       <div className="col-sm-12">
-
         <div className="row">
           <div className="col-sm-6">
             {/* Greys */}
@@ -41,21 +40,22 @@ export default function Colors() {
             {/* Blacks */}
             <div className="Color">
               <div>
-                <div className="Color-block Color-block__light-blue"></div>
-                <div className="Color-block Color-block__blue"></div>
-                <div className="Color-block Color-block__dark-blue"></div>
+                <div className="Color-block Color-block__lightest-black"></div>
+                <div className="Color-block Color-block__light-black"></div>
+                <div className="Color-block Color-block__black"></div>
               </div>
               <div className="Color-block-details">
                 <div className="Color-block-detail">
-                  <div>$light-blue</div>
-                  <div>#DEEFF5</div>
+                  <div>$lightest-black</div>
+                  <div>#ACACAC</div>
                 </div>
                 <div className="Color-block-detail">
-                  <div>$blue</div>
-                  <div>#4A90E2</div>
+                  <div>$light-black</div>
+                  <div>#777</div>
                 </div>
                 <div className="Color-block-detail">
-                  <div>darken($blue, 10%)</div>
+                  <div>$black</div>
+                  <div>#4b4b4b</div>
                 </div>
               </div>
             </div>
