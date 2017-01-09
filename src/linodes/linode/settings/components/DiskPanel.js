@@ -442,7 +442,7 @@ export class DiskPanel extends Component {
                 <h3>{d.label} <small>{d.filesystem}</small></h3>
                 <p>{d.size} MB</p>
                 {d.state !== 'deleting' ? null :
-                  <div className="text-muted">Being deleted</div>}
+                  <small className="text-muted">Being deleted</small>}
                 {!poweredOff || d.state === 'deleting' ? null : (
                   <div>
                     <button
