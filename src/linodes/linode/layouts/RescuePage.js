@@ -203,7 +203,8 @@ export class RescuePage extends Component {
             <div className="col-sm-2"></div>
             <div className="col-sm-10">
               <SubmitButton
-                disabled={!this.state.password || this.state.applying || linode.status !== 'offline'}
+                disabled={!this.state.password || this.state.applying ||
+                          linode.status !== 'offline'}
               >Reset Password</SubmitButton>
               <span style={{ marginLeft: '0.5rem' }}>
                 {this.state.result}
