@@ -167,7 +167,7 @@ describe('linodes/create/layout/IndexPage', () => {
       with_backups: false,
       group: null,
     });
-    expectObjectDeepEquals(dispatch.secondCall.args[0], push('/linodes/label'));
+    expectObjectDeepEquals(dispatch.thirdCall.args[0], push('/linodes/label'));
   });
 
   it('sets errors on create a linode failure', async () => {
