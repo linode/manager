@@ -118,12 +118,14 @@ describe('components/Notifications', () => {
   function makeNotifications(_dispatch = sandbox.spy(),
                              events = api.events,
                              linodes = api.linodes,
-                             hideShowNotifications = sandbox.spy()) {
+                             hideShowNotifications = sandbox.spy(),
+                             eventSeen = sandbox.spy()) {
     return (
       <Notifications
         hideShowNotifications={hideShowNotifications}
         events={events}
         linodes={linodes}
+        eventSeen={eventSeen}
       />
     );
   }
@@ -149,5 +151,13 @@ describe('components/Notifications', () => {
 
     // This event was updated last.
     expect(notifications.find('Notification').at(0).props().id).to.equal(386);
+  });
+
+  it('calls eventSeen when opened', () => {
+    const notifications = shallow(makeNotifications());
+    const eventSeen = sandbox.spy();
+    notifications.instance().componentWillUpdate(
+      { open: true, events: api.events, eventSeen }, {});
+    expect(eventSeen.callCount).to.equal(1);
   });
 });

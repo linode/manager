@@ -147,11 +147,7 @@ export function sortNotifications(eventsDict) {
 }
 
 export default class Notifications extends Component {
-  constructor() {
-    super();
-  }
-
-  componentWillUpdate(nextProps, nextState) {
+  componentWillUpdate(nextProps) {
     const { open, events, eventSeen } = nextProps;
     const sortedEvents = sortNotifications(events);
 

@@ -9,7 +9,7 @@ import { actions as eventsActions } from '~/api/configs/events';
 import { eventRead, eventSeen } from '~/api/events';
 import Header from '~/components/Header';
 import Sidebar from '~/components/Sidebar';
-import Notifications, { sortNotifications } from '~/components/Notifications';
+import Notifications from '~/components/Notifications';
 import Modal from './Modal';
 import Error from '~/components/Error';
 import Feedback from '~/components/Feedback';
@@ -156,7 +156,7 @@ export class Layout extends Component {
     return async (e) => {
       e.preventDefault();
       e.stopPropagation();
-      const { dispatch, [type]: { open }, events } = this.props;
+      const { dispatch, [type]: { open } } = this.props;
       if (open) {
         dispatch(hide());
       } else {

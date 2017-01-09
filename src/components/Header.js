@@ -11,7 +11,7 @@ export default function Header(props) {
     showInfobar,
     hideShowNotifications,
     events,
-    notificationsOpen
+    notificationsOpen,
   } = props;
   const gravatarLink = `https://gravatar.com/avatar/${emailHash}`;
 
