@@ -325,9 +325,10 @@ export class EditConfigPage extends Component {
     );
   }
 
-  renderCheckbox(label, field) {
+  renderCheckbox(label, field, hint) {
+    const hinter = hint ? (<small className="text-muted">{hint}</small>) : null;
     return (
-      <div className="checkbox">
+      <div className="checkbox form-group">
         <label>
           <input
             type="checkbox"
@@ -339,6 +340,7 @@ export class EditConfigPage extends Component {
               helpers: { ...this.state.helpers, [field]: !this.state.helpers[field] },
             })}
           /> {label}
+          <div>{hinter}</div>
         </label>
       </div>
     );
@@ -534,11 +536,23 @@ export class EditConfigPage extends Component {
                 Boot helpers
               </legend>
             </div>
-            <div className="col-md-6">
-              {this.renderCheckbox('Enable distro helper', 'enableDistroHelper')}
-              {this.renderCheckbox('Disable updatedb', 'disableUpdatedb')}
-              {this.renderCheckbox('Enable modules.dep helper', 'enableModulesdepHelper')}
-              {this.renderCheckbox('Enable network helper', 'enableNetworkHelper')}
+            <div className="col-md-8">
+              {this.renderCheckbox(
+                  'Enable distro helper',
+                  'enableDistroHelper',
+                  'Helps maintain correct inittab/upstart console device')}
+              {this.renderCheckbox(
+                  'Disable updatedb',
+                  'disableUpdatedb',
+                  'Disables updatedb cron job to avoid disk thrashing')}
+              {this.renderCheckbox(
+                  'Enable modules.dep helper',
+                  'enableModulesdepHelper',
+                  'Creates a modules dependency file for the kernel you run')}
+              {this.renderCheckbox(
+                  'Enable network helper',
+                  'enableNetworkHelper',
+                  'Automatically configure static networking')}
             </div>
           </fieldset>
           <ErrorSummary errors={errors} />
