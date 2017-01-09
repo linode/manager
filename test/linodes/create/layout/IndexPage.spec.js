@@ -156,7 +156,7 @@ describe('linodes/create/layout/IndexPage', () => {
       backups: false,
       group: null,
     });
-    expect(dispatch.callCount).to.equal(2);
+    expect(dispatch.callCount).to.equal(3);
     expectObjectDeepEquals(dispatch.firstCall.args[0], {
       root_pass: 'password',
       type: 'type',
