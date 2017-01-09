@@ -1,52 +1,54 @@
-.Styleguide-container {
-  font-family: 'Helvetica', Arial, sans-serif;
-  background: #ffffff;
-  height: 100%;
-}
+.Styleguide {
+  &-container {
+    font-family: 'Helvetica', Arial, sans-serif;
+    background: #ffffff;
+    height: 100%;
+  }
 
-.Styleguide-header .LinodeLogo {
-  height: 60px;
-}
+  &-header .LinodeLogo {
+    height: 60px;
+  }
 
-.Styleguide-main {
-  padding: 0 10px;
-}
+  &-main {
+    padding: 0 10px;
+  }
 
-.Styleguide-header {
-  padding: 40px 0 60px 0;
-}
+  &-header {
+    padding: 40px 0 60px 0;
+  }
 
-.Styleguide-header h1 {
-  font-size: 34px;
-}
+  &-header h1 {
+    font-size: 34px;
+  }
 
-.Styleguide-header h1 > img {
-  padding: 0 10px 0 20px;
-}
+  &-header h1 > img {
+    padding: 0 10px 0 20px;
+  }
 
-.Styleguide-container a {
-  font-size: 14px;
-}
+  &-container a {
+    font-size: 14px;
+  }
 
-.Styleguide-container a.active {
-  color: $black;
-  text-decoration: none;
-}
+  &-container a.active {
+    color: $black;
+    text-decoration: none;
+  }
 
-.Styleguide-container a:hover {
-  cursor: pointer;
-}
+  &-container a:hover {
+    cursor: pointer;
+  }
 
-.Styleguide-container a.Styleguide-back-link {
-  position: absolute;
-  left: 15px;
-  top: 5px;
-}
+  &-container a.Styleguide-back-link {
+    position: absolute;
+    left: 15px;
+    top: 5px;
+  }
 
-.Styleguide-container .container {
-  max-width: 1024px;
-}
+  &-container .container {
+    max-width: 1024px;
+  }
 
-.Styleguide-content {
-  display: flex;
+  &-content {
+    display: flex;
+  }
 }
