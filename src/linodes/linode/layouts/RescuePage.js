@@ -195,10 +195,6 @@ export class RescuePage extends Component {
               />
             </div>
           </div>
-            {linode.status === 'offline' ? null :
-              <div className="alert alert-info">Your Linode must
-                be powered off to reset your root password.
-              </div>}
           <div className="form-group row">
             <div className="col-sm-2"></div>
             <div className="col-sm-10">
@@ -211,6 +207,10 @@ export class RescuePage extends Component {
               </span>
             </div>
           </div>
+          {linode.status === 'offline' ? null :
+            <div className="alert alert-info">Your Linode must
+              be powered off to reset your root password.
+            </div>}
         </div>
       );
     }
