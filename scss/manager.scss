@@ -843,6 +843,9 @@ header .sub-header {
 
 .list-unstyled {
     margin-bottom: 0;
+    .linode-ipv6 {
+        color: $lightest-black;
+    }
 }
 
 p {
