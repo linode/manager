@@ -1,9 +1,11 @@
-.Styleguide-section {
-  padding: 0 20px;
-  margin-bottom: 24px;
-}
+.Styleguide {
+  &-section {
+    padding: 0 20px;
+    margin-bottom: 24px;
+  }
 
-.Styleguide-section > h2,
-.Styleguide-section > h3 {
-  margin-bottom: 10px;
+  &-section > h2,
+  &-section > h3 {
+    margin-bottom: 10px;
+  }
 }
