@@ -24,11 +24,6 @@
   padding: 0 10px 0 20px;
 }
 
-.Styleguide-container > .sidebar {
-  min-height: calc(100% - #{$main-nav-height});
-  top: $main-nav-height;
-}
-
 .Styleguide-container a {
   font-size: 14px;
 }
@@ -50,4 +45,12 @@
 
 .Styleguide-container .container {
   max-width: 1024px;
+}
+
+.Styleguide-content {
+  display: flex;
+}
+
+.Styleguide-content h2 {
+  font-size: 1.2rem;
 }
