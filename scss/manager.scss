@@ -11,10 +11,6 @@
     transition: background .35s, color .2s, border .1s;
 }
 
-:disabled {
-    pointer-events: none;
-}
-
 html, #root > [data-reactroot] {
     height: 100%;
 }
@@ -335,7 +331,7 @@ hr {
         line-height: $input-height;
     }
 
-    &:hover,
+    &:not([disabled]):hover,
     &:active,
     &:focus,
     &:active:focus /* yes, this is a special case */ {
@@ -404,6 +400,8 @@ hr {
         &:active,
         &:focus {
             color: white;
+            background: $blue !important;
+            border: 1px solid $blue !important;
         }
 
         &:not([disabled]):hover,
