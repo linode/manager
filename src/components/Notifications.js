@@ -139,8 +139,10 @@ export function sortNotifications(eventsDict) {
     return [];
   }
 
-  events.sort((e1, e2) =>
-    new Date(e2.updated) - new Date(e1.updated));
+  events.sort((e1, e2) => {
+    const timeDelta = new Date(e2.updated) - new Date(e1.updated);
+    return timeDelta !== 0 ? timeDelta : e2.id - e1.id;
+  });
   return events;
 }
 
