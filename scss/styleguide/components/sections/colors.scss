@@ -1,0 +1,62 @@
+.Color,
+.Color > .Color-block-details {
+  padding: 0;
+}
+
+.Color {
+  border: none;
+  min-width: 225px;
+}
+
+.Color > .Color-block-details {
+  font-size: $small-font-size;
+  min-height: 50px;
+}
+
+.Color-block,
+.Color-block-detail {
+  display: inline-block;
+  height: 100px;
+  width: 100px;
+}
+
+.Color-block {
+  padding: 0;
+}
+
+.Color-block-details > .Color-block-detail {
+  padding: 0;
+  text-align: center;
+}
+
+.Color-block__light-blue {
+  background-color: $light-blue;
+}
+
+.Color-block__blue {
+  background-color: $blue;
+}
+
+.Color-block__dark-blue {
+  background-color: $dark-blue;
+}
+
+.Color-block__green {
+  background-color: $green;
+}
+
+.Color-block__red {
+  background-color: $red;
+}
+
+.Color-block__yellow {
+  background-color: $yellow;
+}
+
+.Color-block__dark-yellow {
+  background-color: $dark-yellow;
+}
+
+.Color-block__darkest-yellow {
+  background-color: $darkest-yellow;
+}
