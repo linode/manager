@@ -133,11 +133,16 @@ export class RescuePage extends Component {
             </label>
             <div className="col-xs-9 input-container">Finnix Media</div>
           </div>
-          <button
-            className="btn btn-default"
-            onClick={() => dispatch(rebootLinode)}
-            disabled
-          >Reboot</button>
+          <div className="form-group row">
+            <div className="col-sm-2"></div>
+            <div className="col-xs-9">
+              <button
+                className="btn btn-default"
+                onClick={() => dispatch(rebootLinode)}
+                disabled
+              >Reboot</button>
+            </div>
+          </div>
         </section>
       </div>
     );
@@ -158,6 +163,10 @@ export class RescuePage extends Component {
 
       body = (
         <div className="root-pw">
+          {linode.status === 'offline' ? null :
+            <div className="alert alert-info">Your Linode must
+              be powered off to reset your root password.
+            </div>}
             {showDisks ?
               <div className="form-group row">
                 <div className="col-sm-2">
@@ -190,16 +199,18 @@ export class RescuePage extends Component {
               />
             </div>
           </div>
-            {linode.status === 'offline' ? null :
-              <div className="alert alert-info">Your Linode must
-                be powered off to reset your root password.
-              </div>}
-          <SubmitButton
-            disabled={!this.state.password || this.state.applying || linode.status !== 'offline'}
-          >Reset Password</SubmitButton>
-          <span style={{ marginLeft: '0.5rem' }}>
-            {this.state.result}
-          </span>
+          <div className="form-group row">
+            <div className="col-sm-2"></div>
+            <div className="col-sm-10">
+              <SubmitButton
+                disabled={!this.state.password || this.state.applying ||
+                          linode.status !== 'offline'}
+              >Reset Password</SubmitButton>
+              <span style={{ marginLeft: '0.5rem' }}>
+                {this.state.result}
+              </span>
+            </div>
+          </div>
         </div>
       );
     }
