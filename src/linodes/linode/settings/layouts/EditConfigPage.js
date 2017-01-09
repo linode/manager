@@ -552,7 +552,13 @@ export class EditConfigPage extends Component {
               {this.renderCheckbox(
                   'Enable network helper',
                   'enableNetworkHelper',
-                  'Automatically configure static networking')}
+                  (<span>
+                    Automatically configure static networking <a
+                      href="https://www.linode.com/docs/platform/network-helper"
+                    >
+                      (more info)
+                    </a>
+                  </span>))}
             </div>
           </fieldset>
           <ErrorSummary errors={errors} />
