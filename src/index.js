@@ -26,10 +26,10 @@ import Weblish from './linodes/linode/layouts/Weblish';
 import NodeBalancers from './nodebalancers';
 import Longview from './longview';
 import DNSManager from './dnsmanager';
+import Styleguide from './styleguide';
 import Support from './support';
 import { hideModal } from '~/actions/modal';
 import { LoadingRouterContext } from '~/router';
-import PreloadIndicator from '~/components/PreloadIndicator.js';
 
 import { actions, thunks, reducer } from '~/api/configs/linodes';
 window.actions = actions; window.thunks = thunks; window.reducer = reducer;
@@ -53,7 +53,6 @@ const init = () => {
   render(
     <Provider store={store}>
       <div>
-        <PreloadIndicator />
         <Router
           history={history}
           onUpdate={logPageView}
@@ -67,6 +66,7 @@ const init = () => {
             path="/linodes/:linodeLabel/weblish"
             component={Weblish}
           />
+          {Styleguide}
           <Route
             onChange={() => store.dispatch(hideModal())}
             path="/"
