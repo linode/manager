@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import { logoOnly } from '~/assets';
+import { LinodeLogoImgSrc } from '~/assets';
 import { Link } from '~/components/Link';
 
 export default function Header(props) {
@@ -43,8 +43,8 @@ export default function Header(props) {
         <Link to="/">
           <span className="MainHeader-logo">
             <img
-              src={logoOnly}
-              alt="linode logo"
+              src={LinodeLogoImgSrc}
+              alt="Linode Logo"
               height={40}
               width={35}
             />

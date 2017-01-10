@@ -1,5 +1,6 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
 import { push } from 'react-router-redux';
 
 import { EVENT_POLLING_DELAY } from '~/constants';
@@ -13,6 +14,7 @@ import Notifications from '~/components/Notifications';
 import Modal from './Modal';
 import Error from '~/components/Error';
 import Feedback from '~/components/Feedback';
+import PreloadIndicator from '~/components/PreloadIndicator.js';
 import { rawFetch as fetch } from '~/fetch';
 import { hideModal } from '~/actions/modal';
 import { showNotifications, hideNotifications } from '~/actions/notifications';
@@ -185,6 +187,8 @@ export class Layout extends Component {
     const githubRoot = 'https://github.com/linode/manager/blob/master/';
     return (
       <div className="layout full-height">
+        <PreloadIndicator />
+        <Modal />
         <Header
           username={username}
           emailHash={emailHash}
@@ -211,7 +215,6 @@ export class Layout extends Component {
           submitFeedback={() => {}}
         />
         <div className="main full-height">
-          <Modal />
           <div className="main-inner">
             {!errors.status ?
               this.props.children :
@@ -227,6 +230,7 @@ export class Layout extends Component {
                 Source
               </a>
             }
+            <Link to="/styleguide">Styleguide</Link>
           </footer>
         </div>
       </div>
