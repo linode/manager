@@ -23,7 +23,7 @@ function createNavigationItems() {
 
   return navigationItems.map((item) => {
     const className = item.href === currentPathname ? 'active' : null;
-    return <li><Link to={item.href} className={className}>{item.text}</Link></li>;
+    return <li key={item.href}><Link to={item.href} className={className}>{item.text}</Link></li>;
   });
 }
 
