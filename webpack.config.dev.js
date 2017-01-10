@@ -50,8 +50,5 @@ module.exports = {
         include: path.join(__dirname, 'node_modules')
       }
     ]
-  }/* ,
-      sassLoader: {
-    *  includePaths: [path.resolve(__dirname, './node_modules/bootstrap/scss/')]
-      }*/
+  }
 };

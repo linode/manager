@@ -46,7 +46,7 @@ _.plugins = [
     compiler: {
       language_in: 'ECMASCRIPT6',
       language_out: 'ECMASCRIPT5',
-      compilation_level: 'ADVANCED_OPTIMIZATIONS'
+      compilation_level: 'ADVANCED'
     },
     jsCompiler: true
   }),
