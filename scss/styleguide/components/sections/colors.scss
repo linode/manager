@@ -1,0 +1,49 @@
+.StyleguideColor {
+  border: none;
+  min-width: 225px;
+
+  & > &-block-details {
+    padding: 0;
+  }
+
+  & > &-block-details {
+    font-size: $small-font-size;
+    min-height: 50px;
+  }
+
+  &-block,
+  &-block-detail {
+    display: inline-block;
+    height: 100px;
+    width: 100px;
+  }
+
+  &-block {
+    padding: 0;
+  }
+
+  &-block-details > &-block-detail {
+    padding: 0;
+    text-align: center;
+  }
+
+  &-block__light-gray {  background-color: $light-gray;  }
+  &-block__gray {  background-color: $gray;  }
+  &-block__dark-gray {  background-color: $dark-gray;  }
+
+  &-block__lightest-black {  background-color: $lightest-black;  }
+  &-block__light-black {  background-color: $light-black;  }
+  &-block__black {  background-color: $black;  }
+
+  &-block__light-blue {  background-color: $light-blue;  }
+  &-block__blue {  background-color: $blue;  }
+  &-block__dark-blue {  background-color: $dark-blue;  }
+
+  &-block__green {  background-color: $green;  }
+
+  &-block__red {  background-color: $red;  }
+
+  &-block__yellow {  background-color: $yellow;  }
+  &-block__dark-yellow {  background-color: $dark-yellow;  }
+  &-block__darkest-yellow {  background-color: $darkest-yellow;  }
+}
