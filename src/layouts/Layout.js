@@ -256,7 +256,7 @@ Layout.propTypes = {
   source: PropTypes.object,
   events: PropTypes.object,
   linodes: PropTypes.object,
-  modal: PropTypes.object,
+  modal: PropTypes.node,
 };
 
 function select(state) {
