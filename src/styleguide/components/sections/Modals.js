@@ -116,6 +116,3 @@ export default class Modals extends Component {
     );
   }
 }
-
-Modals.propTypes = {
-};
