@@ -45,6 +45,9 @@ export class Event {
       case Event.LINODE_BOOT:
         status = 'booting';
         break;
+      case Event.LINODE_CREATE:
+        status = 'creating';
+        break;
       default:
         status = null;
     }
