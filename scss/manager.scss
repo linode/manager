@@ -328,7 +328,7 @@ hr {
         line-height: $input-height;
     }
 
-    &:hover,
+    &:not([disabled]):hover,
     &:active,
     &:focus,
     &:active:focus /* yes, this is a special case */ {
@@ -397,6 +397,8 @@ hr {
         &:active,
         &:focus {
             color: white;
+            background: $blue !important;
+            border: 1px solid $blue !important;
         }
 
         &:not([disabled]):hover,
