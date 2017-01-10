@@ -2,7 +2,6 @@ import React from 'react';
 import sinon from 'sinon';
 import { expect } from 'chai';
 import { shallow } from 'enzyme';
-import { expectRequest } from '@/common';
 
 import { expectObjectDeepEquals } from '@/common';
 import { Layout } from '~/layouts/Layout';
@@ -11,7 +10,6 @@ import { api } from '@/data';
 import { testEvent } from '@/data/events';
 import { actions as linodeActions } from '~/api/configs/linodes';
 import { hideModal } from '~/actions/modal';
-import { sortNotifications } from '~/components/Notifications';
 import { showNotifications } from '~/actions/notifications';
 
 describe('layouts/Layout', () => {
@@ -219,7 +217,7 @@ describe('layouts/Layout', () => {
     });
   });
 
-  it('marks all events as seen when the notifications is opened', async () => {
+  it('marks all events as seen when the notifications is opened', () => {
     const page = shallow(
       <Layout
         dispatch={dispatch}
@@ -234,13 +232,9 @@ describe('layouts/Layout', () => {
 
     page.instance().hideShowNotifications({ stopPropagation() {}, preventDefault() {} });
 
-    const sortedEvents = sortNotifications(api.events);
-    expect(dispatch.callCount).to.equal(3);
+    expect(dispatch.callCount).to.equal(2);
 
-    const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, `/account/events/${sortedEvents[0].id}/seen`);
-
-    expectObjectDeepEquals(dispatch.secondCall.args[0], hideModal());
-    expectObjectDeepEquals(dispatch.thirdCall.args[0], showNotifications());
+    expectObjectDeepEquals(dispatch.firstCall.args[0], hideModal());
+    expectObjectDeepEquals(dispatch.secondCall.args[0], showNotifications());
   });
 });

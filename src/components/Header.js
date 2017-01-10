@@ -3,7 +3,16 @@ import { logoOnly } from '~/assets';
 import { Link } from '~/components/Link';
 
 export default function Header(props) {
-  const { username, emailHash, title, link, showInfobar, hideShowNotifications, events } = props;
+  const {
+    username,
+    emailHash,
+    title,
+    link,
+    showInfobar,
+    hideShowNotifications,
+    events,
+    notificationsOpen,
+  } = props;
   const gravatarLink = `https://gravatar.com/avatar/${emailHash}`;
 
   const infobar = (
@@ -24,8 +33,10 @@ export default function Header(props) {
     </div>
   );
 
-  const unseenNotifications = Object.values(events.events).reduce((unseen, e) =>
-    e.seen ? unseen : unseen + 1, 0);
+  const unseenNotifications = notificationsOpen ? 0 :
+    Object.values(events.events).reduce((unseen, e) =>
+      e.seen ? unseen : unseen + 1, 0);
+
   const main = (
     <div className="MainHeader clearfix">
       <div className="MainHeader-brand">
@@ -82,6 +93,7 @@ Header.propTypes = {
   showInfobar: PropTypes.bool.isRequired,
   hideShowNotifications: PropTypes.func,
   events: PropTypes.object,
+  notificationsOpen: PropTypes.bool.isRequired,
 };
 
 Header.defaultProps = {
