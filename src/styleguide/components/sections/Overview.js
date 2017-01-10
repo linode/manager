@@ -1,13 +1,13 @@
 import React from 'react';
 
-import Section from '~/styleguide/components/Section';
+import { StyleguideSection } from '~/styleguide/components';
 
 export default function Overview() {
   return (
-    <Section name="overview" title="Overview">
+    <StyleguideSection name="overview" title="Overview">
       <p>
         At Linode, we want to create a consistent user experience.
       </p>
-    </Section>
+    </StyleguideSection>
   );
 }

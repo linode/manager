@@ -1,11 +1,11 @@
 import React from 'react';
 
-import Section from '~/styleguide/components/Section';
+import { StyleguideSection } from '~/styleguide/components';
 
 export default function Colors() {
   return (
-    <Section name="colors" title="Colors">
+    <StyleguideSection name="colors" title="Colors">
       <p></p>
-    </Section>
+    </StyleguideSection>
   );
 }

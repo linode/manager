@@ -1,11 +1,11 @@
 import React from 'react';
 
-import Section from '~/styleguide/components/Section';
+import { StyleguideSection } from '~/styleguide/components';
 
 export default function Typography() {
   return (
-    <Section name="typography" title="Typography">
+    <StyleguideSection name="typography" title="Typography">
       <p></p>
-    </Section>
+    </StyleguideSection>
   );
 }

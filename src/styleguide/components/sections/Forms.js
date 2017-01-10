@@ -1,11 +1,11 @@
 import React from 'react';
 
-import Section from '~/styleguide/components/Section';
+import { StyleguideSection } from '~/styleguide/components';
 
 export default function Forms() {
   return (
-    <Section name="forms" title="Forms">
+    <StyleguideSection name="forms" title="Forms">
       <p></p>
-    </Section>
+    </StyleguideSection>
   );
 }

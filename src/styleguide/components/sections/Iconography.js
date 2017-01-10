@@ -1,11 +1,11 @@
 import React from 'react';
 
-import Section from '~/styleguide/components/Section';
+import { StyleguideSection } from '~/styleguide/components';
 
 export default function Iconography() {
   return (
-    <Section name="iconography" title="Iconography">
+    <StyleguideSection name="iconography" title="Iconography">
       <p></p>
-    </Section>
+    </StyleguideSection>
   );
 }

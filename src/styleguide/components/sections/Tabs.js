@@ -1,11 +1,11 @@
 import React from 'react';
 
-import Section from '~/styleguide/components/Section';
+import { StyleguideSection } from '~/styleguide/components';
 
 export default function Tabs() {
   return (
-    <Section name="tabs" title="Tabs">
+    <StyleguideSection name="tabs" title="Tabs">
       <p></p>
-    </Section>
+    </StyleguideSection>
   );
 }

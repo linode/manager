@@ -1,1 +1,1 @@
-export { default as Section } from '~/styleguide/components/Section';
+export { default as StyleguideSection } from '~/styleguide/components/StyleguideSection';

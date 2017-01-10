@@ -1,11 +1,11 @@
 import React from 'react';
 
-import Section from '~/styleguide/components/Section';
+import { StyleguideSection } from '~/styleguide/components';
 
 export default function Navigation() {
   return (
-    <Section name="navigation" title="Navigation">
+    <StyleguideSection name="navigation" title="Navigation">
       <p></p>
-    </Section>
+    </StyleguideSection>
   );
 }
