@@ -51,7 +51,7 @@ describe('linodes/linode/networking/layouts/SummaryPage', () => {
 
       it('renders address ip and url', async () => {
         const ipv4 = testLinode.ipv4;
-        const inet = `${ipv4}/24 (li1-1.members.linode.com)`;
+        const inet = `${ipv4} (li1-1.members.linode.com)`;
         const page = shallow(
           <SummaryPage
             linodes={linodes}
@@ -75,7 +75,7 @@ describe('linodes/linode/networking/layouts/SummaryPage', () => {
 
         const content = page.find('section').at(0);
         const ipv4Sect = content.find('.col-sm-6').at(0);
-        const gatewayCol = ipv4Sect.find('.col-sm-9').at(1);
+        const gatewayCol = ipv4Sect.find('.col-sm-9').at(2);
         expect(gatewayCol.text()).to.equal(gateway);
       });
 
@@ -88,7 +88,7 @@ describe('linodes/linode/networking/layouts/SummaryPage', () => {
 
         const content = page.find('section').at(0);
         const ipv4Sect = content.find('.col-sm-6').at(0);
-        const nsCol = ipv4Sect.find('.col-sm-9').at(2);
+        const nsCol = ipv4Sect.find('.col-sm-9').at(3);
         expect(nsCol.text()).to.equal(ipv4ns[testLinode.datacenter.id].join(''));
       });
     });
