@@ -105,31 +105,6 @@ export default function Typography() {
                   <td>0.975rem; ~15px</td>
                   <td></td>
                 </tr>
-                <tr>
-                  <td>
-                    <pre>
-                      {`
-  Preformatted Text
-                      `}
-                    </pre>
-                  </td>
-                  <td></td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td>
-                    <pre>
-                      <code>
-                        {`
-  // Code Blocks
-  (function() {})();
-                        `}
-                      </code>
-                    </pre>
-                  </td>
-                  <td></td>
-                  <td></td>
-                </tr>
               </tbody>
             </table>
           </div>
