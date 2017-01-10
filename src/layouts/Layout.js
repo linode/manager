@@ -11,7 +11,7 @@ import { eventRead, eventSeen } from '~/api/events';
 import Header from '~/components/Header';
 import Sidebar from '~/components/Sidebar';
 import Notifications from '~/components/Notifications';
-import Modal from './Modal';
+import ModalShell from './ModalShell';
 import Error from '~/components/Error';
 import Feedback from '~/components/Feedback';
 import PreloadIndicator from '~/components/PreloadIndicator.js';
@@ -187,7 +187,13 @@ export class Layout extends Component {
     return (
       <div className="layout full-height">
         <PreloadIndicator />
-        <Modal />
+        <ModalShell
+          open={this.props.modal.open}
+          title={this.props.modal.title}
+          close={() => dispatch(hideModal())}
+        >
+          {this.props.modal.body}
+        </ModalShell>
         <Header
           username={username}
           emailHash={emailHash}
@@ -250,6 +256,7 @@ Layout.propTypes = {
   source: PropTypes.object,
   events: PropTypes.object,
   linodes: PropTypes.object,
+  modal: PropTypes.object,
 };
 
 function select(state) {
@@ -264,6 +271,7 @@ function select(state) {
     source: state.source,
     events: state.api.events,
     linodes: state.api.linodes,
+    modal: state.modal,
   };
 }
 
