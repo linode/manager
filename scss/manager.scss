@@ -314,10 +314,6 @@ hr {
     margin: $main-padding-tb/2 0;
 }
 
-.text-muted {
-    font-size: $font-xs-small;
-}
-
 .btn {
     text-decoration: none;
     border-radius: 2px;
@@ -782,11 +778,6 @@ footer {
 
     .ips {
         line-height: initial;
-    }
-
-    .linode-ipv6 {
-        font-size: $font-xs-normal;
-        color: $lightest-black;
     }
 
     .display-group {
