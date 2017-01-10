@@ -2,19 +2,24 @@
 $light-blue: #DEEFF5;
 $blue: #4A90E2;
 $dark-blue: darken($blue, 10%);
+
 $green: #38D377;
 $red: #F24C2B;
+
 $yellow: #FFFCF0;
 $dark-yellow: darken($yellow, 20);
 $darkest-yellow: darken($yellow, 40);
+
+$light-gray: #FBFBFB;
+$gray: #F3F3F3;
+$dark-gray: #DDDDDD;
+
+$lightest-black: #ACACAC;
+$light-black: #777;
+$black: #4b4b4b;
 $darkest-black: #111;
 $dark-black: #333333;
-$black: #4b4b4b;
-$light-black: #777;
-$lightest-black: #ACACAC;
-$dark-gray: #DDDDDD;
-$gray: #F3F3F3;
-$light-gray: #FBFBFB;
+
 $white: #FEFEFE;
 $transparent: rgba(0, 0, 0, 0.5);
 /* END color definitions */
