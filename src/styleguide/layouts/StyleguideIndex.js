@@ -31,9 +31,9 @@ export function StyleguideIndex(props) {
   return (
     <div className="Styleguide-container">
       <div className="Styleguide-header">
-        <Link to="/" className="Styleguide-back-link">
+        <a href="/" className="Styleguide-back-link">
           <i className="fa fa-angle-left"></i> Back to Manager
-        </Link>
+        </a>
         <div className="container">
           <h1>
             <img
