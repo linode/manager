@@ -24,6 +24,9 @@ body {
     background: $light-gray;
     color: $black;
     font-size: $font-normal;
+}
+
+.layout {
     // TODO: min-width considerations:
     // * linode cards need > 700px;
     // * linode rows need > 1150px;
@@ -92,11 +95,11 @@ label {
     position: fixed;
     top: $nav-height;
     left: 0;
+    bottom: 0;
     width: $sidebar-width;
     background: $white;
     border-right: $border;
     overflow-y: scroll;
-    min-height: $main-height;
     padding-bottom: 15px;
 
     & section:first-of-type {
@@ -166,7 +169,8 @@ label {
     display: flex;
     flex-direction: column;
     margin-left: $sidebar-width;
-    min-height: $main-height;
+    min-height: 100%;
+    padding-top: $nav-height;
     width: calc(100% - #{$sidebar-width});
 }
 

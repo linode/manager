@@ -191,6 +191,7 @@ export class Layout extends Component {
     return (
       <div className="layout full-height">
         <PreloadIndicator />
+        <Modal />
         <Header
           username={username}
           emailHash={emailHash}
@@ -215,7 +216,6 @@ export class Layout extends Component {
           submitFeedback={() => {}}
         />
         <div className="main full-height">
-          <Modal />
           <div className="main-inner">
             {!errors.status ?
               this.props.children :
