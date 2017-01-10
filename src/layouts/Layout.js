@@ -11,7 +11,7 @@ import { eventRead, eventSeen } from '~/api/events';
 import Header from '~/components/Header';
 import Sidebar from '~/components/Sidebar';
 import Notifications from '~/components/Notifications';
-import ModalShell from './ModalShell';
+import { ModalShell } from '~/components/modals';
 import Error from '~/components/Error';
 import Feedback from '~/components/Feedback';
 import PreloadIndicator from '~/components/PreloadIndicator.js';

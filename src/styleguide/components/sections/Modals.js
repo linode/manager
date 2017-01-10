@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import { StyleguideSection } from '~/styleguide/components';
-import ModalShell from '~/layouts/ModalShell';
+import { ModalShell } from '~/components/modals';
 import CancelButton from '~/components/form/CancelButton';
 
 export default class Modals extends Component {

@@ -4,7 +4,7 @@ import { getLinode } from './IndexPage';
 import { showModal, hideModal } from '~/actions/modal';
 import { linodes } from '~/api';
 import { resetPassword, rebootLinode } from '~/api/linodes';
-import { ConfirmModal } from '~/components/ConfirmModal';
+import { ConfirmModalBody } from '~/components/modals';
 import { Form, SubmitButton } from '~/components/form';
 import PasswordInput from '~/components/PasswordInput';
 import HelpButton from '~/components/HelpButton';
@@ -221,7 +221,7 @@ export class RescuePage extends Component {
           <Form
             className="ResetRootPassword-form"
             onSubmit={() => {
-              dispatch(showModal('Reset root password', <ConfirmModal
+              dispatch(showModal('Reset root password', <ConfirmModalBody
                 buttonText="Reset Password"
                 children="Are you sure you want to reset the root password for this Linode?
                 This cannot be undone."
