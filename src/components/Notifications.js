@@ -69,47 +69,56 @@ export function Notification(props) {
   const event = new Event(props);
 
   function handleNotificationClick() {
-    if (props.read) {
-      let page = `/linodes/${props.linode_id}`;
+    return props.readNotification(props.id);
+  }
 
-      switch (event.getType()) {
-        case Event.LINODE_DELETE:
-          // No page to change to.
-          return;
-
-        case Event.LINODE_REBOOT:
-        case Event.LINODE_BOOT:
-        case Event.LINODE_POWER_OFF:
-        case Event.LINODE_CREATE:
-          break; // Default is good
-
-        case Event.LINODE_DISK_DELETE:
-        case Event.LINODE_DISK_CREATE:
-        case Event.LINODE_DISK_RESIZE:
-          page = `${page}/settings/advanced`;
-          break;
-
-        case Event.LINODE_BACKUPS_ENABLE:
-        case Event.LINODE_BACKUPS_DISABLE:
-          page = `${page}/backups`;
-          break;
-
-        default:
-          break;
-      }
-
-      return props.gotoPage(page);
+  function handleNotificationView(e) {
+    if (!props.read) {
+      props.readNotification(props.id);
     }
 
-    return props.readNotification(props.id);
+    let page = `/linodes/${getLinodeName(event, props.linodes)}`;
+
+    switch (event.getType()) {
+      case Event.LINODE_DELETE:
+        // No page to change to.
+        return;
+
+      case Event.LINODE_REBOOT:
+      case Event.LINODE_BOOT:
+      case Event.LINODE_POWER_OFF:
+      case Event.LINODE_CREATE:
+        break; // Default is good
+
+      case Event.LINODE_DISK_DELETE:
+      case Event.LINODE_DISK_CREATE:
+      case Event.LINODE_DISK_RESIZE:
+        page = `${page}/settings/advanced`;
+        break;
+
+      case Event.LINODE_BACKUPS_ENABLE:
+      case Event.LINODE_BACKUPS_DISABLE:
+        page = `${page}/backups`;
+        break;
+
+      default:
+        break;
+    }
+
+    props.gotoPage(page);
+    return props.hideShowNotifications(e);
   }
 
   return (
     <div
-      className={`Notification ${props.read ? '' : 'Notification--unread'}`}
+      className={`clearfix Notification ${props.read ? '' : 'Notification--unread'}`}
       onClick={handleNotificationClick}
     >
       <header className="Notification-header">
+        <button
+          className="btn btn-cancel Notification-view"
+          onClick={handleNotificationView}
+        >View</button>
         <div className="Notification-text">{notificationMessage(event, props.linodes)}</div>
         <div className="Notification-time">
           {moment.utc(props.updated, moment.ISO_8601).fromNow()}
@@ -131,6 +140,7 @@ Notification.propTypes = {
   nodebalancer_id: PropTypes.number,
   stackscript_id: PropTypes.number,
   linodes: PropTypes.object.isRequired,
+  hideShowNotifications: PropTypes.func.isRequired,
 };
 
 export function sortNotifications(eventsDict) {
@@ -180,6 +190,7 @@ export default class Notifications extends Component {
                 readNotification={readNotification}
                 gotoPage={gotoPage}
                 linodes={linodes}
+                hideShowNotifications={hideShowNotifications}
                 {...e}
               />)}
             <div className="Notifications-end text-xs-center">

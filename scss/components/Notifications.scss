@@ -34,6 +34,11 @@
         padding-right: 5px;
         white-space: nowrap;
     }
+
+    &-view {
+        float: right;
+        margin-top: 5px;
+    }
 }
 
 .Notifications {
@@ -64,11 +69,11 @@
         background: $white;
         border-bottom: $border;
         padding: 10px 15px;
-        
+
         a {
             line-height: $input-height;
         }
-        
+
         .fa {
             padding-left: 5px;
             color: $blue;

@@ -13,13 +13,15 @@ describe('components/Notification', () => {
   function makeNotification(event = api.events.events[386],
                             linodes = api.linodes,
                             gotoPage = sandbox.spy(),
-                            readNotification = sandbox.spy()) {
+                            readNotification = sandbox.spy(),
+                            hideShowNotifications = sandbox.spy()) {
     return (
       <Notification
         {...event}
         linodes={linodes}
         readNotification={readNotification}
         gotoPage={gotoPage}
+        hideShowNotifications={hideShowNotifications}
       />
     );
   }
@@ -47,13 +49,21 @@ describe('components/Notification', () => {
     expect(readNotification.args[0][0]).to.equal(385);
   });
 
-  it('calls gotoPage on read notification onclick', () => {
+  it('marks unread, redirects, and closes pane on view click', () => {
+    const readNotification = sandbox.spy();
     const gotoPage = sandbox.spy();
-    const notification = shallow(makeNotification(
-      undefined, undefined, gotoPage));
-    notification.find('.Notification').simulate('click');
+    const hideShowNotifications = sandbox.spy();
+    const notification = shallow(makeNotification(api.events.events[385],
+      undefined, gotoPage, readNotification, hideShowNotifications));
+    notification.find('.Notification-view').simulate('click');
+
+    expect(readNotification.calledOnce).to.equal(true);
+    expect(readNotification.args[0][0]).to.equal(385);
+
     expect(gotoPage.calledOnce).to.equal(true);
-    expect(gotoPage.args[0][0]).to.equal(`/linodes/${api.events.events[386].linode_id}`);
+    expect(gotoPage.args[0][0]).to.equal('/linodes/test-linode-3');
+
+    expect(hideShowNotifications.calledOnce).to.equal(true);
   });
 
   function testNotificationText(eventType, expectedText) {
