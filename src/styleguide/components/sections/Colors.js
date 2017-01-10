@@ -4,12 +4,7 @@ import { StyleguideSection } from '~/styleguide/components';
 
 export default function Colors() {
   return (
-<<<<<<< HEAD
-    <StyleguideSection name="colors" title="Colors">
-      <p></p>
-    </StyleguideSection>
-=======
-    <Section name="colors" title="Color Pallete">
+    <StyleguideSection name="colors" title="Color Pallete">
       <div className="col-sm-12">
         <div className="row">
           <div className="col-sm-6">
@@ -143,7 +138,6 @@ export default function Colors() {
           </div>
         </div>
       </div>
-    </Section>
->>>>>>> colors wip
+    </StyleguideSection>
   );
 }
