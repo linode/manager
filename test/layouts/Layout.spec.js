@@ -156,15 +156,13 @@ describe('layouts/Layout', () => {
 
     dispatch.firstCall.args[0].resource.__updatedAt = undefined;
     expectObjectDeepEquals(dispatch.firstCall.args[0], linodeActions.one({
-      ...api.linodes.linodes['1237'],
       __progress: 100,
-    }, [1237]));
+    }, 1237));
 
     dispatch.secondCall.args[0].resource.__updatedAt = undefined;
     expectObjectDeepEquals(dispatch.secondCall.args[0], linodeActions.one({
-      ...api.linodes.linodes['1237'],
       status: 'running',
-    }, [1237]));
+    }, 1237));
   });
 
   it('fetches only one page when some results are read', async () => {

@@ -25,7 +25,7 @@ export default class Plan extends Component {
     return (
       <div
         className={`plan ${planClass}`}
-        key={plan.label}
+        key={plan.id}
         onClick={() => onServiceSelected(plan.id)}
       >
         <header>

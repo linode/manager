@@ -6,8 +6,9 @@ import Source from '../components/Source';
 import Plan from '../components/Plan';
 import Datacenter from '../components/Datacenter';
 import Details from '../components/Details';
-import { parallel } from '~/api/util';
-import { linodes, distributions, datacenters, types } from '~/api';
+import { linodes } from '~/api';
+import { actions as linodeActions } from '~/api/configs/linodes';
+import { randomInitialProgress } from '~/api/linodes';
 import { setError } from '~/actions/errors';
 import { setSource } from '~/actions/source';
 
@@ -15,12 +16,7 @@ export class IndexPage extends Component {
   static async preload(store) {
     const { dispatch } = store;
     try {
-      await dispatch(parallel(
-        distributions.all(),
-        datacenters.all(),
-        types.all(),
-        linodes.all(),
-      ));
+      await dispatch(linodes.all());
     } catch (response) {
       dispatch(setError(response));
     }
@@ -69,7 +65,8 @@ export class IndexPage extends Component {
     const { dispatch } = this.props;
     try {
       this.setState({ loading: true });
-      await this.createLinode({ group, label, password, backups });
+      const { id } = await this.createLinode({ group, label, password, backups });
+      dispatch(linodeActions.one({ __progress: randomInitialProgress() }, id));
 
       this.setState({ loading: false });
       dispatch(push(`/linodes/${label}`));
