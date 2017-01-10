@@ -109,7 +109,6 @@ export default function Typography() {
             </table>
           </div>
         </div>
-
       </div>
     </StyleguideSection>
   );
