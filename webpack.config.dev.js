@@ -19,7 +19,7 @@ module.exports = {
     publicPath: '/static/'
   },
   plugins: [
-    new webpack.optimize.OccurenceOrderPlugin(),
+    new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
     new webpack.DefinePlugin({
@@ -34,24 +34,24 @@ module.exports = {
     })
   ],
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.jsx?/,
-        loaders: ['babel'],
-        include: path.join(__dirname, 'src')
+        loaders: ['babel-loader'],
+        include: path.join(__dirname, 'src'),
       },
       {
         test: /\.scss$/,
-        loaders: ['style', 'css', 'sass']
+        loaders: ['style-loader', 'css-loader', 'sass-loader']
       },
       {
         test: /\.svg$/,
-        loaders: ['file'],
+        loaders: ['file-loader'],
         include: path.join(__dirname, 'node_modules')
       }
     ]
-  },
-  sassLoader: {
-    includePaths: [path.resolve(__dirname, './node_modules/bootstrap/scss/')]
-  }
+  }/* ,
+      sassLoader: {
+    *  includePaths: [path.resolve(__dirname, './node_modules/bootstrap/scss/')]
+      }*/
 };

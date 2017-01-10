@@ -1,4 +1,4 @@
-import * as isomorphicFetch from 'isomorphic-fetch';
+import isomorphicFetch from 'isomorphic-fetch';
 
 import { store } from '~/store';
 import { checkLogin } from '~/session';
@@ -10,7 +10,7 @@ import { API_ROOT } from './constants';
  * https://github.com/sinonjs/sinon/issues/664
  */
 export function rawFetch(...args) {
-  return isomorphicFetch['default'](...args);
+  return isomorphicFetch(...args);
 }
 
 function expireSession() {
@@ -24,7 +24,7 @@ export function fetch(token, _path, _options) {
    * Get updated reference in case rawFetch is a stub (during testing).
    * See comment on rawFetch.
    */
-  const fetchRef = module.exports.rawFetch;
+  const fetchRef = module.exports.rawFetch || rawFetch;
   const options = {
     mode: 'cors',
     ..._options,

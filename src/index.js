@@ -31,8 +31,8 @@ import { hideModal } from '~/actions/modal';
 import { LoadingRouterContext } from '~/router';
 import PreloadIndicator from '~/components/PreloadIndicator.js';
 
-import { actions, thunks, reducer } from '~/api/configs/linodes';
-window.actions = actions; window.thunks = thunks; window.reducer = reducer;
+import { actions, reducer } from '~/api/configs/linodes';
+window.actions = actions; window.reducer = reducer;
 
 ReactGA.initialize(GA_ID); // eslint-disable-line no-undef
 function logPageView() {

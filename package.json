@@ -73,7 +73,7 @@
     "redux-devtools-log-monitor": "^1.0.11",
     "rimraf": "^2.4.3",
     "sinon": "^2.0.0-pre.2",
-    "webpack": "^1.12.9",
+    "webpack": "^2.2.0-rc.3",
     "webpack-dev-middleware": "^1.4.0",
     "webpack-hot-middleware": "^2.6.0",
     "xunit-file": "^0.0.9"
@@ -99,6 +99,8 @@
     "md5": "^2.1.0",
     "moment": "^2.13.0",
     "node-sass": "^3.4.2",
+    "preact": "^7.1.0",
+    "preact-compat": "^3.9.4",
     "rd3": "^0.6.3",
     "react": "^15.1.0",
     "react-addons-test-utils": "^15.1.0",
@@ -110,8 +112,12 @@
     "react-tabs": "^0.7.0",
     "redux": "^3.0.5",
     "redux-thunk": "^2.1.0",
-    "sass-loader": "^3.1.2",
+    "rollup-loader": "^0.1.1",
+    "rollup-plugin-babel": "^2.7.1",
+    "sass-loader": "^4.1.1",
     "style-loader": "^0.13.0",
+    "webpack-bundle-size-analyzer": "^2.4.0",
+    "webpack-closure-compiler": "^2.1.2",
     "xterm": "^2.0.1",
     "zxcvbn": "^4.3.0"
   }
