@@ -19,15 +19,18 @@ function getLinodeName(event, linodes) {
   }
 }
 
-function linodeNotificationMessage(event, linodes, objectType, tempText, doneText) {
+function linodeNotificationMessage(event, linodes, objectType, tempText,
+    doneText, view) {
   const linodeName = getLinodeName(event, linodes);
   const eventFinished = event.getProgress() === 100;
 
   return (
     <span>
-      <span className="Notification-subject">
-        {linodeName}
-      </span>
+      <Link
+        to="#"
+        onClick={view}
+        className="Notification-subject"
+      >{linodeName}</Link>
       {objectType}&nbsp;
       {eventFinished ? doneText : tempText}&nbsp;
       {event._event.status === 'failed' ? 'failed' : ''}
@@ -35,30 +38,31 @@ function linodeNotificationMessage(event, linodes, objectType, tempText, doneTex
   );
 }
 
-function notificationMessage(event, linodes) {
+function notificationMessage(event, linodes, view) {
   switch (event.getType()) {
     case Event.LINODE_REBOOT:
-      return linodeNotificationMessage(event, linodes, 'Linode', 'rebooting', 'rebooted');
+      return linodeNotificationMessage(event, linodes, 'Linode', 'rebooting', 'rebooted', view);
     case Event.LINODE_BOOT:
-      return linodeNotificationMessage(event, linodes, 'Linode', 'booting', 'booted');
+      return linodeNotificationMessage(event, linodes, 'Linode', 'booting', 'booted', view);
     case Event.LINODE_POWER_OFF:
-      return linodeNotificationMessage(event, linodes, 'Linode', 'being shut down', 'shut down');
+      return linodeNotificationMessage(event, linodes, 'Linode', 'being shut down', 'shut down',
+        view);
     case Event.LINODE_CREATE:
-      return linodeNotificationMessage(event, linodes, 'Linode', 'provisioning', 'created');
+      return linodeNotificationMessage(event, linodes, 'Linode', 'provisioning', 'created', view);
     case Event.LINODE_DELETE:
-      return linodeNotificationMessage(event, linodes, 'Linode', 'being deleted', 'deleted');
+      return linodeNotificationMessage(event, linodes, 'Linode', 'being deleted', 'deleted', view);
 
     case Event.LINODE_BACKUPS_ENABLE:
-      return linodeNotificationMessage(event, linodes, 'Backups', 'enabled', 'enabled');
+      return linodeNotificationMessage(event, linodes, 'Backups', 'enabled', 'enabled', view);
     case Event.LINODE_BACKUPS_DISABLE:
-      return linodeNotificationMessage(event, linodes, 'Backups', 'disabled', 'disabled');
+      return linodeNotificationMessage(event, linodes, 'Backups', 'disabled', 'disabled', view);
 
     case Event.LINODE_DISK_DELETE:
-      return linodeNotificationMessage(event, linodes, 'Disk', 'being deleted', 'deleted');
+      return linodeNotificationMessage(event, linodes, 'Disk', 'being deleted', 'deleted', view);
     case Event.LINODE_DISK_CREATE:
-      return linodeNotificationMessage(event, linodes, 'Disk', 'being created', 'created');
+      return linodeNotificationMessage(event, linodes, 'Disk', 'being created', 'created', view);
     case Event.LINODE_DISK_RESIZE:
-      return linodeNotificationMessage(event, linodes, 'Disk', 'being resized', 'resized');
+      return linodeNotificationMessage(event, linodes, 'Disk', 'being resized', 'resized', view);
 
     default:
       return '';
@@ -111,15 +115,13 @@ export function Notification(props) {
 
   return (
     <div
-      className={`clearfix Notification ${props.read ? '' : 'Notification--unread'}`}
+      className={`Notification ${props.read ? '' : 'Notification--unread'}`}
       onClick={handleNotificationClick}
     >
       <header className="Notification-header">
-        <button
-          className="btn btn-cancel Notification-view"
-          onClick={handleNotificationView}
-        >View</button>
-        <div className="Notification-text">{notificationMessage(event, props.linodes)}</div>
+        <div className="Notification-text">
+          {notificationMessage(event, props.linodes, handleNotificationView)}
+        </div>
         <div className="Notification-time">
           {moment.utc(props.updated, moment.ISO_8601).fromNow()}
         </div>

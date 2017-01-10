@@ -30,14 +30,12 @@
     }
 
     &-subject {
-        font-size: $font-normal;
-        padding-right: 5px;
-        white-space: nowrap;
-    }
+        display: block;
+        color: black;
 
-    &-view {
-        float: right;
-        margin-top: 5px;
+        &:hover {
+            color: black;
+        }
     }
 }
 

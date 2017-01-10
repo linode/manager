@@ -55,7 +55,7 @@ describe('components/Notification', () => {
     const hideShowNotifications = sandbox.spy();
     const notification = shallow(makeNotification(api.events.events[385],
       undefined, gotoPage, readNotification, hideShowNotifications));
-    notification.find('.Notification-view').simulate('click');
+    notification.find('.Notification-subject').simulate('click');
 
     expect(readNotification.calledOnce).to.equal(true);
     expect(readNotification.args[0][0]).to.equal(385);
