@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-import zxcvbn from 'zxcvbn';
 
 export default class PasswordInput extends Component {
   constructor() {
@@ -7,6 +6,7 @@ export default class PasswordInput extends Component {
     this.onPasswordChange = this.onPasswordChange.bind(this);
     this.state = {
       password: '',
+      // eslint-disable-next-line no-undef
       strength: zxcvbn(''),
       type: 'password',
     };
@@ -15,6 +15,7 @@ export default class PasswordInput extends Component {
   onPasswordChange(e) {
     const { onChange } = this.props;
     const password = e.target.value;
+    // eslint-disable-next-line no-undef
     const strength = zxcvbn(password);
     this.setState({ password, strength });
     onChange(password);
