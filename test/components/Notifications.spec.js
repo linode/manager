@@ -45,7 +45,7 @@ describe('components/Notification', () => {
     const notification = shallow(makeNotification(
       api.events.events[385], undefined, undefined, readNotification));
     notification.find('.Notification').simulate('click');
-    expect(readNotification.calledOnce).to.equal(true);
+    expect(readNotification.callCount).to.equal(1);
     expect(readNotification.args[0][0]).to.equal(385);
   });
 
@@ -57,13 +57,13 @@ describe('components/Notification', () => {
       undefined, gotoPage, readNotification, hideShowNotifications));
     notification.find('.Notification-subject').simulate('click');
 
-    expect(readNotification.calledOnce).to.equal(true);
+    expect(readNotification.callCount).to.equal(1);
     expect(readNotification.args[0][0]).to.equal(385);
 
-    expect(gotoPage.calledOnce).to.equal(true);
+    expect(gotoPage.callCount).to.equal(1);
     expect(gotoPage.args[0][0]).to.equal('/linodes/test-linode-3');
 
-    expect(hideShowNotifications.calledOnce).to.equal(true);
+    expect(hideShowNotifications.callCount).to.equal(1);
   });
 
   function testNotificationText(eventType, expectedText) {

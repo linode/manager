@@ -31,10 +31,10 @@
 
     &-subject {
         display: block;
-        color: black;
+        color: $black;
 
         &:hover {
-            color: black;
+            color: $black;
         }
     }
 }
