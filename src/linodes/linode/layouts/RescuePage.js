@@ -1,5 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+
+import { ErrorSummary, reduceErrors } from '~/errors';
 import { getLinode } from './IndexPage';
 import { showModal, hideModal } from '~/actions/modal';
 import { linodes } from '~/api';
@@ -46,6 +48,7 @@ export class RescuePage extends Component {
       disk: null,
       applying: false,
       result: null,
+      errors: { }
     };
   }
 
@@ -76,10 +79,8 @@ export class RescuePage extends Component {
         result: <span className="text-success">Success!</span>,
       });
     } catch (response) {
-      this.setState({
-        applying: false,
-        result: <span className="text-danger">An error occured.</span>,
-      });
+      const errors = reduceErrors(response);
+      this.setState({ errors });
     }
   }
 
@@ -211,6 +212,7 @@ export class RescuePage extends Component {
               </span>
             </div>
           </div>
+          <ErrorSummary errors={this.state.errors} />
         </div>
       );
     }
