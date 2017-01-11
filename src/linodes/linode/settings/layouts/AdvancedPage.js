@@ -31,6 +31,7 @@ export class AdvancedPage extends Component {
 
 AdvancedPage.propTypes = {
   linodes: PropTypes.object.isRequired,
+  distributions: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   params: PropTypes.shape({
     linodeLabel: PropTypes.string,
@@ -38,7 +39,10 @@ AdvancedPage.propTypes = {
 };
 
 function select(state) {
-  return { linodes: state.api.linodes };
+  return {
+    linodes: state.api.linodes,
+    distributions: state.api.distributions,
+  };
 }
 
 export default connect(select)(AdvancedPage);

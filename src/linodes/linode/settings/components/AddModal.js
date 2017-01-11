@@ -89,8 +89,6 @@ export class AddModal extends Component {
       password,
       errors,
     } = this.state;
-    const ready = !(!loading && label &&
-                    (distro ? password : filesystem));
 
     const minimumStorageSize = () =>
       distributions.distributions[distro].minimum_storage_size;
@@ -99,82 +97,86 @@ export class AddModal extends Component {
       <Form
         onSubmit={() => this.createDisk()}
       >
-        <div className={`form-group ${errors.label.length ? 'has-danger' : ''}`}>
-          <label htmlFor="label">Label</label>
-          <input
-            className="form-control"
-            id="label"
-            placeholder="Label"
-            value={label}
-            disabled={loading}
-            onChange={e => this.setState({ label: e.target.value })}
-          />
-          {errors.label.length ?
-            <div className="form-control-feedback">
-              {errors.label.map(error => <div key={error}>{error}</div>)}
-            </div> : null}
-        </div>
-        <div className="form-group">
-          <label>Distribution (optional)</label>
-          <select
-            className="form-control"
-            disabled={loading}
-            onChange={e => this.setState({ distro: e.target.value })}
-            value={distro}
-          >{options}</select>
-        </div>
-        {distro ?
-          <div className="form-group">
-            <label>Root password</label>
-            <PasswordInput
-              onChange={p => this.setState({ password: p })}
-              passwordType="offline_fast_hashing_1e10_per_second"
+        <FormGroup errors={errors} field="label" className="row">
+          <div className="col-sm-4 label-col">
+            <label htmlFor="label">Label:</label>
+          </div>
+          <div className="col-sm-8 content-col">
+            <Input
+              placeholder="Label"
+              value={label}
+              onChange={e => this.setState({ label: e.target.value })}
             />
           </div>
-            :
-          <div className="form-group">
-            <label>Filesystem</label>
+          <FormGroupError errors={errors} field="label" />
+        </FormGroup>
+        <div className="form-group row">
+          <div className="col-sm-4 label-col">
+            <label>Distribution:</label>
+          </div>
+          <div className="col-sm-8 content-col">
             <select
               className="form-control"
-              onChange={e => this.setState({ filesystem: e.target.value })}
-              disabled={loading}
-              value={filesystem}
-            >
-              <option value="ext3">ext3</option>
-              <option value="ext4">ext4</option>
-              <option value="swap">swap</option>
-              <option value="raw">raw</option>
-            </select>
+              onChange={e => this.setState({ distro: e.target.value })}
+              value={distro}
+            >{options}</select>
           </div>
-        }
-        <div className={`form-group ${errors.size.length ? 'has-danger' : ''}`}>
-          <label>Size (MB)</label>
-          <input
-            type="number"
-            min={distro ? minimumStorageSize() : 8}
-            max={free}
-            className="form-control"
-            value={size}
-            onChange={e => this.setState({ size: parseInt(e.target.value, 10) })}
-          />
-          {errors.size.length ?
-            <div className="form-control-feedback">
-              {errors.size.map(error => <div key={error}>{error}</div>)}
-            </div> : null}
         </div>
-        {errors._.length ?
-          <div className="alert alert-danger">
-            {errors._.map(error => <div key={error}>{error}</div>)}
-          </div> : null}
+        {distro ?
+         <FormGroup errors={errors} field="root_pass" className="row">
+           <div className="col-sm-4 label-col">
+             <label>Root password:</label>
+           </div>
+           <div className="col-sm-8 content-col">
+             <PasswordInput
+               onChange={p => this.setState({ password: p })}
+               passwordType="offline_fast_hashing_1e10_per_second"
+             />
+           </div>
+         </FormGroup>
+            :
+         <div className="form-group row">
+           <div className="col-sm-4 label-col">
+             <label>Filesystem:</label>
+           </div>
+           <div className="col-sm-8 content-col">
+             <select
+               className="form-control"
+               onChange={e => this.setState({ filesystem: e.target.value })}
+               value={filesystem}
+             >
+               <option value="ext3">ext3</option>
+               <option value="ext4">ext4</option>
+               <option value="swap">swap</option>
+               <option value="raw">raw</option>
+             </select>
+           </div>
+         </div>}
+        <FormGroup errors={errors} field="size" className="row">
+          <div className="col-sm-4 label-col">
+            <label>Size (MB):</label>
+          </div>
+          <div className="col-sm-8 content-col">
+            <Input
+              type="number"
+              min={distro ? minimumStorageSize() : 8}
+              max={free}
+              value={size}
+              onChange={e => this.setState({ size: parseInt(e.target.value, 10) })}
+            />
+          </div>
+          <FormGroupError errors={errors} field="size" />
+        </FormGroup>
         <div className="modal-footer">
           <CancelButton
             disabled={loading}
             onClick={() => dispatch(hideModal())}
           />
           <SubmitButton
-            disabled={ready}
+            disabled={loading}
           >Add Disk</SubmitButton>
         </div>
+        <ErrorSummary errors={errors} />
       </Form>
     );
   }

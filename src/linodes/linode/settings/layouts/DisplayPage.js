@@ -4,9 +4,10 @@ import { push } from 'react-router-redux';
 
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import { linodes } from '~/api';
-import { FormGroup } from '~/components/form';
+import { FormGroup, FormGroupError } from '~/components/form';
 import { ErrorSummary, reduceErrors } from '~/errors';
 import { setSource } from '~/actions/source';
+import Input from '~/components/Input';
 
 export class DisplayPage extends Component {
   constructor(props) {
@@ -14,7 +15,7 @@ export class DisplayPage extends Component {
     this.getLinode = getLinode.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     const { group, label } = this.getLinode();
-    this.state = { group, label, errors: {} };
+    this.state = { group, label, errors: {}, loading: false };
   }
 
   async componentDidMount() {
@@ -28,6 +29,9 @@ export class DisplayPage extends Component {
     const { id } = this.getLinode();
     const { group, label } = this.state;
     const labelChanged = this.getLinode().label !== label;
+
+    this.setState({ loading: true, errors: {} });
+
     try {
       await dispatch(linodes.put({ group, label }, id));
       if (labelChanged) {
@@ -37,6 +41,8 @@ export class DisplayPage extends Component {
       const errors = await reduceErrors(response);
       this.setState({ errors });
     }
+
+    this.setState({ loading: false });
   }
 
   render() {
@@ -49,34 +55,37 @@ export class DisplayPage extends Component {
         <form>
           <FormGroup errors={errors} className="row" name="group">
             <div className="col-sm-1 label-col">
-              <label htmlFor="">Group</label>
+                <label htmlFor="">Group:</label>
             </div>
-            <div className="col-sm-4">
-              <input
-                className="form-control"
-                name="group"
+            <div className="col-sm-11 content-col">
+              <Input
                 value={group}
                 onChange={e => this.setState({ group: e.target.value })}
               />
+              <FormGroupError errors={errors} field="group" />
             </div>
           </FormGroup>
           <FormGroup errors={errors} className="row" name="label">
             <div className="col-sm-1 label-col">
-              <label htmlFor="label">Label</label>
+              <label htmlFor="label">Label:</label>
             </div>
-            <div className="col-sm-4">
-              <input
-                className="form-control LinodesLinodeSettingsDisplay-label"
-                name="label"
+            <div className="col-sm-11 content-col">
+              <Input
+                className="LinodesLinodeSettingsDisplay-label"
                 value={label}
                 onChange={e => this.setState({ label: e.target.value })}
               />
+              <FormGroupError errors={errors} field="label" />
             </div>
           </FormGroup>
           <ErrorSummary errors={errors} />
           <div className="row">
-            <div className="offset-sm-1 col-sm-4">
-              <button className="btn btn-default" onClick={this.onSubmit}>Save</button>
+            <div className="offset-sm-1 col-sm-11">
+              <button
+                className="btn btn-default"
+                onClick={this.onSubmit}
+                disabled={this.loading}
+              >Save</button>
             </div>
           </div>
         </form>

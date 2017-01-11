@@ -22,12 +22,6 @@ const borderColors = [
   '#e67e22',
 ];
 
-function select(state) {
-  return { distributions: state.api.distributions };
-}
-
-const AddModalRedux = connect(select)(AddModal);
-
 export class DiskPanel extends Component {
   static async preload({ dispatch, getState }, { linodeLabel }) {
     const { id } = Object.values(getState().api.linodes.linodes).reduce(
@@ -41,7 +35,7 @@ export class DiskPanel extends Component {
   }
 
   render() {
-    const { dispatch } = this.props;
+    const { dispatch, distributions } = this.props;
     const linode = this.getLinode();
     const disks = Object.values(linode._disks.disks);
     const total = linode.type[0].storage;
@@ -49,7 +43,14 @@ export class DiskPanel extends Component {
     const free = total - used;
     const poweredOff = linode.status === 'offline';
 
-    const addModal = <AddModalRedux free={free} linode={linode} />;
+    const addModal = d => (
+      <AddModal
+        free={free}
+        linode={linode}
+        dispatch={dispatch}
+        distributions={distributions}
+      />
+    );
 
     const editModal = d => (
       <EditModal
@@ -135,6 +136,7 @@ export class DiskPanel extends Component {
 
 DiskPanel.propTypes = {
   dispatch: PropTypes.func.isRequired,
+  distributions: PropTypes.object.isRequired,
   params: PropTypes.shape({
     linodeLabel: PropTypes.string,
   }),

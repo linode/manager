@@ -1,7 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
+import { reduceErrors, FormGroup, ErrorSummary, FormGroupError } from '~/errors';
 import HelpButton from '~/components/HelpButton';
+import CheckboxInputCombo from '~/components/CheckboxInputCombo';
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import { Form, SubmitButton } from '~/components/form';
 import { linodes } from '~/api';
@@ -14,6 +16,7 @@ export class AlertsPage extends Component {
     this.renderAlertRow = this.renderAlertRow.bind(this);
     this.state = {
       loading: false,
+      errors: {},
       alerts: this.getLinode().alerts || {
         cpu: { threshold: 0, enabled: false },
         io: { threshold: 0, enabled: false },
@@ -32,13 +35,21 @@ export class AlertsPage extends Component {
   async saveChanges() {
     const { dispatch } = this.props;
     const { id } = this.getLinode();
-    this.setState({ loading: true });
-    await dispatch(linodes.put({ alerts: this.state.alerts }, id));
+
+    this.setState({ loading: true, errors: {} });
+
+    try {
+      await dispatch(linodes.put({ alerts: this.state.alerts }, id));
+    } catch (response) {
+      const errors = await reduceErrors(response);
+      this.setState({ errors });
+    }
+
     this.setState({ loading: false });
   }
 
   renderAlertRow({ key, name, value, label, text }) {
-    const { loading } = this.state;
+    const { loading, errors } = this.state;
     const { threshold, enabled } = value;
     const int = i => parseInt(i, 10);
     const thresholdChange = e =>
@@ -53,39 +64,33 @@ export class AlertsPage extends Component {
       });
 
     return (
-      <div className="form-group row" key={name}>
+      <FormGroup
+        className="row"
+        key={name}
+        errors={errors}
+        field={'threshold'}
+        fieldCrumbs={'alerts.' + key}
+      >
         <div className="col-sm-2 label-col">
           <span>{name}:</span>
         </div>
         <div className="col-sm-10 content-col">
+          <CheckboxInputCombo
+            checkboxOnChange={enabledChange}
+            checkboxChecked={enabled}
+            checkboxLabel="Enable"
+            inputValue={threshold}
+            inputOnChange={thresholdChange}
+            inputType={"number"}
+            inputMin={0}
+            inputLabel={label}
+          />
+          <FormGroupError errors={errors} field={'threshold'} fieldCrumbs={'alerts.' + key} />
           <div>
-            <div className="checkbox">
-              <label>
-                <input
-                  type="checkbox"
-                  checked={enabled}
-                  onChange={enabledChange}
-                  disabled={loading}
-                />
-                <span>
-                  Enable
-                </span>
-              </label>
-            </div>
-            <div className="input-container">
-              <input
-                type="number"
-                value={threshold}
-                onChange={thresholdChange}
-                disabled={loading}
-                className="form-control"
-              />
-            </div>
-            {label}
+            <small className="text-muted">Triggered by: {text} exceeding this value</small>
           </div>
-          <small className="text-muted">Triggered by: {text} exceeding this value</small>
         </div>
-      </div>
+      </FormGroup>
     );
   }
 

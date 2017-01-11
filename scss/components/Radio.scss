@@ -1,0 +1,11 @@
+.Radio {
+    + .Radio {
+        margin-top: 10px;
+    }
+
+    &-label {
+        display: inline-block;
+        line-height: $input-height;
+        padding-left: 0 5px;
+    }
+}

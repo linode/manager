@@ -38,7 +38,6 @@ export class DeleteModal extends Component {
     }
   }
 
-
   render() {
     const { dispatch } = this.props;
     const { loading, errors } = this.state;

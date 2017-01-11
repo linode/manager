@@ -2,10 +2,11 @@ import React, { Component, PropTypes } from 'react';
 
 import { linodes } from '~/api';
 import { resizeLinodeDisk } from '~/api/linodes';
-import { CancelButton, Form, SubmitButton } from '~/components/form';
+import { CancelButton, Form, SubmitButton, FormGroup, FormGroupError } from '~/components/form';
 import { hideModal } from '~/actions/modal';
 import { FormGroup } from '~/components/form';
 import { ErrorSummary, reduceErrors } from '~/errors';
+import Input from '~/components/Input';
 
 export class EditModal extends Component {
   constructor() {
@@ -28,7 +29,9 @@ export class EditModal extends Component {
   async saveChanges() {
     const { size, label } = this.state;
     const { linode, disk, dispatch } = this.props;
+
     this.setState({ loading: true, errors: {} });
+
     try {
       if (size !== disk.size) {
         await dispatch(resizeLinodeDisk(linode.id, disk.id, size));
@@ -36,11 +39,14 @@ export class EditModal extends Component {
       if (label !== disk.label) {
         await dispatch(linodes.disks.put({ label }, linode.id, disk.id));
       }
-      this.setState({ loading: false });
+      
       dispatch(hideModal());
     } catch (response) {
-      this.setState({ loading: false, errors: await reduceErrors(response) });
+      const errors = await reduceErrors(response);
+      this.setState({ errors });
     }
+
+    this.setState({ loading: false });
   }
 
   render() {
@@ -50,43 +56,54 @@ export class EditModal extends Component {
       <Form
         onSubmit={() => this.saveChanges()}
       >
-        <FormGroup errors={errors} field="label">
-          <label htmlFor="label">Label</label>
-          <input
-            name="label"
-            className="form-control"
-            id="label"
-            placeholder="Label"
-            value={label}
-            disabled={loading}
-            onChange={e => {
-              this.setState({ label: e.target.value });
-            }}
-          />
+        <FormGroup errors={errors} field="label" className="row">
+          <div className="col-sm-4 label-col">
+            <label htmlFor="label">Label:</label>
+          </div>
+          <div className="col-sm-8 content-col">
+            <Input
+              placeholder="Label"
+              value={label}
+              onChange={e => this.setState({ label: e.target.value }) }
+            />
+            <FormGroupError errors={errors} field="label" />
+          </div>
         </FormGroup>
-        <div className="form-group">
-          <label htmlFor="format">Format</label>
-          <input disabled className="form-control" value={disk.filesystem} />
+        <div className="form-group row">
+          <div className="col-sm-4 label-col">
+            <label htmlFor="format">Format</label>
+          </div>
+          <div className="col-sm-8 content-col">
+            <Input disabled value={disk.filesystem} />
+          </div>
         </div>
-        <div className="form-group">
-          <label htmlFor="current-size">Current size (MB)</label>
-          <input disabled className="form-control" value={disk.size} />
+        <div className="form-group row">
+          <div className="col-sm-4 label-col">
+            <label htmlFor="current-size">Current size (MB)</label>
+          </div>
+          <div className="col-sm-8 content-col">
+            <Input disabled value={disk.size} />
+          </div>
         </div>
-        <FormGroup errors={errors} field="size">
-          <label htmlFor="size">New size (MB)</label>
-          <input
-            type="number"
-            min={8} /* TODO: can't/don't calculate distro min size requirement */
-            max={free + disk.size}
-            className="form-control"
-            value={size}
-            name="size"
-            onChange={e => {
-              this.setState({ size: parseInt(e.target.value, 10) });
-            }}
-          />
+        <FormGroup errors={errors} field="size" className="row">
+          <div className="col-sm-4 label-col">
+            <label htmlFor="size">New size (MB):</label>
+          </div>
+          <div className="col-sm-8 content-col">
+            <Input
+              type="number"
+
+              max={free + disk.size}
+              className="form-control"
+              value={size}
+              name="size"
+              onChange={e => {
+                  this.setState({ size: parseInt(e.target.value, 10) });
+                }}
+            />
+            <FormGroupError errors={errors} field="size" />
+          </div>
         </FormGroup>
-        <ErrorSummary errors={errors} />
         <div className="modal-footer">
           <CancelButton
             disabled={loading}
@@ -96,6 +113,7 @@ export class EditModal extends Component {
             disabled={loading}
           />
         </div>
+        <ErrorSummary errors={errors} />
       </Form>);
   }
 }

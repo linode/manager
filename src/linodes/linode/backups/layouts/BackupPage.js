@@ -2,11 +2,12 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { ErrorSummary, reduceErrors } from '~/errors';
+import { ErrorSummary, FormGroup, FormGroupError, reduceErrors } from '~/errors';
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import { linodes } from '~/api';
 import { takeBackup, restoreBackup } from '~/api/backups';
 import { setError } from '~/actions/errors';
+import Select from '~/components/Select';
 
 function renderDateTime(dt) {
   return dt.replace('T', ' ');
@@ -110,12 +111,12 @@ export class BackupPage extends Component {
           Restore to
         </div>
         <div className="col-sm-9 content-col right">
-          <select
+          <Select
             value={targetLinode}
             onChange={e => this.setState({ targetLinode: e.target.value })}
           >
             {restoreTo}
-          </select>
+          </Select>
         </div>
       </div>
     );
