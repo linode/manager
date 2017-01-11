@@ -5,7 +5,7 @@ import { StyleguideSection } from '~/styleguide/components';
 export default function Typography() {
   return (
     <StyleguideSection name="typography" title="Typography">
-      <div className="col-sm-12">
+      <div className="StyleguideTypography col-sm-12">
         <div className="Styleguide-sub-section row">
           <div className="col-sm-12">
             <h3>Semantic Heirarchy</h3>
@@ -74,7 +74,7 @@ export default function Typography() {
                   </td>
                 </tr>
                 <tr>
-                  <td><p>This is a paragraph</p></td>
+                  <td><p>This is a paragraph.</p></td>
                   <td>
                     0.975rem;  ~15px;
                   </td>
