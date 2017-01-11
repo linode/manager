@@ -25,7 +25,8 @@ export default function Typography() {
                     $font-large;  1.8rem;  ~28px;
                   </td>
                   <td>
-                    The main page heading, <code>&lt;h1&gt;</code>, should only be used once per page.
+                    The main page heading, <code>&lt;h1&gt;</code>,
+                    should only be used once per page.
                   </td>
                 </tr>
                 <tr>
@@ -34,7 +35,8 @@ export default function Typography() {
                     $font-medium;  1.4rem;  ~22px;
                   </td>
                   <td>
-                    The secondary heading, <code>&lt;h2&gt;</code>, is a page-level heading. It can be used more than once per page.
+                    The secondary heading, <code>&lt;h2&gt;</code>,
+                    is a page-level heading. It can be used more than once per page.
                   </td>
                 </tr>
                 <tr>
@@ -79,7 +81,9 @@ export default function Typography() {
                     0.975rem;  ~15px;
                   </td>
                   <td>
-                    The paragraph <code>&lt;p&gt;</code>, is the generic font for use where Headings and other more specific tags are not applicable.
+                    The paragraph <code>&lt;p&gt;</code>,
+                    is the generic font for use where Headings and
+                    other more specific tags are not applicable.
                   </td>
                 </tr>
               </tbody>
@@ -92,11 +96,11 @@ export default function Typography() {
             <h3>General Formatting</h3>
             <table>
               <thead>
-              <tr>
-                <th className="element">Element</th>
-                <th>Font Size</th>
-                <th>Description</th>
-              </tr>
+                <tr>
+                  <th className="element">Element</th>
+                  <th>Font Size</th>
+                  <th>Description</th>
+                </tr>
               </thead>
               <tbody>
                 <tr>
