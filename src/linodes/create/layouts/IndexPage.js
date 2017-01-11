@@ -10,6 +10,7 @@ import { parallel } from '~/api/util';
 import { linodes, distributions, datacenters, types } from '~/api';
 import { setError } from '~/actions/errors';
 import { setSource } from '~/actions/source';
+import { reduceErrors } from '~/errors';
 
 export class IndexPage extends Component {
   static async preload(store) {
@@ -67,30 +68,21 @@ export class IndexPage extends Component {
 
   async onSubmit({ group, label, password, backups }) {
     const { dispatch } = this.props;
+
+    this.setState({ loading: true, errors: {} });
+
     try {
-      this.setState({ loading: true });
       await this.createLinode({ group, label, password, backups });
 
-      this.setState({ loading: false });
       dispatch(push(`/linodes/${label}`));
       // TODO: handle creating multiple linodes at once ? refer to
       // TODO: previous commit history for example
     } catch (response) {
-      const { errors } = await response.json();
-      const errorsByField = {};
-      errors.forEach(({ field, reason }) => {
-        // if the field is not defined the error response from the api
-        // corresponds to the whole form
-        if (typeof field === 'undefined') {
-          if (!('__form' in errorsByField)) errorsByField.__form = [];
-          errorsByField.__form.push(reason);
-        } else {
-          if (!(field in errorsByField)) errorsByField[field] = [];
-          errorsByField[field].push(reason);
-        }
-      });
-      this.setState({ loading: false, errors: errorsByField });
+      const errors = await reduceErrors(resposne);
+      this.setState({ errors });
     }
+
+    this.setState({ loading: false });
   }
 
   createLinode({ group, label, password, backups }) {

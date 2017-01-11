@@ -662,6 +662,10 @@ table {
 }
 
 .content-col {
+    > * {
+        display: inline-block;
+    }
+
     li a {
         text-decoration: none;
     }
@@ -909,6 +913,13 @@ p {
     .card {
         width: 400px;
     }
+}
+
+.form-control-feedback {
+    color: $red;
+    margin-top: 0;
+    margin-left: 15px;
+    line-height: $input-height;
 }
 
 .checkbox + .checkbox {

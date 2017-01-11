@@ -13,7 +13,7 @@ export class DisplayPage extends Component {
     this.getLinode = getLinode.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     const { group, label } = this.getLinode();
-    this.state = { group, label, errors: {} };
+    this.state = { group, label, errors: {}, loading: false };
   }
 
   async componentDidMount() {
@@ -27,6 +27,9 @@ export class DisplayPage extends Component {
     const { id } = this.getLinode();
     const { group, label } = this.state;
     const labelChanged = this.getLinode().label !== label;
+
+    this.setState({ loading: true, errors: {} });
+
     try {
       await dispatch(linodes.put({ group, label }, id));
       if (labelChanged) {
@@ -36,6 +39,8 @@ export class DisplayPage extends Component {
       const errors = await reduceErrors(response);
       this.setState({ errors });
     }
+
+    this.setState({ loading: false });
   }
 
   render() {
@@ -48,7 +53,7 @@ export class DisplayPage extends Component {
         <form>
           <FormGroup errors={errors} className="row" field="group">
             <div className="col-sm-1 label-col">
-              <label htmlFor="">Group</label>
+                <label htmlFor="">Group:</label>
             </div>
             <div className="col-sm-4">
               <input
@@ -61,7 +66,7 @@ export class DisplayPage extends Component {
           </FormGroup>
           <FormGroup errors={errors} className="row" field="label">
             <div className="col-sm-1 label-col">
-              <label htmlFor="label">Label</label>
+              <label htmlFor="label">Label:</label>
             </div>
             <div className="col-sm-4">
               <input
@@ -75,7 +80,11 @@ export class DisplayPage extends Component {
           <ErrorSummary errors={errors} />
           <div className="row">
             <div className="offset-sm-1 col-sm-4">
-              <button className="btn btn-default" onClick={this.onSubmit}>Save</button>
+              <button
+                className="btn btn-default"
+                onClick={this.onSubmit}
+                disabled={this.loading}
+              >Save</button>
             </div>
           </div>
         </form>

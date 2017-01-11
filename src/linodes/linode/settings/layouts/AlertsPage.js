@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
+import { reduceErrors, FormGroup, ErrorSummary, FormGroupError } from '~/errors';
 import HelpButton from '~/components/HelpButton';
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import { Form, SubmitButton } from '~/components/form';
@@ -14,6 +15,7 @@ export class AlertsPage extends Component {
     this.renderAlertRow = this.renderAlertRow.bind(this);
     this.state = {
       loading: false,
+      errors: {},
       alerts: this.getLinode().alerts || {
         cpu: { threshold: 0, enabled: false },
         io: { threshold: 0, enabled: false },
@@ -32,13 +34,21 @@ export class AlertsPage extends Component {
   async saveChanges() {
     const { dispatch } = this.props;
     const { id } = this.getLinode();
-    this.setState({ loading: true });
-    await dispatch(linodes.put({ alerts: this.state.alerts }, id));
+
+    this.setState({ loading: true, errors: {} });
+
+    try {
+      await dispatch(linodes.put({ alerts: this.state.alerts }, id));
+    } catch (response) {
+      const errors = await reduceErrors(response);
+      this.setState({ errors });
+    }
+
     this.setState({ loading: false });
   }
 
   renderAlertRow({ key, name, value, label, text }) {
-    const { loading } = this.state;
+    const { loading, errors } = this.state;
     const { threshold, enabled } = value;
     const int = i => parseInt(i, 10);
     const thresholdChange = e =>
@@ -53,7 +63,13 @@ export class AlertsPage extends Component {
       });
 
     return (
-      <div className="form-group row" key={name}>
+      <FormGroup
+        className="row"
+        key={name}
+        errors={errors}
+        field={'threshold'}
+        fieldCrumbs={'alerts.' + key}
+      >
         <div className="col-sm-2 label-col">
           <span>{name}:</span>
         </div>
@@ -65,7 +81,6 @@ export class AlertsPage extends Component {
                   type="checkbox"
                   checked={enabled}
                   onChange={enabledChange}
-                  disabled={loading}
                 />
                 <span>
                   Enable
@@ -76,16 +91,17 @@ export class AlertsPage extends Component {
               <input
                 type="number"
                 value={threshold}
+                min={0}
                 onChange={thresholdChange}
-                disabled={loading}
                 className="form-control"
               />
             </div>
             {label}
           </div>
+          <FormGroupError errors={errors} field={'threshold'} fieldCrumbs={'alerts.' + key} />
           <small className="text-muted">Triggered by: {text} exceeding this value</small>
         </div>
-      </div>
+      </FormGroup>
     );
   }
 

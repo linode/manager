@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { ErrorSummary, reduceErrors } from '~/errors';
+import { ErrorSummary, reduceErrors, FormGroup } from '~/errors';
 import { getLinode } from './IndexPage';
 import { showModal, hideModal } from '~/actions/modal';
 import { linodes } from '~/api';
@@ -46,9 +46,8 @@ export class RescuePage extends Component {
     this.state = {
       password: '',
       disk: null,
-      applying: false,
-      result: null,
-      errors: { }
+      errors: {},
+      loading: false,
     };
   }
 
@@ -70,18 +69,16 @@ export class RescuePage extends Component {
     const { dispatch } = this.props;
     const linode = this.getLinode();
 
-    try {
-      this.setState({ applying: true, result: null });
-      await dispatch(resetPassword(linode.id, disk, password));
+    this.setState({ errors: {}, loading: true });
 
-      this.setState({
-        applying: false,
-        result: <span className="text-success">Success!</span>,
-      });
+    try {
+      await dispatch(resetPassword(linode.id, disk, password));
     } catch (response) {
-      const errors = reduceErrors(response);
+      const errors = await reduceErrors(response);
       this.setState({ errors });
     }
+
+    this.setState({ loading: false });
   }
 
   renderDiskSlotNoEdit(device, index) {
@@ -150,7 +147,7 @@ export class RescuePage extends Component {
   }
 
   renderResetRootPassword() {
-    const { disk } = this.state;
+    const { disk, errors } = this.state;
     const { dispatch } = this.props;
     const linode = this.getLinode();
 
@@ -159,8 +156,8 @@ export class RescuePage extends Component {
     );
 
     if (disk) {
-      const showDisks = Object.values(linode._disks.disks).reduce(
-        (showDisks, d) => showDisks || d.filesystem !== 'swap', false);
+      const multipleNonSwapDisks = Object.values(linode._disks.disks).reduce(
+        (nonSwapDisks, d) => d.filesystem === 'swap' ? nonSwapDisks : nonSwapDisks + 1, -1);
 
       body = (
         <div className="root-pw">
@@ -168,10 +165,10 @@ export class RescuePage extends Component {
             <div className="alert alert-info">Your Linode must
               be powered off to reset your root password.
             </div>}
-            {showDisks ?
-              <div className="form-group row">
-                <div className="col-sm-2">
-                  <label htmlFor="reset-root-password-select" className="label-col">Disk:</label>
+            {multipleNonSwapDisks ?
+              <FormGroup className="row" field="disk" errors={errors}>
+                <div className="col-sm-3 label-col">
+                  <label htmlFor="reset-root-password-select">Disk:</label>
                 </div>
                 <div className="input-container col-sm-9">
                   <select
@@ -185,31 +182,24 @@ export class RescuePage extends Component {
                       .map(d => <option value={d.id} key={d.id}>{d.label}</option>)}
                   </select>
                 </div>
-              </div>
-            : null}
-          <div className="form-group row">
-              {showDisks ?
-                <div className="col-sm-2">
-                  <label htmlFor="password" className="label-col">Password:</label>
-                </div>
-              : null}
-            <div className="col-sm-10">
+              </FormGroup>
+             : null}
+          <FormGroup className="row" field={"disk"} errors={errors}>
+            <div className="col-sm-3 label-col">
+              <label htmlFor="password">Password:</label>
+            </div>
+            <div className="col-sm-9">
               <PasswordInput
                 passwordType="offline_fast_hashing_1e10_per_second"
                 onChange={password => this.setState({ password })}
               />
             </div>
-          </div>
-          <div className="form-group row">
-            <div className="col-sm-2"></div>
-            <div className="col-sm-10">
+          </FormGroup>
+          <div className="row">
+            <div className="col-sm-9 offset-sm-3">
               <SubmitButton
-                disabled={!this.state.password || this.state.applying ||
-                          linode.status !== 'offline'}
+                disabled={linode.status !== 'offline' || this.loading}
               >Reset Password</SubmitButton>
-              <span style={{ marginLeft: '0.5rem' }}>
-                {this.state.result}
-              </span>
             </div>
           </div>
           <ErrorSummary errors={this.state.errors} />

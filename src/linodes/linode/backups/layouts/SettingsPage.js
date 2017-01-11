@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { ErrorSummary, FormGroup, reduceErrors } from '~/errors';
+import { ErrorSummary, FormGroup, FormGroupError, reduceErrors } from '~/errors';
 import { linodes } from '~/api';
 import { cancelBackup } from '~/api/backups';
 import { Form, SubmitButton } from '~/components/form';
@@ -67,6 +67,9 @@ export class SettingsPage extends Component {
     const { dispatch } = this.props;
     const linode = this.getLinode();
     const { day, window } = this.state;
+
+    this.setState({ loading: true, errors: {} });
+
     try {
       await dispatch(linodes.put({
         backups: {
@@ -77,6 +80,8 @@ export class SettingsPage extends Component {
       const errors = await reduceErrors(response);
       this.setState({ errors });
     }
+
+    this.setState({ loading: false });
   }
 
   render() {
@@ -96,33 +101,36 @@ export class SettingsPage extends Component {
           </header>
           <Form onSubmit={() => this.saveChanges()}>
             <FormGroup errors={errors} className="row" field="window">
-              <div className="col-sm-2">
+              <div className="col-sm-2 label-col">
                 <label htmlFor="window">Time of day (EST):</label>
               </div>
-              <div className="col-sm-4">
-                <select
-                  className="form-control"
-                  name="window"
-                  value={window}
-                  onChange={e => this.setState({ window: e.target.value })}
-                >
-                  <option value="W0">12-2 AM</option>
-                  <option value="W2">2-4 AM</option>
-                  <option value="W4">4-6 AM</option>
-                  <option value="W6">6-8 AM</option>
-                  <option value="W8">8-10 AM</option>
-                  <option value="W10">10-12 AM</option>
-                  <option value="W12">12-2 PM</option>
-                  <option value="W14">2-4 PM</option>
-                  <option value="W16">4-6 PM</option>
-                  <option value="W18">6-8 PM</option>
-                  <option value="W20">8-10 PM</option>
-                  <option value="W22">10-12 PM</option>
-                </select>
+              <div className="col-sm-10">
+                <div>
+                  <select
+                    className="form-control input-container"
+                    name="window"
+                    value={window}
+                    onChange={e => this.setState({ window: e.target.value })}
+                  >
+                    <option value="W0">12-2 AM</option>
+                    <option value="W2">2-4 AM</option>
+                    <option value="W4">4-6 AM</option>
+                    <option value="W6">6-8 AM</option>
+                    <option value="W8">8-10 AM</option>
+                    <option value="W10">10-12 AM</option>
+                    <option value="W12">12-2 PM</option>
+                    <option value="W14">2-4 PM</option>
+                    <option value="W16">4-6 PM</option>
+                    <option value="W18">6-8 PM</option>
+                    <option value="W20">8-10 PM</option>
+                    <option value="W22">10-12 PM</option>
+                  </select>
+                </div>
+                <FormGroupError errors={errors} field="window" />
               </div>
             </FormGroup>
             <FormGroup errors={errors} className="row" field="day">
-              <div className="col-sm-2">
+              <div className="col-sm-2 label-col">
                 <label htmlFor="day">Day of week:</label>
               </div>
               <div className="col-sm-4">
@@ -142,8 +150,12 @@ export class SettingsPage extends Component {
                 </select>
               </div>
             </FormGroup>
+            <div className="row">
+              <div className="col-sm-2 offset-sm-2">
+                <SubmitButton />
+              </div>
+            </div>
             <ErrorSummary errors={errors} />
-            <SubmitButton />
           </Form>
         </section>
         <section className="card">

@@ -31,7 +31,7 @@ export class RebuildPage extends Component {
     const { dispatch, params: { linodeLabel } } = this.props;
     const { id: linodeId } = this.getLinode();
 
-    this.setState({ loading: true });
+    this.setState({ loading: true, errors: {} });
 
     try {
       await dispatch(rebuildLinode(linodeId, {
@@ -69,10 +69,10 @@ export class RebuildPage extends Component {
             </div>
             <div className="LinodesLinodeRebuildPage-password">
               <FormGroup errors={errors} field="root_pass" className="row">
-                <div className="col-md-2 label-col">
+                <div className="col-sm-2 label-col">
                   <label>Root password:</label>
                 </div>
-                <div className="col-md-6">
+                <div className="col-sm-4">
                   <PasswordInput
                     value={this.state.password}
                     passwordType="offline_fast_hashing_1e10_per_second"
@@ -82,7 +82,7 @@ export class RebuildPage extends Component {
               </FormGroup>
             </div>
             <div className="row">
-              <div className="col-md-10 offset-md-2">
+              <div className="col-sm-2 offset-sm-2">
                 <button
                   className="LinodesLinodeRebuildPage-rebuild"
                   onClick={this.onSubmit}
