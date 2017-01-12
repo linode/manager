@@ -1,0 +1,54 @@
+input[type="text"].form-control {
+  width: 300px;
+}
+
+.input-container {
+  display: inline-block;
+
+  .form-control {
+    width: auto;
+    min-width: 300px;
+  }
+
+  &.input-group {
+    .btn {
+      position: relative;
+      left: -1px;
+    }
+  }
+}
+
+.form-group {
+  margin-bottom: 0;
+
+  &:not(:last-child) {
+    margin-bottom: 10px;
+  }
+}
+
+.form-group > label {
+  color: $lightest-black;
+  text-align: right;
+
+  legend {
+    font-size: initial;
+  }
+}
+
+.form-group .btn-cancel {
+  margin-left: 10px;
+}
+
+.content-col {
+  li a {
+    text-decoration: none;
+  }
+
+  img {
+    margin-left: 0.5rem;
+  }
+
+  p.text-muted {
+    margin-bottom: 0;
+  }
+}
