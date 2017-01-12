@@ -6,6 +6,7 @@ import { setError } from '~/actions/errors';
 import { showModal, hideModal } from '~/actions/modal';
 import { dnszones } from '~/api';
 import { setSource } from '~/actions/source';
+import { setTitle } from '~/actions/title';
 import CreateHelper from '~/components/CreateHelper';
 
 export class IndexPage extends Component {
@@ -17,6 +18,7 @@ export class IndexPage extends Component {
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
+    dispatch(setTitle('DNS Manager'));
     try {
       await dispatch(dnszones.all());
     } catch (response) {

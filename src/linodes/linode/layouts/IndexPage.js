@@ -9,6 +9,7 @@ import StatusDropdown from '~/linodes/components/StatusDropdown';
 import { setError } from '~/actions/errors';
 import { linodes } from '~/api';
 import { setSource } from '~/actions/source';
+import { setTitle } from '~/actions/title';
 
 export function getLinode() {
   const { linodes } = this.props.linodes;
@@ -95,6 +96,8 @@ export class IndexPage extends Component {
     dispatch(setSource(__filename));
 
     const linode = this.getLinode();
+    dispatch(setTitle(linode.label));
+
     const defaultConfig = Object.values(linode._configs.configs)[0];
     this.setState({
       config: defaultConfig ? defaultConfig.id : '',
