@@ -89,14 +89,21 @@ export function getNextBackup(linode) {
   return nextBackup;
 }
 
-export function renderBackupStatus(linode) {
+export function renderBackupStatus(linode, dashboard = false) {
+  const backupWord = dashboard ? '' : 'Backup';
+  const up = (letter) => {
+    if (dashboard) {
+      return letter.toUpperCase();
+    }
+    return ` ${letter}`;
+  };
   if (linode.backups.enabled) {
     const lastBackup = linode.backups.last_backup;
     if (!lastBackup) {
       const nextBackup = getNextBackup(linode);
       return (
         <Link className="backup-status" to={`/linodes/${linode.label}/backups`}>
-          In ~{nextBackup.fromNow(true)}
+          {backupWord}{up('i')}n ~{nextBackup.fromNow(true)}
         </Link>);
     }
 
@@ -104,20 +111,20 @@ export function renderBackupStatus(linode) {
     if (backupStatus === 'running') {
       return (
         <Link className="backup-status" to={`/linodes/${linode.label}/backups`}>
-          Running
+          {backupWord}{up('r')}unning
         </Link>);
     }
 
     if (backupStatus === 'pending') {
       return (
         <Link className="backup-status" to={`/linodes/${linode.label}/backups`}>
-          Pending
+          {backupWord}{up('p')}ending
         </Link>);
     }
     return (
       <Link to={`/linodes/${linode.label}/backups`}>
         <span className="backup-status">
-          Taken {moment.utc(linode.backups.last_backup).fromNow()}
+          {backupWord}{up('t')}aken {moment.utc(linode.backups.last_backup).fromNow()}
         </span>
       </Link>);
   }
