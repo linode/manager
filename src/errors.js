@@ -4,7 +4,7 @@ export async function reduceErrors(response) {
   const json = await response.json();
   const errors = {};
   json.errors.forEach(error => {
-    const key = error.field || '_';
+    const key = (error.field + (error.field_crumbs ? '.' + error.field_crumbs : '')) || '_';
     const list = errors[key] || [];
     list.push(error);
     if (!errors[key]) {
