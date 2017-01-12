@@ -218,7 +218,7 @@ export class EditConfigPage extends Component {
     let initrd = '';
     try {
       isCustomRoot = AVAILABLE_DISK_SLOTS.indexOf(config.root_device.replace('/dev/', '')) === -1;
-      isMaxRam = config.ram_limit == 0;
+      isMaxRam = config.ram_limit === 0;
       initrd = config.initrd;
     } catch (e) {
       // do nothing.
@@ -464,30 +464,31 @@ export class EditConfigPage extends Component {
               <label>Memory limit</label>
             </div>
             <div className="input-container col-sm-6">
-          {this.renderRadio(
-            <span>
-              <input
-                className="form-control"
-                id="config-ramLimit"
-                disabled={loading}
-                placeholder="Memory limit"
-                type="number"
-                value={ramLimit}
-                onChange={e => this.setState({ ramLimit: e.target.value })}
-              />
-              <span className="measure-unit">MB</span>
-            </span>,
-            'isMaxRam',
-            false
-          )}
-          {this.renderRadio(
-            <span>Maximum ({
-              linode.type.length ? linode.type[0].ram : null
-            } MB)</span>,
-            'isMaxRam',
-            true
-          )}
-          </div></div>
+              {this.renderRadio(
+                <span>
+                  <input
+                    className="form-control"
+                    id="config-ramLimit"
+                    disabled={loading}
+                    placeholder="Memory limit"
+                    type="number"
+                    value={ramLimit}
+                    onChange={e => this.setState({ ramLimit: e.target.value })}
+                  />
+                  <span className="measure-unit">MB</span>
+                </span>,
+                'isMaxRam',
+                false
+              )}
+              {this.renderRadio(
+                <span>Maximum ({
+                  linode.type.length ? linode.type[0].ram : null
+                } MB)</span>,
+                'isMaxRam',
+                true
+              )}
+            </div>
+          </div>
           {diskSlots.map(this.renderDiskSlot)}
           <div className="form-group row">
             <div className="col-sm-2 label-col">
@@ -558,27 +559,27 @@ export class EditConfigPage extends Component {
             </div>
             <div className="col-md-8">
               {this.renderCheckbox(
-                  'Enable distro helper',
-                  'enableDistroHelper',
-                  'Helps maintain correct inittab/upstart console device')}
+                'Enable distro helper',
+                'enableDistroHelper',
+                'Helps maintain correct inittab/upstart console device')}
               {this.renderCheckbox(
-                  'Disable updatedb',
-                  'disableUpdatedb',
-                  'Disables updatedb cron job to avoid disk thrashing')}
+                'Disable updatedb',
+                'disableUpdatedb',
+                'Disables updatedb cron job to avoid disk thrashing')}
               {this.renderCheckbox(
-                  'Enable modules.dep helper',
-                  'enableModulesdepHelper',
-                  'Creates a modules dependency file for the kernel you run')}
+                'Enable modules.dep helper',
+                'enableModulesdepHelper',
+                'Creates a modules dependency file for the kernel you run')}
               {this.renderCheckbox(
-                  'Enable network helper',
-                  'enableNetworkHelper',
-                  <span>
-                    Automatically configure static networking <a
-                      href="https://www.linode.com/docs/platform/network-helper"
-                    >
-                      (more info)
-                    </a>
-                  </span>)}
+                'Enable network helper',
+                'enableNetworkHelper',
+                <span>
+                  Automatically configure static networking <a
+                    href="https://www.linode.com/docs/platform/network-helper"
+                  >
+                    (more info)
+                  </a>
+                </span>)}
             </div>
           </fieldset>
           <ErrorSummary errors={errors} />
