@@ -1,7 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { ErrorSummary, FormGroup, reduceErrors } from '~/errors';
+import { FormGroup } from '~/components/form';
+import { ErrorSummary, reduceErrors } from '~/errors';
 import { linodes } from '~/api';
 import { cancelBackup } from '~/api/backups';
 import { Form, SubmitButton } from '~/components/form';
@@ -87,7 +88,7 @@ export class SettingsPage extends Component {
             <h2>Schedule</h2>
           </header>
           <Form onSubmit={() => this.saveChanges()}>
-            <FormGroup errors={errors} className="row" field="window">
+            <FormGroup errors={errors} className="row" name="window">
               <div className="col-sm-2">
                 <label htmlFor="window">Time of day (EST):</label>
               </div>
@@ -113,7 +114,7 @@ export class SettingsPage extends Component {
                 </select>
               </div>
             </FormGroup>
-            <FormGroup errors={errors} className="row" field="day">
+            <FormGroup errors={errors} className="row" name="day">
               <div className="col-sm-2">
                 <label htmlFor="day">Day of week:</label>
               </div>

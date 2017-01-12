@@ -14,30 +14,6 @@ export async function reduceErrors(response) {
   return errors;
 }
 
-export function FormGroup(props) {
-  const { errors, field, fieldCrumbs } = props;
-
-  const fieldErrors = errors[field + (fieldCrumbs ? '.' + fieldCrumbs : '')];
-
-  return (
-    <div
-      className={`form-group ${
-        errors[field] && errors[field].length ? 'has-danger' : ''
-        } ${props.className}`}
-    >
-      {props.children}
-    </div>
-  );
-}
-
-FormGroup.propTypes = {
-  errors: PropTypes.object.isRequired,
-  field: PropTypes.string.isRequired,
-  fieldCrumbs: PropTypes.string,
-  className: PropTypes.string,
-  children: PropTypes.node,
-};
-
 export function ErrorSummary(props) {
   const { errors } = props;
   if (errors._ && errors._.length) {

@@ -4,17 +4,17 @@ import FormGroupError from '~/components/form/FormGroupError';
 
 
 export default function FormGroup(props) {
-  const { name, errors } = props;
-  const hasErrors = errors && errors[name] && errors[name].length;
+  const { name, errors = {}, crumbs } = props;
+  const fieldErrors = errors[name + (crumbs ? '.' + crumbs : '')];
 
   return (
     <div
       className={`form-group ${
-        hasErrors ? 'has-danger' : ''
+        (fieldErrors && fieldErrors.length) ? 'has-danger' : ''
         } ${props.className}`}
     >
       {props.children}
-      <FormGroupError name={name} errors={errors}/>
+      {fieldErrors && fieldErrors.length ? <FormGroupError fieldErrors={fieldErrors}/> : null}
     </div>
   );
 }

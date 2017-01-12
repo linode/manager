@@ -31,9 +31,9 @@ describe('linodes/linode/settings/layouts/DisplayPage', () => {
     );
 
     expect(page.find('header h2').text()).to.equal('Display');
-    expect(page.find('[name="group"]').props().value).to.equal('Test Group');
+    expect(page.find('input[name="group"]').props().value).to.equal('Test Group');
 
-    expect(page.find('[name="label"]').props().value).to.equal('test-linode');
+    expect(page.find('input[name="label"]').props().value).to.equal('test-linode');
     expect(page.find('button.btn.btn-default').text()).to.equal('Save');
   });
 
@@ -83,7 +83,7 @@ describe('linodes/linode/settings/layouts/DisplayPage', () => {
     await page.instance().onSubmit({ preventDefault() {} });
     expect(dispatchStub.calledTwice).to.equal(true);
 
-    const label = page.find('FormGroup').at(1);
+    const label = page.find('.form-group').at(1);
     expect(label.find('.form-control-feedback > div').text()).to.equal(error);
   });
 
