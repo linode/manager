@@ -306,8 +306,13 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
         />
       );
 
+      const isMaxRam = page.find('#config-isMaxRam-false');
+      isMaxRam.simulate('change', { target: { value: false } });
+
       const ramLimit = page.find('#config-ramLimit');
       ramLimit.simulate('change', { target: { value: 1000 } });
+
+      expect(page.instance().state.isMaxRam).to.equal(false);
       expect(ramLimit.props().value).to.equal(1000);
     });
 
@@ -441,6 +446,8 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
       dispatch.reset();
       const label = page.find('FormGroup[field="label"]');
       label.find('input').simulate('change', { target: { value: 'new label' } });
+      const isMaxRam = page.find('#config-isMaxRam-true');
+      isMaxRam.simulate('change', { target: { value: true } });
       await page.instance().saveChanges(false);
       expect(dispatch.calledTwice).to.equal(true);
       const fn = dispatch.firstCall.args[0];
@@ -450,7 +457,7 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
         expectObjectDeepEquals(JSON.parse(body), {
           label: 'new label',
           comments: 'Test comments',
-          ram_limit: 1024,
+          ram_limit: 0,
           run_level: 'default',
           virt_mode: 'paravirt',
           kernel: 'linode/latest_64',
