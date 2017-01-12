@@ -1,0 +1,17 @@
+.RadioSelectCombo {
+    + .RadioSelectCombo,
+    + .RadioInputCombo {
+        margin-top: 10px;
+    }
+
+    .Radio,
+    .Select {
+        display: inline-block;
+        vertical-align: top;
+    }
+
+    .form-control {
+        display: inline;
+        width: auto;
+    }
+}

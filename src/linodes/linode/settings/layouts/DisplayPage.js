@@ -4,8 +4,9 @@ import { push } from 'react-router-redux';
 
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import { linodes } from '~/api';
-import { ErrorSummary, FormGroup, reduceErrors } from '~/errors';
+import { ErrorSummary, FormGroup, FormGroupError, reduceErrors } from '~/errors';
 import { setSource } from '~/actions/source';
+import Input from '~/components/Input';
 
 export class DisplayPage extends Component {
   constructor(props) {
@@ -55,31 +56,30 @@ export class DisplayPage extends Component {
             <div className="col-sm-1 label-col">
                 <label htmlFor="">Group:</label>
             </div>
-            <div className="col-sm-4">
-              <input
-                className="form-control"
-                name="group"
+            <div className="col-sm-11 content-col">
+              <Input
                 value={group}
                 onChange={e => this.setState({ group: e.target.value })}
               />
+              <FormGroupError errors={errors} field="group" />
             </div>
           </FormGroup>
           <FormGroup errors={errors} className="row" field="label">
             <div className="col-sm-1 label-col">
               <label htmlFor="label">Label:</label>
             </div>
-            <div className="col-sm-4">
-              <input
-                className="form-control LinodesLinodeSettingsDisplay-label"
-                name="label"
+            <div className="col-sm-11 content-col">
+              <Input
+                className="LinodesLinodeSettingsDisplay-label"
                 value={label}
                 onChange={e => this.setState({ label: e.target.value })}
               />
+              <FormGroupError errors={errors} field="label" />
             </div>
           </FormGroup>
           <ErrorSummary errors={errors} />
           <div className="row">
-            <div className="offset-sm-1 col-sm-4">
+            <div className="offset-sm-1 col-sm-11">
               <button
                 className="btn btn-default"
                 onClick={this.onSubmit}

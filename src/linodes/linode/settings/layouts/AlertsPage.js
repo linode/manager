@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import { reduceErrors, FormGroup, ErrorSummary, FormGroupError } from '~/errors';
 import HelpButton from '~/components/HelpButton';
+import CheckboxInputCombo from '~/components/CheckboxInputCombo';
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import { Form, SubmitButton } from '~/components/form';
 import { linodes } from '~/api';
@@ -74,32 +75,20 @@ export class AlertsPage extends Component {
           <span>{name}:</span>
         </div>
         <div className="col-sm-10 content-col">
-          <div>
-            <div className="checkbox">
-              <label>
-                <input
-                  type="checkbox"
-                  checked={enabled}
-                  onChange={enabledChange}
-                />
-                <span>
-                  Enable
-                </span>
-              </label>
-            </div>
-            <div className="input-container">
-              <input
-                type="number"
-                value={threshold}
-                min={0}
-                onChange={thresholdChange}
-                className="form-control"
-              />
-            </div>
-            {label}
-          </div>
+          <CheckboxInputCombo
+            checkboxOnChange={enabledChange}
+            checkboxChecked={enabled}
+            checkboxLabel="Enable"
+            inputValue={threshold}
+            inputOnChange={thresholdChange}
+            inputType={"number"}
+            inputMin={0}
+            inputLabel={label}
+          />
           <FormGroupError errors={errors} field={'threshold'} fieldCrumbs={'alerts.' + key} />
-          <small className="text-muted">Triggered by: {text} exceeding this value</small>
+          <div>
+            <small className="text-muted">Triggered by: {text} exceeding this value</small>
+          </div>
         </div>
       </FormGroup>
     );

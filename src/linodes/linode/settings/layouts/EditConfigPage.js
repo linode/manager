@@ -5,10 +5,18 @@ import { push } from 'react-router-redux';
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import { linodes } from '~/api';
 import HelpButton from '~/components/HelpButton';
-import { ErrorSummary, FormGroup, reduceErrors } from '~/errors';
+import { ErrorSummary, FormGroup, FormGroupError, reduceErrors } from '~/errors';
 import { Link } from '~/components/Link';
 import { setSource } from '~/actions/source';
 import { setError } from '~/actions/errors';
+import Input from '~/components/Input';
+import Radio from '~/components/Radio';
+import Checkbox from '~/components/Checkbox';
+import Select from '~/components/Select';
+import RadioSelectCombo from '~/components/RadioSelectCombo';
+import RadioInputCombo from '~/components/RadioInputCombo';
+
+const CLASSNAME="LinodesLinodeSettingsEditConfigPage";
 
 export const AVAILABLE_DISK_SLOTS =
   ['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg', 'sdh'];
@@ -84,7 +92,6 @@ export function renderDiskSlot(device, index) {
     <button
       type="button"
       className="btn btn-cancel"
-      disabled={loading}
       onClick={() => this.addDiskSlot()}
     >Add</button>
   ) : null;
@@ -93,7 +100,6 @@ export function renderDiskSlot(device, index) {
     <button
       type="button"
       className="btn btn-cancel"
-      disabled={loading}
       onClick={() => this.removeDiskSlot(device)}
     >Remove</button>
   ) : null;
@@ -107,31 +113,17 @@ export function renderDiskSlot(device, index) {
         /dev/{AVAILABLE_DISK_SLOTS[index]}:
       </label>
       <div className="col-xs-9 input-container">
-        <select
-          className="form-control"
-          id={`config-device-${AVAILABLE_DISK_SLOTS[index]}`}
+        <Select
           value={device}
-          disabled={loading}
           onChange={e => {
             diskSlots[index] = parseInt(e.target.value, 10);
             this.setState({ diskSlots });
             this.fillDiskSlots(index, device);
-          }}
-        >
-          {Object.keys(disks).map((disk, i) => {
-            if (disks[disk]) {
-              const { id, label } = disks[disk];
-              return (
-                <option key={i} value={id}>
-                  {label}
-                </option>
-              );
-            }
-          })}
-          <option value="25665">
-            Recovery - Finnix (iso)
-          </option>
-        </select>
+            }}
+          options={Object.values(disk).reduce((accum, d) =>
+            d ? accum.push({ label, value: id }) : accum, []).push(
+              { value: "25665", label: "Recovery - Finnix (iso)" })}
+        />
         <div>
           {addButton}
           {deleteButton}
@@ -294,63 +286,15 @@ export class EditConfigPage extends Component {
     }
   }
 
-  renderFormElement(label, field, element) {
-    const { errors } = this.state;
-    return (
-      <FormGroup errors={errors} field={field} className="row">
-        <div className="col-sm-2 label-col">
-          <label
-            htmlFor={`config-${field}`}
-          >{label}</label>
-        </div>
-        <div className="col-sm-6">{element}</div>
-      </FormGroup>
-    );
-  }
-
-  renderRadio(label, field, value) {
-    return (
-      <div className="checkbox">
-        <label>
-          <input
-            type="radio"
-            name={`config-${field}`}
-            id={`config-${field}-${value}`}
-            disabled={this.state.loading}
-            checked={this.state[field] === value}
-            onChange={() => this.setState({ [field]: value })}
-          /> {label}
-        </label>
-      </div>
-    );
-  }
-
-  renderCheckbox(label, field, hint) {
-    const hinter = hint ? (<small className="text-muted">{hint}</small>) : null;
-    return (
-      <div className="checkbox form-group">
-        <label>
-          <input
-            type="checkbox"
-            name={`config-${field}`}
-            id={`config-${field}`}
-            disabled={this.state.loading}
-            checked={this.state.helpers[field]}
-            onChange={() => this.setState({
-              helpers: { ...this.state.helpers, [field]: !this.state.helpers[field] },
-            })}
-          /> {label}
-          <div>{hinter}</div>
-        </label>
-      </div>
-    );
-  }
-
   render() {
     const { create, kernels, params: { linodeLabel } } = this.props;
     const {
       loading, label, comments, kernel, isCustomRoot, ramLimit, rootDevice,
-      initrd, errors, diskSlots } = this.state;
+      initrd, errors, diskSlots, virtMode, runLevel } = this.state;
+    const { enableDistroHelper, enableNetworkHelper, enableModulesdepHelper, disableUpdatedb,
+    } = this.state.helpers;
+
+    console.log(enableDistroHelper, enableNetworkHelper, disableUpdatedb, this.state);
 
     return (
       <section className="card">
@@ -362,26 +306,34 @@ export class EditConfigPage extends Component {
           <h3 className="sub-header">Label and Note</h3>
         </header>
         <div>
-          {this.renderFormElement('Label', 'label', (
-            <input
-              className="form-control"
-              id="config-label"
-              disabled={loading}
-              placeholder={'My new config'}
-              value={label}
-              onChange={e => this.setState({ label: e.target.value })}
-            />
-           ))}
-          {this.renderFormElement('Notes', 'comments', (
-            <textarea
-              className="form-control"
-              id="config-comments"
-              placeholder="Notes"
-              value={comments}
-              disabled={loading}
-              onChange={e => this.setState({ comments: e.target.value })}
-            />
-           ))}
+          <FormGroup errors={errors} field="label" className="row">
+            <div className="col-sm-2 label-col">
+              <label>Label</label>
+            </div>
+            <div className="col-sm-10 content-col">
+              <Input
+                className={`${CLASSNAME}-label`}
+                placeholder="My new config"
+                value={label}
+                onChange={e => this.setState({ label: e.target.value })}
+              />
+              <FormGroupError errors={errors} field="label" />
+            </div>
+          </FormGroup>
+          <FormGroup errors={errors} field="comments" className="row">
+            <div className="col-sm-2 label-col">
+              <label>Notes</label>
+            </div>
+            <div className="col-sm-10 content-col">
+              <textarea
+                className={`${CLASSNAME}-notes form-control`}
+                placeholder="My notes"
+                value={comments}
+                onChange={e => this.setState({ comments: e.target.value })}
+              />
+              <FormGroupError errors={errors} field="comments" />
+            </div>
+          </FormGroup>
         </div>
         <h3 className="sub-header">Virtual Machine Mode</h3>
         <div>
@@ -389,9 +341,17 @@ export class EditConfigPage extends Component {
             <div className="col-sm-2 label-col">
               <legend>Virtualization mode</legend>
             </div>
-            <div className="col-sm-6">
-              {this.renderRadio('Paravirtualization', 'virtMode', 'paravirt')}
-              {this.renderRadio('Full virtualization', 'virtMode', 'fullvirt')}
+            <div className="col-sm-10">
+              <Radio
+                checked={virtMode === 'paravirt'}
+                onChange={() => thi.setState({ virtMode: 'paravirt' })}
+                label="Paravirtualization"
+              />
+              <Radio
+                checked={virtMode === 'fullVirt'}
+                onChange={() => this.setState({ virtMode: 'fullvirt' })}
+                label="Full virtualization"
+              />
             </div>
           </fieldset>
         </div>
@@ -408,7 +368,6 @@ export class EditConfigPage extends Component {
                 className="form-control"
                 id="config-kernel"
                 value={kernel}
-                disabled={loading}
                 onChange={e => this.setState({ kernel: e.target.value })}
               >
                 <optgroup label="Current">
@@ -448,83 +407,81 @@ export class EditConfigPage extends Component {
                 Run level
               </legend>
             </div>
-            <div className="col-sm-6">
-              {this.renderRadio('Default', 'runLevel', 'default')}
-              {this.renderRadio('Single-user mode', 'runLevel', 'single')}
-              {this.renderRadio('init=/bin/bash', 'runLevel', 'binbash')}
+            <div className="col-sm-10">
+              <Radio
+                checked={runLevel === 'default'}
+                onChange={() => this.setState({ runLevel: 'default' })}
+                label="Default"
+              />
+              <Radio
+                checked={runLevel === 'single'}
+                onChange={() => this.setState({ runLevel: 'single' })}
+                label="Single"
+              />
+              <Radio
+                checked={runLevel === 'binbash'}
+                onChange={() => this.setState({ runLevel: 'binbash' })}
+                label="init=/bin/bash"
+              />
             </div>
           </fieldset>
-          {this.renderFormElement('Memory limit', 'ramLimit', (
-            <div>
-              <input
-                className="col-sm-2 form-control"
-                id="config-ramLimit"
-                disabled={loading}
+          <FormGroup errors={errors} field="ram_limit" className="row">
+            <div className="col-sm-2 label-col">
+              <label>Memory limit</label>
+            </div>
+            <div className="col-sm-10 content-col">
+              <Input
+                className={`${CLASSNAME}-ramLimit`}
                 placeholder="Memory limit"
                 type="number"
                 value={ramLimit}
                 onChange={e => this.setState({ ramLimit: e.target.value })}
+                label="MB"
               />
-              <span className="measure-unit">MB</span>
+              <FormGroupError errors={errors} field="ram_limit" />
             </div>
-           ))}
+          </FormGroup>
           {diskSlots.map(this.renderDiskSlot)}
           <div className="form-group row">
             <div className="col-sm-2 label-col">
               <legend>initrd</legend>
             </div>
             <div className="input-container col-sm-6">
-              <select
+              <Select
                 id="config-initrd"
-                disabled={loading}
                 value={initrd}
                 className="form-control"
                 onChange={e => this.setState({ initrd: e.target.value })}
-              >
-                <option value="">No initrd</option>
-                <option value="25669">Recovery - Finnix (initrd)</option>
-              </select>
+                options={[{ value: '', label: 'No initrd' },
+                          { value: '25669', label: 'Recovery - Finnix (initrd)'}]}
+              />
             </div>
           </div>
           <div className="form-group row">
             <div className="col-sm-2 label-col">
               <label>root / boot device</label>
             </div>
-            <div className="input-container col-sm-6">
-              {this.renderRadio(
-                <span className="multi-radio clearfix">
-                  <span>
-                    Standard
-                  </span>
-                  <select
-                    id="config-root-device-select"
-                    className="form-control float-xs-right"
-                    value={isCustomRoot ? '/dev/sda' : rootDevice}
-                    disabled={loading || isCustomRoot}
-                    onChange={e => this.setState({ rootDevice: e.target.value })}
-                  >
-                    {diskSlots.map((_, i) =>
-                      <option key={i} value={`/dev/${AVAILABLE_DISK_SLOTS[i]}`}>
-                        /dev/{AVAILABLE_DISK_SLOTS[i]}
-                      </option>
-                     )}
-                  </select>
-                </span>, 'isCustomRoot', false)}
-              {this.renderRadio(
-                <span className="multi-radio clearfix">
-                  <span>
-                    Custom
-                  </span>
-                  <input
-                    type="text"
-                    className="form-control float-xs-right"
-                    id="config-custom-root-device"
-                    disabled={loading || !isCustomRoot}
-                    placeholder="/dev/xvda"
-                    value={isCustomRoot ? rootDevice : ''}
-                    onChange={e => this.setState({ rootDevice: e.target.value })}
-                  />
-                </span>, 'isCustomRoot', true)}
+            <div className="col-sm-6">
+              <RadioSelectCombo
+                radioLabel="Standard"
+                radioChecked={!isCustomRoot}
+                radioOnChange={() => this.setState({ isCustomRoot: false })}
+                selectDisabled={isCustomRoot}
+                selectValue={isCustomRoot ? '/dev/sda' : rootDevice}
+                selectOptions={diskSlots.map((_, i) => ({
+                    value: `/dev/${AVAILABLE_DISK_SLOTS[i]}`,
+                    label: `/dev/${AVAILABLE_DISK_SLOTS[i]}`
+                  }))}
+                selectOnChange={e => this.setState({ rootDevice: e.target.value })}
+              />
+              <RadioInputCombo
+                radioLabel="Custom"
+                radioChecked={isCustomRoot}
+                radioOnChange={() => this.setState({ isCustomRoot: true })}
+                inputDisabled={!isCustomRoot}
+                inputValue={isCustomRoot ? rootDevice : ''}
+                inputOnChange={e => this.setState({ rootDevice: e.target.value })}
+              />
             </div>
           </div>
         </div>
@@ -536,29 +493,50 @@ export class EditConfigPage extends Component {
                 Boot helpers
               </legend>
             </div>
-            <div className="col-md-8">
-              {this.renderCheckbox(
-                  'Enable distro helper',
-                  'enableDistroHelper',
-                  'Helps maintain correct inittab/upstart console device')}
-              {this.renderCheckbox(
-                  'Disable updatedb',
-                  'disableUpdatedb',
-                  'Disables updatedb cron job to avoid disk thrashing')}
-              {this.renderCheckbox(
-                  'Enable modules.dep helper',
-                  'enableModulesdepHelper',
-                  'Creates a modules dependency file for the kernel you run')}
-              {this.renderCheckbox(
-                  'Enable network helper',
-                  'enableNetworkHelper',
-                  (<span>
-                    Automatically configure static networking <a
-                      href="https://www.linode.com/docs/platform/network-helper"
-                    >
-                      (more info)
-                    </a>
-                  </span>))}
+            <div className="col-md-10">
+              <div className="form-group">
+                <Checkbox
+                  checked={enableDistroHelper}
+                  onChange={() => this.setState({ enableDistroHelper: !enableDistroHelper })}
+                  label="Enable distro helper"
+                />
+                <div>
+                  <small className="text-muted">Helps maintain correct inittab/upstart console device</small>
+                </div>
+              </div>
+              <div className="form-group">
+                <Checkbox
+                  checked={disableUpdatedb}
+                  onChange={() => this.setState({ disableUpdatedb: !disableUpdatedb })}
+                  label="Disable updatedb"
+                />
+                <div>
+                  <small className="text-muted">Disables updatedb cron job to avoid disk thrashing</small>
+                </div>
+              </div>
+              <div className="form-group">
+                <Checkbox
+                  checked={enableModulesdepHelper}
+                  onChange={() => this.setState({ enableModulesdepHelper: !enableModulesdepHelper })}
+                  label="Enable modulesdep helper"
+                />
+                <div>
+                  <small className="text-muted">Creates a module dependency file for the kernel you run</small>
+                </div>
+              </div>
+              <div className="form-group">
+                <Checkbox
+                  checked={enableNetworkHelper}
+                  onChange={() => this.setState({ enableNetworkHelper: !enableNetworkHelper })}
+                  label="Enable network helper"
+                />
+                <div>
+                  <small className="text-muted">
+                    Automatically configure static networking
+                    <a href="https://www.linode.com/docs/platform/network-helper">(more info)</a>
+                  </small>
+                </div>
+              </div>
             </div>
           </fieldset>
           <ErrorSummary errors={errors} />

@@ -147,7 +147,7 @@ export class Layout extends Component {
     }
 
     // Grab events first time right away
-    dispatch(events.all([], this.eventHandler));
+    dispatch(events.page(0, this.eventHandler));
 
     this.pollForEvents();
   }
