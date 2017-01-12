@@ -35,7 +35,7 @@ $header-padding: $grid-gutter-width-base / 2;
 
 .MainHeader {
     height: $main-nav-height;
-    background: #333;
+    background: $dark-black;
     padding: 0 $header-padding;
 
     &-brand, &-search, &-session {
@@ -76,7 +76,7 @@ $header-padding: $grid-gutter-width-base / 2;
         }
     }
 
-    &-session {        
+    &-session {
         padding: 0 15px;
         margin-right: -15px;
         position: relative; /* Give the badge something to relate to */
@@ -91,12 +91,17 @@ $header-padding: $grid-gutter-width-base / 2;
         &:active,
         &:hover,
         &:focus {
-            background: #3c3c3c;
+            $hover-bg: #3c3c3c;
+            background: $hover-bg;
             cursor: pointer;
             cursor: hand;
+
+            .MainHeader-badge {
+                border: 4px solid $hover-bg;
+            }
         }
     }
-    
+
     &-username {
         padding-right: $header-padding / 2;
         color: $white;
@@ -104,17 +109,18 @@ $header-padding: $grid-gutter-width-base / 2;
 
     &-badge {
         display: inline-block;
-        $height: 24px;
+        $height: 30px;
         position: absolute;
-        top: $height / 4;
-        right: $height / 4;
+        top: 2;
+        right: 0;
         font-size: $font-xs-small;
         background: $red;
         color: $white;
         height: $height;
-        line-height: $height;
+        line-height: 22px;
         text-align: center;
         border-radius: 50%;
+        border: 4px solid $dark-black;
 
         /* These settings are so that it looks circular generally and decent in other cases. */
         min-width: $height;
