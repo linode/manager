@@ -57,7 +57,7 @@ export default class Modals extends Component {
             <p>
               Content goes here
             </p>
-            <div className="ConfigSelectModal-configs">
+            <div className="ConfigSelectModalBody-configs">
               <div key="1" className="radio">
                 <label>
                   <input

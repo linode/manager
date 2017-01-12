@@ -2,14 +2,14 @@ import React from 'react';
 import sinon from 'sinon';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
-import ConfigSelectModal from '~/linodes/components/ConfigSelectModal';
+import ConfigSelectModalBody from '~/linodes/components/ConfigSelectModalBody';
 import { powerOnLinode, rebootLinode } from '~/api/linodes';
 
 import { api } from '@/data';
 
 const { linodes } = api;
 
-describe('linodes/components/StatusDropdown/ConfigSelectModal', () => {
+describe('linodes/components/StatusDropdown/ConfigSelectModalBody', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
@@ -18,7 +18,7 @@ describe('linodes/components/StatusDropdown/ConfigSelectModal', () => {
 
   it('renders power on button text', () => {
     const modal = shallow(
-      <ConfigSelectModal
+      <ConfigSelectModalBody
         linode={linodes.linodes['1238']}
         action={powerOnLinode}
       />
@@ -29,7 +29,7 @@ describe('linodes/components/StatusDropdown/ConfigSelectModal', () => {
 
   it('renders reboot button text', () => {
     const modal = shallow(
-      <ConfigSelectModal
+      <ConfigSelectModalBody
         linode={linodes.linodes['1238']}
         action={rebootLinode}
       />
@@ -40,7 +40,7 @@ describe('linodes/components/StatusDropdown/ConfigSelectModal', () => {
 
   it('renders config list', () => {
     const linode = linodes.linodes['1238'];
-    const modal = shallow(<ConfigSelectModal linode={linode} />);
+    const modal = shallow(<ConfigSelectModalBody linode={linode} />);
 
     const configs = Object.values(linode._configs.configs);
     const elements = modal.find('div.radio label');
@@ -60,7 +60,7 @@ describe('linodes/components/StatusDropdown/ConfigSelectModal', () => {
     const linode = linodes.linodes['1238'];
 
     const modal = shallow(
-      <ConfigSelectModal
+      <ConfigSelectModalBody
         linode={linode}
         action={action}
         dispatch={dispatch}
