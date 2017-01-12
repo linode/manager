@@ -4,6 +4,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { push } from 'react-router-redux';
 
 import { setSource } from '~/actions/source';
+import { setTitle } from '~/actions/title';
 import { dnszones } from '~/api';
 import NewMasterZone from '../components/NewMasterZone';
 
@@ -25,6 +26,7 @@ export class CreatePage extends Component {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
+    dispatch(setTitle('Add a zone'));
   }
 
   async addMasterZone(e) {

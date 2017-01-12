@@ -19,6 +19,7 @@ import {
   toggleSelected,
 } from '../actions';
 import { setSource } from '~/actions/source';
+import { setTitle } from '~/actions/title';
 import ConfirmModal from '~/components/ConfirmModal';
 import { showModal, hideModal } from '~/actions/modal';
 
@@ -47,6 +48,7 @@ export class IndexPage extends Component {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
+    dispatch(setTitle('Linodes'));
   }
 
   powerOn(linode) {

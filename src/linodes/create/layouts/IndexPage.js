@@ -11,6 +11,7 @@ import { actions as linodeActions } from '~/api/configs/linodes';
 import { randomInitialProgress } from '~/api/linodes';
 import { setError } from '~/actions/errors';
 import { setSource } from '~/actions/source';
+import { setTitle } from '~/actions/title';
 
 export class IndexPage extends Component {
   static async preload(store) {
@@ -40,6 +41,7 @@ export class IndexPage extends Component {
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
+    dispatch(setTitle('Add a Linode'));
     const { location } = this.props;
     if (location.query && location.query.linode && location.query.backup) {
       let _linodes = this.props.linodes;

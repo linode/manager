@@ -7,6 +7,7 @@ import modal from './modal';
 import notifications from './notifications';
 import feedback from './feedback';
 import source from './source';
+import title from './title';
 import api from '../api/reducer';
 import errors from './errors';
 import linodes from '../linodes/reducers';
@@ -19,6 +20,7 @@ const appReducer = combineReducers({
   notifications,
   feedback,
   source,
+  title,
   api,
   linodes,
   errors,
