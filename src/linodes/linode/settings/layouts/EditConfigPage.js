@@ -173,7 +173,8 @@ export class EditConfigPage extends Component {
       runLevel: 'default',
       comments: '',
       label: '',
-      ramLimit: 2048, // TODO: fetch from plan
+      ramLimit: 0, // TODO: fetch from plan
+      isMaxRam: true,
       kernel: 'linode/latest_64',
       isCustomRoot: false,
       rootDevice: '/dev/sda',
@@ -213,9 +214,11 @@ export class EditConfigPage extends Component {
     const diskSlots = this.getDiskSlots(true);
 
     let isCustomRoot = true;
+    let isMaxRam = true;
     let initrd = '';
     try {
       isCustomRoot = AVAILABLE_DISK_SLOTS.indexOf(config.root_device.replace('/dev/', '')) === -1;
+      isMaxRam = config.ram_limit == 0;
       initrd = config.initrd;
     } catch (e) {
       // do nothing.
@@ -224,6 +227,7 @@ export class EditConfigPage extends Component {
     this.setState({
       diskSlots,
       isCustomRoot,
+      isMaxRam,
       initrd,
       loading: false,
       virtMode: config.virt_mode,
@@ -245,8 +249,8 @@ export class EditConfigPage extends Component {
   async saveChanges() {
     const { dispatch } = this.props;
     const linode = this.getLinode();
-    const { label, comments, ramLimit, runLevel, virtMode, kernel, diskSlots,
-            initrd, rootDevice, helpers } = this.state;
+    const { label, comments, isMaxRam, ramLimit, runLevel, virtMode, kernel,
+            diskSlots, initrd, rootDevice, helpers } = this.state;
 
     this.setState({ loading: true, errors: {} });
 
@@ -255,7 +259,7 @@ export class EditConfigPage extends Component {
       comments,
       kernel,
       initrd,
-      ram_limit: parseInt(ramLimit, 10),
+      ram_limit: isMaxRam ? 0 : parseInt(ramLimit, 10),
       run_level: runLevel,
       virt_mode: virtMode,
       disks: {},
@@ -351,6 +355,7 @@ export class EditConfigPage extends Component {
     const {
       loading, label, comments, kernel, isCustomRoot, ramLimit, rootDevice,
       initrd, errors, diskSlots } = this.state;
+    const linode = this.getLinode();
 
     return (
       <section className="card">
@@ -454,10 +459,15 @@ export class EditConfigPage extends Component {
               {this.renderRadio('init=/bin/bash', 'runLevel', 'binbash')}
             </div>
           </fieldset>
-          {this.renderFormElement('Memory limit', 'ramLimit', (
-            <div>
+          <div className="form-group row">
+            <div className="col-sm-2 label-col">
+              <label>Memory limit</label>
+            </div>
+            <div className="input-container col-sm-6">
+          {this.renderRadio(
+            <span>
               <input
-                className="col-sm-2 form-control"
+                className="form-control"
                 id="config-ramLimit"
                 disabled={loading}
                 placeholder="Memory limit"
@@ -466,8 +476,18 @@ export class EditConfigPage extends Component {
                 onChange={e => this.setState({ ramLimit: e.target.value })}
               />
               <span className="measure-unit">MB</span>
-            </div>
-           ))}
+            </span>,
+            'isMaxRam',
+            false
+          )}
+          {this.renderRadio(
+            <span>Maximum ({
+              linode.type.length ? linode.type[0].ram : null
+            } MB)</span>,
+            'isMaxRam',
+            true
+          )}
+          </div></div>
           {diskSlots.map(this.renderDiskSlot)}
           <div className="form-group row">
             <div className="col-sm-2 label-col">
@@ -552,13 +572,13 @@ export class EditConfigPage extends Component {
               {this.renderCheckbox(
                   'Enable network helper',
                   'enableNetworkHelper',
-                  (<span>
+                  <span>
                     Automatically configure static networking <a
                       href="https://www.linode.com/docs/platform/network-helper"
                     >
                       (more info)
                     </a>
-                  </span>))}
+                  </span>)}
             </div>
           </fieldset>
           <ErrorSummary errors={errors} />
