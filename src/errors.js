@@ -4,7 +4,7 @@ export async function reduceErrors(response) {
   const json = await response.json();
   const errors = {};
   json.errors.forEach(error => {
-    const key = error.field || '_';
+    const key = (error.field + (error.field_crumbs ? '.' + error.field_crumbs : '')) || '_';
     const list = errors[key] || [];
     list.push(error);
     if (!errors[key]) {
@@ -15,18 +15,17 @@ export async function reduceErrors(response) {
 }
 
 export function FormGroup(props) {
-  const { errors, field } = props;
+  const { errors, field, fieldCrumbs } = props;
+
+  const fieldErrors = errors[field + (fieldCrumbs ? '.' + fieldCrumbs : '')];
+
   return (
     <div
       className={`form-group ${
         errors[field] && errors[field].length ? 'has-danger' : ''
-      } ${props.className}`}
+        } ${props.className}`}
     >
       {props.children}
-      {errors[field] && errors[field].length ?
-        <div className="form-control-feedback">
-          {errors[field].map(error => <div key={error}>{error.reason}</div>)}
-        </div> : null}
     </div>
   );
 }
@@ -34,6 +33,7 @@ export function FormGroup(props) {
 FormGroup.propTypes = {
   errors: PropTypes.object.isRequired,
   field: PropTypes.string.isRequired,
+  fieldCrumbs: PropTypes.string,
   className: PropTypes.string,
   children: PropTypes.node,
 };
