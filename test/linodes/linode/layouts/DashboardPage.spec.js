@@ -35,7 +35,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
 
     const ipSection = page.find('.linode-ips');
     expect(ipSection.find('li').at(0).text()).to.equal(ipv4);
-    expect(ipSection.find('li').at(1).text()).to.equal(ipv6);
+    expect(ipSection.find('li').at(1).text()).to.equal(ipv6.split('/')[0]);
   });
 
   it('renders backups not enabled', () => {

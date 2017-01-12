@@ -119,12 +119,20 @@ export class SummaryPage extends Component {
           <div className="col-sm-9 content-col right">
             <ul className="list-unstyled">
               <span>
-                <span>{ipv4.address}/24 </span>
+                <span>{ipv4.address} </span>
                 <span className="text-nowrap">
                   ({ipv4.rdns})
                 </span>
               </span>
             </ul>
+          </div>
+        </div>
+        <div className="form-group row">
+          <div className="col-sm-3 label-col left">
+            Subnet mask
+          </div>
+          <div className="col-sm-9 content-col right">
+            255.255.255.0
           </div>
         </div>
         <div className="form-group row">
