@@ -213,7 +213,7 @@ export class DashboardPage extends Component {
                 Backup
               </div>
               <div className="col-sm-9 content-col right">
-                {this.renderBackupStatus(linode)}
+                {this.renderBackupStatus(linode, true)}
               </div>
             </div>
           </div>
