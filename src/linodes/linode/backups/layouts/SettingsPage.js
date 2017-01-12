@@ -8,6 +8,7 @@ import { Form, SubmitButton } from '~/components/form';
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import { setSource } from '~/actions/source';
 import { showModal, hideModal } from '~/actions/modal';
+import ConfirmModalBody from '~/components/modals/ConfirmModalBody';
 
 export class CancelBackupsModal extends Component {
   constructor() {
@@ -17,31 +18,22 @@ export class CancelBackupsModal extends Component {
 
   render() {
     const { dispatch, linodeId } = this.props;
-    const { loading } = this.state;
     return (
-      <div>
+      <ConfirmModalBody
+        buttonText="Cancel backups service"
+        onOk={async () => {
+          this.setState({ loading: true });
+          await dispatch(cancelBackup(linodeId));
+          this.setState({ loading: false });
+          dispatch(hideModal());
+        }}
+        onCancel={() => dispatch(hideModal())}
+      >
         <p>
           Are you sure you want to cancel backup service for this Linode?
           This cannot be undone.
         </p>
-        <div className="modal-footer">
-          <button
-            className="btn btn-cancel"
-            disabled={loading}
-            onClick={() => dispatch(hideModal())}
-          >Cancel</button>
-          <button
-            className="btn btn-default"
-            disabled={loading}
-            onClick={async () => {
-              this.setState({ loading: true });
-              await dispatch(cancelBackup(linodeId));
-              this.setState({ loading: false });
-              dispatch(hideModal());
-            }}
-          >Cancel backups service</button>
-        </div>
-      </div>);
+      </ConfirmModalBody>);
   }
 }
 
