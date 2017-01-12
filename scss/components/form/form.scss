@@ -39,6 +39,15 @@ input[type="text"].form-control {
   margin-left: 10px;
 }
 
+.label-col {
+  color: $lightest-black;
+  text-align: right;
+
+  legend {
+    font-size: initial;
+  }
+}
+
 .content-col {
   li a {
     text-decoration: none;
