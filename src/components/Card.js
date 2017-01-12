@@ -20,8 +20,9 @@ Card.propTypes = {
   title: PropTypes.node.isRequired,
   className: PropTypes.string,
   helpLink: PropTypes.string,
+  children: PropTypes.node,
 };
 
 Card.defaultProps = {
-  className: ''
+  className: '',
 };

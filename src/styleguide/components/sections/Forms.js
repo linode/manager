@@ -17,7 +17,9 @@ export default function Forms() {
               <Form>
                 <FormGroup className="row">
                   <label className="col-sm-4">
-                    <span className="FormDescriptor FormDescriptor__form-labels"><span className="badge">1</span></span>
+                    <span className="FormDescriptor FormDescriptor__form-labels">
+                      <span className="badge">1</span>
+                    </span>
                     Field Label
                   </label>
                   <div className="col-sm-8">
@@ -28,7 +30,9 @@ export default function Forms() {
                   <label className="col-sm-4">Field Label</label>
                   <div className="col-sm-8">
                     <input type="text" name="example-form-field" />
-                    <span className="FormDescriptor FormDescriptor__form-fields"><span className="badge">2</span></span>
+                    <span className="FormDescriptor FormDescriptor__form-fields">
+                      <span className="badge">2</span>
+                    </span>
                   </div>
                 </FormGroup>
                 <FormGroup className="row">
@@ -41,7 +45,9 @@ export default function Forms() {
                   <label className="col-sm-4">Field Label</label>
                   <div className="col-sm-8">
                     <input type="text" name="example-form-field" disabled />
-                    <span className="FormDescriptor FormDescriptor__disabled-fields"><span className="badge">3</span></span>
+                    <span className="FormDescriptor FormDescriptor__disabled-fields">
+                      <span className="badge">3</span>
+                    </span>
                   </div>
                 </FormGroup>
               </Form>
@@ -78,9 +84,14 @@ export default function Forms() {
             <div className="ExampleForm">
               <Form>
 
-                <span className="FormDescriptor FormDescriptor__form-title"><span className="badge">1</span></span>
+                <span className="FormDescriptor FormDescriptor__form-title">
+                  <span className="badge">1</span>
+                </span>
                 <h2>Form Title</h2>
-                <p>A short description about the purpose of this form. <a href="#">Learn More.</a></p>
+                <p>
+                  A short description about the purpose of this form.
+                  <a href="#">Learn More.</a>
+                </p>
                 <FormGroup className="row">
                   <label className="col-sm-4">Field Label</label>
                   <div className="col-sm-8">
@@ -90,7 +101,9 @@ export default function Forms() {
 
                 <h3>Form Section Title</h3>
                 <FormGroup className="row">
-                  <span className="FormDescriptor FormDescriptor__form-section-title"><span className="badge">2</span></span>
+                  <span className="FormDescriptor FormDescriptor__form-section-title">
+                    <span className="badge">2</span>
+                  </span>
                   <label className="col-sm-4">Field Label</label>
                   <div className="col-sm-8">
                     <input type="text" name="example-form-field" />
@@ -105,8 +118,10 @@ export default function Forms() {
 
                 <FormGroup className="row">
                   <div className="offset-sm-4 col-sm-8">
-                    <span className="FormDescriptor FormDescriptor__form-buttons"><span className="badge">3</span></span>
-                    <SubmitButton/>
+                    <span className="FormDescriptor FormDescriptor__form-buttons">
+                      <span className="badge">3</span>
+                    </span>
+                    <SubmitButton />
                     <CancelButton />
                   </div>
                 </FormGroup>
@@ -118,27 +133,31 @@ export default function Forms() {
                     1 - Form Title:
                   </dt>
                   <dd>
-                    The form title describes the form content, and is typically an <code>&lt;h2&gt;</code>.
-                    A form title may be followed by a short paragraph describing the form's purpose and/or
-                    function in more detail. This short paragraph may also include support or help links.
+                    The form title describes the form content, and is typically an
+                    <code>&lt;h2&gt;</code>. A form title may be followed by a short
+                    paragraph describing the form's purpose and/or function in more detail.
+                    This short paragraph may also include support or help links.
                   </dd>
                   <dt>
                     2 - Form Section Title:
                   </dt>
                   <dd>
-                    Form section titles are subtitles used to group related form elements. Section titles
-                    use a heading a step below the form title. If the form title is an <code>&lt;h2&gt;</code>,
-                    the section title should be an <code>&lt;h3&gt;</code>. Section titles should be left aligned
-                    with the form title.
+                    Form section titles are subtitles used to group related form elements.
+                    Section titles use a heading a step below the form title. If the form
+                    title is an <code>&lt;h2&gt;</code>, the section title should be an
+                    <code>&lt;h3&gt;</code>. Section titles should be left aligned with the
+                    form title.
                   </dd>
                   <dt>
                     3 - Form Buttons:
                   </dt>
                   <dd>
-                    A form will typically have a primary button to submit, and a link button to cancel.
-                    The primary button should be left aligned with the form fields. The exception to this rule
-                    is when more than one form is available on a single page. In the multiple-forms scenario,
-                    a link button to cancel may be excluded in favor of primary or secondary navigation.
+                    A form will typically have a primary button to submit, and a
+                    link button to cancel. The primary button should be left
+                    aligned with the form fields. The exception to this rule
+                    is when more than one form is available on a single page.
+                    In the multiple-forms scenario, a link button to cancel may be
+                    excluded in favor of primary or secondary navigation.
                   </dd>
                 </dl>
               </div>
@@ -152,9 +171,6 @@ export default function Forms() {
               <h3>Form Help</h3>
             </div>
             <div className="ExampleForm">
-              <Form>
-
-              </Form>
               <div className="ExampleForm-description">
                 <dl>
                 </dl>
@@ -169,9 +185,6 @@ export default function Forms() {
               <h3>Form Validation</h3>
             </div>
             <div className="ExampleForm">
-              <Form>
-
-              </Form>
               <div className="ExampleForm-description">
                 <dl>
                 </dl>

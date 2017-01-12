@@ -9,8 +9,6 @@ export default function FormGroupError(props) {
       {fieldErrors.map(error => <div key={error}>{error.reason}</div>)}
     </div>
   );
-
-  return null;
 }
 
 FormGroupError.propTypes = {
