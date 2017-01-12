@@ -121,7 +121,7 @@ export default function Typography() {
                 <tr>
                   <td><a href="#">Hyperlink</a></td>
                   <td>0.975rem; ~15px</td>
-                  <td>Links use #4A90E2 and are only underlined on hover.</td>
+                  <td>Links use $blue ( #4A90E2 ) and are only underlined on hover.</td>
                 </tr>
               </tbody>
             </table>
