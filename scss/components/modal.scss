@@ -32,6 +32,10 @@
     background: $gray;
     padding: $main-padding-tb $main-padding-lr;
     border-bottom: 1px solid #ccc;
+    h3 {
+        position: relative;
+        top: 1px;
+    }
 }
 
 .modal-body {
