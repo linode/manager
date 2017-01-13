@@ -3,8 +3,16 @@
   margin-bottom: 24px;
   width: 100%;
 
-  & > h2,
-  & > h3 {
+  & > h2 {
     padding: 10px 20px;
+  }
+
+  h3 {
+    padding: 10px 0;
+  }
+
+  .Styleguide-sub-section {
+    margin-bottom: 20px;
+    padding: 5px 0;
   }
 }
