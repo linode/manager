@@ -44,7 +44,12 @@ export default function Forms() {
                 <FormGroup className="row">
                   <label className="col-sm-4">Field Label</label>
                   <div className="col-sm-8">
-                    <input type="text" name="example-form-field" className="form-control" disabled />
+                    <input
+                      type="text"
+                      name="example-form-field"
+                      className="form-control"
+                      disabled
+                    />
                     <span className="FormDescriptor FormDescriptor__disabled-fields">
                       <span className="badge">3</span>
                     </span>
