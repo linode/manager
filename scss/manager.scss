@@ -783,27 +783,6 @@ header .sub-header {
     padding-bottom: 0px;
 }
 
-.create-page {
-    padding-top: 15px;
-
-    section.card:not(:last-of-type) {
-        padding-bottom: 0;
-    }
-
-    section.card:nth-of-type(3) header {
-        margin-bottom: 0;
-    }
-
-    .alert {
-        display: inline-block;
-        margin: $main-padding-tb/2 0 0 0;
-    }
-
-    .backups {
-        margin-bottom: 15px;
-    }
-}
-
 .list-unstyled {
     margin-bottom: 0;
 }

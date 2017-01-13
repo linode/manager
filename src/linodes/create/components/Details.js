@@ -1,7 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 
 import { Card } from '~/components';
-import { Form, FormGroup, FormGroupError, PasswordInput, SubmitButton } from '~/components/form';
+import { Form, FormGroup, SubmitButton } from '~/components/form';
+import PasswordInput from '~/components/PasswordInput';
 
 export default class Details extends Component {
   constructor() {
@@ -51,21 +52,25 @@ export default class Details extends Component {
               />
             </div>
           </FormGroup>
-          <FormGroup name="root_password" errors={errors.root_password}
-                     className={`row ${selectedDistribution === 'none' ? 'hidden': ''}`}>
-            <label htmlFor="root_password" className="col-sm-2">Root Password</label>
+          <FormGroup
+            name="password"
+            errors={errors.root_password}
+            className={`row ${selectedDistribution === 'none' ? 'hidden' : ''}`}
+          >
+            <label htmlFor="password" className="col-sm-2">Root Password</label>
             <div className="col-sm-10">
               <PasswordInput
-                id="root_password"
-                name="root_password"
                 type="text"
                 passwordType="offline_fast_hashing_1e10_per_second"
                 onChange={password => this.setState({ password })}
               />
             </div>
           </FormGroup>
-          <FormGroup name="enabled_backups" errors={errors.backups}
-                     className={`row ${selectedDistribution === 'none' ? 'hidden' : ''}`}>
+          <FormGroup
+            name="enabled_backups"
+            errors={errors.backups}
+            className={`row ${selectedDistribution === 'none' ? 'hidden' : ''}`}
+          >
             <label htmlFor="enabled_backups" className="col-sm-2">Enable Backups</label>
             <div className="col-sm-10">
               <input

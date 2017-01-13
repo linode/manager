@@ -43,12 +43,12 @@ export default class Datacenter extends Component {
     datacentersInRegion.indexOf(id) !== -1);
 
     return datacenters.length ? (
-        <div key={region}>
-          <h3>{region}</h3>
-          <div className="datacenter-group">
-            {datacenters.map(this.renderDatacenter)}
-          </div>
+      <div key={region}>
+        <h3>{region}</h3>
+        <div className="datacenter-group">
+          {datacenters.map(this.renderDatacenter)}
         </div>
+      </div>
       ) : null;
   }
 

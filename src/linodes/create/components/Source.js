@@ -55,10 +55,10 @@ export default class Source extends Component {
         <div className="LinodeSelection-table-container">
           <table>
             <thead>
-            <tr>
-              <td>Linode</td>
-              <td>Last backup</td>
-            </tr>
+              <tr>
+                <td>Linode</td>
+                <td>Last backup</td>
+              </tr>
             </thead>
             <tbody>
             {_.map(linodesOnPage, l =>
@@ -81,26 +81,26 @@ export default class Source extends Component {
           </table>
         </div>
         {linodesWithBackups.length > perPageLimit ? (
-            <nav className="text-xs-center">
-              <ul className="pagination">
-                <li className="page-item">
-                  <a href="#" aria-label="Previous" onClick={decreaseCount} className="page-link">
-                    <span aria-hidden="true">&laquo;</span>
+          <nav className="text-xs-center">
+            <ul className="pagination">
+              <li className="page-item">
+                <a href="#" aria-label="Previous" onClick={decreaseCount} className="page-link">
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </li>
+              {_.range(maxPage + 1).map(pageIndex =>
+                <li className="page-item" key={pageIndex}>
+                  <a href="#" onClick={gotoPage(pageIndex)} className="page-link">
+                    {pageIndex + 1}
                   </a>
-                </li>
-                {_.range(maxPage + 1).map(pageIndex =>
-                  <li className="page-item" key={pageIndex}>
-                    <a href="#" onClick={gotoPage(pageIndex)} className="page-link">
-                      {pageIndex + 1}
-                    </a>
-                  </li>)}
-                <li className="page-item">
-                  <a href="#" aria-label="Next" onClick={increaseCount} className="page-link">
-                    <span aria-hidden="true">&raquo;</span>
-                  </a>
-                </li>
-              </ul>
-            </nav>
+                </li>)}
+              <li className="page-item">
+                <a href="#" aria-label="Next" onClick={increaseCount} className="page-link">
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
           ) : null}
       </div>
     );
