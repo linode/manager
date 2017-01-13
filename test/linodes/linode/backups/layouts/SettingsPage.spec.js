@@ -1,6 +1,6 @@
 import React from 'react';
 import sinon from 'sinon';
-import { shallow, mount } from 'enzyme';
+import { mount } from 'enzyme';
 import { expect } from 'chai';
 import { expectRequest } from '@/common';
 
@@ -75,7 +75,7 @@ describe('linodes/linode/backups/layouts/SettingsPage', () => {
   });
 
   it('cancels backups when button on modal is pressed', async () => {
-    const modal = shallow(
+    const modal = mount(
       <CancelBackupsModal linodeId="1234" dispatch={dispatch} />
     );
 

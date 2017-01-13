@@ -3,7 +3,7 @@ import React, { Component, PropTypes } from 'react';
 import { RANDOM_PROGRESS_MAX, powerOnLinode, powerOffLinode, rebootLinode } from '~/api/linodes';
 import { LinodeStates, LinodeStatesReadable } from '~/constants';
 import { showModal } from '~/actions/modal';
-import ConfigSelectModal from '~/linodes/components/ConfigSelectModal';
+import ConfigSelectModalBody from '~/linodes/components/ConfigSelectModalBody';
 
 export function launchWeblishConsole(linode) {
   window.open(
@@ -75,7 +75,7 @@ export default class StatusDropdown extends Component {
         }
 
         dispatch(showModal('Select configuration profile',
-          <ConfigSelectModal
+          <ConfigSelectModalBody
             linode={linode}
             dispatch={dispatch}
             action={element._action}

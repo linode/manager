@@ -20,7 +20,7 @@ import {
 } from '../actions';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
-import ConfirmModal from '~/components/ConfirmModal';
+import ConfirmModalBody from '~/components/modals/ConfirmModalBody';
 import { showModal, hideModal } from '~/actions/modal';
 
 export class IndexPage extends Component {
@@ -101,7 +101,7 @@ export class IndexPage extends Component {
       const { dispatch } = this.props;
 
       dispatch(showModal('Confirm deletion',
-        <ConfirmModal
+        <ConfirmModalBody
           buttonText="Delete selected Linodes"
           onOk={() => {
             this.doToSelected(action);
@@ -111,7 +111,7 @@ export class IndexPage extends Component {
         >
           Are you sure you want to delete selected Linodes?
           This operation cannot be undone.
-        </ConfirmModal>
+        </ConfirmModalBody>
       ));
     };
   }
