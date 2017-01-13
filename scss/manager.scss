@@ -495,24 +495,14 @@ hr {
     margin-right: 15px;
 }
 
-input[type=checkbox], input[type=radio] {
-    padding: 0;
-    margin: 0;
-    height: 15px;
-    width: 15px;
-
-    + span {
-        padding: 0 5px;
-    }
-}
-
 .input-group-addon {
     background: $light-gray;
     height: $input-height;
     line-height: calc(#{$input-height}-2px});
     padding: 0 $input-padding;
 
-    input[type=checkbox] {
+    .Checkbox {
+        line-height: 28px;
         position: relative;
         top: 1px;
     }
@@ -664,10 +654,15 @@ table {
 }
 
 .alert {
-    &.alert-info {
+    &-info {
         background: $yellow;
         border-color: $dark-gray;
         color: $light-black;
+    }
+
+    &-danger {
+        margin-bottom: 0;
+        margin-top: 15px;
     }
 }
 
@@ -810,44 +805,6 @@ header .sub-header {
 
 p {
     margin-bottom: $main-padding-tb/2;
-}
-
-.password-input {
-    .strength {
-        width: 300px;
-        height: 10px;
-
-        span {
-            display: inline-block;
-            width: 75px;
-            height: 100%;
-            border: 1px solid $gray;
-        }
-
-        &.strength-1 {
-            span:nth-child(1) {
-                background: $dark-gray;
-            }
-        }
-
-        &.strength-2 {
-            span:nth-child(1), span:nth-child(2) {
-                background: $red;
-            }
-        }
-
-        &.strength-3 {
-            span:nth-child(1), span:nth-child(2), span:nth-child(3) {
-                background: $dark-yellow;
-            }
-        }
-
-        &.strength-4 {
-            span {
-                background: $green;
-            }
-        }
-    }
 }
 
 .feedback {

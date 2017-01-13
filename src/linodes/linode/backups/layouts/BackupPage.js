@@ -7,6 +7,8 @@ import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import { linodes } from '~/api';
 import { takeBackup, restoreBackup } from '~/api/backups';
 import { setError } from '~/actions/errors';
+import Select from '~/components/Select';
+import Checkbox from '~/components/Checkbox';
 
 function renderDateTime(dt) {
   return dt.replace('T', ' ');
@@ -107,15 +109,15 @@ export class BackupPage extends Component {
     const restoreToField = (
       <div className="form-group row">
         <div className="col-sm-3 label-col">
-          Restore to
+          <label>Restore to</label>
         </div>
         <div className="col-sm-9 content-col right">
-          <select
+          <Select
             value={targetLinode}
             onChange={e => this.setState({ targetLinode: e.target.value })}
           >
             {restoreTo}
-          </select>
+          </Select>
         </div>
       </div>
     );
@@ -149,7 +151,7 @@ export class BackupPage extends Component {
     const label = (
       <div className="form-group row">
         <div className="col-sm-3 label-col">
-          Label
+          <label>Label</label>
         </div>
         <div className={bemField('label')}>
           {backup.label}
@@ -229,17 +231,12 @@ export class BackupPage extends Component {
           {restoreToField}
           <div className="form-group row">
             <div className="col-sm-3 label-col"></div>
-            <div className="col-sm-9 content-col right checkbox">
-              <label>
-                <input
-                  id="destroy-all"
-                  type="checkbox"
-                  value={overwrite}
-                  name="overwrite"
-                  onChange={() => this.setState({ overwrite: !overwrite })}
-                />
-                <span>Destroy all current disks and backups</span>
-              </label>
+            <div className="col-sm-9 content-col">
+              <Checkbox
+                checked={overwrite}
+                label="Destroy all current disks and backups"
+                onChange={() => this.setState({ overwrite: !overwrite })}
+              />
             </div>
           </div>
           <div className="form-group row">

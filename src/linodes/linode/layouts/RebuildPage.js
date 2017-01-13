@@ -3,18 +3,24 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
 import PasswordInput from '~/components/PasswordInput';
-import FormRow from '~/components/FormRow';
+import { FormGroup, FormGroupError, Form, SubmitButton } from '~/components/form';
+import { reduceErrors, ErrorSummary } from '~/errors';
 import Distributions from '~/linodes/components/Distributions';
 import { setSource } from '~/actions/source';
 import { rebuildLinode } from '~/api/linodes';
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 
 export class RebuildPage extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.onSubmit = this.onSubmit.bind(this);
     this.getLinode = getLinode.bind(this);
-    this.state = { distribution: null, password: '' };
+    this.state = {
+      distribution: this.getLinode().distribution.id,
+      password: null,
+      errors: {},
+      loading: false,
+    };
   }
 
   async componentDidMount() {
@@ -25,20 +31,27 @@ export class RebuildPage extends Component {
   async onSubmit() {
     const { dispatch, params: { linodeLabel } } = this.props;
     const { id: linodeId } = this.getLinode();
+
+    this.setState({ loading: true, errors: {} });
+
     try {
-      dispatch(rebuildLinode(linodeId, {
+      await dispatch(rebuildLinode(linodeId, {
         distribution: this.state.distribution,
         root_pass: this.state.password,
       }));
       dispatch(push(`/linodes/${linodeLabel}`));
-    } catch (e) {
-      // TODO: handle errors
+    } catch (response) {
+      const errors = await reduceErrors(response);
+      errors._ = errors.distribution;
+      this.setState({ errors });
     }
+
+    this.setState({ loading: false });
   }
 
   render() {
     const { distributions } = this.props;
-    const { distribution } = this.state;
+    const { distribution, errors } = this.state;
 
     return (
       <section className="LinodesLinodeRebuildPage">
@@ -47,30 +60,39 @@ export class RebuildPage extends Component {
             <h2 className="LinodesLinodeRebuildPage-title">Rebuild</h2>
           </header>
           <div className="LinodesLinodeRebuildPage-body">
-            <div className="LinodesLinodeRebuildPage-distributions">
-              <Distributions
-                distributions={distributions.distributions}
-                distribution={distribution}
-                onSelected={distribution => this.setState({ distribution })}
-                noDistribution={false}
-              />
-            </div>
-            <div className="LinodesLinodeRebuildPage-password">
-              <FormRow label="Root password">
-                <PasswordInput
-                  value={this.state.password}
-                  passwordType="offline_fast_hashing_1e10_per_second"
-                  onChange={password => this.setState({ password })}
+            <Form onSubmit={this.onSubmit}>
+              <div className="LinodesLinodeRebuildPage-distributions">
+                <Distributions
+                  distributions={distributions.distributions}
+                  distribution={distribution}
+                  onSelected={distribution => this.setState({ distribution })}
+                  noDistribution={false}
                 />
-              </FormRow>
-            </div>
-            <FormRow>
-              <button
-                className="LinodesLinodeRebuildPage-rebuild"
-                onClick={this.onSubmit}
-                disabled={!(this.state.password && this.state.distribution)}
-              >Rebuild</button>
-            </FormRow>
+              </div>
+              <div className="LinodesLinodeRebuildPage-password">
+                <FormGroup errors={errors} name="root_pass" className="row">
+                  <div className="col-sm-2 label-col">
+                    <label>Root password:</label>
+                  </div>
+                  <div className="col-sm-10">
+                    <PasswordInput
+                      value={this.state.password}
+                      passwordType="offline_fast_hashing_1e10_per_second"
+                      onChange={password => this.setState({ password })}
+                    />
+                    <FormGroupError errors={errors} name="root_pass" />
+                  </div>
+                </FormGroup>
+              </div>
+              <div className="form-group row">
+                <div className="col-sm-2 offset-sm-2">
+                  <SubmitButton
+                    disabled={this.loading}
+                  >Rebuild</SubmitButton>
+                </div>
+              </div>
+              <ErrorSummary errors={errors} />
+            </Form>
           </div>
         </div>
       </section>

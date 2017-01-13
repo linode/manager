@@ -1,9 +1,10 @@
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
-import { flags, distros as distroAssets } from '~/assets';
 import moment from 'moment';
 
+import { flags, distros as distroAssets } from '~/assets';
 import StatusDropdown from './StatusDropdown';
+import Checkbox from '~/components/Checkbox';
 
 function renderPowerButton(props) {
   const { linode, onPowerOn, onReboot } = props;
@@ -144,12 +145,10 @@ function renderCard(props) {
   const select = () => onSelect(linode);
   const selectedClass = isSelected ? 'selected' : '';
 
-  const checkbox = <input type="checkbox" checked={isSelected} onChange={select} />;
-
   return (
     <div key={linode.id} className={`linode card ${linode.status} ${selectedClass}`}>
       <header className="header-secondary">
-        {checkbox}
+        <Checkbox checked={isSelected} onChange={select} />
         <div>
           <Link className="linode-label" to={`/linodes/${linode.label}`}>{linode.label}</Link>
         </div>
@@ -185,11 +184,11 @@ function renderRow(props) {
   const select = () => onSelect(linode);
   const selectedClass = isSelected ? 'selected' : '';
 
-  const checkbox = <input type="checkbox" checked={isSelected} onClick={select} />;
-
   return (
     <tr className={`linode ${linode.status} ${selectedClass}`}>
-      <td className="linode-checkbox">{checkbox}</td>
+      <td className="linode-checkbox">
+        <Checkbox checked={isSelected} onChange={select} />
+      </td>
       <td>
         <Link to={`/linodes/${linode.label}`} className="linode-label">{linode.label}</Link>
       </td>

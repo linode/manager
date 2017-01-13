@@ -1,5 +1,7 @@
 import React from 'react';
 
+import Checkbox from '~/components/Checkbox';
+
 export function restorePanel() {
   /* TODO:
    * Linode Endpoint needs to be updated for specifying
@@ -24,13 +26,11 @@ export function restorePanel() {
           </div>
         </div>
         <div className="form-group row destroy-current">
-          <div className="col-sm-12 checkbox">
-            <label>
-              <input type="checkbox" name="destroy-all" value="true" />
-              <span>
-                Destroy all current disks and backups
-              </span>
-            </label>
+          <div className="col-sm-12">
+            <Checkbox
+              onChange={() => {}}
+              label="Destroy all current disks and backups"
+            />
           </div>
         </div>
         <div className="form-group row restore-button">

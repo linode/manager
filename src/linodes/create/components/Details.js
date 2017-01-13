@@ -1,7 +1,12 @@
 import React, { Component, PropTypes } from 'react';
 
 import PasswordInput from '~/components/PasswordInput';
-import FormRow from '~/components/FormRow';
+import Input from '~/components/Input';
+import Checkbox from '~/components/Checkbox';
+import { Form, FormGroup, FormGroupError, SubmitButton } from '~/components/form';
+import { ErrorSummary } from '~/errors';
+
+const CLASS_NAME = 'LinodeCreateDetails';
 
 export default class Details extends Component {
   constructor() {
@@ -12,13 +17,11 @@ export default class Details extends Component {
       label: '',
       enableBackups: false,
       showAdvanced: false,
+      loading: false,
     };
   }
 
-  onSubmit(e) {
-    e.preventDefault();
-    e.stopPropagation();
-
+  onSubmit() {
     this.props.onSubmit({
       password: this.state.password,
       label: this.state.label,
@@ -38,70 +41,62 @@ export default class Details extends Component {
                            (this.state.password || selectedDistribution === 'none'));
 
     return (
-      <div className="LinodesCreateDetails">
-        <header className="LinodesCreateDetails-header">
-          <h2 className="LinodesCreateDetails-title">Details</h2>
+      <div className={CLASS_NAME}>
+        <header>
+          <h2>Details</h2>
         </header>
-        <div className="LinodesCreateDetails-body">
-          <form onSubmit={this.onSubmit}>
-            <section>
-              <FormRow label="Label" errors={errors.label}>
-                <div className="LinodesCreateDetails-label">
-                  <input
+        <div>
+          <Form onSubmit={this.onSubmit}>
+            <FormGroup errors={errors} name="label" className="row">
+              <div className="col-sm-2 label-col">
+                <label>Label:</label>
+              </div>
+              <div className="col-sm-10 content-col">
+                <div className={`${CLASS_NAME}-label`}>
+                  <Input
                     value={this.state.label}
                     onChange={e => this.setState({ label: e.target.value })}
-                    placeholder={'gentoo-www1'}
-                    className="form-control"
+                    placeholder="gentoo-www1"
                   />
                 </div>
-              </FormRow>
-              <FormRow
-                label="Root password"
-                errors={errors.root_password}
-                showIf={selectedDistribution !== 'none'}
-              >
-                <div className="LinodesCreateDetails-password">
-                  <PasswordInput
-                    passwordType="offline_fast_hashing_1e10_per_second"
-                    onChange={password => this.setState({ password })}
-                  />
-                </div>
-              </FormRow>
-              <FormRow
-                label="Enable backups"
-                errors={errors.backups}
-                showIf={selectedDistribution !== 'none'}
-              >
-                <div className="LinodesCreateDetails-enableBackups">
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={this.state.enableBackups}
-                      onChange={e => this.setState({ enableBackups: e.target.checked })}
-                      disabled={selectedType === null}
-                    />
-                    <span>
-                      {selectedType === null ? '' : renderBackupsPrice()}
-                    </span>
-                  </label>
-                </div>
-              </FormRow>
-            </section>
-            {errors.__form ?
-              <section>
-                <div>
-                  <div className="alert alert-danger">
-                    {errors.__form}
-                  </div>
-                </div>
-              </section> : null}
-            <section>
-              <button
-                disabled={formDisabled}
-                className="LinodesCreateDetails-create"
-              >Create Linode{this.state.quantity > 1 ? 's' : null}</button>
-            </section>
-          </form>
+                <FormGroupError errors={errors} name="label" />
+              </div>
+            </FormGroup>
+            <FormGroup errors={errors} name="root_pass" className="row">
+              <div className="col-sm-2 label-col">
+                <label>Root password:</label>
+              </div>
+              <div className="col-sm-10 content-col">
+                <PasswordInput
+                  passwordType="offline_fast_hashing_1e10_per_second"
+                  onChange={password => this.setState({ password })}
+                />
+                <FormGroupError errors={errors} name="root_pass" />
+              </div>
+            </FormGroup>
+            <div className="form-group row">
+              <div className="col-sm-2 label-col">
+                <label>Enable backups:</label>
+              </div>
+              <div className="col-sm-10 content-col">
+                <Checkbox
+                  className={`${CLASS_NAME}-enableBackups`}
+                  checked={this.state.enableBackups}
+                  onChange={e => this.setState({ enableBackups: e.target.checked })}
+                  disabled={selectedType === null}
+                  label={selectedType === null ? '' : renderBackupsPrice()}
+                />
+              </div>
+            </div>
+            <div className="form-group row">
+              <div className="col-sm-10 offset-sm-2">
+                <SubmitButton
+                  disabled={formDisabled}
+                >Create Linode</SubmitButton>
+              </div>
+            </div>
+            <ErrorSummary errors={errors} />
+          </Form>
         </div>
       </div>
     );
