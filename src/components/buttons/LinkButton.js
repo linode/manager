@@ -33,4 +33,5 @@ LinkButton.propTypes = {
 
 LinkButton.defaultProps = {
   disabled: false,
+  className: '',
 };

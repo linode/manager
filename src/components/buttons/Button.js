@@ -51,4 +51,5 @@ Button.defaultProps = {
   disabled: false,
   buttonClass: 'btn-default',
   buttonType: 'button',
+  className: '',
 };

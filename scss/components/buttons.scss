@@ -20,19 +20,16 @@
 
     &.btn-default {
         color: $black;
+
+        &:not([disabled]):hover {
+            background: $gray;
+            color: $black;
+            outline: 0;
+        }
     }
 
     .fa {
         line-height: $input-height;
-    }
-
-    &:not([disabled], .btn-link):hover,
-    &:active,
-    &:focus,
-    &:active:focus /* yes, this is a special case */ {
-        background: $gray;
-        color: $black;
-        outline: 0;
     }
 
     &.btn-help, &.btn-warning {
@@ -91,18 +88,7 @@
         background: $blue;
         border: 1px solid $blue;
 
-        &:hover,
-        &:active,
-        &:focus {
-            color: white;
-            background: $blue !important;
-            border: 1px solid $blue !important;
-        }
-
-        &:not([disabled]):hover,
-        &:not([disabled]):active,
-        &:not([disabled]):focus,
-        &:not([disabled]):focus:active {
+        &:not([disabled]):hover {
             border-color: $blue; /* :focus:active needs this */
             background: white;
             color: $blue;
