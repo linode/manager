@@ -1,8 +1,9 @@
 .Styleguide {
+
   &-container {
     font-family: 'Helvetica', Arial, sans-serif;
     background: #ffffff;
-    height: 100%;
+    min-height: 100%;
   }
 
   &-header .LinodeLogo {
@@ -51,4 +52,8 @@
   &-content {
     display: flex;
   }
+}
+
+.Styleguide-content {
+  display: flex;
 }

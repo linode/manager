@@ -11,4 +11,27 @@
     line-height: normal;
     margin-bottom: 10px;
   }
+
+  &-nav a {
+    font-size: 14px;
+  }
+
+  &-nav a.active {
+    color: $black;
+    text-decoration: none;
+  }
+
+  &-nav a:hover {
+    cursor: pointer;
+  }
+
+  a.Styleguide-back-link {
+    position: absolute;
+    left: 15px;
+    top: 5px;
+  }
+
+  a.Styleguide-back-link:hover {
+    cursor: pointer;
+  }
 }

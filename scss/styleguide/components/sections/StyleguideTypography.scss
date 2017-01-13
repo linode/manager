@@ -1,0 +1,24 @@
+.StyleguideTypography {
+  width: 100%;
+
+  table {
+    table-layout: fixed;
+  }
+
+  table tr {
+    line-height: normal;
+  }
+
+  table thead th,
+  table tbody td {
+    padding: 10px;
+  }
+
+  table tbody td {
+    white-space: normal;
+  }
+
+  th.element {
+    width: 175px;
+  }
+}
