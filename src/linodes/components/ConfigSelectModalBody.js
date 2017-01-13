@@ -50,6 +50,7 @@ export default class ConfigSelectModalBody extends Component {
             onClick={() => dispatch(hideModal())}
           />
           <Button
+            className="LinodesLinodeComponentsConfigSelectModalBody-submit"
             disabled={loading}
             onClick={async () => {
               this.setState({ loading: true });

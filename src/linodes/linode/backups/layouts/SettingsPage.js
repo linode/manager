@@ -146,6 +146,7 @@ export class SettingsPage extends Component {
           </header>
           <p>This will remove all existing backups.</p>
           <Button
+            className="LinodesLinodeBackupsSettings-cancel"
             onClick={() => dispatch(showModal('Cancel backup service', cancelModal(linode.id)))}
           >
             Cancel backup service

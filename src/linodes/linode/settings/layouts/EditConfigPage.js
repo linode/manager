@@ -85,6 +85,7 @@ export function renderDiskSlot(device, index) {
 
   const addButton = oneDiskSlotInUse || currentDisk && !allDisksInUse ? (
     <LinkButton
+      className="EditConfigPage-add"
       disabled={loading}
       onClick={() => this.addDiskSlot()}
     >Add</LinkButton>
@@ -92,6 +93,7 @@ export function renderDiskSlot(device, index) {
 
   const deleteButton = index > 0 && index === diskSlots.length - 1 ? (
     <LinkButton
+      className="EditConfigPage-remove"
       disabled={loading}
       onClick={() => this.removeDiskSlot(device)}
     >Remove</LinkButton>

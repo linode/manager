@@ -30,14 +30,15 @@ function configContent(linode, configs, dispatch) {
         {configs.map(config =>
           <tr key={config.id}>
             <td>
-              <LinkButton
+              <Link
                 to={`/linodes/${linode.label}/settings/advanced/configs/${config.id}`}
               >
                 {config.label}
-              </LinkButton>
+              </Link>
             </td>
             {configs.length > 1 ? <td className="text-xs-right">
               <Button
+                className="LinodesLinodeSettingsComponentsConfigPanel-delete"
                 onClick={e => {
                   e.preventDefault();
                   dispatch(showModal('Confirm deletion',

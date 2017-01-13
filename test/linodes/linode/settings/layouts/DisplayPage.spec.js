@@ -26,7 +26,7 @@ describe('linodes/linode/settings/layouts/DisplayPage', () => {
   };
 
   it('renders display page', async () => {
-    const page = shallow(
+    const page = mount(
       <DisplayPage {...props} />
     );
 
@@ -50,11 +50,12 @@ describe('linodes/linode/settings/layouts/DisplayPage', () => {
   });
 
   it('makes request to save changes', async () => {
-    const page = shallow(<DisplayPage {...props} />);
+    const page = mount(<DisplayPage {...props} />);
 
     const linode = linodes.linodes['1234'];
+    dispatch.reset();
     page.find('button').simulate('click', { preventDefault() {} });
-    expect(dispatch.calledOnce).to.equal(true);
+    expect(dispatch.callCount).to.equal(1);
     const fn = dispatch.firstCall.args[0];
     const dispatched = () => ({ authentication: { token: 'hi' } });
     await expectRequest(fn, '/linode/instances/1234', dispatched,
@@ -88,10 +89,12 @@ describe('linodes/linode/settings/layouts/DisplayPage', () => {
   });
 
   it('redirects if the label changed', async () => {
-    const page = shallow(<DisplayPage {...props} />);
+    const page = mount(<DisplayPage {...props} />);
 
     page.find('.LinodesLinodeSettingsDisplay-label').simulate('change',
       { target: { value: 'newlabel' } });
+
+    dispatch.reset();
 
     await page.find('button').simulate('click', { preventDefault() {} });
 

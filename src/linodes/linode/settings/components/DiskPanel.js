@@ -99,11 +99,11 @@ export class DiskPanel extends Component {
                 {!poweredOff || d.state === 'deleting' ? null : (
                   <div>
                     <Button
-                      className="DiskPanel-edit"
+                      className="LinodesLinodeSettingsComponentsDiskPanel-edit"
                       onClick={() => dispatch(showModal('Edit disk', editModal(d)))}
                     >Edit</Button>
                     <Button
-                      className="DiskPanel-delete"
+                      className="LinodesLinodeSettingsComponentsDiskPanel-delete"
                       onClick={() => dispatch(showModal('Delete disk', deleteModal(d)))}
                     >Delete</Button>
                   </div>
@@ -121,7 +121,7 @@ export class DiskPanel extends Component {
                   {!poweredOff ? null : (
                     <Button
                       onClick={() => dispatch(showModal('Add a disk', addModal))}
-                      className="DiskPanel-add"
+                      className="LinodesLinodeSettingsComponentsDiskPanel-add"
                     >Add a disk</Button>
                    )}
                 </div>

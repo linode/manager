@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 
-import { Button } from '~/components/buttons';
+import Button from './Button';
 
 export default function PrimaryButton(props) {
   return (

@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
 
-import { Button } from '~/components/buttons';
+import Button from './Button';
 
 export default class LinkButton extends Component {
   constructor() {

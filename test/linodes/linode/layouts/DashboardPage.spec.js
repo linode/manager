@@ -132,7 +132,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
       />);
 
     expect(page.find('.input-group').at(0).find('input').length).to.equal(1);
-    expect(page.find('.input-group').at(0).find('button').length).to.equal(1);
+    expect(page.find('.input-group').at(0).find('Button').length).to.equal(1);
   });
 
   it('renders ssh path', () => {
