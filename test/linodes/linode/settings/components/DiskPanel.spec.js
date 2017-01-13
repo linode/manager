@@ -3,12 +3,11 @@ import sinon from 'sinon';
 import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 
-import {
-  AddModal,
-  DeleteModal,
-  EditModal,
-  DiskPanel,
-} from '~/linodes/linode/settings/components/DiskPanel';
+import { DiskPanel } from '~/linodes/linode/settings/components/DiskPanel';
+import { AddModal } from '~/linodes/linode/settings/components/AddModal';
+import { EditModal } from '~/linodes/linode/settings/components/EditModal';
+import { DeleteModal } from '~/linodes/linode/settings/components/DeleteModal';
+
 import { api } from '@/data';
 import { testLinode } from '@/data/linodes';
 import { SHOW_MODAL, hideModal } from '~/actions/modal';
