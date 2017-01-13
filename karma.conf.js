@@ -3,19 +3,11 @@ var path = require("path");
 var CircularDependencyPlugin = require('circular-dependency-plugin');
 
 module.exports = function(config) {
-  config.set({
+  var files = process.env.npm_config_single_file ? process.env.npm_config_single_file : 'test/index.js';
+  var option = {
+    basePath: __dirname,
     frameworks: ['mocha'],
     browsers: ['PhantomJS'],
-    files: [
-      './node_modules/phantomjs-polyfill/bind-polyfill.js',
-      'test/index.js',
-      'test/setup.js'
-    ],
-    preprocessors: {
-      'test/index.js': ['webpack', 'sourcemap'],
-      'src/**/*.js': ['webpack', 'sourcemap'],
-      'test/setup.js': ['webpack', 'sourcemap']
-    },
     webpack: {
       devtool: 'inline-source-map',
       module: {
@@ -93,5 +85,18 @@ module.exports = function(config) {
       require("karma-coverage")
     ],
     browserNoActivityTimeout: 100000
-  });
+  };
+
+  option.files = [
+    './node_modules/phantomjs-polyfill/bind-polyfill.js',
+    'test/setup.js',
+    { pattern: files, watch: false }
+  ];
+  option.preprocessors = {
+    'src/**/*.js': ['webpack', 'sourcemap'],
+    'test/setup.js': ['webpack', 'sourcemap']
+  };
+  option.preprocessors[files] = ['webpack', 'sourcemap'];
+
+  config.set(option);
 };
