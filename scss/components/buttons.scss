@@ -1,0 +1,169 @@
+//@import 'variables';
+//@import 'mixins';
+//
+//@import 'bootstrap';
+//
+//@import 'components/index.scss';
+//@import 'linodes/index.scss';
+//@import 'layout/index.scss';
+//@import 'styleguide/index.scss';
+
+.btn, a {
+    transition: background .35s, color .2s, border .1s;
+}
+
+.btn {
+    text-decoration: none;
+    border-radius: 2px;
+    border: $border;
+    background: $light-gray;
+
+    &.btn-default {
+        color: $black;
+    }
+
+    .fa {
+        line-height: $input-height;
+    }
+
+    &:not([disabled], .btn-cancel):hover,
+    &:active,
+    &:focus,
+    &:active:focus /* yes, this is a special case */ {
+        background: $gray;
+        color: $black;
+        outline: 0;
+    }
+
+    &.btn-help, &.btn-warning {
+        $size: 24px;
+        .fa {
+            color: $lightest-black;
+            line-height: $size - 2px;
+        }
+        background-color: $gray;
+        font-size: $size / 2;
+        line-height: $size - 2px;
+        padding: 0 0 0 0.1rem;
+        margin: 0 1rem;
+        display: inline-block;
+        width: $size;
+        height: $size;
+        border-radius: $size / 2;
+        font-weight: bold;
+        text-indent: -1px;
+
+        &:hover {
+            background-color: $blue;
+            border: $blue;
+
+            .fa {
+                color: $white;
+                line-height: $size + 2px;
+            }
+        }
+
+        /* TODO: Remove this. */
+        h1 &, h2 &, h3 & {
+            margin-top: -0.25rem;
+        }
+    }
+
+    &.btn-warning {
+        .fa {
+            color: $white;
+        }
+        background-color: $red;
+        border-color: $red;
+        text-indent: -0.5px;
+
+        &:hover {
+            background-color: $white;
+            border: $white;
+
+            .fa {
+                color: $red;
+            }
+        }
+    }
+
+    &.btn-primary {
+        background: $blue;
+        border: 1px solid $blue;
+
+        &:hover,
+        &:active,
+        &:focus {
+            color: white;
+            background: $blue !important;
+            border: 1px solid $blue !important;
+        }
+
+        &:not([disabled]):hover,
+        &:not([disabled]):active,
+        &:not([disabled]):focus,
+        &:not([disabled]):focus:active {
+            border-color: $blue; /* :focus:active needs this */
+            background: white;
+            color: $blue;
+        }
+    }
+
+    &.btn-primary-outline {
+        background: white;
+        border: 1px solid $blue;
+        color: $blue;
+
+        &:not([disabled]):hover,
+        &:not([disabled]):active,
+        &:not([disabled]):focus {
+            background: $blue;
+            color: white;
+        }
+    }
+
+    &.btn-cancel, &.btn-cancel:not([href]) {
+        background: transparent;
+        border: 0;
+        color: $blue;
+        padding: 0;
+
+        &:not([disabled]):hover {
+            text-decoration: underline;
+            color: $blue;
+        }
+    }
+
+    &.btn-danger {
+        background: $red;
+        border: 1px solid $red;
+
+        &[disabled]:hover,
+        &[disabled]:active,
+        &[disabled]:focus {
+            color: white;
+            background: $red;
+        }
+
+        &:hover,
+        &:active,
+        &:focus {
+            color: red;
+            background: transparent;
+        }
+    }
+
+    &.btn-danger-outline {
+        border-color: $red;
+        background: transparent;
+        color: $red;
+
+        &:hover,
+        &:active,
+        &:focus {
+            background: $red;
+            color: white;
+        }
+    }
+}
+
