@@ -1,33 +1,36 @@
 import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
 
+import { Button } from '~/components/buttons';
+
 export default class LinkButton extends Component {
   constructor() {
     super();
   }
 
   render() {
-    const { onClick, to, children } = this.props;
-
-    if (to) {
-      return (
-        <Link
-          className="btn btn-cancel"
-          to={to}
-        >{children}</Link>
-      );
-    }
+    const { children, disabled, to, onClick, className } = this.props;
 
     return (
-      <button
-        className="btn btn-cancel"
+      <Button
+        className={className}
+        buttonClass="btn-link"
         onClick={onClick}
-      >{children}</button>
+        to={to}
+        disabled={disabled}
+      >{children}</Button>
     );
   }
 }
 
 LinkButton.propTypes = {
-  onClick: PropTypes.func,
+  children: PropTypes.node,
+  disabled: PropTypes.bool,
   to: PropTypes.string,
+  onClick: PropTypes.func,
+  className: PropTypes.string,
+};
+
+LinkButton.defaultProps = {
+  disabled: false,
 };

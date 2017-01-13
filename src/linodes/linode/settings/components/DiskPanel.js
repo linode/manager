@@ -9,6 +9,7 @@ import { showModal } from '~/actions/modal';
 import { EditModal } from './EditModal';
 import { DeleteModal } from './DeleteModal';
 import { AddModal } from './AddModal';
+import { Button } from '~/components/buttons';
 
 const borderColors = [
   '#1abc9c',
@@ -97,15 +98,14 @@ export class DiskPanel extends Component {
                   <small className="text-muted">Being deleted</small>}
                 {!poweredOff || d.state === 'deleting' ? null : (
                   <div>
-                    <button
-                      className="btn btn-edit btn-default"
-                      style={{ marginRight: '0.5rem' }}
+                    <Button
+                      className="DiskPanel-edit"
                       onClick={() => dispatch(showModal('Edit disk', editModal(d)))}
-                    >Edit</button>
-                    <button
-                      className="btn btn-delete btn-default"
+                    >Edit</Button>
+                    <Button
+                      className="DiskPanel-delete"
                       onClick={() => dispatch(showModal('Delete disk', deleteModal(d)))}
-                    >Delete</button>
+                    >Delete</Button>
                   </div>
                  )}
               </div>
@@ -119,10 +119,10 @@ export class DiskPanel extends Component {
                   <h3>Unallocated</h3>
                   <p>{free} MB</p>
                   {!poweredOff ? null : (
-                    <button
+                    <Button
                       onClick={() => dispatch(showModal('Add a disk', addModal))}
-                      className="btn btn-add btn-default"
-                    >Add a disk</button>
+                      className="DiskPanel-add"
+                    >Add a disk</Button>
                    )}
                 </div>
                )}

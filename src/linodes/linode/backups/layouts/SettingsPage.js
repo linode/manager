@@ -9,6 +9,7 @@ import { Form, SubmitButton } from '~/components/form';
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import { setSource } from '~/actions/source';
 import { showModal, hideModal } from '~/actions/modal';
+import { Button } from '~/components/buttons';
 import ConfirmModalBody from '~/components/modals/ConfirmModalBody';
 
 export class CancelBackupsModal extends Component {
@@ -144,12 +145,11 @@ export class SettingsPage extends Component {
             <h2>Cancel backup service</h2>
           </header>
           <p>This will remove all existing backups.</p>
-          <button
-            className="btn btn-delete btn-default"
+          <Button
             onClick={() => dispatch(showModal('Cancel backup service', cancelModal(linode.id)))}
           >
             Cancel backup service
-          </button>
+          </Button>
         </section>
       </div>
     );

@@ -7,22 +7,28 @@ export default class Button extends Component {
   }
 
   render() {
-    const { onClick, disabled, to, children, className } = this.props;
+    const {
+      children,
+      disabled,
+      to,
+      onClick,
+      className,
+      buttonClass,
+      buttonType
+    } = this.props;
 
-    const classes = `${className} btn btn-default`;
+    const classes = `btn ${buttonClass} ${className}`;
 
-    if (to) {
-      return (
-        <Link
-          className={classes}
-          to={to}
-          disabled={disabled}
-        >{children}</Link>
-      );
-    }
-
-    return (
+    return to ? (
+      <Link
+        className={classes}
+        to={to}
+        onClick={onClick}
+        disabled={disabled}
+      >{children}</Link>
+    ) : (
       <button
+        type={buttonType}
         className={classes}
         onClick={onClick}
         disabled={disabled}
@@ -32,7 +38,17 @@ export default class Button extends Component {
 }
 
 Button.propTypes = {
+  children: PropTypes.node,
   disabled: PropTypes.bool,
-  onClick: PropTypes.func.isRequired,
+  onClick: PropTypes.func,
+  to: PropTypes.string,
   className: PropTypes.string,
+  buttonClass: PropTypes.string.isRequired,
+  buttonType: PropTypes.string.isRequired,
+};
+
+Button.defaultProps = {
+  disabled: false,
+  buttonClass: 'btn-default',
+  buttonType: 'button',
 };

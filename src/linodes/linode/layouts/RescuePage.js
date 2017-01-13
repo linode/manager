@@ -136,11 +136,10 @@ export class RescuePage extends Component {
           <div className="form-group row">
             <div className="col-sm-2"></div>
             <div className="col-xs-9">
-              <button
-                className="btn btn-default"
+              <SubmitButton
                 onClick={() => dispatch(rebootLinode)}
                 disabled
-              >Reboot</button>
+              >Reboot</SubmitButton>
             </div>
           </div>
         </section>

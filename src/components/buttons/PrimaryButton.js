@@ -2,26 +2,25 @@ import React, { PropTypes } from 'react';
 
 import { Button } from '~/components/buttons';
 
-export default function SubmitButton(props) {
+export default function PrimaryButton(props) {
   return (
     <Button
-      type="submit"
-      className={`btn ${props.className}`}
+      buttonClass="btn-primary"
       disabled={props.disabled}
       onClick={props.onClick}
+      buttonType={props.type}
     >{props.children}</Button>
   );
 }
 
-SubmitButton.propTypes = {
+PrimaryButton.propTypes = {
   children: PropTypes.node,
-  className: PropTypes.string,
   disabled: PropTypes.bool,
   onClick: PropTypes.func,
+  type: PropTypes.string,
 };
 
-SubmitButton.defaultProps = {
-  children: 'Save',
-  className: 'btn-default',
+PrimaryButton.defaultProps = {
   disabled: false,
+  type: 'button',
 };

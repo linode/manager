@@ -2,6 +2,8 @@ import React, { Component, PropTypes } from 'react';
 
 import { rebootLinode } from '~/api/linodes';
 import { hideModal } from '~/actions/modal';
+import { Button } from '~/components/buttons';
+import { CancelButton } from '~/components/form';
 
 export default class ConfigSelectModalBody extends Component {
   constructor(props) {
@@ -43,13 +45,11 @@ export default class ConfigSelectModalBody extends Component {
           )}
         </div>
         <div className="modal-footer">
-          <button
-            className="btn btn-cancel"
+          <CancelButton
             disabled={loading}
             onClick={() => dispatch(hideModal())}
-          >Cancel</button>
-          <button
-            className="btn btn-default"
+          />
+          <Button
             disabled={loading}
             onClick={async () => {
               this.setState({ loading: true });
@@ -57,7 +57,7 @@ export default class ConfigSelectModalBody extends Component {
               this.setState({ loading: false });
               dispatch(hideModal());
             }}
-          >{buttonText}</button>
+          >{buttonText}</Button>
         </div>
       </div>);
   }

@@ -588,9 +588,8 @@ export class EditConfigPage extends Component {
                 disabled={loading}
                 onClick={() => this.saveChanges()} // Look this up onClick for testing purposes
               >{this.props.create ? 'Add config' : 'Save'}</SubmitButton>
-              <LinkButton
-                to={`/linodes/${linodeLabel}/settings/advanced`}
-              >Cancel</LinkButton>
+              <CancelButton
+                to={`/linodes/${linodeLabel}/settings/advanced`} />
             </div>
           </div>
         </div>
