@@ -1,0 +1,87 @@
+.StyleguideFormSection {
+  margin-bottom: 20px;
+
+  &-header {
+    margin-bottom: 40px;
+
+    h3 {
+      margin-bottom: 10px;
+    }
+  }
+}
+
+.ExampleForm {
+  padding: 20px 0;
+  position: relative;
+
+  &-description {
+    font-size: $font-size-sm;
+    padding: 10px 0;
+  }
+
+  form {
+    margin-bottom: 40px;
+  }
+
+  // For Descriptor Positioning
+  .form-group,
+  .form-group > label,
+  .form-group > div {
+    position: relative;
+  }
+
+  dl > dt,
+  dl > dd {
+    display: inline;
+  }
+
+  dl > dd {
+    margin-left: 10px;
+  }
+
+  dl > dd:after {
+    content: '';
+    display: block;
+    margin-top: 10px;
+  }
+}
+
+.FormDescriptor {
+  font-size: $font-size-xs;
+  position: absolute;
+  color: $black;
+
+  .badge {
+    background: $blue;
+  }
+
+  &__form-labels {
+    top: -30px;
+    left: 156px;
+  }
+
+  &__form-fields {
+    top: -75px;
+    left: 75px;
+  }
+
+  &__disabled-fields {
+    top: 40px;
+    left: 75px;
+  }
+
+  &__form-title {
+    top: -10px;
+    left: 0;
+  }
+
+  &__form-section-title {
+    top: -60px;
+    left: 20px;
+  }
+
+  &__form-buttons {
+    top: 40px;
+    left: 20px;
+  }
+}

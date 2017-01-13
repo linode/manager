@@ -5,7 +5,8 @@ import { push } from 'react-router-redux';
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import { linodes } from '~/api';
 import HelpButton from '~/components/HelpButton';
-import { ErrorSummary, FormGroup, reduceErrors } from '~/errors';
+import { FormGroup } from '~/components/form';
+import { ErrorSummary, reduceErrors } from '~/errors';
 import { Link } from '~/components/Link';
 import { setSource } from '~/actions/source';
 import { setError } from '~/actions/errors';
@@ -301,7 +302,7 @@ export class EditConfigPage extends Component {
   renderFormElement(label, field, element) {
     const { errors } = this.state;
     return (
-      <FormGroup errors={errors} field={field} className="row">
+      <FormGroup errors={errors} name={field} className="row">
         <div className="col-sm-2 label-col">
           <label
             htmlFor={`config-${field}`}

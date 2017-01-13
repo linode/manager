@@ -4,7 +4,8 @@ import { push } from 'react-router-redux';
 
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import { linodes } from '~/api';
-import { ErrorSummary, FormGroup, reduceErrors } from '~/errors';
+import { FormGroup } from '~/components/form';
+import { ErrorSummary, reduceErrors } from '~/errors';
 import { setSource } from '~/actions/source';
 
 export class DisplayPage extends Component {
@@ -46,7 +47,7 @@ export class DisplayPage extends Component {
           <h2>Display</h2>
         </header>
         <form>
-          <FormGroup errors={errors} className="row" field="group">
+          <FormGroup errors={errors} className="row" name="group">
             <div className="col-sm-1 label-col">
               <label htmlFor="">Group</label>
             </div>
@@ -59,7 +60,7 @@ export class DisplayPage extends Component {
               />
             </div>
           </FormGroup>
-          <FormGroup errors={errors} className="row" field="label">
+          <FormGroup errors={errors} className="row" name="label">
             <div className="col-sm-1 label-col">
               <label htmlFor="label">Label</label>
             </div>

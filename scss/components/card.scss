@@ -14,6 +14,14 @@ $card-padding: 15px;
         right: 15px;
     }
 
+    .card-block {
+        padding: 0;
+
+        h3 {
+            margin-bottom: 10px;
+        }
+    }
+
     header {
         margin-bottom: $card-padding;
 
