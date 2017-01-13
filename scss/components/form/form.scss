@@ -24,15 +24,6 @@ form {
   }
 }
 
-.form-group > label {
-  color: $lightest-black;
-  text-align: right;
-
-  legend {
-    font-size: initial;
-  }
-}
-
 .form-group .btn-cancel {
   margin-left: 10px;
 }
@@ -53,24 +44,11 @@ form {
 }
 
 .content-col {
-    &:only-child {
-        line-height: $input-height;
-    }
-    
-    /* > * {
-       display: inline-block;
-       vertical-align: top;
-       }
-     */
     li a {
         text-decoration: none;
     }
 
     img {
         margin-left: 0.5rem;
-    }
-
-    p.text-muted {
-        margin-bottom: 0;
     }
 }

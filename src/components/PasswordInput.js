@@ -1,5 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 
+import Input from '~/components/Input';
+
 export default class PasswordInput extends Component {
   constructor() {
     super();
@@ -24,30 +26,28 @@ export default class PasswordInput extends Component {
   render() {
     const { passwordType } = this.props;
     return (
-      <div className="input-container input-group password-input">
-        <input
+      <div className="PasswordInput">
+        <Input
           value={this.state.password}
           placeholder="**********"
-          className="form-control PasswordInput-input"
-          name="password"
+          className="PasswordInput-input"
           onChange={this.onPasswordChange}
           autoComplete="off"
-          type={this.state.type}
+          type="password"
         />
-        <br />
-        <div className="form-group">
-          <div className={`PasswordInput-strength strength strength-${this.state.strength.score}`}>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-          {this.state.password !== '' ? <div className="PasswordInput-cracktime">
-            An offline attack would
-            take {this.state.strength.crack_times_display[passwordType]} to
-            crack this password.<br />
-          </div> : null}
+        <div
+          className={`PasswordInput-strength PasswordInput-strength--${this.state.strength.score}`}
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
         </div>
+        {this.state.password !== '' ? <div className="PasswordInput-cracktime">
+          An offline attack would
+          take {this.state.strength.crack_times_display[passwordType]} to
+          crack this password.<br />
+        </div> : null}
       </div>
     );
   }

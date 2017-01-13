@@ -5,6 +5,7 @@ import moment from 'moment';
 
 import Distributions from '~/linodes/components/Distributions';
 import Backups from './Backups';
+import Input from '~/components/Input';
 
 export default class Source extends Component {
   constructor() {
@@ -39,14 +40,12 @@ export default class Source extends Component {
     return (
       <div>
         <section>
-          <div className="filter input-container">
-            <input
-              type="text"
+          <div className="filter">
+            <Input
               onChange={e =>
                 this.setState({ backupsFilter: e.target.value, backupsPage: 0 })}
               value={backupsFilter}
               placeholder="Filter..."
-              className="form-control"
             />
           </div>
         </section>

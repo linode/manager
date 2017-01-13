@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
 import PasswordInput from '~/components/PasswordInput';
-import { FormGroup, FormGroupError } from '~/components/form';
+import { FormGroup, FormGroupError, Form, SubmitButton } from '~/components/form';
 import { reduceErrors, ErrorSummary } from '~/errors';
 import Distributions from '~/linodes/components/Distributions';
 import { setSource } from '~/actions/source';
@@ -60,39 +60,39 @@ export class RebuildPage extends Component {
             <h2 className="LinodesLinodeRebuildPage-title">Rebuild</h2>
           </header>
           <div className="LinodesLinodeRebuildPage-body">
-            <div className="LinodesLinodeRebuildPage-distributions">
-              <Distributions
-                distributions={distributions.distributions}
-                distribution={distribution}
-                onSelected={distribution => this.setState({ distribution })}
-                noDistribution={false}
-              />
-            </div>
-            <div className="LinodesLinodeRebuildPage-password">
-              <FormGroup errors={errors} name="root_pass" className="row">
-                <div className="col-sm-2 label-col">
-                  <label>Root password:</label>
-                </div>
-                <div className="col-sm-10">
-                  <PasswordInput
-                    value={this.state.password}
-                    passwordType="offline_fast_hashing_1e10_per_second"
-                    onChange={password => this.setState({ password })}
-                  />
-                  <FormGroupError errors={errors} name="root_pass" />
-                </div>
-              </FormGroup>
-            </div>
-            <div className="row">
-              <div className="col-sm-2 offset-sm-2">
-                <button
-                  className="LinodesLinodeRebuildPage-rebuild"
-                  onClick={this.onSubmit}
-                  disabled={this.loading}
-                >Rebuild</button>
+            <Form onSubmit={this.onSubmit}>
+              <div className="LinodesLinodeRebuildPage-distributions">
+                <Distributions
+                  distributions={distributions.distributions}
+                  distribution={distribution}
+                  onSelected={distribution => this.setState({ distribution })}
+                  noDistribution={false}
+                />
               </div>
-            </div>
-            <ErrorSummary errors={errors} />
+              <div className="LinodesLinodeRebuildPage-password">
+                <FormGroup errors={errors} name="root_pass" className="row">
+                  <div className="col-sm-2 label-col">
+                    <label>Root password:</label>
+                  </div>
+                  <div className="col-sm-10">
+                    <PasswordInput
+                      value={this.state.password}
+                      passwordType="offline_fast_hashing_1e10_per_second"
+                      onChange={password => this.setState({ password })}
+                    />
+                    <FormGroupError errors={errors} name="root_pass" />
+                  </div>
+                </FormGroup>
+              </div>
+              <div className="form-group row">
+                <div className="col-sm-2 offset-sm-2">
+                  <SubmitButton
+                    disabled={this.loading}
+                  >Rebuild</SubmitButton>
+                </div>
+              </div>
+              <ErrorSummary errors={errors} />
+            </Form>
           </div>
         </div>
       </section>
