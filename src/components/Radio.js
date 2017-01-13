@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 
 export default function Radio(props) {
   return (
@@ -6,14 +6,20 @@ export default function Radio(props) {
       <label>
         <input
           type="radio"
-          className="form-control"
+          className="form-control Radio-input"
           checked={props.checked}
           onChange={props.onChange}
+          value={props.value}
         />
-        <span className="Radio-label">
-          {props.label}
-        </span>
+        {props.label ? <span className="Radio-label">{props.label}</span> : null}
       </label>
     </div>
   );
 }
+
+Radio.propTypes = {
+  checked: PropTypes.bool.isRequired,
+  onChange: PropTypes.func.isRequired,
+  label: PropTypes.string,
+  value: PropTypes.object,
+};

@@ -4,7 +4,6 @@ import { linodes } from '~/api';
 import { resizeLinodeDisk } from '~/api/linodes';
 import { CancelButton, Form, SubmitButton, FormGroup, FormGroupError } from '~/components/form';
 import { hideModal } from '~/actions/modal';
-import { FormGroup } from '~/components/form';
 import { ErrorSummary, reduceErrors } from '~/errors';
 import Input from '~/components/Input';
 
@@ -39,7 +38,7 @@ export class EditModal extends Component {
       if (label !== disk.label) {
         await dispatch(linodes.disks.put({ label }, linode.id, disk.id));
       }
-      
+
       dispatch(hideModal());
     } catch (response) {
       const errors = await reduceErrors(response);
@@ -56,7 +55,7 @@ export class EditModal extends Component {
       <Form
         onSubmit={() => this.saveChanges()}
       >
-        <FormGroup errors={errors} field="label" className="row">
+        <FormGroup errors={errors} name="label" className="row">
           <div className="col-sm-4 label-col">
             <label htmlFor="label">Label:</label>
           </div>
@@ -64,9 +63,9 @@ export class EditModal extends Component {
             <Input
               placeholder="Label"
               value={label}
-              onChange={e => this.setState({ label: e.target.value }) }
+              onChange={e => this.setState({ label: e.target.value })}
             />
-            <FormGroupError errors={errors} field="label" />
+            <FormGroupError errors={errors} name="label" />
           </div>
         </FormGroup>
         <div className="form-group row">
@@ -85,7 +84,7 @@ export class EditModal extends Component {
             <Input disabled value={disk.size} />
           </div>
         </div>
-        <FormGroup errors={errors} field="size" className="row">
+        <FormGroup errors={errors} name="size" className="row">
           <div className="col-sm-4 label-col">
             <label htmlFor="size">New size (MB):</label>
           </div>
@@ -98,10 +97,10 @@ export class EditModal extends Component {
               value={size}
               name="size"
               onChange={e => {
-                  this.setState({ size: parseInt(e.target.value, 10) });
-                }}
+                this.setState({ size: parseInt(e.target.value, 10) });
+              }}
             />
-            <FormGroupError errors={errors} field="size" />
+            <FormGroupError errors={errors} name="size" />
           </div>
         </FormGroup>
         <div className="modal-footer">

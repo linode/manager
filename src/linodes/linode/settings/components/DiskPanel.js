@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-import { connect } from 'react-redux';
 
 import { linodes } from '~/api';
 import HelpButton from '~/components/HelpButton';
@@ -43,7 +42,7 @@ export class DiskPanel extends Component {
     const free = total - used;
     const poweredOff = linode.status === 'offline';
 
-    const addModal = d => (
+    const addModal = (
       <AddModal
         free={free}
         linode={linode}

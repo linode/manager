@@ -22,6 +22,7 @@ import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 import ConfirmModalBody from '~/components/modals/ConfirmModalBody';
 import { showModal, hideModal } from '~/actions/modal';
+import Checkbox from '~/components/Checkbox';
 
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
@@ -209,8 +210,6 @@ export class IndexPage extends Component {
       linodesList.filter(cond).map(this.toggle);
     };
 
-    const selectAllCheckbox = <input type="checkbox" onChange={selectAll} checked={allSelected} />;
-
     const { view } = this.props;
     const listIcon = <span className="fa fa-align-justify"></span>;
     const gridIcon = <span className="fa fa-th-large"></span>;
@@ -244,7 +243,9 @@ export class IndexPage extends Component {
           <div className="submenu clearfix">
             <div className="float-xs-left">
               <div className="input-group">
-                <span className="input-group-addon">{selectAllCheckbox}</span>
+                <span className="input-group-addon">
+                  <Checkbox onChange={selectAll} checked={allSelected} />
+                </span>
                 {this.renderActions()}
               </div>
             </div>

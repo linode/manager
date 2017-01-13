@@ -1,4 +1,3 @@
 .Checkbox {
-    @extends .checkbox;
-    display: inline-block;
+    @include checkbox();
 }

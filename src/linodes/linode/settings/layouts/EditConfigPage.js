@@ -17,7 +17,7 @@ import Select from '~/components/Select';
 import RadioSelectCombo from '~/components/RadioSelectCombo';
 import RadioInputCombo from '~/components/RadioInputCombo';
 
-const CLASSNAME="LinodesLinodeSettingsEditConfigPage";
+const CLASSNAME = 'LinodesLinodeSettingsEditConfigPage';
 
 export const AVAILABLE_DISK_SLOTS =
   ['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg', 'sdh'];
@@ -82,7 +82,7 @@ export function removeDiskSlot() {
 }
 
 export function renderDiskSlot(device, index, disabled) {
-  const { diskSlots, loading } = this.state;
+  const { diskSlots } = this.state;
   const disks = this.getDisks();
 
   const oneDiskSlotInUse = index === 0 && diskSlots.length === 1;
@@ -120,10 +120,10 @@ export function renderDiskSlot(device, index, disabled) {
             diskSlots[index] = parseInt(e.target.value, 10);
             this.setState({ diskSlots });
             this.fillDiskSlots(index, device);
-            }}
+          }}
           options={[...(Object.values(disks).reduce((accum, d) =>
             d ? [...accum, { label: d.label, value: d.id }] : accum, [])),
-                    { value: "25665", label: "Recovery - Finnix (iso)" }]}
+                    { value: '25665', label: 'Recovery - Finnix (iso)' }]}
         />
         <div>
           {addButton}
@@ -311,7 +311,7 @@ export class EditConfigPage extends Component {
           <h3 className="sub-header">Label and Note</h3>
         </header>
         <div>
-          <FormGroup errors={errors} field="label" className="row">
+          <FormGroup errors={errors} name="label" className="row">
             <div className="col-sm-2 label-col">
               <label>Label</label>
             </div>
@@ -322,10 +322,10 @@ export class EditConfigPage extends Component {
                 value={label}
                 onChange={e => this.setState({ label: e.target.value })}
               />
-              <FormGroupError errors={errors} field="label" />
+              <FormGroupError errors={errors} name="label" />
             </div>
           </FormGroup>
-          <FormGroup errors={errors} field="comments" className="row">
+          <FormGroup errors={errors} name="comments" className="row">
             <div className="col-sm-2 label-col">
               <label>Notes</label>
             </div>
@@ -336,7 +336,7 @@ export class EditConfigPage extends Component {
                 value={comments}
                 onChange={e => this.setState({ comments: e.target.value })}
               />
-              <FormGroupError errors={errors} field="comments" />
+              <FormGroupError errors={errors} name="comments" />
             </div>
           </FormGroup>
         </div>
@@ -349,7 +349,7 @@ export class EditConfigPage extends Component {
             <div className="col-sm-10">
               <Radio
                 checked={virtMode === 'paravirt'}
-                onChange={() => thi.setState({ virtMode: 'paravirt' })}
+                onChange={() => this.setState({ virtMode: 'paravirt' })}
                 label="Paravirtualization"
               />
               <Radio
@@ -430,7 +430,7 @@ export class EditConfigPage extends Component {
               />
             </div>
           </fieldset>
-          <FormGroup errors={errors} field="ram_limit" className="row">
+          <FormGroup errors={errors} name="ram_limit" className="row">
             <div className="col-sm-2 label-col">
               <label>Memory limit</label>
             </div>
@@ -443,7 +443,7 @@ export class EditConfigPage extends Component {
                 onChange={e => this.setState({ ramLimit: e.target.value })}
                 label="MB"
               />
-              <FormGroupError errors={errors} field="ram_limit" />
+              <FormGroupError errors={errors} name="ram_limit" />
             </div>
           </FormGroup>
           {diskSlots.map(this.renderDiskSlot)}
@@ -458,7 +458,7 @@ export class EditConfigPage extends Component {
                 className="form-control"
                 onChange={e => this.setState({ initrd: e.target.value })}
                 options={[{ value: '', label: 'No initrd' },
-                          { value: '25669', label: 'Recovery - Finnix (initrd)'}]}
+                          { value: '25669', label: 'Recovery - Finnix (initrd)' }]}
               />
             </div>
           </div>
@@ -474,9 +474,9 @@ export class EditConfigPage extends Component {
                 selectDisabled={isCustomRoot}
                 selectValue={isCustomRoot ? '/dev/sda' : rootDevice}
                 selectOptions={diskSlots.map((_, i) => ({
-                    value: `/dev/${AVAILABLE_DISK_SLOTS[i]}`,
-                    label: `/dev/${AVAILABLE_DISK_SLOTS[i]}`
-                  }))}
+                  value: `/dev/${AVAILABLE_DISK_SLOTS[i]}`,
+                  label: `/dev/${AVAILABLE_DISK_SLOTS[i]}`,
+                }))}
                 selectOnChange={e => this.setState({ rootDevice: e.target.value })}
               />
               <RadioInputCombo
@@ -506,7 +506,9 @@ export class EditConfigPage extends Component {
                   label="Enable distro helper"
                 />
                 <div>
-                  <small className="text-muted">Helps maintain correct inittab/upstart console device</small>
+                  <small className="text-muted">
+                    Helps maintain correct inittab/upstart console device
+                  </small>
                 </div>
               </div>
               <div className="form-group">
@@ -516,17 +518,22 @@ export class EditConfigPage extends Component {
                   label="Disable updatedb"
                 />
                 <div>
-                  <small className="text-muted">Disables updatedb cron job to avoid disk thrashing</small>
+                  <small className="text-muted">
+                    Disables updatedb cron job to avoid disk thrashing
+                  </small>
                 </div>
               </div>
               <div className="form-group">
                 <Checkbox
                   checked={enableModulesdepHelper}
-                  onChange={() => this.setState({ enableModulesdepHelper: !enableModulesdepHelper })}
+                  onChange={() => this.setState({
+                    enableModulesdepHelper: !enableModulesdepHelper })}
                   label="Enable modulesdep helper"
                 />
                 <div>
-                  <small className="text-muted">Creates a module dependency file for the kernel you run</small>
+                  <small className="text-muted">
+                    Creates a module dependency file for the kernel you run
+                  </small>
                 </div>
               </div>
               <div className="form-group">

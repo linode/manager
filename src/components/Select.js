@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 
 export default function Select(props) {
   return (
@@ -7,7 +7,7 @@ export default function Select(props) {
         className="form-control"
         value={props.value}
         disabled={props.disabled}
-        onChange={e => this.setState({ rootDevice: e.target.value })}
+        onChange={props.onChange}
       >
         {props.options ? props.options.map((option, i) =>
           <option key={i} value={option.value}>
@@ -16,10 +16,19 @@ export default function Select(props) {
         ) : props.children}
       </select>
       {!props.label ? null : (
-         <label className="Select-label">
-           {props.label}
-         </label>
+        <label className="Select-label">
+          {props.label}
+        </label>
        )}
     </span>
   );
 }
+
+Select.propTypes = {
+  value: PropTypes.object.isRequired,
+  onChange: PropTypes.func.isRequired,
+  label: PropTypes.string,
+  disabled: PropTypes.bool,
+  options: PropTypes.object,
+  children: PropTypes.object,
+};

@@ -55,14 +55,14 @@ export class DisplayPage extends Component {
         <form>
           <FormGroup errors={errors} className="row" name="group">
             <div className="col-sm-1 label-col">
-                <label htmlFor="">Group:</label>
+              <label htmlFor="">Group:</label>
             </div>
             <div className="col-sm-11 content-col">
               <Input
                 value={group}
                 onChange={e => this.setState({ group: e.target.value })}
               />
-              <FormGroupError errors={errors} field="group" />
+              <FormGroupError errors={errors} name="group" />
             </div>
           </FormGroup>
           <FormGroup errors={errors} className="row" name="label">
@@ -75,7 +75,7 @@ export class DisplayPage extends Component {
                 value={label}
                 onChange={e => this.setState({ label: e.target.value })}
               />
-              <FormGroupError errors={errors} field="label" />
+              <FormGroupError errors={errors} name="label" />
             </div>
           </FormGroup>
           <ErrorSummary errors={errors} />

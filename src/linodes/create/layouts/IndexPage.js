@@ -74,10 +74,8 @@ export class IndexPage extends Component {
       dispatch(linodeActions.one({ __progress: randomInitialProgress() }, id));
 
       dispatch(push(`/linodes/${label}`));
-      // TODO: handle creating multiple linodes at once ? refer to
-      // TODO: previous commit history for example
     } catch (response) {
-      const errors = await reduceErrors(resposne);
+      const errors = await reduceErrors(response);
       this.setState({ errors });
     }
 

@@ -116,7 +116,7 @@ export class SettingsPage extends Component {
                   <option value="W20">8-10 PM</option>
                   <option value="W22">10-12 PM</option>
                 </Select>
-                <FormGroupError errors={errors} field="window" />
+                <FormGroupError errors={errors} name="window" />
               </div>
             </FormGroup>
             <FormGroup errors={errors} className="row" name="day">
@@ -136,7 +136,7 @@ export class SettingsPage extends Component {
                   <option value="Friday">Friday</option>
                   <option value="Saturday">Saturday</option>
                 </Select>
-                <FormGroupError errors={errors} field="window" />
+                <FormGroupError errors={errors} name="window" />
               </div>
             </FormGroup>
             <div className="row">

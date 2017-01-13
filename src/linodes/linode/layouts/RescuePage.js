@@ -1,13 +1,13 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { ErrorSummary, reduceErrors, FormGroup, FormGroupError } from '~/errors';
+import { ErrorSummary, reduceErrors } from '~/errors';
 import { getLinode } from './IndexPage';
 import { showModal, hideModal } from '~/actions/modal';
 import { linodes } from '~/api';
 import { resetPassword, rebootLinode } from '~/api/linodes';
 import { ConfirmModalBody } from '~/components/modals';
-import { Form, SubmitButton } from '~/components/form';
+import { Form, SubmitButton, FormGroup, FormGroupError } from '~/components/form';
 import Select from '~/components/Select';
 import PasswordInput from '~/components/PasswordInput';
 import HelpButton from '~/components/HelpButton';
@@ -170,7 +170,7 @@ export class RescuePage extends Component {
               be powered off to reset your root password.
             </div>}
             {multipleNonSwapDisks ?
-              <FormGroup className="row" field="disk" errors={errors}>
+              <FormGroup className="row" name="disk" errors={errors}>
                 <div className="col-sm-3 label-col">
                   <label htmlFor="reset-root-password-select">Disk:</label>
                 </div>
@@ -186,7 +186,7 @@ export class RescuePage extends Component {
                 </div>
               </FormGroup>
              : null}
-          <FormGroup className="row" field="root_pass" errors={errors}>
+          <FormGroup className="row" name="root_pass" errors={errors}>
             <div className="col-sm-3 label-col">
               <label htmlFor="password">Password:</label>
             </div>
@@ -195,7 +195,7 @@ export class RescuePage extends Component {
                 passwordType="offline_fast_hashing_1e10_per_second"
                 onChange={password => this.setState({ password })}
               />
-              <FormGroupError errors={errors} field="root_pass" />
+              <FormGroupError errors={errors} name="root_pass" />
             </div>
           </FormGroup>
           <div className="row">

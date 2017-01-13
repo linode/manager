@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
 import PasswordInput from '~/components/PasswordInput';
-import { FormGroup, FormGroupError, reduceErrors, ErrorSummary } from '~/errors';
+import { FormGroup, FormGroupError } from '~/components/form';
+import { reduceErrors, ErrorSummary } from '~/errors';
 import Distributions from '~/linodes/components/Distributions';
 import { setSource } from '~/actions/source';
 import { rebuildLinode } from '~/api/linodes';
@@ -68,7 +69,7 @@ export class RebuildPage extends Component {
               />
             </div>
             <div className="LinodesLinodeRebuildPage-password">
-              <FormGroup errors={errors} field="root_pass" className="row">
+              <FormGroup errors={errors} name="root_pass" className="row">
                 <div className="col-sm-2 label-col">
                   <label>Root password:</label>
                 </div>
@@ -78,7 +79,7 @@ export class RebuildPage extends Component {
                     passwordType="offline_fast_hashing_1e10_per_second"
                     onChange={password => this.setState({ password })}
                   />
-                  <FormGroupError errors={errors} field="root_pass" />
+                  <FormGroupError errors={errors} name="root_pass" />
                 </div>
               </FormGroup>
             </div>

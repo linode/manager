@@ -1,11 +1,11 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { reduceErrors, FormGroup, ErrorSummary, FormGroupError } from '~/errors';
+import { reduceErrors, ErrorSummary } from '~/errors';
 import HelpButton from '~/components/HelpButton';
 import CheckboxInputCombo from '~/components/CheckboxInputCombo';
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
-import { Form, SubmitButton } from '~/components/form';
+import { Form, SubmitButton, FormGroup, FormGroupError } from '~/components/form';
 import { linodes } from '~/api';
 import { setSource } from '~/actions/source';
 
@@ -49,7 +49,7 @@ export class AlertsPage extends Component {
   }
 
   renderAlertRow({ key, name, value, label, text }) {
-    const { loading, errors } = this.state;
+    const { errors } = this.state;
     const { threshold, enabled } = value;
     const int = i => parseInt(i, 10);
     const thresholdChange = e =>
@@ -68,8 +68,8 @@ export class AlertsPage extends Component {
         className="row"
         key={name}
         errors={errors}
-        field={'threshold'}
-        fieldCrumbs={'alerts.' + key}
+        name="threshold"
+        crumbs={`alerts.${key}`}
       >
         <div className="col-sm-2 label-col">
           <span>{name}:</span>
@@ -85,7 +85,7 @@ export class AlertsPage extends Component {
             inputMin={0}
             inputLabel={label}
           />
-          <FormGroupError errors={errors} field={'threshold'} fieldCrumbs={'alerts.' + key} />
+          <FormGroupError errors={errors} name={'threshold'} crumbs={`alerts.${key}`} />
           <div>
             <small className="text-muted">Triggered by: {text} exceeding this value</small>
           </div>
@@ -96,7 +96,7 @@ export class AlertsPage extends Component {
 
   render() {
     const { cpu, io, transfer_in, transfer_out, transfer_quota } = this.state.alerts;
-    const { loading } = this.state;
+    const { loading, errors } = this.state;
     const alerts = [
       {
         name: 'CPU usage', key: 'cpu', value: cpu, label: '%',
@@ -130,11 +130,12 @@ export class AlertsPage extends Component {
         </header>
         <Form onSubmit={() => this.saveChanges()}>
           {alerts.map(this.renderAlertRow)}
-          <div className="row">
+          <div className="form-group row">
             <div className="offset-sm-2 col-sm-10">
               <SubmitButton disabled={loading} />
             </div>
           </div>
+          <ErrorSummary errors={errors} />
         </Form>
       </section>
     );

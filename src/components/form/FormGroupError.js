@@ -1,9 +1,9 @@
 import React, { PropTypes } from 'react';
 
-export function FormGroupError(props) {
+export default function FormGroupError(props) {
   const { errors, name, crumbs } = props;
 
-  const fieldErrors = errors[name + (crumbs ? '.' + crumbs : '')];
+  const fieldErrors = errors[name + (crumbs ? `.${crumbs}` : '')];
 
   if (fieldErrors && fieldErrors.length) {
     return (
@@ -17,5 +17,7 @@ export function FormGroupError(props) {
 }
 
 FormGroupError.propTypes = {
-  fieldErrors: PropTypes.array.isRequired,
+  errors: PropTypes.any.isRequired,
+  name: PropTypes.string.isRequired,
+  crumbs: PropTypes.string,
 };

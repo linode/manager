@@ -9,6 +9,7 @@ import { dnszones } from '~/api';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 import CreateHelper from '~/components/CreateHelper';
+import Checkbox from '~/components/Checkbox';
 
 export class IndexPage extends Component {
   constructor() {
@@ -67,7 +68,7 @@ export class IndexPage extends Component {
             {Object.values(dnszones.dnszones).map(z => (
               <tr key={z.id}>
                 <td>
-                  <input type="checkbox" />
+                  <Checkbox />
                 </td>
                 <td>
                   <Link to={`/dnsmanager/${z.id}`}>{z.dnszone}</Link>

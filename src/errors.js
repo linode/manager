@@ -10,7 +10,7 @@ export async function reduceErrors(response) {
     }
 
     if (error.field_crumbs) {
-      key += '.' + error.field_crumbs;
+      key += `.${error.field_crumbs}`;
     }
 
     const list = errors[key] || [];

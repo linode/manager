@@ -1,16 +1,14 @@
 import React, { PropTypes } from 'react';
 
-import FormGroupError from '~/components/form/FormGroupError';
-
-export function FormGroup(props) {
+export default function FormGroup(props) {
   const { errors, name, crumbs } = props;
 
-  const fieldErrors = errors[name + (crumbs ? '.' + crumbs : '')];
+  const fieldErrors = errors[name + (crumbs ? `.${crumbs}` : '')];
 
   return (
     <div
       className={`form-group ${
-        errors[name] && errors[name].length ? 'has-danger' : ''
+        fieldErrors && fieldErrors.length ? 'has-danger' : ''
       } ${props.className}`}
     >
       {props.children}
@@ -19,7 +17,7 @@ export function FormGroup(props) {
 }
 
 FormGroup.propTypes = {
-  errors: PropTypes.object.isRequired,
+  errors: PropTypes.any.isRequired,
   name: PropTypes.string.isRequired,
   crumbs: PropTypes.string,
   className: PropTypes.string,
