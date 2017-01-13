@@ -734,6 +734,6 @@ p {
     }
 }
 
-a:hover {
+a:hover, a:focus, a:active {
     color: $blue;
 }

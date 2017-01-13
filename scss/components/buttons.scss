@@ -24,6 +24,11 @@
         &:not([disabled]):hover {
             background: $gray;
             color: $black;
+        }
+
+        &:hover,
+        &:active,
+        &:focus {
             outline: 0;
         }
     }
@@ -85,8 +90,10 @@
     }
 
     &.btn-primary {
-        background: $blue;
-        border: 1px solid $blue;
+        &, &:active, &:focus {
+            background: $blue;
+            border: 1px solid $blue;
+        }
 
         &:not([disabled]):hover {
             border-color: $blue; /* :focus:active needs this */
@@ -95,24 +102,15 @@
         }
     }
 
-    &.btn-primary-outline {
-        background: white;
-        border: 1px solid $blue;
-        color: $blue;
-
-        &:not([disabled]):hover,
-        &:not([disabled]):active,
-        &:not([disabled]):focus {
-            background: $blue;
-            color: white;
-        }
-    }
-
     &.btn-link, &.btn-link:not([href]) {
-        background: transparent;
-        border: 0;
-        color: $blue;
         padding: 0;
+        border: 0;
+        background: transparent;
+        outline: 0;
+
+        &, &:active, &:focus {
+            color: $blue;
+        }
 
         &:not([disabled]):hover {
             text-decoration: underline;
