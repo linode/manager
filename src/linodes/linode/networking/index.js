@@ -5,13 +5,12 @@ import {
   IndexPage,
   SummaryPage,
   ReverseDNSPage,
-  IPManagementPage,
 } from './layouts';
 
 export default (
   <Route path="networking" component={IndexPage}>
     <IndexRoute component={SummaryPage} />
     <Route path="reversedns" component={ReverseDNSPage} />
-    <Route path="ipmanagement" component={IPManagementPage} />
+    <Route path="ipmanagement" component={() => <span>Todo</span>} />
   </Route>
 );

@@ -1,7 +1,7 @@
 @import 'variables';
 @import 'mixins';
 
-@import 'bootstrap';
+@import '../node_modules/bootstrap/scss/bootstrap';
 
 @import 'components/index.scss';
 @import 'linodes/index.scss';
