@@ -7,7 +7,6 @@ import { linodes } from '~/api';
 import HelpButton from '~/components/HelpButton';
 import { FormGroup } from '~/components/form';
 import { ErrorSummary, reduceErrors } from '~/errors';
-import { Link } from '~/components/Link';
 import { SubmitButton, CancelButton } from '~/components/form';
 import { LinkButton } from '~/components/buttons';
 import { setSource } from '~/actions/source';
@@ -352,7 +351,7 @@ export class EditConfigPage extends Component {
   }
 
   render() {
-    const { create, kernels, params: { linodeLabel }, dispatch } = this.props;
+    const { create, kernels, params: { linodeLabel } } = this.props;
     const {
       loading, label, comments, kernel, isCustomRoot, ramLimit, rootDevice,
       initrd, errors, diskSlots } = this.state;
@@ -590,8 +589,7 @@ export class EditConfigPage extends Component {
                 disabled={loading}
                 onClick={() => this.saveChanges()} // Look this up onClick for testing purposes
               >{this.props.create ? 'Add config' : 'Save'}</SubmitButton>
-              <CancelButton
-                to={`/linodes/${linodeLabel}/settings/advanced`} />
+              <CancelButton to={`/linodes/${linodeLabel}/settings/advanced`} />
             </div>
           </div>
         </div>

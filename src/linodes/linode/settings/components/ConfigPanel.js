@@ -5,7 +5,7 @@ import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import { ConfirmModalBody } from '~/components/modals';
 import { linodes } from '~/api';
 import { showModal, hideModal } from '~/actions/modal';
-import { Button, LinkButton } from '~/components/buttons';
+import { Button } from '~/components/buttons';
 
 function configContent(linode, configs, dispatch) {
   if (!linode && linode._configs.totalPages === -1) {

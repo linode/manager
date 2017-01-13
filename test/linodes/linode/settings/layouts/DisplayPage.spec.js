@@ -1,7 +1,7 @@
 import React from 'react';
 import { push } from 'react-router-redux';
 import sinon from 'sinon';
-import { shallow, mount } from 'enzyme';
+import { mount } from 'enzyme';
 import { expect } from 'chai';
 
 import { expectRequest, expectObjectDeepEquals } from '@/common';
