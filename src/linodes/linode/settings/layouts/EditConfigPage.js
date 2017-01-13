@@ -80,7 +80,7 @@ export function removeDiskSlot() {
   this.setState({ diskSlots });
 }
 
-export function renderDiskSlot(device, index) {
+export function renderDiskSlot(device, index, disabled) {
   const { diskSlots, loading } = this.state;
   const disks = this.getDisks();
 
@@ -105,24 +105,24 @@ export function renderDiskSlot(device, index) {
   ) : null;
 
   return (
-    <div
-      className="form-group row disk-slot"
-      key={index}
-    >
-      <label className="col-sm-2 label-col">
-        /dev/{AVAILABLE_DISK_SLOTS[index]}:
-      </label>
-      <div className="col-xs-9 input-container">
+    <div className="form-group row" key={index}>
+      <div className="col-sm-2 label-col">
+        <label>
+          /dev/{AVAILABLE_DISK_SLOTS[index]}:
+        </label>
+      </div>
+      <div className="col-sm-10 content-col">
         <Select
           value={device}
+          disabled={disabled}
           onChange={e => {
             diskSlots[index] = parseInt(e.target.value, 10);
             this.setState({ diskSlots });
             this.fillDiskSlots(index, device);
             }}
-          options={Object.values(disk).reduce((accum, d) =>
-            d ? accum.push({ label, value: id }) : accum, []).push(
-              { value: "25665", label: "Recovery - Finnix (iso)" })}
+          options={[...(Object.values(disks).reduce((accum, d) =>
+            d ? [...accum, { label: d.label, value: d.id }] : accum, [])),
+                    { value: "25665", label: "Recovery - Finnix (iso)" }]}
         />
         <div>
           {addButton}
@@ -446,7 +446,7 @@ export class EditConfigPage extends Component {
             <div className="col-sm-2 label-col">
               <legend>initrd</legend>
             </div>
-            <div className="input-container col-sm-6">
+            <div className="col-sm-10">
               <Select
                 id="config-initrd"
                 value={initrd}

@@ -9,11 +9,11 @@ export default function Select(props) {
         disabled={props.disabled}
         onChange={e => this.setState({ rootDevice: e.target.value })}
       >
-        {props.options.map((option, i) =>
+        {props.options ? props.options.map((option, i) =>
           <option key={i} value={option.value}>
             {option.label}
           </option>
-        )}
+        ) : props.children}
       </select>
       {!props.label ? null : (
          <label className="Select-label">

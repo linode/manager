@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
 import PasswordInput from '~/components/PasswordInput';
-import { FormGroup, reduceErrors, ErrorSummary } from '~/errors';
+import { FormGroup, FormGroupError, reduceErrors, ErrorSummary } from '~/errors';
 import Distributions from '~/linodes/components/Distributions';
 import { setSource } from '~/actions/source';
 import { rebuildLinode } from '~/api/linodes';
@@ -72,12 +72,13 @@ export class RebuildPage extends Component {
                 <div className="col-sm-2 label-col">
                   <label>Root password:</label>
                 </div>
-                <div className="col-sm-4">
+                <div className="col-sm-10">
                   <PasswordInput
                     value={this.state.password}
                     passwordType="offline_fast_hashing_1e10_per_second"
                     onChange={password => this.setState({ password })}
                   />
+                  <FormGroupError errors={errors} field="root_pass" />
                 </div>
               </FormGroup>
             </div>

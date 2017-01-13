@@ -664,7 +664,15 @@ table {
     }
 }
 
+.input-line-height {
+    line-height: $input-height;
+}
+
 .content-col {
+    &:only-child {
+        line-height: $input-height;
+    }
+    
     /* > * {
        display: inline-block;
        vertical-align: top;

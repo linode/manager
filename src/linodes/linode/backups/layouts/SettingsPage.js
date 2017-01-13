@@ -5,6 +5,7 @@ import { ErrorSummary, FormGroup, FormGroupError, reduceErrors } from '~/errors'
 import { linodes } from '~/api';
 import { cancelBackup } from '~/api/backups';
 import { Form, SubmitButton } from '~/components/form';
+import Select from '~/components/Select';
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import { setSource } from '~/actions/source';
 import { showModal, hideModal } from '~/actions/modal';
@@ -104,28 +105,24 @@ export class SettingsPage extends Component {
               <div className="col-sm-2 label-col">
                 <label htmlFor="window">Time of day (EST):</label>
               </div>
-              <div className="col-sm-10">
-                <div>
-                  <select
-                    className="form-control input-container"
-                    name="window"
-                    value={window}
-                    onChange={e => this.setState({ window: e.target.value })}
-                  >
-                    <option value="W0">12-2 AM</option>
-                    <option value="W2">2-4 AM</option>
-                    <option value="W4">4-6 AM</option>
-                    <option value="W6">6-8 AM</option>
-                    <option value="W8">8-10 AM</option>
-                    <option value="W10">10-12 AM</option>
-                    <option value="W12">12-2 PM</option>
-                    <option value="W14">2-4 PM</option>
-                    <option value="W16">4-6 PM</option>
-                    <option value="W18">6-8 PM</option>
-                    <option value="W20">8-10 PM</option>
-                    <option value="W22">10-12 PM</option>
-                  </select>
-                </div>
+              <div className="col-sm-10 content-col">
+                <Select
+                  value={window}
+                  onChange={e => this.setState({ window: e.target.value })}
+                >
+                  <option value="W0">12-2 AM</option>
+                  <option value="W2">2-4 AM</option>
+                  <option value="W4">4-6 AM</option>
+                  <option value="W6">6-8 AM</option>
+                  <option value="W8">8-10 AM</option>
+                  <option value="W10">10-12 AM</option>
+                  <option value="W12">12-2 PM</option>
+                  <option value="W14">2-4 PM</option>
+                  <option value="W16">4-6 PM</option>
+                  <option value="W18">6-8 PM</option>
+                  <option value="W20">8-10 PM</option>
+                  <option value="W22">10-12 PM</option>
+                </Select>
                 <FormGroupError errors={errors} field="window" />
               </div>
             </FormGroup>
@@ -133,10 +130,8 @@ export class SettingsPage extends Component {
               <div className="col-sm-2 label-col">
                 <label htmlFor="day">Day of week:</label>
               </div>
-              <div className="col-sm-4">
-                <select
-                  className="form-control"
-                  name="day"
+              <div className="col-sm-10 content-col">
+                <Select
                   value={day}
                   onChange={e => this.setState({ day: e.target.value })}
                 >
@@ -147,7 +142,8 @@ export class SettingsPage extends Component {
                   <option value="Thursday">Thursday</option>
                   <option value="Friday">Friday</option>
                   <option value="Saturday">Saturday</option>
-                </select>
+                </Select>
+                <FormGroupError errors={errors} field="window" />
               </div>
             </FormGroup>
             <div className="row">
