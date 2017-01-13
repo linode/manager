@@ -3,7 +3,7 @@ import React, { Component, PropTypes } from 'react';
 import { rebootLinode } from '~/api/linodes';
 import { hideModal } from '~/actions/modal';
 
-export default class ConfigSelectModal extends Component {
+export default class ConfigSelectModalBody extends Component {
   constructor(props) {
     super();
     const { linode } = props;
@@ -26,7 +26,7 @@ export default class ConfigSelectModal extends Component {
           This Linode has multiple configuration profiles associated with it.
           Choose the one you want to boot with.
         </p>
-        <div className="ConfigSelectModal-configs">
+        <div className="ConfigSelectModalBody-configs">
           {Object.values(linode._configs.configs).map(config =>
             <div key={config.id} className="radio">
               <label>
@@ -63,7 +63,7 @@ export default class ConfigSelectModal extends Component {
   }
 }
 
-ConfigSelectModal.propTypes = {
+ConfigSelectModalBody.propTypes = {
   linode: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   action: PropTypes.func.isRequired,

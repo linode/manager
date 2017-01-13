@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 
-export default class ConfirmModal extends Component {
+export default class ConfirmModalBody extends Component {
   constructor() {
     super();
     this.state = { loading: false };
@@ -36,7 +36,7 @@ export default class ConfirmModal extends Component {
   }
 }
 
-ConfirmModal.propTypes = {
+ConfirmModalBody.propTypes = {
   children: PropTypes.any,
   buttonText: PropTypes.string,
   onOk: PropTypes.func.isRequired,

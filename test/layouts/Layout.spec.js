@@ -38,6 +38,7 @@ describe('layouts/Layout', () => {
         linodes={linodes}
         events={events}
         feedback={{ open: false }}
+        modal={{ open: false }}
       >{children}</Layout>
     );
   }
@@ -225,6 +226,7 @@ describe('layouts/Layout', () => {
         linodes={api.linodes}
         feedback={{ open: false }}
         events={api.events}
+        modal={{ open: false }}
       ><span /></Layout>
     );
 

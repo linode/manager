@@ -4,6 +4,7 @@ import { Link } from 'react-router';
 
 import { setError } from '~/actions/errors';
 import { showModal, hideModal } from '~/actions/modal';
+import ConfirmModalBody from '~/components/modals/ConfirmModalBody';
 import { dnszones } from '~/api';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
@@ -34,25 +35,17 @@ export class IndexPage extends Component {
   renderModal(zoneId) {
     const { dispatch } = this.props;
     return (
-      <div>
-        <p>
-          <span className="text-danger">WARNING!</span> This will permanently
-          delete this DNS Zone. Confirm below to proceed.
-        </p>
-        <div className="modal-footer">
-          <Link
-            className="btn btn-cancel"
-            onClick={() => dispatch(hideModal())}
-          >Cancel</Link>
-          <button
-            className="btn btn-default"
-            onClick={() => {
-              dispatch(dnszones.delete(zoneId));
-              dispatch(hideModal());
-            }}
-          >Delete</button>
-        </div>
-      </div>
+      <ConfirmModalBody
+        buttonText="Delete"
+        onOk={async () => {
+          await dispatch(dnszones.delete(zoneId));
+          dispatch(hideModal());
+        }}
+        onCancel={() => dispatch(hideModal())}
+      >
+        <span className="text-danger">WARNING!</span> This will permanently
+        delete this DNS Zone. Confirm below to proceed.
+      </ConfirmModalBody>
     );
   }
 
