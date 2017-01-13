@@ -23,13 +23,13 @@ export default function Forms() {
                     Field Label
                   </label>
                   <div className="col-sm-8">
-                    <input type="text" name="example-form-field" />
+                    <input type="text" name="example-form-field" className="form-control" />
                   </div>
                 </FormGroup>
                 <FormGroup className="row">
                   <label className="col-sm-4">Field Label</label>
                   <div className="col-sm-8">
-                    <input type="text" name="example-form-field" />
+                    <input type="text" name="example-form-field" className="form-control" />
                     <span className="FormDescriptor FormDescriptor__form-fields">
                       <span className="badge">2</span>
                     </span>
@@ -38,13 +38,13 @@ export default function Forms() {
                 <FormGroup className="row">
                   <label className="col-sm-4">Field Lengths</label>
                   <div className="col-sm-8">
-                    <input type="text" name="example-form-field" />
+                    <input type="text" name="example-form-field" className="form-control" />
                   </div>
                 </FormGroup>
                 <FormGroup className="row">
                   <label className="col-sm-4">Field Label</label>
                   <div className="col-sm-8">
-                    <input type="text" name="example-form-field" disabled />
+                    <input type="text" name="example-form-field" className="form-control" disabled />
                     <span className="FormDescriptor FormDescriptor__disabled-fields">
                       <span className="badge">3</span>
                     </span>
@@ -95,7 +95,7 @@ export default function Forms() {
                 <FormGroup className="row">
                   <label className="col-sm-4">Field Label</label>
                   <div className="col-sm-8">
-                    <input type="text" name="example-form-field" />
+                    <input type="text" name="example-form-field" className="form-control" />
                   </div>
                 </FormGroup>
 
@@ -106,13 +106,13 @@ export default function Forms() {
                   </span>
                   <label className="col-sm-4">Field Label</label>
                   <div className="col-sm-8">
-                    <input type="text" name="example-form-field" />
+                    <input type="text" name="example-form-field" className="form-control" />
                   </div>
                 </FormGroup>
                 <FormGroup className="row">
                   <label className="col-sm-4">Field Label</label>
                   <div className="col-sm-8">
-                    <input type="text" name="example-form-field" />
+                    <input type="text" name="example-form-field" className="form-control" />
                   </div>
                 </FormGroup>
 
