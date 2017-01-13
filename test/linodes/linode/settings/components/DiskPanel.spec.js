@@ -238,7 +238,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
 
     it('should handle errors when createDisk is called', async () => {
       const dispatch = sandbox.stub();
-      const modal = shallow(
+      const modal = mount(
         <EditModal
           {...props}
           dispatch={dispatch}

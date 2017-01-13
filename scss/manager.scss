@@ -659,37 +659,6 @@ table {
     }
 }
 
-.form-group {
-    margin-bottom: 0;
-
-    &:not(:last-child) {
-        margin-bottom: 10px;
-    }
-}
-
-.label-col {
-    color: $lightest-black;
-    text-align: right;
-
-    legend {
-        font-size: initial;
-    }
-}
-
-.content-col {
-    li a {
-        text-decoration: none;
-    }
-
-    img {
-        margin-left: 0.5rem;
-    }
-
-    p.text-muted {
-        margin-bottom: 0;
-    }
-}
-
 .text-danger {
     color: $red;
 }

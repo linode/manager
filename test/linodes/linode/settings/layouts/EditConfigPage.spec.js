@@ -436,7 +436,7 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
     });
 
     it('commits changes to the API', async () => {
-      const page = shallow(
+      const page = mount(
         <EditConfigPage
           {...props}
           dispatch={dispatch}
@@ -444,7 +444,7 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
       );
       await page.instance().componentDidMount();
       dispatch.reset();
-      const label = page.find('FormGroup[field="label"]');
+      const label = page.find('FormGroup');
       label.find('input').simulate('change', { target: { value: 'new label' } });
       const isMaxRam = page.find('#config-isMaxRam-true');
       isMaxRam.simulate('change', { target: { value: true } });
