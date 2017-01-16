@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 
 import { Card } from '~/components';
 import { PrimaryButton } from '~/components/buttons';
-import { Form, FormGroup, SubmitButton } from '~/components/form';
+import { Form, FormGroup } from '~/components/form';
 import PasswordInput from '~/components/PasswordInput';
 
 export default class Details extends Component {
