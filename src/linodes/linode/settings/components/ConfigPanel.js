@@ -5,6 +5,7 @@ import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import { ConfirmModalBody } from '~/components/modals';
 import { linodes } from '~/api';
 import { showModal, hideModal } from '~/actions/modal';
+import { Button } from '~/components/buttons';
 
 function configContent(linode, configs, dispatch) {
   if (!linode && linode._configs.totalPages === -1) {
@@ -18,7 +19,7 @@ function configContent(linode, configs, dispatch) {
   }
 
   return (
-    <table>
+    <table className="ConfigPanel-configs">
       <thead className="clear-thead">
         <tr>
           <th>Label</th>
@@ -36,8 +37,8 @@ function configContent(linode, configs, dispatch) {
               </Link>
             </td>
             {configs.length > 1 ? <td className="text-xs-right">
-              <a
-                className="delete-button"
+              <Button
+                className="LinodesLinodeSettingsComponentsConfigPanel-delete"
                 onClick={e => {
                   e.preventDefault();
                   dispatch(showModal('Confirm deletion',
@@ -54,9 +55,7 @@ function configContent(linode, configs, dispatch) {
                     </ConfirmModalBody>
                   ));
                 }}
-                className="action-link float-xs-right"
-                href="#"
-              >Delete</a></td> : null}
+              >Delete</Button></td> : null}
           </tr>
         )}
       </tbody>
@@ -87,12 +86,12 @@ export class ConfigPanel extends Component {
       <div>
         <header className="clearfix">
           <h2 className="float-xs-left">Configs<HelpButton to="http://example.org" /></h2>
-          <Link
+          <Button
             to={`/linodes/${linode.label}/settings/advanced/configs/create`}
-            className="btn btn-default float-xs-right"
+            className="float-xs-right"
           >
             Add a config
-          </Link>
+          </Button>
         </header>
         {content}
       </div>

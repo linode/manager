@@ -133,7 +133,7 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
 
     expect(page.find('#config-device-sdb').length).to.equal(1);
 
-    const removeBtn = page.find('.disk-slot .btn-cancel').at(0);
+    const removeBtn = page.find('.EditConfigPage-remove').at(0);
     expect(removeBtn.text()).to.equal('Remove');
     removeBtn.simulate('click');
 
@@ -151,7 +151,7 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
 
     expect(page.find('#config-device-sdb').length).to.equal(0);
 
-    const addBtn = page.find('.disk-slot .btn-cancel').at(0);
+    const addBtn = page.find('.EditConfigPage-add').at(0);
     expect(addBtn.text()).to.equal('Add');
     addBtn.simulate('click');
 

@@ -6,6 +6,7 @@ import { linodes } from '~/api';
 import { enableBackup } from '~/api/backups';
 import { setSource } from '~/actions/source';
 import { ErrorSummary, reduceErrors } from '~/errors';
+import { PrimaryButton } from '~/components/buttons';
 
 export class IndexPage extends Component {
   static async preload({ dispatch, getState }, { linodeLabel }) {
@@ -54,7 +55,7 @@ export class IndexPage extends Component {
               ${(linode.type[0].backups_price / 100).toFixed(2)}/mo.
             </p>
             <ErrorSummary errors={errors} />
-            <button className="btn btn-primary">Enable backups</button>
+            <PrimaryButton type="submit">Enable backups</PrimaryButton>
           </form>
         </section>
       );

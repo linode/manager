@@ -40,8 +40,9 @@ describe('linodes/linode/settings/components/ConfigPanel', () => {
       />
     );
 
-    expect(panel.find('header Link').props().children).to.equal('Add a config');
-    expect(panel.find('header Link').props().to)
+    expect(panel.find('header Button').props().children).
+      to.equal('Add a config');
+    expect(panel.find('header Button').props().to)
       .equal('/linodes/test-linode-5/settings/advanced/configs/create');
   });
 
@@ -141,9 +142,10 @@ describe('linodes/linode/settings/components/ConfigPanel', () => {
         linodes={linodes}
       />
     );
-    const actionBtn = panel.find('.action-link').at(0);
+    const actionBtn = panel.
+      find('.LinodesLinodeSettingsComponentsConfigPanel-delete').at(0);
     actionBtn.simulate('click', { preventDefault: () => {} });
-    expect(dispatch.calledOnce).to.equal(true);
+    expect(dispatch.callCount).to.equal(1);
     await dispatch.args[0][0].body.props.onOk();
     const fn = dispatch.secondCall.args[0];
     dispatch.reset();

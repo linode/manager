@@ -7,7 +7,8 @@ import { linodes } from '~/api';
 import HelpButton from '~/components/HelpButton';
 import { FormGroup } from '~/components/form';
 import { ErrorSummary, reduceErrors } from '~/errors';
-import { Link } from '~/components/Link';
+import { SubmitButton, CancelButton } from '~/components/form';
+import { LinkButton } from '~/components/buttons';
 import { setSource } from '~/actions/source';
 import { setError } from '~/actions/errors';
 
@@ -82,21 +83,19 @@ export function renderDiskSlot(device, index) {
   const allDisksInUse = index === Math.max(diskSlots.length, Object.keys(disks).length) - 1;
 
   const addButton = oneDiskSlotInUse || currentDisk && !allDisksInUse ? (
-    <button
-      type="button"
-      className="btn btn-cancel"
+    <LinkButton
+      className="EditConfigPage-add"
       disabled={loading}
       onClick={() => this.addDiskSlot()}
-    >Add</button>
+    >Add</LinkButton>
   ) : null;
 
   const deleteButton = index > 0 && index === diskSlots.length - 1 ? (
-    <button
-      type="button"
-      className="btn btn-cancel"
+    <LinkButton
+      className="EditConfigPage-remove"
       disabled={loading}
       onClick={() => this.removeDiskSlot(device)}
-    >Remove</button>
+    >Remove</LinkButton>
   ) : null;
 
   return (
@@ -586,15 +585,11 @@ export class EditConfigPage extends Component {
           <ErrorSummary errors={errors} />
           <div className="row">
             <div className="offset-sm-2 col-sm-10">
-              <button
-                className="btn btn-default"
+              <SubmitButton
                 disabled={loading}
                 onClick={() => this.saveChanges()} // Look this up onClick for testing purposes
-              >{this.props.create ? 'Add config' : 'Save'}</button>
-              <Link
-                className="btn btn-cancel"
-                to={`/linodes/${linodeLabel}/settings/advanced`}
-              >Cancel</Link>
+              >{this.props.create ? 'Add config' : 'Save'}</SubmitButton>
+              <CancelButton to={`/linodes/${linodeLabel}/settings/advanced`} />
             </div>
           </div>
         </div>

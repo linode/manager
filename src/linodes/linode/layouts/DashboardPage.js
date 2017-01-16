@@ -12,6 +12,7 @@ import {
 import { launchWeblishConsole } from '~/linodes/components/StatusDropdown';
 import { getLinode } from './IndexPage';
 import { setSource } from '~/actions/source';
+import { Button } from '~/components/buttons';
 
 export class DashboardPage extends Component {
   constructor() {
@@ -239,7 +240,7 @@ export class DashboardPage extends Component {
                     readOnly
                   />
                   <span className="input-group-btn">
-                    <button type="button" className="btn btn-default">SSH</button>
+                    <Button>SSH</Button>
                   </span>
                 </div>
               </div>
@@ -260,14 +261,10 @@ export class DashboardPage extends Component {
                     readOnly
                   />
                   <span className="input-group-btn">
-                    <button type="button" className="btn btn-default">SSH</button>
-                    <button
-                      type="button"
-                      className="btn btn-default"
-                      onClick={() => launchWeblishConsole(linode)}
-                    >
+                    <Button>SSH</Button>
+                    <Button onClick={() => launchWeblishConsole(linode)}>
                       Open
-                    </button>
+                    </Button>
                   </span>
                 </div>
                 <small className="text-muted">
@@ -283,14 +280,7 @@ export class DashboardPage extends Component {
               </div>
               <div className="col-sm-8 content-col right">
                 <div className="input-group-btn">
-                  <button
-                    type="button"
-                    id="glish-button"
-                    className="btn btn-default"
-                    disabled
-                  >
-                    Open
-                  </button>
+                  <Button id="glish-button" disabled>Open</Button>
                 </div>
                 <small className="text-muted">
                   Equivalent to plugging a monitor and keyboard into your server.
