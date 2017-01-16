@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 
-import { HelpButton } from '~/components';
+import { HelpButton } from './HelpButton';
 
 export default function Card(props) {
   return (

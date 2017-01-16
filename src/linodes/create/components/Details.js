@@ -38,8 +38,8 @@ export default class Details extends Component {
       <Card title="Details">
         {/* TODO: Form should encapsulate all form fields on the create page */}
         <Form onSubmit={this.onSubmit}>
-          <FormGroup name="label" errors={errors.label} className="row">
-            <label className="col-sm-2" htmlFor="label">Label</label>
+          <FormGroup name="label" errors={errors} className="row">
+            <label htmlFor="label" className="col-sm-2">Label</label>
             <div className="col-sm-10">
               <input
                 id="label"
@@ -54,8 +54,9 @@ export default class Details extends Component {
           </FormGroup>
           <FormGroup
             name="password"
-            errors={errors.root_password}
-            className={`row ${selectedDistribution === 'none' ? 'hidden' : ''}`}
+            errors={errors}
+            className="row"
+            showIf={selectedDistribution !== 'none'}
           >
             <label htmlFor="password" className="col-sm-2">Root Password</label>
             <div className="col-sm-10">
@@ -67,20 +68,22 @@ export default class Details extends Component {
             </div>
           </FormGroup>
           <FormGroup
-            name="enabled_backups"
-            errors={errors.backups}
-            className={`row ${selectedDistribution === 'none' ? 'hidden' : ''}`}
+            name="backups"
+            errors={errors}
+            className="row"
+            showIf={selectedDistribution !== 'none'}
           >
-            <label htmlFor="enabled_backups" className="col-sm-2">Enable Backups</label>
+            <label htmlFor="backups" className="col-sm-2">Enable Backups</label>
             <div className="col-sm-10">
               <input
-                id="enabled_backups"
+                id="backups"
+                name="backups"
                 type="checkbox"
                 checked={this.state.enableBackups}
                 onChange={e => this.setState({ enableBackups: e.target.checked })}
                 disabled={selectedType === null}
               />
-              <span>
+              <span className="EnabledBackupsPrice">
                 {selectedType === null ? '' : renderBackupsPrice()}
               </span>
             </div>
