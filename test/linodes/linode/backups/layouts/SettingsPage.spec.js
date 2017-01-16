@@ -64,7 +64,7 @@ describe('linodes/linode/backups/layouts/SettingsPage', () => {
     );
     await page.instance().componentDidMount();
 
-    const cancelButton = page.find('.btn-delete');
+    const cancelButton = page.find('.LinodesLinodeBackupsSettings-cancel');
     expect(cancelButton.length).to.equal(1);
 
     dispatch.reset();

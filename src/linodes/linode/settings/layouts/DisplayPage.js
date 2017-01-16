@@ -7,6 +7,7 @@ import { linodes } from '~/api';
 import { FormGroup } from '~/components/form';
 import { ErrorSummary, reduceErrors } from '~/errors';
 import { setSource } from '~/actions/source';
+import { SubmitButton } from '~/components/form';
 
 export class DisplayPage extends Component {
   constructor(props) {
@@ -76,7 +77,7 @@ export class DisplayPage extends Component {
           <ErrorSummary errors={errors} />
           <div className="row">
             <div className="offset-sm-1 col-sm-4">
-              <button className="btn btn-default" onClick={this.onSubmit}>Save</button>
+              <SubmitButton onClick={this.onSubmit} />
             </div>
           </div>
         </form>

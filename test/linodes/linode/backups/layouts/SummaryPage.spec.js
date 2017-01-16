@@ -76,7 +76,7 @@ describe('linodes/linode/backups/layouts/SummaryPage', () => {
       />
     );
 
-    const takeSnapshot = page.find('.backup-block').at(3).find('button');
+    const takeSnapshot = page.find('.backup-block').at(3).find('Button');
     expect(takeSnapshot.length).to.equal(1);
 
     dispatch.reset();

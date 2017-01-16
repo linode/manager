@@ -24,7 +24,8 @@ describe('linodes/components/StatusDropdown/ConfigSelectModalBody', () => {
       />
     );
 
-    expect(modal.find('.btn-default').text()).to.equal('Power on');
+    expect(modal.find('.LinodesLinodeComponentsConfigSelectModalBody-submit').
+      props().children).to.equal('Power on');
   });
 
   it('renders reboot button text', () => {
@@ -35,7 +36,8 @@ describe('linodes/components/StatusDropdown/ConfigSelectModalBody', () => {
       />
     );
 
-    expect(modal.find('.btn-default').text()).to.equal('Reboot');
+    expect(modal.find('.LinodesLinodeComponentsConfigSelectModalBody-submit').
+      props().children).to.equal('Reboot');
   });
 
   it('renders config list', () => {
@@ -70,7 +72,8 @@ describe('linodes/components/StatusDropdown/ConfigSelectModalBody', () => {
     const configElement = modal.find('div.radio label input').at(1);
     configElement.simulate('change', { target: { value: 321321 } });
 
-    modal.find('.btn-default').simulate('click');
+    modal.find('.LinodesLinodeComponentsConfigSelectModalBody-submit').
+      simulate('click');
 
     expect(action.callCount).to.equal(1);
     expect(action.firstCall.args[0]).to.equal(linode.id);

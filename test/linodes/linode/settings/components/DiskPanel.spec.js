@@ -34,7 +34,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
   });
 
   it('renders disks', () => {
-    const panel = shallow(
+    const panel = mount(
       <DiskPanel
         params={{ linodeLabel: 'test-linode-2' }}
         dispatch={() => {}}
@@ -102,8 +102,9 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
         linodes={linodes}
       />);
 
-    panel.find('.btn-edit').at(0).simulate('click');
-    expect(dispatch.calledOnce).to.equal(true);
+    panel.find('.LinodesLinodeSettingsComponentsDiskPanel-edit').at(0).
+      simulate('click');
+    expect(dispatch.callCount).to.equal(1);
     expect(dispatch.firstCall.args[0])
       .to.have.property('type').which.equals(SHOW_MODAL);
   });
@@ -118,8 +119,9 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
       />);
 
     // Two disks available to delete, delete the first disk
-    panel.find('.btn-delete').at(0).simulate('click');
-    expect(dispatch.calledOnce).to.equal(true);
+    panel.find('.LinodesLinodeSettingsComponentsDiskPanel-delete').at(0).
+      simulate('click');
+    expect(dispatch.callCount).to.equal(1);
     expect(dispatch.firstCall.args[0])
       .to.have.property('type').which.equals(SHOW_MODAL);
   });
@@ -133,8 +135,9 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
         linodes={linodes}
       />);
 
-    panel.find('.btn-add').simulate('click');
-    expect(dispatch.calledOnce).to.equal(true);
+    panel.find('.LinodesLinodeSettingsComponentsDiskPanel-add').
+      simulate('click');
+    expect(dispatch.callCount).to.equal(1);
     expect(dispatch.firstCall.args[0])
       .to.have.property('type').which.equals(SHOW_MODAL);
   });
@@ -192,7 +195,8 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
           {...props}
           dispatch={dispatch}
         />);
-      modal.find('.btn-cancel').simulate('click');
+      modal.find('.LinodesLinodeSettingsComponentsEditModal-cancel').
+        simulate('click');
       expect(dispatch.calledOnce).to.equal(true);
       expect(dispatch.calledWith(hideModal())).to.equal(true);
     });
@@ -285,7 +289,8 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
           dispatch={() => {}}
         />);
       expect(modal.find('p').length).to.equal(1);
-      expect(modal.find('.btn-cancel').length).to.equal(1);
+      expect(modal.find('.LinodesLinodeSettingsComponentsDeleteModal-cancel').
+        length).to.equal(1);
       expect(modal.find('button').length).to.equal(2);
     });
 
@@ -296,7 +301,8 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
           {...props}
           dispatch={dispatch}
         />);
-      modal.find('.btn-cancel').simulate('click');
+      modal.find('.LinodesLinodeSettingsComponentsDeleteModal-cancel').
+        simulate('click');
       expect(dispatch.calledOnce).to.equal(true);
       expect(dispatch.calledWith(hideModal())).to.equal(true);
     });
@@ -404,7 +410,8 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
           {...props}
           dispatch={dispatch}
         />);
-      modal.find('.btn-cancel').simulate('click');
+      modal.find('.LinodesLinodeSettingsComponentsAddModal-cancel').
+        simulate('click');
       expect(dispatch.calledOnce).to.equal(true);
       expect(dispatch.calledWith(hideModal())).to.equal(true);
     });

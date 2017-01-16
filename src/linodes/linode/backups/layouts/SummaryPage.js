@@ -6,6 +6,7 @@ import { Link } from '~/components/Link';
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import { takeBackup } from '~/api/backups';
 import { ErrorSummary, reduceErrors } from '~/errors';
+import { Button } from '~/components/buttons';
 
 export class SummaryPage extends Component {
   constructor() {
@@ -48,11 +49,9 @@ export class SummaryPage extends Component {
           <div className="no-snapshot text-dark-gray">
             No snapshots taken
           </div>
-          <button
-            type="button"
-            className="btn btn-cancel"
+          <Button
             onClick={() => this.takeSnapshot()}
-          >Take first snapshot</button>
+          >Take first snapshot</Button>
         </div>
       </div>
     );

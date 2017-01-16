@@ -4,7 +4,7 @@ import { mount } from 'enzyme';
 import { expect } from 'chai';
 import { ConfirmModalBody } from '~/components/modals';
 
-describe('components/modal/ConfirmModal', () => {
+describe('components/modal/ConfirmModalBody', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
@@ -56,7 +56,7 @@ describe('components/modal/ConfirmModal', () => {
       </ConfirmModalBody>
     );
 
-    modal.find('.btn-cancel').simulate('click');
+    modal.find('CancelButton').simulate('click');
     expect(onCancel.callCount).to.equal(1);
   });
 

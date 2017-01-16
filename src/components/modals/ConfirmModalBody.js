@@ -1,5 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 
+import { SubmitButton, CancelButton } from '~/components/form';
+
 export default class ConfirmModalBody extends Component {
   constructor() {
     super();
@@ -21,16 +23,11 @@ export default class ConfirmModalBody extends Component {
           {this.props.children}
         </p>
         <div className="modal-footer">
-          <button
-            className="btn btn-cancel"
-            disabled={loading}
-            onClick={onCancel}
-          >Cancel</button>
-          <button
-            className="btn btn-default"
+          <CancelButton disabled={loading} onClick={onCancel} />
+          <SubmitButton
             disabled={loading}
             onClick={this.handleOk}
-          >{buttonText || 'Confirm'}</button>
+          >{buttonText || 'Confirm'}</SubmitButton>
         </div>
       </div>);
   }

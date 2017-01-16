@@ -31,8 +31,8 @@ describe('linodes/linode/networking/layouts/SummaryPage', () => {
           params={params}
         />);
 
-      const button = page.find('section').at(0).find('header .btn');
-      expect(button.text()).to.equal('Add public IP address');
+      const button = page.find('section').at(0).find('header Button');
+      expect(button.props().children).to.equal('Add public IP address');
     });
 
     describe('IPv4', () => {

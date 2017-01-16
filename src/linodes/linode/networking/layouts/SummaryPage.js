@@ -7,6 +7,7 @@ import { ipv4ns, ipv6ns, ipv6nsSuffix } from '~/constants';
 import { linodeIPs, addIP } from '~/api/linodes';
 import { setSource } from '~/actions/source';
 import { setError } from '~/actions/errors';
+import { Button } from '~/components/buttons';
 
 export class SummaryPage extends Component {
   static async preload({ dispatch, getState }, { linodeLabel }) {
@@ -210,14 +211,13 @@ export class SummaryPage extends Component {
         <section className="card">
           <header className="clearfix">
             <h2 className="float-xs-left">Summary</h2>
-            <button
-              type="button"
+            <Button
               id="public-ip-button"
-              className="btn btn-default float-xs-right"
+              className="float-xs-right"
               disabled
             >
               Add public IP address
-            </button>
+            </Button>
           </header>
           <div className="row">
             {this.renderIPv4()}

@@ -53,6 +53,7 @@ export class DeleteModal extends Component {
           </div> : null}
         <div className="modal-footer">
           <CancelButton
+            className="LinodesLinodeSettingsComponentsDeleteModal-cancel"
             disabled={loading}
             onClick={() => dispatch(hideModal())}
           />

@@ -8,6 +8,7 @@ import Distributions from '~/linodes/components/Distributions';
 import { setSource } from '~/actions/source';
 import { rebuildLinode } from '~/api/linodes';
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
+import { Button } from '~/components/buttons';
 
 export class RebuildPage extends Component {
   constructor() {
@@ -65,11 +66,11 @@ export class RebuildPage extends Component {
               </FormRow>
             </div>
             <FormRow>
-              <button
+              <Button
                 className="LinodesLinodeRebuildPage-rebuild"
                 onClick={this.onSubmit}
                 disabled={!(this.state.password && this.state.distribution)}
-              >Rebuild</button>
+              >Rebuild</Button>
             </FormRow>
           </div>
         </div>
