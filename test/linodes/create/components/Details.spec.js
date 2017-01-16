@@ -48,19 +48,6 @@ describe('linodes/create/components/Details', () => {
     });
   });
 
-  it('does not show password and backup options when no distro is selected', () => {
-    const details = mount(
-      <Details
-        onSubmit={sandbox.spy}
-        selectedDistribution={'none'}
-        selectedType={null}
-      />
-    );
-
-    expect(details.find('input[name="password"]').length).to.equal(0);
-    expect(details.find('input[name="backups"]').length).to.equal(0);
-  });
-
   it('pulls backups price from selectedType', () => {
     const details = mount(<Details selectedType={types['linode2048.5']} />);
     expect(details.find('.EnabledBackupsPrice').text()).to.contain('$2.50');

@@ -56,7 +56,6 @@ export default class Details extends Component {
             name="password"
             errors={errors}
             className="row"
-            showIf={selectedDistribution !== 'none'}
           >
             <label htmlFor="password" className="col-sm-2">Root Password</label>
             <div className="col-sm-10">
@@ -71,7 +70,6 @@ export default class Details extends Component {
             name="backups"
             errors={errors}
             className="row"
-            showIf={selectedDistribution !== 'none'}
           >
             <label htmlFor="backups" className="col-sm-2">Enable Backups</label>
             <div className="col-sm-10">

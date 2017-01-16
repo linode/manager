@@ -4,11 +4,7 @@ import FormGroupError from '~/components/form/FormGroupError';
 
 
 export default function FormGroup(props) {
-  const { name, errors = {}, crumbs, showIf } = props;
-
-  if (!showIf) {
-    return null;
-  }
+  const { name, errors = {}, crumbs } = props;
 
   const crumb = (crumbs ? `.${crumbs}` : '');
   const fieldErrors = errors[`${name}${crumb}`];
@@ -31,10 +27,8 @@ FormGroup.propTypes = {
   errors: PropTypes.object,
   crumbs: PropTypes.string,
   children: PropTypes.node,
-  showIf: PropTypes.bool,
 };
 
 FormGroup.defaultProps = {
   className: '',
-  showIf: true,
 };
