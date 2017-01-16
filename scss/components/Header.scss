@@ -111,9 +111,9 @@ $header-padding: $grid-gutter-width-base / 2;
         @extend .badge;
         background: $red;
         border: 4px solid $dark-black;
+        line-height: 22px;
         position: absolute;
         right: 0;
         top: 2px;
-        line-height: 22px;
     }
 }
