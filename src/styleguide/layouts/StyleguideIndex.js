@@ -12,8 +12,8 @@ const navigationItems = [
   { href: '/styleguide/iconography', text: 'Iconography' },
   { href: '/styleguide/writing-style', text: 'Writing Style' },
   { href: '/styleguide/buttons', text: 'Buttons' },
-  { href: '/styleguide/tabs', text: 'Tabs' },
   { href: '/styleguide/navigation', text: 'Navigation' },
+  { href: '/styleguide/tabs', text: 'Tabs' },
   { href: '/styleguide/forms', text: 'Forms' },
   { href: '/styleguide/modals', text: 'Modals' },
 ];

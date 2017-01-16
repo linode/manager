@@ -1,10 +1,8 @@
 import React, { Component, PropTypes } from 'react';
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
 import { push } from 'react-router-redux';
 
-
+import { LinodeTabs } from '~/components/tabs';
 import StatusDropdown from '~/linodes/components/StatusDropdown';
 import { setError } from '~/actions/errors';
 import { linodes } from '~/api';
@@ -16,42 +14,6 @@ export function getLinode() {
   const { linodeLabel } = this.props.params;
   return Object.values(linodes).reduce(
     (match, linode) => linode.label === linodeLabel ? linode : match, null);
-}
-
-class LinodeTabs extends Tabs {
-  constructor(props) {
-    super(props);
-
-    // By default, when a tab is clicked, the body of the control changes to
-    // blank before anything's actually been loaded to replace it. This just
-    // prevents that.
-    this.handleClick = () => {};
-  }
-}
-
-export function renderTabs(tabList, selected, isSubtab = false) {
-  const { dispatch } = this.props;
-
-  return (
-    <LinodeTabs
-      selectedIndex={tabList.indexOf(selected)}
-    >
-      <TabList>
-        {tabList.map(t => (
-          <Tab key={t.name} onClick={() => dispatch(push(t.link))}>
-            <Link to={t.link}>{t.name}</Link>
-          </Tab>
-        ))}
-      </TabList>
-      {tabList.map(t => (
-        <TabPanel key={t.name}>
-          <div className={isSubtab ? '' : 'container'}>
-            {t === selected ? this.props.children : null}
-          </div>
-        </TabPanel>
-       ))}
-    </LinodeTabs>
-  );
 }
 
 export class IndexPage extends Component {
@@ -86,7 +48,6 @@ export class IndexPage extends Component {
     this.getLinode = getLinode.bind(this);
     this.render = this.render.bind(this);
     this.renderLabel = this.renderLabel.bind(this);
-    this.renderTabs = renderTabs.bind(this);
     this.componentDidMount = this.componentDidMount.bind(this);
     this.state = { config: '', label: '', group: '' };
   }
@@ -142,7 +103,7 @@ export class IndexPage extends Component {
     const linode = this.getLinode();
     if (!linode) return <span></span>;
 
-    const tabList = [
+    const tabs = [
       { name: 'Dashboard', link: '' },
       { name: 'Networking', link: '/networking' },
       { name: 'Rebuild', link: '/rebuild' },
@@ -152,15 +113,22 @@ export class IndexPage extends Component {
       { name: 'Settings', link: '/settings' },
     ].map(t => ({ ...t, link: `/linodes/${linode.label}${t.link}` }));
 
-    const pathname = location ? location.pathname : tabList[0].link;
-    const selected = tabList.reduce((last, current) =>
+    const pathname = location ? location.pathname : tabs[0].link;
+    const selected = tabs.reduce((last, current) =>
       (pathname.indexOf(current.link) === 0 ? current : last));
 
     return (
       <div className="details-page">
         {this.renderHeader(linode)}
         <div className="main-header-fix"></div>
-        {this.renderTabs(tabList, selected)}
+        <LinodeTabs
+          tabs={tabs}
+          selected={selected}
+          tabClickNoOp
+          onClick={(tab) => this.props.dispatch(push(tab.link))}
+        >
+          {this.props.children}
+        </LinodeTabs>
       </div>
     );
   }
