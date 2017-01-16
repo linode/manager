@@ -32,7 +32,10 @@ export class IndexPage extends Component {
           tabs={tabs}
           selected={selected}
           className="sub-tabs"
-          onClick={(tab) => this.props.dispatch(push(tab.link))}
+          onClick={(e, tab) => {
+            e.stopPropagation();
+            this.props.dispatch(push(tab.link))
+          }}
         >
           {this.props.children}
         </Tabs>

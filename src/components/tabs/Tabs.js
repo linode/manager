@@ -16,9 +16,8 @@ export default function Tabs(props) {
           <Tab
             key={tab.name}
             onClick={(e) => {
-              e.stopPropagation();
               if (onClick) {
-                onClick(tab);
+                onClick(e, tab);
               }
             }}
           >
