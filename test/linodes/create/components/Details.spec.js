@@ -16,7 +16,7 @@ describe('linodes/create/components/Details', () => {
 
   it('renders errors', () => {
     const error = 'There was an error';
-    const errors = { label: [error] };
+    const errors = { label: [{ reason: error }] };
     const details = mount(<Details errors={errors} selectedType={null} />);
     const feedback = details.find('.form-control-feedback');
 

@@ -5,13 +5,7 @@ export default function FormGroupError(props) {
   const { fieldErrors } = props;
 
   function renderFieldErrors(fieldErrors) {
-    return fieldErrors.map((error) => {
-      if (typeof error === 'string') {
-        return <div key={error}>{error}</div>;
-      }
-
-      return <div key={error.reason}>{error.reason}</div>;
-    });
+    return fieldErrors.map((error) => <div key={error.reason}>{error.reason}</div>);
   }
 
   return (
