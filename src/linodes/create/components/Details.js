@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 
 import { Card } from '~/components';
+import { PrimaryButton } from '~/components/buttons';
 import { Form, FormGroup, SubmitButton } from '~/components/form';
 import PasswordInput from '~/components/PasswordInput';
 
@@ -94,9 +95,13 @@ export default class Details extends Component {
             </div> : null}
           <FormGroup className="row">
             <div className="offset-sm-2 col-sm-10">
-              <SubmitButton className="btn-primary" disabled={formDisabled}>
+              <PrimaryButton
+                type="submit"
+                disabled={formDisabled}
+                className="LinodesCreateDetails-create"
+              >
                 Create Linode{this.state.quantity > 1 ? 's' : null}
-              </SubmitButton>
+              </PrimaryButton>
             </div>
           </FormGroup>
         </Form>
