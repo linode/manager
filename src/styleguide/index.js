@@ -9,7 +9,7 @@ import {
   Iconography,
   WritingStyle,
   Buttons,
-  Tabs,
+  StyleguideTabs,
   Navigation,
   Forms,
   Modals,
@@ -26,7 +26,7 @@ export default (
     <Route path="writing-style" component={WritingStyle} />
     <Route path="buttons" component={Buttons} />
     <Route path="navigation" component={Navigation} />
-    <Route path="tabs" component={Tabs} />
+    <Route path="tabs" component={StyleguideTabs} />
     <Route path="forms" component={Forms} />
     <Route path="modals" component={Modals} />
   </Route>

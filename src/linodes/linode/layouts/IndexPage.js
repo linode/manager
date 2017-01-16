@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { LinodeTabs } from '~/components/tabs';
+import { Tabs } from '~/components/tabs';
 import StatusDropdown from '~/linodes/components/StatusDropdown';
 import { setError } from '~/actions/errors';
 import { linodes } from '~/api';
@@ -121,14 +121,14 @@ export class IndexPage extends Component {
       <div className="details-page">
         {this.renderHeader(linode)}
         <div className="main-header-fix"></div>
-        <LinodeTabs
+        <Tabs
           tabs={tabs}
           selected={selected}
           tabClickNoOp
           onClick={(tab) => this.props.dispatch(push(tab.link))}
         >
           {this.props.children}
-        </LinodeTabs>
+        </Tabs>
       </div>
     );
   }

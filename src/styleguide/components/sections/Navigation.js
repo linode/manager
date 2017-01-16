@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { LinodeTabs } from '~/components/tabs';
+import { Tabs } from '~/components/tabs';
 import { StyleguideSection } from '~/styleguide/components';
 
 export default function Navigation() {
@@ -24,7 +24,7 @@ export default function Navigation() {
             </div>
             <div>
               <h3>Example</h3>
-              <LinodeTabs
+              <Tabs
                 tabs={tabs}
                 selected={tabs[0]}
               />

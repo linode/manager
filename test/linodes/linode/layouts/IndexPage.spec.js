@@ -10,7 +10,7 @@ import { testLinode } from '@/data/linodes';
 import { expectRequest } from '@/common';
 import * as IndexPageWrapper from '~/linodes/linode/layouts/IndexPage';
 import Dropdown from '~/components/Dropdown';
-import { LinodeTabs } from '~/components/tabs';
+import { Tabs } from '~/components/tabs';
 
 
 const {
@@ -24,7 +24,7 @@ describe('linodes/linode/layouts/IndexPage/renderTabs', async () => {
   class Test extends Component {
     render() {
       // eslint-disable-next-line react/prop-types
-      return <LinodeTabs tabs={this.props.tabs} onClick={this.props.onClick} />;
+      return <Tabs tabs={this.props.tabs} onClick={this.props.onClick} />;
     }
   }
 

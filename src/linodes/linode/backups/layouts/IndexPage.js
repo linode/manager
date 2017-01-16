@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { push } from 'react-router-redux';
 
-import { LinodeTabs } from '~/components/tabs';
+import { Tabs } from '~/components/tabs';
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import { linodes } from '~/api';
 import { enableBackup } from '~/api/backups';
@@ -75,7 +75,7 @@ export class IndexPage extends Component {
 
     return (
       <div className="container">
-        <LinodeTabs
+        <Tabs
           tabs={tabs}
           selected={selected}
           className="sub-tabs"
@@ -83,7 +83,7 @@ export class IndexPage extends Component {
           onClick={(tab) => this.props.dispatch(push(tab.link))}
         >
           {this.props.children}
-        </LinodeTabs>
+        </Tabs>
       </div>
     );
   }

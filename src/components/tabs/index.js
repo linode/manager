@@ -1,1 +1,1 @@
-export { default as LinodeTabs } from '~/components/tabs/LinodeTabs';
+export { default as Tabs } from '~/components/tabs/Tabs';

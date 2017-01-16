@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router';
 
-import { LinodeTabs } from '~/components/tabs';
+import { Tabs } from '~/components/tabs';
 import { StyleguideSection } from '~/styleguide/components';
 
-export default function Tabs() {
+export default function StyleguideTabs() {
   const tabs = [
     { name: 'Design' },
     { name: 'Development' },
@@ -27,7 +27,7 @@ export default function Tabs() {
             </div>
             <div className="StyleguideTabs-example">
               <h3>Example</h3>
-              <LinodeTabs
+              <Tabs
                 tabs={tabs}
                 selected={tabs[0]}
                 className="sub-tabs"

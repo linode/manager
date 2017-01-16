@@ -4,7 +4,7 @@ export { default as Typography } from '~/styleguide/components/sections/Typograp
 export { default as Iconography } from '~/styleguide/components/sections/Iconography';
 export { default as WritingStyle } from '~/styleguide/components/sections/WritingStyle';
 export { default as Buttons } from '~/styleguide/components/sections/Buttons';
-export { default as Tabs } from '~/styleguide/components/sections/Tabs';
+export { default as StyleguideTabs } from '~/styleguide/components/sections/Tabs';
 export { default as Navigation } from '~/styleguide/components/sections/Navigation';
 export { default as Forms } from '~/styleguide/components/sections/Forms';
 export { default as Modals } from '~/styleguide/components/sections/Modals';
