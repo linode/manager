@@ -5,6 +5,7 @@ import { mount } from 'enzyme';
 
 import Details from '~/linodes/create/components/Details';
 import { api } from '@/data';
+import { expectObjectDeepEquals } from '@/common';
 
 describe('linodes/create/components/Details', () => {
   const { types } = api.types;
@@ -34,14 +35,14 @@ describe('linodes/create/components/Details', () => {
     const find = (name) => details.find(`input[name="${name}"]`);
 
     find('label').simulate('change', { target: { value: 'my-label' } });
-    find('password').simulate('change', { target: { value: 'my-password' } });
+    details.find('input[type="password"]').simulate('change', { target: { value: 'my-password' } });
     find('backups').simulate('change', { target: { checked: true } });
 
     details.find('form').simulate('submit');
 
     expect(onSubmit.calledOnce).to.equal(true);
 
-    expect(onSubmit.firstCall.args[0]).to.deep.equal({
+    expectObjectDeepEquals(onSubmit.firstCall.args[0], {
       password: 'my-password',
       label: 'my-label',
       backups: true,
