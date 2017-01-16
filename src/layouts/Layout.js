@@ -84,11 +84,13 @@ export class Layout extends Component {
               __progress: event.getProgress(),
             }, linode.id));
 
-            setTimeout(() => dispatch(linodeActions.one({
-              status: event.getStatus(),
-              // For best UX, keep the below timeout length the same as the width transition for
-              // this component.
-            }, linode.id)), 1000);
+            if (event.getProgress() === 100) {
+              setTimeout(() => dispatch(linodeActions.one({
+                status: event.getStatus(),
+                // For best UX, keep the below timeout length the same as the width transition for
+                // this component.
+              }, linode.id)), 1000);
+            }
           }
         }
         break;

@@ -1,13 +1,15 @@
 import React, { PropTypes } from 'react';
 
+import { Button } from '~/components/buttons';
+
 export default function SubmitButton(props) {
   return (
-    <button
+    <Button
       type="submit"
       className={`btn ${props.className}`}
       disabled={props.disabled}
       onClick={props.onClick}
-    >{props.children}</button>
+    >{props.children}</Button>
   );
 }
 
