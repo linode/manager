@@ -62,7 +62,7 @@ export class Event {
   }
 
   getProgress() {
-    return Math.max(this._event.percent_complete, 100);
+    return Math.min(this._event.percent_complete, 100);
   }
 
   getType() {
