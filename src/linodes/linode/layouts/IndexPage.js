@@ -126,7 +126,7 @@ export class IndexPage extends Component {
           selected={selected}
           onClick={(e, tab) => {
             e.stopPropagation();
-            this.props.dispatch(push(tab.link))
+            this.props.dispatch(push(tab.link));
           }}
         >
           {this.props.children}

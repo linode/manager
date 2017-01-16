@@ -70,7 +70,7 @@ describe('linodes/linode/layouts/IndexPage/renderTabs', async () => {
 
     const tabComponents = page.find('Tabs').find('Tab');
     tabComponents.at(0).simulate('click');
-    expect(handleClick.calledWith(tabs[0])).to.equal(true);
+    expect(handleClick.callCount).to.equal(1);
   });
 });
 

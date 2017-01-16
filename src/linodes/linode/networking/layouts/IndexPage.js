@@ -34,7 +34,7 @@ export class IndexPage extends Component {
           className="sub-tabs"
           onClick={(e, tab) => {
             e.stopPropagation();
-            this.props.dispatch(push(tab.link))
+            this.props.dispatch(push(tab.link));
           }}
         >
           {this.props.children}
