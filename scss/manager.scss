@@ -182,78 +182,6 @@ label {
     margin-bottom: -37px;
 }
 
-.react-tabs {
-    [role="tablist"] {
-        @extend .container;
-        background: $white;
-        border-bottom: $border;
-        margin: 0 auto;
-    }
-
-    [role="tablist"].form-tab-list [role="tab"] {
-        padding: 6px 12px;
-    }
-
-    [role="tab"] {
-        border-color: 1px solid transparent;
-        padding: 0;
-
-        &:not(:last-of-type) {
-            margin-right: 15px;
-        }
-
-        &:hover,
-        &[aria-selected="true"] {
-            background: $light-gray;
-            border: 1px solid #bbb;
-            border-bottom: 0;
-            border-radius: 2px 2px 0 0;
-            -moz-border-radius: 2px 2px 0 0;
-            -webkit-border-radius: 2px 2px 0 0;
-        }
-
-        &:hover,
-        &:focus,
-        &:active,
-        &:active:focus {
-            outline: 0;
-            box-shadow: none;
-
-            &::after {
-                display: none;
-            }
-        }
-
-        a {
-            color: $black;
-            display: block;
-            padding: 6px 12px;
-            text-decoration: none !important;
-        }
-    }
-
-    /* define subtab behavior */
-    .react-tabs {
-        [role="tablist"] {
-            margin-top: $main-padding-tb/2;
-            padding: 0;
-            background: transparent;
-        }
-
-        [role="tab"] {
-            border: 0; // reset from above
-            border-bottom: 3px solid transparent;
-
-            &:hover,
-            &[aria-selected="true"] {
-                border: 0;
-                border-bottom: 3px solid $blue;
-                background: transparent;
-            }
-        }
-    }
-}
-
 .form-control {
     font-size: $font-normal;
     border-radius: 2px;
@@ -602,10 +530,6 @@ footer {
             padding-left: 0;
         }
     }
-}
-
-section.card header + .react-tabs {
-    margin-top: -10px;
 }
 
 .sub-header {

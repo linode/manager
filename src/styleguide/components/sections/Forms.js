@@ -8,9 +8,9 @@ export default function Forms() {
   return (
     <StyleguideSection name="forms" title="Forms">
       <div className="col-sm-12">
-        <div className="StyleguideFormSection row">
+        <div className="StyleguideSubSection row">
           <div className="col-sm-12">
-            <div className="StyleguideFormSection-header">
+            <div className="StyleguideSubSection-header">
               <h3>Form Details</h3>
             </div>
             <div className="ExampleForm">
@@ -79,9 +79,9 @@ export default function Forms() {
           </div>
         </div>
 
-        <div className="StyleguideFormSection row">
+        <div className="StyleguideSubSection row">
           <div className="col-sm-12">
-            <div className="StyleguideFormSection-header">
+            <div className="StyleguideSubSection-header">
               <h3>Form Layout</h3>
               <p>Form Layout describes the typical organization of form elements.</p>
             </div>
@@ -169,9 +169,9 @@ export default function Forms() {
           </div>
         </div>
 
-        <div className="StyleguideFormSection row">
+        <div className="StyleguideSubSection row">
           <div className="col-sm-12">
-            <div className="StyleguideFormSection-header">
+            <div className="StyleguideSubSection-header">
               <h3>Form Help</h3>
             </div>
             <div className="ExampleForm">
@@ -183,9 +183,9 @@ export default function Forms() {
           </div>
         </div>
 
-        <div className="StyleguideFormSection row">
+        <div className="StyleguideSubSection row">
           <div className="col-sm-12">
-            <div className="StyleguideFormSection-header">
+            <div className="StyleguideSubSection-header">
               <h3>Form Validation</h3>
             </div>
             <div className="ExampleForm">
