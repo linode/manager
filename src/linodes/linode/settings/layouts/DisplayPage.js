@@ -4,7 +4,8 @@ import { push } from 'react-router-redux';
 
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import { linodes } from '~/api';
-import { FormGroup, FormGroupError, Input } from '~/components/form';
+import { Card } from '~/components';
+import { Form, FormGroup, FormGroupError, Input, SubmitButton } from '~/components/form';
 import { ErrorSummary, reduceErrors } from '~/errors';
 import { setSource } from '~/actions/source';
 
@@ -23,7 +24,6 @@ export class DisplayPage extends Component {
   }
 
   async onSubmit(e) {
-    e.preventDefault();
     const { dispatch } = this.props;
     const { id } = this.getLinode();
     const { group, label } = this.state;
@@ -47,17 +47,15 @@ export class DisplayPage extends Component {
   render() {
     const { group, label, errors } = this.state;
     return (
-      <section className="card">
-        <header>
-          <h2>Display</h2>
-        </header>
-        <form>
+      <Card title="Display">
+        <Form onSubmit={this.onSubmit}>
           <FormGroup errors={errors} className="row" name="group">
             <div className="col-sm-1 label-col">
-              <label htmlFor="">Group:</label>
+              <label htmlFor="group">Group:</label>
             </div>
-            <div className="col-sm-11 content-col">
+            <div className="col-sm-11">
               <Input
+                id="group"
                 value={group}
                 onChange={e => this.setState({ group: e.target.value })}
               />
@@ -70,6 +68,7 @@ export class DisplayPage extends Component {
             </div>
             <div className="col-sm-11 content-col">
               <Input
+                id="label
                 className="LinodesLinodeSettingsDisplay-label"
                 value={label}
                 onChange={e => this.setState({ label: e.target.value })}
@@ -78,17 +77,13 @@ export class DisplayPage extends Component {
             </div>
           </FormGroup>
           <ErrorSummary errors={errors} />
-          <div className="row">
+          <FormGroup className="row">
             <div className="offset-sm-1 col-sm-11">
-              <button
-                className="btn btn-default"
-                onClick={this.onSubmit}
-                disabled={this.loading}
-              >Save</button>
+              <SubmitButton/>
             </div>
-          </div>
-        </form>
-      </section>
+          </FormGroup>
+        </Form>
+      </Card>
     );
   }
 }
