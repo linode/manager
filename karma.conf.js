@@ -70,6 +70,7 @@ module.exports = function(config) {
       noInfo: true
     },
     reporters: ['spec', 'coverage'],
+    preprocessors: { '!(*styleguide)': 'coverage' }, //exclude *styleguide files
     coverageReporter: {
       type: 'lcov',
       dir: 'coverage',
