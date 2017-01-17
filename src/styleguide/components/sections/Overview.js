@@ -18,11 +18,18 @@ export default function Overview() {
             </p>
             <ul>
               <li>Code reuse through shared, atomic components</li>
-              <li>Consistent building, allowing effort to be focused on application logic and user flow</li>
-              <li>Documenting common patterns in a single place, supporting fast iterations, and easy maintenance</li>
+              <li>
+                Consistent building, allowing effort to be focused
+                on application logic and user flow
+              </li>
+              <li>
+                Documenting common patterns in a single place,
+                supporting fast iterations, and easy maintenance
+              </li>
             </ul>
             <p>
-              Documented patterns are flexible, and are intended to be adapted to solve unique challenges.
+              Documented patterns are flexible, and are intended
+              to be adapted to solve unique challenges.
             </p>
           </div>
         </div>
