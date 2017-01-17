@@ -2,6 +2,8 @@ import React from 'react';
 
 import { StyleguideSection } from '~/styleguide/components';
 import { Button, LinkButton, PrimaryButton } from '~/components/buttons';
+import Dropdown from '~/components/Dropdown';
+import StatusDropdown from '~/linodes/components/StatusDropdown';
 
 export default function Buttons() {
   return (
@@ -36,6 +38,31 @@ export default function Buttons() {
             </p>
             <p>
               This is for focal points and calls to action. Use sparingly.
+            </p>
+            <br />
+
+            <h3>Dropdown</h3>
+            <p>
+              Example: <Dropdown elements={[
+                { name: 'First item', action: () => {} },
+                { name: 'Second item', action: () => {} },
+                { name: 'Third item', action: () => {} },
+              ]} />
+            </p>
+            <p>
+              This dropdown is for links and actions outside of forms.
+            </p>
+            <br />
+
+            <h3>StatusDropdown</h3>
+            <p>
+              Example: <StatusDropdown dispatch={() => {}} linode={{
+                status: 'running',
+              }} />
+            </p>
+            <p>
+              This dropdown is for showing and controlling the power state of a
+              Linode.
             </p>
           </div>
         </div>

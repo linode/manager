@@ -51,7 +51,7 @@ export default class Dropdown extends Component {
             aria-expanded={this.state.open}
             onClick={this.open}
           >
-            <span className="sr-only">Toggle dropdown</span>
+            <i className="fa fa-caret-down"></i>
           </button> : null}
         <div className={`dropdown-menu ${orientation}`}>{dropdownMenu}</div>
       </div>
