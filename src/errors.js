@@ -24,6 +24,7 @@ export async function reduceErrors(response) {
 
 export function ErrorSummary(props) {
   const { errors } = props;
+
   if (errors._ && errors._.length) {
     return (
       <div className="alert alert-danger">

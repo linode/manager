@@ -30,23 +30,8 @@ describe('linodes/linode/settings/layouts/DisplayPage', () => {
       <DisplayPage {...props} />
     );
 
-    expect(page.find('header h2').text()).to.equal('Display');
-    expect(page.find('input[name="group"]').props().value).to.equal('Test Group');
-
-    expect(page.find('input[name="label"]').props().value).to.equal('test-linode');
-    expect(page.find('button.btn.btn-default').text()).to.equal('Save');
-  });
-
-  it('changes group and label values onChange', async () => {
-    const page = await mount(<DisplayPage {...props} />);
-
-    page.find('input').map((element) => {
-      const { value, name, onChange } = element.props();
-      const newValue = `${value} Changed`;
-      onChange({ target: { value: newValue } });
-      expect(page.state(name)).to.equal(newValue);
-      expect(element.props().value).to.equal(newValue);
-    });
+    expect(page.find('Input').props().value).to.equal('Test Group');
+    expect(page.find('#label').props().value).to.equal('test-linode');
   });
 
   it('makes request to save changes', async () => {
@@ -54,7 +39,7 @@ describe('linodes/linode/settings/layouts/DisplayPage', () => {
 
     const linode = linodes.linodes['1234'];
     dispatch.reset();
-    page.find('button').simulate('click', { preventDefault() {} });
+    page.find('form').simulate('submit', { preventDefault() {} });
     expect(dispatch.callCount).to.equal(1);
     const fn = dispatch.firstCall.args[0];
     const dispatched = () => ({ authentication: { token: 'hi' } });
@@ -96,7 +81,7 @@ describe('linodes/linode/settings/layouts/DisplayPage', () => {
 
     dispatch.reset();
 
-    await page.find('button').simulate('click', { preventDefault() {} });
+    await page.find('form').simulate('submit', { preventDefault() {} });
 
     expect(dispatch.callCount).to.equal(2);
     const fn = dispatch.secondCall.args[0];

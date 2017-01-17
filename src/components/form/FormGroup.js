@@ -3,7 +3,11 @@ import React, { PropTypes } from 'react';
 export default function FormGroup(props) {
   const { errors, name, crumbs } = props;
 
-  const fieldErrors = errors[name + (crumbs ? `.${crumbs}` : '')];
+  let fieldErrors;
+  if (errors && name) {
+    const crumb = (crumbs ? `.${crumbs}` : '');
+    fieldErrors = errors[`${name}${crumb}`];
+  }
 
   return (
     <div
@@ -17,8 +21,8 @@ export default function FormGroup(props) {
 }
 
 FormGroup.propTypes = {
-  errors: PropTypes.any.isRequired,
-  name: PropTypes.string.isRequired,
+  errors: PropTypes.any,
+  name: PropTypes.string,
   crumbs: PropTypes.string,
   className: PropTypes.string,
   children: PropTypes.node,
