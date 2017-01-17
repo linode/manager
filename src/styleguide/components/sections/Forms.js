@@ -80,7 +80,7 @@ export default function Forms() {
                       <span className="badge">4</span>
                     </span>
                   </div>
-                </div>
+                </FormGroup>
               </Form>
               <div className="ExampleForm-description">
                 <dl>
@@ -139,10 +139,10 @@ export default function Forms() {
                   <div className="col-sm-8">
                     <input type="text" name="example-form-field" className="form-control" />
                   </div>
-                </div>
+                </FormGroup>
 
                 <h3>Form Section Title</h3>
-                <div className="form-group row">
+                <FormGroup className="row">
                   <span className="FormDescriptor FormDescriptor__form-section-title">
                     <span className="badge">2</span>
                   </span>
@@ -160,9 +160,9 @@ export default function Forms() {
                   <div className="col-sm-8">
                     <input type="text" name="example-form-field" className="form-control" />
                   </div>
-                </div>
+                </FormGroup>
 
-                <div className="form-group row">
+                <FormGroup className="row">
                   <div className="offset-sm-4 col-sm-8">
                     <span className="FormDescriptor FormDescriptor__form-buttons">
                       <span className="badge">3</span>
@@ -170,7 +170,7 @@ export default function Forms() {
                     <SubmitButton />
                     <CancelButton />
                   </div>
-                </div>
+                </FormGroup>
               </Form>
 
               <div className="ExampleForm-description">
@@ -258,23 +258,23 @@ export default function Forms() {
             <div className="ExampleForm">
               <div className="ExampleForm-description">
                 <Form>
-                  <div className="form-group row">
+                  <FormGroup className="row">
                     <div className="col-sm-3 label-col">
                       <label>Input (text)</label>
                     </div>
                     <div className="col-sm-9">
                       <Input placeholder="my-placeholder" />
                     </div>
-                  </div>
-                  <div className="form-group row">
+                  </FormGroup>
+                  <FormGroup className="row">
                     <div className="col-sm-3 label-col">
                       <label>Input (number)</label>
                     </div>
                     <div className="col-sm-9">
                       <Input type="number" value={1} min={0} max={10} />
                     </div>
-                  </div>
-                  <div className="form-group row">
+                  </FormGroup>
+                  <FormGroup className="row">
                     <div className="col-sm-3 label-col">
                       <label>Checkbox</label>
                     </div>
@@ -284,8 +284,8 @@ export default function Forms() {
                         <Checkbox label="Checkbox 2" />
                       </Checkboxes>
                     </div>
-                  </div>
-                  <div className="form-group row">
+                  </FormGroup>
+                  <FormGroup className="row">
                     <div className="col-sm-3 label-col">
                       <label>Radio</label>
                     </div>
@@ -295,8 +295,8 @@ export default function Forms() {
                         <Radio label="Radio 2" />
                       </Checkboxes>
                     </div>
-                  </div>
-                  <div className="form-group row">
+                  </FormGroup>
+                  <FormGroup className="row">
                     <div className="col-sm-3 label-col">
                       <label>Select</label>
                     </div>
@@ -306,7 +306,7 @@ export default function Forms() {
                         <option value="2">Option 2</option>
                       </Select>
                     </div>
-                  </div>
+                  </FormGroup>
                 </Form>
               </div>
             </div>
@@ -319,15 +319,15 @@ export default function Forms() {
                 <div className="ExampleForm">
                   <div className="ExampleForm-description">
                     <Form>
-                      <div className="form-group row">
+                      <FormGroup className="row">
                         <div className="col-sm-3 label-col">
                           <label>Password input</label>
                         </div>
                         <div className="col-sm-9">
                           <PasswordInput />
                         </div>
-                      </div>
-                      <div className="form-group row">
+                      </FormGroup>
+                      <FormGroup className="row">
                         <div className="col-sm-3 label-col">
                           <label>Checkbox input combo</label>
                         </div>
@@ -342,8 +342,8 @@ export default function Forms() {
                             inputValue="Input 2"
                           />
                         </div>
-                      </div>
-                      <div className="form-group row">
+                      </FormGroup>
+                      <FormGroup className="row">
                         <div className="col-sm-3 label-col">
                           <label>Radio input combo</label>
                         </div>
@@ -358,8 +358,8 @@ export default function Forms() {
                             inputValue="Input 2"
                           />
                         </div>
-                      </div>
-                      <div className="form-group row">
+                      </FormGroup>
+                      <FormGroup className="row">
                         <div className="col-sm-3 label-col">
                           <label>Radio select combo</label>
                         </div>
@@ -376,7 +376,7 @@ export default function Forms() {
                                             { value: '2', label: 'Option 2.1' }]}
                           />
                         </div>
-                      </div>
+                      </FormGroup>
                     </Form>
                   </div>
                 </div>
