@@ -131,6 +131,7 @@ export default class Source extends Component {
           <Tabs
             onSelect={onTabChange}
             selectedIndex={selectedTab}
+            className="SubTabs"
           >
             <TabList className="form-tab-list">
               <Tab>Distributions</Tab>

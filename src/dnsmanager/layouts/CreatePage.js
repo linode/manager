@@ -59,6 +59,7 @@ export class CreatePage extends Component {
             <Tabs
               onSelect={index => this.setState({ tabIndex: index })}
               selectedIndex={this.state.tabIndex}
+              className="SubTabs"
             >
               <TabList>
                 <Tab>New master</Tab>

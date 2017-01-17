@@ -30,7 +30,7 @@ export default function StyleguideTabs() {
               <Tabs
                 tabs={tabs}
                 selected={tabs[0]}
-                className="sub-tabs"
+                className="SubTabs"
               />
             </div>
           </div>
