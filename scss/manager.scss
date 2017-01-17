@@ -81,6 +81,7 @@ label {
     color: #bfbfbf;
 }
 
+// TODO: BEMify
 .sidebar {
     position: fixed;
     top: $nav-height;
@@ -182,17 +183,6 @@ label {
     margin-bottom: -37px;
 }
 
-.form-control {
-    font-size: $font-normal;
-    border-radius: 2px;
-    color: $black;
-    display: inline-block;
-
-    &:focus {
-        color: $black;
-    }
-}
-
 input:not([type="checkbox"]):not([type="radio"]),
 select,
 select.form-control,
@@ -219,6 +209,7 @@ section.card {
     margin-top: $main-padding-tb;
 }
 
+// TODO: remove or replace with specific instance (i.e. for the checkbox + action menu)
 .input-group {
     input {
         margin: 0;
@@ -258,6 +249,7 @@ hr {
     margin-right: 15px;
 }
 
+// TODO: drop after moving to input components
 input[type=checkbox], input[type=radio] {
     padding: 0;
     margin: 0;
@@ -269,6 +261,7 @@ input[type=checkbox], input[type=radio] {
     }
 }
 
+// TODO: drop after moving to input components
 .input-group-addon {
     background: $light-gray;
     height: $input-height;
@@ -281,18 +274,21 @@ input[type=checkbox], input[type=radio] {
     }
 }
 
+// TODO: please drop
 :not(.btn-group) .btn.float-xs-right + .btn.float-xs-right,
 .btn.float-xs-right + label.float-xs-right {
     display: inline-block;
     margin-right: 15px;
 }
 
+// TODO: please drop
 :not(.btn-group) .btn.float-xs-left + .btn.float-xs-left,
 .btn.float-xs-left + label.float-xs-left {
     display: inline-block;
     margin-left: 15px;
 }
 
+// TODO: BEMify
 .dropdown-menu {
     padding: 0;
     border: 0;
@@ -308,6 +304,7 @@ input[type=checkbox], input[type=radio] {
     }
 }
 
+// TODO: look into
 .grid-list {
     a .fa {
         color: $lightest-black;
@@ -349,6 +346,7 @@ input[type=checkbox], input[type=radio] {
     }
 }
 
+// TODO: make component and BEM-ify
 table {
     width: 100%;
 
@@ -426,18 +424,12 @@ table {
     color: $red;
 }
 
+// TODO: prettify
 .alert {
     &.alert-info {
         background: $yellow;
         border-color: $dark-gray;
         color: $light-black;
-    }
-}
-
-.action-link {
-    color: $lightest-black;
-    &:hover {
-        color: $dark-blue;
     }
 }
 
@@ -465,6 +457,7 @@ footer {
         margin: 1rem;
     }
 }
+
 .linodes {
     .linode-label {
         color: $black !important;
@@ -550,44 +543,6 @@ p {
     margin-bottom: $main-padding-tb/2;
 }
 
-.password-input {
-    .strength {
-        width: 300px;
-        height: 10px;
-
-        span {
-            display: inline-block;
-            width: 75px;
-            height: 100%;
-            border: 1px solid $gray;
-        }
-
-        &.strength-1 {
-            span:nth-child(1) {
-                background: $dark-gray;
-            }
-        }
-
-        &.strength-2 {
-            span:nth-child(1), span:nth-child(2) {
-                background: $red;
-            }
-        }
-
-        &.strength-3 {
-            span:nth-child(1), span:nth-child(2), span:nth-child(3) {
-                background: $dark-yellow;
-            }
-        }
-
-        &.strength-4 {
-            span {
-                background: $green;
-            }
-        }
-    }
-}
-
 .feedback {
     position: fixed;
     right: -400px;
@@ -619,6 +574,7 @@ p {
     }
 }
 
+// TODO: remove after converting to checkbox
 .checkbox + .checkbox {
     margin-top: 5px;
 }

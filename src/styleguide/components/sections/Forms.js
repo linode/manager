@@ -2,7 +2,10 @@ import React from 'react';
 
 import { StyleguideSection } from '~/styleguide/components';
 
-import { Form, FormGroup, CancelButton, SubmitButton } from '~/components/form';
+import {
+  Form, FormGroup, CancelButton, SubmitButton, Input, Radio, Checkbox, Select, CheckboxInputCombo,
+  RadioInputCombo, RadioSelectCombo, Checkboxes, PasswordInput,
+} from '~/components/form';
 
 export default function Forms() {
   return (
@@ -192,6 +195,141 @@ export default function Forms() {
               <div className="ExampleForm-description">
                 <dl>
                 </dl>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="StyleguideFormSection row">
+          <div className="col-sm-12">
+            <div className="StyleguideFormSection-header">
+              <h3>Form Inputs (simple)</h3>
+            </div>
+            <div className="ExampleForm">
+              <div className="ExampleForm-description">
+                <Form>
+                  <div className="form-group row">
+                    <div className="col-sm-3 label-col">
+                      <label>Input (text)</label>
+                    </div>
+                    <div className="col-sm-9">
+                      <Input placeholder="my-placeholder" />
+                    </div>
+                  </div>
+                  <div className="form-group row">
+                    <div className="col-sm-3 label-col">
+                      <label>Input (number)</label>
+                    </div>
+                    <div className="col-sm-9">
+                      <Input type="number" value={1} min={0} max={10} />
+                    </div>
+                  </div>
+                  <div className="form-group row">
+                    <div className="col-sm-3 label-col">
+                      <label>Checkbox</label>
+                    </div>
+                    <div className="col-sm-9">
+                      <Checkboxes>
+                        <Checkbox label="Checkbox 1" />
+                        <Checkbox label="Checkbox 2" />
+                      </Checkboxes>
+                    </div>
+                  </div>
+                  <div className="form-group row">
+                    <div className="col-sm-3 label-col">
+                      <label>Radio</label>
+                    </div>
+                    <div className="col-sm-9">
+                      <Checkboxes>
+                        <Radio label="Radio 1" />
+                        <Radio label="Radio 2" />
+                      </Checkboxes>
+                    </div>
+                  </div>
+                  <div className="form-group row">
+                    <div className="col-sm-3 label-col">
+                      <label>Select</label>
+                    </div>
+                    <div className="col-sm-9">
+                      <Select value="1">
+                        <option value="1">Option 1</option>
+                        <option value="2">Option 2</option>
+                      </Select>
+                    </div>
+                  </div>
+                </Form>
+              </div>
+            </div>
+
+            <div className="StyleguideFormSection row">
+              <div className="col-sm-12">
+                <div className="StyleguideFormSection-header">
+                  <h3>Form Inputs (complex)</h3>
+                </div>
+                <div className="ExampleForm">
+                  <div className="ExampleForm-description">
+                    <Form>
+                      <div className="form-group row">
+                        <div className="col-sm-3 label-col">
+                          <label>PasswordInput</label>
+                        </div>
+                        <div className="col-sm-9">
+                          <PasswordInput />
+                        </div>
+                      </div>
+                      <div className="form-group row">
+                        <div className="col-sm-3 label-col">
+                          <label>CheckboxInputCombo</label>
+                        </div>
+                        <div className="col-sm-9">
+                          <CheckboxInputCombo
+                            checkboxLabel="Checkbox 1"
+                            inputDisabled
+                            inputValue="Input 1"
+                          />
+                          <CheckboxInputCombo
+                            checkboxLabel="Checkbox 2"
+                            inputValue="Input 2"
+                          />
+                        </div>
+                      </div>
+                      <div className="form-group row">
+                        <div className="col-sm-3 label-col">
+                          <label>RadioInputCombo</label>
+                        </div>
+                        <div className="col-sm-9">
+                          <RadioInputCombo
+                            radioLabel="Radio 1"
+                            inputDisabled
+                            inputValue="Input 1"
+                          />
+                          <RadioInputCombo
+                            radioLabel="Radio 2"
+                            inputValue="Input 2"
+                          />
+                        </div>
+                      </div>
+                      <div className="form-group row">
+                        <div className="col-sm-3 label-col">
+                          <label>RadioSelectCombo</label>
+                        </div>
+                        <div className="col-sm-9">
+                          <RadioSelectCombo
+                            radioLabel="Radio 1"
+                            inputDisabled
+                            inputValue="Input 1"
+                            selectOptions={[{ value: '1', label: 'Option 1' }]}
+                          />
+                          <RadioSelectCombo
+                            radioLabel="Radio 2"
+                            selectOptions={[{ value: '1', label: 'Option 2' },
+                                            { value: '2', label: 'Option 2.1' }]}
+                          />
+                        </div>
+                      </div>
+                    </Form>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

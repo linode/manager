@@ -1,0 +1,16 @@
+.CheckboxInputCombo {
+    display: inline-block;
+
+    & + & {
+        margin-top: 10px;
+    }
+
+    .Input {
+        margin-left: 5px;
+    }
+
+    .form-control {
+        display: inline;
+        width: auto;
+    }
+}
