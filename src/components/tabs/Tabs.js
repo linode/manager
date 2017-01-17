@@ -9,7 +9,7 @@ export default function Tabs(props) {
   return (
     <ReactTabs
       selectedIndex={tabs.indexOf(selected)}
-      className={`${className}`}
+      className={`Tabs ${className}`}
     >
       <TabList>
         {tabs.map(tab => (

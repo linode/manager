@@ -1,4 +1,4 @@
-.react-tabs {
+.Tabs {
   [role="tablist"] {
     @extend .container;
     background: $white;
@@ -48,7 +48,7 @@
 }
 
 /* define subtab behavior */
-.react-tabs.SubTabs {
+.Tabs.SubTabs {
   [role="tablist"] {
     margin-top: $main-padding-tb/2;
     padding: 0;
@@ -68,6 +68,6 @@
   }
 }
 
-section.card header + .react-tabs {
+section.card header + .Tabs {
   margin-top: -10px;
 }
