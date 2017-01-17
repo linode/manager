@@ -42,10 +42,6 @@
                 border-bottom: none;
             }
         }
-
-        .dropdown-toggle::after {
-            display: none;
-        }
     }
 
     &:not(.plan):not(.backup) > div {

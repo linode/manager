@@ -596,3 +596,7 @@ p {
 a:hover, a:focus, a:active {
     color: $blue;
 }
+
+.dropdown-toggle::after {
+    display: none;
+}
