@@ -192,16 +192,23 @@ export default function Forms() {
             <div className="StyleguideSubSection-header">
               <h3>Form Validation</h3>
             </div>
-            <FormGroup errors={{"validation_error": ["error"]}} name="validation_error" className="row">
+            <FormGroup
+              errors={{ validation_error: [{ reason: 'Specific form error' }] }}
+              name="validation_error"
+              className="row"
+            >
               <div className="col-sm-2 label-col">
                 <label>Validation error:</label>
               </div>
               <div className="col-sm-10 content-col">
-                <input type="text" />
-                <FormGroupError errors={{"validation_error": ["error"]}} name="validation_error" />
+                <Input value="Incorrect input" />
+                <FormGroupError
+                  errors={{ validation_error: [{ reason: 'Specific form error' }] }}
+                  name="validation_error"
+                />
               </div>
             </FormGroup>
-            <ErrorSummary errors={{"validation_error": ["error"]}} />
+            <ErrorSummary errors={{ _: [{ reason: 'Specific form error' }] }} />
           </div>
         </div>
 
