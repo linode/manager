@@ -4,8 +4,9 @@ import { StyleguideSection } from '~/styleguide/components';
 
 import {
   Form, FormGroup, CancelButton, SubmitButton, Input, Radio, Checkbox, Select, CheckboxInputCombo,
-  RadioInputCombo, RadioSelectCombo, Checkboxes, PasswordInput,
+  FormGroupError, RadioInputCombo, RadioSelectCombo, Checkboxes, PasswordInput,
 } from '~/components/form';
+import { ErrorSummary } from '~/errors';
 
 export default function Forms() {
   return (
@@ -18,7 +19,7 @@ export default function Forms() {
             </div>
             <div className="ExampleForm">
               <Form>
-                <FormGroup className="row">
+                <div className="form-group row">
                   <label className="col-sm-4">
                     <span className="FormDescriptor FormDescriptor__form-labels">
                       <span className="badge">1</span>
@@ -28,8 +29,8 @@ export default function Forms() {
                   <div className="col-sm-8">
                     <input type="text" name="example-form-field" className="form-control" />
                   </div>
-                </FormGroup>
-                <FormGroup className="row">
+                </div>
+                <div className="form-group row">
                   <label className="col-sm-4">Field Label</label>
                   <div className="col-sm-8">
                     <input type="text" name="example-form-field" className="form-control" />
@@ -37,14 +38,14 @@ export default function Forms() {
                       <span className="badge">2</span>
                     </span>
                   </div>
-                </FormGroup>
-                <FormGroup className="row">
+                </div>
+                <div className="form-group row">
                   <label className="col-sm-4">Field Lengths</label>
                   <div className="col-sm-8">
                     <input type="text" name="example-form-field" className="form-control" />
                   </div>
-                </FormGroup>
-                <FormGroup className="row">
+                </div>
+                <div className="form-group row">
                   <label className="col-sm-4">Field Label</label>
                   <div className="col-sm-8">
                     <input
@@ -57,7 +58,7 @@ export default function Forms() {
                       <span className="badge">3</span>
                     </span>
                   </div>
-                </FormGroup>
+                </div>
               </Form>
               <div className="ExampleForm-description">
                 <dl>
@@ -99,15 +100,15 @@ export default function Forms() {
                   A short description about the purpose of this form.
                   <a href="#">Learn More.</a>
                 </p>
-                <FormGroup className="row">
+                <div className="form-group row">
                   <label className="col-sm-4">Field Label</label>
                   <div className="col-sm-8">
                     <input type="text" name="example-form-field" className="form-control" />
                   </div>
-                </FormGroup>
+                </div>
 
                 <h3>Form Section Title</h3>
-                <FormGroup className="row">
+                <div className="form-group row">
                   <span className="FormDescriptor FormDescriptor__form-section-title">
                     <span className="badge">2</span>
                   </span>
@@ -115,15 +116,15 @@ export default function Forms() {
                   <div className="col-sm-8">
                     <input type="text" name="example-form-field" className="form-control" />
                   </div>
-                </FormGroup>
-                <FormGroup className="row">
+                </div>
+                <div className="form-group row">
                   <label className="col-sm-4">Field Label</label>
                   <div className="col-sm-8">
                     <input type="text" name="example-form-field" className="form-control" />
                   </div>
-                </FormGroup>
+                </div>
 
-                <FormGroup className="row">
+                <div className="form-group row">
                   <div className="offset-sm-4 col-sm-8">
                     <span className="FormDescriptor FormDescriptor__form-buttons">
                       <span className="badge">3</span>
@@ -131,7 +132,7 @@ export default function Forms() {
                     <SubmitButton />
                     <CancelButton />
                   </div>
-                </FormGroup>
+                </div>
               </Form>
 
               <div className="ExampleForm-description">
@@ -191,12 +192,16 @@ export default function Forms() {
             <div className="StyleguideSubSection-header">
               <h3>Form Validation</h3>
             </div>
-            <div className="ExampleForm">
-              <div className="ExampleForm-description">
-                <dl>
-                </dl>
+            <FormGroup errors={{"validation_error": ["error"]}} name="validation_error" className="row">
+              <div className="col-sm-2 label-col">
+                <label>Validation error:</label>
               </div>
-            </div>
+              <div className="col-sm-10 content-col">
+                <input type="text" />
+                <FormGroupError errors={{"validation_error": ["error"]}} name="validation_error" />
+              </div>
+            </FormGroup>
+            <ErrorSummary errors={{"validation_error": ["error"]}} />
           </div>
         </div>
 
