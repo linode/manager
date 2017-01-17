@@ -1,0 +1,20 @@
+.StyleguideModals {
+  &-examples {
+    ul {
+      padding: 0;
+    }
+
+    ul > li {
+      display: inline;
+      margin-left: 15px;
+    }
+
+    ul > li:first-child {
+      margin-left: 0;
+    }
+  }
+
+  .modal-overlay {
+    top: 0;
+  }
+}
