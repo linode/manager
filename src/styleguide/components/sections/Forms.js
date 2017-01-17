@@ -19,33 +19,55 @@ export default function Forms() {
             <div className="ExampleForm">
               <Form>
                 <FormGroup className="row">
-                  <label className="col-sm-4">
-                    <span className="FormDescriptor FormDescriptor__form-labels">
-                      <span className="badge">1</span>
-                    </span>
-                    Field Label
-                  </label>
+                  <div className="col-sm-4 label-col">
+                    <label>
+                      <span className="FormDescriptor FormDescriptor__form-labels">
+                        <span className="badge">1</span>
+                      </span>
+                      Field label
+                    </label>
+                  </div>
                   <div className="col-sm-8">
-                    <input type="text" name="example-form-field" className="form-control" />
+                    <input
+                      type="text"
+                      name="example-form-field"
+                      className="form-control"
+                      placeholder="Placeholder"
+                    />
                   </div>
                 </FormGroup>
                 <FormGroup className="row">
-                  <label className="col-sm-4">Field Label</label>
+                  <div className="col-sm-4 label-col">
+                    <label>
+                      <span className="FormDescriptor FormDescriptor__required-field">
+                        <span className="badge">2</span>
+                      </span>
+                      Required field
+                    </label>
+                  </div>
                   <div className="col-sm-8">
-                    <input type="text" name="example-form-field" className="form-control" />
+                    <input
+                      type="text"
+                      name="example-form-field"
+                      className="form-control"
+                    />
                     <span className="FormDescriptor FormDescriptor__form-fields">
-                      <span className="badge">2</span>
+                      <span className="badge">3</span>
                     </span>
                   </div>
                 </FormGroup>
                 <FormGroup className="row">
-                  <label className="col-sm-4">Field Lengths</label>
+                  <div className="col-sm-4 label-col">
+                    <label>Field lengths</label>
+                  </div>
                   <div className="col-sm-8">
                     <input type="text" name="example-form-field" className="form-control" />
                   </div>
                 </FormGroup>
                 <FormGroup className="row">
-                  <label className="col-sm-4">Field Label</label>
+                  <div className="col-sm-4 label-col">
+                    <label>Disabled field</label>
+                  </div>
                   <div className="col-sm-8">
                     <input
                       type="text"
@@ -54,7 +76,7 @@ export default function Forms() {
                       disabled
                     />
                     <span className="FormDescriptor FormDescriptor__disabled-fields">
-                      <span className="badge">3</span>
+                      <span className="badge">4</span>
                     </span>
                   </div>
                 </FormGroup>
@@ -65,16 +87,27 @@ export default function Forms() {
                     1 - Form Labels:
                   </dt>
                   <dd>
+                    Form labels use sentence case. They are right aligned by default.
                   </dd>
                   <dt>
-                    2 - Form Fields:
+                    2 - Required Fields:
                   </dt>
                   <dd>
+
                   </dd>
                   <dt>
-                    3 - Disabled Fields:
+                    3 - Form fields:
                   </dt>
                   <dd>
+                    The length of a field should be relative to the intended size of the input.
+                  </dd>
+                  <dt>
+                    4 - Disabled Fields:
+                  </dt>
+                  <dd>
+                    Disabled fields are used to communicate the field is available
+                    in another scenario. Short descriptions, tooltips, or
+                    help links are useful when defining fields with disabled states.
                   </dd>
                 </dl>
               </div>
@@ -96,11 +129,12 @@ export default function Forms() {
                 </span>
                 <h2>Form Title</h2>
                 <p>
-                  A short description about the purpose of this form.
-                  <a href="#">Learn More.</a>
+                  A short description about the purpose of this form. <a href="#">Learn More.</a>
                 </p>
                 <FormGroup className="row">
-                  <label className="col-sm-4">Field Label</label>
+                  <div className="col-sm-4 label-col">
+                    <label>Field label</label>
+                  </div>
                   <div className="col-sm-8">
                     <input type="text" name="example-form-field" className="form-control" />
                   </div>
@@ -111,13 +145,17 @@ export default function Forms() {
                   <span className="FormDescriptor FormDescriptor__form-section-title">
                     <span className="badge">2</span>
                   </span>
-                  <label className="col-sm-4">Field Label</label>
+                  <div className="col-sm-4 label-col">
+                    <label>Field label</label>
+                  </div>
                   <div className="col-sm-8">
                     <input type="text" name="example-form-field" className="form-control" />
                   </div>
                 </FormGroup>
                 <FormGroup className="row">
-                  <label className="col-sm-4">Field Label</label>
+                  <div className="col-sm-4 label-col">
+                    <label>Field label</label>
+                  </div>
                   <div className="col-sm-8">
                     <input type="text" name="example-form-field" className="form-control" />
                   </div>
@@ -271,7 +309,7 @@ export default function Forms() {
                     <Form>
                       <div className="form-group row">
                         <div className="col-sm-3 label-col">
-                          <label>PasswordInput</label>
+                          <label>Password input</label>
                         </div>
                         <div className="col-sm-9">
                           <PasswordInput />
@@ -279,7 +317,7 @@ export default function Forms() {
                       </div>
                       <div className="form-group row">
                         <div className="col-sm-3 label-col">
-                          <label>CheckboxInputCombo</label>
+                          <label>Checkbox input combo</label>
                         </div>
                         <div className="col-sm-9">
                           <CheckboxInputCombo
@@ -295,7 +333,7 @@ export default function Forms() {
                       </div>
                       <div className="form-group row">
                         <div className="col-sm-3 label-col">
-                          <label>RadioInputCombo</label>
+                          <label>Radio input combo</label>
                         </div>
                         <div className="col-sm-9">
                           <RadioInputCombo
@@ -311,7 +349,7 @@ export default function Forms() {
                       </div>
                       <div className="form-group row">
                         <div className="col-sm-3 label-col">
-                          <label>RadioSelectCombo</label>
+                          <label>Radio select combo</label>
                         </div>
                         <div className="col-sm-9">
                           <RadioSelectCombo
