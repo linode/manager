@@ -43,11 +43,13 @@ export default function Buttons() {
 
             <h3>Dropdown</h3>
             <p>
-              Example: <Dropdown elements={[
-                { name: 'First item', action: () => {} },
-                { name: 'Second item', action: () => {} },
-                { name: 'Third item', action: () => {} },
-              ]} />
+              Example: <Dropdown
+                elements={[
+                  { name: 'First item', action: () => {} },
+                  { name: 'Second item', action: () => {} },
+                  { name: 'Third item', action: () => {} },
+                ]}
+              />
             </p>
             <p>
               This dropdown is for links and actions outside of forms.
@@ -56,9 +58,10 @@ export default function Buttons() {
 
             <h3>StatusDropdown</h3>
             <p>
-              Example: <StatusDropdown dispatch={() => {}} linode={{
-                status: 'running',
-              }} />
+              Example: <StatusDropdown
+                dispatch={() => {}}
+                linode={{ status: 'running' }}
+              />
             </p>
             <p>
               This dropdown is for showing and controlling the power state of a
