@@ -1,12 +1,12 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+
 import { getLinode } from './IndexPage';
 import { showModal, hideModal } from '~/actions/modal';
 import { linodes } from '~/api';
 import { resetPassword, rebootLinode } from '~/api/linodes';
 import { ConfirmModalBody } from '~/components/modals';
-import { Form, SubmitButton } from '~/components/form';
-import PasswordInput from '~/components/PasswordInput';
+import { Form, SubmitButton, PasswordInput } from '~/components/form';
 import HelpButton from '~/components/HelpButton';
 import { setSource } from '~/actions/source';
 import { getConfig,
@@ -193,7 +193,6 @@ export class RescuePage extends Component {
               : null}
             <div className="col-sm-10">
               <PasswordInput
-                passwordType="offline_fast_hashing_1e10_per_second"
                 onChange={password => this.setState({ password })}
               />
             </div>

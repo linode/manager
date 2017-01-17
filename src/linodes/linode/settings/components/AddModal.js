@@ -2,8 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import _ from 'lodash';
 
 import { linodes } from '~/api';
-import { CancelButton, Form, SubmitButton } from '~/components/form';
-import PasswordInput from '~/components/PasswordInput';
+import { CancelButton, Form, SubmitButton, PasswordInput } from '~/components/form';
 import { hideModal } from '~/actions/modal';
 
 export class AddModal extends Component {
@@ -128,7 +127,6 @@ export class AddModal extends Component {
             <label>Root password</label>
             <PasswordInput
               onChange={p => this.setState({ password: p })}
-              passwordType="offline_fast_hashing_1e10_per_second"
             />
           </div>
             :

@@ -2,7 +2,7 @@ import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import PasswordInput from '~/components/PasswordInput';
+import { PasswordInput } from '~/components/form';
 import FormRow from '~/components/FormRow';
 import Distributions from '~/linodes/components/Distributions';
 import { setSource } from '~/actions/source';
@@ -60,7 +60,6 @@ export class RebuildPage extends Component {
               <FormRow label="Root password">
                 <PasswordInput
                   value={this.state.password}
-                  passwordType="offline_fast_hashing_1e10_per_second"
                   onChange={password => this.setState({ password })}
                 />
               </FormRow>
