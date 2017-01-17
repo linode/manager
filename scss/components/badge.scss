@@ -1,17 +1,15 @@
-$badge-height: 30px;
+$badge-height: 25px;
 
 .badge {
-  border-radius: 40px;
+  border-radius: 15px;
   display: inline-block;
   position: absolute;
   font-size: $font-xs-small;
-  background: $red;
   color: $white;
   height: $badge-height;
-  line-height: $badge-height;
+  line-height: $badge-height + 1px;
   text-align: center;
 
   /* These settings are so that it looks circular generally and decent in other cases. */
   min-width: $badge-height;
-  padding: 0 3px;
 }

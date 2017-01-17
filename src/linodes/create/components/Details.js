@@ -40,7 +40,9 @@ export default class Details extends Component {
         {/* TODO: Form should encapsulate all form fields on the create page */}
         <Form onSubmit={this.onSubmit}>
           <FormGroup name="label" errors={errors} className="row">
-            <label htmlFor="label" className="col-sm-2">Label</label>
+            <div className="col-sm-2 label-col">
+              <label htmlFor="label">Label</label>
+            </div>
             <div className="col-sm-10">
               <Input
                 id="label"
@@ -52,7 +54,9 @@ export default class Details extends Component {
             </div>
           </FormGroup>
           <FormGroup name="root_pass" errors={errors} className="row">
-            <label htmlFor="password" className="col-sm-2">Root Password</label>
+            <div className="col-sm-2 label-col">
+              <label htmlFor="password">Root password</label>
+            </div>
             <div className="col-sm-10">
               <PasswordInput
                 type="text"
@@ -63,7 +67,9 @@ export default class Details extends Component {
             </div>
           </FormGroup>
           <FormGroup name="backups" errors={errors} className="row">
-            <label htmlFor="backups" className="col-sm-2">Enable Backups</label>
+            <div className="col-sm-2 label-col">
+              <label htmlFor="backups">Enable backups</label>
+            </div>
             <div className="col-sm-10">
               <input
                 id="backups"
