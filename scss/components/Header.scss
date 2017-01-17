@@ -108,9 +108,13 @@ $header-padding: $grid-gutter-width-base / 2;
     }
 
     &-badge {
+        $header-badge-height: 30px;
         @extend .badge;
         background: $red;
         border: 4px solid $dark-black;
+        border-radius: 40px;
+        height: $header-badge-height;
+        min-width: $header-badge-height;
         line-height: 22px;
         position: absolute;
         right: 0;
