@@ -1,7 +1,7 @@
 import React from 'react';
 import sinon from 'sinon';
 import { expect } from 'chai';
-import { shallow, mount } from 'enzyme';
+import { mount } from 'enzyme';
 
 import Details from '~/linodes/create/components/Details';
 import { api } from '@/data';
@@ -16,14 +16,13 @@ describe('linodes/create/components/Details', () => {
 
   it('renders errors', () => {
     const error = 'There was an error';
-    const errors = { label: [error] };
+    const errors = { label: [{ reason: error }] };
     const details = mount(<Details errors={errors} selectedType={null} />);
-    const alert = details.find('.alert.alert-danger');
+    const feedback = details.find('.form-control-feedback');
 
-    expect(alert.length).to.equal(1);
-    const errorList = alert.find('ul');
-    expect(errorList.find('li').length).to.equal(1);
-    expect(errorList.find('li').text()).to.equal(error);
+    expect(feedback.length).to.equal(1);
+    expect(feedback.children().length).to.equal(1);
+    expect(feedback.childAt(0).text()).to.equal(error);
   });
 
   it('submits inputs when submitted', () => {
@@ -32,15 +31,16 @@ describe('linodes/create/components/Details', () => {
       <Details submitEnabled onSubmit={onSubmit} selectedType={null} />
     );
 
-    const find = (name) => details.find(`.LinodesCreateDetails-${name}`);
+    const find = (name) => details.find(`input[name="${name}"]`);
 
-    find('label').find('input').simulate('change', { target: { value: 'my-label' } });
-    find('password').find('input').simulate('change', { target: { value: 'my-password' } });
-    find('enableBackups').find('input').simulate('change', { target: { checked: true } });
+    find('label').simulate('change', { target: { value: 'my-label' } });
+    find('password').simulate('change', { target: { value: 'my-password' } });
+    find('backups').simulate('change', { target: { checked: true } });
 
     details.find('form').simulate('submit');
 
     expect(onSubmit.calledOnce).to.equal(true);
+
     expect(onSubmit.firstCall.args[0]).to.deep.equal({
       password: 'my-password',
       label: 'my-label',
@@ -48,21 +48,8 @@ describe('linodes/create/components/Details', () => {
     });
   });
 
-  it('does not show password and backup options when no distro is selected', () => {
-    const details = shallow(
-      <Details
-        onSubmit={sandbox.spy}
-        selectedDistribution={'none'}
-        selectedType={null}
-      />
-    );
-
-    expect(details.find({ label: 'Root password', showIf: false }).length).to.equal(1);
-    expect(details.find({ label: 'Enable backups', showIf: false }).length).to.equal(1);
-  });
-
   it('pulls backups price from selectedType', () => {
     const details = mount(<Details selectedType={types['linode2048.5']} />);
-    expect(details.find('.LinodesCreateDetails-enableBackups').text()).to.contain('$2.50');
+    expect(details.find('.EnabledBackupsPrice').text()).to.contain('$2.50');
   });
 });

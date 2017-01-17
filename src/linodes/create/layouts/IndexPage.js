@@ -137,53 +137,45 @@ export class IndexPage extends Component {
     return (
       <div className="container create-page">
         <h1>Add a Linode</h1>
-        <section className="card">
-          <Source
-            distribution={distribution}
-            backup={backup}
-            selectedTab={sourceTab}
-            distributions={distributions.distributions}
-            onTabChange={ix => this.setState({ sourceTab: ix })}
-            onSourceSelected={(type, id, linodeId) => {
-              if (type === 'backup' && linodeId && id) {
-                const linode = linodes.linodes[linodeId];
-                const backup = linode._backups.backups[id];
-                this.setState({
-                  backup: id,
-                  datacenter: backup.datacenter.id,
-                  distribution: null,
-                });
-              } else {
-                this.setState({ [type]: id, backup: null });
-              }
-            }}
-            linodes={linodes}
-          />
-        </section>
-        <section className="card">
-          <Datacenter
-            selected={datacenter}
-            datacenters={datacenters.datacenters}
-            disabled={backup !== null}
-            onDatacenterSelected={id => this.setState({ datacenter: id })}
-          />
-        </section>
-        <section className="card">
-          <Plan
-            selected={type}
-            types={types.types}
-            onServiceSelected={id => this.setState({ type: id })}
-          />
-        </section>
-        <section className="card">
-          <Details
-            selectedType={selectedType}
-            onSubmit={this.onSubmit}
-            selectedDistribution={distribution}
-            submitEnabled={(distribution || backup) && datacenter && type && !loading}
-            errors={this.state.errors}
-          />
-        </section>
+        <Source
+          distribution={distribution}
+          backup={backup}
+          selectedTab={sourceTab}
+          distributions={distributions.distributions}
+          onTabChange={ix => this.setState({ sourceTab: ix })}
+          onSourceSelected={(type, id, linodeId) => {
+            if (type === 'backup' && linodeId && id) {
+              const linode = linodes.linodes[linodeId];
+              const backup = linode._backups.backups[id];
+              this.setState({
+                backup: id,
+                datacenter: backup.datacenter.id,
+                distribution: null,
+              });
+            } else {
+              this.setState({ [type]: id, backup: null });
+            }
+          }}
+          linodes={linodes}
+        />
+        <Datacenter
+          selected={datacenter}
+          datacenters={datacenters.datacenters}
+          disabled={backup !== null}
+          onDatacenterSelected={id => this.setState({ datacenter: id })}
+        />
+        <Plan
+          selected={type}
+          types={types.types}
+          onServiceSelected={id => this.setState({ type: id })}
+        />
+        <Details
+          selectedType={selectedType}
+          onSubmit={this.onSubmit}
+          selectedDistribution={distribution}
+          submitEnabled={(distribution || backup) && datacenter && type && !loading}
+          errors={this.state.errors}
+        />
       </div>
     );
   }

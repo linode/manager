@@ -1,8 +1,7 @@
 import React from 'react';
 import sinon from 'sinon';
 import { expect } from 'chai';
-import { shallow } from 'enzyme';
-import { Tab } from 'react-tabs';
+import { mount, shallow } from 'enzyme';
 import moment from 'moment';
 
 import Source from '~/linodes/create/components/Source';
@@ -15,7 +14,7 @@ describe('linodes/create/components/Source', () => {
   });
 
   it('renders the card header', () => {
-    const c = shallow(
+    const c = mount(
       <Source
         distributions={api.distributions}
         linodes={api.linodes}
@@ -28,7 +27,7 @@ describe('linodes/create/components/Source', () => {
   });
 
   it('renders the source tabs', () => {
-    const c = shallow(
+    const tabList = mount(
       <Source
         distributions={api.distributions}
         linodes={api.linodes}
@@ -36,11 +35,13 @@ describe('linodes/create/components/Source', () => {
         backup={null}
         selectedTab={0}
       />
-    );
-    expect(c.contains(<Tab>Distributions</Tab>)).to.equal(true);
-    expect(c.contains(<Tab>Backups</Tab>)).to.equal(true);
-    expect(c.contains(<Tab>Clone</Tab>)).to.equal(true);
-    expect(c.contains(<Tab>StackScripts</Tab>)).to.equal(true);
+    ).find('.form-tab-list');
+
+    expect(tabList.children().length).to.equal(4);
+    expect(tabList.childAt(0).text()).to.equal('Distributions');
+    expect(tabList.childAt(1).text()).to.equal('Backups');
+    expect(tabList.childAt(2).text()).to.equal('Clone');
+    expect(tabList.childAt(3).text()).to.equal('StackScripts');
   });
 
   it('invokes the onTabChange function as necessary', () => {

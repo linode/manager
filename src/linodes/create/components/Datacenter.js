@@ -1,16 +1,15 @@
 import React, { Component, PropTypes } from 'react';
 import _ from 'lodash';
 
+import { Card } from '~/components';
 import { flags } from '~/assets';
 import { regionMap } from '~/constants';
 
 export default class Datacenter extends Component {
-  renderHeader() {
-    return (
-      <header>
-        <h2>Datacenter</h2>
-      </header>
-    );
+  constructor() {
+    super();
+    this.renderRegion = this.renderRegion.bind(this);
+    this.renderDisabled = this.renderDisabled.bind(this);
   }
 
   renderDatacenter = (datacenter) => {
@@ -41,7 +40,7 @@ export default class Datacenter extends Component {
   renderRegion = (datacentersInRegion, region) => {
     const allRealDatacenters = this.props.datacenters;
     const datacenters = Object.values(allRealDatacenters).filter(({ id }) =>
-      datacentersInRegion.indexOf(id) !== -1);
+    datacentersInRegion.indexOf(id) !== -1);
 
     return datacenters.length ? (
       <div key={region}>
@@ -50,23 +49,20 @@ export default class Datacenter extends Component {
           {datacenters.map(this.renderDatacenter)}
         </div>
       </div>
-    ) : null;
+      ) : null;
   }
 
   renderDisabled() {
     const { selected, datacenters } = this.props;
     const dc = Object.values(datacenters).find(dc => dc.id === selected);
     return (
-      <div>
-        {this.renderHeader()}
-        <div className="datacenters">
-          <p>
-            The source you selected limits the datacenters you may deploy
-            your new Linode to.
-          </p>
-          {this.renderDatacenter(dc)}
-        </div>
-      </div>
+      <Card title="Datacenter">
+        <p>
+          The source you selected limits the datacenters you may deploy
+          your new Linode to.
+        </p>
+        {this.renderDatacenter(dc)}
+      </Card>
     );
   }
 
@@ -75,12 +71,9 @@ export default class Datacenter extends Component {
       return this.renderDisabled();
     }
     return (
-      <div>
-        {this.renderHeader()}
-        <div className="datacenters">
-          {_.map(regionMap, this.renderRegion)}
-        </div>
-      </div>
+      <Card title="Datacenter">
+        {_.map(regionMap, this.renderRegion)}
+      </Card>
     );
   }
 }

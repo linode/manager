@@ -1,0 +1,19 @@
+.create-page {
+  padding-top: 15px;
+
+  .alert {
+    display: inline-block;
+    margin: $main-padding-tb/2 0 0 0;
+  }
+}
+
+.LinodeSelection {
+
+  &-container {
+    padding: 10px 0 0 0;
+  }
+
+  &-filter {
+    margin-bottom: 10px;
+  }
+}
