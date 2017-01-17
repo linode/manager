@@ -30,8 +30,8 @@ describe('linodes/linode/settings/layouts/DisplayPage', () => {
       <DisplayPage {...props} />
     );
 
-    expect(page.find('Input').props().value).to.equal('Test Group');
-    expect(page.find('#label').props().value).to.equal('test-linode');
+    expect(page.find({ id: 'group' }).props().value).to.equal('Test Group');
+    expect(page.find({ id: 'label' }).props().value).to.equal('test-linode');
   });
 
   it('makes request to save changes', async () => {

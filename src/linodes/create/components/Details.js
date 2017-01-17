@@ -73,7 +73,6 @@ export default class Details extends Component {
             <div className="col-sm-10">
               <input
                 id="backups"
-                name="backups"
                 type="checkbox"
                 checked={this.state.enableBackups}
                 onChange={e => this.setState({ enableBackups: e.target.checked })}
