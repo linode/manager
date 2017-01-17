@@ -3,6 +3,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import _ from 'lodash';
 import moment from 'moment';
 
+import { Card } from '~/components';
 import Distributions from '~/linodes/components/Distributions';
 import Backups from './Backups';
 
@@ -37,8 +38,8 @@ export default class Source extends Component {
     const increaseCount = gotoPage(Math.min(backupsPage + 1, maxPage));
 
     return (
-      <div>
-        <section>
+      <div className="LinodeSelection-container">
+        <div className="LinodeSelection-filter">
           <div className="filter input-container">
             <input
               type="text"
@@ -49,9 +50,9 @@ export default class Source extends Component {
               className="form-control"
             />
           </div>
-        </section>
+        </div>
 
-        <section>
+        <div className="LinodeSelection-table-container">
           <table>
             <thead>
               <tr>
@@ -60,25 +61,25 @@ export default class Source extends Component {
               </tr>
             </thead>
             <tbody>
-              {_.map(linodesOnPage, l =>
-                <tr key={l.created}>
-                  <td>
-                    <a
-                      href="#"
-                      onClick={e => {
-                        e.preventDefault();
-                        this.setState({ selectedLinode: l.id });
-                      }}
-                    >{l.label}</a>
-                  </td>
-                  <td>{l.backups.last_backup ?
-                       moment(l.backups.last_backup).format('dddd, MMMM D YYYY LT')
-                     : 'Unknown'}</td>
-                </tr>
-               )}
+            {_.map(linodesOnPage, l =>
+              <tr key={l.created}>
+                <td>
+                  <a
+                    href="#"
+                    onClick={e => {
+                      e.preventDefault();
+                      this.setState({ selectedLinode: l.id });
+                    }}
+                  >{l.label}</a>
+                </td>
+                <td>{l.backups.last_backup ?
+                  moment(l.backups.last_backup).format('dddd, MMMM D YYYY LT')
+                  : 'Unknown'}</td>
+              </tr>
+            )}
             </tbody>
           </table>
-        </section>
+        </div>
         {linodesWithBackups.length > perPageLimit ? (
           <nav className="text-xs-center">
             <ul className="pagination">
@@ -100,7 +101,7 @@ export default class Source extends Component {
               </li>
             </ul>
           </nav>
-        ) : null}
+          ) : null}
       </div>
     );
   }
@@ -123,10 +124,7 @@ export default class Source extends Component {
     }
 
     return (
-      <div>
-        <header>
-          <h2>Source</h2>
-        </header>
+      <Card title="Source">
         <div className="react-tabs">
           <Tabs
             onSelect={onTabChange}
@@ -150,7 +148,7 @@ export default class Source extends Component {
             <TabPanel>
               <div className="backups">
                 {selectedLinode === -1 ?
-                 this.renderLinodeSelection() :
+                  this.renderLinodeSelection() :
                   <Backups
                     goBack={e => {
                       e.preventDefault();
@@ -167,7 +165,7 @@ export default class Source extends Component {
             <TabPanel>TODO</TabPanel>
           </Tabs>
         </div>
-      </div>
+      </Card>
     );
   }
 }

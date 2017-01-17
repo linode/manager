@@ -88,7 +88,6 @@ export default function Forms() {
 
             <div className="ExampleForm">
               <Form>
-
                 <span className="FormDescriptor FormDescriptor__form-title">
                   <span className="badge">1</span>
                 </span>

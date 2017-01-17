@@ -20,7 +20,7 @@ export class Backups extends Component {
     } = this.props;
     const l = linodes.linodes[selectedLinode];
     return (
-      <section>
+      <div>
         <div key={l.id}>
           <h3>
             {l.label}
@@ -33,7 +33,7 @@ export class Backups extends Component {
                 onSelect={() => onSourceSelected(backup.id)}
                 key={backup.created}
               />
-             )}
+            )}
           </div>
           <a
             href="#"
@@ -41,7 +41,7 @@ export class Backups extends Component {
             onClick={goBack}
           >Need a different Linode?</a>
         </div>
-      </section>
+      </div>
     );
   }
 }

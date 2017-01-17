@@ -1,4 +1,6 @@
 import React, { Component, PropTypes } from 'react';
+
+import { Card } from '~/components';
 import { renderPlanStyle } from '~/linodes/components/Linode';
 
 export default class Plan extends Component {
@@ -6,14 +8,6 @@ export default class Plan extends Component {
     super();
     this.renderPlan = this.renderPlan.bind(this);
     this.renderPlanStyle = renderPlanStyle.bind(this);
-  }
-
-  renderHeader() {
-    return (
-      <header>
-        <h2>Plan</h2>
-      </header>
-    );
   }
 
   renderPlan(plan) {
@@ -45,14 +39,11 @@ export default class Plan extends Component {
   render() {
     const { types } = this.props;
     const sortedPlans = Object.values(types).sort(
-        (a, b) => a.ram > b.ram);
+      (a, b) => a.ram > b.ram);
     return (
-      <div>
-        {this.renderHeader()}
-        <div className="plans">
-          {sortedPlans.map(this.renderPlan)}
-        </div>
-      </div>
+      <Card title="Plan">
+        {sortedPlans.map(this.renderPlan)}
+      </Card>
     );
   }
 }
