@@ -1,7 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { getLinode, renderTabs } from '~/linodes/linode/layouts/IndexPage';
+import { push } from 'react-router-redux';
+
+import { Tabs } from '~/components/tabs';
+import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import { linodes } from '~/api';
 import { enableBackup } from '~/api/backups';
 import { setSource } from '~/actions/source';
@@ -20,7 +23,6 @@ export class IndexPage extends Component {
     this.getLinode = getLinode.bind(this);
     this.enableBackups = this.enableBackups.bind(this);
     this.componentDidMount = this.componentDidMount.bind(this);
-    this.renderTabs = renderTabs.bind(this);
     this.state = { errors: {} };
   }
 
@@ -61,17 +63,31 @@ export class IndexPage extends Component {
       );
     }
 
-    const tabList = [
+    const tabs = [
       { name: 'Summary', link: '/' },
       { name: 'History', link: '/history' },
       { name: 'Settings', link: '/settings' },
     ].map(t => ({ ...t, link: `/linodes/${linode.label}/backups${t.link}` }));
 
-    const pathname = location ? location.pathname : tabList[0].link;
-    const selected = tabList.reduce((last, current) =>
+    const pathname = location ? location.pathname : tabs[0].link;
+    const selected = tabs.reduce((last, current) =>
       (pathname.indexOf(current.link) === 0 ? current : last));
 
-    return this.renderTabs(tabList, selected, true);
+    return (
+      <div className="container">
+        <Tabs
+          tabs={tabs}
+          selected={selected}
+          className="SubTabs"
+          onClick={(e, tab) => {
+            e.stopPropagation();
+            this.props.dispatch(push(tab.link));
+          }}
+        >
+          {this.props.children}
+        </Tabs>
+      </div>
+    );
   }
 }
 

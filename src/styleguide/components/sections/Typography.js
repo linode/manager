@@ -6,7 +6,7 @@ export default function Typography() {
   return (
     <StyleguideSection name="typography" title="Typography">
       <div className="StyleguideTypography col-sm-12">
-        <div className="Styleguide-sub-section row">
+        <div className="StyleguideSubSection row">
           <div className="col-sm-12">
             <h3>Semantic Heirarchy</h3>
             <p>A visual heirarchy should be established by correctly nesting headings.</p>
@@ -91,7 +91,7 @@ export default function Typography() {
           </div>
         </div>
 
-        <div className="Styleguide-sub-section row">
+        <div className="StyleguideSubSection row">
           <div className="col-sm-12">
             <h3>General Formatting</h3>
             <table>
