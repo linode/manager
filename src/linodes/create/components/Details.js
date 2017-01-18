@@ -2,7 +2,8 @@ import React, { Component, PropTypes } from 'react';
 
 import { Card } from '~/components';
 import { PrimaryButton } from '~/components/buttons';
-import { Form, FormGroup, PasswordInput } from '~/components/form';
+import { Form, FormGroup, FormGroupError, PasswordInput, Input } from '~/components/form';
+import { ErrorSummary } from '~/errors';
 
 export default class Details extends Component {
   constructor() {
@@ -43,22 +44,16 @@ export default class Details extends Component {
               <label htmlFor="label">Label</label>
             </div>
             <div className="col-sm-10">
-              <input
+              <Input
                 id="label"
-                name="label"
-                type="text"
                 value={this.state.label}
                 onChange={e => this.setState({ label: e.target.value })}
                 placeholder={'gentoo-www1'}
-                className="form-control"
               />
+              <FormGroupError errors={errors} name="label" />
             </div>
           </FormGroup>
-          <FormGroup
-            name="password"
-            errors={errors}
-            className="row"
-          >
+          <FormGroup name="root_pass" errors={errors} className="row">
             <div className="col-sm-2 label-col">
               <label htmlFor="password">Root password</label>
             </div>
@@ -68,20 +63,16 @@ export default class Details extends Component {
                 passwordType="offline_fast_hashing_1e10_per_second"
                 onChange={password => this.setState({ password })}
               />
+              <FormGroupError errors={errors} name="group" />
             </div>
           </FormGroup>
-          <FormGroup
-            name="backups"
-            errors={errors}
-            className="row"
-          >
+          <FormGroup name="backups" errors={errors} className="row">
             <div className="col-sm-2 label-col">
               <label htmlFor="backups">Enable backups</label>
             </div>
             <div className="col-sm-10">
               <input
                 id="backups"
-                name="backups"
                 type="checkbox"
                 checked={this.state.enableBackups}
                 onChange={e => this.setState({ enableBackups: e.target.checked })}
@@ -92,12 +83,7 @@ export default class Details extends Component {
               </span>
             </div>
           </FormGroup>
-          {errors.__form ?
-            <div>
-              <div className="alert alert-danger">
-                {errors.__form}
-              </div>
-            </div> : null}
+          <ErrorSummary errors={errors} />
           <FormGroup className="row">
             <div className="offset-sm-2 col-sm-10">
               <PrimaryButton

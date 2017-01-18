@@ -195,6 +195,6 @@ describe('linodes/create/layout/IndexPage', () => {
       password: 'password',
       backups: false,
     });
-    expect(page.state('errors')).to.deep.equal({ label: [error] });
+    expectObjectDeepEquals(page.state('errors'), { label: [{ field: 'label', reason: error }] });
   });
 });

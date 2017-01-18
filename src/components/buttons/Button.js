@@ -9,7 +9,7 @@ export default function Button(props) {
     onClick,
     className,
     buttonClass,
-    buttonType,
+    type,
   } = props;
 
   const classes = `btn ${buttonClass} ${className}`;
@@ -23,7 +23,7 @@ export default function Button(props) {
     >{children}</Link>
   ) : (
     <button
-      type={buttonType}
+      type={type}
       className={classes}
       onClick={onClick}
       disabled={disabled}
@@ -38,12 +38,12 @@ Button.propTypes = {
   to: PropTypes.string,
   className: PropTypes.string,
   buttonClass: PropTypes.string.isRequired,
-  buttonType: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired,
 };
 
 Button.defaultProps = {
   disabled: false,
   buttonClass: 'btn-default',
-  buttonType: 'button',
+  type: 'button',
   className: '',
 };
