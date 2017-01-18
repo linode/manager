@@ -75,6 +75,10 @@ To run tests:
 To automatically re-run tests when you make changes:
 
     npm run test:watch
+    
+To automatically re-run tests on a single test file:
+
+    npm run test:watch --single_file=**/name.spec.js
 
 Our tests live in test/**.spec.js. They're based on
 [Mocha](https://mochajs.org/) and do assertions with
