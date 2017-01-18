@@ -9,5 +9,5 @@ script:
         export const LISH_ROOT = 'wss://lish.alpha.linode.com';
         EOF
     - npm test
-    - node ./node_modules/lcov-filter/index.js ./coverage/lcov.info styleguide | ./node_modules/.bin/coveralls
+    - cat ./coverage/lcov.info | node ./parser.js | ./node_modules/.bin/coveralls
     - npm run lint
