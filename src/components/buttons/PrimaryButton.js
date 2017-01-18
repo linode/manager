@@ -8,7 +8,7 @@ export default function PrimaryButton(props) {
       buttonClass="btn-primary"
       disabled={props.disabled}
       onClick={props.onClick}
-      buttonType={props.type}
+      type={props.type}
     >{props.children}</Button>
   );
 }

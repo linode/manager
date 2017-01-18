@@ -4,8 +4,9 @@ import { StyleguideSection } from '~/styleguide/components';
 
 import {
   Form, FormGroup, CancelButton, SubmitButton, Input, Radio, Checkbox, Select, CheckboxInputCombo,
-  RadioInputCombo, RadioSelectCombo, Checkboxes, PasswordInput,
+  FormGroupError, RadioInputCombo, RadioSelectCombo, Checkboxes, PasswordInput,
 } from '~/components/form';
+import { ErrorSummary } from '~/errors';
 
 export default function Forms() {
   return (
@@ -229,12 +230,23 @@ export default function Forms() {
             <div className="StyleguideSubSection-header">
               <h3>Form Validation</h3>
             </div>
-            <div className="ExampleForm">
-              <div className="ExampleForm-description">
-                <dl>
-                </dl>
+            <FormGroup
+              errors={{ validation_error: [{ reason: 'Specific form error' }] }}
+              name="validation_error"
+              className="row"
+            >
+              <div className="col-sm-2 label-col">
+                <label>Validation error:</label>
               </div>
-            </div>
+              <div className="col-sm-10 content-col">
+                <Input value="Incorrect input" />
+                <FormGroupError
+                  errors={{ validation_error: [{ reason: 'Specific form error' }] }}
+                  name="validation_error"
+                />
+              </div>
+            </FormGroup>
+            <ErrorSummary errors={{ _: [{ reason: 'Specific form error' }] }} />
           </div>
         </div>
 
@@ -246,23 +258,23 @@ export default function Forms() {
             <div className="ExampleForm">
               <div className="ExampleForm-description">
                 <Form>
-                  <div className="form-group row">
+                  <FormGroup className="row">
                     <div className="col-sm-3 label-col">
                       <label>Input (text)</label>
                     </div>
                     <div className="col-sm-9">
                       <Input placeholder="my-placeholder" />
                     </div>
-                  </div>
-                  <div className="form-group row">
+                  </FormGroup>
+                  <FormGroup className="row">
                     <div className="col-sm-3 label-col">
                       <label>Input (number)</label>
                     </div>
                     <div className="col-sm-9">
                       <Input type="number" value={1} min={0} max={10} />
                     </div>
-                  </div>
-                  <div className="form-group row">
+                  </FormGroup>
+                  <FormGroup className="row">
                     <div className="col-sm-3 label-col">
                       <label>Checkbox</label>
                     </div>
@@ -272,8 +284,8 @@ export default function Forms() {
                         <Checkbox label="Checkbox 2" />
                       </Checkboxes>
                     </div>
-                  </div>
-                  <div className="form-group row">
+                  </FormGroup>
+                  <FormGroup className="row">
                     <div className="col-sm-3 label-col">
                       <label>Radio</label>
                     </div>
@@ -283,8 +295,8 @@ export default function Forms() {
                         <Radio label="Radio 2" />
                       </Checkboxes>
                     </div>
-                  </div>
-                  <div className="form-group row">
+                  </FormGroup>
+                  <FormGroup className="row">
                     <div className="col-sm-3 label-col">
                       <label>Select</label>
                     </div>
@@ -294,7 +306,7 @@ export default function Forms() {
                         <option value="2">Option 2</option>
                       </Select>
                     </div>
-                  </div>
+                  </FormGroup>
                 </Form>
               </div>
             </div>
@@ -307,15 +319,15 @@ export default function Forms() {
                 <div className="ExampleForm">
                   <div className="ExampleForm-description">
                     <Form>
-                      <div className="form-group row">
+                      <FormGroup className="row">
                         <div className="col-sm-3 label-col">
                           <label>Password input</label>
                         </div>
                         <div className="col-sm-9">
                           <PasswordInput />
                         </div>
-                      </div>
-                      <div className="form-group row">
+                      </FormGroup>
+                      <FormGroup className="row">
                         <div className="col-sm-3 label-col">
                           <label>Checkbox input combo</label>
                         </div>
@@ -330,8 +342,8 @@ export default function Forms() {
                             inputValue="Input 2"
                           />
                         </div>
-                      </div>
-                      <div className="form-group row">
+                      </FormGroup>
+                      <FormGroup className="row">
                         <div className="col-sm-3 label-col">
                           <label>Radio input combo</label>
                         </div>
@@ -346,8 +358,8 @@ export default function Forms() {
                             inputValue="Input 2"
                           />
                         </div>
-                      </div>
-                      <div className="form-group row">
+                      </FormGroup>
+                      <FormGroup className="row">
                         <div className="col-sm-3 label-col">
                           <label>Radio select combo</label>
                         </div>
@@ -364,7 +376,7 @@ export default function Forms() {
                                             { value: '2', label: 'Option 2.1' }]}
                           />
                         </div>
-                      </div>
+                      </FormGroup>
                     </Form>
                   </div>
                 </div>

@@ -32,11 +32,9 @@ describe('linodes/create/components/Details', () => {
       <Details submitEnabled onSubmit={onSubmit} selectedType={null} />
     );
 
-    const find = (name) => details.find(`input[name="${name}"]`);
-
-    find('label').simulate('change', { target: { value: 'my-label' } });
+    details.find('#label').simulate('change', { target: { value: 'my-label' } });
     details.find('input[type="password"]').simulate('change', { target: { value: 'my-password' } });
-    find('backups').simulate('change', { target: { checked: true } });
+    details.find('#backups').simulate('change', { target: { checked: true } });
 
     details.find('form').simulate('submit');
 
