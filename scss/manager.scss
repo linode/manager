@@ -518,17 +518,6 @@ footer {
         color: $light-black;
         margin-bottom: 5px;
     }
-
-    tr.display-group {
-        border-left: 0;
-        font-size: $font-small;
-
-        td {
-            background: $light-gray;
-            padding-bottom: 0;
-            padding-left: 0;
-        }
-    }
 }
 
 .sub-header {
