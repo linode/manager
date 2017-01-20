@@ -246,11 +246,9 @@ export class RescuePage extends Component {
 
   render() {
     return (
-      <div className="container">
-        <div className="row-justify">
-          {this.renderRescueMode()}
-          {this.renderResetRootPassword()}
-        </div>
+      <div className="row-justify">
+        {this.renderRescueMode()}
+        {this.renderResetRootPassword()}
       </div>
     );
   }
