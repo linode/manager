@@ -6,10 +6,7 @@ import { showModal, hideModal } from '~/actions/modal';
 import { linodes } from '~/api';
 import { resetPassword, rebootLinode } from '~/api/linodes';
 import { ConfirmModalBody } from '~/components/modals';
-import {
-  Form, SubmitButton, FormGroup, FormGroupError, Select, PasswordInput,
-} from '~/components/form';
-import { ErrorSummary, reduceErrors } from '~/errors';
+import { Form, SubmitButton, PasswordInput } from '~/components/form';
 import HelpButton from '~/components/HelpButton';
 import { setSource } from '~/actions/source';
 import { getConfig,
@@ -249,11 +246,9 @@ export class RescuePage extends Component {
 
   render() {
     return (
-      <div className="container">
-        <div className="row-justify">
-          {this.renderRescueMode()}
-          {this.renderResetRootPassword()}
-        </div>
+      <div className="row-justify">
+        {this.renderRescueMode()}
+        {this.renderResetRootPassword()}
       </div>
     );
   }
