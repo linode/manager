@@ -149,17 +149,16 @@ export class IndexPage extends Component {
       );
     }
 
-    const ret = sortedLinodes.map(l => renderLinode(l, true));
-
-    if (group) {
-      ret.splice(0, 0, (
-        <tr className="display-group">
-          <td>{group}</td>
-        </tr>
-      ));
-    }
-
-    return ret;
+    return (
+      <div className="Linodes-group-container">
+        {group ? <div className="display-group">{group}</div> : null}
+        <table>
+          <tbody>
+            {sortedLinodes.map(l => renderLinode(l, true))}
+          </tbody>
+        </table>
+      </div>
+    );
   }
 
   renderLinodes(linodes) {
@@ -178,11 +177,9 @@ export class IndexPage extends Component {
     }
 
     return (
-      <table className="linodes">
-        <tbody>
-          {groups}
-        </tbody>
-      </table>
+      <div className="linodes">
+        {groups}
+      </div>
     );
   }
 

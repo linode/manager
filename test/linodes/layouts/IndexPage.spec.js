@@ -85,15 +85,10 @@ describe('linodes/layouts/IndexPage', () => {
       />
     );
 
-    const table = page.find('table.linodes');
-    expect(table.length).to.equal(1);
-
-    // There should be as many rows as there are Linodes and display groups,
-    // minus 1 for the default empty group.
-    const groups = Object.values(linodes.linodes).map(l => l.group);
-    const groupCount = [...new Set(groups)].length;
-    expect(table.find('tbody tr').length).to.equal(
-      Object.keys(linodes.linodes).length + groupCount - 1);
+    const linodesContainer = page.find('.linodes');
+    expect(linodesContainer.length).to.equal(1);
+    expect(linodesContainer.find('tr').length).to.equal(
+      Object.keys(linodes.linodes).length);
   });
 
   it('renders a power management dropdown', () => {

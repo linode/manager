@@ -458,6 +458,12 @@ footer {
     }
 }
 
+.Linodes {
+    &-group-container {
+        margin-bottom: 20px;
+    }
+}
+
 .linodes {
     .linode-label {
         color: $black !important;
@@ -510,18 +516,7 @@ footer {
 
     .display-group {
         color: $light-black;
-        margin-bottom: $main-padding-tb/3;
-    }
-
-    tr.display-group {
-        border-left: 0;
-        font-size: $font-small;
-
-        td {
-            background: $light-gray;
-            padding-bottom: 0;
-            padding-left: 0;
-        }
+        margin-bottom: 5px;
     }
 }
 
