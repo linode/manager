@@ -129,7 +129,9 @@ export class IndexPage extends Component {
             this.props.dispatch(push(tab.link));
           }}
         >
-          {this.props.children}
+          <div className="container">
+            {this.props.children}
+          </div>
         </Tabs>
       </div>
     );

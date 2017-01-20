@@ -74,19 +74,17 @@ export class IndexPage extends Component {
       (pathname.indexOf(current.link) === 0 ? current : last));
 
     return (
-      <div className="container">
-        <Tabs
-          tabs={tabs}
-          selected={selected}
-          className="SubTabs"
-          onClick={(e, tab) => {
-            e.stopPropagation();
-            this.props.dispatch(push(tab.link));
-          }}
-        >
-          {this.props.children}
-        </Tabs>
-      </div>
+      <Tabs
+        tabs={tabs}
+        selected={selected}
+        className="SubTabs"
+        onClick={(e, tab) => {
+          e.stopPropagation();
+          this.props.dispatch(push(tab.link));
+        }}
+      >
+        {this.props.children}
+      </Tabs>
     );
   }
 }

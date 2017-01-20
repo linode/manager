@@ -295,7 +295,7 @@ export class DashboardPage extends Component {
 
   render() {
     return (
-      <div className="container">
+      <div>
         {this.renderDetails()}
         {this.renderGraphs()}
       </div>
