@@ -3,18 +3,26 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
 import { Card } from '~/components';
-import { Form, FormGroup, PasswordInput, SubmitButton } from '~/components/form';
+import {
+  FormGroup, FormGroupError, Form, SubmitButton, PasswordInput,
+} from '~/components/form';
+import { reduceErrors, ErrorSummary } from '~/errors';
 import Distributions from '~/linodes/components/Distributions';
 import { setSource } from '~/actions/source';
 import { rebuildLinode } from '~/api/linodes';
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 
 export class RebuildPage extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.onSubmit = this.onSubmit.bind(this);
     this.getLinode = getLinode.bind(this);
-    this.state = { distribution: null, password: '' };
+    this.state = {
+      distribution: this.getLinode().distribution.id,
+      password: null,
+      errors: {},
+      loading: false,
+    };
   }
 
   async componentDidMount() {
@@ -25,20 +33,27 @@ export class RebuildPage extends Component {
   async onSubmit() {
     const { dispatch, params: { linodeLabel } } = this.props;
     const { id: linodeId } = this.getLinode();
+
+    this.setState({ loading: true, errors: {} });
+
     try {
-      dispatch(rebuildLinode(linodeId, {
+      await dispatch(rebuildLinode(linodeId, {
         distribution: this.state.distribution,
         root_pass: this.state.password,
       }));
       dispatch(push(`/linodes/${linodeLabel}`));
-    } catch (e) {
-      // TODO: handle errors
+    } catch (response) {
+      const errors = await reduceErrors(response);
+      errors._ = errors.distribution;
+      this.setState({ errors });
     }
+
+    this.setState({ loading: false });
   }
 
   render() {
     const { distributions } = this.props;
-    const { distribution } = this.state;
+    const { distribution, errors } = this.state;
 
     return (
       <Card title="Rebuild">
@@ -52,9 +67,9 @@ export class RebuildPage extends Component {
             />
           </div>
           <div className="LinodesLinodeRebuildPage-password">
-            <FormGroup className="row">
-              <div className="label-col col-sm-2">
-                <label htmlFor="">Root password</label>
+            <FormGroup errors={errors} name="root_pass" className="row">
+              <div className="col-sm-2 label-col">
+                <label>Root password:</label>
               </div>
               <div className="col-sm-10">
                 <PasswordInput
@@ -62,17 +77,18 @@ export class RebuildPage extends Component {
                   passwordType="offline_fast_hashing_1e10_per_second"
                   onChange={password => this.setState({ password })}
                 />
+                <FormGroupError errors={errors} name="root_pass" />
               </div>
             </FormGroup>
           </div>
-          <FormGroup className="row">
-            <div className="offset-sm-2 col-sm-10">
+          <div className="form-group row">
+            <div className="col-sm-2 offset-sm-2">
               <SubmitButton
-                className="LinodesLinodeRebuildPage-rebuild"
-                disabled={!(this.state.password && this.state.distribution)}
+                disabled={this.loading}
               >Rebuild</SubmitButton>
             </div>
-          </FormGroup>
+          </div>
+          <ErrorSummary errors={errors} />
         </Form>
       </Card>
     );
