@@ -37,6 +37,10 @@ form {
     display: inline-block;
 }
 
+.StaticFormField {
+    line-height: $input-height;
+}
+
 .form-group {
   margin-bottom: 0;
 
