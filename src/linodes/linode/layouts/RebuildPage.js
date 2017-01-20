@@ -42,7 +42,7 @@ export class RebuildPage extends Component {
     const { distribution } = this.state;
 
     return (
-      <section className="LinodesLinodeRebuildPage container">
+      <section className="LinodesLinodeRebuildPage">
         <div className="card">
           <header className="LinodesLinodeRebuildPage-header">
             <h2 className="LinodesLinodeRebuildPage-title">Rebuild</h2>
