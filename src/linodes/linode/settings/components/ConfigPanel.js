@@ -20,12 +20,6 @@ function configContent(linode, configs, dispatch) {
 
   return (
     <table className="ConfigPanel-configs">
-      <thead className="clear-thead">
-        <tr>
-          <th>Label</th>
-          {configs.length > 1 ? <th></th> : null}
-        </tr>
-      </thead>
       <tbody>
         {configs.map(config =>
           <tr key={config.id}>
