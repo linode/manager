@@ -2,13 +2,12 @@ import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { PasswordInput } from '~/components/form';
-import FormRow from '~/components/FormRow';
+import { Card } from '~/components';
+import { Form, FormGroup, PasswordInput, SubmitButton } from '~/components/form';
 import Distributions from '~/linodes/components/Distributions';
 import { setSource } from '~/actions/source';
 import { rebuildLinode } from '~/api/linodes';
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
-import { Button } from '~/components/buttons';
 
 export class RebuildPage extends Component {
   constructor() {
@@ -42,38 +41,40 @@ export class RebuildPage extends Component {
     const { distribution } = this.state;
 
     return (
-      <section className="LinodesLinodeRebuildPage">
-        <div className="card">
-          <header className="LinodesLinodeRebuildPage-header">
-            <h2 className="LinodesLinodeRebuildPage-title">Rebuild</h2>
-          </header>
-          <div className="LinodesLinodeRebuildPage-body">
-            <div className="LinodesLinodeRebuildPage-distributions">
-              <Distributions
-                distributions={distributions.distributions}
-                distribution={distribution}
-                onSelected={distribution => this.setState({ distribution })}
-                noDistribution={false}
-              />
-            </div>
-            <div className="LinodesLinodeRebuildPage-password">
-              <FormRow label="Root password">
+      <Card title="Rebuild">
+        <Form onSubmit={() => this.onSubmit()} className="LinodesLinodeRebuildPage-body">
+          <div className="LinodesLinodeRebuildPage-distributions">
+            <Distributions
+              distributions={distributions.distributions}
+              distribution={distribution}
+              onSelected={distribution => this.setState({ distribution })}
+              noDistribution={false}
+            />
+          </div>
+          <div className="LinodesLinodeRebuildPage-password">
+            <FormGroup className="row">
+              <div className="label-col col-sm-2">
+                <label htmlFor="">Root password</label>
+              </div>
+              <div className="col-sm-10">
                 <PasswordInput
                   value={this.state.password}
+                  passwordType="offline_fast_hashing_1e10_per_second"
                   onChange={password => this.setState({ password })}
                 />
-              </FormRow>
-            </div>
-            <FormRow>
-              <Button
-                className="LinodesLinodeRebuildPage-rebuild"
-                onClick={this.onSubmit}
-                disabled={!(this.state.password && this.state.distribution)}
-              >Rebuild</Button>
-            </FormRow>
+              </div>
+            </FormGroup>
           </div>
-        </div>
-      </section>
+          <FormGroup className="row">
+            <div className="offset-sm-2 col-sm-10">
+              <SubmitButton
+                className="LinodesLinodeRebuildPage-rebuild"
+                disabled={!(this.state.password && this.state.distribution)}
+              >Rebuild</SubmitButton>
+            </div>
+          </FormGroup>
+        </Form>
+      </Card>
     );
   }
 }
