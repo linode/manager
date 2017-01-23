@@ -465,6 +465,13 @@ export class EditConfigPage extends Component {
             </div>
             <div className="input-container col-sm-6">
               {this.renderRadio(
+                <span>Maximum ({
+                  linode.type.length ? linode.type[0].ram : null
+                } MB)</span>,
+                'isMaxRam',
+                true
+              )}
+              {this.renderRadio(
                 <span>
                   <input
                     className="form-control"
@@ -479,13 +486,6 @@ export class EditConfigPage extends Component {
                 </span>,
                 'isMaxRam',
                 false
-              )}
-              {this.renderRadio(
-                <span>Maximum ({
-                  linode.type.length ? linode.type[0].ram : null
-                } MB)</span>,
-                'isMaxRam',
-                true
               )}
             </div>
           </div>
