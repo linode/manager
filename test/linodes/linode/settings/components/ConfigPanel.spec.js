@@ -67,7 +67,7 @@ describe('linodes/linode/settings/components/ConfigPanel', () => {
       />
     );
 
-    expect(panel.find('tr').length).to.equal(3);
+    expect(panel.find('tr').length).to.equal(2);
   });
 
   it('renders config label link', () => {
@@ -80,11 +80,11 @@ describe('linodes/linode/settings/components/ConfigPanel', () => {
       />
     );
 
-    expect(panel.find('tr').at(1).find('td')
+    expect(panel.find('tr').at(0).find('td')
       .at(0)
       .find('Link').length)
       .to.equal(1);
-    expect(panel.find('tr').at(1).find('td')
+    expect(panel.find('tr').at(0).find('td')
       .at(0)
       .find('Link')
       .props())
@@ -101,7 +101,7 @@ describe('linodes/linode/settings/components/ConfigPanel', () => {
       />
     );
 
-    expect(panel.find('tr').at(1).find('td')
+    expect(panel.find('tr').at(0).find('td')
       .at(0)
       .text())
       .to.equal('Test config');
