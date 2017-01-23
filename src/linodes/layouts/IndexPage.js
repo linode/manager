@@ -154,7 +154,7 @@ export class IndexPage extends Component {
     if (group) {
       ret.splice(0, 0, (
         <tr className="display-group">
-          <td>{group}</td>
+          <td colSpan="5">{group}</td>
         </tr>
       ));
     }
