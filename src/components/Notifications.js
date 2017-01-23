@@ -9,13 +9,12 @@ function getLinodeName(event, linodes) {
   if (linodeIfCached) {
     return linodeIfCached.label;
   }
-
   switch (event.getType()) {
     case Event.LINODE_BACKUPS_ENABLE:
     case Event.LINODE_BACKUPS_DISABLE:
-      return event._event.label.split(' ')[3];
+      return event._event.entity.split(' ')[3];
     default:
-      return event._event.label.split(' ')[2];
+      return event._event.entity.split(' ')[2];
   }
 }
 
@@ -132,9 +131,7 @@ export function Notification(props) {
 
 Notification.propTypes = {
   id: PropTypes.number.isRequired,
-  label: PropTypes.string.isRequired,
   read: PropTypes.bool.isRequired,
-  label_message: PropTypes.string.isRequired,
   readNotification: PropTypes.func.isRequired,
   gotoPage: PropTypes.func.isRequired,
   updated: PropTypes.string.isRequired,
