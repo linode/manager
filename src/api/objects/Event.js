@@ -22,7 +22,7 @@ export class Event {
   }
 
   _categoryAndAction() {
-    return this._event.event_type.split('_').map(s => s.toLowerCase());
+    return this._event.type.split('_').map(s => s.toLowerCase());
   }
 
   getUpdatedAt() {
