@@ -28,12 +28,14 @@ export function getDisks() {
 
 export function getDiskSlots(fromConfig = false) {
   const disks = fromConfig ? this.getConfig().disks : this.getDisks();
+  console.log(disks);
   const diskSlots = [];
   Object.values(disks).forEach(disk => {
     if (disk) {
       diskSlots.push(disk.id);
     }
   });
+  console.log(diskSlots);
   return diskSlots;
 }
 
