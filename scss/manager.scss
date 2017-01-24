@@ -267,6 +267,7 @@ input[type=checkbox], input[type=radio] {
     height: $input-height;
     line-height: calc(#{$input-height}-2px);
     padding: 0 $input-padding;
+    border-radius: 0;
 
     input[type=checkbox] {
         position: relative;
