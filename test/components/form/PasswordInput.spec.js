@@ -39,6 +39,6 @@ describe('components/form/PasswordInput', () => {
 
     expect(input.find('.PasswordInput-cracktime').length).to.equal(1);
     expect(input.find('.PasswordInput-cracktime').text())
-      .to.equal('An offline attack would take centuries to crack this password.');
+      .to.equal('Strong');
   });
 });
