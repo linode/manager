@@ -35,8 +35,6 @@ export class LoadingRouterContext extends RouterContext {
         if (component !== undefined && component.hasOwnProperty('preload')) {
           this.preloadStack++;
           await component.preload(store, newProps.params);
-
-          // Allow component update now that preloads are done
           this.preloadStack--;
         }
       }
