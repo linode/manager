@@ -23,7 +23,6 @@ function matchPromise(_ref, callback) {
 export class LoadingRouterContext extends RouterContext {
   async runPreload(newProps) {
     // Suppress component update until after route preloads have finished
-    this.fetching = true;
 
     await this.match({
       routes: newProps.routes,
@@ -34,15 +33,16 @@ export class LoadingRouterContext extends RouterContext {
       for (let i = 0; i < redirectParams.routes.length; i++) {
         const component = redirectParams.routes[i].component;
         if (component !== undefined && component.hasOwnProperty('preload')) {
+          this.preloadStack++;
           await component.preload(store, newProps.params);
+
+          // Allow component update now that preloads are done
+          this.preloadStack--;
         }
       }
 
-      // Allow component update now that preloads are done
-      this.fetching = false;
-
       // Set anything at all to force an update
-      if (!this.initialLoad) {
+      if (this.preloadStack === 0 && !this.initialLoad) {
         this.setState({
           updateNow: 'please',
         });
@@ -56,7 +56,7 @@ export class LoadingRouterContext extends RouterContext {
   constructor(props) {
     super(props);
     this.match = props.match;
-    this.fetching = true;
+    this.preloadStack = 0;
     this.initialLoad = true;
   }
 
@@ -84,8 +84,6 @@ export class LoadingRouterContext extends RouterContext {
       super.componentWillReceiveProps(newProps);
     }
 
-    this.fetching = true;
-
     store.dispatch(preloadReset());
     setTimeout(() => store.dispatch(preloadStart()), 0);
 
@@ -93,14 +91,14 @@ export class LoadingRouterContext extends RouterContext {
   }
 
   shouldComponentUpdate() {
-    return !this.fetching;
+    return !this.initialLoad && this.preloadStack === 0;
   }
 
   render() {
     if (this.initialLoad) {
       this.initialLoad = false;
 
-      if (this.fetching) {
+      if (this.preloadStack > 0) {
         return null;
       }
     }

@@ -24,7 +24,13 @@ export class RescuePage extends Component {
   static async preload({ dispatch, getState }, { linodeLabel }) {
     const { id } = Object.values(getState().api.linodes.linodes).reduce(
       (match, linode) => linode.label === linodeLabel ? linode : match);
-    await dispatch(linodes.disks.all([id]));
+
+    try {
+      await dispatch(linodes.disks.all([id]));
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error(e);
+    }
   }
 
   constructor(props) {
