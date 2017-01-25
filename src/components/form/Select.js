@@ -10,7 +10,7 @@ export default function Select(props) {
         onChange={props.onChange}
       >
         {props.options ? props.options.map((option, i) =>
-          <option key={i} value={option.value}>
+          <option key={i} value={option.value} disabled={option.disabled}>
             {option.label}
           </option>
         ) : props.children}
