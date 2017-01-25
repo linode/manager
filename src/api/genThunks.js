@@ -34,7 +34,7 @@ export function getStateOfSpecificResource(config, state, ids) {
 
   while (current !== config) {
     name = path.pop();
-    refined = refined[current.plural][+_ids.shift()][name];
+    refined = refined[current.plural][_ids.shift()][name];
     current = current.subresources[name];
   }
 
