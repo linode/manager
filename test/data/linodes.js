@@ -4,7 +4,7 @@ export const apiTestLinode = {
   group: 'Test Group',
   label: 'test-linode',
   ipv4: '97.107.143.99',
-  ipv6: '2600:3c03::f03c:91ff:fe0a:1dbe/64',
+  ipv6: '2600:3c03::f03c:91ff:fe0a:1dbe',
   created: '2016-07-06T16:47:27',
   id: 1234,
   type: [testType],
@@ -179,21 +179,23 @@ export const testLinode = {
           linode_id: 1234,
           address: '192.168.1.2',
           rdns: 'p1-1.members.linode.com',
+          gateway: '192.168.1.1',
         },
       ],
       public: [
         {
           linode_id: 1234,
           address: '97.107.143.99',
+          gateway: '97.107.143.99',
           rdns: 'li1-1.members.linode.com',
         },
       ],
     },
-    ipv6: [],
-    ipv6_ranges: {
+    ipv6: {
       global: [],
-      'link-local': 'fe80::f03c:91ff:fe0a:181f/64',
-      slaac: '2600:3c03::f03c:91ff:fe0a:1dbe/64',
+      addresses: [],
+      'link-local': 'fe80::f03c:91ff:fe0a:181f',
+      slaac: '2600:3c03::f03c:91ff:fe0a:1dbe',
     },
   },
 };

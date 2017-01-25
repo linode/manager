@@ -23,168 +23,139 @@ describe('linodes/linode/networking/layouts/SummaryPage', () => {
     linodeLabel: testLinode.label,
   };
 
-  describe('public network', () => {
-    it('renders add public ip button', async () => {
+  describe('IPv4', () => {
+    it('renders help button', async () => {
+      const path = 'https://www.linode.com/docs/networking/linux-static-ip-configuration';
       const page = shallow(
         <SummaryPage
           linodes={linodes}
           params={params}
         />);
 
-      const button = page.find('section').at(0).find('header Button');
-      expect(button.props().children).to.equal('Add public IP address');
+      expect(page.find('HelpButton').at(0).props())
+        .to.have.property('to')
+        .which.equals(path);
     });
 
-    describe('IPv4', () => {
-      it('renders help button', async () => {
-        const path = 'https://www.linode.com/docs/networking/linux-static-ip-configuration';
-        const page = shallow(
-          <SummaryPage
-            linodes={linodes}
-            params={params}
-          />);
+    it('renders address ip and url', async () => {
+      const { ipv4 } = testLinode._ips;
+      const page = shallow(
+        <SummaryPage
+          linodes={linodes}
+          params={params}
+        />);
 
-        expect(page.find('HelpButton').at(0).props())
-          .to.have.property('to')
-          .which.equals(path);
-      });
+      const ipv4Section = page.find('#publicIpv4 li');
 
-      it('renders address ip and url', async () => {
-        const ipv4 = testLinode.ipv4;
-        const inet = `${ipv4} (li1-1.members.linode.com)`;
-        const page = shallow(
-          <SummaryPage
-            linodes={linodes}
-            params={params}
-          />);
-
-        const content = page.find('section').at(0);
-        const ipv4Sect = content.find('.col-sm-6').at(0);
-        const inetCol = ipv4Sect.find('.col-sm-9').at(0);
-        expect(inetCol.text()).to.equal(inet);
-      });
-
-      it('renders gateway', async () => {
-        const ipv4 = testLinode.ipv4;
-        const gateway = `${ipv4.substring(0, ipv4.lastIndexOf('.'))}.1`;
-        const page = shallow(
-          <SummaryPage
-            linodes={linodes}
-            params={params}
-          />);
-
-        const content = page.find('section').at(0);
-        const ipv4Sect = content.find('.col-sm-6').at(0);
-        const gatewayCol = ipv4Sect.find('.col-sm-9').at(2);
-        expect(gatewayCol.text()).to.equal(gateway);
-      });
-
-      it('renders nameservers', async () => {
-        const page = shallow(
-          <SummaryPage
-            linodes={linodes}
-            params={params}
-          />);
-
-        const content = page.find('section').at(0);
-        const ipv4Sect = content.find('.col-sm-6').at(0);
-        const nsCol = ipv4Sect.find('.col-sm-9').at(3);
-        expect(nsCol.text()).to.equal(ipv4ns[testLinode.datacenter.id].join(''));
-      });
+      const { address, rdns } = ipv4.public[0];
+      expect(ipv4Section.at(0).text()).to.equal(`${address}(${rdns})`);
     });
 
-    describe('IPv6', () => {
-      it('renders help button', async () => {
-        const path = 'https://www.linode.com/docs/networking/native-ipv6-networking';
-        const page = shallow(
-          <SummaryPage
-            linodes={linodes}
-            params={params}
-          />);
+    it('renders gateway', async () => {
+      const { ipv4 } = testLinode._ips;
+      const page = shallow(
+        <SummaryPage
+          linodes={linodes}
+          params={params}
+        />);
 
-        expect(page.find('HelpButton').at(1).props())
-          .to.have.property('to')
-          .which.equals(path);
-      });
+      const gateway = page.find('#ipv4Gateway');
+      expect(gateway.text()).to.equal(ipv4.public[0].gateway);
+    });
 
-      it('renders address ip', async () => {
-        const ipv6 = testLinode.ipv6;
-        const page = shallow(
-          <SummaryPage
-            linodes={linodes}
-            params={params}
-          />);
+    it('renders nameservers', async () => {
+      const page = shallow(
+        <SummaryPage
+          linodes={linodes}
+          params={params}
+        />);
 
-        const content = page.find('section').at(0);
-        const ipv6Sect = content.find('.col-sm-6').at(1);
-        const inetCol = ipv6Sect.find('.col-sm-9').at(0);
-        expect(inetCol.text()).to.equal(`${ipv6}`);
-      });
-
-      it('renders gateway');
-
-      it('renders nameservers', async () => {
-        const page = shallow(
-          <SummaryPage
-            linodes={linodes}
-            params={params}
-          />);
-
-        const content = page.find('section').at(0);
-        const ipv6Sect = content.find('.col-sm-6').at(1);
-        const nsCol = ipv6Sect.find('.col-sm-9').at(2);
-        expect(nsCol.text())
-          .to.equal(
-            ipv6nsSuffix.map(
-              suffix => ipv6ns[testLinode.datacenter.id] + suffix
-            ).join('')
-          );
-      });
-
-      it('renders global pool');
+      const expectedNameservers = ipv4ns[testLinode.datacenter.id];
+      const nameservers = page.find('#ipv4Nameservers li');
+      nameservers.map((nameserver, i) =>
+        expect(nameserver.text()).to.equal(expectedNameservers[i]));
     });
   });
 
-  describe('private network', () => {
-    it('renders add private ip button when no ipv4s are present', async () => {
+  describe('IPv6', () => {
+    it('renders help button', async () => {
+      const path = 'https://www.linode.com/docs/networking/native-ipv6-networking';
       const page = shallow(
         <SummaryPage
           linodes={linodes}
-          params={{ linodeLabel: 'test-linode-1245' }}
+          params={params}
         />);
 
-      const button = page.find(
-        '.LinodesLinodeNetworkingSummaryPage-addPrivateIp');
-      expect(button.text()).to.equal('Enable private IP address');
+      expect(page.find('HelpButton').at(1).props())
+        .to.have.property('to')
+        .which.equals(path);
     });
 
-    it('renders private ip', async () => {
+    it('renders slaac ip', async () => {
+      const { ipv6 } = testLinode._ips;
       const page = shallow(
         <SummaryPage
           linodes={linodes}
-          params={{ linodeLabel: 'test-linode' }}
+          params={params}
         />);
 
-      const p = page.find(
-        '.LinodesLinodeNetworkingSummaryPage-privateIpv4 span');
-      expect(p.length).to.equal(2);
-
-      const privateIp = linodes.linodes[1234]._ips.ipv4.private[0];
-
-      expect(p.at(0).text()).to.equal(`${privateIp.address}/17 `);
-      expect(p.at(1).text()).to.equal(`(${privateIp.rdns})`);
+      const slaac = page.find('#slaac');
+      expect(slaac.text()).to.equal(`${ipv6.slaac} / 64`);
     });
 
-    it('renders link-local', async () => {
+    /* TODO: add test when gateways are returned for ipv6 objects */
+    it('renders gateway');
+
+    it('renders nameservers', async () => {
       const page = shallow(
         <SummaryPage
           linodes={linodes}
-          params={{ linodeLabel: 'test-linode' }}
+          params={params}
         />);
 
-      const label = page.find('.LinodesLinodeNetworkingSummaryPage-linkLocal');
-      expect(label.text()).to.equal(
-        linodes.linodes[1234]._ips.ipv6_ranges['link-local']);
+      const expectedNameservers = ipv6nsSuffix.map(
+        suffix => ipv6ns[testLinode.datacenter.id] + suffix);
+      const nameservers = page.find('#ipv6Nameservers li');
+      nameservers.map((nameserver, i) =>
+        expect(nameserver.text()).to.equal(expectedNameservers[i]));
     });
+
+    /* TODO: add tests when we render global pools */
+    it('renders global pool');
+  });
+
+  it('renders add private ip button when no ipv4s are present', async () => {
+    const page = shallow(
+      <SummaryPage
+        linodes={linodes}
+        params={{ linodeLabel: 'test-linode-1245' }}
+      />);
+
+    const button = page.find('#addPrivateIp');
+    expect(button.length).to.equal(1);
+  });
+
+  it('renders private ip', async () => {
+    const page = shallow(
+      <SummaryPage
+        linodes={linodes}
+        params={{ linodeLabel: 'test-linode' }}
+      />);
+
+    const li = page.find('#privateIpv4 li');
+    const privateIp = linodes.linodes[1234]._ips.ipv4.private[0];
+
+    expect(li.at(0).text()).to.equal(`${privateIp.address}(${privateIp.rdns})`);
+  });
+
+  it('renders link-local', async () => {
+    const page = shallow(
+      <SummaryPage
+        linodes={linodes}
+        params={{ linodeLabel: 'test-linode' }}
+      />);
+
+    const li = page.find('#linkLocal li');
+    expect(li.at(0).text()).to.equal(linodes.linodes[1234]._ips.ipv6['link-local']);
   });
 });
