@@ -8,7 +8,6 @@ import { api } from '@/data';
 import { SHOW_MODAL } from '~/actions/modal';
 import {
   SettingsPage,
-  CancelBackupsModal,
 } from '~/linodes/linode/backups/layouts/SettingsPage';
 
 describe('linodes/linode/backups/layouts/SettingsPage', () => {
@@ -64,7 +63,7 @@ describe('linodes/linode/backups/layouts/SettingsPage', () => {
     );
     await page.instance().componentDidMount();
 
-    const cancelButton = page.find('.LinodesLinodeBackupsSettings-cancel');
+    const cancelButton = page.find('#backup-settings-cancel');
     expect(cancelButton.length).to.equal(1);
 
     dispatch.reset();
@@ -72,20 +71,5 @@ describe('linodes/linode/backups/layouts/SettingsPage', () => {
 
     expect(dispatch.firstCall.args[0])
       .to.have.property('type').which.equals(SHOW_MODAL);
-  });
-
-  it('cancels backups when button on modal is pressed', async () => {
-    const modal = mount(
-      <CancelBackupsModal linodeId="1234" dispatch={dispatch} />
-    );
-
-    const confirmButton = modal.find('.btn-default');
-    expect(confirmButton.length).to.equal(1);
-
-    dispatch.reset();
-    confirmButton.simulate('click');
-
-    const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, '/linode/instances/1234/backups/cancel');
   });
 });
