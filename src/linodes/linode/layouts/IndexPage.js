@@ -35,7 +35,7 @@ export class IndexPage extends Component {
         }))).linodes[0]);
       }
 
-      await dispatch(linodes.configs.all([id.toString()]));
+      await dispatch(linodes.configs.all([id]));
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error(e);
