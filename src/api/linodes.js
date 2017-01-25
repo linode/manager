@@ -1,13 +1,6 @@
 import { fetch } from '~/fetch';
 import { actions } from './configs/linodes';
 
-export const LINODE_STATUS_TRANSITION_RESULT = {
-  booting: 'running',
-  shutting_down: 'offline',
-  rebooting: 'running',
-  creating: 'offline', // Technically this is "finished", but offline is more useful to us.
-};
-
 export const RANDOM_PROGRESS_MAX = 75;
 export const RANDOM_PROGRESS_MIN = 40;
 
