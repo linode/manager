@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
+import { setError } from '~/actions/errors';
 import { getLinode } from './IndexPage';
 import { showModal, hideModal } from '~/actions/modal';
 import { linodes } from '~/api';
@@ -30,6 +31,7 @@ export class RescuePage extends Component {
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error(e);
+      dispatch(setError(e));
     }
   }
 
