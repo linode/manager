@@ -7,3 +7,4 @@ export {
   getDiskRedirectUrl,
   getBackupRedirectUrl,
 } from '~/components/notifications/EventTypes';
+export { default as sortEvents } from '~/components/notifications/util';
