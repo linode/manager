@@ -61,12 +61,6 @@ export class AddModal extends Component {
         })
       ), vendor => vendor.name);
 
-    // TODO: Replace hardcoded filesystems
-    const filesystems = [];
-    filesystems.push({ value: 'ext3', label: 'ext3' });
-    filesystems.push({ value: 'ext4', label: 'ext4' });
-    filesystems.push({ value: 'swap', label: 'swap' });
-    filesystems.push({ value: 'raw', label: 'raw' });
     const distros = [{ value: '', label: 'None' }];
     for (let i = 0; i < vendors.length; ++i) {
       const v = vendors[i];
@@ -165,9 +159,13 @@ export class AddModal extends Component {
                     <Select
                       id="filesystem"
                       value={filesystem}
-                      options={filesystems}
                       onChange={e => this.setState({ filesystem: e.target.value })}
-                    />
+                    >
+                      <option value="ext3">ext3</option>
+                      <option value="ext4">ext4</option>
+                      <option value="swap">swap</option>
+                      <option value="raw">raw</option>
+                    </Select>
                   </div>
                   <FormGroupError errors={errors} name="filesystem" />
                 </div>

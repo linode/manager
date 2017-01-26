@@ -25,10 +25,10 @@ export default function Select(props) {
 }
 
 Select.propTypes = {
-  value: PropTypes.object.isRequired,
+  value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   label: PropTypes.string,
   disabled: PropTypes.bool,
-  options: PropTypes.object,
-  children: PropTypes.object,
+  options: PropTypes.array,
+  children: PropTypes.array,
 };
