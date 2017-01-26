@@ -10,7 +10,7 @@ export default function Select(props) {
         onChange={props.onChange}
       >
         {props.options ? props.options.map((option, i) =>
-          <option key={i} value={option.value}>
+          <option key={i} value={option.value} disabled={option.disabled}>
             {option.label}
           </option>
         ) : props.children}
@@ -25,10 +25,10 @@ export default function Select(props) {
 }
 
 Select.propTypes = {
-  value: PropTypes.object.isRequired,
+  value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   label: PropTypes.string,
   disabled: PropTypes.bool,
-  options: PropTypes.object,
-  children: PropTypes.object,
+  options: PropTypes.array,
+  children: PropTypes.array,
 };
