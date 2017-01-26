@@ -1,13 +1,13 @@
 import React, { PropTypes } from 'react';
 
 export default function FormGroupError(props) {
-  const { errors, name, crumbs } = props;
-
+  const { errors, name, crumbs, inline } = props;
   const fieldErrors = errors[name + (crumbs ? `.${crumbs}` : '')];
-
+  const errorMessageStyle = inline ? 'form-control-feedback'
+    : 'form-control-feedback form-control-feedback--block';
   if (fieldErrors && fieldErrors.length) {
     return (
-      <div className="form-control-feedback">
+      <div className={errorMessageStyle}>
         {fieldErrors.map(error => <div key={error}>{error.reason}</div>)}
       </div>
     );
@@ -20,4 +20,9 @@ FormGroupError.propTypes = {
   errors: PropTypes.any.isRequired,
   name: PropTypes.string.isRequired,
   crumbs: PropTypes.string,
+  inline: PropTypes.bool,
+};
+
+FormGroupError.defaultProps = {
+  inline: true,
 };
