@@ -35,6 +35,11 @@ form {
     margin-left: 15px;
     line-height: $input-height;
     display: inline-block;
+
+    &--block {
+        display: block;
+        margin-left: 0;
+    }
 }
 
 .form-group {

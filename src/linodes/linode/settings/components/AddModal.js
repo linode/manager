@@ -105,7 +105,7 @@ export class AddModal extends Component {
                 onChange={e => this.setState({ label: e.target.value })}
               />
             </div>
-            <FormGroupError errors={errors} name="label" />
+            <FormGroupError errors={errors} name="label" inline={false} />
           </div>
         </FormGroup>
 
