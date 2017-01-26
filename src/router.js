@@ -33,14 +33,14 @@ export class LoadingRouterContext extends RouterContext {
       for (let i = 0; i < redirectParams.routes.length; i++) {
         const component = redirectParams.routes[i].component;
         if (component !== undefined && component.hasOwnProperty('preload')) {
-          this.preloadStack++;
+          this.preloadCounter++;
           await component.preload(store, newProps.params);
-          this.preloadStack--;
+          this.preloadCounter--;
         }
       }
 
       // Set anything at all to force an update
-      if (this.preloadStack === 0 && !this.initialLoad) {
+      if (this.preloadCounter === 0 && !this.initialLoad) {
         this.setState({
           updateNow: 'please',
         });
@@ -54,7 +54,7 @@ export class LoadingRouterContext extends RouterContext {
   constructor(props) {
     super(props);
     this.match = props.match;
-    this.preloadStack = 0;
+    this.preloadCounter = 0;
     this.initialLoad = true;
   }
 
@@ -89,14 +89,14 @@ export class LoadingRouterContext extends RouterContext {
   }
 
   shouldComponentUpdate() {
-    return !this.initialLoad && this.preloadStack === 0;
+    return !this.initialLoad && this.preloadCounter === 0;
   }
 
   render() {
     if (this.initialLoad) {
       this.initialLoad = false;
 
-      if (this.preloadStack > 0) {
+      if (this.preloadCounter > 0) {
         return null;
       }
     }
