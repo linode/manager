@@ -6,7 +6,6 @@ import { setSource } from '~/actions/source';
 
 export class AdvancedPage extends Component {
   static async preload(store, params) {
-    await ConfigPanel.preload(store, params);
     await DiskPanel.preload(store, params);
   }
 
