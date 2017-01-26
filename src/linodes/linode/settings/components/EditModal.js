@@ -52,7 +52,7 @@ export class EditModal extends Component {
       <Form
         onSubmit={() => this.saveChanges()}
       >
-        <FormGroup errors={errors} field="label" className="row">
+        <FormGroup errors={errors} name="label" className="row">
           <div className="col-sm-5 label-col">
             <label>Label</label>
           </div>
@@ -68,15 +68,15 @@ export class EditModal extends Component {
             <FormGroupError errors={errors} name="label" inline={false} />
           </div>
         </FormGroup>
-        <FormGroup>
+        <FormGroup errors={errors} name="filesystem" className="row">
           <div className="col-sm-5 label-col">
-            <label htmlFor="format">Format</label>
+            <label>Format</label>
           </div>
           <div className="col-sm-7">
             <input disabled className="form-control" value={disk.filesystem} />
           </div>
         </FormGroup>
-        <FormGroup>
+        <FormGroup errors={errors} name="size" className="row">
           <div className="col-sm-5 label-col">
             <label htmlFor="current-size">Current size (MB)</label>
           </div>
@@ -84,7 +84,7 @@ export class EditModal extends Component {
             <input disabled className="form-control" value={disk.size} />
           </div>
         </FormGroup>
-        <FormGroup errors={errors} field="size" className="row">
+        <FormGroup errors={errors} name="size" className="row">
           <div className="col-sm-5 label-col">
             <label htmlFor="size">New size (MB)</label>
           </div>
