@@ -37,17 +37,9 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
       { dispatch: _dispatch, getState: () => state },
       { linodeLabel: 'test-linode-1242' });
 
-    expect(_dispatch.callCount).to.equal(2);
+    expect(_dispatch.callCount).to.equal(1);
 
-    const configs = _dispatch.firstCall.args[0];
-    const disks = _dispatch.secondCall.args[0];
-
-    _dispatch.reset();
-    _dispatch.returns({ total_pages: 1, configs: [], total_results: 0 });
-    await configs(_dispatch, () => state);
-    const fn = _dispatch.firstCall.args[0];
-    await expectRequest(fn, '/linode/instances/1242/configs/?page=1',
-      undefined, { configs: [] });
+    const disks = _dispatch.firstCall.args[0];
 
     _dispatch.reset();
     _dispatch.returns({ total_pages: 1, disks: [], total_results: 0 });

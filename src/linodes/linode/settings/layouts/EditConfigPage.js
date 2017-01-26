@@ -147,7 +147,6 @@ export class EditConfigPage extends Component {
       (match, linode) => linode.label === linodeLabel ? linode : match);
 
     try {
-      await dispatch(linodes.configs.all([id]));
       await dispatch(linodes.disks.all([id]));
     } catch (e) {
       dispatch(setError(e));

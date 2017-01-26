@@ -58,12 +58,6 @@ function configContent(linode, configs, dispatch) {
 }
 
 export class ConfigPanel extends Component {
-  static async preload({ dispatch, getState }, { linodeLabel }) {
-    const { id } = Object.values(getState().api.linodes.linodes).reduce(
-      (match, linode) => linode.label === linodeLabel ? linode : match);
-    await dispatch(linodes.configs.all([id]));
-  }
-
   constructor() {
     super();
     this.getLinode = getLinode.bind(this);
