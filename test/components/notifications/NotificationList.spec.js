@@ -8,7 +8,7 @@ import { makeEvent } from '@/data/events';
 
 import { NotificationList, NotificationListItem } from '~/components/notifications';
 
-describe('components/Notifications', () => {
+describe('components/notifications/NotificationList', () => {
   const sandbox = sinon.sandbox.create();
 
   function makeNotifications(events = api.events,
