@@ -1,6 +1,6 @@
 import {
   genConfig, ReducerGenerator, genActions, ONE, MANY,
-} from '~/api/gen';
+} from '~/api/apiResultActionReducerGenerator';
 
 export const config = genConfig({
   plural: 'events',

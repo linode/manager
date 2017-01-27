@@ -1,4 +1,6 @@
-import { ONE, MANY, DELETE, POST, PUT, generateDefaultStateMany } from './gen';
+import {
+  ONE, MANY, DELETE, POST, PUT, generateDefaultStateMany,
+} from './apiResultActionReducerGenerator';
 import { fetch } from '~/fetch';
 
 /*
@@ -240,7 +242,7 @@ function genThunkPost(config, actions) {
 /**
  * Generates thunks for the provided config.
  */
-export default function genThunks(config, actions) {
+export default function apiActionReducerGenerator(config, actions) {
   const thunks = { };
   const supports = a => config.supports.indexOf(a) !== -1;
   if (supports(ONE)) {
@@ -263,7 +265,7 @@ export default function genThunks(config, actions) {
     Object.keys(config.subresources).forEach((key) => {
       const subr = config.subresources[key];
       const plural = subr.plural;
-      thunks[plural] = genThunks(subr, actions[plural]);
+      thunks[plural] = apiActionReducerGenerator(subr, actions[plural]);
     });
   }
   thunks.type = config.plural;
