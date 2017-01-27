@@ -27,19 +27,13 @@ describe('dnsmanager/layouts/IndexPage', () => {
       />
     );
 
-    const table = page.find('table');
-    expect(table.length).to.equal(1);
-    expect(table.find('tbody tr').length).to.equal(
-      Object.keys(dnszones.dnszones).length);
-    expect(table.find('tbody tr td').at(1).find('Link')
-                .props().to)
-      .to.equal('/dnsmanager/1');
-    expect(table.find('tbody tr td').at(2)
-                .text())
-    .to.equal('master');
-    expect(table.find('tbody tr td').at(3).find('a')
-                .text())
-      .to.equal('Delete');
+    const zone = page.find('.PrimaryTable-row');
+    expect(zone.length).to.equal(Object.keys(dnszones.dnszones).length);
+    const firstZone = zone.at(0);
+    expect(firstZone.find('Link').props().to)
+      .to.equal('/dnsmanager/example.com');
+    expect(firstZone.find('td').at(1).text())
+      .to.equal('master zone');
   });
 
   it('shows the delete modal when delete is pressed', () => {
@@ -51,10 +45,10 @@ describe('dnsmanager/layouts/IndexPage', () => {
       />
     );
 
-    const zoneDelete = page.find('tbody tr a').at(0);
+    const zoneDelete = page.find('.PrimaryTable-row Button').at(0);
     dispatch.reset();
     zoneDelete.simulate('click');
-    expect(dispatch.calledOnce).to.equal(true);
+    expect(dispatch.callCount).to.equal(1);
     expect(dispatch.firstCall.args[0])
       .to.have.property('type').which.equals(SHOW_MODAL);
   });
