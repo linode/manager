@@ -150,7 +150,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
     };
 
     it('should render the label and size inputs', () => {
-      const modal = shallow(
+      const modal = mount(
         <EditModal
           {...props}
           dispatch={() => {}}
@@ -173,7 +173,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
     });
 
     it('update state when fields are edited', () => {
-      const modal = shallow(
+      const modal = mount(
         <EditModal
           {...props}
           dispatch={() => {}}
@@ -214,7 +214,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
 
     it('should commit changes to the API', async () => {
       const dispatch = sandbox.spy();
-      const modal = shallow(
+      const modal = mount(
         <EditModal
           {...props}
           dispatch={dispatch}
