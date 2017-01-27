@@ -61,7 +61,7 @@ export default class AuthenticationPage extends Component {
                 <label>Expires:</label>
               </div>
               <div className="col-sm-10">
-                <Select onChange={expires => this.setState({ expires })} value={expires}>
+                <Select disabled onChange={expires => this.setState({ expires })} value={expires}>
                   <option value="0">Never</option>
                   <option value="1">In 1 month</option>
                   <option value="3">In 3 months</option>
