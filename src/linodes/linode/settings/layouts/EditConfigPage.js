@@ -29,9 +29,9 @@ export function getDisks() {
 export function getDiskSlots(fromConfig = false) {
   const disks = fromConfig ? this.getConfig().disks : this.getDisks();
   const diskSlots = [];
-  Object.values(disks).forEach(disk => {
-    if (disk) {
-      diskSlots.push(disk);
+  Object.values(disks).forEach(diskOrId => {
+    if (diskOrId) {
+      diskSlots.push(fromConfig ? diskOrId : diskOrId.id);
     }
   });
   return diskSlots;
@@ -212,7 +212,6 @@ export class EditConfigPage extends Component {
     }
 
     const diskSlots = this.getDiskSlots(true);
-
     let isCustomRoot = true;
     let isMaxRam = true;
     let initrd = '';
