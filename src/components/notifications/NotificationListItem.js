@@ -74,6 +74,8 @@ export default function NotificationListItem(props) {
 
   if (event.read) {
     className += ` ${baseCls}--read`;
+  } else {
+    className += ` ${baseCls}--unread`;
   }
 
   return (
