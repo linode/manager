@@ -29,9 +29,9 @@ export function getDisks() {
 export function getDiskSlots(fromConfig = false) {
   const disks = fromConfig ? this.getConfig().disks : this.getDisks();
   const diskSlots = [];
-  Object.values(disks).forEach(disk => {
-    if (disk) {
-      diskSlots.push(disk.id);
+  Object.values(disks).forEach(diskOrId => {
+    if (diskOrId) {
+      diskSlots.push(fromConfig ? diskOrId : diskOrId.id);
     }
   });
   return diskSlots;
@@ -211,7 +211,6 @@ export class EditConfigPage extends Component {
     }
 
     const diskSlots = this.getDiskSlots(true);
-
     let isCustomRoot = true;
     let isMaxRam = true;
     let initrd = '';
@@ -280,9 +279,6 @@ export class EditConfigPage extends Component {
         await dispatch(linodes.configs.post(data, linode.id));
       } else {
         const configId = this.getConfig().id;
-        diskSlots.forEach((id, i) => {
-          data.disks[AVAILABLE_DISK_SLOTS[i]] = { id };
-        });
         await dispatch(linodes.configs.put(data, linode.id, configId));
       }
 
