@@ -9,11 +9,8 @@ export function sortNotifications(eventsDict) {
     return [];
   }
 
-  events.sort((e1, e2) => {
-    const timeDelta = new Date(e2.updated) - new Date(e1.updated);
-    return timeDelta !== 0 ? timeDelta : e2.id - e1.id;
-  });
-  return events;
+  // TODO: address with request filter
+  return events.reverse();
 }
 
 export default class NotificationList extends Component {

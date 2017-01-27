@@ -32,7 +32,7 @@ describe('components/notifications/NotificationList', () => {
     expect(notifications.find('NotificationListItem').length).to.equal(count);
 
     // This event was updated last.
-    expect(notifications.find('NotificationListItem').at(0).props().event.id).to.equal(386);
+    expect(notifications.find('NotificationListItem').at(0).props().event.id).to.equal(385);
   });
 
   it('calls eventSeen when opened', () => {
