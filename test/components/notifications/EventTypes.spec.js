@@ -1,7 +1,4 @@
-import React from 'react';
 import { expect } from 'chai';
-
-import { makeEvent } from '@/data/events';
 
 import {
   EventTypeMap,
@@ -12,7 +9,6 @@ import {
 } from '~/components/notifications';
 
 describe('components/notifications/EventTypes', () => {
-
   it('should define a type map', () => {
     expect(EventTypeMap).to.be.defined;
   });

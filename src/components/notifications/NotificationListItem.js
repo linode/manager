@@ -1,4 +1,4 @@
-import React, { PropTypes, Component } from 'react';
+import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 import moment from 'moment';
 
@@ -22,7 +22,7 @@ export default function NotificationListItem(props) {
         </span>
         <small className="text-muted">
           {/* TODO: Time remaining estimation */}
-          {/*{` ${_rate} Estimated ${_time_remaining}`}*/}
+          {/* {` ${_rate} Estimated ${_time_remaining}`} */}
         </small>
       </span>
     );
@@ -79,7 +79,11 @@ export default function NotificationListItem(props) {
   }
 
   return (
-    <Link to={eventOptions.redirectUrl(event.entity)} className={className} onClick={() => props.onClick(event)}>
+    <Link
+      to={eventOptions.redirectUrl(event.entity)}
+      className={className}
+      onClick={() => props.onClick(event)}
+    >
       {message}
     </Link>
   );

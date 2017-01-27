@@ -9,7 +9,7 @@ export function getLinodeRedirectUrl(entity) {
 }
 
 export function getDiskRedirectUrl(entity) {
-  return `${getLinodeRedirectUrl(entity)}/settings/advanced`
+  return `${getLinodeRedirectUrl(entity)}/settings/advanced`;
 }
 
 export function getBackupRedirectUrl(entity) {
@@ -159,7 +159,7 @@ const EventTypeMap = {
     presentTenseAction: 'Deleting',
     pastTenseAction: 'deleted',
     redirectUrl: baseRedirect,
-  }
+  },
 };
 
 export default EventTypeMap;

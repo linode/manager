@@ -4,7 +4,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import { api } from '@/data';
-import { makeEvent } from '@/data/events';
+// import { makeEvent } from '@/data/events';
 
 import { NotificationListItem } from '~/components/notifications';
 

@@ -182,11 +182,16 @@ export class Layout extends Component {
     const { title, link } = this.state;
     const githubRoot = 'https://github.com/linode/manager/blob/master/';
     return (
-      <div className="layout full-height" onClick={(e) => {
-        if (this.props.notifications.open && !e.target.className.includes('NotificationList-listItem')) {
-          dispatch(hideNotifications());
-        }
-      }}>
+      <div
+        className="layout full-height"
+        onClick={(e) => {
+          const open = this.props.notifications.open;
+          const isListItem = e.target.className.includes('NotificationList-listItem');
+          if (open && !isListItem) {
+            dispatch(hideNotifications());
+          }
+        }}
+      >
         <PreloadIndicator />
         <ModalShell
           open={this.props.modal.open}
