@@ -54,7 +54,7 @@ export class EditModal extends Component {
       >
         <FormGroup errors={errors} name="label" className="row">
           <div className="col-sm-5 label-col">
-            <label>Label</label>
+            <label htmlFor="label">Label</label>
           </div>
           <div className="col-sm-7">
             <Input
@@ -73,15 +73,15 @@ export class EditModal extends Component {
             <label>Format</label>
           </div>
           <div className="col-sm-7">
-            <input disabled className="form-control" value={disk.filesystem} />
+            <Input disabled className="form-control" value={disk.filesystem} />
           </div>
         </FormGroup>
         <FormGroup errors={errors} name="size" className="row">
           <div className="col-sm-5 label-col">
-            <label htmlFor="current-size">Current size (MB)</label>
+            <label>Current size (MB)</label>
           </div>
           <div className="col-sm-7">
-            <input disabled className="form-control" value={disk.size} />
+            <Input disabled className="form-control" value={disk.size} />
           </div>
         </FormGroup>
         <FormGroup errors={errors} name="size" className="row">
@@ -90,11 +90,11 @@ export class EditModal extends Component {
           </div>
           <div className="col-sm-7">
             <Input
+              id="size"
               type="number"
               min={8} /* TODO: can't/don't calculate distro min size requirement */
               max={free + disk.size}
               value={size}
-              name="size"
               onChange={e => {
                 this.setState({ size: parseInt(e.target.value, 10) });
               }}
