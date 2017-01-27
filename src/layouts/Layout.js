@@ -83,7 +83,7 @@ export class Layout extends Component {
             __progress: progress,
           }, linode.id));
 
-          if (event.getProgress() === 100) {
+          if (progress === 100) {
             setTimeout(() => dispatch(linodeActions.one({
               status: linodeStatus,
               // For best UX, keep the below timeout length the same as the width transition for
