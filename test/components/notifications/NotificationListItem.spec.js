@@ -5,23 +5,16 @@ import sinon from 'sinon';
 
 import { api } from '@/data';
 import { makeEvent } from '@/data/events';
-import Notifications, { Notification } from '~/components/Notifications';
+
+import { NotificationListItem } from '~/components/notifications';
 
 describe('components/Notification', () => {
   const sandbox = sinon.sandbox.create();
 
-  function makeNotification(event = api.events.events[386],
-                            linodes = api.linodes,
-                            gotoPage = sandbox.spy(),
-                            readNotification = sandbox.spy(),
-                            hideShowNotifications = sandbox.spy()) {
+  function makeNotificationListItem(event = api.events.events[386]) {
     return (
-      <Notification
-        {...event}
-        linodes={linodes}
-        readNotification={readNotification}
-        gotoPage={gotoPage}
-        hideShowNotifications={hideShowNotifications}
+      <NotificationListItem
+        event={event}
       />
     );
   }
@@ -31,18 +24,18 @@ describe('components/Notification', () => {
   });
 
   it('renders unread notification', () => {
-    const notification = shallow(makeNotification(api.events.events[385]));
+    const notification = shallow(makeNotificationListItem(api.events.events[385]));
     expect(notification.find('.Notification--unread').length).to.equal(1);
   });
 
-  it('renders read notifications', () => {
-    const notification = shallow(makeNotification());
+  it('renders read notification', () => {
+    const notification = shallow(makeNotificationListItem());
     expect(notification.find('.Notification--unread').length).to.equal(0);
   });
 
   it('marks unread notification as read onclick', () => {
     const readNotification = sandbox.spy();
-    const notification = shallow(makeNotification(
+    const notification = shallow(makeNotificationListItem(
       api.events.events[385], undefined, undefined, readNotification));
     notification.find('.Notification').simulate('click');
     expect(readNotification.callCount).to.equal(1);
@@ -53,7 +46,7 @@ describe('components/Notification', () => {
     const readNotification = sandbox.spy();
     const gotoPage = sandbox.spy();
     const hideShowNotifications = sandbox.spy();
-    const notification = shallow(makeNotification(api.events.events[385],
+    const notification = shallow(makeNotificationListItem(api.events.events[385],
       undefined, gotoPage, readNotification, hideShowNotifications));
     notification.find('.Notification-subject').simulate('click');
 
@@ -68,7 +61,7 @@ describe('components/Notification', () => {
 
   function testNotificationText(eventType, expectedText) {
     const event = makeEvent(eventType);
-    const notification = shallow(makeNotification(event));
+    const notification = shallow(makeNotificationListItem(event));
     const text = notification.find('.Notification-text').text();
     expect(text).to.contain(expectedText);
   }
@@ -115,59 +108,8 @@ describe('components/Notification', () => {
 
   it('renders empty for unrecognized event type', () => {
     const event = makeEvent('unknown_unrecognized');
-    const notification = shallow(makeNotification(event));
+    const notification = shallow(makeNotificationListItem(event));
     const children = notification.find('.Notification-text').children();
     expect(children.length).to.equal(0);
-  });
-});
-
-
-describe('components/Notifications', () => {
-  const sandbox = sinon.sandbox.create();
-
-  function makeNotifications(_dispatch = sandbox.spy(),
-                             events = api.events,
-                             linodes = api.linodes,
-                             hideShowNotifications = sandbox.spy(),
-                             eventSeen = sandbox.spy()) {
-    return (
-      <Notifications
-        hideShowNotifications={hideShowNotifications}
-        events={events}
-        linodes={linodes}
-        eventSeen={eventSeen}
-      />
-    );
-  }
-
-  afterEach(() => {
-    sandbox.restore();
-  });
-
-  it('hides the sidebar when the notification overlay is clicked', () => {
-    const hideShowNotifications = sandbox.spy();
-    const notifications = shallow(makeNotifications(
-      undefined, undefined, undefined, hideShowNotifications));
-    const overlay = notifications.find('.Notifications-overlay');
-    expect(overlay.length).to.equal(1);
-    overlay.simulate('click');
-    expect(hideShowNotifications.calledOnce).to.equal(true);
-  });
-
-  it('renders events and in updated order', () => {
-    const notifications = shallow(makeNotifications());
-    const count = Object.values(api.events.events).filter(e => !e.seen).length;
-    expect(notifications.find('Notification').length).to.equal(count);
-
-    // This event was updated last.
-    expect(notifications.find('Notification').at(0).props().id).to.equal(386);
-  });
-
-  it('calls eventSeen when opened', () => {
-    const notifications = shallow(makeNotifications());
-    const eventSeen = sandbox.spy();
-    notifications.instance().componentWillUpdate(
-      { open: true, events: api.events, eventSeen }, {});
-    expect(eventSeen.callCount).to.equal(1);
   });
 });
