@@ -4,6 +4,7 @@ import { flags, distros as distroAssets } from '~/assets';
 import moment from 'moment';
 
 import StatusDropdown from './StatusDropdown';
+import { Checkbox } from '~/components/form';
 
 function renderPowerButton(props) {
   const { linode, onPowerOn, onReboot } = props;
@@ -182,18 +183,21 @@ renderCard.propTypes = {
 
 function renderRow(props) {
   const { linode, onSelect, isSelected } = props;
-  const select = () => onSelect(linode);
-  const selectedClass = isSelected ? 'selected' : '';
-
-  const checkbox = <input type="checkbox" checked={isSelected} onClick={select} />;
+  const selectedClass = isSelected ? 'PrimaryTable-row--selected' : '';
 
   return (
-    <tr className={`linode ${linode.status} ${selectedClass}`}>
-      <td className="linode-checkbox">{checkbox}</td>
+    <tr className={`PrimaryTable-row ${selectedClass}`}>
       <td>
-        <Link to={`/linodes/${linode.label}`} className="linode-label">{linode.label}</Link>
+        <Checkbox
+          className="PrimaryTable-rowSelector"
+          checked={isSelected}
+          onChange={() => onSelect(linode)}
+        />
+        <Link to={`/linodes/${linode.label}`} className="PrimaryTable-rowLabel">
+          {linode.label}
+        </Link>
       </td>
-      <td className="ips">
+      <td>
         {linode.ipv4}
         <div className="text-muted">{linode.ipv6.split('/')[0]}</div>
       </td>
