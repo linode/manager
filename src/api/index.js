@@ -6,12 +6,14 @@ import * as kernelsModule from './configs/kernels';
 import * as dnszonesModule from './configs/dnszones';
 import * as eventsModule from './configs/events';
 
-import genThunks from './genThunks';
+import apiActionReducerGenerator from './apiActionReducerGenerator';
 
-export const distributions = genThunks(distributionsModule.config, distributionsModule.actions);
-export const datacenters = genThunks(datacentersModule.config, datacentersModule.actions);
-export const types = genThunks(typesModule.config, typesModule.actions);
-export const linodes = genThunks(linodesModule.config, linodesModule.actions);
-export const kernels = genThunks(kernelsModule.config, kernelsModule.actions);
-export const dnszones = genThunks(dnszonesModule.config, dnszonesModule.actions);
-export const events = genThunks(eventsModule.config, eventsModule.actions);
+export const distributions = apiActionReducerGenerator(distributionsModule.config,
+                                                       distributionsModule.actions);
+export const datacenters = apiActionReducerGenerator(datacentersModule.config,
+                                                     datacentersModule.actions);
+export const types = apiActionReducerGenerator(typesModule.config, typesModule.actions);
+export const linodes = apiActionReducerGenerator(linodesModule.config, linodesModule.actions);
+export const kernels = apiActionReducerGenerator(kernelsModule.config, kernelsModule.actions);
+export const dnszones = apiActionReducerGenerator(dnszonesModule.config, dnszonesModule.actions);
+export const events = apiActionReducerGenerator(eventsModule.config, eventsModule.actions);
