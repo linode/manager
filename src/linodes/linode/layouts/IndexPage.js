@@ -46,9 +46,6 @@ export class IndexPage extends Component {
   constructor() {
     super();
     this.getLinode = getLinode.bind(this);
-    this.render = this.render.bind(this);
-    this.renderLabel = this.renderLabel.bind(this);
-    this.componentDidMount = this.componentDidMount.bind(this);
     this.state = { config: '', label: '', group: '' };
   }
 
@@ -73,7 +70,7 @@ export class IndexPage extends Component {
       <span>{linode.label}</span>;
 
     return (
-      <div style={{ display: 'inline-block' }}>
+      <div className="float-xs-left">
         <h1>{label}</h1>
       </div>
     );
