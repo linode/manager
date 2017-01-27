@@ -7,7 +7,7 @@ import { showModal, hideModal } from '~/actions/modal';
 import { linodes } from '~/api';
 import { resetPassword, rebootLinode } from '~/api/linodes';
 import { ConfirmModalBody } from '~/components/modals';
-import { Form, SubmitButton, PasswordInput } from '~/components/form';
+import { Form, FormGroup, SubmitButton, PasswordInput } from '~/components/form';
 import HelpButton from '~/components/HelpButton';
 import { setSource } from '~/actions/source';
 import { getConfig,
@@ -95,8 +95,8 @@ export class RescuePage extends Component {
     const disks = this.getDisks();
 
     return (
-      <div
-        className="form-group row disk-slot"
+      <FormGroup
+        className="row disk-slot"
         key={index}
       >
         <label className="col-sm-2 label-col">
@@ -105,7 +105,7 @@ export class RescuePage extends Component {
         <div className="col-xs-9 input-container">
           {disks[device].label}
         </div>
-      </div>
+      </FormGroup>
     );
   }
 
@@ -134,22 +134,24 @@ export class RescuePage extends Component {
             </h2>
             <p></p>
           </header>
-          {slots}
-          <div className="form-group row disk-slot">
-            <label className="col-sm-2 label-col">
-              /dev/sdh
-            </label>
-            <div className="col-xs-9 input-container">Finnix Media</div>
-          </div>
-          <div className="form-group row">
-            <div className="col-sm-2"></div>
-            <div className="col-xs-9">
-              <SubmitButton
-                onClick={() => dispatch(rebootLinode)}
-                disabled
-              >Reboot</SubmitButton>
+          <Form onSubmit={() => {}}>
+            {slots}
+            <div className="form-group row disk-slot">
+              <label className="col-sm-2 label-col">
+                /dev/sdh
+              </label>
+              <div className="col-xs-9 input-container">Finnix Media</div>
             </div>
-          </div>
+            <div className="form-group row">
+              <div className="col-sm-2"></div>
+              <div className="col-xs-9">
+                <SubmitButton
+                  onClick={() => dispatch(rebootLinode)}
+                  disabled
+                >Reboot</SubmitButton>
+              </div>
+            </div>
+          </Form>
         </section>
       </div>
     );
