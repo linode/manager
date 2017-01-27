@@ -1,18 +1,18 @@
 const REDIRECT_BASE_URL = '/linodes';
 
-function baseRedirect() {
+export function baseRedirect() {
   return REDIRECT_BASE_URL;
 }
 
-function getLinodeRedirectUrl(entity) {
+export function getLinodeRedirectUrl(entity) {
   return `${REDIRECT_BASE_URL}/${entity}`;
 }
 
-function getDiskRedirectUrl(entity) {
+export function getDiskRedirectUrl(entity) {
   return `${getLinodeRedirectUrl(entity)}/settings/advanced`
 }
 
-function getBackupRedirectUrl(entity) {
+export function getBackupRedirectUrl(entity) {
   return `${getLinodeRedirectUrl(entity)}/backups`;
 }
 
