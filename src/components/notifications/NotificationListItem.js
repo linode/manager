@@ -11,25 +11,14 @@ export default function NotificationListItem(props) {
   const eventOptions = EventTypeMap[event.type];
 
   const timestamp = moment.utc(event.updated, moment.ISO_8601);
-  const baseCls = 'NotificationList-listItem';
-  let className = baseCls;
-
-  let entity;
   let message;
-  if (!event.read) {
-    entity = (<strong>{event.entity}</strong>);
-    className += ` ${baseCls}--unread`;
-  } else {
-    entity = event.entity;
-    className += ` ${baseCls}--read`;
-  }
 
   if (timeRemaining !== null && timeRemaining > 0) {
     message = (
       <span>
         <span>
           {`${eventOptions.presentTenseAction} `}
-          {entity}
+          <strong>{event.entity}</strong>
         </span>
         <small className="text-muted">
           {/* TODO: Time remaining estimation */}
@@ -51,7 +40,7 @@ export default function NotificationListItem(props) {
         <span>
           <span>
             {`${eventOptions.presentTenseAction} `}
-            {entity} failed
+            <strong>{event.entity}</strong> failed
           </span>
           {timestampMessage}
         </span>
@@ -61,7 +50,7 @@ export default function NotificationListItem(props) {
         <div>
           <div>
             {`${eventOptions.pastTensePrefix} `}
-            {entity}
+            <strong>{event.entity}</strong>
             {` ${eventOptions.pastTenseAction} `}
           </div>
           {timestampMessage}
@@ -71,13 +60,22 @@ export default function NotificationListItem(props) {
       message = (
         <span>
           <span>
-            {entity}
+            <strong>{event.entity}</strong>
             {` ${eventOptions.pastTenseAction} `}
           </span>
           {timestampMessage}
         </span>
       );
     }
+  }
+
+  const baseCls = 'NotificationList-listItem';
+  let className = baseCls;
+
+  if (event.read) {
+    className += ` ${baseCls}--read`;
+  } else {
+    className += ` ${baseCls}--unread`;
   }
 
   return (

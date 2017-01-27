@@ -220,7 +220,7 @@ export class Layout extends Component {
               await dispatch(eventRead(event.id));
             }
           }}
-          events={Object.values(this.props.events.events)}
+          events={this.props.events}
           eventSeen={(id) => dispatch(eventSeen(id))}
         />
         <Feedback
