@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { Card } from '~/components';
 import {
-  FormGroup, FormGroupError, Form, SubmitButton, PasswordInput,
+  FormGroup, Form, SubmitButton,
 } from '~/components/form';
 import { reduceErrors, ErrorSummary } from '~/errors';
 import { setSource } from '~/actions/source';
@@ -16,7 +16,8 @@ export class ResizePage extends Component {
     this.onSubmit = this.onSubmit.bind(this);
     this.getLinode = getLinode.bind(this);
     this.state = {
-      type: this.getLinode().type.id,
+      // TODO: deal with multiple types better
+      type: this.getLinode().type[0].id,
       errors: {},
       fetching: false,
     };
@@ -28,12 +29,12 @@ export class ResizePage extends Component {
   }
 
   async onSubmit() {
-    const { dispatch } = this.props;
-    const { id: linodeId } = this.getLinode();
+    // const { id: linodeId } = this.getLinode();
 
     this.setState({ fetching: true, errors: {} });
 
     try {
+      // TODO : Add API call
     } catch (response) {
       const errors = await reduceErrors(response);
       errors._.concat(errors.type);
@@ -42,7 +43,7 @@ export class ResizePage extends Component {
 
     this.setState({ fetching: false });
   }
-  
+
   render() {
     const { types } = this.props;
     const { type, errors } = this.state;
@@ -60,7 +61,7 @@ export class ResizePage extends Component {
           <FormGroup>
             <SubmitButton
               disabled={this.fetching}
-            >Rebuild</SubmitButton>
+            >Resize</SubmitButton>
           </FormGroup>
           <ErrorSummary errors={errors} />
         </Form>
@@ -68,6 +69,12 @@ export class ResizePage extends Component {
     );
   }
 }
+
+ResizePage.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+  types: PropTypes.object.isRequired,
+  linodes: PropTypes.object.isRequired,
+};
 
 function select(state) {
   return {
