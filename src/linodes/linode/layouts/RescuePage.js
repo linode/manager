@@ -5,7 +5,7 @@ import { setError } from '~/actions/errors';
 import { getLinode } from './IndexPage';
 import { showModal, hideModal } from '~/actions/modal';
 import { linodes } from '~/api';
-import { resetPassword, rebootLinode, rescueLinode } from '~/api/linodes';
+import { resetPassword, rescueLinode } from '~/api/linodes';
 import { ConfirmModalBody } from '~/components/modals';
 import { Form, FormGroup, SubmitButton, PasswordInput } from '~/components/form';
 import HelpButton from '~/components/HelpButton';
@@ -119,21 +119,20 @@ export class RescuePage extends Component {
       d => d.filesystem !== 'swap').length > 1 : false;
 
     let slots = null;
+    // eslint-disable-next-line prefer-const
     let diskArray = {};
-    console.log('diskSlots: ', diskSlots);
-    if (showDisks && diskSlots) {
-      slots = diskSlots.map(this.renderDiskSlot);
-      slots.forEach(slot => {
-        diskArray[slot.props.children[0].props.children[1]] = slot.props.children[1].props.children[0].props.value;
-      });
-    } else if (diskSlots) {
-      slots = diskSlots.map(this.renderDiskSlotNoEdit);
-      slots.forEach(slot => {
-        diskArray[slot.props.children[0].props.children[1]] = slot.props.children[1].props.children.props.id;
+    function fillDiskArray() {
+      diskSlots.forEach((slotId, i) => {
+        diskArray[AVAILABLE_DISK_SLOTS[i]] = slotId;
       });
     }
-    console.log('slots', slots);
-    console.log('diskArray', diskArray);
+    if (showDisks && diskSlots) {
+      slots = diskSlots.map(this.renderDiskSlot);
+      fillDiskArray();
+    } else if (diskSlots) {
+      slots = diskSlots.map(this.renderDiskSlotNoEdit);
+      fillDiskArray();
+    }
     return (
       <div className="col-sm-6">
         <section className="card">
@@ -144,7 +143,7 @@ export class RescuePage extends Component {
             </h2>
             <p></p>
           </header>
-          <Form onSubmit={() => {}}>
+          <Form className="RescueMode-form" onSubmit={() => {}}>
             {slots}
             <div className="form-group row disk-slot">
               <label className="col-sm-2 label-col">
@@ -156,7 +155,9 @@ export class RescuePage extends Component {
               <div className="col-sm-2"></div>
               <div className="col-sm-10">
                 <SubmitButton
-                  onClick={() => dispatch(rescueLinode(linode.id, { disks: diskArray } ))}
+                  onClick={async () => {
+                    await dispatch(rescueLinode(linode.id, { disks: diskArray }));
+                  }}
                 >Reboot</SubmitButton>
               </div>
             </div>

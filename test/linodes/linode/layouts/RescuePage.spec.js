@@ -149,6 +149,24 @@ describe('linodes/linode/layouts/RescuePage', () => {
         '/dev/sdh',
       ]);
     });
+
+    it('dispatches reboot to rescue mode', async () => {
+      const page = mount(
+        <RescuePage
+          dispatch={dispatch}
+          linodes={linodes}
+          params={{ linodeLabel: 'test-linode' }}
+        />);
+      page.setState({ diskSlots: [12345, 12346] });
+      // simulate pressing the submit button, the action should get dispatched
+      page.find('.RescueMode-form').find('button').simulate('click');
+      const fn = dispatch.secondCall.args[0];
+      await expectRequest(fn, '/linode/instances/1234/rescue',
+        () => {}, null, options => {
+          expect(options.method).to.equal('POST');
+        }
+      );
+    });
   });
 });
 
