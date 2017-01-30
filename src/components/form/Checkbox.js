@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 
 export default function Checkbox(props) {
   return (
-    <div className="Checkbox">
+    <div className={`Checkbox ${props.className}`}>
       <label>
         <input
           type="checkbox"
@@ -20,6 +20,11 @@ export default function Checkbox(props) {
 Checkbox.propTypes = {
   checked: PropTypes.bool.isRequired,
   onChange: PropTypes.func.isRequired,
+  className: PropTypes.string,
   label: PropTypes.string,
   value: PropTypes.object,
+};
+
+Checkbox.defaultProps = {
+  className: '',
 };
