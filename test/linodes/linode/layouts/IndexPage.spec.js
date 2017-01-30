@@ -98,42 +98,13 @@ describe('linodes/linode/layouts/IndexPage', () => {
     },
   };
 
-  it('preloads the linode when it is not already in the state', async () => {
-    const _dispatch = sandbox.stub();
-    await IndexPage.preload(
-      { dispatch: _dispatch, getState: () => state }, { linodeLabel: 'foo-foo-foo' });
-
-    expect(_dispatch.callCount).to.equal(2);
-    let fn = _dispatch.firstCall.args[0];
-    _dispatch.reset();
-    _dispatch.returns({ total_pages: 1, linodes: [], total_results: 0 });
-
-    // Call to fetch all
-    await fn(_dispatch, () => state);
-    expect(_dispatch.callCount).to.equal(1);
-    fn = _dispatch.firstCall.args[0];
-    _dispatch.reset();
-
-    const defaultMany = generateDefaultStateMany(linodeConfig);
-    await expectRequest(fn, '/linode/instances/?page=1', undefined, {
-      ...defaultMany,
-      linodes: [
-        ...defaultMany.linodes,
-        { ...testLinode, __updatedAt: null },
-      ],
-    }, {
-      headers: {
-        'X-Filter': JSON.stringify({ label: 'foo-foo-foo' }),
-      },
-    });
-  });
-
   it('preloads the configs', async () => {
     const _dispatch = sinon.stub();
+    _dispatch.returns({ id: 1241 });
     await IndexPage.preload({ dispatch: _dispatch, getState: () => state },
                             { linodeLabel: 'test-linode-7' });
 
-    let fn = _dispatch.firstCall.args[0];
+    let fn = _dispatch.secondCall.args[0];
     _dispatch.reset();
     _dispatch.returns({ total_pages: 1, configs: [], total_results: 0 });
     await fn(_dispatch, () => state);
