@@ -15,7 +15,6 @@ import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 export class RebuildPage extends Component {
   constructor(props) {
     super(props);
-    this.onSubmit = this.onSubmit.bind(this);
     this.getLinode = getLinode.bind(this);
     this.state = {
       distribution: this.getLinode().distribution.id,

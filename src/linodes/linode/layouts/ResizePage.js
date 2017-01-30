@@ -13,7 +13,6 @@ import Plan from '~/linodes/components/Plan';
 export class ResizePage extends Component {
   constructor(props) {
     super(props);
-    this.onSubmit = this.onSubmit.bind(this);
     this.getLinode = getLinode.bind(this);
     this.state = {
       // TODO: deal with multiple types better
