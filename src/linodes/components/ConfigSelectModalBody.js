@@ -18,6 +18,7 @@ export default class ConfigSelectModalBody extends Component {
 
   render() {
     const { dispatch, linode, action } = this.props;
+    console.log(action);
     const { loading, configId } = this.state;
 
     const buttonText = action === rebootLinode ? 'Reboot' : 'Power on';

@@ -5,7 +5,7 @@ import { setError } from '~/actions/errors';
 import { getLinode } from './IndexPage';
 import { showModal, hideModal } from '~/actions/modal';
 import { linodes } from '~/api';
-import { resetPassword, rebootLinode } from '~/api/linodes';
+import { resetPassword, rebootLinode, rescueLinode } from '~/api/linodes';
 import { ConfirmModalBody } from '~/components/modals';
 import { Form, FormGroup, SubmitButton, PasswordInput } from '~/components/form';
 import HelpButton from '~/components/HelpButton';
@@ -103,7 +103,7 @@ export class RescuePage extends Component {
           /dev/{AVAILABLE_DISK_SLOTS[index]}
         </label>
         <div className="col-sm-10">
-          {disks[device].label}
+          <span id={disks[device].id}>{disks[device].label}</span>
         </div>
       </FormGroup>
     );
@@ -119,11 +119,21 @@ export class RescuePage extends Component {
       d => d.filesystem !== 'swap').length > 1 : false;
 
     let slots = null;
+    let diskArray = {};
+    console.log('diskSlots: ', diskSlots);
     if (showDisks && diskSlots) {
       slots = diskSlots.map(this.renderDiskSlot);
+      slots.forEach(slot => {
+        diskArray[slot.props.children[0].props.children[1]] = slot.props.children[1].props.children[0].props.value;
+      });
     } else if (diskSlots) {
       slots = diskSlots.map(this.renderDiskSlotNoEdit);
+      slots.forEach(slot => {
+        diskArray[slot.props.children[0].props.children[1]] = slot.props.children[1].props.children.props.id;
+      });
     }
+    console.log('slots', slots);
+    console.log('diskArray', diskArray);
     return (
       <div className="col-sm-6">
         <section className="card">
@@ -146,8 +156,7 @@ export class RescuePage extends Component {
               <div className="col-sm-2"></div>
               <div className="col-sm-10">
                 <SubmitButton
-                  onClick={() => dispatch(rebootLinode)}
-                  disabled
+                  onClick={() => dispatch(rescueLinode(linode.id, { disks: diskArray } ))}
                 >Reboot</SubmitButton>
               </div>
             </div>
