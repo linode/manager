@@ -1,105 +1,54 @@
-.Notification {
-    padding: 10px 15px;
-    border-bottom: $border;
-    cursor: pointer;
-    cursor: hand;
-
-    &--unread {
-        background: white;
-    }
-
-    &--unread &-subject {
-        font-weight: 600;
-    }
-
-    &--unread &-header {
-        padding: 0;
-    }
-
-    &-header {
-        // TODO: remove after updating generic <header> css
-        background: initial !important;
-        border: 0 !important;
-        padding: 0;
-    }
-
-    &-time {
-        color: $light-black;
-        font-size: $font-xs-small;
-        vertical-align: middle;
-    }
-
-    &-subject {
-        display: block;
-        color: $black;
-
-        &:hover {
-            color: $black;
-        }
-    }
-}
-
-.Notifications {
+.NotificationList {
+    display: none;
     $notifications-width: 350px;
 
-    &--open & {
-        &-overlay {
-            display: inline;
-        }
-
+    &--open {
+        display: block;
         &-body {
             height: calc(100% - #{$nav-height});
         }
     }
 
-    &-overlay {
-        display: none;
+    &-body {
+        background-color: $body-bg;
+        border-left: $border;
+        // TODO: create a box-shadow mixin
+        box-shadow: 2px 2px 4px 2px $dark-gray;
+        font-size: $font-xs-normal;
+        max-height: calc(#{$main-height} - 100px);
+        overflow-y: auto;
         position: fixed;
-        height: 100%;
-        width: 100%;
-        left: 0;
-        top: $nav-height - 1;
-        background: $transparent;
-        z-index: 1000;
+        right: 0;
+        top: $nav-height;
+        width: $notifications-width;
+        // TODO: add z-index levels to variables
+        z-index: 1001;
     }
 
-    &-header {
-        background: $white;
+    &-listItem {
         border-bottom: $border;
+        color: $black;
+        cursor: pointer;
+        cursor: hand;
+        display: block;
         padding: 10px 15px;
 
-        a {
-            line-height: $input-height;
+        &:hover,
+        &:active,
+        &:focus {
+            color: $black;
+            text-decoration: none;
+            outline: none;
         }
 
-        .fa {
-            padding-left: 5px;
-            color: $blue;
+        &:hover,
+        &--read{
+            background-color: $gray;
         }
-    }
 
-    &-body {
-        $speed: .3s;
-
-        -webkit-transition: all $speed ease-in;
-        -moz-transition: all $speed ease-in;
-        -o-transition: all $speed ease-in;
-        -ms-transition: all $speed ease-in;
-        position: fixed;
-        top: $nav-height - 1;
-        height: 0;
-        right: 0;
-        width: $notifications-width;
-        max-width: 100%;
-        background: $gray;
-        border-left: $border;
-        z-index: 1001;
-        overflow-y: auto;
-        font-size: $font-xs-normal;
-    }
-
-    &-end {
-        padding: 15px;
-        color: $light-black;
+        &-time {
+            display: block;
+            margin-top: -1px;
+        }
     }
 }
