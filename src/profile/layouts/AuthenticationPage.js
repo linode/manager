@@ -4,7 +4,7 @@ import Card from '~/components/Card';
 import {
   Select, PasswordInput, Form, FormGroup, FormGroupError, SubmitButton,
 } from '~/components/form';
-import { FormSummary, reduceErrors } from '~/errors';
+import { ErrorSummary, reduceErrors } from '~/errors';
 
 export default class AuthenticationPage extends Component {
   constructor() {
@@ -75,15 +75,15 @@ export default class AuthenticationPage extends Component {
                 <SubmitButton disabled={fetching} />
               </div>
             </FormGroup>
-            <FormSummary errors={errors} />
+            <ErrorSummary errors={errors} />
           </Form>
         </Card>
         <Card title="Two-factor Authentication">
-          <Form onSubmit={this.onSubmit}>
+          <Form onSubmit={this.tfaOnSubmit}>
             {/* TODO: this info is conditional on your actual TFA status */}
             <p>Two-factor authentication is currently disabled.</p>
             <SubmitButton>Enable</SubmitButton>
-            <FormSummary errors={errors} />
+            <ErrorSummary errors={errors} />
           </Form>
         </Card>
       </div>
