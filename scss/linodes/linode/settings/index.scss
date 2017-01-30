@@ -4,13 +4,13 @@
 
 .measure-unit {
     display: inline-block;
-    line-height: $input-height;
+    line-height: $form-field-height;
     padding-left: 5px;
 }
 
 .multi-radio {
     display: inline-block;
-    line-height: $input-height;
+    line-height: $form-field-height;
 
     span {
         padding-right: 10px;

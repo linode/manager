@@ -7,10 +7,10 @@ html {
   @include font-size(1.5);
 }
 .font-small {
-  @include font-size(1.2);
+  @include font-size(1.3);
 }
 .font-xs {
-  @include font-size(1.1);
+  @include font-size(1.2);
 }
 .font-medium {
   @include font-size(1.6);
@@ -26,6 +26,9 @@ body {
   @extend .font-normal;
   background: $light-gray;
   color: $black;
+  font-weight: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -84,4 +87,8 @@ hr {
 
 small {
   @extend .font-small;
+}
+
+strong {
+  font-weight: 600; // toned down from 'bolder'
 }

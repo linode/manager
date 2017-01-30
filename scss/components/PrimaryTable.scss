@@ -36,4 +36,21 @@
         @extend .font-large;
         color: $black;
     }
+
+
+    .datacenter-style img {
+        margin-right: 15px;
+        -webkit-filter: contrast(70%) saturate(90%);
+        filter: contrast(70%) saturate(90%);
+        opacity: 0.7;
+        vertical-align: bottom;
+    }
+
+    .distro-style img {
+        margin-right: 15px;
+    }
+
+    &-status-cell {
+        padding-top: 0;
+    }
 }

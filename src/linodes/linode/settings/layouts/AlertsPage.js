@@ -55,10 +55,8 @@ export class AlertsPage extends Component {
 
     return (
       <div className="form-group row" key={name}>
-        <div className="col-sm-2 label-col">
-          <span>{name}:</span>
-        </div>
-        <div className="col-sm-10 content-col">
+        <label className="col-sm-2 col-form-label">{name}:</label>
+        <div className="col-sm-10 ">
           <div>
             <div className="checkbox">
               <label>
@@ -73,7 +71,7 @@ export class AlertsPage extends Component {
                 </span>
               </label>
             </div>
-            <div className="input-container">
+            <div>
               <input
                 type="number"
                 value={threshold}

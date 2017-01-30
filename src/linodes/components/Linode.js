@@ -60,7 +60,7 @@ export function renderDatacenterStyle(linode) {
           ? flags[linode.datacenter.country] : '//placehold.it/50x50'}
         height="15" width="20" alt={linode.datacenter.label}
       />
-      {linode.datacenter.label}
+      <span>{linode.datacenter.label}</span>
     </span>
   );
 }
@@ -207,10 +207,11 @@ function renderRow(props) {
       <td>
         {renderBackupStatus(linode)}
       </td>
-      <td>
+      <td className="PrimaryTable-status-cell">
         <StatusDropdown
           linode={linode}
           dispatch={props.dispatch}
+          className="float-xs-right"
         />
       </td>
     </tr>

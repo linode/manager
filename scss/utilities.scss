@@ -15,6 +15,9 @@
 
 // TODO: prettify
 .alert {
+  border-radius: 0;
+  height: 32px;  // for now, match input height
+  padding: 4px 8px;
   &.alert-info {
     background: $yellow;
     border-color: $dark-gray;

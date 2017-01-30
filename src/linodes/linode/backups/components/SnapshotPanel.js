@@ -14,8 +14,8 @@ export function snapshotPanel() {
       <header>
         <h2>Snapshot</h2>
       </header>
-      <div className="form-group row snapshot-button">
-        <div className="col-sm-12 label-col left">
+      <div className="  row snapshot-button">
+        <div className="col-sm-12 left">
           <form>
             <button type="submit" className="btn btn-default">
               Take Snapshot
@@ -44,7 +44,7 @@ export function snapshotPanel() {
       { snapshot.label ?
         <div className="form-group row label">
           <div className="col-sm-2 label-col left">Label</div>
-          <div className="col-sm-10 content-col right">
+          <div className="col-sm-10  right">
             {snapshot.label}
           </div>
         </div>
@@ -52,25 +52,25 @@ export function snapshotPanel() {
       }
       <div className="form-group row started">
         <div className="col-sm-2 label-col left">Started</div>
-        <div className="col-sm-10 content-col right">
+        <div className="col-sm-10  right">
           {moment(snapshot.created).format('dddd, MMMM D YYYY LT')}
         </div>
       </div>
       <div className="form-group row finished">
         <div className="col-sm-2 label-col left">Finished</div>
-        <div className="col-sm-10 content-col right">
+        <div className="col-sm-10  right">
           {moment(snapshot.finished).format('dddd, MMMM D YYYY LT')}
         </div>
       </div>
       <div className="form-group row duration">
         <div className="col-sm-2 label-col left">Duration</div>
-        <div className="col-sm-10 content-col right">
+        <div className="col-sm-10  right">
           {durationText}
         </div>
       </div>
       <div className="form-group row">
         <div className="col-sm-2 label-col left">Datecenter constraint</div>
-        <div className="col-sm-10 content-col right">{snapshot.datacenter.label}</div>
+        <div className="col-sm-10  right">{snapshot.datacenter.label}</div>
       </div>
       <div className="form-group row snapshot-button">
         <div className="col-sm-12 label-col left">

@@ -13,8 +13,8 @@ export function restorePanel() {
       </header>
       <form>
         <div className="form-group row restore-backup">
-          <div className="col-sm-2 label-col left">Restore to:</div>
-          <div className="col-sm-2 content-col right">
+          <div className="col-sm-2 col-form-label left">Restore to:</div>
+          <div className="col-sm-2  right">
             <select className="form-control select-backup">
               <option key={1} value="id1">Snapshot</option>
               <option key={2} value="id2">X Long Ago</option>
@@ -34,7 +34,7 @@ export function restorePanel() {
           </div>
         </div>
         <div className="form-group row restore-button">
-          <div className="col-sm-12 label-col left">
+          <div className="col-sm-12 left">
             <button type="submit" className="btn btn-default">
               Restore
             </button>

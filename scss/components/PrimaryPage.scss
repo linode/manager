@@ -12,4 +12,43 @@
     .input-group {
         max-width: 50%;
     }
+
+    .input-group,
+    .btn-group,
+    .btn {
+        height: $form-field-height;
+    }
+
+    .btn {
+        border-radius: 0;
+    }
+
+    // TODO: remove or replace with specific instance (i.e. for the checkbox + action menu)
+    .input-group {
+        height: $form-field-height;
+
+        // TODO: drop after moving to input components
+        .input-group-addon {
+            background: $light-gray;
+            height: 100%;
+            padding: 0 8px;
+        }
+
+        input {
+            margin: 0;
+            border: $border;
+            border-radius: 0;
+            height: 100%;
+
+            &[readonly] {
+                background-color: $white;
+                width: 200px;
+            }
+        }
+
+        .input-group-btn {
+            height: $form-field-height;
+            float: left;
+        }
+    }
 }

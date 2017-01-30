@@ -20,15 +20,13 @@ export default function Forms() {
             <div className="ExampleForm">
               <Form>
                 <FormGroup className="row">
-                  <div className="col-sm-4 label-col">
-                    <label>
-                      <span className="FormDescriptor FormDescriptor__form-labels">
-                        <span className="badge">1</span>
-                      </span>
-                      Field label
-                    </label>
-                  </div>
-                  <div className="col-sm-8">
+                  <label className="col-sm-3 col-form-label">
+                    <span className="FormDescriptor FormDescriptor__form-labels">
+                      <span className="badge">1</span>
+                    </span>
+                    Field label
+                  </label>
+                  <div className="col-sm-9">
                     <input
                       type="text"
                       name="example-form-field"
@@ -38,19 +36,18 @@ export default function Forms() {
                   </div>
                 </FormGroup>
                 <FormGroup className="row">
-                  <div className="col-sm-4 label-col">
-                    <label>
-                      <span className="FormDescriptor FormDescriptor__required-field">
-                        <span className="badge">2</span>
-                      </span>
-                      Required field
-                    </label>
-                  </div>
-                  <div className="col-sm-8">
+                  <label className="col-sm-3 col-form-label">
+                    <span className="FormDescriptor FormDescriptor__required-field">
+                      <span className="badge">2</span>
+                    </span>
+                    Required field
+                  </label>
+                  <div className="col-sm-9">
                     <input
                       type="text"
                       name="example-form-field"
                       className="form-control"
+                      placeholder="Placeholder"
                     />
                     <span className="FormDescriptor FormDescriptor__form-fields">
                       <span className="badge">3</span>
@@ -58,18 +55,40 @@ export default function Forms() {
                   </div>
                 </FormGroup>
                 <FormGroup className="row">
-                  <div className="col-sm-4 label-col">
-                    <label>Field lengths</label>
-                  </div>
-                  <div className="col-sm-8">
-                    <input type="text" name="example-form-field" className="form-control" />
+                  <label className="col-sm-3 col-form-label">Field Lengths</label>
+                  <div className="col-sm-9">
+                    <input
+                      type="text"
+                      name="example-form-field"
+                      className="form-control"
+                      placeholder="225px" />
                   </div>
                 </FormGroup>
                 <FormGroup className="row">
-                  <div className="col-sm-4 label-col">
-                    <label>Disabled field</label>
+                  <label className="col-sm-3 col-form-label"></label>
+                  <div className="col-sm-9">
+                    <input
+                      type="text"
+                      name="example-form-field"
+                      className="form-control input-md"
+                      placeholder="275px"
+                    />
                   </div>
-                  <div className="col-sm-8">
+                </FormGroup>
+                <FormGroup className="row">
+                  <label className="col-sm-3 col-form-label"></label>
+                  <div className="col-sm-9">
+                    <input
+                      type="text"
+                      name="example-form-field"
+                      className="form-control input-lg"
+                      placeholder="325px"
+                    />
+                  </div>
+                </FormGroup>
+                <FormGroup className="row">
+                  <label className="col-sm-3 col-form-label">Disabled field</label>
+                  <div className="col-sm-9">
                     <input
                       type="text"
                       name="example-form-field"
@@ -133,10 +152,8 @@ export default function Forms() {
                   A short description about the purpose of this form. <a href="#">Learn More.</a>
                 </p>
                 <FormGroup className="row">
-                  <div className="col-sm-4 label-col">
-                    <label>Field label</label>
-                  </div>
-                  <div className="col-sm-8">
+                  <label className="col-sm-3 col-form-label">Field label</label>
+                  <div className="col-sm-9">
                     <input type="text" name="example-form-field" className="form-control" />
                   </div>
                 </FormGroup>
@@ -146,24 +163,20 @@ export default function Forms() {
                   <span className="FormDescriptor FormDescriptor__form-section-title">
                     <span className="badge">2</span>
                   </span>
-                  <div className="col-sm-4 label-col">
-                    <label>Field label</label>
-                  </div>
-                  <div className="col-sm-8">
+                  <label className="col-sm-3 col-form-label">Field label</label>
+                  <div className="col-sm-9">
                     <input type="text" name="example-form-field" className="form-control" />
                   </div>
                 </FormGroup>
                 <FormGroup className="row">
-                  <div className="col-sm-4 label-col">
-                    <label>Field label</label>
-                  </div>
-                  <div className="col-sm-8">
+                  <label className="col-sm-3 col-form-label">Field label</label>
+                  <div className="col-sm-9">
                     <input type="text" name="example-form-field" className="form-control" />
                   </div>
                 </FormGroup>
 
                 <FormGroup className="row">
-                  <div className="offset-sm-4 col-sm-8">
+                  <div className="offset-sm-3 col-sm-9">
                     <span className="FormDescriptor FormDescriptor__form-buttons">
                       <span className="badge">3</span>
                     </span>
@@ -235,10 +248,8 @@ export default function Forms() {
               name="validation_error"
               className="row"
             >
-              <div className="col-sm-2 label-col">
-                <label>Validation error:</label>
-              </div>
-              <div className="col-sm-10 content-col">
+              <label className="col-sm-3 col-form-label">Validation error:</label>
+              <div className="col-sm-9">
                 <Input value="Incorrect input" />
                 <FormGroupError
                   errors={{ validation_error: [{ reason: 'Specific form error' }] }}
@@ -259,47 +270,37 @@ export default function Forms() {
               <div className="ExampleForm-description">
                 <Form>
                   <FormGroup className="row">
-                    <div className="col-sm-3 label-col">
-                      <label>Input (text)</label>
-                    </div>
+                    <label className="col-sm-3 col-form-label">Input (text)</label>
                     <div className="col-sm-9">
                       <Input placeholder="my-placeholder" />
                     </div>
                   </FormGroup>
                   <FormGroup className="row">
-                    <div className="col-sm-3 label-col">
-                      <label>Input (number)</label>
-                    </div>
+                    <label className="col-sm-3 col-form-label">Input (number)</label>
                     <div className="col-sm-9">
                       <Input type="number" value={1} min={0} max={10} />
                     </div>
                   </FormGroup>
                   <FormGroup className="row">
-                    <div className="col-sm-3 label-col">
-                      <label>Checkbox</label>
-                    </div>
+                    <label className="col-sm-3 col-form-label">Checkbox</label>
                     <div className="col-sm-9">
                       <Checkboxes>
-                        <Checkbox label="Checkbox 1" />
-                        <Checkbox label="Checkbox 2" />
+                        <Checkbox id="example-checkbox-1" label="Checkbox 1" />
+                        <Checkbox id="example-checkbox-2" label="Checkbox 2" />
                       </Checkboxes>
                     </div>
                   </FormGroup>
                   <FormGroup className="row">
-                    <div className="col-sm-3 label-col">
-                      <label>Radio</label>
-                    </div>
+                    <label className="col-sm-3 col-form-label">Radio</label>
                     <div className="col-sm-9">
                       <Checkboxes>
-                        <Radio label="Radio 1" />
-                        <Radio label="Radio 2" />
+                        <Radio name="example-radiogroup-1" label="Radio 1" />
+                        <Radio name="example-radiogroup-1" label="Radio 2" />
                       </Checkboxes>
                     </div>
                   </FormGroup>
                   <FormGroup className="row">
-                    <div className="col-sm-3 label-col">
-                      <label>Select</label>
-                    </div>
+                    <label className="col-sm-3 col-form-label">Select</label>
                     <div className="col-sm-9">
                       <Select value="1">
                         <option value="1">Option 1</option>
@@ -320,17 +321,13 @@ export default function Forms() {
                   <div className="ExampleForm-description">
                     <Form>
                       <FormGroup className="row">
-                        <div className="col-sm-3 label-col">
-                          <label>Password input</label>
-                        </div>
+                        <label className="col-sm-3 col-form-label">Password input</label>
                         <div className="col-sm-9">
                           <PasswordInput />
                         </div>
                       </FormGroup>
                       <FormGroup className="row">
-                        <div className="col-sm-3 label-col">
-                          <label>Checkbox input combo</label>
-                        </div>
+                        <label className="col-sm-3 col-form-label">Checkbox input combo</label>
                         <div className="col-sm-9">
                           <CheckboxInputCombo
                             checkboxLabel="Checkbox 1"
@@ -344,9 +341,7 @@ export default function Forms() {
                         </div>
                       </FormGroup>
                       <FormGroup className="row">
-                        <div className="col-sm-3 label-col">
-                          <label>Radio input combo</label>
-                        </div>
+                        <label className="col-sm-3 col-form-label">Radio input combo</label>
                         <div className="col-sm-9">
                           <RadioInputCombo
                             radioLabel="Radio 1"
@@ -360,9 +355,7 @@ export default function Forms() {
                         </div>
                       </FormGroup>
                       <FormGroup className="row">
-                        <div className="col-sm-3 label-col">
-                          <label>Radio select combo</label>
-                        </div>
+                        <label className="col-sm-3 col-form-label">Radio select combo</label>
                         <div className="col-sm-9">
                           <RadioSelectCombo
                             radioLabel="Radio 1"

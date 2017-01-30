@@ -33,7 +33,7 @@ export default class StatusDropdown extends Component {
 
 
   render() {
-    const { linode, dispatch, shortcuts } = this.props;
+    const { linode, dispatch, shortcuts, className } = this.props;
     const dropdownElements = [
       {
         name: <span>Reboot</span>,
@@ -97,7 +97,7 @@ export default class StatusDropdown extends Component {
     if (LinodeStates.pending.indexOf(linode.status) !== -1) {
       const safeProgress = linode.__progress || RANDOM_PROGRESS_MAX;
       return (
-        <div className="StatusDropdown">
+        <div className={`StatusDropdown ${className}`}>
           <div className="StatusDropdown-container">
             <div
               style={{ width: `${safeProgress}%` }}
@@ -112,7 +112,7 @@ export default class StatusDropdown extends Component {
 
     return (
       <div
-        className={`StatusDropdown ${openClass}`}
+        className={`StatusDropdown ${openClass} ${className}`}
         onBlur={this.close}
       >
         <button

@@ -143,7 +143,7 @@ describe('linodes/linode/layouts/RescuePage', () => {
         />);
       page.setState({ diskSlots: [12345, 12346] });
       // iterate through the labels, there should be two disks and one for Finnix
-      expect(page.find('.label-col').map(node => node.text())).to.deep.equal([
+      expect(page.find('.col-form-label').map(node => node.text())).to.deep.equal([
         '/dev/sda',
         '/dev/sdb',
         '/dev/sdh',
