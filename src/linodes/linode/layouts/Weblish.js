@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
 import { LISH_ROOT } from '~/secrets';
-import { linodes } from '~/api';
+import { getObjectByLabelLazily } from '~/api/util';
 import { lishToken } from '~/api/linodes';
 import { getLinode } from './IndexPage';
 
@@ -41,11 +41,7 @@ export class Weblish extends Component {
 
   async componentWillMount() {
     const { dispatch, params: { linodeLabel } } = this.props;
-    await dispatch(linodes.all([], undefined, {
-      headers: {
-        'X-Filter': JSON.stringify({ label: linodeLabel }),
-      },
-    }));
+    await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
     await this.connect();
   }
 
