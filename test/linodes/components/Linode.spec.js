@@ -22,7 +22,8 @@ describe('linodes/components/Linode', () => {
         isSelected={false}
       />);
 
-    expect(linode.find('Link.linode-label').props().to).to.equal('/linodes/test-linode');
+    expect(linode.find('.PrimaryTable-row .PrimaryTable-rowLabel').props().to)
+      .to.equal('/linodes/test-linode');
   });
 
   it('renders the IP addresses', () => {
@@ -62,19 +63,7 @@ describe('linodes/components/Linode', () => {
         isSelected
       />);
 
-    expect(linode.find('.linode').props().className)
-      .to.contain('selected');
-  });
-
-  it('renders the row view', () => {
-    const linode = shallow(
-      <Linode
-        linode={testLinode}
-        isSelected={false}
-      />);
-
-    expect(linode.find('tr').props().className)
-      .to.contain('linode');
+    expect(linode.find('.PrimaryTable-row--selected').length).to.equal(1);
   });
 
   it('invokes the onSelect function when the checkbox is toggled', () => {

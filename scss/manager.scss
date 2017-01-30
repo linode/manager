@@ -458,70 +458,25 @@ footer {
     }
 }
 
-.linodes {
-    .linode-label {
-        color: $black !important;
+.linodes .card {
+    margin-bottom: $main-padding-tb;
+
+    header {
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+
+    header input[type="checkbox"] {
+        margin-top: 8px;
+    }
+
+    header > * {
+        vertical-align: top;
+    }
+
+    .linode-label, .linode-label:hover {
         font-size: $font-small;
-
-        & + .text-muted {
-            line-height: 15px;
-        }
-    }
-
-    .card {
-        margin-bottom: $main-padding-tb;
-
-        header {
-            padding-top: 15px;
-            padding-bottom: 15px;
-        }
-
-        header input[type="checkbox"] {
-            margin-top: 8px;
-        }
-
-        header > * {
-            vertical-align: top;
-        }
-    }
-
-    td {
-        padding-top: 10px;
-        padding-bottom: 10px;
-        vertical-align: middle;
-    }
-
-    .linode .StatusDropdown {
-        @extend .float-xs-right;
-    }
-
-    td.linode-checkbox {
-        padding: 0 15px;
-        width: 46px;
-    }
-
-    td.linode-checkbox > input:hover {
-        cursor: pointer;
-    }
-
-    .ips {
-        line-height: initial;
-    }
-
-    .display-group {
-        color: $light-black;
-        margin-bottom: $main-padding-tb/3;
-    }
-
-    tr.display-group {
-        border: 0;
-        font-size: $font-small;
-
-        td {
-            background: $light-gray;
-            padding-bottom: 0;
-            padding-left: 0;
-        }
+        color: $black;
     }
 }
 

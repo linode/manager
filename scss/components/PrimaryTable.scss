@@ -1,0 +1,39 @@
+.PrimaryTable {
+    td {
+        vertical-align: middle;
+        line-height: initial;
+    }
+
+    &-row {
+        height: 65px;
+        border: $border;
+        margin: 0 15px;
+
+        &--groupLabel {
+            color: $light-black;
+            border: 0;
+            font-size: $font-small;
+            height: auto;
+
+            td {
+                padding-left: 0 !important;
+                padding-top: 15px;
+                padding-bottom: 5px;
+                background: $light-gray;
+            }
+        }
+
+        &--selected {
+            @extend .selected;
+        }
+    }
+
+    &-rowSelector {
+        padding-right: 10px;
+    }
+
+    &-rowLabel, &-rowLabel:hover {
+        color: $black;
+        font-size: $font-small;
+    }
+}

@@ -66,12 +66,9 @@ describe('linodes/layouts/IndexPage', () => {
       />
     );
 
-    const linodesPage = page.find('.linodes-page > .row-justify');
-
-    expect(linodesPage.find('.col-md-6').length).to.equal(2);
-    expect(linodesPage.find('.linode-label').first()
+    expect(page.find('.linode-label').first()
                   .text()).to.equal(testLinode.label);
-    expect(linodesPage.find('.linode-label').last()
+    expect(page.find('.linode-label').last()
                   .text()).to.equal('asdfasdf');
   });
 
@@ -85,14 +82,11 @@ describe('linodes/layouts/IndexPage', () => {
       />
     );
 
-    const table = page.find('table.linodes');
-    expect(table.length).to.equal(1);
-
     // There should be as many rows as there are Linodes and display groups,
     // minus 1 for the default empty group.
     const groups = Object.values(linodes.linodes).map(l => l.group);
     const groupCount = [...new Set(groups)].length;
-    expect(table.find('tbody tr').length).to.equal(
+    expect(page.find('.PrimaryTable-row').length).to.equal(
       Object.keys(linodes.linodes).length + groupCount - 1);
   });
 
@@ -164,33 +158,6 @@ describe('linodes/layouts/IndexPage', () => {
     );
   });
 
-  it('renders a "select all" checkbox', () => {
-    const page = shallow(
-      <IndexPage
-        dispatch={() => {}}
-        view="grid"
-        selected={{}}
-        linodes={linodes}
-      />);
-    const selectAll = page.find('.submenu');
-    expect(selectAll.find('input[type="checkbox"]').length).to.equal(1);
-  });
-
-  it('renders an "add a linode" button', () => {
-    const page = mount(
-      <IndexPage
-        dispatch={dispatch}
-        view="grid"
-        selected={{}}
-        linodes={linodes}
-      />
-    );
-
-    expect(page.find('.mainmenu Link').props())
-      .to.have.property('to')
-      .which.equals('/linodes/create');
-  });
-
   it('selects all linodes when "select all" is checked', () => {
     const selected = {};
     const localDispatch = sandbox.spy(action => {
@@ -208,7 +175,7 @@ describe('linodes/layouts/IndexPage', () => {
       />
     );
 
-    const checkButton = page.find('.submenu input[type="checkbox"]');
+    const checkButton = page.find('.PrimaryPage-headerRow input[type="checkbox"]');
     expect(checkButton.length).to.equal(1);
     checkButton.simulate('change');
     expect(Object.keys(selected)).to.deep.equal(Object.keys(linodes.linodes));

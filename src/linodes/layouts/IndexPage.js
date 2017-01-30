@@ -153,7 +153,7 @@ export class IndexPage extends Component {
 
     if (group) {
       ret.splice(0, 0, (
-        <tr className="display-group">
+        <tr className="PrimaryTable-row PrimaryTable-row--groupLabel">
           <td colSpan="5">{group}</td>
         </tr>
       ));
@@ -178,7 +178,7 @@ export class IndexPage extends Component {
     }
 
     return (
-      <table className="linodes">
+      <table className="PrimaryTable">
         <tbody>
           {groups}
         </tbody>
@@ -232,29 +232,27 @@ export class IndexPage extends Component {
     );
 
     return (
-      <div className={`container linodes-page ${view}`}>
-        <header>
-          <div className="mainmenu">
-            <Link to="/linodes/create" className="linode-add btn btn-primary float-xs-right">
+      <div className={`PrimaryPage container ${view}`}>
+        <header className="PrimaryPage-header">
+          <div className="PrimaryPage-headerRow clearfix">
+            <h1 className="float-sm-left">Linodes</h1>
+            <Link to="/linodes/create" className="linode-add btn btn-primary float-sm-right">
               <span className="fa fa-plus"></span>
               Add a Linode
             </Link>
-            <h1>Linodes</h1>
           </div>
-          <div className="submenu clearfix">
-            <div className="float-xs-left">
-              <div className="input-group">
-                <span className="input-group-addon">{selectAllCheckbox}</span>
-                {this.renderActions()}
-              </div>
+          <div className="PrimaryPage-headerRow clearfix">
+            <div className="input-group float-sm-left">
+              <span className="input-group-addon">{selectAllCheckbox}</span>
+              {this.renderActions()}
             </div>
-            <div className="float-xs-right">
-              {gridListToggle}
-            </div>
+            <div className="float-sm-right">{gridListToggle}</div>
           </div>
         </header>
-        {Object.keys(this.props.linodes.linodes).length ? this.renderLinodes(linodes) :
-          <CreateHelper label="Linodes" href="/linodes/create" linkText="Add a Linode" />}
+        <div className="PrimaryPage-body">
+          {Object.keys(this.props.linodes.linodes).length ? this.renderLinodes(linodes) :
+            <CreateHelper label="Linodes" href="/linodes/create" linkText="Add a Linode" />}
+        </div>
       </div>
     );
   }
