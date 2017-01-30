@@ -1,16 +1,16 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import { push } from 'react-router-redux';
 
 import { EVENT_POLLING_DELAY } from '~/constants';
 import { events } from '~/api';
-import { Event } from '~/api/objects/Event';
+import { EventTypeMap } from '~/components/notifications';
+
 import { actions as eventsActions } from '~/api/configs/events';
 import { eventRead, eventSeen } from '~/api/events';
 import Header from '~/components/Header';
 import Sidebar from '~/components/Sidebar';
-import Notifications from '~/components/Notifications';
+import { NotificationList } from '~/components/notifications';
 import { ModalShell } from '~/components/modals';
 import Error from '~/components/Error';
 import Feedback from '~/components/Feedback';
@@ -61,45 +61,41 @@ export class Layout extends Component {
     }
   }
 
-  eventHandler(_event) {
+  eventHandler(event) {
     const { dispatch, linodes } = this.props;
-    const event = new Event(_event);
 
-    switch (event.getType()) {
-      case Event.LINODE_CREATE:
-      case Event.LINODE_REBOOT:
-      case Event.LINODE_BOOT:
-      case Event.LINODE_POWER_OFF: {
-        const linode = linodes.linodes[event.getLinodeId()];
-        if (linode) {
-          // Give a 1 second allowance.
-          linode.__updatedAt.setSeconds(linode.__updatedAt.getSeconds() - 1);
-          const newEvent = event.getUpdatedAt() > linode.__updatedAt;
-          const statusChanged = linode.status !== event.getStatus();
-          const changeInProgress = event.getProgress() < 100;
-          const progressMade = linode.__progress < event.getProgress();
+    // handles linode events and display status changes
+    const linodeStatus = EventTypeMap[event.type].linodeStatus;
+    if (event.linode_id && linodeStatus) {
+      const linode = linodes.linodes[event.linode_id];
+      if (linode) {
+        const updatedAt = new Date(event.updated);
+        const progress = Math.min(event.percent_complete, 100);
 
-          if (newEvent && (statusChanged || changeInProgress && progressMade)) {
-            dispatch(linodeActions.one({
-              __progress: event.getProgress(),
-            }, linode.id));
+        // Give a 1 second allowance.
+        linode.__updatedAt.setSeconds(linode.__updatedAt.getSeconds() - 1);
+        const newEvent = updatedAt > linode.__updatedAt;
+        const statusChanged = linode.status !== linodeStatus;
+        const changeInProgress = progress < 100;
+        const progressMade = linode.__progress < progress;
 
-            if (event.getProgress() === 100) {
-              setTimeout(() => dispatch(linodeActions.one({
-                status: event.getStatus(),
-                // For best UX, keep the below timeout length the same as the width transition for
-                // this component.
-              }, linode.id)), 1000);
-            }
+        if (newEvent && (statusChanged || changeInProgress && progressMade)) {
+          dispatch(linodeActions.one({
+            __progress: progress,
+          }, linode.id));
+
+          if (progress === 100) {
+            setTimeout(() => dispatch(linodeActions.one({
+              status: linodeStatus,
+              // For best UX, keep the below timeout length the same as the width transition for
+              // this component.
+            }, linode.id)), 1000);
           }
         }
-        break;
       }
-      default:
-        break;
-    } // TODO: handle other cases
+    }
 
-    return _event;
+    return event;
   }
 
   async fetchEventsPage(page = 0, processedEvents = { events: [] }) {
@@ -187,7 +183,16 @@ export class Layout extends Component {
     const { title, link } = this.state;
     const githubRoot = 'https://github.com/linode/manager/blob/master/';
     return (
-      <div className="layout full-height">
+      <div
+        className="layout full-height"
+        onClick={(e) => {
+          const open = this.props.notifications.open;
+          const isListItem = e.target.className.includes('NotificationList-listItem');
+          if (open && !isListItem) {
+            dispatch(hideNotifications());
+          }
+        }}
+      >
         <PreloadIndicator />
         <ModalShell
           open={this.props.modal.open}
@@ -206,13 +211,16 @@ export class Layout extends Component {
           notificationsOpen={this.props.notifications.open}
         />
         <Sidebar path={currentPath} />
-        <Notifications
+        <NotificationList
           open={this.props.notifications.open}
-          hideShowNotifications={this.hideShowNotifications}
-          gotoPage={async (page) => await dispatch(push(page))}
-          readNotification={async (id) => await dispatch(eventRead(id))}
+          onClickItem={async (event) => {
+            dispatch(hideNotifications());
+
+            if (!event.read) {
+              await dispatch(eventRead(event.id));
+            }
+          }}
           events={this.props.events}
-          linodes={this.props.linodes}
           eventSeen={(id) => dispatch(eventSeen(id))}
         />
         <Feedback
