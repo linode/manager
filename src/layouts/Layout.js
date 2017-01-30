@@ -104,6 +104,8 @@ export class Layout extends Component {
     // filter by most recently updated
     const sortedEvents = sortEvents(this.props.events);
     let headers = null;
+
+    // X-Filter header only applied when we have a known last updated datetime
     if (sortedEvents.length) {
       headers = {
         'X-Filter': JSON.stringify({
