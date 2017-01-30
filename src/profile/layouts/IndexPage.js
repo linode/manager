@@ -1,9 +1,10 @@
 import React, { PropTypes } from 'react';
+import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
 import { Tabs } from '~/components/tabs';
 
-export default function IndexPage() {
+export function IndexPage(props) {
   const tabs = [
     { name: 'Display', link: '' },
     { name: 'Password & Authentication', link: '/authentication' },
@@ -29,11 +30,11 @@ export default function IndexPage() {
         selected={selected}
         onClick={(e, tab) => {
           e.stopPropagation();
-          this.props.dispatch(push(tab.link));
+          props.dispatch(push(tab.link));
         }}
       >
         <div className="container">
-          {this.props.children}
+          {props.children}
         </div>
       </Tabs>
     </div>
@@ -42,4 +43,7 @@ export default function IndexPage() {
 
 IndexPage.propTypes = {
   children: PropTypes.node.isRequired,
+  dispatch: PropTypes.func,
 };
+
+export default connect()(IndexPage);
