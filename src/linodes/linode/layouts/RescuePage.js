@@ -102,7 +102,7 @@ export class RescuePage extends Component {
         <label className="col-sm-2 label-col">
           /dev/{AVAILABLE_DISK_SLOTS[index]}
         </label>
-        <div className="col-sm-9">
+        <div className="col-sm-10">
           {disks[device].label}
         </div>
       </FormGroup>
@@ -140,11 +140,11 @@ export class RescuePage extends Component {
               <label className="col-sm-2 label-col">
                 /dev/sdh
               </label>
-              <div className="col-sm-9 input-line-height">Finnix Media</div>
+              <div className="col-sm-10 input-line-height">Finnix Media</div>
             </div>
             <div className="form-group row">
               <div className="col-sm-2"></div>
-              <div className="col-sm-9">
+              <div className="col-sm-10">
                 <SubmitButton
                   onClick={() => dispatch(rebootLinode)}
                   disabled
@@ -181,7 +181,7 @@ export class RescuePage extends Component {
                 <div className="col-sm-2">
                   <label htmlFor="reset-root-password-select" className="label-col">Disk:</label>
                 </div>
-                <div className="col-sm-9">
+                <div className="col-sm-10">
                   <select
                     name="reset-root-password-select"
                     value={disk}
