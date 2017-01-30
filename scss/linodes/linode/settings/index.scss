@@ -18,6 +18,6 @@
 }
 
 .btn-cancel + .btn-cancel {
+    @extend .font-small;
     padding-left: 15px !important;
-    font-size: $font-xs-small;
 }

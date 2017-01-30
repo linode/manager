@@ -2,7 +2,7 @@
     @extend .text-xs-center;
 
     &-body {
+        @extend .font-large;
         color: $light-black;
-        font-size: $font-small;
     }
 }

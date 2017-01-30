@@ -70,7 +70,7 @@ export class DiskPanel extends Component {
     );
 
     return (
-      <div>
+      <section className="card">
         <header>
           <h2>Disks<HelpButton to="http://example.org" /></h2>
         </header>
@@ -128,7 +128,7 @@ export class DiskPanel extends Component {
                )}
           </section>
         </div>
-      </div>
+      </section>
     );
   }
 }

@@ -1,85 +1,17 @@
-@import 'variables';
 @import 'mixins';
+@import 'variables';
 
 @import 'bootstrap';
+
+@import 'defaults.scss';
+@import 'utilities.scss';
+@import 'layout.scss';
 
 @import 'components/index.scss';
 @import 'linodes/index.scss';
 @import 'layout/index.scss';
 @import 'styleguide/index.scss';
 
-html,
-body,
-#root,
-#root > [data-reactroot],
-.layout {
-    height: 100%;
-}
-
-body {
-    background: $light-gray;
-    color: $black;
-    font-size: $font-normal;
-}
-
-.layout {
-    // TODO: min-width considerations:
-    // * linode cards need > 700px;
-    // * linode rows need > 1150px;
-    // * linode page needs > 980px
-    min-width: 1150px;
-}
-
-h1, h2, h3, h4, h5, h6 {
-    margin: 0;
-    font-weight: normal;
-    line-height: normal;
-    color: $black;
-}
-
-h1 {
-    font-size: $font-large;
-}
-
-h2 {
-   font-size: $font-medium;
-}
-
-h3 {
-    font-size: $font-small;
-}
-
-a {
-    color: $blue;
-    text-decoration: none;
-}
-
-a > i.fa {
-    color: $blue;
-}
-
-label {
-    margin-bottom: 0;
-}
-
-.row-eq-height {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-
-    .card {
-        height: 100%;
-    }
-}
-
-.selected {
-    background: $light-blue;
-}
-
-.fa {
-    color: #bfbfbf;
-}
 
 // TODO: BEMify
 .sidebar {
@@ -103,12 +35,12 @@ label {
 
     header {
         h3 {
+            @extend .font-small;
             text-transform: uppercase;
             background-color: $gray;
             border-bottom: $border;
             border-top: $border;
             border-color: $border-gray;
-            font-size: $font-xs-small;
             color: #777;
             padding: 10px 0;
             padding-left: 34px;
@@ -155,62 +87,17 @@ label {
     }
 }
 
-
-.main {
-    display: flex;
-    flex-direction: column;
-    margin-left: $sidebar-width;
-    min-height: 100%;
-    padding-top: $nav-height;
-    width: calc(100% - #{$sidebar-width});
-}
-
-.main .main-inner {
-    flex: 1;
-}
-
-.main-header {
-    background: $white;
-    padding: $main-padding-tb 0;
-
-    &--border {
-        border-bottom: $border;
-    }
-}
-
-// Deals with the fact that tablist extends container which gives it a max-width
-.main-header-fix {
-    height: 35px;
-    width: 100%;
-    background: $white;
-    border-bottom: $border;
-    margin-bottom: -37px;
-}
-
 input:not([type="checkbox"]):not([type="radio"]),
 select,
 select.form-control,
 .btn:not(.btn-help) {
     height: $input-height !important;
     line-height: $input-height - 1px !important;
-    font-size: $font-normal !important;
     padding: 0 0 0 $input-padding;
 
     &.btn {
         padding: 0 $input-padding;
     }
-}
-
-.vcenter {
-    display: inline-block;
-    vertical-align: middle;
-    float: none;
-    position: relative;
-}
-
-section,
-section.card {
-    margin-top: $main-padding-tb;
 }
 
 // TODO: remove or replace with specific instance (i.e. for the checkbox + action menu)
@@ -221,7 +108,6 @@ section.card {
         border-radius: 0;
         &[readonly] {
             background-color: $white;
-            width: 12.5rem;
         }
     }
 
@@ -235,11 +121,6 @@ section.card {
     .btn {
         margin: 0;
     }
-}
-
-hr {
-    width: 300px;
-    margin: $main-padding-tb/2 0;
 }
 
 .datacenter-style img {
@@ -261,7 +142,7 @@ input[type=checkbox], input[type=radio] {
     width: 15px;
 
     + span {
-        padding: 0 5px;
+        padding: 0 10px;
     }
 }
 
@@ -317,7 +198,7 @@ input[type=checkbox], input[type=radio] {
     }
 
     .fa {
-        font-size: $font-small;
+        @extend .font-large;
         color: $light-black;
     }
 
@@ -338,7 +219,7 @@ input[type=checkbox], input[type=radio] {
 }
 
 .navicon {
-    font-size: $font-small;
+    @extend .font-large;
     padding-left: 15px;
     position: relative;
     top: 2px;
@@ -390,7 +271,6 @@ table {
                 border: 0;
                 border-top: 0;
                 border-bottom: 0;
-                padding-bottom: 0.1rem;
                 padding-top: 0;
             }
             th:last-of-type {
@@ -424,24 +304,10 @@ table {
     }
 }
 
-.text-danger {
-    color: $red;
-}
-
-// TODO: prettify
-.alert {
-    &.alert-info {
-        background: $yellow;
-        border-color: $dark-gray;
-        color: $light-black;
-    }
-}
-
 footer {
     padding-bottom: 15px;
 
     a {
-        font-size: $font-xs-normal;
         color: $lightest-black;
         padding: 0 10px;
     }
@@ -453,12 +319,8 @@ footer {
         color: $dark-gray;
     }
 
-    h2 {
-        font-size: $font-large;
-    }
-
     p {
-        margin: 1rem;
+        margin: 10px;
     }
 }
 
@@ -479,7 +341,7 @@ footer {
     }
 
     .linode-label, .linode-label:hover {
-        font-size: $font-small;
+        @extend .font-large;
         color: $black;
     }
 }
@@ -496,10 +358,6 @@ header .sub-header {
 
 .list-unstyled {
     margin-bottom: 0;
-}
-
-p {
-    margin-bottom: $main-padding-tb/2;
 }
 
 .feedback {
@@ -545,6 +403,7 @@ p {
 
     margin-left: -$grid-gutter-width-base / 4;
     margin-right: -$grid-gutter-width-base / 4;
+    margin-bottom: 20px;
 
     & > [class^="col-"] {
         padding-left: $grid-gutter-width-base / 4;

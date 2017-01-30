@@ -10,9 +10,9 @@
         margin: 0 15px;
 
         &--groupLabel {
+            @extend .font-large;
             color: $light-black;
             border: 0;
-            font-size: $font-small;
             height: auto;
 
             td {
@@ -33,7 +33,7 @@
     }
 
     &-rowLabel, &-rowLabel:hover {
+        @extend .font-large;
         color: $black;
-        font-size: $font-small;
     }
 }

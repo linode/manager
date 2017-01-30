@@ -1,11 +1,11 @@
 .disk-layout {
     display: flex;
     flex-wrap: wrap;
-    margin: 0.5rem auto -0.25rem auto;
+    margin: 10px auto -5px auto;
 
     .disk {
-        margin: 0 0.25rem 0.25rem 0;
-        padding: 0.5rem;
+        margin: 0 10px 10px 0;
+        padding: 10px;
         background: $white;
         border-size: 2px;
         border-style: solid;
@@ -13,14 +13,14 @@
 
         &.free, &.disk-deleting {
             background: transparent;
-            border: 0.2rem dashed $border-gray !important;
+            border: 5px dashed $border-gray !important;
         }
 
         h3 {
             color: $light-black;
 
             small {
-                font-size: $font-xs-small;
+              @extend .font-small;
             }
         }
 
@@ -30,7 +30,7 @@
         }
 
         button {
-            margin-top: 0.25rem;
+            margin-top: 10px;
         }
     }
 }

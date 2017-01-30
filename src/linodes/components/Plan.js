@@ -24,7 +24,7 @@ export default class Plan extends Component {
         <header>
           <div className="title">{this.renderPlanStyle(plan)}</div>
         </header>
-        <div className="plan-contents">
+        <div className="option-contents">
           <div className="pricing">${hourlyPrice / 100}/hr (${monthlyPrice / 100}/mo)</div>
           <hr />
           <div className="cpu-ram">{plan.ram} GB / {plan.vcpus} CPU</div>

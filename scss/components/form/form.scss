@@ -17,9 +17,9 @@ form {
 }
 
 .form-control {
+    @extend .font-normal;
     max-width: 300px;
     width: auto;
-    font-size: $font-normal;
     border-radius: 2px;
     color: $black;
     display: inline-block;
@@ -73,6 +73,6 @@ form {
     }
 
     img {
-        margin-left: 0.5rem;
+        margin-left: 5px;
     }
 }
