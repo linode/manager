@@ -44,7 +44,7 @@ export class RebuildPage extends Component {
       dispatch(push(`/linodes/${linodeLabel}`));
     } catch (response) {
       const errors = await reduceErrors(response);
-      errors._ = errors.distribution;
+      errors._.concat(errors.distribution);
       this.setState({ errors });
     }
 

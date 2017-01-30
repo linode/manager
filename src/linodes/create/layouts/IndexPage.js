@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
 import Source from '../components/Source';
-import Plan from '../components/Plan';
+import Plan from '~/linodes/components/Plan';
 import Datacenter from '../components/Datacenter';
 import Details from '../components/Details';
 import { linodes } from '~/api';
