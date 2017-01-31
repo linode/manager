@@ -5,12 +5,12 @@ import sinon from 'sinon';
 
 import { api } from '@/data';
 
-import { NotificationList } from '~/components/notifications';
+import { NotificationList, sortEvents } from '~/components/notifications';
 
 describe('components/notifications/NotificationList', () => {
   const sandbox = sinon.sandbox.create();
 
-  function makeNotifications(events = api.events,
+  function makeNotifications(events = sortEvents(api.events),
                              onClickItem = sandbox.spy(),
                              eventSeen = sandbox.spy()) {
     return (
@@ -39,7 +39,7 @@ describe('components/notifications/NotificationList', () => {
     const notifications = mount(makeNotifications());
     const eventSeen = sandbox.spy();
     notifications.instance().componentWillUpdate(
-      { open: true, events: api.events, eventSeen }, {});
+      { open: true, events: sortEvents(api.events), eventSeen }, {});
     expect(eventSeen.callCount).to.equal(1);
   });
 });
