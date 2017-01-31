@@ -6,6 +6,7 @@ import { Tabs } from '~/components/tabs';
 import StatusDropdown from '~/linodes/components/StatusDropdown';
 import { setError } from '~/actions/errors';
 import { linodes } from '~/api';
+import { getObjectByLabelLazily } from '~/api/util';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 
@@ -18,23 +19,8 @@ export function getLinode() {
 
 export class IndexPage extends Component {
   static async preload({ dispatch, getState }, { linodeLabel }) {
-    const { linodes: _linodes } = getState().api.linodes;
-    const oldLinodeState = Object.values(_linodes).length && Object.values(_linodes).reduce(
-      (match, linode) => linode.label === linodeLabel ? linode : match, undefined);
-
     try {
-      let id = null;
-
-      if (oldLinodeState && oldLinodeState.id) {
-        ({ id } = oldLinodeState);
-      } else {
-        ({ id } = (await dispatch(linodes.all([], undefined, {
-          headers: {
-            'X-Filter': JSON.stringify({ label: linodeLabel }),
-          },
-        }))).linodes[0]);
-      }
-
+      const { id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
       await dispatch(linodes.configs.all([id]));
     } catch (e) {
       // eslint-disable-next-line no-console
