@@ -119,8 +119,7 @@ export class RescuePage extends Component {
       d => d.filesystem !== 'swap').length > 1 : false;
 
     let slots = null;
-    // eslint-disable-next-line prefer-const
-    let diskArray = {};
+    const diskArray = {};
     function fillDiskArray() {
       diskSlots.forEach((slotId, i) => {
         diskArray[AVAILABLE_DISK_SLOTS[i]] = slotId;
