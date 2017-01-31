@@ -118,7 +118,7 @@ export class RescuePage extends Component {
           /dev/{AVAILABLE_DISK_SLOTS[index]}
         </label>
         <div className="col-sm-10">
-          <span id={disks[device].id}>{disks[device].label}</span>
+          {disks[device].label}
         </div>
       </FormGroup>
     );
