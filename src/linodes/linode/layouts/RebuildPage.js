@@ -15,7 +15,6 @@ import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 export class RebuildPage extends Component {
   constructor(props) {
     super(props);
-    this.onSubmit = this.onSubmit.bind(this);
     this.getLinode = getLinode.bind(this);
     this.state = {
       distribution: this.getLinode().distribution.id,
@@ -44,7 +43,7 @@ export class RebuildPage extends Component {
       dispatch(push(`/linodes/${linodeLabel}`));
     } catch (response) {
       const errors = await reduceErrors(response);
-      errors._ = errors.distribution;
+      errors._.concat(errors.distribution);
       this.setState({ errors });
     }
 

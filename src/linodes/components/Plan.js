@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react';
 
-import { Card } from '~/components';
 import { renderPlanStyle } from '~/linodes/components/Linode';
 
 export default class Plan extends Component {
@@ -41,9 +40,9 @@ export default class Plan extends Component {
     const sortedPlans = Object.values(types).sort(
       (a, b) => a.ram > b.ram);
     return (
-      <Card title="Plan">
+      <div>
         {sortedPlans.map(this.renderPlan)}
-      </Card>
+      </div>
     );
   }
 }
