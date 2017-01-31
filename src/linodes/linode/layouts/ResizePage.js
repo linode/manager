@@ -28,8 +28,6 @@ export class ResizePage extends Component {
   }
 
   async onSubmit() {
-    // const { id: linodeId } = this.getLinode();
-
     this.setState({ fetching: true, errors: {} });
 
     try {
