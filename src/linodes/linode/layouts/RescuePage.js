@@ -96,13 +96,13 @@ export class RescuePage extends Component {
     const { diskSlots } = this.state;
     const { dispatch } = this.props;
     const linode = this.getLinode();
-    const diskArray = {};
+    const disks = {};
 
     if (diskSlots) {
       diskSlots.forEach((slotId, i) => {
-        diskArray[AVAILABLE_DISK_SLOTS[i]] = slotId;
+        disks[AVAILABLE_DISK_SLOTS[i]] = slotId;
       });
-      await dispatch(rescueLinode(linode.id, { disks: diskArray }));
+      await dispatch(rescueLinode(linode.id, { disks }));
     }
   }
 
