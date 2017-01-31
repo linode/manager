@@ -39,6 +39,11 @@ export function rebootLinode(id, config = null) {
     JSON.stringify({ config }));
 }
 
+export function rescueLinode(id, disks = null) {
+  return linodeAction(id, 'rescue', 'rebooting',
+    JSON.stringify({ disks }));
+}
+
 export function rebuildLinode(id, config = null) {
   function makeNormalResponse(rsp, resource) {
     return {
