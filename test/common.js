@@ -8,7 +8,8 @@ class InternalAssertionError extends Error {
     super();
     const keyPathString = `.${keyPath.join('.')}`;
     this.message =
-      `Expected 'a' at ${keyPathString} (${aVal}) to equal 'b' at ${keyPathString} (${bVal})`;
+      `Expected 'a' at ${keyPathString} (${JSON.stringify(aVal)})
+       to equal 'b' at ${keyPathString} (${JSON.stringify(bVal)})`;
   }
 }
 
@@ -17,8 +18,8 @@ class InternalAssertionTypeError extends Error {
     super();
     const keyPathString = `.${keyPath.join('.')}`;
     this.message =
-      (`Expected type of 'a' at ${keyPathString} (${aVal}) ` +
-       `to equal type of 'b' at ${keyPathString} (${bVal})`);
+      (`Expected type of 'a' at ${keyPathString} (${JSON.stringify(aVal)}) ` +
+       `to equal type of 'b' at ${keyPathString} (${JSON.stringify(bVal)})`);
   }
 }
 

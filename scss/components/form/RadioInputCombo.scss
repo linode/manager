@@ -1,4 +1,7 @@
 .RadioInputCombo {
+    display: inline-block;
+    line-height: 30px;
+
     + .RadioSelectCombo,
     + .RadioInputCombo {
         margin-top: 10px;

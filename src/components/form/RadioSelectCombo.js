@@ -13,6 +13,7 @@ export default function RadioSelectCombo(props) {
         label={props.radioLabel}
       />
       <Select
+        id={props.selectId}
         value={props.selectValue}
         onChange={props.selectOnChange}
         label={props.selectLabel}
@@ -30,11 +31,12 @@ RadioSelectCombo.propTypes = {
   radioChecked: PropTypes.bool.isRequired,
   radioValue: PropTypes.object,
   selectOnChange: PropTypes.func.isRequired,
-  selectValue: PropTypes.object.isRequired,
+  selectId: PropTypes.string,
+  selectValue: PropTypes.any.isRequired,
   selectOptions: PropTypes.object,
   selectDisabled: PropTypes.bool,
   selectLabel: PropTypes.string,
-  selectChildren: PropTypes.object,
+  selectChildren: PropTypes.any,
 };
 
 RadioSelectCombo.defaultProps = {
