@@ -42,6 +42,7 @@ export class RescuePage extends Component {
     this.getDisks = getDisks.bind(this);
     this.getDiskSlots = getDiskSlots.bind(this);
     this.fillDiskSlots = fillDiskSlots.bind(this);
+    this.rebootToRescue = this.rebootToRescue.bind(this);
     this.removeDiskSlot = removeDiskSlot.bind(this);
     this.addDiskSlot = addDiskSlot.bind(this);
     this.renderDiskSlot = renderDiskSlot.bind(this);
@@ -91,6 +92,20 @@ export class RescuePage extends Component {
     }
   }
 
+  async rebootToRescue() {
+    const { diskSlots } = this.state;
+    const { dispatch } = this.props;
+    const linode = this.getLinode();
+    const diskArray = {};
+
+    if (diskSlots) {
+      diskSlots.forEach((slotId, i) => {
+        diskArray[AVAILABLE_DISK_SLOTS[i]] = slotId;
+      });
+      await dispatch(rescueLinode(linode.id, { disks: diskArray }));
+    }
+  }
+
   renderDiskSlotNoEdit(device, index) {
     const disks = this.getDisks();
 
@@ -112,25 +127,16 @@ export class RescuePage extends Component {
 
   renderRescueMode() {
     const { diskSlots } = this.state;
-    const { dispatch } = this.props;
     const linode = this.getLinode();
 
     const showDisks = linode && linode._disks ? Object.values(linode._disks.disks).filter(
       d => d.filesystem !== 'swap').length > 1 : false;
 
     let slots = null;
-    const diskArray = {};
-    function fillDiskArray() {
-      diskSlots.forEach((slotId, i) => {
-        diskArray[AVAILABLE_DISK_SLOTS[i]] = slotId;
-      });
-    }
     if (showDisks && diskSlots) {
       slots = diskSlots.map(this.renderDiskSlot);
-      fillDiskArray();
     } else if (diskSlots) {
       slots = diskSlots.map(this.renderDiskSlotNoEdit);
-      fillDiskArray();
     }
     return (
       <div className="col-sm-6">
@@ -142,7 +148,7 @@ export class RescuePage extends Component {
             </h2>
             <p></p>
           </header>
-          <Form className="RescueMode-form" onSubmit={() => {}}>
+          <Form className="RescueMode-form" onSubmit={() => { this.rebootToRescue(); }}>
             {slots}
             <div className="form-group row disk-slot">
               <label className="col-sm-2 label-col">
@@ -153,11 +159,7 @@ export class RescuePage extends Component {
             <div className="form-group row">
               <div className="col-sm-2"></div>
               <div className="col-sm-10">
-                <SubmitButton
-                  onClick={async () => {
-                    await dispatch(rescueLinode(linode.id, { disks: diskArray }));
-                  }}
-                >Reboot</SubmitButton>
+                <SubmitButton>Reboot</SubmitButton>
               </div>
             </div>
           </Form>

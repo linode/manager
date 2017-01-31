@@ -159,7 +159,7 @@ describe('linodes/linode/layouts/RescuePage', () => {
         />);
       page.setState({ diskSlots: [12345, 12346] });
       // simulate pressing the submit button, the action should get dispatched
-      page.find('.RescueMode-form').find('button').simulate('click');
+      page.find('.RescueMode-form').simulate('submit');
       const fn = dispatch.secondCall.args[0];
       await expectRequest(fn, '/linode/instances/1234/rescue',
         () => {}, null, options => {
