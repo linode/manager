@@ -1,15 +1,12 @@
 import sinon from 'sinon';
-import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 
 import { generateDefaultStateMany } from '~/api/apiResultActionReducerGenerator.js';
 import { config as linodeConfig } from '~/api/configs/linodes';
 import { getObjectByLabelLazily } from '~/api/util';
-import { api, state } from '@/data';
+import { state } from '@/data';
 import { testLinode } from '@/data/linodes';
 import { expectRequest } from '@/common';
-
-const { linodes } = api;
 
 describe('api/util', async () => {
   const sandbox = sinon.sandbox.create();
@@ -27,9 +24,10 @@ describe('api/util', async () => {
     dispatch.reset();
 
     // Call to fetch all
-    await fn(dispatch, () => state);
-    dispatch.reset();
     dispatch.returns({ total_pages: 1, linodes: [], total_results: 0 });
+    await fn(dispatch, () => state);
+    fn = dispatch.firstCall.args[0];
+    dispatch.reset();
 
     const defaultMany = generateDefaultStateMany(linodeConfig);
     await expectRequest(fn, '/linode/instances/?page=1', undefined, {

@@ -3,8 +3,6 @@ import sinon from 'sinon';
 import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 
-import { generateDefaultStateMany } from '~/api/apiResultActionReducerGenerator.js';
-import { config as linodeConfig } from '~/api/configs/linodes';
 import { api, state } from '@/data';
 import { testLinode } from '@/data/linodes';
 import { expectRequest } from '@/common';
