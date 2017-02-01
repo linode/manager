@@ -105,7 +105,7 @@ export class IndexPage extends Component {
       );
     }
 
-    return <Card title={title}>{cardContents}</Card>;
+    return <Card title={title} nav={<Button>Add Record</Button>}>{cardContents}</Card>;
   }
 
   renderModal(zoneId) {
