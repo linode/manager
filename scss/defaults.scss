@@ -1,7 +1,8 @@
 html {
-  font-size: 62.5%; /* font-size 1em = 10px on default browser settings */
+  font-size: 62.5%; // resets root font size to 10px
 }
 
+// default font sizes, defined in rem with a pixel fallback, computed whole pixel values
 .font-normal {
   @include font-size(1.4);
 }
@@ -79,4 +80,8 @@ p {
 hr {
   width: 300px;
   margin: $main-padding-tb/2 0;
+}
+
+small {
+  @extend .font-small;
 }

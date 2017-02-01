@@ -1,3 +1,4 @@
+// font size mixin based on 10px
 @mixin font-size($size: 1.6) {
     font-size: ($size * 10) + px; // px fallback where rem not supported
     font-size: $size + rem;
