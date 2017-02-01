@@ -53,17 +53,21 @@ body,
 }
 
 .tab-content-container {
-  padding: 0 20px 20px 20px;
+  padding: 0 15px 15px 15px;
 
   & > .SubTabs {
     margin-top: 5px;
   }
 
   & > :not(.SubTabs):first-child {
-    margin-top: 20px;
+    margin-top: 15px;
   }
 }
 
 .subtab-content-container {
   padding: 15px 0;
+}
+
+.card.graphs {
+  margin-top: 15px;
 }
