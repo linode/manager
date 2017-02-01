@@ -12,6 +12,7 @@ import { setTitle } from '~/actions/title';
 import { Button } from '~/components/buttons';
 import Card from '~/components/Card';
 import SecondaryTable from '~/components/SecondaryTable';
+import { NAME_SERVERS } from '~/constants';
 
 export class IndexPage extends Component {
   static async preload({ dispatch, getState }, { dnszoneLabel }) {
@@ -33,7 +34,7 @@ export class IndexPage extends Component {
     };
 
     const records = this.state.currentDNSZone._records.records;
-    this.state.currentDNSZone._records.records = _.groupBy(records, 'type');
+    this.state.currentDNSZone._groupedRecords = _.groupBy(records, 'type');
   }
 
   async componentDidMount() {
@@ -46,6 +47,65 @@ export class IndexPage extends Component {
   deleteZone(zoneId) {
     const { dispatch } = this.props;
     dispatch(showModal('Delete DNS Zone', this.renderModal(zoneId)));
+  }
+
+  formatNSRecords() {
+    const { currentDNSZone } = this.state;
+    const nsRecords = NAME_SERVERS.map(ns => ({
+      target: ns,
+      name: currentDNSZone.dnszone,
+    }));
+
+    currentDNSZone._groupedRecords.NS.forEach(record => {
+      nsRecords.push({
+        ...record,
+        name: record.name || currentDNSZone.dnszone,
+      });
+    });
+
+    return nsRecords.map((record, i) => ({
+      ...record,
+      nav: <Button disabled={i < NAME_SERVERS.length}>Delete</Button>,
+    }));
+  }
+
+  formatMXRecords() {
+    const { currentDNSZone } = this.state;
+
+    return currentDNSZone._groupedRecords.MX.map(record => ({
+      ...record,
+      name: record.name || currentDNSZone.dnszone,
+    }));
+  }
+
+  formatARecords() {
+    const { currentDNSZone } = this.state;
+
+    return currentDNSZone._groupedRecords.A.concat(
+      currentDNSZone._groupedRecords.AAAA).filter(a => a !== undefined);
+  }
+
+  formatSRVRecords() {
+    const { currentDNSZone } = this.state;
+
+    return currentDNSZone._groupedRecords.SRV.map(r => ({
+      ...r, domain: currentDNSZone.dnszone,
+    }));
+  }
+
+  renderRecords = ({ title, rows, labels, keys }) => {
+    let cardContents = <p>No records created.</p>;
+    if (rows && rows.length) {
+      cardContents = (
+        <SecondaryTable
+          labels={labels}
+          keys={keys}
+          rows={rows}
+        />
+      );
+    }
+
+    return <Card title={title}>{cardContents}</Card>;
   }
 
   renderModal(zoneId) {
@@ -65,24 +125,23 @@ export class IndexPage extends Component {
     );
   }
 
-  renderRecords = ({ title, type, labels, keys }) => {
-    const records = this.state.currentDNSZone._records.records[type];
-    let cardContents = <p>No records created.</p>;
-    if (records && records.length) {
-      cardContents = (
-        <SecondaryTable
-          labels={labels}
-          keys={keys}
-          rows={records}
-        />
-      );
-    }
-
-    return <Card title={title}>{cardContents}</Card>;
-  }
-
   render() {
     const { currentDNSZone } = this.state;
+    const { CNAME: _cnameRecords, TXT: _txtRecords } = currentDNSZone._groupedRecords;
+
+    const setDefaultTTL = (records) => records.map(r => ({
+      ...r, ttl_sec: r.ttl_sec || 'Default',
+    }));
+    const addNav = (records) => records.map(r => ({
+      ...r, nav: <Button>Delete</Button>,
+    }));
+
+    const nsRecords = setDefaultTTL(this.formatNSRecords());
+    const mxRecords = setDefaultTTL(addNav(this.formatMXRecords()));
+    const aRecords = setDefaultTTL(addNav(this.formatARecords()));
+    const cnameRecords = setDefaultTTL(addNav(_cnameRecords));
+    const txtRecords = setDefaultTTL(addNav(_txtRecords));
+    const srvRecords = setDefaultTTL(addNav(this.formatSRVRecords()));
 
     return (
       <div className="PrimaryPage container">
@@ -144,39 +203,39 @@ export class IndexPage extends Component {
           </Card>
           <this.renderRecords
             title="NS Records"
-            type="NS"
-            labels={['Name Server', 'Subdomain', 'TTL']}
-            keys={['name', 'target', 'ttl_sec']}
+            rows={nsRecords}
+            labels={['Name Server', 'Subdomain', 'TTL', '']}
+            keys={['target', 'name', 'ttl_sec', 'nav']}
           />
           <this.renderRecords
             title="MX Records"
-            type="MX"
-            labels={['Mail Server', 'Preference', 'Subdomain']}
-            keys={['name', 'priority', 'target']}
+            rows={mxRecords}
+            labels={['Mail Server', 'Preference', 'Subdomain', '']}
+            keys={['target', 'priority', 'name', 'nav']}
           />
           <this.renderRecords
             title="A/AAAA Records"
-            type="A"
-            labels={['Hostname', 'IP Address', 'TTL']}
-            keys={['name', 'target', 'ttl_sec']}
+            rows={aRecords}
+            labels={['Hostname', 'IP Address', 'TTL', '']}
+            keys={['name', 'target', 'ttl_sec', 'nav']}
           />
           <this.renderRecords
             title="CNAME Records"
-            type="CNAME"
-            labels={['Hostname', 'Aliases to', 'TTL']}
-            keys={['name', 'target', 'ttl_sec']}
+            rows={cnameRecords}
+            labels={['Hostname', 'Aliases to', 'TTL', '']}
+            keys={['name', 'target', 'ttl_sec', 'nav']}
           />
           <this.renderRecords
             title="TXT Records"
-            type="TXT"
-            labels={['Name', 'Value', 'TTL']}
-            keys={['name', 'target', 'ttl_sec']}
+            rows={txtRecords}
+            labels={['Name', 'Value', 'TTL', '']}
+            keys={['name', 'target', 'ttl_sec', 'nav']}
           />
           <this.renderRecords
             title="SRV Records"
-            type="SRV"
-            labels={['Service', 'Priority', 'Weight', 'Port', 'Target', 'TTL']}
-            keys={['name', 'priority', 'weight', 'port', 'target', 'ttl_sec']}
+            rows={srvRecords}
+            labels={['Service', 'Priority', 'Domain', 'Weight', 'Port', 'Target', 'TTL', '']}
+            keys={['name', 'priority', 'domain', 'weight', 'port', 'target', 'ttl_sec', 'nav']}
           />
         </div>
       </div>

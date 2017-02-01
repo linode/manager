@@ -4,7 +4,17 @@
         border: 0 !important;
     }
 
-    &-row:nth-child(even) {
-        background: $light-gray !important;
+    th:last-of-type, td:last-of-type {
+        border: 0;
+        text-align: right;
+    }
+
+    button {
+        position: relative;
+        top: -1px;
+    }
+
+    .label-col {
+        text-align: left;
     }
 }
