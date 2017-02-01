@@ -5,9 +5,10 @@ import { HelpButton } from './HelpButton';
 export default function Card(props) {
   return (
     <section className={`card ${props.className}`}>
-      <header>
-        <h2>{props.title}</h2>
-        {props.helpLink ? <HelpButton to={props.helpLink} /> : null}
+      <header className="clearfix">
+        <h2 className="float-sm-left">{props.title}</h2>
+        {props.helpLink ? <HelpButton className="float-sm-left" to={props.helpLink} /> : null}
+        <div className="float-sm-right">{props.nav}</div>
       </header>
       <div className="card-block">
         {props.children}
@@ -21,6 +22,7 @@ Card.propTypes = {
   className: PropTypes.string,
   helpLink: PropTypes.string,
   children: PropTypes.node,
+  nav: PropTypes.node,
 };
 
 Card.defaultProps = {

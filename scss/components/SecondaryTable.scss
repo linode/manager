@@ -1,0 +1,10 @@
+.SecondaryTable {
+    thead, th {
+        background: transparent;
+        border: 0 !important;
+    }
+
+    &-row:nth-child(even) {
+        background: $light-gray !important;
+    }
+}
