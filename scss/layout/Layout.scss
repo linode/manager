@@ -40,12 +40,21 @@ body,
 
 .main-header {
   background: $white;
-  padding: $main-padding-tb 0;
+  padding: 15px 0;
+
+  // TODO: look at grid defaults. this fixes tab alignment
+  .container {
+    padding: 0 15px;
+  }
+
+  h1 {
+    margin-bottom: 0;
+  }
 }
 
 // Deals with the fact that tablist extends container which gives it a max-width
 .main-header-fix {
-  height: 40px;
+  height: 38px;
   width: 100%;
   background: $white;
   border-bottom: $border;
