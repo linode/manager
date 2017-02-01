@@ -112,6 +112,7 @@ select.form-control,
         border-radius: 0;
         &[readonly] {
             background-color: $white;
+            width: 200px;
         }
     }
 
