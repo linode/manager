@@ -4,7 +4,7 @@ import { HelpButton } from './HelpButton';
 
 export default function Card(props) {
   return (
-    <section className={`card ${props.className}`}>
+    <section className={`card ${props.className}`} id={props.id}>
       <header className="clearfix">
         <h2 className="float-sm-left">{props.title}</h2>
         {props.helpLink ? <HelpButton className="float-sm-left" to={props.helpLink} /> : null}
@@ -21,8 +21,9 @@ Card.propTypes = {
   title: PropTypes.node.isRequired,
   className: PropTypes.string,
   helpLink: PropTypes.string,
-  children: PropTypes.node,
   nav: PropTypes.node,
+  id: PropTypes.string,
+  children: PropTypes.node,
 };
 
 Card.defaultProps = {

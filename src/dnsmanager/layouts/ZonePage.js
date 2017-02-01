@@ -3,8 +3,6 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 
 import { setError } from '~/actions/errors';
-import { showModal, hideModal } from '~/actions/modal';
-import ConfirmModalBody from '~/components/modals/ConfirmModalBody';
 import { dnszones } from '~/api';
 import { getObjectByLabelLazily } from '~/api/util';
 import { setSource } from '~/actions/source';
@@ -14,7 +12,7 @@ import Card from '~/components/Card';
 import SecondaryTable from '~/components/SecondaryTable';
 import { NAME_SERVERS } from '~/constants';
 
-export class IndexPage extends Component {
+export class ZonePage extends Component {
   static async preload({ dispatch, getState }, { dnszoneLabel }) {
     try {
       const { id } = await dispatch(getObjectByLabelLazily('dnszones', dnszoneLabel, 'dnszone'));
@@ -28,13 +26,15 @@ export class IndexPage extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      currentDNSZone: Object.values(props.dnszones.dnszones).filter(
-        d => d.dnszone === props.params.dnszoneLabel)[0],
-    };
 
-    const records = this.state.currentDNSZone._records.records;
-    this.state.currentDNSZone._groupedRecords = _.groupBy(records, 'type');
+    const currentDNSZone = Object.values(props.dnszones.dnszones).filter(
+      d => d.dnszone === props.params.dnszoneLabel)[0];
+    this.state = {
+      currentDNSZone: {
+        ...currentDNSZone,
+        _groupedRecords: _.groupBy(currentDNSZone._records.records, 'type'),
+      },
+    };
   }
 
   async componentDidMount() {
@@ -42,11 +42,6 @@ export class IndexPage extends Component {
     dispatch(setSource(__filename));
 
     dispatch(setTitle('DNS Manager'));
-  }
-
-  deleteZone(zoneId) {
-    const { dispatch } = this.props;
-    dispatch(showModal('Delete DNS Zone', this.renderModal(zoneId)));
   }
 
   formatNSRecords() {
@@ -93,7 +88,7 @@ export class IndexPage extends Component {
     }));
   }
 
-  renderRecords = ({ title, rows, labels, keys }) => {
+  renderRecords = ({ title, id, rows, labels, keys, noNav = false }) => {
     let cardContents = <p>No records created.</p>;
     if (rows && rows.length) {
       cardContents = (
@@ -105,23 +100,14 @@ export class IndexPage extends Component {
       );
     }
 
-    return <Card title={title} nav={<Button>Add Record</Button>}>{cardContents}</Card>;
-  }
-
-  renderModal(zoneId) {
-    const { dispatch } = this.props;
     return (
-      <ConfirmModalBody
-        buttonText="Delete"
-        onOk={async () => {
-          await dispatch(dnszones.delete(zoneId));
-          dispatch(hideModal());
-        }}
-        onCancel={() => dispatch(hideModal())}
+      <Card
+        title={title}
+        id={id}
+        nav={noNav ? null : <Button>Add Record</Button>}
       >
-        <span className="text-danger">WARNING!</span> This will permanently
-        delete this DNS Zone. Confirm below to proceed.
-      </ConfirmModalBody>
+        {cardContents}
+      </Card>
     );
   }
 
@@ -130,7 +116,8 @@ export class IndexPage extends Component {
     const { CNAME: _cnameRecords, TXT: _txtRecords } = currentDNSZone._groupedRecords;
 
     const setDefaultTTL = (records) => records.map(r => ({
-      ...r, ttl_sec: r.ttl_sec || 'Default',
+      ...r,
+      ttl_sec: (!r.ttl_sec || r.ttl_sec === currentDNSZone.ttl_sec) ? 'Default' : r.ttl_sec,
     }));
     const addNav = (records) => records.map(r => ({
       ...r, nav: <Button>Delete</Button>,
@@ -142,97 +129,70 @@ export class IndexPage extends Component {
     const cnameRecords = setDefaultTTL(addNav(_cnameRecords));
     const txtRecords = setDefaultTTL(addNav(_txtRecords));
     const srvRecords = setDefaultTTL(addNav(this.formatSRVRecords()));
+    const soaRecord = {
+      ...currentDNSZone,
+      ttl_sec: currentDNSZone.ttl_sec || 'Default',
+      refresh_sec: currentDNSZone.refresh_sec || 'Default',
+      retry_sec: currentDNSZone.retry_sec || 'Default',
+      expire_sec: currentDNSZone.expire_sec || 'Default',
+    };
 
     return (
-      <div className="PrimaryPage container">
-        <header className="PrimaryPage-header">
-          <div className="PrimaryPage-headerRow">
+      <div>
+        <header className="main-header main-header--border">
+          <div className="container">
             <h1>{currentDNSZone.dnszone}</h1>
           </div>
         </header>
-        <div className="PrimaryPage-body">
-          <Card title="SOA Record" nav={<Button>Edit record</Button>}>
-            <div className="row">
-              <div className="col-sm-2 label-col">
-                <label>Primary DNS</label>
-              </div>
-              <div className="col-sm-10">
-                <span className="input-line-height">{currentDNSZone.dnszone}</span>
-              </div>
-            </div>
-            <div className="row">
-              <div className="col-sm-2 label-col">
-                <label>Email</label>
-              </div>
-              <div className="col-sm-10">
-                <span className="input-line-height">{currentDNSZone.soa_email}</span>
-              </div>
-            </div>
-            <div className="row">
-              <div className="col-sm-2 label-col">
-                <label>Default TTL</label>
-              </div>
-              <div className="col-sm-10">
-                <span className="input-line-height">{currentDNSZone.ttl_sec || 'Default'}</span>
-              </div>
-            </div>
-            <div className="row">
-              <div className="col-sm-2 label-col">
-                <label>Refresh Rate</label>
-              </div>
-              <div className="col-sm-10">
-                <span className="input-line-height">{currentDNSZone.refresh_sec || 'Default'}</span>
-              </div>
-            </div>
-            <div className="row">
-              <div className="col-sm-2 label-col">
-                <label>Retry Rate</label>
-              </div>
-              <div className="col-sm-10">
-                <span className="input-line-height">{currentDNSZone.retry_sec || 'Default'}</span>
-              </div>
-            </div>
-            <div className="row">
-              <div className="col-sm-2 label-col">
-                <label>Expire Time</label>
-              </div>
-              <div className="col-sm-10">
-                <span className="input-line-height">{currentDNSZone.expire_sec || 'Default'}</span>
-              </div>
-            </div>
-          </Card>
+        <div className="container">
+          <this.renderRecords
+            title="SOA Record"
+            id="soa"
+            rows={[soaRecord]}
+            labels={['Primary DNS', 'Email', 'Default TTL', 'Refresh Rate', 'Retry Rate',
+                     'Expire Time', '']}
+            keys={['dnszone', 'soa_email', 'ttl_sec', 'refresh_sec', 'retry_sec', 'expire_sec',
+                   'nav']}
+            noNav
+          />
           <this.renderRecords
             title="NS Records"
+            id="ns"
             rows={nsRecords}
             labels={['Name Server', 'Subdomain', 'TTL', '']}
             keys={['target', 'name', 'ttl_sec', 'nav']}
           />
           <this.renderRecords
             title="MX Records"
+            id="mx"
             rows={mxRecords}
             labels={['Mail Server', 'Preference', 'Subdomain', '']}
             keys={['target', 'priority', 'name', 'nav']}
           />
           <this.renderRecords
             title="A/AAAA Records"
+            id="a"
             rows={aRecords}
             labels={['Hostname', 'IP Address', 'TTL', '']}
             keys={['name', 'target', 'ttl_sec', 'nav']}
           />
           <this.renderRecords
             title="CNAME Records"
+            id="cname"
             rows={cnameRecords}
             labels={['Hostname', 'Aliases to', 'TTL', '']}
             keys={['name', 'target', 'ttl_sec', 'nav']}
           />
           <this.renderRecords
             title="TXT Records"
+            id="txt"
             rows={txtRecords}
             labels={['Name', 'Value', 'TTL', '']}
             keys={['name', 'target', 'ttl_sec', 'nav']}
           />
           <this.renderRecords
             title="SRV Records"
+            id="srv"
             rows={srvRecords}
             labels={['Service', 'Priority', 'Domain', 'Weight', 'Port', 'Target', 'TTL', '']}
             keys={['name', 'priority', 'domain', 'weight', 'port', 'target', 'ttl_sec', 'nav']}
@@ -243,7 +203,7 @@ export class IndexPage extends Component {
   }
 }
 
-IndexPage.propTypes = {
+ZonePage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   dnszones: PropTypes.object.isRequired,
   params: PropTypes.shape({
@@ -257,4 +217,4 @@ function select(state) {
   };
 }
 
-export default connect(select)(IndexPage);
+export default connect(select)(ZonePage);
