@@ -5,12 +5,12 @@
 
 @import 'defaults.scss';
 @import 'utilities.scss';
-@import 'layout.scss';
+@import 'layout/index';
 
-@import 'components/index.scss';
-@import 'linodes/index.scss';
-@import 'layout/index.scss';
-@import 'styleguide/index.scss';
+@import 'components/index';
+@import 'linodes/index';
+@import 'layout/index';
+@import 'styleguide/index';
 
 
 // TODO: BEMify
@@ -26,7 +26,7 @@
     padding-bottom: 15px;
 
     section {
-        margin-top: 15px;
+        margin-top: 5px;
     }
 
     & section:first-of-type {
@@ -66,10 +66,10 @@
         text-align: left;
 
         li {
-            margin-top: 15px;
-            padding-left: 15px;
-            margin-left: 15px;
-            margin-right: 15px;
+            margin-top: 5px;
+            padding-left: 10px;
+            margin-left: 10px;
+            margin-right: 10px;
             border-radius: 3px;
 
             &.active,
