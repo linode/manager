@@ -53,7 +53,15 @@ body,
 }
 
 .tab-content-container {
-  padding: 5px 15px 15px 15px;
+  padding: 0 20px 20px 20px;
+
+  & > .SubTabs {
+    margin-top: 5px;
+  }
+
+  & > :not(.SubTabs):first-child {
+    margin-top: 20px;
+  }
 }
 
 .subtab-content-container {
