@@ -25,6 +25,10 @@
     overflow-y: scroll;
     padding-bottom: 15px;
 
+    section {
+        margin-top: 15px;
+    }
+
     & section:first-of-type {
         margin-top: 0;
 
