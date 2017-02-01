@@ -52,8 +52,7 @@ export class IndexPage extends Component {
         }}
         onCancel={() => dispatch(hideModal())}
       >
-        <span className="text-danger">WARNING!</span> This will permanently
-        delete this NodeBalancer. Confirm below to proceed.
+        Are you sure you want to <strong>permanently</strong> delete this NodeBalancer?
       </ConfirmModalBody>
     );
   }
