@@ -54,7 +54,8 @@ $box-shadow: 0px 2px 4px 0px $transparent;
 
 
 /* BEGIN bootstrap overrides */
-$grid-gutter-width-base: 40px;
+// TODO: look at items that use this, some may now be calculating sub-pixel margins
+$grid-gutter-width-base: 30px;
 
 $grid-breakpoints: (
   xs: 0 + $sidebar-width,
