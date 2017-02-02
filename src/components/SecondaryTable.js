@@ -4,10 +4,7 @@ export default function SecondaryTable(props) {
   return (
     <table className="SecondaryTable">
       <thead>
-        <tr>
-          {props.labels.map((l, i) =>
-            <th key={i} className="label-col"><label>{l}</label></th>)}
-        </tr>
+        <tr>{props.labels.map((l, i) => <th key={i}>{l}</th>)}</tr>
       </thead>
       <tbody>
         {props.rows.map((row, i) => (

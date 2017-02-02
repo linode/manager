@@ -12,3 +12,9 @@
     cursor: pointer;
     cursor: hand;
 }
+
+@mixin label() {
+    color: $lightest-black;
+    line-height: $input-height;
+    white-space: nowrap;
+}
