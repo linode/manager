@@ -1,7 +1,6 @@
 .Tabs {
   [role="tablist"] {
     @extend .container;
-    @extend .font-medium;
     background: $white;
     border-bottom: $border;
     margin: 0 auto;

@@ -55,6 +55,8 @@
         color: $black;
         text-decoration: none !important;
         line-height: 34px;
+        display: block;
+        padding: 5px 0;
     }
 
     .fa {
@@ -66,7 +68,6 @@
         text-align: left;
 
         li {
-            margin-top: 5px;
             padding-left: 10px;
             margin-left: 10px;
             margin-right: 10px;
