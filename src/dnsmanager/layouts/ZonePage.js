@@ -119,7 +119,7 @@ export class ZonePage extends Component {
       const { ttl_sec: ttlSec } = record;
       const { ttl_sec: defaultTTLSec } = currentDNSZone;
       return {
-        ...records,
+        ...record,
         ttl_sec: (!ttlSec || ttlSec === defaultTTLSec) ? 'Default' : ttlSec,
       };
     });
