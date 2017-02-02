@@ -172,6 +172,10 @@ label {
 .main-header {
     background: $white;
     padding: $main-padding-tb 0;
+
+    &--border {
+        border-bottom: $border;
+    }
 }
 
 // Deals with the fact that tablist extends container which gives it a max-width

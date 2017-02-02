@@ -55,10 +55,8 @@ form {
 }
 
 .label-col {
-    color: $lightest-black;
+    @include label();
     text-align: right;
-    line-height: $input-height;
-    white-space: nowrap;
 
     legend {
         font-size: initial;
