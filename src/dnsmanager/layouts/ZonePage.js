@@ -83,8 +83,8 @@ export class ZonePage extends Component {
   formatSRVRecords() {
     const { currentDNSZone } = this.state;
 
-    return currentDNSZone._groupedRecords.SRV.map(r => ({
-      ...r, domain: currentDNSZone.dnszone,
+    return currentDNSZone._groupedRecords.SRV.map(record => ({
+      ...record, domain: currentDNSZone.dnszone,
     }));
   }
 
@@ -115,12 +115,16 @@ export class ZonePage extends Component {
     const { currentDNSZone } = this.state;
     const { CNAME: _cnameRecords, TXT: _txtRecords } = currentDNSZone._groupedRecords;
 
-    const setDefaultTTL = (records) => records.map(r => ({
-      ...r,
-      ttl_sec: (!r.ttl_sec || r.ttl_sec === currentDNSZone.ttl_sec) ? 'Default' : r.ttl_sec,
-    }));
-    const addNav = (records) => records.map(r => ({
-      ...r, nav: <Button>Delete</Button>,
+    const setDefaultTTL = (records) => records.map(record => {
+      const { ttl_sec: ttlSec } = record;
+      const { ttl_sec: defaultTTLSec } = currentDNSZone;
+      return {
+        ...records,
+        ttl_sec: (!ttlSec || ttlSec === defaultTTLSec) ? 'Default' : ttlSec,
+      };
+    });
+    const addNav = (records) => records.map(record => ({
+      ...record, nav: <Button>Delete</Button>,
     }));
 
     const nsRecords = setDefaultTTL(this.formatNSRecords());
