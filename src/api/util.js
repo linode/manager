@@ -1,6 +1,6 @@
 import * as api from '~/api';
 
-export function getObjectByLabelLazily(pluralName, label) {
+export function getObjectByLabelLazily(pluralName, label, labelName = 'label') {
   return async (dispatch, getState) => {
     const oldResources = Object.values(getState().api[pluralName][pluralName]);
     const oldResource = oldResources.length && oldResources.reduce(
@@ -12,7 +12,7 @@ export function getObjectByLabelLazily(pluralName, label) {
 
     return (await dispatch(api[pluralName].all([], undefined, {
       headers: {
-        'X-Filter': JSON.stringify({ label }),
+        'X-Filter': JSON.stringify({ [labelName]: label }),
       },
     })))[pluralName][0];
   };

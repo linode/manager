@@ -13,19 +13,6 @@ describe('linodes/create/components/Source', () => {
     sandbox.restore();
   });
 
-  it('renders the card header', () => {
-    const c = mount(
-      <Source
-        distributions={api.distributions}
-        linodes={api.linodes}
-        distribution={null}
-        backup={null}
-        selectedTab={0}
-      />
-    );
-    expect(c.contains(<h2>Source</h2>)).to.equal(true);
-  });
-
   it('renders the source tabs', () => {
     const tabList = mount(
       <Source
