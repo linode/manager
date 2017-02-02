@@ -57,10 +57,8 @@ form {
 .label-col {
     @include label();
     text-align: right;
-
-    legend {
-        font-size: initial;
-    }
+    line-height: $input-height;
+    white-space: nowrap;
 }
 
 .input-line-height {
