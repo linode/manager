@@ -1,3 +1,6 @@
+import moment from 'moment';
+import 'moment-timezone';
+
 /* eslint-disable no-undef */
 export const API_ROOT = ENV_API_ROOT || 'https://api.alpha.linode.com/v4';
 export const LOGIN_ROOT = ENV_LOGIN_ROOT || 'https://login.alpha.linode.com';
@@ -149,3 +152,5 @@ export const ipv6ns = {
   'tokyo 2': '2400:8902::',
 };
 export const ipv6nsSuffix = ['5', '6', '7', '8', '9', 'b', 'c'];
+
+export const TIME_ZONES = moment.tz.names();
