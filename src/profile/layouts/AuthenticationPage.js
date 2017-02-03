@@ -38,7 +38,7 @@ export default class AuthenticationPage extends Component {
   tfaOnSubmit = async () => {}
 
   render() {
-    const { password, expires, errors, fetching } = this.state;
+    const { password, expires, errors } = this.state;
 
     return (
       <div>
@@ -46,22 +46,28 @@ export default class AuthenticationPage extends Component {
           <Form onSubmit={this.passwordOnSubmit}>
             <FormGroup className="row" errors={errors} name="password">
               <div className="col-sm-2 label-col">
-                <label>New password:</label>
+                <label htmlFor="new-password">New password:</label>
               </div>
               <div className="col-sm-10">
                 <PasswordInput
                   onChange={password => this.setState({ password })}
                   value={password}
+                  id="new-password"
                 />
                 <FormGroupError errors={errors} name="password" />
               </div>
             </FormGroup>
             <FormGroup className="row" errors={errors} name="expires">
               <div className="col-sm-2 label-col">
-                <label>Expires:</label>
+                <label htmlFor="expires">Expires:</label>
               </div>
               <div className="col-sm-10">
-                <Select disabled onChange={expires => this.setState({ expires })} value={expires}>
+                <Select
+                  id="expires"
+                  disabled
+                  onChange={expires => this.setState({ expires })}
+                  value={expires}
+                >
                   <option value="0">Never</option>
                   <option value="1">In 1 month</option>
                   <option value="3">In 3 months</option>
@@ -72,17 +78,17 @@ export default class AuthenticationPage extends Component {
             </FormGroup>
             <FormGroup className="row">
               <div className="col-sm-10 offset-sm-2">
-                <SubmitButton disabled={fetching} />
+                <SubmitButton disabled />
               </div>
             </FormGroup>
             <ErrorSummary errors={errors} />
           </Form>
         </Card>
-        <Card title="Two-factor Authentication">
+        <Card title="Change two-factor authentication setting">
           <Form onSubmit={this.tfaOnSubmit}>
             {/* TODO: this info is conditional on your actual TFA status */}
             <p>Two-factor authentication is currently disabled.</p>
-            <SubmitButton>Enable</SubmitButton>
+            <SubmitButton disabled>Enable</SubmitButton>
             <ErrorSummary errors={errors} />
           </Form>
         </Card>
