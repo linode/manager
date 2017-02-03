@@ -31,15 +31,12 @@ describe('components/form/PasswordInput', () => {
       <PasswordInput
         onChange={() => {}}
       />);
-    console.log(input);
-    input.find('Input').simulate('change',
-      { target: { value: 'correct horse battery staple' } });
-    console.log(input.find('.PasswordInput-strength--4'));
-    debugger;
-    expect(input.find('.PasswordInput-strength--4').length).to.equal(1);
 
-    // expect(input.find('.PasswordInput-strength-text').length).to.equal(1);
-    // expect(input.find('.PasswordInput-strength-text').text())
-    //   .to.equal('Strong');
+    input.find('input').simulate('change',
+      { target: { value: 'correct horse battery staple' } });
+    expect(input.find('.PasswordInput-strength--4').length).to.equal(1);
+    expect(input.find('.PasswordInput-strength-text').length).to.equal(1);
+    expect(input.find('.PasswordInput-strength-text').text())
+      .to.equal('Strong');
   });
 });

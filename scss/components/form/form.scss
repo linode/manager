@@ -24,6 +24,7 @@ form {
     &:focus {
         color: $black;
     }
+
 }
 
 select.form-control:not([size]):not([multiple]) {

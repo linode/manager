@@ -114,7 +114,7 @@ export class RescuePage extends Component {
         className="row disk-slot"
         key={index}
       >
-        <label className="col-sm-2  ">
+        <label className="col-sm-2 row-label">
           /dev/{AVAILABLE_DISK_SLOTS[index]}
         </label>
         <div className="col-sm-10">
@@ -151,7 +151,7 @@ export class RescuePage extends Component {
           <Form className="RescueMode-form" onSubmit={() => { this.rebootToRescue(); }}>
             {slots}
             <div className="form-group row disk-slot">
-              <label className="col-sm-2  ">
+              <label className="col-sm-2">
                 /dev/sdh
               </label>
               <div className="col-sm-10">Finnix Media</div>

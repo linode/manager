@@ -70,7 +70,7 @@ describe('linodes/linode/settings/layouts/DisplayPage', () => {
     expect(dispatchStub.calledTwice).to.equal(true);
 
     const label = page.find('.form-group').at(1);
-    expect(label.find('.form-control-feedback > div').text()).to.equal(error);
+    expect(label.find('.form-control-feedback > span').text()).to.equal(error);
   });
 
   it('redirects if the label changed', async () => {
