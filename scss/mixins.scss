@@ -1,3 +1,9 @@
+// font size mixin based on 10px
+@mixin font-size($size: 1.6) {
+    font-size: ($size * 10) + px; // px fallback where rem not supported
+    font-size: $size + rem;
+}
+
 @mixin flex($justify-content: space-between) {
     display: flex;
     flex-wrap: wrap;
@@ -17,4 +23,11 @@
     color: $lightest-black;
     line-height: $input-height;
     white-space: nowrap;
+}
+
+@mixin title() {
+    text-align: center;
+    overflow: hidden;
+    line-height: $input-height;
+    color: $black;
 }

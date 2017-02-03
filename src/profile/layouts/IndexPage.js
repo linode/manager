@@ -33,7 +33,7 @@ export function IndexPage(props) {
           props.dispatch(push(tab.link));
         }}
       >
-        <div className="container">
+        <div className="container tab-content-container">
           {props.children}
         </div>
       </Tabs>

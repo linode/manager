@@ -25,7 +25,7 @@ export default class Datacenter extends Component {
         <header>
           <div className="title">{datacenter.label}</div>
         </header>
-        <div>
+        <div className="option-contents">
           <img
             src={flags[datacenter.country]}
             width={64}

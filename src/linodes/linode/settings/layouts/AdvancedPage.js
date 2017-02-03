@@ -16,13 +16,9 @@ export class AdvancedPage extends Component {
 
   render() {
     return (
-      <div>
-        <section className="card">
-          <ConfigPanel {...this.props} />
-        </section>
-        <section className="card">
-          <DiskPanel {...this.props} />
-        </section>
+      <div className="subtab-content-container">
+        <ConfigPanel {...this.props} />
+        <DiskPanel {...this.props} />
       </div>
     );
   }
