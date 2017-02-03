@@ -145,7 +145,7 @@ export class ZonePage extends Component {
       <div>
         <header className="main-header main-header--border">
           <div className="container">
-            <h1>{currentDNSZone.dnszone}</h1>
+            <h1 title={currentDNSZone.id}>{currentDNSZone.dnszone}</h1>
           </div>
         </header>
         <div className="container">
