@@ -136,6 +136,7 @@ export default class StatusDropdown extends Component {
 }
 
 StatusDropdown.propTypes = {
+  className: PropTypes.string,
   linode: PropTypes.object,
   dispatch: PropTypes.func,
   shortcuts: PropTypes.bool,

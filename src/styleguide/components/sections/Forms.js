@@ -61,7 +61,8 @@ export default function Forms() {
                       type="text"
                       name="example-form-field"
                       className="form-control"
-                      placeholder="225px" />
+                      placeholder="225px"
+                    />
                   </div>
                 </FormGroup>
                 <FormGroup className="row">

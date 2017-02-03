@@ -20,6 +20,7 @@ Checkbox.propTypes = {
   checked: PropTypes.bool.isRequired,
   onChange: PropTypes.func.isRequired,
   className: PropTypes.string,
+  id: PropTypes.string,
   label: PropTypes.string,
   value: PropTypes.object,
 };
@@ -27,3 +28,4 @@ Checkbox.propTypes = {
 Checkbox.defaultProps = {
   className: '',
 };
+
