@@ -5,11 +5,26 @@ import { push } from 'react-router-redux';
 import { ErrorSummary, reduceErrors } from '~/errors';
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import { linodes } from '~/api';
+import { linodeBackups } from '~/api/linodes';
 import { takeBackup, restoreBackup } from '~/api/backups';
 import { setError } from '~/actions/errors';
 
 function renderDateTime(dt) {
   return dt.replace('T', ' ');
+}
+
+export function getBackup(backups, backupId) {
+  const backupList = backups.weekly;
+  backupList.push(
+    backups.daily,
+    backups.snapshot.current,
+    backups.snapshot.in_progress
+  );
+  for(const i in backupList) {
+    if(backupList[i] && backupList[i].id === parseInt(backupId)) {
+      return backupList[i];
+    }
+  }
 }
 
 export class BackupPage extends Component {
@@ -18,7 +33,7 @@ export class BackupPage extends Component {
       (match, linode) => linode.label === linodeLabel ? linode : match);
 
     try {
-      await dispatch(linodes.backups.all([id]));
+      //await dispatch(linodeBackups(id));
       // All linodes are in-fact needed for restore dialog.
       await dispatch(linodes.all());
     } catch (e) {
@@ -78,7 +93,7 @@ export class BackupPage extends Component {
     } = this.state;
 
     const linode = this.getLinode();
-    const backup = linode._backups.backups[backupId];
+    const backup = getBackup(linode._backups, backupId);
 
     const duration = Math.floor((Date.parse(backup.finished) -
       Date.parse(backup.created)) / 1000 / 60);

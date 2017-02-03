@@ -42,7 +42,6 @@ export const apiTestLinode = {
   },
   backups: {
     enabled: true,
-    last_backup: '2016-06-09T15:05:55',
     schedule: {
       day: 'Monday',
       window: 'W10',
@@ -67,43 +66,72 @@ export const testLinode = {
   ...apiTestLinode,
   _polling: false,
   _backups: {
-    totalPages: 1,
-    pagesFetched: [0],
-    totalResults: 2,
-    backups: {
-      54778593: {
-        type: 'auto',
-        id: 54778593,
-        created: '2016-06-09T15:05:55',
-        finished: '2016-06-09T15:06:55',
-        status: 'successful',
-        availability: 'daily',
-        datacenter: {
-          label: 'Newark, NJ',
-          id: 'newark',
+    daily: {
+      finished: "2017-01-31T07:30:03",
+      label: null,
+      type: "auto",
+      updated: "2017-01-31T12:32:01",
+      status: "successful",
+      disks: [
+        {
+          size: 2330,
+          label: "Ubuntu 15.10 Disk",
+          filesystem: "ext4",
+        }, {
+          size: 0,
+          label: "512 MB Swap Image",
+          filesystem: "swap",
         },
-        configs: [
-          'Some config',
-        ],
-        disks: testBackupDisks,
-      },
-      54778596: {
-        type: 'snapshot',
-        id: 54778596,
-        created: '2016-06-09T15:11:55',
-        finished: '2016-06-09T15:12:55',
-        status: 'successful',
-        label: 'Some snapshot',
-        datacenter: {
-          label: 'Newark, NJ',
-          id: 'newark',
-        },
-        configs: [
-          'Some config',
-        ],
-        disks: testBackupDisks,
+      ],
+      id: 54782214,
+      availability: "daily",
+      created: "2017-01-31T07:28:52",
+      configs: [
+        "My Ubuntu 15.10 Disk",
+        "hyhrtyhry",
+        "asdfasg",
+        "ghdfghdt",
+        "khjgkghjkg",
+      ],
+      datacenter: {
+        label: "Newark, NJ",
+        country: "us",
+        id: "newark",
       },
     },
+    snapshot: {
+      current: {
+        finished: "2017-01-31T21:51:51",
+        label: "",
+        type: "snapshot",
+        updated: "2017-01-31T21:51:51",
+        status: "successful",
+        disks: [
+          {
+            size: 2330,
+            label: "Ubuntu 15.10 Disk",
+            filesystem: "ext4",
+          }, {
+            size: 0,
+            label: "512 MB Swap Image",
+            filesystem: "swap",
+          },
+        ],
+        id: 54782236,
+        availability: "unavailable",
+        created: "2017-01-31T21:50:42",
+        configs: [
+          "Some config",
+        ],
+        datacenter: {
+          label: "Newark, NJ",
+          country: "us",
+          id: "newark",
+        }
+      },
+      in_progress: null,
+    },
+    weekly: [],
   },
   _disks: {
     totalPages: 1,
@@ -230,34 +258,73 @@ export const linodes = {
     backups: { ...testLinode.backups, enabled: false },
     _backups: {
       ...testLinode._backups,
-      totalResults: 4,
-      backups: {
-        ...testLinode._backups.backups,
-        54778594: {
-          type: 'auto',
-          id: 54778594,
-          created: '2016-06-08T15:05:55',
-          finished: '2016-06-08T15:06:55',
-          status: 'successful',
-          availability: 'weekly',
+      weekly: [
+        {
+          finished: "2017-01-31T07:30:03",
+          label: null,
+          type: "auto",
+          updated: "2017-01-31T12:32:01",
+          status: "successful",
+          disks: [
+            {
+              size: 2330,
+              label: "Ubuntu 15.10 Disk",
+              filesystem: "ext4",
+            }, {
+              size: 0,
+              label: "512 MB Swap Image",
+              filesystem: "swap",
+            },
+          ],
+          id: 54782216,
+          availability: "daily",
+          created: "2017-01-31T07:28:52",
+          configs: [
+            "My Ubuntu 15.10 Disk",
+            "hyhrtyhry",
+            "asdfasg",
+            "ghdfghdt",
+            "khjgkghjkg",
+          ],
           datacenter: {
-            label: 'Newark, NJ',
-            id: 'newark',
+            label: "Newark, NJ",
+            country: "us",
+            id: "newark",
+          },
+        }, {
+          finished: "2017-01-31T07:30:03",
+          label: null,
+          type: "auto",
+          updated: "2017-01-31T12:32:01",
+          status: "successful",
+          disks: [
+            {
+              size: 2330,
+              label: "Ubuntu 15.10 Disk",
+              filesystem: "ext4",
+            }, {
+              size: 0,
+              label: "512 MB Swap Image",
+              filesystem: "swap",
+            },
+          ],
+          id: 54782217,
+          availability: "daily",
+          created: "2017-01-31T07:28:52",
+          configs: [
+            "My Ubuntu 15.10 Disk",
+            "hyhrtyhry",
+            "asdfasg",
+            "ghdfghdt",
+            "khjgkghjkg",
+          ],
+          datacenter: {
+            label: "Newark, NJ",
+            country: "us",
+            id: "newark",
           },
         },
-        54778595: {
-          type: 'auto',
-          id: 54778595,
-          created: '2016-06-01T15:05:55',
-          finished: '2016-06-01T15:06:55',
-          status: 'successful',
-          availability: 'weekly',
-          datacenter: {
-            label: 'Newark, NJ',
-            id: 'newark',
-          },
-        },
-      },
+      ],
     },
   },
   1236: {
@@ -268,9 +335,12 @@ export const linodes = {
     created: '2016-07-06T16:48:27',
     backups: { ...testLinode.backups, enabled: false },
     _backups: {
-      ...testLinode._backups,
-      totalResults: 0,
-      backups: {},
+      snapshot: {
+        current: null,
+        in_progress: null,
+      },
+      daily: null,
+      weekly: [],
     },
   },
   1237: {
@@ -378,7 +448,6 @@ export const linodes = {
     label: 'test-linode-1245',
     backups: {
       ...testLinode.backups,
-      last_backup: '2016-06-28T14:19:37',
     },
     _ips: {
       ...testLinode._ips,

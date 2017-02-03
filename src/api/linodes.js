@@ -114,3 +114,13 @@ export function addIP(linodeId, type) {
     dispatch(linodeIPs(linodeId));
   };
 }
+
+export function linodeBackups(linodeId) {
+  return async (dispatch, getState) => {
+    const state = getState();
+    const { token } = state.authentication;
+    const response = await fetch(token, `/linode/instances/${linodeId}/backups`);
+    const json = { _backups: await response.json() };
+    dispatch(actions.one(json, linodeId));
+  };
+}

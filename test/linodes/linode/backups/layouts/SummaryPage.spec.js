@@ -61,10 +61,10 @@ describe('linodes/linode/backups/layouts/SummaryPage', () => {
       expect(block.find('.description').text()).to.contain(description);
     };
 
-    testBlock(blocks.at(0), 'Daily', 'days', '54778593');
-    testBlock(blocks.at(1), 'Weekly', 'days', '54778594');
-    testBlock(blocks.at(2), 'Biweekly', 'days', '54778595');
-    testBlock(blocks.at(3), 'Snapshot', 'days', '54778596');
+    testBlock(blocks.at(0), 'Daily', 'day', '54782214');
+    testBlock(blocks.at(1), 'Weekly', 'day', '54782216');
+    testBlock(blocks.at(2), 'Biweekly', 'day', '54782217');
+    testBlock(blocks.at(3), 'Snapshot', 'day', '54782236');
   });
 
   it('takes a snapshot', async () => {

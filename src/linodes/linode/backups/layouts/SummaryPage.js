@@ -60,7 +60,7 @@ export class SummaryPage extends Component {
   renderBlock(title, backup) {
     const { params: { linodeLabel } } = this.props;
 
-    if (backup === undefined || backup.finished === null) {
+    if (backup === undefined || backup === null || backup.finished === null) {
       return title === 'Snapshot' ? this.renderEmptySnapshot() :
         this.renderEmpty(title);
     }
@@ -84,17 +84,12 @@ export class SummaryPage extends Component {
   render() {
     const { errors } = this.state;
 
-    const backups = Object.values(this.getLinode()._backups.backups);
-    backups.sort((a, b) => a.created > b.created);
-
-    const daily = backups.find(b => b.availability === 'daily');
-    const snapshot = backups.find(b => b.type === 'snapshot');
-
-    const weeklies = backups.filter(b => b.availability === 'weekly');
-    weeklies.sort((a, b) => Date.parse(b.created) - Date.parse(a.created));
-
-    const weekly = weeklies.length >= 1 ? weeklies[0] : undefined;
-    const biweekly = weeklies.length >= 2 ? weeklies[1] : undefined;
+    const backups = this.getLinode()._backups;
+    const daily = backups.daily;
+    const snapshot = backups.snapshot.in_progress ?
+      backups.snapshot.in_progress : backups.snapshot.current;
+    const weekly = backups.weekly.length ? backups.weekly[0] : undefined;
+    const biweekly = backups.weekly.length === 2 ? backups.weekly[1] : undefined;
 
     const blocks = [
       this.renderBlock('Daily', daily),

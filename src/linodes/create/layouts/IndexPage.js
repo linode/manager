@@ -12,6 +12,7 @@ import { randomInitialProgress } from '~/api/linodes';
 import { setError } from '~/actions/errors';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
+import { getBackup } from '~/linodes/linode/backups/layouts/BackupPage';
 import { reduceErrors } from '~/errors';
 
 export class IndexPage extends Component {
@@ -44,6 +45,7 @@ export class IndexPage extends Component {
     dispatch(setSource(__filename));
     dispatch(setTitle('Add a Linode'));
     const { location } = this.props;
+    console.log(location);
     if (location.query && location.query.linode && location.query.backup) {
       let _linodes = this.props.linodes;
       let linode = _linodes.linodes[location.query.linode];
@@ -136,7 +138,8 @@ export class IndexPage extends Component {
           onSourceSelected={(type, id, linodeId) => {
             if (type === 'backup' && linodeId && id) {
               const linode = linodes.linodes[linodeId];
-              const backup = linode._backups.backups[id];
+              const backup = getBackup(linode._backups, id);
+
               this.setState({
                 backup: id,
                 datacenter: backup.datacenter.id,
