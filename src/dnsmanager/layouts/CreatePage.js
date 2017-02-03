@@ -68,7 +68,7 @@ export class CreatePage extends Component {
                 <Tab>Clone</Tab>
               </TabList>
               <TabPanel>
-                <section>
+                <section className="subtab-content-container">
                   <NewMasterZone
                     onSubmit={this.addMasterZone}
                     onChange={this.newMasterZoneChange}

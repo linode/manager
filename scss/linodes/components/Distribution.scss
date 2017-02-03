@@ -1,11 +1,4 @@
 .LinodesDistribution {
-    @mixin title() {
-        text-align: center;
-        overflow: hidden;
-        line-height: $input-height;
-        color: $black;        
-    }
-
     @extend .dropdown;
 
     border: $border;
@@ -22,15 +15,15 @@
     
     &--isNoLinodeDistribution {
         & > div {
+            @extend .font-small;
             padding: 0 10px;
-            font-size: $font-xs-small;
         }
     }
 
     &-dropdown {
         @include clearfix();
 
-        margin-bottom: 0 !important; /* Remove after cleaning up .card header */
+        margin-bottom: 0;
         border-bottom: $border;
         background-color: $light-gray;
         line-height: inherit;
@@ -77,7 +70,6 @@
         @include pointer();
         @extend .dropdown-item;
 
-        font-size: $font-normal;
         text-align: left !important;
         font-weight: inherit;
         padding: 0 inherit;
@@ -90,10 +82,11 @@
     }
 
     &-body {
-        height: 6rem;
         display: flex;
+        height: 100px;
         justify-content: center;
         align-items: center;
+
 
         span {
             padding: 0 15px;

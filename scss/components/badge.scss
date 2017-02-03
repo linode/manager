@@ -1,10 +1,10 @@
 $badge-height: 25px;
 
 .badge {
+  @extend .font-small;
   border-radius: 15px;
   display: inline-block;
   position: absolute;
-  font-size: $font-xs-small;
   color: $white;
   height: $badge-height;
   line-height: $badge-height + 1px;

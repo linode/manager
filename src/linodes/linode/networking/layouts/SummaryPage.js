@@ -158,7 +158,7 @@ export class SummaryPage extends Component {
 
   render() {
     return (
-      <div>
+      <div className="subtab-content-container">
         <section className="card">
           <header className="clearfix">
             <h2 className="float-xs-left">Summary</h2>

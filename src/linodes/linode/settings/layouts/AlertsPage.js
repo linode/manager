@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import HelpButton from '~/components/HelpButton';
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
+import { Card } from '~/components';
 import { Form, SubmitButton } from '~/components/form';
 import { linodes } from '~/api';
 import { setSource } from '~/actions/source';
@@ -116,22 +117,24 @@ export class AlertsPage extends Component {
     ];
 
     return (
-      <section className="card linode-alerts">
-        <header>
-          <h2>
-            Alerts
-            <HelpButton to="https://google.com" />
-          </h2>
-        </header>
-        <Form onSubmit={() => this.saveChanges()}>
-          {alerts.map(this.renderAlertRow)}
-          <div className="row">
-            <div className="offset-sm-2 col-sm-10">
-              <SubmitButton disabled={loading} />
+      <div className="subtab-content-container">
+        <Card className="linode-alerts">
+          <header>
+            <h2>
+              Alerts
+              <HelpButton to="https://google.com" />
+            </h2>
+          </header>
+          <Form onSubmit={() => this.saveChanges()}>
+            {alerts.map(this.renderAlertRow)}
+            <div className="row">
+              <div className="offset-sm-2 col-sm-10">
+                <SubmitButton disabled={loading} />
+              </div>
             </div>
-          </div>
-        </Form>
-      </section>
+          </Form>
+        </Card>
+      </div>
     );
   }
 }

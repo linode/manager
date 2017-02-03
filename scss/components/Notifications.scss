@@ -14,7 +14,6 @@
         border-left: $border;
         // TODO: create a box-shadow mixin
         box-shadow: 2px 2px 4px 2px $dark-gray;
-        font-size: $font-xs-normal;
         max-height: calc(#{$main-height} - 100px);
         overflow-y: auto;
         position: fixed;

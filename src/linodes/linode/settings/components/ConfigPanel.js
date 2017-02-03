@@ -71,7 +71,7 @@ export class ConfigPanel extends Component {
     const content = configContent(linode, configs, dispatch);
 
     return (
-      <div>
+      <section className="card">
         <header className="clearfix">
           <h2 className="float-xs-left">Configs<HelpButton to="http://example.org" /></h2>
           <Button
@@ -82,7 +82,7 @@ export class ConfigPanel extends Component {
           </Button>
         </header>
         {content}
-      </div>
+      </section>
     );
   }
 }

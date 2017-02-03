@@ -1,0 +1,23 @@
+.selected {
+  background: $light-blue;
+}
+
+.vcenter {
+  display: inline-block;
+  vertical-align: middle;
+  float: none;
+  position: relative;
+}
+
+.text-danger {
+  color: $red;
+}
+
+// TODO: prettify
+.alert {
+  &.alert-info {
+    background: $yellow;
+    border-color: $dark-gray;
+    color: $light-black;
+  }
+}

@@ -8,18 +8,18 @@ $header-padding: $grid-gutter-width-base / 2;
 }
 
 .MiniHeader {
+    @extend .font-small;
     padding: 0 $header-padding;
     height: $info-nav-height;
     background: $black;
-    font-size: $font-xs-small;
     line-height: $info-nav-height;
 
     &-new {
+        @extend .font-small;
         color: $black;
         text-transform: uppercase;
         background: $white;
         padding: 1px 4px;
-        font-size: $font-xs-small;
 
         &:hover {
             text-decoration: underline;

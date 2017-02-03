@@ -4,6 +4,7 @@
     background: $white;
     border-bottom: $border;
     margin: 0 auto;
+    padding: 0 15px;
   }
 
   [role="tablist"].form-tab-list [role="tab"] {
@@ -50,7 +51,6 @@
 /* define subtab behavior */
 .Tabs.SubTabs {
   [role="tablist"] {
-    margin-top: $main-padding-tb/2;
     padding: 0;
     background: transparent;
   }
