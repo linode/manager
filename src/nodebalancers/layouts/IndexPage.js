@@ -76,7 +76,11 @@ export class IndexPage extends Component {
                   onChange={() =>
                     this.setState({ isSelected: { ...isSelected, [n.id]: !isSelected[n.id] } })}
                 />
-                <Link className="PrimaryTable-rowLabel" to={`/nodebalancer/${n.label}`}>
+                <Link
+                  className="PrimaryTable-rowLabel"
+                  to={`/nodebalancer/${n.label}`}
+                  title={n.id}
+                >
                   {n.label}
                 </Link>
               </td>

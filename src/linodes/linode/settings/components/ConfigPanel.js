@@ -26,6 +26,7 @@ function configContent(linode, configs, dispatch) {
             <td>
               <Link
                 to={`/linodes/${linode.label}/settings/advanced/configs/${config.id}`}
+                title={config.id}
               >
                 {config.label}
               </Link>

@@ -40,7 +40,12 @@ body,
 
 .main-header {
   background: $white;
-  padding: 15px 0;
+    padding: 15px 0;
+
+    &--border {
+        border-bottom: $border;
+        margin-bottom: 15px;
+    }
 
   // TODO: look at grid defaults. this fixes tab alignment
   .container {
