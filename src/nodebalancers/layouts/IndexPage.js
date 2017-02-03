@@ -100,7 +100,7 @@ export class IndexPage extends Component {
         <header className="PrimaryPage-header">
           <div className="PrimaryPage-headerRow clearfix">
             <h1 className="float-sm-left">NodeBalancers</h1>
-            <Link to="/linodes/create" className="linode-add btn btn-primary float-sm-right">
+            <Link to="/nodebalancers/create" className="linode-add btn btn-primary float-sm-right">
               <span className="fa fa-plus"></span>
               Add a NodeBalancer
             </Link>
@@ -108,7 +108,7 @@ export class IndexPage extends Component {
         </header>
         <div className="PrimaryPage-body">
           {Object.keys(this.props.nodebalancers.nodebalancers).length ? renderZones() :
-            <CreateHelper label="zones" href="/dnsmanager/create" linkText="Add a zone" />}
+            <CreateHelper label="zones" href="/nodebalancers/create" linkText="Add a zone" />}
         </div>
       </div>
     );

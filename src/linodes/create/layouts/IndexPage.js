@@ -4,7 +4,7 @@ import { push } from 'react-router-redux';
 
 import Source from '../components/Source';
 import Plan from '~/linodes/components/Plan';
-import Datacenter from '../components/Datacenter';
+import Datacenter from '~/components/Datacenter';
 import Details from '../components/Details';
 import Card from '~/components/Card';
 import { linodes } from '~/api';
@@ -121,7 +121,6 @@ export class IndexPage extends Component {
       sourceTab,
       loading,
     } = this.state;
-
 
     const selectedType = type === null ? null : types.types[type];
 

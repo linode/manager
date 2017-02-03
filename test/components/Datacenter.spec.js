@@ -3,10 +3,10 @@ import sinon from 'sinon';
 import { expect } from 'chai';
 import { shallow, mount } from 'enzyme';
 
-import Datacenter from '~/linodes/create/components/Datacenter';
+import Datacenter from '~/components/Datacenter';
 import { flags } from '~/assets';
 
-describe('linodes/create/components/Datacenter', () => {
+describe('components/Datacenter', () => {
   const datacenters = {
     newark: {
       id: 'newark',
