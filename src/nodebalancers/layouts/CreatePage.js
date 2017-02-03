@@ -4,7 +4,7 @@ import { push } from 'react-router-redux';
 
 import Card from '~/components/Card';
 import { Input, Form, FormGroup, FormGroupError, SubmitButton } from '~/components/form';
-import Datacenter from '~/linodes/create/components/Datacenter';
+import Datacenter from '~/components/Datacenter';
 import { nodebalancers } from '~/api';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
