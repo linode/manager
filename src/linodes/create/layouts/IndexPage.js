@@ -122,7 +122,6 @@ export class IndexPage extends Component {
       loading,
     } = this.state;
 
-
     const selectedType = type === null ? null : types.types[type];
 
     return (
