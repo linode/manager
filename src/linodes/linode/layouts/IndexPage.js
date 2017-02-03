@@ -57,7 +57,7 @@ export class IndexPage extends Component {
 
     return (
       <div className="float-xs-left">
-        <h1>{label}</h1>
+        <h1 title={linode.id}>{label}</h1>
       </div>
     );
   }

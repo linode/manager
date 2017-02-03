@@ -152,7 +152,11 @@ function renderCard(props) {
       <header className="header-secondary">
         {checkbox}
         <div>
-          <Link className="linode-label" to={`/linodes/${linode.label}`}>{linode.label}</Link>
+          <Link
+            className="linode-label"
+            to={`/linodes/${linode.label}`}
+            title={linode.id}
+          >{linode.label}</Link>
         </div>
         <span className="float-xs-right">
           <StatusDropdown
@@ -193,7 +197,11 @@ function renderRow(props) {
           checked={isSelected}
           onChange={() => onSelect(linode)}
         />
-        <Link to={`/linodes/${linode.label}`} className="PrimaryTable-rowLabel">
+        <Link
+          to={`/linodes/${linode.label}`}
+          className="PrimaryTable-rowLabel"
+          title={linode.id}
+        >
           {linode.label}
         </Link>
       </td>

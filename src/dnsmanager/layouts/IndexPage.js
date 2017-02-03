@@ -77,7 +77,11 @@ export class IndexPage extends Component {
                   onChange={() =>
                     this.setState({ isSelected: { ...isSelected, [z.id]: !isSelected[z.id] } })}
                 />
-                <Link className="PrimaryTable-rowLabel" to={`/dnsmanager/${z.dnszone}`}>
+                <Link
+                  className="PrimaryTable-rowLabel"
+                  to={`/dnsmanager/${z.dnszone}`}
+                  title={z.id}
+                >
                   {z.dnszone}
                 </Link>
               </td>
