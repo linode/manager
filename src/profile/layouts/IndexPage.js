@@ -27,8 +27,8 @@ export class IndexPage extends Component {
     ].map(t => ({ ...t, link: `/profile${t.link}` }));
 
     const pathname = location ? location.pathname : tabs[0].link;
-    const selected = tabs.reduce((last, current) =>
-      (pathname.indexOf(current.link) === 0 ? current : last));
+    const selected = tabs.reduce((knownIndex, { link }, currentIndex) =>
+      pathname.indexOf(link) === 0 ? currentIndex : knownIndex, 0);
 
     return (
       <div>
@@ -45,11 +45,7 @@ export class IndexPage extends Component {
             e.stopPropagation();
             dispatch(push(tab.link));
           }}
-        >
-          <div className="container">
-            {children}
-          </div>
-        </Tabs>
+        >{children}</Tabs>
       </div>
     );
   }

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router';
 
-import { Tabs } from '~/components/tabs';
+import Tabs from '~/components/Tabs';
 import { StyleguideSection } from '~/styleguide/components';
 
 export default function StyleguideTabs() {
@@ -29,8 +29,8 @@ export default function StyleguideTabs() {
               <h3>Example</h3>
               <Tabs
                 tabs={tabs}
-                selected={tabs[0]}
-                className="SubTabs"
+                selected={0}
+                isSubTabs
               />
             </div>
           </div>

@@ -46,46 +46,44 @@ export class DisplayPage extends Component {
   render() {
     const { group, label, errors } = this.state;
     return (
-      <div className="subtab-content-container">
-        <Card title="Display">
-          <Form onSubmit={this.onSubmit}>
-            <FormGroup errors={errors} className="row" name="group">
-              <div className="col-sm-1 label-col">
-                <label htmlFor="group">Group:</label>
-              </div>
-              <div className="col-sm-11">
-                <Input
-                  id="group"
-                  value={group}
-                  className="LinodesLinodeSettingsDisplay-group"
-                  onChange={e => this.setState({ group: e.target.value })}
-                />
-                <FormGroupError errors={errors} name="group" />
-              </div>
-            </FormGroup>
-            <FormGroup errors={errors} className="row" name="label">
-              <div className="col-sm-1 label-col">
-                <label htmlFor="label">Label:</label>
-              </div>
-              <div className="col-sm-11 content-col">
-                <Input
-                  id="label"
-                  className="LinodesLinodeSettingsDisplay-label"
-                  value={label}
-                  onChange={e => this.setState({ label: e.target.value })}
-                />
-                <FormGroupError errors={errors} name="label" />
-              </div>
-            </FormGroup>
-            <ErrorSummary errors={errors} />
-            <FormGroup className="row">
-              <div className="offset-sm-1 col-sm-11">
-                <SubmitButton />
-              </div>
-            </FormGroup>
-          </Form>
-        </Card>
-      </div>
+      <Card title="Display">
+        <Form onSubmit={this.onSubmit}>
+          <FormGroup errors={errors} className="row" name="group">
+            <div className="col-sm-1 label-col">
+              <label htmlFor="group">Group:</label>
+            </div>
+            <div className="col-sm-11">
+              <Input
+                id="group"
+                value={group}
+                className="LinodesLinodeSettingsDisplay-group"
+                onChange={e => this.setState({ group: e.target.value })}
+              />
+              <FormGroupError errors={errors} name="group" />
+            </div>
+          </FormGroup>
+          <FormGroup errors={errors} className="row" name="label">
+            <div className="col-sm-1 label-col">
+              <label htmlFor="label">Label:</label>
+            </div>
+            <div className="col-sm-11 content-col">
+              <Input
+                id="label"
+                className="LinodesLinodeSettingsDisplay-label"
+                value={label}
+                onChange={e => this.setState({ label: e.target.value })}
+              />
+              <FormGroupError errors={errors} name="label" />
+            </div>
+          </FormGroup>
+          <ErrorSummary errors={errors} />
+          <FormGroup className="row">
+            <div className="offset-sm-1 col-sm-11">
+              <SubmitButton />
+            </div>
+          </FormGroup>
+        </Form>
+      </Card>
     );
   }
 }

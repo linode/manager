@@ -13,24 +13,6 @@ describe('linodes/create/components/Source', () => {
     sandbox.restore();
   });
 
-  it('renders the source tabs', () => {
-    const tabList = mount(
-      <Source
-        distributions={api.distributions}
-        linodes={api.linodes}
-        distribution={null}
-        backup={null}
-        selectedTab={0}
-      />
-    ).find('.form-tab-list');
-
-    expect(tabList.children().length).to.equal(4);
-    expect(tabList.childAt(0).text()).to.equal('Distributions');
-    expect(tabList.childAt(1).text()).to.equal('Backups');
-    expect(tabList.childAt(2).text()).to.equal('Clone');
-    expect(tabList.childAt(3).text()).to.equal('StackScripts');
-  });
-
   it('invokes the onTabChange function as necessary', () => {
     const onTabChange = sandbox.spy();
     const c = shallow(
@@ -42,13 +24,13 @@ describe('linodes/create/components/Source', () => {
         selectedTab={0}
         onTabChange={onTabChange}
       />);
-    c.find('Tabs').props().onSelect(1);
+    c.find('Tabs').props().onClick(1);
     expect(onTabChange.calledOnce).to.equal(true);
     expect(onTabChange.calledWith(1)).to.equal(true);
   });
 
   it('renders Distributions', () => {
-    const c = shallow(
+    const c = mount(
       <Source
         distributions={api.distributions.distributions}
         linodes={api.linodes}
@@ -61,7 +43,7 @@ describe('linodes/create/components/Source', () => {
 
   it('invokes the onSourceSelected function as necessary for Distributions', () => {
     const onSourceSelected = sandbox.spy();
-    const c = shallow(
+    const c = mount(
       <Source
         distributions={api.distributions}
         linodes={api.linodes}
@@ -78,24 +60,11 @@ describe('linodes/create/components/Source', () => {
     expect(onSourceSelected.calledWith('distribution', distro)).to.equal(true);
   });
 
-  const moreBackupsLinodes = {
-    ...api.linodes,
-    linodes: {
-      ...api.linodes.linodes,
-      1240: {
-        ...api.linodes.linodes[1234],
-        id: 1240,
-        created: moment(api.linodes.linodes[1234].created) + 60,
-        label: 'More backups',
-      },
-    },
-  };
-
   it('renders Linodes', () => {
-    const c = shallow(
+    const c = mount(
       <Source
         distributions={api.distributions}
-        linodes={moreBackupsLinodes}
+        linodes={api.linodes}
         distribution={null}
         backup={null}
         selectedTab={1}
@@ -108,10 +77,10 @@ describe('linodes/create/components/Source', () => {
   });
 
   it('only shows shows n linodes per page of Backups', () => {
-    const c = shallow(
+    const c = mount(
       <Source
         distributions={api.distributions}
-        linodes={moreBackupsLinodes}
+        linodes={api.linodes}
         distribution={null}
         backup={null}
         selectedTab={1}
@@ -123,21 +92,20 @@ describe('linodes/create/components/Source', () => {
     // Only 1 row
     expect(c.find('table tbody tr').length).to.equal(1);
     // Four buttons (Previous, 1st page, 2nd page, Next)
-    expect(c.find('.page-item').length).to.equal(7);
+    expect(c.find('.page-item').length).to.equal(6);
     expect(c.find('.page-item').at(0).text()).to.equal('«');
     expect(c.find('.page-item').at(1).text()).to.equal('1');
     expect(c.find('.page-item').at(2).text()).to.equal('2');
     expect(c.find('.page-item').at(3).text()).to.equal('3');
     expect(c.find('.page-item').at(4).text()).to.equal('4');
-    expect(c.find('.page-item').at(5).text()).to.equal('5');
     expect(c.find('.page-item').at(6).text()).to.equal('»');
   });
 
   it('changes pages when requested', () => {
-    const c = shallow(
+    const c = mount(
       <Source
         distributions={api.distributions}
-        linodes={moreBackupsLinodes}
+        linodes={api.linodes}
         distribution={null}
         backup={null}
         selectedTab={1}
@@ -167,26 +135,23 @@ describe('linodes/create/components/Source', () => {
     expectOnly('test-linode');
     // Third page shows third linode
     clickNth(3);
-    expectOnly('More backups');
-    // Fourth page shows fourth linode
-    clickNth(4);
     expectOnly('test-linode-1245');
-    // Fifth page shows fifth linode
-    clickNth(5);
+    // Fourth page shows fifth linode
+    clickNth(4);
     expectOnly('test-linode-1246');
     // Previous goes to previous page
     clickNth(0);
     expectOnly('test-linode-1245');
     // Next goes to last page
-    clickNth(5);
+    clickNth(4);
     expectOnly('test-linode-1246');
   });
 
   it('filters backups when updating filter', () => {
-    const c = shallow(
+    const c = mount(
       <Source
         distributions={api.distributions}
-        linodes={moreBackupsLinodes}
+        linodes={api.linodes}
         distribution={null}
         backup={null}
         selectedTab={1}

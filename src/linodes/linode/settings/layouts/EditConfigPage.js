@@ -353,244 +353,242 @@ export class EditConfigPage extends Component {
     const linode = this.getLinode();
 
     return (
-      <div className="subtab-content-container">
-        <section className="card">
-          <header>
-            <h2>
-              {create ? 'Add config' : 'Edit config'}
-              <HelpButton to="https://example.org" />
-            </h2>
-            <h3 className="sub-header">Label and Note</h3>
-          </header>
-          <div>
-            {this.renderFormElement('Label', 'label', (
-              <input
+      <section className="card">
+        <header>
+          <h2>
+            {create ? 'Add config' : 'Edit config'}
+            <HelpButton to="https://example.org" />
+          </h2>
+          <h3 className="sub-header">Label and Note</h3>
+        </header>
+        <div>
+          {this.renderFormElement('Label', 'label', (
+            <input
+              className="form-control"
+              id="config-label"
+              disabled={loading}
+              placeholder={'My new config'}
+              value={label}
+              onChange={e => this.setState({ label: e.target.value })}
+            />
+           ))}
+          {this.renderFormElement('Notes', 'comments', (
+            <textarea
+              className="form-control"
+              id="config-comments"
+              placeholder="Notes"
+              value={comments}
+              disabled={loading}
+              onChange={e => this.setState({ comments: e.target.value })}
+            />
+           ))}
+        </div>
+        <h3 className="sub-header">Virtual Machine Mode</h3>
+        <div>
+          <fieldset className="form-group row">
+            <div className="col-sm-2 label-col">
+              <legend>Virtualization mode</legend>
+            </div>
+            <div className="col-sm-6">
+              {this.renderRadio('Paravirtualization', 'virtMode', 'paravirt')}
+              {this.renderRadio('Full virtualization', 'virtMode', 'fullvirt')}
+            </div>
+          </fieldset>
+        </div>
+        <h3 className="sub-header">Block Device Assignment</h3>
+        <div>
+          <div className="form-group row">
+            <div className="col-sm-2 label-col">
+              <label
+                htmlFor="config-kernel"
+              >Kernel</label>
+            </div>
+            <div className="col-sm-6">
+              <select
                 className="form-control"
-                id="config-label"
+                id="config-kernel"
+                value={kernel}
                 disabled={loading}
-                placeholder={'My new config'}
-                value={label}
-                onChange={e => this.setState({ label: e.target.value })}
-              />
-             ))}
-            {this.renderFormElement('Notes', 'comments', (
-              <textarea
+                onChange={e => this.setState({ kernel: e.target.value })}
+              >
+                <optgroup label="Current">
+                  {Object.values(kernels.kernels).map(kernel => {
+                    const map = {
+                      'linode/latest': 'Latest 32-bit kernel',
+                      'linode/latest_64': 'Latest 64-bit kernel',
+                    };
+                    if (kernel.deprecated) return;
+                    return (
+                      <option key={kernel.id} value={kernel.id}>
+                        {map[kernel.id] || kernel.label}
+                      </option>
+                    );
+                  })}
+                </optgroup>
+                <optgroup label="Deprecated">
+                  {Object.values(kernels.kernels).map(kernel => {
+                    const map = {
+                      'linode/latest': 'Latest 32-bit kernel',
+                      'linode/latest_64': 'Latest 64-bit kernel',
+                    };
+                    if (!kernel.deprecated) return;
+                    return (
+                      <option key={kernel.id} value={kernel.id}>
+                        {map[kernel.id] || kernel.label}
+                      </option>
+                    );
+                  })}
+                </optgroup>
+              </select>
+            </div>
+          </div>
+          <fieldset className="form-group row">
+            <div className="col-sm-2 label-col">
+              <legend>
+                Run level
+              </legend>
+            </div>
+            <div className="col-sm-6">
+              {this.renderRadio('Default', 'runLevel', 'default')}
+              {this.renderRadio('Single-user mode', 'runLevel', 'single')}
+              {this.renderRadio('init=/bin/bash', 'runLevel', 'binbash')}
+            </div>
+          </fieldset>
+          <div className="form-group row">
+            <div className="col-sm-2 label-col">
+              <label>Memory limit</label>
+            </div>
+            <div className="input-container col-sm-6">
+              {this.renderRadio(
+                <span>Maximum ({
+                  linode.type.length ? linode.type[0].ram : null
+                } MB)</span>,
+                'isMaxRam',
+                true
+              )}
+              {this.renderRadio(
+                <span>
+                  <input
+                    className="form-control"
+                    id="config-ramLimit"
+                    disabled={loading}
+                    placeholder="Memory limit"
+                    type="number"
+                    value={ramLimit}
+                    onChange={e => this.setState({ ramLimit: e.target.value })}
+                  />
+                  <span className="measure-unit">MB</span>
+                </span>,
+                'isMaxRam',
+                false
+              )}
+            </div>
+          </div>
+          {diskSlots.map(this.renderDiskSlot)}
+          <div className="form-group row">
+            <div className="col-sm-2 label-col">
+              <legend>initrd</legend>
+            </div>
+            <div className="input-container col-sm-6">
+              <select
+                id="config-initrd"
+                disabled={loading}
+                value={initrd}
                 className="form-control"
-                id="config-comments"
-                placeholder="Notes"
-                value={comments}
+                onChange={e => this.setState({ initrd: e.target.value })}
+              >
+                <option value="">No initrd</option>
+                <option value="25669">Recovery - Finnix (initrd)</option>
+              </select>
+            </div>
+          </div>
+          <div className="form-group row">
+            <div className="col-sm-2 label-col">
+              <label>root / boot device</label>
+            </div>
+            <div className="input-container col-sm-6">
+              {this.renderRadio(
+                <span className="multi-radio clearfix">
+                  <span>
+                    Standard
+                  </span>
+                  <select
+                    id="config-root-device-select"
+                    className="form-control float-xs-right"
+                    value={isCustomRoot ? '/dev/sda' : rootDevice}
+                    disabled={loading || isCustomRoot}
+                    onChange={e => this.setState({ rootDevice: e.target.value })}
+                  >
+                    {diskSlots.map((_, i) =>
+                      <option key={i} value={`/dev/${AVAILABLE_DISK_SLOTS[i]}`}>
+                        /dev/{AVAILABLE_DISK_SLOTS[i]}
+                      </option>
+                     )}
+                  </select>
+                </span>, 'isCustomRoot', false)}
+              {this.renderRadio(
+                <span className="multi-radio clearfix">
+                  <span>
+                    Custom
+                  </span>
+                  <input
+                    type="text"
+                    className="form-control float-xs-right"
+                    id="config-custom-root-device"
+                    disabled={loading || !isCustomRoot}
+                    placeholder="/dev/xvda"
+                    value={isCustomRoot ? rootDevice : ''}
+                    onChange={e => this.setState({ rootDevice: e.target.value })}
+                  />
+                </span>, 'isCustomRoot', true)}
+            </div>
+          </div>
+        </div>
+        <h3 className="sub-header">Filesystem/Boot Helpers</h3>
+        <div>
+          <fieldset className="form-group row">
+            <div className="col-sm-2 label-col">
+              <legend>
+                Boot helpers
+              </legend>
+            </div>
+            <div className="col-md-8">
+              {this.renderCheckbox(
+                'Enable distro helper',
+                'enableDistroHelper',
+                'Helps maintain correct inittab/upstart console device')}
+              {this.renderCheckbox(
+                'Disable updatedb',
+                'disableUpdatedb',
+                'Disables updatedb cron job to avoid disk thrashing')}
+              {this.renderCheckbox(
+                'Enable modules.dep helper',
+                'enableModulesdepHelper',
+                'Creates a modules dependency file for the kernel you run')}
+              {this.renderCheckbox(
+                'Enable network helper',
+                'enableNetworkHelper',
+                <span>
+                  Automatically configure static networking <a
+                    href="https://www.linode.com/docs/platform/network-helper"
+                  >
+                    (more info)
+                  </a>
+                </span>)}
+            </div>
+          </fieldset>
+          <ErrorSummary errors={errors} />
+          <div className="row">
+            <div className="offset-sm-2 col-sm-10">
+              <SubmitButton
                 disabled={loading}
-                onChange={e => this.setState({ comments: e.target.value })}
-              />
-             ))}
-          </div>
-          <h3 className="sub-header">Virtual Machine Mode</h3>
-          <div>
-            <fieldset className="form-group row">
-              <div className="col-sm-2 label-col">
-                <legend>Virtualization mode</legend>
-              </div>
-              <div className="col-sm-6">
-                {this.renderRadio('Paravirtualization', 'virtMode', 'paravirt')}
-                {this.renderRadio('Full virtualization', 'virtMode', 'fullvirt')}
-              </div>
-            </fieldset>
-          </div>
-          <h3 className="sub-header">Block Device Assignment</h3>
-          <div>
-            <div className="form-group row">
-              <div className="col-sm-2 label-col">
-                <label
-                  htmlFor="config-kernel"
-                >Kernel</label>
-              </div>
-              <div className="col-sm-6">
-                <select
-                  className="form-control"
-                  id="config-kernel"
-                  value={kernel}
-                  disabled={loading}
-                  onChange={e => this.setState({ kernel: e.target.value })}
-                >
-                  <optgroup label="Current">
-                    {Object.values(kernels.kernels).map(kernel => {
-                      const map = {
-                        'linode/latest': 'Latest 32-bit kernel',
-                        'linode/latest_64': 'Latest 64-bit kernel',
-                      };
-                      if (kernel.deprecated) return;
-                      return (
-                        <option key={kernel.id} value={kernel.id}>
-                          {map[kernel.id] || kernel.label}
-                        </option>
-                      );
-                    })}
-                  </optgroup>
-                  <optgroup label="Deprecated">
-                    {Object.values(kernels.kernels).map(kernel => {
-                      const map = {
-                        'linode/latest': 'Latest 32-bit kernel',
-                        'linode/latest_64': 'Latest 64-bit kernel',
-                      };
-                      if (!kernel.deprecated) return;
-                      return (
-                        <option key={kernel.id} value={kernel.id}>
-                          {map[kernel.id] || kernel.label}
-                        </option>
-                      );
-                    })}
-                  </optgroup>
-                </select>
-              </div>
-            </div>
-            <fieldset className="form-group row">
-              <div className="col-sm-2 label-col">
-                <legend>
-                  Run level
-                </legend>
-              </div>
-              <div className="col-sm-6">
-                {this.renderRadio('Default', 'runLevel', 'default')}
-                {this.renderRadio('Single-user mode', 'runLevel', 'single')}
-                {this.renderRadio('init=/bin/bash', 'runLevel', 'binbash')}
-              </div>
-            </fieldset>
-            <div className="form-group row">
-              <div className="col-sm-2 label-col">
-                <label>Memory limit</label>
-              </div>
-              <div className="input-container col-sm-6">
-                {this.renderRadio(
-                  <span>Maximum ({
-                    linode.type.length ? linode.type[0].ram : null
-                  } MB)</span>,
-                  'isMaxRam',
-                  true
-                )}
-                {this.renderRadio(
-                  <span>
-                    <input
-                      className="form-control"
-                      id="config-ramLimit"
-                      disabled={loading}
-                      placeholder="Memory limit"
-                      type="number"
-                      value={ramLimit}
-                      onChange={e => this.setState({ ramLimit: e.target.value })}
-                    />
-                    <span className="measure-unit">MB</span>
-                  </span>,
-                  'isMaxRam',
-                  false
-                )}
-              </div>
-            </div>
-            {diskSlots.map(this.renderDiskSlot)}
-            <div className="form-group row">
-              <div className="col-sm-2 label-col">
-                <legend>initrd</legend>
-              </div>
-              <div className="input-container col-sm-6">
-                <select
-                  id="config-initrd"
-                  disabled={loading}
-                  value={initrd}
-                  className="form-control"
-                  onChange={e => this.setState({ initrd: e.target.value })}
-                >
-                  <option value="">No initrd</option>
-                  <option value="25669">Recovery - Finnix (initrd)</option>
-                </select>
-              </div>
-            </div>
-            <div className="form-group row">
-              <div className="col-sm-2 label-col">
-                <label>root / boot device</label>
-              </div>
-              <div className="input-container col-sm-6">
-                {this.renderRadio(
-                  <span className="multi-radio clearfix">
-                    <span>
-                      Standard
-                    </span>
-                    <select
-                      id="config-root-device-select"
-                      className="form-control float-xs-right"
-                      value={isCustomRoot ? '/dev/sda' : rootDevice}
-                      disabled={loading || isCustomRoot}
-                      onChange={e => this.setState({ rootDevice: e.target.value })}
-                    >
-                      {diskSlots.map((_, i) =>
-                        <option key={i} value={`/dev/${AVAILABLE_DISK_SLOTS[i]}`}>
-                          /dev/{AVAILABLE_DISK_SLOTS[i]}
-                        </option>
-                       )}
-                    </select>
-                  </span>, 'isCustomRoot', false)}
-                {this.renderRadio(
-                  <span className="multi-radio clearfix">
-                    <span>
-                      Custom
-                    </span>
-                    <input
-                      type="text"
-                      className="form-control float-xs-right"
-                      id="config-custom-root-device"
-                      disabled={loading || !isCustomRoot}
-                      placeholder="/dev/xvda"
-                      value={isCustomRoot ? rootDevice : ''}
-                      onChange={e => this.setState({ rootDevice: e.target.value })}
-                    />
-                  </span>, 'isCustomRoot', true)}
-              </div>
+                onClick={() => this.saveChanges()} // Look this up onClick for testing purposes
+              >{this.props.create ? 'Add config' : 'Save'}</SubmitButton>
+              <CancelButton to={`/linodes/${linodeLabel}/settings/advanced`} />
             </div>
           </div>
-          <h3 className="sub-header">Filesystem/Boot Helpers</h3>
-          <div>
-            <fieldset className="form-group row">
-              <div className="col-sm-2 label-col">
-                <legend>
-                  Boot helpers
-                </legend>
-              </div>
-              <div className="col-md-8">
-                {this.renderCheckbox(
-                  'Enable distro helper',
-                  'enableDistroHelper',
-                  'Helps maintain correct inittab/upstart console device')}
-                {this.renderCheckbox(
-                  'Disable updatedb',
-                  'disableUpdatedb',
-                  'Disables updatedb cron job to avoid disk thrashing')}
-                {this.renderCheckbox(
-                  'Enable modules.dep helper',
-                  'enableModulesdepHelper',
-                  'Creates a modules dependency file for the kernel you run')}
-                {this.renderCheckbox(
-                  'Enable network helper',
-                  'enableNetworkHelper',
-                  <span>
-                    Automatically configure static networking <a
-                      href="https://www.linode.com/docs/platform/network-helper"
-                    >
-                      (more info)
-                    </a>
-                  </span>)}
-              </div>
-            </fieldset>
-            <ErrorSummary errors={errors} />
-            <div className="row">
-              <div className="offset-sm-2 col-sm-10">
-                <SubmitButton
-                  disabled={loading}
-                  onClick={() => this.saveChanges()} // Look this up onClick for testing purposes
-                >{this.props.create ? 'Add config' : 'Save'}</SubmitButton>
-                <CancelButton to={`/linodes/${linodeLabel}/settings/advanced`} />
-              </div>
-            </div>
-          </div>
-        </section>
-      </div>
+        </div>
+      </section>
     );
   }
 }

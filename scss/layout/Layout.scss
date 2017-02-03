@@ -66,22 +66,6 @@ body,
   margin-bottom: -36px;
 }
 
-.tab-content-container {
-  padding: 0 15px 15px 15px;
-
-  & > .SubTabs {
-    margin-top: 5px;
-  }
-
-  & > :not(.SubTabs):first-child {
-    margin-top: 15px;
-  }
-}
-
-.subtab-content-container {
-  padding: 15px 0;
-}
-
 .card.graphs {
   margin-top: 15px;
 }

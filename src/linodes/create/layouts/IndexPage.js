@@ -132,7 +132,7 @@ export class IndexPage extends Component {
           backup={backup}
           selectedTab={sourceTab}
           distributions={distributions.distributions}
-          onTabChange={ix => this.setState({ sourceTab: ix })}
+          onTabChange={(_, index) => this.setState({ sourceTab: index })}
           onSourceSelected={(type, id, linodeId) => {
             if (type === 'backup' && linodeId && id) {
               const linode = linodes.linodes[linodeId];
