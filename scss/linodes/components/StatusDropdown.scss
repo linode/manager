@@ -12,7 +12,6 @@
     &-status {
         height: $input-height;
         padding-right: 10px;
-        font-size: $font-xs-normal;
         color: $light-black;
     }
 
@@ -38,10 +37,6 @@
         &:focus:active {
             background: transparent;
         }
-    }
-
-    .fa {
-        font-size: $font-xs-normal !important;
     }
 
     &-menu {
@@ -103,8 +98,8 @@
     }
 
     &-percent {
+        @extend .font-small;
         color: white;
-        font-size: $font-xs-small;
-        padding: 0 5px;
+        padding: 0 10px;
     }
 }

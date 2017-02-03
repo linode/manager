@@ -6,7 +6,7 @@ $card-padding: 15px;
     padding: $card-padding;
     position: relative;
     border-radius: 0;
-    margin: 0;
+    margin: 0 0 15px 0;
 
     .card-type {
         position: absolute;
@@ -22,9 +22,11 @@ $card-padding: 15px;
         }
     }
 
-    header {
-        margin-bottom: $card-padding;
+    & > header {
+        margin-bottom: 10px;
+    }
 
+    header {
         &.header-secondary {
             background-color: $light-gray;
             padding: 10px 15px;
