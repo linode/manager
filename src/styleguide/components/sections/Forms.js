@@ -258,7 +258,36 @@ export default function Forms() {
                 />
               </div>
             </FormGroup>
-            <ErrorSummary errors={{ _: [{ reason: 'Specific form error' }] }} />
+            <FormGroup
+              errors={{ validation_error: [{ reason: 'Specific form error' }] }}
+              name="validation_error"
+              className="row"
+            >
+              <label className="col-sm-3 col-form-label">Multiple validation errors:</label>
+              <div className="col-sm-9">
+                <Input value="Incorrect input" />
+                <FormGroupError
+                  errors={{ validation_error: [{ reason: 'Error 1' }, { reason: 'Error 1' }] }}
+                  name="validation_error"
+                />
+              </div>
+            </FormGroup>
+            <div className="row">
+              <div className="col-sm-3 row-label">
+                Form validation error
+              </div>
+              <div className="col-sm-9">
+                <ErrorSummary errors={{ _: [{ reason: 'Form level error' }] }} />
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-sm-3 row-label">
+                Multiple form validation errors
+              </div>
+              <div className="col-sm-9">
+                <ErrorSummary errors={{ _: [{ reason: 'Form level error 1' }, { reason: 'Form level error 2' }] }} />
+              </div>
+            </div>
           </div>
         </div>
 

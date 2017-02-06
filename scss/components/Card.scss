@@ -45,11 +45,6 @@ $card-padding: 15px;
         }
     }
 
-    .row-label {
-        color: $light-black; // $lightest-black
-        text-align: right;
-    }
-
     .row:not(:first-child) {
         margin-top: 10px;
     }
