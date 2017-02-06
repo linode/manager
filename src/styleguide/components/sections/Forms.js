@@ -285,7 +285,14 @@ export default function Forms() {
                 Multiple form validation errors
               </div>
               <div className="col-sm-9">
-                <ErrorSummary errors={{ _: [{ reason: 'Form level error 1' }, { reason: 'Form level error 2' }] }} />
+                <ErrorSummary
+                  errors={{
+                    _: [
+                      { reason: 'Form level error 1' },
+                      { reason: 'Form level error 2' },
+                    ],
+                  }}
+                />
               </div>
             </div>
           </div>
@@ -385,7 +392,9 @@ export default function Forms() {
                         </div>
                       </FormGroup>
                       <FormGroup className="row">
-                        <label className="col-sm-3 col-form-label">Checkbox input combo w/ label</label>
+                        <label className="col-sm-3 col-form-label">
+                          Checkbox input combo w/ label
+                        </label>
                         <div className="col-sm-9">
                           <CheckboxInputCombo
                             checkboxLabel="Checkbox 1"
@@ -396,7 +405,9 @@ export default function Forms() {
                         </div>
                       </FormGroup>
                       <FormGroup className="row">
-                        <label className="col-sm-3 col-form-label">Radio input combo with label</label>
+                        <label className="col-sm-3 col-form-label">
+                          Radio input combo with label
+                        </label>
                         <div className="col-sm-9">
                           <RadioInputCombo
                             radioLabel="Radio 1"
