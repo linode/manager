@@ -1,7 +1,9 @@
 .SubTabs {
     @extend .Tabs;
 
-    margin-top: -10px;
+    .Tabs & {
+        margin-top: -10px;
+    }
 
     [role="tablist"] {
         padding: 0;
