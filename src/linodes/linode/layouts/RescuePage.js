@@ -151,7 +151,7 @@ export class RescuePage extends Component {
           <Form className="RescueMode-form" onSubmit={() => { this.rebootToRescue(); }}>
             {slots}
             <div className="form-group row disk-slot">
-              <label className="col-sm-2">
+              <label className="col-sm-2 row-label">
                 /dev/sdh
               </label>
               <div className="col-sm-10">Finnix Media</div>
@@ -191,7 +191,8 @@ export class RescuePage extends Component {
               <div className="form-group row">
                 <label
                   htmlFor="reset-root-password-select"
-                  className="col-sm-2 col-form-label">
+                  className="col-sm-2 col-form-label"
+                >
                   Disk:
                 </label>
                 <div className="col-sm-10">
