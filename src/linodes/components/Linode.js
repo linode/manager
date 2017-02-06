@@ -47,7 +47,7 @@ export function renderDistroStyle(linode) {
         alt={linode.distribution.vendor}
         width="15" height="15"
       />
-      {linode.distribution.vendor}
+      <span>{linode.distribution.vendor}</span>
     </span>
   );
 }
