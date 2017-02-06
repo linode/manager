@@ -65,12 +65,8 @@ $header-padding: $grid-gutter-width-base / 2;
     &-search {
         padding: 14px 10px;
 
-        input.form-control {
-            background-color: $black;
-        }
-
-        input,
-        input:focus {
+        input.form-control,
+        input.form-control:focus {
             background: $black;
             width: 250px;
             border: $border;
