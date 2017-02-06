@@ -330,28 +330,6 @@ footer {
     }
 }
 
-.linodes .card {
-    margin-bottom: $main-padding-tb;
-
-    header {
-        padding-top: 15px;
-        padding-bottom: 15px;
-    }
-
-    header input[type="checkbox"] {
-        margin-top: 8px;
-    }
-
-    header > * {
-        vertical-align: top;
-    }
-
-    .linode-label, .linode-label:hover {
-        @extend .font-large;
-        color: $black;
-    }
-}
-
 .sub-header {
     color: $light-black;
     padding-top: 15px;
