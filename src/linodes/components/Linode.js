@@ -207,7 +207,7 @@ function renderRow(props) {
       <td>
         {renderBackupStatus(linode)}
       </td>
-      <td className="PrimaryTable-status-cell">
+      <td className="PrimaryTable-rowOptions">
         <StatusDropdown
           linode={linode}
           dispatch={props.dispatch}
