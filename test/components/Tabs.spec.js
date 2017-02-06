@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import sinon from 'sinon';
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import { expect } from 'chai';
 
 import Tabs from '~/components/Tabs';
