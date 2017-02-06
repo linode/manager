@@ -1,47 +1,20 @@
-$header-padding: $grid-gutter-width-base / 2;
-
 .Header {
     position: fixed;
     top: 0;
     width: 100%;
-    z-index: 9999;
-}
-
-.MiniHeader {
-    @extend .font-small;
-    padding: 0 $header-padding;
-    height: $info-nav-height;
-    background: $black;
-    line-height: $info-nav-height;
-
-    &-new {
-        @extend .font-small;
-        color: $black;
-        text-transform: uppercase;
-        background: $white;
-        padding: 1px 4px;
-
-        &:hover {
-            text-decoration: underline;
-        }
-    }
-
-    &-github .fa, &-twitter .fa {
-        color: $white;
-        text-decoration: none;
-        padding-left: $header-padding / 2;
-    }
+    z-index: 9998;
 }
 
 .MainHeader {
     height: $main-nav-height;
     background: $dark-black;
-    padding: 0 $header-padding;
+    font-size: 0;
 
-    &-brand, &-search, &-session {
-        float: left;
+    &-brand, &-search, &-session, &-link {
+        @extend .font-normal;
         display: inline-block;
-        margin-right: $header-padding;
+        line-height: $main-nav-height;
+        margin-right: 30px;
     }
 
     &-session {
@@ -51,7 +24,7 @@ $header-padding: $grid-gutter-width-base / 2;
     &-logo {
         font-size: 35px; /* Special font-size case */
         line-height: 50px;
-        padding-right: $header-padding / 2;
+        padding-right: 15px;
     }
 
     &-title {
@@ -62,17 +35,20 @@ $header-padding: $grid-gutter-width-base / 2;
         font-size: 18px; /* Special font-size case */
     }
 
-    &-search {
-        padding: 14px 10px;
+    &-link {
+        color: $lightest-black;
+        line-height: $main-nav-height;
+        margin-right: 30px;
+        // Correct for display:inline-block;
+        position: relative;
+        top: -2px;
 
-        input.form-control,
-        input.form-control:focus {
-            background: $black;
-            width: 250px;
-            border: $border;
-            border-color: black;
-            outline: 0;
-            color: #ccc;
+        &--selected,
+        &:hover,
+        &:focus,
+        &:active {
+            color: $white;
+            text-decoration: none;
         }
     }
 
@@ -81,6 +57,7 @@ $header-padding: $grid-gutter-width-base / 2;
     }
 
     &-session {
+        float: right;
         padding: 0 15px;
         margin-right: -15px;
         position: relative; /* Give the badge something to relate to */
@@ -102,7 +79,7 @@ $header-padding: $grid-gutter-width-base / 2;
     }
 
     &-username {
-        padding-right: $header-padding / 2;
+        padding-right: 15px;
         color: $white;
     }
 
@@ -146,5 +123,44 @@ $header-padding: $grid-gutter-width-base / 2;
     &-menu-item {
         line-height: initial;
         padding: 15px 30px;
+    }
+}
+
+.MiniHeader {
+    height: $info-nav-height;
+    background: $black;
+    line-height: $info-nav-height;
+
+    &-search, &-link {
+        display: inline-block;
+        line-height: $info-nav-height;
+    }
+
+    &-search {
+        padding: 14px 10px;
+        height: $input-height;
+
+        input.form-control,
+        input.form-control:focus {
+            background: $black;
+            width: 250px;
+            border: $border;
+            border-color: black;
+            outline: 0;
+            color: #ccc;
+        }
+    }
+
+    &-link {
+        @extend .MainHeader-link;
+        position: static;
+
+        &:first-of-type {
+            margin-left: 30px;
+        }
+
+        &--selected {
+            @extend .MainHeader-link--selected;
+        }
     }
 }

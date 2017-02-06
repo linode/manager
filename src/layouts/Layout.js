@@ -102,7 +102,6 @@ export class Layout extends Component {
           username={username}
           notifications={notifications}
         />
-        <Sidebar path={currentPath} />
         <div className="main full-height">
           <div className="main-inner">
             {!errors.status ?

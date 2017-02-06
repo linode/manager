@@ -33,12 +33,11 @@ $nav-hover-background-color: #3c3c3c;
 $main-padding-tb: 10px;
 $main-padding-lr: 20px;
 
-$nav-height: 84px;
-$info-nav-height: 25px;
+$nav-height: 100px;
+$info-nav-height: 40px;
 $main-nav-height: $nav-height - $info-nav-height;
 $main-height: calc(100% - #{$nav-height});
 
-$sidebar-width: 220px;
 
 /* END layout definitions */
 
@@ -56,23 +55,15 @@ $box-shadow: 0px 2px 4px 0px $transparent;
 
 
 /* BEGIN bootstrap overrides */
-// TODO: look at items that use this, some may now be calculating sub-pixel margins
-$grid-gutter-width-base: 30px;
-
-$grid-breakpoints: (
-  xs: 0 + $sidebar-width,
-  sm: 576px + $sidebar-width,
-  md: 768px + $sidebar-width,
-  lg: 992px + $sidebar-width,
-  xl: 1200px + $sidebar-width
-);
+$grid-gutter-width: 50px;
+$grid-gutter-width-base: 50px;
 
 // Basically just sets each max width to 100%
 $container-max-widths: (
-  sm: map-get($grid-breakpoints, sm) + $sidebar-width - $grid-gutter-width-base / 2,
-  md: map-get($grid-breakpoints, md) + $sidebar-width - $grid-gutter-width-base / 2,
-  lg: map-get($grid-breakpoints, lg) + $sidebar-width - $grid-gutter-width-base / 2,
-  xl: map-get($grid-breakpoints, xl) + $sidebar-width - $grid-gutter-width-base / 2
+  sm: 100%,
+  md: 100%,
+  lg: 100%,
+  xl: 1440px
 );
 
 /* END bootstrap overrides */
