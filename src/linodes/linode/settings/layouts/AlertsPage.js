@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import HelpButton from '~/components/HelpButton';
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import { Card } from '~/components';
-import { Form, SubmitButton } from '~/components/form';
+import { CheckboxInputCombo, Form, SubmitButton } from '~/components/form';
 import { linodes } from '~/api';
 import { setSource } from '~/actions/source';
 
@@ -57,31 +57,17 @@ export class AlertsPage extends Component {
       <div className="form-group row" key={name}>
         <label className="col-sm-2 col-form-label">{name}:</label>
         <div className="col-sm-10 ">
-          <div>
-            <div className="checkbox">
-              <label>
-                <input
-                  type="checkbox"
-                  checked={enabled}
-                  onChange={enabledChange}
-                  disabled={loading}
-                />
-                <span>
-                  Enable
-                </span>
-              </label>
-            </div>
-            <div>
-              <input
-                type="number"
-                value={threshold}
-                onChange={thresholdChange}
-                disabled={loading}
-                className="form-control"
-              />
-            </div>
-            {label}
-          </div>
+          <CheckboxInputCombo
+            checkboxLabel="Enable"
+            checkboxChecked={enabled}
+            checkboxOnChange={enabledChange}
+            checkboxDisabled={loading}
+            inputType="number"
+            inputValue={threshold}
+            inputOnChange={thresholdChange}
+            inputLabel={label}
+            inputDisabled={loading}
+          />
           <small className="text-muted">Triggered by: {text} exceeding this value</small>
         </div>
       </div>

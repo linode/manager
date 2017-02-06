@@ -385,6 +385,28 @@ export default function Forms() {
                         </div>
                       </FormGroup>
                       <FormGroup className="row">
+                        <label className="col-sm-3 col-form-label">Checkbox input combo w/ label</label>
+                        <div className="col-sm-9">
+                          <CheckboxInputCombo
+                            checkboxLabel="Checkbox 1"
+                            inputDisabled
+                            inputValue="Input 1"
+                            inputLabel="%"
+                          />
+                        </div>
+                      </FormGroup>
+                      <FormGroup className="row">
+                        <label className="col-sm-3 col-form-label">Radio input combo with label</label>
+                        <div className="col-sm-9">
+                          <RadioInputCombo
+                            radioLabel="Radio 1"
+                            inputDisabled
+                            inputValue="Input 1"
+                            inputLabel="%"
+                          />
+                        </div>
+                      </FormGroup>
+                      <FormGroup className="row">
                         <label className="col-sm-3 col-form-label">Radio select combo</label>
                         <div className="col-sm-9">
                           <RadioSelectCombo
