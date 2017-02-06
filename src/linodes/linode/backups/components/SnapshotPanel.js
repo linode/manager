@@ -15,7 +15,7 @@ export function snapshotPanel() {
         <h2>Snapshot</h2>
       </header>
       <div className="  row snapshot-button">
-        <div className="col-sm-12 left">
+        <div className="col-sm-12">
           <form>
             <button type="submit" className="btn btn-default">
               Take Snapshot

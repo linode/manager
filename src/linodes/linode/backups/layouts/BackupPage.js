@@ -109,7 +109,7 @@ export class BackupPage extends Component {
         <div className="col-sm-3 col-form-label">
           Restore to
         </div>
-        <div className="col-sm-9  right">
+        <div className="col-sm-9">
           <select
             value={targetLinode}
             onChange={e => this.setState({ targetLinode: e.target.value })}
@@ -123,14 +123,14 @@ export class BackupPage extends Component {
     const takeSnapshot = [(
       <div className="form-group row" key="errors">
         <div className="col-sm-3 col-form-label"></div>
-        <div className="col-sm-9  right">
+        <div className="col-sm-9">
           <ErrorSummary errors={takeSnapshotErrors} />
         </div>
       </div>
     ), (
       <div className="form-group row" key="button">
         <div className="col-sm-3 col-form-label"></div>
-        <div className="col-sm-9  right">
+        <div className="col-sm-9">
           <button
             type="button"
             className="btn btn-default"
@@ -229,7 +229,7 @@ export class BackupPage extends Component {
           {restoreToField}
           <div className="form-group row">
             <div className="col-sm-3 col-form-label"></div>
-            <div className="col-sm-9  right checkbox">
+            <div className="col-sm-9 checkbox">
               <label>
                 <input
                   id="destroy-all"
@@ -244,13 +244,13 @@ export class BackupPage extends Component {
           </div>
           <div className="form-group row">
             <div className="col-sm-3 col-form-label"></div>
-            <div className="col-sm-9  right">
+            <div className="col-sm-9">
               <ErrorSummary errors={restoreErrors} />
             </div>
           </div>
           <div className="  row">
             <div className="col-sm-3 col-form-label"></div>
-            <div className="col-sm-9  right">
+            <div className="col-sm-9">
               <button
                 type="button"
                 className="btn btn-default"

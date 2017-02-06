@@ -174,7 +174,7 @@ export class DashboardPage extends Component {
               <div className="col-sm-3 row-label">
                 IP Addresses
               </div>
-              <div className="col-sm-9 right">
+              <div className="col-sm-9">
                 <ul className="list-unstyled">
                   <li>{linode.ipv4}</li>
                   <li className="text-muted">{linode.ipv6.split('/')[0]}</li>
@@ -187,7 +187,7 @@ export class DashboardPage extends Component {
                 <div className="col-sm-3 row-label">
                   Plan
                 </div>
-                <div className="col-sm-9 right">
+                <div className="col-sm-9">
                   {plan}
                 </div>
               </div>
@@ -197,7 +197,7 @@ export class DashboardPage extends Component {
               <div className="col-sm-3 row-label">
                 Datacenter
               </div>
-              <div className="col-sm-9 right">
+              <div className="col-sm-9">
                 {this.renderDatacenterStyle(linode)}
               </div>
             </div>
@@ -205,7 +205,7 @@ export class DashboardPage extends Component {
               <div className="col-sm-3 row-label">
                 Distribution
               </div>
-              <div className="col-sm-9 right">
+              <div className="col-sm-9">
                 {this.renderDistroStyle(linode)}
               </div>
             </div>
@@ -213,7 +213,7 @@ export class DashboardPage extends Component {
               <div className="col-sm-3 row-label">
                 Backup
               </div>
-              <div className="col-sm-9 right">
+              <div className="col-sm-9">
                 {this.renderBackupStatus(linode, true)}
               </div>
             </div>
@@ -228,7 +228,7 @@ export class DashboardPage extends Component {
               <label htmlFor="ssh-input" className="col-sm-4 col-form-label">
                 SSH
               </label>
-              <div className="col-sm-8  right">
+              <div className="col-sm-8">
                 <div className="input-group">
                   <input
                     type="text"
@@ -247,7 +247,7 @@ export class DashboardPage extends Component {
               <label className="col-sm-4 col-form-label" htmlFor="lish-input">
                 Text console
               </label>
-              <div className="col-sm-8  right">
+              <div className="col-sm-8">
                 <div className="input-group">
                   <input
                     type="text"
@@ -272,7 +272,7 @@ export class DashboardPage extends Component {
               <label className="col-sm-4 col-form-label" htmlFor="glish-button">
                 Graphical console
               </label>
-              <div className="col-sm-8  right">
+              <div className="col-sm-8">
                 <div className="input-group-btn">
                   <Button id="glish-button" disabled>Open</Button>
                 </div>
