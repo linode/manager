@@ -35,6 +35,7 @@
     &-rowLabel, &-rowLabel:hover {
         @extend .font-large;
         color: $black;
+        vertical-align: top;
     }
 
     &-rowOptions {
