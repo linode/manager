@@ -172,8 +172,8 @@ export class BackupPage extends Component {
       `col-sm-9  right LinodesLinodeBackupsBackupPage-${name}`;
 
     const label = (
-      <div className="  row">
-        <div className="col-sm-3  ">
+      <div className="row">
+        <div className="col-sm-3">
           Label
         </div>
         <div className={bemField('label')}>
@@ -181,6 +181,9 @@ export class BackupPage extends Component {
         </div>
       </div>
     );
+
+    const vacant = 'In progress';
+
     return (
       <div>
         <section className="card">
@@ -188,60 +191,60 @@ export class BackupPage extends Component {
             <h2>Backup details</h2>
           </header>
           {backup.label ? label : null}
-          <div className="  row">
-            <div className="col-sm-3  ">
+          <div className="row">
+            <div className="col-sm-3">
               Started
             </div>
             <div className={bemField('started')}>
               {renderDateTime(backup.created)}
             </div>
           </div>
-          <div className="  row">
-            <div className="col-sm-3  ">
+          <div className="row">
+            <div className="col-sm-3">
               Finished
             </div>
             <div className={bemField('finished')}>
-              {backup.finished ? renderDateTime(backup.finished) : 'In progress'}
+              {backup.finished ? renderDateTime(backup.finished) : vacant}
             </div>
           </div>
-          <div className="  row">
-            <div className="col-sm-3  ">
+          <div className="row">
+            <div className="col-sm-3">
               Duration
             </div>
             <div className={bemField('duration')}>
-              {backup.finished ? `(${duration} ${durationUnit})` : 'In progress'}
+              {backup.finished ? `(${duration} ${durationUnit})` : vacant}
             </div>
           </div>
-          <div className="  row">
-            <div className="col-sm-3  ">
+          <div className="row">
+            <div className="col-sm-3">
               Datacenter constraint
             </div>
             <div className={bemField('datacenter')}>
               {backup.datacenter.label}
             </div>
           </div>
-          <div className="  row">
-            <div className="col-sm-3  ">
+          <div className="row">
+            <div className="col-sm-3">
               Configuration profiles
             </div>
             <div className={bemField('configs')}>
-              {configs || 'In progress'}
+              {configs || vacant}
             </div>
           </div>
-          <div className="  row">
-            <div className="col-sm-3  ">
+          <div className="row">
+            <div className="col-sm-3">
               Disks
             </div>
             <div className={bemField('disks')}>
-              {disks.length === 0 ? 'In progress' : disks}
+              {disks.length === 0 ? vacant : disks}
             </div>
           </div>
-          <div className="  row">
-            <div className="col-sm-3  ">
+          <div className="row">
+            <div className="col-sm-3">
               Space required
             </div>
             <div className={bemField('space')}>
-              {disks.length === 0 ? 'In progress' : `${space}MB`}
+              {disks.length === 0 ? vacant : `${space}MB`}
             </div>
           </div>
           {backup.type === 'snapshot' && backup.status !== 'pending' ?
