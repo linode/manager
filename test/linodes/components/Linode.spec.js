@@ -94,6 +94,38 @@ describe('linodes/components/Linode', () => {
           window: 'W12',
         },
       },
+      _backups: {
+        daily: {
+          created: '2017-02-06T07:28:56',
+          datacenter: {
+            id: 'newark',
+            country: 'us',
+            label: 'Newark, NJ',
+          },
+          configs: [
+            'Restore 67574',
+          ],
+          id: 54782434,
+          label: null,
+          availability: 'daily',
+          updated: '2017-02-06T12:32:01',
+          disks: [
+            {
+              size: 1,
+              filesystem: 'ext4',
+              label: 'Restore 67574',
+            },
+          ],
+          type: 'auto',
+          finished: '2017-02-06T07:29:53',
+          status: 'successful',
+        },
+        weekly: [],
+        snapshot: {
+          current: null,
+          in_progress: null,
+        },
+      },
     };
 
     afterEach(() => {
@@ -116,7 +148,7 @@ describe('linodes/components/Linode', () => {
     it('renders the last backup taken', () => {
       const item = shallow(renderBackupStatus(linode));
       expect(item.find('.backup-status').text()).to.equal(
-        `Backup taken ${moment.utc(linode.backups.last_backup).fromNow()}`);
+        `Backup taken ${moment.utc(linode._backups.daily.updated).fromNow()}`);
     });
 
     it('renders the projected time of the first backup', () => {
@@ -126,7 +158,14 @@ describe('linodes/components/Linode', () => {
         ...linode,
         backups: {
           ...linode.backups,
-          last_backup: null,
+        },
+        _backups: {
+          daily: null,
+          weekly: [],
+          snapshot: {
+            current: null,
+            in_progress: null,
+          },
         },
       }));
       expect(item.find('.backup-status').text()).to.equal(
@@ -140,7 +179,14 @@ describe('linodes/components/Linode', () => {
         ...linode,
         backups: {
           ...linode.backups,
-          last_backup: null,
+        },
+        _backups: {
+          daily: null,
+          weekly: [],
+          snapshot: {
+            current: null,
+            in_progress: null,
+          },
         },
       }));
       expect(item.find('.backup-status').text()).to.equal(
@@ -152,13 +198,15 @@ describe('linodes/components/Linode', () => {
         ...linode,
         backups: {
           ...linode.backups,
-          last_backup: {
-            create_dt: '2015-10-06T00:27:08',
-            duration: 0,
-            finish_dt: '2015-10-06T01:09:08',
-            id: 26083011,
+        },
+        _backups: {
+          daily: {
             status: 'running',
-            type: 'auto',
+          },
+          weekly: [],
+          snapshot: {
+            current: null,
+            in_progress: null,
           },
         },
       }));
@@ -171,13 +219,15 @@ describe('linodes/components/Linode', () => {
         ...linode,
         backups: {
           ...linode.backups,
-          last_backup: {
-            create_dt: '2015-10-06T00:27:08',
-            duration: 0,
-            finish_dt: '2015-10-06T01:09:08',
-            id: 26083011,
+        },
+        _backups: {
+          daily: {
             status: 'pending',
-            type: 'auto',
+          },
+          weekly: [],
+          snapshot: {
+            current: null,
+            in_progress: null,
           },
         },
       }));

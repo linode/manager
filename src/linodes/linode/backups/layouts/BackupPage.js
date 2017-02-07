@@ -13,16 +13,28 @@ function renderDateTime(dt) {
   return dt.replace('T', ' ');
 }
 
-export function getBackup(backups, backupId) {
-  const backupList = backups.weekly;
+export function getBackups(backups) {
+  const backupList = [];
+  if (backups.backups) {
+    return backupList;
+  }
   backupList.push(
     backups.daily,
+    backups.weekly[0],
+    backups.weekly[1],
     backups.snapshot.current,
-    backups.snapshot.in_progress
+    backups.snapshot.in_progress,
   );
-  for(const i in backupList) {
-    if(backupList[i] && backupList[i].id === parseInt(backupId)) {
-      return backupList[i];
+
+  return backupList.filter(Boolean);
+}
+
+export function getBackup(backups, backupId) {
+  const backupList = getBackups(backups);
+
+  for (const backup of backupList) {
+    if (backup && backup.id === parseInt(backupId)) {
+      return backup;
     }
   }
 }
@@ -33,7 +45,7 @@ export class BackupPage extends Component {
       (match, linode) => linode.label === linodeLabel ? linode : match);
 
     try {
-      //await dispatch(linodeBackups(id));
+      await dispatch(linodeBackups(id));
       // All linodes are in-fact needed for restore dialog.
       await dispatch(linodes.all());
     } catch (e) {
@@ -94,11 +106,9 @@ export class BackupPage extends Component {
 
     const linode = this.getLinode();
     const backup = getBackup(linode._backups, backupId);
-
     const duration = Math.floor((Date.parse(backup.finished) -
       Date.parse(backup.created)) / 1000 / 60);
     const durationUnit = duration === 1 ? 'minute' : 'minutes';
-
     const configs = backup.configs.join('<br />');
 
     // TODO: key={d.id} when disk IDs are added to API
@@ -107,8 +117,8 @@ export class BackupPage extends Component {
         {d.label} ({d.filesystem}) - {d.size}MB
       </div>
     );
-
-    const space = backup.disks.map(d => d.size).reduce((a, b) => a + b);
+    const space = disks.length === 0 ? null :
+      backup.disks.map(d => d.size).reduce((a, b) => a + b);
 
     const otherLinodes =
       Object.values(linodes.linodes).filter(l => l !== linode);
@@ -171,7 +181,6 @@ export class BackupPage extends Component {
         </div>
       </div>
     );
-
     return (
       <div>
         <section className="card">
@@ -192,7 +201,7 @@ export class BackupPage extends Component {
               Finished
             </div>
             <div className={bemField('finished')}>
-              {renderDateTime(backup.finished)}
+              {backup.finished ? renderDateTime(backup.finished) : 'In progress'}
             </div>
           </div>
           <div className="form-group row">
@@ -200,7 +209,7 @@ export class BackupPage extends Component {
               Duration
             </div>
             <div className={bemField('duration')}>
-              {`(${duration} ${durationUnit})`}
+              {backup.finished ? `(${duration} ${durationUnit})` : 'In progress'}
             </div>
           </div>
           <div className="form-group row">
@@ -216,7 +225,7 @@ export class BackupPage extends Component {
               Configuration profiles
             </div>
             <div className={bemField('configs')}>
-              {configs}
+              {configs || 'In progress'}
             </div>
           </div>
           <div className="form-group row">
@@ -224,7 +233,7 @@ export class BackupPage extends Component {
               Disks
             </div>
             <div className={bemField('disks')}>
-              {disks}
+              {disks.length === 0 ? 'In progress' : disks}
             </div>
           </div>
           <div className="form-group row">
@@ -232,51 +241,54 @@ export class BackupPage extends Component {
               Space required
             </div>
             <div className={bemField('space')}>
-              {`${space}MB`}
+              {disks.length === 0 ? 'In progress' : `${space}MB`}
             </div>
           </div>
-          {backup.type === 'snapshot' ? takeSnapshot : ''}
+          {backup.type === 'snapshot' && backup.status !== 'pending' ?
+            takeSnapshot : ''}
         </section>
-        <section className="card">
-          <header>
-            <h2>Restore</h2>
-          </header>
-          {restoreToField}
-          <div className="form-group row">
-            <div className="col-sm-3 label-col"></div>
-            <div className="col-sm-9 content-col right checkbox">
-              <label>
-                <input
-                  id="destroy-all"
-                  type="checkbox"
-                  value={overwrite}
-                  name="overwrite"
-                  onChange={() => this.setState({ overwrite: !overwrite })}
-                />
-                <span>Destroy all current disks and backups</span>
-              </label>
+        {backup.status === 'pending' ? null :
+          <section className="card">
+            <header>
+              <h2>Restore</h2>
+            </header>
+            {restoreToField}
+            <div className="form-group row">
+              <div className="col-sm-3 label-col"></div>
+              <div className="col-sm-9 content-col right checkbox">
+                <label>
+                  <input
+                    id="destroy-all"
+                    type="checkbox"
+                    value={overwrite}
+                    name="overwrite"
+                    onChange={() => this.setState({ overwrite: !overwrite })}
+                  />
+                  <span>Destroy all current disks and backups</span>
+                </label>
+              </div>
             </div>
-          </div>
-          <div className="form-group row">
-            <div className="col-sm-3 label-col"></div>
-            <div className="col-sm-9 content-col right">
-              <ErrorSummary errors={restoreErrors} />
+            <div className="form-group row">
+              <div className="col-sm-3 label-col"></div>
+              <div className="col-sm-9 content-col right">
+                <ErrorSummary errors={restoreErrors} />
+              </div>
             </div>
-          </div>
-          <div className="form-group row">
-            <div className="col-sm-3 label-col"></div>
-            <div className="col-sm-9 content-col right">
-              <button
-                type="button"
-                className="btn btn-default"
-                onClick={this.restore}
-                name="restore"
-              >
-                Restore
-              </button>
+            <div className="form-group row">
+              <div className="col-sm-3 label-col"></div>
+              <div className="col-sm-9 content-col right">
+                <button
+                  type="button"
+                  className="btn btn-default"
+                  onClick={this.restore}
+                  name="restore"
+                >
+                  Restore
+                </button>
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        }
       </div>
     );
   }

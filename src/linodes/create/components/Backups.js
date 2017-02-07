@@ -1,13 +1,13 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import _ from 'lodash';
-import { linodes } from '~/api';
+import { linodeBackups } from '~/api/linodes';
+import { getBackups } from '~/linodes/linode/backups/layouts/BackupPage';
 import Backup from '~/linodes/components/Backup';
 
 export class Backups extends Component {
   async componentDidMount() {
     const { selectedLinode, dispatch } = this.props;
-    await dispatch(linodes.backups.all([selectedLinode]));
+    await dispatch(linodeBackups([selectedLinode]));
   }
 
   render() {
@@ -26,7 +26,7 @@ export class Backups extends Component {
             {l.label}
           </h3>
           <div className="backup-group clearfix">
-            {_.map(l._backups.backups, backup =>
+            {getBackups(l._backups).map(backup =>
               <Backup
                 backup={backup}
                 selected={selected}

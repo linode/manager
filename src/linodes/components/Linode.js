@@ -5,6 +5,7 @@ import moment from 'moment';
 
 import StatusDropdown from './StatusDropdown';
 import { Checkbox } from '~/components/form';
+import { getBackups } from '~/linodes/linode/backups/layouts/BackupPage';
 
 function renderPowerButton(props) {
   const { linode, onPowerOn, onReboot } = props;
@@ -99,16 +100,18 @@ export function renderBackupStatus(linode, dashboard = false) {
     return ` ${letter}`;
   };
   if (linode.backups.enabled) {
-    const lastBackup = linode.backups.last_backup;
-    if (!lastBackup) {
+    const backups = getBackups(linode._backups);
+    if (backups.length === 0) {
       const nextBackup = getNextBackup(linode);
       return (
         <Link className="backup-status" to={`/linodes/${linode.label}/backups`}>
           {backupWord}{up('i')}n ~{nextBackup.fromNow(true)}
         </Link>);
     }
-
-    const backupStatus = linode.backups.last_backup.status;
+    const lastBackup = backups.map(backup => backup.updated).sort().reverse()[0];
+    const backupStatus = backups.filter(obj =>
+      obj.updated === lastBackup
+    )[0].status;
     if (backupStatus === 'running') {
       return (
         <Link className="backup-status" to={`/linodes/${linode.label}/backups`}>
@@ -125,7 +128,7 @@ export function renderBackupStatus(linode, dashboard = false) {
     return (
       <Link to={`/linodes/${linode.label}/backups`}>
         <span className="backup-status">
-          {backupWord}{up('t')}aken {moment.utc(linode.backups.last_backup).fromNow()}
+          {backupWord}{up('t')}aken {moment.utc(lastBackup).fromNow()}
         </span>
       </Link>);
   }
@@ -167,9 +170,6 @@ function renderCard(props) {
         <section>
           {renderDatacenterStyle(linode)}
         </section>
-        <section>
-          {renderBackupStatus(linode)}
-        </section>
       </div>
     </div>
   );
@@ -203,9 +203,6 @@ function renderRow(props) {
       </td>
       <td>
         {renderDatacenterStyle(linode)}
-      </td>
-      <td>
-        {renderBackupStatus(linode)}
       </td>
       <td>
         <StatusDropdown

@@ -24,11 +24,11 @@ describe('linodes/linode/backups/layouts/BackupPage', () => {
         linodes={api.linodes}
         params={{
           linodeLabel: 'test-linode',
-          backupId: '54782236',
+          backupId: '54782214',
         }}
       />
     );
-/*
+
     const restoreTo = page.find('select');
     expect(restoreTo.length).to.equal(1);
     expect(restoreTo.props().value).to.equal(1234);
@@ -46,10 +46,10 @@ describe('linodes/linode/backups/layouts/BackupPage', () => {
     expect(label.length).to.equal(0);
 
     const started = page.find('.LinodesLinodeBackupsBackupPage-started');
-    expect(started.text()).to.equal('2017-01-31 21:50:42');
+    expect(started.text()).to.equal('2017-01-31 07:28:52');
 
     const finished = page.find('.LinodesLinodeBackupsBackupPage-finished');
-    expect(finished.text()).to.equal('2017-01-31 21:51:51');
+    expect(finished.text()).to.equal('2017-01-31 07:30:03');
 
     const duration = page.find('.LinodesLinodeBackupsBackupPage-duration');
     expect(duration.text()).to.equal('(1 minute)');
@@ -58,14 +58,14 @@ describe('linodes/linode/backups/layouts/BackupPage', () => {
     expect(datacenter.text()).to.equal('Newark, NJ');
 
     const configs = page.find('.LinodesLinodeBackupsBackupPage-configs');
-    expect(configs.text()).to.equal('Some config');
+    expect(configs.text()).to.equal('Ubuntu Disk');
 
     const disks = page.find('.LinodesLinodeBackupsBackupPage-disks');
-    expect(disks.text()).to.contain('root (ext4) - 2048MB');
-    expect(disks.text()).to.contain('swap (swap) - 1024MB');
+    expect(disks.text()).to.contain('Ubuntu 15.10 Disk (ext4) - 2330MB');
+    expect(disks.text()).to.contain('512 MB Swap Image (swap) - 0MB');
 
     const space = page.find('.LinodesLinodeBackupsBackupPage-space');
-    expect(space.text()).to.equal('3072MB');*/
+    expect(space.text()).to.equal('2330MB');
   });
 
   it('renders label if label exists', () => {
@@ -75,13 +75,13 @@ describe('linodes/linode/backups/layouts/BackupPage', () => {
         linodes={api.linodes}
         params={{
           linodeLabel: 'test-linode',
-          backupId: '54778596',
+          backupId: '54782236',
         }}
       />
     );
 
     const label = page.find('.LinodesLinodeBackupsBackupPage-label');
-    expect(label.text()).to.equal('Some snapshot');
+    expect(label.text()).to.equal('the label');
   });
 
   it('does not show take snapshot button for an auto backup', () => {
@@ -91,7 +91,7 @@ describe('linodes/linode/backups/layouts/BackupPage', () => {
         linodes={api.linodes}
         params={{
           linodeLabel: 'test-linode',
-          backupId: '54778593',
+          backupId: '54782214',
         }}
       />
     );
@@ -107,7 +107,7 @@ describe('linodes/linode/backups/layouts/BackupPage', () => {
         linodes={api.linodes}
         params={{
           linodeLabel: 'test-linode',
-          backupId: '54782222',
+          backupId: '54782236',
         }}
       />
     );
@@ -131,7 +131,7 @@ describe('linodes/linode/backups/layouts/BackupPage', () => {
         linodes={api.linodes}
         params={{
           linodeLabel: 'test-linode',
-          backupId: '54778593',
+          backupId: '54782214',
         }}
       />
     );
@@ -143,7 +143,7 @@ describe('linodes/linode/backups/layouts/BackupPage', () => {
     page.find('button[name="restore"]').simulate('click');
 
     const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, '/linode/instances/1234/backups/54778593/restore',
+    await expectRequest(fn, '/linode/instances/1234/backups/54782214/restore',
       () => {}, null, d => {
         expect(d.method).to.equal('POST');
         expect(d.body).to.equal(JSON.stringify({
@@ -173,7 +173,7 @@ describe('linodes/linode/backups/layouts/BackupPage', () => {
         linodes={api.linodes}
         params={{
           linodeLabel: 'test-linode',
-          backupId: '54778593',
+          backupId: '54782214',
         }}
       />
     );
@@ -202,7 +202,7 @@ describe('linodes/linode/backups/layouts/BackupPage', () => {
         linodes={api.linodes}
         params={{
           linodeLabel: 'test-linode',
-          backupId: '54778596',
+          backupId: '54782236',
         }}
       />
     );

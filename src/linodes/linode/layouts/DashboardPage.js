@@ -11,6 +11,7 @@ import {
 } from '~/linodes/components/Linode';
 import { launchWeblishConsole } from '~/linodes/components/StatusDropdown';
 import { getLinode } from './IndexPage';
+import { linodeBackups } from '~/api/linodes';
 import { setSource } from '~/actions/source';
 import { Button } from '~/components/buttons';
 
@@ -34,9 +35,11 @@ export class DashboardPage extends Component {
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const { dispatch } = this.props;
-    dispatch(setSource(__filename));
+    const linode = this.getLinode();
+    await dispatch(linodeBackups(linode.id));
+    await dispatch(setSource(__filename));
   }
 
   graphRangeUpdate(value) {

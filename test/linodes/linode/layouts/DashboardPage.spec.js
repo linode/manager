@@ -61,7 +61,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
   });
 
   it('renders backups enabled', () => {
-    const backupTime = linodes.linodes[1245].backups.last_backup;
+    const backupTime = linodes.linodes[1245]._backups.snapshot.current.updated;
     const page = shallow(
       <DashboardPage
         linodes={linodes}

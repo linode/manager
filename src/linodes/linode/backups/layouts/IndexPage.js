@@ -5,7 +5,6 @@ import { push } from 'react-router-redux';
 
 import { Tabs } from '~/components/tabs';
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
-import { linodes } from '~/api';
 import { enableBackup } from '~/api/backups';
 import { linodeBackups } from '~/api/linodes';
 import { setSource } from '~/actions/source';
