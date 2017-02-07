@@ -101,25 +101,8 @@ export class Layout extends Component {
   async fetchEventsPage(page = 0, processedEvents = { events: [] }) {
     const { dispatch } = this.props;
 
-    // filter by most recently updated
-    const sortedEvents = sortEvents(this.props.events);
-    let headers = null;
-
-    // X-Filter header only applied when we have a known last updated datetime
-    if (sortedEvents.length) {
-      headers = {
-        'X-Filter': JSON.stringify({
-          updated: {
-            '+gt': sortedEvents[0].updated,
-          },
-        }),
-      };
-    }
-
     const nextProcessedEvents = await dispatch(
-      events.page(page, [], this.eventHandler, false, null, {
-        headers,
-      })
+      events.page(page, [], this.eventHandler, false, null)
     );
 
     // If all the events are new, we want to fetch another page.
