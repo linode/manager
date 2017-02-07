@@ -1,7 +1,7 @@
 import React from 'react';
 import sinon from 'sinon';
 import { expect } from 'chai';
-import { shallow } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 
 import { PasswordInput } from '~/components/form';
 
@@ -27,18 +27,16 @@ describe('components/form/PasswordInput', () => {
   });
 
   it('should calculate password strength', () => {
-    const input = shallow(
+    const input = mount(
       <PasswordInput
         onChange={() => {}}
       />);
 
-    input.find('Input').simulate('change',
+    input.find('input').simulate('change',
       { target: { value: 'correct horse battery staple' } });
-
     expect(input.find('.PasswordInput-strength--4').length).to.equal(1);
-
-    expect(input.find('.PasswordInput-cracktime').length).to.equal(1);
-    expect(input.find('.PasswordInput-cracktime').text())
+    expect(input.find('.PasswordInput-strength-text').length).to.equal(1);
+    expect(input.find('.PasswordInput-strength-text').text())
       .to.equal('Strong');
   });
 });

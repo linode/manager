@@ -6,8 +6,8 @@
 
     header {
         padding: 0;
-        height: $input-height;
-        line-height: $input-height;
+        height: $form-field-height;
+        line-height: $form-field-height;
     }
 
     > :not(header) {

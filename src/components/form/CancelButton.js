@@ -24,5 +24,5 @@ CancelButton.propTypes = {
 CancelButton.defaultProps = {
   children: 'Cancel',
   disabled: false,
-  className: '',
+  className: 'btn-cancel',
 };

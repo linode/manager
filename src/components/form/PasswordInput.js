@@ -29,7 +29,7 @@ export default class PasswordInput extends Component {
         <Input
           value={this.state.password}
           placeholder="**********"
-          className="PasswordInput-input"
+          className="form-control PasswordInput-input"
           onChange={this.onPasswordChange}
           autoComplete="off"
           type="password"
@@ -42,9 +42,9 @@ export default class PasswordInput extends Component {
           <span></span>
           <span></span>
         </div>
-        {this.state.password !== '' ? <div className="PasswordInput-cracktime">
+        {this.state.password !== '' ? <small className="PasswordInput-strength-text">
           {str[this.state.strength.score]}
-        </div> : null}
+        </small> : null}
       </div>
     );
   }

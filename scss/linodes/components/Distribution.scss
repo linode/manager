@@ -44,10 +44,12 @@
         @extend .btn-secondary;
         @extend .dropdown-toggle;
 
+        border-right: none;
+        border-top: none;
+        border-bottom: none;
+        border-radius: 0;
         float: right;
-        border-right: none !important;
-        border-top: none !important;
-        border-bottom: none !important; /* TODO: clean these importants up */
+        height: $form-field-height;
 
         &::after {
             /* Hide the bootstrap dropdown icon */

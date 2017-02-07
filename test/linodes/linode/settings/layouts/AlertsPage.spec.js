@@ -32,7 +32,7 @@ describe('linodes/linode/settings/layouts/AlertsPage', async () => {
       'Outbound traffic',
       'Transfer quota',
     ].forEach((label, i) => {
-      expect(page.find('.form-group').at(i).find('.col-sm-2 span')
+      expect(page.find('.form-group').at(i).find('.col-form-label')
                  .text())
         .to.equal(`${label}:`);
     });

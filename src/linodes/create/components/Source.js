@@ -40,7 +40,7 @@ export default class Source extends Component {
     return (
       <div className="LinodeSelection-container">
         <div className="LinodeSelection-filter">
-          <div className="filter input-container">
+          <div className="filter">
             <input
               type="text"
               onChange={e =>

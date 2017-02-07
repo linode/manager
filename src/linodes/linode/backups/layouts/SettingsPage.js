@@ -52,9 +52,7 @@ export class SettingsPage extends Component {
         <Card title="Schedule">
           <Form onSubmit={() => this.saveChanges()}>
             <FormGroup name="window" errors={errors} className="row">
-              <div className="label-col col-sm-2">
-                <label htmlFor="window">Time of day (EST):</label>
-              </div>
+              <label htmlFor="window" className="col-sm-2 col-form-label">Time of day (EST):</label>
               <div className="col-sm-4">
                 <select
                   className="form-control"
@@ -79,9 +77,7 @@ export class SettingsPage extends Component {
               </div>
             </FormGroup>
             <FormGroup name="day" errors={errors} className="row">
-              <div className="label-col col-sm-2">
-                <label htmlFor="day">Day of week:</label>
-              </div>
+              <label htmlFor="day" className="col-sm-2 col-form-label">Day of week:</label>
               <div className="col-sm-4">
                 <select
                   className="form-control"

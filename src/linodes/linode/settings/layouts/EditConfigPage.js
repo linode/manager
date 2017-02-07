@@ -103,10 +103,10 @@ export function renderDiskSlot(device, index) {
       className="form-group row disk-slot"
       key={index}
     >
-      <label className="col-sm-2 label-col">
+      <label className="col-sm-2 col-form-label">
         /dev/{AVAILABLE_DISK_SLOTS[index]}:
       </label>
-      <div className="col-xs-9 input-container">
+      <div className="col-xs-9">
         <select
           className="form-control"
           id={`config-device-${AVAILABLE_DISK_SLOTS[index]}`}
@@ -297,11 +297,10 @@ export class EditConfigPage extends Component {
     const { errors } = this.state;
     return (
       <FormGroup errors={errors} name={field} className="row">
-        <div className="col-sm-2 label-col">
-          <label
-            htmlFor={`config-${field}`}
-          >{label}</label>
-        </div>
+        <label
+          htmlFor={`config-${field}`}
+          className="col-sm-2 col-form-label"
+        >{label}</label>
         <div className="col-sm-6">{element}</div>
       </FormGroup>
     );

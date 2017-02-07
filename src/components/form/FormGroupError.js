@@ -7,9 +7,9 @@ export default function FormGroupError(props) {
     : 'form-control-feedback form-control-feedback--block';
   if (fieldErrors && fieldErrors.length) {
     return (
-      <div className={errorMessageStyle}>
-        {fieldErrors.map(error => <div key={error}>{error.reason}</div>)}
-      </div>
+      <span className={errorMessageStyle}>
+        {fieldErrors.map(error => <small key={error}>{error.reason}</small>)}
+      </span>
     );
   }
 

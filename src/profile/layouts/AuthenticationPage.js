@@ -45,9 +45,7 @@ export default class AuthenticationPage extends Component {
         <Card title="Change password">
           <Form onSubmit={this.passwordOnSubmit}>
             <FormGroup className="row" errors={errors} name="password">
-              <div className="col-sm-2 label-col">
-                <label htmlFor="new-password">New password:</label>
-              </div>
+              <label className="col-sm-2 col-form-label">New password:</label>
               <div className="col-sm-10">
                 <PasswordInput
                   onChange={password => this.setState({ password })}
@@ -58,9 +56,7 @@ export default class AuthenticationPage extends Component {
               </div>
             </FormGroup>
             <FormGroup className="row" errors={errors} name="expires">
-              <div className="col-sm-2 label-col">
-                <label htmlFor="expires">Expires:</label>
-              </div>
+              <label className="col-sm-2 col-form-label">Expires:</label>
               <div className="col-sm-10">
                 <Select
                   id="expires"

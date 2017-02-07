@@ -31,7 +31,7 @@ export default function Backup(props) {
     >
       <header><div className="title">{title}</div></header>
       <div className={future ? 'future-disabled' : ''}>
-        <div className="content-col">{content}</div>
+        <div>{content}</div>
       </div>
     </div>
   );

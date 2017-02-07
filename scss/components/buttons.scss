@@ -1,12 +1,18 @@
+.input-group,
+.btn-group,
+.btn {
+    height: $form-field-height;
+}
+
 .btn, a {
     transition: background .35s, color .2s, border .1s;
 }
 
 .btn {
     @extend .font-normal;
-    padding: 5px 10px;
+    padding: 6px 8px;
     text-decoration: none;
-    border-radius: 2px;
+    border-radius: 0;
     border: $border;
     background: $light-gray;
 
@@ -131,3 +137,35 @@
     }
 }
 
+.input-group {
+    max-width: 50%;
+}
+
+// TODO: remove or replace with specific instance (i.e. for the checkbox + action menu)
+.input-group {
+    height: $form-field-height;
+
+    // TODO: drop after moving to input components
+    .input-group-addon {
+        background: $light-gray;
+        height: 100%;
+        padding: 0 8px;
+    }
+
+    input {
+        margin: 0;
+        border: $border;
+        border-radius: 0;
+        height: 100%;
+
+        &[readonly] {
+            background-color: $white;
+            width: 200px;
+        }
+    }
+
+    .input-group-btn {
+        height: $form-field-height;
+        float: left;
+    }
+}

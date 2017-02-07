@@ -60,7 +60,7 @@ export default function Typography() {
                 <tr>
                   <td><h5>Fifth-level</h5></td>
                   <td>
-                    14px; (1.4 rem): $font-normal;
+                    15px; (1.5 rem): $font-normal;
                   </td>
                   <td>
                     <code>&lt;h5&gt;</code>, to be used after <code>&lt;h4&gt;</code>.
@@ -69,7 +69,7 @@ export default function Typography() {
                 <tr>
                   <td><h6>Sixth-level</h6></td>
                   <td>
-                    14px; (1.4 rem): $font-normal;
+                    15px; (1.5 rem): $font-normal;
                   </td>
                   <td>
                     <code>&lt;h6&gt;</code>, to be used after <code>&lt;h5&gt;</code>.
@@ -78,7 +78,7 @@ export default function Typography() {
                 <tr>
                   <td><p>This is a paragraph.</p></td>
                   <td>
-                    14px; (1.4 rem); $font-normal;
+                    15px; (1.5 rem); $font-normal;
                   </td>
                   <td>
                     The paragraph <code>&lt;p&gt;</code>,
@@ -105,12 +105,12 @@ export default function Typography() {
               <tbody>
                 <tr>
                   <td><strong>Bold Text</strong></td>
-                  <td>14px; (1.4 rem); $font-normal;</td>
+                  <td>15px; (1.5 rem); $font-normal;</td>
                   <td>Use the <code>&lt;strong&gt;</code> tag for <strong>Bold Text</strong></td>
                 </tr>
                 <tr>
                   <td><em>Italic Text</em></td>
-                  <td>14px; (1.4 rem); $font-normal;</td>
+                  <td>15px; (1.5 rem); $font-normal;</td>
                   <td>Use the <code>&lt;em&gt;</code> tag for <em>Italic Text</em></td>
                 </tr>
                 <tr>
@@ -120,7 +120,7 @@ export default function Typography() {
                 </tr>
                 <tr>
                   <td><a href="#">Hyperlink</a></td>
-                  <td>14px; (1.4 rem); $font-normal;</td>
+                  <td>15px; (1.5 rem); $font-normal;</td>
                   <td>Links use $blue ( #4A90E2 ) and are only underlined on hover.</td>
                 </tr>
               </tbody>

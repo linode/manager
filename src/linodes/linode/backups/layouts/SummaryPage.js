@@ -108,10 +108,10 @@ export class SummaryPage extends Component {
         <header>
           <h2>Restorable backups</h2>
         </header>
-        <div className="form-group">
+        <div className=" ">
           Select a backup to see details and restore to a Linode.
         </div>
-        <div className="form-group row">
+        <div className="  row">
           {blocks}
         </div>
         <ErrorSummary errors={errors} />
