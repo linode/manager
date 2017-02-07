@@ -13,6 +13,7 @@ $darkest-yellow: darken($yellow, 40);
 $light-gray: #FBFBFB;
 $gray: #F3F3F3;
 $dark-gray: #DDDDDD;
+$default-gray: #a6a6a6;
 
 $lightest-black: #ACACAC;
 $light-black: #777;
@@ -27,8 +28,8 @@ $transparent: rgba(0, 0, 0, 0.5);
 
 /* BEGIN layout definitions */
 
-$main-padding-tb: 1rem;
-$main-padding-lr: 2rem;
+$main-padding-tb: 10px;
+$main-padding-lr: 20px;
 
 $nav-height: 84px;
 $info-nav-height: 25px;
@@ -40,22 +41,10 @@ $sidebar-width: 220px;
 /* END layout definitions */
 
 
-/* BEGIN font definitions */
-
-$font-large: 1.8rem;
-$font-medium: 1.4rem;
-$font-small: 1.2rem;
-$font-xs-small: 12px;
-$font-normal: .975rem;
-$font-xs-normal: .9rem;
-
-/* END font definitions */
-
-
 /* BEGIN generic definitions */
 
-$input-height: 30px;
-$input-padding: .5rem;
+$form-field-height: 32px;
+$form-field-padding: 6px 8px;
 
 $border-gray: $dark-gray;
 $border: 1px solid $border-gray;
@@ -65,7 +54,8 @@ $box-shadow: 0px 2px 4px 0px $transparent;
 
 
 /* BEGIN bootstrap overrides */
-$grid-gutter-width-base: 40px;
+// TODO: look at items that use this, some may now be calculating sub-pixel margins
+$grid-gutter-width-base: 30px;
 
 $grid-breakpoints: (
   xs: 0 + $sidebar-width,

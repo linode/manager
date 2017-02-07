@@ -14,7 +14,7 @@ export default function Sidebar(props) {
       { icon: 'share-alt', name: 'DNS Manager', link: '/dnsmanager' },
     ]],
     ['account', [
-      { icon: 'user', name: 'My profile', link: `${LOGIN_ROOT}/profile` },
+      { icon: 'user', name: 'My profile', link: '/profile' },
       { icon: 'users', name: 'Users', link: `${LOGIN_ROOT}/users` },
       { icon: 'dollar', name: 'Billing', link: `${LOGIN_ROOT}/billing` },
       { icon: 'gear', name: 'Settings', link: `${LOGIN_ROOT}/settings` },

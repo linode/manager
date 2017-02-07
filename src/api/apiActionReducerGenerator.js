@@ -1,4 +1,6 @@
-import { ONE, MANY, DELETE, POST, PUT, generateDefaultStateMany } from './gen';
+import {
+  ONE, MANY, DELETE, POST, PUT, generateDefaultStateMany,
+} from './apiResultActionReducerGenerator';
 import { fetch } from '~/fetch';
 
 /*
@@ -31,6 +33,7 @@ export function getStateOfSpecificResource(config, state, ids) {
   const _ids = [...ids];
   let current = root;
   let name = null;
+
   while (current !== config) {
     name = path.pop();
     refined = refined[current.plural][_ids.shift()][name];
@@ -114,9 +117,9 @@ function genThunkPage(config, actions) {
         const existingResourceState = getStateOfSpecificResource(
           config, getState(), [...ids, resource.id]);
         if (existingResourceState) {
-          const updatedAt = existingResourceState.__updatedAt || new Date();
+          const updatedAt = existingResourceState.__updatedAt || fetchBeganAt;
           if (updatedAt > now) {
-            return await dispatch(fetchOne([resource.id.toString()]));
+            return await dispatch(fetchOne([...ids, resource.id]));
           }
         }
         return resource;
@@ -239,7 +242,7 @@ function genThunkPost(config, actions) {
 /**
  * Generates thunks for the provided config.
  */
-export default function genThunks(config, actions) {
+export default function apiActionReducerGenerator(config, actions) {
   const thunks = { };
   const supports = a => config.supports.indexOf(a) !== -1;
   if (supports(ONE)) {
@@ -262,7 +265,7 @@ export default function genThunks(config, actions) {
     Object.keys(config.subresources).forEach((key) => {
       const subr = config.subresources[key];
       const plural = subr.plural;
-      thunks[plural] = genThunks(subr, actions[plural]);
+      thunks[plural] = apiActionReducerGenerator(subr, actions[plural]);
     });
   }
   thunks.type = config.plural;

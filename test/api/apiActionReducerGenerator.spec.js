@@ -1,10 +1,10 @@
 import sinon from 'sinon';
 import { expect } from 'chai';
-import * as thunks from '~/api/genThunks';
-import * as gen from '~/api/gen';
+import * as thunks from '~/api/apiActionReducerGenerator';
+import * as gen from '~/api/apiResultActionReducerGenerator';
 import { testLinode } from '@/data/linodes';
 
-describe('api/genThunks', () => {
+describe('api/apiActionReducerGenerator', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {

@@ -22,7 +22,7 @@ export default function Typography() {
                 <tr>
                   <td><h1>Page Title</h1></td>
                   <td>
-                    $font-large;  1.8rem;  ~28px;
+                    28px (2.8 rem)
                   </td>
                   <td>
                     The main page heading, <code>&lt;h1&gt;</code>,
@@ -32,7 +32,7 @@ export default function Typography() {
                 <tr>
                   <td><h2>Heading</h2></td>
                   <td>
-                    $font-medium;  1.4rem;  ~22px;
+                    22px (2.2 rem)
                   </td>
                   <td>
                     The secondary heading, <code>&lt;h2&gt;</code>,
@@ -42,7 +42,7 @@ export default function Typography() {
                 <tr>
                   <td><h3>Third-level</h3></td>
                   <td>
-                    $font-small;  1.2rem;  ~19px;
+                    18px; (1.8 rem); $font-large;
                   </td>
                   <td>
                     <code>&lt;h3&gt;</code>, to be used after <code>&lt;h2&gt;</code>.
@@ -51,7 +51,7 @@ export default function Typography() {
                 <tr>
                   <td><h4>Fourth-level</h4></td>
                   <td>
-                    1.5rem;  24px;
+                    16px; (1.6 rem); $font-large;
                   </td>
                   <td>
                     <code>&lt;h4&gt;</code>, to be used after <code>&lt;h3&gt;</code>.
@@ -60,7 +60,7 @@ export default function Typography() {
                 <tr>
                   <td><h5>Fifth-level</h5></td>
                   <td>
-                    1.25rem;  20px;
+                    15px; (1.5 rem): $font-normal;
                   </td>
                   <td>
                     <code>&lt;h5&gt;</code>, to be used after <code>&lt;h4&gt;</code>.
@@ -69,7 +69,7 @@ export default function Typography() {
                 <tr>
                   <td><h6>Sixth-level</h6></td>
                   <td>
-                    1rem;  16px;
+                    15px; (1.5 rem): $font-normal;
                   </td>
                   <td>
                     <code>&lt;h6&gt;</code>, to be used after <code>&lt;h5&gt;</code>.
@@ -78,7 +78,7 @@ export default function Typography() {
                 <tr>
                   <td><p>This is a paragraph.</p></td>
                   <td>
-                    0.975rem;  ~15px;
+                    15px; (1.5 rem); $font-normal;
                   </td>
                   <td>
                     The paragraph <code>&lt;p&gt;</code>,
@@ -105,22 +105,22 @@ export default function Typography() {
               <tbody>
                 <tr>
                   <td><strong>Bold Text</strong></td>
-                  <td>0.975rem; ~15px;</td>
+                  <td>15px; (1.5 rem); $font-normal;</td>
                   <td>Use the <code>&lt;strong&gt;</code> tag for <strong>Bold Text</strong></td>
                 </tr>
                 <tr>
                   <td><em>Italic Text</em></td>
-                  <td>0.975rem; ~15px;</td>
+                  <td>15px; (1.5 rem); $font-normal;</td>
                   <td>Use the <code>&lt;em&gt;</code> tag for <em>Italic Text</em></td>
                 </tr>
                 <tr>
                   <td><small>Small Text</small></td>
-                  <td>80%; ~12px;</td>
+                  <td>12px; (1.2 rem); $font-small;</td>
                   <td>Use the <code>&lt;small&gt;</code> tag for <small>Small Text</small></td>
                 </tr>
                 <tr>
                   <td><a href="#">Hyperlink</a></td>
-                  <td>0.975rem; ~15px</td>
+                  <td>15px; (1.5 rem); $font-normal;</td>
                   <td>Links use $blue ( #4A90E2 ) and are only underlined on hover.</td>
                 </tr>
               </tbody>

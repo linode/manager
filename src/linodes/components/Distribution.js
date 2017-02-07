@@ -24,7 +24,7 @@ export default class Distribution extends Component {
     const { vendor, noDistribution } = this.props;
     const { version } = this.state;
     if (noDistribution) {
-      return 'No distribution';
+      return 'Empty';
     }
 
     const selectedVersion = vendor.versions[version];

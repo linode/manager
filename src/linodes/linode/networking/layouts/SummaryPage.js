@@ -24,20 +24,12 @@ export class SummaryPage extends Component {
   constructor() {
     super();
     this.getLinode = getLinode.bind(this);
-    this.renderIPv4 = this.renderIPv4.bind(this);
-    this.renderIPv6 = this.renderIPv6.bind(this);
-    this.nameserversList = this.nameserversList.bind(this);
     this.addPrivateIP = this.addPrivateIP.bind(this);
-    this.ipList = this.ipList.bind(this);
   }
 
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
-  }
-
-  ipList(ips) {
-    return ips.map(ip => <li key={ip}>{ip}</li>);
   }
 
   async addPrivateIP() {
@@ -50,109 +42,75 @@ export class SummaryPage extends Component {
     }
   }
 
-  nameserversList(isIPv4, linode) {
-    const dc = linode.datacenter.id;
-    const nameservers = (
-      <div className="form-group row">
-        <div className="col-sm-3 label-col left">
-          Nameservers
-        </div>
-        <div className="col-sm-9 content-col right">
-          <ul className="list-unstyled">
-            {
-              isIPv4 ?
-              this.ipList(ipv4ns[dc]) :
-              this.ipList(ipv6nsSuffix.map(
-                suffix => ipv6ns[dc] + suffix
-              ))
-            }
-          </ul>
-        </div>
-      </div>
-    );
+  renderNameservers(isIpv4) {
+    const dc = this.getLinode().datacenter.id;
+    const ipToObject = ip => ({ address: ip });
+    const id = isIpv4 ? 'ipv4Nameservers' : 'ipv6Nameservers';
+    const ips = isIpv4 ? ipv4ns[dc].map(ipToObject) :
+                ipv6nsSuffix.map(suffix => ipToObject(ipv6ns[dc] + suffix));
+    return this.renderIps(id, ips);
+  }
 
-    return nameservers;
+  renderIps(id, ips) {
+    const isIpv6 = prefix => ['17', '24'].indexOf(prefix) === -1;
+
+    return (
+      <ul className="list-unstyled" id={id}>
+        {ips.map(({ address, prefix, rdns }) =>
+          <li key={address}>
+            <span className="text-nowrap">
+              {address}{prefix && isIpv6(prefix) ? ` / ${prefix}` : null}
+            </span>
+            {rdns ? <div className="text-nowrap">({rdns})</div> : null}
+          </li>
+        )}
+      </ul>
+    );
   }
 
   renderIPv4() {
-    const ipv4 = this.getLinode()._ips.ipv4.public[0];
-
-    let content = null;
-
-    if (!this.getLinode()._ips.ipv4.private.length) {
-      const bemPrefix = 'LinodesLinodeNetworkingSummaryPage-';
-      content = (
-        <button
-          type="button"
-          id="private-ip-button"
-          className={`btn btn-default ${bemPrefix}addPrivateIp`}
-          onClick={this.addPrivateIP}
-          disabled
-        >
-          Enable private IP address
-        </button>
-      );
-    } else {
-      const ipv4 = this.getLinode()._ips.ipv4.private[0];
-
-      content = (
-        <div className="LinodesLinodeNetworkingSummaryPage-privateIpv4">
-          <span>{ipv4.address}/17 </span>
-          <span className="text-nowrap">
-            ({ipv4.rdns})
-          </span>
-        </div>
-      );
-    }
+    const { ipv4 } = this.getLinode()._ips;
 
     return (
-      <div className="col-sm-6 left">
+      <div className="col-sm-6">
         <h3>
           IPv4
           <HelpButton
             to="https://www.linode.com/docs/networking/linux-static-ip-configuration"
           />
         </h3>
-        <div className="form-group row">
-          <div className="col-sm-3 label-col left">
-            Address
-          </div>
-          <div className="col-sm-9 content-col right">
-            <ul className="list-unstyled">
-              <span>
-                <span>{ipv4.address} </span>
-                <span className="text-nowrap">
-                  ({ipv4.rdns})
-                </span>
-              </span>
-            </ul>
+        <div className="row">
+          <div className="col-sm-3 row-label">Address</div>
+          <div className="col-sm-9">{this.renderIps('publicIpv4', ipv4.public)}</div>
+        </div>
+        <div className="row">
+          <div className="col-sm-3 row-label">Subnet mask</div>
+          <div className="col-sm-9" id="ipv4Subnet">
+            {ipv4.public[0].subnet_mask}
           </div>
         </div>
-        <div className="form-group row">
-          <div className="col-sm-3 label-col left">
-            Subnet mask
-          </div>
-          <div className="col-sm-9 content-col right">
-            255.255.255.0
+        <div className="row">
+          <div className="col-sm-3 row-label">Gateway</div>
+          <div className="col-sm-9" id="ipv4Gateway">
+            {ipv4.public[0].gateway}
           </div>
         </div>
-        <div className="form-group row">
-          <div className="col-sm-3 label-col left">
-            Gateway
-          </div>
-          <div className="col-sm-9 content-col right">
-            {ipv4.address.substring(0, ipv4.address.lastIndexOf('.'))}.1
-          </div>
+        <div className="row">
+          <div className="col-sm-3 row-label">Nameservers</div>
+          <div className="col-sm-9">{this.renderNameservers(true)}</div>
         </div>
-        {this.nameserversList(true, this.getLinode())}
-        <div className="form-group row">
-          <div>
-            <div className="col-sm-3 label-col left">
-              Private address
-            </div>
-            <div className="col-sm-9 content-col right">
-              {content}
-            </div>
+        <div className="row">
+          <div className="col-sm-3 row-label">Private address</div>
+          <div className="col-sm-9">
+            {ipv4.private.length ? this.renderIps('privateIpv4', ipv4.private) : (
+              <Button
+                id="addPrivateIp"
+                onClick={this.addPrivateIP}
+                disabled
+              >
+                Enable private IP address
+              </Button>
+             )}
           </div>
         </div>
       </div>
@@ -160,45 +118,38 @@ export class SummaryPage extends Component {
   }
 
   renderIPv6() {
-    const linkLocal = this.getLinode()._ips.ipv6_ranges['link-local'];
+    const { ipv6 } = this.getLinode()._ips;
 
     return (
-      <div className="col-sm-6 right">
+      <div className="col-sm-6">
         <h3>
           IPv6
           <HelpButton
             to="https://www.linode.com/docs/networking/native-ipv6-networking"
           />
         </h3>
-        <div className="form-group row">
-          <div className="col-sm-3 label-col left">
-            Address
-          </div>
-          <div className="col-sm-9 content-col right">
-            {this.getLinode().ipv6}
-          </div>
-        </div>
-        <div className="form-group row">
-          <div className="col-sm-3 label-col left">
-            Gateway
-          </div>
-          <div className="col-sm-9 content-col right">
-            fe80::1
+        <div className="row">
+          <div className="col-sm-3 row-label">Address</div>
+          <div className="col-sm-9">
+            {/* TODO: replace with proper prefix */}
+            <div id="slaac">{ipv6.slaac} / {ipv6.prefix || '64'}</div>
+            {ipv6.addresses.map(address =>
+              <div>{address} / {ipv6.prefix || '64'}</div>)}
           </div>
         </div>
-        {this.nameserversList(false, this.getLinode())}
-        <div className="form-group row">
-          <div className="col-sm-3 label-col left">
-            Link-local IP
-          </div>
-          <div className="col-sm-9 content-col right">
-            <ul className="list-unstyled">
-              <span>
-                <span className="LinodesLinodeNetworkingSummaryPage-linkLocal">
-                  {linkLocal}
-                </span>
-              </span>
-            </ul>
+        <div className="row">
+          <div className="col-sm-3 row-label">Gateway</div>
+          {/* TODO: replace once gateways are returned */}
+          <div className="col-sm-9">fe80::1</div>
+        </div>
+        <div className="row">
+          <div className="col-sm-3 row-label">Nameservers</div>
+          <div className="col-sm-9">{this.renderNameservers()}</div>
+        </div>
+        <div className="row">
+          <div className="col-sm-3 row-label">Link-local IP</div>
+          <div className="col-sm-9">
+            {this.renderIps('linkLocal', [{ address: ipv6['link-local'] }])}
           </div>
         </div>
       </div>
@@ -207,7 +158,7 @@ export class SummaryPage extends Component {
 
   render() {
     return (
-      <div>
+      <div className="subtab-content-container">
         <section className="card">
           <header className="clearfix">
             <h2 className="float-xs-left">Summary</h2>

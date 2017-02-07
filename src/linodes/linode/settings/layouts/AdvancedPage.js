@@ -6,7 +6,6 @@ import { setSource } from '~/actions/source';
 
 export class AdvancedPage extends Component {
   static async preload(store, params) {
-    await ConfigPanel.preload(store, params);
     await DiskPanel.preload(store, params);
   }
 
@@ -17,13 +16,9 @@ export class AdvancedPage extends Component {
 
   render() {
     return (
-      <div>
-        <section className="card">
-          <ConfigPanel {...this.props} />
-        </section>
-        <section className="card">
-          <DiskPanel {...this.props} />
-        </section>
+      <div className="subtab-content-container">
+        <ConfigPanel {...this.props} />
+        <DiskPanel {...this.props} />
       </div>
     );
   }

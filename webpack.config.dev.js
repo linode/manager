@@ -7,7 +7,7 @@ module.exports = {
   node: {
     __filename: true,
   },
-  devtool: 'source-map',
+  devtool: 'module-eval-source-map',
   entry: [
     'eventsource-polyfill', // necessary for hot reloading with IE
     'webpack-hot-middleware/client',
@@ -35,6 +35,10 @@ module.exports = {
   ],
   module: {
     loaders: [
+      {
+        test: /\.json$/,
+        loaders: ['json-loader'],
+      },
       {
         test: /\.jsx?/,
         loaders: ['babel'],

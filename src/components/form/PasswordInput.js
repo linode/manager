@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 
 import Input from './Input';
+const str = ['Extremely Weak', 'Very Weak', 'Weak', 'Moderate', 'Strong'];
 
 export default class PasswordInput extends Component {
   constructor() {
@@ -23,13 +24,12 @@ export default class PasswordInput extends Component {
   }
 
   render() {
-    const { passwordType } = this.props;
     return (
       <div className="PasswordInput">
         <Input
           value={this.state.password}
           placeholder="**********"
-          className="PasswordInput-input"
+          className="form-control PasswordInput-input"
           onChange={this.onPasswordChange}
           autoComplete="off"
           type="password"
@@ -42,11 +42,9 @@ export default class PasswordInput extends Component {
           <span></span>
           <span></span>
         </div>
-        {this.state.password !== '' ? <div className="PasswordInput-cracktime">
-          An offline attack would
-          take {this.state.strength.crack_times_display[passwordType]} to
-          crack this password.<br />
-        </div> : null}
+        {this.state.password !== '' ? <small className="PasswordInput-strength-text">
+          {str[this.state.strength.score]}
+        </small> : null}
       </div>
     );
   }

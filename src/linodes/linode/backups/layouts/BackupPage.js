@@ -106,10 +106,10 @@ export class BackupPage extends Component {
 
     const restoreToField = (
       <div className="form-group row">
-        <div className="col-sm-3 label-col">
+        <div className="col-sm-3 col-form-label">
           Restore to
         </div>
-        <div className="col-sm-9 content-col right">
+        <div className="col-sm-9">
           <select
             value={targetLinode}
             onChange={e => this.setState({ targetLinode: e.target.value })}
@@ -122,15 +122,15 @@ export class BackupPage extends Component {
 
     const takeSnapshot = [(
       <div className="form-group row" key="errors">
-        <div className="col-sm-3 label-col"></div>
-        <div className="col-sm-9 content-col right">
+        <div className="col-sm-3 col-form-label"></div>
+        <div className="col-sm-9">
           <ErrorSummary errors={takeSnapshotErrors} />
         </div>
       </div>
     ), (
       <div className="form-group row" key="button">
-        <div className="col-sm-3 label-col"></div>
-        <div className="col-sm-9 content-col right">
+        <div className="col-sm-3 col-form-label"></div>
+        <div className="col-sm-9">
           <button
             type="button"
             className="btn btn-default"
@@ -144,11 +144,11 @@ export class BackupPage extends Component {
     )];
 
     const bemField = name =>
-      `col-sm-9 content-col right LinodesLinodeBackupsBackupPage-${name}`;
+      `col-sm-9  right LinodesLinodeBackupsBackupPage-${name}`;
 
     const label = (
-      <div className="form-group row">
-        <div className="col-sm-3 label-col">
+      <div className="  row">
+        <div className="col-sm-3  ">
           Label
         </div>
         <div className={bemField('label')}>
@@ -164,56 +164,56 @@ export class BackupPage extends Component {
             <h2>Backup details</h2>
           </header>
           {backup.label ? label : null}
-          <div className="form-group row">
-            <div className="col-sm-3 label-col">
+          <div className="  row">
+            <div className="col-sm-3  ">
               Started
             </div>
             <div className={bemField('started')}>
               {renderDateTime(backup.created)}
             </div>
           </div>
-          <div className="form-group row">
-            <div className="col-sm-3 label-col">
+          <div className="  row">
+            <div className="col-sm-3  ">
               Finished
             </div>
             <div className={bemField('finished')}>
               {renderDateTime(backup.finished)}
             </div>
           </div>
-          <div className="form-group row">
-            <div className="col-sm-3 label-col">
+          <div className="  row">
+            <div className="col-sm-3  ">
               Duration
             </div>
             <div className={bemField('duration')}>
               {`(${duration} ${durationUnit})`}
             </div>
           </div>
-          <div className="form-group row">
-            <div className="col-sm-3 label-col">
+          <div className="  row">
+            <div className="col-sm-3  ">
               Datacenter constraint
             </div>
             <div className={bemField('datacenter')}>
               {backup.datacenter.label}
             </div>
           </div>
-          <div className="form-group row">
-            <div className="col-sm-3 label-col">
+          <div className="  row">
+            <div className="col-sm-3  ">
               Configuration profiles
             </div>
             <div className={bemField('configs')}>
               {configs}
             </div>
           </div>
-          <div className="form-group row">
-            <div className="col-sm-3 label-col">
+          <div className="  row">
+            <div className="col-sm-3  ">
               Disks
             </div>
             <div className={bemField('disks')}>
               {disks}
             </div>
           </div>
-          <div className="form-group row">
-            <div className="col-sm-3 label-col">
+          <div className="  row">
+            <div className="col-sm-3  ">
               Space required
             </div>
             <div className={bemField('space')}>
@@ -228,8 +228,8 @@ export class BackupPage extends Component {
           </header>
           {restoreToField}
           <div className="form-group row">
-            <div className="col-sm-3 label-col"></div>
-            <div className="col-sm-9 content-col right checkbox">
+            <div className="col-sm-3 col-form-label"></div>
+            <div className="col-sm-9 checkbox">
               <label>
                 <input
                   id="destroy-all"
@@ -243,14 +243,14 @@ export class BackupPage extends Component {
             </div>
           </div>
           <div className="form-group row">
-            <div className="col-sm-3 label-col"></div>
-            <div className="col-sm-9 content-col right">
+            <div className="col-sm-3 col-form-label"></div>
+            <div className="col-sm-9">
               <ErrorSummary errors={restoreErrors} />
             </div>
           </div>
-          <div className="form-group row">
-            <div className="col-sm-3 label-col"></div>
-            <div className="col-sm-9 content-col right">
+          <div className="  row">
+            <div className="col-sm-3 col-form-label"></div>
+            <div className="col-sm-9">
               <button
                 type="button"
                 className="btn btn-default"

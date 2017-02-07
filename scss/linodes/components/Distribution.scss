@@ -1,11 +1,4 @@
 .LinodesDistribution {
-    @mixin title() {
-        text-align: center;
-        overflow: hidden;
-        line-height: $input-height;
-        color: $black;        
-    }
-
     @extend .dropdown;
 
     border: $border;
@@ -22,15 +15,15 @@
     
     &--isNoLinodeDistribution {
         & > div {
+            @extend .font-small;
             padding: 0 10px;
-            font-size: $font-xs-small;
         }
     }
 
     &-dropdown {
         @include clearfix();
 
-        margin-bottom: 0 !important; /* Remove after cleaning up .card header */
+        margin-bottom: 0;
         border-bottom: $border;
         background-color: $light-gray;
         line-height: inherit;
@@ -51,10 +44,12 @@
         @extend .btn-secondary;
         @extend .dropdown-toggle;
 
+        border-right: none;
+        border-top: none;
+        border-bottom: none;
+        border-radius: 0;
         float: right;
-        border-right: none !important;
-        border-top: none !important;
-        border-bottom: none !important; /* TODO: clean these importants up */
+        height: $form-field-height;
 
         &::after {
             /* Hide the bootstrap dropdown icon */
@@ -77,7 +72,6 @@
         @include pointer();
         @extend .dropdown-item;
 
-        font-size: $font-normal;
         text-align: left !important;
         font-weight: inherit;
         padding: 0 inherit;
@@ -90,10 +84,11 @@
     }
 
     &-body {
-        height: 6rem;
         display: flex;
+        height: 100px;
         justify-content: center;
         align-items: center;
+
 
         span {
             padding: 0 15px;

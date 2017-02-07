@@ -1,26 +1,11 @@
+@import 'Layout';
+
 .linode-add {
     .fa-plus {
-        font-size: $font-xs-normal;
         padding-right: 10px;
         position: relative;
         top: 1px;
         color: inherit;
-    }
-}
-
-.linodes-page {
-    padding-top: 15px;
-
-    .mainmenu {
-        margin-bottom: $main-padding-tb;
-    }
-
-    .submenu {
-        margin-bottom: $main-padding-tb;
-
-        .float-xs-left {
-            max-width: 50%;
-        }
     }
 }
 

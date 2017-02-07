@@ -10,9 +10,8 @@
     }
 
     &-status {
-        height: $input-height;
+        height: $form-field-height;
         padding-right: 10px;
-        font-size: $font-xs-normal;
         color: $light-black;
     }
 
@@ -22,10 +21,10 @@
         @extend .dropdown-toggle;
 
         padding: 0;
-        background: transparent !important;
-        border: 0 !important;
-        height: $input-height !important;
-        line-height: $input-height !important;
+        background: transparent;
+        border: 0;
+        height: $form-field-height;
+        width: 100%;
 
         /* Hide default bootstrap dropdown icon */
         &:after {
@@ -38,10 +37,6 @@
         &:focus:active {
             background: transparent;
         }
-    }
-
-    .fa {
-        font-size: $font-xs-normal !important;
     }
 
     &-menu {
@@ -103,8 +98,8 @@
     }
 
     &-percent {
+        @extend .font-small;
         color: white;
-        font-size: $font-xs-small;
-        padding: 0 5px;
+        padding: 0 10px;
     }
 }

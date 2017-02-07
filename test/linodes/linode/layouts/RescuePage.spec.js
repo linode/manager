@@ -143,11 +143,29 @@ describe('linodes/linode/layouts/RescuePage', () => {
         />);
       page.setState({ diskSlots: [12345, 12346] });
       // iterate through the labels, there should be two disks and one for Finnix
-      expect(page.find('.label-col').map(node => node.text())).to.deep.equal([
+      expect(page.find('.row-label').map(node => node.text())).to.deep.equal([
         '/dev/sda',
         '/dev/sdb',
         '/dev/sdh',
       ]);
+    });
+
+    it('dispatches reboot to rescue mode', async () => {
+      const page = mount(
+        <RescuePage
+          dispatch={dispatch}
+          linodes={linodes}
+          params={{ linodeLabel: 'test-linode' }}
+        />);
+      page.setState({ diskSlots: [12345, 12346] });
+      // simulate pressing the submit button, the action should get dispatched
+      page.find('.RescueMode-form').simulate('submit');
+      const fn = dispatch.secondCall.args[0];
+      await expectRequest(fn, '/linode/instances/1234/rescue',
+        () => {}, null, options => {
+          expect(options.method).to.equal('POST');
+        }
+      );
     });
   });
 });

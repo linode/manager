@@ -9,22 +9,31 @@ import { dnszones } from '~/api';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 import CreateHelper from '~/components/CreateHelper';
+import { Checkbox } from '~/components/form';
+import { Button } from '~/components/buttons';
 
 export class IndexPage extends Component {
+  static async preload({ dispatch }) {
+    try {
+      await dispatch(dnszones.all());
+    } catch (response) {
+      // eslint-disable-next-line no-console
+      console.error(response);
+      dispatch(setError(response));
+    }
+  }
+
   constructor() {
     super();
     this.deleteZone = this.deleteZone.bind(this);
+    this.state = { isSelected: { } };
   }
 
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
+
     dispatch(setTitle('DNS Manager'));
-    try {
-      await dispatch(dnszones.all());
-    } catch (response) {
-      dispatch(setError(response));
-    }
   }
 
   deleteZone(zoneId) {
@@ -51,50 +60,56 @@ export class IndexPage extends Component {
 
   render() {
     const { dnszones } = this.props;
+    const { isSelected } = this.state;
 
     const renderZones = () => (
-      <section>
-        <table>
-          <thead>
-            <tr>
-              <th>&nbsp;</th>
-              <th>Name</th>
-              <th>Type</th>
-              <th>&nbsp;</th>
+      <table className="PrimaryTable">
+        <tbody>
+          {Object.values(dnszones.dnszones).map(z => (
+            <tr
+              key={z.id}
+              className={`PrimaryTable-row ${isSelected[z.id] ? 'PrimaryTable-row--selected' : ''}`}
+            >
+              <td>
+                <Checkbox
+                  className="PrimaryTable-rowSelector"
+                  checked={!!isSelected[z.id]}
+                  onChange={() =>
+                    this.setState({ isSelected: { ...isSelected, [z.id]: !isSelected[z.id] } })}
+                />
+                <Link
+                  className="PrimaryTable-rowLabel"
+                  to={`/dnsmanager/${z.dnszone}`}
+                  title={z.id}
+                >
+                  {z.dnszone}
+                </Link>
+              </td>
+              <td>{z.type} zone</td>
+              <td className="text-sm-right">
+                <Button onClick={() => this.deleteZone(z.id)}>Delete</Button>
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {Object.values(dnszones.dnszones).map(z => (
-              <tr key={z.id}>
-                <td>
-                  <input type="checkbox" />
-                </td>
-                <td>
-                  <Link to={`/dnsmanager/${z.id}`}>{z.dnszone}</Link>
-                </td>
-                <td>{z.type}</td>
-                <td className="text-xs-right">
-                  <a href="#" onClick={() => this.deleteZone(z.id)}>Delete</a>
-                </td>
-              </tr>
-             ))}
-          </tbody>
-        </table>
-      </section>
+           ))}
+        </tbody>
+      </table>
     );
 
     return (
-      <div className="container">
-        <header className="clearfix">
-          <div className="float-xs-left">
-            <h1>DNS Manager</h1>
-          </div>
-          <div className="float-xs-right">
-            <Link to="/dnsmanager/create" className="btn btn-default">Add a zone</Link>
+      <div className="PrimaryPage container">
+        <header className="PrimaryPage-header">
+          <div className="PrimaryPage-headerRow clearfix">
+            <h1 className="float-sm-left">DNS Manager</h1>
+            <Link to="/linodes/create" className="linode-add btn btn-primary float-sm-right">
+              <span className="fa fa-plus"></span>
+              Add a DNS Zone
+            </Link>
           </div>
         </header>
-        {Object.keys(this.props.dnszones.dnszones).length ? renderZones() :
-          <CreateHelper label="zones" href="/dnsmanager/create" linkText="Add a zone" />}
+        <div className="PrimaryPage-body">
+          {Object.keys(this.props.dnszones.dnszones).length ? renderZones() :
+            <CreateHelper label="zones" href="/dnsmanager/create" linkText="Add a zone" />}
+        </div>
       </div>
     );
   }

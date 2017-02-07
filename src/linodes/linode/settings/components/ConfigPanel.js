@@ -20,18 +20,13 @@ function configContent(linode, configs, dispatch) {
 
   return (
     <table className="ConfigPanel-configs">
-      <thead className="clear-thead">
-        <tr>
-          <th>Label</th>
-          {configs.length > 1 ? <th></th> : null}
-        </tr>
-      </thead>
       <tbody>
         {configs.map(config =>
           <tr key={config.id}>
             <td>
               <Link
                 to={`/linodes/${linode.label}/settings/advanced/configs/${config.id}`}
+                title={config.id}
               >
                 {config.label}
               </Link>
@@ -64,12 +59,6 @@ function configContent(linode, configs, dispatch) {
 }
 
 export class ConfigPanel extends Component {
-  static async preload({ dispatch, getState }, { linodeLabel }) {
-    const { id } = Object.values(getState().api.linodes.linodes).reduce(
-      (match, linode) => linode.label === linodeLabel ? linode : match);
-    await dispatch(linodes.configs.all([id]));
-  }
-
   constructor() {
     super();
     this.getLinode = getLinode.bind(this);
@@ -83,7 +72,7 @@ export class ConfigPanel extends Component {
     const content = configContent(linode, configs, dispatch);
 
     return (
-      <div>
+      <section className="card">
         <header className="clearfix">
           <h2 className="float-xs-left">Configs<HelpButton to="http://example.org" /></h2>
           <Button
@@ -94,7 +83,7 @@ export class ConfigPanel extends Component {
           </Button>
         </header>
         {content}
-      </div>
+      </section>
     );
   }
 }

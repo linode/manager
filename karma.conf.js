@@ -13,6 +13,10 @@ module.exports = function(config) {
       module: {
         loaders: [
           {
+            test: /\.json$/,
+            loaders: ['json-loader'],
+          },
+          {
             test: /\.jsx?/,
             loader: 'babel-loader',
             exclude: /node_modules/,

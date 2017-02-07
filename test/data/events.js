@@ -1,5 +1,5 @@
 export const apiTestEvent = {
-  label: 'Reboot Linode linode-www2',
+  entity: 'linode-www2',
   status: 'finished',
   stackscript_id: null,
   updated: '2016-11-21T20:03:40',
@@ -9,7 +9,7 @@ export const apiTestEvent = {
   finished: null,
   percent_complete: 100,
   created: '2016-11-21T20:03:40',
-  event_type: 'linode_reboot',
+  type: 'linode_reboot',
   id: 385,
   label_message: '',
   nodebalancer_id: null,
@@ -23,7 +23,7 @@ export const testEvent = {
 export function makeEvent(eventType) {
   return {
     ...testEvent,
-    event_type: eventType,
+    type: eventType,
   };
 }
 

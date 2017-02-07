@@ -70,7 +70,7 @@ export class DiskPanel extends Component {
     );
 
     return (
-      <div>
+      <section className="card">
         <header>
           <h2>Disks<HelpButton to="http://example.org" /></h2>
         </header>
@@ -92,7 +92,7 @@ export class DiskPanel extends Component {
                   borderColor: borderColors[disks.indexOf(d) % borderColors.length],
                 }}
               >
-                <h3>{d.label} <small>{d.filesystem}</small></h3>
+                <h3 title={d.id}>{d.label} <small>{d.filesystem}</small></h3>
                 <p>{d.size} MB</p>
                 {d.state !== 'deleting' ? null :
                   <small className="text-muted">Being deleted</small>}
@@ -128,7 +128,7 @@ export class DiskPanel extends Component {
                )}
           </section>
         </div>
-      </div>
+      </section>
     );
   }
 }

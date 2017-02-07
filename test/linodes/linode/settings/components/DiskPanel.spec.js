@@ -150,7 +150,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
     };
 
     it('should render the label and size inputs', () => {
-      const modal = shallow(
+      const modal = mount(
         <EditModal
           {...props}
           dispatch={() => {}}
@@ -173,7 +173,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
     });
 
     it('update state when fields are edited', () => {
-      const modal = shallow(
+      const modal = mount(
         <EditModal
           {...props}
           dispatch={() => {}}
@@ -214,7 +214,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
 
     it('should commit changes to the API', async () => {
       const dispatch = sandbox.spy();
-      const modal = shallow(
+      const modal = mount(
         <EditModal
           {...props}
           dispatch={dispatch}
@@ -330,18 +330,19 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
     };
 
     it('should render label, filesystem, distro, and size fields', () => {
-      const modal = shallow(
+      const modal = mount(
         <AddModal
           {...props}
           dispatch={() => {}}
         />);
+
       expect(modal.find('#label').length).to.equal(1);
       expect(modal.find('select').length).to.equal(2);
       expect(modal.find('[type="number"]').length).to.equal(1);
     });
 
     it('should drop filesystem and render password if a distro is selected', () => {
-      const modal = shallow(
+      const modal = mount(
         <AddModal
           {...props}
           dispatch={() => {}}
@@ -354,7 +355,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
     });
 
     it('should handle editing password', () => {
-      const modal = shallow(
+      const modal = mount(
         <AddModal
           {...props}
           dispatch={() => {}}
@@ -366,7 +367,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
     });
 
     it('should handle editing filesystem', () => {
-      const modal = shallow(
+      const modal = mount(
         <AddModal
           {...props}
           dispatch={() => {}}
@@ -388,7 +389,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
     });
 
     it('should enforce the min and max sizes contextually', () => {
-      const modal = shallow(
+      const modal = mount(
         <AddModal
           {...props}
           dispatch={() => {}}
@@ -455,7 +456,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
 
     it('should handle errors when createDisk is called', async () => {
       const dispatch = sandbox.stub();
-      const modal = shallow(
+      const modal = mount(
         <AddModal
           {...props}
           dispatch={dispatch}
@@ -475,15 +476,12 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
       const { createDisk } = modal.instance();
       await createDisk();
       const errs = modal.state('errors');
-      expect(errs)
-        .to.have.property('label')
-        .which.includes('Name error');
-      expect(errs)
-        .to.have.property('size')
-        .which.includes('Size error');
-      expect(errs)
-        .to.have.property('_')
-        .which.includes('General error');
+      expect(errs).to.have.deep.property('label');
+      expect(errs.label[0].reason).to.equal('Name error');
+      expect(errs).to.have.property('size');
+      expect(errs.size[0].reason).to.equal('Size error');
+      expect(errs).to.have.property('_');
+      expect(errs._[0].reason).to.equal('General error');
     });
   });
 });

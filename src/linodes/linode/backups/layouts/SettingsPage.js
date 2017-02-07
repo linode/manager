@@ -5,44 +5,13 @@ import { FormGroup } from '~/components/form';
 import { ErrorSummary, reduceErrors } from '~/errors';
 import { linodes } from '~/api';
 import { cancelBackup } from '~/api/backups';
+import { Card } from '~/components';
+import { ConfirmModalBody } from '~/components/modals';
 import { Form, SubmitButton } from '~/components/form';
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import { setSource } from '~/actions/source';
 import { showModal, hideModal } from '~/actions/modal';
-import { Button } from '~/components/buttons';
-import ConfirmModalBody from '~/components/modals/ConfirmModalBody';
 
-export class CancelBackupsModal extends Component {
-  constructor() {
-    super();
-    this.state = { loading: false };
-  }
-
-  render() {
-    const { dispatch, linodeId } = this.props;
-    return (
-      <ConfirmModalBody
-        buttonText="Cancel backups service"
-        onOk={async () => {
-          this.setState({ loading: true });
-          await dispatch(cancelBackup(linodeId));
-          this.setState({ loading: false });
-          dispatch(hideModal());
-        }}
-        onCancel={() => dispatch(hideModal())}
-      >
-        <p>
-          Are you sure you want to cancel backup service for this Linode?
-          This cannot be undone.
-        </p>
-      </ConfirmModalBody>);
-  }
-}
-
-CancelBackupsModal.propTypes = {
-  linodeId: PropTypes.number.isRequired,
-  dispatch: PropTypes.func.isRequired,
-};
 
 export class SettingsPage extends Component {
   constructor(props) {
@@ -78,24 +47,16 @@ export class SettingsPage extends Component {
     const { window, day, errors } = this.state;
     const linode = this.getLinode();
 
-    const cancelModal = linodeId => (
-      <CancelBackupsModal linodeId={linodeId} dispatch={dispatch} />
-    );
-
     return (
       <div>
-        <section className="card">
-          <header>
-            <h2>Schedule</h2>
-          </header>
+        <Card title="Schedule">
           <Form onSubmit={() => this.saveChanges()}>
-            <FormGroup errors={errors} className="row" name="window">
-              <div className="col-sm-2">
-                <label htmlFor="window">Time of day (EST):</label>
-              </div>
+            <FormGroup name="window" errors={errors} className="row">
+              <label htmlFor="window" className="col-sm-2 col-form-label">Time of day (EST):</label>
               <div className="col-sm-4">
                 <select
                   className="form-control"
+                  id="window"
                   name="window"
                   value={window}
                   onChange={e => this.setState({ window: e.target.value })}
@@ -115,13 +76,12 @@ export class SettingsPage extends Component {
                 </select>
               </div>
             </FormGroup>
-            <FormGroup errors={errors} className="row" name="day">
-              <div className="col-sm-2">
-                <label htmlFor="day">Day of week:</label>
-              </div>
+            <FormGroup name="day" errors={errors} className="row">
+              <label htmlFor="day" className="col-sm-2 col-form-label">Day of week:</label>
               <div className="col-sm-4">
                 <select
                   className="form-control"
+                  id="day"
                   name="day"
                   value={day}
                   onChange={e => this.setState({ day: e.target.value })}
@@ -137,21 +97,35 @@ export class SettingsPage extends Component {
               </div>
             </FormGroup>
             <ErrorSummary errors={errors} />
-            <SubmitButton />
+            <FormGroup className="row">
+              <div className="offset-sm-2 col-sm-10">
+                <SubmitButton />
+              </div>
+            </FormGroup>
           </Form>
-        </section>
-        <section className="card">
-          <header>
-            <h2>Cancel backup service</h2>
-          </header>
+        </Card>
+        <Card title="Cancel backup service">
           <p>This will remove all existing backups.</p>
-          <Button
-            className="LinodesLinodeBackupsSettings-cancel"
-            onClick={() => dispatch(showModal('Cancel backup service', cancelModal(linode.id)))}
+          <button
+            id="backup-settings-cancel"
+            className="btn btn-delete btn-default"
+            onClick={() => {
+              dispatch(showModal('Cancel backup service', <ConfirmModalBody
+                onOk={async() => {
+                  await dispatch(cancelBackup(linode.id));
+                  dispatch(hideModal());
+                }}
+                onCancel={() => dispatch(hideModal())}
+                buttonText="Cancel backups service"
+              >
+                Are you sure you want to cancel backup service for this Linode?
+                This cannot be undone.
+              </ConfirmModalBody>));
+            }}
           >
             Cancel backup service
-          </Button>
-        </section>
+          </button>
+        </Card>
       </div>
     );
   }

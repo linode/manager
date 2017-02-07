@@ -4,6 +4,7 @@ import { flags, distros as distroAssets } from '~/assets';
 import moment from 'moment';
 
 import StatusDropdown from './StatusDropdown';
+import { Checkbox } from '~/components/form';
 
 function renderPowerButton(props) {
   const { linode, onPowerOn, onReboot } = props;
@@ -46,7 +47,7 @@ export function renderDistroStyle(linode) {
         alt={linode.distribution.vendor}
         width="15" height="15"
       />
-      {linode.distribution.vendor}
+      <span>{linode.distribution.vendor}</span>
     </span>
   );
 }
@@ -59,7 +60,7 @@ export function renderDatacenterStyle(linode) {
           ? flags[linode.datacenter.country] : '//placehold.it/50x50'}
         height="15" width="20" alt={linode.datacenter.label}
       />
-      {linode.datacenter.label}
+      <span>{linode.datacenter.label}</span>
     </span>
   );
 }
@@ -151,7 +152,11 @@ function renderCard(props) {
       <header className="header-secondary">
         {checkbox}
         <div>
-          <Link className="linode-label" to={`/linodes/${linode.label}`}>{linode.label}</Link>
+          <Link
+            className="linode-label"
+            to={`/linodes/${linode.label}`}
+            title={linode.id}
+          >{linode.label}</Link>
         </div>
         <span className="float-xs-right">
           <StatusDropdown
@@ -182,18 +187,25 @@ renderCard.propTypes = {
 
 function renderRow(props) {
   const { linode, onSelect, isSelected } = props;
-  const select = () => onSelect(linode);
-  const selectedClass = isSelected ? 'selected' : '';
-
-  const checkbox = <input type="checkbox" checked={isSelected} onClick={select} />;
+  const selectedClass = isSelected ? 'PrimaryTable-row--selected' : '';
 
   return (
-    <tr className={`linode ${linode.status} ${selectedClass}`}>
-      <td className="linode-checkbox">{checkbox}</td>
+    <tr className={`PrimaryTable-row ${selectedClass}`}>
       <td>
-        <Link to={`/linodes/${linode.label}`} className="linode-label">{linode.label}</Link>
+        <Checkbox
+          className="PrimaryTable-rowSelector"
+          checked={isSelected}
+          onChange={() => onSelect(linode)}
+        />
+        <Link
+          to={`/linodes/${linode.label}`}
+          className="PrimaryTable-rowLabel"
+          title={linode.id}
+        >
+          {linode.label}
+        </Link>
       </td>
-      <td className="ips">
+      <td>
         {linode.ipv4}
         <div className="text-muted">{linode.ipv6.split('/')[0]}</div>
       </td>
@@ -203,10 +215,11 @@ function renderRow(props) {
       <td>
         {renderBackupStatus(linode)}
       </td>
-      <td>
+      <td className="PrimaryTable-rowOptions">
         <StatusDropdown
           linode={linode}
           dispatch={props.dispatch}
+          className="float-xs-right"
         />
       </td>
     </tr>

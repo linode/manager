@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 
 import HelpButton from '~/components/HelpButton';
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
-import { Form, SubmitButton } from '~/components/form';
+import { Card } from '~/components';
+import { CheckboxInputCombo, Form, SubmitButton } from '~/components/form';
 import { linodes } from '~/api';
 import { setSource } from '~/actions/source';
 
@@ -54,35 +55,19 @@ export class AlertsPage extends Component {
 
     return (
       <div className="form-group row" key={name}>
-        <div className="col-sm-2 label-col">
-          <span>{name}:</span>
-        </div>
-        <div className="col-sm-10 content-col">
-          <div>
-            <div className="checkbox">
-              <label>
-                <input
-                  type="checkbox"
-                  checked={enabled}
-                  onChange={enabledChange}
-                  disabled={loading}
-                />
-                <span>
-                  Enable
-                </span>
-              </label>
-            </div>
-            <div className="input-container">
-              <input
-                type="number"
-                value={threshold}
-                onChange={thresholdChange}
-                disabled={loading}
-                className="form-control"
-              />
-            </div>
-            {label}
-          </div>
+        <label className="col-sm-2 col-form-label">{name}:</label>
+        <div className="col-sm-10 ">
+          <CheckboxInputCombo
+            checkboxLabel="Enable"
+            checkboxChecked={enabled}
+            checkboxOnChange={enabledChange}
+            checkboxDisabled={loading}
+            inputType="number"
+            inputValue={threshold}
+            inputOnChange={thresholdChange}
+            inputLabel={label}
+            inputDisabled={loading}
+          />
           <small className="text-muted">Triggered by: {text} exceeding this value</small>
         </div>
       </div>
@@ -116,22 +101,24 @@ export class AlertsPage extends Component {
     ];
 
     return (
-      <section className="card linode-alerts">
-        <header>
-          <h2>
-            Alerts
-            <HelpButton to="https://google.com" />
-          </h2>
-        </header>
-        <Form onSubmit={() => this.saveChanges()}>
-          {alerts.map(this.renderAlertRow)}
-          <div className="row">
-            <div className="offset-sm-2 col-sm-10">
-              <SubmitButton disabled={loading} />
+      <div className="subtab-content-container">
+        <Card className="linode-alerts">
+          <header>
+            <h2>
+              Alerts
+              <HelpButton to="https://google.com" />
+            </h2>
+          </header>
+          <Form onSubmit={() => this.saveChanges()}>
+            {alerts.map(this.renderAlertRow)}
+            <div className="row">
+              <div className="offset-sm-2 col-sm-10">
+                <SubmitButton disabled={loading} />
+              </div>
             </div>
-          </div>
-        </Form>
-      </section>
+          </Form>
+        </Card>
+      </div>
     );
   }
 }

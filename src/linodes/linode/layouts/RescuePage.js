@@ -1,12 +1,13 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
+import { setError } from '~/actions/errors';
 import { getLinode } from './IndexPage';
 import { showModal, hideModal } from '~/actions/modal';
 import { linodes } from '~/api';
-import { resetPassword, rebootLinode } from '~/api/linodes';
+import { resetPassword, rescueLinode } from '~/api/linodes';
 import { ConfirmModalBody } from '~/components/modals';
-import { Form, SubmitButton, PasswordInput } from '~/components/form';
+import { Form, FormGroup, SubmitButton, PasswordInput } from '~/components/form';
 import HelpButton from '~/components/HelpButton';
 import { setSource } from '~/actions/source';
 import { getConfig,
@@ -24,7 +25,14 @@ export class RescuePage extends Component {
   static async preload({ dispatch, getState }, { linodeLabel }) {
     const { id } = Object.values(getState().api.linodes.linodes).reduce(
       (match, linode) => linode.label === linodeLabel ? linode : match);
-    await dispatch(linodes.disks.all([id]));
+
+    try {
+      await dispatch(linodes.disks.all([id]));
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error(e);
+      dispatch(setError(e));
+    }
   }
 
   constructor(props) {
@@ -34,6 +42,7 @@ export class RescuePage extends Component {
     this.getDisks = getDisks.bind(this);
     this.getDiskSlots = getDiskSlots.bind(this);
     this.fillDiskSlots = fillDiskSlots.bind(this);
+    this.rebootToRescue = this.rebootToRescue.bind(this);
     this.removeDiskSlot = removeDiskSlot.bind(this);
     this.addDiskSlot = addDiskSlot.bind(this);
     this.renderDiskSlot = renderDiskSlot.bind(this);
@@ -83,28 +92,41 @@ export class RescuePage extends Component {
     }
   }
 
+  async rebootToRescue() {
+    const { diskSlots } = this.state;
+    const { dispatch } = this.props;
+    const linode = this.getLinode();
+    const disks = {};
+
+    if (diskSlots) {
+      diskSlots.forEach((slotId, i) => {
+        disks[AVAILABLE_DISK_SLOTS[i]] = slotId;
+      });
+      await dispatch(rescueLinode(linode.id, { disks }));
+    }
+  }
+
   renderDiskSlotNoEdit(device, index) {
     const disks = this.getDisks();
 
     return (
-      <div
-        className="form-group row disk-slot"
+      <FormGroup
+        className="row disk-slot"
         key={index}
       >
-        <label className="col-sm-2 label-col">
+        <label className="col-sm-2 row-label">
           /dev/{AVAILABLE_DISK_SLOTS[index]}
         </label>
-        <div className="col-xs-9 input-container">
+        <div className="col-sm-10">
           {disks[device].label}
         </div>
-      </div>
+      </FormGroup>
     );
   }
 
 
   renderRescueMode() {
     const { diskSlots } = this.state;
-    const { dispatch } = this.props;
     const linode = this.getLinode();
 
     const showDisks = linode && linode._disks ? Object.values(linode._disks.disks).filter(
@@ -126,22 +148,21 @@ export class RescuePage extends Component {
             </h2>
             <p></p>
           </header>
-          {slots}
-          <div className="form-group row disk-slot">
-            <label className="col-sm-2 label-col">
-              /dev/sdh
-            </label>
-            <div className="col-xs-9 input-container">Finnix Media</div>
-          </div>
-          <div className="form-group row">
-            <div className="col-sm-2"></div>
-            <div className="col-xs-9">
-              <SubmitButton
-                onClick={() => dispatch(rebootLinode)}
-                disabled
-              >Reboot</SubmitButton>
+          <Form className="RescueMode-form" onSubmit={() => { this.rebootToRescue(); }}>
+            {slots}
+            <div className="form-group row disk-slot">
+              <label className="col-sm-2 row-label">
+                /dev/sdh
+              </label>
+              <div className="col-sm-10">Finnix Media</div>
             </div>
-          </div>
+            <div className="form-group row">
+              <div className="col-sm-2"></div>
+              <div className="col-sm-10">
+                <SubmitButton>Reboot</SubmitButton>
+              </div>
+            </div>
+          </Form>
         </section>
       </div>
     );
@@ -168,10 +189,13 @@ export class RescuePage extends Component {
             </div>}
             {showDisks ?
               <div className="form-group row">
-                <div className="col-sm-2">
-                  <label htmlFor="reset-root-password-select" className="label-col">Disk:</label>
-                </div>
-                <div className="input-container col-sm-9">
+                <label
+                  htmlFor="reset-root-password-select"
+                  className="col-sm-2 col-form-label"
+                >
+                  Disk:
+                </label>
+                <div className="col-sm-10">
                   <select
                     name="reset-root-password-select"
                     value={disk}
@@ -187,9 +211,7 @@ export class RescuePage extends Component {
             : null}
           <div className="form-group row">
               {showDisks ?
-                <div className="col-sm-2">
-                  <label htmlFor="password" className="label-col">Password:</label>
-                </div>
+                <label htmlFor="password" className="col-sm-2 col-form-label">Password:</label>
               : null}
             <div className="col-sm-10">
               <PasswordInput
