@@ -38,5 +38,10 @@
     &-rowLabel:focus {
         @extend .font-large;
         color: $black;
+        vertical-align: top;
+    }
+
+    &-rowOptions {
+        padding-top: 0;
     }
 }

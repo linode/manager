@@ -10,7 +10,7 @@
     }
 
     &-status {
-        height: $input-height;
+        height: $form-field-height;
         padding-right: 10px;
         color: $light-black;
     }
@@ -21,10 +21,10 @@
         @extend .dropdown-toggle;
 
         padding: 0;
-        background: transparent !important;
-        border: 0 !important;
-        height: $input-height !important;
-        line-height: $input-height !important;
+        background: transparent;
+        border: 0;
+        height: $form-field-height;
+        width: 100%;
 
         /* Hide default bootstrap dropdown icon */
         &:after {

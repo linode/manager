@@ -93,9 +93,7 @@ export class AddModal extends Component {
           name="label"
           className="row"
         >
-          <div className="col-sm-5 label-col">
-            <label>Label</label>
-          </div>
+          <label className="col-sm-5 col-form-label">Label</label>
           <div className="col-sm-7">
             <div>
               <Input
@@ -114,9 +112,7 @@ export class AddModal extends Component {
           name="distribution"
           className="row"
         >
-          <div className="col-sm-5 label-col">
-            <label>Distribution (optional)</label>
-          </div>
+          <label className="col-sm-5 col-form-label">Distribution (optional)</label>
           <div className="col-sm-7">
             <div>
               <Select
@@ -135,9 +131,7 @@ export class AddModal extends Component {
                 name="password"
                 className="row"
               >
-                <div className="col-sm-5 label-col">
-                  <label>Root password</label>
-                </div>
+                <label className="col-sm-5 col-form-label">Root password</label>
                 <div className="col-sm-7">
                   <PasswordInput
                     onChange={p => this.setState({ password: p })}
@@ -151,9 +145,7 @@ export class AddModal extends Component {
                 name="filesystem"
                 className="row"
               >
-                <div className="col-sm-5 label-col">
-                  <label>Filesystem</label>
-                </div>
+                <label className="col-sm-5 col-form-label">Filesystem</label>
                 <div className="col-sm-7">
                   <div>
                     <Select
@@ -176,9 +168,7 @@ export class AddModal extends Component {
           name="size"
           className="row"
         >
-          <div className="col-sm-5 label-col">
-            <label>Size (MB)</label>
-          </div>
+          <label className="col-sm-5 col-form-label">Size (MB)</label>
           <div className="col-sm-7">
             <Input
               className="LinodesLinodeSettingsComponentsAddModal-disk-size"

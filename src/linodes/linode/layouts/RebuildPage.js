@@ -67,9 +67,7 @@ export class RebuildPage extends Component {
           </div>
           <div className="LinodesLinodeRebuildPage-password">
             <FormGroup errors={errors} name="root_pass" className="row">
-              <div className="col-sm-2 label-col">
-                <label>Root password:</label>
-              </div>
+              <label className="col-sm-2 col-form-label">Root password:</label>
               <div className="col-sm-10">
                 <PasswordInput
                   value={this.state.password}
