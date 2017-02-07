@@ -1,0 +1,92 @@
+html {
+  font-size: 62.5%; // resets root font size to 10px
+}
+
+// default font sizes, defined in rem with a pixel fallback, computed whole pixel values
+.font-normal {
+  @include font-size(1.5);
+}
+.font-small {
+  @include font-size(1.3);
+}
+.font-xs {
+  @include font-size(1.2);
+}
+.font-medium {
+  @include font-size(1.6);
+}
+.font-large {
+  @include font-size(1.8);
+}
+.font-extra-large {
+  @include font-size(2);
+}
+
+body {
+  @extend .font-normal;
+  background: $light-gray;
+  color: $black;
+  font-weight: normal;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  font-weight: normal;
+  line-height: normal;
+  color: $black;
+}
+
+h1 {
+  @include font-size(2.8);
+  margin-bottom: 15px;
+}
+
+h2 {
+  @include font-size(2.2);
+}
+
+h3 {
+  @extend .font-large;
+}
+
+h4 {
+  @extend .font-medium;
+}
+
+h5, h6 {
+  @extend .font-normal;
+}
+
+a {
+  color: $blue;
+  text-decoration: none;
+}
+
+a > i.fa {
+  color: $blue;
+}
+
+label {
+  margin-bottom: 0;
+}
+
+.fa {
+  color: $default-gray;
+}
+
+p {
+  margin-bottom: $main-padding-tb/2;
+}
+
+hr {
+  width: 300px;
+  margin: $main-padding-tb/2 0;
+}
+
+small {
+  @extend .font-small;
+}
+
+strong {
+  font-weight: 500; // toned down from 'bolder'
+}

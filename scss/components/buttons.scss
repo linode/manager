@@ -1,10 +1,18 @@
+.input-group,
+.btn-group,
+.btn {
+    height: $form-field-height;
+}
+
 .btn, a {
     transition: background .35s, color .2s, border .1s;
 }
 
 .btn {
+    @extend .font-normal;
+    padding: 6px 8px;
     text-decoration: none;
-    border-radius: 2px;
+    border-radius: 0;
     border: $border;
     background: $light-gray;
 
@@ -23,27 +31,20 @@
         }
     }
 
-    .fa {
-        line-height: $input-height;
-    }
-
     &.btn-help, &.btn-warning {
         $size: 24px;
         .fa {
             color: $lightest-black;
-            line-height: $size - 2px;
         }
         background-color: $gray;
-        font-size: $size / 2;
         line-height: $size - 2px;
-        padding: 0 0 0 0.1rem;
-        margin: 0 1rem;
+        margin: 0 10px;
+        padding: 0;
         display: inline-block;
         width: $size;
         height: $size;
         border-radius: $size / 2;
         font-weight: bold;
-        text-indent: -1px;
 
         &:hover {
             background-color: $blue;
@@ -53,11 +54,6 @@
                 color: $white;
                 line-height: $size + 2px;
             }
-        }
-
-        /* TODO: Remove this. */
-        h1 &, h2 &, h3 & {
-            margin-top: -0.25rem;
         }
     }
 
@@ -141,3 +137,35 @@
     }
 }
 
+.input-group {
+    max-width: 50%;
+}
+
+// TODO: remove or replace with specific instance (i.e. for the checkbox + action menu)
+.input-group {
+    height: $form-field-height;
+
+    // TODO: drop after moving to input components
+    .input-group-addon {
+        background: $light-gray;
+        height: 100%;
+        padding: 0 8px;
+    }
+
+    input {
+        margin: 0;
+        border: $border;
+        border-radius: 0;
+        height: 100%;
+
+        &[readonly] {
+            background-color: $white;
+            width: 200px;
+        }
+    }
+
+    .input-group-btn {
+        height: $form-field-height;
+        float: left;
+    }
+}

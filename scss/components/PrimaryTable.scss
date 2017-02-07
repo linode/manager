@@ -10,9 +10,9 @@
         margin: 0 15px;
 
         &--groupLabel {
+            @extend .font-large;
             color: $light-black;
             border: 0;
-            font-size: $font-small;
             height: auto;
 
             td {
@@ -32,8 +32,16 @@
         padding-right: 10px;
     }
 
-    &-rowLabel, &-rowLabel:hover {
+    &-rowLabel,
+    &-rowLabel:hover,
+    &-rowLabel:active,
+    &-rowLabel:focus {
+        @extend .font-large;
         color: $black;
-        font-size: $font-small;
+        vertical-align: top;
+    }
+
+    &-rowOptions {
+        padding-top: 0;
     }
 }

@@ -4,37 +4,52 @@ form {
   }
 }
 
-// TOOD: remove input-container
-.input-container {
-    display: inline-block;
+.col-form-label,
+.form-control {
+  @extend .font-normal;
+  height: $form-field-height;
+  padding: $form-field-padding;
+}
 
-    &.input-group {
-        .btn {
-            position: relative;
-            left: -1px;
-        }
-    }
+.col-form-label {
+  color: $light-black; // $lightest-black
+  text-align: right;
 }
 
 .form-control {
-    max-width: 300px;
-    width: auto;
-    font-size: $font-normal;
-    border-radius: 2px;
+    border-radius: 0;
     color: $black;
-    display: inline-block;
 
     &:focus {
         color: $black;
     }
+
+}
+
+select.form-control:not([size]):not([multiple]) {
+  height: $form-field-height;
+}
+
+.form-control {
+  width: 225px;
+}
+
+.form-control.input-md {
+  width: 275px;
+}
+
+.form-control.input-lg {
+  width: 325px;
+}
+
+input[type="number"].form-control {
+  width: 125px;
 }
 
 .form-control-feedback {
     color: $red;
     margin-top: 0;
-    margin-left: 15px;
-    line-height: $input-height;
-    display: inline-block;
+    margin-left: 8px;
 
     &--block {
         display: block;
@@ -43,38 +58,13 @@ form {
 }
 
 .form-group {
-  margin-bottom: 0;
+  margin-bottom: 10px;
 
-  &:not(:last-child) {
-    margin-bottom: 10px;
+  &:last-child {
+    margin-bottom: 0;
   }
 }
 
 .form-group .btn-cancel {
   margin-left: 10px;
-}
-
-.label-col {
-    color: $lightest-black;
-    text-align: right;
-    line-height: $input-height;
-    white-space: nowrap;
-
-    legend {
-        font-size: initial;
-    }
-}
-
-.input-line-height {
-    line-height: $input-height;
-}
-
-.content-col {
-    li a {
-        text-decoration: none;
-    }
-
-    img {
-        margin-left: 0.5rem;
-    }
 }

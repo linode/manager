@@ -5,9 +5,10 @@
 }
 
 .datacenter, .plan, .backup {
-    $width: 11rem;
+    $width: 250px;
     border: $border;
     cursor: pointer;
+    height: 150px;
     width: $width;
 
     header {
@@ -21,11 +22,10 @@
         .dropdown-item {
             text-align: center;
             overflow: hidden;
-            line-height: $input-height;
+            line-height: $form-field-height;
             color: $black;
 
             &.dropdown-item {
-                font-size: $font-normal;
                 text-align: left !important;
                 font-weight: inherit;
                 padding: 0 inherit;
@@ -44,8 +44,12 @@
         }
     }
 
+    .option-contents {
+        padding: 10px 0;
+        height: 118px; // TODO: define default sizes for card style options
+    }
+
     &:not(.plan):not(.backup) > div {
-        height: 6rem;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -70,12 +74,8 @@
 .plan {
     text-align: center;
 
-    .plan-contents {
-        padding: 1rem 0;
-    }
-
     hr {
         width: 80%;
-        margin: .5rem auto;
+        margin: 5px auto;
     }
 }

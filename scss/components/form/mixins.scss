@@ -2,16 +2,16 @@
     @extends .checkbox;
 
     display: inline-block;
-    line-height: $input-height;
+    line-height: $form-field-height;
 
     &-input {
-        height: $input-height / 2;
-        width: $input-height / 2;
+        height: $form-field-height / 2;
+        width: $form-field-height / 2;
     }
 
     &-label {
         display: inline-block;
-        line-height: $input-height;
-        padding: 0 5px;
+        line-height: $form-field-height;
+        padding: 0 10px;
     }
 }

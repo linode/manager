@@ -3,7 +3,6 @@
   position: relative;
 
   &-description {
-    font-size: $font-size-sm;
     padding: 10px 0;
   }
 
@@ -35,7 +34,6 @@
 }
 
 .FormDescriptor {
-  font-size: $font-size-xs;
   position: absolute;
   color: $black;
 
@@ -44,18 +42,18 @@
   }
 
   &__form-labels {
-    top: -22px;
-    left: 156px;
+    top: -20px;
+    left: 105px;
   }
 
   &__required-field {
     top: -10px;
-    left: 118px;
+    left: 72px;
   }
 
   &__form-fields {
     top: -75px;
-    left: 75px;
+    left: 70px;
   }
 
   &__disabled-fields {
@@ -70,7 +68,7 @@
 
   &__form-section-title {
     top: -60px;
-    left: 20px;
+    left: 16px;
   }
 
   &__form-buttons {

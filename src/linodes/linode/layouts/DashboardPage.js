@@ -173,11 +173,11 @@ export class DashboardPage extends Component {
             <header>
               <h2>Summary</h2>
             </header>
-            <div className="form-group row linode-ips">
-              <div className="col-sm-3 label-col">
+            <div className="row linode-ips">
+              <div className="col-sm-3 row-label">
                 IP Addresses
               </div>
-              <div className="col-sm-9 content-col right">
+              <div className="col-sm-9">
                 <ul className="list-unstyled">
                   <li>{linode.ipv4}</li>
                   <li className="text-muted">{linode.ipv6.split('/')[0]}</li>
@@ -186,37 +186,37 @@ export class DashboardPage extends Component {
               </div>
             </div>
             {plan ?
-              <div className="form-group row linode-plan">
-                <div className="col-sm-3 label-col">
+              <div className="row linode-plan">
+                <div className="col-sm-3 row-label">
                   Plan
                 </div>
-                <div className="col-sm-9 content-col right">
+                <div className="col-sm-9">
                   {plan}
                 </div>
               </div>
               : null
             }
-            <div className="form-group row linode-datacenter">
-              <div className="col-sm-3 label-col">
+            <div className="row linode-datacenter">
+              <div className="col-sm-3 row-label">
                 Datacenter
               </div>
-              <div className="col-sm-9 content-col right">
+              <div className="col-sm-9">
                 {this.renderDatacenterStyle(linode)}
               </div>
             </div>
-            <div className="form-group row linode-distro">
-              <div className="col-sm-3 label-col">
+            <div className="row linode-distro">
+              <div className="col-sm-3 row-label">
                 Distribution
               </div>
-              <div className="col-sm-9 content-col right">
+              <div className="col-sm-9">
                 {this.renderDistroStyle(linode)}
               </div>
             </div>
-            <div className="form-group row linode-backups">
-              <div className="col-sm-3 label-col">
+            <div className="row linode-backups">
+              <div className="col-sm-3 row-label">
                 Backup
               </div>
-              <div className="col-sm-9 content-col right">
+              <div className="col-sm-9">
                 {this.renderBackupStatus(linode, true)}
               </div>
             </div>
@@ -228,12 +228,10 @@ export class DashboardPage extends Component {
               <h2>Access</h2>
             </header>
             <div className="form-group row linode-ssh">
-              <div className="col-sm-4 label-col">
-                <label className="form-label" htmlFor="ssh-input">
-                  SSH
-                </label>
-              </div>
-              <div className="col-sm-8 content-col right">
+              <label htmlFor="ssh-input" className="col-sm-4 col-form-label">
+                SSH
+              </label>
+              <div className="col-sm-8">
                 <div className="input-group">
                   <input
                     type="text"
@@ -249,12 +247,10 @@ export class DashboardPage extends Component {
               </div>
             </div>
             <div className="form-group row linode-lish">
-              <div className="col-sm-4 label-col">
-                <label className="form-label" htmlFor="lish-input">
-                  Text console
-                </label>
-              </div>
-              <div className="col-sm-8 content-col right">
+              <label className="col-sm-4 col-form-label" htmlFor="lish-input">
+                Text console
+              </label>
+              <div className="col-sm-8">
                 <div className="input-group">
                   <input
                     type="text"
@@ -276,12 +272,10 @@ export class DashboardPage extends Component {
               </div>
             </div>
             <div className="form-group row linode-glish">
-              <div className="col-sm-4 label-col">
-                <label className="form-label" htmlFor="glish-button">
-                  Graphical console
-                </label>
-              </div>
-              <div className="col-sm-8 content-col right">
+              <label className="col-sm-4 col-form-label" htmlFor="glish-button">
+                Graphical console
+              </label>
+              <div className="col-sm-8">
                 <div className="input-group-btn">
                   <Button id="glish-button" disabled>Open</Button>
                 </div>

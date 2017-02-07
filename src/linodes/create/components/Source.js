@@ -40,7 +40,7 @@ export default class Source extends Component {
     return (
       <div className="LinodeSelection-container">
         <div className="LinodeSelection-filter">
-          <div className="filter input-container">
+          <div className="filter">
             <input
               type="text"
               onChange={e =>
@@ -138,7 +138,7 @@ export default class Source extends Component {
               <Tab>StackScripts</Tab>
             </TabList>
             <TabPanel>
-              <section>
+              <section className="subtab-content-container">
                 <Distributions
                   distributions={distributions}
                   distribution={distribution}
@@ -147,7 +147,7 @@ export default class Source extends Component {
               </section>
             </TabPanel>
             <TabPanel>
-              <div className="backups">
+              <div className="backups subtab-content-container">
                 {selectedLinode === -1 ?
                   this.renderLinodeSelection() :
                   <Backups

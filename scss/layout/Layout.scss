@@ -1,0 +1,87 @@
+html,
+body,
+#root,
+#root > [data-reactroot],
+.layout {
+  height: 100%;
+}
+
+.layout {
+  // TODO: min-width considerations:
+  // * linode cards need > 700px;
+  // * linode rows need > 1150px;
+  // * linode page needs > 980px
+  min-width: 1150px;
+}
+
+.row-eq-height {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+
+  .card {
+    height: 100%;
+  }
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  margin-left: $sidebar-width;
+  min-height: 100%;
+  padding-top: $nav-height;
+  width: calc(100% - #{$sidebar-width});
+}
+
+.main .main-inner {
+  flex: 1;
+}
+
+.main-header {
+  background: $white;
+    padding: 15px 0;
+
+    &--border {
+        border-bottom: $border;
+        margin-bottom: 15px;
+    }
+
+  // TODO: look at grid defaults. this fixes tab alignment
+  .container {
+    padding: 0 15px;
+  }
+
+  h1 {
+    margin-bottom: 0;
+  }
+}
+
+// Deals with the fact that tablist extends container which gives it a max-width
+.main-header-fix {
+  height: 38px;
+  width: 100%;
+  background: $white;
+  border-bottom: $border;
+  margin-bottom: -36px;
+}
+
+.tab-content-container {
+  padding: 0 15px 15px 15px;
+
+  & > .SubTabs {
+    margin-top: 5px;
+  }
+
+  & > :not(.SubTabs):first-child {
+    margin-top: 15px;
+  }
+}
+
+.subtab-content-container {
+  padding: 15px 0;
+}
+
+.card.graphs {
+  margin-top: 15px;
+}

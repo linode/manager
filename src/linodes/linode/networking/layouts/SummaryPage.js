@@ -57,7 +57,7 @@ export class SummaryPage extends Component {
     return (
       <ul className="list-unstyled" id={id}>
         {ips.map(({ address, prefix, rdns }) =>
-          <li key={address} className="input-line-height">
+          <li key={address}>
             <span className="text-nowrap">
               {address}{prefix && isIpv6(prefix) ? ` / ${prefix}` : null}
             </span>
@@ -79,28 +79,28 @@ export class SummaryPage extends Component {
             to="https://www.linode.com/docs/networking/linux-static-ip-configuration"
           />
         </h3>
-        <div className="form-group row">
-          <div className="col-sm-3 label-col">Address</div>
+        <div className="row">
+          <div className="col-sm-3 row-label">Address</div>
           <div className="col-sm-9">{this.renderIps('publicIpv4', ipv4.public)}</div>
         </div>
-        <div className="form-group row">
-          <div className="col-sm-3 label-col">Subnet mask</div>
-          <div className="col-sm-9 input-line-height" id="ipv4Subnet">
+        <div className="row">
+          <div className="col-sm-3 row-label">Subnet mask</div>
+          <div className="col-sm-9" id="ipv4Subnet">
             {ipv4.public[0].subnet_mask}
           </div>
         </div>
-        <div className="form-group row">
-          <div className="col-sm-3 label-col">Gateway</div>
-          <div className="col-sm-9 input-line-height" id="ipv4Gateway">
+        <div className="row">
+          <div className="col-sm-3 row-label">Gateway</div>
+          <div className="col-sm-9" id="ipv4Gateway">
             {ipv4.public[0].gateway}
           </div>
         </div>
-        <div className="form-group row">
-          <div className="col-sm-3 label-col">Nameservers</div>
+        <div className="row">
+          <div className="col-sm-3 row-label">Nameservers</div>
           <div className="col-sm-9">{this.renderNameservers(true)}</div>
         </div>
-        <div className="form-group row">
-          <div className="col-sm-3 label-col">Private address</div>
+        <div className="row">
+          <div className="col-sm-3 row-label">Private address</div>
           <div className="col-sm-9">
             {ipv4.private.length ? this.renderIps('privateIpv4', ipv4.private) : (
               <Button
@@ -128,27 +128,27 @@ export class SummaryPage extends Component {
             to="https://www.linode.com/docs/networking/native-ipv6-networking"
           />
         </h3>
-        <div className="form-group row">
-          <div className="col-sm-3 label-col">Address</div>
+        <div className="row">
+          <div className="col-sm-3 row-label">Address</div>
           <div className="col-sm-9">
             {/* TODO: replace with proper prefix */}
-            <div className="input-line-height" id="slaac">{ipv6.slaac} / {ipv6.prefix || '64'}</div>
+            <div id="slaac">{ipv6.slaac} / {ipv6.prefix || '64'}</div>
             {ipv6.addresses.map(address =>
-              <div className="input-line-height">{address} / {ipv6.prefix || '64'}</div>)}
+              <div>{address} / {ipv6.prefix || '64'}</div>)}
           </div>
         </div>
-        <div className="form-group row">
-          <div className="col-sm-3 label-col">Gateway</div>
+        <div className="row">
+          <div className="col-sm-3 row-label">Gateway</div>
           {/* TODO: replace once gateways are returned */}
-          <div className="col-sm-9 input-line-height">fe80::1</div>
+          <div className="col-sm-9">fe80::1</div>
         </div>
-        <div className="form-group row">
-          <div className="col-sm-3 label-col">Nameservers</div>
+        <div className="row">
+          <div className="col-sm-3 row-label">Nameservers</div>
           <div className="col-sm-9">{this.renderNameservers()}</div>
         </div>
-        <div className="form-group row">
-          <div className="col-sm-3 label-col">Link-local IP</div>
-          <div className="col-sm-9 input-line-height">
+        <div className="row">
+          <div className="col-sm-3 row-label">Link-local IP</div>
+          <div className="col-sm-9">
             {this.renderIps('linkLocal', [{ address: ipv6['link-local'] }])}
           </div>
         </div>
@@ -158,7 +158,7 @@ export class SummaryPage extends Component {
 
   render() {
     return (
-      <div>
+      <div className="subtab-content-container">
         <section className="card">
           <header className="clearfix">
             <h2 className="float-xs-left">Summary</h2>

@@ -1,11 +1,11 @@
 .PrimaryPage {
     margin-top: 15px;
 
-    &-headerRow {
-        margin-bottom: 15px;
+    h1 {
+        margin-bottom: 0;
     }
 
-    .input-group {
-        max-width: 50%;
+    &-headerRow {
+        margin-bottom: 15px;
     }
 }

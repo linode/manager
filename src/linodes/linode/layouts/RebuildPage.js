@@ -15,7 +15,6 @@ import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 export class RebuildPage extends Component {
   constructor(props) {
     super(props);
-    this.onSubmit = this.onSubmit.bind(this);
     this.getLinode = getLinode.bind(this);
     this.state = {
       distribution: this.getLinode().distribution.id,
@@ -44,7 +43,7 @@ export class RebuildPage extends Component {
       dispatch(push(`/linodes/${linodeLabel}`));
     } catch (response) {
       const errors = await reduceErrors(response);
-      errors._ = errors.distribution;
+      errors._.concat(errors.distribution);
       this.setState({ errors });
     }
 
@@ -68,9 +67,7 @@ export class RebuildPage extends Component {
           </div>
           <div className="LinodesLinodeRebuildPage-password">
             <FormGroup errors={errors} name="root_pass" className="row">
-              <div className="col-sm-2 label-col">
-                <label>Root password:</label>
-              </div>
+              <label className="col-sm-2 col-form-label">Root password:</label>
               <div className="col-sm-10">
                 <PasswordInput
                   value={this.state.password}

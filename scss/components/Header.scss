@@ -8,18 +8,18 @@ $header-padding: $grid-gutter-width-base / 2;
 }
 
 .MiniHeader {
+    @extend .font-small;
     padding: 0 $header-padding;
     height: $info-nav-height;
     background: $black;
-    font-size: $font-xs-small;
     line-height: $info-nav-height;
 
     &-new {
+        @extend .font-small;
         color: $black;
         text-transform: uppercase;
         background: $white;
         padding: 1px 4px;
-        font-size: $font-xs-small;
 
         &:hover {
             text-decoration: underline;
@@ -41,8 +41,11 @@ $header-padding: $grid-gutter-width-base / 2;
     &-brand, &-search, &-session {
         float: left;
         display: inline-block;
-        line-height: $main-nav-height;
         margin-right: $header-padding;
+    }
+
+    &-session {
+        line-height: $main-nav-height;
     }
 
     &-logo {
@@ -60,17 +63,14 @@ $header-padding: $grid-gutter-width-base / 2;
     }
 
     &-search {
-        $margin-tb: ($main-nav-height - $input-height) / 2;
-        height: $input-height;
-        margin: 0 $header-padding 0 0;
+        padding: 14px 10px;
 
-        input,
-        input:focus {
+        input.form-control,
+        input.form-control:focus {
             background: $black;
             width: 250px;
             border: $border;
             border-color: black;
-            border-radius: 2px;
             outline: 0;
             color: #ccc;
         }

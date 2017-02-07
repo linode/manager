@@ -3,9 +3,10 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
 import Source from '../components/Source';
-import Plan from '../components/Plan';
-import Datacenter from '../components/Datacenter';
+import Plan from '~/linodes/components/Plan';
+import Datacenter from '~/components/Datacenter';
 import Details from '../components/Details';
+import Card from '~/components/Card';
 import { linodes } from '~/api';
 import { actions as linodeActions } from '~/api/configs/linodes';
 import { randomInitialProgress, linodeBackups } from '~/api/linodes';
@@ -122,7 +123,6 @@ export class IndexPage extends Component {
       loading,
     } = this.state;
 
-
     const selectedType = type === null ? null : types.types[type];
 
     return (
@@ -156,11 +156,13 @@ export class IndexPage extends Component {
           disabled={backup !== null}
           onDatacenterSelected={id => this.setState({ datacenter: id })}
         />
-        <Plan
-          selected={type}
-          types={types.types}
-          onServiceSelected={id => this.setState({ type: id })}
-        />
+        <Card title="Plan">
+          <Plan
+            selected={type}
+            types={types.types}
+            onServiceSelected={id => this.setState({ type: id })}
+          />
+        </Card>
         <Details
           selectedType={selectedType}
           onSubmit={this.onSubmit}
