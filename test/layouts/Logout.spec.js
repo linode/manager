@@ -5,7 +5,6 @@ import { shallow } from 'enzyme';
 
 import { Logout } from '../../src/layouts/Logout';
 import { logout } from '~/actions/authentication';
-import { changeView } from '~/linodes/actions';
 import { LOGIN_ROOT } from '~/constants';
 import * as storage from '~/storage';
 import { setToken } from '~/actions/authentication';
@@ -28,10 +27,9 @@ describe('layouts/Logout', () => {
       />
     );
     await component.instance().componentDidMount();
-    expect(dispatch.callCount).to.equal(3);
-    expect(dispatch.args[0][0]).to.deep.equal(changeView('list'));
-    expect(dispatch.args[1][0]).to.deep.equal(setToken('', '', '', '', ''));
-    expect(dispatch.args[2][0]).to.deep.equal(logout());
+    expect(dispatch.callCount).to.equal(2);
+    expect(dispatch.args[0][0]).to.deep.equal(setToken('', '', '', '', ''));
+    expect(dispatch.args[1][0]).to.deep.equal(logout());
 
     const sessionValues = [
       'authentication/oauth-token',

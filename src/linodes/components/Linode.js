@@ -160,7 +160,7 @@ export function Linode(props) {
           {linode.label}
         </Link>
       </td>
-      <td>
+      <td id="ips">
         {linode.ipv4}
         <div className="text-muted">{linode.ipv6.split('/')[0]}</div>
       </td>
