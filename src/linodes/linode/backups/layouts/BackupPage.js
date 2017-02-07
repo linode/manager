@@ -15,9 +15,6 @@ function renderDateTime(dt) {
 
 export function getBackups(backups) {
   const backupList = [];
-  if (backups.backups) {
-    return backupList;
-  }
   backupList.push(
     backups.daily,
     backups.weekly[0],
