@@ -55,7 +55,7 @@ export class CreatePage extends Component {
         <header className="PrimaryPage-header">
           <h1>Add a NodeBalancer</h1>
         </header>
-        <div className="PrimaryPage-body">
+        <div className="PrimaryPage-body Nodebalancer-create">
           <Datacenter
             selected={datacenter}
             datacenters={datacenters.datacenters}
@@ -64,9 +64,7 @@ export class CreatePage extends Component {
           <Card title="Details">
             <Form onSubmit={this.onSubmit}>
               <FormGroup className="row" errors={errors} name="label">
-                <div className="col-sm-2 label-col">
-                  <label htmlFor="label">Label:</label>
-                </div>
+                <label htmlFor="label" className="col-sm-2 col-form-label">Label:</label>
                 <div className="col-sm-10">
                   <Input
                     name="label"
@@ -79,11 +77,9 @@ export class CreatePage extends Component {
                 </div>
               </FormGroup>
               <FormGroup className="row">
-                <div className="col-sm-2 label-col">
-                  <label htmlFor="label">Plan:</label>
-                </div>
-                <div className="col-sm-10 input-line-height">
-                  <div className="text-muted">$20.00/mo ($0.03/hr)</div>
+                <label htmlFor="label" className="col-sm-2 col-form-label">Plan:</label>
+                <div className="col-sm-10">
+                  <div className="text-muted static-plan">$20.00/mo ($0.03/hr)</div>
                 </div>
               </FormGroup>
               <FormGroup className="row">
