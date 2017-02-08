@@ -30,9 +30,7 @@ export default class DisplayPage extends Component {
         <Card title="Change timezone">
           <Form onSubmit={this.timezoneOnSubmit}>
             <FormGroup className="row">
-              <div className="col-sm-2 label-col">
-                <label htmlFor="timezone">Timezone:</label>
-              </div>
+              <label htmlFor="timezone" className="col-sm-2 col-form-label">Timezone:</label>
               <div className="col-sm-10">
                 <Select
                   id="timezone"
@@ -54,9 +52,7 @@ export default class DisplayPage extends Component {
         <Card title="Change email">
           <Form onSubmit={this.emailOnSubmit}>
             <FormGroup className="row" errors={errors} name="email">
-              <div className="col-sm-2 label-col">
-                <label htmlFor="email">Email:</label>
-              </div>
+              <label htmlFor="email" className="col-sm-2 col-form-label">Email:</label>
               <div className="col-sm-10">
                 <Input
                   type="email"

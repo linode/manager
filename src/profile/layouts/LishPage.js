@@ -27,9 +27,9 @@ export default class NotificationsPage extends Component {
         <Card title="Change Lish settings">
           <Form onSubmit={this.onSubmit}>
             <FormGroup className="row" errors={errors} name="mode">
-              <div className="col-sm-2 label-col">
-                <label htmlFor="authorization">Authorization mode:</label>
-              </div>
+              <label htmlFor="authorization" className="col-sm-2 col-form-label">
+                Authorization mode:
+              </label>
               <div className="col-sm-10">
                 <Select
                   id="authorization"
@@ -45,9 +45,7 @@ export default class NotificationsPage extends Component {
               </div>
             </FormGroup>
             <FormGroup className="row" errors={errors} name="keys">
-              <div className="col-sm-2 label-col">
-                <label htmlFor="keys">Lish keys:</label>
-              </div>
+              <label htmlFor="keys" className="col-sm-2 col-form-label">Lish keys:</label>
               <div className="col-sm-10">
                 <textarea id="keys" name="keys" className="form-control" value={keys}></textarea>
                 <div>
