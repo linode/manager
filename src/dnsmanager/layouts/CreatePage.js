@@ -47,7 +47,7 @@ export class CreatePage extends Component {
 
   render() {
     return (
-      <div className="container">
+      <div className="container DNSManager-create">
         <header>
           <h1>Add a zone</h1>
         </header>

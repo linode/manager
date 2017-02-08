@@ -4,9 +4,7 @@ export default function NewMasterZone(props) {
   return (
     <form onSubmit={props.onSubmit}>
       <div className="form-group row">
-        <div className="col-sm-2">
-          <label>Domain:</label>
-        </div>
+        <label className="col-sm-2 col-form-label">Domain:</label>
         <div className="col-sm-6">
           <input
             className="form-control"
@@ -17,9 +15,7 @@ export default function NewMasterZone(props) {
         </div>
       </div>
       <div className="form-group row">
-        <div className="col-sm-2">
-          <label>SOA email:</label>
-        </div>
+        <label className="col-sm-2 col-form-label">SOA email:</label>
         <div className="col-sm-6">
           <input
             type="email"
