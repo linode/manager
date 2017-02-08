@@ -71,10 +71,10 @@
         text-align: left;
 
         li {
+            border-radius: 0;
             padding-left: 10px;
             margin-left: 10px;
             margin-right: 10px;
-            border-radius: 3px;
 
             &.active,
             &:hover,
@@ -94,7 +94,6 @@
         }
     }
 }
-
 // TODO: look into
 .grid-list {
     a .fa {
@@ -227,28 +226,6 @@ footer {
 
     p {
         margin: 10px;
-    }
-}
-
-.linodes .card {
-    margin-bottom: $main-padding-tb;
-
-    header {
-        padding-top: 15px;
-        padding-bottom: 15px;
-    }
-
-    header input[type="checkbox"] {
-        margin-top: 8px;
-    }
-
-    header > * {
-        vertical-align: top;
-    }
-
-    .linode-label, .linode-label:hover {
-        @extend .font-large;
-        color: $black;
     }
 }
 

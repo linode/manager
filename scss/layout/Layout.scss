@@ -8,7 +8,6 @@ body,
 
 .layout {
   // TODO: min-width considerations:
-  // * linode cards need > 700px;
   // * linode rows need > 1150px;
   // * linode page needs > 980px
   min-width: 1150px;
@@ -64,22 +63,6 @@ body,
   background: $white;
   border-bottom: $border;
   margin-bottom: -36px;
-}
-
-.tab-content-container {
-  padding: 0 15px 15px 15px;
-
-  & > .SubTabs {
-    margin-top: 5px;
-  }
-
-  & > :not(.SubTabs):first-child {
-    margin-top: 15px;
-  }
-}
-
-.subtab-content-container {
-  padding: 15px 0;
 }
 
 .card.graphs {

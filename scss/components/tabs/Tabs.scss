@@ -1,73 +1,61 @@
 .Tabs {
-  [role="tablist"] {
-    @extend .container;
-    background: $white;
-    border-bottom: $border;
-    margin: 0 auto;
-    padding: 0 15px;
-  }
-
-  [role="tablist"].form-tab-list [role="tab"] {
-    padding: 6px 12px;
-  }
-
-  [role="tab"] {
-    border-color: 1px solid transparent;
-
-    &:not(:last-of-type) {
-      margin-right: 15px;
+    [role="tablist"] {
+        @extend .container;
+        background: $white;
+        border-bottom: $border;
+        margin: 0 auto;
+        padding: 0 15px;
     }
 
-    &:hover,
-    &[aria-selected="true"] {
-      background: $light-gray;
-      border: 1px solid #bbb;
-      border-bottom: 0;
-      border-radius: 2px 2px 0 0;
-      -moz-border-radius: 2px 2px 0 0;
-      -webkit-border-radius: 2px 2px 0 0;
+    [role="tablist"].form-tab-list [role="tab"] {
+        padding: 6px 12px;
     }
 
-    &:hover,
-    &:focus,
-    &:active,
-    &:active:focus {
-      outline: 0;
-      box-shadow: none;
+    [role="tab"] {
+        border-color: 1px solid transparent;
 
-      &::after {
-        display: none;
-      }
+        &:not(:last-of-type) {
+            margin-right: 15px;
+        }
+
+        &:hover,
+        &[aria-selected="true"] {
+            background: $light-gray;
+            border: 1px solid #bbb;
+            border-bottom: 0;
+            border-radius: 0;
+            -moz-border-radius: 0;
+            -webkit-border-radius: 0;
+        }
+
+        &:hover,
+        &:focus,
+        &:active,
+        &:active:focus {
+            outline: 0;
+            box-shadow: none;
+
+            &::after {
+                display: none;
+            }
+        }
+
+        a {
+            color: $black;
+            display: block;
+            text-decoration: none !important;
+        }
     }
 
-    a {
-      color: $black;
-      display: block;
-      text-decoration: none !important;
+    
+    &-container {
+        @extend .container;
+
+        padding: 0 15px 15px 15px;
+        margin-top: 15px;
     }
-  }
-}
-
-/* define subtab behavior */
-.Tabs.SubTabs {
-  [role="tablist"] {
-    padding: 0;
-    background: transparent;
-  }
-
-  [role="tab"] {
-    border: 0; // reset from above
-    border-bottom: 3px solid transparent;
-
-    &:hover,
-    &[aria-selected="true"] {
-      border: 0;
-      border-bottom: 3px solid $blue;
-      background: transparent;
-    }
-  }
 }
 
 section.card header + .Tabs {
-  margin-top: -10px;
+    margin-top: -10px;
 }

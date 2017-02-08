@@ -15,7 +15,6 @@ import {
   rebootLinode,
 } from '~/api/linodes';
 import {
-  changeView,
   toggleSelected,
 } from '../actions';
 import { setSource } from '~/actions/source';
@@ -42,7 +41,6 @@ export class IndexPage extends Component {
     this.reboot = this.reboot.bind(this);
     this.remove = this.remove.bind(this);
     this.toggle = this.toggle.bind(this);
-    this.toggleDisplay = this.toggleDisplay.bind(this);
   }
 
   componentDidMount() {
@@ -74,12 +72,6 @@ export class IndexPage extends Component {
   toggle(linode) {
     const { dispatch } = this.props;
     dispatch(toggleSelected(linode.id));
-  }
-
-  toggleDisplay(e) {
-    e.preventDefault();
-    const { dispatch, view } = this.props;
-    dispatch(changeView(view === 'grid' ? 'list' : 'grid'));
   }
 
   doToSelected(action) {
@@ -132,23 +124,6 @@ export class IndexPage extends Component {
         dispatch={this.props.dispatch}
       />;
 
-    const { view } = this.props;
-    if (view === 'grid') {
-      return (
-        <div key={group} className="row-justify linodes">
-          {!group ? null : (
-            <div className="col-md-12">
-              <h3 className="display-group">{group}</h3>
-            </div>
-           )}
-           {sortedLinodes.map(l =>
-             <div key={l.id} className="col-sm-12 col-md-6 col-lg-6 col-xl-4">
-               {renderLinode(l, false)}
-             </div>)}
-        </div>
-      );
-    }
-
     const ret = sortedLinodes.map(l => renderLinode(l, true));
 
     if (group) {
@@ -170,12 +145,6 @@ export class IndexPage extends Component {
           (_linodes, _group) => ({ group: _group, linodes: _linodes })
         ), lg => lg.group
       ), this.renderGroup);
-
-    const { view } = this.props;
-
-    if (view === 'grid') {
-      return groups;
-    }
 
     return (
       <table className="PrimaryTable">
@@ -211,28 +180,8 @@ export class IndexPage extends Component {
 
     const selectAllCheckbox = <input type="checkbox" onChange={selectAll} checked={allSelected} />;
 
-    const { view } = this.props;
-    const listIcon = <span className="fa fa-align-justify"></span>;
-    const gridIcon = <span className="fa fa-th-large"></span>;
-    const gridListToggle = (
-      <span className="grid-list">
-        <span>
-        {
-          view === 'list' ? listIcon :
-            <a className="list" onClick={this.toggleDisplay}>{listIcon}</a>
-        }
-        </span>
-        <span>
-        {
-          view === 'grid' ? gridIcon :
-            <a className="grid" onClick={this.toggleDisplay}>{gridIcon}</a>
-        }
-        </span>
-      </span>
-    );
-
     return (
-      <div className={`PrimaryPage container ${view}`}>
+      <div className="PrimaryPage container">
         <header className="PrimaryPage-header">
           <div className="PrimaryPage-headerRow clearfix">
             <h1 className="float-sm-left">Linodes</h1>
@@ -241,12 +190,11 @@ export class IndexPage extends Component {
               Add a Linode
             </Link>
           </div>
-          <div className="PrimaryPage-headerRow clearfix">
-            <div className="input-group float-sm-left">
+          <div className="PrimaryPage-headerRow">
+            <div className="input-group">
               <span className="input-group-addon">{selectAllCheckbox}</span>
               {this.renderActions()}
             </div>
-            <div className="float-sm-right">{gridListToggle}</div>
           </div>
         </header>
         <div className="PrimaryPage-body">
@@ -261,14 +209,12 @@ export class IndexPage extends Component {
 IndexPage.propTypes = {
   dispatch: PropTypes.func,
   linodes: PropTypes.object,
-  view: PropTypes.oneOf(['list', 'grid']),
   selected: PropTypes.object,
 };
 
 function select(state) {
   return {
     linodes: state.api.linodes,
-    view: state.linodes.index.view,
     selected: state.linodes.index.selected,
   };
 }
