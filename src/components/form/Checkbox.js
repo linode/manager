@@ -19,7 +19,7 @@ export default function Checkbox(props) {
 }
 
 Checkbox.propTypes = {
-  checked: PropTypes.bool.isRequired,
+  checked: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
   className: PropTypes.string,
   label: PropTypes.string,
