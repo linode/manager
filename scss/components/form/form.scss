@@ -69,12 +69,17 @@ input[type="number"].form-control {
   margin-left: 10px;
 }
 
-
 // TODO: move, apply appropriate fixes
 .Nodebalancer-create {
     padding: 15px 0;
 
     .static-plan {
         padding: 6px 8px 6px 0;
+    }
+}
+
+.DNSManager-create {
+    h1 {
+        padding: 15px 0 0 0;
     }
 }
