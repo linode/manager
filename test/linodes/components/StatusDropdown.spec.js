@@ -22,7 +22,7 @@ describe('linodes/components/StatusDropdown', () => {
       <StatusDropdown linode={linodes.linodes[1236]} dispatch={() => {}} />
     );
 
-    expect(dropdown.find('.StatusDropdown-status').text()).to.equal('Offline');
+    expect(dropdown.find('.StatusDropdown-toggle').text().trim()).to.equal('Offline');
 
     dropdown.find('.StatusDropdown-toggle').simulate('click');
 
@@ -36,7 +36,7 @@ describe('linodes/components/StatusDropdown', () => {
       <StatusDropdown linode={linodes.linodes[1235]} dispatch={() => {}} />
     );
 
-    expect(dropdown.find('.StatusDropdown-status').text()).to.equal('Running');
+    expect(dropdown.find('.StatusDropdown-toggle').text().trim()).to.equal('Running');
 
     dropdown.find('.StatusDropdown-toggle').simulate('click');
 
@@ -112,7 +112,7 @@ describe('linodes/components/StatusDropdown', () => {
     const dropdown = shallow(
       <StatusDropdown linode={linodes.linodes[1243]} dispatch={dispatch} />
     );
-    expect(dropdown.find('.StatusDropdown-status').text()).to.equal('Offline');
+    expect(dropdown.find('.StatusDropdown-toggle').text().trim()).to.equal('Offline');
   });
 
   it('renders modal on reboot if multiple configs', () => {

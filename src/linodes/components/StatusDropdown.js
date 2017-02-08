@@ -103,7 +103,7 @@ export default class StatusDropdown extends Component {
               style={{ width: `${safeProgress}%` }}
               className="StatusDropdown-progress"
             >
-              <span className="StatusDropdown-percent">{Math.round(safeProgress)}%</span>
+              <div className="StatusDropdown-percent">{Math.round(safeProgress)}%</div>
             </div>
           </div>
         </div>
@@ -124,10 +124,7 @@ export default class StatusDropdown extends Component {
           onClick={this.open}
           disabled={LinodeStates.pending.indexOf(linode.status) !== -1}
         >
-          <span className="StatusDropdown-status">
-            {LinodeStatesReadable[linode.status] || 'Offline'}
-          </span>
-          <i className="fa fa-caret-down" />
+          {LinodeStatesReadable[linode.status] || 'Offline'} <i className="fa fa-caret-down" />
         </button>
         <div className="StatusDropdown-menu">{dropdownMenu}</div>
       </div>
