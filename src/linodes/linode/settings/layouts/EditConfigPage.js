@@ -332,9 +332,7 @@ export class EditConfigPage extends Component {
           </header>
           <div>
             <FormGroup errors={errors} name="label" className="row">
-              <div className="col-sm-2 label-col">
-                <label>Label</label>
-              </div>
+              <label className="col-sm-2 col-form-label">Label</label>
               <div className="col-sm-6">
                 <Input
                   id="config-label"
@@ -346,9 +344,7 @@ export class EditConfigPage extends Component {
               </div>
             </FormGroup>
             <FormGroup errors={errors} name="comments" className="row">
-              <div className="col-sm-2 label-col">
-                <label>Notes</label>
-              </div>
+              <label className="col-sm-2 col-form-label">Notes</label>
               <div className="col-sm-6">
                 <textarea
                   id="config-comments"
@@ -366,7 +362,7 @@ export class EditConfigPage extends Component {
           <div>
             <FormGroup errors={errors} name="virtMode" className="row">
               <fieldset className="form-group row">
-                <div className="col-sm-2 label-col">
+                <div className="col-sm-2">
                   <legend>Virtualization mode</legend>
                 </div>
                 <div className="col-sm-6">
@@ -388,9 +384,7 @@ export class EditConfigPage extends Component {
           <h3 className="sub-header">Block Device Assignment</h3>
           <div>
             <FormGroup errors={errors} name="kernel" className="row">
-              <div className="col-sm-2 label-col">
-                <label>Kernel</label>
-              </div>
+              <label className="col-sm-2 col-form-label">Kernel</label>
               <div className="col-sm-6">
                 <Select
                   id="config-kernel"
@@ -431,7 +425,7 @@ export class EditConfigPage extends Component {
             </FormGroup>
             <FormGroup errros={errors} name="runLevel" className="row">
               <fieldset className="form-group">
-                <div className="col-sm-2 label-col">
+                <div className="col-sm-2">
                   <legend>
                     Run level
                   </legend>
@@ -457,9 +451,7 @@ export class EditConfigPage extends Component {
               </fieldset>
             </FormGroup>
             <FormGroup errors={errors} name="ram_limit" className="row">
-              <div className="col-sm-2 label-col">
-                <label>Memory limit</label>
-              </div>
+              <label className="col-sm-2 col-form-label">Memory limit</label>
               <div className="input-container col-sm-6">
                 <Radio
                   checked={isMaxRam === true}
@@ -483,7 +475,7 @@ export class EditConfigPage extends Component {
             </FormGroup>
             {diskSlots.map(this.renderDiskSlot)}
             <div className="form-group row">
-              <div className="col-sm-2 label-col">
+              <div className="col-sm-2">
                 <legend>initrd</legend>
               </div>
               <div className="input-container col-sm-6">
@@ -498,9 +490,7 @@ export class EditConfigPage extends Component {
               </div>
             </div>
             <div className="form-group row">
-              <div className="col-sm-2 label-col">
-                <label>root / boot device</label>
-              </div>
+              <label className="col-sm-2 col-form-label">root / boot device</label>
               <div className="input-container col-sm-10">
                 <RadioSelectCombo
                   radioChecked={isCustomRoot === false}
@@ -543,7 +533,7 @@ export class EditConfigPage extends Component {
           <h3 className="sub-header">Filesystem/Boot Helpers</h3>
           <div>
             <fieldset className="form-group row">
-              <div className="col-sm-2 label-col">
+              <div className="col-sm-2">
                 <legend>
                   Boot helpers
                 </legend>
