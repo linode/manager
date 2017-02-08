@@ -13,6 +13,10 @@ html, body {
   height: auto;
 }
 
+#root {
+    display: none;
+}
+
 body>div.terminal {
     font-family: 'Source Code Pro for Powerline', monospace, fixed;
 }
