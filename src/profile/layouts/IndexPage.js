@@ -41,9 +41,9 @@ export class IndexPage extends Component {
         <Tabs
           tabs={tabs}
           selected={selected}
-          onClick={(e, tab) => {
+          onClick={(e, tabIndex) => {
             e.stopPropagation();
-            dispatch(push(tab.link));
+            dispatch(push(tabs[tabIndex].link));
           }}
         >{children}</Tabs>
       </div>
