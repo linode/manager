@@ -140,52 +140,7 @@ export function renderBackupStatus(linode, dashboard = false) {
   );
 }
 
-function renderCard(props) {
-  const { linode, onSelect, isSelected } = props;
-  const select = () => onSelect(linode);
-  const selectedClass = isSelected ? 'selected' : '';
-
-  const checkbox = <input type="checkbox" checked={isSelected} onChange={select} />;
-
-  return (
-    <div key={linode.id} className={`linode card ${linode.status} ${selectedClass}`}>
-      <header className="header-secondary">
-        {checkbox}
-        <div>
-          <Link
-            className="linode-label"
-            to={`/linodes/${linode.label}`}
-            title={linode.id}
-          >{linode.label}</Link>
-        </div>
-        <span className="float-xs-right">
-          <StatusDropdown
-            linode={linode}
-            dispatch={props.dispatch}
-          />
-        </span>
-      </header>
-      <div className="linode-details">
-        <div>{linode.ipv4}</div>
-        <div className="text-muted">{linode.ipv6.split('/')[0]}</div>
-        <section>
-          {renderDatacenterStyle(linode)}
-        </section>
-        <section>
-          {renderBackupStatus(linode)}
-        </section>
-      </div>
-    </div>
-  );
-}
-
-renderCard.propTypes = {
-  linode: PropTypes.object.isRequired,
-  onSelect: PropTypes.func,
-  isSelected: PropTypes.bool.isRequired,
-};
-
-function renderRow(props) {
+export function Linode(props) {
   const { linode, onSelect, isSelected } = props;
   const selectedClass = isSelected ? 'PrimaryTable-row--selected' : '';
 
@@ -205,7 +160,7 @@ function renderRow(props) {
           {linode.label}
         </Link>
       </td>
-      <td>
+      <td id="ips">
         {linode.ipv4}
         <div className="text-muted">{linode.ipv6.split('/')[0]}</div>
       </td>
@@ -226,23 +181,9 @@ function renderRow(props) {
   );
 }
 
-renderRow.propTypes = {
+Linode.propTypes = {
   linode: PropTypes.object.isRequired,
   isSelected: PropTypes.bool.isRequired,
   onSelect: PropTypes.func,
   dispatch: PropTypes.func,
 };
-
-export function Linode(props) {
-  const { isRow } = props;
-  return isRow ? renderRow(props) : renderCard(props);
-}
-
-Linode.propTypes = {
-  isRow: PropTypes.bool,
-  ...renderPowerButton.propTypes,
-  ...renderCard.propTypes,
-  ...renderRow.propTypes,
-};
-
-Linode.defaultProps = { isRow: true };
