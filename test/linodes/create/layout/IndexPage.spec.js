@@ -37,20 +37,6 @@ describe('linodes/create/layout/IndexPage', () => {
     'Details',
   ].map(t => it(`renders a ${t}`, assertContains(t)));
 
-  it('changes the source tab when clicked', () => {
-    const page = shallow(
-      <IndexPage
-        dispatch={() => {}}
-        distributions={api.distributions}
-        datacenters={api.datacenters}
-        types={api.types}
-        linodes={api.linodes}
-      />);
-    const ss = page.find('Source');
-    ss.props().onTabChange(1);
-    expect(page.state('sourceTab')).to.equal(1);
-  });
-
   it('autoselects a backup from query string info', async () => {
     const dispatch = sandbox.spy();
     const page = shallow(

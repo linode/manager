@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Tabs } from '~/components/tabs';
+import Tabs from '~/components/Tabs';
 import { StyleguideSection } from '~/styleguide/components';
 
 export default function Navigation() {
@@ -26,7 +26,7 @@ export default function Navigation() {
               <h3>Example</h3>
               <Tabs
                 tabs={tabs}
-                selected={tabs[0]}
+                selected={0}
               />
             </div>
           </div>

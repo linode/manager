@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { push } from 'react-router-redux';
 
-import { Tabs } from '~/components/tabs';
+import Tabs from '~/components/Tabs';
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 
 export class IndexPage extends Component {
@@ -23,17 +23,17 @@ export class IndexPage extends Component {
     ].map(t => ({ ...t, link: `/linodes/${linode.label}/networking${t.link}` }));
 
     const pathname = location ? location.pathname : tabs[0].link;
-    const selected = tabs.reduce((last, current) =>
-      (pathname.indexOf(current.link) === 0 ? current : last));
+    const selected = tabs.reduce((knownIndex, { link }, currentIndex) =>
+      pathname.indexOf(link) === 0 ? currentIndex : knownIndex, 0);
 
     return (
       <Tabs
         tabs={tabs}
         selected={selected}
-        className="SubTabs"
-        onClick={(e, tab) => {
+        isSubTabs
+        onClick={(e, tabIndex) => {
           e.stopPropagation();
-          this.props.dispatch(push(tab.link));
+          this.props.dispatch(push(tabs[tabIndex].link));
         }}
       >
         {this.props.children}
