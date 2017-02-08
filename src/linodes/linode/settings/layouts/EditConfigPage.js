@@ -338,7 +338,7 @@ export class EditConfigPage extends Component {
               <div className="col-sm-6">
                 <Input
                   id="config-label"
-                  placeholder={'My new config'}
+                  placeholder="My new config"
                   value={label}
                   onChange={e => this.setState({ label: e.target.value })}
                 />
