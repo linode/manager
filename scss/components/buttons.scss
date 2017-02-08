@@ -150,6 +150,10 @@
         background: $light-gray;
         height: 100%;
         padding: 0 8px;
+
+        .Checkbox {
+            padding: 0 !important;
+        }
     }
 
     input {
