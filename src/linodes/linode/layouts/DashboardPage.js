@@ -4,14 +4,12 @@ import { Link } from 'react-router';
 import _ from 'lodash';
 
 import {
-  renderBackupStatus,
   renderDistroStyle,
   renderDatacenterStyle,
   renderPlanStyle,
 } from '~/linodes/components/Linode';
 import { launchWeblishConsole } from '~/linodes/components/StatusDropdown';
 import { getLinode } from './IndexPage';
-import { linodeBackups } from '~/api/linodes';
 import { setSource } from '~/actions/source';
 import { Button } from '~/components/buttons';
 
@@ -19,7 +17,6 @@ export class DashboardPage extends Component {
   constructor() {
     super();
     this.getLinode = getLinode.bind(this);
-    this.renderBackupStatus = renderBackupStatus.bind(this);
     this.renderDistroStyle = renderDistroStyle.bind(this);
     this.renderDatacenterStyle = renderDatacenterStyle.bind(this);
     this.renderPlanStyle = renderPlanStyle.bind(this);
@@ -37,8 +34,6 @@ export class DashboardPage extends Component {
 
   async componentDidMount() {
     const { dispatch } = this.props;
-    const linode = this.getLinode();
-    await dispatch(linodeBackups(linode.id));
     await dispatch(setSource(__filename));
   }
 
@@ -216,8 +211,10 @@ export class DashboardPage extends Component {
               <div className="col-sm-3 row-label">
                 Backup
               </div>
-              <div className="col-sm-9">
-                {this.renderBackupStatus(linode, true)}
+              <div className="col-sm-9 backup-status">
+                <Link to={`/linodes/${linode.label}/backups`}>
+                  {linode.backups.enabled ? 'View Backups' : 'Enable Backups'}
+                </Link>
               </div>
             </div>
           </div>

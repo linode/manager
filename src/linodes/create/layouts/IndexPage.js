@@ -9,11 +9,10 @@ import Details from '../components/Details';
 import Card from '~/components/Card';
 import { linodes } from '~/api';
 import { actions as linodeActions } from '~/api/configs/linodes';
-import { randomInitialProgress, linodeBackups } from '~/api/linodes';
+import { randomInitialProgress } from '~/api/linodes';
 import { setError } from '~/actions/errors';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
-import { getBackup } from '~/linodes/linode/backups/layouts/BackupPage';
 import { reduceErrors } from '~/errors';
 
 export class IndexPage extends Component {
@@ -50,11 +49,9 @@ export class IndexPage extends Component {
       let _linodes = this.props.linodes;
       let linode = _linodes.linodes[location.query.linode];
       if (linode) {
-        await dispatch(linodeBackups(
-          [location.query.linode], [location.query.backup]));
         _linodes = this.props.linodes;
         linode = _linodes.linodes[location.query.linode];
-        const backup = getBackup(linode._backups, [location.query.backup]);
+        const backup = null;
         if (backup) {
           this.setState({
             backup: backup.id,
@@ -137,7 +134,7 @@ export class IndexPage extends Component {
           onSourceSelected={(type, id, linodeId) => {
             if (type === 'backup' && linodeId && id) {
               const linode = linodes.linodes[linodeId];
-              const backup = getBackup(linode._backups, id);
+              const backup = null;
 
               this.setState({
                 backup: id,

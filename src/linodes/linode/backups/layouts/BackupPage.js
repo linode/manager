@@ -13,20 +13,19 @@ function renderDateTime(dt) {
   return dt.replace('T', ' ');
 }
 
-export function getBackups(backups) {
+function getBackups(backups) {
   const backupList = [];
   backupList.push(
     backups.daily,
     backups.weekly[0],
     backups.weekly[1],
-    backups.snapshot.current,
-    backups.snapshot.in_progress,
+    backups.snapshot.current || backups.snapshot.in_progress,
   );
 
   return backupList.filter(Boolean);
 }
 
-export function getBackup(backups, backupId) {
+function getBackup(backups, backupId) {
   const backupList = getBackups(backups);
 
   for (const backup of backupList) {

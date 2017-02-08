@@ -25,20 +25,3 @@ describe('linodes/create/components/Backups', () => {
 
     expect(c.find('Backup').length).to.equal(2);
   });
-
-  it('calls the goBack function when the back button is pressed', () => {
-    const goBack = sandbox.spy();
-    const c = shallow(
-      <Backups
-        onSourceSelected={() => {}}
-        linodes={api.linodes}
-        goBack={goBack}
-        selectedLinode={1234}
-        dispatch={() => {}}
-      />
-    );
-
-    c.find('.back').simulate('click', { preventDefault() {} });
-    expect(goBack.calledOnce).to.equal(true);
-  });
-});

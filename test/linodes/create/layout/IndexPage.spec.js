@@ -37,30 +37,6 @@ describe('linodes/create/layout/IndexPage', () => {
     'Details',
   ].map(t => it(`renders a ${t}`, assertContains(t)));
 
-  it('autoselects a backup from query string info', async () => {
-    const dispatch = sandbox.spy();
-    const page = shallow(
-      <IndexPage
-        dispatch={dispatch}
-        distributions={api.distributions}
-        datacenters={api.datacenters}
-        types={api.types}
-        linodes={api.linodes}
-        location={{ query: { linode: 1234, backup: 54782214 } }}
-      />);
-    await page.instance().componentDidMount();
-    const state = page.state();
-    expect(state)
-      .to.have.property('backup')
-      .which.equals(54782214);
-    expect(state)
-      .to.have.property('sourceTab')
-      .which.equals(1);
-    expect(state)
-      .to.have.property('datacenter')
-      .which.equals('newark');
-  });
-
   it('dispatches an error if fetching when mounted fails', async () => {
     sandbox.stub(errors, 'setError', e => e);
     const env = { dispatch() {} };
