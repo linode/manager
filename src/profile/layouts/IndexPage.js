@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { Tabs } from '~/components/tabs';
+import Tabs from '~/components/Tabs';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 
@@ -27,8 +27,8 @@ export class IndexPage extends Component {
     ].map(t => ({ ...t, link: `/profile${t.link}` }));
 
     const pathname = location ? location.pathname : tabs[0].link;
-    const selected = tabs.reduce((last, current) =>
-      (pathname.indexOf(current.link) === 0 ? current : last));
+    const selected = tabs.reduce((knownIndex, { link }, currentIndex) =>
+      pathname.indexOf(link) === 0 ? currentIndex : knownIndex, 0);
 
     return (
       <div>
@@ -41,15 +41,11 @@ export class IndexPage extends Component {
         <Tabs
           tabs={tabs}
           selected={selected}
-          onClick={(e, tab) => {
+          onClick={(e, tabIndex) => {
             e.stopPropagation();
-            dispatch(push(tab.link));
+            dispatch(push(tabs[tabIndex].link));
           }}
-        >
-          <div className="container">
-            {children}
-          </div>
-        </Tabs>
+        >{children}</Tabs>
       </div>
     );
   }

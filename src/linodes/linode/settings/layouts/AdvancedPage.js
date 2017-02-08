@@ -16,7 +16,7 @@ export class AdvancedPage extends Component {
 
   render() {
     return (
-      <div className="subtab-content-container">
+      <div>
         <ConfigPanel {...this.props} />
         <DiskPanel {...this.props} />
       </div>

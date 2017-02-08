@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { Tabs } from '~/components/tabs';
+import Tabs from '~/components/Tabs';
 
 export function IndexPage(props) {
   const tabs = [
@@ -12,17 +12,17 @@ export function IndexPage(props) {
   ].map(t => ({ ...t, link: `/profile/integrations${t.link}` }));
 
   const pathname = location ? location.pathname : tabs[0].link;
-  const selected = tabs.reduce((last, current) =>
-    (pathname.indexOf(current.link) === 0 ? current : last));
+  const selected = tabs.reduce((knownIndex, { link }, currentIndex) =>
+    pathname.indexOf(link) === 0 ? currentIndex : knownIndex, 0);
 
   return (
     <Tabs
       tabs={tabs}
       selected={selected}
-      className="SubTabs"
-      onClick={(e, tab) => {
+      isSubTabs
+      onClick={(e, tabIndex) => {
         e.stopPropagation();
-        props.dispatch(push(tab.link));
+        props.dispatch(push(tabs[tabIndex].link));
       }}
     >
       {props.children}

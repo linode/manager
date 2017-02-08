@@ -100,7 +100,7 @@ export class IndexPage extends Component {
         <header className="PrimaryPage-header">
           <div className="PrimaryPage-headerRow clearfix">
             <h1 className="float-sm-left">DNS Manager</h1>
-            <Link to="/linodes/create" className="linode-add btn btn-primary float-sm-right">
+            <Link to="/dnsmanager/create" className="linode-add btn btn-primary float-sm-right">
               <span className="fa fa-plus"></span>
               Add a DNS Zone
             </Link>

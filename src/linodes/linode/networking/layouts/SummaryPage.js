@@ -158,24 +158,22 @@ export class SummaryPage extends Component {
 
   render() {
     return (
-      <div className="subtab-content-container">
-        <section className="card">
-          <header className="clearfix">
-            <h2 className="float-xs-left">Summary</h2>
-            <Button
-              id="public-ip-button"
-              className="float-xs-right"
-              disabled
-            >
-              Add public IP address
-            </Button>
-          </header>
-          <div className="row">
-            {this.renderIPv4()}
-            {this.renderIPv6()}
-          </div>
-        </section>
-      </div>
+      <section className="card">
+        <header className="clearfix">
+          <h2 className="float-xs-left">Summary</h2>
+          <Button
+            id="public-ip-button"
+            className="float-xs-right"
+            disabled
+          >
+            Add public IP address
+          </Button>
+        </header>
+        <div className="row">
+          {this.renderIPv4()}
+          {this.renderIPv6()}
+        </div>
+      </section>
     );
   }
 }

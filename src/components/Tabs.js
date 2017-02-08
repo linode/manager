@@ -4,20 +4,21 @@ import { Link } from 'react-router';
 
 
 export default function Tabs(props) {
-  const { tabs, selected, className, children, onClick } = props;
+  const { tabs, selected, className, children, onClick, isSubTabs } = props;
 
+  const componentName = isSubTabs ? 'SubTabs' : 'Tabs';
   return (
     <ReactTabs
-      selectedIndex={tabs.indexOf(selected)}
-      className={`Tabs ${className}`}
+      selectedIndex={selected}
+      className={`${componentName} ${className}`}
     >
       <TabList>
-        {tabs.map(tab => (
+        {tabs.map((tab, i) => (
           <Tab
             key={tab.name}
             onClick={(e) => {
               if (onClick) {
-                onClick(e, tab);
+                onClick(e, i);
               }
             }}
           >
@@ -25,9 +26,9 @@ export default function Tabs(props) {
           </Tab>
         ))}
       </TabList>
-      {tabs.map(tab => (
-        <TabPanel key={tab.name}>
-          {tab === selected ? children : null}
+      {tabs.map((tab, i) => (
+        <TabPanel key={tab.name} className={`${componentName}-container`}>
+          {i === selected ? tab.children || children : null}
         </TabPanel>
       ))}
     </ReactTabs>
@@ -36,12 +37,14 @@ export default function Tabs(props) {
 
 Tabs.propTypes = {
   tabs: PropTypes.array.isRequired,
-  selected: PropTypes.object.isRequired,
+  selected: PropTypes.number.isRequired,
   children: PropTypes.node,
+  isSubTabs: PropTypes.bool,
   className: PropTypes.string,
   onClick: PropTypes.func,
 };
 
 Tabs.defaultProps = {
   className: '',
+  isSubtab: false,
 };

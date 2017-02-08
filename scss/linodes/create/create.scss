@@ -1,19 +1,29 @@
 .create-page {
-  padding-top: 15px;
+    padding-top: 15px;
 
-  .alert {
-    display: inline-block;
-    margin: $main-padding-tb/2 0 0 0;
-  }
+    .alert {
+        display: inline-block;
+        margin: $main-padding-tb/2 0 0 0;
+    }
+
+    .SubTabs-container {
+        // Deals with default padding bottom of SubTabs-container
+        padding-bottom: 0;
+
+        &:first-of-type {
+            // Deals with extra padding bottom of the Distribution wrappers
+            margin-bottom: -15px;
+        }
+    }
 }
 
 .LinodeSelection {
 
-  &-container {
-    padding: 10px 0 0 0;
-  }
+    &-container {
+        padding: 10px 0 0 0;
+    }
 
-  &-filter {
-    margin-bottom: 10px;
-  }
+    &-filter {
+        margin-bottom: 10px;
+    }
 }

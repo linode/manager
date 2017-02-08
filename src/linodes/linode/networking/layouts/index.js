@@ -4,9 +4,7 @@ export IndexPage from './IndexPage';
 export SummaryPage from './SummaryPage';
 
 const todo = () => (
-  <div className="subtab-content-container">
-    <section className="card">TODO</section>
-  </div>
+  <section className="card">TODO</section>
 );
 
 export const ReverseDNSPage = todo;

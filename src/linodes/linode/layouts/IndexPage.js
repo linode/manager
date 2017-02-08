@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { Tabs } from '~/components/tabs';
+import Tabs from '~/components/Tabs';
 import StatusDropdown from '~/linodes/components/StatusDropdown';
 import { setError } from '~/actions/errors';
 import { linodes } from '~/api';
@@ -97,8 +97,8 @@ export class IndexPage extends Component {
     ].map(t => ({ ...t, link: `/linodes/${linode.label}${t.link}` }));
 
     const pathname = location ? location.pathname : tabs[0].link;
-    const selected = tabs.reduce((last, current) =>
-      (pathname.indexOf(current.link) === 0 ? current : last));
+    const selected = tabs.reduce((knownIndex, { link }, currentIndex) =>
+      pathname.indexOf(link) === 0 ? currentIndex : knownIndex, 0);
 
     return (
       <div className="details-page">
@@ -107,14 +107,12 @@ export class IndexPage extends Component {
         <Tabs
           tabs={tabs}
           selected={selected}
-          onClick={(e, tab) => {
+          onClick={(e, tabIndex) => {
             e.stopPropagation();
-            this.props.dispatch(push(tab.link));
+            this.props.dispatch(push(tabs[tabIndex].link));
           }}
         >
-          <div className="container tab-content-container">
-            {this.props.children}
-          </div>
+          {this.props.children}
         </Tabs>
       </div>
     );

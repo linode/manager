@@ -1,9 +1,9 @@
 import React, { Component, PropTypes } from 'react';
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import _ from 'lodash';
 import moment from 'moment';
 
 import { Card } from '~/components';
+import Tabs from '~/components/Tabs';
 import Distributions from '~/linodes/components/Distributions';
 import Backups from './Backups';
 
@@ -123,49 +123,54 @@ export default class Source extends Component {
       }
     }
 
+    const tabs = [
+      {
+        name: 'Distributions',
+        children: (
+          <Distributions
+            distributions={distributions}
+            distribution={distribution}
+            onSelected={d => onSourceSelected('distribution', d)}
+          />
+        ),
+      },
+      {
+        name: 'Backups',
+        children: (
+          <div className="backups">
+            {selectedLinode === -1 ?
+             this.renderLinodeSelection() :
+              <Backups
+                goBack={e => {
+                  e.preventDefault();
+                  this.setState({ selectedLinode: -1 });
+                  onSourceSelected('backup', null);
+                }}
+                onSourceSelected={id => onSourceSelected('backup', id, selectedLinode)}
+                selectedLinode={selectedLinode}
+                selected={backup}
+              />}
+          </div>
+        ),
+      },
+      {
+        name: 'Clone',
+        children: 'TODO',
+      },
+      {
+        name: 'StackScripts',
+        children: 'TODO',
+      },
+    ];
+
     return (
       <Card title="Source">
-        <div className="react-tabs">
-          <Tabs
-            onSelect={onTabChange}
-            selectedIndex={selectedTab}
-            className="Tabs SubTabs"
-          >
-            <TabList className="form-tab-list">
-              <Tab>Distributions</Tab>
-              <Tab>Backups</Tab>
-              <Tab>Clone</Tab>
-              <Tab>StackScripts</Tab>
-            </TabList>
-            <TabPanel>
-              <section className="subtab-content-container">
-                <Distributions
-                  distributions={distributions}
-                  distribution={distribution}
-                  onSelected={d => onSourceSelected('distribution', d)}
-                />
-              </section>
-            </TabPanel>
-            <TabPanel>
-              <div className="backups subtab-content-container">
-                {selectedLinode === -1 ?
-                  this.renderLinodeSelection() :
-                  <Backups
-                    goBack={e => {
-                      e.preventDefault();
-                      this.setState({ selectedLinode: -1 });
-                      onSourceSelected('backup', null);
-                    }}
-                    onSourceSelected={id => onSourceSelected('backup', id, selectedLinode)}
-                    selectedLinode={selectedLinode}
-                    selected={backup}
-                  />}
-              </div>
-            </TabPanel>
-            <TabPanel>TODO</TabPanel>
-            <TabPanel>TODO</TabPanel>
-          </Tabs>
-        </div>
+        <Tabs
+          tabs={tabs}
+          onClick={onTabChange}
+          selected={selectedTab}
+          isSubTabs
+        />
       </Card>
     );
   }
