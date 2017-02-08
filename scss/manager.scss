@@ -51,9 +51,12 @@
         }
     }
 
-    a {
+    a,
+    a:hover,
+    a:active,
+    a:focus {
         color: $black;
-        text-decoration: none !important;
+        text-decoration: none;
         line-height: 34px;
         display: block;
         padding: 5px 0;
@@ -68,10 +71,10 @@
         text-align: left;
 
         li {
+            border-radius: 0;
             padding-left: 10px;
             margin-left: 10px;
             margin-right: 10px;
-            border-radius: 3px;
 
             &.active,
             &:hover,
@@ -91,110 +94,6 @@
         }
     }
 }
-
-input:not([type="checkbox"]):not([type="radio"]),
-select,
-select.form-control,
-.btn:not(.btn-help) {
-    height: $input-height !important;
-    line-height: $input-height - 1px !important;
-    padding: 0 0 0 $input-padding;
-
-    &.btn {
-        padding: 0 $input-padding;
-    }
-}
-
-// TODO: remove or replace with specific instance (i.e. for the checkbox + action menu)
-.input-group {
-    input {
-        margin: 0;
-        border: $border;
-        border-radius: 0;
-        &[readonly] {
-            background-color: $white;
-            width: 200px;
-        }
-    }
-
-    .input-group-btn {
-        float: left;
-        .btn {
-            z-index: initial;
-        }
-    }
-
-    .btn {
-        margin: 0;
-    }
-}
-
-.datacenter-style img {
-    margin-right: 15px;
-    -webkit-filter: contrast(70%) saturate(90%);
-    filter: contrast(70%) saturate(90%);
-    opacity: 0.7;
-}
-
-.distro-style img {
-    margin-right: 15px;
-}
-
-// TODO: drop after moving to input components
-input[type=checkbox], input[type=radio] {
-    padding: 0;
-    margin: 0;
-    height: 15px;
-    width: 15px;
-
-    + span {
-        padding: 0 10px;
-    }
-}
-
-// TODO: drop after moving to input components
-.input-group-addon {
-    background: $light-gray;
-    height: $input-height;
-    line-height: calc(#{$input-height}-2px);
-    padding: 0 $input-padding;
-
-    input[type=checkbox] {
-        position: relative;
-        top: 1px;
-    }
-}
-
-// TODO: please drop
-:not(.btn-group) .btn.float-xs-right + .btn.float-xs-right,
-.btn.float-xs-right + label.float-xs-right {
-    display: inline-block;
-    margin-right: 15px;
-}
-
-// TODO: please drop
-:not(.btn-group) .btn.float-xs-left + .btn.float-xs-left,
-.btn.float-xs-left + label.float-xs-left {
-    display: inline-block;
-    margin-left: 15px;
-}
-
-// TODO: BEMify
-.dropdown-menu {
-    padding: 0;
-    border: 0;
-    margin-top: -1px;
-    margin-left: 1px;
-
-    .dropdown-item:first-of-type {
-        margin-left: -1px;
-    }
-
-    .dropdown-item:not(:first-of-type) {
-        border-top: 0;
-    }
-}
-
 // TODO: look into
 .grid-list {
     a .fa {
@@ -210,7 +109,7 @@ input[type=checkbox], input[type=radio] {
 
     span, div {
         padding-right: 15px;
-        line-height: $input-height;
+        line-height: $form-field-height;
         display: inline-block;
     }
 
@@ -383,7 +282,7 @@ header .sub-header {
     .feedback-button {
         $rotation: -90deg;
         position: absolute;
-        left: -1 * $input-height * 2 + 4px;
+        left: -1 * $form-field-height * 2 + 4px;
         top: 50%;
         -webkit-transform: rotate($rotation);
         -moz-transform: rotate($rotation);
@@ -395,11 +294,6 @@ header .sub-header {
     .card {
         width: 400px;
     }
-}
-
-// TODO: remove after converting to checkbox
-.checkbox + .checkbox {
-    margin-top: 5px;
 }
 
 .row-justify {

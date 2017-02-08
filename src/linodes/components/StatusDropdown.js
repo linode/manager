@@ -33,7 +33,7 @@ export default class StatusDropdown extends Component {
 
 
   render() {
-    const { linode, dispatch, shortcuts } = this.props;
+    const { linode, dispatch, shortcuts, className } = this.props;
     const dropdownElements = [
       {
         name: <span>Reboot</span>,
@@ -97,13 +97,13 @@ export default class StatusDropdown extends Component {
     if (LinodeStates.pending.indexOf(linode.status) !== -1) {
       const safeProgress = linode.__progress || RANDOM_PROGRESS_MAX;
       return (
-        <div className="StatusDropdown">
+        <div className={`StatusDropdown ${className}`}>
           <div className="StatusDropdown-container">
             <div
               style={{ width: `${safeProgress}%` }}
               className="StatusDropdown-progress"
             >
-              <span className="StatusDropdown-percent">{Math.round(safeProgress)}%</span>
+              <div className="StatusDropdown-percent">{Math.round(safeProgress)}%</div>
             </div>
           </div>
         </div>
@@ -112,7 +112,7 @@ export default class StatusDropdown extends Component {
 
     return (
       <div
-        className={`StatusDropdown ${openClass}`}
+        className={`StatusDropdown ${openClass} ${className}`}
         onBlur={this.close}
       >
         <button
@@ -124,10 +124,7 @@ export default class StatusDropdown extends Component {
           onClick={this.open}
           disabled={LinodeStates.pending.indexOf(linode.status) !== -1}
         >
-          <span className="StatusDropdown-status">
-            {LinodeStatesReadable[linode.status] || 'Offline'}
-          </span>
-          <i className="fa fa-caret-down" />
+          {LinodeStatesReadable[linode.status] || 'Offline'} <i className="fa fa-caret-down" />
         </button>
         <div className="StatusDropdown-menu">{dropdownMenu}</div>
       </div>
@@ -136,6 +133,7 @@ export default class StatusDropdown extends Component {
 }
 
 StatusDropdown.propTypes = {
+  className: PropTypes.string,
   linode: PropTypes.object,
   dispatch: PropTypes.func,
   shortcuts: PropTypes.bool,

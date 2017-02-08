@@ -114,7 +114,7 @@ export class RescuePage extends Component {
         className="row disk-slot"
         key={index}
       >
-        <label className="col-sm-2 label-col">
+        <label className="col-sm-2 row-label">
           /dev/{AVAILABLE_DISK_SLOTS[index]}
         </label>
         <div className="col-sm-10">
@@ -151,10 +151,10 @@ export class RescuePage extends Component {
           <Form className="RescueMode-form" onSubmit={() => { this.rebootToRescue(); }}>
             {slots}
             <div className="form-group row disk-slot">
-              <label className="col-sm-2 label-col">
+              <label className="col-sm-2 row-label">
                 /dev/sdh
               </label>
-              <div className="col-sm-10 input-line-height">Finnix Media</div>
+              <div className="col-sm-10">Finnix Media</div>
             </div>
             <div className="form-group row">
               <div className="col-sm-2"></div>
@@ -189,9 +189,12 @@ export class RescuePage extends Component {
             </div>}
             {showDisks ?
               <div className="form-group row">
-                <div className="col-sm-2">
-                  <label htmlFor="reset-root-password-select" className="label-col">Disk:</label>
-                </div>
+                <label
+                  htmlFor="reset-root-password-select"
+                  className="col-sm-2 col-form-label"
+                >
+                  Disk:
+                </label>
                 <div className="col-sm-10">
                   <select
                     name="reset-root-password-select"
@@ -208,9 +211,7 @@ export class RescuePage extends Component {
             : null}
           <div className="form-group row">
               {showDisks ?
-                <div className="col-sm-2">
-                  <label htmlFor="password" className="label-col">Password:</label>
-                </div>
+                <label htmlFor="password" className="col-sm-2 col-form-label">Password:</label>
               : null}
             <div className="col-sm-10">
               <PasswordInput

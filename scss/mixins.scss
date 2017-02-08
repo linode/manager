@@ -1,5 +1,5 @@
 // font size mixin based on 10px
-@mixin font-size($size: 1.6) {
+@mixin font-size($size: 1.5) {
     font-size: ($size * 10) + px; // px fallback where rem not supported
     font-size: $size + rem;
 }
@@ -28,6 +28,6 @@
 @mixin title() {
     text-align: center;
     overflow: hidden;
-    line-height: $input-height;
+    line-height: $form-field-height;
     color: $black;
 }

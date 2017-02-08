@@ -32,8 +32,16 @@
         padding-right: 10px;
     }
 
-    &-rowLabel, &-rowLabel:hover {
+    &-rowLabel,
+    &-rowLabel:hover,
+    &-rowLabel:active,
+    &-rowLabel:focus {
         @extend .font-large;
         color: $black;
+        vertical-align: top;
+    }
+
+    &-rowOptions {
+        padding-top: 0;
     }
 }

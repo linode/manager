@@ -49,9 +49,7 @@ export class DisplayPage extends Component {
       <Card title="Display">
         <Form onSubmit={this.onSubmit}>
           <FormGroup errors={errors} className="row" name="group">
-            <div className="col-sm-1 label-col">
-              <label htmlFor="group">Group:</label>
-            </div>
+            <label htmlFor="group" className="col-sm-1 col-form-label">Group:</label>
             <div className="col-sm-11">
               <Input
                 id="group"
@@ -63,10 +61,8 @@ export class DisplayPage extends Component {
             </div>
           </FormGroup>
           <FormGroup errors={errors} className="row" name="label">
-            <div className="col-sm-1 label-col">
-              <label htmlFor="label">Label:</label>
-            </div>
-            <div className="col-sm-11 content-col">
+            <label htmlFor="label" className="col-sm-1 col-form-label">Label:</label>
+            <div className="col-sm-11">
               <Input
                 id="label"
                 className="LinodesLinodeSettingsDisplay-label"

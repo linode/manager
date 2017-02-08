@@ -29,7 +29,7 @@ export default function NewMasterZone(props) {
           />
         </div>
       </div>
-      <div className="form-group row">
+      <div className="row">
         <div className="col-sm-2"></div>
         <div className="col-sm-6">
           <button className="btn btn-default">Create</button>

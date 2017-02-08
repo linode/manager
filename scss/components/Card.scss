@@ -36,12 +36,16 @@ $card-padding: 15px;
         .title {
             text-align: center;
             overflow: hidden;
-            line-height: $input-height;
+            line-height: $form-field-height;
             color: $black;
         }
 
         h1 {
             display: inline-block;
         }
+    }
+
+    .row:not(:first-child) {
+        margin-top: 10px;
     }
 }

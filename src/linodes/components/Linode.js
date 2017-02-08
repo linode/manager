@@ -47,7 +47,7 @@ export function renderDistroStyle(linode) {
         alt={linode.distribution.vendor}
         width="15" height="15"
       />
-      {linode.distribution.vendor}
+      <span>{linode.distribution.vendor}</span>
     </span>
   );
 }
@@ -60,7 +60,7 @@ export function renderDatacenterStyle(linode) {
           ? flags[linode.datacenter.country] : '//placehold.it/50x50'}
         height="15" width="20" alt={linode.datacenter.label}
       />
-      {linode.datacenter.label}
+      <span>{linode.datacenter.label}</span>
     </span>
   );
 }
@@ -215,10 +215,11 @@ function renderRow(props) {
       <td>
         {renderBackupStatus(linode)}
       </td>
-      <td>
+      <td className="PrimaryTable-rowOptions">
         <StatusDropdown
           linode={linode}
           dispatch={props.dispatch}
+          className="float-xs-right"
         />
       </td>
     </tr>
