@@ -11,17 +11,4 @@ describe('linodes/create/components/Backups', () => {
   afterEach(() => {
     sandbox.restore();
   });
-
-  it('renders the Backups', () => {
-    const c = shallow(
-      <Backups
-        onSourceSelected={() => {}}
-        linodes={api.linodes}
-        goBack={() => {}}
-        selectedLinode={1234}
-        dispatch={() => {}}
-      />
-    );
-
-    expect(c.find('Backup').length).to.equal(2);
-  });
+});

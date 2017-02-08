@@ -1,11 +1,9 @@
 import React from 'react';
 import sinon from 'sinon';
-import moment from 'moment';
-import mockdate from 'mockdate';
 import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 
-import { Linode, renderBackupStatus } from '~/linodes/components/Linode';
+import { Linode } from '~/linodes/components/Linode';
 import { testLinode } from '@/data/linodes';
 
 describe('linodes/components/Linode', () => {

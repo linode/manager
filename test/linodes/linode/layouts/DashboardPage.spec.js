@@ -2,7 +2,6 @@ import React from 'react';
 import sinon from 'sinon';
 import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
-import moment from 'moment';
 
 import { DashboardPage } from '~/linodes/linode/layouts/DashboardPage';
 import { testLinode } from '@/data/linodes';
@@ -12,9 +11,7 @@ const { linodes } = api;
 
 describe('linodes/linode/layouts/DashboardPage', async () => {
   const sandbox = sinon.sandbox.create();
-
   const dispatch = sandbox.spy();
-  debugger;
 
   afterEach(() => {
     dispatch.reset();
@@ -58,7 +55,6 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
   });
 
   it('renders backups enabled', () => {
-    const backupTime = linodes.linodes[1245]._backups.snapshot.current.updated;
     const page = mount(
       <DashboardPage
         linodes={linodes}

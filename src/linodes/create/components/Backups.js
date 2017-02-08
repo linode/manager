@@ -26,12 +26,12 @@ export class Backups extends Component {
             {l.label}
           </h3>
           <div className="backup-group clearfix">
-              <Backup
-                backup={backup}
-                selected={selected}
-                onSelect={() => onSourceSelected(backup.id)}
-                key={backup.created}
-              />
+            <Backup
+              backup={backup}
+              selected={selected}
+              onSelect={() => onSourceSelected(backup.id)}
+              key={backup.created}
+            />
           </div>
           <a
             href="#"
