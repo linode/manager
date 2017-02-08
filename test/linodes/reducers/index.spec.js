@@ -7,27 +7,19 @@ describe('linodes/index reducer', () => {
   it('should handle initial state', () => {
     expect(
       index(undefined, {})
-    ).to.be.eql({ view: 'grid', selected: { } });
+    ).to.be.eql({ selected: { } });
   });
 
   it('should no-op on arbitrary actions', () => {
-    const state = { view: 'grid', selected: { } };
+    const state = { selected: { } };
     deepFreeze(state);
 
     expect(index(state, { type: 'foobar' }))
       .to.deep.equal(state);
   });
 
-  it('should handle CHANGE_VIEW', () => {
-    const state = { view: 'grid', selected: { } };
-    deepFreeze(state);
-
-    expect(index(state, actions.changeView('list')))
-      .to.have.property('view').that.equals('list');
-  });
-
   it('should add to the selection on TOGGLE_SELECTED', () => {
-    const state = { view: 'grid', selected: { } };
+    const state = { selected: { } };
     deepFreeze(state);
 
     expect(index(state, actions.toggleSelected('1234')))
@@ -42,7 +34,7 @@ describe('linodes/index reducer', () => {
   });
 
   it('should remove from the selection on TOGGLE_SELECTED', () => {
-    const state = { view: 'grid', selected: {
+    const state = { selected: {
       1234: true,
       1235: true,
     } };

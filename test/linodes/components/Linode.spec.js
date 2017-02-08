@@ -2,7 +2,7 @@ import React from 'react';
 import sinon from 'sinon';
 import moment from 'moment';
 import mockdate from 'mockdate';
-import { shallow } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 
 import { Linode, renderBackupStatus } from '~/linodes/components/Linode';
@@ -31,12 +31,11 @@ describe('linodes/components/Linode', () => {
       <Linode
         linode={testLinode}
         isSelected={false}
-        isRow={false}
       />);
 
-    expect(linode.find('.linode-details').contains('97.107.143.99'))
+    expect(linode.find('#ips').contains('97.107.143.99'))
       .to.equal(true);
-    expect(linode.find('.linode-details').contains('2600:3c03::f03c:91ff:fe0a:1dbe'))
+    expect(linode.find('#ips').contains('2600:3c03::f03c:91ff:fe0a:1dbe'))
       .to.equal(true);
   });
 
@@ -46,7 +45,6 @@ describe('linodes/components/Linode', () => {
       <Linode
         linode={testLinode}
         isSelected={false}
-        isRow={false}
       />);
 
     expect(linode.contains(datacenter))
@@ -68,12 +66,11 @@ describe('linodes/components/Linode', () => {
 
   it('invokes the onSelect function when the checkbox is toggled', () => {
     const onSelect = sandbox.spy();
-    const linode = shallow(
+    const linode = mount(
       <Linode
         linode={testLinode}
         isSelected={false}
         onSelect={onSelect}
-        isRow={false}
       />);
 
     expect(linode.find('input[type="checkbox"]').length).to.equal(1);

@@ -8,27 +8,3 @@
         color: inherit;
     }
 }
-
-.linode.card {
-    padding: 0;
-
-    .linode-details {
-        padding: 15px 20px;
-    }
-
-    .header-secondary {
-        margin-bottom: 0;
-
-        & > * {
-            display: inline-block;
-            &:not(:first-child) {
-                margin-left: 15px;
-                line-height: 30px;
-            }
-        }
-
-        .linode-power {
-            margin-top: 3px;
-        }
-    }
-}

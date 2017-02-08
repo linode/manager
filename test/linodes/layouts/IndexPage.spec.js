@@ -4,9 +4,8 @@ import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 
 import { IndexPage } from '~/linodes/layouts/IndexPage';
-import { TOGGLE_SELECTED, CHANGE_VIEW } from '~/linodes/actions/index';
+import { TOGGLE_SELECTED } from '~/linodes/actions/index';
 import { api } from '@/data';
-import { testLinode } from '@/data/linodes';
 import Dropdown from '~/components/Dropdown';
 import { SET_ERROR } from '~/actions/errors';
 import { expectRequest } from '@/common.js';
@@ -33,7 +32,6 @@ describe('linodes/layouts/IndexPage', () => {
     mount(
       <IndexPage
         dispatch={dispatch}
-        view="grid"
         selected={{}}
         linodes={linodes}
       />);
@@ -45,38 +43,10 @@ describe('linodes/layouts/IndexPage', () => {
     }));
   });
 
-  it('renders a grid of Linodes', () => {
-    const page = mount(
-      <IndexPage
-        dispatch={dispatch}
-        view="grid"
-        selected={{}}
-        linodes={{
-          totalPages: 1,
-          totalResults: 2,
-          linodes: {
-            [testLinode.id]: testLinode,
-            1235: {
-              ...testLinode,
-              id: 1235,
-              label: 'asdfasdf',
-            },
-          },
-        }}
-      />
-    );
-
-    expect(page.find('.linode-label').first()
-                  .text()).to.equal(testLinode.label);
-    expect(page.find('.linode-label').last()
-                  .text()).to.equal('asdfasdf');
-  });
-
   it('renders a list of Linodes', () => {
     const page = mount(
       <IndexPage
         dispatch={dispatch}
-        view="list"
         selected={{}}
         linodes={linodes}
       />
@@ -94,7 +64,6 @@ describe('linodes/layouts/IndexPage', () => {
     const page = shallow(
       <IndexPage
         dispatch={() => {}}
-        view="grid"
         selected={{}}
         linodes={linodes}
       />);
@@ -113,7 +82,6 @@ describe('linodes/layouts/IndexPage', () => {
       const page = mount(
         <IndexPage
           dispatch={dispatch}
-          view="grid"
           selected={{ 1234: true }}
           linodes={linodes}
         />);
@@ -135,7 +103,6 @@ describe('linodes/layouts/IndexPage', () => {
     const page = mount(
       <IndexPage
         dispatch={dispatch}
-        view="grid"
         selected={{ 1234: true }}
         linodes={linodes}
       />);
@@ -169,7 +136,6 @@ describe('linodes/layouts/IndexPage', () => {
     const page = mount(
       <IndexPage
         dispatch={localDispatch}
-        view="grid"
         selected={{}}
         linodes={linodes}
       />
@@ -185,7 +151,6 @@ describe('linodes/layouts/IndexPage', () => {
     const page = shallow(
       <IndexPage
         dispatch={dispatch}
-        view="grid"
         selected={{}}
         linodes={{
           linodes: {},
@@ -198,25 +163,4 @@ describe('linodes/layouts/IndexPage', () => {
     const checkbox = page.find('.input-group-addon input[type="checkbox"]');
     expect(checkbox.props().checked).to.equal(false);
   });
-
-  function testViewChange(initial, final) {
-    return () => {
-      const page = mount(
-        <IndexPage
-          dispatch={dispatch}
-          view={initial}
-          selected={{}}
-          linodes={linodes}
-        />
-      );
-
-      const listButton = page.find(`.grid-list .${final}`);
-      listButton.simulate('click');
-      expect(dispatch.calledWith({ type: CHANGE_VIEW, view: final }))
-        .to.equal(true);
-    };
-  }
-
-  it('should switch view to list when list is clicked', testViewChange('grid', 'list'));
-  it('should switch view to grid when grid is clicked', testViewChange('list', 'grid'));
 });

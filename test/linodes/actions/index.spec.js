@@ -1,21 +1,8 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
-import {
-  TOGGLE_SELECTED, CHANGE_VIEW,
-  toggleSelected, changeView, toggleSelectAll,
-} from '~/linodes/actions';
+import { TOGGLE_SELECTED, toggleSelected, toggleSelectAll } from '~/linodes/actions';
 
 describe('linodes/actions', () => {
-  describe('changeView', () => {
-    it('should return a CHANGE_VIEW action', () => {
-      expect(changeView('grid'))
-        .to.deep.equal({
-          type: CHANGE_VIEW,
-          view: 'grid',
-        });
-    });
-  });
-
   describe('toggleSelected', () => {
     it('should return a TOGGLE_SELECTED action', () => {
       expect(toggleSelected('1234'))
