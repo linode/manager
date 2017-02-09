@@ -32,10 +32,10 @@ export class SummaryPage extends Component {
 
   renderEmpty(title) {
     return (
-      <div className="col-sm-3" key={title}>
-        <div className="backup-block">
-          <div className="title">{title}</div>
-          <div className="description text-dark-gray">Pending</div>
+      <div className="Backup Backup--disabled col-sm-3" key={title}>
+        <div className="Backup-block">
+          <div className="Backup-title">{title}</div>
+          <div className="Backup-description Backup-description--muted">Pending</div>
         </div>
       </div>
     );
@@ -43,10 +43,10 @@ export class SummaryPage extends Component {
 
   renderEmptySnapshot() {
     return (
-      <div className="col-sm-3" key="Snapshot">
-        <div className="backup-block">
-          <div className="title">Snapshot</div>
-          <div className="no-snapshot text-dark-gray">
+      <div className="Backup col-sm-3" key="Snapshot">
+        <div className="Backup-block">
+          <div className="Backup-title">Snapshot</div>
+          <div className="Backup-description Backup-description--muted">
             No snapshots taken
           </div>
           <Button
@@ -70,11 +70,11 @@ export class SummaryPage extends Component {
     const unit = days === 1 ? 'day' : 'days';
 
     return (
-      <div className="col-sm-3" key={title}>
+      <div className="Backup col-sm-3" key={title}>
         <Link to={`/linodes/${linodeLabel}/backups/${backup.id}`}>
-          <div className="backup-block clickable">
-            <div className="title">{title}</div>
-            <div className="description">{`${days} ${unit}`}</div>
+          <div className="Backup-block Backup-block--clickable">
+            <div className="Backup-title">{title}</div>
+            <div className="Backup-description">{`${days} ${unit}`}</div>
           </div>
         </Link>
       </div>
@@ -103,10 +103,10 @@ export class SummaryPage extends Component {
         <header>
           <h2>Restorable backups</h2>
         </header>
-        <div className=" ">
+        <div>
           Select a backup to see details and restore to a Linode.
         </div>
-        <div className="  row">
+        <div className="row">
           {blocks}
         </div>
         <ErrorSummary errors={errors} />

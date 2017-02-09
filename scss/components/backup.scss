@@ -30,28 +30,39 @@
 
 }
 
-.backup-block {
-  text-align: center;
-  margin: 13px;
-  border: $border;
-  color: $black;
-  height: 120px;
+.Backup {
+    &--disabled {
+        cursor: not-allowed;
+    }
 
-  &.clickable:hover {
-    background-color: $light-gray;
-  }
+    a:hover,
+    a:focus {
+        text-decoration: none;
+    }
 
-  .title {
-    background-color: $light-gray;
-    border-bottom: $border;
-    padding: 3px 0px 3px 0px;
-  }
+    &-block {
+        text-align: center;
+        margin: 13px;
+        border: $border;
+        color: $black;
+        height: 120px;
 
-  .description {
-    margin: 29px 0px 15px 0px;
-  }
+        &--clickable:hover {
+            @extend .selected;
+        }
+    }
 
-  .no-snapshot {
-    margin-top: 18px;
-  }
+    &-title {
+        background-color: $light-gray;
+        border-bottom: $border;
+        padding: 3px 0px 3px 0px;
+    }
+
+    &-description {
+        margin: 29px 0px 15px 0px;
+
+        &--muted {
+            color: $default-gray;
+        }
+    }
 }
