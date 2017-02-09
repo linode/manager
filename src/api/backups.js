@@ -1,5 +1,6 @@
 import { fetch } from '~/fetch';
 import { actions } from './configs/linodes';
+import { linodeBackups } from '~/api/linodes';
 
 function makeBackupAction(action) {
   return (id) => async (dispatch, getState) => {
@@ -23,7 +24,7 @@ export function takeBackup(id) {
     const response = await fetch(token, `/linode/instances/${id}/backups`,
       { method: 'POST' });
     const json = await response.json();
-    dispatch(actions.backups.one(json, id, json.id));
+    dispatch(linodeBackups(id));
     return json;
   };
 }
