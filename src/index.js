@@ -24,7 +24,6 @@ import { NotFound } from './components/Error';
 import Linodes from './linodes';
 import Weblish from './linodes/linode/layouts/Weblish';
 import NodeBalancers from './nodebalancers';
-import Longview from './longview';
 import DNSManager from './dnsmanager';
 import Profile from './profile';
 import Styleguide from './styleguide';
@@ -76,7 +75,6 @@ const init = () => {
             <IndexRedirect to="/linodes" />
             {Linodes}
             {NodeBalancers}
-            {Longview}
             {DNSManager}
             {Profile}
             {Support}
