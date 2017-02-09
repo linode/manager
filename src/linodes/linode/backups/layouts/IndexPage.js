@@ -65,7 +65,6 @@ export class IndexPage extends Component {
 
     const tabs = [
       { name: 'Summary', link: '/' },
-      { name: 'History', link: '/history' },
       { name: 'Settings', link: '/settings' },
     ].map(t => ({ ...t, link: `/linodes/${linode.label}/backups${t.link}` }));
 
