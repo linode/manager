@@ -8,7 +8,7 @@ import { linodes } from '~/api';
 import { resetPassword, rescueLinode } from '~/api/linodes';
 import { ConfirmModalBody } from '~/components/modals';
 import { Form, FormGroup, SubmitButton, PasswordInput } from '~/components/form';
-import HelpButton from '~/components/HelpButton';
+import Card from '~/components/Card';
 import { setSource } from '~/actions/source';
 import { getConfig,
   getDisks,
@@ -140,14 +140,7 @@ export class RescuePage extends Component {
     }
     return (
       <div className="col-sm-6">
-        <section className="card">
-          <header>
-            <h2>
-              Rescue mode
-              <HelpButton to="http://example.org" />
-            </h2>
-            <p></p>
-          </header>
+        <Card title="Rescue mode" helpLink="http://example.org">
           <Form className="RescueMode-form" onSubmit={() => { this.rebootToRescue(); }}>
             {slots}
             <div className="form-group row disk-slot">
@@ -163,7 +156,7 @@ export class RescuePage extends Component {
               </div>
             </div>
           </Form>
-        </section>
+        </Card>
       </div>
     );
   }
@@ -237,7 +230,7 @@ export class RescuePage extends Component {
 
     return (
       <div className="col-sm-6">
-        <section className="card">
+        <Card title="Reset root password" helpLink="http://example.org">
           <Form
             className="ResetRootPassword-form"
             onSubmit={() => {
@@ -253,15 +246,9 @@ export class RescuePage extends Component {
               />));
             }}
           >
-            <header>
-              <h2>
-                Reset root password
-                <HelpButton to="http://example.org" />
-              </h2>
-            </header>
             {body}
           </Form>
-        </section>
+        </Card>
       </div>
     );
   }
