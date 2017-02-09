@@ -27,7 +27,6 @@ describe('linodes/linode/backups/layouts/IndexPage', () => {
 
     const tabList = [
       { name: 'Summary', link: '/' },
-      { name: 'History', link: '/history' },
       { name: 'Settings', link: '/settings' },
     ].map(t => ({ ...t, link: `/linodes/test-linode/backups${t.link}` }));
 
