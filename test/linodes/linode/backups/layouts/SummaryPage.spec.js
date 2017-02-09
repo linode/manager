@@ -25,20 +25,20 @@ describe('linodes/linode/backups/layouts/SummaryPage', () => {
       />
     );
 
-    const blocks = page.find('.backup-block');
+    const blocks = page.find('.Backup');
     expect(blocks.length).to.equal(4);
 
     const testBlock = (block, title, description) => {
-      expect(block.find('.title').text()).to.equal(title);
-      expect(block.find('.description').text()).to.contain(description);
+      expect(block.find('.Backup-title').text()).to.equal(title);
+      expect(block.find('.Backup-description').text()).to.contain(description);
     };
 
     testBlock(blocks.at(0), 'Daily', 'Pending');
     testBlock(blocks.at(1), 'Weekly', 'Pending');
     testBlock(blocks.at(2), 'Biweekly', 'Pending');
 
-    expect(blocks.at(3).find('.title').text()).to.equal('Snapshot');
-    expect(blocks.at(3).find('.no-snapshot').text()).to.equal(
+    expect(blocks.at(3).find('.Backup-title').text()).to.equal('Snapshot');
+    expect(blocks.at(3).find('.Backup-description').text()).to.equal(
       'No snapshots taken');
   });
 
@@ -51,14 +51,14 @@ describe('linodes/linode/backups/layouts/SummaryPage', () => {
       />
     );
 
-    const blocks = page.find('.backup-block');
+    const blocks = page.find('.Backup');
     expect(blocks.length).to.equal(4);
 
     const testBlock = (block, title, description, id) => {
-      expect(block.parent().props().to).to.equal(
+      expect(block.find('Link').props().to).to.equal(
         `/linodes/test-linode-1/backups/${id}`);
-      expect(block.find('.title').text()).to.equal(title);
-      expect(block.find('.description').text()).to.contain(description);
+      expect(block.find('.Backup-title').text()).to.equal(title);
+      expect(block.find('.Backup-description').text()).to.contain(description);
     };
 
     testBlock(blocks.at(0), 'Daily', 'day', '54782214');
@@ -76,7 +76,7 @@ describe('linodes/linode/backups/layouts/SummaryPage', () => {
       />
     );
 
-    const takeSnapshot = page.find('.backup-block').at(3).find('Button');
+    const takeSnapshot = page.find('.Backup').at(3).find('Button');
     expect(takeSnapshot.length).to.equal(1);
 
     dispatch.reset();
