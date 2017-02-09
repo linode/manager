@@ -5,8 +5,8 @@ import { push } from 'react-router-redux';
 
 import Tabs from '~/components/Tabs';
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
-import { linodes } from '~/api';
 import { enableBackup } from '~/api/backups';
+import { linodeBackups } from '~/api/linodes';
 import { setSource } from '~/actions/source';
 import { ErrorSummary, reduceErrors } from '~/errors';
 import { PrimaryButton } from '~/components/buttons';
@@ -15,7 +15,7 @@ export class IndexPage extends Component {
   static async preload({ dispatch, getState }, { linodeLabel }) {
     const { id } = Object.values(getState().api.linodes.linodes).reduce(
       (match, linode) => linode.label === linodeLabel ? linode : match);
-    await dispatch(linodes.backups.all([id]));
+    await dispatch(linodeBackups([id]));
   }
 
   constructor() {

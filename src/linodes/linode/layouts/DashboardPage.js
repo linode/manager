@@ -4,7 +4,6 @@ import { Link } from 'react-router';
 import _ from 'lodash';
 
 import {
-  renderBackupStatus,
   renderDistroStyle,
   renderDatacenterStyle,
   renderPlanStyle,
@@ -18,7 +17,6 @@ export class DashboardPage extends Component {
   constructor() {
     super();
     this.getLinode = getLinode.bind(this);
-    this.renderBackupStatus = renderBackupStatus.bind(this);
     this.renderDistroStyle = renderDistroStyle.bind(this);
     this.renderDatacenterStyle = renderDatacenterStyle.bind(this);
     this.renderPlanStyle = renderPlanStyle.bind(this);
@@ -34,9 +32,9 @@ export class DashboardPage extends Component {
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const { dispatch } = this.props;
-    dispatch(setSource(__filename));
+    await dispatch(setSource(__filename));
   }
 
   graphRangeUpdate(value) {
@@ -213,8 +211,10 @@ export class DashboardPage extends Component {
               <div className="col-sm-3 row-label">
                 Backup
               </div>
-              <div className="col-sm-9">
-                {this.renderBackupStatus(linode, true)}
+              <div className="col-sm-9 backup-status">
+                <Link to={`/linodes/${linode.label}/backups`}>
+                  {linode.backups.enabled ? 'View Backups' : 'Enable Backups'}
+                </Link>
               </div>
             </div>
           </div>

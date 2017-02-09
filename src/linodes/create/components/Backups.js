@@ -1,13 +1,12 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import _ from 'lodash';
-import { linodes } from '~/api';
+import { linodeBackups } from '~/api/linodes';
 import Backup from '~/linodes/components/Backup';
 
 export class Backups extends Component {
   async componentDidMount() {
     const { selectedLinode, dispatch } = this.props;
-    await dispatch(linodes.backups.all([selectedLinode]));
+    await dispatch(linodeBackups([selectedLinode]));
   }
 
   render() {
@@ -18,6 +17,7 @@ export class Backups extends Component {
       onSourceSelected,
       goBack,
     } = this.props;
+    const backup = null;
     const l = linodes.linodes[selectedLinode];
     return (
       <div>
@@ -26,14 +26,12 @@ export class Backups extends Component {
             {l.label}
           </h3>
           <div className="backup-group clearfix">
-            {_.map(l._backups.backups, backup =>
-              <Backup
-                backup={backup}
-                selected={selected}
-                onSelect={() => onSourceSelected(backup.id)}
-                key={backup.created}
-              />
-            )}
+            <Backup
+              backup={backup}
+              selected={selected}
+              onSelect={() => onSourceSelected(backup.id)}
+              key={backup.created}
+            />
           </div>
           <a
             href="#"

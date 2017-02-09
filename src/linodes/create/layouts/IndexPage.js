@@ -49,11 +49,9 @@ export class IndexPage extends Component {
       let _linodes = this.props.linodes;
       let linode = _linodes.linodes[location.query.linode];
       if (linode) {
-        await dispatch(linodes.backups.all(
-          [location.query.linode], [location.query.backup]));
         _linodes = this.props.linodes;
         linode = _linodes.linodes[location.query.linode];
-        const backup = linode._backups.backups[location.query.backup];
+        const backup = null;
         if (backup) {
           this.setState({
             backup: backup.id,
@@ -135,8 +133,8 @@ export class IndexPage extends Component {
           onTabChange={(_, index) => this.setState({ sourceTab: index })}
           onSourceSelected={(type, id, linodeId) => {
             if (type === 'backup' && linodeId && id) {
-              const linode = linodes.linodes[linodeId];
-              const backup = linode._backups.backups[id];
+              const backup = null;
+
               this.setState({
                 backup: id,
                 datacenter: backup.datacenter.id,

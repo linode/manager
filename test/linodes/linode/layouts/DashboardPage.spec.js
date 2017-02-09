@@ -2,7 +2,6 @@ import React from 'react';
 import sinon from 'sinon';
 import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
-import moment from 'moment';
 
 import { DashboardPage } from '~/linodes/linode/layouts/DashboardPage';
 import { testLinode } from '@/data/linodes';
@@ -12,7 +11,6 @@ const { linodes } = api;
 
 describe('linodes/linode/layouts/DashboardPage', async () => {
   const sandbox = sinon.sandbox.create();
-
   const dispatch = sandbox.spy();
 
   afterEach(() => {
@@ -39,8 +37,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
   });
 
   it('renders backups not enabled', () => {
-    const path = `/linodes/${testLinode.label}/backups`;
-    const page = shallow(
+    const page = mount(
       <DashboardPage
         linodes={{ ...linodes,
           linodes: {
@@ -53,23 +50,19 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
         params={params}
       />);
 
-    expect(page.find('.linode-backups').at(0)
-      .find('.col-sm-9')
-      .at(0)
-      .find('Link')
-      .props().to).to.equal(path);
+    expect(page.find('.backup-status')
+      .text()).to.equal('Enable Backups');
   });
 
   it('renders backups enabled', () => {
-    const backupTime = linodes.linodes[1245].backups.last_backup;
-    const page = shallow(
+    const page = mount(
       <DashboardPage
         linodes={linodes}
         params={{ linodeLabel: 'test-linode-1245' }}
       />);
 
     expect(page.find('.backup-status')
-      .text()).to.equal(`Taken ${moment.utc(backupTime).fromNow()}`);
+      .text()).to.equal('View Backups');
   });
 
   it('renders plan', () => {
