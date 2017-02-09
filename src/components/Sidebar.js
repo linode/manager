@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react';
 
 import { Link } from '~/components/Link';
-import { LOGIN_ROOT } from '~/constants';
 
 export default function Sidebar(props) {
   const { path, links } = props;
