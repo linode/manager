@@ -397,7 +397,7 @@ export class EditConfigPage extends Component {
         <h3 className="sub-header">Block Device Assignment</h3>
         <div>
           <div className="form-group row">
-            <label className="col-sm-2 col-form-label">
+            <label className="col-sm-2 col-form-label" htmlFor="config-kernel">
               Kernel
             </label>
             <div className="col-sm-6">
