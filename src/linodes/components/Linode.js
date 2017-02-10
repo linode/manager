@@ -84,7 +84,7 @@ export function Linode(props) {
           {linode.label}
         </Link>
       </td>
-      <td id="ips">
+      <td id={`ips-${linode.label}`}>
         {linode.ipv4}
         <div className="text-muted">{linode.ipv6.split('/')[0]}</div>
       </td>
