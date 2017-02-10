@@ -385,9 +385,9 @@ export class EditConfigPage extends Component {
         <h3 className="sub-header">Virtual Machine Mode</h3>
         <div>
           <fieldset className="form-group row">
-            <div className="col-sm-2">
-              <legend>Virtualization mode</legend>
-            </div>
+            <label className="col-sm-2 col-form-label">
+              Virtualization mode
+            </label>
             <div className="col-sm-6">
               {this.renderRadio('Paravirtualization', 'virtMode', 'paravirt')}
               {this.renderRadio('Full virtualization', 'virtMode', 'fullvirt')}
@@ -397,11 +397,9 @@ export class EditConfigPage extends Component {
         <h3 className="sub-header">Block Device Assignment</h3>
         <div>
           <div className="form-group row">
-            <div className="col-sm-2">
-              <label
-                htmlFor="config-kernel"
-              >Kernel</label>
-            </div>
+            <label className="col-sm-2 col-form-label">
+              Kernel
+            </label>
             <div className="col-sm-6">
               <select
                 className="form-control"
@@ -442,11 +440,9 @@ export class EditConfigPage extends Component {
             </div>
           </div>
           <fieldset className="form-group row">
-            <div className="col-sm-2">
-              <legend>
+            <label className="col-sm-2 col-form-label">
                 Run level
-              </legend>
-            </div>
+            </label>
             <div className="col-sm-6">
               {this.renderRadio('Default', 'runLevel', 'default')}
               {this.renderRadio('Single-user mode', 'runLevel', 'single')}
@@ -454,9 +450,9 @@ export class EditConfigPage extends Component {
             </div>
           </fieldset>
           <div className="form-group row">
-            <div className="col-sm-2">
-              <label>Memory limit</label>
-            </div>
+            <label className="col-sm-2 col-form-label">
+              Memory limit
+            </label>
             <div className="input-container col-sm-6">
               {this.renderRadio(
                 <span>Maximum ({
@@ -485,9 +481,9 @@ export class EditConfigPage extends Component {
           </div>
           {diskSlots.map(this.renderDiskSlot)}
           <div className="form-group row">
-            <div className="col-sm-2">
-              <legend>initrd</legend>
-            </div>
+            <label className="col-sm-2 col-form-label">
+              initrd
+            </label>
             <div className="input-container col-sm-6">
               <select
                 id="config-initrd"
@@ -502,9 +498,9 @@ export class EditConfigPage extends Component {
             </div>
           </div>
           <div className="form-group row">
-            <div className="col-sm-2">
-              <label>root / boot device</label>
-            </div>
+            <label className="col-sm-2 col-form-label">
+              root / boot device
+            </label>
             <div className="input-container col-sm-6">
               {this.renderRadio(
                 <span className="multi-radio clearfix">
@@ -546,11 +542,9 @@ export class EditConfigPage extends Component {
         <h3 className="sub-header">Filesystem/Boot Helpers</h3>
         <div>
           <fieldset className="form-group row">
-            <div className="col-sm-2">
-              <legend>
+            <label className="col-sm-2 col-form-label">
                 Boot helpers
-              </legend>
-            </div>
+            </label>
             <div className="col-md-8">
               {this.renderCheckbox(
                 'Enable distro helper',
