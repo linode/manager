@@ -8,8 +8,8 @@ export default function Typography() {
       <div className="StyleguideTypography col-sm-12">
         <div className="StyleguideSubSection row">
           <div className="col-sm-12">
-            <h3>Semantic Heirarchy</h3>
-            <p>A visual heirarchy should be established by correctly nesting headings.</p>
+            <h3>Semantic Hierarchy</h3>
+            <p>A visual hierarchy should be established by correctly nesting headings.</p>
             <table>
               <thead>
                 <tr>
