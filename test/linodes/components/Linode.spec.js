@@ -25,15 +25,16 @@ describe('linodes/components/Linode', () => {
   });
 
   it('renders the IP addresses', () => {
+    const id = `#ips-${testLinode.label}`;
     const linode = shallow(
       <Linode
         linode={testLinode}
         isSelected={false}
       />);
 
-    expect(linode.find('#ips').contains('97.107.143.99'))
+    expect(linode.find(id).contains('97.107.143.99'))
       .to.equal(true);
-    expect(linode.find('#ips').contains('2600:3c03::f03c:91ff:fe0a:1dbe'))
+    expect(linode.find(id).contains('2600:3c03::f03c:91ff:fe0a:1dbe'))
       .to.equal(true);
   });
 
