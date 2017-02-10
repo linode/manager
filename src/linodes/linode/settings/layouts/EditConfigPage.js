@@ -385,7 +385,7 @@ export class EditConfigPage extends Component {
         <h3 className="sub-header">Virtual Machine Mode</h3>
         <div>
           <fieldset className="form-group row">
-            <div className="col-sm-2 label-col">
+            <div className="col-sm-2">
               <legend>Virtualization mode</legend>
             </div>
             <div className="col-sm-6">
@@ -397,7 +397,7 @@ export class EditConfigPage extends Component {
         <h3 className="sub-header">Block Device Assignment</h3>
         <div>
           <div className="form-group row">
-            <div className="col-sm-2 label-col">
+            <div className="col-sm-2">
               <label
                 htmlFor="config-kernel"
               >Kernel</label>
@@ -442,7 +442,7 @@ export class EditConfigPage extends Component {
             </div>
           </div>
           <fieldset className="form-group row">
-            <div className="col-sm-2 label-col">
+            <div className="col-sm-2">
               <legend>
                 Run level
               </legend>
@@ -454,7 +454,7 @@ export class EditConfigPage extends Component {
             </div>
           </fieldset>
           <div className="form-group row">
-            <div className="col-sm-2 label-col">
+            <div className="col-sm-2">
               <label>Memory limit</label>
             </div>
             <div className="input-container col-sm-6">
@@ -485,7 +485,7 @@ export class EditConfigPage extends Component {
           </div>
           {diskSlots.map(this.renderDiskSlot)}
           <div className="form-group row">
-            <div className="col-sm-2 label-col">
+            <div className="col-sm-2">
               <legend>initrd</legend>
             </div>
             <div className="input-container col-sm-6">
@@ -502,7 +502,7 @@ export class EditConfigPage extends Component {
             </div>
           </div>
           <div className="form-group row">
-            <div className="col-sm-2 label-col">
+            <div className="col-sm-2">
               <label>root / boot device</label>
             </div>
             <div className="input-container col-sm-6">
@@ -546,7 +546,7 @@ export class EditConfigPage extends Component {
         <h3 className="sub-header">Filesystem/Boot Helpers</h3>
         <div>
           <fieldset className="form-group row">
-            <div className="col-sm-2 label-col">
+            <div className="col-sm-2">
               <legend>
                 Boot helpers
               </legend>
