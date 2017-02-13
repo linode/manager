@@ -2,7 +2,7 @@ import React, { PropTypes, Component } from 'react';
 
 import { dnszones } from '~/api';
 import { hideModal } from '~/actions/modal';
-import { ModalFormGroup } from '~/components/form';
+import { ModalFormGroup, Select } from '~/components/form';
 import SelectTTL from './SelectTTL';
 import { Form, Input, SubmitButton, CancelButton } from '~/components/form';
 import { reduceErrors, ErrorSummary } from '~/errors';
@@ -158,12 +158,16 @@ export default class EditSOARecord extends Component {
           apiKey="expire_sec"
           errors={errors}
         >
-          <SelectTTL
+          <Select
+            value={(expireTime || 604800).toString()}
+            onChange={this.onChange}
             id="expireTime"
             name="expireTime"
-            value={expireTime}
-            onChange={this.onChange}
-          />
+          >
+            <option value="604800">Default (1 week)</option>
+            <option value="1209600">1209600 (2 weeks)</option>
+            <option value="2419200">2419200 (4 weeks)</option>
+          </Select>
         </ModalFormGroup>
         <div className="Modal-footer">
           <CancelButton onClick={() => dispatch(hideModal())} />
