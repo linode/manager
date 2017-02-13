@@ -23,7 +23,10 @@ export default function NewSlaveZone(props) {
             placeholder="98.139.180.149, 98.139.180.150"
             onChange={props.onChange('masters')}
           />
-          <small className="text-muted">The IP addresses of the master DNS servers for this<br />zone must be semicolon or new line delimited.</small>
+          <small className="text-muted">
+            The IP addresses of the master DNS servers for this<br />
+            zone must be semicolon or new line delimited.
+          </small>
         </div>
       </div>
       <div className="row">
