@@ -28,7 +28,9 @@ export default class Details extends Component {
     const { errors, selectedType, selectedDistribution, submitEnabled } = this.props;
 
     const renderBackupsPrice = () => {
-      if (!selectedType) return '($X/mo)';
+      if (!selectedType) {
+        return '(Select a plan to view the price of backups)';
+      }
 
       const price = (selectedType.backups_price / 100).toFixed(2);
       return `($${price}/mo)`;
