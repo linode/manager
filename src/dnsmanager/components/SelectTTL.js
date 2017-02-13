@@ -5,7 +5,7 @@ import { Select } from '~/components/form';
 export default function SelectTTL(props) {
   const { value, name, id, onChange } = props;
   return (
-    <Select value={value || 300} onChange={onChange} id={id} name={name}>
+    <Select value={(value || 300).toString()} onChange={onChange} id={id} name={name}>
       <option value="300">Default (5 minutes)</option>
       <option value="3600">3600 (1 hour)</option>
       <option value="7200">7200 (2 hours)</option>

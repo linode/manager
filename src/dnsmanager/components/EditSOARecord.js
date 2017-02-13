@@ -1,5 +1,6 @@
 import React, { PropTypes, Component } from 'react';
 
+import { dnszones } from '~/api';
 import { hideModal } from '~/actions/modal';
 import { ModalFormGroup } from '~/components/form';
 import SelectTTL from './SelectTTL';
@@ -11,14 +12,14 @@ export default class EditSOARecord extends Component {
     super();
 
     const {
-      display_group: displayGroup, dnszone: zone, ttl_sec: defaultTTL, refresh_sec: refreshRate,
+      display_group: group, dnszone: zone, ttl_sec: defaultTTL, refresh_sec: refreshRate,
       retry_sec: retryRate, expire_sec: expireTime, soa_email: email,
     } = props.zone;
 
     this.state = {
       errors: {},
       saving: false,
-      displayGroup,
+      group,
       zone,
       defaultTTL,
       refreshRate,
@@ -31,19 +32,28 @@ export default class EditSOARecord extends Component {
   onSubmit = async () => {
     const { dispatch } = this.props;
     const {
-      displayGroup, zone, defaultTTL, refreshRate, retryRate, expireTime, email,
+      group, zone, defaultTTL, refreshRate, retryRate, expireTime, email,
     } = this.state;
 
     this.setState({ saving: true });
 
     try {
-      // TODO: do call
+      await dispatch(dnszones.put({
+        display_group: group,
+        dnszone: zone,
+        ttl_sec: defaultTTL,
+        refresh_sec: refreshRate,
+        retry_sec: retryRate,
+        expire_sec: expireTime,
+        soa_email: email,
+      }, this.props.zone.id));
     } catch (response) {
       const errors = await reduceErrors(response);
       this.setState({ errors });
     }
 
     this.setState({ saving: false });
+    this.props.close();
   }
 
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
@@ -51,10 +61,8 @@ export default class EditSOARecord extends Component {
   render() {
     const { dispatch } = this.props;
     const {
-      displayGroup, zone, defaultTTL, refreshRate, retryRate, expireTime, email, errors, saving,
+      group, zone, defaultTTL, refreshRate, retryRate, expireTime, email, errors, saving,
     } = this.state;
-
-    console.log(this.state);
 
     return (
       <Form onSubmit={this.onSubmit}>
@@ -64,6 +72,21 @@ export default class EditSOARecord extends Component {
             name="zone"
             value={zone}
             placeholder="ns1.domain.com"
+            onChange={this.onChange}
+          />
+        </ModalFormGroup>
+        <ModalFormGroup
+          label="Group"
+          description="DNS zones are grouped together on the DNS zones list page"
+          id="group"
+          apiKey="group"
+          errors={errors}
+        >
+          <Input
+            id="group"
+            name="group"
+            value={group}
+            placeholder=""
             onChange={this.onChange}
           />
         </ModalFormGroup>
@@ -114,8 +137,8 @@ export default class EditSOARecord extends Component {
         </ModalFormGroup>
         <ModalFormGroup
           label="Retry Rate"
-          description={("How long secondary / slave nameservers wait to contact the master " +
-                        "nameserver again if the last attempt failed")}
+          description={('How long secondary / slave nameservers wait to contact the master ' +
+                        'nameserver again if the last attempt failed')}
           id="retryRate"
           apiKey="retry_sec"
           errors={errors}
@@ -129,8 +152,8 @@ export default class EditSOARecord extends Component {
         </ModalFormGroup>
         <ModalFormGroup
           label="Expire Time"
-          description={("How long secondary / slave nameservers wait before considering DNS data " +
-                        "stale if it cannot reach the master nameserver")}
+          description={('How long secondary / slave nameservers wait before considering DNS data ' +
+                        'stale if it cannot reach the master nameserver')}
           id="expireTime"
           apiKey="expire_sec"
           errors={errors}
@@ -155,4 +178,5 @@ export default class EditSOARecord extends Component {
 EditSOARecord.propTypes = {
   dispatch: PropTypes.func.isRequired,
   zone: PropTypes.object.isRequired,
+  close: PropTypes.func.isRequired,
 };

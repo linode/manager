@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
+import moment from 'moment';
+import _ from 'lodash';
 
 import { setError } from '~/actions/errors';
 import { showModal, hideModal } from '~/actions/modal';
@@ -58,42 +60,69 @@ export class IndexPage extends Component {
     );
   }
 
-  render() {
-    const { dnszones } = this.props;
+  renderGroup = ({ group, zones }) => {
     const { isSelected } = this.state;
+    const sortedZones = _.sortBy(zones, z => moment(z.created));
 
-    const renderZones = () => (
+    const ret = sortedZones.map(z => (
+      <tr
+        key={z.id}
+        className={`PrimaryTable-row ${isSelected[z.id] ? 'PrimaryTable-row--selected' : ''}`}
+      >
+        <td>
+          <Checkbox
+            className="PrimaryTable-rowSelector"
+            checked={!!isSelected[z.id]}
+            onChange={() =>
+              this.setState({ isSelected: { ...isSelected, [z.id]: !isSelected[z.id] } })}
+          />
+          <Link
+            className="PrimaryTable-rowLabel"
+            to={`/dnsmanager/${z.dnszone}`}
+            title={z.id}
+          >
+            {z.dnszone}
+          </Link>
+        </td>
+        <td>{z.type} zone</td>
+        <td className="text-sm-right">
+          <Button onClick={() => this.deleteZone(z.id)}>Delete</Button>
+        </td>
+      </tr>
+    ));
+
+    if (group) {
+      ret.splice(0, 0, (
+        <tr className="PrimaryTable-row PrimaryTable-row--groupLabel">
+          <td colSpan="3">{group}</td>
+        </tr>
+      ));
+    }
+
+    return ret;
+  }
+
+  renderZones(zones) {
+    const groups = _.map(
+      _.sortBy(
+        _.map(
+          _.groupBy(Object.values(zones), z => z.display_group),
+          (_zones, _group) => ({ group: _group, zones: _zones })
+        ), zg => zg.group
+      ), this.renderGroup);
+
+    return (
       <table className="PrimaryTable">
         <tbody>
-          {Object.values(dnszones.dnszones).map(z => (
-            <tr
-              key={z.id}
-              className={`PrimaryTable-row ${isSelected[z.id] ? 'PrimaryTable-row--selected' : ''}`}
-            >
-              <td>
-                <Checkbox
-                  className="PrimaryTable-rowSelector"
-                  checked={!!isSelected[z.id]}
-                  onChange={() =>
-                    this.setState({ isSelected: { ...isSelected, [z.id]: !isSelected[z.id] } })}
-                />
-                <Link
-                  className="PrimaryTable-rowLabel"
-                  to={`/dnsmanager/${z.dnszone}`}
-                  title={z.id}
-                >
-                  {z.dnszone}
-                </Link>
-              </td>
-              <td>{z.type} zone</td>
-              <td className="text-sm-right">
-                <Button onClick={() => this.deleteZone(z.id)}>Delete</Button>
-              </td>
-            </tr>
-           ))}
+          {groups}
         </tbody>
       </table>
     );
+  }
+
+
+  render() {
+    const { dnszones } = this.props;
 
     return (
       <div className="PrimaryPage container">
@@ -107,7 +136,7 @@ export class IndexPage extends Component {
           </div>
         </header>
         <div className="PrimaryPage-body">
-          {Object.keys(this.props.dnszones.dnszones).length ? renderZones() :
+          {Object.keys(dnszones.dnszones).length ? this.renderZones(dnszones.dnszones) :
             <CreateHelper label="zones" href="/dnsmanager/create" linkText="Add a zone" />}
         </div>
       </div>

@@ -7,7 +7,7 @@ export const config = genConfig({
   plural: 'dnszones',
   singular: 'dnszone',
   endpoint: id => `/dns/zones/${id}`,
-  supports: [ONE, MANY, POST],
+  supports: [ONE, MANY, POST, PUT],
   subresources: {
     _records: {
       plural: 'records',

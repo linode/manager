@@ -29,14 +29,20 @@ export class ZonePage extends Component {
   constructor(props) {
     super(props);
 
-    const currentDNSZone = Object.values(props.dnszones.dnszones).filter(
-      d => d.dnszone === props.params.dnszoneLabel)[0];
-    this.state = {
-      currentDNSZone: {
-        ...currentDNSZone,
-        _groupedRecords: _.groupBy(currentDNSZone._records.records, 'type'),
-      },
+    const updateCurrentDNSZone = (props) => {
+      const currentDNSZone = Object.values(props.dnszones.dnszones).filter(
+        d => d.dnszone === props.params.dnszoneLabel)[0];
+      this.state = {
+        currentDNSZone: {
+          ...currentDNSZone,
+          _groupedRecords: _.groupBy(currentDNSZone._records.records, 'type'),
+        },
+      };
     };
+
+    // currentDNSZone needs to be updated now and every time props changes
+    this.componentWillReceiveProps = updateCurrentDNSZone;
+    updateCurrentDNSZone(props);
   }
 
   async componentDidMount() {
@@ -90,8 +96,7 @@ export class ZonePage extends Component {
     }));
   }
 
-  renderRecords = (props) => {
-    const { title, id, rows, labels, keys, nav, navOnClick, recordOnClick } = props;
+  renderRecords = ({ title, id, rows, labels, keys, nav, navOnClick, recordOnClick }) => {
     let cardContents = <p>No records created.</p>;
     if (rows && rows.length) {
       cardContents = (
@@ -163,7 +168,10 @@ export class ZonePage extends Component {
       <div>
         <header className="main-header main-header--border">
           <div className="container">
-            <h1 title={currentDNSZone.id}>{currentDNSZone.dnszone}</h1>
+            <h1 title={currentDNSZone.id}>
+              {currentDNSZone.display_group ? `${currentDNSZone.display_group} / ` : ''}
+              {currentDNSZone.dnszone}
+            </h1>
           </div>
         </header>
         <div className="container">

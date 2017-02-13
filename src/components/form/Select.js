@@ -5,6 +5,7 @@ export default function Select(props) {
     <span className="Select">
       <select
         className="form-control"
+        name={props.name}
         value={props.value}
         disabled={props.disabled}
         onChange={props.onChange}
@@ -27,6 +28,7 @@ export default function Select(props) {
 Select.propTypes = {
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
+  name: PropTypes.string,
   label: PropTypes.string,
   disabled: PropTypes.bool,
   options: PropTypes.array,
