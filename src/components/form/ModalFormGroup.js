@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 
-import { FormGroup, FormGroupError } from './';
+import FormGroup from './FormGroup';
+import FormGroupError from './FormGroupError';
 
 export default function ModalFormGroup(props) {
   const { errors, apiKey, label, id, description, children } = props;
