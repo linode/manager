@@ -476,9 +476,7 @@ export class EditConfigPage extends Component {
             </FormGroup>
             {diskSlots.map(this.renderDiskSlot)}
             <div className="form-group row">
-              <div className="col-sm-2">
-                <legend>initrd</legend>
-              </div>
+              <label className="col-sm-2 col-form-label">initrd</label>
               <div className="input-container col-sm-6">
                 <Select
                   id="config-initrd"
@@ -536,11 +534,7 @@ export class EditConfigPage extends Component {
           <h3 className="sub-header">Filesystem/Boot Helpers</h3>
           <div>
             <fieldset className="form-group row">
-              <div className="col-sm-2">
-                <legend>
-                  Boot helpers
-                </legend>
-              </div>
+              <label className="col-sm-2 col-form-label">Boot helpers</label>
               <div className="col-md-8">
                 <Checkbox
                   id="config-enableDistroHelper"
