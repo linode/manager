@@ -62,31 +62,30 @@ export class IndexPage extends Component {
 
   renderGroup = ({ group, zones }) => {
     const { isSelected } = this.state;
-    const sortedZones = _.sortBy(zones, z => moment(z.created));
+    // TODO: sort in fetch call
+    const sortedZones = _.sortBy(zones, ({ created }) => moment(created));
 
-    const ret = sortedZones.map(z => (
-      <tr
-        key={z.id}
-        className={`PrimaryTable-row ${isSelected[z.id] ? 'PrimaryTable-row--selected' : ''}`}
-      >
+    const rowClass = (zone) =>
+      `PrimaryTable-row ${isSelected[zone.id] ? ' PrimaryTable-row--selected' : ''}`;
+
+    const ret = sortedZones.map(zone => (
+      <tr key={zone.id} className={rowClass(zone)}>
         <td>
           <Checkbox
             className="PrimaryTable-rowSelector"
-            checked={!!isSelected[z.id]}
+            checked={!!isSelected[zone.id]}
             onChange={() =>
-              this.setState({ isSelected: { ...isSelected, [z.id]: !isSelected[z.id] } })}
+              this.setState({ isSelected: { ...isSelected, [zone.id]: !isSelected[zone.id] } })}
           />
           <Link
             className="PrimaryTable-rowLabel"
-            to={`/dnsmanager/${z.dnszone}`}
-            title={z.id}
-          >
-            {z.dnszone}
-          </Link>
+            to={`/dnsmanager/${zone.dnszone}`}
+            title={zone.id}
+          >{zone.dnszone}</Link>
         </td>
-        <td>{z.type} zone</td>
+        <td>{zone.type} zone</td>
         <td className="text-sm-right">
-          <Button onClick={() => this.deleteZone(z.id)}>Delete</Button>
+          <Button onClick={() => this.deleteZone(zone.id)}>Delete</Button>
         </td>
       </tr>
     ));
@@ -106,9 +105,9 @@ export class IndexPage extends Component {
     const groups = _.map(
       _.sortBy(
         _.map(
-          _.groupBy(Object.values(zones), z => z.display_group),
+          _.groupBy(Object.values(zones), ({ display_group: group }) => group),
           (_zones, _group) => ({ group: _group, zones: _zones })
-        ), zg => zg.group
+        ), zoneGroup => zoneGroup.group
       ), this.renderGroup);
 
     return (
