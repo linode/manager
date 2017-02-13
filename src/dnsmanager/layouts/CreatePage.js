@@ -7,18 +7,26 @@ import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 import { dnszones } from '~/api';
 import NewMasterZone from '../components/NewMasterZone';
+import NewSlaveZone from '../components/NewSlaveZone';
 
 export class CreatePage extends Component {
   constructor(props) {
     super(props);
     this.addMasterZone = this.addMasterZone.bind(this);
     this.newMasterZoneChange = this.newMasterZoneChange.bind(this);
+    this.addSlaveZone = this.addSlaveZone.bind(this);
+    this.newSlaveZoneChange = this.newSlaveZoneChange.bind(this);
     this.state = {
       tabIndex: 0,
       newMasterZone: {
         dnszone: '',
         soa_email: props.email,
         type: 'master',
+      },
+      newSlaveZone: {
+        dnszone: '',
+        masters: '',
+        type: 'slave',
       },
     };
   }
@@ -40,6 +48,22 @@ export class CreatePage extends Component {
     return e => {
       this.setState({ newMasterZone: {
         ...this.state.newMasterZone,
+        [field]: e.target.value,
+      } });
+    };
+  }
+
+  async addSlaveZone(e) {
+    e.preventDefault();
+    const { dispatch } = this.props;
+    await dispatch(dnszones.post(this.state.newSlaveZone));
+    await dispatch(push('/dnsmanager'));
+  }
+
+  newSlaveZoneChange(field) {
+    return e => {
+      this.setState({ newSlaveZone: {
+        ...this.state.newSlaveZone,
         [field]: e.target.value,
       } });
     };
@@ -78,8 +102,13 @@ export class CreatePage extends Component {
                 </section>
               </TabPanel>
               <TabPanel>
-                <section>
-                  TODO
+                <section className="subtab-content-container">
+                  <NewSlaveZone
+                    onSubmit={this.addSlaveZone}
+                    onChange={this.newSlaveZoneChange}
+                    masters={this.state.newSlaveZone.masters}
+                    dnszone={this.state.newSlaveZone.dnszone}
+                  />
                 </section>
               </TabPanel>
               <TabPanel>
