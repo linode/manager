@@ -95,7 +95,7 @@ export class EditModal extends Component {
           </div>
         </FormGroup>
         <ErrorSummary errors={errors} />
-        <div className="modal-footer">
+        <div className="Modal-footer">
           <CancelButton
             className="LinodesLinodeSettingsComponentsEditModal-cancel"
             disabled={loading}

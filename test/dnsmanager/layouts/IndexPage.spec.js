@@ -28,8 +28,9 @@ describe('dnsmanager/layouts/IndexPage', () => {
     );
 
     const zone = page.find('.PrimaryTable-row');
-    expect(zone.length).to.equal(Object.keys(dnszones.dnszones).length);
-    const firstZone = zone.at(0);
+    // + 1 for the group
+    expect(zone.length).to.equal(Object.keys(dnszones.dnszones).length + 1);
+    const firstZone = zone.at(1);
     expect(firstZone.find('Link').props().to)
       .to.equal('/dnsmanager/example.com');
     expect(firstZone.find('td').at(1).text())

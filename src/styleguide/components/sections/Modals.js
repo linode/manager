@@ -43,7 +43,7 @@ export default class Modals extends Component {
                         <p>
                           A very important message.
                         </p>
-                        <div className="modal-footer">
+                        <div className="Modal-footer">
                           <Button onClick={() => { this.setState({ basicOpen: false }); }}>
                             Ok
                           </Button>
@@ -64,7 +64,7 @@ export default class Modals extends Component {
                         <p>
                           Please confirm your choice.
                         </p>
-                        <div className="modal-footer">
+                        <div className="Modal-footer">
                           <CancelButton
                             onClick={() => { this.setState({ confirmOpen: false }); }}
                           />
@@ -130,7 +130,7 @@ export default class Modals extends Component {
                             </label>
                           </div>
                         </div>
-                        <div className="modal-footer">
+                        <div className="Modal-footer">
                           <CancelButton onClick={() => { this.setState({ formOpen: false }); }} />
                           <Button onClick={() => { this.setState({ formOpen: false }); }}>
                             Save

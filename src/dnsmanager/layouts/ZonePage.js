@@ -2,6 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 
+import { showModal, hideModal } from '~/actions/modal';
+import EditSOARecord from '../components/EditSOARecord';
 import { setError } from '~/actions/errors';
 import { dnszones } from '~/api';
 import { getObjectByLabelLazily } from '~/api/util';
@@ -27,14 +29,20 @@ export class ZonePage extends Component {
   constructor(props) {
     super(props);
 
-    const currentDNSZone = Object.values(props.dnszones.dnszones).filter(
-      d => d.dnszone === props.params.dnszoneLabel)[0];
-    this.state = {
-      currentDNSZone: {
-        ...currentDNSZone,
-        _groupedRecords: _.groupBy(currentDNSZone._records.records, 'type'),
-      },
+    const updateCurrentDNSZone = (props) => {
+      const currentDNSZone = Object.values(props.dnszones.dnszones).filter(
+        d => d.dnszone === props.params.dnszoneLabel)[0];
+      this.state = {
+        currentDNSZone: {
+          ...currentDNSZone,
+          _groupedRecords: _.groupBy(currentDNSZone._records.records, 'type'),
+        },
+      };
     };
+
+    // currentDNSZone needs to be updated now and every time props changes
+    this.componentWillReceiveProps = updateCurrentDNSZone;
+    updateCurrentDNSZone(props);
   }
 
   async componentDidMount() {
@@ -88,7 +96,7 @@ export class ZonePage extends Component {
     }));
   }
 
-  renderRecords = ({ title, id, rows, labels, keys, noNav = false }) => {
+  renderRecords = ({ title, id, rows, labels, keys, nav, navOnClick, recordOnClick }) => {
     let cardContents = <p>No records created.</p>;
     if (rows && rows.length) {
       cardContents = (
@@ -96,15 +104,19 @@ export class ZonePage extends Component {
           labels={labels}
           keys={keys}
           rows={rows}
+          rowOnClick={recordOnClick}
         />
       );
     }
+
+    const titleSingular =
+      title[title.length - 1] === 's' ? title.substring(0, title.length - 1) : title;
 
     return (
       <Card
         title={title}
         id={id}
-        nav={noNav ? null : <Button>Add Record</Button>}
+        nav={nav || <Button onClick={navOnClick}>Add {titleSingular}</Button>}
       >
         {cardContents}
       </Card>
@@ -141,11 +153,25 @@ export class ZonePage extends Component {
       expire_sec: currentDNSZone.expire_sec || 'Default',
     };
 
+    const renderEditSOARecord = () => {
+      const { dispatch } = this.props;
+      dispatch(showModal(
+        'Edit SOA Record',
+        <EditSOARecord
+          zone={currentDNSZone}
+          dispatch={dispatch}
+          close={() => dispatch(hideModal())}
+        />));
+    };
+
     return (
       <div>
         <header className="main-header main-header--border">
           <div className="container">
-            <h1 title={currentDNSZone.id}>{currentDNSZone.dnszone}</h1>
+            <h1 title={currentDNSZone.id}>
+              {currentDNSZone.display_group ? `${currentDNSZone.display_group} / ` : ''}
+              {currentDNSZone.dnszone}
+            </h1>
           </div>
         </header>
         <div className="container">
@@ -157,7 +183,8 @@ export class ZonePage extends Component {
                      'Expire Time', '']}
             keys={['dnszone', 'soa_email', 'ttl_sec', 'refresh_sec', 'retry_sec', 'expire_sec',
                    'nav']}
-            noNav
+            recordOnClick={renderEditSOARecord}
+            nav={<Button onClick={renderEditSOARecord}>Edit SOA Record</Button>}
           />
           <this.renderRecords
             title="NS Records"

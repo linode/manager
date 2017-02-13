@@ -1,6 +1,7 @@
 export { default as CancelButton } from './CancelButton';
 export { default as Form } from './Form';
 export { default as FormGroup } from './FormGroup';
+export { default as ModalFormGroup } from './ModalFormGroup';
 export { default as FormGroupError } from './FormGroupError';
 export { default as SubmitButton } from './SubmitButton';
 export { default as Input } from './Input';

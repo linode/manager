@@ -44,7 +44,7 @@ export default class ConfigSelectModalBody extends Component {
             </div>
           )}
         </div>
-        <div className="modal-footer">
+        <div className="Modal-footer">
           <CancelButton
             disabled={loading}
             onClick={() => dispatch(hideModal())}
