@@ -7,12 +7,12 @@ export default function Radio(props) {
         <input
           id={props.id}
           type="radio"
-          className="form-control Radio-input"
+          className="Radio-input"
           checked={props.checked}
           onChange={props.onChange}
           value={props.value}
         />
-        {props.label ? <span className="Radio-label">{props.label}</span> : null}
+        {props.label ? <span className="col-form-label Radio-label">{props.label}</span> : null}
       </label>
     </div>
   );

@@ -14,6 +14,7 @@ import { Form,
   RadioInputCombo,
   RadioSelectCombo,
   Checkbox,
+  Checkboxes,
 } from '~/components/form';
 import { ErrorSummary, reduceErrors } from '~/errors';
 import { SubmitButton, CancelButton } from '~/components/form';
@@ -361,11 +362,9 @@ export class EditConfigPage extends Component {
           <h3 className="sub-header">Virtual Machine Mode</h3>
           <div>
             <FormGroup errors={errors} name="virtMode" className="row">
-              <fieldset className="form-group row">
-                <div className="col-sm-2">
-                  <legend>Virtualization mode</legend>
-                </div>
-                <div className="col-sm-6">
+              <label className="col-form-label col-sm-2">Virtualization mode</label>
+              <div className="col-sm-3">
+                <Checkboxes>
                   <Radio
                     checked={virtMode === 'paravirt'}
                     onChange={() => this.setState({ virtMode: 'paravirt' })}
@@ -377,8 +376,8 @@ export class EditConfigPage extends Component {
                     onChange={() => this.setState({ virtMode: 'fullvirt' })}
                     label="Full virtualization"
                   />
-                </div>
-              </fieldset>
+                </Checkboxes>
+              </div>
             </FormGroup>
           </div>
           <h3 className="sub-header">Block Device Assignment</h3>
@@ -425,34 +424,32 @@ export class EditConfigPage extends Component {
             </FormGroup>
             <FormGroup errros={errors} name="runLevel" className="row">
               <fieldset className="form-group">
-                <div className="col-sm-2">
-                  <legend>
-                    Run level
-                  </legend>
-                </div>
+                <label className="col-sm-2 col-form-label">Run level</label>
                 <div className="col-sm-6">
-                  <Radio
-                    checked={runLevel === 'default'}
-                    onChange={() => this.setState({ runLevel: 'default' })}
-                    label="Default"
-                  />
-                  <Radio
-                    id="config-runLevel-single"
-                    checked={runLevel === 'single'}
-                    onChange={() => this.setState({ runLevel: 'single' })}
-                    label="Single-user mode"
-                  />
-                  <Radio
-                    checked={runLevel === 'binbash'}
-                    onChange={() => this.setState({ runLevel: 'binbash' })}
-                    label="init=/bin/bash"
-                  />
+                  <Checkboxes>
+                    <Radio
+                      checked={runLevel === 'default'}
+                      onChange={() => this.setState({ runLevel: 'default' })}
+                      label="Default"
+                    />
+                    <Radio
+                      id="config-runLevel-single"
+                      checked={runLevel === 'single'}
+                      onChange={() => this.setState({ runLevel: 'single' })}
+                      label="Single-user mode"
+                    />
+                    <Radio
+                      checked={runLevel === 'binbash'}
+                      onChange={() => this.setState({ runLevel: 'binbash' })}
+                      label="init=/bin/bash"
+                    />
+                  </Checkboxes>
                 </div>
               </fieldset>
             </FormGroup>
             <FormGroup errors={errors} name="ram_limit" className="row">
               <label className="col-sm-2 col-form-label">Memory limit</label>
-              <div className="input-container col-sm-6">
+              <div className="col-sm-3">
                 <Radio
                   checked={isMaxRam === true}
                   id="config-isMaxRam-true"
@@ -492,24 +489,26 @@ export class EditConfigPage extends Component {
             <div className="form-group row">
               <label className="col-sm-2 col-form-label">root / boot device</label>
               <div className="input-container col-sm-10">
-                <RadioSelectCombo
-                  radioChecked={isCustomRoot === false}
-                  radioOnChange={() => this.setState({
-                    isCustomRoot: false,
-                    rootDevice: '/dev/sda',
-                  })}
-                  radioLabel="Standard"
-                  selectId="config-root-device-select"
-                  selectValue={isCustomRoot ? '/dev/sda' : rootDevice}
-                  selectDisabled={loading || isCustomRoot}
-                  selectOnChange={e => this.setState({ rootDevice: e.target.value })}
-                  selectChildren={diskSlots.map((_, i) =>
-                    <option key={i} value={`/dev/${AVAILABLE_DISK_SLOTS[i]}`}>
-                      /dev/{AVAILABLE_DISK_SLOTS[i]}
-                    </option>
-                  )}
-                />
-                <FormGroup errors={errors} name="root_device" className="row">
+                <FormGroup>
+                  <RadioSelectCombo
+                    radioChecked={isCustomRoot === false}
+                    radioOnChange={() => this.setState({
+                      isCustomRoot: false,
+                      rootDevice: '/dev/sda',
+                    })}
+                    radioLabel="Standard"
+                    selectId="config-root-device-select"
+                    selectValue={isCustomRoot ? '/dev/sda' : rootDevice}
+                    selectDisabled={loading || isCustomRoot}
+                    selectOnChange={e => this.setState({ rootDevice: e.target.value })}
+                    selectChildren={diskSlots.map((_, i) =>
+                      <option key={i} value={`/dev/${AVAILABLE_DISK_SLOTS[i]}`}>
+                        /dev/{AVAILABLE_DISK_SLOTS[i]}
+                      </option>
+                    )}
+                  />
+                </FormGroup>
+                <FormGroup errors={errors} name="root_device">
                   <RadioInputCombo
                     radioId="config-isCustomRoot-true"
                     radioLabel="Custom"

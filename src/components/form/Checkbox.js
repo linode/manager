@@ -12,7 +12,7 @@ export default function Checkbox(props) {
           onChange={props.onChange}
           className="Checkbox-input"
         />
-        {props.label ? <span className="Checkbox-label">{props.label}</span> : null}
+        {props.label ? <span className="col-form-label Checkbox-label">{props.label}</span> : null}
       </label>
     </div>
   );

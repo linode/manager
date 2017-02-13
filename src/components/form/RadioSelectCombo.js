@@ -33,7 +33,7 @@ RadioSelectCombo.propTypes = {
   selectOnChange: PropTypes.func.isRequired,
   selectId: PropTypes.string,
   selectValue: PropTypes.any.isRequired,
-  selectOptions: PropTypes.object,
+  selectOptions: PropTypes.any,
   selectDisabled: PropTypes.bool,
   selectLabel: PropTypes.string,
   selectChildren: PropTypes.any,
