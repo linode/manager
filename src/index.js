@@ -26,8 +26,11 @@ import Weblish from './linodes/linode/layouts/Weblish';
 import NodeBalancers from './nodebalancers';
 import DNSManager from './dnsmanager';
 import Profile from './profile';
-import Styleguide from './styleguide';
+import Users from './users';
+import Billing from './billing';
+import Settings from './settings';
 import Support from './support';
+import Styleguide from './styleguide';
 import { hideModal } from '~/actions/modal';
 import { LoadingRouterContext } from '~/router';
 
@@ -77,6 +80,9 @@ const init = () => {
             {NodeBalancers}
             {DNSManager}
             {Profile}
+            {Users}
+            {Billing}
+            {Settings}
             {Support}
             <Route path="oauth">
               <Route path="callback" component={OAuthCallbackPage} />
