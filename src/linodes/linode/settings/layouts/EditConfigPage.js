@@ -349,7 +349,7 @@ export class EditConfigPage extends Component {
               <div className="col-sm-6">
                 <textarea
                   id="config-comments"
-                  className="form-control"
+                  className="form-control col-sm-3"
                   placeholder="Notes"
                   value={comments}
                   disabled={loading}
@@ -449,25 +449,29 @@ export class EditConfigPage extends Component {
             </FormGroup>
             <FormGroup errors={errors} name="ram_limit" className="row">
               <label className="col-sm-2 col-form-label">Memory limit</label>
-              <div className="col-sm-3">
-                <Radio
-                  checked={isMaxRam === true}
-                  id="config-isMaxRam-true"
-                  onChange={() => this.setState({ isMaxRam: true })}
-                  label={`Maximum (${linode.type.length ? linode.type[0].ram : null} MB)`}
-                />
-                <RadioInputCombo
-                  radioId="config-isMaxRam-false"
-                  radioLabel=""
-                  radioChecked={isMaxRam === false}
-                  radioOnChange={() => this.setState({ isMaxRam: false })}
-                  inputId="config-ramLimit"
-                  inputLabel="MB"
-                  inputDisabled={isMaxRam === true}
-                  inputValue={ramLimit}
-                  inputOnChange={e => this.setState({ ramLimit: e.target.value })}
-                />
-                <FormGroupError errors={errors} name="ram_limit" />
+              <div className="col-sm-10">
+                <div>
+                  <Radio
+                    checked={isMaxRam === true}
+                    id="config-isMaxRam-true"
+                    onChange={() => this.setState({ isMaxRam: true })}
+                    label={`Maximum (${linode.type.length ? linode.type[0].ram : null} MB)`}
+                  />
+                </div>
+                <div>
+                  <RadioInputCombo
+                    radioId="config-isMaxRam-false"
+                    radioLabel=""
+                    radioChecked={isMaxRam === false}
+                    radioOnChange={() => this.setState({ isMaxRam: false })}
+                    inputId="config-ramLimit"
+                    inputLabel="MB"
+                    inputDisabled={isMaxRam === true}
+                    inputValue={ramLimit}
+                    inputOnChange={e => this.setState({ ramLimit: e.target.value })}
+                  />
+                  <FormGroupError errors={errors} name="ram_limit" />
+                </div>
               </div>
             </FormGroup>
             {diskSlots.map(this.renderDiskSlot)}
