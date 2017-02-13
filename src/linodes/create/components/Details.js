@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 
 import { Card } from '~/components';
 import { PrimaryButton } from '~/components/buttons';
-import { Form, FormGroup, FormGroupError, PasswordInput, Input } from '~/components/form';
+import { Form, FormGroup, FormGroupError, PasswordInput, Input, Checkbox } from '~/components/form';
 import { ErrorSummary } from '~/errors';
 
 export default class Details extends Component {
@@ -28,12 +28,13 @@ export default class Details extends Component {
     const { errors, selectedType, selectedDistribution, submitEnabled } = this.props;
 
     const renderBackupsPrice = () => {
+      if (!selectedType) {
+        return '(Select a plan to view the price of backups)';
+      }
+
       const price = (selectedType.backups_price / 100).toFixed(2);
       return `($${price}/mo)`;
     };
-
-    const formDisabled = !(submitEnabled && this.state.label &&
-    (this.state.password || selectedDistribution === 'none'));
 
     return (
       <Card title="Details">
@@ -58,6 +59,7 @@ export default class Details extends Component {
                 type="text"
                 passwordType="offline_fast_hashing_1e10_per_second"
                 onChange={password => this.setState({ password })}
+                disabled={selectedDistribution === 'none'}
               />
               <FormGroupError errors={errors} name="group" />
             </div>
@@ -65,16 +67,12 @@ export default class Details extends Component {
           <FormGroup name="backups" errors={errors} className="row">
             <label htmlFor="backups" className="col-sm-2 col-form-label">Enable backups</label>
             <div className="col-sm-10">
-              <input
+              <Checkbox
                 id="backups"
-                type="checkbox"
                 checked={this.state.enableBackups}
                 onChange={e => this.setState({ enableBackups: e.target.checked })}
-                disabled={selectedType === null}
+                label={renderBackupsPrice()}
               />
-              <span className="EnabledBackupsPrice">
-                {selectedType === null ? '' : renderBackupsPrice()}
-              </span>
             </div>
           </FormGroup>
           <ErrorSummary errors={errors} />
@@ -82,7 +80,7 @@ export default class Details extends Component {
             <div className="offset-sm-2 col-sm-10">
               <PrimaryButton
                 type="submit"
-                disabled={formDisabled}
+                disabled={!submitEnabled}
                 className="LinodesCreateDetails-create"
               >
                 Create Linode{this.state.quantity > 1 ? 's' : null}
