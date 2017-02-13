@@ -4,14 +4,14 @@ export default function ModalShell(props) {
   const { title, open } = props;
   return (
     <div
-      className={`modal-overlay ${open ? 'open' : ''}`}
+      className={`ModalOverlay ${open ? 'ModalOverlay--visible' : ''}`}
       onClick={props.close}
     >
-      <div className="modal" onClick={(e) => e.stopPropagation()}>
-        <header className="modal-header">
+      <div className="Modal" onClick={(e) => e.stopPropagation()}>
+        <header className="Modal-header">
           <h3>{title}</h3>
         </header>
-        <div className="modal-body">{props.children}</div>
+        <div className="Modal-body">{props.children}</div>
       </div>
     </div>
   );

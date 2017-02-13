@@ -51,7 +51,7 @@ export class DeleteModal extends Component {
           <div className="alert alert-danger">
             {errors._.map(error => <div key={error}>{error}</div>)}
           </div> : null}
-        <div className="modal-footer">
+        <div className="Modal-footer">
           <CancelButton
             className="LinodesLinodeSettingsComponentsDeleteModal-cancel"
             disabled={loading}
