@@ -44,15 +44,16 @@ export class SummaryPage extends Component {
   renderEmptySnapshot() {
     return (
       <div className="Backup col-sm-3" key="Snapshot">
-        <div className="Backup-block">
+        <div className="Backup-block Backup-block-snapshot">
           <div className="Backup-title">Snapshot</div>
           <div className="Backup-description Backup-description--muted">
             No snapshots taken
           </div>
-          <Button
-            onClick={() => this.takeSnapshot()}
-          >Take first snapshot</Button>
         </div>
+        <Button
+          className="float-sm-right"
+          onClick={() => this.takeSnapshot()}
+        >Take first snapshot</Button>
       </div>
     );
   }
@@ -106,7 +107,7 @@ export class SummaryPage extends Component {
         <div>
           Select a backup to see details and restore to a Linode.
         </div>
-        <div className="row">
+        <div className="Backup-container row">
           {blocks}
         </div>
         <ErrorSummary errors={errors} />

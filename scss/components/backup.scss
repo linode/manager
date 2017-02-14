@@ -31,6 +31,10 @@
 }
 
 .Backup {
+    &-container {
+        padding: 5px 0;
+    }
+
     &--disabled {
         cursor: not-allowed;
     }
@@ -42,7 +46,6 @@
 
     &-block {
         text-align: center;
-        margin: 13px;
         border: $border;
         color: $black;
         height: 120px;
@@ -50,6 +53,10 @@
         &--clickable:hover {
             @extend .selected;
         }
+    }
+
+    &-block-snapshot {
+        margin-bottom: 15px;
     }
 
     &-title {
