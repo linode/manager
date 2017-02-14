@@ -2,13 +2,11 @@ import React, { PropTypes } from 'react';
 
 export default function FormGroup(props) {
   const { errors, name, crumbs } = props;
-
   let fieldErrors;
   if (errors && name) {
     const crumb = (crumbs ? `.${crumbs}` : '');
     fieldErrors = errors[`${name}${crumb}`];
   }
-
   return (
     <div
       className={`form-group ${

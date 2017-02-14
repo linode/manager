@@ -148,9 +148,7 @@ export const testLinode = {
         id: 12345,
         label: 'Test config',
         comments: 'Test comments',
-        kernel: {
-          id: 'linode/latest_64',
-        },
+        kernel: 'linode/latest_64',
         initrd: '',
         virt_mode: 'paravirt',
         run_level: 'default',

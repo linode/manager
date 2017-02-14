@@ -13,7 +13,7 @@ export default function Input(props) {
 }
 
 Input.propTypes = {
-  value: PropTypes.any.isRequired,
+  value: PropTypes.any,
   placeholder: PropTypes.string,
   disabled: PropTypes.bool,
   type: PropTypes.string,

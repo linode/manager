@@ -2,10 +2,5 @@
     .Checkbox,
     .Radio {
         display: block;
-
-        + .Checkbox,
-        + .Radio {
-            margin-top: -5px;
-        }
     }
 }

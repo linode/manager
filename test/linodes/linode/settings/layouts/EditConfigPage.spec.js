@@ -50,14 +50,14 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
   });
 
   it('calls saveChanges when save is pressed', () => {
-    const page = shallow(
+    const page = mount(
       <EditConfigPage
         {...props}
         dispatch={dispatch}
       />);
 
     const saveChanges = sandbox.stub(page.instance(), 'saveChanges');
-    page.find('.btn-default').simulate('click');
+    page.find('Form').simulate('submit');
     expect(saveChanges.callCount).to.equal(1);
   });
 
@@ -103,9 +103,9 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
         configId: '999999999999999',
       },
     };
-    const path = `/linodes/${testLinode.id}/settings/advanced`;
+    const path = `/linodes/${testLinode.label}/settings/advanced`;
 
-    const page = shallow(
+    const page = mount(
       <EditConfigPage
         {...badProps}
         dispatch={dispatch}
@@ -160,7 +160,7 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
       />
     );
 
-    expect(page.find('#config-device-sda').props().value).to.equal(12345);
+    expect(page.find('#config-device-sda').props().value).to.equal('12345');
   });
 
   describe('UI changes state values', () => {
@@ -208,7 +208,7 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
       expect(kernel.props().value).to.equal('linode/latest');
     });
 
-    it('change distro helper', () => {
+    it('change network helper', () => {
       const page = mount(
         <EditConfigPage
           {...props}
@@ -222,7 +222,7 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
       expect(networkHelper.props().checked).to.equal(!valueWas);
     });
 
-    it('change network helper', () => {
+    it('change distro helper', () => {
       const page = mount(
         <EditConfigPage
           {...props}
@@ -318,7 +318,7 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
 
       const disk = page.find('#config-device-sda');
       disk.simulate('change', { target: { value: 12346 } });
-      expect(disk.props().value).to.equal(12346);
+      expect(disk.props().value).to.equal('12346');
     });
 
     it('change initrd', async () => {
@@ -356,8 +356,8 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
       );
 
       const device = page.find('#config-custom-root-device');
-      device.simulate('change', { target: { value: '/dev/sda/2' } });
       page.find('#config-isCustomRoot-true').simulate('change');
+      device.simulate('change', { target: { value: '/dev/sda/2' } });
       expect(device.props().value).to.equal('/dev/sda/2');
       expect(page.instance().state.isCustomRoot).to.equal(true);
     });
@@ -428,16 +428,15 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
     });
 
     it('commits changes to the API', async () => {
-      const page = mount(
+      const page = await mount(
         <EditConfigPage
           {...props}
           dispatch={dispatch}
         />
       );
-      await page.instance().componentDidMount();
       dispatch.reset();
       const label = page.find('FormGroup');
-      label.find('input').simulate('change', { target: { value: 'new label' } });
+      label.find('#config-label').simulate('change', { target: { value: 'new label' } });
       const isMaxRam = page.find('#config-isMaxRam-true');
       isMaxRam.simulate('change', { target: { value: true } });
       await page.instance().saveChanges(false);
