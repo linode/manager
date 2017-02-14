@@ -5,5 +5,5 @@ export default function Checkboxes(props) {
 }
 
 Checkboxes.propTypes = {
-  children: PropTypes.object.isRequired,
+  children: PropTypes.any.isRequired,
 };
