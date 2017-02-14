@@ -7,6 +7,8 @@ export default function Select(props) {
         id={props.id}
         className="form-control"
         value={props.value.toString()}
+        name={props.name}
+        id={props.id}
         disabled={props.disabled}
         onChange={props.onChange}
       >
@@ -29,6 +31,7 @@ Select.propTypes = {
   value: PropTypes.any.isRequired,
   onChange: PropTypes.func.isRequired,
   id: PropTypes.string,
+  name: PropTypes.string,
   label: PropTypes.string,
   disabled: PropTypes.bool,
   options: PropTypes.array,

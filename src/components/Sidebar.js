@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react';
 
 import { Link } from '~/components/Link';
-import { LOGIN_ROOT } from '~/constants';
 
 export default function Sidebar(props) {
   const { path, links } = props;
@@ -14,9 +13,9 @@ export default function Sidebar(props) {
     ]],
     ['account', [
       { icon: 'user', name: 'My profile', link: '/profile' },
-      { icon: 'users', name: 'Users', link: `${LOGIN_ROOT}/users` },
-      { icon: 'dollar', name: 'Billing', link: `${LOGIN_ROOT}/billing` },
-      { icon: 'gear', name: 'Settings', link: `${LOGIN_ROOT}/settings` },
+      { icon: 'users', name: 'Users', link: '/users' },
+      { icon: 'dollar', name: 'Billing', link: '/billing' },
+      { icon: 'gear', name: 'Settings', link: '/settings' },
       { icon: 'support', name: 'Support', link: '/support' },
     ]],
     ['community', [

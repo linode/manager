@@ -29,7 +29,7 @@ describe('nodebalancers/layouts/CreatePage', () => {
     const fn = dispatch.firstCall.args[0];
     await expectRequest(fn, '/nodebalancers/', undefined, undefined, {
       method: 'POST',
-      body: JSON.stringify({ label: 'my-label', datacenter: 'newark' }),
+      body: { label: 'my-label', datacenter: 'newark' },
     });
 
     expectObjectDeepEquals(dispatch.secondCall.args[0], push('/nodebalancers'));

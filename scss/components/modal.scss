@@ -1,4 +1,4 @@
-.modal-overlay {
+.ModalOverlay {
     display: none;
     z-index: 9999;
     position: fixed;
@@ -8,12 +8,12 @@
     right: 0;
     background: $transparent;
 
-    &.open {
+    &--visible {
         display: initial;
     }
 }
 
-.modal {
+.Modal {
     position: absolute;
     left: 50%;
     width: 500px;
@@ -21,35 +21,40 @@
     margin-top: $main-padding-tb;
     box-shadow: $box-shadow;
     background: $white;
+    display: block;
 
-    .open & {
+    &-header {
+        background: $gray;
+        padding: $main-padding-tb * 2 $main-padding-lr;
+        border-bottom: 1px solid #ccc;
+
+        h3 {
+            position: relative;
+            top: 1px;
+        }
+    }
+
+    &-body {
+        padding: $main-padding-tb $main-padding-lr;
+    }
+
+    &-footer {
+        text-align: right;
+        padding-left: 0;
+        padding-right: 0;
+        padding-bottom: 0;
+        border-top: 0;
+
+        .btn:not(:first-child) {
+            margin-left: 5px;
+        }
+    }
+
+    .Input, .Select {
         display: block;
-        bottom: auto;
-    }
-}
 
-.modal-header {
-    background: $gray;
-    padding: $main-padding-tb $main-padding-lr;
-    border-bottom: 1px solid #ccc;
-    h3 {
-        position: relative;
-        top: 1px;
-    }
-}
-
-.modal-body {
-    padding: $main-padding-tb $main-padding-lr;
-}
-
-.modal-footer {
-    text-align: right;
-    padding-left: 0;
-    padding-right: 0;
-    padding-bottom: 0;
-    border-top: 0;
-
-    .btn:not(:first-child) {
-        margin-left: 5px;
+        .form-control {
+            width: 100%;
+        }
     }
 }
