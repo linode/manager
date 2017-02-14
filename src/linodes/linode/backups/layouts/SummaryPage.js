@@ -44,16 +44,15 @@ export class SummaryPage extends Component {
   renderEmptySnapshot() {
     return (
       <div className="Backup col-sm-3" key="Snapshot">
-        <div className="Backup-block Backup-block-snapshot">
+        <div className="Backup-block">
           <div className="Backup-title">Snapshot</div>
           <div className="Backup-description Backup-description--muted">
             No snapshots taken
           </div>
+          <Button
+            onClick={() => this.takeSnapshot()}
+          >Take first snapshot</Button>
         </div>
-        <Button
-          className="float-sm-right"
-          onClick={() => this.takeSnapshot()}
-        >Take first snapshot</Button>
       </div>
     );
   }
