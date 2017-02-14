@@ -16,8 +16,9 @@ export class RebuildPage extends Component {
   constructor(props) {
     super(props);
     this.getLinode = getLinode.bind(this);
+    const distribution = this.getLinode().distribution;
     this.state = {
-      distribution: this.getLinode().distribution.id,
+      distribution: distribution ? distribution.id : 'linode/Ubuntu16.04LTS',
       password: null,
       errors: {},
       loading: false,

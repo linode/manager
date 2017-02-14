@@ -2,32 +2,39 @@ import React, { Component, PropTypes } from 'react';
 import { distros } from '~/assets';
 
 export default class Distribution extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.onClick = this.onClick.bind(this);
-    this.state = { open: false, version: 0 };
+
+    // In the case of no distribution
+    const vendor = props.vendor || { versions: [] };
+
+    // If this distribution is not selected, default to first version.
+    const selectedIndex = Math.max(0, Object.values(vendor.versions).map(
+      ({ id }) => id).indexOf(props.selected));
+    this.state = { open: false, selectedIndex };
   }
 
   onClick() {
     const { vendor, noDistribution } = this.props;
-    const { version } = this.state;
+    const { selectedIndex } = this.state;
     if (noDistribution) {
       this.props.onClick('none');
       return;
     }
 
-    const selectedVersion = vendor.versions[version];
+    const selectedVersion = vendor.versions[selectedIndex];
     this.props.onClick(selectedVersion.id);
   }
 
   renderLabel() {
     const { vendor, noDistribution } = this.props;
-    const { version } = this.state;
+    const { selectedIndex } = this.state;
     if (noDistribution) {
       return 'Empty';
     }
 
-    const selectedVersion = vendor.versions[version];
+    const selectedVersion = vendor.versions[selectedIndex];
     return selectedVersion.label.replace('Arch Linux', 'Arch');
   }
 
@@ -41,6 +48,7 @@ export default class Distribution extends Component {
     const isSelectedClass = isSelected ? 'LinodesDistribution--isSelected' : '';
     const noDistributionClass = noDistribution ? 'LinodesDistribution--isNoDistribution' : '';
     const isOpenClass = open ? 'LinodesDistribution-dropdown--isOpen' : '';
+
     return (
       <div
         onClick={this.onClick}
@@ -67,7 +75,7 @@ export default class Distribution extends Component {
             <div
               className="LinodesDistribution-menu"
             >
-              {vendor.versions.map(v =>
+              {vendor.versions.map((v, i) =>
                 <button
                   key={v.id}
                   className="LinodesDistribution-version"
@@ -76,7 +84,7 @@ export default class Distribution extends Component {
                     e.preventDefault();
                     e.stopPropagation();
                     onClick(v.id);
-                    this.setState({ open: false, version: vendor.versions.indexOf(v) });
+                    this.setState({ open: false, selectedIndex: i });
                   }}
                 >{v.label}</button>)}
             </div>
