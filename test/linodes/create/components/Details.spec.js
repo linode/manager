@@ -49,6 +49,6 @@ describe('linodes/create/components/Details', () => {
 
   it('pulls backups price from selectedType', () => {
     const details = mount(<Details selectedType={types['linode2048.5']} />);
-    expect(details.find('.EnabledBackupsPrice').text()).to.contain('$2.50');
+    expect(details.find('#backups + span').text()).to.contain('$2.50');
   });
 });

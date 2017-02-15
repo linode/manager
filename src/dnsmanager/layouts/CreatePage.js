@@ -112,8 +112,9 @@ export class CreatePage extends Component {
         children: 'TODO',
       },
     ];
+
     return (
-      <div className="container DNSManager-create">
+      <div className="container create-page">
         <header>
           <h1>Add a zone</h1>
         </header>

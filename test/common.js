@@ -8,7 +8,8 @@ class InternalAssertionError extends Error {
     super();
     const keyPathString = `.${keyPath.join('.')}`;
     this.message =
-      `Expected 'a' at ${keyPathString} (${aVal}) to equal 'b' at ${keyPathString} (${bVal})`;
+      `Expected 'a' at ${keyPathString} (${JSON.stringify(aVal)} : ${typeof aVal}) ` +
+      `to equal 'b' at ${keyPathString} (${JSON.stringify(bVal)} : ${typeof bVal})`;
   }
 }
 
@@ -17,8 +18,8 @@ class InternalAssertionTypeError extends Error {
     super();
     const keyPathString = `.${keyPath.join('.')}`;
     this.message =
-      (`Expected type of 'a' at ${keyPathString} (${aVal}) ` +
-       `to equal type of 'b' at ${keyPathString} (${bVal})`);
+      `Expected type of 'a' at ${keyPathString} (${JSON.stringify(aVal)} : ${typeof aVal}) ` +
+      `to equal type of 'b' at ${keyPathString} (${JSON.stringify(bVal)} : ${typeof bVal})`;
   }
 }
 
@@ -35,8 +36,8 @@ export function expectObjectDeepEquals(initialA, initialB) {
     const { a, path } = stackA.pop();
     const b = stackB.pop();
 
-    if (isObject(a)) {
-      if (!isObject(b)) {
+    if (isObject(a) || isObject(b)) {
+      if (!isObject(a) || !isObject(b)) {
         throw new InternalAssertionTypeError(a, b, path);
       }
 
@@ -99,7 +100,7 @@ export async function expectRequest(fn, path, dispatched = () => {},
         options(o);
       } else {
         Object.keys(options).map(k =>
-          expectObjectDeepEquals(options[k], o[k]));
+          expectObjectDeepEquals(k === 'body' ? JSON.parse(o[k]) : o[k], options[k]));
       }
     }
     for (let i = 0; i < dispatch.callCount; ++i) {

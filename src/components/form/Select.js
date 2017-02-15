@@ -4,8 +4,11 @@ export default function Select(props) {
   return (
     <span className="Select">
       <select
+        id={props.id}
         className="form-control"
-        value={props.value}
+        value={props.value.toString()}
+        name={props.name}
+        id={props.id}
         disabled={props.disabled}
         onChange={props.onChange}
       >
@@ -25,8 +28,10 @@ export default function Select(props) {
 }
 
 Select.propTypes = {
-  value: PropTypes.string.isRequired,
+  value: PropTypes.any.isRequired,
   onChange: PropTypes.func.isRequired,
+  id: PropTypes.string,
+  name: PropTypes.string,
   label: PropTypes.string,
   disabled: PropTypes.bool,
   options: PropTypes.array,
