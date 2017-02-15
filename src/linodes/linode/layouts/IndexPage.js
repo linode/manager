@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
+import { Link } from '~/components/Link';
 import Tabs from '~/components/Tabs';
 import StatusDropdown from '~/linodes/components/StatusDropdown';
 import { setError } from '~/actions/errors';
@@ -50,38 +51,6 @@ export class IndexPage extends Component {
     });
   }
 
-  renderLabel(linode) {
-    const label = linode.group ?
-      <span>{linode.group} / {linode.label}</span> :
-      <span>{linode.label}</span>;
-
-    return (
-      <div className="float-xs-left">
-        <h1 title={linode.id}>{label}</h1>
-      </div>
-    );
-  }
-
-  renderHeader() {
-    const linode = this.getLinode();
-
-    return (
-      <header className="main-header">
-        <div className="container">
-          {this.renderLabel(linode)}
-          <span className="float-xs-right">
-            <StatusDropdown
-              shortcuts={false}
-              linode={linode}
-              short
-              dispatch={this.props.dispatch}
-            />
-          </span>
-        </div>
-      </header>
-    );
-  }
-
   render() {
     const linode = this.getLinode();
     if (!linode) return <span></span>;
@@ -102,7 +71,25 @@ export class IndexPage extends Component {
 
     return (
       <div className="details-page">
-        {this.renderHeader(linode)}
+        <header className="main-header">
+          <div className="container">
+            <div className="float-xs-left">
+              <h1 title={linode.id}>
+                <Link to={`/linodes/${linode.label}`}>
+                  {linode.group ? `${linode.group} / ${linode.label}` : linode.label}
+                </Link>
+              </h1>
+            </div>
+            <span className="float-xs-right">
+              <StatusDropdown
+                shortcuts={false}
+                linode={linode}
+                short
+                dispatch={this.props.dispatch}
+              />
+            </span>
+          </div>
+        </header>
         <div className="main-header-fix"></div>
         <Tabs
           tabs={tabs}

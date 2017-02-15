@@ -56,7 +56,7 @@ describe('linodes/linode/layouts/IndexPage', () => {
   });
 
   it('renders the linode label and group', () => {
-    const page = mount(
+    const page = shallow(
       <IndexPage
         dispatch={dispatch}
         linodes={linodes}
@@ -64,8 +64,10 @@ describe('linodes/linode/layouts/IndexPage', () => {
         detail={detail}
         router={router}
       />);
-    expect(page.contains(<span>{testLinode.group} / {testLinode.label}</span>))
-      .to.equal(true);
+
+    const h1Link = page.find('h1 Link');
+    expect(h1Link.props().to).to.equal(`/linodes/${testLinode.label}`);
+    expect(h1Link.props().children).to.equal(`${testLinode.group} / ${testLinode.label}`);
   });
 
   it('renders the linode label alone when ungrouped', () => {
@@ -77,8 +79,10 @@ describe('linodes/linode/layouts/IndexPage', () => {
         detail={detail}
         router={router}
       />);
-    expect(page.contains(<span>{linodes.linodes[1235].label}</span>))
-      .to.equal(true);
+
+    const h1Link = page.find('h1 Link');
+    expect(h1Link.props().to).to.equal('/linodes/test-linode-1');
+    expect(h1Link.text()).to.equal('test-linode-1');
   });
 
   it('renders a power management dropdown', () => {
