@@ -18,7 +18,7 @@ export default function Forms() {
               <h3>Form Details</h3>
             </div>
             <div className="ExampleForm">
-              <Form>
+              <Form onSubmit={() => {}}>
                 <FormGroup className="row">
                   <label className="col-sm-3 col-form-label">
                     <span className="FormDescriptor FormDescriptor__form-labels">
@@ -144,7 +144,7 @@ export default function Forms() {
             </div>
 
             <div className="ExampleForm">
-              <Form>
+              <Form onSubmit={() => {}}>
                 <span className="FormDescriptor FormDescriptor__form-title">
                   <span className="badge">1</span>
                 </span>
@@ -251,7 +251,10 @@ export default function Forms() {
             >
               <label className="col-sm-3 col-form-label">Validation error:</label>
               <div className="col-sm-9">
-                <Input value="Incorrect input" />
+                <Input
+                  value="Incorrect input"
+                  onChange={() => {}}
+                />
                 <FormGroupError
                   errors={{ validation_error: [{ reason: 'Specific form error' }] }}
                   name="validation_error"
@@ -265,9 +268,12 @@ export default function Forms() {
             >
               <label className="col-sm-3 col-form-label">Multiple validation errors:</label>
               <div className="col-sm-9">
-                <Input value="Incorrect input" />
+                <Input
+                  value="Incorrect input"
+                  onChange={() => {}}
+                />
                 <FormGroupError
-                  errors={{ validation_error: [{ reason: 'Error 1' }, { reason: 'Error 1' }] }}
+                  errors={{ validation_error: [{ reason: 'Error 1. Error 2' }] }}
                   name="validation_error"
                 />
               </div>
@@ -305,25 +311,42 @@ export default function Forms() {
             </div>
             <div className="ExampleForm">
               <div className="ExampleForm-description">
-                <Form>
+                <Form onSubmit={() => {}}>
                   <FormGroup className="row">
                     <label className="col-sm-3 col-form-label">Input (text)</label>
                     <div className="col-sm-9">
-                      <Input placeholder="my-placeholder" />
+                      <Input
+                        placeholder="my-placeholder"
+                        onChange={() => {}}
+                      />
                     </div>
                   </FormGroup>
                   <FormGroup className="row">
                     <label className="col-sm-3 col-form-label">Input (number)</label>
                     <div className="col-sm-9">
-                      <Input type="number" value={1} min={0} max={10} />
+                      <Input
+                        type="number"
+                        value={1}
+                        min={0}
+                        max={10}
+                        onChange={() => {}}
+                      />
                     </div>
                   </FormGroup>
                   <FormGroup className="row">
                     <label className="col-sm-3 col-form-label">Checkbox</label>
                     <div className="col-sm-9">
                       <Checkboxes>
-                        <Checkbox id="example-checkbox-1" label="Checkbox 1" />
-                        <Checkbox id="example-checkbox-2" label="Checkbox 2" />
+                        <Checkbox
+                          id="example-checkbox-1"
+                          label="Checkbox 1"
+                          onChange={() => {}}
+                        />
+                        <Checkbox
+                          id="example-checkbox-2"
+                          label="Checkbox 2"
+                          onChange={() => {}}
+                        />
                       </Checkboxes>
                     </div>
                   </FormGroup>
@@ -331,15 +354,28 @@ export default function Forms() {
                     <label className="col-sm-3 col-form-label">Radio</label>
                     <div className="col-sm-9">
                       <Checkboxes>
-                        <Radio name="example-radiogroup-1" label="Radio 1" />
-                        <Radio name="example-radiogroup-1" label="Radio 2" />
+                        <Radio
+                          name="example-radiogroup-1"
+                          label="Radio 1"
+                          checked={!!1}
+                          onChange={() => {}}
+                        />
+                        <Radio
+                          name="example-radiogroup-1"
+                          label="Radio 2"
+                          checked={!!0}
+                          onChange={() => {}}
+                        />
                       </Checkboxes>
                     </div>
                   </FormGroup>
                   <FormGroup className="row">
                     <label className="col-sm-3 col-form-label">Select</label>
                     <div className="col-sm-9">
-                      <Select value="1">
+                      <Select
+                        value="1"
+                        onChange={() => {}}
+                      >
                         <option value="1">Option 1</option>
                         <option value="2">Option 2</option>
                       </Select>
@@ -356,11 +392,13 @@ export default function Forms() {
                 </div>
                 <div className="ExampleForm">
                   <div className="ExampleForm-description">
-                    <Form>
+                    <Form onSubmit={() => {}}>
                       <FormGroup className="row">
                         <label className="col-sm-3 col-form-label">Password input</label>
                         <div className="col-sm-9">
-                          <PasswordInput />
+                          <PasswordInput
+                            onChange={() => {}}
+                          />
                         </div>
                       </FormGroup>
                       <FormGroup className="row">
@@ -368,12 +406,18 @@ export default function Forms() {
                         <div className="col-sm-9">
                           <CheckboxInputCombo
                             checkboxLabel="Checkbox 1"
+                            checkboxOnChange={() => {}}
+                            checkboxChecked={!!1}
                             inputDisabled
                             inputValue="Input 1"
+                            inputOnChange={() => {}}
                           />
                           <CheckboxInputCombo
                             checkboxLabel="Checkbox 2"
+                            checkboxOnChange={() => {}}
+                            checkboxChecked={false}
                             inputValue="Input 2"
+                            inputOnChange={() => {}}
                           />
                         </div>
                       </FormGroup>
@@ -382,12 +426,18 @@ export default function Forms() {
                         <div className="col-sm-9">
                           <RadioInputCombo
                             radioLabel="Radio 1"
+                            radioOnChange={() => {}}
+                            radioChecked={!!1}
                             inputDisabled
                             inputValue="Input 1"
+                            inputOnChange={() => {}}
                           />
                           <RadioInputCombo
                             radioLabel="Radio 2"
+                            radioOnChange={() => {}}
+                            radioChecked={false}
                             inputValue="Input 2"
+                            inputOnChange={() => {}}
                           />
                         </div>
                       </FormGroup>
@@ -398,9 +448,12 @@ export default function Forms() {
                         <div className="col-sm-9">
                           <CheckboxInputCombo
                             checkboxLabel="Checkbox 1"
+                            checkboxOnChange={() => {}}
+                            checkboxChecked={!!1}
                             inputDisabled
                             inputValue="Input 1"
                             inputLabel="%"
+                            inputOnChange={() => {}}
                           />
                         </div>
                       </FormGroup>
@@ -411,9 +464,12 @@ export default function Forms() {
                         <div className="col-sm-9">
                           <RadioInputCombo
                             radioLabel="Radio 1"
+                            radioOnChange={() => {}}
+                            radioChecked={!!1}
                             inputDisabled
                             inputValue="Input 1"
                             inputLabel="%"
+                            inputOnChange={() => {}}
                           />
                         </div>
                       </FormGroup>
@@ -422,14 +478,22 @@ export default function Forms() {
                         <div className="col-sm-9">
                           <RadioSelectCombo
                             radioLabel="Radio 1"
+                            radioOnChange={() => {}}
+                            radioChecked={!!1}
                             inputDisabled
                             inputValue="Input 1"
+                            selectValue="1"
                             selectOptions={[{ value: '1', label: 'Option 1' }]}
+                            selectOnChange={() => {}}
                           />
                           <RadioSelectCombo
                             radioLabel="Radio 2"
+                            radioOnChange={() => {}}
+                            radioChecked={false}
+                            selectValue="1"
                             selectOptions={[{ value: '1', label: 'Option 2' },
-                                            { value: '2', label: 'Option 2.1' }]}
+                              { value: '2', label: 'Option 2.1' }]}
+                            selectOnChange={() => {}}
                           />
                         </div>
                       </FormGroup>

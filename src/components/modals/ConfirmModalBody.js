@@ -22,7 +22,7 @@ export default class ConfirmModalBody extends Component {
         <p>
           {this.props.children}
         </p>
-        <div className="modal-footer">
+        <div className="Modal-footer">
           <CancelButton disabled={loading} onClick={onCancel} />
           <SubmitButton
             disabled={loading}

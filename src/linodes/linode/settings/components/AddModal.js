@@ -181,7 +181,7 @@ export class AddModal extends Component {
             <FormGroupError errors={errors} name="size" />
           </div>
         </FormGroup>
-        <div className="modal-footer">
+        <div className="Modal-footer">
           <CancelButton
             className="LinodesLinodeSettingsComponentsAddModal-cancel"
             disabled={loading}
