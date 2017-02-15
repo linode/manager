@@ -19,21 +19,21 @@ export default function NewSlaveZone(props) {
         </div>
         <FormGroupError errors={props.errors} name="dnszone" />
       </FormGroup>
-      <FormGroup errors={props.errors} name="masters" className="row">
+      <FormGroup errors={props.errors} name="master_ips" className="row">
         <label className="col-sm-2 col-form-label">Masters:</label>
         <div className="col-sm-6">
           <textarea
-            value={props.masters}
+            value={props.master_ips.length ? props.master_ips.join(';') : ''}
             className="form-control"
-            placeholder="98.139.180.149, 98.139.180.150"
-            onChange={props.onChange('masters')}
+            placeholder="127.0.0.1;255.255.255.1"
+            onChange={props.onChange('master_ips')}
           />
           <small className="text-muted">
             The IP addresses of the master DNS servers for this<br />
             zone must be semicolon or new line delimited.
           </small>
         </div>
-        <FormGroupError errors={props.errors} name="masters" />
+        <FormGroupError errors={props.errors} name="master_ips" />
       </FormGroup>
       <div className="row">
         <div className="col-sm-2"></div>
@@ -51,7 +51,7 @@ export default function NewSlaveZone(props) {
 NewSlaveZone.propTypes = {
   onChange: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
-  masters: PropTypes.string.isRequired,
+  master_ips: PropTypes.any.isRequired,
   dnszone: PropTypes.string.isRequired,
   loading: PropTypes.bool.isRequired,
   errors: PropTypes.any.isRequired,

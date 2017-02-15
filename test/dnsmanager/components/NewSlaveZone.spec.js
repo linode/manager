@@ -15,51 +15,51 @@ describe('dnsmanager/components/NewSlaveZone', () => {
   it('renders data', () => {
     const component = shallow(
       <NewSlaveZone
-        masters="98.139.180.149"
+        master_ips={['127.0.0.1']}
         dnszone="my-domain.net"
         onSubmit={() => {}}
         onChange={() => {}}
-        loading=false
-        errors={}
+        loading={false}
+        errors={{}}
       />
     );
 
     expect(component.find('Input').at(0).props().value).to.equal('my-domain.net');
-    expect(component.find('textarea').at(0).props().value).to.equal('98.139.180.149');
+    expect(component.find('textarea').at(0).props().value).to.equal('127.0.0.1');
   });
 
   it('calls onChange when fields change', () => {
     const onChange = sandbox.stub();
     shallow(
       <NewSlaveZone
-        masters="98.139.180.149"
+        master_ips={['98.139.180.149']}
         dnszone=""
         onSubmit={() => {}}
         onChange={onChange}
-        loading=false
-        errors={}
+        loading={false}
+        errors={{}}
       />
     );
 
     expect(onChange.calledTwice).to.equal(true);
     expect(onChange.firstCall.args[0]).to.equal('dnszone');
-    expect(onChange.secondCall.args[0]).to.equal('masters');
+    expect(onChange.secondCall.args[0]).to.equal('master_ips');
   });
 
   it('calls onSubmit when form is submitted', () => {
     const onSubmit = sandbox.spy();
     const component = shallow(
       <NewSlaveZone
-        masters="98.139.180.149"
+        master_ips={['98.139.180.149']}
         dnszone=""
         onSubmit={onSubmit}
         onChange={() => {}}
-        loading=false
-        errors={}
+        loading={false}
+        errors={{}}
       />
     );
 
-    component.find('form').simulate('submit');
+    component.find('Form').simulate('submit');
     expect(onSubmit.calledOnce).to.equal(true);
   });
 });

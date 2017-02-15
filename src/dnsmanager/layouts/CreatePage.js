@@ -13,10 +13,8 @@ import { reduceErrors } from '~/errors';
 export class CreatePage extends Component {
   constructor(props) {
     super(props);
-    this.addMasterZone = this.addMasterZone.bind(this);
-    this.newMasterZoneChange = this.newMasterZoneChange.bind(this);
-    this.addSlaveZone = this.addSlaveZone.bind(this);
-    this.newSlaveZoneChange = this.newSlaveZoneChange.bind(this);
+    this.addZone = this.addZone.bind(this);
+    this.zoneStateChange = this.zoneStateChange.bind(this);
     this.state = {
       tabIndex: 0,
       loading: false,
@@ -29,7 +27,7 @@ export class CreatePage extends Component {
       },
       newSlaveZone: {
         dnszone: '',
-        masters: '',
+        master_ips: [],
         type: 'slave',
         loading: false,
         errors: {},
@@ -43,66 +41,35 @@ export class CreatePage extends Component {
     dispatch(setTitle('Add a zone'));
   }
 
-  async addMasterZone(e, tab) {
-    console.log('group', tab);
+  async addZone(e, tab) {
     e.preventDefault();
     const { dispatch } = this.props;
-    this.setState({ newMasterZone: {
-      ...this.state.newMasterZone,
+    this.setState({ [tab]: {
+      ...this.state[tab],
       loading: true,
-    }});
+    } });
     try {
-      await dispatch(dnszones.post(this.state.newMasterZone));
+      await dispatch(dnszones.post(this.state[tab]));
       await dispatch(push('/dnsmanager'));
     } catch (response) {
       const errors = await reduceErrors(response);
-      console.log(errors);
-      console.log(this.state);
-      this.setState({ newMasterZone: {
-        ...this.state.newMasterZone,
+      this.setState({ [tab]: {
+        ...this.state[tab],
         loading: false,
         errors,
-      }});
-    }
-  }
-
-  newMasterZoneChange(field) {
-    return e => {
-      this.setState({ newMasterZone: {
-        ...this.state.newMasterZone,
-        [field]: e.target.value,
       } });
-    };
-  }
-
-  async addSlaveZone(e) {
-    e.preventDefault();
-    const { dispatch } = this.props;
-
-    this.setState({ newSlaveZone: {
-      ...this.state.newSlaveZone,
-      loading: true,
-    }});
-    try {
-      await dispatch(dnszones.post(this.state.newSlaveZone));
-      await dispatch(push('/dnsmanager'));
-    } catch (response) {
-      const errors = await reduceErrors(response);
-      console.log(this.state);
-      this.setState({ newSlaveZone: {
-        ...this.state.newSlaveZone,
-        loading: false,
-        errors,
-      }});
-     
     }
   }
 
-  newSlaveZoneChange(field) {
+  zoneStateChange(field, tab) {
     return e => {
-      this.setState({ newSlaveZone: {
-        ...this.state.newSlaveZone,
-        [field]: e.target.value,
+      let value = e.target.value;
+      if (field === 'master_ips') {
+        value = value.split(';');
+      }
+      this.setState({ [tab]: {
+        ...this.state[tab],
+        [field]: value,
       } });
     };
   }
@@ -132,8 +99,8 @@ export class CreatePage extends Component {
               <TabPanel>
                 <section className="subtab-content-container">
                   <NewMasterZone
-                    onSubmit={(e) => this.addMasterZone(e, 'newMasterZone')}
-                    onChange={(e) => this.newMasterZoneChange(e, 'newMasterZone')}
+                    onSubmit={(e) => this.addZone(e, 'newMasterZone')}
+                    onChange={(e) => this.zoneStateChange(e, 'newMasterZone')}
                     soa_email={this.state.newMasterZone.soa_email}
                     dnszone={this.state.newMasterZone.dnszone}
                     loading={this.state.newMasterZone.loading}
@@ -144,9 +111,9 @@ export class CreatePage extends Component {
               <TabPanel>
                 <section className="subtab-content-container">
                   <NewSlaveZone
-                    onSubmit={this.addSlaveZone}
-                    onChange={this.newSlaveZoneChange}
-                    masters={this.state.newSlaveZone.masters}
+                    onSubmit={(e) => this.addZone(e, 'newSlaveZone')}
+                    onChange={(e) => this.zoneStateChange(e, 'newSlaveZone')}
+                    master_ips={this.state.newSlaveZone.master_ips}
                     dnszone={this.state.newSlaveZone.dnszone}
                     loading={this.state.newSlaveZone.loading}
                     errors={this.state.newSlaveZone.errors}

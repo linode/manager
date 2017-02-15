@@ -19,8 +19,8 @@ describe('dnsmanager/components/NewMasterZone', () => {
         dnszone="my-domain.net"
         onSubmit={() => {}}
         onChange={() => {}}
-        loading=false
-        errors={}
+        loading={false}
+        errors={{}}
       />
     );
 
@@ -36,8 +36,8 @@ describe('dnsmanager/components/NewMasterZone', () => {
         dnszone=""
         onSubmit={() => {}}
         onChange={onChange}
-        loading=false
-        errors={}
+        loading={false}
+        errors={{}}
       />
     );
 
@@ -54,12 +54,12 @@ describe('dnsmanager/components/NewMasterZone', () => {
         dnszone=""
         onSubmit={onSubmit}
         onChange={() => {}}
-        loading=false
-        errors={}
+        loading={false}
+        errors={{}}
       />
     );
 
-    component.find('form').simulate('submit');
+    component.find('Form').simulate('submit');
     expect(onSubmit.calledOnce).to.equal(true);
   });
 });
