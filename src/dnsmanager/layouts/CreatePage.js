@@ -1,8 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { push } from 'react-router-redux';
 
+import Card from '~/components/Card';
+import Tabs from '~/components/Tabs';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 import { dnszones } from '~/api';
@@ -75,64 +76,55 @@ export class CreatePage extends Component {
   }
 
   render() {
+    const tabs = [
+      {
+        name: 'New Master',
+        children: (
+          <NewMasterZone
+            onSubmit={(e) => this.addZone(e, 'newMasterZone')}
+            onChange={(e) => this.zoneStateChange(e, 'newMasterZone')}
+            soa_email={this.state.newMasterZone.soa_email}
+            dnszone={this.state.newMasterZone.dnszone}
+            loading={this.state.newMasterZone.loading}
+            errors={this.state.newMasterZone.errors}
+          />
+        ),
+      },
+      {
+        name: 'New Slave',
+        children: (
+          <NewSlaveZone
+            onSubmit={(e) => this.addZone(e, 'newSlaveZone')}
+            onChange={(e) => this.zoneStateChange(e, 'newSlaveZone')}
+            master_ips={this.state.newSlaveZone.master_ips}
+            dnszone={this.state.newSlaveZone.dnszone}
+            loading={this.state.newSlaveZone.loading}
+            errors={this.state.newSlaveZone.errors}
+          />
+        ),
+      },
+      {
+        name: 'Import',
+        children: 'TODO',
+      },
+      {
+        name: 'Clone',
+        children: 'TODO',
+      },
+    ];
     return (
       <div className="container DNSManager-create">
         <header>
           <h1>Add a zone</h1>
         </header>
-        <section className="card">
-          <header>
-            <h2>Source</h2>
-          </header>
-          <div className="react-tabs">
-            <Tabs
-              onSelect={index => this.setState({ tabIndex: index })}
-              selectedIndex={this.state.tabIndex}
-              className="Tabs SubTabs"
-            >
-              <TabList>
-                <Tab>New master</Tab>
-                <Tab>New slave</Tab>
-                <Tab>Import</Tab>
-                <Tab>Clone</Tab>
-              </TabList>
-              <TabPanel>
-                <section className="subtab-content-container">
-                  <NewMasterZone
-                    onSubmit={(e) => this.addZone(e, 'newMasterZone')}
-                    onChange={(e) => this.zoneStateChange(e, 'newMasterZone')}
-                    soa_email={this.state.newMasterZone.soa_email}
-                    dnszone={this.state.newMasterZone.dnszone}
-                    loading={this.state.newMasterZone.loading}
-                    errors={this.state.newMasterZone.errors}
-                  />
-                </section>
-              </TabPanel>
-              <TabPanel>
-                <section className="subtab-content-container">
-                  <NewSlaveZone
-                    onSubmit={(e) => this.addZone(e, 'newSlaveZone')}
-                    onChange={(e) => this.zoneStateChange(e, 'newSlaveZone')}
-                    master_ips={this.state.newSlaveZone.master_ips}
-                    dnszone={this.state.newSlaveZone.dnszone}
-                    loading={this.state.newSlaveZone.loading}
-                    errors={this.state.newSlaveZone.errors}
-                  />
-                </section>
-              </TabPanel>
-              <TabPanel>
-                <section>
-                  TODO
-                </section>
-              </TabPanel>
-              <TabPanel>
-                <section>
-                  TODO
-                </section>
-              </TabPanel>
-            </Tabs>
-          </div>
-        </section>
+        <Card title="Source">
+          <Tabs
+            tabs={tabs}
+            onClick={(_, index) => this.setState({ tabIndex: index })}
+            selected={this.state.tabIndex}
+            isSubTabs
+          />
+        </Card>
       </div>
     );
   }
