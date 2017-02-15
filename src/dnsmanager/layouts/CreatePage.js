@@ -1,8 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { push } from 'react-router-redux';
 
+import Card from '~/components/Card';
+import Tabs from '~/components/Tabs';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 import { dnszones } from '~/api';
@@ -46,55 +47,45 @@ export class CreatePage extends Component {
   }
 
   render() {
+    const tabs = [
+      {
+        name: 'New Master',
+        children: (
+          <NewMasterZone
+            onSubmit={this.addMasterZone}
+            onChange={this.newMasterZoneChange}
+            soa_email={this.state.newMasterZone.soa_email}
+            dnszone={this.state.newMasterZone.dnszone}
+          />
+        ),
+      },
+      {
+        name: 'New Slave',
+        children: 'TODO',
+      },
+      {
+        name: 'Import',
+        children: 'TODO',
+      },
+      {
+        name: 'Clone',
+        children: 'TODO',
+      },
+    ];
+
     return (
-      <div className="container DNSManager-create">
+      <div className="container create-page">
         <header>
           <h1>Add a zone</h1>
         </header>
-        <section className="card">
-          <header>
-            <h2>Source</h2>
-          </header>
-          <div className="react-tabs">
-            <Tabs
-              onSelect={index => this.setState({ tabIndex: index })}
-              selectedIndex={this.state.tabIndex}
-              className="Tabs SubTabs"
-            >
-              <TabList>
-                <Tab>New master</Tab>
-                <Tab>New slave</Tab>
-                <Tab>Import</Tab>
-                <Tab>Clone</Tab>
-              </TabList>
-              <TabPanel>
-                <section className="subtab-content-container">
-                  <NewMasterZone
-                    onSubmit={this.addMasterZone}
-                    onChange={this.newMasterZoneChange}
-                    soa_email={this.state.newMasterZone.soa_email}
-                    dnszone={this.state.newMasterZone.dnszone}
-                  />
-                </section>
-              </TabPanel>
-              <TabPanel>
-                <section>
-                  TODO
-                </section>
-              </TabPanel>
-              <TabPanel>
-                <section>
-                  TODO
-                </section>
-              </TabPanel>
-              <TabPanel>
-                <section>
-                  TODO
-                </section>
-              </TabPanel>
-            </Tabs>
-          </div>
-        </section>
+        <Card title="Source">
+          <Tabs
+            tabs={tabs}
+            onClick={index => this.setState({ tabIndex: index })}
+            selected={this.state.tabIndex}
+            isSubTabs
+          />
+        </Card>
       </div>
     );
   }

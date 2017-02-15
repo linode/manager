@@ -46,5 +46,5 @@ Tabs.propTypes = {
 
 Tabs.defaultProps = {
   className: '',
-  isSubtab: false,
+  isSubTabs: false,
 };
