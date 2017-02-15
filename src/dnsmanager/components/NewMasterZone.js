@@ -1,9 +1,13 @@
 import React, { PropTypes } from 'react';
+import {
+  FormGroup, FormGroupError, Form, SubmitButton,
+} from '~/components/form';
+import { ErrorSummary } from '~/errors';
 
 export default function NewMasterZone(props) {
   return (
-    <form onSubmit={props.onSubmit}>
-      <div className="form-group row">
+    <Form onSubmit={props.onSubmit}>
+      <FormGroup errors={props.errors} name="dnszone" className="row">
         <label className="col-sm-2 col-form-label">Domain:</label>
         <div className="col-sm-6">
           <input
@@ -13,8 +17,9 @@ export default function NewMasterZone(props) {
             onChange={props.onChange('dnszone')}
           />
         </div>
-      </div>
-      <div className="form-group row">
+        <FormGroupError errors={props.errors} name="dnszone" />
+      </FormGroup>
+      <FormGroup errors={props.errors} name="soa_email" className="row">
         <label className="col-sm-2 col-form-label">SOA email:</label>
         <div className="col-sm-6">
           <input
@@ -24,14 +29,18 @@ export default function NewMasterZone(props) {
             onChange={props.onChange('soa_email')}
           />
         </div>
-      </div>
+        <FormGroupError errors={props.errors} name="soa_email" />
+      </FormGroup>
       <div className="row">
         <div className="col-sm-2"></div>
         <div className="col-sm-6">
-          <button className="btn btn-default">Create</button>
+          <SubmitButton
+            disabled={props.loading}
+          >Create</SubmitButton>
         </div>
       </div>
-    </form>
+      <ErrorSummary errors={props.errors} />
+    </Form>
   );
 }
 
@@ -40,4 +49,6 @@ NewMasterZone.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   soa_email: PropTypes.string.isRequired,
   dnszone: PropTypes.string.isRequired,
+  loading: PropTypes.bool.isRequired,
+  errors: PropTypes.any.isRequired,
 };

@@ -8,6 +8,7 @@ import { setTitle } from '~/actions/title';
 import { dnszones } from '~/api';
 import NewMasterZone from '../components/NewMasterZone';
 import NewSlaveZone from '../components/NewSlaveZone';
+import { reduceErrors } from '~/errors';
 
 export class CreatePage extends Component {
   constructor(props) {
@@ -18,15 +19,20 @@ export class CreatePage extends Component {
     this.newSlaveZoneChange = this.newSlaveZoneChange.bind(this);
     this.state = {
       tabIndex: 0,
+      loading: false,
       newMasterZone: {
         dnszone: '',
         soa_email: props.email,
         type: 'master',
+        loading: false,
+        errors: {},
       },
       newSlaveZone: {
         dnszone: '',
         masters: '',
         type: 'slave',
+        loading: false,
+        errors: {},
       },
     };
   }
@@ -40,8 +46,15 @@ export class CreatePage extends Component {
   async addMasterZone(e) {
     e.preventDefault();
     const { dispatch } = this.props;
-    await dispatch(dnszones.post(this.state.newMasterZone));
-    await dispatch(push('/dnsmanager'));
+    this.setState({ newMasterZone: { loading: true }});
+    try {
+      await dispatch(dnszones.post(this.state.newMasterZone));
+      await dispatch(push('/dnsmanager'));
+    } catch (response) {
+      const errors = await reduceErrors(response);
+      this.setState({ errors });
+    }
+    this.setState({ newMasterZone: { loading: false }});
   }
 
   newMasterZoneChange(field) {
@@ -56,8 +69,16 @@ export class CreatePage extends Component {
   async addSlaveZone(e) {
     e.preventDefault();
     const { dispatch } = this.props;
-    await dispatch(dnszones.post(this.state.newSlaveZone));
-    await dispatch(push('/dnsmanager'));
+
+    this.setState({ newSlaveZone: { loading: true }});
+    try {
+      await dispatch(dnszones.post(this.state.newSlaveZone));
+      await dispatch(push('/dnsmanager'));
+    } catch (response) {
+      const errors = await reduceErrors(response);
+      this.setState({ errors });
+    }
+    this.setState({ newSlaveZone: { loading: false }});
   }
 
   newSlaveZoneChange(field) {
@@ -98,6 +119,8 @@ export class CreatePage extends Component {
                     onChange={this.newMasterZoneChange}
                     soa_email={this.state.newMasterZone.soa_email}
                     dnszone={this.state.newMasterZone.dnszone}
+                    loading={this.state.newMasterZone.loading}
+                    errors={this.state.newMasterZone.errors}
                   />
                 </section>
               </TabPanel>
@@ -108,6 +131,8 @@ export class CreatePage extends Component {
                     onChange={this.newSlaveZoneChange}
                     masters={this.state.newSlaveZone.masters}
                     dnszone={this.state.newSlaveZone.dnszone}
+                    loading={this.state.newSlaveZone.loading}
+                    errors={this.state.newSlaveZone.errors}
                   />
                 </section>
               </TabPanel>
