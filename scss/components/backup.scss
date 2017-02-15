@@ -73,4 +73,8 @@
             color: $default-gray;
         }
     }
+
+    &-empty-snapshot &-description {
+        padding: 22px 0 0 0;
+    }
 }

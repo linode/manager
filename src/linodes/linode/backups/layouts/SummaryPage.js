@@ -43,7 +43,7 @@ export class SummaryPage extends Component {
 
   renderEmptySnapshot() {
     return (
-      <div className="Backup col-sm-3" key="Snapshot">
+      <div className="Backup Backup-empty-snapshot col-sm-3" key="Snapshot">
         <div className="Backup-block">
           <div className="Backup-title">Snapshot</div>
           <div className="Backup-description Backup-description--muted">
