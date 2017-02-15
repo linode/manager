@@ -19,11 +19,13 @@ describe('dnsmanager/components/NewMasterZone', () => {
         dnszone="my-domain.net"
         onSubmit={() => {}}
         onChange={() => {}}
+        loading=false
+        errors={}
       />
     );
 
-    expect(component.find('input').at(0).props().value).to.equal('my-domain.net');
-    expect(component.find('input').at(1).props().value).to.equal('test@mail.net');
+    expect(component.find('Input').at(0).props().value).to.equal('my-domain.net');
+    expect(component.find('Input').at(1).props().value).to.equal('test@mail.net');
   });
 
   it('calls onChange when fields change', () => {
@@ -34,6 +36,8 @@ describe('dnsmanager/components/NewMasterZone', () => {
         dnszone=""
         onSubmit={() => {}}
         onChange={onChange}
+        loading=false
+        errors={}
       />
     );
 
@@ -50,6 +54,8 @@ describe('dnsmanager/components/NewMasterZone', () => {
         dnszone=""
         onSubmit={onSubmit}
         onChange={() => {}}
+        loading=false
+        errors={}
       />
     );
 

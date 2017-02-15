@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import {
-  FormGroup, FormGroupError, Form, SubmitButton,
+  FormGroup, FormGroupError, Form, SubmitButton, Input,
 } from '~/components/form';
 import { ErrorSummary } from '~/errors';
 
@@ -10,8 +10,7 @@ export default function NewMasterZone(props) {
       <FormGroup errors={props.errors} name="dnszone" className="row">
         <label className="col-sm-2 col-form-label">Domain:</label>
         <div className="col-sm-6">
-          <input
-            className="form-control"
+          <Input
             placeholder="mydomain.net"
             value={props.dnszone}
             onChange={props.onChange('dnszone')}
@@ -22,10 +21,9 @@ export default function NewMasterZone(props) {
       <FormGroup errors={props.errors} name="soa_email" className="row">
         <label className="col-sm-2 col-form-label">SOA email:</label>
         <div className="col-sm-6">
-          <input
+          <Input
             type="email"
             value={props.soa_email}
-            className="form-control"
             onChange={props.onChange('soa_email')}
           />
         </div>

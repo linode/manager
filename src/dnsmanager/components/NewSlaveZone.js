@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import {
-  FormGroup, FormGroupError, Form, SubmitButton,
+  FormGroup, FormGroupError, Form, SubmitButton, Input,
 } from '~/components/form';
 import { ErrorSummary } from '~/errors';
 
@@ -10,7 +10,7 @@ export default function NewSlaveZone(props) {
       <FormGroup errors={props.errors} name="dnszone" className="row">
         <label className="col-sm-2 col-form-label">Domain:</label>
         <div className="col-sm-6">
-          <input
+          <Input
             className="form-control"
             value={props.dnszone}
             placeholder="mydomain.net"

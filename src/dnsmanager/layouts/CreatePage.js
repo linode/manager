@@ -43,18 +43,27 @@ export class CreatePage extends Component {
     dispatch(setTitle('Add a zone'));
   }
 
-  async addMasterZone(e) {
+  async addMasterZone(e, tab) {
+    console.log('group', tab);
     e.preventDefault();
     const { dispatch } = this.props;
-    this.setState({ newMasterZone: { loading: true }});
+    this.setState({ newMasterZone: {
+      ...this.state.newMasterZone,
+      loading: true,
+    }});
     try {
       await dispatch(dnszones.post(this.state.newMasterZone));
       await dispatch(push('/dnsmanager'));
     } catch (response) {
       const errors = await reduceErrors(response);
-      this.setState({ errors });
+      console.log(errors);
+      console.log(this.state);
+      this.setState({ newMasterZone: {
+        ...this.state.newMasterZone,
+        loading: false,
+        errors,
+      }});
     }
-    this.setState({ newMasterZone: { loading: false }});
   }
 
   newMasterZoneChange(field) {
@@ -70,15 +79,23 @@ export class CreatePage extends Component {
     e.preventDefault();
     const { dispatch } = this.props;
 
-    this.setState({ newSlaveZone: { loading: true }});
+    this.setState({ newSlaveZone: {
+      ...this.state.newSlaveZone,
+      loading: true,
+    }});
     try {
       await dispatch(dnszones.post(this.state.newSlaveZone));
       await dispatch(push('/dnsmanager'));
     } catch (response) {
       const errors = await reduceErrors(response);
-      this.setState({ errors });
+      console.log(this.state);
+      this.setState({ newSlaveZone: {
+        ...this.state.newSlaveZone,
+        loading: false,
+        errors,
+      }});
+     
     }
-    this.setState({ newSlaveZone: { loading: false }});
   }
 
   newSlaveZoneChange(field) {
@@ -115,8 +132,8 @@ export class CreatePage extends Component {
               <TabPanel>
                 <section className="subtab-content-container">
                   <NewMasterZone
-                    onSubmit={this.addMasterZone}
-                    onChange={this.newMasterZoneChange}
+                    onSubmit={(e) => this.addMasterZone(e, 'newMasterZone')}
+                    onChange={(e) => this.newMasterZoneChange(e, 'newMasterZone')}
                     soa_email={this.state.newMasterZone.soa_email}
                     dnszone={this.state.newMasterZone.dnszone}
                     loading={this.state.newMasterZone.loading}

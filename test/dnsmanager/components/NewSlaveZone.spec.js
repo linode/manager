@@ -19,10 +19,12 @@ describe('dnsmanager/components/NewSlaveZone', () => {
         dnszone="my-domain.net"
         onSubmit={() => {}}
         onChange={() => {}}
+        loading=false
+        errors={}
       />
     );
 
-    expect(component.find('input').at(0).props().value).to.equal('my-domain.net');
+    expect(component.find('Input').at(0).props().value).to.equal('my-domain.net');
     expect(component.find('textarea').at(0).props().value).to.equal('98.139.180.149');
   });
 
@@ -34,6 +36,8 @@ describe('dnsmanager/components/NewSlaveZone', () => {
         dnszone=""
         onSubmit={() => {}}
         onChange={onChange}
+        loading=false
+        errors={}
       />
     );
 
@@ -50,6 +54,8 @@ describe('dnsmanager/components/NewSlaveZone', () => {
         dnszone=""
         onSubmit={onSubmit}
         onChange={() => {}}
+        loading=false
+        errors={}
       />
     );
 
