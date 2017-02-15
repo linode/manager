@@ -23,12 +23,12 @@ export function getObjectByLabelLazily(pluralName, label, labelName = 'label') {
       headers: {
         'X-Filter': JSON.stringify({ [labelName]: label }),
       },
-    })))[pluralName][0];
+    })));
 
-    if (!response) {
+    if (!response.total_results) {
       throw new Error404();
     }
 
-    return response;
+    return response[pluralName][0];
   };
 }
