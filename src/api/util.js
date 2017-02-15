@@ -1,8 +1,13 @@
 import * as api from '~/api';
 
-class Error404 extends Error {
-  statusCode = 404
+// Extra cruft involving constructor / prototypes is for any `new Error404`s  to be shown as
+// instanceof Error404:
+// http://stackoverflow.com/a/38020283/1507139
+export function Error404() {
+  this.statusCode = 404;
 }
+
+Error404.prototype = new Error();
 
 export function getObjectByLabelLazily(pluralName, label, labelName = 'label') {
   return async (dispatch, getState) => {
