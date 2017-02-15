@@ -31,6 +31,10 @@
 }
 
 .Backup {
+    &-container {
+        padding: 5px 0;
+    }
+
     &--disabled {
         cursor: not-allowed;
     }
@@ -42,27 +46,35 @@
 
     &-block {
         text-align: center;
-        margin: 13px;
         border: $border;
         color: $black;
-        height: 120px;
+        height: 140px;
 
         &--clickable:hover {
             @extend .selected;
+        }
+
+        button {
+            margin-top: 5px;
         }
     }
 
     &-title {
         background-color: $light-gray;
         border-bottom: $border;
+        height: 30px;
         padding: 3px 0px 3px 0px;
     }
 
     &-description {
-        margin: 29px 0px 15px 0px;
+        padding: 38px 0 0 0;
 
         &--muted {
             color: $default-gray;
         }
+    }
+
+    &-emptySnapshot &-description {
+        padding: 22px 0 0 0;
     }
 }
