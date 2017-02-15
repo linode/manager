@@ -3,7 +3,9 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 
 import { showModal, hideModal } from '~/actions/modal';
+import { formatDNSSeconds } from '../components/SelectDNSSeconds';
 import EditSOARecord from '../components/EditSOARecord';
+import EditNSRecord from '../components/EditNSRecord';
 import { setError } from '~/actions/errors';
 import { dnszones } from '~/api';
 import { getObjectByLabelLazily } from '~/api/util';
@@ -68,7 +70,15 @@ export class ZonePage extends Component {
 
     return nsRecords.map((record, i) => ({
       ...record,
-      nav: <Button disabled={i < NAME_SERVERS.length}>Delete</Button>,
+      nav: i < NAME_SERVERS.length ? <small className="text-muted">Read-only</small> : (
+        <div>
+          <Button
+            onClick={this.renderEditNSRecord('Edit NS Record', record.id)}
+            className="btn-secondary"
+          >Edit</Button>
+          <Button className="btn-secondary">Delete</Button>
+        </div>
+      ),
     }));
   }
 
@@ -96,15 +106,14 @@ export class ZonePage extends Component {
     }));
   }
 
-  renderRecords = ({ title, id, rows, labels, keys, nav, navOnClick, recordOnClick }) => {
+  renderRecords = ({ title, id, records, labels, keys, nav, navOnClick }) => {
     let cardContents = <p>No records created.</p>;
-    if (rows && rows.length) {
+    if (records && records.length) {
       cardContents = (
         <SecondaryTable
           labels={labels}
           keys={keys}
-          rows={rows}
-          rowOnClick={recordOnClick}
+          rows={records}
         />
       );
     }
@@ -116,52 +125,94 @@ export class ZonePage extends Component {
       <Card
         title={title}
         id={id}
-        nav={nav || <Button onClick={navOnClick}>Add {titleSingular}</Button>}
+        nav={nav === undefined ? <Button onClick={navOnClick}>Add {titleSingular}</Button> : nav}
       >
         {cardContents}
       </Card>
     );
   }
 
+  renderEditSOARecord(title, zone) {
+    const { dispatch } = this.props;
+    return dispatch(showModal(
+      title,
+      <EditSOARecord
+        zone={zone || this.state.currentDNSZone}
+        dispatch={dispatch}
+        close={() => dispatch(hideModal())}
+      />));
+  }
+
+  renderEditNSRecord(title, id, zone) {
+    const { dispatch } = this.props;
+    return () => dispatch(showModal(
+      title,
+      <EditNSRecord
+        zone={zone || this.state.currentDNSZone}
+        id={id === -1 ? undefined : id}
+        dispatch={dispatch}
+        close={() => dispatch(hideModal())}
+      />
+    ));
+  }
+
   render() {
     const { currentDNSZone } = this.state;
     const { CNAME: _cnameRecords, TXT: _txtRecords } = currentDNSZone._groupedRecords;
 
-    const setDefaultTTL = (records) => records.map(record => {
+    const formatSeconds = (records) => records.map(record => {
       const { ttl_sec: ttlSec } = record;
       const { ttl_sec: defaultTTLSec } = currentDNSZone;
       return {
         ...record,
-        ttl_sec: (!ttlSec || ttlSec === defaultTTLSec) ? 'Default' : ttlSec,
+        ttl_sec: formatDNSSeconds(ttlSec, defaultTTLSec),
       };
     });
-    const addNav = (records) => records.map(record => ({
-      ...record, nav: <Button>Delete</Button>,
+    const addNav = (records, onEdit, onDelete) => records.map(record => ({
+      ...record, nav: (
+        <div>
+          <Button
+            onClick={() => onEdit(record.id)}
+            className="btn-secondary"
+          >Edit</Button>
+          <Button
+            onClick={() => onDelete(record.id)}
+            className="btn-secondary"
+          >Delete</Button>
+        </div>
+      ),
     }));
 
-    const nsRecords = setDefaultTTL(this.formatNSRecords());
-    const mxRecords = setDefaultTTL(addNav(this.formatMXRecords()));
-    const aRecords = setDefaultTTL(addNav(this.formatARecords()));
-    const cnameRecords = setDefaultTTL(addNav(_cnameRecords));
-    const txtRecords = setDefaultTTL(addNav(_txtRecords));
-    const srvRecords = setDefaultTTL(addNav(this.formatSRVRecords()));
+    const nsRecords = formatSeconds(
+      this.formatNSRecords());
+    const mxRecords = formatSeconds(
+      addNav(this.formatMXRecords()));
+    const aRecords = formatSeconds(
+      addNav(this.formatARecords()));
+    const cnameRecords = formatSeconds(
+      addNav(_cnameRecords));
+    const txtRecords = formatSeconds(
+      addNav(_txtRecords));
+    const srvRecords = formatSeconds(
+      addNav(this.formatSRVRecords()));
     const soaRecord = {
       ...currentDNSZone,
-      ttl_sec: currentDNSZone.ttl_sec || 'Default',
-      refresh_sec: currentDNSZone.refresh_sec || 'Default',
-      retry_sec: currentDNSZone.retry_sec || 'Default',
-      expire_sec: currentDNSZone.expire_sec || 'Default',
-    };
-
-    const renderEditSOARecord = () => {
-      const { dispatch } = this.props;
-      dispatch(showModal(
-        'Edit SOA Record',
-        <EditSOARecord
-          zone={currentDNSZone}
-          dispatch={dispatch}
-          close={() => dispatch(hideModal())}
-        />));
+      ttl_sec: formatDNSSeconds(currentDNSZone.ttl_sec),
+      refresh_sec: formatDNSSeconds(currentDNSZone.refresh_sec),
+      retry_sec: formatDNSSeconds(currentDNSZone.retry_sec),
+      expire_sec: formatDNSSeconds(currentDNSZone.expire_sec, 604800),
+      nav: (
+        <div>
+          <Button
+            onClick={() => this.renderEditSOARecord('Edit SOA Record')}
+            className="btn-secondary"
+          >Edit</Button>
+          <Button
+            onClick={() => {}}
+            className="btn-secondary"
+          >Delete</Button>
+        </div>
+      ),
     };
 
     return (
@@ -178,53 +229,53 @@ export class ZonePage extends Component {
           <this.renderRecords
             title="SOA Record"
             id="soa"
-            rows={[soaRecord]}
+            records={[soaRecord]}
             labels={['Primary DNS', 'Email', 'Default TTL', 'Refresh Rate', 'Retry Rate',
                      'Expire Time', '']}
             keys={['dnszone', 'soa_email', 'ttl_sec', 'refresh_sec', 'retry_sec', 'expire_sec',
                    'nav']}
-            recordOnClick={renderEditSOARecord}
-            nav={<Button onClick={renderEditSOARecord}>Edit SOA Record</Button>}
+            nav={null}
           />
           <this.renderRecords
             title="NS Records"
             id="ns"
-            rows={nsRecords}
+            records={nsRecords}
+            navOnClick={this.renderEditNSRecord('Add NS Record', -1)}
             labels={['Name Server', 'Subdomain', 'TTL', '']}
             keys={['target', 'name', 'ttl_sec', 'nav']}
           />
           <this.renderRecords
             title="MX Records"
             id="mx"
-            rows={mxRecords}
+            records={mxRecords}
             labels={['Mail Server', 'Preference', 'Subdomain', '']}
             keys={['target', 'priority', 'name', 'nav']}
           />
           <this.renderRecords
             title="A/AAAA Records"
             id="a"
-            rows={aRecords}
+            records={aRecords}
             labels={['Hostname', 'IP Address', 'TTL', '']}
             keys={['name', 'target', 'ttl_sec', 'nav']}
           />
           <this.renderRecords
             title="CNAME Records"
             id="cname"
-            rows={cnameRecords}
+            records={cnameRecords}
             labels={['Hostname', 'Aliases to', 'TTL', '']}
             keys={['name', 'target', 'ttl_sec', 'nav']}
           />
           <this.renderRecords
             title="TXT Records"
             id="txt"
-            rows={txtRecords}
+            records={txtRecords}
             labels={['Name', 'Value', 'TTL', '']}
             keys={['name', 'target', 'ttl_sec', 'nav']}
           />
           <this.renderRecords
             title="SRV Records"
             id="srv"
-            rows={srvRecords}
+            records={srvRecords}
             labels={['Service', 'Priority', 'Domain', 'Weight', 'Port', 'Target', 'TTL', '']}
             keys={['name', 'priority', 'domain', 'weight', 'port', 'target', 'ttl_sec', 'nav']}
           />

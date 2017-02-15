@@ -3,6 +3,7 @@ import sinon from 'sinon';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
 
+import { formatDNSSeconds } from '~/dnsmanager/components/SelectDNSSeconds';
 import { ZonePage } from '~/dnsmanager/layouts/ZonePage';
 import { NAME_SERVERS } from '~/constants';
 import { api } from '@/data';
@@ -34,11 +35,11 @@ describe('dnsmanager/layouts/ZonePage', () => {
 
     const soaValues = soaRow.find('td');
     expect(soaValues.length).to.equal(7);
+    const fmt = formatDNSSeconds;
     // Test all values in SOA row
-    [currentZone.dnszone, currentZone.soa_email, currentZone.ttl_sec, currentZone.refresh_sec,
-     currentZone.retry_sec, currentZone.expire_sec].forEach((value, i) => {
-       expect(soaValues.at(i).text()).to.equal(value.toString());
-     });
+    [currentZone.dnszone, currentZone.soa_email, fmt(currentZone.ttl_sec),
+     fmt(currentZone.refresh_sec), fmt(currentZone.retry_sec), fmt(currentZone.expire_sec, 604800),
+    ].forEach((value, i) => expect(soaValues.at(i).text()).to.equal(value));
   });
 
   it('renders ns records', () => {
@@ -61,9 +62,9 @@ describe('dnsmanager/layouts/ZonePage', () => {
     expect(nsValues.length).to.equal(4);
     // Test all values in an NS row
     const nsRecord = nsRecords[0];
-    [nsRecord.target, nsRecord.name || currentZone.dnszone, 'Default'].forEach((value, i) => {
-      expect(nsValues.at(i).text()).to.equal(value.toString());
-    });
+    [nsRecord.target, nsRecord.name || currentZone.dnszone,
+     formatDNSSeconds(nsRecord.ttl, currentZone.ttl_sec)].forEach((value, i) =>
+       expect(nsValues.at(i).text()).to.equal(value));
   });
 
   it('renders mx records', () => {
@@ -87,9 +88,7 @@ describe('dnsmanager/layouts/ZonePage', () => {
     // Test all values in an MX row
     const mxRecord = mxRecords[0];
     [mxRecord.target, mxRecord.priority, mxRecord.name || currentZone.dnszone].forEach(
-      (value, i) => {
-        expect(mxValues.at(i).text()).to.equal(value.toString());
-      });
+      (value, i) => expect(mxValues.at(i).text()).to.equal(value.toString()));
   });
 
   it('renders a records', () => {
@@ -112,9 +111,8 @@ describe('dnsmanager/layouts/ZonePage', () => {
     expect(aValues.length).to.equal(4);
     // Test all values in a A/AAAA row
     const aRecord = aRecords[0];
-    [aRecord.name, aRecord.target, 'Default'].forEach((value, i) => {
-      expect(aValues.at(i).text()).to.equal(value.toString());
-    });
+    [aRecord.name, aRecord.target, formatDNSSeconds(aRecord.ttl_sec, currentZone.ttl_sec),
+    ].forEach((value, i) => expect(aValues.at(i).text()).to.equal(value));
   });
 
   it('renders cname records', () => {
@@ -137,9 +135,9 @@ describe('dnsmanager/layouts/ZonePage', () => {
     expect(cnameValues.length).to.equal(4);
     // Test all values in a CNAME row
     const cnameRecord = cnameRecords[0];
-    [cnameRecord.name, cnameRecord.target, 'Default'].forEach((value, i) => {
-      expect(cnameValues.at(i).text()).to.equal(value.toString());
-    });
+    [cnameRecord.name, cnameRecord.target,
+     formatDNSSeconds(cnameRecord.ttl_sec, currentZone.ttl_sec)].forEach((value, i) =>
+       expect(cnameValues.at(i).text()).to.equal(value));
   });
 
   it('renders txt records', () => {
@@ -162,8 +160,9 @@ describe('dnsmanager/layouts/ZonePage', () => {
     expect(txtValues.length).to.equal(4);
     // Test all values in a TXT row
     const txtRecord = txtRecords[0];
-    [txtRecord.name, txtRecord.target, 'Default'].forEach((value, i) => {
-      expect(txtValues.at(i).text()).to.equal(value.toString());
+    [txtRecord.name, txtRecord.target, formatDNSSeconds(txtRecord.ttl_sec, currentZone.ttl_sec),
+    ].forEach((value, i) => {
+      expect(txtValues.at(i).text()).to.equal(value);
     });
   });
 
@@ -188,8 +187,7 @@ describe('dnsmanager/layouts/ZonePage', () => {
     // Test all values in a SRV row
     const srvRecord = srvRecords[0];
     [srvRecord.name, srvRecord.priority, currentZone.dnszone, srvRecord.weight, srvRecord.port,
-     srvRecord.target, 'Default'].forEach((value, i) => {
-       expect(srvValues.at(i).text()).to.equal(value.toString());
-     });
+     srvRecord.target, formatDNSSeconds(srvRecord.ttl_sec, currentZone.ttl_sec),
+    ].forEach((value, i) => expect(srvValues.at(i).text()).to.equal(value.toString()));
   });
 });

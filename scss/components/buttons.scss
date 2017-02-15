@@ -140,6 +140,23 @@
         margin-left: 5px;
         padding: 8px;
     }
+
+    &.btn-secondary {
+        border: $border;
+        border-color: $gray;
+        color: $light-black;
+        background: $white;
+
+        &:not([disabled]):hover {
+            border: $border;
+            color: $black;
+            background: $white;
+        }
+    }
+
+    & + & {
+        margin-left: 5px;
+    }
 }
 
 // TODO: remove or replace with specific instance (i.e. for the checkbox + action menu)
