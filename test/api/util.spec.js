@@ -3,7 +3,7 @@ import { expect } from 'chai';
 
 import { generateDefaultStateMany } from '~/api/apiResultActionReducerGenerator.js';
 import { config as linodeConfig } from '~/api/configs/linodes';
-import { getObjectByLabelLazily } from '~/api/util';
+import { getObjectByLabelLazily, Error404 } from '~/api/util';
 import { state } from '@/data';
 import { testLinode } from '@/data/linodes';
 import { expectRequest } from '@/common';
@@ -17,7 +17,7 @@ describe('api/util', async () => {
   });
 
   it('preloads a linode when it is not already in the state', async () => {
-    dispatch.returns({ linodes: [null] });
+    dispatch.returns({ linodes: [], total_results: 1 });
     await getObjectByLabelLazily('linodes', 'foo-foo-foo')(dispatch, () => state);
     expect(dispatch.callCount).to.equal(1);
     let fn = dispatch.firstCall.args[0];
@@ -41,5 +41,19 @@ describe('api/util', async () => {
         'X-Filter': JSON.stringify({ label: 'foo-foo-foo' }),
       },
     });
+  });
+
+  it('throws a 404 when the resource is not found', async () => {
+    dispatch.returns({ linodes: [], total_results: 0 });
+    // Could not for the life of me get `expect(async () => await getOb...).to.throw(Error404)`
+    // to work.
+    try {
+      await getObjectByLabelLazily('linodes', 'foo-foo-foo')(dispatch, () => state);
+      throw Error;
+    } catch (e) {
+      if (!(e instanceof Error404)) {
+        throw Error;
+      }
+    }
   });
 });
