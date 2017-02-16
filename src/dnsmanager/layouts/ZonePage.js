@@ -61,7 +61,8 @@ export class ZonePage extends Component {
       name: currentDNSZone.dnszone,
     }));
 
-    currentDNSZone._groupedRecords.NS.forEach(record => {
+    const { NS } = currentDNSZone._groupedRecords;
+    (NS || []).forEach(record => {
       nsRecords.push({
         ...record,
         name: record.name || currentDNSZone.dnszone,
@@ -85,7 +86,8 @@ export class ZonePage extends Component {
   formatMXRecords() {
     const { currentDNSZone } = this.state;
 
-    return currentDNSZone._groupedRecords.MX.map(record => ({
+    const { MX } = currentDNSZone._groupedRecords;
+    return (MX || []).map(record => ({
       ...record,
       name: record.name || currentDNSZone.dnszone,
     }));
@@ -94,14 +96,15 @@ export class ZonePage extends Component {
   formatARecords() {
     const { currentDNSZone } = this.state;
 
-    return currentDNSZone._groupedRecords.A.concat(
-      currentDNSZone._groupedRecords.AAAA).filter(a => a !== undefined);
+    const { A, AAAA } = currentDNSZone._groupedRecords;
+    return (A || []).concat(AAAA || []).filter(a => a !== undefined);
   }
 
   formatSRVRecords() {
     const { currentDNSZone } = this.state;
 
-    return currentDNSZone._groupedRecords.SRV.map(record => ({
+    const { SRV } = currentDNSZone._groupedRecords;
+    return (SRV || []).map(record => ({
       ...record, domain: currentDNSZone.dnszone,
     }));
   }
@@ -190,9 +193,9 @@ export class ZonePage extends Component {
     const aRecords = formatSeconds(
       addNav(this.formatARecords()));
     const cnameRecords = formatSeconds(
-      addNav(_cnameRecords));
+      addNav(_cnameRecords || []));
     const txtRecords = formatSeconds(
-      addNav(_txtRecords));
+      addNav(_txtRecords || []));
     const srvRecords = formatSeconds(
       addNav(this.formatSRVRecords()));
     const soaRecord = {
