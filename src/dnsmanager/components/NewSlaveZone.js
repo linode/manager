@@ -29,7 +29,8 @@ export default function NewSlaveZone(props) {
           />
           <div>
             <small className="text-muted">
-              The IP addresses of the master DNS servers for this zone must be semicolon or new line delimited.
+              The IP addresses of the master DNS servers for
+              this zone must be semicolon or new line delimited.
             </small>
           </div>
         </div>
