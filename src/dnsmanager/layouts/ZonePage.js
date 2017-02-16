@@ -58,6 +58,7 @@ export class ZonePage extends Component {
     const { currentDNSZone } = this.state;
     const nsRecords = NAME_SERVERS.map(ns => ({
       target: ns,
+      ttl_sec: 86400,
       name: currentDNSZone.dnszone,
     }));
 
