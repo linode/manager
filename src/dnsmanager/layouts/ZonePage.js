@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 
 import { showModal, hideModal } from '~/actions/modal';
-import { formatDNSSeconds } from '../components/SelectDNSSeconds';
+import { formatDNSSeconds, ONE_DAY } from '../components/SelectDNSSeconds';
 import EditSOARecord from '../components/EditSOARecord';
 import EditNSRecord from '../components/EditNSRecord';
 import { setError } from '~/actions/errors';
@@ -58,7 +58,7 @@ export class ZonePage extends Component {
     const { currentDNSZone } = this.state;
     const nsRecords = NAME_SERVERS.map(ns => ({
       target: ns,
-      ttl_sec: 86400,
+      ttl_sec: ONE_DAY,
       name: currentDNSZone.dnszone,
     }));
 
