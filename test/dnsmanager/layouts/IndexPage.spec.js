@@ -62,26 +62,21 @@ describe('dnsmanager/layouts/IndexPage', () => {
         dispatch={dispatch}
         selected={{ 1: true }}
         dnszones={dnszones}
-      />);
+      />
+    );
 
-      dispatch.reset();
+    dispatch.reset();
 
-      const actions = page.find(Dropdown).props().elements;
-      actions.find(a => a.name === 'Delete').action();
+    const actions = page.find(Dropdown).props().elements;
+    actions.find(a => a.name === 'Delete').action();
 
-      const modal = mount(dispatch.firstCall.args[0].body);
+    const modal = mount(dispatch.firstCall.args[0].body);
 
-      dispatch.reset();
-      modal.find('.btn-default').simulate('click');
-      console.log(dispatch.callCount);
-      console.log(dispatch.firstCall);
-      console.log(dispatch.firstCall.args);
-      console.log(dispatch.firstCall.args[0]);
-      const fn = dispatch.firstCall.args[0];
-      await expectRequest(fn, '/dns/zones/1', () => {}, null,
-        options => {
-          expect(options.method).to.equal('DELETE');
-        }
-      );
+    dispatch.reset();
+    modal.find('.btn-default').simulate('click');
+    const fn = dispatch.firstCall.args[0];
+    await expectRequest(fn, '/dns/zones/1', undefined, undefined, {
+      method: 'DELETE',
+    });
   });
 });

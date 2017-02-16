@@ -10,7 +10,7 @@ import ConfirmModalBody from '~/components/modals/ConfirmModalBody';
 import { dnszones } from '~/api';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
-import { toggleSelected } from '../actions';
+import { toggleSelected, toggleSelectAll } from '../actions';
 import CreateHelper from '~/components/CreateHelper';
 import { Checkbox } from '~/components/form';
 import { Button } from '~/components/buttons';
@@ -31,7 +31,6 @@ export class IndexPage extends Component {
     super();
     this.deleteZone = this.deleteZone.bind(this);
     this.remove = this.remove.bind(this);
-    this.state = { isSelected: { } };
   }
 
   async componentDidMount() {
@@ -52,11 +51,10 @@ export class IndexPage extends Component {
   }
 
 
-  doToSelected(action) {
-    const { dnszones } = this.props;
-    const { isSelected } = this.state;
-    Object.keys(isSelected).map(id => {
-      if (isSelected[id] === true) {
+  doToSelected() {
+    const { selected } = this.props;
+    Object.keys(selected).map(id => {
+      if (selected[id] === true) {
         this.remove(id);
       }
     });
@@ -105,21 +103,21 @@ export class IndexPage extends Component {
   }
 
   renderGroup = ({ group, zones }) => {
-    const { isSelected } = this.state;
+    const { dispatch, selected } = this.props;
     // TODO: sort in fetch call
     const sortedZones = _.sortBy(zones, ({ created }) => moment(created));
 
     const rowClass = (zone) =>
-      `PrimaryTable-row ${isSelected[zone.id] ? ' PrimaryTable-row--selected' : ''}`;
+      `PrimaryTable-row ${selected[zone.id] ? ' PrimaryTable-row--selected' : ''}`;
 
     const ret = sortedZones.map(zone => (
       <tr key={zone.id} className={rowClass(zone)}>
         <td>
           <Checkbox
             className="PrimaryTable-rowSelector"
-            checked={!!isSelected[zone.id]}
+            checked={!!selected[zone.id]}
             onChange={() =>
-              this.setState({ isSelected: { ...isSelected, [zone.id]: !isSelected[zone.id] } })}
+              dispatch(toggleSelected(zone.id))}
           />
           <Link
             className="PrimaryTable-rowLabel"
@@ -172,23 +170,15 @@ export class IndexPage extends Component {
   }
 
   render() {
-    const { dnszones } = this.props;
-    const { isSelected } = this.state;
-    const zonesList = Object.values(isSelected);
+    const { dnszones, selected, dispatch } = this.props;
+    const zonesList = Object.values(selected);
     const allSelected = zonesList.length === dnszones.totalResults &&
-      zonesList.every((element) => element === true ) &&
+      zonesList.every((element) => element === true) &&
       zonesList.length !== 0;
-    const selectAll = () => {
-      const dnskeys = Object.keys(dnszones.dnszones);
-      const newSelected = {};
-      if (allSelected === false) {
-        dnskeys.forEach((value, i) => {
-          newSelected[value] = true;
-        });
-      }
-      this.setState({ isSelected: newSelected });
-    };
-    const selectAllCheckbox = <input type="checkbox" onChange={selectAll} checked={allSelected} />;
+    const selectAllCheckbox = (<input
+      type="checkbox"
+      onChange={() => dispatch(toggleSelectAll())} checked={allSelected}
+    />);
 
     return (
       <div className="PrimaryPage container">
@@ -226,6 +216,7 @@ IndexPage.propTypes = {
 function select(state) {
   return {
     dnszones: state.api.dnszones,
+    selected: state.dnsmanager.index.selected,
   };
 }
 

@@ -6,7 +6,7 @@ export function toggleSelected(id) {
 
 export function toggleSelectAll() {
   return async (dispatch, getState) => {
-    const zones = Object.keys(getState().api.dnsmanager.zones);
+    const zones = Object.keys(getState().api.dnszones.dnszones);
     dispatch({ type: TOGGLE_SELECTED, selected: zones });
   };
 }
