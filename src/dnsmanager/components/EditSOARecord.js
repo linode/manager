@@ -1,9 +1,8 @@
 import React, { PropTypes, Component } from 'react';
 
 import { dnszones } from '~/api';
-import { hideModal } from '~/actions/modal';
 import { ModalFormGroup, Select } from '~/components/form';
-import SelectTTL from './SelectTTL';
+import SelectDNSSeconds from './SelectDNSSeconds';
 import { Form, Input, SubmitButton, CancelButton } from '~/components/form';
 import { reduceErrors, ErrorSummary } from '~/errors';
 
@@ -47,19 +46,24 @@ export default class EditSOARecord extends Component {
         expire_sec: expireTime,
         soa_email: email,
       }, this.props.zone.id));
-    } catch (response) {
-      const errors = await reduceErrors(response);
-      this.setState({ errors });
-    }
 
-    this.setState({ saving: false });
-    this.props.close();
+      this.setState({ saving: false });
+      this.props.close();
+    } catch (response) {
+      if (!response.json) {
+        // eslint-disable-next-line no-console
+        console.error(response);
+      }
+
+      const errors = await reduceErrors(response);
+      this.setState({ errors, saving: false });
+    }
   }
 
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   render() {
-    const { dispatch } = this.props;
+    const { close } = this.props;
     const {
       group, zone, defaultTTL, refreshRate, retryRate, expireTime, email, errors, saving,
     } = this.state;
@@ -71,7 +75,7 @@ export default class EditSOARecord extends Component {
             id="zone"
             name="zone"
             value={zone}
-            placeholder="ns1.domain.com"
+            placeholder="domain.com"
             onChange={this.onChange}
           />
         </ModalFormGroup>
@@ -114,7 +118,7 @@ export default class EditSOARecord extends Component {
           apiKey="ttl_sec"
           errors={errors}
         >
-          <SelectTTL
+          <SelectDNSSeconds
             id="defaultTTL"
             name="defaultTTL"
             value={defaultTTL}
@@ -123,12 +127,12 @@ export default class EditSOARecord extends Component {
         </ModalFormGroup>
         <ModalFormGroup
           label="Refresh Rate"
-          description="How often secondary / slave nameservers check with the master for updates"
+          description="How often secondary (slave) nameservers check with the master for updates"
           id="refreshRate"
           apiKey="refresh_sec"
           errors={errors}
         >
-          <SelectTTL
+          <SelectDNSSeconds
             id="refreshRate"
             name="refreshRate"
             value={refreshRate}
@@ -137,13 +141,13 @@ export default class EditSOARecord extends Component {
         </ModalFormGroup>
         <ModalFormGroup
           label="Retry Rate"
-          description={('How long secondary / slave nameservers wait to contact the master ' +
+          description={('How long secondary (slave) nameservers wait to contact the master ' +
                         'nameserver again if the last attempt failed')}
           id="retryRate"
           apiKey="retry_sec"
           errors={errors}
         >
-          <SelectTTL
+          <SelectDNSSeconds
             id="retryRate"
             name="retryRate"
             value={retryRate}
@@ -152,14 +156,14 @@ export default class EditSOARecord extends Component {
         </ModalFormGroup>
         <ModalFormGroup
           label="Expire Time"
-          description={('How long secondary / slave nameservers wait before considering DNS data ' +
+          description={('How long secondary (slave) nameservers wait before considering DNS data ' +
                         'stale if it cannot reach the master nameserver')}
           id="expireTime"
           apiKey="expire_sec"
           errors={errors}
         >
           <Select
-            value={(expireTime || 604800).toString()}
+            value={Math.max(expireTime, 604800).toString()}
             onChange={this.onChange}
             id="expireTime"
             name="expireTime"
@@ -170,7 +174,7 @@ export default class EditSOARecord extends Component {
           </Select>
         </ModalFormGroup>
         <div className="Modal-footer">
-          <CancelButton onClick={() => dispatch(hideModal())} />
+          <CancelButton onClick={close} />
           <SubmitButton disabled={saving} />
         </div>
         <ErrorSummary errors={errors} />
