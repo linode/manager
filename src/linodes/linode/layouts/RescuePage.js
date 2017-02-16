@@ -7,7 +7,7 @@ import { showModal, hideModal } from '~/actions/modal';
 import { linodes } from '~/api';
 import { resetPassword, rescueLinode } from '~/api/linodes';
 import { ConfirmModalBody } from '~/components/modals';
-import { Form, FormGroup, SubmitButton, PasswordInput } from '~/components/form';
+import { Form, FormGroup, SubmitButton, Select, PasswordInput } from '~/components/form';
 import Card from '~/components/Card';
 import { setSource } from '~/actions/source';
 import { getConfig,
@@ -189,16 +189,15 @@ export class RescuePage extends Component {
                   Disk:
                 </label>
                 <div className="col-sm-10">
-                  <select
+                  <Select
                     name="reset-root-password-select"
                     value={disk}
-                    className="form-control"
                     onChange={e => this.setState({ disk: e.target.value })}
                   >
                     {Object.values(linode._disks.disks)
                       .filter(d => d.filesystem !== 'swap')
                       .map(d => <option value={d.id} key={d.id}>{d.label}</option>)}
-                  </select>
+                  </Select>
                 </div>
               </div>
             : null}
@@ -215,10 +214,9 @@ export class RescuePage extends Component {
           <div className="form-group row">
             <div className="col-sm-2"></div>
             <div className="col-sm-10">
-              <SubmitButton
-                disabled={!this.state.password || this.state.applying ||
-                          linode.status !== 'offline'}
-              >Reset Password</SubmitButton>
+              <SubmitButton disabled={this.state.applying || linode.status !== 'offline'}>
+                Reset Password
+              </SubmitButton>
               <span style={{ marginLeft: '0.5rem' }}>
                 {this.state.result}
               </span>
