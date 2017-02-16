@@ -3,9 +3,9 @@ import sinon from 'sinon';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
 
-import NewMasterZone from '~/dnsmanager/components/NewMasterZone';
+import NewSlaveZone from '~/dnsmanager/components/NewSlaveZone';
 
-describe('dnsmanager/components/NewMasterZone', () => {
+describe('dnsmanager/components/NewSlaveZone', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
@@ -14,8 +14,8 @@ describe('dnsmanager/components/NewMasterZone', () => {
 
   it('renders data', () => {
     const component = shallow(
-      <NewMasterZone
-        soa_email="test@mail.net"
+      <NewSlaveZone
+        master_ips={['127.0.0.1']}
         dnszone="my-domain.net"
         onSubmit={() => {}}
         onChange={() => {}}
@@ -25,14 +25,14 @@ describe('dnsmanager/components/NewMasterZone', () => {
     );
 
     expect(component.find('Input').at(0).props().value).to.equal('my-domain.net');
-    expect(component.find('Input').at(1).props().value).to.equal('test@mail.net');
+    expect(component.find('textarea').at(0).props().value).to.equal('127.0.0.1');
   });
 
   it('calls onChange when fields change', () => {
     const onChange = sandbox.stub();
     shallow(
-      <NewMasterZone
-        soa_email="test@mail.net"
+      <NewSlaveZone
+        master_ips={['98.139.180.149']}
         dnszone=""
         onSubmit={() => {}}
         onChange={onChange}
@@ -43,14 +43,14 @@ describe('dnsmanager/components/NewMasterZone', () => {
 
     expect(onChange.calledTwice).to.equal(true);
     expect(onChange.firstCall.args[0]).to.equal('dnszone');
-    expect(onChange.secondCall.args[0]).to.equal('soa_email');
+    expect(onChange.secondCall.args[0]).to.equal('master_ips');
   });
 
   it('calls onSubmit when form is submitted', () => {
     const onSubmit = sandbox.spy();
     const component = shallow(
-      <NewMasterZone
-        soa_email="test@mail.net"
+      <NewSlaveZone
+        master_ips={['98.139.180.149']}
         dnszone=""
         onSubmit={onSubmit}
         onChange={() => {}}
