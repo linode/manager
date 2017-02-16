@@ -1,11 +1,24 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
+import { setError } from '~/actions/errors';
 import { TIME_ZONES } from '~/constants';
 import Card from '~/components/Card';
+import { profile } from '~/api';
 import { Form, FormGroup, FormGroupError, SubmitButton, Input, Select } from '~/components/form';
 import { ErrorSummary } from '~/errors';
 
 export default class DisplayPage extends Component {
+  static async preload({ dispatch }) {
+    try {
+      await dispatch(profile.one());
+    } catch (response) {
+      // eslint-disable-next-line no-console
+      console.error(response);
+      dispatch(setError(response));
+    }
+  }
+
   constructor() {
     super();
     // TODO: fill state appropriately based on API
@@ -24,6 +37,8 @@ export default class DisplayPage extends Component {
 
   render() {
     const { errors, timezone, email } = this.state;
+    const { profile } = this.props;
+    console.log('props>profile', profile);
 
     return (
       <div>
@@ -74,4 +89,10 @@ export default class DisplayPage extends Component {
       </div>
     );
   }
+}
+
+function select(state) {
+  return {
+    profile: state.api.profile,
+  };
 }
