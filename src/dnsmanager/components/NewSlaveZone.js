@@ -24,14 +24,14 @@ export default function NewSlaveZone(props) {
         <div className="col-sm-6">
           <textarea
             value={props.master_ips.length ? props.master_ips.join(';') : ''}
-            className="form-control"
             placeholder="127.0.0.1;255.255.255.1"
             onChange={props.onChange('master_ips')}
           />
-          <small className="text-muted">
-            The IP addresses of the master DNS servers for this<br />
-            zone must be semicolon or new line delimited.
-          </small>
+          <div>
+            <small className="text-muted">
+              The IP addresses of the master DNS servers for this zone must be semicolon or new line delimited.
+            </small>
+          </div>
         </div>
         <FormGroupError errors={props.errors} name="master_ips" />
       </FormGroup>
