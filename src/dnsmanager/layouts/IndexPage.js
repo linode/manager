@@ -43,6 +43,7 @@ export class IndexPage extends Component {
   remove(zone) {
     const { dispatch } = this.props;
     dispatch(dnszones.delete(zone));
+    dispatch(toggleSelected(zone));
   }
 
   deleteZone(zoneId) {
@@ -92,6 +93,7 @@ export class IndexPage extends Component {
         buttonText="Delete"
         onOk={async () => {
           await dispatch(dnszones.delete(zoneId));
+          dispatch(toggleSelectAll());
           dispatch(hideModal());
         }}
         onCancel={() => dispatch(hideModal())}
@@ -143,12 +145,12 @@ export class IndexPage extends Component {
     return ret;
   }
 
-  renderActions() {
+  renderActions(disabled) {
     const elements = [
       { _action: this.remove, name: 'Delete' },
     ].map(element => ({ ...element, action: this.massAction(element._action) }));
 
-    return <Dropdown elements={elements} />;
+    return <Dropdown disabled={disabled} elements={elements} />;
   }
 
   renderZones(zones) {
@@ -175,9 +177,11 @@ export class IndexPage extends Component {
     const allSelected = zonesList.length === dnszones.totalResults &&
       zonesList.every((element) => element === true) &&
       zonesList.length !== 0;
+    const noneSelected = zonesList.every((element) => element === false);
     const selectAllCheckbox = (<input
       type="checkbox"
-      onChange={() => dispatch(toggleSelectAll())} checked={allSelected}
+      onChange={() => dispatch(toggleSelectAll())}
+      checked={allSelected}
     />);
 
     return (
@@ -193,7 +197,7 @@ export class IndexPage extends Component {
           <div className="PrimaryPage-headerRow">
             <div className="input-group">
               <span className="input-group-addon">{selectAllCheckbox}</span>
-              {this.renderActions()}
+              {this.renderActions(noneSelected)}
             </div>
           </div>
         </header>
