@@ -50,7 +50,7 @@ input[type="number"].form-control {
 }
 
 textarea {
-    border: 1px solid $border-gray;
+    border: $border;
     max-width: 100%;
     min-height: 100px;
     min-width: 400px;
