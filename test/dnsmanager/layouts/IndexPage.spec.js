@@ -1,10 +1,12 @@
 import React from 'react';
 import sinon from 'sinon';
-import { shallow } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 import { expect } from 'chai';
 
 import { IndexPage } from '~/dnsmanager/layouts/IndexPage';
 import { api } from '@/data';
+import Dropdown from '~/components/Dropdown';
+import { expectRequest } from '@/common.js';
 import { SHOW_MODAL } from '~/actions/modal';
 
 const { dnszones } = api;
@@ -52,5 +54,29 @@ describe('dnsmanager/layouts/IndexPage', () => {
     expect(dispatch.callCount).to.equal(1);
     expect(dispatch.firstCall.args[0])
       .to.have.property('type').which.equals(SHOW_MODAL);
+  });
+
+  it('deletes selected zones when delete is pressed', async () => {
+    const page = mount(
+      <IndexPage
+        dispatch={dispatch}
+        selected={{ 1: true }}
+        dnszones={dnszones}
+      />
+    );
+
+    dispatch.reset();
+
+    const actions = page.find(Dropdown).props().elements;
+    actions.find(a => a.name === 'Delete').action();
+
+    const modal = mount(dispatch.firstCall.args[0].body);
+
+    dispatch.reset();
+    modal.find('.btn-default').simulate('click');
+    const fn = dispatch.firstCall.args[0];
+    await expectRequest(fn, '/dns/zones/1', undefined, undefined, {
+      method: 'DELETE',
+    });
   });
 });
