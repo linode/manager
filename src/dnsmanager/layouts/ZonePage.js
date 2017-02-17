@@ -213,7 +213,7 @@ export class ZonePage extends Component {
     const cnameRecords = formatSeconds(
       addNav(_cnameRecords || []));
     const txtRecords = formatSeconds(
-       addNav(this.formatTXTRecords(), (id) => this.renderEditTXTRecord('Edit TXT Record', id)));
+      addNav(this.formatTXTRecords(), (id) => this.renderEditTXTRecord('Edit TXT Record', id)));
     const srvRecords = formatSeconds(
       addNav(this.formatSRVRecords()));
     const soaRecord = {
