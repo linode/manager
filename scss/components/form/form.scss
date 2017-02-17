@@ -30,20 +30,38 @@ select.form-control:not([size]):not([multiple]) {
   height: $form-field-height;
 }
 
-.form-control {
+input.form-control,
+select.form-control {
   width: 225px;
 }
 
-.form-control.input-md {
+input.form-control.input-md,
+select.form-control.input-md {
   width: 275px;
 }
 
-.form-control.input-lg {
+input.form-control.input-lg,
+select.form-control.input-lg {
   width: 325px;
 }
 
 input[type="number"].form-control {
   width: 125px;
+}
+
+textarea {
+    border: $border;
+    max-width: 100%;
+    min-height: 100px;
+    min-width: 400px;
+    outline: none;
+    padding: 6px 8px;
+    resize: both;
+}
+
+textarea.textarea-md {
+    min-width: 600px;
+    min-height: 200px;
 }
 
 .form-control-feedback {
