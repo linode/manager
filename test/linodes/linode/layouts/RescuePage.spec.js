@@ -62,7 +62,7 @@ describe('linodes/linode/layouts/RescuePage', () => {
     });
 
     it('renders disk selection for appropriate Linodes', () => {
-      const page = shallow(
+      const page = mount(
         <RescuePage
           dispatch={dispatch}
           linodes={linodes}
@@ -77,7 +77,7 @@ describe('linodes/linode/layouts/RescuePage', () => {
     });
 
     it('updates state when selecting disks', () => {
-      const page = shallow(
+      const page = mount(
         <RescuePage
           dispatch={dispatch}
           linodes={linodes}
