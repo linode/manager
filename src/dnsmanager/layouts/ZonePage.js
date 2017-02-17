@@ -6,6 +6,7 @@ import { showModal, hideModal } from '~/actions/modal';
 import { formatDNSSeconds, ONE_DAY } from '../components/SelectDNSSeconds';
 import EditSOARecord from '../components/EditSOARecord';
 import EditNSRecord from '../components/EditNSRecord';
+import EditMXRecord from '../components/EditMXRecord';
 import { setError } from '~/actions/errors';
 import { dnszones } from '~/api';
 import { getObjectByLabelLazily } from '~/api/util';
@@ -136,28 +137,29 @@ export class ZonePage extends Component {
     );
   }
 
-  renderEditSOARecord(title, zone) {
+  renderEditRecord(title, component, props = {}) {
     const { dispatch } = this.props;
-    return dispatch(showModal(
-      title,
-      <EditSOARecord
-        zone={zone || this.state.currentDNSZone}
-        dispatch={dispatch}
-        close={() => dispatch(hideModal())}
-      />));
-  }
-
-  renderEditNSRecord(title, id, zone) {
-    const { dispatch } = this.props;
+    const { currentDNSZone: zone } = this.state;
     return () => dispatch(showModal(
       title,
-      <EditNSRecord
-        zone={zone || this.state.currentDNSZone}
-        id={id === -1 ? undefined : id}
-        dispatch={dispatch}
-        close={() => dispatch(hideModal())}
-      />
-    ));
+      React.createElement(component, {
+        ...props,
+        dispatch,
+        zone,
+        close: () => dispatch(hideModal()),
+      })));
+  }
+
+  renderEditSOARecord(title) {
+    return this.renderEditRecord(title, EditSOARecord);
+  }
+
+  renderEditNSRecord(title, id) {
+    return this.renderEditRecord(title, EditNSRecord, { id });
+  }
+
+  renderEditMXRecord(title, id) {
+    return this.renderEditRecord(title, EditMXRecord, { id });
   }
 
   render() {
@@ -176,11 +178,11 @@ export class ZonePage extends Component {
       ...record, nav: (
         <div>
           <Button
-            onClick={() => onEdit(record.id)}
+            onClick={onEdit && onEdit(record.id)}
             className="btn-secondary"
           >Edit</Button>
           <Button
-            onClick={() => onDelete(record.id)}
+            onClick={onDelete && onDelete(record.id)}
             className="btn-secondary"
           >Delete</Button>
         </div>
@@ -190,7 +192,7 @@ export class ZonePage extends Component {
     const nsRecords = formatSeconds(
       this.formatNSRecords());
     const mxRecords = formatSeconds(
-      addNav(this.formatMXRecords()));
+      addNav(this.formatMXRecords(), (id) => this.renderEditMXRecord('Edit MX Record', id)));
     const aRecords = formatSeconds(
       addNav(this.formatARecords()));
     const cnameRecords = formatSeconds(
@@ -208,7 +210,7 @@ export class ZonePage extends Component {
       nav: (
         <div>
           <Button
-            onClick={() => this.renderEditSOARecord('Edit SOA Record')}
+            onClick={this.renderEditSOARecord('Edit SOA Record')}
             className="btn-secondary"
           >Edit</Button>
           <Button
@@ -244,7 +246,7 @@ export class ZonePage extends Component {
             title="NS Records"
             id="ns"
             records={nsRecords}
-            navOnClick={this.renderEditNSRecord('Add NS Record', -1)}
+            navOnClick={this.renderEditNSRecord('Add NS Record')}
             labels={['Name Server', 'Subdomain', 'TTL', '']}
             keys={['target', 'name', 'ttl_sec', 'nav']}
           />
@@ -252,6 +254,7 @@ export class ZonePage extends Component {
             title="MX Records"
             id="mx"
             records={mxRecords}
+            navOnClick={this.renderEditMXRecord('Add MX Record')}
             labels={['Mail Server', 'Preference', 'Subdomain', '']}
             keys={['target', 'priority', 'name', 'nav']}
           />
