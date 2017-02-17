@@ -26,6 +26,11 @@ form {
 
 }
 
+input[type="checkbox"]:hover,
+input[type="radio"]:hover {
+    cursor: pointer;
+}
+
 select.form-control:not([size]):not([multiple]) {
   height: $form-field-height;
 }
