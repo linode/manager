@@ -33,7 +33,7 @@ const DNS_SECONDS_PRETTY = {
 export function formatDNSSeconds(dnsSeconds, defaultSeconds = ONE_DAY) {
   const actual = !dnsSeconds || +dnsSeconds === +defaultSeconds ? defaultSeconds : dnsSeconds;
   const pretty = DNS_SECONDS_PRETTY[actual];
-  return `${actual === defaultSeconds ? 'Default' : actual}${pretty ? `(${pretty})` : ''}`;
+  return `${actual === defaultSeconds ? 'Default' : actual}${pretty ? ` (${pretty})` : ''}`;
 }
 
 export default function SelectDNSSeconds(props) {
