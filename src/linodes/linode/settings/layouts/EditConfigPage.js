@@ -349,7 +349,6 @@ export class EditConfigPage extends Component {
               <div className="col-sm-6">
                 <textarea
                   id="config-comments"
-                  className="form-control col-sm-3"
                   placeholder="Notes"
                   value={comments}
                   disabled={loading}
