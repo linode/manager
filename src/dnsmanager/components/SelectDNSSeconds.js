@@ -2,25 +2,38 @@ import React, { PropTypes } from 'react';
 
 import { Select } from '~/components/form';
 
+export const FIVE_MINUTES = 300;
+export const ONE_HOUR = FIVE_MINUTES * 12;
+export const TWO_HOURS = ONE_HOUR * 2;
+export const FOUR_HOURS = ONE_HOUR * 4;
+export const EIGHT_HOURS = ONE_HOUR * 8;
+export const SIXTEEN_HOURS = ONE_HOUR * 16;
+export const ONE_DAY = ONE_HOUR * 24;
+export const TWO_DAYS = ONE_DAY * 2;
+export const FOUR_DAYS = ONE_DAY * 4;
+export const ONE_WEEK = ONE_DAY * 7;
+export const TWO_WEEKS = ONE_WEEK * 2;
+export const FOUR_WEEKS = ONE_WEEK * 4;
+
 const DNS_SECONDS_PRETTY = {
-  300: '5 minutes',
-  3600: '1 hour',
-  7200: '2 hours',
-  4400: '4 hours',
-  28800: '8 hours',
-  57600: '16 hours',
-  86400: '1 day',
-  172800: '2 days',
-  345600: '4 days',
-  604800: '1 week',
-  1209600: '2 weeks',
-  2419200: '4 weeks',
+  [FIVE_MINUTES]: '5 minutes',
+  [ONE_HOUR]: '1 hour',
+  [TWO_HOURS]: '2 hours',
+  [FOUR_HOURS]: '4 hours',
+  [EIGHT_HOURS]: '8 hours',
+  [SIXTEEN_HOURS]: '16 hours',
+  [ONE_DAY]: '1 day',
+  [TWO_DAYS]: '2 days',
+  [FOUR_DAYS]: '4 days',
+  [ONE_WEEK]: '1 week',
+  [TWO_WEEKS]: '2 weeks',
+  [FOUR_WEEKS]: '4 weeks',
 };
 
-export function formatDNSSeconds(dnsSeconds, defaultSeconds = 300) {
+export function formatDNSSeconds(dnsSeconds, defaultSeconds = ONE_DAY) {
   const actual = !dnsSeconds || +dnsSeconds === +defaultSeconds ? defaultSeconds : dnsSeconds;
   const pretty = DNS_SECONDS_PRETTY[actual];
-  return `${actual === defaultSeconds ? 'Default' : actual} (${pretty})`;
+  return `${actual === defaultSeconds ? 'Default' : actual}${pretty ? ` (${pretty})` : ''}`;
 }
 
 export default function SelectDNSSeconds(props) {
