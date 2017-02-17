@@ -10,9 +10,11 @@ import ConfirmModalBody from '~/components/modals/ConfirmModalBody';
 import { dnszones } from '~/api';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
+import { toggleSelected, toggleSelectAll } from '../actions';
 import CreateHelper from '~/components/CreateHelper';
 import { Checkbox } from '~/components/form';
 import { Button } from '~/components/buttons';
+import Dropdown from '~/components/Dropdown';
 
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
@@ -28,7 +30,7 @@ export class IndexPage extends Component {
   constructor() {
     super();
     this.deleteZone = this.deleteZone.bind(this);
-    this.state = { isSelected: { } };
+    this.remove = this.remove.bind(this);
   }
 
   async componentDidMount() {
@@ -38,9 +40,50 @@ export class IndexPage extends Component {
     dispatch(setTitle('DNS Manager'));
   }
 
+  remove(zone) {
+    const { dispatch } = this.props;
+    dispatch(dnszones.delete(zone));
+    dispatch(toggleSelected(zone));
+  }
+
   deleteZone(zoneId) {
     const { dispatch } = this.props;
     dispatch(showModal('Delete DNS Zone', this.renderModal(zoneId)));
+  }
+
+
+  doToSelected() {
+    const { selected } = this.props;
+    Object.keys(selected).map(id => {
+      if (selected[id] === true) {
+        this.remove(id);
+      }
+    });
+  }
+
+  massAction(action) {
+    return () => {
+      if (action !== this.remove) {
+        this.doToSelected(action);
+        return;
+      }
+
+      const { dispatch } = this.props;
+
+      dispatch(showModal('Confirm deletion',
+        <ConfirmModalBody
+          buttonText="Delete selected zones"
+          onOk={() => {
+            this.doToSelected(action);
+            dispatch(hideModal());
+          }}
+          onCancel={() => dispatch(hideModal())}
+        >
+          Are you sure you want to delete selected Zones?
+          This operation cannot be undone.
+        </ConfirmModalBody>
+      ));
+    };
   }
 
   renderModal(zoneId) {
@@ -50,6 +93,7 @@ export class IndexPage extends Component {
         buttonText="Delete"
         onOk={async () => {
           await dispatch(dnszones.delete(zoneId));
+          dispatch(toggleSelectAll());
           dispatch(hideModal());
         }}
         onCancel={() => dispatch(hideModal())}
@@ -61,21 +105,21 @@ export class IndexPage extends Component {
   }
 
   renderGroup = ({ group, zones }) => {
-    const { isSelected } = this.state;
+    const { dispatch, selected } = this.props;
     // TODO: sort in fetch call
     const sortedZones = _.sortBy(zones, ({ created }) => moment(created));
 
     const rowClass = (zone) =>
-      `PrimaryTable-row ${isSelected[zone.id] ? ' PrimaryTable-row--selected' : ''}`;
+      `PrimaryTable-row ${selected[zone.id] ? ' PrimaryTable-row--selected' : ''}`;
 
     const ret = sortedZones.map(zone => (
       <tr key={zone.id} className={rowClass(zone)}>
         <td>
           <Checkbox
             className="PrimaryTable-rowSelector"
-            checked={!!isSelected[zone.id]}
+            checked={!!selected[zone.id]}
             onChange={() =>
-              this.setState({ isSelected: { ...isSelected, [zone.id]: !isSelected[zone.id] } })}
+              dispatch(toggleSelected(zone.id))}
           />
           <Link
             className="PrimaryTable-rowLabel"
@@ -101,6 +145,14 @@ export class IndexPage extends Component {
     return ret;
   }
 
+  renderActions(disabled) {
+    const elements = [
+      { _action: this.remove, name: 'Delete' },
+    ].map(element => ({ ...element, action: this.massAction(element._action) }));
+
+    return <Dropdown disabled={disabled} elements={elements} />;
+  }
+
   renderZones(zones) {
     const groups = _.map(
       _.sortBy(
@@ -119,9 +171,18 @@ export class IndexPage extends Component {
     );
   }
 
-
   render() {
-    const { dnszones } = this.props;
+    const { dnszones, selected, dispatch } = this.props;
+    const zonesList = Object.values(selected);
+    const allSelected = zonesList.length === Object.values(dnszones.dnszones).length &&
+      zonesList.every((element) => element === true) &&
+      zonesList.length !== 0;
+    const noneSelected = zonesList.every((element) => element === false);
+    const selectAllCheckbox = (<input
+      type="checkbox"
+      onChange={() => dispatch(toggleSelectAll())}
+      checked={allSelected}
+    />);
 
     return (
       <div className="PrimaryPage container">
@@ -133,6 +194,14 @@ export class IndexPage extends Component {
               Add a DNS Zone
             </Link>
           </div>
+          {Object.values(dnszones.dnszones).length > 0 ?
+            <div className="PrimaryPage-headerRow">
+              <div className="input-group">
+                <span className="input-group-addon">{selectAllCheckbox}</span>
+                {this.renderActions(noneSelected)}
+              </div>
+            </div>
+          : ''}
         </header>
         <div className="PrimaryPage-body">
           {Object.keys(dnszones.dnszones).length ? this.renderZones(dnszones.dnszones) :
@@ -153,6 +222,7 @@ IndexPage.propTypes = {
 function select(state) {
   return {
     dnszones: state.api.dnszones,
+    selected: state.dnsmanager.index.selected,
   };
 }
 
