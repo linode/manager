@@ -1,13 +1,12 @@
 import {
-  genConfig, ReducerGenerator, genActions,
-  ONE, MANY, PUT, POST,
+  genConfig, ReducerGenerator, genActions, ONE, PUT,
 } from '~/api/apiResultActionReducerGenerator';
 
 export const config = genConfig({
   plural: 'profile',
   singular: 'profile',
-  endpoint: () => `/account/profile`,
-  supports: [ONE, MANY, PUT, POST],
+  endpoint: () => '/account/profile',
+  supports: [ONE, PUT],
 });
 
 export const actions = genActions(config);

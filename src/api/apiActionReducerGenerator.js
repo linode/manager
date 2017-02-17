@@ -81,15 +81,12 @@ function genThunkOne(config, actions) {
     const oldState = getStateOfSpecificResource(config, getState(), ids);
 
     const { token } = getState().authentication;
-    console.log('end', config.endpoint);
     const response = await fetch(token, config.endpoint(...ids), options);
-    console.log('rsp',response);
     const resource = {
       ...(await response.json()),
       __progress: oldState && oldState.__progress || 100,
     };
     dispatch(actions.one(resource, ...ids));
-    console.log('res', resource);
     return resource;
   };
 }
