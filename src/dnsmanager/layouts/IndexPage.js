@@ -174,7 +174,7 @@ export class IndexPage extends Component {
   render() {
     const { dnszones, selected, dispatch } = this.props;
     const zonesList = Object.values(selected);
-    const allSelected = zonesList.length === dnszones.totalResults &&
+    const allSelected = zonesList.length === Object.values(dnszones.dnszones).length &&
       zonesList.every((element) => element === true) &&
       zonesList.length !== 0;
     const noneSelected = zonesList.every((element) => element === false);
@@ -194,12 +194,14 @@ export class IndexPage extends Component {
               Add a DNS Zone
             </Link>
           </div>
-          <div className="PrimaryPage-headerRow">
-            <div className="input-group">
-              <span className="input-group-addon">{selectAllCheckbox}</span>
-              {this.renderActions(noneSelected)}
+          {Object.values(dnszones.dnszones).length > 0 ?
+            <div className="PrimaryPage-headerRow">
+              <div className="input-group">
+                <span className="input-group-addon">{selectAllCheckbox}</span>
+                {this.renderActions(noneSelected)}
+              </div>
             </div>
-          </div>
+          : ''}
         </header>
         <div className="PrimaryPage-body">
           {Object.keys(dnszones.dnszones).length ? this.renderZones(dnszones.dnszones) :
