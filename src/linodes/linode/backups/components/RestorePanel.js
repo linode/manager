@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { Card } from '~/components/cards';
+
 export function restorePanel() {
   /* TODO:
    * Linode Endpoint needs to be updated for specifying
@@ -7,10 +9,7 @@ export function restorePanel() {
    * If no backup, return null
    */
   return (
-    <section className="card">
-      <header>
-        <h2>Restore</h2>
-      </header>
+    <Card title="Restore">
       <form>
         <div className="form-group row restore-backup">
           <div className="col-sm-2 col-form-label">Restore to:</div>
@@ -41,6 +40,6 @@ export function restorePanel() {
           </div>
         </div>
       </form>
-    </section>
+    </Card>
   );
 }

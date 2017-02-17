@@ -1,19 +1,19 @@
 import React, { PropTypes } from 'react';
 
-import HelpButton from './HelpButton';
+import HelpButton from '../HelpButton';
 
 export default function Card(props) {
   return (
-    <section className={`card ${props.className}`} id={props.id}>
-      <header className="clearfix">
-        <h2 className="float-sm-left">{props.title}</h2>
+    <div className={`Card ${props.className}`} id={props.id}>
+      <header className="Card-header clearfix">
+        <h2 className="Card-title float-sm-left">{props.title}</h2>
         {props.helpLink ? <HelpButton className="float-sm-left" to={props.helpLink} /> : null}
         <div className="float-sm-right">{props.nav}</div>
       </header>
-      <div className="card-block">
+      <div>
         {props.children}
       </div>
-    </section>
+    </div>
   );
 }
 

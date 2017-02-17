@@ -8,6 +8,8 @@ import { reducer as kernels } from './configs/kernels';
 import { reducer as dnszones } from './configs/dnszones';
 import { reducer as nodebalancers } from './configs/nodebalancers';
 import { reducer as events } from './configs/events';
+import { reducer as tokens } from './configs/tokens';
+import { reducer as clients } from './configs/clients';
 
 export default combineReducers({
   linodes,
@@ -18,4 +20,6 @@ export default combineReducers({
   dnszones,
   events,
   nodebalancers,
+  tokens,
+  clients,
 });

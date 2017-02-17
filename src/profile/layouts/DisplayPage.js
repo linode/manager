@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import { TIME_ZONES } from '~/constants';
-import Card from '~/components/Card';
+import { Card } from '~/components/cards';
 import { Form, FormGroup, FormGroupError, SubmitButton, Input, Select } from '~/components/form';
 import { ErrorSummary } from '~/errors';
 
