@@ -7,6 +7,7 @@ import { formatDNSSeconds, ONE_DAY } from '../components/SelectDNSSeconds';
 import EditSOARecord from '../components/EditSOARecord';
 import EditNSRecord from '../components/EditNSRecord';
 import EditMXRecord from '../components/EditMXRecord';
+import EditTXTRecord from '../components/EditTXTRecord';
 import { setError } from '~/actions/errors';
 import { dnszones } from '~/api';
 import { getObjectByLabelLazily } from '~/api/util';
@@ -111,6 +112,16 @@ export class ZonePage extends Component {
     }));
   }
 
+  formatTXTRecords() {
+    const { currentDNSZone } = this.state;
+
+    const { TXT } = currentDNSZone._groupedRecords;
+    return (TXT || []).map(record => ({
+      ...record,
+      name: record.name || currentDNSZone.dnszone,
+    }));
+  }
+
   renderRecords = ({ title, id, records, labels, keys, nav, navOnClick }) => {
     let cardContents = <p>No records created.</p>;
     if (records && records.length) {
@@ -162,9 +173,13 @@ export class ZonePage extends Component {
     return this.renderEditRecord(title, EditMXRecord, { id });
   }
 
+  renderEditTXTRecord(title, id) {
+    return this.renderEditRecord(title, EditTXTRecord, { id });
+  }
+
   render() {
     const { currentDNSZone } = this.state;
-    const { CNAME: _cnameRecords, TXT: _txtRecords } = currentDNSZone._groupedRecords;
+    const { CNAME: _cnameRecords } = currentDNSZone._groupedRecords;
 
     const formatSeconds = (records) => records.map(record => {
       const { ttl_sec: ttlSec } = record;
@@ -198,7 +213,7 @@ export class ZonePage extends Component {
     const cnameRecords = formatSeconds(
       addNav(_cnameRecords || []));
     const txtRecords = formatSeconds(
-      addNav(_txtRecords || []));
+       addNav(this.formatTXTRecords(), (id) => this.renderEditTXTRecord('Edit TXT Record', id)));
     const srvRecords = formatSeconds(
       addNav(this.formatSRVRecords()));
     const soaRecord = {
@@ -276,6 +291,7 @@ export class ZonePage extends Component {
             title="TXT Records"
             id="txt"
             records={txtRecords}
+            navOnClick={this.renderEditTXTRecord('Add TXT Record')}
             labels={['Name', 'Value', 'TTL', '']}
             keys={['name', 'target', 'ttl_sec', 'nav']}
           />

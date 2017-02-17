@@ -47,8 +47,8 @@ export default function SelectDNSSeconds(props) {
 }
 
 SelectDNSSeconds.propTypes = {
-  onChange: PropTypes.func.isReqired,
-  value: PropTypes.number.isRequired,
+  onChange: PropTypes.func.isRequired,
+  value: PropTypes.any,
   defaultSeconds: PropTypes.number,
   id: PropTypes.string,
   name: PropTypes.string,
