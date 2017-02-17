@@ -781,3 +781,10 @@ export const TIME_ZONES = [
   'SST',
   'VST',
 ];
+
+export const OAUTH_SUBSCOPES = ['view', 'modify', 'create', 'delete'];
+
+export const OAUTH_SCOPES = [
+  'linodes', 'dnszones', 'nodebalancers', 'images', 'stackscripts', 'longivew', 'events', 'tokens',
+  'clients', 'account', 'users',
+];
