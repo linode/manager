@@ -1,8 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
+import CreateHelper from '~/components/CreateHelper';
 import { setError } from '~/actions/errors';
 import { clients } from '~/api';
+import { Button } from '~/components/buttons';
 import MyApplication from '../components/MyApplication';
 
 export class MyApplicationsPage extends Component {
@@ -17,15 +19,30 @@ export class MyApplicationsPage extends Component {
   }
 
   render() {
-    const { dispatch, clients } = this.props;
+    const { dispatch } = this.props;
+
+    const clients = Object.values(this.props.clients.clients);
 
     return (
-      <div className="row">
-        {Object.values(clients.clients).map(client =>
-          <div className="col-lg-6" key={client.id}>
-            <MyApplication client={client} dispatch={dispatch} />
-          </div>
-         )}
+      <div>
+        <header className="clearfix">
+          <Button to="/profile/applications/create" className="float-sm-right">
+            Add an OAuth Client
+          </Button>
+        </header>
+        <div className="row">
+          {clients.length ? clients.map(client =>
+            <div className="col-lg-6" key={client.id}>
+              <MyApplication client={client} dispatch={dispatch} />
+            </div>
+           ) : (
+            <CreateHelper
+              label="OAuth Clients"
+              href="/profile/applications/create"
+              linkText="Add an OAuth Client"
+            />
+           )}
+        </div>
       </div>
     );
   }
