@@ -2,9 +2,7 @@ import React from 'react';
 import sinon from 'sinon';
 import { shallow, mount } from 'enzyme';
 import { expect } from 'chai';
-import { push } from 'react-router-redux';
 
-import { api } from '@/data';
 import { DisplayPage } from '~/profile/layouts/DisplayPage';
 import { TIME_ZONES } from '~/constants';
 
@@ -24,7 +22,7 @@ describe('profile/layouts/DisplayPage', () => {
       },
     },
   };
-  
+
   it('renders timezones', async () => {
     const page = mount(
       <DisplayPage

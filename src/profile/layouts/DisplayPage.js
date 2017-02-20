@@ -25,7 +25,6 @@ export class DisplayPage extends Component {
     this.emailOnSubmit = this.emailOnSubmit.bind(this);
 
     // TODO refactor with abstractor changes
-    console.log(this.props);
     const profile = this.props.profile.profile.undefined;
     this.state = {
       fetching: false,
@@ -46,16 +45,17 @@ export class DisplayPage extends Component {
       await dispatch(profile.put({ timezone: this.state.timezone }));
     } catch (response) {
       const errors = await reduceErrors(response);
+      this.setState({ errors });
     }
   }
 
   async emailOnSubmit() {
     const { dispatch } = this.props;
-    console.log(this.state);
     try {
       await dispatch(profile.put({ email: this.state.email }));
     } catch (response) {
       const errors = await reduceErrors(response);
+      this.setState({ errors });
     }
   }
 
