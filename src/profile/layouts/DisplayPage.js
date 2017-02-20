@@ -24,6 +24,8 @@ export class DisplayPage extends Component {
     this.timezoneOnSubmit = this.timezoneOnSubmit.bind(this);
     this.emailOnSubmit = this.emailOnSubmit.bind(this);
 
+    // TODO refactor with abstractor changes
+    console.log(this.props);
     const profile = this.props.profile.profile.undefined;
     this.state = {
       fetching: false,
@@ -90,6 +92,7 @@ export class DisplayPage extends Component {
               <label htmlFor="email" className="col-sm-2 col-form-label">Email:</label>
               <div className="col-sm-10">
                 <Input
+                  id="email"
                   type="email"
                   name="email"
                   onChange={this.inputOnChange}
