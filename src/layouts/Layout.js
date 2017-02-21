@@ -65,7 +65,7 @@ export class Layout extends Component {
     const { dispatch, linodes } = this.props;
 
     // handles linode events and display status changes
-    const linodeStatus = EventTypeMap[event.type].linodeStatus;
+    const linodeStatus = EventTypeMap[event.action].linodeStatus;
     if (event.linode_id && linodeStatus) {
       const linode = linodes.linodes[event.linode_id];
       if (linode) {

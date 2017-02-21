@@ -9,7 +9,7 @@ export const apiTestEvent = {
   finished: null,
   percent_complete: 100,
   created: '2016-11-21T20:03:40',
-  type: 'linode_reboot',
+  action: 'linode_reboot',
   id: 385,
   label_message: '',
   nodebalancer_id: null,
@@ -23,7 +23,7 @@ export const testEvent = {
 export function makeEvent(eventType) {
   return {
     ...testEvent,
-    type: eventType,
+    action: eventType,
   };
 }
 
