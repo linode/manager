@@ -9,7 +9,7 @@ import EventTypeMap from './EventTypes';
 export default function NotificationListItem(props) {
   const event = props.event;
   const timeRemaining = event.time_remaining;
-  const eventOptions = EventTypeMap[event.type];
+  const eventOptions = EventTypeMap[event.action];
 
   const timestamp = moment.utc(event.updated, moment.ISO_8601);
   const baseCls = 'NotificationList-listItem';
