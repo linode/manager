@@ -15,7 +15,7 @@ export default function NotificationListItem(props) {
   const baseCls = 'NotificationList-listItem';
   let className = baseCls;
 
-  // This should not happen (it is a bug in the db). But if it does, don't blow up.'
+  // This should not happen (it is a bug in the db). But if it does, don't blow up.
   if (!event.entity) {
     return null;
   }
