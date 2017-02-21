@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
-import { Card } from '~/components';
+import { Card } from '~/components/cards';
 import { CheckboxInputCombo, Form, SubmitButton } from '~/components/form';
 import { linodes } from '~/api';
 import { setSource } from '~/actions/source';

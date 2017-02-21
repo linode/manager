@@ -13,7 +13,7 @@ export const config = genConfig({
       plural: 'records',
       singular: 'record',
       endpoint: (dnszone, record) => `/dns/zones/${dnszone}/records/${record}`,
-      supports: [ONE, MANY, PUT, DELETE],
+      supports: [ONE, MANY, PUT, POST, DELETE],
     },
   },
 });

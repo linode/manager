@@ -1,0 +1,14 @@
+.SecondaryCard {
+    @extend .Card;
+    padding: 0;
+
+    &-header,
+    &-body {
+        padding: 15px 20px;
+    }
+
+    &-header {
+        background-color: $light-gray;
+        border-bottom: $border;
+    }
+}

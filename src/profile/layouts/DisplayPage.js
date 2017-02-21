@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 
 import { setError } from '~/actions/errors';
 import { TIME_ZONES } from '~/constants';
-import Card from '~/components/Card';
 import { profile } from '~/api';
+import { Card } from '~/components/cards';
 import { Form, FormGroup, FormGroupError, SubmitButton, Input, Select } from '~/components/form';
 import { ErrorSummary, reduceErrors } from '~/errors';
 

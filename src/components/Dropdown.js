@@ -20,6 +20,7 @@ export default class Dropdown extends Component {
 
   render() {
     const [first, ...rest] = this.props.elements;
+    const { disabled } = this.props;
 
     const dropdownMenu = rest.map(({ name, action }) =>
       <button
@@ -41,9 +42,11 @@ export default class Dropdown extends Component {
           type="button"
           className="btn dropdown-first"
           onClick={first.action}
+          disabled={disabled}
         >{first.name}</button>
         {rest.length !== 0 ?
           <button
+            disabled={disabled}
             type="button"
             className="btn dropdown-toggle"
             data-toggle="dropdown"
@@ -65,4 +68,5 @@ Dropdown.propTypes = {
     action: PropTypes.func,
   })).isRequired,
   leftOriented: PropTypes.bool,
+  disabled: PropTypes.bool,
 };

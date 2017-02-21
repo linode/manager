@@ -4,7 +4,6 @@ import { push } from 'react-router-redux';
 
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import { linodes } from '~/api';
-import HelpButton from '~/components/HelpButton';
 import { Form,
   FormGroup,
   FormGroupError,
@@ -18,6 +17,7 @@ import { Form,
 } from '~/components/form';
 import { ErrorSummary, reduceErrors } from '~/errors';
 import { SubmitButton, CancelButton } from '~/components/form';
+import { Card } from '~/components/cards';
 import { LinkButton } from '~/components/buttons';
 import { setSource } from '~/actions/source';
 import { setError } from '~/actions/errors';
@@ -322,300 +322,282 @@ export class EditConfigPage extends Component {
     } = this.state.helpers;
     const linode = this.getLinode();
     return (
-      <section className="card">
+      <Card title={create ? 'Add config' : 'Edit config'} navLink="https://example.org">
         <Form onSubmit={() => this.saveChanges()}>
-          <header>
-            <h2>
-              {create ? 'Add config' : 'Edit config'}
-              <HelpButton to="https://example.org" />
-            </h2>
-            <h3 className="sub-header">Label and Note</h3>
-          </header>
-          <div>
-            <FormGroup errors={errors} name="label" className="row">
-              <label className="col-sm-2 col-form-label">Label</label>
-              <div className="col-sm-6">
-                <Input
-                  id="config-label"
-                  placeholder="My new config"
-                  value={label}
-                  onChange={e => this.setState({ label: e.target.value })}
-                />
-                <FormGroupError errors={errors} name="label" />
-              </div>
-            </FormGroup>
-            <FormGroup errors={errors} name="comments" className="row">
-              <label className="col-sm-2 col-form-label">Notes</label>
-              <div className="col-sm-6">
-                <textarea
-                  id="config-comments"
-                  className="form-control col-sm-3"
-                  placeholder="Notes"
-                  value={comments}
-                  disabled={loading}
-                  onChange={e => this.setState({ comments: e.target.value })}
-                />
-                <FormGroupError errors={errors} name="comments" />
-              </div>
-            </FormGroup>
-          </div>
+          <h3 className="sub-header">Label and Note</h3>
+          <FormGroup errors={errors} name="label" className="row">
+            <label className="col-sm-2 col-form-label">Label</label>
+            <div className="col-sm-6">
+              <Input
+                id="config-label"
+                placeholder="My new config"
+                value={label}
+                onChange={e => this.setState({ label: e.target.value })}
+              />
+              <FormGroupError errors={errors} name="label" />
+            </div>
+          </FormGroup>
+          <FormGroup errors={errors} name="comments" className="row">
+            <label className="col-sm-2 col-form-label">Notes</label>
+            <div className="col-sm-6">
+              <textarea
+                id="config-comments"
+                placeholder="Notes"
+                value={comments}
+                disabled={loading}
+                onChange={e => this.setState({ comments: e.target.value })}
+              />
+              <FormGroupError errors={errors} name="comments" />
+            </div>
+          </FormGroup>
           <h3 className="sub-header">Virtual Machine Mode</h3>
-          <div>
-            <FormGroup errors={errors} name="virtMode" className="row">
-              <label className="col-form-label col-sm-2">Virtualization mode</label>
-              <div className="col-sm-3">
+          <FormGroup errors={errors} name="virtMode" className="row">
+            <label className="col-form-label col-sm-2">Virtualization mode</label>
+            <div className="col-sm-3">
+              <Checkboxes>
+                <Radio
+                  checked={virtMode === 'paravirt'}
+                  onChange={() => this.setState({ virtMode: 'paravirt' })}
+                  label="Paravirtualization"
+                />
+                <Radio
+                  id="config-virtMode-fullvirt"
+                  checked={virtMode === 'fullvirt'}
+                  onChange={() => this.setState({ virtMode: 'fullvirt' })}
+                  label="Full virtualization"
+                />
+              </Checkboxes>
+            </div>
+          </FormGroup>
+          <h3 className="sub-header">Block Device Assignment</h3>
+          <FormGroup errors={errors} name="kernel" className="row">
+            <label className="col-sm-2 col-form-label">Kernel</label>
+            <div className="col-sm-6">
+              <Select
+                id="config-kernel"
+                value={kernel}
+                disabled={loading}
+                onChange={e => this.setState({ kernel: e.target.value })}
+              >
+                <optgroup label="Current">
+                  {Object.values(kernels.kernels).map(kernel => {
+                    const map = {
+                      'linode/latest': 'Latest 32-bit kernel',
+                      'linode/latest_64': 'Latest 64-bit kernel',
+                    };
+                    if (kernel.deprecated) return;
+                    return (
+                      <option key={kernel.id} value={kernel.id}>
+                        {map[kernel.id] || kernel.label}
+                      </option>
+                    );
+                  })}
+                </optgroup>
+                <optgroup label="Deprecated">
+                  {Object.values(kernels.kernels).map(kernel => {
+                    const map = {
+                      'linode/latest': 'Latest 32-bit kernel',
+                      'linode/latest_64': 'Latest 64-bit kernel',
+                    };
+                    if (!kernel.deprecated) return;
+                    return (
+                      <option key={kernel.id} value={kernel.id}>
+                        {map[kernel.id] || kernel.label}
+                      </option>
+                    );
+                  })}
+                </optgroup>
+              </Select>
+            </div>
+          </FormGroup>
+          <FormGroup errros={errors} name="runLevel" className="row">
+            <fieldset className="form-group">
+              <label className="col-sm-2 col-form-label">Run level</label>
+              <div className="col-sm-6">
                 <Checkboxes>
                   <Radio
-                    checked={virtMode === 'paravirt'}
-                    onChange={() => this.setState({ virtMode: 'paravirt' })}
-                    label="Paravirtualization"
+                    checked={runLevel === 'default'}
+                    onChange={() => this.setState({ runLevel: 'default' })}
+                    label="Default"
                   />
                   <Radio
-                    id="config-virtMode-fullvirt"
-                    checked={virtMode === 'fullvirt'}
-                    onChange={() => this.setState({ virtMode: 'fullvirt' })}
-                    label="Full virtualization"
+                    id="config-runLevel-single"
+                    checked={runLevel === 'single'}
+                    onChange={() => this.setState({ runLevel: 'single' })}
+                    label="Single-user mode"
+                  />
+                  <Radio
+                    checked={runLevel === 'binbash'}
+                    onChange={() => this.setState({ runLevel: 'binbash' })}
+                    label="init=/bin/bash"
                   />
                 </Checkboxes>
               </div>
-            </FormGroup>
-          </div>
-          <h3 className="sub-header">Block Device Assignment</h3>
-          <div>
-            <FormGroup errors={errors} name="kernel" className="row">
-              <label className="col-sm-2 col-form-label">Kernel</label>
-              <div className="col-sm-6">
-                <Select
-                  id="config-kernel"
-                  value={kernel}
-                  disabled={loading}
-                  onChange={e => this.setState({ kernel: e.target.value })}
-                >
-                  <optgroup label="Current">
-                    {Object.values(kernels.kernels).map(kernel => {
-                      const map = {
-                        'linode/latest': 'Latest 32-bit kernel',
-                        'linode/latest_64': 'Latest 64-bit kernel',
-                      };
-                      if (kernel.deprecated) return;
-                      return (
-                        <option key={kernel.id} value={kernel.id}>
-                          {map[kernel.id] || kernel.label}
-                        </option>
-                      );
-                    })}
-                  </optgroup>
-                  <optgroup label="Deprecated">
-                    {Object.values(kernels.kernels).map(kernel => {
-                      const map = {
-                        'linode/latest': 'Latest 32-bit kernel',
-                        'linode/latest_64': 'Latest 64-bit kernel',
-                      };
-                      if (!kernel.deprecated) return;
-                      return (
-                        <option key={kernel.id} value={kernel.id}>
-                          {map[kernel.id] || kernel.label}
-                        </option>
-                      );
-                    })}
-                  </optgroup>
-                </Select>
+            </fieldset>
+          </FormGroup>
+          <FormGroup errors={errors} name="ram_limit" className="row">
+            <label className="col-sm-2 col-form-label">Memory limit</label>
+            <div className="col-sm-10">
+              <div>
+                <Radio
+                  checked={isMaxRam === true}
+                  id="config-isMaxRam-true"
+                  onChange={() => this.setState({ isMaxRam: true })}
+                  label={`Maximum (${linode.type.length ? linode.type[0].ram : null} MB)`}
+                />
               </div>
-            </FormGroup>
-            <FormGroup errros={errors} name="runLevel" className="row">
-              <fieldset className="form-group">
-                <label className="col-sm-2 col-form-label">Run level</label>
-                <div className="col-sm-6">
-                  <Checkboxes>
-                    <Radio
-                      checked={runLevel === 'default'}
-                      onChange={() => this.setState({ runLevel: 'default' })}
-                      label="Default"
-                    />
-                    <Radio
-                      id="config-runLevel-single"
-                      checked={runLevel === 'single'}
-                      onChange={() => this.setState({ runLevel: 'single' })}
-                      label="Single-user mode"
-                    />
-                    <Radio
-                      checked={runLevel === 'binbash'}
-                      onChange={() => this.setState({ runLevel: 'binbash' })}
-                      label="init=/bin/bash"
-                    />
-                  </Checkboxes>
-                </div>
-              </fieldset>
-            </FormGroup>
-            <FormGroup errors={errors} name="ram_limit" className="row">
-              <label className="col-sm-2 col-form-label">Memory limit</label>
-              <div className="col-sm-10">
-                <div>
-                  <Radio
-                    checked={isMaxRam === true}
-                    id="config-isMaxRam-true"
-                    onChange={() => this.setState({ isMaxRam: true })}
-                    label={`Maximum (${linode.type.length ? linode.type[0].ram : null} MB)`}
-                  />
-                </div>
-                <div>
-                  <RadioInputCombo
-                    radioId="config-isMaxRam-false"
-                    radioLabel=""
-                    radioChecked={isMaxRam === false}
-                    radioOnChange={() => this.setState({ isMaxRam: false })}
-                    inputId="config-ramLimit"
-                    inputLabel="MB"
-                    inputDisabled={isMaxRam === true}
-                    inputValue={ramLimit}
-                    inputOnChange={e => this.setState({ ramLimit: e.target.value })}
-                  />
-                  <FormGroupError errors={errors} name="ram_limit" />
-                </div>
-              </div>
-            </FormGroup>
-            {diskSlots.map(this.renderDiskSlot)}
-            <div className="form-group row">
-              <label className="col-sm-2 col-form-label">initrd</label>
-              <div className="input-container col-sm-6">
-                <Select
-                  id="config-initrd"
-                  value={initrd}
-                  onChange={e => this.setState({ initrd: e.target.value })}
-                >
-                  <option value="">No initrd</option>
-                  <option value="25669">Recovery - Finnix (initrd)</option>
-                </Select>
+              <div>
+                <RadioInputCombo
+                  radioId="config-isMaxRam-false"
+                  radioLabel=""
+                  radioChecked={isMaxRam === false}
+                  radioOnChange={() => this.setState({ isMaxRam: false })}
+                  inputId="config-ramLimit"
+                  inputLabel="MB"
+                  inputDisabled={isMaxRam === true}
+                  inputValue={ramLimit}
+                  inputOnChange={e => this.setState({ ramLimit: e.target.value })}
+                />
+                <FormGroupError errors={errors} name="ram_limit" />
               </div>
             </div>
-            <div className="form-group row">
-              <label className="col-sm-2 col-form-label">root / boot device</label>
-              <div className="input-container col-sm-10">
-                <FormGroup>
-                  <RadioSelectCombo
-                    radioChecked={isCustomRoot === false}
-                    radioOnChange={() => this.setState({
-                      isCustomRoot: false,
-                      rootDevice: '/dev/sda',
-                    })}
-                    radioLabel="Standard"
-                    selectId="config-root-device-select"
-                    selectValue={isCustomRoot ? '/dev/sda' : rootDevice}
-                    selectDisabled={loading || isCustomRoot}
-                    selectOnChange={e => this.setState({ rootDevice: e.target.value })}
-                    selectChildren={diskSlots.map((_, i) =>
-                      <option key={i} value={`/dev/${AVAILABLE_DISK_SLOTS[i]}`}>
-                        /dev/{AVAILABLE_DISK_SLOTS[i]}
-                      </option>
-                    )}
-                  />
-                </FormGroup>
-                <FormGroup errors={errors} name="root_device">
-                  <RadioInputCombo
-                    radioId="config-isCustomRoot-true"
-                    radioLabel="Custom"
-                    radioChecked={isCustomRoot === true}
-                    radioOnChange={() => this.setState({
-                      isCustomRoot: true,
-                      rootDevice: '/dev/xvda',
-                    })}
-                    inputId="config-custom-root-device"
-                    inputPlaceholder="/dev/xvda"
-                    inputValue={isCustomRoot ? rootDevice : ''}
-                    inputDisabled={isCustomRoot === false}
-                    inputType="text"
-                    inputOnChange={e => this.setState({ rootDevice: e.target.value })}
-                  />
-                  <FormGroupError errors={errors} name="root_device" />
-                </FormGroup>
-              </div>
+          </FormGroup>
+          {diskSlots.map(this.renderDiskSlot)}
+          <div className="form-group row">
+            <label className="col-sm-2 col-form-label">initrd</label>
+            <div className="input-container col-sm-6">
+              <Select
+                id="config-initrd"
+                value={initrd}
+                onChange={e => this.setState({ initrd: e.target.value })}
+              >
+                <option value="">No initrd</option>
+                <option value="25669">Recovery - Finnix (initrd)</option>
+              </Select>
+            </div>
+          </div>
+          <div className="form-group row">
+            <label className="col-sm-2 col-form-label">root / boot device</label>
+            <div className="input-container col-sm-10">
+              <FormGroup>
+                <RadioSelectCombo
+                  radioChecked={isCustomRoot === false}
+                  radioOnChange={() => this.setState({
+                    isCustomRoot: false,
+                    rootDevice: '/dev/sda',
+                  })}
+                  radioLabel="Standard"
+                  selectId="config-root-device-select"
+                  selectValue={isCustomRoot ? '/dev/sda' : rootDevice}
+                  selectDisabled={loading || isCustomRoot}
+                  selectOnChange={e => this.setState({ rootDevice: e.target.value })}
+                  selectChildren={diskSlots.map((_, i) =>
+                    <option key={i} value={`/dev/${AVAILABLE_DISK_SLOTS[i]}`}>
+                      /dev/{AVAILABLE_DISK_SLOTS[i]}
+                    </option>
+                  )}
+                />
+              </FormGroup>
+              <FormGroup errors={errors} name="root_device">
+                <RadioInputCombo
+                  radioId="config-isCustomRoot-true"
+                  radioLabel="Custom"
+                  radioChecked={isCustomRoot === true}
+                  radioOnChange={() => this.setState({
+                    isCustomRoot: true,
+                    rootDevice: '/dev/xvda',
+                  })}
+                  inputId="config-custom-root-device"
+                  inputPlaceholder="/dev/xvda"
+                  inputValue={isCustomRoot ? rootDevice : ''}
+                  inputDisabled={isCustomRoot === false}
+                  inputType="text"
+                  inputOnChange={e => this.setState({ rootDevice: e.target.value })}
+                />
+                <FormGroupError errors={errors} name="root_device" />
+              </FormGroup>
             </div>
           </div>
           <h3 className="sub-header">Filesystem/Boot Helpers</h3>
-          <div>
-            <fieldset className="form-group row">
-              <label className="col-sm-2 col-form-label">Boot helpers</label>
-              <div className="col-md-8">
-                <Checkbox
-                  id="config-enableDistroHelper"
-                  checked={enableDistroHelper}
-                  onChange={() => this.setState({
-                    helpers: {
-                      ...this.state.helpers,
-                      enableDistroHelper: !enableDistroHelper,
-                    },
-                  })}
-                  label="Enable distro helper"
-                />
-                <div>
-                  <small className="text-muted">
-                    Helps maintain correct inittab/upstart console device
-                  </small>
-                </div>
-                <Checkbox
-                  id="config-disableUpdatedb"
-                  checked={disableUpdatedb}
-                  onChange={() => this.setState({
-                    helpers: {
-                      ...this.state.helpers,
-                      disableUpdatedb: !disableUpdatedb,
-                    },
-                  })}
-                  label="Disable updatedb"
-                />
-                <div>
-                  <small className="text-muted">
-                    Disables updatedb cron job to avoid disk thrashing
-                  </small>
-                </div>
-                <Checkbox
-                  id="config-enableModulesdepHelper"
-                  checked={enableModulesdepHelper}
-                  onChange={() => this.setState({
-                    helpers: {
-                      ...this.state.helpers,
-                      enableModulesdepHelper: !enableModulesdepHelper,
-                    },
-                  })}
-                  label="Enable modules.dep helper"
-                />
-                <div>
-                  <small className="text-muted">
-                    Creates a modules dependency file for the kernel you run
-                  </small>
-                </div>
-                <Checkbox
-                  id="config-enableNetworkHelper"
-                  checked={enableNetworkHelper}
-                  onChange={() => this.setState({
-                    helpers: {
-                      ...this.state.helpers,
-                      enableNetworkHelper: !enableNetworkHelper,
-                    },
-                  })}
-                  label="Enable network helper"
-                />
-                <div>
-                  <small className="text-muted">
-                    Automatically configure static networking <a
-                      href="https://www.linode.com/docs/platform/network-helper"
-                    >
-                      (more info)
-                    </a>
-                  </small>
-                </div>
+          <fieldset className="form-group row">
+            <label className="col-sm-2 col-form-label">Boot helpers</label>
+            <div className="col-md-8">
+              <Checkbox
+                id="config-enableDistroHelper"
+                checked={enableDistroHelper}
+                onChange={() => this.setState({
+                  helpers: {
+                    ...this.state.helpers,
+                    enableDistroHelper: !enableDistroHelper,
+                  },
+                })}
+                label="Enable distro helper"
+              />
+              <div>
+                <small className="text-muted">
+                  Helps maintain correct inittab/upstart console device
+                </small>
               </div>
-            </fieldset>
-            <ErrorSummary errors={errors} />
-            <div className="row">
-              <div className="offset-sm-2 col-sm-10">
-                <SubmitButton>{this.props.create ? 'Add config' : 'Save'}</SubmitButton>
-                <CancelButton to={`/linodes/${linodeLabel}/settings/advanced`} />
+              <Checkbox
+                id="config-disableUpdatedb"
+                checked={disableUpdatedb}
+                onChange={() => this.setState({
+                  helpers: {
+                    ...this.state.helpers,
+                    disableUpdatedb: !disableUpdatedb,
+                  },
+                })}
+                label="Disable updatedb"
+              />
+              <div>
+                <small className="text-muted">
+                  Disables updatedb cron job to avoid disk thrashing
+                </small>
               </div>
+              <Checkbox
+                id="config-enableModulesdepHelper"
+                checked={enableModulesdepHelper}
+                onChange={() => this.setState({
+                  helpers: {
+                    ...this.state.helpers,
+                    enableModulesdepHelper: !enableModulesdepHelper,
+                  },
+                })}
+                label="Enable modules.dep helper"
+              />
+              <div>
+                <small className="text-muted">
+                  Creates a modules dependency file for the kernel you run
+                </small>
+              </div>
+              <Checkbox
+                id="config-enableNetworkHelper"
+                checked={enableNetworkHelper}
+                onChange={() => this.setState({
+                  helpers: {
+                    ...this.state.helpers,
+                    enableNetworkHelper: !enableNetworkHelper,
+                  },
+                })}
+                label="Enable network helper"
+              />
+              <div>
+                <small className="text-muted">
+                  Automatically configure static networking
+                  <a href="https://www.linode.com/docs/platform/network-helper">(more info)</a>
+                </small>
+              </div>
+            </div>
+          </fieldset>
+          <ErrorSummary errors={errors} />
+          <div className="row">
+            <div className="offset-sm-2 col-sm-10">
+              <SubmitButton>{this.props.create ? 'Add config' : 'Save'}</SubmitButton>
+              <CancelButton to={`/linodes/${linodeLabel}/settings/advanced`} />
             </div>
           </div>
         </Form>
-      </section>
+      </Card>
     );
   }
 }

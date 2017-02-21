@@ -9,6 +9,7 @@ import { types } from './types';
 import { kernels } from './kernels';
 import { dnszones } from './dnszones';
 import { events } from './events';
+import { clients } from './clients';
 
 function fakeAPIStore(data, singular, plural) {
   const totalResults = Object.keys(data).length;
@@ -41,6 +42,7 @@ export const api = (apiObjects => {
   [kernels, 'kernel', 'kernels'],
   [dnszones, 'dnszone', 'dnszones'],
   [events, 'event', 'events'],
+  [clients, 'client', 'clients'],
 ]);
 
 export const state = deepFreeze({
