@@ -19,33 +19,6 @@ describe('linodes/linode/settings/components/ConfigPanel', () => {
     sandbox.restore();
   });
 
-  it('renders config help button', () => {
-    const panel = mount(
-      <ConfigPanel
-        params={{ linodeLabel: 'test-linode-5' }}
-        dispatch={() => {}}
-        linodes={linodes}
-      />
-    );
-
-    expect(panel.find('HelpButton').length).to.equal(1);
-  });
-
-  it('renders add a config button', () => {
-    const panel = shallow(
-      <ConfigPanel
-        params={{ linodeLabel: 'test-linode-5' }}
-        dispatch={() => {}}
-        linodes={linodes}
-      />
-    );
-
-    expect(panel.find('header Button').props().children).
-      to.equal('Add a config');
-    expect(panel.find('header Button').props().to)
-      .equal('/linodes/test-linode-5/settings/advanced/configs/create');
-  });
-
   it('renders with no config', () => {
     const panel = shallow(
       <ConfigPanel

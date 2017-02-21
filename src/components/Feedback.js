@@ -1,5 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 
+import { Card } from '~/components/cards';
+
 export default class Feedback extends Component {
   constructor(props) {
     super();
@@ -18,53 +20,48 @@ export default class Feedback extends Component {
           className="btn feedback-button"
           onClick={hideShowFeedback}
         >Feedback</button>
-        <div className="card">
-          <header>
-            <h3>Submit feedback</h3>
-          </header>
-          <div className="card-body">
-            <form
-              onSubmit={() => submitFeedback(this.state)}
-            >
-              <div className="form-group">
-                <div>
-                  <label>Email:</label>
-                </div>
-                <div>
-                  <input
-                    value={email}
-                    name="email"
-                    className="form-control"
-                    onChange={e => this.setState({ email: e.target.value })}
-                  />
-                </div>
+        <Card title="Submit Feedback">
+          <form
+            onSubmit={() => submitFeedback(this.state)}
+          >
+            <div className="form-group">
+              <div>
+                <label>Email:</label>
               </div>
-              <div className="form-group">
-                <div>
-                  <label>Message:</label>
-                </div>
-                <div>
-                  <textarea
-                    value={message}
-                    name="message"
-                    className="form-control"
-                    onChange={e => this.setState({ message: e.target.value })}
-                  />
-                </div>
+              <div>
+                <input
+                  value={email}
+                  name="email"
+                  className="form-control"
+                  onChange={e => this.setState({ email: e.target.value })}
+                />
               </div>
-              <div className="form-group clearfix">
-                <button
-                  className="btn btn-default float-xs-left"
-                >Submit</button>
-                <button
-                  className="btn btn-cancel float-xs-left"
-                  type="button"
-                  onClick={hideShowFeedback}
-                >Cancel</button>
+            </div>
+            <div className="form-group">
+              <div>
+                <label>Message:</label>
               </div>
-            </form>
-          </div>
-        </div>
+              <div>
+                <textarea
+                  value={message}
+                  name="message"
+                  className="form-control"
+                  onChange={e => this.setState({ message: e.target.value })}
+                />
+              </div>
+            </div>
+            <div className="form-group clearfix">
+              <button
+                className="btn btn-default float-xs-left"
+              >Submit</button>
+              <button
+                className="btn btn-cancel float-xs-left"
+                type="button"
+                onClick={hideShowFeedback}
+              >Cancel</button>
+            </div>
+          </form>
+        </Card>
       </div>
     );
   }

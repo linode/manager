@@ -12,6 +12,7 @@ import { launchWeblishConsole } from '~/linodes/components/StatusDropdown';
 import { getLinode } from './IndexPage';
 import { setSource } from '~/actions/source';
 import { Button } from '~/components/buttons';
+import { Card } from '~/components/cards';
 
 export class DashboardPage extends Component {
   constructor() {
@@ -103,18 +104,13 @@ export class DashboardPage extends Component {
 
   renderGraphs() {
     return (
-      <section className="card graphs">
-        TODO
-      </section>
+      <Card title="Performance">TODO</Card>
     );
 
     /* Wait until the data exists because displaying this for not reals is too confusing.
     const graph = this.graphSelection();
     return (
-      <section className="card graphs">
-        <header>
-          <h2>Performance</h2>
-        </header>
+      <Card title="Performance" className="graphs">
         <div className="clearfix">
           <div className="float-xs-left">
             <select
@@ -146,7 +142,7 @@ export class DashboardPage extends Component {
           domain={graph.yDomain}
           gridHorizontal
         />
-      </section>
+       </Card>
     );
     */
   }
@@ -164,10 +160,7 @@ export class DashboardPage extends Component {
     return (
       <div className="row-justify row-eq-height">
         <section className="col-lg-6 col-md-12">
-          <div className="card">
-            <header>
-              <h2>Summary</h2>
-            </header>
+          <Card title="Summary">
             <div className="row linode-ips">
               <div className="col-sm-3 row-label">
                 IP Addresses
@@ -217,13 +210,10 @@ export class DashboardPage extends Component {
                 </Link>
               </div>
             </div>
-          </div>
+          </Card>
         </section>
         <section className="col-lg-6 col-md-12">
-          <div className="card">
-            <header>
-              <h2>Access</h2>
-            </header>
+          <Card title="Access">
             <div className="form-group row linode-ssh">
               <label htmlFor="ssh-input" className="col-sm-4 col-form-label">
                 SSH
@@ -281,7 +271,7 @@ export class DashboardPage extends Component {
                 </small>
               </div>
             </div>
-          </div>
+          </Card>
         </section>
       </div>
     );

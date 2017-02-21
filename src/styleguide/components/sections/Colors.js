@@ -104,7 +104,7 @@ export default function Colors() {
               <div>
                 <div className="StyleguideColor-block StyleguideColor-block__red"></div>
               </div>
-              <div className="card-block StyleguideColor-block-details">
+              <div className="StyleguideColor-block-details">
                 <div className="StyleguideColor-block-detail">
                   <div>$red</div>
                   <div>#F24C2B</div>
@@ -120,7 +120,7 @@ export default function Colors() {
                 <div className="StyleguideColor-block StyleguideColor-block__dark-yellow"></div>
                 <div className="StyleguideColor-block StyleguideColor-block__darkest-yellow"></div>
               </div>
-              <div className="card-block StyleguideColor-block-details">
+              <div className="StyleguideColor-block-details">
                 <div className="StyleguideColor-block-detail">
                   <div>$yellow</div>
                   <div>#FFFCF0</div>

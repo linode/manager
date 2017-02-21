@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import Card from '~/components/Card';
+import { Card } from '~/components/cards';
 import Tabs from '~/components/Tabs';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';

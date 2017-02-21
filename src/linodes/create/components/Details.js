@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 
-import { Card } from '~/components';
+import { Card } from '~/components/cards';
 import { PrimaryButton } from '~/components/buttons';
 import { Form, FormGroup, FormGroupError, PasswordInput, Input, Checkbox } from '~/components/form';
 import { ErrorSummary } from '~/errors';

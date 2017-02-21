@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import Card from '~/components/Card';
+import { Card } from '~/components/cards';
 import { Form, SubmitButton } from '~/components/form';
 import { ErrorSummary } from '~/errors';
 

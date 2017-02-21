@@ -22,17 +22,6 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
     sandbox.restore();
   });
 
-  it('renders disk help button', () => {
-    const panel = mount(
-      <DiskPanel
-        params={{ linodeLabel: `${testLinode.label}` }}
-        dispatch={() => {}}
-        linodes={linodes}
-      />);
-
-    expect(panel.find('HelpButton').length).to.equal(1);
-  });
-
   it('renders disks', () => {
     const panel = mount(
       <DiskPanel

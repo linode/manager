@@ -8,7 +8,7 @@ import { linodes } from '~/api';
 import { resetPassword, rescueLinode } from '~/api/linodes';
 import { ConfirmModalBody } from '~/components/modals';
 import { Form, FormGroup, SubmitButton, Select, PasswordInput } from '~/components/form';
-import Card from '~/components/Card';
+import { Card } from '~/components/cards';
 import { setSource } from '~/actions/source';
 import { getConfig,
   getDisks,

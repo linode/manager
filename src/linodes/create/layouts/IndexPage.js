@@ -6,7 +6,7 @@ import Source from '../components/Source';
 import Plan from '~/linodes/components/Plan';
 import Datacenter from '~/components/Datacenter';
 import Details from '../components/Details';
-import Card from '~/components/Card';
+import { Card } from '~/components/cards';
 import { linodes } from '~/api';
 import { actions as linodeActions } from '~/api/configs/linodes';
 import { randomInitialProgress } from '~/api/linodes';

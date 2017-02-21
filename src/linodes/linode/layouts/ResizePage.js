@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { Card } from '~/components';
+import { Card } from '~/components/cards';
 import {
   FormGroup, Form, SubmitButton,
 } from '~/components/form';

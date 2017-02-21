@@ -5,7 +5,7 @@ import { FormGroup } from '~/components/form';
 import { ErrorSummary, reduceErrors } from '~/errors';
 import { linodes } from '~/api';
 import { cancelBackup } from '~/api/backups';
-import { Card } from '~/components';
+import { Card } from '~/components/cards';
 import { ConfirmModalBody } from '~/components/modals';
 import { Form, SubmitButton } from '~/components/form';
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';

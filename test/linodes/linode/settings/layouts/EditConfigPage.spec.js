@@ -364,14 +364,6 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
   });
 
   describe('edit config', () => {
-    it('edit existing config', () => {
-      const page = shallow(
-        <EditConfigPage
-          {...props}
-        />);
-      expect(page.find('h2').at(0).text()).to.equal('Edit config<HelpButton />');
-    });
-
     it('renders kernel properly', async () => {
       const page = shallow(
         <EditConfigPage
