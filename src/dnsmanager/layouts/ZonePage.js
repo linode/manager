@@ -14,7 +14,7 @@ import { getObjectByLabelLazily } from '~/api/util';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 import { Button } from '~/components/buttons';
-import Card from '~/components/Card';
+import { Card } from '~/components/cards';
 import SecondaryTable from '~/components/SecondaryTable';
 import { NAME_SERVERS } from '~/constants';
 

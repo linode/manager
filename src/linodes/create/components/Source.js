@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import _ from 'lodash';
 import moment from 'moment';
 
-import { Card } from '~/components';
+import { Card } from '~/components/cards';
 import Tabs from '~/components/Tabs';
 import Distributions from '~/linodes/components/Distributions';
 import Backups from './Backups';

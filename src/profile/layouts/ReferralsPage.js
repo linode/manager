@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Card from '~/components/Card';
+import { Card } from '~/components/cards';
 
 export default function ReferralsPage() {
   return (
