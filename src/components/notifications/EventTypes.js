@@ -5,7 +5,7 @@ export function baseRedirect() {
 }
 
 export function getLinodeRedirectUrl(entity) {
-  return `${REDIRECT_BASE_URL}/${entity}`;
+  return `${REDIRECT_BASE_URL}/${entity.label}`;
 }
 
 export function getDiskRedirectUrl(entity) {

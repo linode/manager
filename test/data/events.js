@@ -1,5 +1,7 @@
 export const apiTestEvent = {
-  entity: 'linode-www2',
+  entity: {
+    label: 'linode-www2',
+  },
   status: 'finished',
   stackscript_id: null,
   updated: '2016-11-21T20:03:40',

@@ -7,6 +7,7 @@ import {
   getDiskRedirectUrl,
   getBackupRedirectUrl,
 } from '~/components/notifications';
+import { api } from '@/data';
 
 describe('components/notifications/EventTypes', () => {
   it('should define a type map', () => {
@@ -18,14 +19,17 @@ describe('components/notifications/EventTypes', () => {
   });
 
   it('should create a linode redirect url', () => {
-    expect(getLinodeRedirectUrl('example')).to.equal('/linodes/example');
+    const event = api.events.events[385];
+    expect(getLinodeRedirectUrl(event.entity)).to.equal('/linodes/linode-www2');
   });
 
   it('should create a disk redirect url', () => {
-    expect(getDiskRedirectUrl('example')).to.equal('/linodes/example/settings/advanced');
+    const event = api.events.events[385];
+    expect(getDiskRedirectUrl(event.entity)).to.equal('/linodes/linode-www2/settings/advanced');
   });
 
   it('should create a backups redirect url', () => {
-    expect(getBackupRedirectUrl('example')).to.equal('/linodes/example/backups');
+    const event = api.events.events[385];
+    expect(getBackupRedirectUrl(event.entity)).to.equal('/linodes/linode-www2/backups');
   });
 });
