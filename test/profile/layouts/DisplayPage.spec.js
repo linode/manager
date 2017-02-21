@@ -3,7 +3,7 @@ import sinon from 'sinon';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
 
-import { expectRequest, expectObjectDeepEquals } from '@/common';
+import { expectRequest } from '@/common';
 import { DisplayPage } from '~/profile/layouts/DisplayPage';
 import { TIME_ZONES } from '~/constants';
 
