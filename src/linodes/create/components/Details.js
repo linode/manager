@@ -61,7 +61,7 @@ export default class Details extends Component {
                 onChange={password => this.setState({ password })}
                 disabled={selectedDistribution === 'none'}
               />
-              <FormGroupError errors={errors} name="group" />
+              <FormGroupError errors={errors} name="root_pass" inline={false} />
             </div>
           </FormGroup>
           <FormGroup name="backups" errors={errors} className="row">
