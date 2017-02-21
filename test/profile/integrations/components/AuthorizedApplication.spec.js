@@ -42,7 +42,7 @@ describe('profile/integrations/components/AuthorizedApplication', () => {
       // No strikethroughs because all scopes are granted
       expect(row.find('s').length).to.equal(0);
       // All bold because all scopes are granted
-      expect(row.find('strong').length.to.equal(OAUTH_SUBSCOPES.length));
+      expect(row.find('strong').length).to.equal(OAUTH_SUBSCOPES.length);
     }
   });
 
@@ -70,19 +70,19 @@ describe('profile/integrations/components/AuthorizedApplication', () => {
           // No strikethroughs because all scopes are granted
           expect(row.find('s').length).to.equal(0);
           // All bold because all scopes are granted
-          expect(row.find('strong').length.to.equal(OAUTH_SUBSCOPES.length));
+          expect(row.find('strong').length).to.equal(OAUTH_SUBSCOPES.length);
           break;
         case 'nodebalancers':
           // 1 strikethrough because delete is not granted
           expect(row.find('s').length).to.equal(1);
           // All but 1 is granted are granted
-          expect(row.find('strong').length.to.equal(OAUTH_SUBSCOPES.length - 1));
+          expect(row.find('strong').length).to.equal(OAUTH_SUBSCOPES.length - 1);
           break;
         default:
           // All strikethroughs because no scopes are granted
           expect(row.find('s').length).to.equal(OAUTH_SUBSCOPES.length);
           // No bold because no scopes are granted
-          expect(row.find('strong').length.to.equal(0));
+          expect(row.find('strong').length).to.equal(0);
       }
     }
   });
