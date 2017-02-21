@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import Card from '~/components/Card';
+import { Card } from '~/components/cards';
 import { Form, FormGroup, FormGroupError, SubmitButton, Select } from '~/components/form';
 import { ErrorSummary } from '~/errors';
 
@@ -47,9 +47,11 @@ export default class NotificationsPage extends Component {
             <FormGroup className="row" errors={errors} name="keys">
               <label htmlFor="keys" className="col-sm-2 col-form-label">Lish keys:</label>
               <div className="col-sm-10">
-                <textarea id="keys" name="keys" className="form-control" value={keys}></textarea>
+                <textarea id="keys" className="textarea-md" name="keys" value={keys}></textarea>
                 <div>
-                  <small>Place your SSH public keys here for use with Lish console access.</small>
+                  <small className="text-muted">
+                    Place your SSH public keys here for use with Lish console access.
+                  </small>
                 </div>
                 <FormGroupError errors={errors} name="keys" />
               </div>

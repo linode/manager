@@ -7,6 +7,8 @@ import * as dnszonesModule from './configs/dnszones';
 import * as nodebalancersModule from './configs/nodebalancers';
 import * as profileModule from './configs/profile';
 import * as eventsModule from './configs/events';
+import * as tokensModule from './configs/tokens';
+import * as clientsModule from './configs/clients';
 
 import apiActionReducerGenerator from './apiActionReducerGenerator';
 
@@ -22,3 +24,5 @@ export const nodebalancers = apiActionReducerGenerator(nodebalancersModule.confi
                                                        nodebalancersModule.actions);
 export const profile = apiActionReducerGenerator(profileModule.config, profileModule.actions);
 export const events = apiActionReducerGenerator(eventsModule.config, eventsModule.actions);
+export const tokens = apiActionReducerGenerator(tokensModule.config, tokensModule.actions);
+export const clients = apiActionReducerGenerator(clientsModule.config, clientsModule.actions);

@@ -11,6 +11,7 @@ import title from './title';
 import api from '../api/reducer';
 import errors from './errors';
 import linodes from '../linodes/reducers';
+import dnsmanager from '../dnsmanager/reducers';
 import preloadIndicator from './preloadIndicator';
 
 const appReducer = combineReducers({
@@ -23,6 +24,7 @@ const appReducer = combineReducers({
   title,
   api,
   linodes,
+  dnsmanager,
   errors,
   preloadIndicator,
 });

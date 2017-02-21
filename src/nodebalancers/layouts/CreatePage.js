@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import Card from '~/components/Card';
+import { Card } from '~/components/cards';
 import { Input, Form, FormGroup, FormGroupError, SubmitButton } from '~/components/form';
 import Datacenter from '~/components/Datacenter';
 import { nodebalancers } from '~/api';

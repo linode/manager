@@ -1,12 +1,13 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import { Link } from '~/components/Link';
 
+import { Link } from '~/components/Link';
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import { takeBackup } from '~/api/backups';
 import { ErrorSummary, reduceErrors } from '~/errors';
 import { Button } from '~/components/buttons';
+import { Card } from '~/components/cards';
 
 export class SummaryPage extends Component {
   constructor() {
@@ -99,10 +100,7 @@ export class SummaryPage extends Component {
     ];
 
     return (
-      <section className="card">
-        <header>
-          <h2>Restorable backups</h2>
-        </header>
+      <Card title="Restorable backups">
         <div>
           Select a backup to see details and restore to a Linode.
         </div>
@@ -110,7 +108,7 @@ export class SummaryPage extends Component {
           {blocks}
         </div>
         <ErrorSummary errors={errors} />
-      </section>
+      </Card>
     );
   }
 }

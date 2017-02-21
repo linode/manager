@@ -8,6 +8,7 @@ import { linodes } from '~/api';
 import { linodeBackups } from '~/api/linodes';
 import { takeBackup, restoreBackup } from '~/api/backups';
 import { setError } from '~/actions/errors';
+import { Card } from '~/components/cards';
 
 function renderDateTime(dt) {
   return dt.replace('T', ' ');
@@ -182,10 +183,7 @@ export class BackupPage extends Component {
 
     return (
       <div>
-        <section className="card">
-          <header>
-            <h2>Backup details</h2>
-          </header>
+        <Card title="Backup details">
           {backup.label ? label : null}
           <div className="row">
             <div className="col-sm-3">
@@ -245,12 +243,9 @@ export class BackupPage extends Component {
           </div>
           {backup.type === 'snapshot' && backup.status !== 'pending' ?
             takeSnapshot : ''}
-        </section>
+        </Card>
         {backup.status === 'pending' ? null :
-          <section className="card">
-            <header>
-              <h2>Restore</h2>
-            </header>
+          <Card title="Restore">
             {restoreToField}
             <div className="form-group row">
               <div className="col-sm-3 col-form-label"></div>
@@ -286,7 +281,7 @@ export class BackupPage extends Component {
                 </button>
               </div>
             </div>
-          </section>
+          </Card>
         }
       </div>
     );

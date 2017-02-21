@@ -1,10 +1,12 @@
 import React from 'react';
 
+import { Card } from '~/components/cards';
+
 export IndexPage from './IndexPage';
 export SummaryPage from './SummaryPage';
 
 const todo = () => (
-  <section className="card">TODO</section>
+  <Card title="TODO" />
 );
 
 export const ReverseDNSPage = todo;

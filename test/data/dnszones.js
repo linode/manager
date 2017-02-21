@@ -95,4 +95,12 @@ export const testDNSZone = {
   },
 };
 
-export const dnszones = { 1: testDNSZone };
+export const dnszones = {
+  1: testDNSZone,
+  2: {
+    ...testDNSZone,
+    id: 2,
+    dnszone: 'example1.com',
+    _records: { records: {} },
+  },
+};

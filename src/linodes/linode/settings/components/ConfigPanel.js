@@ -1,11 +1,12 @@
 import React, { Component, PropTypes } from 'react';
-import HelpButton from '~/components/HelpButton';
+
 import { Link } from 'react-router';
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import { ConfirmModalBody } from '~/components/modals';
 import { linodes } from '~/api';
 import { showModal, hideModal } from '~/actions/modal';
 import { Button } from '~/components/buttons';
+import { Card } from '~/components/cards';
 
 function configContent(linode, configs, dispatch) {
   if (!linode && linode._configs.totalPages === -1) {
@@ -27,9 +28,7 @@ function configContent(linode, configs, dispatch) {
               <Link
                 to={`/linodes/${linode.label}/settings/advanced/configs/${config.id}`}
                 title={config.id}
-              >
-                {config.label}
-              </Link>
+              >{config.label}</Link>
             </td>
             {configs.length > 1 ? <td className="text-xs-right">
               <Button
@@ -71,19 +70,21 @@ export class ConfigPanel extends Component {
 
     const content = configContent(linode, configs, dispatch);
 
+    const nav = (
+      <Button
+        to={`/linodes/${linode.label}/settings/advanced/configs/create`}
+        className="float-xs-right"
+      >
+        Add a config
+      </Button>
+    );
+
     return (
-      <section className="card">
-        <header className="clearfix">
-          <h2 className="float-xs-left">Configs<HelpButton to="http://example.org" /></h2>
-          <Button
-            to={`/linodes/${linode.label}/settings/advanced/configs/create`}
-            className="float-xs-right"
-          >
-            Add a config
-          </Button>
-        </header>
-        {content}
-      </section>
+      <Card
+        title="Configs"
+        navLink="https://example.org"
+        nav={nav}
+      >{content}</Card>
     );
   }
 }
