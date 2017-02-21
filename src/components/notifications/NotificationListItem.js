@@ -15,13 +15,18 @@ export default function NotificationListItem(props) {
   const baseCls = 'NotificationList-listItem';
   let className = baseCls;
 
+  // This should not happen (it is a bug in the db). But if it does, don't blow up.'
+  if (!event.entity) {
+    return null;
+  }
+
   let entity;
   let message;
   if (!event.read) {
-    entity = (<strong>{event.entity}</strong>);
+    entity = (<strong>{event.entity.label}</strong>);
     className += ` ${baseCls}--unread`;
   } else {
-    entity = event.entity;
+    entity = event.entity.label;
     className += ` ${baseCls}--read`;
   }
 
