@@ -2,28 +2,31 @@
     position: absolute;
     left: 0px;
     top: 0px;
-    right: 100%;
+    width: 0px;
     background-color: $green;
     height: 3px;
     z-index: $preload-z-index;
-    opacity: 0;
 
     &--running {
-        opacity: 100;
-        right: 65%;
-
-        -webkit-transition: right 2s ease-out;
-        -moz-transition: right 2s ease-out;
-        -o-transition: right 2s ease-out;
-        -ms-transition: right 2s ease-out;
+        animation: left-to-right 4s;
+        opacity: 1;
+        transition: opacity 0 none, width;
     }
 
     &--done {
-        right: 0px;
+        opacity: 0;
+        width: calc(100%);
+        transition: none;
+        transition: width 2s ease-out, opacity .5s ease-out .5s;
+    }
+}
 
-        -webkit-transition: right .2s ease-in, opacity 1s ease-out .2s;
-        -moz-transition: right .2s ease-in, opacity 1s ease-out .2s;
-        -o-transition: right .2s ease-in, opacity 1s ease-out .2s;
-        -ms-transition: right .2s ease-in, opacity 1s ease-out .2s;
+@keyframes left-to-right {
+    0% {
+        width: 0;
+    }
+
+    100% {
+        width: calc(35%);
     }
 }
