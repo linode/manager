@@ -4,8 +4,8 @@ import { API_ROOT } from '~/constants';
 import { SecondaryCard } from '~/components/cards/';
 import { OAUTH_SUBSCOPES, OAUTH_SCOPES } from '~/constants';
 
-function title(s) {
-  return s.split(' ').map(s => s[0].toUpperCase() + s.substring(1));
+export function title(s) {
+  return s.split(' ').map(s => s[0].toUpperCase() + s.substring(1)).join('');
 }
 
 function renderScope(scopesRequested, currentScope, currentSubscope) {

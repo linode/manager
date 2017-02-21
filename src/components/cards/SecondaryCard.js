@@ -4,7 +4,6 @@ export default function SecondaryCard(props) {
   return (
     <div className="SecondaryCard" id={props.id}>
       <header className="SecondaryCard-header clearfix">
-        <h2 className="SecondaryCard-title float-sm-left">{props.title}</h2>
         <div className="float-sm-right">{props.nav}</div>
         {props.icon ? (
           <img
