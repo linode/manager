@@ -40,15 +40,10 @@ describe('profile/layouts/DisplayPage', () => {
     expect(dispatch.calledOnce).to.equal(true);
     const fn = dispatch.firstCall.args[0];
 
-    function expectRequestOptions({ method, body }) {
-      expect(method).to.equal('PUT');
-      expectObjectDeepEquals(JSON.parse(body), {
-        timezone: 'GMT',
-      });
-    }
-
-    await expectRequest(fn, '/account/profile',
-                        () => {}, null, expectRequestOptions);
+    await expectRequest(fn, '/account/profile', undefined, undefined, {
+      method: 'PUT',
+      body: { timezone: 'GMT' },
+    });
   });
 
   it('renders email', async () => {
@@ -68,14 +63,9 @@ describe('profile/layouts/DisplayPage', () => {
     expect(dispatch.calledOnce).to.equal(true);
     const fn = dispatch.firstCall.args[0];
 
-    function expectRequestOptions({ method, body }) {
-      expect(method).to.equal('PUT');
-      expectObjectDeepEquals(JSON.parse(body), {
-        email: 'example2@domain.com',
-      });
-    }
-
-    await expectRequest(fn, '/account/profile',
-                        () => {}, null, expectRequestOptions);
+    await expectRequest(fn, '/account/profile', undefined, undefined, {
+      method: 'PUT',
+      body: { email: 'example2@domain.com' },
+    });
   });
 });
