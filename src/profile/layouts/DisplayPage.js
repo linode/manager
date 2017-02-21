@@ -1,25 +1,62 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
 
+import { setError } from '~/actions/errors';
 import { TIME_ZONES } from '~/constants';
+import { profile } from '~/api';
 import { Card } from '~/components/cards';
 import { Form, FormGroup, FormGroupError, SubmitButton, Input, Select } from '~/components/form';
-import { ErrorSummary } from '~/errors';
+import { ErrorSummary, reduceErrors } from '~/errors';
 
-export default class DisplayPage extends Component {
-  constructor() {
-    super();
-    // TODO: fill state appropriately based on API
-    this.state = { fetching: false, errors: {}, email: '', timezone: '' };
+export class DisplayPage extends Component {
+  static async preload({ dispatch }) {
+    try {
+      await dispatch(profile.one());
+    } catch (response) {
+      // eslint-disable-next-line no-console
+      console.error(response);
+      dispatch(setError(response));
+    }
+  }
+
+  constructor(props) {
+    super(props);
+    this.timezoneOnSubmit = this.timezoneOnSubmit.bind(this);
+    this.emailOnSubmit = this.emailOnSubmit.bind(this);
+
+    // TODO refactor with abstractor changes
+    const profile = this.props.profile.profile.undefined;
+    this.state = {
+      fetching: false,
+      errors: {},
+      email: profile.email,
+      timezone: profile.timezone,
+    };
   }
 
   inputOnChange = ({ target: { name, value } }) => {
     this.setState({ [name]: value });
   }
 
-  timezoneOnSubmit = () => {
+  async timezoneOnSubmit() {
+    const { dispatch } = this.props;
+
+    try {
+      await dispatch(profile.put({ timezone: this.state.timezone }));
+    } catch (response) {
+      const errors = await reduceErrors(response);
+      this.setState({ errors });
+    }
   }
 
-  emailOnSubmit = () => {
+  async emailOnSubmit() {
+    const { dispatch } = this.props;
+    try {
+      await dispatch(profile.put({ email: this.state.email }));
+    } catch (response) {
+      const errors = await reduceErrors(response);
+      this.setState({ errors });
+    }
   }
 
   render() {
@@ -43,7 +80,7 @@ export default class DisplayPage extends Component {
             </FormGroup>
             <FormGroup className="row">
               <div className="offset-sm-2 col-sm-10">
-                <SubmitButton disabled />
+                <SubmitButton />
               </div>
             </FormGroup>
             <ErrorSummary errors={errors} />
@@ -55,6 +92,7 @@ export default class DisplayPage extends Component {
               <label htmlFor="email" className="col-sm-2 col-form-label">Email:</label>
               <div className="col-sm-10">
                 <Input
+                  id="email"
                   type="email"
                   name="email"
                   onChange={this.inputOnChange}
@@ -65,7 +103,7 @@ export default class DisplayPage extends Component {
             </FormGroup>
             <FormGroup className="row">
               <div className="offset-sm-2 col-sm-10">
-                <SubmitButton disabled />
+                <SubmitButton />
               </div>
             </FormGroup>
             <ErrorSummary errors={errors} />
@@ -75,3 +113,16 @@ export default class DisplayPage extends Component {
     );
   }
 }
+
+DisplayPage.propTypes = {
+  dispatch: PropTypes.func,
+  profile: PropTypes.object,
+};
+
+function select(state) {
+  return {
+    profile: state.api.profile,
+  };
+}
+
+export default connect(select)(DisplayPage);
