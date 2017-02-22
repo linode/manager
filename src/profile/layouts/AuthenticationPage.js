@@ -1,32 +1,42 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
+import moment from 'moment';
 
 import { Card } from '~/components/cards';
 import {
   Select, PasswordInput, Form, FormGroup, FormGroupError, SubmitButton,
 } from '~/components/form';
 import { ErrorSummary, reduceErrors } from '~/errors';
+import { profilePassword } from '~/api/account';
 
-export default class AuthenticationPage extends Component {
+export class AuthenticationPage extends Component {
   constructor() {
     super();
     this.state = {
       password: '',
-      expires: '',
+      expires: '0',
       errors: {},
       fetching: false,
     };
   }
 
   passwordOnSubmit = async () => {
-    // eslint-disable-next-line no-unused-vars
+    const { dispatch } = this.props;
     const { password, expires } = this.state;
+    const expiresOn = expires === '0' ? null :
+      moment()
+        .add(parseInt(expires), 'days')
+        .utc()
+        .format('YYYY-MM-DDTHH:mm:ss')
+        .toString();
 
     this.setState({ fetching: true, errors: {} });
 
     try {
-      // eslint-disable-next-line no-unused-vars
-      const expiresInDays = expires * 30;
-      // TODO: hook up to API
+      await dispatch(profilePassword({
+        password,
+        expires: expiresOn,
+      }));
     } catch (response) {
       const errors = await reduceErrors(response);
       this.setState({ errors });
@@ -60,21 +70,20 @@ export default class AuthenticationPage extends Component {
               <div className="col-sm-10">
                 <Select
                   id="expires"
-                  disabled
-                  onChange={expires => this.setState({ expires })}
+                  onChange={e => this.setState({ expires: e.target.value })}
                   value={expires}
                 >
                   <option value="0">Never</option>
-                  <option value="1">In 1 month</option>
-                  <option value="3">In 3 months</option>
-                  <option value="6">In 6 months</option>
+                  <option value="30">In 1 month</option>
+                  <option value="90">In 3 months</option>
+                  <option value="180">In 6 months</option>
                 </Select>
                 <FormGroupError errors={errors} name="expires" />
               </div>
             </FormGroup>
             <FormGroup className="row">
               <div className="col-sm-10 offset-sm-2">
-                <SubmitButton disabled />
+                <SubmitButton />
               </div>
             </FormGroup>
             <ErrorSummary errors={errors} />
@@ -92,3 +101,16 @@ export default class AuthenticationPage extends Component {
     );
   }
 }
+
+AuthenticationPage.propTypes = {
+  dispatch: PropTypes.func,
+  profile: PropTypes.object,
+};
+
+function select(state) {
+  return {
+    profile: state.api.profile,
+  };
+}
+
+export default connect(select)(AuthenticationPage);
