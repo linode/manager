@@ -7,6 +7,7 @@ import { formatDNSSeconds, ONE_DAY } from '../components/SelectDNSSeconds';
 import EditSOARecord from '../components/EditSOARecord';
 import EditNSRecord from '../components/EditNSRecord';
 import EditMXRecord from '../components/EditMXRecord';
+import EditARecord from '../components/EditARecord';
 import EditTXTRecord from '../components/EditTXTRecord';
 import { setError } from '~/actions/errors';
 import { dnszones } from '~/api';
@@ -173,6 +174,10 @@ export class ZonePage extends Component {
     return this.renderEditRecord(title, EditMXRecord, { id });
   }
 
+  renderEditARecord(title, id) {
+    return this.renderEditRecord(title, EditARecord, { id });
+  }
+
   renderEditTXTRecord(title, id) {
     return this.renderEditRecord(title, EditTXTRecord, { id });
   }
@@ -209,7 +214,7 @@ export class ZonePage extends Component {
     const mxRecords = formatSeconds(
       addNav(this.formatMXRecords(), (id) => this.renderEditMXRecord('Edit MX Record', id)));
     const aRecords = formatSeconds(
-      addNav(this.formatARecords()));
+      addNav(this.formatARecords(), (id) => this.renderEditARecord('Edit A/AAAA Record', id)));
     const cnameRecords = formatSeconds(
       addNav(_cnameRecords || []));
     const txtRecords = formatSeconds(
@@ -277,6 +282,7 @@ export class ZonePage extends Component {
             title="A/AAAA Records"
             id="a"
             records={aRecords}
+            navOnClick={this.renderEditARecord('Add A/AAAA Record')}
             labels={['Hostname', 'IP Address', 'TTL', '']}
             keys={['name', 'target', 'ttl_sec', 'nav']}
           />
