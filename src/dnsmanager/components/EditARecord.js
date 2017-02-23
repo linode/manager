@@ -94,19 +94,19 @@ export default class EditARecord extends Component {
             onChange={this.onChange}
           />
         </ModalFormGroup>
-        <ModalFormGroup label="Type" id="type" apiKey="type" errors={errors}>
-          <Select
-            id="type"
-            name="type"
-            value={type || 'A'}
-            disabled={this.props.id}
-            defaultSeconds={defaultTTL}
-            onChange={this.onChange}
-          >
-            <option value="A">A</option>
-            <option value="AAAA">AAAA</option>
-          </Select>
-        </ModalFormGroup>
+        {this.props.id ? null : (
+          <ModalFormGroup label="Type" id="type" apiKey="type" errors={errors}>
+            <Select
+              id="type"
+              name="type"
+              value={type || 'A'}
+              defaultSeconds={defaultTTL}
+              onChange={this.onChange}
+            >
+              <option value="A">A</option>
+              <option value="AAAA">AAAA</option>
+            </Select>
+          </ModalFormGroup>)}
         <div className="Modal-footer">
           <CancelButton onClick={close} />
           <SubmitButton disabled={saving}>
