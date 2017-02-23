@@ -7,8 +7,10 @@ import { formatDNSSeconds, ONE_DAY } from '../components/SelectDNSSeconds';
 import EditSOARecord from '../components/EditSOARecord';
 import EditNSRecord from '../components/EditNSRecord';
 import EditMXRecord from '../components/EditMXRecord';
+import EditARecord from '../components/EditARecord';
 import EditTXTRecord from '../components/EditTXTRecord';
 import EditSRVRecord from '../components/EditSRVRecord';
+import EditCNAMERecord from '../components/EditCNAMERecord';
 import { setError } from '~/actions/errors';
 import { dnszones } from '~/api';
 import { getObjectByLabelLazily } from '~/api/util';
@@ -123,6 +125,16 @@ export class ZonePage extends Component {
     }));
   }
 
+  formatCNAMERecords() {
+    const { currentDNSZone } = this.state;
+
+    const { CNAME } = currentDNSZone._groupedRecords;
+    return (CNAME || []).map(record => ({
+      ...record,
+      name: record.name || currentDNSZone.dnszone,
+    }));
+  }
+
   renderRecords = ({ title, id, records, labels, keys, nav, navOnClick }) => {
     let cardContents = <p>No records created.</p>;
     if (records && records.length) {
@@ -174,17 +186,25 @@ export class ZonePage extends Component {
     return this.renderEditRecord(title, EditMXRecord, { id });
   }
 
+  renderEditARecord(title, id) {
+    return this.renderEditRecord(title, EditARecord, { id });
+  }
+
   renderEditTXTRecord(title, id) {
     return this.renderEditRecord(title, EditTXTRecord, { id });
   }
+
 
   renderEditSRVRecord(title, id) {
     return this.renderEditRecord(title, EditSRVRecord, { id });
   }
 
+  renderEditCNAMERecord(title, id) {
+    return this.renderEditRecord(title, EditCNAMERecord, { id });
+  }
+
   render() {
     const { currentDNSZone } = this.state;
-    const { CNAME: _cnameRecords } = currentDNSZone._groupedRecords;
 
     const formatSeconds = (records) => records.map(record => {
       const { ttl_sec: ttlSec } = record;
@@ -214,9 +234,10 @@ export class ZonePage extends Component {
     const mxRecords = formatSeconds(
       addNav(this.formatMXRecords(), (id) => this.renderEditMXRecord('Edit MX Record', id)));
     const aRecords = formatSeconds(
-      addNav(this.formatARecords()));
+      addNav(this.formatARecords(), (id) => this.renderEditARecord('Edit A/AAAA Record', id)));
     const cnameRecords = formatSeconds(
-      addNav(_cnameRecords || []));
+      addNav(this.formatCNAMERecords(),
+        (id) => this.renderEditCNAMERecord('Edit CNAME Record', id)));
     const txtRecords = formatSeconds(
       addNav(this.formatTXTRecords(), (id) => this.renderEditTXTRecord('Edit TXT Record', id)));
     const srvRecords = formatSeconds(
@@ -282,12 +303,14 @@ export class ZonePage extends Component {
             title="A/AAAA Records"
             id="a"
             records={aRecords}
+            navOnClick={this.renderEditARecord('Add A/AAAA Record')}
             labels={['Hostname', 'IP Address', 'TTL', '']}
             keys={['name', 'target', 'ttl_sec', 'nav']}
           />
           <this.renderRecords
             title="CNAME Records"
             id="cname"
+            navOnClick={this.renderEditCNAMERecord('Add CNAME Record')}
             records={cnameRecords}
             labels={['Hostname', 'Aliases to', 'TTL', '']}
             keys={['name', 'target', 'ttl_sec', 'nav']}
