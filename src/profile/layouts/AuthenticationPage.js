@@ -23,7 +23,7 @@ export class AuthenticationPage extends Component {
   passwordOnSubmit = async () => {
     const { dispatch } = this.props;
     const { password, expires } = this.state;
-    const expiresOn = expires === '0' ? null :
+    const expiresOn = expires === 0 ? null :
       moment()
         .add(expires, 'days')
         .utc()
