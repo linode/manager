@@ -30,9 +30,12 @@ export default class EditSRVRecord extends Component {
       service: service || '',
       protocol: protocol || '_tcp',
       target: target || '',
-      priority: priority || '',
-      weight: weight || '',
-      port: port || '',
+      // eslint-disable-next-line
+      priority: priority,
+      // eslint-disable-next-line
+      weight: weight,
+      // eslint-disable-next-line
+      port: port,
     };
   }
 
