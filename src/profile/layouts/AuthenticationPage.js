@@ -14,7 +14,7 @@ export class AuthenticationPage extends Component {
     super();
     this.state = {
       password: '',
-      expires: '0',
+      expires: 0,
       errors: {},
       fetching: false,
     };
@@ -25,7 +25,7 @@ export class AuthenticationPage extends Component {
     const { password, expires } = this.state;
     const expiresOn = expires === '0' ? null :
       moment()
-        .add(parseInt(expires), 'days')
+        .add(expires, 'days')
         .utc()
         .format('YYYY-MM-DDTHH:mm:ss')
         .toString();
