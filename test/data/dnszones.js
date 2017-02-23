@@ -65,7 +65,7 @@ export const testDNSZone = {
         id: 4,
         protocol: null,
         weight: 0,
-        target: 'ns1.service.com',
+        target: 'ns5.linode.com',
       },
       5: {
         type: 'TXT',
