@@ -107,7 +107,7 @@ export default class EditSRVRecord extends Component {
           <Select
             id="protocol"
             name="protocol"
-            value={protocol || '_tcp'}
+            value={protocol}
             onChange={this.onChange}
           >
             <option value="_tcp">tcp</option>
