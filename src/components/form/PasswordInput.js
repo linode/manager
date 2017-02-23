@@ -34,6 +34,7 @@ export default class PasswordInput extends Component {
           autoComplete="off"
           type="password"
           disabled={this.props.disabled}
+          id={this.props.id}
         />
         <div
           className={`PasswordInput-strength PasswordInput-strength--${this.state.strength.score}`}
@@ -55,6 +56,7 @@ PasswordInput.propTypes = {
   onChange: PropTypes.func.isRequired,
   passwordType: PropTypes.string,
   disabled: PropTypes.bool,
+  id: PropTypes.string,
 };
 
 PasswordInput.defaultProps = {
