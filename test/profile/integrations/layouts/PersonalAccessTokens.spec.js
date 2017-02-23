@@ -7,7 +7,6 @@ import {
   PersonalAccessTokensPage,
 } from '~/profile/integrations/layouts/PersonalAccessTokensPage';
 import { api } from '@/data';
-import { expectObjectDeepEquals } from '@/common';
 
 const { tokens } = api;
 
@@ -27,7 +26,7 @@ describe('profile/integrations/layouts/PersonalAccessTokensPage', () => {
         tokens={tokens}
       />
     );
-    
+
     expect(page.instance().state.clients[0].type).to.equal('personal_access_token');
   });
 });

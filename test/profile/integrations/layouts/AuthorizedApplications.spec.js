@@ -7,7 +7,6 @@ import {
   AuthorizedApplicationsPage,
 } from '~/profile/integrations/layouts/AuthorizedApplicationsPage';
 import { api } from '@/data';
-import { expectObjectDeepEquals } from '@/common';
 
 const { tokens } = api;
 
@@ -27,7 +26,7 @@ describe('profile/integrations/layouts/AuthorizedApplicationsPage', () => {
         tokens={tokens}
       />
     );
-    
+
     expect(page.instance().state.clients[0].type).to.equal('client_token');
   });
 });
