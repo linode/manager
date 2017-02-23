@@ -39,29 +39,35 @@ function renderScope(scopesRequested, currentScope, currentSubscope) {
 }
 
 export default function AuthorizedApplication(props) {
-  const { client } = props;
+  const { clients } = props;
 
   return (
-    <SecondaryCard
-      title={client.client.label}
-      icon={`${API_ROOT}/account/clients/${client.client.id}/thumbnail`}
-    >
-      <p>This application has access to your:</p>
-      <table>
-        <tbody>
-          {OAUTH_SCOPES.map((scope, i) =>
-            <tr key={i}>
-              <td>{title(scope)}</td>
-              {OAUTH_SUBSCOPES.map((subscope, j) =>
-                <td key={j}>{renderScope(client.scopes, scope, subscope)}</td>)}
-            </tr>)}
-        </tbody>
-      </table>
-    </SecondaryCard>
+    <div className="row">
+      {clients.map(client =>
+        <div className="col-lg-6" key={client.id}>
+          <SecondaryCard
+            title={client.client.label}
+            icon={`${API_ROOT}/account/clients/${client.client.id}/thumbnail`}
+          >
+            <p>This application has access to your:</p>
+            <table>
+              <tbody>
+                {OAUTH_SCOPES.map((scope, i) =>
+                  <tr key={i}>
+                    <td>{title(scope)}</td>
+                    {OAUTH_SUBSCOPES.map((subscope, j) =>
+                      <td key={j}>{renderScope(client.scopes, scope, subscope)}</td>)}
+                  </tr>)}
+              </tbody>
+            </table>
+          </SecondaryCard>
+        </div>
+       )}
+    </div>
   );
 }
 
 AuthorizedApplication.propTypes = {
-  client: PropTypes.object.isRequired,
+  clients: PropTypes.array.isRequired,
   dispatch: PropTypes.func.isRequired,
 };

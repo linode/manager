@@ -4,14 +4,14 @@ import { shallow } from 'enzyme';
 import { expect } from 'chai';
 
 import {
-  AuthorizedApplicationsPage,
-} from '~/profile/integrations/layouts/AuthorizedApplicationsPage';
+  PersonalAccessTokensPage,
+} from '~/profile/integrations/layouts/PersonalAccessTokensPage';
 import { api } from '@/data';
 import { expectObjectDeepEquals } from '@/common';
 
 const { tokens } = api;
 
-describe('profile/integrations/layouts/AuthorizedApplicationsPage', () => {
+describe('profile/integrations/layouts/PersonalAccessTokensPage', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
@@ -20,14 +20,14 @@ describe('profile/integrations/layouts/AuthorizedApplicationsPage', () => {
 
   const dispatch = sandbox.spy();
 
-  it('check client_tokens', () => {
+  it('check personal_access_token', () => {
     const page = shallow(
-      <AuthorizedApplicationsPage
+      <PersonalAccessTokensPage
         dispatch={dispatch}
         tokens={tokens}
       />
     );
     
-    expect(page.instance().state.clients[0].type).to.equal('client_token');
+    expect(page.instance().state.clients[0].type).to.equal('personal_access_token');
   });
 });

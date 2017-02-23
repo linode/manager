@@ -10,6 +10,8 @@ import { api } from '@/data';
 import { OAUTH_SCOPES, OAUTH_SUBSCOPES } from '~/constants';
 
 const { tokens: { tokens } } = api;
+const clients = Object.values(tokens).filter(
+  token => token.type === 'client_token');
 
 describe('profile/integrations/components/AuthorizedApplication', () => {
   const sandbox = sinon.sandbox.create();
@@ -20,15 +22,15 @@ describe('profile/integrations/components/AuthorizedApplication', () => {
 
   const dispatch = sandbox.spy();
 
-  it('renders a token', () => {
+  it('renders token', () => {
     const page = shallow(
       <AuthorizedApplication
         dispatch={dispatch}
-        client={tokens[2]}
+        clients={clients}
       />
     );
 
-    const rows = page.find('tr');
+    const rows = page.find('table').at(0).find('tr');
     expect(rows.length).to.equal(OAUTH_SCOPES.length);
 
     for (let i = 0; i < rows.length; i++) {
@@ -50,11 +52,11 @@ describe('profile/integrations/components/AuthorizedApplication', () => {
     const page = shallow(
       <AuthorizedApplication
         dispatch={dispatch}
-        client={tokens[3]}
+        clients={clients}
       />
     );
 
-    const rows = page.find('tr');
+    const rows = page.find('table').at(1).find('tr');
     expect(rows.length).to.equal(OAUTH_SCOPES.length);
 
     for (let i = 0; i < rows.length; i++) {

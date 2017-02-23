@@ -5,7 +5,7 @@ import { setError } from '~/actions/errors';
 import { tokens } from '~/api';
 import AuthorizedApplication from '../components/AuthorizedApplication';
 
-export class AuthorizedApplicationsPage extends Component {
+export class PersonalAccessTokensPage extends Component {
   static async preload({ dispatch }) {
     try {
       await dispatch(tokens.all());
@@ -20,7 +20,7 @@ export class AuthorizedApplicationsPage extends Component {
     super(props);
 
     const clients = Object.values(props.tokens.tokens).filter(
-      token => token.type === 'client_token');
+      token => token.type === 'personal_access_token');
     this.state = { clients };
   }
 
@@ -34,7 +34,7 @@ export class AuthorizedApplicationsPage extends Component {
   }
 }
 
-AuthorizedApplicationsPage.propTypes = {
+PersonalAccessTokensPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   tokens: PropTypes.object.isRequired,
 };
@@ -45,4 +45,4 @@ function select(state) {
   };
 }
 
-export default connect(select)(AuthorizedApplicationsPage);
+export default connect(select)(PersonalAccessTokensPage);
