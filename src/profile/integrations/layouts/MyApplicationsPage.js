@@ -3,9 +3,11 @@ import { connect } from 'react-redux';
 
 import CreateHelper from '~/components/CreateHelper';
 import { setError } from '~/actions/errors';
+import { showModal, hideModal } from '~/actions/modal';
 import { clients } from '~/api';
 import { Button } from '~/components/buttons';
 import MyApplication from '../components/MyApplication';
+import CreateApplication from '../components/CreateApplication';
 
 export class MyApplicationsPage extends Component {
   static async preload({ dispatch }) {
@@ -18,6 +20,16 @@ export class MyApplicationsPage extends Component {
     }
   }
 
+  renderCreateOAuthClient() {
+    const { dispatch } = this.props;
+    dispatch(showModal('Create an OAuth Client', (
+      <CreateApplication
+        dispatch={dispatch}
+        close={() => dispatch(hideModal())}
+      />
+    )));
+  }
+
   render() {
     const { dispatch } = this.props;
 
@@ -25,9 +37,9 @@ export class MyApplicationsPage extends Component {
 
     return (
       <div>
-        <header className="clearfix">
-          <Button to="/profile/applications/create" className="float-sm-right">
-            Add an OAuth Client
+        <header className="NavigationHeader clearfix">
+          <Button onClick={() => this.renderCreateOAuthClient()} className="float-sm-right">
+            Create an OAuth Client
           </Button>
         </header>
         <div className="row">
@@ -37,9 +49,9 @@ export class MyApplicationsPage extends Component {
             </div>
            ) : (
             <CreateHelper
-              label="OAuth Clients"
+              label="OAuth Client"
               href="/profile/applications/create"
-              linkText="Add an OAuth Client"
+              linkText="Create an OAuth Client"
             />
            )}
         </div>

@@ -24,15 +24,16 @@ export function fetch(token, _path, _options) {
    * Get updated reference in case rawFetch is a stub (during testing).
    * See comment on rawFetch.
    */
+  const _headers = _options && _options.headers || {};
   const fetchRef = module.exports.rawFetch;
   const options = {
     mode: 'cors',
     ..._options,
     headers: {
-      ...(_options && _options.headers),
+      ..._headers,
       Accept: 'application/json',
       Authorization: `token ${token}`,
-      'Content-Type': 'application/json',
+      'Content-Type': (_headers && _headers['Content-Type'] || 'application/json'),
       'X-CORS-Status': 'true',
     },
   };
@@ -49,10 +50,14 @@ export function fetch(token, _path, _options) {
         if (status === 401) {
           expireSession();
         }
+
         reject(response);
       } else {
         accept(response);
       }
     }, reject);
+  }).catch((e) => {
+    // eslint-disable-next-line no-throw-literal
+    throw ({ json() { return { errors: [{ reason: e.toString() }] }; } });
   });
 }
