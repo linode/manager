@@ -254,10 +254,6 @@ export class ZonePage extends Component {
             onClick={this.renderEditSOARecord('Edit SOA Record')}
             className="btn-secondary"
           >Edit</Button>
-          <Button
-            onClick={() => {}}
-            className="btn-secondary"
-          >Delete</Button>
         </div>
       ),
     };
