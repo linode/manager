@@ -3,15 +3,15 @@ import sinon from 'sinon';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
 
-import AuthorizedApplication, {
+import PersonalAccessToken, {
   title,
-} from '~/profile/integrations/components/AuthorizedApplication';
+} from '~/profile/integrations/components/PersonalAccessToken';
 import { api } from '@/data';
 import { OAUTH_SCOPES, OAUTH_SUBSCOPES } from '~/constants';
 
 const { tokens: { tokens } } = api;
 
-describe('profile/integrations/components/AuthorizedApplication', () => {
+describe('profile/integrations/components/PersonalAccessToken', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
@@ -22,7 +22,7 @@ describe('profile/integrations/components/AuthorizedApplication', () => {
 
   it('renders a token', () => {
     const page = shallow(
-      <AuthorizedApplication
+      <PersonalAccessToken
         dispatch={dispatch}
         client={tokens[2]}
       />
@@ -48,7 +48,7 @@ describe('profile/integrations/components/AuthorizedApplication', () => {
 
   it('renders a limited token', () => {
     const page = shallow(
-      <AuthorizedApplication
+      <PersonalAccessToken
         dispatch={dispatch}
         client={tokens[3]}
       />

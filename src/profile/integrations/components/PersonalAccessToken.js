@@ -38,13 +38,12 @@ function renderScope(scopesRequested, currentScope, currentSubscope) {
   return subscopeNotAllowed;
 }
 
-export default function AuthorizedApplication(props) {
+export default function PersonalAccessToken(props) {
   const { client } = props;
-
+  console.log(client);
   return (
     <SecondaryCard
-      title={client.client.label}
-      icon={`${API_ROOT}/account/clients/${client.client.id}/thumbnail`}
+      title={client.label}
     >
       <p>This application has access to your:</p>
       <table>
@@ -61,7 +60,7 @@ export default function AuthorizedApplication(props) {
   );
 }
 
-AuthorizedApplication.propTypes = {
+PersonalAccessToken.propTypes = {
   client: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
 };

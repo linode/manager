@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { setError } from '~/actions/errors';
 import { tokens } from '~/api';
-import AuthorizedApplication from '../components/AuthorizedApplication';
+import PersonalAccessToken from '../components/PersonalAccessToken';
 
 export class PersonalAccessTokensPage extends Component {
   static async preload({ dispatch }) {
@@ -29,7 +29,13 @@ export class PersonalAccessTokensPage extends Component {
     const { dispatch } = this.props;
 
     return (
-      <AuthorizedApplication clients={clients} dispatch={dispatch} />
+    <div className="row">
+      {clients.map(client =>
+        <div className="col-lg-6" key={client.id}>
+          <PersonalAccessToken client={client} dispatch={dispatch} />
+        </div>
+       )}
+    </div>
     );
   }
 }

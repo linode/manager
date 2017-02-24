@@ -7,6 +7,7 @@ import {
   PersonalAccessTokensPage,
 } from '~/profile/integrations/layouts/PersonalAccessTokensPage';
 import { api } from '@/data';
+import { expectObjectDeepEquals } from '@/common';
 
 const { tokens } = api;
 
@@ -19,7 +20,7 @@ describe('profile/integrations/layouts/PersonalAccessTokensPage', () => {
 
   const dispatch = sandbox.spy();
 
-  it('check personal_access_token', () => {
+  it('renders a list of tokens', () => {
     const page = shallow(
       <PersonalAccessTokensPage
         dispatch={dispatch}
@@ -27,6 +28,11 @@ describe('profile/integrations/layouts/PersonalAccessTokensPage', () => {
       />
     );
 
-    expect(page.instance().state.clients[0].type).to.equal('personal_access_token');
+    const myApplications = page.find('PersonalAccessToken');
+    const applicationTokens = Object.values(tokens.tokens).filter(
+      ({ type }) => type === 'personal_access_token');
+    expect(myApplications.length).to.equal(applicationTokens.length);
+    const firstToken = myApplications.at(0);
+    expectObjectDeepEquals(firstToken.props().client, applicationTokens[0]);
   });
 });
