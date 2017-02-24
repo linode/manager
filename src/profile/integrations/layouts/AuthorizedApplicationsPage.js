@@ -29,13 +29,13 @@ export class AuthorizedApplicationsPage extends Component {
     const { dispatch } = this.props;
 
     return (
-    <div className="row">
-      {clients.map(client =>
-        <div className="col-lg-6" key={client.id}>
-          <AuthorizedApplication client={client} dispatch={dispatch} />
-        </div>
-       )}
-    </div>
+      <div className="row">
+        {clients.map(client =>
+          <div className="col-lg-6" key={client.id}>
+            <AuthorizedApplication client={client} dispatch={dispatch} />
+          </div>
+         )}
+      </div>
     );
   }
 }

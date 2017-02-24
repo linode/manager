@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react';
 
-import { API_ROOT } from '~/constants';
 import { SecondaryCard } from '~/components/cards/';
 import { OAUTH_SUBSCOPES, OAUTH_SCOPES } from '~/constants';
 
@@ -40,7 +39,6 @@ function renderScope(scopesRequested, currentScope, currentSubscope) {
 
 export default function PersonalAccessToken(props) {
   const { client } = props;
-  console.log(client);
   return (
     <SecondaryCard
       title={client.label}
