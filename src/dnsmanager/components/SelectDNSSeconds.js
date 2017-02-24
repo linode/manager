@@ -37,7 +37,7 @@ export function formatDNSSeconds(dnsSeconds, defaultSeconds = ONE_DAY) {
 }
 
 export default function SelectDNSSeconds(props) {
-  const { value, name, id, onChange, defaultSeconds } = props;
+  const { value, name, id, onChange, defaultSeconds = ONE_DAY } = props;
   return (
     <Select value={(value || defaultSeconds).toString()} onChange={onChange} id={id} name={name}>
       {Object.keys(DNS_SECONDS_PRETTY).map((sec, i) =>
