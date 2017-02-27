@@ -1,46 +1,62 @@
 import React, { PropTypes, Component } from 'react';
-import { Link } from 'react-router';
 
 import NotificationListItem from './NotificationListItem';
 
 
-export function sortNotifications(eventsDict) {
-  const events = Object.values(eventsDict.events);
-  if (!events.length) {
-    return [];
+export default class NotificationList extends Component {
+
+  constructor(props) {
+    super(props);
+
+    this.onClickShowMore = this.onClickShowMore.bind(this);
+
+    this.state = { totalResults: 0 };
   }
 
-  // TODO: address with request filter
-  return events.reverse();
-}
-
-export default class NotificationList extends Component {
   componentWillUpdate(nextProps) {
-    const { open, events, eventSeen } = nextProps;
+    const { events } = nextProps;
 
-    if (open && events[0] && !events[0].seen) {
-      eventSeen(events[0].id);
+    if (events.totalResults > this.state.totalResults) {
+      this.setState({ totalResults: events.totalResults });
     }
   }
 
+  onClickShowMore(e) {
+    e.preventDefault();
+    this.props.onClickShowMore(e);
+  }
+
   render() {
-    const { events, open, onClickItem } = this.props;
+    const { events, loading = false, open, onClickItem } = this.props;
+    const eventMap = events.events;
+    const showMore = events.ids.length < this.state.totalResults;
+    let message;
+
+    if (loading) {
+      message = (<span className="LoadingMessage text-muted">Loading...</span>);
+    } else if (showMore) {
+      message = (
+        <span className="ShowMoreLink btn btn-link">Show more</span>
+      );
+    } else {
+      message = 'No more notifications.';
+    }
 
     return (
       <div className={`NotificationList ${open ? 'NotificationList--open' : ''}`}>
         <div className="NotificationList-body">
-          <header className="NotificationList-listItem text-xs-right">
-            <Link to="/logout">Logout</Link>
-          </header>
           <div>
-            {events.map((event, index) =>
+            {events.ids.map((id, index) =>
               <NotificationListItem
                 key={index}
                 onClick={onClickItem}
-                event={event}
+                event={eventMap[id]}
               />)}
-            <div className="NotificationList-end text-xs-center">
-              No more notifications.
+            <div
+              className="NotificationList-listItem NotificationList-end text-xs-center"
+              onClick={showMore ? this.onClickShowMore : null}
+            >
+              {message}
             </div>
           </div>
         </div>
@@ -50,9 +66,11 @@ export default class NotificationList extends Component {
 }
 
 NotificationList.propTypes = {
-  events: PropTypes.array.isRequired,
+  events: PropTypes.object.isRequired,
+  loading: PropTypes.bool,
   open: PropTypes.bool.isRequired,
-  onClickItem: PropTypes.func.isRequired,
+  onClickItem: PropTypes.func,
+  onClickShowMore: PropTypes.func,
 };
 
 NotificationList.defaultProps = {

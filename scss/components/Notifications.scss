@@ -1,16 +1,41 @@
+.Notifications {
+    height: 100%;
+    padding: 18px 14px;
+    position: relative;
+    width: 48px;
+
+    &:hover {
+        cursor: pointer;
+    }
+
+    i {
+        @extend .font-large;
+        color: $white;
+    }
+}
+
 .NotificationList {
     display: none;
     $notifications-width: 350px;
 
+    &:hover {
+        background: $hover-bg;
+    }
+
     &--open {
         display: block;
+
         &-body {
             height: calc(100% - #{$nav-height});
         }
     }
 
-    &-body {
+    &-body,
+    &-body:hover {
         background-color: $body-bg;
+    }
+
+    &-body {
         border-left: $border;
         // TODO: create a box-shadow mixin
         box-shadow: 2px 2px 4px 2px $dark-gray;
@@ -49,5 +74,9 @@
             display: block;
             margin-top: -1px;
         }
+    }
+
+    &-end {
+        padding: 15px 0;
     }
 }

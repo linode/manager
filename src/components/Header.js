@@ -1,99 +1,138 @@
-import React, { PropTypes } from 'react';
+import React, { PropTypes, Component } from 'react';
+
 import { LinodeLogoImgSrc } from '~/assets';
+
 import { Link } from '~/components/Link';
+import { Notifications } from '~/components/notifications';
 
-export default function Header(props) {
-  const {
-    username,
-    emailHash,
-    title,
-    link,
-    showInfobar,
-    hideShowNotifications,
-    events,
-    notificationsOpen,
-  } = props;
-  const gravatarLink = `https://gravatar.com/avatar/${emailHash}`;
 
-  const infobar = (
-    <div className="MiniHeader clearfix">
-      <div className="MiniHeader-content float-xs-right">
-        {!title ? null :
-          <span>
+export default class Header extends Component {
+
+  constructor(props) {
+    super(props);
+
+    this.onNotificationMenuClick = this.onNotificationMenuClick.bind(this);
+    this.onSessionMenuClick = this.onSessionMenuClick.bind(this);
+
+    this.state = { sessionMenuOpen: false };
+  }
+
+  onSessionMenuClick() {
+    const { sessionMenuOpen } = this.state;
+
+    this.setState({ sessionMenuOpen: !sessionMenuOpen });
+  }
+
+  // TODO: look at syncing up this toggle between menus via redux state
+  onNotificationMenuClick(open) {
+    if (open) {
+      this.setState({ sessionMenuOpen: false });
+    }
+  }
+
+  render() {
+    const {
+      dispatch,
+      emailHash,
+      link,
+      showInfobar,
+      title,
+      username,
+      eventHandler,
+    } = this.props;
+
+    const {
+      sessionMenuOpen,
+    } = this.state;
+
+    const gravatarLink = `https://gravatar.com/avatar/${emailHash}`;
+
+    const infobar = (
+      <div className="MiniHeader clearfix">
+        <div className="MiniHeader-content float-xs-right">
+          {!title ? null : <span>
             <span className="MiniHeader-new">New</span>
             <a href={link} target="_blank" className="MiniHeader-blog">{title}</a>
           </span>}
-        <a href="https://github.com/linode" target="_blank" className="MiniHeader-github">
-          <i className="fa fa-github" />
-        </a>
-        <a href="https://twitter.com/linode" target="_blank" className="MiniHeader-twitter">
-          <i className="fa fa-twitter" />
-        </a>
+          <a href="https://github.com/linode" target="_blank" className="MiniHeader-github">
+            <i className="fa fa-github" />
+          </a>
+          <a href="https://twitter.com/linode" target="_blank" className="MiniHeader-twitter">
+            <i className="fa fa-twitter" />
+          </a>
+        </div>
       </div>
-    </div>
-  );
+    );
 
-  const unseenNotifications = notificationsOpen ? 0 :
-    Object.values(events.events).reduce((unseen, e) =>
-      e.seen ? unseen : unseen + 1, 0);
-
-  const main = (
-    <div className="MainHeader clearfix">
-      <div className="MainHeader-brand">
-        <Link to="/">
-          <span className="MainHeader-logo">
+    const main = (
+      <div className="MainHeader clearfix">
+        <div className="MainHeader-brand">
+          <Link to="/">
+            <span className="MainHeader-logo">
+              <img
+                src={LinodeLogoImgSrc}
+                alt="Linode Logo"
+                height={40}
+                width={35}
+              />
+            </span>
+            <span className="MainHeader-title">Linode Manager</span>
+          </Link>
+        </div>
+        <div className="MainHeader-search">
+          <input className="form-control" type="text" placeholder="Search..." disabled />
+        </div>
+        {!username ? null :
+          <div
+            className="MainHeader-session float-xs-right"
+            onClick={this.onSessionMenuClick}
+          >
+            <span className="MainHeader-username">
+              {username}
+            </span>
             <img
-              src={LinodeLogoImgSrc}
-              alt="Linode Logo"
-              height={40}
+              className="MainHeader-gravatar"
+              src={gravatarLink}
+              alt="User Avatar"
+              height={35}
               width={35}
             />
-          </span>
-          <span className="MainHeader-title">Linode Manager</span>
-        </Link>
-      </div>
-      <div className="MainHeader-search">
-        <input className="form-control" type="text" placeholder="Search..." disabled />
-      </div>
-      {!username ? null :
-        <div
-          className="MainHeader-session float-xs-right"
-          onClick={hideShowNotifications}
-        >
-          <span className="MainHeader-username">
-            {username}
-          </span>
-          <img
-            className="MainHeader-gravatar"
-            src={gravatarLink}
-            alt="User Avatar"
-            height={35}
-            width={35}
+            <div className={`SessionMenu ${sessionMenuOpen ? 'SessionMenu--open' : ''}`}>
+              <div className="SessionMenu-body text-xs-right">
+                <div className="SessionMenu-menu-item">
+                  <Link to="/logout">Logout</Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+        <div className="MainHeader-notifications float-xs-right">
+          <Notifications
+            dispatch={dispatch}
+            eventHandler={eventHandler}
+            onMenuClick={this.onNotificationMenuClick}
           />
-          {!unseenNotifications ? null :
-            <span className="MainHeader-badge">{unseenNotifications}</span>}
         </div>
-      }
-    </div>
-  );
+      </div>
+    );
 
-  return (
-    <div className="Header">
-      {!showInfobar ? null : infobar}
-      {main}
-    </div>
-  );
+    return (
+      <div className="Header">
+        {!showInfobar ? null : infobar}
+        {main}
+      </div>
+    );
+  }
 }
 
 Header.propTypes = {
   username: PropTypes.string,
   emailHash: PropTypes.string,
+  eventHandler: PropTypes.func,
+  dispatch: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   link: PropTypes.string.isRequired,
   showInfobar: PropTypes.bool.isRequired,
-  hideShowNotifications: PropTypes.func,
-  events: PropTypes.object,
-  notificationsOpen: PropTypes.bool.isRequired,
 };
 
 Header.defaultProps = {

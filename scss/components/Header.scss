@@ -91,14 +91,8 @@ $header-padding: $grid-gutter-width-base / 2;
         &:active,
         &:hover,
         &:focus {
-            $hover-bg: #3c3c3c;
-            background: $hover-bg;
             cursor: pointer;
             cursor: hand;
-
-            .MainHeader-badge {
-                border: 4px solid $hover-bg;
-            }
         }
     }
 
@@ -108,16 +102,50 @@ $header-padding: $grid-gutter-width-base / 2;
     }
 
     &-badge {
-        $header-badge-height: 30px;
         @extend .badge;
         background: $red;
-        border: 4px solid $dark-black;
-        border-radius: 40px;
-        height: $header-badge-height;
-        min-width: $header-badge-height;
-        line-height: 22px;
+        border: 2px solid $black;
         position: absolute;
+        right: 4px;
+        top: 6px;
+    }
+}
+
+.SessionMenu {
+    display: none;
+
+    &:hover {
+        background: $hover-bg;
+    }
+
+    &--open {
+        display: block;
+
+        // TODO: update to height of all menu items
+        &-body {
+            height: 40px;
+        }
+    }
+
+    &-body,
+    &-body:hover {
+        background-color: $body-bg;
+    }
+
+    &-body {
+        border-left: $border;
+        // TODO: create a box-shadow mixin
+        box-shadow: 2px 2px 4px 2px $dark-gray;
+        overflow-y: auto;
+        position: fixed;
         right: 0;
-        top: 2px;
+        top: $nav-height;
+        width: 200px;
+        // TODO: add z-index levels to variables
+        z-index: 2001;
+    }
+
+    &-menu-item {
+        padding: 0 15px;
     }
 }

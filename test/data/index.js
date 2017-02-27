@@ -15,12 +15,14 @@ import { tokens } from './tokens';
 function fakeAPIStore(data, singular, plural) {
   const totalResults = Object.keys(data).length;
   const totalPages = Math.floor(totalResults / 25) + 1;
+  const ids = Object.values(data).map((obj) => obj.id);
   return {
     totalPages,
     totalResults,
     pagesFetched: _.range(1, totalPages),
     singular,
     plural,
+    ids,
   };
 }
 

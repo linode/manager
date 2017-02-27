@@ -11,7 +11,7 @@ export default function NotificationListItem(props) {
   const timeRemaining = event.time_remaining;
   const eventOptions = EventTypeMap[event.action];
 
-  const timestamp = moment.utc(event.updated, moment.ISO_8601);
+  const timestamp = moment.utc(event.created, moment.ISO_8601);
   const baseCls = 'NotificationList-listItem';
   let className = baseCls;
 
@@ -98,5 +98,5 @@ export default function NotificationListItem(props) {
 }
 
 NotificationListItem.propTypes = {
-  onClick: PropTypes.func.isRequired,
+  onClick: PropTypes.func,
 };

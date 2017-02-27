@@ -68,6 +68,11 @@ const EventTypeMap = {
     pastTenseAction: 'rebuilt',
     redirectUrl: getLinodeRedirectUrl,
   },
+  linode_resize: {
+    presentTenseAction: 'Resizing',
+    pastTenseAction: 'resized',
+    redirectUrl: getLinodeRedirectUrl,
+  },
   linode_clone: {
     presentTenseAction: 'Cloning',
     pastTenseAction: 'cloned',
