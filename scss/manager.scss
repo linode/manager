@@ -243,37 +243,6 @@ header .sub-header {
     margin-bottom: 0;
 }
 
-.feedback {
-    position: fixed;
-    right: -430px;
-    top: 300px;
-    z-index: 999;
-    -webkit-transition: all .3s ease-out;
-    -moz-transition: all .3s ease-out;
-    -o-transition: all .3s ease-out;
-    -ms-transition: all .3s ease-out;
-
-    &.open {
-        right: 0;
-    }
-
-    .feedback-button {
-        $rotation: -90deg;
-        position: absolute;
-        left: -1 * $form-field-height * 2 + 4px;
-        top: 50%;
-        -webkit-transform: rotate($rotation);
-        -moz-transform: rotate($rotation);
-        -o-transform: rotate($rotation);
-        -ms-transform: rotate($rotation);
-        transform: rotate($rotation);
-    }
-
-    .card {
-        width: 430px;
-    }
-}
-
 .row-justify {
     @extend .row;
     display: flex;

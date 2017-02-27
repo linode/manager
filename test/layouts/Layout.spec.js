@@ -37,7 +37,6 @@ describe('layouts/Layout', () => {
         notifications={{ open: false }}
         linodes={linodes}
         events={events}
-        feedback={{ open: false }}
         modal={{ open: false }}
       >{children}</Layout>
     );
@@ -224,7 +223,6 @@ describe('layouts/Layout', () => {
         source={{ source: 'foobar.html' }}
         notifications={{ open: false }}
         linodes={api.linodes}
-        feedback={{ open: false }}
         events={api.events}
         modal={{ open: false }}
       ><span /></Layout>
