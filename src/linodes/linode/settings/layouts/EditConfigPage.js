@@ -253,7 +253,7 @@ export class EditConfigPage extends Component {
     const config = this.getConfig();
 
     // Config not found. Should we 404?
-    if (!config) {
+    if (!config && !this.props.create) {
       dispatch(push(`/linodes/${this.getLinode().label}/settings/advanced`));
     }
   }
