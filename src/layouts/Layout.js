@@ -13,12 +13,10 @@ import Sidebar from '~/components/Sidebar';
 import { NotificationList, sortEvents } from '~/components/notifications';
 import { ModalShell } from '~/components/modals';
 import Error from '~/components/Error';
-import Feedback from '~/components/Feedback';
 import PreloadIndicator from '~/components/PreloadIndicator.js';
 import { rawFetch as fetch } from '~/fetch';
 import { hideModal } from '~/actions/modal';
 import { showNotifications, hideNotifications } from '~/actions/notifications';
-import { showFeedback, hideFeedback } from '~/actions/feedback';
 import { actions as linodeActions } from '~/api/configs/linodes';
 
 export class Layout extends Component {
@@ -27,9 +25,7 @@ export class Layout extends Component {
     this.eventHandler = this.eventHandler.bind(this);
     this.renderError = this.renderError.bind(this);
     this.hideShowNotifications = this.hideShow(
-      'notifications', hideNotifications, showNotifications).bind(this);
-    this.hideShowFeedback = this.hideShow(
-      'feedback', hideFeedback, showFeedback).bind(this);
+      ).bind(this);
     this._pollingTimeoutId = null;
     this.state = { title: '', link: '' };
   }
@@ -155,18 +151,16 @@ export class Layout extends Component {
     this.pollForEvents();
   }
 
-  hideShow(type, hide, show) {
-    return async (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      const { dispatch, [type]: { open } } = this.props;
-      if (open) {
-        dispatch(hide());
-      } else {
-        dispatch(hideModal());
-        dispatch(show());
-      }
-    };
+  async hideShowNotifications(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const { dispatch, notifications: { open } } = this.props;
+    if (open) {
+      dispatch(hideNotifications());
+    } else {
+      dispatch(hideModal());
+      dispatch(showNotifications());
+    }
   }
 
   renderError() {
@@ -183,7 +177,7 @@ export class Layout extends Component {
   }
 
   render() {
-    const { username, email, emailHash, currentPath, errors, source, dispatch } = this.props;
+    const { username, emailHash, currentPath, errors, source, dispatch } = this.props;
     const { title, link } = this.state;
     const githubRoot = 'https://github.com/linode/manager/blob/master/';
     return (
@@ -227,12 +221,6 @@ export class Layout extends Component {
           events={sortEvents(this.props.events)}
           eventSeen={(id) => dispatch(eventSeen(id))}
         />
-        <Feedback
-          email={email}
-          open={this.props.feedback.open}
-          hideShowFeedback={this.hideShowFeedback}
-          submitFeedback={() => {}}
-        />
         <div className="main full-height">
           <div className="main-inner">
             {!errors.status ?
@@ -266,7 +254,6 @@ Layout.propTypes = {
   errors: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   notifications: PropTypes.object.isRequired,
-  feedback: PropTypes.object.isRequired,
   source: PropTypes.object,
   events: PropTypes.object,
   linodes: PropTypes.object,
@@ -280,7 +267,6 @@ function select(state) {
     email: state.authentication.email,
     currentPath: state.routing.locationBeforeTransitions.pathname,
     notifications: state.notifications,
-    feedback: state.feedback,
     errors: state.errors,
     source: state.source,
     events: state.api.events,
