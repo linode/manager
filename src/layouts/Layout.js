@@ -24,8 +24,6 @@ export class Layout extends Component {
     super();
     this.eventHandler = this.eventHandler.bind(this);
     this.renderError = this.renderError.bind(this);
-    this.hideShowNotifications = this.hideShow(
-      ).bind(this);
     this._pollingTimeoutId = null;
     this.state = { title: '', link: '' };
   }
@@ -151,7 +149,7 @@ export class Layout extends Component {
     this.pollForEvents();
   }
 
-  async hideShowNotifications(e) {
+  hideShowNotifications = async (e) => {
     e.preventDefault();
     e.stopPropagation();
     const { dispatch, notifications: { open } } = this.props;
