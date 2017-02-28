@@ -32,9 +32,13 @@ export class PersonalAccessTokensPage extends Component {
       <div className="row">
         {clients.map(client =>
           <div className="col-lg-6" key={client.id}>
-            <PersonalAccessToken client={client} dispatch={dispatch} />
+            <PersonalAccessToken
+              label={client.label}
+              scopes={client.scopes}
+              dispatch={dispatch}
+            />
           </div>
-         )}
+        )}
       </div>
     );
   }

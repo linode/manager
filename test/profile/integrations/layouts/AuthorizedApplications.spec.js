@@ -33,6 +33,11 @@ describe('profile/integrations/layouts/AuthorizedApplicationsPage', () => {
       ({ type }) => type === 'client_token');
     expect(myApplications.length).to.equal(applicationTokens.length);
     const firstToken = myApplications.at(0);
-    expectObjectDeepEquals(firstToken.props().client, applicationTokens[0]);
+    expectObjectDeepEquals(firstToken.props(), {
+      label: applicationTokens[0].client.label,
+      scopes: applicationTokens[0].scopes,
+      id: applicationTokens[0].client.id,
+      dispatch,
+    });
   });
 });

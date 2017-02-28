@@ -32,7 +32,12 @@ export class AuthorizedApplicationsPage extends Component {
       <div className="row">
         {clients.map(client =>
           <div className="col-lg-6" key={client.id}>
-            <AuthorizedApplication client={client} dispatch={dispatch} />
+            <AuthorizedApplication
+              label={client.client.label}
+              id={client.client.id}
+              scopes={client.scopes}
+              dispatch={dispatch}
+            />
           </div>
          )}
       </div>
