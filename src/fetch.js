@@ -56,8 +56,5 @@ export function fetch(token, _path, _options) {
         accept(response);
       }
     }, reject);
-  }).catch((e) => {
-    // eslint-disable-next-line no-throw-literal
-    throw ({ json() { return { errors: [{ reason: e.toString() }] }; } });
   });
 }

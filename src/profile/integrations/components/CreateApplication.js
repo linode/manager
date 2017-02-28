@@ -30,7 +30,8 @@ export default class CreateApplication extends Component {
     this.setState({ errors: {} });
 
     try {
-      const { id } = await this.submitAction(name, redirect);
+      const r = await this.submitAction(name, redirect);
+      const { id } = r;
 
       if (thumbnail) {
         if ((thumbnail.size / (1024 * 1024)) < MAX_UPLOAD_SIZE_MB) {
