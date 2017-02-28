@@ -31,12 +31,7 @@ function fullyQualified(resource) {
 }
 
 function parseIntIfActualInt(string) {
-  const int = parseInt(string);
-  if (int.toString() === string) {
-    return int;
-  }
-
-  return string;
+  return isNaN(string) ? string : parseInt(string);
 }
 
 const actionGenerators = {
