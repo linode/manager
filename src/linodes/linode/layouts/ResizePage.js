@@ -8,6 +8,7 @@ import {
 import { reduceErrors, ErrorSummary } from '~/errors';
 import { setSource } from '~/actions/source';
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
+import { resizeLinode } from '~/api/linodes';
 import Plan from '~/linodes/components/Plan';
 
 export class ResizePage extends Component {
@@ -28,10 +29,13 @@ export class ResizePage extends Component {
   }
 
   async onSubmit() {
+    const { id: linodeId } = this.getLinode();
+    const { dispatch } = this.props;
+    const { type } = this.state;
     this.setState({ fetching: true, errors: {} });
 
     try {
-      // TODO : Add API call
+      await dispatch(resizeLinode(linodeId, type));
     } catch (response) {
       const errors = await reduceErrors(response);
       errors._.concat(errors.type);
@@ -56,9 +60,9 @@ export class ResizePage extends Component {
             />
           </FormGroup>
           <FormGroup>
-            <SubmitButton
-              disabled={this.fetching}
-            >Resize</SubmitButton>
+            <SubmitButton>
+              Resize
+            </SubmitButton>
           </FormGroup>
           <ErrorSummary errors={errors} />
         </Form>
@@ -71,6 +75,9 @@ ResizePage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   types: PropTypes.object.isRequired,
   linodes: PropTypes.object.isRequired,
+  params: PropTypes.shape({
+    linodeLabel: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 function select(state) {
