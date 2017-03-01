@@ -16,12 +16,8 @@ describe('profile/layouts/DisplayPage', () => {
 
   const dispatch = sandbox.stub();
   const profile = {
-    profile: {
-      undefined: {
-        timezone: 'US/Eastern',
-        email: 'example@domain.com',
-      },
-    },
+    timezone: 'US/Eastern',
+    email: 'example@domain.com',
   };
 
   it('renders timezones', async () => {
