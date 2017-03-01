@@ -3,10 +3,25 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
 import Tabs from '~/components/Tabs';
+import { setError } from '~/actions/errors';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 
+import { profile } from '~/api';
+
+
 export class IndexPage extends Component {
+
+  static async preload({ dispatch }) {
+    try {
+      await dispatch(profile.one());
+    } catch (response) {
+      // eslint-disable-next-line no-console
+      console.error(response);
+      dispatch(setError(response));
+    }
+  }
+
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
@@ -56,4 +71,11 @@ IndexPage.propTypes = {
   dispatch: PropTypes.func,
 };
 
-export default connect()(IndexPage);
+function select(state) {
+  // TODO refactor with abstractor changes, see other 'select' method usage in profile/page(s)
+  return {
+    profile: state.api.profile.profile.undefined,
+  };
+}
+
+export default connect(select)(IndexPage);
