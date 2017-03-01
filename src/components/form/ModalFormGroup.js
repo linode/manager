@@ -26,3 +26,8 @@ ModalFormGroup.propTypes = {
   id: PropTypes.string.isRequired,
   description: PropTypes.string,
 };
+
+ModalFormGroup.defaultProps = {
+  apiKey: '',
+  errors: {},
+};

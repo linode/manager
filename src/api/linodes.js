@@ -114,11 +114,26 @@ export function addIP(linodeId, type) {
   return async (dispatch, getState) => {
     const state = getState();
     const { token } = state.authentication;
-    await fetch(token, `/linode/instances/${linodeId}/ips`,
-      { method: 'POST', body: JSON.stringify({ type }) });
+    await fetch(token, `/linode/instances/${linodeId}/ips`, {
+      method: 'POST',
+      body: JSON.stringify({ type }),
+    });
     dispatch(linodeIPs(linodeId));
   };
 }
+
+export function reverseDNS(linodeId, ipId, rdns) {
+  return async (dispatch, getState) => {
+    const state = getState();
+    const { token } = state.authentication;
+    await fetch(token, `/v4/linode/instances/${linodeId}/ips/${ipId}`, {
+      method: 'PUT',
+      body: JSON.stringify({ rdns }),
+    });
+  };
+}
+
+export function resetRDNS() {}
 
 export function linodeBackups(linodeId) {
   return async (dispatch, getState) => {
