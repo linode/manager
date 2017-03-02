@@ -3,6 +3,7 @@ import sinon from 'sinon';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
 
+import { SHOW_MODAL } from '~/actions/modal';
 import { MyApplicationsPage } from '~/profile/integrations/layouts/MyApplicationsPage';
 import { api } from '@/data';
 import { expectObjectDeepEquals } from '@/common';
@@ -30,5 +31,20 @@ describe('profile/integrations/layouts/MyApplicationsPage', () => {
     expect(myApplications.length).to.equal(Object.keys(clients.clients).length);
     const firstClient = myApplications.at(0);
     expectObjectDeepEquals(firstClient.props().client, clients.clients[1]);
+  });
+
+  it('opens the add modal on add click', () => {
+    const page = shallow(
+      <MyApplicationsPage
+        dispatch={dispatch}
+        clients={clients}
+      />
+    );
+
+    const button = page.find('Button');
+    button.props().onClick();
+
+    expect(dispatch.callCount).to.equal(1);
+    expect(dispatch.firstCall.args[0].type).to.equal(SHOW_MODAL);
   });
 });
