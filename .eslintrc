@@ -17,7 +17,6 @@
     "babel/no-await-in-loop": 0,
     "babel/arrow-parens": 0,
     "arrow-body-style": 0,
-    "comma-dangle": 0,
     "func-names": 0,
     "import/no-unresolved": 0,
     "no-underscore-dangle": 0,
