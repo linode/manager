@@ -1,6 +1,6 @@
 export const apiTestToken = {
   created: '2016-12-12T15:07:47',
-  label: null,
+  label: 'personal',
   id: 1,
   expiry: '2290-09-26T14:07:47',
   client: null,

@@ -4,8 +4,7 @@ import { Route, IndexRoute } from 'react-router';
 import IndexPage from './layouts/IndexPage';
 import AuthorizedApplicationsPage from './layouts/AuthorizedApplicationsPage';
 import MyApplicationsPage from './layouts/MyApplicationsPage';
-
-const PersonalAccessTokensPage = () => null;
+import PersonalAccessTokensPage from './layouts/PersonalAccessTokensPage';
 
 export default (
   <Route path="integrations" component={IndexPage}>
