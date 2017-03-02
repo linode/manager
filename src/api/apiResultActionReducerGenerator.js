@@ -30,13 +30,17 @@ function fullyQualified(resource) {
   return path;
 }
 
+function parseIntIfActualInt(string) {
+  return isNaN(string) ? string : parseInt(string);
+}
+
 const actionGenerators = {
   [ONE]: c => (resource, ...ids) =>
-    ({ type: `GEN@${fullyQualified(c)}/ONE`, resource, ids: ids.map(n => parseInt(n) || n) }),
+    ({ type: `GEN@${fullyQualified(c)}/ONE`, resource, ids: ids.map(parseIntIfActualInt) }),
   [MANY]: c => (page, ...ids) =>
-    ({ type: `GEN@${fullyQualified(c)}/MANY`, page, ids: ids.map(n => parseInt(n) || n) }),
+    ({ type: `GEN@${fullyQualified(c)}/MANY`, page, ids: ids.map(parseIntIfActualInt) }),
   [DELETE]: c => (...ids) =>
-    ({ type: `GEN@${fullyQualified(c)}/DELETE`, ids: ids.map(n => parseInt(n) || n) }),
+    ({ type: `GEN@${fullyQualified(c)}/DELETE`, ids: ids.map(parseIntIfActualInt) }),
 };
 
 /**

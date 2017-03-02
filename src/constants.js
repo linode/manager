@@ -788,3 +788,5 @@ export const OAUTH_SCOPES = [
   'linodes', 'dnszones', 'nodebalancers', 'images', 'stackscripts', 'longview', 'events', 'tokens',
   'clients', 'account', 'users',
 ];
+
+export const MAX_UPLOAD_SIZE_MB = 1;
