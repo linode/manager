@@ -3,6 +3,9 @@ import {
 } from './apiResultActionReducerGenerator';
 import { fetch } from '~/fetch';
 
+import _ from 'lodash';
+
+
 /*
  * This function applies the ids to the config to try to find
  * the particular object we are talking about.
@@ -102,7 +105,13 @@ function genThunkPage(config, actions) {
     return async (dispatch, getState) => {
       const { token } = getState().authentication;
       const endpoint = `${config.endpoint(...ids, '')}?page=${page + 1}`;
-      const response = await fetch(token, endpoint, options);
+
+      const fetchOptions = _.merge({}, config.options, options);
+      if (fetchOptions.headers && fetchOptions.headers['X-Filter']) {
+        fetchOptions.headers['X-Filter'] = JSON.stringify(fetchOptions.headers['X-Filter']);
+      }
+
+      const response = await fetch(token, endpoint, fetchOptions);
       const resources = await response.json();
 
       const now = fetchBeganAt || new Date();
@@ -151,7 +160,7 @@ function genThunkAll(config, actions, fetchPage) {
   function fetchAll(ids = [], resourceFilter, options) {
     return async (dispatch, getState) => {
       let state = getStateOfSpecificResource(config, getState(), ids) ||
-                  generateDefaultStateMany(config);
+        generateDefaultStateMany(config);
 
       const fetchBeganAt = new Date();
 
