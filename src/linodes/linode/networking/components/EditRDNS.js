@@ -3,26 +3,26 @@ import React, { PropTypes, Component } from 'react';
 import { ModalFormGroup } from '~/components/form';
 import { Form, Input, SubmitButton, CancelButton } from '~/components/form';
 import { reduceErrors, ErrorSummary } from '~/errors';
-import { reverseDNS } from '~/api/linodes';
+import { setRDNS } from '~/api/linodes';
 
 export default class EditRDNS extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       errors: {},
-      hostname: '',
+      hostname: props.ip.rdns || '',
     };
   }
 
   onSubmit = async () => {
     const { dispatch, ip: { linode_id: linodeId, address } } = this.props;
-    const { rdns } = this.state;
+    const { hostname } = this.state;
 
     this.setState({ errors: {}, saving: true });
 
     try {
-      await dispatch(reverseDNS(linodeId, address, rdns));
+      await dispatch(setRDNS(linodeId, address, hostname));
 
       this.setState({ saving: false });
       this.props.close();
@@ -52,7 +52,7 @@ export default class EditRDNS extends Component {
             disabled
           />
         </ModalFormGroup>
-        <ModalFormGroup label="Hostname" id="hostname" apiKey="hostname" errors={errors}>
+        <ModalFormGroup label="Hostname" id="hostname" apiKey="rdns" errors={errors}>
           <Input
             id="hostname"
             name="hostname"
@@ -74,6 +74,5 @@ export default class EditRDNS extends Component {
 EditRDNS.propTypes = {
   dispatch: PropTypes.func.isRequired,
   ip: PropTypes.object.isRequired,
-  linodeId: PropTypes.any.isRequired,
   close: PropTypes.func.isRequired,
 };

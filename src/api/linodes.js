@@ -122,18 +122,44 @@ export function addIP(linodeId, type) {
   };
 }
 
-export function reverseDNS(linodeId, ipId, rdns) {
+export function setRDNS(linodeId, address, rdns) {
   return async (dispatch, getState) => {
     const state = getState();
     const { token } = state.authentication;
-    await fetch(token, `/v4/linode/instances/${linodeId}/ips/${ipId}`, {
+    await fetch(token, `/linode/instances/${linodeId}/ips/${address}`, {
       method: 'PUT',
       body: JSON.stringify({ rdns }),
     });
+
+    // This endpoint is likely to fail, so don't update state till it succeeds
+    const ips = { ...state.api.linodes.linodes[linodeId]._ips };
+    function updateRDNS(ipType, ipGroups) {
+      for (const ipGroup of ipGroups) {
+        for (let i = 0; i < ips[ipType][ipGroup].length; i++) {
+          const ip = ips[ipType][ipGroup][i];
+          if (ip.address === address) {
+            // This gets around assigning to read-only arrays
+            const newIpType = {
+              ...ips[ipType],
+              [ipGroup]: [...ips[ipType][ipGroup]],
+            };
+            newIpType[ipGroups][i] = { ...ip, rdns };
+            ips[ipType] = newIpType;
+          }
+        }
+      }
+    }
+
+    updateRDNS('ipv4', ['public']);
+    // TODO: add 'global' and 'slaac' once the API supports them
+    updateRDNS('ipv6', ['addresses']);
+    // Save changes to local state
+    dispatch(actions.one({ _ips: ips }, linodeId));
+
+    // Fetch from the API async to double check
+    dispatch(linodeIPs(linodeId));
   };
 }
-
-export function resetRDNS() {}
 
 export function linodeBackups(linodeId) {
   return async (dispatch, getState) => {

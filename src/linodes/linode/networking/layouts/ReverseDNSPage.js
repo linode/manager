@@ -6,7 +6,7 @@ import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import { Card } from '~/components/cards';
 import SecondaryTable from '~/components/SecondaryTable';
 import { setError } from '~/actions/errors';
-import { linodeIPs, resetRDNS } from '~/api/linodes';
+import { linodeIPs, setRDNS } from '~/api/linodes';
 import { Button } from '~/components/buttons';
 import EditRDNS from '../components/EditRDNS';
 
@@ -25,6 +25,8 @@ export class ReverseDNSPage extends Component {
   constructor() {
     super();
     this.getLinode = getLinode.bind(this);
+
+    this.state = { resetting: {} };
   }
 
   renderEditRDNS(ip) {
@@ -40,28 +42,36 @@ export class ReverseDNSPage extends Component {
   }
 
   render() {
+    const { dispatch } = this.props;
+
     const labels = ['IP Address', 'Target', ''];
     const keys = ['address', 'rdns', 'nav'];
-    const ips = this.getLinode()._ips;
+    const linode = this.getLinode();
+    const ips = linode._ips;
 
-    const addNav = (ips) => ips.map(ip => ({
+    const addNav = (ips) => ips.map((ip, i) => ({
       ...ip,
       nav: (
         <div>
           <Button
             className="btn-secondary"
-            onClick={() => resetRDNS(ip)}
+            onClick={async () => {
+              this.setState({ resetting: { ...this.state.resetting, [ip.address]: true } });
+              await dispatch(setRDNS(linode.id, ip.address, null));
+              this.setState({ resetting: { ...this.state.resetting, [ip.address]: false } });
+            }}
+            id={`reset-${i}`}
+            disabled={this.state.resetting[ip.address]}
           >Reset</Button>
           <Button
             className="btn-secondary"
             onClick={this.renderEditRDNS(ip)}
+            id={`edit-${i}`}
           >Edit</Button>
         </div>
       ),
     }));
-    // TODO: should shared ips show up here? (ipv4.shared)
-    // TODO: should global ipv6 ips show up here?
-    // TODO: should slaac show up here?
+    // TODO: slaac and global should show up here but they are not supported by the API yet
     const records = addNav([...ips.ipv4.public, ...ips.ipv6.addresses]);
 
     return (
