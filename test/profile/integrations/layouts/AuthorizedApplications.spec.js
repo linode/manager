@@ -23,6 +23,7 @@ describe('profile/integrations/layouts/AuthorizedApplicationsPage', () => {
   it('renders a list of tokens', () => {
     const page = shallow(
       <AuthorizedApplicationsPage
+        type="application"
         dispatch={dispatch}
         tokens={tokens}
       />
@@ -34,6 +35,7 @@ describe('profile/integrations/layouts/AuthorizedApplicationsPage', () => {
     expect(myApplications.length).to.equal(applicationTokens.length);
     const firstToken = myApplications.at(0);
     expectObjectDeepEquals(firstToken.props(), {
+      type: 'application',
       label: applicationTokens[0].client.label,
       scopes: applicationTokens[0].scopes,
       id: applicationTokens[0].client.id,

@@ -4,8 +4,9 @@ export default class PersonalAccessToken extends AuthorizedApplication {
   constructor(props) {
     super(props);
 
-    const { label, scopes, dispatch } = props;
+    const { type, label, scopes, dispatch } = props;
     this.state = {
+      type,
       label,
       scopes,
       dispatch,

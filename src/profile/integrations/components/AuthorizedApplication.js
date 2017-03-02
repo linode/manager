@@ -45,15 +45,16 @@ export default class AuthorizedApplication extends Component {
   }
 
   render() {
-    const { label, scopes, id = null } = this.props;
+    const { label, scopes, type, id = null } = this.props;
     const icon = id ? `${API_ROOT}/account/clients/${id}/thumbnail` : '';
+
 
     return (
       <SecondaryCard
         title={label}
         icon={icon}
       >
-        <p>This application has access to your:</p>
+        <p>This {type} has access to your:</p>
         <table>
           <tbody>
             {OAUTH_SCOPES.map((scope, i) =>
@@ -70,6 +71,7 @@ export default class AuthorizedApplication extends Component {
 }
 
 AuthorizedApplication.propTypes = {
+  type: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   scopes: PropTypes.string.isRequired,
   id: PropTypes.string,

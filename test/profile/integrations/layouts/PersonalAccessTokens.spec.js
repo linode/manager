@@ -23,6 +23,7 @@ describe('profile/integrations/layouts/PersonalAccessTokensPage', () => {
   it('renders a list of tokens', () => {
     const page = shallow(
       <PersonalAccessTokensPage
+        type="token"
         dispatch={dispatch}
         tokens={tokens}
       />
@@ -34,6 +35,7 @@ describe('profile/integrations/layouts/PersonalAccessTokensPage', () => {
     expect(myApplications.length).to.equal(applicationTokens.length);
     const firstToken = myApplications.at(0);
     expectObjectDeepEquals(firstToken.props(), {
+      type: 'token',
       label: applicationTokens[0].label,
       scopes: applicationTokens[0].scopes,
       dispatch,

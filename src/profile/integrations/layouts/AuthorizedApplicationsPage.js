@@ -33,6 +33,7 @@ export class AuthorizedApplicationsPage extends Component {
         {clients.map(client =>
           <div className="col-lg-6" key={client.id}>
             <AuthorizedApplication
+              type="application"
               label={client.client.label}
               id={client.client.id}
               scopes={client.scopes}
