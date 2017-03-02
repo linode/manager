@@ -33,13 +33,11 @@ describe('linodes/linode/layouts/ResizePage', () => {
     await page.instance().onSubmit();
 
     const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, '/linode/instances/1234/resize', () => {}, null,
-      d => {
-        expect(d.method).to.equal('POST');
-        expectObjectDeepEquals(JSON.parse(d.body), {
-          type: 'linode1024.5',
-        });
-      }
-    );
+    await expectRequest(fn, '/linode/instances/1234/resize', undefined, undefined, {
+        method: "POST",
+            body: {
+                  type: 'linode1024.5',
+            }
+    });
   });
 });
