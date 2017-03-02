@@ -1,10 +1,9 @@
 import React from 'react';
 import sinon from 'sinon';
 import { mount } from 'enzyme';
-import { expect } from 'chai';
 
 import { ResizePage } from '~/linodes/linode/layouts/ResizePage';
-import { expectRequest, expectObjectDeepEquals } from '@/common';
+import { expectRequest } from '@/common';
 import { api } from '@/data';
 
 describe('linodes/linode/layouts/ResizePage', () => {
@@ -34,10 +33,10 @@ describe('linodes/linode/layouts/ResizePage', () => {
 
     const fn = dispatch.firstCall.args[0];
     await expectRequest(fn, '/linode/instances/1234/resize', undefined, undefined, {
-        method: "POST",
-            body: {
-                  type: 'linode1024.5',
-            }
+      method: 'POST',
+      body: {
+        type: 'linode1024.5',
+      },
     });
   });
 });
