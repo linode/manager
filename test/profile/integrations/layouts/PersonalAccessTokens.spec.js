@@ -4,14 +4,14 @@ import { shallow } from 'enzyme';
 import { expect } from 'chai';
 
 import {
-  AuthorizedApplicationsPage,
-} from '~/profile/integrations/layouts/AuthorizedApplicationsPage';
+  PersonalAccessTokensPage,
+} from '~/profile/integrations/layouts/PersonalAccessTokensPage';
 import { api } from '@/data';
 import { expectObjectDeepEquals } from '@/common';
 
 const { tokens } = api;
 
-describe('profile/integrations/layouts/AuthorizedApplicationsPage', () => {
+describe('profile/integrations/layouts/PersonalAccessTokensPage', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
@@ -22,23 +22,22 @@ describe('profile/integrations/layouts/AuthorizedApplicationsPage', () => {
 
   it('renders a list of tokens', () => {
     const page = shallow(
-      <AuthorizedApplicationsPage
-        type="application"
+      <PersonalAccessTokensPage
+        type="token"
         dispatch={dispatch}
         tokens={tokens}
       />
     );
 
-    const myApplications = page.find('AuthorizedApplication');
+    const myApplications = page.find('PersonalAccessToken');
     const applicationTokens = Object.values(tokens.tokens).filter(
-      ({ type }) => type === 'client_token');
+      ({ type }) => type === 'personal_access_token');
     expect(myApplications.length).to.equal(applicationTokens.length);
     const firstToken = myApplications.at(0);
     expectObjectDeepEquals(firstToken.props(), {
-      type: 'application',
-      label: applicationTokens[0].client.label,
+      type: 'token',
+      label: applicationTokens[0].label,
       scopes: applicationTokens[0].scopes,
-      id: applicationTokens[0].client.id,
       dispatch,
     });
   });

@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React, { PropTypes, Component } from 'react';
 
 import { API_ROOT } from '~/constants';
 import { SecondaryCard } from '~/components/cards/';
@@ -38,30 +38,42 @@ function renderScope(scopesRequested, currentScope, currentSubscope) {
   return subscopeNotAllowed;
 }
 
-export default function AuthorizedApplication(props) {
-  const { client } = props;
+export default class AuthorizedApplication extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { props };
+  }
 
-  return (
-    <SecondaryCard
-      title={client.client.label}
-      icon={`${API_ROOT}/account/clients/${client.client.id}/thumbnail`}
-    >
-      <p>This application has access to your:</p>
-      <table>
-        <tbody>
-          {OAUTH_SCOPES.map((scope, i) =>
-            <tr key={i}>
-              <td>{title(scope)}</td>
-              {OAUTH_SUBSCOPES.map((subscope, j) =>
-                <td key={j}>{renderScope(client.scopes, scope, subscope)}</td>)}
-            </tr>)}
-        </tbody>
-      </table>
-    </SecondaryCard>
-  );
+  render() {
+    const { label, scopes, type, id = null } = this.props;
+    const icon = id ? `${API_ROOT}/account/clients/${id}/thumbnail` : '';
+
+
+    return (
+      <SecondaryCard
+        title={label}
+        icon={icon}
+      >
+        <p>This {type} has access to your:</p>
+        <table>
+          <tbody>
+            {OAUTH_SCOPES.map((scope, i) =>
+              <tr key={i}>
+                <td>{title(scope)}</td>
+                {OAUTH_SUBSCOPES.map((subscope, j) =>
+                  <td key={j}>{renderScope(scopes, scope, subscope)}</td>)}
+              </tr>)}
+          </tbody>
+        </table>
+      </SecondaryCard>
+    );
+  }
 }
 
 AuthorizedApplication.propTypes = {
-  client: PropTypes.object.isRequired,
+  type: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+  scopes: PropTypes.string.isRequired,
+  id: PropTypes.string,
   dispatch: PropTypes.func.isRequired,
 };

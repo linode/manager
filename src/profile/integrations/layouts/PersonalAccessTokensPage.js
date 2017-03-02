@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 
 import { setError } from '~/actions/errors';
 import { tokens } from '~/api';
-import AuthorizedApplication from '../components/AuthorizedApplication';
+import PersonalAccessToken from '../components/PersonalAccessToken';
 
-export class AuthorizedApplicationsPage extends Component {
+export class PersonalAccessTokensPage extends Component {
   static async preload({ dispatch }) {
     try {
       await dispatch(tokens.all());
@@ -20,7 +20,7 @@ export class AuthorizedApplicationsPage extends Component {
     super(props);
 
     const clients = Object.values(props.tokens.tokens).filter(
-      token => token.type === 'client_token');
+      token => token.type === 'personal_access_token');
     this.state = { clients };
   }
 
@@ -32,21 +32,20 @@ export class AuthorizedApplicationsPage extends Component {
       <div className="row">
         {clients.map(client =>
           <div className="col-lg-6" key={client.id}>
-            <AuthorizedApplication
-              type="application"
-              label={client.client.label}
-              id={client.client.id}
+            <PersonalAccessToken
+              type="token"
+              label={client.label}
               scopes={client.scopes}
               dispatch={dispatch}
             />
           </div>
-         )}
+        )}
       </div>
     );
   }
 }
 
-AuthorizedApplicationsPage.propTypes = {
+PersonalAccessTokensPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   tokens: PropTypes.object.isRequired,
 };
@@ -57,4 +56,4 @@ function select(state) {
   };
 }
 
-export default connect(select)(AuthorizedApplicationsPage);
+export default connect(select)(PersonalAccessTokensPage);

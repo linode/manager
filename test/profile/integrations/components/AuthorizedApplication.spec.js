@@ -24,7 +24,9 @@ describe('profile/integrations/components/AuthorizedApplication', () => {
     const page = shallow(
       <AuthorizedApplication
         dispatch={dispatch}
-        client={tokens[2]}
+        label={tokens[2].client.label}
+        scopes={tokens[2].scopes}
+        id={tokens[2].client.id}
       />
     );
 
@@ -50,7 +52,9 @@ describe('profile/integrations/components/AuthorizedApplication', () => {
     const page = shallow(
       <AuthorizedApplication
         dispatch={dispatch}
-        client={tokens[3]}
+        label={tokens[3].client.label}
+        scopes={tokens[3].scopes}
+        id={tokens[3].client.id}
       />
     );
 
