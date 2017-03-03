@@ -34,7 +34,6 @@ export function fetch(token, _path, _options) {
       Accept: 'application/json',
       Authorization: `token ${token}`,
       'Content-Type': (_headers && _headers['Content-Type'] || 'application/json'),
-      'X-CORS-Status': 'true',
     },
   };
 
@@ -42,8 +41,7 @@ export function fetch(token, _path, _options) {
   const promise = fetchRef(path, options);
   return new Promise((accept, reject) => {
     promise.then((response) => {
-      const _status = response.headers.get('X-Status');
-      const status = _status ? parseInt(_status, 10) : response.status;
+      const { status } = response.status;
       // eslint-disable-next-line no-param-reassign
       response.statusCode = status;
       if (status >= 400) {
