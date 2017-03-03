@@ -41,9 +41,7 @@ export function fetch(token, _path, _options) {
   const promise = fetchRef(path, options);
   return new Promise((accept, reject) => {
     promise.then((response) => {
-      const { status } = response;
-      // eslint-disable-next-line no-param-reassign
-      response.statusCode = status;
+      const status = response.statusCode;
       if (status >= 400) {
         if (status === 401) {
           expireSession();
