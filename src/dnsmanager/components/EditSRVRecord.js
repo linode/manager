@@ -50,7 +50,7 @@ export default class EditSRVRecord extends Component {
       port,
     } = this.state;
 
-    this.setState({ saving: true });
+    this.setState({ errors: {}, saving: true });
 
     try {
       const ids = [this.props.zone.id, id].filter(Boolean);

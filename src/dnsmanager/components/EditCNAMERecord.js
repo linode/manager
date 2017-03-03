@@ -32,7 +32,7 @@ export default class EditCNAMERecord extends Component {
     const { dispatch, id } = this.props;
     const { ttl, hostname, alias } = this.state;
 
-    this.setState({ saving: true });
+    this.setState({ errors: {}, saving: true });
 
     try {
       const ids = [this.props.zone.id, id].filter(Boolean);

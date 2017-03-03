@@ -34,7 +34,7 @@ export default class EditSOARecord extends Component {
       group, zone, defaultTTL, refreshRate, retryRate, expireTime, email,
     } = this.state;
 
-    this.setState({ saving: true });
+    this.setState({ errors: {}, saving: true });
 
     try {
       await dispatch(dnszones.put({

@@ -33,7 +33,7 @@ export default class EditARecord extends Component {
     const { dispatch, id } = this.props;
     const { ttl, hostname, ip, type } = this.state;
 
-    this.setState({ saving: true });
+    this.setState({ errors: {}, saving: true });
 
     try {
       const ids = [this.props.zone.id, id].filter(Boolean);
