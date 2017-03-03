@@ -9,8 +9,7 @@ import * as fetch from '~/fetch';
 import { api } from '@/data';
 import { testEvent } from '@/data/events';
 import { actions as linodeActions } from '~/api/configs/linodes';
-import { hideModal } from '~/actions/modal';
-import { showNotifications } from '~/actions/notifications';
+
 
 describe('layouts/Layout', () => {
   const sandbox = sinon.sandbox.create();

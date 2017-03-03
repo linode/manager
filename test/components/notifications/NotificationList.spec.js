@@ -3,7 +3,7 @@ import { mount } from 'enzyme';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
-import { NotificationList, NotificationListItem } from '~/components/notifications';
+import { NotificationList } from '~/components/notifications';
 
 import { api } from '@/data';
 
@@ -31,7 +31,7 @@ describe('components/notifications/NotificationList', () => {
     const notifications = mount(
       <NotificationList
         events={events}
-        loading={true}
+        loading
       />
     );
 

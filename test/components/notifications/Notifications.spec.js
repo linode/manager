@@ -3,8 +3,6 @@ import { shallow } from 'enzyme';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
-import { expectObjectDeepEquals } from '@/common';
-
 import { Notifications } from '~/components/notifications/Notifications';
 
 import { api } from '@/data';
