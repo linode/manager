@@ -23,7 +23,7 @@ export function getObjectByLabelLazily(pluralName, label, labelName = 'label') {
 
     const response = (await dispatch(api[pluralName].all([], undefined, {
       headers: {
-        'X-Filter': { [labelName]: label },
+        'X-Filter': JSON.stringify({ [labelName]: label }),
       },
     })));
 
