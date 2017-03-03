@@ -65,7 +65,7 @@ export const testDNSZone = {
         id: 4,
         protocol: null,
         weight: 0,
-        target: 'ns1.service.com',
+        target: 'ns5.linode.com',
       },
       5: {
         type: 'TXT',
@@ -82,7 +82,8 @@ export const testDNSZone = {
       6: {
         type: 'SRV',
         ttl_sec: 0,
-        name: '_sip._tcp',
+        // TODO: api support for _sip._tcp
+        name: '_sip',
         port: 80,
         service: '_sip',
         priority: 10,

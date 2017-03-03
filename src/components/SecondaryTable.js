@@ -4,7 +4,7 @@ export function SecondaryTableRow(props) {
   const { keys, data } = props;
 
   return (
-    <tr className="SecondaryTable-row">
+    <tr className="SecondaryTable-row" onClick={props.onClick}>
       {keys.map((key, i) =>
         <td key={i} className="SecondaryTable-column">{data[key]}</td>)}
     </tr>
@@ -14,6 +14,7 @@ export function SecondaryTableRow(props) {
 SecondaryTableRow.propTypes = {
   data: PropTypes.object.isRequired,
   keys: PropTypes.array.isRequired,
+  onClick: PropTypes.func,
 };
 
 export default function SecondaryTable(props) {
@@ -25,12 +26,14 @@ export default function SecondaryTable(props) {
         <tr>{labels.map((label, i) => <th key={i}>{label}</th>)}</tr>
       </thead>
       <tbody>
-        {children || rows.map((data, i) =>
+        {children || rows.map((data, i) => (
           <SecondaryTableRow
-            key={i}
+            key={data.id || i}
             data={data}
             keys={keys}
-          />)}
+            onClick={(e) => props.onRowClick(e, data)}
+          />)
+        )}
       </tbody>
     </table>
   );
@@ -41,4 +44,5 @@ SecondaryTable.propTypes = {
   keys: PropTypes.array.isRequired,
   rows: PropTypes.array.isRequired,
   children: PropTypes.node,
+  onRowClick: PropTypes.func,
 };
