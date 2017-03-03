@@ -141,6 +141,7 @@ export class ZonePage extends Component {
 
   renderRecords = ({ title, singularTitle, id, records, labels, keys, nav, navOnClick }) => {
     let cardContents = <p>No records created.</p>;
+    const editSingularTitle = `Edit ${singularTitle}`;
     if (records && records.length) {
       cardContents = (
         <SecondaryTable
@@ -151,17 +152,17 @@ export class ZonePage extends Component {
             const classList = e.target.classList;
             if (classList.contains('edit-button')) {
               if (records[0].type === 'MX') {
-                this.renderEditMXRecord(`Edit ${singularTitle}`, record.id, 'fromClick');
+                this.renderEditRecord(editSingularTitle, EditMXRecord, { id });
               } else if (records[0].type === 'NS') {
-                this.renderEditNSRecord(`Edit ${singularTitle}`, record.id, 'fromClick');
+                this.renderEditRecord(editSingularTitle, EditNSRecord, { id });
               } else if (records[0].type === 'TXT') {
-                this.renderEditTXTRecord(`Edit ${singularTitle}`, record.id, 'fromClick');
+                this.renderEditRecord(editSingularTitle, EditTXTRecord, { id });
               } else if (records[0].type === 'A') {
-                this.renderEditARecord(`Edit ${singularTitle}`, record.id, 'fromClick');
+                this.renderEditRecord(editSingularTitle, EditARecord, { id });
               } else if (records[0].type === 'CNAME') {
-                this.renderEditCNAMERecord(`Edit ${singularTitle}`, record.id, 'fromClick');
+                this.renderEditRecord(editSingularTitle, EditCNAMERecord, { id });
               } else if (records[0].type === 'SRV') {
-                this.renderEditSRVRecord(`Edit ${singularTitle}`, record.id, 'fromClick');
+                this.renderEditRecord(editSingularTitle, EditSRVRecord, { id });
               }
             } else if (classList.contains('delete-button')) {
               this.renderDeleteRecord(`Delete ${singularTitle}`, record.id);
@@ -220,53 +221,28 @@ export class ZonePage extends Component {
     return () => { this.renderEditRecord(title, EditSOARecord); };
   }
 
-  renderEditNSRecord(title, id, fromClick) {
-    if (fromClick === 'fromClick') {
-      this.renderEditRecord(title, EditNSRecord, { id });
-    } else {
-      return () => { this.renderEditRecord(title, EditNSRecord, { id }); };
-    }
+  renderEditMXRecord(title, id) {
+    return () => { this.renderEditRecord(title, EditMXRecord, { id }); };
   }
 
-  renderEditMXRecord(title, id, fromClick) {
-    if (fromClick === 'fromClick') {
-      this.renderEditRecord(title, EditMXRecord, { id });
-    } else {
-      return () => { this.renderEditRecord(title, EditMXRecord, { id }); };
-    }
+  renderEditNSRecord(title, id) {
+    return () => { this.renderEditRecord(title, EditNSRecord, { id }); };
   }
 
-  renderEditARecord(title, id, fromClick) {
-    if (fromClick === 'fromClick') {
-      this.renderEditRecord(title, EditARecord, { id });
-    } else {
-      return () => { this.renderEditRecord(title, EditARecord, { id }); };
-    }
+  renderEditARecord(title, id) {
+    return () => { this.renderEditRecord(title, EditARecord, { id }); };
   }
 
-  renderEditTXTRecord(title, id, fromClick) {
-    if (fromClick === 'fromClick') {
-      this.renderEditRecord(title, EditTXTRecord, { id });
-    } else {
-      return () => { this.renderEditRecord(title, EditTXTRecord, { id }); };
-    }
+  renderEditTXTRecord(title, id) {
+    return () => { this.renderEditRecord(title, EditTXTRecord, { id }); };
   }
 
-
-  renderEditSRVRecord(title, id, fromClick) {
-    if (fromClick === 'fromClick') {
-      this.renderEditRecord(title, EditSRVRecord, { id });
-    } else {
-      return () => { this.renderEditRecord(title, EditSRVRecord, { id }); };
-    }
+  renderEditSRVRecord(title, id) {
+    return () => { this.renderEditRecord(title, EditSRVRecord, { id }); };
   }
 
-  renderEditCNAMERecord(title, id, fromClick) {
-    if (fromClick === 'fromClick') {
-      this.renderEditRecord(title, EditCNAMERecord, { id });
-    } else {
-      return () => { this.renderEditRecord(title, EditCNAMERecord, { id }); };
-    }
+  renderEditCNAMERecord(title, id) {
+    return () => { this.renderEditRecord(title, EditCNAMERecord, { id }); };
   }
 
   render() {
