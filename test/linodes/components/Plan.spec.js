@@ -19,7 +19,7 @@ describe('linodes/components/Plan', () => {
       />
     );
 
-    c.find('.plan').first().simulate('click');
+    c.find('.plan').at(1).simulate('click');
     expect(onSelect.calledOnce).to.equal(true);
     expect(onSelect.firstCall.args[0]).to.equal('linode2048.5');
   });
