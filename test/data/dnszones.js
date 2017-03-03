@@ -82,7 +82,8 @@ export const testDNSZone = {
       6: {
         type: 'SRV',
         ttl_sec: 0,
-        name: '_sip._tcp',
+        // TODO: api support for _sip._tcp
+        name: '_sip',
         port: 80,
         service: '_sip',
         priority: 10,
