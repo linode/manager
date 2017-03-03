@@ -39,6 +39,7 @@ describe('api/apiResultActionReducerGenerator.js', () => {
       totalPages: -1,
       totalResults: -1,
       datacenters: {},
+      ids: []
     });
   });
 
