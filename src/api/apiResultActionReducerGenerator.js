@@ -93,7 +93,7 @@ export class ReducerGenerator {
     const id = action.ids.length ? action.ids[action.ids.length - 1] : action.resource.id;
     const oldStateOne = oldStateMany[config.plural][id];
     const newStateOne = oldStateOne ? action.resource :
-      generateDefaultStateOne(config, action.resource);
+                        generateDefaultStateOne(config, action.resource);
 
     const newStateMany = {
       ...oldStateMany,
