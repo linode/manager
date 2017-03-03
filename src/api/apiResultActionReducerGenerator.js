@@ -75,6 +75,7 @@ export function generateDefaultStateMany(config) {
     totalPages: -1,
     totalResults: -1,
     [config.plural]: {},
+    ids: [],
   };
 }
 
@@ -118,8 +119,15 @@ export class ReducerGenerator {
         resource: oneObject,
       }), oldState);
 
+    let ids = Object.values(newState[config.plural]).map((obj) => obj.id);
+
+    if (config.sortFn) {
+      ids = config.sortFn(ids, newState[config.plural]);
+    }
+
     return {
       ...newState,
+      ids,
       totalPages: page.total_pages,
       totalResults: page.total_results,
     };
