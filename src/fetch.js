@@ -38,6 +38,10 @@ export function fetch(token, _path, _options) {
     },
   };
 
+  if (options.headers['X-Filter']) {
+    options.headers['X-Filter'] = JSON.stringify(options.headers['X-Filter']);
+  }
+
   const path = API_ROOT + _path;
   const promise = fetchRef(path, options);
   return new Promise((accept, reject) => {

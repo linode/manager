@@ -107,10 +107,6 @@ function genThunkPage(config, actions) {
       const endpoint = `${config.endpoint(...ids, '')}?page=${page + 1}`;
 
       const fetchOptions = _.merge({}, config.options, options);
-      if (fetchOptions.headers && fetchOptions.headers['X-Filter']) {
-        fetchOptions.headers['X-Filter'] = JSON.stringify(fetchOptions.headers['X-Filter']);
-      }
-
       const response = await fetch(token, endpoint, fetchOptions);
       const resources = await response.json();
 
