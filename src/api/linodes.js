@@ -120,6 +120,16 @@ export function addIP(linodeId, type) {
   };
 }
 
+export function resizeLinode(linodeId, type) {
+  return async (dispatch, getState) => {
+    const state = getState();
+    const { token } = state.authentication;
+    await fetch(token, `/linode/instances/${linodeId}/resize`,
+      { method: 'POST', body: JSON.stringify({ type }) });
+    dispatch(linodeIPs(linodeId));
+  };
+}
+
 export function linodeBackups(linodeId) {
   return async (dispatch, getState) => {
     const state = getState();

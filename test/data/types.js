@@ -18,5 +18,18 @@ export const testType = {
 };
 
 export const types = {
+  'linode1024.5': {
+    hourly_price: 1,
+    id: 'linode1024.5',
+    label: 'Linode 1024',
+    mbits_out: 125,
+    monthly_price: 500,
+    ram: 1024,
+    service_type: 'linode',
+    storage: 24576,
+    transfer: 1000,
+    vcpus: 1,
+    backups_price: 150,
+  },
   'linode2048.5': testType,
 };
