@@ -131,8 +131,14 @@ export function setRDNS(linodeId, address, rdns) {
       body: JSON.stringify({ rdns }),
     });
 
-    // This endpoint is likely to fail, so don't update state till it succeeds
+    // This endpoint is likely to fail, so don't update state till it succeeded
     const ips = { ...state.api.linodes.linodes[linodeId]._ips };
+
+    // It is difficult to know which IP address was updated because the addresses
+    // aren't currently mapped by key and exist in groups (and sub-groups).
+    // This function goes through groups of an ip version and only sets the single
+    // IP RDNS entry that was updated in the setRDNS call. This is complicated slightly by
+    // trying to work on read-only objects that tests obsess over.
     function updateRDNS(ipType, ipGroups) {
       for (const ipGroup of ipGroups) {
         for (let i = 0; i < ips[ipType][ipGroup].length; i++) {
