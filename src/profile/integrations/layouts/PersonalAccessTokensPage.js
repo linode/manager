@@ -19,14 +19,15 @@ export class PersonalAccessTokensPage extends Component {
   constructor(props) {
     super(props);
 
-    const clients = Object.values(props.tokens.tokens).filter(
-      token => token.type === 'personal_access_token');
-    this.state = { clients };
+    this.state = {
+      ToDo: 'remove when creating add/edit',
+    };
   }
 
   render() {
-    const { clients } = this.state;
     const { dispatch } = this.props;
+    const clients = Object.values(this.props.tokens.tokens).filter(
+      token => token.type === 'personal_access_token');
 
     return (
       <div className="row">

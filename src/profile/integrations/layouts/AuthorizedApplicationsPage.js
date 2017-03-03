@@ -21,10 +21,6 @@ export class AuthorizedApplicationsPage extends Component {
   constructor(props) {
     super(props);
     this.revokeApp = this.revokeApp.bind(this);
-
-    const clients = Object.values(props.tokens.tokens).filter(
-      token => token.type === 'client_token');
-    this.state = { clients };
   }
 
   async revokeApp(id) {
@@ -39,8 +35,9 @@ export class AuthorizedApplicationsPage extends Component {
   }
 
   render() {
-    const { clients } = this.state;
     const { dispatch } = this.props;
+    const clients = Object.values(this.props.tokens.tokens).filter(
+      token => token.type === 'client_token');
 
     return (
       <div className="row">
