@@ -63,10 +63,8 @@ describe('profile/integrations/layouts/AuthorizedApplicationsPage', () => {
       .simulate('click');
     await page.instance().revokeApp(2);
     const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, '/account/tokens/2', undefined, undefined,
-      options => {
-        expect(options.method).to.equal('DELETE');
-      }
-    );
+    await expectRequest(fn, '/account/tokens/2', undefined, undefined, {
+      method: 'DELETE',
+    });
   });
 });
