@@ -38,7 +38,7 @@ describe('api/util', async () => {
       ],
     }, {
       headers: {
-        'X-Filter': JSON.stringify({ label: 'foo-foo-foo' }),
+        'X-Filter': { label: 'foo-foo-foo' },
       },
     });
   });
