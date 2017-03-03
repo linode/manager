@@ -156,6 +156,12 @@ export class ZonePage extends Component {
                 this.renderEditNSRecord(`Edit ${singularTitle}`, record.id, 'fromClick');
               } else if (records[0].type === 'TXT') {
                 this.renderEditTXTRecord(`Edit ${singularTitle}`, record.id, 'fromClick');
+              } else if (records[0].type === 'A') {
+                this.renderEditARecord(`Edit ${singularTitle}`, record.id, 'fromClick');
+              } else if (records[0].type === 'CNAME') {
+                this.renderEditCNAMERecord(`Edit ${singularTitle}`, record.id, 'fromClick');
+              } else if (records[0].type === 'SRV') {
+                this.renderEditSRVRecord(`Edit ${singularTitle}`, record.id, 'fromClick');
               }
             } else if (classList.contains('delete-button')) {
               this.renderDeleteRecord(`Delete ${singularTitle}`, record.id);
@@ -230,8 +236,12 @@ export class ZonePage extends Component {
     }
   }
 
-  renderEditARecord(title, id) {
-    return this.renderEditRecord(title, EditARecord, { id });
+  renderEditARecord(title, id, fromClick) {
+    if (fromClick === 'fromClick') {
+      this.renderEditRecord(title, EditARecord, { id });
+    } else {
+      return () => { this.renderEditRecord(title, EditARecord, { id }); };
+    }
   }
 
   renderEditTXTRecord(title, id, fromClick) {
@@ -243,12 +253,20 @@ export class ZonePage extends Component {
   }
 
 
-  renderEditSRVRecord(title, id) {
-    return this.renderEditRecord(title, EditSRVRecord, { id });
+  renderEditSRVRecord(title, id, fromClick) {
+    if (fromClick === 'fromClick') {
+      this.renderEditRecord(title, EditSRVRecord, { id });
+    } else {
+      return () => { this.renderEditRecord(title, EditSRVRecord, { id }); };
+    }
   }
 
-  renderEditCNAMERecord(title, id) {
-    return this.renderEditRecord(title, EditCNAMERecord, { id });
+  renderEditCNAMERecord(title, id, fromClick) {
+    if (fromClick === 'fromClick') {
+      this.renderEditRecord(title, EditCNAMERecord, { id });
+    } else {
+      return () => { this.renderEditRecord(title, EditCNAMERecord, { id }); };
+    }
   }
 
   render() {
@@ -278,7 +296,7 @@ export class ZonePage extends Component {
     const nsRecords = formatSeconds(this.formatNSRecords());
     const mxRecords = formatSeconds(addNav(this.formatMXRecords()));
     const aRecords = formatSeconds(addNav(this.formatARecords()));
-    const cnameRecords = formatSeconds(addNav(_cnameRecords));
+    const cnameRecords = formatSeconds(addNav(this.formatCNAMERecords()));
     const txtRecords = formatSeconds(addNav(this.formatTXTRecords()));
     const srvRecords = formatSeconds(addNav(this.formatSRVRecords()));
 
