@@ -41,7 +41,7 @@ export function fetch(token, _path, _options) {
   const promise = fetchRef(path, options);
   return new Promise((accept, reject) => {
     promise.then((response) => {
-      const { status } = response.status;
+      const { status } = response;
       // eslint-disable-next-line no-param-reassign
       response.statusCode = status;
       if (status >= 400) {
