@@ -78,7 +78,7 @@ export class IndexPage extends Component {
                 />
                 <Link
                   className="PrimaryTable-rowLabel"
-                  to={`/nodebalancer/${n.label}`}
+                  to={`/nodebalancers/${n.label}`}
                   title={n.id}
                 >
                   {n.label}

@@ -36,6 +36,14 @@ export const LinodeStatesReadable = {
   rebooting: 'Rebooting',
 };
 
+export const NodebalancerStatusReadable = {
+  active: 'Active',
+  suspended: 'Suspended',
+  canceled: 'Canceled',
+  new_active: 'Active',
+  new_suspended: 'Suspended',
+};
+
 export const ipv4ns = {
   dallas: [
     '173.255.199.5',
