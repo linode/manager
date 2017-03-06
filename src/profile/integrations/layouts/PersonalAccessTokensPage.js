@@ -16,14 +16,6 @@ export class PersonalAccessTokensPage extends Component {
     }
   }
 
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      ToDo: 'remove when creating add/edit',
-    };
-  }
-
   render() {
     const { dispatch } = this.props;
     const clients = Object.values(this.props.tokens.tokens).filter(
