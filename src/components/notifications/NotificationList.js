@@ -10,12 +10,14 @@ export default class NotificationList extends Component {
 
     this.onClickShowMore = this.onClickShowMore.bind(this);
 
-    this.state = { totalResults: 0 };
+    this.state = { totalResults: props.events.totalResults || 0 };
   }
 
   componentWillUpdate(nextProps) {
-    const { events } = nextProps;
+    this.updateTotalResults(nextProps.events);
+  }
 
+  updateTotalResults(events) {
     if (events.totalResults > this.state.totalResults) {
       this.setState({ totalResults: events.totalResults });
     }
