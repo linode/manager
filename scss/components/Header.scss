@@ -91,7 +91,7 @@ $header-padding: $grid-gutter-width-base / 2;
         &:active,
         &:hover,
         &:focus {
-            background: $hover-bg;
+            background: $nav-hover-background-color;
             cursor: pointer;
             cursor: hand;
         }
@@ -115,7 +115,7 @@ $header-padding: $grid-gutter-width-base / 2;
     display: none;
 
     &:hover {
-        background: $hover-bg;
+        background: $nav-hover-background-color;
     }
 
     &--open {
