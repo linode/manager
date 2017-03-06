@@ -98,7 +98,7 @@ export default class Header extends Component {
               width={35}
             />
             <div className={`SessionMenu ${sessionMenuOpen ? 'SessionMenu--open' : ''}`}>
-              <div className="SessionMenu-body text-xs-right">
+              <div className="SessionMenu-body">
                 <div className="SessionMenu-menu-item">
                   <Link to="/logout">Logout</Link>
                 </div>
