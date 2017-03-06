@@ -23,8 +23,8 @@ describe('components/notifications/NotificationList', () => {
   });
 
   it('implements default state', () => {
-      expect(notificationList.instance().state).to.exist;
-      expect(notificationList.instance().state.totalResults).to.equal(4);
+    expect(notificationList.instance().state).to.exist;
+    expect(notificationList.instance().state.totalResults).to.equal(4);
   });
 
   it('updates total results based on events results', () => {
@@ -70,7 +70,7 @@ describe('components/notifications/NotificationList', () => {
 
   it('renders a show more link when more results are available', () => {
     const eventsAPI = fakeAPI([
-      [events, 'event', 'events', 200]
+      [events, 'event', 'events', 200],
     ]);
     notificationList = mount(
       <NotificationList
@@ -84,7 +84,7 @@ describe('components/notifications/NotificationList', () => {
   it('supports show more click handling', () => {
     const clickShowMoreHandlerSpy = sandbox.spy();
     const eventsAPI = fakeAPI([
-      [events, 'event', 'events', 200]
+      [events, 'event', 'events', 200],
     ]);
     notificationList = mount(
       <NotificationList

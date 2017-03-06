@@ -53,7 +53,7 @@ describe('components/Notifications', function () {
 
   it('implements making events seen', () => {
     const emptyEventsAPI = fakeAPI([
-      [{}, 'event', 'events']
+      [{}, 'event', 'events'],
     ]);
     notifications = shallow(<Notifications dispatch={dispatch} events={emptyEventsAPI.events} />);
     expect(notifications.instance().markEventsSeen).to.exist;
@@ -67,11 +67,11 @@ describe('components/Notifications', function () {
     const seenEventsAPI = fakeAPI([
       [
         {
-          [seenEvent.id]: seenEvent
+          [seenEvent.id]: seenEvent,
         },
         'event',
-        'events'
-      ]
+        'events',
+      ],
     ]);
     notifications = shallow(<Notifications dispatch={dispatch} events={seenEventsAPI.events} />);
     expect(notifications.instance().markEventsSeen).to.exist;

@@ -20,7 +20,7 @@ function calculateTotalPages(totalResults) {
   return Math.floor(totalResults / 25) + 1;
 }
 
-export function fakeAPIStore(data, singular, plural, totalResults = 0, totalPages = 0) {
+export function fakeAPIStore(data, singular, plural, totalResults, totalPages) {
   totalResults = totalResults || calculateTotalResults(data);
   totalPages = totalPages || calculateTotalPages(totalResults);
   const ids = Object.values(data).map((obj) => obj.id);

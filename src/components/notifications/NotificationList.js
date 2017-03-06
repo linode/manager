@@ -17,15 +17,15 @@ export default class NotificationList extends Component {
     this.updateTotalResults(nextProps.events);
   }
 
+  onClickShowMore(e) {
+    e.preventDefault();
+    this.props.onClickShowMore(e);
+  }
+
   updateTotalResults(events) {
     if (events.totalResults > this.state.totalResults) {
       this.setState({ totalResults: events.totalResults });
     }
-  }
-
-  onClickShowMore(e) {
-    e.preventDefault();
-    this.props.onClickShowMore(e);
   }
 
   render() {
