@@ -91,6 +91,7 @@ $header-padding: $grid-gutter-width-base / 2;
         &:active,
         &:hover,
         &:focus {
+            background: $hover-bg;
             cursor: pointer;
             cursor: hand;
         }
@@ -104,7 +105,6 @@ $header-padding: $grid-gutter-width-base / 2;
     &-badge {
         @extend .badge;
         background: $red;
-        border: 2px solid $black;
         position: absolute;
         right: 4px;
         top: 6px;
