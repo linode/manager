@@ -76,6 +76,10 @@ $header-padding: $grid-gutter-width-base / 2;
         }
     }
 
+    &-notifications {
+        height: 100%;
+    }
+
     &-session {
         padding: 0 15px;
         margin-right: -15px;
@@ -120,11 +124,6 @@ $header-padding: $grid-gutter-width-base / 2;
 
     &--open {
         display: block;
-
-        // TODO: update to height of all menu items
-        &-body {
-            height: 40px;
-        }
     }
 
     &-body,
