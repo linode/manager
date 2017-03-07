@@ -45,14 +45,14 @@ export default class AuthorizedApplication extends Component {
   }
 
   render() {
-    const { label, scopes, type, id = null } = this.props;
+    const { label, nav = null, type, scopes, id = null } = this.props;
     const icon = id ? `${API_ROOT}/account/clients/${id}/thumbnail` : '';
-
 
     return (
       <SecondaryCard
         title={label}
         icon={icon}
+        nav={nav}
       >
         <p>This {type} has access to your:</p>
         <table>
@@ -71,8 +71,9 @@ export default class AuthorizedApplication extends Component {
 }
 
 AuthorizedApplication.propTypes = {
-  type: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
+  nav: PropTypes.node,
+  type: PropTypes.string.isRequired,
   scopes: PropTypes.string.isRequired,
   id: PropTypes.string,
   dispatch: PropTypes.func.isRequired,
