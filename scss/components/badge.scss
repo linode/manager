@@ -4,10 +4,10 @@ $badge-height: 25px;
   @extend .font-small;
   border-radius: 15px;
   display: inline-block;
+  padding: 1px;
   position: absolute;
   color: $white;
   height: $badge-height;
-  line-height: $badge-height + 1px;
   text-align: center;
 
   /* These settings are so that it looks circular generally and decent in other cases. */

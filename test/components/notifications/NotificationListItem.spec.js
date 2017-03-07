@@ -3,14 +3,16 @@ import { shallow } from 'enzyme';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
+import { NotificationListItem } from '~/components/notifications';
+
 import { api } from '@/data';
 
-import { NotificationListItem } from '~/components/notifications';
+const events = api.events;
 
 describe('components/notifications/NotificationListItem', () => {
   const sandbox = sinon.sandbox.create();
 
-  function makeNotificationListItem(event = api.events.events[386]) {
+  function makeNotificationListItem(event = events.events[386]) {
     return (
       <NotificationListItem
         event={event}
@@ -23,7 +25,7 @@ describe('components/notifications/NotificationListItem', () => {
   });
 
   it('renders unread notification', () => {
-    const notification = shallow(makeNotificationListItem(api.events.events[385]));
+    const notification = shallow(makeNotificationListItem(events.events[385]));
     expect(notification.find('.NotificationList-listItem--unread').length).to.equal(1);
   });
 
