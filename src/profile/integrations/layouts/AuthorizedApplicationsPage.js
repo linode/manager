@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 
 import { setError } from '~/actions/errors';
 import { tokens } from '~/api';
+import { Button } from '~/components/buttons/';
+import { reduceErrors } from '~/errors';
 import AuthorizedApplication from '../components/AuthorizedApplication';
 
 export class AuthorizedApplicationsPage extends Component {
@@ -18,25 +20,39 @@ export class AuthorizedApplicationsPage extends Component {
 
   constructor(props) {
     super(props);
+    this.revokeApp = this.revokeApp.bind(this);
+  }
 
-    const clients = Object.values(props.tokens.tokens).filter(
-      token => token.type === 'client_token');
-    this.state = { clients };
+  async revokeApp(id) {
+    const { dispatch } = this.props;
+
+    try {
+      await dispatch(tokens.delete(id));
+    } catch (response) {
+      const errors = await reduceErrors(response);
+      this.setState({ errors });
+    }
   }
 
   render() {
-    const { clients } = this.state;
     const { dispatch } = this.props;
+    const clients = Object.values(this.props.tokens.tokens).filter(
+      token => token.type === 'client_token');
 
     return (
       <div className="row">
         {clients.map(client =>
           <div className="col-lg-6" key={client.id}>
             <AuthorizedApplication
-              type="application"
               label={client.client.label}
-              id={client.client.id}
+              nav={
+                <Button
+                  onClick={() => this.revokeApp(client.id)}
+                >Revoke</Button>
+              }
+              type="application"
               scopes={client.scopes}
+              id={client.client.id}
               dispatch={dispatch}
             />
           </div>
