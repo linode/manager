@@ -17,7 +17,6 @@ describe('fetch', () => {
       Accept: 'application/json',
       Authorization: `token ${token}`,
       'Content-Type': 'application/json',
-      'X-CORS-Status': 'true',
     },
   };
 
@@ -63,21 +62,5 @@ describe('fetch', () => {
         ...data,
       }
     ));
-  });
-
-  it('should handle X-Status', async () => {
-    getFetchStub(201);
-    const resp = await fetch.fetch(token, 'path');
-    expect(resp.statusCode).to.equal(201);
-  });
-
-  it('should handle X-Status errors', async () => {
-    getFetchStub(400);
-    try {
-      await fetch.fetch(token, 'path');
-      expect(true).to.equal(false);
-    } catch (resp) {
-      expect(resp.statusCode).to.equal(400);
-    }
   });
 });
