@@ -32,11 +32,11 @@ describe('linodes/linode/networking/layouts/ReverseDNSPage', () => {
       />
     );
 
-    const rows = page.find('.SecondaryTable-row');
+    const rows = page.find('.Table-row');
     expect(rows.length).to.equal(ips.length);
     for (let i = 0; i < rows.length; i++) {
       const row = rows.at(i);
-      const columns = row.find('.SecondaryTable-column');
+      const columns = row.find('.Table-column');
       expect(columns.length).to.equal(3);
 
       const addressIndex = addresses.indexOf(columns.at(0).text());
@@ -55,8 +55,8 @@ describe('linodes/linode/networking/layouts/ReverseDNSPage', () => {
       />
     );
 
-    const row = page.find('.SecondaryTable-row').at(0);
-    const address = row.find('.SecondaryTable-column').at(0).text();
+    const row = page.find('.Table-row').at(0);
+    const address = row.find('.Table-column').at(0).text();
     await row.find('#reset-0').props().onClick();
     expect(dispatch.callCount).to.equal(1);
     const fn = dispatch.firstCall.args[0];
@@ -75,7 +75,7 @@ describe('linodes/linode/networking/layouts/ReverseDNSPage', () => {
       />
     );
 
-    const row = page.find('.SecondaryTable-row').at(0);
+    const row = page.find('.Table-row').at(0);
     row.find('#edit-0').props().onClick();
     expect(dispatch.callCount).to.equal(1);
     expect(dispatch.firstCall.args[0].type).to.equal(SHOW_MODAL);

@@ -1,0 +1,69 @@
+.Table {
+    thead, th {
+        background: transparent;
+        border: 0;
+    }
+
+    th {
+        @include label();
+    }
+
+    th:last-of-type, td:last-of-type {
+        border: 0;
+        text-align: right;
+    }
+
+    button {
+        position: relative;
+        top: -1px;
+    }
+
+    td {
+        vertical-align: middle;
+        line-height: initial;
+    }
+
+    &-row {
+        height: 65px;
+        border: $border;
+        margin: 0 15px;
+
+        &--selected {
+            @extend .selected;
+        }
+    }
+
+    &-rowSelector {
+        padding-right: 10px;
+    }
+
+    &-rowOptions {
+        padding-top: 0;
+    }
+
+    &--secondary {
+        .Table-row {
+            height: 38px;
+        }
+    }
+}
+
+// TODO: move this somewhere else
+.Group {
+    margin-top: 15px;
+
+    &-label {
+        @extend .font-large;
+        color: $light-black;
+        padding: 5px 0;
+    }
+}
+
+.CheckboxCell {
+    width: 45px;
+}
+
+.RowLabelCell {
+    @extend .font-large;
+    min-width: 200px;
+}

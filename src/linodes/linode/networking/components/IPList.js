@@ -1,32 +1,27 @@
 import React, { PropTypes } from 'react';
 
 import { Checkbox } from '~/components/form';
-import SecondaryTable from '~/components/SecondaryTable';
+import { Table } from '~/components/tables';
+import {
+  CheckboxCell,
+  IPRdnsCell,
+} from '~/components/tables/cells';
+
 
 export default function IPList(props) {
   const { linode, checked, onChange } = props;
-
   const transferableIps = linode._ips.ipv4.public;
-  const rows = transferableIps.map(ip => ({
-    address: (
-      <div>
-        <Checkbox
-          className="SecondaryTable-rowSelector"
-          onChange={() => onChange(ip.address)}
-          id={ip.address}
-          checked={checked[ip.address] || false}
-          label={`${ip.address}${ip.rdns ? ` (${ip.rdns})` : ''}`}
-        />
-      </div>
-    ),
-  }));
 
   return (
     <div>
-      <SecondaryTable
-        labels={['IP Address', '']}
-        keys={['address', '']}
-        rows={rows}
+      <Table
+        columns={[
+          { cellComponent: CheckboxCell, onChange: (ip) => { onChange(ip.address); } },
+          { cellComponent: IPRdnsCell },
+          { dataKey: 'address', label: 'IP Address' },
+        ]}
+        data={transferableIps}
+        selected={checked}
       />
     </div>
   );

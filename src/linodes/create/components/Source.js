@@ -4,6 +4,12 @@ import moment from 'moment';
 
 import { Card } from '~/components/cards';
 import Tabs from '~/components/Tabs';
+import { Table } from '~/components/tables';
+import {
+  RawLinkCell,
+  LastBackupCell,
+} from '~/components/tables/cells';
+
 import Distributions from '~/linodes/components/Distributions';
 import Backups from './Backups';
 
@@ -53,32 +59,21 @@ export default class Source extends Component {
         </div>
 
         <div className="LinodeSelection-table-container">
-          <table>
-            <thead>
-              <tr>
-                <td>Linode</td>
-                <td>Last backup</td>
-              </tr>
-            </thead>
-            <tbody>
-            {_.map(linodesOnPage, l =>
-              <tr key={l.created}>
-                <td>
-                  <a
-                    href="#"
-                    onClick={e => {
-                      e.preventDefault();
-                      this.setState({ selectedLinode: l.id });
-                    }}
-                  >{l.label}</a>
-                </td>
-                <td>{l.backups.last_backup ?
-                  moment(l.backups.last_backup).format('dddd, MMMM D YYYY LT')
-                  : 'Unknown'}</td>
-              </tr>
-            )}
-            </tbody>
-          </table>
+          <Table
+            className="Table--secondary"
+            columns={[
+              {
+                cellComponent: RawLinkCell,
+                label: 'Linode',
+                onClick: (record) => {
+                  e.preventDefault();
+                  this.setState({ selectedLinode: record.id });
+                }
+              },
+              { cellComponent: LastBackupCell, label: 'Last backup' },
+            ]}
+            data={linodesOnPage}
+          />
         </div>
         {linodesWithBackups.length > perPageLimit ? (
           <nav className="text-xs-center">

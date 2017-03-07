@@ -20,7 +20,7 @@ describe('linodes/components/Linode', () => {
         isSelected={false}
       />);
 
-    expect(linode.find('.PrimaryTable-row .PrimaryTable-rowLabel').props().to)
+    expect(linode.find('.Table-row .Table-rowLabel').props().to)
       .to.equal('/linodes/test-linode');
   });
 
@@ -60,7 +60,7 @@ describe('linodes/components/Linode', () => {
         isSelected
       />);
 
-    expect(linode.find('.PrimaryTable-row--selected').length).to.equal(1);
+    expect(linode.find('.Table-row--selected').length).to.equal(1);
   });
 
   it('invokes the onSelect function when the checkbox is toggled', () => {

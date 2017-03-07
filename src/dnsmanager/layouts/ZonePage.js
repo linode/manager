@@ -19,7 +19,11 @@ import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 import { Button } from '~/components/buttons';
 import { Card } from '~/components/cards';
-import SecondaryTable from '~/components/SecondaryTable';
+import { Table } from '~/components/tables';
+import {
+  ButtonCell,
+  NameserversCell,
+} from '~/components/tables/cells';
 import { NAME_SERVERS } from '~/constants';
 
 export class ZonePage extends Component {
@@ -76,21 +80,7 @@ export class ZonePage extends Component {
       });
     });
 
-    return nsRecords.map((record, i) => ({
-      ...record,
-      nav: i < NAME_SERVERS.length ? <small className="text-muted">Read-only</small> : (
-        <div>
-          <Button
-            onClick={this.renderEditNSRecord('Edit NS Record', record.id)}
-            className="btn-secondary"
-          >Edit</Button>
-          <Button
-            onClick={() => this.renderDeleteRecord('Delete NS Record', record.id)}
-            className="btn-secondary"
-          >Delete</Button>
-        </div>
-      ),
-    }));
+    return nsRecords;
   }
 
   formatMXRecords() {
@@ -139,53 +129,6 @@ export class ZonePage extends Component {
     }));
   }
 
-  renderRecords = ({ title, singularTitle, id, records, labels, keys, nav, navOnClick }) => {
-    let cardContents = <p>No records created.</p>;
-    const editSingularTitle = `Edit ${singularTitle}`;
-    if (records && records.length) {
-      cardContents = (
-        <SecondaryTable
-          labels={labels}
-          keys={keys}
-          rows={records}
-          onRowClick={(e, record) => {
-            const classList = e.target.classList;
-            if (classList.contains('edit-button')) {
-              if (records[0].type === 'MX') {
-                this.renderEditRecord(editSingularTitle, EditMXRecord, { id });
-              } else if (records[0].type === 'NS') {
-                this.renderEditRecord(editSingularTitle, EditNSRecord, { id });
-              } else if (records[0].type === 'TXT') {
-                this.renderEditRecord(editSingularTitle, EditTXTRecord, { id });
-              } else if (records[0].type === 'A') {
-                this.renderEditRecord(editSingularTitle, EditARecord, { id });
-              } else if (records[0].type === 'CNAME') {
-                this.renderEditRecord(editSingularTitle, EditCNAMERecord, { id });
-              } else if (records[0].type === 'SRV') {
-                this.renderEditRecord(editSingularTitle, EditSRVRecord, { id });
-              }
-            } else if (classList.contains('delete-button')) {
-              this.renderDeleteRecord(`Delete ${singularTitle}`, record.id);
-            }
-          }}
-        />
-      );
-    }
-
-    const titleSingular =
-      title[title.length - 1] === 's' ? title.substring(0, title.length - 1) : title;
-
-    return (
-      <Card
-        title={title}
-        id={id}
-        nav={nav === undefined ? <Button onClick={navOnClick}>Add {titleSingular}</Button> : nav}
-      >
-        {cardContents}
-      </Card>
-    );
-  }
-
   renderDeleteRecord(title, id) {
     const { dispatch } = this.props;
     const { currentDNSZone: zone } = this.state;
@@ -217,64 +160,26 @@ export class ZonePage extends Component {
     ));
   }
 
-  renderEditSOARecord(title) {
-    return () => { this.renderEditRecord(title, EditSOARecord); };
-  }
-
-  renderEditMXRecord(title, id) {
-    return () => { this.renderEditRecord(title, EditMXRecord, { id }); };
-  }
-
-  renderEditNSRecord(title, id) {
-    return () => { this.renderEditRecord(title, EditNSRecord, { id }); };
-  }
-
-  renderEditARecord(title, id) {
-    return () => { this.renderEditRecord(title, EditARecord, { id }); };
-  }
-
-  renderEditTXTRecord(title, id) {
-    return () => { this.renderEditRecord(title, EditTXTRecord, { id }); };
-  }
-
-  renderEditSRVRecord(title, id) {
-    return () => { this.renderEditRecord(title, EditSRVRecord, { id }); };
-  }
-
-  renderEditCNAMERecord(title, id) {
-    return () => { this.renderEditRecord(title, EditCNAMERecord, { id }); };
-  }
-
   render() {
     const { currentDNSZone } = this.state;
 
-    const formatSeconds = (records) => records.map(record => {
-      const { ttl_sec: ttlSec } = record;
-      const { ttl_sec: defaultTTLSec } = currentDNSZone;
-      return {
-        ...record,
-        ttl_sec: formatDNSSeconds(ttlSec, defaultTTLSec),
-      };
-    });
-
-    const addNav = (records = []) => (
-      records.map((record) => ({
-        ...record,
-        nav: (
-          <div>
-            <Button className="btn-secondary edit-button">Edit</Button>
-            <Button className="btn-secondary delete-button">Delete</Button>
-          </div>
-        ) })
-      )
-    );
+    const formatSeconds = (records) => {
+      return records.map(record => {
+        const { ttl_sec: ttlSec } = record;
+        const { ttl_sec: defaultTTLSec } = currentDNSZone;
+        return {
+          ...record,
+          ttl_sec: formatDNSSeconds(ttlSec, defaultTTLSec),
+        };
+      });
+    }
 
     const nsRecords = formatSeconds(this.formatNSRecords());
-    const mxRecords = formatSeconds(addNav(this.formatMXRecords()));
-    const aRecords = formatSeconds(addNav(this.formatARecords()));
-    const cnameRecords = formatSeconds(addNav(this.formatCNAMERecords()));
-    const txtRecords = formatSeconds(addNav(this.formatTXTRecords()));
-    const srvRecords = formatSeconds(addNav(this.formatSRVRecords()));
+    const mxRecords = formatSeconds(this.formatMXRecords());
+    const aRecords = formatSeconds(this.formatARecords());
+    const cnameRecords = formatSeconds(this.formatCNAMERecords());
+    const txtRecords = formatSeconds(this.formatTXTRecords());
+    const srvRecords = formatSeconds(this.formatSRVRecords());
 
     const soaRecord = {
       ...currentDNSZone,
@@ -282,14 +187,6 @@ export class ZonePage extends Component {
       refresh_sec: formatDNSSeconds(currentDNSZone.refresh_sec),
       retry_sec: formatDNSSeconds(currentDNSZone.retry_sec),
       expire_sec: formatDNSSeconds(currentDNSZone.expire_sec, 604800),
-      nav: (
-        <div>
-          <Button
-            onClick={this.renderEditSOARecord('Edit SOA Record')}
-            className="btn-secondary"
-          >Edit</Button>
-        </div>
-      ),
     };
 
     return (
@@ -303,70 +200,172 @@ export class ZonePage extends Component {
           </div>
         </header>
         <div className="container">
-          <this.renderRecords
-            title="SOA Record"
-            singularTitle="SOA Record"
-            id="soa"
-            records={[soaRecord]}
-            labels={['Primary DNS', 'Email', 'Default TTL', 'Refresh Rate', 'Retry Rate',
-                     'Expire Time', '']}
-            keys={['dnszone', 'soa_email', 'ttl_sec', 'refresh_sec', 'retry_sec', 'expire_sec',
-                   'nav']}
-            nav={null}
-          />
-          <this.renderRecords
+          <Card title="SOA Record">
+            <Table
+              id="soa"
+              className="Table--secondary"
+              columns={[
+                { dataKey: 'dnszone', label: 'Primary DNS' },
+                { dataKey: 'so_email', label: 'Email' },
+                { dataKey: 'ttl_sec', label: 'Default TTL' },
+                { dataKey: 'refresh_sec', label: 'Refresh Rate' },
+                { dataKey: 'retry_sec', label: 'Retry Rate' },
+                { dataKey: 'expire_sec', label: 'Expire Time' },
+                {
+                  cellComponent: ButtonCell,
+                  text: 'Edit',
+                  onClick: () => {
+                    this.renderEditRecord('Edit SOA Record', EditSOARecord);
+                  }
+                },
+              ]}
+              data={[soaRecord]}
+            />
+          </Card>
+          <Card
             title="NS Records"
-            singularTitle="NS Record"
-            id="ns"
-            records={nsRecords}
-            navOnClick={this.renderEditNSRecord('Add NS Record')}
-            labels={['Name Server', 'Subdomain', 'TTL', '']}
-            keys={['target', 'name', 'ttl_sec', 'nav']}
-          />
-          <this.renderRecords
+            nav={
+              <Button
+                onClick={() => {
+                  this.renderEditRecord('Add NS Record', EditNSRecord);
+                }}>
+                Add NS Record
+              </Button>
+            }
+          >
+            <Table
+              id="ns"
+              className="Table--secondary"
+              columns={[
+                { dataKey: 'target', label: 'Name Server' },
+                { dataKey: 'name', label: 'Subdomain' },
+                { dataKey: 'ttl_sec', label: 'TTL' },
+                {
+                  cellComponent: NameserversCell,
+                  onEditClick: () => {},
+                  onDeleteClick: () => {},
+                },
+              ]}
+              data={nsRecords}
+            />
+          </Card>
+          <Card
             title="MX Records"
-            singularTitle="MX Record"
-            id="mx"
-            records={mxRecords}
-            navOnClick={this.renderEditMXRecord('Add MX Record')}
-            labels={['Mail Server', 'Preference', 'Subdomain', '']}
-            keys={['target', 'priority', 'name', 'nav']}
-          />
-          <this.renderRecords
+            nav={
+              <Button onClick={() => {
+                this.renderEditRecord(title, EditMXRecord);
+              }}>
+                Add MX Record
+              </Button>
+            }
+          >
+            <Table
+              id="mx"
+              className="Table--secondary"
+              columns={[
+                { dataKey: 'target', label: 'Mail Server' },
+                { dataKey: 'priority', label: 'Preference' },
+                { dataKey: 'name', label: 'Subdomain' },
+                { cellComponent: ButtonCell, text: 'Edit', onClick: () => {} },
+                { cellComponent: ButtonCell, text: 'Delete', onClick: () => {} },
+              ]}
+              data={mxRecords}
+            />
+          </Card>
+          <Card
             title="A/AAAA Records"
-            singularTitle="A/AAAA Record"
-            id="a"
-            records={aRecords}
-            navOnClick={this.renderEditARecord('Add A/AAAA Record')}
-            labels={['Hostname', 'IP Address', 'TTL', '']}
-            keys={['name', 'target', 'ttl_sec', 'nav']}
-          />
-          <this.renderRecords
+            nav={
+              <Button onClick={() => {
+                this.renderEditRecord(title, EditARecord);
+              }}>
+                Add A/AAAA Record
+              </Button>
+            }
+          >
+            <Table
+              id="a"
+              className="Table--secondary"
+              columns={[
+                { dataKey: 'name', label: 'Hostname' },
+                { dataKey: 'target', label: 'IP Address' },
+                { dataKey: 'ttl_sec', label: 'TTL' },
+                { cellComponent: ButtonCell, text: 'Edit', onClick: () => {} },
+                { cellComponent: ButtonCell, text: 'Delete', onClick: () => {} },
+              ]}
+              data={aRecords}
+            />
+          </Card>
+          <Card
             title="CNAME Records"
-            singularTitle="CNAME Record"
-            id="cname"
-            navOnClick={this.renderEditCNAMERecord('Add CNAME Record')}
-            records={cnameRecords}
-            labels={['Hostname', 'Aliases to', 'TTL', '']}
-            keys={['name', 'target', 'ttl_sec', 'nav']}
-          />
-          <this.renderRecords
+            nav={
+              <Button onClick={() => {
+                this.renderEditRecord(title, EditCNAMERecord, { id });
+              }}>
+                Add CNAME Record
+              </Button>
+            }
+          >
+            <Table
+              id="cname"
+              className="Table--secondary"
+              columns={[
+                { dataKey: 'name', label: 'Hostname' },
+                { dataKey: 'target', label: 'Aliases to' },
+                { dataKey: 'ttl_sec', label: 'TTL' },
+                { cellComponent: ButtonCell, text: 'Edit', onClick: () => {} },
+                { cellComponent: ButtonCell, text: 'Delete', onClick: () => {} },
+              ]}
+              data={cnameRecords}
+            />
+          </Card>
+          <Card
             title="TXT Records"
-            singularTitle="TXT Record"
-            id="txt"
-            records={txtRecords}
-            navOnClick={this.renderEditTXTRecord('Add TXT Record')}
-            labels={['Name', 'Value', 'TTL', '']}
-            keys={['name', 'target', 'ttl_sec', 'nav']}
-          />
-          <this.renderRecords
+            nav={
+              <Button onClick={() => {
+                this.renderEditRecord(title, EditTXTRecord);
+              }}>
+                Add TXT Record
+              </Button>
+            }
+          >
+            <Table
+              id="txt"
+              className="Table--secondary"
+              columns={[
+                { dataKey: 'name', label: 'Name' },
+                { dataKey: 'target', label: 'Value' },
+                { dataKey: 'ttl_sec', label: 'TTL' },
+                { cellComponent: ButtonCell, text: 'Edit', onClick: () => {} },
+                { cellComponent: ButtonCell, text: 'Delete', onClick: () => {} },
+              ]}
+              data={txtRecords}
+            />
+          </Card>
+          <Card
             title="SRV Records"
-            id="srv"
-            records={srvRecords}
-            navOnClick={this.renderEditSRVRecord('Add SRV Record')}
-            labels={['Service', 'Priority', 'Domain', 'Weight', 'Port', 'Target', 'TTL', '']}
-            keys={['service', 'priority', 'domain', 'weight', 'port', 'target', 'ttl_sec', 'nav']}
-          />
+            nav={<Button onClick={() => {
+              this.renderEditRecord(title, EditSRVRecord);
+            }}>
+              Add SRV Record
+            </Button>}
+          >
+            <Table
+              id="srv"
+              className="Table--secondary"
+              columns={[
+                { dataKey: 'service', label: 'Service' },
+                { dataKey: 'priority', label: 'Priority' },
+                { dataKey: 'domain', label: 'Domain' },
+                { dataKey: 'weight', label: 'Weight' },
+                { dataKey: 'port', label: 'Port' },
+                { dataKey: 'target', label: 'Target' },
+                { dataKey: 'ttl_sec', label: 'TTL' },
+                { cellComponent: ButtonCell, text: 'Edit', onClick: () => {} },
+                { cellComponent: ButtonCell, text: 'Delete', onClick: () => {} },
+              ]}
+              data={srvRecords}
+            />
+          </Card>
         </div>
       </div>
     );

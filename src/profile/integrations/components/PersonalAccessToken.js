@@ -8,7 +8,6 @@ import { SecondaryCard } from '~/components/cards/';
 import { ConfirmModalBody } from '~/components/modals';
 import { showModal, hideModal } from '~/actions/modal';
 import { tokens } from '~/api';
-import OAuthScopes from './OAuthScopes';
 
 export default class PersonalAccessToken extends Component {
   constructor() {
@@ -71,7 +70,7 @@ export default class PersonalAccessToken extends Component {
           <label className="col-sm-4 row-label">Secret</label>
           <div className="col-sm-8">{secret.substring(0, 16)}...</div>
         </div>
-        <OAuthScopes type="application" scopes={scopes} />
+        {/*<OAuthScopes type="application" scopes={scopes} />*/}
       </SecondaryCard>
     );
   }

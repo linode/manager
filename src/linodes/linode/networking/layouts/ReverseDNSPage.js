@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { showModal, hideModal } from '~/actions/modal';
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import { Card } from '~/components/cards';
-import SecondaryTable from '~/components/SecondaryTable';
+import { Table } from '~/components/tables';
 import { setError } from '~/actions/errors';
 import { linodeIPs, setRDNS } from '~/api/linodes';
 import { Button } from '~/components/buttons';
@@ -44,8 +44,11 @@ export class ReverseDNSPage extends Component {
   render() {
     const { dispatch } = this.props;
 
-    const labels = ['IP Address', 'Target', ''];
-    const keys = ['address', 'rdns', 'nav'];
+    const columns = [
+      { label: 'IP Address', dataKey: 'address' },
+      { label: 'Target', dataKey: 'rdns' },
+      { label: '', dataKey: 'nav' },
+    ];
     const linode = this.getLinode();
     const ips = linode._ips;
 
@@ -76,10 +79,9 @@ export class ReverseDNSPage extends Component {
 
     return (
       <Card title="Reverse DNS">
-        <SecondaryTable
-          labels={labels}
-          keys={keys}
-          rows={records}
+        <Table
+          columns={columns}
+          data={records}
         />
       </Card>
     );

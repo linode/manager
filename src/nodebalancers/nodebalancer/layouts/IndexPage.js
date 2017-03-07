@@ -7,10 +7,11 @@ import { getObjectByLabelLazily } from '~/api/util';
 import { setError } from '~/actions/errors';
 import { Link } from '~/components/Link';
 import { Card } from '~/components/cards';
-import SecondaryTable from '~/components/SecondaryTable';
+import { Table } from '~/components/tables';
+import { ButtonCell } from '~/components/tables/cells';
 import { Button } from '~/components/buttons';
 import { NodebalancerStatusReadable } from '~/constants';
-import { renderDatacenterStyle } from '~/linodes/components/Linode';
+import Datacenter from '~/linodes/components/Datacenter';
 
 
 export class IndexPage extends Component {
@@ -27,7 +28,6 @@ export class IndexPage extends Component {
 
   constructor(props) {
     super(props);
-    this.renderDatacenterStyle = renderDatacenterStyle.bind(this);
     this._componentWillReceiveProps((state) => {
       this.state = {
         ...state,
@@ -49,24 +49,6 @@ export class IndexPage extends Component {
   }
 
   renderConfigs(configs) {
-    const labels = [
-      'Port',
-      'Protocol',
-      'Algorithm',
-      'Session stickiness',
-      'Health check method',
-      'Node status',
-      '',
-    ];
-    const keys = [
-      'port',
-      'protocol',
-      'algorithm',
-      'stickiness',
-      'check',
-      'statusString',
-      'edit',
-    ];
     const newConfigs = configs.map((config) => {
       return {
         ...config,
@@ -75,15 +57,25 @@ export class IndexPage extends Component {
         stickiness: _.capitalize(config.stickiness),
         check: _.capitalize(config.check),
         statusString: '0 up, 0 down',
-        edit: <Button>Edit</Button>,
       };
     });
 
     return (
-      <SecondaryTable
-        labels={labels}
-        keys={keys}
-        rows={newConfigs}
+      <Table
+        columns={[
+          { dataKey: 'port', label: 'Port' },
+          { dataKey: 'protocol', label: 'Protocol' },
+          { dataKey: 'algorithm', label: 'Algorithm' },
+          { dataKey: 'stickiness', label: 'Session stickiness' },
+          { dataKey: 'check', label: 'Health check method' },
+          { dataKey: 'statusString', label: 'Node status' },
+          {
+            cellComponent: ButtonCell,
+            onClick: () => {}, // TODO
+            text: 'Edit',
+          },
+        ]}
+        data={newConfigs}
       />
     );
   }
@@ -133,7 +125,7 @@ export class IndexPage extends Component {
                 Datacenter
               </div>
               <div className="col-sm-11">
-                {this.renderDatacenterStyle(nodebalancer)}
+                <Datacenter obj={nodebalancer} />
               </div>
             </div>
           </Card>
@@ -168,5 +160,6 @@ function select(state) {
     nodebalancers: state.api.nodebalancers,
   };
 }
+
 export default connect(select)(IndexPage);
 

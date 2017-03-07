@@ -56,7 +56,7 @@ describe('linodes/layouts/IndexPage', () => {
     // minus 1 for the default empty group.
     const groups = Object.values(linodes.linodes).map(l => l.group);
     const groupCount = [...new Set(groups)].length;
-    expect(page.find('.PrimaryTable-row').length).to.equal(
+    expect(page.find('.Table-row').length).to.equal(
       Object.keys(linodes.linodes).length + groupCount - 1);
   });
 

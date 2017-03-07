@@ -50,7 +50,7 @@ describe('dnsmanager/layouts/ZonePage', () => {
       />
     );
 
-    const soaRow = page.find('#soa .SecondaryTable-row');
+    const soaRow = page.find('#soa .Table-row');
     expect(soaRow.length).to.equal(1);
 
     const soaValues = soaRow.find('td');
@@ -76,7 +76,7 @@ describe('dnsmanager/layouts/ZonePage', () => {
       />
     );
 
-    const nsRows = page.find('#ns .SecondaryTable-row');
+    const nsRows = page.find('#ns .Table-row');
     expect(nsRows.length).to.equal(5);
     const nsValues = nsRows.at(4).find('td');
     expect(nsValues.length).to.equal(4);
@@ -99,7 +99,7 @@ describe('dnsmanager/layouts/ZonePage', () => {
       />
     );
 
-    const mxRows = page.find('#mx .SecondaryTable-row');
+    const mxRows = page.find('#mx .Table-row');
     expect(mxRows.length).to.equal(mxRecords.length);
 
     const mxValues = mxRows.at(0).find('td');
@@ -123,7 +123,7 @@ describe('dnsmanager/layouts/ZonePage', () => {
       />
     );
 
-    const aRows = page.find('#a .SecondaryTable-row');
+    const aRows = page.find('#a .Table-row');
     expect(aRows.length).to.equal(aRecords.length);
 
     const aValues = aRows.at(0).find('td');
@@ -147,7 +147,7 @@ describe('dnsmanager/layouts/ZonePage', () => {
       />
     );
 
-    const cnameRows = page.find('#cname .SecondaryTable-row');
+    const cnameRows = page.find('#cname .Table-row');
     expect(cnameRows.length).to.equal(cnameRecords.length);
 
     const cnameValues = cnameRows.at(0).find('td');
@@ -172,7 +172,7 @@ describe('dnsmanager/layouts/ZonePage', () => {
       />
     );
 
-    const txtRows = page.find('#txt .SecondaryTable-row');
+    const txtRows = page.find('#txt .Table-row');
     expect(txtRows.length).to.equal(txtRecords.length);
 
     const txtValues = txtRows.at(0).find('td');
@@ -198,7 +198,7 @@ describe('dnsmanager/layouts/ZonePage', () => {
       />
     );
 
-    const srvRows = page.find('#srv .SecondaryTable-row');
+    const srvRows = page.find('#srv .Table-row');
     expect(srvRows.length).to.equal(srvRecords.length);
 
     const srvValues = srvRows.at(0).find('td');

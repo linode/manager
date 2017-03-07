@@ -1,10 +1,14 @@
 import React, { PropTypes } from 'react';
-import _ from 'lodash';
 
-import { OAUTH_SUBSCOPES, OAUTH_SCOPES } from '~/constants';
+import _ from 'lodash';
+import TableCell from './TableCell';
 
 function renderScope(scopesRequested, currentScope, currentSubscope) {
-  const subscopeAllowed = <small><strong>{_.capitalize(currentSubscope)}</strong></small>;
+  const subscopeAllowed = (
+    <small>
+      <strong>{_.capitalize(currentSubscope)}</strong>
+    </small>
+  );
   const subscopeNotAllowed = (
     <small className="text-muted">
       <s>{_.capitalize(currentSubscope)}</s>
@@ -37,25 +41,22 @@ function renderScope(scopesRequested, currentScope, currentSubscope) {
   return subscopeNotAllowed;
 }
 
-export default function OAuthScopes({ type, scopes }) {
-  return (
-    <div className="OAuthScopes">
-      <p>This {type} has access to your:</p>
-      <table>
-        <tbody>
-          {OAUTH_SCOPES.map((scope, i) =>
-            <tr key={i}>
-              <td>{_.capitalize(scope)}</td>
-              {OAUTH_SUBSCOPES.map((subscope, j) =>
-                <td key={j}>{renderScope(scopes, scope, subscope)}</td>)}
-            </tr>)}
-        </tbody>
-      </table>
-    </div>
-  );
-}
+export default function AuthScopeCell(props) {
+  const { column, record } = props;
 
-OAuthScopes.propTypes = {
-  type: PropTypes.string.isRequired,
-  scopes: PropTypes.string.isRequired,
+  return (
+    <TableCell column={column} record={record}>
+      {renderScope(record.scopes, record.scope, column.subscope)}
+    </TableCell>
+  )
+};
+
+AuthScopeCell.propTypes = {
+  column: PropTypes.shape({
+    subscope: PropTypes.string.isRequired
+  }),
+  record: PropTypes.shape({
+    scopes: PropTypes.string.isRequired,
+    scope: PropTypes.string.isRequired,
+  })
 };

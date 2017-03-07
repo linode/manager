@@ -2,16 +2,23 @@ import React, { PropTypes, Component } from 'react';
 
 import _ from 'lodash';
 import { Card } from '~/components/cards';
-import SecondaryTable from '~/components/SecondaryTable';
 import { Form, FormGroup, SubmitButton, Checkbox } from '~/components/form';
 import { Link } from '~/components/Link';
+import { Table } from '~/components/tables';
+import {
+  CheckboxCell,
+  LinkCell,
+  IPRdnsCell
+} from '~/components/tables/cells';
 import { ErrorSummary, reduceErrors } from '~/errors';
 import { setShared } from '~/api/linodes';
+
 
 export default class IPSharing extends Component {
   constructor(props) {
     super(props);
 
+    this.onChange = this.onChange.bind(this);
     // Need to be able to update immediately and when props change.
     this._componentWillReceiveProps((state) => {
       this.state = {
@@ -59,40 +66,31 @@ export default class IPSharing extends Component {
     };
   }
 
+  onChange(record) {
+    this.setState({
+      checked: { ...checked, [record.ip.address]: !checked[record.ip.address] }
+    });
+  }
+
   formatRows() {
     const { linodes, linode: thisLinode } = this.props;
-    const { checked } = this.state;
 
-    let rows = [];
-    linodes.forEach(linode => {
-      if (linode.id === thisLinode.id) {
-        return;
-      }
+    const data = _.flatten(linodes
+      .filter((linode) => { return linode.id !== thisLinode.id; })
+      .map((linode) => {
+        const shareableIps = linode._ips.ipv4.public;
+        return shareableIps.map((ip) => {
+          return { ip: ip, linode: linode };
+        });
+      }));
 
-      const shareableIps = linode._ips.ipv4.public;
-      rows = rows.concat(shareableIps.map(ip => ({
-        address: (
-          <div>
-            <Checkbox
-              onChange={() => this.setState({
-                checked: { ...checked, [ip.address]: !checked[ip.address] } })}
-              id={ip.address}
-              checked={checked[ip.address] || false}
-              label={`${ip.address}${ip.rdns ? ` (${ip.rdns})` : ''}`}
-            />
-          </div>
-        ),
-        linode: <Link to={`/linodes/${linode.label}`}>{linode.label}</Link>,
-      })));
-    });
-
-    return rows;
+    return data;
   }
 
   render() {
     const { errors, saving } = this.state;
-
-    const rows = this.formatRows();
+    const { checked } = this.state;
+    const data = this.formatRows();
 
     return (
       <Card title="IP Sharing">
@@ -104,10 +102,20 @@ export default class IPSharing extends Component {
         </p>
         <Form onSubmit={this.onSubmit}>
           <FormGroup>
-            <SecondaryTable
-              labels={['IP Address', 'Linode', '']}
-              keys={['address', 'linode', '']}
-              rows={rows}
+            <Table
+              columns={[
+                { cellComponent: CheckboxCell, onChange: this.onChange },
+                { cellComponent: IPRdnsCell, ipKey: 'ip' },
+                { dataKey: 'address', label: 'IP Address' },
+                {
+                  cellComponent: LinkCell,
+                  hrefFn: (record) => {
+                    return `/linodes/${record.linode.label}`;
+                  }
+                },
+              ]}
+              data={data}
+              selected={checked}
             />
           </FormGroup>
           <SubmitButton disabled={saving}>Save</SubmitButton>
