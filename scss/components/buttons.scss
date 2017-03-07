@@ -93,6 +93,8 @@
         border: 0;
         background: transparent;
         outline: 0;
+        display: block;
+        height: 18px;
 
         &, &:active, &:focus {
             color: $blue;

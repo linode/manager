@@ -19,7 +19,11 @@ export const apiTestEvent = {
 
 export const testEvent = {
   ...apiTestEvent,
-  _polling: false,
+};
+
+export const seenEvent = {
+  ...apiTestEvent,
+  seen: true,
 };
 
 export function makeEvent(eventType) {

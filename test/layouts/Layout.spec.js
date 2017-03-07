@@ -9,8 +9,7 @@ import * as fetch from '~/fetch';
 import { api } from '@/data';
 import { testEvent } from '@/data/events';
 import { actions as linodeActions } from '~/api/configs/linodes';
-import { hideModal } from '~/actions/modal';
-import { showNotifications } from '~/actions/notifications';
+
 
 describe('layouts/Layout', () => {
   const sandbox = sinon.sandbox.create();
@@ -128,15 +127,7 @@ describe('layouts/Layout', () => {
     expect(fetchBlogStub.callCount).to.equal(1);
   });
 
-  it('disables polling on unmount', () => {
-    const page = shallow(makeLayout(dispatch));
-
-    page.instance().componentWillUnmount();
-
-    expect(page.instance()._pollingTimeoutId).to.equal(null);
-  });
-
-  it('deals with individual events', () => {
+  it('deals with individual events for linodes', () => {
     sandbox.stub(window, 'setTimeout', f => f());
 
     const page = shallow(makeLayout(dispatch, undefined, undefined, {
@@ -163,76 +154,5 @@ describe('layouts/Layout', () => {
     expectObjectDeepEquals(dispatch.secondCall.args[0], linodeActions.one({
       status: 'running',
     }, 1237));
-  });
-
-  it('fetches only one page when some results are read', async () => {
-    sandbox.stub(window, 'setTimeout', f => f());
-
-    const fetchPageResponse = {
-      events: [
-        { seen: true },
-        { seen: true },
-      ],
-    };
-    const dispatchStub = sandbox.stub({ dispatch() {} }, 'dispatch', () => fetchPageResponse);
-    const page = shallow(makeLayout(dispatchStub));
-
-    const results = await page.instance().fetchEventsPage();
-
-    expectObjectDeepEquals(results, fetchPageResponse);
-    expect(dispatchStub.callCount).to.equal(1);
-  });
-
-  it('fetches multiple pages when all results are unread', async () => {
-    sandbox.stub(window, 'setTimeout', f => f());
-
-    const fetchPageResponse = {
-      events: [
-        { seen: false },
-        { seen: false },
-      ],
-    };
-    let firstCall = true;
-    const dispatchStub = sandbox.stub({ dispatch() {} }, 'dispatch', () => {
-      if (firstCall) {
-        firstCall = false;
-        return fetchPageResponse;
-      }
-
-      return { events: [{ seen: true }] };
-    });
-    const page = shallow(makeLayout(dispatchStub));
-
-    const results = await page.instance().fetchEventsPage();
-
-    expect(dispatchStub.callCount).to.equal(2);
-    expectObjectDeepEquals(results, {
-      events: [
-        { seen: false },
-        { seen: false },
-        { seen: true },
-      ],
-    });
-  });
-
-  it('marks all events as seen when the notifications is opened', () => {
-    const page = shallow(
-      <Layout
-        dispatch={dispatch}
-        errors={errors}
-        source={{ source: 'foobar.html' }}
-        notifications={{ open: false }}
-        linodes={api.linodes}
-        events={api.events}
-        modal={{ open: false }}
-      ><span /></Layout>
-    );
-
-    page.instance().hideShowNotifications({ stopPropagation() {}, preventDefault() {} });
-
-    expect(dispatch.callCount).to.equal(2);
-
-    expectObjectDeepEquals(dispatch.firstCall.args[0], hideModal());
-    expectObjectDeepEquals(dispatch.secondCall.args[0], showNotifications());
   });
 });

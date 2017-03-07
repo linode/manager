@@ -12,30 +12,43 @@ import { events } from './events';
 import { clients } from './clients';
 import { tokens } from './tokens';
 
-function fakeAPIStore(data, singular, plural) {
-  const totalResults = Object.keys(data).length;
-  const totalPages = Math.floor(totalResults / 25) + 1;
+function calculateTotalResults(data) {
+  return Object.keys(data).length;
+}
+
+function calculateTotalPages(totalResults) {
+  return totalResults > 0 ? Math.floor(totalResults / 25) + 1 : 1;
+}
+
+export function fakeAPIStore(data, singular, plural, totalResults = 0, totalPages = 0) {
+  const calculatedTotalResults = totalResults || calculateTotalResults(data);
+  const calculatedTotalPages = totalPages || calculateTotalPages(totalResults);
+  const ids = Object.values(data).map((obj) => obj.id);
+
   return {
-    totalPages,
-    totalResults,
+    totalPages: calculatedTotalPages,
+    totalResults: calculatedTotalResults,
     pagesFetched: _.range(1, totalPages),
     singular,
     plural,
+    ids,
   };
 }
 
-export const authentication = { token: 'token' };
-
-export const api = (apiObjects => {
+export function fakeAPI(apiObjects) {
   const _api = {};
-  apiObjects.forEach(([object, singular, plural]) => {
+  apiObjects.forEach(([object, singular, plural, totalPages]) => {
     _api[plural] = {
-      ...fakeAPIStore(object, singular, plural),
+      ...fakeAPIStore(object, singular, plural, totalPages),
       [plural]: object,
     };
   });
   return _api;
-})([
+}
+
+export const authentication = { token: 'token' };
+
+export const api = fakeAPI([
   [linodes, 'linode', 'linodes'],
   [distributions, 'distribution', 'distributions'],
   [datacenters, 'datacenter', 'datacenters'],

@@ -2,39 +2,29 @@ import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
-import { EVENT_POLLING_DELAY } from '~/constants';
-import { events } from '~/api';
-import { EventTypeMap } from '~/components/notifications';
-
-import { actions as eventsActions } from '~/api/configs/events';
-import { eventRead, eventSeen } from '~/api/events';
 import Header from '~/components/Header';
 import Sidebar from '~/components/Sidebar';
-import { NotificationList, sortEvents } from '~/components/notifications';
 import { ModalShell } from '~/components/modals';
 import Error from '~/components/Error';
+import { EventTypeMap } from '~/components/notifications';
 import PreloadIndicator from '~/components/PreloadIndicator.js';
 import { rawFetch as fetch } from '~/fetch';
 import { hideModal } from '~/actions/modal';
-import { showNotifications, hideNotifications } from '~/actions/notifications';
+import { hideNotifications } from '~/actions/notifications';
 import { actions as linodeActions } from '~/api/configs/linodes';
+
 
 export class Layout extends Component {
   constructor() {
     super();
     this.eventHandler = this.eventHandler.bind(this);
     this.renderError = this.renderError.bind(this);
-    this._pollingTimeoutId = null;
     this.state = { title: '', link: '' };
   }
 
   componentDidMount() {
     this.fetchBlog();
     this.attachEventTimeout();
-  }
-
-  componentWillUnmount() {
-    this.stopPollingForEvents();
   }
 
   async fetchBlog() {
@@ -55,6 +45,7 @@ export class Layout extends Component {
     }
   }
 
+  // TODO: decouple this from events and layout, use explicit poll from /linode on status change
   eventHandler(event) {
     const { dispatch, linodes } = this.props;
 
@@ -92,72 +83,10 @@ export class Layout extends Component {
     return event;
   }
 
-  async fetchEventsPage(page = 0, processedEvents = { events: [] }) {
-    const { dispatch } = this.props;
-
-    const nextProcessedEvents = await dispatch(
-      events.page(page, [], this.eventHandler, false, null)
-    );
-
-    // If all the events are new, we want to fetch another page.
-    const allUnseen = nextProcessedEvents.events.reduce((allUnseenEvents, { seen }) =>
-      !seen && allUnseenEvents, true) && nextProcessedEvents.events.length;
-
-    const allProcessedEvents = {
-      ...nextProcessedEvents,
-      events: processedEvents.events.concat(nextProcessedEvents.events),
-    };
-    if (allUnseen) {
-      return this.fetchEventsPage(page + 1, allProcessedEvents);
-    }
-
-    return allProcessedEvents;
-  }
-
-  pollForEvents() {
-    const { dispatch } = this.props;
-
-    this._pollingTimeoutId = setTimeout(async () => {
-      const processedEvents = await this.fetchEventsPage(0);
-
-      try {
-        dispatch(eventsActions.many(processedEvents));
-        this.pollForEvents();
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error(e);
-      }
-    }, EVENT_POLLING_DELAY);
-  }
-
-  stopPollingForEvents() {
-    clearTimeout(this._pollingTimeoutId);
-    this._pollingTimeoutId = null;
-  }
-
   async attachEventTimeout() {
-    const { dispatch } = this.props;
-
     // OAuth token is not available during the callback
     while (window.location.pathname === '/oauth/callback') {
       await new Promise(r => setTimeout(r, 100));
-    }
-
-    // Grab events first time right away
-    dispatch(events.all([], this.eventHandler));
-
-    this.pollForEvents();
-  }
-
-  hideShowNotifications = async (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const { dispatch, notifications: { open } } = this.props;
-    if (open) {
-      dispatch(hideNotifications());
-    } else {
-      dispatch(hideModal());
-      dispatch(showNotifications());
     }
   }
 
@@ -175,7 +104,15 @@ export class Layout extends Component {
   }
 
   render() {
-    const { username, emailHash, currentPath, errors, source, dispatch } = this.props;
+    const {
+      username,
+      emailHash,
+      currentPath,
+      errors,
+      notifications,
+      source,
+      dispatch,
+    } = this.props;
     const { title, link } = this.state;
     const githubRoot = 'https://github.com/linode/manager/blob/master/';
     return (
@@ -198,27 +135,15 @@ export class Layout extends Component {
           {this.props.modal.body}
         </ModalShell>
         <Header
-          username={username}
+          dispatch={dispatch}
           emailHash={emailHash}
           link={link}
           title={title}
-          hideShowNotifications={this.hideShowNotifications}
-          events={this.props.events}
-          notificationsOpen={this.props.notifications.open}
+          username={username}
+          notifications={notifications}
+          eventHandler={this.eventHandler}
         />
         <Sidebar path={currentPath} />
-        <NotificationList
-          open={this.props.notifications.open}
-          onClickItem={async (event) => {
-            dispatch(hideNotifications());
-
-            if (!event.read) {
-              await dispatch(eventRead(event.id));
-            }
-          }}
-          events={sortEvents(this.props.events)}
-          eventSeen={(id) => dispatch(eventSeen(id))}
-        />
         <div className="main full-height">
           <div className="main-inner">
             {!errors.status ?
@@ -251,11 +176,10 @@ Layout.propTypes = {
   children: PropTypes.node.isRequired,
   errors: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
-  notifications: PropTypes.object.isRequired,
   source: PropTypes.object,
-  events: PropTypes.object,
   linodes: PropTypes.object,
   modal: PropTypes.object,
+  notifications: PropTypes.object,
 };
 
 function select(state) {
@@ -264,12 +188,11 @@ function select(state) {
     emailHash: state.authentication.emailHash,
     email: state.authentication.email,
     currentPath: state.routing.locationBeforeTransitions.pathname,
-    notifications: state.notifications,
     errors: state.errors,
     source: state.source,
-    events: state.api.events,
     linodes: state.api.linodes,
     modal: state.modal,
+    notifications: state.notifications,
   };
 }
 

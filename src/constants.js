@@ -7,8 +7,8 @@ export const GA_ID = ENV_GA_ID || '000000';
 export const DEVTOOLS_DISABLED = ENV_DEVTOOLS_DISABLED || process.env.NODE_ENV === 'production';
 
 /* eslint-enable no-undef */
-
-export const EVENT_POLLING_DELAY = 3000; // milliseconds
+// TODO: increase default polling delay to 10-15 seconds
+export const EVENT_POLLING_DELAY = (3 * 1000); // milliseconds
 
 export const LinodeStates = {
   pending: [
