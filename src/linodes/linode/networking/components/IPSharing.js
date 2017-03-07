@@ -74,8 +74,7 @@ export default class IPSharing extends Component {
               onChange={() => this.setState({
                 checked: { ...checked, [ip.address]: !checked[ip.address] } })}
               id={ip.address}
-              checked={checked[ip.address]}
-              value={checked[ip.address] || false}
+              checked={checked[ip.address] || false}
               label={`${ip.address}${ip.rdns ? ` (${ip.rdns})` : ''}`}
             />
           </div>
