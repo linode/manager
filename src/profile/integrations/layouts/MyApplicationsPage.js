@@ -7,7 +7,7 @@ import { showModal, hideModal } from '~/actions/modal';
 import { clients } from '~/api';
 import { Button } from '~/components/buttons';
 import MyApplication from '../components/MyApplication';
-import CreateApplication from '../components/CreateApplication';
+import { CreateApplication } from '../components/CreateApplication';
 
 export class MyApplicationsPage extends Component {
   static async preload({ dispatch }) {
@@ -38,7 +38,10 @@ export class MyApplicationsPage extends Component {
     return (
       <div>
         <header className="NavigationHeader clearfix">
-          <Button onClick={() => this.renderCreateOAuthClient()} className="float-sm-right">
+          <Button
+            onClick={() => this.renderCreateOAuthClient()}
+            className="float-sm-right"
+          >
             Create an OAuth Client
           </Button>
         </header>
