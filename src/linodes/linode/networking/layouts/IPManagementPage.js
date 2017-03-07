@@ -4,20 +4,17 @@ import { connect } from 'react-redux';
 import { IPTransfer, IPSharing } from '../components';
 import { setError } from '~/actions/errors';
 import { linodes } from '~/api';
+import { createHeaderFilter, objectFromMapByLabel } from '~/api/util';
 import { linodeIPs } from '~/api/linodes';
 
 export class IPManagementPage extends Component {
-  // TODO: this needs to be replaced with fetching all ips and filtering by dc
   static async preload({ dispatch, getState }, { linodeLabel }) {
-    const linode = Object.values(getState().api.linodes.linodes).reduce(
-      (match, linode) => linode.label === linodeLabel ? linode : match);
+    const linode = objectFromMapByLabel(getState().api.linodes.linodes, linodeLabel);
 
     try {
-      const allLinodes = await dispatch(linodes.all([], undefined, {
-        headers: {
-          'X-Filter': { datacenter: linode.datacenter },
-        },
-      }));
+      const allLinodes = await dispatch(linodes.all([], undefined, createHeaderFilter({
+        datacenter: linode.datacenter,
+      })));
 
       for (const linode of Object.values(allLinodes.linodes)) {
         await dispatch(linodeIPs(linode.id));
@@ -30,8 +27,12 @@ export class IPManagementPage extends Component {
   render() {
     const { linodes, dispatch, params: { linodeLabel } } = this.props;
 
-    const linode = Object.values(linodes.linodes).reduce(
-      (match, linode) => linode.label === linodeLabel ? linode : match);
+    const linode = objectFromMapByLabel(linodes.linodes, linodeLabel);
+
+    // Although we only explicitly looked up all linodes in the current dc,
+    // other linodes may already exist in the state.
+    const linodesInDatacenter = Object.values(linodes.linodes).filter(
+      l => l.datacenter.id === linode.datacenter.id);
 
     return (
       <div>
@@ -42,7 +43,7 @@ export class IPManagementPage extends Component {
         <IPSharing
           dispatch={dispatch}
           linode={linode}
-          linodes={linodes}
+          linodes={linodesInDatacenter}
         />
       </div>
     );

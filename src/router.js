@@ -97,6 +97,8 @@ export class LoadingRouterContext extends RouterContext {
       this.initialLoad = false;
 
       if (this.preloadCounter > 0) {
+        // This is a special case in React that will halt the render -- effectively reverting
+        // to its previous state until we're ready to render something for real.
         return null;
       }
     }

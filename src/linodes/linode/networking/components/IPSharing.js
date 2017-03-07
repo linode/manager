@@ -18,17 +18,18 @@ export default class IPSharing extends Component {
       saving: false,
     };
 
-    this.componentWillUpdate = (setState) => (props) => {
-      const { linode } = props;
-      const checked = {};
-      for (const ip of linode._ips.ipv4.shared) {
-        checked[ip.address] = true;
-      }
-      (setState || this.setState)({ checked });
-    };
-    this.componentWillUpdate((state) => {
+    this.componentWillReceiveProps(props, undefined, (state) => {
       this.state = { ...this.state, ...state };
-    })(props);
+    });
+  }
+
+  componentWillReceiveProps(nextProps, nextState, setState) {
+    const { linode } = nextProps;
+    const checked = {};
+    (linode._ips.ipv4.shared || []).forEach(ip => {
+      checked[ip.address] = true;
+    });
+    (setState || this.setState)({ checked });
   }
 
   onSubmit = async () => {
@@ -60,9 +61,9 @@ export default class IPSharing extends Component {
     const { checked } = this.state;
 
     let rows = [];
-    for (const linode of Object.values(linodes.linodes)) {
+    linodes.forEach(linode => {
       if (linode.id === thisLinode.id) {
-        continue;
+        return;
       }
 
       const shareableIps = linode._ips.ipv4.public;
@@ -74,14 +75,14 @@ export default class IPSharing extends Component {
                 checked: { ...checked, [ip.address]: !checked[ip.address] } })}
               id={ip.address}
               checked={checked[ip.address]}
-              value={checked[ip.address]}
+              value={checked[ip.address] || false}
               label={`${ip.address}${ip.rdns ? ` (${ip.rdns})` : ''}`}
             />
           </div>
         ),
         linode: <Link to={`/linodes/${linode.label}`}>{linode.label}</Link>,
       })));
-    }
+    });
 
     return rows;
   }
@@ -117,6 +118,6 @@ export default class IPSharing extends Component {
 
 IPSharing.propTypes = {
   linode: PropTypes.object.isRequired,
-  linodes: PropTypes.object.isRequired,
+  linodes: PropTypes.array.isRequired,
   dispatch: PropTypes.func.isRequired,
 };

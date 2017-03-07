@@ -58,7 +58,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
     const page = mount(
       <DashboardPage
         linodes={linodes}
-        params={{ linodeLabel: 'test-linode-1245' }}
+        params={{ linodeLabel: 'test-linode' }}
       />);
 
     expect(page.find('.backup-status')
