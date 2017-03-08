@@ -66,7 +66,7 @@ export default class CreateApplication extends Component {
 
     return (
       <Form onSubmit={this.onSubmit}>
-        <ModalFormGroup id="label" label="label" apiKey="label" errors={errors}>
+        <ModalFormGroup id="label" label="Label" apiKey="label" errors={errors}>
           <Input
             name="label"
             id="label"
