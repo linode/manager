@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 
 import { API_ROOT } from '~/constants';
 import { SecondaryCard } from '~/components/cards/';
-import { Button } from '~/components/buttons';
+import Dropdown from '~/components/Dropdown';
 import { reduceErrors } from '~/errors';
 import EditApplication from './EditApplication';
 import { ConfirmModalBody } from '~/components/modals';
@@ -27,44 +27,64 @@ export default class MyApplication extends Component {
     }
   }
 
-  render() {
-    const { client, dispatch } = this.props;
+  editAction() {
+    const { dispatch, client } = this.props;
 
-    const nav = (
-      <span>
-        <Button
-          onClick={() => dispatch(showModal(
-            'Edit OAuth Client',
-            <EditApplication
-              id={client.id}
-              name={client.label}
-              redirect={client.redirect_uri}
-              dispatch={dispatch}
-              close={() => dispatch(hideModal())}
-            />))}
-        >Edit</Button>
-        <Button
-          onClick={() => {
-            dispatch(showModal('Delete OAuth Client',
-              <ConfirmModalBody
-                children={`Are you sure you want to delete ${client.label}?`}
-                onCancel={() => dispatch(hideModal())}
-                onOk={() => {
-                  dispatch(hideModal());
-                  this.deleteApp();
-                }}
-              />
-            ));
-          }}
-        >Delete</Button>
-      </span>
-    );
+    dispatch(showModal('Edit OAuth Client',
+      <EditApplication
+        id={client.id}
+        name={client.label}
+        redirect={client.redirect_uri}
+        dispatch={dispatch}
+        close={() => dispatch(hideModal())}
+      />
+    ));
+  }
+
+  deleteAction() {
+    const { dispatch, client } = this.props;
+
+    dispatch(showModal('Delete OAuth Client',
+      <ConfirmModalBody
+        children={`Are you sure you want to delete ${client.label}?`}
+        onCancel={() => dispatch(hideModal())}
+        onOk={() => {
+          dispatch(hideModal());
+          this.deleteApp();
+        }}
+      />
+    ));
+  }
+
+  passAction(action) {
+    return () => {
+      if (action === this.editApp) {
+        this.editAction();
+      }
+
+      if (action === this.deleteApp) {
+        this.deleteAction();
+      }
+    };
+  }
+
+  renderActions() {
+    const elements = [
+      { _action: this.editApp, name: 'Edit' },
+      { _action: this.deleteApp, name: 'Delete' },
+    ].map(element => ({ ...element, action: this.passAction(element._action) }));
+
+    return <Dropdown elements={elements} />;
+  }
+
+  render() {
+    const { client } = this.props;
 
     return (
       <SecondaryCard
         title={client.label}
         icon={`${API_ROOT}/account/clients/${client.id}/thumbnail`}
-        nav={nav}
+        nav={this.renderActions()}
       >
         <div className="row">
           <label className="col-sm-4 row-label">Client ID</label>

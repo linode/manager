@@ -37,6 +37,23 @@ describe('profile/integrations/components/MyApplication', () => {
     expect(page.find('#redirect').text()).to.equal(client.redirect_uri);
   });
 
+  it('renders a client management dropdown', () => {
+    const client = clients[1];
+    const page = mount(
+      <MyApplication
+        dispatch={dispatch}
+        client={client}
+      />
+    );
+    const dropdown = page.find('Dropdown').first();
+    const elements = dropdown.props().elements;
+    expect(elements.length).to.equal(2);
+    const options = ['Edit', 'Delete'];
+    for (let i = 0; i < options.length; i++) {
+      expect(elements[i].name).to.equal(options[i]);
+    }
+  });
+
   it('opens the edit modal on edit click', () => {
     const client = clients[1];
     const page = mount(
@@ -47,14 +64,13 @@ describe('profile/integrations/components/MyApplication', () => {
     );
 
     dispatch.reset();
-    const editButton = page.find('SecondaryCard').find('Button').at(0);
-    editButton.simulate('click');
 
+    page.instance().editAction();
     expect(dispatch.callCount).to.equal(1);
     expect(dispatch.firstCall.args[0].type).to.equal(SHOW_MODAL);
   });
 
-  it('should show modal when delete clicked', async () => {
+  it('should show modal on delete action', async () => {
     const client = clients[1];
     const page = mount(
       <MyApplication
@@ -65,8 +81,7 @@ describe('profile/integrations/components/MyApplication', () => {
 
     dispatch.reset();
 
-    const deleteButton = page.find('SecondaryCard').find('Button').at(1);
-    deleteButton.simulate('click');
+    page.instance().deleteAction();
     expect(dispatch.calledOnce).to.equal(true);
     expect(dispatch.firstCall.args[0])
       .to.have.property('type').which.equals(SHOW_MODAL);
