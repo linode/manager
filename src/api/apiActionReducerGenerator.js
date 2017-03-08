@@ -276,3 +276,23 @@ export default function apiActionReducerGenerator(config, actions) {
   thunks.type = config.plural;
   return thunks;
 }
+
+// Helpers function when making calls outside of the ability of the above thunks.
+function _thunkFetch(method) {
+  return (url, body) =>
+    async (dispatch, getState) => {
+      const state = getState();
+      const { token } = state.authentication;
+      await fetch(token, url, {
+        method: method,
+        body: JSON.stringify(body),
+      });
+    };
+}
+
+export const thunkFetch = {
+  post: _thunkFetch('POST'),
+  put: _thunkFetch('PUT'),
+  get: _thunkFetch('GET'),
+  delete: _thunkFetch('delete'),
+};

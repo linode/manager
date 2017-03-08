@@ -42,9 +42,8 @@ export function fetch(token, _path, _options) {
   }
 
   const path = API_ROOT + _path;
-  const promise = fetchRef(path, options);
   return new Promise((accept, reject) => {
-    promise.then((response) => {
+    fetchRef(path, options).then((response) => {
       const { status } = response;
       if (status >= 400) {
         if (status === 401) {

@@ -12,24 +12,16 @@ export default class IPSharing extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      checked: {},
-      errors: {},
-      saving: false,
-    };
-
-    this.componentWillReceiveProps(props, undefined, (state) => {
-      this.state = { ...this.state, ...state };
-    });
-  }
-
-  componentWillReceiveProps(nextProps, nextState, setState) {
-    const { linode } = nextProps;
-    const checked = {};
-    (linode._ips.ipv4.shared || []).forEach(ip => {
-      checked[ip.address] = true;
-    });
-    (setState || this.setState)({ checked });
+    // Need to be able to update immediately and when props change.
+    this._componentWillReceiveProps((state) => {
+      this.state = {
+        ...state,
+        errors: {},
+        saving: false,
+        checked: {},
+      };
+    })(props);
+    this.componentWillReceiveProps = this._componentWillReceiveProps();
   }
 
   onSubmit = async () => {
@@ -38,8 +30,9 @@ export default class IPSharing extends Component {
 
     this.setState({ errors: {}, saving: true });
 
+    const sharedIps = Object.keys(_.pickBy(checked, checked => checked));
+
     try {
-      const sharedIps = Object.keys(_.pickBy(checked, checked => checked));
       await dispatch(setShared(linode.id, sharedIps));
     } catch (response) {
       if (!response.json) {
@@ -54,7 +47,17 @@ export default class IPSharing extends Component {
     this.setState({ saving: false });
   }
 
-  onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
+  _componentWillReceiveProps(_setState) {
+    const setState = _setState || this.setState.bind(this);
+    return (nextProps) => {
+      const { linode } = nextProps;
+      const checked = {};
+      (linode._ips.ipv4.shared || []).forEach(ip => {
+        checked[ip.address] = true;
+      });
+      setState({ checked });
+    };
+  }
 
   formatRows() {
     const { linodes, linode: thisLinode } = this.props;
