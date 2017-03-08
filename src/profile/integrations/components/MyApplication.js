@@ -58,11 +58,11 @@ export default class MyApplication extends Component {
 
   passAction(action) {
     return () => {
-      if (action === this.editApp) {
+      if (action === 'Edit') {
         this.editAction();
       }
 
-      if (action === this.deleteApp) {
+      if (action === 'Delete') {
         this.deleteAction();
       }
     };
@@ -70,9 +70,9 @@ export default class MyApplication extends Component {
 
   renderActions() {
     const elements = [
-      { _action: this.editApp, name: 'Edit' },
-      { _action: this.deleteApp, name: 'Delete' },
-    ].map(element => ({ ...element, action: this.passAction(element._action) }));
+      { name: 'Edit', action: this.passAction('Edit') },
+      { name: 'Delete', action: this.passAction('Delete') },
+    ];
 
     return <Dropdown elements={elements} leftOriented={false} />;
   }
