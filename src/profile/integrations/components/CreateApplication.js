@@ -21,7 +21,7 @@ export default class CreateApplication extends Component {
     };
   }
 
-  onChange = ({ target: { label, value } }) => this.setState({ [label]: value })
+  onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   onSubmit = async () => {
     const { dispatch } = this.props;
@@ -68,7 +68,7 @@ export default class CreateApplication extends Component {
       <Form onSubmit={this.onSubmit}>
         <ModalFormGroup id="label" label="label" apiKey="label" errors={errors}>
           <Input
-            label="label"
+            name="label"
             id="label"
             placeholder="My client"
             value={label}
@@ -77,7 +77,7 @@ export default class CreateApplication extends Component {
         </ModalFormGroup>
         <ModalFormGroup id="redirect" label="Redirect URI" apiKey="redirect_uri" errors={errors}>
           <Input
-            label="redirect"
+            name="redirect"
             id="redirect"
             placeholder="http://localhost:3000/oauth/callback"
             value={redirect}
@@ -86,13 +86,13 @@ export default class CreateApplication extends Component {
         </ModalFormGroup>
         <ModalFormGroup id="thumbnail" label="Thumbnail" apiKey="thumbnail" errors={errors}>
           <Input
-            label="thumbnail"
+            name="thumbnail"
             id="thumbnail"
             type="file"
             onChange={(e) => this.setState({ thumbnail: e.target.files[0] })}
           />
         </ModalFormGroup>
-        <div classlabel="Modal-footer">
+        <div className="Modal-footer">
           <CancelButton onClick={close} />
           <SubmitButton disabled={saving}>{this.submitText}</SubmitButton>
         </div>
