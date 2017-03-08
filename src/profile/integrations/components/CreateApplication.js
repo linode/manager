@@ -15,22 +15,22 @@ export default class CreateApplication extends Component {
 
     this.state = {
       errors: {},
-      name: '',
+      label: '',
       redirect: '',
       thumbnail: '',
     };
   }
 
-  onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
+  onChange = ({ target: { label, value } }) => this.setState({ [label]: value })
 
   onSubmit = async () => {
     const { dispatch } = this.props;
-    const { name, redirect, thumbnail } = this.state;
+    const { label, redirect, thumbnail } = this.state;
 
     this.setState({ errors: {} });
 
     try {
-      const r = await this.submitAction(name, redirect);
+      const r = await this.submitAction(label, redirect);
       const { id } = r;
 
       if (thumbnail) {
@@ -57,27 +57,27 @@ export default class CreateApplication extends Component {
     }
   }
 
-  submitAction = async (name, redirect) =>
-    this.props.dispatch(clients.post({ name, redirect_uri: redirect }))
+  submitAction = async (label, redirect) =>
+    this.props.dispatch(clients.post({ label, redirect_uri: redirect }))
 
   render() {
     const { close } = this.props;
-    const { errors, name, redirect, saving } = this.state;
+    const { errors, label, redirect, saving } = this.state;
 
     return (
       <Form onSubmit={this.onSubmit}>
-        <ModalFormGroup id="name" label="Name" apiKey="name" errors={errors}>
+        <ModalFormGroup id="label" label="label" apiKey="label" errors={errors}>
           <Input
-            name="name"
-            id="name"
+            label="label"
+            id="label"
             placeholder="My client"
-            value={name}
+            value={label}
             onChange={this.onChange}
           />
         </ModalFormGroup>
         <ModalFormGroup id="redirect" label="Redirect URI" apiKey="redirect_uri" errors={errors}>
           <Input
-            name="redirect"
+            label="redirect"
             id="redirect"
             placeholder="http://localhost:3000/oauth/callback"
             value={redirect}
@@ -86,13 +86,13 @@ export default class CreateApplication extends Component {
         </ModalFormGroup>
         <ModalFormGroup id="thumbnail" label="Thumbnail" apiKey="thumbnail" errors={errors}>
           <Input
-            name="thumbnail"
+            label="thumbnail"
             id="thumbnail"
             type="file"
             onChange={(e) => this.setState({ thumbnail: e.target.files[0] })}
           />
         </ModalFormGroup>
-        <div className="Modal-footer">
+        <div classlabel="Modal-footer">
           <CancelButton onClick={close} />
           <SubmitButton disabled={saving}>{this.submitText}</SubmitButton>
         </div>

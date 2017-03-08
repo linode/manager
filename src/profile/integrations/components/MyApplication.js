@@ -33,7 +33,7 @@ export default class MyApplication extends Component {
     dispatch(showModal('Edit OAuth Client',
       <EditApplication
         id={client.id}
-        name={client.label}
+        label={client.label}
         redirect={client.redirect_uri}
         dispatch={dispatch}
         close={() => dispatch(hideModal())}
@@ -74,7 +74,7 @@ export default class MyApplication extends Component {
       { _action: this.deleteApp, name: 'Delete' },
     ].map(element => ({ ...element, action: this.passAction(element._action) }));
 
-    return <Dropdown elements={elements} />;
+    return <Dropdown elements={elements} leftOriented={false} />;
   }
 
   render() {
