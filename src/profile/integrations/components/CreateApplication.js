@@ -11,13 +11,14 @@ export default class CreateApplication extends Component {
   constructor() {
     super();
 
-    this.submitText = 'Create OAuth Application';
+    this.submitText = 'Create';
 
     this.state = {
       errors: {},
       label: '',
       redirect: '',
       thumbnail: '',
+      saving: false,
     };
   }
 
@@ -27,11 +28,10 @@ export default class CreateApplication extends Component {
     const { dispatch } = this.props;
     const { label, redirect, thumbnail } = this.state;
 
-    this.setState({ errors: {} });
+    this.setState({ errors: {}, saving: true });
 
     try {
-      const r = await this.submitAction(label, redirect);
-      const { id } = r;
+      const { id } = await this.submitAction(label, redirect);
 
       if (thumbnail) {
         if ((thumbnail.size / (1024 * 1024)) < MAX_UPLOAD_SIZE_MB) {
@@ -49,7 +49,7 @@ export default class CreateApplication extends Component {
     } catch (response) {
       if (!response.json) {
         // eslint-disable-next-line no-console
-        console.error(response);
+        return console.error(response);
       }
 
       const errors = await reduceErrors(response);
@@ -57,8 +57,9 @@ export default class CreateApplication extends Component {
     }
   }
 
+  // This is overridden by ./EditApplication.js
   submitAction = async (label, redirect) =>
-    this.props.dispatch(clients.post({ label, redirect_uri: redirect }))
+    await this.props.dispatch(clients.post({ label, redirect_uri: redirect }))
 
   render() {
     const { close } = this.props;

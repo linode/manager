@@ -29,7 +29,7 @@ describe('profile/layouts/AuthenticationPage', () => {
 
     await expectRequest(fn, '/account/profile/password', {
       method: 'POST',
-      body: { password: 'thePassword', expires: null },
+      body: { password: 'thePassword' },
     });
   });
 });

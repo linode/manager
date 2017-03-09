@@ -15,13 +15,11 @@ export default class ConfirmModalBody extends Component {
   }
 
   render() {
-    const { buttonText, onCancel } = this.props;
+    const { buttonText, onCancel, children } = this.props;
     const { loading } = this.state;
     return (
       <div>
-        <p>
-          {this.props.children}
-        </p>
+        {React.isValidElement(children) ? children : <p>{children}</p>}
         <div className="Modal-footer">
           <CancelButton disabled={loading} onClick={onCancel} />
           <SubmitButton

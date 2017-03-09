@@ -33,11 +33,16 @@ describe('profile/integrations/layouts/PersonalAccessTokensPage', () => {
     const applicationTokens = Object.values(tokens.tokens).filter(
       ({ type }) => type === 'personal_access_token');
     expect(myApplications.length).to.equal(applicationTokens.length);
+
     const firstToken = myApplications.at(0);
+    const expectedToken = applicationTokens[0];
     expectObjectDeepEquals(firstToken.props(), {
       type: 'token',
-      label: applicationTokens[0].label,
-      scopes: applicationTokens[0].scopes,
+      label: expectedToken.label,
+      scopes: expectedToken.scopes,
+      id: expectedToken.id,
+      expires: expectedToken.expiry,
+      secret: expectedToken.token,
       dispatch,
     });
   });
