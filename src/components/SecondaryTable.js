@@ -46,3 +46,7 @@ SecondaryTable.propTypes = {
   children: PropTypes.node,
   onRowClick: PropTypes.func,
 };
+
+SecondaryTable.defaultProps = {
+  onRowClick: () => {},
+};

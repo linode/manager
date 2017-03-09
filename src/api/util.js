@@ -11,11 +11,16 @@ export function Error404() {
 
 Error404.prototype = new Error();
 
+
+export function objectFromMapByLabel(map, label, labelName = 'label') {
+  return Object.values(map).length && Object.values(map).reduce(
+    (match, object) => object[labelName] === label ? object : match, undefined);
+}
+
 export function getObjectByLabelLazily(pluralName, label, labelName = 'label') {
   return async (dispatch, getState) => {
-    const oldResources = Object.values(getState().api[pluralName][pluralName]);
-    const oldResource = oldResources.length && oldResources.reduce(
-        (match, resource) => resource.label === label ? resource : match, undefined);
+    const oldResources = getState().api[pluralName][pluralName];
+    const oldResource = objectFromMapByLabel(oldResources, label, labelName);
 
     if (oldResource && oldResource.id) {
       return oldResource;

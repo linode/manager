@@ -1,2 +1,2 @@
-export { default as Card } from './Card';
-export { default as SecondaryCard } from './SecondaryCard';
+export Card from './Card';
+export SecondaryCard from './SecondaryCard';
