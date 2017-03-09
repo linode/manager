@@ -1,6 +1,6 @@
 export const apiTestClient = {
   status: 'active',
-  name: 'My client',
+  label: 'My client',
   id: '1',
   redirect_uri: 'http://localhost:3000/oauth/callback',
   secret: '<REDACTED>',

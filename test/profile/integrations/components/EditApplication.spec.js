@@ -20,16 +20,16 @@ describe('profile/integrations/components/EditApplication', () => {
       <EditApplication
         dispatch={dispatch}
         close={dispatch}
-        name="My awesome client"
+        label="My awesome client"
         redirect="http://example.com"
         id="1"
       />
     );
 
     const changeInput = (id, value) =>
-      page.find('Input').find({ id }).simulate('change', { target: { value, name: id } });
+      page.find('Input').find({ id }).simulate('change', { target: { value, label: id } });
 
-    changeInput('name', 'My new client');
+    changeInput('label', 'My new client');
     changeInput('redirect', 'http://google.com');
 
     await page.props().onSubmit();
@@ -41,7 +41,7 @@ describe('profile/integrations/components/EditApplication', () => {
     expectRequest(fn, '/account/profile/clients/1', undefined, undefined, {
       method: 'PUT',
       body: {
-        name: 'My new client',
+        label: 'My new client',
         redirect_uri: 'http://google.com',
       },
     });

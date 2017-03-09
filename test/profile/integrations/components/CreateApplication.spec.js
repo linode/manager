@@ -25,9 +25,9 @@ describe('profile/integrations/components/CreateApplication', () => {
     );
 
     const changeInput = (id, value) =>
-      page.find('Input').find({ id }).simulate('change', { target: { value, name: id } });
+      page.find('Input').find({ id }).simulate('change', { target: { value, label: id } });
 
-    changeInput('name', 'My new client');
+    changeInput('label', 'My new client');
     changeInput('redirect', 'http://example.com');
     const thumbnail = { size: (MAX_UPLOAD_SIZE_MB - 0.5) * 1024 * 1024 };
     page.instance().setState({ thumbnail });
@@ -45,7 +45,7 @@ describe('profile/integrations/components/CreateApplication', () => {
     expectRequest(fn, '/account/profile/clients', dispatch, undefined, {
       method: 'POST',
       body: {
-        name: 'My new client',
+        label: 'My new client',
         redirect_uri: 'http://example.com',
       },
     });
@@ -67,9 +67,9 @@ describe('profile/integrations/components/CreateApplication', () => {
     );
 
     const changeInput = (id, value) =>
-      page.find('Input').find({ id }).simulate('change', { target: { value, name: id } });
+      page.find('Input').find({ id }).simulate('change', { target: { value, label: id } });
 
-    changeInput('name', 'My new client');
+    changeInput('label', 'My new client');
     changeInput('redirect', 'http://example.com');
     const thumbnail = { size: (MAX_UPLOAD_SIZE_MB + 1) * 1024 * 1024 };
     page.instance().setState({ thumbnail });
