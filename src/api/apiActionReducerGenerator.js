@@ -194,7 +194,7 @@ function genThunkAll(config, actions, fetchPage) {
           dispatch(actions.many(page, ...ids))));
       }
 
-      // The resulting object will look like this, return it so we can store it in localStorage.
+      // The resulting object will look like this, return it so anyone can use it immediately.
       const res = {
         ...resources[resources.length - 1],
         [config.plural]: resources.reduce((a, b) => [...a, ...b[config.plural]], []),

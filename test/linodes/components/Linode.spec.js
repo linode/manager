@@ -32,9 +32,9 @@ describe('linodes/components/Linode', () => {
         isSelected={false}
       />);
 
-    expect(linode.find(id).contains('97.107.143.99'))
+    expect(linode.find(id).contains(testLinode.ipv4))
       .to.equal(true);
-    expect(linode.find(id).contains('2600:3c03::f03c:91ff:fe0a:1dbe'))
+    expect(linode.find(id).contains(testLinode.ipv6))
       .to.equal(true);
   });
 

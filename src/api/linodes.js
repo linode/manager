@@ -180,3 +180,14 @@ export function linodeBackups(linodeId) {
     dispatch(actions.one(json, linodeId));
   };
 }
+
+export function setShared(linodeId, ips) {
+  return async (dispatch, getState) => {
+    const state = getState();
+    const { token } = state.authentication;
+    await fetch(token, `/linode/instances/${linodeId}/ips/sharing`, {
+      method: 'POST',
+      body: JSON.stringify({ ips }),
+    });
+  };
+}
