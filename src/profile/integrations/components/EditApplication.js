@@ -9,25 +9,25 @@ export default class EditApplication extends CreateApplication {
 
     this.submitText = 'Save';
 
-    const { name, redirect } = props;
+    const { label, redirect } = props;
     this.state = {
       errors: {},
       thumbnail: '',
-      name,
+      label,
       redirect,
     };
   }
 
-  submitAction = async (name, redirect) => {
+  submitAction = async (label, redirect) => {
     const { id } = this.props;
-    await this.props.dispatch(clients.put({ name, redirect_uri: redirect }, [id]));
+    await this.props.dispatch(clients.put({ label, redirect_uri: redirect }, [id]));
     return { id };
   }
 }
 
 EditApplication.propTypes = {
   ...CreateApplication.propTypes,
-  name: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
   redirect: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
 };

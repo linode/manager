@@ -1,10 +1,12 @@
 import React from 'react';
 import sinon from 'sinon';
-import { shallow } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 import { expect } from 'chai';
 
 import { SHOW_MODAL } from '~/actions/modal';
-import { MyApplicationsPage } from '~/profile/integrations/layouts/MyApplicationsPage';
+import {
+  MyApplicationsPage,
+} from '~/profile/integrations/layouts/MyApplicationsPage';
 import { api } from '@/data';
 import { expectObjectDeepEquals } from '@/common';
 
@@ -20,7 +22,7 @@ describe('profile/integrations/layouts/MyApplicationsPage', () => {
   const dispatch = sandbox.spy();
 
   it('renders a list of clients', () => {
-    const page = shallow(
+    const page = mount(
       <MyApplicationsPage
         dispatch={dispatch}
         clients={clients}

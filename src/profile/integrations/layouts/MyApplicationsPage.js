@@ -38,7 +38,10 @@ export class MyApplicationsPage extends Component {
     return (
       <div>
         <header className="NavigationHeader clearfix">
-          <Button onClick={() => this.renderCreateOAuthClient()} className="float-sm-right">
+          <Button
+            onClick={() => this.renderCreateOAuthClient()}
+            className="float-sm-right"
+          >
             Create an OAuth Client
           </Button>
         </header>

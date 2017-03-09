@@ -15,7 +15,7 @@ export default class CreateApplication extends Component {
 
     this.state = {
       errors: {},
-      name: '',
+      label: '',
       redirect: '',
       thumbnail: '',
     };
@@ -25,12 +25,12 @@ export default class CreateApplication extends Component {
 
   onSubmit = async () => {
     const { dispatch } = this.props;
-    const { name, redirect, thumbnail } = this.state;
+    const { label, redirect, thumbnail } = this.state;
 
     this.setState({ errors: {} });
 
     try {
-      const r = await this.submitAction(name, redirect);
+      const r = await this.submitAction(label, redirect);
       const { id } = r;
 
       if (thumbnail) {
@@ -57,21 +57,21 @@ export default class CreateApplication extends Component {
     }
   }
 
-  submitAction = async (name, redirect) =>
-    this.props.dispatch(clients.post({ name, redirect_uri: redirect }))
+  submitAction = async (label, redirect) =>
+    this.props.dispatch(clients.post({ label, redirect_uri: redirect }))
 
   render() {
     const { close } = this.props;
-    const { errors, name, redirect, saving } = this.state;
+    const { errors, label, redirect, saving } = this.state;
 
     return (
       <Form onSubmit={this.onSubmit}>
-        <ModalFormGroup id="name" label="Name" apiKey="name" errors={errors}>
+        <ModalFormGroup id="label" label="Label" apiKey="label" errors={errors}>
           <Input
-            name="name"
-            id="name"
+            name="label"
+            id="label"
             placeholder="My client"
-            value={name}
+            value={label}
             onChange={this.onChange}
           />
         </ModalFormGroup>
