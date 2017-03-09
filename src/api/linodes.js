@@ -1,5 +1,6 @@
 import { fetch } from '~/fetch';
 import { actions } from './configs/linodes';
+import { thunkFetch } from './apiActionReducerGenerator';
 
 export const RANDOM_PROGRESS_MAX = 75;
 export const RANDOM_PROGRESS_MIN = 40;
@@ -190,4 +191,8 @@ export function setShared(linodeId, ips) {
       body: JSON.stringify({ ips }),
     });
   };
+}
+
+export function assignIps(datacenter, assignments) {
+  return thunkFetch.post('/networking/ip-assign', { datacenter, assignments });
 }

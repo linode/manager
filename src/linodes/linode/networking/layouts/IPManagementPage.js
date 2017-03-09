@@ -1,5 +1,6 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
+import _ from 'lodash';
 
 import { IPTransfer, IPSharing } from '../components';
 import { setError } from '~/actions/errors';
@@ -31,19 +32,20 @@ export class IPManagementPage extends Component {
 
     // Although we only explicitly looked up all linodes in the current dc,
     // other linodes may already exist in the state.
-    const linodesInDatacenter = Object.values(linodes.linodes).filter(
-      l => l.datacenter.id === linode.datacenter.id);
+    const linodesInDatacenter = _.pickBy(linodes.linodes, l =>
+      l.datacenter.id === linode.datacenter.id);
 
     return (
       <div>
         <IPTransfer
           dispatch={dispatch}
           linode={linode}
+          linodes={linodesInDatacenter}
         />
         <IPSharing
           dispatch={dispatch}
           linode={linode}
-          linodes={linodesInDatacenter}
+          linodes={Object.values(linodesInDatacenter)}
         />
       </div>
     );
