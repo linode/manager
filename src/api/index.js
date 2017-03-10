@@ -9,6 +9,7 @@ import * as profileModule from './configs/profile';
 import * as eventsModule from './configs/events';
 import * as tokensModule from './configs/tokens';
 import * as clientsModule from './configs/clients';
+import * as settingsModule from './configs/settings';
 
 import apiActionReducerGenerator from './apiActionReducerGenerator';
 
@@ -25,4 +26,5 @@ export const nodebalancers = apiActionReducerGenerator(nodebalancersModule.confi
 export const profile = apiActionReducerGenerator(profileModule.config, profileModule.actions);
 export const events = apiActionReducerGenerator(eventsModule.config, eventsModule.actions);
 export const tokens = apiActionReducerGenerator(tokensModule.config, tokensModule.actions);
-export const clients = apiActionReducerGenerator(clientsModule.config, clientsModule.actions);
+export const clients = apiactionreducergenerator(clientsmodule.config, clientsmodule.actions);
+export const settings = apiactionreducergenerator(settingsmodule.config, settingsmodule.actions);
