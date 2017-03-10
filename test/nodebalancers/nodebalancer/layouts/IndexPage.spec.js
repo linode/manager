@@ -34,8 +34,8 @@ describe('nodebalancers/nodebalancer/IndexPage', () => {
     expect(renderedPort).to.equal('80');
     expect(renderedProtocol).to.equal('HTTP');
     expect(renderedAlgorithm).to.equal('Roundrobin');
-    expect(renderedStick).to.equal('none');
-    expect(renderedCheck).to.equal('none');
+    expect(renderedStick).to.equal('None');
+    expect(renderedCheck).to.equal('None');
     expect(secondRenderedPort).to.equal('81');
   });
 });
