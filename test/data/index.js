@@ -8,6 +8,7 @@ import { datacenters } from './datacenters';
 import { types } from './types';
 import { kernels } from './kernels';
 import { dnszones } from './dnszones';
+import { nodebalancers } from './nodebalancers';
 import { events } from './events';
 import { clients } from './clients';
 import { tokens } from './tokens';
@@ -55,6 +56,7 @@ export const api = fakeAPI([
   [types, 'type', 'types'],
   [kernels, 'kernel', 'kernels'],
   [dnszones, 'dnszone', 'dnszones'],
+  [nodebalancers, 'nodebalancer', 'nodebalancers'],
   [events, 'event', 'events'],
   [clients, 'client', 'clients'],
   [tokens, 'token', 'tokens'],
