@@ -72,6 +72,8 @@ export class IndexPage extends Component {
         ...config,
         protocol: config.protocol.toUpperCase(),
         algorithm: title(config.algorithm),
+        stickiness: title(config.stickiness),
+        check: title(config.check),
         statusString: '0 up, 0 down',
         edit: <Button>Edit</Button>,
       };
@@ -94,9 +96,7 @@ export class IndexPage extends Component {
       <div>
         <header className="main-header main-header--border">
           <div className="container">
-            <h1>
-              {nbLabel}
-            </h1>
+            <h1 title={nodebalancer.id}>{nbLabel}</h1>
           </div>
         </header>
         <div className="container">
