@@ -50,7 +50,7 @@ export class IndexPage extends Component {
                   icon={`https://gravatar.com/avatar/${
                     user.email && md5(user.email.trim().toLowerCase())
                   }`}
-                  iconClass='user-icon'
+                  iconClass="user-icon"
                   dispatch={dispatch}
                 >
                   <div className="row">
