@@ -9,19 +9,27 @@ import {
   Checkbox,
   SubmitButton
 } from '~/components/form';
-//import { settings } from '~/api';
+import { settings } from '~/api';
 
 
 export class IndexPage extends Component {
-  /*static async preload({ dispatch }) {
+  static async preload({ dispatch }) {
     try {
-      //await dispatch(settings.one());
+      await dispatch(settings.one());
     } catch (response) {
       // eslint-disable-next-line no-console
       console.error(response);
       dispatch(setError(response));
     }
-  }*/
+  }
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      network_helper: props.settings.network_helper,
+    };
+  }
 
   async componentDidMount() {
     const { dispatch } = this.props;
@@ -30,7 +38,21 @@ export class IndexPage extends Component {
     dispatch(setTitle('Settings'));
   }
 
+  async onSubmit() {
+    const { dispatch } = this.props;
+
+    try {
+      await dispatch(settings.put({
+        network_helper: this.state.network_helper
+      }));
+    } catch (response) {
+      const errors = await reduceErrors(response);
+      this.setState({ errors });
+    }
+  }
+
   render() {
+    const { network_helper } = this.state;
     return (
       <div>
         <header className="main-header main-header--border">
@@ -42,15 +64,17 @@ export class IndexPage extends Component {
         </header>
         <div className="container">
           <Card>
-            <Form onSubmit={() => {}}>
+            <Form onSubmit={() => this.onSubmit()}>
               <label className="col-sm-2 col-form-label">Enable Network Helper</label>
               <div className="row">
                 <Checkbox
                   id="config-enableDistroHelper"
-                  checked={true}
-                  onChange={() => this.setState({
+                  checked={network_helper}
+                  onChange={() => this.setState({ 
+                    network_helper: !network_helper
                   })}
-                  label="Network Helper automatically deposits a static networking configuration in to your Linode at boot."
+                  label="Network Helper automatically deposits a static
+                    networking configuration in to your Linode at boot."
                 />
               </div>
               <div className="row">
@@ -70,9 +94,9 @@ IndexPage.propTypes = {
   dispatch: PropTypes.func,
 };
 
-function select() {
+function select(state) {
   return {
-    //settings: state.api.settings.settings.undefined,
+    settings: state.api.settings.settings.undefined,
   };
 }
 
