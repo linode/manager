@@ -70,7 +70,7 @@ export class IndexPage extends Component {
               <label className="col-sm-2 col-form-label">Enable Network Helper</label>
               <div className="row">
                 <Checkbox
-                  id="config-enableDistroHelper"
+                  id="networkHelper"
                   checked={networkHelper}
                   onChange={() => this.setState({
                     networkHelper: !networkHelper,
@@ -93,8 +93,8 @@ export class IndexPage extends Component {
 }
 
 IndexPage.propTypes = {
-  dispatch: PropTypes.func,
-  settings: PropTypes.node,
+  dispatch: PropTypes.func.isRequired,
+  settings: PropTypes.object.isRequired,
 };
 
 function select(state) {
