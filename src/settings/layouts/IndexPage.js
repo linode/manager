@@ -7,9 +7,11 @@ import { Card } from '~/components/cards';
 import {
   Form,
   Checkbox,
-  SubmitButton
+  SubmitButton,
 } from '~/components/form';
 import { settings } from '~/api';
+import { reduceErrors } from '~/errors';
+import { setError } from '~/actions/errors';
 
 
 export class IndexPage extends Component {
@@ -27,7 +29,7 @@ export class IndexPage extends Component {
     super(props);
 
     this.state = {
-      network_helper: props.settings.network_helper,
+      networkHelper: props.settings.network_helper,
     };
   }
 
@@ -43,7 +45,7 @@ export class IndexPage extends Component {
 
     try {
       await dispatch(settings.put({
-        network_helper: this.state.network_helper
+        network_helper: this.state.networkHelper,
       }));
     } catch (response) {
       const errors = await reduceErrors(response);
@@ -52,7 +54,7 @@ export class IndexPage extends Component {
   }
 
   render() {
-    const { network_helper } = this.state;
+    const { networkHelper } = this.state;
     return (
       <div>
         <header className="main-header main-header--border">
@@ -69,9 +71,9 @@ export class IndexPage extends Component {
               <div className="row">
                 <Checkbox
                   id="config-enableDistroHelper"
-                  checked={network_helper}
-                  onChange={() => this.setState({ 
-                    network_helper: !network_helper
+                  checked={networkHelper}
+                  onChange={() => this.setState({
+                    networkHelper: !networkHelper,
                   })}
                   label="Network Helper automatically deposits a static
                     networking configuration in to your Linode at boot."
@@ -92,6 +94,7 @@ export class IndexPage extends Component {
 
 IndexPage.propTypes = {
   dispatch: PropTypes.func,
+  settings: PropTypes.node,
 };
 
 function select(state) {
