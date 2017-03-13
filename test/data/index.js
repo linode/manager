@@ -12,6 +12,7 @@ import { nodebalancers } from './nodebalancers';
 import { events } from './events';
 import { clients } from './clients';
 import { tokens } from './tokens';
+import { users } from './users';
 
 function calculateTotalResults(data) {
   return Object.keys(data).length;
@@ -60,6 +61,7 @@ export const api = fakeAPI([
   [events, 'event', 'events'],
   [clients, 'client', 'clients'],
   [tokens, 'token', 'tokens'],
+  [users, 'user', 'users'],
 ]);
 
 export const state = deepFreeze({
