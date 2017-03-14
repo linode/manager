@@ -117,7 +117,7 @@ export class Layout extends Component {
     const githubRoot = 'https://github.com/linode/manager/blob/master/';
     return (
       <div
-        className="layout full-height"
+        className={`layout full-height ${this.props.modal.open ? 'layout--modal' : ''}`}
         onClick={(e) => {
           const open = this.props.notifications.open;
           const isListItem = e.target.className.includes('NotificationList-listItem');

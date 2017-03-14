@@ -96,14 +96,8 @@ export class EditModal extends Component {
         </FormGroup>
         <ErrorSummary errors={errors} />
         <div className="Modal-footer">
-          <CancelButton
-            className="LinodesLinodeSettingsComponentsEditModal-cancel"
-            disabled={loading}
-            onClick={() => dispatch(hideModal())}
-          />
-          <SubmitButton
-            disabled={loading}
-          />
+          <CancelButton disabled={loading} onClick={() => dispatch(hideModal())} />
+          <SubmitButton disabled={loading} />
         </div>
       </Form>);
   }

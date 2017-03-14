@@ -52,14 +52,8 @@ export class DeleteModal extends Component {
             {errors._.map(error => <div key={error}>{error}</div>)}
           </div> : null}
         <div className="Modal-footer">
-          <CancelButton
-            className="LinodesLinodeSettingsComponentsDeleteModal-cancel"
-            disabled={loading}
-            onClick={() => dispatch(hideModal())}
-          />
-          <SubmitButton
-            disabled={loading}
-          >Delete Disk</SubmitButton>
+          <CancelButton disabled={loading} onClick={() => dispatch(hideModal())} />
+          <SubmitButton disabled={loading}>Delete Disk</SubmitButton>
         </div>
       </Form>);
   }
