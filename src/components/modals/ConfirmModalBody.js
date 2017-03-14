@@ -12,6 +12,7 @@ export default class ConfirmModalBody extends Component {
     const { onOk } = this.props;
     this.setState({ loading: true });
     await onOk();
+    this.setState({ loading: false });
   }
 
   render() {

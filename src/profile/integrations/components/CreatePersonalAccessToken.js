@@ -1,7 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 
 import { ModalFormGroup } from '~/components/form';
-import { showModal } from '~/actions/modal';
+import { showModal, hideModal } from '~/actions/modal';
 import { ConfirmModalBody } from '~/components/modals';
 import { Form, Input, Select, SubmitButton, CancelButton } from '~/components/form';
 import { reduceErrors, ErrorSummary } from '~/errors';
@@ -10,9 +10,26 @@ import { title } from './OAuthScopes';
 import { tokens } from '~/api';
 import SelectExpiration from '../../components/SelectExpiration';
 
+export async function renderSecret(label, verb, secret) {
+  const { dispatch } = this.props;
+  const close = () => dispatch(hideModal());
+
+  await dispatch(showModal(
+    `${title(label)} ${verb}`,
+    <ConfirmModalBody onOk={close} onCancel={close}>
+      <p>
+        Your {label} has been {verb}. Store this secret. It won't be shown again.
+      </p>
+      <div className="alert alert-warning">{secret}</div>
+    </ConfirmModalBody>
+  ));
+}
+
 export default class CreatePersonalAccessToken extends Component {
   constructor() {
     super();
+
+    this.renderSecret = renderSecret.bind(this);
 
     this.state = {
       ...OAUTH_SCOPES.reduce((object, scope) => ({
@@ -48,7 +65,8 @@ export default class CreatePersonalAccessToken extends Component {
     try {
       const { token } = await dispatch(tokens.post(data));
       this.setState({ saving: false });
-      await this.renderSecret(token);
+
+      await this.renderSecret('personal access token', 'created', token);
     } catch (response) {
       if (!response.json) {
         // eslint-disable-next-line no-console
@@ -58,19 +76,6 @@ export default class CreatePersonalAccessToken extends Component {
       const errors = await reduceErrors(response);
       this.setState({ errors, saving: false });
     }
-  }
-
-  async renderSecret(secret) {
-    const { dispatch, close } = this.props;
-    await dispatch(showModal(
-      'Personal Access Token created',
-      <ConfirmModalBody onOk={close} onCancel={close}>
-        <p>
-          Your personal access token has been created. Store this secret. It won't be shown again.
-        </p>
-        <div className="alert alert-warning">{secret}</div>
-      </ConfirmModalBody>
-    ));
   }
 
   renderScopeFormGroup = (scope) => {

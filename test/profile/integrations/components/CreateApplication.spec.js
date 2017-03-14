@@ -34,10 +34,10 @@ describe('profile/integrations/components/CreateApplication', () => {
     const thumbnail = { size: (MAX_UPLOAD_SIZE_MB - 0.5) * 1024 * 1024 };
     page.instance().setState({ thumbnail });
 
-    dispatch.returns({ id: 1 });
+    dispatch.returns({ id: 1, secret: 'secret' });
     await page.props().onSubmit();
 
-    // One call to save the data, one call to save the thumbnail, one call to close.
+    // One call to save the data, one call to save the thumbnail, one call to show the secret.
     expect(dispatch.callCount).to.equal(3);
 
     let fn = dispatch.firstCall.args[0];
