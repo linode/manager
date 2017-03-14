@@ -67,8 +67,8 @@ export class IndexPage extends Component {
         <div className="container">
           <Card>
             <Form onSubmit={() => this.onSubmit()}>
-              <label className="col-sm-2 col-form-label">Enable Network Helper</label>
               <div className="row">
+                <label className="col-sm-3 row-label">Enable Network Helper</label>
                 <Checkbox
                   id="networkHelper"
                   checked={networkHelper}
@@ -80,7 +80,7 @@ export class IndexPage extends Component {
                 />
               </div>
               <div className="row">
-                <div className="offset-sm-2 col-sm-10">
+                <div className="offset-sm-3 col-sm-9">
                   <SubmitButton>Save settings</SubmitButton>
                 </div>
               </div>
