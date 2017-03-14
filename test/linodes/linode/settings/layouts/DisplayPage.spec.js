@@ -42,9 +42,11 @@ describe('linodes/linode/settings/layouts/DisplayPage', () => {
     page.find('form').simulate('submit', { preventDefault() {} });
     expect(dispatch.callCount).to.equal(1);
     const fn = dispatch.firstCall.args[0];
-    const dispatched = () => ({ authentication: { token: 'hi' } });
-    await expectRequest(fn, '/linode/instances/1234', dispatched,
-                        { group: linode.group, label: linode.label }, { method: 'PUT' });
+
+    await expectRequest(fn, '/linode/instances/1234', {
+      method: 'PUT',
+      body: { group: linode.group, label: linode.label },
+    });
   });
 
   it('shows error if label is invalid', async () => {

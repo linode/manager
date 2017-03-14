@@ -27,7 +27,7 @@ describe('profile/integrations/components/EditApplication', () => {
     );
 
     const changeInput = (id, value) =>
-      page.find('Input').find({ id }).simulate('change', { target: { value, label: id } });
+      page.find('Input').find({ id }).simulate('change', { target: { value, name: id } });
 
     changeInput('label', 'My new client');
     changeInput('redirect', 'http://google.com');
@@ -38,7 +38,7 @@ describe('profile/integrations/components/EditApplication', () => {
     expect(dispatch.callCount).to.equal(2);
 
     const fn = dispatch.firstCall.args[0];
-    expectRequest(fn, '/account/profile/clients/1', undefined, undefined, {
+    await expectRequest(fn, '/account/clients/1', {
       method: 'PUT',
       body: {
         label: 'My new client',

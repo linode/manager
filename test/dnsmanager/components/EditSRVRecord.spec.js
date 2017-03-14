@@ -80,20 +80,19 @@ describe('dnsmanager/components/EditSRVRecord', () => {
     expect(close.callCount).to.equal(1);
 
     const fn = dispatch.firstCall.args[0];
-    await expectRequest(
-      fn, `/dns/zones/${currentZone.id}/records/${currentRecord.id}`, undefined, undefined, {
-        method: 'PUT',
-        body: {
-          service: '_ips',
-          protocol: '_udp',
-          target: 'ns2.service.com',
-          priority: 77,
-          weight: 7,
-          port: 777,
-          ttl_sec: 3600,
-          type: 'SRV',
-        },
-      });
+    await expectRequest(fn, `/dns/zones/${currentZone.id}/records/${currentRecord.id}`, {
+      method: 'PUT',
+      body: {
+        service: '_ips',
+        protocol: '_udp',
+        target: 'ns2.service.com',
+        priority: 77,
+        weight: 7,
+        port: 777,
+        ttl_sec: 3600,
+        type: 'SRV',
+      },
+    });
   });
 
   it('creates a new SRV record and closes the modal', async () => {
@@ -125,19 +124,18 @@ describe('dnsmanager/components/EditSRVRecord', () => {
     expect(close.callCount).to.equal(1);
 
     const fn = dispatch.firstCall.args[0];
-    await expectRequest(
-      fn, `/dns/zones/${currentZone.id}/records/`, undefined, undefined, {
-        method: 'POST',
-        body: {
-          service: '_ips',
-          protocol: '_udp',
-          target: 'ns2.service.com',
-          priority: 77,
-          weight: 7,
-          port: 777,
-          ttl_sec: 3600,
-          type: 'SRV',
-        },
-      });
+    await expectRequest(fn, `/dns/zones/${currentZone.id}/records/`, {
+      method: 'POST',
+      body: {
+        service: '_ips',
+        protocol: '_udp',
+        target: 'ns2.service.com',
+        priority: 77,
+        weight: 7,
+        port: 777,
+        ttl_sec: 3600,
+        type: 'SRV',
+      },
+    });
   });
 });

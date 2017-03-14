@@ -100,8 +100,6 @@ describe('profile/integrations/components/MyApplication', () => {
 
     await page.instance().deleteApp();
     const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, '/account/clients/1', undefined, undefined, {
-      method: 'DELETE',
-    });
+    await expectRequest(fn, '/account/clients/1', { method: 'DELETE' });
   });
 });
