@@ -1,6 +1,6 @@
 import React from 'react';
 import sinon from 'sinon';
-import { mount } from 'enzyme';
+import { shallow } from 'enzyme';
 import { expect } from 'chai';
 
 import { expectRequest } from '@/common';
@@ -15,21 +15,19 @@ describe('profile/layouts/AuthenticationPage', () => {
 
   const dispatch = sandbox.stub();
 
-  it('change password', async () => {
-    const page = mount(
+  it('changes password', async () => {
+    const page = shallow(
       <AuthenticationPage
         dispatch={dispatch}
       />
     );
 
-    expect(page.find('option').length).to.equal(4);
-
     page.instance().setState({ password: 'thePassword' });
     await page.instance().passwordOnSubmit();
-    expect(dispatch.calledOnce).to.equal(true);
+    expect(dispatch.callCount).to.equal(1);
     const fn = dispatch.firstCall.args[0];
 
-    await expectRequest(fn, '/account/profile/password', undefined, undefined, {
+    await expectRequest(fn, '/account/profile/password', {
       method: 'POST',
       body: { password: 'thePassword', expires: null },
     });

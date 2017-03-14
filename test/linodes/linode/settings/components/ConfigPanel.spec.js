@@ -4,7 +4,6 @@ import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 
 import { ConfigPanel } from '~/linodes/linode/settings/components/ConfigPanel';
-import { actions } from '~/api/configs/linodes';
 import { expectRequest } from '@/common';
 import { api } from '@/data';
 import { testLinode } from '@/data/linodes';
@@ -122,8 +121,6 @@ describe('linodes/linode/settings/components/ConfigPanel', () => {
     await dispatch.args[0][0].body.props.onOk();
     const fn = dispatch.secondCall.args[0];
     dispatch.reset();
-    await expectRequest(fn, '/linode/instances/1238/configs/12345',
-      d => expect(d.args[0]).to.deep.equal(actions.configs.delete(1238, 12345)),
-      null, { method: 'DELETE' });
+    await expectRequest(fn, '/linode/instances/1238/configs/12345', { method: 'DELETE' });
   });
 });

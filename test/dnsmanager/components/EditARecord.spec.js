@@ -64,16 +64,15 @@ describe('dnsmanager/components/EditARecord', () => {
     expect(close.callCount).to.equal(1);
 
     const fn = dispatch.firstCall.args[0];
-    await expectRequest(
-      fn, `/dns/zones/${currentZone.id}/records/${currentRecord.id}`, undefined, undefined, {
-        method: 'PUT',
-        body: {
-          target: '4.4.4.4',
-          name: 'tee',
-          ttl_sec: 1,
-          type: 'A',
-        },
-      });
+    await expectRequest(fn, `/dns/zones/${currentZone.id}/records/${currentRecord.id}`, {
+      method: 'PUT',
+      body: {
+        target: '4.4.4.4',
+        name: 'tee',
+        ttl_sec: 1,
+        type: 'A',
+      },
+    });
   });
 
   it('creates a new AAAA record and closes the modal', async () => {
@@ -102,15 +101,14 @@ describe('dnsmanager/components/EditARecord', () => {
     expect(close.callCount).to.equal(1);
 
     const fn = dispatch.firstCall.args[0];
-    await expectRequest(
-      fn, `/dns/zones/${currentZone.id}/records/`, undefined, undefined, {
-        method: 'POST',
-        body: {
-          target: '1.1.1.8',
-          name: 'too',
-          ttl_sec: 1,
-          type: 'AAAA',
-        },
-      });
+    await expectRequest(fn, `/dns/zones/${currentZone.id}/records/`, {
+      method: 'POST',
+      body: {
+        target: '1.1.1.8',
+        name: 'too',
+        ttl_sec: 1,
+        type: 'AAAA',
+      },
+    });
   });
 });

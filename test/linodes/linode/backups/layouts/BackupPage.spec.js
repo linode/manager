@@ -119,9 +119,7 @@ describe('linodes/linode/backups/layouts/BackupPage', () => {
     takeSnapshot.simulate('click');
 
     const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, '/linode/instances/1234/backups', () => {}, null,
-      d => expect(d.method).to.equal('POST')
-    );
+    await expectRequest(fn, '/linode/instances/1234/backups', { method: 'POST' });
   });
 
   it('should dispatch a restore request', async () => {
@@ -143,15 +141,13 @@ describe('linodes/linode/backups/layouts/BackupPage', () => {
     page.find('button[name="restore"]').simulate('click');
 
     const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, '/linode/instances/1234/backups/54782214/restore',
-      () => {}, null, d => {
-        expect(d.method).to.equal('POST');
-        expect(d.body).to.equal(JSON.stringify({
-          linode: restoreToVal,
-          overwrite: overwriteVal,
-        }));
+    await expectRequest(fn, '/linode/instances/1234/backups/54782214/restore', {
+      method: 'POST',
+      body: {
+        linode: restoreToVal,
+        overwrite: overwriteVal,
       },
-    );
+    });
 
     expect(dispatch.calledWith(push('/linodes/test-linode'))).to.equal(true);
   });

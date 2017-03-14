@@ -3,7 +3,6 @@ import sinon from 'sinon';
 import { shallow, mount } from 'enzyme';
 import { expect } from 'chai';
 
-import { actions } from '~/api/configs/linodes';
 import { api } from '@/data';
 import { testLinode } from '@/data/linodes';
 import { expectRequest } from '@/common';
@@ -55,12 +54,7 @@ describe('linodes/linode/settings/layouts/AlertsPage', async () => {
     expect(dispatch.calledOnce).to.equal(true);
 
     const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, `/linode/instances/${testLinode.id}`,
-      (d, n) => {
-        if (n === 0) {
-          expect(d.args[0]).to.deep.equal(actions.one({ }, testLinode.id));
-        }
-      }, { }, { method: 'PUT' });
+    await expectRequest(fn, `/linode/instances/${testLinode.id}`, { method: 'PUT' });
   });
 });
 

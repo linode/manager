@@ -32,7 +32,7 @@ describe('linodes/linode/layouts/ResizePage', () => {
     await page.instance().onSubmit();
 
     const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, '/linode/instances/1234/resize', undefined, undefined, {
+    await expectRequest(fn, '/linode/instances/1234/resize', {
       method: 'POST',
       body: {
         type: 'linode1024.5',
