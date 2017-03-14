@@ -45,8 +45,7 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
     _dispatch.returns({ total_pages: 1, disks: [], total_results: 0 });
     await disks(_dispatch, () => state);
     const fn2 = _dispatch.firstCall.args[0];
-    await expectRequest(fn2, '/linode/instances/1242/disks/?page=1',
-      undefined, { disks: [] });
+    await expectRequest(fn2, '/linode/instances/1242/disks/?page=1', undefined, { disks: [] });
   });
 
   it('calls saveChanges when save is pressed', () => {
@@ -435,9 +434,9 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
       expect(dispatch.calledTwice).to.equal(true);
       const fn = dispatch.firstCall.args[0];
 
-      function expectRequestOptions({ method, body }) {
-        expect(method).to.equal('PUT');
-        expectObjectDeepEquals(JSON.parse(body), {
+      await expectRequest(fn, `/linode/instances/${testLinode.id}/configs/12345`, {
+        method: 'PUT',
+        body: {
           label: 'new label',
           comments: 'Test comments',
           ram_limit: 0,
@@ -456,11 +455,8 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
             enable_network_helper: true,
             enable_modules_dep_helper: true,
           },
-        });
-      }
-
-      await expectRequest(fn, `/linode/instances/${testLinode.id}/configs/12345`,
-                          () => {}, null, expectRequestOptions);
+        },
+      });
     });
   });
 });

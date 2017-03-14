@@ -41,16 +41,16 @@ describe('linodes/linode/backups/layouts/SettingsPage', () => {
     dispatch.reset();
     page.find('.btn-default').at(0).simulate('submit');
     const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, '/linode/instances/1234', () => {}, null,
-      d => expect(d.body).to.equal(JSON.stringify({
+    await expectRequest(fn, '/linode/instances/1234', {
+      body: {
         backups: {
           schedule: {
             day: 'Monday',
             window: 'W10',
           },
         },
-      }))
-    );
+      },
+    });
   });
 
   it('shows cancel backups modal when button is pressed', async () => {

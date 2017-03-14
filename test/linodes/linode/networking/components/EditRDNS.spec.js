@@ -52,10 +52,9 @@ describe('linodes/linode/networking/components/EditRDNS', () => {
     expect(dispatch.callCount).to.equal(2);
 
     const fn = dispatch.firstCall.args[0];
-    await expectRequest(
-      fn, `/linode/instances/${testLinode.id}/ips/${ip.address}`, undefined, undefined, {
-        method: 'PUT',
-        body: { rdns: 'test.com' },
-      });
+    await expectRequest(fn, `/linode/instances/${testLinode.id}/ips/${ip.address}`, {
+      method: 'PUT',
+      body: { rdns: 'test.com' },
+    });
   });
 });

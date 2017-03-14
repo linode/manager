@@ -118,11 +118,7 @@ describe('linodes/layouts/IndexPage', () => {
     modal.find('.btn-default').simulate('click');
 
     const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, '/linode/instances/1234', () => {}, null,
-      options => {
-        expect(options.method).to.equal('DELETE');
-      }
-    );
+    await expectRequest(fn, '/linode/instances/1234', { method: 'DELETE' });
   });
 
   it('selects all linodes when "select all" is checked', () => {

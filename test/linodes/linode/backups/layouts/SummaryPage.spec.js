@@ -83,8 +83,6 @@ describe('linodes/linode/backups/layouts/SummaryPage', () => {
     takeSnapshot.simulate('click');
 
     const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, '/linode/instances/1236/backups', () => {}, null,
-      d => expect(d.method).to.equal('POST')
-    );
+    await expectRequest(fn, '/linode/instances/1236/backups', { method: 'POST' });
   });
 });

@@ -64,16 +64,15 @@ describe('dnsmanager/components/EditMXRecord', () => {
     expect(close.callCount).to.equal(1);
 
     const fn = dispatch.firstCall.args[0];
-    await expectRequest(
-      fn, `/dns/zones/${currentZone.id}/records/${currentRecord.id}`, undefined, undefined, {
-        method: 'PUT',
-        body: {
-          target: 'mx1.tester1234.com',
-          name: 'tester1234.com',
-          priority: 1,
-          type: 'MX',
-        },
-      });
+    await expectRequest(fn, `/dns/zones/${currentZone.id}/records/${currentRecord.id}`, {
+      method: 'PUT',
+      body: {
+        target: 'mx1.tester1234.com',
+        name: 'tester1234.com',
+        priority: 1,
+        type: 'MX',
+      },
+    });
   });
 
   it('creates a new MX record and closes the modal', async () => {
@@ -101,15 +100,14 @@ describe('dnsmanager/components/EditMXRecord', () => {
     expect(close.callCount).to.equal(1);
 
     const fn = dispatch.firstCall.args[0];
-    await expectRequest(
-      fn, `/dns/zones/${currentZone.id}/records/`, undefined, undefined, {
-        method: 'POST',
-        body: {
-          target: 'mx1.tester1234.com',
-          name: 'tester1234.com',
-          priority: 1,
-          type: 'MX',
-        },
-      });
+    await expectRequest(fn, `/dns/zones/${currentZone.id}/records/`, {
+      method: 'POST',
+      body: {
+        target: 'mx1.tester1234.com',
+        name: 'tester1234.com',
+        priority: 1,
+        type: 'MX',
+      },
+    });
   });
 });

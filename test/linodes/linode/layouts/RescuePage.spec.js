@@ -115,9 +115,10 @@ describe('linodes/linode/layouts/RescuePage', () => {
       await resetRootPassword();
       const fn = dispatch.firstCall.args[0];
 
-      const dispatched = () => ({ authentication: { token: 'hi' } });
-      await expectRequest(fn, '/linode/instances/1237/disks/1234/password', dispatched,
-                         { }, { method: 'POST' });
+      await expectRequest(fn, '/linode/instances/1237/disks/1234/password', {
+        method: 'POST',
+        body: { password: 'new password' },
+      });
     });
 
     it('shows a modal for confirmation when reset root password form is submitted', () => {
@@ -161,11 +162,7 @@ describe('linodes/linode/layouts/RescuePage', () => {
       // simulate pressing the submit button, the action should get dispatched
       page.find('.RescueMode-form').simulate('submit');
       const fn = dispatch.secondCall.args[0];
-      await expectRequest(fn, '/linode/instances/1234/rescue',
-        () => {}, null, options => {
-          expect(options.method).to.equal('POST');
-        }
-      );
+      await expectRequest(fn, '/linode/instances/1234/rescue', { method: 'POST' });
     });
   });
 });

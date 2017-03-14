@@ -27,7 +27,7 @@ describe('nodebalancers/layouts/CreatePage', () => {
 
     expect(dispatch.callCount).to.equal(2);
     const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, '/nodebalancers/', undefined, undefined, {
+    await expectRequest(fn, '/nodebalancers/', {
       method: 'POST',
       body: { label: 'my-label', datacenter: 'newark' },
     });

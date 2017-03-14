@@ -2,7 +2,6 @@ import React from 'react';
 import { push } from 'react-router-redux';
 import sinon from 'sinon';
 import { mount } from 'enzyme';
-import { expect } from 'chai';
 
 import { RebuildPage } from '~/linodes/linode/layouts/RebuildPage';
 import { expectRequest, expectObjectDeepEquals } from '@/common';
@@ -37,15 +36,13 @@ describe('linodes/linode/layouts/RebuildPage', () => {
     await page.instance().onSubmit();
 
     const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, '/linode/instances/1234/rebuild', () => {}, null,
-      d => {
-        expect(d.method).to.equal('POST');
-        expectObjectDeepEquals(JSON.parse(d.body), {
-          distribution: 'linode/debian7',
-          root_pass: 'new password',
-        });
-      }
-    );
+    await expectRequest(fn, '/linode/instances/1234/rebuild', {
+      method: 'POST',
+      body: {
+        distribution: 'linode/debian7',
+        root_pass: 'new password',
+      },
+    });
 
     const fn2 = dispatch.secondCall.args[0];
     expectObjectDeepEquals(fn2, push('/linodes/test-linode'));

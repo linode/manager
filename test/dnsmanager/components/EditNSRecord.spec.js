@@ -64,16 +64,15 @@ describe('dnsmanager/components/EditNSRecord', () => {
     expect(close.callCount).to.equal(1);
 
     const fn = dispatch.firstCall.args[0];
-    await expectRequest(
-      fn, `/dns/zones/${currentZone.id}/records/${currentRecord.id}`, undefined, undefined, {
-        method: 'PUT',
-        body: {
-          target: 'ns1.tester1234.com',
-          name: 'tester1234.com',
-          ttl_sec: 3600,
-          type: 'NS',
-        },
-      });
+    await expectRequest(fn, `/dns/zones/${currentZone.id}/records/${currentRecord.id}`, {
+      method: 'PUT',
+      body: {
+        target: 'ns1.tester1234.com',
+        name: 'tester1234.com',
+        ttl_sec: 3600,
+        type: 'NS',
+      },
+    });
   });
 
   it('creates a new NS record and closes the modal', async () => {
@@ -101,15 +100,14 @@ describe('dnsmanager/components/EditNSRecord', () => {
     expect(close.callCount).to.equal(1);
 
     const fn = dispatch.firstCall.args[0];
-    await expectRequest(
-      fn, `/dns/zones/${currentZone.id}/records/`, undefined, undefined, {
-        method: 'POST',
-        body: {
-          target: 'ns1.tester1234.com',
-          name: 'tester1234.com',
-          ttl_sec: 3600,
-          type: 'NS',
-        },
-      });
+    await expectRequest(fn, `/dns/zones/${currentZone.id}/records/`, {
+      method: 'POST',
+      body: {
+        target: 'ns1.tester1234.com',
+        name: 'tester1234.com',
+        ttl_sec: 3600,
+        type: 'NS',
+      },
+    });
   });
 });

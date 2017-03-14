@@ -36,7 +36,7 @@ describe('profile/layouts/DisplayPage', () => {
     expect(dispatch.calledOnce).to.equal(true);
     const fn = dispatch.firstCall.args[0];
 
-    await expectRequest(fn, '/account/profile', undefined, undefined, {
+    await expectRequest(fn, '/account/profile', {
       method: 'PUT',
       body: { timezone: 'GMT' },
     });
@@ -59,7 +59,7 @@ describe('profile/layouts/DisplayPage', () => {
     expect(dispatch.calledOnce).to.equal(true);
     const fn = dispatch.firstCall.args[0];
 
-    await expectRequest(fn, '/account/profile', undefined, undefined, {
+    await expectRequest(fn, '/account/profile', {
       method: 'PUT',
       body: { email: 'example2@domain.com' },
     });

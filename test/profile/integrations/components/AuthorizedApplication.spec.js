@@ -1,27 +1,26 @@
 import React from 'react';
 import sinon from 'sinon';
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import { expect } from 'chai';
 
+import { OAUTH_SCOPES, OAUTH_SUBSCOPES } from '~/constants';
 import AuthorizedApplication, {
   title,
 } from '~/profile/integrations/components/AuthorizedApplication';
 import { api } from '@/data';
-import { OAUTH_SCOPES, OAUTH_SUBSCOPES } from '~/constants';
 
 const { tokens: { tokens } } = api;
 
 describe('profile/integrations/components/AuthorizedApplication', () => {
   const sandbox = sinon.sandbox.create();
+  const dispatch = sandbox.spy();
 
   afterEach(() => {
     sandbox.restore();
   });
 
-  const dispatch = sandbox.spy();
-
   it('renders a token', () => {
-    const page = shallow(
+    const page = mount(
       <AuthorizedApplication
         dispatch={dispatch}
         label={tokens[2].client.label}
@@ -49,7 +48,7 @@ describe('profile/integrations/components/AuthorizedApplication', () => {
   });
 
   it('renders a limited token', () => {
-    const page = shallow(
+    const page = mount(
       <AuthorizedApplication
         dispatch={dispatch}
         label={tokens[3].client.label}

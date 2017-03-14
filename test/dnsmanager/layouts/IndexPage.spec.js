@@ -75,8 +75,6 @@ describe('dnsmanager/layouts/IndexPage', () => {
     dispatch.reset();
     modal.find('.btn-default').simulate('click');
     const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, '/dns/zones/1', undefined, undefined, {
-      method: 'DELETE',
-    });
+    await expectRequest(fn, '/dns/zones/1', { method: 'DELETE' });
   });
 });

@@ -64,16 +64,15 @@ describe('dnsmanager/components/EditCNAMERecord', () => {
     expect(close.callCount).to.equal(1);
 
     const fn = dispatch.firstCall.args[0];
-    await expectRequest(
-      fn, `/dns/zones/${currentZone.id}/records/${currentRecord.id}`, undefined, undefined, {
-        method: 'PUT',
-        body: {
-          name: 'www.tester1234.com',
-          target: 'www.othertester1234.com',
-          ttl_sec: 3600,
-          type: 'CNAME',
-        },
-      });
+    await expectRequest(fn, `/dns/zones/${currentZone.id}/records/${currentRecord.id}`, {
+      method: 'PUT',
+      body: {
+        name: 'www.tester1234.com',
+        target: 'www.othertester1234.com',
+        ttl_sec: 3600,
+        type: 'CNAME',
+      },
+    });
   });
 
   it('creates a new CNAME record and closes the modal', async () => {
@@ -101,15 +100,14 @@ describe('dnsmanager/components/EditCNAMERecord', () => {
     expect(close.callCount).to.equal(1);
 
     const fn = dispatch.firstCall.args[0];
-    await expectRequest(
-      fn, `/dns/zones/${currentZone.id}/records/`, undefined, undefined, {
-        method: 'POST',
-        body: {
-          name: 'www.tester1234.com',
-          target: 'www.othertester1234.com',
-          ttl_sec: 3600,
-          type: 'CNAME',
-        },
-      });
+    await expectRequest(fn, `/dns/zones/${currentZone.id}/records/`, {
+      method: 'POST',
+      body: {
+        name: 'www.tester1234.com',
+        target: 'www.othertester1234.com',
+        ttl_sec: 3600,
+        type: 'CNAME',
+      },
+    });
   });
 });

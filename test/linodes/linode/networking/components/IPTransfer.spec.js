@@ -112,17 +112,16 @@ describe('linodes/linode/networking/components/IPTransfer', () => {
     expect(dispatch.callCount).to.equal(6);
 
     let fn = dispatch.getCall(0).args[0];
-    await expectRequest(
-      fn, '/networking/ip-assign', undefined, undefined, {
-        method: 'POST',
-        body: {
-          datacenter: testLinode.datacenter.id,
-          assignments: [
+    await expectRequest(fn, '/networking/ip-assign', {
+      method: 'POST',
+      body: {
+        datacenter: testLinode.datacenter.id,
+        assignments: [
             { address: ipA.address, linode_id: ipB.linode_id },
-            { address: ipB.address, linode_id: ipA.linode_id },
-          ],
-        },
-      });
+          { address: ipB.address, linode_id: ipA.linode_id },
+        ],
+      },
+    });
 
     fn = dispatch.getCall(1).args[0];
     await expectRequest(fn, `/linode/instances/${ipA.linode_id}`);

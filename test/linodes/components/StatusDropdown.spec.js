@@ -93,10 +93,7 @@ describe('linodes/components/StatusDropdown', () => {
 
     dropdown.find('.StatusDropdown-item').first().simulate('mousedown');
     const reboot = dispatch.firstCall.args[0];
-    await expectRequest(reboot, '/linode/instances/1235/reboot',
-      () => {}, null, options => {
-        expect(options.method).to.equal('POST');
-      });
+    await expectRequest(reboot, '/linode/instances/1235/reboot', { method: 'POST' });
   });
 
   it('is in a rebooting state, progressbar should show up', async () => {
