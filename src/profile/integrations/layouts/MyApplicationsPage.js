@@ -20,7 +20,7 @@ export class MyApplicationsPage extends Component {
     }
   }
 
-  renderCreateOAuthClient() {
+  renderCreateOAuthClient = () => {
     const { dispatch } = this.props;
     dispatch(showModal('Create an OAuth Client', (
       <CreateApplication
@@ -39,7 +39,7 @@ export class MyApplicationsPage extends Component {
       <div>
         <header className="NavigationHeader clearfix">
           <Button
-            onClick={() => this.renderCreateOAuthClient()}
+            onClick={this.renderCreateOAuthClient}
             className="float-sm-right"
           >
             Create an OAuth Client
@@ -52,8 +52,8 @@ export class MyApplicationsPage extends Component {
             </div>
            ) : (
             <CreateHelper
-              label="OAuth Client"
-              href="/profile/applications/create"
+              label="applications"
+              onClick={this.renderCreateOAuthClient}
               linkText="Create an OAuth Client"
             />
            )}
