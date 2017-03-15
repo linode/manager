@@ -2,13 +2,12 @@ import React, { PropTypes, Component } from 'react';
 
 import _ from 'lodash';
 import { Card } from '~/components/cards';
-import { Form, FormGroup, SubmitButton, Checkbox } from '~/components/form';
-import { Link } from '~/components/Link';
+import { Form, FormGroup, SubmitButton } from '~/components/form';
 import { Table } from '~/components/tables';
 import {
   CheckboxCell,
   LinkCell,
-  IPRdnsCell
+  IPRdnsCell,
 } from '~/components/tables/cells';
 import { ErrorSummary, reduceErrors } from '~/errors';
 import { setShared } from '~/api/linodes';
@@ -54,6 +53,15 @@ export default class IPSharing extends Component {
     this.setState({ saving: false });
   }
 
+  onChange(record) {
+    this.setState({
+      checked: {
+        ...this.state.checked,
+        [record.ip.address]: !this.state.checked[record.ip.address],
+      },
+    });
+  }
+
   _componentWillReceiveProps(_setState) {
     const setState = _setState || this.setState.bind(this);
     return (nextProps) => {
@@ -64,12 +72,6 @@ export default class IPSharing extends Component {
       });
       setState({ checked });
     };
-  }
-
-  onChange(record) {
-    this.setState({
-      checked: { ...checked, [record.ip.address]: !checked[record.ip.address] }
-    });
   }
 
   formatRows() {
@@ -111,7 +113,7 @@ export default class IPSharing extends Component {
                   cellComponent: LinkCell,
                   hrefFn: (record) => {
                     return `/linodes/${record.linode.label}`;
-                  }
+                  },
                 },
               ]}
               data={data}

@@ -10,8 +10,8 @@ export default function BackupsCell(props) {
     <LinkCell className="BackupsCell" column={column} record={record}>
       {record.backups.enabled ? 'View Backups' : 'Enable Backups'}
     </LinkCell>
-  )
-};
+  );
+}
 
 BackupsCell.propTypes = {
   column: PropTypes.object.isRequired,

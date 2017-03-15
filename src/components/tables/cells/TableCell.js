@@ -3,7 +3,7 @@ import React, { PropTypes } from 'react';
 
 export default function TableCell(props) {
   const { column, formatFn, record } = props;
-  let className = column.className || props.className || '';
+  const className = column.className || props.className || '';
 
   // TODO: dynamic class name based on column type ( numeric/text/etc )
   let children = props.children;
@@ -22,6 +22,8 @@ export default function TableCell(props) {
 }
 
 TableCell.propTypes = {
+  children: PropTypes.node,
+  className: PropTypes.string,
   column: PropTypes.shape({
     className: PropTypes.string,
     dataKey: PropTypes.string,

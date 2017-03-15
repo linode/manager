@@ -3,7 +3,7 @@ import React, { PropTypes } from 'react';
 import TableCell from './TableCell';
 
 
-export default function RawLinkCell(props) {
+export default function AnchorCell(props) {
   const { column, record } = props;
   const {
     hrefFn,
@@ -23,10 +23,11 @@ export default function RawLinkCell(props) {
         {props.children || record[textKey]}
       </a>
     </TableCell>
-  )
-};
+  );
+}
 
-RawLinkCell.propTypes = {
+AnchorCell.propTypes = {
+  children: PropTypes.node,
   column: PropTypes.shape({
     hrefFn: PropTypes.func.isRequired,
     onClick: PropTypes.func,

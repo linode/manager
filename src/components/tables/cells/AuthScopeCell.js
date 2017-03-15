@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 
 import _ from 'lodash';
+import { OAUTH_SUBSCOPES } from '~/constants';
 import TableCell from './TableCell';
 
 function renderScope(scopesRequested, currentScope, currentSubscope) {
@@ -48,15 +49,15 @@ export default function AuthScopeCell(props) {
     <TableCell column={column} record={record}>
       {renderScope(record.scopes, record.scope, column.subscope)}
     </TableCell>
-  )
-};
+  );
+}
 
 AuthScopeCell.propTypes = {
   column: PropTypes.shape({
-    subscope: PropTypes.string.isRequired
+    subscope: PropTypes.string.isRequired,
   }),
   record: PropTypes.shape({
     scopes: PropTypes.string.isRequired,
     scope: PropTypes.string.isRequired,
-  })
+  }),
 };

@@ -1,4 +1,4 @@
-import React  from 'react';
+import React, { PropTypes } from 'react';
 
 import { flags } from '~/assets';
 
@@ -17,3 +17,7 @@ export default function Datacenter(props) {
     </span>
   );
 }
+
+Datacenter.propTypes = {
+  obj: PropTypes.object,
+};

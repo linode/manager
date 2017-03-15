@@ -9,7 +9,6 @@ import { Link } from '~/components/Link';
 import { Card } from '~/components/cards';
 import { Table } from '~/components/tables';
 import { ButtonCell } from '~/components/tables/cells';
-import { Button } from '~/components/buttons';
 import { NodebalancerStatusReadable } from '~/constants';
 import Datacenter from '~/linodes/components/Datacenter';
 

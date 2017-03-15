@@ -21,7 +21,7 @@ describe('dnsmanager/layouts/IndexPage', () => {
   const dispatch = sandbox.spy();
 
   it('renders a list of DNS Zones', () => {
-    const page = shallow(
+    const page = mount(
       <IndexPage
         dispatch={dispatch}
         selected={{}}
@@ -31,16 +31,18 @@ describe('dnsmanager/layouts/IndexPage', () => {
 
     const zone = page.find('.Table-row');
     // + 1 for the group
-    expect(zone.length).to.equal(Object.keys(dnszones.dnszones).length + 1);
-    const firstZone = zone.at(1);
+    expect(zone.length).to.equal(Object.keys(dnszones.dnszones).length);
+    const firstZone = zone.at(0);
     expect(firstZone.find('Link').props().to)
       .to.equal('/dnsmanager/example.com');
     expect(firstZone.find('td').at(1).text())
-      .to.equal('master zone');
+      .to.equal('example.com');
+    expect(firstZone.find('td').at(2).text())
+      .to.equal('master');
   });
 
   it('shows the delete modal when delete is pressed', () => {
-    const page = shallow(
+    const page = mount(
       <IndexPage
         dispatch={dispatch}
         selected={{}}

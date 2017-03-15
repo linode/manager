@@ -1,4 +1,4 @@
-import React  from 'react';
+import React, { PropTypes } from 'react';
 
 
 export default function PlanStyle(props) {
@@ -15,3 +15,7 @@ export default function PlanStyle(props) {
     </span>
   );
 }
+
+PlanStyle.propTypes = {
+  plan: PropTypes.object,
+};

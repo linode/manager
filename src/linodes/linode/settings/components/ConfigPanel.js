@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react';
 
-import { Link } from 'react-router';
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import { ConfirmModalBody } from '~/components/modals';
 import { linodes } from '~/api';
@@ -35,7 +34,7 @@ export class ConfigPanel extends Component {
         Are you sure you want to delete this config?
         This operation cannot be undone.
       </ConfirmModalBody>
-    ))
+    ));
   }
 
   renderConfigContent(linode, configs) {
@@ -53,12 +52,17 @@ export class ConfigPanel extends Component {
       <Table
         className="ConfigPanel-config Table--secondary"
         columns={[
-          { cellComponent: LinkCell, hrefFn: (config) => { return `/linodes/${linode.label}/settings/advanced/configs/${config.id}`; }},
+          {
+            cellComponent: LinkCell,
+            hrefFn: (config) => {
+              return `/linodes/${linode.label}/settings/advanced/configs/${config.id}`;
+            },
+          },
           {
             cellComponent: ButtonCell,
             onClick: (config) => { this.deleteConfig(linode, config); },
             text: 'Delete',
-          }
+          },
         ]}
         data={configs}
       />

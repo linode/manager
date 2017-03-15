@@ -12,8 +12,8 @@ export default function ButtonCell(props) {
     <TableCell column={column} record={record}>
       <Button onClick={() => { onClick(record); }}>{text}</Button>
     </TableCell>
-  )
-};
+  );
+}
 
 ButtonCell.propTypes = {
   column: PropTypes.shape({

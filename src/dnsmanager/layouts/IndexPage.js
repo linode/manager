@@ -11,15 +11,13 @@ import { Table } from '~/components/tables';
 import {
   ButtonCell,
   CheckboxCell,
-  LinkCell
+  LinkCell,
 } from '~/components/tables/cells';
 import { dnszones } from '~/api';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 import { toggleSelected, toggleSelectAll } from '../actions';
 import CreateHelper from '~/components/CreateHelper';
-import { Checkbox } from '~/components/form';
-import { Button } from '~/components/buttons';
 import Dropdown from '~/components/Dropdown';
 
 export class IndexPage extends Component {
@@ -132,14 +130,18 @@ export class IndexPage extends Component {
             {
               className: 'RowLabelCell',
               cellComponent: LinkCell,
-              hrefFn: (zone) => `/dnsmanager/${zone.dnszone}`, textKey: 'dnszone'
+              hrefFn: (zone) => `/dnsmanager/${zone.dnszone}`, textKey: 'dnszone',
             },
             { dataKey: 'type' },
-            { cellComponent: ButtonCell, text: 'Delete', onClick: (zone) => { this.deleteZone(zone.id); } }
+            {
+              cellComponent: ButtonCell,
+              text: 'Delete',
+              onClick: (zone) => { this.deleteZone(zone.id); },
+            },
           ],
           data: _zones,
           disableHeader: true,
-        }
+        };
       }), zoneGroup => zoneGroup.group);
 
     return (

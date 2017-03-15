@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react';
 
-import { Checkbox } from '~/components/form';
 import { Table } from '~/components/tables';
 import {
   CheckboxCell,

@@ -22,10 +22,11 @@ export default function LinkCell(props) {
         {props.children || record[textKey]}
       </Link>
     </TableCell>
-  )
-};
+  );
+}
 
 LinkCell.propTypes = {
+  children: PropTypes.node,
   className: PropTypes.string,
   column: PropTypes.shape({
     hrefFn: PropTypes.func.isRequired,

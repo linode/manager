@@ -1,12 +1,11 @@
 import React, { Component, PropTypes } from 'react';
 import _ from 'lodash';
-import moment from 'moment';
 
 import { Card } from '~/components/cards';
 import Tabs from '~/components/Tabs';
 import { Table } from '~/components/tables';
 import {
-  RawLinkCell,
+  AnchorCell,
   LastBackupCell,
 } from '~/components/tables/cells';
 
@@ -63,12 +62,11 @@ export default class Source extends Component {
             className="Table--secondary"
             columns={[
               {
-                cellComponent: RawLinkCell,
+                cellComponent: AnchorCell,
                 label: 'Linode',
                 onClick: (record) => {
-                  e.preventDefault();
                   this.setState({ selectedLinode: record.id });
-                }
+                },
               },
               { cellComponent: LastBackupCell, label: 'Last backup' },
             ]}

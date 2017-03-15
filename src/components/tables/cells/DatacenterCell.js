@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 
-import { TableCell } from '~/components/tables/cells';
+import TableCell from './TableCell';
 import Datacenter from '~/linodes/components/Datacenter';
 
 
@@ -10,10 +10,10 @@ export default function DatacenterCell(props) {
 
   return (
     <TableCell column={column} record={record}>
-     <Datacenter obj={record} />
+      <Datacenter obj={record} />
     </TableCell>
-  )
-};
+  );
+}
 
 DatacenterCell.propTypes = {
   column: PropTypes.object.isRequired,

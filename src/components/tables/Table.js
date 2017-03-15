@@ -1,54 +1,59 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 
 import TableHeaderRow from './TableHeaderRow';
 import TableRow from './TableRow';
 
 
-export default class Table extends Component {
+export default function Table(props) {
+  const {
+    className,
+    columns,
+    data,
+    disableHeader,
+    id,
+    onToggleSelect,
+    selected = {},
+  } = props;
 
-  render() {
-    const {
-      className,
-      columns,
-      data,
-      disableHeader,
-      id,
-      onToggleSelect,
-      selected = {},
-    } = this.props;
+  let tableHeader;
+  if (!disableHeader) {
+    tableHeader = (
+      <thead>
+        <TableHeaderRow columns={columns} />
+      </thead>
+    );
+  } else {
+    tableHeader = (<thead></thead>);
+  }
 
-    let tableHeader;
-    if (!disableHeader) {
-      tableHeader = (
-        <thead>
-          <TableHeaderRow columns={columns} />
-        </thead>
-      );
-    } else {
-      tableHeader = (<thead></thead>);
-    }
-
-    return (
+  let tableContent;
+  if (!data.length) {
+    tableContent = (<p>No records found.</p>);
+  } else {
+    tableContent = (
       <table id={id} className={`Table ${className}`}>
         {tableHeader}
         <tbody>
-          {data.map(function (record, index) {
-            return (
-              <TableRow
-                // assumes that if one record in the collection does not have an id, than no records should have an
-                // id, and all keys will fallback to index usage
-                key={record.id || index}
-                columns={columns}
-                record={record}
-                onToggleSelect={onToggleSelect}
-                selected={selected[record.id] ? true : false}
-              />
-            );
-          })}
+        {data.map(function (record, index) {
+          return (
+            <TableRow
+              // assumes that if one record in the collection does not have an id,
+              // than no records should have an id, and all keys will fallback to
+              // index usage
+              key={record.id || index}
+              columns={columns}
+              record={record}
+              onToggleSelect={onToggleSelect}
+              selected={selected[record.id]}
+            />
+          );
+        })}
         </tbody>
       </table>
     );
   }
+
+  return tableContent;
 }
 
 Table.propTypes = {

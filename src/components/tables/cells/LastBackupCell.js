@@ -13,8 +13,8 @@ export default function LastBackupCell(props) {
         moment(record.backups.last_backup).format('dddd, MMMM D YYYY LT')
         : 'Unknown'}
     </TableCell>
-  )
-};
+  );
+}
 
 LastBackupCell.propTypes = {
   column: PropTypes.object.isRequired,

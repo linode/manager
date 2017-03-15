@@ -172,7 +172,7 @@ export class ZonePage extends Component {
           ttl_sec: formatDNSSeconds(ttlSec, defaultTTLSec),
         };
       });
-    }
+    };
 
     const nsRecords = formatSeconds(this.formatNSRecords());
     const mxRecords = formatSeconds(this.formatMXRecords());
@@ -200,13 +200,12 @@ export class ZonePage extends Component {
           </div>
         </header>
         <div className="container">
-          <Card title="SOA Record">
+          <Card id="soa" title="SOA Record">
             <Table
-              id="soa"
               className="Table--secondary"
               columns={[
                 { dataKey: 'dnszone', label: 'Primary DNS' },
-                { dataKey: 'so_email', label: 'Email' },
+                { dataKey: 'soa_email', label: 'Email' },
                 { dataKey: 'ttl_sec', label: 'Default TTL' },
                 { dataKey: 'refresh_sec', label: 'Refresh Rate' },
                 { dataKey: 'retry_sec', label: 'Retry Rate' },
@@ -216,25 +215,26 @@ export class ZonePage extends Component {
                   text: 'Edit',
                   onClick: () => {
                     this.renderEditRecord('Edit SOA Record', EditSOARecord);
-                  }
+                  },
                 },
               ]}
               data={[soaRecord]}
             />
           </Card>
           <Card
+            id="ns"
             title="NS Records"
             nav={
               <Button
                 onClick={() => {
                   this.renderEditRecord('Add NS Record', EditNSRecord);
-                }}>
+                }}
+              >
                 Add NS Record
               </Button>
             }
           >
             <Table
-              id="ns"
               className="Table--secondary"
               columns={[
                 { dataKey: 'target', label: 'Name Server' },
@@ -250,17 +250,17 @@ export class ZonePage extends Component {
             />
           </Card>
           <Card
+            id="mx"
             title="MX Records"
             nav={
-              <Button onClick={() => {
-                this.renderEditRecord(title, EditMXRecord);
-              }}>
+              <Button
+                onClick={() => { this.renderEditRecord('Add MX Record', EditMXRecord); }}
+              >
                 Add MX Record
               </Button>
             }
           >
             <Table
-              id="mx"
               className="Table--secondary"
               columns={[
                 { dataKey: 'target', label: 'Mail Server' },
@@ -273,17 +273,17 @@ export class ZonePage extends Component {
             />
           </Card>
           <Card
+            id="a"
             title="A/AAAA Records"
             nav={
-              <Button onClick={() => {
-                this.renderEditRecord(title, EditARecord);
-              }}>
+              <Button
+                onClick={() => { this.renderEditRecord('Add A/AAAA Record', EditARecord); }}
+              >
                 Add A/AAAA Record
               </Button>
             }
           >
             <Table
-              id="a"
               className="Table--secondary"
               columns={[
                 { dataKey: 'name', label: 'Hostname' },
@@ -296,17 +296,19 @@ export class ZonePage extends Component {
             />
           </Card>
           <Card
+            id="cname"
             title="CNAME Records"
             nav={
-              <Button onClick={() => {
-                this.renderEditRecord(title, EditCNAMERecord, { id });
-              }}>
+              <Button
+                onClick={() => {
+                  this.renderEditRecord('Add CNAME Record', EditCNAMERecord);
+                }}
+              >
                 Add CNAME Record
               </Button>
             }
           >
             <Table
-              id="cname"
               className="Table--secondary"
               columns={[
                 { dataKey: 'name', label: 'Hostname' },
@@ -319,17 +321,17 @@ export class ZonePage extends Component {
             />
           </Card>
           <Card
+            id="txt"
             title="TXT Records"
             nav={
-              <Button onClick={() => {
-                this.renderEditRecord(title, EditTXTRecord);
-              }}>
+              <Button
+                onClick={() => { this.renderEditRecord('Add TXT Record', EditTXTRecord); }}
+              >
                 Add TXT Record
               </Button>
             }
           >
             <Table
-              id="txt"
               className="Table--secondary"
               columns={[
                 { dataKey: 'name', label: 'Name' },
@@ -342,15 +344,17 @@ export class ZonePage extends Component {
             />
           </Card>
           <Card
+            id="srv"
             title="SRV Records"
-            nav={<Button onClick={() => {
-              this.renderEditRecord(title, EditSRVRecord);
-            }}>
-              Add SRV Record
-            </Button>}
+            nav={
+              <Button
+                onClick={() => { this.renderEditRecord('Add SRV Record', EditSRVRecord); }}
+              >
+                Add SRV Record
+              </Button>
+            }
           >
             <Table
-              id="srv"
               className="Table--secondary"
               columns={[
                 { dataKey: 'service', label: 'Service' },

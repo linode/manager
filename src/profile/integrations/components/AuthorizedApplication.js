@@ -1,5 +1,7 @@
 import React, { PropTypes, Component } from 'react';
+
 import moment from 'moment';
+import _ from 'lodash';
 
 import { API_ROOT } from '~/constants';
 import { Button } from '~/components/buttons/';
@@ -37,7 +39,7 @@ export default class AuthorizedApplication extends Component {
     expireValue = expireValue[0].toUpperCase() + expireValue.substring(1);
 
     const scopeData = OAUTH_SCOPES.map(function (scope) {
-      return{ scopes: scopes, scope: scope };
+      return { scopes: scopes, scope: scope };
     });
 
     return (
@@ -55,7 +57,7 @@ export default class AuthorizedApplication extends Component {
           columns={[
             {
               dataKey: 'scope',
-              formatFn: _.upperFirst,
+              formatFn: _.capitalize,
             },
           ].concat(OAUTH_SUBSCOPES.map((subscope) => {
             return { cellComponent: AuthScopeCell, subscope: subscope };

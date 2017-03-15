@@ -13,7 +13,7 @@ import {
   CheckboxCell,
   DatacenterCell,
   IPAddressCell,
-  LinkCell
+  LinkCell,
 } from '~/components/tables/cells';
 import StatusDropdownCell from '~/linodes/components/StatusDropdownCell';
 
@@ -132,7 +132,7 @@ export class IndexPage extends Component {
             {
               className: 'RowLabelCell',
               cellComponent: LinkCell,
-              hrefFn: (linode) => `/linodes/${linode.label}`
+              hrefFn: (linode) => `/linodes/${linode.label}`,
             },
             { cellComponent: IPAddressCell },
             { cellComponent: DatacenterCell },

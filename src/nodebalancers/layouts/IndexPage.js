@@ -9,14 +9,12 @@ import { nodebalancers } from '~/api';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 import CreateHelper from '~/components/CreateHelper';
-import { Checkbox } from '~/components/form';
-import { Button } from '~/components/buttons';
 import { Table } from '~/components/tables';
 import {
   ButtonCell,
   DatacenterCell,
   IPAddressCell,
-  LinkCell
+  LinkCell,
 } from '~/components/tables/cells';
 
 
@@ -71,14 +69,14 @@ export class IndexPage extends Component {
           {
             className: 'RowLabelCell',
             cellComponent: LinkCell,
-            hrefFn: (nodebalancer) => { return `/nodebalancer/${nodebalancer.label}`; }
+            hrefFn: (nodebalancer) => { return `/nodebalancer/${nodebalancer.label}`; },
           },
           { cellComponent: IPAddressCell },
           { cellComponent: DatacenterCell },
           {
             cellComponent: ButtonCell,
-            onClick: (nodebalancer) => { this.deleteNodeBalancer(nodebalancer.id) },
-            text: 'Delete'
+            onClick: (nodebalancer) => { this.deleteNodeBalancer(nodebalancer.id); },
+            text: 'Delete',
           },
         ]}
         data={data}

@@ -29,8 +29,8 @@ export default function NameserversCell(props) {
     <TableCell column={column} record={record}>
       {actions}
     </TableCell>
-  )
-};
+  );
+}
 
 NameserversCell.propTypes = {
   column: PropTypes.shape({

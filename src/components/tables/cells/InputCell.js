@@ -1,25 +1,22 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 
 import { Input } from '~/components/form';
 import TableCell from './TableCell';
 
 
-export default class InputCell extends Component {
+export default function InputCell(props) {
+  const { column, onChange, placeholder, record, value } = props;
 
-  render() {
-    const { column, onChange, placeholder, record, value } = this.props;
-
-    return (
-      <TableCell column={column} record={record}>
-        <Input
-          onChange={() => { onChange(record, e.target.value); }}
-          placeholder={placeholder}
-          value={value}
-        />
-      </TableCell>
-    );
-  }
-};
+  return (
+    <TableCell column={column} record={record}>
+      <Input
+        onChange={(e) => { onChange(record, e.target.value); }}
+        placeholder={placeholder}
+        value={value}
+      />
+    </TableCell>
+  );
+}
 
 InputCell.propTypes = {
   column: PropTypes.object.isRequired,

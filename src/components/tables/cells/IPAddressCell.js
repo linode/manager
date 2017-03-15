@@ -17,8 +17,8 @@ export default function IPAddressCell(props) {
       {record.ipv4}
       {ipv6}
     </TableCell>
-  )
-};
+  );
+}
 
 IPAddressCell.propTypes = {
   column: PropTypes.object.isRequired,
