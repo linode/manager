@@ -80,7 +80,7 @@ export class IndexPage extends Component {
                       networkHelper: !networkHelper,
                     })}
                     label="Network Helper automatically deposits a static
-                      networking configuration in to your Linode at boot."
+                      networking configuration into your Linode at boot."
                   />
                 </div>
               </div>
