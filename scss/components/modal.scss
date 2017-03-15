@@ -14,14 +14,14 @@
 }
 
 .Modal {
-    position: absolute;
-    left: 50%;
     width: 500px;
-    margin-left: -250px;
-    margin-top: $main-padding-tb;
+    margin: $main-padding-tb auto;
+    max-height: calc(100% - #{2 * $main-padding-tb});
     box-shadow: $box-shadow;
     background: $white;
-    display: block;
+    display: flex;
+    flex-direction: column;
+    overflow-y: hidden;
 
     &-header {
         background: $gray;
@@ -36,6 +36,7 @@
 
     &-body {
         padding: $main-padding-tb $main-padding-lr;
+        overflow-y: auto;
     }
 
     &-footer {
