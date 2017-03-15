@@ -67,26 +67,21 @@ export class IndexPage extends Component {
         <div className="container">
           <Card>
             <Form onSubmit={() => this.onSubmit()}>
-              <div className="row">
-              </div>
+              <p>
+                This page controls the default settings for all users.
+              </p>
               <div className="row">
                 <label className="col-sm-3 row-label">Enable Network Helper</label>
                 <div className="col-sm-9">
-                <Checkbox
-                  id="networkHelper"
-                  checked={networkHelper}
-                  onChange={() => this.setState({
-                    networkHelper: !networkHelper,
-                  })}
-                  label="Network Helper automatically deposits a static
-                    networking configuration in to your Linode at boot."
-                />
-                </div>
-                <div className="offset-sm-3 col-sm-9">
-                  <small className="text-muted">
-                    This controls the default setting for the Network Helper
-                    on newly created Configuration Profiles.
-                  </small>
+                  <Checkbox
+                    id="networkHelper"
+                    checked={networkHelper}
+                    onChange={() => this.setState({
+                      networkHelper: !networkHelper,
+                    })}
+                    label="Network Helper automatically deposits a static
+                      networking configuration in to your Linode at boot."
+                  />
                 </div>
               </div>
               <div className="row">
