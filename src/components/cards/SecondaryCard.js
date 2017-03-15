@@ -6,7 +6,7 @@ export default function SecondaryCard(props) {
       <header className="SecondaryCard-header clearfix">
         {props.icon ? (
           <img
-            className="SecondaryCard-icon float-sm-left"
+            className={`SecondaryCard-icon float-sm-left ${props.iconClass}`}
             src={props.icon}
             alt="Client thumbnail"
           />) : null}
@@ -25,6 +25,7 @@ SecondaryCard.propTypes = {
   nav: PropTypes.node,
   id: PropTypes.string,
   icon: PropTypes.string,
+  iconClass: PropTypes.string,
   children: PropTypes.node,
 };
 

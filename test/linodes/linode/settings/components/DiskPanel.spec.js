@@ -184,8 +184,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
           {...props}
           dispatch={dispatch}
         />);
-      modal.find('.LinodesLinodeSettingsComponentsEditModal-cancel').
-        simulate('click');
+      modal.find('.btn-cancel').simulate('click');
       expect(dispatch.calledOnce).to.equal(true);
       expect(dispatch.calledWith(hideModal())).to.equal(true);
     });
@@ -217,16 +216,15 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
       expect(dispatch.calledThrice).to.equal(true);
       const resize = dispatch.firstCall.args[0];
       const put = dispatch.secondCall.args[0];
-      await expectRequest(resize, '/linode/instances/1236/disks/12345/resize',
-        () => {}, null, options => {
-          expect(options.method).to.equal('POST');
-          expect(options.body).to.equal(JSON.stringify({ size: 1234 }));
-        });
-      await expectRequest(put, '/linode/instances/1236/disks/12345',
-        () => {}, null, options => {
-          expect(options.method).to.equal('PUT');
-          expect(options.body).to.equal(JSON.stringify({ label: 'New label' }));
-        });
+      await expectRequest(resize, '/linode/instances/1236/disks/12345/resize', {
+        method: 'POST',
+        body: { size: 1234 },
+      });
+
+      await expectRequest(put, '/linode/instances/1236/disks/12345', {
+        method: 'PUT',
+        body: { label: 'New label' },
+      });
     });
 
     it('should handle errors when createDisk is called', async () => {
@@ -278,8 +276,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
           dispatch={() => {}}
         />);
       expect(modal.find('p').length).to.equal(1);
-      expect(modal.find('.LinodesLinodeSettingsComponentsDeleteModal-cancel').
-        length).to.equal(1);
+      expect(modal.find('.btn-cancel').length).to.equal(1);
       expect(modal.find('button').length).to.equal(2);
     });
 
@@ -290,8 +287,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
           {...props}
           dispatch={dispatch}
         />);
-      modal.find('.LinodesLinodeSettingsComponentsDeleteModal-cancel').
-        simulate('click');
+      modal.find('.btn-cancel').simulate('click');
       expect(dispatch.calledOnce).to.equal(true);
       expect(dispatch.calledWith(hideModal())).to.equal(true);
     });
@@ -306,8 +302,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
       await modal.find('.btn-default').simulate('submit');
       expect(dispatch.calledTwice).to.equal(true);
       const fn = dispatch.firstCall.args[0];
-      await expectRequest(fn, '/linode/instances/1236/disks/12345',
-        () => {}, null, { method: 'DELETE' });
+      await expectRequest(fn, '/linode/instances/1236/disks/12345', { method: 'DELETE' });
     });
   });
 
@@ -400,8 +395,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
           {...props}
           dispatch={dispatch}
         />);
-      modal.find('.LinodesLinodeSettingsComponentsAddModal-cancel').
-        simulate('click');
+      modal.find('.btn-cancel').simulate('click');
       expect(dispatch.calledOnce).to.equal(true);
       expect(dispatch.calledWith(hideModal())).to.equal(true);
     });
@@ -430,17 +424,16 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
       await createDisk();
       expect(dispatch.calledTwice).to.equal(true);
       const fn = dispatch.firstCall.args[0];
-      await expectRequest(fn, '/linode/instances/1236/disks/',
-        () => {}, null, options => {
-          expect(options.method).to.equal('POST');
-          expect(JSON.parse(options.body)).to.deep.equal({
-            label: 'Test disk',
-            size: 1024,
-            filesystem: 'ext4',
-            distribution: null,
-            root_pass: '',
-          });
-        });
+      await expectRequest(fn, '/linode/instances/1236/disks/', {
+        method: 'POST',
+        body: {
+          label: 'Test disk',
+          size: 1024,
+          filesystem: 'ext4',
+          distribution: null,
+          root_pass: '',
+        },
+      });
     });
 
     it('should handle errors when createDisk is called', async () => {

@@ -68,10 +68,9 @@ describe('linodes/linode/networking/components/IPSharing', () => {
     expect(dispatch.callCount).to.equal(1);
 
     const fn = dispatch.firstCall.args[0];
-    await expectRequest(
-      fn, `/linode/instances/${testLinode.id}/ips/sharing`, undefined, undefined, {
-        method: 'POST',
-        body: { ips: [someIp.address] },
-      });
+    await expectRequest(fn, `/linode/instances/${testLinode.id}/ips/sharing`, {
+      method: 'POST',
+      body: { ips: [someIp.address] },
+    });
   });
 });

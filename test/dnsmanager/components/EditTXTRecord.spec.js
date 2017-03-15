@@ -64,16 +64,15 @@ describe('dnsmanager/components/EditTXTRecord', () => {
     expect(close.callCount).to.equal(1);
 
     const fn = dispatch.firstCall.args[0];
-    await expectRequest(
-      fn, `/dns/zones/${currentZone.id}/records/${currentRecord.id}`, undefined, undefined, {
-        method: 'PUT',
-        body: {
-          target: 'someval',
-          name: 'somename',
-          ttl_sec: 3600,
-          type: 'TXT',
-        },
-      });
+    await expectRequest(fn, `/dns/zones/${currentZone.id}/records/${currentRecord.id}`, {
+      method: 'PUT',
+      body: {
+        target: 'someval',
+        name: 'somename',
+        ttl_sec: 3600,
+        type: 'TXT',
+      },
+    });
   });
 
   it('creates a new TXT record and closes the modal', async () => {
@@ -101,15 +100,14 @@ describe('dnsmanager/components/EditTXTRecord', () => {
     expect(close.callCount).to.equal(1);
 
     const fn = dispatch.firstCall.args[0];
-    await expectRequest(
-      fn, `/dns/zones/${currentZone.id}/records/`, undefined, undefined, {
-        method: 'POST',
-        body: {
-          target: 'someval',
-          name: 'somename',
-          ttl_sec: 3600,
-          type: 'TXT',
-        },
-      });
+    await expectRequest(fn, `/dns/zones/${currentZone.id}/records/`, {
+      method: 'POST',
+      body: {
+        target: 'someval',
+        name: 'somename',
+        ttl_sec: 3600,
+        type: 'TXT',
+      },
+    });
   });
 });

@@ -5,6 +5,9 @@
     &-header,
     &-body {
         padding: 15px 20px;
+        &-label {
+            color: $light-black; 
+        }
     }
 
     &-header {
@@ -15,5 +18,10 @@
     &-icon {
         margin-right: 15px;
         display: none;
+    }
+
+    .user-icon {
+        height: 50px;
+        width: 50px;
     }
 }

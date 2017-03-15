@@ -60,7 +60,7 @@ describe('linodes/linode/networking/layouts/ReverseDNSPage', () => {
     await row.find('#reset-0').props().onClick();
     expect(dispatch.callCount).to.equal(1);
     const fn = dispatch.firstCall.args[0];
-    expectRequest(fn, `/linode/instances/${testLinode.id}/ips/${address}`, undefined, undefined, {
+    await expectRequest(fn, `/linode/instances/${testLinode.id}/ips/${address}`, {
       method: 'PUT',
       body: { rdns: null },
     });

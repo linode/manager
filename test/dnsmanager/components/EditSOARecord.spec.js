@@ -76,7 +76,7 @@ describe('dnsmanager/components/EditSOARecord', () => {
     expect(close.callCount).to.equal(1);
 
     const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, `/dns/zones/${currentZone.id}`, undefined, undefined, {
+    await expectRequest(fn, `/dns/zones/${currentZone.id}`, {
       method: 'PUT',
       body: {
         dnszone: 'tester1234.com',
