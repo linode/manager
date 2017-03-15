@@ -57,9 +57,14 @@ h5, h6 {
   @extend .font-normal;
 }
 
-a {
-  color: $blue;
-  text-decoration: none;
+a, a.force-link:not([href]):not([tabindex]) {
+    color: $blue;
+    text-decoration: none;
+    cursor: pointer;
+
+    &:hover, &:focus, &:active {
+        text-decoration: underline;
+    }
 }
 
 a > i.fa {
