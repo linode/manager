@@ -88,7 +88,7 @@
         }
     }
 
-    &.btn-link, &.btn-link:not([href]) {
+    &.btn-link {
         padding: 0;
         border: 0;
         background: transparent;
@@ -103,9 +103,6 @@
         &:not([disabled]):hover {
             text-decoration: underline;
             color: $blue;
-        }
-        &+& {
-          margin-left: 13px;
         }
     }
 
@@ -141,9 +138,9 @@
         }
     }
 
-    &.btn-cancel {
-        margin-left: 5px;
-        padding: 8px;
+    &.btn-cancel, &.btn-cancel:not([href]) {
+        margin-left: 10px;
+        display: inline-block;
     }
 
     &.btn-secondary {
