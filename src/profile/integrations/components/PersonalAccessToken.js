@@ -1,6 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 import moment from 'moment';
 
+import _ from 'lodash';
 import { API_ROOT } from '~/constants';
 import Dropdown from '~/components/Dropdown';
 import EditPersonalAccessToken from './EditPersonalAccessToken';
