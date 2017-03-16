@@ -9,7 +9,7 @@ export default function IPAddressCell(props) {
   const ip = ipKey ? record[ipKey] : record;
   let str = `${ip.address}`;
   if (ip.rdns) {
-    str += `(${ip.rdns})`;
+    str += ` (${ip.rdns})`;
   }
 
   return (
