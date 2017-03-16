@@ -75,7 +75,7 @@ describe('linodes/linode/networking/components/IPTransfer', () => {
     const notLinodeB = Object.values(linodesInDatacenter).filter(
       ({ id }) => id !== linodeB.id)[0];
 
-    select.simulate('change', { target: { name: 'selectedOtherLinode', value: notLinodeB.id } });
+    select.simulate('change', { record: { name: 'selectedOtherLinode', value: notLinodeB.id } });
 
     const rowsB = sectionB.find('.Table-row');
     expect(rowsB.length).to.equal(notLinodeB._ips.ipv4.public.length);
@@ -95,19 +95,19 @@ describe('linodes/linode/networking/components/IPTransfer', () => {
       />
     );
 
-    const sectionAFirstIp = page.find('#sectionA .Table-row').at(0);
-    const addressA = sectionAFirstIp.find('.Table-cell').at(1).text()
+    const sectionAFirstIp = page.find('#sectionA .Table-row').at(1);
+    const addressA = sectionAFirstIp.find('.Table-cell').at(0).text()
                                     .split(' ')[0];
     const ipA = allIps[addressA];
-    sectionAFirstIp.find('Checkbox').props().onChange({ target: { checked: true }});
+    sectionAFirstIp.find('input').simulate('change');
 
-    const sectionBFirstIp = page.find('#sectionB .Table-row').at(0);
-    const addressB = sectionBFirstIp.find('.Table-cell').at(1).text()
+    const sectionBFirstIp = page.find('#sectionB .Table-row').at(1);
+    const addressB = sectionBFirstIp.find('.Table-cell').at(0).text()
                                     .split(' ')[0];
     const ipB = allIps[addressB];
-    sectionBFirstIp.find('Checkbox').props().onChange({ target: { checked: true }});
+    sectionBFirstIp.find('input').simulate('change')
 
-    await page.find('Form').props().onSubmit();
+    await page.find('form').simulate('submit');
 
     expect(dispatch.callCount).to.equal(6);
 

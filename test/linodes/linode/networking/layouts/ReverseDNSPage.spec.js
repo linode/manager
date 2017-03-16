@@ -46,26 +46,6 @@ describe('linodes/linode/networking/layouts/ReverseDNSPage', () => {
     }
   });
 
-  it('resets the rdns', async () => {
-    const page = mount(
-      <ReverseDNSPage
-        dispatch={dispatch}
-        linodes={linodes}
-        params={{ linodeLabel: testLinode.label }}
-      />
-    );
-
-    const row = page.find('.Table-row').at(0);
-    const address = row.find('.Table-column').at(0).text();
-    await row.find('#reset-0').props().onClick();
-    expect(dispatch.callCount).to.equal(1);
-    const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, `/linode/instances/${testLinode.id}/ips/${address}`, {
-      method: 'PUT',
-      body: { rdns: null },
-    });
-  });
-
   it('opens the edit modal', async () => {
     const page = mount(
       <ReverseDNSPage
