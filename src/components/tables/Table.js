@@ -11,6 +11,7 @@ export default function Table(props) {
     data,
     disableHeader,
     id,
+    noDataMessage,
     onToggleSelect,
     selected = {},
   } = props;
@@ -28,7 +29,7 @@ export default function Table(props) {
 
   let tableContent;
   if (!data.length) {
-    tableContent = (<p>No records found.</p>);
+    tableContent = (<p>{noDataMessage}</p>);
   } else {
     tableContent = (
       <table id={id} className={`Table ${className}`}>
@@ -69,4 +70,5 @@ Table.propTypes = {
 Table.defaultProps = {
   className: '',
   disableHeader: false,
+  noDataMessage: 'No records found.',
 };
