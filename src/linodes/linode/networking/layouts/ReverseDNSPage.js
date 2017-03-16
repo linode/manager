@@ -80,6 +80,7 @@ export class ReverseDNSPage extends Component {
     return (
       <Card title="Reverse DNS">
         <Table
+          className='Table--secondary'
           columns={columns}
           data={records}
         />

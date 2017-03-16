@@ -14,6 +14,7 @@ export default function IPList(props) {
   return (
     <div>
       <Table
+        className='Table--secondary'
         columns={[
           { cellComponent: CheckboxCell, onChange: (ip) => { onChange(ip.address); } },
           { cellComponent: IPRdnsCell },
