@@ -8,8 +8,8 @@ export default function NewMasterZone(props) {
   return (
     <Form onSubmit={props.onSubmit}>
       <FormGroup errors={props.errors} name="dnszone" className="row">
-        <label className="col-sm-2 col-form-label">Domain:</label>
-        <div className="col-sm-6">
+        <label className="col-sm-2 col-form-label">Domain</label>
+        <div className="col-sm-10">
           <Input
             placeholder="mydomain.net"
             value={props.dnszone}
@@ -19,8 +19,8 @@ export default function NewMasterZone(props) {
         <FormGroupError errors={props.errors} name="dnszone" />
       </FormGroup>
       <FormGroup errors={props.errors} name="soa_email" className="row">
-        <label className="col-sm-2 col-form-label">SOA email:</label>
-        <div className="col-sm-6">
+        <label className="col-sm-2 col-form-label">SOA email</label>
+        <div className="col-sm-10">
           <Input
             type="email"
             value={props.soa_email}
@@ -30,8 +30,7 @@ export default function NewMasterZone(props) {
         <FormGroupError errors={props.errors} name="soa_email" />
       </FormGroup>
       <div className="row">
-        <div className="col-sm-2"></div>
-        <div className="col-sm-6">
+        <div className="offset-sm-2 col-sm-10">
           <SubmitButton
             disabled={props.loading}
           >Create</SubmitButton>

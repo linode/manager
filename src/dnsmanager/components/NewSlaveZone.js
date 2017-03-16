@@ -8,7 +8,7 @@ export default function NewSlaveZone(props) {
   return (
     <Form onSubmit={props.onSubmit}>
       <FormGroup errors={props.errors} name="dnszone" className="row">
-        <label className="col-sm-2 col-form-label">Domain:</label>
+        <label className="col-sm-2 col-form-label">Domain</label>
         <div className="col-sm-6">
           <Input
             className="form-control"
@@ -20,11 +20,11 @@ export default function NewSlaveZone(props) {
         <FormGroupError errors={props.errors} name="dnszone" />
       </FormGroup>
       <FormGroup errors={props.errors} name="master_ips" className="row">
-        <label className="col-sm-2 col-form-label">Masters:</label>
-        <div className="col-sm-6">
+        <label className="col-sm-2 col-form-label">Masters</label>
+        <div className="col-sm-10">
           <textarea
             value={props.master_ips.length ? props.master_ips.join(';') : ''}
-            placeholder="127.0.0.1;255.255.255.1"
+            placeholder="172.92.1.4;209.124.103.15"
             onChange={props.onChange('master_ips')}
           />
           <div>
@@ -37,8 +37,7 @@ export default function NewSlaveZone(props) {
         <FormGroupError errors={props.errors} name="master_ips" />
       </FormGroup>
       <div className="row">
-        <div className="col-sm-2"></div>
-        <div className="col-sm-6">
+        <div className="offset-sm-2 col-sm-10">
           <SubmitButton
             disabled={props.loading}
           >Create</SubmitButton>

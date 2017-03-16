@@ -19,4 +19,9 @@
     .row:not(:first-child) {
         margin-top: 10px;
     }
+
+    .SubTabs-container {
+        // Deals with default padding bottom of SubTabs-container
+        padding-bottom: 0;
+    }
 }

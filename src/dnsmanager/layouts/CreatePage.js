@@ -39,6 +39,7 @@ export class CreatePage extends Component {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
+
     dispatch(setTitle('Add a zone'));
   }
 
