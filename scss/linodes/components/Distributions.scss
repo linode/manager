@@ -1,5 +1,6 @@
 .LinodesDistributions {
     @extend .row;
+    margin-bottom: -15px;
 
     &-wrapper {
         @extend .col-sm-3;
