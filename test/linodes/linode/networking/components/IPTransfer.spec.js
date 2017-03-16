@@ -95,21 +95,21 @@ describe('linodes/linode/networking/components/IPTransfer', () => {
       />
     );
 
-    const sectionAFirstIp = page.find('#sectionA .Table-row').at(1);
-    const addressA = sectionAFirstIp.find('.Table-cell').at(0).text()
+    const sectionAFirstIp = page.find('#sectionA .Table-row').at(0);
+    const addressA = sectionAFirstIp.find('.Table-cell').at(1).text()
                                     .split(' ')[0];
     const ipA = allIps[addressA];
     sectionAFirstIp.find('input').simulate('change');
 
-    const sectionBFirstIp = page.find('#sectionB .Table-row').at(1);
-    const addressB = sectionBFirstIp.find('.Table-cell').at(0).text()
+    const sectionBFirstIp = page.find('#sectionB .Table-row').at(0);
+    const addressB = sectionBFirstIp.find('.Table-cell').at(1).text()
                                     .split(' ')[0];
     const ipB = allIps[addressB];
     sectionBFirstIp.find('input').simulate('change')
 
     await page.find('form').simulate('submit');
 
-    expect(dispatch.callCount).to.equal(6);
+    expect(dispatch.callCount).to.equal(2);
 
     let fn = dispatch.getCall(0).args[0];
     await expectRequest(fn, '/networking/ip-assign', {
