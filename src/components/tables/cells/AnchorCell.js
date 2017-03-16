@@ -6,7 +6,6 @@ import TableCell from './TableCell';
 export default function AnchorCell(props) {
   const { column, record } = props;
   const {
-    hrefFn,
     onClick,
     titleKey = 'id',
     textKey = 'label',
@@ -14,14 +13,13 @@ export default function AnchorCell(props) {
 
   return (
     <TableCell column={column} record={record}>
-      <a
-        href={hrefFn ? hrefFn(record) : null}
-        className="Table-rowLabel"
-        onClick={onClick}
+      <button
+        className="Table-rowLabel btn btn-link"
+        onClick={() => { onClick(record); }}
         title={record[titleKey]}
       >
         {props.children || record[textKey]}
-      </a>
+      </button>
     </TableCell>
   );
 }
@@ -29,7 +27,6 @@ export default function AnchorCell(props) {
 AnchorCell.propTypes = {
   children: PropTypes.node,
   column: PropTypes.shape({
-    hrefFn: PropTypes.func.isRequired,
     onClick: PropTypes.func,
     titleKey: PropTypes.string,
     textKey: PropTypes.string,
