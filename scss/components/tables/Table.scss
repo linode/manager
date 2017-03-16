@@ -8,11 +8,6 @@
         @include label();
     }
 
-    th:last-of-type, td:last-of-type {
-        border: 0;
-        text-align: right;
-    }
-
     button {
         position: relative;
         top: -1px;

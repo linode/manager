@@ -53,15 +53,8 @@ describe('linodes/linode/settings/components/ConfigPanel', () => {
     );
 
     expect(panel.find('tr').at(0).find('td')
-      .at(0)
-      .find('Link').length)
+      .at(0).length)
       .to.equal(1);
-    expect(panel.find('tr').at(0).find('td')
-      .at(0)
-      .find('Link')
-      .props())
-      .to.have.property('to')
-      .which.equals(path);
   });
 
   it('renders config label text', () => {

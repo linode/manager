@@ -7,7 +7,7 @@ export default function DistroStyle(props) {
   const { linode } = props;
 
   if (!linode || !linode.distribution || !linode.distribution.vendor) {
-    return 'Unknown';
+    return (<span>Unknown</span>);
   }
 
   return (

@@ -16,9 +16,14 @@ export default function IPList(props) {
       <Table
         className='Table--secondary'
         columns={[
-          { cellComponent: CheckboxCell, onChange: (ip) => { onChange(ip.address); } },
-          { cellComponent: IPRdnsCell },
-          { dataKey: 'address', label: 'IP Address' },
+          {
+            cellComponent: CheckboxCell,
+            onChange: (ip) => { onChange(ip.address); }
+          },
+          {
+            cellComponent: IPRdnsCell,
+            label: 'IP Address'
+          },
         ]}
         data={transferableIps}
         selected={checked}

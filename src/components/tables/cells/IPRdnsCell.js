@@ -3,8 +3,9 @@ import React, { PropTypes } from 'react';
 import TableCell from './TableCell';
 
 
-export default function IPAddressCell(props) {
-  const { column, record, ipKey } = props;
+export default function IPRdnsCell(props) {
+  const { column, record} = props;
+  const { ipKey } = column;
 
   const ip = ipKey ? record[ipKey] : record;
   let str = `${ip.address}`;
@@ -19,11 +20,7 @@ export default function IPAddressCell(props) {
   );
 }
 
-IPAddressCell.propTypes = {
+IPRdnsCell.propTypes = {
   column: PropTypes.object.isRequired,
-  ipKey: PropTypes.string,
-  record: PropTypes.shape({
-    address: PropTypes.string.isRequired,
-    rdns: PropTypes.string,
-  }).isRequired,
+  record: PropTypes.object.isRequired,
 };

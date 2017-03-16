@@ -25,5 +25,5 @@ IPAddressCell.propTypes = {
   record: PropTypes.shape({
     ipv4: PropTypes.array.isRequired,
     ipv6: PropTypes.string,
-  }).isRequired,
+  }),
 };

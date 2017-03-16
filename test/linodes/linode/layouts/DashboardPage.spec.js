@@ -112,8 +112,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
       />);
 
     expect(page.find('.linode-distro').at(0)
-      .find('.col-sm-9')
-      .at(0)
+      .find('.col-sm-9').children().first()
       .text()).to.equal('Unknown');
   });
 

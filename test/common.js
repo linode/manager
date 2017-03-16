@@ -3,6 +3,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import { state } from '@/data';
 
+
 class InternalAssertionError extends Error {
   constructor(aVal, bVal, keyPath) {
     super();
@@ -81,25 +82,27 @@ export function expectObjectDeepEquals(initialA, initialB) {
  */
 export async function expectRequest(fn, path, expectedRequestData, response) {
   const sandbox = sinon.sandbox.create();
-  try {
-    expect(fn).to.be.a('function');
-    const fetchStub = sandbox.stub(fetch, 'fetch').returns({
-      json: () => response || {},
-    });
-    const dispatch = sinon.spy();
-    await fn(dispatch, () => state);
-    expect(fetchStub.callCount).to.equal(1);
-    expect(fetchStub.firstCall.args[1]).to.equal(path);
-    const requestData = fetchStub.firstCall.args[2];
+  const fetchStub = sandbox.stub(fetch, 'fetch').returns({
+    json: () => response || {},
+  });
 
-    if (expectedRequestData) {
-      Object.keys(expectedRequestData).map(key => {
-        const value = requestData[key];
-        const nativeValue = key === 'body' ? JSON.parse(value) : value;
-        expectObjectDeepEquals(nativeValue, expectedRequestData[key]);
-      });
-    }
-  } finally {
-    sandbox.restore();
+  expect(fn).to.be.a('function');
+
+  const dispatch = sinon.spy();
+  await fn(dispatch, () => state);
+
+  expect(fetchStub.callCount).to.equal(1);
+  expect(fetchStub.firstCall.args[1]).to.equal(path);
+
+  const requestData = fetchStub.firstCall.args[2];
+
+  if (expectedRequestData) {
+    Object.keys(expectedRequestData).map(key => {
+      const value = requestData[key];
+      const nativeValue = key === 'body' ? JSON.parse(value) : value;
+      expectObjectDeepEquals(nativeValue, expectedRequestData[key]);
+    });
   }
+
+  sandbox.restore();
 }

@@ -108,12 +108,15 @@ export default class IPSharing extends Component {
               className='Table--secondary'
               columns={[
                 { cellComponent: CheckboxCell, onChange: this.onChange },
-                { cellComponent: IPRdnsCell, ipKey: 'ip' },
-                { dataKey: 'address', label: 'IP Address' },
+                { cellComponent: IPRdnsCell, ipKey: 'ip', label: 'IP Address' },
                 {
                   cellComponent: LinkCell,
                   hrefFn: (record) => {
                     return `/linodes/${record.linode.label}`;
+                  },
+                  label: 'Linode',
+                  textFn: (record) => {
+                    return record.linode.label;
                   },
                 },
               ]}
