@@ -52,8 +52,9 @@ export default class AuthorizedApplication extends Component {
           <label className="col-sm-4 row-label">Expires</label>
           <div className="col-sm-8">{expireValue}</div>
         </div>
-        <p>This {type} has access to your:</p>
+        <p>This application has access to your:</p>
         <Table
+          className="Table--secondary"
           columns={[
             {
               dataKey: 'scope',

@@ -6,6 +6,9 @@ import Dropdown from '~/components/Dropdown';
 import EditPersonalAccessToken from './EditPersonalAccessToken';
 import { SecondaryCard } from '~/components/cards/';
 import { ConfirmModalBody } from '~/components/modals';
+import { Table } from '~/components/tables';
+import { AuthScopeCell } from '~/components/tables/cells';
+import { OAUTH_SUBSCOPES, OAUTH_SCOPES } from '~/constants';
 import { showModal, hideModal } from '~/actions/modal';
 import { tokens } from '~/api';
 
@@ -51,6 +54,10 @@ export default class PersonalAccessToken extends Component {
     let expireValue = moment.utc(expires, moment.ISO_8601).fromNow();
     expireValue = expireValue[0].toUpperCase() + expireValue.substring(1);
 
+    const scopeData = OAUTH_SCOPES.map(function (scope) {
+      return { scopes: scopes, scope: scope };
+    });
+
     const elements = [
       { name: 'Edit', action: this.editAction },
       { name: 'Delete', action: this.deleteAction },
@@ -70,7 +77,19 @@ export default class PersonalAccessToken extends Component {
           <label className="col-sm-4 row-label">Secret</label>
           <div className="col-sm-8">{secret.substring(0, 16)}...</div>
         </div>
-        {/*<OAuthScopes type="application" scopes={scopes} />*/}
+        <p>This application has access to your:</p>
+        <Table
+          className="Table--secondary"
+          columns={[
+            {
+              dataKey: 'scope',
+              formatFn: _.capitalize,
+            },
+          ].concat(OAUTH_SUBSCOPES.map((subscope) => {
+            return { cellComponent: AuthScopeCell, subscope: subscope };
+          }))}
+          data={scopeData}
+        />
       </SecondaryCard>
     );
   }
