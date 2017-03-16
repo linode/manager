@@ -6,6 +6,7 @@ import { expect } from 'chai';
 import { OAUTH_SCOPES, OAUTH_SUBSCOPES } from '~/constants';
 import AuthorizedApplication from '~/profile/integrations/components/AuthorizedApplication';
 import { api } from '@/data';
+import { expectRequest } from '@/common';
 
 const { tokens: { tokens } } = api;
 
