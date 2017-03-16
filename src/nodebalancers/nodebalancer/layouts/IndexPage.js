@@ -10,7 +10,7 @@ import SecondaryTable from '~/components/SecondaryTable';
 import { Button } from '~/components/buttons';
 import { NodebalancerStatusReadable } from '~/constants';
 import { renderDatacenterStyle } from '~/linodes/components/Linode';
-import { title } from '~/profile/integrations/components/AuthorizedApplication.js';
+import { title } from '~/profile/integrations/components/OAuthScopes';
 
 
 export class IndexPage extends Component {
