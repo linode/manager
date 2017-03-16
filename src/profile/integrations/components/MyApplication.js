@@ -54,9 +54,7 @@ export default class MyApplication extends Component {
           this.deleteApp();
         }}
       >
-        <p>
-          Are you sure you want to delete <strong>{client.label}</strong>?
-        </p>
+        Are you sure you want to delete <strong>{client.label}</strong>?
       </ConfirmModalBody>
     ));
   }
@@ -72,7 +70,7 @@ export default class MyApplication extends Component {
           this.renderSecret('client secret', 'reset', secret);
         }}
       >
-        <p>Are you sure you want to reset <strong>{client.label}</strong>'s secret?</p>
+        Are you sure you want to reset <strong>{client.label}</strong>'s secret?
       </ConfirmModalBody>
     ));
   }

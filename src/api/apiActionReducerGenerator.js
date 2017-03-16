@@ -283,10 +283,12 @@ function _thunkFetch(method) {
     async (dispatch, getState) => {
       const state = getState();
       const { token } = state.authentication;
-      return await (await fetch(token, url, {
+      const result = await fetch(token, url, {
         method: method,
         body: JSON.stringify(body),
-      })).json();
+      });
+
+      return await result.json();
     };
 }
 

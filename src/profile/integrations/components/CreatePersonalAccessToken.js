@@ -1,4 +1,5 @@
 import React, { PropTypes, Component } from 'react';
+import _ from 'lodash';
 
 import { ModalFormGroup } from '~/components/form';
 import { showModal, hideModal } from '~/actions/modal';
@@ -6,7 +7,6 @@ import { ConfirmModalBody } from '~/components/modals';
 import { Form, Input, Select, SubmitButton, CancelButton } from '~/components/form';
 import { reduceErrors, ErrorSummary } from '~/errors';
 import { OAUTH_SUBSCOPES, OAUTH_SCOPES } from '~/constants';
-import { title } from './OAuthScopes';
 import { tokens } from '~/api';
 import SelectExpiration from '../../components/SelectExpiration';
 
@@ -15,12 +15,14 @@ export async function renderSecret(label, verb, secret) {
   const close = () => dispatch(hideModal());
 
   await dispatch(showModal(
-    `${title(label)} ${verb}`,
-    <ConfirmModalBody onOk={close} onCancel={close}>
-      <p>
-        Your {label} has been {verb}. Store this secret. It won't be shown again.
-      </p>
-      <div className="alert alert-warning">{secret}</div>
+    `${_.capitalize(label)} ${verb}`,
+    <ConfirmModalBody onOk={close} onCancel={close} buttonText="I understand">
+      <div>
+        <p>
+          Your {label} has been {verb}. Store this secret. It won't be shown again.
+        </p>
+        <div className="alert alert-warning">{secret}</div>
+      </div>
     </ConfirmModalBody>
   ));
 }
@@ -82,7 +84,7 @@ export default class CreatePersonalAccessToken extends Component {
     return (
       <ModalFormGroup
         id={scope}
-        label={title(scope)}
+        label={_.capitalize(scope)}
         apiKey={scope}
         errors={this.state.errors}
         key={scope}
@@ -94,7 +96,7 @@ export default class CreatePersonalAccessToken extends Component {
           onChange={this.onChange}
           options={['No Access', ...OAUTH_SUBSCOPES].reverse().map(value => ({
             value,
-            label: `${title(value)}${value === 'delete' ? ' (All Access)' : ''}`,
+            label: `${_.capitalize(value)}${value === 'delete' ? ' (All Access)' : ''}`,
           }))}
         />
       </ModalFormGroup>
