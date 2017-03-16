@@ -9,6 +9,7 @@
 
 @import 'components/index';
 @import 'linodes/index';
+@import 'profile/integrations/components/OAuthScopes';
 @import 'layout/index';
 @import 'styleguide/index';
 
@@ -232,7 +233,7 @@ footer {
 .sub-header {
     color: $light-black;
     padding-top: 15px;
-    padding-bottom: 15px;
+    padding-bottom: 5px;
 }
 
 header .sub-header {

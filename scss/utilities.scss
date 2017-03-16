@@ -15,6 +15,7 @@
 
 // TODO: prettify
 .alert {
+  overflow-x: auto;
   border-radius: 0;
   min-height: $form-field-height;  // for now, match input height
   padding: 4px 8px;

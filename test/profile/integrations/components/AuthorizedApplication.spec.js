@@ -4,9 +4,9 @@ import { mount } from 'enzyme';
 import { expect } from 'chai';
 
 import { OAUTH_SCOPES, OAUTH_SUBSCOPES } from '~/constants';
-import AuthorizedApplication, {
-  title,
-} from '~/profile/integrations/components/AuthorizedApplication';
+import AuthorizedApplication from '~/profile/integrations/components/AuthorizedApplication';
+import { title } from '~/profile/integrations/components/OAuthScopes';
+import { expectRequest } from '@/common';
 import { api } from '@/data';
 
 const { tokens: { tokens } } = api;
@@ -88,5 +88,21 @@ describe('profile/integrations/components/AuthorizedApplication', () => {
           expect(row.find('strong').length).to.equal(0);
       }
     }
+  });
+
+  it('revokes token auth', async () => {
+    const page = mount(
+      <AuthorizedApplication
+        dispatch={dispatch}
+        label={tokens[2].client.label}
+        scopes={tokens[2].scopes}
+        id={tokens[2].client.id}
+      />
+    );
+
+    page.find('Button').props().onClick();
+    expect(dispatch.callCount).to.equal(1);
+    const fn = dispatch.firstCall.args[0];
+    await expectRequest(fn, `/account/tokens/${tokens[2].client.id}`, { method: 'DELETE' });
   });
 });
