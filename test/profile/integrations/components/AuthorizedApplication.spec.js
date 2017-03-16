@@ -3,7 +3,6 @@ import sinon from 'sinon';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
 
-import _ from 'lodash';
 import { OAUTH_SCOPES, OAUTH_SUBSCOPES } from '~/constants';
 import AuthorizedApplication from '~/profile/integrations/components/AuthorizedApplication';
 import { api } from '@/data';

@@ -7,7 +7,6 @@ import { SHOW_MODAL } from '~/actions/modal';
 import { ReverseDNSPage } from '~/linodes/linode/networking/layouts/ReverseDNSPage';
 import { testLinode } from '@/data/linodes';
 import { state } from '@/data';
-import { expectRequest } from '@/common';
 
 const { linodes } = state.api;
 

@@ -3,12 +3,13 @@ import sinon from 'sinon';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
 
-import _ from 'lodash';
+
+import PersonalAccessToken
+  from '~/profile/integrations/components/PersonalAccessToken';
 import { OAUTH_SCOPES, OAUTH_SUBSCOPES } from '~/constants';
 import { hideModal } from '~/actions/modal';
 import { api } from '@/data';
 import { expectRequest, expectObjectDeepEquals } from '@/common';
-import PersonalAccessToken from '~/profile/integrations/components/PersonalAccessToken';
 
 const { tokens } = api;
 

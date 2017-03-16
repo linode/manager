@@ -105,7 +105,7 @@ describe('linodes/linode/networking/components/IPTransfer', () => {
     const addressB = sectionBFirstIp.find('.Table-cell').at(1).text()
                                     .split(' ')[0];
     const ipB = allIps[addressB];
-    sectionBFirstIp.find('input').simulate('change')
+    sectionBFirstIp.find('input').simulate('change');
 
     await page.find('form').simulate('submit');
 

@@ -14,15 +14,15 @@ export default function IPList(props) {
   return (
     <div>
       <Table
-        className='Table--secondary'
+        className="Table--secondary"
         columns={[
           {
             cellComponent: CheckboxCell,
-            onChange: (record) => { onChange(record); }
+            onChange: (record) => { onChange(record); },
           },
           {
             cellComponent: IPRdnsCell,
-            label: 'IP Address'
+            label: 'IP Address',
           },
         ]}
         data={transferableIps}

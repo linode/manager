@@ -43,7 +43,6 @@ describe('linodes/linode/settings/components/ConfigPanel', () => {
   });
 
   it('renders config label link', () => {
-    const path = '/linodes/test-linode/settings/advanced/configs/12345';
     const panel = mount(
       <ConfigPanel
         params={{ linodeLabel: `${testLinode.label}` }}

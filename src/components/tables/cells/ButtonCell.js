@@ -10,7 +10,7 @@ export default function ButtonCell(props) {
     buttonClassName,
     isDisabledFn,
     text,
-    onClick
+    onClick,
   } = column;
 
   let disabled = false;
@@ -23,7 +23,10 @@ export default function ButtonCell(props) {
       <Button
         className={buttonClassName}
         disabled={disabled}
-        onClick={() => { onClick(record); }}>{text}</Button>
+        onClick={() => {
+          onClick(record);
+        }}
+      >{text}</Button>
     </TableCell>
   );
 }

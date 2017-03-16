@@ -61,7 +61,7 @@ export class IndexPage extends Component {
 
     return (
       <Table
-        className='Table--secondary'
+        className="Table--secondary"
         columns={[
           { dataKey: 'port', label: 'Port' },
           { dataKey: 'protocol', label: 'Protocol' },

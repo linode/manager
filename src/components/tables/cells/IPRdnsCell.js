@@ -4,7 +4,7 @@ import TableCell from './TableCell';
 
 
 export default function IPRdnsCell(props) {
-  const { column, record} = props;
+  const { column, record } = props;
   const { ipKey } = column;
 
   const ip = ipKey ? record[ipKey] : record;

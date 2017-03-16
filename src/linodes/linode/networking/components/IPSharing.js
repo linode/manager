@@ -105,7 +105,7 @@ export default class IPSharing extends Component {
         <Form onSubmit={this.onSubmit}>
           <FormGroup>
             <Table
-              className='Table--secondary'
+              className="Table--secondary"
               columns={[
                 { cellComponent: CheckboxCell, onChange: this.onChange },
                 { cellComponent: IPRdnsCell, ipKey: 'ip', label: 'IP Address' },

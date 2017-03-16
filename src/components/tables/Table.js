@@ -63,6 +63,7 @@ Table.propTypes = {
   data: PropTypes.array.isRequired,
   disableHeader: PropTypes.bool,
   id: PropTypes.string,
+  noDataMessage: PropTypes.string,
   onToggleSelect: PropTypes.func,
   selected: PropTypes.object,
 };

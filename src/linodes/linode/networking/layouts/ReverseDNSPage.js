@@ -8,7 +8,6 @@ import { Table } from '~/components/tables';
 import { ButtonCell } from '~/components/tables/cells';
 import { setError } from '~/actions/errors';
 import { linodeIPs, setRDNS } from '~/api/linodes';
-import { Button } from '~/components/buttons';
 import EditRDNS from '../components/EditRDNS';
 
 export class ReverseDNSPage extends Component {
@@ -30,18 +29,6 @@ export class ReverseDNSPage extends Component {
     this.state = { resetting: {} };
   }
 
-  renderEditRDNS(ip) {
-    const { dispatch } = this.props;
-    dispatch(showModal(
-      'Edit RDNS Entry',
-      <EditRDNS
-        ip={ip}
-        dispatch={dispatch}
-        close={() => dispatch(hideModal())}
-      />
-    ));
-  }
-
   async resetRDNS(record) {
     const { dispatch } = this.props;
     const linode = this.getLinode();
@@ -50,6 +37,19 @@ export class ReverseDNSPage extends Component {
     this.setState({ resetting: { ...this.state.resetting, [address]: true } });
     await dispatch(setRDNS(linode.id, address, null));
     this.setState({ resetting: { ...this.state.resetting, [address]: false } });
+  }
+
+  renderEditRDNS(ip) {
+    const { dispatch } = this.props;
+
+    dispatch(showModal(
+      'Edit RDNS Entry',
+      <EditRDNS
+        ip={ip}
+        dispatch={dispatch}
+        close={() => dispatch(hideModal())}
+      />
+    ));
   }
 
   render() {
@@ -64,7 +64,7 @@ export class ReverseDNSPage extends Component {
         text: 'Reset',
         isDisabledFn: (record) => {
           return this.state.resetting[record.address];
-        }
+        },
       },
       {
         cellComponent: ButtonCell,
@@ -73,7 +73,7 @@ export class ReverseDNSPage extends Component {
           this.renderEditRDNS(record);
         },
         text: 'Edit',
-      }
+      },
     ];
     const linode = this.getLinode();
     const ips = linode._ips;
@@ -84,7 +84,7 @@ export class ReverseDNSPage extends Component {
     return (
       <Card title="Reverse DNS">
         <Table
-          className='Table--secondary'
+          className="Table--secondary"
           columns={columns}
           data={records}
         />
