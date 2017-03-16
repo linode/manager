@@ -41,20 +41,20 @@ describe('linodes/linode/networking/components/IPTransfer', () => {
     );
 
     const sectionA = page.find('#sectionA');
-    const rowsA = sectionA.find('.SecondaryTable-row');
+    const rowsA = sectionA.find('.Table-row');
     expect(rowsA.length).to.equal(testLinode._ips.ipv4.public.length);
     rowsA.forEach(row => {
-      const address = row.find('.SecondaryTable-column').at(0).text();
+      const address = row.find('.Table-column').at(0).text();
       const ip = allIps[address.split(' ')[0]];
       expect(address).to.equal(`${ip.address} (${ip.rdns})`);
     });
 
     const sectionB = page.find('#sectionB');
     const linodeB = linodes.linodes[page.find('select').props().value];
-    const rowsB = sectionB.find('.SecondaryTable-row');
+    const rowsB = sectionB.find('.Table-row');
     expect(rowsB.length).to.equal(linodeB._ips.ipv4.public.length);
     rowsB.forEach(row => {
-      const address = row.find('.SecondaryTable-column').at(0).text();
+      const address = row.find('.Table-column').at(0).text();
       const ip = allIps[address.split(' ')[0]];
       expect(address).to.equal(`${ip.address} (${ip.rdns})`);
     });
@@ -77,10 +77,10 @@ describe('linodes/linode/networking/components/IPTransfer', () => {
 
     select.simulate('change', { target: { name: 'selectedOtherLinode', value: notLinodeB.id } });
 
-    const rowsB = sectionB.find('.SecondaryTable-row');
+    const rowsB = sectionB.find('.Table-row');
     expect(rowsB.length).to.equal(notLinodeB._ips.ipv4.public.length);
     rowsB.forEach(row => {
-      const address = row.find('.SecondaryTable-column').at(0).text();
+      const address = row.find('.Table-column').at(0).text();
       const ip = allIps[address.split(' ')[0]];
       expect(address).to.equal(`${ip.address} (${ip.rdns})`);
     });
@@ -95,14 +95,14 @@ describe('linodes/linode/networking/components/IPTransfer', () => {
       />
     );
 
-    const sectionAFirstIp = page.find('#sectionA .SecondaryTable-row').at(0);
-    const addressA = sectionAFirstIp.find('.SecondaryTable-column').at(0).text()
+    const sectionAFirstIp = page.find('#sectionA .Table-row').at(0);
+    const addressA = sectionAFirstIp.find('.Table-column').at(0).text()
                                     .split(' ')[0];
     const ipA = allIps[addressA];
     sectionAFirstIp.find('Checkbox').props().onChange();
 
-    const sectionBFirstIp = page.find('#sectionB .SecondaryTable-row').at(0);
-    const addressB = sectionBFirstIp.find('.SecondaryTable-column').at(0).text()
+    const sectionBFirstIp = page.find('#sectionB .Table-row').at(0);
+    const addressB = sectionBFirstIp.find('.Table-column').at(0).text()
                                     .split(' ')[0];
     const ipB = allIps[addressB];
     sectionBFirstIp.find('Checkbox').props().onChange();

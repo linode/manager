@@ -30,7 +30,7 @@ describe('profile/integrations/components/AuthorizedApplication', () => {
     );
 
     const rows = page.find('tr');
-    expect(rows.length).to.equal(OAUTH_SCOPES.length);
+    expect(rows.length).to.equal(OAUTH_SCOPES.length + 1);
 
     for (let i = 0; i < rows.length; i++) {
       const row = rows.at(i);
@@ -58,7 +58,7 @@ describe('profile/integrations/components/AuthorizedApplication', () => {
     );
 
     const rows = page.find('tr');
-    expect(rows.length).to.equal(OAUTH_SCOPES.length);
+    expect(rows.length).to.equal(OAUTH_SCOPES.length + 1);
 
     for (let i = 0; i < rows.length; i++) {
       const row = rows.at(i);
