@@ -182,14 +182,8 @@ export class AddModal extends Component {
           </div>
         </FormGroup>
         <div className="Modal-footer">
-          <CancelButton
-            className="LinodesLinodeSettingsComponentsAddModal-cancel"
-            disabled={loading}
-            onClick={() => dispatch(hideModal())}
-          />
-          <SubmitButton
-            disabled={ready}
-          >Add Disk</SubmitButton>
+          <CancelButton disabled={loading} onClick={() => dispatch(hideModal())} />
+          <SubmitButton disabled={ready}>Add Disk</SubmitButton>
         </div>
 
         <ErrorSummary errors={errors} />

@@ -7,10 +7,14 @@ body,
 }
 
 .layout {
-  // TODO: min-width considerations:
-  // * linode rows need > 1150px;
-  // * linode page needs > 980px
-  min-width: 1150px;
+    // TODO: min-width considerations:
+    // * linode rows need > 1150px;
+    // * linode page needs > 980px
+    min-width: 1150px;
+
+    &--modal {
+        overflow-y: hidden;
+    }
 }
 
 .row-eq-height {
