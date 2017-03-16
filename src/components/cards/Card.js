@@ -5,11 +5,11 @@ import HelpButton from '../HelpButton';
 export default function Card(props) {
   return (
     <div className={`Card ${props.className}`} id={props.id}>
-      <header className="Card-header clearfix">
+      {props.title ? <header className="Card-header clearfix">
         <h2 className="Card-title float-sm-left">{props.title}</h2>
         {props.helpLink ? <HelpButton className="float-sm-left" to={props.helpLink} /> : null}
         <div className="float-sm-right">{props.nav}</div>
-      </header>
+      </header> : null}
       <div>
         {props.children}
       </div>
@@ -18,7 +18,7 @@ export default function Card(props) {
 }
 
 Card.propTypes = {
-  title: PropTypes.node.isRequired,
+  title: PropTypes.node,
   className: PropTypes.string,
   helpLink: PropTypes.string,
   nav: PropTypes.node,
