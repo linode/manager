@@ -6,11 +6,24 @@ import TableCell from './TableCell';
 
 export default function ButtonCell(props) {
   const { column, record } = props;
-  const { text, onClick, buttonClassName='' } = column;
+  const {
+    buttonClassName,
+    isDisabledFn,
+    text,
+    onClick
+  } = column;
+
+  let disabled = false;
+  if (isDisabledFn) {
+    disabled = isDisabledFn(record);
+  }
 
   return (
-    <TableCell column={column} record={record}>
-      <Button className={buttonClassName} onClick={() => { onClick(record); }}>{text}</Button>
+    <TableCell className="ButtonCell" column={column} record={record}>
+      <Button
+        className={buttonClassName}
+        disabled={disabled}
+        onClick={() => { onClick(record); }}>{text}</Button>
     </TableCell>
   );
 }
@@ -21,5 +34,10 @@ ButtonCell.propTypes = {
     text: PropTypes.string.isRequired,
     onClick: PropTypes.func,
   }),
+  isDisabledFn: PropTypes.func,
   record: PropTypes.object,
+};
+
+ButtonCell.defaultProps = {
+  buttonClassName: '',
 };

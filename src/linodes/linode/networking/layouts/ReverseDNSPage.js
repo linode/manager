@@ -5,6 +5,7 @@ import { showModal, hideModal } from '~/actions/modal';
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import { Card } from '~/components/cards';
 import { Table } from '~/components/tables';
+import { ButtonCell } from '~/components/tables/cells';
 import { setError } from '~/actions/errors';
 import { linodeIPs, setRDNS } from '~/api/linodes';
 import { Button } from '~/components/buttons';
@@ -31,7 +32,7 @@ export class ReverseDNSPage extends Component {
 
   renderEditRDNS(ip) {
     const { dispatch } = this.props;
-    return () => dispatch(showModal(
+    dispatch(showModal(
       'Edit RDNS Entry',
       <EditRDNS
         ip={ip}
@@ -41,41 +42,43 @@ export class ReverseDNSPage extends Component {
     ));
   }
 
-  render() {
+  async resetRDNS(record) {
     const { dispatch } = this.props;
+    const linode = this.getLinode();
+    const address = record.address;
 
+    this.setState({ resetting: { ...this.state.resetting, [address]: true } });
+    await dispatch(setRDNS(linode.id, address, null));
+    this.setState({ resetting: { ...this.state.resetting, [address]: false } });
+  }
+
+  render() {
     const columns = [
       { label: 'IP Address', dataKey: 'address' },
       { label: 'Target', dataKey: 'rdns' },
-      { label: '', dataKey: 'nav' },
+      {
+        cellComponent: ButtonCell,
+        onClick: (record) => {
+          this.resetRDNS(record);
+        },
+        text: 'Reset',
+        isDisabledFn: (record) => {
+          return this.state.resetting[record.address];
+        }
+      },
+      {
+        cellComponent: ButtonCell,
+        onClick: (record) => {
+          this.renderEditRDNS(record);
+        },
+        text: 'Edit',
+      }
     ];
     const linode = this.getLinode();
     const ips = linode._ips;
 
-    const addNav = (ips) => ips.map((ip, i) => ({
-      ...ip,
-      nav: (
-        <div>
-          <Button
-            className="btn-secondary"
-            onClick={async () => {
-              this.setState({ resetting: { ...this.state.resetting, [ip.address]: true } });
-              await dispatch(setRDNS(linode.id, ip.address, null));
-              this.setState({ resetting: { ...this.state.resetting, [ip.address]: false } });
-            }}
-            id={`reset-${i}`}
-            disabled={this.state.resetting[ip.address]}
-          >Reset</Button>
-          <Button
-            className="btn-secondary"
-            onClick={this.renderEditRDNS(ip)}
-            id={`edit-${i}`}
-          >Edit</Button>
-        </div>
-      ),
-    }));
     // TODO: slaac and global should show up here but they are not supported by the API yet
-    const records = addNav([...ips.ipv4.public, ...ips.ipv6.addresses]);
+    const records = [...ips.ipv4.public, ...ips.ipv6.addresses];
 
     return (
       <Card title="Reverse DNS">

@@ -62,3 +62,11 @@
     @extend .font-large;
     min-width: 200px;
 }
+
+.ButtonCell {
+    width: 75px;
+
+    button {
+        float: right;
+    }
+}
