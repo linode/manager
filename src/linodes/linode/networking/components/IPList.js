@@ -18,7 +18,7 @@ export default function IPList(props) {
         columns={[
           {
             cellComponent: CheckboxCell,
-            onChange: (ip) => { onChange(ip.address); }
+            onChange: (record) => { onChange(record); }
           },
           {
             cellComponent: IPRdnsCell,

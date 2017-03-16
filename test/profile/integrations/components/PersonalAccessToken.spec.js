@@ -43,7 +43,7 @@ describe('profile/integrations/components/PersonalAccessToken', () => {
 
       // +1 for scope name
       expect(columns.length).to.equal(OAUTH_SUBSCOPES.length + 1);
-      expect(columns.at(0).text()).to.equal(_.capitalize(OAUTH_SCOPES[i - 1]));
+      expect(columns.at(0).text()).to.equal(OAUTH_SCOPES[i - 1]);
 
       // No strikethroughs because all scopes are granted
       expect(row.find('s').length).to.equal(0);

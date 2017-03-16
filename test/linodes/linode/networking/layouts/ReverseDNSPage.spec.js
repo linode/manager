@@ -34,9 +34,9 @@ describe('linodes/linode/networking/layouts/ReverseDNSPage', () => {
 
     const rows = page.find('.Table-row');
     expect(rows.length).to.equal(ips.length);
-    for (let i = 0; i < rows.length; i++) {
+    for (let i = 1; i < rows.length; i++) {
       const row = rows.at(i);
-      const columns = row.find('.Table-column');
+      const columns = row.find('.Table-cell');
       expect(columns.length).to.equal(3);
 
       const addressIndex = addresses.indexOf(columns.at(0).text());
@@ -76,7 +76,7 @@ describe('linodes/linode/networking/layouts/ReverseDNSPage', () => {
     );
 
     const row = page.find('.Table-row').at(0);
-    row.find('#edit-0').props().onClick();
+    row.find('.EditButton').props().onClick();
     expect(dispatch.callCount).to.equal(1);
     expect(dispatch.firstCall.args[0].type).to.equal(SHOW_MODAL);
   });

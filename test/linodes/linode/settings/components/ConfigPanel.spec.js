@@ -52,7 +52,7 @@ describe('linodes/linode/settings/components/ConfigPanel', () => {
       />
     );
 
-    expect(panel.find('tr').at(0).find('td')
+    expect(panel.find('tr').at(1).find('td')
       .at(0).length)
       .to.equal(1);
   });
@@ -66,8 +66,8 @@ describe('linodes/linode/settings/components/ConfigPanel', () => {
       />
     );
 
-    expect(panel.find('tr').at(0).find('td')
-      .at(1)
+    expect(panel.find('tr').at(1).find('td')
+      .at(0)
       .text())
       .to.equal('Test config');
   });

@@ -68,6 +68,7 @@ export class ReverseDNSPage extends Component {
       },
       {
         cellComponent: ButtonCell,
+        buttonClassName: 'EditButton',
         onClick: (record) => {
           this.renderEditRDNS(record);
         },

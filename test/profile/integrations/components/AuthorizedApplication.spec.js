@@ -37,7 +37,7 @@ describe('profile/integrations/components/AuthorizedApplication', () => {
 
       // +1 for scope name
       expect(columns.length).to.equal(OAUTH_SUBSCOPES.length + 1);
-      expect(columns.at(0).text()).to.equal(_.capitalize(OAUTH_SCOPES[i - 1]));
+      expect(columns.at(0).text()).to.equal(OAUTH_SCOPES[i - 1]);
 
       // No strikethroughs because all scopes are granted
       expect(row.find('s').length).to.equal(0);
@@ -59,13 +59,13 @@ describe('profile/integrations/components/AuthorizedApplication', () => {
     const rows = page.find('tr');
     expect(rows.length).to.equal(OAUTH_SCOPES.length + 1);
 
-    for (let i = 1; i < rows.length; i++) {
-      const row = rows.at(i);
+    for (let i = 0; i < rows.length; i++) {
+      const row = rows.at(i + 1);
       const columns = row.find('td');
 
       // +1 for scope name
       expect(columns.length).to.equal(OAUTH_SUBSCOPES.length + 1);
-      expect(columns.at(0).text()).to.equal(_.capitalize(OAUTH_SCOPES[i - 1]));
+      expect(columns.at(0).text()).to.equal(OAUTH_SCOPES[i]);
 
       switch (OAUTH_SCOPES[i]) {
         case 'linodes':
