@@ -128,7 +128,12 @@ export class IndexPage extends Component {
           name: _group,
           // TODO: don't redefine these for each
           columns: [
-            { cellComponent: CheckboxCell },
+            {
+              cellComponent: CheckboxCell,
+              onChange: (record, checked) => {
+                this.toggle(record);
+              },
+            },
             {
               className: 'RowLabelCell',
               cellComponent: LinkCell,
@@ -153,7 +158,7 @@ export class IndexPage extends Component {
               <Table
                 columns={group.columns}
                 data={group.data}
-                selected={selected}
+                selectedMap={selected}
               />
             </div>
           );

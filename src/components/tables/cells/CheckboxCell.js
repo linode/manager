@@ -5,14 +5,17 @@ import TableCell from './TableCell';
 
 
 export default function CheckboxCell(props) {
-  const { checked, column, record, onChange } = props;
+  const { checked, column, record } = props;
+  const { onChange } = column;
 
   return (
     <TableCell className="CheckboxCell" column={column} record={record}>
       <Checkbox
         checked={checked}
         className="Table-rowSelector"
-        onChange={(e) => onChange(e.target.checked)}
+        onChange={(e) => {
+          onChange(record, e.target.checked);
+        }}
       />
     </TableCell>
   );
@@ -21,7 +24,7 @@ export default function CheckboxCell(props) {
 CheckboxCell.propTypes = {
   checked: PropTypes.bool,
   column: PropTypes.object.isRequired,
-  onChange: PropTypes.func,
+  onChange: PropTypes.func.isRequired,
   record: PropTypes.object.isRequired,
 };
 

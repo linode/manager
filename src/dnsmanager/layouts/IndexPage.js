@@ -153,7 +153,7 @@ export class IndexPage extends Component {
               <Table
                 columns={group.columns}
                 data={group.data}
-                selected={selected}
+                selectedMap={selected}
               />
             </div>
           );

@@ -18,16 +18,11 @@ export default class IPSharing extends Component {
     super(props);
 
     this.onChange = this.onChange.bind(this);
-    // Need to be able to update immediately and when props change.
-    this._componentWillReceiveProps((state) => {
-      this.state = {
-        ...state,
-        errors: {},
-        saving: false,
-        checked: {},
-      };
-    })(props);
-    this.componentWillReceiveProps = this._componentWillReceiveProps();
+    this.state = {
+      errors: {},
+      saving: false,
+      checked: {},
+    };
   }
 
   onSubmit = async () => {
@@ -53,25 +48,25 @@ export default class IPSharing extends Component {
     this.setState({ saving: false });
   }
 
-  onChange(record) {
-    this.setState({
+  onChange(record, checked) {
+    this.setState(_.merge({}, this.state, {
       checked: {
-        ...this.state.checked,
-        [record.ip.address]: !this.state.checked[record.ip.address],
+        [record.ip.address]: checked,
       },
-    });
+    }));
   }
 
-  _componentWillReceiveProps(_setState) {
-    const setState = _setState || this.setState.bind(this);
-    return (nextProps) => {
-      const { linode } = nextProps;
-      const checked = {};
-      (linode._ips.ipv4.shared || []).forEach(ip => {
-        checked[ip.address] = true;
-      });
-      setState({ checked });
-    };
+  componentWillReceiveProps(nextProps) {
+    const { linode } = nextProps;
+    const checked = {};
+
+    (linode._ips.ipv4.shared || []).forEach(ip => {
+      checked[ip.address] = true;
+    });
+
+    this.setState({
+      checked: _.merge({}, this.state.checked, checked),
+    });
   }
 
   formatRows() {
@@ -107,7 +102,13 @@ export default class IPSharing extends Component {
             <Table
               className="Table--secondary"
               columns={[
-                { cellComponent: CheckboxCell, onChange: this.onChange },
+                {
+                  cellComponent: CheckboxCell,
+                  selectedKeyFn: (record) => {
+                    return record.ip.address;
+                  },
+                  onChange: this.onChange,
+                },
                 { cellComponent: IPRdnsCell, ipKey: 'ip', label: 'IP Address' },
                 {
                   cellComponent: LinkCell,
@@ -121,7 +122,7 @@ export default class IPSharing extends Component {
                 },
               ]}
               data={data}
-              selected={checked}
+              selectedMap={checked}
             />
           </FormGroup>
           <SubmitButton disabled={saving}>Save</SubmitButton>

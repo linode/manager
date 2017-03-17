@@ -14,7 +14,20 @@ export default class TableRow extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({ selected: nextProps.selected });
+    const { columns, record, selectedMap } = nextProps;
+    const checkboxColumn = columns.filter(function (column) {
+      return column.cellComponent && (column.cellComponent === CheckboxCell);
+    })[0];
+
+    if (checkboxColumn) {
+      const { selectedKey = 'id', selectedKeyFn } = checkboxColumn;
+
+      if (selectedKeyFn) {
+        this.setState({ selected: selectedMap[selectedKeyFn(record)] });
+      } else {
+        this.setState({ selected: selectedMap[record[selectedKey]] });
+      }
+    }
   }
 
   onCheckboxChange(checked) {
@@ -29,7 +42,7 @@ export default class TableRow extends Component {
 
   render() {
     const { columns, record } = this.props;
-    const { selected } = this.state;
+    let { selected } = this.state;
 
     // TODO: className based on selected
     // const selectedClass = isSelected ? 'Table-row--selected' : '';
@@ -79,5 +92,5 @@ TableRow.propTypes = {
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
   onToggleSelect: PropTypes.func,
   record: PropTypes.object.isRequired,
-  selected: PropTypes.bool,
+  selectedMap: PropTypes.object,
 };

@@ -13,7 +13,7 @@ export default function Table(props) {
     id,
     noDataMessage,
     onToggleSelect,
-    selected = {},
+    selectedMap = {},
   } = props;
 
   let tableHeader;
@@ -45,7 +45,7 @@ export default function Table(props) {
               columns={columns}
               record={record}
               onToggleSelect={onToggleSelect}
-              selected={selected[record.id]}
+              selectedMap={selectedMap}
             />
           );
         })}
@@ -65,7 +65,7 @@ Table.propTypes = {
   id: PropTypes.string,
   noDataMessage: PropTypes.string,
   onToggleSelect: PropTypes.func,
-  selected: PropTypes.object,
+  selectedMap: PropTypes.object,
 };
 
 Table.defaultProps = {
