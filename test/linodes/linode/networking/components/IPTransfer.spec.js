@@ -95,17 +95,22 @@ describe('linodes/linode/networking/components/IPTransfer', () => {
       />
     );
 
+
     const sectionAFirstIp = page.find('#sectionA .Table-row').at(0);
     const addressA = sectionAFirstIp.find('.Table-cell').at(1).text()
                                     .split(' ')[0];
     const ipA = allIps[addressA];
-    sectionAFirstIp.find('input').simulate('change');
+    const checkboxA = sectionAFirstIp.find('Checkbox');
+    const checkboxAProps = checkboxA.props();
+    checkboxAProps.onChange({ target: { checked: true }});
 
     const sectionBFirstIp = page.find('#sectionB .Table-row').at(0);
     const addressB = sectionBFirstIp.find('.Table-cell').at(1).text()
                                     .split(' ')[0];
     const ipB = allIps[addressB];
-    sectionBFirstIp.find('input').simulate('change');
+    const checkboxB = sectionBFirstIp.find('Checkbox');
+    const checkboxBProps = checkboxB.props();
+    checkboxBProps.onChange({ target: { checked: true }});
 
     await page.find('form').simulate('submit');
 
