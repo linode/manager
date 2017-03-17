@@ -1,4 +1,5 @@
 import { fetch } from '~/fetch';
+import { thunkFetch } from './apiActionReducerGenerator';
 
 export function updateClientThumbnail(id, thumbnail) {
   return async (dispatch, getState) => {
@@ -12,4 +13,8 @@ export function updateClientThumbnail(id, thumbnail) {
       body: thumbnail,
     });
   };
+}
+
+export function resetSecret(id) {
+  return thunkFetch.post(`/account/clients/${id}/reset_secret`);
 }

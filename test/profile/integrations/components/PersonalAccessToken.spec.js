@@ -2,9 +2,9 @@ import React from 'react';
 import sinon from 'sinon';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
+import _ from 'lodash';
 
 import PersonalAccessToken from '~/profile/integrations/components/PersonalAccessToken';
-import { title } from '~/profile/integrations/components/OAuthScopes';
 import { OAUTH_SCOPES, OAUTH_SUBSCOPES } from '~/constants';
 import { hideModal } from '~/actions/modal';
 import { api } from '@/data';
@@ -43,7 +43,7 @@ describe('profile/integrations/components/PersonalAccessToken', () => {
 
       // +1 for scope name
       expect(columns.length).to.equal(OAUTH_SUBSCOPES.length + 1);
-      expect(columns.at(0).text()).to.equal(title(OAUTH_SCOPES[i]));
+      expect(columns.at(0).text()).to.equal(_.capitalize(OAUTH_SCOPES[i]));
 
       // No strikethroughs because all scopes are granted
       expect(row.find('s').length).to.equal(0);
