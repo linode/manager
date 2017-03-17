@@ -121,7 +121,7 @@ export default class IPTransfer extends Component {
                 onChange={(record, checked) => {
                   this.setState({
                     checkedA: {
-                      [record.address]: checked
+                      [record.address]: checked,
                     },
                   });
                 }}

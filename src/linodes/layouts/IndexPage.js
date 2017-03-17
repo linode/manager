@@ -130,7 +130,7 @@ export class IndexPage extends Component {
           columns: [
             {
               cellComponent: CheckboxCell,
-              onChange: (record, checked) => {
+              onChange: (record) => {
                 this.toggle(record);
               },
             },

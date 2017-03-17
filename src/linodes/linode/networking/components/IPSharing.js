@@ -25,6 +25,19 @@ export default class IPSharing extends Component {
     };
   }
 
+  componentWillReceiveProps(nextProps) {
+    const { linode } = nextProps;
+    const checked = {};
+
+    (linode._ips.ipv4.shared || []).forEach(ip => {
+      checked[ip.address] = true;
+    });
+
+    this.setState({
+      checked: _.merge({}, this.state.checked, checked),
+    });
+  }
+
   onSubmit = async () => {
     const { dispatch, linode } = this.props;
     const { checked } = this.state;
@@ -54,19 +67,6 @@ export default class IPSharing extends Component {
         [record.ip.address]: checked,
       },
     }));
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const { linode } = nextProps;
-    const checked = {};
-
-    (linode._ips.ipv4.shared || []).forEach(ip => {
-      checked[ip.address] = true;
-    });
-
-    this.setState({
-      checked: _.merge({}, this.state.checked, checked),
-    });
   }
 
   formatRows() {
