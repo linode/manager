@@ -2,7 +2,8 @@ import React, { PropTypes } from 'react';
 
 
 export default function TableCell(props) {
-  const { column, formatFn, record } = props;
+  const { column, record } = props;
+  const { formatFn } = column;
   const className = column.className || props.className || '';
 
   // TODO: dynamic class name based on column type ( numeric/text/etc )

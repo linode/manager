@@ -14,20 +14,8 @@
     thead, th {
         background: transparent;
         border: 0;
-    }
-
-    th {
-        @include label();
-    }
-
-    button {
-        position: relative;
-        top: -1px;
-    }
-
-    td {
-        vertical-align: middle;
-        line-height: initial;
+        font-weight: normal;
+        color: $lightest-black;
     }
 
     &-row {
@@ -50,7 +38,7 @@
 
     &--secondary {
         .Table-row {
-            height: 38px;
+            height: 40px;
         }
     }
 }
@@ -72,13 +60,23 @@
 
 .RowLabelCell {
     @extend .font-large;
-    min-width: 200px;
+    width: 350px;
 }
 
 .ButtonCell {
-    width: 75px;
+    width: 70px;
+    padding: 0 0 0 10px;
 
     button {
+        // TODO: proper styles for buttons in cells
+        display: block;
         float: right;
+        position: relative;
+        top: 1px;
     }
+}
+
+.AuthScopeCell {
+    width: 65px;
+    text-align: center;
 }

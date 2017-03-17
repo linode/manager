@@ -46,7 +46,7 @@ export default function AuthScopeCell(props) {
   const { column, record } = props;
 
   return (
-    <TableCell column={column} record={record}>
+    <TableCell className="AuthScopeCell" column={column} record={record}>
       {renderScope(record.scopes, record.scope, column.subscope)}
     </TableCell>
   );
