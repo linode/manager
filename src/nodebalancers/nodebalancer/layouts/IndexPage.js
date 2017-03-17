@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import _ from 'lodash';
 
 import { nodebalancers } from '~/api';
 import { getObjectByLabelLazily } from '~/api/util';
@@ -10,7 +11,6 @@ import SecondaryTable from '~/components/SecondaryTable';
 import { Button } from '~/components/buttons';
 import { NodebalancerStatusReadable } from '~/constants';
 import { renderDatacenterStyle } from '~/linodes/components/Linode';
-import { title } from '~/profile/integrations/components/AuthorizedApplication.js';
 
 
 export class IndexPage extends Component {
@@ -71,9 +71,9 @@ export class IndexPage extends Component {
       return {
         ...config,
         protocol: config.protocol.toUpperCase(),
-        algorithm: title(config.algorithm),
-        stickiness: title(config.stickiness),
-        check: title(config.check),
+        algorithm: _.capitalize(config.algorithm),
+        stickiness: _.capitalize(config.stickiness),
+        check: _.capitalize(config.check),
         statusString: '0 up, 0 down',
         edit: <Button>Edit</Button>,
       };

@@ -5,16 +5,6 @@
         display: inline-block;
         margin: $main-padding-tb/2 0 0 0;
     }
-
-    .SubTabs-container {
-        // Deals with default padding bottom of SubTabs-container
-        padding-bottom: 0;
-
-        &:first-of-type {
-            // Deals with extra padding bottom of the Distribution wrappers
-            margin-bottom: -15px;
-        }
-    }
 }
 
 .LinodeSelection {
