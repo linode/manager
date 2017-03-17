@@ -32,8 +32,9 @@ export class AuthenticationPage extends Component {
     } catch (response) {
       if (!response.json) {
         // eslint-disable-next-line no-console
-        return console.error(response, 333333);
+        return console.error(response);
       }
+
       const errors = await reduceErrors(response);
       this.setState({ passwordErrors: errors });
     }
