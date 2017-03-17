@@ -52,19 +52,21 @@ export default class AuthorizedApplication extends Component {
           <label className="col-sm-4 row-label">Expires</label>
           <div className="col-sm-8">{expireValue}</div>
         </div>
-        <p>This application has access to your:</p>
-        <Table
-          className="Table--secondary"
-          columns={[
-            {
-              dataKey: 'scope',
-              formatFn: _.capitalize,
-            },
-          ].concat(OAUTH_SUBSCOPES.map((subscope) => {
-            return { cellComponent: AuthScopeCell, subscope: subscope };
-          }))}
-          data={scopeData}
-        />
+        <div className="OAuthScopes">
+          <p>This application has access to your:</p>
+          <Table
+            className="Table--secondary"
+            columns={[
+              {
+                dataKey: 'scope',
+                formatFn: _.capitalize,
+              },
+            ].concat(OAUTH_SUBSCOPES.map((subscope) => {
+              return { cellComponent: AuthScopeCell, subscope: subscope };
+            }))}
+            data={scopeData}
+          />
+        </div>
       </SecondaryCard>
     );
   }

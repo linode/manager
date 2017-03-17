@@ -1,7 +1,6 @@
 import React, { PropTypes, Component } from 'react';
 import _ from 'lodash';
 
-import _ from 'lodash';
 import { ModalFormGroup } from '~/components/form';
 import { showModal, hideModal } from '~/actions/modal';
 import { ConfirmModalBody } from '~/components/modals';

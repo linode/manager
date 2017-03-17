@@ -3,7 +3,7 @@ import sinon from 'sinon';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
 
-import _ from 'linode';
+import _ from 'lodash';
 import PersonalAccessToken
   from '~/profile/integrations/components/PersonalAccessToken';
 import { OAUTH_SCOPES, OAUTH_SUBSCOPES } from '~/constants';
