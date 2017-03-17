@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
 
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
@@ -8,6 +9,8 @@ import { setError } from '~/actions/errors';
 import { users } from '~/api';
 import { SecondaryCard } from '~/components/cards/';
 import { Button } from '~/components/buttons';
+import { showModal, hideModal } from '~/actions/modal';
+import { UserForm } from '../components/UserForm';
 import md5 from 'md5';
 
 export class IndexPage extends Component {
@@ -35,12 +38,6 @@ export class IndexPage extends Component {
 
   render() {
     const { users, dispatch } = this.props;
-    const nav = (
-      <Button
-        onClick={() => {}}
-        className="btn-secondary"
-      >Edit</Button>
-    );
 
     return (
       <div className="PrimaryPage container">
@@ -62,7 +59,12 @@ export class IndexPage extends Component {
                   icon={`https://gravatar.com/avatar/${
                     user.email && md5(user.email.trim().toLowerCase())
                   }`}
-                  nav={nav}
+                  nav={
+                    <Link
+                      to={`/users/${user.username}`}
+                      className="btn-secondary"
+                    >Edit</Link>
+                  }
                   iconClass="user-icon"
                   dispatch={dispatch}
                 >

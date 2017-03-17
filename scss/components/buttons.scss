@@ -78,6 +78,7 @@
     &.btn-primary {
         &, &:active, &:focus {
             background: $blue;
+            color: white;
             border: 1px solid $blue;
         }
 
