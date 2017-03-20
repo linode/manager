@@ -36,7 +36,7 @@ describe('dnsmanager/layouts/ZonePage', () => {
     const txt = page.find('#txt');
 
     [srv, mx, cname, a, txt].forEach(section =>
-      expect(section.find('p').text()).to.equal('No records created.'));
+      expect(section.find('p').text()).to.equal('No records found.'));
   });
 
   it('renders soa records', () => {
@@ -50,7 +50,7 @@ describe('dnsmanager/layouts/ZonePage', () => {
       />
     );
 
-    const soaRow = page.find('#soa .SecondaryTable-row');
+    const soaRow = page.find('#soa .TableRow');
     expect(soaRow.length).to.equal(1);
 
     const soaValues = soaRow.find('td');
@@ -76,7 +76,7 @@ describe('dnsmanager/layouts/ZonePage', () => {
       />
     );
 
-    const nsRows = page.find('#ns .SecondaryTable-row');
+    const nsRows = page.find('#ns .TableRow');
     expect(nsRows.length).to.equal(5);
     const nsValues = nsRows.at(4).find('td');
     expect(nsValues.length).to.equal(4);
@@ -99,11 +99,11 @@ describe('dnsmanager/layouts/ZonePage', () => {
       />
     );
 
-    const mxRows = page.find('#mx .SecondaryTable-row');
+    const mxRows = page.find('#mx .TableRow');
     expect(mxRows.length).to.equal(mxRecords.length);
 
     const mxValues = mxRows.at(0).find('td');
-    expect(mxValues.length).to.equal(4);
+    expect(mxValues.length).to.equal(5);
     // Test all values in an MX row
     const mxRecord = mxRecords[0];
     [mxRecord.target, mxRecord.priority, mxRecord.name || currentZone.dnszone].forEach(
@@ -123,11 +123,11 @@ describe('dnsmanager/layouts/ZonePage', () => {
       />
     );
 
-    const aRows = page.find('#a .SecondaryTable-row');
+    const aRows = page.find('#a .TableRow');
     expect(aRows.length).to.equal(aRecords.length);
 
     const aValues = aRows.at(0).find('td');
-    expect(aValues.length).to.equal(4);
+    expect(aValues.length).to.equal(5);
     // Test all values in a A/AAAA row
     const aRecord = aRecords[0];
     [aRecord.name, aRecord.target, formatDNSSeconds(aRecord.ttl_sec, currentZone.ttl_sec),
@@ -147,11 +147,11 @@ describe('dnsmanager/layouts/ZonePage', () => {
       />
     );
 
-    const cnameRows = page.find('#cname .SecondaryTable-row');
+    const cnameRows = page.find('#cname .TableRow');
     expect(cnameRows.length).to.equal(cnameRecords.length);
 
     const cnameValues = cnameRows.at(0).find('td');
-    expect(cnameValues.length).to.equal(4);
+    expect(cnameValues.length).to.equal(5);
     // Test all values in a CNAME row
     const cnameRecord = cnameRecords[0];
     [cnameRecord.name, cnameRecord.target,
@@ -172,11 +172,11 @@ describe('dnsmanager/layouts/ZonePage', () => {
       />
     );
 
-    const txtRows = page.find('#txt .SecondaryTable-row');
+    const txtRows = page.find('#txt .TableRow');
     expect(txtRows.length).to.equal(txtRecords.length);
 
     const txtValues = txtRows.at(0).find('td');
-    expect(txtValues.length).to.equal(4);
+    expect(txtValues.length).to.equal(5);
     // Test all values in a TXT row
     const txtRecord = txtRecords[0];
     [txtRecord.name, txtRecord.target, formatDNSSeconds(txtRecord.ttl_sec, currentZone.ttl_sec),
@@ -198,11 +198,11 @@ describe('dnsmanager/layouts/ZonePage', () => {
       />
     );
 
-    const srvRows = page.find('#srv .SecondaryTable-row');
+    const srvRows = page.find('#srv .TableRow');
     expect(srvRows.length).to.equal(srvRecords.length);
 
     const srvValues = srvRows.at(0).find('td');
-    expect(srvValues.length).to.equal(8);
+    expect(srvValues.length).to.equal(9);
     // Test all values in a SRV row
     const srvRecord = srvRecords[0];
     [srvRecord.name, srvRecord.priority, currentZone.dnszone, srvRecord.weight, srvRecord.port,

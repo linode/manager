@@ -1,12 +1,11 @@
 import React, { Component, PropTypes } from 'react';
 
-import { renderPlanStyle } from '~/linodes/components/Linode';
+import PlanStyle from '~/linodes/components/PlanStyle';
 
 export default class Plan extends Component {
   constructor() {
     super();
     this.renderPlan = this.renderPlan.bind(this);
-    this.renderPlanStyle = renderPlanStyle.bind(this);
   }
 
   renderPlan(plan) {
@@ -22,7 +21,9 @@ export default class Plan extends Component {
         onClick={() => onServiceSelected(plan.id)}
       >
         <header>
-          <div className="title">{this.renderPlanStyle(plan)}</div>
+          <div className="title">
+            <PlanStyle plan={plan} />
+          </div>
         </header>
         <div className="option-contents">
           <div className="pricing">${hourlyPrice / 100}/hr (${monthlyPrice / 100}/mo)</div>

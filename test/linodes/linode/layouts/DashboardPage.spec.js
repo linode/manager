@@ -66,7 +66,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
   });
 
   it('renders plan', () => {
-    const page = shallow(
+    const page = mount(
       <DashboardPage
         linodes={linodes}
         params={params}
@@ -79,7 +79,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
   });
 
   it('renders datacenter', () => {
-    const page = shallow(
+    const page = mount(
       <DashboardPage
         linodes={linodes}
         params={params}
@@ -92,7 +92,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
   });
 
   it('renders distribution', () => {
-    const page = shallow(
+    const page = mount(
       <DashboardPage
         linodes={linodes}
         params={params}
@@ -105,7 +105,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
   });
 
   it('renders unknown distribution', () => {
-    const page = shallow(
+    const page = mount(
       <DashboardPage
         linodes={linodes}
         params={{ linodeLabel: 'test-linode-1246' }}
@@ -113,7 +113,8 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
 
     expect(page.find('.linode-distro').at(0)
       .find('.col-sm-9')
-      .at(0)
+      .children()
+      .first()
       .text()).to.equal('Unknown');
   });
 

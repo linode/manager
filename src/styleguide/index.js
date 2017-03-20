@@ -13,6 +13,7 @@ import {
   Navigation,
   Forms,
   Modals,
+  Lists,
 } from '~/styleguide/components/sections';
 
 
@@ -29,5 +30,6 @@ export default (
     <Route path="tabs" component={StyleguideTabs} />
     <Route path="forms" component={Forms} />
     <Route path="modals" component={Modals} />
+    <Route path="lists" component={Lists} />
   </Route>
 );

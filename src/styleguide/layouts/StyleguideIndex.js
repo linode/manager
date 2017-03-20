@@ -16,6 +16,7 @@ const navigationItems = [
   { href: '/styleguide/tabs', text: 'Tabs' },
   { href: '/styleguide/forms', text: 'Forms' },
   { href: '/styleguide/modals', text: 'Modals' },
+  { href: '/styleguide/lists', text: 'Lists' },
 ];
 
 function createNavigationItems() {

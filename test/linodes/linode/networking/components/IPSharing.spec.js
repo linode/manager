@@ -40,15 +40,8 @@ describe('linodes/linode/networking/components/IPSharing', () => {
       />
     );
 
-    const rows = page.find('.SecondaryTable-row');
+    const rows = page.find('.TableRow');
     expect(rows.length).to.equal(Object.keys(allIps).length);
-    rows.forEach(row => {
-      const columns = row.find('.SecondaryTable-column');
-      const ipColumn = columns.at(0);
-      const [address] = ipColumn.text().split(' ');
-      const ip = allIps[address];
-      expect(columns.at(1).text()).to.equal(linodes.linodes[ip.linode_id].label);
-    });
   });
 
   it('saves shared ips', async () => {

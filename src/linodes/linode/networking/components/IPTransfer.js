@@ -107,7 +107,7 @@ export default class IPTransfer extends Component {
               <Select
                 value={selectedOtherLinode}
                 name="selectedOtherLinode"
-                onChange={({ target: { name, value } }) =>
+                onChange={({ record: { name, value } }) =>
                   this.setState({ [name]: value, checkedB: {} })}
                 options={this.otherLinodes().map(linode => ({ ...linode, value: linode.id }))}
               />
@@ -118,16 +118,26 @@ export default class IPTransfer extends Component {
               <IPList
                 linode={linode}
                 checked={checkedA}
-                onChange={(name) =>
-                  this.setState({ checkedA: { ...checkedA, [name]: !checkedA[name] } })}
+                onChange={(record, checked) => {
+                  this.setState({
+                    checkedA: {
+                      [record.address]: checked,
+                    },
+                  });
+                }}
               />
             </div>
             <div className="col-sm-6" id="sectionB">
               <IPList
                 linode={linodes[selectedOtherLinode]}
                 checked={checkedB}
-                onChange={(name) =>
-                  this.setState({ checkedB: { ...checkedB, [name]: !checkedB[name] } })}
+                onChange={(record, checked) => {
+                  this.setState({
+                    checkedB: {
+                      [record.address]: checked,
+                    },
+                  });
+                }}
               />
             </div>
           </FormGroup>

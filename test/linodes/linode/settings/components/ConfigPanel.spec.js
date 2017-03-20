@@ -31,7 +31,7 @@ describe('linodes/linode/settings/components/ConfigPanel', () => {
   });
 
   it('renders multiple configs', () => {
-    const panel = shallow(
+    const panel = mount(
       <ConfigPanel
         params={{ linodeLabel: 'test-linode-4' }}
         dispatch={() => {}}
@@ -39,12 +39,11 @@ describe('linodes/linode/settings/components/ConfigPanel', () => {
       />
     );
 
-    expect(panel.find('tr').length).to.equal(2);
+    expect(panel.find('tr').length).to.equal(3);
   });
 
   it('renders config label link', () => {
-    const path = '/linodes/test-linode/settings/advanced/configs/12345';
-    const panel = shallow(
+    const panel = mount(
       <ConfigPanel
         params={{ linodeLabel: `${testLinode.label}` }}
         dispatch={() => {}}
@@ -52,16 +51,9 @@ describe('linodes/linode/settings/components/ConfigPanel', () => {
       />
     );
 
-    expect(panel.find('tr').at(0).find('td')
-      .at(0)
-      .find('Link').length)
+    expect(panel.find('tr').at(1).find('td')
+      .at(0).length)
       .to.equal(1);
-    expect(panel.find('tr').at(0).find('td')
-      .at(0)
-      .find('Link')
-      .props())
-      .to.have.property('to')
-      .which.equals(path);
   });
 
   it('renders config label text', () => {
@@ -73,7 +65,7 @@ describe('linodes/linode/settings/components/ConfigPanel', () => {
       />
     );
 
-    expect(panel.find('tr').at(0).find('td')
+    expect(panel.find('tr').at(1).find('td')
       .at(0)
       .text())
       .to.equal('Test config');
@@ -107,7 +99,7 @@ describe('linodes/linode/settings/components/ConfigPanel', () => {
   });
 
   it('attempts to delete config', async () => {
-    const panel = shallow(
+    const panel = mount(
       <ConfigPanel
         params={{ linodeLabel: 'test-linode-4' }}
         dispatch={dispatch}
@@ -115,7 +107,7 @@ describe('linodes/linode/settings/components/ConfigPanel', () => {
       />
     );
     const actionBtn = panel.
-      find('.LinodesLinodeSettingsComponentsConfigPanel-delete').at(0);
+      find('.ConfigPanel-delete').at(0);
     actionBtn.simulate('click', { preventDefault: () => {} });
     expect(dispatch.callCount).to.equal(1);
     await dispatch.args[0][0].body.props.onOk();
