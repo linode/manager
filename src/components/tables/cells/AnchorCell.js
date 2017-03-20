@@ -14,7 +14,7 @@ export default function AnchorCell(props) {
   return (
     <TableCell column={column} record={record}>
       <button
-        className="Table-rowLabel btn btn-link"
+        className="TableRow-label btn btn-link"
         onClick={() => { onClick(record); }}
         title={record[titleKey]}
       >

@@ -40,7 +40,7 @@ describe('linodes/linode/networking/components/IPSharing', () => {
       />
     );
 
-    const rows = page.find('.Table-row');
+    const rows = page.find('.TableRow');
     expect(rows.length).to.equal(Object.keys(allIps).length);
   });
 

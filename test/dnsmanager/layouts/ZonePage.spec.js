@@ -50,7 +50,7 @@ describe('dnsmanager/layouts/ZonePage', () => {
       />
     );
 
-    const soaRow = page.find('#soa .Table-row');
+    const soaRow = page.find('#soa .TableRow');
     expect(soaRow.length).to.equal(1);
 
     const soaValues = soaRow.find('td');
@@ -76,7 +76,7 @@ describe('dnsmanager/layouts/ZonePage', () => {
       />
     );
 
-    const nsRows = page.find('#ns .Table-row');
+    const nsRows = page.find('#ns .TableRow');
     expect(nsRows.length).to.equal(5);
     const nsValues = nsRows.at(4).find('td');
     expect(nsValues.length).to.equal(4);
@@ -99,7 +99,7 @@ describe('dnsmanager/layouts/ZonePage', () => {
       />
     );
 
-    const mxRows = page.find('#mx .Table-row');
+    const mxRows = page.find('#mx .TableRow');
     expect(mxRows.length).to.equal(mxRecords.length);
 
     const mxValues = mxRows.at(0).find('td');
@@ -123,7 +123,7 @@ describe('dnsmanager/layouts/ZonePage', () => {
       />
     );
 
-    const aRows = page.find('#a .Table-row');
+    const aRows = page.find('#a .TableRow');
     expect(aRows.length).to.equal(aRecords.length);
 
     const aValues = aRows.at(0).find('td');
@@ -147,7 +147,7 @@ describe('dnsmanager/layouts/ZonePage', () => {
       />
     );
 
-    const cnameRows = page.find('#cname .Table-row');
+    const cnameRows = page.find('#cname .TableRow');
     expect(cnameRows.length).to.equal(cnameRecords.length);
 
     const cnameValues = cnameRows.at(0).find('td');
@@ -172,7 +172,7 @@ describe('dnsmanager/layouts/ZonePage', () => {
       />
     );
 
-    const txtRows = page.find('#txt .Table-row');
+    const txtRows = page.find('#txt .TableRow');
     expect(txtRows.length).to.equal(txtRecords.length);
 
     const txtValues = txtRows.at(0).find('td');
@@ -198,7 +198,7 @@ describe('dnsmanager/layouts/ZonePage', () => {
       />
     );
 
-    const srvRows = page.find('#srv .Table-row');
+    const srvRows = page.find('#srv .TableRow');
     expect(srvRows.length).to.equal(srvRecords.length);
 
     const srvValues = srvRows.at(0).find('td');

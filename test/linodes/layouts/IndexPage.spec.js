@@ -52,7 +52,7 @@ describe('linodes/layouts/IndexPage', () => {
       />
     );
 
-    expect(page.find('.Table-row').length).to.equal(
+    expect(page.find('.TableRow').length).to.equal(
       Object.keys(linodes.linodes).length);
   });
 

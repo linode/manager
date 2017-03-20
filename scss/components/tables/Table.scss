@@ -18,14 +18,6 @@
         color: $lightest-black;
     }
 
-    &-rowSelector {
-        padding-right: 10px;
-    }
-
-    &-rowOptions {
-        padding-top: 0;
-    }
-
     &--secondary {
         .TableRow {
             height: 40px;
@@ -37,6 +29,10 @@
     height: 65px;
     border: $border;
     margin: 0 15px;
+
+    &-selector {
+        padding-right: 10px;
+    }
 
     &--selected {
         @extend .selected;

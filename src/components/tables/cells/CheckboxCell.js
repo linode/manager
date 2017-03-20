@@ -12,7 +12,7 @@ export default function CheckboxCell(props) {
     <TableCell className="CheckboxCell" column={column} record={record}>
       <Checkbox
         checked={checked}
-        className="Table-rowSelector"
+        className="TableRow-selector"
         onChange={(e) => {
           onChange(record, e.target.checked);
         }}

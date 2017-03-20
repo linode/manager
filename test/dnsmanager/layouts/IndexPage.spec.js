@@ -29,7 +29,7 @@ describe('dnsmanager/layouts/IndexPage', () => {
       />
     );
 
-    const zone = page.find('.Table-row');
+    const zone = page.find('.TableRow');
     // + 1 for the group
     expect(zone.length).to.equal(Object.keys(dnszones.dnszones).length);
     const firstZone = zone.at(0);
@@ -50,7 +50,7 @@ describe('dnsmanager/layouts/IndexPage', () => {
       />
     );
 
-    const zoneDelete = page.find('.Table-row Button').at(0);
+    const zoneDelete = page.find('.TableRow Button').at(0);
     dispatch.reset();
     zoneDelete.simulate('click');
     expect(dispatch.callCount).to.equal(1);
