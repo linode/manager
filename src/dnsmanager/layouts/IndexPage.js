@@ -134,7 +134,7 @@ export class IndexPage extends Component {
               cellComponent: CheckboxCell,
               onChange: (record) => {
                 this.toggle(record);
-              }
+              },
             },
             {
               className: 'RowLabelCell',
