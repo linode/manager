@@ -7,13 +7,17 @@ import _ from 'lodash';
 import { setError } from '~/actions/errors';
 import { showModal, hideModal } from '~/actions/modal';
 import ConfirmModalBody from '~/components/modals/ConfirmModalBody';
+import { Table } from '~/components/tables';
+import {
+  ButtonCell,
+  CheckboxCell,
+  LinkCell,
+} from '~/components/tables/cells';
 import { dnszones } from '~/api';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 import { toggleSelected, toggleSelectAll } from '../actions';
 import CreateHelper from '~/components/CreateHelper';
-import { Checkbox } from '~/components/form';
-import { Button } from '~/components/buttons';
 import Dropdown from '~/components/Dropdown';
 
 export class IndexPage extends Component {
@@ -51,6 +55,10 @@ export class IndexPage extends Component {
     dispatch(showModal('Delete DNS Zone', this.renderModal(zoneId)));
   }
 
+  toggle(zone) {
+    const { dispatch } = this.props;
+    dispatch(toggleSelected(zone.id));
+  }
 
   doToSelected() {
     const { selected } = this.props;
@@ -104,47 +112,6 @@ export class IndexPage extends Component {
     );
   }
 
-  renderGroup = ({ group, zones }) => {
-    const { dispatch, selected } = this.props;
-    // TODO: sort in fetch call
-    const sortedZones = _.sortBy(zones, ({ created }) => moment(created));
-
-    const rowClass = (zone) =>
-      `PrimaryTable-row ${selected[zone.id] ? ' PrimaryTable-row--selected' : ''}`;
-
-    const ret = sortedZones.map(zone => (
-      <tr key={zone.id} className={rowClass(zone)}>
-        <td>
-          <Checkbox
-            className="PrimaryTable-rowSelector"
-            checked={!!selected[zone.id]}
-            onChange={() =>
-              dispatch(toggleSelected(zone.id))}
-          />
-          <Link
-            className="PrimaryTable-rowLabel"
-            to={`/dnsmanager/${zone.dnszone}`}
-            title={zone.id}
-          >{zone.dnszone}</Link>
-        </td>
-        <td>{zone.type} zone</td>
-        <td className="text-sm-right">
-          <Button onClick={() => this.deleteZone(zone.id)}>Delete</Button>
-        </td>
-      </tr>
-    ));
-
-    if (group) {
-      ret.splice(0, 0, (
-        <tr className="PrimaryTable-row PrimaryTable-row--groupLabel">
-          <td colSpan="3">{group}</td>
-        </tr>
-      ));
-    }
-
-    return ret;
-  }
-
   renderActions(disabled) {
     const elements = [
       { _action: this.remove, name: 'Delete' },
@@ -154,20 +121,53 @@ export class IndexPage extends Component {
   }
 
   renderZones(zones) {
-    const groups = _.map(
-      _.sortBy(
-        _.map(
-          _.groupBy(Object.values(zones), ({ display_group: group }) => group),
-          (_zones, _group) => ({ group: _group, zones: _zones })
-        ), zoneGroup => zoneGroup.group
-      ), this.renderGroup);
+    const { selected } = this.props;
+    // TODO: add sort function in dns zones config definition
+    const sortedZones = _.sortBy(Object.values(zones), ({ created }) => moment(created));
+
+    const groups = _.sortBy(
+      _.map(_.groupBy(sortedZones, ({ display_group: group }) => group), (_zones, _group) => {
+        return {
+          name: _group,
+          columns: [
+            {
+              cellComponent: CheckboxCell,
+              onChange: (record) => {
+                this.toggle(record);
+              },
+            },
+            {
+              className: 'RowLabelCell',
+              cellComponent: LinkCell,
+              hrefFn: (zone) => `/dnsmanager/${zone.dnszone}`, textKey: 'dnszone',
+            },
+            { dataKey: 'type' },
+            {
+              cellComponent: ButtonCell,
+              text: 'Delete',
+              onClick: (zone) => { this.deleteZone(zone.id); },
+            },
+          ],
+          data: _zones,
+          disableHeader: true,
+        };
+      }), zoneGroup => zoneGroup.group);
 
     return (
-      <table className="PrimaryTable">
-        <tbody>
-          {groups}
-        </tbody>
-      </table>
+      <div>
+        {groups.map(function (group, index) {
+          return (
+            <div className="Group" key={index}>
+              <div className="Group-label">{group.name}</div>
+              <Table
+                columns={group.columns}
+                data={group.data}
+                selectedMap={selected}
+              />
+            </div>
+          );
+        })}
+      </div>
     );
   }
 

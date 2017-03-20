@@ -4,9 +4,19 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 import _ from 'lodash';
 
-import { Linode } from '../components/Linode';
 import Dropdown from '~/components/Dropdown';
 import CreateHelper from '~/components/CreateHelper';
+
+import { Table } from '~/components/tables';
+import {
+  BackupsCell,
+  CheckboxCell,
+  DatacenterCell,
+  IPAddressCell,
+  LinkCell,
+} from '~/components/tables/cells';
+import StatusDropdownCell from '~/linodes/components/StatusDropdownCell';
+
 import { setError } from '~/actions/errors';
 import { linodes } from '~/api';
 import {
@@ -22,6 +32,7 @@ import { setTitle } from '~/actions/title';
 import ConfirmModalBody from '~/components/modals/ConfirmModalBody';
 import { showModal, hideModal } from '~/actions/modal';
 
+
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
     try {
@@ -35,7 +46,6 @@ export class IndexPage extends Component {
 
   constructor() {
     super();
-    this.renderGroup = this.renderGroup.bind(this);
     this.powerOn = this.powerOn.bind(this);
     this.powerOff = this.powerOff.bind(this);
     this.reboot = this.reboot.bind(this);
@@ -108,50 +118,53 @@ export class IndexPage extends Component {
     };
   }
 
-  renderGroup({ group, linodes }) {
-    const { selected } = this.props;
-    const sortedLinodes = _.sortBy(linodes, l => moment(l.created));
+  renderLinodes(linodes, selected) {
+    const { dispatch } = this.props;
+    // TODO: add sort function in linodes config definition
+    const sortedLinodes = _.sortBy(Object.values(linodes), l => moment(l.created));
 
-    const renderLinode = (l, row) =>
-      <Linode
-        key={l.id}
-        linode={l}
-        onSelect={this.toggle}
-        isSelected={l.id in selected}
-        isRow={row}
-        onPowerOn={this.powerOn}
-        onReboot={this.reboot}
-        dispatch={this.props.dispatch}
-      />;
-
-    const ret = sortedLinodes.map(l => renderLinode(l, true));
-
-    if (group) {
-      ret.splice(0, 0, (
-        <tr className="PrimaryTable-row PrimaryTable-row--groupLabel">
-          <td colSpan="5">{group}</td>
-        </tr>
-      ));
-    }
-
-    return ret;
-  }
-
-  renderLinodes(linodes) {
-    const groups = _.map(
-      _.sortBy(
-        _.map(
-          _.groupBy(Object.values(linodes), l => l.group),
-          (_linodes, _group) => ({ group: _group, linodes: _linodes })
-        ), lg => lg.group
-      ), this.renderGroup);
+    const groups = _.sortBy(
+      _.map(_.groupBy(sortedLinodes, l => l.group), (_linodes, _group) => {
+        return {
+          name: _group,
+          // TODO: don't redefine these for each linode
+          columns: [
+            {
+              cellComponent: CheckboxCell,
+              onChange: (record) => {
+                this.toggle(record);
+              },
+            },
+            {
+              className: 'RowLabelCell',
+              cellComponent: LinkCell,
+              hrefFn: (linode) => `/linodes/${linode.label}`,
+            },
+            { cellComponent: IPAddressCell },
+            { cellComponent: DatacenterCell },
+            { cellComponent: BackupsCell, hrefFn: (linode) => `/linodes/${linode.label}/backups` },
+            { cellComponent: StatusDropdownCell, dispatch: dispatch },
+          ],
+          data: _linodes,
+          disableHeader: true,
+        };
+      }), lg => lg.name);
 
     return (
-      <table className="PrimaryTable">
-        <tbody>
-          {groups}
-        </tbody>
-      </table>
+      <div>
+        {groups.map(function (group, index) {
+          return (
+            <div className="Group" key={index}>
+              <div className="Group-label">{group.name}</div>
+              <Table
+                columns={group.columns}
+                data={group.data}
+                selectedMap={selected}
+              />
+            </div>
+          );
+        })}
+      </div>
     );
   }
 
@@ -198,7 +211,7 @@ export class IndexPage extends Component {
           </div>
         </header>
         <div className="PrimaryPage-body">
-          {Object.keys(this.props.linodes.linodes).length ? this.renderLinodes(linodes) :
+          {Object.keys(this.props.linodes.linodes).length ? this.renderLinodes(linodes, selected) :
             <CreateHelper label="Linodes" href="/linodes/create" linkText="Add a Linode" />}
         </div>
       </div>

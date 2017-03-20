@@ -1,6 +1,6 @@
 import React from 'react';
 import sinon from 'sinon';
-import { shallow, mount } from 'enzyme';
+import { mount } from 'enzyme';
 import { expect } from 'chai';
 
 import { IndexPage } from '~/dnsmanager/layouts/IndexPage';
@@ -21,7 +21,7 @@ describe('dnsmanager/layouts/IndexPage', () => {
   const dispatch = sandbox.spy();
 
   it('renders a list of DNS Zones', () => {
-    const page = shallow(
+    const page = mount(
       <IndexPage
         dispatch={dispatch}
         selected={{}}
@@ -29,18 +29,20 @@ describe('dnsmanager/layouts/IndexPage', () => {
       />
     );
 
-    const zone = page.find('.PrimaryTable-row');
+    const zone = page.find('.TableRow');
     // + 1 for the group
-    expect(zone.length).to.equal(Object.keys(dnszones.dnszones).length + 1);
-    const firstZone = zone.at(1);
+    expect(zone.length).to.equal(Object.keys(dnszones.dnszones).length);
+    const firstZone = zone.at(0);
     expect(firstZone.find('Link').props().to)
       .to.equal('/dnsmanager/example.com');
     expect(firstZone.find('td').at(1).text())
-      .to.equal('master zone');
+      .to.equal('example.com');
+    expect(firstZone.find('td').at(2).text())
+      .to.equal('master');
   });
 
   it('shows the delete modal when delete is pressed', () => {
-    const page = shallow(
+    const page = mount(
       <IndexPage
         dispatch={dispatch}
         selected={{}}
@@ -48,7 +50,7 @@ describe('dnsmanager/layouts/IndexPage', () => {
       />
     );
 
-    const zoneDelete = page.find('.PrimaryTable-row Button').at(0);
+    const zoneDelete = page.find('.TableRow Button').at(0);
     dispatch.reset();
     zoneDelete.simulate('click');
     expect(dispatch.callCount).to.equal(1);
