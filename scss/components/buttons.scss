@@ -4,8 +4,9 @@
     height: $form-field-height;
 }
 
-.btn, a {
-    transition: background .35s, color .2s, border .1s;
+.btn,
+a {
+    transition: background 0.2s, color 0.2s, border 0.2s;
 }
 
 .btn {
