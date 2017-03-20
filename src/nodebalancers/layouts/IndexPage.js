@@ -62,7 +62,7 @@ export class IndexPage extends Component {
     // TODO: add sort function in config definition
     const data = Object.values(nodebalancers.nodebalancers);
 
-    // TODO: add mass edit controls
+    // TODO: add mass edit controls to nodebalancers
     const renderZones = (data) => (
       <Table
         columns={[

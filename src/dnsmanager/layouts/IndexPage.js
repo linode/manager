@@ -55,6 +55,10 @@ export class IndexPage extends Component {
     dispatch(showModal('Delete DNS Zone', this.renderModal(zoneId)));
   }
 
+  toggle(zone) {
+    const { dispatch } = this.props;
+    dispatch(toggleSelected(zone.id));
+  }
 
   doToSelected() {
     const { selected } = this.props;
@@ -118,7 +122,7 @@ export class IndexPage extends Component {
 
   renderZones(zones) {
     const { selected } = this.props;
-    // TODO: add sort function in config definition
+    // TODO: add sort function in dns zones config definition
     const sortedZones = _.sortBy(Object.values(zones), ({ created }) => moment(created));
 
     const groups = _.sortBy(
@@ -126,7 +130,12 @@ export class IndexPage extends Component {
         return {
           name: _group,
           columns: [
-            { cellComponent: CheckboxCell },
+            {
+              cellComponent: CheckboxCell,
+              onChange: (record) => {
+                this.toggle(record);
+              }
+            },
             {
               className: 'RowLabelCell',
               cellComponent: LinkCell,

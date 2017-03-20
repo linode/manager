@@ -120,14 +120,14 @@ export class IndexPage extends Component {
 
   renderLinodes(linodes, selected) {
     const { dispatch } = this.props;
-    // TODO: add sort function in config definition
+    // TODO: add sort function in linodes config definition
     const sortedLinodes = _.sortBy(Object.values(linodes), l => moment(l.created));
 
     const groups = _.sortBy(
       _.map(_.groupBy(sortedLinodes, l => l.group), (_linodes, _group) => {
         return {
           name: _group,
-          // TODO: don't redefine these for each
+          // TODO: don't redefine these for each linode
           columns: [
             {
               cellComponent: CheckboxCell,

@@ -42,7 +42,7 @@ LinkCell.propTypes = {
     hrefFn: PropTypes.func.isRequired,
     titleKey: PropTypes.string,
     textKey: PropTypes.string,
-    // TODO: consider generalizing
+    // TODO: consider generalizing textFn for formatting
     textFn: PropTypes.func,
   }).isRequired,
   record: PropTypes.object.isRequired,

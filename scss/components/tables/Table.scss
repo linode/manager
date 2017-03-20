@@ -18,16 +18,6 @@
         color: $lightest-black;
     }
 
-    &-row {
-        height: 65px;
-        border: $border;
-        margin: 0 15px;
-
-        &--selected {
-            @extend .selected;
-        }
-    }
-
     &-rowSelector {
         padding-right: 10px;
     }
@@ -37,9 +27,19 @@
     }
 
     &--secondary {
-        .Table-row {
+        .TableRow {
             height: 40px;
         }
+    }
+}
+
+.TableRow {
+    height: 65px;
+    border: $border;
+    margin: 0 15px;
+
+    &--selected {
+        @extend .selected;
     }
 }
 

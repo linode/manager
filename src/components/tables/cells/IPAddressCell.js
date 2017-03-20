@@ -23,7 +23,7 @@ export default function IPAddressCell(props) {
 IPAddressCell.propTypes = {
   column: PropTypes.object.isRequired,
   record: PropTypes.shape({
-    ipv4: PropTypes.array.isRequired,
+    ipv4: PropTypes.any,
     ipv6: PropTypes.string,
   }),
 };

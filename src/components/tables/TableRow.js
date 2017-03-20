@@ -44,10 +44,9 @@ export default class TableRow extends Component {
     const { columns, record } = this.props;
     let { selected } = this.state;
 
-    // TODO: className based on selected
-    // const selectedClass = isSelected ? 'Table-row--selected' : '';
+    const selectedClass = selected ? 'TableRow--selected' : '';
     return (
-      <tr className="Table-row">
+      <tr className={`TableRow ${selectedClass}`}>
         {columns.map((column, index) => {
           // rendering options from most to least specific
 

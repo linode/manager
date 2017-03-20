@@ -6,7 +6,7 @@ export default function TableCell(props) {
   const { formatFn } = column;
   const className = column.className || props.className || '';
 
-  // TODO: dynamic class name based on column type ( numeric/text/etc )
+  // TODO: add dynamic class name based on column type ( numeric/text/etc )
   let children = props.children;
   if (!children) {
     children = record[column.dataKey];
