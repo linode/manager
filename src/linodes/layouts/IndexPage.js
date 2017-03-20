@@ -119,6 +119,7 @@ export class IndexPage extends Component {
   }
 
   renderLinodes(linodes, selected) {
+    const { dispatch } = this.props;
     // TODO: add sort function in config definition
     const sortedLinodes = _.sortBy(Object.values(linodes), l => moment(l.created));
 
@@ -142,7 +143,7 @@ export class IndexPage extends Component {
             { cellComponent: IPAddressCell },
             { cellComponent: DatacenterCell },
             { cellComponent: BackupsCell, hrefFn: (linode) => `/linodes/${linode.label}/backups` },
-            { cellComponent: StatusDropdownCell },
+            { cellComponent: StatusDropdownCell, dispatch: dispatch },
           ],
           data: _linodes,
           disableHeader: true,

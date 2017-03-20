@@ -6,7 +6,8 @@ import StatusDropdown from './StatusDropdown';
 
 // TODO: Pull dispatch out of status dropdown, handle in container view
 export default function StatusDropdownCell(props) {
-  const { column, dispatch, record } = props;
+  const { column, record } = props;
+  const { dispatch } = column;
 
   return (
     <TableCell column={column} record={record}>
