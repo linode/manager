@@ -4,14 +4,8 @@ import { RANDOM_PROGRESS_MAX, powerOnLinode, powerOffLinode, rebootLinode } from
 import { LinodeStates, LinodeStatesReadable } from '~/constants';
 import { showModal } from '~/actions/modal';
 import ConfigSelectModalBody from '~/linodes/components/ConfigSelectModalBody';
+import { launchWeblishConsole } from '~/linodes/components/WeblishLaunch';
 
-export function launchWeblishConsole(linode) {
-  window.open(
-    `${window.location.protocol}//${window.location.host}/linodes/${linode.label}/weblish`,
-    `weblish_con_${linode.id}`,
-    'left=100,top=100,width=1024,height=655,toolbar=0,resizable=1'
-  );
-}
 
 export default class StatusDropdown extends Component {
   constructor() {
@@ -58,7 +52,7 @@ export default class StatusDropdown extends Component {
       {
         name: <span>Launch Console</span>,
         _key: 'text-console',
-        _action: () => launchWeblishConsole(linode),
+        _action: () => { launchWeblishConsole(linode); },
         _condition: () => shortcuts,
       },
     ]
