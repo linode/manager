@@ -10,7 +10,7 @@
   "parser": "babel-eslint",
   rules: {
     "babel/generator-star-spacing": 2,
-    "babel/new-cap": 2,
+    "babel/new-cap": 0,
     "babel/array-bracket-spacing": 2,
     "babel/object-shorthand": 0,
     "babel/flow-object-type": 2,
@@ -29,6 +29,7 @@
     "react/no-did-mount-set-state": 0,
     "import/no-duplicates": 0,
     "no-duplicate-imports": 0,
+    "new-cap": 0,
     "no-shadow": 0,
     "object-shorthand": 0,
     "radix": 0,
