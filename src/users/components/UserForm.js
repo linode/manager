@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-import { users } from '~/api';
 import {
   Form,
   FormGroup,
@@ -10,7 +9,7 @@ import {
   Checkbox,
   Checkboxes,
 } from '~/components/form';
-import { ErrorSummary, reduceErrors } from '~/errors';
+import { ErrorSummary } from '~/errors';
 import { SubmitButton, CancelButton } from '~/components/form';
 import { setSource } from '~/actions/source';
 import { setError } from '~/actions/errors';
@@ -22,27 +21,25 @@ export class UserForm extends Component {
       username: props.username,
       email: props.email,
       password: null,
-      permissions: props.permissions,
-      permissionsLabel: props.permissionsLabel,
-      errors: {},
+      restricted: props.restricted,
+      restrictedLabel: props.restrictedLabel,
     };
   }
 
   render() {
-    const { dispatch } = this.props;
+    const { dispatch, errors, onSubmit } = this.props;
     const {
       username,
       email,
       password,
-      permissions,
-      permissionsLabel,
-      errors
+      restricted,
+      restrictedLabel,
     } = this.state;
 
     return (
       <Form onSubmit={async () => {
         const values = { ...this.state };
-        await saveChanges(values);
+        await onSubmit(values);
       }}>
         <FormGroup errors={errors} name="username" className="row">
           <label className="col-sm-2 col-form-label">Username</label>
@@ -77,16 +74,17 @@ export class UserForm extends Component {
             <FormGroupError errors={errors} name="password" />
           </div>
         </FormGroup>
-        <FormGroup errors={errors} name="permissions" className="row">
+        <FormGroup errors={errors} name="restricted" className="row">
           <div className="offset-sm-2 col-sm-6">
             <Checkbox
-              id="permissions"
-              checked={!!permissions}
-              onChange={() => this.setState({ permissions: !permissions })}
-              label={permissionsLabel}
+              id="restricted"
+              checked={!!restricted}
+              onChange={() => this.setState({ restricted: !restricted })}
+              label={restrictedLabel}
+              disabled={true}
             />
           </div>
-          <FormGroupError errors={errors} name="permissions" />
+          <FormGroupError errors={errors} name="restricted" />
         </FormGroup>
         <ErrorSummary errors={errors} />
         <div className="row">
@@ -100,11 +98,12 @@ export class UserForm extends Component {
 }
 
 UserForm.propTypes = {
-  saveChanges: PropTypes.func,
+  onSubmit: PropTypes.func,
   username: PropTypes.string,
   email: PropTypes.string,
-  permissions: PropTypes.bool,
-  permissionsLabel: PropTypes.string,
+  restricted: PropTypes.bool,
+  restrictedLabel: PropTypes.string,
+  errors: PropTypes.any,
 };
 
 UserForm.defaultProps = {

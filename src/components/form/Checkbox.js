@@ -9,6 +9,7 @@ export default function Checkbox(props) {
           type="checkbox"
           value={props.value}
           checked={props.checked}
+          disabled={props.disabled}
           onChange={props.onChange}
           className="Checkbox-input"
         />
@@ -22,6 +23,7 @@ Checkbox.propTypes = {
   checked: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
   className: PropTypes.string,
+  disabled: PropTypes.bool,
   label: PropTypes.string,
   value: PropTypes.bool,
   id: PropTypes.string,

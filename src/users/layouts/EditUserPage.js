@@ -8,7 +8,7 @@ import { Card } from '~/components/cards';
 import { Input, Form, FormGroup, FormGroupError, SubmitButton } from '~/components/form';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
-import { reduceErrors, ErrorSummary } from '~/errors';
+import { reduceErrors } from '~/errors';
 import { UserForm } from '../components/UserForm';
 
 export class EditUserPage extends Component {
@@ -24,15 +24,36 @@ export class EditUserPage extends Component {
 
   constructor(props) {
     super(props);
+
+    this.onSubmit = this.onSubmit.bind(this);
     const { username } = props.params;
     this.state = {
-      username: username,
+      loading: false,
+      initUsername: username,
       email: props.users[username].email,
+      errors: {},
     };
   }
 
+  async onSubmit(stateValues){
+    const { dispatch } = this.props;
+    const { initUsername } = this.state;
+
+    this.setState({ loading: true });
+    try {
+      await dispatch(users.put(stateValues, initUsername));
+      dispatch(push('/users'));
+    } catch (response) {
+      console.log(response);
+      await new Promise(async (resolve) => this.setState({
+        loading: false,
+        errors: Object.freeze(await reduceErrors(response)),
+      }, resolve));
+    }
+  }
+
   render() {
-    const { username, email, restricted } = this.state;
+    const { initUsername, email, restricted, errors } = this.state;
     return (
       <div className="PrimaryPage container">
         <header className="PrimaryPage-header">
@@ -41,13 +62,15 @@ export class EditUserPage extends Component {
           </div>
         </header>
         <div className="PrimaryPage-body User-edit">
-          <Card title={`Edit user ${username}`}>
+          <Card title={`Edit user ${initUsername}`}>
             <UserForm
-              username={username}
+              username={initUsername}
               email={email}
-              permissionsLabel="Edit permissions
-                (leave blank to keep existing permissions)"
-              permissions={false}
+              restrictedLabel="Edit restricted
+                (leave blank to keep existing restrictions)"
+              restricted={false}
+              errors={errors}
+              onSubmit={this.onSubmit}
             />
           </Card>
         </div>
@@ -59,7 +82,7 @@ export class EditUserPage extends Component {
 EditUserPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   params: PropTypes.shape({
-    username: PropTypes.string,
+    username: PropTypes.string.isRequired,
   }),
   username: PropTypes.string,
   email: PropTypes.string,
