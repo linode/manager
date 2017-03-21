@@ -9,9 +9,14 @@ import { nodebalancers } from '~/api';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 import CreateHelper from '~/components/CreateHelper';
-import { Checkbox } from '~/components/form';
-import { Button } from '~/components/buttons';
-import { renderDatacenterStyle } from '~/linodes/components/Linode';
+import { Table } from '~/components/tables';
+import {
+  ButtonCell,
+  DatacenterCell,
+  IPAddressCell,
+  LinkCell,
+} from '~/components/tables/cells';
+
 
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
@@ -22,11 +27,6 @@ export class IndexPage extends Component {
       console.error(response);
       dispatch(setError(response));
     }
-  }
-
-  constructor() {
-    super();
-    this.state = { isSelected: { } };
   }
 
   async componentDidMount() {
@@ -59,44 +59,28 @@ export class IndexPage extends Component {
 
   render() {
     const { nodebalancers } = this.props;
-    const { isSelected } = this.state;
+    // TODO: add sort function in config definition
+    const data = Object.values(nodebalancers.nodebalancers);
 
-    const renderZones = () => (
-      <table className="PrimaryTable">
-        <tbody>
-          {Object.values(nodebalancers.nodebalancers).map(n => (
-            <tr
-              key={n.id}
-              className={`PrimaryTable-row ${isSelected[n.id] ? 'PrimaryTable-row--selected' : ''}`}
-            >
-              <td>
-                <Checkbox
-                  className="PrimaryTable-rowSelector"
-                  checked={!!isSelected[n.id]}
-                  onChange={() =>
-                    this.setState({ isSelected: { ...isSelected, [n.id]: !isSelected[n.id] } })}
-                />
-                <Link
-                  className="PrimaryTable-rowLabel"
-                  to={`/nodebalancers/${n.label}`}
-                  title={n.id}
-                >
-                  {n.label}
-                </Link>
-              </td>
-              <td>
-                {n.ipv4}
-                {/* TODO: drop || when ipv6 actually exists, or look up correctly */}
-                <div className="text-muted">{(n.ipv6 || '').split('/')[0]}</div>
-              </td>
-              <td>{renderDatacenterStyle(n)}</td>
-              <td className="text-sm-right">
-                <Button onClick={() => this.deleteNodeBalancer(n.id)}>Delete</Button>
-              </td>
-            </tr>
-           ))}
-        </tbody>
-      </table>
+    // TODO: add mass edit controls to nodebalancers
+    const renderZones = (data) => (
+      <Table
+        columns={[
+          {
+            className: 'RowLabelCell',
+            cellComponent: LinkCell,
+            hrefFn: (nodebalancer) => { return `/nodebalancer/${nodebalancer.label}`; },
+          },
+          { cellComponent: IPAddressCell },
+          { cellComponent: DatacenterCell },
+          {
+            cellComponent: ButtonCell,
+            onClick: (nodebalancer) => { this.deleteNodeBalancer(nodebalancer.id); },
+            text: 'Delete',
+          },
+        ]}
+        data={data}
+      />
     );
 
     return (
@@ -111,7 +95,7 @@ export class IndexPage extends Component {
           </div>
         </header>
         <div className="PrimaryPage-body">
-          {Object.keys(this.props.nodebalancers.nodebalancers).length ? renderZones() :
+          {data.length ? renderZones(data) :
             <CreateHelper label="zones" href="/nodebalancers/create" linkText="Add a zone" />}
         </div>
       </div>

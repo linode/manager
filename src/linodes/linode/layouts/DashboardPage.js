@@ -3,12 +3,10 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import _ from 'lodash';
 
-import {
-  renderDistroStyle,
-  renderDatacenterStyle,
-  renderPlanStyle,
-} from '~/linodes/components/Linode';
-import { launchWeblishConsole } from '~/linodes/components/StatusDropdown';
+import Datacenter from '~/linodes/components/Datacenter';
+import DistroStyle from '~/linodes/components/DistroStyle';
+import PlanStyle from '~/linodes/components/PlanStyle';
+import WeblishLaunch from '~/linodes/components/WeblishLaunch';
 import { getLinode } from './IndexPage';
 import { setSource } from '~/actions/source';
 import { Button } from '~/components/buttons';
@@ -18,9 +16,6 @@ export class DashboardPage extends Component {
   constructor() {
     super();
     this.getLinode = getLinode.bind(this);
-    this.renderDistroStyle = renderDistroStyle.bind(this);
-    this.renderDatacenterStyle = renderDatacenterStyle.bind(this);
-    this.renderPlanStyle = renderPlanStyle.bind(this);
     this.renderDetails = this.renderDetails.bind(this);
     this.renderGraphs = this.renderGraphs.bind(this);
     this.graphSelection = this.graphSelection.bind(this);
@@ -150,7 +145,7 @@ export class DashboardPage extends Component {
   renderDetails() {
     const { username } = this.props;
     const linode = this.getLinode();
-    const plan = this.renderPlanStyle(linode.type[0]);
+    const plan = (<PlanStyle plan={linode.type[0]} />);
     const lishLink = `ssh -t ${
         username
       }@lish-${
@@ -189,7 +184,7 @@ export class DashboardPage extends Component {
                 Datacenter
               </div>
               <div className="col-sm-9">
-                {this.renderDatacenterStyle(linode)}
+                <Datacenter obj={linode} />
               </div>
             </div>
             <div className="row linode-distro">
@@ -197,7 +192,7 @@ export class DashboardPage extends Component {
                 Distribution
               </div>
               <div className="col-sm-9">
-                {this.renderDistroStyle(linode)}
+                <DistroStyle linode={linode} />
               </div>
             </div>
             <div className="row linode-backups">
@@ -248,9 +243,7 @@ export class DashboardPage extends Component {
                   />
                   <span className="input-group-btn">
                     <Button>SSH</Button>
-                    <Button onClick={() => launchWeblishConsole(linode)}>
-                      Open
-                    </Button>
+                    <WeblishLaunch linode={linode} />
                   </span>
                 </div>
                 <small className="text-muted">

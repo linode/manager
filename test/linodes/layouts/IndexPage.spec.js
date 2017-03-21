@@ -52,12 +52,8 @@ describe('linodes/layouts/IndexPage', () => {
       />
     );
 
-    // There should be as many rows as there are Linodes and display groups,
-    // minus 1 for the default empty group.
-    const groups = Object.values(linodes.linodes).map(l => l.group);
-    const groupCount = [...new Set(groups)].length;
-    expect(page.find('.PrimaryTable-row').length).to.equal(
-      Object.keys(linodes.linodes).length + groupCount - 1);
+    expect(page.find('.TableRow').length).to.equal(
+      Object.keys(linodes.linodes).length);
   });
 
   it('renders a power management dropdown', () => {

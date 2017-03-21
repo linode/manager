@@ -6,6 +6,7 @@ import {
 export const config = genConfig({
   plural: 'users',
   singular: 'user',
+  primaryKey: 'username',
   endpoint: id => `/account/users/${id}`,
   supports: [ONE, MANY, DELETE, PUT, POST],
 });

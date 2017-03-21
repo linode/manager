@@ -9,6 +9,7 @@
 
 @import 'components/index';
 @import 'linodes/index';
+@import 'profile/integrations/components/OAuthScopes';
 @import 'layout/index';
 @import 'styleguide/index';
 
@@ -136,79 +137,6 @@
     }
 }
 
-// TODO: make component and BEM-ify
-table {
-    width: 100%;
-
-    th:first-of-type,
-    td:first-of-type {
-        padding-left: 15px;
-    }
-
-    th:last-of-type,
-    td:last-of-type {
-        padding-right: 15px;
-    }
-
-    td:not(:first-of-type) {
-        white-space: nowrap;
-    }
-
-    thead {
-        background: $light-gray;
-        border: $border;
-        border-bottom: 0;
-        height: 35px;
-        line-height: 35px;
-
-        th {
-            font-weight: normal;
-        }
-
-        th:last-of-type {
-            border-right: $border;
-        }
-
-        &.clear-thead {
-            background-color: transparent;
-            border: 0;
-            th {
-                border: 0;
-                border-top: 0;
-                border-bottom: 0;
-                padding-top: 0;
-            }
-            th:last-of-type {
-                border-right: 0;
-            }
-        }
-    }
-
-    tbody {
-        tr {
-            height: 35px;
-            line-height: 35px;
-            border: $border;
-            margin: 0 15px;
-            
-            &:not(.selected) {
-                background: $white;
-            }
-        }
-        &.hard-border {
-            tr {
-                background: $light-gray;
-
-                td {
-                    border: 0;
-                    padding: 0 15px;
-                    line-height: 35px;
-                }
-            }
-        }
-    }
-}
-
 footer {
     padding-bottom: 15px;
 
@@ -232,7 +160,7 @@ footer {
 .sub-header {
     color: $light-black;
     padding-top: 15px;
-    padding-bottom: 15px;
+    padding-bottom: 5px;
 }
 
 header .sub-header {

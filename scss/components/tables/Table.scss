@@ -1,0 +1,79 @@
+.Table {
+    width: 100%;
+
+    th:first-of-type,
+    td:first-of-type {
+        padding-left: 15px;
+    }
+
+    th:last-of-type,
+    td:last-of-type {
+        padding-right: 15px;
+    }
+
+    thead, th {
+        background: transparent;
+        border: 0;
+        font-weight: normal;
+        color: $lightest-black;
+    }
+
+    &--secondary {
+        .TableRow {
+            height: 40px;
+        }
+    }
+}
+
+.TableRow {
+    height: 65px;
+    border: $border;
+    margin: 0 15px;
+    background: $white;
+
+    &-selector {
+        padding-right: 10px;
+    }
+
+    &--selected {
+        @extend .selected;
+    }
+}
+
+// TODO: move this somewhere else
+.Group {
+    margin-top: 15px;
+
+    &-label {
+        @extend .font-large;
+        color: $light-black;
+        padding: 5px 0;
+    }
+}
+
+.CheckboxCell {
+    width: 45px;
+}
+
+.RowLabelCell {
+    @extend .font-large;
+    width: 350px;
+}
+
+.ButtonCell {
+    width: 70px;
+    padding: 0 0 0 10px;
+
+    button {
+        // TODO: proper styles for buttons in cells
+        display: block;
+        float: right;
+        position: relative;
+        top: 1px;
+    }
+}
+
+.AuthScopeCell {
+    width: 65px;
+    text-align: center;
+}

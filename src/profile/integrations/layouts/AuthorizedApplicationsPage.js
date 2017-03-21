@@ -3,8 +3,7 @@ import { connect } from 'react-redux';
 
 import { setError } from '~/actions/errors';
 import { tokens } from '~/api';
-import { Button } from '~/components/buttons/';
-import { reduceErrors } from '~/errors';
+
 import AuthorizedApplication from '../components/AuthorizedApplication';
 
 export class AuthorizedApplicationsPage extends Component {
@@ -15,22 +14,6 @@ export class AuthorizedApplicationsPage extends Component {
       // eslint-disable-next-line no-console
       console.error(response);
       dispatch(setError(response));
-    }
-  }
-
-  constructor(props) {
-    super(props);
-    this.revokeApp = this.revokeApp.bind(this);
-  }
-
-  async revokeApp(id) {
-    const { dispatch } = this.props;
-
-    try {
-      await dispatch(tokens.delete(id));
-    } catch (response) {
-      const errors = await reduceErrors(response);
-      this.setState({ errors });
     }
   }
 
@@ -45,14 +28,9 @@ export class AuthorizedApplicationsPage extends Component {
           <div className="col-lg-6" key={client.id}>
             <AuthorizedApplication
               label={client.client.label}
-              nav={
-                <Button
-                  onClick={() => this.revokeApp(client.id)}
-                >Revoke</Button>
-              }
-              type="application"
               scopes={client.scopes}
               id={client.client.id}
+              expires={client.expiry}
               dispatch={dispatch}
             />
           </div>
