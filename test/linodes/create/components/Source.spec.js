@@ -14,16 +14,16 @@ describe('linodes/create/components/Source', () => {
 
   it('invokes the onTabChange function as necessary', () => {
     const onTabChange = sandbox.spy();
-    const c = shallow(
+    const c = mount(
       <Source
         distributions={api.distributions}
         linodes={api.linodes}
         distribution={null}
         backup={null}
-        selectedTab={0}
+        selectedIndex={0}
         onTabChange={onTabChange}
       />);
-    c.find('Tabs').props().onClick(1);
+    c.find('Tabs').first().props().onClick(1);
     expect(onTabChange.calledOnce).to.equal(true);
     expect(onTabChange.calledWith(1)).to.equal(true);
   });
@@ -35,8 +35,9 @@ describe('linodes/create/components/Source', () => {
         linodes={api.linodes}
         distribution={null}
         backup={null}
-        selectedTab={0}
+        selectedIndex={0}
       />);
+
     expect(c.find('Distributions').length).to.equal(1);
   });
 
@@ -48,7 +49,7 @@ describe('linodes/create/components/Source', () => {
         linodes={api.linodes}
         distribution={null}
         backup={null}
-        selectedTab={0}
+        selectedIndex={0}
         onSourceSelected={onSourceSelected}
       />
     );

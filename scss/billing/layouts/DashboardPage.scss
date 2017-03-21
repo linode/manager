@@ -1,0 +1,8 @@
+.BillingDashboard {
+  min-height: 400px;
+  padding: 170px;
+
+  &-placeholder {
+    @extend .font-extra-large;
+  }
+}
