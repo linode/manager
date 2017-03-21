@@ -1,20 +1,65 @@
 import React, { Component, PropTypes } from 'react';
 
-import { RANDOM_PROGRESS_MAX, powerOnLinode, powerOffLinode, rebootLinode } from '~/api/linodes';
+import { linodes as apiLinodes } from '~/api';
+import { actions } from '~/api/configs/linodes';
+import { powerOnLinode, powerOffLinode, rebootLinode } from '~/api/linodes';
+import Polling from '~/api/polling';
 import { LinodeStates, LinodeStatesReadable } from '~/constants';
 import { showModal } from '~/actions/modal';
 import ConfigSelectModalBody from '~/linodes/components/ConfigSelectModalBody';
 import { launchWeblishConsole } from '~/linodes/components/WeblishLaunch';
 
+const RANDOM_PROGRESS_MAX = 75;
+const RANDOM_PROGRESS_MIN = 40;
+
+function randomInitialProgress() {
+  return Math.random() * (RANDOM_PROGRESS_MAX - RANDOM_PROGRESS_MIN) + RANDOM_PROGRESS_MIN;
+}
 
 export default class StatusDropdown extends Component {
   constructor() {
     super();
     this.open = this.open.bind(this);
     this.close = this.close.bind(this);
+
+    this._polling = Polling({
+      apiRequestFn: this.fetchLinode.bind(this),
+      timeout: 2500,
+      maxTries: 20,
+      onMaxTriesReached: this.onMaxPollingReached.bind(this),
+    });
     this.state = {
       open: false,
     };
+  }
+
+  componentWillUpdate(nextProps) {
+    const { linode } = nextProps;
+
+    // stop polling if Linode status change is complete
+    if (LinodeStates.pending.indexOf(linode.status) === -1) {
+      this._polling.stop();
+    }
+  }
+
+  onMaxPollingReached() {
+    // TODO: error state
+  }
+
+  async startLinodePolling(tempStatus = '') {
+    const { dispatch, linode } = this.props;
+
+    dispatch(actions.one({ status: tempStatus, __progress: 1 }, linode.id));
+    await new Promise(resolve => setTimeout(resolve, 0));
+    dispatch(actions.one({ __progress: randomInitialProgress() }, linode.id));
+
+    this._polling.start();
+  }
+
+  fetchLinode() {
+    const { dispatch, linode } = this.props;
+
+    dispatch(apiLinodes.one([linode.id]));
   }
 
   open() {
@@ -25,12 +70,12 @@ export default class StatusDropdown extends Component {
     this.setState({ open: false });
   }
 
-
   render() {
     const { linode, dispatch, shortcuts, className } = this.props;
     const dropdownElements = [
       {
         name: <span>Reboot</span>,
+        tempStatus: 'rebooting',
         _key: 'reboot',
         _action: rebootLinode,
         _condition: () => linode.status !== 'offline',
@@ -38,12 +83,14 @@ export default class StatusDropdown extends Component {
       },
       {
         name: <span>Power off</span>,
+        tempStatus: 'shutting_down',
         _key: 'power-off',
         _action: powerOffLinode,
         _condition: () => linode.status === 'running',
       },
       {
         name: <span>Power on</span>,
+        tempStatus: 'booting',
         _key: 'power-on',
         _action: powerOnLinode,
         _condition: () => linode.status === 'offline',
@@ -65,6 +112,7 @@ export default class StatusDropdown extends Component {
         const configCount = Object.keys(linode._configs.configs).length;
         if (!element._configs || configCount <= 1) {
           dispatch(element._action(linode.id));
+          this.startLinodePolling(element.tempStatus);
           return;
         }
 

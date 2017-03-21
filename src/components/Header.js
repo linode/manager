@@ -38,7 +38,6 @@ export default class Header extends Component {
       showInfobar,
       title,
       username,
-      eventHandler,
     } = this.props;
 
     const {
@@ -109,7 +108,6 @@ export default class Header extends Component {
         <div className="MainHeader-notifications float-xs-right">
           <Notifications
             dispatch={dispatch}
-            eventHandler={eventHandler}
             onMenuClick={this.onNotificationMenuClick}
           />
         </div>
@@ -128,7 +126,6 @@ export default class Header extends Component {
 Header.propTypes = {
   username: PropTypes.string,
   emailHash: PropTypes.string,
-  eventHandler: PropTypes.func,
   dispatch: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   link: PropTypes.string.isRequired,
