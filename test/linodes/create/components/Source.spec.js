@@ -1,7 +1,7 @@
 import React from 'react';
 import sinon from 'sinon';
 import { expect } from 'chai';
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 
 import Source from '~/linodes/create/components/Source';
 import { api } from '@/data';
@@ -23,7 +23,8 @@ describe('linodes/create/components/Source', () => {
         selectedIndex={0}
         onTabChange={onTabChange}
       />);
-    c.find('Tabs').first().props().onClick(1);
+    c.find('Tabs').first().props()
+      .onClick(1);
     expect(onTabChange.calledOnce).to.equal(true);
     expect(onTabChange.calledWith(1)).to.equal(true);
   });
