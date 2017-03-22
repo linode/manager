@@ -28,7 +28,6 @@ export class EditUserPage extends Component {
       loading: false,
       initUsername: username,
       email: props.users[username].email,
-      restricted: false,
       errors: {},
     };
   }
@@ -48,7 +47,7 @@ export class EditUserPage extends Component {
   }
 
   render() {
-    const { initUsername, email, restricted, errors } = this.state;
+    const { initUsername, email, errors } = this.state;
     return (
       <div className="PrimaryPage container">
         <header className="PrimaryPage-header">
@@ -61,9 +60,6 @@ export class EditUserPage extends Component {
             <UserForm
               username={initUsername}
               email={email}
-              restrictedLabel="Edit restricted
-                (leave blank to keep existing restrictions)"
-              restricted={restricted}
               errors={errors}
               onSubmit={this.onSubmit}
             />
