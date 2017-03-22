@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 
 // eslint-disable-next-line react/prefer-stateless-function
 export class DashboardPage extends Component {
-
   render() {
     return (
       <div className="BlankSlate">
