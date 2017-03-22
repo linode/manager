@@ -1,6 +1,6 @@
 import {
   genConfig, ReducerGenerator, genActions,
-  ONE, MANY, DELETE, PUT, POST
+  ONE, MANY, DELETE, PUT, POST,
 } from '~/api/apiResultActionReducerGenerator';
 
 export const config = genConfig({

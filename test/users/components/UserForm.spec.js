@@ -1,9 +1,8 @@
 import React from 'react';
 import sinon from 'sinon';
-import { shallow, mount } from 'enzyme';
+import { shallow } from 'enzyme';
 import { expect } from 'chai';
 
-import { expectRequest } from '@/common';
 import { UserForm } from '~/users/components/UserForm';
 
 describe('users/components/UserForm', () => {
@@ -14,20 +13,25 @@ describe('users/components/UserForm', () => {
   });
 
   const dispatch = sandbox.stub();
+  const user = {
+    username: 'Mako',
+    email: 'username@example.com',
+  };
 
-  it('renders UserForm', async () => {
+  it('renders UserForm', () => {
     const page = shallow(
       <UserForm
         dispatch={dispatch}
         onSubmit={() => {}}
-        username={'Mako'}
-        email='username@example.com'
-        restricted={true}
-        restrictedLabel='checkbox label'
+        username={user.username}
+        email={user.email}
+        restrictedLabel="checkbox label"
       />
     );
 
     const username = page.find('#user-username').props().value;
-    expect(username).to.equal('Mako');
+    expect(username).to.equal(user.username);
+    const email = page.find('#user-email').props().value;
+    expect(email).to.equal(user.email);
   });
 });

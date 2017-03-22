@@ -5,9 +5,6 @@ import { push } from 'react-router-redux';
 import { setError } from '~/actions/errors';
 import { users } from '~/api';
 import { Card } from '~/components/cards';
-import { Input, Form, FormGroup, FormGroupError, SubmitButton } from '~/components/form';
-import { setSource } from '~/actions/source';
-import { setTitle } from '~/actions/title';
 import { reduceErrors } from '~/errors';
 import { UserForm } from '../components/UserForm';
 
@@ -31,11 +28,12 @@ export class EditUserPage extends Component {
       loading: false,
       initUsername: username,
       email: props.users[username].email,
+      restricted: false,
       errors: {},
     };
   }
 
-  async onSubmit(stateValues){
+  async onSubmit(stateValues) {
     const { dispatch } = this.props;
     const { initUsername } = this.state;
 
@@ -44,7 +42,6 @@ export class EditUserPage extends Component {
       await dispatch(users.put(stateValues, initUsername));
       dispatch(push('/users'));
     } catch (response) {
-      console.log(response);
       await new Promise(async (resolve) => this.setState({
         loading: false,
         errors: Object.freeze(await reduceErrors(response)),
@@ -68,7 +65,7 @@ export class EditUserPage extends Component {
               email={email}
               restrictedLabel="Edit restricted
                 (leave blank to keep existing restrictions)"
-              restricted={false}
+              restricted={restricted}
               errors={errors}
               onSubmit={this.onSubmit}
             />
@@ -82,10 +79,9 @@ export class EditUserPage extends Component {
 EditUserPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   params: PropTypes.shape({
-    username: PropTypes.string.isRequired,
+    username: PropTypes.string,
   }),
-  username: PropTypes.string,
-  email: PropTypes.string,
+  users: PropTypes.object.isRequired,
 };
 
 function select(state) {

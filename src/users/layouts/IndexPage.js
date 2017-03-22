@@ -8,9 +8,6 @@ import { setTitle } from '~/actions/title';
 import { setError } from '~/actions/errors';
 import { users } from '~/api';
 import { SecondaryCard } from '~/components/cards/';
-import { Button } from '~/components/buttons';
-import { showModal, hideModal } from '~/actions/modal';
-import { UserForm } from '../components/UserForm';
 import md5 from 'md5';
 
 export class IndexPage extends Component {
@@ -38,7 +35,6 @@ export class IndexPage extends Component {
 
   render() {
     const { users, dispatch } = this.props;
-
     return (
       <div className="PrimaryPage container">
         <header className="PrimaryPage-header">

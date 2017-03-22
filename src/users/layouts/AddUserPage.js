@@ -3,9 +3,6 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
 import { Card } from '~/components/cards';
-import { Input, Form, FormGroup, FormGroupError, SubmitButton } from '~/components/form';
-import { setSource } from '~/actions/source';
-import { setTitle } from '~/actions/title';
 import { reduceErrors } from '~/errors';
 import { users } from '~/api';
 import { UserForm } from '../components/UserForm';
@@ -21,15 +18,14 @@ export class AddUserPage extends Component {
     };
   }
 
-  async onSubmit(stateValues){
-    const { dispatch, errors } = this.props;
+  async onSubmit(stateValues) {
+    const { dispatch } = this.props;
 
     this.setState({ loading: true });
     try {
       await dispatch(users.post(stateValues));
       dispatch(push('/users'));
     } catch (response) {
-      console.log(response);
       await new Promise(async (resolve) => this.setState({
         loading: false,
         errors: Object.freeze(await reduceErrors(response)),
@@ -44,7 +40,7 @@ export class AddUserPage extends Component {
         <header className="PrimaryPage-header">
           <div className="PrimaryPage-headerRow clearfix">
             <h1>Users</h1>
-           </div>
+          </div>
         </header>
         <div className="PrimaryPage-body User-create">
           <Card title="Add a user">

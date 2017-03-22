@@ -2,13 +2,13 @@ import React from 'react';
 import sinon from 'sinon';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
-
-import deepFreeze from 'deep-freeze';
-import { api } from '@/data';
 import { expectRequest } from '@/common';
+
+import { api } from '@/data';
 import { EditUserPage } from '~/users/layouts/EditUserPage';
 
 const { users } = api;
+const user = { testuser1: users.users[0] };
 
 describe('users/layouts/EditUserPage', () => {
   const sandbox = sinon.sandbox.create();
@@ -18,20 +18,47 @@ describe('users/layouts/EditUserPage', () => {
   });
 
   const dispatch = sandbox.stub();
-  const props = deepFreeze({
-    users,
-    params: {
-      username: 'testuser1',
-    },
-  });
-  it('renders UserForm', async () => {
+  const params = {
+    username: 'testuser1',
+  };
+
+  it('renders UserForm', () => {
     const page = shallow(
       <EditUserPage
         dispatch={dispatch}
-        {...props}
+        users={user}
+        params={params}
       />
     );
 
     expect(page.find('UserForm').length).to.equal(1);
+  });
+
+  it('should commit changes to the API', async () => {
+    const page = shallow(
+      <EditUserPage
+        dispatch={dispatch}
+        users={user}
+        params={params}
+      />
+    );
+
+    dispatch.reset();
+    const values = {
+      username: 'theUser',
+      email: 'user@example.com',
+      password: 'password',
+      restricted: false,
+    };
+    await page.instance().onSubmit(values);
+    expect(dispatch.calledTwice).to.equal(true);
+    const fn = dispatch.firstCall.args[0];
+    await expectRequest(
+      fn, `/account/users/${params.username}`,
+      undefined, undefined, {
+        method: 'PUT',
+        body: { values },
+      }
+    );
   });
 });

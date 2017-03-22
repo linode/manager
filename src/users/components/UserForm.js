@@ -5,14 +5,10 @@ import {
   FormGroupError,
   PasswordInput,
   Input,
-  Select,
   Checkbox,
-  Checkboxes,
 } from '~/components/form';
 import { ErrorSummary } from '~/errors';
-import { SubmitButton, CancelButton } from '~/components/form';
-import { setSource } from '~/actions/source';
-import { setError } from '~/actions/errors';
+import { SubmitButton } from '~/components/form';
 
 export class UserForm extends Component {
   constructor(props) {
@@ -27,7 +23,7 @@ export class UserForm extends Component {
   }
 
   render() {
-    const { dispatch, errors, onSubmit } = this.props;
+    const { errors, onSubmit } = this.props;
     const {
       username,
       email,
@@ -37,10 +33,14 @@ export class UserForm extends Component {
     } = this.state;
 
     return (
-      <Form onSubmit={async () => {
-        const values = { ...this.state };
-        await onSubmit(values);
-      }}>
+      <Form
+        onSubmit={async () => {
+          const values = {
+            ...this.state,
+          };
+          await onSubmit(values);
+        }}
+      >
         <FormGroup errors={errors} name="username" className="row">
           <label className="col-sm-2 col-form-label">Username</label>
           <div className="col-sm-6">
@@ -67,10 +67,10 @@ export class UserForm extends Component {
           <label className="col-sm-2 col-form-label">Password</label>
           <div className="col-sm-6">
             <PasswordInput
-                onChange={password => this.setState({ password })}
-                value={password}
-                id="new-password"
-              />
+              onChange={password => this.setState({ password })}
+              value={password}
+              id="new-password"
+            />
             <FormGroupError errors={errors} name="password" />
           </div>
         </FormGroup>
@@ -81,7 +81,6 @@ export class UserForm extends Component {
               checked={!!restricted}
               onChange={() => this.setState({ restricted: !restricted })}
               label={restrictedLabel}
-              disabled={true}
             />
           </div>
           <FormGroupError errors={errors} name="restricted" />
