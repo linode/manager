@@ -25,7 +25,6 @@ describe('users/components/UserForm', () => {
         onSubmit={() => {}}
         username={user.username}
         email={user.email}
-        restrictedLabel="checkbox label"
       />
     );
 

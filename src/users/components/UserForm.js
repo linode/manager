@@ -11,15 +11,13 @@ import { ErrorSummary } from '~/errors';
 import { SubmitButton } from '~/components/form';
 
 export class UserForm extends Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
     this.formSubmit = this.formSubmit.bind(this);
     this.state = {
-      username: props.username,
-      email: props.email,
-      password: null,
-      restricted: props.restricted,
-      restrictedLabel: props.restrictedLabel,
+      username: '',
+      email: '',
+      password: '',
     };
   }
 
@@ -39,8 +37,6 @@ export class UserForm extends Component {
       username,
       email,
       password,
-      restricted,
-      restrictedLabel,
     } = this.state;
 
     return (
@@ -82,22 +78,10 @@ export class UserForm extends Component {
             <FormGroupError errors={errors} name="password" />
           </div>
         </FormGroup>
-        <FormGroup errors={errors} name="restricted" className="row">
-          <div className="offset-sm-2 col-sm-6">
-            <Checkbox
-              id="restricted"
-              name="restricted"
-              checked={!!restricted}
-              onChange={this.onChange}
-              label={restrictedLabel}
-            />
-          </div>
-          <FormGroupError errors={errors} name="restricted" />
-        </FormGroup>
         <ErrorSummary errors={errors} />
         <div className="row">
           <div className="offset-sm-2 col-sm-10">
-            <SubmitButton>Submit</SubmitButton>
+            <SubmitButton>Add User</SubmitButton>
           </div>
         </div>
       </Form>
@@ -107,15 +91,5 @@ export class UserForm extends Component {
 
 UserForm.propTypes = {
   onSubmit: PropTypes.func,
-  username: PropTypes.string,
-  email: PropTypes.string,
-  restricted: PropTypes.bool,
-  restrictedLabel: PropTypes.string,
   errors: PropTypes.any,
-};
-
-UserForm.defaultProps = {
-  username: '',
-  email: '',
-  password: '',
 };

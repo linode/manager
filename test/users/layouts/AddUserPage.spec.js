@@ -37,7 +37,6 @@ describe('users/layouts/AddUserPage', () => {
       username: 'theUser',
       email: 'user@example.com',
       password: 'password',
-      restricted: false,
     };
     await page.instance().onSubmit(values);
     expect(dispatch.calledTwice).to.equal(true);

@@ -43,9 +43,6 @@ export class AddUserPage extends Component {
         <div className="PrimaryPage-body User-create">
           <Card title="Add a user">
             <UserForm
-              restricted={false}
-              restrictedLabel="Restricted user
-                (Customize restriction)"
               errors={errors}
               onSubmit={this.onSubmit}
             />

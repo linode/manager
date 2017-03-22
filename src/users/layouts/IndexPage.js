@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
+import { Button } from '~/components/buttons';
 
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
@@ -56,10 +57,10 @@ export class IndexPage extends Component {
                     user.email && md5(user.email.trim().toLowerCase())
                   }`}
                   nav={
-                    <Link
+                    <Button
                       to={`/users/${user.username}`}
                       className="btn-secondary"
-                    >Edit</Link>
+                    >Edit</Button>
                   }
                   iconClass="user-icon"
                   dispatch={dispatch}
