@@ -5,7 +5,6 @@ import {
   FormGroupError,
   PasswordInput,
   Input,
-  Checkbox,
 } from '~/components/form';
 import { ErrorSummary } from '~/errors';
 import { SubmitButton } from '~/components/form';
