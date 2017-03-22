@@ -22,6 +22,8 @@ export class UserForm extends Component {
     };
   }
 
+  onChange = ({ target: { name, value } }) => this.setState({ [name]: value });
+
   render() {
     const { errors, onSubmit } = this.props;
     const {
@@ -47,7 +49,8 @@ export class UserForm extends Component {
             <Input
               id="user-username"
               value={username}
-              onChange={e => this.setState({ username: e.target.value })}
+              name="username"
+              onChange={this.onChange}
             />
             <FormGroupError errors={errors} name="username" />
           </div>
@@ -58,7 +61,8 @@ export class UserForm extends Component {
             <Input
               id="user-email"
               value={email}
-              onChange={e => this.setState({ email: e.target.value })}
+              name="email"
+              onChange={this.onChange}
             />
             <FormGroupError errors={errors} name="email" />
           </div>
@@ -78,8 +82,9 @@ export class UserForm extends Component {
           <div className="offset-sm-2 col-sm-6">
             <Checkbox
               id="restricted"
+              name="restricted"
               checked={!!restricted}
-              onChange={() => this.setState({ restricted: !restricted })}
+              onChange={this.onChange}
               label={restrictedLabel}
             />
           </div>
@@ -108,4 +113,5 @@ UserForm.propTypes = {
 UserForm.defaultProps = {
   username: '',
   email: '',
+  password: '',
 };

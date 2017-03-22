@@ -79,13 +79,13 @@ a {
     &.btn-primary {
         &, &:active, &:focus {
             background: $blue;
-            color: white;
+            color: $white;
             border: 1px solid $blue;
         }
 
         &:not([disabled]):hover {
             border-color: $blue; /* :focus:active needs this */
-            background: white;
+            background: $white;
             color: $blue;
         }
     }
@@ -115,7 +115,7 @@ a {
         &[disabled]:hover,
         &[disabled]:active,
         &[disabled]:focus {
-            color: white;
+            color: $white;
             background: $red;
         }
 
@@ -136,7 +136,7 @@ a {
         &:active,
         &:focus {
             background: $red;
-            color: white;
+            color: $white;
         }
     }
 
