@@ -65,10 +65,6 @@ export class IndexPage extends Component {
       { name: 'Settings', link: '/settings' },
     ].map(t => ({ ...t, link: `/linodes/${linode.label}${t.link}` }));
 
-    const pathname = location ? location.pathname : tabs[0].link;
-    const selected = tabs.reduce((knownIndex, { link }, currentIndex) =>
-      pathname.indexOf(link) === 0 ? currentIndex : knownIndex, 0);
-
     return (
       <div className="details-page">
         <header className="main-header">
@@ -93,11 +89,11 @@ export class IndexPage extends Component {
         <div className="main-header-fix"></div>
         <Tabs
           tabs={tabs}
-          selected={selected}
           onClick={(e, tabIndex) => {
             e.stopPropagation();
             this.props.dispatch(push(tabs[tabIndex].link));
           }}
+          pathname={location.pathname}
         >
           {this.props.children}
         </Tabs>
