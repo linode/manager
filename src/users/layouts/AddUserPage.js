@@ -26,10 +26,8 @@ export class AddUserPage extends Component {
       await dispatch(users.post(stateValues));
       dispatch(push('/users'));
     } catch (response) {
-      await new Promise(async (resolve) => this.setState({
-        loading: false,
-        errors: Object.freeze(await reduceErrors(response)),
-      }, resolve));
+      const errors = await reduceErrors(response);
+      this.setState({ errors, loading: false });
     }
   }
 

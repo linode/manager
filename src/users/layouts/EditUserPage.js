@@ -42,10 +42,8 @@ export class EditUserPage extends Component {
       await dispatch(users.put(stateValues, initUsername));
       dispatch(push('/users'));
     } catch (response) {
-      await new Promise(async (resolve) => this.setState({
-        loading: false,
-        errors: Object.freeze(await reduceErrors(response)),
-      }, resolve));
+      const errors = await reduceErrors(response);
+      this.setState({ errors, loading: false });
     }
   }
 

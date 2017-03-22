@@ -13,6 +13,7 @@ import { SubmitButton } from '~/components/form';
 export class UserForm extends Component {
   constructor(props) {
     super(props);
+    this.formSubmit = this.formSubmit.bind(this);
     this.state = {
       username: props.username,
       email: props.email,
@@ -24,8 +25,16 @@ export class UserForm extends Component {
 
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value });
 
+  formSubmit() {
+    const { onSubmit } = this.props;
+    const values = {
+      ...this.state,
+    };
+    onSubmit(values);
+  }
+
   render() {
-    const { errors, onSubmit } = this.props;
+    const { errors } = this.props;
     const {
       username,
       email,
@@ -36,12 +45,7 @@ export class UserForm extends Component {
 
     return (
       <Form
-        onSubmit={async () => {
-          const values = {
-            ...this.state,
-          };
-          await onSubmit(values);
-        }}
+        onSubmit={this.formSubmit}
       >
         <FormGroup errors={errors} name="username" className="row">
           <label className="col-sm-2 col-form-label">Username</label>
