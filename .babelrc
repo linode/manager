@@ -1,19 +1,19 @@
 {
-  "presets": ["stage-0", "react", "es2015"],
-  "compact": true,
-  "plugins": [
-    "transform-runtime",
-    "transform-class-properties",
-    ["babel-root-import", [{
-        "rootPathSuffix": "src"
-    }, {
-        "rootPathSuffix": "test",
-        "rootPathPrefix": "@",
-    }]]
+  "presets": [
+    "react",
+    ["es2015", {
+      "modules": false
+    }],
+    "stage-3"
   ],
-  "env": {
-    "development": {
-      "presets": ["react-hmre"]
-    }
-  }
+  "plugins": [
+    "react-hot-loader/babel",
+    ["babel-plugin-root-import", [{
+      "rootPathSuffix": "src"
+    }, {
+      "rootPathSuffix": "test",
+      "rootPathPrefix": "@",
+    }]],
+    "transform-class-properties"
+  ]
 }

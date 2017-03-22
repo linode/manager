@@ -1,10 +1,10 @@
 /* eslint-disable no-undef */
-export const API_ROOT = ENV_API_ROOT || 'https://api.alpha.linode.com/v4';
-export const LOGIN_ROOT = ENV_LOGIN_ROOT || 'https://login.alpha.linode.com';
-export const APP_ROOT = ENV_APP_ROOT || 'http://localhost:3000';
-export const GA_ID = ENV_GA_ID || '000000';
-export const DEVTOOLS_DISABLED = ENV_DEVTOOLS_DISABLED || process.env.NODE_ENV === 'production';
-export const VERSION = ENV_VERSION;
+export const API_ROOT = window.ENV_API_ROOT || 'https://api.alpha.linode.com/v4';
+export const LOGIN_ROOT = window.ENV_LOGIN_ROOT || 'https://login.alpha.linode.com';
+export const APP_ROOT = window.ENV_APP_ROOT || 'http://localhost:3000';
+export const GA_ID = window.ENV_GA_ID || '000000';
+export const DEVTOOLS_DISABLED = window.ENV_DEVTOOLS_DISABLED || process.env.NODE_ENV === 'production';
+export const VERSION = window.ENV_VERSION;
 /* eslint-enable no-undef */
 
 export const EVENT_POLLING_DELAY = (15 * 1000); // milliseconds

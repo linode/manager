@@ -1,2 +1,2 @@
-export IPTransfer from './IPTransfer';
-export IPSharing from './IPSharing';
+export { IPTransfer } from './IPTransfer';
+export { IPSharing } from './IPSharing';
