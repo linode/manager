@@ -4,8 +4,8 @@ import { push } from 'react-router-redux';
 
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import { linodes } from '~/api';
-import { Card, CardHeader } from '~/components/cards';
-import { Form, FormGroup, FormGroupError, Input, SubmitButton } from '~/components/form';
+import { Card, CardHeader } from 'linode-components/cards';
+import { Form, FormGroup, FormGroupError, Input, SubmitButton } from 'linode-components/forms';
 import { ErrorSummary, reduceErrors } from '~/errors';
 import { setSource } from '~/actions/source';
 

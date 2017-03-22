@@ -2,8 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { Link } from '~/components/Link';
-import Tabs from '~/components/Tabs';
+import { Link } from 'react-router';
+import { Tabs } from 'linode-components/tabs';
 import StatusDropdown from '~/linodes/components/StatusDropdown';
 import { setError } from '~/actions/errors';
 import { linodes } from '~/api';

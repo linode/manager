@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 
-import { Link } from '~/components/Link';
+import { Link } from 'react-router';
 
 export default function Sidebar(props) {
   const { path, links } = props;

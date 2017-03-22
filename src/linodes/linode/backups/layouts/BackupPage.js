@@ -8,7 +8,7 @@ import { linodes } from '~/api';
 import { linodeBackups } from '~/api/linodes';
 import { takeBackup, restoreBackup } from '~/api/backups';
 import { setError } from '~/actions/errors';
-import { Card, CardHeader } from '~/components/cards';
+import { Card, CardHeader } from 'linode-components/cards';
 
 function renderDateTime(dt) {
   return dt.replace('T', ' ');

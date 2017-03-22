@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import {
   FormGroup, FormGroupError, Form, SubmitButton, Input,
-} from '~/components/form';
+} from 'linode-components/forms';
 import { ErrorSummary } from '~/errors';
 
 export default function NewSlaveZone(props) {

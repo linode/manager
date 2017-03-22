@@ -29,4 +29,4 @@ _.plugins = [
   new webpack.optimize.AggressiveMergingPlugin()
 ];
 
-module.exports = _;;
+module.exports = _;

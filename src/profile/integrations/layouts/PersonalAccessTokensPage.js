@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import CreateHelper from '~/components/CreateHelper';
 import { showModal, hideModal } from '~/actions/modal';
-import { Button } from '~/components/buttons';
+import { Button } from 'linode-components/buttons';
 import { setError } from '~/actions/errors';
 import { tokens } from '~/api';
 import PersonalAccessToken from '../components/PersonalAccessToken';

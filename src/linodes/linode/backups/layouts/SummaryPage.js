@@ -2,12 +2,12 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { Link } from '~/components/Link';
+export { Link } from 'react-router';
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import { takeBackup } from '~/api/backups';
 import { ErrorSummary, reduceErrors } from '~/errors';
-import { Button } from '~/components/buttons';
-import { Card, CardHeader } from '~/components/cards';
+import { Button } from 'linode-components/buttons';
+import { Card, CardHeader } from 'linode-components/cards';
 
 export class SummaryPage extends Component {
   constructor() {

@@ -3,8 +3,15 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { Link } from 'react-router';
 
-import { Card } from '~/components/cards';
-import { Input, Select, Form, FormGroup, FormGroupError, SubmitButton } from '~/components/form';
+import { Card } from 'linode-components/cards';
+import {
+  Input,
+  Select,
+  Form,
+  FormGroup,
+  FormGroupError,
+  SubmitButton
+} from 'linode-components/forms';
 import { tickets } from '~/api';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';

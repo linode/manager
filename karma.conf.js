@@ -19,10 +19,11 @@ module.exports = function(config) {
           {
             test: /\.jsx?/,
             loader: 'babel-loader',
-            exclude: /node_modules/,
             include: [
               path.join(__dirname, 'src'),
-              path.join(__dirname, 'test')
+              path.join(__dirname, 'test'),
+              path.resolve(__dirname, 'node_modules/linode-components'),
+              path.resolve(__dirname, 'node_modules/linode-styleguide')
             ]
           },
           {

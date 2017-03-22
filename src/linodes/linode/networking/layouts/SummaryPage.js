@@ -6,9 +6,9 @@ import { ipv4ns, ipv6ns, ipv6nsSuffix } from '~/constants';
 import { linodeIPs, addIP } from '~/api/linodes';
 import { setSource } from '~/actions/source';
 import { setError } from '~/actions/errors';
-import { Button } from '~/components/buttons';
-import { Card, CardHeader } from '~/components/cards';
-import { HelpButton } from '~/components';
+import { Button } from 'linode-components/buttons';
+import { Card, CardHeader } from 'linode-components/cards';
+import { HelpButton } from 'linode-components/buttons';
 
 export class SummaryPage extends Component {
   static async preload({ dispatch, getState }, { linodeLabel }) {

@@ -8,8 +8,8 @@ import { showModal } from '~/actions/modal';
 import { EditModal } from './EditModal';
 import { DeleteModal } from './DeleteModal';
 import { AddModal } from './AddModal';
-import { Button } from '~/components/buttons';
-import { Card, CardHeader } from '~/components/cards';
+import { Button } from 'linode-components/buttons';
+import { Card, CardHeader } from 'linode-components/cards';
 
 const borderColors = [
   '#1abc9c',

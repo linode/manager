@@ -1,18 +1,11 @@
-@import 'mixins';
-@import 'variables';
-
-@import 'bootstrap';
-
-@import 'defaults.scss';
-@import 'utilities.scss';
-@import 'layout/index';
-
+@import '../linode-components/scss/linode-components';
 @import 'components/index';
+@import 'layout/index';
 @import 'linodes/index';
 @import 'support/index';
 @import 'layout/index';
-@import 'styleguide/index';
 @import 'profile/integrations/components/OAuthScopes';
+
 
 // TODO: look into
 .grid-list {
@@ -114,6 +107,3 @@ a:hover, a:focus, a:active {
     color: $blue;
 }
 
-.dropdown-toggle::after {
-    display: none;
-}

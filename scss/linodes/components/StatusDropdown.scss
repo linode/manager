@@ -22,9 +22,9 @@
         width: 100%;
 
         /* Hide default bootstrap dropdown icon */
-        &:after {
-            display: none;
-        }
+        //&:after {
+        //    display: none;
+        //}
 
         &:active,
         &:hover,
@@ -34,12 +34,12 @@
         }
     }
 
-    &-menu {
-        @extend .dropdown-menu;
-        right: -2px;
-        left: initial;
-        margin-top: 0;
-    }
+    //&-menu {
+    //    @extend .dropdown-menu;
+    //    right: -2px;
+    //    left: initial;
+    //    margin-top: 0;
+    //}
 
     &-item {
         @extend .btn;

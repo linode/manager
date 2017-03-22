@@ -2,7 +2,7 @@ import React from 'react';
 import sinon from 'sinon';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
-import { ConfirmModalBody } from '~/components/modals';
+import { ConfirmModalBody } from 'linode-components/modals';
 
 describe('components/modal/ConfirmModalBody', () => {
   const sandbox = sinon.sandbox.create();

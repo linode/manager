@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 
-import { Button } from '~/components/buttons';
-import TableCell from './TableCell';
+import { Button } from 'linode-components/buttons';
+import { TableCell } from 'linode-components/tables/cells';
 
 import { NAME_SERVERS } from '~/constants';
 
