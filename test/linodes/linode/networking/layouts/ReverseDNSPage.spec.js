@@ -7,7 +7,6 @@ import { SHOW_MODAL } from '~/actions/modal';
 import { ReverseDNSPage } from '~/linodes/linode/networking/layouts/ReverseDNSPage';
 import { testLinode } from '@/data/linodes';
 import { state } from '@/data';
-import { expectRequest } from '@/common';
 
 const { linodes } = state.api;
 
@@ -32,11 +31,11 @@ describe('linodes/linode/networking/layouts/ReverseDNSPage', () => {
       />
     );
 
-    const rows = page.find('.SecondaryTable-row');
+    const rows = page.find('.TableRow');
     expect(rows.length).to.equal(ips.length);
-    for (let i = 0; i < rows.length; i++) {
+    for (let i = 1; i < rows.length; i++) {
       const row = rows.at(i);
-      const columns = row.find('.SecondaryTable-column');
+      const columns = row.find('.Table-cell');
       expect(columns.length).to.equal(3);
 
       const addressIndex = addresses.indexOf(columns.at(0).text());
@@ -44,26 +43,6 @@ describe('linodes/linode/networking/layouts/ReverseDNSPage', () => {
       const ip = ips[addressIndex];
       expect(columns.at(1).text()).to.equal(ip.rdns);
     }
-  });
-
-  it('resets the rdns', async () => {
-    const page = mount(
-      <ReverseDNSPage
-        dispatch={dispatch}
-        linodes={linodes}
-        params={{ linodeLabel: testLinode.label }}
-      />
-    );
-
-    const row = page.find('.SecondaryTable-row').at(0);
-    const address = row.find('.SecondaryTable-column').at(0).text();
-    await row.find('#reset-0').props().onClick();
-    expect(dispatch.callCount).to.equal(1);
-    const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, `/linode/instances/${testLinode.id}/ips/${address}`, {
-      method: 'PUT',
-      body: { rdns: null },
-    });
   });
 
   it('opens the edit modal', async () => {
@@ -75,8 +54,8 @@ describe('linodes/linode/networking/layouts/ReverseDNSPage', () => {
       />
     );
 
-    const row = page.find('.SecondaryTable-row').at(0);
-    row.find('#edit-0').props().onClick();
+    const row = page.find('.TableRow').at(0);
+    row.find('.EditButton').props().onClick();
     expect(dispatch.callCount).to.equal(1);
     expect(dispatch.firstCall.args[0].type).to.equal(SHOW_MODAL);
   });

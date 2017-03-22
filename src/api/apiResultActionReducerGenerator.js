@@ -10,7 +10,7 @@ export const DELETE = 'DELETE';
  * Adds parent properties to all subresources and returns a new config.
  */
 export function genConfig(config, parent = undefined) {
-  const result = { ...config, parent };
+  const result = { primaryKey: 'id', ...config, parent };
   if (config.subresources) {
     Object.keys(config.subresources).forEach((key) => {
       result.subresources[key] =
@@ -90,7 +90,8 @@ export function generateDefaultStateOne(config, one) {
 
 export class ReducerGenerator {
   static one(config, oldStateMany, action) {
-    const id = action.ids.length ? action.ids[action.ids.length - 1] : action.resource.id;
+    const id = action.ids.length ? action.ids[action.ids.length - 1] :
+               action.resource[config.primaryKey];
     const oldStateOne = oldStateMany[config.plural][id];
     const newStateOne = oldStateOne ? action.resource :
                         generateDefaultStateOne(config, action.resource);
@@ -115,11 +116,11 @@ export class ReducerGenerator {
 
     const newState = page[config.plural].reduce((stateAccumulator, oneObject) =>
       ReducerGenerator.one(config, stateAccumulator, {
-        ids: [oneObject.id],
+        ids: [oneObject[config.primaryKey]],
         resource: oneObject,
       }), oldState);
 
-    let ids = Object.values(newState[config.plural]).map((obj) => obj.id);
+    let ids = Object.values(newState[config.plural]).map((obj) => obj[config.primaryKey]);
 
     if (config.sortFn) {
       ids = config.sortFn(ids, newState[config.plural]);
