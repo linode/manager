@@ -11,19 +11,15 @@ export function IndexPage(props) {
     { name: 'Personal Access Tokens', link: '/tokens' },
   ].map(t => ({ ...t, link: `/profile/integrations${t.link}` }));
 
-  const pathname = location ? location.pathname : tabs[0].link;
-  const selected = tabs.reduce((knownIndex, { link }, currentIndex) =>
-    pathname.indexOf(link) === 0 ? currentIndex : knownIndex, 0);
-
   return (
     <Tabs
       tabs={tabs}
-      selected={selected}
       isSubTabs
       onClick={(e, tabIndex) => {
         e.stopPropagation();
         props.dispatch(push(tabs[tabIndex].link));
       }}
+      pathname={location.pathname}
     >
       {props.children}
     </Tabs>
