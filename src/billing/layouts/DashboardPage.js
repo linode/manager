@@ -8,8 +8,8 @@ export class DashboardPage extends Component {
 
   render() {
     return (
-      <div>
-        <Card className="BillingDashboard" title="">
+      <div className="BlankSlate">
+        <div className="BlankSlate-body">
           <p className="text-muted text-sm-center BillingDashboard-placeholder">
             <span>Please use the </span>
             <a href="https://manager.linode.com/account" target="_blank">
@@ -17,7 +17,7 @@ export class DashboardPage extends Component {
             </a>
             <span> to view billing, update payment information, or make payments.</span>
           </p>
-        </Card>
+        </div>
       </div>
     );
   }
