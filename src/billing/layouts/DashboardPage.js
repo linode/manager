@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { Card } from '~/components/cards';
 
 // eslint-disable-next-line react/prefer-stateless-function
 export class DashboardPage extends Component {
