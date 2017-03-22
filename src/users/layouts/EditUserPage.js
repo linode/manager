@@ -57,7 +57,7 @@ export class EditUserPage extends Component {
           </div>
         </header>
         <div className="PrimaryPage-body User-edit">
-          <Card title={`Edit user ${initUsername}`}>
+          <Card title={`Edit ${initUsername}`}>
             <UserForm
               username={initUsername}
               email={email}
