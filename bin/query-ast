@@ -1,3 +1,5 @@
 #!/usr/bin/env bash
 
+# Usage: ./bin/query-ast src '$..*[?(@.name=="Checkbox" && @.type=="Identifier")]'
+
 find $1 -name "*.js" | xargs -I {} ./bin/query-ast.js {} "$2"
