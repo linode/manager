@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+find $1 -name "*.js" | xargs -I {} ./bin/query-ast.js {} "$2"
