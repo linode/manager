@@ -1,5 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
+import { Button } from '~/components/buttons';
 
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
@@ -39,6 +41,10 @@ export class IndexPage extends Component {
         <header className="PrimaryPage-header">
           <div className="PrimaryPage-headerRow clearfix">
             <h1 className="float-sm-left">Users</h1>
+            <Link to="/users/create" className="linode-add btn btn-primary float-sm-right">
+              <span className="fa fa-plus"></span>
+              Add a user
+            </Link>
           </div>
         </header>
         <div className="PrimaryPage-body">
@@ -50,6 +56,12 @@ export class IndexPage extends Component {
                   icon={`https://gravatar.com/avatar/${
                     user.email && md5(user.email.trim().toLowerCase())
                   }`}
+                  nav={
+                    <Button
+                      to={`/users/${user.username}`}
+                      className="btn-secondary"
+                    >Edit</Button>
+                  }
                   iconClass="user-icon"
                   dispatch={dispatch}
                 >

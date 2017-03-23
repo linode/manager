@@ -82,10 +82,10 @@
             &:active,
             &:focus {
                 background-color: $green;
-                color: white;
+                color: $white;
 
                 .fa {
-                    color: white;
+                    color: $white;
                 }
             }
 
