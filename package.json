@@ -85,7 +85,6 @@
     "babel-preset-stage-0": "^6.3.13",
     "babylon": "^6.16.1",
     "bootstrap": "4.0.0-alpha.5",
-    "chart.js": "^2.5.0",
     "css-loader": "^0.23.1",
     "d3": "^3.5.17",
     "deep-freeze": "0.0.1",
