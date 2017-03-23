@@ -6,6 +6,8 @@ const DEFAULT_TIMEOUT = 10000;
 
 
 export default function Polling(args) {
+  // map for managing multiple polling timeouts at once, using an object.id
+  const pollingIdMap = {};
   const {
     apiRequestFn,
     filterOptions = {},
@@ -16,39 +18,38 @@ export default function Polling(args) {
 
   const options = createHeaderFilter(filterOptions);
   let numTries = 0;
-  let pollingTimeoutId = null;
 
-  function stop() {
-    if (pollingTimeoutId !== null) {
-      clearTimeout(pollingTimeoutId);
+  function stop(id) {
+    if (pollingIdMap[id] !== undefined) {
+      clearTimeout(pollingIdMap[id]);
     }
   }
 
-  function poll() {
+  function poll(id) {
     // additional calls to this function will restart polling by default
     // so that requests don't stack
-    stop();
+    stop(id);
 
-    pollingTimeoutId = setTimeout(async function () {
+    pollingIdMap[id] = setTimeout(async function () {
       await apiRequestFn(options);
 
-      pollingTimeoutId = null;
+      delete pollingIdMap[id];
       ++numTries;
 
       if (maxTries !== null) {
         if (numTries <= maxTries) {
-          poll();
+          poll(id);
         } else if (onMaxTriesReached) {
           onMaxTriesReached();
         }
       } else {
-        poll();
+        poll(id);
       }
     }, timeout);
   }
 
-  function start() {
-    poll();
+  function start(id) {
+    poll(id);
   }
 
   return Object.freeze({

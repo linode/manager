@@ -38,7 +38,7 @@ export default class StatusDropdown extends Component {
 
     // stop polling if Linode status change is complete
     if (LinodeStates.pending.indexOf(linode.status) === -1) {
-      this._polling.stop();
+      this._polling.stop(linode.id);
     }
   }
 
@@ -50,10 +50,9 @@ export default class StatusDropdown extends Component {
     const { dispatch, linode } = this.props;
 
     dispatch(actions.one({ status: tempStatus, __progress: 1 }, linode.id));
-    await new Promise(resolve => setTimeout(resolve, 0));
     dispatch(actions.one({ __progress: randomInitialProgress() }, linode.id));
 
-    this._polling.start();
+    this._polling.start(linode.id);
   }
 
   fetchLinode() {
