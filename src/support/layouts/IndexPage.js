@@ -57,7 +57,7 @@ export class IndexPage extends Component {
     if (to) {
       return <Link to={to}>{entity.label}</Link>;
     }
-    
+
     return <strong>{entity.label}</strong>;
   }
 

@@ -12,7 +12,7 @@ export default function LinkCell(props) {
     titleKey = 'id',
     textKey = 'label',
     textFn,
-    statusComponent
+    statusComponent,
   } = column;
 
   let children = props.children;
