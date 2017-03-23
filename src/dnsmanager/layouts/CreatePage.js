@@ -123,7 +123,7 @@ export class CreatePage extends Component {
           <Tabs
             tabs={tabs}
             onClick={(_, index) => this.setState({ tabIndex: index })}
-            selected={this.state.tabIndex}
+            selectedIndex={this.state.tabIndex}
             isSubTabs
           />
         </Card>

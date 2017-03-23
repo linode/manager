@@ -1,8 +1,9 @@
-.CreateHelper {
+.BlankSlate {
     @extend .text-xs-center;
 
     &-body {
-        @extend .font-large;
+        @extend .font-extra-large;
         color: $light-black;
+        padding: 100px 0;
     }
 }
