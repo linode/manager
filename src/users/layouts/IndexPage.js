@@ -1,5 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
+import { Button } from '~/components/buttons';
 
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
@@ -62,7 +64,16 @@ export class IndexPage extends Component {
                   icon={`https://gravatar.com/avatar/${
                     user.email && md5(user.email.trim().toLowerCase())
                   }`}
+<<<<<<< HEAD
                   nav={nav}
+=======
+                  nav={
+                    <Button
+                      to={`/users/${user.username}`}
+                      className="btn-secondary"
+                    >Edit</Button>
+                  }
+>>>>>>> e39bd2bc623f4d14af77695c18c9d7fb3d00f472
                   iconClass="user-icon"
                   dispatch={dispatch}
                 >
