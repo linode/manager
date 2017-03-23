@@ -16,14 +16,10 @@ import { Select } from '~/components/form';
 import { objectFromMapByLabel } from '~/api/util';
 import { linodeStats } from '~/api/linodes';
 
-function formatData(datasets) {
-  return {
-    labels: datasets[0].map(datum => datum[0]),
-    datasets: datasets.map(dataset => ({
-      data: dataset.map(datum => datum[1]),
-      fill: true,
-    })),
-  };
+function formatData(datasets, legends) {
+  const x = datasets[0].map(([x]) => x);
+  const ys = datasets.map(dataset => dataset.map(([, y]) => y));
+  return LineGraph.formatData(x, ys, legends);
 }
 
 export class DashboardPage extends Component {
@@ -48,56 +44,47 @@ export class DashboardPage extends Component {
     };
 
     const stats = this.getLinode()._stats;
-    this.graphs = Object.freeze({
+    this.graphs = {
       cpu: {
-        title: 'CPU Usage',
+        title: 'CPU',
         yAxis: {
-          label: 'Percentage of CPU(s)',
+          label: 'Percentage of CPU(s) used',
           format: p => `${p}%`,
         },
         data: formatData([stats.cpu]),
       },
       io: {
-        title: 'Disk IO',
+        title: 'IO',
         yAxis: {
           label: 'Blocks per second',
           format: r => `${r} blocks/s`,
         },
-        data: formatData([stats.io.io, stats.io.swap]),
+        data: formatData([stats.io.io, stats.io.swap],
+                         ['Disk', 'Swap']),
       },
-      netv4Inbound: {
-        title: 'Inbound IPv4 Traffic',
+      netv4: {
+        title: 'IPv4 Network',
         yAxis: {
           label: 'Bits per second',
           format: r => `${r} bits/s`,
         },
-        data: formatData([stats.netv4.private_in, stats.netv4.in]),
+        data: formatData([stats.netv4.in, stats.netv4.private_in,
+                          stats.netv4.out, stats.netv4.private_out],
+                         ['Public IPv4 Inbound', 'Private IPv4 Inbound',
+                          'Public IPv4 Outbound', 'Private IPv4 Outbound']),
       },
-      netv4Outbound: {
-        title: 'Outbound IPv4 Traffic',
+      netv6: {
+        title: 'IPv6 Network',
         yAxis: {
           label: 'Bits per second',
           format: r => `${r} bits/s`,
         },
-        data: formatData([stats.netv4.private_out, stats.netv4.out]),
+        data: formatData([stats.netv6.in, stats.netv6.private_in,
+                          stats.netv6.out, stats.netv6.private_out],
+                         ['Public IPv6 Inbound', 'Private IPv6 Inbound',
+                          'Public IPv6 Outbound', 'Private IPv6 Outbound']),
       },
-      netv6Inbound: {
-        title: 'Inbound IPv6 Traffic',
-        yAxis: {
-          label: 'Bits per second',
-          format: r => `${r} bits/s`,
-        },
-        data: formatData([stats.netv6.private_in, stats.netv6.in]),
-      },
-      netv6Outbound: {
-        title: 'Outbound IPv6 Traffic',
-        yAxis: {
-          label: 'Bits per second',
-          format: r => `${r} bits/s`,
-        },
-        data: formatData([stats.netv6.private_out, stats.netv6.out]),
-      },
-    });
+    };
   }
 
   async componentDidMount() {
@@ -117,12 +104,10 @@ export class DashboardPage extends Component {
               name="source"
               onChange={this.onChange}
             >
-              <option value="cpu">CPU Usage</option>
-              <option value="io">Disk IO</option>
-              <option value="netv4Inbound">Inbound IPv4 Traffic</option>
-              <option value="netv4Outbound">Outbound IPv4 Traffic</option>
-              <option value="netv6Inbound">Inbound IPv6 Traffic</option>
-              <option value="netv6Outbound">Outbound IPv6 Traffic</option>
+              <option value="cpu">CPU</option>
+              <option value="io">IO</option>
+              <option value="netv4">IPv4 Network</option>
+              <option value="netv6">IPv6 Network</option>
             </Select>
           </div>
           <div className="float-xs-right">
