@@ -202,3 +202,10 @@ export function setShared(linodeId, ips) {
 export function assignIps(datacenter, assignments) {
   return thunkFetch.post('/networking/ip-assign', { datacenter, assignments });
 }
+
+export function linodeStats(linodeId) {
+  return async (dispatch) => {
+    const { data: _stats } = await dispatch(thunkFetch.get(`/linode/instances/${linodeId}/stats`));
+    dispatch(actions.one({ _stats }, linodeId));
+  };
+}

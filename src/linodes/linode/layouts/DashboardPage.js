@@ -1,8 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import _ from 'lodash';
 
+import { setError } from '~/actions/errors';
 import Datacenter from '~/linodes/components/Datacenter';
 import DistroStyle from '~/linodes/components/DistroStyle';
 import PlanStyle from '~/linodes/components/PlanStyle';
@@ -11,21 +11,93 @@ import { getLinode } from './IndexPage';
 import { setSource } from '~/actions/source';
 import { Button } from '~/components/buttons';
 import { Card } from '~/components/cards';
+import LineGraph from '~/components/graphs/LineGraph';
+import { Select } from '~/components/form';
+import { objectFromMapByLabel } from '~/api/util';
+import { linodeStats } from '~/api/linodes';
+
+function formatData(datasets) {
+  return {
+    labels: datasets[0].map(datum => datum[0]),
+    datasets: datasets.map(dataset => ({
+      data: dataset.map(datum => datum[1]),
+      fill: true,
+    })),
+  };
+}
 
 export class DashboardPage extends Component {
-  constructor() {
-    super();
+  static async preload({ dispatch, getState }, { linodeLabel }) {
+    try {
+      const { id } = objectFromMapByLabel(getState().api.linodes.linodes, linodeLabel);
+      await dispatch(linodeStats([id]));
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error(e);
+      dispatch(setError(e));
+    }
+  }
+
+  constructor(props) {
+    super(props);
+
     this.getLinode = getLinode.bind(this);
-    this.renderDetails = this.renderDetails.bind(this);
-    this.renderGraphs = this.renderGraphs.bind(this);
-    this.graphSelection = this.graphSelection.bind(this);
-    this.graphUpdate = this.graphUpdate.bind(this);
-    this.graphRangeUpdate = this.graphRangeUpdate.bind(this);
-    this.graphSourceUpdate = this.graphSourceUpdate.bind(this);
     this.state = {
       source: 'cpu',
       range: 'last1day',
     };
+
+    const stats = this.getLinode()._stats;
+    this.graphs = Object.freeze({
+      cpu: {
+        title: 'CPU Usage',
+        yAxis: {
+          label: 'Percentage of CPU(s)',
+          format: p => `${p}%`,
+        },
+        data: formatData([stats.cpu]),
+      },
+      io: {
+        title: 'Disk IO',
+        yAxis: {
+          label: 'Blocks per second',
+          format: r => `${r} blocks/s`,
+        },
+        data: formatData([stats.io.io, stats.io.swap]),
+      },
+      netv4Inbound: {
+        title: 'Inbound IPv4 Traffic',
+        yAxis: {
+          label: 'Bits per second',
+          format: r => `${r} bits/s`,
+        },
+        data: formatData([stats.netv4.private_in, stats.netv4.in]),
+      },
+      netv4Outbound: {
+        title: 'Outbound IPv4 Traffic',
+        yAxis: {
+          label: 'Bits per second',
+          format: r => `${r} bits/s`,
+        },
+        data: formatData([stats.netv4.private_out, stats.netv4.out]),
+      },
+      netv6Inbound: {
+        title: 'Inbound IPv6 Traffic',
+        yAxis: {
+          label: 'Bits per second',
+          format: r => `${r} bits/s`,
+        },
+        data: formatData([stats.netv6.private_in, stats.netv6.in]),
+      },
+      netv6Outbound: {
+        title: 'Outbound IPv6 Traffic',
+        yAxis: {
+          label: 'Bits per second',
+          format: r => `${r} bits/s`,
+        },
+        data: formatData([stats.netv6.private_out, stats.netv6.out]),
+      },
+    });
   }
 
   async componentDidMount() {
@@ -33,113 +105,42 @@ export class DashboardPage extends Component {
     await dispatch(setSource(__filename));
   }
 
-  graphRangeUpdate(value) {
-    this.setState({ range: value });
-  }
-  graphSourceUpdate(value) {
-    this.setState({ source: value });
-  }
-
-  graphSelection() {
-    const source = this.state.source;
-    const range = this.state.range;
-    const now = new Date().getTime();
-    const timeRange = {
-      last1day: _.range(now - (1000 * 60 * 60 * 24 * 1), now, 5 * 60 * 1000),
-      last2day: _.range(now - (1000 * 60 * 60 * 24 * 2), now, 15 * 60 * 1000),
-      last7day: _.range(now - (1000 * 60 * 60 * 24 * 7), now, 60 * 60 * 1000),
-    };
-    const dataSource = {
-      cpu: {
-        name: 'CPU Usage',
-        yLabel: 'CPU Usage %',
-        xLabel: 'Sample Time',
-        yDomain: { y: [0, 100] },
-        range: 40,
-      },
-      disk: {
-        name: 'Disk IO',
-        yLabel: 'Block/sec',
-        xLabel: 'Sample Time',
-        yDomain: { y: [0, 70] },
-        range: 40,
-      },
-      ipv4: {
-        name: 'Networking IPv4',
-        yLabel: 'bits/sec',
-        xLabel: 'Sample Time',
-        yDomain: { y: [0, 2] },
-        range: 2,
-      },
-      ipv6: {
-        name: 'Networking IPv6',
-        yLabel: 'bits/sec',
-        xLabel: 'Sample Time',
-        yDomain: { y: [0, 60] },
-        range: 40,
-      },
-    };
-    return this.graphUpdate(dataSource[source], timeRange[range]);
-  }
-
-  graphUpdate(source, range) {
-    const data = {
-      data: [{
-        name: source.name,
-        values: range.map(ts => ({ x: ts, y: Math.random() * source.range })),
-        strokeWidth: 2,
-      }],
-      yLabel: source.yLabel,
-      xLabel: source.xLabel,
-      yDomain: source.yDomain,
-      xDomain: d => new Date(d.x),
-    };
-    return data;
-  }
+  onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   renderGraphs() {
-    return (
-      <Card title="Performance">TODO</Card>
-    );
-
-    /* Wait until the data exists because displaying this for not reals is too confusing.
-    const graph = this.graphSelection();
     return (
       <Card title="Performance" className="graphs">
         <div className="clearfix">
           <div className="float-xs-left">
-            <select
-              onChange={e => this.graphSourceUpdate(e.target.value)}
-              className="form-control select-source"
+            <Select
+              value={this.state.source}
+              name="source"
+              onChange={this.onChange}
             >
               <option value="cpu">CPU Usage</option>
-              <option value="disk">Memory Usage</option>
-              <option value="ipv4">IPv4 Network</option>
-              <option value="ipv6">IPv6 Network</option>
-            </select>
+              <option value="io">Disk IO</option>
+              <option value="netv4Inbound">Inbound IPv4 Traffic</option>
+              <option value="netv4Outbound">Outbound IPv4 Traffic</option>
+              <option value="netv6Inbound">Inbound IPv6 Traffic</option>
+              <option value="netv6Outbound">Outbound IPv6 Traffic</option>
+            </Select>
           </div>
           <div className="float-xs-right">
-            <select
-              onChange={e => this.graphRangeUpdate(e.target.value)}
-              className="form-control select-range"
+            <Select
+              value={this.state.range}
+              name="range"
+              onChange={this.onChange}
+              disabled
             >
               <option key={1} value="last1day">Last 24 hours</option>
               <option key={2} value="last2day">Last 48 hours</option>
               <option key={3} value="last7day">Last week</option>
-            </select>
+            </Select>
           </div>
         </div>
-        <ResponsiveLineChart
-          yAxisLabel={graph.yLabel}
-          xAxisLabel={graph.xLabel}
-          xAccessor={graph.xDomain}
-          data={graph.data}
-          domain={graph.yDomain}
-          gridHorizontal
-        />
-       </Card>
+        <LineGraph {...this.graphs[this.state.source]} />
+      </Card>
     );
-    */
   }
 
   renderDetails() {
@@ -154,7 +155,7 @@ export class DashboardPage extends Component {
 
     return (
       <div className="row-justify row-eq-height">
-        <section className="col-lg-6 col-md-12">
+        <section className="col-lg-6 col-md-12 col-sm-12">
           <Card title="Summary">
             <div className="row linode-ips">
               <div className="col-sm-3 row-label">
@@ -207,7 +208,7 @@ export class DashboardPage extends Component {
             </div>
           </Card>
         </section>
-        <section className="col-lg-6 col-md-12">
+        <section className="col-lg-6 col-md-12 col-sm-12">
           <Card title="Access">
             <div className="form-group row linode-ssh">
               <label htmlFor="ssh-input" className="col-sm-4 col-form-label">
