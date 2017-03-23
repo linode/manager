@@ -23,10 +23,9 @@ describe('support/layouts/IndexPage', () => {
       />
     );
 
-    const tickets = page.find('.PrimaryTable-row');
-    // + 1 for the group
-    expect(tickets.length).to.equal(Object.keys(api.tickets.tickets).length + 1);
-    const ticket = tickets.at(1);
+    const tickets = page.find('.TableRow');
+    expect(tickets.length).to.equal(Object.keys(api.tickets.tickets).length);
+    const ticket = tickets.at(0);
 
     // Get id without hashtag
     const id = ticket.find('td').at(1).text()
@@ -38,9 +37,9 @@ describe('support/layouts/IndexPage', () => {
 
     const formatTime = time => moment.utc(time).fromNow();
 
-    expect(ticket.find('#opened-by-0').text()).to.equal(renderedTicket.opened_by);
-    expect(ticket.find('#opened-0').text()).to.equal(formatTime(renderedTicket.opened));
-    expect(ticket.find('#regarding-0').text()).to.equal(renderedTicket.entity.label);
+    expect(ticket.find(`#opened-by-${id}`).text()).to.equal(renderedTicket.opened_by);
+    expect(ticket.find(`#opened-${id}`).text()).to.equal(formatTime(renderedTicket.opened));
+    expect(ticket.find(`#regarding-${id}`).text()).to.equal(renderedTicket.entity.label);
 
     expect(ticket.find('td').at(2).text()).to.equal(
       `Updated by ${renderedTicket.updated_by} ${formatTime(renderedTicket.updated)}`);

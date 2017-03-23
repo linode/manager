@@ -12,6 +12,10 @@ import CreateHelper from '~/components/CreateHelper';
 import {
   getLinodeRedirectUrl, getNodebalancerRedirectUrl, getDNSZoneRedirectUrl,
 } from '~/components/notifications/EventTypes';
+import { Table } from '~/components/tables';
+import {
+  LinkCell,
+} from '~/components/tables/cells';
 
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
@@ -53,62 +57,39 @@ export class IndexPage extends Component {
     if (to) {
       return <Link to={to}>{entity.label}</Link>;
     }
-
+    
     return <strong>{entity.label}</strong>;
   }
 
-  renderGroup = ({ group, tickets }) => {
-    // TODO: sort in fetch call
-    const sortedTickets = _.sortBy(tickets, ({ created }) => moment(created));
+  renderLabelStatus = (ticket) => {
+    return (
+      <span>
+        Opened
+        {!ticket.opened_by ? null : (
+          <span>
+            &nbsp;by <strong id={`opened-by-${ticket.id}`}>{ticket.opened_by}</strong>
+          </span>
+        )}
+        &nbsp;<span id={`opened-${ticket.id}`}>{moment.utc(ticket.opened).fromNow()}</span>
+        {ticket.entity ? (
+          <span>
+            &nbsp;regarding <span id={`regarding-${ticket.id}`}>{this.renderLink(ticket)}</span>
+          </span>
+        ) : null}
+      </span>
+    );
+  }
 
-    const formatTime = time => moment.utc(time).fromNow();
-
-    const ret = sortedTickets.map((ticket, i) => (
-      <tr key={ticket.id} className="PrimaryTable-row">
-        <td>
-          <div>
-            <Link
-              className="PrimaryTable-rowLabel"
-              to={`/support/${ticket.id}`}
-              title={ticket.id}
-            >{ticket.summary}</Link>
-          </div>
-          <div><small>
-            Opened
-            {!ticket.opened_by ? null : (
-              <span>
-                &nbsp;by <strong id={`opened-by-${i}`}>{ticket.opened_by}</strong>
-              </span>
-            )}
-            &nbsp;<span id={`opened-${i}`}>{formatTime(ticket.opened)}</span>
-            {ticket.entity ? (
-              <span>
-                &nbsp;regarding <span id={`regarding-${i}`}>{this.renderLink(ticket)}</span>
-              </span>
-            ) : null}
-          </small></div>
-        </td>
-        <td>#{ticket.id}</td>
-        <td>
-          {!ticket.updated_by ? <span>No updates</span> : (
-            <span>
-              Updated by <strong>{ticket.updated_by}</strong> {formatTime(ticket.updated)}
-            </span>
-          )}
-        </td>
-        <td></td>
-      </tr>
-    ));
-
-    if (group) {
-      ret.splice(0, 0, (
-        <tr className="PrimaryTable-row PrimaryTable-row--groupLabel">
-          <td colSpan="3">{group}</td>
-        </tr>
-      ));
-    }
-
-    return ret;
+  renderUpdatedByCell({ record: ticket }) {
+    return (
+      <td>
+        {!ticket.updated_by ? <span>No updates</span> : (
+          <span>
+            Updated by <strong>{ticket.updated_by}</strong> {moment.utc(ticket.updated).fromNow()}
+          </span>
+        )}
+      </td>
+    );
   }
 
   renderTickets(tickets) {
@@ -118,20 +99,46 @@ export class IndexPage extends Component {
       closed: 'Closed',
     };
 
-    const groups = _.map(
-      _.sortBy(
-        _.map(
-          _.groupBy(Object.values(tickets), ({ status }) => statusFormat[status]),
-          (_tickets, _group) => ({ group: _group, tickets: _tickets })
-        ), ticketGroup => ticketGroup.group
-      ).reverse(), this.renderGroup);
+    const groups = _.sortBy(
+      _.map(
+        _.groupBy(Object.values(tickets), ({ status }) => statusFormat[status]),
+        (_tickets, _group) => ({
+          name: _group,
+          columns: [
+            {
+              cellComponent: LinkCell,
+              statusComponent: this.renderLabelStatus,
+              hrefFn: ticket => `/tickets/${ticket.id}`,
+              textKey: 'summary',
+              className: 'RowLabelCell',
+            },
+            {
+              dataKey: 'id',
+              formatFn: id => <span>#{id}</span>,
+            },
+            {
+              cellComponent: this.renderUpdatedByCell,
+              className: 'RowLabelCell',
+            },
+          ],
+          data: _tickets,
+        })));
 
     return (
-      <table className="PrimaryTable">
-        <tbody>
-          {groups}
-        </tbody>
-      </table>
+      <div>
+        {groups.map(function (group, index) {
+          return (
+            <div className="Group" key={index}>
+              <div className="Group-label">{group.name}</div>
+              <Table
+                className="Tickets"
+                columns={group.columns}
+                data={group.data}
+              />
+            </div>
+          );
+        })}
+      </div>
     );
   }
 
