@@ -37,17 +37,15 @@ export class EditUserPage extends Component {
     const { email } = this.props.users[username];
     const errors = {};
     return (
-      <div className="PrimaryPage container">
-        <div className="PrimaryPage-body User-create">
-          <Card>
-            <UserForm
-              errors={errors}
-              username={username}
-              email={email}
-              onSubmit={this.onSubmit}
-            />
-          </Card>
-        </div>
+      <div>
+        <Card>
+          <UserForm
+            errors={errors}
+            username={username}
+            email={email}
+            onSubmit={this.onSubmit}
+          />
+        </Card>
       </div>
     );
   }

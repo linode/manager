@@ -14,8 +14,8 @@ export class UserForm extends Component {
     super(props);
     this.formSubmit = this.formSubmit.bind(this);
     this.state = {
-      username: props.username || '',
-      email: props.email || '',
+      username: props.username,
+      email: props.email,
       password: '',
     };
   }
@@ -93,4 +93,9 @@ UserForm.propTypes = {
   username: PropTypes.string,
   email: PropTypes.string,
   errors: PropTypes.any,
+};
+
+UserForm.defaultProps = {
+  username: '',
+  email: '',
 };

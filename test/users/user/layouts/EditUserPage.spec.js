@@ -53,7 +53,7 @@ describe('users/layouts/EditUserPage', () => {
     const fn = dispatch.firstCall.args[0];
     await expectRequest(
       fn, `/account/users/${params.username}`,
-      undefined, undefined, {
+      undefined, {
         method: 'PUT',
         body: { values },
       }
