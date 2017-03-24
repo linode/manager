@@ -10,12 +10,12 @@ import { ErrorSummary } from '~/errors';
 import { SubmitButton } from '~/components/form';
 
 export class UserForm extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.formSubmit = this.formSubmit.bind(this);
     this.state = {
-      username: '',
-      email: '',
+      username: props.username || '',
+      email: props.email || '',
       password: '',
     };
   }
@@ -80,7 +80,7 @@ export class UserForm extends Component {
         <ErrorSummary errors={errors} />
         <div className="row">
           <div className="offset-sm-2 col-sm-10">
-            <SubmitButton>Add User</SubmitButton>
+            <SubmitButton>{this.props.username ? 'Save' : 'Add User'}</SubmitButton>
           </div>
         </div>
       </Form>
@@ -90,5 +90,7 @@ export class UserForm extends Component {
 
 UserForm.propTypes = {
   onSubmit: PropTypes.func,
+  username: PropTypes.string,
+  email: PropTypes.string,
   errors: PropTypes.any,
 };
