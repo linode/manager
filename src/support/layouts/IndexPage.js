@@ -108,7 +108,7 @@ export class IndexPage extends Component {
             {
               cellComponent: LinkCell,
               statusComponent: this.renderLabelStatus,
-              hrefFn: ticket => `/tickets/${ticket.id}`,
+              hrefFn: ticket => `/support/${ticket.id}`,
               textKey: 'summary',
               className: 'RowLabelCell',
             },
