@@ -42,10 +42,9 @@ describe('users/layouts/AddUserPage', () => {
     expect(dispatch.calledTwice).to.equal(true);
     const fn = dispatch.firstCall.args[0];
     await expectRequest(
-      fn, '/account/users/',
-      undefined, undefined, {
+      fn, '/account/users/', {
         method: 'POST',
-        body: { values },
+        body: { ...values },
       }
     );
   });

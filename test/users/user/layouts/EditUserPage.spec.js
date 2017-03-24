@@ -52,10 +52,9 @@ describe('users/layouts/EditUserPage', () => {
     expect(dispatch.calledTwice).to.equal(true);
     const fn = dispatch.firstCall.args[0];
     await expectRequest(
-      fn, `/account/users/${params.username}`,
-      undefined, {
+      fn, `/account/users/${params.username}`, {
         method: 'PUT',
-        body: { values },
+        body: { ...values },
       }
     );
   });
