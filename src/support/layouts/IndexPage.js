@@ -46,7 +46,7 @@ export class IndexPage extends Component {
     const to = TICKET_LINK_MAP[entity.type];
 
     if (to) {
-      return <Link to={to}>{entity.label}</Link>;
+      return <Link to={to(entity)}>{entity.label}</Link>;
     }
 
     return <strong>{entity.label}</strong>;
