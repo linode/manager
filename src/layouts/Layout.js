@@ -2,6 +2,7 @@ import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
+import { VERSION } from '~/constants';
 import Header from '~/components/Header';
 import Sidebar from '~/components/Sidebar';
 import { ModalShell } from '~/components/modals';
@@ -151,6 +152,9 @@ export class Layout extends Component {
               this.renderError()}
           </div>
           <footer className="footer text-xs-center">
+            <div>
+              <span>Version {VERSION}</span>
+            </div>
             {!source || !source.source ? null :
               <a
                 target="__blank"
