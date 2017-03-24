@@ -14,7 +14,7 @@ import {
 } from '~/components/notifications/EventTypes';
 import { Table } from '~/components/tables';
 import {
-  LinkCell,
+  TableCell,
 } from '~/components/tables/cells';
 
 const TICKET_LINK_MAP = {
@@ -52,34 +52,37 @@ export class IndexPage extends Component {
     return <strong>{entity.label}</strong>;
   }
 
-  renderLabelStatus = (ticket) => {
+  renderLabelCell = ({ record: ticket }) => {
     return (
-      <span>
-        Opened
-        {!ticket.opened_by ? null : (
-          <span>
-            &nbsp;by <strong id={`opened-by-${ticket.id}`}>{ticket.opened_by}</strong>
-          </span>
-        )}
-        &nbsp;<span id={`opened-${ticket.id}`}>{moment.utc(ticket.opened).fromNow()}</span>
-        {ticket.entity ? (
-          <span>
-            &nbsp;regarding <span id={`regarding-${ticket.id}`}>{this.renderLink(ticket)}</span>
-          </span>
-        ) : null}
-      </span>
+      <TableCell column={{ className: 'RowLabelCell' }} record={ticket}>
+        <Link title={ticket.id} to={`/support/${ticket.id}`}>{ticket.summary}</Link>
+        <small>
+          Opened
+          {!ticket.opened_by ? null : (
+            <span>
+              &nbsp;by <strong id={`opened-by-${ticket.id}`}>{ticket.opened_by}</strong>
+            </span>
+          )}
+          &nbsp;<span id={`opened-${ticket.id}`}>{moment.utc(ticket.opened).fromNow()}</span>
+          {ticket.entity ? (
+            <span>
+              &nbsp;regarding <span id={`regarding-${ticket.id}`}>{this.renderLink(ticket)}</span>
+            </span>
+           ) : null}
+        </small>
+      </TableCell>
     );
   }
 
   renderUpdatedByCell({ record: ticket }) {
     return (
-      <td>
+      <TableCell column={{}} record={ticket}>
         {!ticket.updated_by ? <span>No updates</span> : (
           <span>
             Updated by <strong>{ticket.updated_by}</strong> {moment.utc(ticket.updated).fromNow()}
           </span>
         )}
-      </td>
+      </TableCell>
     );
   }
 
@@ -97,11 +100,7 @@ export class IndexPage extends Component {
           name: _group,
           columns: [
             {
-              cellComponent: LinkCell,
-              statusComponent: this.renderLabelStatus,
-              hrefFn: ticket => `/support/${ticket.id}`,
-              textKey: 'summary',
-              className: 'RowLabelCell',
+              cellComponent: this.renderLabelCell,
             },
             {
               dataKey: 'id',
@@ -109,7 +108,6 @@ export class IndexPage extends Component {
             },
             {
               cellComponent: this.renderUpdatedByCell,
-              className: 'RowLabelCell',
             },
           ],
           data: _tickets,

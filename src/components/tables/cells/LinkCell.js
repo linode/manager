@@ -12,7 +12,6 @@ export default function LinkCell(props) {
     titleKey = 'id',
     textKey = 'label',
     textFn,
-    statusComponent,
   } = column;
 
   let children = props.children;
@@ -32,7 +31,6 @@ export default function LinkCell(props) {
       >
         {children}
       </Link>
-      {statusComponent ? <small>{statusComponent(record)}</small> : null}
     </TableCell>
   );
 }
