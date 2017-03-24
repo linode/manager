@@ -17,6 +17,12 @@ import {
   LinkCell,
 } from '~/components/tables/cells';
 
+const TICKET_LINK_MAP = {
+  linode: getLinodeRedirectUrl,
+  nodebalancer: getNodebalancerRedirectUrl,
+  dnszone: getDNSZoneRedirectUrl,
+};
+
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
     try {
@@ -36,23 +42,8 @@ export class IndexPage extends Component {
   }
 
   renderLink(ticket) {
-    // TODO: this can just be {entity} = ticket when entity changes exist in API
-    const entity = ticket.entity || {};
-    let to = '';
-
-    switch (entity.type) {
-      case 'linode':
-        to = getLinodeRedirectUrl(entity);
-        break;
-      case 'nodebalancer':
-        to = getNodebalancerRedirectUrl(entity);
-        break;
-      case 'dnszone':
-        to = getDNSZoneRedirectUrl(entity);
-        break;
-      default:
-        break;
-    }
+    const { entity } = ticket;
+    const to = TICKET_LINK_MAP[entity.type];
 
     if (to) {
       return <Link to={to}>{entity.label}</Link>;
