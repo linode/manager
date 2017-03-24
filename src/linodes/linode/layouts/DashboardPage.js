@@ -57,7 +57,7 @@ export class DashboardPage extends Component {
         title: 'IO',
         yAxis: {
           label: 'Blocks per second',
-          format: r => `${r} blocks/s`,
+          format: r => `${r.toFixed(1)} blocks/s`,
         },
         data: formatData([stats.io.io, stats.io.swap],
                          ['Disk', 'Swap']),
@@ -66,7 +66,7 @@ export class DashboardPage extends Component {
         title: 'IPv4 Network',
         yAxis: {
           label: 'Bits per second',
-          format: r => `${r} bits/s`,
+          format: r => `${r.toFixed()} bits/s`,
         },
         data: formatData([stats.netv4.in, stats.netv4.private_in,
                           stats.netv4.out, stats.netv4.private_out],
@@ -77,7 +77,7 @@ export class DashboardPage extends Component {
         title: 'IPv6 Network',
         yAxis: {
           label: 'Bits per second',
-          format: r => `${r} bits/s`,
+          format: r => `${r.toFixed()} bits/s`,
         },
         data: formatData([stats.netv6.in, stats.netv6.private_in,
                           stats.netv6.out, stats.netv6.private_out],
