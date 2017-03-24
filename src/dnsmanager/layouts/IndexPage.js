@@ -156,9 +156,11 @@ export class IndexPage extends Component {
     return (
       <div>
         {groups.map(function (group, index) {
+          const groupLabel = group.name ? (<div className="Group-label">{group.name}</div>) : null;
+
           return (
             <div className="Group" key={index}>
-              <div className="Group-label">{group.name}</div>
+              {groupLabel}
               <Table
                 columns={group.columns}
                 data={group.data}
