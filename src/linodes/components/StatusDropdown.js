@@ -49,7 +49,7 @@ export default class StatusDropdown extends Component {
   async startLinodePolling(tempStatus = '') {
     const { dispatch, linode } = this.props;
 
-    dispatch(actions.one({ status: tempStatus, __progress: 1 }, linode.id));
+    await dispatch(actions.one({ status: tempStatus, __progress: 1 }, linode.id));
     dispatch(actions.one({ __progress: randomInitialProgress() }, linode.id));
 
     this._polling.start(linode.id);
