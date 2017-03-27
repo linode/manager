@@ -26,11 +26,12 @@ export class CreatePage extends Component {
     }
   }
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+
     this.state = {
       summary: '',
-      regarding: '',
+      regarding: `linode_id:${Object.values(props.linodes)[0].id}`,
       description: '',
       errors: {},
       creating: false,
@@ -56,27 +57,13 @@ export class CreatePage extends Component {
     const { dispatch } = this.props;
     const { summary, regarding, description } = this.state;
 
-    const regardingType = regarding.substring(0, regarding.indexOf('-'));
-    const regardingId = regarding.substring(regardingType.length + 1);
-    let regardingTypeField = '';
-    switch (regardingType) {
-      case 'Linodes':
-        regardingTypeField = 'linode_id';
-        break;
-      case 'DNS Zones':
-        regardingTypeField = 'dnszone_id';
-        break;
-      case 'NodeBalancers':
-        regardingTypeField = 'nodebalancer_id';
-        break;
-      default:
-        break;
-    }
+    const regardingField = regarding.substring(0, regarding.indexOf(':'));
+    const regardingId = regarding.substring(regardingField.length + 1);
 
     this.setState({ loading: true, errors: {} });
 
     try {
-      await dispatch(tickets.post({ summary, description, [regardingTypeField]: +regardingId }));
+      await dispatch(tickets.post({ summary, description, [regardingField]: +regardingId }));
 
       // TODO: Redirect to newly create ticket page
       dispatch(push('/support'));
@@ -95,11 +82,11 @@ export class CreatePage extends Component {
       this.setState({ hidden: { ...this.state.hidden, [section]: !this.state.hidden[section] } });
   }
 
-  renderOptionsGroup(label, group) {
+  renderOptionsGroup(label, field, group) {
     return (
       <optgroup label={label} key={label}>
         {group.map(object => (
-          <option key={object.id} value={`${label}-${object.id}`}>
+          <option key={object.id} value={`${field}:${object.id}`}>
             {object.label || object.dnszone}
           </option>
          ))}
@@ -111,9 +98,9 @@ export class CreatePage extends Component {
     const { summary, regarding, description, creating, errors } = this.state;
     const { linodes, dnszones, nodebalancers } = this.props;
     const regardingOptions = [
-      this.renderOptionsGroup('Linodes', Object.values(linodes)),
-      this.renderOptionsGroup('DNS Zones', Object.values(dnszones)),
-      this.renderOptionsGroup('NodeBalancers', Object.values(nodebalancers)),
+      this.renderOptionsGroup('Linodes', 'linode_id', Object.values(linodes)),
+      this.renderOptionsGroup('DNS Zones', 'dnszone_id', Object.values(dnszones)),
+      this.renderOptionsGroup('NodeBalancers', 'nodebalancer_id', Object.values(nodebalancers)),
       // TODO: this is not currently supported by the API
       // this.renderOptionsGroup('Other', [{ label: 'Other', id: 'other' }]),
     ];
@@ -216,9 +203,10 @@ export class CreatePage extends Component {
                   name="summary"
                   id="summary"
                   value={summary}
+                  className="input-lg"
                   onChange={this.onChange}
                 />
-                <FormGroupError errors={errors} name="summary" />
+                <FormGroupError errors={errors} name="summary" inline={false} />
               </div>
             </FormGroup>
             <FormGroup className="row" errors={errors} name="regarding">
@@ -230,7 +218,7 @@ export class CreatePage extends Component {
                   value={regarding}
                   onChange={this.onChange}
                 >{regardingOptions}</Select>
-                <FormGroupError errors={errors} name="regarding" />
+                <FormGroupError errors={errors} name="regarding" inline={false} />
               </div>
             </FormGroup>
             <FormGroup className="row" errors={errors} name="description">
@@ -245,7 +233,7 @@ export class CreatePage extends Component {
                   value={description}
                   onChange={this.onChange}
                 />
-                <FormGroupError errors={errors} name="description" />
+                <FormGroupError errors={errors} name="description" inline={false} />
               </div>
             </FormGroup>
             <FormGroup className="row">
