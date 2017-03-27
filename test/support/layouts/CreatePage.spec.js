@@ -30,7 +30,7 @@ describe('support/layouts/CreatePage', () => {
       page.find(type).find({ id }).simulate('change', { target: { value, name: id } });
 
     changeInput('Input', 'summary', 'My new ticket!');
-    changeInput('Select', 'regarding', `Linodes-${testLinode.id}`);
+    changeInput('Select', 'regarding', `linode_id:${testLinode.id}`);
     changeInput('textarea', 'description', 'This is my new description!');
 
     dispatch.reset();
