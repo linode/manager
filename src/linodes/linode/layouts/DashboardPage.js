@@ -49,7 +49,7 @@ export class DashboardPage extends Component {
         title: 'CPU',
         yAxis: {
           label: 'Percentage of CPU(s) used',
-          format: p => `${p}%`,
+          format: p => `${p.toFixed(1)}%`,
         },
         data: formatData([stats.cpu]),
       },
