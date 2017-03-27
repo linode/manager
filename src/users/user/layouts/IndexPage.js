@@ -11,6 +11,7 @@ export class IndexPage extends Component {
   static async preload({ dispatch, getState }, { username }) {
     try {
       await dispatch(users.one([username]));
+      await dispatch(users.permissions.one([username]));
     } catch (response) {
       // eslint-disable-next-line no-console
       console.error(response);

@@ -34,7 +34,7 @@ export class EditUserPage extends Component {
 
   render() {
     const { username } = this.props.params;
-    const { email } = this.props.users[username];
+    const { email, restricted } = this.props.users[username];
     const errors = {};
     return (
       <div>
@@ -43,6 +43,7 @@ export class EditUserPage extends Component {
             errors={errors}
             username={username}
             email={email}
+            restricted={restricted}
             onSubmit={this.onSubmit}
           />
         </Card>

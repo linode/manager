@@ -5,6 +5,8 @@ import {
   FormGroupError,
   PasswordInput,
   Input,
+  Checkboxes,
+  Radio,
 } from '~/components/form';
 import { ErrorSummary } from '~/errors';
 import { SubmitButton } from '~/components/form';
@@ -16,6 +18,7 @@ export class UserForm extends Component {
     this.state = {
       username: props.username,
       email: props.email,
+      restricted: props.restricted,
       password: '',
     };
   }
@@ -35,9 +38,10 @@ export class UserForm extends Component {
     const {
       username,
       email,
+      restricted,
       password,
     } = this.state;
-
+    console.log(restricted ? "true" : "false");
     return (
       <Form
         onSubmit={this.formSubmit}
@@ -77,6 +81,26 @@ export class UserForm extends Component {
             <FormGroupError errors={errors} name="password" />
           </div>
         </FormGroup>
+        <FormGroup errors={errors} name="restricted" className="row">
+          <label className="col-sm-2 col-form-label">Restricted</label>
+          <div className="col-sm-6">
+            <Checkboxes>
+              <Radio
+                id="user-restricted"
+                checked={restricted}
+                onChange={() => this.setState({ restricted: true })}
+                label="Yes - this user can only do what I specify"
+              />
+              <Radio
+                id="user-unrestricted"
+                checked={!restricted}
+                onChange={() => this.setState({ restricted: false })}
+                label="No - this user has no access restrictions"
+              />
+            </Checkboxes>
+            <FormGroupError errors={errors} name="restricted" />
+          </div>
+        </FormGroup>
         <ErrorSummary errors={errors} />
         <div className="row">
           <div className="offset-sm-2 col-sm-10">
@@ -92,10 +116,12 @@ UserForm.propTypes = {
   onSubmit: PropTypes.func,
   username: PropTypes.string,
   email: PropTypes.string,
+  restricted: PropTypes.bool,
   errors: PropTypes.any,
 };
 
 UserForm.defaultProps = {
   username: '',
   email: '',
+  restricted: true,
 };
