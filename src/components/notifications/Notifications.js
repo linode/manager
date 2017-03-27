@@ -10,6 +10,7 @@ import {
   lessThanDatetimeFilter,
   lessThanNowFilter,
 } from '~/api/util';
+import Polling from '~/api/polling';
 
 import { eventRead, eventSeen } from '~/api/events';
 import { hideNotifications, showNotifications } from '~/actions/notifications';
@@ -25,7 +26,11 @@ export class Notifications extends Component {
     this.onClickItem = this.onClickItem.bind(this);
     this.onClickShowMore = this.onClickShowMore.bind(this);
 
-    this._pollingTimeoutId = null;
+    this._polling = Polling({
+      apiRequestFn: this.fetchAllEvents.bind(this),
+      filterOptions: { seen: false },
+      timeout: EVENT_POLLING_DELAY,
+    });
     this.state = { loadingMore: false };
   }
 
@@ -40,7 +45,7 @@ export class Notifications extends Component {
     }
 
     // initialize polling for unseen events
-    this.pollForEvents();
+    this._polling.start();
   }
 
   componentWillUnmount() {
@@ -100,39 +105,16 @@ export class Notifications extends Component {
     }
   }
 
-  async pollForEvents(
-    options = createHeaderFilter({ seen: false }),
-    timeout = EVENT_POLLING_DELAY
-  ) {
-    // additional calls to this function will restart polling by default
-    // so that requests don't stack
-    if (this._pollingTimeoutId !== null) {
-      clearTimeout(this._pollingTimeoutId);
-    }
-
-    this._pollingTimeoutId = setTimeout(async () => {
-      this.fetchAllEvents(options); // this.eventHandler
-
-      try {
-        this._pollingTimeoutId = null;
-        await this.pollForEvents(options);
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error(e);
-      }
-    }, timeout);
-  }
-
   async fetchEventsPage(options = null) {
-    const { dispatch, eventHandler = (x) => x } = this.props;
+    const { dispatch } = this.props;
     await dispatch(
-      events.page(0, [], eventHandler, true, null, options)
+      events.page(0, [], null, true, null, options)
     );
   }
 
   async fetchAllEvents(options = null) {
-    const { dispatch, eventHandler = (x) => x } = this.props;
-    await dispatch(events.all([], eventHandler, options));
+    const { dispatch } = this.props;
+    await dispatch(events.all([], null, options));
   }
 
   render() {
@@ -162,7 +144,6 @@ export class Notifications extends Component {
 Notifications.propTypes = {
   dispatch: PropTypes.func.isRequired,
   events: PropTypes.object,
-  eventHandler: PropTypes.func,
   notifications: PropTypes.object.isRequired,
   onMenuClick: PropTypes.func,
 };

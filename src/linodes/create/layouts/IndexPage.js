@@ -8,8 +8,6 @@ import Datacenter from '~/components/Datacenter';
 import Details from '../components/Details';
 import { Card } from '~/components/cards';
 import { linodes } from '~/api';
-import { actions as linodeActions } from '~/api/configs/linodes';
-import { randomInitialProgress } from '~/api/linodes';
 import { setError } from '~/actions/errors';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
@@ -69,9 +67,7 @@ export class IndexPage extends Component {
     this.setState({ loading: true });
 
     try {
-      const { id } = await this.createLinode({ group, label, password, backups });
-      dispatch(linodeActions.one({ __progress: randomInitialProgress() }, id));
-
+      await this.createLinode({ group, label, password, backups });
       dispatch(push(`/linodes/${label}`));
     } catch (response) {
       const errors = await reduceErrors(response);

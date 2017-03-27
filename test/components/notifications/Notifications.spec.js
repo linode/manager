@@ -27,7 +27,6 @@ describe('components/Notifications', function () {
   it('defines default state', () => {
     expect(notifications.instance().state).to.exist;
     expect(notifications.instance().state.loadingMore).to.equal(false);
-    expect(notifications.instance()._pollingTimeoutId).to.be.null;
   });
 
   it('disables polling on unmount', () => {
