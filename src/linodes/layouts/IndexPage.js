@@ -9,10 +9,10 @@ import CreateHelper from '~/components/CreateHelper';
 
 import { Table } from '~/components/tables';
 import {
-  BackupsCell,
   CheckboxCell,
-  DatacenterCell,
   IPAddressCell,
+  DatacenterCell,
+  BackupsCell,
   LinkCell,
 } from '~/components/tables/cells';
 import StatusDropdownCell from '~/linodes/components/StatusDropdownCell';

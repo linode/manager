@@ -58,6 +58,10 @@
 .RowLabelCell {
     @extend .font-large;
     width: 350px;
+
+    small {
+        display: block;
+    }
 }
 
 .ButtonCell {
