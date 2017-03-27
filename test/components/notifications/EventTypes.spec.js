@@ -4,8 +4,8 @@ import {
   EventTypeMap,
   baseRedirect,
   getLinodeRedirectUrl,
-  getDiskRedirectUrl,
-  getBackupRedirectUrl,
+  getLinodeDiskRedirectUrl,
+  getLinodeBackupRedirectUrl,
 } from '~/components/notifications';
 import { api } from '@/data';
 
@@ -18,7 +18,7 @@ describe('components/notifications/EventTypes', () => {
   });
 
   it('should provide a base redirect url', () => {
-    expect(baseRedirect()).to.equal('/linodes');
+    expect(baseRedirect()).to.equal('/');
   });
 
   it('should create a linode redirect url', () => {
@@ -28,11 +28,12 @@ describe('components/notifications/EventTypes', () => {
 
   it('should create a disk redirect url', () => {
     const event = events.events[385];
-    expect(getDiskRedirectUrl(event.entity)).to.equal('/linodes/linode-www2/settings/advanced');
+    expect(getLinodeDiskRedirectUrl(event.entity))
+      .to.equal('/linodes/linode-www2/settings/advanced');
   });
 
   it('should create a backups redirect url', () => {
     const event = events.events[385];
-    expect(getBackupRedirectUrl(event.entity)).to.equal('/linodes/linode-www2/backups');
+    expect(getLinodeBackupRedirectUrl(event.entity)).to.equal('/linodes/linode-www2/backups');
   });
 });
