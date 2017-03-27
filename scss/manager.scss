@@ -138,11 +138,17 @@
 }
 
 footer {
+    @extend .font-small;
+
     padding-bottom: 15px;
 
     span, a {
         color: $lightest-black;
         padding: 0 10px;
+    }
+
+    a {
+        text-decoration: underline;
     }
 }
 
