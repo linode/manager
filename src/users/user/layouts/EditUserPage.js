@@ -5,6 +5,7 @@ import { push } from 'react-router-redux';
 import { Card } from '~/components/cards';
 import { reduceErrors } from '~/errors';
 import { users } from '~/api';
+import { actions as userActions } from '~/api/configs/users';
 import { UserForm } from '../../components/UserForm';
 
 export class EditUserPage extends Component {
@@ -26,6 +27,9 @@ export class EditUserPage extends Component {
     try {
       await dispatch(users.put(stateValues, username));
       dispatch(push('/users'));
+
+      // TODO: remove once primary key stops changing
+      dispatch(userActions.delete(username));
     } catch (response) {
       const errors = await reduceErrors(response);
       this.setState({ errors, loading: false });
@@ -33,9 +37,17 @@ export class EditUserPage extends Component {
   }
 
   render() {
+    const { errors } = this.state;
     const { username } = this.props.params;
-    const { email } = this.props.users[username];
-    const errors = {};
+
+    // TODO: remove once primary key stops changing
+    let email;
+    try {
+      ({ email } = this.props.users[username]);
+    } catch (e) {
+      return null;
+    }
+
     return (
       <div>
         <Card>
