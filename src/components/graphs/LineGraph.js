@@ -17,15 +17,11 @@ function rgbaFromHex(hex, alpha) {
 export default class LineGraph extends Component {
   // Source: http://www.mulinblog.com/a-color-palette-optimized-for-data-visualization/
   static COLORS = [
-    'F17CB0',
     'FAA43A',
-    'F15854',
-    'B2912F',
     '60BD68',
     '5DA5DA',
     'B276B2',
-    'DECF3F',
-    '4D4D4D',
+    'B2912F',
   ]
 
   static formatData(x, ys, legends = []) {
