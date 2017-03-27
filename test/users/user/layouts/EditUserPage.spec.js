@@ -10,7 +10,7 @@ import { EditUserPage } from '~/users/user/layouts/EditUserPage';
 const { users } = api;
 const user = { testuser1: users.users[0] };
 
-describe('users/layouts/EditUserPage', () => {
+describe('users/user/layouts/EditUserPage', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
@@ -49,7 +49,7 @@ describe('users/layouts/EditUserPage', () => {
       password: 'password',
     };
     await page.instance().onSubmit(values);
-    expect(dispatch.callCount).to.equal(2);
+    expect(dispatch.callCount).to.equal(3);
     const fn = dispatch.firstCall.args[0];
     await expectRequest(
       fn, `/account/users/${params.username}`, {
