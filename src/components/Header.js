@@ -109,7 +109,10 @@ export default class Header extends Component {
                   <Link to="/billing">Billing</Link>
                 </li>
                 <li className="list-unstyled SessionMenu-menu-item">
-                  <Link to="/billing">Settings</Link>
+                  <Link to="/settings">Settings</Link>
+                </li>
+                <li className="list-unstyled SessionMenu-menu-item">
+                  <Link to="/support">Support</Link>
                 </li>
                 <hr />
                 <li className="list-unstyled SessionMenu-menu-item">
