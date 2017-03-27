@@ -117,9 +117,7 @@ export default class LineGraph extends Component {
 
   render() {
     return (
-      <canvas
-        style={{ marginTop: '15px', width: '100%', height: '500px', maxHeight: '500px' }}
-      />
+      <canvas className="LineGraph" />
     );
   }
 }
