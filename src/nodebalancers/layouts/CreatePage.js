@@ -14,7 +14,7 @@ export class CreatePage extends Component {
   constructor() {
     super();
     this.state = {
-      datacenter: '',
+      datacenter: 'newark',
       label: '',
       errors: {},
       fetching: false,
