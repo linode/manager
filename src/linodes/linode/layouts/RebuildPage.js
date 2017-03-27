@@ -58,7 +58,7 @@ export class RebuildPage extends Component {
     return (
       <Card title="Rebuild">
         <Form onSubmit={() => this.onSubmit()} className="LinodesLinodeRebuildPage-body">
-          <div className="LinodesLinodeRebuildPage-distributions">
+          <div className="LinodesLinodeRebuildPage-distributions clearfix">
             <Distributions
               distributions={distributions.distributions}
               distribution={distribution}
