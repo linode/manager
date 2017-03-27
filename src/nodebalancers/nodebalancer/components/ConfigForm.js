@@ -98,8 +98,11 @@ export class ConfigForm extends Component {
               <option value="leastconn">Least Connections</option>
               <option value="source">Source IP</option>
             </Select>
-            <div className="text-muted">
-              Configure how initial client connections are allocated across backend nodes.
+            <div>
+              <small className="text-muted">
+                Configure how initial client connections are
+                allocated across backend nodes.
+              </small>
             </div>
           </div>
           <FormGroupError errors={errors} name="algorithm" />
@@ -118,8 +121,11 @@ export class ConfigForm extends Component {
               <option value="http_cookie">HTTP Cookie</option>
               <option value="none">None</option>
             </Select>
-            <div className="text-muted">
-              Enable subsequent requests from the same client to be routed to the same backend node.
+            <div>
+              <small className="text-muted">
+                Enable subsequent requests from the same client to
+                be routed to the same backend node.
+              </small>
             </div>
           </div>
           <FormGroupError errors={errors} name="stickiness" />
@@ -139,8 +145,10 @@ export class ConfigForm extends Component {
               <option value="http">HTTP Valid Status</option>
               <option value="http_body">HTTP Body Regex</option>
             </Select>
-            <div className="text-muted">
-              Active health checks proactively check the health of back-end nodes.
+            <div>
+              <small className="text-muted">
+                Active health checks proactively check the health of back-end nodes.
+              </small>
             </div>
           </div>
           <FormGroupError errors={errors} name="check" />
@@ -154,8 +162,8 @@ export class ConfigForm extends Component {
               placeholder="0"
               value={checkInterval}
               onChange={this.onChange}
+              label="seconds"
             />
-            <span className="text-muted">seconds</span>
             <FormGroupError errors={errors} name="check_interval" />
           </div>
         </FormGroup>
@@ -168,8 +176,8 @@ export class ConfigForm extends Component {
               placeholder="0"
               value={checkTimeout}
               onChange={this.onChange}
+              label="seconds"
             />
-            <span className="text-muted">seconds</span>
             <FormGroupError errors={errors} name="check_timeout" />
           </div>
         </FormGroup>
@@ -183,8 +191,10 @@ export class ConfigForm extends Component {
               value={checkAttempts}
               onChange={this.onChange}
             />
-            <div className="text-muted">
-              Take this node out of rotation after this number of failed health checks
+            <div>
+              <small className="text-muted">
+                Take this node out of rotation after this number of failed health checks
+              </small>
             </div>
             <FormGroupError errors={errors} name="check_attempts" />
           </div>
