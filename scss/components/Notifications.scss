@@ -33,6 +33,9 @@
     }
 
     &-body {
+        /* Places the notification list beneath the header so (among other things) the top of the box shadow is hidden */
+        z-index: -1;
+
         border-left: $border;
         // TODO: create a box-shadow mixin
         box-shadow: 2px 2px 4px 2px $dark-gray;
@@ -42,8 +45,6 @@
         right: 0;
         top: $nav-height;
         width: $notifications-width;
-        // TODO: add z-index levels to variables
-        z-index: 1001;
     }
 
     &-listItem {

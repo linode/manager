@@ -132,6 +132,10 @@ $header-padding: $grid-gutter-width-base / 2;
     }
 
     &-body {
+        /* Places the popup underneath the header so (among other things) the top box shadow is hidden */
+        z-index: -1;
+
+        padding: 0;
         border-left: $border;
         // TODO: create a box-shadow mixin
         box-shadow: 2px 2px 4px 2px $dark-gray;
@@ -139,12 +143,11 @@ $header-padding: $grid-gutter-width-base / 2;
         position: fixed;
         right: 0;
         top: $nav-height;
-        width: 200px;
-        // TODO: add z-index levels to variables
-        z-index: 2001;
+        width: 250px;
     }
 
     &-menu-item {
-        padding: 0 15px;
+        line-height: initial;
+        padding: 15px 30px;
     }
 }
