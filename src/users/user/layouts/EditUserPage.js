@@ -56,14 +56,12 @@ EditUserPage.propTypes = {
   params: PropTypes.shape({
     username: PropTypes.string,
   }),
-  username: PropTypes.string,
   dispatch: PropTypes.func.isRequired,
 };
 
 function select(state) {
   return {
     users: state.api.users.users,
-    username: state.authentication.username,
   };
 }
 
