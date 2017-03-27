@@ -63,7 +63,7 @@ export class IndexPage extends Component {
     const data = Object.values(nodebalancers.nodebalancers);
 
     // TODO: add mass edit controls to nodebalancers
-    const renderZones = (data) => (
+    const renderNodebalancers = (data) => (
       <Table
         columns={[
           {
@@ -95,8 +95,13 @@ export class IndexPage extends Component {
           </div>
         </header>
         <div className="PrimaryPage-body">
-          {data.length ? renderZones(data) :
-            <CreateHelper label="zones" href="/nodebalancers/create" linkText="Add a zone" />}
+          {data.length ? renderNodebalancers(data) : (
+            <CreateHelper
+              label="NodeBalancers"
+              href="/nodebalancers/create"
+              linkText="Add a NodeBalancer"
+            />
+          )}
         </div>
       </div>
     );
