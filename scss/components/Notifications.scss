@@ -33,12 +33,9 @@
     }
 
     &-body {
-        /* Places the notification list beneath the header so (among other things) the top of the box shadow is hidden */
-        z-index: -1;
-
         border-left: $border;
         // TODO: create a box-shadow mixin
-        box-shadow: 2px 2px 4px 2px $dark-gray;
+        box-shadow: 0px 2px 3px 1px $dark-gray;
         max-height: calc(#{$main-height} - 100px);
         overflow-y: auto;
         position: fixed;

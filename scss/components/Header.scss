@@ -132,13 +132,10 @@ $header-padding: $grid-gutter-width-base / 2;
     }
 
     &-body {
-        /* Places the popup underneath the header so (among other things) the top box shadow is hidden */
-        z-index: -1;
-
         padding: 0;
         border-left: $border;
         // TODO: create a box-shadow mixin
-        box-shadow: 2px 2px 4px 2px $dark-gray;
+        box-shadow: 0px 2px 3px 1px $dark-gray;
         overflow-y: auto;
         position: fixed;
         right: 0;
