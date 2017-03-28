@@ -30,6 +30,7 @@ describe('layouts/Layout', () => {
         errors={_errors}
         source={source}
         notifications={{ open: false }}
+        session={{ open: false }}
         linodes={linodes}
         events={events}
         modal={{ open: false }}
@@ -46,11 +47,6 @@ describe('layouts/Layout', () => {
     const component = shallow(makeLayout());
     expect(component.contains(<p>Hello world!</p>))
       .to.equal(true);
-  });
-
-  it('renders a header', () => {
-    const component = shallow(makeLayout());
-    expect(component.find('Header').length).to.equal(1);
   });
 
   it('renders a footer', () => {
