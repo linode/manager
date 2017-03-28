@@ -74,6 +74,7 @@ export class IndexPage extends Component {
           { dataKey: 'statusString', label: 'Node status' },
           {
             cellComponent: ButtonCell,
+            buttonClassName: 'btn-secondary',
             hrefFn: function (config) {
               return `/nodebalancers/${nbLabel}/configs/${config.id}/edit`;
             },
@@ -93,16 +94,17 @@ export class IndexPage extends Component {
       <div>
         <header className="main-header main-header--border">
           <div className="container">
+            <Link to="/nodebalancers">NodeBalancers</Link>
             <h1 title={nodebalancer.id}>{nbLabel}</h1>
           </div>
         </header>
         <div className="container">
           <Card title="Summary">
             <div className="row">
-              <div className="col-sm-1 row-label">
+              <div className="col-sm-2 row-label">
                 IP Addresses
               </div>
-              <div className="col-sm-11">
+              <div className="col-sm-10">
                 <ul className="list-unstyled">
                   <li>{nodebalancer.ipv4}</li>
                   <li className="text-muted">{nodebalancer.ipv6}</li>
@@ -110,26 +112,26 @@ export class IndexPage extends Component {
               </div>
             </div>
             <div className="row">
-              <div className="col-sm-1 row-label">
+              <div className="col-sm-2 row-label">
                 Hostname
               </div>
-              <div className="col-sm-11">
+              <div className="col-sm-10">
                 {nodebalancer.hostname}
               </div>
             </div>
             <div className="row">
-              <div className="col-sm-1 row-label">
+              <div className="col-sm-2 row-label">
                 Status
               </div>
-              <div className="col-sm-11">
+              <div className="col-sm-10">
                 {NodebalancerStatusReadable[nodebalancer.status]}
               </div>
             </div>
             <div className="row">
-              <div className="col-sm-1 row-label">
+              <div className="col-sm-2 row-label">
                 Datacenter
               </div>
-              <div className="col-sm-11">
+              <div className="col-sm-10">
                 <Datacenter obj={nodebalancer} />
               </div>
             </div>
