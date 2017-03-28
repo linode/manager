@@ -10,7 +10,7 @@ import WeblishLaunch from '~/linodes/components/WeblishLaunch';
 import { getLinode } from './IndexPage';
 import { setSource } from '~/actions/source';
 import { Button } from '~/components/buttons';
-import { Card } from '~/components/cards';
+import { Card, CardHeader } from '~/components/cards';
 import LineGraph from '~/components/graphs/LineGraph';
 import { Select } from '~/components/form';
 import { objectFromMapByLabel } from '~/api/util';
@@ -98,7 +98,7 @@ export class DashboardPage extends Component {
 
   renderGraphs() {
     return (
-      <Card title="Performance" className="graphs">
+      <Card header={<CardHeader title="Performance" />} className="graphs">
         {!this.graphs ? <p>No stats are available.</p> : (
           <div>
             <div className="clearfix">
@@ -147,7 +147,7 @@ export class DashboardPage extends Component {
     return (
       <div className="row-justify row-eq-height">
         <section className="col-lg-6 col-md-12 col-sm-12">
-          <Card title="Summary">
+          <Card header={<CardHeader title="Summary" />}>
             <div className="row linode-ips">
               <div className="col-sm-3 row-label">
                 IP Addresses
@@ -200,7 +200,7 @@ export class DashboardPage extends Component {
           </Card>
         </section>
         <section className="col-lg-6 col-md-12 col-sm-12">
-          <Card title="Access">
+          <Card header={<CardHeader title="Access" />}>
             <div className="form-group row linode-ssh">
               <label htmlFor="ssh-input" className="col-sm-4 col-form-label">
                 SSH

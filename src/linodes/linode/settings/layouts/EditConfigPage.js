@@ -16,8 +16,9 @@ import { Form,
   Checkboxes,
 } from '~/components/form';
 import { ErrorSummary, reduceErrors } from '~/errors';
+
 import { SubmitButton } from '~/components/form';
-import { Card } from '~/components/cards';
+import { Card, CardHeader } from '~/components/cards';
 import { CancelButton, LinkButton } from '~/components/buttons';
 import { setSource } from '~/actions/source';
 import { setError } from '~/actions/errors';
@@ -322,7 +323,11 @@ export class EditConfigPage extends Component {
     } = this.state.helpers;
     const linode = this.getLinode();
     return (
-      <Card title={create ? 'Add config' : 'Edit config'} navLink="https://example.org">
+      <Card
+        header={
+          <CardHeader title={create ? 'Add config' : 'Edit config'} navLink="https://example.org" />
+        }
+      >
         <Form onSubmit={() => this.saveChanges()}>
           <h3 className="sub-header">Label and Note</h3>
           <FormGroup errors={errors} name="label" className="row">

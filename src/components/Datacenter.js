@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import _ from 'lodash';
 
-import { Card } from '~/components/cards';
+import { Card, CardHeader } from '~/components/cards';
 import { flags } from '~/assets';
 import { regionMap } from '~/constants';
 
@@ -56,7 +56,7 @@ export default class Datacenter extends Component {
     const { selected, datacenters } = this.props;
     const dc = Object.values(datacenters).find(dc => dc.id === selected);
     return (
-      <Card title="Datacenter">
+      <Card header={<CardHeader title="Datacenter" />}>
         <p>
           The source you selected limits the datacenters you may deploy
           your new Linode to.
@@ -71,7 +71,7 @@ export default class Datacenter extends Component {
       return this.renderDisabled();
     }
     return (
-      <Card title="Datacenter">
+      <Card header={<CardHeader title="Datacenter" />}>
         {_.map(regionMap, this.renderRegion)}
       </Card>
     );

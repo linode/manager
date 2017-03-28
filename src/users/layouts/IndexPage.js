@@ -8,7 +8,7 @@ import { setTitle } from '~/actions/title';
 
 import { setError } from '~/actions/errors';
 import { users } from '~/api';
-import { SecondaryCard } from '~/components/cards/';
+import { Card, CardImageHeader } from '~/components/cards/';
 import md5 from 'md5';
 
 export class IndexPage extends Component {
@@ -35,7 +35,7 @@ export class IndexPage extends Component {
   }
 
   render() {
-    const { users, dispatch } = this.props;
+    const { users } = this.props;
     return (
       <div className="PrimaryPage container">
         <header className="PrimaryPage-header">
@@ -51,26 +51,28 @@ export class IndexPage extends Component {
           <div className="row">
             {Object.values(users.users).map(user =>
               <div className="col-lg-6" key={user.username}>
-                <SecondaryCard
-                  title={user.username}
-                  icon={`https://gravatar.com/avatar/${
-                    user.email && md5(user.email.trim().toLowerCase())
-                  }`}
-                  nav={
-                    <Button
-                      to={`/users/${user.username}`}
-                    >Edit</Button>
+                <Card
+                  header={
+                    <CardImageHeader
+                      title={user.username}
+                      icon={`https://gravatar.com/avatar/${
+                        user.email && md5(user.email.trim().toLowerCase())
+                        }`}
+                      nav={
+                        <Button
+                          to={`/users/${user.username}`}
+                        >Edit</Button>
+                      }
+                    />
                   }
-                  iconClass="user-icon"
-                  dispatch={dispatch}
                 >
                   <div className="row">
                     <div className="col-lg-12">
-                      <div className="SecondaryCard-body-label">Email</div>
+                      <div className="Card-body-label">Email</div>
                       <div className="user-email">{user.email}</div>
                     </div>
                   </div>
-                </SecondaryCard>
+                </Card>
               </div>
             )}
           </div>

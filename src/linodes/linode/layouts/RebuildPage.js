@@ -2,7 +2,7 @@ import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { Card } from '~/components/cards';
+import { Card, CardHeader } from '~/components/cards';
 import {
   FormGroup, FormGroupError, Form, SubmitButton, PasswordInput,
 } from '~/components/form';
@@ -56,7 +56,7 @@ export class RebuildPage extends Component {
     const { distribution, errors } = this.state;
 
     return (
-      <Card title="Rebuild">
+      <Card header={<CardHeader title="Rebuild" />}>
         <Form onSubmit={() => this.onSubmit()} className="LinodesLinodeRebuildPage-body">
           <div className="LinodesLinodeRebuildPage-distributions clearfix">
             <Distributions

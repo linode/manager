@@ -5,7 +5,7 @@ import { ConfirmModalBody } from '~/components/modals';
 import { linodes } from '~/api';
 import { showModal, hideModal } from '~/actions/modal';
 import { Button } from '~/components/buttons';
-import { Card } from '~/components/cards';
+import { Card, CardHeader } from '~/components/cards';
 import { Table } from '~/components/tables';
 import {
   LinkCell,
@@ -87,10 +87,16 @@ export class ConfigPanel extends Component {
 
     return (
       <Card
-        title="Configs"
-        navLink="https://example.org"
-        nav={nav}
-      >{content}</Card>
+        header={
+          <CardHeader
+            title="Configs"
+            navLink="https://example.org"
+            nav={nav}
+          />
+        }
+      >
+        {content}
+      </Card>
     );
   }
 }
