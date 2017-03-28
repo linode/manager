@@ -48,7 +48,7 @@ export function expectObjectDeepEquals(initialA, initialB) {
 
       Object.keys(b).forEach(bKey => {
         if (a[bKey] === undefined) {
-          throw new InternalAssertionError(a[bKey], b[bKey], path);
+          throw new InternalAssertionError(a[bKey], b[bKey], [...path, bKey]);
         }
       });
     } else if (Array.isArray(a)) {
