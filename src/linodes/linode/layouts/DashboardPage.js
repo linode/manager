@@ -44,47 +44,49 @@ export class DashboardPage extends Component {
     };
 
     const stats = this.getLinode()._stats;
-    this.graphs = {
-      cpu: {
-        title: 'CPU',
-        yAxis: {
-          label: 'Percentage of CPU(s) used',
-          format: p => `${p.toFixed(1)}%`,
+    if (stats) {
+      this.graphs = {
+        cpu: {
+          title: 'CPU',
+          yAxis: {
+            label: 'Percentage of CPU(s) used',
+            format: p => `${p.toFixed(1)}%`,
+          },
+          data: formatData([stats.cpu]),
         },
-        data: formatData([stats.cpu]),
-      },
-      io: {
-        title: 'IO',
-        yAxis: {
-          label: 'Blocks per second',
-          format: r => `${r.toFixed(1)} blocks/s`,
+        io: {
+          title: 'IO',
+          yAxis: {
+            label: 'Blocks per second',
+            format: r => `${r.toFixed(1)} blocks/s`,
+          },
+          data: formatData([stats.io.io, stats.io.swap],
+                           ['Disk', 'Swap']),
         },
-        data: formatData([stats.io.io, stats.io.swap],
-                         ['Disk', 'Swap']),
-      },
-      netv4: {
-        title: 'IPv4 Network',
-        yAxis: {
-          label: 'Bits per second',
-          format: r => `${r.toFixed()} bits/s`,
+        netv4: {
+          title: 'IPv4 Network',
+          yAxis: {
+            label: 'Bits per second',
+            format: r => `${r.toFixed()} bits/s`,
+          },
+          data: formatData([stats.netv4.in, stats.netv4.private_in,
+                            stats.netv4.out, stats.netv4.private_out],
+                           ['Public IPv4 Inbound', 'Private IPv4 Inbound',
+                            'Public IPv4 Outbound', 'Private IPv4 Outbound']),
         },
-        data: formatData([stats.netv4.in, stats.netv4.private_in,
-                          stats.netv4.out, stats.netv4.private_out],
-                         ['Public IPv4 Inbound', 'Private IPv4 Inbound',
-                          'Public IPv4 Outbound', 'Private IPv4 Outbound']),
-      },
-      netv6: {
-        title: 'IPv6 Network',
-        yAxis: {
-          label: 'Bits per second',
-          format: r => `${r.toFixed()} bits/s`,
+        netv6: {
+          title: 'IPv6 Network',
+          yAxis: {
+            label: 'Bits per second',
+            format: r => `${r.toFixed()} bits/s`,
+          },
+          data: formatData([stats.netv6.in, stats.netv6.private_in,
+                            stats.netv6.out, stats.netv6.private_out],
+                           ['Public IPv6 Inbound', 'Private IPv6 Inbound',
+                            'Public IPv6 Outbound', 'Private IPv6 Outbound']),
         },
-        data: formatData([stats.netv6.in, stats.netv6.private_in,
-                          stats.netv6.out, stats.netv6.private_out],
-                         ['Public IPv6 Inbound', 'Private IPv6 Inbound',
-                          'Public IPv6 Outbound', 'Private IPv6 Outbound']),
-      },
-    };
+      };
+    }
   }
 
   async componentDidMount() {
@@ -97,33 +99,37 @@ export class DashboardPage extends Component {
   renderGraphs() {
     return (
       <Card title="Performance" className="graphs">
-        <div className="clearfix">
-          <div className="float-xs-left">
-            <Select
-              value={this.state.source}
-              name="source"
-              onChange={this.onChange}
-            >
-              <option value="cpu">CPU</option>
-              <option value="io">IO</option>
-              <option value="netv4">IPv4 Network</option>
-              <option value="netv6">IPv6 Network</option>
-            </Select>
+        {!this.graphs ? <p>No stats are available.</p> : (
+          <div>
+            <div className="clearfix">
+              <div className="float-xs-left">
+                <Select
+                  value={this.state.source}
+                  name="source"
+                  onChange={this.onChange}
+                >
+                  <option value="cpu">CPU</option>
+                  <option value="io">IO</option>
+                  <option value="netv4">IPv4 Network</option>
+                  <option value="netv6">IPv6 Network</option>
+                </Select>
+              </div>
+              <div className="float-xs-right">
+                <Select
+                  value={this.state.range}
+                  name="range"
+                  onChange={this.onChange}
+                  disabled
+                >
+                  <option key={1} value="last1day">Last 24 hours</option>
+                  <option key={2} value="last2day">Last 48 hours</option>
+                  <option key={3} value="last7day">Last week</option>
+                </Select>
+              </div>
+            </div>
+            <LineGraph {...this.graphs[this.state.source]} />
           </div>
-          <div className="float-xs-right">
-            <Select
-              value={this.state.range}
-              name="range"
-              onChange={this.onChange}
-              disabled
-            >
-              <option key={1} value="last1day">Last 24 hours</option>
-              <option key={2} value="last2day">Last 48 hours</option>
-              <option key={3} value="last7day">Last week</option>
-            </Select>
-          </div>
-        </div>
-        <LineGraph {...this.graphs[this.state.source]} />
+        )}
       </Card>
     );
   }
