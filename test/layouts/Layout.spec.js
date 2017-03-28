@@ -48,11 +48,6 @@ describe('layouts/Layout', () => {
       .to.equal(true);
   });
 
-  it('renders a sidebar', () => {
-    const component = shallow(makeLayout());
-    expect(component.find('Sidebar').length).to.equal(1);
-  });
-
   it('renders a header', () => {
     const component = shallow(makeLayout());
     expect(component.find('Header').length).to.equal(1);
