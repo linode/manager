@@ -61,7 +61,7 @@ export class EditConfigPage extends Component {
       algorithm,
       stickiness,
       check,
-      check_passive: checkPassive,
+      check_passive: Number(checkPassive),
       check_interval: checkInterval,
       check_timeout: checkTimeout,
       check_attempts: checkAttempts,

@@ -65,7 +65,7 @@ describe('nodebalancers/nodebalancer/EditConfigPage', () => {
           protocol: 'http',
           algorithm: 'roundrobin',
           stickiness: 'none',
-          check_passive: true,
+          check_passive: 1,
           port: 82,
           check: 'none',
         },
