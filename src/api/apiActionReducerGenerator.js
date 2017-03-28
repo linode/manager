@@ -233,8 +233,8 @@ function genThunkPut(config, actions) {
 }
 
 function genThunkPost(config, actions) {
-  return function (resource, ...ids) {
-    return async function (dispatch, getState) {
+  return (resource, ...ids) => {
+    return async (dispatch, getState) => {
       const { token } = getState().authentication;
       const response = await fetch(token, config.endpoint(...ids, ''), {
         method: 'POST',

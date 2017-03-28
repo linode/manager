@@ -19,6 +19,7 @@ form {
 .form-control {
     border-radius: 0;
     color: $black;
+    display: inline-block;
 
     &:focus {
         color: $black;
