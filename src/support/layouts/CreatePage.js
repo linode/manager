@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
+import { Link } from 'react-router';
 
 import { Card } from '~/components/cards';
 import { Input, Select, Form, FormGroup, FormGroupError, SubmitButton } from '~/components/form';
@@ -10,7 +11,6 @@ import { setTitle } from '~/actions/title';
 import { setError } from '~/actions/errors';
 import { reduceErrors, ErrorSummary } from '~/errors';
 import { LinkButton } from '~/components/buttons';
-import { Link } from '~/components/Link';
 import { linodes, dnszones, nodebalancers } from '~/api';
 
 export class CreatePage extends Component {
@@ -187,10 +187,34 @@ export class CreatePage extends Component {
           <div>
             <h3 className="sub-header">Resources</h3>
             <ul className="list-unstyled">
-              <li><Link to="https://forum.linode.com/">Community forum</Link></li>
-              <li><Link to="https://www.linode.com/docs/">User documentation and guides</Link></li>
-              <li><Link to="https://developers.linode.com/">Developer documentation and guides</Link></li>
-              <li><Link to="https://status.linode.com/">Overall system status</Link></li>
+              <li>
+                <Link
+                  target="_blank"
+                  rel="nofollow"
+                  to="https://forum.linode.com/"
+                >Community forum</Link>
+              </li>
+              <li>
+                <Link
+                  target="_blank"
+                  rel="nofollow"
+                  to="https://www.linode.com/docs/"
+                >User documentation and guides</Link>
+              </li>
+              <li>
+                <Link
+                  target="_blank"
+                  rel="nofollow"
+                  to="https://developers.linode.com/"
+                >Developer documentation and guides</Link>
+              </li>
+              <li>
+                <Link
+                  target="_blank"
+                  rel="nofollow"
+                  to="https://status.linode.com/"
+                >Overall system status</Link>
+              </li>
             </ul>
           </div>
         </Card>
