@@ -4,9 +4,13 @@ import { shallow } from 'enzyme';
 import { expect } from 'chai';
 import { expectRequest } from '@/common';
 
-import { AddUserPage } from '~/users/layouts/AddUserPage';
+import { api } from '@/data';
+import { EditUserPage } from '~/users/user/layouts/EditUserPage';
 
-describe('users/layouts/AddUserPage', () => {
+const { users } = api;
+const user = { testuser1: users.users[0] };
+
+describe('users/user/layouts/EditUserPage', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
@@ -14,11 +18,15 @@ describe('users/layouts/AddUserPage', () => {
   });
 
   const dispatch = sandbox.stub();
-
+  const params = {
+    username: 'testuser1',
+  };
   it('renders UserForm', () => {
     const page = shallow(
-      <AddUserPage
+      <EditUserPage
         dispatch={dispatch}
+        users={user}
+        params={params}
       />
     );
 
@@ -27,8 +35,10 @@ describe('users/layouts/AddUserPage', () => {
 
   it('should commit changes to the API', async () => {
     const page = shallow(
-      <AddUserPage
+      <EditUserPage
         dispatch={dispatch}
+        users={user}
+        params={params}
       />
     );
 
@@ -39,11 +49,11 @@ describe('users/layouts/AddUserPage', () => {
       password: 'password',
     };
     await page.instance().onSubmit(values);
-    expect(dispatch.calledTwice).to.equal(true);
+    expect(dispatch.callCount).to.equal(3);
     const fn = dispatch.firstCall.args[0];
     await expectRequest(
-      fn, '/account/users/', {
-        method: 'POST',
+      fn, `/account/users/${params.username}`, {
+        method: 'PUT',
         body: { ...values },
       }
     );

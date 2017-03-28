@@ -10,12 +10,12 @@ import { ErrorSummary } from '~/errors';
 import { SubmitButton } from '~/components/form';
 
 export class UserForm extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.formSubmit = this.formSubmit.bind(this);
     this.state = {
-      username: '',
-      email: '',
+      username: props.username,
+      email: props.email,
       password: '',
     };
   }
@@ -44,7 +44,7 @@ export class UserForm extends Component {
       >
         <FormGroup errors={errors} name="username" className="row">
           <label className="col-sm-2 col-form-label">Username</label>
-          <div className="col-sm-6">
+          <div className="col-sm-10">
             <Input
               id="user-username"
               value={username}
@@ -56,7 +56,7 @@ export class UserForm extends Component {
         </FormGroup>
         <FormGroup errors={errors} name="email" className="row">
           <label className="col-sm-2 col-form-label">Email</label>
-          <div className="col-sm-6">
+          <div className="col-sm-10">
             <Input
               id="user-email"
               value={email}
@@ -68,7 +68,7 @@ export class UserForm extends Component {
         </FormGroup>
         <FormGroup errors={errors} name="password" className="row">
           <label className="col-sm-2 col-form-label">Password</label>
-          <div className="col-sm-6">
+          <div className="col-sm-10">
             <PasswordInput
               onChange={password => this.setState({ password })}
               value={password}
@@ -80,7 +80,7 @@ export class UserForm extends Component {
         <ErrorSummary errors={errors} />
         <div className="row">
           <div className="offset-sm-2 col-sm-10">
-            <SubmitButton>Add User</SubmitButton>
+            <SubmitButton>{this.props.username ? 'Save' : 'Add User'}</SubmitButton>
           </div>
         </div>
       </Form>
@@ -90,5 +90,12 @@ export class UserForm extends Component {
 
 UserForm.propTypes = {
   onSubmit: PropTypes.func,
+  username: PropTypes.string,
+  email: PropTypes.string,
   errors: PropTypes.any,
+};
+
+UserForm.defaultProps = {
+  username: '',
+  email: '',
 };
