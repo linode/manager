@@ -149,7 +149,7 @@ export class IndexPage extends Component {
           >
             {this.renderConfigs(Object.values(configs))}
           </Card>
-          <Card title="Graphs">No data available</Card>
+          <Card title="Performance">No stats are available.</Card>
         </div>
       </div>
     );
