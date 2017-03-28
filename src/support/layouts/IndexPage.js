@@ -93,25 +93,26 @@ export class IndexPage extends Component {
       closed: 'Closed',
     };
 
-    const groups = _.sortBy(
-      _.map(
-        _.groupBy(Object.values(tickets), ({ status }) => statusFormat[status]),
-        (_tickets, _group) => ({
-          name: _group,
-          columns: [
-            {
-              cellComponent: this.renderLabelCell,
-            },
-            {
-              dataKey: 'id',
-              formatFn: id => <span>#{id}</span>,
-            },
-            {
-              cellComponent: this.renderUpdatedByCell,
-            },
-          ],
-          data: _tickets,
-        })));
+    const groups = _.map(
+      _.groupBy(
+        _.sortBy(Object.values(tickets), ticket => new Date(ticket.created)).reverse(),
+        ({ status }) => statusFormat[status]),
+      (_tickets, _group) => ({
+        name: _group,
+        columns: [
+          {
+            cellComponent: this.renderLabelCell,
+          },
+          {
+            dataKey: 'id',
+            formatFn: id => <span>#{id}</span>,
+          },
+          {
+            cellComponent: this.renderUpdatedByCell,
+          },
+        ],
+        data: _tickets,
+      }));
 
     return (
       <div>

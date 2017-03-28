@@ -38,7 +38,8 @@ select.form-control:not([size]):not([multiple]) {
 
 input.form-control,
 select.form-control {
-  width: 225px;
+    width: 225px;
+    max-width: 100%;
 }
 
 input.form-control.input-md,
@@ -48,7 +49,7 @@ select.form-control.input-md {
 
 input.form-control.input-lg,
 select.form-control.input-lg {
-  width: 325px;
+    min-width: 600px;
 }
 
 input[type="number"].form-control {

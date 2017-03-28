@@ -1,0 +1,14 @@
+.TicketHelper {
+    h3 {
+        margin-bottom: 0;
+        padding-bottom: 5px;
+    }
+
+    li:not(:last-of-type) {
+        margin-bottom: 15px;
+    }
+
+    p {
+        max-width: 750px;
+    }
+}
