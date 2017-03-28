@@ -33,9 +33,7 @@ $nav-hover-background-color: #3c3c3c;
 $main-padding-tb: 10px;
 $main-padding-lr: 20px;
 
-$nav-height: 100px;
-$info-nav-height: 40px;
-$main-nav-height: $nav-height - $info-nav-height;
+$nav-height: 60px;
 $main-height: calc(100% - #{$nav-height});
 
 

@@ -6,19 +6,19 @@
 }
 
 .MainHeader {
-    height: $main-nav-height;
+    height: $nav-height;
     background: $dark-black;
     font-size: 0;
 
     &-brand, &-search, &-session, &-link {
         @extend .font-normal;
         display: inline-block;
-        line-height: $main-nav-height;
+        line-height: $nav-height;
         margin-right: 30px;
     }
 
     &-session {
-        line-height: $main-nav-height;
+        line-height: $nav-height;
     }
 
     &-logo {
@@ -31,13 +31,13 @@
         color: $dark-gray;
         display: inline-block;
         vertical-align: top;
-        line-height: $main-nav-height;
+        line-height: $nav-height;
         font-size: 18px; /* Special font-size case */
     }
 
     &-link {
         color: $lightest-black;
-        line-height: $main-nav-height;
+        line-height: $nav-height;
         margin-right: 30px;
         // Correct for display:inline-block;
         position: relative;
@@ -53,6 +53,7 @@
     }
 
     &-notifications {
+        @extend .font-normal;
         height: 100%;
     }
 
@@ -127,13 +128,13 @@
 }
 
 .MiniHeader {
-    height: $info-nav-height;
+    height: $nav-height;
     background: $black;
-    line-height: $info-nav-height;
+    line-height: $nav-height;
 
     &-search, &-link {
         display: inline-block;
-        line-height: $info-nav-height;
+        line-height: $nav-height;
     }
 
     &-search {

@@ -4,11 +4,9 @@ import { Link } from 'react-router';
 
 import { VERSION } from '~/constants';
 import Header from '~/components/Header';
-import Sidebar from '~/components/Sidebar';
 import { ModalShell } from '~/components/modals';
 import Error from '~/components/Error';
 import PreloadIndicator from '~/components/PreloadIndicator.js';
-import { rawFetch as fetch } from '~/fetch';
 import { hideModal } from '~/actions/modal';
 import { hideNotifications } from '~/actions/notifications';
 
@@ -18,36 +16,6 @@ export class Layout extends Component {
     super();
     this.renderError = this.renderError.bind(this);
     this.state = { title: '', link: '' };
-  }
-
-  componentDidMount() {
-    this.fetchBlog();
-    this.attachEventTimeout();
-  }
-
-  async fetchBlog() {
-    if (this.state.title === '') {
-      try {
-        const resp = await fetch('https://blog.linode.com/feed/', {
-          mode: 'cors',
-        });
-        const parser = new DOMParser();
-        const xml = parser.parseFromString(await resp.text(), 'text/xml');
-        const latest = xml.querySelector('channel item');
-        const title = latest.querySelector('title').textContent;
-        const link = latest.querySelector('link').textContent;
-        this.setState({ title, link });
-      } catch (ex) {
-        // TODO
-      }
-    }
-  }
-
-  async attachEventTimeout() {
-    // OAuth token is not available during the callback
-    while (window.location.pathname === '/oauth/callback') {
-      await new Promise(r => setTimeout(r, 100));
-    }
   }
 
   renderError() {
@@ -67,7 +35,6 @@ export class Layout extends Component {
     const {
       username,
       emailHash,
-      currentPath,
       errors,
       notifications,
       source,

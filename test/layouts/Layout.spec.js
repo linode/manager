@@ -4,7 +4,6 @@ import { expect } from 'chai';
 import { shallow } from 'enzyme';
 
 import { Layout } from '~/layouts/Layout';
-import * as fetch from '~/fetch';
 import { api } from '@/data';
 
 
@@ -88,39 +87,5 @@ describe('layouts/Layout', () => {
     const component = shallow(makeLayout(
       dispatch, { ...errorsPopulated, status: 404 }));
     expect(component.find('Error').length).to.equal(1);
-  });
-
-  it('fetches the blog RSS feed', async () => {
-    /* eslint-disable prefer-template */
-    const fetchStub = sandbox.stub(fetch, 'rawFetch').returns({
-      text: () => '<?xml version="1.0" encoding="UTF-8"?><rss version="2.0">' +
-          '<channel>' +
-            '<item>' +
-              '<title>Introducing Fedora 24</title>' +
-              '<link>https://example.org</link>' +
-            '</item>' +
-          '</channel>' +
-        '</rss>',
-    });
-
-    /* eslint-enable prefer-template */
-    const layout = shallow(makeLayout());
-    await layout.instance().fetchBlog();
-    expect(fetchStub.calledWith('https://blog.linode.com/feed/'))
-      .to.equal(true);
-    expect(layout.state('title')).to.equal('Introducing Fedora 24');
-    expect(layout.state('link')).to.equal('https://example.org');
-  });
-
-  it('calls attachLinodesTimeout and setSourceLink on mount', () => {
-    const page = shallow(makeLayout(dispatch));
-
-    const attachEventTimeoutStub = sandbox.stub(page.instance(), 'attachEventTimeout');
-    const fetchBlogStub = sandbox.stub(page.instance(), 'fetchBlog');
-
-    page.instance().componentDidMount();
-
-    expect(attachEventTimeoutStub.callCount).to.equal(1);
-    expect(fetchBlogStub.callCount).to.equal(1);
   });
 });
