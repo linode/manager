@@ -10,6 +10,7 @@
 @import 'components/index';
 @import 'linodes/index';
 @import 'profile/integrations/components/OAuthScopes';
+@import 'support/layouts/Tickets';
 @import 'layout/index';
 @import 'styleguide/index';
 
@@ -82,10 +83,10 @@
             &:active,
             &:focus {
                 background-color: $green;
-                color: white;
+                color: $white;
 
                 .fa {
-                    color: white;
+                    color: $white;
                 }
             }
 
@@ -138,11 +139,17 @@
 }
 
 footer {
+    @extend .font-small;
+
     padding-bottom: 15px;
 
-    a {
+    span, a {
         color: $lightest-black;
         padding: 0 10px;
+    }
+
+    a {
+        text-decoration: underline;
     }
 }
 

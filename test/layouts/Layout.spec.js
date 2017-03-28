@@ -3,12 +3,9 @@ import sinon from 'sinon';
 import { expect } from 'chai';
 import { shallow } from 'enzyme';
 
-import { expectObjectDeepEquals } from '@/common';
 import { Layout } from '~/layouts/Layout';
 import * as fetch from '~/fetch';
 import { api } from '@/data';
-import { testEvent } from '@/data/events';
-import { actions as linodeActions } from '~/api/configs/linodes';
 
 
 describe('layouts/Layout', () => {
@@ -125,34 +122,5 @@ describe('layouts/Layout', () => {
 
     expect(attachEventTimeoutStub.callCount).to.equal(1);
     expect(fetchBlogStub.callCount).to.equal(1);
-  });
-
-  it('deals with individual events for linodes', () => {
-    sandbox.stub(window, 'setTimeout', f => f());
-
-    const page = shallow(makeLayout(dispatch, undefined, undefined, {
-      ...api.linodes,
-      linodes: {
-        ...api.linodes.linodes,
-        1237: {
-          ...api.linodes.linodes['1237'],
-          __updatedAt: new Date(testEvent.updated),
-        },
-      },
-    }));
-
-    page.instance().eventHandler(testEvent);
-
-    expect(dispatch.callCount).to.equal(2);
-
-    dispatch.firstCall.args[0].resource.__updatedAt = undefined;
-    expectObjectDeepEquals(dispatch.firstCall.args[0], linodeActions.one({
-      __progress: 100,
-    }, 1237));
-
-    dispatch.secondCall.args[0].resource.__updatedAt = undefined;
-    expectObjectDeepEquals(dispatch.secondCall.args[0], linodeActions.one({
-      status: 'running',
-    }, 1237));
   });
 });

@@ -2,22 +2,20 @@ import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
+import { VERSION } from '~/constants';
 import Header from '~/components/Header';
 import Sidebar from '~/components/Sidebar';
 import { ModalShell } from '~/components/modals';
 import Error from '~/components/Error';
-import { EventTypeMap } from '~/components/notifications';
 import PreloadIndicator from '~/components/PreloadIndicator.js';
 import { rawFetch as fetch } from '~/fetch';
 import { hideModal } from '~/actions/modal';
 import { hideNotifications } from '~/actions/notifications';
-import { actions as linodeActions } from '~/api/configs/linodes';
 
 
 export class Layout extends Component {
   constructor() {
     super();
-    this.eventHandler = this.eventHandler.bind(this);
     this.renderError = this.renderError.bind(this);
     this.state = { title: '', link: '' };
   }
@@ -43,44 +41,6 @@ export class Layout extends Component {
         // TODO
       }
     }
-  }
-
-  // TODO: decouple this from events and layout, use explicit poll from /linode on status change
-  eventHandler(event) {
-    const { dispatch, linodes } = this.props;
-
-    // handles linode events and display status changes
-    const linodeStatus = EventTypeMap[event.action].linodeStatus;
-    if (event.linode_id && linodeStatus) {
-      const linode = linodes.linodes[event.linode_id];
-      if (linode) {
-        const updatedAt = new Date(event.updated);
-        const progress = Math.min(event.percent_complete, 100);
-
-        // Give a 1 second allowance.
-        linode.__updatedAt.setSeconds(linode.__updatedAt.getSeconds() - 1);
-        const newEvent = updatedAt > linode.__updatedAt;
-        const statusChanged = linode.status !== linodeStatus;
-        const changeInProgress = progress < 100;
-        const progressMade = linode.__progress < progress;
-
-        if (newEvent && (statusChanged || changeInProgress && progressMade)) {
-          dispatch(linodeActions.one({
-            __progress: progress,
-          }, linode.id));
-
-          if (progress === 100) {
-            setTimeout(() => dispatch(linodeActions.one({
-              status: linodeStatus,
-              // For best UX, keep the below timeout length the same as the width transition for
-              // this component.
-            }, linode.id)), 1000);
-          }
-        }
-      }
-    }
-
-    return event;
   }
 
   async attachEventTimeout() {
@@ -141,7 +101,6 @@ export class Layout extends Component {
           title={title}
           username={username}
           notifications={notifications}
-          eventHandler={this.eventHandler}
         />
         <Sidebar path={currentPath} />
         <div className="main full-height">
@@ -151,6 +110,9 @@ export class Layout extends Component {
               this.renderError()}
           </div>
           <footer className="footer text-xs-center">
+            <div>
+              <span>Version {VERSION}</span>
+            </div>
             {!source || !source.source ? null :
               <a
                 target="__blank"

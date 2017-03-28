@@ -101,7 +101,7 @@ export default class Source extends Component {
 
   render() {
     const {
-      selectedTab, onTabChange, distributions, distribution, onSourceSelected, backup,
+      selectedIndex, onTabChange, distributions, distribution, onSourceSelected, backup,
       linodes,
     } = this.props;
 
@@ -156,12 +156,13 @@ export default class Source extends Component {
       },
     ];
 
+
     return (
       <Card title="Source">
         <Tabs
           tabs={tabs}
           onClick={onTabChange}
-          selected={selectedTab}
+          selectedIndex={selectedIndex}
           isSubTabs
         />
       </Card>
@@ -172,7 +173,7 @@ export default class Source extends Component {
 Source.propTypes = {
   distributions: PropTypes.object.isRequired,
   linodes: PropTypes.object.isRequired,
-  selectedTab: PropTypes.number.isRequired,
+  selectedIndex: PropTypes.number,
   onTabChange: PropTypes.func,
   onSourceSelected: PropTypes.func,
   distribution: PropTypes.string,

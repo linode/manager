@@ -6,7 +6,7 @@ import { setError } from '~/actions/errors';
 import Datacenter from '~/linodes/components/Datacenter';
 import DistroStyle from '~/linodes/components/DistroStyle';
 import PlanStyle from '~/linodes/components/PlanStyle';
-import { launchWeblishConsole } from '~/linodes/components/StatusDropdown';
+import WeblishLaunch from '~/linodes/components/WeblishLaunch';
 import { getLinode } from './IndexPage';
 import { setSource } from '~/actions/source';
 import { Button } from '~/components/buttons';
@@ -235,9 +235,7 @@ export class DashboardPage extends Component {
                   />
                   <span className="input-group-btn">
                     <Button>SSH</Button>
-                    <Button onClick={() => launchWeblishConsole(linode)}>
-                      Open
-                    </Button>
+                    <WeblishLaunch linode={linode} />
                   </span>
                 </div>
                 <small className="text-muted">

@@ -2,8 +2,9 @@ import React, { Component, PropTypes } from 'react';
 import _ from 'lodash';
 
 import { linodes } from '~/api';
-import { CancelButton, Form, FormGroup, FormGroupError, Input, Select,
+import { Form, FormGroup, FormGroupError, Input, Select,
   SubmitButton, PasswordInput } from '~/components/form';
+import { CancelButton } from '~/components/buttons';
 import { ErrorSummary, reduceErrors } from '~/errors';
 import { hideModal } from '~/actions/modal';
 

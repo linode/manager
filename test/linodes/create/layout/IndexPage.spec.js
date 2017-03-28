@@ -118,7 +118,7 @@ describe('linodes/create/layout/IndexPage', () => {
       backups: false,
       group: null,
     });
-    expect(dispatch.callCount).to.equal(3);
+    expect(dispatch.callCount).to.equal(2);
     expectObjectDeepEquals(dispatch.firstCall.args[0], {
       root_pass: 'password',
       type: 'type',
@@ -129,7 +129,7 @@ describe('linodes/create/layout/IndexPage', () => {
       with_backups: false,
       group: null,
     });
-    expectObjectDeepEquals(dispatch.thirdCall.args[0], push('/linodes/label'));
+    expectObjectDeepEquals(dispatch.secondCall.args[0], push('/linodes/label'));
   });
 
   it('sets errors on create a linode failure', async () => {

@@ -16,9 +16,9 @@ import { Form,
   Checkboxes,
 } from '~/components/form';
 import { ErrorSummary, reduceErrors } from '~/errors';
-import { SubmitButton, CancelButton } from '~/components/form';
+import { SubmitButton } from '~/components/form';
 import { Card } from '~/components/cards';
-import { LinkButton } from '~/components/buttons';
+import { CancelButton, LinkButton } from '~/components/buttons';
 import { setSource } from '~/actions/source';
 import { setError } from '~/actions/errors';
 

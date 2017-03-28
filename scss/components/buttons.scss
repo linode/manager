@@ -4,8 +4,9 @@
     height: $form-field-height;
 }
 
-.btn, a {
-    transition: background .35s, color .2s, border .1s;
+.btn,
+a {
+    transition: background 0.2s, color 0.2s, border 0.2s;
 }
 
 .btn {
@@ -78,12 +79,13 @@
     &.btn-primary {
         &, &:active, &:focus {
             background: $blue;
+            color: $white;
             border: 1px solid $blue;
         }
 
         &:not([disabled]):hover {
             border-color: $blue; /* :focus:active needs this */
-            background: white;
+            background: $white;
             color: $blue;
         }
     }
@@ -113,7 +115,7 @@
         &[disabled]:hover,
         &[disabled]:active,
         &[disabled]:focus {
-            color: white;
+            color: $white;
             background: $red;
         }
 
@@ -134,7 +136,7 @@
         &:active,
         &:focus {
             background: $red;
-            color: white;
+            color: $white;
         }
     }
 

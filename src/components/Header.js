@@ -38,7 +38,6 @@ export default class Header extends Component {
       showInfobar,
       title,
       username,
-      eventHandler,
     } = this.props;
 
     const {
@@ -98,18 +97,43 @@ export default class Header extends Component {
               width={35}
             />
             <div className={`SessionMenu ${sessionMenuOpen ? 'SessionMenu--open' : ''}`}>
-              <div className="SessionMenu-body">
-                <div className="SessionMenu-menu-item">
+              <ul className="SessionMenu-body">
+                <li className="list-unstyled SessionMenu-menu-item">
+                  <Link to="/profile">My Profile</Link>
+                </li>
+                <li className="list-unstyled SessionMenu-menu-item">
+                  <Link to="/users">Users</Link>
+                </li>
+                <li className="list-unstyled SessionMenu-menu-item">
+                  <Link to="/billing">Billing</Link>
+                </li>
+                <li className="list-unstyled SessionMenu-menu-item">
+                  <Link to="/settings">Settings</Link>
+                </li>
+                <li className="list-unstyled SessionMenu-menu-item">
+                  <Link to="/support">Support</Link>
+                </li>
+                <hr />
+                <li className="list-unstyled SessionMenu-menu-item">
+                  <Link to="https://forum.linode.com/">Community Forum</Link>
+                </li>
+                <li className="list-unstyled SessionMenu-menu-item">
+                  <Link to="https://linode.com/docs">User documentation</Link>
+                </li>
+                <li className="list-unstyled SessionMenu-menu-item">
+                  <Link to="https://developers.linode.com">Developer documentation</Link>
+                </li>
+                <hr />
+                <li className="list-unstyled SessionMenu-menu-item">
                   <Link to="/logout">Logout</Link>
-                </div>
-              </div>
+                </li>
+              </ul>
             </div>
           </div>
         }
         <div className="MainHeader-notifications float-xs-right">
           <Notifications
             dispatch={dispatch}
-            eventHandler={eventHandler}
             onMenuClick={this.onNotificationMenuClick}
           />
         </div>
@@ -128,7 +152,6 @@ export default class Header extends Component {
 Header.propTypes = {
   username: PropTypes.string,
   emailHash: PropTypes.string,
-  eventHandler: PropTypes.func,
   dispatch: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   link: PropTypes.string.isRequired,

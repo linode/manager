@@ -3,12 +3,11 @@ export const API_ROOT = ENV_API_ROOT || 'https://api.alpha.linode.com/v4';
 export const LOGIN_ROOT = ENV_LOGIN_ROOT || 'https://login.alpha.linode.com';
 export const APP_ROOT = ENV_APP_ROOT || 'http://localhost:3000';
 export const GA_ID = ENV_GA_ID || '000000';
-
 export const DEVTOOLS_DISABLED = ENV_DEVTOOLS_DISABLED || process.env.NODE_ENV === 'production';
-
+export const VERSION = ENV_VERSION;
 /* eslint-enable no-undef */
-// TODO: increase default polling delay to 10-15 seconds
-export const EVENT_POLLING_DELAY = (3 * 1000); // milliseconds
+
+export const EVENT_POLLING_DELAY = (15 * 1000); // milliseconds
 
 export const LinodeStates = {
   pending: [

@@ -1,7 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 
 import { linodes } from '~/api';
-import { CancelButton, Form, SubmitButton } from '~/components/form';
+import { Form, SubmitButton } from '~/components/form';
+import { CancelButton } from '~/components/buttons';
 import { hideModal } from '~/actions/modal';
 
 export class DeleteModal extends Component {
