@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import { Button } from '~/components/buttons';
-import { CancelButton } from '~/components/form';
+import { CancelButton } from '~/components/buttons';
 import { ModalShell } from '~/components/modals';
 import { StyleguideSection } from '~/styleguide/components';
 

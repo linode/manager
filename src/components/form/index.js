@@ -1,4 +1,3 @@
-export { default as CancelButton } from './CancelButton';
 export { default as Form } from './Form';
 export { default as FormGroup } from './FormGroup';
 export { default as ModalFormGroup } from './ModalFormGroup';
