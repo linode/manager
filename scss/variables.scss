@@ -56,12 +56,14 @@ $box-shadow: 0px 2px 4px 0px $transparent;
 $grid-gutter-width: 50px;
 $grid-gutter-width-base: 50px;
 
+$grid-max-width: 1440px;
+
 // Basically just sets each max width to 100%
 $container-max-widths: (
   sm: 100%,
   md: 100%,
   lg: 100%,
-  xl: 1440px
+  xl: $grid-max-width
 );
 
 /* END bootstrap overrides */

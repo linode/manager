@@ -8,9 +8,9 @@
         top: $nav-height;
         height: 100%;
         z-index: 1001;
-        left: calc(1440px + calc(calc(100% - 1440px) / 2));
+        left: calc(#{$grid-max-width} + calc(calc(100% - #{$grid-max-width}) / 2));
 
-        @media (max-width: 1440px) {
+        @media (max-width: #{$grid-max-width}) {
             left: 100%;
         }
 
