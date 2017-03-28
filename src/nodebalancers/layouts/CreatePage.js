@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
+import { Link } from 'react-router';
 
 import { Card } from '~/components/cards';
 import { Input, Form, FormGroup, FormGroupError, SubmitButton } from '~/components/form';
@@ -53,6 +54,7 @@ export class CreatePage extends Component {
     return (
       <div className="PrimaryPage container">
         <header className="PrimaryPage-header">
+          <Link to="/nodebalancers">NodeBalancers</Link>
           <h1>Add a NodeBalancer</h1>
         </header>
         <div className="PrimaryPage-body Nodebalancer-create">
