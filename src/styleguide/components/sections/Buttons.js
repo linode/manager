@@ -43,7 +43,7 @@ export default function Buttons() {
 
             <h3>SecondaryButton</h3>
             <p>
-              Example: <SecondaryButton />
+              Example: <SecondaryButton>Secondary Button</SecondaryButton>
             </p>
             <p>
               Use secondary buttons for non-primary actions, edit, delete, cancel, etc.
