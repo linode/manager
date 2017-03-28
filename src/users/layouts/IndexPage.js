@@ -59,7 +59,6 @@ export class IndexPage extends Component {
                   nav={
                     <Button
                       to={`/users/${user.username}`}
-                      className="btn-secondary"
                     >Edit</Button>
                   }
                   iconClass="user-icon"
