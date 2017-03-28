@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
 import _ from 'lodash';
 
 import { showModal, hideModal } from '~/actions/modal';
@@ -193,6 +194,7 @@ export class ZonePage extends Component {
       <div>
         <header className="main-header main-header--border">
           <div className="container">
+            <Link to="/dnsmanager">DNS Manager</Link>
             <h1 title={currentDNSZone.id}>
               {currentDNSZone.display_group ? `${currentDNSZone.display_group} / ` : ''}
               {currentDNSZone.dnszone}

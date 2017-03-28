@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
+import { Link } from 'react-router';
 
 import Source from '../components/Source';
 import Plan from '~/linodes/components/Plan';
@@ -120,6 +121,7 @@ export class IndexPage extends Component {
 
     return (
       <div className="container create-page">
+        <Link to="/linodes">Linodes</Link>
         <h1>Add a Linode</h1>
         <Source
           distribution={distribution}
