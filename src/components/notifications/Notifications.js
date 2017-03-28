@@ -12,8 +12,7 @@ import {
 } from '~/api/util';
 import Polling from '~/api/polling';
 
-import { eventRead, eventSeen } from '~/api/events';
-import { hideNotifications, showNotifications } from '~/actions/notifications';
+import { eventRead } from '~/api/events';
 import NotificationList from './NotificationList';
 
 const MIN_SHOWN_EVENTS = 10;
@@ -22,7 +21,6 @@ export class Notifications extends Component {
   constructor(props) {
     super(props);
 
-    this.toggleNotifications = this.toggleNotifications.bind(this);
     this.onClickItem = this.onClickItem.bind(this);
     this.onClickShowMore = this.onClickShowMore.bind(this);
 
@@ -78,33 +76,6 @@ export class Notifications extends Component {
     this.setState({ loading: false });
   }
 
-  toggleNotifications(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    const { dispatch, notifications, onMenuClick } = this.props;
-
-    if (notifications.open) {
-      dispatch(hideNotifications());
-      onMenuClick(false);
-    } else {
-      this.markEventsSeen();
-      dispatch(showNotifications());
-      onMenuClick(true);
-    }
-  }
-
-  async markEventsSeen() {
-    const { dispatch, events } = this.props;
-    const unseenIds = events.ids.filter(function (id) {
-      return !events.events[id].seen;
-    });
-
-    // mark up to and including the most recent event seen
-    if (unseenIds.length) {
-      await dispatch(eventSeen(unseenIds[0]));
-    }
-  }
-
   async fetchEventsPage(options = null) {
     const { dispatch } = this.props;
     await dispatch(
@@ -120,23 +91,14 @@ export class Notifications extends Component {
   render() {
     const { events, notifications = { open: false } } = this.props;
 
-    const unseenCount = notifications.open ? 0 :
-      events.ids.reduce(function (count, id) {
-        return events.events[id].seen ? count : count + 1;
-      }, 0);
-
     return (
-      <div className="Notifications" onClick={this.toggleNotifications}>
-        <i className="fa fa-bell-o"></i>
-        {!unseenCount ? null : <span className="MainHeader-badge badge">{unseenCount}</span>}
-        <NotificationList
-          events={events}
-          loading={this.state.loading}
-          open={notifications.open}
-          onClickItem={this.onClickItem}
-          onClickShowMore={this.onClickShowMore}
-        />
-      </div>
+      <NotificationList
+        events={events}
+        loading={this.state.loading}
+        open={notifications.open}
+        onClickItem={this.onClickItem}
+        onClickShowMore={this.onClickShowMore}
+      />
     );
   }
 }
@@ -145,7 +107,6 @@ Notifications.propTypes = {
   dispatch: PropTypes.func.isRequired,
   events: PropTypes.object,
   notifications: PropTypes.object.isRequired,
-  onMenuClick: PropTypes.func,
 };
 
 

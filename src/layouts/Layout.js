@@ -4,11 +4,14 @@ import { Link } from 'react-router';
 
 import { VERSION } from '~/constants';
 import Header from '~/components/Header';
+import Notifications from '~/components/notifications/Notifications';
+import SessionMenu from '~/components/SessionMenu';
 import { ModalShell } from '~/components/modals';
 import Error from '~/components/Error';
 import PreloadIndicator from '~/components/PreloadIndicator.js';
 import { hideModal } from '~/actions/modal';
 import { hideNotifications } from '~/actions/notifications';
+import { hideSession } from '~/actions/session';
 
 
 export class Layout extends Component {
@@ -37,6 +40,8 @@ export class Layout extends Component {
       emailHash,
       errors,
       notifications,
+      session,
+      events,
       source,
       dispatch,
     } = this.props;
@@ -46,14 +51,18 @@ export class Layout extends Component {
       <div
         className={`layout full-height ${this.props.modal.open ? 'layout--modal' : ''}`}
         onClick={(e) => {
-          const open = this.props.notifications.open;
+          const { notifications, session } = this.props;
           const isListItem = e.target.className.includes('NotificationList-listItem');
-          if (open && !isListItem) {
+          if (notifications.open && !isListItem) {
             dispatch(hideNotifications());
+          } else if (session.open) {
+            dispatch(hideSession());
           }
         }}
       >
         <PreloadIndicator />
+        <Notifications />
+        <SessionMenu open={session.open} />
         <ModalShell
           open={this.props.modal.open}
           title={this.props.modal.title}
@@ -68,9 +77,11 @@ export class Layout extends Component {
           title={title}
           username={username}
           notifications={notifications}
+          session={session}
+          events={events}
         />
-        <div className="main full-height">
-          <div className="main-inner">
+        <div className="Main full-height">
+          <div className="Main-inner">
             {!errors.status ?
               this.props.children :
               this.renderError()}
@@ -108,6 +119,8 @@ Layout.propTypes = {
   linodes: PropTypes.object,
   modal: PropTypes.object,
   notifications: PropTypes.object,
+  session: PropTypes.object,
+  events: PropTypes.object,
 };
 
 function select(state) {
@@ -121,6 +134,8 @@ function select(state) {
     linodes: state.api.linodes,
     modal: state.modal,
     notifications: state.notifications,
+    session: state.session,
+    events: state.api.events,
   };
 }
 

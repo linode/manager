@@ -28,15 +28,20 @@ body,
   }
 }
 
-.main {
-  display: flex;
-  flex-direction: column;
-  min-height: 100%;
-  padding-top: $nav-height;
-}
+.Main {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    padding-top: $nav-height;
 
-.main .main-inner {
-  flex: 1;
+    &-dropdownContainer {
+        position: relative;
+        z-index: 1001;
+    }
+
+    &-inner {
+        flex: 1;
+    }
 }
 
 .main-header {

@@ -55,6 +55,20 @@
     &-notifications {
         @extend .font-normal;
         height: 100%;
+
+        padding: 19px 14px;
+        position: relative;
+        width: 48px;
+
+        &:hover {
+            background: $nav-hover-background-color;
+            cursor: pointer;
+        }
+
+        i {
+            @extend .font-large;
+            color: $white;
+        }
     }
 
     &-session {
@@ -90,40 +104,6 @@
         position: absolute;
         right: 4px;
         top: 6px;
-    }
-}
-
-.SessionMenu {
-    display: none;
-
-    &:hover {
-        background: $nav-hover-background-color;
-    }
-
-    &--open {
-        display: block;
-    }
-
-    &-body,
-    &-body:hover {
-        background-color: $body-bg;
-    }
-
-    &-body {
-        padding: 0;
-        border-left: $border;
-        // TODO: create a box-shadow mixin
-        box-shadow: 0px 2px 3px 1px $dark-gray;
-        overflow-y: auto;
-        position: fixed;
-        right: 0;
-        top: $nav-height;
-        width: 250px;
-    }
-
-    &-menu-item {
-        line-height: initial;
-        padding: 15px 30px;
     }
 }
 
