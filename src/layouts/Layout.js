@@ -52,10 +52,12 @@ export class Layout extends Component {
         className={`layout full-height ${this.props.modal.open ? 'layout--modal' : ''}`}
         onClick={(e) => {
           const { notifications, session } = this.props;
+          // Gross
           const isListItem = e.target.className.includes('NotificationList-listItem');
+          const isSessionMenu = e.target.className.includes('SessionMenu');
           if (notifications.open && !isListItem) {
             dispatch(hideNotifications());
-          } else if (session.open) {
+          } else if (session.open && !isSessionMenu) {
             dispatch(hideSession());
           }
         }}

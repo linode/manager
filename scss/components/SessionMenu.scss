@@ -17,6 +17,11 @@
         }
     }
 
+    hr {
+        margin: 0;
+        max-width: 100%;
+    }
+
     &-body,
     &-body:hover {
         background-color: $body-bg;
@@ -30,6 +35,7 @@
         overflow-y: auto;
         position: absolute;
         right: 0;
+        width: 250px;
     }
 
     &-menu-item {

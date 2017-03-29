@@ -54,7 +54,7 @@ export default class Header extends Component {
     const gravatarLink = `https://gravatar.com/avatar/${emailHash}`;
     const { pathname } = window.location;
     const linkClass = (link, primary = 'MainHeader') =>
-      `${primary}-link ${link === pathname ? `${primary}-link--selected` : ''}`;
+      `${primary}-link ${pathname.indexOf(link) === 0 ? `${primary}-link--selected` : ''}`;
 
     const unseenCount = notifications.open ? 0 :
       events.ids.reduce(function (count, id) {
