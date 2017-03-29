@@ -33,6 +33,11 @@ export class Notifications extends Component {
   }
 
   async componentDidMount() {
+    // OAuth token is not available during the callback
+    while (window.location.pathname === '/oauth/callback') {
+      await new Promise(r => setTimeout(r, 100));
+    }
+
     // begin by fetching all unseen events
     await this.fetchAllEvents(createHeaderFilter({ seen: false }));
 

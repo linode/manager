@@ -1,12 +1,13 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
+import { Link } from 'react-router';
 
 import Source from '../components/Source';
 import Plan from '~/linodes/components/Plan';
 import Datacenter from '~/components/Datacenter';
 import Details from '../components/Details';
-import { Card } from '~/components/cards';
+import { Card, CardHeader } from '~/components/cards';
 import { linodes } from '~/api';
 import { setError } from '~/actions/errors';
 import { setSource } from '~/actions/source';
@@ -120,6 +121,7 @@ export class IndexPage extends Component {
 
     return (
       <div className="container create-page">
+        <Link to="/linodes">Linodes</Link>
         <h1>Add a Linode</h1>
         <Source
           distribution={distribution}
@@ -148,7 +150,7 @@ export class IndexPage extends Component {
           disabled={backup !== null}
           onDatacenterSelected={id => this.setState({ datacenter: id })}
         />
-        <Card title="Plan">
+        <Card header={<CardHeader title="Plan" />}>
           <Plan
             selected={type}
             types={types.types}

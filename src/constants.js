@@ -797,3 +797,5 @@ export const OAUTH_SCOPES = [
 ];
 
 export const MAX_UPLOAD_SIZE_MB = 1;
+
+export const GRAVATAR_BASE_URL = 'https://gravatar.com/avatar/';

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { showModal, hideModal } from '~/actions/modal';
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
-import { Card } from '~/components/cards';
+import { Card, CardHeader } from '~/components/cards';
 import { Table } from '~/components/tables';
 import { ButtonCell } from '~/components/tables/cells';
 import { setError } from '~/actions/errors';
@@ -82,7 +82,7 @@ export class ReverseDNSPage extends Component {
     const records = [...ips.ipv4.public, ...ips.ipv6.addresses];
 
     return (
-      <Card title="Reverse DNS">
+      <Card header={<CardHeader title="Reverse DNS" />}>
         <Table
           className="Table--secondary"
           columns={columns}

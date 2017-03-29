@@ -5,7 +5,7 @@ import _ from 'lodash';
 
 import { API_ROOT } from '~/constants';
 import { Button } from '~/components/buttons/';
-import { SecondaryCard } from '~/components/cards/';
+import { Card, CardImageHeader } from '~/components/cards/';
 
 import { tokens } from '~/api';
 import { reduceErrors } from '~/errors';
@@ -43,10 +43,14 @@ export default class AuthorizedApplication extends Component {
     });
 
     return (
-      <SecondaryCard
-        title={label}
-        icon={icon}
-        nav={<Button onClick={() => this.revokeApp(id)}>Revoke</Button>}
+      <Card
+        header={
+          <CardImageHeader
+            title={label}
+            icon={icon}
+            nav={<Button onClick={() => this.revokeApp(id)}>Revoke</Button>}
+          />
+        }
       >
         <div className="row">
           <label className="col-sm-4 row-label">Expires</label>
@@ -67,7 +71,7 @@ export default class AuthorizedApplication extends Component {
             data={scopeData}
           />
         </div>
-      </SecondaryCard>
+      </Card>
     );
   }
 }

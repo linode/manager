@@ -1,8 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
+import { Link } from 'react-router';
 
-import { Card } from '~/components/cards';
+import { Card, CardHeader } from '~/components/cards';
 import { Input, Form, FormGroup, FormGroupError, SubmitButton } from '~/components/form';
 import Datacenter from '~/components/Datacenter';
 import { nodebalancers } from '~/api';
@@ -53,6 +54,7 @@ export class CreatePage extends Component {
     return (
       <div className="PrimaryPage container">
         <header className="PrimaryPage-header">
+          <Link to="/nodebalancers">NodeBalancers</Link>
           <h1>Add a NodeBalancer</h1>
         </header>
         <div className="PrimaryPage-body Nodebalancer-create">
@@ -61,7 +63,7 @@ export class CreatePage extends Component {
             datacenters={datacenters.datacenters}
             onDatacenterSelected={id => this.setState({ datacenter: id })}
           />
-          <Card title="Details">
+          <Card header={<CardHeader />}>
             <Form onSubmit={this.onSubmit}>
               <FormGroup className="row" errors={errors} name="label">
                 <label htmlFor="label" className="col-sm-2 col-form-label">Label:</label>
