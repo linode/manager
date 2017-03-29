@@ -1,0 +1,9 @@
+.CardHeader {
+    padding: 15px 20px 0 20px;
+
+    &-title {
+        text-align: center;
+        overflow: hidden;
+        color: $black;
+    }
+}

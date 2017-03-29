@@ -6,7 +6,7 @@ import { getObjectByLabelLazily, objectFromMapByLabel } from '~/api/util';
 import { nodebalancers } from '~/api';
 
 import { reduceErrors } from '~/errors';
-import { Card } from '~/components/cards';
+import { Card, CardHeader } from '~/components/cards';
 import { setError } from '~/actions/errors';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
@@ -90,7 +90,7 @@ export class EditConfigPage extends Component {
           </div>
         </header>
         <div className="container">
-          <Card title="Edit Configuration">
+          <Card header={<CardHeader title="Edit Configuration" />}>
             <div>
               <p>
                 {/* eslint-disable max-len */}

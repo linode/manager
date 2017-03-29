@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import _ from 'lodash';
 
-import { Card } from '~/components/cards';
+import { Card, CardHeader } from '~/components/cards';
 import Tabs from '~/components/Tabs';
 import { Table } from '~/components/tables';
 import {
@@ -158,7 +158,7 @@ export default class Source extends Component {
 
 
     return (
-      <Card title="Source">
+      <Card header={<CardHeader title="Source" />}>
         <Tabs
           tabs={tabs}
           onClick={onTabChange}

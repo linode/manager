@@ -5,7 +5,7 @@ import _ from 'lodash';
 import { API_ROOT } from '~/constants';
 import Dropdown from '~/components/Dropdown';
 import EditPersonalAccessToken from './EditPersonalAccessToken';
-import { SecondaryCard } from '~/components/cards/';
+import { Card, CardImageHeader } from '~/components/cards/';
 import { ConfirmModalBody } from '~/components/modals';
 import { Table } from '~/components/tables';
 import { AuthScopeCell } from '~/components/tables/cells';
@@ -65,10 +65,14 @@ export default class PersonalAccessToken extends Component {
     ];
 
     return (
-      <SecondaryCard
-        title={label}
-        icon={icon}
-        nav={<Dropdown elements={elements} leftOriented={false} />}
+      <Card
+        header={
+          <CardImageHeader
+            title={label}
+            icon={icon}
+            nav={<Dropdown elements={elements} leftOriented={false} />}
+          />
+        }
       >
         <div className="row">
           <label className="col-sm-4 row-label">Expires in</label>
@@ -93,7 +97,7 @@ export default class PersonalAccessToken extends Component {
             data={scopeData}
           />
         </div>
-      </SecondaryCard>
+      </Card>
     );
   }
 }

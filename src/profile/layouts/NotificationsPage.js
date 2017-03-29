@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { Card } from '~/components/cards';
+import { Card, CardHeader } from '~/components/cards';
 import { Form, SubmitButton } from '~/components/form';
 import { ErrorSummary } from '~/errors';
 
@@ -18,7 +18,7 @@ export default class NotificationsPage extends Component {
 
     return (
       <div>
-        <Card title="Change email settings">
+        <Card header={<CardHeader title="Change email settings" />}>
           <Form onSubmit={this.onSubmit}>
             <p>Email notifications are currently enabled.</p>
             <SubmitButton disabled>Disable</SubmitButton>

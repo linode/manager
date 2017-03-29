@@ -10,7 +10,7 @@ import { linodeBackups } from '~/api/linodes';
 import { setSource } from '~/actions/source';
 import { ErrorSummary, reduceErrors } from '~/errors';
 import { PrimaryButton } from '~/components/buttons';
-import { Card } from '~/components/cards';
+import { Card, CardHeader } from '~/components/cards';
 
 export class IndexPage extends Component {
   static async preload({ dispatch, getState }, { linodeLabel }) {
@@ -51,7 +51,7 @@ export class IndexPage extends Component {
       const { errors } = this.state;
 
       return (
-        <Card title="Enable backups">
+        <Card header={<CardHeader title="Enable backups" />}>
           <form onSubmit={this.enableBackups}>
             <p>
               Backups not enabled. Enable backups for

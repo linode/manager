@@ -1,6 +1,6 @@
 import React from 'react';
 import sinon from 'sinon';
-import { shallow, mount } from 'enzyme';
+import { mount } from 'enzyme';
 import { expect } from 'chai';
 
 import { SHOW_MODAL } from '~/actions/modal';
@@ -22,16 +22,19 @@ describe('profile/integrations/components/MyApplication', () => {
 
   it('renders a client', () => {
     const client = clients[1];
-    const page = shallow(
+    const page = mount(
       <MyApplication
         dispatch={dispatch}
         client={client}
       />
     );
 
-    const cardProps = page.find('SecondaryCard').props();
-    expect(cardProps.title).to.equal(client.label);
-    expect(cardProps.icon).to.equal(`${API_ROOT}/account/clients/${client.id}/thumbnail`);
+    const headerProps = page.find('CardImageHeader').props();
+
+    expect(headerProps.title)
+      .to.equal(client.label);
+    expect(headerProps.icon)
+      .to.equal(`${API_ROOT}/account/clients/${client.id}/thumbnail`);
 
     expect(page.find('#clientId').text()).to.equal(client.id);
     expect(page.find('#redirect').text()).to.equal(client.redirect_uri);

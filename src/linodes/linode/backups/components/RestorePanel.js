@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Card } from '~/components/cards';
+import { Card, CardHeader } from '~/components/cards';
 
 export function restorePanel() {
   /* TODO:
@@ -9,7 +9,7 @@ export function restorePanel() {
    * If no backup, return null
    */
   return (
-    <Card title="Restore">
+    <Card header={<CardHeader title="Restore" />}>
       <form>
         <div className="form-group row restore-backup">
           <div className="col-sm-2 col-form-label">Restore to:</div>

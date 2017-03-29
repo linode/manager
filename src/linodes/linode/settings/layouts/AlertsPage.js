@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
-import { Card } from '~/components/cards';
+import { Card, CardHeader } from '~/components/cards';
 import { CheckboxInputCombo, Form, SubmitButton } from '~/components/form';
 import { linodes } from '~/api';
 import { setSource } from '~/actions/source';
@@ -100,7 +100,12 @@ export class AlertsPage extends Component {
     ];
 
     return (
-      <Card className="linode-alerts" title="Alerts" helpLink="https://google.com">
+      <Card
+        className="linode-alerts"
+        header={
+          <CardHeader title="Alerts" helpLink="https://google.com" />
+        }
+      >
         <Form onSubmit={() => this.saveChanges()}>
           {alerts.map(this.renderAlertRow)}
           <div className="row">

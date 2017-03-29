@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { Card } from '~/components/cards';
+import { Card, CardHeader } from '~/components/cards';
 import { reduceErrors } from '~/errors';
 import { users } from '~/api';
 import { UserForm } from '../components/UserForm';
@@ -41,7 +41,7 @@ export class AddUserPage extends Component {
           </div>
         </header>
         <div className="PrimaryPage-body User-create">
-          <Card title="Add a user">
+          <Card header={<CardHeader title="Add a user" />}>
             <UserForm
               errors={errors}
               onSubmit={this.onSubmit}

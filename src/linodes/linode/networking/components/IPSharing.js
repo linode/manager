@@ -1,7 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 
 import _ from 'lodash';
-import { Card } from '~/components/cards';
+import { Card, CardHeader } from '~/components/cards';
 import { Form, FormGroup, SubmitButton } from '~/components/form';
 import { Table } from '~/components/tables';
 import {
@@ -90,7 +90,7 @@ export default class IPSharing extends Component {
     const data = this.formatRows();
 
     return (
-      <Card title="IP Sharing">
+      <Card header={<CardHeader title="IP Sharing" />}>
         <p>
           <small>
             The selected IP addresses can be brought up by this Linode if the original Linode's

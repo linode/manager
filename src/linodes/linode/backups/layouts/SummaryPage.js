@@ -7,7 +7,7 @@ import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import { takeBackup } from '~/api/backups';
 import { ErrorSummary, reduceErrors } from '~/errors';
 import { Button } from '~/components/buttons';
-import { Card } from '~/components/cards';
+import { Card, CardHeader } from '~/components/cards';
 
 export class SummaryPage extends Component {
   constructor() {
@@ -100,7 +100,7 @@ export class SummaryPage extends Component {
     ];
 
     return (
-      <Card title="Restorable backups">
+      <Card header={<CardHeader title="Restorable backups" />}>
         <div>
           Select a backup to see details and restore to a Linode.
         </div>

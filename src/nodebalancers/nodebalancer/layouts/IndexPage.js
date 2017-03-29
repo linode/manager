@@ -8,7 +8,7 @@ import { setError } from '~/actions/errors';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 import { Link } from '~/components/Link';
-import { Card } from '~/components/cards';
+import { Card, CardHeader } from '~/components/cards';
 import { Table } from '~/components/tables';
 import { LinkCell, ButtonCell } from '~/components/tables/cells';
 import { NodebalancerStatusReadable } from '~/constants';
@@ -99,7 +99,7 @@ export class IndexPage extends Component {
           </div>
         </header>
         <div className="container">
-          <Card title="Summary">
+          <Card header={<CardHeader title="Summary" />}>
             <div className="row">
               <div className="col-sm-2 row-label">
                 IP Addresses
@@ -137,19 +137,23 @@ export class IndexPage extends Component {
             </div>
           </Card>
           <Card
-            title="Configurations"
-            nav={
-              <Link
-                to={`/nodebalancers/${nbLabel}/configs/create`}
-                className="linode-add btn btn-default float-sm-right"
-              >
-                Add a Configuration
-              </Link>
+            header={
+              <CardHeader
+                title="Configurations"
+                nav={
+                  <Link
+                    to={`/nodebalancers/${nbLabel}/configs/create`}
+                    className="linode-add btn btn-default float-sm-right"
+                  >
+                    Add a Configuration
+                  </Link>
+                }
+              />
             }
           >
             {this.renderConfigs(Object.values(configs))}
           </Card>
-          <Card title="Performance">No stats are available.</Card>
+          <Card header={<CardHeader title="Performance" />}>No stats are available.</Card>
         </div>
       </div>
     );

@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 
-import { Card } from '~/components/cards';
+import { Card, CardHeader } from '~/components/cards';
 import { PrimaryButton } from '~/components/buttons';
 import { Form, FormGroup, FormGroupError, PasswordInput, Input, Checkbox } from '~/components/form';
 import { ErrorSummary } from '~/errors';
@@ -37,7 +37,7 @@ export default class Details extends Component {
     };
 
     return (
-      <Card title="Details">
+      <Card header={<CardHeader title="Details" />}>
         {/* TODO: Form should encapsulate all form fields on the create page */}
         <Form onSubmit={this.onSubmit}>
           <FormGroup name="label" errors={errors} className="row">

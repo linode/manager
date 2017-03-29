@@ -7,7 +7,7 @@ import Source from '../components/Source';
 import Plan from '~/linodes/components/Plan';
 import Datacenter from '~/components/Datacenter';
 import Details from '../components/Details';
-import { Card } from '~/components/cards';
+import { Card, CardHeader } from '~/components/cards';
 import { linodes } from '~/api';
 import { setError } from '~/actions/errors';
 import { setSource } from '~/actions/source';
@@ -150,7 +150,7 @@ export class IndexPage extends Component {
           disabled={backup !== null}
           onDatacenterSelected={id => this.setState({ datacenter: id })}
         />
-        <Card title="Plan">
+        <Card header={<CardHeader title="Plan" />}>
           <Plan
             selected={type}
             types={types.types}

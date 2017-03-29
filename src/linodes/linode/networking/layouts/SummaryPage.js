@@ -7,7 +7,7 @@ import { linodeIPs, addIP } from '~/api/linodes';
 import { setSource } from '~/actions/source';
 import { setError } from '~/actions/errors';
 import { Button } from '~/components/buttons';
-import { Card } from '~/components/cards';
+import { Card, CardHeader } from '~/components/cards';
 import { HelpButton } from '~/components';
 
 export class SummaryPage extends Component {
@@ -169,7 +169,14 @@ export class SummaryPage extends Component {
     );
 
     return (
-      <Card title="Summary" nav={nav}>
+      <Card
+        header={
+          <CardHeader
+            title="Summary"
+            nav={nav}
+          />
+        }
+      >
         <div className="row">
           {this.renderIPv4()}
           {this.renderIPv6()}

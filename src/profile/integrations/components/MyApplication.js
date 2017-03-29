@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 
 import { API_ROOT } from '~/constants';
-import { SecondaryCard } from '~/components/cards/';
+import { Card, CardImageHeader } from '~/components/cards/';
 import Dropdown from '~/components/Dropdown';
 import { reduceErrors } from '~/errors';
 import EditApplication from './EditApplication';
@@ -89,10 +89,14 @@ export default class MyApplication extends Component {
     const { client } = this.props;
 
     return (
-      <SecondaryCard
-        title={client.label}
-        icon={`${API_ROOT}/account/clients/${client.id}/thumbnail`}
-        nav={this.renderActions()}
+      <Card
+        header={
+          <CardImageHeader
+            title={client.label}
+            icon={`${API_ROOT}/account/clients/${client.id}/thumbnail`}
+            nav={this.renderActions()}
+          />
+        }
       >
         <div className="row">
           <label className="col-sm-4 row-label">Client ID</label>
@@ -102,7 +106,7 @@ export default class MyApplication extends Component {
           <label className="col-sm-4 row-label">Redirect URI</label>
           <div className="col-sm-8" id="redirect">{client.redirect_uri}</div>
         </div>
-      </SecondaryCard>
+      </Card>
     );
   }
 }

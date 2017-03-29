@@ -1,7 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 import { push } from 'react-router-redux';
 
-import { Card } from '~/components/cards';
+import { Card, CardHeader } from '~/components/cards';
 import { Form, FormGroup, SubmitButton, Select } from '~/components/form';
 import { ErrorSummary, reduceErrors } from '~/errors';
 import IPList from './IPList';
@@ -89,7 +89,7 @@ export default class IPTransfer extends Component {
     const { linode, linodes } = this.props;
 
     return (
-      <Card title="IP Transfer">
+      <Card header={<CardHeader title="IP Transfer" />}>
         <p>
           <small>
             The selected IP addresses will be transferred between this Linode (A) and the selected

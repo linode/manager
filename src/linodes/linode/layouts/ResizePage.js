@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { Card } from '~/components/cards';
+import { Card, CardHeader } from '~/components/cards';
 import {
   FormGroup, Form, SubmitButton,
 } from '~/components/form';
@@ -50,7 +50,7 @@ export class ResizePage extends Component {
     const { type, errors } = this.state;
 
     return (
-      <Card title="Resize">
+      <Card header={<CardHeader title="Resize" />}>
         <Form onSubmit={() => this.onSubmit()}>
           <FormGroup>
             <Plan
