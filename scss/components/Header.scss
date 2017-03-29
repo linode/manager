@@ -6,23 +6,21 @@
 }
 
 .MainHeader {
+    @extend .clearfix;
     height: $nav-height;
     background: $dark-black;
     font-size: 0;
 
-    &-brand, &-search, &-session, &-link {
-        @extend .font-normal;
-        display: inline-block;
-        line-height: $nav-height;
-        margin-right: 30px;
+    a:hover,
+    a:focus,
+    a:active {
+        text-decoration: none;
     }
 
-    &-session {
-        line-height: $nav-height;
-
-        &:hover .MainHeader-username {
-            color: $white;
-        }
+    &-brand, &-search, &-session, &-link {
+        @extend .font-normal;
+        float: left;
+        margin-right: 30px;
     }
 
     &-logo {
@@ -33,7 +31,6 @@
 
     &-title {
         color: $dark-gray;
-        display: inline-block;
         vertical-align: top;
         line-height: $nav-height;
         font-size: 18px; /* Special font-size case */
@@ -43,16 +40,12 @@
         color: $lightest-black;
         line-height: $nav-height;
         margin-right: 30px;
-        // Correct for display:inline-block;
-        position: relative;
-        top: -2px;
 
         &--selected,
         &:hover,
         &:focus,
         &:active {
             color: $white;
-            text-decoration: none;
         }
     }
 
@@ -80,6 +73,7 @@
     }
 
     &-session {
+        height: $nav-height;
         float: right;
         padding: 0 15px;
         margin-right: -15px;
@@ -99,11 +93,22 @@
             cursor: pointer;
             cursor: hand;
         }
+
+        &:hover .MainHeader-username {
+            color: $white;
+        }
     }
 
     &-username {
+        line-height: $nav-height;
         padding-right: 15px;
         color: $lightest-black;
+    }
+
+    &-gravatar {
+        vertical-align: initial;
+        position: relative;
+        top: calc(calc(#{$nav-height} - 35px) / 2);
     }
 
     &-badge {

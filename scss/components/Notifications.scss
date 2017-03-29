@@ -4,9 +4,9 @@
 
     &--open {
         display: block;
-        position: absolute;
-        top: $nav-height;
+        position: fixed;
         height: 100%;
+        top: $nav-height;
         z-index: 1001;
         left: calc(#{$grid-max-width} + calc(calc(100% - #{$grid-max-width}) / 2));
 

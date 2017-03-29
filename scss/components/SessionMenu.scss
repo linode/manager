@@ -7,9 +7,8 @@
 
     &--open {
         display: block;
-        position: absolute;
+        position: fixed;
         top: $nav-height;
-        height: 100%;
         z-index: 1001;
         left: calc(#{$grid-max-width} + calc(calc(100% - #{$grid-max-width}) / 2));
 
@@ -31,7 +30,6 @@
         overflow-y: auto;
         position: absolute;
         right: 0;
-        width: 250px;
     }
 
     &-menu-item {
