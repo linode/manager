@@ -3,123 +3,119 @@ import React, { PropTypes, Component } from 'react';
 import { LinodeLogoImgSrc } from '~/assets';
 
 import { Link } from '~/components/Link';
-import { Notifications } from '~/components/notifications';
-
+import { eventSeen } from '~/api/events';
+import { hideSession, showSession } from '~/actions/session';
+import { hideNotifications, showNotifications } from '~/actions/notifications';
 
 export default class Header extends Component {
+  toggleNotifications = () => {
+    const { dispatch, notifications } = this.props;
 
-  constructor(props) {
-    super(props);
-
-    this.onNotificationMenuClick = this.onNotificationMenuClick.bind(this);
-    this.onSessionMenuClick = this.onSessionMenuClick.bind(this);
-
-    this.state = { sessionMenuOpen: false };
+    if (notifications.open) {
+      dispatch(hideNotifications());
+    } else {
+      this.markEventsSeen();
+      dispatch(hideSession());
+      dispatch(showNotifications());
+    }
   }
 
-  onSessionMenuClick() {
-    const { sessionMenuOpen } = this.state;
+  async markEventsSeen() {
+    const { dispatch, events } = this.props;
+    const unseenIds = events.ids.filter(function (id) {
+      return !events.events[id].seen;
+    });
 
-    this.setState({ sessionMenuOpen: !sessionMenuOpen });
+    // mark up to and including the most recent event seen
+    if (unseenIds.length) {
+      await dispatch(eventSeen(unseenIds[0]));
+    }
   }
 
-  // TODO: look at syncing up this toggle between menus via redux state
-  onNotificationMenuClick(open) {
-    if (open) {
-      this.setState({ sessionMenuOpen: false });
+  toggleSession = () => {
+    const { dispatch, session } = this.props;
+
+    if (session.open) {
+      dispatch(hideSession());
+    } else {
+      dispatch(hideNotifications());
+      dispatch(showSession());
     }
   }
 
   render() {
     const {
-      dispatch,
       emailHash,
-      link,
-      showInfobar,
-      title,
       username,
-      eventHandler,
+      notifications,
+      events,
     } = this.props;
 
-    const {
-      sessionMenuOpen,
-    } = this.state;
-
     const gravatarLink = `https://gravatar.com/avatar/${emailHash}`;
+    const { pathname } = window.location;
+    const linkClass = (link, primary = 'MainHeader') =>
+      `${primary}-link ${pathname.indexOf(link) === 0 ? `${primary}-link--selected` : ''}`;
 
-    const infobar = (
-      <div className="MiniHeader clearfix">
-        <div className="MiniHeader-content float-xs-right">
-          {!title ? null : <span>
-            <span className="MiniHeader-new">New</span>
-            <a href={link} target="_blank" className="MiniHeader-blog">{title}</a>
-          </span>}
-          <a href="https://github.com/linode" target="_blank" className="MiniHeader-github">
-            <i className="fa fa-github" />
-          </a>
-          <a href="https://twitter.com/linode" target="_blank" className="MiniHeader-twitter">
-            <i className="fa fa-twitter" />
-          </a>
-        </div>
-      </div>
-    );
-
-    const main = (
-      <div className="MainHeader clearfix">
-        <div className="MainHeader-brand">
-          <Link to="/">
-            <span className="MainHeader-logo">
-              <img
-                src={LinodeLogoImgSrc}
-                alt="Linode Logo"
-                height={40}
-                width={35}
-              />
-            </span>
-            <span className="MainHeader-title">Linode Manager</span>
-          </Link>
-        </div>
-        <div className="MainHeader-search">
-          <input className="form-control" type="text" placeholder="Search..." disabled />
-        </div>
-        {!username ? null :
-          <div
-            className="MainHeader-session float-xs-right"
-            onClick={this.onSessionMenuClick}
-          >
-            <span className="MainHeader-username">
-              {username}
-            </span>
-            <img
-              className="MainHeader-gravatar"
-              src={gravatarLink}
-              alt="User Avatar"
-              height={35}
-              width={35}
-            />
-            <div className={`SessionMenu ${sessionMenuOpen ? 'SessionMenu--open' : ''}`}>
-              <div className="SessionMenu-body">
-                <div className="SessionMenu-menu-item">
-                  <Link to="/logout">Logout</Link>
-                </div>
-              </div>
-            </div>
-          </div>
-        }
-        <div className="MainHeader-notifications float-xs-right">
-          <Notifications
-            dispatch={dispatch}
-            eventHandler={eventHandler}
-            onMenuClick={this.onNotificationMenuClick}
-          />
-        </div>
-      </div>
-    );
+    const unseenCount = notifications.open ? 0 :
+      events.ids.reduce(function (count, id) {
+        return events.events[id].seen ? count : count + 1;
+      }, 0);
 
     return (
       <div className="Header">
-        {!showInfobar ? null : infobar}
-        {main}
+        <div className="MainHeader clearfix">
+          <div className="container">
+            <div className="MainHeader-brand">
+              <Link to="/">
+                <span className="MainHeader-logo">
+                  <img
+                    src={LinodeLogoImgSrc}
+                    alt="Linode Logo"
+                    height={40}
+                    width={35}
+                  />
+                </span>
+                <span className="MainHeader-title">Linode Manager</span>
+              </Link>
+            </div>
+            <Link
+              className={`${linkClass('/linodes')}`}
+              to="/linodes"
+            >Linodes</Link>
+            <Link
+              className={`${linkClass('/nodebalancers')}`}
+              to="/nodebalancers"
+            >NodeBalancers</Link>
+            <Link
+              className={`${linkClass('/dnsmanager')}`}
+              to="/dnsmanager"
+            >DNS Manager</Link>
+            {!username ? null :
+              <div
+                className="MainHeader-session float-xs-right"
+                onClick={this.toggleSession}
+              >
+                <span className="MainHeader-username">
+                  {username}
+                </span>
+                <img
+                  className="MainHeader-gravatar"
+                  src={gravatarLink}
+                  alt="User Avatar"
+                  height={35}
+                  width={35}
+                />
+              </div>
+            }
+            <div
+              className="MainHeader-notifications float-xs-right"
+              onClick={this.toggleNotifications}
+            >
+              <i className="fa fa-bell-o"></i>
+              {!unseenCount ? null : <span className="MainHeader-badge badge">{unseenCount}</span>}
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -128,13 +124,8 @@ export default class Header extends Component {
 Header.propTypes = {
   username: PropTypes.string,
   emailHash: PropTypes.string,
-  eventHandler: PropTypes.func,
-  dispatch: PropTypes.func.isRequired,
-  title: PropTypes.string.isRequired,
-  link: PropTypes.string.isRequired,
-  showInfobar: PropTypes.bool.isRequired,
-};
-
-Header.defaultProps = {
-  showInfobar: true,
+  dispatch: PropTypes.func,
+  notifications: PropTypes.object,
+  session: PropTypes.object,
+  events: PropTypes.object,
 };

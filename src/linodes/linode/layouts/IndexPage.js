@@ -70,6 +70,7 @@ export class IndexPage extends Component {
         <header className="main-header">
           <div className="container">
             <div className="float-xs-left">
+              <Link to="/linodes">Linodes</Link>
               <h1 title={linode.id}>
                 <Link to={`/linodes/${linode.label}`}>
                   {linode.group ? `${linode.group} / ${linode.label}` : linode.label}

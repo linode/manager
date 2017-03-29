@@ -10,91 +10,10 @@
 @import 'components/index';
 @import 'linodes/index';
 @import 'profile/integrations/components/OAuthScopes';
+@import 'support/layouts/Tickets';
 @import 'layout/index';
 @import 'styleguide/index';
 
-
-// TODO: BEMify
-.sidebar {
-    position: fixed;
-    top: $nav-height;
-    left: 0;
-    bottom: 0;
-    width: $sidebar-width;
-    background: $white;
-    border-right: $border;
-    overflow-y: scroll;
-    padding-bottom: 15px;
-
-    section {
-        margin-top: 5px;
-    }
-
-    & section:first-of-type {
-        margin-top: 0;
-
-        header h3 {
-            border-top: 0;
-        }
-    }
-
-    header {
-        h3 {
-            @extend .font-small;
-            text-transform: uppercase;
-            background-color: $gray;
-            border-bottom: $border;
-            border-top: $border;
-            border-color: $border-gray;
-            color: #777;
-            padding: 10px 0;
-            padding-left: 34px;
-        }
-    }
-
-    a,
-    a:hover,
-    a:active,
-    a:focus {
-        color: $black;
-        text-decoration: none;
-        line-height: 34px;
-        display: block;
-        padding: 5px 0;
-    }
-
-    .fa {
-        width: 15px;
-        color: #acacac;
-    }
-
-    ul {
-        text-align: left;
-
-        li {
-            border-radius: 0;
-            padding-left: 10px;
-            margin-left: 10px;
-            margin-right: 10px;
-
-            &.active,
-            &:hover,
-            &:active,
-            &:focus {
-                background-color: $green;
-                color: $white;
-
-                .fa {
-                    color: $white;
-                }
-            }
-
-            span:last-of-type {
-                padding-left: 15px;
-            }
-        }
-    }
-}
 // TODO: look into
 .grid-list {
     a .fa {
@@ -138,11 +57,17 @@
 }
 
 footer {
+    @extend .font-small;
+
     padding-bottom: 15px;
 
-    a {
+    span, a {
         color: $lightest-black;
         padding: 0 10px;
+    }
+
+    a {
+        text-decoration: underline;
     }
 }
 
@@ -178,7 +103,6 @@ header .sub-header {
 
     margin-left: -$grid-gutter-width-base / 4;
     margin-right: -$grid-gutter-width-base / 4;
-    margin-bottom: 15px;
 
     & > [class^="col-"] {
         padding-left: $grid-gutter-width-base / 4;

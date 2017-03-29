@@ -51,6 +51,7 @@ describe('users/user/layouts/EditUserPage', () => {
     };
     await page.instance().onSubmit(values);
     expect(dispatch.callCount).to.equal(2);
+
     const fn = dispatch.firstCall.args[0];
     await expectRequest(
       fn, `/account/users/${params.username}`, {

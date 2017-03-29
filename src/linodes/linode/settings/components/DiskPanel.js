@@ -9,7 +9,7 @@ import { EditModal } from './EditModal';
 import { DeleteModal } from './DeleteModal';
 import { AddModal } from './AddModal';
 import { Button } from '~/components/buttons';
-import { Card } from '~/components/cards';
+import { Card, CardHeader } from '~/components/cards';
 
 const borderColors = [
   '#1abc9c',
@@ -70,7 +70,11 @@ export class DiskPanel extends Component {
     );
 
     return (
-      <Card title="Disks" navLink="https://example.org">
+      <Card
+        header={
+          <CardHeader title="Disks" navLink="https://example.org" />
+        }
+      >
         <section>
           {poweredOff ? null : (
             <div className="alert alert-info">

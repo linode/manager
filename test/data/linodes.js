@@ -1,5 +1,29 @@
 import { testType } from './types';
 
+const stats = {
+  netv6: {
+    in: [[1490377800000, 0]],
+    private_in: [[1490377800000, 0]],
+    out: [[1490377800000, 0]],
+    private_out: [[1490377800000, 0]],
+  },
+  netv4: {
+    in: [[1490377800000, 0]],
+    private_in: [[1490377800000, 0]],
+    out: [[1490377800000, 0]],
+    private_out: [[1490377800000, 0]],
+  },
+  cpu: [[1490378700000, 1.67]],
+  io: {
+    swap: [[1490378100000, 0]],
+    io: [[1490379000000, 0.91]],
+  },
+};
+
+function createTestStats() {
+  return stats;
+}
+
 let usedIpv4UpTo = 0;
 function createTestIpv4(linodeId) {
   return {
@@ -70,6 +94,7 @@ function createTestLinode(id) {
         window: 'W10',
       },
     },
+    _stats: createTestStats(),
     _polling: false,
     _backups: {
       daily: {

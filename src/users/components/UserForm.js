@@ -48,7 +48,7 @@ export class UserForm extends Component {
       >
         <FormGroup errors={errors} name="username" className="row">
           <label className="col-sm-2 col-form-label">Username</label>
-          <div className="col-sm-6">
+          <div className="col-sm-10">
             <Input
               id="user-username"
               value={username}
@@ -60,7 +60,7 @@ export class UserForm extends Component {
         </FormGroup>
         <FormGroup errors={errors} name="email" className="row">
           <label className="col-sm-2 col-form-label">Email</label>
-          <div className="col-sm-6">
+          <div className="col-sm-10">
             <Input
               id="user-email"
               value={email}

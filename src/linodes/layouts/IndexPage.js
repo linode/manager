@@ -9,10 +9,10 @@ import CreateHelper from '~/components/CreateHelper';
 
 import { Table } from '~/components/tables';
 import {
-  BackupsCell,
   CheckboxCell,
-  DatacenterCell,
   IPAddressCell,
+  DatacenterCell,
+  BackupsCell,
   LinkCell,
 } from '~/components/tables/cells';
 import StatusDropdownCell from '~/linodes/components/StatusDropdownCell';
@@ -153,9 +153,11 @@ export class IndexPage extends Component {
     return (
       <div>
         {groups.map(function (group, index) {
+          const groupLabel = group.name ? (<div className="Group-label">{group.name}</div>) : null;
+
           return (
             <div className="Group" key={index}>
-              <div className="Group-label">{group.name}</div>
+              {groupLabel}
               <Table
                 columns={group.columns}
                 data={group.data}

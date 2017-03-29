@@ -1,12 +1,12 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { Card } from '~/components/cards';
+import { Card, CardHeader } from '~/components/cards';
 
 function ReferralsPage(props) {
   // TODO: Add referrals description
   return (
-    <Card title="Referrals">
+    <Card header={<CardHeader title="Referrals" />}>
       <div className="row">
         <div className="col-sm-2 row-label">
           Referral Code

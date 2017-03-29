@@ -1,88 +1,82 @@
-$header-padding: $grid-gutter-width-base / 2;
-
 .Header {
     position: fixed;
     top: 0;
     width: 100%;
-    z-index: 9999;
-}
-
-.MiniHeader {
-    @extend .font-small;
-    padding: 0 $header-padding;
-    height: $info-nav-height;
-    background: $black;
-    line-height: $info-nav-height;
-
-    &-new {
-        @extend .font-small;
-        color: $black;
-        text-transform: uppercase;
-        background: $white;
-        padding: 1px 4px;
-
-        &:hover {
-            text-decoration: underline;
-        }
-    }
-
-    &-github .fa, &-twitter .fa {
-        color: $white;
-        text-decoration: none;
-        padding-left: $header-padding / 2;
-    }
+    z-index: 9998;
 }
 
 .MainHeader {
-    height: $main-nav-height;
+    @extend .clearfix;
+    height: $nav-height;
     background: $dark-black;
-    padding: 0 $header-padding;
+    font-size: 0;
 
-    &-brand, &-search, &-session {
-        float: left;
-        display: inline-block;
-        margin-right: $header-padding;
+    a:hover,
+    a:focus,
+    a:active {
+        text-decoration: none;
     }
 
-    &-session {
-        line-height: $main-nav-height;
+    &-brand, &-search, &-session, &-link {
+        @extend .font-normal;
+        float: left;
+        margin-right: 30px;
     }
 
     &-logo {
         font-size: 35px; /* Special font-size case */
         line-height: 50px;
-        padding-right: $header-padding / 2;
+        padding-right: 15px;
     }
 
     &-title {
         color: $dark-gray;
-        display: inline-block;
         vertical-align: top;
-        line-height: $main-nav-height;
+        line-height: $nav-height;
         font-size: 18px; /* Special font-size case */
     }
 
-    &-search {
-        padding: 14px 10px;
+    &-link {
+        color: $lightest-black;
+        line-height: $nav-height;
+        margin-right: 30px;
 
-        input.form-control,
-        input.form-control:focus {
-            background: $black;
-            width: 250px;
-            border: $border;
-            border-color: black;
-            outline: 0;
-            color: #ccc;
+        &--selected,
+        &:hover,
+        &:focus,
+        &:active {
+            color: $white;
         }
     }
 
     &-notifications {
+        @extend .font-normal;
         height: 100%;
+
+        padding: 19px 14px;
+        position: relative;
+        width: 48px;
+
+        &:hover {
+            background: $nav-hover-background-color;
+            cursor: pointer;
+
+            i {
+                color: $white;
+            }
+        }
+
+        i {
+            @extend .font-large;
+            color: $lightest-black;
+        }
     }
 
     &-session {
+        height: $nav-height;
+        float: right;
         padding: 0 15px;
-        margin-right: -15px;
+        margin-right: 0;
         position: relative; /* Give the badge something to relate to */
 
         /* Disable double click highlight */
@@ -99,11 +93,22 @@ $header-padding: $grid-gutter-width-base / 2;
             cursor: pointer;
             cursor: hand;
         }
+
+        &:hover .MainHeader-username {
+            color: $white;
+        }
     }
 
     &-username {
-        padding-right: $header-padding / 2;
-        color: $white;
+        line-height: $nav-height;
+        padding-right: 15px;
+        color: $lightest-black;
+    }
+
+    &-gravatar {
+        vertical-align: initial;
+        position: relative;
+        top: calc(calc(#{$nav-height} - 35px) / 2);
     }
 
     &-badge {
@@ -115,36 +120,41 @@ $header-padding: $grid-gutter-width-base / 2;
     }
 }
 
-.SessionMenu {
-    display: none;
+.MiniHeader {
+    height: $nav-height;
+    background: $black;
+    line-height: $nav-height;
 
-    &:hover {
-        background: $nav-hover-background-color;
+    &-search, &-link {
+        display: inline-block;
+        line-height: $nav-height;
     }
 
-    &--open {
-        display: block;
+    &-search {
+        padding: 14px 10px;
+        height: $input-height;
+
+        input.form-control,
+        input.form-control:focus {
+            background: $black;
+            width: 250px;
+            border: $border;
+            border-color: black;
+            outline: 0;
+            color: #ccc;
+        }
     }
 
-    &-body,
-    &-body:hover {
-        background-color: $body-bg;
-    }
+    &-link {
+        @extend .MainHeader-link;
+        position: static;
 
-    &-body {
-        border-left: $border;
-        // TODO: create a box-shadow mixin
-        box-shadow: 2px 2px 4px 2px $dark-gray;
-        overflow-y: auto;
-        position: fixed;
-        right: 0;
-        top: $nav-height;
-        width: 200px;
-        // TODO: add z-index levels to variables
-        z-index: 2001;
-    }
+        &:first-of-type {
+            margin-left: 30px;
+        }
 
-    &-menu-item {
-        padding: 0 15px;
+        &--selected {
+            @extend .MainHeader-link--selected;
+        }
     }
 }
