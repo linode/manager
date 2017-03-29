@@ -4,13 +4,14 @@ import { Link } from 'react-router';
 
 import { VERSION } from '~/constants';
 import Header from '~/components/Header';
-import Sidebar from '~/components/Sidebar';
+import Notifications from '~/components/notifications/Notifications';
+import SessionMenu from '~/components/SessionMenu';
 import { ModalShell } from '~/components/modals';
 import Error from '~/components/Error';
 import PreloadIndicator from '~/components/PreloadIndicator.js';
-import { rawFetch as fetch } from '~/fetch';
 import { hideModal } from '~/actions/modal';
 import { hideNotifications } from '~/actions/notifications';
+import { hideSession } from '~/actions/session';
 
 
 export class Layout extends Component {
@@ -18,36 +19,6 @@ export class Layout extends Component {
     super();
     this.renderError = this.renderError.bind(this);
     this.state = { title: '', link: '' };
-  }
-
-  componentDidMount() {
-    this.fetchBlog();
-    this.attachEventTimeout();
-  }
-
-  async fetchBlog() {
-    if (this.state.title === '') {
-      try {
-        const resp = await fetch('https://blog.linode.com/feed/', {
-          mode: 'cors',
-        });
-        const parser = new DOMParser();
-        const xml = parser.parseFromString(await resp.text(), 'text/xml');
-        const latest = xml.querySelector('channel item');
-        const title = latest.querySelector('title').textContent;
-        const link = latest.querySelector('link').textContent;
-        this.setState({ title, link });
-      } catch (ex) {
-        // TODO
-      }
-    }
-  }
-
-  async attachEventTimeout() {
-    // OAuth token is not available during the callback
-    while (window.location.pathname === '/oauth/callback') {
-      await new Promise(r => setTimeout(r, 100));
-    }
   }
 
   renderError() {
@@ -67,9 +38,10 @@ export class Layout extends Component {
     const {
       username,
       emailHash,
-      currentPath,
       errors,
       notifications,
+      session,
+      events,
       source,
       dispatch,
     } = this.props;
@@ -79,14 +51,20 @@ export class Layout extends Component {
       <div
         className={`layout full-height ${this.props.modal.open ? 'layout--modal' : ''}`}
         onClick={(e) => {
-          const open = this.props.notifications.open;
+          const { notifications, session } = this.props;
+          // Gross
           const isListItem = e.target.className.includes('NotificationList-listItem');
-          if (open && !isListItem) {
+          const isSessionMenu = e.target.className.includes('SessionMenu');
+          if (notifications.open && !isListItem) {
             dispatch(hideNotifications());
+          } else if (session.open && !isSessionMenu) {
+            dispatch(hideSession());
           }
         }}
       >
         <PreloadIndicator />
+        <Notifications />
+        <SessionMenu open={session.open} />
         <ModalShell
           open={this.props.modal.open}
           title={this.props.modal.title}
@@ -101,10 +79,11 @@ export class Layout extends Component {
           title={title}
           username={username}
           notifications={notifications}
+          session={session}
+          events={events}
         />
-        <Sidebar path={currentPath} />
-        <div className="main full-height">
-          <div className="main-inner">
+        <div className="Main full-height">
+          <div className="Main-inner">
             {!errors.status ?
               this.props.children :
               this.renderError()}
@@ -142,6 +121,8 @@ Layout.propTypes = {
   linodes: PropTypes.object,
   modal: PropTypes.object,
   notifications: PropTypes.object,
+  session: PropTypes.object,
+  events: PropTypes.object,
 };
 
 function select(state) {
@@ -155,6 +136,8 @@ function select(state) {
     linodes: state.api.linodes,
     modal: state.modal,
     notifications: state.notifications,
+    session: state.session,
+    events: state.api.events,
   };
 }
 
