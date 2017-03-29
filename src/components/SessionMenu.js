@@ -23,13 +23,13 @@ export default function SessionMenu(props) {
         </li>
         <hr />
         <li className="list-unstyled SessionMenu-menu-item">
-          <Link to="https://forum.linode.com/">Community Forum</Link>
+          <a href="https://forum.linode.com/" target="_blank">Community Forum</a>
         </li>
         <li className="list-unstyled SessionMenu-menu-item">
-          <Link to="https://linode.com/docs">User documentation</Link>
+          <a href="https://linode.com/docs" target="_blank">User documentation</a>
         </li>
         <li className="list-unstyled SessionMenu-menu-item">
-          <Link to="https://developers.linode.com">Developer documentation</Link>
+          <a href="https://developers.linode.com" target="_blank">Developer documentation</a>
         </li>
         <hr />
         <li className="list-unstyled SessionMenu-menu-item">
