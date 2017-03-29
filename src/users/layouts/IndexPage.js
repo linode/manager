@@ -1,15 +1,22 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import { Button } from '~/components/buttons';
+import md5 from 'md5';
 
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
-
 import { setError } from '~/actions/errors';
 import { users } from '~/api';
-import { SecondaryCard } from '~/components/cards/';
-import md5 from 'md5';
+
+import { Button } from '~/components/buttons';
+import { Card, CardImageHeader } from '~/components/cards/';
+
+import { GRAVATAR_BASE_URL } from '~/constants';
+
+
+function getGravatarURL(email) {
+  return `${GRAVATAR_BASE_URL}${md5(email.trim().toLowerCase())}`;
+}
 
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
@@ -35,7 +42,9 @@ export class IndexPage extends Component {
   }
 
   render() {
-    const { users, dispatch } = this.props;
+    const { users } = this.props;
+
+    // TODO: Calculate gravatar url outside of render
     return (
       <div className="PrimaryPage container">
         <header className="PrimaryPage-header">
@@ -51,26 +60,26 @@ export class IndexPage extends Component {
           <div className="row">
             {Object.values(users.users).map(user =>
               <div className="col-lg-6" key={user.username}>
-                <SecondaryCard
-                  title={user.username}
-                  icon={`https://gravatar.com/avatar/${
-                    user.email && md5(user.email.trim().toLowerCase())
-                  }`}
-                  nav={
-                    <Button
-                      to={`/users/${user.username}`}
-                    >Edit</Button>
+                <Card
+                  header={
+                    <CardImageHeader
+                      title={user.username}
+                      icon={getGravatarURL(user.email)}
+                      nav={
+                        <Button
+                          to={`/users/${user.username}`}
+                        >Edit</Button>
+                      }
+                    />
                   }
-                  iconClass="user-icon"
-                  dispatch={dispatch}
                 >
                   <div className="row">
                     <div className="col-lg-12">
-                      <div className="SecondaryCard-body-label">Email</div>
+                      <div className="Card-bodyLabel">Email</div>
                       <div className="user-email">{user.email}</div>
                     </div>
                   </div>
-                </SecondaryCard>
+                </Card>
               </div>
             )}
           </div>
