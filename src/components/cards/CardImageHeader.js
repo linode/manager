@@ -22,4 +22,3 @@ CardImageHeader.propTypes = {
   title: PropTypes.string,
   nav: PropTypes.node,
 };
-
