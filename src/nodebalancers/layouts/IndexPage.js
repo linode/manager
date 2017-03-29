@@ -9,7 +9,8 @@ import { nodebalancers } from '~/api';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 import CreateHelper from '~/components/CreateHelper';
-import { Table } from '~/components/tables';
+import { List, Table } from '~/components/tables';
+import { ListBody } from '~/components/tables/bodies';
 import {
   ButtonCell,
   DatacenterCell,
@@ -64,23 +65,29 @@ export class IndexPage extends Component {
 
     // TODO: add mass edit controls to nodebalancers
     const renderNodebalancers = (data) => (
-      <Table
-        columns={[
-          {
-            className: 'RowLabelCell',
-            cellComponent: LinkCell,
-            hrefFn: (nodebalancer) => { return `/nodebalancers/${nodebalancer.label}`; },
-          },
-          { cellComponent: IPAddressCell },
-          { cellComponent: DatacenterCell },
-          {
-            cellComponent: ButtonCell,
-            onClick: (nodebalancer) => { this.deleteNodeBalancer(nodebalancer.id); },
-            text: 'Delete',
-          },
-        ]}
-        data={data}
-      />
+      <List>
+        <ListBody>
+          <Table
+            columns={[
+              {
+                className: 'RowLabelCell',
+                cellComponent: LinkCell,
+                hrefFn: (nodebalancer) => { return `/nodebalancers/${nodebalancer.label}`; },
+              },
+              { cellComponent: IPAddressCell },
+              { cellComponent: DatacenterCell },
+              {
+                cellComponent: ButtonCell,
+                onClick: (nodebalancer) => { this.deleteNodeBalancer(nodebalancer.id); },
+                text: 'Delete',
+              },
+            ]}
+            data={data}
+            selectedMap={{}}
+            disableHeader
+          />
+        </ListBody>
+      </List>
     );
 
     return (

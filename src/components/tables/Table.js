@@ -13,7 +13,7 @@ export default function Table(props) {
     id,
     noDataMessage,
     onToggleSelect,
-    selectedMap = {},
+    selectedMap,
   } = props;
 
   let tableHeader;
@@ -60,7 +60,12 @@ export default function Table(props) {
 
 Table.propTypes = {
   className: PropTypes.string,
-  columns: PropTypes.array.isRequired,
+  columns: PropTypes.arrayOf(PropTypes.shape({
+    cellComponent: PropTypes.any,
+    className: PropTypes.string,
+    dataKey: PropTypes.string,
+    formatFn: PropTypes.func,
+  })),
   data: PropTypes.array.isRequired,
   disableHeader: PropTypes.bool,
   id: PropTypes.string,
