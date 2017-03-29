@@ -18,13 +18,13 @@ export class EditUserPage extends Component {
     };
   }
 
-  async onSubmit(stateValues) {
+  async onSubmit(values) {
     const { dispatch } = this.props;
     const { username } = this.props.params;
 
     this.setState({ loading: true });
     try {
-      await dispatch(users.put(stateValues, username));
+      await dispatch(users.put(values, username));
       dispatch(push('/users'));
     } catch (response) {
       const errors = await reduceErrors(response);
@@ -64,7 +64,6 @@ EditUserPage.propTypes = {
 function select(state) {
   return {
     users: state.api.users.users,
-    username: state.authentication.username,
   };
 }
 

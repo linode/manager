@@ -16,6 +16,12 @@ export const config = genConfig({
       endpoint: user => `/account/users/${user}/grants`,
       supports: [ONE, MANY, PUT],
     },
+    _password: {
+      pluarl: 'password',
+      singular: 'password',
+      endpoint: user => `/account/users/${user}/password`,
+      supports: [POST],
+    },
   },
 });
 

@@ -41,7 +41,7 @@ export class UserForm extends Component {
       restricted,
       password,
     } = this.state;
-    console.log(restricted ? "true" : "false");
+
     return (
       <Form
         onSubmit={this.formSubmit}
@@ -70,17 +70,19 @@ export class UserForm extends Component {
             <FormGroupError errors={errors} name="email" />
           </div>
         </FormGroup>
-        <FormGroup errors={errors} name="password" className="row">
-          <label className="col-sm-2 col-form-label">Password</label>
-          <div className="col-sm-6">
-            <PasswordInput
-              onChange={password => this.setState({ password })}
-              value={password}
-              id="new-password"
-            />
-            <FormGroupError errors={errors} name="password" />
-          </div>
-        </FormGroup>
+        {this.props.username ? null :
+          <FormGroup errors={errors} name="password" className="row">
+            <label className="col-sm-2 col-form-label">Password</label>
+            <div className="col-sm-6">
+              <PasswordInput
+                onChange={password => this.setState({ password })}
+                value={password}
+                id="new-password"
+              />
+              <FormGroupError errors={errors} name="password" />
+            </div>
+          </FormGroup>
+        }
         <FormGroup errors={errors} name="restricted" className="row">
           <label className="col-sm-2 col-form-label">Restricted</label>
           <div className="col-sm-6">

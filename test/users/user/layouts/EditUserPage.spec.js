@@ -10,7 +10,7 @@ import { EditUserPage } from '~/users/user/layouts/EditUserPage';
 const { users } = api;
 const user = { testuser1: users.users[0] };
 
-describe('users/layouts/EditUserPage', () => {
+describe('users/user/layouts/EditUserPage', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
@@ -21,6 +21,7 @@ describe('users/layouts/EditUserPage', () => {
   const params = {
     username: 'testuser1',
   };
+
   it('renders UserForm', () => {
     const page = shallow(
       <EditUserPage
@@ -46,10 +47,10 @@ describe('users/layouts/EditUserPage', () => {
     const values = {
       username: 'theUser',
       email: 'user@example.com',
-      password: 'password',
+      restricted: false,
     };
     await page.instance().onSubmit(values);
-    expect(dispatch.calledTwice).to.equal(true);
+    expect(dispatch.callCount).to.equal(2);
     const fn = dispatch.firstCall.args[0];
     await expectRequest(
       fn, `/account/users/${params.username}`, {
