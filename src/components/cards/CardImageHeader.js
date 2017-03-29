@@ -20,7 +20,7 @@ export default function CardImageHeader(props) {
 
   let navItems;
   if (nav) {
-    navItems = (<div className="float-sm-right">{nav}</div>);
+    navItems = (<div className="CardImageHeader-nav float-sm-right">{nav}</div>);
   }
 
   return (

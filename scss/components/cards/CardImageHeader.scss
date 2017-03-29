@@ -4,12 +4,16 @@
     padding: 15px 20px;
 
     &-title {
-        padding: 7px 0;
+        padding: 7px 0 0 0;
     }
 
     &-icon {
         margin-right: 15px;
         height: 40px;
         width: 40px;
+    }
+
+    &-nav {
+        padding: 5px 0 0 0;
     }
 }
