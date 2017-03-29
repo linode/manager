@@ -1,7 +1,6 @@
 .Card {
     background: $white;
     border: $border;
-    padding: 15px 20px;
     position: relative;
     border-radius: 0;
     margin: 0 0 15px 0;
@@ -16,8 +15,10 @@
     }
 
     &-body {
-        &-label {
-            color: $light-black;
-        }
+        padding: 15px 20px;
+    }
+
+    &-bodyLabel {
+        color: $light-black;
     }
 }

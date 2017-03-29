@@ -5,7 +5,7 @@ export default function Card(props) {
   return (
     <div className={`Card ${props.className}`} id={props.id}>
       {props.header}
-      <div>
+      <div className="Card-body">
         {props.children}
       </div>
     </div>
