@@ -21,10 +21,12 @@ export class IndexPage extends Component {
 
   render() {
     const { username } = this.props.params;
-    const tabs = [
-      { name: 'Edit User', link: '' },
-      { name: 'Permissions', link: '/Permissions' },
-    ].map(t => ({ ...t, link: `/users/${username}${t.link}` }));
+    const { restricted } = this.props.users[username];
+    let tabList = [{ name: 'Edit User', link: '' }];
+    if(restricted) {
+      tabList.push({ name: 'Permissions', link: '/Permissions' });
+    }
+    const tabs = tabList.map(t => ({ ...t, link: `/users/${username}${t.link}` }));
 
     return (
       <div className="details-page">
@@ -65,7 +67,9 @@ IndexPage.propTypes = {
 };
 
 function select(state) {
-  return { users: state.api.users };
+  return {
+    users: state.api.users.users,
+  };
 }
 
 export default connect(select)(IndexPage);

@@ -56,6 +56,10 @@ export class PermissionsPage extends Component {
   render() {
     const { global, customer } = this.state;
 
+    if(!customer) {
+      return null;
+    }
+
     return (
       <Form
         onSubmit={this.onSubmit}
