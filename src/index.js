@@ -23,6 +23,7 @@ import Logout from './layouts/Logout';
 import { NotFound } from './components/Error';
 import Linodes from './linodes';
 import Weblish from './linodes/linode/layouts/Weblish';
+import Glish from './linodes/linode/layouts/Glish';
 import NodeBalancers from './nodebalancers';
 import Domains from './domains';
 import Profile from './profile';
@@ -68,6 +69,10 @@ const init = () => {
           <Route
             path="/linodes/:linodeLabel/weblish"
             component={Weblish}
+          />
+          <Route
+            path="/linodes/:linodeLabel/glish"
+            component={Glish}
           />
           {Styleguide}
           <Route

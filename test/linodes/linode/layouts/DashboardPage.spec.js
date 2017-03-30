@@ -173,16 +173,6 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
       .to.equal(lishLink);
   });
 
-  it('renders glish button element', () => {
-    const page = shallow(
-      <DashboardPage
-        linodes={linodes}
-        params={params}
-      />);
-
-    expect(page.find('#glish-button').length).to.equal(1);
-  });
-
   /*
   describe('performance graph', () => {
     it('renders source options', () => {
