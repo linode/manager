@@ -126,7 +126,7 @@ export class IndexPage extends Component {
         <Source
           distribution={distribution}
           backup={backup}
-          selectedTab={sourceTab}
+          selectedIndex={sourceTab}
           distributions={distributions.distributions}
           onTabChange={(_, index) => this.setState({ sourceTab: index })}
           onSourceSelected={(type, id, linodeId) => {
