@@ -22,8 +22,8 @@ export class IndexPage extends Component {
   render() {
     const { username } = this.props.params;
     const { restricted } = this.props.users[username];
-    let tabList = [{ name: 'Edit User', link: '' }];
-    if(restricted) {
+    const tabList = [{ name: 'Edit User', link: '' }];
+    if (restricted) {
       tabList.push({ name: 'Permissions', link: '/Permissions' });
     }
     const tabs = tabList.map(t => ({ ...t, link: `/users/${username}${t.link}` }));

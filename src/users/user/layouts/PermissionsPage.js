@@ -56,7 +56,7 @@ export class PermissionsPage extends Component {
   render() {
     const { global, customer } = this.state;
 
-    if(!customer) {
+    if (!customer) {
       return null;
     }
 
