@@ -117,7 +117,7 @@ export function renderDiskSlot(device, index) {
       <label className="col-sm-2 col-form-label">
         /dev/{AVAILABLE_DISK_SLOTS[index]}:
       </label>
-      <div className="col-xs-9 input-container">
+      <div className="col-sm-9 input-container">
         <Select
           id={`config-device-${AVAILABLE_DISK_SLOTS[index]}`}
           value={device}

@@ -29,7 +29,7 @@ export class IndexPage extends Component {
       <div className="details-page">
         <header className="main-header">
           <div className="container">
-            <div className="float-xs-left">
+            <div className="float-sm-left">
               <h1 title={username}>
                 <Link to={`/users/${username}`}>
                   {username}
