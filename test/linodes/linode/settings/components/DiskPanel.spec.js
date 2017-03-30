@@ -184,7 +184,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
           {...props}
           dispatch={dispatch}
         />);
-      modal.find('.btn-cancel').simulate('click');
+      modal.find('.btn-secondary').simulate('click');
       expect(dispatch.calledOnce).to.equal(true);
       expect(dispatch.calledWith(hideModal())).to.equal(true);
     });
@@ -196,7 +196,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
           dispatch={() => {}}
         />);
       const saveChanges = sandbox.stub(modal.instance(), 'saveChanges');
-      modal.find('.btn-default').simulate('submit');
+      modal.find('button[type="submit"]').simulate('submit');
       expect(saveChanges.calledOnce).to.equal(true);
     });
 
@@ -276,7 +276,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
           dispatch={() => {}}
         />);
       expect(modal.find('p').length).to.equal(1);
-      expect(modal.find('.btn-cancel').length).to.equal(1);
+      expect(modal.find('.btn-secondary').length).to.equal(1);
       expect(modal.find('button').length).to.equal(2);
     });
 
@@ -287,7 +287,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
           {...props}
           dispatch={dispatch}
         />);
-      modal.find('.btn-cancel').simulate('click');
+      modal.find('.btn-secondary').simulate('click');
       expect(dispatch.calledOnce).to.equal(true);
       expect(dispatch.calledWith(hideModal())).to.equal(true);
     });
@@ -395,7 +395,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
           {...props}
           dispatch={dispatch}
         />);
-      modal.find('.btn-cancel').simulate('click');
+      modal.find('.btn-secondary').simulate('click');
       expect(dispatch.calledOnce).to.equal(true);
       expect(dispatch.calledWith(hideModal())).to.equal(true);
     });

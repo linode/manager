@@ -42,6 +42,7 @@ export default function Table(props) {
               // than no records should have an id, and all keys will fallback to
               // index usage
               key={record.id || index}
+              index={index}
               columns={columns}
               record={record}
               onToggleSelect={onToggleSelect}

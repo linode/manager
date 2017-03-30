@@ -1,8 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
+import { Link } from 'react-router';
 
-import { Card } from '~/components/cards';
+import { Card, CardHeader } from '~/components/cards';
 import Tabs from '~/components/Tabs';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
@@ -117,9 +118,10 @@ export class CreatePage extends Component {
     return (
       <div className="container create-page">
         <header>
+          <Link to="/dnsmanager">DNS Manager</Link>
           <h1>Add a zone</h1>
         </header>
-        <Card title="Source">
+        <Card header={<CardHeader title="Source" />}>
           <Tabs
             tabs={tabs}
             onClick={(_, index) => this.setState({ tabIndex: index })}

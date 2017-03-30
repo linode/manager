@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 
-import { SubmitButton, CancelButton } from '~/components/form';
+import { SubmitButton } from '~/components/form';
+import { CancelButton } from '~/components/buttons';
 
 export default class ConfirmModalBody extends Component {
   constructor() {

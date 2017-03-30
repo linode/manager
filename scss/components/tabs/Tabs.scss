@@ -4,7 +4,6 @@
         background: $white;
         border-bottom: $border;
         margin: 0 auto;
-        padding: 0 15px;
     }
 
     [role="tablist"].form-tab-list [role="tab"] {
@@ -50,8 +49,6 @@
     
     &-container {
         @extend .container;
-
-        padding: 0 15px 15px 15px;
         margin-top: 15px;
     }
 }

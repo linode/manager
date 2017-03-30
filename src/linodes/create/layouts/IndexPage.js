@@ -1,15 +1,14 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
+import { Link } from 'react-router';
 
 import Source from '../components/Source';
 import Plan from '~/linodes/components/Plan';
 import Datacenter from '~/components/Datacenter';
 import Details from '../components/Details';
-import { Card } from '~/components/cards';
+import { Card, CardHeader } from '~/components/cards';
 import { linodes } from '~/api';
-import { actions as linodeActions } from '~/api/configs/linodes';
-import { randomInitialProgress } from '~/api/linodes';
 import { setError } from '~/actions/errors';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
@@ -69,9 +68,7 @@ export class IndexPage extends Component {
     this.setState({ loading: true });
 
     try {
-      const { id } = await this.createLinode({ group, label, password, backups });
-      dispatch(linodeActions.one({ __progress: randomInitialProgress() }, id));
-
+      await this.createLinode({ group, label, password, backups });
       dispatch(push(`/linodes/${label}`));
     } catch (response) {
       const errors = await reduceErrors(response);
@@ -124,6 +121,7 @@ export class IndexPage extends Component {
 
     return (
       <div className="container create-page">
+        <Link to="/linodes">Linodes</Link>
         <h1>Add a Linode</h1>
         <Source
           distribution={distribution}
@@ -152,7 +150,7 @@ export class IndexPage extends Component {
           disabled={backup !== null}
           onDatacenterSelected={id => this.setState({ datacenter: id })}
         />
-        <Card title="Plan">
+        <Card header={<CardHeader title="Plan" />}>
           <Plan
             selected={type}
             types={types.types}

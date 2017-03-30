@@ -5,7 +5,7 @@ import { FormGroup } from '~/components/form';
 import { ErrorSummary, reduceErrors } from '~/errors';
 import { linodes } from '~/api';
 import { cancelBackup } from '~/api/backups';
-import { Card } from '~/components/cards';
+import { Card, CardHeader } from '~/components/cards';
 import { ConfirmModalBody } from '~/components/modals';
 import { Form, SubmitButton } from '~/components/form';
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
@@ -49,7 +49,7 @@ export class SettingsPage extends Component {
 
     return (
       <div>
-        <Card title="Schedule">
+        <Card header={<CardHeader title="Schedule" />}>
           <Form onSubmit={() => this.saveChanges()}>
             <FormGroup name="window" errors={errors} className="row">
               <label htmlFor="window" className="col-sm-2 col-form-label">Time of day (EST):</label>
@@ -104,7 +104,7 @@ export class SettingsPage extends Component {
             </FormGroup>
           </Form>
         </Card>
-        <Card title="Cancel backup service">
+        <Card header={<CardHeader title="Cancel backup service" />}>
           <p>This will remove all existing backups.</p>
           <button
             id="backup-settings-cancel"

@@ -3,7 +3,8 @@ import React, { PropTypes, Component } from 'react';
 import { dnszones } from '~/api';
 import { ModalFormGroup } from '~/components/form';
 import SelectDNSSeconds from './SelectDNSSeconds';
-import { Form, Input, Select, SubmitButton, CancelButton } from '~/components/form';
+import { Form, Input, Select, SubmitButton } from '~/components/form';
+import { CancelButton } from '~/components/buttons';
 import { reduceErrors, ErrorSummary } from '~/errors';
 
 export default class EditSRVRecord extends Component {

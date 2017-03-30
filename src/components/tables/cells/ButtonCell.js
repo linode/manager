@@ -11,7 +11,12 @@ export default function ButtonCell(props) {
     isDisabledFn,
     text,
     onClick,
+    hrefFn,
   } = column;
+  let to;
+  if (hrefFn) {
+    to = hrefFn(record);
+  }
 
   let disabled = false;
   if (isDisabledFn) {
@@ -24,8 +29,11 @@ export default function ButtonCell(props) {
         className={buttonClassName}
         disabled={disabled}
         onClick={() => {
-          onClick(record);
+          if (onClick) {
+            onClick(record);
+          }
         }}
+        to={to}
       >{text}</Button>
     </TableCell>
   );
