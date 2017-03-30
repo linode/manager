@@ -27,6 +27,7 @@ export default class Dropdown extends Component {
         type="button"
         key={name}
         className="btn dropdown-item"
+        // This onMouseDown is intentional. See https://github.com/linode/manager/pull/223
         onMouseDown={action}
       >{name}</button>
     );
