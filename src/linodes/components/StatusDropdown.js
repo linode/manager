@@ -33,6 +33,13 @@ export default class StatusDropdown extends Component {
     };
   }
 
+  componentDidMount() {
+    const { linode } = this.props;
+    if (linode.status === 'provisioning') {
+      this.startLinodePolling('provisioning');
+    }
+  }
+
   componentWillUpdate(nextProps) {
     const { linode } = nextProps;
 
