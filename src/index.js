@@ -22,6 +22,7 @@ import Domains from '~/domains';
 import Layout from '~/layouts/Layout';
 import Logout from '~/layouts/Logout';
 import OAuthCallbackPage from '~/layouts/OAuth';
+import Glish from './linodes/linode/layouts/Glish';
 import Linodes from '~/linodes';
 import StackScripts from '~/linodes/stackscripts';
 import Weblish from '~/linodes/linode/layouts/Weblish';
@@ -133,6 +134,10 @@ const init = () => {
             <Route
               path="/linodes/:linodeLabel/weblish"
               component={Weblish}
+            />
+            <Route
+              path="/linodes/:linodeLabel/glish"
+              component={Glish}
             />
             <Route
               onChange={() => store.dispatch(hideModal())}
