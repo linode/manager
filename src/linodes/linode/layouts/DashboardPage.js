@@ -24,6 +24,7 @@ import {
 import { ZONES } from '~/constants';
 import Region from '~/linodes/components/Region';
 import DistroStyle from '~/linodes/components/DistroStyle';
+import GlishLaunch from '~/linodes/components/GlishLaunch';
 import WeblishLaunch from '~/linodes/components/WeblishLaunch';
 
 import { selectLinode } from '../utilities';
@@ -189,7 +190,8 @@ export class DashboardPage extends Component {
             </FormGroup>
             <FormGroup className="row" name="list-form">
               <label className="col-sm-4 col-form-label" htmlFor="lish-input">
-                Console
+                Weblish
+                <div><small className="text-muted">Console</small></div>
               </label>
               <div className="col-sm-8">
                 <div className="input-group">
@@ -207,6 +209,20 @@ export class DashboardPage extends Component {
                 </div>
                 <small className="text-muted">
                   Lish listens on ports 22, 443, and 2200.
+                </small>
+              </div>
+            </FormGroup>
+            <FormGroup className="row">
+              <label className="col-sm-4 col-form-label" htmlFor="lish-input">
+                Glish
+                <div><small className="text-muted">NoVNC Console</small></div>
+              </label>
+              <div className="col-sm-8">
+                <div className="input-group-btn">
+                  <GlishLaunch linode={linode} />
+                </div>
+                <small className="text-muted">
+                  Equivalent to plugging a monitor and keyboard into your server.
                 </small>
               </div>
             </FormGroup>
