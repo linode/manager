@@ -41,6 +41,7 @@ CardImageHeader.propTypes = {
   icon: PropTypes.string,
   iconClass: PropTypes.string,
   title: PropTypes.string,
+  subtitle: PropTypes.string,
   nav: PropTypes.node,
 };
 

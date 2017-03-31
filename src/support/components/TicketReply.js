@@ -53,3 +53,8 @@ export default function TicketReply(props) {
     </Card>
   );
 }
+
+TicketReply.propTypes = {
+  createdField: PropTypes.string.isRequired,
+  reply: PropTypes.object.isRequired,
+};

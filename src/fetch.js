@@ -26,6 +26,7 @@ export function fetch(token, _path, _options) {
    */
   const _headers = _options && _options.headers || {};
   const fetchRef = module.exports.rawFetch;
+
   const options = {
     mode: 'cors',
     ..._options,
@@ -33,9 +34,20 @@ export function fetch(token, _path, _options) {
       ..._headers,
       Accept: 'application/json',
       Authorization: `token ${token}`,
-      'Content-Type': (_headers && _headers['Content-Type'] || 'application/json'),
     },
   };
+
+  let contentType = 'application/json';
+  if (_headers && _headers['Content-Type']) {
+    contentType = _headers['Content-Type'];
+  } else if (_options && _options.body instanceof FormData) {
+    contentType = undefined;
+  }
+
+  // FormData 'body's need to be able to set their own Content-Type header.
+  if (contentType) {
+    options.headers['Content-Type'] = contentType;
+  }
 
   if (options.headers['X-Filter']) {
     options.headers['X-Filter'] = JSON.stringify(options.headers['X-Filter']);

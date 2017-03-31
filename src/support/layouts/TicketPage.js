@@ -40,7 +40,7 @@ export class TicketPage extends Component {
     this.setState({ errors: {}, saving: true });
 
     try {
-      if (reply) {
+      if (description) {
         await dispatch(tickets.replies.post({ description }, [ticket.id]));
         this.setState({ reply: '' });
       }
@@ -51,14 +51,13 @@ export class TicketPage extends Component {
         if ((attachment.size / (1024 * 1024)) < MAX_UPLOAD_SIZE_MB) {
           await dispatch(addTicketAttachment(ticket.id, attachment));
         } else {
-          this.setState({
-            errors: { attachments: [{ reason: `File size must be under ${MAX_UPLOAD_SIZE_MB} MB` }] },
-          });
+          const error = `File size must be under ${MAX_UPLOAD_SIZE_MB} MB`;
+          this.setState({ errors: { attachments: [{ reason: error }] } });
 
           return;
         }
       }
-        
+
       this.setState({ saving: false });
     } catch (response) {
       if (!response.json) {
@@ -71,8 +70,57 @@ export class TicketPage extends Component {
     }
   }
 
-  render() {
+  renderTicketResponseForm() {
     const { errors, saving, reply } = this.state;
+
+    return (
+      <Card>
+        <Form onSubmit={this.onSubmit}>
+          <FormGroup>
+            <label htmlFor="reply" className="row-label">Write a reply:</label>
+            <textarea
+              name="reply"
+              id="reply"
+              className="textarea-lg"
+              onChange={this.onChange}
+              value={reply}
+            />
+            <FormGroupError inline={false} errors={errors} name="description" />
+          </FormGroup>
+          <FormGroup errors={errors}>
+            <div>
+              <label htmlFor="attachments" className="row-label">Add attachments:</label>
+            </div>
+            <Input
+              multiple
+              name="attachments"
+              id="attachments"
+              type="file"
+              onChange={(e) => this.setState({ attachments: e.target.files })}
+            />
+            <FormGroupError inline={false} errors={errors} name="attachments" />
+          </FormGroup>
+          <div className="clearfix">
+            <div className="float-sm-right">
+              <SubmitButton disabled={saving}>Submit</SubmitButton>
+            </div>
+          </div>
+          <ErrorSummary errors={errors} />
+        </Form>
+      </Card>
+    );
+  }
+
+  renderTicketClosed() {
+    return (
+      <Card>
+        This ticket has been closed. If you are still experiencing an issue,
+        please <Link to="/support/create">open a new ticket</Link>.
+      </Card>
+    );
+  }
+
+  render() {
     const { ticket, replies } = this.props;
 
     return (
@@ -91,40 +139,9 @@ export class TicketPage extends Component {
               {Object.values(replies).map(reply => (
                 <TicketReply reply={reply} createdField="created" key={reply.id} />
               ))}
-              <Card>
-                <Form onSubmit={this.onSubmit}>
-                  <FormGroup>
-                    <label htmlFor="reply" className="row-label">Write a reply:</label>
-                    <textarea
-                      name="reply"
-                      id="reply"
-                      className="textarea-lg"
-                      onChange={this.onChange}
-                      value={reply}
-                    />
-                    <FormGroupError inline={false} errors={errors} name="description" />
-                  </FormGroup>
-                  <FormGroup errors={errors}>
-                    <div>
-                      <label htmlFor="attachments" className="row-label">Add attachments:</label>
-                    </div>
-                    <Input
-                      multiple
-                      name="attachments"
-                      id="attachments"
-                      type="file"
-                      onChange={(e) => this.setState({ attachments: e.target.files })}
-                    />
-                    <FormGroupError inline={false} errors={errors} name="attachments" />
-                  </FormGroup>
-                  <div className="clearfix">
-                    <div className="float-sm-right">
-                      <SubmitButton disabled={saving}>Submit</SubmitButton>
-                    </div>
-                  </div>
-                  <ErrorSummary errors={errors} />
-                </Form>
-              </Card>
+              {ticket.status === 'closed' ?
+                this.renderTicketClosed() :
+                this.renderTicketResponseForm()}
             </div>
             <div className="col-lg-5 col-md-12">
               <TicketHelper />
@@ -139,6 +156,7 @@ export class TicketPage extends Component {
 TicketPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   ticket: PropTypes.object.isRequired,
+  replies: PropTypes.object.isRequired,
 };
 
 function select(state, props) {

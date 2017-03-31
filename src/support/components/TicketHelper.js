@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
 
 import { Card, CardHeader } from '~/components/cards';
@@ -141,3 +141,7 @@ export default class TicketHelper extends Component {
     );
   }
 }
+
+TicketHelper.propTypes = {
+  displayHeader: PropTypes.bool,
+};
