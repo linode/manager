@@ -21,9 +21,18 @@ export class IndexPage extends Component {
     }
   }
 
+  constructor(props) {
+    super(props);
+    const { username } = props.params;
+
+    this.state = {
+      restricted: props.users[username].restricted || false,
+    };
+  }
+
   render() {
     const { username } = this.props.params;
-    const { restricted } = this.props.users[username];
+    const { restricted } = this.state;
     const tabList = [{ name: 'Edit User', link: '' }];
     if (restricted) {
       tabList.push({ name: 'Permissions', link: '/Permissions' });
@@ -35,6 +44,7 @@ export class IndexPage extends Component {
         <header className="main-header">
           <div className="container">
             <div className="float-xs-left">
+              <Link to="/users">Users</Link>
               <h1 title={username}>
                 <Link to={`/users/${username}`}>
                   {username}

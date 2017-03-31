@@ -9,11 +9,13 @@ import { actions as userActions } from '~/api/configs/users';
 import { UserForm } from '../../components/UserForm';
 
 export class EditUserPage extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+    const { username } = props.params;
 
     this.onSubmit = this.onSubmit.bind(this);
     this.state = {
+      restricted: props.users[username].restricted || false,
       loading: false,
       errors: {},
     };
@@ -38,7 +40,7 @@ export class EditUserPage extends Component {
 
   render() {
     const { username } = this.props.params;
-    const { restricted } = this.props.users[username];
+    const { restricted } = this.state.restricted;
     const { errors } = this.state;
 
     // TODO: remove once primary key stops changing
