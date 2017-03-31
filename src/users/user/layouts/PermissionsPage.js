@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { users } from '~/api';
-import { Card } from '~/components/cards';
+import { Card, CardHeader } from '~/components/cards';
 import { Form,
   Checkbox,
   Checkboxes,
@@ -65,7 +65,11 @@ export class PermissionsPage extends Component {
         onSubmit={this.onSubmit}
       >
         <Card
-          title="Global permissions"
+          header={
+            <CardHeader
+              title="Global permissions"
+            />
+          }
         >
           <Checkboxes>
             <Checkbox

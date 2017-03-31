@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { Card } from '~/components/cards';
+import { Card, CardHeader } from '~/components/cards';
 import { Checkbox } from '~/components/form';
 
 export class PermissionCard extends Component {
@@ -17,7 +17,11 @@ export class PermissionCard extends Component {
     const { section, updateGlobal } = this.props;
     return (
       <Card
-        title={this.state.title}
+        header={
+          <CardHeader
+            title={this.state.title}
+          />
+        }
       >
         <Checkbox
           id={`permission-global-${section}`}

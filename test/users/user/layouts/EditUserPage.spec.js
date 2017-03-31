@@ -50,7 +50,7 @@ describe('users/user/layouts/EditUserPage', () => {
       restricted: false,
     };
     await page.instance().onSubmit(values);
-    expect(dispatch.callCount).to.equal(2);
+    expect(dispatch.callCount).to.equal(3);
 
     const fn = dispatch.firstCall.args[0];
     await expectRequest(

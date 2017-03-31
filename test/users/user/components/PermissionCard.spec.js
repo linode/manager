@@ -20,7 +20,7 @@ describe('users/user/components/PermissionCard', () => {
     expect(header.text()).to.equal('The Title');
     const label = page.find('label').at(0);
     expect(label.text()).to.equal('details here');
-    const checkbox = page.find('#permission-global-tester');
+    const checkbox = page.find('#permission-global-tester').at(0);
     expect(checkbox.props().checked).to.equal(false);
   });
 });
