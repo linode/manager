@@ -45,10 +45,10 @@ export default class TicketHelper extends Component {
         <h3 className="sub-header">Frequently Asked Questions</h3>
         <ul className="list-unstyled">
           <li>
-            <LinkButton onClick={this.toggleSection('availibility')}>
+            <LinkButton onClick={this.toggleSection('availibility')} id="availibility-button">
               When will there be availibility in Tokyo, Singapore, or Frankfurt?
             </LinkButton>
-            <p className={this.state.hidden.availibility ? 'hidden' : ''}><small>
+            <p className={this.state.hidden.availibility ? 'hidden' : ''} id="availibility"><small>
               {/* eslint-disable max-len */}
               Our Singapore and Frankfurt datacenters are now available and we are currently considering expansion in Tokyo. You can stay up-to-date on all datacenter news on <Link to="https://blog.linode.com">our blog</Link>.
               {/* eslint-enable max-len */}

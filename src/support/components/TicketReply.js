@@ -3,10 +3,24 @@ import moment from 'moment';
 
 import { Card, CardImageHeader } from '~/components/cards';
 
-function paragraphs(text) {
-  const ps = text.split('\n');
+function getLineBreakCharacter(text) {
+  // Check the longer one first because it contains the second one.
+  const lineBreakCharacters = ['\r\n', '\n'];
+  for (let i = 0; i < lineBreakCharacters.length; i++) {
+    const lineBreakCharacter = lineBreakCharacters[i];
+    if (text.indexOf(lineBreakCharacter) !== -1) {
+      return lineBreakCharacter;
+    }
+  }
 
-  if (ps.length === 1) {
+  return null;
+}
+
+function paragraphs(text) {
+  const lineBreakCharacter = getLineBreakCharacter(text);
+  const ps = text.split(lineBreakCharacter + lineBreakCharacter);
+
+  if (!lineBreakCharacter || ps.length === 1) {
     return text;
   }
 
@@ -22,7 +36,7 @@ function paragraphs(text) {
       const lastPreLine = _.findIndex(afterToEnd, p => p.indexOf('    ') !== 0);
       const safeLastPreLine = lastPreLine === -1 ? afterToEnd.length : lastPreLine;
       const preLines = _.slice(afterToEnd, 0, safeLastPreLine);
-      const pre = preLines.join('\n');
+      const pre = preLines.join(lineBreakCharacter);
       elements.push(<pre key={i}>{pre}</pre>);
 
       // Skip past rest of pre chunk
@@ -31,7 +45,9 @@ function paragraphs(text) {
 
       return <pre>{text}</pre>;
     } else {
-      elements.push(<p key={i}>{p}</p>);
+      const linesInP = p.split(lineBreakCharacter).map((line, j) =>
+        <span key={j}>{j > 0 ? <br /> : null}{line}</span>);
+      elements.push(<p key={i}>{linesInP}</p>);
     }
   }
 
