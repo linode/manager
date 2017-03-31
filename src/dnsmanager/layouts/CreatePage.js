@@ -112,23 +112,6 @@ export class CreatePage extends Component {
           />
         ),
       },
-      {
-        name: 'Import',
-        children: (
-          <ImportZone
-            onSubmit={(e) => this.addZone(e, 'importZone')}
-            onChange={(e) => this.zoneStateChange(e, 'importZone')}
-            axfr_ips={this.state.importZone.axfr_ips}
-            dnszone={this.state.importZone.dnszone}
-            loading={true}
-            errors={this.state.importZone.errors}
-          />
-        ),
-      },
-      {
-        name: 'Clone',
-        children: 'TODO',
-      },
     ];
 
     return (
