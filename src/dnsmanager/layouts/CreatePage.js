@@ -10,7 +10,6 @@ import { setTitle } from '~/actions/title';
 import { dnszones } from '~/api';
 import NewMasterZone from '../components/NewMasterZone';
 import NewSlaveZone from '../components/NewSlaveZone';
-import ImportZone from '../components/ImportZone';
 import { reduceErrors } from '~/errors';
 
 export class CreatePage extends Component {
@@ -32,12 +31,6 @@ export class CreatePage extends Component {
         dnszone: '',
         master_ips: [],
         type: 'slave',
-        loading: false,
-        errors: {},
-      },
-      importZone: {
-        dnszone: '',
-        axfr_ips: [],
         loading: false,
         errors: {},
       },

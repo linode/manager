@@ -15,7 +15,7 @@ export default function NewImportZone(props) {
             value={props.dnszone}
             placeholder="example.com"
             onChange={props.onChange('dnszone')}
-            disabled={true}
+            disabled
           />
         </div>
         <FormGroupError errors={props.errors} name="dnszone" />
@@ -28,7 +28,7 @@ export default function NewImportZone(props) {
             value={props.axfr_ips}
             placeholder="44.55.66.77"
             onChange={props.onChange('axfr_ips')}
-            disabled={true}
+            disabled
           />
           <div>
             <small className="text-muted">
