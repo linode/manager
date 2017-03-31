@@ -14,24 +14,18 @@ export default function Tabs(props) {
     tabs,
   } = props;
 
-  let searchPath;
   let selected;
   if (selectedIndex !== undefined) {
-    searchPath = tabs[selectedIndex].link;
+    selected = selectedIndex;
   } else if (pathname) {
-    searchPath = pathname;
-  }
-
-  if (searchPath) {
     selected = tabs.reduce(function (knownIndex, { link }, currentIndex) {
-      return searchPath.indexOf(link) === 0 ? currentIndex : knownIndex;
+      return pathname.indexOf(link) === 0 ? currentIndex : knownIndex;
     }, 0);
   } else {
     selected = 0;
   }
 
   const componentName = isSubTabs ? 'SubTabs' : 'Tabs';
-
   return (
     <ReactTabs
       selectedIndex={selected}
