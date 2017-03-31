@@ -105,14 +105,6 @@ export class CreatePage extends Component {
           />
         ),
       },
-      {
-        name: 'Import',
-        children: 'TODO',
-      },
-      {
-        name: 'Clone',
-        children: 'TODO',
-      },
     ];
 
     return (
