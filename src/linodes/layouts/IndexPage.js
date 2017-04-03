@@ -141,7 +141,6 @@ export class IndexPage extends Component {
                 name={group.name}
               >
                 <Table
-                  // List Group / Table stuff
                   columns={[
                     { cellComponent: CheckboxCell },
                     {
