@@ -113,7 +113,7 @@ export class TicketPage extends Component {
 
   renderTicketClosed() {
     return (
-      <Card>
+      <Card id="ticket-closed">
         This ticket has been closed. If you are still experiencing an issue,
         please <Link to="/support/create">open a new ticket</Link>.
       </Card>

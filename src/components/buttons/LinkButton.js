@@ -3,7 +3,7 @@ import React, { PropTypes } from 'react';
 import Button from './Button';
 
 export default function LinkButton(props) {
-  const { children, disabled, to, onClick, className } = props;
+  const { children, disabled, to, onClick, className, id } = props;
 
   return (
     <Button
@@ -11,6 +11,7 @@ export default function LinkButton(props) {
       buttonClass="btn-link"
       onClick={onClick}
       to={to}
+      id={id}
       disabled={disabled}
     >{children}</Button>
   );
@@ -22,9 +23,5 @@ LinkButton.propTypes = {
   to: PropTypes.string,
   onClick: PropTypes.func,
   className: PropTypes.string,
-};
-
-LinkButton.defaultProps = {
-  disabled: false,
-  className: '',
+  id: PropTypes.string,
 };

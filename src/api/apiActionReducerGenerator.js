@@ -311,5 +311,5 @@ function _thunkFetchFile(method) {
 
 export const thunkFetchFile = {
   post: _thunkFetchFile('POST'),
-  put: _thunkFetchFile('POST'),
+  put: _thunkFetchFile('PUT'),
 };

@@ -3,7 +3,7 @@ import moment from 'moment';
 
 import { Card, CardImageHeader } from '~/components/cards';
 
-function getLineBreakCharacter(text) {
+export function getLineBreakCharacter(text) {
   // Check the longer one first because it contains the second one.
   const lineBreakCharacters = ['\r\n', '\n'];
   for (let i = 0; i < lineBreakCharacters.length; i++) {
@@ -16,11 +16,11 @@ function getLineBreakCharacter(text) {
   return null;
 }
 
-function paragraphs(text) {
+export function stringToParagraphs(text) {
   const lineBreakCharacter = getLineBreakCharacter(text);
   const ps = text.split(lineBreakCharacter + lineBreakCharacter);
 
-  if (!lineBreakCharacter || ps.length === 1) {
+  if (!lineBreakCharacter) {
     return text;
   }
 
@@ -30,19 +30,7 @@ function paragraphs(text) {
 
     if (p === '') {
       elements.push(<br key={i} />);
-    } else if (p.indexOf('    ') === 0) {
-      /* TODO: more precise code formatting.
-      const afterToEnd = _.slice(ps, i);
-      const lastPreLine = _.findIndex(afterToEnd, p => p.indexOf('    ') !== 0);
-      const safeLastPreLine = lastPreLine === -1 ? afterToEnd.length : lastPreLine;
-      const preLines = _.slice(afterToEnd, 0, safeLastPreLine);
-      const pre = preLines.join(lineBreakCharacter);
-      elements.push(<pre key={i}>{pre}</pre>);
-
-      // Skip past rest of pre chunk
-      i += safeLastPreLine;
-      */
-
+    } else if (p.indexOf('    ') !== -1) {
       return <pre>{text}</pre>;
     } else {
       const linesInP = p.split(lineBreakCharacter).map((line, j) =>
@@ -61,7 +49,7 @@ export default function TicketReply(props) {
   const created = moment.utc(props.reply[props.createdField]).fromNow();
   const header = <CardImageHeader title={createdBy} subtitle={created} />;
 
-  const description = paragraphs(props.reply.description);
+  const description = stringToParagraphs(props.reply.description);
 
   return (
     <Card header={header} className="TicketReply">
