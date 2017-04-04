@@ -793,9 +793,10 @@ export const OAUTH_SUBSCOPES = ['view', 'modify', 'create', 'delete'];
 
 export const OAUTH_SCOPES = [
   'linodes', 'dnszones', 'nodebalancers', 'images', 'stackscripts', 'longview', 'events', 'tokens',
-  'clients', 'account', 'users',
+  'clients', 'account', 'users', 'tickets',
 ];
 
-export const MAX_UPLOAD_SIZE_MB = 1;
+// Set by API, but we can enforce it here to be nice.
+export const MAX_UPLOAD_SIZE_MB = 5;
 
 export const GRAVATAR_BASE_URL = 'https://gravatar.com/avatar/';

@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 
 
 export default function CardImageHeader(props) {
-  const { icon, iconClass, nav, title } = props;
+  const { icon, iconClass, nav, title, subtitle } = props;
 
   let img;
   if (icon) {
@@ -15,7 +15,12 @@ export default function CardImageHeader(props) {
 
   let headerTitle;
   if (title) {
-    headerTitle = (<h2 className="CardImageHeader-title float-sm-left">{title}</h2>);
+    headerTitle = (
+      <div className="float-sm-left">
+        <h2 className="CardImageHeader-title">{title}</h2>
+        {subtitle ? <div><small className="text-muted">{subtitle}</small></div> : null}
+      </div>
+    );
   }
 
   let navItems;
@@ -36,6 +41,7 @@ CardImageHeader.propTypes = {
   icon: PropTypes.string,
   iconClass: PropTypes.string,
   title: PropTypes.string,
+  subtitle: PropTypes.string,
   nav: PropTypes.node,
 };
 

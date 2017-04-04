@@ -64,11 +64,16 @@ textarea {
     outline: none;
     padding: 6px 8px;
     resize: both;
-}
 
-textarea.textarea-md {
-    min-width: 600px;
-    min-height: 200px;
+    &.textarea-md {
+        min-width: 600px;
+        min-height: 200px;
+    }
+
+    &.textarea-lg {
+        min-height: 200px;
+        width: 100%;
+    }
 }
 
 .form-control-feedback {

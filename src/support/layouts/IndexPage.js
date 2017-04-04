@@ -23,6 +23,33 @@ const TICKET_LINK_MAP = {
   dnszone: getDNSZoneRedirectUrl,
 };
 
+export function renderTicketCreationInfo(ticket) {
+  const entity = ticket.entity || {};
+  const to = TICKET_LINK_MAP[entity.type];
+
+  let link = <strong>{entity.label}</strong>;
+  if (to) {
+    link = <Link to={to(entity)}>{entity.label}</Link>;
+  }
+
+  return (
+    <div>
+      Opened
+      {!ticket.opened_by ? null : (
+        <span>
+          &nbsp;by <strong id={`opened-by-${ticket.id}`}>{ticket.opened_by}</strong>
+        </span>
+      )}
+      &nbsp;<span id={`opened-${ticket.id}`}>{moment.utc(ticket.opened).fromNow()}</span>
+      {ticket.entity ? (
+        <span>
+          &nbsp;regarding <span id={`regarding-${ticket.id}`}>{link}</span>
+        </span>
+      ) : null}
+    </div>
+  );
+}
+
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
     try {
@@ -41,35 +68,11 @@ export class IndexPage extends Component {
     dispatch(setTitle('Support'));
   }
 
-  renderLink(ticket) {
-    const { entity } = ticket;
-    const to = TICKET_LINK_MAP[entity.type];
-
-    if (to) {
-      return <Link to={to(entity)}>{entity.label}</Link>;
-    }
-
-    return <strong>{entity.label}</strong>;
-  }
-
   renderLabelCell = ({ record: ticket }) => {
     return (
       <TableCell column={{ className: 'RowLabelCell' }} record={ticket}>
         <Link title={ticket.id} to={`/support/${ticket.id}`}>{ticket.summary}</Link>
-        <small>
-          Opened
-          {!ticket.opened_by ? null : (
-            <span>
-              &nbsp;by <strong id={`opened-by-${ticket.id}`}>{ticket.opened_by}</strong>
-            </span>
-          )}
-          &nbsp;<span id={`opened-${ticket.id}`}>{moment.utc(ticket.opened).fromNow()}</span>
-          {ticket.entity ? (
-            <span>
-              &nbsp;regarding <span id={`regarding-${ticket.id}`}>{this.renderLink(ticket)}</span>
-            </span>
-           ) : null}
-        </small>
+        <small>{renderTicketCreationInfo(ticket)}</small>
       </TableCell>
     );
   }
