@@ -30,7 +30,7 @@ export default class EditSOARecord extends Component {
   }
 
   onSubmit = async () => {
-    const { dispatch } = this.props;
+    const { dispatch, close } = this.props;
     const {
       group, zone, defaultTTL, refreshRate, retryRate, expireTime, email,
     } = this.state;
@@ -49,7 +49,7 @@ export default class EditSOARecord extends Component {
       }, this.props.zone.id));
 
       this.setState({ saving: false });
-      this.props.close();
+      close(zone);
     } catch (response) {
       if (!response.json) {
         // eslint-disable-next-line no-console

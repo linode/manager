@@ -3,6 +3,7 @@ import sinon from 'sinon';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
 
+import _ from 'lodash';
 import { formatDNSSeconds } from '~/dnsmanager/components/SelectDNSSeconds';
 import { ZonePage } from '~/dnsmanager/layouts/ZonePage';
 import { api } from '@/data';
@@ -26,6 +27,10 @@ describe('dnsmanager/layouts/ZonePage', () => {
         dispatch={dispatch}
         params={{ dnszoneLabel: currentZone.dnszone }}
         dnszones={dnszones}
+        currentDNSZone={{
+          ...currentZone,
+          _groupedRecords: _.groupBy(currentZone._records.records, 'type'),
+        }}
       />
     );
 
@@ -47,6 +52,10 @@ describe('dnsmanager/layouts/ZonePage', () => {
         dispatch={dispatch}
         params={{ dnszoneLabel: currentZone.dnszone }}
         dnszones={dnszones}
+        currentDNSZone={{
+          ...currentZone,
+          _groupedRecords: _.groupBy(currentZone._records.records, 'type'),
+        }}
       />
     );
 
@@ -73,6 +82,10 @@ describe('dnsmanager/layouts/ZonePage', () => {
         dispatch={dispatch}
         params={{ dnszoneLabel: currentZone.dnszone }}
         dnszones={dnszones}
+        currentDNSZone={{
+          ...currentZone,
+          _groupedRecords: _.groupBy(currentZone._records.records, 'type'),
+        }}
       />
     );
 
@@ -96,6 +109,10 @@ describe('dnsmanager/layouts/ZonePage', () => {
         dispatch={dispatch}
         params={{ dnszoneLabel: currentZone.dnszone }}
         dnszones={dnszones}
+        currentDNSZone={{
+          ...currentZone,
+          _groupedRecords: _.groupBy(currentZone._records.records, 'type'),
+        }}
       />
     );
 
@@ -120,6 +137,10 @@ describe('dnsmanager/layouts/ZonePage', () => {
         dispatch={dispatch}
         params={{ dnszoneLabel: currentZone.dnszone }}
         dnszones={dnszones}
+        currentDNSZone={{
+          ...currentZone,
+          _groupedRecords: _.groupBy(currentZone._records.records, 'type'),
+        }}
       />
     );
 
@@ -144,6 +165,10 @@ describe('dnsmanager/layouts/ZonePage', () => {
         dispatch={dispatch}
         params={{ dnszoneLabel: currentZone.dnszone }}
         dnszones={dnszones}
+        currentDNSZone={{
+          ...currentZone,
+          _groupedRecords: _.groupBy(currentZone._records.records, 'type'),
+        }}
       />
     );
 
@@ -169,6 +194,10 @@ describe('dnsmanager/layouts/ZonePage', () => {
         dispatch={dispatch}
         params={{ dnszoneLabel: currentZone.dnszone }}
         dnszones={dnszones}
+        currentDNSZone={{
+          ...currentZone,
+          _groupedRecords: _.groupBy(currentZone._records.records, 'type'),
+        }}
       />
     );
 
@@ -195,6 +224,10 @@ describe('dnsmanager/layouts/ZonePage', () => {
         dispatch={dispatch}
         params={{ dnszoneLabel: currentZone.dnszone }}
         dnszones={dnszones}
+        currentDNSZone={{
+          ...currentZone,
+          _groupedRecords: _.groupBy(currentZone._records.records, 'type'),
+        }}
       />
     );
 
