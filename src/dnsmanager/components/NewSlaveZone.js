@@ -29,7 +29,7 @@ export default function NewSlaveZone(props) {
           />
           <div>
             <small className="text-muted">
-              Use semicolons or new lines to delimit multiple IP addresses.
+              Use semicolons or new lines to separate multiple IP addresses.
             </small>
           </div>
         </div>
