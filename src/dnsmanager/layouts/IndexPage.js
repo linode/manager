@@ -6,11 +6,11 @@ import _ from 'lodash';
 
 import { setError } from '~/actions/errors';
 import { showModal, hideModal } from '~/actions/modal';
-import ConfirmModalBody from '~/components/modals/ConfirmModalBody';
 import { List, Table } from '~/components/tables';
 import { MassEditControl } from '~/components/tables/controls';
 import { ListHeader } from '~/components/tables/headers';
 import { ListBody, ListGroup } from '~/components/tables/bodies';
+import DeleteModalBody from '~/components/modals/DeleteModalBody';
 import {
   ButtonCell,
   CheckboxCell,
@@ -47,9 +47,9 @@ export class IndexPage extends Component {
   }
 
   remove(zones) {
-    const { dispatch } = this.props;
+    const { dispatch, selected, dnszones } = this.props;
     dispatch(showModal('Confirm deletion',
-      <ConfirmModalBody
+      <DeleteModalBody
         buttonText="Delete selected zones"
         onOk={() => {
           const zoneIds = zones.map((zone) => zone.id);
@@ -60,11 +60,12 @@ export class IndexPage extends Component {
           dispatch(toggleSelected(zoneIds));
           dispatch(hideModal());
         }}
+        items={dnszones.dnszones}
+        selectedItems={Object.keys(selected)}
+        typeOfItem="zones"
+        label="dnszone"
         onCancel={() => dispatch(hideModal())}
-      >
-        Are you sure you want to delete selected Zones?
-        This operation cannot be undone.
-      </ConfirmModalBody>
+      />
     ));
   }
 
@@ -74,20 +75,21 @@ export class IndexPage extends Component {
   }
 
   renderModal(zoneId) {
-    const { dispatch } = this.props;
+    const { dispatch, dnszones: theseZones } = this.props;
     return (
-      <ConfirmModalBody
-        buttonText="Delete"
+      <DeleteModalBody
+        buttonText="Delete selected zones"
         onOk={async () => {
           await dispatch(dnszones.delete(zoneId));
           dispatch(toggleSelectAll());
           dispatch(hideModal());
         }}
+        items={theseZones.dnszones}
+        selectedItems={zoneId}
+        typeOfItem="zones"
+        label="dnszone"
         onCancel={() => dispatch(hideModal())}
-      >
-        <span className="text-danger">WARNING!</span> This will permanently
-        delete this DNS Zone. Confirm below to proceed.
-      </ConfirmModalBody>
+      />
     );
   }
 
