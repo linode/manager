@@ -3,6 +3,7 @@ import sinon from 'sinon';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
 
+import _ from 'lodash';
 import { formatDNSSeconds } from '~/dnsmanager/components/SelectDNSSeconds';
 import { ZonePage } from '~/dnsmanager/layouts/ZonePage';
 import { api } from '@/data';
