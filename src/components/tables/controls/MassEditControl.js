@@ -59,10 +59,7 @@ export default class MassEditControl extends Component {
 MassEditControl.propTypes = {
   data: PropTypes.array.isRequired,
   dispatch: PropTypes.func,
-  massEditOptions: PropTypes.arrayOf(PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    action: PropTypes.func.isRequired,
-  })),
+  massEditOptions: MassEditDropdown.propTypes.options,
   selectedKey: PropTypes.string,
   selectedMap: PropTypes.object.isRequired,
   toggleSelected: PropTypes.func,
