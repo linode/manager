@@ -421,11 +421,14 @@ ZonePage.propTypes = {
 function select(state, ownProps) {
   const { dnszones } = state.api;
   const { params } = ownProps;
-  const currentDNSZone = Object.values(dnszones.dnszones).filter(
+  let currentDNSZone = Object.values(dnszones.dnszones).filter(
     d => d.dnszone === params.dnszoneLabel)[0];
 
   if (currentDNSZone) {
-    currentDNSZone._groupedRecords = _.groupBy(currentDNSZone._records.records, 'type');
+    currentDNSZone = {
+      ...currentDNSZone,
+      _groupedRecords: _.groupBy(currentDNSZone._records.records, 'type'),
+    };
   }
   return {
     dnszones: dnszones,
