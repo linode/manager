@@ -35,6 +35,7 @@ export default class MassEditControl extends Component {
       selectedMap,
     } = this.props;
 
+    const noneSelected = (Object.keys(selectedMap).length === 0);
     const allSelected = data.every((record) => {
       return selectedMap[record[selectedKey]];
     });
@@ -42,6 +43,7 @@ export default class MassEditControl extends Component {
     return (
       <MassEditDropdown
         checked={allSelected}
+        disabled={noneSelected}
         options={massEditOptions.map((option) => {
           return {
             name: option.name,
@@ -69,4 +71,3 @@ MassEditControl.propTypes = {
 MassEditControl.defaultProps = {
   selectedKey: 'id',
 };
-
