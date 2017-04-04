@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
+import { replace } from 'react-router-redux';
 import _ from 'lodash';
 
 import { showModal, hideModal } from '~/actions/modal';
@@ -39,25 +40,6 @@ export class ZonePage extends Component {
     }
   }
 
-  constructor(props) {
-    super(props);
-
-    const updateCurrentDNSZone = (props) => {
-      const currentDNSZone = Object.values(props.dnszones.dnszones).filter(
-        d => d.dnszone === props.params.dnszoneLabel)[0];
-      this.state = {
-        currentDNSZone: {
-          ...currentDNSZone,
-          _groupedRecords: _.groupBy(currentDNSZone._records.records, 'type'),
-        },
-      };
-    };
-
-    // currentDNSZone needs to be updated now and every time props changes
-    this.componentWillReceiveProps = updateCurrentDNSZone;
-    updateCurrentDNSZone(props);
-  }
-
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
@@ -66,7 +48,7 @@ export class ZonePage extends Component {
   }
 
   formatNSRecords() {
-    const { currentDNSZone } = this.state;
+    const { currentDNSZone } = this.props;
     const nsRecords = NAME_SERVERS.map(ns => ({
       target: ns,
       ttl_sec: ONE_DAY,
@@ -85,7 +67,7 @@ export class ZonePage extends Component {
   }
 
   formatMXRecords() {
-    const { currentDNSZone } = this.state;
+    const { currentDNSZone } = this.props;
 
     const { MX } = currentDNSZone._groupedRecords;
     return (MX || []).map(record => ({
@@ -95,14 +77,14 @@ export class ZonePage extends Component {
   }
 
   formatARecords() {
-    const { currentDNSZone } = this.state;
+    const { currentDNSZone } = this.props;
 
     const { A, AAAA } = currentDNSZone._groupedRecords;
     return (A || []).concat(AAAA || []).filter(a => a !== undefined);
   }
 
   formatSRVRecords() {
-    const { currentDNSZone } = this.state;
+    const { currentDNSZone } = this.props;
 
     const { SRV } = currentDNSZone._groupedRecords;
     return (SRV || []).map(record => ({
@@ -111,7 +93,7 @@ export class ZonePage extends Component {
   }
 
   formatTXTRecords() {
-    const { currentDNSZone } = this.state;
+    const { currentDNSZone } = this.props;
 
     const { TXT } = currentDNSZone._groupedRecords;
     return (TXT || []).map(record => ({
@@ -121,7 +103,7 @@ export class ZonePage extends Component {
   }
 
   formatCNAMERecords() {
-    const { currentDNSZone } = this.state;
+    const { currentDNSZone } = this.props;
 
     const { CNAME } = currentDNSZone._groupedRecords;
     return (CNAME || []).map(record => ({
@@ -131,13 +113,13 @@ export class ZonePage extends Component {
   }
 
   renderDeleteRecord(title, id) {
-    const { dispatch } = this.props;
-    const { currentDNSZone: zone } = this.state;
+    const { dispatch, currentDNSZone } = this.props;
+
     dispatch(showModal(title,
       <ConfirmModalBody
         buttonText="Delete zone record"
         onOk={async () => {
-          await dispatch(dnszones.records.delete(zone.id, id));
+          await dispatch(dnszones.records.delete(currentDNSZone.id, id));
           dispatch(hideModal());
         }}
         onCancel={() => dispatch(hideModal())}
@@ -147,22 +129,42 @@ export class ZonePage extends Component {
     ));
   }
 
+  renderSOAEditRecord() {
+    const { dispatch, currentDNSZone } = this.props;
+
+    dispatch(showModal(
+      'Edit SOA Record',
+      <EditSOARecord
+        dispatch={dispatch}
+        zone={currentDNSZone}
+        close={(zone) => {
+          dispatch(hideModal());
+          dispatch(replace(`/dnsmanager/${zone}`));
+        }}
+      />
+    ));
+  }
+
   renderEditRecord(title, component, props = {}) {
-    const { dispatch } = this.props;
-    const { currentDNSZone: zone } = this.state;
+    const { dispatch, currentDNSZone } = this.props;
+
     dispatch(showModal(
       title,
-      React.createElement(component, {
-        ...props,
-        dispatch,
-        zone,
-        close: () => dispatch(hideModal()),
-      })
+      <component
+        {...props}
+        dispatch={dispatch}
+        zone={currentDNSZone}
+        close={() => dispatch(hideModal())}
+      />
     ));
   }
 
   render() {
-    const { currentDNSZone } = this.state;
+    const { currentDNSZone } = this.props;
+
+    if (!currentDNSZone) {
+      return null;
+    }
 
     const formatSeconds = (records) => {
       return records.map(record => {
@@ -221,7 +223,7 @@ export class ZonePage extends Component {
                   cellComponent: ButtonCell,
                   text: 'Edit',
                   onClick: () => {
-                    this.renderEditRecord('Edit SOA Record', EditSOARecord);
+                    this.renderSOAEditRecord();
                   },
                 },
               ]}
@@ -413,11 +415,24 @@ ZonePage.propTypes = {
   params: PropTypes.shape({
     dnszoneLabel: PropTypes.string.isRequired,
   }),
+  currentDNSZone: PropTypes.object,
 };
 
-function select(state) {
+function select(state, ownProps) {
+  const { dnszones } = state.api;
+  const { params } = ownProps;
+  let currentDNSZone = Object.values(dnszones.dnszones).filter(
+    d => d.dnszone === params.dnszoneLabel)[0];
+
+  if (currentDNSZone) {
+    currentDNSZone = {
+      ...currentDNSZone,
+      _groupedRecords: _.groupBy(currentDNSZone._records.records, 'type'),
+    };
+  }
   return {
-    dnszones: state.api.dnszones,
+    dnszones: dnszones,
+    currentDNSZone: currentDNSZone,
   };
 }
 
