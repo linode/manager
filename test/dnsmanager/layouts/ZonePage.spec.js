@@ -47,6 +47,7 @@ describe('dnsmanager/layouts/ZonePage', () => {
         dispatch={dispatch}
         params={{ dnszoneLabel: currentZone.dnszone }}
         dnszones={dnszones}
+        currentDNSZone={currentZone}
       />
     );
 
@@ -73,6 +74,7 @@ describe('dnsmanager/layouts/ZonePage', () => {
         dispatch={dispatch}
         params={{ dnszoneLabel: currentZone.dnszone }}
         dnszones={dnszones}
+        currentDNSZone={currentZone}
       />
     );
 
@@ -96,6 +98,7 @@ describe('dnsmanager/layouts/ZonePage', () => {
         dispatch={dispatch}
         params={{ dnszoneLabel: currentZone.dnszone }}
         dnszones={dnszones}
+        currentDNSZone={currentZone}
       />
     );
 
@@ -120,6 +123,7 @@ describe('dnsmanager/layouts/ZonePage', () => {
         dispatch={dispatch}
         params={{ dnszoneLabel: currentZone.dnszone }}
         dnszones={dnszones}
+        currentDNSZone={currentZone}
       />
     );
 
@@ -144,6 +148,7 @@ describe('dnsmanager/layouts/ZonePage', () => {
         dispatch={dispatch}
         params={{ dnszoneLabel: currentZone.dnszone }}
         dnszones={dnszones}
+        currentDNSZone={currentZone}
       />
     );
 
@@ -169,6 +174,7 @@ describe('dnsmanager/layouts/ZonePage', () => {
         dispatch={dispatch}
         params={{ dnszoneLabel: currentZone.dnszone }}
         dnszones={dnszones}
+        currentDNSZone={currentZone}
       />
     );
 
@@ -195,6 +201,7 @@ describe('dnsmanager/layouts/ZonePage', () => {
         dispatch={dispatch}
         params={{ dnszoneLabel: currentZone.dnszone }}
         dnszones={dnszones}
+        currentDNSZone={currentZone}
       />
     );
 
