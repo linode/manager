@@ -415,6 +415,7 @@ ZonePage.propTypes = {
   params: PropTypes.shape({
     dnszoneLabel: PropTypes.string.isRequired,
   }),
+  currentDNSZone: PropTypes.object,
 };
 
 function select(state, ownProps) {

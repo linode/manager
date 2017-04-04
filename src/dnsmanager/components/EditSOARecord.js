@@ -2,7 +2,6 @@ import React, { PropTypes, Component } from 'react';
 
 import { dnszones } from '~/api';
 import { ModalFormGroup, Select } from '~/components/form';
-import { hideModal } from '~/actions/modal';
 import SelectDNSSeconds from './SelectDNSSeconds';
 import { Form, Input, SubmitButton } from '~/components/form';
 import { CancelButton } from '~/components/buttons';
