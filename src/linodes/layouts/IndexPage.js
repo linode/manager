@@ -118,7 +118,7 @@ export class IndexPage extends Component {
     return (
       <List>
         <ListHeader>
-          <div className="pull-left">
+          <div className="pull-sm-left">
             <MassEditControl
               data={sortedLinodes}
               dispatch={dispatch}
