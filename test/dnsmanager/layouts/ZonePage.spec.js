@@ -26,6 +26,10 @@ describe('dnsmanager/layouts/ZonePage', () => {
         dispatch={dispatch}
         params={{ dnszoneLabel: currentZone.dnszone }}
         dnszones={dnszones}
+        currentDNSZone={{
+          ...currentZone,
+          _groupedRecords: _.groupBy(currentZone._records.records, 'type'),
+        }}
       />
     );
 
@@ -47,7 +51,10 @@ describe('dnsmanager/layouts/ZonePage', () => {
         dispatch={dispatch}
         params={{ dnszoneLabel: currentZone.dnszone }}
         dnszones={dnszones}
-        currentDNSZone={currentZone}
+        currentDNSZone={{
+          ...currentZone,
+          _groupedRecords: _.groupBy(currentZone._records.records, 'type'),
+        }}
       />
     );
 
@@ -74,7 +81,10 @@ describe('dnsmanager/layouts/ZonePage', () => {
         dispatch={dispatch}
         params={{ dnszoneLabel: currentZone.dnszone }}
         dnszones={dnszones}
-        currentDNSZone={currentZone}
+        currentDNSZone={{
+          ...currentZone,
+          _groupedRecords: _.groupBy(currentZone._records.records, 'type'),
+        }}
       />
     );
 
@@ -98,7 +108,10 @@ describe('dnsmanager/layouts/ZonePage', () => {
         dispatch={dispatch}
         params={{ dnszoneLabel: currentZone.dnszone }}
         dnszones={dnszones}
-        currentDNSZone={currentZone}
+        currentDNSZone={{
+          ...currentZone,
+          _groupedRecords: _.groupBy(currentZone._records.records, 'type'),
+        }}
       />
     );
 
@@ -123,7 +136,10 @@ describe('dnsmanager/layouts/ZonePage', () => {
         dispatch={dispatch}
         params={{ dnszoneLabel: currentZone.dnszone }}
         dnszones={dnszones}
-        currentDNSZone={currentZone}
+        currentDNSZone={{
+          ...currentZone,
+          _groupedRecords: _.groupBy(currentZone._records.records, 'type'),
+        }}
       />
     );
 
@@ -148,7 +164,10 @@ describe('dnsmanager/layouts/ZonePage', () => {
         dispatch={dispatch}
         params={{ dnszoneLabel: currentZone.dnszone }}
         dnszones={dnszones}
-        currentDNSZone={currentZone}
+        currentDNSZone={{
+          ...currentZone,
+          _groupedRecords: _.groupBy(currentZone._records.records, 'type'),
+        }}
       />
     );
 
@@ -174,7 +193,10 @@ describe('dnsmanager/layouts/ZonePage', () => {
         dispatch={dispatch}
         params={{ dnszoneLabel: currentZone.dnszone }}
         dnszones={dnszones}
-        currentDNSZone={currentZone}
+        currentDNSZone={{
+          ...currentZone,
+          _groupedRecords: _.groupBy(currentZone._records.records, 'type'),
+        }}
       />
     );
 
@@ -201,7 +223,10 @@ describe('dnsmanager/layouts/ZonePage', () => {
         dispatch={dispatch}
         params={{ dnszoneLabel: currentZone.dnszone }}
         dnszones={dnszones}
-        currentDNSZone={currentZone}
+        currentDNSZone={{
+          ...currentZone,
+          _groupedRecords: _.groupBy(currentZone._records.records, 'type'),
+        }}
       />
     );
 
