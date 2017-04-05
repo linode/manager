@@ -16,16 +16,21 @@ import {
   CheckboxCell,
   LinkCell,
 } from '~/components/tables/cells';
-import { dnszones as apiDnszones } from '~/api';
+
+import { dnszones as api } from '~/api';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
-import { toggleSelected, toggleSelectAll } from '../actions';
+import { default as toggleSelected } from '~/actions/select';
 import CreateHelper from '~/components/CreateHelper';
 
+const OBJ_TYPE = 'dnszones';
+
+
 export class IndexPage extends Component {
+
   static async preload({ dispatch }) {
     try {
-      await dispatch(apiDnszones.all());
+      await dispatch(api.all());
     } catch (response) {
       // eslint-disable-next-line no-console
       console.error(response);
@@ -33,10 +38,10 @@ export class IndexPage extends Component {
     }
   }
 
-  constructor() {
-    super();
-    this.deleteZone = this.deleteZone.bind(this);
-    this.remove = this.remove.bind(this);
+  constructor(props) {
+    super(props);
+
+    this.deleteZones = this.deleteZones.bind(this);
   }
 
   async componentDidMount() {
@@ -46,18 +51,18 @@ export class IndexPage extends Component {
     dispatch(setTitle('DNS Manager'));
   }
 
-  remove(zones) {
+  deleteZones(zones) {
     const { dispatch, selected, dnszones } = this.props;
+    const zonesArr = Array.isArray(zones) ? zones : [zones];
+
     dispatch(showModal('Confirm deletion',
       <DeleteModalBody
         buttonText="Delete selected zones"
-        onOk={() => {
-          const zoneIds = zones.map((zone) => zone.id);
+        onOk={async () => {
+          const ids = zonesArr.map(function (zone) { return zone.id; });
 
-          zoneIds.forEach(function (id) {
-            dispatch(apiDnszones.delete(id));
-          });
-          dispatch(toggleSelected(zoneIds));
+          await dispatch(api.delete(ids));
+          dispatch(toggleSelected(OBJ_TYPE, ids));
           dispatch(hideModal());
         }}
         items={dnszones.dnszones}
@@ -69,32 +74,8 @@ export class IndexPage extends Component {
     ));
   }
 
-  deleteZone(zoneId) {
-    const { dispatch } = this.props;
-    dispatch(showModal('Delete DNS Zone', this.renderModal(zoneId)));
-  }
-
-  renderModal(zoneId) {
-    const { dispatch, dnszones: theseZones } = this.props;
-    return (
-      <DeleteModalBody
-        buttonText="Delete selected zones"
-        onOk={async () => {
-          await dispatch(apiDnszones.delete(zoneId));
-          dispatch(toggleSelectAll());
-          dispatch(hideModal());
-        }}
-        items={theseZones.dnszones}
-        selectedItems={zoneId}
-        typeOfItem="zones"
-        label="dnszone"
-        onCancel={() => dispatch(hideModal())}
-      />
-    );
-  }
-
   renderZones(zones) {
-    const { dispatch, selected } = this.props;
+    const { dispatch, selectedMap } = this.props;
     // TODO: add sort function in dns zones config definition
     const sortedZones = _.sortBy(Object.values(zones), ({ created }) => moment(created));
 
@@ -114,9 +95,10 @@ export class IndexPage extends Component {
               data={sortedZones}
               dispatch={dispatch}
               massEditOptions={[
-                { name: 'Delete', action: this.remove },
+                { name: 'Delete', action: this.deleteZones },
               ]}
-              selectedMap={selected}
+              selectedMap={selectedMap}
+              objType={OBJ_TYPE}
               toggleSelected={toggleSelected}
             />
           </div>
@@ -140,14 +122,14 @@ export class IndexPage extends Component {
                     {
                       cellComponent: ButtonCell,
                       text: 'Delete',
-                      onClick: (zone) => { this.deleteZone(zone.id); },
+                      onClick: (zone) => { this.deleteZones(zone); },
                     },
                   ]}
                   data={group.data}
-                  selectedMap={selected}
+                  selectedMap={selectedMap}
                   disableHeader
                   onToggleSelect={(record) => {
-                    dispatch(toggleSelected(record.id));
+                    dispatch(toggleSelected(OBJ_TYPE, record.id));
                   }}
                 />
               </ListGroup>
@@ -159,7 +141,7 @@ export class IndexPage extends Component {
   }
 
   render() {
-    const { dnszones, selected } = this.props;
+    const { dnszones } = this.props;
 
     return (
       <div className="PrimaryPage container">
@@ -173,7 +155,7 @@ export class IndexPage extends Component {
           </div>
         </header>
         <div className="PrimaryPage-body">
-          {Object.keys(dnszones.dnszones).length ? this.renderZones(dnszones.dnszones, selected) :
+          {Object.keys(dnszones.dnszones).length ? this.renderZones(dnszones.dnszones) :
             <CreateHelper label="zones" href="/dnsmanager/create" linkText="Add a zone" />}
         </div>
       </div>
@@ -184,14 +166,14 @@ export class IndexPage extends Component {
 IndexPage.propTypes = {
   dispatch: PropTypes.func,
   dnszones: PropTypes.object,
-  selected: PropTypes.object,
+  selectedMap: PropTypes.object.isRequired,
 };
 
 
 function select(state) {
   return {
     dnszones: state.api.dnszones,
-    selected: state.dnsmanager.index.selected,
+    selectedMap: state.select.selected[OBJ_TYPE] || {},
   };
 }
 

@@ -5,13 +5,12 @@ import { LOGOUT } from '~/actions/authentication';
 import authentication from './authentication';
 import modal from './modal';
 import notifications from './notifications';
+import select from './select';
 import session from './session';
 import source from './source';
 import title from './title';
 import api from '../api/reducer';
 import errors from './errors';
-import linodes from '../linodes/reducers';
-import dnsmanager from '../dnsmanager/reducers';
 import preloadIndicator from './preloadIndicator';
 
 const appReducer = combineReducers({
@@ -19,12 +18,11 @@ const appReducer = combineReducers({
   authentication,
   modal,
   notifications,
+  select,
   session,
   source,
   title,
   api,
-  linodes,
-  dnsmanager,
   errors,
   preloadIndicator,
 });

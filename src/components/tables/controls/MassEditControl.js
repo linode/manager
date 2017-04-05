@@ -12,10 +12,10 @@ export default class MassEditControl extends Component {
   }
 
   onMassEditChange() {
-    const { data, dispatch, selectedKey, toggleSelected } = this.props;
+    const { data, dispatch, objType, selectedKey, toggleSelected } = this.props;
     const selected = data.map(function (record) { return record[selectedKey]; });
 
-    dispatch(toggleSelected(selected));
+    dispatch(toggleSelected(objType, selected));
   }
 
   createMassEditActionHandler(fn) {
@@ -60,6 +60,7 @@ MassEditControl.propTypes = {
   data: PropTypes.array.isRequired,
   dispatch: PropTypes.func,
   massEditOptions: MassEditDropdown.propTypes.options,
+  objType: PropTypes.string.isRequired,
   selectedKey: PropTypes.string,
   selectedMap: PropTypes.object.isRequired,
   toggleSelected: PropTypes.func,
