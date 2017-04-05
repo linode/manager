@@ -16,7 +16,7 @@ import {
   CheckboxCell,
   LinkCell,
 } from '~/components/tables/cells';
-import { dnszones } from '~/api';
+import { dnszones as apiDnszones } from '~/api';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 import { toggleSelected, toggleSelectAll } from '../actions';
@@ -25,7 +25,7 @@ import CreateHelper from '~/components/CreateHelper';
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
     try {
-      await dispatch(dnszones.all());
+      await dispatch(apiDnszones.all());
     } catch (response) {
       // eslint-disable-next-line no-console
       console.error(response);
@@ -55,7 +55,7 @@ export class IndexPage extends Component {
           const zoneIds = zones.map((zone) => zone.id);
 
           zoneIds.forEach(function (id) {
-            dispatch(dnszones.delete(id));
+            dispatch(apiDnszones.delete(id));
           });
           dispatch(toggleSelected(zoneIds));
           dispatch(hideModal());
@@ -80,7 +80,7 @@ export class IndexPage extends Component {
       <DeleteModalBody
         buttonText="Delete selected zones"
         onOk={async () => {
-          await dispatch(dnszones.delete(zoneId));
+          await dispatch(apiDnszones.delete(zoneId));
           dispatch(toggleSelectAll());
           dispatch(hideModal());
         }}

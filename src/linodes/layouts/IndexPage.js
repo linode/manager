@@ -82,14 +82,13 @@ export class IndexPage extends Component {
     });
   }
 
-  remove(linodes) {
-    const { dispatch } = this.props;
-
+  remove(linodesToBeRemoved) {
+    const { dispatch, selected, linodes } = this.props;
     dispatch(showModal('Confirm deletion',
       <DeleteModalBody
         buttonText="Delete selected Linodes"
         onOk={() => {
-          linodes.forEach(function (linode) {
+          linodesToBeRemoved.forEach(function (linode) {
             dispatch(apiLinodes.delete(linode.id));
           });
           dispatch(hideModal());
