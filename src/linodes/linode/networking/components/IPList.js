@@ -19,9 +19,6 @@ export default function IPList(props) {
           {
             cellComponent: CheckboxCell,
             selectedKey: 'address',
-            onChange: (record, checked) => {
-              onChange(record, checked);
-            },
           },
           {
             cellComponent: IPRdnsCell,
@@ -30,6 +27,9 @@ export default function IPList(props) {
         ]}
         data={transferableIps}
         selectedMap={checked}
+        onToggleSelect={(record, checked) => {
+          onChange(record, checked);
+        }}
       />
     </div>
   );

@@ -1,6 +1,6 @@
 import React from 'react';
 import sinon from 'sinon';
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import { expect } from 'chai';
 
 import { IndexPage } from '~/linodes/layouts/IndexPage';
@@ -57,7 +57,7 @@ describe('linodes/layouts/IndexPage', () => {
   });
 
   it('renders a power management dropdown', () => {
-    const page = shallow(
+    const page = mount(
       <IndexPage
         dispatch={() => {}}
         selected={{}}
@@ -121,7 +121,9 @@ describe('linodes/layouts/IndexPage', () => {
     const selected = {};
     const localDispatch = sandbox.spy(action => {
       if (action.type === TOGGLE_SELECTED) {
-        selected[action.selected[0]] = true;
+        action.selected.forEach(function (id) {
+          selected[id] = true;
+        });
       }
     });
 
@@ -133,26 +135,9 @@ describe('linodes/layouts/IndexPage', () => {
       />
     );
 
-    const checkButton = page.find('.PrimaryPage-headerRow input[type="checkbox"]');
+    const checkButton = page.find('MassEditControl input[type="checkbox"]');
     expect(checkButton.length).to.equal(1);
     checkButton.simulate('change');
     expect(Object.keys(selected)).to.deep.equal(Object.keys(linodes.linodes));
-  });
-
-  it('does not check "select all" if there are no Linodes', () => {
-    const page = shallow(
-      <IndexPage
-        dispatch={dispatch}
-        selected={{}}
-        linodes={{
-          linodes: {},
-          totalPages: 1,
-          totalResults: 0,
-        }}
-      />
-    );
-
-    const checkbox = page.find('.input-group-addon input[type="checkbox"]');
-    expect(checkbox.props().checked).to.equal(false);
   });
 });

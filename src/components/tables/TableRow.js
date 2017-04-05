@@ -10,39 +10,32 @@ export default class TableRow extends Component {
     super(props);
 
     this.onCheckboxChange = this.onCheckboxChange.bind(this);
-    this.state = { selected: false };
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { columns, record, selectedMap } = nextProps;
+  onCheckboxChange(record, checked) {
+    const { onToggleSelect } = this.props;
+
+    if (onToggleSelect) {
+      onToggleSelect(record, checked);
+    }
+  }
+
+  render() {
+    const { columns, record, selectedMap } = this.props;
     const checkboxColumn = columns.filter(function (column) {
       return column.cellComponent && (column.cellComponent === CheckboxCell);
     })[0];
 
+    let selected;
     if (checkboxColumn) {
       const { selectedKey = 'id', selectedKeyFn } = checkboxColumn;
 
       if (selectedKeyFn) {
-        this.setState({ selected: selectedMap[selectedKeyFn(record)] });
+        selected = selectedMap[selectedKeyFn(record)];
       } else {
-        this.setState({ selected: selectedMap[record[selectedKey]] });
+        selected = selectedMap[record[selectedKey]];
       }
     }
-  }
-
-  onCheckboxChange(checked) {
-    const { onToggleSelect } = this.props;
-
-    this.setState({ selected: checked }, () => {
-      if (onToggleSelect) {
-        onToggleSelect(this.state.selected);
-      }
-    });
-  }
-
-  render() {
-    const { columns, record } = this.props;
-    let { selected } = this.state;
 
     const selectedClass = selected ? 'TableRow--selected' : '';
     return (

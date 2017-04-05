@@ -16,6 +16,11 @@ describe('linodes/actions', () => {
   const linodesApiState = {
     api: {
       linodes: {
+        ids: [
+          1234,
+          1235,
+          1236,
+        ],
         linodes: {
           1234: { },
           1235: { },
@@ -52,7 +57,7 @@ describe('linodes/actions', () => {
       func(dispatch, getState);
       expect(dispatch.calledWith({
         type: TOGGLE_SELECTED,
-        selected: ['1234', '1235', '1236'],
+        selected: [1234, 1235, 1236],
       })).to.equal(true);
     });
   });

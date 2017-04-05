@@ -55,6 +55,7 @@ export default function Lists() {
                   { label: 'linode-2', ip_address: '192.168.0.0', datacenter: 'Huston, TX' },
                   { label: 'linode-3', ip_address: '192.168.0.0', datacenter: 'Huston, TX' },
                 ]}
+                selectedMap={{}}
               />
             </div>
           </div>

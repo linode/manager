@@ -12,7 +12,8 @@ import CreateHelper from '~/components/CreateHelper';
 import {
   getLinodeRedirectUrl, getNodebalancerRedirectUrl, getDNSZoneRedirectUrl,
 } from '~/components/notifications/EventTypes';
-import { Table } from '~/components/tables';
+import { List, Table } from '~/components/tables';
+import { ListBody, ListGroup } from '~/components/tables/bodies';
 import {
   TableCell,
 } from '~/components/tables/cells';
@@ -118,20 +119,26 @@ export class IndexPage extends Component {
       }));
 
     return (
-      <div>
-        {groups.map(function (group, index) {
-          return (
-            <div className="Group" key={index}>
-              <div className="Group-label">{group.name}</div>
-              <Table
-                className="Tickets"
-                columns={group.columns}
-                data={group.data}
-              />
-            </div>
-          );
-        })}
-      </div>
+      <List>
+        <ListBody>
+          {groups.map((group, index) => {
+            return (
+              <ListGroup
+                key={index}
+                name={group.name}
+              >
+                <Table
+                  className="Tickets"
+                  columns={group.columns}
+                  data={group.data}
+                  selectedMap={{}}
+                  disableHeader
+                />
+              </ListGroup>
+            );
+          })}
+        </ListBody>
+      </List>
     );
   }
 

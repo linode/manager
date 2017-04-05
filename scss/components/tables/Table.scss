@@ -40,17 +40,6 @@
     }
 }
 
-// TODO: move this somewhere else
-.Group {
-    margin-top: 15px;
-
-    &-label {
-        @extend .font-large;
-        color: $light-black;
-        padding: 5px 0;
-    }
-}
-
 .CheckboxCell {
     width: 45px;
 }

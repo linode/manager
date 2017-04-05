@@ -9,7 +9,9 @@ import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 import { Link } from '~/components/Link';
 import { Card, CardHeader } from '~/components/cards';
-import { Table } from '~/components/tables';
+import { List, Table } from '~/components/tables';
+import { ListBody } from '~/components/tables/bodies';
+
 import { LinkCell, ButtonCell } from '~/components/tables/cells';
 import { NodebalancerStatusReadable } from '~/constants';
 import Datacenter from '~/linodes/components/Datacenter';
@@ -58,31 +60,37 @@ export class IndexPage extends Component {
     });
 
     return (
-      <Table
-        className="Table--secondary"
-        columns={[
-          { textKey: 'port', label: 'Port',
-            cellComponent: LinkCell,
-            hrefFn: function (config) {
-              return `/nodebalancers/${nbLabel}/configs/${config.id}`;
-            },
-          },
-          { dataKey: 'protocol', label: 'Protocol' },
-          { dataKey: 'algorithm', label: 'Algorithm' },
-          { dataKey: 'stickiness', label: 'Session stickiness' },
-          { dataKey: 'check', label: 'Health check method' },
-          { dataKey: 'statusString', label: 'Node status' },
-          {
-            cellComponent: ButtonCell,
-            buttonClassName: 'btn-secondary',
-            hrefFn: function (config) {
-              return `/nodebalancers/${nbLabel}/configs/${config.id}/edit`;
-            },
-            text: 'Edit',
-          },
-        ]}
-        data={newConfigs}
-      />
+      <List>
+        <ListBody>
+          <Table
+            className="Table--secondary"
+            columns={[
+              { textKey: 'port', label: 'Port',
+                cellComponent: LinkCell,
+                hrefFn: function (config) {
+                  return `/nodebalancers/${nbLabel}/configs/${config.id}`;
+                },
+              },
+              { dataKey: 'protocol', label: 'Protocol' },
+              { dataKey: 'algorithm', label: 'Algorithm' },
+              { dataKey: 'stickiness', label: 'Session stickiness' },
+              { dataKey: 'check', label: 'Health check method' },
+              { dataKey: 'statusString', label: 'Node status' },
+              {
+                cellComponent: ButtonCell,
+                buttonClassName: 'btn-secondary',
+                hrefFn: function (config) {
+                  return `/nodebalancers/${nbLabel}/configs/${config.id}/edit`;
+                },
+                text: 'Edit',
+              },
+            ]}
+            data={newConfigs}
+            selectedMap={{}}
+            disableHeader
+          />
+        </ListBody>
+      </List>
     );
   }
 
