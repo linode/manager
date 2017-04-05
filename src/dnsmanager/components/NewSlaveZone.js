@@ -20,7 +20,7 @@ export default function NewSlaveZone(props) {
         <FormGroupError errors={props.errors} name="dnszone" />
       </FormGroup>
       <FormGroup errors={props.errors} name="master_ips" className="row">
-        <label className="col-sm-2 col-form-label">Masters</label>
+        <label className="col-sm-2 col-form-label">Master Zones</label>
         <div className="col-sm-10">
           <textarea
             value={props.master_ips.length ? props.master_ips.join(';') : ''}
@@ -29,8 +29,7 @@ export default function NewSlaveZone(props) {
           />
           <div>
             <small className="text-muted">
-              The IP addresses of the master DNS servers for
-              this zone must be semicolon or new line delimited.
+              Use semicolons or new lines to separate multiple IP addresses.
             </small>
           </div>
         </div>
