@@ -9,23 +9,25 @@ import { actions as userActions } from '~/api/configs/users';
 import { UserForm } from '../../components/UserForm';
 
 export class EditUserPage extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+    const { username } = props.params;
 
     this.onSubmit = this.onSubmit.bind(this);
     this.state = {
+      restricted: props.users[username].restricted || false,
       loading: false,
       errors: {},
     };
   }
 
-  async onSubmit(stateValues) {
+  async onSubmit(values) {
     const { dispatch } = this.props;
     const { username } = this.props.params;
 
     this.setState({ loading: true });
     try {
-      await dispatch(users.put(stateValues, username));
+      await dispatch(users.put(values, username));
       dispatch(push('/users'));
 
       // TODO: remove once primary key stops changing
@@ -37,8 +39,9 @@ export class EditUserPage extends Component {
   }
 
   render() {
-    const { errors } = this.state;
     const { username } = this.props.params;
+    const { restricted } = this.state.restricted;
+    const { errors } = this.state;
 
     // TODO: remove once primary key stops changing
     let email;
@@ -55,6 +58,7 @@ export class EditUserPage extends Component {
             errors={errors}
             username={username}
             email={email}
+            restricted={restricted}
             onSubmit={this.onSubmit}
           />
         </Card>
