@@ -146,17 +146,45 @@ export class ZonePage extends Component {
   }
 
   renderEditRecord(title, component, props = {}) {
-    const { dispatch, currentDNSZone } = this.props;
+    const { dispatch, currentDNSZone: zone } = this.props;
 
     dispatch(showModal(
       title,
-      <component
-        {...props}
-        dispatch={dispatch}
-        zone={currentDNSZone}
-        close={() => dispatch(hideModal())}
-      />
+      React.createElement(component, {
+        ...props,
+        dispatch,
+        zone,
+        close: () => dispatch(hideModal()),
+      }),
     ));
+  }
+
+  renderEditSOARecord(title) {
+    return this.renderEditRecord(title, EditSOARecord);
+  }
+
+  renderEditMXRecord(title, id) {
+    return this.renderEditRecord(title, EditMXRecord, { id });
+  }
+
+  renderEditNSRecord(title, id) {
+    return this.renderEditRecord(title, EditNSRecord, { id });
+  }
+
+  renderEditARecord(title, id) {
+    return this.renderEditRecord(title, EditARecord, { id });
+  }
+
+  renderEditTXTRecord(title, id) {
+    return this.renderEditRecord(title, EditTXTRecord, { id });
+  }
+
+  renderEditSRVRecord(title, id) {
+    return this.renderEditRecord(title, EditSRVRecord, { id });
+  }
+
+  renderEditCNAMERecord(title, id) {
+    return this.renderEditRecord(title, EditCNAMERecord, { id });
   }
 
   render() {
@@ -255,8 +283,8 @@ export class ZonePage extends Component {
                 { dataKey: 'ttl_sec', label: 'TTL' },
                 {
                   cellComponent: NameserversCell,
-                  onEditClick: () => {},
-                  onDeleteClick: () => {},
+                  onEditClick: ({ id }) => this.renderEditNSRecord('Edit NS Record', id),
+                  onDeleteClick: ({ id }) => this.renderDeleteRecord('Delete NS Record', id),
                 },
               ]}
               data={nsRecords}
@@ -283,8 +311,16 @@ export class ZonePage extends Component {
                 { dataKey: 'target', label: 'Mail Server' },
                 { dataKey: 'priority', label: 'Preference' },
                 { dataKey: 'name', label: 'Subdomain' },
-                { cellComponent: ButtonCell, text: 'Edit', onClick: () => {} },
-                { cellComponent: ButtonCell, text: 'Delete', onClick: () => {} },
+                {
+                  cellComponent: ButtonCell,
+                  text: 'Edit',
+                  onClick: ({ id }) => this.renderEditMXRecord('Edit MX Record', id),
+                },
+                {
+                  cellComponent: ButtonCell,
+                  text: 'Delete',
+                  onClick: ({ id }) => this.renderDeleteRecord('Delete MX Record', id),
+                },
               ]}
               data={mxRecords}
             />
@@ -310,8 +346,16 @@ export class ZonePage extends Component {
                 { dataKey: 'name', label: 'Hostname' },
                 { dataKey: 'target', label: 'IP Address' },
                 { dataKey: 'ttl_sec', label: 'TTL' },
-                { cellComponent: ButtonCell, text: 'Edit', onClick: () => {} },
-                { cellComponent: ButtonCell, text: 'Delete', onClick: () => {} },
+                {
+                  cellComponent: ButtonCell,
+                  text: 'Edit',
+                  onClick: ({ id }) => this.renderEditARecord('Edit A/AAAA Record', id),
+                },
+                {
+                  cellComponent: ButtonCell,
+                  text: 'Delete',
+                  onClick: ({ id }) => this.renderDeleteRecord('Delete A/AAAA Record', id),
+                },
               ]}
               data={aRecords}
             />
@@ -339,8 +383,16 @@ export class ZonePage extends Component {
                 { dataKey: 'name', label: 'Hostname' },
                 { dataKey: 'target', label: 'Aliases to' },
                 { dataKey: 'ttl_sec', label: 'TTL' },
-                { cellComponent: ButtonCell, text: 'Edit', onClick: () => {} },
-                { cellComponent: ButtonCell, text: 'Delete', onClick: () => {} },
+                {
+                  cellComponent: ButtonCell,
+                  text: 'Edit',
+                  onClick: ({ id }) => this.renderEditCNAMERecord('Edit CNAME Record', id),
+                },
+                {
+                  cellComponent: ButtonCell,
+                  text: 'Delete',
+                  onClick: ({ id }) => this.renderDeleteRecord('Delete CNAME Record', id),
+                },
               ]}
               data={cnameRecords}
             />
@@ -366,8 +418,16 @@ export class ZonePage extends Component {
                 { dataKey: 'name', label: 'Name' },
                 { dataKey: 'target', label: 'Value' },
                 { dataKey: 'ttl_sec', label: 'TTL' },
-                { cellComponent: ButtonCell, text: 'Edit', onClick: () => {} },
-                { cellComponent: ButtonCell, text: 'Delete', onClick: () => {} },
+                {
+                  cellComponent: ButtonCell,
+                  text: 'Edit',
+                  onClick: ({ id }) => this.renderEditTXTRecord('Edit TXT Record', id),
+                },
+                {
+                  cellComponent: ButtonCell,
+                  text: 'Delete',
+                  onClick: ({ id }) => this.renderDeleteRecord('Delete TXT Record', id),
+                },
               ]}
               data={txtRecords}
             />
@@ -397,8 +457,16 @@ export class ZonePage extends Component {
                 { dataKey: 'port', label: 'Port' },
                 { dataKey: 'target', label: 'Target' },
                 { dataKey: 'ttl_sec', label: 'TTL' },
-                { cellComponent: ButtonCell, text: 'Edit', onClick: () => {} },
-                { cellComponent: ButtonCell, text: 'Delete', onClick: () => {} },
+                {
+                  cellComponent: ButtonCell,
+                  text: 'Edit',
+                  onClick: ({ id }) => this.renderEditSRVRecord('Edit SRV Record', id),
+                },
+                {
+                  cellComponent: ButtonCell,
+                  text: 'Delete',
+                  onClick: ({ id }) => this.renderDeleteRecord('Delete SRV Record', id),
+                },
               ]}
               data={srvRecords}
             />
