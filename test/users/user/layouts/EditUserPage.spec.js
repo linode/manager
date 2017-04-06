@@ -21,6 +21,7 @@ describe('users/user/layouts/EditUserPage', () => {
   const params = {
     username: 'testuser1',
   };
+
   it('renders UserForm', () => {
     const page = shallow(
       <EditUserPage
@@ -46,10 +47,11 @@ describe('users/user/layouts/EditUserPage', () => {
     const values = {
       username: 'theUser',
       email: 'user@example.com',
-      password: 'password',
+      restricted: false,
     };
     await page.instance().onSubmit(values);
     expect(dispatch.callCount).to.equal(3);
+
     const fn = dispatch.firstCall.args[0];
     await expectRequest(
       fn, `/account/users/${params.username}`, {

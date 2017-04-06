@@ -10,7 +10,10 @@ import { setError } from '~/actions/errors';
 export class IndexPage extends Component {
   static async preload({ dispatch, getState }, { username }) {
     try {
-      await dispatch(users.one([username]));
+      const user = await dispatch(users.one([username]));
+      if (user.restricted) {
+        await dispatch(users.permissions.one([username]));
+      }
     } catch (response) {
       // eslint-disable-next-line no-console
       console.error(response);
@@ -18,18 +21,30 @@ export class IndexPage extends Component {
     }
   }
 
+  constructor(props) {
+    super(props);
+    const { username } = props.params;
+
+    this.state = {
+      restricted: props.users[username].restricted || false,
+    };
+  }
+
   render() {
     const { username } = this.props.params;
-    const tabs = [
-      { name: 'Edit User', link: '' },
-      { name: 'Permissions', link: '/Permissions' },
-    ].map(t => ({ ...t, link: `/users/${username}${t.link}` }));
+    const { restricted } = this.state;
+    const tabList = [{ name: 'Edit User', link: '' }];
+    if (restricted) {
+      tabList.push({ name: 'Permissions', link: '/Permissions' });
+    }
+    const tabs = tabList.map(t => ({ ...t, link: `/users/${username}${t.link}` }));
 
     return (
       <div className="details-page">
         <header className="main-header">
           <div className="container">
             <div className="float-xs-left">
+              <Link to="/users">Users</Link>
               <h1 title={username}>
                 <Link to={`/users/${username}`}>
                   {username}
@@ -64,7 +79,9 @@ IndexPage.propTypes = {
 };
 
 function select(state) {
-  return { users: state.api.users };
+  return {
+    users: state.api.users.users,
+  };
 }
 
 export default connect(select)(IndexPage);
