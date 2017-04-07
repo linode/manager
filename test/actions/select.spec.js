@@ -8,7 +8,7 @@ describe('actions/select', () => {
       expect(toggleSelected('example', '1234'))
         .to.deep.equal({
           type: TOGGLE_SELECTED,
-          objType: 'example',
+          objectType: 'example',
           selectedIds: ['1234'],
         });
     });

@@ -12,8 +12,8 @@ export default function select(_state = null, action) {
 
   switch (action.type) {
     case TOGGLE_SELECTED: {
-      const { selectedIds = [], objType } = action;
-      const selectedMap = { ...state.selected[objType] };
+      const { selectedIds = [], objectType } = action;
+      const selectedMap = { ...state.selected[objectType] };
       const toggledMap = _.zipObject(selectedIds, _.fill(Array(selectedIds.length), true));
 
       // merge toggled state
@@ -31,7 +31,7 @@ export default function select(_state = null, action) {
         ...state,
         selected: {
           ...state.selected,
-          [objType]: selectedMap,
+          [objectType]: selectedMap,
         },
       };
     }

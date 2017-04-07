@@ -98,7 +98,7 @@ export class IndexPage extends Component {
                 { name: 'Delete', action: this.deleteZones },
               ]}
               selectedMap={selectedMap}
-              objType={OBJECT_TYPE}
+              objectType={OBJECT_TYPE}
               toggleSelected={toggleSelected}
             />
           </div>

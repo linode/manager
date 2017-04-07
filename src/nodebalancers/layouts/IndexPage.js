@@ -88,7 +88,7 @@ export class IndexPage extends Component {
                 { name: 'Delete', action: this.deleteNodeBalancers },
               ]}
               selectedMap={selectedMap}
-              objType={OBJECT_TYPE}
+              objectType={OBJECT_TYPE}
               toggleSelected={toggleSelected}
             />
           </div>

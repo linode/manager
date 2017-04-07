@@ -30,7 +30,7 @@ describe('reducers/select reducer', () => {
 
     expect(select(state, {
       type: TOGGLE_SELECTED,
-      objType: 'example',
+      objectType: 'example',
       selectedIds: ['1234', '1235'],
     }))
       .to.have.property('selected')
