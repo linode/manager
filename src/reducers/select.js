@@ -4,7 +4,32 @@ import {
   TOGGLE_SELECTED,
 } from '~/actions/select';
 
-
+/**
+ * Reduces toggleSelect actions for any checked state stored in Redux.
+ * Associates checked state with an objectType, e.g. linodes
+ *
+ * Redux State Structure:
+ *
+ * {
+ *    select: {
+ *      selected: {
+ *        [objectType]: {
+ *          [id]: true
+ *          ...
+ *        }
+ *        ...
+ *      }
+ *    }
+ * }
+ *
+ * Access in mapStateToProps:
+ *
+ * state.select.selected[OBJECT_TYPE]
+ *
+ * @param {Object} _state
+ * @param {Object} action
+ * @returns {Object} state
+ */
 export default function select(_state = null, action) {
   const state = _state === null ? {
     selected: {},
@@ -39,4 +64,3 @@ export default function select(_state = null, action) {
       return state;
   }
 }
-
