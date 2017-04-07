@@ -32,7 +32,7 @@ import { setTitle } from '~/actions/title';
 import DeleteModalBody from '~/components/modals/DeleteModalBody';
 import { showModal, hideModal } from '~/actions/modal';
 
-const OBJ_TYPE = 'linodes';
+const OBJECT_TYPE = 'linodes';
 
 
 export class IndexPage extends Component {
@@ -96,7 +96,7 @@ export class IndexPage extends Component {
           const ids = linodesToBeRemoved.map(function (linode) { return linode.id; });
 
           await dispatch(api.delete(ids));
-          dispatch(toggleSelected(OBJ_TYPE, ids));
+          dispatch(toggleSelected(OBJECT_TYPE, ids));
           dispatch(hideModal());
         }}
         items={linodes.linodes}
@@ -135,7 +135,7 @@ export class IndexPage extends Component {
                 { name: 'Delete', action: this.deleteLinodes },
               ]}
               selectedMap={selectedMap}
-              objType={OBJ_TYPE}
+              objType={OBJECT_TYPE}
               toggleSelected={toggleSelected}
             />
           </div>
@@ -167,7 +167,7 @@ export class IndexPage extends Component {
                   selectedMap={selectedMap}
                   disableHeader
                   onToggleSelect={(record) => {
-                    dispatch(toggleSelected(OBJ_TYPE, record.id));
+                    dispatch(toggleSelected(OBJECT_TYPE, record.id));
                   }}
                 />
               </ListGroup>
@@ -210,7 +210,7 @@ IndexPage.propTypes = {
 function select(state) {
   return {
     linodes: state.api.linodes,
-    selectedMap: state.select.selected[OBJ_TYPE] || {},
+    selectedMap: state.select.selected[OBJECT_TYPE] || {},
   };
 }
 

@@ -22,7 +22,7 @@ import {
 } from '~/components/tables/cells';
 import { MassEditControl } from '~/components/tables/controls';
 
-const OBJ_TYPE = 'nodebalancers';
+const OBJECT_TYPE = 'nodebalancers';
 
 
 export class IndexPage extends Component {
@@ -61,7 +61,7 @@ export class IndexPage extends Component {
           const ids = nodebalancersArr.map(function (nodebalancer) { return nodebalancer.id; });
 
           await dispatch(api.delete(ids));
-          dispatch(toggleSelected(OBJ_TYPE, ids));
+          dispatch(toggleSelected(OBJECT_TYPE, ids));
           dispatch(hideModal());
         }}
         onCancel={() => dispatch(hideModal())}
@@ -88,7 +88,7 @@ export class IndexPage extends Component {
                 { name: 'Delete', action: this.deleteNodeBalancers },
               ]}
               selectedMap={selectedMap}
-              objType={OBJ_TYPE}
+              objType={OBJECT_TYPE}
               toggleSelected={toggleSelected}
             />
           </div>
@@ -114,7 +114,7 @@ export class IndexPage extends Component {
             selectedMap={selectedMap}
             disableHeader
             onToggleSelect={(record) => {
-              dispatch(toggleSelected(OBJ_TYPE, record.id));
+              dispatch(toggleSelected(OBJECT_TYPE, record.id));
             }}
           />
         </ListBody>
@@ -156,7 +156,7 @@ IndexPage.propTypes = {
 function select(state) {
   return {
     nodebalancers: state.api.nodebalancers,
-    selectedMap: state.select.selected[OBJ_TYPE] || {},
+    selectedMap: state.select.selected[OBJECT_TYPE] || {},
   };
 }
 
