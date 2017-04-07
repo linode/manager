@@ -6,17 +6,17 @@ import _ from 'lodash';
 
 import { setError } from '~/actions/errors';
 import { showModal, hideModal } from '~/actions/modal';
-import ConfirmModalBody from '~/components/modals/ConfirmModalBody';
 import { List, Table } from '~/components/tables';
 import { MassEditControl } from '~/components/tables/controls';
 import { ListHeader } from '~/components/tables/headers';
 import { ListBody, ListGroup } from '~/components/tables/bodies';
+import DeleteModalBody from '~/components/modals/DeleteModalBody';
 import {
   ButtonCell,
   CheckboxCell,
   LinkCell,
 } from '~/components/tables/cells';
-import { dnszones } from '~/api';
+import { dnszones as apiDnszones } from '~/api';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 import { toggleSelected, toggleSelectAll } from '../actions';
@@ -25,7 +25,7 @@ import CreateHelper from '~/components/CreateHelper';
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
     try {
-      await dispatch(dnszones.all());
+      await dispatch(apiDnszones.all());
     } catch (response) {
       // eslint-disable-next-line no-console
       console.error(response);
@@ -47,24 +47,25 @@ export class IndexPage extends Component {
   }
 
   remove(zones) {
-    const { dispatch } = this.props;
+    const { dispatch, selected, dnszones } = this.props;
     dispatch(showModal('Confirm deletion',
-      <ConfirmModalBody
+      <DeleteModalBody
         buttonText="Delete selected zones"
         onOk={() => {
           const zoneIds = zones.map((zone) => zone.id);
 
           zoneIds.forEach(function (id) {
-            dispatch(dnszones.delete(id));
+            dispatch(apiDnszones.delete(id));
           });
           dispatch(toggleSelected(zoneIds));
           dispatch(hideModal());
         }}
+        items={dnszones.dnszones}
+        selectedItems={Object.keys(selected)}
+        typeOfItem="zones"
+        label="dnszone"
         onCancel={() => dispatch(hideModal())}
-      >
-        Are you sure you want to delete selected Zones?
-        This operation cannot be undone.
-      </ConfirmModalBody>
+      />
     ));
   }
 
@@ -74,20 +75,21 @@ export class IndexPage extends Component {
   }
 
   renderModal(zoneId) {
-    const { dispatch } = this.props;
+    const { dispatch, dnszones: theseZones } = this.props;
     return (
-      <ConfirmModalBody
-        buttonText="Delete"
+      <DeleteModalBody
+        buttonText="Delete selected zones"
         onOk={async () => {
-          await dispatch(dnszones.delete(zoneId));
+          await dispatch(apiDnszones.delete(zoneId));
           dispatch(toggleSelectAll());
           dispatch(hideModal());
         }}
+        items={theseZones.dnszones}
+        selectedItems={zoneId}
+        typeOfItem="zones"
+        label="dnszone"
         onCancel={() => dispatch(hideModal())}
-      >
-        <span className="text-danger">WARNING!</span> This will permanently
-        delete this DNS Zone. Confirm below to proceed.
-      </ConfirmModalBody>
+      />
     );
   }
 

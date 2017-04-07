@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
-import { ConfirmModalBody } from '~/components/modals';
+import DeleteModalBody from '~/components/modals/DeleteModalBody';
 import { linodes } from '~/api';
 import { showModal, hideModal } from '~/actions/modal';
 import { Button } from '~/components/buttons';
@@ -23,17 +23,18 @@ export class ConfigPanel extends Component {
     const { dispatch } = this.props;
 
     dispatch(showModal('Confirm deletion',
-      <ConfirmModalBody
+      <DeleteModalBody
         buttonText="Delete config"
         onOk={async () => {
           await dispatch(linodes.configs.delete(linode.id, config.id));
           dispatch(hideModal());
         }}
+        items={{ config }}
+        selectedItems={['config']}
+        typeOfItem="Configs"
+        label="label"
         onCancel={() => dispatch(hideModal())}
-      >
-        Are you sure you want to delete this config?
-        This operation cannot be undone.
-      </ConfirmModalBody>
+      />
     ));
   }
 

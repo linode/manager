@@ -1,17 +1,18 @@
 import React, { PropTypes, Component } from 'react';
 import moment from 'moment';
+import { connect } from 'react-redux';
 
 import _ from 'lodash';
 import { API_ROOT } from '~/constants';
 import Dropdown from '~/components/Dropdown';
 import EditPersonalAccessToken from './EditPersonalAccessToken';
 import { Card, CardImageHeader } from '~/components/cards/';
-import { ConfirmModalBody } from '~/components/modals';
+import DeleteModalBody from '~/components/modals/DeleteModalBody';
 import { Table } from '~/components/tables';
 import { AuthScopeCell } from '~/components/tables/cells';
 import { OAUTH_SUBSCOPES, OAUTH_SCOPES } from '~/constants';
 import { showModal, hideModal } from '~/actions/modal';
-import { tokens } from '~/api';
+import { tokens as apiTokens } from '~/api';
 
 export default class PersonalAccessToken extends Component {
   constructor() {
@@ -33,18 +34,21 @@ export default class PersonalAccessToken extends Component {
   }
 
   deleteAction = () => {
-    const { dispatch, label, id } = this.props;
+    const { dispatch, id, client } = this.props;
 
     dispatch(showModal('Delete Personal Access Token',
-      <ConfirmModalBody
+      <DeleteModalBody
+        buttonText="Delete personal access token"
         onCancel={() => dispatch(hideModal())}
         onOk={() => {
-          dispatch(tokens.delete(id));
+          dispatch(apiTokens.delete(id));
           dispatch(hideModal());
         }}
-      >
-        Are you sure you want to delete <strong>{label}</strong>?
-      </ConfirmModalBody>
+        typeOfItem="Personal access tokens"
+        label="label"
+        items={{ client }}
+        selectedItems={['client']}
+      />
     ));
   }
 
@@ -109,4 +113,13 @@ PersonalAccessToken.propTypes = {
   id: PropTypes.any.isRequired,
   secret: PropTypes.string.isRequired,
   dispatch: PropTypes.func.isRequired,
+  client: PropTypes.object,
 };
+
+function select(state) {
+  return {
+    tokens: state.api.tokens,
+  };
+}
+
+connect(select)(PersonalAccessToken);
