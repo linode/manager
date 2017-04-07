@@ -87,7 +87,7 @@ export class IndexPage extends Component {
   }
 
   deleteLinodes(linodesToBeRemoved) {
-    const { dispatch, selected, linodes } = this.props;
+    const { dispatch, selectedMap, linodes } = this.props;
 
     dispatch(showModal('Confirm deletion',
       <DeleteModalBody
@@ -100,7 +100,7 @@ export class IndexPage extends Component {
           dispatch(hideModal());
         }}
         items={linodes.linodes}
-        selectedItems={Object.keys(selected)}
+        selectedItems={Object.keys(selectedMap)}
         typeOfItem="Linodes"
         label="label"
         onCancel={() => dispatch(hideModal())}

@@ -52,7 +52,7 @@ export class IndexPage extends Component {
   }
 
   deleteZones(zones) {
-    const { dispatch, selected, dnszones } = this.props;
+    const { dispatch, selectedMap, dnszones } = this.props;
     const zonesArr = Array.isArray(zones) ? zones : [zones];
 
     dispatch(showModal('Confirm deletion',
@@ -66,7 +66,7 @@ export class IndexPage extends Component {
           dispatch(hideModal());
         }}
         items={dnszones.dnszones}
-        selectedItems={Object.keys(selected)}
+        selectedItems={Object.keys(selectedMap)}
         typeOfItem="zones"
         label="dnszone"
         onCancel={() => dispatch(hideModal())}
