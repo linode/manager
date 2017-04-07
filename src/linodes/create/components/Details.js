@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import { Link } from 'react-router';
 
 import { Card, CardHeader } from '~/components/cards';
 import { PrimaryButton } from '~/components/buttons';
@@ -22,6 +23,18 @@ export default class Details extends Component {
       label: this.state.label,
       backups: this.state.enableBackups,
     });
+  }
+
+  maxLimit(errors) {
+    if (errors._) {
+      if (errors._[0].reason === 'Account Limit reached.  Please open a support ticket.') {
+        return (
+          <Link className="alert" to="/support/create">
+            Open a support ticket
+          </Link>
+        );
+      }
+    }
   }
 
   render() {
@@ -75,7 +88,6 @@ export default class Details extends Component {
               />
             </div>
           </FormGroup>
-          <ErrorSummary errors={errors} />
           <FormGroup className="row">
             <div className="offset-sm-2 col-sm-10">
               <PrimaryButton
@@ -85,6 +97,11 @@ export default class Details extends Component {
               >
                 Create Linode{this.state.quantity > 1 ? 's' : null}
               </PrimaryButton>
+            </div>
+          </FormGroup>
+          <FormGroup className="row">
+            <div className="offset-sm-2 col-sm-10">
+              <ErrorSummary errors={errors} />{this.maxLimit(errors)}
             </div>
           </FormGroup>
         </Form>
