@@ -6,6 +6,7 @@ import Dropdown from '~/components/Dropdown';
 import { reduceErrors } from '~/errors';
 import EditApplication from './EditApplication';
 import { ConfirmModalBody } from '~/components/modals';
+import DeleteModalBody from '~/components/modals/DeleteModalBody';
 import { showModal, hideModal } from '~/actions/modal';
 import { renderSecret } from './CreatePersonalAccessToken';
 import { clients } from '~/api';
@@ -45,17 +46,19 @@ export default class MyApplication extends Component {
 
   deleteAction = () => {
     const { dispatch, client } = this.props;
-
     dispatch(showModal('Delete OAuth Client',
-      <ConfirmModalBody
-        onCancel={() => dispatch(hideModal())}
+      <DeleteModalBody
+        buttonText="Delete OAuth client"
         onOk={() => {
           dispatch(hideModal());
           this.deleteApp();
         }}
-      >
-        Are you sure you want to delete <strong>{client.label}</strong>?
-      </ConfirmModalBody>
+        onCancel={() => dispatch(hideModal())}
+        typeOfItem="Clients"
+        label="label"
+        items={{ client }}
+        selectedItems={['client']}
+      />
     ));
   }
 

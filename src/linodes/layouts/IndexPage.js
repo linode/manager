@@ -29,7 +29,7 @@ import {
 } from '~/api/linodes';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
-import ConfirmModalBody from '~/components/modals/ConfirmModalBody';
+import DeleteModalBody from '~/components/modals/DeleteModalBody';
 import { showModal, hideModal } from '~/actions/modal';
 
 
@@ -82,23 +82,23 @@ export class IndexPage extends Component {
     });
   }
 
-  remove(linodes) {
-    const { dispatch } = this.props;
-
+  remove(linodesToBeRemoved) {
+    const { dispatch, selected, linodes } = this.props;
     dispatch(showModal('Confirm deletion',
-      <ConfirmModalBody
+      <DeleteModalBody
         buttonText="Delete selected Linodes"
         onOk={() => {
-          linodes.forEach(function (linode) {
+          linodesToBeRemoved.forEach(function (linode) {
             dispatch(apiLinodes.delete(linode.id));
           });
           dispatch(hideModal());
         }}
+        items={linodes.linodes}
+        selectedItems={Object.keys(selected)}
+        typeOfItem="Linodes"
+        label="label"
         onCancel={() => dispatch(hideModal())}
-      >
-        Are you sure you want to delete selected Linodes?
-        This operation cannot be undone.
-      </ConfirmModalBody>
+      />
     ));
   }
 
