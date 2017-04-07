@@ -510,10 +510,10 @@ export class EditConfigPage extends Component {
                   radioChecked={isCustomRoot === true}
                   radioOnChange={() => this.setState({
                     isCustomRoot: true,
-                    rootDevice: '/dev/xvda',
+                    rootDevice: '/dev/sda',
                   })}
                   inputId="config-custom-root-device"
-                  inputPlaceholder="/dev/xvda"
+                  inputPlaceholder="/dev/sda"
                   inputValue={isCustomRoot ? rootDevice : ''}
                   inputDisabled={isCustomRoot === false}
                   inputType="text"
