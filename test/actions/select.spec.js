@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { expectObjectDeepEquals } from '@/common';
 
 import { TOGGLE_SELECTED } from '~/actions/select';

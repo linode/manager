@@ -7,10 +7,9 @@ import { TOGGLE_SELECTED } from '~/actions/select';
 import toggleSelected from '~/actions/select';
 
 
-
 describe('reducers/select reducer', () => {
   it('should handle initial state', () => {
-    expect(select(undefined, {}))
+    expect(select(undefined, { }))
       .to.deep.equal({ selected: { } });
   });
 
@@ -23,31 +22,31 @@ describe('reducers/select reducer', () => {
   });
 
   it('should add to the selection on TOGGLE_SELECTED', () => {
-    const state = {selected: {example: {}}};
+    const state = { selected: { example: { } } };
     deepFreeze(state);
 
     const newState = select(state, toggleSelected('example', '1234'));
     expectObjectDeepEquals(newState, {
       selected: {
         example: {
-          '1234': true
-        }
-      }
+          1234: true,
+        },
+      },
     });
 
 
-    const newState = select(state, {
+    const multiNewState = select(state, {
       type: TOGGLE_SELECTED,
       objectType: 'example',
       selectedIds: ['1234', '1235'],
     });
-    expectObjectDeepEquals(newState, {
+    expectObjectDeepEquals(multiNewState, {
       selected: {
         example: {
           1234: true,
           1235: true,
-        }
-      }
+        },
+      },
     });
   });
 
@@ -66,18 +65,18 @@ describe('reducers/select reducer', () => {
     expectObjectDeepEquals(newState, {
       selected: {
         example: {
-          1234: true
-        }
-      }
+          1234: true,
+        },
+      },
     });
 
-    const newState = select(state, toggleSelected('example', '1234'));
-    expectObjectDeepEquals(newState, {
+    const altNewState = select(state, toggleSelected('example', '1234'));
+    expectObjectDeepEquals(altNewState, {
       selected: {
         example: {
-          1234: true
-        }
-      }
+          1234: true,
+        },
+      },
     });
   });
 });
