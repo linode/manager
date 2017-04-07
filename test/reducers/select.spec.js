@@ -65,16 +65,17 @@ describe('reducers/select reducer', () => {
     expectObjectDeepEquals(newState, {
       selected: {
         example: {
-          1234: true,
+          1235: true,
         },
       },
     });
 
-    const altNewState = select(state, toggleSelected('example', '1234'));
+    const altNewState = select(newState, toggleSelected('example', '1234'));
     expectObjectDeepEquals(altNewState, {
       selected: {
         example: {
           1234: true,
+          1235: true,
         },
       },
     });
