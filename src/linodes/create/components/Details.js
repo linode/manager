@@ -27,14 +27,20 @@ export default class Details extends Component {
 
   maxLimit(errors) {
     if (errors._) {
-      if (errors._[0].reason === 'Account Limit reached.  Please open a support ticket.') {
+      if (errors._[0].reason.toLowerCase().match(/limit reached/)) {
         return (
-          <Link className="alert" to="/support/create">
-            Open a support ticket
-          </Link>
+          <div>
+            <span className="alert alert-danger">
+              You've reached your account limit.
+            </span>
+            <Link className="alert" to="/support/create">
+              Open a support ticket to request a limit increase.
+            </Link>
+          </div>
         );
       }
     }
+    return <ErrorSummary errors={errors} />;
   }
 
   render() {
@@ -101,7 +107,7 @@ export default class Details extends Component {
           </FormGroup>
           <FormGroup className="row">
             <div className="offset-sm-2 col-sm-10">
-              <ErrorSummary errors={errors} />{this.maxLimit(errors)}
+              {this.maxLimit(errors)}
             </div>
           </FormGroup>
         </Form>
