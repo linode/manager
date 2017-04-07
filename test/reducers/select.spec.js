@@ -9,16 +9,15 @@ import toggleSelected from '~/actions/select';
 
 describe('reducers/select reducer', () => {
   it('should handle initial state', () => {
-    expect(select(undefined, { }))
-      .to.deep.equal({ selected: { } });
+    expectObjectDeepEquals(select(undefined, { }), { selected: { } });
   });
 
   it('should no-op on arbitrary actions', () => {
     const state = { selected: { } };
     deepFreeze(state);
 
-    expect(select(state, { type: 'foobar' }))
-      .to.deep.equal(state);
+    const newState = select(state, { type: 'foobar' });
+    expectObjectDeepEquals(newState, state);
   });
 
   it('should add to the selection on TOGGLE_SELECTED', () => {
