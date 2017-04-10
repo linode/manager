@@ -7,7 +7,6 @@ import _ from 'lodash';
 import CreateHelper from '~/components/CreateHelper';
 
 import { List, Table } from '~/components/tables';
-import { MassEditControl } from '~/components/tables/controls';
 import { ListHeader } from '~/components/tables/headers';
 import { ListBody, ListGroup } from '~/components/tables/bodies';
 import {
@@ -17,11 +16,12 @@ import {
   BackupsCell,
   LinkCell,
 } from '~/components/tables/cells';
+import { MassEditControl } from '~/components/tables/controls';
 import StatusDropdownCell from '~/linodes/components/StatusDropdownCell';
 
 import { setError } from '~/actions/errors';
-import { toggleSelected } from '../actions';
-import { linodes as apiLinodes } from '~/api';
+import { default as toggleSelected } from '~/actions/select';
+import { linodes as api } from '~/api';
 import {
   powerOnLinode,
   powerOffLinode,
@@ -32,11 +32,14 @@ import { setTitle } from '~/actions/title';
 import DeleteModalBody from '~/components/modals/DeleteModalBody';
 import { showModal, hideModal } from '~/actions/modal';
 
+const OBJECT_TYPE = 'linodes';
+
 
 export class IndexPage extends Component {
+
   static async preload({ dispatch }) {
     try {
-      await dispatch(apiLinodes.all());
+      await dispatch(api.all());
     } catch (response) {
       // eslint-disable-next-line no-console
       console.error(response);
@@ -44,12 +47,13 @@ export class IndexPage extends Component {
     }
   }
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+
     this.powerOn = this.powerOn.bind(this);
     this.powerOff = this.powerOff.bind(this);
     this.reboot = this.reboot.bind(this);
-    this.remove = this.remove.bind(this);
+    this.deleteLinodes = this.deleteLinodes.bind(this);
   }
 
   componentDidMount() {
@@ -82,19 +86,21 @@ export class IndexPage extends Component {
     });
   }
 
-  remove(linodesToBeRemoved) {
-    const { dispatch, selected, linodes } = this.props;
+  deleteLinodes(linodesToBeRemoved) {
+    const { dispatch, selectedMap, linodes } = this.props;
+
     dispatch(showModal('Confirm deletion',
       <DeleteModalBody
         buttonText="Delete selected Linodes"
-        onOk={() => {
-          linodesToBeRemoved.forEach(function (linode) {
-            dispatch(apiLinodes.delete(linode.id));
-          });
+        onOk={async () => {
+          const ids = linodesToBeRemoved.map(function (linode) { return linode.id; });
+
+          await dispatch(api.delete(ids));
+          dispatch(toggleSelected(OBJECT_TYPE, ids));
           dispatch(hideModal());
         }}
         items={linodes.linodes}
-        selectedItems={Object.keys(selected)}
+        selectedItems={Object.keys(selectedMap)}
         typeOfItem="Linodes"
         label="label"
         onCancel={() => dispatch(hideModal())}
@@ -102,8 +108,8 @@ export class IndexPage extends Component {
     ));
   }
 
-  renderLinodes(linodes, selected) {
-    const { dispatch } = this.props;
+  renderLinodes(linodes) {
+    const { dispatch, selectedMap } = this.props;
     // TODO: add sort function in linodes config definition
     const sortedLinodes = _.sortBy(Object.values(linodes), l => moment(l.created));
 
@@ -126,9 +132,10 @@ export class IndexPage extends Component {
                 { name: 'Reboot', action: this.reboot },
                 { name: 'Power on', action: this.powerOn },
                 { name: 'Power off', action: this.powerOff },
-                { name: 'Delete', action: this.remove },
+                { name: 'Delete', action: this.deleteLinodes },
               ]}
-              selectedMap={selected}
+              selectedMap={selectedMap}
+              objectType={OBJECT_TYPE}
               toggleSelected={toggleSelected}
             />
           </div>
@@ -158,10 +165,10 @@ export class IndexPage extends Component {
                     { cellComponent: StatusDropdownCell, dispatch: dispatch },
                   ]}
                   data={group.data}
-                  selectedMap={selected}
+                  selectedMap={selectedMap}
                   disableHeader
                   onToggleSelect={(record) => {
-                    dispatch(toggleSelected(record.id));
+                    dispatch(toggleSelected(OBJECT_TYPE, record.id));
                   }}
                 />
               </ListGroup>
@@ -174,7 +181,6 @@ export class IndexPage extends Component {
 
   render() {
     const { linodes } = this.props.linodes;
-    const { selected } = this.props;
 
     return (
       <div className="PrimaryPage container">
@@ -188,7 +194,7 @@ export class IndexPage extends Component {
           </div>
         </header>
         <div className="PrimaryPage-body">
-          {Object.keys(this.props.linodes.linodes).length ? this.renderLinodes(linodes, selected) :
+          {Object.keys(this.props.linodes.linodes).length ? this.renderLinodes(linodes) :
             <CreateHelper label="Linodes" href="/linodes/create" linkText="Add a Linode" />}
         </div>
       </div>
@@ -199,13 +205,13 @@ export class IndexPage extends Component {
 IndexPage.propTypes = {
   dispatch: PropTypes.func,
   linodes: PropTypes.object,
-  selected: PropTypes.object,
+  selectedMap: PropTypes.object.isRequired,
 };
 
 function select(state) {
   return {
     linodes: state.api.linodes,
-    selected: state.linodes.index.selected,
+    selectedMap: state.select.selected[OBJECT_TYPE] || {},
   };
 }
 

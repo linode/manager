@@ -4,7 +4,6 @@ import { mount } from 'enzyme';
 import { expect } from 'chai';
 
 import { IndexPage } from '~/linodes/layouts/IndexPage';
-import { TOGGLE_SELECTED } from '~/linodes/actions/index';
 import { api } from '@/data';
 import Dropdown from '~/components/Dropdown';
 import { SET_ERROR } from '~/actions/errors';
@@ -32,7 +31,7 @@ describe('linodes/layouts/IndexPage', () => {
     mount(
       <IndexPage
         dispatch={dispatch}
-        selected={{}}
+        selectedMap={{}}
         linodes={linodes}
       />);
     expect(dispatch.calledWith({
@@ -47,7 +46,7 @@ describe('linodes/layouts/IndexPage', () => {
     const page = mount(
       <IndexPage
         dispatch={dispatch}
-        selected={{}}
+        selectedMap={{}}
         linodes={linodes}
       />
     );
@@ -60,7 +59,7 @@ describe('linodes/layouts/IndexPage', () => {
     const page = mount(
       <IndexPage
         dispatch={() => {}}
-        selected={{}}
+        selectedMap={{}}
         linodes={linodes}
       />);
     const dropdown = page.find('Dropdown');
@@ -78,7 +77,7 @@ describe('linodes/layouts/IndexPage', () => {
       const page = mount(
         <IndexPage
           dispatch={dispatch}
-          selected={{ 1234: true }}
+          selectedMap={{ 1234: true }}
           linodes={linodes}
         />);
       dispatch.reset();
@@ -99,7 +98,7 @@ describe('linodes/layouts/IndexPage', () => {
     const page = mount(
       <IndexPage
         dispatch={dispatch}
-        selected={{ 1234: true }}
+        selectedMap={{ 1234: true }}
         linodes={linodes}
       />);
 
@@ -115,29 +114,5 @@ describe('linodes/layouts/IndexPage', () => {
 
     const fn = dispatch.firstCall.args[0];
     await expectRequest(fn, '/linode/instances/1234', { method: 'DELETE' });
-  });
-
-  it('selects all linodes when "select all" is checked', () => {
-    const selected = {};
-    const localDispatch = sandbox.spy(action => {
-      if (action.type === TOGGLE_SELECTED) {
-        action.selected.forEach(function (id) {
-          selected[id] = true;
-        });
-      }
-    });
-
-    const page = mount(
-      <IndexPage
-        dispatch={localDispatch}
-        selected={{}}
-        linodes={linodes}
-      />
-    );
-
-    const checkButton = page.find('MassEditControl input[type="checkbox"]');
-    expect(checkButton.length).to.equal(1);
-    checkButton.simulate('change');
-    expect(Object.keys(selected)).to.deep.equal(Object.keys(linodes.linodes));
   });
 });
