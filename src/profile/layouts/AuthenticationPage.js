@@ -8,15 +8,16 @@ import {
 import { ErrorSummary, reduceErrors } from '~/errors';
 import { setPassword } from '~/api/account';
 import SelectExpiration from '../components/SelectExpiration';
+import { TwoFactorPanel } from '../components/TwoFactorPanel';
 
 export class AuthenticationPage extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+
     this.state = {
       password: '',
       expires: '0',
-      passwordErrors: {},
-      tfaErrors: {},
+      errors: {},
       fetching: false,
     };
   }
@@ -25,7 +26,7 @@ export class AuthenticationPage extends Component {
     const { dispatch } = this.props;
     const { password, expires } = this.state;
 
-    this.setState({ fetching: true, passwordErrors: {} });
+    this.setState({ fetching: true, errors: {} });
 
     try {
       await dispatch(setPassword(password, SelectExpiration.map(expires)));
@@ -36,22 +37,20 @@ export class AuthenticationPage extends Component {
       }
 
       const errors = await reduceErrors(response);
-      this.setState({ passwordErrors: errors });
+      this.setState({ errors: errors });
     }
 
     this.setState({ fetching: false });
   }
 
-  tfaOnSubmit = async () => {}
-
   render() {
-    const { password, expires, passwordErrors, tfaErrors } = this.state;
+    const { password, expires, errors } = this.state;
 
     return (
       <div>
         <Card header={<CardHeader title="Change password" />}>
           <Form onSubmit={this.passwordOnSubmit}>
-            <FormGroup className="row" errors={passwordErrors} name="password">
+            <FormGroup className="row" errors={errors} name="password">
               <label className="col-sm-2 col-form-label">New password:</label>
               <div className="col-sm-10">
                 <PasswordInput
@@ -59,10 +58,10 @@ export class AuthenticationPage extends Component {
                   value={password}
                   id="new-password"
                 />
-                <FormGroupError errors={passwordErrors} name="password" />
+                <FormGroupError errors={errors} name="password" />
               </div>
             </FormGroup>
-            <FormGroup className="row" errors={passwordErrors} name="expires">
+            <FormGroup className="row" errors={errors} name="expires">
               <label className="col-sm-2 col-form-label">Expires:</label>
               <div className="col-sm-10">
                 <SelectExpiration
@@ -71,7 +70,7 @@ export class AuthenticationPage extends Component {
                   value={expires}
                   onChange={e => this.setState({ expires: e.target.value })}
                 />
-                <FormGroupError errors={passwordErrors} name="expires" />
+                <FormGroupError errors={errors} name="expires" />
               </div>
             </FormGroup>
             <FormGroup className="row">
@@ -79,17 +78,10 @@ export class AuthenticationPage extends Component {
                 <SubmitButton />
               </div>
             </FormGroup>
-            <ErrorSummary errors={passwordErrors} />
+            <ErrorSummary errors={errors} />
           </Form>
         </Card>
-        <Card header={<CardHeader title="Change two-factor authentication setting" />}>
-          <Form onSubmit={this.tfaOnSubmit}>
-            {/* TODO: this info is conditional on your actual TFA status */}
-            <p>Two-factor authentication is currently disabled.</p>
-            <SubmitButton disabled>Enable</SubmitButton>
-            <ErrorSummary errors={tfaErrors} />
-          </Form>
-        </Card>
+        <TwoFactorPanel {...this.props} />
       </div>
     );
   }
@@ -102,7 +94,7 @@ AuthenticationPage.propTypes = {
 
 function select(state) {
   return {
-    profile: state.api.profile,
+    profile: state.api.profile.profile.undefined,
   };
 }
 
