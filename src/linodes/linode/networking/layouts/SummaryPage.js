@@ -161,7 +161,7 @@ export class SummaryPage extends Component {
     const nav = (
       <Button
         id="public-ip-button"
-        className="float-xs-right"
+        className="float-sm-right"
         disabled
       >
         Add public IP address

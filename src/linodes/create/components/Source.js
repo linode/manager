@@ -74,7 +74,7 @@ export default class Source extends Component {
           />
         </div>
         {linodesWithBackups.length > perPageLimit ? (
-          <nav className="text-xs-center">
+          <nav className="text-sm-center">
             <ul className="pagination">
               <li className="page-item">
                 <a href="#" aria-label="Previous" onClick={decreaseCount} className="page-link">

@@ -152,6 +152,7 @@ export class IndexPage extends Component {
                     { cellComponent: DatacenterCell },
                     {
                       cellComponent: BackupsCell,
+                      className: 'hidden-md-down',
                       hrefFn: (linode) => `/linodes/${linode.label}/backups`,
                     },
                     { cellComponent: StatusDropdownCell, dispatch: dispatch },

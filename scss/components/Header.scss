@@ -2,6 +2,7 @@
     position: fixed;
     top: 0;
     width: 100%;
+    min-width: inherit; /* From .layout min-width */
     z-index: 9998;
 }
 
