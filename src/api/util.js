@@ -48,6 +48,14 @@ export function lessThanDatetimeFilter(key, datetime) {
   };
 }
 
+export function greaterThanDatetimeFilter(key, datetime) {
+  return {
+    [key]: {
+      '+gte': datetime,
+    },
+  };
+}
+
 export function lessThanNowFilter(key) {
   return lessThanDatetimeFilter(key, moment().toISOString());
 }
