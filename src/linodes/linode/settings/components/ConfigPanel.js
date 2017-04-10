@@ -80,7 +80,7 @@ export class ConfigPanel extends Component {
     const nav = (
       <Button
         to={`/linodes/${linode.label}/settings/advanced/configs/create`}
-        className="float-xs-right"
+        className="float-sm-right"
       >
         Add a config
       </Button>

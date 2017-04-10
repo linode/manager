@@ -102,7 +102,7 @@ export class DashboardPage extends Component {
         {!this.graphs ? <p>No stats are available.</p> : (
           <div>
             <div className="clearfix">
-              <div className="float-xs-left">
+              <div className="float-sm-left">
                 <Select
                   value={this.state.source}
                   name="source"
@@ -114,7 +114,7 @@ export class DashboardPage extends Component {
                   <option value="netv6">IPv6 Network</option>
                 </Select>
               </div>
-              <div className="float-xs-right">
+              <div className="float-sm-right">
                 <Select
                   value={this.state.range}
                   name="range"

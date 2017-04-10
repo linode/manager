@@ -109,6 +109,7 @@ export class IndexPage extends Component {
           },
           {
             dataKey: 'id',
+            className: 'hidden-md-down',
             formatFn: id => <span>#{id}</span>,
           },
           {

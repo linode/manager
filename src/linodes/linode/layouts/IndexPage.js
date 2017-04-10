@@ -69,7 +69,7 @@ export class IndexPage extends Component {
       <div className="details-page">
         <header className="main-header">
           <div className="container">
-            <div className="float-xs-left">
+            <div className="float-sm-left">
               <Link to="/linodes">Linodes</Link>
               <h1 title={linode.id}>
                 <Link to={`/linodes/${linode.label}`}>
@@ -77,7 +77,7 @@ export class IndexPage extends Component {
                 </Link>
               </h1>
             </div>
-            <span className="float-xs-right">
+            <span className="float-sm-right">
               <StatusDropdown
                 shortcuts={false}
                 linode={linode}
