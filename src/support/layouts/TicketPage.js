@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
+import { push } from 'react-router-redux';
 
 import { MAX_UPLOAD_SIZE_MB } from '~/constants';
 import { tickets } from '~/api';
@@ -22,6 +23,7 @@ export class TicketPage extends Component {
       // eslint-disable-next-line no-console
       console.error(response);
       dispatch(setError(response));
+      await dispatch(push('/404'));
     }
   }
 
