@@ -3,31 +3,44 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
 import { setError } from '~/actions/errors';
+import { default as toggleSelected } from '~/actions/select';
 import { showModal, hideModal } from '~/actions/modal';
-import ConfirmModalBody from '~/components/modals/ConfirmModalBody';
-import { nodebalancers } from '~/api';
+import { nodebalancers as api } from '~/api';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
+import ConfirmModalBody from '~/components/modals/ConfirmModalBody';
 import CreateHelper from '~/components/CreateHelper';
 import { List, Table } from '~/components/tables';
 import { ListBody } from '~/components/tables/bodies';
+import { ListHeader } from '~/components/tables/headers';
 import {
   ButtonCell,
+  CheckboxCell,
   DatacenterCell,
   IPAddressCell,
   LinkCell,
 } from '~/components/tables/cells';
+import { MassEditControl } from '~/components/tables/controls';
+
+const OBJECT_TYPE = 'nodebalancers';
 
 
 export class IndexPage extends Component {
+
   static async preload({ dispatch }) {
     try {
-      await dispatch(nodebalancers.all());
+      await dispatch(api.all());
     } catch (response) {
       // eslint-disable-next-line no-console
       console.error(response);
       dispatch(setError(response));
     }
+  }
+
+  constructor(props) {
+    super(props);
+
+    this.deleteNodeBalancers = this.deleteNodeBalancers.bind(this);
   }
 
   async componentDidMount() {
@@ -37,38 +50,53 @@ export class IndexPage extends Component {
     dispatch(setTitle('Nodebalancers'));
   }
 
-  deleteNodeBalancer = (zoneId) => {
+  deleteNodeBalancers(nodebalancers) {
     const { dispatch } = this.props;
-    dispatch(showModal('Delete NodeBalancer', this.renderModal(zoneId)));
-  }
+    const nodebalancersArr = Array.isArray(nodebalancers) ? nodebalancers : [nodebalancers];
 
-  renderModal(zoneId) {
-    const { dispatch } = this.props;
-    return (
+    dispatch(showModal('Delete NodeBalancer',
       <ConfirmModalBody
         buttonText="Delete"
         onOk={async () => {
-          await dispatch(nodebalancers.delete(zoneId));
+          const ids = nodebalancersArr.map(function (nodebalancer) { return nodebalancer.id; });
+
+          await dispatch(api.delete(ids));
+          dispatch(toggleSelected(OBJECT_TYPE, ids));
           dispatch(hideModal());
         }}
         onCancel={() => dispatch(hideModal())}
       >
         Are you sure you want to <strong>permanently</strong> delete this NodeBalancer?
       </ConfirmModalBody>
-    );
+    ));
   }
 
   render() {
-    const { nodebalancers } = this.props;
+    const { dispatch, nodebalancers, selectedMap } = this.props;
     // TODO: add sort function in config definition
     const data = Object.values(nodebalancers.nodebalancers);
 
     // TODO: add mass edit controls to nodebalancers
     const renderNodebalancers = (data) => (
       <List>
+        <ListHeader>
+          <div className="pull-sm-left">
+            <MassEditControl
+              data={data}
+              dispatch={dispatch}
+              massEditOptions={[
+                { name: 'Delete', action: this.deleteNodeBalancers },
+              ]}
+              selectedMap={selectedMap}
+              objectType={OBJECT_TYPE}
+              toggleSelected={toggleSelected}
+            />
+          </div>
+        </ListHeader>
         <ListBody>
           <Table
             columns={[
+              { cellComponent: CheckboxCell },
               {
                 className: 'RowLabelCell',
                 cellComponent: LinkCell,
@@ -78,13 +106,16 @@ export class IndexPage extends Component {
               { cellComponent: DatacenterCell },
               {
                 cellComponent: ButtonCell,
-                onClick: (nodebalancer) => { this.deleteNodeBalancer(nodebalancer.id); },
+                onClick: (nodebalancer) => { this.deleteNodeBalancers(nodebalancer); },
                 text: 'Delete',
               },
             ]}
             data={data}
-            selectedMap={{}}
+            selectedMap={selectedMap}
             disableHeader
+            onToggleSelect={(record) => {
+              dispatch(toggleSelected(OBJECT_TYPE, record.id));
+            }}
           />
         </ListBody>
       </List>
@@ -118,12 +149,14 @@ export class IndexPage extends Component {
 IndexPage.propTypes = {
   dispatch: PropTypes.func,
   nodebalancers: PropTypes.object,
+  selectedMap: PropTypes.object.isRequired,
 };
 
 
 function select(state) {
   return {
     nodebalancers: state.api.nodebalancers,
+    selectedMap: state.select.selected[OBJECT_TYPE] || {},
   };
 }
 
