@@ -1,7 +1,3 @@
-import {
-  createHeaderFilter,
-} from './util';
-
 const DEFAULT_TIMEOUT = 10000;
 
 
