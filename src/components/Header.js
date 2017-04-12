@@ -87,9 +87,9 @@ export default class Header extends Component {
               to="/nodebalancers"
             >NodeBalancers</Link>
             <Link
-              className={`${linkClass('/dnsmanager')}`}
-              to="/dnsmanager"
-            >DNS Manager</Link>
+              className={`${linkClass('/domains')}`}
+              to="/domains"
+            >Domains</Link>
             {!username ? null :
               <div
                 className="MainHeader-session float-sm-right"

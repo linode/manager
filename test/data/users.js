@@ -20,7 +20,7 @@ export const testPermissions = {
       global: {
         add_linodes: true,
         add_nodebalancers: true,
-        add_dnszones: true,
+        add_domains: true,
       },
     },
   },
