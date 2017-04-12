@@ -14,7 +14,7 @@ import { ListBody } from '~/components/tables/bodies';
 
 import { LinkCell, ButtonCell } from '~/components/tables/cells';
 import { NodebalancerStatusReadable } from '~/constants';
-import Datacenter from '~/linodes/components/Datacenter';
+import Region from '~/linodes/components/Region';
 
 
 export class IndexPage extends Component {
@@ -137,10 +137,10 @@ export class IndexPage extends Component {
             </div>
             <div className="row">
               <div className="col-sm-2 row-label">
-                Datacenter
+                Region
               </div>
               <div className="col-sm-10">
-                <Datacenter obj={nodebalancer} />
+                <Region obj={nodebalancer} />
               </div>
             </div>
           </Card>
