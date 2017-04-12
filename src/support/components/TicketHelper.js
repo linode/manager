@@ -50,7 +50,7 @@ export default class TicketHelper extends Component {
             </LinkButton>
             <p className={this.state.hidden.availibility ? 'hidden' : ''} id="availibility"><small>
               {/* eslint-disable max-len */}
-              Our Singapore and Frankfurt datacenters are now available and we are currently considering expansion in Tokyo. You can stay up-to-date on all datacenter news on <Link to="https://blog.linode.com">our blog</Link>.
+              Our Singapore and Frankfurt regions are now available and we are currently considering expansion in Tokyo. You can stay up-to-date on all region news on <Link to="https://blog.linode.com">our blog</Link>.
               {/* eslint-enable max-len */}
             </small></p>
           </li>

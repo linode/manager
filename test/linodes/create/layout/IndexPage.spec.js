@@ -22,7 +22,7 @@ describe('linodes/create/layout/IndexPage', () => {
         <IndexPage
           dispatch={() => {}}
           distributions={api.distributions}
-          datacenters={api.datacenters}
+          regions={api.regions}
           types={api.types}
           linodes={api.linodes}
         />);
@@ -32,7 +32,7 @@ describe('linodes/create/layout/IndexPage', () => {
 
   [
     'Source',
-    'Datacenter',
+    'Region',
     'Plan',
     'Details',
   ].map(t => it(`renders a ${t}`, assertContains(t)));
@@ -55,7 +55,7 @@ describe('linodes/create/layout/IndexPage', () => {
       <IndexPage
         dispatch={() => {}}
         distributions={api.distributions}
-        datacenters={api.datacenters}
+        regions={api.regions}
         types={api.types}
         linodes={api.linodes}
       />);
@@ -64,18 +64,18 @@ describe('linodes/create/layout/IndexPage', () => {
     expect(page.instance().state.distribution).to.equal('linode/arch2016.05');
   });
 
-  it('selects a datacenter when appropriate', () => {
+  it('selects a region when appropriate', () => {
     const page = shallow(
       <IndexPage
         dispatch={() => {}}
         distributions={api.distributions}
-        datacenters={api.datacenters}
+        regions={api.regions}
         types={api.types}
         linodes={api.linodes}
       />);
-    const ds = page.find('Datacenter');
-    ds.props().onDatacenterSelected('newark');
-    expect(page.instance().state.datacenter).to.equal('newark');
+    const ds = page.find('Region');
+    ds.props().onRegionSelected('newark');
+    expect(page.instance().state.region).to.equal('newark');
   });
 
   it('selects a type when appropriate', () => {
@@ -83,7 +83,7 @@ describe('linodes/create/layout/IndexPage', () => {
       <IndexPage
         dispatch={() => {}}
         distributions={api.distributions}
-        datacenters={api.datacenters}
+        regions={api.regions}
         types={api.types}
         linodes={api.linodes}
       />);
@@ -101,7 +101,7 @@ describe('linodes/create/layout/IndexPage', () => {
       <IndexPage
         dispatch={dispatch}
         distributions={api.distributions}
-        datacenters={api.datacenters}
+        regions={api.regions}
         types={api.types}
         linodes={api.linodes}
       />
@@ -110,7 +110,7 @@ describe('linodes/create/layout/IndexPage', () => {
     dispatch.onCall(0).returns({ id: createdLinodeId });
 
     page.find('Plan').props().onServiceSelected('type');
-    page.find('Datacenter').props().onDatacenterSelected('datacenter');
+    page.find('Region').props().onRegionSelected('region');
     page.find('Source').props().onSourceSelected('distribution', 'source');
     await page.instance().onSubmit({
       label: 'label',
@@ -124,7 +124,7 @@ describe('linodes/create/layout/IndexPage', () => {
       type: 'type',
       distribution: 'source',
       backup: null,
-      datacenter: 'datacenter',
+      region: 'region',
       label: 'label',
       with_backups: false,
       group: null,
@@ -140,7 +140,7 @@ describe('linodes/create/layout/IndexPage', () => {
       <IndexPage
         dispatch={dispatch}
         distributions={api.distributions}
-        datacenters={api.datacenters}
+        regions={api.regions}
         types={api.types}
         linodes={api.linodes}
       />
@@ -149,7 +149,7 @@ describe('linodes/create/layout/IndexPage', () => {
     dispatch.onCall(0).throws({ json: () => ({ errors: [{ field: 'label', reason: error }] }) });
 
     page.find('Plan').props().onServiceSelected('type');
-    page.find('Datacenter').props().onDatacenterSelected('datacenter');
+    page.find('Region').props().onRegionSelected('region');
     page.find('Source').props().onSourceSelected('distribution', 'source');
     await page.instance().onSubmit({
       group: 'group',

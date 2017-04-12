@@ -1,6 +1,6 @@
 export const nodebalancers = [
   {
-    datacenter: {
+    region: {
       id: 'newark',
       label: 'Newark, NJ',
       country: 'us',

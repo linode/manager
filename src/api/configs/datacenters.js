@@ -4,9 +4,9 @@ import {
 } from '~/api/apiResultActionReducerGenerator';
 
 export const config = genConfig({
-  plural: 'datacenters',
-  singular: 'datacenter',
-  endpoint: id => `/datacenters/${id}`,
+  plural: 'regions',
+  singular: 'region',
+  endpoint: id => `/regions/${id}`,
   supports: [ONE, MANY],
 });
 
