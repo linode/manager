@@ -80,6 +80,11 @@ export default class Details extends Component {
                 onChange={password => this.setState({ password })}
                 disabled={selectedDistribution === 'none'}
               />
+              {selectedDistribution !== 'none' ? null : (
+                <p className="alert alert-info">
+                  <small>You can't set a password for an Empty Linode.</small>
+                </p>
+              )}
               <FormGroupError errors={errors} name="root_pass" inline={false} />
             </div>
           </FormGroup>
