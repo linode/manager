@@ -12,7 +12,7 @@ import { ListBody, ListGroup } from '~/components/tables/bodies';
 import {
   CheckboxCell,
   IPAddressCell,
-  DatacenterCell,
+  RegionCell,
   BackupsCell,
   LinkCell,
 } from '~/components/tables/cells';
@@ -156,7 +156,7 @@ export class IndexPage extends Component {
                       hrefFn: (linode) => `/linodes/${linode.label}`,
                     },
                     { cellComponent: IPAddressCell },
-                    { cellComponent: DatacenterCell },
+                    { cellComponent: RegionCell },
                     {
                       cellComponent: BackupsCell,
                       className: 'hidden-md-down',

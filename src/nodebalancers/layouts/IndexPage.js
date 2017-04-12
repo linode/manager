@@ -16,7 +16,7 @@ import { ListHeader } from '~/components/tables/headers';
 import {
   ButtonCell,
   CheckboxCell,
-  DatacenterCell,
+  RegionCell,
   IPAddressCell,
   LinkCell,
 } from '~/components/tables/cells';
@@ -103,7 +103,7 @@ export class IndexPage extends Component {
                 hrefFn: (nodebalancer) => { return `/nodebalancers/${nodebalancer.label}`; },
               },
               { cellComponent: IPAddressCell },
-              { cellComponent: DatacenterCell },
+              { cellComponent: RegionCell },
               {
                 cellComponent: ButtonCell,
                 onClick: (nodebalancer) => { this.deleteNodeBalancers(nodebalancer); },
