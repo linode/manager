@@ -150,7 +150,7 @@ export class SummaryPage extends Component {
         <div className="row">
           <div className="col-sm-3 row-label">Link-local IP</div>
           <div className="col-sm-9">
-            {this.renderIps('linkLocal', [{ address: ipv6['link-local'] }])}
+            {this.renderIps('linkLocal', [{ address: ipv6.link_local }])}
           </div>
         </div>
       </div>

@@ -234,7 +234,7 @@ function createTestLinode(id) {
       ipv6: {
         global: [],
         addresses: [],
-        'link-local': 'fe80::f03c:91ff:fe0a:181f',
+        link_local: 'fe80::f03c:91ff:fe0a:181f',
         slaac: ipv6.address,
       },
     },
