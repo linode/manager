@@ -3,9 +3,11 @@ import React, { PropTypes } from 'react';
 import { Form, FormGroup, SubmitButton, Select } from '~/components/form';
 import { ErrorSummary } from '~/errors';
 
-import { TIME_ZONES } from '~/constants';
+import moment from 'moment';
+import 'moment-timezone';
 
 export default function TimezoneForm(props) {
+  const timezones = moment.tz.names();
   return (
     <Form onSubmit={props.onSubmit}>
       <FormGroup className="row">
@@ -16,7 +18,7 @@ export default function TimezoneForm(props) {
             name="timezone"
             onChange={props.onChange}
             value={props.timezone}
-            options={TIME_ZONES.map(zone => ({ value: zone, label: zone }))}
+            options={timezones.map(zone => ({ value: zone, label: zone }))}
           />
         </div>
       </FormGroup>
