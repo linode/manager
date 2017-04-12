@@ -41,25 +41,25 @@ export class ZonePage extends Component {
   }
 
   async componentDidMount() {
-    const { dispatch } = this.props;
+    const { dispatch, dnszone } = this.props;
     dispatch(setSource(__filename));
 
-    dispatch(setTitle('Domains'));
+    dispatch(setTitle(dnszone.dnszone));
   }
 
   formatNSRecords() {
-    const { currentDNSZone } = this.props;
+    const { dnszone } = this.props;
     const nsRecords = NAME_SERVERS.map(ns => ({
       target: ns,
       ttl_sec: ONE_DAY,
-      name: currentDNSZone.dnszone,
+      name: dnszone.dnszone,
     }));
 
-    const { NS } = currentDNSZone._groupedRecords;
+    const { NS } = dnszone._groupedRecords;
     (NS || []).forEach(record => {
       nsRecords.push({
         ...record,
-        name: record.name || currentDNSZone.dnszone,
+        name: record.name || dnszone.dnszone,
       });
     });
 
@@ -67,59 +67,59 @@ export class ZonePage extends Component {
   }
 
   formatMXRecords() {
-    const { currentDNSZone } = this.props;
+    const { dnszone } = this.props;
 
-    const { MX } = currentDNSZone._groupedRecords;
+    const { MX } = dnszone._groupedRecords;
     return (MX || []).map(record => ({
       ...record,
-      name: record.name || currentDNSZone.dnszone,
+      name: record.name || dnszone.dnszone,
     }));
   }
 
   formatARecords() {
-    const { currentDNSZone } = this.props;
+    const { dnszone } = this.props;
 
-    const { A, AAAA } = currentDNSZone._groupedRecords;
+    const { A, AAAA } = dnszone._groupedRecords;
     return (A || []).concat(AAAA || []).filter(a => a !== undefined);
   }
 
   formatSRVRecords() {
-    const { currentDNSZone } = this.props;
+    const { dnszone } = this.props;
 
-    const { SRV } = currentDNSZone._groupedRecords;
+    const { SRV } = dnszone._groupedRecords;
     return (SRV || []).map(record => ({
-      ...record, domain: currentDNSZone.dnszone,
+      ...record, domain: dnszone.dnszone,
     }));
   }
 
   formatTXTRecords() {
-    const { currentDNSZone } = this.props;
+    const { dnszone } = this.props;
 
-    const { TXT } = currentDNSZone._groupedRecords;
+    const { TXT } = dnszone._groupedRecords;
     return (TXT || []).map(record => ({
       ...record,
-      name: record.name || currentDNSZone.dnszone,
+      name: record.name || dnszone.dnszone,
     }));
   }
 
   formatCNAMERecords() {
-    const { currentDNSZone } = this.props;
+    const { dnszone } = this.props;
 
-    const { CNAME } = currentDNSZone._groupedRecords;
+    const { CNAME } = dnszone._groupedRecords;
     return (CNAME || []).map(record => ({
       ...record,
-      name: record.name || currentDNSZone.dnszone,
+      name: record.name || dnszone.dnszone,
     }));
   }
 
   renderDeleteRecord(title, id) {
-    const { dispatch, currentDNSZone } = this.props;
+    const { dispatch, dnszone } = this.props;
 
     dispatch(showModal(title,
       <ConfirmModalBody
         buttonText="Delete Domain record"
         onOk={async () => {
-          await dispatch(dnszones.records.delete(currentDNSZone.id, id));
+          await dispatch(dnszones.records.delete(dnszone.id, id));
           dispatch(hideModal());
         }}
         onCancel={() => dispatch(hideModal())}
@@ -130,13 +130,13 @@ export class ZonePage extends Component {
   }
 
   renderSOAEditRecord() {
-    const { dispatch, currentDNSZone } = this.props;
+    const { dispatch, dnszone } = this.props;
 
     dispatch(showModal(
       'Edit SOA Record',
       <EditSOARecord
         dispatch={dispatch}
-        zone={currentDNSZone}
+        zone={dnszone}
         close={(zone) => {
           dispatch(hideModal());
           dispatch(replace(`/domains/${zone}`));
@@ -146,30 +146,30 @@ export class ZonePage extends Component {
   }
 
   renderEditRecord(title, component, props = {}) {
-    const { dispatch, currentDNSZone } = this.props;
+    const { dispatch, dnszone } = this.props;
 
     dispatch(showModal(
       title,
       <component
         {...props}
         dispatch={dispatch}
-        zone={currentDNSZone}
+        zone={dnszone}
         close={() => dispatch(hideModal())}
       />
     ));
   }
 
   render() {
-    const { currentDNSZone } = this.props;
+    const { dnszone } = this.props;
 
-    if (!currentDNSZone) {
+    if (!dnszone) {
       return null;
     }
 
     const formatSeconds = (records) => {
       return records.map(record => {
         const { ttl_sec: ttlSec } = record;
-        const { ttl_sec: defaultTTLSec } = currentDNSZone;
+        const { ttl_sec: defaultTTLSec } = dnszone;
         return {
           ...record,
           ttl_sec: formatDNSSeconds(ttlSec, defaultTTLSec),
@@ -185,11 +185,11 @@ export class ZonePage extends Component {
     const srvRecords = formatSeconds(this.formatSRVRecords());
 
     const soaRecord = {
-      ...currentDNSZone,
-      ttl_sec: formatDNSSeconds(currentDNSZone.ttl_sec),
-      refresh_sec: formatDNSSeconds(currentDNSZone.refresh_sec),
-      retry_sec: formatDNSSeconds(currentDNSZone.retry_sec),
-      expire_sec: formatDNSSeconds(currentDNSZone.expire_sec, 604800),
+      ...dnszone,
+      ttl_sec: formatDNSSeconds(dnszone.ttl_sec),
+      refresh_sec: formatDNSSeconds(dnszone.refresh_sec),
+      retry_sec: formatDNSSeconds(dnszone.retry_sec),
+      expire_sec: formatDNSSeconds(dnszone.expire_sec, 604800),
     };
 
     return (
@@ -197,9 +197,9 @@ export class ZonePage extends Component {
         <header className="main-header main-header--border">
           <div className="container">
             <Link to="/domains">Domains</Link>
-            <h1 title={currentDNSZone.id}>
-              {currentDNSZone.display_group ? `${currentDNSZone.display_group} / ` : ''}
-              {currentDNSZone.dnszone}
+            <h1 title={dnszone.id}>
+              {dnszone.display_group ? `${dnszone.display_group} / ` : ''}
+              {dnszone.dnszone}
             </h1>
           </div>
         </header>
@@ -411,29 +411,22 @@ export class ZonePage extends Component {
 
 ZonePage.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  dnszones: PropTypes.object.isRequired,
-  params: PropTypes.shape({
-    dnszoneLabel: PropTypes.string.isRequired,
-  }),
-  currentDNSZone: PropTypes.object,
+  dnszone: PropTypes.object,
 };
 
 function select(state, ownProps) {
   const { dnszones } = state.api;
   const { params } = ownProps;
-  let currentDNSZone = Object.values(dnszones.dnszones).filter(
+  let dnszone = Object.values(dnszones.dnszones).filter(
     d => d.dnszone === params.dnszoneLabel)[0];
 
-  if (currentDNSZone) {
-    currentDNSZone = {
-      ...currentDNSZone,
-      _groupedRecords: _.groupBy(currentDNSZone._records.records, 'type'),
+  if (dnszone) {
+    dnszone = {
+      ...dnszone,
+      _groupedRecords: _.groupBy(dnszone._records.records, 'type'),
     };
   }
-  return {
-    dnszones: dnszones,
-    currentDNSZone: currentDNSZone,
-  };
+  return { dnszone };
 }
 
 export default connect(select)(ZonePage);
