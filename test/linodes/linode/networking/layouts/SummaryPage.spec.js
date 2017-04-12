@@ -148,7 +148,7 @@ describe('linodes/linode/networking/layouts/SummaryPage', () => {
     expect(li.at(0).text()).to.equal(`${privateIp.address}(${privateIp.rdns})`);
   });
 
-  it('renders link-local', async () => {
+  it('renders link_local', async () => {
     const page = shallow(
       <SummaryPage
         linodes={linodes}
@@ -156,6 +156,6 @@ describe('linodes/linode/networking/layouts/SummaryPage', () => {
       />);
 
     const li = page.find('#linkLocal li');
-    expect(li.at(0).text()).to.equal(linodes.linodes[1234]._ips.ipv6['link-local']);
+    expect(li.at(0).text()).to.equal(linodes.linodes[1234]._ips.ipv6.link_local);
   });
 });
