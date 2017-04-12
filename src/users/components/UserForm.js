@@ -103,12 +103,12 @@ export class UserForm extends Component {
             <FormGroupError errors={errors} name="restricted" />
           </div>
         </FormGroup>
-        <ErrorSummary errors={errors} />
         <div className="row">
           <div className="offset-sm-2 col-sm-10">
             <SubmitButton>{this.props.username ? 'Save' : 'Add User'}</SubmitButton>
           </div>
         </div>
+        <ErrorSummary errors={errors} />
       </Form>
     );
   }

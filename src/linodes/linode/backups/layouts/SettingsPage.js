@@ -96,12 +96,12 @@ export class SettingsPage extends Component {
                 </select>
               </div>
             </FormGroup>
-            <ErrorSummary errors={errors} />
             <FormGroup className="row">
               <div className="offset-sm-2 col-sm-10">
                 <SubmitButton />
               </div>
             </FormGroup>
+            <ErrorSummary errors={errors} />
           </Form>
         </Card>
         <Card header={<CardHeader title="Cancel backup service" />}>
