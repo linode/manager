@@ -82,7 +82,7 @@ export default class Details extends Component {
               />
               {selectedDistribution !== 'none' ? null : (
                 <p className="alert alert-info">
-                  <small>You can't set a password because you are creating an Empty Linode.</small>
+                  <small>You can't set a password for an Empty Linode.</small>
                 </p>
               )}
               <FormGroupError errors={errors} name="root_pass" inline={false} />
