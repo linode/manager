@@ -5,9 +5,9 @@ import { expect } from 'chai';
 
 import { api } from '@/data';
 import { expectRequest } from '@/common';
-import EditCNAMERecord from '~/dnsmanager/components/EditCNAMERecord';
+import EditCNAMERecord from '~/domains/components/EditCNAMERecord';
 
-describe('dnsmanager/components/EditCNAMERecord', () => {
+describe('domains/components/EditCNAMERecord', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {

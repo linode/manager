@@ -6,7 +6,7 @@ import CreatePage from './layouts/CreatePage';
 import ZonePage from './layouts/ZonePage';
 
 export default (
-  <Route path="/dnsmanager">
+  <Route path="/domains">
     <IndexRoute component={IndexPage} />
     <Route path="create" component={CreatePage} />
     <Route path=":dnszoneLabel" component={ZonePage} />

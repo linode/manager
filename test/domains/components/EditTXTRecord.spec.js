@@ -5,9 +5,9 @@ import { expect } from 'chai';
 
 import { api } from '@/data';
 import { expectRequest } from '@/common';
-import EditNSRecord from '~/dnsmanager/components/EditNSRecord';
+import EditTXTRecord from '~/domains/components/EditTXTRecord';
 
-describe('dnsmanager/components/EditNSRecord', () => {
+describe('domains/components/EditTXTRecord', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
@@ -16,11 +16,11 @@ describe('dnsmanager/components/EditNSRecord', () => {
 
   const dispatch = sandbox.stub();
 
-  it('renders fields correctly', () => {
+  it('renders fields correctly for TXT record', () => {
     const currentZone = api.dnszones.dnszones['1'];
     const currentRecord = currentZone._records.records[4];
     const page = mount(
-      <EditNSRecord
+      <EditTXTRecord
         dispatch={dispatch}
         zone={currentZone}
         id={currentRecord.id}
@@ -28,22 +28,22 @@ describe('dnsmanager/components/EditNSRecord', () => {
       />
     );
 
-    const nameserver = page.find('#nameserver');
-    expect(nameserver.props().value).to.equal(currentRecord.target);
+    const textname = page.find('#textname');
+    expect(textname.props().value).to.equal(currentRecord.name);
 
-    const subdomain = page.find('#subdomain');
-    expect(subdomain.props().value).to.equal(currentRecord.name || currentZone.dnszone);
+    const textvalue = page.find('#textvalue');
+    expect(textvalue.props().value).to.equal(currentRecord.target);
 
     const ttl = page.find('#ttl');
     expect(+ttl.props().value).to.equal(currentRecord.ttl_sec || currentZone.ttl_sec);
   });
 
-  it('submits data onsubmit and closes modal', async () => {
+  it('submits data onsubmit and closes modal for TXT record', async () => {
     const currentZone = api.dnszones.dnszones['1'];
     const currentRecord = currentZone._records.records[4];
     const close = sandbox.spy();
     const page = mount(
-      <EditNSRecord
+      <EditTXTRecord
         dispatch={dispatch}
         zone={currentZone}
         id={currentRecord.id}
@@ -54,8 +54,8 @@ describe('dnsmanager/components/EditNSRecord', () => {
     const changeInput = (name, value) =>
       page.instance().setState({ [name]: value });
 
-    changeInput('nameserver', 'ns1.tester1234.com');
-    changeInput('subdomain', 'tester1234.com');
+    changeInput('textname', 'somename');
+    changeInput('textvalue', 'someval');
     changeInput('ttl', 3600);
 
     await page.find('Form').props().onSubmit();
@@ -67,19 +67,19 @@ describe('dnsmanager/components/EditNSRecord', () => {
     await expectRequest(fn, `/dns/zones/${currentZone.id}/records/${currentRecord.id}`, {
       method: 'PUT',
       body: {
-        target: 'ns1.tester1234.com',
-        name: 'tester1234.com',
+        target: 'someval',
+        name: 'somename',
         ttl_sec: 3600,
-        type: 'NS',
+        type: 'TXT',
       },
     });
   });
 
-  it('creates a new NS record and closes the modal', async () => {
+  it('creates a new TXT record and closes the modal', async () => {
     const currentZone = api.dnszones.dnszones['1'];
     const close = sandbox.spy();
     const page = mount(
-      <EditNSRecord
+      <EditTXTRecord
         dispatch={dispatch}
         zone={currentZone}
         close={close}
@@ -89,8 +89,8 @@ describe('dnsmanager/components/EditNSRecord', () => {
     const changeInput = (name, value) =>
       page.instance().setState({ [name]: value });
 
-    changeInput('nameserver', 'ns1.tester1234.com');
-    changeInput('subdomain', 'tester1234.com');
+    changeInput('textname', 'somename');
+    changeInput('textvalue', 'someval');
     changeInput('ttl', 3600);
 
     dispatch.reset();
@@ -103,10 +103,10 @@ describe('dnsmanager/components/EditNSRecord', () => {
     await expectRequest(fn, `/dns/zones/${currentZone.id}/records/`, {
       method: 'POST',
       body: {
-        target: 'ns1.tester1234.com',
-        name: 'tester1234.com',
+        target: 'someval',
+        name: 'somename',
         ttl_sec: 3600,
-        type: 'NS',
+        type: 'TXT',
       },
     });
   });

@@ -4,13 +4,13 @@ import { mount } from 'enzyme';
 import { expect } from 'chai';
 
 import _ from 'lodash';
-import { formatDNSSeconds } from '~/dnsmanager/components/SelectDNSSeconds';
-import { ZonePage } from '~/dnsmanager/layouts/ZonePage';
+import { formatDNSSeconds } from '~/domains/components/SelectDNSSeconds';
+import { ZonePage } from '~/domains/layouts/ZonePage';
 import { api } from '@/data';
 
 const { dnszones } = api;
 
-describe('dnsmanager/layouts/ZonePage', () => {
+describe('domains/layouts/ZonePage', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
@@ -19,7 +19,7 @@ describe('dnsmanager/layouts/ZonePage', () => {
 
   const dispatch = sandbox.spy();
 
-  it('renders a zone with no records', () => {
+  it('renders a domain with no records', () => {
     const currentZone = dnszones.dnszones[2];
 
     const page = mount(

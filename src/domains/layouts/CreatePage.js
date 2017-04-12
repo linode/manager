@@ -53,7 +53,7 @@ export class CreatePage extends Component {
     } });
     try {
       await dispatch(dnszones.post(this.state[tab]));
-      await dispatch(push('/dnsmanager'));
+      await dispatch(push('/domains'));
     } catch (response) {
       const errors = await reduceErrors(response);
       this.setState({ [tab]: {
@@ -110,8 +110,8 @@ export class CreatePage extends Component {
     return (
       <div className="container create-page">
         <header>
-          <Link to="/dnsmanager">DNS Manager</Link>
-          <h1>Add a zone</h1>
+          <Link to="/domains">Domains</Link>
+          <h1>Add a Domain</h1>
         </header>
         <Card header={<CardHeader title="Source" />}>
           <Tabs
