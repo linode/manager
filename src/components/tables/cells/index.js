@@ -4,7 +4,7 @@ export { default as AuthScopeCell } from './AuthScopeCell';
 export { default as BackupsCell } from './BackupsCell';
 export { default as ButtonCell } from './ButtonCell';
 export { default as CheckboxCell } from './CheckboxCell';
-export { default as DatacenterCell } from './DatacenterCell';
+export { default as RegionCell } from './RegionCell';
 export { default as IPAddressCell } from './IPAddressCell';
 export { default as IPRdnsCell } from './IPRdnsCell';
 export { default as LastBackupCell } from './LastBackupCell';
