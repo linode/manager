@@ -72,12 +72,12 @@ export class DisplayPage extends Component {
               <FormGroupError errors={errors} name="label" />
             </div>
           </FormGroup>
-          <ErrorSummary errors={errors} />
           <FormGroup className="row">
             <div className="offset-sm-1 col-sm-11">
               <SubmitButton />
             </div>
           </FormGroup>
+          <ErrorSummary errors={errors} />
         </Form>
       </Card>
     );
