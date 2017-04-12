@@ -1,12 +1,7 @@
 .Radio {
-    display: inline;
-
-    &.col-form-label {
-        padding: 6px 8px 6px 0;
-        text-align: left;
-    }
+    @extend .Checkbox;
 
     &-label {
-        vertical-align: middle;
+        @extend .Checkbox-label;
     }
 }
