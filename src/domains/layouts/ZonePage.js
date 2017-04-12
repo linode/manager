@@ -44,7 +44,7 @@ export class ZonePage extends Component {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
 
-    dispatch(setTitle('DNS Manager'));
+    dispatch(setTitle('Domains'));
   }
 
   formatNSRecords() {
@@ -117,14 +117,14 @@ export class ZonePage extends Component {
 
     dispatch(showModal(title,
       <ConfirmModalBody
-        buttonText="Delete zone record"
+        buttonText="Delete Domain record"
         onOk={async () => {
           await dispatch(dnszones.records.delete(currentDNSZone.id, id));
           dispatch(hideModal());
         }}
         onCancel={() => dispatch(hideModal())}
       >
-        Are you sure you want to delete the zone record?
+        Are you sure you want to delete the Domain record?
       </ConfirmModalBody>
     ));
   }
@@ -139,7 +139,7 @@ export class ZonePage extends Component {
         zone={currentDNSZone}
         close={(zone) => {
           dispatch(hideModal());
-          dispatch(replace(`/dnsmanager/${zone}`));
+          dispatch(replace(`/domains/${zone}`));
         }}
       />
     ));
@@ -196,7 +196,7 @@ export class ZonePage extends Component {
       <div>
         <header className="main-header main-header--border">
           <div className="container">
-            <Link to="/dnsmanager">DNS Manager</Link>
+            <Link to="/domains">Domains</Link>
             <h1 title={currentDNSZone.id}>
               {currentDNSZone.display_group ? `${currentDNSZone.display_group} / ` : ''}
               {currentDNSZone.dnszone}

@@ -71,7 +71,7 @@ export default class EditSOARecord extends Component {
 
     return (
       <Form onSubmit={this.onSubmit}>
-        <ModalFormGroup errors={errors} id="zone" label="Primary DNS" apiKey="dnszone">
+        <ModalFormGroup errors={errors} id="zone" label="Primary Domain" apiKey="dnszone">
           <Input
             id="zone"
             name="zone"
@@ -82,7 +82,7 @@ export default class EditSOARecord extends Component {
         </ModalFormGroup>
         <ModalFormGroup
           label="Group"
-          description="DNS zones are grouped together on the DNS zones list page"
+          description="Domains are grouped together on the Domain list page"
           id="group"
           apiKey="group"
           errors={errors}

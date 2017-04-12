@@ -48,7 +48,7 @@ export class IndexPage extends Component {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
 
-    dispatch(setTitle('DNS Manager'));
+    dispatch(setTitle('Domains'));
   }
 
   deleteZones(zones) {
@@ -57,7 +57,7 @@ export class IndexPage extends Component {
 
     dispatch(showModal('Confirm deletion',
       <DeleteModalBody
-        buttonText="Delete selected zones"
+        buttonText="Delete selected Domains"
         onOk={async () => {
           const ids = zonesArr.map(function (zone) { return zone.id; });
 
@@ -116,7 +116,7 @@ export class IndexPage extends Component {
                     {
                       className: 'RowLabelCell',
                       cellComponent: LinkCell,
-                      hrefFn: (zone) => `/dnsmanager/${zone.dnszone}`, textKey: 'dnszone',
+                      hrefFn: (zone) => `/domains/${zone.dnszone}`, textKey: 'dnszone',
                     },
                     { dataKey: 'type' },
                     {
@@ -147,16 +147,16 @@ export class IndexPage extends Component {
       <div className="PrimaryPage container">
         <header className="PrimaryPage-header">
           <div className="PrimaryPage-headerRow clearfix">
-            <h1 className="float-sm-left">DNS Manager</h1>
-            <Link to="/dnsmanager/create" className="linode-add btn btn-primary float-sm-right">
+            <h1 className="float-sm-left">Domains</h1>
+            <Link to="/domains/create" className="linode-add btn btn-primary float-sm-right">
               <span className="fa fa-plus"></span>
-              Add a DNS Zone
+              Add a Domain
             </Link>
           </div>
         </header>
         <div className="PrimaryPage-body">
           {Object.keys(dnszones.dnszones).length ? this.renderZones(dnszones.dnszones) :
-            <CreateHelper label="zones" href="/dnsmanager/create" linkText="Add a zone" />}
+            <CreateHelper label="zones" href="/domains/create" linkText="Add a Domain" />}
         </div>
       </div>
     );

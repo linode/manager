@@ -5,9 +5,9 @@ import { expect } from 'chai';
 
 import { api } from '@/data';
 import { expectRequest } from '@/common';
-import EditMXRecord from '~/dnsmanager/components/EditMXRecord';
+import EditARecord from '~/domains/components/EditARecord';
 
-describe('dnsmanager/components/EditMXRecord', () => {
+describe('domains/components/EditARecord', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
@@ -18,9 +18,9 @@ describe('dnsmanager/components/EditMXRecord', () => {
 
   it('renders fields correctly', () => {
     const currentZone = api.dnszones.dnszones['1'];
-    const currentRecord = currentZone._records.records[4];
+    const currentRecord = currentZone._records.records[1];
     const page = mount(
-      <EditMXRecord
+      <EditARecord
         dispatch={dispatch}
         zone={currentZone}
         id={currentRecord.id}
@@ -28,22 +28,22 @@ describe('dnsmanager/components/EditMXRecord', () => {
       />
     );
 
-    const nameserver = page.find('#mailserver');
-    expect(nameserver.props().value).to.equal(currentRecord.target);
+    const nameserver = page.find('#hostname');
+    expect(nameserver.props().value).to.equal(currentRecord.name);
 
-    const subdomain = page.find('#subdomain');
-    expect(subdomain.props().value).to.equal(currentRecord.name || currentZone.dnszone);
+    const subdomain = page.find('#ip');
+    expect(subdomain.props().value).to.equal(currentRecord.target);
 
-    const ttl = page.find('#preference');
-    expect(+ttl.props().value).to.equal(currentRecord.priority);
+    const ttl = page.find('#ttl');
+    expect(+ttl.props().value).to.equal(currentRecord.ttl_sec || currentZone.ttl_sec);
   });
 
   it('submits data onsubmit and closes modal', async () => {
     const currentZone = api.dnszones.dnszones['1'];
-    const currentRecord = currentZone._records.records[4];
+    const currentRecord = currentZone._records.records[1];
     const close = sandbox.spy();
     const page = mount(
-      <EditMXRecord
+      <EditARecord
         dispatch={dispatch}
         zone={currentZone}
         id={currentRecord.id}
@@ -54,9 +54,9 @@ describe('dnsmanager/components/EditMXRecord', () => {
     const changeInput = (name, value) =>
       page.instance().setState({ [name]: value });
 
-    changeInput('mailserver', 'mx1.tester1234.com');
-    changeInput('subdomain', 'tester1234.com');
-    changeInput('preference', 1);
+    changeInput('hostname', 'tee');
+    changeInput('ip', '4.4.4.4');
+    changeInput('ttl', 1);
 
     await page.find('Form').props().onSubmit();
 
@@ -67,19 +67,19 @@ describe('dnsmanager/components/EditMXRecord', () => {
     await expectRequest(fn, `/dns/zones/${currentZone.id}/records/${currentRecord.id}`, {
       method: 'PUT',
       body: {
-        target: 'mx1.tester1234.com',
-        name: 'tester1234.com',
-        priority: 1,
-        type: 'MX',
+        target: '4.4.4.4',
+        name: 'tee',
+        ttl_sec: 1,
+        type: 'A',
       },
     });
   });
 
-  it('creates a new MX record and closes the modal', async () => {
+  it('creates a new AAAA record and closes the modal', async () => {
     const currentZone = api.dnszones.dnszones['1'];
     const close = sandbox.spy();
     const page = mount(
-      <EditMXRecord
+      <EditARecord
         dispatch={dispatch}
         zone={currentZone}
         close={close}
@@ -89,9 +89,10 @@ describe('dnsmanager/components/EditMXRecord', () => {
     const changeInput = (name, value) =>
       page.instance().setState({ [name]: value });
 
-    changeInput('mailserver', 'mx1.tester1234.com');
-    changeInput('subdomain', 'tester1234.com');
-    changeInput('preference', 1);
+    changeInput('ip', '1.1.1.8');
+    changeInput('hostname', 'too');
+    changeInput('ttl', 1);
+    changeInput('type', 'AAAA');
 
     dispatch.reset();
     await page.find('Form').props().onSubmit();
@@ -103,10 +104,10 @@ describe('dnsmanager/components/EditMXRecord', () => {
     await expectRequest(fn, `/dns/zones/${currentZone.id}/records/`, {
       method: 'POST',
       body: {
-        target: 'mx1.tester1234.com',
-        name: 'tester1234.com',
-        priority: 1,
-        type: 'MX',
+        target: '1.1.1.8',
+        name: 'too',
+        ttl_sec: 1,
+        type: 'AAAA',
       },
     });
   });

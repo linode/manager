@@ -86,7 +86,7 @@ export class CreatePage extends Component {
     const { linodes, dnszones, nodebalancers } = this.props;
     const regardingOptions = [
       this.renderOptionsGroup('Linodes', 'linode_id', Object.values(linodes)),
-      this.renderOptionsGroup('DNS Zones', 'dnszone_id', Object.values(dnszones)),
+      this.renderOptionsGroup('Domains', 'dnszone_id', Object.values(dnszones)),
       this.renderOptionsGroup('NodeBalancers', 'nodebalancer_id', Object.values(nodebalancers)),
       // TODO: this is not currently supported by the API
       // this.renderOptionsGroup('Other', [{ label: 'Other', id: 'other' }]),

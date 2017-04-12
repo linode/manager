@@ -5,9 +5,9 @@ import { expect } from 'chai';
 
 import { api } from '@/data';
 import { expectRequest } from '@/common';
-import EditSOARecord from '~/dnsmanager/components/EditSOARecord';
+import EditSOARecord from '~/domains/components/EditSOARecord';
 
-describe('dnsmanager/components/EditSOARecord', () => {
+describe('domains/components/EditSOARecord', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {

@@ -3,7 +3,7 @@ import sinon from 'sinon';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
 
-import { IndexPage } from '~/dnsmanager/layouts/IndexPage';
+import { IndexPage } from '~/domains/layouts/IndexPage';
 import { api } from '@/data';
 import Dropdown from '~/components/Dropdown';
 import { expectRequest } from '@/common.js';
@@ -11,7 +11,7 @@ import { SHOW_MODAL } from '~/actions/modal';
 
 const { dnszones } = api;
 
-describe('dnsmanager/layouts/IndexPage', () => {
+describe('domains/layouts/IndexPage', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
@@ -20,7 +20,7 @@ describe('dnsmanager/layouts/IndexPage', () => {
 
   const dispatch = sandbox.spy();
 
-  it('renders a list of DNS Zones', () => {
+  it('renders a list of Domains', () => {
     const page = mount(
       <IndexPage
         dispatch={dispatch}
@@ -34,7 +34,7 @@ describe('dnsmanager/layouts/IndexPage', () => {
     expect(zone.length).to.equal(Object.keys(dnszones.dnszones).length);
     const firstZone = zone.at(0);
     expect(firstZone.find('Link').props().to)
-      .to.equal('/dnsmanager/example.com');
+      .to.equal('/domains/example.com');
     expect(firstZone.find('td').at(1).text())
       .to.equal('example.com');
     expect(firstZone.find('td').at(2).text())
@@ -58,7 +58,7 @@ describe('dnsmanager/layouts/IndexPage', () => {
       .to.have.property('type').which.equals(SHOW_MODAL);
   });
 
-  it('deletes selected zones when delete is pressed', async () => {
+  it('deletes selected domains when delete is pressed', async () => {
     const page = mount(
       <IndexPage
         dispatch={dispatch}

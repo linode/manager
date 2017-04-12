@@ -3,9 +3,9 @@ import sinon from 'sinon';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
 
-import NewMasterZone from '~/dnsmanager/components/NewMasterZone';
+import NewMasterZone from '~/domains/components/NewMasterZone';
 
-describe('dnsmanager/components/NewMasterZone', () => {
+describe('domains/components/NewMasterZone', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {

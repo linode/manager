@@ -114,9 +114,9 @@ export class PermissionsPage extends Component {
         />
         <PermissionCard
           updateGlobal={this.updateGlobal}
-          title="DNS Manager permissions"
+          title="Domains permissions"
           section="dnszones"
-          addLabel="Can add Domains using the DNS Manager"
+          addLabel="Can add Domains"
           addCheck={global.add_dnszones}
         />
         <SubmitButton>Save</SubmitButton>
