@@ -72,7 +72,7 @@ export class TwoFactorPanel extends Component {
         buttonText="Next"
         onOk={() => {
           dispatch(hideModal());
-          dispatch(showModal('Enable Two Factor',
+          dispatch(showModal('Enable two-factor authentication',
             <TwoFactorModal
               toggleTwoFactor={this.toggleTwoFactor}
               dispatch={this.props.dispatch}
@@ -82,17 +82,24 @@ export class TwoFactorPanel extends Component {
         onCancel={() => dispatch(hideModal())}
       >
         <div className="form-group row">
-          <div className="col-sm-7">
-            <div className="form-group">
-              Enter this code in your two factor app if you can't use a QR code:
-            </div>
-            <div className="alert alert-warning">{secret}</div>
+          <div className="col-sm-12">
+            Scan this QR code to add your Linode account to your TFA app.
           </div>
-          <div className="col-sm-4">
+        </div>
+        <div className="form-group row">
+          <div className="col-sm-12 qrcode">
             <img
               src={QRcode.toDataURL()}
               alt={secret}
             />
+          </div>
+        </div>
+        <div className="form-group row">
+          <div className="col-sm-12">
+            <div className="form-group">
+              If your TFA app does not have a QR scanner, you can use this secret key.
+            </div>
+            <div className="alert alert-warning">{secret}</div>
           </div>
         </div>
       </ConfirmModalBody>
@@ -105,7 +112,7 @@ export class TwoFactorPanel extends Component {
       <Card header={<CardHeader title="Change two-factor authentication setting" />}>
         <Form onSubmit={this.twoFactorAction}>
           <p>
-            Two-factor authentication is currently {twoFactor ? 'enabled' : 'disabled'}.
+            Two-factor authentication (TFA) is currently {twoFactor ? 'enabled' : 'disabled'}.
           </p>
           <SubmitButton>
             {twoFactor ? 'Disable' : 'Enable'}

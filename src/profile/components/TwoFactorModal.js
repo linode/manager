@@ -41,12 +41,20 @@ export class TwoFactorModal extends Component {
 
   twoFactorScratchModal(scratch) {
     const { dispatch } = this.props;
-    dispatch(showModal('Scratch Code',
+    dispatch(showModal('Scratch code generated',
       <ConfirmModalBody
-        buttonText="Finished"
+        buttonText="Ok"
         onOk={() => dispatch(hideModal())}
         onCancel={() => dispatch(hideModal())}
       >
+        <div className="form-group">
+          <p>
+            A new emergency one-time use scratch code has been generated.
+          </p>
+          <p>
+            Store this somewhere safe.
+          </p>
+        </div>
         <div className="form-group row">
           <div className="col-sm-8">
             <div className="alert alert-warning">{scratch}</div>
@@ -62,16 +70,19 @@ export class TwoFactorModal extends Component {
 
     return (
       <ConfirmModalBody
-        buttonText="Authenticate"
+        buttonText="Two-factor Authentication"
         onOk={() => {
           dispatch(hideModal());
           this.twoFactorConfirm();
         }}
         onCancel={() => dispatch(hideModal())}
       >
+        <div className="form-group">
+          Please enter your two-factor authentication token.
+        </div>
         <FormGroup errors={errors} className="row" name="tfaCode">
           <div className="col-sm-4">
-            Two Factor Code
+            Token:
           </div>
           <div className="col-sm-8">
             <Input
@@ -80,7 +91,7 @@ export class TwoFactorModal extends Component {
             />
             <div>
               <small className="text-muted">
-                Enter the 6 digit authentication code.
+                You may use a scratch code if necessary.
               </small>
             </div>
             <FormGroupError errors={errors} name="tfaCode" />
