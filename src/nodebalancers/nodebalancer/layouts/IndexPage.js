@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 import _ from 'lodash';
 
 import { nodebalancers } from '~/api';
@@ -26,6 +27,7 @@ export class IndexPage extends Component {
       // eslint-disable-next-line no-console
       console.error(response);
       dispatch(setError(response));
+      await dispatch(push('/404'));
     }
   }
 
@@ -171,7 +173,7 @@ export class IndexPage extends Component {
 IndexPage.propTypes = {
   dispatch: PropTypes.func,
   nbLabel: PropTypes.string,
-  nodebalancer: PropTypes.object,
+  nodebalancer: PropTypes.any,
 };
 
 function select(state, ownProps) {
@@ -187,4 +189,3 @@ function select(state, ownProps) {
 }
 
 export default connect(select)(IndexPage);
-

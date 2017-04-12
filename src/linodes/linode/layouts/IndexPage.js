@@ -27,6 +27,7 @@ export class IndexPage extends Component {
       // eslint-disable-next-line no-console
       console.error(e);
       dispatch(setError(e));
+      await dispatch(push('/404'));
     }
   }
 
