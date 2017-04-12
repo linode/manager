@@ -15,8 +15,8 @@ export default function NewMasterZone(props) {
             value={props.dnszone}
             onChange={props.onChange('dnszone')}
           />
+          <FormGroupError errors={props.errors} name="dnszone" inline={false} />
         </div>
-        <FormGroupError errors={props.errors} name="dnszone" />
       </FormGroup>
       <FormGroup errors={props.errors} name="soa_email" className="row">
         <label className="col-sm-2 col-form-label">SOA email</label>
@@ -26,8 +26,8 @@ export default function NewMasterZone(props) {
             value={props.soa_email}
             onChange={props.onChange('soa_email')}
           />
+          <FormGroupError errors={props.errors} name="soa_email" inline={false} />
         </div>
-        <FormGroupError errors={props.errors} name="soa_email" />
       </FormGroup>
       <div className="row">
         <div className="offset-sm-2 col-sm-10">
