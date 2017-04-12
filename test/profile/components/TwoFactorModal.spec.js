@@ -28,7 +28,7 @@ describe('profile/layouts/twofactormodal', () => {
 
     await expectRequest(fn, '/account/profile/tfa-enable-confirm', {
       method: 'POST',
-      body: { 'tfa_code': 'theCode' },
+      body: { tfa_code: 'theCode' },
     });
   });
 });
