@@ -211,10 +211,10 @@ export class BackupPage extends Component {
           </div>
           <div className="row">
             <div className="col-sm-3">
-              Datacenter constraint
+              Region constraint
             </div>
-            <div className={bemField('datacenter')}>
-              {backup.datacenter.label}
+            <div className={bemField('region')}>
+              {backup.region.label}
             </div>
           </div>
           <div className="row">

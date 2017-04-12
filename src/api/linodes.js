@@ -185,8 +185,8 @@ export function setShared(linodeId, ips) {
   };
 }
 
-export function assignIps(datacenter, assignments) {
-  return thunkFetch.post('/networking/ip-assign', { datacenter, assignments });
+export function assignIps(region, assignments) {
+  return thunkFetch.post('/networking/ip-assign', { region, assignments });
 }
 
 export function linodeStats(linodeId) {
