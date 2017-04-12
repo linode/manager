@@ -46,7 +46,7 @@ export default class IPTransfer extends Component {
     });
 
     try {
-      await dispatch(assignIps(linode.datacenter.id, assignments));
+      await dispatch(assignIps(linode.region.id, assignments));
 
       // Needs to refresh ips for both Linodes
       await dispatch(apiLinodes.one([linode.id]));

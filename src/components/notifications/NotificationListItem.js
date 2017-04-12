@@ -46,8 +46,7 @@ export default function NotificationListItem(props) {
   } else {
     const timestampMessage = (
       <small className="NotificationList-listItem-time text-muted">
-        {/* TODO: user_id calculation */}
-        {timestamp.fromNow()}
+        {timestamp.fromNow()} by <b>{event.username}</b>
       </small>
     );
 

@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 
 import { reducer as linodes } from './configs/linodes';
 import { reducer as distributions } from './configs/distributions';
-import { reducer as datacenters } from './configs/datacenters';
+import { reducer as regions } from './configs/regions';
 import { reducer as types } from './configs/types';
 import { reducer as kernels } from './configs/kernels';
 import { reducer as dnszones } from './configs/dnszones';
@@ -17,7 +17,7 @@ import { reducer as tickets } from './configs/tickets';
 
 export default combineReducers({
   linodes,
-  datacenters,
+  regions,
   distributions,
   types,
   kernels,

@@ -24,7 +24,7 @@ describe('dnsmanager/layouts/IndexPage', () => {
     const page = mount(
       <IndexPage
         dispatch={dispatch}
-        selected={{}}
+        selectedMap={{}}
         dnszones={dnszones}
       />
     );
@@ -45,7 +45,7 @@ describe('dnsmanager/layouts/IndexPage', () => {
     const page = mount(
       <IndexPage
         dispatch={dispatch}
-        selected={{}}
+        selectedMap={{}}
         dnszones={dnszones}
       />
     );
@@ -62,7 +62,7 @@ describe('dnsmanager/layouts/IndexPage', () => {
     const page = mount(
       <IndexPage
         dispatch={dispatch}
-        selected={{ 1: true }}
+        selectedMap={{ 1: true }}
         dnszones={dnszones}
       />
     );

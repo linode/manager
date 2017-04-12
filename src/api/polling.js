@@ -1,7 +1,3 @@
-import {
-  createHeaderFilter,
-} from './util';
-
 const DEFAULT_TIMEOUT = 10000;
 
 
@@ -10,13 +6,11 @@ export default function Polling(args) {
   const pollingIdMap = {};
   const {
     apiRequestFn,
-    filterOptions = {},
     timeout = DEFAULT_TIMEOUT,
     maxTries = null,
     onMaxTriesReached = null,
   } = args;
 
-  const options = createHeaderFilter(filterOptions);
   let numTries = 0;
 
   function stop(id) {
@@ -31,7 +25,7 @@ export default function Polling(args) {
     stop(id);
 
     pollingIdMap[id] = setTimeout(async function () {
-      await apiRequestFn(options);
+      await apiRequestFn();
 
       delete pollingIdMap[id];
       ++numTries;

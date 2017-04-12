@@ -41,6 +41,20 @@ export class DiskPanel extends Component {
     this.getLinode = getLinode.bind(this);
   }
 
+  renderStatusMessage(status) {
+    if (status !== 'offline' && status !== 'provisioning') {
+      return (
+        <section>
+          <div className="alert alert-info">
+            Your Linode must be powered off to manage your disks.
+          </div>
+        </section>
+      );
+    }
+
+    return null;
+  }
+
   render() {
     const { dispatch } = this.props;
     const linode = this.getLinode();
@@ -75,13 +89,7 @@ export class DiskPanel extends Component {
           <CardHeader title="Disks" navLink="https://example.org" />
         }
       >
-        <section>
-          {poweredOff ? null : (
-            <div className="alert alert-info">
-              Your Linode must be powered off to manage your disks.
-            </div>
-          )}
-        </section>
+        {this.renderStatusMessage(linode.status)}
         <section className="disk-layout">
           {disks.map(d =>
             <div

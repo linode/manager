@@ -12,7 +12,8 @@ import CreateHelper from '~/components/CreateHelper';
 import {
   getLinodeRedirectUrl, getNodebalancerRedirectUrl, getDNSZoneRedirectUrl,
 } from '~/components/notifications/EventTypes';
-import { Table } from '~/components/tables';
+import { List, Table } from '~/components/tables';
+import { ListBody, ListGroup } from '~/components/tables/bodies';
 import {
   TableCell,
 } from '~/components/tables/cells';
@@ -22,6 +23,33 @@ const TICKET_LINK_MAP = {
   nodebalancer: getNodebalancerRedirectUrl,
   dnszone: getDNSZoneRedirectUrl,
 };
+
+export function renderTicketCreationInfo(ticket) {
+  const entity = ticket.entity || {};
+  const to = TICKET_LINK_MAP[entity.type];
+
+  let link = <strong>{entity.label}</strong>;
+  if (to) {
+    link = <Link to={to(entity)}>{entity.label}</Link>;
+  }
+
+  return (
+    <div>
+      Opened
+      {!ticket.opened_by ? null : (
+        <span>
+          &nbsp;by <strong id={`opened-by-${ticket.id}`}>{ticket.opened_by}</strong>
+        </span>
+      )}
+      &nbsp;<span id={`opened-${ticket.id}`}>{moment.utc(ticket.opened).fromNow()}</span>
+      {ticket.entity ? (
+        <span>
+          &nbsp;regarding <span id={`regarding-${ticket.id}`}>{link}</span>
+        </span>
+      ) : null}
+    </div>
+  );
+}
 
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
@@ -41,35 +69,11 @@ export class IndexPage extends Component {
     dispatch(setTitle('Support'));
   }
 
-  renderLink(ticket) {
-    const { entity } = ticket;
-    const to = TICKET_LINK_MAP[entity.type];
-
-    if (to) {
-      return <Link to={to(entity)}>{entity.label}</Link>;
-    }
-
-    return <strong>{entity.label}</strong>;
-  }
-
   renderLabelCell = ({ record: ticket }) => {
     return (
       <TableCell column={{ className: 'RowLabelCell' }} record={ticket}>
         <Link title={ticket.id} to={`/support/${ticket.id}`}>{ticket.summary}</Link>
-        <small>
-          Opened
-          {!ticket.opened_by ? null : (
-            <span>
-              &nbsp;by <strong id={`opened-by-${ticket.id}`}>{ticket.opened_by}</strong>
-            </span>
-          )}
-          &nbsp;<span id={`opened-${ticket.id}`}>{moment.utc(ticket.opened).fromNow()}</span>
-          {ticket.entity ? (
-            <span>
-              &nbsp;regarding <span id={`regarding-${ticket.id}`}>{this.renderLink(ticket)}</span>
-            </span>
-           ) : null}
-        </small>
+        <small>{renderTicketCreationInfo(ticket)}</small>
       </TableCell>
     );
   }
@@ -105,6 +109,7 @@ export class IndexPage extends Component {
           },
           {
             dataKey: 'id',
+            className: 'hidden-md-down',
             formatFn: id => <span>#{id}</span>,
           },
           {
@@ -115,20 +120,26 @@ export class IndexPage extends Component {
       }));
 
     return (
-      <div>
-        {groups.map(function (group, index) {
-          return (
-            <div className="Group" key={index}>
-              <div className="Group-label">{group.name}</div>
-              <Table
-                className="Tickets"
-                columns={group.columns}
-                data={group.data}
-              />
-            </div>
-          );
-        })}
-      </div>
+      <List>
+        <ListBody>
+          {groups.map((group, index) => {
+            return (
+              <ListGroup
+                key={index}
+                name={group.name}
+              >
+                <Table
+                  className="Tickets"
+                  columns={group.columns}
+                  data={group.data}
+                  selectedMap={{}}
+                  disableHeader
+                />
+              </ListGroup>
+            );
+          })}
+        </ListBody>
+      </List>
     );
   }
 

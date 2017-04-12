@@ -34,7 +34,7 @@ export default class IPSharing extends Component {
     });
 
     this.setState({
-      checked: _.merge({}, this.state.checked, checked),
+      checked: _.merge({}, checked, this.state.checked),
     });
   }
 
@@ -107,7 +107,6 @@ export default class IPSharing extends Component {
                   selectedKeyFn: (record) => {
                     return record.ip.address;
                   },
-                  onChange: this.onChange,
                 },
                 { cellComponent: IPRdnsCell, ipKey: 'ip', label: 'IP Address' },
                 {
@@ -123,6 +122,7 @@ export default class IPSharing extends Component {
               ]}
               data={data}
               selectedMap={checked}
+              onToggleSelect={this.onChange}
             />
           </FormGroup>
           <SubmitButton disabled={saving}>Save</SubmitButton>

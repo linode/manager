@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
 import { push } from 'react-router-redux';
 
 import { Card, CardHeader } from '~/components/cards';
@@ -35,6 +36,7 @@ export class AddUserPage extends Component {
     const { errors } = this.state;
     return (
       <div className="PrimaryPage container">
+        <Link to="/users">Users</Link>
         <header className="PrimaryPage-header">
           <div className="PrimaryPage-headerRow clearfix">
             <h1>Users</h1>

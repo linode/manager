@@ -55,7 +55,7 @@ export default class NotificationList extends Component {
                 event={eventMap[id]}
               />)}
             <div
-              className="NotificationList-listItem NotificationList-end text-xs-center"
+              className="NotificationList-listItem NotificationList-end text-sm-center"
               onClick={showMore ? this.onClickShowMore : null}
             >
               {message}

@@ -7,8 +7,22 @@ export const config = genConfig({
   plural: 'users',
   singular: 'user',
   primaryKey: 'username',
-  endpoint: id => `/account/users/${id}`,
+  endpoint: user => `/account/users/${user}`,
   supports: [ONE, MANY, DELETE, PUT, POST],
+  subresources: {
+    _permissions: {
+      plural: 'permissions',
+      singular: 'permissions',
+      endpoint: user => `/account/users/${user}/grants`,
+      supports: [ONE, MANY, PUT],
+    },
+    _password: {
+      pluarl: 'password',
+      singular: 'password',
+      endpoint: user => `/account/users/${user}/password`,
+      supports: [POST],
+    },
+  },
 });
 
 export const actions = genActions(config);

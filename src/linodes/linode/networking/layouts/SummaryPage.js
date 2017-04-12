@@ -44,7 +44,7 @@ export class SummaryPage extends Component {
   }
 
   renderNameservers(isIpv4) {
-    const dc = this.getLinode().datacenter.id;
+    const dc = this.getLinode().region.id;
     const ipToObject = ip => ({ address: ip });
     const id = isIpv4 ? 'ipv4Nameservers' : 'ipv6Nameservers';
     const ips = isIpv4 ? ipv4ns[dc].map(ipToObject) :
@@ -150,7 +150,7 @@ export class SummaryPage extends Component {
         <div className="row">
           <div className="col-sm-3 row-label">Link-local IP</div>
           <div className="col-sm-9">
-            {this.renderIps('linkLocal', [{ address: ipv6['link-local'] }])}
+            {this.renderIps('linkLocal', [{ address: ipv6.link_local }])}
           </div>
         </div>
       </div>
@@ -161,7 +161,7 @@ export class SummaryPage extends Component {
     const nav = (
       <Button
         id="public-ip-button"
-        className="float-xs-right"
+        className="float-sm-right"
         disabled
       >
         Add public IP address

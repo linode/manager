@@ -16,11 +16,11 @@ describe('linodes/linode/networking/components/IPTransfer', () => {
   const sandbox = sinon.sandbox.create();
   const dispatch = sandbox.stub();
 
-  const linodesInDatacenter = _.pickBy(linodes.linodes, l =>
-      l.datacenter.id === testLinode.datacenter.id);
+  const linodesInRegion = _.pickBy(linodes.linodes, l =>
+      l.region.id === testLinode.region.id);
 
   const allIps = {};
-  Object.values(linodesInDatacenter).forEach(linode => {
+  Object.values(linodesInRegion).forEach(linode => {
     linode._ips.ipv4.public.forEach(ip => {
       allIps[ip.address] = ip;
     });
@@ -35,7 +35,7 @@ describe('linodes/linode/networking/components/IPTransfer', () => {
     const page = mount(
       <IPTransfer
         dispatch={dispatch}
-        linodes={linodesInDatacenter}
+        linodes={linodesInRegion}
         linode={testLinode}
       />
     );
@@ -64,7 +64,7 @@ describe('linodes/linode/networking/components/IPTransfer', () => {
     const page = mount(
       <IPTransfer
         dispatch={dispatch}
-        linodes={linodesInDatacenter}
+        linodes={linodesInRegion}
         linode={testLinode}
       />
     );
@@ -72,7 +72,7 @@ describe('linodes/linode/networking/components/IPTransfer', () => {
     const sectionB = page.find('#sectionB');
     const select = page.find('select');
     const linodeB = linodes.linodes[select.props().value];
-    const notLinodeB = Object.values(linodesInDatacenter).filter(
+    const notLinodeB = Object.values(linodesInRegion).filter(
       ({ id }) => id !== linodeB.id)[0];
 
     select.simulate('change', { record: { name: 'selectedOtherLinode', value: notLinodeB.id } });
@@ -90,7 +90,7 @@ describe('linodes/linode/networking/components/IPTransfer', () => {
     const page = mount(
       <IPTransfer
         dispatch={dispatch}
-        linodes={linodesInDatacenter}
+        linodes={linodesInRegion}
         linode={testLinode}
       />
     );
@@ -120,7 +120,7 @@ describe('linodes/linode/networking/components/IPTransfer', () => {
     await expectRequest(fn, '/networking/ip-assign', {
       method: 'POST',
       body: {
-        datacenter: testLinode.datacenter.id,
+        region: testLinode.region.id,
         assignments: [
           { address: ipA.address, linode_id: ipB.linode_id },
           { address: ipB.address, linode_id: ipA.linode_id },

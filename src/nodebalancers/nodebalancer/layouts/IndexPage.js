@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 import _ from 'lodash';
 
 import { nodebalancers } from '~/api';
@@ -9,10 +10,12 @@ import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 import { Link } from '~/components/Link';
 import { Card, CardHeader } from '~/components/cards';
-import { Table } from '~/components/tables';
+import { List, Table } from '~/components/tables';
+import { ListBody } from '~/components/tables/bodies';
+
 import { LinkCell, ButtonCell } from '~/components/tables/cells';
 import { NodebalancerStatusReadable } from '~/constants';
-import Datacenter from '~/linodes/components/Datacenter';
+import Region from '~/linodes/components/Region';
 
 
 export class IndexPage extends Component {
@@ -24,6 +27,7 @@ export class IndexPage extends Component {
       // eslint-disable-next-line no-console
       console.error(response);
       dispatch(setError(response));
+      await dispatch(push('/404'));
     }
   }
 
@@ -58,31 +62,37 @@ export class IndexPage extends Component {
     });
 
     return (
-      <Table
-        className="Table--secondary"
-        columns={[
-          { textKey: 'port', label: 'Port',
-            cellComponent: LinkCell,
-            hrefFn: function (config) {
-              return `/nodebalancers/${nbLabel}/configs/${config.id}`;
-            },
-          },
-          { dataKey: 'protocol', label: 'Protocol' },
-          { dataKey: 'algorithm', label: 'Algorithm' },
-          { dataKey: 'stickiness', label: 'Session stickiness' },
-          { dataKey: 'check', label: 'Health check method' },
-          { dataKey: 'statusString', label: 'Node status' },
-          {
-            cellComponent: ButtonCell,
-            buttonClassName: 'btn-secondary',
-            hrefFn: function (config) {
-              return `/nodebalancers/${nbLabel}/configs/${config.id}/edit`;
-            },
-            text: 'Edit',
-          },
-        ]}
-        data={newConfigs}
-      />
+      <List>
+        <ListBody>
+          <Table
+            className="Table--secondary"
+            columns={[
+              { textKey: 'port', label: 'Port',
+                cellComponent: LinkCell,
+                hrefFn: function (config) {
+                  return `/nodebalancers/${nbLabel}/configs/${config.id}`;
+                },
+              },
+              { dataKey: 'protocol', label: 'Protocol' },
+              { dataKey: 'algorithm', label: 'Algorithm' },
+              { dataKey: 'stickiness', label: 'Session stickiness' },
+              { dataKey: 'check', label: 'Health check method' },
+              { dataKey: 'statusString', label: 'Node status' },
+              {
+                cellComponent: ButtonCell,
+                buttonClassName: 'btn-secondary',
+                hrefFn: function (config) {
+                  return `/nodebalancers/${nbLabel}/configs/${config.id}/edit`;
+                },
+                text: 'Edit',
+              },
+            ]}
+            data={newConfigs}
+            selectedMap={{}}
+            disableHeader
+          />
+        </ListBody>
+      </List>
     );
   }
 
@@ -129,10 +139,10 @@ export class IndexPage extends Component {
             </div>
             <div className="row">
               <div className="col-sm-2 row-label">
-                Datacenter
+                Region
               </div>
               <div className="col-sm-10">
-                <Datacenter obj={nodebalancer} />
+                <Region obj={nodebalancer} />
               </div>
             </div>
           </Card>
@@ -153,7 +163,7 @@ export class IndexPage extends Component {
           >
             {this.renderConfigs(Object.values(configs))}
           </Card>
-          <Card header={<CardHeader title="Performance" />}>No stats are available.</Card>
+          <Card header={<CardHeader title="Graphs" />}>No graphs are available.</Card>
         </div>
       </div>
     );
@@ -163,7 +173,7 @@ export class IndexPage extends Component {
 IndexPage.propTypes = {
   dispatch: PropTypes.func,
   nbLabel: PropTypes.string,
-  nodebalancer: PropTypes.object,
+  nodebalancer: PropTypes.any,
 };
 
 function select(state, ownProps) {
@@ -179,4 +189,3 @@ function select(state, ownProps) {
 }
 
 export default connect(select)(IndexPage);
-

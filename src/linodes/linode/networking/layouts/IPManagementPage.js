@@ -14,7 +14,7 @@ export class IPManagementPage extends Component {
 
     try {
       const allLinodes = await dispatch(linodes.all([], undefined, createHeaderFilter({
-        datacenter: linode.datacenter,
+        region: linode.region,
       })));
 
       for (const linode of Object.values(allLinodes.linodes)) {
@@ -32,20 +32,20 @@ export class IPManagementPage extends Component {
 
     // Although we only explicitly looked up all linodes in the current dc,
     // other linodes may already exist in the state.
-    const linodesInDatacenter = _.pickBy(linodes.linodes, l =>
-      l.datacenter.id === linode.datacenter.id);
+    const linodesInRegion = _.pickBy(linodes.linodes, l =>
+      l.region.id === linode.region.id);
 
     return (
       <div>
         <IPTransfer
           dispatch={dispatch}
           linode={linode}
-          linodes={linodesInDatacenter}
+          linodes={linodesInRegion}
         />
         <IPSharing
           dispatch={dispatch}
           linode={linode}
-          linodes={Object.values(linodesInDatacenter)}
+          linodes={Object.values(linodesInRegion)}
         />
       </div>
     );
