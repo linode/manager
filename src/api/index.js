@@ -1,5 +1,5 @@
 import * as distributionsModule from './configs/distributions';
-import * as datacentersModule from './configs/datacenters';
+import * as regionsModule from './configs/regions';
 import * as typesModule from './configs/types';
 import * as linodesModule from './configs/linodes';
 import * as kernelsModule from './configs/kernels';
@@ -17,8 +17,8 @@ import apiActionReducerGenerator from './apiActionReducerGenerator';
 
 export const distributions = apiActionReducerGenerator(distributionsModule.config,
                                                        distributionsModule.actions);
-export const datacenters = apiActionReducerGenerator(datacentersModule.config,
-                                                     datacentersModule.actions);
+export const regions = apiActionReducerGenerator(regionsModule.config,
+                                                 regionsModule.actions);
 export const types = apiActionReducerGenerator(typesModule.config, typesModule.actions);
 export const linodes = apiActionReducerGenerator(linodesModule.config, linodesModule.actions);
 export const kernels = apiActionReducerGenerator(kernelsModule.config, kernelsModule.actions);

@@ -25,12 +25,12 @@ export default function Lists() {
                 columns={[
                   { className: 'RowLabelCell', dataKey: 'label', label: 'Linode' },
                   { dataKey: 'ip_address', label: 'IP address' },
-                  { dataKey: 'datacenter', label: 'Datacenter' },
+                  { dataKey: 'region', label: 'Region' },
                 ]}
                 data={[
-                  { label: 'linode-1', ip_address: '192.168.0.0', datacenter: 'Huston, TX' },
-                  { label: 'linode-2', ip_address: '192.168.0.0', datacenter: 'Huston, TX' },
-                  { label: 'linode-3', ip_address: '192.168.0.0', datacenter: 'Huston, TX' },
+                  { label: 'linode-1', ip_address: '192.168.0.0', region: 'Huston, TX' },
+                  { label: 'linode-2', ip_address: '192.168.0.0', region: 'Huston, TX' },
+                  { label: 'linode-3', ip_address: '192.168.0.0', region: 'Huston, TX' },
                 ]}
               />
             </div>
@@ -47,13 +47,13 @@ export default function Lists() {
                     hrefFn: () => { return '#'; },
                   },
                   { dataKey: 'ip_address', label: 'IP address' },
-                  { dataKey: 'datacenter', label: 'Datacenter' },
+                  { dataKey: 'region', label: 'Region' },
                   { cellComponent: ButtonCell, text: 'Edit' },
                 ]}
                 data={[
-                  { label: 'linode-1', ip_address: '192.168.0.0', datacenter: 'Huston, TX' },
-                  { label: 'linode-2', ip_address: '192.168.0.0', datacenter: 'Huston, TX' },
-                  { label: 'linode-3', ip_address: '192.168.0.0', datacenter: 'Huston, TX' },
+                  { label: 'linode-1', ip_address: '192.168.0.0', region: 'Huston, TX' },
+                  { label: 'linode-2', ip_address: '192.168.0.0', region: 'Huston, TX' },
+                  { label: 'linode-3', ip_address: '192.168.0.0', region: 'Huston, TX' },
                 ]}
                 selectedMap={{}}
               />

@@ -56,7 +56,7 @@ function createTestLinode(id) {
     created: '2016-07-06T16:47:27',
     type: [testType],
     status: 'running',
-    datacenter: {
+    region: {
       id: 'newark',
       label: 'Newark, NJ',
     },
@@ -120,7 +120,7 @@ function createTestLinode(id) {
         configs: [
           'Ubuntu Disk',
         ],
-        datacenter: {
+        region: {
           label: 'Newark, NJ',
           country: 'us',
           id: 'newark',
@@ -150,7 +150,7 @@ function createTestLinode(id) {
           configs: [
             'Some config',
           ],
-          datacenter: {
+          region: {
             label: 'Newark, NJ',
             country: 'us',
             id: 'newark',
@@ -296,7 +296,7 @@ const testLinode1235 = {
         configs: [
           'aConfig',
         ],
-        datacenter: {
+        region: {
           label: 'Newark, NJ',
           country: 'us',
           id: 'newark',
@@ -324,7 +324,7 @@ const testLinode1235 = {
         configs: [
           'My Ubuntu 15.10 Disk',
         ],
-        datacenter: {
+        region: {
           label: 'Newark, NJ',
           country: 'us',
           id: 'newark',

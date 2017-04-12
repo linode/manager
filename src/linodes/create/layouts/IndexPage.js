@@ -5,7 +5,7 @@ import { Link } from 'react-router';
 
 import Source from '../components/Source';
 import Plan from '~/linodes/components/Plan';
-import Datacenter from '~/components/Datacenter';
+import Region from '~/components/Region';
 import Details from '../components/Details';
 import { Card, CardHeader } from '~/components/cards';
 import { linodes } from '~/api';
@@ -30,7 +30,7 @@ export class IndexPage extends Component {
     this.createLinode = this.createLinode.bind(this);
     this.state = {
       type: null,
-      datacenter: null,
+      region: null,
       distribution: null,
       backup: null,
       sourceTab: 0,
@@ -54,7 +54,7 @@ export class IndexPage extends Component {
         if (backup) {
           this.setState({
             backup: backup.id,
-            datacenter: backup.datacenter.id,
+            region: backup.region.id,
             sourceTab: 1,
           });
         }
@@ -80,14 +80,14 @@ export class IndexPage extends Component {
 
   createLinode({ group, label, password, backups }) {
     const { dispatch } = this.props;
-    const { type, datacenter, distribution, backup } = this.state;
+    const { type, region, distribution, backup } = this.state;
 
     const data = {
       root_pass: password,
       type,
       distribution,
       backup,
-      datacenter,
+      region,
       label,
       group,
       with_backups: backups,
@@ -105,13 +105,13 @@ export class IndexPage extends Component {
     const {
       distributions,
       linodes,
-      datacenters,
+      regions,
       types,
     } = this.props;
     const {
       backup,
       distribution,
-      datacenter,
+      region,
       type,
       sourceTab,
       loading,
@@ -135,7 +135,7 @@ export class IndexPage extends Component {
 
               this.setState({
                 backup: id,
-                datacenter: backup.datacenter.id,
+                region: backup.region.id,
                 distribution: null,
               });
             } else {
@@ -144,11 +144,11 @@ export class IndexPage extends Component {
           }}
           linodes={linodes}
         />
-        <Datacenter
-          selected={datacenter}
-          datacenters={datacenters.datacenters}
+        <Region
+          selected={region}
+          regions={regions.regions}
           disabled={backup !== null}
-          onDatacenterSelected={id => this.setState({ datacenter: id })}
+          onRegionSelected={id => this.setState({ region: id })}
         />
         <Card header={<CardHeader title="Plan" />}>
           <Plan
@@ -161,7 +161,7 @@ export class IndexPage extends Component {
           selectedType={selectedType}
           onSubmit={this.onSubmit}
           selectedDistribution={distribution}
-          submitEnabled={(distribution || backup) && datacenter && type && !loading}
+          submitEnabled={(distribution || backup) && region && type && !loading}
           errors={this.state.errors}
         />
       </div>
@@ -174,7 +174,7 @@ IndexPage.propTypes = {
   distributions: PropTypes.object,
   linodes: PropTypes.object,
   types: PropTypes.object,
-  datacenters: PropTypes.object,
+  regions: PropTypes.object,
   location: PropTypes.object,
 };
 
@@ -182,7 +182,7 @@ function select(state) {
   return {
     distributions: state.api.distributions,
     linodes: state.api.linodes,
-    datacenters: state.api.datacenters,
+    regions: state.api.regions,
     types: state.api.types,
   };
 }

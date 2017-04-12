@@ -3,21 +3,21 @@ import React, { PropTypes } from 'react';
 import { flags } from '~/assets';
 
 
-export default function Datacenter(props) {
+export default function Region(props) {
   const { obj } = props;
 
   return (
-    <span className="datacenter-style">
+    <span className="region-style">
       <img
-        src={flags[obj.datacenter.country]
-          ? flags[obj.datacenter.country] : '//placehold.it/50x50'}
-        height="15" width="20" alt={obj.datacenter.label}
+        src={flags[obj.region.country]
+          ? flags[obj.region.country] : '//placehold.it/50x50'}
+        height="15" width="20" alt={obj.region.label}
       />
-      <span>{obj.datacenter.label}</span>
+      <span>{obj.region.label}</span>
     </span>
   );
 }
 
-Datacenter.propTypes = {
+Region.propTypes = {
   obj: PropTypes.object,
 };

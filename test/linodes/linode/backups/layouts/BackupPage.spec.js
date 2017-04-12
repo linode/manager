@@ -54,8 +54,8 @@ describe('linodes/linode/backups/layouts/BackupPage', () => {
     const duration = page.find('.LinodesLinodeBackupsBackupPage-duration');
     expect(duration.text()).to.equal('(1 minute)');
 
-    const datacenter = page.find('.LinodesLinodeBackupsBackupPage-datacenter');
-    expect(datacenter.text()).to.equal('Newark, NJ');
+    const region = page.find('.LinodesLinodeBackupsBackupPage-region');
+    expect(region.text()).to.equal('Newark, NJ');
 
     const configs = page.find('.LinodesLinodeBackupsBackupPage-configs');
     expect(configs.text()).to.equal('Ubuntu Disk');

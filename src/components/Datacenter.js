@@ -5,63 +5,63 @@ import { Card, CardHeader } from '~/components/cards';
 import { flags } from '~/assets';
 import { regionMap } from '~/constants';
 
-export default class Datacenter extends Component {
+export default class Region extends Component {
   constructor() {
     super();
     this.renderRegion = this.renderRegion.bind(this);
     this.renderDisabled = this.renderDisabled.bind(this);
   }
 
-  renderDatacenter = (datacenter) => {
-    const { selected, onDatacenterSelected } = this.props;
-    const dcClass = datacenter.id === selected ? 'selected' : '';
+  renderRegion = (region) => {
+    const { selected, onRegionSelected } = this.props;
+    const dcClass = region.id === selected ? 'selected' : '';
 
     return (
       <div
-        className={`datacenter ${dcClass}`}
-        key={datacenter.id}
-        onClick={() => onDatacenterSelected(datacenter.id)}
+        className={`region ${dcClass}`}
+        key={region.id}
+        onClick={() => onRegionSelected(region.id)}
       >
         <header>
-          <div className="title">{datacenter.label}</div>
+          <div className="title">{region.label}</div>
         </header>
         <div className="option-contents">
           <img
-            src={flags[datacenter.country]}
+            src={flags[region.country]}
             width={64}
             height={64}
-            alt={datacenter.label}
+            alt={region.label}
           />
         </div>
       </div>
     );
   }
 
-  renderRegion = (datacentersInRegion, region) => {
-    const allRealDatacenters = this.props.datacenters;
-    const datacenters = Object.values(allRealDatacenters).filter(({ id }) =>
-    datacentersInRegion.indexOf(id) !== -1);
+  renderRegion = (regionsInRegion, region) => {
+    const allRealRegions = this.props.regions;
+    const regions = Object.values(allRealRegions).filter(({ id }) =>
+    regionsInRegion.indexOf(id) !== -1);
 
-    return datacenters.length ? (
+    return regions.length ? (
       <div key={region}>
         <h3>{region}</h3>
-        <div className="datacenter-group">
-          {datacenters.map(this.renderDatacenter)}
+        <div className="region-group">
+          {regions.map(this.renderRegion)}
         </div>
       </div>
       ) : null;
   }
 
   renderDisabled() {
-    const { selected, datacenters } = this.props;
-    const dc = Object.values(datacenters).find(dc => dc.id === selected);
+    const { selected, regions } = this.props;
+    const dc = Object.values(regions).find(dc => dc.id === selected);
     return (
-      <Card header={<CardHeader title="Datacenter" />}>
+      <Card header={<CardHeader title="Region" />}>
         <p>
-          The source you selected limits the datacenters you may deploy
+          The source you selected limits the regions you may deploy
           your new Linode to.
         </p>
-        {this.renderDatacenter(dc)}
+        {this.renderRegion(dc)}
       </Card>
     );
   }
@@ -71,16 +71,16 @@ export default class Datacenter extends Component {
       return this.renderDisabled();
     }
     return (
-      <Card header={<CardHeader title="Datacenter" />}>
+      <Card header={<CardHeader title="Region" />}>
         {_.map(regionMap, this.renderRegion)}
       </Card>
     );
   }
 }
 
-Datacenter.propTypes = {
+Region.propTypes = {
   selected: PropTypes.string,
-  datacenters: PropTypes.object.isRequired,
-  onDatacenterSelected: PropTypes.func.isRequired,
+  regions: PropTypes.object.isRequired,
+  onRegionSelected: PropTypes.func.isRequired,
   disabled: PropTypes.bool,
 };

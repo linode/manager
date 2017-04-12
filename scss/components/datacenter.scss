@@ -1,10 +1,10 @@
-.datacenter-group, .plans, .backup-group {
+.region-group, .plans, .backup-group {
     display: flex;
     flex-wrap: wrap;
     justify-content: left;
 }
 
-.datacenter, .plan, .backup {
+.region, .plan, .backup {
     $width: 250px;
     border: $border;
     cursor: pointer;

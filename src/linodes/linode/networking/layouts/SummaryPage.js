@@ -44,7 +44,7 @@ export class SummaryPage extends Component {
   }
 
   renderNameservers(isIpv4) {
-    const dc = this.getLinode().datacenter.id;
+    const dc = this.getLinode().region.id;
     const ipToObject = ip => ({ address: ip });
     const id = isIpv4 ? 'ipv4Nameservers' : 'ipv6Nameservers';
     const ips = isIpv4 ? ipv4ns[dc].map(ipToObject) :

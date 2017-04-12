@@ -11,16 +11,16 @@ describe('api/apiResultActionReducerGenerator.js', () => {
     sandbox.restore();
   });
 
-  it('should look like a datacenter config', () => {
+  it('should look like a region config', () => {
     const config = gen.genConfig({
-      plural: 'datacenters',
-      singular: 'datacenter',
+      plural: 'regions',
+      singular: 'region',
       localStorageCacheable: true,
-      endpoint: id => `/datacenters/${id}`,
+      endpoint: id => `/regions/${id}`,
       supports: [gen.ONE, gen.MANY],
     });
-    expect(config.plural).to.equal('datacenters');
-    expect(config.singular).to.equal('datacenter');
+    expect(config.plural).to.equal('regions');
+    expect(config.singular).to.equal('region');
     expect(config.localStorageCacheable).to.equal(true);
     expect(config.supports).to.deep.equal(['ONE', 'MANY']);
     expect(config.parent).to.equal(undefined);
@@ -28,27 +28,27 @@ describe('api/apiResultActionReducerGenerator.js', () => {
 
   it('should generate a default state', () => {
     const config = gen.genConfig({
-      plural: 'datacenters',
-      singular: 'datacenter',
+      plural: 'regions',
+      singular: 'region',
       localStorageCacheable: true,
-      endpoint: id => `/datacenters/${id}`,
+      endpoint: id => `/regions/${id}`,
       supports: [gen.ONE, gen.MANY],
     });
     const df = gen.generateDefaultStateMany(config);
     expect(df).to.deep.equal({
       totalPages: -1,
       totalResults: -1,
-      datacenters: {},
+      regions: {},
       ids: [],
     });
   });
 
   it('should add one', () => {
     const config = gen.genConfig({
-      plural: 'datacenters',
-      singular: 'datacenter',
+      plural: 'regions',
+      singular: 'region',
       localStorageCacheable: true,
-      endpoint: id => `/datacenters/${id}`,
+      endpoint: id => `/regions/${id}`,
       supports: [gen.ONE, gen.MANY],
     });
     const addOne = gen.generateDefaultStateOne(config, 'ph');
@@ -60,10 +60,10 @@ describe('api/apiResultActionReducerGenerator.js', () => {
 
   it('should run invalidate', () => {
     const config = gen.genConfig({
-      plural: 'datacenters',
-      singular: 'datacenter',
+      plural: 'regions',
+      singular: 'region',
       localStorageCacheable: true,
-      endpoint: id => `/datacenters/${id}`,
+      endpoint: id => `/regions/${id}`,
       supports: [gen.ONE, gen.MANY],
     });
     const state = { placeholder: 'placeholder' };

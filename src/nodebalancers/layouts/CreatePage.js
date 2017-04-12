@@ -5,7 +5,7 @@ import { Link } from 'react-router';
 
 import { Card, CardHeader } from '~/components/cards';
 import { Input, Form, FormGroup, FormGroupError, SubmitButton } from '~/components/form';
-import Datacenter from '~/components/Datacenter';
+import Region from '~/components/Region';
 import { nodebalancers } from '~/api';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
@@ -15,7 +15,7 @@ export class CreatePage extends Component {
   constructor() {
     super();
     this.state = {
-      datacenter: 'newark',
+      region: 'newark',
       label: '',
       errors: {},
       fetching: false,
@@ -30,12 +30,12 @@ export class CreatePage extends Component {
 
   onSubmit = async () => {
     const { dispatch } = this.props;
-    const { datacenter, label } = this.state;
+    const { region, label } = this.state;
 
     this.setState({ loading: true });
 
     try {
-      await dispatch(nodebalancers.post({ label, datacenter }));
+      await dispatch(nodebalancers.post({ label, region }));
 
       // TODO: Redirect to newly create nodebalancer page
       dispatch(push('/nodebalancers'));
@@ -48,8 +48,8 @@ export class CreatePage extends Component {
   }
 
   render() {
-    const { datacenters } = this.props;
-    const { datacenter, label, fetching, errors } = this.state;
+    const { regions } = this.props;
+    const { region, label, fetching, errors } = this.state;
 
     return (
       <div className="PrimaryPage container">
@@ -58,10 +58,10 @@ export class CreatePage extends Component {
           <h1>Add a NodeBalancer</h1>
         </header>
         <div className="PrimaryPage-body Nodebalancer-create">
-          <Datacenter
-            selected={datacenter}
-            datacenters={datacenters.datacenters}
-            onDatacenterSelected={id => this.setState({ datacenter: id })}
+          <Region
+            selected={region}
+            regions={regions.regions}
+            onRegionSelected={id => this.setState({ region: id })}
           />
           <Card header={<CardHeader />}>
             <Form onSubmit={this.onSubmit}>
@@ -100,12 +100,12 @@ export class CreatePage extends Component {
 
 CreatePage.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  datacenters: PropTypes.object,
+  regions: PropTypes.object,
 };
 
 function select(state) {
   return {
-    datacenters: state.api.datacenters,
+    regions: state.api.regions,
   };
 }
 
