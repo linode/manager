@@ -4,7 +4,7 @@ import {
 } from '~/components/form';
 import { ErrorSummary } from '~/errors';
 
-export default function NewSlaveZone(props) {
+export default function NewImportZone(props) {
   return (
     <Form onSubmit={props.onSubmit}>
       <FormGroup errors={props.errors} name="dnszone" className="row">
@@ -15,25 +15,29 @@ export default function NewSlaveZone(props) {
             value={props.dnszone}
             placeholder="example.com"
             onChange={props.onChange('dnszone')}
+            disabled
           />
         </div>
         <FormGroupError errors={props.errors} name="dnszone" />
       </FormGroup>
-      <FormGroup errors={props.errors} name="master_ips" className="row">
-        <label className="col-sm-2 col-form-label">Master Zones</label>
-        <div className="col-sm-10">
-          <textarea
-            value={props.master_ips.length ? props.master_ips.join(';') : ''}
-            placeholder="172.92.1.4;209.124.103.15"
-            onChange={props.onChange('master_ips')}
+      <FormGroup errors={props.errors} name="axfr_ips" className="row">
+        <label className="col-sm-2 col-form-label">Remote nameserver</label>
+        <div className="col-sm-6">
+          <Input
+            className="form-control"
+            value={props.axfr_ips}
+            placeholder="44.55.66.77"
+            onChange={props.onChange('axfr_ips')}
+            disabled
           />
           <div>
             <small className="text-muted">
-              Use semicolons or new lines to separate multiple IP addresses.
+              Your nameserver must allow zone transfer (AXFR) from
+              96.126.114.97, 96.126.114.98, 2600:3c00::5e, and 2600:3c00::5f.
             </small>
           </div>
         </div>
-        <FormGroupError errors={props.errors} name="master_ips" />
+        <FormGroupError errors={props.errors} name="axfr_ips" />
       </FormGroup>
       <div className="row">
         <div className="offset-sm-2 col-sm-10">
@@ -47,10 +51,10 @@ export default function NewSlaveZone(props) {
   );
 }
 
-NewSlaveZone.propTypes = {
+NewImportZone.propTypes = {
   onChange: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
-  master_ips: PropTypes.any.isRequired,
+  axfr_ips: PropTypes.any.isRequired,
   dnszone: PropTypes.string.isRequired,
   loading: PropTypes.bool.isRequired,
   errors: PropTypes.any.isRequired,
