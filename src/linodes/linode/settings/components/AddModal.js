@@ -186,7 +186,6 @@ export class AddModal extends Component {
           <CancelButton disabled={loading} onClick={() => dispatch(hideModal())} />
           <SubmitButton disabled={ready}>Add Disk</SubmitButton>
         </div>
-
         <ErrorSummary errors={errors} />
       </Form>
     );

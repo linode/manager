@@ -57,8 +57,8 @@ export class IndexPage extends Component {
               Backups not enabled. Enable backups for
               ${(linode.type[0].backups_price / 100).toFixed(2)}/mo.
             </p>
-            <ErrorSummary errors={errors} />
             <PrimaryButton type="submit">Enable backups</PrimaryButton>
+            <ErrorSummary errors={errors} />
           </form>
         </Card>
       );

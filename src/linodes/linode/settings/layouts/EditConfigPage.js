@@ -594,13 +594,13 @@ export class EditConfigPage extends Component {
               </div>
             </div>
           </fieldset>
-          <ErrorSummary errors={errors} />
           <div className="row">
             <div className="offset-sm-2 col-sm-10">
               <SubmitButton>{this.props.create ? 'Add config' : 'Save'}</SubmitButton>
               <CancelButton to={`/linodes/${linodeLabel}/settings/advanced`} />
             </div>
           </div>
+          <ErrorSummary errors={errors} />
         </Form>
       </Card>
     );

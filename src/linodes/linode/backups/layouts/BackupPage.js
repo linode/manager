@@ -143,13 +143,6 @@ export class BackupPage extends Component {
     );
 
     const takeSnapshot = [(
-      <div className="form-group row" key="errors">
-        <div className="col-sm-3 col-form-label"></div>
-        <div className="col-sm-9">
-          <ErrorSummary errors={takeSnapshotErrors} />
-        </div>
-      </div>
-    ), (
       <div className="form-group row" key="button">
         <div className="col-sm-3 col-form-label"></div>
         <div className="col-sm-9">
@@ -161,6 +154,13 @@ export class BackupPage extends Component {
           >
             Take new snapshot
           </button>
+        </div>
+      </div>
+    ), (
+      <div className="form-group row" key="errors">
+        <div className="col-sm-3 col-form-label"></div>
+        <div className="col-sm-9">
+          <ErrorSummary errors={takeSnapshotErrors} />
         </div>
       </div>
     )];
@@ -262,12 +262,6 @@ export class BackupPage extends Component {
                 </label>
               </div>
             </div>
-            <div className="form-group row">
-              <div className="col-sm-3 col-form-label"></div>
-              <div className="col-sm-9">
-                <ErrorSummary errors={restoreErrors} />
-              </div>
-            </div>
             <div className="row">
               <div className="col-sm-3 col-form-label"></div>
               <div className="col-sm-9">
@@ -279,6 +273,12 @@ export class BackupPage extends Component {
                 >
                   Restore
                 </button>
+              </div>
+            </div>
+            <div className="form-group row">
+              <div className="col-sm-3 col-form-label"></div>
+              <div className="col-sm-9">
+                <ErrorSummary errors={restoreErrors} />
               </div>
             </div>
           </Card>

@@ -95,11 +95,11 @@ export class EditModal extends Component {
             <FormGroupError errors={errors} name="size" inline={false} />
           </div>
         </FormGroup>
-        <ErrorSummary errors={errors} />
         <div className="Modal-footer">
           <CancelButton disabled={loading} onClick={() => dispatch(hideModal())} />
           <SubmitButton disabled={loading} />
         </div>
+        <ErrorSummary errors={errors} />
       </Form>);
   }
 }
