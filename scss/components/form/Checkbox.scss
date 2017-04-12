@@ -1,12 +1,9 @@
 .Checkbox {
     display: inline;
 
-    &.col-form-label {
-        padding: 6px 8px 6px 0;
-        text-align: left;
-    }
-
     &-label {
+        text-align: left;
+        color: $black;
         vertical-align: middle;
     }
 }
