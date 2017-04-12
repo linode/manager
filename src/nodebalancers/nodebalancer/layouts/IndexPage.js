@@ -161,7 +161,7 @@ export class IndexPage extends Component {
           >
             {this.renderConfigs(Object.values(configs))}
           </Card>
-          <Card header={<CardHeader title="Performance" />}>No stats are available.</Card>
+          <Card header={<CardHeader title="Graphs" />}>No graphs are available.</Card>
         </div>
       </div>
     );

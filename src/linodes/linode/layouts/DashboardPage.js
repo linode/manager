@@ -98,8 +98,8 @@ export class DashboardPage extends Component {
 
   renderGraphs() {
     return (
-      <Card header={<CardHeader title="Performance" />} className="graphs">
-        {!this.graphs ? <p>No stats are available.</p> : (
+      <Card header={<CardHeader title="Graphs" />} className="graphs">
+        {!this.graphs ? <p>No graphs are available.</p> : (
           <div>
             <div className="clearfix">
               <div className="float-sm-left">
