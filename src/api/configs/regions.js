@@ -1,13 +1,13 @@
 import {
   genConfig, ReducerGenerator, genActions,
-  ONE, MANY, POST, PUT, DELETE,
+  ONE, MANY,
 } from '~/api/apiResultActionReducerGenerator';
 
 export const config = genConfig({
-  plural: 'tickets',
-  singular: 'tickets',
-  endpoint: id => `/support/tickets/${id}`,
-  supports: [ONE, MANY, POST, PUT, DELETE],
+  plural: 'regions',
+  singular: 'region',
+  endpoint: id => `/regions/${id}`,
+  supports: [ONE, MANY],
 });
 
 export const actions = genActions(config);

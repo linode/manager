@@ -214,12 +214,12 @@ export class ConfigForm extends Component {
           </div>
           <FormGroupError errors={errors} name="check_passive" />
         </FormGroup>
-        <ErrorSummary errors={errors} />
         <div className="row">
           <div className="offset-sm-2 col-sm-10">
             <SubmitButton>{submitText}</SubmitButton>
           </div>
         </div>
+        <ErrorSummary errors={errors} />
       </Form>
     );
   }

@@ -5,8 +5,7 @@ import TableCell from './TableCell';
 
 
 export default function CheckboxCell(props) {
-  const { checked, column, record } = props;
-  const { onChange } = column;
+  const { checked, column, onChange, record } = props;
 
   return (
     <TableCell className="CheckboxCell" column={column} record={record}>

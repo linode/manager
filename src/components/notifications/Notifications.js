@@ -7,6 +7,7 @@ import { EVENT_POLLING_DELAY } from '~/constants';
 import { events } from '~/api';
 import {
   createHeaderFilter,
+  greaterThanDatetimeFilter,
   lessThanDatetimeFilter,
   lessThanNowFilter,
 } from '~/api/util';
@@ -24,9 +25,9 @@ export class Notifications extends Component {
     this.onClickItem = this.onClickItem.bind(this);
     this.onClickShowMore = this.onClickShowMore.bind(this);
 
+    this._filterOptions = { seen: false };
     this._polling = Polling({
       apiRequestFn: this.fetchAllEvents.bind(this),
-      filterOptions: { seen: false },
       timeout: EVENT_POLLING_DELAY,
     });
     this.state = { loadingMore: false };
@@ -49,6 +50,18 @@ export class Notifications extends Component {
 
     // initialize polling for unseen events
     this._polling.start();
+  }
+
+  componentWillUpdate() {
+    const { events } = this.props;
+    if (events.ids.length) {
+      const latest = events.events[events.ids[0]];
+      this._filterOptions = _.merge(
+        {},
+        this._filterOptions,
+        greaterThanDatetimeFilter('created', latest.created)
+      );
+    }
   }
 
   componentWillUnmount() {
@@ -88,9 +101,9 @@ export class Notifications extends Component {
     );
   }
 
-  async fetchAllEvents(options = null) {
+  async fetchAllEvents() {
     const { dispatch } = this.props;
-    await dispatch(events.all([], null, options));
+    await dispatch(events.all([], null, createHeaderFilter(this._filterOptions)));
   }
 
   render() {

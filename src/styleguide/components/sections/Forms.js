@@ -3,9 +3,10 @@ import React from 'react';
 import { StyleguideSection } from '~/styleguide/components';
 
 import {
-  Form, FormGroup, CancelButton, SubmitButton, Input, Radio, Checkbox, Select, CheckboxInputCombo,
+  Form, FormGroup, SubmitButton, Input, Radio, Checkbox, Select, CheckboxInputCombo,
   FormGroupError, RadioInputCombo, RadioSelectCombo, Checkboxes, PasswordInput,
 } from '~/components/form';
+import { CancelButton } from '~/components/buttons';
 import { ErrorSummary } from '~/errors';
 
 export default function Forms() {

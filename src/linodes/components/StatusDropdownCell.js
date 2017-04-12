@@ -14,7 +14,7 @@ export default function StatusDropdownCell(props) {
       <StatusDropdown
         linode={record}
         dispatch={dispatch}
-        className="float-xs-right"
+        className="float-sm-right"
       />
     </TableCell>
   );

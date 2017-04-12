@@ -12,7 +12,7 @@ export default function NameserversCell(props) {
 
   let actions;
   // Linode nameservers are readonly
-  if (NAME_SERVERS.indexOf(record.name) > -1) {
+  if (NAME_SERVERS.indexOf(record.target) > -1) {
     actions = (
       <small className="text-muted">Read-only</small>
     );

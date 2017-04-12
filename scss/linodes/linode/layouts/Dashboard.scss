@@ -1,10 +1,10 @@
 .distro-style img,
-.datacenter-style img {
+.region-style img {
     margin-right: 10px;
     vertical-align: text-bottom;
 }
 
-.datacenter-style img {
+.region-style img {
     -webkit-filter: contrast(70%) saturate(90%);
     filter: contrast(70%) saturate(90%);
     opacity: 0.7;

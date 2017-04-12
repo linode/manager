@@ -1,21 +1,21 @@
 import React, { PropTypes } from 'react';
 
 import TableCell from './TableCell';
-import Datacenter from '~/linodes/components/Datacenter';
+import Region from '~/linodes/components/Region';
 
 
 // TODO: this should probably be a more generic icon + text cell
-export default function DatacenterCell(props) {
+export default function RegionCell(props) {
   const { column, record } = props;
 
   return (
     <TableCell column={column} record={record}>
-      <Datacenter obj={record} />
+      <Region obj={record} />
     </TableCell>
   );
 }
 
-DatacenterCell.propTypes = {
+RegionCell.propTypes = {
   column: PropTypes.object.isRequired,
   record: PropTypes.object.isRequired,
 };

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
 import { setError } from '~/actions/errors';
-import Datacenter from '~/linodes/components/Datacenter';
+import Region from '~/linodes/components/Region';
 import DistroStyle from '~/linodes/components/DistroStyle';
 import PlanStyle from '~/linodes/components/PlanStyle';
 import WeblishLaunch from '~/linodes/components/WeblishLaunch';
@@ -98,11 +98,11 @@ export class DashboardPage extends Component {
 
   renderGraphs() {
     return (
-      <Card header={<CardHeader title="Performance" />} className="graphs">
-        {!this.graphs ? <p>No stats are available.</p> : (
+      <Card header={<CardHeader title="Graphs" />} className="graphs">
+        {!this.graphs ? <p>No graphs are available.</p> : (
           <div>
             <div className="clearfix">
-              <div className="float-xs-left">
+              <div className="float-sm-left">
                 <Select
                   value={this.state.source}
                   name="source"
@@ -114,7 +114,7 @@ export class DashboardPage extends Component {
                   <option value="netv6">IPv6 Network</option>
                 </Select>
               </div>
-              <div className="float-xs-right">
+              <div className="float-sm-right">
                 <Select
                   value={this.state.range}
                   name="range"
@@ -141,7 +141,7 @@ export class DashboardPage extends Component {
     const lishLink = `ssh -t ${
         username
       }@lish-${
-        linode.datacenter.id
+        linode.region.id
       }.linode.com`;
 
     return (
@@ -171,12 +171,12 @@ export class DashboardPage extends Component {
               </div>
               : null
             }
-            <div className="row linode-datacenter">
+            <div className="row linode-region">
               <div className="col-sm-3 row-label">
-                Datacenter
+                Region
               </div>
               <div className="col-sm-9">
-                <Datacenter obj={linode} />
+                <Region obj={linode} />
               </div>
             </div>
             <div className="row linode-distro">
