@@ -3,8 +3,7 @@ import React, { PropTypes } from 'react';
 import { Form, FormGroup, SubmitButton, Select } from '~/components/form';
 import { ErrorSummary } from '~/errors';
 
-import moment from 'moment';
-import 'moment-timezone';
+import moment from 'moment-timezone';
 
 export default function TimezoneForm(props) {
   const timezones = moment.tz.names();
