@@ -78,8 +78,8 @@ export class ReverseDNSPage extends Component {
     const linode = this.getLinode();
     const ips = linode._ips;
 
-    // TODO: slaac and global should show up here but they are not supported by the API yet
-    const records = [...ips.ipv4.public, ...ips.ipv6.addresses];
+    // TODO: global should show up here but they are not supported by the API yet?
+    const records = [...ips.ipv4.public, ...ips.ipv6.addresses, ips.ipv6.slaac];
 
     return (
       <Card header={<CardHeader title="Reverse DNS" />}>
