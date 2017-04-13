@@ -105,6 +105,11 @@ const EventTypeMap = {
     pastTenseAction: 'cloned',
     redirectUrl: getLinodeRedirectUrl,
   },
+  linode_kvmify: {
+    presentTenseAction: 'KVMifying',
+    pastTenseAction: 'kvmified',
+    redirectUrl: getLinodeRedirectUrl,
+  },
 
   disk_create: {
     presentTenseAction: 'Creating',
