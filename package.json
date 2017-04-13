@@ -51,7 +51,7 @@
     "circular-dependency-plugin": "^2.0.0",
     "coveralls": "^2.11.9",
     "cross-env": "^1.0.6",
-    "enzyme": "^2.3.0",
+    "enzyme": "2.8.0",
     "eslint": "^2.13.1",
     "eslint-config-airbnb": "^9.0.1",
     "eslint-plugin-babel": "^3.3.0",
