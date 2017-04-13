@@ -34,6 +34,15 @@ export function getNodebalancerRedirectUrl(entity) {
   return `${getNodebalancersRedirectUrl()}/${entity.label}`;
 }
 
+export function getTicketsRedirectUrl() {
+  return '/support';
+}
+
+export function getTicketRedirectUrl(entity) {
+  return `${getTicketsRedirectUrl()}/${entity.id}`;
+}
+
+
 const EventTypeMap = {
   linode_boot: {
     presentTenseAction: 'Booting',
@@ -163,6 +172,27 @@ const EventTypeMap = {
     redirectUrl: getDNSZonesRedirectUrl,
   },
 
+  nodebalancer_create: {
+    presentTenseAction: 'Creating',
+    pastTenseAction: 'created',
+    redirectUrl: getNodebalancersRedirectUrl,
+  },
+  nodebalancer_delete: {
+    presentTenseAction: 'Deleting',
+    pastTenseAction: 'deleted',
+    redirectUrl: getNodebalancersRedirectUrl,
+  },
+  nodebalancer_config_create: {
+    presentTenseAction: 'Creating',
+    pastTenseAction: 'created',
+    redirectUrl: getNodebalancerRedirectUrl,
+  },
+  nodebalancer_config_delete: {
+    presentTenseAction: 'Deleting',
+    pastTenseAction: 'deleted',
+    redirectUrl: getNodebalancerRedirectUrl,
+  },
+
   stackscript_create: {
     presentTenseAction: 'Creating',
     pastTenseAction: 'created',
@@ -182,6 +212,24 @@ const EventTypeMap = {
     presentTenseAction: 'Deleting',
     pastTenseAction: 'deleted',
     redirectUrl: baseRedirect,
+  },
+
+  ticket_create: {
+    presentTenseAction: 'Creating',
+    pastTenseAction: 'created',
+    redirectUrl: getTicketsRedirectUrl,
+  },
+  ticket_reply: {
+    presentTenseAction: 'Replying',
+    pastTenseAction: '',
+    pastTensePrefix: 'Reply posted to',
+    redirectUrl: getTicketRedirectUrl,
+  },
+  ticket_attachment_upload: {
+    presentTenseAction: 'Attachment uploading',
+    pastTenseAction: '',
+    pastTensePrefix: 'Attachment uploaded to',
+    redirectUrl: getTicketRedirectUrl,
   },
 };
 
