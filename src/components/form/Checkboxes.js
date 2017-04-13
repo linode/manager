@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 
 export default function Checkboxes(props) {
-  return <div className="Checkboxes">{props.children}</div>;
+  return <fieldset className="Checkboxes">{props.children}</fieldset>;
 }
 
 Checkboxes.propTypes = {

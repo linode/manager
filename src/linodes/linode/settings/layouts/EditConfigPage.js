@@ -416,29 +416,27 @@ export class EditConfigPage extends Component {
             </div>
           </FormGroup>
           <FormGroup errros={errors} name="runLevel" className="row">
-            <fieldset className="form-group">
-              <label className="col-sm-2 col-form-label">Run level</label>
-              <div className="col-sm-6">
-                <Checkboxes>
-                  <Radio
-                    checked={runLevel === 'default'}
-                    onChange={() => this.setState({ runLevel: 'default' })}
-                    label="Default"
-                  />
-                  <Radio
-                    id="config-runLevel-single"
-                    checked={runLevel === 'single'}
-                    onChange={() => this.setState({ runLevel: 'single' })}
-                    label="Single-user mode"
-                  />
-                  <Radio
-                    checked={runLevel === 'binbash'}
-                    onChange={() => this.setState({ runLevel: 'binbash' })}
-                    label="init=/bin/bash"
-                  />
-                </Checkboxes>
-              </div>
-            </fieldset>
+            <label className="col-sm-2 col-form-label">Run level</label>
+            <div className="col-sm-6">
+              <Checkboxes>
+                <Radio
+                  checked={runLevel === 'default'}
+                  onChange={() => this.setState({ runLevel: 'default' })}
+                  label="Default"
+                />
+                <Radio
+                  id="config-runLevel-single"
+                  checked={runLevel === 'single'}
+                  onChange={() => this.setState({ runLevel: 'single' })}
+                  label="Single-user mode"
+                />
+                <Radio
+                  checked={runLevel === 'binbash'}
+                  onChange={() => this.setState({ runLevel: 'binbash' })}
+                  label="init=/bin/bash"
+                />
+              </Checkboxes>
+            </div>
           </FormGroup>
           <FormGroup errors={errors} name="ram_limit" className="row">
             <label className="col-sm-2 col-form-label">Memory limit</label>
@@ -524,76 +522,78 @@ export class EditConfigPage extends Component {
             </div>
           </div>
           <h3 className="sub-header">Filesystem/Boot Helpers</h3>
-          <fieldset className="form-group row">
+          <FormGroup className="row">
             <label className="col-sm-2 col-form-label">Boot helpers</label>
             <div className="col-md-8">
-              <Checkbox
-                id="config-enableDistroHelper"
-                checked={enableDistroHelper}
-                onChange={() => this.setState({
-                  helpers: {
-                    ...this.state.helpers,
-                    enableDistroHelper: !enableDistroHelper,
-                  },
-                })}
-                label="Enable distro helper"
-              />
-              <div>
-                <small className="text-muted">
-                  Helps maintain correct inittab/upstart console device
-                </small>
-              </div>
-              <Checkbox
-                id="config-disableUpdatedb"
-                checked={disableUpdatedb}
-                onChange={() => this.setState({
-                  helpers: {
-                    ...this.state.helpers,
-                    disableUpdatedb: !disableUpdatedb,
-                  },
-                })}
-                label="Disable updatedb"
-              />
-              <div>
-                <small className="text-muted">
-                  Disables updatedb cron job to avoid disk thrashing
-                </small>
-              </div>
-              <Checkbox
-                id="config-enableModulesdepHelper"
-                checked={enableModulesdepHelper}
-                onChange={() => this.setState({
-                  helpers: {
-                    ...this.state.helpers,
-                    enableModulesdepHelper: !enableModulesdepHelper,
-                  },
-                })}
-                label="Enable modules.dep helper"
-              />
-              <div>
-                <small className="text-muted">
-                  Creates a modules dependency file for the kernel you run
-                </small>
-              </div>
-              <Checkbox
-                id="config-enableNetworkHelper"
-                checked={enableNetworkHelper}
-                onChange={() => this.setState({
-                  helpers: {
-                    ...this.state.helpers,
-                    enableNetworkHelper: !enableNetworkHelper,
-                  },
-                })}
-                label="Enable network helper"
-              />
-              <div>
-                <small className="text-muted">
-                  Automatically configure static networking
-                  <a href="https://www.linode.com/docs/platform/network-helper">(more info)</a>
-                </small>
-              </div>
+              <Checkboxes>
+                <Checkbox
+                  id="config-enableDistroHelper"
+                  checked={enableDistroHelper}
+                  onChange={() => this.setState({
+                    helpers: {
+                      ...this.state.helpers,
+                      enableDistroHelper: !enableDistroHelper,
+                    },
+                  })}
+                  label="Enable distro helper"
+                />
+                <div>
+                  <small className="text-muted">
+                    Helps maintain correct inittab/upstart console device
+                  </small>
+                </div>
+                <Checkbox
+                  id="config-disableUpdatedb"
+                  checked={disableUpdatedb}
+                  onChange={() => this.setState({
+                    helpers: {
+                      ...this.state.helpers,
+                      disableUpdatedb: !disableUpdatedb,
+                    },
+                  })}
+                  label="Disable updatedb"
+                />
+                <div>
+                  <small className="text-muted">
+                    Disables updatedb cron job to avoid disk thrashing
+                  </small>
+                </div>
+                <Checkbox
+                  id="config-enableModulesdepHelper"
+                  checked={enableModulesdepHelper}
+                  onChange={() => this.setState({
+                    helpers: {
+                      ...this.state.helpers,
+                      enableModulesdepHelper: !enableModulesdepHelper,
+                    },
+                  })}
+                  label="Enable modules.dep helper"
+                />
+                <div>
+                  <small className="text-muted">
+                    Creates a modules dependency file for the kernel you run
+                  </small>
+                </div>
+                <Checkbox
+                  id="config-enableNetworkHelper"
+                  checked={enableNetworkHelper}
+                  onChange={() => this.setState({
+                    helpers: {
+                      ...this.state.helpers,
+                      enableNetworkHelper: !enableNetworkHelper,
+                    },
+                  })}
+                  label="Enable network helper"
+                />
+                <div>
+                  <small className="text-muted">
+                    Automatically configure static networking
+                    <a href="https://www.linode.com/docs/platform/network-helper">(more info)</a>
+                  </small>
+                </div>
+              </Checkboxes>
             </div>
-          </fieldset>
+          </FormGroup>
           <div className="row">
             <div className="offset-sm-2 col-sm-10">
               <SubmitButton>{this.props.create ? 'Add config' : 'Save'}</SubmitButton>
