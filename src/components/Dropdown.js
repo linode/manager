@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 
+
 export default class Dropdown extends Component {
   constructor() {
     super();
@@ -36,7 +37,7 @@ export default class Dropdown extends Component {
 
     return (
       <div
-        className={`btn-group ${this.state.open ? 'open' : ''}`}
+        className={`Dropdown btn-group ${this.state.open ? 'show' : ''}`}
         onBlur={this.close}
       >
         <button
@@ -49,7 +50,7 @@ export default class Dropdown extends Component {
           <button
             disabled={disabled}
             type="button"
-            className="btn dropdown-toggle"
+            className="btn dropdown-toggle dropdown-toggle-split"
             data-toggle="dropdown"
             aria-haspopup="true"
             aria-expanded={this.state.open}

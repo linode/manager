@@ -8,6 +8,7 @@
 
     th:last-of-type,
     td:last-of-type {
+        text-align: right;
         padding-right: 15px;
     }
 
@@ -37,17 +38,6 @@
 
     &--selected {
         @extend .selected;
-    }
-}
-
-// TODO: move this somewhere else
-.Group {
-    margin-top: 15px;
-
-    &-label {
-        @extend .font-large;
-        color: $light-black;
-        padding: 5px 0;
     }
 }
 

@@ -33,6 +33,13 @@ export default class StatusDropdown extends Component {
     };
   }
 
+  componentDidMount() {
+    const { linode } = this.props;
+    if (linode.status === 'provisioning') {
+      this.startLinodePolling('provisioning');
+    }
+  }
+
   componentWillUpdate(nextProps) {
     const { linode } = nextProps;
 
@@ -133,7 +140,7 @@ export default class StatusDropdown extends Component {
         onMouseDown={action}
       >{name}</button>
     );
-    const openClass = this.state.open ? 'StatusDropdown--open' : '';
+    const openClass = this.state.open ? 'show' : '';
 
     if (LinodeStates.pending.indexOf(linode.status) !== -1) {
       const safeProgress = linode.__progress || RANDOM_PROGRESS_MAX;
@@ -153,12 +160,12 @@ export default class StatusDropdown extends Component {
 
     return (
       <div
-        className={`StatusDropdown ${openClass} ${className}`}
+        className={`StatusDropdown Dropdown ${openClass} ${className}`}
         onBlur={this.close}
       >
         <button
           type="button"
-          className="StatusDropdown-toggle"
+          className="StatusDropdown-toggle btn dropdown-toggle"
           data-toggle="dropdown"
           aria-haspopup="true"
           aria-expanded={this.state.open}
@@ -167,7 +174,7 @@ export default class StatusDropdown extends Component {
         >
           {LinodeStatesReadable[linode.status] || 'Offline'} <i className="fa fa-caret-down" />
         </button>
-        <div className="StatusDropdown-menu">{dropdownMenu}</div>
+        <div className="StatusDropdown-menu dropdown-menu">{dropdownMenu}</div>
       </div>
     );
   }

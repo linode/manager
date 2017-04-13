@@ -87,12 +87,12 @@ export default class Header extends Component {
               to="/nodebalancers"
             >NodeBalancers</Link>
             <Link
-              className={`${linkClass('/dnsmanager')}`}
-              to="/dnsmanager"
-            >DNS Manager</Link>
+              className={`${linkClass('/domains')}`}
+              to="/domains"
+            >Domains</Link>
             {!username ? null :
               <div
-                className="MainHeader-session float-xs-right"
+                className="MainHeader-session float-sm-right"
                 onClick={this.toggleSession}
               >
                 <span className="MainHeader-username">
@@ -108,7 +108,7 @@ export default class Header extends Component {
               </div>
             }
             <div
-              className="MainHeader-notifications float-xs-right"
+              className="MainHeader-notifications float-sm-right"
               onClick={this.toggleNotifications}
             >
               <i className="fa fa-bell-o"></i>

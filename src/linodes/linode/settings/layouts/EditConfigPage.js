@@ -117,7 +117,7 @@ export function renderDiskSlot(device, index) {
       <label className="col-sm-2 col-form-label">
         /dev/{AVAILABLE_DISK_SLOTS[index]}:
       </label>
-      <div className="col-xs-9 input-container">
+      <div className="col-sm-9 input-container">
         <Select
           id={`config-device-${AVAILABLE_DISK_SLOTS[index]}`}
           value={device}
@@ -510,10 +510,10 @@ export class EditConfigPage extends Component {
                   radioChecked={isCustomRoot === true}
                   radioOnChange={() => this.setState({
                     isCustomRoot: true,
-                    rootDevice: '/dev/xvda',
+                    rootDevice: '/dev/sda',
                   })}
                   inputId="config-custom-root-device"
-                  inputPlaceholder="/dev/xvda"
+                  inputPlaceholder="/dev/sda"
                   inputValue={isCustomRoot ? rootDevice : ''}
                   inputDisabled={isCustomRoot === false}
                   inputType="text"
@@ -594,13 +594,13 @@ export class EditConfigPage extends Component {
               </div>
             </div>
           </fieldset>
-          <ErrorSummary errors={errors} />
           <div className="row">
             <div className="offset-sm-2 col-sm-10">
               <SubmitButton>{this.props.create ? 'Add config' : 'Save'}</SubmitButton>
               <CancelButton to={`/linodes/${linodeLabel}/settings/advanced`} />
             </div>
           </div>
+          <ErrorSummary errors={errors} />
         </Form>
       </Card>
     );
