@@ -132,10 +132,9 @@ export class SummaryPage extends Component {
         <div className="row">
           <div className="col-sm-3 row-label">Address</div>
           <div className="col-sm-9">
-            {/* TODO: replace with proper prefix */}
-            <div id="slaac">{ipv6.slaac} / {ipv6.prefix || '64'}</div>
-            {ipv6.addresses.map(address =>
-              <div>{address} / {ipv6.prefix || '64'}</div>)}
+            <div id="slaac">{ipv6.slaac.address} / {ipv6.slaac.prefix}</div>
+            {ipv6.addresses.map(ip =>
+              <div>{ip.address} / {ip.prefix}</div>)}
           </div>
         </div>
         <div className="row">
