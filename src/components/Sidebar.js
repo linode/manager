@@ -9,7 +9,7 @@ export default function Sidebar(props) {
     ['services', [
       { icon: 'cubes', name: 'Linodes', link: '/linodes' },
       { icon: 'code-fork', name: 'NodeBalancers', link: '/nodebalancers' },
-      { icon: 'share-alt', name: 'DNS Manager', link: '/dnsmanager' },
+      { icon: 'share-alt', name: 'Domains', link: '/domains' },
     ]],
   ];
 

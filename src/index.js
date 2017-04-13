@@ -23,8 +23,9 @@ import Logout from './layouts/Logout';
 import { NotFound } from './components/Error';
 import Linodes from './linodes';
 import Weblish from './linodes/linode/layouts/Weblish';
+import Glish from './linodes/linode/layouts/Glish';
 import NodeBalancers from './nodebalancers';
-import DNSManager from './dnsmanager';
+import Domains from './domains';
 import Profile from './profile';
 import Users from './users';
 import Billing from './billing';
@@ -69,6 +70,10 @@ const init = () => {
             path="/linodes/:linodeLabel/weblish"
             component={Weblish}
           />
+          <Route
+            path="/linodes/:linodeLabel/glish"
+            component={Glish}
+          />
           {Styleguide}
           <Route
             onChange={() => store.dispatch(hideModal())}
@@ -78,7 +83,7 @@ const init = () => {
             <IndexRedirect to="/linodes" />
             {Linodes}
             {NodeBalancers}
-            {DNSManager}
+            {Domains}
             {Profile}
             {Users}
             {Billing}

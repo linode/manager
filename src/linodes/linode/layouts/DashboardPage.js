@@ -7,6 +7,7 @@ import Region from '~/linodes/components/Region';
 import DistroStyle from '~/linodes/components/DistroStyle';
 import PlanStyle from '~/linodes/components/PlanStyle';
 import WeblishLaunch from '~/linodes/components/WeblishLaunch';
+import GlishLaunch from '~/linodes/components/GlishLaunch';
 import { getLinode } from './IndexPage';
 import { setSource } from '~/actions/source';
 import { Button } from '~/components/buttons';
@@ -249,7 +250,7 @@ export class DashboardPage extends Component {
               </label>
               <div className="col-sm-8">
                 <div className="input-group-btn">
-                  <Button id="glish-button" disabled>Open</Button>
+                  <GlishLaunch linode={linode} />
                 </div>
                 <small className="text-muted">
                   Equivalent to plugging a monitor and keyboard into your server.

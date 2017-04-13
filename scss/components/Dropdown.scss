@@ -1,0 +1,35 @@
+.Dropdown {
+    &.dropdown-menu {
+        @extend .font-normal;
+    }
+
+    .btn:hover {
+        cursor: pointer;
+    }
+
+    .btn:focus {
+        outline: none;
+        box-shadow: none;
+    }
+
+    .dropdown-first:focus, .dropdown-first:focus:active {
+        outline: 0;
+    }
+
+    // TODO: BEMify
+    .dropdown-menu {
+        padding: 0;
+        border: 0;
+        margin-top: -1px;
+        margin-left: 1px;
+
+        .dropdown-item:first-of-type {
+            margin-left: -1px;
+        }
+
+        .dropdown-item:not(:first-of-type) {
+            border-top: 0;
+        }
+    }
+
+}

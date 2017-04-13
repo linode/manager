@@ -54,22 +54,18 @@
     }
 
     &-progress {
-        position: absolute;
-        top: -1px;
-        left: -1px;
         text-align: center;
         background-color: $green;
         background-image: linear-gradient(
-           45deg,
-           rgba(white, 0.1) 25%,
-           transparent 25%,
-           transparent 50%,
-           rgba(white, 0.1) 50%,
-           rgba(white, 0.1) 75%,
-           transparent 75%,
-           transparent
+            45deg,
+            rgba(white, 0.1) 25%,
+            transparent 25%,
+            transparent 50%,
+            rgba(white, 0.1) 50%,
+            rgba(white, 0.1) 75%,
+            transparent 75%,
+            transparent
         );
-        background-size: 30px 30px;
         -webkit-animation: spin 2s linear infinite;
         animation: spin 2s linear infinite;
 
@@ -82,9 +78,9 @@
     }
 
     @-webkit-keyframes spin {
-       0% {background-position: 0px 0px;}
-       100% {background-position: 0px 60px;}
-       }
+        0% {background-position: 0px 0px;}
+        100% {background-position: 0px 60px;}
+    }
 
     @keyframes spin {
         0% {background-position: 0px 0px;}
