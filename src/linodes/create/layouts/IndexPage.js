@@ -1,15 +1,14 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
+import { Link } from 'react-router';
 
 import Source from '../components/Source';
 import Plan from '~/linodes/components/Plan';
-import Datacenter from '~/components/Datacenter';
+import Region from '~/components/Region';
 import Details from '../components/Details';
-import { Card } from '~/components/cards';
+import { Card, CardHeader } from '~/components/cards';
 import { linodes } from '~/api';
-import { actions as linodeActions } from '~/api/configs/linodes';
-import { randomInitialProgress } from '~/api/linodes';
 import { setError } from '~/actions/errors';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
@@ -31,7 +30,7 @@ export class IndexPage extends Component {
     this.createLinode = this.createLinode.bind(this);
     this.state = {
       type: null,
-      datacenter: null,
+      region: null,
       distribution: null,
       backup: null,
       sourceTab: 0,
@@ -55,7 +54,7 @@ export class IndexPage extends Component {
         if (backup) {
           this.setState({
             backup: backup.id,
-            datacenter: backup.datacenter.id,
+            region: backup.region.id,
             sourceTab: 1,
           });
         }
@@ -69,9 +68,7 @@ export class IndexPage extends Component {
     this.setState({ loading: true });
 
     try {
-      const { id } = await this.createLinode({ group, label, password, backups });
-      dispatch(linodeActions.one({ __progress: randomInitialProgress() }, id));
-
+      await this.createLinode({ group, label, password, backups });
       dispatch(push(`/linodes/${label}`));
     } catch (response) {
       const errors = await reduceErrors(response);
@@ -83,14 +80,14 @@ export class IndexPage extends Component {
 
   createLinode({ group, label, password, backups }) {
     const { dispatch } = this.props;
-    const { type, datacenter, distribution, backup } = this.state;
+    const { type, region, distribution, backup } = this.state;
 
     const data = {
       root_pass: password,
       type,
       distribution,
       backup,
-      datacenter,
+      region,
       label,
       group,
       with_backups: backups,
@@ -108,13 +105,13 @@ export class IndexPage extends Component {
     const {
       distributions,
       linodes,
-      datacenters,
+      regions,
       types,
     } = this.props;
     const {
       backup,
       distribution,
-      datacenter,
+      region,
       type,
       sourceTab,
       loading,
@@ -124,11 +121,12 @@ export class IndexPage extends Component {
 
     return (
       <div className="container create-page">
+        <Link to="/linodes">Linodes</Link>
         <h1>Add a Linode</h1>
         <Source
           distribution={distribution}
           backup={backup}
-          selectedTab={sourceTab}
+          selectedIndex={sourceTab}
           distributions={distributions.distributions}
           onTabChange={(_, index) => this.setState({ sourceTab: index })}
           onSourceSelected={(type, id, linodeId) => {
@@ -137,7 +135,7 @@ export class IndexPage extends Component {
 
               this.setState({
                 backup: id,
-                datacenter: backup.datacenter.id,
+                region: backup.region.id,
                 distribution: null,
               });
             } else {
@@ -146,13 +144,13 @@ export class IndexPage extends Component {
           }}
           linodes={linodes}
         />
-        <Datacenter
-          selected={datacenter}
-          datacenters={datacenters.datacenters}
+        <Region
+          selected={region}
+          regions={regions.regions}
           disabled={backup !== null}
-          onDatacenterSelected={id => this.setState({ datacenter: id })}
+          onRegionSelected={id => this.setState({ region: id })}
         />
-        <Card title="Plan">
+        <Card header={<CardHeader title="Plan" />}>
           <Plan
             selected={type}
             types={types.types}
@@ -163,7 +161,7 @@ export class IndexPage extends Component {
           selectedType={selectedType}
           onSubmit={this.onSubmit}
           selectedDistribution={distribution}
-          submitEnabled={(distribution || backup) && datacenter && type && !loading}
+          submitEnabled={(distribution || backup) && region && type && !loading}
           errors={this.state.errors}
         />
       </div>
@@ -176,7 +174,7 @@ IndexPage.propTypes = {
   distributions: PropTypes.object,
   linodes: PropTypes.object,
   types: PropTypes.object,
-  datacenters: PropTypes.object,
+  regions: PropTypes.object,
   location: PropTypes.object,
 };
 
@@ -184,7 +182,7 @@ function select(state) {
   return {
     distributions: state.api.distributions,
     linodes: state.api.linodes,
-    datacenters: state.api.datacenters,
+    regions: state.api.regions,
     types: state.api.types,
   };
 }

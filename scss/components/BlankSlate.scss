@@ -1,0 +1,9 @@
+.BlankSlate {
+    @extend .text-sm-center;
+
+    &-body {
+        @extend .font-extra-large;
+        color: $light-black;
+        padding: 100px 0;
+    }
+}

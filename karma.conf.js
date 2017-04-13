@@ -59,7 +59,8 @@ module.exports = function(config) {
           ENV_API_ROOT: null,
           ENV_LOGIN_ROOT: null,
           ENV_APP_ROOT: null,
-          ENV_GA_ID: null
+          ENV_GA_ID: null,
+          ENV_VERSION: null,
         }),
         new CircularDependencyPlugin({
           failOnError: true,

@@ -1,14 +1,18 @@
 import React, { PropTypes, Component } from 'react';
 import moment from 'moment';
+import { connect } from 'react-redux';
 
+import _ from 'lodash';
 import { API_ROOT } from '~/constants';
 import Dropdown from '~/components/Dropdown';
 import EditPersonalAccessToken from './EditPersonalAccessToken';
-import { SecondaryCard } from '~/components/cards/';
-import { ConfirmModalBody } from '~/components/modals';
+import { Card, CardImageHeader } from '~/components/cards/';
+import DeleteModalBody from '~/components/modals/DeleteModalBody';
+import { Table } from '~/components/tables';
+import { AuthScopeCell } from '~/components/tables/cells';
+import { OAUTH_SUBSCOPES, OAUTH_SCOPES } from '~/constants';
 import { showModal, hideModal } from '~/actions/modal';
-import { tokens } from '~/api';
-import OAuthScopes from './OAuthScopes';
+import { tokens as apiTokens } from '~/api';
 
 export default class PersonalAccessToken extends Component {
   constructor() {
@@ -30,18 +34,19 @@ export default class PersonalAccessToken extends Component {
   }
 
   deleteAction = () => {
-    const { dispatch, label, id } = this.props;
+    const { dispatch, id, client } = this.props;
 
     dispatch(showModal('Delete Personal Access Token',
-      <ConfirmModalBody
+      <DeleteModalBody
+        buttonText="Delete personal access token"
         onCancel={() => dispatch(hideModal())}
         onOk={() => {
-          dispatch(tokens.delete(id));
+          dispatch(apiTokens.delete(id));
           dispatch(hideModal());
         }}
-      >
-        Are you sure you want to delete <strong>{label}</strong>?
-      </ConfirmModalBody>
+        typeOfItem="Personal access tokens"
+        items={[client.label]}
+      />
     ));
   }
 
@@ -52,16 +57,24 @@ export default class PersonalAccessToken extends Component {
     let expireValue = moment.utc(expires, moment.ISO_8601).fromNow();
     expireValue = expireValue[0].toUpperCase() + expireValue.substring(1);
 
+    const scopeData = OAUTH_SCOPES.map(function (scope) {
+      return { scopes: scopes, scope: scope };
+    });
+
     const elements = [
       { name: 'Edit', action: this.editAction },
       { name: 'Delete', action: this.deleteAction },
     ];
 
     return (
-      <SecondaryCard
-        title={label}
-        icon={icon}
-        nav={<Dropdown elements={elements} leftOriented={false} />}
+      <Card
+        header={
+          <CardImageHeader
+            title={label}
+            icon={icon}
+            nav={<Dropdown elements={elements} leftOriented={false} />}
+          />
+        }
       >
         <div className="row">
           <label className="col-sm-4 row-label">Expires in</label>
@@ -71,8 +84,22 @@ export default class PersonalAccessToken extends Component {
           <label className="col-sm-4 row-label">Secret</label>
           <div className="col-sm-8">{secret.substring(0, 16)}...</div>
         </div>
-        <OAuthScopes type="application" scopes={scopes} />
-      </SecondaryCard>
+        <div className="OAuthScopes">
+          <p>This application has access to your:</p>
+          <Table
+            className="Table--secondary"
+            columns={[
+              {
+                dataKey: 'scope',
+                formatFn: _.capitalize,
+              },
+            ].concat(OAUTH_SUBSCOPES.map((subscope) => {
+              return { cellComponent: AuthScopeCell, subscope: subscope };
+            }))}
+            data={scopeData}
+          />
+        </div>
+      </Card>
     );
   }
 }
@@ -84,4 +111,13 @@ PersonalAccessToken.propTypes = {
   id: PropTypes.any.isRequired,
   secret: PropTypes.string.isRequired,
   dispatch: PropTypes.func.isRequired,
+  client: PropTypes.object,
 };
+
+function select(state) {
+  return {
+    tokens: state.api.tokens,
+  };
+}
+
+connect(select)(PersonalAccessToken);

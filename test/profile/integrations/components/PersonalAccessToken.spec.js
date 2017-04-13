@@ -3,8 +3,9 @@ import sinon from 'sinon';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
 
-import PersonalAccessToken from '~/profile/integrations/components/PersonalAccessToken';
-import { title } from '~/profile/integrations/components/OAuthScopes';
+import _ from 'lodash';
+import PersonalAccessToken
+  from '~/profile/integrations/components/PersonalAccessToken';
 import { OAUTH_SCOPES, OAUTH_SUBSCOPES } from '~/constants';
 import { hideModal } from '~/actions/modal';
 import { api } from '@/data';
@@ -35,15 +36,15 @@ describe('profile/integrations/components/PersonalAccessToken', () => {
     );
 
     const rows = page.find('tr');
-    expect(rows.length).to.equal(OAUTH_SCOPES.length);
+    expect(rows.length).to.equal(OAUTH_SCOPES.length + 1);
 
-    for (let i = 0; i < rows.length; i++) {
+    for (let i = 1; i < rows.length; i++) {
       const row = rows.at(i);
       const columns = row.find('td');
 
       // +1 for scope name
       expect(columns.length).to.equal(OAUTH_SUBSCOPES.length + 1);
-      expect(columns.at(0).text()).to.equal(title(OAUTH_SCOPES[i]));
+      expect(columns.at(0).text()).to.equal(_.capitalize(OAUTH_SCOPES[i - 1]));
 
       // No strikethroughs because all scopes are granted
       expect(row.find('s').length).to.equal(0);

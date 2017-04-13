@@ -1,7 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 import { push } from 'react-router-redux';
 
-import { Card } from '~/components/cards';
+import { Card, CardHeader } from '~/components/cards';
 import { Form, FormGroup, SubmitButton, Select } from '~/components/form';
 import { ErrorSummary, reduceErrors } from '~/errors';
 import IPList from './IPList';
@@ -46,7 +46,7 @@ export default class IPTransfer extends Component {
     });
 
     try {
-      await dispatch(assignIps(linode.datacenter.id, assignments));
+      await dispatch(assignIps(linode.region.id, assignments));
 
       // Needs to refresh ips for both Linodes
       await dispatch(apiLinodes.one([linode.id]));
@@ -89,7 +89,7 @@ export default class IPTransfer extends Component {
     const { linode, linodes } = this.props;
 
     return (
-      <Card title="IP Transfer">
+      <Card header={<CardHeader title="IP Transfer" />}>
         <p>
           <small>
             The selected IP addresses will be transferred between this Linode (A) and the selected
@@ -107,7 +107,7 @@ export default class IPTransfer extends Component {
               <Select
                 value={selectedOtherLinode}
                 name="selectedOtherLinode"
-                onChange={({ target: { name, value } }) =>
+                onChange={({ record: { name, value } }) =>
                   this.setState({ [name]: value, checkedB: {} })}
                 options={this.otherLinodes().map(linode => ({ ...linode, value: linode.id }))}
               />
@@ -118,16 +118,26 @@ export default class IPTransfer extends Component {
               <IPList
                 linode={linode}
                 checked={checkedA}
-                onChange={(name) =>
-                  this.setState({ checkedA: { ...checkedA, [name]: !checkedA[name] } })}
+                onChange={(record, checked) => {
+                  this.setState({
+                    checkedA: {
+                      [record.address]: checked,
+                    },
+                  });
+                }}
               />
             </div>
             <div className="col-sm-6" id="sectionB">
               <IPList
                 linode={linodes[selectedOtherLinode]}
                 checked={checkedB}
-                onChange={(name) =>
-                  this.setState({ checkedB: { ...checkedB, [name]: !checkedB[name] } })}
+                onChange={(record, checked) => {
+                  this.setState({
+                    checkedB: {
+                      [record.address]: checked,
+                    },
+                  });
+                }}
               />
             </div>
           </FormGroup>

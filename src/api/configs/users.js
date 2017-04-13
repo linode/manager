@@ -1,13 +1,28 @@
 import {
   genConfig, ReducerGenerator, genActions,
-  ONE, MANY, DELETE,
+  ONE, MANY, DELETE, PUT, POST,
 } from '~/api/apiResultActionReducerGenerator';
 
 export const config = genConfig({
   plural: 'users',
   singular: 'user',
-  endpoint: id => `/account/users/${id}`,
-  supports: [ONE, MANY, DELETE],
+  primaryKey: 'username',
+  endpoint: user => `/account/users/${user}`,
+  supports: [ONE, MANY, DELETE, PUT, POST],
+  subresources: {
+    _permissions: {
+      plural: 'permissions',
+      singular: 'permissions',
+      endpoint: user => `/account/users/${user}/grants`,
+      supports: [ONE, MANY, PUT],
+    },
+    _password: {
+      pluarl: 'password',
+      singular: 'password',
+      endpoint: user => `/account/users/${user}/password`,
+      supports: [POST],
+    },
+  },
 });
 
 export const actions = genActions(config);

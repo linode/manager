@@ -2,8 +2,9 @@ import React, { Component, PropTypes } from 'react';
 
 import { linodes } from '~/api';
 import { resizeLinodeDisk } from '~/api/linodes';
-import { CancelButton, Form, FormGroup, FormGroupError,
+import { Form, FormGroup, FormGroupError,
   Input, SubmitButton } from '~/components/form';
+import { CancelButton } from '~/components/buttons';
 import { hideModal } from '~/actions/modal';
 import { ErrorSummary, reduceErrors } from '~/errors';
 
@@ -94,11 +95,11 @@ export class EditModal extends Component {
             <FormGroupError errors={errors} name="size" inline={false} />
           </div>
         </FormGroup>
-        <ErrorSummary errors={errors} />
         <div className="Modal-footer">
           <CancelButton disabled={loading} onClick={() => dispatch(hideModal())} />
           <SubmitButton disabled={loading} />
         </div>
+        <ErrorSummary errors={errors} />
       </Form>);
   }
 }

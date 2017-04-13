@@ -1,22 +1,25 @@
 import React, { Component, PropTypes } from 'react';
 
 import { API_ROOT } from '~/constants';
-import { SecondaryCard } from '~/components/cards/';
+import { Card, CardImageHeader } from '~/components/cards/';
 import Dropdown from '~/components/Dropdown';
 import { reduceErrors } from '~/errors';
 import EditApplication from './EditApplication';
 import { ConfirmModalBody } from '~/components/modals';
+import DeleteModalBody from '~/components/modals/DeleteModalBody';
 import { showModal, hideModal } from '~/actions/modal';
+import { renderSecret } from './CreatePersonalAccessToken';
 import { clients } from '~/api';
+import { resetSecret } from '~/api/clients';
 
 export default class MyApplication extends Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
 
-    this.deleteApp = this.deleteApp.bind(this);
+    this.renderSecret = renderSecret.bind(this);
   }
 
-  async deleteApp() {
+  deleteApp = async () => {
     const { client, dispatch } = this.props;
 
     try {
@@ -27,7 +30,7 @@ export default class MyApplication extends Component {
     }
   }
 
-  editAction() {
+  editAction = () => {
     const { dispatch, client } = this.props;
 
     dispatch(showModal('Edit OAuth Client',
@@ -41,25 +44,43 @@ export default class MyApplication extends Component {
     ));
   }
 
-  deleteAction() {
+  deleteAction = () => {
     const { dispatch, client } = this.props;
-
     dispatch(showModal('Delete OAuth Client',
-      <ConfirmModalBody
-        children={`Are you sure you want to delete ${client.label}?`}
-        onCancel={() => dispatch(hideModal())}
+      <DeleteModalBody
+        buttonText="Delete OAuth client"
         onOk={() => {
           dispatch(hideModal());
           this.deleteApp();
         }}
+        onCancel={() => dispatch(hideModal())}
+        typeOfItem="Clients"
+        items={[client.label]}
       />
+    ));
+  }
+
+  resetAction = () => {
+    const { dispatch, client } = this.props;
+
+    dispatch(showModal('Reset client secret',
+      <ConfirmModalBody
+        onCancel={() => dispatch(hideModal())}
+        onOk={async () => {
+          const { secret } = await dispatch(resetSecret(client.id));
+          this.renderSecret('client secret', 'reset', secret);
+        }}
+      >
+        Are you sure you want to reset <strong>{client.label}</strong>'s secret?
+      </ConfirmModalBody>
     ));
   }
 
   renderActions() {
     const elements = [
-      { name: 'Edit', action: () => this.editAction() },
-      { name: 'Delete', action: () => this.deleteAction() },
+      { name: 'Edit', action: this.editAction },
+      { name: 'Delete', action: this.deleteAction },
+      { name: 'Reset secret', action: this.resetAction },
     ];
 
     return <Dropdown elements={elements} leftOriented={false} />;
@@ -69,10 +90,14 @@ export default class MyApplication extends Component {
     const { client } = this.props;
 
     return (
-      <SecondaryCard
-        title={client.label}
-        icon={`${API_ROOT}/account/clients/${client.id}/thumbnail`}
-        nav={this.renderActions()}
+      <Card
+        header={
+          <CardImageHeader
+            title={client.label}
+            icon={`${API_ROOT}/account/clients/${client.id}/thumbnail`}
+            nav={this.renderActions()}
+          />
+        }
       >
         <div className="row">
           <label className="col-sm-4 row-label">Client ID</label>
@@ -82,7 +107,7 @@ export default class MyApplication extends Component {
           <label className="col-sm-4 row-label">Redirect URI</label>
           <div className="col-sm-8" id="redirect">{client.redirect_uri}</div>
         </div>
-      </SecondaryCard>
+      </Card>
     );
   }
 }

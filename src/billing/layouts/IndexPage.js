@@ -1,8 +1,12 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
+
+import Tabs from '~/components/Tabs';
+
 
 export class IndexPage extends Component {
   async componentDidMount() {
@@ -13,16 +17,45 @@ export class IndexPage extends Component {
   }
 
   render() {
-    return (<div>To Do</div>);
+    const { dispatch, children } = this.props;
+
+    const tabs = [
+      { name: 'Dashboard', link: '' },
+    ].map(function (tab) {
+      return {
+        ...tab,
+        link: `/billing${tab.link}`,
+      };
+    });
+
+    return (
+      <div>
+        <header className="main-header">
+          <div className="container">
+            <h1>Billing</h1>
+          </div>
+        </header>
+        <div className="main-header-fix"></div>
+        <Tabs
+          tabs={tabs}
+          onClick={(e, tabIndex) => {
+            e.stopPropagation();
+            dispatch(push(tabs[tabIndex].link));
+          }}
+          pathname={location.pathname}
+        >{children}</Tabs>
+      </div>
+    );
   }
 }
 
 IndexPage.propTypes = {
+  children: PropTypes.node.isRequired,
   dispatch: PropTypes.func,
 };
 
-function select() {
+function mapStateToProps() {
   return {};
 }
 
-export default connect(select)(IndexPage);
+export default connect(mapStateToProps)(IndexPage);

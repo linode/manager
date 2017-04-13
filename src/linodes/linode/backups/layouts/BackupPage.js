@@ -8,7 +8,7 @@ import { linodes } from '~/api';
 import { linodeBackups } from '~/api/linodes';
 import { takeBackup, restoreBackup } from '~/api/backups';
 import { setError } from '~/actions/errors';
-import { Card } from '~/components/cards';
+import { Card, CardHeader } from '~/components/cards';
 
 function renderDateTime(dt) {
   return dt.replace('T', ' ');
@@ -106,7 +106,9 @@ export class BackupPage extends Component {
     const duration = Math.floor((Date.parse(backup.finished) -
       Date.parse(backup.created)) / 1000 / 60);
     const durationUnit = duration === 1 ? 'minute' : 'minutes';
-    const configs = backup.configs.join('<br />');
+    const configs = backup.configs.map(function (config) {
+      return (<div>{config}</div>);
+    });
 
     // TODO: key={d.id} when disk IDs are added to API
     const disks = backup.disks.map(d =>
@@ -143,13 +145,6 @@ export class BackupPage extends Component {
     );
 
     const takeSnapshot = [(
-      <div className="form-group row" key="errors">
-        <div className="col-sm-3 col-form-label"></div>
-        <div className="col-sm-9">
-          <ErrorSummary errors={takeSnapshotErrors} />
-        </div>
-      </div>
-    ), (
       <div className="form-group row" key="button">
         <div className="col-sm-3 col-form-label"></div>
         <div className="col-sm-9">
@@ -161,6 +156,13 @@ export class BackupPage extends Component {
           >
             Take new snapshot
           </button>
+        </div>
+      </div>
+    ), (
+      <div className="form-group row" key="errors">
+        <div className="col-sm-3 col-form-label"></div>
+        <div className="col-sm-9">
+          <ErrorSummary errors={takeSnapshotErrors} />
         </div>
       </div>
     )];
@@ -183,7 +185,7 @@ export class BackupPage extends Component {
 
     return (
       <div>
-        <Card title="Backup details">
+        <Card header={<CardHeader title="Backup details" />}>
           {backup.label ? label : null}
           <div className="row">
             <div className="col-sm-3">
@@ -211,10 +213,10 @@ export class BackupPage extends Component {
           </div>
           <div className="row">
             <div className="col-sm-3">
-              Datacenter constraint
+              Region constraint
             </div>
-            <div className={bemField('datacenter')}>
-              {backup.datacenter.label}
+            <div className={bemField('region')}>
+              {backup.region.label}
             </div>
           </div>
           <div className="row">
@@ -245,7 +247,7 @@ export class BackupPage extends Component {
             takeSnapshot : ''}
         </Card>
         {backup.status === 'pending' ? null :
-          <Card title="Restore">
+          <Card header={<CardHeader title="Restore" />}>
             {restoreToField}
             <div className="form-group row">
               <div className="col-sm-3 col-form-label"></div>
@@ -262,12 +264,6 @@ export class BackupPage extends Component {
                 </label>
               </div>
             </div>
-            <div className="form-group row">
-              <div className="col-sm-3 col-form-label"></div>
-              <div className="col-sm-9">
-                <ErrorSummary errors={restoreErrors} />
-              </div>
-            </div>
             <div className="row">
               <div className="col-sm-3 col-form-label"></div>
               <div className="col-sm-9">
@@ -279,6 +275,12 @@ export class BackupPage extends Component {
                 >
                   Restore
                 </button>
+              </div>
+            </div>
+            <div className="form-group row">
+              <div className="col-sm-3 col-form-label"></div>
+              <div className="col-sm-9">
+                <ErrorSummary errors={restoreErrors} />
               </div>
             </div>
           </Card>

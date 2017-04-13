@@ -10,7 +10,7 @@ import { linodeBackups } from '~/api/linodes';
 import { setSource } from '~/actions/source';
 import { ErrorSummary, reduceErrors } from '~/errors';
 import { PrimaryButton } from '~/components/buttons';
-import { Card } from '~/components/cards';
+import { Card, CardHeader } from '~/components/cards';
 
 export class IndexPage extends Component {
   static async preload({ dispatch, getState }, { linodeLabel }) {
@@ -51,14 +51,14 @@ export class IndexPage extends Component {
       const { errors } = this.state;
 
       return (
-        <Card title="Enable backups">
+        <Card header={<CardHeader title="Enable backups" />}>
           <form onSubmit={this.enableBackups}>
             <p>
               Backups not enabled. Enable backups for
               ${(linode.type[0].backups_price / 100).toFixed(2)}/mo.
             </p>
-            <ErrorSummary errors={errors} />
             <PrimaryButton type="submit">Enable backups</PrimaryButton>
+            <ErrorSummary errors={errors} />
           </form>
         </Card>
       );
@@ -69,19 +69,15 @@ export class IndexPage extends Component {
       { name: 'Settings', link: '/settings' },
     ].map(t => ({ ...t, link: `/linodes/${linode.label}/backups${t.link}` }));
 
-    const pathname = location ? location.pathname : tabs[0].link;
-    const selected = tabs.reduce((knownIndex, { link }, currentIndex) =>
-      pathname.indexOf(link) === 0 ? currentIndex : knownIndex, 0);
-
     return (
       <Tabs
         tabs={tabs}
-        selected={selected}
         isSubTabs
         onClick={(e, tabIndex) => {
           e.stopPropagation();
           this.props.dispatch(push(tabs[tabIndex].link));
         }}
+        pathname={location.pathname}
       >
         {this.props.children}
       </Tabs>

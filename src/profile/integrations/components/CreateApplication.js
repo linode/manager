@@ -4,14 +4,18 @@ import { MAX_UPLOAD_SIZE_MB } from '~/constants';
 import { clients } from '~/api';
 import { updateClientThumbnail } from '~/api/clients';
 import { ModalFormGroup } from '~/components/form';
-import { Form, Input, SubmitButton, CancelButton } from '~/components/form';
+import { Form, Input, SubmitButton } from '~/components/form';
+import { CancelButton } from '~/components/buttons';
 import { reduceErrors, ErrorSummary } from '~/errors';
+import { renderSecret } from './CreatePersonalAccessToken';
 
 export default class CreateApplication extends Component {
   constructor() {
     super();
 
     this.submitText = 'Create';
+
+    this.renderSecret = renderSecret.bind(this);
 
     this.state = {
       errors: {},
@@ -31,7 +35,7 @@ export default class CreateApplication extends Component {
     this.setState({ errors: {}, saving: true });
 
     try {
-      const { id } = await this.submitAction(label, redirect);
+      const { id, secret } = await this.submitAction(label, redirect);
 
       if (thumbnail) {
         if ((thumbnail.size / (1024 * 1024)) < MAX_UPLOAD_SIZE_MB) {
@@ -45,7 +49,12 @@ export default class CreateApplication extends Component {
       }
 
       this.setState({ saving: false });
-      this.props.close();
+
+      if (secret) {
+        await this.renderSecret('client', 'created', secret);
+      } else {
+        this.props.close();
+      }
     } catch (response) {
       if (!response.json) {
         // eslint-disable-next-line no-console

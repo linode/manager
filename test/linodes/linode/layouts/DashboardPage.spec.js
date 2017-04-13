@@ -66,7 +66,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
   });
 
   it('renders plan', () => {
-    const page = shallow(
+    const page = mount(
       <DashboardPage
         linodes={linodes}
         params={params}
@@ -78,21 +78,21 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
       .text()).to.equal('Linode 2G');
   });
 
-  it('renders datacenter', () => {
-    const page = shallow(
+  it('renders region', () => {
+    const page = mount(
       <DashboardPage
         linodes={linodes}
         params={params}
       />);
 
-    expect(page.find('.linode-datacenter').at(0)
+    expect(page.find('.linode-region').at(0)
       .find('.col-sm-9')
       .at(0)
-      .text()).to.equal(testLinode.datacenter.label);
+      .text()).to.equal(testLinode.region.label);
   });
 
   it('renders distribution', () => {
-    const page = shallow(
+    const page = mount(
       <DashboardPage
         linodes={linodes}
         params={params}
@@ -105,7 +105,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
   });
 
   it('renders unknown distribution', () => {
-    const page = shallow(
+    const page = mount(
       <DashboardPage
         linodes={linodes}
         params={{ linodeLabel: 'test-linode-1246' }}
@@ -113,7 +113,8 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
 
     expect(page.find('.linode-distro').at(0)
       .find('.col-sm-9')
-      .at(0)
+      .children()
+      .first()
       .text()).to.equal('Unknown');
   });
 
@@ -158,7 +159,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
 
   it('renders lish path', () => {
     const lishLink = `ssh -t tdude@lish-${
-        testLinode.datacenter.id
+        testLinode.region.id
       }.linode.com`;
     const page = shallow(
       <DashboardPage

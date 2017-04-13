@@ -4,15 +4,16 @@ import deepFreeze from 'deep-freeze';
 
 import { linodes } from './linodes';
 import { distributions } from './distributions';
-import { datacenters } from './datacenters';
+import { regions } from './regions';
 import { types } from './types';
 import { kernels } from './kernels';
-import { dnszones } from './dnszones';
+import { domains } from './domains';
 import { nodebalancers } from './nodebalancers';
 import { events } from './events';
 import { clients } from './clients';
 import { tokens } from './tokens';
 import { users } from './users';
+import { tickets } from './tickets';
 
 function calculateTotalResults(data) {
   return Object.keys(data).length;
@@ -53,15 +54,16 @@ export const authentication = { token: 'token' };
 export const api = fakeAPI([
   [linodes, 'linode', 'linodes'],
   [distributions, 'distribution', 'distributions'],
-  [datacenters, 'datacenter', 'datacenters'],
+  [regions, 'region', 'regions'],
   [types, 'type', 'types'],
   [kernels, 'kernel', 'kernels'],
-  [dnszones, 'dnszone', 'dnszones'],
+  [domains, 'domain', 'domains'],
   [nodebalancers, 'nodebalancer', 'nodebalancers'],
   [events, 'event', 'events'],
   [clients, 'client', 'clients'],
   [tokens, 'token', 'tokens'],
   [users, 'user', 'users'],
+  [tickets, 'ticket', 'tickets'],
 ]);
 
 export const state = deepFreeze({

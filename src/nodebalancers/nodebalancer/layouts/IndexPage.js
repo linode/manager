@@ -1,16 +1,20 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import _ from 'lodash';
 
 import { nodebalancers } from '~/api';
-import { getObjectByLabelLazily } from '~/api/util';
+import { getObjectByLabelLazily, objectFromMapByLabel } from '~/api/util';
 import { setError } from '~/actions/errors';
+import { setSource } from '~/actions/source';
+import { setTitle } from '~/actions/title';
 import { Link } from '~/components/Link';
-import { Card } from '~/components/cards';
-import SecondaryTable from '~/components/SecondaryTable';
-import { Button } from '~/components/buttons';
+import { Card, CardHeader } from '~/components/cards';
+import { List, Table } from '~/components/tables';
+import { ListBody } from '~/components/tables/bodies';
+
+import { LinkCell, ButtonCell } from '~/components/tables/cells';
 import { NodebalancerStatusReadable } from '~/constants';
-import { renderDatacenterStyle } from '~/linodes/components/Linode';
-import { title } from '~/profile/integrations/components/OAuthScopes';
+import Region from '~/linodes/components/Region';
 
 
 export class IndexPage extends Component {
@@ -20,92 +24,98 @@ export class IndexPage extends Component {
       await dispatch(nodebalancers.configs.all([id]));
     } catch (response) {
       // eslint-disable-next-line no-console
-      console.error(response);
-      dispatch(setError(response));
+      await dispatch(setError(response));
     }
   }
 
   constructor(props) {
     super(props);
-    this.renderDatacenterStyle = renderDatacenterStyle.bind(this);
-    this._componentWillReceiveProps((state) => {
-      this.state = {
-        ...state,
-        errors: {},
-        saving: false,
-      };
-    })(props);
-    this.componentWillReceiveProps = this._componentWillReceiveProps();
-  }
 
-  _componentWillReceiveProps(_setState) {
-    const setState = _setState || this.setState.bind(this);
-    return (nextProps) => {
-      const { nodebalancers, params } = nextProps;
-      const nodebalancer = Object.values(nodebalancers.nodebalancers).filter(
-        n => n.label === params.nbLabel)[0];
-      setState({ nodebalancer });
+    this.state = {
+      errors: {},
+      saving: false,
     };
   }
 
+  async componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch(setSource(__filename));
+
+    dispatch(setTitle('Nodebalancers'));
+  }
+
   renderConfigs(configs) {
-    const labels = [
-      'Port',
-      'Protocol',
-      'Algorithm',
-      'Session stickiness',
-      'Health check method',
-      'Node status',
-      '',
-    ];
-    const keys = [
-      'port',
-      'protocol',
-      'algorithm',
-      'stickiness',
-      'check',
-      'statusString',
-      'edit',
-    ];
+    const { nbLabel } = this.props;
+
     const newConfigs = configs.map((config) => {
       return {
         ...config,
         protocol: config.protocol.toUpperCase(),
-        algorithm: title(config.algorithm),
-        stickiness: title(config.stickiness),
-        check: title(config.check),
+        algorithm: _.capitalize(config.algorithm),
+        stickiness: _.capitalize(config.stickiness),
+        check: _.capitalize(config.check),
         statusString: '0 up, 0 down',
-        edit: <Button>Edit</Button>,
       };
     });
 
     return (
-      <SecondaryTable
-        labels={labels}
-        keys={keys}
-        rows={newConfigs}
-      />
+      <List>
+        <ListBody>
+          <Table
+            className="Table--secondary"
+            columns={[
+              { textKey: 'port', label: 'Port',
+                cellComponent: LinkCell,
+                hrefFn: function (config) {
+                  return `/nodebalancers/${nbLabel}/configs/${config.id}`;
+                },
+              },
+              { dataKey: 'protocol', label: 'Protocol' },
+              { dataKey: 'algorithm', label: 'Algorithm' },
+              { dataKey: 'stickiness', label: 'Session stickiness' },
+              { dataKey: 'check', label: 'Health check method' },
+              { dataKey: 'statusString', label: 'Node status' },
+              {
+                cellComponent: ButtonCell,
+                buttonClassName: 'btn-secondary',
+                hrefFn: function (config) {
+                  return `/nodebalancers/${nbLabel}/configs/${config.id}/edit`;
+                },
+                text: 'Edit',
+              },
+            ]}
+            data={newConfigs}
+            selectedMap={{}}
+            disableHeader
+          />
+        </ListBody>
+      </List>
     );
   }
 
   render() {
-    const { nbLabel } = this.props.params;
-    const { nodebalancer } = this.state;
+    const { nbLabel, nodebalancer } = this.props;
+    if (!nodebalancer) {
+      return null;
+    }
+
     const { configs } = nodebalancer._configs;
+
     return (
       <div>
         <header className="main-header main-header--border">
           <div className="container">
+            <Link to="/nodebalancers">NodeBalancers</Link>
             <h1 title={nodebalancer.id}>{nbLabel}</h1>
           </div>
         </header>
         <div className="container">
-          <Card title="Summary">
+          <Card header={<CardHeader title="Summary" />}>
             <div className="row">
-              <div className="col-sm-1 row-label">
+              <div className="col-sm-2 row-label">
                 IP Addresses
               </div>
-              <div className="col-sm-11">
+              <div className="col-sm-10">
                 <ul className="list-unstyled">
                   <li>{nodebalancer.ipv4}</li>
                   <li className="text-muted">{nodebalancer.ipv6}</li>
@@ -113,44 +123,48 @@ export class IndexPage extends Component {
               </div>
             </div>
             <div className="row">
-              <div className="col-sm-1 row-label">
+              <div className="col-sm-2 row-label">
                 Hostname
               </div>
-              <div className="col-sm-11">
+              <div className="col-sm-10">
                 {nodebalancer.hostname}
               </div>
             </div>
             <div className="row">
-              <div className="col-sm-1 row-label">
+              <div className="col-sm-2 row-label">
                 Status
               </div>
-              <div className="col-sm-11">
+              <div className="col-sm-10">
                 {NodebalancerStatusReadable[nodebalancer.status]}
               </div>
             </div>
             <div className="row">
-              <div className="col-sm-1 row-label">
-                Datacenter
+              <div className="col-sm-2 row-label">
+                Region
               </div>
-              <div className="col-sm-11">
-                {this.renderDatacenterStyle(nodebalancer)}
+              <div className="col-sm-10">
+                <Region obj={nodebalancer} />
               </div>
             </div>
           </Card>
           <Card
-            title="Configurations"
-            nav={
-              <Link
-                to={`/nodebalancers/${nbLabel}/configs/create`}
-                className="linode-add btn btn-default float-sm-right"
-              >
-                Add a Configuration
-              </Link>
+            header={
+              <CardHeader
+                title="Configurations"
+                nav={
+                  <Link
+                    to={`/nodebalancers/${nbLabel}/configs/create`}
+                    className="linode-add btn btn-default float-sm-right"
+                  >
+                    Add a Configuration
+                  </Link>
+                }
+              />
             }
           >
             {this.renderConfigs(Object.values(configs))}
           </Card>
-          <Card title="Graphs">No data available</Card>
+          <Card header={<CardHeader title="Graphs" />}>No graphs are available.</Card>
         </div>
       </div>
     );
@@ -159,14 +173,20 @@ export class IndexPage extends Component {
 
 IndexPage.propTypes = {
   dispatch: PropTypes.func,
-  nodebalancers: PropTypes.object,
-  params: PropTypes.any,
+  nbLabel: PropTypes.string,
+  nodebalancer: PropTypes.any,
 };
 
-function select(state) {
+function select(state, ownProps) {
+  const params = ownProps.params;
+  const nbLabel = params.nbLabel;
+
+  const nodebalancer = objectFromMapByLabel(state.api.nodebalancers.nodebalancers, nbLabel);
+
   return {
-    nodebalancers: state.api.nodebalancers,
+    nbLabel: nbLabel,
+    nodebalancer: nodebalancer,
   };
 }
-export default connect(select)(IndexPage);
 
+export default connect(select)(IndexPage);

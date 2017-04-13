@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { profile } from '~/api';
 
-import { Card } from '~/components/cards';
+import { Card, CardHeader } from '~/components/cards';
 import { reduceErrors } from '~/errors';
 
 import { TimezoneForm, EmailForm } from '~/profile/display/components';
@@ -53,7 +53,7 @@ export class DisplayPage extends Component {
 
     return (
       <div>
-        <Card title="Change timezone">
+        <Card header={<CardHeader title="Change timezone" />}>
           <TimezoneForm
             timezone={this.state.timezone}
             errors={errors}
@@ -61,7 +61,7 @@ export class DisplayPage extends Component {
             onChange={this.inputOnChange}
           />
         </Card>
-        <Card title="Change email">
+        <Card header={<CardHeader title="Change email" />}>
           <EmailForm
             errors={errors}
             email={this.state.email}

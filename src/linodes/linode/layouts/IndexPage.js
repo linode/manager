@@ -26,7 +26,7 @@ export class IndexPage extends Component {
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error(e);
-      dispatch(setError(e));
+      await dispatch(setError(e));
     }
   }
 
@@ -43,6 +43,7 @@ export class IndexPage extends Component {
     const linode = this.getLinode();
     dispatch(setTitle(linode.label));
 
+    // TODO: move this into the constructor
     const defaultConfig = Object.values(linode._configs.configs)[0];
     this.setState({
       config: defaultConfig ? defaultConfig.id : '',
@@ -53,7 +54,7 @@ export class IndexPage extends Component {
 
   render() {
     const linode = this.getLinode();
-    if (!linode) return <span></span>;
+    if (!linode) return null;
 
     const tabs = [
       { name: 'Dashboard', link: '' },
@@ -65,22 +66,19 @@ export class IndexPage extends Component {
       { name: 'Settings', link: '/settings' },
     ].map(t => ({ ...t, link: `/linodes/${linode.label}${t.link}` }));
 
-    const pathname = location ? location.pathname : tabs[0].link;
-    const selected = tabs.reduce((knownIndex, { link }, currentIndex) =>
-      pathname.indexOf(link) === 0 ? currentIndex : knownIndex, 0);
-
     return (
       <div className="details-page">
         <header className="main-header">
           <div className="container">
-            <div className="float-xs-left">
+            <div className="float-sm-left">
+              <Link to="/linodes">Linodes</Link>
               <h1 title={linode.id}>
                 <Link to={`/linodes/${linode.label}`}>
                   {linode.group ? `${linode.group} / ${linode.label}` : linode.label}
                 </Link>
               </h1>
             </div>
-            <span className="float-xs-right">
+            <span className="float-sm-right">
               <StatusDropdown
                 shortcuts={false}
                 linode={linode}
@@ -93,11 +91,11 @@ export class IndexPage extends Component {
         <div className="main-header-fix"></div>
         <Tabs
           tabs={tabs}
-          selected={selected}
           onClick={(e, tabIndex) => {
             e.stopPropagation();
             this.props.dispatch(push(tabs[tabIndex].link));
           }}
+          pathname={location.pathname}
         >
           {this.props.children}
         </Tabs>

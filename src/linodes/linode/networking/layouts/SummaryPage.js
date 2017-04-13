@@ -7,7 +7,7 @@ import { linodeIPs, addIP } from '~/api/linodes';
 import { setSource } from '~/actions/source';
 import { setError } from '~/actions/errors';
 import { Button } from '~/components/buttons';
-import { Card } from '~/components/cards';
+import { Card, CardHeader } from '~/components/cards';
 import { HelpButton } from '~/components';
 
 export class SummaryPage extends Component {
@@ -44,7 +44,7 @@ export class SummaryPage extends Component {
   }
 
   renderNameservers(isIpv4) {
-    const dc = this.getLinode().datacenter.id;
+    const dc = this.getLinode().region.id;
     const ipToObject = ip => ({ address: ip });
     const id = isIpv4 ? 'ipv4Nameservers' : 'ipv6Nameservers';
     const ips = isIpv4 ? ipv4ns[dc].map(ipToObject) :
@@ -132,10 +132,9 @@ export class SummaryPage extends Component {
         <div className="row">
           <div className="col-sm-3 row-label">Address</div>
           <div className="col-sm-9">
-            {/* TODO: replace with proper prefix */}
-            <div id="slaac">{ipv6.slaac} / {ipv6.prefix || '64'}</div>
-            {ipv6.addresses.map(address =>
-              <div>{address} / {ipv6.prefix || '64'}</div>)}
+            <div id="slaac">{ipv6.slaac.address} / {ipv6.slaac.prefix}</div>
+            {ipv6.addresses.map(ip =>
+              <div>{ip.address} / {ip.prefix}</div>)}
           </div>
         </div>
         <div className="row">
@@ -150,7 +149,7 @@ export class SummaryPage extends Component {
         <div className="row">
           <div className="col-sm-3 row-label">Link-local IP</div>
           <div className="col-sm-9">
-            {this.renderIps('linkLocal', [{ address: ipv6['link-local'] }])}
+            {this.renderIps('linkLocal', [{ address: ipv6.link_local }])}
           </div>
         </div>
       </div>
@@ -161,7 +160,7 @@ export class SummaryPage extends Component {
     const nav = (
       <Button
         id="public-ip-button"
-        className="float-xs-right"
+        className="float-sm-right"
         disabled
       >
         Add public IP address
@@ -169,7 +168,14 @@ export class SummaryPage extends Component {
     );
 
     return (
-      <Card title="Summary" nav={nav}>
+      <Card
+        header={
+          <CardHeader
+            title="Summary"
+            nav={nav}
+          />
+        }
+      >
         <div className="row">
           {this.renderIPv4()}
           {this.renderIPv6()}

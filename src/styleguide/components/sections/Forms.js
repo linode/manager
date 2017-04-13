@@ -3,9 +3,10 @@ import React from 'react';
 import { StyleguideSection } from '~/styleguide/components';
 
 import {
-  Form, FormGroup, CancelButton, SubmitButton, Input, Radio, Checkbox, Select, CheckboxInputCombo,
+  Form, FormGroup, SubmitButton, Input, Radio, Checkbox, Select, CheckboxInputCombo,
   FormGroupError, RadioInputCombo, RadioSelectCombo, Checkboxes, PasswordInput,
 } from '~/components/form';
+import { CancelButton } from '~/components/buttons';
 import { ErrorSummary } from '~/errors';
 
 export default function Forms() {
@@ -22,7 +23,7 @@ export default function Forms() {
                 <FormGroup className="row">
                   <label className="col-sm-3 col-form-label">
                     <span className="FormDescriptor FormDescriptor__form-labels">
-                      <span className="badge">1</span>
+                      <span className="Badge">1</span>
                     </span>
                     Field label
                   </label>
@@ -38,7 +39,7 @@ export default function Forms() {
                 <FormGroup className="row">
                   <label className="col-sm-3 col-form-label">
                     <span className="FormDescriptor FormDescriptor__required-field">
-                      <span className="badge">2</span>
+                      <span className="Badge">2</span>
                     </span>
                     Required field
                   </label>
@@ -50,7 +51,7 @@ export default function Forms() {
                       placeholder="Placeholder"
                     />
                     <span className="FormDescriptor FormDescriptor__form-fields">
-                      <span className="badge">3</span>
+                      <span className="Badge">3</span>
                     </span>
                   </div>
                 </FormGroup>
@@ -97,7 +98,7 @@ export default function Forms() {
                       disabled
                     />
                     <span className="FormDescriptor FormDescriptor__disabled-fields">
-                      <span className="badge">4</span>
+                      <span className="Badge">4</span>
                     </span>
                   </div>
                 </FormGroup>
@@ -146,7 +147,7 @@ export default function Forms() {
             <div className="ExampleForm">
               <Form onSubmit={() => {}}>
                 <span className="FormDescriptor FormDescriptor__form-title">
-                  <span className="badge">1</span>
+                  <span className="Badge">1</span>
                 </span>
                 <h2>Form Title</h2>
                 <p>
@@ -162,7 +163,7 @@ export default function Forms() {
                 <h3>Form Section Title</h3>
                 <FormGroup className="row">
                   <span className="FormDescriptor FormDescriptor__form-section-title">
-                    <span className="badge">2</span>
+                    <span className="Badge">2</span>
                   </span>
                   <label className="col-sm-3 col-form-label">Field label</label>
                   <div className="col-sm-9">
@@ -179,7 +180,7 @@ export default function Forms() {
                 <FormGroup className="row">
                   <div className="offset-sm-3 col-sm-9">
                     <span className="FormDescriptor FormDescriptor__form-buttons">
-                      <span className="badge">3</span>
+                      <span className="Badge">3</span>
                     </span>
                     <SubmitButton />
                     <CancelButton />

@@ -1,7 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 
 import { linodes } from '~/api';
-import { CancelButton, Form, SubmitButton } from '~/components/form';
+import { Form, SubmitButton } from '~/components/form';
+import { CancelButton } from '~/components/buttons';
 import { hideModal } from '~/actions/modal';
 
 export class DeleteModal extends Component {
@@ -40,13 +41,14 @@ export class DeleteModal extends Component {
 
 
   render() {
-    const { dispatch } = this.props;
+    const { dispatch, disk } = this.props;
     const { loading, errors } = this.state;
     return (
       <Form
         onSubmit={() => this.deleteDisk()}
       >
-        <p>Are you sure you want to delete this disk? This cannot be undone.</p>
+        <p>Are you sure you want to <strong>permanently</strong> delete
+          the disk named: <strong>{disk.label}</strong>? This cannot be undone.</p>
         {errors._.length ?
           <div className="alert alert-danger">
             {errors._.map(error => <div key={error}>{error}</div>)}

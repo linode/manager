@@ -41,10 +41,6 @@ export class IndexPage extends Component {
       { name: 'Lish Settings', link: '/lish' },
     ].map(t => ({ ...t, link: `/profile${t.link}` }));
 
-    const pathname = location ? location.pathname : tabs[0].link;
-    const selected = tabs.reduce((knownIndex, { link }, currentIndex) =>
-      pathname.indexOf(link) === 0 ? currentIndex : knownIndex, 0);
-
     return (
       <div>
         <header className="main-header">
@@ -55,11 +51,11 @@ export class IndexPage extends Component {
         <div className="main-header-fix"></div>
         <Tabs
           tabs={tabs}
-          selected={selected}
           onClick={(e, tabIndex) => {
             e.stopPropagation();
             dispatch(push(tabs[tabIndex].link));
           }}
+          pathname={location.pathname}
         >{children}</Tabs>
       </div>
     );

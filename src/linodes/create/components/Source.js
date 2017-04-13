@@ -1,9 +1,14 @@
 import React, { Component, PropTypes } from 'react';
 import _ from 'lodash';
-import moment from 'moment';
 
-import { Card } from '~/components/cards';
+import { Card, CardHeader } from '~/components/cards';
 import Tabs from '~/components/Tabs';
+import { Table } from '~/components/tables';
+import {
+  AnchorCell,
+  LastBackupCell,
+} from '~/components/tables/cells';
+
 import Distributions from '~/linodes/components/Distributions';
 import Backups from './Backups';
 
@@ -53,35 +58,23 @@ export default class Source extends Component {
         </div>
 
         <div className="LinodeSelection-table-container">
-          <table>
-            <thead>
-              <tr>
-                <td>Linode</td>
-                <td>Last backup</td>
-              </tr>
-            </thead>
-            <tbody>
-            {_.map(linodesOnPage, l =>
-              <tr key={l.created}>
-                <td>
-                  <a
-                    href="#"
-                    onClick={e => {
-                      e.preventDefault();
-                      this.setState({ selectedLinode: l.id });
-                    }}
-                  >{l.label}</a>
-                </td>
-                <td>{l.backups.last_backup ?
-                  moment(l.backups.last_backup).format('dddd, MMMM D YYYY LT')
-                  : 'Unknown'}</td>
-              </tr>
-            )}
-            </tbody>
-          </table>
+          <Table
+            className="Table--secondary"
+            columns={[
+              {
+                cellComponent: AnchorCell,
+                label: 'Linode',
+                onClick: (record) => {
+                  this.setState({ selectedLinode: record.id });
+                },
+              },
+              { cellComponent: LastBackupCell, label: 'Last backup' },
+            ]}
+            data={linodesOnPage}
+          />
         </div>
         {linodesWithBackups.length > perPageLimit ? (
-          <nav className="text-xs-center">
+          <nav className="text-sm-center">
             <ul className="pagination">
               <li className="page-item">
                 <a href="#" aria-label="Previous" onClick={decreaseCount} className="page-link">
@@ -108,7 +101,7 @@ export default class Source extends Component {
 
   render() {
     const {
-      selectedTab, onTabChange, distributions, distribution, onSourceSelected, backup,
+      selectedIndex, onTabChange, distributions, distribution, onSourceSelected, backup,
       linodes,
     } = this.props;
 
@@ -163,12 +156,13 @@ export default class Source extends Component {
       },
     ];
 
+
     return (
-      <Card title="Source">
+      <Card header={<CardHeader title="Source" />}>
         <Tabs
           tabs={tabs}
           onClick={onTabChange}
-          selected={selectedTab}
+          selectedIndex={selectedIndex}
           isSubTabs
         />
       </Card>
@@ -179,7 +173,7 @@ export default class Source extends Component {
 Source.propTypes = {
   distributions: PropTypes.object.isRequired,
   linodes: PropTypes.object.isRequired,
-  selectedTab: PropTypes.number.isRequired,
+  selectedIndex: PropTypes.number,
   onTabChange: PropTypes.func,
   onSourceSelected: PropTypes.func,
   distribution: PropTypes.string,
