@@ -137,9 +137,9 @@ export class ZonePage extends Component {
       <EditSOARecord
         dispatch={dispatch}
         zone={domain}
-        close={(zone) => {
+        close={(newDomain) => () => {
           dispatch(hideModal());
-          dispatch(replace(`/domains/${zone}`));
+          dispatch(replace(`/domains/${newDomain || domain.domain}`));
         }}
       />
     ));
