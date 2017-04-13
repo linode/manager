@@ -106,7 +106,9 @@ export class BackupPage extends Component {
     const duration = Math.floor((Date.parse(backup.finished) -
       Date.parse(backup.created)) / 1000 / 60);
     const durationUnit = duration === 1 ? 'minute' : 'minutes';
-    const configs = backup.configs.join('<br />');
+    const configs = backup.configs.map(function (config) {
+      return (<div>{config}</div>);
+    });
 
     // TODO: key={d.id} when disk IDs are added to API
     const disks = backup.disks.map(d =>
