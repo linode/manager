@@ -224,7 +224,7 @@ const EventTypeMap = {
     pastTenseAction: 'created',
     redirectUrl: getTicketsRedirectUrl,
   },
-  ticket_reply: {
+  ticket_update: {
     presentTenseAction: 'Replying',
     pastTenseAction: '',
     pastTensePrefix: 'Reply posted to',
