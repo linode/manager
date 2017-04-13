@@ -113,8 +113,9 @@
     }
 
     &-badge {
-        @extend .badge;
+        @extend .Badge;
         background: $red;
+        border: 2px solid $dark-black;
         position: absolute;
         right: 4px;
         top: 6px;
