@@ -45,9 +45,7 @@ export default class PersonalAccessToken extends Component {
           dispatch(hideModal());
         }}
         typeOfItem="Personal access tokens"
-        label="label"
-        items={{ client }}
-        selectedItems={['client']}
+        items={[client.label]}
       />
     ));
   }

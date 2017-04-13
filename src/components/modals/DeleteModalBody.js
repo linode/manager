@@ -7,26 +7,27 @@ export default function DeleteModalBody(props) {
     onOk,
     buttonText,
     items,
-    selectedItems,
     onCancel,
     typeOfItem,
-    label,
   } = props;
-  let sentence;
+
+  let body;
   let newButtonText = buttonText;
-  if (selectedItems.length > 1) {
-    sentence = (<div>
-      <p>Are you sure you want to <strong>permanently</strong> delete these {typeOfItem}?</p>
-      <ScrollingList
-        items={selectedItems.map(selectedItem => items[selectedItem][label])}
-      />
-      <p>This operation cannot be undone.</p>
-    </div>);
+  if (items.length > 1) {
+    body = (
+      <div>
+        <p>Are you sure you want to <strong>permanently</strong> delete these {typeOfItem}?</p>
+        <ScrollingList items={items} />
+        <p>This operation cannot be undone.</p>
+      </div>
+    );
   } else {
-    sentence = (<p>
-      Are you sure you want
-      to <strong>permanently</strong> delete <strong>{items[selectedItems][label]}</strong>?
-    </p>);
+    body = (
+      <p>
+        Are you sure you want
+        to <strong>permanently</strong> delete <strong>{items[0]}</strong>?
+      </p>
+    );
     newButtonText = buttonText.replace(/s$/, '');
   }
 
@@ -37,7 +38,7 @@ export default function DeleteModalBody(props) {
       onOk={onOk}
       onCancel={onCancel}
     >
-      {sentence}
+      {body}
     </ConfirmModalBody>
   );
 }
@@ -45,9 +46,7 @@ export default function DeleteModalBody(props) {
 DeleteModalBody.propTypes = {
   onOk: PropTypes.func,
   buttonText: PropTypes.string,
-  items: PropTypes.object,
-  selectedItems: PropTypes.array,
+  items: PropTypes.arrayOf(PropTypes.string),
   onCancel: PropTypes.func,
   typeOfItem: PropTypes.string,
-  label: PropTypes.string,
 };
