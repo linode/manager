@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import { push } from 'react-router-redux';
 
 import { MAX_UPLOAD_SIZE_MB } from '~/constants';
 import { tickets } from '~/api';
@@ -22,8 +21,7 @@ export class TicketPage extends Component {
     } catch (response) {
       // eslint-disable-next-line no-console
       console.error(response);
-      dispatch(setError(response));
-      await dispatch(push('/404'));
+      await dispatch(setError(response));
     }
   }
 
@@ -124,6 +122,9 @@ export class TicketPage extends Component {
 
   render() {
     const { ticket, replies } = this.props;
+    if (!ticket) {
+      return null;
+    }
 
     return (
       <div>
@@ -166,7 +167,7 @@ function select(state, props) {
   const ticket = state.api.tickets.tickets[ticketId];
   return {
     ticket,
-    replies: ticket._replies.replies,
+    replies: ticket && ticket._replies.replies,
   };
 }
 

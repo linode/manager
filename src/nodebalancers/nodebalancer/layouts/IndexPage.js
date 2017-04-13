@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { push } from 'react-router-redux';
 import _ from 'lodash';
 
 import { nodebalancers } from '~/api';
@@ -25,9 +24,7 @@ export class IndexPage extends Component {
       await dispatch(nodebalancers.configs.all([id]));
     } catch (response) {
       // eslint-disable-next-line no-console
-      console.error(response);
-      dispatch(setError(response));
-      await dispatch(push('/404'));
+      await dispatch(setError(response));
     }
   }
 
@@ -98,6 +95,10 @@ export class IndexPage extends Component {
 
   render() {
     const { nbLabel, nodebalancer } = this.props;
+    if (!nodebalancer) {
+      return null;
+    }
+
     const { configs } = nodebalancer._configs;
 
     return (

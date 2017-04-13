@@ -16,23 +16,29 @@ export class IndexPage extends Component {
       }
     } catch (response) {
       // eslint-disable-next-line no-console
-      console.error(response);
-      dispatch(setError(response));
-      await dispatch(push('/404'));
+      await dispatch(setError(response));
     }
   }
 
   constructor(props) {
     super(props);
-    const { username } = props.params;
+
+    if (!props.user) {
+      return;
+    }
 
     this.state = {
-      restricted: props.users[username].restricted || false,
+      restricted: props.user.restricted || false,
     };
   }
 
   render() {
-    const { username } = this.props.params;
+    if (!this.props.user) {
+      return null;
+    }
+
+    const { username } = this.props.user;
+
     const { restricted } = this.state;
     const tabList = [{ name: 'Edit User', link: '' }];
     if (restricted) {
@@ -72,16 +78,13 @@ export class IndexPage extends Component {
 
 IndexPage.propTypes = {
   dispatch: PropTypes.func,
-  users: PropTypes.object,
-  params: PropTypes.shape({
-    username: PropTypes.string,
-  }),
+  user: PropTypes.object,
   children: PropTypes.node,
 };
 
-function select(state) {
+function select(state, props) {
   return {
-    users: state.api.users.users,
+    user: state.api.users.users[props.params.username],
   };
 }
 

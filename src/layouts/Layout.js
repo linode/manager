@@ -84,9 +84,9 @@ export class Layout extends Component {
         />
         <div className="Main full-height">
           <div className="Main-inner">
-            {!errors.status ?
-              this.props.children :
-              this.renderError()}
+            {errors.status ?
+              this.renderError() :
+              this.props.children}
           </div>
           <footer className="footer text-sm-center">
             <div>

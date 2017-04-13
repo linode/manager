@@ -20,7 +20,7 @@ export class EditConfigPage extends Component {
     } catch (response) {
       // eslint-disable-next-line no-console
       console.error(response);
-      dispatch(setError(response));
+      await dispatch(setError(response));
     }
   }
 
@@ -77,8 +77,13 @@ export class EditConfigPage extends Component {
   }
 
   render() {
-    const { config, nbLabel } = this.props;
+    const { config, nbLabel, dispatch } = this.props;
     const { loading, errors } = this.state;
+
+    if (!config) {
+      dispatch(push(`/nodebalancers/${nbLabel}`));
+      return null;
+    }
 
     return (
       <div>
