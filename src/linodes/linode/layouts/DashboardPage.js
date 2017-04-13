@@ -235,6 +235,8 @@ export class DashboardPage extends Component {
                   />
                   <span className="input-group-btn">
                     <Button>SSH</Button>
+                  </span>
+                  <span className="input-group-btn">
                     <WeblishLaunch linode={linode} />
                   </span>
                 </div>
@@ -248,7 +250,7 @@ export class DashboardPage extends Component {
                 Graphical console
               </label>
               <div className="col-sm-8">
-                <div className="input-group-btn">
+                <div>
                   <Button id="glish-button" disabled>Open</Button>
                 </div>
                 <small className="text-muted">
