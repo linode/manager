@@ -147,15 +147,14 @@ export class ZonePage extends Component {
 
   renderEditRecord(title, component, props = {}) {
     const { dispatch, domain } = this.props;
-
     dispatch(showModal(
       title,
-      <component
-        {...props}
-        dispatch={dispatch}
-        zone={domain}
-        close={() => dispatch(hideModal())}
-      />
+      React.createElement(component, {
+        ...props,
+        dispatch,
+        zone: domain,
+        close: () => dispatch(hideModal()),
+      }),
     ));
   }
 
