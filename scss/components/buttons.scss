@@ -17,6 +17,10 @@ a {
     border: $border;
     background: $light-gray;
 
+    &:hover {
+        cursor: pointer;
+    }
+
     &.btn-default {
         color: $black;
 
