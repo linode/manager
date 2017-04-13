@@ -26,8 +26,7 @@ export class IndexPage extends Component {
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error(e);
-      dispatch(setError(e));
-      await dispatch(push('/404'));
+      await dispatch(setError(e));
     }
   }
 
@@ -44,6 +43,7 @@ export class IndexPage extends Component {
     const linode = this.getLinode();
     dispatch(setTitle(linode.label));
 
+    // TODO: move this into the constructor
     const defaultConfig = Object.values(linode._configs.configs)[0];
     this.setState({
       config: defaultConfig ? defaultConfig.id : '',
@@ -54,7 +54,7 @@ export class IndexPage extends Component {
 
   render() {
     const linode = this.getLinode();
-    if (!linode) return <span></span>;
+    if (!linode) return null;
 
     const tabs = [
       { name: 'Dashboard', link: '' },

@@ -13,7 +13,7 @@ import { Button } from '~/components/buttons';
 import { Card, CardHeader } from '~/components/cards';
 import LineGraph from '~/components/graphs/LineGraph';
 import { Select } from '~/components/form';
-import { objectFromMapByLabel } from '~/api/util';
+import { getObjectByLabelLazily } from '~/api/util';
 import { linodeStats } from '~/api/linodes';
 
 function formatData(datasets, legends) {
@@ -25,12 +25,12 @@ function formatData(datasets, legends) {
 export class DashboardPage extends Component {
   static async preload({ dispatch, getState }, { linodeLabel }) {
     try {
-      const { id } = objectFromMapByLabel(getState().api.linodes.linodes, linodeLabel);
+      const { id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
       await dispatch(linodeStats([id]));
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error(e);
-      dispatch(setError(e));
+      await dispatch(setError(e));
     }
   }
 
