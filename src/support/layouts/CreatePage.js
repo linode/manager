@@ -10,14 +10,14 @@ import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 import { setError } from '~/actions/errors';
 import { reduceErrors, ErrorSummary } from '~/errors';
-import { linodes, dnszones, nodebalancers } from '~/api';
+import { linodes, domains, nodebalancers } from '~/api';
 import TicketHelper from '../components/TicketHelper';
 
 export class CreatePage extends Component {
   static async preload({ dispatch }) {
     try {
       await dispatch(linodes.all());
-      await dispatch(dnszones.all());
+      await dispatch(domains.all());
       await dispatch(nodebalancers.all());
     } catch (response) {
       // eslint-disable-next-line no-console
@@ -74,7 +74,7 @@ export class CreatePage extends Component {
       <optgroup label={label} key={label}>
         {group.map(object => (
           <option key={object.id} value={`${field}:${object.id}`}>
-            {object.label || object.dnszone}
+            {object.label || object.domain}
           </option>
          ))}
       </optgroup>
@@ -83,10 +83,10 @@ export class CreatePage extends Component {
 
   render() {
     const { summary, regarding, description, creating, errors } = this.state;
-    const { linodes, dnszones, nodebalancers } = this.props;
+    const { linodes, domains, nodebalancers } = this.props;
     const regardingOptions = [
       this.renderOptionsGroup('Linodes', 'linode_id', Object.values(linodes)),
-      this.renderOptionsGroup('DNS Zones', 'dnszone_id', Object.values(dnszones)),
+      this.renderOptionsGroup('Domains', 'domain_id', Object.values(domains)),
       this.renderOptionsGroup('NodeBalancers', 'nodebalancer_id', Object.values(nodebalancers)),
       // TODO: this is not currently supported by the API
       // this.renderOptionsGroup('Other', [{ label: 'Other', id: 'other' }]),
@@ -157,7 +157,7 @@ export class CreatePage extends Component {
 CreatePage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   linodes: PropTypes.object.isRequired,
-  dnszones: PropTypes.object.isRequired,
+  domains: PropTypes.object.isRequired,
   nodebalancers: PropTypes.object.isRequired,
 };
 
@@ -165,7 +165,7 @@ function select(state) {
   return {
     nodebalancers: state.api.nodebalancers.nodebalancers,
     linodes: state.api.linodes.linodes,
-    dnszones: state.api.dnszones.dnszones,
+    domains: state.api.domains.domains,
   };
 }
 

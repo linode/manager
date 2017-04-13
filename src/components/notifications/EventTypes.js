@@ -19,7 +19,7 @@ export function getLinodeBackupRedirectUrl(entity) {
 }
 
 export function getDNSZonesRedirectUrl() {
-  return '/dnsmanager';
+  return '/domains';
 }
 
 export function getDNSZoneRedirectUrl(entity) {

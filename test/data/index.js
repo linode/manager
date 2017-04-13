@@ -7,7 +7,7 @@ import { distributions } from './distributions';
 import { regions } from './regions';
 import { types } from './types';
 import { kernels } from './kernels';
-import { dnszones } from './dnszones';
+import { domains } from './domains';
 import { nodebalancers } from './nodebalancers';
 import { events } from './events';
 import { clients } from './clients';
@@ -57,7 +57,7 @@ export const api = fakeAPI([
   [regions, 'region', 'regions'],
   [types, 'type', 'types'],
   [kernels, 'kernel', 'kernels'],
-  [dnszones, 'dnszone', 'dnszones'],
+  [domains, 'domain', 'domains'],
   [nodebalancers, 'nodebalancer', 'nodebalancers'],
   [events, 'event', 'events'],
   [clients, 'client', 'clients'],

@@ -10,7 +10,7 @@ import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 import CreateHelper from '~/components/CreateHelper';
 import {
-  getLinodeRedirectUrl, getNodebalancerRedirectUrl, getDNSZoneRedirectUrl,
+  getLinodeRedirectUrl, getNodebalancerRedirectUrl, getDomainRedirectUrl,
 } from '~/components/notifications/EventTypes';
 import { List, Table } from '~/components/tables';
 import { ListBody, ListGroup } from '~/components/tables/bodies';
@@ -21,7 +21,7 @@ import {
 const TICKET_LINK_MAP = {
   linode: getLinodeRedirectUrl,
   nodebalancer: getNodebalancerRedirectUrl,
-  dnszone: getDNSZoneRedirectUrl,
+  domain: getDomainRedirectUrl,
 };
 
 export function renderTicketCreationInfo(ticket) {

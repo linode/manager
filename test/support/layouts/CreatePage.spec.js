@@ -20,7 +20,7 @@ describe('support/layouts/CreatePage', () => {
     const page = mount(
       <CreatePage
         linodes={api.linodes.linodes}
-        dnszones={api.dnszones.dnszones}
+        domains={api.domains.domains}
         nodebalancers={api.nodebalancers.nodebalancers}
         dispatch={dispatch}
       />

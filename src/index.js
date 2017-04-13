@@ -24,7 +24,7 @@ import { NotFound } from './components/Error';
 import Linodes from './linodes';
 import Weblish from './linodes/linode/layouts/Weblish';
 import NodeBalancers from './nodebalancers';
-import DNSManager from './dnsmanager';
+import Domains from './domains';
 import Profile from './profile';
 import Users from './users';
 import Billing from './billing';
@@ -78,7 +78,7 @@ const init = () => {
             <IndexRedirect to="/linodes" />
             {Linodes}
             {NodeBalancers}
-            {DNSManager}
+            {Domains}
             {Profile}
             {Users}
             {Billing}

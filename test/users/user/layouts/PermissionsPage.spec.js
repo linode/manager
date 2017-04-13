@@ -39,7 +39,7 @@ describe('users/user/layouts/PermissionsPage', () => {
     expect(globalLinodes.props().checked).to.equal(true);
     const globalNB = page.find('#permission-global-nodebalancers');
     expect(globalNB.props().checked).to.equal(true);
-    const globalDNS = page.find('#permission-global-dnszones');
+    const globalDNS = page.find('#permission-global-domains');
     expect(globalDNS.props().checked).to.equal(true);
   });
 
@@ -68,7 +68,7 @@ describe('users/user/layouts/PermissionsPage', () => {
           global: {
             add_linodes: false,
             add_nodebalancers: true,
-            add_dnszones: true,
+            add_domains: true,
           },
         },
       }

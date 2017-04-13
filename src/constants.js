@@ -792,7 +792,7 @@ export const TIME_ZONES = [
 export const OAUTH_SUBSCOPES = ['view', 'modify', 'create', 'delete'];
 
 export const OAUTH_SCOPES = [
-  'linodes', 'dnszones', 'nodebalancers', 'images', 'stackscripts', 'longview', 'events', 'tokens',
+  'linodes', 'domains', 'nodebalancers', 'images', 'stackscripts', 'longview', 'events', 'tokens',
   'clients', 'account', 'users', 'tickets',
 ];
 
