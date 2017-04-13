@@ -29,10 +29,8 @@ export class ConfigPanel extends Component {
           await dispatch(linodes.configs.delete(linode.id, config.id));
           dispatch(hideModal());
         }}
-        items={{ config }}
-        selectedItems={['config']}
+        items={[config.label]}
         typeOfItem="Configs"
-        label="label"
         onCancel={() => dispatch(hideModal())}
       />
     ));

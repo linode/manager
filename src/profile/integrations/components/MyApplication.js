@@ -55,9 +55,7 @@ export default class MyApplication extends Component {
         }}
         onCancel={() => dispatch(hideModal())}
         typeOfItem="Clients"
-        label="label"
-        items={{ client }}
-        selectedItems={['client']}
+        items={[client.label]}
       />
     ));
   }
