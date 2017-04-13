@@ -49,7 +49,7 @@ export default class EditSOARecord extends Component {
       }, this.props.zone.id));
 
       this.setState({ saving: false });
-      close();
+      close(zone)();
     } catch (response) {
       if (!response.json) {
         // eslint-disable-next-line no-console
@@ -175,7 +175,7 @@ export default class EditSOARecord extends Component {
           </Select>
         </ModalFormGroup>
         <div className="Modal-footer">
-          <CancelButton onClick={close} />
+          <CancelButton onClick={close()} />
           <SubmitButton disabled={saving} />
         </div>
         <ErrorSummary errors={errors} />
