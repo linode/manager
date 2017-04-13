@@ -112,7 +112,7 @@ export default class Header extends Component {
               onClick={this.toggleNotifications}
             >
               <i className="fa fa-bell-o"></i>
-              {!unseenCount ? null : <span className="MainHeader-badge badge">{unseenCount}</span>}
+              {!unseenCount ? null : <span className="MainHeader-badge Badge">{unseenCount}</span>}
             </div>
           </div>
         </div>
