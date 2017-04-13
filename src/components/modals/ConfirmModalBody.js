@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 
-import { SubmitButton, CancelButton } from '~/components/form';
+import { SubmitButton } from '~/components/form';
+import { CancelButton } from '~/components/buttons';
 
 export default class ConfirmModalBody extends Component {
   constructor() {
@@ -12,13 +13,19 @@ export default class ConfirmModalBody extends Component {
     const { onOk } = this.props;
     this.setState({ loading: true });
     await onOk();
+    this.setState({ loading: false });
   }
 
   render() {
-    const { buttonText, onCancel, children } = this.props;
+    const {
+      className,
+      buttonText,
+      onCancel,
+      children,
+    } = this.props;
     const { loading } = this.state;
     return (
-      <div>
+      <div className={`ConfirmModalBody-body ${className}`}>
         {React.isValidElement(children) ? children : <p>{children}</p>}
         <div className="Modal-footer">
           <CancelButton disabled={loading} onClick={onCancel} />
@@ -31,7 +38,12 @@ export default class ConfirmModalBody extends Component {
   }
 }
 
+ConfirmModalBody.defaultProps = {
+  className: '',
+};
+
 ConfirmModalBody.propTypes = {
+  className: PropTypes.string,
   children: PropTypes.any,
   buttonText: PropTypes.string,
   onOk: PropTypes.func.isRequired,

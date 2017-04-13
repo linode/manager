@@ -10,11 +10,31 @@ export const testUser = {
   _polling: false,
 };
 
+export const testPermissions = {
+  permissions: {
+    undefined: {
+      customer: {
+        access: true,
+        cancel: false,
+      },
+      global: {
+        add_linodes: true,
+        add_nodebalancers: true,
+        add_domains: true,
+      },
+    },
+  },
+};
+
 export const users = [
   { ...testUser },
   {
     ...testUser,
     username: 'testuser2',
     email: 'example2@domain.com',
+    restricted: true,
+    _permissions: {
+      ...testPermissions,
+    },
   },
 ];

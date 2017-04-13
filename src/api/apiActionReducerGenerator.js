@@ -53,12 +53,13 @@ export function getStateOfSpecificResource(config, state, ids) {
  * Apply a filter to all returned objects so only selected fields (or none)
  * will be updated.
  */
-export function filterResources(config, resources, resourceFilter = x => x) {
+export function filterResources(config, resources, resourceFilter) {
   const filteredResources = { ...resources };
+
 
   for (let i = 0; i < filteredResources[config.plural].length; i += 1) {
     const object = filteredResources[config.plural][i];
-    const filteredObject = resourceFilter(object);
+    const filteredObject = resourceFilter ? resourceFilter(object) : object;
 
     if (!filteredObject || !Object.keys(filteredObject).length) {
       filteredResources[config.plural].splice(i, 1);
@@ -232,15 +233,17 @@ function genThunkPut(config, actions) {
 }
 
 function genThunkPost(config, actions) {
-  return (resource, ...ids) => async (dispatch, getState) => {
-    const { token } = getState().authentication;
-    const response = await fetch(token, config.endpoint(...ids, ''), {
-      method: 'POST',
-      body: JSON.stringify(resource),
-    });
-    const json = await response.json();
-    dispatch(actions.one(json, ...ids));
-    return json;
+  return (resource, ...ids) => {
+    return async (dispatch, getState) => {
+      const { token } = getState().authentication;
+      const response = await fetch(token, config.endpoint(...ids, ''), {
+        method: 'POST',
+        body: JSON.stringify(resource),
+      });
+      const json = await response.json();
+      dispatch(actions.one(json, ...ids));
+      return json;
+    };
   };
 }
 
@@ -278,15 +281,18 @@ export default function apiActionReducerGenerator(config, actions) {
 }
 
 // Helpers function when making calls outside of the ability of the above thunks.
-function _thunkFetch(method) {
-  return (url, body) =>
+function _thunkFetch(method, stringifyBody = true) {
+  return (url, body, headers = {}) =>
     async (dispatch, getState) => {
       const state = getState();
       const { token } = state.authentication;
-      await fetch(token, url, {
-        method: method,
-        body: JSON.stringify(body),
+      const result = await fetch(token, url, {
+        method,
+        headers,
+        body: stringifyBody ? JSON.stringify(body) : body,
       });
+
+      return await result.json();
     };
 }
 
@@ -294,5 +300,16 @@ export const thunkFetch = {
   post: _thunkFetch('POST'),
   put: _thunkFetch('PUT'),
   get: _thunkFetch('GET'),
-  delete: _thunkFetch('delete'),
+  delete: _thunkFetch('DELETE'),
+};
+
+function _thunkFetchFile(method) {
+  const _fetch = _thunkFetch(method, false);
+  return (url, attachment, type = 'image/png') =>
+    _fetch(url, attachment, { 'Content-Type': type });
+}
+
+export const thunkFetchFile = {
+  post: _thunkFetchFile('POST'),
+  put: _thunkFetchFile('PUT'),
 };

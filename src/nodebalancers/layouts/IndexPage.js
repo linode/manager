@@ -3,20 +3,33 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
 import { setError } from '~/actions/errors';
+import { default as toggleSelected } from '~/actions/select';
 import { showModal, hideModal } from '~/actions/modal';
-import ConfirmModalBody from '~/components/modals/ConfirmModalBody';
-import { nodebalancers } from '~/api';
+import { nodebalancers as api } from '~/api';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
+import ConfirmModalBody from '~/components/modals/ConfirmModalBody';
 import CreateHelper from '~/components/CreateHelper';
-import { Checkbox } from '~/components/form';
-import { Button } from '~/components/buttons';
-import { renderDatacenterStyle } from '~/linodes/components/Linode';
+import { List, Table } from '~/components/tables';
+import { ListBody } from '~/components/tables/bodies';
+import { ListHeader } from '~/components/tables/headers';
+import {
+  ButtonCell,
+  CheckboxCell,
+  RegionCell,
+  IPAddressCell,
+  LinkCell,
+} from '~/components/tables/cells';
+import { MassEditControl } from '~/components/tables/controls';
+
+const OBJECT_TYPE = 'nodebalancers';
+
 
 export class IndexPage extends Component {
+
   static async preload({ dispatch }) {
     try {
-      await dispatch(nodebalancers.all());
+      await dispatch(api.all());
     } catch (response) {
       // eslint-disable-next-line no-console
       console.error(response);
@@ -24,79 +37,88 @@ export class IndexPage extends Component {
     }
   }
 
-  constructor() {
-    super();
-    this.state = { isSelected: { } };
+  constructor(props) {
+    super(props);
+
+    this.deleteNodeBalancers = this.deleteNodeBalancers.bind(this);
   }
 
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
 
-    dispatch(setTitle('NodeBalancers'));
+    dispatch(setTitle('Nodebalancers'));
   }
 
-  deleteNodeBalancer = (zoneId) => {
+  deleteNodeBalancers(nodebalancers) {
     const { dispatch } = this.props;
-    dispatch(showModal('Delete NodeBalancer', this.renderModal(zoneId)));
-  }
+    const nodebalancersArr = Array.isArray(nodebalancers) ? nodebalancers : [nodebalancers];
 
-  renderModal(zoneId) {
-    const { dispatch } = this.props;
-    return (
+    dispatch(showModal('Delete NodeBalancer',
       <ConfirmModalBody
         buttonText="Delete"
         onOk={async () => {
-          await dispatch(nodebalancers.delete(zoneId));
+          const ids = nodebalancersArr.map(function (nodebalancer) { return nodebalancer.id; });
+
+          await dispatch(api.delete(ids));
+          dispatch(toggleSelected(OBJECT_TYPE, ids));
           dispatch(hideModal());
         }}
         onCancel={() => dispatch(hideModal())}
       >
         Are you sure you want to <strong>permanently</strong> delete this NodeBalancer?
       </ConfirmModalBody>
-    );
+    ));
   }
 
   render() {
-    const { nodebalancers } = this.props;
-    const { isSelected } = this.state;
+    const { dispatch, nodebalancers, selectedMap } = this.props;
+    // TODO: add sort function in config definition
+    const data = Object.values(nodebalancers.nodebalancers);
 
-    const renderZones = () => (
-      <table className="PrimaryTable">
-        <tbody>
-          {Object.values(nodebalancers.nodebalancers).map(n => (
-            <tr
-              key={n.id}
-              className={`PrimaryTable-row ${isSelected[n.id] ? 'PrimaryTable-row--selected' : ''}`}
-            >
-              <td>
-                <Checkbox
-                  className="PrimaryTable-rowSelector"
-                  checked={!!isSelected[n.id]}
-                  onChange={() =>
-                    this.setState({ isSelected: { ...isSelected, [n.id]: !isSelected[n.id] } })}
-                />
-                <Link
-                  className="PrimaryTable-rowLabel"
-                  to={`/nodebalancers/${n.label}`}
-                  title={n.id}
-                >
-                  {n.label}
-                </Link>
-              </td>
-              <td>
-                {n.ipv4}
-                {/* TODO: drop || when ipv6 actually exists, or look up correctly */}
-                <div className="text-muted">{(n.ipv6 || '').split('/')[0]}</div>
-              </td>
-              <td>{renderDatacenterStyle(n)}</td>
-              <td className="text-sm-right">
-                <Button onClick={() => this.deleteNodeBalancer(n.id)}>Delete</Button>
-              </td>
-            </tr>
-           ))}
-        </tbody>
-      </table>
+    // TODO: add mass edit controls to nodebalancers
+    const renderNodebalancers = (data) => (
+      <List>
+        <ListHeader>
+          <div className="pull-sm-left">
+            <MassEditControl
+              data={data}
+              dispatch={dispatch}
+              massEditOptions={[
+                { name: 'Delete', action: this.deleteNodeBalancers },
+              ]}
+              selectedMap={selectedMap}
+              objectType={OBJECT_TYPE}
+              toggleSelected={toggleSelected}
+            />
+          </div>
+        </ListHeader>
+        <ListBody>
+          <Table
+            columns={[
+              { cellComponent: CheckboxCell },
+              {
+                className: 'RowLabelCell',
+                cellComponent: LinkCell,
+                hrefFn: (nodebalancer) => { return `/nodebalancers/${nodebalancer.label}`; },
+              },
+              { cellComponent: IPAddressCell },
+              { cellComponent: RegionCell },
+              {
+                cellComponent: ButtonCell,
+                onClick: (nodebalancer) => { this.deleteNodeBalancers(nodebalancer); },
+                text: 'Delete',
+              },
+            ]}
+            data={data}
+            selectedMap={selectedMap}
+            disableHeader
+            onToggleSelect={(record) => {
+              dispatch(toggleSelected(OBJECT_TYPE, record.id));
+            }}
+          />
+        </ListBody>
+      </List>
     );
 
     return (
@@ -111,8 +133,13 @@ export class IndexPage extends Component {
           </div>
         </header>
         <div className="PrimaryPage-body">
-          {Object.keys(this.props.nodebalancers.nodebalancers).length ? renderZones() :
-            <CreateHelper label="zones" href="/nodebalancers/create" linkText="Add a zone" />}
+          {data.length ? renderNodebalancers(data) : (
+            <CreateHelper
+              label="NodeBalancers"
+              href="/nodebalancers/create"
+              linkText="Add a NodeBalancer"
+            />
+          )}
         </div>
       </div>
     );
@@ -122,12 +149,14 @@ export class IndexPage extends Component {
 IndexPage.propTypes = {
   dispatch: PropTypes.func,
   nodebalancers: PropTypes.object,
+  selectedMap: PropTypes.object.isRequired,
 };
 
 
 function select(state) {
   return {
     nodebalancers: state.api.nodebalancers,
+    selectedMap: state.select.selected[OBJECT_TYPE] || {},
   };
 }
 

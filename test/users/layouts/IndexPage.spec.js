@@ -25,7 +25,7 @@ describe('users', () => {
       />
     );
 
-    const cards = page.find('.SecondaryCard');
+    const cards = page.find('.Card');
     expect(cards.length).to.equal(users.users.length);
   });
 
@@ -38,8 +38,8 @@ describe('users', () => {
     );
 
     const user = users.users[0];
-    const firstCard = page.find('.SecondaryCard').at(0);
+    const firstCard = page.find('.Card').at(0);
     expect(firstCard.find('.user-email').text()).to.equal(user.email);
-    expect(firstCard.find('.SecondaryCard-title').text()).to.equal(user.username);
+    expect(firstCard.find('.CardImageHeader-title').text()).to.equal(user.username);
   });
 });

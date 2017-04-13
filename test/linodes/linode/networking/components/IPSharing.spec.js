@@ -14,11 +14,11 @@ describe('linodes/linode/networking/components/IPSharing', () => {
   const sandbox = sinon.sandbox.create();
   const dispatch = sandbox.stub();
 
-  const linodesInDatacenter = Object.values(linodes.linodes).filter(
-    l => l.datacenter.id === testLinode.datacenter.id);
+  const linodesInRegion = Object.values(linodes.linodes).filter(
+    l => l.region.id === testLinode.region.id);
 
   const allIps = {};
-  linodesInDatacenter.forEach(linode => {
+  linodesInRegion.forEach(linode => {
     if (linode.id !== testLinode.id) {
       linode._ips.ipv4.public.forEach(ip => {
         allIps[ip.address] = ip;
@@ -35,27 +35,20 @@ describe('linodes/linode/networking/components/IPSharing', () => {
     const page = mount(
       <IPSharing
         dispatch={dispatch}
-        linodes={linodesInDatacenter}
+        linodes={linodesInRegion}
         linode={testLinode}
       />
     );
 
-    const rows = page.find('.SecondaryTable-row');
+    const rows = page.find('.TableRow');
     expect(rows.length).to.equal(Object.keys(allIps).length);
-    rows.forEach(row => {
-      const columns = row.find('.SecondaryTable-column');
-      const ipColumn = columns.at(0);
-      const [address] = ipColumn.text().split(' ');
-      const ip = allIps[address];
-      expect(columns.at(1).text()).to.equal(linodes.linodes[ip.linode_id].label);
-    });
   });
 
   it('saves shared ips', async () => {
     const page = mount(
       <IPSharing
         dispatch={dispatch}
-        linodes={linodesInDatacenter}
+        linodes={linodesInRegion}
         linode={testLinode}
       />
     );

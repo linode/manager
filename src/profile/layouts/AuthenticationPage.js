@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { Card } from '~/components/cards';
+import { Card, CardHeader } from '~/components/cards';
 import {
   PasswordInput, Form, FormGroup, FormGroupError, SubmitButton,
 } from '~/components/form';
@@ -32,8 +32,9 @@ export class AuthenticationPage extends Component {
     } catch (response) {
       if (!response.json) {
         // eslint-disable-next-line no-console
-        return console.error(response, 333333);
+        return console.error(response);
       }
+
       const errors = await reduceErrors(response);
       this.setState({ passwordErrors: errors });
     }
@@ -48,7 +49,7 @@ export class AuthenticationPage extends Component {
 
     return (
       <div>
-        <Card title="Change password">
+        <Card header={<CardHeader title="Change password" />}>
           <Form onSubmit={this.passwordOnSubmit}>
             <FormGroup className="row" errors={passwordErrors} name="password">
               <label className="col-sm-2 col-form-label">New password:</label>
@@ -81,7 +82,7 @@ export class AuthenticationPage extends Component {
             <ErrorSummary errors={passwordErrors} />
           </Form>
         </Card>
-        <Card title="Change two-factor authentication setting">
+        <Card header={<CardHeader title="Change two-factor authentication setting" />}>
           <Form onSubmit={this.tfaOnSubmit}>
             {/* TODO: this info is conditional on your actual TFA status */}
             <p>Two-factor authentication is currently disabled.</p>

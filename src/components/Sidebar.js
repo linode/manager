@@ -9,19 +9,7 @@ export default function Sidebar(props) {
     ['services', [
       { icon: 'cubes', name: 'Linodes', link: '/linodes' },
       { icon: 'code-fork', name: 'NodeBalancers', link: '/nodebalancers' },
-      { icon: 'share-alt', name: 'DNS Manager', link: '/dnsmanager' },
-    ]],
-    ['account', [
-      { icon: 'user', name: 'My profile', link: '/profile' },
-      { icon: 'users', name: 'Users', link: '/users' },
-      { icon: 'dollar', name: 'Billing', link: '/billing' },
-      { icon: 'gear', name: 'Settings', link: '/settings' },
-      { icon: 'support', name: 'Support', link: '/support' },
-    ]],
-    ['community', [
-      { icon: 'university', name: 'Guides', link: 'https://linode.com/docs' },
-      { icon: 'comments', name: 'Forum', link: 'https://forum.linode.com' },
-      { icon: 'book', name: 'Developers', link: 'https://developers.linode.com' },
+      { icon: 'share-alt', name: 'Domains', link: '/domains' },
     ]],
   ];
 

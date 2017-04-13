@@ -19,17 +19,17 @@ describe('nodebalancers/layouts/CreatePage', () => {
 
   it('creates nodebalancer and redirects on form submit', async () => {
     const page = shallow(
-      <CreatePage dispatch={dispatch} datacenters={api.datacenters} />
+      <CreatePage dispatch={dispatch} regions={api.regions} />
     );
 
-    page.instance().setState({ label: 'my-label', datacenter: 'newark' });
+    page.instance().setState({ label: 'my-label', region: 'newark' });
     await page.instance().onSubmit();
 
     expect(dispatch.callCount).to.equal(2);
     const fn = dispatch.firstCall.args[0];
     await expectRequest(fn, '/nodebalancers/', {
       method: 'POST',
-      body: { label: 'my-label', datacenter: 'newark' },
+      body: { label: 'my-label', region: 'newark' },
     });
 
     expectObjectDeepEquals(dispatch.secondCall.args[0], push('/nodebalancers'));

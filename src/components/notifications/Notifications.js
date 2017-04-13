@@ -7,12 +7,13 @@ import { EVENT_POLLING_DELAY } from '~/constants';
 import { events } from '~/api';
 import {
   createHeaderFilter,
+  greaterThanDatetimeFilter,
   lessThanDatetimeFilter,
   lessThanNowFilter,
 } from '~/api/util';
+import Polling from '~/api/polling';
 
-import { eventRead, eventSeen } from '~/api/events';
-import { hideNotifications, showNotifications } from '~/actions/notifications';
+import { eventRead } from '~/api/events';
 import NotificationList from './NotificationList';
 
 const MIN_SHOWN_EVENTS = 10;
@@ -21,15 +22,23 @@ export class Notifications extends Component {
   constructor(props) {
     super(props);
 
-    this.toggleNotifications = this.toggleNotifications.bind(this);
     this.onClickItem = this.onClickItem.bind(this);
     this.onClickShowMore = this.onClickShowMore.bind(this);
 
-    this._pollingTimeoutId = null;
+    this._filterOptions = { seen: false };
+    this._polling = Polling({
+      apiRequestFn: this.fetchAllEvents.bind(this),
+      timeout: EVENT_POLLING_DELAY,
+    });
     this.state = { loadingMore: false };
   }
 
   async componentDidMount() {
+    // OAuth token is not available during the callback
+    while (window.location.pathname === '/oauth/callback') {
+      await new Promise(r => setTimeout(r, 100));
+    }
+
     // begin by fetching all unseen events
     await this.fetchAllEvents(createHeaderFilter({ seen: false }));
 
@@ -40,7 +49,19 @@ export class Notifications extends Component {
     }
 
     // initialize polling for unseen events
-    this.pollForEvents();
+    this._polling.start();
+  }
+
+  componentWillUpdate() {
+    const { events } = this.props;
+    if (events.ids.length) {
+      const latest = events.events[events.ids[0]];
+      this._filterOptions = _.merge(
+        {},
+        this._filterOptions,
+        greaterThanDatetimeFilter('created', latest.created)
+      );
+    }
   }
 
   componentWillUnmount() {
@@ -73,88 +94,29 @@ export class Notifications extends Component {
     this.setState({ loading: false });
   }
 
-  toggleNotifications(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    const { dispatch, notifications, onMenuClick } = this.props;
-
-    if (notifications.open) {
-      dispatch(hideNotifications());
-      onMenuClick(false);
-    } else {
-      this.markEventsSeen();
-      dispatch(showNotifications());
-      onMenuClick(true);
-    }
-  }
-
-  async markEventsSeen() {
-    const { dispatch, events } = this.props;
-    const unseenIds = events.ids.filter(function (id) {
-      return !events.events[id].seen;
-    });
-
-    // mark up to and including the most recent event seen
-    if (unseenIds.length) {
-      await dispatch(eventSeen(unseenIds[0]));
-    }
-  }
-
-  async pollForEvents(
-    options = createHeaderFilter({ seen: false }),
-    timeout = EVENT_POLLING_DELAY
-  ) {
-    // additional calls to this function will restart polling by default
-    // so that requests don't stack
-    if (this._pollingTimeoutId !== null) {
-      clearTimeout(this._pollingTimeoutId);
-    }
-
-    this._pollingTimeoutId = setTimeout(async () => {
-      this.fetchAllEvents(options); // this.eventHandler
-
-      try {
-        this._pollingTimeoutId = null;
-        await this.pollForEvents(options);
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error(e);
-      }
-    }, timeout);
-  }
-
   async fetchEventsPage(options = null) {
-    const { dispatch, eventHandler = (x) => x } = this.props;
+    const { dispatch } = this.props;
     await dispatch(
-      events.page(0, [], eventHandler, true, null, options)
+      events.page(0, [], null, true, null, options)
     );
   }
 
-  async fetchAllEvents(options = null) {
-    const { dispatch, eventHandler = (x) => x } = this.props;
-    await dispatch(events.all([], eventHandler, options));
+  async fetchAllEvents() {
+    const { dispatch } = this.props;
+    await dispatch(events.all([], null, createHeaderFilter(this._filterOptions)));
   }
 
   render() {
     const { events, notifications = { open: false } } = this.props;
 
-    const unseenCount = notifications.open ? 0 :
-      events.ids.reduce(function (count, id) {
-        return events.events[id].seen ? count : count + 1;
-      }, 0);
-
     return (
-      <div className="Notifications" onClick={this.toggleNotifications}>
-        <i className="fa fa-bell-o"></i>
-        {!unseenCount ? null : <span className="MainHeader-badge badge">{unseenCount}</span>}
-        <NotificationList
-          events={events}
-          loading={this.state.loading}
-          open={notifications.open}
-          onClickItem={this.onClickItem}
-          onClickShowMore={this.onClickShowMore}
-        />
-      </div>
+      <NotificationList
+        events={events}
+        loading={this.state.loading}
+        open={notifications.open}
+        onClickItem={this.onClickItem}
+        onClickShowMore={this.onClickShowMore}
+      />
     );
   }
 }
@@ -162,9 +124,7 @@ export class Notifications extends Component {
 Notifications.propTypes = {
   dispatch: PropTypes.func.isRequired,
   events: PropTypes.object,
-  eventHandler: PropTypes.func,
   notifications: PropTypes.object.isRequired,
-  onMenuClick: PropTypes.func,
 };
 
 

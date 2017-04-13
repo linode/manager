@@ -70,7 +70,7 @@ describe('linodes/linode/networking/layouts/SummaryPage', () => {
           params={params}
         />);
 
-      const expectedNameservers = ipv4ns[testLinode.datacenter.id];
+      const expectedNameservers = ipv4ns[testLinode.region.id];
       const nameservers = page.find('#ipv4Nameservers li');
       nameservers.map((nameserver, i) =>
         expect(nameserver.text()).to.equal(expectedNameservers[i]));
@@ -114,7 +114,7 @@ describe('linodes/linode/networking/layouts/SummaryPage', () => {
         />);
 
       const expectedNameservers = ipv6nsSuffix.map(
-        suffix => ipv6ns[testLinode.datacenter.id] + suffix);
+        suffix => ipv6ns[testLinode.region.id] + suffix);
       const nameservers = page.find('#ipv6Nameservers li');
       nameservers.map((nameserver, i) =>
         expect(nameserver.text()).to.equal(expectedNameservers[i]));
@@ -148,7 +148,7 @@ describe('linodes/linode/networking/layouts/SummaryPage', () => {
     expect(li.at(0).text()).to.equal(`${privateIp.address}(${privateIp.rdns})`);
   });
 
-  it('renders link-local', async () => {
+  it('renders link_local', async () => {
     const page = shallow(
       <SummaryPage
         linodes={linodes}
@@ -156,6 +156,6 @@ describe('linodes/linode/networking/layouts/SummaryPage', () => {
       />);
 
     const li = page.find('#linkLocal li');
-    expect(li.at(0).text()).to.equal(linodes.linodes[1234]._ips.ipv6['link-local']);
+    expect(li.at(0).text()).to.equal(linodes.linodes[1234]._ips.ipv6.link_local);
   });
 });

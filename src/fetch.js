@@ -1,4 +1,5 @@
 import * as isomorphicFetch from 'isomorphic-fetch';
+import _ from 'lodash';
 
 import { store } from '~/store';
 import { checkLogin } from '~/session';
@@ -24,18 +25,21 @@ export function fetch(token, _path, _options) {
    * Get updated reference in case rawFetch is a stub (during testing).
    * See comment on rawFetch.
    */
-  const _headers = _options && _options.headers || {};
+
   const fetchRef = module.exports.rawFetch;
-  const options = {
+
+  const options = _.merge({
     mode: 'cors',
-    ..._options,
     headers: {
-      ..._headers,
       Accept: 'application/json',
       Authorization: `token ${token}`,
-      'Content-Type': (_headers && _headers['Content-Type'] || 'application/json'),
+      'Content-Type': 'application/json',
     },
-  };
+  }, _options);
+
+  if (options.body instanceof FormData) {
+    delete options.headers['Content-Type'];
+  }
 
   if (options.headers['X-Filter']) {
     options.headers['X-Filter'] = JSON.stringify(options.headers['X-Filter']);

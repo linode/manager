@@ -1,20 +1,47 @@
-const REDIRECT_BASE_URL = '/linodes';
-
 export function baseRedirect() {
-  return REDIRECT_BASE_URL;
+  return '/';
+}
+
+export function getLinodesRedirectUrl() {
+  return '/linodes';
 }
 
 export function getLinodeRedirectUrl(entity) {
-  return `${REDIRECT_BASE_URL}/${entity.label}`;
+  return `${getLinodesRedirectUrl()}/${entity.label}`;
 }
 
-export function getDiskRedirectUrl(entity) {
+export function getLinodeDiskRedirectUrl(entity) {
   return `${getLinodeRedirectUrl(entity)}/settings/advanced`;
 }
 
-export function getBackupRedirectUrl(entity) {
+export function getLinodeBackupRedirectUrl(entity) {
   return `${getLinodeRedirectUrl(entity)}/backups`;
 }
+
+export function getDNSZonesRedirectUrl() {
+  return '/domains';
+}
+
+export function getDNSZoneRedirectUrl(entity) {
+  return `${getDNSZonesRedirectUrl()}/${entity.label}`;
+}
+
+export function getNodebalancersRedirectUrl() {
+  return '/nodebalancers';
+}
+
+export function getNodebalancerRedirectUrl(entity) {
+  return `${getNodebalancersRedirectUrl()}/${entity.label}`;
+}
+
+export function getTicketsRedirectUrl() {
+  return '/support';
+}
+
+export function getTicketRedirectUrl(entity) {
+  return `${getTicketsRedirectUrl()}/${entity.id}`;
+}
+
 
 const EventTypeMap = {
   linode_boot: {
@@ -32,7 +59,7 @@ const EventTypeMap = {
   linode_delete: {
     presentTenseAction: 'Deleting',
     pastTenseAction: 'deleted',
-    redirectUrl: baseRedirect,
+    redirectUrl: getLinodesRedirectUrl,
   },
   linode_shutdown: {
     presentTenseAction: 'Shutting down',
@@ -78,42 +105,47 @@ const EventTypeMap = {
     pastTenseAction: 'cloned',
     redirectUrl: getLinodeRedirectUrl,
   },
+  linode_kvmify: {
+    presentTenseAction: 'KVMifying',
+    pastTenseAction: 'kvmified',
+    redirectUrl: getLinodeRedirectUrl,
+  },
 
   disk_create: {
     presentTenseAction: 'Creating',
     pastTenseAction: 'created',
-    redirectUrl: getDiskRedirectUrl,
+    redirectUrl: getLinodeDiskRedirectUrl,
   },
   disk_delete: {
     presentTenseAction: 'Deleting',
     pastTenseAction: 'deleted',
-    redirectUrl: getDiskRedirectUrl,
+    redirectUrl: getLinodeDiskRedirectUrl,
   },
   disk_duplicate: {
     presentTenseAction: 'Duplicating',
     pastTenseAction: 'duplicated',
-    redirectUrl: getDiskRedirectUrl,
+    redirectUrl: getLinodeDiskRedirectUrl,
   },
   disk_resize: {
     presentTenseAction: 'Resizing',
     pastTenseAction: 'resized',
-    redirectUrl: getDiskRedirectUrl,
+    redirectUrl: getLinodeDiskRedirectUrl,
   },
 
   backups_enable: {
     presentTenseAction: 'Enabling',
     pastTenseAction: 'enabled',
-    redirectUrl: getBackupRedirectUrl,
+    redirectUrl: getLinodeBackupRedirectUrl,
   },
   backups_cancel: {
     presentTenseAction: 'Cancelling',
     pastTenseAction: 'cancelled',
-    redirectUrl: getBackupRedirectUrl,
+    redirectUrl: getLinodeBackupRedirectUrl,
   },
   backups_restore: {
     presentTenseAction: 'Restoring',
     pastTenseAction: 'restored',
-    redirectUrl: getBackupRedirectUrl,
+    redirectUrl: getLinodeBackupRedirectUrl,
   },
 
   password_reset: {
@@ -126,23 +158,44 @@ const EventTypeMap = {
   dns_zone_create: {
     presentTenseAction: 'Creating',
     pastTenseAction: 'created',
-    redirectUrl: baseRedirect,
+    redirectUrl: getDNSZoneRedirectUrl,
   },
   dns_zone_delete: {
     presentTenseAction: 'Deleting',
     pastTenseAction: 'deleted',
-    redirectUrl: baseRedirect,
+    redirectUrl: getDNSZonesRedirectUrl,
   },
 
   dns_record_create: {
     presentTenseAction: 'Creating',
     pastTenseAction: 'created',
-    redirectUrl: baseRedirect,
+    redirectUrl: getDNSZoneRedirectUrl,
   },
   dns_record_delete: {
     presentTenseAction: 'Deleting',
     pastTenseAction: 'deleted',
-    redirectUrl: baseRedirect,
+    redirectUrl: getDNSZonesRedirectUrl,
+  },
+
+  nodebalancer_create: {
+    presentTenseAction: 'Creating',
+    pastTenseAction: 'created',
+    redirectUrl: getNodebalancersRedirectUrl,
+  },
+  nodebalancer_delete: {
+    presentTenseAction: 'Deleting',
+    pastTenseAction: 'deleted',
+    redirectUrl: getNodebalancersRedirectUrl,
+  },
+  nodebalancer_config_create: {
+    presentTenseAction: 'Creating',
+    pastTenseAction: 'created',
+    redirectUrl: getNodebalancerRedirectUrl,
+  },
+  nodebalancer_config_delete: {
+    presentTenseAction: 'Deleting',
+    pastTenseAction: 'deleted',
+    redirectUrl: getNodebalancerRedirectUrl,
   },
 
   stackscript_create: {
@@ -164,6 +217,24 @@ const EventTypeMap = {
     presentTenseAction: 'Deleting',
     pastTenseAction: 'deleted',
     redirectUrl: baseRedirect,
+  },
+
+  ticket_create: {
+    presentTenseAction: 'Creating',
+    pastTenseAction: 'created',
+    redirectUrl: getTicketsRedirectUrl,
+  },
+  ticket_update: {
+    presentTenseAction: 'Replying',
+    pastTenseAction: '',
+    pastTensePrefix: 'Reply posted to',
+    redirectUrl: getTicketRedirectUrl,
+  },
+  ticket_attachment_upload: {
+    presentTenseAction: 'Attachment uploading',
+    pastTenseAction: '',
+    pastTensePrefix: 'Attachment uploaded to',
+    redirectUrl: getTicketRedirectUrl,
   },
 };
 

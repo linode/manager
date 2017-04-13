@@ -1,5 +1,29 @@
 import { testType } from './types';
 
+const stats = {
+  netv6: {
+    in: [[1490377800000, 0]],
+    private_in: [[1490377800000, 0]],
+    out: [[1490377800000, 0]],
+    private_out: [[1490377800000, 0]],
+  },
+  netv4: {
+    in: [[1490377800000, 0]],
+    private_in: [[1490377800000, 0]],
+    out: [[1490377800000, 0]],
+    private_out: [[1490377800000, 0]],
+  },
+  cpu: [[1490378700000, 1.67]],
+  io: {
+    swap: [[1490378100000, 0]],
+    io: [[1490379000000, 0.91]],
+  },
+};
+
+function createTestStats() {
+  return stats;
+}
+
 let usedIpv4UpTo = 0;
 function createTestIpv4(linodeId) {
   return {
@@ -32,7 +56,7 @@ function createTestLinode(id) {
     created: '2016-07-06T16:47:27',
     type: [testType],
     status: 'running',
-    datacenter: {
+    region: {
       id: 'newark',
       label: 'Newark, NJ',
     },
@@ -70,6 +94,7 @@ function createTestLinode(id) {
         window: 'W10',
       },
     },
+    _stats: createTestStats(),
     _polling: false,
     _backups: {
       daily: {
@@ -95,7 +120,7 @@ function createTestLinode(id) {
         configs: [
           'Ubuntu Disk',
         ],
-        datacenter: {
+        region: {
           label: 'Newark, NJ',
           country: 'us',
           id: 'newark',
@@ -125,7 +150,7 @@ function createTestLinode(id) {
           configs: [
             'Some config',
           ],
-          datacenter: {
+          region: {
             label: 'Newark, NJ',
             country: 'us',
             id: 'newark',
@@ -209,7 +234,7 @@ function createTestLinode(id) {
       ipv6: {
         global: [],
         addresses: [],
-        'link-local': 'fe80::f03c:91ff:fe0a:181f',
+        link_local: 'fe80::f03c:91ff:fe0a:181f',
         slaac: ipv6.address,
       },
     },
@@ -271,7 +296,7 @@ const testLinode1235 = {
         configs: [
           'aConfig',
         ],
-        datacenter: {
+        region: {
           label: 'Newark, NJ',
           country: 'us',
           id: 'newark',
@@ -299,7 +324,7 @@ const testLinode1235 = {
         configs: [
           'My Ubuntu 15.10 Disk',
         ],
-        datacenter: {
+        region: {
           label: 'Newark, NJ',
           country: 'us',
           id: 'newark',

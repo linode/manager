@@ -7,7 +7,7 @@ import {
   preloadStart,
   preloadStop,
 } from '~/actions/preloadIndicator';
-import { kernels, types, datacenters, distributions } from '~/api';
+import { kernels, types, regions, distributions } from '~/api';
 
 
 // This wraps the react-router match function so that we can await it
@@ -69,7 +69,7 @@ export class LoadingRouterContext extends RouterContext {
     if (!(pathname.endsWith('/weblish') && params.linodeLabel)) {
       store.dispatch(kernels.all());
       store.dispatch(types.all());
-      store.dispatch(datacenters.all());
+      store.dispatch(regions.all());
       store.dispatch(distributions.all());
     }
 

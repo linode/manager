@@ -1,26 +1,18 @@
-.Notifications {
-    height: 100%;
-    padding: 20px 14px;
-    position: relative;
-    width: 48px;
-
-    &:hover {
-        background: $nav-hover-background-color;
-        cursor: pointer;
-    }
-
-    i {
-        @extend .font-large;
-        color: $white;
-    }
-}
-
 .NotificationList {
     display: none;
     $notifications-width: 350px;
 
     &--open {
         display: block;
+        position: fixed;
+        height: 100%;
+        top: $nav-height;
+        z-index: 1001;
+        left: calc(#{$grid-max-width} + calc(calc(100% - #{$grid-max-width}) / 2));
+
+        @media (max-width: #{$grid-max-width}) {
+            left: 100%;
+        }
 
         &-body {
             height: calc(100% - #{$nav-height});
@@ -35,15 +27,12 @@
     &-body {
         border-left: $border;
         // TODO: create a box-shadow mixin
-        box-shadow: 2px 2px 4px 2px $dark-gray;
+        box-shadow: 0px 2px 3px 1px $dark-gray;
         max-height: calc(#{$main-height} - 100px);
         overflow-y: auto;
-        position: fixed;
+        position: absolute;
         right: 0;
-        top: $nav-height;
         width: $notifications-width;
-        // TODO: add z-index levels to variables
-        z-index: 1001;
     }
 
     &-listItem {

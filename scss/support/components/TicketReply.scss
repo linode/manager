@@ -1,0 +1,13 @@
+.TicketReply {
+    .CardImageHeader-title {
+        padding: 0;
+    }
+
+    p {
+        margin-bottom: 15px;
+
+        &:last-of-type {
+            margin: 0;
+        }
+    }
+}

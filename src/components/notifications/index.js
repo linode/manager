@@ -5,6 +5,6 @@ export {
   default as EventTypeMap,
   baseRedirect,
   getLinodeRedirectUrl,
-  getDiskRedirectUrl,
-  getBackupRedirectUrl,
+  getLinodeDiskRedirectUrl,
+  getLinodeBackupRedirectUrl,
 } from '~/components/notifications/EventTypes';

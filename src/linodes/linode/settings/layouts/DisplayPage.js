@@ -4,7 +4,7 @@ import { push } from 'react-router-redux';
 
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import { linodes } from '~/api';
-import { Card } from '~/components/cards';
+import { Card, CardHeader } from '~/components/cards';
 import { Form, FormGroup, FormGroupError, Input, SubmitButton } from '~/components/form';
 import { ErrorSummary, reduceErrors } from '~/errors';
 import { setSource } from '~/actions/source';
@@ -46,7 +46,7 @@ export class DisplayPage extends Component {
   render() {
     const { group, label, errors } = this.state;
     return (
-      <Card title="Display">
+      <Card header={<CardHeader title="Display" />}>
         <Form onSubmit={this.onSubmit}>
           <FormGroup errors={errors} className="row" name="group">
             <label htmlFor="group" className="col-sm-1 col-form-label">Group:</label>
@@ -72,12 +72,12 @@ export class DisplayPage extends Component {
               <FormGroupError errors={errors} name="label" />
             </div>
           </FormGroup>
-          <ErrorSummary errors={errors} />
           <FormGroup className="row">
             <div className="offset-sm-1 col-sm-11">
               <SubmitButton />
             </div>
           </FormGroup>
+          <ErrorSummary errors={errors} />
         </Form>
       </Card>
     );

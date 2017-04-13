@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { Card } from '~/components/cards';
+import { Card, CardHeader } from '~/components/cards';
 import { Form, FormGroup, FormGroupError, SubmitButton, Select } from '~/components/form';
 import { ErrorSummary } from '~/errors';
 
@@ -24,7 +24,7 @@ export default class NotificationsPage extends Component {
 
     return (
       <div>
-        <Card title="Change Lish settings">
+        <Card header={<CardHeader title="Change Lish settings" />}>
           <Form onSubmit={this.onSubmit}>
             <FormGroup className="row" errors={errors} name="mode">
               <label htmlFor="authorization" className="col-sm-2 col-form-label">

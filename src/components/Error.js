@@ -31,7 +31,7 @@ export default function Error(props) {
   }[statusString];
 
   return (
-    <div className="error text-xs-center">
+    <div className="error text-sm-center">
       <h1>{status}</h1>
       <h2>{title}</h2>
       <p>{msg}</p>

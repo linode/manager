@@ -57,3 +57,7 @@
 .Styleguide-content {
   display: flex;
 }
+
+.Styleguide-container .RowLabelCell a {
+  @extend .font-large;
+}

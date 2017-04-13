@@ -18,13 +18,17 @@ describe('nodebalancers/nodebalancer/IndexPage', () => {
   const dispatch = sandbox.stub();
 
   it('displays nodebalancer configs', () => {
-    const testNodebalancers = nodebalancers.nodebalancers;
+    const testNodebalancers = nodebalancers;
     const nbLabel = testNodebalancers.nodebalancers[0].label;
     const page = mount(
-      <IndexPage dispatch={dispatch} params={{ nbLabel }} nodebalancers={testNodebalancers} />
+      <IndexPage
+        dispatch={dispatch}
+        params={{ nbLabel }}
+        nodebalancer={testNodebalancers.nodebalancers[0]}
+      />
     );
-    const firstRow = page.find('tr').at(1);
-    const secondRow = page.find('tr').at(2);
+    const firstRow = page.find('tr').at(0);
+    const secondRow = page.find('tr').at(1);
     const renderedPort = firstRow.find('td').at(0).text();
     const renderedProtocol = firstRow.find('td').at(1).text();
     const renderedAlgorithm = firstRow.find('td').at(2).text();
@@ -39,3 +43,4 @@ describe('nodebalancers/nodebalancer/IndexPage', () => {
     expect(secondRenderedPort).to.equal('81');
   });
 });
+

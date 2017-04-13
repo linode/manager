@@ -8,3 +8,4 @@ export { default as StyleguideTabs } from '~/styleguide/components/sections/Tabs
 export { default as Navigation } from '~/styleguide/components/sections/Navigation';
 export { default as Forms } from '~/styleguide/components/sections/Forms';
 export { default as Modals } from '~/styleguide/components/sections/Modals';
+export { default as Lists } from '~/styleguide/components/sections/Lists';

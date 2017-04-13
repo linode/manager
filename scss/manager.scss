@@ -9,92 +9,11 @@
 
 @import 'components/index';
 @import 'linodes/index';
-@import 'profile/integrations/components/OAuthScopes';
+@import 'support/index';
 @import 'layout/index';
 @import 'styleguide/index';
+@import 'profile/integrations/components/OAuthScopes';
 
-
-// TODO: BEMify
-.sidebar {
-    position: fixed;
-    top: $nav-height;
-    left: 0;
-    bottom: 0;
-    width: $sidebar-width;
-    background: $white;
-    border-right: $border;
-    overflow-y: scroll;
-    padding-bottom: 15px;
-
-    section {
-        margin-top: 5px;
-    }
-
-    & section:first-of-type {
-        margin-top: 0;
-
-        header h3 {
-            border-top: 0;
-        }
-    }
-
-    header {
-        h3 {
-            @extend .font-small;
-            text-transform: uppercase;
-            background-color: $gray;
-            border-bottom: $border;
-            border-top: $border;
-            border-color: $border-gray;
-            color: #777;
-            padding: 10px 0;
-            padding-left: 34px;
-        }
-    }
-
-    a,
-    a:hover,
-    a:active,
-    a:focus {
-        color: $black;
-        text-decoration: none;
-        line-height: 34px;
-        display: block;
-        padding: 5px 0;
-    }
-
-    .fa {
-        width: 15px;
-        color: #acacac;
-    }
-
-    ul {
-        text-align: left;
-
-        li {
-            border-radius: 0;
-            padding-left: 10px;
-            margin-left: 10px;
-            margin-right: 10px;
-
-            &.active,
-            &:hover,
-            &:active,
-            &:focus {
-                background-color: $green;
-                color: white;
-
-                .fa {
-                    color: white;
-                }
-            }
-
-            span:last-of-type {
-                padding-left: 15px;
-            }
-        }
-    }
-}
 // TODO: look into
 .grid-list {
     a .fa {
@@ -137,85 +56,18 @@
     }
 }
 
-// TODO: make component and BEM-ify
-table {
-    width: 100%;
-
-    th:first-of-type,
-    td:first-of-type {
-        padding-left: 15px;
-    }
-
-    th:last-of-type,
-    td:last-of-type {
-        padding-right: 15px;
-    }
-
-    td:not(:first-of-type) {
-        white-space: nowrap;
-    }
-
-    thead {
-        background: $light-gray;
-        border: $border;
-        border-bottom: 0;
-        height: 35px;
-        line-height: 35px;
-
-        th {
-            font-weight: normal;
-        }
-
-        th:last-of-type {
-            border-right: $border;
-        }
-
-        &.clear-thead {
-            background-color: transparent;
-            border: 0;
-            th {
-                border: 0;
-                border-top: 0;
-                border-bottom: 0;
-                padding-top: 0;
-            }
-            th:last-of-type {
-                border-right: 0;
-            }
-        }
-    }
-
-    tbody {
-        tr {
-            height: 35px;
-            line-height: 35px;
-            border: $border;
-            margin: 0 15px;
-            
-            &:not(.selected) {
-                background: $white;
-            }
-        }
-        &.hard-border {
-            tr {
-                background: $light-gray;
-
-                td {
-                    border: 0;
-                    padding: 0 15px;
-                    line-height: 35px;
-                }
-            }
-        }
-    }
-}
-
 footer {
+    @extend .font-small;
+
     padding-bottom: 15px;
 
-    a {
+    span, a {
         color: $lightest-black;
         padding: 0 10px;
+    }
+
+    a {
+        text-decoration: underline;
     }
 }
 
@@ -251,7 +103,6 @@ header .sub-header {
 
     margin-left: -$grid-gutter-width-base / 4;
     margin-right: -$grid-gutter-width-base / 4;
-    margin-bottom: 15px;
 
     & > [class^="col-"] {
         padding-left: $grid-gutter-width-base / 4;

@@ -1,0 +1,18 @@
+.List {
+    &-header {
+        min-height: 32px;
+        margin-bottom: 10px;
+    }
+}
+
+.ListGroup {
+    &:not(:first-child) {
+        margin-top: 15px;
+    }
+
+    &-label {
+        @extend .font-large;
+        color: $light-black;
+        padding: 5px 0;
+    }
+}
