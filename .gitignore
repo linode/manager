@@ -6,3 +6,4 @@ src/secrets.js
 xunit.xml
 coverage
 .sass-cache/
+assets/glish/novnc
