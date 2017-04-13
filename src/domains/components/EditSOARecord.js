@@ -49,7 +49,7 @@ export default class EditSOARecord extends Component {
       }, this.props.zone.id));
 
       this.setState({ saving: false });
-      close(zone);
+      close();
     } catch (response) {
       if (!response.json) {
         // eslint-disable-next-line no-console
