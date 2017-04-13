@@ -7,7 +7,7 @@ window.onload = function() {
   ]);
   var apiKey = window.localStorage.getItem('authentication/oauth-token').replace(/"/g, '');
   var linodeLabel = window.location.href.split('/')[4];
-  var linode, datacenter, linodeId, token;
+  var linode, region, linodeId, token;
 
   var xhr = new XMLHttpRequest();
   xhr.open("GET", 'https://api.alpha.linode.com/v4/linode/instances');
@@ -17,18 +17,13 @@ window.onload = function() {
   xhr.onload = function() {
     linode = JSON.parse(xhr.responseText);
     linodeId = linode.linodes[0].id;
-    datacenter = linode.linodes[0].datacenter.id;
-    console.log('linode', linode);
-    console.log('linodeId', linodeId);
-    console.log('datacenter', datacenter);
+    region = linode.linodes[0].region.id;
     var xhr2 = new XMLHttpRequest();
     xhr2.open("POST", 'https://api.alpha.linode.com/v4/linode/instances/'+linodeId+'/lish_token');
     xhr2.setRequestHeader('Content-Type', 'application/json');
     xhr2.setRequestHeader('Authorization', 'token ' + apiKey);
     xhr2.onload = function() {
-      console.log('xhr2.responseText', xhr2.responseText);
       token = JSON.parse(xhr2.responseText).lish_token;
-      console.log('token', token);
       finishLoading();
     };
     xhr2.send();
@@ -36,7 +31,6 @@ window.onload = function() {
   };
   xhr.send();
   function finishLoading() {
-    console.log('got here');
     if (typeof bindingsApplied === 'undefined') {
         var bindingsApplied = false;
     }
@@ -44,7 +38,7 @@ window.onload = function() {
         var bindingsAppliedVNC = false;
     }
     // TODO: For beta
-    // host = datacenter + 'webconsole.linode.com';
+    // host = region + 'webconsole.linode.com';
     host = 'lish.alpha.linode.com';
     session = token;
     label = linodeLabel;
@@ -93,7 +87,7 @@ window.onload = function() {
         });
         self.monitor = new WebSocket("wss://lish.alpha.linode.com:8080/" + session + "/monitor");
         // TODO: For beta
-        // self.monitor = new WebSocket("wss://"+datacenter+".webconsole.linode.com:8080/" + session + "/monitor");
+        // self.monitor = new WebSocket("wss://"+region+".webconsole.linode.com:8080/" + session + "/monitor");
         self.monitor.addEventListener("message", function(e) {
             console.log("Monitor says " + e.data);
             var json = JSON.parse(e.data);
