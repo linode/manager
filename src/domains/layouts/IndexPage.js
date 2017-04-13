@@ -51,9 +51,11 @@ export class IndexPage extends Component {
     dispatch(setTitle('Domains'));
   }
 
-  deleteZones(zones) {
-    const { dispatch, selectedMap, domains } = this.props;
-    const zonesArr = Array.isArray(zones) ? zones : [zones];
+  deleteZones(zonesToDelete) {
+    const { dispatch } = this.props;
+    const zonesArr = Array.isArray(zonesToDelete) ? zonesToDelete : [zonesToDelete];
+
+    const selectedDomains = zonesArr.map(l => l.domain);
 
     dispatch(showModal('Confirm deletion',
       <DeleteModalBody
@@ -65,10 +67,8 @@ export class IndexPage extends Component {
           dispatch(toggleSelected(OBJECT_TYPE, ids));
           dispatch(hideModal());
         }}
-        items={domains.domains}
-        selectedItems={Object.keys(selectedMap)}
-        typeOfItem="zones"
-        label="domain"
+        items={selectedDomains}
+        typeOfItem="Domains"
         onCancel={() => dispatch(hideModal())}
       />
     ));
