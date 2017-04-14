@@ -9,7 +9,6 @@ import { reduceErrors } from '~/errors';
 import { Card, CardHeader } from 'linode-components/cards';
 import { setError } from '~/actions/errors';
 import { setSource } from '~/actions/source';
-import { setTitle } from '~/actions/title';
 import { ConfigForm } from '../components/ConfigForm';
 
 export class AddConfigPage extends Component {
@@ -36,12 +35,10 @@ export class AddConfigPage extends Component {
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
-
-    dispatch(setTitle('Nodebalancers'));
   }
 
   async saveChanges(stateValues) {
-    const { dispatch, nbLabel, nodebalancer } = this.props;
+    const { dispatch, nodebalancer } = this.props;
 
     const {
       port,
@@ -69,7 +66,7 @@ export class AddConfigPage extends Component {
     try {
       await dispatch(nodebalancers.configs.post(data, nodebalancer.id));
       this.setState({ loading: false });
-      dispatch(push(`/nodebalancers/${nbLabel}`));
+      dispatch(push(`/nodebalancers/${nodebalancer.label}`));
     } catch (response) {
       const errors = await reduceErrors(response);
       this.setState({ errors, loading: false });
@@ -77,42 +74,29 @@ export class AddConfigPage extends Component {
   }
 
   render() {
-    const { nbLabel } = this.props;
     const { loading, errors } = this.state;
 
     return (
-      <div>
-        <header className="main-header main-header--border">
-          <div className="container">
-            <h1>
-              {nbLabel}
-            </h1>
-          </div>
-        </header>
-        <div className="container">
-          <Card header={<CardHeader title="Add Configuration" />}>
-            <div>
-              <p>
-                Configure how your NodeBalancer listens for incoming traffic
-                and connects to backend nodes. <a href="#">Learn more.</a>
-              </p>
-            </div>
-            <ConfigForm
-              saveChanges={this.saveChanges}
-              loading={loading}
-              errors={errors}
-              submitText="Add Configuration"
-            />
-          </Card>
+      <Card header={<CardHeader title="Add Configuration" />}>
+        <div>
+          <p>
+            Configure how your NodeBalancer listens for incoming traffic
+            and connects to backend nodes. <a href="#">Learn more.</a>
+          </p>
         </div>
-      </div>
+        <ConfigForm
+          saveChanges={this.saveChanges}
+          loading={loading}
+          errors={errors}
+          submitText="Add Configuration"
+        />
+      </Card>
     );
   }
 }
 
 AddConfigPage.propTypes = {
   dispatch: PropTypes.func,
-  nbLabel: PropTypes.string,
   nodebalancer: PropTypes.object,
 };
 
@@ -122,10 +106,7 @@ function select(state, ownProps) {
 
   const nodebalancer = objectFromMapByLabel(state.api.nodebalancers.nodebalancers, nbLabel);
 
-  return {
-    nbLabel: nbLabel,
-    nodebalancer: nodebalancer,
-  };
+  return { nodebalancer };
 }
 
 export default connect(select)(AddConfigPage);
