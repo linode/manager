@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import QRious from 'qrious';
 
 import { ConfirmModalBody } from '~/components/modals';
 import { showModal, hideModal } from '~/actions/modal';
@@ -6,7 +7,7 @@ import { confirmTFA } from '~/api/account';
 import {
   FormGroup, FormGroupError, Input,
 } from '~/components/form';
-import { reduceErrors } from '~/errors';
+import { ErrorSummary, reduceErrors } from '~/errors';
 
 export class TwoFactorModal extends Component {
   constructor(props) {
@@ -65,39 +66,70 @@ export class TwoFactorModal extends Component {
   }
 
   render() {
-    const { dispatch } = this.props;
+    const { dispatch, secret } = this.props;
     const { tfaCode, errors } = this.state;
+    const QRcode = new QRious({
+      value: secret,
+      level: 'H',
+      size: 170,
+    });
 
     return (
-      <ConfirmModalBody
-        buttonText="Two-factor Authentication"
-        onOk={() => {
-          dispatch(hideModal());
-          this.twoFactorConfirm();
-        }}
-        onCancel={() => dispatch(hideModal())}
-      >
-        <div className="form-group">
-          Please enter your two-factor authentication token.
-        </div>
-        <FormGroup errors={errors} className="row" name="tfaCode">
-          <div className="col-sm-4">
-            Token:
-          </div>
-          <div className="col-sm-8">
-            <Input
-              value={tfaCode}
-              onChange={e => this.setState({ tfaCode: e.target.value })}
-            />
-            <div>
-              <small className="text-muted">
-                You may use a scratch code if necessary.
-              </small>
+      <div>
+        <ConfirmModalBody
+          buttonText="Two-factor Authentication"
+          onOk={async () => {
+            await this.twoFactorConfirm();
+            if (errors === {}) {
+              dispatch(hideModal());
+            }
+          }}
+          onCancel={() => dispatch(hideModal())}
+        >
+          <div className="form-group row">
+            <div className="col-sm-12">
+              Scan this QR code to add your Linode account to your TFA app.
             </div>
-            <FormGroupError errors={errors} name="tfaCode" />
           </div>
-        </FormGroup>
-      </ConfirmModalBody>
+          <div className="form-group row">
+            <div className="col-sm-12 qrcode">
+              <img
+                src={QRcode.toDataURL()}
+                alt={secret}
+              />
+            </div>
+          </div>
+          <div className="form-group row">
+            <div className="col-sm-12">
+              <div className="form-group">
+                If your TFA app does not have a QR scanner, you can use this secret key.
+              </div>
+              <div className="alert alert-warning">{secret}</div>
+            </div>
+          </div>
+          <div className="form-group">
+            Please enter your two-factor authentication token.
+          </div>
+          <FormGroup errors={errors} className="row" name="tfa_code">
+            <div className="col-sm-4">
+              Token:
+            </div>
+            <div className="col-sm-8">
+              <Input
+                value={tfaCode}
+                onChange={e => this.setState({ tfaCode: e.target.value })}
+              />
+              <div>
+                <small className="text-muted">
+                  You may use a scratch code if necessary.
+                </small>
+              </div>
+              <FormGroupError errors={errors} name="tfa_code" />
+            </div>
+          </FormGroup>
+        </ConfirmModalBody>
+        <ErrorSummary errors={errors} />
+      </div>
     );
   }
 }
@@ -105,4 +137,5 @@ export class TwoFactorModal extends Component {
 TwoFactorModal.propTypes = {
   dispatch: PropTypes.func.isRequired,
   toggleTwoFactor: PropTypes.func,
+  secret: PropTypes.string,
 };
