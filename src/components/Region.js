@@ -12,7 +12,7 @@ export default class Region extends Component {
     this.renderDisabled = this.renderDisabled.bind(this);
   }
 
-  renderRegion = (region) => {
+  renderZone = (region) => {
     const { selected, onRegionSelected } = this.props;
     const dcClass = region.id === selected ? 'selected' : '';
 
@@ -37,16 +37,16 @@ export default class Region extends Component {
     );
   }
 
-  renderRegion = (regionsInRegion, region) => {
+  renderRegion = (zonesInRegion, region) => {
     const allRealRegions = this.props.regions;
     const regions = Object.values(allRealRegions).filter(({ id }) =>
-    regionsInRegion.indexOf(id) !== -1);
+      zonesInRegion.indexOf(id) !== -1);
 
     return regions.length ? (
       <div key={region}>
         <h3>{region}</h3>
         <div className="region-group">
-          {regions.map(this.renderRegion)}
+          {regions.map(this.renderZone)}
         </div>
       </div>
       ) : null;
