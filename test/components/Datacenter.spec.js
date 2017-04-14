@@ -5,16 +5,9 @@ import { shallow, mount } from 'enzyme';
 
 import Region from '~/components/Region';
 import { flags } from '~/assets';
+import { regions } from '@/data/regions';
 
 describe('components/Region', () => {
-  const regions = {
-    newark: {
-      id: 'newark',
-      label: 'Newark, NJ',
-      country: 'us',
-    },
-  };
-
   it('renders the regions', () => {
     const c = mount(
       <Region
@@ -28,7 +21,7 @@ describe('components/Region', () => {
     expect(c.find('.region').length).to.equal(1);
     expect(c.find('.region header .title').text()).to.equal('Newark, NJ');
     const img = c.find('img').props();
-    expect(img.src).to.equal(flags[regions.newark.country]);
+    expect(img.src).to.equal(flags[regions['us-east-1a'].country]);
     expect(img.width).to.equal(64);
     expect(img.height).to.equal(64);
     expect(img.alt).to.equal('Newark, NJ');
@@ -38,7 +31,7 @@ describe('components/Region', () => {
     const c = shallow(
       <Region
         regions={regions}
-        selected="newark"
+        selected="us-east-1a"
         onRegionSelected={() => {}}
         disabled
       />
@@ -62,7 +55,7 @@ describe('components/Region', () => {
     );
 
     c.find('.region').simulate('click');
-    expect(onSelect.calledOnce).to.equal(true);
-    expect(onSelect.firstCall.args[0]).to.equal(regions.newark.id);
+    expect(onSelect.callCount).to.equal(1);
+    expect(onSelect.firstCall.args[0]).to.equal(regions['us-east-1a'].id);
   });
 });

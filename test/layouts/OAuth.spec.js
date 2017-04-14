@@ -25,7 +25,7 @@ describe('layouts/OAuth', () => {
         }}
       />);
     await component.instance().componentDidMount();
-    expect(dispatch.calledOnce).to.equal(true);
+    expect(dispatch.callCount).to.equal(1);
     expect(dispatch.calledWith(push('/'))).to.equal(true);
   });
 
@@ -54,7 +54,7 @@ describe('layouts/OAuth', () => {
         }}
       />);
     await component.instance().componentDidMount();
-    expect(fetchStub.calledOnce).to.equal(true);
+    expect(fetchStub.callCount).to.equal(1);
     expect(fetchStub.calledWith(`${LOGIN_ROOT}/oauth/token`)).to.equal(true);
     // TODO: Figure out how to test FormData, it's weird
   });
@@ -95,7 +95,7 @@ describe('layouts/OAuth', () => {
         }}
       />);
     await component.instance().componentDidMount();
-    expect(dispatch.calledTwice).to.equal(true);
+    expect(dispatch.callCount).to.equal(2);
     expect(dispatch.calledWith(
       setToken('access_token', '*', 'username', 'email',
         '0c83f57c786a0b4a39efab23731c7ebc'))).to.equal(true);
