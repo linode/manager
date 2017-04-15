@@ -22,7 +22,7 @@ describe('domains/components/EditSOARecord', () => {
       <EditSOARecord
         dispatch={dispatch}
         zone={currentZone}
-        close={() => {}}
+        close={() => () => {}}
       />
     );
 
@@ -55,7 +55,7 @@ describe('domains/components/EditSOARecord', () => {
       <EditSOARecord
         dispatch={dispatch}
         zone={currentZone}
-        close={close}
+        close={() => close}
       />
     );
 

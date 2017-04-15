@@ -226,10 +226,10 @@ function createTestLinode(id) {
         addresses: [],
         link_local: 'fe80::f03c:91ff:fe0a:181f',
         slaac: {
-	  address: ipv6.address,
-	  rdns: '',
-	  prefix: '64',
-	},
+          address: ipv6.address,
+          rdns: '',
+          prefix: '64',
+        },
       },
     },
   };

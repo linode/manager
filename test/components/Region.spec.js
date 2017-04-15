@@ -1,7 +1,7 @@
 import React from 'react';
 import sinon from 'sinon';
 import { expect } from 'chai';
-import { shallow, mount } from 'enzyme';
+import { mount } from 'enzyme';
 
 import Region from '~/components/Region';
 import { flags } from '~/assets';
@@ -28,7 +28,7 @@ describe('components/Region', () => {
   });
 
   it('renders disabled', () => {
-    const c = shallow(
+    const c = mount(
       <Region
         regions={regions}
         selected="us-east-1a"

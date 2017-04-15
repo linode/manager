@@ -29,6 +29,7 @@ describe('actions/errors', () => {
           get: () => 'application/json',
         },
         json,
+        status: 200,
       };
       const thunk = actions.setError(response);
       await thunk(() => {});
@@ -41,7 +42,7 @@ describe('actions/errors', () => {
           get: () => 'application/json',
         },
         json: () => ({ foo: 'bar' }),
-        statusCode: 400,
+        status: 400,
         statusText: 'Bad Request',
       };
       const thunk = actions.setError(response);

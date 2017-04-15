@@ -32,7 +32,7 @@ describe('Polling', function () {
   });
 
   it('will execute a provided function', function (done) {
-    this.timeout(100);
+    this.timeout(50);
     const options = {
       apiRequestFn: async function () {
         polling.stop();
