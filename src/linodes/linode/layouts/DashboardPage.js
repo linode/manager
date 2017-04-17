@@ -24,13 +24,19 @@ function formatData(datasets, legends) {
 
 export class DashboardPage extends Component {
   static async preload({ dispatch, getState }, { linodeLabel }) {
+    let id;
     try {
-      const { id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
-      await dispatch(linodeStats([id]));
+      ({ id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel)));
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error(e);
       await dispatch(setError(e));
+    }
+
+    try {
+      await dispatch(linodeStats([id]));
+    } catch (e) {
+      // Stats aren't available.
     }
   }
 
