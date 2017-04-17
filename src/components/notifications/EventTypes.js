@@ -18,12 +18,12 @@ export function getLinodeBackupRedirectUrl(entity) {
   return `${getLinodeRedirectUrl(entity)}/backups`;
 }
 
-export function getDNSZonesRedirectUrl() {
+export function getDomainsRedirectUrl() {
   return '/domains';
 }
 
-export function getDNSZoneRedirectUrl(entity) {
-  return `${getDNSZonesRedirectUrl()}/${entity.label}`;
+export function getDomainRedirectUrl(entity) {
+  return `${getDomainsRedirectUrl()}/${entity.label}`;
 }
 
 export function getNodebalancersRedirectUrl() {
@@ -158,23 +158,23 @@ const EventTypeMap = {
   dns_zone_create: {
     presentTenseAction: 'Creating',
     pastTenseAction: 'created',
-    redirectUrl: getDNSZoneRedirectUrl,
+    redirectUrl: getDomainRedirectUrl,
   },
   dns_zone_delete: {
     presentTenseAction: 'Deleting',
     pastTenseAction: 'deleted',
-    redirectUrl: getDNSZonesRedirectUrl,
+    redirectUrl: getDomainsRedirectUrl,
   },
 
   dns_record_create: {
     presentTenseAction: 'Creating',
     pastTenseAction: 'created',
-    redirectUrl: getDNSZoneRedirectUrl,
+    redirectUrl: getDomainRedirectUrl,
   },
   dns_record_delete: {
     presentTenseAction: 'Deleting',
     pastTenseAction: 'deleted',
-    redirectUrl: getDNSZonesRedirectUrl,
+    redirectUrl: getDomainsRedirectUrl,
   },
 
   nodebalancer_create: {
