@@ -1,4 +1,5 @@
 import { testType } from './types';
+import { apiTestRegion } from './regions';
 
 const stats = {
   netv6: {
@@ -56,10 +57,7 @@ function createTestLinode(id) {
     created: '2016-07-06T16:47:27',
     type: [testType],
     status: 'running',
-    region: {
-      id: 'newark',
-      label: 'Newark, NJ',
-    },
+    region: apiTestRegion,
     distribution: {
       id: 'linode/ubuntu15.10',
       vendor: 'Ubuntu',
@@ -120,11 +118,7 @@ function createTestLinode(id) {
         configs: [
           'Ubuntu Disk',
         ],
-        region: {
-          label: 'Newark, NJ',
-          country: 'us',
-          id: 'newark',
-        },
+        region: apiTestRegion,
       },
       snapshot: {
         current: {
@@ -150,11 +144,7 @@ function createTestLinode(id) {
           configs: [
             'Some config',
           ],
-          region: {
-            label: 'Newark, NJ',
-            country: 'us',
-            id: 'newark',
-          },
+          region: apiTestRegion,
         },
         in_progress: null,
       },
@@ -235,7 +225,11 @@ function createTestLinode(id) {
         global: [],
         addresses: [],
         link_local: 'fe80::f03c:91ff:fe0a:181f',
-        slaac: ipv6.address,
+        slaac: {
+          address: ipv6.address,
+          rdns: '',
+          prefix: '64',
+        },
       },
     },
   };
@@ -296,11 +290,7 @@ const testLinode1235 = {
         configs: [
           'aConfig',
         ],
-        region: {
-          label: 'Newark, NJ',
-          country: 'us',
-          id: 'newark',
-        },
+        region: apiTestRegion,
       }, {
         finished: '2017-01-31T07:30:03',
         label: null,
@@ -324,11 +314,7 @@ const testLinode1235 = {
         configs: [
           'My Ubuntu 15.10 Disk',
         ],
-        region: {
-          label: 'Newark, NJ',
-          country: 'us',
-          id: 'newark',
-        },
+        region: apiTestRegion,
       },
     ],
   },

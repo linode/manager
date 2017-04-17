@@ -63,7 +63,7 @@ describe('linodes/components/Distribution', () => {
       />
     );
     dv.find('div').first().simulate('click');
-    expect(onClick.calledOnce).to.equal(true);
+    expect(onClick.callCount).to.equal(1);
     expect(onClick.calledWith(vendor.versions[0].id)).to.equal(true);
   });
 
@@ -81,7 +81,7 @@ describe('linodes/components/Distribution', () => {
     });
     onClick.reset();
     dv.find('.LinodesDistribution-version').first().simulate('click');
-    expect(onClick.calledOnce).to.equal(true);
+    expect(onClick.callCount).to.equal(1);
     expect(onClick.calledWith(vendor.versions[0].id)).to.equal(true);
   });
 

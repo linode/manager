@@ -68,7 +68,7 @@ describe('profile/integrations/components/MyApplication', () => {
     dispatch.reset();
 
     page.instance().deleteAction();
-    expect(dispatch.calledOnce).to.equal(true);
+    expect(dispatch.callCount).to.equal(1);
     expect(dispatch.firstCall.args[0].type).to.equal(SHOW_MODAL);
   });
 
@@ -84,7 +84,7 @@ describe('profile/integrations/components/MyApplication', () => {
     dispatch.reset();
 
     page.instance().deleteAction();
-    expect(dispatch.calledOnce).to.equal(true);
+    expect(dispatch.callCount).to.equal(1);
     expect(dispatch.firstCall.args[0].type).to.equal(SHOW_MODAL);
   });
 

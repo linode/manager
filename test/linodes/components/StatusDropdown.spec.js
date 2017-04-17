@@ -52,10 +52,10 @@ describe('linodes/components/StatusDropdown', () => {
     );
 
     dropdown.find('.StatusDropdown-toggle').simulate('click');
-    expect(dropdown.find('.StatusDropdown--open').length).to.equal(1);
+    expect(dropdown.find('.StatusDropdown.show').length).to.equal(1);
 
     dropdown.find('.StatusDropdown-toggle').simulate('click');
-    expect(dropdown.find('.StatusDropdown--open').length).to.equal(0);
+    expect(dropdown.find('.StatusDropdown.show').length).to.equal(0);
   });
 
   it('closes on blur', () => {
@@ -64,10 +64,10 @@ describe('linodes/components/StatusDropdown', () => {
     );
 
     dropdown.find('.StatusDropdown-toggle').simulate('click');
-    expect(dropdown.find('.StatusDropdown--open').length).to.equal(1);
+    expect(dropdown.find('.StatusDropdown.show').length).to.equal(1);
 
     dropdown.find('.StatusDropdown-toggle').simulate('blur');
-    expect(dropdown.find('.StatusDropdown--open').length).to.equal(0);
+    expect(dropdown.find('.StatusDropdown.show').length).to.equal(0);
   });
 
   it('closes on item click', () => {
@@ -76,10 +76,10 @@ describe('linodes/components/StatusDropdown', () => {
     );
 
     dropdown.find('.StatusDropdown-toggle').simulate('click');
-    expect(dropdown.find('.StatusDropdown--open').length).to.equal(1);
+    expect(dropdown.find('.StatusDropdown.show').length).to.equal(1);
 
     dropdown.find('.StatusDropdown-item').first().simulate('mousedown');
-    expect(dropdown.find('.StatusDropdown--open').length).to.equal(0);
+    expect(dropdown.find('.StatusDropdown.show').length).to.equal(0);
   });
 
   it('dispatches on item click', async () => {
@@ -89,7 +89,7 @@ describe('linodes/components/StatusDropdown', () => {
     );
 
     dropdown.find('.StatusDropdown-toggle').simulate('click');
-    expect(dropdown.find('.StatusDropdown--open').length).to.equal(1);
+    expect(dropdown.find('.StatusDropdown.show').length).to.equal(1);
 
     dropdown.find('.StatusDropdown-item').first().simulate('mousedown');
     const reboot = dispatch.firstCall.args[0];

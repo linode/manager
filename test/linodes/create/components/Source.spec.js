@@ -25,7 +25,7 @@ describe('linodes/create/components/Source', () => {
       />);
     c.find('Tabs').first().props()
       .onClick(1);
-    expect(onTabChange.calledOnce).to.equal(true);
+    expect(onTabChange.callCount).to.equal(1);
     expect(onTabChange.calledWith(1)).to.equal(true);
   });
 
@@ -57,7 +57,7 @@ describe('linodes/create/components/Source', () => {
     const distro = api.distributions.distributions.distro_1234;
     c.find('Distributions').props()
      .onSelected(distro);
-    expect(onSourceSelected.calledOnce).to.equal(true);
+    expect(onSourceSelected.callCount).to.equal(1);
     expect(onSourceSelected.calledWith('distribution', distro)).to.equal(true);
   });
 });

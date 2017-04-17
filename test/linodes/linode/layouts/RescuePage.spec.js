@@ -130,7 +130,7 @@ describe('linodes/linode/layouts/RescuePage', () => {
         />);
       page.setState({ loading: false, disk: 1234, password: 'new password' });
       page.find('.ResetRootPassword-form').simulate('submit');
-      expect(dispatch.calledTwice).to.equal(true);
+      expect(dispatch.callCount).to.equal(2);
       expect(dispatch.secondCall.args[0])
         .to.have.property('type').which.equals(SHOW_MODAL);
     });

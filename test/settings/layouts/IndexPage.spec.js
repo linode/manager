@@ -52,7 +52,7 @@ describe('settings', () => {
 
     dispatch.reset();
     await page.instance().onSubmit();
-    expect(dispatch.calledOnce).to.equal(true);
+    expect(dispatch.callCount).to.equal(1);
     const fn = dispatch.firstCall.args[0];
 
     await expectRequest(fn, '/account/settings', undefined, undefined, {

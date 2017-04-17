@@ -69,7 +69,7 @@ describe('linodes/linode/settings/layouts/DisplayPage', () => {
 
     expect(dispatchStub.callCount).to.equal(1);
     await page.instance().onSubmit({ preventDefault() {} });
-    expect(dispatchStub.calledTwice).to.equal(true);
+    expect(dispatchStub.callCount).to.equal(2);
 
     const label = page.find('.form-group').at(1);
     expect(label.find('.form-control-feedback')

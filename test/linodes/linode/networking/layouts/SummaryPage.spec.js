@@ -100,7 +100,7 @@ describe('linodes/linode/networking/layouts/SummaryPage', () => {
         />);
 
       const slaac = page.find('#slaac');
-      expect(slaac.text()).to.equal(`${ipv6.slaac} / 64`);
+      expect(slaac.text()).to.equal(`${ipv6.slaac.address} / ${ipv6.slaac.prefix}`);
     });
 
     /* TODO: add test when gateways are returned for ipv6 objects */
@@ -114,7 +114,7 @@ describe('linodes/linode/networking/layouts/SummaryPage', () => {
         />);
 
       const expectedNameservers = ipv6nsSuffix.map(
-        suffix => ipv6ns[testLinode.region.id] + suffix);
+        prefix => ipv6ns[testLinode.region.id] + prefix);
       const nameservers = page.find('#ipv6Nameservers li');
       nameservers.map((nameserver, i) =>
         expect(nameserver.text()).to.equal(expectedNameservers[i]));

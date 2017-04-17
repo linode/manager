@@ -185,7 +185,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
           dispatch={dispatch}
         />);
       modal.find('.btn-secondary').simulate('click');
-      expect(dispatch.calledOnce).to.equal(true);
+      expect(dispatch.callCount).to.equal(1);
       expect(dispatch.calledWith(hideModal())).to.equal(true);
     });
 
@@ -197,7 +197,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
         />);
       const saveChanges = sandbox.stub(modal.instance(), 'saveChanges');
       modal.find('button[type="submit"]').simulate('submit');
-      expect(saveChanges.calledOnce).to.equal(true);
+      expect(saveChanges.callCount).to.equal(1);
     });
 
     it('should commit changes to the API', async () => {
@@ -213,7 +213,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
       modal.find('[type="number"]').props().onChange({ target: { value: 1234 } });
       const { saveChanges } = modal.instance();
       await saveChanges();
-      expect(dispatch.calledThrice).to.equal(true);
+      expect(dispatch.callCount).to.equal(3);
       const resize = dispatch.firstCall.args[0];
       const put = dispatch.secondCall.args[0];
       await expectRequest(resize, '/linode/instances/1236/disks/12345/resize', {
@@ -288,7 +288,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
           dispatch={dispatch}
         />);
       modal.find('.btn-secondary').simulate('click');
-      expect(dispatch.calledOnce).to.equal(true);
+      expect(dispatch.callCount).to.equal(1);
       expect(dispatch.calledWith(hideModal())).to.equal(true);
     });
 
@@ -300,7 +300,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
           dispatch={dispatch}
         />);
       await modal.find('.btn-default').simulate('submit');
-      expect(dispatch.calledTwice).to.equal(true);
+      expect(dispatch.callCount).to.equal(2);
       const fn = dispatch.firstCall.args[0];
       await expectRequest(fn, '/linode/instances/1236/disks/12345', { method: 'DELETE' });
     });
@@ -396,7 +396,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
           dispatch={dispatch}
         />);
       modal.find('.btn-secondary').simulate('click');
-      expect(dispatch.calledOnce).to.equal(true);
+      expect(dispatch.callCount).to.equal(1);
       expect(dispatch.calledWith(hideModal())).to.equal(true);
     });
 
@@ -408,7 +408,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
         />);
       const createDisk = sandbox.stub(modal.instance(), 'createDisk');
       modal.find('.btn-default').simulate('submit');
-      expect(createDisk.calledOnce).to.equal(true);
+      expect(createDisk.callCount).to.equal(1);
     });
 
     it('should POST /linode/instances/:id/disks/ when createDisk is called', async () => {
@@ -422,7 +422,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
       dispatch.reset();
       const { createDisk } = modal.instance();
       await createDisk();
-      expect(dispatch.calledTwice).to.equal(true);
+      expect(dispatch.callCount).to.equal(2);
       const fn = dispatch.firstCall.args[0];
       await expectRequest(fn, '/linode/instances/1236/disks/', {
         method: 'POST',

@@ -51,7 +51,7 @@ describe('linodes/linode/settings/layouts/AlertsPage', async () => {
     dispatch.reset();
     page.find('form').simulate('submit', { preventDefault() {} });
 
-    expect(dispatch.calledOnce).to.equal(true);
+    expect(dispatch.callCount).to.equal(1);
 
     const fn = dispatch.firstCall.args[0];
     await expectRequest(fn, `/linode/instances/${testLinode.id}`, { method: 'PUT' });

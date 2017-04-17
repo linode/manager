@@ -15,7 +15,7 @@ export class CreatePage extends Component {
   constructor() {
     super();
     this.state = {
-      region: 'newark',
+      region: 'us-east-1a',
       label: '',
       errors: {},
       fetching: false,

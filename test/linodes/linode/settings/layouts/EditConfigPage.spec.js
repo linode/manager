@@ -88,7 +88,7 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
     );
 
     await page.instance().saveChanges();
-    expect(dispatch.calledTwice).to.equal(true);
+    expect(dispatch.callCount).to.equal(2);
     const arg = dispatch.secondCall.args[0];
     expectObjectDeepEquals(
       arg, push(`/linodes/${props.params.linodeLabel}/settings/advanced`));
@@ -431,7 +431,7 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
       const isMaxRam = page.find('#config-isMaxRam-true');
       isMaxRam.simulate('change', { target: { value: true } });
       await page.instance().saveChanges(false);
-      expect(dispatch.calledTwice).to.equal(true);
+      expect(dispatch.callCount).to.equal(2);
       const fn = dispatch.firstCall.args[0];
 
       await expectRequest(fn, `/linode/instances/${testLinode.id}/configs/12345`, {

@@ -55,7 +55,6 @@ export class PersonalAccessTokensPage extends Component {
                 expires={client.expiry}
                 secret={client.token}
                 dispatch={dispatch}
-                client={client}
               />
             </div>
            ) : (

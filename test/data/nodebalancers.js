@@ -1,10 +1,8 @@
+import { apiTestRegion } from './regions';
+
 export const nodebalancers = [
   {
-    region: {
-      id: 'newark',
-      label: 'Newark, NJ',
-      country: 'us',
-    },
+    region: apiTestRegion,
     status: 'new_active',
     updated: '2017-03-06T22:00:48',
     label: 'nodebalancer-1',

@@ -51,16 +51,16 @@ describe('components/Dropdown', () => {
     dropdown.find('.dropdown-item').first().simulate('mousedown');
     // Last menu item goes unclicked
 
-    expect(clickFirst.calledOnce).to.equal(true);
-    expect(dropdown.find('.btn-group.open').length).to.equal(1);
-    expect(clickBodyItem.calledOnce).to.equal(true);
+    expect(clickFirst.callCount).to.equal(1);
+    expect(dropdown.find('.Dropdown.show').length).to.equal(1);
+    expect(clickBodyItem.callCount).to.equal(1);
     expect(unclicked.callCount).to.equal(0);
 
     // Mousedown did not hide dropdown
-    expect(dropdown.find('.btn-group.open').length).to.equal(1);
+    expect(dropdown.find('.Dropdown.show').length).to.equal(1);
     // But onblur does
-    dropdown.find('.btn-group').simulate('blur');
-    expect(dropdown.find('.btn-group.open').length).to.equal(0);
+    dropdown.find('.Dropdown').simulate('blur');
+    expect(dropdown.find('.Dropdown.show').length).to.equal(0);
   });
 
   it('closes on second click', () => {
@@ -73,9 +73,9 @@ describe('components/Dropdown', () => {
     />);
 
     dropdown.find('.dropdown-toggle').simulate('click');
-    expect(dropdown.find('.btn-group.open').length).to.equal(1);
+    expect(dropdown.find('.Dropdown.show').length).to.equal(1);
     dropdown.find('.dropdown-toggle').simulate('click');
-    expect(dropdown.find('.btn-group.open').length).to.equal(0);
+    expect(dropdown.find('.Dropdown.show').length).to.equal(0);
   });
 
   it('closes on blur', () => {
@@ -88,8 +88,8 @@ describe('components/Dropdown', () => {
     />);
 
     dropdown.find('.dropdown-toggle').simulate('click');
-    expect(dropdown.find('.btn-group.open').length).to.equal(1);
+    expect(dropdown.find('.Dropdown.show').length).to.equal(1);
     dropdown.find('.dropdown-toggle').simulate('blur');
-    expect(dropdown.find('.btn-group.open').length).to.equal(0);
+    expect(dropdown.find('.Dropdown.show').length).to.equal(0);
   });
 });

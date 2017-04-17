@@ -25,7 +25,7 @@ describe('linodes/layouts/IndexPage', () => {
     sandbox.stub(thunks, 'page').throws({
       json: () => ({ foo: 'bar' }),
       headers: { get() { return 'application/json'; } },
-      statusCode: 400,
+      status: 400,
       statusText: 'Bad Request',
     });
     mount(

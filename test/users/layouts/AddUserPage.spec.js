@@ -40,7 +40,7 @@ describe('users/layouts/AddUserPage', () => {
       restricted: true,
     };
     await page.instance().onSubmit(values);
-    expect(dispatch.calledTwice).to.equal(true);
+    expect(dispatch.callCount).to.equal(2);
     const fn = dispatch.firstCall.args[0];
     await expectRequest(
       fn, '/account/users/', {

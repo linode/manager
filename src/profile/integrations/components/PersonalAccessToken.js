@@ -34,7 +34,7 @@ export default class PersonalAccessToken extends Component {
   }
 
   deleteAction = () => {
-    const { dispatch, id, client } = this.props;
+    const { dispatch, id, label } = this.props;
 
     dispatch(showModal('Delete Personal Access Token',
       <DeleteModalBody
@@ -45,7 +45,7 @@ export default class PersonalAccessToken extends Component {
           dispatch(hideModal());
         }}
         typeOfItem="Personal access tokens"
-        items={[client.label]}
+        items={[label]}
       />
     ));
   }
@@ -111,7 +111,6 @@ PersonalAccessToken.propTypes = {
   id: PropTypes.any.isRequired,
   secret: PropTypes.string.isRequired,
   dispatch: PropTypes.func.isRequired,
-  client: PropTypes.object,
 };
 
 function select(state) {
