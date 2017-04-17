@@ -1,5 +1,4 @@
 import React, { PropTypes, Component } from 'react';
-import moment from 'moment';
 import { connect } from 'react-redux';
 
 import _ from 'lodash';
@@ -9,6 +8,7 @@ import EditPersonalAccessToken from './EditPersonalAccessToken';
 import { Card, CardImageHeader } from 'linode-components/cards/';
 import { DeleteModalBody } from 'linode-components/modals';
 import { Table } from 'linode-components/tables';
+import TimeDisplay from 'linode-components/TimeDisplay';
 import { AuthScopeCell } from '~/components/tables/cells';
 import { OAUTH_SUBSCOPES, OAUTH_SCOPES } from '~/constants';
 import { showModal, hideModal } from '~/actions/modal';
@@ -53,9 +53,7 @@ export default class PersonalAccessToken extends Component {
   render() {
     const { label, scopes, id, expires, secret } = this.props;
     const icon = id ? `${API_ROOT}/account/clients/${id}/thumbnail` : '';
-
-    let expireValue = moment.utc(expires, moment.ISO_8601).fromNow();
-    expireValue = expireValue[0].toUpperCase() + expireValue.substring(1);
+    const expireValue = <TimeDisplay time={expires} />;
 
     const scopeData = OAUTH_SCOPES.map(function (scope) {
       return { scopes: scopes, scope: scope };

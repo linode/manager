@@ -1,6 +1,4 @@
 import React, { PropTypes, Component } from 'react';
-
-import moment from 'moment';
 import _ from 'lodash';
 
 import { API_ROOT } from '~/constants';
@@ -11,6 +9,7 @@ import { tokens } from '~/api';
 import { reduceErrors } from '~/errors';
 import { OAUTH_SUBSCOPES, OAUTH_SCOPES } from '~/constants';
 import { Table } from 'linode-components/tables';
+import TimeDisplay from 'linode-components/TimeDisplay';
 import { AuthScopeCell } from '~/components/tables/cells';
 
 
@@ -34,9 +33,7 @@ export default class AuthorizedApplication extends Component {
   render() {
     const { label, scopes, id, expires } = this.props;
     const icon = id ? `${API_ROOT}/account/clients/${id}/thumbnail` : '';
-
-    let expireValue = moment.utc(expires, moment.ISO_8601).fromNow();
-    expireValue = expireValue[0].toUpperCase() + expireValue.substring(1);
+    const expireValue = <TimeDisplay time={expires} />;
 
     const scopeData = OAUTH_SCOPES.map(function (scope) {
       return { scopes: scopes, scope: scope };
