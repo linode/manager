@@ -41,7 +41,7 @@ describe('domains/components/NewSlaveZone', () => {
       />
     );
 
-    expect(onChange.calledTwice).to.equal(true);
+    expect(onChange.callCount).to.equal(2);
     expect(onChange.firstCall.args[0]).to.equal('domain');
     expect(onChange.secondCall.args[0]).to.equal('master_ips');
   });
@@ -60,6 +60,6 @@ describe('domains/components/NewSlaveZone', () => {
     );
 
     component.find('Form').simulate('submit');
-    expect(onSubmit.calledOnce).to.equal(true);
+    expect(onSubmit.callCount).to.equal(1);
   });
 });

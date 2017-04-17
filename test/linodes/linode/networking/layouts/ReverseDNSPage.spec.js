@@ -21,7 +21,7 @@ describe('linodes/linode/networking/layouts/ReverseDNSPage', () => {
 
   it('renders ips', () => {
     const { _ips } = testLinode;
-    const ips = [..._ips.ipv4.public, ..._ips.ipv6.addresses];
+    const ips = [..._ips.ipv4.public, ..._ips.ipv6.addresses, _ips.ipv6.slaac];
     const addresses = ips.map(({ address }) => address);
     const page = mount(
       <ReverseDNSPage
@@ -36,7 +36,7 @@ describe('linodes/linode/networking/layouts/ReverseDNSPage', () => {
     for (let i = 1; i < rows.length; i++) {
       const row = rows.at(i);
       const columns = row.find('.Table-cell');
-      expect(columns.length).to.equal(3);
+      expect(columns.length).to.equal(4);
 
       const addressIndex = addresses.indexOf(columns.at(0).text());
       expect(addressIndex).to.not.equal(-1);
