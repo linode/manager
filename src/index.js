@@ -8,7 +8,7 @@ import { AppContainer } from 'react-hot-loader';
 import { default as App } from './App';
 
 
-const render = function (Component) {
+function render (Component) {
   ReactDOM.render(
     <AppContainer>
       <Component/>
@@ -24,4 +24,4 @@ if (module.hot) {
   });
 }
 
-render(App);
+window.init = function () { render(App); };
