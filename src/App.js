@@ -14,6 +14,9 @@ import { initializeAuthentication } from './session';
 // eslint-disable-next-line no-unused-vars
 import styles from '../scss/manager.scss';
 
+import { actions, reducer } from '~/api/configs/linodes';
+window.actions = actions; window.reducer = reducer;
+
 const history = syncHistoryWithStore(browserHistory, store);
 initializeAuthentication(store.dispatch);
 
