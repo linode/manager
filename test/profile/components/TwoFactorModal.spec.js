@@ -16,7 +16,7 @@ describe('profile/components/twofactormodal', () => {
       <TwoFactorModal
         dispatch={dispatch}
         toggleTwoFactor={() => {}}
-        secret='qrCode'
+        secret={'qrCode'}
       />
     );
 
