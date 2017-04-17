@@ -95,7 +95,7 @@ describe('layouts/OAuth', () => {
         }}
       />);
     await component.instance().componentDidMount();
-    expect(dispatch.callCount).to.equal(3);
+    expect(dispatch.callCount).to.equal(2);
     expect(dispatch.calledWith(
       setToken('access_token', '*', 'username', 'email',
         '0c83f57c786a0b4a39efab23731c7ebc'))).to.equal(true);

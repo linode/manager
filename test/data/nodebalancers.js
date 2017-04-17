@@ -1,9 +1,7 @@
 import { apiTestRegion } from './regions';
 
-function createTestNodeBalancer(id) {
-  return {
-    label: `nodebalancer-${id}`,
-    group: `group-${id}`,
+export const nodebalancers = [
+  {
     region: apiTestRegion,
     status: 'new_active',
     updated: '2017-03-06T22:00:48',
