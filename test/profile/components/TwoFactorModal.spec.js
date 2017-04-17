@@ -6,7 +6,7 @@ import { expect } from 'chai';
 import { expectRequest } from '@/common';
 import { TwoFactorModal } from '~/profile/components/TwoFactorModal';
 
-describe('profile/layouts/twofactormodal', () => {
+describe('profile/components/twofactormodal', () => {
   const sandbox = sinon.sandbox.create();
 
   const dispatch = sandbox.stub();
@@ -16,6 +16,7 @@ describe('profile/layouts/twofactormodal', () => {
       <TwoFactorModal
         dispatch={dispatch}
         toggleTwoFactor={() => {}}
+        secret='qrCode'
       />
     );
 
