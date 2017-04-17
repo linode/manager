@@ -18,7 +18,6 @@ export class CreatePage extends Component {
     super();
 
     this.state = {
-      // TODO: don't hard-code this
       region: 'us-east-1a',
       label: '',
       errors: {},
