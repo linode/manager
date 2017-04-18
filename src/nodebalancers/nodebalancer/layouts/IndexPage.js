@@ -18,7 +18,6 @@ import { NodebalancerStatusReadable } from '~/constants';
 import Region from '~/linodes/components/Region';
 
 
-
 export class IndexPage extends Component {
   static async preload({ dispatch, getState }, { nbLabel }) {
     try {
