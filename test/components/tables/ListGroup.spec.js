@@ -2,7 +2,7 @@ import React from 'react';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
 
-import { ListGroup } from 'linode-components/lists';
+import { ListGroup } from 'linode-components/lists/bodies';
 
 
 describe('components/lists/ListGroup', function () {

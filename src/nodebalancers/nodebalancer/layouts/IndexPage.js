@@ -7,7 +7,7 @@ import { getObjectByLabelLazily, objectFromMapByLabel } from '~/api/util';
 import { setError } from '~/actions/errors';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
-export { Link } from 'react-router';
+import { Link } from 'react-router';
 import { Card, CardHeader } from 'linode-components/cards';
 import { List } from 'linode-components/lists';
 import { Table } from 'linode-components/tables';
@@ -16,6 +16,7 @@ import { ListBody } from 'linode-components/lists/bodies';
 import { LinkCell, ButtonCell } from 'linode-components/tables/cells';
 import { NodebalancerStatusReadable } from '~/constants';
 import Region from '~/linodes/components/Region';
+
 
 
 export class IndexPage extends Component {

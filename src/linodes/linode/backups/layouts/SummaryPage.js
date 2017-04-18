@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-export { Link } from 'react-router';
+import { Link } from 'react-router';
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import { takeBackup } from '~/api/backups';
 import { ErrorSummary, reduceErrors } from '~/errors';
