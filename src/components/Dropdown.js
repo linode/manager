@@ -35,9 +35,6 @@ export default class Dropdown extends Component {
 
     const orientation = this.props.leftOriented === false ? 'dropdown-menu-right' : '';
 
-    // ${this.state.open ? 'open' : ''}
-    // onBlur={this.close}
-    // onClick={this.open}
     return (
       <div
         className={`Dropdown btn-group ${this.state.open ? 'show' : ''}`}
