@@ -3,8 +3,9 @@ import { Route, IndexRoute } from 'react-router';
 
 import IndexPage from './layouts/IndexPage';
 import DashboardPage from './layouts/DashboardPage';
-import EditConfigPage from './layouts/EditConfigPage';
-import AddConfigPage from './layouts/AddConfigPage';
+import EditConfigPage from './configs/layouts/EditConfigPage';
+import ViewConfigPage from './configs/layouts/ViewConfigPage';
+import AddConfigPage from './configs/layouts/AddConfigPage';
 import SettingsPage from './layouts/SettingsPage';
 
 export default (
@@ -12,6 +13,7 @@ export default (
     <IndexRoute component={DashboardPage} />
     <Route path="settings" component={SettingsPage} />
     <Route path="configurations/create" component={AddConfigPage} />
-    <Route path="configurations/:configId" component={EditConfigPage} />
+    <Route path="configurations/:configId" component={ViewConfigPage} />
+    <Route path="configurations/:configId/edit" component={EditConfigPage} />
   </Route>
 );

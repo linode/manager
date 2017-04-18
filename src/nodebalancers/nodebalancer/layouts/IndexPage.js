@@ -4,6 +4,7 @@ import { Link } from 'react-router';
 import { push } from 'react-router-redux';
 import { Tabs } from 'linode-components/tabs';
 
+import Breadcrumbs from '~/components/Breadcrumbs';
 import { setError } from '~/actions/errors';
 import { nodebalancers } from '~/api';
 import { getObjectByLabelLazily, objectFromMapByLabel } from '~/api/util';
