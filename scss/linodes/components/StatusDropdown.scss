@@ -21,11 +21,6 @@
         height: $form-field-height;
         width: 100%;
 
-        /* Hide default bootstrap dropdown icon */
-        //&:after {
-        //    display: none;
-        //}
-
         &:active,
         &:hover,
         &:focus,
@@ -33,13 +28,6 @@
             background: transparent;
         }
     }
-
-    //&-menu {
-    //    @extend .dropdown-menu;
-    //    right: -2px;
-    //    left: initial;
-    //    margin-top: 0;
-    //}
 
     &-item {
         @extend .btn;
