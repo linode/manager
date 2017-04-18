@@ -9,11 +9,9 @@ import { EditModal } from '~/linodes/linode/settings/components/EditModal';
 import { DeleteModal } from '~/linodes/linode/settings/components/DeleteModal';
 
 import { api } from '@/data';
-import { testLinode } from '@/data/linodes';
+import { testLinode, testLinode1236, testLinodeWithUnallocatedSpace } from '@/data/linodes';
 import { SHOW_MODAL, hideModal } from '~/actions/modal';
 import { expectRequest } from '@/common';
-
-const { linodes } = api;
 
 describe('linodes/linode/settings/components/DiskPanel', () => {
   const sandbox = sinon.sandbox.create();
@@ -25,12 +23,11 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
   it('renders disks', () => {
     const panel = mount(
       <DiskPanel
-        params={{ linodeLabel: 'test-linode-2' }}
         dispatch={() => {}}
-        linodes={linodes}
+        linode={testLinode1236}
       />);
 
-    const disks = Object.values(linodes.linodes[1236]._disks.disks);
+    const disks = Object.values(testLinode1236._disks.disks);
     expect(panel.find('.disk-layout .disk').length).to.equal(disks.length + 1); // has free space
     const firstDisk = panel.find('.disk-layout .disk').at(0);
     expect(firstDisk.props())
@@ -49,9 +46,8 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
   it('renders offline message', () => {
     const panel = shallow(
       <DiskPanel
-        params={{ linodeLabel: `${testLinode.label}` }}
         dispatch={() => {}}
-        linodes={linodes}
+        linode={testLinode}
       />);
 
     expect(panel.contains(
@@ -63,16 +59,14 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
   it('renders unallocated space', () => {
     const panel = shallow(
       <DiskPanel
-        params={{ linodeLabel: 'test-linode-6' }}
         dispatch={() => {}}
-        linodes={linodes}
+        linode={testLinodeWithUnallocatedSpace}
       />);
 
-    const linode = linodes.linodes[1240];
-    const disks = Object.values(linode._disks.disks);
+    const disks = Object.values(testLinodeWithUnallocatedSpace._disks.disks);
     expect(panel.find('.disk').length).to.equal(3);
     const unallocated = panel.find('.disk').at(2);
-    const free = linode.type[0].storage -
+    const free = testLinodeWithUnallocatedSpace.type[0].storage -
       disks.reduce((s, d) => s + d.size, 0);
     expect(unallocated.props())
       .to.have.property('style')
@@ -86,9 +80,8 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
     const dispatch = sandbox.spy();
     const panel = shallow(
       <DiskPanel
-        params={{ linodeLabel: 'test-linode-2' }}
         dispatch={dispatch}
-        linodes={linodes}
+        linode={testLinode1236}
       />);
 
     panel.find('.LinodesLinodeSettingsComponentsDiskPanel-edit').at(0).
@@ -102,9 +95,8 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
     const dispatch = sandbox.spy();
     const panel = shallow(
       <DiskPanel
-        params={{ linodeLabel: 'test-linode-2' }}
         dispatch={dispatch}
-        linodes={linodes}
+        linode={testLinode1236}
       />);
 
     // Two disks available to delete, delete the first disk
@@ -119,9 +111,8 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
     const dispatch = sandbox.spy();
     const panel = mount(
       <DiskPanel
-        params={{ linodeLabel: 'test-linode-6' }}
         dispatch={dispatch}
-        linodes={linodes}
+        linode={testLinodeWithUnallocatedSpace}
       />);
 
     panel.find('.LinodesLinodeSettingsComponentsDiskPanel-add').
@@ -132,17 +123,15 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
   });
 
   describe('EditModal', () => {
-    const props = {
-      linode: linodes.linodes[1236],
-      disk: linodes.linodes[1236]._disks.disks[12345],
-      free: 0,
-    };
+    const testDisk = testLinode1236._disks.disks[12345];
 
     it('should render the label and size inputs', () => {
       const modal = mount(
         <EditModal
-          {...props}
+          linode={testLinode1236}
           dispatch={() => {}}
+          disk={testDisk}
+          free={0}
         />);
 
       expect(modal.find('input#label').length).to.equal(1);
@@ -152,20 +141,23 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
     it('should copy initial state from props on mount', () => {
       const modal = shallow(
         <EditModal
-          {...props}
           dispatch={() => {}}
+          linode={testLinode1236}
+          disk={testDisk}
+          free={0}
         />);
       modal.instance().componentDidMount();
-      const disk = linodes.linodes[1236]._disks.disks[12345];
-      expect(modal.state('label')).to.equal(disk.label);
-      expect(modal.state('size')).to.equal(disk.size);
+      expect(modal.state('label')).to.equal(testDisk.label);
+      expect(modal.state('size')).to.equal(testDisk.size);
     });
 
     it('update state when fields are edited', () => {
       const modal = mount(
         <EditModal
-          {...props}
           dispatch={() => {}}
+          linode={testLinode1236}
+          disk={testDisk}
+          free={0}
         />);
 
       modal.find('input#label').simulate('change', {
@@ -181,8 +173,10 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
       const dispatch = sandbox.spy();
       const modal = mount(
         <EditModal
-          {...props}
           dispatch={dispatch}
+          linode={testLinode1236}
+          disk={testDisk}
+          free={0}
         />);
       modal.find('.btn-secondary').simulate('click');
       expect(dispatch.callCount).to.equal(1);
@@ -192,8 +186,10 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
     it('should call saveChanges when Edit Disk form is submitted', () => {
       const modal = mount(
         <EditModal
-          {...props}
           dispatch={() => {}}
+          linode={testLinode1236}
+          disk={testDisk}
+          free={0}
         />);
       const saveChanges = sandbox.stub(modal.instance(), 'saveChanges');
       modal.find('button[type="submit"]').simulate('submit');
@@ -204,8 +200,10 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
       const dispatch = sandbox.spy();
       const modal = mount(
         <EditModal
-          {...props}
           dispatch={dispatch}
+          linode={testLinode1236}
+          disk={testDisk}
+          free={0}
         />);
       modal.find('input#label').simulate('change', {
         target: { value: 'New label' },
@@ -231,8 +229,10 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
       const dispatch = sandbox.stub();
       const modal = mount(
         <EditModal
-          {...props}
           dispatch={dispatch}
+          linode={testLinode1236}
+          disk={testDisk}
+          free={0}
         />);
       modal.find('input#label').simulate('change', {
         target: { value: 'New label' },
@@ -264,16 +264,14 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
   });
 
   describe('DeleteModal', () => {
-    const props = {
-      linode: linodes.linodes[1236],
-      disk: linodes.linodes[1236]._disks.disks[12345],
-    };
+    const disk = testLinode1236._disks.disks[12345];
 
     it('should render warning text and buttons', () => {
       const modal = mount(
         <DeleteModal
-          {...props}
           dispatch={() => {}}
+          linode={testLinode1236}
+          disk={disk}
         />);
       expect(modal.find('p').length).to.equal(1);
       expect(modal.find('.btn-secondary').length).to.equal(1);
@@ -284,8 +282,9 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
       const dispatch = sandbox.spy();
       const modal = mount(
         <DeleteModal
-          {...props}
           dispatch={dispatch}
+          linode={testLinode1236}
+          disk={disk}
         />);
       modal.find('.btn-secondary').simulate('click');
       expect(dispatch.callCount).to.equal(1);
@@ -296,8 +295,9 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
       const dispatch = sandbox.spy();
       const modal = mount(
         <DeleteModal
-          {...props}
           dispatch={dispatch}
+          linode={testLinode1236}
+          disk={disk}
         />);
       await modal.find('.btn-default').simulate('submit');
       expect(dispatch.callCount).to.equal(2);
@@ -307,17 +307,13 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
   });
 
   describe('AddModal', () => {
-    const props = {
-      distributions: api.distributions,
-      linode: linodes.linodes[1236],
-      free: 4096,
-    };
-
     it('should render label, filesystem, distro, and size fields', () => {
       const modal = mount(
         <AddModal
-          {...props}
           dispatch={() => {}}
+          linode={testLinode1236}
+          free={4096}
+          distributions={api.distributions}
         />);
 
       expect(modal.find('#label').length).to.equal(1);
@@ -328,8 +324,10 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
     it('should drop filesystem and render password if a distro is selected', () => {
       const modal = mount(
         <AddModal
-          {...props}
           dispatch={() => {}}
+          linode={testLinode1236}
+          free={4096}
+          distributions={api.distributions}
         />);
       const distro = Object.keys(api.distributions.distributions)[0];
       modal.find('select').at(0).simulate('change', { target: { value: distro } });
@@ -341,8 +339,10 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
     it('should handle editing password', () => {
       const modal = mount(
         <AddModal
-          {...props}
           dispatch={() => {}}
+          linode={testLinode1236}
+          free={4096}
+          distributions={api.distributions}
         />);
       const distro = Object.keys(api.distributions.distributions)[0];
       modal.find('select').at(0).simulate('change', { target: { value: distro } });
@@ -353,8 +353,10 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
     it('should handle editing filesystem', () => {
       const modal = mount(
         <AddModal
-          {...props}
           dispatch={() => {}}
+          linode={testLinode1236}
+          free={4096}
+          distributions={api.distributions}
         />);
       modal.find('select').at(1).simulate('change', { target: { value: 'swap' } });
       expect(modal.state('filesystem')).to.equal('swap');
@@ -363,8 +365,10 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
     it('should handle editing size', () => {
       const modal = mount(
         <AddModal
-          {...props}
           dispatch={() => {}}
+          linode={testLinode1236}
+          free={4096}
+          distributions={api.distributions}
         />);
       const size = modal.find('[type="number"]');
       size.props().onChange({ target: { value: '1234' } });
@@ -375,8 +379,10 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
     it('should enforce the min and max sizes contextually', () => {
       const modal = mount(
         <AddModal
-          {...props}
           dispatch={() => {}}
+          linode={testLinode1236}
+          free={4096}
+          distributions={api.distributions}
         />);
       expect(modal.find('[type="number"]').props())
         .to.have.property('min').that.equals(8);
@@ -392,20 +398,27 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
       const dispatch = sandbox.spy();
       const modal = mount(
         <AddModal
-          {...props}
           dispatch={dispatch}
+          linode={testLinode1236}
+          free={4096}
+          distributions={api.distributions}
         />);
+
       modal.find('.btn-secondary').simulate('click');
       expect(dispatch.callCount).to.equal(1);
       expect(dispatch.calledWith(hideModal())).to.equal(true);
     });
 
     it('should call createDisk when Add Disk form is submitted', () => {
+      const dispatch = sandbox.spy();
       const modal = mount(
         <AddModal
-          {...props}
-          dispatch={() => {}}
+          dispatch={dispatch}
+          linode={testLinode1236}
+          free={4096}
+          distributions={api.distributions}
         />);
+
       const createDisk = sandbox.stub(modal.instance(), 'createDisk');
       modal.find('.btn-default').simulate('submit');
       expect(createDisk.callCount).to.equal(1);
@@ -413,11 +426,14 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
 
     it('should POST /linode/instances/:id/disks/ when createDisk is called', async () => {
       const dispatch = sandbox.spy();
-      const modal = shallow(
+      const modal = mount(
         <AddModal
-          {...props}
           dispatch={dispatch}
+          linode={testLinode1236}
+          free={4096}
+          distributions={api.distributions}
         />);
+
       modal.find('#label').simulate('change', { target: { value: 'Test disk' } });
       dispatch.reset();
       const { createDisk } = modal.instance();
@@ -428,7 +444,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
         method: 'POST',
         body: {
           label: 'Test disk',
-          size: 1024,
+          size: 4096,
           filesystem: 'ext4',
           distribution: null,
           root_pass: '',
@@ -440,9 +456,12 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
       const dispatch = sandbox.stub();
       const modal = mount(
         <AddModal
-          {...props}
           dispatch={dispatch}
+          linode={testLinode1236}
+          free={4096}
+          distributions={api.distributions}
         />);
+
       modal.find('#label').simulate('change', { target: { value: 'Test disk' } });
       dispatch.onCall(0).throws({
         json() {

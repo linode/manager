@@ -3,17 +3,11 @@ import sinon from 'sinon';
 import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 
-import { api, state } from '@/data';
-import { testLinode } from '@/data/linodes';
+import { state } from '@/data';
+import { testLinode, testLinode1235, testLinode1237 } from '@/data/linodes';
 import { expectRequest } from '@/common';
-import * as IndexPageWrapper from '~/linodes/linode/layouts/IndexPage';
 import { Dropdown } from 'linode-components/dropdowns';
-
-const {
-  IndexPage,
-} = IndexPageWrapper;
-
-const { linodes } = api;
+import { IndexPage } from '~/linodes/linode/layouts/IndexPage';
 
 describe('linodes/linode/layouts/IndexPage', () => {
   const sandbox = sinon.sandbox.create();
@@ -26,18 +20,6 @@ describe('linodes/linode/layouts/IndexPage', () => {
     dispatch.reset();
     sandbox.restore();
   });
-
-  const detail = {
-    editing: false,
-    label: '',
-    group: '',
-    loading: false,
-    errors: {
-      label: null,
-      group: null,
-      _: null,
-    },
-  };
 
   it('preloads the configs', async () => {
     const _dispatch = sinon.stub();
@@ -59,9 +41,7 @@ describe('linodes/linode/layouts/IndexPage', () => {
     const page = shallow(
       <IndexPage
         dispatch={dispatch}
-        linodes={linodes}
-        params={{ linodeLabel: `${testLinode.label}` }}
-        detail={detail}
+        linode={testLinode}
         router={router}
       />);
 
@@ -74,9 +54,7 @@ describe('linodes/linode/layouts/IndexPage', () => {
     const page = mount(
       <IndexPage
         dispatch={dispatch}
-        linodes={linodes}
-        params={{ linodeLabel: 'test-linode-1' }}
-        detail={detail}
+        linode={testLinode1235}
         router={router}
       />);
 
@@ -89,9 +67,7 @@ describe('linodes/linode/layouts/IndexPage', () => {
     const page = shallow(
       <IndexPage
         dispatch={dispatch}
-        linodes={linodes}
-        params={{ linodeLabel: `${testLinode.label}` }}
-        detail={detail}
+        linode={testLinode}
       />);
     const dropdown = page.find('StatusDropdown');
     expect(dropdown.length).to.equal(1);
@@ -101,9 +77,7 @@ describe('linodes/linode/layouts/IndexPage', () => {
     const page = mount(
       <IndexPage
         dispatch={dispatch}
-        linodes={linodes}
-        params={{ linodeLabel: 'test-linode-3' }}
-        detail={detail}
+        linode={testLinode1237}
         router={router}
       />);
     expect(page.contains(Dropdown)).to.equal(false);

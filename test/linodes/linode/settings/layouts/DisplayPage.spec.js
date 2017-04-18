@@ -5,10 +5,8 @@ import { mount } from 'enzyme';
 import { expect } from 'chai';
 
 import { expectRequest, expectObjectDeepEquals } from '@/common';
-import { api } from '@/data';
+import { testLinode } from '@/data/linodes';
 import { DisplayPage } from '~/linodes/linode/settings/layouts/DisplayPage';
-
-const { linodes } = api;
 
 describe('linodes/linode/settings/layouts/DisplayPage', () => {
   const sandbox = sinon.sandbox.create();
@@ -19,15 +17,12 @@ describe('linodes/linode/settings/layouts/DisplayPage', () => {
     sandbox.restore();
   });
 
-  const props = {
-    dispatch,
-    linodes,
-    params: { linodeLabel: 'test-linode' },
-  };
-
   it('renders display page', async () => {
     const page = mount(
-      <DisplayPage {...props} />
+      <DisplayPage
+        dispatch={dispatch}
+        linode={testLinode}
+      />
     );
 
     expect(page.find({ id: 'group' }).props().value).to.equal('Test Group');
@@ -35,9 +30,13 @@ describe('linodes/linode/settings/layouts/DisplayPage', () => {
   });
 
   it('makes request to save changes', async () => {
-    const page = mount(<DisplayPage {...props} />);
+    const page = mount(
+      <DisplayPage
+        dispatch={dispatch}
+        linode={testLinode}
+      />
+    );
 
-    const linode = linodes.linodes['1234'];
     dispatch.reset();
     page.find('form').simulate('submit', { preventDefault() {} });
     expect(dispatch.callCount).to.equal(1);
@@ -45,7 +44,7 @@ describe('linodes/linode/settings/layouts/DisplayPage', () => {
 
     await expectRequest(fn, '/linode/instances/1234', {
       method: 'PUT',
-      body: { group: linode.group, label: linode.label },
+      body: { group: testLinode.group, label: testLinode.label },
     });
   });
 
@@ -62,8 +61,7 @@ describe('linodes/linode/settings/layouts/DisplayPage', () => {
     const page = await mount(
       <DisplayPage
         dispatch={dispatchStub}
-        linodes={props.linodes}
-        params={props.params}
+        linode={testLinode}
       />
     );
 
@@ -79,7 +77,12 @@ describe('linodes/linode/settings/layouts/DisplayPage', () => {
   });
 
   it('redirects if the label changed', async () => {
-    const page = mount(<DisplayPage {...props} />);
+    const page = mount(
+      <DisplayPage
+        dispatch={dispatch}
+        linode={testLinode}
+      />
+    );
 
     page.find('.LinodesLinodeSettingsDisplay-label').simulate('change',
       { target: { value: 'newlabel' } });

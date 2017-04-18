@@ -6,9 +6,8 @@ import { expect } from 'chai';
 import { SHOW_MODAL } from '~/actions/modal';
 import { RescuePage } from '~/linodes/linode/layouts/RescuePage';
 import { expectRequest } from '@/common';
+import { testLinode, testLinode1233, testLinode1235, testLinode1237 } from '@/data/linodes';
 import { state } from '@/data';
-
-const { linodes } = state.api;
 
 describe('linodes/linode/layouts/RescuePage', () => {
   const sandbox = sinon.sandbox.create();
@@ -41,8 +40,7 @@ describe('linodes/linode/layouts/RescuePage', () => {
       const page = shallow(
         <RescuePage
           dispatch={dispatch}
-          linodes={linodes}
-          params={{ linodeLabel: 'test-linode-1' }}
+          linode={testLinode1235}
         />);
       page.setState({ loading: false });
       expect(page.contains(
@@ -54,8 +52,7 @@ describe('linodes/linode/layouts/RescuePage', () => {
       const page = mount(
         <RescuePage
           dispatch={dispatch}
-          linodes={linodes}
-          params={{ linodeLabel: 'test-linode' }}
+          linode={testLinode}
         />);
       page.setState({ loading: false, disk: true });
       expect(page.find('PasswordInput').length).to.equal(1);
@@ -65,14 +62,13 @@ describe('linodes/linode/layouts/RescuePage', () => {
       const page = mount(
         <RescuePage
           dispatch={dispatch}
-          linodes={linodes}
-          params={{ linodeLabel: 'test-linode-1233' }}
+          linode={testLinode1233}
         />);
       page.setState({ loading: false, disk: 12345 });
       const reset = page.find('.root-pw');
       const select = reset.find('select');
       expect(select.length).to.equal(1);
-      const { label } = linodes.linodes['1233']._disks.disks['12345'];
+      const { label } = testLinode1233._disks.disks['12345'];
       expect(select.find('option').text()).to.equal(label);
     });
 
@@ -80,8 +76,7 @@ describe('linodes/linode/layouts/RescuePage', () => {
       const page = mount(
         <RescuePage
           dispatch={dispatch}
-          linodes={linodes}
-          params={{ linodeLabel: 'test-linode-1233' }}
+          linode={testLinode1233}
         />);
       page.setState({ loading: false, disk: 2234 });
       const reset = page.find('.root-pw');
@@ -94,8 +89,7 @@ describe('linodes/linode/layouts/RescuePage', () => {
       const page = shallow(
         <RescuePage
           dispatch={dispatch}
-          linodes={linodes}
-          params={{ linodeLabel: 'test-linode' }}
+          linode={testLinode}
         />);
       page.setState({ loading: false, disk: 1234 });
       const reset = page.find('.root-pw');
@@ -107,8 +101,7 @@ describe('linodes/linode/layouts/RescuePage', () => {
       const page = shallow(
         <RescuePage
           dispatch={dispatch}
-          linodes={linodes}
-          params={{ linodeLabel: 'test-linode-3' }}
+          linode={testLinode1237}
         />);
       page.setState({ loading: false, disk: 1234, password: 'new password' });
       const { resetRootPassword } = page.instance();
@@ -125,8 +118,7 @@ describe('linodes/linode/layouts/RescuePage', () => {
       const page = mount(
         <RescuePage
           dispatch={dispatch}
-          linodes={linodes}
-          params={{ linodeLabel: 'test-linode-3' }}
+          linode={testLinode1237}
         />);
       page.setState({ loading: false, disk: 1234, password: 'new password' });
       page.find('.ResetRootPassword-form').simulate('submit');
@@ -139,8 +131,7 @@ describe('linodes/linode/layouts/RescuePage', () => {
       const page = mount(
         <RescuePage
           dispatch={dispatch}
-          linodes={linodes}
-          params={{ linodeLabel: 'test-linode' }}
+          linode={testLinode}
         />);
       page.setState({ diskSlots: [12345, 12346] });
       // iterate through the labels, there should be two disks and one for Finnix
@@ -155,8 +146,7 @@ describe('linodes/linode/layouts/RescuePage', () => {
       const page = mount(
         <RescuePage
           dispatch={dispatch}
-          linodes={linodes}
-          params={{ linodeLabel: 'test-linode' }}
+          linode={testLinode}
         />);
       page.setState({ diskSlots: [12345, 12346] });
       // simulate pressing the submit button, the action should get dispatched

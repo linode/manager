@@ -4,8 +4,8 @@ import { withRouter } from 'react-router';
 
 import { LISH_ROOT } from '~/secrets';
 import { getObjectByLabelLazily } from '~/api/util';
+import { selectLinode } from '../utilities';
 import { lishToken } from '~/api/linodes';
-import { getLinode } from './IndexPage';
 
 export function addCSSLink(url) {
   const head = window.document.querySelector('head');
@@ -26,11 +26,11 @@ export function addJSScript(url) {
 export class Weblish extends Component {
   constructor() {
     super();
-    this.getLinode = getLinode.bind(this);
 
     this.state = {
       token: '',
       renderingLish: false,
+      linode: null,
     };
 
     addCSSLink('/assets/weblish/weblish-fonts.css');
@@ -41,21 +41,22 @@ export class Weblish extends Component {
 
   async componentWillMount() {
     const { dispatch, params: { linodeLabel } } = this.props;
-    await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
+    const linode = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
+    this.setState({ linode });
     await this.connect();
   }
 
   async connect() {
     const { dispatch } = this.props;
-    const { id } = this.getLinode();
-    const { lish_token: token } = await dispatch(lishToken(id));
+    const { linode } = this.state;
+    const { lish_token: token } = await dispatch(lishToken(linode.id));
     const socket = new WebSocket(`${LISH_ROOT}:8181/${token}/weblish`);
     socket.addEventListener('open', () =>
       this.setState({ renderingLish: true }, this.renderTerminal(socket)));
   }
 
   renderTerminal(socket) {
-    const { group, label } = this.getLinode();
+    const { group, label } = this.state.linode;
     const terminal = new window.Terminal({
       cols: 120,
       rows: 32,
@@ -95,14 +96,9 @@ export class Weblish extends Component {
 
 Weblish.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  linodes: PropTypes.object,
   params: PropTypes.shape({
     linodeLabel: PropTypes.string.isRequired,
   }).isRequired,
 };
 
-function select(state) {
-  return { linodes: state.api.linodes };
-}
-
-export default withRouter(connect(select)(Weblish));
+export default withRouter(connect()(Weblish));

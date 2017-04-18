@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { getLinode } from '~/linodes/linode/layouts/IndexPage';
+import { selectLinode } from '../../utilities';
 import { linodes } from '~/api';
 import { Form,
   FormGroup,
@@ -26,19 +26,13 @@ import { setError } from '~/actions/errors';
 export const AVAILABLE_DISK_SLOTS =
   ['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg', 'sdh'];
 
-export function getConfig() {
-  const linode = this.getLinode();
-  const configId = parseInt(this.props.params.configId);
-  return linode._configs.configs[configId];
-}
-
 export function getDisks() {
-  const linode = this.getLinode();
+  const { linode } = this.props;
   return linode._disks.totalResults === -1 ? null : linode._disks.disks;
 }
 
 export function getDiskSlots(fromConfig = false) {
-  const disks = fromConfig ? this.getConfig().disks : this.getDisks();
+  const disks = fromConfig ? this.props.config.disks : this.getDisks();
   const diskSlots = [];
   Object.values(disks).forEach(diskOrId => {
     if (diskOrId) {
@@ -164,16 +158,14 @@ export class EditConfigPage extends Component {
 
   constructor(props) {
     super(props);
-    this.getLinode = getLinode.bind(this);
     this.renderDiskSlot = renderDiskSlot.bind(this);
-    this.getConfig = getConfig.bind(this);
     this.getDisks = getDisks.bind(this);
     this.addDiskSlot = addDiskSlot.bind(this);
     this.getDiskSlots = getDiskSlots.bind(this);
     this.fillDiskSlots = fillDiskSlots.bind(this);
     this.addDiskSlot = addDiskSlot.bind(this);
     this.removeDiskSlot = removeDiskSlot.bind(this);
-    const { create } = this.props;
+    const { create, config } = this.props;
 
     if (create) {
       const disks = this.getDisks();
@@ -205,8 +197,6 @@ export class EditConfigPage extends Component {
     }
 
     // If not creating a new config, populate the state with the config values.
-    const config = this.getConfig();
-
     if (!config) {
       return;
     }
@@ -247,21 +237,17 @@ export class EditConfigPage extends Component {
   }
 
   componentDidMount() {
-    const { dispatch } = this.props;
+    const { dispatch, linode, config } = this.props;
     dispatch(setSource(__filename));
-
-    // If not creating a new config, populate the state with the config values.
-    const config = this.getConfig();
 
     // Config not found. Should we 404?
     if (!config && !this.props.create) {
-      dispatch(push(`/linodes/${this.getLinode().label}/settings/advanced`));
+      dispatch(push(`/linodes/${linode.label}/settings/advanced`));
     }
   }
 
   async saveChanges() {
-    const { dispatch } = this.props;
-    const linode = this.getLinode();
+    const { dispatch, linode, config } = this.props;
     const { label, comments, isMaxRam, ramLimit, runLevel, virtMode, kernel,
             diskSlots, initrd, rootDevice, helpers } = this.state;
 
@@ -271,7 +257,7 @@ export class EditConfigPage extends Component {
       label,
       comments,
       kernel,
-      initrd,
+      initrd: initrd || null, // The API expects this to be null not ''
       ram_limit: isMaxRam ? 0 : parseInt(ramLimit, 10),
       run_level: runLevel,
       virt_mode: virtMode,
@@ -293,8 +279,7 @@ export class EditConfigPage extends Component {
       if (this.props.create) {
         await dispatch(linodes.configs.post(data, linode.id));
       } else {
-        const configId = this.getConfig().id;
-        await dispatch(linodes.configs.put(data, linode.id, configId));
+        await dispatch(linodes.configs.put(data, linode.id, config.id));
       }
 
       this.setState({ loading: false });
@@ -313,7 +298,7 @@ export class EditConfigPage extends Component {
     if (!this.state) {
       return null;
     }
-    const { create, kernels, params: { linodeLabel } } = this.props;
+    const { create, kernels, linode } = this.props;
     const {
       loading, label, comments, kernel, isCustomRoot, ramLimit, rootDevice,
       initrd, errors, diskSlots, virtMode, runLevel, isMaxRam,
@@ -321,7 +306,6 @@ export class EditConfigPage extends Component {
     const {
       enableDistroHelper, enableNetworkHelper, enableModulesdepHelper, disableUpdatedb,
     } = this.state.helpers;
-    const linode = this.getLinode();
     return (
       <Card
         header={
@@ -597,7 +581,7 @@ export class EditConfigPage extends Component {
           <div className="row">
             <div className="offset-sm-2 col-sm-10">
               <SubmitButton>{this.props.create ? 'Add config' : 'Save'}</SubmitButton>
-              <CancelButton to={`/linodes/${linodeLabel}/settings/advanced`} />
+              <CancelButton to={`/linodes/${linode.label}/settings/advanced`} />
             </div>
           </div>
           <ErrorSummary errors={errors} />
@@ -608,25 +592,24 @@ export class EditConfigPage extends Component {
 }
 
 EditConfigPage.propTypes = {
-  linodes: PropTypes.object.isRequired,
+  linode: PropTypes.object.isRequired,
   kernels: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
-  params: PropTypes.shape({
-    linodeLabel: PropTypes.string,
-    configId: PropTypes.string,
-  }),
   create: PropTypes.bool.isRequired,
+  config: PropTypes.object,
 };
 
 EditConfigPage.defaultProps = {
   create: false,
 };
 
-export function select(state) {
-  return {
-    linodes: state.api.linodes,
-    kernels: state.api.kernels,
-  };
+export function select(state, props) {
+  const { linode } = selectLinode(state, props);
+  const { configId } = props.params;
+  const configs = linode._configs.configs;
+  const config = configId && configs[configId];
+  const { kernels } = state.api;
+  return { linode, config, kernels };
 }
 
 export default connect(select)(EditConfigPage);
