@@ -25,6 +25,7 @@ describe('components/Header', () => {
         emailHash="24afd9bad4cf41b3c07d61fa0df03768"
         events={events}
         notifications={{ open: false }}
+        account={{ open: false }}
         session={{ open: false }}
       />
     );
@@ -40,6 +41,7 @@ describe('components/Header', () => {
         emailHash="24afd9bad4cf41b3c07d61fa0df03768"
         events={events}
         notifications={{ open: false }}
+        account={{ open: false }}
         session={{ open: false }}
       />
     );
@@ -59,6 +61,7 @@ describe('components/Header', () => {
         emailHash="24afd9bad4cf41b3c07d61fa0df03768"
         events={emptyEventsAPI.events}
         notifications={{ open: false }}
+        account={{ open: false }}
         session={{ open: false }}
       />
     );

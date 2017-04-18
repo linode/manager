@@ -5,6 +5,7 @@ import { LOGOUT } from '~/actions/authentication';
 import authentication from './authentication';
 import modal from './modal';
 import notifications from './notifications';
+import account from './account';
 import select from './select';
 import session from './session';
 import source from './source';
@@ -18,6 +19,7 @@ const appReducer = combineReducers({
   authentication,
   modal,
   notifications,
+  account,
   select,
   session,
   source,

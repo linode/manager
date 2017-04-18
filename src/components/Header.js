@@ -1,11 +1,11 @@
 import React, { PropTypes, Component } from 'react';
+import { Link } from 'react-router';
 
 import { LinodeLogoImgSrc } from '~/assets';
-
-import { Link } from 'react-router';
 import { eventSeen } from '~/api/events';
 import { hideSession, showSession } from '~/actions/session';
 import { hideNotifications, showNotifications } from '~/actions/notifications';
+import { hideAccount, showAccount } from '~/actions/account';
 
 export default class Header extends Component {
   toggleNotifications = () => {
@@ -16,7 +16,20 @@ export default class Header extends Component {
     } else {
       this.markEventsSeen();
       dispatch(hideSession());
+      dispatch(hideAccount());
       dispatch(showNotifications());
+    }
+  }
+
+  toggleAccount = () => {
+    const { dispatch, account } = this.props;
+
+    if (account.open) {
+      dispatch(hideAccount());
+    } else {
+      dispatch(hideSession());
+      dispatch(hideNotifications());
+      dispatch(showAccount());
     }
   }
 
@@ -48,6 +61,8 @@ export default class Header extends Component {
       emailHash,
       username,
       notifications,
+      account,
+      session,
       events,
     } = this.props;
 
@@ -60,6 +75,21 @@ export default class Header extends Component {
       events.ids.reduce(function (count, id) {
         return events.events[id].seen ? count : count + 1;
       }, 0);
+
+    let notificationsClass = 'MainHeader-notifications';
+    if (notifications.open) {
+      notificationsClass += ' active';
+    }
+
+    let sessionClass = 'MainHeader-session';
+    if (session.open) {
+      sessionClass += ' active';
+    }
+
+    let accountClass = 'MainHeader-account';
+    if (account.open) {
+      accountClass += ' active';
+    }
 
     return (
       <div className="Header">
@@ -91,10 +121,7 @@ export default class Header extends Component {
               to="/domains"
             >Domains</Link>
             {!username ? null :
-              <div
-                className="MainHeader-session float-sm-right"
-                onClick={this.toggleSession}
-              >
+              <div className={sessionClass} onClick={this.toggleSession}>
                 <span className="MainHeader-username">
                   {username}
                 </span>
@@ -107,13 +134,15 @@ export default class Header extends Component {
                 />
               </div>
             }
-            <div
-              className="MainHeader-notifications float-sm-right"
-              onClick={this.toggleNotifications}
-            >
-              <i className="fa fa-bell-o"></i>
+            <div className={notificationsClass} onClick={this.toggleNotifications}>
+              <i className="fa fa-bell-o" />
               {!unseenCount ? null : <span className="MainHeader-badge Badge">{unseenCount}</span>}
             </div>
+            {!username ? null : (
+              <div className={accountClass} onClick={this.toggleAccount}>
+                <i className="fa fa-users" />
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -126,6 +155,7 @@ Header.propTypes = {
   emailHash: PropTypes.string,
   dispatch: PropTypes.func,
   notifications: PropTypes.object,
+  account: PropTypes.object,
   session: PropTypes.object,
   events: PropTypes.object,
 };
