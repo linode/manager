@@ -22,7 +22,7 @@ module.exports = function(config) {
             include: [
               path.join(__dirname, 'src'),
               path.join(__dirname, 'test'),
-              path.resolve(__dirname, 'node_modules/linode-components'),
+              path.resolve(__dirname, 'node_modules/components'),
               path.resolve(__dirname, 'node_modules/linode-styleguide')
             ]
           },
