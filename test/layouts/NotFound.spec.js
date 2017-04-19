@@ -1,7 +1,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
-import NotFound from '~/layouts/NotFound';
+import { NotFound } from 'linode-components/errors';
 
 describe('layouts/NotFound', () => {
   it('should return 404 Not Found', () => {

@@ -9,8 +9,8 @@ import { GA_ID } from './constants';
 import styles from '../scss/index.scss';
 
 import { MainLayout } from './layouts';
-import { DocsIndexPage } from './docs';
-import NotFoundPage from './NotFoundPage';
+import { IndexPage as DocsIndexPage } from './docs';
+import { NotFound } from 'linode-components/errors';
 
 
 ReactGA.initialize(GA_ID); // eslint-disable-line no-undef
@@ -28,7 +28,7 @@ export function init() {
       <Route path="/" component={MainLayout}>
         <IndexRedirect to="/docs" />
         <Route path="/docs" component={DocsIndexPage} />
-        <Route path="*" component={NotFoundPage} />
+        <Route path="*" component={NotFound} />
       </Route>
     </Router>,
     document.getElementById('root')
