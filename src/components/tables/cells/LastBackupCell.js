@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react';
 
 import { TableCell } from 'linode-components/tables/cells';
-import TimeDisplay from '~/components/TimeDisplay';
 
 
 export default function LastBackupCell(props) {

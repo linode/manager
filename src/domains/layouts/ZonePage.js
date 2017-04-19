@@ -5,7 +5,7 @@ import { replace } from 'react-router-redux';
 import _ from 'lodash';
 
 import { showModal, hideModal } from '~/actions/modal';
-import { DeleteModalBody } from 'linode-components/modals';
+import { ConfirmModalBody } from 'linode-components/modals';
 import { formatDNSSeconds, ONE_DAY } from '../components/SelectDNSSeconds';
 import EditSOARecord from '../components/EditSOARecord';
 import EditNSRecord from '../components/EditNSRecord';
