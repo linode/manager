@@ -22,8 +22,8 @@ describe('nodebalancers/nodebalancer/layouts/DashboardPage', () => {
         nodebalancer={genericNodeBalancer}
       />
     );
-    const firstRow = page.find('tr').at(1);
-    const secondRow = page.find('tr').at(2);
+    const firstRow = page.find('tr').at(0);
+    const secondRow = page.find('tr').at(1);
     const renderedPort = firstRow.find('td').at(0).text();
     const renderedProtocol = firstRow.find('td').at(1).text();
     const renderedAlgorithm = firstRow.find('td').at(2).text();
