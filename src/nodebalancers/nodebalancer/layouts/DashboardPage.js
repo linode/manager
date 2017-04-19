@@ -1,15 +1,23 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
 import _ from 'lodash';
+import { Card, CardHeader } from 'linode-components/cards';
+import { Table } from 'linode-components/tables';
+import { List } from 'linode-components/lists';
+import { ListBody } from 'linode-components/lists/bodies';
+import { LinkCell, ButtonCell } from 'linode-components/tables/cells';
+
+console.log(Card);
+console.log(CardHeader);
+console.log(List);
+console.log(Table);
+console.log(ListBody);
+console.log(LinkCell);
+console.log(ButtonCell);
 
 import { objectFromMapByLabel } from '~/api/util';
 import { setSource } from '~/actions/source';
-import { Link } from '~/components/Link';
-import { Card, CardHeader } from '~/components/cards';
-import { List, Table } from '~/components/tables';
-import { ListBody } from '~/components/tables/bodies';
-
-import { LinkCell, ButtonCell } from '~/components/tables/cells';
 import Region from '~/linodes/components/Region';
 
 

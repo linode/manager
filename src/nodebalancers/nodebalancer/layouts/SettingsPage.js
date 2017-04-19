@@ -1,13 +1,14 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
+import { Card, CardHeader } from 'linode-components/cards';
+import { Form, FormGroup, FormGroupError, SubmitButton, Input } from 'linode-components/forms';
 
 import { nodebalancers } from '~/api';
 import { objectFromMapByLabel, dispatchOrStoreErrors } from '~/api/util';
-import { Form, FormGroup, FormGroupError, SubmitButton, Input } from '~/components/form';
 import { setSource } from '~/actions/source';
-import { Card, CardHeader } from '~/components/cards';
 import { ErrorSummary } from '~/errors';
+
 
 export class SettingsPage extends Component {
   constructor(props) {
