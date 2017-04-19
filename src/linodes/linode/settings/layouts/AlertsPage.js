@@ -1,9 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import { Card, CardHeader } from 'linode-components/cards';
 import { CheckboxInputCombo, Form, SubmitButton } from 'linode-components/forms';
+import { selectLinode } from '../../utilities';
 import { linodes } from '~/api';
 import { setSource } from '~/actions/source';
 import { linodes } from '~/api';
@@ -18,7 +18,6 @@ export class AlertsPage extends Component {
     this.renderAlertRow = this.renderAlertRow.bind(this);
     this.state = {
       loading: false,
-      errors: {},
       alerts: props.linode.alerts || {
         cpu: { threshold: 0, enabled: false },
         io: { threshold: 0, enabled: false },
@@ -34,12 +33,11 @@ export class AlertsPage extends Component {
     dispatch(setSource(__filename));
   }
 
-  onSubmit = async () => {
+  async saveChanges() {
     const { dispatch, linode } = this.props;
-
-    await dispatch(dispatchOrStoreErrors.apply(this, [
-      [() => linodes.put({ alerts: this.state.alerts }, linode.id)],
-    ]));
+    this.setState({ loading: true });
+    await dispatch(linodes.put({ alerts: this.state.alerts }, linode.id));
+    this.setState({ loading: false });
   }
 
   renderAlertRow({ key, name, value, label, text }) {

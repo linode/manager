@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react';
 
-import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import { DeleteModalBody } from 'linode-components/modals';
 import { linodes } from '~/api';
 import { showModal, hideModal } from '~/actions/modal';
