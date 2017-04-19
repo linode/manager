@@ -1,0 +1,28 @@
+$sidebar-width: 300px;
+
+.Layout {
+    background-color: $gray;
+
+    &-container,
+    &-navigation-container,
+    &-content {
+        height: 100%;
+    }
+
+    &-container {
+        padding-top: $nav-height;
+    }
+
+    &-navigation-container {
+        background-color: $light-gray;
+        border: $border;
+        position: fixed;
+        width: $sidebar-width;
+    }
+
+    &-content {
+        background-color: $white;
+        margin-left: $sidebar-width;
+        padding: 25px;
+    }
+}
