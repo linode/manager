@@ -7,7 +7,7 @@ import { Button } from 'linode-components/buttons';
 import { Card, CardHeader } from 'linode-components/cards';
 
 import { Link } from 'react-router';
-import { getLinode } from '~/linodes/linode/layouts/IndexPage';
+import { selectLinode } from '../../utilities';
 import { takeBackup } from '~/api/backups';
 import { ErrorSummary, reduceErrors } from '~/errors';
 import { Button } from 'linode-components/buttons';

@@ -2,9 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { Card, CardHeader } from 'linode-components/cards';
-import { Form, FormGroup, FormGroupError, Input, SubmitButton } from 'linode-components/forms';
-
+import { selectLinode } from '../../utilities';
 import { linodes } from '~/api';
 import { Card, CardHeader } from 'linode-components/cards';
 import { Form, FormGroup, FormGroupError, Input, SubmitButton } from 'linode-components/forms';
@@ -19,6 +17,7 @@ export class DisplayPage extends Component {
   constructor(props) {
     super(props);
 
+    this.onSubmit = this.onSubmit.bind(this);
     const { group, label } = props.linode;
     this.state = { group, label, errors: {}, loading: false };
   }
@@ -28,7 +27,7 @@ export class DisplayPage extends Component {
     dispatch(setSource(__filename));
   }
 
-  onSubmit = async () => {
+  async onSubmit() {
     const { dispatch, linode } = this.props;
     const { id, label: oldLabel, group: oldGroup } = linode;
     const { group, label } = this.state;

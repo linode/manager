@@ -4,7 +4,7 @@ import { withRouter } from 'react-router';
 import { push } from 'react-router-redux';
 
 import { Tabs } from 'linode-components/tabs';
-import { getLinode } from '~/linodes/linode/layouts/IndexPage';
+import { selectLinode } from '../../utilities';
 
 export class IndexPage extends Component {
   render() {

@@ -9,8 +9,7 @@ import { setError } from '~/actions/errors';
 import { setTitle } from '~/actions/title';
 import { linodes } from '~/api';
 import { getObjectByLabelLazily } from '~/api/util';
-import StatusDropdown from '~/linodes/components/StatusDropdown';
-
+import { setTitle } from '~/actions/title';
 import { selectLinode } from '../utilities';
 
 export class IndexPage extends Component {
@@ -25,12 +24,10 @@ export class IndexPage extends Component {
     }
   }
 
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
 
-    const { linode: { _configs: { configs }, label, group } } = props;
-    const config = configs[0] ? configs[0].id : '';
-    this.state = { config, label, group };
+    this.state = { config: '', label: '', group: '' };
   }
 
   async componentDidMount() {

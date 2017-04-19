@@ -8,7 +8,7 @@ import { cancelBackup } from '~/api/backups';
 import { Card, CardHeader } from 'linode-components/cards';
 import { ConfirmModalBody } from 'linode-components/modals';
 import { Form, SubmitButton } from 'linode-components/forms';
-import { getLinode } from '~/linodes/linode/layouts/IndexPage';
+import { selectLinode } from '../../utilities';
 import { setSource } from '~/actions/source';
 import { showModal, hideModal } from '~/actions/modal';
 
@@ -26,8 +26,8 @@ export class SettingsPage extends Component {
     dispatch(setSource(__filename));
   }
 
-  onSubmit = async () => {
-    const { dispatch, linode: { id } } = this.props;
+  async saveChanges() {
+    const { dispatch, linode } = this.props;
     const { day, window } = this.state;
 
     await dispatch(dispatchOrStoreErrors.apply(this, [
@@ -37,7 +37,7 @@ export class SettingsPage extends Component {
 
   render() {
     const { dispatch, linode } = this.props;
-    const { window, day, loading, errors } = this.state;
+    const { window, day, errors } = this.state;
 
     return (
       <div>

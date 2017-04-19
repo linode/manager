@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { getLinode } from '~/linodes/linode/layouts/IndexPage';
+import { selectLinode } from '../../utilities';
 import { linodes } from '~/api';
 import { Form,
   FormGroup,
@@ -28,12 +28,13 @@ import { FormSummary, reduceErrors } from '~/components/forms';
 
 import { selectLinode } from '../../utilities';
 
-
-export const AVAILABLE_DISK_SLOTS =
-  ['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg', 'sdh'];
+export function getDisks() {
+  const { linode } = this.props;
+  return linode._disks.totalResults === -1 ? null : linode._disks.disks;
+}
 
 export function getDiskSlots(fromConfig = false) {
-  const disks = fromConfig ? this.props.config.disks : this.props.linode._disks.disks;
+  const disks = fromConfig ? this.props.config.disks : this.getDisks();
   const diskSlots = [];
   Object.values(disks).forEach(diskOrId => {
     if (diskOrId) {
@@ -160,6 +161,7 @@ export class EditConfigPage extends Component {
   constructor(props) {
     super(props);
     this.renderDiskSlot = renderDiskSlot.bind(this);
+    this.getDisks = getDisks.bind(this);
     this.addDiskSlot = addDiskSlot.bind(this);
     this.getDiskSlots = getDiskSlots.bind(this);
     this.fillDiskSlots = fillDiskSlots.bind(this);
@@ -595,7 +597,6 @@ export class EditConfigPage extends Component {
 
 EditConfigPage.propTypes = {
   linode: PropTypes.object.isRequired,
-  account: PropTypes.object.isRequired,
   kernels: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   create: PropTypes.bool.isRequired,
@@ -611,8 +612,8 @@ export function select(state, props) {
   const { configId } = props.params;
   const configs = linode._configs.configs;
   const config = configId && configs[configId];
-  const { kernels, account } = state.api;
-  return { linode, config, kernels, account };
+  const { kernels } = state.api;
+  return { linode, config, kernels };
 }
 
 export default connect(select)(EditConfigPage);
