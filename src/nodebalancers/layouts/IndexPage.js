@@ -8,7 +8,7 @@ import { showModal, hideModal } from '~/actions/modal';
 import { nodebalancers as api } from '~/api';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
-import { ConfirmModalBody } from 'linode-components/modals';
+import { DeleteModalBody } from 'linode-components/modals';
 import CreateHelper from '~/components/CreateHelper';
 import { List } from 'linode-components/lists';
 import { Table } from 'linode-components/tables';
@@ -59,6 +59,7 @@ export class IndexPage extends Component {
 
     dispatch(showModal('Delete NodeBalancer',
       <DeleteModalBody
+        buttonText="Delete"
         onOk={async () => {
           const ids = nodebalancersArr.map(function (nodebalancer) { return nodebalancer.id; });
 
