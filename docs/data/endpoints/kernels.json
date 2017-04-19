@@ -1,0 +1,36 @@
+{
+  "name": "Kernels",
+  "sort": 3,
+  "base_path": "/linode/kernels",
+  "description": "Kernel endpoints provide a means of viewing <a href=\"#object-kernel\"> kernel objects</a>.\n",
+  "endpoints": {
+    "linode/kernels": {
+      "type": "list",
+      "resource": "kernels",
+      "description": "Returns collection of kernels.\n",
+      "methods": {
+        "GET": {
+          "description": "Returns list of <a href=\"#object-kernel\">kernels</a>.\n",
+          "examples": {
+            "curl": "curl https://$api_root/$version/linode/kernels\n",
+            "python": "import kernels\nTODO\n"
+          }
+        }
+      }
+    },
+    "linode/kernels/:id": {
+      "type": "resource",
+      "resource": "kernels",
+      "description": "Returns information about a specific kernel.\n",
+      "methods": {
+        "GET": {
+          "description": "Returns information about this <a href=\"#object-kernel\">kernel</a>.\n",
+          "examples": {
+            "curl": "curl https://$api_root/$version/linode/kernels/$kernel_id\n",
+            "python": "import kernels\nTODO\n"
+          }
+        }
+      }
+    }
+  }
+}

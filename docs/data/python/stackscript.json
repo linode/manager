@@ -1,0 +1,27 @@
+{
+  "name": "StackScript",
+  "import": "from linode import StackScript",
+  "_object": "stackscript",
+  "desc": "Represents a StackScript in the API.\n",
+  "constructor": {
+    "name": "StackScript",
+    "parameters": {
+      "client": {
+        "_keyword": false,
+        "desc": "The <code>LinodeClient</code> this object will use to communicate with the API."
+      },
+      "id": {
+        "_keyword": false,
+        "desc": "This StackScript's ID."
+      }
+    },
+    "example": "stackscript = linode.StackScript(client, 6)\n"
+  },
+  "methods": {
+    "save": {
+      "desc": "Sends any local changes to Editable fields of this StackScript to the API, saving them.\n",
+      "example": "stackscript.save()\n",
+      "returns": "True if the save succeeded"
+    }
+  }
+}
