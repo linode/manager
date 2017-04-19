@@ -9,7 +9,7 @@ import { tokens } from '~/api';
 import { reduceErrors } from '~/errors';
 import { OAUTH_SUBSCOPES, OAUTH_SCOPES } from '~/constants';
 import { Table } from 'linode-components/tables';
-import TimeDisplay from 'linode-components/TimeDisplay';
+import TimeDisplay from '~/components/TimeDisplay';
 import { AuthScopeCell } from '~/components/tables/cells';
 
 
