@@ -17,11 +17,6 @@
       "from": "classnames@>=2.2.0 <3.0.0",
       "resolved": "https://registry.npmjs.org/classnames/-/classnames-2.2.5.tgz"
     },
-    "clipboard": {
-      "version": "1.6.1",
-      "from": "clipboard@latest",
-      "resolved": "https://registry.npmjs.org/clipboard/-/clipboard-1.6.1.tgz"
-    },
     "core-js": {
       "version": "1.2.7",
       "from": "core-js@>=1.0.0 <2.0.0",
@@ -37,11 +32,6 @@
       "from": "deep-equal@>=1.0.0 <2.0.0",
       "resolved": "https://registry.npmjs.org/deep-equal/-/deep-equal-1.0.1.tgz"
     },
-    "delegate": {
-      "version": "3.1.2",
-      "from": "delegate@>=3.1.2 <4.0.0",
-      "resolved": "https://registry.npmjs.org/delegate/-/delegate-3.1.2.tgz"
-    },
     "encoding": {
       "version": "0.1.12",
       "from": "encoding@>=0.1.11 <0.2.0",
@@ -56,11 +46,6 @@
       "version": "4.7.2",
       "from": "fontawesome@>=4.5.0 <5.0.0",
       "resolved": "https://registry.npmjs.org/fontawesome/-/fontawesome-4.7.2.tgz"
-    },
-    "good-listener": {
-      "version": "1.2.2",
-      "from": "good-listener@>=1.2.0 <2.0.0",
-      "resolved": "https://registry.npmjs.org/good-listener/-/good-listener-1.2.2.tgz"
     },
     "history": {
       "version": "2.1.2",
@@ -222,14 +207,9 @@
       "resolved": "https://registry.npmjs.org/react-tabs/-/react-tabs-0.7.0.tgz"
     },
     "resolve-pathname": {
-      "version": "2.1.0",
+      "version": "2.0.2",
       "from": "resolve-pathname@>=2.0.0 <3.0.0",
-      "resolved": "https://registry.npmjs.org/resolve-pathname/-/resolve-pathname-2.1.0.tgz"
-    },
-    "select": {
-      "version": "1.1.2",
-      "from": "select@>=1.1.2 <2.0.0",
-      "resolved": "https://registry.npmjs.org/select/-/select-1.1.2.tgz"
+      "resolved": "https://registry.npmjs.org/resolve-pathname/-/resolve-pathname-2.0.2.tgz"
     },
     "setimmediate": {
       "version": "1.0.5",
@@ -246,20 +226,15 @@
       "from": "tether@>=1.4.0 <2.0.0",
       "resolved": "https://registry.npmjs.org/tether/-/tether-1.4.0.tgz"
     },
-    "tiny-emitter": {
-      "version": "1.2.0",
-      "from": "tiny-emitter@>=1.0.0 <2.0.0",
-      "resolved": "https://registry.npmjs.org/tiny-emitter/-/tiny-emitter-1.2.0.tgz"
-    },
     "ua-parser-js": {
       "version": "0.7.12",
       "from": "ua-parser-js@>=0.7.9 <0.8.0",
       "resolved": "https://registry.npmjs.org/ua-parser-js/-/ua-parser-js-0.7.12.tgz"
     },
     "value-equal": {
-      "version": "0.2.1",
+      "version": "0.2.0",
       "from": "value-equal@>=0.2.0 <0.3.0",
-      "resolved": "https://registry.npmjs.org/value-equal/-/value-equal-0.2.1.tgz"
+      "resolved": "https://registry.npmjs.org/value-equal/-/value-equal-0.2.0.tgz"
     },
     "warning": {
       "version": "2.1.0",
