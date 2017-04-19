@@ -2,7 +2,7 @@ import React, { PropTypes, Component } from 'react';
 
 import { LinodeLogoImgSrc } from '~/assets';
 
-import { Link } from '~/components/Link';
+import { Link } from 'react-router';
 import { eventSeen } from '~/api/events';
 import { hideSession, showSession } from '~/actions/session';
 import { hideNotifications, showNotifications } from '~/actions/notifications';

@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 
 import _ from 'lodash';
 import { OAUTH_SUBSCOPES } from '~/constants';
-import TableCell from './TableCell';
+import { TableCell } from 'linode-components/tables/cells';
 
 function renderScope(scopesRequested, currentScope, currentSubscope) {
   const subscopeAllowed = (

@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 
-import { Button } from '~/components/buttons';
+import { Button } from 'linode-components/buttons';
 
 
 export function launchWeblishConsole(linode) {

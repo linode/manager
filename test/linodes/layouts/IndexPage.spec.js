@@ -5,7 +5,7 @@ import { expect } from 'chai';
 
 import { IndexPage } from '~/linodes/layouts/IndexPage';
 import { api } from '@/data';
-import Dropdown from '~/components/Dropdown';
+import { Dropdown } from 'linode-components/dropdowns';
 import { SET_ERROR } from '~/actions/errors';
 import { expectRequest } from '@/common.js';
 import { linodes as thunks } from '~/api';

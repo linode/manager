@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { profile } from '~/api';
 
-import { Card, CardHeader } from '~/components/cards';
+import { Card, CardHeader } from 'linode-components/cards';
 import { reduceErrors } from '~/errors';
 
 import { TimezoneForm, EmailForm } from '~/profile/display/components';

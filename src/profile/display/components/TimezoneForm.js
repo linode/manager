@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 
-import { Form, FormGroup, SubmitButton, Select } from '~/components/form';
+import { Form, FormGroup, SubmitButton, Select } from 'linode-components/forms';
 import { ErrorSummary } from '~/errors';
 
 import moment from 'moment-timezone';

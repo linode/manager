@@ -4,11 +4,11 @@ import { connect } from 'react-redux';
 
 import _ from 'lodash';
 import { API_ROOT } from '~/constants';
-import Dropdown from '~/components/Dropdown';
+import { Dropdown } from 'linode-components/dropdowns';
 import EditPersonalAccessToken from './EditPersonalAccessToken';
-import { Card, CardImageHeader } from '~/components/cards/';
-import DeleteModalBody from '~/components/modals/DeleteModalBody';
-import { Table } from '~/components/tables';
+import { Card, CardImageHeader } from 'linode-components/cards/';
+import { DeleteModalBody } from 'linode-components/modals';
+import { Table } from 'linode-components/tables';
 import { AuthScopeCell } from '~/components/tables/cells';
 import { OAUTH_SUBSCOPES, OAUTH_SCOPES } from '~/constants';
 import { showModal, hideModal } from '~/actions/modal';

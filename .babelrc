@@ -5,10 +5,10 @@
     "transform-runtime",
     "transform-class-properties",
     ["babel-root-import", [{
-        "rootPathSuffix": "src"
+      "rootPathSuffix": "src"
     }, {
-        "rootPathSuffix": "test",
-        "rootPathPrefix": "@",
+      "rootPathSuffix": "test",
+      "rootPathPrefix": "@",
     }]]
   ],
   "env": {

@@ -2,12 +2,12 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { users } from '~/api';
-import { Card, CardHeader } from '~/components/cards';
+import { Card, CardHeader } from 'linode-components/cards';
 import { Form,
   Checkbox,
   Checkboxes,
   SubmitButton,
-} from '~/components/form';
+} from 'linode-components/forms';
 import { PermissionCard } from '../components/PermissionCard';
 import { reduceErrors } from '~/errors';
 

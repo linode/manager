@@ -12,11 +12,10 @@ import CreateHelper from '~/components/CreateHelper';
 import {
   getLinodeRedirectUrl, getNodebalancerRedirectUrl, getDomainRedirectUrl,
 } from '~/components/notifications/EventTypes';
-import { List, Table } from '~/components/tables';
-import { ListBody, ListGroup } from '~/components/tables/bodies';
-import {
-  TableCell,
-} from '~/components/tables/cells';
+import { List } from 'linode-components/lists';
+import { Table } from 'linode-components/tables';
+import { ListBody, ListGroup } from 'linode-components/lists/bodies';
+import { TableCell } from 'linode-components/tables/cells';
 
 const TICKET_LINK_MAP = {
   linode: getLinodeRedirectUrl,

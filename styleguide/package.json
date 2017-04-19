@@ -1,0 +1,12 @@
+{
+  "name": "linode-styleguide",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Linode UI/UX Styleguide",
+  "main": "src/Styleguide.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

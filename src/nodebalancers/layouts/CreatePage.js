@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { Link } from 'react-router';
 
-import { Card, CardHeader } from '~/components/cards';
-import { Input, Form, FormGroup, FormGroupError, SubmitButton } from '~/components/form';
+import { Card, CardHeader } from 'linode-components/cards';
+import { Input, Form, FormGroup, FormGroupError, SubmitButton } from 'linode-components/forms';
 import Region from '~/components/Region';
 import { nodebalancers } from '~/api';
 import { setSource } from '~/actions/source';

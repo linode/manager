@@ -1,16 +1,16 @@
 import React, { Component, PropTypes } from 'react';
 
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
-import DeleteModalBody from '~/components/modals/DeleteModalBody';
+import { DeleteModalBody } from 'linode-components/modals';
 import { linodes } from '~/api';
 import { showModal, hideModal } from '~/actions/modal';
-import { Button } from '~/components/buttons';
-import { Card, CardHeader } from '~/components/cards';
-import { Table } from '~/components/tables';
+import { Button } from 'linode-components/buttons';
+import { Card, CardHeader } from 'linode-components/cards';
+import { Table } from 'linode-components/tables';
 import {
   LinkCell,
   ButtonCell,
-} from '~/components/tables/cells';
+} from 'linode-components/tables/cells';
 
 
 export class ConfigPanel extends Component {

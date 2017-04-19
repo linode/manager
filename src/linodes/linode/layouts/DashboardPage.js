@@ -9,10 +9,10 @@ import PlanStyle from '~/linodes/components/PlanStyle';
 import WeblishLaunch from '~/linodes/components/WeblishLaunch';
 import { getLinode } from './IndexPage';
 import { setSource } from '~/actions/source';
-import { Button } from '~/components/buttons';
-import { Card, CardHeader } from '~/components/cards';
+import { Button } from 'linode-components/buttons';
+import { Card, CardHeader } from 'linode-components/cards';
 import LineGraph from '~/components/graphs/LineGraph';
-import { Select } from '~/components/form';
+import { Select } from 'linode-components/forms';
 import { getObjectByLabelLazily } from '~/api/util';
 import { linodeStats } from '~/api/linodes';
 

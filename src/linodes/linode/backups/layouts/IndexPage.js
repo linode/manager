@@ -3,14 +3,14 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { push } from 'react-router-redux';
 
-import Tabs from '~/components/Tabs';
+import { Tabs } from 'linode-components/tabs';
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import { enableBackup } from '~/api/backups';
 import { linodeBackups } from '~/api/linodes';
 import { setSource } from '~/actions/source';
 import { ErrorSummary, reduceErrors } from '~/errors';
-import { PrimaryButton } from '~/components/buttons';
-import { Card, CardHeader } from '~/components/cards';
+import { PrimaryButton } from 'linode-components/buttons';
+import { Card, CardHeader } from 'linode-components/cards';
 
 export class IndexPage extends Component {
   static async preload({ dispatch, getState }, { linodeLabel }) {

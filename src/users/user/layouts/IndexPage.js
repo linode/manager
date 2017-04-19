@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { push } from 'react-router-redux';
 
-import Tabs from '~/components/Tabs';
+import { Tabs } from 'linode-components/tabs';
 import { users } from '~/api';
 import { setError } from '~/actions/errors';
 

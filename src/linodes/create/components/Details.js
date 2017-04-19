@@ -1,9 +1,16 @@
 import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
 
-import { Card, CardHeader } from '~/components/cards';
-import { PrimaryButton } from '~/components/buttons';
-import { Form, FormGroup, FormGroupError, PasswordInput, Input, Checkbox } from '~/components/form';
+import { Card, CardHeader } from 'linode-components/cards';
+import { PrimaryButton } from 'linode-components/buttons';
+import {
+  Form,
+  FormGroup,
+  FormGroupError,
+  PasswordInput,
+  Input,
+  Checkbox,
+} from 'linode-components/forms';
 import { ErrorSummary } from '~/errors';
 
 export default class Details extends Component {

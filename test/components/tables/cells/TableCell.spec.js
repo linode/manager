@@ -3,7 +3,7 @@ import sinon from 'sinon';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
 
-import { TableCell } from '~/components/tables/cells';
+import { TableCell } from 'linode-components/tables/cells';
 
 
 describe('components/tables/cells/TableCell', function () {

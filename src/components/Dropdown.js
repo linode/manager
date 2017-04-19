@@ -54,7 +54,6 @@ export default class Dropdown extends Component {
             data-toggle="dropdown"
             aria-haspopup="true"
             aria-expanded={this.state.open}
-            onClick={this.open}
           >
             <i className="fa fa-caret-down"></i>
           </button> : null}

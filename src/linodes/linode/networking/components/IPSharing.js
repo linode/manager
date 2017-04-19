@@ -1,14 +1,14 @@
 import React, { PropTypes, Component } from 'react';
 
 import _ from 'lodash';
-import { Card, CardHeader } from '~/components/cards';
-import { Form, FormGroup, SubmitButton } from '~/components/form';
-import { Table } from '~/components/tables';
+import { Card, CardHeader } from 'linode-components/cards';
+import { Form, FormGroup, SubmitButton } from 'linode-components/forms';
+import { Table } from 'linode-components/tables';
 import {
   CheckboxCell,
   LinkCell,
-  IPRdnsCell,
-} from '~/components/tables/cells';
+} from 'linode-components/tables/cells';
+import { IPRdnsCell } from '~/components/tables/cells';
 import { ErrorSummary, reduceErrors } from '~/errors';
 import { setShared } from '~/api/linodes';
 

@@ -3,12 +3,12 @@ import { connect } from 'react-redux';
 
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
-import { Card } from '~/components/cards';
+import { Card } from 'linode-components/cards';
 import {
   Form,
   Checkbox,
   SubmitButton,
-} from '~/components/form';
+} from 'linode-components/forms';
 import { settings } from '~/api';
 import { reduceErrors } from '~/errors';
 import { setError } from '~/actions/errors';

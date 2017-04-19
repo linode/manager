@@ -3,9 +3,9 @@ import sinon from 'sinon';
 import { expect } from 'chai';
 import { shallow, mount } from 'enzyme';
 
-import { PasswordInput } from '~/components/form';
+import { PasswordInput } from 'linode-components/forms';
 
-describe('components/form/PasswordInput', () => {
+describe('components/forms/PasswordInput', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {

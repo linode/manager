@@ -2,8 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
-import { Card, CardHeader } from '~/components/cards';
-import Tabs from '~/components/Tabs';
+import { Card, CardHeader } from 'linode-components/cards';
+import { Tabs } from 'linode-components/tabs';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 import { domains } from '~/api';

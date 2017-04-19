@@ -3,8 +3,8 @@ import _ from 'lodash';
 
 import { linodes } from '~/api';
 import { Form, FormGroup, FormGroupError, Input, Select,
-  SubmitButton, PasswordInput } from '~/components/form';
-import { CancelButton } from '~/components/buttons';
+  SubmitButton, PasswordInput } from 'linode-components/forms';
+import { CancelButton } from 'linode-components/buttons';
 import { ErrorSummary, reduceErrors } from '~/errors';
 import { hideModal } from '~/actions/modal';
 

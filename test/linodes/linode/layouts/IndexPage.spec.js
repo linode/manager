@@ -7,7 +7,7 @@ import { api, state } from '@/data';
 import { testLinode } from '@/data/linodes';
 import { expectRequest } from '@/common';
 import * as IndexPageWrapper from '~/linodes/linode/layouts/IndexPage';
-import Dropdown from '~/components/Dropdown';
+import { Dropdown } from 'linode-components/dropdowns';
 
 const {
   IndexPage,

@@ -6,17 +6,20 @@ import _ from 'lodash';
 
 import CreateHelper from '~/components/CreateHelper';
 
-import { List, Table } from '~/components/tables';
-import { ListHeader } from '~/components/tables/headers';
-import { ListBody, ListGroup } from '~/components/tables/bodies';
+import { List } from 'linode-components/lists';
+import { Table } from 'linode-components/tables';
+import { ListHeader } from 'linode-components/lists/headers';
+import { ListBody, ListGroup } from 'linode-components/lists/bodies';
 import {
   CheckboxCell,
+  LinkCell,
+} from 'linode-components/tables/cells';
+import {
   IPAddressCell,
   RegionCell,
   BackupsCell,
-  LinkCell,
 } from '~/components/tables/cells';
-import { MassEditControl } from '~/components/tables/controls';
+import { MassEditControl } from 'linode-components/lists/controls';
 import StatusDropdownCell from '~/linodes/components/StatusDropdownCell';
 
 import { setError } from '~/actions/errors';
@@ -29,7 +32,7 @@ import {
 } from '~/api/linodes';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
-import DeleteModalBody from '~/components/modals/DeleteModalBody';
+import { DeleteModalBody } from 'linode-components/modals';
 import { showModal, hideModal } from '~/actions/modal';
 
 const OBJECT_TYPE = 'linodes';

@@ -6,7 +6,7 @@ import { VERSION } from '~/constants';
 import Header from '~/components/Header';
 import Notifications from '~/components/notifications/Notifications';
 import SessionMenu from '~/components/SessionMenu';
-import { ModalShell } from '~/components/modals';
+import { ModalShell } from 'linode-components/modals';
 import Error from '~/components/Error';
 import PreloadIndicator from '~/components/PreloadIndicator.js';
 import { hideModal } from '~/actions/modal';

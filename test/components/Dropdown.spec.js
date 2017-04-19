@@ -2,7 +2,7 @@ import React from 'react';
 import sinon from 'sinon';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
-import Dropdown from '~/components/Dropdown';
+import { Dropdown } from 'linode-components/dropdowns';
 
 describe('components/Dropdown', () => {
   const sandbox = sinon.sandbox.create();
