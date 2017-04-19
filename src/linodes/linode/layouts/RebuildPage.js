@@ -9,18 +9,13 @@ import { reduceErrors, ErrorSummary } from '~/errors';
 import Distributions from '~/linodes/components/Distributions';
 import { setSource } from '~/actions/source';
 import { rebuildLinode } from '~/api/linodes';
-import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
-import Distributions from '~/linodes/components/Distributions';
-
 import { selectLinode } from '../utilities';
-
 
 export class RebuildPage extends Component {
   static DEFAULT_DISTRIBUTION = 'linode/Ubuntu16.04LTS'
 
   constructor(props) {
     super(props);
-
     const distribution = props.linode.distribution;
     this.state = {
       distribution: distribution ? distribution.id : RebuildPage.DEFAULT_DISTRIBUTION,
@@ -36,18 +31,24 @@ export class RebuildPage extends Component {
   }
 
   async onSubmit() {
-    const { dispatch, linode: { id } } = this.props;
+    const { dispatch, linode } = this.props;
+    const { label, id } = linode;
 
-    await dispatch(dispatchOrStoreErrors.apply(this, [
-      [
-        () => rebuildLinode(id, {
-          distribution: this.state.distribution,
-          root_pass: this.state.password,
-        }),
-        () => this.setState({ password: '', distribution: RebuildPage.DEFAULT_DISTRIBUTION }),
-      ],
-      ['distribution'],
-    ]));
+    this.setState({ loading: true, errors: {} });
+
+    try {
+      await dispatch(rebuildLinode(id, {
+        distribution: this.state.distribution,
+        root_pass: this.state.password,
+      }));
+      dispatch(push(`/linodes/${label}`));
+    } catch (response) {
+      const errors = await reduceErrors(response);
+      errors._.concat(errors.distribution);
+      this.setState({ errors });
+    }
+
+    this.setState({ loading: false });
   }
 
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
