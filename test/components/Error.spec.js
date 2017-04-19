@@ -6,7 +6,6 @@ import { expect } from 'chai';
 import { Error } from 'linode-components/errors';
 
 
-
 describe('components/Error', () => {
   const sandbox = sinon.sandbox.create();
 
