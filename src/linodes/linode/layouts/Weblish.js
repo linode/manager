@@ -4,7 +4,6 @@ import { withRouter } from 'react-router';
 
 import { LISH_ROOT } from '~/secrets';
 import { getObjectByLabelLazily } from '~/api/util';
-import { selectLinode } from '../utilities';
 import { lishToken } from '~/api/linodes';
 
 export function addCSSLink(url) {
