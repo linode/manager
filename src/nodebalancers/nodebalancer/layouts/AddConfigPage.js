@@ -81,7 +81,7 @@ export class AddConfigPage extends Component {
         <div>
           <p>
             Configure how your NodeBalancer listens for incoming traffic
-            and connects to backend nodes. <a href="#">Learn more.</a>
+            and connects to backend nodes.
           </p>
         </div>
         <ConfigForm
