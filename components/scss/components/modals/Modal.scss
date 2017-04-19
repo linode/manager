@@ -61,7 +61,11 @@
     }
 }
 .DeleteModalBody {
-  li {
-    font-weight: bold;
-  }
+    strong {
+        white-space: nowrap;
+    }
+
+    li {
+        font-weight: bold;
+    }
 }

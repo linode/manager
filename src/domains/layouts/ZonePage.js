@@ -5,7 +5,7 @@ import { replace } from 'react-router-redux';
 import _ from 'lodash';
 
 import { showModal, hideModal } from '~/actions/modal';
-import { ConfirmModalBody } from 'linode-components/modals';
+import { DeleteModalBody } from 'linode-components/modals';
 import { formatDNSSeconds, ONE_DAY } from '../components/SelectDNSSeconds';
 import EditSOARecord from '../components/EditSOARecord';
 import EditNSRecord from '../components/EditNSRecord';
@@ -114,16 +114,16 @@ export class ZonePage extends Component {
     const { dispatch, domain } = this.props;
 
     dispatch(showModal(title,
-      <ConfirmModalBody
+      <DeleteModalBody
         buttonText="Delete Domain record"
         onOk={async () => {
           await dispatch(domains.records.delete(domain.id, id));
           dispatch(hideModal());
         }}
+        items={[domain.domain]}
+        typeOfItem="Domains"
         onCancel={() => dispatch(hideModal())}
-      >
-        Are you sure you want to delete the Domain record?
-      </ConfirmModalBody>
+      />
     ));
   }
 

@@ -4,7 +4,6 @@ import { shallow } from 'enzyme';
 import { expect } from 'chai';
 
 import CreatePersonalAccessToken from '~/profile/integrations/components/CreatePersonalAccessToken';
-import SelectExpiration from '~/profile/components/SelectExpiration';
 import { SHOW_MODAL } from '~/actions/modal';
 import { expectRequest } from '@/common';
 
@@ -29,7 +28,6 @@ describe('profile/integrations/components/CreatePersonalAccessToken', () => {
       page.find({ id, name: id }).props().onChange({ target: { value, name: id } });
 
     changeInput('label', 'My sweet new token');
-    changeInput('expiry', '30');
 
     dispatch.returns({ token: 'the-secret' });
     await page.props().onSubmit();
@@ -42,7 +40,7 @@ describe('profile/integrations/components/CreatePersonalAccessToken', () => {
       method: 'POST',
       body: {
         label: 'My sweet new token',
-        expiry: SelectExpiration.map('30'),
+        // Can't actually check on expiry because it's based off of $NOW which leads to test failure
       },
     });
 

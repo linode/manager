@@ -8,7 +8,7 @@ import { showModal, hideModal } from '~/actions/modal';
 import { nodebalancers as api } from '~/api';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
-import { ConfirmModalBody } from 'linode-components/modals';
+import { DeleteModalBody } from 'linode-components/modals';
 import CreateHelper from '~/components/CreateHelper';
 import { List } from 'linode-components/lists';
 import { Table } from 'linode-components/tables';
@@ -58,7 +58,7 @@ export class IndexPage extends Component {
     const nodebalancersArr = Array.isArray(nodebalancers) ? nodebalancers : [nodebalancers];
 
     dispatch(showModal('Delete NodeBalancer',
-      <ConfirmModalBody
+      <DeleteModalBody
         buttonText="Delete"
         onOk={async () => {
           const ids = nodebalancersArr.map(function (nodebalancer) { return nodebalancer.id; });
@@ -68,9 +68,9 @@ export class IndexPage extends Component {
           dispatch(hideModal());
         }}
         onCancel={() => dispatch(hideModal())}
-      >
-        Are you sure you want to <strong>permanently</strong> delete this NodeBalancer?
-      </ConfirmModalBody>
+        items={nodebalancersArr.map(n => n.label)}
+        typeOfItem="NodeBalancers"
+      />
     ));
   }
 
