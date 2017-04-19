@@ -1,0 +1,36 @@
+{
+  "name": "Config",
+  "import": "from linode import Config",
+  "_object": "linode_config",
+  "desc": "A Linode configuration profile.  This class maps Disks and a Kernel to a Linode, allowing it to boot. These do not need to be created manually - deploy a linode with <code>client.create_linode(serv, dc,  source=distribution)</code> to have the API generate a configuration for you.\n",
+  "constructor": {
+    "name": "Config",
+    "parameters": {
+      "client": {
+        "_keyword": false,
+        "desc": "The <code>LinodeClient</code> this object will use to communicate with the API."
+      },
+      "id": {
+        "_keyword": false,
+        "desc": "This Config's ID."
+      },
+      "parent_id": {
+        "_keyword": false,
+        "desc": "The <code>Linode</code> object's ID who owns this Config."
+      }
+    },
+    "example": "config = linode.Config(client, \"My Debian 8.1 Disk Profile\", \"123456\")\n"
+  },
+  "methods": {
+    "save": {
+      "desc": "Sends any local changes to Editable fields of this Config to the API, saving them.\n",
+      "example": "config.save()\n",
+      "returns": "True if the save succeeded"
+    },
+    "delete": {
+      "desc": "Deletes this Config.  This is not reversable.\n",
+      "example": "config.delete()",
+      "returns": "True if the delete succueeded."
+    }
+  }
+}

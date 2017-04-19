@@ -1,0 +1,20 @@
+{
+  "name": "Datacenter",
+  "import": "from linode import Datacenter",
+  "_object": "datacenter",
+  "desc": "Represents a Datacenter in the API.\n",
+  "constructor": {
+    "name": "Datacenter",
+    "parameters": {
+      "client": {
+        "_keyword": false,
+        "desc": "The <code>LinodeClient</code> this object will use to communicate with the API."
+      },
+      "id": {
+        "_keyword": false,
+        "desc": "This Datacenter's ID."
+      }
+    },
+    "example": "dc = linode.Datacenter(client, \"newark\")\n"
+  }
+}
