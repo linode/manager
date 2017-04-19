@@ -14,12 +14,12 @@ import { Form,
   RadioSelectCombo,
   Checkbox,
   Checkboxes,
-} from '~/components/form';
+} from 'linode-components/forms';
 import { ErrorSummary, reduceErrors } from '~/errors';
 
-import { SubmitButton } from '~/components/form';
-import { Card, CardHeader } from '~/components/cards';
-import { CancelButton, LinkButton } from '~/components/buttons';
+import { SubmitButton } from 'linode-components/forms';
+import { Card, CardHeader } from 'linode-components/cards';
+import { CancelButton, LinkButton } from 'linode-components/buttons';
 import { setSource } from '~/actions/source';
 import { setError } from '~/actions/errors';
 

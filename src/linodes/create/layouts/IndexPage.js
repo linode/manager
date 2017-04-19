@@ -7,7 +7,7 @@ import Source from '../components/Source';
 import Plan from '~/linodes/components/Plan';
 import Region from '~/components/Region';
 import Details from '../components/Details';
-import { Card, CardHeader } from '~/components/cards';
+import { Card, CardHeader } from 'linode-components/cards';
 import { linodes } from '~/api';
 import { setError } from '~/actions/errors';
 import { setSource } from '~/actions/source';

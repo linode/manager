@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { Card, CardHeader } from '~/components/cards';
+import { Card, CardHeader } from 'linode-components/cards';
 
 function ReferralsPage(props) {
   // TODO: Add referrals description

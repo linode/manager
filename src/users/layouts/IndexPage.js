@@ -7,8 +7,8 @@ import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 import { setError } from '~/actions/errors';
 import { users } from '~/api';
-import { Button } from '~/components/buttons';
-import { Card, CardImageHeader } from '~/components/cards/';
+import { Button } from 'linode-components/buttons';
+import { Card, CardImageHeader } from 'linode-components/cards/';
 
 import { GRAVATAR_BASE_URL } from '~/constants';
 

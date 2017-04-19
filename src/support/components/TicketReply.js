@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import moment from 'moment';
 
-import { Card, CardImageHeader } from '~/components/cards';
+import { Card, CardImageHeader } from 'linode-components/cards';
 
 export function getLineBreakCharacter(text) {
   // Check the longer one first because it contains the second one.

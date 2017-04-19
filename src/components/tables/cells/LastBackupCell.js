@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import moment from 'moment';
 
-import TableCell from './TableCell';
+import { TableCell } from 'linode-components/tables/cells';
 
 
 export default function LastBackupCell(props) {

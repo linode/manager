@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import Tabs from '~/components/Tabs';
+import { Tabs } from 'linode-components/tabs';
 
 export function IndexPage(props) {
   const tabs = [

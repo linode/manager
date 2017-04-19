@@ -5,7 +5,7 @@ import { replace } from 'react-router-redux';
 import _ from 'lodash';
 
 import { showModal, hideModal } from '~/actions/modal';
-import ConfirmModalBody from '~/components/modals/ConfirmModalBody';
+import { ConfirmModalBody } from 'linode-components/modals';
 import { formatDNSSeconds, ONE_DAY } from '../components/SelectDNSSeconds';
 import EditSOARecord from '../components/EditSOARecord';
 import EditNSRecord from '../components/EditNSRecord';
@@ -19,13 +19,11 @@ import { domains } from '~/api';
 import { getObjectByLabelLazily } from '~/api/util';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
-import { Button } from '~/components/buttons';
-import { Card, CardHeader } from '~/components/cards';
-import { Table } from '~/components/tables';
-import {
-  ButtonCell,
-  NameserversCell,
-} from '~/components/tables/cells';
+import { Button } from 'linode-components/buttons';
+import { Card, CardHeader } from 'linode-components/cards';
+import { Table } from 'linode-components/tables';
+import { ButtonCell } from 'linode-components/tables/cells';
+import { NameserversCell } from '~/components/tables/cells';
 import { NAME_SERVERS } from '~/constants';
 
 export class ZonePage extends Component {

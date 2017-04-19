@@ -1,10 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { Card, CardHeader } from '~/components/cards';
+import { Card, CardHeader } from 'linode-components/cards';
 import {
   FormGroup, Form, SubmitButton,
-} from '~/components/form';
+} from 'linode-components/forms';
 import { reduceErrors, ErrorSummary } from '~/errors';
 import { setSource } from '~/actions/source';
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';

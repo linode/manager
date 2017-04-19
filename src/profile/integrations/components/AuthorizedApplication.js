@@ -4,13 +4,13 @@ import moment from 'moment';
 import _ from 'lodash';
 
 import { API_ROOT } from '~/constants';
-import { Button } from '~/components/buttons/';
-import { Card, CardImageHeader } from '~/components/cards/';
+import { Button } from 'linode-components/buttons/';
+import { Card, CardImageHeader } from 'linode-components/cards/';
 
 import { tokens } from '~/api';
 import { reduceErrors } from '~/errors';
 import { OAUTH_SUBSCOPES, OAUTH_SCOPES } from '~/constants';
-import { Table } from '~/components/tables';
+import { Table } from 'linode-components/tables';
 import { AuthScopeCell } from '~/components/tables/cells';
 
 

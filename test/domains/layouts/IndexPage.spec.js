@@ -5,7 +5,7 @@ import { expect } from 'chai';
 
 import { IndexPage } from '~/domains/layouts/IndexPage';
 import { api } from '@/data';
-import Dropdown from '~/components/Dropdown';
+import { Dropdown } from 'linode-components/dropdowns';
 import { expectRequest } from '@/common.js';
 import { SHOW_MODAL } from '~/actions/modal';
 

@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 
 import { showModal, hideModal } from '~/actions/modal';
 import { getLinode } from '~/linodes/linode/layouts/IndexPage';
-import { Card, CardHeader } from '~/components/cards';
-import { Table } from '~/components/tables';
-import { ButtonCell } from '~/components/tables/cells';
+import { Card, CardHeader } from 'linode-components/cards';
+import { Table } from 'linode-components/tables';
+import { ButtonCell } from 'linode-components/tables/cells';
 import { setError } from '~/actions/errors';
 import { linodeIPs, setRDNS } from '~/api/linodes';
 import EditRDNS from '../components/EditRDNS';

@@ -1,6 +1,6 @@
 {
   "name": "linode-manager",
-  "version": "0.1.0",
+  "version": "0.2.1",
   "dependencies": {
     "asap": {
       "version": "2.0.5",
@@ -122,6 +122,11 @@
       "from": "is-stream@>=1.0.1 <2.0.0",
       "resolved": "https://registry.npmjs.org/is-stream/-/is-stream-1.1.0.tgz"
     },
+    "isarray": {
+      "version": "0.0.1",
+      "from": "isarray@0.0.1",
+      "resolved": "https://registry.npmjs.org/isarray/-/isarray-0.0.1.tgz"
+    },
     "isomorphic-fetch": {
       "version": "2.2.1",
       "from": "isomorphic-fetch@>=2.2.0 <3.0.0",
@@ -181,6 +186,11 @@
       "version": "4.1.1",
       "from": "object-assign@>=4.1.0 <5.0.0",
       "resolved": "https://registry.npmjs.org/object-assign/-/object-assign-4.1.1.tgz"
+    },
+    "path-to-regexp": {
+      "version": "1.7.0",
+      "from": "path-to-regexp@>=1.5.3 <2.0.0",
+      "resolved": "https://registry.npmjs.org/path-to-regexp/-/path-to-regexp-1.7.0.tgz"
     },
     "promise": {
       "version": "7.1.1",
@@ -249,10 +259,25 @@
       "from": "redux@>=3.0.5 <4.0.0",
       "resolved": "https://registry.npmjs.org/redux/-/redux-3.6.0.tgz"
     },
+    "redux-devtools": {
+      "version": "3.3.2",
+      "from": "redux-devtools@>=3.3.1 <4.0.0",
+      "resolved": "https://registry.npmjs.org/redux-devtools/-/redux-devtools-3.3.2.tgz"
+    },
+    "redux-devtools-instrument": {
+      "version": "1.8.0",
+      "from": "redux-devtools-instrument@>=1.0.1 <2.0.0",
+      "resolved": "https://registry.npmjs.org/redux-devtools-instrument/-/redux-devtools-instrument-1.8.0.tgz"
+    },
     "redux-thunk": {
       "version": "2.2.0",
       "from": "redux-thunk@>=2.1.0 <3.0.0",
       "resolved": "https://registry.npmjs.org/redux-thunk/-/redux-thunk-2.2.0.tgz"
+    },
+    "resolve-pathname": {
+      "version": "2.0.2",
+      "from": "resolve-pathname@>=2.0.0 <3.0.0",
+      "resolved": "https://registry.npmjs.org/resolve-pathname/-/resolve-pathname-2.0.2.tgz"
     },
     "setimmediate": {
       "version": "1.0.5",
@@ -278,6 +303,11 @@
       "version": "0.7.12",
       "from": "ua-parser-js@>=0.7.9 <0.8.0",
       "resolved": "https://registry.npmjs.org/ua-parser-js/-/ua-parser-js-0.7.12.tgz"
+    },
+    "value-equal": {
+      "version": "0.2.0",
+      "from": "value-equal@>=0.2.0 <0.3.0",
+      "resolved": "https://registry.npmjs.org/value-equal/-/value-equal-0.2.0.tgz"
     },
     "warning": {
       "version": "2.1.0",
