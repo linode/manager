@@ -9,7 +9,6 @@ var fs = require('fs');
 var app = express();
 var compiler = webpack(config);
 
-app.use('/assets', express.static(__dirname + '/assets'));
 
 app.use(require('webpack-dev-middleware')(compiler, {
   noInfo: true,
@@ -26,7 +25,7 @@ app.get('*', function(req, res) {
   }
 });
 
-var port = process.env.MANAGER_PORT || 3000;
+var port = process.env.DOCS_PORT || 5000;
 
 app.listen(port, 'localhost', function(err) {
   if (err) {
