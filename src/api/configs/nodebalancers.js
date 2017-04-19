@@ -16,6 +16,8 @@ export const config = genConfig({
       supports: [ONE, MANY, PUT, POST, DELETE],
     },
   },
+
+
 });
 
 export const actions = genActions(config);

@@ -1,11 +1,11 @@
 import React, { PropTypes, Component } from 'react';
 import _ from 'lodash';
 
-import { ModalFormGroup } from '~/components/form';
+import { ModalFormGroup } from 'linode-components/forms';
 import { showModal, hideModal } from '~/actions/modal';
-import { ConfirmModalBody } from '~/components/modals';
-import { Form, Input, Select, SubmitButton } from '~/components/form';
-import { CancelButton } from '~/components/buttons';
+import { ConfirmModalBody } from 'linode-components/modals';
+import { Form, Input, Select, SubmitButton } from 'linode-components/forms';
+import { CancelButton } from 'linode-components/buttons';
 import { reduceErrors, ErrorSummary } from '~/errors';
 import { OAUTH_SUBSCOPES, OAUTH_SCOPES } from '~/constants';
 import { tokens } from '~/api';

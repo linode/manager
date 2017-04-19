@@ -74,8 +74,8 @@ describe('linodes/create/layout/IndexPage', () => {
         linodes={api.linodes}
       />);
     const ds = page.find('Region');
-    ds.props().onRegionSelected('newark');
-    expect(page.instance().state.region).to.equal('newark');
+    ds.props().onRegionSelected('us-east-1a');
+    expect(page.instance().state.region).to.equal('us-east-1a');
   });
 
   it('selects a type when appropriate', () => {

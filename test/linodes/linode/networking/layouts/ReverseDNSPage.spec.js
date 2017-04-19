@@ -6,9 +6,6 @@ import { expect } from 'chai';
 import { SHOW_MODAL } from '~/actions/modal';
 import { ReverseDNSPage } from '~/linodes/linode/networking/layouts/ReverseDNSPage';
 import { testLinode } from '@/data/linodes';
-import { state } from '@/data';
-
-const { linodes } = state.api;
 
 describe('linodes/linode/networking/layouts/ReverseDNSPage', () => {
   const sandbox = sinon.sandbox.create();
@@ -21,13 +18,12 @@ describe('linodes/linode/networking/layouts/ReverseDNSPage', () => {
 
   it('renders ips', () => {
     const { _ips } = testLinode;
-    const ips = [..._ips.ipv4.public, ..._ips.ipv6.addresses];
+    const ips = [..._ips.ipv4.public, ..._ips.ipv6.addresses, _ips.ipv6.slaac];
     const addresses = ips.map(({ address }) => address);
     const page = mount(
       <ReverseDNSPage
         dispatch={dispatch}
-        linodes={linodes}
-        params={{ linodeLabel: testLinode.label }}
+        linode={testLinode}
       />
     );
 
@@ -36,7 +32,7 @@ describe('linodes/linode/networking/layouts/ReverseDNSPage', () => {
     for (let i = 1; i < rows.length; i++) {
       const row = rows.at(i);
       const columns = row.find('.Table-cell');
-      expect(columns.length).to.equal(3);
+      expect(columns.length).to.equal(4);
 
       const addressIndex = addresses.indexOf(columns.at(0).text());
       expect(addressIndex).to.not.equal(-1);
@@ -49,8 +45,7 @@ describe('linodes/linode/networking/layouts/ReverseDNSPage', () => {
     const page = mount(
       <ReverseDNSPage
         dispatch={dispatch}
-        linodes={linodes}
-        params={{ linodeLabel: testLinode.label }}
+        linode={testLinode}
       />
     );
 

@@ -1,10 +1,10 @@
 import React, { PropTypes, Component } from 'react';
 
 import { domains } from '~/api';
-import { ModalFormGroup } from '~/components/form';
+import { ModalFormGroup } from 'linode-components/forms';
 import SelectDNSSeconds from './SelectDNSSeconds';
-import { Form, Input, Select, SubmitButton } from '~/components/form';
-import { CancelButton } from '~/components/buttons';
+import { Form, Input, Select, SubmitButton } from 'linode-components/forms';
+import { CancelButton } from 'linode-components/buttons';
 import { reduceErrors, ErrorSummary } from '~/errors';
 
 export default class EditSRVRecord extends Component {

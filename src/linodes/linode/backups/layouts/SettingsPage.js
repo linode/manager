@@ -1,14 +1,14 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { FormGroup } from '~/components/form';
+import { FormGroup } from 'linode-components/forms';
 import { ErrorSummary, reduceErrors } from '~/errors';
 import { linodes } from '~/api';
 import { cancelBackup } from '~/api/backups';
-import { Card, CardHeader } from '~/components/cards';
-import { ConfirmModalBody } from '~/components/modals';
-import { Form, SubmitButton } from '~/components/form';
-import { getLinode } from '~/linodes/linode/layouts/IndexPage';
+import { Card, CardHeader } from 'linode-components/cards';
+import { ConfirmModalBody } from 'linode-components/modals';
+import { Form, SubmitButton } from 'linode-components/forms';
+import { selectLinode } from '../../utilities';
 import { setSource } from '~/actions/source';
 import { showModal, hideModal } from '~/actions/modal';
 
@@ -16,8 +16,8 @@ import { showModal, hideModal } from '~/actions/modal';
 export class SettingsPage extends Component {
   constructor(props) {
     super(props);
-    this.getLinode = getLinode.bind(this);
-    const { day, window } = this.getLinode().backups.schedule;
+
+    const { day, window } = props.linode.backups.schedule;
     this.state = { day, window, errors: {} };
   }
 
@@ -27,8 +27,7 @@ export class SettingsPage extends Component {
   }
 
   async saveChanges() {
-    const { dispatch } = this.props;
-    const linode = this.getLinode();
+    const { dispatch, linode } = this.props;
     const { day, window } = this.state;
     try {
       await dispatch(linodes.put({
@@ -43,9 +42,8 @@ export class SettingsPage extends Component {
   }
 
   render() {
-    const { dispatch } = this.props;
+    const { dispatch, linode } = this.props;
     const { window, day, errors } = this.state;
-    const linode = this.getLinode();
 
     return (
       <div>
@@ -133,14 +131,7 @@ export class SettingsPage extends Component {
 
 SettingsPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  linodes: PropTypes.object.isRequired,
-  params: PropTypes.shape({
-    linodeLabel: PropTypes.string.isRequired,
-  }).isRequired,
+  linode: PropTypes.object.isRequired,
 };
 
-function select(state) {
-  return { linodes: state.api.linodes };
-}
-
-export default connect(select)(SettingsPage);
+export default connect(selectLinode)(SettingsPage);

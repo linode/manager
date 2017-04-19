@@ -1,4 +1,5 @@
 import { testType } from './types';
+import { apiTestRegion } from './regions';
 
 const stats = {
   netv6: {
@@ -56,10 +57,7 @@ function createTestLinode(id) {
     created: '2016-07-06T16:47:27',
     type: [testType],
     status: 'running',
-    region: {
-      id: 'newark',
-      label: 'Newark, NJ',
-    },
+    region: apiTestRegion,
     distribution: {
       id: 'linode/ubuntu15.10',
       vendor: 'Ubuntu',
@@ -120,11 +118,7 @@ function createTestLinode(id) {
         configs: [
           'Ubuntu Disk',
         ],
-        region: {
-          label: 'Newark, NJ',
-          country: 'us',
-          id: 'newark',
-        },
+        region: apiTestRegion,
       },
       snapshot: {
         current: {
@@ -150,11 +144,7 @@ function createTestLinode(id) {
           configs: [
             'Some config',
           ],
-          region: {
-            label: 'Newark, NJ',
-            country: 'us',
-            id: 'newark',
-          },
+          region: apiTestRegion,
         },
         in_progress: null,
       },
@@ -235,7 +225,11 @@ function createTestLinode(id) {
         global: [],
         addresses: [],
         link_local: 'fe80::f03c:91ff:fe0a:181f',
-        slaac: ipv6.address,
+        slaac: {
+          address: ipv6.address,
+          rdns: '',
+          prefix: '64',
+        },
       },
     },
   };
@@ -246,7 +240,7 @@ export const testLinode = {
   label: 'test-linode',
 };
 
-const testLinode1233 = {
+export const testLinode1233 = {
   ...createTestLinode(1233),
   _configs: {
     ...testLinode._configs,
@@ -264,7 +258,7 @@ const testLinode1233 = {
   },
 };
 
-const testLinode1235 = {
+export const testLinode1235 = {
   ...createTestLinode(1235),
   label: 'test-linode-1',
   group: '',
@@ -296,11 +290,7 @@ const testLinode1235 = {
         configs: [
           'aConfig',
         ],
-        region: {
-          label: 'Newark, NJ',
-          country: 'us',
-          id: 'newark',
-        },
+        region: apiTestRegion,
       }, {
         finished: '2017-01-31T07:30:03',
         label: null,
@@ -324,17 +314,13 @@ const testLinode1235 = {
         configs: [
           'My Ubuntu 15.10 Disk',
         ],
-        region: {
-          label: 'Newark, NJ',
-          country: 'us',
-          id: 'newark',
-        },
+        region: apiTestRegion,
       },
     ],
   },
 };
 
-const testLinode1236 = {
+export const testLinode1236 = {
   ...createTestLinode(1236),
   label: 'test-linode-2',
   status: 'offline',
@@ -350,7 +336,7 @@ const testLinode1236 = {
   },
 };
 
-const testLinode1237 = {
+export const testLinode1237 = {
   ...createTestLinode(1237),
   label: 'test-linode-3',
   status: 'booting',
@@ -358,7 +344,7 @@ const testLinode1237 = {
   backups: { ...testLinode.backups, enabled: false },
 };
 
-const testLinode1238 = {
+export const testLinode1238 = {
   ...createTestLinode(1238),
   label: 'test-linode-4',
   status: 'offline',
@@ -377,7 +363,7 @@ const testLinode1238 = {
   },
 };
 
-const testLinode1239 = {
+export const testLinode1239 = {
   ...createTestLinode(1239),
   label: 'test-linode-5',
   status: 'running',
@@ -389,7 +375,7 @@ const testLinode1239 = {
   },
 };
 
-const testLinodeWithUnallocatedSpace = {
+export const testLinodeWithUnallocatedSpace = {
   ...createTestLinode(1240),
   label: 'test-linode-6',
   status: 'offline',
@@ -418,7 +404,7 @@ const testLinodeWithUnallocatedSpace = {
   },
 };
 
-const testLinode1241 = {
+export const testLinode1241 = {
   ...createTestLinode(1241),
   label: 'test-linode-7',
   status: 'running',
@@ -430,7 +416,7 @@ const testLinode1241 = {
   },
 };
 
-const testLinode1242 = {
+export const testLinode1242 = {
   ...createTestLinode(1242),
   status: 'running',
   backups: { ...testLinode.backups, enabled: false },
@@ -441,13 +427,13 @@ const testLinode1242 = {
   },
 };
 
-const testLinode1243 = {
+export const testLinode1243 = {
   ...createTestLinode(1243),
   status: 'unrecognized',
   backups: { ...testLinode.backups, enabled: false },
 };
 
-const testLinode1245 = {
+export const testLinode1245 = {
   ...createTestLinode(1245),
   backups: {
     ...testLinode.backups,
@@ -462,7 +448,7 @@ const testLinode1245 = {
   },
 };
 
-const testLinode1246 = {
+export const testLinode1246 = {
   ...createTestLinode(1246),
   distribution: null,
 };

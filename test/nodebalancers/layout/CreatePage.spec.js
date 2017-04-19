@@ -22,14 +22,14 @@ describe('nodebalancers/layouts/CreatePage', () => {
       <CreatePage dispatch={dispatch} regions={api.regions} />
     );
 
-    page.instance().setState({ label: 'my-label', region: 'newark' });
+    page.instance().setState({ label: 'my-label', region: 'us-east-1a' });
     await page.instance().onSubmit();
 
     expect(dispatch.callCount).to.equal(2);
     const fn = dispatch.firstCall.args[0];
     await expectRequest(fn, '/nodebalancers/', {
       method: 'POST',
-      body: { label: 'my-label', region: 'newark' },
+      body: { label: 'my-label', region: 'us-east-1a' },
     });
 
     expectObjectDeepEquals(dispatch.secondCall.args[0], push('/nodebalancers'));

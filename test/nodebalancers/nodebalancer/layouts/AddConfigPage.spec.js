@@ -5,12 +5,10 @@ import { expect } from 'chai';
 import { push } from 'react-router-redux';
 
 import { expectRequest, expectObjectDeepEquals } from '@/common';
-import { api } from '@/data';
+import { genericNodeBalancer } from '@/data/nodebalancers';
 import { AddConfigPage } from '~/nodebalancers/nodebalancer/layouts/AddConfigPage';
 
-const { nodebalancers } = api;
-
-describe('nodebalancers/nodebalancer/AddConfigPage', () => {
+describe('nodebalancers/nodebalancer/layouts/AddConfigPage', () => {
   const sandbox = sinon.sandbox.create();
   const dispatch = sandbox.stub();
 
@@ -20,12 +18,9 @@ describe('nodebalancers/nodebalancer/AddConfigPage', () => {
   });
 
   it('commits changes to the API', async () => {
-    const nbLabel = 'nodebalancer-1';
-    const nodebalancer = nodebalancers.nodebalancers[0];
     const page = await mount(
       <AddConfigPage
-        nbLabel={nbLabel}
-        nodebalancer={nodebalancer}
+        nodebalancer={genericNodeBalancer}
         dispatch={dispatch}
       />
     );
@@ -48,7 +43,7 @@ describe('nodebalancers/nodebalancer/AddConfigPage', () => {
     expect(dispatch.callCount).to.equal(2);
     const fn = dispatch.firstCall.args[0];
     await expectRequest(
-      fn, `/nodebalancers/${nodebalancer.id}/configs/`,
+      fn, `/nodebalancers/${genericNodeBalancer.id}/configs/`,
       { method: 'POST',
         body: {
           check_timeout: 30,
@@ -66,7 +61,7 @@ describe('nodebalancers/nodebalancer/AddConfigPage', () => {
 
     expectObjectDeepEquals(
       dispatch.secondCall.args[0],
-      push(`/nodebalancers/${nbLabel}`)
+      push(`/nodebalancers/${genericNodeBalancer.label}`)
     );
   });
 });

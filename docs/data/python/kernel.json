@@ -1,0 +1,20 @@
+{
+  "name": "Kernel",
+  "import": "from linode import Kernel",
+  "_object": "kernel",
+  "desc": "Represents a Kernel in the API.\n",
+  "constructor": {
+    "name": "Kernel",
+    "parameters": {
+      "client": {
+        "_keyword": false,
+        "desc": "The <code>LinodeClient</code> this object will use to communicate with the API."
+      },
+      "id": {
+        "_keyword": false,
+        "desc": "This Kernel's ID."
+      }
+    },
+    "example": "kernel = linode.Kernel(client, \"linode/latest_64\")\n"
+  }
+}

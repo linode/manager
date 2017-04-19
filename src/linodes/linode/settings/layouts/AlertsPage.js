@@ -1,20 +1,19 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { getLinode } from '~/linodes/linode/layouts/IndexPage';
-import { Card, CardHeader } from '~/components/cards';
-import { CheckboxInputCombo, Form, SubmitButton } from '~/components/form';
+import { Card, CardHeader } from 'linode-components/cards';
+import { CheckboxInputCombo, Form, SubmitButton } from 'linode-components/forms';
+import { selectLinode } from '../../utilities';
 import { linodes } from '~/api';
 import { setSource } from '~/actions/source';
 
 export class AlertsPage extends Component {
   constructor(props) {
     super(props);
-    this.getLinode = getLinode.bind(this);
     this.renderAlertRow = this.renderAlertRow.bind(this);
     this.state = {
       loading: false,
-      alerts: this.getLinode().alerts || {
+      alerts: props.linode.alerts || {
         cpu: { threshold: 0, enabled: false },
         io: { threshold: 0, enabled: false },
         transfer_in: { threshold: 0, enabled: false },
@@ -30,10 +29,9 @@ export class AlertsPage extends Component {
   }
 
   async saveChanges() {
-    const { dispatch } = this.props;
-    const { id } = this.getLinode();
+    const { dispatch, linode } = this.props;
     this.setState({ loading: true });
-    await dispatch(linodes.put({ alerts: this.state.alerts }, id));
+    await dispatch(linodes.put({ alerts: this.state.alerts }, linode.id));
     this.setState({ loading: false });
   }
 
@@ -120,12 +118,8 @@ export class AlertsPage extends Component {
 }
 
 AlertsPage.propTypes = {
-  linodes: PropTypes.object.isRequired,
+  linode: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
 };
 
-function select(state) {
-  return { linodes: state.api.linodes };
-}
-
-export default connect(select)(AlertsPage);
+export default connect(selectLinode)(AlertsPage);

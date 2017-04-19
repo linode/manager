@@ -1,23 +1,23 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { Card, CardHeader } from '~/components/cards';
+import { Card, CardHeader } from 'linode-components/cards';
 import {
   FormGroup, Form, SubmitButton,
-} from '~/components/form';
+} from 'linode-components/forms';
 import { reduceErrors, ErrorSummary } from '~/errors';
 import { setSource } from '~/actions/source';
-import { getLinode } from '~/linodes/linode/layouts/IndexPage';
+import { selectLinode } from '../utilities';
 import { resizeLinode } from '~/api/linodes';
 import Plan from '~/linodes/components/Plan';
 
 export class ResizePage extends Component {
   constructor(props) {
     super(props);
-    this.getLinode = getLinode.bind(this);
+
     this.state = {
       // TODO: deal with multiple types better
-      type: this.getLinode().type[0].id,
+      type: props.linode.type[0].id,
       errors: {},
       fetching: false,
     };
@@ -29,13 +29,12 @@ export class ResizePage extends Component {
   }
 
   async onSubmit() {
-    const { id: linodeId } = this.getLinode();
-    const { dispatch } = this.props;
+    const { dispatch, linode } = this.props;
     const { type } = this.state;
     this.setState({ fetching: true, errors: {} });
 
     try {
-      await dispatch(resizeLinode(linodeId, type));
+      await dispatch(resizeLinode(linode.id, type));
     } catch (response) {
       const errors = await reduceErrors(response);
       errors._.concat(errors.type);
@@ -74,17 +73,13 @@ export class ResizePage extends Component {
 ResizePage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   types: PropTypes.object.isRequired,
-  linodes: PropTypes.object.isRequired,
-  params: PropTypes.shape({
-    linodeLabel: PropTypes.string.isRequired,
-  }).isRequired,
+  linode: PropTypes.object.isRequired,
 };
 
-function select(state) {
-  return {
-    types: state.api.types,
-    linodes: state.api.linodes,
-  };
+function select(state, props) {
+  const { linode } = selectLinode(state, props);
+  const { types } = state.api;
+  return { linode, types };
 }
 
 export default connect(select)(ResizePage);

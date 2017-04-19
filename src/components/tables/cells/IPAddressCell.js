@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 
-import TableCell from './TableCell';
+import { TableCell } from 'linode-components/tables/cells';
 
 
 // TODO: this could potentially be a more generic stacked values cell

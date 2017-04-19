@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 
-import { TableCell } from '~/components/tables/cells';
+import { TableCell } from 'linode-components/tables/cells';
 import StatusDropdown from './StatusDropdown';
 
 

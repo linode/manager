@@ -2,14 +2,13 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { linodes } from '~/api';
-import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 
 import { showModal } from '~/actions/modal';
 import { EditModal } from './EditModal';
 import { DeleteModal } from './DeleteModal';
 import { AddModal } from './AddModal';
-import { Button } from '~/components/buttons';
-import { Card, CardHeader } from '~/components/cards';
+import { Button } from 'linode-components/buttons';
+import { Card, CardHeader } from 'linode-components/cards';
 
 const borderColors = [
   '#1abc9c',
@@ -36,11 +35,6 @@ export class DiskPanel extends Component {
     await dispatch(linodes.disks.all([id]));
   }
 
-  constructor() {
-    super();
-    this.getLinode = getLinode.bind(this);
-  }
-
   renderStatusMessage(status) {
     if (status !== 'offline' && status !== 'provisioning') {
       return (
@@ -56,8 +50,7 @@ export class DiskPanel extends Component {
   }
 
   render() {
-    const { dispatch } = this.props;
-    const linode = this.getLinode();
+    const { dispatch, linode } = this.props;
     const disks = Object.values(linode._disks.disks);
     const total = linode.type[0].storage;
     const used = disks.reduce((total, disk) => total + disk.size, 0);
@@ -142,7 +135,5 @@ export class DiskPanel extends Component {
 
 DiskPanel.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  params: PropTypes.shape({
-    linodeLabel: PropTypes.string,
-  }),
+  linode: PropTypes.object.isRequired,
 };

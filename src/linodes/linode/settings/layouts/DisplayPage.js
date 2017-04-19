@@ -2,19 +2,19 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { getLinode } from '~/linodes/linode/layouts/IndexPage';
+import { selectLinode } from '../../utilities';
 import { linodes } from '~/api';
-import { Card, CardHeader } from '~/components/cards';
-import { Form, FormGroup, FormGroupError, Input, SubmitButton } from '~/components/form';
+import { Card, CardHeader } from 'linode-components/cards';
+import { Form, FormGroup, FormGroupError, Input, SubmitButton } from 'linode-components/forms';
 import { ErrorSummary, reduceErrors } from '~/errors';
 import { setSource } from '~/actions/source';
 
 export class DisplayPage extends Component {
   constructor(props) {
     super(props);
-    this.getLinode = getLinode.bind(this);
+
     this.onSubmit = this.onSubmit.bind(this);
-    const { group, label } = this.getLinode();
+    const { group, label } = props.linode;
     this.state = { group, label, errors: {}, loading: false };
   }
 
@@ -24,8 +24,8 @@ export class DisplayPage extends Component {
   }
 
   async onSubmit() {
-    const { dispatch } = this.props;
-    const { id, label: oldLabel, group: oldGroup } = this.getLinode();
+    const { dispatch, linode } = this.props;
+    const { id, label: oldLabel, group: oldGroup } = linode;
     const { group, label } = this.state;
 
     this.setState({ loading: true, errors: {} });
@@ -85,12 +85,8 @@ export class DisplayPage extends Component {
 }
 
 DisplayPage.propTypes = {
-  linodes: PropTypes.object.isRequired,
+  linode: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
 };
 
-function select(state) {
-  return { linodes: state.api.linodes };
-}
-
-export default connect(select)(DisplayPage);
+export default connect(selectLinode)(DisplayPage);

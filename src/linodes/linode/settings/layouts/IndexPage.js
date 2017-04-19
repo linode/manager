@@ -3,18 +3,13 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { push } from 'react-router-redux';
 
-import Tabs from '~/components/Tabs';
-import { getLinode } from '~/linodes/linode/layouts/IndexPage';
+import { Tabs } from 'linode-components/tabs';
+import { selectLinode } from '../../utilities';
 
 
 export class IndexPage extends Component {
-  constructor() {
-    super();
-    this.getLinode = getLinode.bind(this);
-  }
-
   render() {
-    const linode = this.getLinode();
+    const { linode } = this.props;
     if (!linode) return null;
 
     const tabs = [
@@ -41,18 +36,9 @@ export class IndexPage extends Component {
 
 IndexPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  linodes: PropTypes.object.isRequired,
-  params: PropTypes.shape({
-    linodeLabel: PropTypes.string.isRequired,
-  }).isRequired,
-  children: PropTypes.object,
+  linode: PropTypes.object.isRequired,
+  children: PropTypes.node.isRequired,
   location: PropTypes.object,
 };
 
-function select(state) {
-  return {
-    linodes: state.api.linodes,
-  };
-}
-
-export default withRouter(connect(select)(IndexPage));
+export default withRouter(connect(selectLinode)(IndexPage));

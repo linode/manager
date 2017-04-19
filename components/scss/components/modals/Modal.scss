@@ -1,0 +1,67 @@
+.ModalOverlay {
+    display: none;
+    z-index: 9999;
+    position: fixed;
+    top: $nav-height - 1px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: $transparent;
+
+    &--visible {
+        display: initial;
+    }
+}
+
+.Modal {
+    width: 500px;
+    margin: $main-padding-tb auto;
+    max-height: calc(100% - #{2 * $main-padding-tb});
+    box-shadow: $box-shadow;
+    background: $white;
+    display: flex;
+    flex-direction: column;
+    overflow-y: hidden;
+
+    &-header {
+        background: $gray;
+        padding: $main-padding-tb * 2 $main-padding-lr;
+        border-bottom: 1px solid #ccc;
+
+        h3 {
+            position: relative;
+            top: 1px;
+        }
+    }
+
+    &-body {
+        // TODO: address calculated gutter values where possible
+        padding: $main-padding-tb ($grid-gutter-width-base / 2);
+        overflow-y: auto;
+    }
+
+    &-footer {
+        text-align: right;
+        padding-left: 0;
+        padding-right: 0;
+        padding-bottom: 0;
+        border-top: 0;
+
+        .btn:not(:first-child) {
+            margin-left: 5px;
+        }
+    }
+
+    .Input, .Select {
+        display: block;
+
+        .form-control {
+            width: 100%;
+        }
+    }
+}
+.DeleteModalBody {
+  li {
+    font-weight: bold;
+  }
+}

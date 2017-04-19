@@ -4,6 +4,7 @@ import { mount } from 'enzyme';
 
 import { ResizePage } from '~/linodes/linode/layouts/ResizePage';
 import { expectRequest } from '@/common';
+import { testLinode } from '@/data/linodes';
 import { api } from '@/data';
 
 describe('linodes/linode/layouts/ResizePage', () => {
@@ -21,8 +22,7 @@ describe('linodes/linode/layouts/ResizePage', () => {
       <ResizePage
         dispatch={dispatch}
         types={api.types}
-        linodes={api.linodes}
-        params={{ linodeLabel: 'test-linode' }}
+        linode={testLinode}
       />
     );
 

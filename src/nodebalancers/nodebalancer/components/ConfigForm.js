@@ -5,9 +5,9 @@ import { Form,
   Input,
   Select,
   Checkbox,
-} from '~/components/form';
+} from 'linode-components/forms';
 import { ErrorSummary } from '~/errors';
-import { SubmitButton } from '~/components/form';
+import { SubmitButton } from 'linode-components/forms';
 
 export class ConfigForm extends Component {
   constructor(props) {

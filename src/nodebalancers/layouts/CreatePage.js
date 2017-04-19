@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { Link } from 'react-router';
 
-import { Card, CardHeader } from '~/components/cards';
-import { Input, Form, FormGroup, FormGroupError, SubmitButton } from '~/components/form';
+import { Card, CardHeader } from 'linode-components/cards';
+import { Input, Form, FormGroup, FormGroupError, SubmitButton } from 'linode-components/forms';
 import Region from '~/components/Region';
 import { nodebalancers } from '~/api';
 import { setSource } from '~/actions/source';
@@ -15,7 +15,7 @@ export class CreatePage extends Component {
   constructor() {
     super();
     this.state = {
-      region: 'newark',
+      region: 'us-east-1a',
       label: '',
       errors: {},
       fetching: false,

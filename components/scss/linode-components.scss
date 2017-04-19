@@ -1,0 +1,109 @@
+@import 'mixins';
+@import 'variables';
+@import 'bootstrap';
+@import 'defaults.scss';
+@import 'utilities';
+
+@import 'components/index';
+
+
+// TODO: look into
+.grid-list {
+    a .fa {
+        color: $lightest-black;
+        cursor: pointer;
+        cursor: hand;
+    }
+
+    .fa {
+        @extend .font-large;
+        color: $light-black;
+    }
+
+    span, div {
+        padding-right: 15px;
+        line-height: $form-field-height;
+        display: inline-block;
+    }
+
+    div {
+        position: relative;
+        top: -3px;
+    }
+
+    span:last-of-type {
+        padding-right: 0;
+    }
+}
+
+.navicon {
+    @extend .font-large;
+    padding-left: 15px;
+    position: relative;
+    top: 2px;
+
+    &:hover,
+    &:active,
+    &:focus {
+        color: $blue;
+    }
+}
+
+footer {
+    @extend .font-small;
+
+    padding-bottom: 15px;
+
+    span, a {
+        color: $lightest-black;
+        padding: 0 10px;
+    }
+
+    a {
+        text-decoration: underline;
+    }
+}
+
+.error {
+    h1 {
+        font-size: 8rem; /* Special font-size case */
+        color: $dark-gray;
+    }
+
+    p {
+        margin: 10px;
+    }
+}
+
+.sub-header {
+    color: $light-black;
+    padding-top: 15px;
+    padding-bottom: 5px;
+}
+
+header .sub-header {
+    padding-bottom: 0px;
+}
+
+.list-unstyled {
+    margin-bottom: 0;
+}
+
+.row-justify {
+    @extend .row;
+    display: flex;
+    flex-wrap: wrap;
+
+    margin-left: -$grid-gutter-width-base / 4;
+    margin-right: -$grid-gutter-width-base / 4;
+
+    & > [class^="col-"] {
+        padding-left: $grid-gutter-width-base / 4;
+        padding-right: $grid-gutter-width-base / 4;
+    }
+}
+
+a:hover, a:focus, a:active {
+    color: $blue;
+}
+

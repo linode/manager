@@ -1,10 +1,8 @@
 import React, { PropTypes } from 'react';
 
-import { Table } from '~/components/tables';
-import {
-  CheckboxCell,
-  IPRdnsCell,
-} from '~/components/tables/cells';
+import { Table } from 'linode-components/tables';
+import { CheckboxCell } from 'linode-components/tables/cells';
+import { IPRdnsCell } from '~/components/tables/cells';
 
 
 export default function IPList(props) {

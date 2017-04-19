@@ -1,18 +1,12 @@
 import React, { Component, PropTypes } from 'react';
 import _ from 'lodash';
 
-import { Card, CardHeader } from '~/components/cards';
+import { Card, CardHeader } from 'linode-components/cards';
 import { flags } from '~/assets';
 import { regionMap } from '~/constants';
 
 export default class Region extends Component {
-  constructor() {
-    super();
-    this.renderRegion = this.renderRegion.bind(this);
-    this.renderDisabled = this.renderDisabled.bind(this);
-  }
-
-  renderRegion = (region) => {
+  renderZone = (region) => {
     const { selected, onRegionSelected } = this.props;
     const dcClass = region.id === selected ? 'selected' : '';
 
@@ -37,16 +31,16 @@ export default class Region extends Component {
     );
   }
 
-  renderRegion = (regionsInRegion, region) => {
+  renderRegion = (zonesInRegion, region) => {
     const allRealRegions = this.props.regions;
     const regions = Object.values(allRealRegions).filter(({ id }) =>
-    regionsInRegion.indexOf(id) !== -1);
+      zonesInRegion.indexOf(id) !== -1);
 
     return regions.length ? (
       <div key={region}>
         <h3>{region}</h3>
         <div className="region-group">
-          {regions.map(this.renderRegion)}
+          {regions.map(this.renderZone)}
         </div>
       </div>
       ) : null;
@@ -54,14 +48,14 @@ export default class Region extends Component {
 
   renderDisabled() {
     const { selected, regions } = this.props;
-    const dc = Object.values(regions).find(dc => dc.id === selected);
+    const zone = Object.values(regions).find(zone => zone.id === selected);
     return (
       <Card header={<CardHeader title="Region" />}>
         <p>
           The source you selected limits the regions you may deploy
           your new Linode to.
         </p>
-        {this.renderRegion(dc)}
+        {this.renderZone(zone)}
       </Card>
     );
   }
@@ -70,6 +64,7 @@ export default class Region extends Component {
     if (this.props.disabled) {
       return this.renderDisabled();
     }
+
     return (
       <Card header={<CardHeader title="Region" />}>
         {_.map(regionMap, this.renderRegion)}

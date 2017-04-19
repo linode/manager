@@ -8,12 +8,12 @@ import DistroStyle from '~/linodes/components/DistroStyle';
 import PlanStyle from '~/linodes/components/PlanStyle';
 import WeblishLaunch from '~/linodes/components/WeblishLaunch';
 import GlishLaunch from '~/linodes/components/GlishLaunch';
-import { getLinode } from './IndexPage';
+import { selectLinode } from '../utilities';
 import { setSource } from '~/actions/source';
-import { Button } from '~/components/buttons';
-import { Card, CardHeader } from '~/components/cards';
+import { Button } from 'linode-components/buttons';
+import { Card, CardHeader } from 'linode-components/cards';
 import LineGraph from '~/components/graphs/LineGraph';
-import { Select } from '~/components/form';
+import { Select } from 'linode-components/forms';
 import { getObjectByLabelLazily } from '~/api/util';
 import { linodeStats } from '~/api/linodes';
 
@@ -25,26 +25,31 @@ function formatData(datasets, legends) {
 
 export class DashboardPage extends Component {
   static async preload({ dispatch, getState }, { linodeLabel }) {
+    let id;
     try {
-      const { id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
-      await dispatch(linodeStats([id]));
+      ({ id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel)));
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error(e);
       await dispatch(setError(e));
+    }
+
+    try {
+      await dispatch(linodeStats([id]));
+    } catch (e) {
+      // Stats aren't available.
     }
   }
 
   constructor(props) {
     super(props);
 
-    this.getLinode = getLinode.bind(this);
     this.state = {
       source: 'cpu',
       range: 'last1day',
     };
 
-    const stats = this.getLinode()._stats;
+    const stats = props.linode._stats;
     if (stats) {
       this.graphs = {
         cpu: {
@@ -136,8 +141,7 @@ export class DashboardPage extends Component {
   }
 
   renderDetails() {
-    const { username } = this.props;
-    const linode = this.getLinode();
+    const { username, linode } = this.props;
     const plan = (<PlanStyle plan={linode.type[0]} />);
     const lishLink = `ssh -t ${
         username
@@ -276,19 +280,15 @@ export class DashboardPage extends Component {
 }
 
 DashboardPage.propTypes = {
-  linodes: PropTypes.object,
-  params: PropTypes.shape({
-    linodeLabel: PropTypes.string,
-  }),
+  linode: PropTypes.object,
   username: PropTypes.string,
   dispatch: PropTypes.func.isRequired,
 };
 
-function select(state) {
-  return {
-    linodes: state.api.linodes,
-    username: state.authentication.username,
-  };
+function select(state, props) {
+  const { linode } = selectLinode(state, props);
+  const { username } = state.authentication;
+  return { linode, username };
 }
 
 export default connect(select)(DashboardPage);
