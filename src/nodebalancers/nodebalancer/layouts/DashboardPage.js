@@ -119,7 +119,7 @@ export class DashboardPage extends Component {
             </ListBody>
           </List>
         </Card>
-        <Card header={<CardHeader title="Graph" />}>No stats are available.</Card>
+        <Card header={<CardHeader title="Graphs" />}>No graphs are available.</Card>
       </div>
     );
   }
