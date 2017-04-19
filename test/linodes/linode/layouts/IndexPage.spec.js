@@ -6,8 +6,14 @@ import { expect } from 'chai';
 import { state } from '@/data';
 import { testLinode, testLinode1235, testLinode1237 } from '@/data/linodes';
 import { expectRequest } from '@/common';
+import * as IndexPageWrapper from '~/linodes/linode/layouts/IndexPage';
 import { Dropdown } from 'linode-components/dropdowns';
-import { IndexPage } from '~/linodes/linode/layouts/IndexPage';
+
+const {
+  IndexPage,
+} = IndexPageWrapper;
+
+const { linodes } = api;
 
 describe('linodes/linode/layouts/IndexPage', () => {
   const sandbox = sinon.sandbox.create();

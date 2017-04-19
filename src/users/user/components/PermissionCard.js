@@ -1,8 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { CheckboxCell } from 'linode-components/tables/cells';
-import { Table } from 'linode-components/tables';
+import { Card, CardHeader } from 'linode-components/cards';
+import { Checkbox } from 'linode-components/forms';
 
 export class PermissionCard extends Component {
   constructor(props) {

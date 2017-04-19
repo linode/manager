@@ -1,11 +1,16 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
+import { setSource } from '~/actions/source';
+import { setTitle } from '~/actions/title';
 import { Card } from 'linode-components/cards';
 import {
-  Checkbox, Form, FormGroup, SubmitButton,
+  Form,
+  Checkbox,
+  SubmitButton,
 } from 'linode-components/forms';
-
+import { settings } from '~/api';
+import { reduceErrors } from '~/errors';
 import { setError } from '~/actions/errors';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';

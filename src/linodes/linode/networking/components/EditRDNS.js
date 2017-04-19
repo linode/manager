@@ -1,8 +1,9 @@
 import React, { PropTypes, Component } from 'react';
 
+import { ModalFormGroup } from 'linode-components/forms';
+import { Form, Input, SubmitButton } from 'linode-components/forms';
 import { CancelButton } from 'linode-components/buttons';
-import { Form, Input, ModalFormGroup, SubmitButton } from 'linode-components/forms';
-
+import { reduceErrors, ErrorSummary } from '~/errors';
 import { setRDNS } from '~/api/linodes';
 import { reduceErrors, FormSummary } from '~/components/forms';
 

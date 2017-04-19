@@ -8,8 +8,11 @@ import {
 import { hideModal } from '~/actions/modal';
 import { linodes } from '~/api';
 import { resizeLinodeDisk } from '~/api/linodes';
-import { FormSummary, reduceErrors } from '~/components/forms';
-
+import { Form, FormGroup, FormGroupError,
+  Input, SubmitButton } from 'linode-components/forms';
+import { CancelButton } from 'linode-components/buttons';
+import { hideModal } from '~/actions/modal';
+import { ErrorSummary, reduceErrors } from '~/errors';
 
 export class EditModal extends Component {
   constructor() {

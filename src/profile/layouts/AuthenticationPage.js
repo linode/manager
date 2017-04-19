@@ -1,7 +1,13 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { ChangePassword, TwoFactor } from '../components';
+import { Card, CardHeader } from 'linode-components/cards';
+import {
+  PasswordInput, Form, FormGroup, FormGroupError, SubmitButton,
+} from 'linode-components/forms';
+import { ErrorSummary, reduceErrors } from '~/errors';
+import { setPassword } from '~/api/account';
+import SelectExpiration from '../components/SelectExpiration';
 
 
 export function AuthenticationPage(props) {

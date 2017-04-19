@@ -1,5 +1,4 @@
 import 'buttons/index';
-import 'breadcrumbs/index';
 import 'cards/index';
 import 'dropdowns/index';
 import 'forms/index';

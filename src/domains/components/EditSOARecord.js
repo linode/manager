@@ -4,10 +4,11 @@ import { Form, Input, SubmitButton, Select, ModalFormGroup } from 'linode-compon
 import { CancelButton } from 'linode-components/buttons';
 
 import { domains } from '~/api';
-import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
-
+import { ModalFormGroup, Select } from 'linode-components/forms';
 import SelectDNSSeconds from './SelectDNSSeconds';
-
+import { Form, Input, SubmitButton } from 'linode-components/forms';
+import { CancelButton } from 'linode-components/buttons';
+import { reduceErrors, ErrorSummary } from '~/errors';
 
 export default class EditSOARecord extends Component {
   constructor(props) {

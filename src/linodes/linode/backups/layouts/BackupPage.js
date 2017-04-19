@@ -4,7 +4,22 @@ import { connect } from 'react-redux';
 import { setError } from '~/actions/errors';
 import { linodes } from '~/api';
 import { linodeBackups } from '~/api/linodes';
-import { getObjectByLabelLazily, objectFromMapByLabel } from '~/api/util';
+import { takeBackup, restoreBackup } from '~/api/backups';
+import { setError } from '~/actions/errors';
+import { Card, CardHeader } from 'linode-components/cards';
+
+function renderDateTime(dt) {
+  return dt.replace('T', ' ');
+}
+
+function getBackups(backups) {
+  const backupList = [];
+  backupList.push(
+    backups.daily,
+    backups.weekly[0],
+    backups.weekly[1],
+    backups.snapshot.current || backups.snapshot.in_progress,
+  );
 
 import { BackupRestore, BackupDetails } from '../components';
 import { selectLinode } from '../../utilities';
