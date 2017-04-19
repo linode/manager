@@ -6,12 +6,8 @@ import { expect } from 'chai';
 import { expectRequest } from '@/common';
 import { AuthenticationPage } from '~/profile/layouts/AuthenticationPage';
 
-describe('profile/layouts/AuthenticationPage', () => {
+describe('profile/layouts/authenticationpage', () => {
   const sandbox = sinon.sandbox.create();
-
-  afterEach(() => {
-    sandbox.restore();
-  });
 
   const dispatch = sandbox.stub();
 
@@ -31,5 +27,15 @@ describe('profile/layouts/AuthenticationPage', () => {
       method: 'POST',
       body: { password: 'thePassword' },
     });
+  });
+
+  it('renders two factor', async () => {
+    const page = shallow(
+      <AuthenticationPage
+        dispatch={dispatch}
+      />
+    );
+
+    expect(page.find('TwoFactorPanel').length).to.equal(1);
   });
 });
