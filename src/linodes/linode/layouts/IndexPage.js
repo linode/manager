@@ -4,7 +4,7 @@ import { push } from 'react-router-redux';
 
 import { Link } from 'react-router';
 import { Tabs } from 'linode-components/tabs';
-
+import StatusDropdown from '~/linodes/components/StatusDropdown';
 import { setError } from '~/actions/errors';
 import { setTitle } from '~/actions/title';
 import { linodes } from '~/api';

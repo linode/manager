@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 import { push } from 'react-router-redux';
 
 import { Card, CardHeader } from 'linode-components/cards';
-import { reduceErrors } from '~/components/forms';
+import { reduceErrors } from '~/errors';
 import { users } from '~/api';
 import { UserForm } from '../components/UserForm';
 

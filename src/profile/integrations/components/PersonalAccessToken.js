@@ -8,7 +8,6 @@ import EditPersonalAccessToken from './EditPersonalAccessToken';
 import { Card, CardImageHeader } from 'linode-components/cards/';
 import { DeleteModalBody } from 'linode-components/modals';
 import { Table } from 'linode-components/tables';
-import TimeDisplay from '~/components/TimeDisplay';
 import { AuthScopeCell } from '~/components/tables/cells';
 import { OAUTH_SUBSCOPES, OAUTH_SCOPES } from '~/constants';
 import { showModal, hideModal } from '~/actions/modal';

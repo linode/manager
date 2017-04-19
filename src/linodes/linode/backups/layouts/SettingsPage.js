@@ -1,17 +1,16 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { Card, CardHeader } from 'linode-components/cards';
-import { ConfirmModalBody } from 'linode-components/modals';
-import { Form, FormGroup, SubmitButton } from 'linode-components/forms';
-
-import { showModal, hideModal } from '~/actions/modal';
-import { setSource } from '~/actions/source';
+import { FormGroup } from 'linode-components/forms';
+import { ErrorSummary, reduceErrors } from '~/errors';
 import { linodes } from '~/api';
 import { cancelBackup } from '~/api/backups';
-import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
-
-import { selectLinode } from '../../utilities';
+import { Card, CardHeader } from 'linode-components/cards';
+import { ConfirmModalBody } from 'linode-components/modals';
+import { Form, SubmitButton } from 'linode-components/forms';
+import { getLinode } from '~/linodes/linode/layouts/IndexPage';
+import { setSource } from '~/actions/source';
+import { showModal, hideModal } from '~/actions/modal';
 
 
 export class SettingsPage extends Component {
