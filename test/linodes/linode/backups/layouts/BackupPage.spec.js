@@ -6,6 +6,7 @@ import { expect } from 'chai';
 import { expectRequest } from '@/common';
 
 import { api } from '@/data';
+import { testLinode } from '@/data/linodes';
 import { BackupPage } from '~/linodes/linode/backups/layouts/BackupPage';
 
 describe('linodes/linode/backups/layouts/BackupPage', () => {
@@ -22,10 +23,8 @@ describe('linodes/linode/backups/layouts/BackupPage', () => {
       <BackupPage
         dispatch={dispatch}
         linodes={api.linodes}
-        params={{
-          linodeLabel: 'test-linode',
-          backupId: '54782214',
-        }}
+        linode={testLinode}
+        backupId={54782214}
       />
     );
 
@@ -73,10 +72,8 @@ describe('linodes/linode/backups/layouts/BackupPage', () => {
       <BackupPage
         dispatch={dispatch}
         linodes={api.linodes}
-        params={{
-          linodeLabel: 'test-linode',
-          backupId: '54782236',
-        }}
+        linode={testLinode}
+        backupId={54782236}
       />
     );
 
@@ -89,10 +86,8 @@ describe('linodes/linode/backups/layouts/BackupPage', () => {
       <BackupPage
         dispatch={dispatch}
         linodes={api.linodes}
-        params={{
-          linodeLabel: 'test-linode',
-          backupId: '54782214',
-        }}
+        linode={testLinode}
+        backupId={54782214}
       />
     );
 
@@ -105,10 +100,8 @@ describe('linodes/linode/backups/layouts/BackupPage', () => {
       <BackupPage
         dispatch={dispatch}
         linodes={api.linodes}
-        params={{
-          linodeLabel: 'test-linode',
-          backupId: '54782236',
-        }}
+        linode={testLinode}
+        backupId={54782236}
       />
     );
 
@@ -127,10 +120,8 @@ describe('linodes/linode/backups/layouts/BackupPage', () => {
       <BackupPage
         dispatch={dispatch}
         linodes={api.linodes}
-        params={{
-          linodeLabel: 'test-linode',
-          backupId: '54782214',
-        }}
+        linode={testLinode}
+        backupId={54782214}
       />
     );
 
@@ -167,10 +158,8 @@ describe('linodes/linode/backups/layouts/BackupPage', () => {
       <BackupPage
         dispatch={errorDispatch}
         linodes={api.linodes}
-        params={{
-          linodeLabel: 'test-linode',
-          backupId: '54782214',
-        }}
+        linode={testLinode}
+        backupId={54782214}
       />
     );
 
@@ -196,10 +185,8 @@ describe('linodes/linode/backups/layouts/BackupPage', () => {
       <BackupPage
         dispatch={errorDispatch}
         linodes={api.linodes}
-        params={{
-          linodeLabel: 'test-linode',
-          backupId: '54782236',
-        }}
+        linode={testLinode}
+        backupId={54782236}
       />
     );
 

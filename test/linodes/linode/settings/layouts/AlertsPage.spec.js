@@ -3,7 +3,6 @@ import sinon from 'sinon';
 import { shallow, mount } from 'enzyme';
 import { expect } from 'chai';
 
-import { api } from '@/data';
 import { testLinode } from '@/data/linodes';
 import { expectRequest } from '@/common';
 import { AlertsPage } from '~/linodes/linode/settings/layouts/AlertsPage';
@@ -18,8 +17,7 @@ describe('linodes/linode/settings/layouts/AlertsPage', async () => {
   it('renders all alerts', () => {
     const page = shallow(
       <AlertsPage
-        linodes={api.linodes}
-        params={{ linodeLabel: testLinode.label }}
+        linode={testLinode}
         dispatch={() => {}}
       />
     );
@@ -41,8 +39,7 @@ describe('linodes/linode/settings/layouts/AlertsPage', async () => {
     const dispatch = sandbox.spy();
     const page = mount(
       <AlertsPage
-        linodes={api.linodes}
-        params={{ linodeLabel: testLinode.label }}
+        linode={testLinode}
         dispatch={dispatch}
       />
     );

@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { setError } from '~/actions/errors';
-import { getLinode } from './IndexPage';
+import { selectLinode } from '../utilities';
 import { showModal, hideModal } from '~/actions/modal';
 import { linodes } from '~/api';
 import { resetPassword, rescueLinode } from '~/api/linodes';
@@ -10,7 +10,7 @@ import { ConfirmModalBody } from 'linode-components/modals';
 import { Form, FormGroup, SubmitButton, Select, PasswordInput } from 'linode-components/forms';
 import { Card, CardHeader } from 'linode-components/cards';
 import { setSource } from '~/actions/source';
-import { getConfig,
+import {
   getDisks,
   getDiskSlots,
   renderDiskSlot,
@@ -37,8 +37,6 @@ export class RescuePage extends Component {
 
   constructor(props) {
     super(props);
-    this.getLinode = getLinode.bind(this);
-    this.getConfig = getConfig.bind(this);
     this.getDisks = getDisks.bind(this);
     this.getDiskSlots = getDiskSlots.bind(this);
     this.fillDiskSlots = fillDiskSlots.bind(this);
@@ -59,9 +57,8 @@ export class RescuePage extends Component {
   }
 
   async componentDidMount() {
-    const { dispatch } = this.props;
+    const { dispatch, linode } = this.props;
     dispatch(setSource(__filename));
-    const linode = this.getLinode();
     const diskSlots = await this.getDiskSlots(false);
     const disk = Object.values(linode._disks.disks)
                        .filter(d => d.filesystem !== 'swap')[0];
@@ -73,8 +70,7 @@ export class RescuePage extends Component {
 
   async resetRootPassword() {
     const { password, disk } = this.state;
-    const { dispatch } = this.props;
-    const linode = this.getLinode();
+    const { dispatch, linode } = this.props;
 
     try {
       this.setState({ applying: true, result: null });
@@ -94,8 +90,8 @@ export class RescuePage extends Component {
 
   async rebootToRescue() {
     const { diskSlots } = this.state;
-    const { dispatch } = this.props;
-    const linode = this.getLinode();
+    const { dispatch, linode } = this.props;
+
     const disks = {};
 
     if (diskSlots) {
@@ -126,8 +122,8 @@ export class RescuePage extends Component {
 
 
   renderRescueMode() {
+    const { linode } = this.props;
     const { diskSlots } = this.state;
-    const linode = this.getLinode();
 
     const showDisks = linode && linode._disks ? Object.values(linode._disks.disks).filter(
       d => d.filesystem !== 'swap').length > 1 : false;
@@ -165,8 +161,7 @@ export class RescuePage extends Component {
 
   renderResetRootPassword() {
     const { disk } = this.state;
-    const { dispatch } = this.props;
-    const linode = this.getLinode();
+    const { dispatch, linode } = this.props;
 
     let body = (
       <p>This Linode does not have any disks eligible for password reset.</p>
@@ -269,13 +264,7 @@ export class RescuePage extends Component {
 
 RescuePage.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  params: PropTypes.shape({
-    linodeLabel: PropTypes.string,
-  }),
+  linode: PropTypes.object.isRequired,
 };
 
-function select(state) {
-  return { linodes: state.api.linodes };
-}
-
-export default connect(select)(RescuePage);
+export default connect(selectLinode)(RescuePage);

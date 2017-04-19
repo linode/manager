@@ -8,15 +8,8 @@ import StatusDropdown from '~/linodes/components/StatusDropdown';
 import { setError } from '~/actions/errors';
 import { linodes } from '~/api';
 import { getObjectByLabelLazily } from '~/api/util';
-import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
-
-export function getLinode() {
-  const { linodes } = this.props.linodes;
-  const { linodeLabel } = this.props.params;
-  return Object.values(linodes).reduce(
-    (match, linode) => linode.label === linodeLabel ? linode : match, null);
-}
+import { selectLinode } from '../utilities';
 
 export class IndexPage extends Component {
   static async preload({ dispatch, getState }, { linodeLabel }) {
@@ -32,15 +25,12 @@ export class IndexPage extends Component {
 
   constructor() {
     super();
-    this.getLinode = getLinode.bind(this);
+
     this.state = { config: '', label: '', group: '' };
   }
 
   async componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch(setSource(__filename));
-
-    const linode = this.getLinode();
+    const { dispatch, linode } = this.props;
     dispatch(setTitle(linode.label));
 
     // TODO: move this into the constructor
@@ -53,7 +43,7 @@ export class IndexPage extends Component {
   }
 
   render() {
-    const linode = this.getLinode();
+    const { linode } = this.props;
     if (!linode) return null;
 
     const tabs = [
@@ -105,18 +95,9 @@ export class IndexPage extends Component {
 }
 
 IndexPage.propTypes = {
-  dispatch: PropTypes.func,
-  username: PropTypes.string,
-  linodes: PropTypes.object,
-  params: PropTypes.shape({
-    linodeLabel: PropTypes.string,
-  }),
-  detail: PropTypes.object,
-  children: PropTypes.node,
+  dispatch: PropTypes.func.isRequired,
+  linode: PropTypes.object.isRequired,
+  children: PropTypes.node.isRequired,
 };
 
-function select(state) {
-  return { linodes: state.api.linodes };
-}
-
-export default connect(select)(IndexPage);
+export default connect(selectLinode)(IndexPage);

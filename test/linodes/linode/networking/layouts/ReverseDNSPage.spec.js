@@ -6,9 +6,6 @@ import { expect } from 'chai';
 import { SHOW_MODAL } from '~/actions/modal';
 import { ReverseDNSPage } from '~/linodes/linode/networking/layouts/ReverseDNSPage';
 import { testLinode } from '@/data/linodes';
-import { state } from '@/data';
-
-const { linodes } = state.api;
 
 describe('linodes/linode/networking/layouts/ReverseDNSPage', () => {
   const sandbox = sinon.sandbox.create();
@@ -26,8 +23,7 @@ describe('linodes/linode/networking/layouts/ReverseDNSPage', () => {
     const page = mount(
       <ReverseDNSPage
         dispatch={dispatch}
-        linodes={linodes}
-        params={{ linodeLabel: testLinode.label }}
+        linode={testLinode}
       />
     );
 
@@ -49,8 +45,7 @@ describe('linodes/linode/networking/layouts/ReverseDNSPage', () => {
     const page = mount(
       <ReverseDNSPage
         dispatch={dispatch}
-        linodes={linodes}
-        params={{ linodeLabel: testLinode.label }}
+        linode={testLinode}
       />
     );
 

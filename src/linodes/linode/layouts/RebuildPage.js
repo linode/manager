@@ -10,13 +10,12 @@ import { reduceErrors, ErrorSummary } from '~/errors';
 import Distributions from '~/linodes/components/Distributions';
 import { setSource } from '~/actions/source';
 import { rebuildLinode } from '~/api/linodes';
-import { getLinode } from '~/linodes/linode/layouts/IndexPage';
+import { selectLinode } from '../utilities';
 
 export class RebuildPage extends Component {
   constructor(props) {
     super(props);
-    this.getLinode = getLinode.bind(this);
-    const distribution = this.getLinode().distribution;
+    const distribution = props.linode.distribution;
     this.state = {
       distribution: distribution ? distribution.id : 'linode/Ubuntu16.04LTS',
       password: null,
@@ -31,17 +30,17 @@ export class RebuildPage extends Component {
   }
 
   async onSubmit() {
-    const { dispatch, params: { linodeLabel } } = this.props;
-    const { id: linodeId } = this.getLinode();
+    const { dispatch, linode } = this.props;
+    const { label, id } = linode;
 
     this.setState({ loading: true, errors: {} });
 
     try {
-      await dispatch(rebuildLinode(linodeId, {
+      await dispatch(rebuildLinode(id, {
         distribution: this.state.distribution,
         root_pass: this.state.password,
       }));
-      dispatch(push(`/linodes/${linodeLabel}`));
+      dispatch(push(`/linodes/${label}`));
     } catch (response) {
       const errors = await reduceErrors(response);
       errors._.concat(errors.distribution);
@@ -96,17 +95,13 @@ export class RebuildPage extends Component {
 RebuildPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   distributions: PropTypes.object.isRequired,
-  linodes: PropTypes.object.isRequired,
-  params: PropTypes.shape({
-    linodeLabel: PropTypes.string.isRequired,
-  }).isRequired,
+  linode: PropTypes.object.isRequired,
 };
 
-function select(state) {
-  return {
-    distributions: state.api.distributions,
-    linodes: state.api.linodes,
-  };
+function select(state, props) {
+  const { linode } = selectLinode(state, props);
+  const { distributions } = state.api;
+  return { linode, distributions };
 }
 
 export default connect(select)(RebuildPage);
