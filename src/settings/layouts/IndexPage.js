@@ -1,35 +1,21 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
+import { Card } from 'linode-components/cards';
+import { Form, Checkbox, SubmitButton } from 'linode-components/forms';
+
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
-import { Card } from 'linode-components/cards';
-import {
-  Form,
-  Checkbox,
-  SubmitButton,
-} from 'linode-components/forms';
-import { settings } from '~/api';
+import { account } from '~/api';
 import { reduceErrors } from '~/errors';
-import { setError } from '~/actions/errors';
 
 
 export class IndexPage extends Component {
-  static async preload({ dispatch }) {
-    try {
-      await dispatch(settings.one());
-    } catch (response) {
-      // eslint-disable-next-line no-console
-      console.error(response);
-      dispatch(setError(response));
-    }
-  }
-
   constructor(props) {
     super(props);
 
     this.state = {
-      networkHelper: props.settings.network_helper,
+      networkHelper: props.account.network_helper,
     };
   }
 
@@ -44,7 +30,7 @@ export class IndexPage extends Component {
     const { dispatch } = this.props;
 
     try {
-      await dispatch(settings.put({
+      await dispatch(account.put({
         network_helper: this.state.networkHelper,
       }));
     } catch (response) {
@@ -75,6 +61,7 @@ export class IndexPage extends Component {
                 <div className="col-sm-9">
                   <Checkbox
                     id="networkHelper"
+                    value={networkHelper}
                     checked={networkHelper}
                     onChange={() => this.setState({
                       networkHelper: !networkHelper,
@@ -99,12 +86,12 @@ export class IndexPage extends Component {
 
 IndexPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  settings: PropTypes.object.isRequired,
+  account: PropTypes.object.isRequired,
 };
 
 function select(state) {
   return {
-    settings: state.api.settings.settings.undefined,
+    account: state.api.account,
   };
 }
 

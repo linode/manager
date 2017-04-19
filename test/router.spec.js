@@ -3,11 +3,20 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import { shallow } from 'enzyme';
 
+import { kernels, distributions, regions, types, account } from '~/api';
 import { LoadingRouterContext } from '~/router';
 import * as session from '~/session';
 
+
 describe('router/LoadingRouterContext', () => {
   const sandbox = sinon.sandbox.create();
+
+  beforeEach(() => {
+    sandbox.stub(account, 'one').returns({ type: 'DO NOTHING' });
+    [kernels, distributions, regions, types].forEach(object => {
+      sandbox.stub(object, 'all').returns({ type: 'DO NOTHING' });
+    });
+  });
 
   afterEach(() => {
     sandbox.restore();

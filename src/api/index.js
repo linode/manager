@@ -6,10 +6,10 @@ import * as kernelsModule from './configs/kernels';
 import * as domainsModule from './configs/domains';
 import * as nodebalancersModule from './configs/nodebalancers';
 import * as profileModule from './configs/profile';
+import * as accountModule from './configs/account';
 import * as eventsModule from './configs/events';
 import * as tokensModule from './configs/tokens';
 import * as clientsModule from './configs/clients';
-import * as settingsModule from './configs/settings';
 import * as usersModule from './configs/users';
 import * as ticketsModule from './configs/tickets';
 
@@ -29,6 +29,6 @@ export const profile = apiActionReducerGenerator(profileModule.config, profileMo
 export const events = apiActionReducerGenerator(eventsModule.config, eventsModule.actions);
 export const tokens = apiActionReducerGenerator(tokensModule.config, tokensModule.actions);
 export const clients = apiActionReducerGenerator(clientsModule.config, clientsModule.actions);
-export const settings = apiActionReducerGenerator(settingsModule.config, settingsModule.actions);
 export const users = apiActionReducerGenerator(usersModule.config, usersModule.actions);
 export const tickets = apiActionReducerGenerator(ticketsModule.config, ticketsModule.actions);
+export const account = apiActionReducerGenerator(accountModule.config, accountModule.actions);
