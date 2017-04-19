@@ -1,11 +1,11 @@
-import Arch from 'file!../assets/distros/Arch.png';
-import CentOS from 'file!../assets/distros/CentOS.png';
-import Debian from 'file!../assets/distros/Debian.png';
-import Fedora from 'file!../assets/distros/Fedora.png';
-import Gentoo from 'file!../assets/distros/Gentoo.png';
-import Slackware from 'file!../assets/distros/Slackware.png';
-import Ubuntu from 'file!../assets/distros/Ubuntu.png';
-import openSUSE from 'file!../assets/distros/OpenSUSE.png';
+import Arch from 'file-loader!../assets/distros/Arch.png';
+import CentOS from 'file-loader!../assets/distros/CentOS.png';
+import Debian from 'file-loader!../assets/distros/Debian.png';
+import Fedora from 'file-loader!../assets/distros/Fedora.png';
+import Gentoo from 'file-loader!../assets/distros/Gentoo.png';
+import Slackware from 'file-loader!../assets/distros/Slackware.png';
+import Ubuntu from 'file-loader!../assets/distros/Ubuntu.png';
+import openSUSE from 'file-loader!../assets/distros/OpenSUSE.png';
 
 export const distros = {
   Arch, CentOS, Debian, Fedora, Gentoo, Slackware, Ubuntu, openSUSE,
@@ -21,6 +21,6 @@ export const flags = {
   us, de, gb, sg, jp,
 };
 
-import logo from 'file!../assets/logo/logo.svg';
+import logo from 'file-loader!../assets/logo/logo.svg';
 
 export const LinodeLogoImgSrc = logo;
