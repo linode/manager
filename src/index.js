@@ -20,7 +20,7 @@ initializeAuthentication(store.dispatch);
 import Layout from './layouts/Layout';
 import OAuthCallbackPage from './layouts/OAuth';
 import Logout from './layouts/Logout';
-import { NotFound } from './components/Error';
+import { NotFound } from 'linode-components/errors';
 import Linodes from './linodes';
 import Weblish from './linodes/linode/layouts/Weblish';
 import NodeBalancers from './nodebalancers';

@@ -1,0 +1,19 @@
+{
+  "presets": ["stage-0", "react", "es2015"],
+  "compact": true,
+  "plugins": [
+    "transform-runtime",
+    "transform-class-properties",
+    ["babel-root-import", [{
+      "rootPathSuffix": "src"
+    }, {
+      "rootPathSuffix": "test",
+      "rootPathPrefix": "@",
+    }]]
+  ],
+  "env": {
+    "development": {
+      "presets": ["react-hmre"]
+    }
+  }
+}
