@@ -4,10 +4,7 @@ import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 
 import { DashboardPage } from '~/linodes/linode/layouts/DashboardPage';
-import { testLinode } from '@/data/linodes';
-import { api } from '@/data';
-
-const { linodes } = api;
+import { testLinode, testLinode1246 } from '@/data/linodes';
 
 describe('linodes/linode/layouts/DashboardPage', async () => {
   const sandbox = sinon.sandbox.create();
@@ -18,17 +15,12 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
     sandbox.restore();
   });
 
-  const params = {
-    linodeLabel: testLinode.label,
-  };
-
   it('renders public ipv4 and ipv6', () => {
     const { ipv4, ipv6 } = testLinode;
     const page = mount(
       <DashboardPage
         dispatch={dispatch}
-        linodes={linodes}
-        params={params}
+        linode={testLinode}
       />);
 
     const ipSection = page.find('.linode-ips');
@@ -39,15 +31,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
   it('renders backups not enabled', () => {
     const page = mount(
       <DashboardPage
-        linodes={{ ...linodes,
-          linodes: {
-            ...linodes.linodes,
-            [testLinode.id]: {
-              ...testLinode,
-              backups: { enabled: false },
-            },
-          } }}
-        params={params}
+        linode={{ ...testLinode, backups: { enabled: false } }}
       />);
 
     expect(page.find('.backup-status')
@@ -57,8 +41,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
   it('renders backups enabled', () => {
     const page = mount(
       <DashboardPage
-        linodes={linodes}
-        params={{ linodeLabel: 'test-linode' }}
+        linode={testLinode}
       />);
 
     expect(page.find('.backup-status')
@@ -68,8 +51,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
   it('renders plan', () => {
     const page = mount(
       <DashboardPage
-        linodes={linodes}
-        params={params}
+        linode={testLinode}
       />);
 
     expect(page.find('.linode-plan').at(0)
@@ -81,8 +63,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
   it('renders region', () => {
     const page = mount(
       <DashboardPage
-        linodes={linodes}
-        params={params}
+        linode={testLinode}
       />);
 
     expect(page.find('.linode-region').at(0)
@@ -94,8 +75,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
   it('renders distribution', () => {
     const page = mount(
       <DashboardPage
-        linodes={linodes}
-        params={params}
+        linode={testLinode}
       />);
 
     expect(page.find('.linode-distro').at(0)
@@ -107,8 +87,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
   it('renders unknown distribution', () => {
     const page = mount(
       <DashboardPage
-        linodes={linodes}
-        params={{ linodeLabel: 'test-linode-1246' }}
+        linode={testLinode1246}
       />);
 
     expect(page.find('.linode-distro').at(0)
@@ -121,8 +100,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
   it('renders ssh input elements', () => {
     const page = shallow(
       <DashboardPage
-        linodes={linodes}
-        params={params}
+        linode={testLinode}
       />);
 
     expect(page.find('.input-group').at(0).find('input').length).to.equal(1);
@@ -134,8 +112,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
     const sshPath = `ssh root@${ipv4}`;
     const page = shallow(
       <DashboardPage
-        linodes={linodes}
-        params={params}
+        linode={testLinode}
       />);
 
     expect(page.find('#ssh-input').props())
@@ -146,8 +123,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
   it('renders lish input elements', () => {
     const page = shallow(
       <DashboardPage
-        linodes={linodes}
-        params={params}
+        linode={testLinode}
       />);
 
     expect(page.find('.input-group').at(1).find('input').length).to.equal(1);
@@ -163,8 +139,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
       }.linode.com`;
     const page = shallow(
       <DashboardPage
-        linodes={linodes}
-        params={params}
+        linode={testLinode}
         username="tdude"
       />);
 
@@ -176,70 +151,9 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
   it('renders glish button element', () => {
     const page = shallow(
       <DashboardPage
-        linodes={linodes}
-        params={params}
+        linode={testLinode}
       />);
 
     expect(page.find('#glish-button').length).to.equal(1);
   });
-
-  /*
-  describe('performance graph', () => {
-    it('renders source options', () => {
-      const page = shallow(
-        <DashboardPage
-          linodes={linodes}
-          params={params}
-        />);
-
-      const sourceInput = page.find('.select-source');
-      expect(sourceInput.find('option').length).to.equal(4);
-    });
-
-    it('renders range options', () => {
-      const page = shallow(
-        <DashboardPage
-          linodes={linodes}
-          params={params}
-        />);
-
-      const rangeInput = page.find('.select-range');
-      expect(rangeInput.find('option').length).to.equal(3);
-    });
-
-    it('changes source on change', () => {
-      const page = shallow(
-        <DashboardPage
-          linodes={linodes}
-          params={params}
-        />);
-
-      const sourceInput = page.find('.select-source');
-      sourceInput.simulate('change', { target: { value: 'disk' } });
-      expect(page.state('source')).to.equal('disk');
-    });
-
-    it('changes range on change', () => {
-      const page = shallow(
-        <DashboardPage
-          linodes={linodes}
-          params={params}
-        />);
-
-      const rangeInput = page.find('.select-range');
-      rangeInput.simulate('change', { target: { value: 'last2day' } });
-      expect(page.state('range')).to.equal('last2day');
-    });
-
-    it('renders the chart', () => {
-      const page = shallow(
-        <DashboardPage
-          linodes={linodes}
-          params={params}
-        />);
-
-      expect(page.find('Chart').length).to.equal(1);
-    });
-  });
-  */
 });

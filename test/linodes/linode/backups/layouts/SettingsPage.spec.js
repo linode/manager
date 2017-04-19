@@ -4,7 +4,7 @@ import { mount } from 'enzyme';
 import { expect } from 'chai';
 import { expectRequest } from '@/common';
 
-import { api } from '@/data';
+import { testLinode } from '@/data/linodes';
 import { SHOW_MODAL } from '~/actions/modal';
 import {
   SettingsPage,
@@ -23,8 +23,7 @@ describe('linodes/linode/backups/layouts/SettingsPage', () => {
     const page = mount(
       <SettingsPage
         dispatch={dispatch}
-        linodes={api.linodes}
-        params={{ linodeLabel: 'test-linode' }}
+        linode={testLinode}
       />
     );
     await page.instance().componentDidMount();
@@ -57,8 +56,7 @@ describe('linodes/linode/backups/layouts/SettingsPage', () => {
     const page = mount(
       <SettingsPage
         dispatch={dispatch}
-        linodes={api.linodes}
-        params={{ linodeLabel: 'test-linode' }}
+        linode={testLinode}
       />
     );
     await page.instance().componentDidMount();

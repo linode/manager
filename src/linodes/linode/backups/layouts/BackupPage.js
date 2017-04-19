@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
 import { ErrorSummary, reduceErrors } from '~/errors';
-import { getLinode } from '~/linodes/linode/layouts/IndexPage';
+import { selectLinode } from '../../utilities';
 import { linodes } from '~/api';
 import { linodeBackups } from '~/api/linodes';
 import { takeBackup, restoreBackup } from '~/api/backups';
@@ -52,10 +52,10 @@ export class BackupPage extends Component {
 
   constructor(props) {
     super(props);
-    this.getLinode = getLinode.bind(this);
+
     this.takeSnapshot = this.takeSnapshot.bind(this);
     this.restore = this.restore.bind(this);
-    const { id: linodeId } = this.getLinode();
+    const { id: linodeId } = props.linode;
     this.state = {
       linodeId,
       targetLinode: linodeId,
@@ -66,10 +66,9 @@ export class BackupPage extends Component {
   }
 
   async takeSnapshot() {
-    const { dispatch } = this.props;
-    const { id: linodeId } = this.getLinode();
+    const { dispatch, linode } = this.props;
     try {
-      await dispatch(takeBackup(linodeId));
+      await dispatch(takeBackup(linode.id));
     } catch (response) {
       const takeSnapshotErrors = await reduceErrors(response);
       this.setState({ takeSnapshotErrors });
@@ -77,14 +76,12 @@ export class BackupPage extends Component {
   }
 
   async restore() {
-    const { dispatch } = this.props;
-    const { backupId, linodeLabel } = this.props.params;
-    const { id: linodeId } = this.getLinode();
+    const { dispatch, linode, backupId } = this.props;
     const { targetLinode, overwrite } = this.state;
     try {
       await dispatch(
-        restoreBackup(linodeId, targetLinode, backupId, overwrite));
-      dispatch(push(`/linodes/${linodeLabel}`));
+        restoreBackup(linode.id, targetLinode, backupId, overwrite));
+      dispatch(push(`/linodes/${linode.label}`));
     } catch (response) {
       const restoreErrors = await reduceErrors(response);
       this.setState({ restoreErrors });
@@ -92,8 +89,7 @@ export class BackupPage extends Component {
   }
 
   render() {
-    const { linodes } = this.props;
-    const { backupId } = this.props.params;
+    const { linodes, linode, backupId } = this.props;
     const {
       targetLinode,
       overwrite,
@@ -101,7 +97,6 @@ export class BackupPage extends Component {
       takeSnapshotErrors,
     } = this.state;
 
-    const linode = this.getLinode();
     const backup = getBackup(linode._backups, backupId);
     const duration = Math.floor((Date.parse(backup.finished) -
       Date.parse(backup.created)) / 1000 / 60);
@@ -293,14 +288,15 @@ export class BackupPage extends Component {
 BackupPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   linodes: PropTypes.object.isRequired,
-  params: PropTypes.shape({
-    linodeLabel: PropTypes.string.isRequired,
-    backupId: PropTypes.string.isRequired,
-  }).isRequired,
+  linode: PropTypes.object.isRequired,
+  backupId: PropTypes.string.isRequired,
 };
 
-function select(state) {
-  return { linodes: state.api.linodes };
+function select(state, props) {
+  const { linode } = selectLinode(state, props);
+  const { linodes } = state.api;
+  const { backupId } = props.params;
+  return { linode, backupId, linodes };
 }
 
 export default connect(select)(BackupPage);

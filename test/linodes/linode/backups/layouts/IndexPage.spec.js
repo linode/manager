@@ -4,7 +4,7 @@ import { mount } from 'enzyme';
 import { expect } from 'chai';
 
 import { expectRequest, expectObjectDeepEquals } from '@/common';
-import { api } from '@/data';
+import { testLinode, testLinode1235 } from '@/data/linodes';
 import { IndexPage } from '~/linodes/linode/backups/layouts/IndexPage';
 
 describe('linodes/linode/backups/layouts/IndexPage', () => {
@@ -20,8 +20,7 @@ describe('linodes/linode/backups/layouts/IndexPage', () => {
     const page = mount(
       <IndexPage
         dispatch={dispatch}
-        linodes={api.linodes}
-        params={{ linodeLabel: 'test-linode' }}
+        linode={testLinode}
       />
     );
 
@@ -41,8 +40,7 @@ describe('linodes/linode/backups/layouts/IndexPage', () => {
     const page = mount(
       <IndexPage
         dispatch={dispatch}
-        linodes={api.linodes}
-        params={{ linodeLabel: 'test-linode-1' }}
+        linode={testLinode1235}
       />
     );
 
@@ -66,8 +64,7 @@ describe('linodes/linode/backups/layouts/IndexPage', () => {
     const page = await mount(
       <IndexPage
         dispatch={errorDispatch}
-        linodes={api.linodes}
-        params={{ linodeLabel: 'test-linode-1' }}
+        linode={testLinode1235}
       />
     );
 

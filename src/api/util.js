@@ -44,6 +44,16 @@ export function getObjectByLabelLazily(pluralName, label, labelName = 'label') {
   };
 }
 
+export function selectObjectByLabel({ collection, paramField, resultField, labelName }) {
+  return (state, props) => {
+    const object = objectFromMapByLabel(
+      state.api[collection][collection],
+      props.params[paramField],
+      labelName);
+    return { [resultField]: object };
+  };
+}
+
 export function lessThanDatetimeFilter(key, datetime) {
   return {
     [key]: {

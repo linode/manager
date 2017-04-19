@@ -7,6 +7,7 @@ import { setError } from '~/actions/errors';
 import { linodes } from '~/api';
 import { createHeaderFilter, objectFromMapByLabel } from '~/api/util';
 import { linodeIPs } from '~/api/linodes';
+import { selectLinode } from '../../utilities';
 
 export class IPManagementPage extends Component {
   static async preload({ dispatch, getState }, { linodeLabel }) {
@@ -26,13 +27,11 @@ export class IPManagementPage extends Component {
   }
 
   render() {
-    const { linodes, dispatch, params: { linodeLabel } } = this.props;
-
-    const linode = objectFromMapByLabel(linodes.linodes, linodeLabel);
+    const { linodes, dispatch, linode } = this.props;
 
     // Although we only explicitly looked up all linodes in the current dc,
     // other linodes may already exist in the state.
-    const linodesInRegion = _.pickBy(linodes.linodes, l =>
+    const linodesInRegion = _.pickBy(linodes, l =>
       l.region.id === linode.region.id);
 
     return (
@@ -54,15 +53,15 @@ export class IPManagementPage extends Component {
 
 
 IPManagementPage.propTypes = {
-  linodes: PropTypes.object,
+  linodes: PropTypes.object.isRequired,
+  linode: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
-  params: PropTypes.shape({
-    linodeLabel: PropTypes.string.isRequired,
-  }).isRequired,
 };
 
-function select(state) {
-  return { linodes: state.api.linodes };
+function select(state, props) {
+  const { linode } = selectLinode(state, props);
+  const { linodes } = state.api.linodes;
+  return { linode, linodes };
 }
 
 export default connect(select)(IPManagementPage);

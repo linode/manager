@@ -7,7 +7,7 @@ import Region from '~/linodes/components/Region';
 import DistroStyle from '~/linodes/components/DistroStyle';
 import PlanStyle from '~/linodes/components/PlanStyle';
 import WeblishLaunch from '~/linodes/components/WeblishLaunch';
-import { getLinode } from './IndexPage';
+import { selectLinode } from '../utilities';
 import { setSource } from '~/actions/source';
 import { Button } from 'linode-components/buttons';
 import { Card, CardHeader } from 'linode-components/cards';
@@ -43,13 +43,12 @@ export class DashboardPage extends Component {
   constructor(props) {
     super(props);
 
-    this.getLinode = getLinode.bind(this);
     this.state = {
       source: 'cpu',
       range: 'last1day',
     };
 
-    const stats = this.getLinode()._stats;
+    const stats = props.linode._stats;
     if (stats) {
       this.graphs = {
         cpu: {
@@ -141,8 +140,7 @@ export class DashboardPage extends Component {
   }
 
   renderDetails() {
-    const { username } = this.props;
-    const linode = this.getLinode();
+    const { username, linode } = this.props;
     const plan = (<PlanStyle plan={linode.type[0]} />);
     const lishLink = `ssh -t ${
         username
@@ -281,19 +279,15 @@ export class DashboardPage extends Component {
 }
 
 DashboardPage.propTypes = {
-  linodes: PropTypes.object,
-  params: PropTypes.shape({
-    linodeLabel: PropTypes.string,
-  }),
+  linode: PropTypes.object,
   username: PropTypes.string,
   dispatch: PropTypes.func.isRequired,
 };
 
-function select(state) {
-  return {
-    linodes: state.api.linodes,
-    username: state.authentication.username,
-  };
+function select(state, props) {
+  const { linode } = selectLinode(state, props);
+  const { username } = state.authentication;
+  return { linode, username };
 }
 
 export default connect(select)(DashboardPage);

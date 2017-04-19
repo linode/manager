@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react';
 
-import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import { DeleteModalBody } from 'linode-components/modals';
 import { linodes } from '~/api';
 import { showModal, hideModal } from '~/actions/modal';
@@ -14,11 +13,6 @@ import {
 
 
 export class ConfigPanel extends Component {
-  constructor() {
-    super();
-    this.getLinode = getLinode.bind(this);
-  }
-
   deleteConfig(linode, config) {
     const { dispatch } = this.props;
 
@@ -70,7 +64,7 @@ export class ConfigPanel extends Component {
   }
 
   render() {
-    const linode = this.getLinode();
+    const { linode } = this.props;
     const configs = Object.values(linode._configs.configs);
 
     const content = this.renderConfigContent(linode, configs);
@@ -102,7 +96,5 @@ export class ConfigPanel extends Component {
 
 ConfigPanel.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  params: PropTypes.shape({
-    linodeLabel: PropTypes.string,
-  }),
+  linode: PropTypes.object.isRequired,
 };

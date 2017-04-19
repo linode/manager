@@ -4,26 +4,32 @@ import { withRouter } from 'react-router';
 import { push } from 'react-router-redux';
 
 import { Tabs } from 'linode-components/tabs';
-import { getLinode } from '~/linodes/linode/layouts/IndexPage';
+import { selectLinode } from '../../utilities';
 import { enableBackup } from '~/api/backups';
 import { linodeBackups } from '~/api/linodes';
 import { setSource } from '~/actions/source';
+import { setError } from '~/actions/errors';
+import { getObjectByLabelLazily } from '~/api/util';
 import { ErrorSummary, reduceErrors } from '~/errors';
 import { PrimaryButton } from 'linode-components/buttons';
 import { Card, CardHeader } from 'linode-components/cards';
 
 export class IndexPage extends Component {
   static async preload({ dispatch, getState }, { linodeLabel }) {
-    const { id } = Object.values(getState().api.linodes.linodes).reduce(
-      (match, linode) => linode.label === linodeLabel ? linode : match);
-    await dispatch(linodeBackups([id]));
+    try {
+      const { id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
+      await dispatch(linodeBackups([id]));
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error(e);
+      await dispatch(setError(e));
+    }
   }
 
   constructor() {
     super();
-    this.getLinode = getLinode.bind(this);
+
     this.enableBackups = this.enableBackups.bind(this);
-    this.componentDidMount = this.componentDidMount.bind(this);
     this.state = { errors: {} };
   }
 
@@ -34,9 +40,9 @@ export class IndexPage extends Component {
 
   async enableBackups(e) {
     e.preventDefault();
-    const { dispatch } = this.props;
+    const { dispatch, linode } = this.props;
     try {
-      await dispatch(enableBackup(this.getLinode().id));
+      await dispatch(enableBackup(linode.id));
     } catch (response) {
       const errors = await reduceErrors(response);
       // Promisify result for tests.
@@ -45,7 +51,7 @@ export class IndexPage extends Component {
   }
 
   render() {
-    const linode = this.getLinode();
+    const { linode } = this.props;
 
     if (!linode.backups.enabled) {
       const { errors } = this.state;
@@ -87,20 +93,11 @@ export class IndexPage extends Component {
 
 IndexPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  linodes: PropTypes.object.isRequired,
-  params: PropTypes.shape({
-    linodeLabel: PropTypes.string.isRequired,
-  }).isRequired,
-  children: PropTypes.object,
-  location: PropTypes.object,
-  router: PropTypes.object,
-  route: PropTypes.object,
+  linode: PropTypes.object.isRequired,
+  children: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
+  router: PropTypes.object.isRequired,
+  route: PropTypes.object.isRequired,
 };
 
-function select(state) {
-  return {
-    linodes: state.api.linodes,
-  };
-}
-
-export default withRouter(connect(select)(IndexPage));
+export default withRouter(connect(selectLinode)(IndexPage));

@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { getLinode } from '~/linodes/linode/layouts/IndexPage';
+import { selectLinode } from '../../utilities';
 import { ipv4ns, ipv6ns, ipv6nsSuffix } from '~/constants';
 import { linodeIPs, addIP } from '~/api/linodes';
 import { setSource } from '~/actions/source';
@@ -24,7 +24,7 @@ export class SummaryPage extends Component {
 
   constructor() {
     super();
-    this.getLinode = getLinode.bind(this);
+
     this.addPrivateIP = this.addPrivateIP.bind(this);
   }
 
@@ -34,17 +34,16 @@ export class SummaryPage extends Component {
   }
 
   async addPrivateIP() {
-    const { id } = this.getLinode();
-    const { dispatch } = this.props;
+    const { dispatch, linode } = this.props;
     try {
-      await dispatch(addIP(id, 'private'));
+      await dispatch(addIP(linode.id, 'private'));
     } catch (e) {
       dispatch(setError(e));
     }
   }
 
   renderNameservers(isIpv4) {
-    const dc = this.getLinode().region.id;
+    const dc = this.props.linode.region.id;
     const ipToObject = ip => ({ address: ip });
     const id = isIpv4 ? 'ipv4Nameservers' : 'ipv6Nameservers';
     const ips = isIpv4 ? ipv4ns[dc].map(ipToObject) :
@@ -70,7 +69,7 @@ export class SummaryPage extends Component {
   }
 
   renderIPv4() {
-    const { ipv4 } = this.getLinode()._ips;
+    const { ipv4 } = this.props.linode._ips;
 
     return (
       <div className="col-sm-6">
@@ -119,7 +118,7 @@ export class SummaryPage extends Component {
   }
 
   renderIPv6() {
-    const { ipv6 } = this.getLinode()._ips;
+    const { ipv6 } = this.props.linode._ips;
 
     return (
       <div className="col-sm-6">
@@ -186,15 +185,8 @@ export class SummaryPage extends Component {
 }
 
 SummaryPage.propTypes = {
-  linodes: PropTypes.object,
+  linode: PropTypes.object,
   dispatch: PropTypes.func.isRequired,
-  params: PropTypes.shape({
-    linodeLabel: PropTypes.string.isRequired,
-  }).isRequired,
 };
 
-function select(state) {
-  return { linodes: state.api.linodes };
-}
-
-export default connect(select)(SummaryPage);
+export default connect(selectLinode)(SummaryPage);
