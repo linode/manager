@@ -1,0 +1,424 @@
+{
+  "name": "Linode",
+  "prefix": "lnde",
+  "description": "Linode objects describe a single Linode on your account.\n",
+  "schema": {
+    "id": {
+      "_type": "integer",
+      "_value": 123456,
+      "_description": "This Linode's ID"
+    },
+    "alerts": {
+      "_description": "Toggle and set thresholds for receiving email alerts. <ul> <li>CPU Usage - % - Average CPU usage over 2 hours exceeding this value triggers this alert. (Range 0-2000, default 90)</li> <li>Disk IO Rate - IO Ops/sec - Average Disk IO ops/sec over 2 hours exceeding this value triggers this alert. (Range 0-100000, default 10000)</li> <li>Incoming Traffic - Mbit/s - Average incoming traffic over a 2 hour period exceeding this value triggers this alert. (Range 0-40000, default 10)</li> <li>Outbound Traffic - Mbit/s - Average outbound traffic over a 2 hour period exceeding this value triggers this alert. (Range 0-10000, default 10)</li> <li>Transfer Quota - % - Percentage of network transfer quota used being greater than this value will trigger this alert. (Range 0-400, default 80)</li></ul>\n",
+      "cpu": {
+        "_description": "Average CPU usage over 2 hours exceeding this value triggers this alert.",
+        "enabled": {
+          "_type": "boolean",
+          "_value": true
+        },
+        "threshold": {
+          "_type": "integer",
+          "_value": 90,
+          "_description": "CPU Usage % (Range 0-2000, default 90)."
+        }
+      },
+      "io": {
+        "_description": "Average Disk IO ops/sec over 2 hours exceeding this value triggers this alert.",
+        "enabled": {
+          "_type": "boolean",
+          "_value": true
+        },
+        "threshold": {
+          "_type": "integer",
+          "_value": 10000,
+          "_description": "Disk IO Rate ops/sec (Range 0-100000, default 10000)."
+        }
+      },
+      "transfer_in": {
+        "_description": "Average incoming traffic over a 2 hour period exceeding this value triggers this alert.",
+        "enabled": {
+          "_type": "boolean",
+          "_value": true
+        },
+        "threshold": {
+          "_type": "integer",
+          "_value": 10,
+          "_description": "Incoming Traffic Mbit/s (Range 0-40000, default 10)."
+        }
+      },
+      "transfer_out": {
+        "_description": "Average outbound traffic over a 2 hour period exceeding this value triggers this alert.",
+        "enabled": {
+          "_type": "boolean",
+          "_value": true
+        },
+        "threshold": {
+          "_type": "integer",
+          "_value": 10,
+          "_description": "Outbound Traffic Mbit/s (Range 0-10000, default 10)."
+        }
+      },
+      "transfer_quota": {
+        "_description": "Percentage of network transfer quota used being greater than this value will trigger this alert.",
+        "enabled": {
+          "_type": "boolean",
+          "_value": true
+        },
+        "threshold": {
+          "_type": "integer",
+          "_value": 80,
+          "_description": "Transfer Quota % (Range 0-400, default 80)."
+        }
+      }
+    },
+    "backups": {
+      "_description": "Displays if backups are enabled, last backup datetime if applicable, and the day/window your backups will occur. Window is prefixed by a \"W\" and an integer representing the two-hour window in 24-hour UTC time format. For example, 2AM is represented as \"W2\", 8PM as \"W20\", etc. (W0, W2, W4...W22)\n",
+      "enabled": {
+        "_type": "boolean",
+        "_value": true
+      },
+      "schedule": {
+        "_description": "The day and window of a Linode's automatic backups.",
+        "day": {
+          "_type": "string",
+          "_value": "Tuesday"
+        },
+        "window": {
+          "_type": "string",
+          "_value": "W20"
+        }
+      },
+      "last_backup": {
+        "_description": "If enabled, the last backup that was successfully taken.",
+        "_type": "backup",
+        "id": {
+          "_type": "integer",
+          "_value": 123456
+        },
+        "label": {
+          "_type": "string",
+          "_value": "A label for your snapshot",
+          "_description": "Human-friendly backup name.",
+          "_filterable": false,
+          "_limit": "1-255 characters"
+        },
+        "status": {
+          "_type": "enum",
+          "_subtype": "Status",
+          "_value": "successful",
+          "_description": "Status of the backup.",
+          "_filterable": false
+        },
+        "type": {
+          "_type": "enum",
+          "_subtype": "Type",
+          "_value": "snapshot",
+          "_description": "Whether this is a snapshot or an auto backup."
+        },
+        "datacenter": {
+          "_type": "datacenter",
+          "_filterable": false,
+          "_description": "This backup  datacenter.",
+          "id": {
+            "_type": "string",
+            "_value": "newark"
+          },
+          "label": {
+            "_type": "string",
+            "_value": "Newark, NJ"
+          },
+          "country": {
+            "_type": "string",
+            "_value": "us"
+          }
+        },
+        "created": {
+          "_type": "datetime",
+          "_value": "2015-09-29T11:21:01"
+        },
+        "updated": {
+          "_type": "datetime",
+          "_value": "2015-09-29T11:21:01"
+        },
+        "finished": {
+          "_type": "datetime",
+          "_value": "2015-09-29T11:21:01",
+          "_description": "An ISO 8601 datetime of when the backup completed."
+        }
+      },
+      "snapshot": {
+        "_description": "If enabled, the last snapshot that was successfully taken.",
+        "_type": "backup",
+        "id": {
+          "_type": "integer",
+          "_value": 123456
+        },
+        "label": {
+          "_type": "string",
+          "_value": "A label for your snapshot",
+          "_description": "Human-friendly backup name.",
+          "_filterable": false,
+          "_limit": "1-255 characters"
+        },
+        "status": {
+          "_type": "enum",
+          "_subtype": "Status",
+          "_value": "successful",
+          "_description": "Status of the backup.",
+          "_filterable": false
+        },
+        "type": {
+          "_type": "enum",
+          "_subtype": "Type",
+          "_value": "snapshot",
+          "_description": "Whether this is a snapshot or an auto backup."
+        },
+        "datacenter": {
+          "_type": "datacenter",
+          "_filterable": false,
+          "_description": "This backup  datacenter.",
+          "id": {
+            "_type": "string",
+            "_value": "newark"
+          },
+          "label": {
+            "_type": "string",
+            "_value": "Newark, NJ"
+          },
+          "country": {
+            "_type": "string",
+            "_value": "us"
+          }
+        },
+        "created": {
+          "_type": "datetime",
+          "_value": "2015-09-29T11:21:01"
+        },
+        "updated": {
+          "_type": "datetime",
+          "_value": "2015-09-29T11:21:01"
+        },
+        "finished": {
+          "_type": "datetime",
+          "_value": "2015-09-29T11:21:01",
+          "_description": "An ISO 8601 datetime of when the backup completed."
+        }
+      }
+    },
+    "created": {
+      "_type": "datetime",
+      "_value": "2015-09-29T11:21:01"
+    },
+    "datacenter": {
+      "_type": "datacenter",
+      "_filterable": true,
+      "_description": "This Linode's datacenter.",
+      "id": {
+        "_type": "string",
+        "_value": "newark"
+      },
+      "label": {
+        "_type": "string",
+        "_value": "Newark, NJ"
+      },
+      "country": {
+        "_type": "string",
+        "_value": "US"
+      }
+    },
+    "distribution": {
+      "_description": "The distribution that this Linode booted to last.",
+      "_type": "distribution",
+      "_filterable": true,
+      "id": {
+        "_type": "string",
+        "_value": "linode/opensuse13.2"
+      },
+      "label": {
+        "_type": "string",
+        "_value": "openSUSE 13.2"
+      },
+      "vendor": {
+        "_type": "string",
+        "_value": "openSUSE"
+      },
+      "x64": {
+        "_type": "boolean",
+        "_value": true
+      },
+      "recommended": {
+        "_type": "boolean",
+        "_value": true
+      },
+      "created": {
+        "_type": "datetime",
+        "_value": "2014-12-17T17:55:42.000Z"
+      },
+      "minimum_storage_size": {
+        "_type": "integer",
+        "_value": 700
+      }
+    },
+    "group": {
+      "_editable": true,
+      "_type": "string",
+      "_description": "This Linode's display group.",
+      "_value": "Example",
+      "_filterable": true,
+      "limit": "0-50 characters"
+    },
+    "ipv4": {
+      "_editable": false,
+      "_type": "array",
+      "_subtype": "string",
+      "_description": "This Linode's IPv4 addresses.",
+      "_value": [
+        "97.107.143.8",
+        "192.168.149.108"
+      ]
+    },
+    "ipv6": {
+      "_editable": false,
+      "_type": "string",
+      "_description": "This Linode's IPv6 slaac address.",
+      "_value": "2a01:7e00::f03c:91ff:fe96:46f5/64"
+    },
+    "label": {
+      "_editable": true,
+      "_type": "string",
+      "_description": "This Linode's display label.",
+      "_value": "Example Linode",
+      "_filterable": true,
+      "_limit": "3-32 ASCII characters limited to letters, numbers, underscores, and dashes, starting and ending with a letter, and without two dashes or underscores in a row"
+    },
+    "type": {
+      "_description": "The type of Linode.",
+      "_type": "array",
+      "_subtype": "service",
+      "_value": [
+        {
+          "id": {
+            "_type": "string",
+            "_value": "standard-1"
+          },
+          "backups_price": {
+            "_type": "integer",
+            "_value": 250
+          },
+          "class": {
+            "_type": "string",
+            "_value": "standard"
+          },
+          "disk": {
+            "_type": "integer",
+            "_value": 24576
+          },
+          "hourly_price": {
+            "_type": "integer",
+            "_value": 1
+          },
+          "label": {
+            "_type": "string",
+            "_value": "Linode 2048"
+          },
+          "mbits_out": {
+            "_type": "integer",
+            "_value": 125
+          },
+          "monthly_price": {
+            "_type": "integer",
+            "_value": 1000
+          },
+          "ram": {
+            "_type": "integer",
+            "_value": 2048
+          },
+          "service_type": {
+            "_type": "enum",
+            "_subtype": "Service Type",
+            "_value": "linode"
+          },
+          "storage": {
+            "_type": "integer",
+            "_value": 24576
+          },
+          "transfer": {
+            "_type": "integer",
+            "_value": 2000
+          },
+          "vcpus": {
+            "_type": "integer",
+            "_value": 2
+          }
+        }
+      ]
+    },
+    "status": {
+      "_type": "enum",
+      "_subtype": "Status",
+      "_description": "The current state of this Linode.",
+      "_value": "running",
+      "_filterable": true,
+      "_pylib_volatile": true
+    },
+    "total_transfer": {
+      "_type": "integer",
+      "_description": "The amount of outbound traffic used this month.",
+      "_value": 20000
+    },
+    "updated": {
+      "_type": "datetime",
+      "_value": "2015-10-27T09:59:26.000Z",
+      "_pylib_volatile": true,
+      "_description": "The last updated datetime for this Linode record."
+    },
+    "hypervisor": {
+      "_type": "enum",
+      "_subtype": "Hypervisor",
+      "_description": "The hypervisor this Linode is running on.",
+      "_value": "kvm"
+    }
+  },
+  "enums": {
+    "Status": {
+      "offline": "The Linode is powered off.",
+      "booting": "The Linode is currently booting up.",
+      "running": "The Linode is currently running.",
+      "shutting_down": "The Linode is currently shutting down.",
+      "rebooting": "The Linode is rebooting.",
+      "provisioning": "The Linode is being created.",
+      "deleting": "The Linode is being deleted.",
+      "migrating": "The Linode is being migrated to a new host/datacenter."
+    },
+    "BackupStatus": {
+      "pending": "Backup is in the queue and waiting to begin.",
+      "running": "Linode in the process of being backed up.",
+      "needsPostProcessing": "Backups awaiting final integration into existing backup data.",
+      "successful": "Backup successfully completed.",
+      "failed": "Linode backup failed.",
+      "userAborted": "User aborted current backup process."
+    },
+    "BackupType": {
+      "auto": "Automatic backup",
+      "snapshot": "User-initiated, manual file backup"
+    },
+    "Window": {
+      "W0": "0000 - 0200 UTC",
+      "W2": "0200 - 0400 UTC",
+      "W4": "0400 - 0600 UTC",
+      "W6": "0600 - 0800 UTC",
+      "W8": "0800 - 1000 UTC",
+      "W10": "1000 - 1200 UTC",
+      "W12": "1200 - 1400 UTC",
+      "W14": "1400 - 1600 UTC",
+      "W16": "1600 - 1800 UTC",
+      "W18": "1800 - 2000 UTC",
+      "W20": "2000 - 2200 UTC",
+      "W22": "2200 - 0000 UTC"
+    },
+    "Hypervisor": {
+      "kvm": "KVM",
+      "xen": "Xen"
+    }
+  }
+}
