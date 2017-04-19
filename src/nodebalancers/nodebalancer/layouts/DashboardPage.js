@@ -8,14 +8,6 @@ import { List } from 'linode-components/lists';
 import { ListBody } from 'linode-components/lists/bodies';
 import { LinkCell, ButtonCell } from 'linode-components/tables/cells';
 
-console.log(Card);
-console.log(CardHeader);
-console.log(List);
-console.log(Table);
-console.log(ListBody);
-console.log(LinkCell);
-console.log(ButtonCell);
-
 import { objectFromMapByLabel } from '~/api/util';
 import { setSource } from '~/actions/source';
 import Region from '~/linodes/components/Region';
