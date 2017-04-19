@@ -1,19 +1,20 @@
 import { apiTestRegion } from './regions';
 
-export const nodebalancers = [
-  {
+function createTestNodeBalancer(id) {
+  return {
+    label: `nodebalancer-${id}`,
+    group: `group-${id}`,
     region: apiTestRegion,
     status: 'new_active',
     updated: '2017-03-06T22:00:48',
-    label: 'nodebalancer-1',
     created: '2017-03-03T18:08:44',
     hostname: 'nb-1-1-1-1.newark.nodebalancer.linode.com',
     id: 23,
     client_conn_throttle: 0,
     ipv4: '1.1.1.1',
     _configs: {
-      configs: [
-        {
+      configs: {
+        0: {
           check_timeout: 30,
           nodebalancer_id: 23,
           check_path: '',
@@ -30,7 +31,7 @@ export const nodebalancers = [
           check_body: '',
           check: 'none',
         },
-        {
+        1: {
           check_timeout: 30,
           nodebalancer_id: 23,
           check_path: '',
@@ -47,7 +48,19 @@ export const nodebalancers = [
           check_body: '',
           check: 'none',
         },
-      ],
+      },
     },
-  },
-];
+  };
+}
+
+export const genericNodeBalancer = createTestNodeBalancer(1);
+
+export const noGroupNodeBalancer = {
+  ...createTestNodeBalancer(2),
+  group: '',
+};
+
+export const nodebalancers = [
+  genericNodeBalancer,
+  noGroupNodeBalancer,
+].reduce((object, nodebalancer) => ({ ...object, [nodebalancer.id]: nodebalancer }), {});

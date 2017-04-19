@@ -50,7 +50,7 @@ export class IndexPage extends Component {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
 
-    dispatch(setTitle('Nodebalancers'));
+    dispatch(setTitle('NodeBalancers'));
   }
 
   deleteNodeBalancers(nodebalancers) {
@@ -80,7 +80,7 @@ export class IndexPage extends Component {
     const data = Object.values(nodebalancers.nodebalancers);
 
     // TODO: add mass edit controls to nodebalancers
-    const renderNodebalancers = (data) => (
+    const renderNodeBalancers = (data) => (
       <List>
         <ListHeader>
           <div className="pull-sm-left">
@@ -136,7 +136,7 @@ export class IndexPage extends Component {
           </div>
         </header>
         <div className="PrimaryPage-body">
-          {data.length ? renderNodebalancers(data) : (
+          {data.length ? renderNodeBalancers(data) : (
             <CreateHelper
               label="NodeBalancers"
               href="/nodebalancers/create"
