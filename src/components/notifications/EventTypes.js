@@ -26,12 +26,12 @@ export function getDomainRedirectUrl(entity) {
   return `${getDomainsRedirectUrl()}/${entity.label}`;
 }
 
-export function getNodebalancersRedirectUrl() {
+export function getNodeBalancersRedirectUrl() {
   return '/nodebalancers';
 }
 
 export function getNodebalancerRedirectUrl(entity) {
-  return `${getNodebalancersRedirectUrl()}/${entity.label}`;
+  return `${getNodeBalancersRedirectUrl()}/${entity.label}`;
 }
 
 export function getTicketsRedirectUrl() {
@@ -180,12 +180,12 @@ const EventTypeMap = {
   nodebalancer_create: {
     presentTenseAction: 'Creating',
     pastTenseAction: 'created',
-    redirectUrl: getNodebalancersRedirectUrl,
+    redirectUrl: getNodeBalancersRedirectUrl,
   },
   nodebalancer_delete: {
     presentTenseAction: 'Deleting',
     pastTenseAction: 'deleted',
-    redirectUrl: getNodebalancersRedirectUrl,
+    redirectUrl: getNodeBalancersRedirectUrl,
   },
   nodebalancer_config_create: {
     presentTenseAction: 'Creating',
