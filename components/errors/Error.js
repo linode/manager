@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 
+
 export default function Error(props) {
   const { status, href, description } = props;
   let statusString = status.toString();
@@ -48,5 +49,3 @@ Error.propTypes = {
 Error.defaultProps = {
   href: 'mailto:support@linode.com',
 };
-
-export const NotFound = () => <Error status={404} />;
