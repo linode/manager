@@ -32,7 +32,7 @@ export class DashboardPage extends Component {
     const { nodebalancer } = this.props;
     const { configs } = nodebalancer._configs;
 
-    const newConfigs = Object.values(configs).map((config) => {
+    const newConfigurations = Object.values(configs).map((config) => {
       return {
         ...config,
         protocol: config.protocol.toUpperCase(),
@@ -77,10 +77,10 @@ export class DashboardPage extends Component {
         <Card
           header={
             <CardHeader
-              title="Configs"
+              title="Configurations"
               nav={
                 <Link
-                  to={`/nodebalancers/${nodebalancer.label}/configs/create`}
+                  to={`/nodebalancers/${nodebalancer.label}/configurations/create`}
                   className="linode-add btn btn-default float-sm-right"
                 >Add a Configuration</Link>
               }
@@ -95,7 +95,7 @@ export class DashboardPage extends Component {
                   { textKey: 'port', label: 'Port',
                     cellComponent: LinkCell,
                     hrefFn: function (config) {
-                      return `/nodebalancers/${nodebalancer.label}/configs/${config.id}`;
+                      return `/nodebalancers/${nodebalancer.label}/configurations/${config.id}`;
                     },
                   },
                   { dataKey: 'protocol', label: 'Protocol' },
@@ -105,16 +105,16 @@ export class DashboardPage extends Component {
                   { dataKey: 'statusString', label: 'Node status' },
                   {
                     cellComponent: ButtonCell,
-                    headerClassName: 'ButtonColumn',
                     buttonClassName: 'btn-secondary',
                     hrefFn: function (config) {
-                      return `/nodebalancers/${nodebalancer.label}/configs/${config.id}/edit`;
+                      return `/nodebalancers/${nodebalancer.label}/configurations/${config.id}`;
                     },
                     text: 'Edit',
                   },
                 ]}
-                data={newConfigs}
+                data={newConfigurations}
                 selectedMap={{}}
+                disableHeader
               />
             </ListBody>
           </List>
