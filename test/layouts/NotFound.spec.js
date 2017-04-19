@@ -9,6 +9,6 @@ describe('layouts/NotFound', () => {
       <NotFound />
     );
 
-    expect(content.find('h1').text()).to.equal('404 Not Found');
+    expect(content.find('h1').text()).to.equal('404');
   });
 });
