@@ -9,7 +9,7 @@ export default function Layout(props) {
     <div className="Layout">
       <Header></Header>
       <div className="Layout-container container">
-        <div className="Layout-navigation-container">
+        <div className="Layout-navigationContainer">
           <div className="VerticalNav">
             <div className="VerticalNav-section">
               <h3>Getting Started</h3>

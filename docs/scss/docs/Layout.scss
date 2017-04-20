@@ -4,7 +4,7 @@ $sidebar-width: 300px;
     background-color: $gray;
 
     &-container,
-    &-navigation-container,
+    &-navigationContainer,
     &-content {
         height: 100%;
     }
@@ -13,7 +13,7 @@ $sidebar-width: 300px;
         padding-top: $nav-height;
     }
 
-    &-navigation-container {
+    &-navigationContainer {
         background-color: $light-gray;
         border: $border;
         position: fixed;
