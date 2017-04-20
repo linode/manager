@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 
 import Breadcrumbs from '~/components/Breadcrumbs';
-import { Link } from '~/components/Link';
-import { Card, CardHeader } from '~/components/cards';
+import { Link } from 'react-router';
+import { Card, CardHeader } from 'linode-components/cards';
 import { nodebalancers } from '~/api';
 import { getObjectByLabelLazily, objectFromMapByLabel } from '~/api/util';
 
