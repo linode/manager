@@ -1,4 +1,4 @@
-$sidebar-width: 275px;
+$sidebar-width: 300px;
 
 .Layout {
     background-color: $gray;
@@ -23,5 +23,6 @@ $sidebar-width: 275px;
     &-content {
         background-color: $white;
         margin-left: $sidebar-width;
+        padding: 25px;
     }
 }

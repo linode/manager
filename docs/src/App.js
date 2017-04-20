@@ -8,8 +8,9 @@ import { GA_ID } from './constants';
 
 import styles from '../scss/index.scss';
 
-import { MainLayout } from './layouts';
-import { IndexPage as DocsIndexPage } from './docs';
+import { Layout } from './layouts';
+import { Routes as IntroductionRoutes } from './docs/introduction';
+import { Routes as LinodeRoutes } from './docs/linodes';
 import { NotFound } from 'linode-components/errors';
 
 
@@ -25,9 +26,10 @@ export function init() {
       history={browserHistory}
       onUpdate={logPageView}
     >
-      <Route path="/" component={MainLayout}>
-        <IndexRedirect to="/docs" />
-        <Route path="/docs" component={DocsIndexPage} />
+      <Route path="/" component={Layout}>
+        <IndexRedirect to="introduction"/>
+        {IntroductionRoutes}
+        {LinodeRoutes}
         <Route path="*" component={NotFound} />
       </Route>
     </Router>,

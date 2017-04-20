@@ -9,7 +9,7 @@
     }, {
       "rootPathSuffix": "test",
       "rootPathPrefix": "@",
-    }]]
+    }]],
   ],
   "env": {
     "development": {
