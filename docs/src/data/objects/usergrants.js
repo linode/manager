@@ -1,0 +1,1 @@
+module.exports = {"name":"UserGrants","description":"Information about a restricted user's grants.\n","endpoints":null};
