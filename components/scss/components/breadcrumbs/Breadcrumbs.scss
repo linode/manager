@@ -1,0 +1,14 @@
+.Breadcrumbs {
+    li {
+        display: inline-block;
+        padding-right: 10px;
+
+        &:not(:last-of-type) {
+            &:after {
+                padding-left: 10px;
+                font-family: FontAwesome;
+                content: "\f105";
+            }
+        }
+    }
+}
