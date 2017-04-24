@@ -78,6 +78,7 @@
     "mocha": "^2.3.4",
     "mocha-lcov-reporter": "^1.2.0",
     "mockdate": "^1.0.4",
+    "node-sass": "^3.4.2",
     "qrious": "^2.2.0",
     "phantomjs-polyfill": "0.0.2",
     "phantomjs-prebuilt": "^2.1.7",
