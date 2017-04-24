@@ -1,0 +1,1 @@
+module.exports = {"name":"Support Ticket","description":"Support ticket objects describe requests to the Linode support team.\n","endpoints":null};

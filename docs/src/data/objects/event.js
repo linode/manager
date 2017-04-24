@@ -1,0 +1,1 @@
+module.exports = {"name":"Event","description":"Event objects describe a notification on a user's account timeline.\n","endpoints":null};

@@ -1,0 +1,1 @@
+module.exports = {"name":"IPv6 Pool","description":"A Public IPv6 Pool, available to an entire Datacenter\n","endpoints":null};

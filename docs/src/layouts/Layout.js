@@ -5,6 +5,9 @@ import { Header } from 'linode-components/navigation';
 
 
 export default function Layout(props) {
+  const { route } = props;
+  const { topLevelRoutes } = route;
+
   return (
     <div className="Layout">
       <Header></Header>
@@ -23,7 +26,10 @@ export default function Layout(props) {
             <div className="VerticalNav-section">
               <h3>Reference</h3>
               <ul>
-                <li><Link to="/linodes">Linodes</Link></li>
+                {topLevelRoutes.map(function(topLevelRoute, index) {
+                  const { to, label } = topLevelRoute;
+                  return (<li key={index}><Link to={to}>{label}</Link></li>);
+                })}
               </ul>
             </div>
           </div>
