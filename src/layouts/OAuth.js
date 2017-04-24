@@ -9,7 +9,11 @@ import { rawFetch } from '~/fetch';
 import { setStorage } from '~/storage';
 import md5 from 'md5';
 
-export function setSession(oauthToken = '', scopes = '', username = '', email = '') {
+export function setSession(oauthToken = '',
+                           scopes = '',
+                           username = '',
+                           email = '',
+                           timezone = '') {
   const { dispatch } = this.props;
   const hash = email && md5(email.trim().toLowerCase());
   dispatch(setToken(
@@ -19,6 +23,7 @@ export function setSession(oauthToken = '', scopes = '', username = '', email = 
   setStorage('authentication/username', username);
   setStorage('authentication/email', email);
   setStorage('authentication/email-hash', hash);
+  setStorage('authentication/timezone', timezone);
 }
 
 export class OAuthCallbackPage extends Component {
@@ -30,7 +35,7 @@ export class OAuthCallbackPage extends Component {
 
   async componentDidMount() {
     const { dispatch, location } = this.props;
-    const { error, code, username, email } = location.query;
+    const { error, code, username, email, timezone } = location.query;
     const returnTo = location.query['return'];
 
     if (error) {
@@ -50,7 +55,7 @@ export class OAuthCallbackPage extends Component {
         mode: 'cors',
       });
       const json = await resp.json();
-      this.setSession(json.access_token, json.scopes, username, email);
+      this.setSession(json.access_token, json.scopes, username, email, timezone);
       dispatch(push(returnTo || '/'));
     } else {
       dispatch(push('/'));

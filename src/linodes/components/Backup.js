@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import moment from 'moment';
+import TimeDisplay from '~/components/TimeDisplay';
 
 export default function Backup(props) {
   const { backup, title, selected, onSelect } = props;
@@ -8,11 +8,9 @@ export default function Backup(props) {
   let backupClass = (selected && selected === backup.id) ? 'selected' : '';
   if (future) backupClass = 'future';
 
-  const created = moment(backup.created, moment.ISO_8601);
-
   let content = backup.type === 'snapshot' && 'No snapshot taken.' || 'Pending';
   if (!future) {
-    content = created.format('dddd, MMMM D YYYY LT');
+    content = <TimeDisplay time={backup.created} />;
     if (backup.status !== 'successful') {
       if (backup.status === 'needsPostProcessing') {
         content = 'Backup running';

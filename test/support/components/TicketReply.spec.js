@@ -1,7 +1,6 @@
 import React from 'react';
 import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
-import moment from 'moment';
 
 import TicketReply, {
   stringToParagraphs,
@@ -12,10 +11,11 @@ import { testTicket } from '@/data/tickets';
 describe('support/components/TicketReply', () => {
   it('renders all data correctly', () => {
     const page = mount(<TicketReply createdField="opened" reply={testTicket} />);
-
     const header = page.find('CardImageHeader');
+    const time = header.find('TimeDisplay');
+
     expect(header.props().title).to.equal(testTicket.opened_by);
-    expect(header.props().subtitle).to.equal(moment.utc(testTicket.opened).fromNow());
+    expect(time.props().time).to.equal(testTicket.opened);
 
     expect(page.find('.Card-body').text()).to.equal(
       stringToParagraphs(testTicket.description));
