@@ -1,1 +1,1 @@
-module.exports = {"name":"Distribution","import":"from linode import Distribution","_object":"distribution","desc":"Represents a Distribution in the API.\n","endpoints":null,"methods":null};
+module.exports = {"name":"Distribution","endpoints":null};
