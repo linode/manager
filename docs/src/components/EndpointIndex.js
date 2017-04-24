@@ -7,8 +7,7 @@ import { LinkCell } from 'linode-components/tables/cells';
 
 export default function EndpointIndex(props) {
   const { route } = props;
-  const { endpointConfig } = route;
-  const { crumbs, endpoint, title } = endpointConfig;
+  const { crumbs, endpoint, title } = route;
 
   return (
     <div className="EndpointIndex">
@@ -27,11 +26,12 @@ export default function EndpointIndex(props) {
               cellComponent: LinkCell,
               textKey: 'path',
               label: 'Endpoint',
-              hrefFn: function(childEndpoint) {
-                return childEndpoint.routePath;
+              hrefFn: function(record) {
+                return '#';
               }
             },
             { label: 'Description', dataKey: 'description' },
+            {} // empty until fix
           ]}
           data={endpoint.endpoints}
         />
