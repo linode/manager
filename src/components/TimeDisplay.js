@@ -5,8 +5,7 @@ import { getStorage } from '~/storage';
 
 export default function TimeDisplay(props) {
   const timezone = getStorage('authentication/timezone') || 'UTC';
-  const utcTime = moment.utc(props.time, moment.iso_8601);
-  utcTime.tz(timezone);
+  const utcTime = moment.utc(props.time, moment.iso_8601).tz(timezone);
   return (
     <span
       title={utcTime.format('MMM D YYYY h:mm A z')}
