@@ -58,7 +58,6 @@ export class OAuthCallbackPage extends Component {
       });
       const json = await resp.json();
       this.setSession(json.access_token, json.scopes, username, email, timezone);
-      await dispatch(account.one());
       dispatch(push(returnTo || '/'));
     } else {
       dispatch(push('/'));
