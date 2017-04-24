@@ -1,1 +1,1 @@
-module.exports = {"name":"User","description":"User information associated with an account.\n","endpoints":null};
+module.exports = {"name":"User","description":"User information associated with an account.\n","endpoints":null,"methods":null};

@@ -1,1 +1,1 @@
-module.exports = {"name":"Backup","endpoints":null};
+module.exports = {"name":"Backup","endpoints":null,"methods":[{"desc":"Restores this Backup to a Linode\n","example":"backup.restore_to(l)\n","returns":"True if the restore succeeded","parameters":{"linode":{"_keyword":false,"desc":"A linode object or ID to restore this Backup to."}},"name":"restore_to"}]};
