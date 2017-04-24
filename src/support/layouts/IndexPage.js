@@ -15,6 +15,7 @@ import { List } from 'linode-components/lists';
 import { Table } from 'linode-components/tables';
 import { ListBody, ListGroup } from 'linode-components/lists/bodies';
 import { TableCell } from 'linode-components/tables/cells';
+import TimeDisplay from '~/components/TimeDisplay';
 
 const TICKET_LINK_MAP = {
   linode: getLinodeRedirectUrl,
