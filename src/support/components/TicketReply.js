@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
-import moment from 'moment';
 
 import { Card, CardImageHeader } from 'linode-components/cards';
+import TimeDisplay from '~/components/TimeDisplay';
 
 export function getLineBreakCharacter(text) {
   // Check the longer one first because it contains the second one.
@@ -46,7 +46,7 @@ export function stringToParagraphs(text) {
 
 export default function TicketReply(props) {
   const createdBy = props.reply[`${props.createdField}_by`];
-  const created = moment.utc(props.reply[props.createdField]).fromNow();
+  const created = <TimeDisplay time={props.reply[props.createdField]} />;
   const header = <CardImageHeader title={createdBy} subtitle={created} />;
 
   const description = stringToParagraphs(props.reply.description);
