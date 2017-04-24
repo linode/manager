@@ -1,0 +1,1 @@
+module.exports = {"name":"Datacenter","endpoints":null};

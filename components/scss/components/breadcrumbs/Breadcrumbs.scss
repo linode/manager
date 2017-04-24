@@ -1,0 +1,19 @@
+.Breadcrumbs {
+    &-crumb {
+        display: inline-block;
+        margin-top: -5px;
+        padding-right: 10px;
+
+        a:not([href]):not([tabindex]) {
+            color: $blue;
+        }
+
+        &:not(:last-of-type) {
+            &:after {
+                padding-left: 10px;
+                font-family: FontAwesome;
+                content: "\f105";
+            }
+        }
+    }
+}

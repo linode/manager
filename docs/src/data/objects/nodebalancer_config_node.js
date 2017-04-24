@@ -1,0 +1,1 @@
+module.exports = {"name":"NodeBalancer Config Node","description":"Describes a node for a NodeBalancer configuration.\n","endpoints":null};

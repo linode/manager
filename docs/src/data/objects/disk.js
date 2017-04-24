@@ -1,0 +1,1 @@
+module.exports = {"name":"Disk","description":"Disk objects are disk images that are attached to a Linode.\n","endpoints":null};
