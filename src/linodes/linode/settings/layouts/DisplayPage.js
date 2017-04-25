@@ -2,18 +2,20 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { selectLinode } from '../../utilities';
-import { linodes } from '~/api';
 import { Card, CardHeader } from 'linode-components/cards';
 import { Form, FormGroup, FormGroupError, Input, SubmitButton } from 'linode-components/forms';
-import { ErrorSummary, reduceErrors } from '~/errors';
+
+import { linodes } from '~/api';
 import { setSource } from '~/actions/source';
+import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+
+import { selectLinode } from '../../utilities';
+
 
 export class DisplayPage extends Component {
   constructor(props) {
     super(props);
 
-    this.onSubmit = this.onSubmit.bind(this);
     const { group, label } = props.linode;
     this.state = { group, label, errors: {}, loading: false };
   }
@@ -23,33 +25,28 @@ export class DisplayPage extends Component {
     dispatch(setSource(__filename));
   }
 
-  async onSubmit() {
+  onSubmit = async () => {
     const { dispatch, linode } = this.props;
     const { id, label: oldLabel, group: oldGroup } = linode;
     const { group, label } = this.state;
 
-    this.setState({ loading: true, errors: {} });
-
-    try {
-      await dispatch(linodes.put({ group, label }, id));
-      if (oldLabel !== label || oldGroup !== group) {
-        await dispatch(push(`/linodes/${label}/settings`));
-      }
-    } catch (response) {
-      const errors = await reduceErrors(response);
-      this.setState({ errors });
-    }
-
-    this.setState({ loading: false });
+    await dispatch(dispatchOrStoreErrors.apply(this, [
+      [
+        () => linodes.put({ group, label }, id),
+        () => oldLabel !== label || oldGroup !== group ?
+            push(`/linodes/${label}/settings`) : () => {},
+      ],
+    ]));
   }
 
   render() {
-    const { group, label, errors } = this.state;
+    const { group, label, loading, errors } = this.state;
+
     return (
       <Card header={<CardHeader title="Display" />}>
         <Form onSubmit={this.onSubmit}>
           <FormGroup errors={errors} className="row" name="group">
-            <label htmlFor="group" className="col-sm-1 col-form-label">Group:</label>
+            <label htmlFor="group" className="col-sm-1 col-form-label">Group</label>
             <div className="col-sm-11">
               <Input
                 id="group"
@@ -61,7 +58,7 @@ export class DisplayPage extends Component {
             </div>
           </FormGroup>
           <FormGroup errors={errors} className="row" name="label">
-            <label htmlFor="label" className="col-sm-1 col-form-label">Label:</label>
+            <label htmlFor="label" className="col-sm-1 col-form-label">Label</label>
             <div className="col-sm-11">
               <Input
                 id="label"
@@ -74,10 +71,10 @@ export class DisplayPage extends Component {
           </FormGroup>
           <FormGroup className="row">
             <div className="offset-sm-1 col-sm-11">
-              <SubmitButton />
+              <SubmitButton disabled={loading} />
+              <FormSummary errors={errors} success="Display settings saved." />
             </div>
           </FormGroup>
-          <ErrorSummary errors={errors} />
         </Form>
       </Card>
     );

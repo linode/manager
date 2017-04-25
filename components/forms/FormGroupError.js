@@ -1,15 +1,16 @@
 import React, { PropTypes } from 'react';
 
 export default function FormGroupError(props) {
-  const { errors, name, crumbs, inline } = props;
+  const { errors, name, crumbs, inline, className } = props;
   const fieldErrors = errors[name + (crumbs ? `.${crumbs}` : '')];
-  const errorMessageStyle = inline ? 'form-control-feedback'
-    : 'form-control-feedback form-control-feedback--block';
+  const baseClassName = `${className} FormGroupError`;
+  const fullClassName = inline ? baseClassName
+                          : `${baseClassName} FormGroupError--block`;
   if (fieldErrors && fieldErrors.length) {
     return (
-      <span className={errorMessageStyle}>
-        {fieldErrors.map(error => <small key={error}>{error.reason}</small>)}
-      </span>
+      <ul className={fullClassName}>
+        {fieldErrors.map(error => <li key={error.reason}>{error.reason}</li>)}
+      </ul>
     );
   }
 
@@ -19,10 +20,12 @@ export default function FormGroupError(props) {
 FormGroupError.propTypes = {
   errors: PropTypes.any.isRequired,
   name: PropTypes.string.isRequired,
+  className: PropTypes.string,
   crumbs: PropTypes.string,
   inline: PropTypes.bool,
 };
 
 FormGroupError.defaultProps = {
   inline: true,
+  className: '',
 };

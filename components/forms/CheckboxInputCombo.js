@@ -17,7 +17,7 @@ export default function CheckboxInputCombo(props) {
         type={props.inputType}
         onChange={props.inputOnChange}
         label={props.inputLabel}
-        disabled={props.inputDisabled}
+        disabled={!props.checkboxChecked || props.inputDisabled}
         placeholder={props.inputPlaceholder}
       />
     </div>

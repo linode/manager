@@ -25,16 +25,16 @@ export class ReverseDNSPage extends Component {
   constructor() {
     super();
 
-    this.state = { resetting: {} };
+    this.state = { loading: {} };
   }
 
   async resetRDNS(record) {
     const { dispatch, linode } = this.props;
     const address = record.address;
 
-    this.setState({ resetting: { ...this.state.resetting, [address]: true } });
+    this.setState({ loading: { ...this.state.loading, [address]: true } });
     await dispatch(setRDNS(linode.id, address, null));
-    this.setState({ resetting: { ...this.state.resetting, [address]: false } });
+    this.setState({ loading: { ...this.state.loading, [address]: false } });
   }
 
   renderEditRDNS(ip) {
@@ -61,7 +61,7 @@ export class ReverseDNSPage extends Component {
         },
         text: 'Reset',
         isDisabledFn: (record) => {
-          return this.state.resetting[record.address];
+          return this.state.loading[record.address];
         },
       },
       {
