@@ -182,10 +182,6 @@ export class ReducerGenerator {
 
     if (!name) return state;
 
-    if (i !== names.length - 2) {
-      throw new Error('3-layer configs not supported');
-    }
-
     const keys = Object.keys(config.subresources);
     let subkey = null;
     let subconfig = null;
@@ -217,7 +213,9 @@ export class ReducerGenerator {
       case `GEN@${fullyQualified(config)}/INVALIDATE`:
         return ReducerGenerator.invalidate(config, state, action);
       default:
-        if (action.type && action.type.indexOf(`GEN@${config.plural}.`) === 0) {
+        const subTypeMatch = `GEN@${fullyQualified(config)}`;
+        if (action.type && action.type.split('/')[0].indexOf(subTypeMatch) === 0) {
+          // Go inside a nested config
           return ReducerGenerator.subresource(config, state, action);
         }
         return state;
