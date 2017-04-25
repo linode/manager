@@ -1,1 +1,1 @@
-module.exports = {"name":"StackScript","endpoints":null};
+module.exports = {"name":"StackScript","endpoints":null,"methods":[{"desc":"Sends any local changes to Editable fields of this StackScript to the API, saving them.\n","example":"stackscript.save()\n","returns":"True if the save succeeded","name":"save"}]};

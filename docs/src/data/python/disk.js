@@ -1,1 +1,1 @@
-module.exports = {"name":"Disk","endpoints":null};
+module.exports = {"name":"Disk","endpoints":null,"methods":[{"desc":"Sends any local changes to Editable fields of this Disk to the API, saving them.\n","example":"disk.save()\n","returns":"True if the save succeeded","name":"save"},{"desc":"Deletes this Disk.  This is not reversable.\n","example":"disk.delete()","returns":"True if the delete succueeded.","name":"delete"}]};

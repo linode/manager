@@ -10,8 +10,15 @@ import styles from '../scss/index.scss';
 
 import { NotFound } from 'linode-components/errors';
 
-import { Layout } from './layouts';
-import { generateRoutes } from '~/RoutesGenerator';
+import {
+  IndexLayout,
+  Layout
+} from './layouts';
+
+import {
+  generateIndexRoute,
+  generateChildRoute
+} from '~/RoutesGenerator';
 
 import {
   account,
@@ -36,77 +43,92 @@ function logPageView() {
 const endpointConfigs = [
   {
     crumbs: [
-      { groupLabel: 'Reference', label: 'Account', to: '/account' },
+      { groupLabel: 'Reference', label: account.basePath, to: account.basePath },
     ],
     endpoint: account
   },
   {
     crumbs: [
-      { groupLabel: 'Reference', label: 'Regions', to: '/regions' },
+      { groupLabel: 'Reference', label: regions.basePath, to: regions.basePath },
     ],
     endpoint: regions
   },
   {
     crumbs: [
-      { groupLabel: 'Reference', label: 'Distributions', to: '/distributions' },
+      { groupLabel: 'Reference', label: distributions.basePath, to: distributions.basePath },
     ],
     endpoint: distributions
   },
   {
     crumbs: [
-      { groupLabel: 'Reference', label: 'Domains', to: '/domains' },
+      { groupLabel: 'Reference', label: domains.basePath, to: domains.basePath },
     ],
     endpoint: domains
   },
   {
     crumbs: [
-      { groupLabel: 'Reference', label: 'Events', to: '/events' },
+      { groupLabel: 'Reference', label: events.basePath, to: events.basePath },
     ],
     endpoint: events
   },
   {
     crumbs: [
-      { groupLabel: 'Reference', label: 'Kernels', to: '/kernels' },
+      { groupLabel: 'Reference', label: kernels.basePath, to: kernels.basePath },
     ],
     endpoint: kernels
   },
   {
     crumbs: [
-      { groupLabel: 'Reference', label: 'Linodes', to: '/linodes' },
+      { groupLabel: 'Reference', label: linodes.basePath, to: linodes.basePath },
     ],
     endpoint: linodes
   },
   {
     crumbs: [
-      { groupLabel: 'Reference', label: 'Networking', to: '/networking' },
+      { groupLabel: 'Reference', label: networking.basePath, to: networking.basePath },
     ],
     endpoint: networking
   },
   {
     crumbs: [
-      { groupLabel: 'Reference', label: 'Types', to: '/types' },
+      { groupLabel: 'Reference', label: services.basePath, to: services.basePath },
     ],
     endpoint: services
   },
   {
     crumbs: [
-      { groupLabel: 'Reference', label: 'Stack Scripts', to: '/stackscripts' },
+      { groupLabel: 'Reference', label: stackscripts.basePath, to: stackscripts.basePath },
     ],
     endpoint: stackscripts
   },
   {
     crumbs: [
-      { groupLabel: 'Reference', label: 'Support Tickets', to: '/supporttickets' },
+      { groupLabel: 'Reference', label: supporttickets.basePath, to: supporttickets.basePath },
     ],
-    endpoint: supporttickets
+    endpoint: supporttickets,
   }
-];
+].map(function(endpointConfig) {
+  const { crumbs, endpoint } = endpointConfig;
+  let childEndpoints;
 
-const topLevelRoutes = endpointConfigs.map(function(endpointConfig) {
-  return {
-    to: endpointConfig.endpoint.basePath,
-    label: endpointConfig.endpoint.name
-  };
+  if (endpoint.endpoints) {
+    childEndpoints = endpoint.endpoints.map(function(childEndpoint) {
+      const routePath = `/${childEndpoint.path}/endpoint`;
+      const crumb = {
+        label: childEndpoint.path,
+        to: routePath
+      };
+
+      return {
+        ...childEndpoint,
+        crumbs: crumbs.concat([crumb]),
+        routePath: routePath
+      };
+    });
+  }
+
+  endpoint.endpoints = childEndpoints;
+  return endpointConfig;
 });
 
 
@@ -116,11 +138,16 @@ export function init() {
       history={browserHistory}
       onUpdate={logPageView}
     >
-      <Route path="/" component={Layout} topLevelRoutes={topLevelRoutes}>
-        <IndexRedirect to="linodes"/>
-        {endpointConfigs.map(function(endpointConfig, index) {
-          return generateRoutes({ key: index, endpointConfig: endpointConfig });
-        })}
+      <Route path="/" component={Layout} endpointConfigs={endpointConfigs}>
+        <Route component={IndexLayout}>
+          <IndexRedirect to="linode/instances" />
+          {endpointConfigs.map(function(endpointConfig, index) {
+            return generateIndexRoute({ key: index, endpointConfig: endpointConfig });
+          })}
+          {endpointConfigs.map(function(endpointConfig) {
+            return generateChildRoute({ endpointConfig: endpointConfig });
+          })}
+        </Route>
         <Route path="*" component={NotFound} />
       </Route>
     </Router>,
