@@ -13,10 +13,11 @@ import { nodebalancers } from '~/api';
 import { getObjectByLabelLazily, objectFromMapByLabel } from '~/api/util';
 
 export class ViewConfigPage extends Component {
-  static async preload({ dispatch, getState }, { nbLabel }) {
+  static async preload({ dispatch, getState }, { nbLabel, configId }) {
     try {
       const { id } = await dispatch(getObjectByLabelLazily('nodebalancers', nbLabel));
-      await dispatch(nodebalancers.configs.all([id]));
+      await dispatch(nodebalancers.configs.one([id, configId]));
+      await dispatch(nodebalancers.configs.nodes.all([id, configId]));
     } catch (response) {
       // eslint-disable-next-line no-console
       console.error(response);
@@ -35,9 +36,8 @@ export class ViewConfigPage extends Component {
 
   render() {
     const { nodebalancer, config } = this.props;
-    console.log('config', config);
 
-    const nodes = [];
+    const nodes = Object.values(config._nodes.nodes);
 
     return (
       <div>
