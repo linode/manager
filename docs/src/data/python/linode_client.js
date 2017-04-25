@@ -1,1 +1,1 @@
-module.exports = {"name":"LinodeClient","endpoints":null};
+module.exports = {"name":"LinodeClient","endpoints":null,"methods":[{"desc":"Retrieves a list of Datacenter objects.  This function is filterable - include filters in the parameters list to retrieve only specific objects.\n","parameters":{"*filters":{"desc":"Any number of filters to this function","_keyword":false}},"example":"dc = client.get_datacenters(linode.Datacenter.label.contains(\"Newark\"))[0]\n","returns":"A list of Datacenter objects","name":"get_datacenters"}]};

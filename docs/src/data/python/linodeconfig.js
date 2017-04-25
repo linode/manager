@@ -1,1 +1,1 @@
-module.exports = {"name":"Config","endpoints":null};
+module.exports = {"name":"Config","endpoints":null,"methods":[{"desc":"Sends any local changes to Editable fields of this Config to the API, saving them.\n","example":"config.save()\n","returns":"True if the save succeeded","name":"save"},{"desc":"Deletes this Config.  This is not reversable.\n","example":"config.delete()","returns":"True if the delete succueeded.","name":"delete"}]};
