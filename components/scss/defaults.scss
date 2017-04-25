@@ -95,3 +95,22 @@ small {
 strong {
   font-weight: 500; // toned down from 'bolder'
 }
+
+// These need to be separated or they'll be ignored
+::-webkit-input-placeholder {
+    color: $lightest-black !important;
+}
+
+::-moz-placeholder {
+    color: $lightest-black !important;
+    opacity: 1 !important;
+}
+
+:-moz-placeholder {
+    color: $lightest-black !important;
+    opacity: 1 !important;
+}
+
+:-ms-input-placeholder {
+    color: $lightest-black !important;
+}
