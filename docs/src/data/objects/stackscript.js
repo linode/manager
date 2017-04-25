@@ -1,1 +1,1 @@
-module.exports = {"name":"StackScript","description":"StackScript objects describe a StackScript which can be used to help automate deployment of new Linodes.\n","endpoints":null};
+module.exports = {"name":"StackScript","description":"StackScript objects describe a StackScript which can be used to help automate deployment of new Linodes.\n","endpoints":null,"methods":null};

@@ -1,1 +1,1 @@
-module.exports = {"name":"Distribution","description":"Distribution objects describe a Linux distribution supported by Linode.\n","endpoints":null};
+module.exports = {"name":"Distribution","description":"Distribution objects describe a Linux distribution supported by Linode.\n","endpoints":null,"methods":null};
