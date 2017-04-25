@@ -1,1 +1,1 @@
-module.exports = {"name":"Kernel","endpoints":null};
+module.exports = {"name":"Kernel","endpoints":null,"methods":null};

@@ -12,8 +12,32 @@ function formatEndpoint(endpoint) {
   let endpoints = null;
   if (endpoint.endpoints) {
     endpoints = Object.keys(endpoint.endpoints).map(function(path) {
-      return _.merge({}, endpoint.endpoints[path], {
+      const childEndpoint = endpoint.endpoints[path];
+      const formattedEndpoint = formatEndpoint(childEndpoint);
+      return _.merge({}, formattedEndpoint, {
         path: path
+      });
+    });
+  }
+
+  let methods = null;
+  if (endpoint.methods) {
+    methods = Object.keys(endpoint.methods).map(function(method) {
+      const methodObj = endpoint.methods[method];
+
+      let examples;
+      if (methodObj.examples) {
+        examples = Object.keys(methodObj.examples).map(function(example) {
+          return {
+            name: example,
+            value: methodObj.examples[example]
+          };
+        });
+      }
+
+      return _.merge({}, methodObj, {
+        name: method,
+        examples: examples
       });
     });
   }
@@ -23,6 +47,7 @@ function formatEndpoint(endpoint) {
     basePath: endpoint.base_path,
     description: endpoint.description,
     endpoints: endpoints,
+    methods: methods
   };
 }
 

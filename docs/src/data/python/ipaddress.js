@@ -1,1 +1,1 @@
-module.exports = {"name":"IPAddress","endpoints":null};
+module.exports = {"name":"IPAddress","endpoints":null,"methods":null};

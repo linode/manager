@@ -1,33 +1,42 @@
 import React from 'react';
 import { Route, IndexRedirect } from 'react-router';
 
-import { EndpointIndex } from '~/components';
+import {
+  Endpoint,
+  EndpointIndex
+} from '~/components';
 
-
-export function generateRoutes(props) {
+export function generateIndexRoute(props) {
   const { endpointConfig, key } = props;
-  const { crumbs, endpoint, navPath } = endpointConfig;
-
-  if (navPath !== endpoint.basePath) {
-    return (
-      <Route key={key} path={navPath}>
-        <IndexRedirect to={endpoint.basePath} />
-        <Route
-          component={EndpointIndex}
-          crumbs={crumbs}
-          endpoint={endpoint}
-          path={endpoint.basePath}
-        />
-      </Route>
-    );
-  }
+  const { endpoint } = endpointConfig;
 
   return (
     <Route
+      key={key}
       component={EndpointIndex}
-      crumbs={crumbs}
-      endpoint={endpoint}
+      endpointConfig={endpointConfig}
       path={endpoint.basePath}
     />
   );
+}
+
+export function generateChildRoute(props) {
+  const { endpointConfig } = props;
+  const { endpoint } = endpointConfig;
+
+  let childEndpoints = null;
+  if (endpoint.endpoints) {
+    childEndpoints = endpoint.endpoints.map(function(childEndpoint, index) {
+      return (
+        <Route
+          key={index}
+          component={Endpoint}
+          endpoint={childEndpoint}
+          path={childEndpoint.routePath}
+        />
+      );
+    });
+  }
+
+  return childEndpoints;
 }

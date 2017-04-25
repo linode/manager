@@ -1,1 +1,1 @@
-module.exports = {"name":"Distribution","endpoints":null};
+module.exports = {"name":"Distribution","endpoints":null,"methods":null};
