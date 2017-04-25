@@ -31,7 +31,6 @@ export class IndexPage extends Component {
   render() {
     const { nodebalancer, params } = this.props;
     if (!nodebalancer) return null;
-    console.log('nodebalancer', nodebalancer);
 
     const { group, label } = nodebalancer;
     let crumbs = [];

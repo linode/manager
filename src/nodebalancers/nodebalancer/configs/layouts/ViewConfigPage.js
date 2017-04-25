@@ -10,13 +10,16 @@ import { List } from 'linode-components/lists';
 import { ListBody } from 'linode-components/lists/bodies';
 import { LinkCell, ButtonCell } from 'linode-components/tables/cells';
 import { nodebalancers } from '~/api';
+import { nodes } from '~/api';
 import { getObjectByLabelLazily, objectFromMapByLabel } from '~/api/util';
 
 export class ViewConfigPage extends Component {
-  static async preload({ dispatch, getState }, { nbLabel }) {
+  static async preload({ dispatch, getState }, { nbLabel, configId }) {
     try {
       const { id } = await dispatch(getObjectByLabelLazily('nodebalancers', nbLabel));
-      await dispatch(nodebalancers.configs.all([id]));
+      console.log('nodebalancers', nodebalancers);
+      console.log('nodebalancernodes aka nodes aka NodetoriousBIG', nodes);
+      await dispatch(nodes.all([id, configId]));
     } catch (response) {
       // eslint-disable-next-line no-console
       console.error(response);
@@ -34,10 +37,8 @@ export class ViewConfigPage extends Component {
   }
 
   render() {
-    const { nodebalancer, config } = this.props;
+    const { nodebalancer, config, nodes } = this.props;
     console.log('config', config);
-
-    const nodes = [];
 
     return (
       <div>
@@ -98,9 +99,8 @@ export class ViewConfigPage extends Component {
                       text: 'Edit',
                     },
                   ]}
-                  data={nodes}
+                  data={Object.values(nodes.nodes)}
                   selectedMap={{}}
-                  disableHeader
                 />
               </ListBody>
             </List>
@@ -120,7 +120,8 @@ function select(state, props) {
   const { nbLabel, configId } = props.params;
   const nodebalancer = objectFromMapByLabel(state.api.nodebalancers.nodebalancers, nbLabel);
   const config = objectFromMapByLabel(nodebalancer._configs.configs, +configId, 'id');
-  return { config, nodebalancer };
+  const nodes = state.api.nodes;
+  return { config, nodebalancer, nodes };
 }
 
 export default connect(select)(ViewConfigPage);
