@@ -5,6 +5,10 @@ import _ from 'lodash';
 import Breadcrumbs from '~/components/Breadcrumbs';
 import { Link } from 'react-router';
 import { Card, CardHeader } from 'linode-components/cards';
+import { Table } from 'linode-components/tables';
+import { List } from 'linode-components/lists';
+import { ListBody } from 'linode-components/lists/bodies';
+import { LinkCell, ButtonCell } from 'linode-components/tables/cells';
 import { nodebalancers } from '~/api';
 import { getObjectByLabelLazily, objectFromMapByLabel } from '~/api/util';
 
@@ -31,20 +35,12 @@ export class ViewConfigPage extends Component {
 
   render() {
     const { nodebalancer, config } = this.props;
+    console.log('config', config);
 
-    const crumbs = [
-      { to: '/nodebalancers', label: 'NodeBalancers' },
-      { to: `/nodebalancers/${nodebalancer.label}`, label: nodebalancer.label },
-    ];
+    const nodes = [];
 
     return (
       <div>
-        <header className="main-header main-header--border">
-          <div className="container">
-            <Breadcrumbs crumbs={crumbs} />
-            <h1 title={config.id}>Port {config.port}</h1>
-          </div>
-        </header>
         <div className="container">
           <Card header={<CardHeader title="Summary" />}>
             <div className="row">
@@ -76,7 +72,39 @@ export class ViewConfigPage extends Component {
                 }
               />
             }
-          />
+          >
+            <List>
+              <ListBody>
+                <Table
+                  className="Table--secondary"
+                  columns={[
+                    { textKey: 'label', label: 'Label',
+                      cellComponent: LinkCell,
+                      hrefFn: function (node) {
+                        return `/nodebalancers/${nodebalancer.label}/configurations/${config.id}/nodes/${node.id}`;
+                      },
+                    },
+                    { dataKey: 'address', label: 'Address' },
+                    { dataKey: 'weight', label: 'Weight' },
+                    { dataKey: 'mode', label: 'Mode' },
+                    { dataKey: 'status', label: 'Status' },
+                    { dataKey: 'last_status_change', label: 'Last status change' },
+                    {
+                      cellComponent: ButtonCell,
+                      buttonClassName: 'btn-secondary',
+                      hrefFn: function (node) {
+                        return `/nodebalancers/${nodebalancer.label}/configurations/${config.id}/nodes/${node.id}/edit`;
+                      },
+                      text: 'Edit',
+                    },
+                  ]}
+                  data={nodes}
+                  selectedMap={{}}
+                  disableHeader
+                />
+              </ListBody>
+            </List>
+          </Card>
         </div>
       </div>
     );

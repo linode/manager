@@ -29,10 +29,26 @@ export class IndexPage extends Component {
   }
 
   render() {
-    const { nodebalancer } = this.props;
+    const { nodebalancer, params } = this.props;
     if (!nodebalancer) return null;
+    console.log('nodebalancer', nodebalancer);
 
     const { group, label } = nodebalancer;
+    let crumbs = [];
+    let title = "";
+
+    if ( params.configId ) {
+      crumbs = [
+        { to: '/nodebalancers', label: 'NodeBalancers' },
+        { to: `/nodebalancers/${nodebalancer.label}`, label: nodebalancer.label },
+      ];
+      title = `Port ${nodebalancer._configs.configs[params.configId].port}`;
+    } else {
+      crumbs = [
+        { to: '/nodebalancers', label: 'NodeBalancers' },
+      ];
+      title = nodebalancer.label;
+    }
 
     const tabs = [
       { name: 'Dashboard', link: '' },
@@ -43,12 +59,8 @@ export class IndexPage extends Component {
       <div className="details-page">
         <header className="main-header">
           <div className="container">
-            <Link to="/nodebalancers">NodeBalancers</Link>
-            <h1 title={nodebalancer.id}>
-              <Link to={`/nodebalancers/${label}`}>
-                {nodebalancer.group ? `${group} / ${label}` : nodebalancer.label}
-              </Link>
-            </h1>
+            <Breadcrumbs crumbs={crumbs} />
+            <h1 title={nodebalancer.id}>{title}</h1>
           </div>
         </header>
         <div className="main-header-fix"></div>

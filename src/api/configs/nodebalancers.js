@@ -14,6 +14,14 @@ export const config = genConfig({
       singular: 'config',
       endpoint: (id, nbConfigId) => `/nodebalancers/${id}/configs/${nbConfigId}`,
       supports: [ONE, MANY, PUT, POST, DELETE],
+      subresources: {
+        _nodes: {
+          plural: 'nodes',
+          singular: 'node',
+          endpoint: (id, nbConfigId, nodeId) => `/nodebalancers/${id}/configs/${nbConfigId}/nodes/${nodeId}`,
+          supports: [ONE, MANY, PUT, POST, DELETE],
+        },
+      }
     },
   },
 
