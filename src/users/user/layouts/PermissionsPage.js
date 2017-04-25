@@ -16,6 +16,7 @@ export class PermissionsPage extends Component {
     super(props);
     this.onSubmit = this.onSubmit.bind(this);
     this.updateGlobal = this.updateGlobal.bind(this);
+    this.onCellChange = this.onCellChange.bind(this);
 
     const { username } = props.params;
     const permissions = props.users[username]._permissions.permissions.undefined;
@@ -29,9 +30,13 @@ export class PermissionsPage extends Component {
   async onSubmit() {
     const { dispatch } = this.props;
     const { username } = this.props.params;
+    const { global, customer, linode, nodebalancer, dnszone } = this.state;
     const values = {
-      customer: this.state.customer,
-      global: this.state.global,
+      global,
+      customer,
+      linode,
+      nodebalancer,
+      dnszone,
     };
 
     this.setState({ loading: true });
@@ -44,6 +49,23 @@ export class PermissionsPage extends Component {
     }
   }
 
+  onCellChange(record, checked, keys) {
+    const { parentKey, dataKey } = keys;
+    const parentState = this.state[parentKey].map(function (child) {
+      if (child === record) {
+        return {
+          ...child,
+          [dataKey]: checked,
+        };
+      }
+      return child;
+    });
+
+    this.setState({
+      [parentKey]: parentState,
+    });
+  }
+
   updateGlobal(name) {
     this.setState({
       global: {
@@ -54,7 +76,7 @@ export class PermissionsPage extends Component {
   }
 
   render() {
-    const { global, customer } = this.state;
+    const { global, customer, linode, dnszone, nodebalancer } = this.state;
 
     if (!customer) {
       return null;
@@ -96,28 +118,59 @@ export class PermissionsPage extends Component {
               })}
               label="Can cancel the entire account"
             />
+            <Checkbox
+              id="permission-global-linodes"
+              checked={global.add_linodes}
+              onChange={() => this.updateGlobal('add_linodes')}
+              label="Can add Linodes to this Account ($)"
+            />
+            <Checkbox
+              id="permission-global-nodebalancers"
+              checked={global.add_nodebalancers}
+              onChange={() => this.updateGlobal('add_nodebalancers')}
+              label="Can add NodeBalancers to this Account ($)"
+            />
+            <Checkbox
+              id="permission-global-domains"
+              checked={global.add_domains}
+              onChange={() => this.updateGlobal('add_domains')}
+              label="Can add Domains"
+            />
           </Checkboxes>
         </Card>
         <PermissionCard
-          updateGlobal={this.updateGlobal}
-          title="Linode permissions"
-          section="linodes"
-          addLabel="Can add Linodes to this Account ($)"
-          addCheck={global.add_linodes}
+          title="Linode"
+          parentKey="linode"
+          onCellChange={this.onCellChange}
+          objects={linode}
+          columns={[
+            { dataKey: 'all', label: 'All' },
+            { dataKey: 'access', label: 'Access' },
+            { dataKey: 'delete', label: 'Delete' },
+            { dataKey: 'resize', label: 'Resize ($)' },
+          ]}
         />
         <PermissionCard
-          updateGlobal={this.updateGlobal}
-          title="NodeBalancer permissions"
-          section="nodebalancers"
-          addLabel="Can add NodeBalancers to this Account ($)"
-          addCheck={global.add_nodebalancers}
+          title="NodeBalancer"
+          parentKey="nodebalancer"
+          onCellChange={this.onCellChange}
+          objects={nodebalancer}
+          columns={[
+            { dataKey: 'all', label: 'All' },
+            { dataKey: 'access', label: 'Access' },
+            { dataKey: 'delete', label: 'Delete' },
+          ]}
         />
         <PermissionCard
-          updateGlobal={this.updateGlobal}
-          title="Domains permissions"
-          section="domains"
-          addLabel="Can add Domains"
-          addCheck={global.add_domains}
+          title="Domains"
+          parentKey="dnszone"
+          onCellChange={this.onCellChange}
+          objects={dnszone}
+          columns={[
+            { dataKey: 'all', label: 'All' },
+            { dataKey: 'access', label: 'Access' },
+            { dataKey: 'delete', label: 'Delete' },
+          ]}
         />
         <SubmitButton>Save</SubmitButton>
       </Form>

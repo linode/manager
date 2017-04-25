@@ -70,8 +70,59 @@ describe('users/user/layouts/PermissionsPage', () => {
             add_nodebalancers: true,
             add_domains: true,
           },
+          linode: [
+            {
+              all: true,
+              access: true,
+              delete: true,
+              resize: true,
+              label: 'linode1',
+              id: 1234,
+            },
+          ],
+          nodebalancer: [
+            {
+              all: true,
+              access: true,
+              delete: true,
+              label: 'nb1',
+              id: 4321,
+            },
+          ],
+          dnszone: [
+            {
+              all: true,
+              access: true,
+              delete: true,
+              label: 'domain1',
+              id: 9876,
+            },
+          ],
         },
       }
     );
+  });
+
+  it('should change object state', async () => {
+    const page = mount(
+      <PermissionsPage
+        dispatch={dispatch}
+        users={user}
+        params={params}
+      />
+    );
+
+    const record = page.instance().state.linode[0];
+    const valueWas = page.find('.TableRow').at(0).find('input')
+      .at(0)
+      .props().checked;
+    const keys = {
+      parentKey: 'linode',
+      dataKey: 'all',
+    };
+    await page.instance().onCellChange(record, !valueWas, keys);
+    const checkbox = page.find('.TableRow').at(0).find('input')
+      .at(0);
+    expect(checkbox.props().checked).to.equal(!valueWas);
   });
 });
