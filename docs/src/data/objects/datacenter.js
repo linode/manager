@@ -1,1 +1,1 @@
-module.exports = {"name":"Datacenter","description":"Datacenter objects describe the datacenters available for Linode services.\n","endpoints":null};
+module.exports = {"name":"Datacenter","description":"Datacenter objects describe the datacenters available for Linode services.\n","endpoints":null,"methods":null};
