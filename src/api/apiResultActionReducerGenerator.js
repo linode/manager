@@ -203,6 +203,8 @@ export class ReducerGenerator {
   }
 
   static reducer(config, state, action) {
+    const subTypeMatch = `GEN@${fullyQualified(config)}`;
+
     switch (action.type) {
       case `GEN@${fullyQualified(config)}/ONE`:
         return ReducerGenerator.one(config, state, action);
@@ -213,7 +215,6 @@ export class ReducerGenerator {
       case `GEN@${fullyQualified(config)}/INVALIDATE`:
         return ReducerGenerator.invalidate(config, state, action);
       default:
-        const subTypeMatch = `GEN@${fullyQualified(config)}`;
         if (action.type && action.type.split('/')[0].indexOf(subTypeMatch) === 0) {
           // Go inside a nested config
           return ReducerGenerator.subresource(config, state, action);
