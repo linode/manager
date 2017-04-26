@@ -28,22 +28,16 @@ export class PermissionCard extends Component {
     });
 
     return (
-      <Card
-        header={
-          <CardHeader
-            title={`${title} permissions`}
-          />
-        }
-      >
+      <div className="form-group Permissions-section">
         <Table
-          className="Table--secondary col-sm-8"
+          className="Table--secondary col-sm-5"
           columns={[
             { dataKey: 'label', label: title },
             ...cols,
           ]}
           data={objects}
         />
-      </Card>
+      </div>
     );
   }
 }
