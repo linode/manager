@@ -86,93 +86,90 @@ export class PermissionsPage extends Component {
       <Form
         onSubmit={this.onSubmit}
       >
-        <Card
-          header={
-            <CardHeader
-              title="Global permissions"
-            />
-          }
-        >
-          <Checkboxes>
-            <Checkbox
-              id="permission-customer-access"
-              checked={customer.access}
-              onChange={() => this.setState({
-                customer: {
-                  ...this.state.customer,
-                  access: !customer.access,
-                },
-              })}
-              label="Can view invoices, make payments, update contact and
-                billing info, and will receive copies of all invoices and
-                payment emails"
-            />
-            <Checkbox
-              id="permission-customer-cancel"
-              checked={customer.cancel}
-              onChange={() => this.setState({
-                customer: {
-                  ...this.state.customer,
-                  cancel: !customer.cancel,
-                },
-              })}
-              label="Can cancel the entire account"
-            />
-            <Checkbox
-              id="permission-global-linodes"
-              checked={global.add_linodes}
-              onChange={() => this.updateGlobal('add_linodes')}
-              label="Can add Linodes to this Account ($)"
-            />
-            <Checkbox
-              id="permission-global-nodebalancers"
-              checked={global.add_nodebalancers}
-              onChange={() => this.updateGlobal('add_nodebalancers')}
-              label="Can add NodeBalancers to this Account ($)"
-            />
-            <Checkbox
-              id="permission-global-domains"
-              checked={global.add_domains}
-              onChange={() => this.updateGlobal('add_domains')}
-              label="Can add Domains"
-            />
-          </Checkboxes>
+        <Card>
+          <div className="Permissions-section">
+            <h4>Global Permissions</h4>
+            <Checkboxes>
+              <Checkbox
+                id="permission-customer-access"
+                checked={customer.access}
+                onChange={() => this.setState({
+                  customer: {
+                    ...this.state.customer,
+                    access: !customer.access,
+                  },
+                })}
+                label="Can view invoices, make payments, update contact and
+                  billing info, and will receive copies of all invoices and
+                  payment emails"
+              />
+              <Checkbox
+                id="permission-customer-cancel"
+                checked={customer.cancel}
+                onChange={() => this.setState({
+                  customer: {
+                    ...this.state.customer,
+                    cancel: !customer.cancel,
+                  },
+                })}
+                label="Can cancel the entire account"
+              />
+              <Checkbox
+                id="permission-global-linodes"
+                checked={global.add_linodes}
+                onChange={() => this.updateGlobal('add_linodes')}
+                label="Can add Linodes to this Account ($)"
+              />
+              <Checkbox
+                id="permission-global-nodebalancers"
+                checked={global.add_nodebalancers}
+                onChange={() => this.updateGlobal('add_nodebalancers')}
+                label="Can add NodeBalancers to this Account ($)"
+              />
+              <Checkbox
+                id="permission-global-domains"
+                checked={global.add_domains}
+                onChange={() => this.updateGlobal('add_domains')}
+                label="Can add Domains"
+              />
+            </Checkboxes>
+          </div>
+          <PermissionCard
+            title="Linode"
+            parentKey="linode"
+            onCellChange={this.onCellChange}
+            objects={linode}
+            columns={[
+              { dataKey: 'all', label: 'All' },
+              { dataKey: 'access', label: 'Access' },
+              { dataKey: 'delete', label: 'Delete' },
+              { dataKey: 'resize', label: 'Resize ($)' },
+            ]}
+          />
+          <PermissionCard
+            title="NodeBalancer"
+            parentKey="nodebalancer"
+            onCellChange={this.onCellChange}
+            objects={nodebalancer}
+            columns={[
+              { dataKey: 'all', label: 'All' },
+              { dataKey: 'access', label: 'Access' },
+              { dataKey: 'delete', label: 'Delete' },
+            ]}
+          />
+          <PermissionCard
+            title="Domains"
+            parentKey="dnszone"
+            onCellChange={this.onCellChange}
+            objects={dnszone}
+            columns={[
+              { dataKey: 'all', label: 'All' },
+              { dataKey: 'access', label: 'Access' },
+              { dataKey: 'delete', label: 'Delete' },
+            ]}
+          />
+          <SubmitButton>Save</SubmitButton>
         </Card>
-        <PermissionCard
-          title="Linode"
-          parentKey="linode"
-          onCellChange={this.onCellChange}
-          objects={linode}
-          columns={[
-            { dataKey: 'all', label: 'All' },
-            { dataKey: 'access', label: 'Access' },
-            { dataKey: 'delete', label: 'Delete' },
-            { dataKey: 'resize', label: 'Resize ($)' },
-          ]}
-        />
-        <PermissionCard
-          title="NodeBalancer"
-          parentKey="nodebalancer"
-          onCellChange={this.onCellChange}
-          objects={nodebalancer}
-          columns={[
-            { dataKey: 'all', label: 'All' },
-            { dataKey: 'access', label: 'Access' },
-            { dataKey: 'delete', label: 'Delete' },
-          ]}
-        />
-        <PermissionCard
-          title="Domains"
-          parentKey="dnszone"
-          onCellChange={this.onCellChange}
-          objects={dnszone}
-          columns={[
-            { dataKey: 'all', label: 'All' },
-            { dataKey: 'access', label: 'Access' },
-            { dataKey: 'delete', label: 'Delete' },
-          ]}
-        />
-        <SubmitButton>Save</SubmitButton>
       </Form>
     );
   }
