@@ -36,9 +36,7 @@ export class ViewConfigPage extends Component {
 
   render() {
     const { nodebalancer, config } = this.props;
-
     const nodes = Object.values(config._nodes.nodes);
-
     return (
       <div>
         <div className="container">
@@ -98,9 +96,8 @@ export class ViewConfigPage extends Component {
                       text: 'Edit',
                     },
                   ]}
-                  data={nodes}
+                  data={Object.values(nodes.nodes)}
                   selectedMap={{}}
-                  disableHeader
                 />
               </ListBody>
             </List>
@@ -120,7 +117,8 @@ function select(state, props) {
   const { nbLabel, configId } = props.params;
   const nodebalancer = objectFromMapByLabel(state.api.nodebalancers.nodebalancers, nbLabel);
   const config = objectFromMapByLabel(nodebalancer._configs.configs, +configId, 'id');
-  return { config, nodebalancer };
+  const nodes = objectFromMapByLabel(nodebalancer._configs.configs._nodes.nodes);
+  return { config, nodebalancer, nodes };
 }
 
 export default connect(select)(ViewConfigPage);
