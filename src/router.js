@@ -103,6 +103,8 @@ export class LoadingRouterContext extends RouterContext {
       }
     }
 
+    // Force scroll to the top of the page on page change.
+    window.scroll(0, 0);
     return super.render();
   }
 }
