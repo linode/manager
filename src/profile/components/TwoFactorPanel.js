@@ -64,6 +64,7 @@ export class TwoFactorPanel extends Component {
         toggleTwoFactor={this.toggleTwoFactor}
         dispatch={this.props.dispatch}
         secret={secret}
+        profile={this.props.profile}
       />
     ));
   }
