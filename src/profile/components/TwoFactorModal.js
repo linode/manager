@@ -49,12 +49,12 @@ export class TwoFactorModal extends Component {
         onCancel={() => dispatch(hideModal())}
       >
         <div className="form-group">
-          <p>
+          <div>
             A new emergency one-time use scratch code has been generated.
-          </p>
-          <p>
+          </div>
+          <div>
             Store this somewhere safe.
-          </p>
+          </div>
         </div>
         <div className="form-group row">
           <div className="col-sm-8">
@@ -66,12 +66,12 @@ export class TwoFactorModal extends Component {
   }
 
   render() {
-    const { dispatch, secret } = this.props;
+    const { dispatch, secret, profile } = this.props;
     const { tfaCode, errors } = this.state;
     const QRcode = new QRious({
-      value: secret,
+      value: `otpauth://totp/LinodeManager%3A${profile.username}?secret=${secret}`,
       level: 'H',
-      size: 170,
+      size: 250,
     });
 
     return (
@@ -138,4 +138,5 @@ TwoFactorModal.propTypes = {
   dispatch: PropTypes.func.isRequired,
   toggleTwoFactor: PropTypes.func,
   secret: PropTypes.string,
+  profile: PropTypes.object,
 };
