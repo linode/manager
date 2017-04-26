@@ -5,7 +5,7 @@ import { push } from 'react-router-redux';
 import { objectFromMapByLabel } from '~/api/util';
 import { nodebalancers } from '~/api';
 
-import { reduceErrors } from '~/errors';
+import { reduceErrors } from '~/components/forms';
 import { Card, CardHeader } from 'linode-components/cards';
 import { setSource } from '~/actions/source';
 import { ConfigForm } from '../components/ConfigForm';

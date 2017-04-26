@@ -5,7 +5,7 @@ import { push } from 'react-router-redux';
 import { Link } from 'react-router';
 import { selectLinode } from '../../utilities';
 import { takeBackup } from '~/api/backups';
-import { ErrorSummary, reduceErrors } from '~/errors';
+import { ErrorSummary, reduceErrors } from '~/components/forms';
 import { Button } from 'linode-components/buttons';
 import { Card, CardHeader } from 'linode-components/cards';
 

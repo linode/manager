@@ -17,13 +17,9 @@ export default class ConfirmModalBody extends Component {
   }
 
   render() {
-    const {
-      className,
-      buttonText,
-      onCancel,
-      children,
-    } = this.props;
+    const { className, buttonText, buttonDisabledText, onCancel, children } = this.props;
     const { loading } = this.state;
+
     return (
       <div className={`ConfirmModalBody-body ${className}`}>
         {React.isValidElement(children) ? children : <p>{children}</p>}
@@ -31,6 +27,7 @@ export default class ConfirmModalBody extends Component {
           <CancelButton disabled={loading} onClick={onCancel} />
           <SubmitButton
             disabled={loading}
+            disabledChildren={buttonDisabledText}
             onClick={this.handleOk}
           >{buttonText || 'Confirm'}</SubmitButton>
         </div>
@@ -38,14 +35,15 @@ export default class ConfirmModalBody extends Component {
   }
 }
 
-ConfirmModalBody.defaultProps = {
-  className: '',
-};
-
 ConfirmModalBody.propTypes = {
   className: PropTypes.string,
   children: PropTypes.any,
   buttonText: PropTypes.string,
+  buttonDisabledText: PropTypes.string,
   onOk: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
+};
+
+ConfirmModalBody.defaultProps = {
+  className: '',
 };

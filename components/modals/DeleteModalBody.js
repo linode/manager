@@ -5,14 +5,12 @@ import { ScrollingList } from '../lists';
 export default function DeleteModalBody(props) {
   const {
     onOk,
-    buttonText,
     items,
     onCancel,
     typeOfItem,
   } = props;
 
   let body;
-  let newButtonText = buttonText;
   if (items.length > 1) {
     body = (
       <div>
@@ -28,13 +26,13 @@ export default function DeleteModalBody(props) {
         to <strong>permanently</strong> delete <strong>{items[0]}</strong>?
       </p>
     );
-    newButtonText = buttonText.replace(/s$/, '');
   }
 
   return (
     <ConfirmModalBody
       className="DeleteModalBody"
-      buttonText={newButtonText}
+      buttonText="Delete"
+      buttonDisabledText="Deleting"
       onOk={onOk}
       onCancel={onCancel}
     >
@@ -45,7 +43,6 @@ export default function DeleteModalBody(props) {
 
 DeleteModalBody.propTypes = {
   onOk: PropTypes.func,
-  buttonText: PropTypes.string,
   items: PropTypes.arrayOf(PropTypes.string),
   onCancel: PropTypes.func,
   typeOfItem: PropTypes.string,

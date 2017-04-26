@@ -1,59 +1,48 @@
 import React, { Component, PropTypes } from 'react';
 
-import Input from './Input';
+import { Input } from './';
+
+
 const str = ['Extremely Weak', 'Very Weak', 'Weak', 'Moderate', 'Strong'];
 
-export default class PasswordInput extends Component {
-  constructor() {
-    super();
-    this.onPasswordChange = this.onPasswordChange.bind(this);
-    this.state = {
-      password: '',
-      // eslint-disable-next-line no-undef
-      strength: zxcvbn(''),
-    };
-  }
+export default function PasswordInput(props) {
+  // eslint-disable-next-line no-undef
+  const strength = zxcvbn(props.value);
 
-  onPasswordChange(e) {
-    const { onChange } = this.props;
-    const password = e.target.value;
-    // eslint-disable-next-line no-undef
-    const strength = zxcvbn(password);
-    this.setState({ password, strength });
-    onChange(password);
-  }
-
-  render() {
-    return (
-      <div className="PasswordInput">
-        <Input
-          value={this.state.password}
-          placeholder="**********"
-          className="form-control PasswordInput-input"
-          onChange={this.onPasswordChange}
-          autoComplete="off"
-          type="password"
-          disabled={this.props.disabled}
-          id={this.props.id}
-        />
-        <div
-          className={`PasswordInput-strength PasswordInput-strength--${this.state.strength.score}`}
-        >
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-        {this.state.password !== '' ? <small className="PasswordInput-strength-text">
-          {str[this.state.strength.score]}
-        </small> : null}
+  return (
+    <div className="PasswordInput float-sm-left">
+      <Input
+        value={props.value}
+        name={props.name}
+        placeholder="**********"
+        className="form-control PasswordInput-input"
+        onChange={props.onChange}
+        autoComplete="off"
+        type="password"
+        disabled={props.disabled}
+        id={props.id}
+      />
+      <div className={`PasswordInput-strength PasswordInput-strength--${strength.score}`}>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
       </div>
-    );
-  }
+      {props.value === '' ? null : (
+         <small className="PasswordInput-strength-text">
+           {str[strength.score]}
+         </small>
+       )}
+    </div>
+  );
 }
 
 PasswordInput.propTypes = {
   onChange: PropTypes.func.isRequired,
+  value: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  errors: PropTypes.object,
+  errorField: PropTypes.string,
   passwordType: PropTypes.string,
   disabled: PropTypes.bool,
   id: PropTypes.string,

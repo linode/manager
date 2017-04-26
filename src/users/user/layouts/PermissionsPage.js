@@ -9,7 +9,7 @@ import { Form,
   SubmitButton,
 } from 'linode-components/forms';
 import { PermissionCard } from '../components/PermissionCard';
-import { reduceErrors } from '~/errors';
+import { reduceErrors } from '~/components/forms';
 
 export class PermissionsPage extends Component {
   constructor(props) {

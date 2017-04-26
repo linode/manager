@@ -11,7 +11,7 @@ import {
   Input,
   Checkbox,
 } from 'linode-components/forms';
-import { ErrorSummary } from '~/errors';
+import { ErrorSummary } from '~/components/forms';
 
 export default class Details extends Component {
   constructor() {

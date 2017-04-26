@@ -9,7 +9,7 @@ import Region from '~/components/Region';
 import { nodebalancers } from '~/api';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
-import { reduceErrors, ErrorSummary } from '~/errors';
+import { reduceErrors, ErrorSummary } from '~/components/forms';
 
 export class CreatePage extends Component {
   constructor() {

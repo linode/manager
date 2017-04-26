@@ -9,7 +9,7 @@ import {
   LinkCell,
 } from 'linode-components/tables/cells';
 import { IPRdnsCell } from '~/components/tables/cells';
-import { ErrorSummary, reduceErrors } from '~/errors';
+import { ErrorSummary, reduceErrors } from '~/components/forms';
 import { setShared } from '~/api/linodes';
 
 

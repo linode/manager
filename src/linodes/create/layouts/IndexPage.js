@@ -12,7 +12,7 @@ import { linodes } from '~/api';
 import { setError } from '~/actions/errors';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
-import { reduceErrors } from '~/errors';
+import { reduceErrors } from '~/components/forms';
 
 export class IndexPage extends Component {
   static async preload(store) {

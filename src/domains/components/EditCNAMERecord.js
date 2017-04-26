@@ -1,11 +1,12 @@
 import React, { PropTypes, Component } from 'react';
 
-import { domains } from '~/api';
-import { ModalFormGroup } from 'linode-components/forms';
-import SelectDNSSeconds from './SelectDNSSeconds';
-import { Form, Input, SubmitButton } from 'linode-components/forms';
+import { Form, Input, SubmitButton, ModalFormGroup } from 'linode-components/forms';
 import { CancelButton } from 'linode-components/buttons';
-import { reduceErrors, ErrorSummary } from '~/errors';
+
+import { domains } from '~/api';
+import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+
+import SelectDNSSeconds from './SelectDNSSeconds';
 
 export default class EditCNAMERecord extends Component {
   constructor(props) {
@@ -20,7 +21,7 @@ export default class EditCNAMERecord extends Component {
 
     this.state = {
       errors: {},
-      saving: false,
+      loading: false,
       zone,
       defaultTTL,
       ttl,
@@ -30,39 +31,29 @@ export default class EditCNAMERecord extends Component {
   }
 
   onSubmit = async () => {
-    const { dispatch, id } = this.props;
+    const { dispatch, id, close } = this.props;
     const { ttl, hostname, alias } = this.state;
+    const ids = [this.props.zone.id, id].filter(Boolean);
+    const data = {
+      ttl_sec: +ttl,
+      name: hostname,
+      target: alias,
+      type: 'CNAME',
+    };
 
-    this.setState({ errors: {}, saving: true });
-
-    try {
-      const ids = [this.props.zone.id, id].filter(Boolean);
-
-      await dispatch(domains.records[id ? 'put' : 'post']({
-        ttl_sec: +ttl,
-        name: hostname,
-        target: alias,
-        type: 'CNAME',
-      }, ...ids));
-
-      this.setState({ saving: false });
-      this.props.close();
-    } catch (response) {
-      if (!response.json) {
-        // eslint-disable-next-line no-console
-        return console.error(response);
-      }
-
-      const errors = await reduceErrors(response);
-      this.setState({ errors, saving: false });
-    }
+    await dispatch(dispatchOrStoreErrors.apply(this, [
+      [
+        () => domains.records[id ? 'put' : 'post'](data, ...ids),
+        close,
+      ],
+    ]));
   }
 
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   render() {
     const { close } = this.props;
-    const { errors, saving, defaultTTL, ttl, hostname, alias } = this.state;
+    const { errors, loading, defaultTTL, ttl, hostname, alias } = this.state;
 
     return (
       <Form onSubmit={this.onSubmit}>
@@ -95,11 +86,14 @@ export default class EditCNAMERecord extends Component {
         </ModalFormGroup>
         <div className="Modal-footer">
           <CancelButton onClick={close} />
-          <SubmitButton disabled={saving}>
-            {this.props.id ? 'Save' : 'Add CNAME Record'}
+          <SubmitButton
+            disabled={loading}
+            disabledChildren={this.props.id ? undefined : 'Adding CNAME Record'}
+          >
+            {this.props.id ? undefined : 'Add CNAME Record'}
           </SubmitButton>
+          <FormSummary errors={errors} />
         </div>
-        <ErrorSummary errors={errors} />
       </Form>
     );
   }

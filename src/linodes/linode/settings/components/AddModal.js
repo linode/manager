@@ -5,7 +5,7 @@ import { linodes } from '~/api';
 import { Form, FormGroup, FormGroupError, Input, Select,
   SubmitButton, PasswordInput } from 'linode-components/forms';
 import { CancelButton } from 'linode-components/buttons';
-import { ErrorSummary, reduceErrors } from '~/errors';
+import { ErrorSummary, reduceErrors } from '~/components/forms';
 import { hideModal } from '~/actions/modal';
 
 export class AddModal extends Component {

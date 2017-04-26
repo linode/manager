@@ -6,7 +6,7 @@ import { Button } from 'linode-components/buttons/';
 import { Card, CardImageHeader } from 'linode-components/cards/';
 
 import { tokens } from '~/api';
-import { reduceErrors } from '~/errors';
+import { reduceErrors } from '~/components/forms';
 import { OAUTH_SUBSCOPES, OAUTH_SCOPES } from '~/constants';
 import { Table } from 'linode-components/tables';
 import TimeDisplay from '~/components/TimeDisplay';

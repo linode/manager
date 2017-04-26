@@ -6,7 +6,7 @@ import { Form, FormGroup, FormGroupError,
   Input, SubmitButton } from 'linode-components/forms';
 import { CancelButton } from 'linode-components/buttons';
 import { hideModal } from '~/actions/modal';
-import { ErrorSummary, reduceErrors } from '~/errors';
+import { ErrorSummary, reduceErrors } from '~/components/forms';
 
 export class EditModal extends Component {
   constructor() {

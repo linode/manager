@@ -5,9 +5,9 @@ form {
 }
 
 .col-form-label,
-.form-control {
+.form-control,
+.form-control-feedback {
   @extend .font-normal;
-  height: $form-field-height;
   padding: $form-field-padding;
 }
 
@@ -73,17 +73,6 @@ textarea {
     &.textarea-lg {
         min-height: 200px;
         width: 100%;
-    }
-}
-
-.form-control-feedback {
-    color: $red;
-    margin-top: 0;
-    margin-left: 8px;
-
-    &--block {
-        display: block;
-        margin-left: 0;
     }
 }
 
