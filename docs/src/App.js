@@ -122,7 +122,7 @@ const endpointConfigs = [
       return {
         ...childEndpoint,
         crumbs: crumbs.concat([crumb]),
-        routePath: routePath
+        routePath: routePath,
       };
     });
   }
