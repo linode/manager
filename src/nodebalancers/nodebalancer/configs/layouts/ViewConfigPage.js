@@ -10,7 +10,6 @@ import { List } from 'linode-components/lists';
 import { ListBody } from 'linode-components/lists/bodies';
 import { LinkCell, ButtonCell } from 'linode-components/tables/cells';
 import { nodebalancers } from '~/api';
-import { nodes } from '~/api';
 import { getObjectByLabelLazily, objectFromMapByLabel } from '~/api/util';
 
 export class ViewConfigPage extends Component {
@@ -120,7 +119,7 @@ function select(state, props) {
   const { nbLabel, configId } = props.params;
   const nodebalancer = objectFromMapByLabel(state.api.nodebalancers.nodebalancers, nbLabel);
   const config = objectFromMapByLabel(nodebalancer._configs.configs, +configId, 'id');
-  const nodes = state.api.nodes;
+  const nodes = objectFromMapByLabel(nodebalancer._configs.configs._nodes.nodes);
   return { config, nodebalancer, nodes };
 }
 

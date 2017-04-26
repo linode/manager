@@ -5,7 +5,6 @@ import * as linodesModule from './configs/linodes';
 import * as kernelsModule from './configs/kernels';
 import * as domainsModule from './configs/domains';
 import * as nodebalancersModule from './configs/nodebalancers';
-import * as nodesModule from './configs/nodebalancernodes';
 import * as profileModule from './configs/profile';
 import * as eventsModule from './configs/events';
 import * as tokensModule from './configs/tokens';
@@ -26,8 +25,6 @@ export const kernels = apiActionReducerGenerator(kernelsModule.config, kernelsMo
 export const domains = apiActionReducerGenerator(domainsModule.config, domainsModule.actions);
 export const nodebalancers = apiActionReducerGenerator(nodebalancersModule.config,
                                                        nodebalancersModule.actions);
-export const nodes = apiActionReducerGenerator(nodesModule.config,
-                                                       nodesModule.actions);
 export const profile = apiActionReducerGenerator(profileModule.config, profileModule.actions);
 export const events = apiActionReducerGenerator(eventsModule.config, eventsModule.actions);
 export const tokens = apiActionReducerGenerator(tokensModule.config, tokensModule.actions);

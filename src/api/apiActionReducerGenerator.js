@@ -44,12 +44,7 @@ export function getStateOfSpecificResource(config, state, ids) {
   }
 
   if (_ids.length) {
-    //if (_ids.length < 3 && current.plural === "nodes") {
-    //  // don't do anything
-    //} else {
-    console.log('length of ids', _ids.length, current);
-      return refined[current.plural][_ids.shift()];
-      //}
+    return refined[current.plural][_ids.shift()];
   }
   return refined;
 }
