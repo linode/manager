@@ -16,9 +16,8 @@ export class ViewConfigPage extends Component {
   static async preload({ dispatch, getState }, { nbLabel, configId }) {
     try {
       const { id } = await dispatch(getObjectByLabelLazily('nodebalancers', nbLabel));
-      console.log('nodebalancers', nodebalancers);
-      console.log('nodebalancernodes aka nodes aka NodetoriousBIG', nodes);
-      await dispatch(nodes.all([id, configId]));
+      await dispatch(nodebalancers.configs.one([id, configId]));
+      await dispatch(nodebalancers.configs.nodes.all([id, configId]));
     } catch (response) {
       // eslint-disable-next-line no-console
       console.error(response);
@@ -36,9 +35,8 @@ export class ViewConfigPage extends Component {
   }
 
   render() {
-    const { nodebalancer, config, nodes } = this.props;
-    console.log('config', config);
-
+    const { nodebalancer, config } = this.props;
+    const nodes = Object.values(config._nodes.nodes);
     return (
       <div>
         <div className="container">
