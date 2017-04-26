@@ -1,1 +1,1 @@
-module.exports = {"name":"Kernel","endpoints":null,"methods":null};
+module.exports = {"name":"Kernel","import":"from linode import Kernel","_object":"kernel","desc":"Represents a Kernel in the API.\n","endpoints":null,"methods":null};

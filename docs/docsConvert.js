@@ -7,6 +7,8 @@ const _ = require('lodash');
 const BASE_PATH = './src/data';
 const dirs = fs.readdirSync(BASE_PATH);
 
+const apiObjectMap = require('./src/data/objects/index').apiObjectMap;
+
 
 function formatEndpoint(endpoint) {
   let endpoints = null;
@@ -25,6 +27,49 @@ function formatEndpoint(endpoint) {
     methods = Object.keys(endpoint.methods).map(function(method) {
       const methodObj = endpoint.methods[method];
 
+      // IF this is a GET endpoint and has an associated resource object, combine them
+      let resourceObject;
+      if (method === 'GET' && endpoint.resource) {
+        let resource = endpoint.resource;
+
+        // mismatch rewrites
+        if (resource === 'account') {
+          resource = 'profile';
+        }
+
+        resourceObject = apiObjectMap[resource];
+        if (!resourceObject && (resource.charAt(resource.length - 1) === 's')) {
+          resourceObject = apiObjectMap[resource.substr(0, resource.length - 1)];
+        }
+
+        let enums;
+        let schema;
+        if (resourceObject) {
+          enums = resourceObject.enums;
+          if (enums) {
+            resourceObject.enums = Object.keys(enums).map(function(enumName) {
+              return _.merge({}, enums[enumName], {
+                name: enumName
+              });
+            });
+          }
+
+          schema = resourceObject.schema;
+          if (schema) {
+            resourceObject.schema = Object.keys(schema).map(function(schemaName) {
+              const schemaField = schema[schemaName];
+              return {
+                name: schemaName,
+                description: schemaField._description,
+                editable: schemaField._editable,
+                type: schemaField._type,
+                value: schemaField._value
+              };
+            });
+          }
+        }
+      }
+
       let examples;
       if (methodObj.examples) {
         examples = Object.keys(methodObj.examples).map(function(example) {
@@ -35,20 +80,31 @@ function formatEndpoint(endpoint) {
         });
       }
 
+      let params;
+      if (methodObj.params) {
+        params = Object.keys(methodObj.params).map(function(paramName) {
+          const param = methodObj.params[paramName];
+
+          return _.merge({}, param, {
+            name: paramName
+          });
+        });
+      }
+
       return _.merge({}, methodObj, {
         name: method,
-        examples: examples
+        examples: examples,
+        params: params,
+        resource: resourceObject
       });
     });
   }
 
-  return {
-    name: endpoint.name,
+  return _.merge({}, endpoint, {
     basePath: endpoint.base_path,
-    description: endpoint.description,
     endpoints: endpoints,
     methods: methods
-  };
+  });
 }
 
 dirs.forEach(function(dirName) {

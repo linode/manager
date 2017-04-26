@@ -11,7 +11,7 @@ import { default as Method } from './Method';
 export default function Endpoint(props) {
   const { route } = props;
   const { endpoint } = route;
-  const { crumbs, description, methods, path } = endpoint;
+  const { crumbs, description, methods, path, resourceObject } = endpoint;
 
   return (
     <div className="Endpoint">
