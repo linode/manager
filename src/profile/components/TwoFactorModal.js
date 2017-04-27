@@ -48,19 +48,19 @@ export class TwoFactorModal extends Component {
         onOk={() => dispatch(hideModal())}
         onCancel={() => dispatch(hideModal())}
       >
-        <div className="form-group">
+        <FormGroup>
           <div>
             A new emergency one-time use scratch code has been generated.
           </div>
           <div>
             Store this somewhere safe.
           </div>
-        </div>
-        <div className="form-group row">
+        </FormGroup>
+        <FormGroup className="row">
           <div className="col-sm-8">
             <div className="alert alert-warning">{scratch}</div>
           </div>
-        </div>
+        </FormGroup>
       </ConfirmModalBody>
     ));
   }
@@ -86,30 +86,28 @@ export class TwoFactorModal extends Component {
           }}
           onCancel={() => dispatch(hideModal())}
         >
-          <div className="form-group row">
-            <div className="col-sm-12">
-              Scan this QR code to add your Linode account to your TFA app.
-            </div>
-          </div>
-          <div className="form-group row">
+          <FormGroup>
+            Scan this QR code to add your Linode account to your TFA app.
+          </FormGroup>
+          <FormGroup className="row">
             <div className="col-sm-12 qrcode">
               <img
                 src={QRcode.toDataURL()}
                 alt={secret}
               />
             </div>
-          </div>
-          <div className="form-group row">
+          </FormGroup>
+          <FormGroup className="row">
             <div className="col-sm-12">
-              <div className="form-group">
+              <FormGroup>
                 If your TFA app does not have a QR scanner, you can use this secret key.
-              </div>
+              </FormGroup>
               <div className="alert alert-warning">{secret}</div>
             </div>
-          </div>
-          <div className="form-group">
+          </FormGroup>
+          <FormGroup>
             Please enter your two-factor authentication token.
-          </div>
+          </FormGroup>
           <FormGroup errors={errors} className="row" name="tfa_code">
             <div className="col-sm-4">
               Token:

@@ -7,7 +7,7 @@ import { profile } from '@/data/profile';
 import { expectRequest } from '@/common';
 import { TwoFactorModal } from '~/profile/components/TwoFactorModal';
 
-describe('profile/components/twofactormodal', () => {
+describe('profile/components/TwoFactorModal', () => {
   const sandbox = sinon.sandbox.create();
 
   const dispatch = sandbox.stub();
