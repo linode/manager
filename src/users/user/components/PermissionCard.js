@@ -1,8 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { Card, CardHeader } from 'linode-components/cards';
-import { Checkbox } from 'linode-components/forms';
+import { CheckboxCell } from 'linode-components/tables/cells';
+import { Table } from 'linode-components/tables';
 
 export class PermissionCard extends Component {
   constructor(props) {
@@ -19,7 +19,6 @@ export class PermissionCard extends Component {
     const cols = columns.map(function (col) {
       return {
         cellComponent: CheckboxCell,
-        headerClassName: 'CheckboxColumn',
         onChange: onCellChange,
         parentKey,
         dataKey: col.dataKey,
