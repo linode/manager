@@ -27,7 +27,7 @@ export default class NewSlaveZone extends Component {
 
     await dispatch(dispatchOrStoreErrors.apply(this, [
       [
-        () => domains.post({ domain, ips, type: 'slave' }),
+        () => domains.post({ domain, ips: ips.split(';'), type: 'slave' }),
         () => push(`/domains`),
       ],
     ]));
@@ -39,33 +39,38 @@ export default class NewSlaveZone extends Component {
     const { errors, loading, domain, ips } = this.state;
 
     return (
-      <Form onSubmit={props.onSubmit}>
-        <FormGroup errors={props.errors} name="domain" className="row">
+      <Form onSubmit={this.onSubmit}>
+        <FormGroup errors={errors} name="domain" className="row">
           <label className="col-sm-2 col-form-label">Domain</label>
-          <div className="col-sm-10">
+          <div className="col-sm-10 clearfix">
             <Input
+              name="domain"
               value={domain}
               placeholder="mydomain.net"
               onChange={this.onChange}
+              className="float-sm-left"
             />
+            <FormGroupError className="float-sm-left" errors={errors} name="domain" />
           </div>
-          <FormGroupError errors={errors} name="domain" />
         </FormGroup>
         <FormGroup errors={errors} name="master_ips" className="row">
           <label className="col-sm-2 col-form-label">Master Zones</label>
-          <div className="col-sm-10">
-            <textarea
-              value={ips}
-              placeholder="172.92.1.4;209.124.103.15"
-              onChange={this.onChange}
-            />
-            <div>
-              <small className="text-muted">
-                Use semicolons or new lines to separate multiple IP addresses.
-              </small>
+          <div className="col-sm-10 clearfix">
+            <div className="float-sm-left">
+              <textarea
+                name="ips"
+                value={ips}
+                placeholder="172.92.1.4;209.124.103.15"
+                onChange={this.onChange}
+              />
+              <div>
+                <small className="text-muted">
+                  Use semicolons or new lines to separate multiple IP addresses.
+                </small>
+              </div>
             </div>
+            <FormGroupError className="float-sm-left" errors={errors} name="master_ips" />
           </div>
-          <FormGroupError errors={errors} name="master_ips" />
         </FormGroup>
         <div className="row">
           <div className="offset-sm-2 col-sm-10">
