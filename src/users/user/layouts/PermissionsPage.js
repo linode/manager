@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { users } from '~/api';
-import { Card, CardHeader } from 'linode-components/cards';
+import { Card } from 'linode-components/cards';
 import { Form,
   Checkbox,
   Checkboxes,
@@ -88,7 +88,7 @@ export class PermissionsPage extends Component {
       >
         <Card>
           <div className="Permissions-section">
-            <h4>Global Permissions</h4>
+            <h3>Global Permissions</h3>
             <Checkboxes>
               <Checkbox
                 id="permission-customer-access"

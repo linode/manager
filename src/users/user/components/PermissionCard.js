@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { Card, CardHeader } from 'linode-components/cards';
 import { CheckboxCell } from 'linode-components/tables/cells';
 import { Table } from 'linode-components/tables';
 
@@ -29,6 +28,7 @@ export class PermissionCard extends Component {
 
     return (
       <div className="form-group Permissions-section">
+        <h3>{title} permissions</h3>
         <Table
           className="Table--secondary col-sm-5"
           columns={[

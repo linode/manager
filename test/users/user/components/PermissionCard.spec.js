@@ -26,7 +26,7 @@ describe('users/user/components/PermissionCard', () => {
       />
     );
 
-    const header = page.find('h2').at(0);
+    const header = page.find('h3').at(0);
     expect(header.text()).to.equal('The Title permissions');
     const th = page.find('th');
     expect(th.at(0).text()).to.equal('The Title');
