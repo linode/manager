@@ -32,4 +32,14 @@ describe('profile/layouts/AuthenticationPage', () => {
       body: { password: 'thePassword' },
     });
   });
+
+  it('renders two factor', async () => {
+    const page = shallow(
+      <AuthenticationPage
+        dispatch={dispatch}
+      />
+    );
+
+    expect(page.find('TwoFactorPanel').length).to.equal(1);
+  });
 });
