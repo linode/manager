@@ -74,7 +74,7 @@ export function FormSummary(props) {
   } else if (Object.keys(errors).length === 1) {
     content = props.success ? <div className="alert alert-success">{props.success}</div> : '';
   } else if (errors._) {
-    content = <div className="alert alert-danger">Please fix all errors before retrying.</div>
+    content = <div className="alert alert-danger">Please fix all errors before retrying.</div>;
   }
 
   return (

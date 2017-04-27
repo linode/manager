@@ -28,7 +28,7 @@ export default class NewSlaveZone extends Component {
     await dispatch(dispatchOrStoreErrors.apply(this, [
       [
         () => domains.post({ domain, ips: ips.split(';'), type: 'slave' }),
-        () => push(`/domains`),
+        () => push('/domains'),
       ],
     ]));
   }

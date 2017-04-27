@@ -27,7 +27,6 @@ export class CreatePage extends Component {
 
   render() {
     const { email, dispatch } = this.props;
-    const { tabIndex } = this.state;
 
     const tabs = [
       {
@@ -36,7 +35,7 @@ export class CreatePage extends Component {
       },
       {
         name: 'New Slave',
-        children: <NewSlaveZone dispatch={dispatch} />
+        children: <NewSlaveZone dispatch={dispatch} />,
       },
     ];
 

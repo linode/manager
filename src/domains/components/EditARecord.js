@@ -47,7 +47,7 @@ export default class EditARecord extends Component {
       [
         () => domains.records[id ? 'put' : 'post'](data, ...ids),
         close,
-      ]
+      ],
     ]));
   }
 

@@ -38,7 +38,7 @@ export default class EditMXRecord extends Component {
       name: subdomain === this.props.zone.domain ? '' : subdomain,
       priority: +preference,
       type: 'MX',
-    }
+    };
 
     await dispatch(dispatchOrStoreErrors.apply(this, [
       [
