@@ -10,7 +10,13 @@ export default function TableHeaderRow(props) {
   return (
     <tr>
       {columns.map(function (column, index) {
-        return (<TableHeaderCell key={index} text={column.label} />);
+        return (
+          <TableHeaderCell
+            className={column.headerClassName}
+            key={index}
+            text={column.label}
+          />
+        );
       })}
     </tr>
   );

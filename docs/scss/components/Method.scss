@@ -1,7 +1,89 @@
 .Method {
     padding: 25px;
 
+    &-section {
+        margin-bottom: 15px;
+    }
+
+    &-request {
+        padding: 10px 0 0 0;
+
+        h4 {
+            padding: 0 0 10px 0;
+        }
+
+        .Tabs {
+            .ReactTabs__TabList {
+                padding: 0;
+            }
+
+            .ReactTabs__Tab {
+                height: 30px;
+                margin-right: 5px;
+                padding: 4px 10px;
+
+            }
+
+            &-container {
+                margin: 0;
+                padding: 0;
+            }
+        }
+    }
+
     &-description {
-        margin-bottom: 10px;
+
+    }
+
+    &-response {
+        h4 {
+            margin-bottom: 5px;
+        }
+    }
+
+    &-responseExample {
+
+    }
+
+    .Table--secondary .TableRow {
+        height: 35px;
+    }
+
+    th, td {
+        @extend .font-small;
+        padding: 2px 8px;
+    }
+
+    td {
+        border-right: $border;
+    }
+
+    .FieldColumn {
+        width: 150px;
+    }
+
+    .FieldCell {
+        // text-align: right;
+
+        //&-type {
+        //    margin-top: -2px;
+        //}
+        //
+        //&-type small {
+        //    @extend .font-xs;
+        //    color: $lightest-black;
+        //}
+    }
+
+    .TypeColumn {
+        width: 75px;
+    }
+
+    .DescriptionColumn {
+
+    }
+
+    .DescriptionCell {
+        //vertical-align: top;
     }
 }
