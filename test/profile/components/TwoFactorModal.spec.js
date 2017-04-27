@@ -2,6 +2,7 @@ import React from 'react';
 import sinon from 'sinon';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
+import { profile } from '@/data/profile';
 
 import { expectRequest } from '@/common';
 import { TwoFactorModal } from '~/profile/components/TwoFactorModal';
@@ -17,6 +18,7 @@ describe('profile/components/twofactormodal', () => {
         dispatch={dispatch}
         toggleTwoFactor={() => {}}
         secret={'qrCode'}
+        profile={profile}
       />
     );
 
