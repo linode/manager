@@ -22,6 +22,34 @@ export const testPermissions = {
         add_nodebalancers: true,
         add_domains: true,
       },
+      linode: [
+        {
+          all: true,
+          access: true,
+          delete: true,
+          resize: true,
+          label: 'linode1',
+          id: 1234,
+        },
+      ],
+      nodebalancer: [
+        {
+          all: true,
+          access: true,
+          delete: true,
+          label: 'nb1',
+          id: 4321,
+        },
+      ],
+      dnszone: [
+        {
+          all: true,
+          access: true,
+          delete: true,
+          label: 'domain1',
+          id: 9876,
+        },
+      ],
     },
   },
 };

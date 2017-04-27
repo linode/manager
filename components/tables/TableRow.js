@@ -23,7 +23,9 @@ export default class TableRow extends Component {
   render() {
     const { columns, record, selectedMap } = this.props;
     const checkboxColumn = columns.filter(function (column) {
-      return column.cellComponent && (column.cellComponent === CheckboxCell);
+      return  column.cellComponent &&
+        (column.cellComponent === CheckboxCell) &&
+        !column.onChange;
     })[0];
 
     let selected;
@@ -49,10 +51,10 @@ export default class TableRow extends Component {
               return (
                 <column.cellComponent
                   key={index}
-                  checked={selected}
+                  checked={record[column.dataKey] || selected}
                   column={column}
                   record={record}
-                  onChange={this.onCheckboxChange}
+                  onChange={column.onChange || this.onCheckboxChange}
                 />
               );
             }

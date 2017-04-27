@@ -14,7 +14,7 @@ export default function CheckboxCell(props) {
         checked={checked}
         className="TableRow-selector"
         onChange={(e) => {
-          onChange(record, e.target.checked);
+          onChange(record, e.target.checked, column);
         }}
       />
     </TableCell>
