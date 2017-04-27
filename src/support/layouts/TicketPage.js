@@ -7,7 +7,7 @@ import { tickets } from '~/api';
 import { addTicketAttachment } from '~/api/tickets';
 import { setError } from '~/actions/errors';
 import { Form, FormGroup, FormGroupError, SubmitButton, Input } from 'linode-components/forms';
-import { reduceErrors, ErrorSummary } from '~/errors';
+import { reduceErrors, ErrorSummary } from '~/components/forms';
 import { Card } from 'linode-components/cards';
 import { renderTicketCreationInfo } from './IndexPage';
 import TicketReply from '../components/TicketReply';

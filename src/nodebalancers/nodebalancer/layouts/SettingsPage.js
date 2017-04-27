@@ -7,7 +7,7 @@ import { Form, FormGroup, FormGroupError, SubmitButton, Input } from 'linode-com
 import { nodebalancers } from '~/api';
 import { objectFromMapByLabel, dispatchOrStoreErrors } from '~/api/util';
 import { setSource } from '~/actions/source';
-import { ErrorSummary } from '~/errors';
+import { ErrorSummary } from '~/components/forms';
 
 
 export class SettingsPage extends Component {

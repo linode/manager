@@ -6,7 +6,7 @@ import { selectLinode } from '../../utilities';
 import { linodes } from '~/api';
 import { Card, CardHeader } from 'linode-components/cards';
 import { Form, FormGroup, FormGroupError, Input, SubmitButton } from 'linode-components/forms';
-import { ErrorSummary, reduceErrors } from '~/errors';
+import { ErrorSummary, reduceErrors } from '~/components/forms';
 import { setSource } from '~/actions/source';
 
 export class DisplayPage extends Component {

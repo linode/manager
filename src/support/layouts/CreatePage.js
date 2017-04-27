@@ -16,7 +16,7 @@ import { tickets } from '~/api';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 import { setError } from '~/actions/errors';
-import { reduceErrors, ErrorSummary } from '~/errors';
+import { reduceErrors, ErrorSummary } from '~/components/forms';
 import { linodes, domains, nodebalancers } from '~/api';
 import TicketHelper from '../components/TicketHelper';
 

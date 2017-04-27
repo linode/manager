@@ -17,6 +17,7 @@ describe('components/forms/PasswordInput', () => {
     const input = shallow(
       <PasswordInput
         onChange={change}
+        value=""
       />);
 
     input.find('Input').simulate('change',
@@ -30,6 +31,7 @@ describe('components/forms/PasswordInput', () => {
     const input = mount(
       <PasswordInput
         onChange={() => {}}
+        value=""
       />);
 
     input.find('input').simulate('change',

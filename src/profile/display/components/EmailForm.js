@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 
 import { Form, FormGroup, FormGroupError, SubmitButton, Input } from 'linode-components/forms';
-import { ErrorSummary } from '~/errors';
+import { ErrorSummary } from '~/components/forms';
 
 export default function EmailForm(props) {
   return (

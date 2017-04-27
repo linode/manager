@@ -6,7 +6,7 @@ import { updateClientThumbnail } from '~/api/clients';
 import { ModalFormGroup } from 'linode-components/forms';
 import { Form, Input, SubmitButton } from 'linode-components/forms';
 import { CancelButton } from 'linode-components/buttons';
-import { reduceErrors, ErrorSummary } from '~/errors';
+import { reduceErrors, ErrorSummary } from '~/components/forms';
 import { renderSecret } from './CreatePersonalAccessToken';
 
 export default class CreateApplication extends Component {

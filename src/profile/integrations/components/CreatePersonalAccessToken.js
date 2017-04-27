@@ -6,7 +6,7 @@ import { showModal, hideModal } from '~/actions/modal';
 import { ConfirmModalBody } from 'linode-components/modals';
 import { Form, Input, Select, SubmitButton } from 'linode-components/forms';
 import { CancelButton } from 'linode-components/buttons';
-import { reduceErrors, ErrorSummary } from '~/errors';
+import { reduceErrors, ErrorSummary } from '~/components/forms';
 import { OAUTH_SUBSCOPES, OAUTH_SCOPES } from '~/constants';
 import { tokens } from '~/api';
 import SelectExpiration from '../../components/SelectExpiration';

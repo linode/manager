@@ -1,0 +1,14 @@
+.FormGroupError {
+    @extend .form-control-feedback;
+    @extend .list-unstyled;
+    @extend .font-xs;
+
+    display: inline-block;
+    margin-top: 0;
+    margin-left: 8px;
+
+    &--block {
+        display: block;
+        margin-left: 0;
+    }
+}

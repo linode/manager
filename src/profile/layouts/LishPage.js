@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import { Card, CardHeader } from 'linode-components/cards';
 import { Form, FormGroup, FormGroupError, SubmitButton, Select } from 'linode-components/forms';
-import { ErrorSummary } from '~/errors';
+import { ErrorSummary } from '~/components/forms';
 
 export default class NotificationsPage extends Component {
   constructor() {

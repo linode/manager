@@ -3,7 +3,7 @@ import React, { PropTypes, Component } from 'react';
 import { ModalFormGroup } from 'linode-components/forms';
 import { Form, Input, SubmitButton } from 'linode-components/forms';
 import { CancelButton } from 'linode-components/buttons';
-import { reduceErrors, ErrorSummary } from '~/errors';
+import { reduceErrors, ErrorSummary } from '~/components/forms';
 import { setRDNS } from '~/api/linodes';
 
 export default class EditRDNS extends Component {

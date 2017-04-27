@@ -5,7 +5,7 @@ import { Card, CardHeader } from 'linode-components/cards';
 import {
   FormGroup, Form, SubmitButton,
 } from 'linode-components/forms';
-import { reduceErrors, ErrorSummary } from '~/errors';
+import { reduceErrors, ErrorSummary } from '~/components/forms';
 import { setSource } from '~/actions/source';
 import { selectLinode } from '../utilities';
 import { resizeLinode } from '~/api/linodes';

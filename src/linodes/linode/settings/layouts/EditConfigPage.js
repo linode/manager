@@ -15,7 +15,7 @@ import { Form,
   Checkbox,
   Checkboxes,
 } from 'linode-components/forms';
-import { ErrorSummary, reduceErrors } from '~/errors';
+import { ErrorSummary, reduceErrors } from '~/components/forms';
 
 import { SubmitButton } from 'linode-components/forms';
 import { Card, CardHeader } from 'linode-components/cards';

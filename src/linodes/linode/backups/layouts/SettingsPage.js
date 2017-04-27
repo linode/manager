@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { FormGroup } from 'linode-components/forms';
-import { ErrorSummary, reduceErrors } from '~/errors';
+import { ErrorSummary, reduceErrors } from '~/components/forms';
 import { linodes } from '~/api';
 import { cancelBackup } from '~/api/backups';
 import { Card, CardHeader } from 'linode-components/cards';

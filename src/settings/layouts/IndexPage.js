@@ -10,7 +10,7 @@ import {
   SubmitButton,
 } from 'linode-components/forms';
 import { settings } from '~/api';
-import { reduceErrors } from '~/errors';
+import { reduceErrors } from '~/components/forms';
 import { setError } from '~/actions/errors';
 
 
