@@ -77,7 +77,7 @@ export class TwoFactorModal extends Component {
     return (
       <div>
         <ConfirmModalBody
-          buttonText="Two-factor Authentication"
+          buttonText="Enable"
           onOk={async () => {
             await this.twoFactorConfirm();
             if (errors === {}) {
