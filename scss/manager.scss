@@ -4,7 +4,9 @@
 @import 'linodes/index';
 @import 'support/index';
 @import 'layout/index';
+@import 'profile/authentication';
 @import 'profile/integrations/components/OAuthScopes';
+@import 'users/index';
 
 
 // TODO: look into
@@ -106,4 +108,3 @@ header .sub-header {
 a:hover, a:focus, a:active {
     color: $blue;
 }
-

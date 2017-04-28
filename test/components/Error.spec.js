@@ -2,7 +2,9 @@ import React from 'react';
 import sinon from 'sinon';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
-import Error from '../../src/components/Error';
+
+import { Error } from 'linode-components/errors';
+
 
 describe('components/Error', () => {
   const sandbox = sinon.sandbox.create();

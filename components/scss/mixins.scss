@@ -31,3 +31,8 @@
     line-height: $form-field-height;
     color: $black;
 }
+
+@mixin placeholder() {
+    color: $lightest-black;
+    opacity: 1;
+}
