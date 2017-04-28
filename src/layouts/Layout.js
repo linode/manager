@@ -49,7 +49,7 @@ export class Layout extends Component {
     const githubRoot = 'https://github.com/linode/manager/blob/master/';
     return (
       <div
-        className={`layout full-height ${this.props.modal.open ? 'layout--modal' : ''}`}
+        className="layout full-height"
         onClick={(e) => {
           const { notifications, session } = this.props;
           // Gross
