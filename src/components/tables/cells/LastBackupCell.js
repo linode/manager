@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
-import moment from 'moment';
 
 import { TableCell } from 'linode-components/tables/cells';
+import TimeDisplay from '~/components/TimeDisplay';
 
 
 export default function LastBackupCell(props) {
@@ -10,7 +10,7 @@ export default function LastBackupCell(props) {
   return (
     <TableCell column={column} record={record}>
       {record.backups.last_backup ?
-        moment(record.backups.last_backup).format('dddd, MMMM D YYYY LT')
+        <TimeDisplay time={record.backups.last_backup} />
         : 'Unknown'}
     </TableCell>
   );

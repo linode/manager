@@ -63,6 +63,7 @@ Table.propTypes = {
   className: PropTypes.string,
   columns: PropTypes.arrayOf(PropTypes.shape({
     cellComponent: PropTypes.any,
+    onChange: PropTypes.func,
     className: PropTypes.string,
     dataKey: PropTypes.string,
     formatFn: PropTypes.func,

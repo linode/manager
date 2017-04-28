@@ -37,6 +37,7 @@ describe('layouts/Logout', () => {
       'authentication/username',
       'authentication/email',
       'authentication/email-hash',
+      'authentication/timezone',
     ];
 
     expect(setStorage.callCount).to.equal(sessionValues.length);
