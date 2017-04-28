@@ -137,9 +137,6 @@ function genThunkPage(config, actions) {
       };
 
       if (storeInState) {
-        if (config.plural == "nodes") {
-          console.log(updatedResources, ids);
-        }
         await dispatch(actions.many(updatedResources, ...ids));
       }
 
@@ -177,10 +174,6 @@ function genThunkAll(config, actions, fetchPage) {
         const resource = await dispatch(
           fetchPage(i, ids, resourceFilter, !state.invalid, fetchBeganAt, options));
         resources.push(resource);
-      }
-
-      if (config.plural == "nodes") {
-        console.log(resources);
       }
 
       // If the number of total results returned by the last page is different

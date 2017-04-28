@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
 import { push } from 'react-router-redux';
 import { Tabs } from 'linode-components/tabs';
 
@@ -32,11 +31,11 @@ export class IndexPage extends Component {
     const { nodebalancer, params } = this.props;
     if (!nodebalancer) return null;
 
-    const { group, label } = nodebalancer;
+    const { label } = nodebalancer;
     let crumbs = [];
-    let title = "";
+    let title = '';
 
-    if ( params.configId ) {
+    if (params.configId) {
       crumbs = [
         { to: '/nodebalancers', label: 'NodeBalancers' },
         { to: `/nodebalancers/${nodebalancer.label}`, label: nodebalancer.label },
@@ -82,6 +81,7 @@ IndexPage.propTypes = {
   dispatch: PropTypes.func,
   nodebalancer: PropTypes.object,
   children: PropTypes.node,
+  params: PropTypes.object,
 };
 
 function select(state, props) {

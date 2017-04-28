@@ -1,8 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import _ from 'lodash';
 
-import Breadcrumbs from '~/components/Breadcrumbs';
+import { setError } from '~/actions/errors';
 import { Link } from 'react-router';
 import { Card, CardHeader } from 'linode-components/cards';
 import { Table } from 'linode-components/tables';
@@ -58,7 +57,8 @@ export class ViewConfigPage extends Component {
               <div className="col-sm-10">{config.stickiness}</div>
             </div>
           </Card>
-          <Card title="Nodes"
+          <Card
+            title="Nodes"
             header={
               <CardHeader
                 title="Nodes"
@@ -79,24 +79,38 @@ export class ViewConfigPage extends Component {
                     { textKey: 'label', label: 'Label',
                       cellComponent: LinkCell,
                       hrefFn: function (node) {
-                        return `/nodebalancers/${nodebalancer.label}/configurations/${config.id}/nodes/${node.id}`;
+                        const string = [];
+                        string.push('/nodebalancers');
+                        string.push(nodebalancer.label);
+                        string.push('configurations');
+                        string.push(config.id);
+                        string.push('nodes');
+                        string.push(node.id);
+                        return string.join('/');
                       },
                     },
                     { dataKey: 'address', label: 'Address' },
                     { dataKey: 'weight', label: 'Weight' },
                     { dataKey: 'mode', label: 'Mode' },
                     { dataKey: 'status', label: 'Status' },
-                    { dataKey: 'last_status_change', label: 'Last status change' },
                     {
                       cellComponent: ButtonCell,
                       buttonClassName: 'btn-secondary',
                       hrefFn: function (node) {
-                        return `/nodebalancers/${nodebalancer.label}/configurations/${config.id}/nodes/${node.id}/edit`;
+                        const string = [];
+                        string.push('/nodebalancers');
+                        string.push(nodebalancer.label);
+                        string.push('configurations');
+                        string.push(config.id);
+                        string.push('nodes');
+                        string.push(node.id);
+                        string.push('edit');
+                        return string.join('/');
                       },
                       text: 'Edit',
                     },
                   ]}
-                  data={Object.values(nodes.nodes)}
+                  data={Object.values(nodes)}
                   selectedMap={{}}
                 />
               </ListBody>
@@ -117,8 +131,7 @@ function select(state, props) {
   const { nbLabel, configId } = props.params;
   const nodebalancer = objectFromMapByLabel(state.api.nodebalancers.nodebalancers, nbLabel);
   const config = objectFromMapByLabel(nodebalancer._configs.configs, +configId, 'id');
-  const nodes = objectFromMapByLabel(nodebalancer._configs.configs._nodes.nodes);
-  return { config, nodebalancer, nodes };
+  return { config, nodebalancer };
 }
 
 export default connect(select)(ViewConfigPage);

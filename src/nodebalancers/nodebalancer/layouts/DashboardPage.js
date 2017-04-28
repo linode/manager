@@ -107,7 +107,13 @@ export class DashboardPage extends Component {
                     cellComponent: ButtonCell,
                     buttonClassName: 'btn-secondary',
                     hrefFn: function (config) {
-                      return `/nodebalancers/${nodebalancer.label}/configurations/${config.id}/edit`;
+                      const string = [];
+                      string.push('/nodebalancers');
+                      string.push(nodebalancer.label);
+                      string.push('configurations');
+                      string.push(config.id);
+                      string.push('edit');
+                      return string.join('/');
                     },
                     text: 'Edit',
                   },

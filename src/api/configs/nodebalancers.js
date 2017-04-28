@@ -16,7 +16,9 @@ export const config = genConfig({
         _nodes: {
           plural: 'nodes',
           singular: 'node',
-          endpoint: (id, nbConfigId, nodeId) => `/nodebalancers/${id}/configs/${nbConfigId}/nodes/${nodeId}`,
+          endpoint: (id, nbConfigId, nodeId) => {
+            return `/nodebalancers/${id}/configs/${nbConfigId}/nodes/${nodeId}`;
+          },
           supports: [ONE, MANY, PUT, POST, DELETE],
         },
       },

@@ -26,3 +26,7 @@ export default function Breadcrumbs(props) {
     </div>
   );
 }
+
+Breadcrumbs.propTypes = {
+  crumbs: PropTypes.any,
+};

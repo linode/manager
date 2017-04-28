@@ -212,6 +212,7 @@ export class ReducerGenerator {
         return ReducerGenerator.del(config, state, action);
       case `GEN@${fullyQualified(config)}/INVALIDATE`:
         return ReducerGenerator.invalidate(config, state, action);
+      // eslint-disable-next-line no-case-declarations
       default:
         const subTypeMatch = `GEN@${fullyQualified(config)}`;
         if (action.type && action.type.split('/')[0].indexOf(subTypeMatch) === 0) {
