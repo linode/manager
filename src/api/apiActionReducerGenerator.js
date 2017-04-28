@@ -43,9 +43,6 @@ export function getStateOfSpecificResource(config, state, ids) {
     current = current.subresources[name];
   }
 
-  if (_ids.length) {
-    return refined[current.plural][_ids.shift()];
-  }
   return refined;
 }
 
