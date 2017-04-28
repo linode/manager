@@ -69,7 +69,7 @@ export class LoadingRouterContext extends RouterContext {
     const { location: { pathname }, params } = this.props;
     // No need to fetch these in weblish.
     if (!(pathname.endsWith('/weblish') && params.linodeLabel)) {
-      Promise.all([
+      await Promise.all([
         store.dispatch(account.one()),
         store.dispatch(kernels.all()),
         store.dispatch(types.all()),
