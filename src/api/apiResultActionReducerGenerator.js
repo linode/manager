@@ -202,12 +202,16 @@ export class ReducerGenerator {
     const keys = Object.keys(config.subresources);
     let subkey = null;
     let subconfig = null;
-    for (let i = 0; i < keys.length; i += 1) {
+    for (i = 0; i < keys.length; i += 1) {
       subkey = keys[i];
       subconfig = config.subresources[subkey];
-      if (subconfig.plural === name) {
+      if (subconfig.plural === name || subconfig.singular === name) {
         break;
       }
+    }
+
+    if (i === keys.length) {
+      return state;
     }
 
     const subaction = { ...action, ids: ids.splice(1) };
