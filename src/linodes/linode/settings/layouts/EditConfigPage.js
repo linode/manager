@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
 import { selectLinode } from '../../utilities';
-import { linodes, settings } from '~/api';
+import { linodes } from '~/api';
 import { Form,
   FormGroup,
   FormGroupError,
@@ -151,7 +151,6 @@ export class EditConfigPage extends Component {
 
     try {
       await dispatch(linodes.disks.all([id]));
-      await dispatch(settings.one());
     } catch (e) {
       dispatch(setError(e));
     }
@@ -170,7 +169,7 @@ export class EditConfigPage extends Component {
 
     if (create) {
       const disks = this.getDisks();
-      const networkHelperEnabled = props.settings.settings.undefined.network_helper;
+      const networkHelperEnabled = props.account.network_helper;
       if (disks) {
         const diskSlots = Object.values(disks).map(disk => disk.id).slice(0, 1) || [];
         this.state = {
@@ -595,7 +594,7 @@ export class EditConfigPage extends Component {
 
 EditConfigPage.propTypes = {
   linode: PropTypes.object.isRequired,
-  settings: PropTypes.object.isRequired,
+  account: PropTypes.object.isRequired,
   kernels: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   create: PropTypes.bool.isRequired,
@@ -611,8 +610,8 @@ export function select(state, props) {
   const { configId } = props.params;
   const configs = linode._configs.configs;
   const config = configId && configs[configId];
-  const { kernels, settings } = state.api;
-  return { linode, config, kernels, settings };
+  const { kernels, account } = state.api;
+  return { linode, config, kernels, account };
 }
 
 export default connect(select)(EditConfigPage);

@@ -23,12 +23,8 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
     linode: testLinode,
     config: testLinode._configs.configs[12345],
     kernels: api.kernels,
-    settings: {
-      settings: {
-        undefined: {
-          network_helper: true,
-        },
-      },
+    account: {
+      network_helper: true,
     },
   });
 
@@ -39,7 +35,7 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
       { dispatch: _dispatch, getState: () => state },
       { linodeLabel: 'test-linode-1242' });
 
-    expect(_dispatch.callCount).to.equal(2);
+    expect(_dispatch.callCount).to.equal(1);
 
     const disks = _dispatch.firstCall.args[0];
 
