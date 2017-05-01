@@ -161,21 +161,15 @@ export class IndexPage extends Component {
                       hrefFn: (linode) => `/linodes/${linode.label}`,
                     },
                     { cellComponent: IPAddressCell, headerClassName: 'IPAddressColumn' },
-<<<<<<< HEAD
-=======
-                    { cellComponent: RegionCell, headerClassName: 'RegionColumn' },
->>>>>>> Change the way disabled headers work ( technically hidden ) to allow for widths on th
                     {
                       cellComponent: RegionCell,
+                      headerClassName: 'RegionColumn',
                       className: 'hidden-md-down',
-<<<<<<< HEAD
                     },
                     {
                       cellComponent: BackupsCell,
                       className: 'hidden-lg-down',
-=======
                       headerClassName: 'BackupsColumn',
->>>>>>> Change the way disabled headers work ( technically hidden ) to allow for widths on th
                       hrefFn: (linode) => `/linodes/${linode.label}/backups`,
                     },
                     { cellComponent: StatusDropdownCell, dispatch: dispatch },
