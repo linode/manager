@@ -245,6 +245,7 @@ export class ZonePage extends Component {
                 { dataKey: 'expire_sec', label: 'Expire Time' },
                 {
                   cellComponent: ButtonCell,
+                  headerClassName: 'ButtonColumn',
                   text: 'Edit',
                   onClick: () => {
                     this.renderSOAEditRecord();
@@ -309,11 +310,13 @@ export class ZonePage extends Component {
                 { dataKey: 'name', label: 'Subdomain' },
                 {
                   cellComponent: ButtonCell,
+                  headerClassName: 'ButtonColumn',
                   text: 'Edit',
                   onClick: ({ id }) => this.renderEditMXRecord('Edit MX Record', id),
                 },
                 {
                   cellComponent: ButtonCell,
+                  headerClassName: 'ButtonColumn',
                   text: 'Delete',
                   onClick: ({ id }) => this.renderDeleteRecord('Delete MX Record', id),
                 },
@@ -349,6 +352,7 @@ export class ZonePage extends Component {
                 },
                 {
                   cellComponent: ButtonCell,
+                  headerClassName: 'ButtonColumn',
                   text: 'Delete',
                   onClick: ({ id }) => this.renderDeleteRecord('Delete A/AAAA Record', id),
                 },
@@ -381,11 +385,13 @@ export class ZonePage extends Component {
                 { dataKey: 'ttl_sec', label: 'TTL' },
                 {
                   cellComponent: ButtonCell,
+                  headerClassName: 'ButtonColumn',
                   text: 'Edit',
                   onClick: ({ id }) => this.renderEditCNAMERecord('Edit CNAME Record', id),
                 },
                 {
                   cellComponent: ButtonCell,
+                  headerClassName: 'ButtonColumn',
                   text: 'Delete',
                   onClick: ({ id }) => this.renderDeleteRecord('Delete CNAME Record', id),
                 },
@@ -416,11 +422,13 @@ export class ZonePage extends Component {
                 { dataKey: 'ttl_sec', label: 'TTL' },
                 {
                   cellComponent: ButtonCell,
+                  headerClassName: 'ButtonColumn',
                   text: 'Edit',
                   onClick: ({ id }) => this.renderEditTXTRecord('Edit TXT Record', id),
                 },
                 {
                   cellComponent: ButtonCell,
+                  headerClassName: 'ButtonColumn',
                   text: 'Delete',
                   onClick: ({ id }) => this.renderDeleteRecord('Delete TXT Record', id),
                 },
@@ -455,11 +463,13 @@ export class ZonePage extends Component {
                 { dataKey: 'ttl_sec', label: 'TTL' },
                 {
                   cellComponent: ButtonCell,
+                  headerClassName: 'ButtonColumn',
                   text: 'Edit',
                   onClick: ({ id }) => this.renderEditSRVRecord('Edit SRV Record', id),
                 },
                 {
                   cellComponent: ButtonCell,
+                  headerClassName: 'ButtonColumn',
                   text: 'Delete',
                   onClick: ({ id }) => this.renderDeleteRecord('Delete SRV Record', id),
                 },

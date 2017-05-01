@@ -121,6 +121,7 @@ export class IndexPage extends Component {
                     { dataKey: 'type' },
                     {
                       cellComponent: ButtonCell,
+                      headerClassName: 'ButtonColumn',
                       text: 'Delete',
                       onClick: (zone) => { this.deleteZones(zone); },
                     },

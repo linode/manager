@@ -16,6 +16,7 @@ export default function IPList(props) {
         columns={[
           {
             cellComponent: CheckboxCell,
+            headerClassName: 'CheckboxColumn',
             selectedKey: 'address',
           },
           {
