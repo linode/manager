@@ -1,40 +1,21 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { setSource } from '~/actions/source';
-import { setTitle } from '~/actions/title';
 import { Card } from 'linode-components/cards';
-import {
-  Form,
-  Checkbox,
-  SubmitButton,
-} from 'linode-components/forms';
-import { settings } from '~/api';
-import { reduceErrors } from '~/errors';
-import { setError } from '~/actions/errors';
+import { Form, Checkbox, SubmitButton } from 'linode-components/forms';
+
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 import { account } from '~/api';
-import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+import { reduceErrors } from '~/errors';
 
 
 export class IndexPage extends Component {
-  static async preload({ dispatch }) {
-    try {
-      await dispatch(account.one());
-    } catch (response) {
-      // eslint-disable-next-line no-console
-      console.error(response);
-      dispatch(setError(response));
-    }
-  }
-
   constructor(props) {
     super(props);
 
     this.state = {
       networkHelper: props.account.network_helper,
-      errors: {},
     };
   }
 
@@ -49,9 +30,14 @@ export class IndexPage extends Component {
     const { dispatch } = this.props;
     const { networkHelper: network_helper } = this.state;
 
-    await dispatch(dispatchOrStoreErrors.apply(this, [
-      [() => account.put({ network_helper })],
-    ]));
+    try {
+      await dispatch(account.put({
+        network_helper: this.state.networkHelper,
+      }));
+    } catch (response) {
+      const errors = await reduceErrors(response);
+      this.setState({ errors });
+    }
   }
 
   render() {
@@ -74,6 +60,7 @@ export class IndexPage extends Component {
                 <div className="col-sm-9">
                   <Checkbox
                     id="networkHelper"
+                    value={networkHelper}
                     checked={networkHelper}
                     onChange={() => this.setState({
                       networkHelper: !networkHelper,

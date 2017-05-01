@@ -93,7 +93,7 @@ AuthenticationPage.propTypes = {
 
 function select(state) {
   return {
-    profile: state.api.profile.profile.undefined,
+    profile: state.api.profile,
   };
 }
 
