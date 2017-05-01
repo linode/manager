@@ -11,6 +11,12 @@ export const DELETE = 'DELETE';
  */
 export function genConfig(config, parent = undefined) {
   const result = { primaryKey: 'id', ...config, parent };
+  if (result.singular && result.plural) {
+    throw new Error(
+      'Config must not set "singular" _and_ "plural" keys. Plural is used for ' +
+      'collection endpoints. Singular is used for non-collection endpoints'
+    );
+  }
   if (config.subresources) {
     Object.keys(config.subresources).forEach((key) => {
       result.subresources[key] =
