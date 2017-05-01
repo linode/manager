@@ -573,8 +573,8 @@ export class EditConfigPage extends Component {
                 />
                 <div>
                   <small className="text-muted">
-                    Automatically configure static networking
-                    <a href="https://www.linode.com/docs/platform/network-helper">(more info)</a>
+                    Automatically configure static networking.
+                    &nbsp;<a href="https://www.linode.com/docs/platform/network-helper">Learn More</a>
                   </small>
                 </div>
               </Checkboxes>
