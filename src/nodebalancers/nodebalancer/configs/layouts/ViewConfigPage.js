@@ -79,14 +79,8 @@ export class ViewConfigPage extends Component {
                     { textKey: 'label', label: 'Label',
                       cellComponent: LinkCell,
                       hrefFn: function (node) {
-                        const string = [];
-                        string.push('/nodebalancers');
-                        string.push(nodebalancer.label);
-                        string.push('configurations');
-                        string.push(config.id);
-                        string.push('nodes');
-                        string.push(node.id);
-                        return string.join('/');
+                        // eslint-disable-next-line max-len
+                        return `/nodebalancers/${nodebalancer.label}/configurations/${config.id}/nodes/${node.id}`;
                       },
                     },
                     { dataKey: 'address', label: 'Address' },
@@ -97,15 +91,8 @@ export class ViewConfigPage extends Component {
                       cellComponent: ButtonCell,
                       buttonClassName: 'btn-secondary',
                       hrefFn: function (node) {
-                        const string = [];
-                        string.push('/nodebalancers');
-                        string.push(nodebalancer.label);
-                        string.push('configurations');
-                        string.push(config.id);
-                        string.push('nodes');
-                        string.push(node.id);
-                        string.push('edit');
-                        return string.join('/');
+                        // eslint-disable-next-line max-len
+                        return `/nodebalancers/${nodebalancer.label}/configurations/${config.id}/nodes/${node.id}/edit`;
                       },
                       text: 'Edit',
                     },
