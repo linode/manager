@@ -38,72 +38,70 @@ export class ViewConfigPage extends Component {
     const nodes = Object.values(config._nodes.nodes);
     return (
       <div>
-        <div className="container">
-          <Card header={<CardHeader title="Summary" />}>
-            <div className="row">
-              <div className="col-sm-2 row-label">Port</div>
-              <div className="col-sm-10">{config.port}</div>
-            </div>
-            <div className="row">
-              <div className="col-sm-2 row-label">Protocol</div>
-              <div className="col-sm-10">{config.protocol}</div>
-            </div>
-            <div className="row">
-              <div className="col-sm-2 row-label">Algorithm</div>
-              <div className="col-sm-10">{config.algorithm}</div>
-            </div>
-            <div className="row">
-              <div className="col-sm-2 row-label">Session Stickiness</div>
-              <div className="col-sm-10">{config.stickiness}</div>
-            </div>
-          </Card>
-          <Card
-            title="Nodes"
-            header={
-              <CardHeader
-                title="Nodes"
-                nav={
-                  <Link
-                    to={`/nodebalancers/${nodebalancer.label}/configs/${config.id}/create`}
-                    className="linode-add btn btn-default float-sm-right"
-                  >Add a Node</Link>
-                }
+        <Card header={<CardHeader title="Summary" />}>
+          <div className="row">
+            <div className="col-sm-2 row-label">Port</div>
+            <div className="col-sm-10">{config.port}</div>
+          </div>
+          <div className="row">
+            <div className="col-sm-2 row-label">Protocol</div>
+            <div className="col-sm-10">{config.protocol}</div>
+          </div>
+          <div className="row">
+            <div className="col-sm-2 row-label">Algorithm</div>
+            <div className="col-sm-10">{config.algorithm}</div>
+          </div>
+          <div className="row">
+            <div className="col-sm-2 row-label">Session Stickiness</div>
+            <div className="col-sm-10">{config.stickiness}</div>
+          </div>
+        </Card>
+        <Card
+          title="Nodes"
+          header={
+            <CardHeader
+              title="Nodes"
+              nav={
+                <Link
+                  to={`/nodebalancers/${nodebalancer.label}/configs/${config.id}/create`}
+                  className="linode-add btn btn-default float-sm-right"
+                >Add a Node</Link>
+              }
+            />
+          }
+        >
+          <List>
+            <ListBody>
+              <Table
+                className="Table--secondary"
+                columns={[
+                  { textKey: 'label', label: 'Label',
+                    cellComponent: LinkCell,
+                    hrefFn: function (node) {
+                      // eslint-disable-next-line max-len
+                      return `/nodebalancers/${nodebalancer.label}/configs/${config.id}/nodes/${node.id}`;
+                    },
+                  },
+                  { dataKey: 'address', label: 'Address' },
+                  { dataKey: 'weight', label: 'Weight' },
+                  { dataKey: 'mode', label: 'Mode' },
+                  { dataKey: 'status', label: 'Status' },
+                  {
+                    cellComponent: ButtonCell,
+                    buttonClassName: 'btn-secondary',
+                    hrefFn: function (node) {
+                      // eslint-disable-next-line max-len
+                      return `/nodebalancers/${nodebalancer.label}/configs/${config.id}/nodes/${node.id}/edit`;
+                    },
+                    text: 'Edit',
+                  },
+                ]}
+                data={Object.values(nodes)}
+                selectedMap={{}}
               />
-            }
-          >
-            <List>
-              <ListBody>
-                <Table
-                  className="Table--secondary"
-                  columns={[
-                    { textKey: 'label', label: 'Label',
-                      cellComponent: LinkCell,
-                      hrefFn: function (node) {
-                        // eslint-disable-next-line max-len
-                        return `/nodebalancers/${nodebalancer.label}/configs/${config.id}/nodes/${node.id}`;
-                      },
-                    },
-                    { dataKey: 'address', label: 'Address' },
-                    { dataKey: 'weight', label: 'Weight' },
-                    { dataKey: 'mode', label: 'Mode' },
-                    { dataKey: 'status', label: 'Status' },
-                    {
-                      cellComponent: ButtonCell,
-                      buttonClassName: 'btn-secondary',
-                      hrefFn: function (node) {
-                        // eslint-disable-next-line max-len
-                        return `/nodebalancers/${nodebalancer.label}/configs/${config.id}/nodes/${node.id}/edit`;
-                      },
-                      text: 'Edit',
-                    },
-                  ]}
-                  data={Object.values(nodes)}
-                  selectedMap={{}}
-                />
-              </ListBody>
-            </List>
-          </Card>
-        </div>
+            </ListBody>
+          </List>
+        </Card>
       </div>
     );
   }
