@@ -30,6 +30,20 @@ function createTestNodeBalancer(id) {
           port: 80,
           check_body: '',
           check: 'none',
+          _nodes: {
+            nodes: {
+              0: {
+                nodebalancer_id: 23,
+                id: 0,
+                mode: 'accept',
+                address: '192.168.4.5:80',
+                label: 'greatest_node_ever',
+                weight: 40,
+                config_id: 0,
+                status: 'online',
+              },
+            },
+          },
         },
         1: {
           check_timeout: 30,
