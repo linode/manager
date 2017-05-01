@@ -154,20 +154,28 @@ export class IndexPage extends Component {
               >
                 <Table
                   columns={[
-                    { cellComponent: CheckboxCell },
+                    { cellComponent: CheckboxCell, headerClassName: 'CheckboxColumn' },
                     {
                       className: 'RowLabelCell',
                       cellComponent: LinkCell,
                       hrefFn: (linode) => `/linodes/${linode.label}`,
                     },
                     { cellComponent: IPAddressCell, headerClassName: 'IPAddressColumn' },
+<<<<<<< HEAD
+=======
+                    { cellComponent: RegionCell, headerClassName: 'RegionColumn' },
+>>>>>>> Change the way disabled headers work ( technically hidden ) to allow for widths on th
                     {
                       cellComponent: RegionCell,
                       className: 'hidden-md-down',
+<<<<<<< HEAD
                     },
                     {
                       cellComponent: BackupsCell,
                       className: 'hidden-lg-down',
+=======
+                      headerClassName: 'BackupsColumn',
+>>>>>>> Change the way disabled headers work ( technically hidden ) to allow for widths on th
                       hrefFn: (linode) => `/linodes/${linode.label}/backups`,
                     },
                     { cellComponent: StatusDropdownCell, dispatch: dispatch },

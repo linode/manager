@@ -22,6 +22,15 @@
     }
 }
 
+.TableHead {
+    &--disabled {
+        th {
+            height: 0;
+            padding: 0;
+        }
+    }
+}
+
 .TableRow {
     height: 65px;
     border: $border;

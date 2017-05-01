@@ -112,7 +112,7 @@ export class IndexPage extends Component {
               >
                 <Table
                   columns={[
-                    { cellComponent: CheckboxCell },
+                    { cellComponent: CheckboxCell, headerClassName: 'CheckboxColumn' },
                     {
                       className: 'RowLabelCell',
                       cellComponent: LinkCell,
