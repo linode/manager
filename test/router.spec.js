@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import { shallow, mount } from 'enzyme';
 
-import { kernels, distributions, regions, types } from '~/api';
+import { kernels, distributions, regions, types, account } from '~/api';
 import * as fetch from '~/fetch';
 import { LoadingRouterContext } from '~/router';
 import * as session from '~/session';
@@ -15,6 +15,7 @@ describe('router/LoadingRouterContext', () => {
 
   beforeEach(() => {
     sandbox.stub(fetch, 'rawFetch');
+    sandbox.stub(account, 'one', () => ({ type: 'NO TYPE' }));
     [kernels, distributions, regions, types].forEach(object => {
       sandbox.stub(object, 'all', () => ({ type: 'NO TYPE' }));
     });
