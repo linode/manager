@@ -42,10 +42,10 @@ export class IndexPage extends Component {
         { to: `/nodebalancers/${nodebalancer.label}`, label: nodebalancer.label },
       ];
       tabs = [
-        { name: 'Dashboard', link: `/nodebalancers/${label}/configurations/${params.configId}` },
+        { name: 'Dashboard', link: `/nodebalancers/${label}/configs/${params.configId}` },
         {
           name: 'Settings',
-          link: `/nodebalancers/${label}/configurations/${params.configId}/edit`,
+          link: `/nodebalancers/${label}/configs/${params.configId}/edit`,
         },
       ];
       title = `Port ${nodebalancer._configs.configs[params.configId].port}`;
