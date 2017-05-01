@@ -3,7 +3,6 @@ import {
 } from '~/api/apiResultActionReducerGenerator';
 
 export const config = genConfig({
-  plural: 'profile',
   singular: 'profile',
   endpoint: () => '/account/profile',
   supports: [ONE, PUT],

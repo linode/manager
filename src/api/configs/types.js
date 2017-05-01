@@ -5,7 +5,6 @@ import {
 
 export const config = genConfig({
   plural: 'types',
-  singular: 'type',
   endpoint: id => `/linode/types/${id}`,
   supports: [ONE, MANY],
 });

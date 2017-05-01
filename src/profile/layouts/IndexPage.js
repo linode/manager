@@ -70,7 +70,7 @@ IndexPage.propTypes = {
 function select(state) {
   // TODO refactor with abstractor changes, see other 'select' method usage in profile/page(s)
   return {
-    profile: state.api.profile.profile.undefined,
+    profile: state.api.profile,
   };
 }
 

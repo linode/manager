@@ -1,6 +1,5 @@
 import { RouterContext, match } from 'react-router';
 
-import { store } from './store';
 import { checkLogin } from './session';
 import {
   preloadReset,
@@ -8,6 +7,8 @@ import {
   preloadStop,
 } from '~/actions/preloadIndicator';
 import { kernels, types, regions, distributions } from '~/api';
+import { account } from '~/api';
+import { store } from '~/store';
 
 
 // This wraps the react-router match function so that we can await it
@@ -40,13 +41,13 @@ export class LoadingRouterContext extends RouterContext {
       }
 
       // Set anything at all to force an update
-      if (this.preloadCounter === 0 && !this.initialLoad) {
+      if (this.preloadCounter === 0 && !this.state.initialLoad) {
         this.setState({
           updateNow: 'please',
         });
       }
 
-      setTimeout(() => store.dispatch(preloadStop()), 0);
+      setTimeout(() => this.props.dispatch(preloadStop()), 0);
       done();
     });
   }
@@ -55,7 +56,8 @@ export class LoadingRouterContext extends RouterContext {
     super(props);
     this.match = props.match;
     this.preloadCounter = 0;
-    this.initialLoad = true;
+
+    this.state = { initialLoad: true };
   }
 
   async componentWillMount() {
@@ -67,14 +69,19 @@ export class LoadingRouterContext extends RouterContext {
     const { location: { pathname }, params } = this.props;
     // No need to fetch these in weblish.
     if (!(pathname.endsWith('/weblish') && params.linodeLabel)) {
-      store.dispatch(kernels.all());
-      store.dispatch(types.all());
-      store.dispatch(regions.all());
-      store.dispatch(distributions.all());
+      await Promise.all([
+        this.props.dispatch(account.one()),
+        this.props.dispatch(kernels.all()),
+        this.props.dispatch(types.all()),
+        this.props.dispatch(regions.all()),
+        this.props.dispatch(distributions.all()),
+      ]);
     }
 
     // Necessary to await this for testing
     await this.runPreload(this.props);
+
+    this.setState({ initialLoad: false });
   }
 
   async componentWillReceiveProps(newProps) {
@@ -82,25 +89,19 @@ export class LoadingRouterContext extends RouterContext {
       super.componentWillReceiveProps(newProps);
     }
 
-    store.dispatch(preloadReset());
-    setTimeout(() => store.dispatch(preloadStart()), 0);
+    this.props.dispatch(preloadReset());
+    setTimeout(() => this.props.dispatch(preloadStart()), 0);
 
-    this.runPreload(newProps);
+    await this.runPreload(newProps);
   }
 
   shouldComponentUpdate() {
-    return !this.initialLoad && this.preloadCounter === 0;
+    return this.preloadCounter === 0;
   }
 
   render() {
-    if (this.initialLoad) {
-      this.initialLoad = false;
-
-      if (this.preloadCounter > 0) {
-        // This is a special case in React that will halt the render -- effectively reverting
-        // to its previous state until we're ready to render something for real.
-        return null;
-      }
+    if (this.state.initialLoad) {
+      return null;
     }
 
     // Force scroll to the top of the page on page change.
