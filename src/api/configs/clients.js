@@ -5,7 +5,6 @@ import {
 
 export const config = genConfig({
   plural: 'clients',
-  singular: 'client',
   endpoint: id => `/account/clients/${id}`,
   supports: [ONE, MANY, POST, PUT, DELETE],
 });

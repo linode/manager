@@ -71,9 +71,9 @@ describe('linodes/linode/settings/layouts/DisplayPage', () => {
 
     const label = page.find('.form-group').at(1);
     expect(label.find('.form-control-feedback')
-      .children()
-      .first()
-      .text()).to.equal(error);
+                .children()
+                .first()
+                .text()).to.equal(error);
   });
 
   it('redirects if the label changed', async () => {

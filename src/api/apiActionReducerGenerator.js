@@ -1,5 +1,5 @@
 import {
-  ONE, MANY, DELETE, POST, PUT, generateDefaultStateMany,
+  ONE, MANY, DELETE, POST, PUT, generateDefaultStateFull,
 } from './apiResultActionReducerGenerator';
 import { fetch } from '~/fetch';
 
@@ -32,19 +32,30 @@ export function getStateOfSpecificResource(config, state, ids) {
     Object.keys(parent.subresources).forEach(s => match(s, parent));
     root = parent;
   }
-  let refined = state.api[root.plural];
+  let refined = state.api[root.plural || root.singular];
   const _ids = [...ids];
   let current = root;
   let name = null;
 
   while (current !== config) {
     name = path.pop();
-    refined = refined[current.plural][_ids.shift()][name];
+    if (current.singular) {
+      // Not totally sure how things would work with a plural inside a singular
+      refined = refined[current.singular][name];
+    } else {
+      refined = refined[current.plural][_ids.shift()][name];
+    }
     current = current.subresources[name];
   }
 
   if (_ids.length) {
-    return refined[current.plural][_ids.shift()];
+    // Should only be a plural one anyway, but just in case.
+    const objects = refined[current.plural || current.singular];
+    if (current.singular) {
+      return objects;
+    }
+
+    return objects[_ids.length];
   }
   return refined;
 }
@@ -55,7 +66,6 @@ export function getStateOfSpecificResource(config, state, ids) {
  */
 export function filterResources(config, resources, resourceFilter) {
   const filteredResources = { ...resources };
-
 
   for (let i = 0; i < filteredResources[config.plural].length; i += 1) {
     const object = filteredResources[config.plural][i];
@@ -90,6 +100,7 @@ function genThunkOne(config, actions) {
       ...(await response.json()),
       __progress: oldState && oldState.__progress || 100,
     };
+
     dispatch(actions.one(resource, ...ids));
     return resource;
   };
@@ -157,7 +168,7 @@ function genThunkAll(config, actions, fetchPage) {
   function fetchAll(ids = [], resourceFilter, options) {
     return async (dispatch, getState) => {
       let state = getStateOfSpecificResource(config, getState(), ids) ||
-        generateDefaultStateMany(config);
+        generateDefaultStateFull(config);
 
       const fetchBeganAt = new Date();
 
@@ -271,12 +282,21 @@ export default function apiActionReducerGenerator(config, actions) {
   }
   if (config.subresources) {
     Object.keys(config.subresources).forEach((key) => {
-      const subr = config.subresources[key];
-      const plural = subr.plural;
-      thunks[plural] = apiActionReducerGenerator(subr, actions[plural]);
+      const subresource = config.subresources[key];
+      if (subresource.plural) {
+        thunks[subresource.plural] = apiActionReducerGenerator(subresource,
+                                                               actions[subresource.plural]);
+      } else if (subresource.singular) {
+        thunks[subresource.singular] = apiActionReducerGenerator(subresource,
+                                                                 actions[subresource.singular]);
+      }
     });
   }
-  thunks.type = config.plural;
+  if (config.plural) {
+    thunks.type = config.plural;
+  } else if (config.singular) {
+    thunks.type = config.singular;
+  }
   return thunks;
 }
 

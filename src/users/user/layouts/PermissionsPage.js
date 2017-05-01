@@ -19,7 +19,7 @@ export class PermissionsPage extends Component {
     this.onCellChange = this.onCellChange.bind(this);
 
     const { username } = props.params;
-    const permissions = props.users[username]._permissions.permissions.undefined;
+    const permissions = props.users[username]._permissions;
     this.state = {
       ...permissions,
       loading: false,

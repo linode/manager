@@ -29,7 +29,7 @@ function ReferralsPage(props) {
 
 function select(state) {
   return {
-    referrals: state.api.profile.profile.undefined.referrals,
+    referrals: state.api.profile.referrals,
   };
 }
 
