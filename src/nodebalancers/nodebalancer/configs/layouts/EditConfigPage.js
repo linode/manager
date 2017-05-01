@@ -2,15 +2,13 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { Card, CardHeader } from 'linode-components/cards';
-
-import { setSource } from '~/actions/source';
 import { objectFromMapByLabel } from '~/api/util';
 import { nodebalancers } from '~/api';
-import { reduceErrors } from '~/components/forms';
 
+import { reduceErrors } from '~/errors';
+import { Card, CardHeader } from 'linode-components/cards';
+import { setSource } from '~/actions/source';
 import { ConfigForm } from '../../components/ConfigForm';
-
 
 export class EditConfigPage extends Component {
   constructor(props) {
