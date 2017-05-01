@@ -15,6 +15,7 @@ export const config = genConfig({
       subresources: {
         _nodes: {
           plural: 'nodes',
+          singular: 'node',
           endpoint: (id, nbConfigId, nodeId) => {
             return `/nodebalancers/${id}/configs/${nbConfigId}/nodes/${nodeId}`;
           },

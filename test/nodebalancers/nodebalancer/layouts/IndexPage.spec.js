@@ -17,16 +17,16 @@ describe('nodebalancers/nodebalancer/layouts/IndexPage', () => {
   });
 
   it('renders the nodebalancer label and group', () => {
+    // TODO: test for group when supported by API
     const page = mount(
       <IndexPage
         dispatch={dispatch}
         nodebalancer={genericNodeBalancer}
+        params={{ configId: genericNodeBalancer._configs.configs[0].id }}
       />);
-
-    const { group, label } = genericNodeBalancer;
-    const h1Link = page.find('h1 Link');
-    expect(h1Link.props().to).to.equal(`/nodebalancers/${label}`);
-    expect(h1Link.props().children).to.equal(`${group} / ${label}`);
+    const { label } = genericNodeBalancer;
+    const h1 = page.find('h1');
+    expect(h1.text()).to.equal(label);
   });
 
   it('renders the nodebalancer label alone when ungrouped', () => {
@@ -34,10 +34,10 @@ describe('nodebalancers/nodebalancer/layouts/IndexPage', () => {
       <IndexPage
         dispatch={dispatch}
         nodebalancer={noGroupNodeBalancer}
+        params={{ configId: noGroupNodeBalancer._configs.configs[0].id }}
       />);
 
-    const h1Link = page.find('h1 Link');
-    expect(h1Link.props().to).to.equal(`/nodebalancers/${noGroupNodeBalancer.label}`);
-    expect(h1Link.text()).to.equal(noGroupNodeBalancer.label);
+    const h1 = page.find('h1');
+    expect(h1.text()).to.equal(noGroupNodeBalancer.label);
   });
 });

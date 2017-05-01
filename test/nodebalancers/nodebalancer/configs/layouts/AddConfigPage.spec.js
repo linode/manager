@@ -6,7 +6,7 @@ import { push } from 'react-router-redux';
 
 import { expectRequest, expectObjectDeepEquals } from '@/common';
 import { genericNodeBalancer } from '@/data/nodebalancers';
-import { AddConfigPage } from '~/nodebalancers/nodebalancer/layouts/AddConfigPage';
+import { AddConfigPage } from '~/nodebalancers/nodebalancer/configs/layouts/AddConfigPage';
 
 describe('nodebalancers/nodebalancer/layouts/AddConfigPage', () => {
   const sandbox = sinon.sandbox.create();

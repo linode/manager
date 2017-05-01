@@ -7,6 +7,7 @@ import { reducer as types } from './configs/types';
 import { reducer as kernels } from './configs/kernels';
 import { reducer as domains } from './configs/domains';
 import { reducer as nodebalancers } from './configs/nodebalancers';
+import { reducer as nodes } from './configs/nodebalancernodes';
 import { reducer as profile } from './configs/profile';
 import { reducer as account } from './configs/account';
 import { reducer as events } from './configs/events';
@@ -24,6 +25,7 @@ export default combineReducers({
   domains,
   events,
   nodebalancers,
+  nodes,
   profile,
   tokens,
   clients,
