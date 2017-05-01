@@ -32,7 +32,8 @@ export class IndexPage extends Component {
     if (!nodebalancer) return null;
 
     const { label } = nodebalancer;
-    let crumbs = [];
+    let crumbs;
+    let tabs;
     let title = '';
 
     if (params.configId) {
@@ -40,18 +41,24 @@ export class IndexPage extends Component {
         { to: '/nodebalancers', label: 'NodeBalancers' },
         { to: `/nodebalancers/${nodebalancer.label}`, label: nodebalancer.label },
       ];
+      tabs = [
+        { name: 'Dashboard', link: `/nodebalancers/${label}/configurations/${params.configId}` },
+        {
+          name: 'Settings',
+          link: `/nodebalancers/${label}/configurations/${params.configId}/edit`,
+        },
+      ];
       title = `Port ${nodebalancer._configs.configs[params.configId].port}`;
     } else {
       crumbs = [
         { to: '/nodebalancers', label: 'NodeBalancers' },
       ];
+      tabs = [
+        { name: 'Dashboard', link: `/nodebalancers/${label}` },
+        { name: 'Settings', link: `/nodebalancers/${label}/settings` },
+      ];
       title = nodebalancer.label;
     }
-
-    const tabs = [
-      { name: 'Dashboard', link: '' },
-      { name: 'Settings', link: '/settings' },
-    ].map(t => ({ ...t, link: `/nodebalancers/${label}${t.link}` }));
 
     return (
       <div className="details-page">
