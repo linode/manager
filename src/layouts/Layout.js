@@ -41,6 +41,7 @@ export class Layout extends Component {
     const {
       username,
       emailHash,
+      company,
       errors,
       notifications,
       account,
@@ -72,7 +73,7 @@ export class Layout extends Component {
         <PreloadIndicator />
         <Notifications />
         <SessionMenu open={session.open} />
-        <AccountMenu open={account.open} />
+        <AccountMenu open={account.open} company={company} />
         <ModalShell
           open={this.props.modal.open}
           title={this.props.modal.title}
@@ -140,6 +141,7 @@ function select(state) {
     username: state.authentication.username,
     emailHash: state.authentication.emailHash,
     email: state.authentication.email,
+    company: state.api.account.company,
     currentPath: state.routing.locationBeforeTransitions.pathname,
     errors: state.errors,
     source: state.source,
