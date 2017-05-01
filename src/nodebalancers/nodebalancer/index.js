@@ -12,8 +12,8 @@ export default (
   <Route path=":nbLabel" component={IndexPage}>
     <IndexRoute component={DashboardPage} />
     <Route path="settings" component={SettingsPage} />
-    <Route path="configurations/create" component={AddConfigPage} />
-    <Route path="configurations/:configId" component={ViewConfigPage} />
-    <Route path="configurations/:configId/edit" component={EditConfigPage} />
+    <Route path="configs/create" component={AddConfigPage} />
+    <Route path="configs/:configId" component={ViewConfigPage} />
+    <Route path="configs/:configId/edit" component={EditConfigPage} />
   </Route>
 );

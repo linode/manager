@@ -32,7 +32,7 @@ export class DashboardPage extends Component {
     const { nodebalancer } = this.props;
     const { configs } = nodebalancer._configs;
 
-    const newConfigurations = Object.values(configs).map((config) => {
+    const newConfigs = Object.values(configs).map((config) => {
       return {
         ...config,
         protocol: config.protocol.toUpperCase(),
@@ -77,10 +77,10 @@ export class DashboardPage extends Component {
         <Card
           header={
             <CardHeader
-              title="Configurations"
+              title="Configs"
               nav={
                 <Link
-                  to={`/nodebalancers/${nodebalancer.label}/configurations/create`}
+                  to={`/nodebalancers/${nodebalancer.label}/configs/create`}
                   className="linode-add btn btn-default float-sm-right"
                 >Add a Configuration</Link>
               }
@@ -95,7 +95,7 @@ export class DashboardPage extends Component {
                   { textKey: 'port', label: 'Port',
                     cellComponent: LinkCell,
                     hrefFn: function (config) {
-                      return `/nodebalancers/${nodebalancer.label}/configurations/${config.id}`;
+                      return `/nodebalancers/${nodebalancer.label}/configs/${config.id}`;
                     },
                   },
                   { dataKey: 'protocol', label: 'Protocol' },
@@ -107,18 +107,12 @@ export class DashboardPage extends Component {
                     cellComponent: ButtonCell,
                     buttonClassName: 'btn-secondary',
                     hrefFn: function (config) {
-                      const string = [];
-                      string.push('/nodebalancers');
-                      string.push(nodebalancer.label);
-                      string.push('configurations');
-                      string.push(config.id);
-                      string.push('edit');
-                      return string.join('/');
+                      return `/nodebalancers/${nodebalancer.label}/configs/${config.id}/edit`;
                     },
                     text: 'Edit',
                   },
                 ]}
-                data={newConfigurations}
+                data={newConfigs}
                 selectedMap={{}}
                 disableHeader
               />

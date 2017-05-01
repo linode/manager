@@ -64,7 +64,7 @@ export class ViewConfigPage extends Component {
                 title="Nodes"
                 nav={
                   <Link
-                    to={`/nodebalancers/${nodebalancer.label}/configurations/${config.id}/create`}
+                    to={`/nodebalancers/${nodebalancer.label}/configs/${config.id}/create`}
                     className="linode-add btn btn-default float-sm-right"
                   >Add a Node</Link>
                 }
@@ -80,7 +80,7 @@ export class ViewConfigPage extends Component {
                       cellComponent: LinkCell,
                       hrefFn: function (node) {
                         // eslint-disable-next-line max-len
-                        return `/nodebalancers/${nodebalancer.label}/configurations/${config.id}/nodes/${node.id}`;
+                        return `/nodebalancers/${nodebalancer.label}/configs/${config.id}/nodes/${node.id}`;
                       },
                     },
                     { dataKey: 'address', label: 'Address' },
@@ -92,7 +92,7 @@ export class ViewConfigPage extends Component {
                       buttonClassName: 'btn-secondary',
                       hrefFn: function (node) {
                         // eslint-disable-next-line max-len
-                        return `/nodebalancers/${nodebalancer.label}/configurations/${config.id}/nodes/${node.id}/edit`;
+                        return `/nodebalancers/${nodebalancer.label}/configs/${config.id}/nodes/${node.id}/edit`;
                       },
                       text: 'Edit',
                     },
