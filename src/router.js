@@ -1,6 +1,5 @@
 import { RouterContext, match } from 'react-router';
 
-import { store } from './store';
 import { checkLogin } from './session';
 import {
   preloadReset,
@@ -9,6 +8,7 @@ import {
 } from '~/actions/preloadIndicator';
 import { kernels, types, regions, distributions } from '~/api';
 import { account } from '~/api';
+import { store } from '~/store';
 
 
 // This wraps the react-router match function so that we can await it
@@ -47,7 +47,7 @@ export class LoadingRouterContext extends RouterContext {
         });
       }
 
-      setTimeout(() => store.dispatch(preloadStop()), 0);
+      setTimeout(() => this.props.dispatch(preloadStop()), 0);
       done();
     });
   }
@@ -70,11 +70,11 @@ export class LoadingRouterContext extends RouterContext {
     // No need to fetch these in weblish.
     if (!(pathname.endsWith('/weblish') && params.linodeLabel)) {
       await Promise.all([
-        store.dispatch(account.one()),
-        store.dispatch(kernels.all()),
-        store.dispatch(types.all()),
-        store.dispatch(regions.all()),
-        store.dispatch(distributions.all()),
+        this.props.dispatch(account.one()),
+        this.props.dispatch(kernels.all()),
+        this.props.dispatch(types.all()),
+        this.props.dispatch(regions.all()),
+        this.props.dispatch(distributions.all()),
       ]);
     }
 
@@ -89,10 +89,10 @@ export class LoadingRouterContext extends RouterContext {
       super.componentWillReceiveProps(newProps);
     }
 
-    store.dispatch(preloadReset());
-    setTimeout(() => store.dispatch(preloadStart()), 0);
+    this.props.dispatch(preloadReset());
+    setTimeout(() => this.props.dispatch(preloadStart()), 0);
 
-    this.runPreload(newProps);
+    await this.runPreload(newProps);
   }
 
   shouldComponentUpdate() {

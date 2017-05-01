@@ -59,6 +59,7 @@ const init = () => {
         <Router
           history={history}
           onUpdate={logPageView}
+          dispatch={store.dispatch}
           render={props => <LoadingRouterContext {...fillInMissingProps(props)} />}
         >
           <Route
