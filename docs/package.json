@@ -49,6 +49,7 @@
   },
   "dependencies": {
     "bootstrap": "^4.0.0-alpha.6",
+    "clipboard": "^1.6.1",
     "fontawesome": "^4.5.0",
     "history": "^2.1.2",
     "linode-components": "file:../components",

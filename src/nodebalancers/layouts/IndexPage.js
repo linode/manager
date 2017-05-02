@@ -98,16 +98,17 @@ export class IndexPage extends Component {
         <ListBody>
           <Table
             columns={[
-              { cellComponent: CheckboxCell },
+              { cellComponent: CheckboxCell, headerClassName: 'CheckboxColumn' },
               {
                 className: 'RowLabelCell',
                 cellComponent: LinkCell,
                 hrefFn: (nodebalancer) => { return `/nodebalancers/${nodebalancer.label}`; },
               },
-              { cellComponent: IPAddressCell },
+              { cellComponent: IPAddressCell, headerClassName: 'IPAddressColumn' },
               { cellComponent: RegionCell },
               {
                 cellComponent: ButtonCell,
+                headerClassName: 'ButtonColumn',
                 onClick: (nodebalancer) => { this.deleteNodeBalancers(nodebalancer); },
                 text: 'Delete',
               },

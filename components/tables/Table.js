@@ -17,16 +17,12 @@ export default function Table(props) {
     selectedMap,
   } = props;
 
-  let tableHeader;
-  if (!disableHeader) {
-    tableHeader = (
-      <thead>
-        <TableHeaderRow columns={columns} />
-      </thead>
-    );
-  } else {
-    tableHeader = (<thead></thead>);
-  }
+  const theadClassName = disableHeader ? 'TableHead--disabled' : '';
+  const tableHeader = (
+    <thead className={theadClassName}>
+      <TableHeaderRow columns={columns} />
+    </thead>
+  );
 
   let tableContent;
   if (!data.length) {

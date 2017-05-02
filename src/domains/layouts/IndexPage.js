@@ -112,7 +112,7 @@ export class IndexPage extends Component {
               >
                 <Table
                   columns={[
-                    { cellComponent: CheckboxCell },
+                    { cellComponent: CheckboxCell, headerClassName: 'CheckboxColumn' },
                     {
                       className: 'RowLabelCell',
                       cellComponent: LinkCell,
@@ -121,6 +121,7 @@ export class IndexPage extends Component {
                     { dataKey: 'type' },
                     {
                       cellComponent: ButtonCell,
+                      headerClassName: 'ButtonColumn',
                       text: 'Delete',
                       onClick: (zone) => { this.deleteZones(zone); },
                     },

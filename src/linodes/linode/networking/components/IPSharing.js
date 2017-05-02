@@ -105,6 +105,7 @@ export default class IPSharing extends Component {
               columns={[
                 {
                   cellComponent: CheckboxCell,
+                  headerClassName: 'CheckboxColumn',
                   selectedKeyFn: (record) => {
                     return record.ip.address;
                   },

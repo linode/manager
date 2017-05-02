@@ -38,7 +38,7 @@ export default function Lists() {
               <p>List with selection, links, and actions example:</p>
               <Table
                 columns={[
-                  { cellComponent: CheckboxCell, onChange: () => {} },
+                  { cellComponent: CheckboxCell, headerClassName: 'CheckboxColumn', onChange: () => {} },
                   {
                     className: 'RowLabelCell',
                     cellComponent: LinkCell,
@@ -48,7 +48,7 @@ export default function Lists() {
                   },
                   { dataKey: 'ip_address', label: 'IP address' },
                   { dataKey: 'region', label: 'Region' },
-                  { cellComponent: ButtonCell, text: 'Edit' },
+                  { cellComponent: ButtonCell, headerClassName: 'ButtonColumn', text: 'Edit' },
                 ]}
                 data={[
                   { label: 'linode-1', ip_address: '192.168.0.0', region: 'Huston, TX' },
