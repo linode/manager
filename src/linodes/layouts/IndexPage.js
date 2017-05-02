@@ -163,13 +163,13 @@ export class IndexPage extends Component {
                     { cellComponent: IPAddressCell, headerClassName: 'IPAddressColumn' },
                     {
                       cellComponent: RegionCell,
-                      headerClassName: 'RegionColumn',
+                      headerClassName: 'RegionColumn hidden-md-down',
                       className: 'hidden-md-down',
                     },
                     {
                       cellComponent: BackupsCell,
                       className: 'hidden-lg-down',
-                      headerClassName: 'BackupsColumn',
+                      headerClassName: 'BackupsColumn hidden-lg-down',
                       hrefFn: (linode) => `/linodes/${linode.label}/backups`,
                     },
                     { cellComponent: StatusDropdownCell, dispatch: dispatch },
