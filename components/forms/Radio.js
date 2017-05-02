@@ -21,7 +21,7 @@ export default function Radio(props) {
 Radio.propTypes = {
   checked: PropTypes.bool.isRequired,
   onChange: PropTypes.func.isRequired,
+  value: PropTypes.bool.isRequired,
   label: PropTypes.any,
-  value: PropTypes.object,
   id: PropTypes.string,
 };

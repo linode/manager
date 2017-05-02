@@ -82,7 +82,6 @@ export class DiskPanel extends Component {
           <CardHeader title="Disks" navLink="https://example.org" />
         }
       >
-        {this.renderStatusMessage(linode.status)}
         <section className="disk-layout">
           {disks.map(d =>
             <div
@@ -128,6 +127,7 @@ export class DiskPanel extends Component {
             </div>
            )}
         </section>
+        {this.renderStatusMessage(linode.status)}
       </Card>
     );
   }

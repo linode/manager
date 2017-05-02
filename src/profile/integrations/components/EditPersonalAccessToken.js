@@ -1,10 +1,12 @@
 import React, { PropTypes, Component } from 'react';
 
-import { tokens } from '~/api';
 import { ModalFormGroup } from 'linode-components/forms';
 import { Form, Input, SubmitButton } from 'linode-components/forms';
 import { CancelButton } from 'linode-components/buttons';
-import { reduceErrors, ErrorSummary } from '~/errors';
+
+import { tokens } from '~/api';
+import { FormSummary, reduceErrors } from '~/components/forms';
+
 
 export default class CreatePersonalAccessToken extends Component {
   constructor(props) {
@@ -60,7 +62,7 @@ export default class CreatePersonalAccessToken extends Component {
           <CancelButton onClick={close} />
           <SubmitButton disabled={saving} />
         </div>
-        <ErrorSummary errors={errors} />
+        <FormSummary errors={errors} />
       </Form>
     );
   }

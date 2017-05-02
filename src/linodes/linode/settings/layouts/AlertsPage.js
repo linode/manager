@@ -2,10 +2,16 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { Card, CardHeader } from 'linode-components/cards';
-import { CheckboxInputCombo, Form, SubmitButton } from 'linode-components/forms';
-import { selectLinode } from '../../utilities';
-import { linodes } from '~/api';
+import {
+  CheckboxInputCombo, Form, FormGroup, FormGroupError, SubmitButton,
+} from 'linode-components/forms';
+
 import { setSource } from '~/actions/source';
+import { linodes } from '~/api';
+import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+
+import { selectLinode } from '../../utilities';
+
 
 export class AlertsPage extends Component {
   constructor(props) {
@@ -13,6 +19,7 @@ export class AlertsPage extends Component {
     this.renderAlertRow = this.renderAlertRow.bind(this);
     this.state = {
       loading: false,
+      errors: {},
       alerts: props.linode.alerts || {
         cpu: { threshold: 0, enabled: false },
         io: { threshold: 0, enabled: false },
@@ -28,15 +35,16 @@ export class AlertsPage extends Component {
     dispatch(setSource(__filename));
   }
 
-  async saveChanges() {
+  onSubmit = async () => {
     const { dispatch, linode } = this.props;
-    this.setState({ loading: true });
-    await dispatch(linodes.put({ alerts: this.state.alerts }, linode.id));
-    this.setState({ loading: false });
+
+    await dispatch(dispatchOrStoreErrors.apply(this, [
+      [() => linodes.put({ alerts: this.state.alerts }, linode.id)],
+    ]));
   }
 
   renderAlertRow({ key, name, value, label, text }) {
-    const { loading } = this.state;
+    const { errors } = this.state;
     const { threshold, enabled } = value;
     const int = i => parseInt(i, 10);
     const thresholdChange = e =>
@@ -49,31 +57,40 @@ export class AlertsPage extends Component {
         ...this.state.alerts,
         [key]: { ...value, enabled: e.target.checked } },
       });
+    const crumbs = `alerts.${key}`;
 
     return (
-      <div className="form-group row" key={name}>
-        <label className="col-sm-2 col-form-label">{name}:</label>
-        <div className="col-sm-10 ">
-          <CheckboxInputCombo
-            checkboxLabel="Enable"
-            checkboxChecked={enabled}
-            checkboxOnChange={enabledChange}
-            checkboxDisabled={loading}
-            inputType="number"
-            inputValue={threshold}
-            inputOnChange={thresholdChange}
-            inputLabel={label}
-            inputDisabled={loading}
-          />
+      <FormGroup className="row" name="threshold" crumbs={crumbs} errors={errors} key={name}>
+        <label className="col-sm-2 col-form-label">{name}</label>
+        <div className="col-sm-10 clearfix">
+          <div className="clearfix">
+            <div className="float-sm-left">
+              <CheckboxInputCombo
+                checkboxLabel="Enable"
+                checkboxChecked={enabled}
+                checkboxOnChange={enabledChange}
+                inputType="number"
+                inputValue={threshold}
+                inputOnChange={thresholdChange}
+                inputLabel={label}
+              />
+            </div>
+            <FormGroupError
+              errors={errors}
+              name="threshold"
+              crumbs={crumbs}
+              className="float-sm-left"
+            />
+          </div>
           <small className="text-muted">Triggered by: {text} exceeding this value</small>
         </div>
-      </div>
+      </FormGroup>
     );
   }
 
   render() {
     const { cpu, io, transfer_in, transfer_out, transfer_quota } = this.state.alerts;
-    const { loading } = this.state;
+    const { loading, errors } = this.state;
     const alerts = [
       {
         name: 'CPU usage', key: 'cpu', value: cpu, label: '%',
@@ -97,18 +114,16 @@ export class AlertsPage extends Component {
       },
     ];
 
+    const header = <CardHeader title="Alerts" helpLink="https://google.com" />;
+
     return (
-      <Card
-        className="linode-alerts"
-        header={
-          <CardHeader title="Alerts" helpLink="https://google.com" />
-        }
-      >
-        <Form onSubmit={() => this.saveChanges()}>
+      <Card header={header}>
+        <Form onSubmit={this.onSubmit}>
           {alerts.map(this.renderAlertRow)}
           <div className="row">
             <div className="offset-sm-2 col-sm-10">
               <SubmitButton disabled={loading} />
+              <FormSummary errors={errors} success="Alerts settings saved." />
             </div>
           </div>
         </Form>

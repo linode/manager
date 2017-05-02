@@ -1,13 +1,12 @@
 import React from 'react';
 
-import { StyleguideSection } from '../components';
-
 import {
-  ErrorSummary, Form, FormGroup, SubmitButton, Input, Radio, Checkbox, Select, CheckboxInputCombo,
+  FormSummary, Form, FormGroup, SubmitButton, Input, Radio, Checkbox, Select, CheckboxInputCombo,
   FormGroupError, RadioInputCombo, RadioSelectCombo, Checkboxes, PasswordInput,
 } from 'linode-components/forms';
 import { CancelButton } from 'linode-components/buttons';
 
+import { StyleguideSection } from '../components';
 
 export default function Forms() {
   return (
@@ -284,7 +283,7 @@ export default function Forms() {
                 Form validation error
               </div>
               <div className="col-sm-9">
-                <ErrorSummary errors={{ _: [{ reason: 'Form level error' }] }} />
+                <FormSummary errors={{ _: [{ reason: 'Form level error' }] }} />
               </div>
             </div>
             <div className="row">
@@ -292,7 +291,7 @@ export default function Forms() {
                 Multiple form validation errors
               </div>
               <div className="col-sm-9">
-                <ErrorSummary
+                <FormSummary
                   errors={{
                     _: [
                       { reason: 'Form level error 1' },
@@ -404,6 +403,7 @@ export default function Forms() {
                         <label className="col-sm-3 col-form-label">Password input</label>
                         <div className="col-sm-9">
                           <PasswordInput
+                            value=""
                             onChange={() => {}}
                           />
                         </div>

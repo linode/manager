@@ -6,7 +6,6 @@ import AuthenticationPage from './layouts/AuthenticationPage';
 import DisplayPage from './layouts/DisplayPage';
 import NotificationsPage from './layouts/NotificationsPage';
 import ReferralsPage from './layouts/ReferralsPage';
-import LishPage from './layouts/LishPage';
 import Integrations from './integrations';
 
 export default (
@@ -15,7 +14,6 @@ export default (
     <Route path="authentication" component={AuthenticationPage} />
     <Route path="notifications" component={NotificationsPage} />
     <Route path="referrals" component={ReferralsPage} />
-    <Route path="lish" component={LishPage} />
     {Integrations}
   </Route>
 );

@@ -7,7 +7,7 @@ import { confirmTFA } from '~/api/account';
 import {
   FormGroup, FormGroupError, Input,
 } from 'linode-components/forms';
-import { ErrorSummary, reduceErrors } from '~/errors';
+import { FormSummary, reduceErrors } from '~/components/forms';
 
 export class TwoFactorModal extends Component {
   constructor(props) {
@@ -126,7 +126,7 @@ export class TwoFactorModal extends Component {
             </div>
           </FormGroup>
         </ConfirmModalBody>
-        <ErrorSummary errors={errors} />
+        <FormSummary errors={errors} />
       </div>
     );
   }

@@ -38,7 +38,6 @@ export default class PersonalAccessToken extends Component {
 
     dispatch(showModal('Delete Personal Access Token',
       <DeleteModalBody
-        buttonText="Delete personal access token"
         onCancel={() => dispatch(hideModal())}
         onOk={() => {
           dispatch(apiTokens.delete(id));

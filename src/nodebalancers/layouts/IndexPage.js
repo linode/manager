@@ -59,7 +59,6 @@ export class IndexPage extends Component {
 
     dispatch(showModal('Delete NodeBalancer',
       <DeleteModalBody
-        buttonText="Delete"
         onOk={async () => {
           const ids = nodebalancersArr.map(function (nodebalancer) { return nodebalancer.id; });
 

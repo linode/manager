@@ -2,14 +2,16 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { getObjectByLabelLazily, objectFromMapByLabel } from '~/api/util';
-import { nodebalancers } from '~/api';
-
-import { reduceErrors } from '~/errors';
 import { Card, CardHeader } from 'linode-components/cards';
+
 import { setError } from '~/actions/errors';
 import { setSource } from '~/actions/source';
+import { nodebalancers } from '~/api';
+import { getObjectByLabelLazily, objectFromMapByLabel } from '~/api/util';
+import { reduceErrors } from '~/components/forms';
+
 import { ConfigForm } from '../../components/ConfigForm';
+
 
 export class AddConfigPage extends Component {
   static async preload({ dispatch, getState }, { nbLabel }) {

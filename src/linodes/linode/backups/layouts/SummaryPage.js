@@ -1,13 +1,16 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-
 import { Link } from 'react-router';
-import { selectLinode } from '../../utilities';
-import { takeBackup } from '~/api/backups';
-import { ErrorSummary, reduceErrors } from '~/errors';
+
 import { Button } from 'linode-components/buttons';
 import { Card, CardHeader } from 'linode-components/cards';
+
+import { takeBackup } from '~/api/backups';
+import { FormSummary, reduceErrors } from '~/components/forms';
+
+import { selectLinode } from '../../utilities';
+
 
 export class SummaryPage extends Component {
   constructor() {
@@ -106,7 +109,7 @@ export class SummaryPage extends Component {
         <div className="Backup-container row">
           {blocks}
         </div>
-        <ErrorSummary errors={errors} />
+        <FormSummary errors={errors} />
       </Card>
     );
   }

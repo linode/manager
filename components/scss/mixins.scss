@@ -19,12 +19,6 @@
     cursor: hand;
 }
 
-@mixin label() {
-    color: $lightest-black;
-    line-height: $input-height;
-    white-space: nowrap;
-}
-
 @mixin title() {
     text-align: center;
     overflow: hidden;

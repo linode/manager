@@ -1,11 +1,13 @@
 import React, { PropTypes, Component } from 'react';
 
-import { domains } from '~/api';
-import { ModalFormGroup, Select } from 'linode-components/forms';
-import SelectDNSSeconds from './SelectDNSSeconds';
-import { Form, Input, SubmitButton } from 'linode-components/forms';
+import { Form, Input, SubmitButton, Select, ModalFormGroup } from 'linode-components/forms';
 import { CancelButton } from 'linode-components/buttons';
-import { reduceErrors, ErrorSummary } from '~/errors';
+
+import { domains } from '~/api';
+import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+
+import SelectDNSSeconds from './SelectDNSSeconds';
+
 
 export default class EditSOARecord extends Component {
   constructor(props) {
@@ -18,7 +20,7 @@ export default class EditSOARecord extends Component {
 
     this.state = {
       errors: {},
-      saving: false,
+      loading: false,
       group,
       zone,
       defaultTTL,
@@ -31,34 +33,23 @@ export default class EditSOARecord extends Component {
 
   onSubmit = async () => {
     const { dispatch, close } = this.props;
-    const {
-      group, zone, defaultTTL, refreshRate, retryRate, expireTime, email,
-    } = this.state;
+    const { group, zone, defaultTTL, refreshRate, retryRate, expireTime, email } = this.state;
+    const data = {
+      display_group: group,
+      domain: zone,
+      ttl_sec: defaultTTL,
+      refresh_sec: refreshRate,
+      retry_sec: retryRate,
+      expire_sec: expireTime,
+      soa_email: email,
+    };
 
-    this.setState({ errors: {}, saving: true });
-
-    try {
-      await dispatch(domains.put({
-        display_group: group,
-        domain: zone,
-        ttl_sec: defaultTTL,
-        refresh_sec: refreshRate,
-        retry_sec: retryRate,
-        expire_sec: expireTime,
-        soa_email: email,
-      }, this.props.zone.id));
-
-      this.setState({ saving: false });
-      close(zone)();
-    } catch (response) {
-      if (!response.json) {
-        // eslint-disable-next-line no-console
-        console.error(response);
-      }
-
-      const errors = await reduceErrors(response);
-      this.setState({ errors, saving: false });
-    }
+    await dispatch(dispatchOrStoreErrors.apply(this, [
+      [
+        () => domains.put(data, this.props.zone.id),
+        () => close(zone)(),
+      ],
+    ]));
   }
 
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
@@ -66,7 +57,7 @@ export default class EditSOARecord extends Component {
   render() {
     const { close } = this.props;
     const {
-      group, zone, defaultTTL, refreshRate, retryRate, expireTime, email, errors, saving,
+      group, zone, defaultTTL, refreshRate, retryRate, expireTime, email, errors, loading,
     } = this.state;
 
     return (
@@ -176,9 +167,9 @@ export default class EditSOARecord extends Component {
         </ModalFormGroup>
         <div className="Modal-footer">
           <CancelButton onClick={close()} />
-          <SubmitButton disabled={saving} />
+          <SubmitButton disabled={loading} />
+          <FormSummary errors={errors} />
         </div>
-        <ErrorSummary errors={errors} />
       </Form>
     );
   }

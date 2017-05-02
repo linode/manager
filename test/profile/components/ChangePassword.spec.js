@@ -1,12 +1,14 @@
+import { expect } from 'chai';
+import { shallow } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
-import { shallow } from 'enzyme';
-import { expect } from 'chai';
+
+import { ChangePassword } from '~/profile/components';
 
 import { expectRequest } from '@/common';
-import { AuthenticationPage } from '~/profile/layouts/AuthenticationPage';
 
-describe('profile/layouts/AuthenticationPage', () => {
+
+describe('profile/components/ChangePassword', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
@@ -17,13 +19,17 @@ describe('profile/layouts/AuthenticationPage', () => {
 
   it('changes password', async () => {
     const page = shallow(
-      <AuthenticationPage
+      <ChangePassword
         dispatch={dispatch}
       />
     );
 
-    page.instance().setState({ password: 'thePassword' });
-    await page.instance().passwordOnSubmit();
+    const changeInput = (id, value) =>
+      page.find({ id, name: id }).props().onChange({ target: { value, name: id } });
+
+    changeInput('password', 'thePassword');
+
+    await page.find('Form').props().onSubmit();
     expect(dispatch.callCount).to.equal(1);
     const fn = dispatch.firstCall.args[0];
 

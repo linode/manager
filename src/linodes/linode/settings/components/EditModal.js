@@ -1,12 +1,15 @@
 import React, { Component, PropTypes } from 'react';
 
+import { CancelButton } from 'linode-components/buttons';
+import {
+  Form, FormGroup, FormGroupError, Input, SubmitButton,
+} from 'linode-components/forms';
+
+import { hideModal } from '~/actions/modal';
 import { linodes } from '~/api';
 import { resizeLinodeDisk } from '~/api/linodes';
-import { Form, FormGroup, FormGroupError,
-  Input, SubmitButton } from 'linode-components/forms';
-import { CancelButton } from 'linode-components/buttons';
-import { hideModal } from '~/actions/modal';
-import { ErrorSummary, reduceErrors } from '~/errors';
+import { FormSummary, reduceErrors } from '~/components/forms';
+
 
 export class EditModal extends Component {
   constructor() {
@@ -99,7 +102,7 @@ export class EditModal extends Component {
           <CancelButton disabled={loading} onClick={() => dispatch(hideModal())} />
           <SubmitButton disabled={loading} />
         </div>
-        <ErrorSummary errors={errors} />
+        <FormSummary errors={errors} />
       </Form>);
   }
 }

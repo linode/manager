@@ -1,7 +1,6 @@
 import moment from 'moment';
 
-import * as api from '~/api';
-import { reduceErrors } from '~/errors';
+import * as api from './';
 
 // Extra cruft involving constructor / prototypes is for any `new Error404`s  to be shown as
 // instanceof Error404:
@@ -19,7 +18,11 @@ export function objectFromMapByLabel(map, label, labelName = 'label') {
   }
 
   return Object.values(map).reduce(
-    (match, object) => object[labelName] === label ? object : match, undefined);
+    (match, object) => {
+      // This == is explicit because some ids are ints some are strings.
+      // eslint-disable-next-line eqeqeq
+      return object[labelName] == label ? object : match;
+    }, undefined);
 }
 
 export function getObjectByLabelLazily(pluralName, label, labelName = 'label') {
@@ -80,28 +83,5 @@ export function createHeaderFilter(filter) {
     headers: {
       'X-Filter': filter,
     },
-  };
-}
-
-export function dispatchOrStoreErrors(...apiCalls) {
-  return async (dispatch) => {
-    this.setState({ loading: true, errors: {} });
-
-    const results = [];
-    for (let i = 0; i < apiCalls.length; i++) {
-      const nextCall = apiCalls[i];
-
-      try {
-        results[i] = await dispatch(nextCall(...results));
-      } catch (response) {
-        const errors = await reduceErrors(response);
-        this.setState({ errors });
-        return results;
-      }
-    }
-
-    this.setState({ loading: false });
-
-    return results;
   };
 }

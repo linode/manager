@@ -1,10 +1,11 @@
 import React, { PropTypes, Component } from 'react';
 
-import { ModalFormGroup } from 'linode-components/forms';
-import { Form, Input, SubmitButton } from 'linode-components/forms';
 import { CancelButton } from 'linode-components/buttons';
-import { reduceErrors, ErrorSummary } from '~/errors';
+import { Form, Input, ModalFormGroup, SubmitButton } from 'linode-components/forms';
+
 import { setRDNS } from '~/api/linodes';
+import { reduceErrors, FormSummary } from '~/components/forms';
+
 
 export default class EditRDNS extends Component {
   constructor(props) {
@@ -65,8 +66,8 @@ export default class EditRDNS extends Component {
         <div className="Modal-footer">
           <CancelButton onClick={close} />
           <SubmitButton disabled={saving}>Save</SubmitButton>
+          <FormSummary errors={errors} />
         </div>
-        <ErrorSummary errors={errors} />
       </Form>
     );
   }
