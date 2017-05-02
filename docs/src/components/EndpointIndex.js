@@ -32,7 +32,6 @@ export default function EndpointIndex(props) {
               }
             },
             { label: 'Description', dataKey: 'description' },
-            {} // empty until fix
           ]}
           data={endpoint.endpoints}
         />

@@ -4,13 +4,8 @@
     table-layout: fixed;
     width: 100%;
 
-    th:first-of-type,
-    td:first-of-type {
-        padding-left: 15px;
-    }
-
-    td:last-of-type {
-        padding-right: 15px;
+    th, td {
+        padding: 5px 15px;
     }
 
     thead, th {

@@ -1,7 +1,9 @@
 import React from 'react';
 
 import { Table } from 'linode-components/tables';
+import { Tabs } from 'linode-components/tabs';
 import { default as Example } from './Example';
+import { DescriptionCell, FieldCell } from './Tables/Cells';
 
 
 export default function Method(props) {
@@ -13,22 +15,19 @@ export default function Method(props) {
     params,
     resource = {},
   } = method;
-  const { enums = [], schema = [] } = resource;
 
   // TODO: Break these out if needed
-
   let methodParams = null;
   if (params) {
     // { label: 'Type', dataKey: 'type' }
     methodParams = (
-      <div className="Method-params">
+      <div className="Method-section Method-params">
         <h4><b>Params</b></h4>
         <Table
           className="Table--secondary"
           columns={[
-            { label: 'Field', dataKey: 'name' },
-            { label: 'Description', dataKey: 'description' },
-            {}
+            { label: 'Field', dataKey: 'name', headerClassName: 'FieldColumn' },
+            { label: 'Description', dataKey: 'description', headerClassName: 'DescriptionColumn' }
           ]}
           data={params}
         />
@@ -37,29 +36,41 @@ export default function Method(props) {
   }
 
   let methodRequest = (
-    <div className="Method-request">
+    <div className="Method-section Method-request">
       <h4><b>Request</b></h4>
-      {examples.map(function(example, index) {
-        return (<Example key={index} example={example} />);
-      })}
+      <Tabs
+        tabs={examples.map(function(example, index) {
+          // example: { name, value }
+          return {
+            name: example.name,
+            children: (<Example key={index} example={example.value} />)
+          };
+        })}
+      />
     </div>
   );
 
   let methodResponse = null;
+  let methodResponseExample = null;
   if (name === 'GET') {
     methodResponse = (
-      <div className="Method-response">
+      <div className="Method-section Method-response">
         <h4><b>Response</b></h4>
         <Table
           className="Table--secondary"
           columns={[
-            { label: 'Field', dataKey: 'name' },
-            { label: 'Type', dataKey: 'type' },
-            { label: 'Description', dataKey: 'description' },
-            {}
+            { cellComponent: FieldCell, label: 'Field', headerClassName: 'FieldColumn' },
+            { cellComponent: DescriptionCell, label: 'Description', headerClassName: 'DescriptionColumn' }
           ]}
-          data={schema}
+          data={resource.schema}
         />
+      </div>
+    );
+
+    methodResponseExample = (
+      <div className="Method-section Method-responseExample">
+        <h4><b>Example</b></h4>
+        <Example example={JSON.stringify(resource.example, null, 2)} />
       </div>
     );
   }
@@ -67,10 +78,13 @@ export default function Method(props) {
   return (
     <div className="Method">
       <h2>{name}</h2>
-      <p className="Method-description">{description}</p>
+      <div className="Method-section">
+        <p className="Method-description">{description}</p>
+      </div>
       {methodParams}
       {methodRequest}
       {methodResponse}
+      {methodResponseExample}
     </div>
   );
 };
