@@ -2,16 +2,19 @@ import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
-import { VERSION } from '~/constants';
-import Header from '~/components/Header';
-import Notifications from '~/components/notifications/Notifications';
-import SessionMenu from '~/components/SessionMenu';
 import { ModalShell } from 'linode-components/modals';
 import { Error } from 'linode-components/errors';
-import PreloadIndicator from '~/components/PreloadIndicator.js';
+
+import { hideAccount } from '~/actions/account';
 import { hideModal } from '~/actions/modal';
 import { hideNotifications } from '~/actions/notifications';
 import { hideSession } from '~/actions/session';
+import AccountMenu from '~/components/AccountMenu';
+import Header from '~/components/Header';
+import Notifications from '~/components/notifications/Notifications';
+import PreloadIndicator from '~/components/PreloadIndicator.js';
+import SessionMenu from '~/components/SessionMenu';
+import { VERSION } from '~/constants';
 
 
 export class Layout extends Component {
@@ -38,8 +41,10 @@ export class Layout extends Component {
     const {
       username,
       emailHash,
+      company,
       errors,
       notifications,
+      account,
       session,
       events,
       source,
@@ -51,12 +56,15 @@ export class Layout extends Component {
       <div
         className="layout full-height"
         onClick={(e) => {
-          const { notifications, session } = this.props;
+          const { notifications, session, account } = this.props;
           // Gross
           const isListItem = e.target.className.includes('NotificationList-listItem');
           const isSessionMenu = e.target.className.includes('SessionMenu');
+          const isAccountMenu = e.target.className.includes('AccountMenu');
           if (notifications.open && !isListItem) {
             dispatch(hideNotifications());
+          } else if (account.open && !isAccountMenu) {
+            dispatch(hideAccount());
           } else if (session.open && !isSessionMenu) {
             dispatch(hideSession());
           }
@@ -65,6 +73,7 @@ export class Layout extends Component {
         <PreloadIndicator />
         <Notifications />
         <SessionMenu open={session.open} />
+        <AccountMenu open={account.open} company={company} />
         <ModalShell
           open={this.props.modal.open}
           title={this.props.modal.title}
@@ -79,6 +88,7 @@ export class Layout extends Component {
           title={title}
           username={username}
           notifications={notifications}
+          account={account}
           session={session}
           events={events}
         />
@@ -121,6 +131,7 @@ Layout.propTypes = {
   linodes: PropTypes.object,
   modal: PropTypes.object,
   notifications: PropTypes.object,
+  account: PropTypes.object,
   session: PropTypes.object,
   events: PropTypes.object,
 };
@@ -130,12 +141,14 @@ function select(state) {
     username: state.authentication.username,
     emailHash: state.authentication.emailHash,
     email: state.authentication.email,
+    company: state.api.account.company,
     currentPath: state.routing.locationBeforeTransitions.pathname,
     errors: state.errors,
     source: state.source,
     linodes: state.api.linodes,
     modal: state.modal,
     notifications: state.notifications,
+    account: state.account,
     session: state.session,
     events: state.api.events,
   };

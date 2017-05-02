@@ -52,12 +52,16 @@
 
     &-notifications {
         @extend .font-normal;
+        @extend .float-sm-right;
+        
         height: 100%;
-
         padding: 19px 14px;
         position: relative;
         width: 48px;
 
+        &.active,
+        &:active,
+        &:focus,
         &:hover {
             background: $nav-hover-background-color;
             cursor: pointer;
@@ -74,6 +78,8 @@
     }
 
     &-session {
+        @extend .float-sm-right;
+
         height: $nav-height;
         float: right;
         padding: 0 15px;
@@ -95,8 +101,35 @@
             cursor: hand;
         }
 
+        &.active .MainHeader-username,
+        &:active .MainHeader-username,
+        &:focus .MainHeader-username,
         &:hover .MainHeader-username {
             color: $white;
+        }
+    }
+
+    &-account {
+        @extend .font-normal;
+        @extend .float-sm-right;
+
+        width: 48px;
+        color: $lightest-black;
+        height: $nav-height;
+        line-height: $nav-height;
+        text-align: center;
+
+        &.active,
+        &:active,
+        &:focus,
+        &:hover {
+            background: $nav-hover-background-color;
+            cursor: pointer;
+            cursor: hand;
+
+            i {
+                color: $white;
+            }
         }
     }
 

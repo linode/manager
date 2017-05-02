@@ -30,6 +30,7 @@ describe('layouts/Layout', () => {
         errors={_errors}
         source={source}
         notifications={{ open: false }}
+        account={{ open: false }}
         session={{ open: false }}
         linodes={linodes}
         events={events}
