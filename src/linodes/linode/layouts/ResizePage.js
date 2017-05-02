@@ -20,8 +20,7 @@ export class ResizePage extends Component {
     super(props);
 
     this.state = {
-      // TODO: deal with multiple types better
-      type: props.linode.type[0].id,
+      type: props.linode.type.id,
       errors: {},
       loading: false,
     };
