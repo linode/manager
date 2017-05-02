@@ -19,6 +19,7 @@ export class PermissionCard extends Component {
     const cols = columns.map(function (col) {
       return {
         cellComponent: CheckboxCell,
+        headerClassName: 'CheckboxColumn',
         onChange: onCellChange,
         parentKey,
         dataKey: col.dataKey,

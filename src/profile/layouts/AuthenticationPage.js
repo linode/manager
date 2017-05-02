@@ -1,8 +1,6 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { Card, CardHeader } from 'linode-components/cards';
-
 import { ChangePassword, TwoFactor } from '../components';
 
 

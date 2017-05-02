@@ -1,5 +1,6 @@
 @import 'forms/index.scss';
 @import 'BlankSlate';
+@import 'Breadcrumbs';
 @import 'region';
 @import 'backup';
 @import 'Notifications';
@@ -7,5 +8,4 @@
 @import 'PrimaryPage';
 @import 'SessionMenu';
 @import 'LineGraph';
-@import 'Breadcrumbs';
-@import './forms/index.scss';
+@import 'Tables/index';

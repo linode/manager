@@ -105,6 +105,7 @@ export class DashboardPage extends Component {
                   { dataKey: 'statusString', label: 'Node status' },
                   {
                     cellComponent: ButtonCell,
+                    headerClassName: 'ButtonColumn',
                     buttonClassName: 'btn-secondary',
                     hrefFn: function (config) {
                       return `/nodebalancers/${nodebalancer.label}/configs/${config.id}/edit`;
@@ -114,7 +115,6 @@ export class DashboardPage extends Component {
                 ]}
                 data={newConfigs}
                 selectedMap={{}}
-                disableHeader
               />
             </ListBody>
           </List>

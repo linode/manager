@@ -10,6 +10,25 @@ const dirs = fs.readdirSync(BASE_PATH);
 const apiObjectMap = require('./src/data/objects/index').apiObjectMap;
 
 
+function generateExample(schema) {
+  const example = {};
+
+  Object.keys(schema).forEach(function(schemaName) {
+    const schemaField = schema[schemaName];
+    const value = schemaField._value;
+
+    if (Array.isArray(value)) {
+      example[schemaName] = value.map(generateExample);
+    } else if (typeof value === 'object' && value !== null) {
+      example[schemaName] = generateExample((value));
+    } else {
+      example[schemaName] = value;
+    }
+  });
+
+  return example;
+}
+
 function formatEndpoint(endpoint) {
   let endpoints = null;
   if (endpoint.endpoints) {
@@ -58,14 +77,21 @@ function formatEndpoint(endpoint) {
           if (schema) {
             resourceObject.schema = Object.keys(schema).map(function(schemaName) {
               const schemaField = schema[schemaName];
+
+              let type = schemaField._type;
+              if (apiObjectMap[type]) {
+                type = generateExample(type);
+              }
+
               return {
                 name: schemaName,
                 description: schemaField._description,
                 editable: schemaField._editable,
-                type: schemaField._type,
-                value: schemaField._value
+                type: type
               };
             });
+
+            resourceObject.example = generateExample(schema);
           }
         }
       }
