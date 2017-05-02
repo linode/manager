@@ -7,9 +7,7 @@ export default function DescriptionCell(props) {
 
   return (
     <td className={`Table-cell DescriptionCell`}>
-      <div>
-        {record.description}
-      </div>
+      {record.description}
     </td>
   );
 }
