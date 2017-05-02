@@ -9,7 +9,7 @@
     "kill": "lsof -i :3000 | grep node | tr -s ' ' | cut -d ' ' -f2 | xargs kill",
     "lint": "eslint src test",
     "lint:fix": "eslint src test --fix",
-    "start": "node devServer.js",
+    "start": "./bin/copyAssets.sh && node devServer.js",
     "test": "NODE_ENV=test karma start karma.conf.js --single-run",
     "test:watch": "NODE_ENV=test karma start karma.conf.js",
     "test:debug": "NODE_ENV=test karma start karma.conf.js --browsers=Chrome --debug"
@@ -110,6 +110,7 @@
     "md5": "^2.1.0",
     "moment": "^2.17.1",
     "moment-timezone": "^0.5.11",
+    "noVNC": "git://github.com/novnc/novnc.git#v0.6.2",
     "qrious": "https://registry.npmjs.org/qrious/-/qrious-2.2.0.tgz",
     "rd3": "^0.6.3",
     "react": "^15.1.0",

@@ -3,20 +3,9 @@ var process = require('process');
 var express = require('express');
 var webpack = require('webpack');
 var config = require('./webpack.config.dev');
-var mime = require('mime');
-var fs = require('fs');
 
 var app = express();
 var compiler = webpack(config);
-
-function copyFile(from, to) {
-  fs.createReadStream(__dirname + '/node_modules/xterm/' + from)
-    .pipe(fs.createWriteStream(__dirname + '/assets/weblish/' + to));
-}
-
-copyFile('dist/xterm.js', 'xterm.js');
-copyFile('dist/xterm.css', 'xterm.css');
-copyFile('dist/xterm.js.map', 'xterm.js.map');
 
 app.use('/assets', express.static(__dirname + '/assets'));
 
