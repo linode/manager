@@ -160,16 +160,14 @@ export class IndexPage extends Component {
                       cellComponent: LinkCell,
                       hrefFn: (linode) => `/linodes/${linode.label}`,
                     },
-                    { cellComponent: IPAddressCell, headerClassName: 'IPAddressColumn' },
+                    { cellComponent: IPAddressCell },
                     {
                       cellComponent: RegionCell,
-                      headerClassName: 'RegionColumn hidden-md-down',
                       className: 'hidden-md-down',
                     },
                     {
                       cellComponent: BackupsCell,
                       className: 'hidden-lg-down',
-                      headerClassName: 'BackupsColumn hidden-lg-down',
                       hrefFn: (linode) => `/linodes/${linode.label}/backups`,
                     },
                     {
