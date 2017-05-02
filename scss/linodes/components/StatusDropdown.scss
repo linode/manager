@@ -36,9 +36,12 @@
     }
 
     &-container {
-        width: 92px;
         height: 100%;
-        position: relative;
+        // These calculations offset the left, right and top borders.
+        width: calc(100% + 2px);
+        position: absolute;
+        top: -1px;
+        left: -1px;
     }
 
     &-progress {
