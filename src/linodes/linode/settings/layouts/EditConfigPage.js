@@ -170,9 +170,8 @@ export class EditConfigPage extends Component {
     const { create, config } = this.props;
 
     if (create) {
+      const disks = this.getDisks();
       const networkHelperEnabled = props.account.network_helper;
-      const { disks } = this.props.linode._disks;
-
       if (disks) {
         const diskSlots = Object.values(disks).map(disk => disk.id).slice(0, 1) || [];
         this.state = {
@@ -597,6 +596,7 @@ export class EditConfigPage extends Component {
 
 EditConfigPage.propTypes = {
   linode: PropTypes.object.isRequired,
+  account: PropTypes.object.isRequired,
   kernels: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   create: PropTypes.bool.isRequired,
@@ -612,8 +612,8 @@ export function select(state, props) {
   const { configId } = props.params;
   const configs = linode._configs.configs;
   const config = configId && configs[configId];
-  const { kernels } = state.api;
-  return { linode, config, kernels };
+  const { kernels, account } = state.api;
+  return { linode, config, kernels, account };
 }
 
 export default connect(select)(EditConfigPage);
