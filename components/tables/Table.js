@@ -19,7 +19,7 @@ export default function Table(props) {
 
   const theadClassName = disableHeader ? 'TableHead--disabled' : '';
   const tableHeader = (
-    <thead className={`${theadClassName}`}>
+    <thead className={theadClassName}>
       <TableHeaderRow columns={columns} />
     </thead>
   );
