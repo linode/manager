@@ -55,7 +55,7 @@ function createTestLinode(id) {
     ipv4: ipv4.address,
     ipv6: ipv6.address,
     created: '2016-07-06T16:47:27',
-    type: [testType],
+    type: testType,
     status: 'running',
     region: apiTestRegion,
     distribution: {
