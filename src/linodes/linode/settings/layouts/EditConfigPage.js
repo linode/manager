@@ -430,7 +430,7 @@ export class EditConfigPage extends Component {
                   checked={isMaxRam === true}
                   id="config-isMaxRam-true"
                   onChange={() => this.setState({ isMaxRam: true })}
-                  label={`Maximum (${linode.type.length ? linode.type[0].ram : null} MB)`}
+                  label={`Maximum (${linode.type.length ? linode.type.ram : null} MB)`}
                 />
               </div>
               <div>
