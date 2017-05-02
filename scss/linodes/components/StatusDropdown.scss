@@ -81,6 +81,7 @@
     &-percent {
         @extend .font-small;
         color: $white;
-        padding: 6px 8px;
+        padding: 0 8px;
+        line-height: $form-field-height;
     }
 }
