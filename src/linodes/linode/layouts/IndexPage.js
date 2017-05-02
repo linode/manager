@@ -4,12 +4,13 @@ import { push } from 'react-router-redux';
 
 import { Link } from 'react-router';
 import { Tabs } from 'linode-components/tabs';
-import StatusDropdown from '~/linodes/components/StatusDropdown';
+
 import { setError } from '~/actions/errors';
 import { setTitle } from '~/actions/title';
 import { linodes } from '~/api';
 import { getObjectByLabelLazily } from '~/api/util';
-import { setTitle } from '~/actions/title';
+import StatusDropdown from '~/linodes/components/StatusDropdown';
+
 import { selectLinode } from '../utilities';
 
 export class IndexPage extends Component {
@@ -24,10 +25,12 @@ export class IndexPage extends Component {
     }
   }
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
-    this.state = { config: '', label: '', group: '' };
+    const { linode: { _configs: { configs }, label, group } } = props;
+    const config = configs[0] ? configs[0].id : '';
+    this.state = { config, label, group };
   }
 
   async componentDidMount() {

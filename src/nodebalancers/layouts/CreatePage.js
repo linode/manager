@@ -6,10 +6,6 @@ import { push } from 'react-router-redux';
 import { Card, CardHeader } from 'linode-components/cards';
 import { Input, Form, FormGroup, FormGroupError, SubmitButton } from 'linode-components/forms';
 
-import { Card, CardHeader } from 'linode-components/cards';
-import { Input, Form, FormGroup, FormGroupError, SubmitButton } from 'linode-components/forms';
-import Region from '~/components/Region';
-import { nodebalancers } from '~/api';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 import { nodebalancers } from '~/api';
@@ -22,6 +18,7 @@ export class CreatePage extends Component {
     super();
 
     this.state = {
+      // TODO: don't hard-code this
       region: 'us-east-1a',
       label: '',
       errors: {},
