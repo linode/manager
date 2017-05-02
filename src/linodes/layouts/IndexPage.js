@@ -172,7 +172,11 @@ export class IndexPage extends Component {
                       headerClassName: 'BackupsColumn hidden-lg-down',
                       hrefFn: (linode) => `/linodes/${linode.label}/backups`,
                     },
-                    { cellComponent: StatusDropdownCell, dispatch: dispatch },
+                    {
+                      cellComponent: StatusDropdownCell,
+                      headerClassName: 'StatusDropdownColumn',
+                      dispatch: dispatch,
+                    },
                   ]}
                   data={group.data}
                   selectedMap={selectedMap}
