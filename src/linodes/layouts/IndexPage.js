@@ -99,7 +99,6 @@ export class IndexPage extends Component {
 
     dispatch(showModal('Confirm deletion',
       <DeleteModalBody
-        buttonText="Delete selected Linodes"
         onOk={async () => {
           const ids = linodesToBeRemoved.map(function (linode) { return linode.id; });
 

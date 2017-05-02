@@ -2,19 +2,22 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
+import { Button } from 'linode-components/buttons';
+import { Card, CardHeader } from 'linode-components/cards';
+import { FormGroup, Select } from 'linode-components/forms';
+
 import { setError } from '~/actions/errors';
+import { setSource } from '~/actions/source';
+import { getObjectByLabelLazily } from '~/api/util';
+import { linodeStats } from '~/api/linodes';
+import LineGraph from '~/components/graphs/LineGraph';
 import Region from '~/linodes/components/Region';
 import DistroStyle from '~/linodes/components/DistroStyle';
 import PlanStyle from '~/linodes/components/PlanStyle';
 import WeblishLaunch from '~/linodes/components/WeblishLaunch';
+
 import { selectLinode } from '../utilities';
-import { setSource } from '~/actions/source';
-import { Button } from 'linode-components/buttons';
-import { Card, CardHeader } from 'linode-components/cards';
-import LineGraph from '~/components/graphs/LineGraph';
-import { Select } from 'linode-components/forms';
-import { getObjectByLabelLazily } from '~/api/util';
-import { linodeStats } from '~/api/linodes';
+
 
 function formatData(datasets, legends) {
   const x = datasets[0].map(([x]) => x);
@@ -205,7 +208,7 @@ export class DashboardPage extends Component {
         </section>
         <section className="col-lg-6 col-md-12 col-sm-12">
           <Card header={<CardHeader title="Access" />}>
-            <div className="form-group row linode-ssh">
+            <FormGroup className="row">
               <label htmlFor="ssh-input" className="col-sm-4 col-form-label">
                 SSH
               </label>
@@ -223,8 +226,8 @@ export class DashboardPage extends Component {
                   </span>
                 </div>
               </div>
-            </div>
-            <div className="form-group row linode-lish">
+            </FormGroup>
+            <FormGroup className="row">
               <label className="col-sm-4 col-form-label" htmlFor="lish-input">
                 Text console
               </label>
@@ -248,8 +251,8 @@ export class DashboardPage extends Component {
                   Lish listens on ports 22, 443, and 2200.
                 </small>
               </div>
-            </div>
-            <div className="form-group row linode-glish">
+            </FormGroup>
+            <FormGroup className="row">
               <label className="col-sm-4 col-form-label" htmlFor="glish-button">
                 Graphical console
               </label>
@@ -261,7 +264,7 @@ export class DashboardPage extends Component {
                   Equivalent to plugging a monitor and keyboard into your server.
                 </small>
               </div>
-            </div>
+            </FormGroup>
           </Card>
         </section>
       </div>

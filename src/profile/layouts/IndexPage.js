@@ -38,7 +38,8 @@ export class IndexPage extends Component {
       { name: 'Integrations', link: '/integrations' },
       { name: 'Notifications', link: '/notifications' },
       { name: 'Referrals', link: '/referrals' },
-      { name: 'Lish Settings', link: '/lish' },
+      // TODO: Add this when API supports it
+      //{ name: 'Lish Settings', link: '/lish' },
     ].map(t => ({ ...t, link: `/profile${t.link}` }));
 
     return (

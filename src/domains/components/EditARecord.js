@@ -1,11 +1,12 @@
 import React, { PropTypes, Component } from 'react';
 
-import { domains } from '~/api';
-import { ModalFormGroup } from 'linode-components/forms';
-import SelectDNSSeconds from './SelectDNSSeconds';
-import { Form, Select, Input, SubmitButton } from 'linode-components/forms';
+import { Form, Select, Input, SubmitButton, ModalFormGroup } from 'linode-components/forms';
 import { CancelButton } from 'linode-components/buttons';
-import { reduceErrors, ErrorSummary } from '~/errors';
+
+import { domains } from '~/api';
+import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+
+import SelectDNSSeconds from './SelectDNSSeconds';
 
 export default class EditARecord extends Component {
   constructor(props) {
@@ -26,45 +27,35 @@ export default class EditARecord extends Component {
       ip,
       type: type || 'A',
       errors: {},
-      saving: false,
+      loading: false,
     };
   }
 
   onSubmit = async () => {
-    const { dispatch, id } = this.props;
+    const { dispatch, id, close } = this.props;
     const { ttl, hostname, ip, type } = this.state;
+    const ids = [this.props.zone.id, id].filter(Boolean);
+    const data = {
+      type,
+      ttl_sec: +ttl,
+      target: ip,
+      // '' is the default and will track the zone
+      name: hostname,
+    };
 
-    this.setState({ errors: {}, saving: true });
-
-    try {
-      const ids = [this.props.zone.id, id].filter(Boolean);
-
-      await dispatch(domains.records[id ? 'put' : 'post']({
-        type,
-        ttl_sec: +ttl,
-        target: ip,
-        // '' is the default and will track the zone
-        name: hostname,
-      }, ...ids));
-
-      this.setState({ saving: false });
-      this.props.close();
-    } catch (response) {
-      if (!response.json) {
-        // eslint-disable-next-line no-console
-        return console.error(response);
-      }
-
-      const errors = await reduceErrors(response);
-      this.setState({ errors, saving: false });
-    }
+    await dispatch(dispatchOrStoreErrors.apply(this, [
+      [
+        () => domains.records[id ? 'put' : 'post'](data, ...ids),
+        close,
+      ],
+    ]));
   }
 
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   render() {
     const { close } = this.props;
-    const { errors, saving, defaultTTL, type, ttl, ip, hostname } = this.state;
+    const { errors, loading, defaultTTL, type, ttl, ip, hostname } = this.state;
 
     return (
       <Form onSubmit={this.onSubmit}>
@@ -110,11 +101,14 @@ export default class EditARecord extends Component {
           </ModalFormGroup>)}
         <div className="Modal-footer">
           <CancelButton onClick={close} />
-          <SubmitButton disabled={saving}>
-            {this.props.id ? 'Save' : 'Add A/AAAA Record'}
+          <SubmitButton
+            disabled={loading}
+            disabledChildren={this.props.id ? undefined : 'Adding A/AAAA Record'}
+          >
+            {this.props.id ? undefined : 'Add A/AAAA Record'}
           </SubmitButton>
+          <FormSummary errors={errors} />
         </div>
-        <ErrorSummary errors={errors} />
       </Form>
     );
   }
