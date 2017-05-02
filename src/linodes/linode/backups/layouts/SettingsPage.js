@@ -1,16 +1,17 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { FormGroup } from 'linode-components/forms';
-import { ErrorSummary, reduceErrors } from '~/errors';
-import { linodes } from '~/api';
-import { cancelBackup } from '~/api/backups';
 import { Card, CardHeader } from 'linode-components/cards';
 import { ConfirmModalBody } from 'linode-components/modals';
-import { Form, SubmitButton } from 'linode-components/forms';
-import { selectLinode } from '../../utilities';
-import { setSource } from '~/actions/source';
+import { Form, FormGroup, SubmitButton } from 'linode-components/forms';
+
 import { showModal, hideModal } from '~/actions/modal';
+import { setSource } from '~/actions/source';
+import { linodes } from '~/api';
+import { cancelBackup } from '~/api/backups';
+import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+
+import { selectLinode } from '../../utilities';
 
 
 export class SettingsPage extends Component {
@@ -26,8 +27,8 @@ export class SettingsPage extends Component {
     dispatch(setSource(__filename));
   }
 
-  async saveChanges() {
-    const { dispatch, linode } = this.props;
+  onSubmit = async () => {
+    const { dispatch, linode: { id } } = this.props;
     const { day, window } = this.state;
 
     await dispatch(dispatchOrStoreErrors.apply(this, [
@@ -37,7 +38,7 @@ export class SettingsPage extends Component {
 
   render() {
     const { dispatch, linode } = this.props;
-    const { window, day, errors } = this.state;
+    const { window, day, loading, errors } = this.state;
 
     return (
       <div>

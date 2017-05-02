@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
 import { Card } from 'linode-components/cards';
-import { reduceErrors } from '~/errors';
+import { reduceErrors } from '~/components/forms';
 import { users } from '~/api';
 import { actions as userActions } from '~/api/configs/users';
 import { UserForm } from '../../components/UserForm';

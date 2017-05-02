@@ -3,9 +3,7 @@ import { push } from 'react-router-redux';
 
 import { Card, CardHeader } from 'linode-components/cards';
 import { Form, FormGroup, SubmitButton, Select } from 'linode-components/forms';
-import { ErrorSummary, reduceErrors } from '~/errors';
-import IPList from './IPList';
-import { assignIps, linodeIPs } from '~/api/linodes';
+
 import { linodes as apiLinodes } from '~/api';
 import { assignIps, linodeIPs } from '~/api/linodes';
 import { FormSummary, reduceErrors } from '~/components/forms';

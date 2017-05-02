@@ -8,7 +8,7 @@ import {
   Checkboxes,
   Radio,
 } from 'linode-components/forms';
-import { ErrorSummary } from '~/errors';
+import { FormSummary } from '~/components/forms';
 import { SubmitButton } from 'linode-components/forms';
 
 export class UserForm extends Component {

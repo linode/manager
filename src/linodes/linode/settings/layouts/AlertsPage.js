@@ -2,9 +2,10 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { Card, CardHeader } from 'linode-components/cards';
-import { CheckboxInputCombo, Form, SubmitButton } from 'linode-components/forms';
-import { selectLinode } from '../../utilities';
-import { linodes } from '~/api';
+import {
+  CheckboxInputCombo, Form, FormGroup, FormGroupError, SubmitButton,
+} from 'linode-components/forms';
+
 import { setSource } from '~/actions/source';
 import { linodes } from '~/api';
 import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
@@ -18,6 +19,7 @@ export class AlertsPage extends Component {
     this.renderAlertRow = this.renderAlertRow.bind(this);
     this.state = {
       loading: false,
+      errors: {},
       alerts: props.linode.alerts || {
         cpu: { threshold: 0, enabled: false },
         io: { threshold: 0, enabled: false },
@@ -33,11 +35,12 @@ export class AlertsPage extends Component {
     dispatch(setSource(__filename));
   }
 
-  async saveChanges() {
+  onSubmit = async () => {
     const { dispatch, linode } = this.props;
-    this.setState({ loading: true });
-    await dispatch(linodes.put({ alerts: this.state.alerts }, linode.id));
-    this.setState({ loading: false });
+
+    await dispatch(dispatchOrStoreErrors.apply(this, [
+      [() => linodes.put({ alerts: this.state.alerts }, linode.id)],
+    ]));
   }
 
   renderAlertRow({ key, name, value, label, text }) {

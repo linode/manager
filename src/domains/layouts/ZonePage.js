@@ -115,7 +115,6 @@ export class ZonePage extends Component {
 
     dispatch(showModal(title,
       <DeleteModalBody
-        buttonText="Delete Domain record"
         onOk={async () => {
           await dispatch(domains.records.delete(domain.id, id));
           dispatch(hideModal());
