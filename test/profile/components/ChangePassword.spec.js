@@ -4,6 +4,7 @@ import React from 'react';
 import sinon from 'sinon';
 
 import { ChangePassword } from '~/profile/components';
+import { AuthenticationPage } from '~/profile/layouts/AuthenticationPage';
 
 import { expectRequest } from '@/common';
 
