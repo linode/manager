@@ -22,7 +22,7 @@ export default class ConfirmModalBody extends Component {
 
     return (
       <div className={`ConfirmModalBody-body ${className}`}>
-        {React.isValidElement(children) ? children : <div>{children}</div>}
+        {React.isValidElement(children) ? children : <p>{children}</p>}
         <div className="Modal-footer">
           <CancelButton disabled={loading} onClick={onCancel} />
           <SubmitButton

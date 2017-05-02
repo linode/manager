@@ -2,16 +2,9 @@ import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 
 import { Card, CardHeader } from 'linode-components/cards';
-import { PrimaryButton } from 'linode-components/buttons';
 import {
-  Form,
-  FormGroup,
-  FormGroupError,
-  PasswordInput,
-  Input,
-  Checkbox,
+  Checkbox, Form, FormGroup, FormGroupError, Input, PasswordInput, SubmitButton,
 } from 'linode-components/forms';
-import { ErrorSummary } from '~/errors';
 
 import { FormSummary } from '~/components/forms';
 

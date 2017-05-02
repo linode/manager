@@ -8,9 +8,9 @@ import { Form, FormGroup, FormGroupError, SubmitButton, Input } from 'linode-com
 import { tickets } from '~/api';
 import { addTicketAttachment } from '~/api/tickets';
 import { setError } from '~/actions/errors';
-import { Form, FormGroup, FormGroupError, SubmitButton, Input } from 'linode-components/forms';
-import { reduceErrors, ErrorSummary } from '~/errors';
-import { Card } from 'linode-components/cards';
+import { MAX_UPLOAD_SIZE_MB } from '~/constants';
+import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+
 import { renderTicketCreationInfo } from './IndexPage';
 import TicketReply from '../components/TicketReply';
 import TicketHelper from '../components/TicketHelper';

@@ -5,10 +5,7 @@ import { Form, Input, SubmitButton } from 'linode-components/forms';
 import { CancelButton } from 'linode-components/buttons';
 
 import { domains } from '~/api';
-import { ModalFormGroup } from 'linode-components/forms';
-import { Form, Input, SubmitButton } from 'linode-components/forms';
-import { CancelButton } from 'linode-components/buttons';
-import { reduceErrors, ErrorSummary } from '~/errors';
+import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
 
 export default class EditMXRecord extends Component {
   constructor(props) {

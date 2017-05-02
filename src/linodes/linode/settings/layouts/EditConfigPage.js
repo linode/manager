@@ -2,25 +2,13 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { selectLinode } from '../../utilities';
-import { linodes } from '~/api';
-import { Form,
-  FormGroup,
-  FormGroupError,
-  Input,
-  Select,
-  Radio,
-  RadioInputCombo,
-  RadioSelectCombo,
-  Checkbox,
-  Checkboxes,
-} from 'linode-components/forms';
-import { ErrorSummary, reduceErrors } from '~/errors';
-
-import { SubmitButton } from 'linode-components/forms';
-import { Card, CardHeader } from 'linode-components/cards';
 import { CancelButton, LinkButton } from 'linode-components/buttons';
-import { setSource } from '~/actions/source';
+import { Card, CardHeader } from 'linode-components/cards';
+import {
+  Form, FormGroup, FormGroupError, Input, Select, Radio, RadioInputCombo, RadioSelectCombo,
+  Checkbox, Checkboxes, SubmitButton,
+} from 'linode-components/forms';
+
 import { setError } from '~/actions/errors';
 import { setSource } from '~/actions/source';
 import { linodes } from '~/api';
@@ -28,13 +16,11 @@ import { FormSummary, reduceErrors } from '~/components/forms';
 
 import { selectLinode } from '../../utilities';
 
-export function getDisks() {
-  const { linode } = this.props;
-  return linode._disks.totalResults === -1 ? null : linode._disks.disks;
-}
+
+import { selectLinode } from '../../utilities';
 
 export function getDiskSlots(fromConfig = false) {
-  const disks = fromConfig ? this.props.config.disks : this.getDisks();
+  const disks = fromConfig ? this.props.config.disks : this.props.linode._disks.disks;
   const diskSlots = [];
   Object.values(disks).forEach(diskOrId => {
     if (diskOrId) {
@@ -161,7 +147,6 @@ export class EditConfigPage extends Component {
   constructor(props) {
     super(props);
     this.renderDiskSlot = renderDiskSlot.bind(this);
-    this.getDisks = getDisks.bind(this);
     this.addDiskSlot = addDiskSlot.bind(this);
     this.getDiskSlots = getDiskSlots.bind(this);
     this.fillDiskSlots = fillDiskSlots.bind(this);
@@ -170,8 +155,9 @@ export class EditConfigPage extends Component {
     const { create, config } = this.props;
 
     if (create) {
-      const disks = this.getDisks();
       const networkHelperEnabled = props.account.network_helper;
+      const { disks } = this.props.linode._disks;
+
       if (disks) {
         const diskSlots = Object.values(disks).map(disk => disk.id).slice(0, 1) || [];
         this.state = {

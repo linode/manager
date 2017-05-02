@@ -15,14 +15,9 @@ import Region from '~/linodes/components/Region';
 import DistroStyle from '~/linodes/components/DistroStyle';
 import PlanStyle from '~/linodes/components/PlanStyle';
 import WeblishLaunch from '~/linodes/components/WeblishLaunch';
+
 import { selectLinode } from '../utilities';
-import { setSource } from '~/actions/source';
-import { Button } from 'linode-components/buttons';
-import { Card, CardHeader } from 'linode-components/cards';
-import LineGraph from '~/components/graphs/LineGraph';
-import { Select } from 'linode-components/forms';
-import { getObjectByLabelLazily } from '~/api/util';
-import { linodeStats } from '~/api/linodes';
+
 
 function formatData(datasets, legends) {
   const x = datasets[0].map(([x]) => x);

@@ -5,10 +5,9 @@ import { Form, Input, ModalFormGroup, SubmitButton } from 'linode-components/for
 
 import { clients } from '~/api';
 import { updateClientThumbnail } from '~/api/clients';
-import { ModalFormGroup } from 'linode-components/forms';
-import { Form, Input, SubmitButton } from 'linode-components/forms';
-import { CancelButton } from 'linode-components/buttons';
-import { reduceErrors, ErrorSummary } from '~/errors';
+import { MAX_UPLOAD_SIZE_MB } from '~/constants';
+import { FormSummary, reduceErrors } from '~/components/forms';
+
 import { renderSecret } from './CreatePersonalAccessToken';
 
 

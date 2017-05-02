@@ -7,35 +7,6 @@
 @import 'components/index';
 
 
-// TODO: look into
-.grid-list {
-    a .fa {
-        color: $lightest-black;
-        cursor: pointer;
-        cursor: hand;
-    }
-
-    .fa {
-        @extend .font-large;
-        color: $light-black;
-    }
-
-    span, div {
-        padding-right: 15px;
-        line-height: $form-field-height;
-        display: inline-block;
-    }
-
-    div {
-        position: relative;
-        top: -3px;
-    }
-
-    span:last-of-type {
-        padding-right: 0;
-    }
-}
-
 .navicon {
     @extend .font-large;
     padding-left: 15px;
@@ -105,4 +76,14 @@ header .sub-header {
 
 a:hover, a:focus, a:active {
     color: $blue;
+}
+
+.alert {
+    @extend .font-xs;
+
+    display: inline-block;
+    margin: 5px 0 0 0;
+    padding: 15px;
+    line-height: initial;
+    min-height: initial;
 }

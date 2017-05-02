@@ -5,9 +5,8 @@ import { Card, CardHeader } from 'linode-components/cards';
 import {
   FormGroup, Form, SubmitButton,
 } from 'linode-components/forms';
-import { reduceErrors, ErrorSummary } from '~/errors';
+
 import { setSource } from '~/actions/source';
-import { selectLinode } from '../utilities';
 import { resizeLinode } from '~/api/linodes';
 import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
 import Plan from '~/linodes/components/Plan';
@@ -34,15 +33,6 @@ export class ResizePage extends Component {
   async onSubmit() {
     const { dispatch, linode } = this.props;
     const { type } = this.state;
-    this.setState({ fetching: true, errors: {} });
-
-    try {
-      await dispatch(resizeLinode(linode.id, type));
-    } catch (response) {
-      const errors = await reduceErrors(response);
-      errors._.concat(errors.type);
-      this.setState({ errors });
-    }
 
     await dispatch(dispatchOrStoreErrors.apply(this, [
       [() => resizeLinode(linode.id, type)],

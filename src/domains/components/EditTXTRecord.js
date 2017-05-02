@@ -4,11 +4,10 @@ import { Form, Input, SubmitButton, ModalFormGroup } from 'linode-components/for
 import { CancelButton } from 'linode-components/buttons';
 
 import { domains } from '~/api';
-import { ModalFormGroup } from 'linode-components/forms';
+import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+
 import SelectDNSSeconds from './SelectDNSSeconds';
-import { Form, Input, SubmitButton } from 'linode-components/forms';
-import { CancelButton } from 'linode-components/buttons';
-import { reduceErrors, ErrorSummary } from '~/errors';
+
 
 export default class EditTXTRecord extends Component {
   constructor(props) {

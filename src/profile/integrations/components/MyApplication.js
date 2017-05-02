@@ -1,11 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 
-import { API_ROOT } from '~/constants';
 import { Card, CardImageHeader } from 'linode-components/cards';
 import { Dropdown } from 'linode-components/dropdowns';
-import { reduceErrors } from '~/errors';
-import EditApplication from './EditApplication';
 import { ConfirmModalBody, DeleteModalBody } from 'linode-components/modals';
+
 import { showModal, hideModal } from '~/actions/modal';
 import { clients } from '~/api';
 import { resetSecret } from '~/api/clients';
