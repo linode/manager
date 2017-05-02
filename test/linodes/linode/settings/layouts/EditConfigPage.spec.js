@@ -23,6 +23,9 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
     linode: testLinode,
     config: testLinode._configs.configs[12345],
     kernels: api.kernels,
+    account: {
+      network_helper: true,
+    },
   });
 
   it('preloads configs and disks', async () => {
