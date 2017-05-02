@@ -154,23 +154,29 @@ export class IndexPage extends Component {
               >
                 <Table
                   columns={[
-                    { cellComponent: CheckboxCell },
+                    { cellComponent: CheckboxCell, headerClassName: 'CheckboxColumn' },
                     {
                       className: 'RowLabelCell',
                       cellComponent: LinkCell,
                       hrefFn: (linode) => `/linodes/${linode.label}`,
                     },
-                    { cellComponent: IPAddressCell },
+                    { cellComponent: IPAddressCell, headerClassName: 'IPAddressColumn' },
                     {
                       cellComponent: RegionCell,
+                      headerClassName: 'RegionColumn hidden-md-down',
                       className: 'hidden-md-down',
                     },
                     {
                       cellComponent: BackupsCell,
                       className: 'hidden-lg-down',
+                      headerClassName: 'BackupsColumn hidden-lg-down',
                       hrefFn: (linode) => `/linodes/${linode.label}/backups`,
                     },
-                    { cellComponent: StatusDropdownCell, dispatch: dispatch },
+                    {
+                      cellComponent: StatusDropdownCell,
+                      headerClassName: 'StatusDropdownColumn',
+                      dispatch: dispatch,
+                    },
                   ]}
                   data={group.data}
                   selectedMap={selectedMap}

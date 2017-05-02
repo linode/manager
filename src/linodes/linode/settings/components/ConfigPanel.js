@@ -53,6 +53,7 @@ export class ConfigPanel extends Component {
           {
             buttonClassName: 'ConfigPanel-delete',
             cellComponent: ButtonCell,
+            headerClassName: 'ButtonColumn',
             onClick: (config) => { this.deleteConfig(linode, config); },
             text: 'Delete',
           },

@@ -52,20 +52,23 @@ export class ReverseDNSPage extends Component {
 
   render() {
     const columns = [
-      { label: 'IP Address', dataKey: 'address' },
+      { label: 'IP Address', dataKey: 'address', headerClassName: 'IPAddressColumn' },
       { label: 'Target', dataKey: 'rdns' },
       {
         cellComponent: ButtonCell,
+        headerClassName: 'ButtonColumn',
         onClick: (record) => {
           this.resetRDNS(record);
         },
         text: 'Reset',
+        className: 'ResetButton',
         isDisabledFn: (record) => {
           return this.state.loading[record.address];
         },
       },
       {
         cellComponent: ButtonCell,
+        headerClassName: 'ButtonColumn',
         buttonClassName: 'EditButton',
         onClick: (record) => {
           this.renderEditRDNS(record);

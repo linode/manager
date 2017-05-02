@@ -12,11 +12,11 @@
         }
 
         li {
-            margin: 0;
+            margin: 0 0 5px 0;
             padding: 0;
 
             a {
-                @extend .font-normal;
+                @extend .font-medium;
                 color: $light-black;
             }
 
