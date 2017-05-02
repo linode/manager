@@ -141,7 +141,7 @@ export class DashboardPage extends Component {
 
   renderDetails() {
     const { username, linode } = this.props;
-    const plan = (<PlanStyle plan={linode.type[0]} />);
+    const plan = (<PlanStyle plan={linode.type} />);
     const lishLink = `ssh -t ${
         username
       }@lish-${

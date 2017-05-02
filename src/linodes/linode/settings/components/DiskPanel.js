@@ -52,7 +52,7 @@ export class DiskPanel extends Component {
   render() {
     const { dispatch, linode } = this.props;
     const disks = Object.values(linode._disks.disks);
-    const total = linode.type[0].storage;
+    const total = linode.type.storage;
     const used = disks.reduce((total, disk) => total + disk.size, 0);
     const free = total - used;
     const poweredOff = linode.status === 'offline';

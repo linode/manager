@@ -61,7 +61,7 @@ export class IndexPage extends Component {
           <form onSubmit={this.enableBackups}>
             <p>
               Backups not enabled. Enable backups for
-              ${(linode.type[0].backups_price / 100).toFixed(2)}/mo.
+              ${(linode.type.backups_price / 100).toFixed(2)}/mo.
             </p>
             <PrimaryButton type="submit">Enable backups</PrimaryButton>
             <ErrorSummary errors={errors} />
