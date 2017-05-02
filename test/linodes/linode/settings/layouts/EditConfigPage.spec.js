@@ -23,6 +23,9 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
     linode: testLinode,
     config: testLinode._configs.configs[12345],
     kernels: api.kernels,
+    account: {
+      network_helper: true,
+    },
   });
 
   it('preloads configs and disks', async () => {
@@ -136,6 +139,19 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
     );
 
     expect(page.find('#config-device-sda').props().value).to.equal('12345');
+  });
+
+  it('uses network helper default on create', async () => {
+    const page = await mount(
+      <EditConfigPage
+        {...props}
+        create
+        params={{ linodeLabel: 'test-linode-1233' }}
+        dispatch={dispatch}
+      />
+    );
+
+    expect(page.find('#config-enableNetworkHelper').props().checked).to.equal(true);
   });
 
   describe('UI changes state values', () => {
