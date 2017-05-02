@@ -36,9 +36,12 @@
     }
 
     &-container {
-        width: 92px;
         height: 100%;
-        position: relative;
+        // These calculations offset the left, right and top borders.
+        width: calc(100% + 2px);
+        position: absolute;
+        top: -1px;
+        left: -1px;
     }
 
     &-progress {
@@ -78,6 +81,7 @@
     &-percent {
         @extend .font-small;
         color: $white;
-        padding: 6px 8px;
+        padding: 0 8px;
+        line-height: $form-field-height;
     }
 }
