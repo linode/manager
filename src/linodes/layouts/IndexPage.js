@@ -162,10 +162,13 @@ export class IndexPage extends Component {
                       hrefFn: (linode) => `/linodes/${linode.label}`,
                     },
                     { cellComponent: IPAddressCell },
-                    { cellComponent: RegionCell },
+                    {
+                      cellComponent: RegionCell,
+                      className: 'hidden-md-down',
+                    },
                     {
                       cellComponent: BackupsCell,
-                      className: 'hidden-md-down',
+                      className: 'hidden-lg-down',
                       hrefFn: (linode) => `/linodes/${linode.label}/backups`,
                     },
                     { cellComponent: StatusDropdownCell, dispatch: dispatch },
