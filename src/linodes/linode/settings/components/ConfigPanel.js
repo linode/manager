@@ -16,7 +16,7 @@ export class ConfigPanel extends Component {
   deleteConfig(linode, config) {
     const { dispatch } = this.props;
 
-    dispatch(showModal('Confirm deletion',
+    dispatch(showModal('Delete Config',
       <DeleteModalBody
         onOk={async () => {
           await dispatch(linodes.configs.delete(linode.id, config.id));
@@ -78,19 +78,9 @@ export class ConfigPanel extends Component {
       </Button>
     );
 
-    return (
-      <Card
-        header={
-          <CardHeader
-            title="Configs"
-            navLink="https://example.org"
-            nav={nav}
-          />
-        }
-      >
-        {content}
-      </Card>
-    );
+    const header = <CardHeader title="Configs" nav={nav} />;
+
+    return <Card header={header}>{content}</Card>;
   }
 }
 
