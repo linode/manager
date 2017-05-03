@@ -16,7 +16,15 @@ export default class ConfigForm extends Component {
     this.state = {
       errors: {},
       loading: false,
-      ...props.config,
+      port: props.config.port,
+      protocol: props.config.protocol,
+      stickiness: props.config.stickiness,
+      algorithm: props.config.algorithm,
+      check: props.config.check,
+      checkPassive: props.config.check_passive,
+      checkInterval: props.config.check_interval,
+      checkTimeout: props.config.check_timeout,
+      checkAttempts: props.config.check_attempts,
     };
   }
 
@@ -33,7 +41,7 @@ export default class ConfigForm extends Component {
       stickiness,
       check,
       port: parseInt(port),
-      check_passive: Number(checkPassive),
+      check_passive: checkPassive,
       check_interval: parseInt(checkInterval),
       check_timeout: parseInt(checkTimeout),
       check_attempts: parseInt(checkAttempts),
@@ -84,8 +92,8 @@ export default class ConfigForm extends Component {
               <option value="https">HTTPS</option>
               <option value="tcp">TCP</option>
             </Select>
+            <FormGroupError errors={errors} name="protocol" />
           </div>
-          <FormGroupError errors={errors} name="protocol" />
         </FormGroup>
         <FormGroup errors={errors} name="algorithm" className="row">
           <label className="col-sm-2 col-form-label">Algorithm</label>
@@ -106,8 +114,8 @@ export default class ConfigForm extends Component {
                 allocated across backend nodes.
               </small>
             </div>
+            <FormGroupError errors={errors} name="algorithm" />
           </div>
-          <FormGroupError errors={errors} name="algorithm" />
         </FormGroup>
         <FormGroup errors={errors} name="stickiness" className="row">
           <label className="col-sm-2 col-form-label">Session Stickiness</label>
@@ -128,8 +136,8 @@ export default class ConfigForm extends Component {
                 be routed to the same backend node.
               </small>
             </div>
+            <FormGroupError errors={errors} name="stickiness" />
           </div>
-          <FormGroupError errors={errors} name="stickiness" />
         </FormGroup>
         <h3 className="sub-header">Active Health Check</h3>
         <FormGroup errors={errors} name="check" className="row">
@@ -150,8 +158,8 @@ export default class ConfigForm extends Component {
                 Active health checks proactively check the health of back-end nodes.
               </small>
             </div>
+            <FormGroupError errors={errors} name="check" />
           </div>
-          <FormGroupError errors={errors} name="check" />
         </FormGroup>
         <FormGroup errors={errors} name="check_interval" className="row">
           <label className="col-sm-2 col-form-label">Interval</label>
@@ -191,12 +199,12 @@ export default class ConfigForm extends Component {
               value={checkAttempts}
               onChange={this.onChange}
             />
+            <FormGroupError errors={errors} name="check_attempts" />
             <div>
               <small className="text-muted">
                 Take this node out of rotation after this number of failed health checks
               </small>
             </div>
-            <FormGroupError errors={errors} name="check_attempts" />
           </div>
         </FormGroup>
         <h3 className="sub-header">Passive Checks</h3>
@@ -211,8 +219,8 @@ export default class ConfigForm extends Component {
               value={checkPassive}
               onChange={this.onChange}
             />
+            <FormGroupError errors={errors} name="check_passive" />
           </div>
-          <FormGroupError errors={errors} name="check_passive" />
         </FormGroup>
         <FormGroup className="row">
           <div className="offset-sm-2 col-sm-10">
@@ -220,7 +228,7 @@ export default class ConfigForm extends Component {
               disabled={loading}
               disabledChildren={submitDisabledText}
             >{submitText}</SubmitButton>
-            <FormSummary errors={errors} />
+            <FormSummary errors={errors} success="Config settings saved." />
           </div>
         </FormGroup>
       </Form>
@@ -243,9 +251,9 @@ ConfigForm.defaultProps = {
     algorithm: 'roundrobin',
     stickiness: 'table',
     check: 'connection',
-    checkPassive: true,
-    checkInterval: 5,
-    checkTimeout: 3,
-    checkAttempts: 2,
+    check_passive: true,
+    check_interval: 5,
+    check_timeout: 3,
+    check_attempts: 2,
   },
 };

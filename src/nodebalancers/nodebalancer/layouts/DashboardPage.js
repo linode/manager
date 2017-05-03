@@ -108,7 +108,7 @@ export class DashboardPage extends Component {
                     headerClassName: 'ButtonColumn',
                     buttonClassName: 'btn-secondary',
                     hrefFn: function (config) {
-                      return `/nodebalancers/${nodebalancer.label}/configs/${config.id}/edit`;
+                      return `/nodebalancers/${nodebalancer.label}/configs/${config.id}/settings`;
                     },
                     text: 'Edit',
                   },

@@ -44,7 +44,7 @@ export class NotificationsPage extends Component {
             >{reversePrefix}e</SubmitButton>
             <FormSummary
               errors={errors}
-              success={`Email notifications successfully ${prefix}ed.`}
+              success={`Email notifications ${prefix}ed.`}
             />
           </Form>
         </Card>
