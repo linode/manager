@@ -1,57 +1,63 @@
 import React, { Component, PropTypes } from 'react';
+import { push } from 'react-router-redux';
 
 import {
   Form, FormGroup, FormGroupError, Input, Select, Checkbox, SubmitButton,
 } from 'linode-components/forms';
 
-import { FormSummary } from '~/components/forms';
+import { nodebalancers } from '~/api';
+import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
 
 
-export class ConfigForm extends Component {
+export default class ConfigForm extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      saving: false,
-      port: props.port,
-      protocol: props.protocol,
-      algorithm: props.algorithm,
-      stickiness: props.stickiness,
-      check: props.check,
-      checkPassive: props.checkPassive,
-      checkInterval: props.checkInterval,
-      checkTimeout: props.checkTimeout,
-      checkAttempts: props.checkAttempts,
+      errors: {},
+      loading: false,
+      ...props.config,
     };
   }
-  onChange = ({ target: { checked, value, name, type } }) => {
-    this.setState({ [name]: type === 'checkbox' ? checked : value });
-  };
 
-  render() {
-    const { saveChanges, loading, errors, submitText, nodebalancerConfigId } = this.props;
+  onSubmit = async () => {
+    const { dispatch, nodebalancer, config } = this.props;
     const {
-      port,
+      port, protocol, algorithm, stickiness, check, checkPassive, checkInterval, checkTimeout,
+      checkAttempts,
+    } = this.state;
+
+    const data = {
       protocol,
       algorithm,
       stickiness,
       check,
-      checkPassive,
-      checkInterval,
-      checkTimeout,
-      checkAttempts,
+      port: parseInt(port),
+      check_passive: Number(checkPassive),
+      check_interval: parseInt(checkInterval),
+      check_timeout: parseInt(checkTimeout),
+      check_attempts: parseInt(checkAttempts),
+    };
+
+    const idsPath = [nodebalancer.id, config.id].filter(Boolean);
+    await dispatch(dispatchOrStoreErrors.call(this, [
+      () => nodebalancers.configs[config.id ? 'put' : 'post'](data, ...idsPath),
+      ({ id }) => id !== config.id && push(`/nodebalancers/${nodebalancer.label}/configs/${id}`),
+    ]));
+  }
+
+  onChange = ({ target: { checked, value, name, type } }) =>
+    this.setState({ [name]: type === 'checkbox' ? checked : value })
+
+  render() {
+    const { submitText, submitDisabledText } = this.props;
+    const {
+      port, protocol, algorithm, stickiness, check, checkPassive, checkInterval, checkTimeout,
+      checkAttempts, errors, loading,
     } = this.state;
+
     return (
-      <Form
-        onSubmit={async () => {
-          const values = { nodebalancerConfigId,
-            ...this.state,
-            checkInterval: parseInt(checkInterval),
-            checkTimeout: parseInt(checkTimeout),
-            checkAttempts: parseInt(checkAttempts),
-          };
-          await saveChanges(values);
-        }}
-      >
+      <Form onSubmit={this.onSubmit}>
         <FormGroup errors={errors} name="port" className="row">
           <label className="col-sm-2 col-form-label">Port</label>
           <div className="col-sm-10">
@@ -72,7 +78,6 @@ export class ConfigForm extends Component {
               id="protocol"
               name="protocol"
               value={protocol}
-              disabled={loading}
               onChange={this.onChange}
             >
               <option value="http">HTTP</option>
@@ -89,7 +94,6 @@ export class ConfigForm extends Component {
               id="algorithm"
               name="algorithm"
               value={algorithm}
-              disabled={loading}
               onChange={this.onChange}
             >
               <option value="roundrobin">Round Robin</option>
@@ -112,7 +116,6 @@ export class ConfigForm extends Component {
               id="stickiness"
               name="stickiness"
               value={stickiness}
-              disabled={loading}
               onChange={this.onChange}
             >
               <option value="table">Table</option>
@@ -136,7 +139,6 @@ export class ConfigForm extends Component {
               id="check"
               name="check"
               value={check}
-              disabled={loading}
               onChange={this.onChange}
             >
               <option value="connection">TCP Connection</option>
@@ -212,43 +214,38 @@ export class ConfigForm extends Component {
           </div>
           <FormGroupError errors={errors} name="check_passive" />
         </FormGroup>
-        <div className="row">
+        <FormGroup className="row">
           <div className="offset-sm-2 col-sm-10">
-            <SubmitButton>{submitText}</SubmitButton>
+            <SubmitButton
+              disabled={loading}
+              disabledChildren={submitDisabledText}
+            >{submitText}</SubmitButton>
+            <FormSummary errors={errors} />
           </div>
-        </div>
-        <FormSummary errors={errors} />
+        </FormGroup>
       </Form>
     );
   }
 }
 
 ConfigForm.propTypes = {
-  saveChanges: PropTypes.func,
-  nodebalancers: PropTypes.any,
-  loading: PropTypes.any,
-  errors: PropTypes.any,
-  port: PropTypes.number,
-  protocol: PropTypes.string,
-  algorithm: PropTypes.string,
-  stickiness: PropTypes.string,
-  check: PropTypes.string,
-  checkPassive: PropTypes.bool,
-  checkInterval: PropTypes.number,
-  checkTimeout: PropTypes.number,
-  checkAttempts: PropTypes.number,
+  dispatch: PropTypes.func.isRequired,
+  nodebalancer: PropTypes.object.isRequired,
+  config: PropTypes.object.isRequired,
   submitText: PropTypes.string,
-  nodebalancerConfigId: PropTypes.any,
+  submitDisabledText: PropTypes.string,
 };
 
 ConfigForm.defaultProps = {
-  port: 80,
-  protocol: 'http',
-  algorithm: 'roundrobin',
-  stickiness: 'table',
-  check: 'connection',
-  checkPassive: true,
-  checkInterval: 5,
-  checkTimeout: 3,
-  checkAttempts: 2,
+  config: {
+    port: 80,
+    protocol: 'http',
+    algorithm: 'roundrobin',
+    stickiness: 'table',
+    check: 'connection',
+    checkPassive: true,
+    checkInterval: 5,
+    checkTimeout: 3,
+    checkAttempts: 2,
+  },
 };

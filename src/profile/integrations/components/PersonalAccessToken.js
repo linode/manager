@@ -11,7 +11,7 @@ import { showModal, hideModal } from '~/actions/modal';
 import { tokens as apiTokens } from '~/api';
 import { AuthScopeCell } from '~/components/tables/cells';
 import TimeDisplay from '~/components/TimeDisplay';
-import { API_ROOT, OAUTH_SCOPES, OAUTH_SUBSCOPES } from '~/constants';
+import { OAUTH_SCOPES, OAUTH_SUBSCOPES } from '~/constants';
 
 import { EditPersonalAccessToken } from './';
 
@@ -52,9 +52,7 @@ export default class PersonalAccessToken extends Component {
   }
 
   render() {
-    const { label, scopes, id, expires, secret } = this.props;
-    const icon = id ? `${API_ROOT}/account/clients/${id}/thumbnail` : '';
-    const expireValue = <TimeDisplay time={expires} />;
+    const { label, scopes, expires, secret } = this.props;
 
     const scopeData = OAUTH_SCOPES.map(function (scope) {
       return { scopes: scopes, scope: scope };
@@ -76,7 +74,7 @@ export default class PersonalAccessToken extends Component {
       <Card header={header}>
         <div className="row">
           <label className="col-sm-4 row-label">Expires in</label>
-          <div className="col-sm-8">{expireValue}</div>
+          <div className="col-sm-8"><TimeDisplay time={expires} /></div>
         </div>
         <div className="row">
           <label className="col-sm-4 row-label">Secret</label>

@@ -34,21 +34,22 @@ export default class CreateOrEditApplication extends Component {
 
     await dispatch(dispatchOrStoreErrors.call(this, [
       () => this.props.saveOrCreate(label, redirect),
-      ({ id, secret }) => {
+      ({ id }) => {
         if (thumbnail) {
           if ((thumbnail.size / (1024 * 1024)) < MAX_UPLOAD_SIZE_MB) {
             return updateClientThumbnail(id, thumbnail);
-          } else {
-            throw { json: () => Promise.resolve({
-              errors: [{
-                field: 'thumbnail',
-                reason: `File size must be under ${MAX_UPLOAD_SIZE_MB} MB`,
-              }],
-            }) };
           }
+
+          // eslint-disable-next-line no-throw-literal
+          throw { json: () => Promise.resolve({
+            errors: [{
+              field: 'thumbnail',
+              reason: `File size must be under ${MAX_UPLOAD_SIZE_MB} MB`,
+            }],
+          }) };
         }
       },
-      ({ id, secret }) =>
+      ({ secret }) =>
         !this.props.id ? this.renderSecret('client', 'created', secret) : this.props.close(),
     ]));
   }
@@ -107,6 +108,7 @@ CreateOrEditApplication.propTypes = {
   label: PropTypes.string,
   id: PropTypes.string,
   redirect: PropTypes.string,
+  thumbnail: PropTypes.string,
 };
 
 CreateOrEditApplication.defaultProps = {

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { Card, CardHeader } from 'linode-components/cards';
@@ -53,10 +53,15 @@ export class NotificationsPage extends Component {
   }
 }
 
+NotificationsPage.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+  enabled: PropTypes.bool.isRequired,
+};
+
 function select(state) {
   return {
     enabled: state.api.profile.email_notifications,
-  }
+  };
 }
 
 export default connect(select)(NotificationsPage);

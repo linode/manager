@@ -82,7 +82,7 @@ export class DashboardPage extends Component {
                 <Link
                   to={`/nodebalancers/${nodebalancer.label}/configs/create`}
                   className="linode-add btn btn-default float-sm-right"
-                >Add a Configuration</Link>
+                >Add a Config</Link>
               }
             />
           }
