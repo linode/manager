@@ -1,18 +1,20 @@
+import _ from 'lodash';
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 
-import _ from 'lodash';
-import { API_ROOT } from '~/constants';
-import { Dropdown } from 'linode-components/dropdowns';
-import EditPersonalAccessToken from './EditPersonalAccessToken';
 import { Card, CardImageHeader } from 'linode-components/cards/';
+import { Dropdown } from 'linode-components/dropdowns';
 import { DeleteModalBody } from 'linode-components/modals';
 import { Table } from 'linode-components/tables';
-import TimeDisplay from '~/components/TimeDisplay';
-import { AuthScopeCell } from '~/components/tables/cells';
-import { OAUTH_SUBSCOPES, OAUTH_SCOPES } from '~/constants';
+
 import { showModal, hideModal } from '~/actions/modal';
 import { tokens as apiTokens } from '~/api';
+import { AuthScopeCell } from '~/components/tables/cells';
+import TimeDisplay from '~/components/TimeDisplay';
+import { API_ROOT, OAUTH_SCOPES, OAUTH_SUBSCOPES } from '~/constants';
+
+import { EditPersonalAccessToken } from './';
+
 
 export default class PersonalAccessToken extends Component {
   constructor() {
@@ -63,16 +65,15 @@ export default class PersonalAccessToken extends Component {
       { name: 'Delete', action: this.deleteAction },
     ];
 
+    const header = (
+      <CardImageHeader
+        title={label}
+        nav={<Dropdown elements={elements} leftOriented={false} />}
+      />
+    );
+
     return (
-      <Card
-        header={
-          <CardImageHeader
-            title={label}
-            icon={icon}
-            nav={<Dropdown elements={elements} leftOriented={false} />}
-          />
-        }
-      >
+      <Card header={header}>
         <div className="row">
           <label className="col-sm-4 row-label">Expires in</label>
           <div className="col-sm-8">{expireValue}</div>
@@ -105,7 +106,7 @@ PersonalAccessToken.propTypes = {
   label: PropTypes.string.isRequired,
   scopes: PropTypes.string.isRequired,
   expires: PropTypes.string.isRequired,
-  id: PropTypes.any.isRequired,
+  id: PropTypes.number.isRequired,
   secret: PropTypes.string.isRequired,
   dispatch: PropTypes.func.isRequired,
 };

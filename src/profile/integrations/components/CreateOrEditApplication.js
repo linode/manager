@@ -49,7 +49,7 @@ export default class CreateOrEditApplication extends Component {
         }
       },
       ({ id, secret }) =>
-        secret ? this.renderSecret('client', 'created', secret) : this.props.close(),
+        !this.props.id ? this.renderSecret('client', 'created', secret) : this.props.close(),
     ]));
   }
 
