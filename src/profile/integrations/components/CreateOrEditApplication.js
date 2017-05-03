@@ -6,22 +6,22 @@ import { Form, Input, ModalFormGroup, SubmitButton } from 'linode-components/for
 import { clients } from '~/api';
 import { updateClientThumbnail } from '~/api/clients';
 import { MAX_UPLOAD_SIZE_MB } from '~/constants';
-import { FormSummary, reduceErrors } from '~/components/forms';
+import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
 
 import { renderSecret } from './CreatePersonalAccessToken';
 
 
-export default class CreateApplication extends Component {
-  constructor() {
-    super();
+export default class CreateOrEditApplication extends Component {
+  constructor(props) {
+    super(props);
 
     this.renderSecret = renderSecret.bind(this);
 
     this.state = {
+      label: props.label || '',
+      redirect: props.redirect || '',
+      thumbnail: props.thumbnail || '',
       errors: {},
-      label: '',
-      redirect: '',
-      thumbnail: '',
       loading: false,
     };
   }
@@ -33,22 +33,24 @@ export default class CreateApplication extends Component {
     const { label, redirect, thumbnail } = this.state;
 
     await dispatch(dispatchOrStoreErrors.call(this, [
-      () => this.props.saveOrCreateApplication(label, redirect),
+      () => this.props.saveOrCreate(label, redirect),
+      ({ id, secret }) => {
+        if (thumbnail) {
+          if ((thumbnail.size / (1024 * 1024)) < MAX_UPLOAD_SIZE_MB) {
+            return updateClientThumbnail(id, thumbnail);
+          } else {
+            throw { json: () => Promise.resolve({
+              errors: [{
+                field: 'thumbnail',
+                reason: `File size must be under ${MAX_UPLOAD_SIZE_MB} MB`,
+              }],
+            }) };
+          }
+        }
+      },
       ({ id, secret }) =>
         secret ? this.renderSecret('client', 'created', secret) : this.props.close(),
     ]));
-
-    if (thumbnail) {
-      if ((thumbnail.size / (1024 * 1024)) < MAX_UPLOAD_SIZE_MB) {
-        await dispatch(dispatchOrStoreErrors.call(this, [
-          () => updateClientThumbnail(id, thumbnail),
-        ]));
-      } else {
-        this.setState({
-          errors: { thumbnail: [{ reason: `File size must be under ${MAX_UPLOAD_SIZE_MB} MB` }] },
-        });
-      }
-    }
   }
 
   render() {
@@ -96,13 +98,17 @@ export default class CreateApplication extends Component {
   }
 }
 
-CreateApplication.propTypes = {
+CreateOrEditApplication.propTypes = {
   dispatch: PropTypes.func.isRequired,
   close: PropTypes.func.isRequired,
-  saveOrCreateApplication: PropTypes.func.isRequired,
-  submitDisabledText: PropTypes.string.isRequired,
+  saveOrCreate: PropTypes.func.isRequired,
+  submitText: PropTypes.string,
+  submitDisabledText: PropTypes.string,
+  label: PropTypes.string,
+  id: PropTypes.string,
+  redirect: PropTypes.string,
 };
 
 CreateOrEditApplication.defaultProps = {
-  saveOrCreateApplication: (label, redirect) => clients.post({ label, redirect_uri: redirect }),
+  saveOrCreate: (label, redirect) => clients.post({ label, redirect_uri: redirect }),
 };

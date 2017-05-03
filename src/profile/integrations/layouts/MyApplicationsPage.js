@@ -1,13 +1,15 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import CreateHelper from '~/components/CreateHelper';
+import { Button } from 'linode-components/buttons';
+
 import { setError } from '~/actions/errors';
 import { showModal, hideModal } from '~/actions/modal';
 import { clients } from '~/api';
-import { Button } from 'linode-components/buttons';
-import MyApplication from '../components/MyApplication';
-import CreateApplication from '../components/CreateApplication';
+import CreateHelper from '~/components/CreateHelper';
+
+import { MyApplication, CreateOrEditApplication } from '../components';
+
 
 export class MyApplicationsPage extends Component {
   static async preload({ dispatch }) {
@@ -25,8 +27,9 @@ export class MyApplicationsPage extends Component {
     dispatch(showModal('Create an OAuth Client', (
       <CreateOrEditApplication
         dispatch={dispatch}
-        dispatches={[()]}
         close={() => dispatch(hideModal())}
+        submitText="Create"
+        submitDisabledText="Creating"
       />
     )));
   }
