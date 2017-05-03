@@ -6,13 +6,14 @@
 }
 
 .ListGroup {
-    &:not(:first-child) {
-        margin-top: 15px;
+    &:not(:first-of-type) &-label {
+        position: relative;
+        top: 10px;
     }
 
     &-label {
         @extend .font-large;
-        color: $light-black;
+        color: $lightest-black;
         padding: 5px 0;
     }
 }
