@@ -5,7 +5,6 @@ import {
 
 export const config = genConfig({
   plural: 'regions',
-  singular: 'region',
   endpoint: id => `/regions/${id}`,
   supports: [ONE, MANY],
 });

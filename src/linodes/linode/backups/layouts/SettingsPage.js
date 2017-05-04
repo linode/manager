@@ -1,23 +1,24 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { FormGroup } from '~/components/form';
-import { ErrorSummary, reduceErrors } from '~/errors';
+import { Card, CardHeader } from 'linode-components/cards';
+import { ConfirmModalBody } from 'linode-components/modals';
+import { Form, FormGroup, SubmitButton } from 'linode-components/forms';
+
+import { showModal, hideModal } from '~/actions/modal';
+import { setSource } from '~/actions/source';
 import { linodes } from '~/api';
 import { cancelBackup } from '~/api/backups';
-import { Card, CardHeader } from '~/components/cards';
-import { ConfirmModalBody } from '~/components/modals';
-import { Form, SubmitButton } from '~/components/form';
-import { getLinode } from '~/linodes/linode/layouts/IndexPage';
-import { setSource } from '~/actions/source';
-import { showModal, hideModal } from '~/actions/modal';
+import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+
+import { selectLinode } from '../../utilities';
 
 
 export class SettingsPage extends Component {
   constructor(props) {
     super(props);
-    this.getLinode = getLinode.bind(this);
-    const { day, window } = this.getLinode().backups.schedule;
+
+    const { day, window } = props.linode.backups.schedule;
     this.state = { day, window, errors: {} };
   }
 
@@ -26,33 +27,25 @@ export class SettingsPage extends Component {
     dispatch(setSource(__filename));
   }
 
-  async saveChanges() {
-    const { dispatch } = this.props;
-    const linode = this.getLinode();
+  onSubmit = async () => {
+    const { dispatch, linode: { id } } = this.props;
     const { day, window } = this.state;
-    try {
-      await dispatch(linodes.put({
-        backups: {
-          schedule: { day, window },
-        },
-      }, linode.id));
-    } catch (response) {
-      const errors = await reduceErrors(response);
-      this.setState({ errors });
-    }
+
+    await dispatch(dispatchOrStoreErrors.apply(this, [
+      [() => linodes.put({ backups: { schedule: { day, window } } }, id)],
+    ]));
   }
 
   render() {
-    const { dispatch } = this.props;
-    const { window, day, errors } = this.state;
-    const linode = this.getLinode();
+    const { dispatch, linode } = this.props;
+    const { window, day, loading, errors } = this.state;
 
     return (
       <div>
         <Card header={<CardHeader title="Schedule" />}>
-          <Form onSubmit={() => this.saveChanges()}>
+          <Form onSubmit={this.onSubmit}>
             <FormGroup name="window" errors={errors} className="row">
-              <label htmlFor="window" className="col-sm-2 col-form-label">Time of day (EST):</label>
+              <label htmlFor="window" className="col-sm-2 col-form-label">Time of day (EST)</label>
               <div className="col-sm-4">
                 <select
                   className="form-control"
@@ -77,7 +70,7 @@ export class SettingsPage extends Component {
               </div>
             </FormGroup>
             <FormGroup name="day" errors={errors} className="row">
-              <label htmlFor="day" className="col-sm-2 col-form-label">Day of week:</label>
+              <label htmlFor="day" className="col-sm-2 col-form-label">Day of week</label>
               <div className="col-sm-4">
                 <select
                   className="form-control"
@@ -98,10 +91,10 @@ export class SettingsPage extends Component {
             </FormGroup>
             <FormGroup className="row">
               <div className="offset-sm-2 col-sm-10">
-                <SubmitButton />
+                <SubmitButton disabled={loading} />
+                <FormSummary errors={errors} success="Schedule settings saved." />
               </div>
             </FormGroup>
-            <ErrorSummary errors={errors} />
           </Form>
         </Card>
         <Card header={<CardHeader title="Cancel backup service" />}>
@@ -117,6 +110,7 @@ export class SettingsPage extends Component {
                 }}
                 onCancel={() => dispatch(hideModal())}
                 buttonText="Cancel backups service"
+                buttonDisabledText="Cancelling backups service"
               >
                 Are you sure you want to cancel backup service for this Linode?
                 This cannot be undone.
@@ -133,14 +127,7 @@ export class SettingsPage extends Component {
 
 SettingsPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  linodes: PropTypes.object.isRequired,
-  params: PropTypes.shape({
-    linodeLabel: PropTypes.string.isRequired,
-  }).isRequired,
+  linode: PropTypes.object.isRequired,
 };
 
-function select(state) {
-  return { linodes: state.api.linodes };
-}
-
-export default connect(select)(SettingsPage);
+export default connect(selectLinode)(SettingsPage);

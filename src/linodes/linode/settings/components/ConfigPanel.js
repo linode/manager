@@ -1,30 +1,23 @@
 import React, { Component, PropTypes } from 'react';
 
-import { getLinode } from '~/linodes/linode/layouts/IndexPage';
-import DeleteModalBody from '~/components/modals/DeleteModalBody';
+import { DeleteModalBody } from 'linode-components/modals';
 import { linodes } from '~/api';
 import { showModal, hideModal } from '~/actions/modal';
-import { Button } from '~/components/buttons';
-import { Card, CardHeader } from '~/components/cards';
-import { Table } from '~/components/tables';
+import { Button } from 'linode-components/buttons';
+import { Card, CardHeader } from 'linode-components/cards';
+import { Table } from 'linode-components/tables';
 import {
   LinkCell,
   ButtonCell,
-} from '~/components/tables/cells';
+} from 'linode-components/tables/cells';
 
 
 export class ConfigPanel extends Component {
-  constructor() {
-    super();
-    this.getLinode = getLinode.bind(this);
-  }
-
   deleteConfig(linode, config) {
     const { dispatch } = this.props;
 
     dispatch(showModal('Confirm deletion',
       <DeleteModalBody
-        buttonText="Delete config"
         onOk={async () => {
           await dispatch(linodes.configs.delete(linode.id, config.id));
           dispatch(hideModal());
@@ -60,6 +53,7 @@ export class ConfigPanel extends Component {
           {
             buttonClassName: 'ConfigPanel-delete',
             cellComponent: ButtonCell,
+            headerClassName: 'ButtonColumn',
             onClick: (config) => { this.deleteConfig(linode, config); },
             text: 'Delete',
           },
@@ -70,7 +64,7 @@ export class ConfigPanel extends Component {
   }
 
   render() {
-    const linode = this.getLinode();
+    const { linode } = this.props;
     const configs = Object.values(linode._configs.configs);
 
     const content = this.renderConfigContent(linode, configs);
@@ -102,7 +96,5 @@ export class ConfigPanel extends Component {
 
 ConfigPanel.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  params: PropTypes.shape({
-    linodeLabel: PropTypes.string,
-  }),
+  linode: PropTypes.object.isRequired,
 };

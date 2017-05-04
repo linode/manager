@@ -31,10 +31,10 @@ describe('Polling', function () {
     expect(polling.stop).to.exist;
   });
 
-  it('will execute a provided function', function (done) {
-    this.timeout(100);
+  it('will execute a provided function', function () {
+    this.timeout(50);
     const options = {
-      apiRequestFn: async function () {
+      apiRequestFn: async function (done) {
         polling.stop();
         done();
       },

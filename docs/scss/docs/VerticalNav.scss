@@ -1,0 +1,29 @@
+.VerticalNav {
+    height: 100%;
+    padding: 25px;
+
+    &-section {
+        margin-bottom: 20px;
+
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 10px 0;
+        }
+
+        li {
+            margin: 0 0 5px 0;
+            padding: 0;
+
+            a {
+                @extend .font-medium;
+                color: $light-black;
+            }
+
+            a:hover {
+                color: $blue;
+                text-decoration: none;
+            }
+        }
+    }
+}

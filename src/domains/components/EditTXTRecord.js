@@ -1,11 +1,13 @@
 import React, { PropTypes, Component } from 'react';
 
+import { Form, Input, SubmitButton, ModalFormGroup } from 'linode-components/forms';
+import { CancelButton } from 'linode-components/buttons';
+
 import { domains } from '~/api';
-import { ModalFormGroup } from '~/components/form';
+import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+
 import SelectDNSSeconds from './SelectDNSSeconds';
-import { Form, Input, SubmitButton } from '~/components/form';
-import { CancelButton } from '~/components/buttons';
-import { reduceErrors, ErrorSummary } from '~/errors';
+
 
 export default class EditTXTRecord extends Component {
   constructor(props) {
@@ -20,7 +22,7 @@ export default class EditTXTRecord extends Component {
 
     this.state = {
       errors: {},
-      saving: false,
+      loading: false,
       zone,
       defaultTTL,
       ttl,
@@ -30,40 +32,30 @@ export default class EditTXTRecord extends Component {
   }
 
   onSubmit = async () => {
-    const { dispatch, id } = this.props;
+    const { dispatch, id, close } = this.props;
     const { ttl, textvalue, textname } = this.state;
+    const ids = [this.props.zone.id, id].filter(Boolean);
+    const data = {
+      ttl_sec: +ttl,
+      target: textvalue,
+      // '' is the default and will track the zone
+      name: textname === this.props.zone.domain ? '' : textname,
+      type: 'TXT',
+    };
 
-    this.setState({ errors: {}, saving: true });
-
-    try {
-      const ids = [this.props.zone.id, id].filter(Boolean);
-
-      await dispatch(domains.records[id ? 'put' : 'post']({
-        ttl_sec: +ttl,
-        target: textvalue,
-        // '' is the default and will track the zone
-        name: textname === this.props.zone.domain ? '' : textname,
-        type: 'TXT',
-      }, ...ids));
-
-      this.setState({ saving: false });
-      this.props.close();
-    } catch (response) {
-      if (!response.json) {
-        // eslint-disable-next-line no-console
-        return console.error(response);
-      }
-
-      const errors = await reduceErrors(response);
-      this.setState({ errors, saving: false });
-    }
+    await dispatch(dispatchOrStoreErrors.apply(this, [
+      [
+        () => domains.records[id ? 'put' : 'post'](data, ...ids),
+        close,
+      ],
+    ]));
   }
 
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value });
 
   render() {
     const { close } = this.props;
-    const { errors, saving, defaultTTL, ttl, textvalue, textname } = this.state;
+    const { errors, loading, defaultTTL, ttl, textvalue, textname } = this.state;
     return (
       <Form onSubmit={this.onSubmit}>
         <ModalFormGroup id="textname" label="Name" apiKey="name" errors={errors}>
@@ -95,9 +87,14 @@ export default class EditTXTRecord extends Component {
         </ModalFormGroup>
         <div className="Modal-footer">
           <CancelButton onClick={close} />
-          <SubmitButton disabled={saving}>{this.props.id ? 'Save' : 'Add TXT Record'}</SubmitButton>
+          <SubmitButton
+            disabled={loading}
+            disabledChildren={!this.props.id && 'Adding TXT Record' || undefined}
+          >
+            {!this.props.id && 'Add TXT Record' || undefined}
+          </SubmitButton>
+          <FormSummary errors={errors} />
         </div>
-        <ErrorSummary errors={errors} />
       </Form>
     );
   }

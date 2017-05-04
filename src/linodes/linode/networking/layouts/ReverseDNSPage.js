@@ -2,10 +2,10 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { showModal, hideModal } from '~/actions/modal';
-import { getLinode } from '~/linodes/linode/layouts/IndexPage';
-import { Card, CardHeader } from '~/components/cards';
-import { Table } from '~/components/tables';
-import { ButtonCell } from '~/components/tables/cells';
+import { Card, CardHeader } from 'linode-components/cards';
+import { Table } from 'linode-components/tables';
+import { ButtonCell } from 'linode-components/tables/cells';
+import { selectLinode } from '../../utilities';
 import { setError } from '~/actions/errors';
 import { linodeIPs, setRDNS } from '~/api/linodes';
 import EditRDNS from '../components/EditRDNS';
@@ -24,19 +24,17 @@ export class ReverseDNSPage extends Component {
 
   constructor() {
     super();
-    this.getLinode = getLinode.bind(this);
 
-    this.state = { resetting: {} };
+    this.state = { loading: {} };
   }
 
   async resetRDNS(record) {
-    const { dispatch } = this.props;
-    const linode = this.getLinode();
+    const { dispatch, linode } = this.props;
     const address = record.address;
 
-    this.setState({ resetting: { ...this.state.resetting, [address]: true } });
+    this.setState({ loading: { ...this.state.loading, [address]: true } });
     await dispatch(setRDNS(linode.id, address, null));
-    this.setState({ resetting: { ...this.state.resetting, [address]: false } });
+    this.setState({ loading: { ...this.state.loading, [address]: false } });
   }
 
   renderEditRDNS(ip) {
@@ -54,20 +52,23 @@ export class ReverseDNSPage extends Component {
 
   render() {
     const columns = [
-      { label: 'IP Address', dataKey: 'address' },
+      { label: 'IP Address', dataKey: 'address', headerClassName: 'IPAddressColumn' },
       { label: 'Target', dataKey: 'rdns' },
       {
         cellComponent: ButtonCell,
+        headerClassName: 'ButtonColumn',
         onClick: (record) => {
           this.resetRDNS(record);
         },
         text: 'Reset',
+        className: 'ResetButton',
         isDisabledFn: (record) => {
-          return this.state.resetting[record.address];
+          return this.state.loading[record.address];
         },
       },
       {
         cellComponent: ButtonCell,
+        headerClassName: 'ButtonColumn',
         buttonClassName: 'EditButton',
         onClick: (record) => {
           this.renderEditRDNS(record);
@@ -75,7 +76,7 @@ export class ReverseDNSPage extends Component {
         text: 'Edit',
       },
     ];
-    const linode = this.getLinode();
+    const { linode } = this.props;
     const ips = linode._ips;
 
     // TODO: global should show up here but they are not supported by the API yet?
@@ -94,12 +95,8 @@ export class ReverseDNSPage extends Component {
 }
 
 ReverseDNSPage.propTypes = {
-  linodes: PropTypes.object,
+  linode: PropTypes.object,
   dispatch: PropTypes.func.isRequired,
 };
 
-function select(state) {
-  return { linodes: state.api.linodes };
-}
-
-export default connect(select)(ReverseDNSPage);
+export default connect(selectLinode)(ReverseDNSPage);

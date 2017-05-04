@@ -2,21 +2,16 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { Link } from '~/components/Link';
-import Tabs from '~/components/Tabs';
-import StatusDropdown from '~/linodes/components/StatusDropdown';
+import { Link } from 'react-router';
+import { Tabs } from 'linode-components/tabs';
+
 import { setError } from '~/actions/errors';
+import { setTitle } from '~/actions/title';
 import { linodes } from '~/api';
 import { getObjectByLabelLazily } from '~/api/util';
-import { setSource } from '~/actions/source';
-import { setTitle } from '~/actions/title';
+import StatusDropdown from '~/linodes/components/StatusDropdown';
 
-export function getLinode() {
-  const { linodes } = this.props.linodes;
-  const { linodeLabel } = this.props.params;
-  return Object.values(linodes).reduce(
-    (match, linode) => linode.label === linodeLabel ? linode : match, null);
-}
+import { selectLinode } from '../utilities';
 
 export class IndexPage extends Component {
   static async preload({ dispatch, getState }, { linodeLabel }) {
@@ -30,30 +25,21 @@ export class IndexPage extends Component {
     }
   }
 
-  constructor() {
-    super();
-    this.getLinode = getLinode.bind(this);
-    this.state = { config: '', label: '', group: '' };
+  constructor(props) {
+    super(props);
+
+    const { linode: { _configs: { configs }, label, group } } = props;
+    const config = configs[0] ? configs[0].id : '';
+    this.state = { config, label, group };
   }
 
   async componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch(setSource(__filename));
-
-    const linode = this.getLinode();
+    const { dispatch, linode } = this.props;
     dispatch(setTitle(linode.label));
-
-    // TODO: move this into the constructor
-    const defaultConfig = Object.values(linode._configs.configs)[0];
-    this.setState({
-      config: defaultConfig ? defaultConfig.id : '',
-      label: linode.label,
-      group: linode.group,
-    });
   }
 
   render() {
-    const linode = this.getLinode();
+    const { linode } = this.props;
     if (!linode) return null;
 
     const tabs = [
@@ -105,18 +91,9 @@ export class IndexPage extends Component {
 }
 
 IndexPage.propTypes = {
-  dispatch: PropTypes.func,
-  username: PropTypes.string,
-  linodes: PropTypes.object,
-  params: PropTypes.shape({
-    linodeLabel: PropTypes.string,
-  }),
-  detail: PropTypes.object,
-  children: PropTypes.node,
+  dispatch: PropTypes.func.isRequired,
+  linode: PropTypes.object.isRequired,
+  children: PropTypes.node.isRequired,
 };
 
-function select(state) {
-  return { linodes: state.api.linodes };
-}
-
-export default connect(select)(IndexPage);
+export default connect(selectLinode)(IndexPage);

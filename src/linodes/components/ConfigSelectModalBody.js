@@ -2,8 +2,8 @@ import React, { Component, PropTypes } from 'react';
 
 import { rebootLinode } from '~/api/linodes';
 import { hideModal } from '~/actions/modal';
-import { Button } from '~/components/buttons';
-import { CancelButton } from '~/components/buttons';
+import { Button } from 'linode-components/buttons';
+import { CancelButton } from 'linode-components/buttons';
 
 export default class ConfigSelectModalBody extends Component {
   constructor(props) {

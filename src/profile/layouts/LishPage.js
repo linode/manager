@@ -1,17 +1,20 @@
 import React, { Component } from 'react';
 
-import { Card, CardHeader } from '~/components/cards';
-import { Form, FormGroup, FormGroupError, SubmitButton, Select } from '~/components/form';
-import { ErrorSummary } from '~/errors';
+import { Card, CardHeader } from 'linode-components/cards';
+import { Form, FormGroup, FormGroupError, SubmitButton, Select } from 'linode-components/forms';
+
+import { FormSummary } from '~/components/forms';
+
 
 export default class NotificationsPage extends Component {
   constructor() {
     super();
-    // TODO: grab lish settings from API
+
     this.state = {
       authorization: '',
       keys: '',
       errors: {},
+      loading: false,
     };
   }
 
@@ -20,7 +23,7 @@ export default class NotificationsPage extends Component {
   }
 
   render() {
-    const { errors, authorization, keys } = this.state;
+    const { errors, loading, authorization, keys } = this.state;
 
     return (
       <div>
@@ -28,7 +31,7 @@ export default class NotificationsPage extends Component {
           <Form onSubmit={this.onSubmit}>
             <FormGroup className="row" errors={errors} name="mode">
               <label htmlFor="authorization" className="col-sm-2 col-form-label">
-                Authorization mode:
+                Authorization mode
               </label>
               <div className="col-sm-10">
                 <Select
@@ -58,10 +61,10 @@ export default class NotificationsPage extends Component {
             </FormGroup>
             <FormGroup className="row">
               <div className="offset-sm-2 col-sm-10">
-                <SubmitButton disabled />
+                <SubmitButton disabled={loading} />
+                <FormSummary errors={errors} success="Lish settings saved." />
               </div>
             </FormGroup>
-            <ErrorSummary errors={errors} />
           </Form>
         </Card>
       </div>

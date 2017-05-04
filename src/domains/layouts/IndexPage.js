@@ -6,16 +6,17 @@ import _ from 'lodash';
 
 import { setError } from '~/actions/errors';
 import { showModal, hideModal } from '~/actions/modal';
-import { List, Table } from '~/components/tables';
-import { MassEditControl } from '~/components/tables/controls';
-import { ListHeader } from '~/components/tables/headers';
-import { ListBody, ListGroup } from '~/components/tables/bodies';
-import DeleteModalBody from '~/components/modals/DeleteModalBody';
+import { List } from 'linode-components/lists';
+import { Table } from 'linode-components/tables';
+import { MassEditControl } from 'linode-components/lists/controls';
+import { ListHeader } from 'linode-components/lists/headers';
+import { ListBody, ListGroup } from 'linode-components/lists/bodies';
+import { DeleteModalBody } from 'linode-components/modals';
 import {
   ButtonCell,
   CheckboxCell,
   LinkCell,
-} from '~/components/tables/cells';
+} from 'linode-components/tables/cells';
 
 import { domains as api } from '~/api';
 import { setSource } from '~/actions/source';
@@ -59,7 +60,6 @@ export class IndexPage extends Component {
 
     dispatch(showModal('Confirm deletion',
       <DeleteModalBody
-        buttonText="Delete selected Domains"
         onOk={async () => {
           const ids = zonesArr.map(function (zone) { return zone.id; });
 
@@ -112,7 +112,7 @@ export class IndexPage extends Component {
               >
                 <Table
                   columns={[
-                    { cellComponent: CheckboxCell },
+                    { cellComponent: CheckboxCell, headerClassName: 'CheckboxColumn' },
                     {
                       className: 'RowLabelCell',
                       cellComponent: LinkCell,
@@ -121,6 +121,7 @@ export class IndexPage extends Component {
                     { dataKey: 'type' },
                     {
                       cellComponent: ButtonCell,
+                      headerClassName: 'ButtonColumn',
                       text: 'Delete',
                       onClick: (zone) => { this.deleteZones(zone); },
                     },

@@ -3,9 +3,8 @@ import sinon from 'sinon';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
 
-import { api } from '@/data';
+import { testLinode1235 } from '@/data/linodes';
 import { AdvancedPage } from '~/linodes/linode/settings/layouts/AdvancedPage';
-const { linodes } = api;
 
 describe('linodes/linode/settings/layouts/AdvancedPage', () => {
   const sandbox = sinon.sandbox.create();
@@ -19,8 +18,7 @@ describe('linodes/linode/settings/layouts/AdvancedPage', () => {
   it('renders config panel component', () => {
     const page = shallow(
       <AdvancedPage
-        linodes={linodes}
-        params={{ linodeLabel: 'test-linode-1' }}
+        linode={testLinode1235}
         dispatch={() => {}}
       />
     );
@@ -31,8 +29,7 @@ describe('linodes/linode/settings/layouts/AdvancedPage', () => {
   it('renders disk panel component', () => {
     const page = shallow(
       <AdvancedPage
-        linodes={linodes}
-        params={{ linodeLabel: 'test-linode-1' }}
+        linode={testLinode1235}
         dispatch={() => {}}
       />
     );

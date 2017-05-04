@@ -1,20 +1,26 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { getLinode } from '~/linodes/linode/layouts/IndexPage';
-import { Card, CardHeader } from '~/components/cards';
-import { CheckboxInputCombo, Form, SubmitButton } from '~/components/form';
-import { linodes } from '~/api';
+import { Card, CardHeader } from 'linode-components/cards';
+import {
+  CheckboxInputCombo, Form, FormGroup, FormGroupError, SubmitButton,
+} from 'linode-components/forms';
+
 import { setSource } from '~/actions/source';
+import { linodes } from '~/api';
+import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+
+import { selectLinode } from '../../utilities';
+
 
 export class AlertsPage extends Component {
   constructor(props) {
     super(props);
-    this.getLinode = getLinode.bind(this);
     this.renderAlertRow = this.renderAlertRow.bind(this);
     this.state = {
       loading: false,
-      alerts: this.getLinode().alerts || {
+      errors: {},
+      alerts: props.linode.alerts || {
         cpu: { threshold: 0, enabled: false },
         io: { threshold: 0, enabled: false },
         transfer_in: { threshold: 0, enabled: false },
@@ -29,16 +35,16 @@ export class AlertsPage extends Component {
     dispatch(setSource(__filename));
   }
 
-  async saveChanges() {
-    const { dispatch } = this.props;
-    const { id } = this.getLinode();
-    this.setState({ loading: true });
-    await dispatch(linodes.put({ alerts: this.state.alerts }, id));
-    this.setState({ loading: false });
+  onSubmit = async () => {
+    const { dispatch, linode } = this.props;
+
+    await dispatch(dispatchOrStoreErrors.apply(this, [
+      [() => linodes.put({ alerts: this.state.alerts }, linode.id)],
+    ]));
   }
 
   renderAlertRow({ key, name, value, label, text }) {
-    const { loading } = this.state;
+    const { errors } = this.state;
     const { threshold, enabled } = value;
     const int = i => parseInt(i, 10);
     const thresholdChange = e =>
@@ -51,31 +57,40 @@ export class AlertsPage extends Component {
         ...this.state.alerts,
         [key]: { ...value, enabled: e.target.checked } },
       });
+    const crumbs = `alerts.${key}`;
 
     return (
-      <div className="form-group row" key={name}>
-        <label className="col-sm-2 col-form-label">{name}:</label>
-        <div className="col-sm-10 ">
-          <CheckboxInputCombo
-            checkboxLabel="Enable"
-            checkboxChecked={enabled}
-            checkboxOnChange={enabledChange}
-            checkboxDisabled={loading}
-            inputType="number"
-            inputValue={threshold}
-            inputOnChange={thresholdChange}
-            inputLabel={label}
-            inputDisabled={loading}
-          />
+      <FormGroup className="row" name="threshold" crumbs={crumbs} errors={errors} key={name}>
+        <label className="col-sm-2 col-form-label">{name}</label>
+        <div className="col-sm-10 clearfix">
+          <div className="clearfix">
+            <div className="float-sm-left">
+              <CheckboxInputCombo
+                checkboxLabel="Enable"
+                checkboxChecked={enabled}
+                checkboxOnChange={enabledChange}
+                inputType="number"
+                inputValue={threshold}
+                inputOnChange={thresholdChange}
+                inputLabel={label}
+              />
+            </div>
+            <FormGroupError
+              errors={errors}
+              name="threshold"
+              crumbs={crumbs}
+              className="float-sm-left"
+            />
+          </div>
           <small className="text-muted">Triggered by: {text} exceeding this value</small>
         </div>
-      </div>
+      </FormGroup>
     );
   }
 
   render() {
     const { cpu, io, transfer_in, transfer_out, transfer_quota } = this.state.alerts;
-    const { loading } = this.state;
+    const { loading, errors } = this.state;
     const alerts = [
       {
         name: 'CPU usage', key: 'cpu', value: cpu, label: '%',
@@ -99,18 +114,16 @@ export class AlertsPage extends Component {
       },
     ];
 
+    const header = <CardHeader title="Alerts" helpLink="https://google.com" />;
+
     return (
-      <Card
-        className="linode-alerts"
-        header={
-          <CardHeader title="Alerts" helpLink="https://google.com" />
-        }
-      >
-        <Form onSubmit={() => this.saveChanges()}>
+      <Card header={header}>
+        <Form onSubmit={this.onSubmit}>
           {alerts.map(this.renderAlertRow)}
           <div className="row">
             <div className="offset-sm-2 col-sm-10">
               <SubmitButton disabled={loading} />
+              <FormSummary errors={errors} success="Alerts settings saved." />
             </div>
           </div>
         </Form>
@@ -120,12 +133,8 @@ export class AlertsPage extends Component {
 }
 
 AlertsPage.propTypes = {
-  linodes: PropTypes.object.isRequired,
+  linode: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
 };
 
-function select(state) {
-  return { linodes: state.api.linodes };
-}
-
-export default connect(select)(AlertsPage);
+export default connect(selectLinode)(AlertsPage);

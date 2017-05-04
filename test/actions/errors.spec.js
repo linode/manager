@@ -1,6 +1,6 @@
 import sinon from 'sinon';
 import { expect } from 'chai';
-import * as actions from '../../src/actions/errors';
+import * as actions from '~/actions/errors';
 
 describe('actions/errors', () => {
   describe('toggleDetails', () => {
@@ -29,10 +29,11 @@ describe('actions/errors', () => {
           get: () => 'application/json',
         },
         json,
+        status: 200,
       };
       const thunk = actions.setError(response);
       await thunk(() => {});
-      expect(json.calledOnce).to.equal(true);
+      expect(json.callCount).to.equal(1);
     });
 
     it('dispatches a SET_ERROR action', async () => {
@@ -41,13 +42,13 @@ describe('actions/errors', () => {
           get: () => 'application/json',
         },
         json: () => ({ foo: 'bar' }),
-        statusCode: 400,
+        status: 400,
         statusText: 'Bad Request',
       };
       const thunk = actions.setError(response);
       const dispatch = sandbox.spy();
       await thunk(dispatch);
-      expect(dispatch.calledOnce).to.equal(true);
+      expect(dispatch.callCount).to.equal(1);
       expect(dispatch.calledWith({
         type: actions.SET_ERROR,
         status: 400,

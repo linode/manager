@@ -5,7 +5,6 @@ import {
 
 export const config = genConfig({
   plural: 'tokens',
-  singular: 'token',
   endpoint: id => `/account/tokens/${id}`,
   supports: [ONE, MANY, DELETE, POST, PUT],
 });

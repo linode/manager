@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 
-import LinkCell from './LinkCell';
+import { LinkCell } from 'linode-components/tables/cells';
 
 
 export default function BackupsCell(props) {

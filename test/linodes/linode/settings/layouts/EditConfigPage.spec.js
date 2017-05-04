@@ -6,11 +6,9 @@ import { push } from 'react-router-redux';
 import deepFreeze from 'deep-freeze';
 
 import { api, state } from '@/data';
-import { testLinode } from '@/data/linodes';
+import { testLinode, testLinode1233 } from '@/data/linodes';
 import { expectRequest, expectObjectDeepEquals } from '@/common';
 import { EditConfigPage } from '~/linodes/linode/settings/layouts/EditConfigPage';
-
-const { kernels, linodes } = api;
 
 describe('linodes/linode/settings/layouts/EditConfigPage', () => {
   const sandbox = sinon.sandbox.create();
@@ -22,11 +20,11 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
   });
 
   const props = deepFreeze({
-    linodes,
-    kernels,
-    params: {
-      linodeLabel: `${testLinode.label}`,
-      configId: '12345',
+    linode: testLinode,
+    config: testLinode._configs.configs[12345],
+    kernels: api.kernels,
+    account: {
+      network_helper: true,
     },
   });
 
@@ -88,30 +86,10 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
     );
 
     await page.instance().saveChanges();
-    expect(dispatch.calledTwice).to.equal(true);
+    expect(dispatch.callCount).to.equal(2);
     const arg = dispatch.secondCall.args[0];
     expectObjectDeepEquals(
-      arg, push(`/linodes/${props.params.linodeLabel}/settings/advanced`));
-  });
-
-  it('config not exist', async () => {
-    const badProps = {
-      ...props,
-      params: {
-        linodeLabel: `${testLinode.label}`,
-        configId: '999999999999999',
-      },
-    };
-    const path = `/linodes/${testLinode.label}/settings/advanced`;
-
-    const page = mount(
-      <EditConfigPage
-        {...badProps}
-        dispatch={dispatch}
-      />);
-
-    await page.instance().componentDidMount();
-    expect(dispatch.calledWith(push(path))).to.equal(true);
+      arg, push(`/linodes/${props.linode.label}/settings/advanced`));
   });
 
   it('remove disk slot', async () => {
@@ -135,7 +113,8 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
     const page = await mount(
       <EditConfigPage
         {...props}
-        params={{ linodeLabel: 'test-linode-1233', configId: '12346' }}
+        linode={testLinode1233}
+        config={testLinode1233._configs.configs[12346]}
         dispatch={dispatch}
       />
     );
@@ -160,6 +139,19 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
     );
 
     expect(page.find('#config-device-sda').props().value).to.equal('12345');
+  });
+
+  it('uses network helper default on create', async () => {
+    const page = await mount(
+      <EditConfigPage
+        {...props}
+        create
+        params={{ linodeLabel: 'test-linode-1233' }}
+        dispatch={dispatch}
+      />
+    );
+
+    expect(page.find('#config-enableNetworkHelper').props().checked).to.equal(true);
   });
 
   describe('UI changes state values', () => {
@@ -431,7 +423,7 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
       const isMaxRam = page.find('#config-isMaxRam-true');
       isMaxRam.simulate('change', { target: { value: true } });
       await page.instance().saveChanges(false);
-      expect(dispatch.calledTwice).to.equal(true);
+      expect(dispatch.callCount).to.equal(2);
       const fn = dispatch.firstCall.args[0];
 
       await expectRequest(fn, `/linode/instances/${testLinode.id}/configs/12345`, {
@@ -447,7 +439,7 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
             sda: { id: 12345 },
             sdb: { id: 12346 },
           },
-          initrd: '',
+          initrd: null,
           root_device: '/dev/sda',
           helpers: {
             disable_updatedb: true,

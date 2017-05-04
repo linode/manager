@@ -20,7 +20,7 @@ initializeAuthentication(store.dispatch);
 import Layout from './layouts/Layout';
 import OAuthCallbackPage from './layouts/OAuth';
 import Logout from './layouts/Logout';
-import { NotFound } from './components/Error';
+import { NotFound } from 'linode-components/errors';
 import Linodes from './linodes';
 import Weblish from './linodes/linode/layouts/Weblish';
 import NodeBalancers from './nodebalancers';
@@ -30,7 +30,7 @@ import Users from './users';
 import Billing from './billing';
 import Settings from './settings';
 import Support from './support';
-import Styleguide from './styleguide';
+import Styleguide from 'linode-styleguide';
 import { hideModal } from '~/actions/modal';
 import { LoadingRouterContext } from '~/router';
 
@@ -59,6 +59,7 @@ const init = () => {
         <Router
           history={history}
           onUpdate={logPageView}
+          dispatch={store.dispatch}
           render={props => <LoadingRouterContext {...fillInMissingProps(props)} />}
         >
           <Route

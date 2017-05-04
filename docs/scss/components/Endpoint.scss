@@ -1,0 +1,45 @@
+.Endpoint {
+    &-header {
+        padding: 25px;
+    }
+
+    &-header {
+
+    }
+
+    &-title {
+        padding: 10px 0;
+
+        h1 {
+            margin: 0;
+        }
+    }
+
+    &-body {
+
+    }
+
+    &-methods {
+
+    }
+
+    &-methodsLabel {
+
+    }
+
+    &-methodsList {
+        display: inline;
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+
+        li {
+            display: inline;
+            margin-left: 10px;
+        }
+    }
+
+    .divider {
+     border: $border;
+    }
+}

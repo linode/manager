@@ -14,8 +14,6 @@ describe('api/apiActionReducerGenerator', () => {
   it('gets the state of a specific resource', () => {
     const config = gen.genConfig({
       plural: 'linodes',
-      singular: 'linode',
-      localStorageCacheable: true,
       endpoint: id => `/linode/instances/${id}`,
       supports: [gen.ONE, gen.MANY, gen.PUT, gen.DELETE, gen.POST],
     });
@@ -29,8 +27,6 @@ describe('api/apiActionReducerGenerator', () => {
   it('filters resources', () => {
     const config = gen.genConfig({
       plural: 'linodes',
-      singular: 'linode',
-      localStorageCacheable: true,
       endpoint: id => `/linode/instances/${id}`,
       supports: [gen.ONE, gen.MANY, gen.PUT, gen.DELETE, gen.POST],
     });

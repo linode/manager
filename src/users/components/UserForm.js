@@ -7,9 +7,9 @@ import {
   Input,
   Checkboxes,
   Radio,
-} from '~/components/form';
-import { ErrorSummary } from '~/errors';
-import { SubmitButton } from '~/components/form';
+} from 'linode-components/forms';
+import { FormSummary } from '~/components/forms';
+import { SubmitButton } from 'linode-components/forms';
 
 export class UserForm extends Component {
   constructor(props) {
@@ -72,12 +72,13 @@ export class UserForm extends Component {
         </FormGroup>
         {this.props.username ? null :
           <FormGroup errors={errors} name="password" className="row">
-            <label className="col-sm-2 col-form-label">Password</label>
-            <div className="col-sm-6">
+            <label htmlFor="password" className="col-sm-2 col-form-label">Password</label>
+            <div className="col-sm-10">
               <PasswordInput
-                onChange={password => this.setState({ password })}
                 value={password}
-                id="new-password"
+                name="password"
+                id="password"
+                onChange={({ target: { value: password } }) => this.setState({ password })}
               />
               <FormGroupError errors={errors} name="password" />
             </div>
@@ -108,7 +109,7 @@ export class UserForm extends Component {
             <SubmitButton>{this.props.username ? 'Save' : 'Add User'}</SubmitButton>
           </div>
         </div>
-        <ErrorSummary errors={errors} />
+        <FormSummary errors={errors} />
       </Form>
     );
   }

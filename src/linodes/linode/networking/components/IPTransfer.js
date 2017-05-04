@@ -1,12 +1,15 @@
 import React, { PropTypes, Component } from 'react';
 import { push } from 'react-router-redux';
 
-import { Card, CardHeader } from '~/components/cards';
-import { Form, FormGroup, SubmitButton, Select } from '~/components/form';
-import { ErrorSummary, reduceErrors } from '~/errors';
-import IPList from './IPList';
-import { assignIps, linodeIPs } from '~/api/linodes';
+import { Card, CardHeader } from 'linode-components/cards';
+import { Form, FormGroup, SubmitButton, Select } from 'linode-components/forms';
+
 import { linodes as apiLinodes } from '~/api';
+import { assignIps, linodeIPs } from '~/api/linodes';
+import { FormSummary, reduceErrors } from '~/components/forms';
+
+import IPList from './IPList';
+
 
 export default class IPTransfer extends Component {
   constructor(props) {
@@ -17,7 +20,7 @@ export default class IPTransfer extends Component {
       this.state = {
         ...state,
         errors: {},
-        saving: false,
+        loading: false,
         checkedA: {},
         checkedB: {},
       };
@@ -29,7 +32,7 @@ export default class IPTransfer extends Component {
     const { dispatch, linode, linodes } = this.props;
     const { checkedA, checkedB, selectedOtherLinode } = this.state;
 
-    this.setState({ errors: {}, saving: true });
+    this.setState({ errors: {}, loading: true });
 
     const otherLinode = linodes[selectedOtherLinode];
     // checkedA ips go to selectedOtherLinode, checkedB ips go here
@@ -65,7 +68,7 @@ export default class IPTransfer extends Component {
       this.setState({ errors });
     }
 
-    this.setState({ saving: false });
+    this.setState({ loading: false });
   }
 
   otherLinodes(props) {
@@ -85,7 +88,7 @@ export default class IPTransfer extends Component {
   }
 
   render() {
-    const { errors, saving, selectedOtherLinode, checkedA, checkedB } = this.state;
+    const { errors, loading, selectedOtherLinode, checkedA, checkedB } = this.state;
     const { linode, linodes } = this.props;
 
     return (
@@ -141,8 +144,8 @@ export default class IPTransfer extends Component {
               />
             </div>
           </FormGroup>
-          <SubmitButton disabled={saving}>Transfer IPs</SubmitButton>
-          <ErrorSummary errors={errors} />
+          <SubmitButton disabled={loading}>Transfer IPs</SubmitButton>
+          <FormSummary errors={errors} />
         </Form>
       </Card>
     );

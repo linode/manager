@@ -2,7 +2,6 @@ import React from 'react';
 import sinon from 'sinon';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
-import moment from 'moment';
 
 import { IndexPage } from '~/support/layouts/IndexPage';
 import { api } from '@/data';
@@ -35,13 +34,11 @@ describe('support/layouts/IndexPage', () => {
     expect(label.props().to).to.equal(`/support/${id}`);
     expect(label.text()).to.equal(renderedTicket.summary);
 
-    const formatTime = time => moment.utc(time).fromNow();
-
     expect(ticket.find(`#opened-by-${id}`).text()).to.equal(renderedTicket.opened_by);
-    expect(ticket.find(`#opened-${id}`).text()).to.equal(formatTime(renderedTicket.opened));
+    expect(ticket.find(`#opened-${id} TimeDisplay`).props().time).to.equal(renderedTicket.opened);
     expect(ticket.find(`#regarding-${id}`).text()).to.equal(renderedTicket.entity.label);
 
-    expect(ticket.find('td').at(2).text()).to.equal(
-      `Updated by ${renderedTicket.updated_by} ${formatTime(renderedTicket.updated)}`);
+    expect(ticket.find(`#updated-by-${id}`).text()).to.equal(renderedTicket.updated_by);
+    expect(ticket.find(`#updated-${id} TimeDisplay`).props().time).to.equal(renderedTicket.updated);
   });
 });

@@ -26,7 +26,10 @@ export function fetch(token, _path, _options) {
    * See comment on rawFetch.
    */
 
-  const fetchRef = module.exports.rawFetch;
+  let fetchRef = window.fetch;
+  if (module && module.exports) {
+    fetchRef = module.exports.rawFetch;
+  }
 
   const options = _.merge({
     mode: 'cors',

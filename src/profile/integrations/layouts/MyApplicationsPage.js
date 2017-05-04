@@ -5,7 +5,7 @@ import CreateHelper from '~/components/CreateHelper';
 import { setError } from '~/actions/errors';
 import { showModal, hideModal } from '~/actions/modal';
 import { clients } from '~/api';
-import { Button } from '~/components/buttons';
+import { Button } from 'linode-components/buttons';
 import MyApplication from '../components/MyApplication';
 import CreateApplication from '../components/CreateApplication';
 

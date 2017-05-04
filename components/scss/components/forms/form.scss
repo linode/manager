@@ -1,0 +1,101 @@
+form {
+  h3 {
+    padding: 10px 0;
+  }
+}
+
+.col-form-label,
+.form-control,
+.form-control-feedback {
+  @extend .font-normal;
+  padding: $form-field-padding;
+}
+
+.col-form-label {
+  color: $light-black; // $lightest-black
+  text-align: right;
+}
+
+.form-control {
+    border-radius: 0;
+    color: $black;
+    display: inline-block;
+
+    &:focus {
+        color: $black;
+    }
+
+}
+
+input[type="checkbox"]:hover,
+input[type="radio"]:hover {
+    cursor: pointer;
+}
+
+select.form-control:not([size]):not([multiple]) {
+  height: $form-field-height;
+}
+
+input.form-control,
+select.form-control {
+    width: 225px;
+    max-width: 100%;
+}
+
+input.form-control.input-md,
+select.form-control.input-md {
+  width: 275px;
+}
+
+input.form-control.input-lg,
+select.form-control.input-lg {
+    min-width: 600px;
+}
+
+input[type="number"].form-control {
+  width: 125px;
+}
+
+textarea {
+    border: $border;
+    max-width: 100%;
+    min-height: 100px;
+    min-width: 400px;
+    outline: none;
+    padding: 6px 8px;
+    resize: both;
+
+    &.textarea-md {
+        min-width: 600px;
+        min-height: 200px;
+    }
+
+    &.textarea-lg {
+        min-height: 200px;
+        width: 100%;
+    }
+}
+
+.form-group {
+  margin-bottom: 10px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+// TODO: move, apply appropriate fixes
+.Nodebalancer-create {
+    padding: 15px 0;
+
+    .static-plan {
+        padding: 6px 8px 6px 0;
+    }
+}
+
+// TODO: move and apply appropriate fix
+.DNSManager-create {
+    h1 {
+        padding: 15px 0 0 0;
+    }
+}

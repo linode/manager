@@ -1,0 +1,24 @@
+.Example {
+    padding: 10px 0 0 0;
+    position: relative;
+
+    &-copy {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
+    pre {
+        background-color: $black;
+        color: $white;
+        padding: 10px;
+
+        code {
+            @extend .font-small;
+        }
+    }
+}

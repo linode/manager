@@ -1,25 +1,37 @@
 import React from 'react';
 import { expect } from 'chai';
 import sinon from 'sinon';
-import { shallow } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 
+import { kernels, distributions, regions, types, account } from '~/api';
+import * as fetch from '~/fetch';
 import { LoadingRouterContext } from '~/router';
 import * as session from '~/session';
+import { store } from '~/store';
+
 
 describe('router/LoadingRouterContext', () => {
   const sandbox = sinon.sandbox.create();
+
+  beforeEach(() => {
+    sandbox.stub(fetch, 'rawFetch');
+    sandbox.stub(account, 'one', () => ({ type: 'NO TYPE' }));
+    [kernels, distributions, regions, types].forEach(object => {
+      sandbox.stub(object, 'all', () => ({ type: 'NO TYPE' }));
+    });
+  });
 
   afterEach(() => {
     sandbox.restore();
   });
 
   it('should call check login state and preload methods on componentWillMount', async () => {
-    const match = sandbox.spy();
     const checkLoginStub = sandbox.stub(session, 'checkLogin');
 
-    const rc = shallow(
+    const rc = mount(
       <LoadingRouterContext
-        match={match}
+        dispatch={sinon.stub().returns(Promise.resolve())}
+        match={sandbox.spy()}
         router={{}}
         routes={[]}
         location={{ pathname: '/' }}
@@ -28,9 +40,15 @@ describe('router/LoadingRouterContext', () => {
       />
     );
 
-    match.reset();
     checkLoginStub.reset();
-    await rc.instance().componentWillMount();
+    const match = sandbox.spy();
+    const _this = rc.instance();
+    await _this.componentWillMount.call({
+      ..._this,
+      match,
+      runPreload: _this.runPreload,
+      setState: _this.setState,
+    });
     expect(match.callCount).to.equal(1);
     expect(checkLoginStub.callCount).to.equal(1);
   });
@@ -47,6 +65,7 @@ describe('router/LoadingRouterContext', () => {
       location: { pathname: 'a path' },
       history: {},
       params: {},
+      dispatch: store.dispatch,
     };
 
     const rc = shallow(
@@ -62,51 +81,6 @@ describe('router/LoadingRouterContext', () => {
     expect(match.callCount).to.equal(1);
   });
 
-  it('should prevent updates while preload is running', async () => {
-    // Prevent redirect to login
-    sandbox.stub(session, 'checkLogin');
-
-    let resolvePreload = null;
-    const preload = async (store, params) => {
-      expect(params).to.deep.equal({ myParam: 2 });
-
-      return new Promise((resolve) => {
-        resolvePreload = resolve;
-      });
-    };
-
-    // The second call (by react-router) is not promisified.
-    let firstCall = true;
-    const matchPromise = (_ref, callback) =>
-      !firstCall ? null : new Promise(resolve => {
-        firstCall = false;
-        expect(_ref.routes).to.deep.equal([1, 2, 3]);
-        expect(_ref.location).to.equal('/');
-
-        callback(null, null, { routes: [{ component: { preload } }] }, resolve);
-      });
-
-    const rc = shallow(
-      <LoadingRouterContext
-        match={matchPromise}
-        router={{}}
-        routes={[1, 2, 3]}
-        location={{ pathname: '/' }}
-        history={{}}
-        params={{ myParam: 2 }}
-      />
-    );
-
-    await rc.instance().componentWillMount();
-    expect(rc.instance().shouldComponentUpdate()).to.equal(false);
-
-    resolvePreload();
-    // Allow (at least) one step in the event loop before evaluating shouldComponentUpdate
-    await new Promise(resolve => setTimeout(resolve, 0));
-
-    expect(rc.instance().shouldComponentUpdate()).to.equal(true);
-  });
-
   it('should not render on initial load', async () => {
     // Prevent redirect to login
     sandbox.stub(session, 'checkLogin');
@@ -119,6 +93,7 @@ describe('router/LoadingRouterContext', () => {
         location={{ pathname: '/' }}
         history={{}}
         params={{}}
+        dispatch={store.dispatch}
       />
     );
 

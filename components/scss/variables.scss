@@ -1,0 +1,76 @@
+/* BEGIN Color definitions */
+$light-blue: #DEEFF5;
+$blue: #4A90E2;
+$dark-blue: darken($blue, 10%);
+
+$green: #38D377;
+$red: #F24C2B;
+
+$yellow: #FFFCF0;
+$dark-yellow: darken($yellow, 20);
+$darkest-yellow: darken($yellow, 40);
+
+$light-gray: #FBFBFB;
+$gray: #F3F3F3;
+$dark-gray: #DDDDDD;
+$default-gray: #a6a6a6;
+
+$lightest-black: #ACACAC;
+$light-black: #777;
+$black: #4b4b4b;
+$darkest-black: #111;
+$dark-black: #333333;
+
+$white: #FEFEFE;
+$transparent: rgba(0, 0, 0, 0.5);
+
+$nav-hover-background-color: #3c3c3c;
+/* END color definitions */
+
+
+/* BEGIN layout definitions */
+
+$main-padding-tb: 10px;
+$main-padding-lr: 20px;
+
+$nav-height: 60px;
+$main-height: calc(100% - #{$nav-height});
+
+
+/* END layout definitions */
+
+
+/* BEGIN generic definitions */
+
+$form-field-height: 32px;
+$form-field-padding: 6px 8px;
+
+$border-gray: $dark-gray;
+$border: 1px solid $border-gray;
+$box-shadow: 0px 2px 4px 0px $transparent;
+
+/* END generic definitions */
+
+
+/* BEGIN bootstrap overrides */
+$grid-gutter-width: 50px;
+$grid-gutter-width-base: 50px;
+
+$grid-max-width: 1140px;
+
+// Basically just sets each max width to 100%
+$container-max-widths: (
+  sm: 100%,
+  md: 100%,
+  lg: 100%,
+  xl: $grid-max-width
+);
+
+/* END bootstrap overrides */
+
+
+/* BEGIN z-index definitions */
+
+$preload-z-index: 10000;
+
+/* END z-index definitions */

@@ -6,6 +6,7 @@ import { mount } from 'enzyme';
 import { RebuildPage } from '~/linodes/linode/layouts/RebuildPage';
 import { expectRequest, expectObjectDeepEquals } from '@/common';
 import { api } from '@/data';
+import { testLinode } from '@/data/linodes';
 
 describe('linodes/linode/layouts/RebuildPage', () => {
   const sandbox = sinon.sandbox.create();
@@ -22,8 +23,7 @@ describe('linodes/linode/layouts/RebuildPage', () => {
       <RebuildPage
         dispatch={dispatch}
         distributions={api.distributions}
-        linodes={api.linodes}
-        params={{ linodeLabel: 'test-linode' }}
+        linode={testLinode}
       />
     );
 
