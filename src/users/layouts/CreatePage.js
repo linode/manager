@@ -103,7 +103,7 @@ export class CreatePage extends Component {
                       name="restricted"
                       id="restricted"
                       checked={restricted}
-                      value={true}
+                      value
                       onChange={() => this.setState({ restricted: true })}
                       label="Yes - this user can only do what I specify"
                     />

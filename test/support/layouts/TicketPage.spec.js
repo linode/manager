@@ -65,7 +65,7 @@ describe('support/layouts/TicketPage', () => {
     // No attachments, so save attachment endpoint not called.
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      ([fn]) => await expectRequest(fn, `/support/tickets/${testTicket.id}/replies/`, {
+      async ([fn]) => await expectRequest(fn, `/support/tickets/${testTicket.id}/replies/`, {
         method: 'POST',
         body: { description: reply },
       }),

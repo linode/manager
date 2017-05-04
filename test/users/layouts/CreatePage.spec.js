@@ -32,7 +32,7 @@ describe('users/layouts/CreatePage', () => {
     changeInput('Input', 'email', 'user@example.com');
     changeInput('Input', 'password', 'password');
     changeInput('Radio', 'restricted', true);
-    
+
     await page.find('Form').simulate('submit');
     const fn = dispatch.firstCall.args[0];
 

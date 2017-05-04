@@ -1,11 +1,11 @@
 import { expect } from 'chai';
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
 import { ChangeEmail } from '~/profile/components';
 
-import { profile } from '@/profile';
+import { profile } from '@/data/profile';
 import { expectRequest, expectDispatchOrStoreErrors } from '@/common';
 
 
@@ -26,7 +26,7 @@ describe('profile/components/ChangeEmail', () => {
     );
 
     const changeInput = (id, value) =>
-      page.find({ id, name: id }).props().onChange({ target: { value, name: id } });
+      page.find({ id, name: id }).simulate('change', { target: { value, name: id } });
 
     changeInput('email', 'new@gmail.com');
 
