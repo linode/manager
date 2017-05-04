@@ -35,8 +35,14 @@ export class DiskPanel extends Component {
     await dispatch(linodes.disks.all([id]));
   }
 
+  poweredOff() {
+    return [
+      'offline', 'contact_support', 'provisioning'
+    ].indexOf(this.props.linode.status) !== -1;
+  }
+
   renderStatusMessage(status) {
-    if (status !== 'offline' && status !== 'provisioning') {
+    if (!this.poweredOff()) {
       return (
         <section>
           <div className="alert alert-info">
@@ -55,7 +61,6 @@ export class DiskPanel extends Component {
     const total = linode.type.storage;
     const used = disks.reduce((total, disk) => total + disk.size, 0);
     const free = total - used;
-    const poweredOff = linode.status === 'offline';
 
     const addModal = <AddModalRedux free={free} linode={linode} />;
 
@@ -96,7 +101,7 @@ export class DiskPanel extends Component {
               <p>{d.size} MB</p>
               {d.state !== 'deleting' ? null :
                 <small className="text-muted">Being deleted</small>}
-                {!poweredOff || d.state === 'deleting' ? null : (
+                {!this.poweredOff() || d.state === 'deleting' ? null : (
                   <div>
                     <Button
                       className="LinodesLinodeSettingsComponentsDiskPanel-edit"
@@ -110,22 +115,20 @@ export class DiskPanel extends Component {
                 )}
             </div>
           )}
-          {free <= 0 ? null : (
-            <div
-              className="disk free"
-              key={'free'}
-              style={{ flexGrow: free }}
-            >
-              <h3>Unallocated</h3>
-              <p>{free} MB</p>
-              {!poweredOff ? null : (
-                <Button
-                  onClick={() => dispatch(showModal('Add a disk', addModal))}
-                  className="LinodesLinodeSettingsComponentsDiskPanel-add"
-                >Add a disk</Button>
-              )}
-            </div>
-           )}
+          <div
+            className="disk free"
+            key={'free'}
+            style={{ flexGrow: free }}
+          >
+            <h3>Unallocated</h3>
+            <p>{free} MB</p>
+            {!this.poweredOff() ? null : (
+               <Button
+                 onClick={() => dispatch(showModal('Add a disk', addModal))}
+                 disabled={free === 0}
+               >Add a disk</Button>
+             )}
+          </div>
         </section>
         {this.renderStatusMessage(linode.status)}
       </Card>

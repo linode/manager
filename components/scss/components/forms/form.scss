@@ -62,7 +62,7 @@ textarea {
     min-height: 100px;
     min-width: 400px;
     outline: none;
-    padding: 6px 8px;
+    padding: $form-field-padding;
     resize: both;
 
     &.textarea-md {
@@ -89,7 +89,8 @@ textarea {
     padding: 15px 0;
 
     .static-plan {
-        padding: 6px 8px 6px 0;
+        padding: $form-field-padding;
+        padding-bottom: 0;
     }
 }
 
