@@ -116,7 +116,8 @@ function formatMethodResource(endpoint, method) {
           } else {
             description = schemaField.description;
           }
-          //description = convertUlToArray(description);
+
+          description = convertUlToArray(description);
           return {
             name: schemaName,
             description: description,
