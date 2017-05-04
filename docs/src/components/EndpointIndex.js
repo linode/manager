@@ -30,6 +30,7 @@ export default function EndpointIndex(props) {
                     cellComponent: LinkCell,
                     textKey: 'path',
                     label: 'Endpoint',
+                    headerClassName: 'EndpointColumn',
                     hrefFn: function(childEndpoint) {
                       return childEndpoint.path;
                     }

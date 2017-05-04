@@ -3883,7 +3883,7 @@ module.exports = { endpoints: [
     "path": "/account",
     "formattedEndpoints": [
       {
-        "name": "Account",
+        "name": "",
         "sort": 1,
         "base_path": "/account",
         "description": "Account endpoints provide a means of viewing user profile objects, as well as managing OAuth Clients and Tokens.\n",

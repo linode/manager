@@ -202,7 +202,9 @@ allEndpoints.forEach(function(endpoint) {
   console.log('BASE: ', basePath, ' ALT BASE: ', altBasePath);
 
   if (endpointMap[basePath]) {
-    endpointMap[basePath].formattedEndpoints.push(formatEndpoint(endpoint, basePath));
+    const formatted = formatEndpoint(endpoint, basePath);
+    if (formatted.name === 'Account') { formatted.name = ''; }
+    endpointMap[basePath].formattedEndpoints.push(formatted);
   } else if (endpointMap[altBasePath]) {
     endpointMap[altBasePath].formattedEndpoints.push(formatEndpoint(endpoint, altBasePath));
   } else {
