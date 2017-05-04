@@ -20,11 +20,9 @@ describe('components/forms/PasswordInput', () => {
         value=""
       />);
 
-    input.find('Input').simulate('change',
-                                  { target: { value: 'p@ssword' } });
+    input.find('Input').simulate('change', { target: { value: 'p@ssword' } });
 
     expect(change.callCount).to.equal(1);
-    expect(change.firstCall.args[0]).to.equal('p@ssword');
   });
 
   it('should calculate password strength', () => {
