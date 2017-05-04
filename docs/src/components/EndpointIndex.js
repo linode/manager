@@ -21,7 +21,7 @@ export default function EndpointIndex(props) {
       <div>
         {endpoint.formattedEndpoints.map(function(endpointSection) {
           return (
-            <div>
+            <div className="EndpointIndex-group">
               <h3>{endpointSection.name}</h3>
               <Table
                 className="Table--secondary"

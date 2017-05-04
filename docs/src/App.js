@@ -42,7 +42,8 @@ export function init() {
             return generateIndexRoute({ key: index, endpoint: endpoint });
           })}
           {api.endpoints.map(function(endpoint) {
-            return generateChildRoute({ endpoint: endpoint });
+            const crumb = [{ groupLabel: 'Reference', label: endpoint.path, to: endpoint.path }];
+            return generateChildRoute({ endpoint: endpoint, prevCrumbs: crumb });
           })}
         </Route>
         <Route path="*" component={NotFound} />

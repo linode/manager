@@ -7,6 +7,25 @@ const _ = require('lodash');
 const BASE_PATH = './src/data';
 const apiObjectMap = require('./src/data/objects/index').apiObjectMap;
 
+function stripATags(description) {
+  if (description) {
+    if (description.match(/href/)) {
+      // First the obligatory warning messages
+      // https://blog.codinghorror.com/parsing-html-the-cthulhu-way/
+      // http://stackoverflow.com/questions/1732348/regex-match-open-tags-except-xhtml-self-contained-tags/1732454#1732454
+      // find '<a' the beginning of the tag
+      // .* any character
+      // ? non greedy meaning stop after you've found the first match
+      // find '">' the end of the tag
+      // (space star) [ *] find zero or more spaces
+      // g global over the entire string
+      description = description.replace(/<a.*?"> */g, '');
+      description = description.replace(/<\/a>/g, '');
+    }
+  }
+  return description;
+}
+
 
 function formatMethodParams(methodObj) {
   let params;
@@ -14,6 +33,7 @@ function formatMethodParams(methodObj) {
     params = Object.keys(methodObj.params).map(function(paramName) {
       const param = methodObj.params[paramName];
 
+      param.description = stripATags(param.description);
       return _.merge({}, param, {
         name: paramName
       });
@@ -67,7 +87,13 @@ function formatMethodResource(endpoint, method) {
       if (schema) {
         resourceObject.schema = Object.keys(schema).map(function(schemaName) {
           const schemaField = schema[schemaName];
-          const description = !!schemaField._description ? schemaField._description : schemaField.description;
+
+          let description;
+          if (schemaField._description) {
+            description = schemaField._description;
+          } else {
+            description = schemaField.description;
+          }
 
           return {
             name: schemaName,
@@ -86,6 +112,7 @@ function formatMethodResource(endpoint, method) {
 
 function formatMethod(endpoint, method) {
   const methodObj = endpoint.methods[method];
+  methodObj.description = stripATags(methodObj.description);
   const resourceObj = formatMethodResource(endpoint, method);
   const examples = formatMethodExamples(methodObj);
   const params = formatMethodParams(methodObj);
@@ -99,13 +126,14 @@ function formatMethod(endpoint, method) {
 }
 
 
-function formatEndpoint(endpoint, path) {
+function formatEndpoint(endpoint, path = null) {
   let methods = null;
   if (endpoint.methods) {
     methods = Object.keys(endpoint.methods).map(function(method) {
       return formatMethod(endpoint, method);
     });
   }
+  endpoint.description = stripATags(endpoint.description);
 
   return _.merge({}, endpoint, {
     path: path,
@@ -113,7 +141,6 @@ function formatEndpoint(endpoint, path) {
     methods: methods
   });
 }
-
 
 const endpointsPath = path.join(BASE_PATH, 'endpoints');
 const files = fs.readdirSync(endpointsPath);
@@ -166,6 +193,7 @@ let endpointMap = {
     formattedEndpoints: []
   },
 };
+
 allEndpoints.forEach(function(endpoint) {
   const pathArr = endpoint.base_path.split('/');
   // console.log('PATH ARR: ', pathArr);
@@ -174,9 +202,9 @@ allEndpoints.forEach(function(endpoint) {
   console.log('BASE: ', basePath, ' ALT BASE: ', altBasePath);
 
   if (endpointMap[basePath]) {
-    endpointMap[basePath].formattedEndpoints.push(formatEndpoint(endpoint));
+    endpointMap[basePath].formattedEndpoints.push(formatEndpoint(endpoint, basePath));
   } else if (endpointMap[altBasePath]) {
-    endpointMap[altBasePath].formattedEndpoints.push(formatEndpoint(endpoint));
+    endpointMap[altBasePath].formattedEndpoints.push(formatEndpoint(endpoint, altBasePath));
   } else {
     console.log('NO MATCH FOUND: ', basePath);
   }
@@ -192,13 +220,9 @@ allEndpoints = allEndpoints.map(function(endpoint) {
   endpoint.formattedEndpoints = endpoint.formattedEndpoints.map(function(formattedEndpoint) {
     if (formattedEndpoint.endpoints) {
       Object.keys(formattedEndpoint.endpoints).forEach(function(path) {
-        // const pathArr = path.split('/');
-        // pathArr.shift(); // remove the base path
-        // const restPath = `/${pathArr.join('/')}`;
-        // console.log('REST :', restPath);
-        console.log(path);
+        const pathFromRoot = `/${path}`;
         const childEndpoint = formattedEndpoint.endpoints[path];
-        const childFormattedEndpoint = formatEndpoint(childEndpoint, path);
+        const childFormattedEndpoint = formatEndpoint(childEndpoint, pathFromRoot);
         formattedEndpoint.formattedEndpoints.push(childFormattedEndpoint);
       });
       delete formattedEndpoint.endpoints;

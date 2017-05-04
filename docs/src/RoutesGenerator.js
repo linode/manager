@@ -10,7 +10,7 @@ import {
 
 export function generateIndexRoute(props) {
   const { endpoint, key } = props;
-  const crumbs = [{ label: endpoint.path, to: endpoint.path }];
+  const crumbs = [{ groupLabel: 'Reference', label: endpoint.path, to: endpoint.path }];
 
   return (
     <Route
@@ -24,22 +24,16 @@ export function generateIndexRoute(props) {
 }
 
 export function generateChildRoute(props) {
-  const { endpoint } = props;
-  let crumbs = [{ label: endpoint.path, to: endpoint.path }];
+  const { prevCrumbs, endpoint } = props;
 
   let childEndpoints = null;
   if (endpoint.formattedEndpoints) {
     childEndpoints = endpoint.formattedEndpoints.map(function(childEndpoint, index) {
       if (childEndpoint.formattedEndpoints && childEndpoint.formattedEndpoints.length) {
-        return generateChildRoute({ endpoint: childEndpoint });
+        return generateChildRoute({ endpoint: childEndpoint, prevCrumbs: prevCrumbs });
       }
 
-      if (endpoint.path !== childEndpoint.path) {
-        crumbs = crumbs.concat([
-          { label: childEndpoint.path, to: childEndpoint.path }
-        ]);
-      }
-
+      const crumbs = [].concat(prevCrumbs).concat([{ label: childEndpoint.path, to: childEndpoint.path }]);
       return (
         <Route
           key={index}

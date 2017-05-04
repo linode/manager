@@ -7,7 +7,8 @@ module.exports = { endpoints: [
         "name": "Distributions",
         "sort": 2,
         "base_path": "/linode/distributions",
-        "description": "Distribution endpoints provide a means of viewing <a href=\"#object-distribution\">distribution objects</a>.\n",
+        "description": "Distribution endpoints provide a means of viewing distribution objects.\n",
+        "path": "/linode",
         "formattedEndpoints": [
           {
             "type": "list",
@@ -15,7 +16,7 @@ module.exports = { endpoints: [
             "description": "View the collection of distributions.\n",
             "methods": [
               {
-                "description": "Returns a list of <a href=\"#object-distribution\">distributions</a>.\n",
+                "description": "Returns a list of distributions.\n",
                 "examples": [
                   {
                     "name": "curl",
@@ -76,7 +77,7 @@ module.exports = { endpoints: [
                 }
               }
             ],
-            "path": "linode/distributions",
+            "path": "/linode/distributions",
             "formattedEndpoints": []
           },
           {
@@ -85,7 +86,7 @@ module.exports = { endpoints: [
             "description": "Returns information about a specific distribution.\n",
             "methods": [
               {
-                "description": "Returns information about this <a href=\"#object-distribution\"> distribution</a>.\n",
+                "description": "Returns information about this distribution.\n",
                 "examples": [
                   {
                     "name": "curl",
@@ -109,25 +110,30 @@ module.exports = { endpoints: [
                       "name": "1"
                     },
                     {
-                      "name": "2"
+                      "name": "2",
+                      "description": "The user-friendly name of this distribution."
                     },
                     {
-                      "name": "3"
+                      "name": "3",
+                      "description": "The minimum size required for the distrbution image."
                     },
                     {
-                      "name": "4"
+                      "name": "4",
+                      "description": "True if this distribution is recommended by Linode."
                     },
                     {
-                      "name": "5"
+                      "name": "5",
+                      "description": "The upstream distribution vendor. Consistent between releases of a distro."
                     },
                     {
-                      "name": "6"
+                      "name": "6",
+                      "description": "True if this is a 64-bit distribution."
                     }
                   ]
                 }
               }
             ],
-            "path": "linode/distributions/:id",
+            "path": "/linode/distributions/:id",
             "formattedEndpoints": []
           }
         ],
@@ -137,7 +143,8 @@ module.exports = { endpoints: [
         "name": "Kernels",
         "sort": 3,
         "base_path": "/linode/kernels",
-        "description": "Kernel endpoints provide a means of viewing <a href=\"#object-kernel\"> kernel objects</a>.\n",
+        "description": "Kernel endpoints provide a means of viewing kernel objects.\n",
+        "path": "/linode",
         "formattedEndpoints": [
           {
             "type": "list",
@@ -145,7 +152,7 @@ module.exports = { endpoints: [
             "description": "Returns collection of kernels.\n",
             "methods": [
               {
-                "description": "Returns list of <a href=\"#object-kernel\">kernels</a>.\n",
+                "description": "Returns list of kernels.\n",
                 "examples": [
                   {
                     "name": "curl",
@@ -222,7 +229,7 @@ module.exports = { endpoints: [
                 }
               }
             ],
-            "path": "linode/kernels",
+            "path": "/linode/kernels",
             "formattedEndpoints": []
           },
           {
@@ -231,7 +238,7 @@ module.exports = { endpoints: [
             "description": "Returns information about a specific kernel.\n",
             "methods": [
               {
-                "description": "Returns information about this <a href=\"#object-kernel\">kernel</a>.\n",
+                "description": "Returns information about this kernel.\n",
                 "examples": [
                   {
                     "name": "curl",
@@ -252,22 +259,28 @@ module.exports = { endpoints: [
                       "name": "0"
                     },
                     {
-                      "name": "1"
+                      "name": "1",
+                      "description": "Additional, descriptive text about the kernel."
                     },
                     {
-                      "name": "2"
+                      "name": "2",
+                      "description": "If this kernel is suitable for Xen Linodes."
                     },
                     {
-                      "name": "3"
+                      "name": "3",
+                      "description": "If this kernel is suitable for KVM Linodes."
                     },
                     {
-                      "name": "4"
+                      "name": "4",
+                      "description": "The friendly name of this kernel."
                     },
                     {
-                      "name": "5"
+                      "name": "5",
+                      "description": "Linux Kernel version."
                     },
                     {
-                      "name": "6"
+                      "name": "6",
+                      "description": "True if this is a 64-bit kernel, false for 32-bit."
                     },
                     {
                       "name": "7"
@@ -282,7 +295,7 @@ module.exports = { endpoints: [
                 }
               }
             ],
-            "path": "linode/kernels/:id",
+            "path": "/linode/kernels/:id",
             "formattedEndpoints": []
           }
         ],
@@ -292,7 +305,8 @@ module.exports = { endpoints: [
         "name": "Linodes",
         "sort": 0,
         "base_path": "/linode/instances",
-        "description": "Linode endpoints provide a means of managing the <a href=\"#object-linode\"> Linode objects</a> on your account.\n",
+        "description": "Linode endpoints provide a means of managing the Linode objects on your account.\n",
+        "path": "/linode",
         "formattedEndpoints": [
           {
             "type": "list",
@@ -302,7 +316,7 @@ module.exports = { endpoints: [
             "methods": [
               {
                 "oauth": "linodes:view",
-                "description": "Returns a list of <a href=\"#object-linode\">Linodes</a>.\n",
+                "description": "Returns a list of Linodes.\n",
                 "examples": [
                   {
                     "name": "curl",
@@ -521,12 +535,12 @@ module.exports = { endpoints: [
                 "description": "Creates a new Linode.\n",
                 "params": [
                   {
-                    "description": "A <a href=\"#object-region\">region</a> ID to provision this Linode in.\n",
+                    "description": "A region ID to provision this Linode in.\n",
                     "type": "region",
                     "name": "region"
                   },
                   {
-                    "description": "A <a href=\"#object-service\">Linode type</a> ID to use for this Linode.\n",
+                    "description": "A Linode type ID to use for this Linode.\n",
                     "type": "service",
                     "name": "type"
                   },
@@ -544,7 +558,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "optional": true,
-                    "description": "The <a href=\"#object-distribution\">Distribution</a> to deploy this Linode with.  May not be included if 'backup' is sent.\n",
+                    "description": "The Distribution to deploy this Linode with.  May not be included if 'backup' is sent.\n",
                     "type": "distribution",
                     "name": "distribution"
                   },
@@ -572,7 +586,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "optional": true,
-                    "description": "The <a href=\"#object-backup\">Backup</a> to restore to the newly created Linode.  May not be included if 'distribution' is sent.\n",
+                    "description": "The Backup to restore to the newly created Linode.  May not be included if 'distribution' is sent.\n",
                     "type": "backup",
                     "name": "backup"
                   },
@@ -595,7 +609,7 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "linode/instances",
+            "path": "/linode/instances",
             "formattedEndpoints": []
           },
           {
@@ -606,7 +620,7 @@ module.exports = { endpoints: [
             "methods": [
               {
                 "oauth": "linodes:view",
-                "description": "Returns information about this <a href=\"#object-linode\">Linode</a>.\n",
+                "description": "Returns information about this Linode.\n",
                 "examples": [
                   {
                     "name": "curl",
@@ -624,49 +638,63 @@ module.exports = { endpoints: [
                   "description": "Linode objects describe a single Linode on your account.\n",
                   "schema": [
                     {
-                      "name": "0"
+                      "name": "0",
+                      "description": "This Linode's ID"
                     },
                     {
-                      "name": "1"
+                      "name": "1",
+                      "description": "Toggle and set thresholds for receiving email alerts. <ul> <li>CPU Usage - % - Average CPU usage over 2 hours exceeding this value triggers this alert. (Range 0-2000, default 90)</li> <li>Disk IO Rate - IO Ops/sec - Average Disk IO ops/sec over 2 hours exceeding this value triggers this alert. (Range 0-100000, default 10000)</li> <li>Incoming Traffic - Mbit/s - Average incoming traffic over a 2 hour period exceeding this value triggers this alert. (Range 0-40000, default 10)</li> <li>Outbound Traffic - Mbit/s - Average outbound traffic over a 2 hour period exceeding this value triggers this alert. (Range 0-10000, default 10)</li> <li>Transfer Quota - % - Percentage of network transfer quota used being greater than this value will trigger this alert. (Range 0-400, default 80)</li></ul>\n"
                     },
                     {
-                      "name": "2"
+                      "name": "2",
+                      "description": "Displays if backups are enabled, last backup datetime if applicable, and the day/window your backups will occur. Window is prefixed by a \"W\" and an integer representing the two-hour window in 24-hour UTC time format. For example, 2AM is represented as \"W2\", 8PM as \"W20\", etc. (W0, W2, W4...W22)\n"
                     },
                     {
                       "name": "3"
                     },
                     {
-                      "name": "4"
+                      "name": "4",
+                      "description": "This Linode's region."
                     },
                     {
-                      "name": "5"
+                      "name": "5",
+                      "description": "The distribution that this Linode booted to last."
                     },
                     {
-                      "name": "6"
+                      "name": "6",
+                      "description": "This Linode's display group."
                     },
                     {
-                      "name": "7"
+                      "name": "7",
+                      "description": "This Linode's IPv4 addresses."
                     },
                     {
-                      "name": "8"
+                      "name": "8",
+                      "description": "This Linode's IPv6 slaac address."
                     },
                     {
-                      "name": "9"
+                      "name": "9",
+                      "description": "This Linode's display label."
                     },
                     {
-                      "name": "10"
+                      "name": "10",
+                      "description": "The type of Linode."
                     },
                     {
-                      "name": "11"
+                      "name": "11",
+                      "description": "The current state of this Linode."
                     },
                     {
-                      "name": "12"
+                      "name": "12",
+                      "description": "The amount of outbound traffic used this month."
                     },
                     {
-                      "name": "13"
+                      "name": "13",
+                      "description": "The last updated datetime for this Linode record."
                     },
                     {
-                      "name": "14"
+                      "name": "14",
+                      "description": "The hypervisor this Linode is running on."
                     }
                   ],
                   "enums": [
@@ -750,7 +778,7 @@ module.exports = { endpoints: [
                 "name": "DELETE"
               }
             ],
-            "path": "linode/instances/:id",
+            "path": "/linode/instances/:id",
             "formattedEndpoints": []
           },
           {
@@ -761,7 +789,7 @@ module.exports = { endpoints: [
             "methods": [
               {
                 "oauth": "linodes:view",
-                "description": "Returns a list of <a href=\"#object-disk\">disks</a>.\n",
+                "description": "Returns a list of disks.\n",
                 "examples": [
                   {
                     "name": "curl",
@@ -779,49 +807,63 @@ module.exports = { endpoints: [
                   "description": "Linode objects describe a single Linode on your account.\n",
                   "schema": [
                     {
-                      "name": "0"
+                      "name": "0",
+                      "description": "This Linode's ID"
                     },
                     {
-                      "name": "1"
+                      "name": "1",
+                      "description": "Toggle and set thresholds for receiving email alerts. <ul> <li>CPU Usage - % - Average CPU usage over 2 hours exceeding this value triggers this alert. (Range 0-2000, default 90)</li> <li>Disk IO Rate - IO Ops/sec - Average Disk IO ops/sec over 2 hours exceeding this value triggers this alert. (Range 0-100000, default 10000)</li> <li>Incoming Traffic - Mbit/s - Average incoming traffic over a 2 hour period exceeding this value triggers this alert. (Range 0-40000, default 10)</li> <li>Outbound Traffic - Mbit/s - Average outbound traffic over a 2 hour period exceeding this value triggers this alert. (Range 0-10000, default 10)</li> <li>Transfer Quota - % - Percentage of network transfer quota used being greater than this value will trigger this alert. (Range 0-400, default 80)</li></ul>\n"
                     },
                     {
-                      "name": "2"
+                      "name": "2",
+                      "description": "Displays if backups are enabled, last backup datetime if applicable, and the day/window your backups will occur. Window is prefixed by a \"W\" and an integer representing the two-hour window in 24-hour UTC time format. For example, 2AM is represented as \"W2\", 8PM as \"W20\", etc. (W0, W2, W4...W22)\n"
                     },
                     {
                       "name": "3"
                     },
                     {
-                      "name": "4"
+                      "name": "4",
+                      "description": "This Linode's region."
                     },
                     {
-                      "name": "5"
+                      "name": "5",
+                      "description": "The distribution that this Linode booted to last."
                     },
                     {
-                      "name": "6"
+                      "name": "6",
+                      "description": "This Linode's display group."
                     },
                     {
-                      "name": "7"
+                      "name": "7",
+                      "description": "This Linode's IPv4 addresses."
                     },
                     {
-                      "name": "8"
+                      "name": "8",
+                      "description": "This Linode's IPv6 slaac address."
                     },
                     {
-                      "name": "9"
+                      "name": "9",
+                      "description": "This Linode's display label."
                     },
                     {
-                      "name": "10"
+                      "name": "10",
+                      "description": "The type of Linode."
                     },
                     {
-                      "name": "11"
+                      "name": "11",
+                      "description": "The current state of this Linode."
                     },
                     {
-                      "name": "12"
+                      "name": "12",
+                      "description": "The amount of outbound traffic used this month."
                     },
                     {
-                      "name": "13"
+                      "name": "13",
+                      "description": "The last updated datetime for this Linode record."
                     },
                     {
-                      "name": "14"
+                      "name": "14",
+                      "description": "The hypervisor this Linode is running on."
                     }
                   ],
                   "enums": [
@@ -908,7 +950,7 @@ module.exports = { endpoints: [
                     "name": "label"
                   },
                   {
-                    "description": "A <a href=\"#object-filesystem-enum\">filesystem</a> for this disk.\n",
+                    "description": "A filesystem for this disk.\n",
                     "type": "string",
                     "name": "filesystem"
                   },
@@ -944,7 +986,7 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "linode/instances/:id/disks",
+            "path": "/linode/instances/:id/disks",
             "formattedEndpoints": []
           },
           {
@@ -955,7 +997,7 @@ module.exports = { endpoints: [
             "methods": [
               {
                 "oauth": "linodes:view",
-                "description": "Returns information about this <a href=\"#object-disk\">disk</a>.\n",
+                "description": "Returns information about this disk.\n",
                 "examples": [
                   {
                     "name": "curl",
@@ -1086,7 +1128,7 @@ module.exports = { endpoints: [
                 "name": "DELETE"
               }
             ],
-            "path": "linode/instances/:id/disks/:id",
+            "path": "/linode/instances/:id/disks/:id",
             "formattedEndpoints": []
           },
           {
@@ -1113,7 +1155,7 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "linode/instances/:id/disks/:id/resize",
+            "path": "/linode/instances/:id/disks/:id/resize",
             "formattedEndpoints": []
           },
           {
@@ -1144,7 +1186,7 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "linode/instances/:id/disks/:id/password",
+            "path": "/linode/instances/:id/disks/:id/password",
             "formattedEndpoints": []
           },
           {
@@ -1155,7 +1197,7 @@ module.exports = { endpoints: [
             "methods": [
               {
                 "oauth": "linodes:view",
-                "description": "Returns a list of <a href=\"#object-linode_config\">configs</a> for a given Linode.\n",
+                "description": "Returns a list of configs for a given Linode.\n",
                 "examples": [
                   {
                     "name": "curl",
@@ -1173,7 +1215,7 @@ module.exports = { endpoints: [
                 "description": "Creates a new config for a given Linode.\n",
                 "params": [
                   {
-                    "description": "A <a href=\"#object-kernel\">kernel</a> ID to boot this Linode with.\n",
+                    "description": "A kernel ID to boot this Linode with.\n",
                     "type": "kernel",
                     "name": "kernel"
                   },
@@ -1183,7 +1225,7 @@ module.exports = { endpoints: [
                     "name": "label"
                   },
                   {
-                    "description": "<a href=\"#object-disk\">Disks</a> attached to this Linode config.\n",
+                    "description": "Disks attached to this Linode config.\n",
                     "name": "disks"
                   },
                   {
@@ -1210,12 +1252,12 @@ module.exports = { endpoints: [
                   },
                   {
                     "optional": true,
-                    "description": "Sets the <a href=\"#object-run_level-enum\">run level</a> for Linode boot. Defaults to \"default\".\n",
+                    "description": "Sets the run level for Linode boot. Defaults to \"default\".\n",
                     "name": "run_level"
                   },
                   {
                     "optional": true,
-                    "description": "Controls the <a href=\"#object-virt_mode-enum\">virtualization mode</a>. Defaults to \"paravirt\".\n",
+                    "description": "Controls the virtualization mode. Defaults to \"paravirt\".\n",
                     "name": "virt_mode"
                   }
                 ],
@@ -1232,7 +1274,7 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "linode/instances/:id/configs",
+            "path": "/linode/instances/:id/configs",
             "formattedEndpoints": []
           },
           {
@@ -1243,7 +1285,7 @@ module.exports = { endpoints: [
             "methods": [
               {
                 "oauth": "linodes:view",
-                "description": "Returns information about this <a href=\"#object-linode_config\"> Linode config</a>.\n",
+                "description": "Returns information about this Linode config.\n",
                 "examples": [
                   {
                     "name": "curl",
@@ -1287,7 +1329,7 @@ module.exports = { endpoints: [
                 "name": "DELETE"
               }
             ],
-            "path": "linode/instances/:id/configs/:id",
+            "path": "/linode/instances/:id/configs/:id",
             "formattedEndpoints": []
           },
           {
@@ -1319,7 +1361,7 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "linode/instances/:id/boot",
+            "path": "/linode/instances/:id/boot",
             "formattedEndpoints": []
           },
           {
@@ -1343,7 +1385,7 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "linode/instances/:id/shutdown",
+            "path": "/linode/instances/:id/shutdown",
             "formattedEndpoints": []
           },
           {
@@ -1375,7 +1417,7 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "linode/instances/:id/reboot",
+            "path": "/linode/instances/:id/reboot",
             "formattedEndpoints": []
           },
           {
@@ -1399,7 +1441,7 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "linode/instances/:id/kvmify",
+            "path": "/linode/instances/:id/kvmify",
             "formattedEndpoints": []
           },
           {
@@ -1413,7 +1455,7 @@ module.exports = { endpoints: [
                 "params": [
                   {
                     "optional": true,
-                    "description": "<a href=\"#object-disk\">Disks</a> to include during Rescue.\n",
+                    "description": "Disks to include during Rescue.\n",
                     "type": "disk",
                     "name": "disks"
                   }
@@ -1431,13 +1473,13 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "linode/instances/:id/rescue",
+            "path": "/linode/instances/:id/rescue",
             "formattedEndpoints": []
           },
           {
             "type": "action",
             "authenticated": true,
-            "description": "Resizes a Linode to a new <a href=\"#object-service\">Linode type</a>.\n",
+            "description": "Resizes a Linode to a new Linode type.\n",
             "methods": [
               {
                 "money": true,
@@ -1445,7 +1487,7 @@ module.exports = { endpoints: [
                 "dangerous": false,
                 "params": [
                   {
-                    "description": "A <a href=\"#object-service\">Linode type</a> to use for this Linode.\n",
+                    "description": "A Linode type to use for this Linode.\n",
                     "type": "service",
                     "name": "type"
                   }
@@ -1459,16 +1501,16 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "linode/instances/:id/resize",
+            "path": "/linode/instances/:id/resize",
             "formattedEndpoints": []
           },
           {
             "type": "action",
             "authenticated": true,
-            "description": "Returns information about this Linode's available <a href=\"#object-backup\">backups</a>.\n",
+            "description": "Returns information about this Linode's available backups.\n",
             "methods": [
               {
-                "description": "Returns a <a href=\"#object-backupsresponse\">Backups Response</a> with information on this Linode's available backups.\n",
+                "description": "Returns a Backups Response with information on this Linode's available backups.\n",
                 "oauth": "linodes:view",
                 "examples": [
                   {
@@ -1506,13 +1548,13 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "linode/instances/:id/backups",
+            "path": "/linode/instances/:id/backups",
             "formattedEndpoints": []
           },
           {
             "type": "action",
             "authenticated": true,
-            "description": "Enables the <a href=\"#object-backup\">backup</a> service on the given Linode.\n",
+            "description": "Enables the backup service on the given Linode.\n",
             "methods": [
               {
                 "money": true,
@@ -1531,13 +1573,13 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "linode/instances/:id/backups/enable",
+            "path": "/linode/instances/:id/backups/enable",
             "formattedEndpoints": []
           },
           {
             "type": "action",
             "authenticated": true,
-            "description": "Cancels the <a href=\"#object-backup\">backup</a> service on the given Linode.\n",
+            "description": "Cancels the backup service on the given Linode.\n",
             "methods": [
               {
                 "oauth": "linodes:delete",
@@ -1555,13 +1597,13 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "linode/instances/:id/backups/cancel",
+            "path": "/linode/instances/:id/backups/cancel",
             "formattedEndpoints": []
           },
           {
             "type": "action",
             "authenticated": true,
-            "description": "Restores a <a href=\"#object-backup\">backup</a> to a Linode.\n",
+            "description": "Restores a backup to a Linode.\n",
             "methods": [
               {
                 "oauth": "linodes:create",
@@ -1592,7 +1634,7 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "linode/instances/:id/backups/:id/restore",
+            "path": "/linode/instances/:id/backups/:id/restore",
             "formattedEndpoints": []
           },
           {
@@ -1602,7 +1644,7 @@ module.exports = { endpoints: [
             "methods": [
               {
                 "oauth": "linodes:view",
-                "description": "Returns a <a href=\"#object-linodenetworking\">Linode Networking Object</a>.\n",
+                "description": "Returns a Linode Networking Object.\n",
                 "examples": [
                   {
                     "name": "curl",
@@ -1617,7 +1659,7 @@ module.exports = { endpoints: [
                 "description": "Allocates a new IP Address for this Linode.\n",
                 "params": [
                   {
-                    "description": "An <a href=\"#object-ipaddresstype-enum\">IP Address Type</a> for this IP Address. Public IP's incur a monthly cost.\n",
+                    "description": "An IP Address Type for this IP Address. Public IP's incur a monthly cost.\n",
                     "type": "IPAddressType",
                     "name": "type"
                   }
@@ -1631,7 +1673,7 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "linode/instances/:id/ips",
+            "path": "/linode/instances/:id/ips",
             "formattedEndpoints": []
           },
           {
@@ -1652,7 +1694,7 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "linode/instances/:id/ips/sharing",
+            "path": "/linode/instances/:id/ips/sharing",
             "formattedEndpoints": []
           },
           {
@@ -1663,7 +1705,7 @@ module.exports = { endpoints: [
             "methods": [
               {
                 "oauth": "linodes:view",
-                "description": "Returns information about this <a href=\"#object-ipaddress\">IPv4</a> or <a href=\"#object-ipv6-address\">IPv6</a> Address.\n",
+                "description": "Returns information about this IPv4 or IPv6 Address.\n",
                 "examples": [
                   {
                     "name": "curl",
@@ -1739,20 +1781,20 @@ module.exports = { endpoints: [
                 "name": "PUT"
               }
             ],
-            "path": "linode/instances/:id/ips/:ip_address",
+            "path": "/linode/instances/:id/ips/:ip_address",
             "formattedEndpoints": []
           },
           {
             "type": "action",
             "authenticated": true,
-            "description": "Deletes all Disks and Configs on this Linode, then deploys a new Distribution to this Linode with the given attributes. Returns information about this <a href=\"#object-linode\">Linode</a>.\n",
+            "description": "Deletes all Disks and Configs on this Linode, then deploys a new Distribution to this Linode with the given attributes. Returns information about this Linode.\n",
             "methods": [
               {
                 "oauth": "linodes:modify",
                 "dangerous": true,
                 "params": [
                   {
-                    "description": "An <a href=\"#object-ipaddresstype-enum\">Distribution</a> to deploy to this Linode.\n",
+                    "description": "An Distribution to deploy to this Linode.\n",
                     "type": "Distribution",
                     "name": "distribution"
                   },
@@ -1789,7 +1831,7 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "linode/instances/:id/rebuild",
+            "path": "/linode/instances/:id/rebuild",
             "formattedEndpoints": []
           }
         ],
@@ -1799,7 +1841,8 @@ module.exports = { endpoints: [
         "name": "Types",
         "sort": 1,
         "base_path": "/linode/types",
-        "description": "Type endpoints provide a means of viewing <a href=\"#object-service\"> service objects</a>.\n",
+        "description": "Type endpoints provide a means of viewing service objects.\n",
+        "path": "/linode",
         "formattedEndpoints": [
           {
             "type": "list",
@@ -1807,7 +1850,7 @@ module.exports = { endpoints: [
             "description": "Returns collection of types.\n",
             "methods": [
               {
-                "description": "Returns list of <a href=\"#object-service\">services</a>.\n",
+                "description": "Returns list of services.\n",
                 "examples": [
                   {
                     "name": "curl",
@@ -1821,7 +1864,7 @@ module.exports = { endpoints: [
                 "name": "GET"
               }
             ],
-            "path": "linode/types",
+            "path": "/linode/types",
             "formattedEndpoints": []
           },
           {
@@ -1830,7 +1873,7 @@ module.exports = { endpoints: [
             "description": "Returns information about a specific Linode type offered by Linode.\n",
             "methods": [
               {
-                "description": "Returns information about this <a href=\"#object-service\">service</a>.\n",
+                "description": "Returns information about this service.\n",
                 "examples": [
                   {
                     "name": "curl",
@@ -1844,7 +1887,7 @@ module.exports = { endpoints: [
                 "name": "GET"
               }
             ],
-            "path": "linode/types/:id",
+            "path": "/linode/types/:id",
             "formattedEndpoints": []
           }
         ],
@@ -1854,7 +1897,8 @@ module.exports = { endpoints: [
         "name": "StackScripts",
         "sort": 4,
         "base_path": "/linode/stackscripts",
-        "description": "StackScript endpoints provide a means of managing the <a href=\"#object-stackscript\"> StackScript objects</a> accessible from your account.\n",
+        "description": "StackScript endpoints provide a means of managing the StackScript objects accessible from your account.\n",
+        "path": "/linode",
         "formattedEndpoints": [
           {
             "type": "list",
@@ -1862,7 +1906,7 @@ module.exports = { endpoints: [
             "description": "View public StackScripts.\n",
             "methods": [
               {
-                "description": "Returns a list of public <a href=\"#object-stackscript\">StackScripts</a>. Results can be <a href=\"#filtering\">filtered</a>.  Include '\"mine\": true' in the filter dict to see only StackScripts you created.\n",
+                "description": "Returns a list of public StackScripts. Results can be filtered.  Include '\"mine\": true' in the filter dict to see only StackScripts you created.\n",
                 "examples": [
                   {
                     "name": "curl",
@@ -2085,7 +2129,7 @@ module.exports = { endpoints: [
                     "name": "description"
                   },
                   {
-                    "description": "A list of <a href=\"#object-distribution\">distributions</a> compatible with StackScript.\n",
+                    "description": "A list of distributions compatible with StackScript.\n",
                     "type": "distribution",
                     "name": "distributions"
                   },
@@ -2118,7 +2162,7 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "linode/stackscripts",
+            "path": "/linode/stackscripts",
             "formattedEndpoints": []
           },
           {
@@ -2129,7 +2173,7 @@ module.exports = { endpoints: [
             "methods": [
               {
                 "oauth": "stackscripts:view",
-                "description": "Returns information about this <a href=\"#object-stackscript\"> StackScript</a>.\n",
+                "description": "Returns information about this StackScript.\n",
                 "examples": [
                   {
                     "name": "curl",
@@ -2147,46 +2191,60 @@ module.exports = { endpoints: [
                   "description": "StackScript objects describe a StackScript which can be used to help automate deployment of new Linodes.\n",
                   "schema": [
                     {
-                      "name": "0"
+                      "name": "0",
+                      "description": "A unique ID for the StackScript."
                     },
                     {
-                      "name": "1"
+                      "name": "1",
+                      "description": "The customer that created this StackScript."
                     },
                     {
-                      "name": "2"
+                      "name": "2",
+                      "description": "The user account that created this StackScript."
                     },
                     {
-                      "name": "3"
+                      "name": "3",
+                      "description": "This StackScript's display label."
                     },
                     {
-                      "name": "4"
+                      "name": "4",
+                      "description": "In-depth information on what this StackScript does."
                     },
                     {
-                      "name": "5"
+                      "name": "5",
+                      "description": "A list of distributions this StackScript is compatible with."
                     },
                     {
-                      "name": "6"
+                      "name": "6",
+                      "description": "The total number of times this StackScript has been deployed."
                     },
                     {
-                      "name": "7"
+                      "name": "7",
+                      "description": "The total number of active deployments."
                     },
                     {
-                      "name": "8"
+                      "name": "8",
+                      "description": "Publicize StackScript in the Linode StackScript library. Note that StackScripts cannot be changed to private after they have been public.\n"
                     },
                     {
-                      "name": "9"
+                      "name": "9",
+                      "description": "When the StackScript was initially created."
                     },
                     {
-                      "name": "10"
+                      "name": "10",
+                      "description": "When the StackScript was last updated."
                     },
                     {
-                      "name": "11"
+                      "name": "11",
+                      "description": "The most recent note about what was changed for this revision."
                     },
                     {
-                      "name": "12"
+                      "name": "12",
+                      "description": "The actual script body to be executed."
                     },
                     {
-                      "name": "13"
+                      "name": "13",
+                      "description": "Variables that can be set to customize the script per deployment."
                     }
                   ]
                 }
@@ -2222,7 +2280,7 @@ module.exports = { endpoints: [
                 "name": "DELETE"
               }
             ],
-            "path": "linode/stackscripts/:id",
+            "path": "/linode/stackscripts/:id",
             "formattedEndpoints": []
           }
         ],
@@ -2237,7 +2295,8 @@ module.exports = { endpoints: [
       {
         "name": "Domains",
         "base_path": "/domains",
-        "description": "Domain endpoints provide a means of managing the <a href=\"#object-domain\"> Domain objects</a> on your account.\nNote: the validation rules for domain records are too complicated to document here. We'll just direct you to [RFC 1035](https://www.ietf.org/rfc/rfc1035.txt).\n",
+        "description": "Domain endpoints provide a means of managing the Domain objects on your account.\nNote: the validation rules for domain records are too complicated to document here. We'll just direct you to [RFC 1035](https://www.ietf.org/rfc/rfc1035.txt).\n",
+        "path": "/domains",
         "formattedEndpoints": [
           {
             "type": "list",
@@ -2247,7 +2306,7 @@ module.exports = { endpoints: [
             "methods": [
               {
                 "oauth": "domains:view",
-                "description": "Returns a list of <a href=\"#object-domain\">Domains</a>.\n",
+                "description": "Returns a list of Domains.\n",
                 "examples": [
                   {
                     "name": "curl",
@@ -2384,7 +2443,7 @@ module.exports = { endpoints: [
                     "name": "domain"
                   },
                   {
-                    "description": "Domain <a href=\"#object-domain_type-enum\">type</a> as master or slave.\n",
+                    "description": "Domain type as master or slave.\n",
                     "name": "type"
                   },
                   {
@@ -2451,7 +2510,7 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "domains",
+            "path": "/domains",
             "formattedEndpoints": []
           },
           {
@@ -2460,7 +2519,7 @@ module.exports = { endpoints: [
             "methods": [
               {
                 "oauth": "domains:view",
-                "description": "Returns information for the <a href=\"#object-domain\">Domain</a> identified by :id.\n",
+                "description": "Returns information for the Domain identified by :id.\n",
                 "examples": [
                   {
                     "name": "curl",
@@ -2481,40 +2540,52 @@ module.exports = { endpoints: [
                       "name": "0"
                     },
                     {
-                      "name": "1"
+                      "name": "1",
+                      "description": "The Domain name.\n"
                     },
                     {
-                      "name": "2"
+                      "name": "2",
+                      "description": "Start of Authority (SOA) contact email.\n"
                     },
                     {
-                      "name": "3"
+                      "name": "3",
+                      "description": "A description to keep track of this Domain.\n"
                     },
                     {
-                      "name": "4"
+                      "name": "4",
+                      "description": "Time interval before the Domain should be refreshed, in seconds.\n"
                     },
                     {
-                      "name": "5"
+                      "name": "5",
+                      "description": "Time interval that should elapse before a failed refresh should be retried, in seconds.\n"
                     },
                     {
-                      "name": "6"
+                      "name": "6",
+                      "description": "Time value that specifies the upper limit on the time interval that can elapse before the Domain is no longer authoritative, in seconds.\n"
                     },
                     {
-                      "name": "7"
+                      "name": "7",
+                      "description": "Time interval that the resource record may be cached before\n  it should be discarded, in seconds.\n"
                     },
                     {
-                      "name": "8"
+                      "name": "8",
+                      "description": "The status of the Domain it can be disabled, active, or edit_mode.\n"
                     },
                     {
-                      "name": "9"
+                      "name": "9",
+                      "description": "An array of IP addresses for this Domain.\n"
                     },
                     {
-                      "name": "10"
+                      "name": "10",
+                      "description": "An array of IP addresses allowed to AXFR the entire Domain.\n"
                     },
                     {
-                      "name": "11"
+                      "name": "11",
+                      "description": "A display group to keep track of this Domain.\n"
                     },
                     {
-                      "name": "12"
+                      "name": "12",
+                      "description": "Controls the Domain type."
                     }
                   ],
                   "enums": [
@@ -2564,7 +2635,7 @@ module.exports = { endpoints: [
                 "name": "DELETE"
               }
             ],
-            "path": "domains/:id",
+            "path": "/domains/:id",
             "formattedEndpoints": []
           },
           {
@@ -2575,7 +2646,7 @@ module.exports = { endpoints: [
             "methods": [
               {
                 "oauth": "domains:view",
-                "description": "Returns a list of <a href=\"#object-domainrecord\">Domain Records</a>.\n",
+                "description": "Returns a list of Domain Records.\n",
                 "examples": [
                   {
                     "name": "curl",
@@ -2679,7 +2750,7 @@ module.exports = { endpoints: [
                 "description": "Create a Domain Record.\n",
                 "params": [
                   {
-                    "description": "<a href=\"#object-zone-record-types-enum\">Type</a> of record.\n",
+                    "description": "Type of record.\n",
                     "name": "type"
                   },
                   {
@@ -2737,7 +2808,7 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "domains/:id/records",
+            "path": "/domains/:id/records",
             "formattedEndpoints": []
           },
           {
@@ -2746,7 +2817,7 @@ module.exports = { endpoints: [
             "methods": [
               {
                 "oauth": "domains:view",
-                "description": "Returns information for the <a href=\"#object-domainrecord\">Domain Record</a> identified by \":id\".\n",
+                "description": "Returns information for the Domain Record identified by \":id\".\n",
                 "examples": [
                   {
                     "name": "curl",
@@ -2767,31 +2838,40 @@ module.exports = { endpoints: [
                       "name": "0"
                     },
                     {
-                      "name": "1"
+                      "name": "1",
+                      "description": "Type of record (A/AAAA, NS, MX, CNAME, TXT, SRV).\n"
                     },
                     {
-                      "name": "2"
+                      "name": "2",
+                      "description": "The hostname or FQDN. When type=MX the subdomain to delegate to the Target MX server.\n"
                     },
                     {
-                      "name": "3"
+                      "name": "3",
+                      "description": "When type=MX the hostname. When type=CNAME the target of the alias. When type=TXT the value of the record. When type=A or AAAA the token of '[remote_addr]' will be substituted with the IP address of the request.\n"
                     },
                     {
-                      "name": "4"
+                      "name": "4",
+                      "description": "Priority for MX and SRV records.\n"
                     },
                     {
-                      "name": "5"
+                      "name": "5",
+                      "description": "A relative weight for records with the same priority, higher value means more preferred.\n"
                     },
                     {
-                      "name": "6"
+                      "name": "6",
+                      "description": "The TCP or UDP port on which the service is to be found.\n"
                     },
                     {
-                      "name": "7"
+                      "name": "7",
+                      "description": "The service to append to an SRV record. Must conform to RFC2782 standards.\n"
                     },
                     {
-                      "name": "8"
+                      "name": "8",
+                      "description": "The protocol to append to an SRV record. Must conform to RFC2782 standards.\n"
                     },
                     {
-                      "name": "9"
+                      "name": "9",
+                      "description": "Time interval that the resource record may be cached before it should be discarded, in seconds. Leave as 0 to accept our default.\n"
                     }
                   ],
                   "enums": [
@@ -2840,7 +2920,7 @@ module.exports = { endpoints: [
                 "name": "DELETE"
               }
             ],
-            "path": "domains/:id/records/:id",
+            "path": "/domains/:id/records/:id",
             "formattedEndpoints": []
           }
         ],
@@ -2855,7 +2935,8 @@ module.exports = { endpoints: [
       {
         "name": "NodeBalancers",
         "base_path": "/nodebalancers",
-        "description": "NodeBalancer endpoints provide a means of managing <a href=\"#object-nodebalancer\"> NodeBalancer objects</a> on your account.\n",
+        "description": "NodeBalancer endpoints provide a means of managing NodeBalancer objects on your account.\n",
+        "path": "/nodebalancers",
         "formattedEndpoints": [
           {
             "type": "list",
@@ -2865,7 +2946,7 @@ module.exports = { endpoints: [
             "methods": [
               {
                 "oauth": "nodebalancers:view",
-                "description": "Returns a list of <a href=\"#object-nodebalancer\">NodeBalancers</a>.\n",
+                "description": "Returns a list of NodeBalancers.\n",
                 "examples": [
                   {
                     "name": "curl",
@@ -2914,7 +2995,7 @@ module.exports = { endpoints: [
                 "description": "Creates a new NodeBalancer.\n",
                 "params": [
                   {
-                    "description": "A <a href=\"#object-region\">region</a> ID to provision this NodeBalancer in.\n",
+                    "description": "A region ID to provision this NodeBalancer in.\n",
                     "type": "region",
                     "name": "region"
                   },
@@ -2939,7 +3020,7 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "nodebalancers",
+            "path": "/nodebalancers",
             "formattedEndpoints": []
           },
           {
@@ -2950,7 +3031,7 @@ module.exports = { endpoints: [
             "methods": [
               {
                 "oauth": "nodebalancers:view",
-                "description": "Returns information about this <a href=\"#object-nodebalancer\">NodeBalancer</a>.\n",
+                "description": "Returns information about this NodeBalancer.\n",
                 "examples": [
                   {
                     "name": "curl",
@@ -2964,16 +3045,20 @@ module.exports = { endpoints: [
                   "description": "NodeBalancer objects describe a single NodeBalancer on your account.\n",
                   "schema": [
                     {
-                      "name": "0"
+                      "name": "0",
+                      "description": "An integer."
                     },
                     {
-                      "name": "1"
+                      "name": "1",
+                      "description": "The NodeBalancer's display label. Must be 3-32 ASCII characters limited to letters, numbers, underscores, and dashes, starting and ending with a letter, and without two dashes or underscores in a row."
                     },
                     {
-                      "name": "2"
+                      "name": "2",
+                      "description": "The NodeBalancer's hostname."
                     },
                     {
-                      "name": "3"
+                      "name": "3",
+                      "description": "Throttle connections per second. 0 to disable, max of 20."
                     }
                   ]
                 }
@@ -3002,7 +3087,7 @@ module.exports = { endpoints: [
                 "name": "DELETE"
               }
             ],
-            "path": "nodebalancers/:id",
+            "path": "/nodebalancers/:id",
             "formattedEndpoints": []
           },
           {
@@ -3013,7 +3098,7 @@ module.exports = { endpoints: [
             "methods": [
               {
                 "oauth": "nodebalancers:view",
-                "description": "Returns a list of <a href=\"#object-nodebalancer_config\">configs</a> for a given NodeBalancer.\n",
+                "description": "Returns a list of configs for a given NodeBalancer.\n",
                 "examples": [
                   {
                     "name": "curl",
@@ -3091,7 +3176,7 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "nodebalancers/:id/configs",
+            "path": "/nodebalancers/:id/configs",
             "formattedEndpoints": []
           },
           {
@@ -3123,7 +3208,7 @@ module.exports = { endpoints: [
                 "name": "DELETE"
               }
             ],
-            "path": "nodebalancers/:id/configs/:id",
+            "path": "/nodebalancers/:id/configs/:id",
             "formattedEndpoints": []
           },
           {
@@ -3143,7 +3228,7 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "nodebalancers/:id/configs/:id/ssl",
+            "path": "/nodebalancers/:id/configs/:id/ssl",
             "formattedEndpoints": []
           },
           {
@@ -3154,7 +3239,7 @@ module.exports = { endpoints: [
             "methods": [
               {
                 "oauth": "nodebalancers:view",
-                "description": "Returns a list of <a href=\"#object-nodebalancer_config_node\">config nodes</a> for a given NodeBalancer.\n",
+                "description": "Returns a list of config nodes for a given NodeBalancer.\n",
                 "examples": [
                   {
                     "name": "curl",
@@ -3197,7 +3282,7 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "nodebalancers/:id/configs/:id/nodes",
+            "path": "/nodebalancers/:id/configs/:id/nodes",
             "formattedEndpoints": []
           },
           {
@@ -3240,7 +3325,7 @@ module.exports = { endpoints: [
                 "name": "DELETE"
               }
             ],
-            "path": "nodebalancers/:id/configs/:id/nodes/:id",
+            "path": "/nodebalancers/:id/configs/:id/nodes/:id",
             "formattedEndpoints": []
           }
         ],
@@ -3256,7 +3341,8 @@ module.exports = { endpoints: [
         "name": "Networking",
         "sort": 1,
         "base_path": "/networking",
-        "description": "Networking endpoints provide a means of viewing <a href=\"#object-networking\"> networking objects</a>.\n",
+        "description": "Networking endpoints provide a means of viewing networking objects.\n",
+        "path": "/networking",
         "formattedEndpoints": [
           {
             "type": "list",
@@ -3265,7 +3351,7 @@ module.exports = { endpoints: [
             "methods": [
               {
                 "oauth": "ips:view",
-                "description": "Returns a list of <a href=\"#object-ipaddress\">IPv4 Addresses</a>\n",
+                "description": "Returns a list of IPv4 Addresses\n",
                 "examples": [
                   {
                     "name": "curl",
@@ -3277,7 +3363,7 @@ module.exports = { endpoints: [
               {
                 "money": true,
                 "oauth": "ips:create",
-                "description": "Create a new Public <a href=\"#object-ipaddress\">IPv4 Address</a>\n",
+                "description": "Create a new Public IPv4 Address\n",
                 "params": [
                   {
                     "description": "The Linode ID to assign this IP to.\n",
@@ -3294,17 +3380,17 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "networking/ipv4",
+            "path": "/networking/ipv4",
             "formattedEndpoints": []
           },
           {
             "type": "resource",
             "authenticated": true,
-            "description": "Manage a single <a href=\"#object-ipaddress\">IPv4 Address</a>\n",
+            "description": "Manage a single IPv4 Address\n",
             "methods": [
               {
                 "oauth": "ips:get",
-                "description": "Returns a single <a href=\"#object-ipaddress\">IPv4 Address</a>\n",
+                "description": "Returns a single IPv4 Address\n",
                 "examples": [
                   {
                     "name": "curl",
@@ -3315,7 +3401,7 @@ module.exports = { endpoints: [
               },
               {
                 "oauth": "ips:modify",
-                "description": "Update RDNS on one <a href=\"#object-ipaddress\">IPv4 Address</a>.  Set RDNS to null to reset.\n",
+                "description": "Update RDNS on one IPv4 Address.  Set RDNS to null to reset.\n",
                 "examples": [
                   {
                     "name": "curl",
@@ -3325,17 +3411,17 @@ module.exports = { endpoints: [
                 "name": "PUT"
               }
             ],
-            "path": "networking/ipv4/:address",
+            "path": "/networking/ipv4/:address",
             "formattedEndpoints": []
           },
           {
             "type": "list",
             "authenticated": true,
-            "description": "Manage <a href=\"#object-ipv6pool\">IPv6 Global Pools</a>.\n",
+            "description": "Manage IPv6 Global Pools.\n",
             "methods": [
               {
                 "oauth": "ips:view",
-                "description": "Returns a list of <a href=\"#object-ipv6pool\">IPv6 Pools</a>.\n",
+                "description": "Returns a list of IPv6 Pools.\n",
                 "examples": [
                   {
                     "name": "curl",
@@ -3345,17 +3431,17 @@ module.exports = { endpoints: [
                 "name": "GET"
               }
             ],
-            "path": "networking/ipv6",
+            "path": "/networking/ipv6",
             "formattedEndpoints": []
           },
           {
             "type": "resource",
             "authenticated": true,
-            "description": "Manage a single <a href=\"#object-ipv6-address\">IPv6 Address</a>.  Address in URL can be as compressed as you want.\n",
+            "description": "Manage a single IPv6 Address.  Address in URL can be as compressed as you want.\n",
             "methods": [
               {
                 "oauth": "ips:view",
-                "description": "Return a single <a href=\"#object-ipv6-address\">IPv6 Address</a>.\n",
+                "description": "Return a single IPv6 Address.\n",
                 "examples": [
                   {
                     "name": "curl",
@@ -3366,7 +3452,7 @@ module.exports = { endpoints: [
               },
               {
                 "oauth": "ips:modify",
-                "description": "Set RDNS on a single <a href=\"#object-ipv6-address\">IPv6 Address</a>.\n",
+                "description": "Set RDNS on a single IPv6 Address.\n",
                 "examples": [
                   {
                     "name": "curl",
@@ -3376,7 +3462,7 @@ module.exports = { endpoints: [
                 "name": "PUT"
               }
             ],
-            "path": "networking/ipv6/:address",
+            "path": "/networking/ipv6/:address",
             "formattedEndpoints": []
           },
           {
@@ -3389,7 +3475,7 @@ module.exports = { endpoints: [
                 "dangerous": true,
                 "params": [
                   {
-                    "description": "The <a href=\"#object-region\">region</a> where the IPv4 address and Linode are located.\n",
+                    "description": "The region where the IPv4 address and Linode are located.\n",
                     "type": "region",
                     "name": "region"
                   },
@@ -3408,7 +3494,7 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "networking/ip-assign",
+            "path": "/networking/ip-assign",
             "formattedEndpoints": []
           }
         ],
@@ -3423,7 +3509,8 @@ module.exports = { endpoints: [
       {
         "name": "Regions",
         "base_path": "/regions",
-        "description": "Region endpoints provide a means of viewing <a href=\"#object-region\"> region objects</a>.\n",
+        "description": "Region endpoints provide a means of viewing region objects.\n",
+        "path": "/regions",
         "formattedEndpoints": [
           {
             "type": "list",
@@ -3431,7 +3518,7 @@ module.exports = { endpoints: [
             "description": "Returns collection of regions.\n",
             "methods": [
               {
-                "description": "Returns list of <a href=\"#object-region\">regions</a>.\n",
+                "description": "Returns list of regions.\n",
                 "examples": [
                   {
                     "name": "curl",
@@ -3445,7 +3532,7 @@ module.exports = { endpoints: [
                 "name": "GET"
               }
             ],
-            "path": "regions",
+            "path": "/regions",
             "formattedEndpoints": []
           },
           {
@@ -3454,7 +3541,7 @@ module.exports = { endpoints: [
             "description": "Return a particular region.\n",
             "methods": [
               {
-                "description": "Returns information about this <a href=\"#object-region\"> region</a>.\n",
+                "description": "Returns information about this region.\n",
                 "examples": [
                   {
                     "name": "curl",
@@ -3468,7 +3555,7 @@ module.exports = { endpoints: [
                 "name": "GET"
               }
             ],
-            "path": "regions/:id",
+            "path": "/regions/:id",
             "formattedEndpoints": []
           }
         ],
@@ -3485,6 +3572,7 @@ module.exports = { endpoints: [
         "sort": 0,
         "base_path": "/support/tickets",
         "description": "Support tickets allow you to view, submit, and manage requests for help to the Linode support team.\n",
+        "path": "/support/tickets",
         "formattedEndpoints": [
           {
             "type": "list",
@@ -3494,7 +3582,7 @@ module.exports = { endpoints: [
             "methods": [
               {
                 "oauth": "tickets:view",
-                "description": "Returns a list of <a href=\"#object-supportticket\">Support Tickets</a>.\n",
+                "description": "Returns a list of Support Tickets.\n",
                 "examples": [
                   {
                     "name": "curl",
@@ -3614,7 +3702,7 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "support/tickets",
+            "path": "/support/tickets",
             "formattedEndpoints": []
           },
           {
@@ -3625,7 +3713,7 @@ module.exports = { endpoints: [
             "methods": [
               {
                 "oauth": "tickets:view",
-                "description": "Returns information about this <a href=\"#object-supportticket\">support ticket</a>.\n",
+                "description": "Returns information about this support ticket.\n",
                 "examples": [
                   {
                     "name": "curl",
@@ -3638,16 +3726,20 @@ module.exports = { endpoints: [
                   "description": "Support ticket objects describe requests to the Linode support team.\n",
                   "schema": [
                     {
-                      "name": "0"
+                      "name": "0",
+                      "description": "This ticket's ID"
                     },
                     {
-                      "name": "1"
+                      "name": "1",
+                      "description": "This is summary or title for the ticket."
                     },
                     {
-                      "name": "2"
+                      "name": "2",
+                      "description": "The full details of the issue or question."
                     },
                     {
-                      "name": "3"
+                      "name": "3",
+                      "description": "The status of the ticket."
                     },
                     {
                       "name": "4"
@@ -3656,16 +3748,19 @@ module.exports = { endpoints: [
                       "name": "5"
                     },
                     {
-                      "name": "6"
+                      "name": "6",
+                      "description": "The user who closed this ticket."
                     },
                     {
                       "name": "7"
                     },
                     {
-                      "name": "8"
+                      "name": "8",
+                      "description": "The user who last updated this ticket."
                     },
                     {
-                      "name": "9"
+                      "name": "9",
+                      "description": "The entity this ticket was opened regarding"
                     }
                   ],
                   "enums": [
@@ -3679,7 +3774,7 @@ module.exports = { endpoints: [
                 }
               }
             ],
-            "path": "support/tickets/:id",
+            "path": "/support/tickets/:id",
             "formattedEndpoints": []
           },
           {
@@ -3690,7 +3785,7 @@ module.exports = { endpoints: [
             "methods": [
               {
                 "oauth": "tickets:view",
-                "description": "Returns a list of <a href=\"#object-supportticketreply\">support ticket replies</a>.\n",
+                "description": "Returns a list of support ticket replies.\n",
                 "examples": [
                   {
                     "name": "curl",
@@ -3748,7 +3843,7 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "support/tickets/:id/replies",
+            "path": "/support/tickets/:id/replies",
             "formattedEndpoints": []
           },
           {
@@ -3775,7 +3870,7 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "support/tickets/:id/attachments",
+            "path": "/support/tickets/:id/attachments",
             "formattedEndpoints": []
           }
         ],
@@ -3791,7 +3886,8 @@ module.exports = { endpoints: [
         "name": "Account",
         "sort": 1,
         "base_path": "/account",
-        "description": "Account endpoints provide a means of viewing <a href=\"#object-profile\"> user profile objects</a>, as well as managing OAuth Clients and Tokens.\n",
+        "description": "Account endpoints provide a means of viewing user profile objects, as well as managing OAuth Clients and Tokens.\n",
+        "path": "/account",
         "formattedEndpoints": [
           {
             "type": "resource",
@@ -3893,7 +3989,7 @@ module.exports = { endpoints: [
                 "name": "PUT"
               }
             ],
-            "path": "account/profile",
+            "path": "/account/profile",
             "formattedEndpoints": []
           },
           {
@@ -3909,7 +4005,7 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "account/profile/password",
+            "path": "/account/profile/password",
             "formattedEndpoints": []
           },
           {
@@ -3925,7 +4021,7 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "account/profile/tfa-enable",
+            "path": "/account/profile/tfa-enable",
             "formattedEndpoints": []
           },
           {
@@ -3948,7 +4044,7 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "account/profile/tfa-enable-confirm",
+            "path": "/account/profile/tfa-enable-confirm",
             "formattedEndpoints": []
           },
           {
@@ -3964,7 +4060,7 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "account/profile/tfa-disable",
+            "path": "/account/profile/tfa-disable",
             "formattedEndpoints": []
           },
           {
@@ -3980,7 +4076,7 @@ module.exports = { endpoints: [
                 "name": "GET"
               }
             ],
-            "path": "account/profile/grants",
+            "path": "/account/profile/grants",
             "formattedEndpoints": []
           },
           {
@@ -4096,7 +4192,7 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "account/tokens",
+            "path": "/account/tokens",
             "formattedEndpoints": []
           },
           {
@@ -4120,28 +4216,35 @@ module.exports = { endpoints: [
                   "description": "An OAuth Token granting access to your user.\n",
                   "schema": [
                     {
-                      "name": "0"
+                      "name": "0",
+                      "description": "This token's ID.\n"
                     },
                     {
-                      "name": "1"
+                      "name": "1",
+                      "description": "The OAuthClient this token is associated with, or null if this is a Personal Access Token.\n"
                     },
                     {
-                      "name": "2"
+                      "name": "2",
+                      "description": "If this is a Client Token or a Personal Access Token.\n"
                     },
                     {
-                      "name": "3"
+                      "name": "3",
+                      "description": "The OAuth Scopes this token has.\n"
                     },
                     {
-                      "name": "4"
+                      "name": "4",
+                      "description": "The label given to this token.\n"
                     },
                     {
                       "name": "5"
                     },
                     {
-                      "name": "6"
+                      "name": "6",
+                      "description": "The OAuth Token that you can use in API requests.  Except for the inital creation of the token, this field is truncated to 16 characters.\n"
                     },
                     {
-                      "name": "7"
+                      "name": "7",
+                      "description": "When this token expires.\n"
                     }
                   ],
                   "enums": [
@@ -4176,7 +4279,7 @@ module.exports = { endpoints: [
                 "name": "DELETE"
               }
             ],
-            "path": "account/tokens/:id",
+            "path": "/account/tokens/:id",
             "formattedEndpoints": []
           },
           {
@@ -4199,31 +4302,40 @@ module.exports = { endpoints: [
                   "description": "Your User profile information.\n",
                   "schema": [
                     {
-                      "name": "0"
+                      "name": "0",
+                      "description": "The username of the user.\n"
                     },
                     {
-                      "name": "1"
+                      "name": "1",
+                      "description": "The email address of the user.\n"
                     },
                     {
-                      "name": "2"
+                      "name": "2",
+                      "description": "The selected timezone of the user location."
                     },
                     {
-                      "name": "3"
+                      "name": "3",
+                      "description": "Toggles to determine if the user receives email notifications"
                     },
                     {
-                      "name": "4"
+                      "name": "4",
+                      "description": "Displays information related to referral signups attributed to the user.\n"
                     },
                     {
-                      "name": "5"
+                      "name": "5",
+                      "description": "When enabled, you can only log in from an IP address on your whitelist.\n"
                     },
                     {
-                      "name": "6"
+                      "name": "6",
+                      "description": "Controls what authentication methods are allowed to connect to the Lish console servers.\n"
                     },
                     {
-                      "name": "7"
+                      "name": "7",
+                      "description": "Comma-delimited list of authorized SSH public keys"
                     },
                     {
-                      "name": "8"
+                      "name": "8",
+                      "description": "Toggles whether two factor authentication (TFA) is enabled or disabled."
                     }
                   ],
                   "enums": [
@@ -4247,7 +4359,7 @@ module.exports = { endpoints: [
                 "name": "PUT"
               }
             ],
-            "path": "account/settings",
+            "path": "/account/settings",
             "formattedEndpoints": []
           },
           {
@@ -4258,7 +4370,7 @@ module.exports = { endpoints: [
             "methods": [
               {
                 "oauth": "clients:view",
-                "description": "Returns a list of <a href=\"#object-client\">clients</a>.\n",
+                "description": "Returns a list of clients.\n",
                 "examples": [
                   {
                     "name": "curl",
@@ -4293,7 +4405,7 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "account/clients",
+            "path": "/account/clients",
             "formattedEndpoints": []
           },
           {
@@ -4304,7 +4416,7 @@ module.exports = { endpoints: [
             "methods": [
               {
                 "oauth": "clients:view",
-                "description": "Returns information about this <a href=\"#object-client\">OAuth client</a>.\n",
+                "description": "Returns information about this OAuth client.\n",
                 "examples": [
                   {
                     "name": "curl",
@@ -4315,7 +4427,7 @@ module.exports = { endpoints: [
               },
               {
                 "oauth": "clients:modify",
-                "description": "Edits this <a href=\"#object-client\">OAuth client</a>.\n",
+                "description": "Edits this OAuth client.\n",
                 "examples": [
                   {
                     "name": "curl",
@@ -4337,7 +4449,7 @@ module.exports = { endpoints: [
                 "name": "DELETE"
               }
             ],
-            "path": "account/clients/:id",
+            "path": "/account/clients/:id",
             "formattedEndpoints": []
           },
           {
@@ -4357,7 +4469,7 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "account/clients/:id/reset_secret",
+            "path": "/account/clients/:id/reset_secret",
             "formattedEndpoints": []
           },
           {
@@ -4388,13 +4500,13 @@ module.exports = { endpoints: [
                 "name": "PUT"
               }
             ],
-            "path": "account/clients/:id/thumbnail",
+            "path": "/account/clients/:id/thumbnail",
             "formattedEndpoints": []
           },
           {
             "type": "list",
             "resource": "account",
-            "description": "Returns a list of <a href=\"#object-user\">User objects</a> associated with your account.\n",
+            "description": "Returns a list of User objects associated with your account.\n",
             "methods": [
               {
                 "examples": [
@@ -4410,31 +4522,40 @@ module.exports = { endpoints: [
                   "description": "Your User profile information.\n",
                   "schema": [
                     {
-                      "name": "0"
+                      "name": "0",
+                      "description": "The username of the user.\n"
                     },
                     {
-                      "name": "1"
+                      "name": "1",
+                      "description": "The email address of the user.\n"
                     },
                     {
-                      "name": "2"
+                      "name": "2",
+                      "description": "The selected timezone of the user location."
                     },
                     {
-                      "name": "3"
+                      "name": "3",
+                      "description": "Toggles to determine if the user receives email notifications"
                     },
                     {
-                      "name": "4"
+                      "name": "4",
+                      "description": "Displays information related to referral signups attributed to the user.\n"
                     },
                     {
-                      "name": "5"
+                      "name": "5",
+                      "description": "When enabled, you can only log in from an IP address on your whitelist.\n"
                     },
                     {
-                      "name": "6"
+                      "name": "6",
+                      "description": "Controls what authentication methods are allowed to connect to the Lish console servers.\n"
                     },
                     {
-                      "name": "7"
+                      "name": "7",
+                      "description": "Comma-delimited list of authorized SSH public keys"
                     },
                     {
-                      "name": "8"
+                      "name": "8",
+                      "description": "Toggles whether two factor authentication (TFA) is enabled or disabled."
                     }
                   ],
                   "enums": [
@@ -4481,7 +4602,7 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "account/users",
+            "path": "/account/users",
             "formattedEndpoints": []
           },
           {
@@ -4503,31 +4624,40 @@ module.exports = { endpoints: [
                   "description": "Your User profile information.\n",
                   "schema": [
                     {
-                      "name": "0"
+                      "name": "0",
+                      "description": "The username of the user.\n"
                     },
                     {
-                      "name": "1"
+                      "name": "1",
+                      "description": "The email address of the user.\n"
                     },
                     {
-                      "name": "2"
+                      "name": "2",
+                      "description": "The selected timezone of the user location."
                     },
                     {
-                      "name": "3"
+                      "name": "3",
+                      "description": "Toggles to determine if the user receives email notifications"
                     },
                     {
-                      "name": "4"
+                      "name": "4",
+                      "description": "Displays information related to referral signups attributed to the user.\n"
                     },
                     {
-                      "name": "5"
+                      "name": "5",
+                      "description": "When enabled, you can only log in from an IP address on your whitelist.\n"
                     },
                     {
-                      "name": "6"
+                      "name": "6",
+                      "description": "Controls what authentication methods are allowed to connect to the Lish console servers.\n"
                     },
                     {
-                      "name": "7"
+                      "name": "7",
+                      "description": "Comma-delimited list of authorized SSH public keys"
                     },
                     {
-                      "name": "8"
+                      "name": "8",
+                      "description": "Toggles whether two factor authentication (TFA) is enabled or disabled."
                     }
                   ],
                   "enums": [
@@ -4561,7 +4691,7 @@ module.exports = { endpoints: [
                 "name": "DELETE"
               }
             ],
-            "path": "account/users/:username",
+            "path": "/account/users/:username",
             "formattedEndpoints": []
           },
           {
@@ -4585,7 +4715,7 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "account/users/:username/password",
+            "path": "/account/users/:username/password",
             "formattedEndpoints": []
           },
           {
@@ -4694,7 +4824,7 @@ module.exports = { endpoints: [
                 "name": "PUT"
               }
             ],
-            "path": "account/users/:username/grants",
+            "path": "/account/users/:username/grants",
             "formattedEndpoints": []
           }
         ],
@@ -4704,6 +4834,7 @@ module.exports = { endpoints: [
         "name": "Events",
         "base_path": "/account/events",
         "description": "Event endpoints provide a means of viewing event notifications.\n",
+        "path": "/account",
         "formattedEndpoints": [
           {
             "type": "list",
@@ -4712,7 +4843,7 @@ module.exports = { endpoints: [
             "description": "View the collection of events.\n",
             "methods": [
               {
-                "description": "Returns a list of <a href=\"#object-event\">events</a>.\n",
+                "description": "Returns a list of events.\n",
                 "examples": [
                   {
                     "name": "curl",
@@ -4841,7 +4972,7 @@ module.exports = { endpoints: [
                 }
               }
             ],
-            "path": "account/events",
+            "path": "/account/events",
             "formattedEndpoints": []
           },
           {
@@ -4851,7 +4982,7 @@ module.exports = { endpoints: [
             "description": "Returns information about a specific event.\n",
             "methods": [
               {
-                "description": "Returns information about this <a href=\"#object-event\"> event</a>.\n",
+                "description": "Returns information about this event.\n",
                 "examples": [
                   {
                     "name": "curl",
@@ -4868,31 +4999,40 @@ module.exports = { endpoints: [
                       "name": "0"
                     },
                     {
-                      "name": "1"
+                      "name": "1",
+                      "description": "Detailed inforrmation about the event's entity, including id, type, label, and URL used to access it.\n"
                     },
                     {
-                      "name": "2"
+                      "name": "2",
+                      "description": "The action that caused this event.\n"
                     },
                     {
-                      "name": "3"
+                      "name": "3",
+                      "description": "The username of the user who initiated this event.\n"
                     },
                     {
-                      "name": "4"
+                      "name": "4",
+                      "description": "The current status of this event.  \n"
                     },
                     {
-                      "name": "5"
+                      "name": "5",
+                      "description": "A percentage estimating the amount of time remaining for an event.  Returns null for notification events.\n"
                     },
                     {
-                      "name": "6"
+                      "name": "6",
+                      "description": "The rate of completion of the event.  Currently only returned for migration and resize events.\n"
                     },
                     {
-                      "name": "7"
+                      "name": "7",
+                      "description": "The estimated time remaining until the completion of this event.  Currently only returned for in progress migrations or resizes.\n"
                     },
                     {
-                      "name": "8"
+                      "name": "8",
+                      "description": "If this event has been seen."
                     },
                     {
-                      "name": "9"
+                      "name": "9",
+                      "description": "If this event has been read."
                     },
                     {
                       "name": "10"
@@ -4901,7 +5041,8 @@ module.exports = { endpoints: [
                       "name": "11"
                     },
                     {
-                      "name": "12"
+                      "name": "12",
+                      "description": "The ID of the user who initiated this event.\n"
                     }
                   ],
                   "enums": [
@@ -4946,7 +5087,7 @@ module.exports = { endpoints: [
                 }
               }
             ],
-            "path": "account/events/:id",
+            "path": "/account/events/:id",
             "formattedEndpoints": []
           },
           {
@@ -4955,7 +5096,7 @@ module.exports = { endpoints: [
             "authenticated": true,
             "methods": [
               {
-                "description": "Marks all <a href=\"#object-event\">events</a> up to and including :id as seen.\n",
+                "description": "Marks all events up to and including :id as seen.\n",
                 "examples": [
                   {
                     "name": "curl",
@@ -4965,7 +5106,7 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "account/events/:id/seen",
+            "path": "/account/events/:id/seen",
             "formattedEndpoints": []
           },
           {
@@ -4974,7 +5115,7 @@ module.exports = { endpoints: [
             "authenticated": true,
             "methods": [
               {
-                "description": "Updates specific <a href=\"#object-event\">event</a> to designate that it has been read.\n",
+                "description": "Updates specific event to designate that it has been read.\n",
                 "examples": [
                   {
                     "name": "curl",
@@ -4984,7 +5125,7 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "account/events/:id/read",
+            "path": "/account/events/:id/read",
             "formattedEndpoints": []
           }
         ],
