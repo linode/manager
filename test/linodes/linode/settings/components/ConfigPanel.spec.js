@@ -5,9 +5,7 @@ import { expect } from 'chai';
 
 import { ConfigPanel } from '~/linodes/linode/settings/components/ConfigPanel';
 import { expectRequest } from '@/common';
-import { api } from '@/data';
-import { testLinode } from '@/data/linodes';
-const { linodes } = api;
+import { testLinode, testLinode1238, testLinode1239 } from '@/data/linodes';
 
 describe('linodes/linode/settings/components/ConfigPanel', () => {
   const sandbox = sinon.sandbox.create();
@@ -21,9 +19,8 @@ describe('linodes/linode/settings/components/ConfigPanel', () => {
   it('renders with no config', () => {
     const panel = shallow(
       <ConfigPanel
-        params={{ linodeLabel: 'test-linode-5' }}
         dispatch={() => {}}
-        linodes={linodes}
+        linode={testLinode1239}
       />
     );
 
@@ -33,9 +30,8 @@ describe('linodes/linode/settings/components/ConfigPanel', () => {
   it('renders multiple configs', () => {
     const panel = mount(
       <ConfigPanel
-        params={{ linodeLabel: 'test-linode-4' }}
         dispatch={() => {}}
-        linodes={linodes}
+        linode={testLinode1238}
       />
     );
 
@@ -45,9 +41,8 @@ describe('linodes/linode/settings/components/ConfigPanel', () => {
   it('renders config label link', () => {
     const panel = mount(
       <ConfigPanel
-        params={{ linodeLabel: `${testLinode.label}` }}
         dispatch={() => {}}
-        linodes={linodes}
+        linode={testLinode}
       />
     );
 
@@ -59,9 +54,8 @@ describe('linodes/linode/settings/components/ConfigPanel', () => {
   it('renders config label text', () => {
     const panel = mount(
       <ConfigPanel
-        params={{ linodeLabel: 'test-linode' }}
         dispatch={() => {}}
-        linodes={linodes}
+        linode={testLinode}
       />
     );
 
@@ -74,9 +68,8 @@ describe('linodes/linode/settings/components/ConfigPanel', () => {
   it('renders delete button when multiple configs are present', () => {
     const panel = mount(
       <ConfigPanel
-        params={{ linodeLabel: 'test-linode-4' }}
         dispatch={() => {}}
-        linodes={linodes}
+        linode={testLinode1238}
       />
     );
 
@@ -89,9 +82,8 @@ describe('linodes/linode/settings/components/ConfigPanel', () => {
   it('does not render delete button for one config', () => {
     const panel = mount(
       <ConfigPanel
-        params={{ linodeLabel: 'test-linode' }}
         dispatch={() => {}}
-        linodes={linodes}
+        linode={testLinode}
       />
     );
 
@@ -101,9 +93,8 @@ describe('linodes/linode/settings/components/ConfigPanel', () => {
   it('attempts to delete config', async () => {
     const panel = mount(
       <ConfigPanel
-        params={{ linodeLabel: 'test-linode-4' }}
         dispatch={dispatch}
-        linodes={linodes}
+        linode={testLinode1238}
       />
     );
     const actionBtn = panel.

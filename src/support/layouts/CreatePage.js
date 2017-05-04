@@ -1,24 +1,35 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { push } from 'react-router-redux';
 import { Link } from 'react-router';
+import { push } from 'react-router-redux';
 
-import { Card } from '~/components/cards';
-import { Input, Select, Form, FormGroup, FormGroupError, SubmitButton } from '~/components/form';
-import { tickets } from '~/api';
+import { Card } from 'linode-components/cards';
+import {
+  Input,
+  Select,
+  Form,
+  FormGroup,
+  FormGroupError,
+  SubmitButton,
+} from 'linode-components/forms';
+
+import { setError } from '~/actions/errors';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
-import { setError } from '~/actions/errors';
-import { reduceErrors, ErrorSummary } from '~/errors';
-import { linodes, domains, nodebalancers } from '~/api';
+import { domains, linodes, nodebalancers, tickets } from '~/api';
+import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+
 import TicketHelper from '../components/TicketHelper';
+
 
 export class CreatePage extends Component {
   static async preload({ dispatch }) {
     try {
-      await dispatch(linodes.all());
-      await dispatch(domains.all());
-      await dispatch(nodebalancers.all());
+      await Promise.all([
+        dispatch(linodes.all()),
+        dispatch(domains.all()),
+        dispatch(nodebalancers.all()),
+      ]);
     } catch (response) {
       // eslint-disable-next-line no-console
       console.error(response);
@@ -34,7 +45,7 @@ export class CreatePage extends Component {
       regarding: `linode_id:${Object.values(props.linodes)[0].id}`,
       description: '',
       errors: {},
-      creating: false,
+      loading: false,
     };
   }
 
@@ -54,17 +65,12 @@ export class CreatePage extends Component {
 
     this.setState({ loading: true, errors: {} });
 
-    try {
-      await dispatch(tickets.post({ summary, description, [regardingField]: +regardingId }));
-
-      // TODO: Redirect to newly create ticket page
-      dispatch(push('/support'));
-    } catch (response) {
-      const errors = await reduceErrors(response);
-      this.setState({ errors });
-    }
-
-    this.setState({ loading: false });
+    await dispatch(dispatchOrStoreErrors.apply(this, [
+      [
+        () => tickets.post({ summary, description, [regardingField]: +regardingId }),
+        ({ id }) => push(`/support/${id}`),
+      ],
+    ]));
   }
 
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
@@ -82,7 +88,7 @@ export class CreatePage extends Component {
   }
 
   render() {
-    const { summary, regarding, description, creating, errors } = this.state;
+    const { summary, regarding, description, loading, errors } = this.state;
     const { linodes, domains, nodebalancers } = this.props;
     const regardingOptions = [
       this.renderOptionsGroup('Linodes', 'linode_id', Object.values(linodes)),
@@ -143,10 +149,12 @@ export class CreatePage extends Component {
             </FormGroup>
             <FormGroup className="row">
               <div className="col-sm-10 offset-sm-2">
-                <SubmitButton disabled={creating}>Open Ticket</SubmitButton>
+                <SubmitButton disabled={loading} disabledChildren="Opening Ticket">
+                  Open Ticket
+                </SubmitButton>
+                <FormSummary errors={errors} />
               </div>
             </FormGroup>
-            <ErrorSummary errors={errors} />
           </Form>
         </Card>
       </div>

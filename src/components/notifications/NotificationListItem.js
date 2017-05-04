@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 
 import { Link } from 'react-router';
-import moment from 'moment';
+import TimeDisplay from '~/components/TimeDisplay';
 
 import EventTypeMap from './EventTypes';
 
@@ -11,7 +11,6 @@ export default function NotificationListItem(props) {
   const timeRemaining = event.time_remaining;
   const eventOptions = EventTypeMap[event.action];
 
-  const timestamp = moment.utc(event.created, moment.ISO_8601);
   const baseCls = 'NotificationList-listItem';
   let className = baseCls;
 
@@ -46,7 +45,7 @@ export default function NotificationListItem(props) {
   } else {
     const timestampMessage = (
       <small className="NotificationList-listItem-time text-muted">
-        {timestamp.fromNow()} by <b>{event.username}</b>
+        <TimeDisplay time={event.created} /> by <b>{event.username}</b>
       </small>
     );
 

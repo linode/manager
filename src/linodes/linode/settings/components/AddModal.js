@@ -1,12 +1,15 @@
-import React, { Component, PropTypes } from 'react';
 import _ from 'lodash';
+import React, { Component, PropTypes } from 'react';
 
-import { linodes } from '~/api';
-import { Form, FormGroup, FormGroupError, Input, Select,
-  SubmitButton, PasswordInput } from '~/components/form';
-import { CancelButton } from '~/components/buttons';
-import { ErrorSummary, reduceErrors } from '~/errors';
+import { CancelButton } from 'linode-components/buttons';
+import {
+  Form, FormGroup, FormGroupError, Input, Select, SubmitButton, PasswordInput,
+} from 'linode-components/forms';
+
 import { hideModal } from '~/actions/modal';
+import { linodes } from '~/api';
+import { FormSummary, reduceErrors } from '~/components/forms';
+
 
 export class AddModal extends Component {
   constructor() {
@@ -135,6 +138,7 @@ export class AddModal extends Component {
                 <label className="col-sm-5 col-form-label">Root password</label>
                 <div className="col-sm-7">
                   <PasswordInput
+                    value={this.state.password}
                     onChange={p => this.setState({ password: p })}
                   />
                 </div>
@@ -186,7 +190,7 @@ export class AddModal extends Component {
           <CancelButton disabled={loading} onClick={() => dispatch(hideModal())} />
           <SubmitButton disabled={ready}>Add Disk</SubmitButton>
         </div>
-        <ErrorSummary errors={errors} />
+        <FormSummary errors={errors} />
       </Form>
     );
   }

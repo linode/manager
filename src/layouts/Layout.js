@@ -6,8 +6,8 @@ import { VERSION } from '~/constants';
 import Header from '~/components/Header';
 import Notifications from '~/components/notifications/Notifications';
 import SessionMenu from '~/components/SessionMenu';
-import { ModalShell } from '~/components/modals';
-import Error from '~/components/Error';
+import { ModalShell } from 'linode-components/modals';
+import { Error } from 'linode-components/errors';
 import PreloadIndicator from '~/components/PreloadIndicator.js';
 import { hideModal } from '~/actions/modal';
 import { hideNotifications } from '~/actions/notifications';
@@ -49,7 +49,7 @@ export class Layout extends Component {
     const githubRoot = 'https://github.com/linode/manager/blob/master/';
     return (
       <div
-        className={`layout full-height ${this.props.modal.open ? 'layout--modal' : ''}`}
+        className="layout full-height"
         onClick={(e) => {
           const { notifications, session } = this.props;
           // Gross

@@ -1,13 +1,11 @@
 import React, { Component, PropTypes } from 'react';
-import { Form,
-  FormGroup,
-  FormGroupError,
-  Input,
-  Select,
-  Checkbox,
-} from '~/components/form';
-import { ErrorSummary } from '~/errors';
-import { SubmitButton } from '~/components/form';
+
+import {
+  Form, FormGroup, FormGroupError, Input, Select, Checkbox, SubmitButton,
+} from 'linode-components/forms';
+
+import { FormSummary } from '~/components/forms';
+
 
 export class ConfigForm extends Component {
   constructor(props) {
@@ -219,7 +217,7 @@ export class ConfigForm extends Component {
             <SubmitButton>{submitText}</SubmitButton>
           </div>
         </div>
-        <ErrorSummary errors={errors} />
+        <FormSummary errors={errors} />
       </Form>
     );
   }

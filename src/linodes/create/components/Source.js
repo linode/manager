@@ -1,14 +1,11 @@
 import React, { Component, PropTypes } from 'react';
 import _ from 'lodash';
 
-import { Card, CardHeader } from '~/components/cards';
-import Tabs from '~/components/Tabs';
-import { Table } from '~/components/tables';
-import {
-  AnchorCell,
-  LastBackupCell,
-} from '~/components/tables/cells';
-
+import { Card, CardHeader } from 'linode-components/cards';
+import { Tabs } from 'linode-components/tabs';
+import { Table } from 'linode-components/tables';
+import { AnchorCell } from 'linode-components/tables/cells';
+import { LastBackupCell } from '~/components/tables/cells';
 import Distributions from '~/linodes/components/Distributions';
 import Backups from './Backups';
 

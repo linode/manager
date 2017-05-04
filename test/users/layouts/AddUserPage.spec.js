@@ -4,9 +4,9 @@ import { shallow } from 'enzyme';
 import { expect } from 'chai';
 import { expectRequest } from '@/common';
 
-import { AddUserPage } from '~/users/layouts/AddUserPage';
+import { CreatePage } from '~/users/layouts/CreatePage';
 
-describe('users/layouts/AddUserPage', () => {
+describe('users/layouts/CreatePage', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
@@ -17,7 +17,7 @@ describe('users/layouts/AddUserPage', () => {
 
   it('renders UserForm', () => {
     const page = shallow(
-      <AddUserPage
+      <CreatePage
         dispatch={dispatch}
       />
     );
@@ -27,7 +27,7 @@ describe('users/layouts/AddUserPage', () => {
 
   it('should commit changes to the API', async () => {
     const page = shallow(
-      <AddUserPage
+      <CreatePage
         dispatch={dispatch}
       />
     );
@@ -40,7 +40,7 @@ describe('users/layouts/AddUserPage', () => {
       restricted: true,
     };
     await page.instance().onSubmit(values);
-    expect(dispatch.calledTwice).to.equal(true);
+    expect(dispatch.callCount).to.equal(2);
     const fn = dispatch.firstCall.args[0];
     await expectRequest(
       fn, '/account/users/', {

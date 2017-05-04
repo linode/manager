@@ -1,18 +1,21 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
+import { Link } from 'react-router';
 
-import { Link } from '~/components/Link';
-import { getLinode } from '~/linodes/linode/layouts/IndexPage';
+import { Button } from 'linode-components/buttons';
+import { Card, CardHeader } from 'linode-components/cards';
+
 import { takeBackup } from '~/api/backups';
-import { ErrorSummary, reduceErrors } from '~/errors';
-import { Button } from '~/components/buttons';
-import { Card, CardHeader } from '~/components/cards';
+import { FormSummary, reduceErrors } from '~/components/forms';
+
+import { selectLinode } from '../../utilities';
+
 
 export class SummaryPage extends Component {
   constructor() {
     super();
-    this.getLinode = getLinode.bind(this);
+
     this.takeBackup = takeBackup.bind(this);
     this.state = {
       errors: {},
@@ -20,8 +23,7 @@ export class SummaryPage extends Component {
   }
 
   async takeSnapshot() {
-    const { id, label } = this.getLinode();
-    const { dispatch } = this.props;
+    const { dispatch, linode: { id, label } } = this.props;
     try {
       const backup = await dispatch(takeBackup(id));
       dispatch(push(`/linodes/${label}/backups/${backup.id}`));
@@ -59,7 +61,7 @@ export class SummaryPage extends Component {
   }
 
   renderBlock(title, backup) {
-    const { params: { linodeLabel } } = this.props;
+    const { linode } = this.props;
 
     if (backup === undefined || backup === null || backup.finished === null) {
       return title === 'Snapshot' ? this.renderEmptySnapshot() :
@@ -72,7 +74,7 @@ export class SummaryPage extends Component {
 
     return (
       <div className="Backup col-sm-3" key={title}>
-        <Link to={`/linodes/${linodeLabel}/backups/${backup.id}`}>
+        <Link to={`/linodes/${linode.label}/backups/${backup.id}`}>
           <div className="Backup-block Backup-block--clickable">
             <div className="Backup-title">{title}</div>
             <div className="Backup-description">{`${days} ${unit}`}</div>
@@ -83,9 +85,9 @@ export class SummaryPage extends Component {
   }
 
   render() {
+    const { linode: { _backups: backups } } = this.props;
     const { errors } = this.state;
 
-    const backups = this.getLinode()._backups;
     const daily = backups.daily;
     const snapshot = backups.snapshot.in_progress ?
       backups.snapshot.in_progress : backups.snapshot.current;
@@ -107,7 +109,7 @@ export class SummaryPage extends Component {
         <div className="Backup-container row">
           {blocks}
         </div>
-        <ErrorSummary errors={errors} />
+        <FormSummary errors={errors} />
       </Card>
     );
   }
@@ -115,14 +117,7 @@ export class SummaryPage extends Component {
 
 SummaryPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  linodes: PropTypes.object.isRequired,
-  params: PropTypes.shape({
-    linodeLabel: PropTypes.string.isRequired,
-  }).isRequired,
+  linode: PropTypes.object.isRequired,
 };
 
-function select(state) {
-  return { linodes: state.api.linodes };
-}
-
-export default connect(select)(SummaryPage);
+export default connect(selectLinode)(SummaryPage);

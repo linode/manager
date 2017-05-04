@@ -21,11 +21,11 @@ export function genConfig(config, parent = undefined) {
 }
 
 function fullyQualified(resource) {
-  let path = resource.plural;
+  let path = resource.plural ? resource.plural : resource.singular;
   let res = resource;
   while (res.parent) {
     res = res.parent;
-    path = `${res.plural}.${path}`;
+    path = `${res.plural ? res.plural : res.singular}.${path}`;
   }
   return path;
 }
@@ -62,34 +62,51 @@ export function genActions(config) {
     ({ type: `GEN@${fullyQualified(config)}/INVALIDATE`, ids, partial });
   if (config.subresources) {
     Object.keys(config.subresources).forEach((key) => {
-      actions[config.subresources[key].plural] =
-        genActions(config.subresources[key], 2);
+      const subresource = config.subresources[key];
+      const subActions = genActions(subresource, 2);
+      if (subresource.plural) {
+        actions[subresource.plural] = subActions;
+      } else if (subresource.singular) {
+        actions[subresource.singular] = subActions;
+      }
     });
   }
-  actions.type = config.plural;
+  if (config.plural) {
+    actions.type = config.plural;
+  } else if (config.singular) {
+    actions.type = config.singular;
+  }
   return actions;
 }
 
-export function generateDefaultStateMany(config) {
-  return {
-    totalPages: -1,
-    totalResults: -1,
-    [config.plural]: {},
-    ids: [],
-  };
+export function generateDefaultStateFull(config) {
+  if (config.plural) {
+    return {
+      totalPages: -1,
+      totalResults: -1,
+      ids: [],
+      [config.plural]: {},
+    };
+  }
+
+  return {};
 }
 
 export function generateDefaultStateOne(config, one) {
   const subresources = _.reduce(
     config.subresources, (accumulated, subresourceConfig, subresourceName) => ({
       ...accumulated,
-      [subresourceName]: { ...generateDefaultStateMany(subresourceConfig) },
+      [subresourceName]: { ...generateDefaultStateFull(subresourceConfig) },
     }), {});
   return { ...one, ...subresources };
 }
 
 export class ReducerGenerator {
   static one(config, oldStateMany, action) {
+    if (config.singular) {
+      return action.resource;
+    }
+
     const id = action.ids.length ? action.ids[action.ids.length - 1] :
                action.resource[config.primaryKey];
     const oldStateOne = oldStateMany[config.plural][id];
@@ -158,7 +175,7 @@ export class ReducerGenerator {
         // action.ids should only ever be just 1 id
         delete newState[config.plural][action.ids[0]];
       } else {
-        newState = generateDefaultStateMany(config);
+        newState = generateDefaultStateFull(config);
       }
     }
 
@@ -182,19 +199,19 @@ export class ReducerGenerator {
 
     if (!name) return state;
 
-    if (i !== names.length - 2) {
-      throw new Error('3-layer configs not supported');
-    }
-
     const keys = Object.keys(config.subresources);
     let subkey = null;
     let subconfig = null;
-    for (let i = 0; i < keys.length; i += 1) {
+    for (i = 0; i < keys.length; i += 1) {
       subkey = keys[i];
       subconfig = config.subresources[subkey];
-      if (subconfig.plural === name) {
+      if (subconfig.plural === name || subconfig.singular === name) {
         break;
       }
+    }
+
+    if (i === keys.length) {
+      return state;
     }
 
     const subaction = { ...action, ids: ids.splice(1) };
@@ -207,6 +224,8 @@ export class ReducerGenerator {
   }
 
   static reducer(config, state, action) {
+    const subTypeMatch = `GEN@${fullyQualified(config)}`;
+
     switch (action.type) {
       case `GEN@${fullyQualified(config)}/ONE`:
         return ReducerGenerator.one(config, state, action);
@@ -216,8 +235,10 @@ export class ReducerGenerator {
         return ReducerGenerator.del(config, state, action);
       case `GEN@${fullyQualified(config)}/INVALIDATE`:
         return ReducerGenerator.invalidate(config, state, action);
+      // eslint-disable-next-line no-case-declarations
       default:
-        if (action.type && action.type.indexOf(`GEN@${config.plural}.`) === 0) {
+        if (action.type && action.type.split('/')[0].indexOf(subTypeMatch) === 0) {
+          // Go inside a nested config
           return ReducerGenerator.subresource(config, state, action);
         }
         return state;
@@ -225,7 +246,7 @@ export class ReducerGenerator {
   }
 
   constructor(_config) {
-    const defaultState = generateDefaultStateMany(_config);
+    const defaultState = generateDefaultStateFull(_config);
     this.reducer = (state = defaultState, action) =>
       ReducerGenerator.reducer(_config, state, action);
   }

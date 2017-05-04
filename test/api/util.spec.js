@@ -1,7 +1,7 @@
 import sinon from 'sinon';
 import { expect } from 'chai';
 
-import { generateDefaultStateMany } from '~/api/apiResultActionReducerGenerator.js';
+import { generateDefaultStateFull } from '~/api/apiResultActionReducerGenerator.js';
 import { config as linodeConfig } from '~/api/configs/linodes';
 import {
   getObjectByLabelLazily,
@@ -35,7 +35,7 @@ describe('api/util', async () => {
     fn = dispatch.firstCall.args[0];
     dispatch.reset();
 
-    const defaultMany = generateDefaultStateMany(linodeConfig);
+    const defaultMany = generateDefaultStateFull(linodeConfig);
     await expectRequest(fn, '/linode/instances/?page=1', undefined, {
       ...defaultMany,
       linodes: [

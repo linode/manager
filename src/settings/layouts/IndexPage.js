@@ -1,23 +1,22 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
+import { Card } from 'linode-components/cards';
+import {
+  Checkbox, Form, FormGroup, SubmitButton,
+} from 'linode-components/forms';
+
+import { setError } from '~/actions/errors';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
-import { Card } from '~/components/cards';
-import {
-  Form,
-  Checkbox,
-  SubmitButton,
-} from '~/components/form';
-import { settings } from '~/api';
-import { reduceErrors } from '~/errors';
-import { setError } from '~/actions/errors';
+import { account } from '~/api';
+import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
 
 
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
     try {
-      await dispatch(settings.one());
+      await dispatch(account.one());
     } catch (response) {
       // eslint-disable-next-line no-console
       console.error(response);
@@ -29,7 +28,8 @@ export class IndexPage extends Component {
     super(props);
 
     this.state = {
-      networkHelper: props.settings.network_helper,
+      networkHelper: props.account.network_helper,
+      errors: {},
     };
   }
 
@@ -37,40 +37,34 @@ export class IndexPage extends Component {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
 
-    dispatch(setTitle('Settings'));
+    dispatch(setTitle('Account'));
   }
 
-  async onSubmit() {
+  onSubmit = async () => {
     const { dispatch } = this.props;
+    const { networkHelper: network_helper } = this.state;
 
-    try {
-      await dispatch(settings.put({
-        network_helper: this.state.networkHelper,
-      }));
-    } catch (response) {
-      const errors = await reduceErrors(response);
-      this.setState({ errors });
-    }
+    await dispatch(dispatchOrStoreErrors.apply(this, [
+      [() => account.put({ network_helper })],
+    ]));
   }
 
   render() {
-    const { networkHelper } = this.state;
+    const { networkHelper, loading, errors } = this.state;
     return (
       <div>
         <header className="main-header main-header--border">
           <div className="container">
-            <h1>
-              Settings
-            </h1>
+            <h1>Account</h1>
           </div>
         </header>
         <div className="container">
           <Card>
-            <Form onSubmit={() => this.onSubmit()}>
+            <Form onSubmit={this.onSubmit}>
               <p>
-                This page controls the default settings for all users.
+                This page controls the default account for all users.
               </p>
-              <div className="row">
+              <FormGroup className="row">
                 <label className="col-sm-3 row-label">Enable Network Helper</label>
                 <div className="col-sm-9">
                   <Checkbox
@@ -83,12 +77,13 @@ export class IndexPage extends Component {
                       networking configuration into your Linode at boot."
                   />
                 </div>
-              </div>
-              <div className="row">
+              </FormGroup>
+              <FormGroup className="row">
                 <div className="offset-sm-3 col-sm-9">
-                  <SubmitButton>Save settings</SubmitButton>
+                  <SubmitButton disabled={loading} />
+                  <FormSummary errors={errors} success="Account saved." />
                 </div>
-              </div>
+              </FormGroup>
             </Form>
           </Card>
         </div>
@@ -99,12 +94,12 @@ export class IndexPage extends Component {
 
 IndexPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  settings: PropTypes.object.isRequired,
+  account: PropTypes.object.isRequired,
 };
 
 function select(state) {
   return {
-    settings: state.api.settings.settings.undefined,
+    account: state.api.account,
   };
 }
 

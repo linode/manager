@@ -1,0 +1,32 @@
+// font size mixin based on 10px
+@mixin font-size($size: 1.5) {
+    font-size: ($size * 10) + px; // px fallback where rem not supported
+    font-size: $size + rem;
+}
+
+@mixin flex($justify-content: space-between) {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: $justify-content;
+}
+
+@mixin clearfix() {
+    clear: both;
+}
+
+@mixin pointer() {
+    cursor: pointer;
+    cursor: hand;
+}
+
+@mixin title() {
+    text-align: center;
+    overflow: hidden;
+    line-height: $form-field-height;
+    color: $black;
+}
+
+@mixin placeholder() {
+    color: $lightest-black;
+    opacity: 1;
+}

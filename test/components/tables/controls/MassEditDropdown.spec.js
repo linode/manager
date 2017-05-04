@@ -3,10 +3,10 @@ import sinon from 'sinon';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
 
-import { MassEditDropdown } from '~/components/tables/controls';
+import { MassEditDropdown } from 'linode-components/lists/controls';
 
 
-describe('components/tables/MassEditDropdown', function () {
+describe('components/lists/MassEditDropdown', function () {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {

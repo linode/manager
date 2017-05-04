@@ -1,9 +1,9 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
-import HelpButton from '~/components/HelpButton';
+import { HelpButton } from 'linode-components/buttons';
 
-describe('components/HelpButton', () => {
+describe('components/buttons/HelpButton', () => {
   it('renders a Link to the suggested article', () => {
     const button = shallow(
       <HelpButton to="http://example.org" />

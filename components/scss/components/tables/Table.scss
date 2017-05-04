@@ -1,0 +1,77 @@
+.Table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    table-layout: fixed;
+    width: 100%;
+
+    th, td {
+        padding: 5px 15px;
+    }
+
+    thead, th {
+        background: transparent;
+        border: 0;
+        font-weight: normal;
+        color: $lightest-black;
+    }
+
+    &--secondary {
+        .TableRow {
+            height: 40px;
+        }
+    }
+}
+
+.TableHead {
+    &--disabled {
+        th {
+            height: 0;
+            padding: 0;
+        }
+    }
+}
+
+.TableRow {
+    height: 65px;
+    border: $border;
+    margin: 0 15px;
+    background: $white;
+
+    &-selector {
+        padding-right: 10px;
+    }
+
+    &--selected {
+        @extend .selected;
+    }
+}
+
+.CheckboxCell {
+    width: 45px;
+}
+
+.RowLabelCell {
+    @extend .font-large;
+    width: 350px;
+
+    small {
+        display: block;
+    }
+}
+
+.ButtonCell {
+    padding: 0;
+
+    button {
+        // TODO: proper styles for buttons in cells
+        display: block;
+        float: right;
+        position: relative;
+        top: 1px;
+    }
+}
+
+.AuthScopeCell {
+    width: 65px;
+    text-align: center;
+}

@@ -1,16 +1,17 @@
+import _ from 'lodash';
 import React, { PropTypes, Component } from 'react';
 
-import _ from 'lodash';
-import { Card, CardHeader } from '~/components/cards';
-import { Form, FormGroup, SubmitButton } from '~/components/form';
-import { Table } from '~/components/tables';
+import { Card, CardHeader } from 'linode-components/cards';
+import { Form, FormGroup, SubmitButton } from 'linode-components/forms';
+import { Table } from 'linode-components/tables';
 import {
   CheckboxCell,
   LinkCell,
-  IPRdnsCell,
-} from '~/components/tables/cells';
-import { ErrorSummary, reduceErrors } from '~/errors';
+} from 'linode-components/tables/cells';
+
 import { setShared } from '~/api/linodes';
+import { FormSummary, reduceErrors } from '~/components/forms';
+import { IPRdnsCell } from '~/components/tables/cells';
 
 
 export default class IPSharing extends Component {
@@ -104,6 +105,7 @@ export default class IPSharing extends Component {
               columns={[
                 {
                   cellComponent: CheckboxCell,
+                  headerClassName: 'CheckboxColumn',
                   selectedKeyFn: (record) => {
                     return record.ip.address;
                   },
@@ -126,7 +128,7 @@ export default class IPSharing extends Component {
             />
           </FormGroup>
           <SubmitButton disabled={saving}>Save</SubmitButton>
-          <ErrorSummary errors={errors} />
+          <FormSummary errors={errors} />
         </Form>
       </Card>
     );

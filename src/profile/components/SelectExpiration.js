@@ -1,7 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 import moment from 'moment';
 
-import { Select } from '~/components/form';
+import { Select } from 'linode-components/forms';
 
 export default class SelectExpiration extends Component {
   static map(value) {

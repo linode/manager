@@ -38,7 +38,7 @@ describe('linodes/create/components/Details', () => {
 
     details.find('form').simulate('submit');
 
-    expect(onSubmit.calledOnce).to.equal(true);
+    expect(onSubmit.callCount).to.equal(1);
 
     expectObjectDeepEquals(onSubmit.firstCall.args[0], {
       password: 'my-password',

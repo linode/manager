@@ -2,16 +2,19 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
-import { MAX_UPLOAD_SIZE_MB } from '~/constants';
+import { Card } from 'linode-components/cards';
+import { Form, FormGroup, FormGroupError, SubmitButton, Input } from 'linode-components/forms';
+
 import { tickets } from '~/api';
 import { addTicketAttachment } from '~/api/tickets';
 import { setError } from '~/actions/errors';
-import { Form, FormGroup, FormGroupError, SubmitButton, Input } from '~/components/form';
-import { reduceErrors, ErrorSummary } from '~/errors';
-import Card from '~/components/cards/Card';
+import { MAX_UPLOAD_SIZE_MB } from '~/constants';
+import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+
 import { renderTicketCreationInfo } from './IndexPage';
 import TicketReply from '../components/TicketReply';
 import TicketHelper from '../components/TicketHelper';
+
 
 export class TicketPage extends Component {
   static async preload({ dispatch }, { ticketId }) {
@@ -28,7 +31,7 @@ export class TicketPage extends Component {
   constructor() {
     super();
 
-    this.state = { reply: '', attachments: [], errors: {}, saving: false };
+    this.state = { reply: '', attachments: [], errors: {}, loading: false };
   }
 
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
@@ -37,41 +40,29 @@ export class TicketPage extends Component {
     const { attachments, reply: description } = this.state;
     const { ticket, dispatch } = this.props;
 
-    this.setState({ errors: {}, saving: true });
+    await dispatch(dispatchOrStoreErrors.apply(this, [
+      [() => description ? tickets.replies.post({ description }, [ticket.id]) : () => {}],
+    ]));
 
-    try {
-      if (description) {
-        await dispatch(tickets.replies.post({ description }, [ticket.id]));
-        this.setState({ reply: '' });
+    const requests = [];
+    for (let i = 0; i < attachments.length; i++) {
+      const attachment = attachments[i];
+
+      if ((attachment.size / (1024 * 1024)) < MAX_UPLOAD_SIZE_MB) {
+        requests.push(dispatch(addTicketAttachment(ticket.id, attachment)));
+      } else {
+        const error = `File size must be under ${MAX_UPLOAD_SIZE_MB} MB`;
+        this.setState({ errors: { attachments: [{ reason: error }] } });
+
+        return;
       }
-
-      for (let i = 0; i < attachments.length; i++) {
-        const attachment = attachments[i];
-
-        if ((attachment.size / (1024 * 1024)) < MAX_UPLOAD_SIZE_MB) {
-          await dispatch(addTicketAttachment(ticket.id, attachment));
-        } else {
-          const error = `File size must be under ${MAX_UPLOAD_SIZE_MB} MB`;
-          this.setState({ errors: { attachments: [{ reason: error }] } });
-
-          return;
-        }
-      }
-
-      this.setState({ saving: false });
-    } catch (response) {
-      if (!response.json) {
-        // eslint-disable-next-line no-console
-        return console.error(response);
-      }
-
-      const errors = await reduceErrors(response);
-      this.setState({ errors, saving: false });
     }
+
+    await dispatch(dispatchOrStoreErrors.apply(this, [requests]));
   }
 
   renderTicketResponseForm() {
-    const { errors, saving, reply } = this.state;
+    const { errors, loading, reply } = this.state;
 
     return (
       <Card>
@@ -101,11 +92,11 @@ export class TicketPage extends Component {
             <FormGroupError inline={false} errors={errors} name="attachments" />
           </FormGroup>
           <div className="clearfix">
-            <div className="float-sm-right">
-              <SubmitButton disabled={saving}>Submit</SubmitButton>
+            <div className="text-sm-right">
+              <SubmitButton disabled={loading} disabledChildren="Submitting">Submit</SubmitButton>
+              <FormSummary errors={errors} success="Response submitted." />
             </div>
           </div>
-          <ErrorSummary errors={errors} />
         </Form>
       </Card>
     );

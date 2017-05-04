@@ -1,5 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+
+import { selectLinode } from '../../utilities';
 import { ConfigPanel } from '~/linodes/linode/settings/components/ConfigPanel';
 import { DiskPanel } from '~/linodes/linode/settings/components/DiskPanel';
 import { setSource } from '~/actions/source';
@@ -25,15 +27,8 @@ export class AdvancedPage extends Component {
 }
 
 AdvancedPage.propTypes = {
-  linodes: PropTypes.object.isRequired,
+  linode: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
-  params: PropTypes.shape({
-    linodeLabel: PropTypes.string,
-  }),
 };
 
-function select(state) {
-  return { linodes: state.api.linodes };
-}
-
-export default connect(select)(AdvancedPage);
+export default connect(selectLinode)(AdvancedPage);

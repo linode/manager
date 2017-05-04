@@ -1,11 +1,13 @@
 import React, { PropTypes, Component } from 'react';
 
+import { Form, Input, Select, SubmitButton, ModalFormGroup } from 'linode-components/forms';
+import { CancelButton } from 'linode-components/buttons';
+
 import { domains } from '~/api';
-import { ModalFormGroup } from '~/components/form';
+import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+
 import SelectDNSSeconds from './SelectDNSSeconds';
-import { Form, Input, Select, SubmitButton } from '~/components/form';
-import { CancelButton } from '~/components/buttons';
-import { reduceErrors, ErrorSummary } from '~/errors';
+
 
 export default class EditSRVRecord extends Component {
   constructor(props) {
@@ -13,7 +15,7 @@ export default class EditSRVRecord extends Component {
 
     const { id, zone: { ttl_sec: defaultTTL, domain: zone } } = props;
     const {
-      service,
+      name: service,
       protocol,
       target,
       priority,
@@ -24,7 +26,7 @@ export default class EditSRVRecord extends Component {
 
     this.state = {
       errors: {},
-      saving: false,
+      loading: false,
       zone,
       defaultTTL,
       ttl,
@@ -41,43 +43,26 @@ export default class EditSRVRecord extends Component {
   }
 
   onSubmit = async () => {
-    const { dispatch, id } = this.props;
-    const { ttl,
+    const { dispatch, id, close } = this.props;
+    const { ttl, service, protocol, target, priority, weight, port } = this.state;
+    const ids = [this.props.zone.id, id].filter(Boolean);
+    const data = {
+      ttl_sec: +ttl,
       service,
       protocol,
       target,
-      priority,
-      weight,
-      port,
-    } = this.state;
+      priority: +priority,
+      weight: +weight,
+      port: +port,
+      type: 'SRV',
+    };
 
-    this.setState({ errors: {}, saving: true });
-
-    try {
-      const ids = [this.props.zone.id, id].filter(Boolean);
-
-      await dispatch(domains.records[id ? 'put' : 'post']({
-        ttl_sec: +ttl,
-        service,
-        protocol,
-        target,
-        priority: +priority,
-        weight: +weight,
-        port: +port,
-        type: 'SRV',
-      }, ...ids));
-
-      this.setState({ saving: false });
-      this.props.close();
-    } catch (response) {
-      if (!response.json) {
-        // eslint-disable-next-line no-console
-        return console.error(response);
-      }
-
-      const errors = await reduceErrors(response);
-      this.setState({ errors, saving: false });
-    }
+    await dispatch(dispatchOrStoreErrors.apply(this, [
+      [
+        () => domains.records[id ? 'put' : 'post'](data, ...ids),
+        close,
+      ],
+    ]));
   }
 
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value });
@@ -86,7 +71,7 @@ export default class EditSRVRecord extends Component {
     const { close } = this.props;
     const {
       errors,
-      saving,
+      loading,
       defaultTTL,
       ttl,
       service,
@@ -98,7 +83,7 @@ export default class EditSRVRecord extends Component {
     } = this.state;
     return (
       <Form onSubmit={this.onSubmit}>
-        <ModalFormGroup id="service" label="Service" apiKey="service" errors={errors}>
+        <ModalFormGroup id="service" label="Service" apiKey="name" errors={errors}>
           <Input
             id="service"
             name="service"
@@ -177,9 +162,14 @@ export default class EditSRVRecord extends Component {
         </ModalFormGroup>
         <div className="Modal-footer">
           <CancelButton onClick={close} />
-          <SubmitButton disabled={saving}>{this.props.id ? 'Save' : 'Add SRV Record'}</SubmitButton>
+          <SubmitButton
+            disabled={loading}
+            disabledChildren={this.props.id ? undefined : 'Adding SRV Record'}
+          >
+            {this.props.id ? undefined : 'Add SRV Record'}
+          </SubmitButton>
+          <FormSummary errors={errors} />
         </div>
-        <ErrorSummary errors={errors} />
       </Form>
     );
   }

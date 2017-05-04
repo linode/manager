@@ -3,7 +3,7 @@ import sinon from 'sinon';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
 
-import Tabs from '~/components/Tabs';
+import { Tabs } from 'linode-components/tabs';
 
 describe('components/Tabs', async () => {
   // eslint-disable-next-line react/prefer-stateless-function

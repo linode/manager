@@ -2,19 +2,22 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
+import { Button } from 'linode-components/buttons';
+import { Card, CardHeader } from 'linode-components/cards';
+import { FormGroup, Select } from 'linode-components/forms';
+
 import { setError } from '~/actions/errors';
+import { setSource } from '~/actions/source';
+import { getObjectByLabelLazily } from '~/api/util';
+import { linodeStats } from '~/api/linodes';
+import LineGraph from '~/components/graphs/LineGraph';
 import Region from '~/linodes/components/Region';
 import DistroStyle from '~/linodes/components/DistroStyle';
 import PlanStyle from '~/linodes/components/PlanStyle';
 import WeblishLaunch from '~/linodes/components/WeblishLaunch';
-import { getLinode } from './IndexPage';
-import { setSource } from '~/actions/source';
-import { Button } from '~/components/buttons';
-import { Card, CardHeader } from '~/components/cards';
-import LineGraph from '~/components/graphs/LineGraph';
-import { Select } from '~/components/form';
-import { getObjectByLabelLazily } from '~/api/util';
-import { linodeStats } from '~/api/linodes';
+
+import { selectLinode } from '../utilities';
+
 
 function formatData(datasets, legends) {
   const x = datasets[0].map(([x]) => x);
@@ -24,26 +27,31 @@ function formatData(datasets, legends) {
 
 export class DashboardPage extends Component {
   static async preload({ dispatch, getState }, { linodeLabel }) {
+    let id;
     try {
-      const { id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
-      await dispatch(linodeStats([id]));
+      ({ id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel)));
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error(e);
       await dispatch(setError(e));
+    }
+
+    try {
+      await dispatch(linodeStats([id]));
+    } catch (e) {
+      // Stats aren't available.
     }
   }
 
   constructor(props) {
     super(props);
 
-    this.getLinode = getLinode.bind(this);
     this.state = {
       source: 'cpu',
       range: 'last1day',
     };
 
-    const stats = this.getLinode()._stats;
+    const stats = props.linode._stats;
     if (stats) {
       this.graphs = {
         cpu: {
@@ -135,9 +143,8 @@ export class DashboardPage extends Component {
   }
 
   renderDetails() {
-    const { username } = this.props;
-    const linode = this.getLinode();
-    const plan = (<PlanStyle plan={linode.type[0]} />);
+    const { username, linode } = this.props;
+    const plan = (<PlanStyle plan={linode.type} />);
     const lishLink = `ssh -t ${
         username
       }@lish-${
@@ -201,7 +208,7 @@ export class DashboardPage extends Component {
         </section>
         <section className="col-lg-6 col-md-12 col-sm-12">
           <Card header={<CardHeader title="Access" />}>
-            <div className="form-group row linode-ssh">
+            <FormGroup className="row">
               <label htmlFor="ssh-input" className="col-sm-4 col-form-label">
                 SSH
               </label>
@@ -219,8 +226,8 @@ export class DashboardPage extends Component {
                   </span>
                 </div>
               </div>
-            </div>
-            <div className="form-group row linode-lish">
+            </FormGroup>
+            <FormGroup className="row">
               <label className="col-sm-4 col-form-label" htmlFor="lish-input">
                 Text console
               </label>
@@ -244,8 +251,8 @@ export class DashboardPage extends Component {
                   Lish listens on ports 22, 443, and 2200.
                 </small>
               </div>
-            </div>
-            <div className="form-group row linode-glish">
+            </FormGroup>
+            <FormGroup className="row">
               <label className="col-sm-4 col-form-label" htmlFor="glish-button">
                 Graphical console
               </label>
@@ -257,7 +264,7 @@ export class DashboardPage extends Component {
                   Equivalent to plugging a monitor and keyboard into your server.
                 </small>
               </div>
-            </div>
+            </FormGroup>
           </Card>
         </section>
       </div>
@@ -275,19 +282,15 @@ export class DashboardPage extends Component {
 }
 
 DashboardPage.propTypes = {
-  linodes: PropTypes.object,
-  params: PropTypes.shape({
-    linodeLabel: PropTypes.string,
-  }),
+  linode: PropTypes.object,
   username: PropTypes.string,
   dispatch: PropTypes.func.isRequired,
 };
 
-function select(state) {
-  return {
-    linodes: state.api.linodes,
-    username: state.authentication.username,
-  };
+function select(state, props) {
+  const { linode } = selectLinode(state, props);
+  const { username } = state.authentication;
+  return { linode, username };
 }
 
 export default connect(select)(DashboardPage);

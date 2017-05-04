@@ -1,6 +1,6 @@
 import moment from 'moment';
 
-import * as api from '~/api';
+import * as api from './';
 
 // Extra cruft involving constructor / prototypes is for any `new Error404`s  to be shown as
 // instanceof Error404:
@@ -18,7 +18,11 @@ export function objectFromMapByLabel(map, label, labelName = 'label') {
   }
 
   return Object.values(map).reduce(
-    (match, object) => object[labelName] === label ? object : match, undefined);
+    (match, object) => {
+      // This == is explicit because some ids are ints some are strings.
+      // eslint-disable-next-line eqeqeq
+      return object[labelName] == label ? object : match;
+    }, undefined);
 }
 
 export function getObjectByLabelLazily(pluralName, label, labelName = 'label') {
@@ -41,6 +45,16 @@ export function getObjectByLabelLazily(pluralName, label, labelName = 'label') {
     }
 
     return response[pluralName][0];
+  };
+}
+
+export function selectObjectByLabel({ collection, paramField, resultField, labelName }) {
+  return (state, props) => {
+    const object = objectFromMapByLabel(
+      state.api[collection][collection],
+      props.params[paramField],
+      labelName);
+    return { [resultField]: object };
   };
 }
 

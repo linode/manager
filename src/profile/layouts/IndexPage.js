@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import Tabs from '~/components/Tabs';
+import { Tabs } from 'linode-components/tabs';
 import { setError } from '~/actions/errors';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
@@ -38,7 +38,8 @@ export class IndexPage extends Component {
       { name: 'Integrations', link: '/integrations' },
       { name: 'Notifications', link: '/notifications' },
       { name: 'Referrals', link: '/referrals' },
-      { name: 'Lish Settings', link: '/lish' },
+      // TODO: Add this when API supports it
+      //{ name: 'Lish Settings', link: '/lish' },
     ].map(t => ({ ...t, link: `/profile${t.link}` }));
 
     return (
@@ -70,7 +71,7 @@ IndexPage.propTypes = {
 function select(state) {
   // TODO refactor with abstractor changes, see other 'select' method usage in profile/page(s)
   return {
-    profile: state.api.profile.profile.undefined,
+    profile: state.api.profile,
   };
 }
 

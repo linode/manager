@@ -4,7 +4,7 @@ import { shallow } from 'enzyme';
 import { expect } from 'chai';
 
 import { expectRequest } from '@/common';
-import { api } from '@/data';
+import { testLinode1235, testLinode1236 } from '@/data/linodes';
 import { SummaryPage } from '~/linodes/linode/backups/layouts/SummaryPage';
 
 describe('linodes/linode/backups/layouts/SummaryPage', () => {
@@ -20,8 +20,7 @@ describe('linodes/linode/backups/layouts/SummaryPage', () => {
     const page = shallow(
       <SummaryPage
         dispatch={dispatch}
-        linodes={api.linodes}
-        params={{ linodeLabel: 'test-linode-2' }}
+        linode={testLinode1236}
       />
     );
 
@@ -46,8 +45,7 @@ describe('linodes/linode/backups/layouts/SummaryPage', () => {
     const page = shallow(
       <SummaryPage
         dispatch={dispatch}
-        linodes={api.linodes}
-        params={{ linodeLabel: 'test-linode-1' }}
+        linode={testLinode1235}
       />
     );
 
@@ -71,8 +69,7 @@ describe('linodes/linode/backups/layouts/SummaryPage', () => {
     const page = shallow(
       <SummaryPage
         dispatch={dispatch}
-        linodes={api.linodes}
-        params={{ linodeLabel: 'test-linode-2' }}
+        linode={testLinode1236}
       />
     );
 

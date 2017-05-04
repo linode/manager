@@ -5,7 +5,7 @@ import { push } from 'react-router-redux';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 
-import Tabs from '~/components/Tabs';
+import { Tabs } from 'linode-components/tabs';
 
 
 export class IndexPage extends Component {

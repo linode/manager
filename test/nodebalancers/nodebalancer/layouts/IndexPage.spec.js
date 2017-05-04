@@ -3,44 +3,41 @@ import sinon from 'sinon';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
 
-import { api } from '@/data';
+import { noGroupNodeBalancer, genericNodeBalancer } from '@/data/nodebalancers';
 import { IndexPage } from '~/nodebalancers/nodebalancer/layouts/IndexPage';
 
-const { nodebalancers } = api;
-
-describe('nodebalancers/nodebalancer/IndexPage', () => {
+describe('nodebalancers/nodebalancer/layouts/IndexPage', () => {
   const sandbox = sinon.sandbox.create();
 
+  const dispatch = sandbox.spy();
+
   afterEach(() => {
+    dispatch.reset();
     sandbox.restore();
   });
 
-  const dispatch = sandbox.stub();
-
-  it('displays nodebalancer configs', () => {
-    const testNodebalancers = nodebalancers;
-    const nbLabel = testNodebalancers.nodebalancers[0].label;
+  it('renders the nodebalancer label and group', () => {
+    // TODO: test for group when supported by API
     const page = mount(
       <IndexPage
         dispatch={dispatch}
-        params={{ nbLabel }}
-        nodebalancer={testNodebalancers.nodebalancers[0]}
-      />
-    );
-    const firstRow = page.find('tr').at(0);
-    const secondRow = page.find('tr').at(1);
-    const renderedPort = firstRow.find('td').at(0).text();
-    const renderedProtocol = firstRow.find('td').at(1).text();
-    const renderedAlgorithm = firstRow.find('td').at(2).text();
-    const renderedStick = firstRow.find('td').at(3).text();
-    const renderedCheck = firstRow.find('td').at(4).text();
-    const secondRenderedPort = secondRow.find('td').at(0).text();
-    expect(renderedPort).to.equal('80');
-    expect(renderedProtocol).to.equal('HTTP');
-    expect(renderedAlgorithm).to.equal('Roundrobin');
-    expect(renderedStick).to.equal('None');
-    expect(renderedCheck).to.equal('None');
-    expect(secondRenderedPort).to.equal('81');
+        nodebalancer={genericNodeBalancer}
+        params={{ configId: genericNodeBalancer._configs.configs[0].id }}
+      />);
+    const { label } = genericNodeBalancer;
+    const h1 = page.find('h1');
+    expect(h1.text()).to.equal(label);
+  });
+
+  it('renders the nodebalancer label alone when ungrouped', () => {
+    const page = mount(
+      <IndexPage
+        dispatch={dispatch}
+        nodebalancer={noGroupNodeBalancer}
+        params={{ configId: noGroupNodeBalancer._configs.configs[0].id }}
+      />);
+
+    const h1 = page.find('h1');
+    expect(h1.text()).to.equal(noGroupNodeBalancer.label);
   });
 });
-

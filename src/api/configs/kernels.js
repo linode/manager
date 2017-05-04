@@ -5,7 +5,6 @@ import {
 
 export const config = genConfig({
   plural: 'kernels',
-  singular: 'kernel',
   endpoint: id => `/linode/kernels/${id}`,
   supports: [ONE, MANY],
 });

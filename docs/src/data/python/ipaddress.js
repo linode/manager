@@ -1,0 +1,1 @@
+module.exports = {"name":"IPAddress","import":"from linode import IPAddress","_object":"ipaddress","desc":"An IPv4 Address\n","endpoints":null,"methods":null};

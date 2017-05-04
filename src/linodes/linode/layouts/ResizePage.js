@@ -1,25 +1,27 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { Card, CardHeader } from '~/components/cards';
+import { Card, CardHeader } from 'linode-components/cards';
 import {
   FormGroup, Form, SubmitButton,
-} from '~/components/form';
-import { reduceErrors, ErrorSummary } from '~/errors';
+} from 'linode-components/forms';
+
 import { setSource } from '~/actions/source';
-import { getLinode } from '~/linodes/linode/layouts/IndexPage';
 import { resizeLinode } from '~/api/linodes';
+import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
 import Plan from '~/linodes/components/Plan';
+
+import { selectLinode } from '../utilities';
+
 
 export class ResizePage extends Component {
   constructor(props) {
     super(props);
-    this.getLinode = getLinode.bind(this);
+
     this.state = {
-      // TODO: deal with multiple types better
-      type: this.getLinode().type[0].id,
+      type: props.linode.type.id,
       errors: {},
-      fetching: false,
+      loading: false,
     };
   }
 
@@ -29,25 +31,18 @@ export class ResizePage extends Component {
   }
 
   async onSubmit() {
-    const { id: linodeId } = this.getLinode();
-    const { dispatch } = this.props;
+    const { dispatch, linode } = this.props;
     const { type } = this.state;
-    this.setState({ fetching: true, errors: {} });
 
-    try {
-      await dispatch(resizeLinode(linodeId, type));
-    } catch (response) {
-      const errors = await reduceErrors(response);
-      errors._.concat(errors.type);
-      this.setState({ errors });
-    }
-
-    this.setState({ fetching: false });
+    await dispatch(dispatchOrStoreErrors.apply(this, [
+      [() => resizeLinode(linode.id, type)],
+      ['type'],
+    ]));
   }
 
   render() {
     const { types } = this.props;
-    const { type, errors } = this.state;
+    const { type, errors, loading } = this.state;
 
     return (
       <Card header={<CardHeader title="Resize" />}>
@@ -60,11 +55,12 @@ export class ResizePage extends Component {
             />
           </FormGroup>
           <FormGroup>
-            <SubmitButton>
-              Resize
-            </SubmitButton>
+            <SubmitButton
+              disabled={loading}
+              disabledChildren="Resizing"
+            >Resize</SubmitButton>
+            <FormSummary errors={errors} success="Linode is being resized." />
           </FormGroup>
-          <ErrorSummary errors={errors} />
         </Form>
       </Card>
     );
@@ -74,17 +70,13 @@ export class ResizePage extends Component {
 ResizePage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   types: PropTypes.object.isRequired,
-  linodes: PropTypes.object.isRequired,
-  params: PropTypes.shape({
-    linodeLabel: PropTypes.string.isRequired,
-  }).isRequired,
+  linode: PropTypes.object.isRequired,
 };
 
-function select(state) {
-  return {
-    types: state.api.types,
-    linodes: state.api.linodes,
-  };
+function select(state, props) {
+  const { linode } = selectLinode(state, props);
+  const { types } = state.api;
+  return { linode, types };
 }
 
 export default connect(select)(ResizePage);

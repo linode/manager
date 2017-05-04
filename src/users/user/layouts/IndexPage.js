@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { push } from 'react-router-redux';
 
-import Tabs from '~/components/Tabs';
+import { Tabs } from 'linode-components/tabs';
 import { users } from '~/api';
 import { setError } from '~/actions/errors';
 
@@ -42,7 +42,7 @@ export class IndexPage extends Component {
     const { restricted } = this.state;
     const tabList = [{ name: 'Edit User', link: '' }];
     if (restricted) {
-      tabList.push({ name: 'Permissions', link: '/Permissions' });
+      tabList.push({ name: 'Permissions', link: '/permissions' });
     }
     const tabs = tabList.map(t => ({ ...t, link: `/users/${username}${t.link}` }));
 

@@ -8,19 +8,22 @@ import { showModal, hideModal } from '~/actions/modal';
 import { nodebalancers as api } from '~/api';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
-import ConfirmModalBody from '~/components/modals/ConfirmModalBody';
+import { DeleteModalBody } from 'linode-components/modals';
 import CreateHelper from '~/components/CreateHelper';
-import { List, Table } from '~/components/tables';
-import { ListBody } from '~/components/tables/bodies';
-import { ListHeader } from '~/components/tables/headers';
+import { List } from 'linode-components/lists';
+import { Table } from 'linode-components/tables';
+import { ListBody } from 'linode-components/lists/bodies';
+import { ListHeader } from 'linode-components/lists/headers';
 import {
   ButtonCell,
   CheckboxCell,
+  LinkCell,
+} from 'linode-components/tables/cells';
+import {
   RegionCell,
   IPAddressCell,
-  LinkCell,
 } from '~/components/tables/cells';
-import { MassEditControl } from '~/components/tables/controls';
+import { MassEditControl } from 'linode-components/lists/controls';
 
 const OBJECT_TYPE = 'nodebalancers';
 
@@ -47,7 +50,7 @@ export class IndexPage extends Component {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
 
-    dispatch(setTitle('Nodebalancers'));
+    dispatch(setTitle('NodeBalancers'));
   }
 
   deleteNodeBalancers(nodebalancers) {
@@ -55,8 +58,7 @@ export class IndexPage extends Component {
     const nodebalancersArr = Array.isArray(nodebalancers) ? nodebalancers : [nodebalancers];
 
     dispatch(showModal('Delete NodeBalancer',
-      <ConfirmModalBody
-        buttonText="Delete"
+      <DeleteModalBody
         onOk={async () => {
           const ids = nodebalancersArr.map(function (nodebalancer) { return nodebalancer.id; });
 
@@ -65,9 +67,9 @@ export class IndexPage extends Component {
           dispatch(hideModal());
         }}
         onCancel={() => dispatch(hideModal())}
-      >
-        Are you sure you want to <strong>permanently</strong> delete this NodeBalancer?
-      </ConfirmModalBody>
+        items={nodebalancersArr.map(n => n.label)}
+        typeOfItem="NodeBalancers"
+      />
     ));
   }
 
@@ -77,7 +79,7 @@ export class IndexPage extends Component {
     const data = Object.values(nodebalancers.nodebalancers);
 
     // TODO: add mass edit controls to nodebalancers
-    const renderNodebalancers = (data) => (
+    const renderNodeBalancers = (data) => (
       <List>
         <ListHeader>
           <div className="pull-sm-left">
@@ -96,16 +98,17 @@ export class IndexPage extends Component {
         <ListBody>
           <Table
             columns={[
-              { cellComponent: CheckboxCell },
+              { cellComponent: CheckboxCell, headerClassName: 'CheckboxColumn' },
               {
                 className: 'RowLabelCell',
                 cellComponent: LinkCell,
                 hrefFn: (nodebalancer) => { return `/nodebalancers/${nodebalancer.label}`; },
               },
-              { cellComponent: IPAddressCell },
+              { cellComponent: IPAddressCell, headerClassName: 'IPAddressColumn' },
               { cellComponent: RegionCell },
               {
                 cellComponent: ButtonCell,
+                headerClassName: 'ButtonColumn',
                 onClick: (nodebalancer) => { this.deleteNodeBalancers(nodebalancer); },
                 text: 'Delete',
               },
@@ -133,7 +136,7 @@ export class IndexPage extends Component {
           </div>
         </header>
         <div className="PrimaryPage-body">
-          {data.length ? renderNodebalancers(data) : (
+          {data.length ? renderNodeBalancers(data) : (
             <CreateHelper
               label="NodeBalancers"
               href="/nodebalancers/create"

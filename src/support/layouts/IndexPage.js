@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import moment from 'moment';
 import _ from 'lodash';
 
 import { setError } from '~/actions/errors';
@@ -12,11 +11,11 @@ import CreateHelper from '~/components/CreateHelper';
 import {
   getLinodeRedirectUrl, getNodebalancerRedirectUrl, getDomainRedirectUrl,
 } from '~/components/notifications/EventTypes';
-import { List, Table } from '~/components/tables';
-import { ListBody, ListGroup } from '~/components/tables/bodies';
-import {
-  TableCell,
-} from '~/components/tables/cells';
+import { List } from 'linode-components/lists';
+import { Table } from 'linode-components/tables';
+import { ListBody, ListGroup } from 'linode-components/lists/bodies';
+import { TableCell } from 'linode-components/tables/cells';
+import TimeDisplay from '~/components/TimeDisplay';
 
 const TICKET_LINK_MAP = {
   linode: getLinodeRedirectUrl,
@@ -41,7 +40,7 @@ export function renderTicketCreationInfo(ticket) {
           &nbsp;by <strong id={`opened-by-${ticket.id}`}>{ticket.opened_by}</strong>
         </span>
       )}
-      &nbsp;<span id={`opened-${ticket.id}`}>{moment.utc(ticket.opened).fromNow()}</span>
+      &nbsp;<span id={`opened-${ticket.id}`}><TimeDisplay time={ticket.opened} /></span>
       {ticket.entity ? (
         <span>
           &nbsp;regarding <span id={`regarding-${ticket.id}`}>{link}</span>
@@ -83,7 +82,8 @@ export class IndexPage extends Component {
       <TableCell column={{}} record={ticket}>
         {!ticket.updated_by ? <span>No updates</span> : (
           <span>
-            Updated by <strong>{ticket.updated_by}</strong> {moment.utc(ticket.updated).fromNow()}
+            Updated by <strong id={`updated-by-${ticket.id}`}>{ticket.updated_by}</strong>
+            <span id={`updated-${ticket.id}`}><TimeDisplay time={ticket.updated} /></span>
           </span>
         )}
       </TableCell>
@@ -110,6 +110,7 @@ export class IndexPage extends Component {
           {
             dataKey: 'id',
             className: 'hidden-md-down',
+            headerClassName: 'hidden-md-down',
             formatFn: id => <span>#{id}</span>,
           },
           {

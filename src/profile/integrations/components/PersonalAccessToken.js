@@ -1,14 +1,14 @@
 import React, { PropTypes, Component } from 'react';
-import moment from 'moment';
 import { connect } from 'react-redux';
 
 import _ from 'lodash';
 import { API_ROOT } from '~/constants';
-import Dropdown from '~/components/Dropdown';
+import { Dropdown } from 'linode-components/dropdowns';
 import EditPersonalAccessToken from './EditPersonalAccessToken';
-import { Card, CardImageHeader } from '~/components/cards/';
-import DeleteModalBody from '~/components/modals/DeleteModalBody';
-import { Table } from '~/components/tables';
+import { Card, CardImageHeader } from 'linode-components/cards/';
+import { DeleteModalBody } from 'linode-components/modals';
+import { Table } from 'linode-components/tables';
+import TimeDisplay from '~/components/TimeDisplay';
 import { AuthScopeCell } from '~/components/tables/cells';
 import { OAUTH_SUBSCOPES, OAUTH_SCOPES } from '~/constants';
 import { showModal, hideModal } from '~/actions/modal';
@@ -34,18 +34,17 @@ export default class PersonalAccessToken extends Component {
   }
 
   deleteAction = () => {
-    const { dispatch, id, client } = this.props;
+    const { dispatch, id, label } = this.props;
 
     dispatch(showModal('Delete Personal Access Token',
       <DeleteModalBody
-        buttonText="Delete personal access token"
         onCancel={() => dispatch(hideModal())}
         onOk={() => {
           dispatch(apiTokens.delete(id));
           dispatch(hideModal());
         }}
         typeOfItem="Personal access tokens"
-        items={[client.label]}
+        items={[label]}
       />
     ));
   }
@@ -53,9 +52,7 @@ export default class PersonalAccessToken extends Component {
   render() {
     const { label, scopes, id, expires, secret } = this.props;
     const icon = id ? `${API_ROOT}/account/clients/${id}/thumbnail` : '';
-
-    let expireValue = moment.utc(expires, moment.ISO_8601).fromNow();
-    expireValue = expireValue[0].toUpperCase() + expireValue.substring(1);
+    const expireValue = <TimeDisplay time={expires} />;
 
     const scopeData = OAUTH_SCOPES.map(function (scope) {
       return { scopes: scopes, scope: scope };
@@ -111,7 +108,6 @@ PersonalAccessToken.propTypes = {
   id: PropTypes.any.isRequired,
   secret: PropTypes.string.isRequired,
   dispatch: PropTypes.func.isRequired,
-  client: PropTypes.object,
 };
 
 function select(state) {

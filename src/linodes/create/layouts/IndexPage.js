@@ -3,16 +3,19 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { Link } from 'react-router';
 
-import Source from '../components/Source';
-import Plan from '~/linodes/components/Plan';
-import Region from '~/components/Region';
-import Details from '../components/Details';
-import { Card, CardHeader } from '~/components/cards';
-import { linodes } from '~/api';
+import { Card, CardHeader } from 'linode-components/cards';
+
 import { setError } from '~/actions/errors';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
-import { reduceErrors } from '~/errors';
+import { linodes } from '~/api';
+import { dispatchOrStoreErrors } from '~/components/forms';
+import Region from '~/components/Region';
+
+import Details from '../components/Details';
+import Source from '../components/Source';
+import Plan from '../../components/Plan';
+
 
 export class IndexPage extends Component {
   static async preload(store) {
@@ -26,13 +29,15 @@ export class IndexPage extends Component {
 
   constructor() {
     super();
-    this.onSubmit = this.onSubmit.bind(this);
-    this.createLinode = this.createLinode.bind(this);
+
     this.state = {
       type: null,
       region: null,
       distribution: null,
       backup: null,
+      label: '',
+      password: '',
+      backups: false,
       sourceTab: 0,
       errors: {},
       loading: false,
@@ -43,6 +48,7 @@ export class IndexPage extends Component {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
     dispatch(setTitle('Add a Linode'));
+
     const { location } = this.props;
     if (location.query && location.query.linode && location.query.backup) {
       let _linodes = this.props.linodes;
@@ -62,25 +68,9 @@ export class IndexPage extends Component {
     }
   }
 
-  async onSubmit({ group, label, password, backups }) {
+  onSubmit = async () => {
     const { dispatch } = this.props;
-
-    this.setState({ loading: true });
-
-    try {
-      await this.createLinode({ group, label, password, backups });
-      dispatch(push(`/linodes/${label}`));
-    } catch (response) {
-      const errors = await reduceErrors(response);
-      this.setState({ errors });
-    }
-
-    this.setState({ loading: false });
-  }
-
-  createLinode({ group, label, password, backups }) {
-    const { dispatch } = this.props;
-    const { type, region, distribution, backup } = this.state;
+    const { type, region, distribution, backup, label, password, backups } = this.state;
 
     const data = {
       root_pass: password,
@@ -89,7 +79,6 @@ export class IndexPage extends Component {
       backup,
       region,
       label,
-      group,
       with_backups: backups,
     };
 
@@ -98,8 +87,18 @@ export class IndexPage extends Component {
       delete data.distribution;
     }
 
-    return dispatch(linodes.post(data));
+    await dispatch(dispatchOrStoreErrors.apply(this, [
+      [
+        () => linodes.post(data),
+        // label is optional, so accept it from the previous call
+        ({ label }) => push(`/linodes/${label}`),
+      ],
+      ['distribution', 'type', 'region'],
+    ]));
   }
+
+  onChange = ({ target: { name, value, checked } }) =>
+    this.setState({ [name]: name === 'backups' ? checked : value })
 
   render() {
     const {
@@ -115,6 +114,9 @@ export class IndexPage extends Component {
       type,
       sourceTab,
       loading,
+      label,
+      password,
+      backups,
     } = this.state;
 
     const selectedType = type === null ? null : types.types[type];
@@ -160,8 +162,12 @@ export class IndexPage extends Component {
         <Details
           selectedType={selectedType}
           onSubmit={this.onSubmit}
+          onChange={this.onChange}
           selectedDistribution={distribution}
-          submitEnabled={(distribution || backup) && region && type && !loading}
+          loading={loading}
+          label={label}
+          password={password}
+          backups={backups}
           errors={this.state.errors}
         />
       </div>

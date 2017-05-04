@@ -2,8 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { Card } from '~/components/cards';
-import { reduceErrors } from '~/errors';
+import { Card } from 'linode-components/cards';
+import { reduceErrors } from '~/components/forms';
 import { users } from '~/api';
 import { actions as userActions } from '~/api/configs/users';
 import { UserForm } from '../../components/UserForm';

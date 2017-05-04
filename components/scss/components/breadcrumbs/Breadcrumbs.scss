@@ -1,0 +1,29 @@
+.Breadcrumbs {
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    &-crumb {
+        display: inline-block;
+        padding-right: 10px;
+
+        & > div {
+            display: inline-block;
+        }
+
+        a:not([href]):not([tabindex]) {
+            color: $blue;
+        }
+    }
+
+    &-crumbLink {
+        margin-top: -5px;
+    }
+
+    &-divider {
+        @extend .font-xs;
+        margin-left: 5px;
+    }
+}

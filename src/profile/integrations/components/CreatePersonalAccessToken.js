@@ -1,15 +1,17 @@
-import React, { PropTypes, Component } from 'react';
 import _ from 'lodash';
+import React, { PropTypes, Component } from 'react';
 
-import { ModalFormGroup } from '~/components/form';
+import { CancelButton } from 'linode-components/buttons';
+import { Form, Input, ModalFormGroup, Select, SubmitButton } from 'linode-components/forms';
+import { ConfirmModalBody } from 'linode-components/modals';
+
 import { showModal, hideModal } from '~/actions/modal';
-import { ConfirmModalBody } from '~/components/modals';
-import { Form, Input, Select, SubmitButton } from '~/components/form';
-import { CancelButton } from '~/components/buttons';
-import { reduceErrors, ErrorSummary } from '~/errors';
-import { OAUTH_SUBSCOPES, OAUTH_SCOPES } from '~/constants';
 import { tokens } from '~/api';
+import { OAUTH_SUBSCOPES, OAUTH_SCOPES } from '~/constants';
+import { reduceErrors, FormSummary } from '~/components/forms';
+
 import SelectExpiration from '../../components/SelectExpiration';
+
 
 export async function renderSecret(label, verb, secret) {
   const { dispatch } = this.props;
@@ -136,8 +138,8 @@ export default class CreatePersonalAccessToken extends Component {
         <div className="Modal-footer">
           <CancelButton onClick={close} />
           <SubmitButton disabled={saving}>Create</SubmitButton>
+          <FormSummary errors={errors} />
         </div>
-        <ErrorSummary errors={errors} />
       </Form>
     );
   }

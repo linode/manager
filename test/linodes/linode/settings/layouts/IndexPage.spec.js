@@ -3,7 +3,7 @@ import sinon from 'sinon';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
 
-import { api } from '@/data';
+import { testLinode1235 } from '@/data/linodes';
 import { IndexPage } from '~/linodes/linode/settings/layouts/IndexPage';
 
 describe('linodes/linode/settings/layouts/IndexPage', () => {
@@ -19,8 +19,7 @@ describe('linodes/linode/settings/layouts/IndexPage', () => {
     const page = mount(
       <IndexPage
         dispatch={dispatch}
-        linodes={api.linodes}
-        params={{ linodeLabel: 'test-linode-1' }}
+        linode={testLinode1235}
       />
     );
 

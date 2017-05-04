@@ -1,0 +1,20 @@
+{
+  "name": "Service",
+  "import": "from linode import Service",
+  "_object": "service",
+  "desc": "Represents a Service in the API.\n",
+  "constructor": {
+    "name": "Service",
+    "parameters": {
+      "client": {
+        "_keyword": false,
+        "desc": "The <code>LinodeClient</code> this object will use to communicate with the API."
+      },
+      "id": {
+        "_keyword": false,
+        "desc": "This Service's ID."
+      }
+    },
+    "example": "service = linode.Service(client, \"linode2048.5\")\n"
+  }
+}

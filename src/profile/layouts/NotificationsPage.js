@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 
-import { Card, CardHeader } from '~/components/cards';
-import { Form, SubmitButton } from '~/components/form';
-import { ErrorSummary } from '~/errors';
+import { Card, CardHeader } from 'linode-components/cards';
+import { Form, SubmitButton } from 'linode-components/forms';
+
+import { FormSummary } from '~/components/forms';
+
 
 export default class NotificationsPage extends Component {
   constructor() {
@@ -21,8 +23,8 @@ export default class NotificationsPage extends Component {
         <Card header={<CardHeader title="Change email settings" />}>
           <Form onSubmit={this.onSubmit}>
             <p>Email notifications are currently enabled.</p>
-            <SubmitButton disabled>Disable</SubmitButton>
-            <ErrorSummary errors={errors} />
+            <SubmitButton disabled disabledChildren="Disable">Disable</SubmitButton>
+            <FormSummary errors={errors} />
           </Form>
         </Card>
       </div>

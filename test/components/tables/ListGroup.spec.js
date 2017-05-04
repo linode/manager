@@ -2,10 +2,10 @@ import React from 'react';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
 
-import { ListGroup } from '~/components/tables';
+import { ListGroup } from 'linode-components/lists/bodies';
 
 
-describe('components/tables/ListGroup', function () {
+describe('components/lists/ListGroup', function () {
   it('should be defined', function () {
     expect(ListGroup).to.be.defined;
   });

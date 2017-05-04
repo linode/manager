@@ -1,16 +1,18 @@
 import React, { Component, PropTypes } from 'react';
 
-import { API_ROOT } from '~/constants';
-import { Card, CardImageHeader } from '~/components/cards/';
-import Dropdown from '~/components/Dropdown';
-import { reduceErrors } from '~/errors';
-import EditApplication from './EditApplication';
-import { ConfirmModalBody } from '~/components/modals';
-import DeleteModalBody from '~/components/modals/DeleteModalBody';
+import { Card, CardImageHeader } from 'linode-components/cards';
+import { Dropdown } from 'linode-components/dropdowns';
+import { ConfirmModalBody, DeleteModalBody } from 'linode-components/modals';
+
 import { showModal, hideModal } from '~/actions/modal';
-import { renderSecret } from './CreatePersonalAccessToken';
 import { clients } from '~/api';
 import { resetSecret } from '~/api/clients';
+import { reduceErrors } from '~/components/forms';
+import { API_ROOT } from '~/constants';
+
+import { renderSecret } from './CreatePersonalAccessToken';
+import EditApplication from './EditApplication';
+
 
 export default class MyApplication extends Component {
   constructor() {
@@ -48,7 +50,6 @@ export default class MyApplication extends Component {
     const { dispatch, client } = this.props;
     dispatch(showModal('Delete OAuth Client',
       <DeleteModalBody
-        buttonText="Delete OAuth client"
         onOk={() => {
           dispatch(hideModal());
           this.deleteApp();

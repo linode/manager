@@ -45,11 +45,15 @@ module.exports = {
       {
         test: /\.jsx?/,
         loaders: ['babel'],
-        include: path.join(__dirname, 'src')
+        include: [
+          path.join(__dirname, 'src'),
+          path.resolve(__dirname, './node_modules/linode-components'),
+          path.resolve(__dirname, './node_modules/linode-styleguide')
+        ]
       },
       {
         test: /\.scss$/,
-        loaders: ['style', 'css', 'sass']
+        loaders: ['style', 'css', 'sass'],
       },
       {
         test: /\.svg$/,
@@ -59,6 +63,8 @@ module.exports = {
     ]
   },
   sassLoader: {
-    includePaths: [path.resolve(__dirname, './node_modules/bootstrap/scss/')]
+    includePaths: [
+      path.resolve(__dirname, './node_modules/bootstrap/scss/'),
+    ]
   }
 };

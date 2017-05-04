@@ -14,14 +14,10 @@ describe('api/apiResultActionReducerGenerator.js', () => {
   it('should look like a region config', () => {
     const config = gen.genConfig({
       plural: 'regions',
-      singular: 'region',
-      localStorageCacheable: true,
       endpoint: id => `/regions/${id}`,
       supports: [gen.ONE, gen.MANY],
     });
     expect(config.plural).to.equal('regions');
-    expect(config.singular).to.equal('region');
-    expect(config.localStorageCacheable).to.equal(true);
     expect(config.supports).to.deep.equal(['ONE', 'MANY']);
     expect(config.parent).to.equal(undefined);
   });
@@ -29,12 +25,10 @@ describe('api/apiResultActionReducerGenerator.js', () => {
   it('should generate a default state', () => {
     const config = gen.genConfig({
       plural: 'regions',
-      singular: 'region',
-      localStorageCacheable: true,
       endpoint: id => `/regions/${id}`,
       supports: [gen.ONE, gen.MANY],
     });
-    const df = gen.generateDefaultStateMany(config);
+    const df = gen.generateDefaultStateFull(config);
     expect(df).to.deep.equal({
       totalPages: -1,
       totalResults: -1,
@@ -46,8 +40,6 @@ describe('api/apiResultActionReducerGenerator.js', () => {
   it('should add one', () => {
     const config = gen.genConfig({
       plural: 'regions',
-      singular: 'region',
-      localStorageCacheable: true,
       endpoint: id => `/regions/${id}`,
       supports: [gen.ONE, gen.MANY],
     });
@@ -61,8 +53,6 @@ describe('api/apiResultActionReducerGenerator.js', () => {
   it('should run invalidate', () => {
     const config = gen.genConfig({
       plural: 'regions',
-      singular: 'region',
-      localStorageCacheable: true,
       endpoint: id => `/regions/${id}`,
       supports: [gen.ONE, gen.MANY],
     });
@@ -77,8 +67,6 @@ describe('api/apiResultActionReducerGenerator.js', () => {
   it('should run one', () => {
     const config = gen.genConfig({
       plural: 'linodes',
-      singular: 'linode',
-      localStorageCacheable: true,
       endpoint: id => `/linode/instances/${id}`,
       supports: [gen.ONE, gen.MANY, gen.PUT, gen.DELETE, gen.POST],
     });
@@ -93,14 +81,11 @@ describe('api/apiResultActionReducerGenerator.js', () => {
   it('should run subresource', () => {
     const config = gen.genConfig({
       plural: 'linodes',
-      singular: 'linode',
-      localStorageCacheable: true,
       endpoint: id => `/linode/instances/${id}`,
       supports: [gen.ONE, gen.MANY, gen.PUT, gen.DELETE, gen.POST],
       subresources: {
         _disks: {
           plural: 'disks',
-          singular: 'disk',
           endpoint: (linode, disk) => `/linode/instances/${linode}/disks/${disk}`,
           supports: [gen.ONE, gen.MANY, gen.PUT, gen.DELETE, gen.POST],
         },

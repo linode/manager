@@ -4,7 +4,6 @@ import {
 
 export const config = genConfig({
   plural: 'events',
-  singular: 'event',
   endpoint: id => `/account/events/${id}`,
   supports: [ONE, MANY],
 

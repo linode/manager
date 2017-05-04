@@ -6,7 +6,7 @@ import { expectRequest } from '@/common';
 
 import { IndexPage } from '~/settings/layouts/IndexPage';
 
-describe('settings', () => {
+describe('settings/layouts/IndexPage', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
@@ -14,7 +14,7 @@ describe('settings', () => {
   });
 
   const dispatch = sandbox.stub();
-  const settings = {
+  const account = {
     network_helper: false,
   };
 
@@ -22,7 +22,7 @@ describe('settings', () => {
     const page = mount(
       <IndexPage
         dispatch={dispatch}
-        settings={settings}
+        account={account}
       />
     );
     const checkbox = page.find('#networkHelper').at(0);
@@ -33,7 +33,7 @@ describe('settings', () => {
     const page = mount(
       <IndexPage
         dispatch={dispatch}
-        settings={settings}
+        account={account}
       />
     );
     const networkHelper = page.find('#networkHelper').at(0);
@@ -46,13 +46,13 @@ describe('settings', () => {
     const page = mount(
       <IndexPage
         dispatch={dispatch}
-        settings={settings}
+        account={account}
       />
     );
 
     dispatch.reset();
     await page.instance().onSubmit();
-    expect(dispatch.calledOnce).to.equal(true);
+    expect(dispatch.callCount).to.equal(1);
     const fn = dispatch.firstCall.args[0];
 
     await expectRequest(fn, '/account/settings', undefined, undefined, {

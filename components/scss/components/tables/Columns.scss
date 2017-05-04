@@ -1,0 +1,12 @@
+.ButtonColumn {
+    width: 70px;
+}
+
+.CheckboxColumn {
+    width: 45px;
+}
+
+.CheckboxColumn + th,
+.CheckboxCell + td {
+    padding: 5px 15px 5px 0;
+}

@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 
-import TableCell from './TableCell';
+import { TableCell } from 'linode-components/tables/cells';
 import Region from '~/linodes/components/Region';
 
 
