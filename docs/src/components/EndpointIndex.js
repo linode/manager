@@ -32,7 +32,7 @@ export default function EndpointIndex(props) {
                     label: 'Endpoint',
                     headerClassName: 'EndpointColumn',
                     hrefFn: function(childEndpoint) {
-                      return childEndpoint.path;
+                      return childEndpoint.routePath;
                     }
                   },
                   { label: 'Description', dataKey: 'description' },

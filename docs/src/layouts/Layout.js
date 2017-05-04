@@ -27,7 +27,7 @@ export default function Layout(props) {
               <h3>Reference</h3>
               <ul>
                 {endpoints.map(function(endpoint, index) {
-                  return (<li key={index}><Link to={endpoint.path}>{endpoint.name}</Link></li>);
+                  return (<li key={index}><Link to={endpoint.routePath}>{endpoint.name}</Link></li>);
                 })}
               </ul>
             </div>

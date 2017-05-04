@@ -2,6 +2,7 @@ module.exports = { endpoints: [
   {
     "name": "Linodes",
     "path": "/linode",
+    "routePath": "/reference/linode",
     "formattedEndpoints": [
       {
         "name": "Distributions",
@@ -77,8 +78,9 @@ module.exports = { endpoints: [
                 }
               }
             ],
-            "path": "/linode/distributions",
-            "formattedEndpoints": []
+            "path": "linode/distributions",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/linode/distributions"
           },
           {
             "type": "resource",
@@ -133,8 +135,9 @@ module.exports = { endpoints: [
                 }
               }
             ],
-            "path": "/linode/distributions/:id",
-            "formattedEndpoints": []
+            "path": "linode/distributions/:id",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/linode/distributions/:id"
           }
         ],
         "methods": null
@@ -229,8 +232,9 @@ module.exports = { endpoints: [
                 }
               }
             ],
-            "path": "/linode/kernels",
-            "formattedEndpoints": []
+            "path": "linode/kernels",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/linode/kernels"
           },
           {
             "type": "resource",
@@ -295,8 +299,9 @@ module.exports = { endpoints: [
                 }
               }
             ],
-            "path": "/linode/kernels/:id",
-            "formattedEndpoints": []
+            "path": "linode/kernels/:id",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/linode/kernels/:id"
           }
         ],
         "methods": null
@@ -609,8 +614,9 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "/linode/instances",
-            "formattedEndpoints": []
+            "path": "linode/instances",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/linode/instances"
           },
           {
             "type": "resource",
@@ -778,8 +784,9 @@ module.exports = { endpoints: [
                 "name": "DELETE"
               }
             ],
-            "path": "/linode/instances/:id",
-            "formattedEndpoints": []
+            "path": "linode/instances/:id",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/linode/instances/:id"
           },
           {
             "type": "list",
@@ -986,8 +993,9 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "/linode/instances/:id/disks",
-            "formattedEndpoints": []
+            "path": "linode/instances/:id/disks",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/linode/instances/:id/disks"
           },
           {
             "type": "resource",
@@ -1128,8 +1136,9 @@ module.exports = { endpoints: [
                 "name": "DELETE"
               }
             ],
-            "path": "/linode/instances/:id/disks/:id",
-            "formattedEndpoints": []
+            "path": "linode/instances/:id/disks/:id",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/linode/instances/:id/disks/:id"
           },
           {
             "type": "strange",
@@ -1155,8 +1164,9 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "/linode/instances/:id/disks/:id/resize",
-            "formattedEndpoints": []
+            "path": "linode/instances/:id/disks/:id/resize",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/linode/instances/:id/disks/:id/resize"
           },
           {
             "type": "strange",
@@ -1186,8 +1196,9 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "/linode/instances/:id/disks/:id/password",
-            "formattedEndpoints": []
+            "path": "linode/instances/:id/disks/:id/password",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/linode/instances/:id/disks/:id/password"
           },
           {
             "type": "list",
@@ -1274,8 +1285,9 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "/linode/instances/:id/configs",
-            "formattedEndpoints": []
+            "path": "linode/instances/:id/configs",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/linode/instances/:id/configs"
           },
           {
             "type": "resource",
@@ -1329,8 +1341,9 @@ module.exports = { endpoints: [
                 "name": "DELETE"
               }
             ],
-            "path": "/linode/instances/:id/configs/:id",
-            "formattedEndpoints": []
+            "path": "linode/instances/:id/configs/:id",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/linode/instances/:id/configs/:id"
           },
           {
             "type": "action",
@@ -1361,8 +1374,9 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "/linode/instances/:id/boot",
-            "formattedEndpoints": []
+            "path": "linode/instances/:id/boot",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/linode/instances/:id/boot"
           },
           {
             "type": "action",
@@ -1385,8 +1399,9 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "/linode/instances/:id/shutdown",
-            "formattedEndpoints": []
+            "path": "linode/instances/:id/shutdown",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/linode/instances/:id/shutdown"
           },
           {
             "type": "action",
@@ -1417,8 +1432,9 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "/linode/instances/:id/reboot",
-            "formattedEndpoints": []
+            "path": "linode/instances/:id/reboot",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/linode/instances/:id/reboot"
           },
           {
             "type": "action",
@@ -1441,8 +1457,9 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "/linode/instances/:id/kvmify",
-            "formattedEndpoints": []
+            "path": "linode/instances/:id/kvmify",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/linode/instances/:id/kvmify"
           },
           {
             "type": "action",
@@ -1473,8 +1490,9 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "/linode/instances/:id/rescue",
-            "formattedEndpoints": []
+            "path": "linode/instances/:id/rescue",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/linode/instances/:id/rescue"
           },
           {
             "type": "action",
@@ -1501,8 +1519,9 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "/linode/instances/:id/resize",
-            "formattedEndpoints": []
+            "path": "linode/instances/:id/resize",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/linode/instances/:id/resize"
           },
           {
             "type": "action",
@@ -1548,8 +1567,9 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "/linode/instances/:id/backups",
-            "formattedEndpoints": []
+            "path": "linode/instances/:id/backups",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/linode/instances/:id/backups"
           },
           {
             "type": "action",
@@ -1573,8 +1593,9 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "/linode/instances/:id/backups/enable",
-            "formattedEndpoints": []
+            "path": "linode/instances/:id/backups/enable",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/linode/instances/:id/backups/enable"
           },
           {
             "type": "action",
@@ -1597,8 +1618,9 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "/linode/instances/:id/backups/cancel",
-            "formattedEndpoints": []
+            "path": "linode/instances/:id/backups/cancel",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/linode/instances/:id/backups/cancel"
           },
           {
             "type": "action",
@@ -1634,8 +1656,9 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "/linode/instances/:id/backups/:id/restore",
-            "formattedEndpoints": []
+            "path": "linode/instances/:id/backups/:id/restore",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/linode/instances/:id/backups/:id/restore"
           },
           {
             "type": "strange",
@@ -1673,8 +1696,9 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "/linode/instances/:id/ips",
-            "formattedEndpoints": []
+            "path": "linode/instances/:id/ips",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/linode/instances/:id/ips"
           },
           {
             "methods": [
@@ -1694,8 +1718,9 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "/linode/instances/:id/ips/sharing",
-            "formattedEndpoints": []
+            "path": "linode/instances/:id/ips/sharing",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/linode/instances/:id/ips/sharing"
           },
           {
             "type": "action",
@@ -1781,8 +1806,9 @@ module.exports = { endpoints: [
                 "name": "PUT"
               }
             ],
-            "path": "/linode/instances/:id/ips/:ip_address",
-            "formattedEndpoints": []
+            "path": "linode/instances/:id/ips/:ip_address",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/linode/instances/:id/ips/:ip_address"
           },
           {
             "type": "action",
@@ -1831,8 +1857,9 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "/linode/instances/:id/rebuild",
-            "formattedEndpoints": []
+            "path": "linode/instances/:id/rebuild",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/linode/instances/:id/rebuild"
           }
         ],
         "methods": null
@@ -1864,8 +1891,9 @@ module.exports = { endpoints: [
                 "name": "GET"
               }
             ],
-            "path": "/linode/types",
-            "formattedEndpoints": []
+            "path": "linode/types",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/linode/types"
           },
           {
             "type": "resource",
@@ -1887,8 +1915,9 @@ module.exports = { endpoints: [
                 "name": "GET"
               }
             ],
-            "path": "/linode/types/:id",
-            "formattedEndpoints": []
+            "path": "linode/types/:id",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/linode/types/:id"
           }
         ],
         "methods": null
@@ -2162,8 +2191,9 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "/linode/stackscripts",
-            "formattedEndpoints": []
+            "path": "linode/stackscripts",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/linode/stackscripts"
           },
           {
             "type": "list",
@@ -2280,8 +2310,9 @@ module.exports = { endpoints: [
                 "name": "DELETE"
               }
             ],
-            "path": "/linode/stackscripts/:id",
-            "formattedEndpoints": []
+            "path": "linode/stackscripts/:id",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/linode/stackscripts/:id"
           }
         ],
         "methods": null
@@ -2291,6 +2322,7 @@ module.exports = { endpoints: [
   {
     "name": "Domains",
     "path": "/domains",
+    "routePath": "/reference/domains",
     "formattedEndpoints": [
       {
         "name": "Domains",
@@ -2510,8 +2542,9 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "/domains",
-            "formattedEndpoints": []
+            "path": "domains",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/domains"
           },
           {
             "authenticated": true,
@@ -2635,8 +2668,9 @@ module.exports = { endpoints: [
                 "name": "DELETE"
               }
             ],
-            "path": "/domains/:id",
-            "formattedEndpoints": []
+            "path": "domains/:id",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/domains/:id"
           },
           {
             "type": "list",
@@ -2808,8 +2842,9 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "/domains/:id/records",
-            "formattedEndpoints": []
+            "path": "domains/:id/records",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/domains/:id/records"
           },
           {
             "authenticated": true,
@@ -2920,8 +2955,9 @@ module.exports = { endpoints: [
                 "name": "DELETE"
               }
             ],
-            "path": "/domains/:id/records/:id",
-            "formattedEndpoints": []
+            "path": "domains/:id/records/:id",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/domains/:id/records/:id"
           }
         ],
         "methods": null
@@ -2931,6 +2967,7 @@ module.exports = { endpoints: [
   {
     "name": "NodeBalancers",
     "path": "/nodebalancers",
+    "routePath": "/reference/nodebalancers",
     "formattedEndpoints": [
       {
         "name": "NodeBalancers",
@@ -3020,8 +3057,9 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "/nodebalancers",
-            "formattedEndpoints": []
+            "path": "nodebalancers",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/nodebalancers"
           },
           {
             "type": "resource",
@@ -3087,8 +3125,9 @@ module.exports = { endpoints: [
                 "name": "DELETE"
               }
             ],
-            "path": "/nodebalancers/:id",
-            "formattedEndpoints": []
+            "path": "nodebalancers/:id",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/nodebalancers/:id"
           },
           {
             "type": "list",
@@ -3176,8 +3215,9 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "/nodebalancers/:id/configs",
-            "formattedEndpoints": []
+            "path": "nodebalancers/:id/configs",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/nodebalancers/:id/configs"
           },
           {
             "type": "resource",
@@ -3208,8 +3248,9 @@ module.exports = { endpoints: [
                 "name": "DELETE"
               }
             ],
-            "path": "/nodebalancers/:id/configs/:id",
-            "formattedEndpoints": []
+            "path": "nodebalancers/:id/configs/:id",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/nodebalancers/:id/configs/:id"
           },
           {
             "type": "resource",
@@ -3228,8 +3269,9 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "/nodebalancers/:id/configs/:id/ssl",
-            "formattedEndpoints": []
+            "path": "nodebalancers/:id/configs/:id/ssl",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/nodebalancers/:id/configs/:id/ssl"
           },
           {
             "type": "list",
@@ -3282,8 +3324,9 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "/nodebalancers/:id/configs/:id/nodes",
-            "formattedEndpoints": []
+            "path": "nodebalancers/:id/configs/:id/nodes",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/nodebalancers/:id/configs/:id/nodes"
           },
           {
             "type": "resource",
@@ -3325,8 +3368,9 @@ module.exports = { endpoints: [
                 "name": "DELETE"
               }
             ],
-            "path": "/nodebalancers/:id/configs/:id/nodes/:id",
-            "formattedEndpoints": []
+            "path": "nodebalancers/:id/configs/:id/nodes/:id",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/nodebalancers/:id/configs/:id/nodes/:id"
           }
         ],
         "methods": null
@@ -3336,6 +3380,7 @@ module.exports = { endpoints: [
   {
     "name": "Networking",
     "path": "/networking",
+    "routePath": "/reference/networking",
     "formattedEndpoints": [
       {
         "name": "Networking",
@@ -3380,8 +3425,9 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "/networking/ipv4",
-            "formattedEndpoints": []
+            "path": "networking/ipv4",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/networking/ipv4"
           },
           {
             "type": "resource",
@@ -3411,8 +3457,9 @@ module.exports = { endpoints: [
                 "name": "PUT"
               }
             ],
-            "path": "/networking/ipv4/:address",
-            "formattedEndpoints": []
+            "path": "networking/ipv4/:address",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/networking/ipv4/:address"
           },
           {
             "type": "list",
@@ -3431,8 +3478,9 @@ module.exports = { endpoints: [
                 "name": "GET"
               }
             ],
-            "path": "/networking/ipv6",
-            "formattedEndpoints": []
+            "path": "networking/ipv6",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/networking/ipv6"
           },
           {
             "type": "resource",
@@ -3462,8 +3510,9 @@ module.exports = { endpoints: [
                 "name": "PUT"
               }
             ],
-            "path": "/networking/ipv6/:address",
-            "formattedEndpoints": []
+            "path": "networking/ipv6/:address",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/networking/ipv6/:address"
           },
           {
             "type": "strange",
@@ -3494,8 +3543,9 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "/networking/ip-assign",
-            "formattedEndpoints": []
+            "path": "networking/ip-assign",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/networking/ip-assign"
           }
         ],
         "methods": null
@@ -3505,6 +3555,7 @@ module.exports = { endpoints: [
   {
     "name": "Regions",
     "path": "/regions",
+    "routePath": "/reference/regions",
     "formattedEndpoints": [
       {
         "name": "Regions",
@@ -3532,8 +3583,9 @@ module.exports = { endpoints: [
                 "name": "GET"
               }
             ],
-            "path": "/regions",
-            "formattedEndpoints": []
+            "path": "regions",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/regions"
           },
           {
             "type": "resource",
@@ -3555,8 +3607,9 @@ module.exports = { endpoints: [
                 "name": "GET"
               }
             ],
-            "path": "/regions/:id",
-            "formattedEndpoints": []
+            "path": "regions/:id",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/regions/:id"
           }
         ],
         "methods": null
@@ -3566,6 +3619,7 @@ module.exports = { endpoints: [
   {
     "name": "Support",
     "path": "/support",
+    "routePath": "/reference/support",
     "formattedEndpoints": [
       {
         "name": "Support Tickets",
@@ -3702,8 +3756,9 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "/support/tickets",
-            "formattedEndpoints": []
+            "path": "support/tickets",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/support/tickets"
           },
           {
             "type": "resource",
@@ -3774,8 +3829,9 @@ module.exports = { endpoints: [
                 }
               }
             ],
-            "path": "/support/tickets/:id",
-            "formattedEndpoints": []
+            "path": "support/tickets/:id",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/support/tickets/:id"
           },
           {
             "type": "list",
@@ -3843,8 +3899,9 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "/support/tickets/:id/replies",
-            "formattedEndpoints": []
+            "path": "support/tickets/:id/replies",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/support/tickets/:id/replies"
           },
           {
             "type": "list",
@@ -3870,8 +3927,9 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "/support/tickets/:id/attachments",
-            "formattedEndpoints": []
+            "path": "support/tickets/:id/attachments",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/support/tickets/:id/attachments"
           }
         ],
         "methods": null
@@ -3881,6 +3939,7 @@ module.exports = { endpoints: [
   {
     "name": "Account",
     "path": "/account",
+    "routePath": "/reference/account",
     "formattedEndpoints": [
       {
         "name": "",
@@ -3989,8 +4048,9 @@ module.exports = { endpoints: [
                 "name": "PUT"
               }
             ],
-            "path": "/account/profile",
-            "formattedEndpoints": []
+            "path": "account/profile",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/account/profile"
           },
           {
             "methods": [
@@ -4005,8 +4065,9 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "/account/profile/password",
-            "formattedEndpoints": []
+            "path": "account/profile/password",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/account/profile/password"
           },
           {
             "methods": [
@@ -4021,8 +4082,9 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "/account/profile/tfa-enable",
-            "formattedEndpoints": []
+            "path": "account/profile/tfa-enable",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/account/profile/tfa-enable"
           },
           {
             "methods": [
@@ -4044,8 +4106,9 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "/account/profile/tfa-enable-confirm",
-            "formattedEndpoints": []
+            "path": "account/profile/tfa-enable-confirm",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/account/profile/tfa-enable-confirm"
           },
           {
             "methods": [
@@ -4060,8 +4123,9 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "/account/profile/tfa-disable",
-            "formattedEndpoints": []
+            "path": "account/profile/tfa-disable",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/account/profile/tfa-disable"
           },
           {
             "methods": [
@@ -4076,8 +4140,9 @@ module.exports = { endpoints: [
                 "name": "GET"
               }
             ],
-            "path": "/account/profile/grants",
-            "formattedEndpoints": []
+            "path": "account/profile/grants",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/account/profile/grants"
           },
           {
             "type": "list",
@@ -4192,8 +4257,9 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "/account/tokens",
-            "formattedEndpoints": []
+            "path": "account/tokens",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/account/tokens"
           },
           {
             "type": "resource",
@@ -4279,8 +4345,9 @@ module.exports = { endpoints: [
                 "name": "DELETE"
               }
             ],
-            "path": "/account/tokens/:id",
-            "formattedEndpoints": []
+            "path": "account/tokens/:id",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/account/tokens/:id"
           },
           {
             "type": "resource",
@@ -4359,8 +4426,9 @@ module.exports = { endpoints: [
                 "name": "PUT"
               }
             ],
-            "path": "/account/settings",
-            "formattedEndpoints": []
+            "path": "account/settings",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/account/settings"
           },
           {
             "type": "list",
@@ -4405,8 +4473,9 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "/account/clients",
-            "formattedEndpoints": []
+            "path": "account/clients",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/account/clients"
           },
           {
             "type": "resource",
@@ -4449,8 +4518,9 @@ module.exports = { endpoints: [
                 "name": "DELETE"
               }
             ],
-            "path": "/account/clients/:id",
-            "formattedEndpoints": []
+            "path": "account/clients/:id",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/account/clients/:id"
           },
           {
             "type": "action",
@@ -4469,8 +4539,9 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "/account/clients/:id/reset_secret",
-            "formattedEndpoints": []
+            "path": "account/clients/:id/reset_secret",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/account/clients/:id/reset_secret"
           },
           {
             "type": "action",
@@ -4500,8 +4571,9 @@ module.exports = { endpoints: [
                 "name": "PUT"
               }
             ],
-            "path": "/account/clients/:id/thumbnail",
-            "formattedEndpoints": []
+            "path": "account/clients/:id/thumbnail",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/account/clients/:id/thumbnail"
           },
           {
             "type": "list",
@@ -4602,8 +4674,9 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "/account/users",
-            "formattedEndpoints": []
+            "path": "account/users",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/account/users"
           },
           {
             "type": "resource",
@@ -4691,8 +4764,9 @@ module.exports = { endpoints: [
                 "name": "DELETE"
               }
             ],
-            "path": "/account/users/:username",
-            "formattedEndpoints": []
+            "path": "account/users/:username",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/account/users/:username"
           },
           {
             "type": "action",
@@ -4715,8 +4789,9 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "/account/users/:username/password",
-            "formattedEndpoints": []
+            "path": "account/users/:username/password",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/account/users/:username/password"
           },
           {
             "type": "resource",
@@ -4824,8 +4899,9 @@ module.exports = { endpoints: [
                 "name": "PUT"
               }
             ],
-            "path": "/account/users/:username/grants",
-            "formattedEndpoints": []
+            "path": "account/users/:username/grants",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/account/users/:username/grants"
           }
         ],
         "methods": null
@@ -4972,8 +5048,9 @@ module.exports = { endpoints: [
                 }
               }
             ],
-            "path": "/account/events",
-            "formattedEndpoints": []
+            "path": "account/events",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/account/events"
           },
           {
             "type": "resource",
@@ -5087,8 +5164,9 @@ module.exports = { endpoints: [
                 }
               }
             ],
-            "path": "/account/events/:id",
-            "formattedEndpoints": []
+            "path": "account/events/:id",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/account/events/:id"
           },
           {
             "type": "resource",
@@ -5106,8 +5184,9 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "/account/events/:id/seen",
-            "formattedEndpoints": []
+            "path": "account/events/:id/seen",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/account/events/:id/seen"
           },
           {
             "type": "resource",
@@ -5125,8 +5204,9 @@ module.exports = { endpoints: [
                 "name": "POST"
               }
             ],
-            "path": "/account/events/:id/read",
-            "formattedEndpoints": []
+            "path": "account/events/:id/read",
+            "formattedEndpoints": [],
+            "routePath": "/reference/endpoints/account/events/:id/read"
           }
         ],
         "methods": null

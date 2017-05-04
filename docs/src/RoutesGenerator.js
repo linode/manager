@@ -18,7 +18,7 @@ export function generateIndexRoute(props) {
       component={EndpointIndex}
       crumbs={crumbs}
       endpoint={endpoint}
-      path={endpoint.path}
+      path={endpoint.routePath}
     />
   );
 }
@@ -33,14 +33,14 @@ export function generateChildRoute(props) {
         return generateChildRoute({ endpoint: childEndpoint, prevCrumbs: prevCrumbs });
       }
 
-      const crumbs = [].concat(prevCrumbs).concat([{ label: childEndpoint.path, to: childEndpoint.path }]);
+      const crumbs = [].concat(prevCrumbs).concat([{ label: childEndpoint.path, to: childEndpoint.routePath }]);
       return (
         <Route
           key={index}
           component={Endpoint}
           crumbs={crumbs}
           endpoint={childEndpoint}
-          path={childEndpoint.path}
+          path={childEndpoint.routePath}
         />
       );
     });

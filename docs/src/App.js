@@ -37,12 +37,12 @@ export function init() {
     >
       <Route path="/" component={Layout} endpoints={api.endpoints}>
         <Route component={IndexLayout}>
-          <IndexRedirect to={api.endpoints[0].path} />
+          <IndexRedirect to={api.endpoints[0].routePath} />
           {api.endpoints.map(function(endpoint, index) {
             return generateIndexRoute({ key: index, endpoint: endpoint });
           })}
           {api.endpoints.map(function(endpoint) {
-            const crumb = [{ groupLabel: 'Reference', label: endpoint.path, to: endpoint.path }];
+            const crumb = [{ groupLabel: 'Reference', label: endpoint.path, to: endpoint.routePath }];
             return generateChildRoute({ endpoint: endpoint, prevCrumbs: crumb });
           })}
         </Route>

@@ -7,6 +7,8 @@ const _ = require('lodash');
 const BASE_PATH = './src/data';
 const apiObjectMap = require('./src/data/objects/index').apiObjectMap;
 
+const ROUTE_BASE_PATH = '/reference';
+
 function stripATags(description) {
   if (description) {
     if (description.match(/href/)) {
@@ -160,36 +162,43 @@ let endpointMap = {
   '/linode': {
     name: 'Linodes',
     path: '/linode',
+    routePath: `${ROUTE_BASE_PATH}/linode`,
     formattedEndpoints: []
   },
   '/domains': {
     name: 'Domains',
     path: '/domains',
+    routePath: `${ROUTE_BASE_PATH}/domains`,
     formattedEndpoints: []
   },
   '/nodebalancers': {
     name: 'NodeBalancers',
     path: '/nodebalancers',
+    routePath: `${ROUTE_BASE_PATH}/nodebalancers`,
     formattedEndpoints: []
   },
   '/networking': {
     name: 'Networking',
     path: '/networking',
+    routePath: `${ROUTE_BASE_PATH}/networking`,
     formattedEndpoints: []
   },
   '/regions': {
     name: 'Regions',
     path: '/regions',
+    routePath: `${ROUTE_BASE_PATH}/regions`,
     formattedEndpoints: []
   },
   '/support/tickets': {
     name: 'Support',
     path: '/support',
+    routePath: `${ROUTE_BASE_PATH}/support`,
     formattedEndpoints: []
   },
   '/account': {
     name: 'Account',
     path: '/account',
+    routePath: `${ROUTE_BASE_PATH}/account`,
     formattedEndpoints: []
   },
 };
@@ -222,9 +231,10 @@ allEndpoints = allEndpoints.map(function(endpoint) {
   endpoint.formattedEndpoints = endpoint.formattedEndpoints.map(function(formattedEndpoint) {
     if (formattedEndpoint.endpoints) {
       Object.keys(formattedEndpoint.endpoints).forEach(function(path) {
-        const pathFromRoot = `/${path}`;
         const childEndpoint = formattedEndpoint.endpoints[path];
-        const childFormattedEndpoint = formatEndpoint(childEndpoint, pathFromRoot);
+        const childFormattedEndpoint = formatEndpoint(childEndpoint, path);
+
+        childFormattedEndpoint.routePath = `${ROUTE_BASE_PATH}/endpoints/${path}`;
         formattedEndpoint.formattedEndpoints.push(childFormattedEndpoint);
       });
       delete formattedEndpoint.endpoints;
