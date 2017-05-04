@@ -5,9 +5,9 @@ import { expect } from 'chai';
 import { profile } from '@/data/profile';
 
 import { expectRequest } from '@/common';
-import { TwoFactorPanel } from '~/profile/components/TwoFactorPanel';
+import { TwoFactor } from '~/profile/components/TwoFactor';
 
-describe('profile/layouts/TwoFactorPanel', () => {
+describe('profile/layouts/TwoFactor', () => {
   const sandbox = sinon.sandbox.create();
 
   const dispatch = sandbox.stub();
@@ -19,7 +19,7 @@ describe('profile/layouts/TwoFactorPanel', () => {
 
   it('disable two factor called', async () => {
     const page = shallow(
-      <TwoFactorPanel
+      <TwoFactor
         dispatch={dispatch}
         profile={profile}
       />
@@ -39,7 +39,7 @@ describe('profile/layouts/TwoFactorPanel', () => {
 
   it('enable two factor called', async () => {
     const page = shallow(
-      <TwoFactorPanel
+      <TwoFactor
         dispatch={dispatch}
         profile={profile2}
       />

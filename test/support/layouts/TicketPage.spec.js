@@ -1,13 +1,14 @@
+import { expect } from 'chai';
+import { mount } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
-import { mount } from 'enzyme';
-import { expect } from 'chai';
 
-import * as fetch from '~/fetch';
 import { MAX_UPLOAD_SIZE_MB } from '~/constants';
+import * as fetch from '~/fetch';
 import { TicketPage } from '~/support/layouts/TicketPage';
+
 import { testTicket, closedTicket } from '@/data/tickets';
-import { expectRequest } from '@/common';
+import { expectRequest, expectDispatchOrStoreErrors } from '@/common';
 import { state } from '@/data';
 
 describe('support/layouts/TicketPage', () => {
@@ -63,10 +64,12 @@ describe('support/layouts/TicketPage', () => {
 
     // No attachments, so save attachment endpoint not called.
     expect(dispatch.callCount).to.equal(1);
-    await expectRequest(dispatch.firstCall.args[0], `/support/tickets/${testTicket.id}/replies/`, {
-      method: 'POST',
-      body: { description: reply },
-    });
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      ([fn]) => await expectRequest(fn, `/support/tickets/${testTicket.id}/replies/`, {
+        method: 'POST',
+        body: { description: reply },
+      }),
+    ]);
   });
 
   it('sends attachments on submit if attachments are there', async () => {

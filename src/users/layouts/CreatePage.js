@@ -103,7 +103,7 @@ export class CreatePage extends Component {
                       name="restricted"
                       id="restricted"
                       checked={restricted}
-                      value={restricted}
+                      value={true}
                       onChange={() => this.setState({ restricted: true })}
                       label="Yes - this user can only do what I specify"
                     />
@@ -111,7 +111,7 @@ export class CreatePage extends Component {
                       name="restricted"
                       id="unrestricted"
                       checked={!restricted}
-                      value={!restricted}
+                      value={false}
                       onChange={() => this.setState({ restricted: false })}
                       label="No - this user has no access restrictions"
                     />

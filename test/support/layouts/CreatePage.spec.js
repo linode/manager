@@ -1,12 +1,14 @@
-import React from 'react';
-import sinon from 'sinon';
 import { mount } from 'enzyme';
-import { expect } from 'chai';
+import React from 'react';
+import { push } from 'react-router-redux';
+import sinon from 'sinon';
 
 import { CreatePage } from '~/support/layouts/CreatePage';
+
+import { expectDispatchOrStoreErrors, expectObjectDeepEquals, expectRequest } from '@/common';
 import { testLinode } from '@/data/linodes';
 import { api } from '@/data';
-import { expectRequest } from '@/common';
+
 
 describe('support/layouts/CreatePage', () => {
   const sandbox = sinon.sandbox.create();
@@ -34,19 +36,19 @@ describe('support/layouts/CreatePage', () => {
     changeInput('textarea', 'description', 'This is my new description!');
 
     dispatch.reset();
-    await page.find('Form').props().onSubmit();
-
-    // One call to save the data, one call to redirect.
-    expect(dispatch.callCount).to.equal(2);
-
+    await page.find('Form').simulate('submit');
     const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, '/support/tickets/', {
-      method: 'POST',
-      body: {
-        linode_id: testLinode.id,
-        summary: 'My new ticket!',
-        description: 'This is my new description!',
-      },
-    });
+    await expectDispatchOrStoreErrors(fn, [
+      async ([fn]) => await expectRequest(
+        fn, '/support/tickets/', {
+          method: 'POST',
+          body: {
+            linode_id: testLinode.id,
+            summary: 'My new ticket!',
+            description: 'This is my new description!',
+          },
+        }),
+      ([pushResult]) => expectObjectDeepEquals(pushResult, push('/support/')),
+    ]);
   });
 });

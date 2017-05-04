@@ -1,7 +1,10 @@
-import * as fetch from '~/fetch';
 import { expect } from 'chai';
 import sinon from 'sinon';
+
+import * as fetch from '~/fetch';
+
 import { state } from '@/data';
+
 
 class InternalAssertionError extends Error {
   constructor(aVal, bVal, keyPath) {
@@ -98,6 +101,25 @@ export async function expectRequest(fn, path, expectedRequestData, response) {
         const nativeValue = key === 'body' ? JSON.parse(value) : value;
         expectObjectDeepEquals(nativeValue, expectedRequestData[key]);
       });
+    }
+  } finally {
+    sandbox.restore();
+  }
+}
+
+export async function expectDispatchOrStoreErrors(fn, expectArgs) {
+  const sandbox = sinon.sandbox.create();
+  const dispatch = sinon.spy();
+
+  try {
+    fn(dispatch, () => state);
+
+    for (let i = 0; i < dispatch.callCount; i += 1) {
+      const nextArgs = dispatch.args[i];
+      const nextExpect = expectArgs[i];
+      if (nextExpect) {
+        await nextExpect(nextArgs);
+      }
     }
   } finally {
     sandbox.restore();
