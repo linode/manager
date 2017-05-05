@@ -5,7 +5,7 @@ import { expect } from 'chai';
 import { profile } from '@/data/profile';
 
 import { expectRequest } from '@/common';
-import { TwoFactor } from '~/profile/components/TwoFactor';
+import { TwoFactor } from '~/profile/components';
 
 describe('profile/components/TwoFactor', () => {
   const sandbox = sinon.sandbox.create();
