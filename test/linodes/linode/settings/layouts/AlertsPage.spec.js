@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { shallow, mount } from 'enzyme';
+import { mount } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
@@ -17,7 +17,7 @@ describe('linodes/linode/settings/layouts/AlertsPage', async () => {
   });
 
   it('renders all alerts', () => {
-    const page = shallow(
+    const page = mount(
       <AlertsPage
         linode={testLinode}
         dispatch={() => {}}

@@ -32,6 +32,7 @@ describe('linodes/linode/settings/layouts/DisplayPage', () => {
 
     change('group', 'foobar');
 
+    dispatch.reset();
     page.find('Form').simulate('submit');
 
     expect(dispatch.callCount).to.equal(1);
@@ -55,17 +56,18 @@ describe('linodes/linode/settings/layouts/DisplayPage', () => {
       page.find({ name }).simulate('change', { target: { name, value } });
 
     change('group', 'foobar');
-    change('label', 'barfoo');
+    change('label', 'my-new-label');
 
+    dispatch.reset();
     page.find('Form').simulate('submit');
 
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
       ([fn]) => expectRequest(fn, '/linode/instances/1234', {
         method: 'PUT',
-        body: { group: 'foobar', label: 'barfoo' },
+        body: { group: 'foobar', label: 'my-new-label' },
       }),
-      ([pushResult]) => expectObjectDeepEquals(pushResult, push('/linodes/barfoo/settings')),
+      ([pushResult]) => expectObjectDeepEquals(pushResult, push('/linodes/my-new-label/settings')),
     ], 2);
   });
 });

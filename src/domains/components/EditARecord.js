@@ -43,11 +43,9 @@ export default class EditARecord extends Component {
       name: hostname,
     };
 
-    await dispatch(dispatchOrStoreErrors.apply(this, [
-      [
-        () => domains.records[id ? 'put' : 'post'](data, ...ids),
-        close,
-      ],
+    await dispatch(dispatchOrStoreErrors.call(this, [
+      () => domains.records[id ? 'put' : 'post'](data, ...ids),
+      close,
     ]));
   }
 

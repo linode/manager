@@ -66,19 +66,17 @@ export class RebuildPage extends Component {
               noDistribution={false}
             />
           </div>
-          <div className="LinodesLinodeRebuildPage-password">
-            <FormGroup errors={errors} name="root_pass" className="row">
-              <label htmlFor="password" className="col-sm-2 col-form-label">Root password</label>
-              <div className="col-sm-10 clearfix">
-                <PasswordInput
-                  name="password"
-                  id="password"
-                  value={this.state.password}
-                  onChange={this.onChange}
-                  className="float-sm-left"
-                />
-                <FormGroupError className="float-sm-left" errors={errors} name="root_pass" />
-              </div>
+          <FormGroup errors={errors} name="root_pass" className="row">
+            <label htmlFor="password" className="col-sm-2 col-form-label">Root password</label>
+            <div className="col-sm-10 clearfix">
+              <PasswordInput
+                name="password"
+                id="password"
+                value={this.state.password}
+                onChange={this.onChange}
+                className="float-sm-left"
+              />
+              <FormGroupError className="float-sm-left" errors={errors} name="root_pass" />
             </FormGroup>
           </div>
           <FormGroup className="row">

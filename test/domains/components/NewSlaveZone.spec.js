@@ -25,7 +25,7 @@ describe('domains/components/NewSlaveZone', () => {
     );
 
     const change = (name, value) =>
-      component.find('Input').find({ name }).simulate('change', { target: { name, value } });
+      component.find({ name }).simulate('change', { target: { name, value } });
 
     change('ips', '1;2;3;4');
     change('domain', 'test.com');

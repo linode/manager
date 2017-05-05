@@ -40,15 +40,13 @@ describe('domains/components/EditARecord', () => {
     expect(+ttl.props().value).to.equal(currentRecord.ttl_sec || currentZone.ttl_sec);
   });
 
-  it('submits data onsubmit and closes modal', async () => {
+  it('creates a new AAAA record', async () => {
     const currentZone = api.domains.domains['1'];
-    const currentRecord = currentZone._records.records[1];
     const close = sandbox.spy();
     const page = mount(
       <EditARecord
         dispatch={dispatch}
         zone={currentZone}
-        id={currentRecord.id}
         close={close}
       />
     );
@@ -59,24 +57,22 @@ describe('domains/components/EditARecord', () => {
     changeInput('hostname', 'tee');
     changeInput('ip', '4.4.4.4');
     changeInput('ttl', 1);
-    changeInput('type', 'AAA');
+    changeInput('type', 'AAAA');
 
-    console.log(page.debug());
     await page.find('Form').simulate('submit');
 
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      ([fn]) => expectRequest(fn, `/domains/${currentZone.id}/records/${currentRecord.id}`, {
+      ([fn]) => expectRequest(fn, `/domains/${currentZone.id}/records/`, {
         method: 'PUT',
         body: {
           target: '4.4.4.4',
           name: 'tee',
           ttl_sec: 1,
-          type: 'AAA',
+          type: 'AAAA',
         },
       }),
-      ([close]) => close(),
-    ], 2);
+    ], 1);
 
     expect(close.callCount).to.equal(1);
   });

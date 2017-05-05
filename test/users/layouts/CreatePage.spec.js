@@ -29,11 +29,8 @@ describe('users/layouts/CreatePage', () => {
       page.find(type).find({ id: name }).simulate('change', { target: { value, name } });
 
     changeInput('Input', 'username', 'theUser');
-    console.log('DEFINITELY FREAKING HERE', 333);
     changeInput('Input', 'email', 'user@example.com');
-    console.log('DEFINITELY FREAKING HERE', 2222);
     changeInput('PasswordInput', 'password', 'password');
-    console.log('DEFINITELY FREAKING HERE');
     changeInput('Radio', 'restricted', true);
 
     await page.find('Form').simulate('submit');
