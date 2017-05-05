@@ -97,9 +97,9 @@
           "oauth": "linodes:access",
           "dangerous": true,
           "params": {
-            "datacenter": {
-              "description": "The <a href=\"#object-datacenter\">datacenter</a> where the IPv4 address and Linode are located.\n",
-              "type": "datacenter"
+            "region": {
+              "description": "The <a href=\"#object-region\">region</a> where the IPv4 address and Linode are located.\n",
+              "type": "region"
             },
             "assignments": {
               "description": "An array of IPv4 addresses and the Linode IDs they will be assigned to\n",
@@ -107,7 +107,7 @@
             }
           },
           "examples": {
-            "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n        \"datacenter\": \"newark\",\n        \"assignments\": [\n          {\"address\": \"210.111.22.95\", \"linode_id\": 134504},\n          {\"address\": \"190.12.207.11\", \"linode_id\": 119034},\n        ]\n    }' \\\nhttps://$api_root/$version/networking/ip-assign\n"
+            "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n        \"region\": \"us-east-1a\",\n        \"assignments\": [\n          {\"address\": \"210.111.22.95\", \"linode_id\": 134504},\n          {\"address\": \"190.12.207.11\", \"linode_id\": 119034},\n        ]\n    }' \\\nhttps://$api_root/$version/networking/ip-assign\n"
           }
         }
       }

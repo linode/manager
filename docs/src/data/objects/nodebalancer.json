@@ -1,0 +1,30 @@
+{
+  "name": "NodeBalancer",
+  "prefix": "lnde",
+  "description": "NodeBalancer objects describe a single NodeBalancer on your account.\n",
+  "schema": {
+    "id": {
+      "_type": "integer",
+      "_value": 123456,
+      "_description": "An integer."
+    },
+    "label": {
+      "_editable": true,
+      "_type": "string",
+      "_value": "nodebalancer12345",
+      "_description": "The NodeBalancer's display label. Must be 3-32 ASCII characters limited to letters, numbers, underscores, and dashes, starting and ending with a letter, and without two dashes or underscores in a row."
+    },
+    "hostname": {
+      "_editable": false,
+      "_type": "string",
+      "_value": "nb-69-164-223-4.us-east-1a.nodebalancer.linode.com",
+      "_description": "The NodeBalancer's hostname."
+    },
+    "client_conn_throttle": {
+      "_editable": true,
+      "_type": "integer",
+      "_value": 10,
+      "_description": "Throttle connections per second. 0 to disable, max of 20."
+    }
+  }
+}

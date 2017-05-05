@@ -6,7 +6,7 @@ import { Header } from 'linode-components/navigation';
 
 export default function Layout(props) {
   const { route } = props;
-  const { endpointConfigs } = route;
+  const { endpoints } = route;
 
   return (
     <div className="Layout">
@@ -26,9 +26,8 @@ export default function Layout(props) {
             <div className="VerticalNav-section">
               <h3>Reference</h3>
               <ul>
-                {endpointConfigs.map(function(endpointConfig, index) {
-                  const { endpoint } = endpointConfig;
-                  return (<li key={index}><Link to={endpoint.basePath}>{endpoint.name}</Link></li>);
+                {endpoints.map(function(endpoint, index) {
+                  return (<li key={index}><Link to={endpoint.routePath}>{endpoint.name}</Link></li>);
                 })}
               </ul>
             </div>

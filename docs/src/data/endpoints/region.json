@@ -1,0 +1,35 @@
+{
+  "name": "Regions",
+  "base_path": "/regions",
+  "description": "Region endpoints provide a means of viewing <a href=\"#object-region\"> region objects</a>.\n",
+  "endpoints": {
+    "regions": {
+      "type": "list",
+      "resource": "regions",
+      "description": "Returns collection of regions.\n",
+      "methods": {
+        "GET": {
+          "description": "Returns list of <a href=\"#object-region\">regions</a>.\n",
+          "examples": {
+            "curl": "curl https://$api_root/$version/regions\n",
+            "python": "import regions\nTODO\n"
+          }
+        }
+      }
+    },
+    "regions/:id": {
+      "type": "resource",
+      "resource": "region",
+      "description": "Return a particular region.\n",
+      "methods": {
+        "GET": {
+          "description": "Returns information about this <a href=\"#object-region\"> region</a>.\n",
+          "examples": {
+            "curl": "curl https://$api_root/$version/region/$region_id\n",
+            "python": "import regions\nTODO\n"
+          }
+        }
+      }
+    }
+  }
+}

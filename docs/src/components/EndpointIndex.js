@@ -7,8 +7,7 @@ import { LinkCell } from 'linode-components/tables/cells';
 
 export default function EndpointIndex(props) {
   const { route } = props;
-  const { endpointConfig } = route;
-  const { crumbs, endpoint, title } = endpointConfig;
+  const { crumbs, endpoint } = route;
 
   return (
     <div className="EndpointIndex">
@@ -16,25 +15,33 @@ export default function EndpointIndex(props) {
         <div className="EndpointIndex-breadcrumbsContainer">
           <Breadcrumbs crumbs={crumbs} />
         </div>
-        <h2>{title}</h2>
+        <h2>{endpoint.name}</h2>
         <p>{endpoint.description}</p>
       </div>
       <div>
-        <Table
-          className="Table--secondary"
-          columns={[
-            {
-              cellComponent: LinkCell,
-              textKey: 'path',
-              label: 'Endpoint',
-              hrefFn: function(childEndpoint) {
-                return childEndpoint.routePath;
-              }
-            },
-            { label: 'Description', dataKey: 'description' },
-          ]}
-          data={endpoint.endpoints}
-        />
+        {endpoint.formattedEndpoints.map(function(endpointSection) {
+          return (
+            <div className="EndpointIndex-group">
+              <h3>{endpointSection.name}</h3>
+              <Table
+                className="Table--secondary"
+                columns={[
+                  {
+                    cellComponent: LinkCell,
+                    textKey: 'path',
+                    label: 'Endpoint',
+                    headerClassName: 'EndpointColumn',
+                    hrefFn: function(childEndpoint) {
+                      return childEndpoint.routePath;
+                    }
+                  },
+                  { label: 'Description', dataKey: 'description' },
+                ]}
+                data={endpointSection.formattedEndpoints}
+              />
+            </div>
+          );
+        })}
       </div>
     </div>
   );
