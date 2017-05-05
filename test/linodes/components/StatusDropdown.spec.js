@@ -83,7 +83,7 @@ describe('linodes/components/StatusDropdown', () => {
   });
 
   it('dispatches on item click', async () => {
-    const dispatch = sinon.spy();
+    const dispatch = sandbox.spy();
     const dropdown = shallow(
       <StatusDropdown linode={linodes.linodes[1235]} dispatch={dispatch} />
     );
@@ -97,7 +97,7 @@ describe('linodes/components/StatusDropdown', () => {
   });
 
   it('is in a rebooting state, progressbar should show up', async () => {
-    const dispatch = sinon.spy();
+    const dispatch = sandbox.spy();
     const progress = shallow(
       <StatusDropdown linode={linodes.linodes[1237]} dispatch={dispatch} />
     );
@@ -105,7 +105,7 @@ describe('linodes/components/StatusDropdown', () => {
   });
 
   it('shows unrecognized status as offline', async () => {
-    const dispatch = sinon.spy();
+    const dispatch = sandbox.spy();
     const dropdown = shallow(
       <StatusDropdown linode={linodes.linodes[1243]} dispatch={dispatch} />
     );
@@ -113,7 +113,7 @@ describe('linodes/components/StatusDropdown', () => {
   });
 
   it('renders modal on reboot if multiple configs', () => {
-    const dispatch = sinon.spy();
+    const dispatch = sandbox.spy();
     const dropdown = shallow(
       <StatusDropdown linode={linodes.linodes['1233']} dispatch={dispatch} />
     );
@@ -124,7 +124,7 @@ describe('linodes/components/StatusDropdown', () => {
   });
 
   it('renders modal on power on if multiple configs', () => {
-    const dispatch = sinon.spy();
+    const dispatch = sandbox.spy();
     const dropdown = shallow(
       <StatusDropdown linode={linodes.linodes['1238']} dispatch={dispatch} />
     );

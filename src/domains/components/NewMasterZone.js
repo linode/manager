@@ -21,15 +21,13 @@ export default class NewMasterZone extends Component {
     };
   }
 
-  onSubmit = async () => {
+  onSubmit = () => {
     const { dispatch } = this.props;
     const { domain, email } = this.state;
 
-    await dispatch(dispatchOrStoreErrors.apply(this, [
-      [
-        () => domains.post({ domain, soa_email: email, type: 'master' }),
-        () => push(`/domains/${domain}`),
-      ],
+    return dispatch(dispatchOrStoreErrors.call(this, [
+      () => domains.post({ domain, soa_email: email, type: 'master' }),
+      () => push(`/domains/${domain}`),
     ]));
   }
 
