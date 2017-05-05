@@ -2,8 +2,6 @@ const backup = require('./backup');
 const backupsresponse = require('./backupsresponse');
 const disk = require('./disk');
 const distribution = require('./distribution');
-const dnszone = require('./dnszone');
-const dnszonerecord = require('./dnszonerecord');
 const domain = require('./domain');
 const domainrecord = require('./domainrecord');
 const event = require('./event');
@@ -34,8 +32,6 @@ module.exports.apiObjectMap = {
   distribution,
   domain,
   domainrecord,
-  dnszone,
-  dnszonerecord,
   event,
   ipaddress,
   ipv6address,
