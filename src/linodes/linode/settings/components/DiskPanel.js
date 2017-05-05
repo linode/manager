@@ -70,7 +70,7 @@ export class DiskPanel extends Component {
   addAction = () => {
     const { dispatch, linode, distributions } = this.props;
 
-    return dispatch(showModal('Delete Disk', (
+    return dispatch(showModal('Add a Disk', (
       <AddModal
         distributions={distributions}
         free={this.freeSpace()}
