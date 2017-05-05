@@ -12,9 +12,11 @@ export default function Method(props) {
     name,
     description,
     examples,
-    params,
+    params = [],
     resource = {},
   } = method;
+
+  const { schema = [] } = resource;
 
   // TODO: Break these out if needed
   let methodParams = null;
@@ -62,7 +64,7 @@ export default function Method(props) {
             { cellComponent: FieldCell, label: 'Field', headerClassName: 'FieldColumn' },
             { cellComponent: DescriptionCell, label: 'Description', headerClassName: 'DescriptionColumn' }
           ]}
-          data={resource.schema}
+          data={schema}
         />
       </div>
     );

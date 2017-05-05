@@ -19,7 +19,7 @@
         },
         "POST": {
           "oauth": "tickets:create",
-          "description": "Submit a new question and request help from the Linode support team. Only one of dnszone_id, linode_id, and nodebalancer_id can be set on a single ticket.\n",
+          "description": "Submit a new question and request help from the Linode support team. Only one of domain_id, linode_id, and nodebalancer_id can be set on a single ticket.\n",
           "params": {
             "summary": {
               "description": "A short summary or title for the support ticket.\n",
@@ -29,8 +29,8 @@
               "description": "The complete details of the support request.\n",
               "type": "string"
             },
-            "dnszone_id": {
-              "description": "The DNS zone this ticket is regarding, if relevant.\n",
+            "domain_id": {
+              "description": "The Domain this ticket is regarding, if relevant.\n",
               "type": "int",
               "optional": true
             },
