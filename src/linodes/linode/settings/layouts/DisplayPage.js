@@ -29,7 +29,6 @@ export class DisplayPage extends Component {
     const { dispatch, linode: { id, label: oldLabel } } = this.props;
     const { group, label } = this.state;
 
-    console.log(group, label, oldLabel);
     await dispatch(dispatchOrStoreErrors.call(this, [
       () => linodes.put({ group, label }, id),
       () => oldLabel !== label ? push(`/linodes/${label}/settings`) : () => {},

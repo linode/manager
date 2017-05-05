@@ -16,9 +16,8 @@ describe('domains/components/EditARecord', () => {
     sandbox.restore();
   });
 
-  const dispatch = sandbox.stub();
-
   it('renders fields correctly', () => {
+    const dispatch = sandbox.stub();
     const currentZone = api.domains.domains['1'];
     const currentRecord = currentZone._records.records[1];
     const page = mount(
@@ -40,7 +39,47 @@ describe('domains/components/EditARecord', () => {
     expect(+ttl.props().value).to.equal(currentRecord.ttl_sec || currentZone.ttl_sec);
   });
 
+  it('saves an existing A record', async () => {
+    const dispatch = sandbox.stub();
+    const currentZone = api.domains.domains['1'];
+    const currentRecord = currentZone._records.records[1];
+    const close = sandbox.spy();
+    const page = mount(
+      <EditARecord
+        dispatch={dispatch}
+        zone={currentZone}
+        id={currentRecord.id}
+        close={close}
+      />
+    );
+
+    const changeInput = (name, value) =>
+      page.find({ name }).simulate('change', { target: { value, name } });
+
+    changeInput('hostname', 'tee');
+    changeInput('ip', '4.4.4.4');
+    changeInput('ttl', 1);
+
+    await page.find('Form').simulate('submit');
+
+    expect(dispatch.callCount).to.equal(1);
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      ([fn]) => expectRequest(fn, `/domains/${currentZone.id}/records/${currentRecord.id}`, {
+        method: 'PUT',
+        body: {
+          target: '4.4.4.4',
+          name: 'tee',
+          ttl_sec: 1,
+          type: 'A',
+        },
+      }),
+    ], 1);
+
+    expect(close.callCount).to.equal(1);
+  });
+
   it('creates a new AAAA record', async () => {
+    const dispatch = sandbox.stub();
     const currentZone = api.domains.domains['1'];
     const close = sandbox.spy();
     const page = mount(
@@ -52,7 +91,7 @@ describe('domains/components/EditARecord', () => {
     );
 
     const changeInput = (name, value) =>
-      page.find({ name }).simulate('change', { target: { [name]: value } });
+      page.find({ name }).simulate('change', { target: { name, value } });
 
     changeInput('hostname', 'tee');
     changeInput('ip', '4.4.4.4');
@@ -64,7 +103,7 @@ describe('domains/components/EditARecord', () => {
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
       ([fn]) => expectRequest(fn, `/domains/${currentZone.id}/records/`, {
-        method: 'PUT',
+        method: 'POST',
         body: {
           target: '4.4.4.4',
           name: 'tee',
