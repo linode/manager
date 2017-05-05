@@ -30,7 +30,7 @@ export default class EditCNAMERecord extends Component {
     };
   }
 
-  onSubmit = async () => {
+  onSubmit = () => {
     const { dispatch, id, close } = this.props;
     const { ttl, hostname, alias } = this.state;
     const ids = [this.props.zone.id, id].filter(Boolean);
@@ -41,11 +41,9 @@ export default class EditCNAMERecord extends Component {
       type: 'CNAME',
     };
 
-    await dispatch(dispatchOrStoreErrors.apply(this, [
-      [
-        () => domains.records[id ? 'put' : 'post'](data, ...ids),
-        close,
-      ],
+    return dispatch(dispatchOrStoreErrors.call(this, [
+      () => domains.records[id ? 'put' : 'post'](data, ...ids),
+      close,
     ]));
   }
 

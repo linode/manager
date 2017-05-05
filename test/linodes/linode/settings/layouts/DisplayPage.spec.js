@@ -1,82 +1,50 @@
+import { expect } from 'chai';
+import { mount } from 'enzyme';
 import React from 'react';
 import { push } from 'react-router-redux';
 import sinon from 'sinon';
-import { mount } from 'enzyme';
-import { expect } from 'chai';
 
-import { expectRequest, expectObjectDeepEquals } from '@/common';
-import { testLinode } from '@/data/linodes';
 import { DisplayPage } from '~/linodes/linode/settings/layouts/DisplayPage';
+
+import { expectDispatchOrStoreErrors, expectObjectDeepEquals, expectRequest } from '@/common';
+import { testLinode } from '@/data/linodes';
+
 
 describe('linodes/linode/settings/layouts/DisplayPage', () => {
   const sandbox = sinon.sandbox.create();
-  const dispatch = sandbox.spy();
 
   afterEach(() => {
-    dispatch.reset();
     sandbox.restore();
   });
 
-  it('renders display page', async () => {
-    const page = mount(
-      <DisplayPage
-        dispatch={dispatch}
-        linode={testLinode}
-      />
-    );
-
-    expect(page.find({ id: 'group' }).props().value).to.equal('Test Group');
-    expect(page.find({ id: 'label' }).props().value).to.equal('test-linode');
-  });
-
   it('makes request to save changes', async () => {
+    const dispatch = sandbox.spy();
     const page = mount(
       <DisplayPage
         dispatch={dispatch}
         linode={testLinode}
       />
     );
+
+    const change = (name, value) =>
+      page.find({ name }).simulate('change', { target: { name, value } });
+
+    change('group', 'foobar');
 
     dispatch.reset();
-    page.find('form').simulate('submit', { preventDefault() {} });
+    await page.find('Form').props().onSubmit();
+
     expect(dispatch.callCount).to.equal(1);
-    const fn = dispatch.firstCall.args[0];
-
-    await expectRequest(fn, '/linode/instances/1234', {
-      method: 'PUT',
-      body: { group: testLinode.group, label: testLinode.label },
-    });
-  });
-
-  it('shows error if label is invalid', async () => {
-    const env = { dispatch() {} };
-    const error = 'this is my error string';
-    const dispatchStub = sandbox.stub(env, 'dispatch');
-    dispatchStub.throws({
-      json: () => ({
-        errors: [{ field: 'label', reason: error }],
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      ([fn]) => expectRequest(fn, '/linode/instances/1234', {
+        method: 'PUT',
+        body: { group: 'foobar', label: testLinode.label },
       }),
-    });
-
-    const page = await mount(
-      <DisplayPage
-        dispatch={dispatchStub}
-        linode={testLinode}
-      />
-    );
-
-    expect(dispatchStub.callCount).to.equal(1);
-    await page.instance().onSubmit({ preventDefault() {} });
-    expect(dispatchStub.callCount).to.equal(2);
-
-    const label = page.find('.form-group').at(1);
-    expect(label.find('.form-control-feedback')
-                .children()
-                .first()
-                .text()).to.equal(error);
+    ], 1);
   });
 
   it('redirects if the label changed', async () => {
+    const dispatch = sandbox.spy();
     const page = mount(
       <DisplayPage
         dispatch={dispatch}
@@ -84,15 +52,22 @@ describe('linodes/linode/settings/layouts/DisplayPage', () => {
       />
     );
 
-    page.find('.LinodesLinodeSettingsDisplay-label').simulate('change',
-      { target: { value: 'newlabel' } });
+    const change = (name, value) =>
+      page.find({ name }).simulate('change', { target: { name, value } });
+
+    change('group', 'foobar');
+    change('label', 'my-new-label');
 
     dispatch.reset();
+    await page.find('Form').props().onSubmit();
 
-    await page.find('form').simulate('submit', { preventDefault() {} });
-
-    expect(dispatch.callCount).to.equal(2);
-    const fn = dispatch.secondCall.args[0];
-    expectObjectDeepEquals(fn, push('/linodes/newlabel/settings'));
+    expect(dispatch.callCount).to.equal(1);
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      ([fn]) => expectRequest(fn, '/linode/instances/1234', {
+        method: 'PUT',
+        body: { group: 'foobar', label: 'my-new-label' },
+      }),
+      ([pushResult]) => expectObjectDeepEquals(pushResult, push('/linodes/my-new-label/settings')),
+    ], 2);
   });
 });

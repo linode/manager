@@ -1,18 +1,17 @@
+import { expect } from 'chai';
+import { mount } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
-import { mount } from 'enzyme';
-import { expect } from 'chai';
 
-import * as fetch from '~/fetch';
 import { MAX_UPLOAD_SIZE_MB } from '~/constants';
 import { TicketPage } from '~/support/layouts/TicketPage';
+
+import { expectRequest, expectDispatchOrStoreErrors } from '@/common';
 import { testTicket, closedTicket } from '@/data/tickets';
-import { expectRequest } from '@/common';
-import { state } from '@/data';
+
 
 describe('support/layouts/TicketPage', () => {
   const sandbox = sinon.sandbox.create();
-  const dispatch = sandbox.spy();
 
   afterEach(() => {
     sandbox.restore();
@@ -24,7 +23,7 @@ describe('support/layouts/TicketPage', () => {
       <TicketPage
         ticket={testTicket}
         replies={testTicket._replies.replies}
-        dispatch={dispatch}
+        dispatch={() => {}}
       />
     );
 
@@ -33,6 +32,7 @@ describe('support/layouts/TicketPage', () => {
   });
 
   it('hide response options when ticket is closed', () => {
+    const dispatch = sandbox.spy();
     const page = mount(
       <TicketPage
         ticket={closedTicket}
@@ -47,6 +47,7 @@ describe('support/layouts/TicketPage', () => {
   });
 
   it('sends a reply on submit if a reply is there', async () => {
+    const dispatch = sandbox.spy();
     const page = mount(
       <TicketPage
         ticket={testTicket}
@@ -59,17 +60,20 @@ describe('support/layouts/TicketPage', () => {
     page.find('#reply[name="reply"]').simulate(
       'change', { target: { name: 'reply', value: reply } });
 
-    page.find('Form').simulate('submit');
+    await page.find('Form').props().onSubmit();
 
     // No attachments, so save attachment endpoint not called.
     expect(dispatch.callCount).to.equal(1);
-    await expectRequest(dispatch.firstCall.args[0], `/support/tickets/${testTicket.id}/replies/`, {
-      method: 'POST',
-      body: { description: reply },
-    });
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      ([fn]) => expectRequest(fn, `/support/tickets/${testTicket.id}/replies/`, {
+        method: 'POST',
+        body: { description: reply },
+      }),
+    ]);
   });
 
   it('sends attachments on submit if attachments are there', async () => {
+    const dispatch = sandbox.spy();
     const page = mount(
       <TicketPage
         ticket={testTicket}
@@ -82,22 +86,16 @@ describe('support/layouts/TicketPage', () => {
     page.instance().setState({ attachments });
 
     dispatch.reset();
-    const fetchStub = sandbox.stub(fetch, 'fetch').returns({ json: () => {} });
-    page.find('Form').simulate('submit');
+    await page.find('Form').props().onSubmit();
 
-    // No reply, so save reply endpoint not called.
     expect(dispatch.callCount).to.equal(1);
-
-    // Trigger request
-    const fn = dispatch.firstCall.args[0];
-    dispatch.reset();
-    await fn(dispatch, () => state);
-
-    expect(fetchStub.callCount).to.equal(1);
-    expect(fetchStub.firstCall.args[1]).to.equal(`/support/tickets/${testTicket.id}/attachments`);
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      ([fn]) => expectRequest(fn, `/support/tickets/${testTicket.id}/attachments`),
+    ]);
   });
 
-  it('doesn\'t allow attachments bigger than MAX_UPLOAD_SIZE_MB', () => {
+  it('doesn\'t allow attachments bigger than MAX_UPLOAD_SIZE_MB', async () => {
+    const dispatch = sandbox.spy();
     const page = mount(
       <TicketPage
         ticket={testTicket}
@@ -110,9 +108,13 @@ describe('support/layouts/TicketPage', () => {
     page.instance().setState({ attachments });
 
     dispatch.reset();
-    page.find('Form').simulate('submit');
+    await page.find('Form').props().onSubmit();
 
-    // No reply and attachment is too big, so no endpoints are called.
-    expect(dispatch.callCount).to.equal(0);
+    expect(dispatch.callCount).to.equal(1);
+    // Only attempting to upload an attachment
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [], 1);
+    // But we've got errors
+    console.log(page.instance().errors, page.state('errors'));
+    expect(Object.values(page.state('errors')).length).to.equal(1);
   });
 });

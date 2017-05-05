@@ -25,18 +25,19 @@ export class DisplayPage extends Component {
     dispatch(setSource(__filename));
   }
 
-  onSubmit = async () => {
-    const { dispatch, linode } = this.props;
-    const { id, label: oldLabel, group: oldGroup } = linode;
+  onSubmit = () => {
+    const { dispatch, linode: { id, label: oldLabel } } = this.props;
     const { group, label } = this.state;
 
-    await dispatch(dispatchOrStoreErrors.apply(this, [
-      [
-        () => linodes.put({ group, label }, id),
-        () => oldLabel !== label || oldGroup !== group ?
-            push(`/linodes/${label}/settings`) : () => {},
-      ],
-    ]));
+    const requests = [
+      () => linodes.put({ group, label }, id),
+    ];
+
+    if (oldLabel !== label) {
+      requests.push(() => push(`/linodes/${label}/settings`));
+    }
+
+    return dispatch(dispatchOrStoreErrors.call(this, requests));
   }
 
   render() {
@@ -50,8 +51,8 @@ export class DisplayPage extends Component {
             <div className="col-sm-11">
               <Input
                 id="group"
+                name="group"
                 value={group}
-                className="LinodesLinodeSettingsDisplay-group"
                 onChange={e => this.setState({ group: e.target.value })}
               />
               <FormGroupError errors={errors} name="group" />
@@ -62,7 +63,7 @@ export class DisplayPage extends Component {
             <div className="col-sm-11">
               <Input
                 id="label"
-                className="LinodesLinodeSettingsDisplay-label"
+                name="label"
                 value={label}
                 onChange={e => this.setState({ label: e.target.value })}
               />
