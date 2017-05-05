@@ -107,12 +107,16 @@ export async function expectRequest(fn, path, expectedRequestData, response) {
   }
 }
 
-export async function expectDispatchOrStoreErrors(fn, expectArgs = [], expectN = undefined) {
+export async function expectDispatchOrStoreErrors(fn, expectArgs = [], expectN = undefined, dispatchResults = []) {
   const sandbox = sinon.sandbox.create();
-  const dispatch = sandbox.spy();
+  const dispatch = sandbox.stub();
 
   try {
-    fn(dispatch, () => state);
+    for (let i = 0; i < dispatch.callCount; i += 1) {
+      dispatch.onCall(i).returns(dispatchResults[i]);
+    }
+
+    await fn(dispatch, () => state);
 
     if (expectN !== undefined) {
       expect(dispatch.callCount).to.equal(expectN);

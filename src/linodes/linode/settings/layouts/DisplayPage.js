@@ -29,10 +29,15 @@ export class DisplayPage extends Component {
     const { dispatch, linode: { id, label: oldLabel } } = this.props;
     const { group, label } = this.state;
 
-    return dispatch(dispatchOrStoreErrors.call(this, [
+    const requests = [
       () => linodes.put({ group, label }, id),
-      () => oldLabel !== label ? push(`/linodes/${label}/settings`) : () => {},
-    ]));
+    ];
+
+    if (oldLabel !== label) {
+      requests.push(() => push(`/linodes/${label}/settings`));
+    }
+
+    return dispatch(dispatchOrStoreErrors.call(this, requests));
   }
 
   render() {

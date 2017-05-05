@@ -111,8 +111,10 @@ describe('support/layouts/TicketPage', () => {
     await page.find('Form').props().onSubmit();
 
     expect(dispatch.callCount).to.equal(1);
-    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0]);
+    // Only attempting to upload an attachment
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [], 1);
     // But we've got errors
+    console.log(page.instance().errors, page.state('errors'));
     expect(Object.values(page.state('errors')).length).to.equal(1);
   });
 });

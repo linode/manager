@@ -16,6 +16,15 @@ import TicketReply from '../components/TicketReply';
 import TicketHelper from '../components/TicketHelper';
 
 
+export function AttachmentTooBigError() {
+  const error = `File size must be under ${MAX_UPLOAD_SIZE_MB} MB`;
+  this.json = () => ({
+    errors: [{ field: 'attachments', reason: error }],
+  });
+}
+
+AttachmentTooBigError.prototype = new Error();
+
 export class TicketPage extends Component {
   static async preload({ dispatch }, { ticketId }) {
     try {
@@ -54,9 +63,7 @@ export class TicketPage extends Component {
           return addTicketAttachment(ticket.id, attachment);
         }
 
-        const error = `File size must be under ${MAX_UPLOAD_SIZE_MB} MB`;
-        // eslint-disable-next-line no-throw-literal
-        throw { errors: [{ field: 'attachments', reason: error }] };
+        throw new AttachmentTooBigError();
       });
     }
 

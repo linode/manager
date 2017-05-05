@@ -420,7 +420,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
         />);
 
       const createDisk = sandbox.stub(modal.instance(), 'createDisk');
-      await modal.find('Form').prop().onSubmit();
+      await modal.find('Form').props().onSubmit();
       expect(createDisk.callCount).to.equal(1);
     });
 

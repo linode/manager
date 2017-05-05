@@ -47,8 +47,8 @@ describe('support/layouts/CreatePage', () => {
           summary: 'My new ticket!',
           description: 'This is my new description!',
         },
-      }, { id: 2 }),
+      }),
       ([pushResult]) => expectObjectDeepEquals(pushResult, push('/support/2')),
-    ]);
+    ], 2, [{ id: 2 }]);
   });
 });
