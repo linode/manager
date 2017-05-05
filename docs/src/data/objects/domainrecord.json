@@ -1,7 +1,7 @@
 {
-  "name": "DNS Zone Records",
+  "name": "Domain Records",
   "prefix": "zrcd",
-  "description": "DNS Zone Records: The DNS Zone Record fields will contain different values depending on what type of record it is.\n",
+  "description": "Domain Records: The Domain Record fields will contain different values depending on what type of record it is.\n",
   "schema": {
     "id": {
       "_type": "integer",

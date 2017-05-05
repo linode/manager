@@ -23,9 +23,9 @@
           "oauth": "linodes:create",
           "description": "Creates a new Linode.\n",
           "params": {
-            "datacenter": {
-              "description": "A <a href=\"#object-datacenter\">datacenter</a> ID to provision this Linode in.\n",
-              "type": "datacenter"
+            "region": {
+              "description": "A <a href=\"#object-region\">region</a> ID to provision this Linode in.\n",
+              "type": "region"
             },
             "type": {
               "description": "A <a href=\"#object-service\">Linode type</a> ID to use for this Linode.\n",
@@ -75,7 +75,7 @@
             }
           },
           "examples": {
-            "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n        \"datacenter\": \"newark\",\n        \"type\": \"standard-1\"\n    }' \\\n    https://$api_root/$version/linode/instances\n",
+            "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n        \"region\": \"us-east-1a\",\n        \"type\": \"g5-standard-1\"\n    }' \\\n    https://$api_root/$version/linode/instances\n",
             "python": "import linode\nTODO\n"
           }
         }
@@ -473,7 +473,7 @@
             }
           },
           "examples": {
-            "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n        \"type\": \"standard-1\"\n        }\n    }' \\\n    https://$api_root/$version/linode/instances/$linode_id/resize\n"
+            "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n        \"type\": \"g5-standard-1\"\n        }\n    }' \\\n    https://$api_root/$version/linode/instances/$linode_id/resize\n"
           }
         }
       }
@@ -635,7 +635,7 @@
     "linode/instances/:id/rebuild": {
       "type": "action",
       "authenticated": true,
-      "description": "Deletes all Disks and Configs on this Linode, then deploys a new Distribution to this Linode with the given attributes.\n",
+      "description": "Deletes all Disks and Configs on this Linode, then deploys a new Distribution to this Linode with the given attributes. Returns information about this <a href=\"#object-linode\">Linode</a>.\n",
       "methods": {
         "POST": {
           "oauth": "linodes:modify",

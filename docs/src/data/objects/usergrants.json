@@ -14,10 +14,10 @@
         "_value": true,
         "_description": "If this user may create NodeBalancers."
       },
-      "add_dnszones": {
+      "add_domains": {
         "_type": "boolean",
         "_value": true,
-        "_description": "If this user may create DNS Zones."
+        "_description": "If this user may create Domains."
       },
       "add_longview": {
         "_type": "boolean",
@@ -106,9 +106,9 @@
         }
       ]
     },
-    "dnszone": {
+    "domain": {
       "_type": "array",
-      "_description": "Individual grants to a DNS Zone you own.  Grants include all, access and delete"
+      "_description": "Individual grants to a Domain you own.  Grants include all, access and delete"
     }
   }
 }

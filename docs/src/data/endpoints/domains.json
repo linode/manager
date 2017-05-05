@@ -1,0 +1,203 @@
+{
+  "name": "Domains",
+  "base_path": "/domains",
+  "description": "Domain endpoints provide a means of managing the <a href=\"#object-domain\"> Domain objects</a> on your account.\nNote: the validation rules for domain records are too complicated to document here. We'll just direct you to [RFC 1035](https://www.ietf.org/rfc/rfc1035.txt).\n",
+  "endpoints": {
+    "domains": {
+      "type": "list",
+      "resource": "domains",
+      "authenticated": true,
+      "description": "Manage the collection of Domains your account may access.\n",
+      "methods": {
+        "GET": {
+          "oauth": "domains:view",
+          "description": "Returns a list of <a href=\"#object-domain\">Domains</a>.\n",
+          "examples": {
+            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/domains\n",
+            "python": "import linode\nTODO\n"
+          }
+        },
+        "POST": {
+          "oauth": "domains:create",
+          "description": "Create a Domain.\n",
+          "params": {
+            "domain": {
+              "description": "The Domain name.\n"
+            },
+            "type": {
+              "description": "Domain <a href=\"#object-domain_type-enum\">type</a> as master or slave.\n"
+            },
+            "soa_email": {
+              "optional": true,
+              "description": "Start of Authority (SOA) contact email.\n"
+            },
+            "description": {
+              "optional": true,
+              "description": "A description to keep track of this Domain.\n"
+            },
+            "refresh_sec": {
+              "optional": true,
+              "description": "Time interval before the Domain should be refreshed, in seconds.\n"
+            },
+            "retry_sec": {
+              "optional": true,
+              "description": "Time interval that should elapse before a failed refresh should\n  be retried, in seconds.\n"
+            },
+            "expire_sec": {
+              "optional": true,
+              "description": "Time value that specifies the upper limit on\n  the time interval that can elapse before the Domain is no\n  longer authoritative, in seconds.\n"
+            },
+            "ttl_sec": {
+              "optional": true,
+              "description": "Time interval that the resource record may be cached before\n  it should be discarded, in seconds.\n"
+            },
+            "status": {
+              "optional": true,
+              "description": "The status of the Domain; it can be disabled, active, or edit_mode.\n"
+            },
+            "master_ips": {
+              "optional": true,
+              "description": "An array of IP addresses for this Domain.\n"
+            },
+            "axfr_ips": {
+              "optional": true,
+              "description": "An array of IP addresses allowed to AXFR the entire Domain.\n"
+            },
+            "display_group": {
+              "optional": true,
+              "description": "A display group to keep track of this Domain.\n"
+            }
+          },
+          "examples": {
+            "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n        \"domain\": \"example.com\",\n        \"type\": \"master\",\n        \"soa_email\": \"admin@example.com\",\n        \"description\": \"Example Description\",\n        \"refresh_sec\": 14400,\n        \"retry_sec\": 3600,\n        \"expire_sec\": 604800,\n        \"ttl_sec\": 3600,\n        \"status\": \"active\",\n        \"master_ips\": [\"127.0.0.1\",\"255.255.255.1\",\"123.123.123.7\"],\n        \"axfr_ips\": [\"44.55.66.77\"],\n        \"display_group\": \"Example Display Group\"\n    }'\n    https://$api_root/$version/domains\n",
+            "python": "import linode\nTODO\n"
+          }
+        }
+      }
+    },
+    "domains/:id": {
+      "authenticated": true,
+      "resource": "domain",
+      "methods": {
+        "GET": {
+          "oauth": "domains:view",
+          "description": "Returns information for the <a href=\"#object-domain\">Domain</a> identified by :id.\n",
+          "examples": {
+            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/domains/$domain_id\n",
+            "python": "import linode\nTODO\n"
+          }
+        },
+        "PUT": {
+          "oauth": "domains:modify",
+          "description": "Modifies a given Domain.\n",
+          "examples": {
+            "curl": "curl -H \"Content-Type: application/json\" \\\n  -H \"Authorization: token TOKEN\" \\\n  -X PUT -d '{\n    \"domain\": \"examplechange.com\",\n    \"description\": \"The changed description\",\n    \"display_group\": \"New display group\",\n    \"status\": \"edit_mode\",\n    \"soa_email\": \"newemail@example.com\",\n    \"retry_sec\": 3602,\n    \"master_ips\": [\"123.456.789.101\", \"192.168.1.1\", \"127.0.0.1\"],\n    \"axfr_ips\": [\"55.66.77.88\"],\n    \"expire_sec\": 604802,\n    \"refresh_sec\": 14402,\n    \"ttl_sec\": 3602\n  }'\n  https://$api_root/$version/domains/$domain_id\n",
+            "python": "import linode\nTODO\n"
+          }
+        },
+        "DELETE": {
+          "oauth": "domains:modify",
+          "dangerous": true,
+          "description": "Deletes the Domain. This action cannot be undone.\n",
+          "examples": {
+            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    -X DELETE\n    https://$api_root/$version/domains/$domain_id\n",
+            "python": "import linode\nTODO\n"
+          }
+        }
+      }
+    },
+    "domains/:id/records": {
+      "type": "list",
+      "resource": "domainrecords",
+      "authenticated": true,
+      "description": "Manage the collection of Domain Records your account may access.\n",
+      "methods": {
+        "GET": {
+          "oauth": "domains:view",
+          "description": "Returns a list of <a href=\"#object-domainrecord\">Domain Records</a>.\n",
+          "examples": {
+            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/domains/$domain_id/records\n",
+            "python": "import linode\nTODO\n"
+          }
+        },
+        "POST": {
+          "oauth": "domains:create",
+          "description": "Create a Domain Record.\n",
+          "params": {
+            "type": {
+              "description": "<a href=\"#object-zone-record-types-enum\">Type</a> of record.\n"
+            },
+            "name": {
+              "optional": true,
+              "description": "The hostname or FQDN. When type=MX the subdomain to delegate to the Target MX server.\n",
+              "limit": "1-100 characters"
+            },
+            "target": {
+              "optional": true,
+              "description": "When Type=MX the hostname. When Type=CNAME the target of the alias. When Type=TXT the value of the record. When Type=A or AAAA the token of '[remote_addr]' will be substituted with the IP address of the request.\n"
+            },
+            "priority": {
+              "optional": true,
+              "description": "Priority for MX and SRV records.\n"
+            },
+            "weight": {
+              "optional": true,
+              "description": "A relative weight for records with the same priority, higher value means more preferred.\n"
+            },
+            "port": {
+              "optional": true,
+              "description": "The TCP or UDP port on which the service is to be found.\n"
+            },
+            "service": {
+              "optional": true,
+              "description": "The service to append to an SRV record.\n"
+            },
+            "protocol": {
+              "optional": true,
+              "description": "The protocol to append to an SRV record.\n"
+            },
+            "ttl": {
+              "optional": true,
+              "description": "Time interval that the resource record may be cached before\n  it should be discarded. In seconds. Leave as 0 to accept\n  our default.\n"
+            }
+          },
+          "examples": {
+            "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n        \"type\": \"A\",\n        \"target\": \"123.456.789.101\",\n        \"name\": \"sub.example.com\"\n    }'\n    https://$api_root/$version/domains/$domain_id/records\n",
+            "python": "import linode\nTODO\n"
+          }
+        }
+      }
+    },
+    "domains/:id/records/:id": {
+      "authenticated": true,
+      "resource": "domainrecord",
+      "methods": {
+        "GET": {
+          "oauth": "domains:view",
+          "description": "Returns information for the <a href=\"#object-domainrecord\">Domain Record</a> identified by \":id\".\n",
+          "examples": {
+            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n  https://$api_root/$version/domains/$domain_id/records/$record_id\n",
+            "python": "import linode\nTODO\n"
+          }
+        },
+        "PUT": {
+          "oauth": "domains:modify",
+          "description": "Modifies a given Domain Record.\n",
+          "examples": {
+            "curl": "curl -H \"Content-Type: application/json\" \\\n  -H \"Authorization: token TOKEN\" \\\n  -X PUT -d '{\n        \"target\": \"123.456.789.102\",\n        \"name\": \"sub2.example.com\"\n  }'\n  https://$api_root/$version/domains/$domain_id/records/$record_id\n",
+            "python": "import linode\nTODO\n"
+          }
+        },
+        "DELETE": {
+          "oauth": "domains:modify",
+          "dangerous": true,
+          "description": "Deletes the Domain Record. This action cannot be undone.\n",
+          "examples": {
+            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n  -X DELETE\n  https://$api_root/$version/domains/$domain_id/records/$record_id\n",
+            "python": "import linode\nTODO\n"
+          }
+        }
+      }
+    }
+  }
+}
