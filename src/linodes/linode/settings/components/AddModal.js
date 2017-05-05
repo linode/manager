@@ -72,7 +72,7 @@ export class AddModal extends Component {
       distributions.distributions[distribution].minimum_storage_size;
 
     return (
-      <Form onSubmit={() => this.createDisk()}>
+      <Form onSubmit={this.onSubmit}>
         <ModalFormGroup id="label" label="Label" apiKey="label" errors={errors}>
           <Input
             id="label"
@@ -97,10 +97,11 @@ export class AddModal extends Component {
           />
         </ModalFormGroup>
         {distribution ? (
-          <ModalFormGroup id="password" label="Root Password" apiKey="password" errors={errors}>
+          <ModalFormGroup id="password" label="Root Password" apiKey="root_pass" errors={errors}>
             <PasswordInput
-              value={this.state.password}
               name="password"
+              id="password"
+              value={password}
               onChange={this.onChange}
             />
           </ModalFormGroup>
@@ -126,7 +127,7 @@ export class AddModal extends Component {
             value={size}
             type="number"
             min={distribution ? minimumStorageSize() : 8}
-            max={free}
+            max={free + size}
             onChange={this.onChange}
             label="MB"
           />

@@ -9,7 +9,6 @@ import {
   Checkbox, Checkboxes, SubmitButton,
 } from 'linode-components/forms';
 
-import { setError } from '~/actions/errors';
 import { setSource } from '~/actions/source';
 import { linodes } from '~/api';
 import { FormSummary, reduceErrors } from '~/components/forms';

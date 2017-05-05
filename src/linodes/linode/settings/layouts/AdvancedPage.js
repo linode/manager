@@ -41,6 +41,13 @@ export class AdvancedPage extends Component {
 AdvancedPage.propTypes = {
   linode: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
+  distributions: PropTypes.object.isRequired,
 };
 
-export default connect(selectLinode)(AdvancedPage);
+function select(state, params) {
+  const { linode } = selectLinode(state, params);
+  const { distributions } = state.api;
+  return { linode, distributions };
+}
+
+export default connect(select)(AdvancedPage);
