@@ -11,7 +11,7 @@ import { reduceErrors } from '~/components/forms';
 import { API_ROOT } from '~/constants';
 
 import { renderSecret } from './CreatePersonalAccessToken';
-import EditApplication from './EditApplication';
+import { CreateOrEditApplication } from './';
 
 
 export default class MyApplication extends Component {
@@ -36,11 +36,13 @@ export default class MyApplication extends Component {
     const { dispatch, client } = this.props;
 
     dispatch(showModal('Edit OAuth Client',
-      <EditApplication
+      <CreateOrEditApplication
         id={client.id}
         label={client.label}
         redirect={client.redirect_uri}
         dispatch={dispatch}
+        saveOrCreate={(label, redirect) =>
+          clients.put({ label, redirect_uri: redirect }, [client.id])}
         close={() => dispatch(hideModal())}
       />
     ));

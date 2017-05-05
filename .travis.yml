@@ -11,7 +11,7 @@ script:
         EOF
     - |
       if [[ $(git diff HEAD^ $(git rev-parse --abbrev-ref HEAD) --name-only | grep -v scss) ]]; then
+        npm run lint
         npm test
         cat ./coverage/lcov.info | node ./bin/styleguideTestFilter.js | ./node_modules/.bin/coveralls
-        npm run lint
       fi

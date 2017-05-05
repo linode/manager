@@ -6,25 +6,23 @@ import { Form, Input, ModalFormGroup, SubmitButton } from 'linode-components/for
 import { clients } from '~/api';
 import { updateClientThumbnail } from '~/api/clients';
 import { MAX_UPLOAD_SIZE_MB } from '~/constants';
-import { FormSummary, reduceErrors } from '~/components/forms';
+import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
 
 import { renderSecret } from './CreatePersonalAccessToken';
 
 
-export default class CreateApplication extends Component {
-  constructor() {
-    super();
-
-    this.submitText = 'Create';
+export default class CreateOrEditApplication extends Component {
+  constructor(props) {
+    super(props);
 
     this.renderSecret = renderSecret.bind(this);
 
     this.state = {
+      label: props.label || '',
+      redirect: props.redirect || '',
+      thumbnail: props.thumbnail || '',
       errors: {},
-      label: '',
-      redirect: '',
-      thumbnail: '',
-      saving: false,
+      loading: false,
     };
   }
 
@@ -34,47 +32,31 @@ export default class CreateApplication extends Component {
     const { dispatch } = this.props;
     const { label, redirect, thumbnail } = this.state;
 
-    this.setState({ errors: {}, saving: true });
+    await dispatch(dispatchOrStoreErrors.call(this, [
+      () => this.props.saveOrCreate(label, redirect),
+      ({ id }) => {
+        if (thumbnail) {
+          if ((thumbnail.size / (1024 * 1024)) < MAX_UPLOAD_SIZE_MB) {
+            return updateClientThumbnail(id, thumbnail);
+          }
 
-    try {
-      const { id, secret } = await this.submitAction(label, redirect);
-
-      if (thumbnail) {
-        if ((thumbnail.size / (1024 * 1024)) < MAX_UPLOAD_SIZE_MB) {
-          await dispatch(updateClientThumbnail(id, thumbnail));
-        } else {
-          this.setState({
-            errors: { thumbnail: [{ reason: `File size must be under ${MAX_UPLOAD_SIZE_MB} MB` }] },
-          });
-          return;
+          // eslint-disable-next-line no-throw-literal
+          throw { json: () => Promise.resolve({
+            errors: [{
+              field: 'thumbnail',
+              reason: `File size must be under ${MAX_UPLOAD_SIZE_MB} MB`,
+            }],
+          }) };
         }
-      }
-
-      this.setState({ saving: false });
-
-      if (secret) {
-        await this.renderSecret('client', 'created', secret);
-      } else {
-        this.props.close();
-      }
-    } catch (response) {
-      if (!response.json) {
-        // eslint-disable-next-line no-console
-        return console.error(response);
-      }
-
-      const errors = await reduceErrors(response);
-      this.setState({ errors, saving: false });
-    }
+      },
+      ({ secret }) =>
+        !this.props.id ? this.renderSecret('client', 'created', secret) : this.props.close(),
+    ]));
   }
-
-  // This is overridden by ./EditApplication.js
-  submitAction = async (label, redirect) =>
-    await this.props.dispatch(clients.post({ label, redirect_uri: redirect }))
 
   render() {
     const { close } = this.props;
-    const { errors, label, redirect, saving } = this.state;
+    const { errors, label, redirect, loading } = this.state;
 
     return (
       <Form onSubmit={this.onSubmit}>
@@ -106,15 +88,29 @@ export default class CreateApplication extends Component {
         </ModalFormGroup>
         <div className="Modal-footer">
           <CancelButton onClick={close} />
-          <SubmitButton disabled={saving}>{this.submitText}</SubmitButton>
+          <SubmitButton
+            disabled={loading}
+            disabledChildren={this.props.submitDisabledText}
+          >{this.props.submitText}</SubmitButton>
+          <FormSummary errors={errors} />
         </div>
-        <FormSummary errors={errors} />
       </Form>
     );
   }
 }
 
-CreateApplication.propTypes = {
+CreateOrEditApplication.propTypes = {
   dispatch: PropTypes.func.isRequired,
   close: PropTypes.func.isRequired,
+  saveOrCreate: PropTypes.func.isRequired,
+  submitText: PropTypes.string,
+  submitDisabledText: PropTypes.string,
+  label: PropTypes.string,
+  id: PropTypes.string,
+  redirect: PropTypes.string,
+  thumbnail: PropTypes.string,
+};
+
+CreateOrEditApplication.defaultProps = {
+  saveOrCreate: (label, redirect) => clients.post({ label, redirect_uri: redirect }),
 };
