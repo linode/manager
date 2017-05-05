@@ -1,6 +1,5 @@
 const backup = require('./backup');
 const backupsresponse = require('./backupsresponse');
-const datacenter = require('./datacenter');
 const disk = require('./disk');
 const distribution = require('./distribution');
 const dnszone = require('./dnszone');
@@ -29,8 +28,8 @@ const user = require('./user');
 const usergrants = require('./usergrants');
 
 module.exports.apiObjectMap = {
+  backup,
   backupsresponse,
-  datacenter,
   disk,
   distribution,
   domain,
