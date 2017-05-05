@@ -3,11 +3,13 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
 import { setToken } from '~/actions/authentication';
-import { clientId, clientSecret } from '~/secrets';
+import { account } from '~/api';
 import { LOGIN_ROOT } from '~/constants';
 import { rawFetch } from '~/fetch';
-import { setStorage } from '~/storage';
 import md5 from 'md5';
+import { clientId, clientSecret } from '~/secrets';
+import { setStorage } from '~/storage';
+
 
 export function setSession(oauthToken = '',
                            scopes = '',
@@ -56,6 +58,7 @@ export class OAuthCallbackPage extends Component {
       });
       const json = await resp.json();
       this.setSession(json.access_token, json.scopes, username, email, timezone);
+      await dispatch(account.one());
       dispatch(push(returnTo || '/'));
     } else {
       dispatch(push('/'));
