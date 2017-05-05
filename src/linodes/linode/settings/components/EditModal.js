@@ -27,11 +27,11 @@ export class EditModal extends Component {
 
     const requests = [hideModal];
     if (size !== disk.size) {
-        requests.unshift(() => resizeLinodeDisk(linode.id, disk.id, parseInt(size)));
+      requests.unshift(() => resizeLinodeDisk(linode.id, disk.id, parseInt(size)));
     }
 
     if (label !== disk.label) {
-        requests.unshift(() => linodes.disks.put({ label }, linode.id, disk.id));
+      requests.unshift(() => linodes.disks.put({ label }, linode.id, disk.id));
     }
 
     return dispatch(dispatchOrStoreErrors.call(this, requests));
