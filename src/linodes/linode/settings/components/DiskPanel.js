@@ -1,14 +1,14 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { linodes } from '~/api';
-
-import { showModal } from '~/actions/modal';
-import { EditModal } from './EditModal';
-import { DeleteModal } from './DeleteModal';
-import { AddModal } from './AddModal';
 import { Button } from 'linode-components/buttons';
 import { Card, CardHeader } from 'linode-components/cards';
+
+import { showModal } from '~/actions/modal';
+
+import { AddModal } from './AddModal';
+import { EditModal } from './EditModal';
+
 
 const borderColors = [
   '#1abc9c',
@@ -22,19 +22,7 @@ const borderColors = [
   '#e67e22',
 ];
 
-function select(state) {
-  return { distributions: state.api.distributions };
-}
-
-const AddModalRedux = connect(select)(AddModal);
-
 export class DiskPanel extends Component {
-  static async preload({ dispatch, getState }, { linodeLabel }) {
-    const { id } = Object.values(getState().api.linodes.linodes).reduce(
-      (match, linode) => linode.label === linodeLabel ? linode : match);
-    await dispatch(linodes.disks.all([id]));
-  }
-
   poweredOff() {
     return [
       'offline', 'contact_support', 'provisioning'
@@ -56,13 +44,13 @@ export class DiskPanel extends Component {
   }
 
   render() {
-    const { dispatch, linode } = this.props;
+    const { dispatch, linode, distributions } = this.props;
     const disks = Object.values(linode._disks.disks);
     const total = linode.type.storage;
     const used = disks.reduce((total, disk) => total + disk.size, 0);
     const free = total - used;
 
-    const addModal = <AddModalRedux free={free} linode={linode} />;
+    const addModal = <AddModal distributions={distributions} free={free} linode={linode} />;
 
     const editModal = d => (
       <EditModal
@@ -104,7 +92,6 @@ export class DiskPanel extends Component {
                 {!this.poweredOff() || d.state === 'deleting' ? null : (
                   <div>
                     <Button
-                      className="LinodesLinodeSettingsComponentsDiskPanel-edit"
                       onClick={() => dispatch(showModal('Edit disk', editModal(d)))}
                     >Edit</Button>
                     <Button
