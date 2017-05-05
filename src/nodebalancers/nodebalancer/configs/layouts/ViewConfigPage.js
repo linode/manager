@@ -91,7 +91,7 @@ export class ViewConfigPage extends Component {
                     buttonClassName: 'btn-secondary',
                     hrefFn: function (node) {
                       // eslint-disable-next-line max-len
-                      return `/nodebalancers/${nodebalancer.label}/configs/${config.id}/nodes/${node.id}/edit`;
+                      return `/nodebalancers/${nodebalancer.label}/configs/${config.id}/nodes/${node.id}/settings`;
                     },
                     text: 'Edit',
                   },

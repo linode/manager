@@ -1,57 +1,71 @@
 import React, { Component, PropTypes } from 'react';
+import { push } from 'react-router-redux';
 
 import {
   Form, FormGroup, FormGroupError, Input, Select, Checkbox, SubmitButton,
 } from 'linode-components/forms';
 
-import { FormSummary } from '~/components/forms';
+import { nodebalancers } from '~/api';
+import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
 
 
-export class ConfigForm extends Component {
+export default class ConfigForm extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      saving: false,
-      port: props.port,
-      protocol: props.protocol,
-      algorithm: props.algorithm,
-      stickiness: props.stickiness,
-      check: props.check,
-      checkPassive: props.checkPassive,
-      checkInterval: props.checkInterval,
-      checkTimeout: props.checkTimeout,
-      checkAttempts: props.checkAttempts,
+      errors: {},
+      loading: false,
+      port: props.config.port,
+      protocol: props.config.protocol,
+      stickiness: props.config.stickiness,
+      algorithm: props.config.algorithm,
+      check: props.config.check,
+      checkPassive: props.config.check_passive,
+      checkInterval: props.config.check_interval,
+      checkTimeout: props.config.check_timeout,
+      checkAttempts: props.config.check_attempts,
     };
   }
-  onChange = ({ target: { checked, value, name, type } }) => {
-    this.setState({ [name]: type === 'checkbox' ? checked : value });
-  };
 
-  render() {
-    const { saveChanges, loading, errors, submitText, nodebalancerConfigId } = this.props;
+  onSubmit = async () => {
+    const { dispatch, nodebalancer, config } = this.props;
     const {
-      port,
+      port, protocol, algorithm, stickiness, check, checkPassive, checkInterval, checkTimeout,
+      checkAttempts,
+    } = this.state;
+
+    const data = {
       protocol,
       algorithm,
       stickiness,
       check,
-      checkPassive,
-      checkInterval,
-      checkTimeout,
-      checkAttempts,
+      port: parseInt(port),
+      check_passive: checkPassive,
+      check_interval: parseInt(checkInterval),
+      check_timeout: parseInt(checkTimeout),
+      check_attempts: parseInt(checkAttempts),
+    };
+
+    const idsPath = [nodebalancer.id, config.id].filter(Boolean);
+    await dispatch(dispatchOrStoreErrors.call(this, [
+      () => nodebalancers.configs[config.id ? 'put' : 'post'](data, ...idsPath),
+      ({ id }) => id !== config.id && push(`/nodebalancers/${nodebalancer.label}/configs/${id}`),
+    ]));
+  }
+
+  onChange = ({ target: { checked, value, name, type } }) =>
+    this.setState({ [name]: type === 'checkbox' ? checked : value })
+
+  render() {
+    const { submitText, submitDisabledText } = this.props;
+    const {
+      port, protocol, algorithm, stickiness, check, checkPassive, checkInterval, checkTimeout,
+      checkAttempts, errors, loading,
     } = this.state;
+
     return (
-      <Form
-        onSubmit={async () => {
-          const values = { nodebalancerConfigId,
-            ...this.state,
-            checkInterval: parseInt(checkInterval),
-            checkTimeout: parseInt(checkTimeout),
-            checkAttempts: parseInt(checkAttempts),
-          };
-          await saveChanges(values);
-        }}
-      >
+      <Form onSubmit={this.onSubmit}>
         <FormGroup errors={errors} name="port" className="row">
           <label className="col-sm-2 col-form-label">Port</label>
           <div className="col-sm-10">
@@ -72,15 +86,14 @@ export class ConfigForm extends Component {
               id="protocol"
               name="protocol"
               value={protocol}
-              disabled={loading}
               onChange={this.onChange}
             >
               <option value="http">HTTP</option>
               <option value="https">HTTPS</option>
               <option value="tcp">TCP</option>
             </Select>
+            <FormGroupError errors={errors} name="protocol" />
           </div>
-          <FormGroupError errors={errors} name="protocol" />
         </FormGroup>
         <FormGroup errors={errors} name="algorithm" className="row">
           <label className="col-sm-2 col-form-label">Algorithm</label>
@@ -89,7 +102,6 @@ export class ConfigForm extends Component {
               id="algorithm"
               name="algorithm"
               value={algorithm}
-              disabled={loading}
               onChange={this.onChange}
             >
               <option value="roundrobin">Round Robin</option>
@@ -102,8 +114,8 @@ export class ConfigForm extends Component {
                 allocated across backend nodes.
               </small>
             </div>
+            <FormGroupError errors={errors} name="algorithm" />
           </div>
-          <FormGroupError errors={errors} name="algorithm" />
         </FormGroup>
         <FormGroup errors={errors} name="stickiness" className="row">
           <label className="col-sm-2 col-form-label">Session Stickiness</label>
@@ -112,7 +124,6 @@ export class ConfigForm extends Component {
               id="stickiness"
               name="stickiness"
               value={stickiness}
-              disabled={loading}
               onChange={this.onChange}
             >
               <option value="table">Table</option>
@@ -125,8 +136,8 @@ export class ConfigForm extends Component {
                 be routed to the same backend node.
               </small>
             </div>
+            <FormGroupError errors={errors} name="stickiness" />
           </div>
-          <FormGroupError errors={errors} name="stickiness" />
         </FormGroup>
         <h3 className="sub-header">Active Health Check</h3>
         <FormGroup errors={errors} name="check" className="row">
@@ -136,7 +147,6 @@ export class ConfigForm extends Component {
               id="check"
               name="check"
               value={check}
-              disabled={loading}
               onChange={this.onChange}
             >
               <option value="connection">TCP Connection</option>
@@ -148,8 +158,8 @@ export class ConfigForm extends Component {
                 Active health checks proactively check the health of back-end nodes.
               </small>
             </div>
+            <FormGroupError errors={errors} name="check" />
           </div>
-          <FormGroupError errors={errors} name="check" />
         </FormGroup>
         <FormGroup errors={errors} name="check_interval" className="row">
           <label className="col-sm-2 col-form-label">Interval</label>
@@ -189,12 +199,12 @@ export class ConfigForm extends Component {
               value={checkAttempts}
               onChange={this.onChange}
             />
+            <FormGroupError errors={errors} name="check_attempts" />
             <div>
               <small className="text-muted">
                 Take this node out of rotation after this number of failed health checks
               </small>
             </div>
-            <FormGroupError errors={errors} name="check_attempts" />
           </div>
         </FormGroup>
         <h3 className="sub-header">Passive Checks</h3>
@@ -209,46 +219,41 @@ export class ConfigForm extends Component {
               value={checkPassive}
               onChange={this.onChange}
             />
+            <FormGroupError errors={errors} name="check_passive" />
           </div>
-          <FormGroupError errors={errors} name="check_passive" />
         </FormGroup>
-        <div className="row">
+        <FormGroup className="row">
           <div className="offset-sm-2 col-sm-10">
-            <SubmitButton>{submitText}</SubmitButton>
+            <SubmitButton
+              disabled={loading}
+              disabledChildren={submitDisabledText}
+            >{submitText}</SubmitButton>
+            <FormSummary errors={errors} success="Config settings saved." />
           </div>
-        </div>
-        <FormSummary errors={errors} />
+        </FormGroup>
       </Form>
     );
   }
 }
 
 ConfigForm.propTypes = {
-  saveChanges: PropTypes.func,
-  nodebalancers: PropTypes.any,
-  loading: PropTypes.any,
-  errors: PropTypes.any,
-  port: PropTypes.number,
-  protocol: PropTypes.string,
-  algorithm: PropTypes.string,
-  stickiness: PropTypes.string,
-  check: PropTypes.string,
-  checkPassive: PropTypes.bool,
-  checkInterval: PropTypes.number,
-  checkTimeout: PropTypes.number,
-  checkAttempts: PropTypes.number,
+  dispatch: PropTypes.func.isRequired,
+  nodebalancer: PropTypes.object.isRequired,
+  config: PropTypes.object.isRequired,
   submitText: PropTypes.string,
-  nodebalancerConfigId: PropTypes.any,
+  submitDisabledText: PropTypes.string,
 };
 
 ConfigForm.defaultProps = {
-  port: 80,
-  protocol: 'http',
-  algorithm: 'roundrobin',
-  stickiness: 'table',
-  check: 'connection',
-  checkPassive: true,
-  checkInterval: 5,
-  checkTimeout: 3,
-  checkAttempts: 2,
+  config: {
+    port: 80,
+    protocol: 'http',
+    algorithm: 'roundrobin',
+    stickiness: 'table',
+    check: 'connection',
+    check_passive: true,
+    check_interval: 5,
+    check_timeout: 3,
+    check_attempts: 2,
+  },
 };

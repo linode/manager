@@ -114,7 +114,7 @@ export default class ResetRootPassword extends Component {
                 disabledChildren={disabled ? 'Reset' : 'Resetting'}
               >Reset</SubmitButton>
               {disabledMessage}
-              <FormSummary errors={errors} success="Password reset successfully." />
+              <FormSummary errors={errors} success="Password reset." />
             </div>
           </FormGroup>
         </Form>
