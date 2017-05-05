@@ -34,15 +34,12 @@ export class RebuildPage extends Component {
     dispatch(setSource(__filename));
   }
 
-  onSubmit = async () => {
+  onSubmit = () => {
     const { dispatch, linode: { id } } = this.props;
     const { password, distribution } = this.state;
 
-    await dispatch(dispatchOrStoreErrors.call(this, [
-      () => rebuildLinode(id, {
-        distribution,
-        root_pass: password,
-      }),
+    return dispatch(dispatchOrStoreErrors.call(this, [
+      () => rebuildLinode(id, { distribution, root_pass: password }),
       () => this.setState({ password: '', distribution: RebuildPage.DEFAULT_DISTRIBUTION }),
     ], ['distribution']));
   }

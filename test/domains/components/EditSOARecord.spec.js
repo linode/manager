@@ -1,11 +1,13 @@
+import { expect } from 'chai';
+import { mount } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
-import { mount } from 'enzyme';
-import { expect } from 'chai';
 
-import { api } from '@/data';
-import { expectRequest } from '@/common';
 import EditSOARecord from '~/domains/components/EditSOARecord';
+
+import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
+import { api } from '@/data';
+
 
 describe('domains/components/EditSOARecord', () => {
   const sandbox = sinon.sandbox.create();
@@ -14,13 +16,11 @@ describe('domains/components/EditSOARecord', () => {
     sandbox.restore();
   });
 
-  const dispatch = sandbox.stub();
-
   it('renders fields correctly', () => {
     const currentZone = api.domains.domains['1'];
     const page = mount(
       <EditSOARecord
-        dispatch={dispatch}
+        dispatch={() => {}}
         zone={currentZone}
         close={() => () => {}}
       />
@@ -49,6 +49,7 @@ describe('domains/components/EditSOARecord', () => {
   });
 
   it('submits data onsubmit and closes modal', async () => {
+    const dispatch = sandbox.spy();
     const currentZone = api.domains.domains['1'];
     const close = sandbox.spy();
     const page = mount(
@@ -60,7 +61,7 @@ describe('domains/components/EditSOARecord', () => {
     );
 
     const changeInput = (name, value) =>
-      page.instance().setState({ [name]: value });
+      page.find({ name }).simulate('change', { target: { name, value } });
 
     changeInput('zone', 'tester1234.com');
     changeInput('group', 'tester-zones');
@@ -70,23 +71,22 @@ describe('domains/components/EditSOARecord', () => {
     changeInput('retryRate', 3600);
     changeInput('expireTime', 3600);
 
-    await page.find('Form').props().onSubmit();
+    await page.find('Form').simulate('submit');
 
     expect(dispatch.callCount).to.equal(1);
-    expect(close.callCount).to.equal(1);
-
-    const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, `/domains/${currentZone.id}`, {
-      method: 'PUT',
-      body: {
-        domain: 'tester1234.com',
-        display_group: 'tester-zones',
-        soa_email: 'admin@tester1234.com',
-        ttl_sec: 3600,
-        refresh_sec: 3600,
-        retry_sec: 3600,
-        expire_sec: 3600,
-      },
-    });
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      ([fn]) => expectRequest(fn, `/domains/${currentZone.id}`, {
+        method: 'PUT',
+        body: {
+          domain: 'tester1234.com',
+          display_group: 'tester-zones',
+          soa_email: 'admin@tester1234.com',
+          ttl_sec: 3600,
+          refresh_sec: 3600,
+          retry_sec: 3600,
+          expire_sec: 3600,
+        },
+      }),
+    ]);
   });
 });

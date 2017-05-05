@@ -12,14 +12,13 @@ import { testLinode } from '@/data/linodes';
 
 describe('linodes/linode/settings/layouts/DisplayPage', () => {
   const sandbox = sinon.sandbox.create();
-  const dispatch = sandbox.spy();
 
   afterEach(() => {
-    dispatch.reset();
     sandbox.restore();
   });
 
   it('makes request to save changes', async () => {
+    const dispatch = sandbox.spy();
     const page = mount(
       <DisplayPage
         dispatch={dispatch}
@@ -45,6 +44,7 @@ describe('linodes/linode/settings/layouts/DisplayPage', () => {
   });
 
   it('redirects if the label changed', async () => {
+    const dispatch = sandbox.spy();
     const page = mount(
       <DisplayPage
         dispatch={dispatch}

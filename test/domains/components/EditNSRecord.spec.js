@@ -1,11 +1,13 @@
+import { expect } from 'chai';
+import { mount } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
-import { mount } from 'enzyme';
-import { expect } from 'chai';
 
-import { api } from '@/data';
-import { expectRequest } from '@/common';
 import EditNSRecord from '~/domains/components/EditNSRecord';
+
+import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
+import { api } from '@/data';
+
 
 describe('domains/components/EditNSRecord', () => {
   const sandbox = sinon.sandbox.create();
@@ -14,14 +16,12 @@ describe('domains/components/EditNSRecord', () => {
     sandbox.restore();
   });
 
-  const dispatch = sandbox.stub();
-
   it('renders fields correctly', () => {
     const currentZone = api.domains.domains['1'];
     const currentRecord = currentZone._records.records[4];
     const page = mount(
       <EditNSRecord
-        dispatch={dispatch}
+        dispatch={() => {}}
         zone={currentZone}
         id={currentRecord.id}
         close={() => {}}
@@ -38,7 +38,8 @@ describe('domains/components/EditNSRecord', () => {
     expect(+ttl.props().value).to.equal(currentRecord.ttl_sec || currentZone.ttl_sec);
   });
 
-  it('submits data onsubmit and closes modal', async () => {
+  it('updates an existing NS record', async () => {
+    const dispatch = sandbox.spy();
     const currentZone = api.domains.domains['1'];
     const currentRecord = currentZone._records.records[4];
     const close = sandbox.spy();
@@ -52,30 +53,30 @@ describe('domains/components/EditNSRecord', () => {
     );
 
     const changeInput = (name, value) =>
-      page.instance().setState({ [name]: value });
+      page.find({ name }).simulate('change', { target: { name, value } });
 
     changeInput('nameserver', 'ns1.tester1234.com');
     changeInput('subdomain', 'tester1234.com');
     changeInput('ttl', 3600);
 
-    await page.find('Form').props().onSubmit();
+    await page.find('Form').simulate('submit');
 
     expect(dispatch.callCount).to.equal(1);
-    expect(close.callCount).to.equal(1);
-
-    const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, `/domains/${currentZone.id}/records/${currentRecord.id}`, {
-      method: 'PUT',
-      body: {
-        target: 'ns1.tester1234.com',
-        name: 'tester1234.com',
-        ttl_sec: 3600,
-        type: 'NS',
-      },
-    });
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      ([fn]) => expectRequest(fn, `/domains/${currentZone.id}/records/${currentRecord.id}`, {
+        method: 'PUT',
+        body: {
+          target: 'ns1.tester1234.com',
+          name: 'tester1234.com',
+          ttl_sec: 3600,
+          type: 'NS',
+        },
+      }),
+    ]);
   });
 
-  it('creates a new NS record and closes the modal', async () => {
+  it('creates a new NS record', async () => {
+    const dispatch = sandbox.spy();
     const currentZone = api.domains.domains['1'];
     const close = sandbox.spy();
     const page = mount(
@@ -87,27 +88,25 @@ describe('domains/components/EditNSRecord', () => {
     );
 
     const changeInput = (name, value) =>
-      page.instance().setState({ [name]: value });
+      page.find({ name }).simulate('change', { target: { name, value } });
 
     changeInput('nameserver', 'ns1.tester1234.com');
     changeInput('subdomain', 'tester1234.com');
     changeInput('ttl', 3600);
 
-    dispatch.reset();
-    await page.find('Form').props().onSubmit();
+    await page.find('Form').simulate('submit');
 
     expect(dispatch.callCount).to.equal(1);
-    expect(close.callCount).to.equal(1);
-
-    const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, `/domains/${currentZone.id}/records/`, {
-      method: 'POST',
-      body: {
-        target: 'ns1.tester1234.com',
-        name: 'tester1234.com',
-        ttl_sec: 3600,
-        type: 'NS',
-      },
-    });
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      ([fn]) => expectRequest(fn, `/domains/${currentZone.id}/records/`, {
+        method: 'POST',
+        body: {
+          target: 'ns1.tester1234.com',
+          name: 'tester1234.com',
+          ttl_sec: 3600,
+          type: 'NS',
+        },
+      }),
+    ]);
   });
 });

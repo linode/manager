@@ -89,7 +89,7 @@ export async function expectRequest(fn, path, expectedRequestData, response) {
     const fetchStub = sandbox.stub(fetch, 'fetch').returns({
       json: () => response || {},
     });
-    const dispatch = sinon.spy();
+    const dispatch = sandbox.spy();
     await fn(dispatch, () => state);
     expect(fetchStub.callCount).to.equal(1);
     expect(fetchStub.firstCall.args[1]).to.equal(path);
@@ -109,7 +109,7 @@ export async function expectRequest(fn, path, expectedRequestData, response) {
 
 export async function expectDispatchOrStoreErrors(fn, expectArgs = [], expectN = undefined) {
   const sandbox = sinon.sandbox.create();
-  const dispatch = sinon.spy();
+  const dispatch = sandbox.spy();
 
   try {
     fn(dispatch, () => state);

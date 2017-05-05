@@ -5,6 +5,7 @@ import { push } from 'react-router-redux';
 import sinon from 'sinon';
 
 import { RebuildPage } from '~/linodes/linode/layouts/RebuildPage';
+
 import { expectDispatchOrStoreErrors, expectObjectDeepEquals, expectRequest } from '@/common';
 import { api } from '@/data';
 import { testLinode } from '@/data/linodes';
@@ -13,14 +14,12 @@ import { testLinode } from '@/data/linodes';
 describe('linodes/linode/layouts/RebuildPage', () => {
   const sandbox = sinon.sandbox.create();
 
-  const dispatch = sandbox.spy();
-
   afterEach(() => {
-    dispatch.reset();
     sandbox.restore();
   });
 
   it('rebuilds the linode', async () => {
+    const dispatch = sandbox.spy();
     const page = mount(
       <RebuildPage
         dispatch={dispatch}
