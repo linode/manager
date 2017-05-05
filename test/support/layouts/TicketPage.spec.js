@@ -110,7 +110,6 @@ describe('support/layouts/TicketPage', () => {
     dispatch.reset();
     await page.find('Form').props().onSubmit();
 
-    // No calls made
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0]);
     // But we've got errors
