@@ -8,8 +8,10 @@
 
     git clone https://github.com/Linode/manager.git
     cd manager/docs
-    node --version # should be 6.x or better
+    node --version # should be 7.2.x
     npm install
+    ./transform.sh
+    ./docsConvert.sh
 
 ## Development
 
