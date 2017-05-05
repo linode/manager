@@ -67,17 +67,17 @@ export class DiskPanel extends Component {
     )));
   }
 
-  addAction() {
+  addAction = () => {
     const { dispatch, linode, distributions } = this.props;
 
-    return (
+    return dispatch(showModal('Delete Disk', (
       <AddModal
         distributions={distributions}
         free={this.freeSpace()}
         linode={linode}
         dispatch={dispatch}
       />
-    );
+    )));
   }
 
   renderStatusMessage() {
@@ -102,13 +102,13 @@ export class DiskPanel extends Component {
     return (
       <Card header={header}>
         <section className="disk-layout">
-          {disks.map(d =>
+          {Object.values(disks).map(d =>
             <div
               className={`disk disk-${d.state}`}
               key={d.id}
               style={{
                 flexGrow: d.size,
-                borderColor: borderColors[disks.indexOf(d) % borderColors.length],
+                borderColor: borderColors[Object.values(disks).indexOf(d) % borderColors.length],
               }}
             >
               <h3 title={d.id}>{d.label} <small>{d.filesystem}</small></h3>
