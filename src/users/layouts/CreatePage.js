@@ -86,7 +86,7 @@ export class CreatePage extends Component {
                     id="password"
                     name="password"
                     value={password}
-                    onChange={password => this.setState({ password })}
+                    onChange={({ target: { value } }) => this.setState({ password: value })}
                   />
                   <FormGroupError
                     errors={errors}
@@ -97,13 +97,13 @@ export class CreatePage extends Component {
               </FormGroup>
               <FormGroup errors={errors} name="restricted" className="row">
                 <label htmlFor="restricted" className="col-sm-2 col-form-label">Restricted</label>
-                <div className="col-sm-6">
+                <div className="col-sm-10">
                   <Checkboxes>
                     <Radio
                       name="restricted"
                       id="restricted"
                       checked={restricted}
-                      value={restricted}
+                      value
                       onChange={() => this.setState({ restricted: true })}
                       label="Yes - this user can only do what I specify"
                     />
@@ -111,7 +111,7 @@ export class CreatePage extends Component {
                       name="restricted"
                       id="unrestricted"
                       checked={!restricted}
-                      value={!restricted}
+                      value={false}
                       onChange={() => this.setState({ restricted: false })}
                       label="No - this user has no access restrictions"
                     />

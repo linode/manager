@@ -1,7 +1,10 @@
-import * as fetch from '~/fetch';
 import { expect } from 'chai';
 import sinon from 'sinon';
+
+import * as fetch from '~/fetch';
+
 import { state } from '@/data';
+
 
 class InternalAssertionError extends Error {
   constructor(aVal, bVal, keyPath) {
@@ -86,7 +89,7 @@ export async function expectRequest(fn, path, expectedRequestData, response) {
     const fetchStub = sandbox.stub(fetch, 'fetch').returns({
       json: () => response || {},
     });
-    const dispatch = sinon.spy();
+    const dispatch = sandbox.spy();
     await fn(dispatch, () => state);
     expect(fetchStub.callCount).to.equal(1);
     expect(fetchStub.firstCall.args[1]).to.equal(path);
@@ -98,6 +101,33 @@ export async function expectRequest(fn, path, expectedRequestData, response) {
         const nativeValue = key === 'body' ? JSON.parse(value) : value;
         expectObjectDeepEquals(nativeValue, expectedRequestData[key]);
       });
+    }
+  } finally {
+    sandbox.restore();
+  }
+}
+
+export async function expectDispatchOrStoreErrors(fn, expectArgs = [], expectN = undefined, dispatchResults = []) {
+  const sandbox = sinon.sandbox.create();
+  const dispatch = sandbox.stub();
+
+  try {
+    for (let i = 0; i < dispatch.callCount; i += 1) {
+      dispatch.onCall(i).returns(dispatchResults[i]);
+    }
+
+    await fn(dispatch, () => state);
+
+    if (expectN !== undefined) {
+      expect(dispatch.callCount).to.equal(expectN);
+    }
+
+    for (let i = 0; i < dispatch.callCount; i += 1) {
+      const nextArgs = dispatch.args[i];
+      const nextExpect = expectArgs[i];
+      if (nextExpect) {
+        await nextExpect(nextArgs);
+      }
     }
   } finally {
     sandbox.restore();

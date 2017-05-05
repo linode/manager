@@ -1,11 +1,13 @@
+import { expect } from 'chai';
+import { mount } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
-import { mount } from 'enzyme';
-import { expect } from 'chai';
 
-import { api } from '@/data';
-import { expectRequest } from '@/common';
 import EditSRVRecord from '~/domains/components/EditSRVRecord';
+
+import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
+import { api } from '@/data';
+
 
 describe('domains/components/EditSRVRecord', () => {
   const sandbox = sinon.sandbox.create();
@@ -14,14 +16,12 @@ describe('domains/components/EditSRVRecord', () => {
     sandbox.restore();
   });
 
-  const dispatch = sandbox.stub();
-
   it('renders fields correctly for SRV record', () => {
     const currentZone = api.domains.domains['1'];
     const currentRecord = currentZone._records.records[6];
     const page = mount(
       <EditSRVRecord
-        dispatch={dispatch}
+        dispatch={() => {}}
         zone={currentZone}
         id={currentRecord.id}
         close={() => {}}
@@ -51,6 +51,7 @@ describe('domains/components/EditSRVRecord', () => {
   });
 
   it('submits data onsubmit and closes modal for SRV record', async () => {
+    const dispatch = sandbox.spy();
     const currentZone = api.domains.domains['1'];
     const currentRecord = currentZone._records.records[6];
     const close = sandbox.spy();
@@ -64,7 +65,7 @@ describe('domains/components/EditSRVRecord', () => {
     );
 
     const changeInput = (name, value) =>
-      page.instance().setState({ [name]: value });
+      page.find({ name }).simulate('change', { target: { name, value } });
 
     changeInput('service', '_ips');
     changeInput('protocol', '_udp');
@@ -77,25 +78,25 @@ describe('domains/components/EditSRVRecord', () => {
     await page.find('Form').props().onSubmit();
 
     expect(dispatch.callCount).to.equal(1);
-    expect(close.callCount).to.equal(1);
-
-    const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, `/domains/${currentZone.id}/records/${currentRecord.id}`, {
-      method: 'PUT',
-      body: {
-        service: '_ips',
-        protocol: '_udp',
-        target: 'ns2.service.com',
-        priority: 77,
-        weight: 7,
-        port: 777,
-        ttl_sec: 3600,
-        type: 'SRV',
-      },
-    });
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      ([fn]) => expectRequest(fn, `/domains/${currentZone.id}/records/${currentRecord.id}`, {
+        method: 'PUT',
+        body: {
+          service: '_ips',
+          protocol: '_udp',
+          target: 'ns2.service.com',
+          priority: 77,
+          weight: 7,
+          port: 777,
+          ttl_sec: 3600,
+          type: 'SRV',
+        },
+      }),
+    ]);
   });
 
   it('creates a new SRV record and closes the modal', async () => {
+    const dispatch = sandbox.spy();
     const currentZone = api.domains.domains['1'];
     const close = sandbox.spy();
     const page = mount(
@@ -107,7 +108,7 @@ describe('domains/components/EditSRVRecord', () => {
     );
 
     const changeInput = (name, value) =>
-      page.instance().setState({ [name]: value });
+      page.find({ name }).simulate('change', { target: { name, value } });
 
     changeInput('service', '_ips');
     changeInput('protocol', '_udp');
@@ -117,25 +118,23 @@ describe('domains/components/EditSRVRecord', () => {
     changeInput('port', 777);
     changeInput('ttl', 3600);
 
-    dispatch.reset();
     await page.find('Form').props().onSubmit();
 
     expect(dispatch.callCount).to.equal(1);
-    expect(close.callCount).to.equal(1);
-
-    const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, `/domains/${currentZone.id}/records/`, {
-      method: 'POST',
-      body: {
-        service: '_ips',
-        protocol: '_udp',
-        target: 'ns2.service.com',
-        priority: 77,
-        weight: 7,
-        port: 777,
-        ttl_sec: 3600,
-        type: 'SRV',
-      },
-    });
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      ([fn]) => expectRequest(fn, `/domains/${currentZone.id}/records/`, {
+        method: 'POST',
+        body: {
+          service: '_ips',
+          protocol: '_udp',
+          target: 'ns2.service.com',
+          priority: 77,
+          weight: 7,
+          port: 777,
+          ttl_sec: 3600,
+          type: 'SRV',
+        },
+      }),
+    ]);
   });
 });

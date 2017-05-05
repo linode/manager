@@ -28,11 +28,9 @@ export default class ResetRootPassword extends Component {
     const { password, disk } = this.state;
     const { dispatch, linode } = this.props;
 
-    return await dispatch(dispatchOrStoreErrors.apply(this, [
-      [
-        () => resetPassword(linode.id, disk, password),
-        () => this.setState({ password: '' }) && {},
-      ],
+    return await dispatch(dispatchOrStoreErrors.call(this, [
+      () => resetPassword(linode.id, disk, password),
+      () => this.setState({ password: '' }),
     ]));
   }
 

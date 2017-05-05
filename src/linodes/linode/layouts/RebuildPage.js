@@ -34,19 +34,14 @@ export class RebuildPage extends Component {
     dispatch(setSource(__filename));
   }
 
-  async onSubmit() {
+  onSubmit = () => {
     const { dispatch, linode: { id } } = this.props;
+    const { password, distribution } = this.state;
 
-    await dispatch(dispatchOrStoreErrors.apply(this, [
-      [
-        () => rebuildLinode(id, {
-          distribution: this.state.distribution,
-          root_pass: this.state.password,
-        }),
-        () => this.setState({ password: '', distribution: RebuildPage.DEFAULT_DISTRIBUTION }),
-      ],
-      ['distribution'],
-    ]));
+    return dispatch(dispatchOrStoreErrors.call(this, [
+      () => rebuildLinode(id, { distribution, root_pass: password }),
+      () => this.setState({ password: '', distribution: RebuildPage.DEFAULT_DISTRIBUTION }),
+    ], ['distribution']));
   }
 
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
@@ -57,8 +52,8 @@ export class RebuildPage extends Component {
 
     return (
       <Card header={<CardHeader title="Rebuild" />}>
-        <Form onSubmit={() => this.onSubmit()} className="LinodesLinodeRebuildPage-body">
-          <div className="LinodesLinodeRebuildPage-distributions clearfix">
+        <Form onSubmit={this.onSubmit}>
+          <div className="clearfix">
             <Distributions
               distributions={distributions.distributions}
               distribution={distribution}
@@ -66,21 +61,19 @@ export class RebuildPage extends Component {
               noDistribution={false}
             />
           </div>
-          <div className="LinodesLinodeRebuildPage-password">
-            <FormGroup errors={errors} name="root_pass" className="row">
-              <label htmlFor="password" className="col-sm-2 col-form-label">Root password</label>
-              <div className="col-sm-10 clearfix">
-                <PasswordInput
-                  name="password"
-                  id="password"
-                  value={this.state.password}
-                  onChange={this.onChange}
-                  className="float-sm-left"
-                />
-                <FormGroupError className="float-sm-left" errors={errors} name="root_pass" />
-              </div>
-            </FormGroup>
-          </div>
+          <FormGroup errors={errors} name="root_pass" className="row">
+            <label htmlFor="password" className="col-sm-2 col-form-label">Root password</label>
+            <div className="col-sm-10 clearfix">
+              <PasswordInput
+                name="password"
+                id="password"
+                value={this.state.password}
+                onChange={this.onChange}
+                className="float-sm-left"
+              />
+              <FormGroupError className="float-sm-left" errors={errors} name="root_pass" />
+            </div>
+          </FormGroup>
           <FormGroup className="row">
             <div className="col-sm-10 offset-sm-2">
               <SubmitButton
