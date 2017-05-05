@@ -1,108 +1,82 @@
 import React, { Component, PropTypes } from 'react';
 
 import { CancelButton } from 'linode-components/buttons';
-import {
-  Form, FormGroup, FormGroupError, Input, SubmitButton,
-} from 'linode-components/forms';
+import { Form, ModalFormGroup, Input, SubmitButton } from 'linode-components/forms';
 
 import { hideModal } from '~/actions/modal';
 import { linodes } from '~/api';
 import { resizeLinodeDisk } from '~/api/linodes';
-import { FormSummary, reduceErrors } from '~/components/forms';
+import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
 
 
 export class EditModal extends Component {
-  constructor() {
-    super();
-    this.componentDidMount = this.componentDidMount.bind(this);
-    this.saveChanges = this.saveChanges.bind(this);
+  constructor(props) {
+    super(props);
+
     this.state = {
+      size: props.disk.size,
+      label: props.disk.label,
       loading: false,
-      size: -1,
-      label: '',
       errors: {},
     };
   }
 
-  componentDidMount() {
-    const { disk } = this.props;
-    this.setState({ label: disk.label, size: disk.size });
-  }
-
-  async saveChanges() {
+  onSubmit = () => {
     const { size, label } = this.state;
     const { linode, disk, dispatch } = this.props;
-    this.setState({ loading: true, errors: {} });
-    try {
-      if (size !== disk.size) {
-        await dispatch(resizeLinodeDisk(linode.id, disk.id, size));
-      }
-      if (label !== disk.label) {
-        await dispatch(linodes.disks.put({ label }, linode.id, disk.id));
-      }
-      dispatch(hideModal());
-    } catch (response) {
-      const errors = await reduceErrors(response);
-      this.setState({ errors });
+
+    const requests = [hideModal];
+    if (size !== disk.size) {
+        requests.unshift(() => resizeLinodeDisk(linode.id, disk.id, parseInt(size)));
     }
 
-    this.setState({ loading: false });
+    if (label !== disk.label) {
+        requests.unshift(() => linodes.disks.put({ label }, linode.id, disk.id));
+    }
+
+    return dispatch(dispatchOrStoreErrors.call(this, requests));
   }
+
+  onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   render() {
     const { disk, free, dispatch } = this.props;
     const { label, size, errors, loading } = this.state;
+
     return (
-      <Form
-        onSubmit={() => this.saveChanges()}
-      >
-        <FormGroup errors={errors} name="label" className="row">
-          <label htmlFor="label" className="col-sm-5 col-form-label">Label</label>
-          <div className="col-sm-7">
-            <Input
-              id="label"
-              placeholder="Label"
-              value={label}
-              onChange={e => {
-                this.setState({ label: e.target.value });
-              }}
-            />
-            <FormGroupError errors={errors} name="label" inline={false} />
-          </div>
-        </FormGroup>
-        <FormGroup errors={errors} name="filesystem" className="row">
-          <label className="col-sm-5 col-form-label">Format</label>
-          <div className="col-sm-7">
-            <Input disabled className="form-control" value={disk.filesystem} />
-          </div>
-        </FormGroup>
-        <FormGroup errors={errors} name="size" className="row">
-          <label className="col-sm-5 col-form-label">Current size (MB)</label>
-          <div className="col-sm-7">
-            <Input disabled className="form-control" value={disk.size} />
-          </div>
-        </FormGroup>
-        <FormGroup errors={errors} name="size" className="row">
-          <label htmlFor="size" className="col-sm-5 col-form-label">New size (MB)</label>
-          <div className="col-sm-7">
-            <Input
-              id="size"
-              type="number"
-              min={8} /* TODO: can't/don't calculate distro min size requirement */
-              max={free + disk.size}
-              value={size}
-              onChange={e => {
-                this.setState({ size: parseInt(e.target.value, 10) });
-              }}
-            />
-            <FormGroupError errors={errors} name="size" inline={false} />
-          </div>
-        </FormGroup>
+      <Form onSubmit={this.onSubmit}>
+        <ModalFormGroup errors={errors} id="label" label="Label" apiKey="label">
+          <Input
+            id="label"
+            name="label"
+            placeholder="Label"
+            value={label}
+            onChange={this.onChange}
+          />
+        </ModalFormGroup>
+        <ModalFormGroup errors={errors} label="Format">
+          <Input disabled value={disk.filesystem} />
+        </ModalFormGroup>
+        <ModalFormGroup errors={errors} label="Current Size">
+          <Input disabled label="MB" value={disk.size} type="number" />
+        </ModalFormGroup>
+        <ModalFormGroup errors={errors} id="size" label="New Size" apiKey="size">
+          <Input
+            id="size"
+            name="size"
+            label="MB"
+            type="number"
+            value={size}
+            min={8} /* TODO: can't/don't calculate distro min size requirement */
+            max={free + disk.size}
+            onChange={this.onChange}
+          />
+        </ModalFormGroup>
         <div className="Modal-footer">
-          <CancelButton disabled={loading} onClick={() => dispatch(hideModal())} />
+          <CancelButton onClick={() => dispatch(hideModal())} />
           <SubmitButton disabled={loading} />
+          <FormSummary errors={errors} />
         </div>
-        <FormSummary errors={errors} />
       </Form>);
   }
 }

@@ -31,8 +31,8 @@ export class AddModal extends Component {
     const { label, size, distribution, password, filesystem } = this.state;
     const data = {
       label,
-      size,
       filesystem,
+      size: parseInt(size),
       distribution: distribution || null,
       root_pass: password,
     };
@@ -97,12 +97,7 @@ export class AddModal extends Component {
           />
         </ModalFormGroup>
         {distribution ? (
-          <ModalFormGroup
-            id="password"
-            label="Root Password"
-            apiKey="password"
-            errors={errors}
-          >
+          <ModalFormGroup id="password" label="Root Password" apiKey="password" errors={errors}>
             <PasswordInput
               value={this.state.password}
               name="password"
@@ -110,12 +105,7 @@ export class AddModal extends Component {
             />
           </ModalFormGroup>
         ) : (
-          <ModalFormGroup
-            id="filesystem"
-            label="Filesystem"
-            apiKey="filesystem"
-            errors={errors}
-          >
+          <ModalFormGroup id="filesystem" label="Filesystem" apiKey="filesystem" errors={errors}>
             <Select
               id="filesystem"
               name="filesystem"
@@ -129,12 +119,7 @@ export class AddModal extends Component {
             </Select>
           </ModalFormGroup>
         )}
-        <ModalFormGroup
-          id="size"
-          label="Size"
-          apiKey="size"
-          errors={errors}
-        >
+        <ModalFormGroup id="size" label="Size" apiKey="size" errors={errors}>
           <Input
             id="size"
             name="size"
