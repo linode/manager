@@ -56,7 +56,7 @@
     "lodash": "^4.16.4",
     "moment": "^2.17.1",
     "moment-timezone": "^0.5.11",
-    "react": "https://registry.npmjs.org/react/-/react-15.5.4.tgz",
+    "react": "^15.1.0",
     "react-dom": "^15.1.0",
     "react-ga": "^2.1.2",
     "react-router": "^2.4.1",

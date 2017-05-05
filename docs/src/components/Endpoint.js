@@ -12,7 +12,7 @@ export default function Endpoint(props) {
   const { route } = props;
   const { crumbs, endpoint } = route;
   const { description, methods, path, resource } = endpoint;
-  console.log(description);
+
   return (
     <div className="Endpoint">
       <div className="Endpoint-header">
