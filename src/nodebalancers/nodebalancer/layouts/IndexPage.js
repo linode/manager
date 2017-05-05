@@ -45,7 +45,7 @@ export class IndexPage extends Component {
         { name: 'Dashboard', link: `/nodebalancers/${label}/configs/${params.configId}` },
         {
           name: 'Settings',
-          link: `/nodebalancers/${label}/configs/${params.configId}/edit`,
+          link: `/nodebalancers/${label}/configs/${params.configId}/settings`,
         },
       ];
       title = `Port ${nodebalancer._configs.configs[params.configId].port}`;

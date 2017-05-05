@@ -62,7 +62,7 @@ export default function BackupDetails(props) {
         <div className="col-sm-9">{backup.region.label}</div>
       </FormGroup>
       <FormGroup className="row">
-        <div className="col-sm-3 row-label">Configuration Profiles</div>
+        <div className="col-sm-3 row-label">Config Profiles</div>
         <div className="col-sm-9">{configs || vacant}</div>
       </FormGroup>
       <FormGroup className="row">

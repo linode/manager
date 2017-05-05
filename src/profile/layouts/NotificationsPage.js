@@ -1,33 +1,67 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
 
 import { Card, CardHeader } from 'linode-components/cards';
 import { Form, SubmitButton } from 'linode-components/forms';
 
-import { FormSummary } from '~/components/forms';
+import { profile } from '~/api';
+import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
 
 
-export default class NotificationsPage extends Component {
-  constructor() {
-    super();
-    this.state = { errors: {} };
+export class NotificationsPage extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      errors: {},
+      loading: false,
+    };
   }
-  // TODO: grab notifications settings from API
-  onSubmit = () => {
+
+  onSubmit = async () => {
+    const { dispatch, enabled } = this.props;
+
+    await dispatch(dispatchOrStoreErrors.call(this, [
+      () => profile.put({ email_notifications: !enabled }),
+    ]));
   }
 
   render() {
-    const { errors } = this.state;
+    const { enabled } = this.props;
+    const { errors, loading } = this.state;
+
+    const prefix = enabled ? 'enabl' : 'disabl';
+    const reversePrefix = enabled ? 'Disabl' : 'Enabl';
 
     return (
       <div>
         <Card header={<CardHeader title="Change email settings" />}>
           <Form onSubmit={this.onSubmit}>
-            <p>Email notifications are currently enabled.</p>
-            <SubmitButton disabled disabledChildren="Disable">Disable</SubmitButton>
-            <FormSummary errors={errors} />
+            <p>Email notifications are currently {prefix}ed.</p>
+            <SubmitButton
+              disabled={loading}
+              disabledChildren={`${reversePrefix}ing`}
+            >{reversePrefix}e</SubmitButton>
+            <FormSummary
+              errors={errors}
+              success={`Email notifications ${prefix}ed.`}
+            />
           </Form>
         </Card>
       </div>
     );
   }
 }
+
+NotificationsPage.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+  enabled: PropTypes.bool.isRequired,
+};
+
+function select(state) {
+  return {
+    enabled: state.api.profile.email_notifications,
+  };
+}
+
+export default connect(select)(NotificationsPage);
