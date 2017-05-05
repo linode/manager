@@ -89,9 +89,7 @@ export class AddModal extends Component {
     const minimumStorageSize = () =>
       distributions.distributions[distro].minimum_storage_size;
     return (
-      <Form
-        onSubmit={() => this.createDisk()}
-      >
+      <Form onSubmit={() => this.createDisk()}>
         <FormGroup
           errors={errors}
           name="label"

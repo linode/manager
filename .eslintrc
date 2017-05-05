@@ -8,7 +8,7 @@
     "mocha": true
   },
   "parser": "babel-eslint",
-  rules: {
+  "rules": {
     "babel/generator-star-spacing": 2,
     "babel/new-cap": 0,
     "babel/array-bracket-spacing": 2,
