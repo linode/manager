@@ -3,38 +3,39 @@ import { mount } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
-import { ChangePassword } from '~/profile/components';
+import { ChangeTimezone } from '~/profile/components';
 
+import { profile } from '@/data/profile';
 import { expectRequest, expectDispatchOrStoreErrors } from '@/common';
 
 
-describe('profile/components/ChangePassword', () => {
+describe('profile/components/ChangeTimezone', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
     sandbox.restore();
   });
 
-  const dispatch = sandbox.stub();
-
-  it('changes password', async () => {
+  it('changes email', async () => {
+    const dispatch = sandbox.stub();
     const page = mount(
-      <ChangePassword
+      <ChangeTimezone
         dispatch={dispatch}
+        timezone={profile.timezone}
       />
     );
 
     const changeInput = (id, value) =>
       page.find({ id, name: id }).simulate('change', { target: { value, name: id } });
 
-    changeInput('password', 'thePassword');
+    changeInput('timezone', 'GMT');
 
     await page.find('Form').props().onSubmit();
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      ([fn]) => expectRequest(fn, '/account/profile/password', {
-        method: 'POST',
-        body: { password: 'thePassword' },
+      ([fn]) => expectRequest(fn, '/account/profile', {
+        method: 'PUT',
+        body: { timezone: 'GMT' },
       }),
     ]);
   });
