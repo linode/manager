@@ -59,7 +59,7 @@ describe('domains/components/EditMXRecord', () => {
     changeInput('subdomain', 'tester1234.com');
     changeInput('preference', 1);
 
-    await page.find('Form').simulate('submit');
+    await page.find('Form').props().onSubmit();
 
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
@@ -96,7 +96,7 @@ describe('domains/components/EditMXRecord', () => {
     changeInput('subdomain', 'tester1234.com');
     changeInput('preference', 1);
 
-    await page.find('Form').simulate('submit');
+    await page.find('Form').props().onSubmit();
 
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [

@@ -25,11 +25,11 @@ export class DisplayPage extends Component {
     dispatch(setSource(__filename));
   }
 
-  onSubmit = async () => {
+  onSubmit = () => {
     const { dispatch, linode: { id, label: oldLabel } } = this.props;
     const { group, label } = this.state;
 
-    await dispatch(dispatchOrStoreErrors.call(this, [
+    return dispatch(dispatchOrStoreErrors.call(this, [
       () => linodes.put({ group, label }, id),
       () => oldLabel !== label ? push(`/linodes/${label}/settings`) : () => {},
     ]));

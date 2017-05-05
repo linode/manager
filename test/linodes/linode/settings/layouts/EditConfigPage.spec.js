@@ -46,7 +46,7 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
     await expectRequest(fn2, '/linode/instances/1242/disks/?page=1', undefined, { disks: [] });
   });
 
-  it('calls saveChanges when save is pressed', () => {
+  it('calls saveChanges when save is pressed', async () => {
     const page = mount(
       <EditConfigPage
         {...props}
@@ -54,7 +54,7 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
       />);
 
     const saveChanges = sandbox.stub(page.instance(), 'saveChanges');
-    page.find('Form').simulate('submit');
+    await page.find('Form').props().onSubmit();
     expect(saveChanges.callCount).to.equal(1);
   });
 

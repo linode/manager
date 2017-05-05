@@ -40,7 +40,7 @@ describe('linodes/linode/backups/layouts/SettingsPage', () => {
     expect(settingsForm.length).to.equal(1);
 
     dispatch.reset();
-    page.find('.btn-default').at(0).simulate('submit');
+    await settingsForm.props().onSubmit();
 
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [

@@ -52,7 +52,7 @@ describe('linodes/linode/backups/layouts/IndexPage', () => {
     const button = form.find('button');
     expect(button.length).to.equal(1);
     dispatch.reset();
-    form.simulate('submit');
+    await form.props().onSubmit();
 
     const fn = dispatch.firstCall.args[0];
     await expectRequest(fn, '/linode/instances/1235/backups/enable');

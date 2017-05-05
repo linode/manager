@@ -29,12 +29,11 @@ describe('linodes/linode/layouts/RebuildPage', () => {
     );
 
     page.find('.LinodesDistribution').first().simulate('click');
-    page.find('PasswordInput').simulate(
-      'change',
-      { target: { value: 'new password', name: 'password' } });
+    page.find('PasswordInput').find({ id: 'password' }).simulate(
+      'change', { target: { value: 'new password', name: 'password' } });
 
     dispatch.reset();
-    await page.find('Form').simulate('submit');
+    await page.find('Form').props().onSubmit();
 
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [

@@ -89,7 +89,7 @@ describe('linodes/linode/components/ResetRootPassword', () => {
       />);
     page.setState({ loading: false, disk: 1234, password: 'new password' });
 
-    page.find('Form').simulate('submit');
+    await page.find('Form').props().onSubmit();
 
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
@@ -100,14 +100,14 @@ describe('linodes/linode/components/ResetRootPassword', () => {
     ], 1);
   });
 
-  it('shows a modal for confirmation when reset root password form is submitted', () => {
+  it('shows a modal for confirmation when reset root password form is submitted', async () => {
     const page = mount(
       <ResetRootPassword
         dispatch={dispatch}
         linode={testLinode1237}
       />);
     page.setState({ loading: false, disk: 1234, password: 'new password' });
-    page.find('.ResetRootPassword-form').simulate('submit');
+    await page.find('Form').props().onSubmit();
     expect(dispatch.callCount).to.equal(2);
     expect(dispatch.secondCall.args[0])
       .to.have.property('type').which.equals(SHOW_MODAL);

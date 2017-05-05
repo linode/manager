@@ -36,7 +36,7 @@ describe('support/layouts/CreatePage', () => {
     changeInput('textarea', 'description', 'This is my new description!');
 
     dispatch.reset();
-    await page.find('Form').simulate('submit');
+    await page.find('Form').props().onSubmit();
 
     const fn = dispatch.firstCall.args[0];
     await expectDispatchOrStoreErrors(fn, [

@@ -183,7 +183,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
       expect(dispatch.calledWith(hideModal())).to.equal(true);
     });
 
-    it('should call saveChanges when Edit Disk form is submitted', () => {
+    it('should call saveChanges when Edit Disk form is submitted', async () => {
       const modal = mount(
         <EditModal
           dispatch={() => {}}
@@ -192,7 +192,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
           free={0}
         />);
       const saveChanges = sandbox.stub(modal.instance(), 'saveChanges');
-      modal.find('button[type="submit"]').simulate('submit');
+      await modal.find('Form').props().onSubmit();
       expect(saveChanges.callCount).to.equal(1);
     });
 
@@ -299,7 +299,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
           linode={testLinode1236}
           disk={disk}
         />);
-      await modal.find('.btn-default').simulate('submit');
+      await modal.find('Form').props().onSubmit();
       expect(dispatch.callCount).to.equal(2);
       const fn = dispatch.firstCall.args[0];
       await expectRequest(fn, '/linode/instances/1236/disks/12345', { method: 'DELETE' });
@@ -409,7 +409,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
       expect(dispatch.calledWith(hideModal())).to.equal(true);
     });
 
-    it('should call createDisk when Add Disk form is submitted', () => {
+    it('should call createDisk when Add Disk form is submitted', async () => {
       const dispatch = sandbox.spy();
       const modal = mount(
         <AddModal
@@ -420,7 +420,7 @@ describe('linodes/linode/settings/components/DiskPanel', () => {
         />);
 
       const createDisk = sandbox.stub(modal.instance(), 'createDisk');
-      modal.find('.btn-default').simulate('submit');
+      await modal.find('Form').prop().onSubmit();
       expect(createDisk.callCount).to.equal(1);
     });
 

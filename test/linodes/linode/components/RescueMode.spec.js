@@ -42,7 +42,7 @@ describe('linodes/linode/layouts/RescueMode', () => {
       />);
 
     page.setState({ diskSlots: [12345, 12346] });
-    page.find('Form').simulate('submit');
+    await page.find('Form').props().onSubmit();
 
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [

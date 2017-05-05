@@ -12,7 +12,6 @@ import { testTicket, closedTicket } from '@/data/tickets';
 
 describe('support/layouts/TicketPage', () => {
   const sandbox = sinon.sandbox.create();
-  const dispatch = sandbox.spy();
 
   afterEach(() => {
     sandbox.restore();
@@ -24,7 +23,7 @@ describe('support/layouts/TicketPage', () => {
       <TicketPage
         ticket={testTicket}
         replies={testTicket._replies.replies}
-        dispatch={dispatch}
+        dispatch={() => {}}
       />
     );
 
@@ -33,6 +32,7 @@ describe('support/layouts/TicketPage', () => {
   });
 
   it('hide response options when ticket is closed', () => {
+    const dispatch = sandbox.spy();
     const page = mount(
       <TicketPage
         ticket={closedTicket}
@@ -47,6 +47,7 @@ describe('support/layouts/TicketPage', () => {
   });
 
   it('sends a reply on submit if a reply is there', async () => {
+    const dispatch = sandbox.spy();
     const page = mount(
       <TicketPage
         ticket={testTicket}
@@ -59,7 +60,7 @@ describe('support/layouts/TicketPage', () => {
     page.find('#reply[name="reply"]').simulate(
       'change', { target: { name: 'reply', value: reply } });
 
-    page.find('Form').simulate('submit');
+    await page.find('Form').props().onSubmit();
 
     // No attachments, so save attachment endpoint not called.
     expect(dispatch.callCount).to.equal(1);
@@ -72,6 +73,7 @@ describe('support/layouts/TicketPage', () => {
   });
 
   it('sends attachments on submit if attachments are there', async () => {
+    const dispatch = sandbox.spy();
     const page = mount(
       <TicketPage
         ticket={testTicket}
@@ -84,7 +86,7 @@ describe('support/layouts/TicketPage', () => {
     page.instance().setState({ attachments });
 
     dispatch.reset();
-    page.find('Form').simulate('submit');
+    await page.find('Form').props().onSubmit();
 
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
@@ -93,6 +95,7 @@ describe('support/layouts/TicketPage', () => {
   });
 
   it('doesn\'t allow attachments bigger than MAX_UPLOAD_SIZE_MB', async () => {
+    const dispatch = sandbox.spy();
     const page = mount(
       <TicketPage
         ticket={testTicket}
@@ -105,7 +108,7 @@ describe('support/layouts/TicketPage', () => {
     page.instance().setState({ attachments });
 
     dispatch.reset();
-    page.find('Form').simulate('submit');
+    await page.find('Form').props().onSubmit();
 
     // No calls made
     expect(dispatch.callCount).to.equal(1);

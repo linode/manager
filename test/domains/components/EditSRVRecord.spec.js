@@ -75,7 +75,7 @@ describe('domains/components/EditSRVRecord', () => {
     changeInput('port', 777);
     changeInput('ttl', 3600);
 
-    await page.find('Form').simulate('submit');
+    await page.find('Form').props().onSubmit();
 
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
@@ -118,7 +118,7 @@ describe('domains/components/EditSRVRecord', () => {
     changeInput('port', 777);
     changeInput('ttl', 3600);
 
-    await page.find('Form').simulate('submit');
+    await page.find('Form').props().onSubmit();
 
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [

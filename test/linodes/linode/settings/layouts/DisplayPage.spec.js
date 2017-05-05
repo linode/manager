@@ -32,7 +32,7 @@ describe('linodes/linode/settings/layouts/DisplayPage', () => {
     change('group', 'foobar');
 
     dispatch.reset();
-    page.find('Form').simulate('submit');
+    await page.find('Form').props().onSubmit();
 
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
@@ -59,7 +59,7 @@ describe('linodes/linode/settings/layouts/DisplayPage', () => {
     change('label', 'my-new-label');
 
     dispatch.reset();
-    page.find('Form').simulate('submit');
+    await page.find('Form').props().onSubmit();
 
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [

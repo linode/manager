@@ -14,7 +14,6 @@ const { linodes } = state.api;
 
 describe('linodes/linode/networking/components/IPTransfer', () => {
   const sandbox = sinon.sandbox.create();
-  const dispatch = sandbox.stub();
 
   const linodesInRegion = _.pickBy(linodes.linodes, l =>
       l.region.id === testLinode.region.id);
@@ -27,14 +26,13 @@ describe('linodes/linode/networking/components/IPTransfer', () => {
   });
 
   afterEach(() => {
-    dispatch.reset();
     sandbox.restore();
   });
 
   it('renders ips', () => {
     const page = mount(
       <IPTransfer
-        dispatch={dispatch}
+        dispatch={() => {}}
         linodes={linodesInRegion}
         linode={testLinode}
       />
@@ -63,7 +61,7 @@ describe('linodes/linode/networking/components/IPTransfer', () => {
   it('updates list of IPs when linodeB changes', () => {
     const page = mount(
       <IPTransfer
-        dispatch={dispatch}
+        dispatch={() => {}}
         linodes={linodesInRegion}
         linode={testLinode}
       />
@@ -87,6 +85,7 @@ describe('linodes/linode/networking/components/IPTransfer', () => {
   });
 
   it('calls the API correctly', async () => {
+    const dispatch = sandbox.spy();
     const page = mount(
       <IPTransfer
         dispatch={dispatch}
@@ -94,7 +93,6 @@ describe('linodes/linode/networking/components/IPTransfer', () => {
         linode={testLinode}
       />
     );
-
 
     const sectionAFirstIp = page.find('#sectionA .TableRow').at(0);
     const addressA = sectionAFirstIp.find('.Table-cell').at(1).text()
@@ -112,9 +110,9 @@ describe('linodes/linode/networking/components/IPTransfer', () => {
     const checkboxBProps = checkboxB.props();
     checkboxBProps.onChange({ target: { checked: true } });
 
-    await page.find('Form').simulate('submit');
+    await page.find('Form').props().onSubmit();
 
-    expect(dispatch.callCount).to.equal(2);
+    expect(dispatch.callCount).to.equal(6);
 
     let fn = dispatch.getCall(0).args[0];
     await expectRequest(fn, '/networking/ip-assign', {

@@ -60,7 +60,7 @@ describe('domains/components/EditARecord', () => {
     changeInput('ip', '4.4.4.4');
     changeInput('ttl', 1);
 
-    await page.find('Form').simulate('submit');
+    await page.find('Form').props().onSubmit();
 
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
@@ -98,7 +98,7 @@ describe('domains/components/EditARecord', () => {
     changeInput('ttl', 1);
     changeInput('type', 'AAAA');
 
-    await page.find('Form').simulate('submit');
+    await page.find('Form').props().onSubmit();
 
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [

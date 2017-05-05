@@ -49,7 +49,7 @@ export class TicketPage extends Component {
       const attachment = attachments[i];
 
       if ((attachment.size / (1024 * 1024)) < MAX_UPLOAD_SIZE_MB) {
-        requests.push(dispatch(addTicketAttachment(ticket.id, attachment)));
+        requests.push(() => addTicketAttachment(ticket.id, attachment));
       } else {
         const error = `File size must be under ${MAX_UPLOAD_SIZE_MB} MB`;
         this.setState({ errors: { attachments: [{ reason: error }] } });
@@ -58,7 +58,7 @@ export class TicketPage extends Component {
       }
     }
 
-    await dispatch(dispatchOrStoreErrors.apply(this, [requests]));
+    await dispatch(dispatchOrStoreErrors.call(this, requests));
   }
 
   renderTicketResponseForm() {

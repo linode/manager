@@ -33,7 +33,7 @@ describe('users/layouts/CreatePage', () => {
     changeInput('PasswordInput', 'password', 'password');
     changeInput('Radio', 'restricted', true);
 
-    await page.find('Form').simulate('submit');
+    await page.find('Form').props().onSubmit();
     const fn = dispatch.firstCall.args[0];
 
     await expectDispatchOrStoreErrors(fn, [

@@ -31,7 +31,7 @@ describe('domains/components/NewMasterZone', () => {
     change('email', 'test@gmail.com');
     change('domain', 'test.com');
 
-    component.find('Form').simulate('submit');
+    await component.find('Form').props().onSubmit();
 
     expect(dispatch.callCount).to.equal(1);
     expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
