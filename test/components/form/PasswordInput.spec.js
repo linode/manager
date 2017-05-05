@@ -31,11 +31,12 @@ describe('components/forms/PasswordInput', () => {
       <PasswordInput
         onChange={({ target: { value } }) => { state.password = value; }}
         value={state.password}
+        name="password"
       />
     );
 
-    input.find('input').simulate('change',
-      { target: { value: 'correct horse battery staple' } });
+    input.find('input').simulate('change', { target: { value: 'correct horse battery staple' } });
+    console.log(input.debug());
     expect(input.find('.PasswordInput-strength--4').length).to.equal(1);
     expect(input.find('.PasswordInput-strength-text').length).to.equal(1);
     expect(input.find('.PasswordInput-strength-text').text())

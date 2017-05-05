@@ -47,7 +47,7 @@ describe('linodes/linode/settings/layouts/AlertsPage', async () => {
     );
 
     dispatch.reset();
-    page.find('form').simulate('submit');
+    page.find('Form').simulate('submit');
 
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [

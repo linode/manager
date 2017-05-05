@@ -112,7 +112,7 @@ describe('linodes/linode/networking/components/IPTransfer', () => {
     const checkboxBProps = checkboxB.props();
     checkboxBProps.onChange({ target: { checked: true } });
 
-    await page.find('form').simulate('submit');
+    await page.find('Form').simulate('submit');
 
     expect(dispatch.callCount).to.equal(2);
 

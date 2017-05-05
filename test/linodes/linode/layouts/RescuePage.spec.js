@@ -1,13 +1,14 @@
+import { expect } from 'chai';
+import { mount, shallow } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
-import { mount, shallow } from 'enzyme';
-import { expect } from 'chai';
 
 import { SHOW_MODAL } from '~/actions/modal';
 import { RescuePage } from '~/linodes/linode/layouts/RescuePage';
-import { expectRequest } from '@/common';
+
+import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
 import { testLinode, testLinode1233, testLinode1235, testLinode1237 } from '@/data/linodes';
-import { state } from '@/data';
+
 
 describe('linodes/linode/layouts/RescuePage', () => {
   const sandbox = sinon.sandbox.create();
@@ -17,22 +18,6 @@ describe('linodes/linode/layouts/RescuePage', () => {
   afterEach(() => {
     dispatch.reset();
     sandbox.restore();
-  });
-
-  it('fetches linode disks', async () => {
-    const _dispatch = sinon.stub();
-    await RescuePage.preload({ dispatch: _dispatch, getState: () => state },
-                             { linodeLabel: 'test-linode-1242' });
-
-    expect(_dispatch.callCount).to.equal(1);
-    let fn = _dispatch.firstCall.args[0];
-    _dispatch.reset();
-    _dispatch.returns({ total_pages: 1, disks: [], total_results: 0 });
-    await fn(_dispatch, () => state);
-    fn = _dispatch.firstCall.args[0];
-    await expectRequest(fn, '/linode/instances/1242/disks/?page=1', undefined, {
-      disks: [],
-    });
   });
 
   describe('reset root password', () => {
@@ -149,10 +134,12 @@ describe('linodes/linode/layouts/RescuePage', () => {
           linode={testLinode}
         />);
       page.setState({ diskSlots: [12345, 12346] });
-      // simulate pressing the submit button, the action should get dispatched
       page.find('.RescueMode-form').simulate('submit');
-      const fn = dispatch.secondCall.args[0];
-      await expectRequest(fn, '/linode/instances/1234/rescue', { method: 'POST' });
+
+      expect(dispatch.callCount).to.equal(1);
+      await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+        ([fn]) => expectRequest(fn, '/linode/instances/1234/rescue', { method: 'POST' }),
+      ]);
     });
   });
 });

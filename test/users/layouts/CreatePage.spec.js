@@ -26,12 +26,15 @@ describe('users/layouts/CreatePage', () => {
     dispatch.reset();
 
     const changeInput = (type, name, value) =>
-      page.find(type).find({ name }).simulate('change', { target: { value, name } });
+      page.find(type).find({ id: name }).simulate('change', { target: { value, name } });
 
     changeInput('Input', 'username', 'theUser');
+    console.log('DEFINITELY FREAKING HERE', 333);
     changeInput('Input', 'email', 'user@example.com');
-    changeInput('Input', 'password', 'password');
-    changeInput('input[type="radio"]', 'restricted', true);
+    console.log('DEFINITELY FREAKING HERE', 2222);
+    changeInput('PasswordInput', 'password', 'password');
+    console.log('DEFINITELY FREAKING HERE');
+    changeInput('Radio', 'restricted', true);
 
     await page.find('Form').simulate('submit');
     const fn = dispatch.firstCall.args[0];

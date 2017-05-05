@@ -36,7 +36,7 @@ describe('linodes/linode/backups/layouts/SettingsPage', () => {
     const selectWindow = page.find('select[name="window"]');
     expect(selectWindow.props().value).to.equal('W10');
 
-    const settingsForm = page.find('form');
+    const settingsForm = page.find('Form');
     expect(settingsForm.length).to.equal(1);
 
     dispatch.reset();

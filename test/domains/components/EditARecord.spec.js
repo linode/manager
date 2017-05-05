@@ -1,11 +1,13 @@
+import { expect } from 'chai';
+import { mount } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
-import { mount } from 'enzyme';
-import { expect } from 'chai';
 
-import { api } from '@/data';
-import { expectRequest } from '@/common';
 import EditARecord from '~/domains/components/EditARecord';
+
+import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
+import { api } from '@/data';
+
 
 describe('domains/components/EditARecord', () => {
   const sandbox = sinon.sandbox.create();
@@ -52,63 +54,30 @@ describe('domains/components/EditARecord', () => {
     );
 
     const changeInput = (name, value) =>
-      page.instance().setState({ [name]: value });
+      page.find({ name }).simulate('change', { target: { [name]: value } });
 
     changeInput('hostname', 'tee');
     changeInput('ip', '4.4.4.4');
     changeInput('ttl', 1);
+    changeInput('type', 'AAA');
 
-    await page.find('Form').props().onSubmit();
-
-    expect(dispatch.callCount).to.equal(1);
-    expect(close.callCount).to.equal(1);
-
-    const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, `/domains/${currentZone.id}/records/${currentRecord.id}`, {
-      method: 'PUT',
-      body: {
-        target: '4.4.4.4',
-        name: 'tee',
-        ttl_sec: 1,
-        type: 'A',
-      },
-    });
-  });
-
-  it('creates a new AAAA record and closes the modal', async () => {
-    const currentZone = api.domains.domains['1'];
-    const close = sandbox.spy();
-    const page = mount(
-      <EditARecord
-        dispatch={dispatch}
-        zone={currentZone}
-        close={close}
-      />
-    );
-
-    const changeInput = (name, value) =>
-      page.instance().setState({ [name]: value });
-
-    changeInput('ip', '1.1.1.8');
-    changeInput('hostname', 'too');
-    changeInput('ttl', 1);
-    changeInput('type', 'AAAA');
-
-    dispatch.reset();
-    await page.find('Form').props().onSubmit();
+    console.log(page.debug());
+    await page.find('Form').simulate('submit');
 
     expect(dispatch.callCount).to.equal(1);
-    expect(close.callCount).to.equal(1);
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      ([fn]) => expectRequest(fn, `/domains/${currentZone.id}/records/${currentRecord.id}`, {
+        method: 'PUT',
+        body: {
+          target: '4.4.4.4',
+          name: 'tee',
+          ttl_sec: 1,
+          type: 'AAA',
+        },
+      }),
+      ([close]) => close(),
+    ], 2);
 
-    const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, `/domains/${currentZone.id}/records/`, {
-      method: 'POST',
-      body: {
-        target: '1.1.1.8',
-        name: 'too',
-        ttl_sec: 1,
-        type: 'AAAA',
-      },
-    });
+    expect(close.callCount).to.equal(1);
   });
 });

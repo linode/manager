@@ -86,7 +86,7 @@ export class CreatePage extends Component {
                     id="password"
                     name="password"
                     value={password}
-                    onChange={password => this.setState({ password })}
+                    onChange={({ target: { value } }) => this.setState({ password: value })}
                   />
                   <FormGroupError
                     errors={errors}

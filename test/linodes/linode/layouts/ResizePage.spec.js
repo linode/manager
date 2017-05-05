@@ -32,7 +32,7 @@ describe('linodes/linode/layouts/ResizePage', () => {
     dispatch.reset();
 
     page.find('.plan').first().simulate('click');
-    await page.find('form').simulate('submit');
+    await page.find('Form').simulate('submit');
 
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [

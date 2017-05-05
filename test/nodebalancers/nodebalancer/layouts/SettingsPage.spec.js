@@ -39,7 +39,7 @@ describe('nodebalancers/nodebalancer/layouts/SettingsPage', () => {
     );
 
     dispatch.reset();
-    page.find('form').simulate('submit', { preventDefault() {} });
+    page.find('Form').simulate('submit', { preventDefault() {} });
     const fn = dispatch.firstCall.args[0];
 
     await expectDispatchOrStoreErrors(fn, [
@@ -66,7 +66,7 @@ describe('nodebalancers/nodebalancer/layouts/SettingsPage', () => {
 
     dispatch.reset();
 
-    await page.find('form').simulate('submit', { preventDefault() {} });
+    await page.find('Form').simulate('submit', { preventDefault() {} });
 
     const fn = dispatch.firstCall.args[0];
     await expectDispatchOrStoreErrors(fn, [

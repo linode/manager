@@ -30,7 +30,7 @@ describe('domains/components/NewSlaveZone', () => {
     change('ips', '1;2;3;4');
     change('domain', 'test.com');
 
-    component.find('form').simulate('submit');
+    component.find('Form').simulate('submit');
 
     expect(dispatch.callCount).to.equal(1);
     expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [

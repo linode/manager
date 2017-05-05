@@ -84,7 +84,7 @@ describe('support/layouts/TicketPage', () => {
     page.instance().setState({ attachments });
 
     dispatch.reset();
-    page.find('form').simulate('submit');
+    page.find('Form').simulate('submit');
 
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [

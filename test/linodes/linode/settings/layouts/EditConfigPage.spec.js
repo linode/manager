@@ -58,25 +58,6 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
     expect(saveChanges.callCount).to.equal(1);
   });
 
-  it('handles API errors', async () => {
-    const dispatch = sandbox.stub();
-    const page = shallow(
-      <EditConfigPage
-        {...props}
-        dispatch={dispatch}
-      />);
-    dispatch.throws({
-      json: () => ({
-        errors: [{ field: 'label', reason: 'because of fail' }],
-      }),
-    });
-
-    await page.instance().saveChanges();
-    expectObjectDeepEquals(page.instance().state.errors, {
-      label: [{ field: 'label', reason: 'because of fail' }],
-    });
-  });
-
   it('redirects to advanced page after call', async () => {
     const page = shallow(
       <EditConfigPage
