@@ -1,11 +1,13 @@
+import { expect } from 'chai';
+import { shallow, mount } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
-import { shallow, mount } from 'enzyme';
-import { expect } from 'chai';
 
-import { testLinode } from '@/data/linodes';
-import { expectRequest } from '@/common';
 import { AlertsPage } from '~/linodes/linode/settings/layouts/AlertsPage';
+
+import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
+import { testLinode } from '@/data/linodes';
+
 
 describe('linodes/linode/settings/layouts/AlertsPage', async () => {
   const sandbox = sinon.sandbox.create();
@@ -43,15 +45,14 @@ describe('linodes/linode/settings/layouts/AlertsPage', async () => {
         dispatch={dispatch}
       />
     );
-    await page.instance().componentDidMount();
 
     dispatch.reset();
-    page.find('form').simulate('submit', { preventDefault() {} });
+    page.find('form').simulate('submit');
 
     expect(dispatch.callCount).to.equal(1);
-
-    const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, `/linode/instances/${testLinode.id}`, { method: 'PUT' });
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      ([fn]) => expectRequest(fn, `/linode/instances/${testLinode.id}`, { method: 'PUT' }),
+    ]);
   });
 });
 

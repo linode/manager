@@ -4,12 +4,11 @@ import React from 'react';
 import sinon from 'sinon';
 
 import { MAX_UPLOAD_SIZE_MB } from '~/constants';
-import * as fetch from '~/fetch';
 import { TicketPage } from '~/support/layouts/TicketPage';
 
-import { testTicket, closedTicket } from '@/data/tickets';
 import { expectRequest, expectDispatchOrStoreErrors } from '@/common';
-import { state } from '@/data';
+import { testTicket, closedTicket } from '@/data/tickets';
+
 
 describe('support/layouts/TicketPage', () => {
   const sandbox = sinon.sandbox.create();
@@ -65,7 +64,7 @@ describe('support/layouts/TicketPage', () => {
     // No attachments, so save attachment endpoint not called.
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      async ([fn]) => await expectRequest(fn, `/support/tickets/${testTicket.id}/replies/`, {
+      ([fn]) => expectRequest(fn, `/support/tickets/${testTicket.id}/replies/`, {
         method: 'POST',
         body: { description: reply },
       }),
@@ -85,22 +84,15 @@ describe('support/layouts/TicketPage', () => {
     page.instance().setState({ attachments });
 
     dispatch.reset();
-    const fetchStub = sandbox.stub(fetch, 'fetch').returns({ json: () => {} });
-    page.find('Form').simulate('submit');
+    page.find('form').simulate('submit');
 
-    // No reply, so save reply endpoint not called.
     expect(dispatch.callCount).to.equal(1);
-
-    // Trigger request
-    const fn = dispatch.firstCall.args[0];
-    dispatch.reset();
-    await fn(dispatch, () => state);
-
-    expect(fetchStub.callCount).to.equal(1);
-    expect(fetchStub.firstCall.args[1]).to.equal(`/support/tickets/${testTicket.id}/attachments`);
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      ([fn]) => expectRequest(fn, `/support/tickets/${testTicket.id}/attachments`),
+    ]);
   });
 
-  it('doesn\'t allow attachments bigger than MAX_UPLOAD_SIZE_MB', () => {
+  it('doesn\'t allow attachments bigger than MAX_UPLOAD_SIZE_MB', async () => {
     const page = mount(
       <TicketPage
         ticket={testTicket}
@@ -115,7 +107,10 @@ describe('support/layouts/TicketPage', () => {
     dispatch.reset();
     page.find('Form').simulate('submit');
 
-    // No reply and attachment is too big, so no endpoints are called.
-    expect(dispatch.callCount).to.equal(0);
+    // No calls made
+    expect(dispatch.callCount).to.equal(1);
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0]);
+    // But we've got errors
+    expect(Object.values(page.state('errors')).length).to.equal(1);
   });
 });

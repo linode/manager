@@ -97,7 +97,7 @@ export class CreatePage extends Component {
               </FormGroup>
               <FormGroup errors={errors} name="restricted" className="row">
                 <label htmlFor="restricted" className="col-sm-2 col-form-label">Restricted</label>
-                <div className="col-sm-6">
+                <div className="col-sm-10">
                   <Checkboxes>
                     <Radio
                       name="restricted"

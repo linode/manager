@@ -107,7 +107,7 @@ export async function expectRequest(fn, path, expectedRequestData, response) {
   }
 }
 
-export async function expectDispatchOrStoreErrors(fn, expectArgs) {
+export async function expectDispatchOrStoreErrors(fn, expectArgs = []) {
   const sandbox = sinon.sandbox.create();
   const dispatch = sinon.spy();
 

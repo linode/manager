@@ -31,22 +31,21 @@ describe('users/layouts/CreatePage', () => {
     changeInput('Input', 'username', 'theUser');
     changeInput('Input', 'email', 'user@example.com');
     changeInput('Input', 'password', 'password');
-    changeInput('Radio', 'restricted', true);
+    changeInput('input[type="radio"]', 'restricted', true);
 
     await page.find('Form').simulate('submit');
     const fn = dispatch.firstCall.args[0];
 
     await expectDispatchOrStoreErrors(fn, [
-      async ([fn]) => await expectRequest(
-        fn, '/account/users/', {
-          method: 'POST',
-          body: {
-            username: 'theUser',
-            email: 'user@example.com',
-            password: 'password',
-            restricted: true,
-          },
-        }),
+      ([fn]) => expectRequest(fn, '/account/users/', {
+        method: 'POST',
+        body: {
+          username: 'theUser',
+          email: 'user@example.com',
+          password: 'password',
+          restricted: true,
+        },
+      }),
     ]);
   });
 });

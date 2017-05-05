@@ -43,7 +43,7 @@ describe('nodebalancers/nodebalancer/layouts/SettingsPage', () => {
     const fn = dispatch.firstCall.args[0];
 
     await expectDispatchOrStoreErrors(fn, [
-      async ([fn]) => await expectRequest(fn, `/nodebalancers/${genericNodeBalancer.id}`, {
+      ([fn]) => expectRequest(fn, `/nodebalancers/${genericNodeBalancer.id}`, {
         method: 'PUT',
         body: {
           group: genericNodeBalancer.group,

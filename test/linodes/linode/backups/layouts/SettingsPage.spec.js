@@ -1,14 +1,16 @@
+import { expect } from 'chai';
+import { mount } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
-import { mount } from 'enzyme';
-import { expect } from 'chai';
-import { expectRequest } from '@/common';
 
-import { testLinode } from '@/data/linodes';
 import { SHOW_MODAL } from '~/actions/modal';
 import {
   SettingsPage,
 } from '~/linodes/linode/backups/layouts/SettingsPage';
+
+import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
+import { testLinode } from '@/data/linodes';
+
 
 describe('linodes/linode/backups/layouts/SettingsPage', () => {
   const sandbox = sinon.sandbox.create();
@@ -39,17 +41,20 @@ describe('linodes/linode/backups/layouts/SettingsPage', () => {
 
     dispatch.reset();
     page.find('.btn-default').at(0).simulate('submit');
-    const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, '/linode/instances/1234', {
-      body: {
-        backups: {
-          schedule: {
-            day: 'Monday',
-            window: 'W10',
+
+    expect(dispatch.callCount).to.equal(1);
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      ([fn]) => expectRequest(fn, '/linode/instances/1234', {
+        body: {
+          backups: {
+            schedule: {
+              day: 'Monday',
+              window: 'W10',
+            },
           },
         },
-      },
-    });
+      }),
+    ]);
   });
 
   it('shows cancel backups modal when button is pressed', async () => {

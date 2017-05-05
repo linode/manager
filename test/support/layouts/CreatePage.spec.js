@@ -37,17 +37,18 @@ describe('support/layouts/CreatePage', () => {
 
     dispatch.reset();
     await page.find('Form').simulate('submit');
+
     const fn = dispatch.firstCall.args[0];
     await expectDispatchOrStoreErrors(fn, [
-      async ([fn]) => await expectRequest(fn, '/support/tickets/', {
+      ([fn]) => expectRequest(fn, '/support/tickets/', {
         method: 'POST',
         body: {
           linode_id: testLinode.id,
           summary: 'My new ticket!',
           description: 'This is my new description!',
         },
-      }),
-      ([pushResult]) => expectObjectDeepEquals(pushResult, push('/support/')),
+      }, { id: 2 }),
+      ([pushResult]) => expectObjectDeepEquals(pushResult, push('/support/2')),
     ]);
   });
 });

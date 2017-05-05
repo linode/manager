@@ -26,11 +26,13 @@ describe('components/forms/PasswordInput', () => {
   });
 
   it('should calculate password strength', () => {
+    const state = { password: '' };
     const input = mount(
       <PasswordInput
-        onChange={() => {}}
-        value=""
-      />);
+        onChange={({ target: { value } }) => { state.password = value; }}
+        value={state.password}
+      />
+    );
 
     input.find('input').simulate('change',
       { target: { value: 'correct horse battery staple' } });

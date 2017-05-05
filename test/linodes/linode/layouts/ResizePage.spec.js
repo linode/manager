@@ -1,11 +1,14 @@
+import { expect } from 'chai';
+import { mount } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
-import { mount } from 'enzyme';
 
 import { ResizePage } from '~/linodes/linode/layouts/ResizePage';
-import { expectRequest } from '@/common';
+
+import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
 import { testLinode } from '@/data/linodes';
 import { api } from '@/data';
+
 
 describe('linodes/linode/layouts/ResizePage', () => {
   const sandbox = sinon.sandbox.create();
@@ -29,14 +32,16 @@ describe('linodes/linode/layouts/ResizePage', () => {
     dispatch.reset();
 
     page.find('.plan').first().simulate('click');
-    await page.instance().onSubmit();
+    await page.find('form').simulate('submit');
 
-    const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, '/linode/instances/1234/resize', {
-      method: 'POST',
-      body: {
-        type: 'linode1024.5',
-      },
-    });
+    expect(dispatch.callCount).to.equal(1);
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      ([fn]) => expectRequest(fn, '/linode/instances/1234/resize', {
+        method: 'POST',
+        body: {
+          type: 'linode1024.5',
+        },
+      }),
+    ]);
   });
 });

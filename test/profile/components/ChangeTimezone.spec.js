@@ -33,7 +33,7 @@ describe('profile/components/ChangeTimezone', () => {
     await page.find('Form').props().onSubmit();
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      async ([fn]) => await expectRequest(fn, '/account/profile', {
+      ([fn]) => expectRequest(fn, '/account/profile', {
         method: 'PUT',
         body: { timezone: 'GMT' },
       }),
