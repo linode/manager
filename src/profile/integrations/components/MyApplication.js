@@ -11,7 +11,7 @@ import { reduceErrors } from '~/components/forms';
 import { API_ROOT } from '~/constants';
 
 import { renderSecret } from './CreatePersonalAccessToken';
-import { CreateOrEditApplication } from './';
+import CreateOrEditApplication from './CreateOrEditApplication';
 
 
 export default class MyApplication extends Component {

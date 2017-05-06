@@ -3,10 +3,10 @@ import sinon from 'sinon';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
 
-import EditApplication from '~/profile/integrations/components/EditApplication';
+import { CreateOrEditApplication } from '~/profile/integrations/components';
 import { expectRequest } from '@/common';
 
-describe('profile/integrations/components/EditApplication', () => {
+describe('profile/integrations/components/CreateOrEditApplication', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
@@ -17,7 +17,7 @@ describe('profile/integrations/components/EditApplication', () => {
 
   it('updates an application', async () => {
     const page = shallow(
-      <EditApplication
+      <CreateOrEditApplication
         dispatch={dispatch}
         close={dispatch}
         label="My awesome client"
