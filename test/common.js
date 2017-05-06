@@ -107,7 +107,10 @@ export async function expectRequest(fn, path, expectedRequestData, response) {
   }
 }
 
-export async function expectDispatchOrStoreErrors(fn, expectArgs = [], expectN = undefined, dispatchResults = []) {
+export async function expectDispatchOrStoreErrors(fn,
+                                                  expectArgs = [],
+                                                  expectN = undefined,
+                                                  dispatchResults = []) {
   const sandbox = sinon.sandbox.create();
   const dispatch = sandbox.stub();
 
