@@ -6,10 +6,11 @@ import { expect } from 'chai';
 import * as fetch from '~/fetch';
 import { state } from '@/data';
 import { MAX_UPLOAD_SIZE_MB } from '~/constants';
-import CreateApplication from '~/profile/integrations/components/CreateApplication';
+import { CreateOrEditApplication } from '~/profile/integrations/components';
 import { expectRequest, expectObjectDeepEquals } from '@/common';
 
-describe('profile/integrations/components/CreateApplication', () => {
+
+describe('profile/integrations/components/CreateOrEditApplication', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
@@ -20,7 +21,7 @@ describe('profile/integrations/components/CreateApplication', () => {
 
   it('creates a new application', async () => {
     const page = shallow(
-      <CreateApplication
+      <CreateOrEditApplication
         dispatch={dispatch}
         close={dispatch}
       />
@@ -66,7 +67,7 @@ describe('profile/integrations/components/CreateApplication', () => {
 
   it('fails on a larger file', async () => {
     const page = shallow(
-      <CreateApplication
+      <CreateOrEditApplication
         dispatch={dispatch}
         close={dispatch}
       />
