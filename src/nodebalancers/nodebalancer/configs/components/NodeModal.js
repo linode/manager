@@ -2,12 +2,12 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { hideModal } from '~/actions/modal';
-import { ConfirmModalBody } from 'linode-components/modals';
 import { nodebalancers } from '~/api';
+import { CancelButton } from 'linode-components/buttons';
 import {
-  ModalFormGroup, Input, Select,
+  Form, ModalFormGroup, Input, Select, SubmitButton,
 } from 'linode-components/forms';
-import { dispatchOrStoreErrors } from '~/components/forms';
+import { FormSummary, dispatchOrStoreErrors } from '~/components/forms';
 
 export class NodeModal extends Component {
   constructor(props) {
@@ -24,6 +24,7 @@ export class NodeModal extends Component {
       weight: this.props.node.weight,
       mode: this.props.node.mode,
       errors: {},
+      loading: false,
     };
   }
 
@@ -33,9 +34,10 @@ export class NodeModal extends Component {
     const { dispatch, nodebalancerId, configId } = this.props;
     const state = this.state;
     const data = {
-      ...state,
+      label: state.label,
       address: `${state.address}:${state.port}`,
       weight: +state.weight,
+      mode: state.mode,
     };
     const ids = [nodebalancerId, configId, state.id].filter(Boolean);
 
@@ -49,15 +51,11 @@ export class NodeModal extends Component {
 
   render() {
     const { dispatch } = this.props;
-    const { label, address, port, weight, mode, errors } = this.state;
+    const { label, address, port, weight, mode, errors, loading } = this.state;
 
     return (
-      <ConfirmModalBody
-        buttonText={this.props.confirmText}
-        onOk={async () => {
-          await this.onSubmit();
-        }}
-        onCancel={() => dispatch(hideModal())}
+      <Form
+        onSubmit={() => this.onSubmit()}
       >
         <ModalFormGroup
           label="Label"
@@ -132,7 +130,12 @@ export class NodeModal extends Component {
             <option value="drain">Drain</option>
           </Select>
         </ModalFormGroup>
-      </ConfirmModalBody>
+        <div className="Modal-footer">
+          <CancelButton disabled={loading} onClick={() => dispatch(hideModal())} />
+          <SubmitButton disabled={loading} />
+        </div>
+        <FormSummary errors={errors} />
+      </Form>
     );
   }
 }

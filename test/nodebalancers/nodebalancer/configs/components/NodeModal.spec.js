@@ -3,12 +3,16 @@ import sinon from 'sinon';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
 
+import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
 import { genericNodeBalancer } from '@/data/nodebalancers';
 import {
   NodeModal,
 } from '~/nodebalancers/nodebalancer/configs/components/NodeModal';
 
-const node = genericNodeBalancer._configs.configs['0']._nodes.nodes[0];
+const node = {
+  ...genericNodeBalancer._configs.configs['0']._nodes.nodes[0],
+  id: 1,
+};
 
 describe('nodebalancers/nodebalancer/configs/components/NodeModal', () => {
   const sandbox = sinon.sandbox.create();
@@ -35,5 +39,67 @@ describe('nodebalancers/nodebalancer/configs/components/NodeModal', () => {
     expect(page.find('#port').props().value).to.equal('80');
     expect(page.find('#weight').props().value).to.equal(40);
     expect(page.find('#mode').props().value).to.equal('accept');
+  });
+
+  it('updates node', async () => {
+    const page = mount(
+      <NodeModal
+        dispatch={dispatch}
+        confirmTest="Edit"
+        configId="0"
+        nodebalancerId="23"
+        node={node}
+      />
+    );
+
+    dispatch.reset();
+    await page.find('Form').props().onSubmit();
+    expect(dispatch.callCount).to.equal(1);
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      ([fn]) => expectRequest(fn, `/nodebalancers/23/configs/0/nodes/${node.id}`, {
+        method: 'PUT',
+        body: {
+          label: 'greatest_node_ever',
+          address: '192.168.4.5:80',
+          weight: 40,
+          mode: 'accept',
+        },
+      }),
+    ], 2);
+  });
+
+  it('creates node', async () => {
+    const page = mount(
+      <NodeModal
+        dispatch={dispatch}
+        confirmTest="Edit"
+        configId="0"
+        nodebalancerId="23"
+      />
+    );
+
+    page.find('input').find('#label')
+      .simulate('change', { target: { name: 'label', value: 'myLabel' } });
+    page.find('input').find('#address')
+      .simulate('change', { target: { name: 'address', value: '192.168.4.6' } });
+    page.find('input').find('#port')
+      .simulate('change', { target: { name: 'port', value: '88' } });
+    page.find('input').find('#weight')
+      .simulate('change', { target: { name: 'weight', value: '50' } });
+
+    dispatch.reset();
+    await page.find('Form').props().onSubmit();
+    expect(dispatch.callCount).to.equal(1);
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      ([fn]) => expectRequest(fn, '/nodebalancers/23/configs/0/nodes/', {
+        method: 'POST',
+        body: {
+          label: 'myLabel',
+          address: '192.168.4.6:88',
+          weight: 50,
+          mode: 'accept',
+        },
+      }),
+    ], 2);
   });
 });
