@@ -11,7 +11,7 @@
     node --version # should be 7.2.x
     npm install
     ./transform.sh
-    ./docsConvert.sh
+    ./docsConvert.js
 
 ## Development
 
@@ -23,6 +23,17 @@ to start the development server. Connect to
 [localhost:5000](https://localhost:5000) to try it out. Most of the changes you
 make will be applied on the fly, but you may occasionally find that you have to
 restart it.
+
+## Scripts
+
+The transform.sh script clones the
+[linode-developers](https://github.com/linode/developers) repo,
+translates the yaml files into json and puts them in the data directory
+for the corresponding endpoints, objects, etc. directories.
+
+The docsConvert.js script strips the html out, nests the endpoint and
+object data in a way that we expect and concatenates the json into one
+json file.
 
 ## License
 
