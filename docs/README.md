@@ -10,8 +10,7 @@
     cd manager/docs
     node --version # should be 7.2.x
     npm install
-    ./transform.sh
-    ./docsConvert.js
+    
 
 ## Development
 
@@ -23,6 +22,13 @@ to start the development server. Connect to
 [localhost:5000](https://localhost:5000) to try it out. Most of the changes you
 make will be applied on the fly, but you may occasionally find that you have to
 restart it.
+
+Update:
+
+    ./transform.sh
+    ./docsConvert.js
+
+to update the contents of the json that contains the contents of the docs run these two files.
 
 ## Scripts
 
