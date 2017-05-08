@@ -43,15 +43,14 @@ export class SettingsPage extends Component {
 
   render() {
     const { errors, loading, connThrottle, label, hostname } = this.state;
-    console.log(this.state);
 
     return (
       <Card header={<CardHeader title="Display" />}>
         <Form onSubmit={this.onSubmit}>
           <div className="row">
-            <label className="col-sm-3 row-label">Hostname</label>
+            <label className="col-sm-3 col-form-label">Hostname</label>
             <div className="col-sm-8">
-              <span>{hostname}</span>
+              {hostname}
             </div>
           </div>
           <FormGroup errors={errors} className="row" name="label">
@@ -67,7 +66,9 @@ export class SettingsPage extends Component {
             </div>
           </FormGroup>
           <FormGroup errors={errors} className="row" name="label">
-            <label htmlFor="connThrottle" className="col-sm-3 col-form-label">Client Connection Throttle</label>
+            <label htmlFor="connThrottle" className="col-sm-3 col-form-label">
+              Client Connection Throttle
+            </label>
             <div className="col-sm-8">
               <Input
                 id="connThrottle"
