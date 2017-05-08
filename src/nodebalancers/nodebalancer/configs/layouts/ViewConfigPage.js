@@ -40,7 +40,6 @@ export class ViewConfigPage extends Component {
 
   addNodeModal() {
     const { dispatch, nodebalancer } = this.props;
-    const { errors } = this.state;
 
     dispatch(showModal('Add Node',
       <NodeModal
@@ -48,14 +47,12 @@ export class ViewConfigPage extends Component {
         confirmText="Create"
         configId={this.props.params.configId}
         nodebalancerId={nodebalancer.id}
-        errors={errors}
       />
     ));
   }
 
   editNodeModal(node) {
     const { dispatch, nodebalancer } = this.props;
-    const { errors } = this.state;
 
     dispatch(showModal(`Edit ${node.label}`,
       <NodeModal
@@ -64,7 +61,6 @@ export class ViewConfigPage extends Component {
         node={node}
         configId={this.props.params.configId}
         nodebalancerId={nodebalancer.id}
-        errors={errors}
       />
     ));
   }

@@ -29,8 +29,9 @@ export class NodeModal extends Component {
 
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
-  async onSubmit(state) {
+  async onSubmit() {
     const { dispatch, nodebalancerId, configId } = this.props;
+    const state = this.state;
     const data = {
       ...state,
       address: `${state.address}:${state.port}`,
@@ -54,7 +55,7 @@ export class NodeModal extends Component {
       <ConfirmModalBody
         buttonText={this.props.confirmText}
         onOk={async () => {
-          await this.onSubmit(this.state);
+          await this.onSubmit();
         }}
         onCancel={() => dispatch(hideModal())}
       >
@@ -66,6 +67,7 @@ export class NodeModal extends Component {
         >
           <Input
             name="label"
+            id="label"
             onChange={this.onChange}
             value={label}
           />
@@ -78,6 +80,7 @@ export class NodeModal extends Component {
         >
           <Input
             name="address"
+            id="address"
             onChange={this.onChange}
             value={address}
           />
@@ -90,6 +93,7 @@ export class NodeModal extends Component {
         >
           <Input
             name="port"
+            id="port"
             onChange={this.onChange}
             value={port}
           />
@@ -104,6 +108,7 @@ export class NodeModal extends Component {
         >
           <Input
             name="weight"
+            id="weight"
             onChange={this.onChange}
             value={weight}
           />
