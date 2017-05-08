@@ -157,9 +157,5 @@ NodeModal.defaultProps = {
   },
 };
 
-function select() {
-  return;
-}
-
-export default connect(select)(NodeModal);
+export default connect()(NodeModal);
 

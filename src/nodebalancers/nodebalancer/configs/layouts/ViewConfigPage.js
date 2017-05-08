@@ -26,8 +26,8 @@ export class ViewConfigPage extends Component {
     }
   }
 
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
 
     this.addNodeModal = this.addNodeModal.bind(this);
     this.editNodeModal = this.editNodeModal.bind(this);
@@ -54,7 +54,7 @@ export class ViewConfigPage extends Component {
   editNodeModal(node) {
     const { dispatch, nodebalancer } = this.props;
 
-    dispatch(showModal(`Edit ${node.label}`,
+    dispatch(showModal('Edit Node`',
       <NodeModal
         dispatch={dispatch}
         confirmText="Save"
