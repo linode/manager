@@ -1,0 +1,19 @@
+.GettingStartedPage {
+    &-header,
+    &-body {
+        padding: 5px 25px;
+    }
+
+    &-title {
+        padding: 10px 0;
+
+        h1 {
+            margin: 0;
+        }
+    }
+
+    &-section {
+        padding: 10px 0;
+    }
+
+}

@@ -1,29 +1,32 @@
 import React from 'react';
 export default function Pagination() {
   return (
-    <div>
-      <div>
-        <div>
-          <h4>Pagination
-              <span className="anchor" id="pagination">&nbsp;</span>
-          </h4>
+    <div className="GettingStartedPage">
+      <div className="GettingStartedPage-header">
+        <div className="GettingStartedPage-title">
+          <h1>Pagination</h1>
+        </div>
+      </div>
+      <div className="GettingStartedPage-body">
+        <div className="GettingStartedPage-section">
           <p>
             Resource lists are always paginated. The response will look similar to this:
           </p>
-          <pre><code>
+          <pre>
+            <code>
 {`{
     "linodes": [ ... ],
     "page": 1,
     "total_pages": 10,
     "total_results": 248
 }`}
-          </code></pre>
-          <p>Pages start at 1. You may get a particular page by adding <code>?page=2</code>
-          to your URL. Each page has at most 25 results.</p>
+            </code>
+          </pre>
+          <p>
+            Pages start at 1. You may get a particular page by adding <code>?page=2</code> to your URL. Each page has at most 25 results.
+          </p>
         </div>
-      </div>
-      <div>
-        <div>
+        <div className="GettingStartedPage-section">
           <h4>
             Lists &amp; Objects
             <span className="anchor" id="lists-and-objects">&nbsp;</span>

@@ -13,12 +13,15 @@ import { NotFound } from 'linode-components/errors';
 import {
   IndexLayout,
   Layout,
+} from './layouts';
+
+import {
   Introduction,
   Access,
   Pagination,
   Filtering,
   Errors,
-} from './layouts';
+} from './components/intros';
 
 import {
   generateIndexRoute,
