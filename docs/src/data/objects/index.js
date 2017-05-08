@@ -1,10 +1,9 @@
 const backup = require('./backup');
 const backupsresponse = require('./backupsresponse');
-const datacenter = require('./datacenter');
 const disk = require('./disk');
 const distribution = require('./distribution');
-const dnszone = require('./dnszone');
-const dnszonerecord = require('./dnszonerecord');
+const domain = require('./domain');
+const domainrecord = require('./domainrecord');
 const event = require('./event');
 const ipaddress = require('./ipaddress');
 const ipv6address = require('./ipv6-address');
@@ -13,6 +12,8 @@ const kernel = require('./kernel');
 const linode = require('./linode');
 const linodeConfig = require('./linode_config');
 const linodenetworking = require('./linodenetworking');
+const nodebalancer = require('./nodebalancer');
+const nodebalancerConfig = require('./nodebalancer_config');
 const nodebalancerConfigNode = require('./nodebalancer_config_node');
 const oauthclient = require('./oauthclient');
 const oauthtoken = require('./oauthtoken');
@@ -25,12 +26,12 @@ const user = require('./user');
 const usergrants = require('./usergrants');
 
 module.exports.apiObjectMap = {
+  backup,
   backupsresponse,
-  datacenter,
   disk,
   distribution,
-  dnszone,
-  dnszonerecord,
+  domain,
+  domainrecord,
   event,
   ipaddress,
   ipv6address,
@@ -39,6 +40,8 @@ module.exports.apiObjectMap = {
   linode,
   linodeConfig,
   linodenetworking,
+  nodebalancer,
+  nodebalancerConfig,
   nodebalancerConfigNode,
   oauthclient,
   oauthtoken,

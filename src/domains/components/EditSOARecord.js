@@ -31,7 +31,7 @@ export default class EditSOARecord extends Component {
     };
   }
 
-  onSubmit = async () => {
+  onSubmit = () => {
     const { dispatch, close } = this.props;
     const { group, zone, defaultTTL, refreshRate, retryRate, expireTime, email } = this.state;
     const data = {
@@ -44,11 +44,9 @@ export default class EditSOARecord extends Component {
       soa_email: email,
     };
 
-    await dispatch(dispatchOrStoreErrors.apply(this, [
-      [
-        () => domains.put(data, this.props.zone.id),
-        () => close(zone)(),
-      ],
+    return dispatch(dispatchOrStoreErrors.call(this, [
+      () => domains.put(data, this.props.zone.id),
+      () => close(zone)(),
     ]));
   }
 

@@ -28,11 +28,9 @@ export default class ResetRootPassword extends Component {
     const { password, disk } = this.state;
     const { dispatch, linode } = this.props;
 
-    return await dispatch(dispatchOrStoreErrors.apply(this, [
-      [
-        () => resetPassword(linode.id, disk, password),
-        () => this.setState({ password: '' }) && {},
-      ],
+    return await dispatch(dispatchOrStoreErrors.call(this, [
+      () => resetPassword(linode.id, disk, password),
+      () => this.setState({ password: '' }),
     ]));
   }
 
@@ -114,7 +112,7 @@ export default class ResetRootPassword extends Component {
                 disabledChildren={disabled ? 'Reset' : 'Resetting'}
               >Reset</SubmitButton>
               {disabledMessage}
-              <FormSummary errors={errors} success="Password reset successfully." />
+              <FormSummary errors={errors} success="Password reset." />
             </div>
           </FormGroup>
         </Form>

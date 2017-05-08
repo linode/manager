@@ -1,12 +1,13 @@
-import React from 'react';
-import sinon from 'sinon';
-import { shallow } from 'enzyme';
 import { expect } from 'chai';
+import { shallow } from 'enzyme';
+import React from 'react';
 import { push } from 'react-router-redux';
+import sinon from 'sinon';
 
-import { api } from '@/data';
-import { expectRequest, expectObjectDeepEquals } from '@/common';
 import { CreatePage } from '~/nodebalancers/layouts/CreatePage';
+
+import { expectDispatchOrStoreErrors, expectObjectDeepEquals, expectRequest } from '@/common';
+import { api } from '@/data';
 
 describe('nodebalancers/layouts/CreatePage', () => {
   const sandbox = sinon.sandbox.create();
@@ -25,13 +26,13 @@ describe('nodebalancers/layouts/CreatePage', () => {
     page.instance().setState({ label: 'my-label', region: 'us-east-1a' });
     await page.instance().onSubmit();
 
-    expect(dispatch.callCount).to.equal(2);
-    const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, '/nodebalancers/', {
-      method: 'POST',
-      body: { label: 'my-label', region: 'us-east-1a' },
-    });
-
-    expectObjectDeepEquals(dispatch.secondCall.args[0], push('/nodebalancers'));
+    expect(dispatch.callCount).to.equal(1);
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      ([fn]) => expectRequest(fn, '/nodebalancers/', {
+        method: 'POST',
+        body: { label: 'my-label', region: 'us-east-1a' },
+      }),
+      ([pushResult]) => expectObjectDeepEquals(pushResult, push('/nodebalancers/my-label')),
+    ]);
   });
 });

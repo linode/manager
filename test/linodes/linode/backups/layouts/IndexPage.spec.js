@@ -46,13 +46,13 @@ describe('linodes/linode/backups/layouts/IndexPage', () => {
 
     expect(page.find('Tabs').length).to.equal(0);
 
-    const form = page.find('form');
+    const form = page.find('Form');
     expect(form.text()).to.contain('$2.50');
 
     const button = form.find('button');
     expect(button.length).to.equal(1);
     dispatch.reset();
-    form.simulate('submit');
+    await form.props().onSubmit();
 
     const fn = dispatch.firstCall.args[0];
     await expectRequest(fn, '/linode/instances/1235/backups/enable');

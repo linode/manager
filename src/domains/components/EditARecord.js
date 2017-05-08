@@ -31,7 +31,7 @@ export default class EditARecord extends Component {
     };
   }
 
-  onSubmit = async () => {
+  onSubmit = () => {
     const { dispatch, id, close } = this.props;
     const { ttl, hostname, ip, type } = this.state;
     const ids = [this.props.zone.id, id].filter(Boolean);
@@ -43,11 +43,9 @@ export default class EditARecord extends Component {
       name: hostname,
     };
 
-    await dispatch(dispatchOrStoreErrors.apply(this, [
-      [
-        () => domains.records[id ? 'put' : 'post'](data, ...ids),
-        close,
-      ],
+    return dispatch(dispatchOrStoreErrors.call(this, [
+      () => domains.records[id ? 'put' : 'post'](data, ...ids),
+      close,
     ]));
   }
 

@@ -17,20 +17,15 @@ export default function Table(props) {
     selectedMap,
   } = props;
 
-  const theadClassName = disableHeader ? 'TableHead--disabled' : '';
-  const tableHeader = (
-    <thead className={theadClassName}>
-      <TableHeaderRow columns={columns} />
-    </thead>
-  );
-
   let tableContent;
   if (!data.length) {
     tableContent = (<p>{noDataMessage}</p>);
   } else {
     tableContent = (
-      <table id={id} className={`Table ${className}`}>
-        {tableHeader}
+      <table id={id} className={`Table ${disableHeader ? 'Table--noHeader' : ''} ${className}`}>
+        <thead>
+          <TableHeaderRow columns={columns} />
+        </thead>
         <tbody>
         {data.map(function (record, index) {
           return (
