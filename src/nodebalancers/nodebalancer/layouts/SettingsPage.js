@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { Card, CardHeader } from 'linode-components/cards';
+import { Card } from 'linode-components/cards';
 import { Form, FormGroup, FormGroupError, SubmitButton, Input } from 'linode-components/forms';
 
 import { setSource } from '~/actions/source';
@@ -45,7 +45,7 @@ export class SettingsPage extends Component {
     const { errors, loading, connThrottle, label, hostname } = this.state;
 
     return (
-      <Card header={<CardHeader title="Display" />}>
+      <Card>
         <Form onSubmit={this.onSubmit}>
           <div className="row">
             <label className="col-sm-3 col-form-label">Hostname</label>
