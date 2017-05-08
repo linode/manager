@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Card } from 'linode-components/cards';
 
 import { selectUser } from './IndexPage';
-import { UserForm } from '../../components/UserForm';
+import { UserForm } from '../../components';
 
 
 export function EditUserPage(props) {

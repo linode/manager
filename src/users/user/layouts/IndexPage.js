@@ -28,9 +28,7 @@ export class IndexPage extends Component {
       return null;
     }
 
-    const { username } = this.props.user;
-
-    const { restricted } = this.state;
+    const { username, restricted } = this.props.user;
     const tabList = [{ name: 'Dashboard', link: '' }];
     if (restricted) {
       tabList.push({ name: 'Permissions', link: '/permissions' });
@@ -74,9 +72,9 @@ IndexPage.propTypes = {
 };
 
 export function selectUser(state, props) {
-  const { users } = state.api;
+  const { users } = state.api.users;
   const { username } = props.params;
-  const { user } = users[username];
+  const user = users[username];
   return { user };
 }
 
