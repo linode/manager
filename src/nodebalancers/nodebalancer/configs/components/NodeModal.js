@@ -13,7 +13,6 @@ export class NodeModal extends Component {
   constructor(props) {
     super(props);
 
-    this.onSubmit = this.onSubmit.bind(this);
     const address = this.props.node.address.split(':');
 
     this.state = {
