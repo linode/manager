@@ -28,11 +28,6 @@ export class IndexPage extends Component {
     }
   }
 
-  constructor() {
-    super();
-    this.state = { isSelected: { } };
-  }
-
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
@@ -41,7 +36,7 @@ export class IndexPage extends Component {
   }
 
   render() {
-    const { users } = this.props;
+    const listOfUsers = Object.values(this.props.users.users);
 
     // TODO: Calculate gravatar url outside of render
     return (
@@ -57,7 +52,7 @@ export class IndexPage extends Component {
         </header>
         <div className="PrimaryPage-body">
           <div className="row">
-            {Object.values(users.users).map(user =>
+            {listOfUsers.map(user =>
               <div className="col-lg-6" key={user.username}>
                 <Card
                   header={
@@ -94,9 +89,7 @@ IndexPage.propTypes = {
 };
 
 function select(state) {
-  return {
-    users: state.api.users,
-  };
+  return { users: state.api.users };
 }
 
 export default connect(select)(IndexPage);
