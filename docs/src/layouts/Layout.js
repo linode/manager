@@ -18,9 +18,12 @@ export default function Layout(props) {
               <h3>Getting Started</h3>
               <ul>
                 <li><Link to="/introduction">Introduction</Link></li>
-                <li><Link to="/authorization">Authorization</Link></li>
+                <li><Link to="/authentication">Authentication</Link></li>
+                <li><Link to="/lists-objects">Lists &amp; Objects</Link></li>
                 <li><Link to="/pagination">Pagination</Link></li>
+                <li><Link to="/editing-objects">Editing Objects</Link></li>
                 <li><Link to="/filtering">Filtering</Link></li>
+                <li><Link to="/errors">Errors</Link></li>
               </ul>
             </div>
             <div className="VerticalNav-section">
