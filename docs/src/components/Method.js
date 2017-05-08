@@ -21,7 +21,6 @@ export default function Method(props) {
   // TODO: Break these out if needed
   let methodParams = null;
   if (params) {
-    // { label: 'Type', dataKey: 'type' }
     methodParams = (
       <div className="Method-section Method-params">
         <h4><b>Params</b></h4>
@@ -29,6 +28,7 @@ export default function Method(props) {
           className="Table--secondary"
           columns={[
             { label: 'Field', dataKey: 'name', headerClassName: 'FieldColumn' },
+            { label: 'Type', dataKey: 'type', headerClassName: 'TypeColumn' },
             { label: 'Description', dataKey: 'description', headerClassName: 'DescriptionColumn' }
           ]}
           data={params}
@@ -62,6 +62,7 @@ export default function Method(props) {
           className="Table--secondary"
           columns={[
             { cellComponent: FieldCell, label: 'Field', headerClassName: 'FieldColumn' },
+            { label: 'Type', dataKey: 'type', headerClassName: 'TypeColumn' },
             { cellComponent: DescriptionCell, label: 'Description', headerClassName: 'DescriptionColumn' }
           ]}
           data={schema}
