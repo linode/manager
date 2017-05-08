@@ -69,12 +69,14 @@ export default function Method(props) {
       </div>
     );
 
-    methodResponseExample = (
-      <div className="Method-section Method-responseExample">
-        <h4><b>Example</b></h4>
-        <Example example={JSON.stringify(resource.example, null, 2)} />
-      </div>
-    );
+    if (resource.example) {
+      methodResponseExample = (
+        <div className="Method-section Method-responseExample">
+          <h4><b>Example</b></h4>
+          <Example example={JSON.stringify(resource.example, null, 2)} />
+        </div>
+      );
+    }
   }
 
   return (
