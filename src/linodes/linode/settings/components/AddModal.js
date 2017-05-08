@@ -34,7 +34,7 @@ export class AddModal extends Component {
       filesystem,
       size: parseInt(size),
       distribution: distribution || null,
-      root_pass: password,
+      root_pass: password || null,
     };
 
     return dispatch(dispatchOrStoreErrors.call(this, [
