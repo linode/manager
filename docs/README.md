@@ -34,7 +34,7 @@ and then removes the temporary clone.
 
 The `docsConvert.js` script strips the html out, nests the endpoint and
 object data in a way that we expect and concatenates the json into one
-json file.
+js file.
 
 ## License
 
