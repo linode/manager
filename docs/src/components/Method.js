@@ -12,7 +12,7 @@ export default function Method(props) {
     name,
     description,
     examples,
-    params = [],
+    params,
     resource = {},
   } = method;
 
@@ -23,7 +23,7 @@ export default function Method(props) {
   if (params) {
     methodParams = (
       <div className="Method-section Method-params">
-        <h4><b>Params</b></h4>
+        <h4><b>Parameters</b></h4>
         <Table
           className="Table--secondary"
           columns={[
