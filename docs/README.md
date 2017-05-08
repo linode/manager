@@ -28,10 +28,9 @@ restart it.
 
 The transform.sh script clones the
 [linode-developers](https://github.com/linode/developers) repo to the
-`/tmp` directory,
-translates the yaml files into json and puts them in the data directory
-for the corresponding endpoints, objects, etc. directories; and the
-removes the temporary clone.
+`/tmp` directory, translates the yaml files into json and puts them in the
+data directory for the corresponding endpoints, objects, etc. directories;
+and the removes the temporary clone.
 
 The docsConvert.js script strips the html out, nests the endpoint and
 object data in a way that we expect and concatenates the json into one
