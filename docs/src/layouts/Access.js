@@ -1,16 +1,15 @@
 import React from 'react';
 const LOGIN_ROOT = 'login.alpha.linode.com';
-export default function Authentication() {
+export default function Access() {
   return (
     <div>
-      <div className="row reference white">
-        <div className="col-lg-6 text-justify left">
-          <h4>Authentication
-            <span className="anchor" id="authentication">&nbsp;</span>
+      <div>
+        <div>
+          <h4>Access
+            <span>&nbsp;</span>
           </h4>
           <p>
-          To use some API endpoints authentication is required. This is indicated by the
-          <span className="text-muted"><i className="fa fa-lock"></i> Authenticated</span> notation
+          To use some API endpoints authentication is required. This is indicated by the <span className="text-muted"><i className="fa fa-lock"></i> Authenticated</span> notation
           throughout the documentation. We use the basic OAuth workflow were you can create
           <em>applications</em> that integrate with Linode by registering those applications with us.
           You then use OAuth to authenticate on behalf of the user to request access to resources from their account.
@@ -29,8 +28,8 @@ export default function Authentication() {
           </p>
         </div>
       </div>
-      <div className="row reference white">
-        <div className="col-lg-6 text-justify left">
+      <div>
+        <div>
           <h5>Through The Web</h5>
           <p>
           If you are making a web based application this is the recommended method for getting a user's authorization.
@@ -92,8 +91,8 @@ export default function Authentication() {
           </table>
         </div>
       </div>
-      <div className="row reference white">
-        <div className="col-lg-6 text-justify left">
+      <div>
+        <div>
           <h5>Access Token</h5>
           <p>
           Once the user has logged in to Linode and you have received an <em>access code</em>, you 
@@ -135,8 +134,8 @@ export default function Authentication() {
           <pre><code>Authorization: token 03d084436a6c91fbafd5c4b20c82e5056a2e9ce1635920c30dc8d81dc7a6665c</code></pre>
         </div>
       </div>
-      <div className="row reference white">
-        <div className="col-lg-6 text-justify left">
+      <div>
+        <div>
           <h5>OAuth Scopes</h5>
           <p>
           The above login flow will give you the minimum amount of access to a user's account.

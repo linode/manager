@@ -1,9 +1,7 @@
 export { default as Layout } from './Layout';
 export { default as IndexLayout } from './IndexLayout';
 export { default as Introduction } from './Introduction';
-export { default as Authentication } from './Authentication';
-export { default as ListsObjects } from './ListsObjects';
+export { default as Access } from './Access';
 export { default as Pagination } from './Pagination';
-export { default as EditingObjects } from './EditingObjects';
 export { default as Filtering } from './Filtering';
 export { default as Errors } from './Errors';

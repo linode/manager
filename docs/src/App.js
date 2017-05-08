@@ -14,10 +14,8 @@ import {
   IndexLayout,
   Layout,
   Introduction,
-  Authentication,
-  ListsObjects,
+  Access,
   Pagination,
-  EditingObjects,
   Filtering,
   Errors,
 } from './layouts';
@@ -46,10 +44,8 @@ export function init() {
         <Route component={IndexLayout}>
           <IndexRedirect to="/introduction" />
           <Route path="/introduction" component={Introduction} />
-          <Route path="/authentication" component={Authentication} />
-          <Route path="/lists-objects" component={ListsObjects} />
+          <Route path="/access" component={Access} />
           <Route path="/pagination" component={Pagination} />
-          <Route path="/editing-objects" component={EditingObjects} />
           <Route path="/filtering" component={Filtering} />
           <Route path="/errors" component={Errors} />
           {api.endpoints.map(function(endpoint, index) {

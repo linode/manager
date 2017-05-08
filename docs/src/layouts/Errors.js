@@ -3,8 +3,8 @@ import React from 'react';
 export default function Errors() {
   return (
     <div>
-      <div className="row reference white">
-      <div className="col-lg-6 text-justify left">
+      <div>
+      <div>
         <h4>
           Errors
           <span className="anchor" id="errors">&nbsp;</span>
