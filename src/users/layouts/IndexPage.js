@@ -5,7 +5,7 @@ import { Link } from 'react-router';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 import { setError } from '~/actions/errors';
-import { users } from '~/api';
+import { users, profile } from '~/api';
 
 import { User } from '../components';
 
@@ -13,6 +13,7 @@ import { User } from '../components';
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
     try {
+      await dispatch(profile.one());
       await dispatch(users.all());
     } catch (response) {
       // eslint-disable-next-line no-console
@@ -29,9 +30,8 @@ export class IndexPage extends Component {
   }
 
   render() {
-    const { username: currentUser } = this.props.account;
+    const { username: currentUser } = this.props.profile;
     const listOfUsers = Object.values(this.props.users.users);
-    console.log(this.props.account);
 
     // TODO: Calculate gravatar url outside of render
     return (
@@ -62,12 +62,13 @@ export class IndexPage extends Component {
 IndexPage.propTypes = {
   dispatch: PropTypes.func,
   users: PropTypes.object,
+  profile: PropTypes.object,
 };
 
 function select(state) {
-  console.log(state.api);
   return {
     users: state.api.users,
+    profile: state.api.profile,
   };
 }
 

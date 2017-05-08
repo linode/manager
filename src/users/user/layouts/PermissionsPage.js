@@ -1,55 +1,39 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import { users } from '~/api';
+
 import { Card } from 'linode-components/cards';
-import { Form,
-  Checkbox,
-  Checkboxes,
-  SubmitButton,
-} from 'linode-components/forms';
-import { PermissionCard } from '../components/PermissionCard';
-import { reduceErrors } from '~/components/forms';
+import { Checkbox, Checkboxes, Form, FormGroup, SubmitButton } from 'linode-components/forms';
+
+import { users } from '~/api';
+import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+
+import { selectUser } from './IndexPage';
+import { PermissionsTable } from '../components';
+
 
 export class PermissionsPage extends Component {
   constructor(props) {
     super(props);
-    this.onSubmit = this.onSubmit.bind(this);
-    this.updateGlobal = this.updateGlobal.bind(this);
-    this.onCellChange = this.onCellChange.bind(this);
 
-    const { username } = props.params;
-    const permissions = props.users[username]._permissions;
     this.state = {
-      ...permissions,
+      ...props.user._permissions,
       loading: false,
       errors: {},
     };
   }
 
-  async onSubmit() {
-    const { dispatch } = this.props;
-    const { username } = this.props.params;
+  onSubmit = async () => {
+    const { dispatch, user: { username } } = this.props;
     const { global, customer, linode, nodebalancer, dnszone } = this.state;
-    const values = {
-      global,
-      customer,
-      linode,
-      nodebalancer,
-      dnszone,
-    };
+    const data = { global, customer, linode, nodebalancer, dnszone };
 
-    this.setState({ loading: true });
-    try {
-      await dispatch(users.permissions.put(values, username));
-      dispatch(push('/users'));
-    } catch (response) {
-      const errors = await reduceErrors(response);
-      this.setState({ errors, loading: false });
-    }
+    await dispatch(dispatchOrStoreErrors.call(this, [
+      () => users.permissions.put(data, username),
+    ]));
   }
 
-  onCellChange(record, checked, keys) {
+  onCellChange = (record, checked, keys) => {
     const { parentKey, dataKey } = keys;
     const parentState = this.state[parentKey].map(function (child) {
       if (child === record) {
@@ -66,7 +50,7 @@ export class PermissionsPage extends Component {
     });
   }
 
-  updateGlobal(name) {
+  updateGlobal = (name) => {
     this.setState({
       global: {
         ...this.state.global,
@@ -76,17 +60,11 @@ export class PermissionsPage extends Component {
   }
 
   render() {
-    const { global, customer, linode, dnszone, nodebalancer } = this.state;
-
-    if (!customer) {
-      return null;
-    }
+    const { global, customer, linode, dnszone, nodebalancer, loading, errors } = this.state;
 
     return (
-      <Form
-        onSubmit={this.onSubmit}
-      >
-        <Card>
+      <Form onSubmit={this.onSubmit}>
+        <Card className="Permissions">
           <div className="Permissions-section">
             <h3>Global Permissions</h3>
             <Checkboxes>
@@ -134,7 +112,7 @@ export class PermissionsPage extends Component {
               />
             </Checkboxes>
           </div>
-          <PermissionCard
+          <PermissionsTable
             title="Linode"
             parentKey="linode"
             onCellChange={this.onCellChange}
@@ -146,7 +124,7 @@ export class PermissionsPage extends Component {
               { dataKey: 'resize', label: 'Resize ($)' },
             ]}
           />
-          <PermissionCard
+          <PermissionsTable
             title="NodeBalancer"
             parentKey="nodebalancer"
             onCellChange={this.onCellChange}
@@ -155,9 +133,10 @@ export class PermissionsPage extends Component {
               { dataKey: 'all', label: 'All' },
               { dataKey: 'access', label: 'Access' },
               { dataKey: 'delete', label: 'Delete' },
+              null,
             ]}
           />
-          <PermissionCard
+          <PermissionsTable
             title="Domains"
             parentKey="dnszone"
             onCellChange={this.onCellChange}
@@ -166,9 +145,13 @@ export class PermissionsPage extends Component {
               { dataKey: 'all', label: 'All' },
               { dataKey: 'access', label: 'Access' },
               { dataKey: 'delete', label: 'Delete' },
+              null,
             ]}
           />
-          <SubmitButton>Save</SubmitButton>
+          <FormGroup>
+            <SubmitButton disabled={loading}>Save</SubmitButton>
+            <FormSummary errors={errors} success="Permissions saved." />
+          </FormGroup>
         </Card>
       </Form>
     );
@@ -176,17 +159,8 @@ export class PermissionsPage extends Component {
 }
 
 PermissionsPage.propTypes = {
-  users: PropTypes.object,
-  params: PropTypes.shape({
-    username: PropTypes.string,
-  }),
+  user: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
 };
 
-function select(state) {
-  return {
-    users: state.api.users.users,
-  };
-}
-
-export default connect(select)(PermissionsPage);
+export default connect(selectUser)(PermissionsPage);
