@@ -7,7 +7,6 @@ import {
   preloadStop,
 } from '~/actions/preloadIndicator';
 import { kernels, types, regions, distributions } from '~/api';
-import { account } from '~/api';
 import { store } from '~/store';
 
 
@@ -70,7 +69,6 @@ export class LoadingRouterContext extends RouterContext {
     // No need to fetch these in weblish.
     if (!(pathname.endsWith('/weblish') && params.linodeLabel)) {
       await Promise.all([
-        this.props.dispatch(account.one()),
         this.props.dispatch(kernels.all()),
         this.props.dispatch(types.all()),
         this.props.dispatch(regions.all()),
