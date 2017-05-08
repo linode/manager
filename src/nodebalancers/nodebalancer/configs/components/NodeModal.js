@@ -42,7 +42,7 @@ export class NodeModal extends Component {
     await dispatch(dispatchOrStoreErrors.apply(this, [
       [
         () => nodebalancers.configs.nodes[state.id ? 'put' : 'post'](data, ...ids),
-        () => dispatch(hideModal()),
+        hideModal,
       ],
     ]));
   }
