@@ -63,8 +63,8 @@ export default function Errors() {
             { status: '401 Unauthorized', description: 'You failed to authenticate for this resource.' },
             { status: '403 Forbidden', description: 'You are authenticated, but don\'t have permission to do this.' },
             { status: '404 Not Found', description: 'The resource you\'re asking for does not exist.' },
-            { status: '420 Enhance Your Calm', description: 'You\'ve hit some sort of rate limit.' },
-            { status: '500 Internal Server Error', description: 'We screwed up. Let support know (we probably already know).' },
+            { status: '429 Too many requests', description: 'You\'ve hit some sort of rate limit.' },
+            { status: '500 Internal Server Error', description: 'Let support know.' },
           ]}
         />
       </section>
