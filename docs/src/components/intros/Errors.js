@@ -14,10 +14,8 @@ export default function Errors() {
       <div className="GettingStartedPage-body">
         <div className="GettingStartedPage-section">
           <p>
-            Success is indicated via
-            <a href="https://en.wikipedia.org/wiki/List_of_HTTP_status_codes">
-              standard HTTP status codes
-            </a>. Generally speaking, <code>2xx</code> codes indicate success,
+            Success is indicated via <a href="https://en.wikipedia.org/wiki/List_of_HTTP_status_codes">standard HTTP status codes</a>.
+            Generally speaking, <code>2xx</code> codes indicate success,
             <code>4xx</code> codes indicate an error on your side, and
             <code>5xx</code> codes indicate an error on our side. An error on your
             side might be an invalid input, a required parameter being omitted, and
@@ -29,16 +27,15 @@ export default function Errors() {
             Every request that returns errors will look something like this:
           </p>
           <pre>
-            <code>{`
-          {
-            "errors": [
-              {
-                "field": "region",
-                "reason": "Record not found"
-              }
-            ]
-          }
-          `}
+            <code>
+{`{
+  "errors": [
+    {
+      "field": "region",
+      "reason": "Record not found"
+    }
+  ]
+}`}
             </code>
           </pre>
           <p>

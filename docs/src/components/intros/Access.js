@@ -1,5 +1,5 @@
 import React from 'react';
-const LOGIN_ROOT = 'login.alpha.linode.com';
+import { LOGIN_ROOT } from '~/constants';
 
 import { Table } from 'linode-components/tables';
 
@@ -15,12 +15,11 @@ export default function Authentication() {
       <div className="GettingStartedPage-body">
         <div className="GettingStartedPage-section">
           <p>
-          To use some API endpoints authentication is required. This is indicated by the
-          <span className="text-muted"><i className="fa fa-lock"></i> Authenticated</span> notation
-          throughout the documentation. We use the basic OAuth workflow were you can create
-          <em>applications</em> that integrate with Linode by registering those applications with us.
-          You then use OAuth to authenticate on behalf of the user to request access to resources from their account.
-        </p>
+            To use some API endpoints authentication is required. This is indicated by the <span className="text-muted">&nbsp;<i className="fa fa-lock"></i>&nbsp;Authenticated</span> notation
+            throughout the documentation. We use the basic OAuth workflow were you can create
+            <em> applications</em> that integrate with Linode by registering those applications with us.
+            You then use OAuth to authenticate on behalf of the user to request access to resources from their account.
+          </p>
           <p>
             To register your application go to <a target="_blank" href={`https://${ LOGIN_ROOT }/apps`}>{ LOGIN_ROOT }/apps</a>.
             We'll provide you with a <em>client ID</em> and a <em>client secret</em>.
@@ -187,8 +186,7 @@ export default function Authentication() {
           </p>
           <p>
             Each API endpoint documented on this page includes the OAuth scope necessary
-            to use that resource. It will look like this:
-            <span className="text-muted"><i className="fa fa-key"></i> linodes:view</span>.
+            to use that resource. It will look like this: <span className="text-muted">&nbsp;<i className="fa fa-key"></i>&nbsp;linodes:view</span>.
             You may also request <code>*</code> to get full access to a user's account,
             but this is highly discouraged. You should do your best to request the least amount
             of access needed for your application to function.

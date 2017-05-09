@@ -1,6 +1,5 @@
 import React from 'react';
-const API_ROOT = 'api.alpha.linode.com';
-const API_VERSION = 'v4';
+import { API_ROOT, API_VERSION } from '~/constants';
 
 import { Table } from 'linode-components/tables';
 
@@ -27,11 +26,11 @@ export default function Filtering() {
           </p>
           <pre>
             <code>
-              curl "https://{ API_ROOT }/{ API_VERSION }/linode/distributions" \
-            {`-H 'X-Filter: {
-              "vendor": "Debian"
-            }'
-            `}
+    curl "https://{ API_ROOT }/{ API_VERSION }/linode/distributions" \
+    {`
+    -H 'X-Filter: {
+      "vendor": "Debian"
+    }'`}
             </code>
           </pre>
         </div>
@@ -42,12 +41,12 @@ export default function Filtering() {
           </p>
           <pre>
             <code>
-              curl "https://{ API_ROOT }/{ API_VERSION }/linode/distributions" \
-          {`-H 'X-Filter: {
-            "vendor": "Debian",
-            "recommended": true
-          }'
-          `}
+    curl "https://{ API_ROOT }/{ API_VERSION }/linode/distributions" \
+    {`
+    -H 'X-Filter: {
+      "vendor": "Debian",
+      "recommended": true
+    }'`}
             </code>
           </pre>
         </div>
@@ -58,14 +57,14 @@ export default function Filtering() {
           </p>
           <pre>
             <code>
-              curl "https://{ API_ROOT }/{ API_VERSION }/linode/distributions" \
-            {`-H 'X-Filter: {
-              "+or": [
-                { "vendor": "Debian" },
-                { "recommended": true }
-              ]
-            }'
-            `}
+    curl "https://{ API_ROOT }/{ API_VERSION }/linode/distributions" \
+    {`
+    -H 'X-Filter: {
+      "+or": [
+        { "vendor": "Debian" },
+        { "recommended": true }
+      ]
+    }'`}
             </code>
           </pre>
         </div>
@@ -76,13 +75,13 @@ export default function Filtering() {
           </p>
           <pre>
             <code>
-              curl "https://{ API_ROOT }/{ API_VERSION }/linode/distributions" \
-          {`-H 'X-Filter: {
-            "minimum_storage_size": {
-              "+lte": 500
-            }
-          }'
-          `}
+      curl "https://{ API_ROOT }/{ API_VERSION }/linode/distributions" \
+      {`
+      -H 'X-Filter: {
+        "minimum_storage_size": {
+          "+lte": 500
+        }
+      }'`}
             </code>
           </pre>
         </div>
@@ -117,36 +116,36 @@ export default function Filtering() {
           />
           <pre>
             <code>
-              curl "https://{ API_ROOT }/{ API_VERSION }/linode/distributions" \
-          {`-H 'X-Filter: {
+      curl "https://{ API_ROOT }/{ API_VERSION }/linode/distributions" \
+      {`
+      -H 'X-Filter: {
+        "+or": [
+          {
             "+or": [
               {
-                "+or": [
-                  {
-                    "vendor": "Debian"
-                  },
-                  {
-                    "recommended": true
-                  }
-                ]
+                "vendor": "Debian"
               },
               {
-                "+and": [
-                  {
-                    "minimum_storage_size": {
-                      "+lte": 500
-                    }
-                  },
-                  {
-                    "minimum_storage_size": {
-                      "+gte": 100
-                    }
-                  }
-                ]
+                "recommended": true
               }
             ]
-          }'
-          `}
+          },
+          {
+            "+and": [
+              {
+                "minimum_storage_size": {
+                  "+lte": 500
+                }
+              },
+              {
+                "minimum_storage_size": {
+                  "+gte": 100
+                }
+              }
+            ]
+          }
+        ]
+      }'`}
             </code>
           </pre>
         </div>
