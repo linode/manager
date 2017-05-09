@@ -10,8 +10,7 @@ export default function Filtering() {
       <h1>Filtering</h1>
       <section>
         <p>
-          Resource lists are searchable by most fields they include (filterable fields are marked with
-          a <i className="fa fa-filter"></i> icon in the <a href="#">object reference</a>).
+          Resource lists are searchable by most fields they include.
         </p>
         <p>
           Filters are passed in the <code>X-Filter</code> header, and are formated as JSON objects.  Here is a
