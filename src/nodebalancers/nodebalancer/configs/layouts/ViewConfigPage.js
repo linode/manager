@@ -39,27 +39,27 @@ export class ViewConfigPage extends Component {
   }
 
   addNodeModal() {
-    const { dispatch, nodebalancer } = this.props;
+    const { dispatch, nodebalancer, config } = this.props;
 
     dispatch(showModal('Add Node',
       <NodeModal
         dispatch={dispatch}
         confirmText="Create"
-        configId={this.props.params.configId}
+        configId={config.id}
         nodebalancerId={nodebalancer.id}
       />
     ));
   }
 
   editNodeModal(node) {
-    const { dispatch, nodebalancer } = this.props;
+    const { dispatch, nodebalancer, config } = this.props;
 
     dispatch(showModal('Edit Node`',
       <NodeModal
         dispatch={dispatch}
         confirmText="Save"
         node={node}
-        configId={this.props.params.configId}
+        configId={config.id}
         nodebalancerId={nodebalancer.id}
       />
     ));
@@ -140,9 +140,6 @@ ViewConfigPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   config: PropTypes.object.isRequired,
   nodebalancer: PropTypes.object.isRequired,
-  params: PropTypes.shape({
-    configId: PropTypes.string.isRequired,
-  }),
 };
 
 function select(state, props) {

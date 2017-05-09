@@ -132,8 +132,8 @@ export class NodeModal extends Component {
         <div className="Modal-footer">
           <CancelButton disabled={loading} onClick={() => dispatch(hideModal())} />
           <SubmitButton disabled={loading} />
+          <FormSummary errors={errors} />
         </div>
-        <FormSummary errors={errors} />
       </Form>
     );
   }
@@ -143,7 +143,7 @@ NodeModal.propTypes = {
   dispatch: PropTypes.func.isRequired,
   confirmText: PropTypes.string.isRequired,
   node: PropTypes.object,
-  configId: PropTypes.string.isRequired,
+  configId: PropTypes.number.isRequired,
   nodebalancerId: PropTypes.number.isRequired,
 };
 

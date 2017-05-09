@@ -9,10 +9,7 @@ import {
   NodeModal,
 } from '~/nodebalancers/nodebalancer/configs/components/NodeModal';
 
-const node = {
-  ...genericNodeBalancer._configs.configs['0']._nodes.nodes[0],
-  id: 1,
-};
+const node = genericNodeBalancer._configs.configs['1']._nodes.nodes[1];
 
 describe('nodebalancers/nodebalancer/configs/components/NodeModal', () => {
   const sandbox = sinon.sandbox.create();
@@ -28,7 +25,7 @@ describe('nodebalancers/nodebalancer/configs/components/NodeModal', () => {
       <NodeModal
         dispatch={dispatch}
         confirmTest="Edit"
-        configId="0"
+        configId="1"
         nodebalancerId="23"
         node={node}
       />
@@ -46,7 +43,7 @@ describe('nodebalancers/nodebalancer/configs/components/NodeModal', () => {
       <NodeModal
         dispatch={dispatch}
         confirmTest="Edit"
-        configId="0"
+        configId="1"
         nodebalancerId="23"
         node={node}
       />
@@ -56,7 +53,7 @@ describe('nodebalancers/nodebalancer/configs/components/NodeModal', () => {
     await page.find('Form').props().onSubmit();
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      ([fn]) => expectRequest(fn, `/nodebalancers/23/configs/0/nodes/${node.id}`, {
+      ([fn]) => expectRequest(fn, `/nodebalancers/23/configs/1/nodes/${node.id}`, {
         method: 'PUT',
         body: {
           label: 'greatest_node_ever',
@@ -73,7 +70,7 @@ describe('nodebalancers/nodebalancer/configs/components/NodeModal', () => {
       <NodeModal
         dispatch={dispatch}
         confirmTest="Edit"
-        configId="0"
+        configId="1"
         nodebalancerId="23"
       />
     );
@@ -91,7 +88,7 @@ describe('nodebalancers/nodebalancer/configs/components/NodeModal', () => {
     await page.find('Form').props().onSubmit();
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      ([fn]) => expectRequest(fn, '/nodebalancers/23/configs/0/nodes/', {
+      ([fn]) => expectRequest(fn, '/nodebalancers/23/configs/1/nodes/', {
         method: 'POST',
         body: {
           label: 'myLabel',
