@@ -29,7 +29,7 @@ export default function Endpoint(props) {
             {methods.map(function(method, index) {
               return (
                 <li key={index}>
-                  <Link to={`#${method.name}`}>{method.name}</Link>
+                  <a href={`#${method.name}`}>{method.name}</a>
                 </li>
               );
             })}
