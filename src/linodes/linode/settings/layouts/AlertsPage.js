@@ -62,7 +62,7 @@ export class AlertsPage extends Component {
     return (
       <FormGroup className="row" name="threshold" crumbs={crumbs} errors={errors} key={name}>
         <label className="col-sm-2 col-form-label">{name}</label>
-        <div className="col-sm-10 clearfix">
+        <div className="col-sm-10">
           <div className="clearfix">
             <div className="float-sm-left">
               <CheckboxInputCombo

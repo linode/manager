@@ -9,7 +9,6 @@ import {
   Checkbox, Checkboxes, SubmitButton,
 } from 'linode-components/forms';
 
-import { setError } from '~/actions/errors';
 import { setSource } from '~/actions/source';
 import { linodes } from '~/api';
 import { FormSummary, reduceErrors } from '~/components/forms';
@@ -133,17 +132,6 @@ export function renderDiskSlot(device, index) {
 }
 
 export class EditConfigPage extends Component {
-  static async preload({ dispatch, getState }, { linodeLabel }) {
-    const { id } = Object.values(getState().api.linodes.linodes).reduce(
-      (match, linode) => linode.label === linodeLabel ? linode : match);
-
-    try {
-      await dispatch(linodes.disks.all([id]));
-    } catch (e) {
-      dispatch(setError(e));
-    }
-  }
-
   constructor(props) {
     super(props);
     this.renderDiskSlot = renderDiskSlot.bind(this);

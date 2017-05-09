@@ -1,14 +1,15 @@
 import React, { Component, PropTypes } from 'react';
-import { connect } from 'react-redux';
 
-import { linodes } from '~/api';
-
-import { showModal } from '~/actions/modal';
-import { EditModal } from './EditModal';
-import { DeleteModal } from './DeleteModal';
-import { AddModal } from './AddModal';
 import { Button } from 'linode-components/buttons';
 import { Card, CardHeader } from 'linode-components/cards';
+import { DeleteModalBody } from 'linode-components/modals';
+
+import { hideModal, showModal } from '~/actions/modal';
+import { linodes } from '~/api';
+
+import { AddModal } from './AddModal';
+import { EditModal } from './EditModal';
+
 
 const borderColors = [
   '#1abc9c',
@@ -22,21 +23,65 @@ const borderColors = [
   '#e67e22',
 ];
 
-function select(state) {
-  return { distributions: state.api.distributions };
-}
-
-const AddModalRedux = connect(select)(AddModal);
-
 export class DiskPanel extends Component {
-  static async preload({ dispatch, getState }, { linodeLabel }) {
-    const { id } = Object.values(getState().api.linodes.linodes).reduce(
-      (match, linode) => linode.label === linodeLabel ? linode : match);
-    await dispatch(linodes.disks.all([id]));
+  poweredOff() {
+    return [
+      'offline', 'contact_support', 'provisioning',
+    ].indexOf(this.props.linode.status) !== -1;
   }
 
-  renderStatusMessage(status) {
-    if (status !== 'offline' && status !== 'provisioning') {
+  freeSpace() {
+    const { linode } = this.props;
+    const disks = Object.values(linode._disks.disks);
+    const total = linode.type.storage;
+    const used = disks.reduce((total, disk) => total + disk.size, 0);
+    return total - used;
+  }
+
+  editAction(d) {
+    const { dispatch, linode } = this.props;
+
+    return () => dispatch(showModal('Edit Disk', (
+      <EditModal
+        free={this.freeSpace()}
+        linode={linode}
+        disk={d}
+        dispatch={dispatch}
+      />
+    )));
+  }
+
+  deleteAction(d) {
+    const { dispatch, linode } = this.props;
+
+    return () => dispatch(showModal('Delete Disk', (
+      <DeleteModalBody
+        onCancel={() => dispatch(hideModal())}
+        onOk={() => {
+          dispatch(linodes.disks.delete(linode.id, d.id));
+          dispatch(hideModal());
+        }}
+        typeOfItem="Disks"
+        items={[d.label]}
+      />
+    )));
+  }
+
+  addAction = () => {
+    const { dispatch, linode, distributions } = this.props;
+
+    return dispatch(showModal('Add a Disk', (
+      <AddModal
+        distributions={distributions}
+        free={this.freeSpace()}
+        linode={linode}
+        dispatch={dispatch}
+      />
+    )));
+  }
+
+  renderStatusMessage() {
+    if (!this.poweredOff()) {
       return (
         <section>
           <div className="alert alert-info">
@@ -50,84 +95,43 @@ export class DiskPanel extends Component {
   }
 
   render() {
-    const { dispatch, linode } = this.props;
-    const disks = Object.values(linode._disks.disks);
-    const total = linode.type.storage;
-    const used = disks.reduce((total, disk) => total + disk.size, 0);
-    const free = total - used;
-    const poweredOff = linode.status === 'offline';
-
-    const addModal = <AddModalRedux free={free} linode={linode} />;
-
-    const editModal = d => (
-      <EditModal
-        free={free}
-        linode={linode}
-        disk={d}
-        dispatch={dispatch}
-      />
-    );
-
-    const deleteModal = d => (
-      <DeleteModal
-        linode={linode}
-        disk={d}
-        dispatch={dispatch}
-      />
-    );
+    const { linode: { _disks: { disks } } } = this.props;
+    const free = this.freeSpace();
+    const header = <CardHeader title="Disks" />;
 
     return (
-      <Card
-        header={
-          <CardHeader title="Disks" navLink="https://example.org" />
-        }
-      >
+      <Card header={header}>
         <section className="disk-layout">
-          {disks.map(d =>
+          {Object.values(disks).map(d =>
             <div
               className={`disk disk-${d.state}`}
               key={d.id}
               style={{
                 flexGrow: d.size,
-                borderColor: borderColors[disks.indexOf(d) % borderColors.length],
+                borderColor: borderColors[Object.values(disks).indexOf(d) % borderColors.length],
               }}
             >
               <h3 title={d.id}>{d.label} <small>{d.filesystem}</small></h3>
               <p>{d.size} MB</p>
               {d.state !== 'deleting' ? null :
                 <small className="text-muted">Being deleted</small>}
-                {!poweredOff || d.state === 'deleting' ? null : (
+                {!this.poweredOff() || d.state === 'deleting' ? null : (
                   <div>
-                    <Button
-                      className="LinodesLinodeSettingsComponentsDiskPanel-edit"
-                      onClick={() => dispatch(showModal('Edit disk', editModal(d)))}
-                    >Edit</Button>
-                    <Button
-                      className="LinodesLinodeSettingsComponentsDiskPanel-delete"
-                      onClick={() => dispatch(showModal('Delete disk', deleteModal(d)))}
-                    >Delete</Button>
+                    <Button onClick={this.editAction(d)}>Edit</Button>
+                    <Button onClick={this.deleteAction(d)}>Delete</Button>
                   </div>
                 )}
             </div>
           )}
-          {free <= 0 ? null : (
-            <div
-              className="disk free"
-              key={'free'}
-              style={{ flexGrow: free }}
-            >
-              <h3>Unallocated</h3>
-              <p>{free} MB</p>
-              {!poweredOff ? null : (
-                <Button
-                  onClick={() => dispatch(showModal('Add a disk', addModal))}
-                  className="LinodesLinodeSettingsComponentsDiskPanel-add"
-                >Add a disk</Button>
-              )}
-            </div>
-           )}
+          <div className="disk free" style={{ flexGrow: free }}>
+            <h3>Unallocated</h3>
+            <p>{free} MB</p>
+            {!this.poweredOff() ? null : (
+              <Button onClick={this.addAction} disabled={free === 0}>Add a disk</Button>
+            )}
+          </div>
         </section>
-        {this.renderStatusMessage(linode.status)}
+        {this.renderStatusMessage()}
       </Card>
     );
   }
@@ -136,4 +140,5 @@ export class DiskPanel extends Component {
 DiskPanel.propTypes = {
   dispatch: PropTypes.func.isRequired,
   linode: PropTypes.object.isRequired,
+  distributions: PropTypes.object.isRequired,
 };
