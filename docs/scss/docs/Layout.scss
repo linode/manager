@@ -1,16 +1,16 @@
-$sidebar-width: 275px;
+$sidebar-width: 250px;
 
 .Layout {
     background-color: $gray;
 
-    &-container,
     &-navigationContainer,
     &-content {
-        height: 100%;
+        min-height: 100%;
     }
 
     &-container {
-        padding-top: $nav-height;
+        min-height: calc(100% - #{$nav-height});
+        margin-top: $nav-height;
     }
 
     &-navigationContainer {

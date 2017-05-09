@@ -1,9 +1,9 @@
 {
   "name": "linode-manager",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "The Linode Manager website",
   "scripts": {
-    "clean": "rimraf dist",
+    "clean": "rm -rf dist",
     "build:webpack": "cross-env NODE_ENV=production webpack --config webpack.config.prod.js",
     "build": "npm run clean && npm run build:webpack",
     "rebuild-components": "rm -fr node_modules/linode-components && npm install",
@@ -87,7 +87,6 @@
     "redux-devtools": "^3.3.1",
     "redux-devtools-dock-monitor": "^1.1.1",
     "redux-devtools-log-monitor": "^1.0.11",
-    "rimraf": "^2.4.3",
     "sass-loader": "^3.1.2",
     "style-loader": "^0.13.0",
     "sinon": "^2.0.0-pre.2",

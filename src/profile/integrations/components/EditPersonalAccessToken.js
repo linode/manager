@@ -1,51 +1,38 @@
 import React, { PropTypes, Component } from 'react';
 
-import { ModalFormGroup } from 'linode-components/forms';
-import { Form, Input, SubmitButton } from 'linode-components/forms';
 import { CancelButton } from 'linode-components/buttons';
+import { Form, Input, ModalFormGroup, SubmitButton } from 'linode-components/forms';
 
 import { tokens } from '~/api';
-import { FormSummary, reduceErrors } from '~/components/forms';
+import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
 
 
-export default class CreatePersonalAccessToken extends Component {
+export default class EditPersonalAccessToken extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       errors: {},
       label: props.label,
-      saving: false,
+      loading: false,
     };
   }
 
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   onSubmit = async () => {
-    const { dispatch, id } = this.props;
+    const { dispatch, id, close } = this.props;
     const { label } = this.state;
 
-    this.setState({ errors: {}, saving: true });
-
-    try {
-      await dispatch(tokens.put({ label }, id));
-
-      this.setState({ saving: false });
-      this.props.close();
-    } catch (response) {
-      if (!response.json) {
-        // eslint-disable-next-line no-console
-        console.error(response);
-      }
-
-      const errors = await reduceErrors(response);
-      this.setState({ errors, saving: false });
-    }
+    await dispatch(dispatchOrStoreErrors.call(this, [
+      () => tokens.put({ label }, id),
+      close,
+    ]));
   }
 
   render() {
     const { close } = this.props;
-    const { errors, label, saving } = this.state;
+    const { errors, label, loading } = this.state;
 
     return (
       <Form onSubmit={this.onSubmit}>
@@ -60,17 +47,17 @@ export default class CreatePersonalAccessToken extends Component {
         </ModalFormGroup>
         <div className="Modal-footer">
           <CancelButton onClick={close} />
-          <SubmitButton disabled={saving} />
+          <SubmitButton disabled={loading} />
+          <FormSummary errors={errors} />
         </div>
-        <FormSummary errors={errors} />
       </Form>
     );
   }
 }
 
-CreatePersonalAccessToken.propTypes = {
+EditPersonalAccessToken.propTypes = {
   dispatch: PropTypes.func.isRequired,
   close: PropTypes.func.isRequired,
   label: PropTypes.string.isRequired,
-  id: PropTypes.string.isRequired,
+  id: PropTypes.number.isRequired,
 };

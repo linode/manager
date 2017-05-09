@@ -1,9 +1,13 @@
-import React from 'react';
-import sinon from 'sinon';
-import { shallow } from 'enzyme';
 import { expect } from 'chai';
+import { mount } from 'enzyme';
+import React from 'react';
+import { push } from 'react-router-redux';
+import sinon from 'sinon';
 
 import NewSlaveZone from '~/domains/components/NewSlaveZone';
+
+import { expectDispatchOrStoreErrors, expectObjectDeepEquals, expectRequest } from '@/common';
+
 
 describe('domains/components/NewSlaveZone', () => {
   const sandbox = sinon.sandbox.create();
@@ -12,54 +16,30 @@ describe('domains/components/NewSlaveZone', () => {
     sandbox.restore();
   });
 
-  it('renders data', () => {
-    const component = shallow(
+  it('submits form and redirects to domain', async () => {
+    const dispatch = sinon.stub();
+    const component = mount(
       <NewSlaveZone
-        master_ips={['127.0.0.1']}
-        domain="my-domain.net"
-        onSubmit={() => {}}
-        onChange={() => {}}
-        loading={false}
-        errors={{}}
+        dispatch={dispatch}
       />
     );
 
-    expect(component.find('Input').at(0).props().value).to.equal('my-domain.net');
-    expect(component.find('textarea').at(0).props().value).to.equal('127.0.0.1');
-  });
+    const change = (name, value) =>
+      component.find({ name }).simulate('change', { target: { name, value } });
 
-  it('calls onChange when fields change', () => {
-    const onChange = sandbox.stub();
-    shallow(
-      <NewSlaveZone
-        master_ips={['98.139.180.149']}
-        domain=""
-        onSubmit={() => {}}
-        onChange={onChange}
-        loading={false}
-        errors={{}}
-      />
-    );
+    change('ips', '1;2;3;4');
+    change('domain', 'test.com');
 
-    expect(onChange.callCount).to.equal(2);
-    expect(onChange.firstCall.args[0]).to.equal('domain');
-    expect(onChange.secondCall.args[0]).to.equal('master_ips');
-  });
+    await component.find('Form').props().onSubmit();
 
-  it('calls onSubmit when form is submitted', () => {
-    const onSubmit = sandbox.spy();
-    const component = shallow(
-      <NewSlaveZone
-        master_ips={['98.139.180.149']}
-        domain=""
-        onSubmit={onSubmit}
-        onChange={() => {}}
-        loading={false}
-        errors={{}}
-      />
-    );
-
-    component.find('Form').simulate('submit');
-    expect(onSubmit.callCount).to.equal(1);
+    expect(dispatch.callCount).to.equal(1);
+    expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      ([fn]) => expectRequest(fn, '/domains/', {
+        domain: 'test.com',
+        type: 'slave',
+        ips: ['1', '2', '3', '4'],
+      }),
+      ([pushResult]) => expectObjectDeepEquals(pushResult, push('/domains')),
+    ]);
   });
 });

@@ -8,16 +8,16 @@ import { ConfirmModalBody } from 'linode-components/modals';
 import { showModal, hideModal } from '~/actions/modal';
 import { tokens } from '~/api';
 import { OAUTH_SUBSCOPES, OAUTH_SCOPES } from '~/constants';
-import { reduceErrors, FormSummary } from '~/components/forms';
+import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
 
 import SelectExpiration from '../../components/SelectExpiration';
 
 
-export async function renderSecret(label, verb, secret) {
+export function renderSecret(label, verb, secret) {
   const { dispatch } = this.props;
   const close = () => dispatch(hideModal());
 
-  await dispatch(showModal(
+  dispatch(showModal(
     `${_.capitalize(label)} ${verb}`,
     <ConfirmModalBody onOk={close} onCancel={close} buttonText="I understand">
       <div>
@@ -44,7 +44,7 @@ export default class CreatePersonalAccessToken extends Component {
       errors: {},
       label: '',
       expiry: '0',
-      saving: false,
+      loading: false,
     };
   }
 
@@ -63,24 +63,10 @@ export default class CreatePersonalAccessToken extends Component {
       return `${scopes};${scope}:${level}`;
     }, '') || undefined;
 
-    this.setState({ errors: {}, saving: true });
-
-    const data = { label, scopes, expiry: SelectExpiration.map(expiry) };
-
-    try {
-      const { token } = await dispatch(tokens.post(data));
-      this.setState({ saving: false });
-
-      await this.renderSecret('personal access token', 'created', token);
-    } catch (response) {
-      if (!response.json) {
-        // eslint-disable-next-line no-console
-        return console.error(response);
-      }
-
-      const errors = await reduceErrors(response);
-      this.setState({ errors, saving: false });
-    }
+    await dispatch(dispatchOrStoreErrors.call(this, [
+      () => tokens.post({ label, scopes, expiry: SelectExpiration.map(expiry) }),
+      ({ token }) => this.renderSecret('personal access token', 'created', token),
+    ]));
   }
 
   renderScopeFormGroup = (scope) => {
@@ -108,7 +94,7 @@ export default class CreatePersonalAccessToken extends Component {
 
   render() {
     const { close } = this.props;
-    const { errors, label, expiry, saving } = this.state;
+    const { errors, label, expiry, loading } = this.state;
 
     return (
       <Form onSubmit={this.onSubmit}>
@@ -137,7 +123,10 @@ export default class CreatePersonalAccessToken extends Component {
         {OAUTH_SCOPES.map(this.renderScopeFormGroup)}
         <div className="Modal-footer">
           <CancelButton onClick={close} />
-          <SubmitButton disabled={saving}>Create</SubmitButton>
+          <SubmitButton
+            disabled={loading}
+            disabledChildren="Creating"
+          >Create</SubmitButton>
           <FormSummary errors={errors} />
         </div>
       </Form>

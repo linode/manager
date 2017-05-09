@@ -46,7 +46,7 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
     await expectRequest(fn2, '/linode/instances/1242/disks/?page=1', undefined, { disks: [] });
   });
 
-  it('calls saveChanges when save is pressed', () => {
+  it('calls saveChanges when save is pressed', async () => {
     const page = mount(
       <EditConfigPage
         {...props}
@@ -54,27 +54,8 @@ describe('linodes/linode/settings/layouts/EditConfigPage', () => {
       />);
 
     const saveChanges = sandbox.stub(page.instance(), 'saveChanges');
-    page.find('Form').simulate('submit');
+    await page.find('Form').props().onSubmit();
     expect(saveChanges.callCount).to.equal(1);
-  });
-
-  it('handles API errors', async () => {
-    const dispatch = sandbox.stub();
-    const page = shallow(
-      <EditConfigPage
-        {...props}
-        dispatch={dispatch}
-      />);
-    dispatch.throws({
-      json: () => ({
-        errors: [{ field: 'label', reason: 'because of fail' }],
-      }),
-    });
-
-    await page.instance().saveChanges();
-    expectObjectDeepEquals(page.instance().state.errors, {
-      label: [{ field: 'label', reason: 'because of fail' }],
-    });
   });
 
   it('redirects to advanced page after call', async () => {

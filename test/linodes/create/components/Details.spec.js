@@ -26,7 +26,7 @@ describe('linodes/create/components/Details', () => {
     expect(feedback.childAt(0).text()).to.equal(error);
   });
 
-  it('submits inputs when submitted', () => {
+  it('submits inputs when submitted', async () => {
     const onSubmit = sandbox.spy();
     const details = mount(
       <Details submitEnabled onSubmit={onSubmit} selectedType={null} />
@@ -36,7 +36,7 @@ describe('linodes/create/components/Details', () => {
     details.find('input[type="password"]').simulate('change', { target: { value: 'my-password' } });
     details.find('#backups').simulate('change', { target: { checked: true } });
 
-    details.find('form').simulate('submit');
+    await details.find('form').props().onSubmit();
 
     expect(onSubmit.callCount).to.equal(1);
 

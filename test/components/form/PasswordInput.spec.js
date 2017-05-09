@@ -17,12 +17,13 @@ describe('components/forms/PasswordInput', () => {
     const input = shallow(
       <PasswordInput
         onChange={change}
+        name="password"
         value=""
         name="password"
       />
     );
 
-    input.find('Input').simulate('change', { target: { value: 'p@ssword' } });
+    input.find('Input').simulate('change', { target: { value: 'password' } });
     expect(change.callCount).to.equal(1);
   });
 
