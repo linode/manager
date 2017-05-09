@@ -31,6 +31,9 @@
 }
 
 .row-label {
-  color: $light-black; // $lightest-black
-  text-align: right;
+    padding: $form-field-padding;
+    padding-top: 0;
+    padding-bottom: 0;
+    color: $light-black;
+    text-align: right;
 }
