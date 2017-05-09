@@ -53,7 +53,7 @@ function onRouterUpdate() {
 }
 
 export function init() {
-  setTimeout(() => hashLinkScroll(), 0);
+  setTimeout(hashLinkScroll, 0);
 
   render(
     <Router
