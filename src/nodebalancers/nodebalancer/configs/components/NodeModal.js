@@ -29,7 +29,7 @@ export class NodeModal extends Component {
 
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
-  async onSubmit() {
+  onSubmit = () => {
     const { dispatch, nodebalancerId, configId } = this.props;
     const state = this.state;
     const data = {
@@ -40,11 +40,9 @@ export class NodeModal extends Component {
     };
     const ids = [nodebalancerId, configId, state.id].filter(Boolean);
 
-    await dispatch(dispatchOrStoreErrors.apply(this, [
-      [
-        () => nodebalancers.configs.nodes[state.id ? 'put' : 'post'](data, ...ids),
-        hideModal,
-      ],
+    return dispatch(dispatchOrStoreErrors.call(this, [
+      () => nodebalancers.configs.nodes[state.id ? 'put' : 'post'](data, ...ids),
+      hideModal,
     ]));
   }
 
@@ -53,9 +51,7 @@ export class NodeModal extends Component {
     const { label, address, port, weight, mode, errors, loading } = this.state;
 
     return (
-      <Form
-        onSubmit={() => this.onSubmit()}
-      >
+      <Form onSubmit={this.onSubmit}>
         <ModalFormGroup
           label="Label"
           id="label"
