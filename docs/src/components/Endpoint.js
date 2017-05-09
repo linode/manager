@@ -23,18 +23,6 @@ export default function Endpoint(props) {
           <h1>{path}</h1>
           <p>{description}</p>
         </div>
-        <div className="Endpoint-methods">
-          <span className="Endpoint-methodsLabel">JUMP TO:</span>
-          <ul className="Endpoint-methodsList">
-            {methods.map(function(method, index) {
-              return (
-                <li key={index}>
-                  <Link to={`#${method.name}`}>{method.name}</Link>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
       </div>
       <div className="divider"></div>
       <div className="Endpoint-body">
