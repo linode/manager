@@ -24,12 +24,12 @@ export default function Errors() {
         <pre>
           <code>
 {`{
-"errors": [
-  {
-    "field": "region",
-    "reason": "Record not found"
-  }
-]
+  "errors": [
+    {
+      "field": "region",
+      "reason": "Record not found"
+    }
+  ]
 }`}
           </code>
         </pre>
