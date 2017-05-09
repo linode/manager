@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import _ from 'lodash';
+
 import { Card, CardHeader } from 'linode-components/cards';
 import { Table } from 'linode-components/tables';
 import { List } from 'linode-components/lists';
@@ -11,6 +11,9 @@ import { LinkCell, ButtonCell } from 'linode-components/tables/cells';
 import { objectFromMapByLabel } from '~/api/util';
 import { setSource } from '~/actions/source';
 import Region from '~/linodes/components/Region';
+import {
+  NODEBALANCER_CONFIG_ALGORITHMS, NODEBALANCER_CONFIG_STICKINESS, NODEBALANCER_CONFIG_CHECKS,
+} from '~/constants';
 
 
 export class DashboardPage extends Component {
@@ -36,9 +39,8 @@ export class DashboardPage extends Component {
       return {
         ...config,
         protocol: config.protocol.toUpperCase(),
-        algorithm: _.capitalize(config.algorithm),
-        stickiness: _.capitalize(config.stickiness),
-        check: _.capitalize(config.check),
+        algorithm: NODEBALANCER_CONFIG_ALGORITHMS[config.algorithm],
+        stickiness: NODEBALANCER_CONFIG_STICKINESS[config.stickiness],
         statusString: '0 up, 0 down',
       };
     });
@@ -100,18 +102,9 @@ export class DashboardPage extends Component {
                   },
                   { dataKey: 'protocol', label: 'Protocol' },
                   { dataKey: 'algorithm', label: 'Algorithm' },
-                  { dataKey: 'stickiness', label: 'Session stickiness' },
-                  { dataKey: 'check', label: 'Health check method' },
-                  { dataKey: 'statusString', label: 'Node status' },
-                  {
-                    cellComponent: ButtonCell,
-                    headerClassName: 'ButtonColumn',
-                    buttonClassName: 'btn-secondary',
-                    hrefFn: function (config) {
-                      return `/nodebalancers/${nodebalancer.label}/configs/${config.id}/settings`;
-                    },
-                    text: 'Edit',
-                  },
+                  { dataKey: 'stickiness', label: 'Session Stickiness' },
+                  { dataKey: 'statusString', label: 'Node Status' },
+                  // TODO: make Delete button
                 ]}
                 data={newConfigs}
                 selectedMap={{}}

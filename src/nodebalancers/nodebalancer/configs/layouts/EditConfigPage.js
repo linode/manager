@@ -24,7 +24,7 @@ export class EditConfigPage extends Component {
     }
 
     return (
-      <Card header={<CardHeader title="Edit Config" />}>
+      <Card>
         <div>
           <p>
             {/* eslint-disable max-len */}

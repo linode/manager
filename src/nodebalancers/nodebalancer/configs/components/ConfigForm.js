@@ -7,6 +7,9 @@ import {
 
 import { nodebalancers } from '~/api';
 import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+import {
+  NODEBALANCER_CONFIG_ALGORITHMS, NODEBALANCER_CONFIG_STICKINESS, NODEBALANCER_CONFIG_CHECKS,
+} from '~/constants';
 
 
 export default class ConfigForm extends Component {
@@ -103,11 +106,9 @@ export default class ConfigForm extends Component {
               name="algorithm"
               value={algorithm}
               onChange={this.onChange}
-            >
-              <option value="roundrobin">Round Robin</option>
-              <option value="leastconn">Least Connections</option>
-              <option value="source">Source IP</option>
-            </Select>
+              options={Object.keys(NODEBALANCER_CONFIG_ALGORITHMS).map(
+                value => ({ value, label: NODEBALANCER_CONFIG_ALGORITHMS[value] }))}
+            />
             <div>
               <small className="text-muted">
                 Configure how initial client connections are
@@ -125,11 +126,9 @@ export default class ConfigForm extends Component {
               name="stickiness"
               value={stickiness}
               onChange={this.onChange}
-            >
-              <option value="table">Table</option>
-              <option value="http_cookie">HTTP Cookie</option>
-              <option value="none">None</option>
-            </Select>
+              options={Object.keys(NODEBALANCER_CONFIG_STICKINESS).map(
+                value => ({ value, label: NODEBALANCER_CONFIG_STICKINESS[value] }))}
+            />
             <div>
               <small className="text-muted">
                 Enable subsequent requests from the same client to
@@ -141,18 +140,16 @@ export default class ConfigForm extends Component {
         </FormGroup>
         <h3 className="sub-header">Active Health Check</h3>
         <FormGroup errors={errors} name="check" className="row">
-          <label className="col-sm-2 col-form-label">Health check type</label>
+          <label className="col-sm-2 col-form-label">Type</label>
           <div className="col-sm-10">
             <Select
               id="check"
               name="check"
               value={check}
               onChange={this.onChange}
-            >
-              <option value="connection">TCP Connection</option>
-              <option value="http">HTTP Valid Status</option>
-              <option value="http_body">HTTP Body Regex</option>
-            </Select>
+              options={Object.keys(NODEBALANCER_CONFIG_CHECKS).map(
+                value => ({ value, label: NODEBALANCER_CONFIG_CHECKS[value] }))}
+            />
             <div>
               <small className="text-muted">
                 Active health checks proactively check the health of back-end nodes.
