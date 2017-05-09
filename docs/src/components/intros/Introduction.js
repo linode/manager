@@ -38,16 +38,19 @@ export default function Introduction() {
           HTTP Methods
           <span className="anchor" id="http-methods">&nbsp;</span>
         </h2>
-        <dl>
-          <dt>GET</dt>
-          <dd>Gets information about a resource or resources</dd>
-          <dt>PUT</dt>
-          <dd>Edits information about a resource</dd>
-          <dt>POST</dt>
-          <dd>Creates a new resource</dd>
-          <dt>DELETE</dt>
-          <dd>Deletes a resource</dd>
-        </dl>
+        <Table
+          className="Table--secondary"
+          columns={[
+            { dataKey: 'method', label: 'Method' },
+            { dataKey: 'description', label: 'Description' }
+          ]}
+          data={[
+            { method: 'GET', description: 'Gets information about a resource or resources' },
+            { method: 'PUT', description: 'Edits information about a resource' },
+            { method: 'POST', description: 'Creates a new resource' },
+            { method: 'DELETE', description: 'Deletes a resource' },
+          ]}
+        />
         <p>
           The API exposes <strong>resources</strong> through various HTTP endpoints.
           You work with these resources through consistent use of HTTP verbs and
