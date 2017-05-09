@@ -59,7 +59,7 @@ export class ViewConfigPage extends Component {
   editNodeModal(node) {
     const { dispatch, nodebalancer, config } = this.props;
 
-    dispatch(showModal('Edit Node`',
+    dispatch(showModal('Edit Node',
       <NodeModal
         dispatch={dispatch}
         confirmText="Save"
