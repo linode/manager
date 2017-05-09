@@ -1,11 +1,29 @@
 .Docs {
+    p, pre {
+        padding: 5px 0;
+    }
+
+    h1, h2, h3 {
+        margin: 0;
+        padding: 0;
+    }
+
+    table {
+        margin-bottom: 15px;
+    }
+
     pre {
         background-color: $black;
         color: $white;
         padding: 10px;
+        margin: 10px 0;
 
         code {
             @extend .font-small;
         }
+    }
+
+    section {
+        margin-bottom: 25px;
     }
 }
