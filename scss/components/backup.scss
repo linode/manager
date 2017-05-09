@@ -1,40 +1,4 @@
-.backup {
-    border: $border;
-    cursor: pointer;
-    cursor: hand;
-    text-align: center;
-
-    header {
-        padding: 0;
-        height: $form-field-height;
-        line-height: $form-field-height;
-    }
-
-    > :not(header) {
-        padding: 15px;
-    }
-
-    .content-col:last-of-type {
-        margin: 0 auto;
-    }
-
-    &.future {
-      opacity: 0.70;
-      cursor: default;
-      .future-disabled {
-        &:hover {
-          background-color: $white;
-        }
-      }
-    }
-
-}
-
 .Backup {
-    &-container {
-        padding: 5px 0;
-    }
-
     &--disabled {
         cursor: not-allowed;
     }
