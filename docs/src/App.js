@@ -41,6 +41,7 @@ function hashLinkScroll() {
       const element = document.getElementById(id);
       if (element) {
         element.scrollIntoView();
+        window.scrollBy(0, -60); // Offset for header
       }
     }, 0);
   }
@@ -52,6 +53,8 @@ function onRouterUpdate() {
 }
 
 export function init() {
+  setTimeout(() => hashLinkScroll(), 0);
+
   render(
     <Router
       history={browserHistory}
