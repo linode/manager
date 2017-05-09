@@ -55,7 +55,7 @@
     .Input, .Select {
         display: block;
 
-        .form-control {
+        :last-child.form-control {
             width: 100%;
         }
     }
