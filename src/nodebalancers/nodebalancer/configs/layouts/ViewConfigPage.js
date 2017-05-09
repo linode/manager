@@ -1,15 +1,17 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
+import { showModal } from '~/actions/modal';
 import { setError } from '~/actions/errors';
-import { Link } from 'react-router';
 import { Card, CardHeader } from 'linode-components/cards';
+import { Button } from 'linode-components/buttons';
 import { Table } from 'linode-components/tables';
 import { List } from 'linode-components/lists';
 import { ListBody } from 'linode-components/lists/bodies';
 import { LinkCell, ButtonCell } from 'linode-components/tables/cells';
 import { nodebalancers } from '~/api';
 import { getObjectByLabelLazily, objectFromMapByLabel } from '~/api/util';
+import { NodeModal } from '../components/NodeModal';
 
 export class ViewConfigPage extends Component {
   static async preload({ dispatch, getState }, { nbLabel, configId }) {
@@ -27,10 +29,40 @@ export class ViewConfigPage extends Component {
   constructor() {
     super();
 
+    this.addNodeModal = this.addNodeModal.bind(this);
+    this.editNodeModal = this.editNodeModal.bind(this);
     this.state = {
       errors: {},
       saving: false,
+      loading: false,
     };
+  }
+
+  addNodeModal() {
+    const { dispatch, nodebalancer, config } = this.props;
+
+    dispatch(showModal('Add Node',
+      <NodeModal
+        dispatch={dispatch}
+        confirmText="Create"
+        configId={config.id}
+        nodebalancerId={nodebalancer.id}
+      />
+    ));
+  }
+
+  editNodeModal(node) {
+    const { dispatch, nodebalancer, config } = this.props;
+
+    dispatch(showModal('Edit Node`',
+      <NodeModal
+        dispatch={dispatch}
+        confirmText="Save"
+        node={node}
+        configId={config.id}
+        nodebalancerId={nodebalancer.id}
+      />
+    ));
   }
 
   render() {
@@ -62,10 +94,10 @@ export class ViewConfigPage extends Component {
             <CardHeader
               title="Nodes"
               nav={
-                <Link
-                  to={`/nodebalancers/${nodebalancer.label}/configs/${config.id}/create`}
+                <Button
+                  onClick={this.addNodeModal}
                   className="linode-add btn btn-default float-sm-right"
-                >Add a Node</Link>
+                >Add a Node</Button>
               }
             />
           }
@@ -89,10 +121,7 @@ export class ViewConfigPage extends Component {
                   {
                     cellComponent: ButtonCell,
                     buttonClassName: 'btn-secondary',
-                    hrefFn: function (node) {
-                      // eslint-disable-next-line max-len
-                      return `/nodebalancers/${nodebalancer.label}/configs/${config.id}/nodes/${node.id}/settings`;
-                    },
+                    onClick: (node) => this.editNodeModal(node),
                     text: 'Edit',
                   },
                 ]}
@@ -108,6 +137,7 @@ export class ViewConfigPage extends Component {
 }
 
 ViewConfigPage.propTypes = {
+  dispatch: PropTypes.func.isRequired,
   config: PropTypes.object.isRequired,
   nodebalancer: PropTypes.object.isRequired,
 };
