@@ -73,7 +73,7 @@ export default function Authentication() {
           data={[
             {
               parameter: 'client_id',
-              description: 'Required. Your appliication\'s client ID.'
+              description: 'Required. Your application\'s client ID.'
             },
             {
               parameter: 'scopes',
