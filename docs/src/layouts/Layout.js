@@ -9,7 +9,7 @@ export default function Layout(props) {
   const { endpoints } = route;
 
   return (
-    <div className="Layout">
+    <div className="Docs Layout">
       <Header></Header>
       <div className="Layout-container container">
         <div className="Layout-navigationContainer">
