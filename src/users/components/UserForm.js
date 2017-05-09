@@ -42,8 +42,8 @@ export default class UserForm extends Component {
     const idsPath = [oldUsername].filter(Boolean);
     await dispatch(dispatchOrStoreErrors.call(this, [
       () => users[oldUsername ? 'put' : 'post'](data, ...idsPath),
-      () => oldUsername != username && push(`/users/${username}`),
-      () => oldUsername != username && actions.delete(username),
+      () => oldUsername !== data.username && push(`/users/${data.username}`),
+      () => oldUsername !== data.username && actions.delete(data.username),
     ]));
   }
 

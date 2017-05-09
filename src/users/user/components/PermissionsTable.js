@@ -7,15 +7,18 @@ import { CheckboxCell } from 'linode-components/tables/cells';
 export default function PermissionsTable(props) {
   const { onCellChange, parentKey, columns, objects, title } = props;
   const headerColumn = { dataKey: 'label', label: title };
+
+  const maybeCheckboxCell = (col) => !col ? {} : {
+    cellComponent: col ? CheckboxCell : null,
+    onChange: onCellChange,
+    dataKey: col.dataKey,
+    label: col.label,
+  };
+
   const allColumns = [headerColumn, ...columns.map(col => ({
     parentKey,
     headerClassName: 'PermissionsCheckboxColumn',
-    ...(!col ? {} : {
-      cellComponent: col ? CheckboxCell : null,
-      onChange: onCellChange,
-      dataKey: col.dataKey,
-      label: col.label,
-    }),
+    ...maybeCheckboxCell(col),
   }))];
 
   return (

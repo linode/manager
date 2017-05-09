@@ -154,7 +154,8 @@ export class IndexPage extends Component {
           </div>
         </header>
         <div className="PrimaryPage-body">
-          {Object.keys(this.props.domains.domains).length ? this.renderZones(this.props.domains.domains) :
+          {Object.keys(this.props.domains.domains).length ?
+            this.renderZones(this.props.domains.domains) :
             <CreateHelper label="Domains" href="/domains/create" linkText="Add a Domain" />}
         </div>
       </div>

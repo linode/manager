@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { push } from 'react-router-redux';
 
 import { Card } from 'linode-components/cards';
 import { Checkbox, Checkboxes, Form, FormGroup, SubmitButton } from 'linode-components/forms';
