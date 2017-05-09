@@ -19,12 +19,12 @@ export default class ScheduleForm extends Component {
   }
 
   onSubmit = async () => {
-    const { dispatch } = this.props;
+    const { dispatch, linode } = this.props;
     const { day, window } = this.state;
 
     await dispatch(dispatchOrStoreErrors.call(this, [
-      () => linodes.put({ backups: { schedule: { day, window } } }, id),
-    ]))
+      () => linodes.put({ backups: { schedule: { day, window } } }, linode.id),
+    ]));
   }
 
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
@@ -89,4 +89,6 @@ export default class ScheduleForm extends Component {
 ScheduleForm.propTypes = {
   window: PropTypes.string.isRequired,
   day: PropTypes.string.isRequired,
+  linode: PropTypes.object.isRequired,
+  dispatch: PropTypes.func.isRequired,
 };

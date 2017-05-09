@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 
 import { ConfirmModalBody } from 'linode-components/modals';
-import { Form, FormGroup, SubmitButton } from 'linode-components/forms';
+import { Form, SubmitButton } from 'linode-components/forms';
 
 import { cancelBackup } from '~/api/backups';
 import { showModal, hideModal } from '~/actions/modal';
@@ -26,7 +26,7 @@ export default class CancelForm extends Component {
 
   onSubmit = () => {
     const { dispatch } = this.props;
-    
+
     dispatch(showModal('Cancel Backups Service', (
       <ConfirmModalBody
         onOk={this.onOk}
@@ -55,3 +55,8 @@ export default class CancelForm extends Component {
     );
   }
 }
+
+CancelForm.propTypes = {
+  linode: PropTypes.object.isRequired,
+  dispatch: PropTypes.func.isRequired,
+};

@@ -22,7 +22,7 @@ export class SettingsPage extends Component {
     return (
       <div>
         <Card header={<CardHeader title="Manage Schedule" />}>
-          <ScheduleForm day={day} window={window} dispatch={dispatch} />
+          <ScheduleForm linode={linode} day={day} window={window} dispatch={dispatch} />
         </Card>
         <Card header={<CardHeader title="Cancel Backups Service" />}>
           <CancelForm linode={linode} dispatch={dispatch} />

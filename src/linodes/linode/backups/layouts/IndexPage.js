@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { push } from 'react-router-redux';
 
-import { PrimaryButton } from 'linode-components/buttons';
 import { Card, CardHeader } from 'linode-components/cards';
 import { Tabs } from 'linode-components/tabs';
 import { Form, SubmitButton } from 'linode-components/forms';
@@ -21,8 +20,10 @@ import { selectLinode } from '../../utilities';
 export class IndexPage extends Component {
   static async preload({ dispatch, getState }, { linodeLabel }) {
     try {
-      const { id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
-      await dispatch(linodeBackups([id]));
+      const { id, backups } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
+      if (backups.enabled) {
+        await dispatch(linodeBackups([id]));
+      }
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error(e);

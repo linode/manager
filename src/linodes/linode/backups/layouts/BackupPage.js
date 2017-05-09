@@ -3,20 +3,16 @@ import { connect } from 'react-redux';
 
 import { setError } from '~/actions/errors';
 import { linodes } from '~/api';
-import { linodeBackups } from '~/api/linodes';
-import { getObjectByLabelLazily, objectFromMapByLabel } from '~/api/util';
 
 import { BackupRestore, BackupDetails } from '../components';
 import { selectLinode } from '../../utilities';
 
 
 export class BackupPage extends Component {
-  static async preload({ dispatch, getState }, { linodeLabel }) {
+  static async preload({ dispatch }) {
     try {
       // All linodes are in-fact needed for restore dialog.
       await dispatch(linodes.all());
-      const { id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
-      await dispatch(linodeBackups(id));
     } catch (e) {
       dispatch(setError(e));
     }
@@ -48,8 +44,28 @@ BackupPage.propTypes = {
 function select(state, props) {
   const { linode } = selectLinode(state, props);
   const { linodes } = state.api;
-  const { backupId } = props.params;
-  const backup = objectFromMapByLabel(linode._backups, backupId, 'id');
+  const backupId = parseInt(props.params.backupId);
+
+  const backups = linode._backups;
+  let backup;
+  if (backups) {
+    if (backups.daily && backups.daily.id === backupId) {
+      backup = backups.daily;
+    } else if (backups.snapshot) {
+      if (backups.snapshot.current && backups.snapshot.current.id === backupId) {
+        backup = backups.snapshot.current;
+      } else if (backups.snapshot.in_progress && backups.snapshot.in_progress.id === backupId) {
+        backup = backups.snapshot.in_progress;
+      }
+    } else if (backups.weekly.length) {
+      if (backups.weekly[0] && backups.weekly[0].id === backupId) {
+        backup = backups.weekly[0];
+      } else if (backups.weekly[1] && backups.weekly[1].id === backupId) {
+        backup = backups.weekly[1];
+      }
+    }
+  }
+
   return { linode, backup, linodes };
 }
 
