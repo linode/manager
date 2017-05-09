@@ -40,8 +40,7 @@ function hashLinkScroll() {
       const id = hash.replace('#', '');
       const element = document.getElementById(id);
       if (element) {
-        element.scrollIntoView();
-        window.scrollBy(0, -60); // Offset for header
+        element.scrollTop = element.offsetHeight;
       }
     }, 0);
   }
