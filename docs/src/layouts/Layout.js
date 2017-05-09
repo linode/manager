@@ -20,7 +20,7 @@ export default function Layout(props) {
                 <li><Link to="/introduction">Introduction</Link></li>
                 <li><Link to="/access">Access</Link></li>
                 <li><Link to="/pagination">Pagination</Link></li>
-                <li><Link to="/filtering">Filtering</Link></li>
+                <li><Link to="/filtering">Filtering &amp; Sorting</Link></li>
                 <li><Link to="/errors">Errors</Link></li>
               </ul>
             </div>
