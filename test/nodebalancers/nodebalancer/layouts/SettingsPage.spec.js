@@ -26,7 +26,7 @@ describe('nodebalancers/nodebalancer/layouts/SettingsPage', () => {
       />
     );
 
-    expect(page.find({ id: 'connThrottle' }).props().value)
+    expect(page.find({ id: 'client_conn_throttle' }).props().value)
       .to.equal(genericNodeBalancer.client_conn_throttle);
     expect(page.find({ id: 'label' }).props().value).to.equal(genericNodeBalancer.label);
   });

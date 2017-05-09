@@ -49,13 +49,13 @@ export class SettingsPage extends Component {
         <Form onSubmit={this.onSubmit}>
           <div className="row">
             <label className="col-sm-3 col-form-label">Hostname</label>
-            <div className="col-sm-8">
+            <div className="col-sm-9">
               {hostname}
             </div>
           </div>
           <FormGroup errors={errors} className="row" name="label">
             <label htmlFor="label" className="col-sm-3 col-form-label">Label</label>
-            <div className="col-sm-8">
+            <div className="col-sm-9">
               <Input
                 id="label"
                 name="label"
@@ -65,26 +65,26 @@ export class SettingsPage extends Component {
               <FormGroupError errors={errors} name="label" />
             </div>
           </FormGroup>
-          <FormGroup errors={errors} className="row" name="label">
+          <FormGroup errors={errors} className="row" name="client_conn_throttle">
             <label htmlFor="connThrottle" className="col-sm-3 col-form-label">
               Client Connection Throttle
             </label>
-            <div className="col-sm-8">
+            <div className="col-sm-9">
               <Input
-                id="connThrottle"
-                name="connThrottle"
+                id="client_conn_throttle"
+                name="client_conn_throttle"
                 value={connThrottle}
                 onChange={e => this.setState({ connThrottle: e.target.value })}
               />
+              <FormGroupError errors={errors} name="client_conn_throttle" />
               <div><small className="text-muted">
                 To help mitigate abuse, throttle connections from a single
                 client IP to this number per second. 0 to disable.
               </small></div>
-              <FormGroupError errors={errors} name="connThrottle" />
             </div>
           </FormGroup>
           <FormGroup className="row">
-            <div className="offset-sm-3 col-sm-8">
+            <div className="offset-sm-3 col-sm-9">
               <SubmitButton disabled={loading} />
               <FormSummary errors={errors} success="Settings saved." />
             </div>
