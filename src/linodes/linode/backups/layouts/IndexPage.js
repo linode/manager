@@ -6,7 +6,7 @@ import { push } from 'react-router-redux';
 import { PrimaryButton } from 'linode-components/buttons';
 import { Card, CardHeader } from 'linode-components/cards';
 import { Tabs } from 'linode-components/tabs';
-import { Form } from 'linode-components/forms';
+import { Form, SubmitButton } from 'linode-components/forms';
 
 import { setSource } from '~/actions/source';
 import { setError } from '~/actions/errors';
@@ -62,11 +62,11 @@ export class IndexPage extends Component {
               Backups not enabled. Enable backups for
               ${(linode.type.backups_price / 100).toFixed(2)}/mo.
             </p>
-            <PrimaryButton
-              type="submit"
+            <SubmitButton
+              className="btn-primary"
               disabled={loading}
               disabledChildren="Enabling backups"
-            >Enable backups</PrimaryButton>
+            >Enable backups</SubmitButton>
             <FormSummary errors={errors} />
           </Form>
         </Card>
