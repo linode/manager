@@ -1,6 +1,5 @@
 .Endpoint {
-    &-header,
-    &-body {
+    &-header {
         padding: 25px;
     }
 
@@ -10,6 +9,10 @@
         h1 {
             margin: 0;
         }
+    }
+
+    &-body {
+
     }
 
     &-methods {
