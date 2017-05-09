@@ -1,6 +1,9 @@
 import React from 'react';
 import { API_ROOT, API_VERSION } from '~/constants';
 
+import { Table } from 'linode-components/tables';
+
+
 export default function Introduction() {
   return (
     <section className="GettingStartedPage">
@@ -41,8 +44,8 @@ export default function Introduction() {
         <Table
           className="Table--secondary"
           columns={[
-            { dataKey: 'method', label: 'Method' },
-            { dataKey: 'description', label: 'Description' }
+            { dataKey: 'method', label: 'Method', headerClassName: 'MethodColumn' },
+            { dataKey: 'description', label: 'Description', headerClassName: 'DescriptionColumn' }
           ]}
           data={[
             { method: 'GET', description: 'Gets information about a resource or resources' },
