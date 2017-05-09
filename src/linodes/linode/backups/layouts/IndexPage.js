@@ -3,16 +3,17 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { push } from 'react-router-redux';
 
-import { Tabs } from 'linode-components/tabs';
 import { PrimaryButton } from 'linode-components/buttons';
 import { Card, CardHeader } from 'linode-components/cards';
+import { Tabs } from 'linode-components/tabs';
+import { Form } from 'linode-components/forms';
 
 import { setSource } from '~/actions/source';
 import { setError } from '~/actions/errors';
 import { enableBackup } from '~/api/backups';
 import { linodeBackups } from '~/api/linodes';
 import { getObjectByLabelLazily } from '~/api/util';
-import { FormSummary, reduceErrors } from '~/components/forms';
+import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
 
 import { selectLinode } from '../../utilities';
 
@@ -32,8 +33,7 @@ export class IndexPage extends Component {
   constructor() {
     super();
 
-    this.enableBackups = this.enableBackups.bind(this);
-    this.state = { errors: {} };
+    this.state = { loading: false, errors: {} };
   }
 
   componentDidMount() {
@@ -41,34 +41,34 @@ export class IndexPage extends Component {
     dispatch(setSource(__filename));
   }
 
-  async enableBackups(e) {
-    e.preventDefault();
+  onSubmit = () => {
     const { dispatch, linode } = this.props;
-    try {
-      await dispatch(enableBackup(linode.id));
-    } catch (response) {
-      const errors = await reduceErrors(response);
-      // Promisify result for tests.
-      await new Promise(resolve => this.setState({ errors }, resolve));
-    }
+
+    return dispatch(dispatchOrStoreErrors.call(this, [
+      () => enableBackup(linode.id),
+    ]));
   }
 
   render() {
     const { linode } = this.props;
 
     if (!linode.backups.enabled) {
-      const { errors } = this.state;
+      const { loading, errors } = this.state;
 
       return (
         <Card header={<CardHeader title="Enable backups" />}>
-          <form onSubmit={this.enableBackups}>
+          <Form onSubmit={this.onSubmit}>
             <p>
               Backups not enabled. Enable backups for
               ${(linode.type.backups_price / 100).toFixed(2)}/mo.
             </p>
-            <PrimaryButton type="submit">Enable backups</PrimaryButton>
+            <PrimaryButton
+              type="submit"
+              disabled={loading}
+              disabledChildren="Enabling backups"
+            >Enable backups</PrimaryButton>
             <FormSummary errors={errors} />
-          </form>
+          </Form>
         </Card>
       );
     }
