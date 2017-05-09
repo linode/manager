@@ -112,7 +112,6 @@ Details.propTypes = {
   loading: PropTypes.bool.isRequired,
   label: PropTypes.string.isRequired,
   password: PropTypes.string.isRequired,
-  backups: PropTypes.bool.isRequired,
   selectedType: PropTypes.object,
   selectedDistribution: PropTypes.string,
 };

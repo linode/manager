@@ -3,11 +3,11 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { Link } from 'react-router';
 
-import { Button } from 'linode-components/buttons';
+import { Form } from 'linode-components/forms';
 import { Card, CardHeader } from 'linode-components/cards';
 
 import { takeBackup } from '~/api/backups';
-import { FormSummary, reduceErrors } from '~/components/forms';
+import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
 
 import { selectLinode } from '../../utilities';
 
@@ -16,26 +16,24 @@ export class SummaryPage extends Component {
   constructor() {
     super();
 
-    this.takeBackup = takeBackup.bind(this);
     this.state = {
       errors: {},
+      loading: false,
     };
   }
 
-  async takeSnapshot() {
-    const { dispatch, linode: { id, label } } = this.props;
-    try {
-      const backup = await dispatch(takeBackup(id));
-      dispatch(push(`/linodes/${label}/backups/${backup.id}`));
-    } catch (response) {
-      const errors = await reduceErrors(response);
-      this.setState({ errors });
-    }
+  onSubmit = () => {
+    const { dispatch, linode } = this.props;
+
+    return dispatch(dispatchOrStoreErrors.call(this, [
+      () => takeBackup(linode.id),
+      ({ id }) => push(`/linodes/${linode.label}/backups/${id}`),
+    ]));
   }
 
   renderEmpty(title) {
     return (
-      <div className="Backup Backup--disabled col-sm-3" key={title}>
+      <div className="Backup Backup--disabled col-sm-3">
         <div className="Backup-block">
           <div className="Backup-title">{title}</div>
           <div className="Backup-description Backup-description--muted">Pending</div>
@@ -45,22 +43,26 @@ export class SummaryPage extends Component {
   }
 
   renderEmptySnapshot() {
+    const { loading } = this.state;
+
     return (
-      <div className="Backup Backup-emptySnapshot col-sm-3" key="Snapshot">
+      <Form onSubmit={this.onSubmit} className="Backup Backup-emptySnapshot col-sm-3">
         <div className="Backup-block">
           <div className="Backup-title">Snapshot</div>
           <div className="Backup-description Backup-description--muted">
             No snapshots taken
           </div>
-          <Button
-            onClick={() => this.takeSnapshot()}
-          >Take first snapshot</Button>
+          <SubmitButton
+            disabled={loading}
+            disabledChildren="Taking first snapshot"
+          >Take first snapshot</SubmitButton>
+          <FormSummary errors={errors} />
         </div>
-      </div>
+      </Form>
     );
   }
 
-  renderBlock(title, backup) {
+  renderBlock({ title, backup }) {
     const { linode } = this.props;
 
     if (backup === undefined || backup === null || backup.finished === null) {
@@ -94,22 +96,17 @@ export class SummaryPage extends Component {
     const weekly = backups.weekly.length ? backups.weekly[0] : undefined;
     const biweekly = backups.weekly.length === 2 ? backups.weekly[1] : undefined;
 
-    const blocks = [
-      this.renderBlock('Daily', daily),
-      this.renderBlock('Weekly', weekly),
-      this.renderBlock('Biweekly', biweekly),
-      this.renderBlock('Snapshot', snapshot),
-    ];
-
     return (
       <Card header={<CardHeader title="Restorable backups" />}>
         <div>
           Select a backup to see details and restore to a Linode.
         </div>
         <div className="Backup-container row">
-          {blocks}
+          <this.renderBlock title="Daily" backup={daily} />
+          <this.renderBlock title="Weekly" backup={weekly} />
+          <this.renderBlock title="Biweekly" backup={biweekly} />
+          <this.renderBlock title="Snapshot" backup={snapshot} />
         </div>
-        <FormSummary errors={errors} />
       </Card>
     );
   }
