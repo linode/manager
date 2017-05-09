@@ -8,7 +8,7 @@ import { expectRequest, expectObjectDeepEquals } from '@/common';
 import { genericNodeBalancer } from '@/data/nodebalancers';
 import { EditConfigPage } from '~/nodebalancers/nodebalancer/configs/layouts/EditConfigPage';
 
-describe('nodebalancers/nodebalancer/layouts/EditConfigPage', () => {
+describe('nodebalancers/nodebalancer/configs/layouts/EditConfigPage', () => {
   const sandbox = sinon.sandbox.create();
   const dispatch = sandbox.stub();
 
