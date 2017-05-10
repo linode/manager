@@ -1,6 +1,9 @@
 .Example {
-    padding: 10px 0 0 0;
     position: relative;
+
+    pre {
+        padding: 0;
+    }
 
     &-copy {
         position: absolute;
@@ -9,16 +12,6 @@
 
         &:hover {
             cursor: pointer;
-        }
-    }
-
-    pre {
-        background-color: $black;
-        color: $white;
-        padding: 10px;
-
-        code {
-            @extend .font-small;
         }
     }
 }

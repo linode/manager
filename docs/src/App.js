@@ -12,8 +12,16 @@ import { NotFound } from 'linode-components/errors';
 
 import {
   IndexLayout,
-  Layout
+  Layout,
 } from './layouts';
+
+import {
+  Introduction,
+  Access,
+  Pagination,
+  Filtering,
+  Errors,
+} from './components/intros';
 
 import {
   generateIndexRoute,
@@ -61,7 +69,12 @@ export function init() {
     >
       <Route path="/" component={Layout} endpoints={api.endpoints}>
         <Route component={IndexLayout}>
-          <IndexRedirect to={api.endpoints[0].routePath} />
+          <IndexRedirect to="/introduction" />
+          <Route path="/introduction" component={Introduction} />
+          <Route path="/access" component={Access} />
+          <Route path="/pagination" component={Pagination} />
+          <Route path="/filtering" component={Filtering} />
+          <Route path="/errors" component={Errors} />
           {api.endpoints.map(function(endpoint, index) {
             return generateIndexRoute({ key: index, endpoint: endpoint });
           })}
