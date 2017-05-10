@@ -106,8 +106,8 @@ export default class ConfigForm extends Component {
               name="algorithm"
               value={algorithm}
               onChange={this.onChange}
-              options={Object.keys(NODEBALANCER_CONFIG_ALGORITHMS).map(
-                value => ({ value, label: NODEBALANCER_CONFIG_ALGORITHMS[value] }))}
+              options={NODEBALANCER_CONFIG_ALGORITHMS.entries().map(
+                (value, label) => ({ value, label }))}
             />
             <div>
               <small className="text-muted">
@@ -126,8 +126,8 @@ export default class ConfigForm extends Component {
               name="stickiness"
               value={stickiness}
               onChange={this.onChange}
-              options={Object.keys(NODEBALANCER_CONFIG_STICKINESS).map(
-                value => ({ value, label: NODEBALANCER_CONFIG_STICKINESS[value] }))}
+              options={NODEBALANCER_CONFIG_STICKINESS.entries().map(
+                (value, label) => ({ value, label }))}
             />
             <div>
               <small className="text-muted">
@@ -147,8 +147,8 @@ export default class ConfigForm extends Component {
               name="check"
               value={check}
               onChange={this.onChange}
-              options={Object.keys(NODEBALANCER_CONFIG_CHECKS).map(
-                value => ({ value, label: NODEBALANCER_CONFIG_CHECKS[value] }))}
+              options={NODEBALANCER_CONFIG_CHECKS.entries().map(
+                (value, label) => ({ value, label }))}
             />
             <div>
               <small className="text-muted">

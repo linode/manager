@@ -6,13 +6,13 @@ import { Card, CardHeader } from 'linode-components/cards';
 import { Table } from 'linode-components/tables';
 import { List } from 'linode-components/lists';
 import { ListBody } from 'linode-components/lists/bodies';
-import { LinkCell, ButtonCell } from 'linode-components/tables/cells';
+import { LinkCell } from 'linode-components/tables/cells';
 
 import { objectFromMapByLabel } from '~/api/util';
 import { setSource } from '~/actions/source';
 import Region from '~/linodes/components/Region';
 import {
-  NODEBALANCER_CONFIG_ALGORITHMS, NODEBALANCER_CONFIG_STICKINESS, NODEBALANCER_CONFIG_CHECKS,
+  NODEBALANCER_CONFIG_ALGORITHMS, NODEBALANCER_CONFIG_STICKINESS,
 } from '~/constants';
 
 
@@ -39,8 +39,8 @@ export class DashboardPage extends Component {
       return {
         ...config,
         protocol: config.protocol.toUpperCase(),
-        algorithm: NODEBALANCER_CONFIG_ALGORITHMS[config.algorithm],
-        stickiness: NODEBALANCER_CONFIG_STICKINESS[config.stickiness],
+        algorithm: NODEBALANCER_CONFIG_ALGORITHMS.get(config.algorithm),
+        stickiness: NODEBALANCER_CONFIG_STICKINESS.get(config.stickiness),
         statusString: '0 up, 0 down',
       };
     });

@@ -173,20 +173,20 @@ export const MAX_UPLOAD_SIZE_MB = 5;
 
 export const GRAVATAR_BASE_URL = 'https://gravatar.com/avatar/';
 
-export const NODEBALANCER_CONFIG_ALGORITHMS = {
-  roundrobin: 'Round Robin',
-  leastconn: 'Least Connections',
-  source: 'Source IP',
-};
+export const NODEBALANCER_CONFIG_ALGORITHMS = new Map([
+  ['roundrobin', 'Round Robin'],
+  ['leastconn', 'Least Connections'],
+  ['source', 'Source IP'],
+]);
 
-export const NODEBALANCER_CONFIG_STICKINESS = {
-  table: 'Table',
-  http_cookie: 'HTTP Cookie',
-  none: '-- None --',
-};
+export const NODEBALANCER_CONFIG_STICKINESS = new Map([
+  ['none', '-- None --'],
+  ['table', 'Table'],
+  ['http_cookie', 'HTTP Cookie'],
+]);
 
-export const NODEBALANCER_CONFIG_CHECKS = {
-  connection: 'TCP Connection',
-  http: 'HTTP Valid Status',
-  http_body: 'HTTP Body Regex',
-};
+export const NODEBALANCER_CONFIG_CHECKS = new Map([
+  ['connection', 'TCP Connection'],
+  ['http', 'HTTP Valid Status'],
+  ['http_body', 'HTTP Body Regex'],
+]);

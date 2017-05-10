@@ -7,7 +7,7 @@ import { Button } from 'linode-components/buttons';
 import { Card, CardHeader } from 'linode-components/cards';
 import { List } from 'linode-components/lists';
 import { Table } from 'linode-components/tables';
-import { LinkCell, ButtonCell } from 'linode-components/tables/cells';
+import { ButtonCell } from 'linode-components/tables/cells';
 
 import { showModal } from '~/actions/modal';
 import { setError } from '~/actions/errors';
@@ -71,7 +71,7 @@ export class ViewConfigPage extends Component {
   }
 
   render() {
-    const { nodebalancer, config } = this.props;
+    const { config } = this.props;
     const nodes = Object.values(config._nodes.nodes);
 
     return (
@@ -87,11 +87,11 @@ export class ViewConfigPage extends Component {
           </div>
           <div className="row">
             <div className="col-sm-3 row-label">Algorithm</div>
-            <div className="col-sm-9">{NODEBALANCER_CONFIG_ALGORITHMS[config.algorithm]}</div>
+            <div className="col-sm-9">{NODEBALANCER_CONFIG_ALGORITHMS.get(config.algorithm)}</div>
           </div>
           <div className="row">
             <div className="col-sm-3 row-label">Session Stickiness</div>
-            <div className="col-sm-9">{NODEBALANCER_CONFIG_STICKINESS[config.stickiness]}</div>
+            <div className="col-sm-9">{NODEBALANCER_CONFIG_STICKINESS.get(config.stickiness)}</div>
           </div>
         </Card>
         <Card

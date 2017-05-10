@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { Card, CardHeader } from 'linode-components/cards';
+import { Card } from 'linode-components/cards';
 
 import { setSource } from '~/actions/source';
 import { objectFromMapByLabel } from '~/api/util';
