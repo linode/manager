@@ -37,42 +37,53 @@ module.exports = { endpoints: [
                     {
                       "name": "id",
                       "type": "string",
-                      "value": "linode/Arch2014.10"
+                      "value": "linode/Arch2014.10",
+                      "example": null
                     },
                     {
                       "name": "created",
                       "type": "datetime",
-                      "value": "2014-12-24T18:00:09.000Z"
+                      "value": "2014-12-24T18:00:09.000Z",
+                      "example": null
                     },
                     {
                       "name": "label",
                       "description": "The user-friendly name of this distribution.",
+                      "filterable": true,
                       "type": "string",
-                      "value": "Arch Linux 2014.10"
+                      "value": "Arch Linux 2014.10",
+                      "example": null
                     },
                     {
                       "name": "minimum_storage_size",
                       "description": "The minimum size required for the distrbution image.",
+                      "filterable": true,
                       "type": "integer",
-                      "value": 800
+                      "value": 800,
+                      "example": null
                     },
                     {
                       "name": "recommended",
                       "description": "True if this distribution is recommended by Linode.",
+                      "filterable": true,
                       "type": "boolean",
-                      "value": true
+                      "value": true,
+                      "example": null
                     },
                     {
                       "name": "vendor",
                       "description": "The upstream distribution vendor. Consistent between releases of a distro.",
+                      "filterable": true,
                       "type": "string",
-                      "value": "Arch"
+                      "value": "Arch",
+                      "example": null
                     },
                     {
                       "name": "x64",
                       "description": "True if this is a 64-bit distribution.",
                       "type": "boolean",
-                      "value": true
+                      "value": true,
+                      "example": null
                     }
                   ]
                 }
@@ -106,30 +117,55 @@ module.exports = { endpoints: [
                   "description": "Distribution objects describe a Linux distribution supported by Linode.\n",
                   "schema": [
                     {
-                      "name": "0"
+                      "name": "id",
+                      "type": "string",
+                      "value": "linode/Arch2014.10",
+                      "example": null
                     },
                     {
-                      "name": "1"
+                      "name": "created",
+                      "type": "datetime",
+                      "value": "2014-12-24T18:00:09.000Z",
+                      "example": null
                     },
                     {
-                      "name": "2",
-                      "description": "The user-friendly name of this distribution."
+                      "name": "label",
+                      "description": "The user-friendly name of this distribution.",
+                      "filterable": true,
+                      "type": "string",
+                      "value": "Arch Linux 2014.10",
+                      "example": null
                     },
                     {
-                      "name": "3",
-                      "description": "The minimum size required for the distrbution image."
+                      "name": "minimum_storage_size",
+                      "description": "The minimum size required for the distrbution image.",
+                      "filterable": true,
+                      "type": "integer",
+                      "value": 800,
+                      "example": null
                     },
                     {
-                      "name": "4",
-                      "description": "True if this distribution is recommended by Linode."
+                      "name": "recommended",
+                      "description": "True if this distribution is recommended by Linode.",
+                      "filterable": true,
+                      "type": "boolean",
+                      "value": true,
+                      "example": null
                     },
                     {
-                      "name": "5",
-                      "description": "The upstream distribution vendor. Consistent between releases of a distro."
+                      "name": "vendor",
+                      "description": "The upstream distribution vendor. Consistent between releases of a distro.",
+                      "filterable": true,
+                      "type": "string",
+                      "value": "Arch",
+                      "example": null
                     },
                     {
-                      "name": "6",
-                      "description": "True if this is a 64-bit distribution."
+                      "name": "x64",
+                      "description": "True if this is a 64-bit distribution.",
+                      "type": "boolean",
+                      "value": true,
+                      "example": null
                     }
                   ]
                 }
@@ -175,58 +211,75 @@ module.exports = { endpoints: [
                     {
                       "name": "id",
                       "type": "string",
-                      "value": "linode/3.5.2-x86_64-linode26"
+                      "value": "linode/3.5.2-x86_64-linode26",
+                      "example": null
                     },
                     {
                       "name": "description",
                       "description": "Additional, descriptive text about the kernel.",
                       "type": "string",
-                      "value": "null"
+                      "value": "null",
+                      "example": null
                     },
                     {
                       "name": "xen",
                       "description": "If this kernel is suitable for Xen Linodes.",
+                      "filterable": true,
                       "type": "boolean",
-                      "value": false
+                      "value": false,
+                      "example": null
                     },
                     {
                       "name": "kvm",
                       "description": "If this kernel is suitable for KVM Linodes.",
+                      "filterable": true,
                       "type": "boolean",
-                      "value": true
+                      "value": true,
+                      "example": null
                     },
                     {
                       "name": "label",
                       "description": "The friendly name of this kernel.",
+                      "filterable": true,
                       "type": "string",
-                      "value": "3.5.2-x86_64-linode26"
+                      "value": "3.5.2-x86_64-linode26",
+                      "example": null
                     },
                     {
                       "name": "version",
                       "description": "Linux Kernel version.",
+                      "filterable": true,
                       "type": "string",
-                      "value": "3.5.2"
+                      "value": "3.5.2",
+                      "example": null
                     },
                     {
                       "name": "x64",
                       "description": "True if this is a 64-bit kernel, false for 32-bit.",
+                      "filterable": true,
                       "type": "boolean",
-                      "value": true
+                      "value": true,
+                      "example": null
                     },
                     {
                       "name": "current",
+                      "filterable": true,
                       "type": "boolean",
-                      "value": true
+                      "value": true,
+                      "example": null
                     },
                     {
                       "name": "deprecated",
+                      "filterable": true,
                       "type": "boolean",
-                      "value": false
+                      "value": false,
+                      "example": null
                     },
                     {
                       "name": "latest",
                       "type": "boolean",
-                      "value": true
+                      "value": true,
+                      "example": null
                     }
                   ]
                 }
@@ -260,40 +313,77 @@ module.exports = { endpoints: [
                   "description": "Kernel objects describe a Linux kernel that can be booted on a Linode. Some special kernels are available that have special behavior, such as \"Direct Disk\", which will boot your disk directly instead of supplying a kernel directly to the hypervisor. The latest kernels are \"linode/latest_64\" (64 bit) and \"linode/latest\" (32bit).\n",
                   "schema": [
                     {
-                      "name": "0"
+                      "name": "id",
+                      "type": "string",
+                      "value": "linode/3.5.2-x86_64-linode26",
+                      "example": null
                     },
                     {
-                      "name": "1",
-                      "description": "Additional, descriptive text about the kernel."
+                      "name": "description",
+                      "description": "Additional, descriptive text about the kernel.",
+                      "type": "string",
+                      "value": "null",
+                      "example": null
                     },
                     {
-                      "name": "2",
-                      "description": "If this kernel is suitable for Xen Linodes."
+                      "name": "xen",
+                      "description": "If this kernel is suitable for Xen Linodes.",
+                      "filterable": true,
+                      "type": "boolean",
+                      "value": false,
+                      "example": null
                     },
                     {
-                      "name": "3",
-                      "description": "If this kernel is suitable for KVM Linodes."
+                      "name": "kvm",
+                      "description": "If this kernel is suitable for KVM Linodes.",
+                      "filterable": true,
+                      "type": "boolean",
+                      "value": true,
+                      "example": null
                     },
                     {
-                      "name": "4",
-                      "description": "The friendly name of this kernel."
+                      "name": "label",
+                      "description": "The friendly name of this kernel.",
+                      "filterable": true,
+                      "type": "string",
+                      "value": "3.5.2-x86_64-linode26",
+                      "example": null
                     },
                     {
-                      "name": "5",
-                      "description": "Linux Kernel version."
+                      "name": "version",
+                      "description": "Linux Kernel version.",
+                      "filterable": true,
+                      "type": "string",
+                      "value": "3.5.2",
+                      "example": null
                     },
                     {
-                      "name": "6",
-                      "description": "True if this is a 64-bit kernel, false for 32-bit."
+                      "name": "x64",
+                      "description": "True if this is a 64-bit kernel, false for 32-bit.",
+                      "filterable": true,
+                      "type": "boolean",
+                      "value": true,
+                      "example": null
                     },
                     {
-                      "name": "7"
+                      "name": "current",
+                      "filterable": true,
+                      "type": "boolean",
+                      "value": true,
+                      "example": null
                     },
                     {
-                      "name": "8"
+                      "name": "deprecated",
+                      "filterable": true,
+                      "type": "boolean",
+                      "value": false,
+                      "example": null
                     },
                     {
-                      "name": "9"
+                      "name": "latest",
+                      "type": "boolean",
+                      "value": true,
+                      "example": null
                     }
                   ]
                 }
@@ -342,7 +432,8 @@ module.exports = { endpoints: [
                       "name": "id",
                       "description": "This Linode's ID",
                       "type": "integer",
-                      "value": 123456
+                      "value": 123456,
+                      "example": null
                     },
                     {
                       "name": "alerts",
@@ -355,33 +446,54 @@ module.exports = { endpoints: [
                           "Outbound Traffic - Mbit/s - Average outbound traffic over a 2 hour period exceeding this value triggers this alert. (Range 0-10000, default 10)",
                           "Transfer Quota - % - Percentage of network transfer quota used being greater than this value will trigger this alert. (Range 0-400, default 80)"
                         ]
-                      }
+                      },
+                      "example": null
                     },
                     {
                       "name": "backups",
-                      "description": "Displays if backups are enabled, last backup datetime if applicable, and the day/window your backups will occur. Window is prefixed by a \"W\" and an integer representing the two-hour window in 24-hour UTC time format. For example, 2AM is represented as \"W2\", 8PM as \"W20\", etc. (W0, W2, W4...W22)\n"
+                      "description": "Displays if backups are enabled, last backup datetime if applicable, and the day/window your backups will occur. Window is prefixed by a \"W\" and an integer representing the two-hour window in 24-hour UTC time format. For example, 2AM is represented as \"W2\", 8PM as \"W20\", etc. (W0, W2, W4...W22)\n",
+                      "example": null
                     },
                     {
                       "name": "created",
                       "type": "datetime",
-                      "value": "2015-09-29T11:21:01"
+                      "value": "2015-09-29T11:21:01",
+                      "example": null
                     },
                     {
                       "name": "region",
                       "description": "This Linode's region.",
-                      "type": "region"
+                      "filterable": true,
+                      "type": "region",
+                      "example": {
+                        "id": "us-east-1a",
+                        "label": "Newark, NJ",
+                        "country": "US"
+                      }
                     },
                     {
                       "name": "distribution",
                       "description": "The distribution that this Linode booted to last.",
-                      "type": "distribution"
+                      "filterable": true,
+                      "type": "distribution",
+                      "example": {
+                        "id": "linode/Arch2014.10",
+                        "created": "2014-12-24T18:00:09.000Z",
+                        "label": "Arch Linux 2014.10",
+                        "minimum_storage_size": 800,
+                        "recommended": true,
+                        "vendor": "Arch",
+                        "x64": true
+                      }
                     },
                     {
                       "name": "group",
                       "description": "This Linode's display group.",
                       "editable": true,
+                      "filterable": true,
                       "type": "string",
-                      "value": "Example"
+                      "value": "Example",
+                      "example": null
                     },
                     {
                       "name": "ipv4",
@@ -391,21 +503,25 @@ module.exports = { endpoints: [
                       "value": [
                         "97.107.143.8",
                         "192.168.149.108"
-                      ]
+                      ],
+                      "example": null
                     },
                     {
                       "name": "ipv6",
                       "description": "This Linode's IPv6 slaac address.",
                       "editable": false,
                       "type": "string",
-                      "value": "2a01:7e00::f03c:91ff:fe96:46f5/64"
+                      "value": "2a01:7e00::f03c:91ff:fe96:46f5/64",
+                      "example": null
                     },
                     {
                       "name": "label",
                       "description": "This Linode's display label.",
                       "editable": true,
+                      "filterable": true,
                       "type": "string",
-                      "value": "Example Linode"
+                      "value": "Example Linode",
+                      "example": null
                     },
                     {
                       "name": "type",
@@ -467,31 +583,37 @@ module.exports = { endpoints: [
                             "_value": 2
                           }
                         }
-                      ]
+                      ],
+                      "example": null
                     },
                     {
                       "name": "status",
                       "description": "The current state of this Linode.",
+                      "filterable": true,
                       "type": "enum",
-                      "value": "running"
+                      "value": "running",
+                      "example": null
                     },
                     {
                       "name": "total_transfer",
                       "description": "The amount of outbound traffic used this month.",
                       "type": "integer",
-                      "value": 20000
+                      "value": 20000,
+                      "example": null
                     },
                     {
                       "name": "updated",
                       "description": "The last updated datetime for this Linode record.",
                       "type": "datetime",
-                      "value": "2015-10-27T09:59:26.000Z"
+                      "value": "2015-10-27T09:59:26.000Z",
+                      "example": null
                     },
                     {
                       "name": "hypervisor",
                       "description": "The hypervisor this Linode is running on.",
                       "type": "enum",
-                      "value": "kvm"
+                      "value": "kvm",
+                      "example": null
                     }
                   ],
                   "enums": [
@@ -550,12 +672,12 @@ module.exports = { endpoints: [
                 "params": [
                   {
                     "description": "A region ID to provision this Linode in.\n",
-                    "type": "region",
+                    "type": "integer",
                     "name": "region"
                   },
                   {
                     "description": "A Linode type ID to use for this Linode.\n",
-                    "type": "service",
+                    "type": "integer",
                     "name": "type"
                   },
                   {
@@ -573,7 +695,7 @@ module.exports = { endpoints: [
                   {
                     "optional": true,
                     "description": "The Distribution to deploy this Linode with.  May not be included if 'backup' is sent.\n",
-                    "type": "distribution",
+                    "type": "integer",
                     "name": "distribution"
                   },
                   {
@@ -589,7 +711,7 @@ module.exports = { endpoints: [
                   {
                     "optional": true,
                     "description": "The stackscript ID to deploy with this disk. <ul><li>Must provide a distribution. Distribution must be one that the stackscript can be deployed to.</li></ul>\n",
-                    "type": "stackscript",
+                    "type": "integer",
                     "name": "stackscript"
                   },
                   {
@@ -601,7 +723,7 @@ module.exports = { endpoints: [
                   {
                     "optional": true,
                     "description": "The Backup to restore to the newly created Linode.  May not be included if 'distribution' is sent.\n",
-                    "type": "backup",
+                    "type": "integer",
                     "name": "backup"
                   },
                   {
@@ -653,11 +775,14 @@ module.exports = { endpoints: [
                   "description": "Linode objects describe a single Linode on your account.\n",
                   "schema": [
                     {
-                      "name": "0",
-                      "description": "This Linode's ID"
+                      "name": "id",
+                      "description": "This Linode's ID",
+                      "type": "integer",
+                      "value": 123456,
+                      "example": null
                     },
                     {
-                      "name": "1",
+                      "name": "alerts",
                       "description": {
                         "descText": "Toggle and set thresholds for receiving email alerts. \n",
                         "listItems": [
@@ -667,58 +792,174 @@ module.exports = { endpoints: [
                           "Outbound Traffic - Mbit/s - Average outbound traffic over a 2 hour period exceeding this value triggers this alert. (Range 0-10000, default 10)",
                           "Transfer Quota - % - Percentage of network transfer quota used being greater than this value will trigger this alert. (Range 0-400, default 80)"
                         ]
+                      },
+                      "example": null
+                    },
+                    {
+                      "name": "backups",
+                      "description": "Displays if backups are enabled, last backup datetime if applicable, and the day/window your backups will occur. Window is prefixed by a \"W\" and an integer representing the two-hour window in 24-hour UTC time format. For example, 2AM is represented as \"W2\", 8PM as \"W20\", etc. (W0, W2, W4...W22)\n",
+                      "example": null
+                    },
+                    {
+                      "name": "created",
+                      "type": "datetime",
+                      "value": "2015-09-29T11:21:01",
+                      "example": null
+                    },
+                    {
+                      "name": "region",
+                      "description": "This Linode's region.",
+                      "filterable": true,
+                      "type": "region",
+                      "example": {
+                        "id": "us-east-1a",
+                        "label": "Newark, NJ",
+                        "country": "US"
                       }
                     },
                     {
-                      "name": "2",
-                      "description": "Displays if backups are enabled, last backup datetime if applicable, and the day/window your backups will occur. Window is prefixed by a \"W\" and an integer representing the two-hour window in 24-hour UTC time format. For example, 2AM is represented as \"W2\", 8PM as \"W20\", etc. (W0, W2, W4...W22)\n"
+                      "name": "distribution",
+                      "description": "The distribution that this Linode booted to last.",
+                      "filterable": true,
+                      "type": "distribution",
+                      "example": {
+                        "id": "linode/Arch2014.10",
+                        "created": "2014-12-24T18:00:09.000Z",
+                        "label": "Arch Linux 2014.10",
+                        "minimum_storage_size": 800,
+                        "recommended": true,
+                        "vendor": "Arch",
+                        "x64": true
+                      }
                     },
                     {
-                      "name": "3"
+                      "name": "group",
+                      "description": "This Linode's display group.",
+                      "editable": true,
+                      "filterable": true,
+                      "type": "string",
+                      "value": "Example",
+                      "example": null
                     },
                     {
-                      "name": "4",
-                      "description": "This Linode's region."
+                      "name": "ipv4",
+                      "description": "This Linode's IPv4 addresses.",
+                      "editable": false,
+                      "type": "array",
+                      "value": [
+                        "97.107.143.8",
+                        "192.168.149.108"
+                      ],
+                      "example": null
                     },
                     {
-                      "name": "5",
-                      "description": "The distribution that this Linode booted to last."
+                      "name": "ipv6",
+                      "description": "This Linode's IPv6 slaac address.",
+                      "editable": false,
+                      "type": "string",
+                      "value": "2a01:7e00::f03c:91ff:fe96:46f5/64",
+                      "example": null
                     },
                     {
-                      "name": "6",
-                      "description": "This Linode's display group."
+                      "name": "label",
+                      "description": "This Linode's display label.",
+                      "editable": true,
+                      "filterable": true,
+                      "type": "string",
+                      "value": "Example Linode",
+                      "example": null
                     },
                     {
-                      "name": "7",
-                      "description": "This Linode's IPv4 addresses."
+                      "name": "type",
+                      "description": "The type of Linode.",
+                      "type": "array",
+                      "value": [
+                        {
+                          "id": {
+                            "_type": "string",
+                            "_value": "g5-standard-1"
+                          },
+                          "backups_price": {
+                            "_type": "integer",
+                            "_value": 250
+                          },
+                          "class": {
+                            "_type": "string",
+                            "_value": "standard"
+                          },
+                          "disk": {
+                            "_type": "integer",
+                            "_value": 24576
+                          },
+                          "hourly_price": {
+                            "_type": "integer",
+                            "_value": 1
+                          },
+                          "label": {
+                            "_type": "string",
+                            "_value": "Linode 2048"
+                          },
+                          "mbits_out": {
+                            "_type": "integer",
+                            "_value": 125
+                          },
+                          "monthly_price": {
+                            "_type": "integer",
+                            "_value": 1000
+                          },
+                          "ram": {
+                            "_type": "integer",
+                            "_value": 2048
+                          },
+                          "service_type": {
+                            "_type": "enum",
+                            "_subtype": "Service Type",
+                            "_value": "linode"
+                          },
+                          "storage": {
+                            "_type": "integer",
+                            "_value": 24576
+                          },
+                          "transfer": {
+                            "_type": "integer",
+                            "_value": 2000
+                          },
+                          "vcpus": {
+                            "_type": "integer",
+                            "_value": 2
+                          }
+                        }
+                      ],
+                      "example": null
                     },
                     {
-                      "name": "8",
-                      "description": "This Linode's IPv6 slaac address."
+                      "name": "status",
+                      "description": "The current state of this Linode.",
+                      "filterable": true,
+                      "type": "enum",
+                      "value": "running",
+                      "example": null
                     },
                     {
-                      "name": "9",
-                      "description": "This Linode's display label."
+                      "name": "total_transfer",
+                      "description": "The amount of outbound traffic used this month.",
+                      "type": "integer",
+                      "value": 20000,
+                      "example": null
                     },
                     {
-                      "name": "10",
-                      "description": "The type of Linode."
+                      "name": "updated",
+                      "description": "The last updated datetime for this Linode record.",
+                      "type": "datetime",
+                      "value": "2015-10-27T09:59:26.000Z",
+                      "example": null
                     },
                     {
-                      "name": "11",
-                      "description": "The current state of this Linode."
-                    },
-                    {
-                      "name": "12",
-                      "description": "The amount of outbound traffic used this month."
-                    },
-                    {
-                      "name": "13",
-                      "description": "The last updated datetime for this Linode record."
-                    },
-                    {
-                      "name": "14",
-                      "description": "The hypervisor this Linode is running on."
+                      "name": "hypervisor",
+                      "description": "The hypervisor this Linode is running on.",
+                      "type": "enum",
+                      "value": "kvm",
+                      "example": null
                     }
                   ],
                   "enums": [
@@ -832,11 +1073,14 @@ module.exports = { endpoints: [
                   "description": "Linode objects describe a single Linode on your account.\n",
                   "schema": [
                     {
-                      "name": "0",
-                      "description": "This Linode's ID"
+                      "name": "id",
+                      "description": "This Linode's ID",
+                      "type": "integer",
+                      "value": 123456,
+                      "example": null
                     },
                     {
-                      "name": "1",
+                      "name": "alerts",
                       "description": {
                         "descText": "Toggle and set thresholds for receiving email alerts. \n",
                         "listItems": [
@@ -846,58 +1090,174 @@ module.exports = { endpoints: [
                           "Outbound Traffic - Mbit/s - Average outbound traffic over a 2 hour period exceeding this value triggers this alert. (Range 0-10000, default 10)",
                           "Transfer Quota - % - Percentage of network transfer quota used being greater than this value will trigger this alert. (Range 0-400, default 80)"
                         ]
+                      },
+                      "example": null
+                    },
+                    {
+                      "name": "backups",
+                      "description": "Displays if backups are enabled, last backup datetime if applicable, and the day/window your backups will occur. Window is prefixed by a \"W\" and an integer representing the two-hour window in 24-hour UTC time format. For example, 2AM is represented as \"W2\", 8PM as \"W20\", etc. (W0, W2, W4...W22)\n",
+                      "example": null
+                    },
+                    {
+                      "name": "created",
+                      "type": "datetime",
+                      "value": "2015-09-29T11:21:01",
+                      "example": null
+                    },
+                    {
+                      "name": "region",
+                      "description": "This Linode's region.",
+                      "filterable": true,
+                      "type": "region",
+                      "example": {
+                        "id": "us-east-1a",
+                        "label": "Newark, NJ",
+                        "country": "US"
                       }
                     },
                     {
-                      "name": "2",
-                      "description": "Displays if backups are enabled, last backup datetime if applicable, and the day/window your backups will occur. Window is prefixed by a \"W\" and an integer representing the two-hour window in 24-hour UTC time format. For example, 2AM is represented as \"W2\", 8PM as \"W20\", etc. (W0, W2, W4...W22)\n"
+                      "name": "distribution",
+                      "description": "The distribution that this Linode booted to last.",
+                      "filterable": true,
+                      "type": "distribution",
+                      "example": {
+                        "id": "linode/Arch2014.10",
+                        "created": "2014-12-24T18:00:09.000Z",
+                        "label": "Arch Linux 2014.10",
+                        "minimum_storage_size": 800,
+                        "recommended": true,
+                        "vendor": "Arch",
+                        "x64": true
+                      }
                     },
                     {
-                      "name": "3"
+                      "name": "group",
+                      "description": "This Linode's display group.",
+                      "editable": true,
+                      "filterable": true,
+                      "type": "string",
+                      "value": "Example",
+                      "example": null
                     },
                     {
-                      "name": "4",
-                      "description": "This Linode's region."
+                      "name": "ipv4",
+                      "description": "This Linode's IPv4 addresses.",
+                      "editable": false,
+                      "type": "array",
+                      "value": [
+                        "97.107.143.8",
+                        "192.168.149.108"
+                      ],
+                      "example": null
                     },
                     {
-                      "name": "5",
-                      "description": "The distribution that this Linode booted to last."
+                      "name": "ipv6",
+                      "description": "This Linode's IPv6 slaac address.",
+                      "editable": false,
+                      "type": "string",
+                      "value": "2a01:7e00::f03c:91ff:fe96:46f5/64",
+                      "example": null
                     },
                     {
-                      "name": "6",
-                      "description": "This Linode's display group."
+                      "name": "label",
+                      "description": "This Linode's display label.",
+                      "editable": true,
+                      "filterable": true,
+                      "type": "string",
+                      "value": "Example Linode",
+                      "example": null
                     },
                     {
-                      "name": "7",
-                      "description": "This Linode's IPv4 addresses."
+                      "name": "type",
+                      "description": "The type of Linode.",
+                      "type": "array",
+                      "value": [
+                        {
+                          "id": {
+                            "_type": "string",
+                            "_value": "g5-standard-1"
+                          },
+                          "backups_price": {
+                            "_type": "integer",
+                            "_value": 250
+                          },
+                          "class": {
+                            "_type": "string",
+                            "_value": "standard"
+                          },
+                          "disk": {
+                            "_type": "integer",
+                            "_value": 24576
+                          },
+                          "hourly_price": {
+                            "_type": "integer",
+                            "_value": 1
+                          },
+                          "label": {
+                            "_type": "string",
+                            "_value": "Linode 2048"
+                          },
+                          "mbits_out": {
+                            "_type": "integer",
+                            "_value": 125
+                          },
+                          "monthly_price": {
+                            "_type": "integer",
+                            "_value": 1000
+                          },
+                          "ram": {
+                            "_type": "integer",
+                            "_value": 2048
+                          },
+                          "service_type": {
+                            "_type": "enum",
+                            "_subtype": "Service Type",
+                            "_value": "linode"
+                          },
+                          "storage": {
+                            "_type": "integer",
+                            "_value": 24576
+                          },
+                          "transfer": {
+                            "_type": "integer",
+                            "_value": 2000
+                          },
+                          "vcpus": {
+                            "_type": "integer",
+                            "_value": 2
+                          }
+                        }
+                      ],
+                      "example": null
                     },
                     {
-                      "name": "8",
-                      "description": "This Linode's IPv6 slaac address."
+                      "name": "status",
+                      "description": "The current state of this Linode.",
+                      "filterable": true,
+                      "type": "enum",
+                      "value": "running",
+                      "example": null
                     },
                     {
-                      "name": "9",
-                      "description": "This Linode's display label."
+                      "name": "total_transfer",
+                      "description": "The amount of outbound traffic used this month.",
+                      "type": "integer",
+                      "value": 20000,
+                      "example": null
                     },
                     {
-                      "name": "10",
-                      "description": "The type of Linode."
+                      "name": "updated",
+                      "description": "The last updated datetime for this Linode record.",
+                      "type": "datetime",
+                      "value": "2015-10-27T09:59:26.000Z",
+                      "example": null
                     },
                     {
-                      "name": "11",
-                      "description": "The current state of this Linode."
-                    },
-                    {
-                      "name": "12",
-                      "description": "The amount of outbound traffic used this month."
-                    },
-                    {
-                      "name": "13",
-                      "description": "The last updated datetime for this Linode record."
-                    },
-                    {
-                      "name": "14",
-                      "description": "The hypervisor this Linode is running on."
+                      "name": "hypervisor",
+                      "description": "The hypervisor this Linode is running on.",
+                      "type": "enum",
+                      "value": "kvm",
+                      "example": null
                     }
                   ],
                   "enums": [
@@ -962,7 +1322,7 @@ module.exports = { endpoints: [
                   {
                     "optional": true,
                     "description": "Optional distribution to deploy with this disk. <ul><li>If no distribution is provided, a blank disk is created.</li></ul>\n",
-                    "type": "distribution",
+                    "type": "integer",
                     "name": "distribution"
                   },
                   {
@@ -997,7 +1357,7 @@ module.exports = { endpoints: [
                   {
                     "optional": true,
                     "description": "The stackscript ID to deploy with this disk. <ul><li>Must provide a distribution. Distribution must be one that the stackscript can be deployed to.</li></ul>\n",
-                    "type": "stackscript",
+                    "type": "integer",
                     "name": "stackscript"
                   },
                   {
@@ -1052,42 +1412,52 @@ module.exports = { endpoints: [
                     {
                       "name": "id",
                       "type": "integer",
-                      "value": 123456
+                      "value": 123456,
+                      "example": null
                     },
                     {
                       "name": "label",
                       "description": "Human-friendly disk name.",
+                      "filterable": true,
                       "type": "string",
-                      "value": "Ubuntu 14.04 Disk"
+                      "value": "Ubuntu 14.04 Disk",
+                      "example": null
                     },
                     {
                       "name": "status",
                       "description": "Status of the disk.",
+                      "filterable": false,
                       "type": "enum",
-                      "value": "ok"
+                      "value": "ok",
+                      "example": null
                     },
                     {
                       "name": "size",
                       "description": "Size of this disk in MB.",
                       "editable": true,
+                      "filterable": true,
                       "type": "integer",
-                      "value": 1000
+                      "value": 1000,
+                      "example": null
                     },
                     {
                       "name": "filesystem",
                       "description": "The filesystem on the disk.",
                       "type": "enum",
-                      "value": "ext4"
+                      "value": "ext4",
+                      "example": null
                     },
                     {
                       "name": "created",
                       "type": "datetime",
-                      "value": "2015-09-29T11:21:01"
+                      "value": "2015-09-29T11:21:01",
+                      "example": null
                     },
                     {
                       "name": "updated",
                       "type": "datetime",
-                      "value": "2015-09-29T11:21:01"
+                      "value": "2015-09-29T11:21:01",
+                      "example": null
                     }
                   ],
                   "enums": [
@@ -1254,7 +1624,7 @@ module.exports = { endpoints: [
                 "params": [
                   {
                     "description": "A kernel ID to boot this Linode with.\n",
-                    "type": "kernel",
+                    "type": "integer",
                     "name": "kernel"
                   },
                   {
@@ -1500,7 +1870,7 @@ module.exports = { endpoints: [
                   {
                     "optional": true,
                     "description": "Disks to include during Rescue.\n",
-                    "type": "disk",
+                    "type": "integer",
                     "name": "disks"
                   }
                 ],
@@ -1533,7 +1903,7 @@ module.exports = { endpoints: [
                 "params": [
                   {
                     "description": "A Linode type to use for this Linode.\n",
-                    "type": "service",
+                    "type": "integer",
                     "name": "type"
                   }
                 ],
@@ -1660,7 +2030,7 @@ module.exports = { endpoints: [
                 "params": [
                   {
                     "description": "The ID of the Linode to restore a backup to.\n",
-                    "type": "linode",
+                    "type": "integer",
                     "name": "linode"
                   },
                   {
@@ -1773,43 +2143,50 @@ module.exports = { endpoints: [
                       "name": "address",
                       "description": "The IP Address.",
                       "type": "string",
-                      "value": "97.107.143.8"
+                      "value": "97.107.143.8",
+                      "example": null
                     },
                     {
                       "name": "gateway",
                       "description": "The default gateway. Gateways for private IP's are always null.",
                       "type": "string",
-                      "value": "97.107.143.1"
+                      "value": "97.107.143.1",
+                      "example": null
                     },
                     {
                       "name": "subnet_mask",
                       "description": "The subnet mask.",
                       "type": "string",
-                      "value": "255.255.255.0"
+                      "value": "255.255.255.0",
+                      "example": null
                     },
                     {
                       "name": "prefix",
                       "description": "The network prefix.",
                       "type": "string",
-                      "value": 24
+                      "value": 24,
+                      "example": null
                     },
                     {
                       "name": "type",
                       "description": "The type of IP Address, either public or private",
                       "type": "enum",
-                      "value": "public"
+                      "value": "public",
+                      "example": null
                     },
                     {
                       "name": "rdns",
                       "description": "Reverse DNS address for this IP Address. Null to reset.",
                       "editable": true,
                       "type": "string",
-                      "value": null
+                      "value": null,
+                      "example": null
                     },
                     {
                       "name": "linode_id",
                       "type": "integer",
-                      "value": 42
+                      "value": 42,
+                      "example": null
                     }
                   ],
                   "enums": [
@@ -1865,7 +2242,7 @@ module.exports = { endpoints: [
                   {
                     "optional": true,
                     "description": "The stackscript ID to deploy with this disk. <ul><li>Must provide a distribution. Distribution must be one that the stackscript can be deployed to.</li></ul>\n",
-                    "type": "stackscript",
+                    "type": "integer",
                     "name": "stackscript"
                   },
                   {
@@ -1983,38 +2360,46 @@ module.exports = { endpoints: [
                       "name": "id",
                       "description": "A unique ID for the StackScript.",
                       "type": "integer",
-                      "value": 37
+                      "value": 37,
+                      "example": null
                     },
                     {
                       "name": "customer_id",
                       "description": "The customer that created this StackScript.",
                       "type": "integer",
-                      "value": 123
+                      "value": 123,
+                      "example": null
                     },
                     {
                       "name": "user_id",
                       "description": "The user account that created this StackScript.",
                       "type": "integer",
-                      "value": 456
+                      "value": 456,
+                      "example": null
                     },
                     {
                       "name": "label",
                       "description": "This StackScript's display label.",
                       "editable": true,
+                      "filterable": true,
                       "type": "string",
-                      "value": "Example StackScript"
+                      "value": "Example StackScript",
+                      "example": null
                     },
                     {
                       "name": "description",
                       "description": "In-depth information on what this StackScript does.",
                       "editable": true,
+                      "filterable": true,
                       "type": "string",
-                      "value": "Installs the Linode API bindings"
+                      "value": "Installs the Linode API bindings",
+                      "example": null
                     },
                     {
                       "name": "distributions",
                       "description": "A list of distributions this StackScript is compatible with.",
                       "editable": true,
+                      "filterable": true,
                       "type": "array",
                       "value": [
                         {
@@ -2077,52 +2462,61 @@ module.exports = { endpoints: [
                             "_value": 600
                           }
                         }
-                      ]
+                      ],
+                      "example": null
                     },
                     {
                       "name": "deployments_total",
                       "description": "The total number of times this StackScript has been deployed.",
                       "type": "integer",
-                      "value": 150
+                      "value": 150,
+                      "example": null
                     },
                     {
                       "name": "deployments_active",
                       "description": "The total number of active deployments.",
                       "type": "integer",
-                      "value": 42
+                      "value": 42,
+                      "example": null
                     },
                     {
                       "name": "is_public",
                       "description": "Publicize StackScript in the Linode StackScript library. Note that StackScripts cannot be changed to private after they have been public.\n",
                       "editable": true,
+                      "filterable": true,
                       "type": "boolean",
-                      "value": true
+                      "value": true,
+                      "example": null
                     },
                     {
                       "name": "created",
                       "description": "When the StackScript was initially created.",
                       "type": "datetime",
-                      "value": "2015-09-29T11:21:01"
+                      "value": "2015-09-29T11:21:01",
+                      "example": null
                     },
                     {
                       "name": "updated",
                       "description": "When the StackScript was last updated.",
                       "type": "datetime",
-                      "value": "2015-10-15T10:02:01"
+                      "value": "2015-10-15T10:02:01",
+                      "example": null
                     },
                     {
                       "name": "rev_note",
                       "description": "The most recent note about what was changed for this revision.",
                       "editable": true,
                       "type": "string",
-                      "value": "Initial import"
+                      "value": "Initial import",
+                      "example": null
                     },
                     {
                       "name": "script",
                       "description": "The actual script body to be executed.",
                       "editable": true,
                       "type": "string",
-                      "value": "#!/bin/bash"
+                      "value": "#!/bin/bash",
+                      "example": null
                     },
                     {
                       "name": "user_defined_fields",
@@ -2165,7 +2559,8 @@ module.exports = { endpoints: [
                             "_value": "possible,enum,values"
                           }
                         }
-                      ]
+                      ],
+                      "example": null
                     }
                   ]
                 }
@@ -2186,7 +2581,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "description": "A list of distributions compatible with StackScript.\n",
-                    "type": "distribution",
+                    "type": "integer",
                     "name": "distributions"
                   },
                   {
@@ -2248,60 +2643,210 @@ module.exports = { endpoints: [
                   "description": "StackScript objects describe a StackScript which can be used to help automate deployment of new Linodes.\n",
                   "schema": [
                     {
-                      "name": "0",
-                      "description": "A unique ID for the StackScript."
+                      "name": "id",
+                      "description": "A unique ID for the StackScript.",
+                      "type": "integer",
+                      "value": 37,
+                      "example": null
                     },
                     {
-                      "name": "1",
-                      "description": "The customer that created this StackScript."
+                      "name": "customer_id",
+                      "description": "The customer that created this StackScript.",
+                      "type": "integer",
+                      "value": 123,
+                      "example": null
                     },
                     {
-                      "name": "2",
-                      "description": "The user account that created this StackScript."
+                      "name": "user_id",
+                      "description": "The user account that created this StackScript.",
+                      "type": "integer",
+                      "value": 456,
+                      "example": null
                     },
                     {
-                      "name": "3",
-                      "description": "This StackScript's display label."
+                      "name": "label",
+                      "description": "This StackScript's display label.",
+                      "editable": true,
+                      "filterable": true,
+                      "type": "string",
+                      "value": "Example StackScript",
+                      "example": null
                     },
                     {
-                      "name": "4",
-                      "description": "In-depth information on what this StackScript does."
+                      "name": "description",
+                      "description": "In-depth information on what this StackScript does.",
+                      "editable": true,
+                      "filterable": true,
+                      "type": "string",
+                      "value": "Installs the Linode API bindings",
+                      "example": null
                     },
                     {
-                      "name": "5",
-                      "description": "A list of distributions this StackScript is compatible with."
+                      "name": "distributions",
+                      "description": "A list of distributions this StackScript is compatible with.",
+                      "editable": true,
+                      "filterable": true,
+                      "type": "array",
+                      "value": [
+                        {
+                          "id": {
+                            "_type": "string",
+                            "_value": "linode/debian8"
+                          },
+                          "label": {
+                            "_type": "string",
+                            "_value": "Debian 8.1"
+                          },
+                          "vendor": {
+                            "_type": "string",
+                            "_value": "Debian"
+                          },
+                          "x64": {
+                            "_type": "boolean",
+                            "_value": true
+                          },
+                          "recommended": {
+                            "_type": "boolean",
+                            "_value": true
+                          },
+                          "created": {
+                            "_type": "datetime",
+                            "_value": "2015-04-27T16:26:41.000Z"
+                          },
+                          "minimum_storage_size": {
+                            "_type": "integer",
+                            "_value": 900
+                          }
+                        },
+                        {
+                          "id": {
+                            "_type": "string",
+                            "_value": "linode/debian7"
+                          },
+                          "label": {
+                            "_type": "string",
+                            "_value": "Debian 7"
+                          },
+                          "vendor": {
+                            "_type": "string",
+                            "_value": "Debian"
+                          },
+                          "x64": {
+                            "_type": "boolean",
+                            "_value": true
+                          },
+                          "recommended": {
+                            "_type": "boolean",
+                            "_value": true
+                          },
+                          "created": {
+                            "_type": "datetime",
+                            "_value": "2014-09-24T13:59:32.000Z"
+                          },
+                          "minimum_storage_size": {
+                            "_type": "integer",
+                            "_value": 600
+                          }
+                        }
+                      ],
+                      "example": null
                     },
                     {
-                      "name": "6",
-                      "description": "The total number of times this StackScript has been deployed."
+                      "name": "deployments_total",
+                      "description": "The total number of times this StackScript has been deployed.",
+                      "type": "integer",
+                      "value": 150,
+                      "example": null
                     },
                     {
-                      "name": "7",
-                      "description": "The total number of active deployments."
+                      "name": "deployments_active",
+                      "description": "The total number of active deployments.",
+                      "type": "integer",
+                      "value": 42,
+                      "example": null
                     },
                     {
-                      "name": "8",
-                      "description": "Publicize StackScript in the Linode StackScript library. Note that StackScripts cannot be changed to private after they have been public.\n"
+                      "name": "is_public",
+                      "description": "Publicize StackScript in the Linode StackScript library. Note that StackScripts cannot be changed to private after they have been public.\n",
+                      "editable": true,
+                      "filterable": true,
+                      "type": "boolean",
+                      "value": true,
+                      "example": null
                     },
                     {
-                      "name": "9",
-                      "description": "When the StackScript was initially created."
+                      "name": "created",
+                      "description": "When the StackScript was initially created.",
+                      "type": "datetime",
+                      "value": "2015-09-29T11:21:01",
+                      "example": null
                     },
                     {
-                      "name": "10",
-                      "description": "When the StackScript was last updated."
+                      "name": "updated",
+                      "description": "When the StackScript was last updated.",
+                      "type": "datetime",
+                      "value": "2015-10-15T10:02:01",
+                      "example": null
                     },
                     {
-                      "name": "11",
-                      "description": "The most recent note about what was changed for this revision."
+                      "name": "rev_note",
+                      "description": "The most recent note about what was changed for this revision.",
+                      "editable": true,
+                      "type": "string",
+                      "value": "Initial import",
+                      "example": null
                     },
                     {
-                      "name": "12",
-                      "description": "The actual script body to be executed."
+                      "name": "script",
+                      "description": "The actual script body to be executed.",
+                      "editable": true,
+                      "type": "string",
+                      "value": "#!/bin/bash",
+                      "example": null
                     },
                     {
-                      "name": "13",
-                      "description": "Variables that can be set to customize the script per deployment."
+                      "name": "user_defined_fields",
+                      "description": "Variables that can be set to customize the script per deployment.",
+                      "type": "array",
+                      "value": [
+                        {
+                          "name": {
+                            "_type": "string",
+                            "_value": "var1"
+                          },
+                          "label": {
+                            "_type": "string",
+                            "_value": "A question"
+                          },
+                          "example": {
+                            "_type": "string",
+                            "_value": "An example value"
+                          },
+                          "default": {
+                            "_type": "string",
+                            "_value": "Default value"
+                          }
+                        },
+                        {
+                          "name": {
+                            "_type": "string",
+                            "_value": "var2"
+                          },
+                          "label": {
+                            "_type": "string",
+                            "_value": "Another question"
+                          },
+                          "example": {
+                            "_type": "string",
+                            "_value": "possible"
+                          },
+                          "oneof": {
+                            "_type": "string",
+                            "_value": "possible,enum,values"
+                          }
+                        }
+                      ],
+                      "example": null
                     }
                   ]
                 }
@@ -2385,74 +2930,86 @@ module.exports = { endpoints: [
                     {
                       "name": "id",
                       "type": "integer",
-                      "value": 357
+                      "value": 357,
+                      "example": null
                     },
                     {
                       "name": "domain",
                       "description": "The Domain name.\n",
                       "editable": true,
+                      "filterable": true,
                       "type": "string",
-                      "value": "example.com"
+                      "value": "example.com",
+                      "example": null
                     },
                     {
                       "name": "soa_email",
                       "description": "Start of Authority (SOA) contact email.\n",
                       "editable": true,
                       "type": "string",
-                      "value": "admin@example.com"
+                      "value": "admin@example.com",
+                      "example": null
                     },
                     {
                       "name": "description",
                       "description": "A description to keep track of this Domain.\n",
                       "editable": true,
                       "type": "string",
-                      "value": "Example Description"
+                      "value": "Example Description",
+                      "example": null
                     },
                     {
                       "name": "refresh_sec",
                       "description": "Time interval before the Domain should be refreshed, in seconds.\n",
                       "editable": true,
                       "type": "integer",
-                      "value": 14400
+                      "value": 14400,
+                      "example": null
                     },
                     {
                       "name": "retry_sec",
                       "description": "Time interval that should elapse before a failed refresh should be retried, in seconds.\n",
                       "editable": true,
                       "type": "integer",
-                      "value": 3600
+                      "value": 3600,
+                      "example": null
                     },
                     {
                       "name": "expire_sec",
                       "description": "Time value that specifies the upper limit on the time interval that can elapse before the Domain is no longer authoritative, in seconds.\n",
                       "editable": true,
                       "type": "integer",
-                      "value": 604800
+                      "value": 604800,
+                      "example": null
                     },
                     {
                       "name": "ttl_sec",
                       "description": "Time interval that the resource record may be cached before\n  it should be discarded, in seconds.\n",
                       "editable": true,
                       "type": "integer",
-                      "value": 3600
+                      "value": 3600,
+                      "example": null
                     },
                     {
                       "name": "status",
                       "description": "The status of the Domain it can be disabled, active, or edit_mode.\n",
                       "editable": true,
                       "type": "enum",
-                      "value": "active"
+                      "value": "active",
+                      "example": null
                     },
                     {
                       "name": "master_ips",
                       "description": "An array of IP addresses for this Domain.\n",
                       "editable": true,
+                      "filterable": true,
                       "type": "array",
                       "value": [
                         "127.0.0.1",
                         "255.255.255.1",
                         "123.123.123.7"
-                      ]
+                      ],
+                      "example": null
                     },
                     {
                       "name": "axfr_ips",
@@ -2461,21 +3018,26 @@ module.exports = { endpoints: [
                       "type": "array",
                       "value": [
                         "44.55.66.77"
-                      ]
+                      ],
+                      "example": null
                     },
                     {
                       "name": "display_group",
                       "description": "A display group to keep track of this Domain.\n",
                       "editable": true,
+                      "filterable": true,
                       "type": "string",
-                      "value": "Example Display Group"
+                      "value": "Example Display Group",
+                      "example": null
                     },
                     {
                       "name": "type",
                       "description": "Controls the Domain type.",
                       "editable": false,
+                      "filterable": true,
                       "type": "enum",
-                      "value": "master"
+                      "value": "master",
+                      "example": null
                     }
                   ],
                   "enums": [
@@ -2597,55 +3159,116 @@ module.exports = { endpoints: [
                   "description": "Domains\n",
                   "schema": [
                     {
-                      "name": "0"
+                      "name": "id",
+                      "type": "integer",
+                      "value": 357,
+                      "example": null
                     },
                     {
-                      "name": "1",
-                      "description": "The Domain name.\n"
+                      "name": "domain",
+                      "description": "The Domain name.\n",
+                      "editable": true,
+                      "filterable": true,
+                      "type": "string",
+                      "value": "example.com",
+                      "example": null
                     },
                     {
-                      "name": "2",
-                      "description": "Start of Authority (SOA) contact email.\n"
+                      "name": "soa_email",
+                      "description": "Start of Authority (SOA) contact email.\n",
+                      "editable": true,
+                      "type": "string",
+                      "value": "admin@example.com",
+                      "example": null
                     },
                     {
-                      "name": "3",
-                      "description": "A description to keep track of this Domain.\n"
+                      "name": "description",
+                      "description": "A description to keep track of this Domain.\n",
+                      "editable": true,
+                      "type": "string",
+                      "value": "Example Description",
+                      "example": null
                     },
                     {
-                      "name": "4",
-                      "description": "Time interval before the Domain should be refreshed, in seconds.\n"
+                      "name": "refresh_sec",
+                      "description": "Time interval before the Domain should be refreshed, in seconds.\n",
+                      "editable": true,
+                      "type": "integer",
+                      "value": 14400,
+                      "example": null
                     },
                     {
-                      "name": "5",
-                      "description": "Time interval that should elapse before a failed refresh should be retried, in seconds.\n"
+                      "name": "retry_sec",
+                      "description": "Time interval that should elapse before a failed refresh should be retried, in seconds.\n",
+                      "editable": true,
+                      "type": "integer",
+                      "value": 3600,
+                      "example": null
                     },
                     {
-                      "name": "6",
-                      "description": "Time value that specifies the upper limit on the time interval that can elapse before the Domain is no longer authoritative, in seconds.\n"
+                      "name": "expire_sec",
+                      "description": "Time value that specifies the upper limit on the time interval that can elapse before the Domain is no longer authoritative, in seconds.\n",
+                      "editable": true,
+                      "type": "integer",
+                      "value": 604800,
+                      "example": null
                     },
                     {
-                      "name": "7",
-                      "description": "Time interval that the resource record may be cached before\n  it should be discarded, in seconds.\n"
+                      "name": "ttl_sec",
+                      "description": "Time interval that the resource record may be cached before\n  it should be discarded, in seconds.\n",
+                      "editable": true,
+                      "type": "integer",
+                      "value": 3600,
+                      "example": null
                     },
                     {
-                      "name": "8",
-                      "description": "The status of the Domain it can be disabled, active, or edit_mode.\n"
+                      "name": "status",
+                      "description": "The status of the Domain it can be disabled, active, or edit_mode.\n",
+                      "editable": true,
+                      "type": "enum",
+                      "value": "active",
+                      "example": null
                     },
                     {
-                      "name": "9",
-                      "description": "An array of IP addresses for this Domain.\n"
+                      "name": "master_ips",
+                      "description": "An array of IP addresses for this Domain.\n",
+                      "editable": true,
+                      "filterable": true,
+                      "type": "array",
+                      "value": [
+                        "127.0.0.1",
+                        "255.255.255.1",
+                        "123.123.123.7"
+                      ],
+                      "example": null
                     },
                     {
-                      "name": "10",
-                      "description": "An array of IP addresses allowed to AXFR the entire Domain.\n"
+                      "name": "axfr_ips",
+                      "description": "An array of IP addresses allowed to AXFR the entire Domain.\n",
+                      "editable": true,
+                      "type": "array",
+                      "value": [
+                        "44.55.66.77"
+                      ],
+                      "example": null
                     },
                     {
-                      "name": "11",
-                      "description": "A display group to keep track of this Domain.\n"
+                      "name": "display_group",
+                      "description": "A display group to keep track of this Domain.\n",
+                      "editable": true,
+                      "filterable": true,
+                      "type": "string",
+                      "value": "Example Display Group",
+                      "example": null
                     },
                     {
-                      "name": "12",
-                      "description": "Controls the Domain type."
+                      "name": "type",
+                      "description": "Controls the Domain type.",
+                      "editable": false,
+                      "filterable": true,
+                      "type": "enum",
+                      "value": "master",
+                      "example": null
                     }
                   ],
                   "enums": [
@@ -2727,69 +3350,81 @@ module.exports = { endpoints: [
                     {
                       "name": "id",
                       "type": "integer",
-                      "value": 468
+                      "value": 468,
+                      "example": null
                     },
                     {
                       "name": "type",
                       "description": "Type of record (A/AAAA, NS, MX, CNAME, TXT, SRV).\n",
                       "type": "string",
-                      "value": "A"
+                      "value": "A",
+                      "example": null
                     },
                     {
                       "name": "name",
                       "description": "The hostname or FQDN. When type=MX the subdomain to delegate to the Target MX server.\n",
                       "editable": true,
+                      "filterable": true,
                       "type": "string",
-                      "value": "sub.example.com"
+                      "value": "sub.example.com",
+                      "example": null
                     },
                     {
                       "name": "target",
                       "description": "When type=MX the hostname. When type=CNAME the target of the alias. When type=TXT the value of the record. When type=A or AAAA the token of '[remote_addr]' will be substituted with the IP address of the request.\n",
                       "editable": true,
+                      "filterable": true,
                       "type": "string",
-                      "value": "sub"
+                      "value": "sub",
+                      "example": null
                     },
                     {
                       "name": "priority",
                       "description": "Priority for MX and SRV records.\n",
                       "editable": true,
                       "type": "integer",
-                      "value": 10
+                      "value": 10,
+                      "example": null
                     },
                     {
                       "name": "weight",
                       "description": "A relative weight for records with the same priority, higher value means more preferred.\n",
                       "editable": true,
                       "type": "integer",
-                      "value": 20
+                      "value": 20,
+                      "example": null
                     },
                     {
                       "name": "port",
                       "description": "The TCP or UDP port on which the service is to be found.\n",
                       "editable": true,
                       "type": "integer",
-                      "value": 80
+                      "value": 80,
+                      "example": null
                     },
                     {
                       "name": "service",
                       "description": "The service to append to an SRV record. Must conform to RFC2782 standards.\n",
                       "editable": true,
                       "type": "string",
-                      "value": "_sip"
+                      "value": "_sip",
+                      "example": null
                     },
                     {
                       "name": "protocol",
                       "description": "The protocol to append to an SRV record. Must conform to RFC2782 standards.\n",
                       "editable": true,
                       "type": "string",
-                      "value": "_tcp"
+                      "value": "_tcp",
+                      "example": null
                     },
                     {
                       "name": "ttl_sec",
                       "description": "Time interval that the resource record may be cached before it should be discarded, in seconds. Leave as 0 to accept our default.\n",
                       "editable": true,
                       "type": "integer",
-                      "value": 86400
+                      "value": 86400,
+                      "example": null
                     }
                   ],
                   "enums": [
@@ -2897,43 +3532,83 @@ module.exports = { endpoints: [
                   "description": "Domain Records: The Domain Record fields will contain different values depending on what type of record it is.\n",
                   "schema": [
                     {
-                      "name": "0"
+                      "name": "id",
+                      "type": "integer",
+                      "value": 468,
+                      "example": null
                     },
                     {
-                      "name": "1",
-                      "description": "Type of record (A/AAAA, NS, MX, CNAME, TXT, SRV).\n"
+                      "name": "type",
+                      "description": "Type of record (A/AAAA, NS, MX, CNAME, TXT, SRV).\n",
+                      "type": "string",
+                      "value": "A",
+                      "example": null
                     },
                     {
-                      "name": "2",
-                      "description": "The hostname or FQDN. When type=MX the subdomain to delegate to the Target MX server.\n"
+                      "name": "name",
+                      "description": "The hostname or FQDN. When type=MX the subdomain to delegate to the Target MX server.\n",
+                      "editable": true,
+                      "filterable": true,
+                      "type": "string",
+                      "value": "sub.example.com",
+                      "example": null
                     },
                     {
-                      "name": "3",
-                      "description": "When type=MX the hostname. When type=CNAME the target of the alias. When type=TXT the value of the record. When type=A or AAAA the token of '[remote_addr]' will be substituted with the IP address of the request.\n"
+                      "name": "target",
+                      "description": "When type=MX the hostname. When type=CNAME the target of the alias. When type=TXT the value of the record. When type=A or AAAA the token of '[remote_addr]' will be substituted with the IP address of the request.\n",
+                      "editable": true,
+                      "filterable": true,
+                      "type": "string",
+                      "value": "sub",
+                      "example": null
                     },
                     {
-                      "name": "4",
-                      "description": "Priority for MX and SRV records.\n"
+                      "name": "priority",
+                      "description": "Priority for MX and SRV records.\n",
+                      "editable": true,
+                      "type": "integer",
+                      "value": 10,
+                      "example": null
                     },
                     {
-                      "name": "5",
-                      "description": "A relative weight for records with the same priority, higher value means more preferred.\n"
+                      "name": "weight",
+                      "description": "A relative weight for records with the same priority, higher value means more preferred.\n",
+                      "editable": true,
+                      "type": "integer",
+                      "value": 20,
+                      "example": null
                     },
                     {
-                      "name": "6",
-                      "description": "The TCP or UDP port on which the service is to be found.\n"
+                      "name": "port",
+                      "description": "The TCP or UDP port on which the service is to be found.\n",
+                      "editable": true,
+                      "type": "integer",
+                      "value": 80,
+                      "example": null
                     },
                     {
-                      "name": "7",
-                      "description": "The service to append to an SRV record. Must conform to RFC2782 standards.\n"
+                      "name": "service",
+                      "description": "The service to append to an SRV record. Must conform to RFC2782 standards.\n",
+                      "editable": true,
+                      "type": "string",
+                      "value": "_sip",
+                      "example": null
                     },
                     {
-                      "name": "8",
-                      "description": "The protocol to append to an SRV record. Must conform to RFC2782 standards.\n"
+                      "name": "protocol",
+                      "description": "The protocol to append to an SRV record. Must conform to RFC2782 standards.\n",
+                      "editable": true,
+                      "type": "string",
+                      "value": "_tcp",
+                      "example": null
                     },
                     {
-                      "name": "9",
-                      "description": "Time interval that the resource record may be cached before it should be discarded, in seconds. Leave as 0 to accept our default.\n"
+                      "name": "ttl_sec",
+                      "description": "Time interval that the resource record may be cached before it should be discarded, in seconds. Leave as 0 to accept our default.\n",
+                      "editable": true,
+                      "type": "integer",
+                      "value": 86400,
+                      "example": null
                     }
                   ],
                   "enums": [
@@ -3027,28 +3702,32 @@ module.exports = { endpoints: [
                       "name": "id",
                       "description": "An integer.",
                       "type": "integer",
-                      "value": 123456
+                      "value": 123456,
+                      "example": null
                     },
                     {
                       "name": "label",
                       "description": "The NodeBalancer's display label. Must be 3-32 ASCII characters limited to letters, numbers, underscores, and dashes, starting and ending with a letter, and without two dashes or underscores in a row.",
                       "editable": true,
                       "type": "string",
-                      "value": "nodebalancer12345"
+                      "value": "nodebalancer12345",
+                      "example": null
                     },
                     {
                       "name": "hostname",
                       "description": "The NodeBalancer's hostname.",
                       "editable": false,
                       "type": "string",
-                      "value": "nb-69-164-223-4.us-east-1a.nodebalancer.linode.com"
+                      "value": "nb-69-164-223-4.us-east-1a.nodebalancer.linode.com",
+                      "example": null
                     },
                     {
                       "name": "client_conn_throttle",
                       "description": "Throttle connections per second. 0 to disable, max of 20.",
                       "editable": true,
                       "type": "integer",
-                      "value": 10
+                      "value": 10,
+                      "example": null
                     }
                   ]
                 }
@@ -3060,7 +3739,7 @@ module.exports = { endpoints: [
                 "params": [
                   {
                     "description": "A region ID to provision this NodeBalancer in.\n",
-                    "type": "region",
+                    "type": "integer",
                     "name": "region"
                   },
                   {
@@ -3110,20 +3789,35 @@ module.exports = { endpoints: [
                   "description": "NodeBalancer objects describe a single NodeBalancer on your account.\n",
                   "schema": [
                     {
-                      "name": "0",
-                      "description": "An integer."
+                      "name": "id",
+                      "description": "An integer.",
+                      "type": "integer",
+                      "value": 123456,
+                      "example": null
                     },
                     {
-                      "name": "1",
-                      "description": "The NodeBalancer's display label. Must be 3-32 ASCII characters limited to letters, numbers, underscores, and dashes, starting and ending with a letter, and without two dashes or underscores in a row."
+                      "name": "label",
+                      "description": "The NodeBalancer's display label. Must be 3-32 ASCII characters limited to letters, numbers, underscores, and dashes, starting and ending with a letter, and without two dashes or underscores in a row.",
+                      "editable": true,
+                      "type": "string",
+                      "value": "nodebalancer12345",
+                      "example": null
                     },
                     {
-                      "name": "2",
-                      "description": "The NodeBalancer's hostname."
+                      "name": "hostname",
+                      "description": "The NodeBalancer's hostname.",
+                      "editable": false,
+                      "type": "string",
+                      "value": "nb-69-164-223-4.us-east-1a.nodebalancer.linode.com",
+                      "example": null
                     },
                     {
-                      "name": "3",
-                      "description": "Throttle connections per second. 0 to disable, max of 20."
+                      "name": "client_conn_throttle",
+                      "description": "Throttle connections per second. 0 to disable, max of 20.",
+                      "editable": true,
+                      "type": "integer",
+                      "value": 10,
+                      "example": null
                     }
                   ]
                 }
@@ -3552,7 +4246,7 @@ module.exports = { endpoints: [
                 "params": [
                   {
                     "description": "The region where the IPv4 address and Linode are located.\n",
-                    "type": "region",
+                    "type": "integer",
                     "name": "region"
                   },
                   {
@@ -3607,7 +4301,36 @@ module.exports = { endpoints: [
                     "value": "import regions\nTODO\n"
                   }
                 ],
-                "name": "GET"
+                "name": "GET",
+                "resource": {
+                  "name": "Region",
+                  "prefix": "dctr",
+                  "description": "Region objects describe the regions available for Linode services.\n",
+                  "schema": [
+                    {
+                      "name": "id",
+                      "type": "string",
+                      "value": "us-east-1a",
+                      "example": null
+                    },
+                    {
+                      "name": "label",
+                      "description": "Human-friendly region name.",
+                      "filterable": true,
+                      "type": "string",
+                      "value": "Newark, NJ",
+                      "example": null
+                    },
+                    {
+                      "name": "country",
+                      "description": "Country",
+                      "filterable": true,
+                      "type": "string",
+                      "value": "US",
+                      "example": null
+                    }
+                  ]
+                }
               }
             ],
             "path": "regions",
@@ -3631,7 +4354,36 @@ module.exports = { endpoints: [
                     "value": "import regions\nTODO\n"
                   }
                 ],
-                "name": "GET"
+                "name": "GET",
+                "resource": {
+                  "name": "Region",
+                  "prefix": "dctr",
+                  "description": "Region objects describe the regions available for Linode services.\n",
+                  "schema": [
+                    {
+                      "name": "id",
+                      "type": "string",
+                      "value": "us-east-1a",
+                      "example": null
+                    },
+                    {
+                      "name": "label",
+                      "description": "Human-friendly region name.",
+                      "filterable": true,
+                      "type": "string",
+                      "value": "Newark, NJ",
+                      "example": null
+                    },
+                    {
+                      "name": "country",
+                      "description": "Country",
+                      "filterable": true,
+                      "type": "string",
+                      "value": "US",
+                      "example": null
+                    }
+                  ]
+                }
               }
             ],
             "path": "regions/:id",
@@ -3679,56 +4431,70 @@ module.exports = { endpoints: [
                       "name": "id",
                       "description": "This ticket's ID",
                       "type": "integer",
-                      "value": 1234
+                      "value": 1234,
+                      "example": null
                     },
                     {
                       "name": "summary",
                       "description": "This is summary or title for the ticket.",
                       "type": "string",
-                      "value": "A summary of the ticket."
+                      "value": "A summary of the ticket.",
+                      "example": null
                     },
                     {
                       "name": "description",
                       "description": "The full details of the issue or question.",
                       "type": "string",
-                      "value": "More details about the ticket."
+                      "value": "More details about the ticket.",
+                      "example": null
                     },
                     {
                       "name": "status",
                       "description": "The status of the ticket.",
+                      "filterable": true,
                       "type": "enum",
-                      "value": "open"
+                      "value": "open",
+                      "example": null
                     },
                     {
                       "name": "opened",
+                      "filterable": true,
                       "type": "datetime",
-                      "value": "2017-02-23T11:21:01"
+                      "value": "2017-02-23T11:21:01",
+                      "example": null
                     },
                     {
                       "name": "closed",
+                      "filterable": true,
                       "type": "datetime",
-                      "value": "2017-02-25T03:20:00"
+                      "value": "2017-02-25T03:20:00",
+                      "example": null
                     },
                     {
                       "name": "closed_by",
                       "description": "The user who closed this ticket.",
                       "type": "string",
-                      "value": "some_user"
+                      "value": "some_user",
+                      "example": null
                     },
                     {
                       "name": "updated",
+                      "filterable": true,
                       "type": "datetime",
-                      "value": "2017-02-23T11:21:01"
+                      "value": "2017-02-23T11:21:01",
+                      "example": null
                     },
                     {
                       "name": "updated_by",
                       "description": "The user who last updated this ticket.",
                       "type": "string",
-                      "value": "some_other_user"
+                      "value": "some_other_user",
+                      "example": null
                     },
                     {
                       "name": "entity",
-                      "description": "The entity this ticket was opened regarding"
+                      "description": "The entity this ticket was opened regarding",
+                      "example": null
                     }
                   ],
                   "enums": [
@@ -3808,41 +4574,73 @@ module.exports = { endpoints: [
                   "description": "Support ticket objects describe requests to the Linode support team.\n",
                   "schema": [
                     {
-                      "name": "0",
-                      "description": "This ticket's ID"
+                      "name": "id",
+                      "description": "This ticket's ID",
+                      "type": "integer",
+                      "value": 1234,
+                      "example": null
                     },
                     {
-                      "name": "1",
-                      "description": "This is summary or title for the ticket."
+                      "name": "summary",
+                      "description": "This is summary or title for the ticket.",
+                      "type": "string",
+                      "value": "A summary of the ticket.",
+                      "example": null
                     },
                     {
-                      "name": "2",
-                      "description": "The full details of the issue or question."
+                      "name": "description",
+                      "description": "The full details of the issue or question.",
+                      "type": "string",
+                      "value": "More details about the ticket.",
+                      "example": null
                     },
                     {
-                      "name": "3",
-                      "description": "The status of the ticket."
+                      "name": "status",
+                      "description": "The status of the ticket.",
+                      "filterable": true,
+                      "type": "enum",
+                      "value": "open",
+                      "example": null
                     },
                     {
-                      "name": "4"
+                      "name": "opened",
+                      "filterable": true,
+                      "type": "datetime",
+                      "value": "2017-02-23T11:21:01",
+                      "example": null
                     },
                     {
-                      "name": "5"
+                      "name": "closed",
+                      "filterable": true,
+                      "type": "datetime",
+                      "value": "2017-02-25T03:20:00",
+                      "example": null
                     },
                     {
-                      "name": "6",
-                      "description": "The user who closed this ticket."
+                      "name": "closed_by",
+                      "description": "The user who closed this ticket.",
+                      "type": "string",
+                      "value": "some_user",
+                      "example": null
                     },
                     {
-                      "name": "7"
+                      "name": "updated",
+                      "filterable": true,
+                      "type": "datetime",
+                      "value": "2017-02-23T11:21:01",
+                      "example": null
                     },
                     {
-                      "name": "8",
-                      "description": "The user who last updated this ticket."
+                      "name": "updated_by",
+                      "description": "The user who last updated this ticket.",
+                      "type": "string",
+                      "value": "some_other_user",
+                      "example": null
                     },
                     {
-                      "name": "9",
-                      "description": "The entity this ticket was opened regarding"
+                      "name": "entity",
+                      "description": "The entity this ticket was opened regarding",
+                      "example": null
                     }
                   ],
                   "enums": [
@@ -3884,25 +4682,29 @@ module.exports = { endpoints: [
                       "name": "id",
                       "description": "This ticket's ID",
                       "type": "int",
-                      "value": 1234
+                      "value": 1234,
+                      "example": null
                     },
                     {
                       "name": "description",
                       "description": "The body of this ticket reply.",
                       "type": "string",
-                      "value": "More details about the ticket."
+                      "value": "More details about the ticket.",
+                      "example": null
                     },
                     {
                       "name": "created",
                       "description": "A timestamp for when the reply was submitted.",
                       "type": "datetime",
-                      "value": "2017-02-23T11:21:01"
+                      "value": "2017-02-23T11:21:01",
+                      "example": null
                     },
                     {
                       "name": "created_by",
                       "description": "The user who submitted this reply.",
                       "type": "string",
-                      "value": "some_other_user"
+                      "value": "some_other_user",
+                      "example": null
                     }
                   ]
                 }
@@ -3998,60 +4800,69 @@ module.exports = { endpoints: [
                       "name": "username",
                       "description": "The username of the user.\n",
                       "type": "string",
-                      "value": "example_user"
+                      "value": "example_user",
+                      "example": null
                     },
                     {
                       "name": "email",
                       "description": "The email address of the user.\n",
                       "editable": true,
                       "type": "string",
-                      "value": "person@place.com"
+                      "value": "person@place.com",
+                      "example": null
                     },
                     {
                       "name": "timezone",
                       "description": "The selected timezone of the user location.",
                       "editable": true,
                       "type": "string",
-                      "value": "US/Eastern"
+                      "value": "US/Eastern",
+                      "example": null
                     },
                     {
                       "name": "email_notifications",
                       "description": "Toggles to determine if the user receives email notifications",
                       "editable": true,
                       "type": "boolean",
-                      "value": true
+                      "value": true,
+                      "example": null
                     },
                     {
                       "name": "referrals",
-                      "description": "Displays information related to referral signups attributed to the user.\n"
+                      "description": "Displays information related to referral signups attributed to the user.\n",
+                      "example": null
                     },
                     {
                       "name": "ip_whitelist_enabled",
                       "description": "When enabled, you can only log in from an IP address on your whitelist.\n",
                       "editable": true,
                       "type": "boolean",
-                      "value": true
+                      "value": true,
+                      "example": null
                     },
                     {
                       "name": "lish_auth_method",
                       "description": "Controls what authentication methods are allowed to connect to the Lish console servers.\n",
                       "editable": true,
                       "type": "enum",
-                      "value": "password_keys"
+                      "value": "password_keys",
+                      "example": null
                     },
                     {
                       "name": "authorized_keys",
                       "description": "Comma-delimited list of authorized SSH public keys",
                       "editable": true,
                       "type": "string",
-                      "value": "ssh-rsa AADDDDB3NzaC1yc2EAAAADAQABAAACAQDzP5sZlvUR9nZPy0WrklktNXffq+nQoEYUdVJ0hpIzZs+KqjZ3CDbsJZF0g0pn1/gpY9oSEeXzFpWasdkjlfasdf09asldf+O+y8w6rbPe8IyP1mext4cmBe6g/nHAjw/k0rS6cuUFZu++snG0qubymE9gMZ3X0ac92TP7tk0dEwq1fbjumhqNmNyqSbt5j8pLuLRhYHhVszmwnuKjeGjm9mJLJGnd5V6IdZWEIhCjrNgNr1H+fVNI87ryFE31i/i/bnHcbnkNdAmDc2EQ2gJ33vXg8D8Nf2aI+K+e3t9MiFVTJmzAILQpvZQj2YV4mfOt+GSTUJ4VdgH9dNC/3lA0yoP6YoFYw0cdTKhJ0MotmR9iZepbJfbuXxAFOECJuC1bxFtUam3fIsGqj3vXi1R6CzRzxNERqPGLiFcXH8z0VTwXA1v+iflVd4KqihnwNtU+45TXTtFY0twLQRauB9qo9slvnhYlHqQZb8SBYw5WltX3MBQpyLTSZLQLqIKZVgQRKKF413fT52vMF54zk5SpImm5qY5Q1E4od00UJ1x4kFe0fTUQWVgeYvL8AgFx/idUsVs9r3jRPVTUnQZNB2D+7Cyf9dUFjjpiuH3AMMZyRYfJbh/Chg8J6QXYZyEQCxMRa9/lm2rRCVfGbcfb5zgKsV/HRHI/O1F9cZ9JvykwQ== someguy@someplace.com"
+                      "value": "ssh-rsa AADDDDB3NzaC1yc2EAAAADAQABAAACAQDzP5sZlvUR9nZPy0WrklktNXffq+nQoEYUdVJ0hpIzZs+KqjZ3CDbsJZF0g0pn1/gpY9oSEeXzFpWasdkjlfasdf09asldf+O+y8w6rbPe8IyP1mext4cmBe6g/nHAjw/k0rS6cuUFZu++snG0qubymE9gMZ3X0ac92TP7tk0dEwq1fbjumhqNmNyqSbt5j8pLuLRhYHhVszmwnuKjeGjm9mJLJGnd5V6IdZWEIhCjrNgNr1H+fVNI87ryFE31i/i/bnHcbnkNdAmDc2EQ2gJ33vXg8D8Nf2aI+K+e3t9MiFVTJmzAILQpvZQj2YV4mfOt+GSTUJ4VdgH9dNC/3lA0yoP6YoFYw0cdTKhJ0MotmR9iZepbJfbuXxAFOECJuC1bxFtUam3fIsGqj3vXi1R6CzRzxNERqPGLiFcXH8z0VTwXA1v+iflVd4KqihnwNtU+45TXTtFY0twLQRauB9qo9slvnhYlHqQZb8SBYw5WltX3MBQpyLTSZLQLqIKZVgQRKKF413fT52vMF54zk5SpImm5qY5Q1E4od00UJ1x4kFe0fTUQWVgeYvL8AgFx/idUsVs9r3jRPVTUnQZNB2D+7Cyf9dUFjjpiuH3AMMZyRYfJbh/Chg8J6QXYZyEQCxMRa9/lm2rRCVfGbcfb5zgKsV/HRHI/O1F9cZ9JvykwQ== someguy@someplace.com",
+                      "example": null
                     },
                     {
                       "name": "two_factor_auth",
                       "description": "Toggles whether two factor authentication (TFA) is enabled or disabled.",
                       "editable": true,
                       "type": "boolean",
-                      "value": true
+                      "value": true,
+                      "example": null
                     }
                   ],
                   "enums": [
@@ -4195,48 +5006,62 @@ module.exports = { endpoints: [
                       "name": "id",
                       "description": "This token's ID.\n",
                       "type": "integer",
-                      "value": 123
+                      "value": 123,
+                      "example": null
                     },
                     {
                       "name": "client",
                       "description": "The OAuthClient this token is associated with, or null if this is a Personal Access Token.\n",
                       "type": "oauthclient",
-                      "value": null
+                      "value": null,
+                      "example": {
+                        "id": "0123456789abcdef0123",
+                        "name": "Example OAuth app",
+                        "secret": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+                        "redirect_uri": "https://oauthreturn.example.org/",
+                        "status": "active"
+                      }
                     },
                     {
                       "name": "type",
                       "description": "If this is a Client Token or a Personal Access Token.\n",
                       "type": "enum",
-                      "value": "personal_access_token"
+                      "value": "personal_access_token",
+                      "example": null
                     },
                     {
                       "name": "scopes",
                       "description": "The OAuth Scopes this token has.\n",
                       "type": "string",
-                      "value": "*"
+                      "value": "*",
+                      "example": null
                     },
                     {
                       "name": "label",
                       "description": "The label given to this token.\n",
                       "type": "string",
-                      "value": "cli-token"
+                      "value": "cli-token",
+                      "example": null
                     },
                     {
                       "name": "created",
                       "type": "datetime",
-                      "value": "2017-01-01T13:46:32.000Z"
+                      "value": "2017-01-01T13:46:32.000Z",
+                      "example": null
                     },
                     {
                       "name": "token",
                       "description": "The OAuth Token that you can use in API requests.  Except for the inital creation of the token, this field is truncated to 16 characters.\n",
                       "type": "string",
-                      "value": "cd224292c853fe27..."
+                      "value": "cd224292c853fe27...",
+                      "example": null
                     },
                     {
                       "name": "expiry",
                       "description": "When this token expires.\n",
                       "type": "datetime",
-                      "value": "2018-01-01T13:46:32.000Z"
+                      "value": "2018-01-01T13:46:32.000Z",
+                      "example": null
                     }
                   ],
                   "enums": [
@@ -4309,35 +5134,65 @@ module.exports = { endpoints: [
                   "description": "An OAuth Token granting access to your user.\n",
                   "schema": [
                     {
-                      "name": "0",
-                      "description": "This token's ID.\n"
+                      "name": "id",
+                      "description": "This token's ID.\n",
+                      "type": "integer",
+                      "value": 123,
+                      "example": null
                     },
                     {
-                      "name": "1",
-                      "description": "The OAuthClient this token is associated with, or null if this is a Personal Access Token.\n"
+                      "name": "client",
+                      "description": "The OAuthClient this token is associated with, or null if this is a Personal Access Token.\n",
+                      "type": "oauthclient",
+                      "value": null,
+                      "example": {
+                        "id": "0123456789abcdef0123",
+                        "name": "Example OAuth app",
+                        "secret": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+                        "redirect_uri": "https://oauthreturn.example.org/",
+                        "status": "active"
+                      }
                     },
                     {
-                      "name": "2",
-                      "description": "If this is a Client Token or a Personal Access Token.\n"
+                      "name": "type",
+                      "description": "If this is a Client Token or a Personal Access Token.\n",
+                      "type": "enum",
+                      "value": "personal_access_token",
+                      "example": null
                     },
                     {
-                      "name": "3",
-                      "description": "The OAuth Scopes this token has.\n"
+                      "name": "scopes",
+                      "description": "The OAuth Scopes this token has.\n",
+                      "type": "string",
+                      "value": "*",
+                      "example": null
                     },
                     {
-                      "name": "4",
-                      "description": "The label given to this token.\n"
+                      "name": "label",
+                      "description": "The label given to this token.\n",
+                      "type": "string",
+                      "value": "cli-token",
+                      "example": null
                     },
                     {
-                      "name": "5"
+                      "name": "created",
+                      "type": "datetime",
+                      "value": "2017-01-01T13:46:32.000Z",
+                      "example": null
                     },
                     {
-                      "name": "6",
-                      "description": "The OAuth Token that you can use in API requests.  Except for the inital creation of the token, this field is truncated to 16 characters.\n"
+                      "name": "token",
+                      "description": "The OAuth Token that you can use in API requests.  Except for the inital creation of the token, this field is truncated to 16 characters.\n",
+                      "type": "string",
+                      "value": "cd224292c853fe27...",
+                      "example": null
                     },
                     {
-                      "name": "7",
-                      "description": "When this token expires.\n"
+                      "name": "expiry",
+                      "description": "When this token expires.\n",
+                      "type": "datetime",
+                      "value": "2018-01-01T13:46:32.000Z",
+                      "example": null
                     }
                   ],
                   "enums": [
@@ -4396,40 +5251,72 @@ module.exports = { endpoints: [
                   "description": "Your User profile information.\n",
                   "schema": [
                     {
-                      "name": "0",
-                      "description": "The username of the user.\n"
+                      "name": "username",
+                      "description": "The username of the user.\n",
+                      "type": "string",
+                      "value": "example_user",
+                      "example": null
                     },
                     {
-                      "name": "1",
-                      "description": "The email address of the user.\n"
+                      "name": "email",
+                      "description": "The email address of the user.\n",
+                      "editable": true,
+                      "type": "string",
+                      "value": "person@place.com",
+                      "example": null
                     },
                     {
-                      "name": "2",
-                      "description": "The selected timezone of the user location."
+                      "name": "timezone",
+                      "description": "The selected timezone of the user location.",
+                      "editable": true,
+                      "type": "string",
+                      "value": "US/Eastern",
+                      "example": null
                     },
                     {
-                      "name": "3",
-                      "description": "Toggles to determine if the user receives email notifications"
+                      "name": "email_notifications",
+                      "description": "Toggles to determine if the user receives email notifications",
+                      "editable": true,
+                      "type": "boolean",
+                      "value": true,
+                      "example": null
                     },
                     {
-                      "name": "4",
-                      "description": "Displays information related to referral signups attributed to the user.\n"
+                      "name": "referrals",
+                      "description": "Displays information related to referral signups attributed to the user.\n",
+                      "example": null
                     },
                     {
-                      "name": "5",
-                      "description": "When enabled, you can only log in from an IP address on your whitelist.\n"
+                      "name": "ip_whitelist_enabled",
+                      "description": "When enabled, you can only log in from an IP address on your whitelist.\n",
+                      "editable": true,
+                      "type": "boolean",
+                      "value": true,
+                      "example": null
                     },
                     {
-                      "name": "6",
-                      "description": "Controls what authentication methods are allowed to connect to the Lish console servers.\n"
+                      "name": "lish_auth_method",
+                      "description": "Controls what authentication methods are allowed to connect to the Lish console servers.\n",
+                      "editable": true,
+                      "type": "enum",
+                      "value": "password_keys",
+                      "example": null
                     },
                     {
-                      "name": "7",
-                      "description": "Comma-delimited list of authorized SSH public keys"
+                      "name": "authorized_keys",
+                      "description": "Comma-delimited list of authorized SSH public keys",
+                      "editable": true,
+                      "type": "string",
+                      "value": "ssh-rsa AADDDDB3NzaC1yc2EAAAADAQABAAACAQDzP5sZlvUR9nZPy0WrklktNXffq+nQoEYUdVJ0hpIzZs+KqjZ3CDbsJZF0g0pn1/gpY9oSEeXzFpWasdkjlfasdf09asldf+O+y8w6rbPe8IyP1mext4cmBe6g/nHAjw/k0rS6cuUFZu++snG0qubymE9gMZ3X0ac92TP7tk0dEwq1fbjumhqNmNyqSbt5j8pLuLRhYHhVszmwnuKjeGjm9mJLJGnd5V6IdZWEIhCjrNgNr1H+fVNI87ryFE31i/i/bnHcbnkNdAmDc2EQ2gJ33vXg8D8Nf2aI+K+e3t9MiFVTJmzAILQpvZQj2YV4mfOt+GSTUJ4VdgH9dNC/3lA0yoP6YoFYw0cdTKhJ0MotmR9iZepbJfbuXxAFOECJuC1bxFtUam3fIsGqj3vXi1R6CzRzxNERqPGLiFcXH8z0VTwXA1v+iflVd4KqihnwNtU+45TXTtFY0twLQRauB9qo9slvnhYlHqQZb8SBYw5WltX3MBQpyLTSZLQLqIKZVgQRKKF413fT52vMF54zk5SpImm5qY5Q1E4od00UJ1x4kFe0fTUQWVgeYvL8AgFx/idUsVs9r3jRPVTUnQZNB2D+7Cyf9dUFjjpiuH3AMMZyRYfJbh/Chg8J6QXYZyEQCxMRa9/lm2rRCVfGbcfb5zgKsV/HRHI/O1F9cZ9JvykwQ== someguy@someplace.com",
+                      "example": null
                     },
                     {
-                      "name": "8",
-                      "description": "Toggles whether two factor authentication (TFA) is enabled or disabled."
+                      "name": "two_factor_auth",
+                      "description": "Toggles whether two factor authentication (TFA) is enabled or disabled.",
+                      "editable": true,
+                      "type": "boolean",
+                      "value": true,
+                      "example": null
                     }
                   ],
                   "enums": [
@@ -4621,40 +5508,72 @@ module.exports = { endpoints: [
                   "description": "Your User profile information.\n",
                   "schema": [
                     {
-                      "name": "0",
-                      "description": "The username of the user.\n"
+                      "name": "username",
+                      "description": "The username of the user.\n",
+                      "type": "string",
+                      "value": "example_user",
+                      "example": null
                     },
                     {
-                      "name": "1",
-                      "description": "The email address of the user.\n"
+                      "name": "email",
+                      "description": "The email address of the user.\n",
+                      "editable": true,
+                      "type": "string",
+                      "value": "person@place.com",
+                      "example": null
                     },
                     {
-                      "name": "2",
-                      "description": "The selected timezone of the user location."
+                      "name": "timezone",
+                      "description": "The selected timezone of the user location.",
+                      "editable": true,
+                      "type": "string",
+                      "value": "US/Eastern",
+                      "example": null
                     },
                     {
-                      "name": "3",
-                      "description": "Toggles to determine if the user receives email notifications"
+                      "name": "email_notifications",
+                      "description": "Toggles to determine if the user receives email notifications",
+                      "editable": true,
+                      "type": "boolean",
+                      "value": true,
+                      "example": null
                     },
                     {
-                      "name": "4",
-                      "description": "Displays information related to referral signups attributed to the user.\n"
+                      "name": "referrals",
+                      "description": "Displays information related to referral signups attributed to the user.\n",
+                      "example": null
                     },
                     {
-                      "name": "5",
-                      "description": "When enabled, you can only log in from an IP address on your whitelist.\n"
+                      "name": "ip_whitelist_enabled",
+                      "description": "When enabled, you can only log in from an IP address on your whitelist.\n",
+                      "editable": true,
+                      "type": "boolean",
+                      "value": true,
+                      "example": null
                     },
                     {
-                      "name": "6",
-                      "description": "Controls what authentication methods are allowed to connect to the Lish console servers.\n"
+                      "name": "lish_auth_method",
+                      "description": "Controls what authentication methods are allowed to connect to the Lish console servers.\n",
+                      "editable": true,
+                      "type": "enum",
+                      "value": "password_keys",
+                      "example": null
                     },
                     {
-                      "name": "7",
-                      "description": "Comma-delimited list of authorized SSH public keys"
+                      "name": "authorized_keys",
+                      "description": "Comma-delimited list of authorized SSH public keys",
+                      "editable": true,
+                      "type": "string",
+                      "value": "ssh-rsa AADDDDB3NzaC1yc2EAAAADAQABAAACAQDzP5sZlvUR9nZPy0WrklktNXffq+nQoEYUdVJ0hpIzZs+KqjZ3CDbsJZF0g0pn1/gpY9oSEeXzFpWasdkjlfasdf09asldf+O+y8w6rbPe8IyP1mext4cmBe6g/nHAjw/k0rS6cuUFZu++snG0qubymE9gMZ3X0ac92TP7tk0dEwq1fbjumhqNmNyqSbt5j8pLuLRhYHhVszmwnuKjeGjm9mJLJGnd5V6IdZWEIhCjrNgNr1H+fVNI87ryFE31i/i/bnHcbnkNdAmDc2EQ2gJ33vXg8D8Nf2aI+K+e3t9MiFVTJmzAILQpvZQj2YV4mfOt+GSTUJ4VdgH9dNC/3lA0yoP6YoFYw0cdTKhJ0MotmR9iZepbJfbuXxAFOECJuC1bxFtUam3fIsGqj3vXi1R6CzRzxNERqPGLiFcXH8z0VTwXA1v+iflVd4KqihnwNtU+45TXTtFY0twLQRauB9qo9slvnhYlHqQZb8SBYw5WltX3MBQpyLTSZLQLqIKZVgQRKKF413fT52vMF54zk5SpImm5qY5Q1E4od00UJ1x4kFe0fTUQWVgeYvL8AgFx/idUsVs9r3jRPVTUnQZNB2D+7Cyf9dUFjjpiuH3AMMZyRYfJbh/Chg8J6QXYZyEQCxMRa9/lm2rRCVfGbcfb5zgKsV/HRHI/O1F9cZ9JvykwQ== someguy@someplace.com",
+                      "example": null
                     },
                     {
-                      "name": "8",
-                      "description": "Toggles whether two factor authentication (TFA) is enabled or disabled."
+                      "name": "two_factor_auth",
+                      "description": "Toggles whether two factor authentication (TFA) is enabled or disabled.",
+                      "editable": true,
+                      "type": "boolean",
+                      "value": true,
+                      "example": null
                     }
                   ],
                   "enums": [
@@ -4724,40 +5643,72 @@ module.exports = { endpoints: [
                   "description": "Your User profile information.\n",
                   "schema": [
                     {
-                      "name": "0",
-                      "description": "The username of the user.\n"
+                      "name": "username",
+                      "description": "The username of the user.\n",
+                      "type": "string",
+                      "value": "example_user",
+                      "example": null
                     },
                     {
-                      "name": "1",
-                      "description": "The email address of the user.\n"
+                      "name": "email",
+                      "description": "The email address of the user.\n",
+                      "editable": true,
+                      "type": "string",
+                      "value": "person@place.com",
+                      "example": null
                     },
                     {
-                      "name": "2",
-                      "description": "The selected timezone of the user location."
+                      "name": "timezone",
+                      "description": "The selected timezone of the user location.",
+                      "editable": true,
+                      "type": "string",
+                      "value": "US/Eastern",
+                      "example": null
                     },
                     {
-                      "name": "3",
-                      "description": "Toggles to determine if the user receives email notifications"
+                      "name": "email_notifications",
+                      "description": "Toggles to determine if the user receives email notifications",
+                      "editable": true,
+                      "type": "boolean",
+                      "value": true,
+                      "example": null
                     },
                     {
-                      "name": "4",
-                      "description": "Displays information related to referral signups attributed to the user.\n"
+                      "name": "referrals",
+                      "description": "Displays information related to referral signups attributed to the user.\n",
+                      "example": null
                     },
                     {
-                      "name": "5",
-                      "description": "When enabled, you can only log in from an IP address on your whitelist.\n"
+                      "name": "ip_whitelist_enabled",
+                      "description": "When enabled, you can only log in from an IP address on your whitelist.\n",
+                      "editable": true,
+                      "type": "boolean",
+                      "value": true,
+                      "example": null
                     },
                     {
-                      "name": "6",
-                      "description": "Controls what authentication methods are allowed to connect to the Lish console servers.\n"
+                      "name": "lish_auth_method",
+                      "description": "Controls what authentication methods are allowed to connect to the Lish console servers.\n",
+                      "editable": true,
+                      "type": "enum",
+                      "value": "password_keys",
+                      "example": null
                     },
                     {
-                      "name": "7",
-                      "description": "Comma-delimited list of authorized SSH public keys"
+                      "name": "authorized_keys",
+                      "description": "Comma-delimited list of authorized SSH public keys",
+                      "editable": true,
+                      "type": "string",
+                      "value": "ssh-rsa AADDDDB3NzaC1yc2EAAAADAQABAAACAQDzP5sZlvUR9nZPy0WrklktNXffq+nQoEYUdVJ0hpIzZs+KqjZ3CDbsJZF0g0pn1/gpY9oSEeXzFpWasdkjlfasdf09asldf+O+y8w6rbPe8IyP1mext4cmBe6g/nHAjw/k0rS6cuUFZu++snG0qubymE9gMZ3X0ac92TP7tk0dEwq1fbjumhqNmNyqSbt5j8pLuLRhYHhVszmwnuKjeGjm9mJLJGnd5V6IdZWEIhCjrNgNr1H+fVNI87ryFE31i/i/bnHcbnkNdAmDc2EQ2gJ33vXg8D8Nf2aI+K+e3t9MiFVTJmzAILQpvZQj2YV4mfOt+GSTUJ4VdgH9dNC/3lA0yoP6YoFYw0cdTKhJ0MotmR9iZepbJfbuXxAFOECJuC1bxFtUam3fIsGqj3vXi1R6CzRzxNERqPGLiFcXH8z0VTwXA1v+iflVd4KqihnwNtU+45TXTtFY0twLQRauB9qo9slvnhYlHqQZb8SBYw5WltX3MBQpyLTSZLQLqIKZVgQRKKF413fT52vMF54zk5SpImm5qY5Q1E4od00UJ1x4kFe0fTUQWVgeYvL8AgFx/idUsVs9r3jRPVTUnQZNB2D+7Cyf9dUFjjpiuH3AMMZyRYfJbh/Chg8J6QXYZyEQCxMRa9/lm2rRCVfGbcfb5zgKsV/HRHI/O1F9cZ9JvykwQ== someguy@someplace.com",
+                      "example": null
                     },
                     {
-                      "name": "8",
-                      "description": "Toggles whether two factor authentication (TFA) is enabled or disabled."
+                      "name": "two_factor_auth",
+                      "description": "Toggles whether two factor authentication (TFA) is enabled or disabled.",
+                      "editable": true,
+                      "type": "boolean",
+                      "value": true,
+                      "example": null
                     }
                   ],
                   "enums": [
@@ -4840,21 +5791,25 @@ module.exports = { endpoints: [
                   "schema": [
                     {
                       "name": "global",
-                      "description": "Grants involving global permissions, such as creating resources."
+                      "description": "Grants involving global permissions, such as creating resources.",
+                      "example": null
                     },
                     {
                       "name": "customer",
-                      "description": "Grants related to modifying the account."
+                      "description": "Grants related to modifying the account.",
+                      "example": null
                     },
                     {
                       "name": "stackscript",
                       "description": "Individual grants to StackScripts you own.  Grants include all, use, edit and delete",
-                      "type": "array"
+                      "type": "array",
+                      "example": null
                     },
                     {
                       "name": "nodebalancer",
                       "description": "Individual grants to NodeBalancers you own.  Grants inlcude all, access, and delete",
-                      "type": "array"
+                      "type": "array",
+                      "example": null
                     },
                     {
                       "name": "linode",
@@ -4905,12 +5860,14 @@ module.exports = { endpoints: [
                             "_value": "linode324"
                           }
                         }
-                      ]
+                      ],
+                      "example": null
                     },
                     {
                       "name": "domain",
                       "description": "Individual grants to a Domain you own.  Grants include all, access and delete",
-                      "type": "array"
+                      "type": "array",
+                      "example": null
                     }
                   ]
                 }
@@ -4962,75 +5919,90 @@ module.exports = { endpoints: [
                     {
                       "name": "id",
                       "type": "integer",
-                      "value": 1234
+                      "value": 1234,
+                      "example": null
                     },
                     {
                       "name": "entity",
-                      "description": "Detailed inforrmation about the event's entity, including id, type, label, and URL used to access it.\n"
+                      "description": "Detailed inforrmation about the event's entity, including id, type, label, and URL used to access it.\n",
+                      "example": null
                     },
                     {
                       "name": "action",
                       "description": "The action that caused this event.\n",
                       "type": "enum",
-                      "value": "linode_reboot"
+                      "value": "linode_reboot",
+                      "example": null
                     },
                     {
                       "name": "username",
                       "description": "The username of the user who initiated this event.\n",
                       "type": "string",
-                      "value": "example_user"
+                      "value": "example_user",
+                      "example": null
                     },
                     {
                       "name": "status",
                       "description": "The current status of this event.  \n",
                       "type": "enum",
-                      "value": "finished"
+                      "value": "finished",
+                      "example": null
                     },
                     {
                       "name": "percent_complete",
                       "description": "A percentage estimating the amount of time remaining for an event.  Returns null for notification events.\n",
+                      "filterable": false,
                       "type": "integer",
-                      "value": 20
+                      "value": 20,
+                      "example": null
                     },
                     {
                       "name": "rate",
                       "description": "The rate of completion of the event.  Currently only returned for migration and resize events.\n",
                       "type": "string",
-                      "value": null
+                      "value": null,
+                      "example": null
                     },
                     {
                       "name": "time_remaining",
                       "description": "The estimated time remaining until the completion of this event.  Currently only returned for in progress migrations or resizes.\n",
                       "type": "string",
-                      "value": null
+                      "value": null,
+                      "example": null
                     },
                     {
                       "name": "seen",
                       "description": "If this event has been seen.",
                       "type": "boolean",
-                      "value": false
+                      "value": false,
+                      "example": null
                     },
                     {
                       "name": "read",
                       "description": "If this event has been read.",
                       "type": "boolean",
-                      "value": false
+                      "value": false,
+                      "example": null
                     },
                     {
                       "name": "created",
+                      "filterable": true,
                       "type": "datetime",
-                      "value": "2014-12-24T18:00:09.000Z"
+                      "value": "2014-12-24T18:00:09.000Z",
+                      "example": null
                     },
                     {
                       "name": "updated",
                       "type": "datetime",
-                      "value": "2014-12-24T19:00:09.000Z"
+                      "value": "2014-12-24T19:00:09.000Z",
+                      "example": null
                     },
                     {
                       "name": "user_id",
                       "description": "The ID of the user who initiated this event.\n",
                       "type": "integer",
-                      "value": 234567
+                      "value": 234567,
+                      "example": null
                     }
                   ],
                   "enums": [
@@ -5100,53 +6072,92 @@ module.exports = { endpoints: [
                   "description": "Event objects describe a notification on a user's account timeline.\n",
                   "schema": [
                     {
-                      "name": "0"
+                      "name": "id",
+                      "type": "integer",
+                      "value": 1234,
+                      "example": null
                     },
                     {
-                      "name": "1",
-                      "description": "Detailed inforrmation about the event's entity, including id, type, label, and URL used to access it.\n"
+                      "name": "entity",
+                      "description": "Detailed inforrmation about the event's entity, including id, type, label, and URL used to access it.\n",
+                      "example": null
                     },
                     {
-                      "name": "2",
-                      "description": "The action that caused this event.\n"
+                      "name": "action",
+                      "description": "The action that caused this event.\n",
+                      "type": "enum",
+                      "value": "linode_reboot",
+                      "example": null
                     },
                     {
-                      "name": "3",
-                      "description": "The username of the user who initiated this event.\n"
+                      "name": "username",
+                      "description": "The username of the user who initiated this event.\n",
+                      "type": "string",
+                      "value": "example_user",
+                      "example": null
                     },
                     {
-                      "name": "4",
-                      "description": "The current status of this event.  \n"
+                      "name": "status",
+                      "description": "The current status of this event.  \n",
+                      "type": "enum",
+                      "value": "finished",
+                      "example": null
                     },
                     {
-                      "name": "5",
-                      "description": "A percentage estimating the amount of time remaining for an event.  Returns null for notification events.\n"
+                      "name": "percent_complete",
+                      "description": "A percentage estimating the amount of time remaining for an event.  Returns null for notification events.\n",
+                      "filterable": false,
+                      "type": "integer",
+                      "value": 20,
+                      "example": null
                     },
                     {
-                      "name": "6",
-                      "description": "The rate of completion of the event.  Currently only returned for migration and resize events.\n"
+                      "name": "rate",
+                      "description": "The rate of completion of the event.  Currently only returned for migration and resize events.\n",
+                      "type": "string",
+                      "value": null,
+                      "example": null
                     },
                     {
-                      "name": "7",
-                      "description": "The estimated time remaining until the completion of this event.  Currently only returned for in progress migrations or resizes.\n"
+                      "name": "time_remaining",
+                      "description": "The estimated time remaining until the completion of this event.  Currently only returned for in progress migrations or resizes.\n",
+                      "type": "string",
+                      "value": null,
+                      "example": null
                     },
                     {
-                      "name": "8",
-                      "description": "If this event has been seen."
+                      "name": "seen",
+                      "description": "If this event has been seen.",
+                      "type": "boolean",
+                      "value": false,
+                      "example": null
                     },
                     {
-                      "name": "9",
-                      "description": "If this event has been read."
+                      "name": "read",
+                      "description": "If this event has been read.",
+                      "type": "boolean",
+                      "value": false,
+                      "example": null
                     },
                     {
-                      "name": "10"
+                      "name": "created",
+                      "filterable": true,
+                      "type": "datetime",
+                      "value": "2014-12-24T18:00:09.000Z",
+                      "example": null
                     },
                     {
-                      "name": "11"
+                      "name": "updated",
+                      "type": "datetime",
+                      "value": "2014-12-24T19:00:09.000Z",
+                      "example": null
                     },
                     {
-                      "name": "12",
-                      "description": "The ID of the user who initiated this event.\n"
+                      "name": "user_id",
+                      "description": "The ID of the user who initiated this event.\n",
+                      "type": "integer",
+                      "value": 234567,
+                      "example": null
                     }
                   ],
                   "enums": [

@@ -47,7 +47,13 @@ function convertUlToArray(description) {
   return description;
 }
 
-
+function getResourceObjByName(resource) {
+  let resourceObject = apiObjectMap[resource];
+  if (!resourceObject && (resource.charAt(resource.length - 1) === 's')) {
+    resourceObject = apiObjectMap[resource.substr(0, resource.length - 1)];
+  }
+  return resourceObject;
+}
 
 function formatMethodParams(methodObj) {
   let params;
@@ -55,9 +61,12 @@ function formatMethodParams(methodObj) {
     params = Object.keys(methodObj.params).map(function(paramName) {
       const param = methodObj.params[paramName];
 
-      param.description = stripATags(param.description);
+      param.description = stripATags(param.description); // convertUlToArray(stripATags(param.description));
+
+      const type = apiObjectMap[param.type] ? 'integer' : param.type;
       return _.merge({}, param, {
-        name: paramName
+        name: paramName,
+        type: type,
       });
     });
   }
@@ -77,6 +86,65 @@ function formatMethodExamples(methodObj) {
   return examples;
 }
 
+function formatSchemaExample(schema) {
+  const schemaExample = {};
+  if (Array.isArray(schema)) {
+    schema.forEach(function(obj) {
+      schemaExample[obj.name] = obj.value;
+    });
+  } else {
+    Object.keys(schema).forEach(function(key) {
+      schemaExample[key] = schema[key]._value;
+    });
+  }
+  return schemaExample;
+}
+
+function formatSchemaField(schemaField) {
+  let description;
+  if (schemaField._description) {
+    description = schemaField._description;
+  } else {
+    description = schemaField.description;
+  }
+  description = convertUlToArray(description);
+
+  const name = schemaField.name;
+  const editable = schemaField._editable;
+  const filterable = schemaField._filterable;
+  const type = schemaField._type;
+  const value = schemaField._value;
+
+  let example = null;
+  if (apiObjectMap[type]) {
+    example = formatSchemaExample(getResourceObjByName(type).schema);
+  }
+
+  return {
+    name: name,
+    description: description,
+    editable: editable,
+    filterable: filterable,
+    type: type,
+    value: value,
+    example: example,
+  };
+}
+
+function formatSchema(schema) {
+  let schemaArr;
+
+  if (Array.isArray(schema)) {
+    schemaArr = schema;
+  } else {
+    schemaArr = Object.keys(schema).map(function (schemaName) {
+      return formatSchemaField(_.merge(schema[schemaName], { name: schemaName }));
+    });
+  }
+
+  return schemaArr;
+}
+
 function formatMethodResource(endpoint, method) {
   // IF this is a GET endpoint and has an associated resource object, combine them
   let resourceObject;
@@ -88,10 +156,7 @@ function formatMethodResource(endpoint, method) {
       resource = 'profile';
     }
 
-    resourceObject = apiObjectMap[resource];
-    if (!resourceObject && (resource.charAt(resource.length - 1) === 's')) {
-      resourceObject = apiObjectMap[resource.substr(0, resource.length - 1)];
-    }
+    resourceObject = getResourceObjByName(resource);
 
     let enums;
     let schema;
@@ -107,25 +172,7 @@ function formatMethodResource(endpoint, method) {
 
       schema = resourceObject.schema;
       if (schema) {
-        resourceObject.schema = Object.keys(schema).map(function(schemaName) {
-          const schemaField = schema[schemaName];
-
-          let description;
-          if (schemaField._description) {
-            description = schemaField._description;
-          } else {
-            description = schemaField.description;
-          }
-
-          description = convertUlToArray(description);
-          return {
-            name: schemaName,
-            description: description,
-            editable: schemaField._editable,
-            type: schemaField._type,
-            value: schemaField._value
-          };
-        });
+        resourceObject.schema = formatSchema(resourceObject.schema);
       }
     }
   }
