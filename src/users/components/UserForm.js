@@ -26,7 +26,7 @@ export default class UserForm extends Component {
 
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value });
 
-  onSubmit = async () => {
+  onSubmit = () => {
     const { dispatch, user: { username: oldUsername } } = this.props;
     const data = {
       username: this.state.username,
@@ -40,7 +40,7 @@ export default class UserForm extends Component {
     }
 
     const idsPath = [oldUsername].filter(Boolean);
-    await dispatch(dispatchOrStoreErrors.call(this, [
+    return dispatch(dispatchOrStoreErrors.call(this, [
       () => users[oldUsername ? 'put' : 'post'](data, ...idsPath),
       () => oldUsername !== data.username && push(`/users/${data.username}`),
       () => oldUsername !== data.username && actions.delete(data.username),
@@ -122,7 +122,10 @@ export default class UserForm extends Component {
               disabled={loading}
               disabledChildren={this.props.user.username ? undefined : 'Adding User'}
             >{this.props.user.username ? undefined : 'Add User'}</SubmitButton>
-            <FormSummary errors={errors} />
+            <FormSummary
+              errors={errors}
+              success={this.props.user.username && "User settings saved."}
+            />
           </div>
         </div>
       </Form>
