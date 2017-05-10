@@ -387,5 +387,8 @@ CreateOrEditConfig.defaultProps = {
       disable_updatedb: true,
     },
     kernel: '',
+    virt_mode: 'paravirt',
+    run_level: 'default',
+    ram_limit: 0,
   },
 };

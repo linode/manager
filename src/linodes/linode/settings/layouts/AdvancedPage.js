@@ -10,11 +10,6 @@ import { DiskPanel } from '../components/DiskPanel';
 
 import { selectLinode } from '../../utilities';
 
-import { ConfigPanel } from '../components/ConfigPanel';
-import { DiskPanel } from '../components/DiskPanel';
-
-import { selectLinode } from '../../utilities';
-
 
 export class AdvancedPage extends Component {
   componentDidMount() {
