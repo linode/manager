@@ -2,8 +2,6 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { setSource } from '~/actions/source';
-import { linodes } from '~/api';
-import { getObjectByLabelLazily } from '~/api/util';
 
 import { ConfigPanel } from '../components/ConfigPanel';
 import { DiskPanel } from '../components/DiskPanel';

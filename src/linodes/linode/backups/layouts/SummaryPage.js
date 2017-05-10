@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { Link } from 'react-router';
 
-import { Form } from 'linode-components/forms';
+import { Form, SubmitButton } from 'linode-components/forms';
 import { Card, CardHeader } from 'linode-components/cards';
 
 import { takeBackup } from '~/api/backups';
@@ -43,7 +43,7 @@ export class SummaryPage extends Component {
   }
 
   renderEmptySnapshot() {
-    const { loading } = this.state;
+    const { loading, errors } = this.state;
 
     return (
       <Form onSubmit={this.onSubmit} className="Backup Backup-emptySnapshot col-sm-3">
@@ -88,7 +88,6 @@ export class SummaryPage extends Component {
 
   render() {
     const { linode: { _backups: backups } } = this.props;
-    const { errors } = this.state;
 
     const daily = backups.daily;
     const snapshot = backups.snapshot.in_progress ?
