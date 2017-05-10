@@ -3,59 +3,52 @@ import React, { Component, PropTypes } from 'react';
 
 import { CancelButton } from 'linode-components/buttons';
 import {
-  Form, FormGroup, FormGroupError, Input, Select, SubmitButton, PasswordInput,
+  Form, Input, ModalFormGroup, PasswordInput, Select, SubmitButton,
 } from 'linode-components/forms';
 
 import { hideModal } from '~/actions/modal';
 import { linodes } from '~/api';
-import { FormSummary, reduceErrors } from '~/components/forms';
+import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
 
 
 export class AddModal extends Component {
-  constructor() {
-    super();
-    this.createDisk = this.createDisk.bind(this);
+  constructor(props) {
+    super(props);
+
     this.state = {
       loading: false,
       errors: {},
       label: '',
-      size: 1024,
-      distro: '',
+      size: props.free,
+      distribution: '',
       password: '',
       filesystem: 'ext4',
     };
   }
 
-  componentDidMount() {
-    const { free } = this.props;
-    this.setState({ size: free });
-  }
-
-  async createDisk() {
+  onSubmit = () => {
     const { dispatch, linode } = this.props;
-    const { label, size, distro, password, filesystem } = this.state;
+    const { label, size, distribution, password, filesystem } = this.state;
+    const data = {
+      label,
+      filesystem,
+      size: parseInt(size),
+      distribution: distribution || null,
+      root_pass: password || null,
+    };
 
-    this.setState({ loading: true, errors: {} });
-
-    try {
-      await dispatch(linodes.disks.post({
-        label,
-        size,
-        filesystem,
-        distribution: distro === '' ? null : distro,
-        root_pass: password,
-      }, linode.id));
-      dispatch(hideModal());
-    } catch (response) {
-      const errors = await reduceErrors(response);
-      this.setState({ errors });
-    }
-
-    this.setState({ loading: false });
+    return dispatch(dispatchOrStoreErrors.call(this, [
+      () => linodes.disks.post(data, linode.id),
+      hideModal,
+    ]));
   }
+
+  onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   render() {
     const { dispatch, free, distributions } = this.props;
+    const { label, size, distribution, filesystem, password, loading, errors } = this.state;
+
     const vendors = _.sortBy(
       _.map(
         _.groupBy(Object.values(distributions.distributions), d => d.vendor),
@@ -65,130 +58,88 @@ export class AddModal extends Component {
         })
       ), vendor => vendor.name);
 
-    const distros = [{ value: '', label: 'None' }];
+    const distributionOptions = [{ value: '', label: 'None' }];
     for (let i = 0; i < vendors.length; ++i) {
       const v = vendors[i];
       if (i !== 0) {
-        distros.push({ value: v.name, disabled: 'disabled', label: '──────────' });
+        distributionOptions.push({ value: v.name, disabled: 'disabled', label: '──────────' });
       }
       v.versions.forEach(d =>
-        distros.push({ value: d.id, label: d.label }));
+        distributionOptions.push({ value: d.id, label: d.label }));
     }
-    const {
-      loading,
-      label,
-      size,
-      distro,
-      filesystem,
-      password,
-      errors,
-    } = this.state;
-    const ready = !(!loading && label &&
-                    (distro ? password : filesystem));
 
     const minimumStorageSize = () =>
-      distributions.distributions[distro].minimum_storage_size;
-    return (
-      <Form onSubmit={() => this.createDisk()}>
-        <FormGroup
-          errors={errors}
-          name="label"
-          className="row"
-        >
-          <label className="col-sm-5 col-form-label">Label</label>
-          <div className="col-sm-7">
-            <div>
-              <Input
-                id="label"
-                placeholder="Label"
-                value={label}
-                onChange={e => this.setState({ label: e.target.value })}
-              />
-            </div>
-            <FormGroupError errors={errors} name="label" inline={false} />
-          </div>
-        </FormGroup>
+      distributions.distributions[distribution].minimum_storage_size;
 
-        <FormGroup
+    return (
+      <Form onSubmit={this.onSubmit}>
+        <ModalFormGroup id="label" label="Label" apiKey="label" errors={errors}>
+          <Input
+            id="label"
+            name="label"
+            placeholder="Label"
+            value={label}
+            onChange={this.onChange}
+          />
+        </ModalFormGroup>
+        <ModalFormGroup
+          id="distribution"
+          label="Distribution"
+          apiKey="distribution"
           errors={errors}
-          name="distribution"
-          className="row"
         >
-          <label className="col-sm-5 col-form-label">Distribution (optional)</label>
-          <div className="col-sm-7">
-            <div>
-              <Select
-                id="distribution"
-                value={distro}
-                options={distros}
-                onChange={e => this.setState({ distro: e.target.value })}
-              />
-            </div>
-            <FormGroupError errors={errors} name="distribution" />
-          </div>
-        </FormGroup>
-            {distro ?
-              <FormGroup
-                errors={errors}
-                name="password"
-                className="row"
-              >
-                <label className="col-sm-5 col-form-label">Root password</label>
-                <div className="col-sm-7">
-                  <PasswordInput
-                    value={this.state.password}
-                    onChange={p => this.setState({ password: p })}
-                  />
-                </div>
-                <FormGroupError errors={errors} name="password" />
-              </FormGroup>
-                :
-              <FormGroup
-                errors={errors}
-                name="filesystem"
-                className="row"
-              >
-                <label className="col-sm-5 col-form-label">Filesystem</label>
-                <div className="col-sm-7">
-                  <div>
-                    <Select
-                      id="filesystem"
-                      value={filesystem}
-                      onChange={e => this.setState({ filesystem: e.target.value })}
-                    >
-                      <option value="ext3">ext3</option>
-                      <option value="ext4">ext4</option>
-                      <option value="swap">swap</option>
-                      <option value="raw">raw</option>
-                    </Select>
-                  </div>
-                  <FormGroupError errors={errors} name="filesystem" />
-                </div>
-              </FormGroup>
-            }
-        <FormGroup
-          errors={errors}
-          name="size"
-          className="row"
-        >
-          <label className="col-sm-5 col-form-label">Size (MB)</label>
-          <div className="col-sm-7">
-            <Input
-              className="LinodesLinodeSettingsComponentsAddModal-disk-size"
-              type="number"
-              min={distro ? minimumStorageSize() : 8}
-              max={free}
-              value={size}
-              onChange={e => this.setState({ size: parseInt(e.target.value, 10) })}
+          <Select
+            id="distribution"
+            name="distribution"
+            value={distribution}
+            options={distributionOptions}
+            onChange={this.onChange}
+          />
+        </ModalFormGroup>
+        {distribution ? (
+          <ModalFormGroup id="password" label="Root Password" apiKey="root_pass" errors={errors}>
+            <PasswordInput
+              name="password"
+              id="password"
+              value={password}
+              onChange={this.onChange}
             />
-            <FormGroupError errors={errors} name="size" />
-          </div>
-        </FormGroup>
+          </ModalFormGroup>
+        ) : (
+          <ModalFormGroup id="filesystem" label="Filesystem" apiKey="filesystem" errors={errors}>
+            <Select
+              id="filesystem"
+              name="filesystem"
+              value={filesystem}
+              onChange={this.onChange}
+            >
+              <option value="ext3">ext3</option>
+              <option value="ext4">ext4</option>
+              <option value="swap">swap</option>
+              <option value="raw">raw</option>
+            </Select>
+          </ModalFormGroup>
+        )}
+        <ModalFormGroup id="size" label="Size" apiKey="size" errors={errors}>
+          <Input
+            id="size"
+            name="size"
+            value={size}
+            type="number"
+            min={distribution ? minimumStorageSize() : 8}
+            max={free + size}
+            onChange={this.onChange}
+            label="MB"
+          />
+        </ModalFormGroup>
         <div className="Modal-footer">
-          <CancelButton disabled={loading} onClick={() => dispatch(hideModal())} />
-          <SubmitButton disabled={ready}>Add Disk</SubmitButton>
+          <CancelButton onClick={() => dispatch(hideModal())} />
+          <SubmitButton
+            disabled={loading}
+            disabledChildren="Adding Disk"
+          >Add Disk</SubmitButton>
+          <FormSummary errors={errors} />
         </div>
-        <FormSummary errors={errors} />
       </Form>
     );
   }

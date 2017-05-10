@@ -11,8 +11,8 @@ export default function ModalFormGroup(props) {
       <label className="col-sm-4 col-form-label" htmlFor={id}>{label}</label>
       <div className="col-sm-8">
         {children}
-        {description ? <small className="text-muted">{description}</small> : null}
-        <FormGroupError errors={errors} name={apiKey} inline={false} />
+        {description ? <small className="text-muted modal-description">{description}</small> : null}
+        <FormGroupError errors={errors} name={apiKey} inline={false} className="ModalFormGroupError" />
       </div>
     </FormGroup>
   );

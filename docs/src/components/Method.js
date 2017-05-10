@@ -81,7 +81,7 @@ export default function Method(props) {
   }
 
   return (
-    <div className="Method">
+    <div id={name} className="Method">
       <h2>{name}</h2>
       <div className="Method-section">
         <p className="Method-description">{description}</p>
