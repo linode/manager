@@ -26,4 +26,10 @@
     section {
         margin-bottom: 25px;
     }
+
+    table {
+        td {
+            border: $border;
+        }
+    }
 }

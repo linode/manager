@@ -7,7 +7,7 @@ import { Table } from 'linode-components/tables';
 export default function Filtering() {
   return (
     <section className="GettingStartedPage">
-      <h1>Filtering</h1>
+      <h1>Filtering &amp; Sorting</h1>
       <section>
         <p>
           Resource lists are searchable by most fields they include.
