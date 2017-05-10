@@ -51,13 +51,17 @@ function select(state, props) {
   if (backups) {
     if (backups.daily && backups.daily.id === backupId) {
       backup = backups.daily;
-    } else if (backups.snapshot) {
+    }
+
+    if (backups.snapshot) {
       if (backups.snapshot.current && backups.snapshot.current.id === backupId) {
         backup = backups.snapshot.current;
       } else if (backups.snapshot.in_progress && backups.snapshot.in_progress.id === backupId) {
         backup = backups.snapshot.in_progress;
       }
-    } else if (backups.weekly.length) {
+    }
+
+    if (backups.weekly.length) {
       if (backups.weekly[0] && backups.weekly[0].id === backupId) {
         backup = backups.weekly[0];
       } else if (backups.weekly[1] && backups.weekly[1].id === backupId) {
