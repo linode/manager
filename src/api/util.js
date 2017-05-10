@@ -13,11 +13,12 @@ Error404.prototype = new Error();
 
 
 export function objectFromMapByLabel(map, label, labelName = 'label') {
-  if (!Object.values(map).length) {
+  const mapValues = Object.values(map);
+  if (!mapValues.length) {
     return null;
   }
 
-  return Object.values(map).reduce(
+  return mapValues.reduce(
     (match, object) => {
       // This == is explicit because some ids are ints some are strings.
       // eslint-disable-next-line eqeqeq

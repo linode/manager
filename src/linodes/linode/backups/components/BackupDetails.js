@@ -9,7 +9,7 @@ import TakeSnapshot from './TakeSnapshot';
 
 
 export default function BackupDetails(props) {
-  const { linode, backup } = props;
+  const { linode, backup, dispatch } = props;
 
   const duration = Math.floor((Date.parse(backup.finished) -
                                Date.parse(backup.created)) / 1000 / 60);
@@ -35,7 +35,7 @@ export default function BackupDetails(props) {
   const vacant = 'In progress';
 
   const takeSnapshot = backup.type === 'snapshot' && backup.status !== 'pending' ?
-    <TakeSnapshot linode={linode} /> :
+    <TakeSnapshot linode={linode} dispatch={dispatch} /> :
     null;
 
   return (

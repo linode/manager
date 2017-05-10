@@ -16,8 +16,8 @@ export default class TakeSnapshot extends Component {
   onSubmit = async () => {
     const { dispatch, linode } = this.props;
 
-    await dispatch(dispatchOrStoreErrors.apply(this, [
-      [() => takeBackup(linode.id)],
+    await dispatch(dispatchOrStoreErrors.call(this, [
+      () => takeBackup(linode.id),
     ]));
   }
 
@@ -30,9 +30,9 @@ export default class TakeSnapshot extends Component {
           <div className="offset-sm-3 col-sm-9">
             <SubmitButton
               disabled={loading}
-              disabledChildren={"Starting snapshot"}
+              disabledChildren={"Taking snapshot"}
             >Take snapshot</SubmitButton>
-            <FormSummary errors={errors} success="Snapshot started" />
+            <FormSummary errors={errors} success="Snapshot started." />
           </div>
         </FormGroup>
       </Form>
