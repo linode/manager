@@ -106,7 +106,7 @@ export default class ConfigForm extends Component {
               name="algorithm"
               value={algorithm}
               onChange={this.onChange}
-              options={NODEBALANCER_CONFIG_ALGORITHMS.entries().map(
+              options={Array.from(NODEBALANCER_CONFIG_ALGORITHMS.entries()).map(
                 (value, label) => ({ value, label }))}
             />
             <div>
@@ -126,7 +126,7 @@ export default class ConfigForm extends Component {
               name="stickiness"
               value={stickiness}
               onChange={this.onChange}
-              options={NODEBALANCER_CONFIG_STICKINESS.entries().map(
+              options={Array.from(NODEBALANCER_CONFIG_STICKINESS.entries()).map(
                 (value, label) => ({ value, label }))}
             />
             <div>
@@ -147,7 +147,7 @@ export default class ConfigForm extends Component {
               name="check"
               value={check}
               onChange={this.onChange}
-              options={NODEBALANCER_CONFIG_CHECKS.entries().map(
+              options={Array.from(NODEBALANCER_CONFIG_CHECKS.entries()).map(
                 (value, label) => ({ value, label }))}
             />
             <div>
@@ -167,6 +167,7 @@ export default class ConfigForm extends Component {
               placeholder="0"
               value={checkInterval}
               onChange={this.onChange}
+              type="number"
               label="seconds"
             />
             <FormGroupError errors={errors} name="check_interval" />
@@ -181,6 +182,7 @@ export default class ConfigForm extends Component {
               placeholder="0"
               value={checkTimeout}
               onChange={this.onChange}
+              type="number"
               label="seconds"
             />
             <FormGroupError errors={errors} name="check_timeout" />
@@ -195,6 +197,7 @@ export default class ConfigForm extends Component {
               placeholder="0"
               value={checkAttempts}
               onChange={this.onChange}
+              type="number"
             />
             <FormGroupError errors={errors} name="check_attempts" />
             <div>
@@ -249,8 +252,5 @@ ConfigForm.defaultProps = {
     stickiness: 'table',
     check: 'connection',
     check_passive: true,
-    check_interval: 0,
-    check_timeout: 0,
-    check_attempts: 0,
   },
 };
