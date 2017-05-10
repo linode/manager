@@ -249,8 +249,8 @@ ConfigForm.defaultProps = {
     stickiness: 'table',
     check: 'connection',
     check_passive: true,
-    check_interval: 5,
-    check_timeout: 3,
-    check_attempts: 2,
+    check_interval: 0,
+    check_timeout: 0,
+    check_attempts: 0,
   },
 };
