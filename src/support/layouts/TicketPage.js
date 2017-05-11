@@ -6,6 +6,7 @@ import { Card } from 'linode-components/cards';
 import { Form, FormGroup, FormGroupError, SubmitButton, Input } from 'linode-components/forms';
 
 import { tickets } from '~/api';
+import { getObjectByLabelLazily } from '~/api/util';
 import { addTicketAttachment } from '~/api/tickets';
 import { setError } from '~/actions/errors';
 import { MAX_UPLOAD_SIZE_MB } from '~/constants';
@@ -28,6 +29,7 @@ AttachmentTooBigError.prototype = new Error();
 export class TicketPage extends Component {
   static async preload({ dispatch }, { ticketId }) {
     try {
+      await dispatch(getObjectByLabelLazily('tickets', ticketId, 'id'));
       await dispatch(tickets.one([ticketId]));
       await dispatch(tickets.replies.all([ticketId]));
     } catch (response) {
