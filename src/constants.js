@@ -172,3 +172,6 @@ export const OAUTH_SCOPES = [
 export const MAX_UPLOAD_SIZE_MB = 5;
 
 export const GRAVATAR_BASE_URL = 'https://gravatar.com/avatar/';
+
+export const AVAILABLE_DISK_SLOTS =
+  ['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg', 'sdh'];
