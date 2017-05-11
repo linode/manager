@@ -1,86 +1,35 @@
 .LinodesDistribution {
-    @extend .dropdown;
-
     border: $border;
     margin-top: 0;
     cursor: pointer;
 
-    &:not(&--isSelected) &-body:hover {
-        background-color: $gray;
+    .Dropdown {
+        // Compensate for border
+        width: calc(100% + 2px);
+        margin-top: -1px;
+        position: relative;
+        left: -1px;
+
+        &-first {
+            text-align: center;
+        }
+
+        &-first,
+        &-menu {
+            width: 100%;
+        }
     }
 
+    &-body:hover,
     &--isSelected {
-        background-color: $light-blue;
+        @extend .selected;
+
     }
     
     &--isNoLinodeDistribution {
         & > div {
-            @extend .font-small;
             padding: 0 10px;
         }
-    }
-
-    &-dropdown {
-        @include clearfix();
-
-        margin-bottom: 0;
-        border-bottom: $border;
-        background-color: $light-gray;
-        line-height: inherit;
-        padding: inherit;
-        position: relative;
-    }
-
-    &-dropdown--isOpen &-menu {
-        display: block;
-    }
-
-    &-title {
-        @include title();
-    }
-
-    &-toggleDropdown {
-        @extend .btn;
-        @extend .btn-secondary;
-        @extend .dropdown-toggle;
-
-        border-right: none;
-        border-top: none;
-        border-bottom: none;
-        border-radius: 0;
-        float: right;
-        height: $form-field-height;
-
-        &::after {
-            /* Hide the bootstrap dropdown icon */
-            display: none;
-        }
-    }
-
-    &-menu {
-        @extend .dropdown-menu;
-
-        border: $border !important;
-        border-radius: 0;
-        min-width: calc(100% + 2px);
-        left: -2px;
-        margin-top: 0 !important;
-    }
-
-    &-version { 
-        @include title();
-        @include pointer();
-        @extend .dropdown-item;
-
-        text-align: left !important;
-        font-weight: inherit;
-        padding: 0 inherit;
-        margin-left: 0 !important;
-            
-        &:first-of-type {
-            margin-left: 0;
-        }
-            
     }
 
     &-body {
