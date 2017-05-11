@@ -13,6 +13,9 @@ _.plugins = [
     'process.env': {
       'NODE_ENV': JSON.stringify('production')
     },
+    'ENV_API_ROOT': JSON.stringify(process.env.API_ROOT),
+    'ENV_LOGIN_ROOT': JSON.stringify(process.env.LOGIN_ROOT),
+    'ENV_API_VERSION': JSON.stringify(process.env.API_VERSION),
     'ENV_GA_ID': JSON.stringify(process.env.GA_ID),
     'ENV_VERSION': JSON.stringify(_package.version)
   }),
