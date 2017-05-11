@@ -4,6 +4,7 @@
     border: $border;
     margin-top: 0;
     cursor: pointer;
+    width: 225px;
 
     &:not(&--isSelected) &-body:hover {
         background-color: $gray;
