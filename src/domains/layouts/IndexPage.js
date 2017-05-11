@@ -1,11 +1,9 @@
+import _ from 'lodash';
+import moment from 'moment';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import moment from 'moment';
-import _ from 'lodash';
 
-import { setError } from '~/actions/errors';
-import { showModal, hideModal } from '~/actions/modal';
 import { List } from 'linode-components/lists';
 import { Table } from 'linode-components/tables';
 import { MassEditControl } from 'linode-components/lists/controls';
@@ -18,20 +16,22 @@ import {
   LinkCell,
 } from 'linode-components/tables/cells';
 
-import { domains as api } from '~/api';
+import { setError } from '~/actions/errors';
+import { showModal, hideModal } from '~/actions/modal';
+import { default as toggleSelected } from '~/actions/select';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
-import { default as toggleSelected } from '~/actions/select';
+import { domains } from '~/api';
 import CreateHelper from '~/components/CreateHelper';
 
-const OBJECT_TYPE = 'domains';
 
+const OBJECT_TYPE = 'domains';
 
 export class IndexPage extends Component {
 
   static async preload({ dispatch }) {
     try {
-      await dispatch(api.all());
+      await dispatch(domains.all());
     } catch (response) {
       // eslint-disable-next-line no-console
       console.error(response);
@@ -63,7 +63,7 @@ export class IndexPage extends Component {
         onOk={async () => {
           const ids = zonesArr.map(function (zone) { return zone.id; });
 
-          await dispatch(api.delete(ids));
+          await dispatch(domains.delete(ids));
           dispatch(toggleSelected(OBJECT_TYPE, ids));
           dispatch(hideModal());
         }}
@@ -142,8 +142,6 @@ export class IndexPage extends Component {
   }
 
   render() {
-    const { domains } = this.props;
-
     return (
       <div className="PrimaryPage container">
         <header className="PrimaryPage-header">
@@ -156,7 +154,8 @@ export class IndexPage extends Component {
           </div>
         </header>
         <div className="PrimaryPage-body">
-          {Object.keys(domains.domains).length ? this.renderZones(domains.domains) :
+          {Object.keys(this.props.domains.domains).length ?
+            this.renderZones(this.props.domains.domains) :
             <CreateHelper label="Domains" href="/domains/create" linkText="Add a Domain" />}
         </div>
       </div>
