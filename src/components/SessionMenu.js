@@ -6,7 +6,6 @@ export default function SessionMenu(props) {
   return (
     <div className={`SessionMenu ${open ? 'SessionMenu--open' : ''}`}>
       <ul className="SessionMenu-body">
-        <li className="SessionMenu-header">My User</li>
         <li className="SessionMenu-item">
           <Link to="/profile">My Profile</Link>
         </li>
@@ -17,7 +16,7 @@ export default function SessionMenu(props) {
           <a href="mailto:feedback@linode.com">Submit Feedback</a>
         </li>
         <hr />
-        <li className="SessionMenu-header">My Account</li>
+        <li className="SessionMenu-header">Account</li>
         <li className="SessionMenu-item">
           <Link to="/settings">Account Settings</Link>
         </li>
@@ -28,7 +27,7 @@ export default function SessionMenu(props) {
           <Link to="/users">Users</Link>
         </li>
         <hr />
-        <li className="SessionMenu-header">Information</li>
+        <li className="SessionMenu-header">Resources</li>
         <li className="SessionMenu-item">
           <a href="https://forum.linode.com/" target="_blank" rel="nofollow noopener noreferrer">Community Forum</a>
         </li>
