@@ -14,12 +14,12 @@ function createTestNodeBalancer(id) {
     ipv4: '1.1.1.1',
     _configs: {
       configs: {
-        0: {
+        1: {
           check_timeout: 30,
           nodebalancer_id: 23,
           check_path: '',
           check_attempts: 3,
-          id: 0,
+          id: 1,
           label: 'none',
           check_interval: 0,
           protocol: 'http',
@@ -32,9 +32,9 @@ function createTestNodeBalancer(id) {
           check: 'none',
           _nodes: {
             nodes: {
-              0: {
+              1: {
                 nodebalancer_id: 23,
-                id: 0,
+                id: 1,
                 mode: 'accept',
                 address: '192.168.4.5:80',
                 label: 'greatest_node_ever',
@@ -45,12 +45,12 @@ function createTestNodeBalancer(id) {
             },
           },
         },
-        1: {
+        2: {
           check_timeout: 30,
           nodebalancer_id: 23,
           check_path: '',
           check_attempts: 3,
-          id: 1,
+          id: 2,
           label: 'none',
           check_interval: 0,
           protocol: 'http',

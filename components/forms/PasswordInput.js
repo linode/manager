@@ -3,7 +3,7 @@ import React, { Component, PropTypes } from 'react';
 import { Input } from './';
 
 
-const str = ['Extremely Weak', 'Very Weak', 'Weak', 'Moderate', 'Strong'];
+const str = ['an extremely weak', 'a very weak', 'a weak', 'a strong', 'a very strong'];
 
 export default function PasswordInput(props) {
   // eslint-disable-next-line no-undef
@@ -14,7 +14,6 @@ export default function PasswordInput(props) {
       <Input
         value={props.value}
         name={props.name}
-        placeholder="**********"
         className="PasswordInput-input"
         onChange={props.onChange}
         autoComplete="off"
@@ -30,7 +29,7 @@ export default function PasswordInput(props) {
       </div>
       {props.value === '' ? null : (
          <small className="PasswordInput-strength-text">
-           {str[strength.score]}
+           This is {str[strength.score]} password.
          </small>
        )}
     </div>

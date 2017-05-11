@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
 import { setToken } from '~/actions/authentication';
-import { account } from '~/api';
+import { account, profile } from '~/api';
 import { LOGIN_ROOT } from '~/constants';
 import { rawFetch } from '~/fetch';
 import md5 from 'md5';
@@ -37,7 +37,7 @@ export class OAuthCallbackPage extends Component {
 
   async componentDidMount() {
     const { dispatch, location } = this.props;
-    const { error, code, username, email, timezone } = location.query;
+    const { error, code } = location.query;
     const returnTo = location.query['return'];
 
     if (error) {
@@ -57,6 +57,8 @@ export class OAuthCallbackPage extends Component {
         mode: 'cors',
       });
       const json = await resp.json();
+      this.setSession(json.access_token, json.scopes);
+      const { email, username, timezone } = await dispatch(profile.one());
       this.setSession(json.access_token, json.scopes, username, email, timezone);
       await dispatch(account.one());
       dispatch(push(returnTo || '/'));

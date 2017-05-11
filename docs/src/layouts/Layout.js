@@ -9,8 +9,9 @@ export default function Layout(props) {
   const { endpoints } = route;
 
   return (
-    <div className="Layout">
-      <Header></Header>
+    <div className="Docs Layout">
+      <Header>
+      </Header>
       <div className="Layout-container container">
         <div className="Layout-navigationContainer">
           <div className="VerticalNav">
@@ -18,9 +19,10 @@ export default function Layout(props) {
               <h3>Getting Started</h3>
               <ul>
                 <li><Link to="/introduction">Introduction</Link></li>
-                <li><Link to="/authorization">Authorization</Link></li>
+                <li><Link to="/access">Access</Link></li>
                 <li><Link to="/pagination">Pagination</Link></li>
-                <li><Link to="/filtering">Filtering</Link></li>
+                <li><Link to="/filtering">Filtering &amp; Sorting</Link></li>
+                <li><Link to="/errors">Errors</Link></li>
               </ul>
             </div>
             <div className="VerticalNav-section">

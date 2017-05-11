@@ -8,6 +8,9 @@ import {
 import { nodebalancers } from '~/api';
 import { updateConfigSSL } from '~/api/nodebalancers';
 import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+import {
+  NODEBALANCER_CONFIG_ALGORITHMS, NODEBALANCER_CONFIG_STICKINESS, NODEBALANCER_CONFIG_CHECKS,
+} from '~/constants';
 
 
 export default class ConfigForm extends Component {
@@ -92,7 +95,8 @@ export default class ConfigForm extends Component {
             <Input
               id="port"
               name="port"
-              placeholder="0"
+              placeholder="80"
+              type="number"
               value={port}
               onChange={this.onChange}
             />
@@ -123,11 +127,9 @@ export default class ConfigForm extends Component {
               name="algorithm"
               value={algorithm}
               onChange={this.onChange}
-            >
-              <option value="roundrobin">Round Robin</option>
-              <option value="leastconn">Least Connections</option>
-              <option value="source">Source IP</option>
-            </Select>
+              options={Array.from(NODEBALANCER_CONFIG_ALGORITHMS.entries()).map(
+                ([value, label]) => ({ value, label }))}
+            />
             <div>
               <small className="text-muted">
                 Configure how initial client connections are
@@ -145,11 +147,9 @@ export default class ConfigForm extends Component {
               name="stickiness"
               value={stickiness}
               onChange={this.onChange}
-            >
-              <option value="none">None</option>
-              <option value="table">Table</option>
-              <option value="http_cookie">HTTP Cookie</option>
-            </Select>
+              options={Array.from(NODEBALANCER_CONFIG_STICKINESS.entries()).map(
+                ([value, label]) => ({ value, label }))}
+            />
             <div>
               <small className="text-muted">
                 Enable subsequent requests from the same client to
@@ -194,18 +194,16 @@ export default class ConfigForm extends Component {
         : null}
         <h3 className="sub-header">Active Health Check</h3>
         <FormGroup errors={errors} name="check" className="row">
-          <label className="col-sm-2 col-form-label">Health check type</label>
+          <label className="col-sm-2 col-form-label">Type</label>
           <div className="col-sm-10">
             <Select
               id="check"
               name="check"
               value={check}
               onChange={this.onChange}
-            >
-              <option value="connection">TCP Connection</option>
-              <option value="http">HTTP Valid Status</option>
-              <option value="http_body">HTTP Body Regex</option>
-            </Select>
+              options={Array.from(NODEBALANCER_CONFIG_CHECKS.entries()).map(
+                ([value, label]) => ({ value, label }))}
+            />
             <div>
               <small className="text-muted">
                 Active health checks proactively check the health of back-end nodes.
@@ -223,6 +221,7 @@ export default class ConfigForm extends Component {
               placeholder="0"
               value={checkInterval}
               onChange={this.onChange}
+              type="number"
               label="seconds"
             />
             <FormGroupError errors={errors} name="check_interval" />
@@ -237,6 +236,7 @@ export default class ConfigForm extends Component {
               placeholder="0"
               value={checkTimeout}
               onChange={this.onChange}
+              type="number"
               label="seconds"
             />
             <FormGroupError errors={errors} name="check_timeout" />
@@ -251,6 +251,7 @@ export default class ConfigForm extends Component {
               placeholder="0"
               value={checkAttempts}
               onChange={this.onChange}
+              type="number"
             />
             <FormGroupError errors={errors} name="check_attempts" />
             <div>
@@ -298,17 +299,11 @@ ConfigForm.propTypes = {
 };
 
 ConfigForm.defaultProps = {
-  config: {
-    port: 80,
+  config: {:
     protocol: 'http',
     algorithm: 'roundrobin',
     stickiness: 'table',
     check: 'connection',
     check_passive: true,
-    check_interval: 5,
-    check_timeout: 3,
-    check_attempts: 2,
-    ssl_cert: '',
-    ssl_key: '',
   },
 };
