@@ -299,7 +299,7 @@ ConfigForm.propTypes = {
 };
 
 ConfigForm.defaultProps = {
-  config: {:
+  config: {
     protocol: 'http',
     algorithm: 'roundrobin',
     stickiness: 'table',
