@@ -190,3 +190,6 @@ export const NODEBALANCER_CONFIG_CHECKS = new Map([
   ['http', 'HTTP Valid Status'],
   ['http_body', 'HTTP Body Regex'],
 ]);
+
+export const AVAILABLE_DISK_SLOTS =
+  ['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg', 'sdh'];
