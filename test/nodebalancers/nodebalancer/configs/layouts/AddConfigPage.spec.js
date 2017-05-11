@@ -62,8 +62,8 @@ describe('nodebalancers/nodebalancer/layouts/AddConfigPage', () => {
           },
         }
       ),
-      ([fn]) => expectObjectDeepEquals(
-        fn, push(`/nodebalancers/${genericNodeBalancer.label}`)
+      ([pushResult]) => expectObjectDeepEquals(
+        pushResult, push(`/nodebalancers/${genericNodeBalancer.label}`)
       ),
     ], 2);
   });

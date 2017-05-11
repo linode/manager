@@ -163,7 +163,7 @@ export default class ConfigForm extends Component {
           <span>
             <h3 className="sub-header">SSL Settings</h3>
             <FormGroup errors={errors} name="ssl_cert" className="row">
-              <label className="col-sm-2 col-form-label">SSL Certificate</label>
+              <label htmlFor="sslCert" className="col-sm-2 col-form-label">SSL Certificate</label>
               <div className="col-sm-10">
                 <textarea
                   id="sslCert"
@@ -177,7 +177,7 @@ export default class ConfigForm extends Component {
               </div>
             </FormGroup>
             <FormGroup errors={errors} name="ssl_key" className="row">
-              <label className="col-sm-2 col-form-label">Private Key</label>
+              <label htmlFor="sslKey" className="col-sm-2 col-form-label">Private Key</label>
               <div className="col-sm-10">
                 <textarea
                   id="sslKey"
