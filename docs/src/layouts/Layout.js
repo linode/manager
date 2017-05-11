@@ -3,6 +3,8 @@ import { Link } from 'react-router';
 
 import { Header } from 'linode-components/navigation';
 
+import { LinodeLogoImgSrc } from '~/assets';
+
 
 export default function Layout(props) {
   const { route } = props;
@@ -11,6 +13,19 @@ export default function Layout(props) {
   return (
     <div className="Docs Layout">
       <Header>
+        <div className="MainHeader-brand">
+          <Link to="/">
+            <span className="MainHeader-logo">
+              <img
+                src={LinodeLogoImgSrc}
+                alt="Linode Logo"
+                height={40}
+                width={35}
+              />
+            </span>
+            <span className="MainHeader-title">Linode API Documentation</span>
+          </Link>
+        </div>
       </Header>
       <div className="Layout-container container">
         <div className="Layout-navigationContainer">
