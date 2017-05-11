@@ -12,7 +12,7 @@ export default function ModalFormGroup(props) {
       <div className="col-sm-8">
         {children}
         {description ? <small className="text-muted modal-description">{description}</small> : null}
-        <FormGroupError errors={errors} name={apiKey} inline={false} className="ModalFormGroupError" />
+        <FormGroupError errors={errors} name={apiKey} inline={false} />
       </div>
     </FormGroup>
   );
