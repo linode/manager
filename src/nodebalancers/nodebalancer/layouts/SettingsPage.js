@@ -20,7 +20,6 @@ export class SettingsPage extends Component {
       hostname: props.nodebalancer.hostname,
       connThrottle: props.nodebalancer.client_conn_throttle,
       errors: {},
-      saving: false,
     };
   }
 
@@ -48,7 +47,7 @@ export class SettingsPage extends Component {
       <Card>
         <Form onSubmit={this.onSubmit}>
           <div className="row">
-            <label className="col-sm-3 col-form-label">Hostname</label>
+            <label className="col-sm-3 row-label">Hostname</label>
             <div className="col-sm-9">
               {hostname}
             </div>
@@ -66,7 +65,7 @@ export class SettingsPage extends Component {
             </div>
           </FormGroup>
           <FormGroup errors={errors} className="row" name="client_conn_throttle">
-            <label htmlFor="connThrottle" className="col-sm-3 col-form-label">
+            <label htmlFor="client_conn_throttle" className="col-sm-3 col-form-label">
               Client Connection Throttle
             </label>
             <div className="col-sm-9">
@@ -74,6 +73,7 @@ export class SettingsPage extends Component {
                 id="client_conn_throttle"
                 name="client_conn_throttle"
                 value={connThrottle}
+                type="number"
                 onChange={e => this.setState({ connThrottle: e.target.value })}
               />
               <FormGroupError errors={errors} name="client_conn_throttle" />
