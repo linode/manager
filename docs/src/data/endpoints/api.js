@@ -700,7 +700,12 @@ module.exports = { endpoints: [
                   },
                   {
                     "optional": "unless source == \"distro\"",
-                    "description": "The root password to use when sourcing this Linode from a distribution. <ul><li>root_pass is required if the source provided is a distribution.</li></ul>\n",
+                    "description": {
+                      "descText": "The root password to use when sourcing this Linode from a distribution. \n",
+                      "listItems": [
+                        "root_pass is required if the source provided is a distribution."
+                      ]
+                    },
                     "name": "root_pass"
                   },
                   {
@@ -710,13 +715,23 @@ module.exports = { endpoints: [
                   },
                   {
                     "optional": true,
-                    "description": "The stackscript ID to deploy with this disk. <ul><li>Must provide a distribution. Distribution must be one that the stackscript can be deployed to.</li></ul>\n",
+                    "description": {
+                      "descText": "The stackscript ID to deploy with this disk. \n",
+                      "listItems": [
+                        "Must provide a distribution. Distribution must be one that the stackscript can be deployed to."
+                      ]
+                    },
                     "type": "integer",
                     "name": "stackscript"
                   },
                   {
                     "optional": true,
-                    "description": "UDF (user-defined fields) for this stackscript. Defaults to \"{}\". <ul><li>Must match UDFs required by stackscript.</li></ul>\n",
+                    "description": {
+                      "descText": "UDF (user-defined fields) for this stackscript. Defaults to \"{}\". \n",
+                      "listItems": [
+                        "Must match UDFs required by stackscript."
+                      ]
+                    },
                     "type": "string",
                     "name": "stackscript_udf_responses"
                   },
@@ -1321,13 +1336,23 @@ module.exports = { endpoints: [
                   },
                   {
                     "optional": true,
-                    "description": "Optional distribution to deploy with this disk. <ul><li>If no distribution is provided, a blank disk is created.</li></ul>\n",
+                    "description": {
+                      "descText": "Optional distribution to deploy with this disk. \n",
+                      "listItems": [
+                        "If no distribution is provided, a blank disk is created."
+                      ]
+                    },
                     "type": "integer",
                     "name": "distribution"
                   },
                   {
                     "optional": "unless distribution is specified",
-                    "description": "Root password to deploy distribution with. <ul><li>root_pass is required if a distribution is provided.</li></ul>\n",
+                    "description": {
+                      "descText": "Root password to deploy distribution with. \n",
+                      "listItems": [
+                        "root_pass is required if a distribution is provided."
+                      ]
+                    },
                     "type": "string",
                     "name": "root_pass"
                   },
@@ -1356,13 +1381,23 @@ module.exports = { endpoints: [
                   },
                   {
                     "optional": true,
-                    "description": "The stackscript ID to deploy with this disk. <ul><li>Must provide a distribution. Distribution must be one that the stackscript can be deployed to.</li></ul>\n",
+                    "description": {
+                      "descText": "The stackscript ID to deploy with this disk. \n",
+                      "listItems": [
+                        "Must provide a distribution. Distribution must be one that the stackscript can be deployed to."
+                      ]
+                    },
                     "type": "integer",
                     "name": "stackscript"
                   },
                   {
                     "optional": true,
-                    "description": "UDF (user-defined fields) for this stackscript. Defaults to \"{}\". <ul><li>Must match UDFs required by stackscript.</li></ul>\n",
+                    "description": {
+                      "descText": "UDF (user-defined fields) for this stackscript. Defaults to \"{}\". \n",
+                      "listItems": [
+                        "Must match UDFs required by stackscript."
+                      ]
+                    },
                     "type": "string",
                     "name": "stackscript_udf_responses"
                   }
@@ -2241,13 +2276,23 @@ module.exports = { endpoints: [
                   },
                   {
                     "optional": true,
-                    "description": "The stackscript ID to deploy with this disk. <ul><li>Must provide a distribution. Distribution must be one that the stackscript can be deployed to.</li></ul>\n",
+                    "description": {
+                      "descText": "The stackscript ID to deploy with this disk. \n",
+                      "listItems": [
+                        "Must provide a distribution. Distribution must be one that the stackscript can be deployed to."
+                      ]
+                    },
                     "type": "integer",
                     "name": "stackscript"
                   },
                   {
                     "optional": true,
-                    "description": "UDF (user-defined fields) for this stackscript. Defaults to \"{}\". <ul><li>Must match UDFs required by stackscript.</li></ul>\n",
+                    "description": {
+                      "descText": "UDF (user-defined fields) for this stackscript. Defaults to \"{}\". \n",
+                      "listItems": [
+                        "Must match UDFs required by stackscript."
+                      ]
+                    },
                     "type": "string",
                     "name": "stackscript_udf_responses"
                   }

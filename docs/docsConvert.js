@@ -61,7 +61,7 @@ function formatMethodParams(methodObj) {
     params = Object.keys(methodObj.params).map(function(paramName) {
       const param = methodObj.params[paramName];
 
-      param.description = stripATags(param.description); // convertUlToArray(stripATags(param.description));
+      param.description = convertUlToArray(stripATags(param.description));
 
       const type = apiObjectMap[param.type] ? 'integer' : param.type;
       return _.merge({}, param, {
