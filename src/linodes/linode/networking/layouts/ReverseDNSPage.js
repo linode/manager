@@ -1,40 +1,32 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { showModal, hideModal } from '~/actions/modal';
 import { Card, CardHeader } from 'linode-components/cards';
 import { Table } from 'linode-components/tables';
 import { ButtonCell } from 'linode-components/tables/cells';
-import { selectLinode } from '../../utilities';
-import { setError } from '~/actions/errors';
-import { linodeIPs, setRDNS } from '~/api/linodes';
+
+import { showModal, hideModal } from '~/actions/modal';
+import { setRDNS } from '~/api/linodes';
+import { dispatchOrStoreErrors } from '~/components/forms';
+
 import EditRDNS from '../components/EditRDNS';
+import { selectLinode } from '../../utilities';
+
 
 export class ReverseDNSPage extends Component {
-  static async preload({ dispatch, getState }, { linodeLabel }) {
-    const { id } = Object.values(getState().api.linodes.linodes).reduce(
-      (match, linode) => linode.label === linodeLabel ? linode : match);
-
-    try {
-      await dispatch(linodeIPs(id));
-    } catch (e) {
-      dispatch(setError(e));
-    }
-  }
-
   constructor() {
     super();
 
     this.state = { loading: {} };
   }
 
-  async resetRDNS(record) {
+  resetRDNS = (record) => {
     const { dispatch, linode } = this.props;
     const address = record.address;
 
-    this.setState({ loading: { ...this.state.loading, [address]: true } });
-    await dispatch(setRDNS(linode.id, address, null));
-    this.setState({ loading: { ...this.state.loading, [address]: false } });
+    return dispatch(dispatchOrStoreErrors.call(this, [
+      () => setRDNS(linode.id, address, null),
+    ], [], address));
   }
 
   renderEditRDNS(ip) {
@@ -61,7 +53,6 @@ export class ReverseDNSPage extends Component {
           this.resetRDNS(record);
         },
         text: 'Reset',
-        className: 'ResetButton',
         isDisabledFn: (record) => {
           return this.state.loading[record.address];
         },
@@ -69,7 +60,6 @@ export class ReverseDNSPage extends Component {
       {
         cellComponent: ButtonCell,
         headerClassName: 'ButtonColumn',
-        buttonClassName: 'EditButton',
         onClick: (record) => {
           this.renderEditRDNS(record);
         },
@@ -80,7 +70,8 @@ export class ReverseDNSPage extends Component {
     const ips = linode._ips;
 
     // TODO: global should show up here but they are not supported by the API yet?
-    const records = [...ips.ipv4.public, ...ips.ipv6.addresses, ips.ipv6.slaac];
+    const records = [...ips.ipv4.public, ...ips.ipv6.addresses, ips.ipv6.slaac].filter(
+      address => address.rdns);
 
     return (
       <Card header={<CardHeader title="Reverse DNS" />}>
