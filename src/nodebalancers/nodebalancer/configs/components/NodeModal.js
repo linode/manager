@@ -13,13 +13,10 @@ export class NodeModal extends Component {
   constructor(props) {
     super(props);
 
-    const address = this.props.node.address.split(':');
-
     this.state = {
       id: this.props.node.id,
       label: this.props.node.label,
-      address: address.length ? address[0] : address[0],
-      port: address.length ? address[1] : address[0],
+      address: this.props.node.address,
       weight: this.props.node.weight,
       mode: this.props.node.mode,
       errors: {},
@@ -29,33 +26,29 @@ export class NodeModal extends Component {
 
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
-  async onSubmit() {
+  onSubmit = () => {
     const { dispatch, nodebalancerId, configId } = this.props;
     const state = this.state;
     const data = {
       label: state.label,
-      address: `${state.address}:${state.port}`,
+      address: state.address,
       weight: +state.weight,
       mode: state.mode,
     };
     const ids = [nodebalancerId, configId, state.id].filter(Boolean);
 
-    await dispatch(dispatchOrStoreErrors.apply(this, [
-      [
-        () => nodebalancers.configs.nodes[state.id ? 'put' : 'post'](data, ...ids),
-        hideModal,
-      ],
+    return dispatch(dispatchOrStoreErrors.call(this, [
+      () => nodebalancers.configs.nodes[state.id ? 'put' : 'post'](data, ...ids),
+      hideModal,
     ]));
   }
 
   render() {
     const { dispatch } = this.props;
-    const { label, address, port, weight, mode, errors, loading } = this.state;
+    const { label, address, weight, mode, errors, loading } = this.state;
 
     return (
-      <Form
-        onSubmit={() => this.onSubmit()}
-      >
+      <Form onSubmit={this.onSubmit}>
         <ModalFormGroup
           label="Label"
           id="label"
@@ -78,21 +71,9 @@ export class NodeModal extends Component {
           <Input
             name="address"
             id="address"
+            placeholder="192.168.1.10:80"
             onChange={this.onChange}
             value={address}
-          />
-        </ModalFormGroup>
-        <ModalFormGroup
-          label="Port"
-          id="port"
-          apiKey="port"
-          errors={errors}
-        >
-          <Input
-            name="port"
-            id="port"
-            onChange={this.onChange}
-            value={port}
           />
         </ModalFormGroup>
         <ModalFormGroup
@@ -106,6 +87,7 @@ export class NodeModal extends Component {
           <Input
             name="weight"
             id="weight"
+            type="number"
             onChange={this.onChange}
             value={weight}
           />
