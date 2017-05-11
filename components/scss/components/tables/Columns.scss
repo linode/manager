@@ -6,7 +6,7 @@
     width: 45px;
 }
 
-.CheckboxColumn + th,
-.CheckboxCell + td {
+.CheckboxColumn + th:not(.CheckboxColumn),
+.CheckboxCell + td:not(.CheckboxCell) {
     padding: 5px 15px 5px 0;
 }

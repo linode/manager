@@ -1,11 +1,24 @@
+import _ from 'lodash';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { replace } from 'react-router-redux';
-import _ from 'lodash';
 
-import { showModal, hideModal } from '~/actions/modal';
 import { DeleteModalBody } from 'linode-components/modals';
+import { Button } from 'linode-components/buttons';
+import { Card, CardHeader } from 'linode-components/cards';
+import { Table } from 'linode-components/tables';
+import { ButtonCell } from 'linode-components/tables/cells';
+
+import { setError } from '~/actions/errors';
+import { showModal, hideModal } from '~/actions/modal';
+import { setSource } from '~/actions/source';
+import { setTitle } from '~/actions/title';
+import { domains } from '~/api';
+import { getObjectByLabelLazily } from '~/api/util';
+import { NameserversCell } from '~/components/tables/cells';
+import { NAME_SERVERS } from '~/constants';
+
 import { formatDNSSeconds, ONE_DAY } from '../components/SelectDNSSeconds';
 import EditSOARecord from '../components/EditSOARecord';
 import EditNSRecord from '../components/EditNSRecord';
@@ -14,17 +27,7 @@ import EditARecord from '../components/EditARecord';
 import EditTXTRecord from '../components/EditTXTRecord';
 import EditSRVRecord from '../components/EditSRVRecord';
 import EditCNAMERecord from '../components/EditCNAMERecord';
-import { setError } from '~/actions/errors';
-import { domains } from '~/api';
-import { getObjectByLabelLazily } from '~/api/util';
-import { setSource } from '~/actions/source';
-import { setTitle } from '~/actions/title';
-import { Button } from 'linode-components/buttons';
-import { Card, CardHeader } from 'linode-components/cards';
-import { Table } from 'linode-components/tables';
-import { ButtonCell } from 'linode-components/tables/cells';
-import { NameserversCell } from '~/components/tables/cells';
-import { NAME_SERVERS } from '~/constants';
+
 
 export class ZonePage extends Component {
   static async preload({ dispatch, getState }, { domainLabel }) {
