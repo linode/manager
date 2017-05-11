@@ -58,7 +58,7 @@ export class IndexPage extends Component {
 
     const selectedDomains = zonesArr.map(l => l.domain);
 
-    dispatch(showModal('Confirm deletion',
+    dispatch(showModal('Delete Domain(s)',
       <DeleteModalBody
         onOk={async () => {
           const ids = zonesArr.map(function (zone) { return zone.id; });
