@@ -36,24 +36,37 @@ export default function Distributions(props) {
     }
   }
 
+  const chunkedDistros = _.chunk(vendors, 4);
+
   return (
-    <div className="LinodesDistributions">
-      {vendors.map(v =>
-        <div className="LinodesDistributions-wrapper" key={v.name}>
-          <Distribution
-            selected={distribution}
-            vendor={v}
-            onClick={onSelected}
-          />
-        </div>)}
-        {!noDistribution ? null : (
-          <div className="LinodesDistributions-wrapper">
+    <div>
+      {chunkedDistros.map((arr, index) => {
+        return (
+          <div key={index} className="row">
+            {arr.map((distro, index) => {
+              return (
+                <div key={index} className="col-sm-3">
+                  <Distribution
+                    selected={distribution}
+                    vendor={distro}
+                    onClick={onSelected}
+                  />
+                </div>
+              );
+            })}
+          </div>
+        );
+      })}
+      {!noDistribution ? null : (
+        <div className="row">
+          <div className="col-sm-3">
             <Distribution
               noDistribution
               selected={distribution}
               onClick={onSelected}
             />
-          </div>)}
+          </div>
+        </div>)}
     </div>
   );
 }
