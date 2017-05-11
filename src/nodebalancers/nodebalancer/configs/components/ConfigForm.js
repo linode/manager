@@ -6,6 +6,7 @@ import {
 } from 'linode-components/forms';
 
 import { nodebalancers } from '~/api';
+import { updateConfigSSL } from '~/api/nodebalancers';
 import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
 
 
@@ -25,6 +26,8 @@ export default class ConfigForm extends Component {
       checkInterval: props.config.check_interval,
       checkTimeout: props.config.check_timeout,
       checkAttempts: props.config.check_attempts,
+      sslCert: props.config.ssl_cert,
+      sslKey: props.config.ssl_key,
     };
   }
 
@@ -32,7 +35,7 @@ export default class ConfigForm extends Component {
     const { dispatch, nodebalancer, config } = this.props;
     const {
       port, protocol, algorithm, stickiness, check, checkPassive, checkInterval, checkTimeout,
-      checkAttempts,
+      checkAttempts, sslCert, sslKey,
     } = this.state;
 
     const data = {
@@ -47,11 +50,28 @@ export default class ConfigForm extends Component {
       check_attempts: parseInt(checkAttempts),
     };
 
+    const sslData = {};
+    if (protocol === 'https') {
+      if (!config.id) {
+        data.ssl_cert = sslCert;
+        data.ssl_key = sslKey;
+      } else {
+        sslData.ssl_cert = sslCert;
+        sslData.ssl_key = sslKey;
+      }
+    }
+
     const idsPath = [nodebalancer.id, config.id].filter(Boolean);
-    await dispatch(dispatchOrStoreErrors.call(this, [
-      () => nodebalancers.configs[config.id ? 'put' : 'post'](data, ...idsPath),
-      ({ id }) => id !== config.id && push(`/nodebalancers/${nodebalancer.label}/configs/${id}`),
-    ]));
+    const calls = [];
+    if ((config.id && protocol === 'https') &&
+        (config.protocol !== 'https' || (sslCert || sslKey))) {
+      calls.push(() => updateConfigSSL(sslData, ...idsPath));
+    }
+    calls.push(() => nodebalancers.configs[config.id ? 'put' : 'post'](data, ...idsPath));
+    calls.push(({ id }) => id !== config.id &&
+      push(`/nodebalancers/${nodebalancer.label}/configs/${id}`));
+
+    await dispatch(dispatchOrStoreErrors.call(this, calls));
   }
 
   onChange = ({ target: { checked, value, name, type } }) =>
@@ -61,7 +81,7 @@ export default class ConfigForm extends Component {
     const { submitText, submitDisabledText } = this.props;
     const {
       port, protocol, algorithm, stickiness, check, checkPassive, checkInterval, checkTimeout,
-      checkAttempts, errors, loading,
+      checkAttempts, sslCert, sslKey, errors, loading,
     } = this.state;
 
     return (
@@ -88,9 +108,9 @@ export default class ConfigForm extends Component {
               value={protocol}
               onChange={this.onChange}
             >
+              <option value="tcp">TCP</option>
               <option value="http">HTTP</option>
               <option value="https">HTTPS</option>
-              <option value="tcp">TCP</option>
             </Select>
             <FormGroupError errors={errors} name="protocol" />
           </div>
@@ -126,9 +146,9 @@ export default class ConfigForm extends Component {
               value={stickiness}
               onChange={this.onChange}
             >
+              <option value="none">None</option>
               <option value="table">Table</option>
               <option value="http_cookie">HTTP Cookie</option>
-              <option value="none">None</option>
             </Select>
             <div>
               <small className="text-muted">
@@ -139,6 +159,39 @@ export default class ConfigForm extends Component {
             <FormGroupError errors={errors} name="stickiness" />
           </div>
         </FormGroup>
+        {protocol === 'https' ?
+          <span>
+            <h3 className="sub-header">SSL Settings</h3>
+            <FormGroup errors={errors} name="ssl_cert" className="row">
+              <label className="col-sm-2 col-form-label">SSL Certificate</label>
+              <div className="col-sm-10">
+                <textarea
+                  id="sslCert"
+                  name="sslCert"
+                  placeholder="Please provide your SSL certificate
+                    (including chained intermediate certificates if needed)"
+                  value={sslCert}
+                  onChange={this.onChange}
+                />
+                <FormGroupError errors={errors} name="ssl_cert" />
+              </div>
+            </FormGroup>
+            <FormGroup errors={errors} name="ssl_key" className="row">
+              <label className="col-sm-2 col-form-label">Private Key</label>
+              <div className="col-sm-10">
+                <textarea
+                  id="sslKey"
+                  name="sslKey"
+                  placeholder="Please provide your
+                    unpassphrassed SSL private key"
+                  value={sslKey}
+                  onChange={this.onChange}
+                />
+                <FormGroupError errors={errors} name="ssl_key" />
+              </div>
+            </FormGroup>
+          </span>
+        : null}
         <h3 className="sub-header">Active Health Check</h3>
         <FormGroup errors={errors} name="check" className="row">
           <label className="col-sm-2 col-form-label">Health check type</label>
@@ -255,5 +308,7 @@ ConfigForm.defaultProps = {
     check_interval: 5,
     check_timeout: 3,
     check_attempts: 2,
+    ssl_cert: '',
+    ssl_key: '',
   },
 };
