@@ -14,7 +14,6 @@ export default function PasswordInput(props) {
       <Input
         value={props.value}
         name={props.name}
-        placeholder="**********"
         className="PasswordInput-input"
         onChange={props.onChange}
         autoComplete="off"

@@ -4,12 +4,15 @@ import { Link } from 'react-router';
 import { push } from 'react-router-redux';
 
 import { Tabs } from 'linode-components/tabs';
+
 import { users } from '~/api';
+import { getObjectByLabelLazily } from '~/api/util';
 import { setError } from '~/actions/errors';
 
 export class IndexPage extends Component {
   static async preload({ dispatch, getState }, { username }) {
     try {
+      await dispatch(getObjectByLabelLazily('users', username, 'username'));
       const user = await dispatch(users.one([username]));
       if (user.restricted) {
         await dispatch(users.permissions.one([username]));
@@ -20,27 +23,13 @@ export class IndexPage extends Component {
     }
   }
 
-  constructor(props) {
-    super(props);
-
-    if (!props.user) {
-      return;
-    }
-
-    this.state = {
-      restricted: props.user.restricted || false,
-    };
-  }
-
   render() {
     if (!this.props.user) {
       return null;
     }
 
-    const { username } = this.props.user;
-
-    const { restricted } = this.state;
-    const tabList = [{ name: 'Edit User', link: '' }];
+    const { username, restricted } = this.props.user;
+    const tabList = [{ name: 'Dashboard', link: '' }];
     if (restricted) {
       tabList.push({ name: 'Permissions', link: '/permissions' });
     }
@@ -82,10 +71,11 @@ IndexPage.propTypes = {
   children: PropTypes.node,
 };
 
-function select(state, props) {
-  return {
-    user: state.api.users.users[props.params.username],
-  };
+export function selectUser(state, props) {
+  const { users } = state.api.users;
+  const { username } = props.params;
+  const user = users[username];
+  return { user };
 }
 
-export default connect(select)(IndexPage);
+export default connect(selectUser)(IndexPage);
