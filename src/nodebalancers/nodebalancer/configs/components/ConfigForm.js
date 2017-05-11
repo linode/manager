@@ -75,7 +75,8 @@ export default class ConfigForm extends Component {
             <Input
               id="port"
               name="port"
-              placeholder="0"
+              placeholder="80"
+              type="number"
               value={port}
               onChange={this.onChange}
             />
@@ -107,7 +108,7 @@ export default class ConfigForm extends Component {
               value={algorithm}
               onChange={this.onChange}
               options={Array.from(NODEBALANCER_CONFIG_ALGORITHMS.entries()).map(
-                (value, label) => ({ value, label }))}
+                ([value, label]) => ({ value, label }))}
             />
             <div>
               <small className="text-muted">
@@ -127,7 +128,7 @@ export default class ConfigForm extends Component {
               value={stickiness}
               onChange={this.onChange}
               options={Array.from(NODEBALANCER_CONFIG_STICKINESS.entries()).map(
-                (value, label) => ({ value, label }))}
+                ([value, label]) => ({ value, label }))}
             />
             <div>
               <small className="text-muted">
@@ -148,7 +149,7 @@ export default class ConfigForm extends Component {
               value={check}
               onChange={this.onChange}
               options={Array.from(NODEBALANCER_CONFIG_CHECKS.entries()).map(
-                (value, label) => ({ value, label }))}
+                ([value, label]) => ({ value, label }))}
             />
             <div>
               <small className="text-muted">
@@ -246,7 +247,6 @@ ConfigForm.propTypes = {
 
 ConfigForm.defaultProps = {
   config: {
-    port: 80,
     protocol: 'http',
     algorithm: 'roundrobin',
     stickiness: 'table',
