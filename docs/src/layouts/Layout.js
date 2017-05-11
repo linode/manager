@@ -10,7 +10,8 @@ export default function Layout(props) {
 
   return (
     <div className="Docs Layout">
-      <Header></Header>
+      <Header>
+      </Header>
       <div className="Layout-container container">
         <div className="Layout-navigationContainer">
           <div className="VerticalNav">
