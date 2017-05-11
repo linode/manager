@@ -26,7 +26,8 @@ describe('nodebalancers/nodebalancer/layouts/SettingsPage', () => {
       />
     );
 
-    expect(page.find({ id: 'group' }).props().value).to.equal(genericNodeBalancer.group);
+    expect(page.find({ id: 'client_conn_throttle' }).props().value)
+      .to.equal(genericNodeBalancer.client_conn_throttle);
     expect(page.find({ id: 'label' }).props().value).to.equal(genericNodeBalancer.label);
   });
 
@@ -46,7 +47,7 @@ describe('nodebalancers/nodebalancer/layouts/SettingsPage', () => {
       ([fn]) => expectRequest(fn, `/nodebalancers/${genericNodeBalancer.id}`, {
         method: 'PUT',
         body: {
-          group: genericNodeBalancer.group,
+          client_conn_throttle: genericNodeBalancer.client_conn_throttle,
           label: genericNodeBalancer.label,
         },
       }),
