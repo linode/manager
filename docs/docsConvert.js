@@ -115,9 +115,16 @@ function formatSchemaField(schemaField) {
   const type = schemaField._type;
   const value = schemaField._value;
 
+  let nestedSchema = null;
   let example = null;
   if (apiObjectMap[type]) {
+    nestedSchema = formatSchema(getResourceObjByName(type).schema);
     example = formatSchemaExample(getResourceObjByName(type).schema);
+  } else if (!type) {
+    console.log(name, schemaField);
+    // TODO: check the name of the nested item?
+    nestedSchema = formatSchema(schemaField);
+    example = formatSchemaExample(schemaField);
   }
 
   return {
@@ -128,21 +135,21 @@ function formatSchemaField(schemaField) {
     type: type,
     value: value,
     example: example,
+    schema: nestedSchema
   };
 }
 
 function formatSchema(schema) {
-  let schemaArr;
-
   if (Array.isArray(schema)) {
-    schemaArr = schema;
-  } else {
-    schemaArr = Object.keys(schema).map(function (schemaName) {
-      return formatSchemaField(_.merge(schema[schemaName], { name: schemaName }));
-    });
+    return schema;
   }
 
-  return schemaArr;
+  return Object.keys(schema).map(function (schemaName) {
+    if (typeof schema[schemaName] === 'object') {
+      return formatSchemaField(_.merge(schema[schemaName], { name: schemaName }));
+    }
+    // TODO: account for other cases
+  }).filter(function(item) { return item; }); // filter at the end dumps nulls from result of non-object values
 }
 
 function formatMethodResource(endpoint, method) {
@@ -315,7 +322,3 @@ allEndpoints = allEndpoints.map(function(endpoint) {
 const data = JSON.stringify(allEndpoints, null, 2);
 const endpointModule = `module.exports = { endpoints: ${data} };`;
 fs.writeFileSync(path.join(endpointsPath, 'api.js'), endpointModule);
-
-const compressedData = JSON.stringify(allEndpoints);
-const compressedModule = `module.exports = { endpoints: ${compressedData} };`;
-fs.writeFileSync(path.join(endpointsPath, 'api_min.js'), compressedModule);

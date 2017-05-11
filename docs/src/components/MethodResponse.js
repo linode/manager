@@ -15,34 +15,33 @@ export default function MethodResponse(props) {
         renderRowsFn={function(columns, data, onToggleSelect, selectedMap) {
           const rows = [];
           data.forEach(function (record, index) {
-            if (record.example) {
+            if (record.schema && record.example) {
               rows.push((<TableRow
-                // assumes that if one record in the collection does not have an id,
-                // than no records should have an id, and all keys will fallback to
-                // index usage
                 key={record.id || index}
                 index={index}
                 columns={columns}
                 record={record}
-                onToggleSelect={onToggleSelect}
-                selectedMap={selectedMap}
               />));
-              rows.push((
-                <tr>
-                  <ExampleCell example={record.example} colSpan={3} />
-                </tr>
-              ));
+              // TODO: Nested rows:
+              {/*record.schema.forEach(function(nestedRecord, index) {*/}
+                {/*rows.push((<TableRow*/}
+                  {/*key={nestedRecord.id || index}*/}
+                  {/*index={index}*/}
+                  {/*columns={columns}*/}
+                  {/*record={nestedRecord}*/}
+                {/*/>));*/}
+              {/*});*/}
+              {/*rows.push((*/}
+                {/*<tr>*/}
+                  {/*<ExampleCell example={record.example} colSpan={3} />*/}
+                {/*</tr>*/}
+              {/*));*/}
             } else {
               rows.push((<TableRow
-                // assumes that if one record in the collection does not have an id,
-                // than no records should have an id, and all keys will fallback to
-                // index usage
                 key={record.id || index}
                 index={index}
                 columns={columns}
                 record={record}
-                onToggleSelect={onToggleSelect}
-                selectedMap={selectedMap}
               />))
             }
           });
