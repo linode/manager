@@ -57,7 +57,7 @@ export class IndexPage extends Component {
     const { dispatch } = this.props;
     const nodebalancersArr = Array.isArray(nodebalancers) ? nodebalancers : [nodebalancers];
 
-    dispatch(showModal('Delete NodeBalancer',
+    dispatch(showModal('Delete NodeBalancer(s)',
       <DeleteModalBody
         onOk={async () => {
           const ids = nodebalancersArr.map(function (nodebalancer) { return nodebalancer.id; });
