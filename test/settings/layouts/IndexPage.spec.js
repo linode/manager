@@ -26,7 +26,7 @@ describe('settings/layouts/IndexPage', () => {
       />
     );
 
-    page.find('#networkHelper').simulate('change');
+    page.find('#networkHelper').simulate('change', { target: { value: true } });
 
     dispatch.reset();
     await page.find('Form').props().onSubmit();
