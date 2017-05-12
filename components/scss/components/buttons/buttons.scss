@@ -21,18 +21,19 @@ a {
         cursor: pointer;
     }
 
+    &:hover,
+    &:active,
+    &:focus {
+        outline: 0;
+        box-shadow: none;
+    }
+
     &.btn-default {
         color: $black;
 
         &:not([disabled]):hover {
             background: $gray;
             color: $black;
-        }
-
-        &:hover,
-        &:active,
-        &:focus {
-            outline: 0;
         }
     }
 

@@ -18,7 +18,7 @@ export default function MassEditDropdown(props) {
           checked={checked}
         />
       </span>
-      <Dropdown elements={options} disabled={disabled} />
+      <Dropdown elements={options} disabled={disabled} leftOriented />
     </div>
   );
 }

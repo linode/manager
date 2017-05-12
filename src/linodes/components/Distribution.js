@@ -1,5 +1,9 @@
 import React, { Component, PropTypes } from 'react';
+
+import { Dropdown } from 'linode-components/dropdowns';
+
 import { distros } from '~/assets';
+
 
 export default class Distribution extends Component {
   constructor(props) {
@@ -49,47 +53,24 @@ export default class Distribution extends Component {
     const noDistributionClass = noDistribution ? 'LinodesDistribution--isNoDistribution' : '';
     const isOpenClass = open ? 'LinodesDistribution-dropdown--isOpen' : '';
 
+    const versions = !vendor ? [{ name: 'Empty' }] : [
+      {
+        name: this.renderLabel(),
+        action: () => this.setState({ open: !open }),
+      },
+      ...vendor.versions.map((version, i) => ({
+        name: version.label,
+        action: () => this.setState({ open: false, selectedIndex: i }),
+      })),
+    ];
+
     return (
       <div
         onClick={this.onClick}
         className={`LinodesDistribution ${isSelectedClass} ${noDistributionClass}`}
         onBlur={() => this.setState({ open: false })}
       >
-        <header
-          className={`LinodesDistribution-dropdown ${isOpenClass}`}
-        >
-          <div className="LinodesDistribution-title">
-            {this.renderLabel()}
-            {noDistribution ? null : <button
-              className="LinodesDistribution-toggleDropdown"
-              aria-haspopup
-              aria-expanded={open}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                this.setState({ open: !open });
-              }}
-            ><i className="fa fa-caret-down"></i></button>}
-          </div>
-          {vendor ? (
-            <div
-              className="LinodesDistribution-menu"
-            >
-              {vendor.versions.map((v, i) =>
-                <button
-                  key={v.id}
-                  className="LinodesDistribution-version"
-                  type="button"
-                  onMouseDown={e => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    onClick(v.id);
-                    this.setState({ open: false, selectedIndex: i });
-                  }}
-                >{v.label}</button>)}
-            </div>
-          ) : null}
-        </header>
+        <Dropdown elements={versions} />
         <div className="LinodesDistribution-body">
           {vendor ? <img
             src={distros[vendor.name]}

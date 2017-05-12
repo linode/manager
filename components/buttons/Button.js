@@ -11,9 +11,14 @@ export default function Button(props) {
     buttonClass,
     type,
     id,
+    href,
   } = props;
 
   const classes = `btn ${buttonClass} ${className}`;
+
+  if (href) {
+    return <a className={classes} id={id} href={href} disabled={disabled}>{children}</a>;
+  }
 
   return to ? (
     <Link
@@ -43,6 +48,7 @@ Button.propTypes = {
   id: PropTypes.string,
   buttonClass: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
+  href: PropTypes.string,
 };
 
 Button.defaultProps = {

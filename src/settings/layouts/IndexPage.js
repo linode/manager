@@ -37,7 +37,7 @@ export class IndexPage extends Component {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
 
-    dispatch(setTitle('Account'));
+    dispatch(setTitle('Account Settings'));
   }
 
   onSubmit = async () => {
@@ -55,7 +55,7 @@ export class IndexPage extends Component {
       <div>
         <header className="main-header main-header--border">
           <div className="container">
-            <h1>Account</h1>
+            <h1>Account Settings</h1>
           </div>
         </header>
         <div className="container">

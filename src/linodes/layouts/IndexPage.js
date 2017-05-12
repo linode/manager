@@ -137,6 +137,7 @@ export class IndexPage extends Component {
                 { name: 'Reboot', action: this.reboot },
                 { name: 'Power on', action: this.powerOn },
                 { name: 'Power off', action: this.powerOff },
+                null,
                 { name: 'Delete', action: this.deleteLinodes },
               ]}
               selectedMap={selectedMap}

@@ -1,15 +1,15 @@
 $badge-height: 25px;
 
 .Badge {
-  @extend .font-small;
-  border-radius: 15px;
-  display: inline-block;
-  padding: 1px 1px 0 0;
-  position: absolute;
-  color: $white;
-  height: $badge-height;
-  text-align: center;
+    @extend .font-xs;
+    border-radius: 15px;
+    display: inline-block;
+    padding: 2px 1px 0 0;
+    position: absolute;
+    color: $white;
+    height: $badge-height;
+    text-align: center;
 
-  /* These settings are so that it looks circular generally and decent in other cases. */
-  min-width: $badge-height;
+    /* These settings are so that it looks circular generally and decent in other cases. */
+    min-width: $badge-height;
 }
