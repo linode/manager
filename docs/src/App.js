@@ -24,6 +24,10 @@ import {
 } from './components/intros';
 
 import {
+  Python,
+} from './components/guides';
+
+import {
   generateIndexRoute,
   generateChildRoute
 } from '~/RoutesGenerator';
@@ -75,6 +79,7 @@ export function init() {
           <Route path="/pagination" component={Pagination} />
           <Route path="/filtering" component={Filtering} />
           <Route path="/errors" component={Errors} />
+          <Route path="/python" component={Python} />
           {api.endpoints.map(function(endpoint, index) {
             return generateIndexRoute({ key: index, endpoint: endpoint });
           })}
