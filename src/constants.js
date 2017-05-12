@@ -27,7 +27,8 @@ export const regionMap = {
 };
 
 export const LinodeStatesReadable = {
-  shutting_down: 'Powering off',
+  shutting_down: 'Powering Off',
+  contact_support: 'Error',
   offline: 'Offline',
   running: 'Running',
   booting: 'Booting',
