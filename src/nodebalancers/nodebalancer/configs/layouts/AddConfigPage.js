@@ -21,8 +21,10 @@ export class AddConfigPage extends Component {
     return (
       <Card header={<CardHeader title="Add Config" />}>
         <p>
+          {/* eslint-disable max-len */}
           Configure how your NodeBalancer listens for incoming traffic
-          and connects to backend nodes.
+          and connects to backend nodes. <a href="https://www.linode.com/docs/platform/nodebalancer/getting-started-with-nodebalancers#configuring-a-nodebalancer" target="_blank">Learn more.</a>
+          {/* eslint-enable max-len */}
         </p>
         <ConfigForm
           dispatch={dispatch}
