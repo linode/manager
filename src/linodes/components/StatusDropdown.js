@@ -1,13 +1,16 @@
 import React, { Component, PropTypes } from 'react';
 
+import { Dropdown } from 'linode-components/dropdowns';
+
+import { showModal } from '~/actions/modal';
 import { linodes as apiLinodes } from '~/api';
 import { actions } from '~/api/configs/linodes';
 import { powerOnLinode, powerOffLinode, rebootLinode } from '~/api/linodes';
 import Polling from '~/api/polling';
 import { LinodeStates, LinodeStatesReadable } from '~/constants';
-import { showModal } from '~/actions/modal';
 import ConfigSelectModalBody from '~/linodes/components/ConfigSelectModalBody';
 import { launchWeblishConsole } from '~/linodes/components/WeblishLaunch';
+
 
 const RANDOM_PROGRESS_MAX = 75;
 const RANDOM_PROGRESS_MIN = 40;
@@ -78,9 +81,27 @@ export default class StatusDropdown extends Component {
 
   render() {
     const { linode, dispatch, shortcuts, className } = this.props;
-    const dropdownElements = [
+
+    if (LinodeStates.pending.indexOf(linode.status) !== -1) {
+      const safeProgress = linode.__progress || RANDOM_PROGRESS_MAX;
+      return (
+        <div className={`StatusDropdown ${className}`}>
+          <div className="StatusDropdown-container">
+            <div
+              style={{ width: `${safeProgress}%` }}
+              className="StatusDropdown-progress"
+            >
+              <div className="StatusDropdown-percent">{Math.round(safeProgress)}%</div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    const status = LinodeStatesReadable[linode.status];
+    const elements = [
       {
-        name: <span>Reboot</span>,
+        name: 'Reboot',
         tempStatus: 'rebooting',
         _key: 'reboot',
         _action: rebootLinode,
@@ -88,14 +109,14 @@ export default class StatusDropdown extends Component {
         _configs: true,
       },
       {
-        name: <span>Power off</span>,
+        name: 'Power Off',
         tempStatus: 'shutting_down',
         _key: 'power-off',
         _action: powerOffLinode,
         _condition: () => linode.status === 'running',
       },
       {
-        name: <span>Power on</span>,
+        name: 'Power On',
         tempStatus: 'booting',
         _key: 'power-on',
         _action: powerOnLinode,
@@ -103,7 +124,7 @@ export default class StatusDropdown extends Component {
         _configs: true,
       },
       {
-        name: <span>Launch Console</span>,
+        name: 'Launch Console',
         _key: 'text-console',
         _action: () => { launchWeblishConsole(linode); },
         _condition: () => shortcuts,
@@ -122,7 +143,7 @@ export default class StatusDropdown extends Component {
           return;
         }
 
-        dispatch(showModal('Select configuration profile',
+        dispatch(showModal('Select Configuration Profile',
           <ConfigSelectModalBody
             linode={linode}
             dispatch={dispatch}
@@ -132,49 +153,9 @@ export default class StatusDropdown extends Component {
       },
     }));
 
-    const dropdownMenu = dropdownElements.map(({ name, action, _key }) =>
-      <button
-        type="button"
-        key={_key}
-        className="StatusDropdown-item"
-        onMouseDown={action}
-      >{name}</button>
-    );
-    const openClass = this.state.open ? 'show' : '';
-
-    if (LinodeStates.pending.indexOf(linode.status) !== -1) {
-      const safeProgress = linode.__progress || RANDOM_PROGRESS_MAX;
-      return (
-        <div className={`StatusDropdown ${className}`}>
-          <div className="StatusDropdown-container">
-            <div
-              style={{ width: `${safeProgress}%` }}
-              className="StatusDropdown-progress"
-            >
-              <div className="StatusDropdown-percent">{Math.round(safeProgress)}%</div>
-            </div>
-          </div>
-        </div>
-      );
-    }
-
     return (
-      <div
-        className={`StatusDropdown Dropdown ${openClass} ${className}`}
-        onBlur={this.close}
-      >
-        <button
-          type="button"
-          className="StatusDropdown-toggle btn dropdown-toggle"
-          data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded={this.state.open}
-          onClick={this.open}
-          disabled={LinodeStates.pending.indexOf(linode.status) !== -1}
-        >
-          {LinodeStatesReadable[linode.status] || 'Offline'} <i className="fa fa-caret-down" />
-        </button>
-        <div className="StatusDropdown-menu dropdown-menu">{dropdownMenu}</div>
+      <div className="StatusDropdown StatusDropdown--dropdown">
+        <Dropdown elements={[{ name: status }, ...elements]} />
       </div>
     );
   }

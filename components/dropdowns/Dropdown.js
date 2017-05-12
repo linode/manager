@@ -24,42 +24,41 @@ export default class Dropdown extends Component {
     const [first, ...rest] = this.props.elements;
     const { disabled } = this.props;
 
-    const dropdownMenu = rest.map(({ name, action }) =>
+    const dropdownMenu = rest.map((item, i) => !item ? <hr key={i} /> :
       <button
         type="button"
-        key={name}
-        className="btn dropdown-item"
+        key={item.name}
+        className="Dropdown-item"
         // This onMouseDown is intentional. See https://github.com/linode/manager/pull/223
-        onMouseDown={action}
-      >{name}</button>
+        onMouseDown={item.action}
+      >{item.name}</button>
     );
 
-    const orientation = this.props.leftOriented === false ? 'dropdown-menu-right' : '';
+    const orientation = !this.props.leftOriented ? 'Dropdown-menu--right' : '';
 
     return (
       <div
-        className={`Dropdown btn-group ${this.state.open ? 'show' : ''}`}
+        className={`Dropdown btn-group ${this.state.open ? 'Dropdown--open' : ''}`}
         onBlur={this.close}
       >
         <button
           type="button"
-          className="btn dropdown-first"
+          className="Dropdown-first"
           onClick={first.action}
           disabled={disabled}
         >{first.name}</button>
-        {rest.length !== 0 ?
+        {rest.length === 0 ? null : (
           <button
             disabled={disabled}
             type="button"
-            className="btn dropdown-toggle"
+            className="Dropdown-toggle"
             data-toggle="dropdown"
             aria-haspopup="true"
             aria-expanded={this.state.open}
             onClick={this.open}
-          >
-            <i className="fa fa-caret-down"></i>
-          </button> : null}
-        <div className={`dropdown-menu ${orientation}`}>{dropdownMenu}</div>
+          ><i className="fa fa-caret-down" /></button>
+        )}
+        <div className={`Dropdown-menu ${orientation}`}>{dropdownMenu}</div>
       </div>
     );
   }

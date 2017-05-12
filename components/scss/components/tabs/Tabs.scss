@@ -19,7 +19,7 @@
 
         &:hover,
         &[aria-selected="true"] {
-            background: $light-gray;
+            background: $background-color;
             border: 1px solid #bbb;
             border-bottom: 0;
             border-radius: 0;

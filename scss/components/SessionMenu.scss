@@ -17,11 +17,6 @@
         }
     }
 
-    hr {
-        margin: 0;
-        max-width: 100%;
-    }
-
     &-body,
     &-body:hover {
         background-color: $body-bg;
@@ -38,8 +33,30 @@
         width: 250px;
     }
 
-    &-menu-item {
-        line-height: initial;
-        padding: 15px 30px;
+    &-header {
+        @extend .list-unstyled;
+        @extend .font-xs;
+
+        padding: 5px 30px;
+        padding-bottom: 0;
+        color: $lightest-black;
+        text-transform: uppercase;
+    }
+
+    &-item {
+        @extend .list-unstyled;
+
+        a {
+            transition: 0;
+            display: block;
+            line-height: initial;
+            padding: 10px 30px;
+            color: $black;
+
+            &:hover {
+                background: $gray;
+                text-decoration: none;
+            }
+        }
     }
 }
