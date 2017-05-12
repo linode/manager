@@ -168,8 +168,8 @@ export default class ConfigForm extends Component {
                 <textarea
                   id="sslCert"
                   name="sslCert"
-                  placeholder="Please provide your SSL certificate
-                    (including chained intermediate certificates if needed)"
+                  placeholder="SSL certificate (including chained intermediate
+                    certificates if needed)"
                   value={sslCert}
                   onChange={this.onChange}
                 />
@@ -182,8 +182,7 @@ export default class ConfigForm extends Component {
                 <textarea
                   id="sslKey"
                   name="sslKey"
-                  placeholder="Please provide your
-                    unpassphrassed SSL private key"
+                  placeholder="Unpassphrassed SSL private key"
                   value={sslKey}
                   onChange={this.onChange}
                 />
