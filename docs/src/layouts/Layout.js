@@ -23,7 +23,7 @@ export default function Layout(props) {
                 width={35}
               />
             </span>
-            <span className="MainHeader-title">Linode API Documentation</span>
+            <span className="MainHeader-title">Linode Developers</span>
           </Link>
         </div>
       </Header>
