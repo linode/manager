@@ -38,7 +38,7 @@ export class SummaryPage extends Component {
       <div className="Backup Backup--disabled col-sm-3">
         <div className="Backup-block">
           <div className="Backup-title">{title}</div>
-          <div className="Backup-description Backup-description--muted">Pending</div>
+          <div className="Backup-description text-muted">Pending</div>
         </div>
       </div>
     );
@@ -51,7 +51,7 @@ export class SummaryPage extends Component {
       <Form onSubmit={this.onSubmit} className="Backup Backup-emptySnapshot col-sm-3">
         <div className="Backup-block">
           <div className="Backup-title">Snapshot</div>
-          <div className="Backup-description Backup-description--muted">
+          <div className="Backup-description text-muted">
             No snapshots taken
           </div>
           <SubmitButton

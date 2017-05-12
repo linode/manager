@@ -32,10 +32,6 @@
 
     &-description {
         padding: 38px 0 0 0;
-
-        &--muted {
-            color: $default-gray;
-        }
     }
 
     &-emptySnapshot &-description {
