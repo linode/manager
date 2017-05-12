@@ -1,45 +1,39 @@
 .StatusDropdown {
-    @extend .btn-group;
-
     position: relative;
+    width: 120px;
     border: $border;
-    width: 92px;
+    // Offset td padding
+    margin-left: -30px;
+    height: $form-field-height;
 
-    &--open &-menu {
-        display: block;
+    &--dropdown {
+        border: 0;
     }
 
-    &-toggle {
-        @extend .btn;
-        @extend .float-sm-right;
-        @extend .dropdown-toggle;
+    .Dropdown {
+        position: relative;
+        width: 120px;
 
-        padding: 0;
-        background: transparent;
-        border: 0;
-        color: $light-black;
-        height: $form-field-height;
-        width: 100%;
+        &-first {
+            background: $white;
+            width: calc(100% - #{$form-field-height});
 
-        &:active,
-        &:hover,
-        &:focus,
-        &:focus:active {
-            background: transparent;
+            &:hover,
+            &:active,
+            &:focus {
+                background: $white;
+            }
+        }
+
+        &-menu {
+            right: 1px;
         }
     }
 
-    &-item {
-        @extend .btn;
-        @extend .dropdown-item;
-        border: $border;
-    }
-
     &-container {
-        height: 100%;
         // These calculations offset the left, right and top borders.
         width: calc(100% + 2px);
-        position: absolute;
+        position: relative;
         top: -1px;
         left: -1px;
     }

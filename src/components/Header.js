@@ -75,7 +75,6 @@ export default class Header extends Component {
                     width={35}
                   />
                 </span>
-                <span className="MainHeader-title">Linode Manager</span>
               </Link>
             </div>
             <Link

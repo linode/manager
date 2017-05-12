@@ -10,10 +10,10 @@ $yellow: #FFFCF0;
 $dark-yellow: darken($yellow, 20);
 $darkest-yellow: darken($yellow, 40);
 
-$light-gray: #FBFBFB;
-$gray: #F3F3F3;
+$light-gray: #FAFAFA;
+$medium-gray: #F7F7F7;
+$gray: #F0F0F0;
 $dark-gray: #DDDDDD;
-$default-gray: #a6a6a6;
 
 $lightest-black: #ACACAC;
 $light-black: #777;
@@ -25,6 +25,9 @@ $white: #FEFEFE;
 $transparent: rgba(0, 0, 0, 0.5);
 
 $nav-hover-background-color: #3c3c3c;
+
+$background-color: #FCFCFC;
+
 /* END color definitions */
 
 

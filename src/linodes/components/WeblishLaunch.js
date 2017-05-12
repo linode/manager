@@ -15,9 +15,7 @@ export default function WeblishLaunch(props) {
   const { linode } = props;
 
   return (
-    <Button onClick={() => { launchWeblishConsole(linode); }}>
-      Open
-    </Button>
+    <Button onClick={() => { launchWeblishConsole(linode); }}>Launch</Button>
   );
 }
 

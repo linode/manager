@@ -46,10 +46,10 @@ export default class MassEditControl extends Component {
         checked={allSelected}
         disabled={noneSelected}
         options={massEditOptions.map((option) => {
-          return {
+          return option && {
             name: option.name,
             action: this.createMassEditActionHandler(option.action),
-          };
+          } || option;
         })}
         onChange={this.onMassEditChange}
       />

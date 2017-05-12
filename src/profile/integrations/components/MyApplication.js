@@ -82,8 +82,9 @@ export default class MyApplication extends Component {
   renderActions() {
     const elements = [
       { name: 'Edit', action: this.editAction },
-      { name: 'Delete', action: this.deleteAction },
       { name: 'Reset secret', action: this.resetAction },
+      null,
+      { name: 'Delete', action: this.deleteAction },
     ];
 
     return <Dropdown elements={elements} leftOriented={false} />;
