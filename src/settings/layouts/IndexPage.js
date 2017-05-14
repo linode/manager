@@ -14,16 +14,6 @@ import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
 
 
 export class IndexPage extends Component {
-  static async preload({ dispatch }) {
-    try {
-      await dispatch(account.one());
-    } catch (response) {
-      // eslint-disable-next-line no-console
-      console.error(response);
-      dispatch(setError(response));
-    }
-  }
-
   constructor(props) {
     super(props);
 

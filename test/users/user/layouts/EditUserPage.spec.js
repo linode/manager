@@ -34,6 +34,7 @@ describe('users/user/layouts/EditUserPage', () => {
 
     dispatch.reset();
     await page.find('Form').props().onSubmit({ preventDefault() {} });
+
     expect(dispatch.callCount).to.equal(1);
 
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
