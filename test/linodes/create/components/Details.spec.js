@@ -1,11 +1,13 @@
-import React from 'react';
-import sinon from 'sinon';
 import { expect } from 'chai';
 import { mount } from 'enzyme';
+import React from 'react';
+import sinon from 'sinon';
 
 import Details from '~/linodes/create/components/Details';
-import { api } from '@/data';
+
 import { expectObjectDeepEquals } from '@/common';
+import { api } from '@/data';
+
 
 describe('linodes/create/components/Details', () => {
   const { types } = api.types;
@@ -15,40 +17,40 @@ describe('linodes/create/components/Details', () => {
     sandbox.restore();
   });
 
-  it('renders errors', () => {
-    const error = 'There was an error';
-    const errors = { label: [{ reason: error }] };
-    const details = mount(<Details errors={errors} selectedType={null} />);
-    const feedback = details.find('.form-control-feedback');
-
-    expect(feedback.length).to.equal(1);
-    expect(feedback.children().length).to.equal(1);
-    expect(feedback.childAt(0).text()).to.equal(error);
-  });
-
   it('submits inputs when submitted', async () => {
     const onSubmit = sandbox.spy();
     const details = mount(
-      <Details submitEnabled onSubmit={onSubmit} selectedType={null} />
+      <Details
+        selectedType={null}
+        onSubmit={onSubmit}
+        onChange={() => {}}
+        selectedDistribution={null}
+        loading={false}
+        label={"my-label"}
+        password={"my-password"}
+        backups={true}
+        errors={{}}
+      />
     );
 
-    details.find('#label').simulate('change', { target: { value: 'my-label' } });
-    details.find('input[type="password"]').simulate('change', { target: { value: 'my-password' } });
-    details.find('#backups').simulate('change', { target: { checked: true } });
-
-    await details.find('form').props().onSubmit();
-
+    await details.find('form').props().onSubmit({ preventDefault() {} });
     expect(onSubmit.callCount).to.equal(1);
-
-    expectObjectDeepEquals(onSubmit.firstCall.args[0], {
-      password: 'my-password',
-      label: 'my-label',
-      backups: true,
-    });
   });
 
   it('pulls backups price from selectedType', () => {
-    const details = mount(<Details selectedType={types['linode2048.5']} />);
+    const details = mount(
+      <Details
+        selectedType={types['linode2048.5']}
+        onSubmit={() => {}}
+        onChange={() => {}}
+        selectedDistribution={null}
+        loading={false}
+        label={"my-label"}
+        password={"my-password"}
+        backups={true}
+        errors={{}}
+      />
+    );
     expect(details.find('#backups + span').text()).to.contain('$2.50');
   });
 });
