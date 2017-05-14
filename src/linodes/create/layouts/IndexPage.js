@@ -57,7 +57,7 @@ export class IndexPage extends Component {
       region,
       label,
       root_pass: password,
-      with_backups: backups,
+      with_backups: backups || false,
     };
 
     if (distribution === 'none') {

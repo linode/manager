@@ -17,7 +17,7 @@ describe('domains/components/NewMasterZone', () => {
   });
 
   it('submits form and redirects to domain', async () => {
-    const dispatch = sinon.stub();
+    const dispatch = sandbox.stub();
     const component = mount(
       <NewMasterZone
         email="test@mail.net"

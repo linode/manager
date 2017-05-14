@@ -24,11 +24,9 @@ export default class BackupRestore extends Component {
     const { dispatch, linode, backup, linodes } = this.props;
     const { target, overwrite } = this.state;
 
-    await dispatch(dispatchOrStoreErrors.apply(this, [
-      [
-        () => restoreBackup(linode.id, target, backup.id, overwrite),
-        () => push(`/linodes/${linodes.linodes[target].label}`),
-      ],
+    await dispatch(dispatchOrStoreErrors.call(this, [
+      () => restoreBackup(linode.id, target, backup.id, overwrite),
+      () => push(`/linodes/${linodes.linodes[target].label}`),
     ]));
   }
 

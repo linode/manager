@@ -17,7 +17,7 @@ describe('domains/components/NewSlaveZone', () => {
   });
 
   it('submits form and redirects to domain', async () => {
-    const dispatch = sinon.stub();
+    const dispatch = sandbox.stub();
     const component = mount(
       <NewSlaveZone
         dispatch={dispatch}

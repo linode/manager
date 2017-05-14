@@ -29,7 +29,7 @@ describe('router/LoadingRouterContext', () => {
 
     const rc = mount(
       <LoadingRouterContext
-        dispatch={sinon.stub().returns(Promise.resolve())}
+        dispatch={sandbox.stub().returns(Promise.resolve())}
         match={sandbox.spy()}
         router={{}}
         routes={[]}

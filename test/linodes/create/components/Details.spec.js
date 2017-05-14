@@ -5,7 +5,6 @@ import sinon from 'sinon';
 
 import Details from '~/linodes/create/components/Details';
 
-import { expectObjectDeepEquals } from '@/common';
 import { api } from '@/data';
 
 
@@ -28,7 +27,7 @@ describe('linodes/create/components/Details', () => {
         loading={false}
         label={"my-label"}
         password={"my-password"}
-        backups={true}
+        backups
         errors={{}}
       />
     );
@@ -47,7 +46,7 @@ describe('linodes/create/components/Details', () => {
         loading={false}
         label={"my-label"}
         password={"my-password"}
-        backups={true}
+        backups
         errors={{}}
       />
     );
