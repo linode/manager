@@ -5,7 +5,7 @@ import { Form, FormGroup, SubmitButton } from 'linode-components/forms';
 
 import { rescueLinode } from '~/api/linodes';
 import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
-import { DiskSelect } from './';
+import DiskSelect from './DiskSelect';
 import { AVAILABLE_DISK_SLOTS } from '~/constants';
 
 

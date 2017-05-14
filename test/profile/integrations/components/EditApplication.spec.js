@@ -1,10 +1,12 @@
+import { expect } from 'chai';
+import { shallow } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
-import { shallow } from 'enzyme';
-import { expect } from 'chai';
 
 import { CreateOrEditApplication } from '~/profile/integrations/components';
-import { expectRequest } from '@/common';
+
+import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
+
 
 describe('profile/integrations/components/CreateOrEditApplication', () => {
   const sandbox = sinon.sandbox.create();
@@ -34,16 +36,15 @@ describe('profile/integrations/components/CreateOrEditApplication', () => {
 
     await page.props().onSubmit();
 
-    // One call to save the data, one call to close.
-    expect(dispatch.callCount).to.equal(2);
-
-    const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, '/account/clients/1', {
-      method: 'PUT',
-      body: {
-        label: 'My new client',
-        redirect_uri: 'http://google.com',
-      },
-    });
+    expect(dispatch.callCount).to.equal(1);
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      ([fn]) => expectRequest(fn, '/account/clients/1', {
+        method: 'PUT',
+        body: {
+          label: 'My new client',
+          redirect_uri: 'http://google.com',
+        },
+      }),
+    ], 2);
   });
 });

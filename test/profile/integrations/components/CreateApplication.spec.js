@@ -1,13 +1,14 @@
+import { expect } from 'chai';
+import { shallow } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
-import { shallow } from 'enzyme';
-import { expect } from 'chai';
 
 import * as fetch from '~/fetch';
-import { state } from '@/data';
 import { MAX_UPLOAD_SIZE_MB } from '~/constants';
 import { CreateOrEditApplication } from '~/profile/integrations/components';
-import { expectRequest, expectObjectDeepEquals } from '@/common';
+
+import { expectDispatchOrStoreErrors, expectObjectDeepEquals, expectRequest } from '@/common';
+import { state } from '@/data';
 
 
 describe('profile/integrations/components/CreateOrEditApplication', () => {
@@ -38,31 +39,30 @@ describe('profile/integrations/components/CreateOrEditApplication', () => {
     dispatch.returns({ id: 1, secret: 'secret' });
     await page.props().onSubmit();
 
-    // One call to save the data, one call to save the thumbnail, one call to show the secret.
-    expect(dispatch.callCount).to.equal(3);
+    expect(dispatch.callCount).to.equal(1);
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      ([fn]) => expectRequest(fn, '/account/clients/', {
+        method: 'POST',
+        body: {
+          label: 'My new client',
+          redirect_uri: 'http://example.com',
+        },
+      }),
+      async ([fn]) => {
+        const fetchStub = sandbox.stub(fetch, 'fetch').returns({ json: () => {} });
+        dispatch.reset();
+        await fn(dispatch, () => state);
 
-    let fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, '/account/clients/', {
-      method: 'POST',
-      body: {
-        label: 'My new client',
-        redirect_uri: 'http://example.com',
+        expect(fetchStub.callCount).to.equal(1);
+        expect(fetchStub.firstCall.args[1]).to.equal('/account/clients/1/thumbnail');
+        expectObjectDeepEquals(fetchStub.firstCall.args[2], {
+          method: 'PUT',
+          body: thumbnail,
+          headers: { 'Content-Type': 'image/png' },
+        });
       },
-    });
-
-    // This is not a normal request, so we are not able to test it using expectRequest.
-    fn = dispatch.secondCall.args[0];
-    const fetchStub = sandbox.stub(fetch, 'fetch').returns({ json: () => {} });
-    dispatch.reset();
-    await fn(dispatch, () => state);
-
-    expect(fetchStub.callCount).to.equal(1);
-    expect(fetchStub.firstCall.args[1]).to.equal('/account/clients/1/thumbnail');
-    expectObjectDeepEquals(fetchStub.firstCall.args[2], {
-      method: 'PUT',
-      body: thumbnail,
-      headers: { 'Content-Type': 'image/png' },
-    });
+    ], 3);
+    // One call to save the data, one call to save the thumbnail, one call to show the secret.
   });
 
   it('fails on a larger file', async () => {
@@ -86,6 +86,6 @@ describe('profile/integrations/components/CreateOrEditApplication', () => {
     await page.props().onSubmit();
 
     // One call to save the data, all other calls are skipped after large file size
-    expect(dispatch.callCount).to.equal(1);
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [], 1);
   });
 });

@@ -1,12 +1,16 @@
-import React from 'react';
-import sinon from 'sinon';
 import { expect } from 'chai';
 import { shallow, mount } from 'enzyme';
-import { OAuthCallbackPage } from '../../src/layouts/OAuth';
+import React from 'react';
 import { push } from 'react-router-redux';
+import sinon from 'sinon';
+
 import { setToken } from '~/actions/authentication';
 import { LOGIN_ROOT } from '~/constants';
+import { OAuthCallbackPage } from '~/layouts/OAuth';
 import * as fetch from '~/fetch';
+
+import { expectObjectDeepEquals, expectRequest } from '@/common';
+
 
 describe('layouts/OAuth', () => {
   const sandbox = sinon.sandbox.create();
@@ -20,10 +24,10 @@ describe('layouts/OAuth', () => {
     const component = shallow(
       <OAuthCallbackPage
         dispatch={dispatch}
-        location={{
-          query: { },
-        }}
+        location={{ query: { } }}
       />);
+
+    dispatch.reset();
     await component.instance().componentDidMount();
     expect(dispatch.callCount).to.equal(1);
     expect(dispatch.calledWith(push('/'))).to.equal(true);
@@ -32,27 +36,24 @@ describe('layouts/OAuth', () => {
   const exchangeResponse = {
     access_token: 'access_token',
     scopes: '*',
-    username: 'username',
-    email: 'email',
   };
 
   it('exchanges the code for an OAuth token', async () => {
     const fetchStub = sandbox.stub(fetch, 'rawFetch').returns({
       json: () => exchangeResponse,
     });
-    const dispatch = sandbox.stub();
-    dispatch.onFirstCall().returns({ scopes: '*', token: 'access_token' });
+
     const component = shallow(
       <OAuthCallbackPage
-        dispatch={dispatch}
+        dispatch={() => ({ timezone: '' })}
         location={{
           query: {
-            username: 'username',
-            email: 'email',
             code: 'code',
           },
         }}
       />);
+
+    fetchStub.resetHistory();
     await component.instance().componentDidMount();
     expect(fetchStub.callCount).to.equal(1);
     expect(fetchStub.calledWith(`${LOGIN_ROOT}/oauth/token`)).to.equal(true);
@@ -65,7 +66,7 @@ describe('layouts/OAuth', () => {
     });
     const component = mount(
       <OAuthCallbackPage
-        dispatch={() => {}}
+        dispatch={() => ({ timezone: '' })}
         location={{
           query: {
             error: 'yes',
@@ -82,23 +83,24 @@ describe('layouts/OAuth', () => {
       json: () => exchangeResponse,
     });
     const dispatch = sandbox.stub();
-    dispatch.onFirstCall().returns({ scopes: '*', token: 'access_token' });
+    dispatch.returns({ timezone: '' });
+
     const component = shallow(
       <OAuthCallbackPage
         dispatch={dispatch}
         location={{
           query: {
-            username: 'username',
-            email: 'email',
             code: 'code',
           },
         }}
       />);
+
+    dispatch.resetHistory();
     await component.instance().componentDidMount();
+    dispatch.firstCall.args[0](dispatch);
     expect(dispatch.callCount).to.equal(3);
-    expect(dispatch.calledWith(
-      setToken('access_token', '*', 'username', 'email',
-        '0c83f57c786a0b4a39efab23731c7ebc'))).to.equal(true);
+    expectObjectDeepEquals(dispatch.args[2][0], setToken('access_token', '*'));
+    expectRequest(dispatch.secondCall.args[0], '/account/profile');
     expect(dispatch.calledWith(push('/'))).to.equal(true);
   });
 
@@ -107,14 +109,13 @@ describe('layouts/OAuth', () => {
       json: () => exchangeResponse,
     });
     const dispatch = sandbox.stub();
-    dispatch.onFirstCall().returns({ scopes: '*', token: 'access_token' });
+    dispatch.returns({ timezone: '' });
+
     const component = shallow(
       <OAuthCallbackPage
         dispatch={dispatch}
         location={{
           query: {
-            username: 'username',
-            email: 'email',
             code: 'code',
             return: '/asdf',
           },

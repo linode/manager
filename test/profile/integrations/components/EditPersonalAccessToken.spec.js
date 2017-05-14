@@ -1,11 +1,12 @@
+import { expect } from 'chai';
+import { shallow } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
-import { shallow } from 'enzyme';
-import { expect } from 'chai';
 
 import EditPersonalAccessToken from '~/profile/integrations/components/EditPersonalAccessToken';
+
+import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
 import { testToken } from '@/data/tokens';
-import { expectRequest } from '@/common';
 
 describe('profile/integrations/components/EditPersonalAccessToken', () => {
   const sandbox = sinon.sandbox.create();
@@ -17,10 +18,11 @@ describe('profile/integrations/components/EditPersonalAccessToken', () => {
   const dispatch = sandbox.stub();
 
   it('modifies a token', async () => {
+    const close = sandbox.spy();
     const page = shallow(
       <EditPersonalAccessToken
         dispatch={dispatch}
-        close={dispatch}
+        close={close}
         label={testToken.label}
         id={testToken.id}
       />
@@ -33,15 +35,16 @@ describe('profile/integrations/components/EditPersonalAccessToken', () => {
 
     await page.props().onSubmit();
 
-    // One call to save the data, one call to close.
-    expect(dispatch.callCount).to.equal(2);
+    expect(dispatch.callCount).to.equal(1);
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      ([fn]) => expectRequest(fn, `/account/tokens/${testToken.id}`, {
+        method: 'PUT',
+        body: {
+          label: 'My awesome token',
+        },
+      }),
+    ], 2);
 
-    const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, `/account/tokens/${testToken.id}`, {
-      method: 'PUT',
-      body: {
-        label: 'My awesome token',
-      },
-    });
+    expect(close.callCount).to.equal(1);
   });
 });

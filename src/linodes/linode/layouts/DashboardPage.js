@@ -272,7 +272,7 @@ DashboardPage.propTypes = {
 
 function select(state, props) {
   const { linode } = selectLinode(state, props);
-  const { username } = state.authentication;
+  const { username } = state.profile;
   return { linode, username };
 }
 

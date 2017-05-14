@@ -2,19 +2,38 @@ import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
-import { VERSION } from '~/constants';
-import Header from '~/components/Header';
-import Notifications from '~/components/notifications/Notifications';
-import SessionMenu from '~/components/SessionMenu';
 import { ModalShell } from 'linode-components/modals';
 import { Error } from 'linode-components/errors';
-import PreloadIndicator from '~/components/PreloadIndicator.js';
+
 import { hideModal } from '~/actions/modal';
 import { hideNotifications } from '~/actions/notifications';
 import { hideSession } from '~/actions/session';
+import * as api from '~/api';
+import Header from '~/components/Header';
+import Notifications from '~/components/notifications/Notifications';
+import PreloadIndicator from '~/components/PreloadIndicator.js';
+import SessionMenu from '~/components/SessionMenu';
+import { VERSION } from '~/constants';
+import { setStorage } from '~/storage';
 
 
 export class Layout extends Component {
+  static async preload({ dispatch, getState }) {
+    // Fetch not just timezone but also email and username.
+    if (!getState().api.profile.timezone) {
+      const { timezone } = await dispatch(api.profile.one());
+      // Needed for time display component that is not attached to Redux.
+      setStorage('profile/timezone', timezone);
+    }
+
+    // Filter out objects we've already grabbed this page session.
+    const rest = ['kernels', 'types', 'regions', 'distributions'].filter(
+      type => Object.values(getState().api[type]).length);
+
+    // Fetch all objects we haven't already grabbed this page session.
+    await Promise.all(rest.map(type => dispatch(api[type].all())));
+  }
+
   constructor() {
     super();
     this.renderError = this.renderError.bind(this);
@@ -37,7 +56,7 @@ export class Layout extends Component {
   render() {
     const {
       username,
-      emailHash,
+      email,
       errors,
       notifications,
       session,
@@ -74,9 +93,9 @@ export class Layout extends Component {
         </ModalShell>
         <Header
           dispatch={dispatch}
-          emailHash={emailHash}
           link={link}
           title={title}
+          email={email}
           username={username}
           notifications={notifications}
           session={session}
@@ -111,8 +130,7 @@ export class Layout extends Component {
 
 Layout.propTypes = {
   username: PropTypes.string,
-  emailHash: PropTypes.string,
-  email: PropTypes.string.isRequired,
+  email: PropTypes.string,
   currentPath: PropTypes.string,
   children: PropTypes.node.isRequired,
   errors: PropTypes.object.isRequired,
@@ -127,9 +145,8 @@ Layout.propTypes = {
 
 function select(state) {
   return {
-    username: state.authentication.username,
-    emailHash: state.authentication.emailHash,
-    email: state.authentication.email,
+    username: state.api.profile.username,
+    email: state.api.profile.email,
     currentPath: state.routing.locationBeforeTransitions.pathname,
     errors: state.errors,
     source: state.source,

@@ -5,7 +5,7 @@ import { expect } from 'chai';
 
 import CreatePersonalAccessToken from '~/profile/integrations/components/CreatePersonalAccessToken';
 import { SHOW_MODAL } from '~/actions/modal';
-import { expectRequest } from '@/common';
+import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
 
 describe('profile/integrations/components/CreatePersonalAccessToken', () => {
   const sandbox = sinon.sandbox.create();
@@ -29,22 +29,21 @@ describe('profile/integrations/components/CreatePersonalAccessToken', () => {
 
     changeInput('label', 'My sweet new token');
 
-    dispatch.returns({ token: 'the-secret' });
     await page.props().onSubmit();
 
+    // TODO: this doesn't work like this     dispatch.returns({ token: 'the-secret' });
     // One call to save the data, one call to show secret.
-    expect(dispatch.callCount).to.equal(2);
-
-    const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, '/account/tokens/', {
-      method: 'POST',
-      body: {
-        label: 'My sweet new token',
-        // Can't actually check on expiry because it's based off of $NOW which leads to test failure
-      },
-    });
-
-    const showModalAction = dispatch.secondCall.args[0];
-    expect(showModalAction.type).to.equal(SHOW_MODAL);
+    expect(dispatch.callCount).to.equal(1);
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      ([fn]) => expectRequest(fn, '/account/tokens/', {
+        method: 'POST',
+        body: {
+          label: 'My sweet new token',
+          // Can't actually check on expiry because it's based off of $NOW which
+          // leads to test failure
+        },
+      }),
+      ([{ type }]) => expect(type).to.equal(SHOW_MODAL),
+    ], 2);
   });
 });

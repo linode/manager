@@ -33,7 +33,6 @@ export class IndexPage extends Component {
     const { username: currentUser } = this.props.profile;
     const listOfUsers = Object.values(this.props.users.users);
 
-    // TODO: Calculate gravatar url outside of render
     return (
       <div className="PrimaryPage container">
         <header className="PrimaryPage-header">

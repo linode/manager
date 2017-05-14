@@ -1,14 +1,13 @@
+import { expect } from 'chai';
+import { shallow } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
-import { shallow } from 'enzyme';
-import { expect } from 'chai';
-import { expectRequest } from '@/common';
 
-import { api } from '@/data';
 import { EditUserPage } from '~/users/user/layouts/EditUserPage';
 
-const { users } = api;
-const user = { testuser1: users.users[0] };
+import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
+import { testUser } from '@/data/users';
+
 
 describe('users/user/layouts/EditUserPage', () => {
   const sandbox = sinon.sandbox.create();
@@ -18,16 +17,12 @@ describe('users/user/layouts/EditUserPage', () => {
   });
 
   const dispatch = sandbox.stub();
-  const params = {
-    username: 'testuser1',
-  };
 
   it('renders UserForm', () => {
     const page = shallow(
       <EditUserPage
         dispatch={dispatch}
-        users={user}
-        params={params}
+        user={testUser}
       />
     );
 
@@ -38,8 +33,7 @@ describe('users/user/layouts/EditUserPage', () => {
     const page = shallow(
       <EditUserPage
         dispatch={dispatch}
-        users={user}
-        params={params}
+        user={testUser}
       />
     );
 
@@ -49,15 +43,14 @@ describe('users/user/layouts/EditUserPage', () => {
       email: 'user@example.com',
       restricted: false,
     };
-    await page.instance().onSubmit(values);
-    expect(dispatch.callCount).to.equal(3);
+    await page.instance().onSubmit();
+    expect(dispatch.callCount).to.equal(1);
 
-    const fn = dispatch.firstCall.args[0];
-    await expectRequest(
-      fn, `/account/users/${params.username}`, {
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      ([fn]) => expectRequest(fn, `/account/users/${testUser.username}`, {
         method: 'PUT',
         body: { ...values },
-      }
-    );
+      }),
+    ], 3);
   });
 });
