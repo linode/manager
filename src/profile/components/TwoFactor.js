@@ -4,8 +4,8 @@ import { Card, CardHeader } from 'linode-components/cards';
 import { Form, SubmitButton } from 'linode-components/forms';
 
 import { showModal } from '~/actions/modal';
-import { enableTFA, disableTFA } from '~/api/account';
-import { reduceErrors, FormSummary } from '~/components/forms';
+import { toggleTFA } from '~/api/profile';
+import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
 
 import { TwoFactorModal } from './TwoFactorModal';
 
@@ -14,68 +14,52 @@ export default class TwoFactor extends Component {
   constructor(props) {
     super(props);
 
-    this.twoFactorAction = this.twoFactorAction.bind(this);
-    this.toggleTwoFactor = this.toggleTwoFactor.bind(this);
     this.state = {
       tfaCode: '',
-      twoFactor: props.profile.two_factor_auth === 'enabled',
       errors: {},
+      loading: false,
     };
   }
 
-  toggleTwoFactor() {
-    const { twoFactor } = this.state;
-    this.setState({
-      twoFactor: !twoFactor,
-    });
-  }
+  onSubmit = async () => {
+    const { dispatch, tfaEnabled } = this.props;
 
-  async twoFactorAction() {
-    const { dispatch } = this.props;
-    const { twoFactor } = this.state;
-    let tfaResponse = {};
-
-    try {
-      if (twoFactor) {
-        tfaResponse = await dispatch(disableTFA());
-        this.toggleTwoFactor();
-      } else {
-        tfaResponse = await dispatch(enableTFA());
-        this.twoFactorModal(tfaResponse);
-      }
-    } catch (response) {
-      if (!response.json) {
-        // eslint-disable-next-line no-console
-        return console.error(response);
-      }
-
-      const errors = await reduceErrors(response);
-      this.setState({ errors: errors });
+    const requests = [() => toggleTFA(!tfaEnabled)];
+    if (!tfaEnabled) {
+      requests.push(({ secret }) => this.twoFactorModal(secret));
     }
+
+    return dispatch(dispatchOrStoreErrors.call(this, requests));
   }
 
-  twoFactorModal({ secret }) {
-    const { dispatch } = this.props;
-    dispatch(showModal('Enable two-factor authentication',
+  twoFactorModal(secret) {
+    return (dispatch) => dispatch(showModal('Enable Two-Factor Authentication', (
       <TwoFactorModal
         toggleTwoFactor={this.toggleTwoFactor}
-        dispatch={this.props.dispatch}
+        dispatch={dispatch}
         secret={secret}
-        profile={this.props.profile}
+        username={this.props.username}
       />
-    ));
+    )));
   }
 
   render() {
-    const { twoFactor, errors } = this.state;
+    const { tfaEnabled } = this.props;
+    const { errors, loading } = this.state;
+    const header = <CardHeader title="Change Two-Factor Authentication" />;
+
     return (
-      <Card header={<CardHeader title="Change two-factor authentication setting" />}>
-        <Form onSubmit={this.twoFactorAction}>
+      <Card header={header}>
+        <Form onSubmit={this.onSubmit}>
           <p>
-            Two-factor authentication (TFA) is currently {twoFactor ? 'enabled' : 'disabled'}.
+            Two-factor authentication (TFA) is
+            currently <strong>{tfaEnabled ? 'enabled' : 'disabled'}</strong>.
           </p>
-          <SubmitButton>
-            {twoFactor ? 'Disable' : 'Enable'}
+          <SubmitButton
+            disabled={loading}
+            disabledChildren={tfaEnabled ? 'Disabling' : 'Enabling'}
+          >
+            {tfaEnabled ? 'Disable' : 'Enable'}
           </SubmitButton>
           <FormSummary errors={errors} />
         </Form>
@@ -86,5 +70,6 @@ export default class TwoFactor extends Component {
 
 TwoFactor.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  profile: PropTypes.object,
+  tfaEnabled: PropTypes.bool.isRequired,
+  username: PropTypes.string.isRequired,
 };

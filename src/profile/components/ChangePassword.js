@@ -5,7 +5,7 @@ import {
   Form, FormGroup, FormGroupError, PasswordInput, SubmitButton,
 } from 'linode-components/forms';
 
-import { setPassword } from '~/api/account';
+import { setPassword } from '~/api/profile';
 import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
 
 import SelectExpiration from '../components/SelectExpiration';
