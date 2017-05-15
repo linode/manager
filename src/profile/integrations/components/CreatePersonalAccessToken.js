@@ -5,7 +5,7 @@ import { CancelButton } from 'linode-components/buttons';
 import { Form, Input, ModalFormGroup, Select, SubmitButton } from 'linode-components/forms';
 import { ConfirmModalBody } from 'linode-components/modals';
 
-import { showModal, hideModal } from '~/actions/modal';
+import { showModal } from '~/actions/modal';
 import { tokens } from '~/api';
 import { OAUTH_SUBSCOPES, OAUTH_SCOPES } from '~/constants';
 import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
@@ -13,28 +13,27 @@ import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
 import SelectExpiration from '../../components/SelectExpiration';
 
 
-export function renderSecret(label, verb, secret) {
-  const { dispatch } = this.props;
-  const close = () => dispatch(hideModal());
-
-  dispatch(showModal(
+export function renderSecret(label, verb, secret, close) {
+  return showModal(
     `${_.capitalize(label)} ${verb}`,
-    <ConfirmModalBody onOk={close} onCancel={close} buttonText="I understand">
+    <ConfirmModalBody
+      onOk={close}
+      onCancel={close}
+      buttonText="I understand"
+    >
       <div>
         <p>
           Your {label} has been {verb}. Store this secret. It won't be shown again.
         </p>
-        <div className="alert alert-warning">{secret}</div>
+        <div className="alert alert-warning" id="secret">{secret}</div>
       </div>
     </ConfirmModalBody>
-  ));
+  );
 }
 
 export default class CreatePersonalAccessToken extends Component {
   constructor() {
     super();
-
-    this.renderSecret = renderSecret.bind(this);
 
     this.state = {
       ...OAUTH_SCOPES.reduce((object, scope) => ({
@@ -65,7 +64,8 @@ export default class CreatePersonalAccessToken extends Component {
 
     await dispatch(dispatchOrStoreErrors.call(this, [
       () => tokens.post({ label, scopes, expiry: SelectExpiration.map(expiry) }),
-      ({ token }) => this.renderSecret('personal access token', 'created', token),
+      ({ token }) => renderSecret(
+        'personal access token', 'created', token, this.props.close),
     ]));
   }
 

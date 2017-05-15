@@ -3,7 +3,6 @@ import { mount } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
-import { SHOW_MODAL } from '~/actions/modal';
 import ScheduleForm from '~/linodes/linode/backups/components/ScheduleForm';
 
 import { expectDispatchOrStoreErrors, expectRequest } from '@/common';

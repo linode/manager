@@ -7,7 +7,7 @@ import { ConfirmModalBody, DeleteModalBody } from 'linode-components/modals';
 import { showModal, hideModal } from '~/actions/modal';
 import { clients } from '~/api';
 import { resetSecret } from '~/api/clients';
-import { reduceErrors } from '~/components/forms';
+import { dispatchOrStoreErrors } from '~/components/forms';
 import { API_ROOT } from '~/constants';
 
 import { renderSecret } from './CreatePersonalAccessToken';
@@ -24,12 +24,9 @@ export default class MyApplication extends Component {
   deleteApp = async () => {
     const { client, dispatch } = this.props;
 
-    try {
-      await dispatch(clients.delete(client.id));
-    } catch (response) {
-      const errors = await reduceErrors(response);
-      this.setState({ errors });
-    }
+    return dispatch(dispatchOrStoreErrors.call(this, [
+      () => clients.delete(client.id),
+    ]));
   }
 
   editAction = () => {
@@ -41,8 +38,6 @@ export default class MyApplication extends Component {
         label={client.label}
         redirect={client.redirect_uri}
         dispatch={dispatch}
-        saveOrCreate={(label, redirect) =>
-          clients.put({ label, redirect_uri: redirect }, [client.id])}
         close={() => dispatch(hideModal())}
       />
     ));

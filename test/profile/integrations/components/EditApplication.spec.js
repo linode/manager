@@ -18,10 +18,11 @@ describe('profile/integrations/components/CreateOrEditApplication', () => {
   const dispatch = sandbox.spy();
 
   it('updates an application', async () => {
+    const close = sandbox.spy();
     const page = shallow(
       <CreateOrEditApplication
         dispatch={dispatch}
-        close={dispatch}
+        close={close}
         label="My awesome client"
         redirect="http://example.com"
         id="1"
@@ -45,6 +46,8 @@ describe('profile/integrations/components/CreateOrEditApplication', () => {
           redirect_uri: 'http://google.com',
         },
       }),
-    ], 2);
+    ], 2, [{ id: 1 }]);
+
+    expect(close.callCount).to.equal(1);
   });
 });

@@ -9,7 +9,7 @@ import { OAUTH_SCOPES, OAUTH_SUBSCOPES } from '~/constants';
 import PersonalAccessToken
   from '~/profile/integrations/components/PersonalAccessToken';
 
-import { expectDispatchOrStoreErrors, expectObjectDeepEquals, expectRequest } from '@/common';
+import { expectObjectDeepEquals, expectRequest } from '@/common';
 import { tokens } from '@/data/tokens';
 
 
@@ -73,12 +73,11 @@ describe('profile/integrations/components/PersonalAccessToken', () => {
     dispatch.reset();
     body.props.onOk();
 
-    expect(dispatch.callCount).to.equal(1);
-    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      ([fn]) => expectRequest(fn, `/account/tokens/${clients[0].id}`, {
-        method: 'DELETE',
-      }),
-      ([hideModalResult]) => expectObjectDeepEquals(hideModalResult, hideModal()),
-    ]);
+    expect(dispatch.callCount).to.equal(2);
+    await expectRequest(dispatch.firstCall.args[0], `/account/tokens/${clients[0].id}`, {
+      method: 'DELETE',
+    });
+
+    expectObjectDeepEquals(dispatch.secondCall.args[0], hideModal());
   });
 });

@@ -27,17 +27,14 @@ describe('layouts/Logout', () => {
       />
     );
     await component.instance().componentDidMount();
-    expect(dispatch.callCount).to.equal(2);
-    expect(dispatch.args[0][0]).to.deep.equal(setToken('', '', '', '', ''));
-    expect(dispatch.args[1][0]).to.deep.equal(logout());
+    dispatch.firstCall.args[0](dispatch);
+    expect(dispatch.callCount).to.equal(3);
+    expect(dispatch.thirdCall.args[0]).to.deep.equal(setToken('', '', '', '', ''));
+    expect(dispatch.secondCall.args[0]).to.deep.equal(logout());
 
     const sessionValues = [
       'authentication/oauth-token',
       'authentication/scopes',
-      'authentication/username',
-      'authentication/email',
-      'authentication/email-hash',
-      'authentication/timezone',
     ];
 
     expect(setStorage.callCount).to.equal(sessionValues.length);

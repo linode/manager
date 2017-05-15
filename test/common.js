@@ -122,7 +122,7 @@ export async function expectDispatchOrStoreErrors(fn,
     await fn(dispatch, () => state);
 
     if (expectN !== undefined) {
-      expect(dispatch.callCount).to.equal(expectN);
+      expect(expectN).to.equal(dispatch.callCount);
     }
 
     for (let i = 0; i < dispatch.callCount; i += 1) {

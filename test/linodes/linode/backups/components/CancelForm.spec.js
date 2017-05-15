@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { mount } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
@@ -33,7 +32,7 @@ describe('linodes/linode/backups/components/CancelForm', () => {
     modal.find('Form').props().onSubmit({ preventDefault() {} });
 
     await expectDispatchOrStoreErrors(dispatch.secondCall.args[0], [
-      ([fn]) => expectRequest(fn, '/linodes/', { method: 'POST' }),
+      ([fn]) => expectRequest(fn, '/linode/instances/1234/backups/cancel', { method: 'POST' }),
     ], 2);
   });
 });

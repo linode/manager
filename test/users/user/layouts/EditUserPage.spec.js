@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
@@ -18,38 +18,33 @@ describe('users/user/layouts/EditUserPage', () => {
 
   const dispatch = sandbox.stub();
 
-  it('renders UserForm', () => {
-    const page = shallow(
-      <EditUserPage
-        dispatch={dispatch}
-        user={testUser}
-      />
-    );
-
-    expect(page.find('UserForm').length).to.equal(1);
-  });
-
   it('should commit changes to the API', async () => {
-    const page = shallow(
+    const page = mount(
       <EditUserPage
         dispatch={dispatch}
         user={testUser}
       />
     );
+
+    const changeInput = (id, value) =>
+      page.find('Input').find({ id }).simulate('change', { target: { value, name: id } });
+
+    changeInput('username', 'the-username');
+    changeInput('password', 'the-password');
+    changeInput('email', 'the-email');
 
     dispatch.reset();
-    const values = {
-      username: 'theUser',
-      email: 'user@example.com',
-      restricted: false,
-    };
-    await page.instance().onSubmit();
+    await page.find('Form').props().onSubmit({ preventDefault() {} });
     expect(dispatch.callCount).to.equal(1);
 
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
       ([fn]) => expectRequest(fn, `/account/users/${testUser.username}`, {
         method: 'PUT',
-        body: { ...values },
+        body: {
+          username: 'the-username',
+          password: 'the-password',
+          email: 'the-email',
+        },
       }),
     ], 3);
   });

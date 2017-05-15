@@ -31,7 +31,6 @@ describe('profile/integrations/components/CreatePersonalAccessToken', () => {
 
     await page.props().onSubmit();
 
-    // TODO: this doesn't work like this     dispatch.returns({ token: 'the-secret' });
     // One call to save the data, one call to show secret.
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
@@ -43,7 +42,11 @@ describe('profile/integrations/components/CreatePersonalAccessToken', () => {
           // leads to test failure
         },
       }),
-      ([{ type }]) => expect(type).to.equal(SHOW_MODAL),
-    ], 2);
+      ([{ type, body }]) => {
+        expect(type).to.equal(SHOW_MODAL);
+        const modal = shallow(body);
+        expect(modal.find('#secret').text()).to.equal('the-new-token');
+      },
+    ], 2, [{ token: 'the-new-token' }]);
   });
 });

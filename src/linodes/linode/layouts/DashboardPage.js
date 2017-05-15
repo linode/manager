@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 
 import { Button } from 'linode-components/buttons';
 import { Card, CardHeader } from 'linode-components/cards';
-import { FormGroup, Select } from 'linode-components/forms';
+import { FormGroup, Input, Select } from 'linode-components/forms';
 
 import { setError } from '~/actions/errors';
 import { setSource } from '~/actions/source';
@@ -151,50 +151,35 @@ export class DashboardPage extends Component {
       <div className="row-justify row-eq-height">
         <section className="col-lg-6 col-md-12 col-sm-12">
           <Card header={<CardHeader title="Summary" />}>
-            <div className="row linode-ips">
+            <div className="row">
               <div className="col-sm-4 row-label">
                 IP Addresses
               </div>
               <div className="col-sm-8">
-                <ul className="list-unstyled">
+                <ul className="list-unstyled" id="ips">
                   <li>{linode.ipv4}</li>
                   <li className="text-muted">{linode.ipv6.split('/')[0]}</li>
                   <li><Link to={`/linodes/${linode.label}/networking`}>(...)</Link></li>
                 </ul>
               </div>
             </div>
-            {plan ?
-              <div className="row linode-plan">
-                <div className="col-sm-4 row-label">
-                  Plan
-                </div>
-                <div className="col-sm-8">
-                  {plan}
-                </div>
+            {!plan ? null : (
+              <div className="row">
+                <div className="col-sm-4 row-label">Plan</div>
+                <div className="col-sm-8" id="plan">{plan}</div>
               </div>
-              : null
-            }
-            <div className="row linode-region">
-              <div className="col-sm-4 row-label">
-                Region
-              </div>
-              <div className="col-sm-8">
-                <Region obj={linode} />
-              </div>
+            )}
+            <div className="row">
+              <div className="col-sm-4 row-label">Region</div>
+              <div className="col-sm-8" id="region"><Region obj={linode} /></div>
             </div>
-            <div className="row linode-distro">
-              <div className="col-sm-4 row-label">
-                Distribution
-              </div>
-              <div className="col-sm-8">
-                <DistroStyle linode={linode} />
-              </div>
+            <div className="row">
+              <div className="col-sm-4 row-label">Distribution</div>
+              <div className="col-sm-8" id="distro"><DistroStyle linode={linode} /></div>
             </div>
             <div className="row linode-backups">
-              <div className="col-sm-4 row-label">
-                Backup
-              </div>
-              <div className="col-sm-8 backup-status">
+              <div className="col-sm-4 row-label">Backup</div>
+              <div className="col-sm-8" id="backup-status">
                 <Link to={`/linodes/${linode.label}/backups`}>
                   {linode.backups.enabled ? 'View Backups' : 'Enable Backups'}
                 </Link>
@@ -205,15 +190,11 @@ export class DashboardPage extends Component {
         <section className="col-lg-6 col-md-12 col-sm-12">
           <Card header={<CardHeader title="Access" />}>
             <FormGroup className="row">
-              <label htmlFor="ssh-input" className="col-sm-4 col-form-label">
-                SSH
-              </label>
+              <label htmlFor="ssh-input" className="col-sm-4 col-form-label">SSH</label>
               <div className="col-sm-8">
                 <div className="input-group">
-                  <input
-                    type="text"
+                  <Input
                     id="ssh-input"
-                    className="form-control"
                     value={`ssh root@${linode.ipv4}`}
                     readOnly
                   />
@@ -229,10 +210,8 @@ export class DashboardPage extends Component {
               </label>
               <div className="col-sm-8">
                 <div className="input-group">
-                  <input
-                    type="text"
+                  <Input
                     id="lish-input"
-                    className="form-control"
                     value={`ssh -t ${lishLink}`}
                     readOnly
                   />

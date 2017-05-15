@@ -43,7 +43,7 @@ describe('profile/integrations/components/EditPersonalAccessToken', () => {
           label: 'My awesome token',
         },
       }),
-    ], 2);
+    ], 1);
 
     expect(close.callCount).to.equal(1);
   });

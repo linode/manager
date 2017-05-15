@@ -15,8 +15,6 @@ export default class CreateOrEditApplication extends Component {
   constructor(props) {
     super(props);
 
-    this.renderSecret = renderSecret.bind(this);
-
     this.state = {
       label: props.label || '',
       redirect: props.redirect || '',
@@ -32,8 +30,11 @@ export default class CreateOrEditApplication extends Component {
     const { dispatch } = this.props;
     const { label, redirect, thumbnail } = this.state;
 
+    const data = { label, redirect_uri: redirect };
+    const idsPath = [this.props.id].filter(Boolean);
+
     await dispatch(dispatchOrStoreErrors.call(this, [
-      () => this.props.saveOrCreate(label, redirect),
+      () => clients[this.props.id ? 'put' : 'post'](data, ...idsPath),
       ({ id }) => {
         if (thumbnail) {
           if ((thumbnail.size / (1024 * 1024)) < MAX_UPLOAD_SIZE_MB) {
@@ -49,8 +50,8 @@ export default class CreateOrEditApplication extends Component {
           }) };
         }
       },
-      ({ secret }) =>
-        !this.props.id ? this.renderSecret('client', 'created', secret) : this.props.close(),
+      ({ secret }) => this.props.id ? this.props.close :
+        renderSecret('client', 'created', secret, this.props.close),
     ]));
   }
 
@@ -102,15 +103,10 @@ export default class CreateOrEditApplication extends Component {
 CreateOrEditApplication.propTypes = {
   dispatch: PropTypes.func.isRequired,
   close: PropTypes.func.isRequired,
-  saveOrCreate: PropTypes.func.isRequired,
   submitText: PropTypes.string,
   submitDisabledText: PropTypes.string,
   label: PropTypes.string,
   id: PropTypes.string,
   redirect: PropTypes.string,
   thumbnail: PropTypes.string,
-};
-
-CreateOrEditApplication.defaultProps = {
-  saveOrCreate: (label, redirect) => clients.post({ label, redirect_uri: redirect }),
 };

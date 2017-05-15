@@ -46,7 +46,7 @@ describe('linodes/layouts/IndexPage', () => {
     const modal = mount(dispatch.firstCall.args[0].body);
 
     dispatch.reset();
-    modal.find('.btn-default').simulate('click');
+    modal.find('Form').props().onSubmit({ preventDefault() {} });
 
     const fn = dispatch.firstCall.args[0];
     await expectRequest(fn, '/linode/instances/1234', { method: 'DELETE' });

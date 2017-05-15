@@ -36,7 +36,6 @@ describe('profile/integrations/components/CreateOrEditApplication', () => {
     const thumbnail = { size: (MAX_UPLOAD_SIZE_MB - 0.5) * 1024 * 1024 };
     page.instance().setState({ thumbnail });
 
-    dispatch.returns({ id: 1, secret: 'secret' });
     await page.props().onSubmit();
 
     expect(dispatch.callCount).to.equal(1);
@@ -61,7 +60,7 @@ describe('profile/integrations/components/CreateOrEditApplication', () => {
           headers: { 'Content-Type': 'image/png' },
         });
       },
-    ], 3);
+    ], 3, [{ id: 1, secret: '' }]);
     // One call to save the data, one call to save the thumbnail, one call to show the secret.
   });
 
@@ -82,10 +81,9 @@ describe('profile/integrations/components/CreateOrEditApplication', () => {
     page.instance().setState({ thumbnail });
 
     dispatch.reset();
-    dispatch.returns({ json: () => ({ id: 1 }) });
     await page.props().onSubmit();
 
     // One call to save the data, all other calls are skipped after large file size
-    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [], 1);
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [], 1, [{ id: 1 }]);
   });
 });

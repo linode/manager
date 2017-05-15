@@ -34,11 +34,14 @@ describe('domains/components/NewMasterZone', () => {
     await component.find('Form').props().onSubmit();
 
     expect(dispatch.callCount).to.equal(1);
-    expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
       ([fn]) => expectRequest(fn, '/domains/', {
-        domain: 'test.com',
-        soa_email: 'test@gmail.com',
-        type: 'master',
+        method: 'POST',
+        body: {
+          domain: 'test.com',
+          soa_email: 'test@gmail.com',
+          type: 'master',
+        },
       }),
       ([pushResult]) => expectObjectDeepEquals(pushResult, push('/domains/test.com')),
     ]);

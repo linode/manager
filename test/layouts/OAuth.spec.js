@@ -99,8 +99,8 @@ describe('layouts/OAuth', () => {
     await component.instance().componentDidMount();
     dispatch.firstCall.args[0](dispatch);
     expect(dispatch.callCount).to.equal(3);
-    expectObjectDeepEquals(dispatch.args[2][0], setToken('access_token', '*'));
-    expectRequest(dispatch.secondCall.args[0], '/account/profile');
+    expectObjectDeepEquals(dispatch.thirdCall.args[0], setToken('access_token', '*'));
+    await expectRequest(dispatch.secondCall.args[0], '/account/profile');
     expect(dispatch.calledWith(push('/'))).to.equal(true);
   });
 

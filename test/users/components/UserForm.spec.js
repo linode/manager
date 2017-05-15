@@ -1,9 +1,12 @@
+import { expect } from 'chai';
+import { shallow } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
-import { shallow } from 'enzyme';
-import { expect } from 'chai';
 
-import { UserForm } from '~/users/components/UserForm';
+import UserForm from '~/users/components/UserForm';
+
+import { testUser } from '@/data/users';
+
 
 describe('users/layouts/UserForm', () => {
   const sandbox = sinon.sandbox.create();
@@ -14,23 +17,17 @@ describe('users/layouts/UserForm', () => {
 
   const dispatch = sandbox.stub();
 
-  const data = {
-    username: 'thisUser',
-    email: 'user@example.com',
-  };
-
   it('renders data in UserForm', () => {
     const page = shallow(
       <UserForm
         dispatch={dispatch}
-        username={data.username}
-        email={data.email}
+        user={testUser}
       />
     );
 
-    const username = page.find('#user-username');
-    expect(username.props().value).to.equal(data.username);
-    const email = page.find('#user-email');
-    expect(email.props().value).to.equal(data.email);
+    const username = page.find('#username');
+    expect(username.props().value).to.equal(testUser.username);
+    const email = page.find('#email');
+    expect(email.props().value).to.equal(testUser.email);
   });
 });
