@@ -251,7 +251,7 @@ DashboardPage.propTypes = {
 
 function select(state, props) {
   const { linode } = selectLinode(state, props);
-  const { username } = state.profile;
+  const { username } = state.api.profile;
   return { linode, username };
 }
 
