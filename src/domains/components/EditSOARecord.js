@@ -11,7 +11,7 @@ import SelectDNSSeconds from './SelectDNSSeconds';
 
 export default class EditSOARecord extends Component {
   constructor(props) {
-    super();
+    super(props);
 
     const {
       group, domain: zone, ttl_sec: defaultTTL, refresh_sec: refreshRate,
@@ -23,39 +23,39 @@ export default class EditSOARecord extends Component {
       errors: {},
       loading: false,
       group,
-      zone,
+      domain,
       defaultTTL,
       refreshRate,
       retryRate,
       expireTime,
       email,
       status,
-      axfrIps,
-      masterIps,
+      axfrIps: axfrIps.join(';'),
+      masterIps: masterIps.join(';'),
     };
   }
 
   onSubmit = () => {
     const { dispatch, close } = this.props;
-    const { group, zone, defaultTTL, refreshRate, retryRate, expireTime, email,
+    const { group, domain, defaultTTL, refreshRate, retryRate, expireTime, email,
       status, masterIps, axfrIps,
     } = this.state;
     const data = {
-      group: group,
-      domain: zone,
+      group,
+      domain,
       ttl_sec: defaultTTL,
       refresh_sec: refreshRate,
       retry_sec: retryRate,
       expire_sec: expireTime,
       soa_email: email,
-      master_ips: masterIps.split(';'),
-      axfr_ips: axfrIps.split(';'),
+      master_ips: masterIps.length ? masterIps.split(';') : [],
+      axfr_ips: axfrIps.length ? axfrIps.split(';') : [],
       status,
     };
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => domains.put(data, this.props.zone.id),
-      () => close(zone)(),
+      () => domains.put(data, this.props.domains.id),
+      () => close(domain)(),
     ]));
   }
 
@@ -63,19 +63,19 @@ export default class EditSOARecord extends Component {
 
   render() {
     const { close } = this.props;
-    const { type } = this.props.zone;
+    const { type } = this.props.domains;
     const {
-      group, zone, defaultTTL, refreshRate, retryRate, expireTime, email,
+      group, domain, defaultTTL, refreshRate, retryRate, expireTime, email,
       masterIps, axfrIps, status, errors, loading,
     } = this.state;
 
     return (
       <Form onSubmit={this.onSubmit}>
-        <ModalFormGroup errors={errors} id="zone" label="Primary Domain" apiKey="domain">
+        <ModalFormGroup errors={errors} id="domain" label="Primary Domain" apiKey="domain">
           <Input
-            id="zone"
-            name="zone"
-            value={zone}
+            id="domain"
+            name="domain"
+            value={domain}
             placeholder="domain.com"
             onChange={this.onChange}
           />
@@ -100,13 +100,15 @@ export default class EditSOARecord extends Component {
             errors={errors}
             name="master_ips"
             label="Masters"
+            id="masterIps"
             apiKey="master_ips"
             description="The IP addresses of the master DNS servers for this zone.
               Semicolon or new line delimited. (maximum: 6)"
           >
             <textarea
-              name="master_ips"
+              name="masterIps"
               value={masterIps}
+              id="masterIps"
               placeholder="172.92.1.4;209.124.103.15"
               onChange={this.onChange}
             />
@@ -117,12 +119,14 @@ export default class EditSOARecord extends Component {
           name="axfr_ips"
           label="Domain Transfers"
           apiKey="axfr_ips"
+          id="axfrIps"
           description="The IP addresses allowed to AXFR this entire zone.
             Semicolon or new line delimited. (maximum: 6)"
         >
           <textarea
-            name="axfr_ips"
+            name="axfrIps"
             value={axfrIps}
+            id="axfrIps"
             placeholder="172.92.1.4;209.124.103.15"
             onChange={this.onChange}
           />
@@ -241,6 +245,6 @@ export default class EditSOARecord extends Component {
 
 EditSOARecord.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  zone: PropTypes.object.isRequired,
+  domains: PropTypes.object.isRequired,
   close: PropTypes.func.isRequired,
 };
