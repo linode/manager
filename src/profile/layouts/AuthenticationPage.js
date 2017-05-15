@@ -8,7 +8,11 @@ export function AuthenticationPage(props) {
   return (
     <div>
       <ChangePassword dispatch={props.dispatch} />
-      <TwoFactor dispatch={props.dispatch} profile={props.profile} />
+      <TwoFactor
+        dispatch={props.dispatch}
+        tfaEnabled={props.profile.two_factor_auth === 'enabled'}
+        username={props.profile.username}
+      />
     </div>
   );
 }
