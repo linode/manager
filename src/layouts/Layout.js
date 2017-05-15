@@ -26,6 +26,10 @@ export class Layout extends Component {
       setStorage('profile/timezone', timezone);
     }
 
+    if (!getState().api.account.network_helper) {
+      await dispatch(api.account.one());
+    }
+
     // Filter out objects we've already grabbed this page session.
     const rest = ['kernels', 'types', 'regions', 'distributions'].filter(
       type => Object.values(getState().api[type]).length);
