@@ -9,7 +9,7 @@ import { LOGIN_ROOT } from '~/constants';
 import { OAuthCallbackPage } from '~/layouts/OAuth';
 import * as fetch from '~/fetch';
 
-import { expectObjectDeepEquals, expectRequest } from '@/common';
+import { expectObjectDeepEquals } from '@/common';
 
 
 describe('layouts/OAuth', () => {
@@ -100,8 +100,7 @@ describe('layouts/OAuth', () => {
     dispatch.firstCall.args[0](dispatch);
     expect(dispatch.callCount).to.equal(3);
     expectObjectDeepEquals(dispatch.thirdCall.args[0], setToken('access_token', '*'));
-    await expectRequest(dispatch.secondCall.args[0], '/account/profile');
-    expect(dispatch.calledWith(push('/'))).to.equal(true);
+    expectObjectDeepEquals(dispatch.secondCall.args[0], push('/'));
   });
 
   it('supports the return query string option', async () => {

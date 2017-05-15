@@ -105,6 +105,7 @@ describe('support/layouts/TicketPage', () => {
     );
 
     const attachments = [{ size: (MAX_UPLOAD_SIZE_MB + 1) * 1024 * 1024 }];
+    // This is a rare place where the only way to set this is by directly modifying state.
     page.instance().setState({ attachments });
 
     dispatch.reset();
@@ -112,8 +113,8 @@ describe('support/layouts/TicketPage', () => {
 
     expect(dispatch.callCount).to.equal(1);
     // Only attempting to upload an attachment
-    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [], 1);
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [], 0);
     // But we've got errors
-    expect(Object.values(page.state('errors')).length).to.equal(1);
+    expect(Object.values(page.state('errors')).length).to.equal(2);
   });
 });

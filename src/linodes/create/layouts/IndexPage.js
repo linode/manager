@@ -41,13 +41,13 @@ export class IndexPage extends Component {
     };
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
     dispatch(setTitle('Add a Linode'));
   }
 
-  onSubmit = async () => {
+  onSubmit = () => {
     const { dispatch } = this.props;
     const { type, region, distribution, label, password, backups } = this.state;
 
@@ -65,7 +65,7 @@ export class IndexPage extends Component {
       delete data.distribution;
     }
 
-    await dispatch(dispatchOrStoreErrors.call(this, [
+    return dispatch(dispatchOrStoreErrors.call(this, [
       () => linodes.post(data),
       // label is created by the api if not sent, so accept it from the previous call
       ({ label }) => push(`/linodes/${label}`),

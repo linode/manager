@@ -26,14 +26,14 @@ export default class CreateOrEditApplication extends Component {
 
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
-  onSubmit = async () => {
+  onSubmit = () => {
     const { dispatch } = this.props;
     const { label, redirect, thumbnail } = this.state;
 
     const data = { label, redirect_uri: redirect };
     const idsPath = [this.props.id].filter(Boolean);
 
-    await dispatch(dispatchOrStoreErrors.call(this, [
+    return dispatch(dispatchOrStoreErrors.call(this, [
       () => clients[this.props.id ? 'put' : 'post'](data, ...idsPath),
       ({ id }) => {
         if (thumbnail) {
@@ -50,7 +50,7 @@ export default class CreateOrEditApplication extends Component {
           }) };
         }
       },
-      ({ secret }) => this.props.id ? this.props.close :
+      ({ secret }) => this.props.id ? this.props.close() :
         renderSecret('client', 'created', secret, this.props.close),
     ]));
   }

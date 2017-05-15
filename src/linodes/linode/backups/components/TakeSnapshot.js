@@ -13,10 +13,10 @@ export default class TakeSnapshot extends Component {
     this.state = { errors: {}, loading: false };
   }
 
-  onSubmit = async () => {
+  onSubmit = () => {
     const { dispatch, linode } = this.props;
 
-    await dispatch(dispatchOrStoreErrors.call(this, [
+    return dispatch(dispatchOrStoreErrors.call(this, [
       () => takeBackup(linode.id),
     ]));
   }

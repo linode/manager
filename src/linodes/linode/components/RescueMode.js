@@ -24,11 +24,11 @@ export default class RescueMode extends Component {
     });
   }
 
-  onSubmit = async () => {
+  onSubmit = () => {
     const { dispatch, linode } = this.props;
     const { disks } = this.state;
 
-    await dispatch(dispatchOrStoreErrors.apply(this, [
+    return dispatch(dispatchOrStoreErrors.apply(this, [
       [() => rescueLinode(linode.id, { disks })],
     ]));
   }

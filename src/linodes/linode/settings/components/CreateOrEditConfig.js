@@ -44,7 +44,7 @@ export default class CreateOrEditConfig extends Component {
     }
   }
 
-  onSubmit = async () => {
+  onSubmit = () => {
     const { dispatch, linode, config } = this.props;
 
     const data = {
@@ -67,7 +67,7 @@ export default class CreateOrEditConfig extends Component {
     };
 
     const idsPath = [linode.id, config.id].filter(Boolean);
-    await dispatch(dispatchOrStoreErrors.call(this, [
+    return dispatch(dispatchOrStoreErrors.call(this, [
       () => linodes.configs[config.id ? 'put' : 'post'](data, ...idsPath),
       () => push(`/linodes/${linode.label}/settings/advanced`),
     ]));

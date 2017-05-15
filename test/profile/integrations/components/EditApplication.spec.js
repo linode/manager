@@ -46,7 +46,7 @@ describe('profile/integrations/components/CreateOrEditApplication', () => {
           redirect_uri: 'http://google.com',
         },
       }),
-    ], 2, [{ id: 1 }]);
+    ], 1, [{ id: 1 }]);
 
     expect(close.callCount).to.equal(1);
   });

@@ -20,11 +20,11 @@ export default class EditPersonalAccessToken extends Component {
 
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
-  onSubmit = async () => {
+  onSubmit = () => {
     const { dispatch, id, close } = this.props;
     const { label } = this.state;
 
-    await dispatch(dispatchOrStoreErrors.call(this, [
+    return dispatch(dispatchOrStoreErrors.call(this, [
       () => tokens.put({ label }, id),
       close,
     ]));

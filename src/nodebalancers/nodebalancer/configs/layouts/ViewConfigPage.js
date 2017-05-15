@@ -79,7 +79,7 @@ export class ViewConfigPage extends Component {
         <Card header={<CardHeader title="Summary" />}>
           <div className="row">
             <div className="col-sm-3 row-label">Port</div>
-            <div className="col-sm-9">{config.port}</div>
+            <div className="col-sm-9" id="port">{config.port}</div>
           </div>
           <div className="row">
             <div className="col-sm-3 row-label">Protocol</div>

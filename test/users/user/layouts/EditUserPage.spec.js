@@ -27,10 +27,9 @@ describe('users/user/layouts/EditUserPage', () => {
     );
 
     const changeInput = (id, value) =>
-      page.find('Input').find({ id }).simulate('change', { target: { value, name: id } });
+      page.find({ id, name: id }).simulate('change', { target: { value, name: id } });
 
     changeInput('username', 'the-username');
-    changeInput('password', 'the-password');
     changeInput('email', 'the-email');
 
     dispatch.reset();
@@ -42,8 +41,8 @@ describe('users/user/layouts/EditUserPage', () => {
         method: 'PUT',
         body: {
           username: 'the-username',
-          password: 'the-password',
           email: 'the-email',
+          restricted: false,
         },
       }),
     ], 3);

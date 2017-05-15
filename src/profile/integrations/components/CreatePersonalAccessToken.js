@@ -49,7 +49,7 @@ export default class CreatePersonalAccessToken extends Component {
 
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
-  onSubmit = async () => {
+  onSubmit = () => {
     const { dispatch } = this.props;
     const { label, expiry } = this.state;
 
@@ -62,7 +62,7 @@ export default class CreatePersonalAccessToken extends Component {
       return `${scopes};${scope}:${level}`;
     }, '') || undefined;
 
-    await dispatch(dispatchOrStoreErrors.call(this, [
+    return dispatch(dispatchOrStoreErrors.call(this, [
       () => tokens.post({ label, scopes, expiry: SelectExpiration.map(expiry) }),
       ({ token }) => renderSecret(
         'personal access token', 'created', token, this.props.close),
