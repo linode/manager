@@ -83,7 +83,7 @@ export class IndexPage extends Component {
         {!ticket.updated_by ? <span>No updates</span> : (
           <span>
             Updated by <strong id={`updated-by-${ticket.id}`}>{ticket.updated_by}</strong>
-            <span id={`updated-${ticket.id}`}><TimeDisplay time={ticket.updated} /></span>
+            &nbsp;<span id={`updated-${ticket.id}`}><TimeDisplay time={ticket.updated} /></span>
           </span>
         )}
       </TableCell>
