@@ -9,6 +9,7 @@ import { rawFetch } from '~/fetch';
 import md5 from 'md5';
 import { clientId, clientSecret } from '~/secrets';
 import { setStorage } from '~/storage';
+import { getCookie } from '~/api/util';
 
 
 export function setSession(oauthToken = '',
@@ -46,17 +47,20 @@ export class OAuthCallbackPage extends Component {
     }
 
     if (code) {
-      const data = new FormData();
-      data.append('client_id', clientId);
-      data.append('client_secret', clientSecret);
-      data.append('code', code);
+      //const data = new FormData();
+      //data.append('client_id', clientId);
+      //data.append('client_secret', clientSecret);
+      //data.append('code', code);
 
-      const resp = await rawFetch(`${LOGIN_ROOT}/oauth/token`, {
-        method: 'POST',
-        body: data,
-        mode: 'cors',
-      });
-      const json = await resp.json();
+      //const resp = await rawFetch(`${LOGIN_ROOT}/oauth/token`, {
+      //  method: 'POST',
+      //  body: data,
+      //  mode: 'cors',
+      //});
+      //const json = await resp.json();
+      console.log('the cookie is', document.cookie);
+      const json = JSON.parse(getCookie('oa'));
+      console.log('the json from the cookie is', json);
       this.setSession(json.access_token, json.scopes, username, email, timezone);
       await dispatch(account.one());
       dispatch(push(returnTo || '/'));
