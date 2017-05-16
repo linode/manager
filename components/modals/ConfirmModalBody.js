@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 
-import { SubmitButton } from '../forms';
+import { Form, SubmitButton } from '../forms';
 import { CancelButton } from '../buttons';
 
 export default class ConfirmModalBody extends Component {
@@ -9,7 +9,7 @@ export default class ConfirmModalBody extends Component {
     this.state = { loading: false };
   }
 
-  handleOk = async () => {
+  onSubmit = async () => {
     const { onOk } = this.props;
     this.setState({ loading: true });
     await onOk();
@@ -21,17 +21,17 @@ export default class ConfirmModalBody extends Component {
     const { loading } = this.state;
 
     return (
-      <div className={`ConfirmModalBody-body ${className}`}>
+      <Form className={`ConfirmModalBody-body ${className}`} onSubmit={this.onSubmit}>
         {React.isValidElement(children) ? children : <p>{children}</p>}
         <div className="Modal-footer">
           <CancelButton disabled={loading} onClick={onCancel} />
           <SubmitButton
             disabled={loading}
-            disabledChildren={buttonDisabledText}
-            onClick={this.handleOk}
+            disabledChildren={buttonDisabledText || 'Confirmed'}
           >{buttonText || 'Confirm'}</SubmitButton>
         </div>
-      </div>);
+      </Form>
+    );
   }
 }
 

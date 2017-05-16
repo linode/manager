@@ -31,8 +31,8 @@ function isObject(o) {
   return o === Object(o);
 }
 
-export function expectObjectDeepEquals(initialA, initialB) {
-  const stackA = [{ a: initialA, path: [] }];
+export function expectObjectDeepEquals(initialA, initialB, initialPath) {
+  const stackA = [{ a: initialA, path: [initialPath].filter(Boolean) }];
   const stackB = [initialB];
 
   while (stackA.length) {
@@ -99,7 +99,7 @@ export async function expectRequest(fn, path, expectedRequestData, response) {
       Object.keys(expectedRequestData).map(key => {
         const value = requestData[key];
         const nativeValue = key === 'body' ? JSON.parse(value) : value;
-        expectObjectDeepEquals(nativeValue, expectedRequestData[key]);
+        expectObjectDeepEquals(nativeValue, expectedRequestData[key], key);
       });
     }
   } finally {
@@ -115,14 +115,14 @@ export async function expectDispatchOrStoreErrors(fn,
   const dispatch = sandbox.stub();
 
   try {
-    for (let i = 0; i < dispatch.callCount; i += 1) {
+    for (let i = 0; i < dispatchResults.length; i += 1) {
       dispatch.onCall(i).returns(dispatchResults[i]);
     }
 
     await fn(dispatch, () => state);
 
     if (expectN !== undefined) {
-      expect(dispatch.callCount).to.equal(expectN);
+      expect(expectN).to.equal(dispatch.callCount);
     }
 
     for (let i = 0; i < dispatch.callCount; i += 1) {

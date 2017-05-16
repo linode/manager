@@ -17,7 +17,7 @@ describe('settings/layouts/IndexPage', () => {
   });
 
   it('submit network helper', async () => {
-    const dispatch = sinon.stub();
+    const dispatch = sandbox.stub();
 
     const page = mount(
       <IndexPage

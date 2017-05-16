@@ -49,14 +49,14 @@ export class CreatePage extends Component {
     };
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
 
     dispatch(setTitle('Open a Ticket'));
   }
 
-  onSubmit = async () => {
+  onSubmit = () => {
     const { dispatch } = this.props;
     const { summary, regarding, description } = this.state;
 
@@ -65,11 +65,9 @@ export class CreatePage extends Component {
 
     this.setState({ loading: true, errors: {} });
 
-    await dispatch(dispatchOrStoreErrors.apply(this, [
-      [
-        () => tickets.post({ summary, description, [regardingField]: +regardingId }),
-        ({ id }) => push(`/support/${id}`),
-      ],
+    return dispatch(dispatchOrStoreErrors.call(this, [
+      () => tickets.post({ summary, description, [regardingField]: +regardingId }),
+      ({ id }) => push(`/support/${id}`),
     ]));
   }
 

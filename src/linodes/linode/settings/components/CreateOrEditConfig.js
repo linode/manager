@@ -44,7 +44,7 @@ export default class CreateOrEditConfig extends Component {
     }
   }
 
-  onSubmit = async () => {
+  onSubmit = () => {
     const { dispatch, linode, config } = this.props;
 
     const data = {
@@ -67,7 +67,7 @@ export default class CreateOrEditConfig extends Component {
     };
 
     const idsPath = [linode.id, config.id].filter(Boolean);
-    await dispatch(dispatchOrStoreErrors.call(this, [
+    return dispatch(dispatchOrStoreErrors.call(this, [
       () => linodes.configs[config.id ? 'put' : 'post'](data, ...idsPath),
       () => push(`/linodes/${linode.label}/settings/advanced`),
     ]));
@@ -206,18 +206,18 @@ export default class CreateOrEditConfig extends Component {
               <Radio
                 name="isMaxRam"
                 checked={isMaxRam}
-                id="config-isMaxRam-true"
+                id="isMaxRam-true"
                 onChange={this.onChange}
                 label={`Maximum (${linode.type.ram} MB)`}
               />
             </div>
             <div>
               <RadioInputCombo
-                radioId="config-isMaxRam-false"
+                radioId="isMaxRam-false"
                 radioLabel=""
                 radioChecked={!isMaxRam}
                 radioOnChange={() => this.setState({ isMaxRam: false })}
-                inputId="config-ramLimit"
+                inputId="ramLimit"
                 inputLabel="MB"
                 inputDisabled={isMaxRam}
                 inputValue={ramLimit}
@@ -261,7 +261,7 @@ export default class CreateOrEditConfig extends Component {
                   rootDevice: '/dev/sda',
                 })}
                 radioLabel="Standard"
-                selectId="config-root-device-select"
+                selectId="root-device-select"
                 selectValue={isCustomRoot ? '/dev/sda' : rootDevice}
                 selectDisabled={isCustomRoot}
                 selectOnChange={e => this.setState({ rootDevice: e.target.value })}
@@ -275,14 +275,14 @@ export default class CreateOrEditConfig extends Component {
             </FormGroup>
             <FormGroup>
               <RadioInputCombo
-                radioId="config-isCustomRoot-true"
+                radioId="isCustomRoot-true"
                 radioLabel="Custom"
                 radioChecked={isCustomRoot === true}
                 radioOnChange={() => this.setState({
                   isCustomRoot: true,
                   rootDevice: '/dev/sda',
                 })}
-                inputId="config-custom-root-device"
+                inputId="custom-root-device"
                 inputPlaceholder="/dev/sda"
                 inputValue={isCustomRoot ? rootDevice : ''}
                 inputDisabled={isCustomRoot === false}

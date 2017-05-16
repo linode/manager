@@ -22,7 +22,7 @@ describe('linodes/linode/layouts/IndexPage', () => {
   });
 
   it('preloads the configs', async () => {
-    const _dispatch = sinon.stub();
+    const _dispatch = sandbox.stub();
     _dispatch.returns({ id: 1241 });
     await IndexPage.preload({ dispatch: _dispatch, getState: () => state },
                             { linodeLabel: 'test-linode-7' });

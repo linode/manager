@@ -7,16 +7,11 @@ import { setSession } from './OAuth';
 import { redirect } from '~/session';
 
 export class Logout extends Component {
-  constructor() {
-    super();
-    this.setSession = setSession.bind(this);
-  }
-
   componentDidMount() {
     const { dispatch, redirect } = this.props;
 
     // Drop session info
-    this.setSession();
+    dispatch(setSession());
 
     // Reset state
     dispatch(logout());

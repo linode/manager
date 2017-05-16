@@ -21,12 +21,12 @@ export default class ChangeTimezone extends Component {
     };
   }
 
-  onSubmit = async () => {
+  onSubmit = () => {
     const { dispatch } = this.props;
     const { timezone } = this.state;
 
-    await dispatch(dispatchOrStoreErrors.apply(this, [
-      [() => profile.put({ timezone })],
+    return dispatch(dispatchOrStoreErrors.call(this, [
+      () => profile.put({ timezone }),
     ]));
   }
 

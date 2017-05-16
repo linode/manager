@@ -1,16 +1,16 @@
-import React from 'react';
-import sinon from 'sinon';
 import { expect } from 'chai';
-import { shallow } from 'enzyme';
+import { mount, shallow } from 'enzyme';
+import React from 'react';
 import { push } from 'react-router-redux';
+import sinon from 'sinon';
 
-import { IndexPage } from '~/linodes/create/layouts/IndexPage';
 import * as errors from '~/actions/errors';
-import { linodes as thunks } from '~/api';
-import { api } from '@/data';
-import { expectObjectDeepEquals } from '@/common';
+import { IndexPage } from '~/linodes/create/layouts/IndexPage';
 
-describe('linodes/create/layout/IndexPage', () => {
+import { expectDispatchOrStoreErrors, expectObjectDeepEquals, expectRequest } from '@/common';
+import { api } from '@/data';
+
+describe('linodes/create/layouts/IndexPage', () => {
   const sandbox = sinon.sandbox.create();
   afterEach(() => {
     sandbox.restore();
@@ -60,7 +60,7 @@ describe('linodes/create/layout/IndexPage', () => {
         linodes={api.linodes}
       />);
     const ss = page.find('Source');
-    ss.props().onSourceSelected('distribution', 'linode/arch2016.05');
+    ss.props().onDistroSelected('linode/arch2016.05');
     expect(page.instance().state.distribution).to.equal('linode/arch2016.05');
   });
 
@@ -93,11 +93,8 @@ describe('linodes/create/layout/IndexPage', () => {
   });
 
   it('creates a linode when the form is submitted', async () => {
-    const env = { dispatch() {} };
-    const dispatch = sandbox.stub(env, 'dispatch');
-    const createdLinodeId = 1;
-    sandbox.stub(thunks, 'post', d => d);
-    const page = shallow(
+    const dispatch = sandbox.stub();
+    const page = mount(
       <IndexPage
         dispatch={dispatch}
         distributions={api.distributions}
@@ -107,56 +104,33 @@ describe('linodes/create/layout/IndexPage', () => {
       />
     );
     dispatch.reset();
-    dispatch.onCall(0).returns({ id: createdLinodeId });
 
-    page.find('Plan').props().onServiceSelected('type');
-    page.find('Region').props().onRegionSelected('region');
-    page.find('Source').props().onSourceSelected('distribution', 'source');
-    await page.instance().onSubmit({
-      label: 'label',
-      password: 'password',
-      backups: false,
-      group: null,
-    });
-    expect(dispatch.callCount).to.equal(2);
-    expectObjectDeepEquals(dispatch.firstCall.args[0], {
-      root_pass: 'password',
-      type: 'type',
-      distribution: 'source',
-      backup: null,
-      region: 'region',
-      label: 'label',
-      with_backups: false,
-      group: null,
-    });
-    expectObjectDeepEquals(dispatch.secondCall.args[0], push('/linodes/label'));
-  });
+    const changeInput = (id, value) =>
+      page.find('Input').find({ id }).simulate('change', { target: { value, name: id } });
 
-  it('sets errors on create a linode failure', async () => {
-    const error = 'The error';
-    const env = { dispatch() {} };
-    const dispatch = sandbox.stub(env, 'dispatch');
-    const page = shallow(
-      <IndexPage
-        dispatch={dispatch}
-        distributions={api.distributions}
-        regions={api.regions}
-        types={api.types}
-        linodes={api.linodes}
-      />
-    );
+    changeInput('label', 'label');
+    changeInput('password', 'password');
+    page.find('Plan').props().onServiceSelected('the-type');
+    page.find('Region').props().onRegionSelected('the-region');
+    page.find('Source').props().onDistroSelected('the-distribution');
+
     dispatch.reset();
-    dispatch.onCall(0).throws({ json: () => ({ errors: [{ field: 'label', reason: error }] }) });
+    await page.instance().onSubmit();
 
-    page.find('Plan').props().onServiceSelected('type');
-    page.find('Region').props().onRegionSelected('region');
-    page.find('Source').props().onSourceSelected('distribution', 'source');
-    await page.instance().onSubmit({
-      group: 'group',
-      labels: ['label'],
-      password: 'password',
-      backups: false,
-    });
-    expectObjectDeepEquals(page.state('errors'), { label: [{ field: 'label', reason: error }] });
+    expect(dispatch.callCount).to.equal(1);
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      ([fn]) => expectRequest(fn, '/linode/instances/', {
+        method: 'POST',
+        body: {
+          root_pass: 'password',
+          type: 'the-type',
+          distribution: 'the-distribution',
+          region: 'the-region',
+          label: 'label',
+          with_backups: false,
+        },
+      }),
+      ([pushResult]) => expectObjectDeepEquals(pushResult, push('/linodes/label')),
+    ], 2, [{ label: 'label' }]);
   });
 });

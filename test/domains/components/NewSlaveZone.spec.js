@@ -17,7 +17,7 @@ describe('domains/components/NewSlaveZone', () => {
   });
 
   it('submits form and redirects to domain', async () => {
-    const dispatch = sinon.stub();
+    const dispatch = sandbox.stub();
     const component = mount(
       <NewSlaveZone
         dispatch={dispatch}
@@ -33,11 +33,14 @@ describe('domains/components/NewSlaveZone', () => {
     await component.find('Form').props().onSubmit();
 
     expect(dispatch.callCount).to.equal(1);
-    expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
       ([fn]) => expectRequest(fn, '/domains/', {
-        domain: 'test.com',
-        type: 'slave',
-        ips: ['1', '2', '3', '4'],
+        method: 'POST',
+        body: {
+          domain: 'test.com',
+          type: 'slave',
+          ips: ['1', '2', '3', '4'],
+        },
       }),
       ([pushResult]) => expectObjectDeepEquals(pushResult, push('/domains')),
     ]);

@@ -53,23 +53,21 @@ describe('nodebalancers/nodebalancer/configs/layouts/EditConfigPage', () => {
     await page.find('Form').props().onSubmit();
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      ([fn]) => expectRequest(
-        fn, `/nodebalancers/${genericNodeBalancer.id}/configs/${id}`, {
-          method: 'PUT',
-          body: {
-            check_timeout: 30,
-            check_attempts: 3,
-            check_interval: 0,
-            protocol: 'http',
-            algorithm: 'roundrobin',
-            stickiness: 'none',
-            check_passive: true,
-            port: 82,
-            check: 'none',
-          },
-        }
-      ),
-    ], 1);
+      ([fn]) => expectRequest(fn, `/nodebalancers/${genericNodeBalancer.id}/configs/${id}`, {
+        method: 'PUT',
+        body: {
+          check_timeout: 30,
+          check_attempts: 3,
+          check_interval: 0,
+          protocol: 'http',
+          algorithm: 'roundrobin',
+          stickiness: 'none',
+          check_passive: true,
+          port: 82,
+          check: 'none',
+        },
+      }),
+    ], 1, [{ id: 1 }]);
   });
 
   it('commits changes to the API with HTTPS', async () => {
@@ -108,31 +106,27 @@ describe('nodebalancers/nodebalancer/configs/layouts/EditConfigPage', () => {
     await page.find('Form').props().onSubmit();
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      ([fn1]) => expectRequest(
-        fn1, `/nodebalancers/${genericNodeBalancer.id}/configs/${id}/ssl`, {
-          method: 'POST',
-          body: {
-            ssl_cert: 'Some ssl cert',
-            ssl_key: 'Some ssl key',
-          },
-        }
-      ),
-      ([fn2]) => expectRequest(
-        fn2, `/nodebalancers/${genericNodeBalancer.id}/configs/${id}`, {
-          method: 'PUT',
-          body: {
-            check_timeout: 30,
-            check_attempts: 3,
-            check_interval: 0,
-            protocol: 'http',
-            algorithm: 'roundrobin',
-            stickiness: 'none',
-            check_passive: true,
-            port: 82,
-            check: 'none',
-          },
-        }
-      ),
-    ], 2);
+      ([fn1]) => expectRequest(fn1, `/nodebalancers/${genericNodeBalancer.id}/configs/${id}/ssl`, {
+        method: 'POST',
+        body: {
+          ssl_cert: 'Some ssl cert',
+          ssl_key: 'Some ssl key',
+        },
+      }),
+      ([fn2]) => expectRequest(fn2, `/nodebalancers/${genericNodeBalancer.id}/configs/${id}`, {
+        method: 'PUT',
+        body: {
+          check_timeout: 30,
+          check_attempts: 3,
+          check_interval: 0,
+          protocol: 'https',
+          algorithm: 'roundrobin',
+          stickiness: 'none',
+          check_passive: true,
+          port: 82,
+          check: 'none',
+        },
+      }),
+    ], 2, [undefined, { id: 1 }]);
   });
 });

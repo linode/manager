@@ -127,7 +127,7 @@ export class AddModal extends Component {
             value={size}
             type="number"
             min={distribution ? minimumStorageSize() : 8}
-            max={free + size}
+            max={free}
             onChange={this.onChange}
             label="MB"
           />

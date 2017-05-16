@@ -32,8 +32,7 @@ describe('nodebalancers/nodebalancer/configs/components/NodeModal', () => {
     );
 
     expect(page.find('#label').props().value).to.equal('greatest_node_ever');
-    expect(page.find('#address').props().value).to.equal('192.168.4.5');
-    expect(page.find('#port').props().value).to.equal('80');
+    expect(page.find('#address').props().value).to.equal('192.168.4.5:80');
     expect(page.find('#weight').props().value).to.equal(40);
     expect(page.find('#mode').props().value).to.equal('accept');
   });
@@ -78,9 +77,7 @@ describe('nodebalancers/nodebalancer/configs/components/NodeModal', () => {
     page.find('input').find('#label')
       .simulate('change', { target: { name: 'label', value: 'myLabel' } });
     page.find('input').find('#address')
-      .simulate('change', { target: { name: 'address', value: '192.168.4.6' } });
-    page.find('input').find('#port')
-      .simulate('change', { target: { name: 'port', value: '88' } });
+      .simulate('change', { target: { name: 'address', value: '192.168.4.6:88' } });
     page.find('input').find('#weight')
       .simulate('change', { target: { name: 'weight', value: '50' } });
 

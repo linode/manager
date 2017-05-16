@@ -1,14 +1,15 @@
-import md5 from 'md5';
 import React, { PropTypes } from 'react';
 
 import { Button } from 'linode-components/buttons';
 import { Card, CardImageHeader } from 'linode-components/cards/';
 
+import { getEmailHash } from '~/cache';
 import { GRAVATAR_BASE_URL } from '~/constants';
 
 
 function getGravatarURL(email) {
-  return `${GRAVATAR_BASE_URL}${md5(email.trim().toLowerCase())}`;
+  const emailHash = getEmailHash(email);
+  return `${GRAVATAR_BASE_URL}${emailHash}`;
 }
 
 export default function User(props) {

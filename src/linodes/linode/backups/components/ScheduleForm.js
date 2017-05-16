@@ -18,11 +18,11 @@ export default class ScheduleForm extends Component {
     };
   }
 
-  onSubmit = async () => {
+  onSubmit = () => {
     const { dispatch, linode } = this.props;
     const { day, window } = this.state;
 
-    await dispatch(dispatchOrStoreErrors.call(this, [
+    return dispatch(dispatchOrStoreErrors.call(this, [
       () => linodes.put({ backups: { schedule: { day, window } } }, linode.id),
     ]));
   }

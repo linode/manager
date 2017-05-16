@@ -1,11 +1,12 @@
 import React, { PropTypes, Component } from 'react';
-
-import { LinodeLogoImgSrc } from '~/assets';
-
 import { Link } from 'react-router';
-import { eventSeen } from '~/api/events';
-import { hideSession, showSession } from '~/actions/session';
+
 import { hideNotifications, showNotifications } from '~/actions/notifications';
+import { hideSession, showSession } from '~/actions/session';
+import { eventSeen } from '~/api/events';
+import { LinodeLogoImgSrc } from '~/assets';
+import { getEmailHash } from '~/cache';
+
 
 export default class Header extends Component {
   toggleNotifications = () => {
@@ -44,14 +45,8 @@ export default class Header extends Component {
   }
 
   render() {
-    const {
-      emailHash,
-      username,
-      notifications,
-      events,
-    } = this.props;
-
-    const gravatarLink = `https://gravatar.com/avatar/${emailHash}`;
+    const { username, notifications, events, email } = this.props;
+    const gravatarLink = `https://gravatar.com/avatar/${getEmailHash(email)}`;
     const { pathname } = window.location;
     const linkClass = (link, primary = 'MainHeader') =>
       `${primary}-link ${pathname.indexOf(link) === 0 ? `${primary}-link--selected` : ''}`;
@@ -122,7 +117,7 @@ export default class Header extends Component {
 
 Header.propTypes = {
   username: PropTypes.string,
-  emailHash: PropTypes.string,
+  email: PropTypes.string,
   dispatch: PropTypes.func,
   notifications: PropTypes.object,
   session: PropTypes.object,

@@ -23,7 +23,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
         linode={testLinode}
       />);
 
-    const ipSection = page.find('.linode-ips');
+    const ipSection = page.find('#ips');
     expect(ipSection.find('li').at(0).text()).to.equal(ipv4);
     expect(ipSection.find('li').at(1).text()).to.equal(ipv6.split('/')[0]);
   });
@@ -34,8 +34,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
         linode={{ ...testLinode, backups: { enabled: false } }}
       />);
 
-    expect(page.find('.backup-status')
-      .text()).to.equal('Enable Backups');
+    expect(page.find('#backup-status').text()).to.equal('Enable Backups');
   });
 
   it('renders backups enabled', () => {
@@ -44,8 +43,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
         linode={testLinode}
       />);
 
-    expect(page.find('.backup-status')
-      .text()).to.equal('View Backups');
+    expect(page.find('#backup-status').text()).to.equal('View Backups');
   });
 
   it('renders plan', () => {
@@ -54,10 +52,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
         linode={testLinode}
       />);
 
-    expect(page.find('.linode-plan').at(0)
-      .find('.col-sm-9')
-      .at(0)
-      .text()).to.equal('Linode 2G');
+    expect(page.find('#plan').text()).to.equal('Linode 2G');
   });
 
   it('renders region', () => {
@@ -66,10 +61,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
         linode={testLinode}
       />);
 
-    expect(page.find('.linode-region').at(0)
-      .find('.col-sm-9')
-      .at(0)
-      .text()).to.equal(testLinode.region.label);
+    expect(page.find('#region').text()).to.equal(testLinode.region.label);
   });
 
   it('renders distribution', () => {
@@ -78,10 +70,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
         linode={testLinode}
       />);
 
-    expect(page.find('.linode-distro').at(0)
-      .find('.col-sm-9')
-      .at(0)
-      .text()).to.equal(testLinode.distribution.vendor);
+    expect(page.find('#distro').text()).to.equal(testLinode.distribution.vendor);
   });
 
   it('renders unknown distribution', () => {
@@ -90,11 +79,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
         linode={testLinode1246}
       />);
 
-    expect(page.find('.linode-distro').at(0)
-      .find('.col-sm-9')
-      .children()
-      .first()
-      .text()).to.equal('Unknown');
+    expect(page.find('#distro').text()).to.equal('Unknown');
   });
 
   it('renders ssh input elements', () => {
@@ -103,7 +88,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
         linode={testLinode}
       />);
 
-    expect(page.find('.input-group').at(0).find('input').length).to.equal(1);
+    expect(page.find('.input-group').at(0).find('Input').length).to.equal(1);
     expect(page.find('.input-group').at(0).find('Button').length).to.equal(1);
   });
 
@@ -126,7 +111,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
         linode={testLinode}
       />);
 
-    expect(page.find('.input-group').at(1).find('input').length).to.equal(1);
+    expect(page.find('.input-group').at(1).find('Input').length).to.equal(1);
     expect(page.find('.input-group').at(1).find('button')
       .at(0).length).to.equal(1);
     expect(page.find('.input-group').at(1).find('button')
@@ -146,14 +131,5 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
     expect(page.find('#lish-input').props())
       .to.have.property('value')
       .to.equal(lishLink);
-  });
-
-  it('renders glish button element', () => {
-    const page = shallow(
-      <DashboardPage
-        linode={testLinode}
-      />);
-
-    expect(page.find('#glish-button').length).to.equal(1);
   });
 });
