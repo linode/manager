@@ -22,12 +22,12 @@ export class PermissionsPage extends Component {
     };
   }
 
-  onSubmit = async () => {
+  onSubmit = () => {
     const { dispatch, user: { username } } = this.props;
     const { global, customer, linode, nodebalancer, dnszone } = this.state;
     const data = { global, customer, linode, nodebalancer, dnszone };
 
-    await dispatch(dispatchOrStoreErrors.call(this, [
+    return dispatch(dispatchOrStoreErrors.call(this, [
       () => users.permissions.put(data, username),
     ]));
   }

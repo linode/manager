@@ -18,10 +18,10 @@ export class NotificationsPage extends Component {
     };
   }
 
-  onSubmit = async () => {
+  onSubmit = () => {
     const { dispatch, enabled } = this.props;
 
-    await dispatch(dispatchOrStoreErrors.call(this, [
+    return dispatch(dispatchOrStoreErrors.call(this, [
       () => profile.put({ email_notifications: !enabled }),
     ]));
   }

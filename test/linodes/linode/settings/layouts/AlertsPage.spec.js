@@ -25,15 +25,15 @@ describe('linodes/linode/settings/layouts/AlertsPage', async () => {
     );
 
     [
-      'CPU usage',
-      'Disk IO rate',
-      'Incoming traffic',
-      'Outbound traffic',
-      'Transfer quota',
+      'CPU Usage',
+      'Disk IO Rate',
+      'Incoming Traffic',
+      'Outbound Traffic',
+      'Transfer Quota',
     ].forEach((label, i) => {
-      expect(page.find('.form-group').at(i).find('.col-form-label')
-                 .text())
-        .to.equal(`${label}:`);
+      const formGroup = page.find('FormGroup').at(i);
+      const labelElement = formGroup.find('.col-form-label').at(0);
+      expect(labelElement.text()).to.equal(label);
     });
   });
 

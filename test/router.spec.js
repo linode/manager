@@ -3,8 +3,6 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import { shallow, mount } from 'enzyme';
 
-import { kernels, distributions, regions, types } from '~/api';
-import * as fetch from '~/fetch';
 import { LoadingRouterContext } from '~/router';
 import * as session from '~/session';
 import { store } from '~/store';
@@ -12,13 +10,6 @@ import { store } from '~/store';
 
 describe('router/LoadingRouterContext', () => {
   const sandbox = sinon.sandbox.create();
-
-  beforeEach(() => {
-    sandbox.stub(fetch, 'rawFetch');
-    [kernels, distributions, regions, types].forEach(object => {
-      sandbox.stub(object, 'all', () => ({ type: 'NO TYPE' }));
-    });
-  });
 
   afterEach(() => {
     sandbox.restore();
@@ -29,7 +20,7 @@ describe('router/LoadingRouterContext', () => {
 
     const rc = mount(
       <LoadingRouterContext
-        dispatch={sinon.stub().returns(Promise.resolve())}
+        dispatch={sandbox.stub().returns(Promise.resolve())}
         match={sandbox.spy()}
         router={{}}
         routes={[]}

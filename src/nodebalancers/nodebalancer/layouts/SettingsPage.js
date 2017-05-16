@@ -23,20 +23,18 @@ export class SettingsPage extends Component {
     };
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
   }
 
-  onSubmit = async () => {
+  onSubmit = () => {
     const { dispatch, nodebalancer: { id, label: oldLabel } } = this.props;
     const { connThrottle, label } = this.state;
 
-    await dispatch(dispatchOrStoreErrors.apply(this, [
-      [
-        () => nodebalancers.put({ client_conn_throttle: +connThrottle, label }, id),
-        () => label !== oldLabel ? push(`/nodebalancers/${label}/settings`) : () => {},
-      ],
+    return dispatch(dispatchOrStoreErrors.call(this, [
+      () => nodebalancers.put({ client_conn_throttle: +connThrottle, label }, id),
+      () => label !== oldLabel ? push(`/nodebalancers/${label}/settings`) : () => {},
     ]));
   }
 

@@ -28,11 +28,11 @@ describe('nodebalancers/nodebalancer/configs/layouts/AddConfigPage', () => {
         dispatch={dispatch}
       />
     );
+
     const changeInput = (id, value) =>
-    page.find({ id, name: id }).props().onChange({ target: { value,
-                                                 checked: value,
-                                                 name: id,
-    } });
+      page.find({ id, name: id }).props().onChange(
+        { target: { value, checked: value, name: id } });
+
     changeInput('port', 82);
     changeInput('protocol', 'http');
     changeInput('algorithm', 'roundrobin');
@@ -42,30 +42,28 @@ describe('nodebalancers/nodebalancer/configs/layouts/AddConfigPage', () => {
     changeInput('checkInterval', 0);
     changeInput('checkTimeout', 30);
     changeInput('checkAttempts', 3);
+
     dispatch.reset();
     await page.find('Form').props().onSubmit();
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      ([fn]) => expectRequest(
-        fn, `/nodebalancers/${genericNodeBalancer.id}/configs/`, {
-          method: 'POST',
-          body: {
-            check_timeout: 30,
-            check_attempts: 3,
-            check_interval: 0,
-            protocol: 'http',
-            algorithm: 'roundrobin',
-            stickiness: 'none',
-            check_passive: 1,
-            port: 82,
-            check: 'none',
-          },
-        }
-      ),
+      ([fn]) => expectRequest(fn, `/nodebalancers/${genericNodeBalancer.id}/configs/`, {
+        method: 'POST',
+        body: {
+          check_timeout: 30,
+          check_attempts: 3,
+          check_interval: 0,
+          protocol: 'http',
+          algorithm: 'roundrobin',
+          stickiness: 'none',
+          check_passive: true,
+          port: 82,
+          check: 'none',
+        },
+      }),
       ([pushResult]) => expectObjectDeepEquals(
-        pushResult, push(`/nodebalancers/${genericNodeBalancer.label}`)
-      ),
-    ], 2);
+        pushResult, push(`/nodebalancers/${genericNodeBalancer.label}/configs/5`)),
+    ], 2, [{ id: 5 }]);
   });
 
   it('commits changes to the API with HTTPS', async () => {
@@ -75,11 +73,11 @@ describe('nodebalancers/nodebalancer/configs/layouts/AddConfigPage', () => {
         dispatch={dispatch}
       />
     );
+
     const changeInput = (id, value) =>
-    page.find({ id, name: id }).props().onChange({ target: { value,
-                                                 checked: value,
-                                                 name: id,
-    } });
+      page.find({ id, name: id }).props().onChange(
+        { target: { value, checked: value, name: id } });
+
     changeInput('port', 82);
     changeInput('protocol', 'https');
     changeInput('algorithm', 'roundrobin');
@@ -91,31 +89,29 @@ describe('nodebalancers/nodebalancer/configs/layouts/AddConfigPage', () => {
     changeInput('checkAttempts', 3);
     changeInput('sslCert', 'Some ssl cert');
     changeInput('sslKey', 'Some ssl key');
+
     dispatch.reset();
     await page.find('Form').props().onSubmit();
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      ([fn]) => expectRequest(
-        fn, `/nodebalancers/${genericNodeBalancer.id}/configs/`, {
-          method: 'POST',
-          body: {
-            check_timeout: 30,
-            check_attempts: 3,
-            check_interval: 0,
-            protocol: 'http',
-            algorithm: 'roundrobin',
-            stickiness: 'none',
-            check_passive: 1,
-            port: 82,
-            check: 'none',
-            ssl_cert: 'Some ssl cert',
-            ssl_key: 'Some ssl key',
-          },
-        }
-      ),
-      ([fn]) => expectObjectDeepEquals(
-        fn, push(`/nodebalancers/${genericNodeBalancer.label}/configs/5`)
-      ),
+      ([fn]) => expectRequest(fn, `/nodebalancers/${genericNodeBalancer.id}/configs/`, {
+        method: 'POST',
+        body: {
+          check_timeout: 30,
+          check_attempts: 3,
+          check_interval: 0,
+          protocol: 'https',
+          algorithm: 'roundrobin',
+          stickiness: 'none',
+          check_passive: true,
+          port: 82,
+          check: 'none',
+          ssl_cert: 'Some ssl cert',
+          ssl_key: 'Some ssl key',
+        },
+      }),
+      ([pushResult]) => expectObjectDeepEquals(
+        pushResult, push(`/nodebalancers/${genericNodeBalancer.label}/configs/5`)),
     ], 2, [{ id: 5 }]);
   });
 });

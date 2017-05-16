@@ -57,7 +57,7 @@ export default class EditSRVRecord extends Component {
       type: 'SRV',
     };
 
-    dispatch(dispatchOrStoreErrors.call(this, [
+    return dispatch(dispatchOrStoreErrors.call(this, [
       () => domains.records[id ? 'put' : 'post'](data, ...ids),
       close,
     ]));

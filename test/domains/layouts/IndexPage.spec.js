@@ -5,7 +5,6 @@ import { expect } from 'chai';
 
 import { IndexPage } from '~/domains/layouts/IndexPage';
 import { api } from '@/data';
-import { Dropdown } from 'linode-components/dropdowns';
 import { expectRequest } from '@/common.js';
 import { SHOW_MODAL } from '~/actions/modal';
 
@@ -38,7 +37,7 @@ describe('domains/layouts/IndexPage', () => {
     expect(firstZone.find('td').at(1).text())
       .to.equal('example.com');
     expect(firstZone.find('td').at(2).text())
-      .to.equal('master');
+      .to.equal('Master');
   });
 
   it('shows the delete modal when delete is pressed', () => {
@@ -69,13 +68,13 @@ describe('domains/layouts/IndexPage', () => {
 
     dispatch.reset();
 
-    const actions = page.find(Dropdown).props().elements;
-    actions.find(a => a.name === 'Delete').action();
+    const actions = page.find('Dropdown').props().elements;
+    actions.find(a => a && a.name === 'Delete').action();
 
     const modal = mount(dispatch.firstCall.args[0].body);
 
     dispatch.reset();
-    modal.find('.btn-default').simulate('click');
+    modal.find('Form').props().onSubmit({ preventDefault() {} });
     const fn = dispatch.firstCall.args[0];
     await expectRequest(fn, '/domains/1', { method: 'DELETE' });
   });

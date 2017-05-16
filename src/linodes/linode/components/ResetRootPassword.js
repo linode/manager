@@ -24,11 +24,11 @@ export default class ResetRootPassword extends Component {
     };
   }
 
-  onSubmit = async () => {
+  onSubmit = () => {
     const { password, disk } = this.state;
     const { dispatch, linode } = this.props;
 
-    return await dispatch(dispatchOrStoreErrors.call(this, [
+    return dispatch(dispatchOrStoreErrors.call(this, [
       () => resetPassword(linode.id, disk, password),
       () => this.setState({ password: '' }),
     ]));

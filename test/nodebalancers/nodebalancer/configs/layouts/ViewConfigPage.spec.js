@@ -22,7 +22,7 @@ describe('nodebalancers/nodebalancer/configs/layouts/ViewConfigPage', () => {
         nodebalancer={genericNodeBalancer}
       />
     );
-    const port = page.find('.Card-body .row .col-sm-10').at(0).text();
+    const port = page.find('#port').at(0).text();
     const portFromApi = genericNodeBalancer._configs.configs[1].port;
     const nodesFromApi = genericNodeBalancer._configs.configs[1]._nodes.nodes;
     expect(parseInt(port)).to.equal(portFromApi);
@@ -36,7 +36,7 @@ describe('nodebalancers/nodebalancer/configs/layouts/ViewConfigPage', () => {
       nodesFromApi[1].mode,
       nodesFromApi[1].status,
     ].forEach((value, i) => {
-      expect(value.toString()).to.equal(nodeValues.at(i).text());
+      expect(value.toString()).to.equal(nodeValues.at(i).text().toLowerCase());
     });
   });
 });

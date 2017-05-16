@@ -6,7 +6,6 @@ import {
   preloadStart,
   preloadStop,
 } from '~/actions/preloadIndicator';
-import { kernels, types, regions, distributions } from '~/api';
 import { store } from '~/store';
 
 
@@ -63,17 +62,6 @@ export class LoadingRouterContext extends RouterContext {
     const ret = checkLogin(this.props);
     if (ret) {
       return;
-    }
-
-    const { location: { pathname }, params } = this.props;
-    // No need to fetch these in weblish.
-    if (!(pathname.endsWith('/weblish') && params.linodeLabel)) {
-      await Promise.all([
-        this.props.dispatch(kernels.all()),
-        this.props.dispatch(types.all()),
-        this.props.dispatch(regions.all()),
-        this.props.dispatch(distributions.all()),
-      ]);
     }
 
     // Necessary to await this for testing
