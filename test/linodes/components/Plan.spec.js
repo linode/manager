@@ -10,8 +10,7 @@ describe('linodes/components/Plan', () => {
   const { types } = api.types;
 
   it('dispatched the appropriate event on select', () => {
-    const env = { onSelect: () => {} };
-    const onSelect = sinon.stub(env, 'onSelect');
+    const onSelect = sinon.spy();
     const c = mount(
       <Plan
         types={types}

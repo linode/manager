@@ -1,17 +1,17 @@
+import { expect } from 'chai';
+import { mount } from 'enzyme';
+import _ from 'lodash';
 import React from 'react';
 import sinon from 'sinon';
-import { mount } from 'enzyme';
-import { expect } from 'chai';
 
-import _ from 'lodash';
+import { hideModal } from '~/actions/modal';
+import { OAUTH_SCOPES, OAUTH_SUBSCOPES } from '~/constants';
 import PersonalAccessToken
   from '~/profile/integrations/components/PersonalAccessToken';
-import { OAUTH_SCOPES, OAUTH_SUBSCOPES } from '~/constants';
-import { hideModal } from '~/actions/modal';
-import { api } from '@/data';
-import { expectRequest, expectObjectDeepEquals } from '@/common';
 
-const { tokens } = api;
+import { expectObjectDeepEquals, expectRequest } from '@/common';
+import { tokens } from '@/data/tokens';
+
 
 describe('profile/integrations/components/PersonalAccessToken', () => {
   const sandbox = sinon.sandbox.create();
@@ -21,7 +21,7 @@ describe('profile/integrations/components/PersonalAccessToken', () => {
   });
 
   const dispatch = sandbox.spy();
-  const clients = Object.values(tokens.tokens).filter(
+  const clients = Object.values(tokens).filter(
     token => token.type === 'personal_access_token');
 
   it('renders a token', () => {
@@ -70,15 +70,14 @@ describe('profile/integrations/components/PersonalAccessToken', () => {
     expect(dispatch.callCount).to.equal(1);
     const { body } = dispatch.firstCall.args[0];
 
+    dispatch.reset();
     body.props.onOk();
 
-    expect(dispatch.callCount).to.equal(3);
-    let fn = dispatch.secondCall.args[0];
-    await expectRequest(fn, `/account/tokens/${clients[0].id}`, {
+    expect(dispatch.callCount).to.equal(2);
+    await expectRequest(dispatch.firstCall.args[0], `/account/tokens/${clients[0].id}`, {
       method: 'DELETE',
     });
 
-    fn = dispatch.thirdCall.args[0];
-    expectObjectDeepEquals(dispatch.thirdCall.args[0], hideModal());
+    expectObjectDeepEquals(dispatch.secondCall.args[0], hideModal());
   });
 });

@@ -8,7 +8,6 @@ import { distros } from '~/assets';
 export default class Distribution extends Component {
   constructor(props) {
     super(props);
-    this.onClick = this.onClick.bind(this);
 
     // In the case of no distribution
     const vendor = props.vendor || { versions: [] };
@@ -16,10 +15,10 @@ export default class Distribution extends Component {
     // If this distribution is not selected, default to first version.
     const selectedIndex = Math.max(0, Object.values(vendor.versions).map(
       ({ id }) => id).indexOf(props.selected));
-    this.state = { open: false, selectedIndex };
+    this.state = { selectedIndex };
   }
 
-  onClick() {
+  onClick = () => {
     const { vendor, noDistribution } = this.props;
     const { selectedIndex } = this.state;
     if (noDistribution) {
@@ -43,24 +42,22 @@ export default class Distribution extends Component {
   }
 
   render() {
-    const { onClick, vendor, selected, noDistribution } = this.props;
-    const { open } = this.state;
+    const { vendor, selected, noDistribution } = this.props;
 
     const isSelected = selected === 'none' && noDistribution ||
                        !noDistribution && vendor.versions.find(v => v.id === selected);
 
     const isSelectedClass = isSelected ? 'LinodesDistribution--isSelected' : '';
     const noDistributionClass = noDistribution ? 'LinodesDistribution--isNoDistribution' : '';
-    const isOpenClass = open ? 'LinodesDistribution-dropdown--isOpen' : '';
 
     const versions = !vendor ? [{ name: 'Empty' }] : [
       {
         name: this.renderLabel(),
-        action: () => this.setState({ open: !open }),
+        action: this.onClick,
       },
       ...vendor.versions.map((version, i) => ({
         name: version.label,
-        action: () => this.setState({ open: false, selectedIndex: i }),
+        action: () => this.setState({ selectedIndex: i }, this.onClick),
       })),
     ];
 
@@ -68,7 +65,6 @@ export default class Distribution extends Component {
       <div
         onClick={this.onClick}
         className={`LinodesDistribution ${isSelectedClass} ${noDistributionClass}`}
-        onBlur={() => this.setState({ open: false })}
       >
         <Dropdown elements={versions} />
         <div className="LinodesDistribution-body">

@@ -22,7 +22,7 @@ describe('nodebalancers/nodebalancer/layouts/IndexPage', () => {
       <IndexPage
         dispatch={dispatch}
         nodebalancer={genericNodeBalancer}
-        params={{ configId: genericNodeBalancer._configs.configs[2].id }}
+        params={{}}
       />);
     const { label } = genericNodeBalancer;
     const h1 = page.find('h1');
@@ -34,7 +34,7 @@ describe('nodebalancers/nodebalancer/layouts/IndexPage', () => {
       <IndexPage
         dispatch={dispatch}
         nodebalancer={noGroupNodeBalancer}
-        params={{ configId: noGroupNodeBalancer._configs.configs[2].id }}
+        params={{}}
       />);
 
     const h1 = page.find('h1');

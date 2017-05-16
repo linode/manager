@@ -429,7 +429,7 @@ export const testLinode1242 = {
 
 export const testLinode1243 = {
   ...createTestLinode(1243),
-  status: 'unrecognized',
+  status: 'offline',
   backups: { ...testLinode.backups, enabled: false },
 };
 

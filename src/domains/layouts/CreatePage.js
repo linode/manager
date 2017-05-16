@@ -65,7 +65,7 @@ CreatePage.propTypes = {
 
 function select(state) {
   return {
-    email: state.authentication.email,
+    email: state.api.profile.email,
   };
 }
 

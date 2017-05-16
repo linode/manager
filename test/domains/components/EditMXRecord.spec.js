@@ -39,7 +39,7 @@ describe('domains/components/EditMXRecord', () => {
   });
 
   it('submits data onsubmit and closes modal', async () => {
-    const dispatch = sinon.stub();
+    const dispatch = sandbox.stub();
     const currentZone = api.domains.domains['1'];
     const currentRecord = currentZone._records.records[4];
     const close = sandbox.spy();
@@ -78,7 +78,7 @@ describe('domains/components/EditMXRecord', () => {
   });
 
   it('creates a new MX record and closes the modal', async () => {
-    const dispatch = sinon.stub();
+    const dispatch = sandbox.stub();
     const currentZone = api.domains.domains['1'];
     const close = sandbox.spy();
     const page = mount(
