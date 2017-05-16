@@ -1,11 +1,13 @@
+import { expect } from 'chai';
+import { mount } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
-import { shallow } from 'enzyme';
-import { expect } from 'chai';
+
+import { TwoFactorModal } from '~/profile/components/TwoFactorModal';
+
+import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
 import { profile } from '@/data/profile';
 
-import { expectRequest } from '@/common';
-import { TwoFactorModal } from '~/profile/components/TwoFactorModal';
 
 describe('profile/components/TwoFactorModal', () => {
   const sandbox = sinon.sandbox.create();
@@ -13,7 +15,7 @@ describe('profile/components/TwoFactorModal', () => {
   const dispatch = sandbox.stub();
 
   it('confirm two factor called', async () => {
-    const page = shallow(
+    const page = mount(
       <TwoFactorModal
         dispatch={dispatch}
         toggleTwoFactor={() => {}}
@@ -25,13 +27,17 @@ describe('profile/components/TwoFactorModal', () => {
     page.instance().setState({ tfaCode: 'theCode' });
 
     dispatch.reset();
-    await page.instance().twoFactorConfirm();
+    await page.find('Form').props().onSubmit({ preventDefault() {} });
     expect(dispatch.callCount).to.equal(1);
-    const fn = dispatch.firstCall.args[0];
-
-    await expectRequest(fn, '/account/profile/tfa-enable-confirm', {
-      method: 'POST',
-      body: { tfa_code: 'theCode' },
-    });
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      ([fn]) => {
+        const _dispatch = sinon.stub();
+        fn(_dispatch, () => ({ api: { profile: {} } }));
+        return expectRequest(_dispatch.firstCall.args[0], '/account/profile/tfa-enable-confirm', {
+          method: 'POST',
+          body: { tfa_code: 'theCode' },
+        });
+      },
+    ], 2, [{ secret: '' }]);
   });
 });
