@@ -20,7 +20,7 @@ export class TwoFactorModal extends Component {
   }
 
   onSubmit = () => {
-    const { dispatch, toggleTwoFactor } = this.props;
+    const { dispatch } = this.props;
     const { tfaCode } = this.state;
 
     return dispatch(dispatchOrStoreErrors.call(this, [
@@ -29,6 +29,8 @@ export class TwoFactorModal extends Component {
     ]));
   }
 
+  onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
+
   twoFactorScratchModal(scratch) {
     return (dispatch) => dispatch(showModal('Two-Factor Authentication Enabled',
       <ConfirmModalBody
@@ -36,16 +38,16 @@ export class TwoFactorModal extends Component {
         onOk={() => dispatch(hideModal())}
         onCancel={() => dispatch(hideModal())}
       >
-        <p>
-          Two-Factor authentication has been enabled. And a new emergency one-time use scratch code
-          has been generated. Store this somewhere safe.
-        </p>
-        <div className="alert alert-warning">{scratch}</div>
+        <div>
+          <p>
+            Two-Factor authentication has been enabled. And a new emergency one-time use scratch
+            code has been generated. Store this somewhere safe.
+          </p>
+          <div className="alert alert-warning">{scratch}</div>
+        </div>
       </ConfirmModalBody>
     ));
   }
-
-  onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   render() {
     const { dispatch, secret, username } = this.props;
@@ -94,7 +96,6 @@ export class TwoFactorModal extends Component {
 
 TwoFactorModal.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  toggleTwoFactor: PropTypes.func,
-  secret: PropTypes.string,
-  profile: PropTypes.object,
+  secret: PropTypes.string.isRequired,
+  username: PropTypes.string.isRequired,
 };

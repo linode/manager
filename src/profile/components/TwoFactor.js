@@ -21,7 +21,7 @@ export default class TwoFactor extends Component {
     };
   }
 
-  onSubmit = async () => {
+  onSubmit = () => {
     const { dispatch, tfaEnabled } = this.props;
 
     const requests = [() => toggleTFA(!tfaEnabled)];
@@ -35,7 +35,6 @@ export default class TwoFactor extends Component {
   twoFactorModal(secret) {
     return (dispatch) => dispatch(showModal('Enable Two-Factor Authentication', (
       <TwoFactorModal
-        toggleTwoFactor={this.toggleTwoFactor}
         dispatch={dispatch}
         secret={secret}
         username={this.props.username}

@@ -1,47 +1,48 @@
+import { expect } from 'chai';
+import { shallow } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
-import { shallow } from 'enzyme';
-import { expect } from 'chai';
-import { profile } from '@/data/profile';
 
-import { expectRequest } from '@/common';
 import { TwoFactor } from '~/profile/components';
+
+import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
+
 
 describe('profile/components/TwoFactor', () => {
   const sandbox = sinon.sandbox.create();
 
   const dispatch = sandbox.stub();
 
-  const profile2 = {
-    ...profile,
-    two_factor_auth: 'disabled',
-  };
-
   it('disable two factor called', async () => {
     const page = shallow(
       <TwoFactor
         dispatch={dispatch}
-        profile={profile}
+        tfaEnabled
       />
     );
 
     const button = page.find('SubmitButton').at(0);
     expect(button.props().children).to.equal('Disable');
 
-    await page.instance().twoFactorAction();
+    dispatch.reset();
+    await page.find('Form').props().onSubmit({ preventDefault() {} });
     expect(dispatch.callCount).to.equal(1);
-    const fn = dispatch.firstCall.args[0];
-
-    await expectRequest(fn, '/account/profile/tfa-disable', {
-      method: 'POST',
-    });
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      ([fn]) => {
+        const _dispatch = sinon.stub();
+        fn(_dispatch, () => ({ api: { profile: {} } }));
+        return expectRequest(_dispatch.firstCall.args[0], '/account/profile/tfa-disable', {
+          method: 'POST',
+        });
+      },
+    ], 1);
   });
 
   it('enable two factor called', async () => {
     const page = shallow(
       <TwoFactor
         dispatch={dispatch}
-        profile={profile2}
+        tfaEnabled={false}
       />
     );
 
@@ -49,12 +50,16 @@ describe('profile/components/TwoFactor', () => {
     expect(button.props().children).to.equal('Enable');
 
     dispatch.reset();
-    await page.instance().twoFactorAction();
+    await page.find('Form').props().onSubmit({ preventDefault() {} });
     expect(dispatch.callCount).to.equal(1);
-    const fn = dispatch.firstCall.args[0];
-
-    await expectRequest(fn, '/account/profile/tfa-enable', {
-      method: 'POST',
-    });
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      ([fn]) => {
+        const _dispatch = sinon.stub();
+        fn(_dispatch, () => ({ api: { profile: {} } }));
+        return expectRequest(_dispatch.firstCall.args[0], '/account/profile/tfa-enable', {
+          method: 'POST',
+        });
+      },
+    ], 2, [{ secret: '' }]);
   });
 });

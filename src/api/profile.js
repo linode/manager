@@ -19,7 +19,9 @@ export function toggleTFA(enable) {
 
 export function confirmTFA(code) {
   return async (dispatch, getState) => {
-    const result = await dispatch(thunkFetch.post('/account/profile/tfa-enable-confirm', { tfa_code: code }));
+    const result = await dispatch(thunkFetch.post('/account/profile/tfa-enable-confirm', {
+      tfa_code: code,
+    }));
     const { profile } = getState().api;
     dispatch(actions.one({ ...profile, two_factor_auth: 'enabled' }));
     return result;
