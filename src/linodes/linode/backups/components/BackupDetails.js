@@ -28,7 +28,7 @@ export default function BackupDetails(props) {
   const label = !backup.label ? null : (
     <FormGroup className="row">
       <div className="col-sm-3 row-label">Label</div>
-      <div className="col-sm-9">{backup.label}</div>
+      <div className="col-sm-9" id="label">{backup.label}</div>
     </FormGroup>
   );
 
@@ -43,35 +43,35 @@ export default function BackupDetails(props) {
       {label}
       <FormGroup className="row">
         <div className="col-sm-3 row-label">Started</div>
-        <div className="col-sm-9"><TimeDisplay time={backup.created} /></div>
+        <div className="col-sm-9" id="started"><TimeDisplay time={backup.created} /></div>
       </FormGroup>
       <FormGroup className="row">
         <div className="col-sm-3 row-label">Finished</div>
-        <div className="col-sm-9">
+        <div className="col-sm-9" id="finished">
           {backup.finished ? <TimeDisplay time={backup.finished} /> : vacant}
         </div>
       </FormGroup>
       <FormGroup className="row">
         <div className="col-sm-3 row-label">Duration</div>
-        <div className="col-sm-9">
+        <div className="col-sm-9" id="duration">
           {backup.finished ? `(${duration} ${durationUnit})` : vacant}
         </div>
       </FormGroup>
       <FormGroup className="row">
-        <div className="col-sm-3 row-label">Region Constraint</div>
-        <div className="col-sm-9">{backup.region.label}</div>
+        <div className="col-sm-3 row-label">Region</div>
+        <div className="col-sm-9" id="region">{backup.region.label}</div>
       </FormGroup>
       <FormGroup className="row">
         <div className="col-sm-3 row-label">Config Profiles</div>
-        <div className="col-sm-9">{configs || vacant}</div>
+        <div className="col-sm-9" id="configs">{configs || vacant}</div>
       </FormGroup>
       <FormGroup className="row">
         <div className="col-sm-3 row-label">Disks</div>
-        <div className="col-sm-9">{disks.length === 0 ? vacant : disks}</div>
+        <div className="col-sm-9" id="disks">{disks.length === 0 ? vacant : disks}</div>
       </FormGroup>
       <FormGroup className="row">
-        <div className="col-sm-3 row-label">Space required</div>
-        <div className="col-sm-9">{disks.length === 0 ? vacant : `${space}MB`}</div>
+        <div className="col-sm-3 row-label">Space Required</div>
+        <div className="col-sm-9" id="space">{disks.length === 0 ? vacant : `${space}MB`}</div>
       </FormGroup>
       {takeSnapshot}
     </Card>

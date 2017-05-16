@@ -2,12 +2,12 @@ import React from 'react';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
 
-import { PermissionCard } from '~/users/user/components/PermissionCard';
+import { PermissionsTable } from '~/users/user/components';
 
-describe('users/user/components/PermissionCard', () => {
+describe('users/user/components/PermissionsTable', () => {
   it('renders permission card', () => {
     const page = mount(
-      <PermissionCard
+      <PermissionsTable
         title="The Title"
         parentKey="linode"
         onCellChange={() => {}}

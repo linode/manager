@@ -32,9 +32,9 @@ describe('nodebalancers/nodebalancer/layouts/DashboardPage', () => {
     const secondRenderedPort = secondRow.find('td').at(0).text();
     expect(renderedPort).to.equal('80');
     expect(renderedProtocol).to.equal('HTTP');
-    expect(renderedAlgorithm).to.equal('Roundrobin');
-    expect(renderedStick).to.equal('None');
-    expect(renderedCheck).to.equal('None');
+    expect(renderedAlgorithm).to.equal('Round Robin');
+    expect(renderedStick).to.equal('-- None --');
+    expect(renderedCheck).to.equal('0 up, 0 down');
     expect(secondRenderedPort).to.equal('81');
   });
 });

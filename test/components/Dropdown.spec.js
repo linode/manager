@@ -22,11 +22,11 @@ describe('components/Dropdown', () => {
       />
     );
 
-    expect(dropdown.find('.dropdown-first').text()).to.equal('Drew');
+    expect(dropdown.find('.Dropdown-first').text()).to.equal('Drew');
 
-    expect(dropdown.find('.dropdown-item').length).to.equal(2);
-    expect(dropdown.find('.dropdown-item').at(0).text()).to.equal('Phil');
-    expect(dropdown.find('.dropdown-item').at(1).text()).to.equal('Will');
+    expect(dropdown.find('.Dropdown-item').length).to.equal(2);
+    expect(dropdown.find('.Dropdown-item').at(0).text()).to.equal('Phil');
+    expect(dropdown.find('.Dropdown-item').at(1).text()).to.equal('Will');
   });
 
   it('clickable dropdown', () => {
@@ -44,23 +44,23 @@ describe('components/Dropdown', () => {
     );
 
     // Click first item should trigger clickFirst
-    dropdown.find('.dropdown-first').simulate('click');
+    dropdown.find('.Dropdown-first').simulate('click');
     // Click toggle should open body
-    dropdown.find('.dropdown-toggle').simulate('click');
+    dropdown.find('.Dropdown-toggle').simulate('click');
     // Click first menu item should trigger clickBodyItem
-    dropdown.find('.dropdown-item').first().simulate('mousedown');
+    dropdown.find('.Dropdown-item').first().simulate('mousedown');
     // Last menu item goes unclicked
 
     expect(clickFirst.callCount).to.equal(1);
-    expect(dropdown.find('.Dropdown.show').length).to.equal(1);
+    expect(dropdown.find('.Dropdown--open').length).to.equal(1);
     expect(clickBodyItem.callCount).to.equal(1);
     expect(unclicked.callCount).to.equal(0);
 
     // Mousedown did not hide dropdown
-    expect(dropdown.find('.Dropdown.show').length).to.equal(1);
+    expect(dropdown.find('.Dropdown--open').length).to.equal(1);
     // But onblur does
     dropdown.find('.Dropdown').simulate('blur');
-    expect(dropdown.find('.Dropdown.show').length).to.equal(0);
+    expect(dropdown.find('.Dropdown--open').length).to.equal(0);
   });
 
   it('closes on second click', () => {
@@ -72,10 +72,10 @@ describe('components/Dropdown', () => {
       ]}
     />);
 
-    dropdown.find('.dropdown-toggle').simulate('click');
-    expect(dropdown.find('.Dropdown.show').length).to.equal(1);
-    dropdown.find('.dropdown-toggle').simulate('click');
-    expect(dropdown.find('.Dropdown.show').length).to.equal(0);
+    dropdown.find('.Dropdown-toggle').simulate('click');
+    expect(dropdown.find('.Dropdown--open').length).to.equal(1);
+    dropdown.find('.Dropdown-toggle').simulate('click');
+    expect(dropdown.find('.Dropdown--open').length).to.equal(0);
   });
 
   it('closes on blur', () => {
@@ -87,9 +87,9 @@ describe('components/Dropdown', () => {
       ]}
     />);
 
-    dropdown.find('.dropdown-toggle').simulate('click');
-    expect(dropdown.find('.Dropdown.show').length).to.equal(1);
-    dropdown.find('.dropdown-toggle').simulate('blur');
-    expect(dropdown.find('.Dropdown.show').length).to.equal(0);
+    dropdown.find('.Dropdown-toggle').simulate('click');
+    expect(dropdown.find('.Dropdown--open').length).to.equal(1);
+    dropdown.find('.Dropdown-toggle').simulate('blur');
+    expect(dropdown.find('.Dropdown--open').length).to.equal(0);
   });
 });

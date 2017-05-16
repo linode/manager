@@ -18,12 +18,12 @@ export default class ChangeEmail extends Component {
     };
   }
 
-  onSubmit = async () => {
+  onSubmit = () => {
     const { dispatch } = this.props;
     const { email } = this.state;
 
-    await dispatch(dispatchOrStoreErrors.apply(this, [
-      [() => profile.put({ email })],
+    return dispatch(dispatchOrStoreErrors.call(this, [
+      () => profile.put({ email }),
     ]));
   }
 

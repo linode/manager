@@ -25,16 +25,16 @@ export class ResizePage extends Component {
     };
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
   }
 
-  async onSubmit() {
+  onSubmit = () => {
     const { dispatch, linode } = this.props;
     const { type } = this.state;
 
-    await dispatch(dispatchOrStoreErrors.apply(this, [
+    return dispatch(dispatchOrStoreErrors.apply(this, [
       [() => resizeLinode(linode.id, type)],
       ['type'],
     ]));
@@ -46,7 +46,7 @@ export class ResizePage extends Component {
 
     return (
       <Card header={<CardHeader title="Resize" />}>
-        <Form onSubmit={() => this.onSubmit()}>
+        <Form onSubmit={this.onSubmit}>
           <FormGroup>
             <Plan
               types={types.types}

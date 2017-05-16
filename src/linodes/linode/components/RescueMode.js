@@ -5,7 +5,7 @@ import { Form, FormGroup, SubmitButton } from 'linode-components/forms';
 
 import { rescueLinode } from '~/api/linodes';
 import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
-import { DiskSelect } from './';
+import DiskSelect from './DiskSelect';
 import { AVAILABLE_DISK_SLOTS } from '~/constants';
 
 
@@ -24,11 +24,11 @@ export default class RescueMode extends Component {
     });
   }
 
-  onSubmit = async () => {
+  onSubmit = () => {
     const { dispatch, linode } = this.props;
     const { disks } = this.state;
 
-    await dispatch(dispatchOrStoreErrors.apply(this, [
+    return dispatch(dispatchOrStoreErrors.apply(this, [
       [() => rescueLinode(linode.id, { disks })],
     ]));
   }
