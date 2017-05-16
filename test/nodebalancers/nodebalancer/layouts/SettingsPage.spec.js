@@ -1,13 +1,13 @@
+import { expect } from 'chai';
+import { mount } from 'enzyme';
 import React from 'react';
 import { push } from 'react-router-redux';
 import sinon from 'sinon';
-import { mount } from 'enzyme';
-import { expect } from 'chai';
 
-import { state } from '@/data';
-import { expectRequest, expectObjectDeepEquals } from '@/common';
+import { expectDispatchOrStoreErrors, expectObjectDeepEquals, expectRequest } from '@/common';
 import { genericNodeBalancer } from '@/data/nodebalancers';
 import { SettingsPage } from '~/nodebalancers/nodebalancer/layouts/SettingsPage';
+
 
 describe('nodebalancers/nodebalancer/layouts/SettingsPage', () => {
   const sandbox = sinon.sandbox.create();
@@ -26,7 +26,8 @@ describe('nodebalancers/nodebalancer/layouts/SettingsPage', () => {
       />
     );
 
-    expect(page.find({ id: 'group' }).props().value).to.equal(genericNodeBalancer.group);
+    expect(page.find({ id: 'client_conn_throttle' }).props().value)
+      .to.equal(genericNodeBalancer.client_conn_throttle);
     expect(page.find({ id: 'label' }).props().value).to.equal(genericNodeBalancer.label);
   });
 
@@ -39,22 +40,18 @@ describe('nodebalancers/nodebalancer/layouts/SettingsPage', () => {
     );
 
     dispatch.reset();
-    page.find('form').simulate('submit', { preventDefault() {} });
-    expect(dispatch.callCount).to.equal(1);
-    let fn = dispatch.firstCall.args[0];
+    page.find('Form').simulate('submit', { preventDefault() {} });
+    const fn = dispatch.firstCall.args[0];
 
-    dispatch.reset();
-    // Call to dispatchOrStoreErrors
-    fn(dispatch, () => state);
-    fn = dispatch.firstCall.args[0];
-
-    await expectRequest(fn, `/nodebalancers/${genericNodeBalancer.id}`, {
-      method: 'PUT',
-      body: {
-        group: genericNodeBalancer.group,
-        label: genericNodeBalancer.label,
-      },
-    });
+    await expectDispatchOrStoreErrors(fn, [
+      ([fn]) => expectRequest(fn, `/nodebalancers/${genericNodeBalancer.id}`, {
+        method: 'PUT',
+        body: {
+          client_conn_throttle: genericNodeBalancer.client_conn_throttle,
+          label: genericNodeBalancer.label,
+        },
+      }),
+    ]);
   });
 
   it('redirects if the label changed', async () => {
@@ -70,10 +67,14 @@ describe('nodebalancers/nodebalancer/layouts/SettingsPage', () => {
 
     dispatch.reset();
 
-    await page.find('form').simulate('submit', { preventDefault() {} });
+    await page.find('Form').simulate('submit', { preventDefault() {} });
 
-    expect(dispatch.callCount).to.equal(2);
-    const fn = dispatch.secondCall.args[0];
-    expectObjectDeepEquals(fn, push('/nodebalancers/newlabel/settings'));
+    const fn = dispatch.firstCall.args[0];
+    await expectDispatchOrStoreErrors(fn, [
+      null,
+      ([pushResult]) => expectObjectDeepEquals(
+        pushResult,
+        push('/nodebalancers/newlabel/settings')),
+    ]);
   });
 });

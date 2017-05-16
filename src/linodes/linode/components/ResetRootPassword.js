@@ -24,15 +24,13 @@ export default class ResetRootPassword extends Component {
     };
   }
 
-  onSubmit = async () => {
+  onSubmit = () => {
     const { password, disk } = this.state;
     const { dispatch, linode } = this.props;
 
-    return await dispatch(dispatchOrStoreErrors.apply(this, [
-      [
-        () => resetPassword(linode.id, disk, password),
-        () => this.setState({ password: '' }) && {},
-      ],
+    return dispatch(dispatchOrStoreErrors.call(this, [
+      () => resetPassword(linode.id, disk, password),
+      () => this.setState({ password: '' }),
     ]));
   }
 
@@ -82,8 +80,8 @@ export default class ResetRootPassword extends Component {
       <Card header={header}>
         <Form onSubmit={this.onSubmitConfirm}>
           <FormGroup className="row" errors={errors} field="disk">
-            <label htmlFor="disk" className="col-sm-2 col-form-label">Disk</label>
-            <div className="col-sm-10">
+            <label htmlFor="disk" className="col-sm-3 col-form-label">Disk</label>
+            <div className="col-sm-9">
               <Select
                 name="disk"
                 id="disk"
@@ -96,8 +94,8 @@ export default class ResetRootPassword extends Component {
             </div>
           </FormGroup>
           <FormGroup className="row" errors={errors} field="password">
-            <label htmlFor="password" className="col-sm-2 col-form-label">Password</label>
-            <div className="col-sm-10">
+            <label htmlFor="password" className="col-sm-3 col-form-label">Password</label>
+            <div className="col-sm-9">
               <PasswordInput
                 id="password"
                 name="password"
@@ -108,13 +106,13 @@ export default class ResetRootPassword extends Component {
             </div>
           </FormGroup>
           <FormGroup className="row">
-            <div className="col-sm-10 offset-sm-2">
+            <div className="col-sm-9 offset-sm-3">
               <SubmitButton
                 disabled={disabled || loading}
                 disabledChildren={disabled ? 'Reset' : 'Resetting'}
               >Reset</SubmitButton>
               {disabledMessage}
-              <FormSummary errors={errors} success="Password reset successfully." />
+              <FormSummary errors={errors} success="Password reset." />
             </div>
           </FormGroup>
         </Form>

@@ -1,11 +1,13 @@
+import { expect } from 'chai';
+import { mount } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
-import { mount } from 'enzyme';
-import { expect } from 'chai';
 
-import { api } from '@/data';
-import { expectRequest } from '@/common';
 import EditMXRecord from '~/domains/components/EditMXRecord';
+
+import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
+import { api } from '@/data';
+
 
 describe('domains/components/EditMXRecord', () => {
   const sandbox = sinon.sandbox.create();
@@ -14,14 +16,12 @@ describe('domains/components/EditMXRecord', () => {
     sandbox.restore();
   });
 
-  const dispatch = sandbox.stub();
-
   it('renders fields correctly', () => {
     const currentZone = api.domains.domains['1'];
     const currentRecord = currentZone._records.records[4];
     const page = mount(
       <EditMXRecord
-        dispatch={dispatch}
+        dispatch={() => {}}
         zone={currentZone}
         id={currentRecord.id}
         close={() => {}}
@@ -39,6 +39,7 @@ describe('domains/components/EditMXRecord', () => {
   });
 
   it('submits data onsubmit and closes modal', async () => {
+    const dispatch = sandbox.stub();
     const currentZone = api.domains.domains['1'];
     const currentRecord = currentZone._records.records[4];
     const close = sandbox.spy();
@@ -52,7 +53,7 @@ describe('domains/components/EditMXRecord', () => {
     );
 
     const changeInput = (name, value) =>
-      page.instance().setState({ [name]: value });
+      page.find({ name }).simulate('change', { target: { name, value } });
 
     changeInput('mailserver', 'mx1.tester1234.com');
     changeInput('subdomain', 'tester1234.com');
@@ -61,21 +62,23 @@ describe('domains/components/EditMXRecord', () => {
     await page.find('Form').props().onSubmit();
 
     expect(dispatch.callCount).to.equal(1);
-    expect(close.callCount).to.equal(1);
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      ([fn]) => expectRequest(fn, `/domains/${currentZone.id}/records/${currentRecord.id}`, {
+        method: 'PUT',
+        body: {
+          target: 'mx1.tester1234.com',
+          name: 'tester1234.com',
+          priority: 1,
+          type: 'MX',
+        },
+      }),
+    ], 1);
 
-    const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, `/domains/${currentZone.id}/records/${currentRecord.id}`, {
-      method: 'PUT',
-      body: {
-        target: 'mx1.tester1234.com',
-        name: 'tester1234.com',
-        priority: 1,
-        type: 'MX',
-      },
-    });
+    expect(close.callCount).to.equal(1);
   });
 
   it('creates a new MX record and closes the modal', async () => {
+    const dispatch = sandbox.stub();
     const currentZone = api.domains.domains['1'];
     const close = sandbox.spy();
     const page = mount(
@@ -87,27 +90,27 @@ describe('domains/components/EditMXRecord', () => {
     );
 
     const changeInput = (name, value) =>
-      page.instance().setState({ [name]: value });
+      page.find({ name }).simulate('change', { target: { name, value } });
 
     changeInput('mailserver', 'mx1.tester1234.com');
     changeInput('subdomain', 'tester1234.com');
     changeInput('preference', 1);
 
-    dispatch.reset();
     await page.find('Form').props().onSubmit();
 
     expect(dispatch.callCount).to.equal(1);
-    expect(close.callCount).to.equal(1);
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      ([fn]) => expectRequest(fn, `/domains/${currentZone.id}/records/`, {
+        method: 'POST',
+        body: {
+          target: 'mx1.tester1234.com',
+          name: 'tester1234.com',
+          priority: 1,
+          type: 'MX',
+        },
+      }),
+    ]);
 
-    const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, `/domains/${currentZone.id}/records/`, {
-      method: 'POST',
-      body: {
-        target: 'mx1.tester1234.com',
-        name: 'tester1234.com',
-        priority: 1,
-        type: 'MX',
-      },
-    });
+    expect(close.callCount).to.equal(1);
   });
 });

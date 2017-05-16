@@ -42,7 +42,7 @@ export default class EditSRVRecord extends Component {
     };
   }
 
-  onSubmit = async () => {
+  onSubmit = () => {
     const { dispatch, id, close } = this.props;
     const { ttl, service, protocol, target, priority, weight, port } = this.state;
     const ids = [this.props.zone.id, id].filter(Boolean);
@@ -57,11 +57,9 @@ export default class EditSRVRecord extends Component {
       type: 'SRV',
     };
 
-    await dispatch(dispatchOrStoreErrors.apply(this, [
-      [
-        () => domains.records[id ? 'put' : 'post'](data, ...ids),
-        close,
-      ],
+    return dispatch(dispatchOrStoreErrors.call(this, [
+      () => domains.records[id ? 'put' : 'post'](data, ...ids),
+      close,
     ]));
   }
 

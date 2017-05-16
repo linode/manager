@@ -3,34 +3,26 @@
 }
 
 .selected {
-  background: $light-blue;
-}
-
-.vcenter {
-  display: inline-block;
-  vertical-align: middle;
-  float: none;
-  position: relative;
-}
-
-.text-danger {
-  color: $red;
+  background: $gray;
 }
 
 // TODO: prettify
 .alert {
-  overflow-x: auto;
-  border-radius: 0;
-  min-height: $form-field-height;  // for now, match input height
-  padding: 4px 8px;
-  &.alert-info {
-    background: $yellow;
-    border-color: $dark-gray;
-    color: $light-black;
-  }
+    overflow-x: auto;
+    border-radius: 0;
+    min-height: $form-field-height;  // for now, match input height
+    padding: 4px 8px;
+    &.alert-info {
+        background: $yellow;
+        border-color: $dark-gray;
+        color: $light-black;
+    }
 }
 
 .row-label {
-  color: $light-black; // $lightest-black
-  text-align: right;
+    padding: $form-field-padding;
+    padding-top: 0;
+    padding-bottom: 0;
+    color: $light-black;
+    text-align: right;
 }

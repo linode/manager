@@ -1,10 +1,13 @@
+import { expect } from 'chai';
+import { mount } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
-import { mount } from 'enzyme';
-import { expect } from 'chai';
-import { expectRequest } from '@/common';
 
 import { IndexPage } from '~/settings/layouts/IndexPage';
+
+import { expectRequest, expectDispatchOrStoreErrors } from '@/common';
+import { account } from '@/data/account';
+
 
 describe('settings/layouts/IndexPage', () => {
   const sandbox = sinon.sandbox.create();
@@ -13,51 +16,27 @@ describe('settings/layouts/IndexPage', () => {
     sandbox.restore();
   });
 
-  const dispatch = sandbox.stub();
-  const account = {
-    network_helper: false,
-  };
+  it('submit network helper', async () => {
+    const dispatch = sandbox.stub();
 
-  it('renders network helper', () => {
     const page = mount(
       <IndexPage
         dispatch={dispatch}
         account={account}
       />
     );
-    const checkbox = page.find('#networkHelper').at(0);
-    expect(checkbox.props().checked).to.equal(false);
-  });
 
-  it('change network helper', () => {
-    const page = mount(
-      <IndexPage
-        dispatch={dispatch}
-        account={account}
-      />
-    );
-    const networkHelper = page.find('#networkHelper').at(0);
-    const valueWas = networkHelper.props().checked;
-    networkHelper.simulate('change');
-    expect(networkHelper.props().checked).to.equal(!valueWas);
-  });
-
-  it('submit network helper', async() => {
-    const page = mount(
-      <IndexPage
-        dispatch={dispatch}
-        account={account}
-      />
-    );
+    page.find('#networkHelper').simulate('change');
 
     dispatch.reset();
-    await page.instance().onSubmit();
-    expect(dispatch.callCount).to.equal(1);
-    const fn = dispatch.firstCall.args[0];
+    await page.find('Form').props().onSubmit();
 
-    await expectRequest(fn, '/account/settings', undefined, undefined, {
-      method: 'PUT',
-      body: { network_helper: false },
-    });
+    expect(dispatch.callCount).to.equal(1);
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      ([fn]) => expectRequest(fn, '/account/settings', {
+        method: 'PUT',
+        body: { network_helper: true },
+      }),
+    ]);
   });
 });

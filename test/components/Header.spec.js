@@ -1,11 +1,13 @@
-import React from 'react';
-import { shallow } from 'enzyme';
 import { expect } from 'chai';
+import { shallow } from 'enzyme';
+import md5 from 'md5';
+import React from 'react';
 import sinon from 'sinon';
 
 import Header from '~/components/Header';
 import { api, fakeAPI } from '@/data';
 import { testEvent, seenEvent } from '@/data/events';
+
 
 const events = api.events;
 
@@ -22,7 +24,7 @@ describe('components/Header', () => {
       <Header
         dispatch={dispatch}
         username="peanut"
-        emailHash="24afd9bad4cf41b3c07d61fa0df03768"
+        email="peanut@gmail.com"
         events={events}
         notifications={{ open: false }}
         session={{ open: false }}
@@ -37,7 +39,7 @@ describe('components/Header', () => {
       <Header
         dispatch={dispatch}
         username="peanut"
-        emailHash="24afd9bad4cf41b3c07d61fa0df03768"
+        email="peanut@gmail.com"
         events={events}
         notifications={{ open: false }}
         session={{ open: false }}
@@ -45,7 +47,7 @@ describe('components/Header', () => {
     );
 
     expect(header.find('.MainHeader-gravatar').props().src)
-      .to.equal('https://gravatar.com/avatar/24afd9bad4cf41b3c07d61fa0df03768');
+      .to.equal(`https://gravatar.com/avatar/${md5('peanut@gmail.com')}`);
   });
 
   it('implements making events seen', () => {
@@ -56,7 +58,7 @@ describe('components/Header', () => {
       <Header
         dispatch={dispatch}
         username="peanut"
-        emailHash="24afd9bad4cf41b3c07d61fa0df03768"
+        email="peanut@gmail.com"
         events={emptyEventsAPI.events}
         notifications={{ open: false }}
         session={{ open: false }}
@@ -83,7 +85,7 @@ describe('components/Header', () => {
       <Header
         dispatch={dispatch}
         username="peanut"
-        emailHash="24afd9bad4cf41b3c07d61fa0df03768"
+        email="peanut@gmail.com"
         events={seenEventsAPI.events}
         notifications={{ open: false }}
         session={{ open: false }}
@@ -111,7 +113,7 @@ describe('components/Header', () => {
       <Header
         dispatch={dispatch}
         username="peanut"
-        emailHash="24afd9bad4cf41b3c07d61fa0df03768"
+        email="peanut@gmail.com"
         events={seenEventsAPI.events}
         notifications={{ open: false }}
         session={{ open: false }}

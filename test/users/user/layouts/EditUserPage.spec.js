@@ -1,14 +1,13 @@
+import { expect } from 'chai';
+import { mount } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
-import { shallow } from 'enzyme';
-import { expect } from 'chai';
-import { expectRequest } from '@/common';
 
-import { api } from '@/data';
 import { EditUserPage } from '~/users/user/layouts/EditUserPage';
 
-const { users } = api;
-const user = { testuser1: users.users[0] };
+import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
+import { testUser } from '@/data/users';
+
 
 describe('users/user/layouts/EditUserPage', () => {
   const sandbox = sinon.sandbox.create();
@@ -18,46 +17,34 @@ describe('users/user/layouts/EditUserPage', () => {
   });
 
   const dispatch = sandbox.stub();
-  const params = {
-    username: 'testuser1',
-  };
-
-  it('renders UserForm', () => {
-    const page = shallow(
-      <EditUserPage
-        dispatch={dispatch}
-        users={user}
-        params={params}
-      />
-    );
-
-    expect(page.find('UserForm').length).to.equal(1);
-  });
 
   it('should commit changes to the API', async () => {
-    const page = shallow(
+    const page = mount(
       <EditUserPage
         dispatch={dispatch}
-        users={user}
-        params={params}
+        user={testUser}
       />
     );
 
-    dispatch.reset();
-    const values = {
-      username: 'theUser',
-      email: 'user@example.com',
-      restricted: false,
-    };
-    await page.instance().onSubmit(values);
-    expect(dispatch.callCount).to.equal(3);
+    const changeInput = (id, value) =>
+      page.find({ id, name: id }).simulate('change', { target: { value, name: id } });
 
-    const fn = dispatch.firstCall.args[0];
-    await expectRequest(
-      fn, `/account/users/${params.username}`, {
+    changeInput('username', 'the-username');
+    changeInput('email', 'the-email');
+
+    dispatch.reset();
+    await page.find('Form').props().onSubmit({ preventDefault() {} });
+    expect(dispatch.callCount).to.equal(1);
+
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      ([fn]) => expectRequest(fn, `/account/users/${testUser.username}`, {
         method: 'PUT',
-        body: { ...values },
-      }
-    );
+        body: {
+          username: 'the-username',
+          email: 'the-email',
+          restricted: false,
+        },
+      }),
+    ], 3);
   });
 });

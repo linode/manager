@@ -97,7 +97,7 @@ export class IndexPage extends Component {
 
     const selectedLinodes = linodesArray.map(l => l.label);
 
-    dispatch(showModal('Confirm deletion',
+    dispatch(showModal('Delete Linode(s)',
       <DeleteModalBody
         onOk={async () => {
           const ids = linodesToBeRemoved.map(function (linode) { return linode.id; });
@@ -137,6 +137,7 @@ export class IndexPage extends Component {
                 { name: 'Reboot', action: this.reboot },
                 { name: 'Power on', action: this.powerOn },
                 { name: 'Power off', action: this.powerOff },
+                null,
                 { name: 'Delete', action: this.deleteLinodes },
               ]}
               selectedMap={selectedMap}

@@ -45,8 +45,7 @@ describe('components/Region', () => {
   });
 
   it('dispatches the appropriate event on select', () => {
-    const env = { onSelect: () => {} };
-    const onSelect = sinon.stub(env, 'onSelect');
+    const onSelect = sinon.spy();
     const c = mount(
       <Region
         regions={regions}

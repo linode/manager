@@ -66,6 +66,9 @@ const init = () => {
             path="/logout"
             component={Logout}
           />
+          <Route path="oauth">
+            <Route path="callback" component={OAuthCallbackPage} />
+          </Route>
           <Route
             path="/linodes/:linodeLabel/weblish"
             component={Weblish}
@@ -85,9 +88,6 @@ const init = () => {
             {Billing}
             {Settings}
             {Support}
-            <Route path="oauth">
-              <Route path="callback" component={OAuthCallbackPage} />
-            </Route>
             <Route path="*" component={NotFound} />
           </Route>
         </Router>

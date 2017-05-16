@@ -133,18 +133,18 @@ const EventTypeMap = {
   },
 
   backups_enable: {
-    presentTenseAction: 'Enabling',
-    pastTenseAction: 'enabled',
+    presentTenseAction: 'Enabling backups service',
+    pastTenseAction: 'backups enabled',
     redirectUrl: getLinodeBackupRedirectUrl,
   },
   backups_cancel: {
-    presentTenseAction: 'Cancelling',
-    pastTenseAction: 'cancelled',
+    presentTenseAction: 'Cancelling backups service',
+    pastTenseAction: 'backups service cancelled',
     redirectUrl: getLinodeBackupRedirectUrl,
   },
   backups_restore: {
-    presentTenseAction: 'Restoring',
-    pastTenseAction: 'restored',
+    presentTenseAction: 'Restoring from backup',
+    pastTenseAction: 'backup restored',
     redirectUrl: getLinodeBackupRedirectUrl,
   },
 

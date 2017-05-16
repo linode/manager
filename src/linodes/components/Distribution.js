@@ -1,10 +1,13 @@
 import React, { Component, PropTypes } from 'react';
+
+import { Dropdown } from 'linode-components/dropdowns';
+
 import { distros } from '~/assets';
+
 
 export default class Distribution extends Component {
   constructor(props) {
     super(props);
-    this.onClick = this.onClick.bind(this);
 
     // In the case of no distribution
     const vendor = props.vendor || { versions: [] };
@@ -12,10 +15,10 @@ export default class Distribution extends Component {
     // If this distribution is not selected, default to first version.
     const selectedIndex = Math.max(0, Object.values(vendor.versions).map(
       ({ id }) => id).indexOf(props.selected));
-    this.state = { open: false, selectedIndex };
+    this.state = { selectedIndex };
   }
 
-  onClick() {
+  onClick = () => {
     const { vendor, noDistribution } = this.props;
     const { selectedIndex } = this.state;
     if (noDistribution) {
@@ -39,57 +42,31 @@ export default class Distribution extends Component {
   }
 
   render() {
-    const { onClick, vendor, selected, noDistribution } = this.props;
-    const { open } = this.state;
+    const { vendor, selected, noDistribution } = this.props;
 
     const isSelected = selected === 'none' && noDistribution ||
                        !noDistribution && vendor.versions.find(v => v.id === selected);
 
     const isSelectedClass = isSelected ? 'LinodesDistribution--isSelected' : '';
     const noDistributionClass = noDistribution ? 'LinodesDistribution--isNoDistribution' : '';
-    const isOpenClass = open ? 'LinodesDistribution-dropdown--isOpen' : '';
+
+    const versions = !vendor ? [{ name: 'Empty' }] : [
+      {
+        name: this.renderLabel(),
+        action: this.onClick,
+      },
+      ...vendor.versions.map((version, i) => ({
+        name: version.label,
+        action: () => this.setState({ selectedIndex: i }, this.onClick),
+      })),
+    ];
 
     return (
       <div
         onClick={this.onClick}
         className={`LinodesDistribution ${isSelectedClass} ${noDistributionClass}`}
-        onBlur={() => this.setState({ open: false })}
       >
-        <header
-          className={`LinodesDistribution-dropdown ${isOpenClass}`}
-        >
-          <div className="LinodesDistribution-title">
-            {this.renderLabel()}
-            {noDistribution ? null : <button
-              className="LinodesDistribution-toggleDropdown"
-              aria-haspopup
-              aria-expanded={open}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                this.setState({ open: !open });
-              }}
-            ><i className="fa fa-caret-down"></i></button>}
-          </div>
-          {vendor ? (
-            <div
-              className="LinodesDistribution-menu"
-            >
-              {vendor.versions.map((v, i) =>
-                <button
-                  key={v.id}
-                  className="LinodesDistribution-version"
-                  type="button"
-                  onMouseDown={e => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    onClick(v.id);
-                    this.setState({ open: false, selectedIndex: i });
-                  }}
-                >{v.label}</button>)}
-            </div>
-          ) : null}
-        </header>
+        <Dropdown elements={versions} />
         <div className="LinodesDistribution-body">
           {vendor ? <img
             src={distros[vendor.name]}

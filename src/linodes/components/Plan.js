@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { Component, PropTypes } from 'react';
 
 import PlanStyle from '~/linodes/components/PlanStyle';
@@ -40,9 +41,24 @@ export default class Plan extends Component {
     const { types } = this.props;
     const sortedPlans = Object.values(types).sort(
       (a, b) => a.ram > b.ram);
+
+    const chunkedPlans = _.chunk(sortedPlans, 4);
+
     return (
       <div>
-        {sortedPlans.map(this.renderPlan)}
+        {chunkedPlans.map((arr, index) => {
+          return (
+            <div key={index} className="row">
+              {arr.map((plan, index) => {
+                return (
+                  <div key={index} className="col-sm-3">
+                    {this.renderPlan(plan)}
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })}
       </div>
     );
   }

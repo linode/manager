@@ -50,15 +50,15 @@ export const testPermissions = {
   ],
 };
 
+export const testUser2 = {
+  ...testUser,
+  username: 'testuser2',
+  email: 'example2@domain.com',
+  restricted: true,
+  _permissions: testPermissions,
+};
+
 export const users = [
-  { ...testUser },
-  {
-    ...testUser,
-    username: 'testuser2',
-    email: 'example2@domain.com',
-    restricted: true,
-    _permissions: {
-      ...testPermissions,
-    },
-  },
+  testUser,
+  testUser2,
 ];

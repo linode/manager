@@ -26,21 +26,6 @@
       "_description": "The status of the ticket.",
       "_filterable": true
     },
-    "dnszone_id": {
-      "_type": "integer",
-      "_value": 456,
-      "_description": "The DNS zone this ticket is regarding, or null."
-    },
-    "linode_id": {
-      "_type": "integer",
-      "_value": 789,
-      "_description": "The Linode this ticket is regarding, or null."
-    },
-    "nodebalancer_id": {
-      "_type": "integer",
-      "_value": 123,
-      "_description": "The NodeBalancer this ticket is regarding, or null."
-    },
     "opened": {
       "_type": "datetime",
       "_value": "2017-02-23T11:21:01",
@@ -65,6 +50,29 @@
       "_type": "string",
       "_value": "some_other_user",
       "_description": "The user who last updated this ticket."
+    },
+    "entity": {
+      "_description": "The entity this ticket was opened regarding",
+      "id": {
+        "_type": "integer",
+        "_value": 9302,
+        "_description": "The entity's ID that this event is for.  This is meaningless without a type.\n"
+      },
+      "label": {
+        "_type": "string",
+        "_value": "linode123",
+        "_description": "The current label of this object.  This will reflect changes in label.\n"
+      },
+      "type": {
+        "_type": "string",
+        "_value": "linode",
+        "_description": "The type of entity this is related to.\n"
+      },
+      "url": {
+        "_type": "string",
+        "_value": "/v4/linode/instances/123",
+        "_description": "The URL where you can access the object this event is for.  If a relative URL, it is relative to the domain you retrieved the event from.\n"
+      }
     }
   },
   "enums": {

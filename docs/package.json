@@ -4,6 +4,9 @@
   "description": "Linode API Docs",
   "main": "src/index.js",
   "scripts": {
+    "build:webpack": "cross-env NODE_ENV=production webpack --config webpack.config.prod.js",
+    "build": "npm run clean && npm run build:webpack",
+    "clean": "rm -rf dist",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node devServer.js"
   },

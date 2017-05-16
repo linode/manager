@@ -1,7 +1,10 @@
-import * as fetch from '~/fetch';
 import { expect } from 'chai';
 import sinon from 'sinon';
+
+import * as fetch from '~/fetch';
+
 import { state } from '@/data';
+
 
 class InternalAssertionError extends Error {
   constructor(aVal, bVal, keyPath) {
@@ -28,8 +31,8 @@ function isObject(o) {
   return o === Object(o);
 }
 
-export function expectObjectDeepEquals(initialA, initialB) {
-  const stackA = [{ a: initialA, path: [] }];
+export function expectObjectDeepEquals(initialA, initialB, initialPath) {
+  const stackA = [{ a: initialA, path: [initialPath].filter(Boolean) }];
   const stackB = [initialB];
 
   while (stackA.length) {
@@ -86,7 +89,7 @@ export async function expectRequest(fn, path, expectedRequestData, response) {
     const fetchStub = sandbox.stub(fetch, 'fetch').returns({
       json: () => response || {},
     });
-    const dispatch = sinon.spy();
+    const dispatch = sandbox.spy();
     await fn(dispatch, () => state);
     expect(fetchStub.callCount).to.equal(1);
     expect(fetchStub.firstCall.args[1]).to.equal(path);
@@ -96,8 +99,38 @@ export async function expectRequest(fn, path, expectedRequestData, response) {
       Object.keys(expectedRequestData).map(key => {
         const value = requestData[key];
         const nativeValue = key === 'body' ? JSON.parse(value) : value;
-        expectObjectDeepEquals(nativeValue, expectedRequestData[key]);
+        expectObjectDeepEquals(nativeValue, expectedRequestData[key], key);
       });
+    }
+  } finally {
+    sandbox.restore();
+  }
+}
+
+export async function expectDispatchOrStoreErrors(fn,
+                                                  expectArgs = [],
+                                                  expectN = undefined,
+                                                  dispatchResults = []) {
+  const sandbox = sinon.sandbox.create();
+  const dispatch = sandbox.stub();
+
+  try {
+    for (let i = 0; i < dispatchResults.length; i += 1) {
+      dispatch.onCall(i).returns(dispatchResults[i]);
+    }
+
+    await fn(dispatch, () => state);
+
+    if (expectN !== undefined) {
+      expect(expectN).to.equal(dispatch.callCount);
+    }
+
+    for (let i = 0; i < dispatch.callCount; i += 1) {
+      const nextArgs = dispatch.args[i];
+      const nextExpect = expectArgs[i];
+      if (nextExpect) {
+        await nextExpect(nextArgs);
+      }
     }
   } finally {
     sandbox.restore();
