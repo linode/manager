@@ -23,15 +23,13 @@ export default class ChangePassword extends Component {
     };
   }
 
-  onSubmit = async () => {
+  onSubmit = () => {
     const { dispatch } = this.props;
     const { password, expires } = this.state;
 
-    await dispatch(dispatchOrStoreErrors.apply(this, [
-      [
-        () => setPassword(password, SelectExpiration.map(expires)),
-        () => this.setState({ password: '', expires: '0' }),
-      ],
+    return dispatch(dispatchOrStoreErrors.call(this, [
+      () => setPassword(password, SelectExpiration.map(expires)),
+      () => this.setState({ password: '', expires: '0' }),
     ]));
   }
 

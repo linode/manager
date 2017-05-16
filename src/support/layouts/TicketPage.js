@@ -47,7 +47,7 @@ export class TicketPage extends Component {
 
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
-  onSubmit = async () => {
+  onSubmit = () => {
     const { attachments, reply: description } = this.state;
     const { ticket, dispatch } = this.props;
 
@@ -69,7 +69,7 @@ export class TicketPage extends Component {
       });
     }
 
-    await dispatch(dispatchOrStoreErrors.call(this, requests));
+    return dispatch(dispatchOrStoreErrors.call(this, requests));
   }
 
   renderTicketResponseForm() {

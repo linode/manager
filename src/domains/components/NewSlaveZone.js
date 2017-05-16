@@ -25,7 +25,7 @@ export default class NewSlaveZone extends Component {
     const { dispatch } = this.props;
     const { domain, ips } = this.state;
 
-    dispatch(dispatchOrStoreErrors.call(this, [
+    return dispatch(dispatchOrStoreErrors.call(this, [
       () => domains.post({ domain, ips: ips.split(';'), type: 'slave' }),
       () => push('/domains'),
     ]));

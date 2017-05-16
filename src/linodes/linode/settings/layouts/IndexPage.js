@@ -14,7 +14,7 @@ import { selectLinode } from '../../utilities';
 
 export class IndexPage extends Component {
   static async preload({ dispatch, getState }, { linodeLabel }) {
-    if (window.location.pathname.indexOf('/settings/advanced/configs/') === -1) {
+    if (window.location.pathname.indexOf('/settings/advanced') === -1) {
       // No need to preload disks.
       return;
     }

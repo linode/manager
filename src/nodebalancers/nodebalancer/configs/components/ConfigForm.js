@@ -34,7 +34,7 @@ export default class ConfigForm extends Component {
     };
   }
 
-  onSubmit = async () => {
+  onSubmit = () => {
     const { dispatch, nodebalancer, config } = this.props;
     const {
       port, protocol, algorithm, stickiness, check, checkPassive, checkInterval, checkTimeout,
@@ -71,10 +71,12 @@ export default class ConfigForm extends Component {
       calls.push(() => updateConfigSSL(sslData, ...idsPath));
     }
     calls.push(() => nodebalancers.configs[config.id ? 'put' : 'post'](data, ...idsPath));
-    calls.push(({ id }) => id !== config.id &&
-      push(`/nodebalancers/${nodebalancer.label}/configs/${id}`));
 
-    await dispatch(dispatchOrStoreErrors.call(this, calls));
+    if (!config.id) {
+      calls.push(({ id }) => push(`/nodebalancers/${nodebalancer.label}/configs/${id}`));
+    }
+
+    return dispatch(dispatchOrStoreErrors.call(this, calls));
   }
 
   onChange = ({ target: { checked, value, name, type } }) =>

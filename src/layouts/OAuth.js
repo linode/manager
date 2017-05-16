@@ -3,36 +3,26 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
 import { setToken } from '~/actions/authentication';
-import { account, profile } from '~/api';
 import { LOGIN_ROOT } from '~/constants';
 import { rawFetch } from '~/fetch';
-import md5 from 'md5';
 import { clientId, clientSecret } from '~/secrets';
 import { setStorage } from '~/storage';
 
 
-export function setSession(oauthToken = '',
-                           scopes = '',
-                           username = '',
-                           email = '',
-                           timezone = '') {
-  const { dispatch } = this.props;
-  const hash = email && md5(email.trim().toLowerCase());
-  dispatch(setToken(
-    oauthToken, scopes, username, email, hash));
-  setStorage('authentication/oauth-token', oauthToken);
-  setStorage('authentication/scopes', scopes);
-  setStorage('authentication/username', username);
-  setStorage('authentication/email', email);
-  setStorage('authentication/email-hash', hash);
-  setStorage('authentication/timezone', timezone);
+export function setSession(oauthToken = '', scopes = '') {
+  return (dispatch) => {
+    // Set these two so we can grab them on subsequent page loads
+    setStorage('authentication/oauth-token', oauthToken);
+    setStorage('authentication/scopes', scopes);
+    // Add all to state for this (page load) session
+    dispatch(setToken(oauthToken, scopes));
+  };
 }
 
 export class OAuthCallbackPage extends Component {
   constructor() {
     super();
     this.state = { error: null };
-    this.setSession = setSession.bind(this);
   }
 
   async componentDidMount() {
@@ -51,15 +41,18 @@ export class OAuthCallbackPage extends Component {
       data.append('client_secret', clientSecret);
       data.append('code', code);
 
+      // Exchange temporary code for access token.
       const resp = await rawFetch(`${LOGIN_ROOT}/oauth/token`, {
         method: 'POST',
         body: data,
         mode: 'cors',
       });
-      const json = await resp.json();
-      this.setSession(json.access_token, json.scopes);
-      const { email, username, timezone } = await dispatch(profile.one());
-      this.setSession(json.access_token, json.scopes, username, email, timezone);
+      const { access_token, scopes } = await resp.json();
+
+      // Token needs to be in redux state for all API calls
+      dispatch(setSession(access_token, scopes));
+
+      // Done OAuth flow. Let the app begin.
       dispatch(push(returnTo || '/'));
     } else {
       dispatch(push('/'));

@@ -5,11 +5,11 @@ import sinon from 'sinon';
 
 import { RescueMode } from '~/linodes/linode/components';
 
-import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
+import { expectDispatchOrStoreErrors, expectObjectDeepEquals, expectRequest } from '@/common';
 import { testLinode } from '@/data/linodes';
 
 
-describe('linodes/linode/layouts/RescueMode', () => {
+describe('linodes/linode/components/RescueMode', () => {
   const sandbox = sinon.sandbox.create();
 
   const dispatch = sandbox.spy();
@@ -26,10 +26,7 @@ describe('linodes/linode/layouts/RescueMode', () => {
         linode={testLinode}
       />);
     page.setState({ diskSlots: [12345, 12346] });
-    // iterate through the labels, there should be two disks and one for Finnix
-    expect(page.find('.row-label').map(node => node.text())).to.deep.equal([
-      '/dev/sda',
-      '/dev/sdb',
+    expectObjectDeepEquals(page.find('.row-label').map(node => node.text()), [
       '/dev/sdh',
     ]);
   });

@@ -1,11 +1,15 @@
-import React from 'react';
-import sinon from 'sinon';
-import { shallow } from 'enzyme';
 import { expect } from 'chai';
+import { mount } from 'enzyme';
+import React from 'react';
+import { push } from 'react-router-redux';
+import sinon from 'sinon';
 
-import { expectRequest } from '@/common';
-import { testLinode1235, testLinode1236 } from '@/data/linodes';
+import { TimeDisplay } from '~/components';
 import { SummaryPage } from '~/linodes/linode/backups/layouts/SummaryPage';
+
+import { expectDispatchOrStoreErrors, expectObjectDeepEquals, expectRequest } from '@/common';
+import { testLinode1235, testLinode1236 } from '@/data/linodes';
+
 
 describe('linodes/linode/backups/layouts/SummaryPage', () => {
   const sandbox = sinon.sandbox.create();
@@ -17,7 +21,7 @@ describe('linodes/linode/backups/layouts/SummaryPage', () => {
   });
 
   it('renders backup blocks with no backups present', () => {
-    const page = shallow(
+    const page = mount(
       <SummaryPage
         dispatch={dispatch}
         linode={testLinode1236}
@@ -42,7 +46,8 @@ describe('linodes/linode/backups/layouts/SummaryPage', () => {
   });
 
   it('renders backup blocks with all backups present', () => {
-    const page = shallow(
+    const { daily, weekly, snapshot } = testLinode1235._backups;
+    const page = mount(
       <SummaryPage
         dispatch={dispatch}
         linode={testLinode1235}
@@ -52,34 +57,38 @@ describe('linodes/linode/backups/layouts/SummaryPage', () => {
     const blocks = page.find('.Backup');
     expect(blocks.length).to.equal(4);
 
-    const testBlock = (block, title, description, id) => {
+    const renderTime = (time) =>
+      mount(<TimeDisplay time={time} />).text();
+
+    const testBlock = (block, title, time, id) => {
       expect(block.find('Link').props().to).to.equal(
         `/linodes/test-linode-1/backups/${id}`);
       expect(block.find('.Backup-title').text()).to.equal(title);
-      expect(block.find('.Backup-description').text()).to.contain(description);
+      expect(block.find('.Backup-description').text()).to.contain(renderTime(time));
     };
 
-    testBlock(blocks.at(0), 'Daily', 'day', '54782214');
-    testBlock(blocks.at(1), 'Weekly', 'day', '54782216');
-    testBlock(blocks.at(2), 'Biweekly', 'day', '54782217');
-    testBlock(blocks.at(3), 'Snapshot', 'day', '54782236');
+    testBlock(blocks.at(0), 'Daily', daily.finished, '54782214');
+    testBlock(blocks.at(1), 'Weekly', weekly[0].finished, '54782216');
+    testBlock(blocks.at(2), 'Biweekly', weekly[1].finished, '54782217');
+    testBlock(blocks.at(3), 'Snapshot', snapshot.current.finished, '54782236');
   });
 
   it('takes a snapshot', async () => {
-    const page = shallow(
+    const page = mount(
       <SummaryPage
         dispatch={dispatch}
         linode={testLinode1236}
       />
     );
 
-    const takeSnapshot = page.find('.Backup').at(3).find('Button');
-    expect(takeSnapshot.length).to.equal(1);
-
     dispatch.reset();
-    takeSnapshot.simulate('click');
+    page.find('Form').props().onSubmit({ preventDefault() {} });
 
-    const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, '/linode/instances/1236/backups', { method: 'POST' });
+    expect(dispatch.callCount).to.equal(1);
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      ([fn]) => expectRequest(fn, '/linode/instances/1236/backups', { method: 'POST' }),
+      ([pushResult]) => expectObjectDeepEquals(
+        pushResult, push(`/linodes/${testLinode1236.label}/backups/1`)),
+    ], 2, [{ id: '1' }]);
   });
 });

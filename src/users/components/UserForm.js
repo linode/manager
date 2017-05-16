@@ -124,7 +124,7 @@ export default class UserForm extends Component {
             >{this.props.user.username ? undefined : 'Add User'}</SubmitButton>
             <FormSummary
               errors={errors}
-              success={this.props.user.username && "User settings saved."}
+              success={this.props.user.username && 'User settings saved.'}
             />
           </div>
         </div>

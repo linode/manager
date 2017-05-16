@@ -1,4 +1,4 @@
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
@@ -17,7 +17,7 @@ describe('users/layouts/CreatePage', () => {
   const dispatch = sandbox.stub();
 
   it('should commit changes to the API', async () => {
-    const page = shallow(
+    const page = mount(
       <CreatePage
         dispatch={dispatch}
       />

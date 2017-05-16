@@ -72,9 +72,11 @@ export default function Details(props) {
                 disabled={selectedDistribution === 'none'}
               />
               {selectedDistribution !== 'none' ? null : (
-                <p className="alert alert-info">
-                  You can't set a password for an Empty Linode.
-                </p>
+                <div>
+                  <p className="alert alert-info">
+                    You can't set a password for an Empty Linode.
+                  </p>
+                </div>
               )}
             </div>
             <FormGroupError className="float-sm-left" errors={errors} name="root_pass" />

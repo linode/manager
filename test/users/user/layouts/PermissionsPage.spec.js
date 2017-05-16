@@ -1,14 +1,13 @@
+import { expect } from 'chai';
+import { mount, shallow } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
-import { mount, shallow } from 'enzyme';
-import { expect } from 'chai';
-import { expectRequest } from '@/common';
 
-import { api } from '@/data';
 import { PermissionsPage } from '~/users/user/layouts/PermissionsPage';
 
-const { users } = api;
-const user = { testuser2: users.users[1] };
+import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
+import { testUser2 } from '@/data/users';
+
 
 describe('users/user/layouts/PermissionsPage', () => {
   const sandbox = sinon.sandbox.create();
@@ -18,16 +17,12 @@ describe('users/user/layouts/PermissionsPage', () => {
   });
 
   const dispatch = sandbox.stub();
-  const params = {
-    username: 'testuser2',
-  };
 
   it('renders permissions', () => {
     const page = mount(
       <PermissionsPage
         dispatch={dispatch}
-        users={user}
-        params={params}
+        user={testUser2}
       />
     );
 
@@ -47,18 +42,16 @@ describe('users/user/layouts/PermissionsPage', () => {
     const page = shallow(
       <PermissionsPage
         dispatch={dispatch}
-        users={user}
-        params={params}
+        user={testUser2}
       />
     );
 
     dispatch.reset();
     page.instance().updateGlobal('add_linodes');
     await page.instance().onSubmit();
-    expect(dispatch.callCount).to.equal(2);
-    const fn = dispatch.firstCall.args[0];
-    await expectRequest(
-      fn, `/account/users/${params.username}/grants`, {
+    expect(dispatch.callCount).to.equal(1);
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      ([fn]) => expectRequest(fn, `/account/users/${testUser2.username}/grants`, {
         method: 'PUT',
         body: {
           customer: {
@@ -99,16 +92,15 @@ describe('users/user/layouts/PermissionsPage', () => {
             },
           ],
         },
-      }
-    );
+      }),
+    ]);
   });
 
   it('should change object state', async () => {
     const page = mount(
       <PermissionsPage
         dispatch={dispatch}
-        users={user}
-        params={params}
+        user={testUser2}
       />
     );
 

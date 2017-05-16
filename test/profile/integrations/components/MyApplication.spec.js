@@ -1,15 +1,15 @@
+import { expect } from 'chai';
+import { mount } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
-import { mount } from 'enzyme';
-import { expect } from 'chai';
 
 import { SHOW_MODAL } from '~/actions/modal';
 import { API_ROOT } from '~/constants';
 import MyApplication from '~/profile/integrations/components/MyApplication';
-import { api } from '@/data';
-import { expectRequest } from '@/common';
 
-const { clients: { clients } } = api;
+import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
+import { clients } from '@/data/clients';
+
 
 describe('profile/integrations/components/MyApplication', () => {
   const sandbox = sinon.sandbox.create();
@@ -100,7 +100,10 @@ describe('profile/integrations/components/MyApplication', () => {
     dispatch.reset();
 
     await page.instance().deleteApp();
-    const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, '/account/clients/1', { method: 'DELETE' });
+    expect(dispatch.callCount).to.equal(1);
+
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      ([fn]) => expectRequest(fn, '/account/clients/1', { method: 'DELETE' }),
+    ], 1);
   });
 });

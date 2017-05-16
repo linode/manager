@@ -39,7 +39,7 @@ describe('components/modal/ConfirmModalBody', () => {
       </ConfirmModalBody>
     );
 
-    modal.find('.btn-default').simulate('click');
+    modal.find('Form').props().onSubmit({ preventDefault() {} });
     expect(onOk.callCount).to.equal(1);
   });
 

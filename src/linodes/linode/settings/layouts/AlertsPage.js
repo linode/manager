@@ -16,7 +16,7 @@ import { selectLinode } from '../../utilities';
 export class AlertsPage extends Component {
   constructor(props) {
     super(props);
-    this.renderAlertRow = this.renderAlertRow.bind(this);
+
     this.state = {
       loading: false,
       errors: {},
@@ -30,20 +30,20 @@ export class AlertsPage extends Component {
     };
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
   }
 
-  onSubmit = async () => {
+  onSubmit = () => {
     const { dispatch, linode } = this.props;
 
-    await dispatch(dispatchOrStoreErrors.apply(this, [
+    return dispatch(dispatchOrStoreErrors.apply(this, [
       [() => linodes.put({ alerts: this.state.alerts }, linode.id)],
     ]));
   }
 
-  renderAlertRow({ key, name, value, label, text }) {
+  renderAlertRow = ({ key, name, value, label, text }) => {
     const { errors } = this.state;
     const { threshold, enabled } = value;
     const int = i => parseInt(i, 10);
@@ -93,23 +93,23 @@ export class AlertsPage extends Component {
     const { loading, errors } = this.state;
     const alerts = [
       {
-        name: 'CPU usage', key: 'cpu', value: cpu, label: '%',
+        name: 'CPU Usage', key: 'cpu', value: cpu, label: '%',
         text: 'average CPU usage over 2 hours',
       },
       {
-        name: 'Disk IO rate', key: 'io', value: io, label: 'IOPS',
+        name: 'Disk IO Rate', key: 'io', value: io, label: 'IOPS',
         text: 'average disk IOPS over 2 hours',
       },
       {
-        name: 'Incoming traffic', key: 'transfer_in', value: transfer_in,
+        name: 'Incoming Traffic', key: 'transfer_in', value: transfer_in,
         label: 'Mbit/s', text: 'average incoming traffic over a 2 hour period',
       },
       {
-        name: 'Outbound traffic', key: 'transfer_out', value: transfer_out,
+        name: 'Outbound Traffic', key: 'transfer_out', value: transfer_out,
         label: 'Mbit/s', text: 'average outbound traffic over a 2 hour period',
       },
       {
-        name: 'Transfer quota', key: 'transfer_quota', value: transfer_quota,
+        name: 'Transfer Quota', key: 'transfer_quota', value: transfer_quota,
         label: '%', text: 'percentage of network transfer quota used',
       },
     ];
