@@ -80,7 +80,7 @@ export default class StatusDropdown extends Component {
   }
 
   render() {
-    const { linode, dispatch, shortcuts, className } = this.props;
+    const { linode, dispatch, className } = this.props;
 
     if (LinodeStates.pending.indexOf(linode.status) !== -1) {
       const safeProgress = linode.__progress || RANDOM_PROGRESS_MAX;
@@ -105,7 +105,7 @@ export default class StatusDropdown extends Component {
         tempStatus: 'rebooting',
         _key: 'reboot',
         _action: rebootLinode,
-        _condition: () => linode.status !== 'offline',
+        _condition: () => linode.status === 'running',
         _configs: true,
       },
       {
@@ -127,7 +127,7 @@ export default class StatusDropdown extends Component {
         name: 'Launch Console',
         _key: 'text-console',
         _action: () => { launchWeblishConsole(linode); },
-        _condition: () => shortcuts,
+        _condition: () => linode.status === 'running',
       },
     ]
     .filter(element => element._condition())
@@ -165,11 +165,4 @@ StatusDropdown.propTypes = {
   className: PropTypes.string,
   linode: PropTypes.object,
   dispatch: PropTypes.func,
-  shortcuts: PropTypes.bool,
-  short: PropTypes.bool,
-};
-
-StatusDropdown.defaultProps = {
-  shortcuts: true,
-  short: true,
 };
