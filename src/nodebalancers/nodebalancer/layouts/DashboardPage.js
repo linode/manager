@@ -96,7 +96,7 @@ export class DashboardPage extends Component {
         protocol: config.protocol.toUpperCase(),
         algorithm: NODEBALANCER_CONFIG_ALGORITHMS.get(config.algorithm),
         stickiness: NODEBALANCER_CONFIG_STICKINESS.get(config.stickiness),
-        statusString: '0 up, 0 down',
+        statusString: `${config.nodes_status.up} up, ${config.nodes_status.down} down`,
       };
     });
 

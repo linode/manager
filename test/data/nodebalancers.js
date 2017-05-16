@@ -27,6 +27,10 @@ function createTestNodeBalancer(id) {
           cipher_suite: 'recommended',
           stickiness: 'none',
           check_passive: true,
+          nodes_status: {
+            up: 1,
+            down: 0,
+          },
           port: 80,
           check_body: '',
           check: 'none',
@@ -58,6 +62,10 @@ function createTestNodeBalancer(id) {
           cipher_suite: 'recommended',
           stickiness: 'none',
           check_passive: true,
+          nodes_status: {
+            up: 0,
+            down: 0,
+          },
           port: 81,
           check_body: '',
           check: 'none',
