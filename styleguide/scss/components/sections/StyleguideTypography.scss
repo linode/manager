@@ -1,21 +1,13 @@
 .StyleguideTypography {
   width: 100%;
 
-  table {
-    table-layout: fixed;
-  }
-
-  table tr {
-    line-height: normal;
-  }
-
-  table thead th,
-  table tbody td {
-    padding: 10px;
-  }
-
-  table tbody td {
-    white-space: normal;
+  .TableCell h1,
+  .TableCell h2,
+  .TableCell h3,
+  .TableCell h4,
+  .TableCell h5,
+  .TableCell h6 {
+    margin: 0;
   }
 
   th.element {

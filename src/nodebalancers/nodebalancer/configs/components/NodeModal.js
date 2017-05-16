@@ -3,11 +3,14 @@ import { connect } from 'react-redux';
 
 import { hideModal } from '~/actions/modal';
 import { nodebalancers } from '~/api';
+import { dispatchOrStoreErrors } from '~/api/util';
 import { CancelButton } from 'linode-components/buttons';
 import {
   Form, ModalFormGroup, Input, Select, SubmitButton,
 } from 'linode-components/forms';
-import { FormSummary, dispatchOrStoreErrors } from '~/components/forms';
+
+import { FormSummary } from 'linode-components/forms';
+
 
 export class NodeModal extends Component {
   constructor(props) {

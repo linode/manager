@@ -5,7 +5,8 @@ import { Form, Input, SubmitButton } from 'linode-components/forms';
 import { CancelButton } from 'linode-components/buttons';
 
 import { domains } from '~/api';
-import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+import { dispatchOrStoreErrors } from '~/api/util';
+import { FormSummary } from 'linode-components/forms';
 
 export default class EditMXRecord extends Component {
   constructor(props) {

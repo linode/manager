@@ -4,12 +4,12 @@ import { Link } from 'react-router';
 import { push } from 'react-router-redux';
 
 import { Card, CardHeader } from 'linode-components/cards';
-import { Input, Form, FormGroup, FormGroupError, SubmitButton } from 'linode-components/forms';
+import { Input, Form, FormGroup, FormGroupError, FormSummary, SubmitButton } from 'linode-components/forms';
 
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 import { nodebalancers, regions } from '~/api';
-import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+import { dispatchOrStoreErrors } from '~/components/forms';
 import Region from '~/components/Region';
 
 

@@ -11,15 +11,14 @@
   }
 
   &-main {
-    padding: 0 10px;
-  }
-
-  &-header {
-    padding: 40px 0 60px 0;
+    min-height: 100%;
+    padding-top: 80px;
   }
 
   &-header h1 {
-    font-size: 34px;
+    font-size: 28px;
+    color: $gray;
+    padding: 14px 0;
   }
 
   &-header h1 > img {
