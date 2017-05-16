@@ -35,14 +35,12 @@ export class OAuthCallbackPage extends Component {
       return;
     }
 
-    console.log('HERE');
     if (code) {
       const data = new FormData();
       data.append('client_id', clientId);
       data.append('client_secret', clientSecret);
       data.append('code', code);
 
-      console.log('HERE');
       // Exchange temporary code for access token.
       const resp = await rawFetch(`${LOGIN_ROOT}/oauth/token`, {
         method: 'POST',

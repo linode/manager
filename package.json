@@ -8,7 +8,7 @@
     "build": "npm run clean && npm run build:webpack",
     "rebuild-components": "rm -fr node_modules/linode-components && npm install",
     "kill": "lsof -i :3000 | grep node | tr -s ' ' | cut -d ' ' -f2 | xargs kill",
-    "lint": "eslint src test",
+    "lint": "eslint --max-warnings=0 src test",
     "lint:fix": "eslint src test --fix",
     "start": "node devServer.js",
     "test": "NODE_ENV=test karma start karma.conf.js --single-run",
