@@ -9,6 +9,38 @@ export default class Plan extends Component {
     this.renderPlan = this.renderPlan.bind(this);
   }
 
+  renderClass(plans, group, label) {
+    const planGroup = Object.values(plans).filter(
+      plan => {
+        if (group.indexOf(plan.class) > -1) {
+          return plan;
+        }
+      }
+    );
+
+    const chunkedPlans = _.chunk(planGroup, 4);
+    return (
+      <div key={label} className="plan-group">
+        <h3>{label}</h3>
+        <div>
+        {chunkedPlans.map((arr, index) => {
+          return (
+            <div key={index} className="row">
+              {arr.map((plan, index) => {
+                return (
+                  <div key={index} className="col-sm-3">
+                    {this.renderPlan(plan)}
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })}
+        </div>
+      </div>
+    );
+  }
+
   renderPlan(plan) {
     const monthlyPrice = plan.monthly_price;
     const hourlyPrice = plan.hourly_price;
@@ -37,28 +69,20 @@ export default class Plan extends Component {
     );
   }
 
+  sortPlans = (types, key) => types.sort((a,b) => {
+    return (a[key] > b[key]) ? 1 : ((b[key] > a[key]) ? -1 : 0);
+  });
+
   render() {
     const { types } = this.props;
-    const sortedPlans = Object.values(types).sort(
-      (a, b) => a.ram > b.ram);
+    const sortedPlans = this.sortPlans(Object.values(types), 'ram');
 
     const chunkedPlans = _.chunk(sortedPlans, 4);
 
     return (
       <div>
-        {chunkedPlans.map((arr, index) => {
-          return (
-            <div key={index} className="row">
-              {arr.map((plan, index) => {
-                return (
-                  <div key={index} className="col-sm-3">
-                    {this.renderPlan(plan)}
-                  </div>
-                );
-              })}
-            </div>
-          );
-        })}
+        {this.renderClass(sortedPlans, ['standard', 'nanode'], 'Standard')}
+        {this.renderClass(sortedPlans, ['highmem'], 'High Memory')}
       </div>
     );
   }
