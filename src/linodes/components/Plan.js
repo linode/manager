@@ -9,13 +9,6 @@ export default class Plan extends Component {
     this.renderPlan = this.renderPlan.bind(this);
   }
 
-  sortPlans = (types, key) => types.sort((a, b) => {
-    if (a[key] > b[key]) {
-      return 1;
-    }
-    return (b[key] > a[key]) ? -1 : 0;
-  });
-
   renderClass(plans, group, label) {
     const planGroup = Object.values(plans).filter(
       plan => {
@@ -76,9 +69,15 @@ export default class Plan extends Component {
     );
   }
 
+  sortPlans = (types, key) => types.sort((a,b) => {
+    return (a[key] > b[key]) ? 1 : ((b[key] > a[key]) ? -1 : 0);
+  });
+
   render() {
     const { types } = this.props;
     const sortedPlans = this.sortPlans(Object.values(types), 'ram');
+
+    const chunkedPlans = _.chunk(sortedPlans, 4);
 
     return (
       <div>
