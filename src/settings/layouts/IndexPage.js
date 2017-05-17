@@ -6,7 +6,6 @@ import {
   Checkbox, Form, FormGroup, SubmitButton,
 } from 'linode-components/forms';
 
-import { setError } from '~/actions/errors';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 import { account } from '~/api';
@@ -14,16 +13,6 @@ import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
 
 
 export class IndexPage extends Component {
-  static async preload({ dispatch }) {
-    try {
-      await dispatch(account.one());
-    } catch (response) {
-      // eslint-disable-next-line no-console
-      console.error(response);
-      dispatch(setError(response));
-    }
-  }
-
   constructor(props) {
     super(props);
 

@@ -27,15 +27,30 @@ export class LoadingRouterContext extends RouterContext {
       routes: newProps.routes,
       location: newProps.location.pathname,
     }, async (error, redirectLocation, redirectParams, done) => {
+      const newPreloads = [];
+
       // Call preload if present on any components rendered by the route,
       // down to the page level (Layout -> IndexPage -> EditConfigPage)
       for (let i = 0; i < redirectParams.routes.length; i++) {
-        const component = redirectParams.routes[i].component;
+        const { component } = redirectParams.routes[i];
+
         if (component !== undefined && component.hasOwnProperty('preload')) {
+          // If this page's preload was loaded in the last page change, don't load it again.
+          if (this.lastPreloads.indexOf(component.preload) !== -1) {
+            // Store as if we had called it.
+            newPreloads.push(component.preload);
+            continue;
+          }
+
           this.preloadCounter++;
           await component.preload(store, newProps.params);
+          newPreloads.push(component.preload);
           this.preloadCounter--;
         }
+      }
+
+      if (newPreloads.length) {
+        this.lastPreloads = newPreloads;
       }
 
       // Set anything at all to force an update
@@ -54,6 +69,7 @@ export class LoadingRouterContext extends RouterContext {
     super(props);
     this.match = props.match;
     this.preloadCounter = 0;
+    this.lastPreloads = [];
 
     this.state = { initialLoad: true };
   }
