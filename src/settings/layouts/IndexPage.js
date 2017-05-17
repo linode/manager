@@ -6,7 +6,6 @@ import {
   Checkbox, Form, FormGroup, SubmitButton,
 } from 'linode-components/forms';
 
-import { setError } from '~/actions/errors';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 import { account } from '~/api';
