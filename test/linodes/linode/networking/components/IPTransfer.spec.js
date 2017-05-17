@@ -144,7 +144,9 @@ describe('linodes/linode/networking/components/IPTransfer', () => {
         _dispatch.returns({ total_pages: 1, linodes: [], total_results: 0 });
         await _fn(_dispatch, () => state);
         _fn = _dispatch.firstCall.args[0];
-        await expectRequest(_fn, '/linode/instances/?page=1', { method: 'GET' });
+        await expectRequest(_fn, '/linode/instances/?page=1', undefined, {
+          linodes: [],
+        });
       },
     ]);
   });
