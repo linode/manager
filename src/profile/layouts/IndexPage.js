@@ -3,24 +3,11 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
 import { Tabs } from 'linode-components/tabs';
-import { setError } from '~/actions/errors';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 
-import { profile } from '~/api';
-
 
 export class IndexPage extends Component {
-
-  static async preload({ dispatch }) {
-    try {
-      await dispatch(profile.one());
-    } catch (response) {
-      // eslint-disable-next-line no-console
-      console.error(response);
-      dispatch(setError(response));
-    }
-  }
 
   async componentDidMount() {
     const { dispatch } = this.props;
