@@ -1,0 +1,18 @@
+.MethodResponse {
+    h4 {
+        margin-bottom: 5px;
+    }
+}
+
+tr.NestedSchemaParent {
+
+}
+
+td.NestedSchemaCell {
+    background-color: $gray;
+    padding: 10px 0 0 40px;
+
+    .Example {
+        padding: 0;
+    }
+}
