@@ -29,7 +29,7 @@ describe('linodes/components/StatusDropdown', () => {
 
     dropdown.find('.Dropdown-toggle').simulate('click');
 
-    expect(dropdown.find('.Dropdown-item').length).to.equal(2);
+    expect(dropdown.find('.Dropdown-item').length).to.equal(1);
     expect(dropdown.find('.Dropdown-item').at(0).text()).to.equal('Power On');
   });
 
