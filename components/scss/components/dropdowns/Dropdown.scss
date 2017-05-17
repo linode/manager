@@ -1,8 +1,4 @@
 .Dropdown {
-    &.dropdown-menu {
-        @extend .font-normal;
-    }
-
     .btn:hover {
         cursor: pointer;
     }
@@ -12,27 +8,58 @@
         box-shadow: none;
     }
 
-    .dropdown-first:focus, .dropdown-first:focus:active {
-        outline: 0;
+    &-toggle,
+    &-first,
+    &-item {
+        @extend .btn;
+        @extend .btn-default;
+
+        text-align: left;
     }
 
-    // TODO: BEMify
-    .dropdown-menu {
-        padding: 0;
+    &-item {
+        width: 100%;
+        display: block;
         border: 0;
-        margin-top: -1px;
-        margin-left: 1px;
+        padding: 0 15px;
 
-        .dropdown-item:first-of-type {
-            margin-left: -1px;
-        }
+        // Overwrites settings from inside .btn-group
+        margin-left: 0 !important;
+    }
 
-        .dropdown-item:not(:first-of-type) {
-            border-top: 0;
+    &-toggle {
+        // Give menu an anchor position
+        position: relative;
+        width: $form-field-height;
+        height: $form-field-height;
+        text-align: center;
+
+        // Hide default Bootstrap arrow
+        ::after {
+            display: none;
         }
     }
 
-    .dropdown-toggle::after {
+    &-menu {
+        @extend .font-normal;
+
+        border: $border;
+        width: 200px;
+        text-align: right;
+        position: absolute;
+        top: $form-field-height - 1px;
+        z-index: 1000;
+
+        left: 0;
+        &--right {
+            left: initial;
+            right: 0;
+        }
+
         display: none;
+    }
+
+    &--open &-menu {
+        display: initial;
     }
 }

@@ -6,11 +6,13 @@ export default function Radio(props) {
       <label>
         <input
           id={props.id}
+          name={props.name}
           type="radio"
           className="Radio-input"
           checked={props.checked}
           onChange={props.onChange}
           value={props.value}
+          name={props.name}
         />
         {props.label ? <span className="col-form-label Radio-label">{props.label}</span> : null}
       </label>
@@ -21,7 +23,9 @@ export default function Radio(props) {
 Radio.propTypes = {
   checked: PropTypes.bool.isRequired,
   onChange: PropTypes.func.isRequired,
-  value: PropTypes.bool.isRequired,
+  name: PropTypes.string.isRequired,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+  name: PropTypes.string.isRequired,
   label: PropTypes.any,
   id: PropTypes.string,
 };

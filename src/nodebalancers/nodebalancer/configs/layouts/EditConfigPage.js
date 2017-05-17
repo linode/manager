@@ -2,78 +2,29 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { Card, CardHeader } from 'linode-components/cards';
+import { Card } from 'linode-components/cards';
 
 import { setSource } from '~/actions/source';
 import { objectFromMapByLabel } from '~/api/util';
-import { nodebalancers } from '~/api';
-import { reduceErrors } from '~/components/forms';
 
-import { ConfigForm } from '../../components/ConfigForm';
+import { ConfigForm } from '../components';
 
 
 export class EditConfigPage extends Component {
-  constructor(props) {
-    super(props);
-    this.saveChanges = this.saveChanges.bind(this);
-    this.state = {
-      loading: false,
-      errors: {},
-    };
-  }
-
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
   }
 
-  async saveChanges(stateValues) {
-    const { config, dispatch, nodebalancer } = this.props;
-
-    const {
-      port,
-      protocol,
-      algorithm,
-      stickiness,
-      check,
-      checkPassive,
-      checkInterval,
-      checkTimeout,
-      checkAttempts,
-    } = stateValues;
-    this.setState({ loading: true, errors: {} });
-    const data = {
-      port: parseInt(port),
-      protocol,
-      algorithm,
-      stickiness,
-      check,
-      check_passive: checkPassive,
-      check_interval: checkInterval,
-      check_timeout: checkTimeout,
-      check_attempts: checkAttempts,
-    };
-    try {
-      await dispatch(nodebalancers.configs.put(data, nodebalancer.id, config.id));
-      this.setState({ loading: false });
-      await dispatch(push(`/nodebalancers/${nodebalancer.label}`));
-    } catch (response) {
-      const errors = await reduceErrors(response);
-      this.setState({ errors, loading: false });
-    }
-  }
-
   render() {
     const { config, dispatch, nodebalancer } = this.props;
-    const { loading, errors } = this.state;
 
     if (!config) {
-      dispatch(push(`/nodebalancers/${nodebalancer.label}`));
-      return null;
+      return dispatch(push(`/nodebalancers/${nodebalancer.label}`));
     }
 
     return (
-      <Card header={<CardHeader title="Edit Configuration" />}>
+      <Card>
         <div>
           <p>
             {/* eslint-disable max-len */}
@@ -83,20 +34,9 @@ export class EditConfigPage extends Component {
           </p>
         </div>
         <ConfigForm
-          saveChanges={this.saveChanges}
-          loading={loading}
-          errors={errors}
-          submitText="Edit Configuration"
-          port={config.port}
-          protocol={config.protocol}
-          algorithm={config.algorithm}
-          stickiness={config.stickiness}
-          check={config.check}
-          checkPassive={!!config.check_passive}
-          checkInterval={config.check_interval}
-          checkTimeout={config.check_timeout}
-          checkAttempts={config.check_attempts}
-          nodebalancerConfigId={config.id}
+          config={config}
+          nodebalancer={nodebalancer}
+          dispatch={dispatch}
         />
       </Card>
     );
@@ -104,10 +44,9 @@ export class EditConfigPage extends Component {
 }
 
 EditConfigPage.propTypes = {
-  dispatch: PropTypes.func,
-  config: PropTypes.object,
-  nodebalancer: PropTypes.object,
-  port: PropTypes.number,
+  dispatch: PropTypes.func.isRequired,
+  config: PropTypes.object.isRequired,
+  nodebalancer: PropTypes.object.isRequired,
 };
 
 function select(state, ownProps) {
@@ -120,4 +59,5 @@ function select(state, ownProps) {
 
   return { nodebalancer, config };
 }
+
 export default connect(select)(EditConfigPage);

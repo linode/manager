@@ -26,21 +26,19 @@ export class CreatePage extends Component {
     };
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
     dispatch(setTitle('Add a NodeBalancer'));
   }
 
-  onSubmit = async () => {
+  onSubmit = () => {
     const { dispatch } = this.props;
     const { region, label } = this.state;
 
-    await dispatch(dispatchOrStoreErrors.apply(this, [
-      [
-        () => nodebalancers.post({ label, region }),
-        () => push(`/nodebalancers/${label}`),
-      ],
+    return dispatch(dispatchOrStoreErrors.call(this, [
+      () => nodebalancers.post({ label, region }),
+      () => push(`/nodebalancers/${label}`),
     ]));
   }
 

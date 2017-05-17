@@ -7,11 +7,11 @@ import { ConfirmModalBody, DeleteModalBody } from 'linode-components/modals';
 import { showModal, hideModal } from '~/actions/modal';
 import { clients } from '~/api';
 import { resetSecret } from '~/api/clients';
-import { reduceErrors } from '~/components/forms';
+import { dispatchOrStoreErrors } from '~/components/forms';
 import { API_ROOT } from '~/constants';
 
 import { renderSecret } from './CreatePersonalAccessToken';
-import EditApplication from './EditApplication';
+import CreateOrEditApplication from './CreateOrEditApplication';
 
 
 export default class MyApplication extends Component {
@@ -24,19 +24,16 @@ export default class MyApplication extends Component {
   deleteApp = async () => {
     const { client, dispatch } = this.props;
 
-    try {
-      await dispatch(clients.delete(client.id));
-    } catch (response) {
-      const errors = await reduceErrors(response);
-      this.setState({ errors });
-    }
+    return dispatch(dispatchOrStoreErrors.call(this, [
+      () => clients.delete(client.id),
+    ]));
   }
 
   editAction = () => {
     const { dispatch, client } = this.props;
 
     dispatch(showModal('Edit OAuth Client',
-      <EditApplication
+      <CreateOrEditApplication
         id={client.id}
         label={client.label}
         redirect={client.redirect_uri}
@@ -80,8 +77,9 @@ export default class MyApplication extends Component {
   renderActions() {
     const elements = [
       { name: 'Edit', action: this.editAction },
-      { name: 'Delete', action: this.deleteAction },
       { name: 'Reset secret', action: this.resetAction },
+      null,
+      { name: 'Delete', action: this.deleteAction },
     ];
 
     return <Dropdown elements={elements} leftOriented={false} />;

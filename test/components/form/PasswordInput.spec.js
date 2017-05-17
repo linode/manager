@@ -17,28 +17,28 @@ describe('components/forms/PasswordInput', () => {
     const input = shallow(
       <PasswordInput
         onChange={change}
+        name="password"
         value=""
-      />);
+        name="password"
+      />
+    );
 
-    input.find('Input').simulate('change',
-                                  { target: { value: 'p@ssword' } });
-
+    input.find('Input').simulate('change', { target: { value: 'password' } });
     expect(change.callCount).to.equal(1);
-    expect(change.firstCall.args[0]).to.equal('p@ssword');
   });
 
   it('should calculate password strength', () => {
     const input = mount(
       <PasswordInput
+        value="correct horse battery staple"
         onChange={() => {}}
-        value=""
-      />);
+        name="password"
+      />
+    );
 
-    input.find('input').simulate('change',
-      { target: { value: 'correct horse battery staple' } });
     expect(input.find('.PasswordInput-strength--4').length).to.equal(1);
     expect(input.find('.PasswordInput-strength-text').length).to.equal(1);
     expect(input.find('.PasswordInput-strength-text').text())
-      .to.equal('Strong');
+      .to.equal('This is a very strong password.');
   });
 });

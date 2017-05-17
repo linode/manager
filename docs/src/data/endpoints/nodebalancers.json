@@ -1,0 +1,245 @@
+{
+  "name": "NodeBalancers",
+  "base_path": "/nodebalancers",
+  "description": "NodeBalancer endpoints provide a means of managing <a href=\"#object-nodebalancer\"> NodeBalancer objects</a> on your account.\n",
+  "endpoints": {
+    "nodebalancers": {
+      "type": "list",
+      "resource": "nodebalancer",
+      "authenticated": true,
+      "description": "Manage the collection of NodeBalancers your account may access.\n",
+      "methods": {
+        "GET": {
+          "oauth": "nodebalancers:view",
+          "description": "Returns a list of <a href=\"#object-nodebalancer\">NodeBalancers</a>.\n",
+          "examples": {
+            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/nodebalancers\n"
+          }
+        },
+        "POST": {
+          "money": true,
+          "oauth": "nodebalancers:create",
+          "description": "Creates a new NodeBalancer.\n",
+          "params": {
+            "region": {
+              "description": "A <a href=\"#object-region\">region</a> ID to provision this NodeBalancer in.\n",
+              "type": "region"
+            },
+            "label": {
+              "optional": true,
+              "description": "The label to assign this NodeBalancer. Defaults to \"nodebalancer\" followed by its ID.",
+              "limit": "3-32 ASCII characters limited to letters, numbers, underscores, and dashes, starting and ending with a letter, and without two dashes or underscores in a row"
+            },
+            "client_conn_throttle": {
+              "optional": true,
+              "description": "To help mitigate abuse, throttle connections per second, per client. 0 to disable, max of 20.\n"
+            }
+          },
+          "examples": {
+            "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n        \"region\": \"us-east-1a\",\n        \"label\": \"my_cool_balancer\",\n        \"client_conn_throttle\": 10\n    }' \\\n    https://$api_root/$version/nodebalancers\n"
+          }
+        }
+      }
+    },
+    "nodebalancers/:id": {
+      "type": "resource",
+      "resource": "nodebalancer",
+      "authenticated": true,
+      "description": "Manage a particular NodeBalancer your account may access.\n",
+      "methods": {
+        "GET": {
+          "oauth": "nodebalancers:view",
+          "description": "Returns information about this <a href=\"#object-nodebalancer\">NodeBalancer</a>.\n",
+          "examples": {
+            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id\n"
+          }
+        },
+        "PUT": {
+          "oauth": "nodebalancers:modify",
+          "description": "Modifies this NodeBalancer.\n",
+          "examples": {
+            "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X PUT -d '{\n        \"region\": \"us-east-1a\",\n        \"label\": \"awesome_new_label\",\n        \"client_conn_throttle\": 14\n    }' \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id\n"
+          }
+        },
+        "DELETE": {
+          "oauth": "nodebalancers:delete",
+          "dangerous": true,
+          "description": "Deletes this NodeBalancer and all associated configs and nodes. This action cannot be undone.\n",
+          "examples": {
+            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    -X DELETE \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id\n"
+          }
+        }
+      }
+    },
+    "nodebalancers/:id/configs": {
+      "type": "list",
+      "resource": "nodebalancer_config",
+      "authenticated": true,
+      "description": "Manage the configs on this NodeBalancer.\n",
+      "methods": {
+        "GET": {
+          "oauth": "nodebalancers:view",
+          "description": "Returns a list of <a href=\"#object-nodebalancer_config\">configs</a> for a given NodeBalancer.\n",
+          "examples": {
+            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id/configs\n"
+          }
+        },
+        "POST": {
+          "oauth": "nodebalancers:create",
+          "description": "Creates a NodeBalancer config.\n",
+          "params": {
+            "label": {
+              "description": "Unique label for your NodeBalancer config."
+            },
+            "port": {
+              "description": "Port to bind to on the public interfaces.",
+              "limit": "1-65534"
+            },
+            "protocol": {
+              "description": "The protocol used for the config."
+            },
+            "algorithm": {
+              "description": "Balancing algorithm."
+            },
+            "stickiness": {
+              "description": "Session persistence. Route subsequent requests from a client to the same backend."
+            },
+            "check": {
+              "description": "Perform active health checks on the backend nodes."
+            },
+            "check_interval": {
+              "description": "Seconds between health check probes."
+            },
+            "check_timeout": {
+              "description": "Seconds to wait before considering the probe a failure.",
+              "limit": "1-30. Must be less than check_interval"
+            },
+            "check_attempts": {
+              "description": "Number of failed probes before taking a node out of rotation.",
+              "limit": "1-30"
+            },
+            "check_path": {
+              "description": "When check is \"http\", the path to request."
+            },
+            "check_body": {
+              "description": "When check is \"http\", a regex to match within the first 16,384 bytes of the response body."
+            },
+            "check_passive": {
+              "description": "Enable passive checks based on observing communication with back-end nodes."
+            },
+            "cipher_suite": {
+              "description": "SSL cipher suite to enforce."
+            }
+          },
+          "examples": {
+            "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n        \"label\": \"myNodeBalancer\",\n        \"port\": 80,\n        \"protocol\": \"http\",\n        \"algorithm\": \"roundrobin\",\n        \"stickiness\": \"none\",\n        \"check\": \"http_body\",\n        \"check_interval\": 5,\n        \"check_timeout\": 3,\n        \"check_attempts\": 10,\n        \"check_path\": \"/path/to/check\",\n        \"check_body\": \"we got some stuff back\",\n        \"cipher_suite\": \"legacy\"\n    }' \\\n    https://$api_root/$version/nodebalancers\n"
+          }
+        }
+      }
+    },
+    "nodebalancers/:id/configs/:id": {
+      "type": "resource",
+      "authenticated": true,
+      "description": "Manage a particular NodeBalancer config.\n",
+      "methods": {
+        "GET": {
+          "oauth": "nodebalancers:view",
+          "description": "Returns information about this NodeBalancer config.\n",
+          "examples": {
+            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id\n"
+          }
+        },
+        "DELETE": {
+          "oauth": "nodebalancers:modify",
+          "description": "Deletes a NodeBalancer config and all associated nodes. This action cannot be undone.\n",
+          "dangerous": true,
+          "examples": {
+            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    -X DELETE \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id\n"
+          }
+        }
+      }
+    },
+    "nodebalancers/:id/configs/:id/ssl": {
+      "type": "resource",
+      "authenticated": true,
+      "description": "Add or update SSL certificate and https protocol to an existing config profile.\n",
+      "methods": {
+        "POST": {
+          "oauth": "nodebaalancers:modify",
+          "description": "Adds/updates SSL certificates",
+          "examples": {
+            "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n      \"ssl_cert\": \"----- BEGIN CERTIFICATE ----- < etc...> ----- END CERTIFICATE -----\",\n      \"ssl_key\": \"----- BEGIN PRIVATE KEY ----- < etc...> ----- END PRIVATE KEY -----\"\n    }' \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id/ssl\n"
+          }
+        }
+      }
+    },
+    "nodebalancers/:id/configs/:id/nodes": {
+      "type": "list",
+      "resource": "nodebalancer_config_nodes",
+      "authenticated": true,
+      "description": "Manage the nodes for a specified NodeBalancer config.\n",
+      "methods": {
+        "GET": {
+          "oauth": "nodebalancers:view",
+          "description": "Returns a list of <a href=\"#object-nodebalancer_config_node\">config nodes</a> for a given NodeBalancer.\n",
+          "examples": {
+            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id/nodes\n"
+          }
+        },
+        "POST": {
+          "oauth": "nodebalancers:create",
+          "description": "Creates a new NodeBalancer config node.",
+          "params": {
+            "label": {
+              "description": "Unique label for your NodeBalancer config node."
+            },
+            "address": {
+              "description": "The address:port combination used to communicate with this node."
+            },
+            "weight": {
+              "description": "Load balancing weight, 1-255. Higher means more connections."
+            },
+            "mode": {
+              "description": "The connections mode for this node. One of 'accept', 'reject', or 'drain'."
+            },
+            "status": {
+              "description": "The status of this node."
+            }
+          },
+          "examples": {
+            "curl": "curl -H \"Content-Type: application/json\" \\\n  -H \"Authorization: token $TOKEN\" \\\n  -X POST -d '{\n      \"label\": \"greatest_node_ever\",\n      \"address\": \"192.168.4.5:80\",\n      \"weight\": 40,\n      \"mode\": \"accept\",\n      \"status\": \"online\"\n  }' \\\n  https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id/nodes\n"
+          }
+        }
+      }
+    },
+    "nodebalancers/:id/configs/:id/nodes/:id": {
+      "type": "resource",
+      "authenticated": true,
+      "description": "Manage a particular NodeBalancer config node.\n",
+      "methods": {
+        "GET": {
+          "oauth": "nodebalancers:view",
+          "description": "Returns information about this node..\n",
+          "examples": {
+            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id/nodes/$node_id\n"
+          }
+        },
+        "PUT": {
+          "oauth": "nodebalancers:modify",
+          "description": "Modifies this node\n",
+          "examples": {
+            "curl": "curl -H \"Content-Type: application/json\" \\\n  -H \"Authorization: token $TOKEN\" \\\n  -X PUT -d '{\n      \"label\": \"node001\",\n      \"address\": \"192.168.12.12:100\",\n      \"weight\": 40,\n      \"mode\": \"accept\",\n      \"status\": \"online\"\n  }' \\\n  https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id/nodes/$node_id\n"
+          }
+        },
+        "DELETE": {
+          "oauth": "nodebalancers:modify",
+          "description": "Deletes a NodeBalancer config. This action cannot be undone.\n",
+          "dangerous": true,
+          "examples": {
+            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    -X DELETE \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id/nodes/$node_id\n"
+          }
+        }
+      }
+    }
+  }
+}

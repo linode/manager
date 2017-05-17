@@ -1,11 +1,13 @@
+import { expect } from 'chai';
+import { mount } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
-import { shallow, mount } from 'enzyme';
-import { expect } from 'chai';
 
-import { testLinode } from '@/data/linodes';
-import { expectRequest } from '@/common';
 import { AlertsPage } from '~/linodes/linode/settings/layouts/AlertsPage';
+
+import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
+import { testLinode } from '@/data/linodes';
+
 
 describe('linodes/linode/settings/layouts/AlertsPage', async () => {
   const sandbox = sinon.sandbox.create();
@@ -15,7 +17,7 @@ describe('linodes/linode/settings/layouts/AlertsPage', async () => {
   });
 
   it('renders all alerts', () => {
-    const page = shallow(
+    const page = mount(
       <AlertsPage
         linode={testLinode}
         dispatch={() => {}}
@@ -23,15 +25,15 @@ describe('linodes/linode/settings/layouts/AlertsPage', async () => {
     );
 
     [
-      'CPU usage',
-      'Disk IO rate',
-      'Incoming traffic',
-      'Outbound traffic',
-      'Transfer quota',
+      'CPU Usage',
+      'Disk IO Rate',
+      'Incoming Traffic',
+      'Outbound Traffic',
+      'Transfer Quota',
     ].forEach((label, i) => {
-      expect(page.find('.form-group').at(i).find('.col-form-label')
-                 .text())
-        .to.equal(`${label}:`);
+      const formGroup = page.find('FormGroup').at(i);
+      const labelElement = formGroup.find('.col-form-label').at(0);
+      expect(labelElement.text()).to.equal(label);
     });
   });
 
@@ -43,15 +45,14 @@ describe('linodes/linode/settings/layouts/AlertsPage', async () => {
         dispatch={dispatch}
       />
     );
-    await page.instance().componentDidMount();
 
     dispatch.reset();
-    page.find('form').simulate('submit', { preventDefault() {} });
+    await page.find('Form').props().onSubmit();
 
     expect(dispatch.callCount).to.equal(1);
-
-    const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, `/linode/instances/${testLinode.id}`, { method: 'PUT' });
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      ([fn]) => expectRequest(fn, `/linode/instances/${testLinode.id}`, { method: 'PUT' }),
+    ]);
   });
 });
 

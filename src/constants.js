@@ -27,7 +27,8 @@ export const regionMap = {
 };
 
 export const LinodeStatesReadable = {
-  shutting_down: 'Powering off',
+  shutting_down: 'Powering Off',
+  contact_support: 'Error',
   offline: 'Offline',
   running: 'Running',
   booting: 'Booting',
@@ -172,3 +173,24 @@ export const OAUTH_SCOPES = [
 export const MAX_UPLOAD_SIZE_MB = 5;
 
 export const GRAVATAR_BASE_URL = 'https://gravatar.com/avatar/';
+
+export const NODEBALANCER_CONFIG_ALGORITHMS = new Map([
+  ['roundrobin', 'Round Robin'],
+  ['leastconn', 'Least Connections'],
+  ['source', 'Source IP'],
+]);
+
+export const NODEBALANCER_CONFIG_STICKINESS = new Map([
+  ['none', '-- None --'],
+  ['table', 'Table'],
+  ['http_cookie', 'HTTP Cookie'],
+]);
+
+export const NODEBALANCER_CONFIG_CHECKS = new Map([
+  ['connection', 'TCP Connection'],
+  ['http', 'HTTP Valid Status'],
+  ['http_body', 'HTTP Body Regex'],
+]);
+
+export const AVAILABLE_DISK_SLOTS =
+  ['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg', 'sdh'];

@@ -6,6 +6,7 @@ import { Card } from 'linode-components/cards';
 import { Form, FormGroup, FormGroupError, SubmitButton, Input } from 'linode-components/forms';
 
 import { tickets } from '~/api';
+import { getObjectByLabelLazily } from '~/api/util';
 import { addTicketAttachment } from '~/api/tickets';
 import { setError } from '~/actions/errors';
 import { MAX_UPLOAD_SIZE_MB } from '~/constants';
@@ -16,9 +17,19 @@ import TicketReply from '../components/TicketReply';
 import TicketHelper from '../components/TicketHelper';
 
 
+export function AttachmentTooBigError() {
+  const error = `File size must be under ${MAX_UPLOAD_SIZE_MB} MB`;
+  this.json = () => ({
+    errors: [{ field: 'attachments', reason: error }],
+  });
+}
+
+AttachmentTooBigError.prototype = new Error();
+
 export class TicketPage extends Component {
   static async preload({ dispatch }, { ticketId }) {
     try {
+      await dispatch(getObjectByLabelLazily('tickets', ticketId, 'id'));
       await dispatch(tickets.one([ticketId]));
       await dispatch(tickets.replies.all([ticketId]));
     } catch (response) {
@@ -36,29 +47,29 @@ export class TicketPage extends Component {
 
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
-  onSubmit = async () => {
+  onSubmit = () => {
     const { attachments, reply: description } = this.state;
     const { ticket, dispatch } = this.props;
 
-    await dispatch(dispatchOrStoreErrors.apply(this, [
-      [() => description ? tickets.replies.post({ description }, [ticket.id]) : () => {}],
-    ]));
-
     const requests = [];
+
+    if (description) {
+      requests.push(() => tickets.replies.post({ description }, [ticket.id]));
+    }
+
     for (let i = 0; i < attachments.length; i++) {
       const attachment = attachments[i];
 
-      if ((attachment.size / (1024 * 1024)) < MAX_UPLOAD_SIZE_MB) {
-        requests.push(dispatch(addTicketAttachment(ticket.id, attachment)));
-      } else {
-        const error = `File size must be under ${MAX_UPLOAD_SIZE_MB} MB`;
-        this.setState({ errors: { attachments: [{ reason: error }] } });
+      requests.push(() => {
+        if ((attachment.size / (1024 * 1024)) < MAX_UPLOAD_SIZE_MB) {
+          return addTicketAttachment(ticket.id, attachment);
+        }
 
-        return;
-      }
+        throw new AttachmentTooBigError();
+      });
     }
 
-    await dispatch(dispatchOrStoreErrors.apply(this, [requests]));
+    return dispatch(dispatchOrStoreErrors.call(this, requests));
   }
 
   renderTicketResponseForm() {

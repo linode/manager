@@ -21,13 +21,11 @@
     &-brand, &-search, &-session, &-link {
         @extend .font-normal;
         float: left;
-        margin-right: 30px;
+        margin-right: 15px;
     }
 
     &-logo {
-        font-size: 35px; /* Special font-size case */
-        line-height: 50px;
-        padding-right: 15px;
+        line-height: $nav-height - 5px;
     }
 
     &-title {

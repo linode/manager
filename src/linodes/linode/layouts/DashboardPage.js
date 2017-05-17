@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 
 import { Button } from 'linode-components/buttons';
 import { Card, CardHeader } from 'linode-components/cards';
-import { FormGroup, Select } from 'linode-components/forms';
+import { FormGroup, Input, Select } from 'linode-components/forms';
 
 import { setError } from '~/actions/errors';
 import { setSource } from '~/actions/source';
@@ -145,60 +145,41 @@ export class DashboardPage extends Component {
   renderDetails() {
     const { username, linode } = this.props;
     const plan = (<PlanStyle plan={linode.type} />);
-    const lishLink = `ssh -t ${
-        username
-      }@lish-${
-        linode.region.id
-      }.linode.com`;
+    const lishLink = `${username}@lish-${linode.region.id}.linode.com`;
 
     return (
       <div className="row-justify row-eq-height">
         <section className="col-lg-6 col-md-12 col-sm-12">
           <Card header={<CardHeader title="Summary" />}>
-            <div className="row linode-ips">
-              <div className="col-sm-3 row-label">
+            <div className="row">
+              <div className="col-sm-4 row-label">
                 IP Addresses
               </div>
-              <div className="col-sm-9">
-                <ul className="list-unstyled">
+              <div className="col-sm-8">
+                <ul className="list-unstyled" id="ips">
                   <li>{linode.ipv4}</li>
                   <li className="text-muted">{linode.ipv6.split('/')[0]}</li>
                   <li><Link to={`/linodes/${linode.label}/networking`}>(...)</Link></li>
                 </ul>
               </div>
             </div>
-            {plan ?
-              <div className="row linode-plan">
-                <div className="col-sm-3 row-label">
-                  Plan
-                </div>
-                <div className="col-sm-9">
-                  {plan}
-                </div>
+            {!plan ? null : (
+              <div className="row">
+                <div className="col-sm-4 row-label">Plan</div>
+                <div className="col-sm-8" id="plan">{plan}</div>
               </div>
-              : null
-            }
-            <div className="row linode-region">
-              <div className="col-sm-3 row-label">
-                Region
-              </div>
-              <div className="col-sm-9">
-                <Region obj={linode} />
-              </div>
+            )}
+            <div className="row">
+              <div className="col-sm-4 row-label">Region</div>
+              <div className="col-sm-8" id="region"><Region obj={linode} /></div>
             </div>
-            <div className="row linode-distro">
-              <div className="col-sm-3 row-label">
-                Distribution
-              </div>
-              <div className="col-sm-9">
-                <DistroStyle linode={linode} />
-              </div>
+            <div className="row">
+              <div className="col-sm-4 row-label">Distribution</div>
+              <div className="col-sm-8" id="distro"><DistroStyle linode={linode} /></div>
             </div>
             <div className="row linode-backups">
-              <div className="col-sm-3 row-label">
-                Backup
-              </div>
-              <div className="col-sm-9 backup-status">
+              <div className="col-sm-4 row-label">Backup</div>
+              <div className="col-sm-8" id="backup-status">
                 <Link to={`/linodes/${linode.label}/backups`}>
                   {linode.backups.enabled ? 'View Backups' : 'Enable Backups'}
                 </Link>
@@ -209,39 +190,33 @@ export class DashboardPage extends Component {
         <section className="col-lg-6 col-md-12 col-sm-12">
           <Card header={<CardHeader title="Access" />}>
             <FormGroup className="row">
-              <label htmlFor="ssh-input" className="col-sm-4 col-form-label">
-                SSH
-              </label>
+              <label htmlFor="ssh-input" className="col-sm-4 col-form-label">SSH</label>
               <div className="col-sm-8">
                 <div className="input-group">
-                  <input
-                    type="text"
+                  <Input
                     id="ssh-input"
-                    className="form-control"
                     value={`ssh root@${linode.ipv4}`}
                     readOnly
                   />
                   <span className="input-group-btn">
-                    <Button>SSH</Button>
+                    <Button href={`ssh://root@${linode.ipv4}`}>SSH</Button>
                   </span>
                 </div>
               </div>
             </FormGroup>
             <FormGroup className="row">
               <label className="col-sm-4 col-form-label" htmlFor="lish-input">
-                Text console
+                Console
               </label>
               <div className="col-sm-8">
                 <div className="input-group">
-                  <input
-                    type="text"
+                  <Input
                     id="lish-input"
-                    className="form-control"
-                    value={lishLink}
+                    value={`ssh -t ${lishLink}`}
                     readOnly
                   />
                   <span className="input-group-btn">
-                    <Button>SSH</Button>
+                    <Button href={`ssh://${lishLink}`}>SSH</Button>
                   </span>
                   <span className="input-group-btn">
                     <WeblishLaunch linode={linode} />
@@ -249,19 +224,6 @@ export class DashboardPage extends Component {
                 </div>
                 <small className="text-muted">
                   Lish listens on ports 22, 443, and 2200.
-                </small>
-              </div>
-            </FormGroup>
-            <FormGroup className="row">
-              <label className="col-sm-4 col-form-label" htmlFor="glish-button">
-                Graphical console
-              </label>
-              <div className="col-sm-8">
-                <div>
-                  <Button id="glish-button" disabled>Open</Button>
-                </div>
-                <small className="text-muted">
-                  Equivalent to plugging a monitor and keyboard into your server.
                 </small>
               </div>
             </FormGroup>
@@ -289,7 +251,7 @@ DashboardPage.propTypes = {
 
 function select(state, props) {
   const { linode } = selectLinode(state, props);
-  const { username } = state.authentication;
+  const { username } = state.api.profile;
   return { linode, username };
 }
 

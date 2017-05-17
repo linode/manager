@@ -5,36 +5,35 @@ import { CancelButton } from 'linode-components/buttons';
 import { Form, Input, ModalFormGroup, Select, SubmitButton } from 'linode-components/forms';
 import { ConfirmModalBody } from 'linode-components/modals';
 
-import { showModal, hideModal } from '~/actions/modal';
+import { showModal } from '~/actions/modal';
 import { tokens } from '~/api';
 import { OAUTH_SUBSCOPES, OAUTH_SCOPES } from '~/constants';
-import { reduceErrors, FormSummary } from '~/components/forms';
+import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
 
 import SelectExpiration from '../../components/SelectExpiration';
 
 
-export async function renderSecret(label, verb, secret) {
-  const { dispatch } = this.props;
-  const close = () => dispatch(hideModal());
-
-  await dispatch(showModal(
+export function renderSecret(label, verb, secret, close) {
+  return showModal(
     `${_.capitalize(label)} ${verb}`,
-    <ConfirmModalBody onOk={close} onCancel={close} buttonText="I understand">
+    <ConfirmModalBody
+      onOk={close}
+      onCancel={close}
+      buttonText="I understand"
+    >
       <div>
         <p>
           Your {label} has been {verb}. Store this secret. It won't be shown again.
         </p>
-        <div className="alert alert-warning">{secret}</div>
+        <div className="alert alert-warning" id="secret">{secret}</div>
       </div>
     </ConfirmModalBody>
-  ));
+  );
 }
 
 export default class CreatePersonalAccessToken extends Component {
   constructor() {
     super();
-
-    this.renderSecret = renderSecret.bind(this);
 
     this.state = {
       ...OAUTH_SCOPES.reduce((object, scope) => ({
@@ -44,13 +43,13 @@ export default class CreatePersonalAccessToken extends Component {
       errors: {},
       label: '',
       expiry: '0',
-      saving: false,
+      loading: false,
     };
   }
 
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
-  onSubmit = async () => {
+  onSubmit = () => {
     const { dispatch } = this.props;
     const { label, expiry } = this.state;
 
@@ -63,24 +62,11 @@ export default class CreatePersonalAccessToken extends Component {
       return `${scopes};${scope}:${level}`;
     }, '') || undefined;
 
-    this.setState({ errors: {}, saving: true });
-
-    const data = { label, scopes, expiry: SelectExpiration.map(expiry) };
-
-    try {
-      const { token } = await dispatch(tokens.post(data));
-      this.setState({ saving: false });
-
-      await this.renderSecret('personal access token', 'created', token);
-    } catch (response) {
-      if (!response.json) {
-        // eslint-disable-next-line no-console
-        return console.error(response);
-      }
-
-      const errors = await reduceErrors(response);
-      this.setState({ errors, saving: false });
-    }
+    return dispatch(dispatchOrStoreErrors.call(this, [
+      () => tokens.post({ label, scopes, expiry: SelectExpiration.map(expiry) }),
+      ({ token }) => renderSecret(
+        'personal access token', 'created', token, this.props.close),
+    ]));
   }
 
   renderScopeFormGroup = (scope) => {
@@ -108,7 +94,7 @@ export default class CreatePersonalAccessToken extends Component {
 
   render() {
     const { close } = this.props;
-    const { errors, label, expiry, saving } = this.state;
+    const { errors, label, expiry, loading } = this.state;
 
     return (
       <Form onSubmit={this.onSubmit}>
@@ -137,7 +123,10 @@ export default class CreatePersonalAccessToken extends Component {
         {OAUTH_SCOPES.map(this.renderScopeFormGroup)}
         <div className="Modal-footer">
           <CancelButton onClick={close} />
-          <SubmitButton disabled={saving}>Create</SubmitButton>
+          <SubmitButton
+            disabled={loading}
+            disabledChildren="Creating"
+          >Create</SubmitButton>
           <FormSummary errors={errors} />
         </div>
       </Form>

@@ -16,15 +16,15 @@ html {
   @include font-size(1.6);
 }
 .font-large {
-  @include font-size(1.8);
+  @include font-size(1.7);
 }
 .font-extra-large {
-  @include font-size(2);
+  @include font-size(1.8);
 }
 
 body {
   @extend .font-normal;
-  background: $light-gray;
+  background: $background-color;
   color: $black;
   font-weight: normal;
 }
@@ -75,17 +75,14 @@ label {
   margin-bottom: 0;
 }
 
-.fa {
-  color: $default-gray;
-}
-
 p {
   margin-bottom: $main-padding-tb/2;
 }
 
 hr {
-  width: 300px;
-  margin: $main-padding-tb/2 0;
+    width: 100%;
+    margin: 0;
+    background: $dark-gray;
 }
 
 small {

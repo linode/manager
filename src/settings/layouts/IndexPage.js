@@ -33,19 +33,18 @@ export class IndexPage extends Component {
     };
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
-
-    dispatch(setTitle('Account'));
+    dispatch(setTitle('Account Settings'));
   }
 
-  onSubmit = async () => {
+  onSubmit = () => {
     const { dispatch } = this.props;
     const { networkHelper: network_helper } = this.state;
 
-    await dispatch(dispatchOrStoreErrors.apply(this, [
-      [() => account.put({ network_helper })],
+    return dispatch(dispatchOrStoreErrors.call(this, [
+      () => account.put({ network_helper }),
     ]));
   }
 
@@ -55,7 +54,7 @@ export class IndexPage extends Component {
       <div>
         <header className="main-header main-header--border">
           <div className="container">
-            <h1>Account</h1>
+            <h1>Account Settings</h1>
           </div>
         </header>
         <div className="container">

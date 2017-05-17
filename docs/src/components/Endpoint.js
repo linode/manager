@@ -10,8 +10,8 @@ import { default as Method } from './Method';
 
 export default function Endpoint(props) {
   const { route } = props;
-  const { endpoint } = route;
-  const { crumbs, description, methods, path, resourceObject } = endpoint;
+  const { crumbs, endpoint } = route;
+  const { description, methods, path, resource } = endpoint;
 
   return (
     <div className="Endpoint">
@@ -29,7 +29,7 @@ export default function Endpoint(props) {
             {methods.map(function(method, index) {
               return (
                 <li key={index}>
-                  <Link to={`#${method.name}`}>{method.name}</Link>
+                  <a href={`#${method.name}`}>{method.name}</a>
                 </li>
               );
             })}
