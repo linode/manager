@@ -15,11 +15,6 @@ export default function Authentication() {
           <em> applications</em> that integrate with Linode by registering those applications with us.
           You then use OAuth to authenticate on behalf of the user to request access to resources from their account.
         </p>
-        <p>
-          To register your application go to <a target="_blank" href={`https://${ LOGIN_ROOT }/apps`}>{ LOGIN_ROOT }/apps</a>.
-          We'll provide you with a <em>client ID</em> and a <em>client secret</em>.
-          You'll have to keep the client secret private, but the client ID can be shared.
-        </p>
       </section>
       <section>
         <h2>The Access Code</h2>
@@ -38,7 +33,7 @@ export default function Authentication() {
         </p>
           <pre>
             <code>
-              https://{ LOGIN_ROOT }/oauth/authorize?client_id=<strong>client_id</strong>
+              { LOGIN_ROOT }/oauth/authorize?client_id=<strong>client_id</strong>
             </code>
           </pre>
         <p>
@@ -102,7 +97,7 @@ export default function Authentication() {
         </p>
         <pre>
           <code>
-            POST https://{ LOGIN_ROOT }/oauth/token
+            POST { LOGIN_ROOT }/oauth/token
           </code>
         </pre>
         <p>
