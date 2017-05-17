@@ -10,6 +10,7 @@ export const apiTestType = {
   transfer: 2000,
   vcpus: 2,
   backups_price: 250,
+  class: 'standard',
 };
 
 export const testType = {
@@ -30,6 +31,7 @@ export const types = {
     transfer: 1000,
     vcpus: 1,
     backups_price: 150,
+    class: 'standard',
   },
   'linode2048.5': testType,
 };
