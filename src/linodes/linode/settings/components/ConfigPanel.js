@@ -51,7 +51,6 @@ export class ConfigPanel extends Component {
             },
           },
           {
-            buttonClassName: 'ConfigPanel-delete btn-secondary',
             cellComponent: ButtonCell,
             headerClassName: 'ButtonColumn',
             onClick: (config) => { this.deleteConfig(linode, config); },

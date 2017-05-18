@@ -4,7 +4,7 @@ import { CancelButton } from 'linode-components/buttons';
 import { Form, Input, ModalFormGroup, SubmitButton } from 'linode-components/forms';
 
 import { setRDNS } from '~/api/linodes';
-import { reduceErrors, FormSummary } from '~/components/forms';
+import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
 
 
 export default class EditRDNS extends Component {
@@ -17,33 +17,21 @@ export default class EditRDNS extends Component {
     };
   }
 
-  onSubmit = async () => {
+  onSubmit = () => {
     const { dispatch, ip: { linode_id: linodeId, address } } = this.props;
     const { hostname } = this.state;
 
-    this.setState({ errors: {}, saving: true });
-
-    try {
-      await dispatch(setRDNS(linodeId, address, hostname));
-
-      this.setState({ saving: false });
-      this.props.close();
-    } catch (response) {
-      if (!response.json) {
-        // eslint-disable-next-line no-console
-        return console.error(response);
-      }
-
-      const errors = await reduceErrors(response);
-      this.setState({ errors, saving: false });
-    }
+    return dispatch(dispatchOrStoreErrors.call(this, [
+      () => setRDNS(linodeId, address, hostname),
+      close,
+    ]));
   }
 
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   render() {
     const { close, ip: { address } } = this.props;
-    const { errors, saving, hostname } = this.state;
+    const { errors, loading, hostname } = this.state;
 
     return (
       <Form onSubmit={this.onSubmit}>
@@ -65,7 +53,7 @@ export default class EditRDNS extends Component {
         </ModalFormGroup>
         <div className="Modal-footer">
           <CancelButton onClick={close} />
-          <SubmitButton disabled={saving}>Save</SubmitButton>
+          <SubmitButton disabled={loading} />
           <FormSummary errors={errors} />
         </div>
       </Form>
