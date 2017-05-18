@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [0.5.2] 2017-05-18
 ### Fixed
-- fixed user restricted radio #1801
+- fixed user restricted radio #1808
 
 ## [0.5.1] 2017-05-18
 ### Fixed
