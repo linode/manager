@@ -74,7 +74,6 @@ export class DashboardPage extends Component {
 
     this.state = {
       source: 'connections',
-      range: 'last1day',
       errors: {},
       saving: false,
     };
@@ -180,18 +179,6 @@ export class DashboardPage extends Component {
                   >
                     <option value="connections">Connections</option>
                     <option value="traffic">Traffic</option>
-                  </Select>
-                </div>
-                <div className="float-sm-right">
-                  <Select
-                    value={this.state.range}
-                    name="range"
-                    onChange={this.onChange}
-                    disabled
-                  >
-                    <option key={1} value="last1day">Last 24 hours</option>
-                    <option key={2} value="last2day">Last 48 hours</option>
-                    <option key={3} value="last7day">Last week</option>
                   </Select>
                 </div>
               </div>
