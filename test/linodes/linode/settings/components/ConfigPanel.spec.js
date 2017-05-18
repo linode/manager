@@ -97,9 +97,8 @@ describe('linodes/linode/settings/components/ConfigPanel', () => {
         linode={testLinode1238}
       />
     );
-    const actionBtn = panel.
-      find('.ConfigPanel-delete').at(0);
-    actionBtn.simulate('click', { preventDefault: () => {} });
+    const deleteBtn = panel.find('Button').at(1);
+    deleteBtn.simulate('click', { preventDefault: () => {} });
     expect(dispatch.callCount).to.equal(1);
     await dispatch.args[0][0].body.props.onOk();
     const fn = dispatch.secondCall.args[0];

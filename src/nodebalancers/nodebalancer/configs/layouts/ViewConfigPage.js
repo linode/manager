@@ -120,7 +120,6 @@ export class ViewConfigPage extends Component {
                   { dataKey: 'status', label: 'Status', formatFn: _.capitalize },
                   {
                     cellComponent: ButtonCell,
-                    buttonClassName: 'btn-secondary',
                     onClick: (node) => this.editNodeModal(node),
                     text: 'Edit',
                   },

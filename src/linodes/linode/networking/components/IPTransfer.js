@@ -1,12 +1,12 @@
 import React, { PropTypes, Component } from 'react';
-import { push } from 'react-router-redux';
 
 import { Card, CardHeader } from 'linode-components/cards';
 import { Form, FormGroup, SubmitButton, Select } from 'linode-components/forms';
 
 import { linodes as apiLinodes } from '~/api';
+import { createHeaderFilter } from '~/api/util';
 import { assignIps, linodeIPs } from '~/api/linodes';
-import { FormSummary, reduceErrors } from '~/components/forms';
+import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
 
 import IPList from './IPList';
 
@@ -28,11 +28,9 @@ export default class IPTransfer extends Component {
     this.componentWillReceiveProps = this._componentWillReceiveProps();
   }
 
-  onSubmit = async () => {
+  onSubmit = () => {
     const { dispatch, linode, linodes } = this.props;
     const { checkedA, checkedB, selectedOtherLinode } = this.state;
-
-    this.setState({ errors: {}, loading: true });
 
     const otherLinode = linodes[selectedOtherLinode];
     // checkedA ips go to selectedOtherLinode, checkedB ips go here
@@ -48,27 +46,16 @@ export default class IPTransfer extends Component {
       }
     });
 
-    try {
-      await dispatch(assignIps(linode.region.id, assignments));
-
-      // Needs to refresh ips for both Linodes
-      await dispatch(apiLinodes.one([linode.id]));
-      await dispatch(linodeIPs(linode.id));
-      dispatch(apiLinodes.one([otherLinode.id]));
-      dispatch(linodeIPs(otherLinode.id));
-
-      dispatch(push(`/linodes/${linode.label}`));
-    } catch (response) {
-      if (!response.json) {
-        // eslint-disable-next-line no-console
-        return console.error(response);
-      }
-
-      const errors = await reduceErrors(response);
-      this.setState({ errors });
-    }
-
-    this.setState({ loading: false });
+    return dispatch(dispatchOrStoreErrors.call(this, [
+      () => assignIps(linode.region.id, assignments),
+      () => (dispatch) => Promise.all([
+        dispatch(apiLinodes.all([], undefined, createHeaderFilter({
+          '+or': [{ label: linode.label }, { label: otherLinode.label }],
+        }))),
+        dispatch(linodeIPs(linode.id)),
+        dispatch(linodeIPs(otherLinode.id)),
+      ]),
+    ]));
   }
 
   otherLinodes(props) {
@@ -79,10 +66,10 @@ export default class IPTransfer extends Component {
   _componentWillReceiveProps(_setState) {
     const setState = _setState || this.setState.bind(this);
     return (nextProps) => {
-      const otherLinodes = this.otherLinodes(nextProps);
+      const otherLinode = this.otherLinodes(nextProps)[0] || {};
       const { selectedOtherLinode } = (this.state || {});
       setState({
-        selectedOtherLinode: selectedOtherLinode || otherLinodes[0].id,
+        selectedOtherLinode: selectedOtherLinode || otherLinode.id,
       });
     };
   }
@@ -91,63 +78,76 @@ export default class IPTransfer extends Component {
     const { errors, loading, selectedOtherLinode, checkedA, checkedB } = this.state;
     const { linode, linodes } = this.props;
 
+    let body = (
+      <p>
+        Transfer is only available within Linodes in the same region. There are no other
+        Linodes in this region.
+      </p>
+    );
+
+    if (selectedOtherLinode) {
+      body = (
+        <div>
+          <p>
+            <small>
+              The selected IP addresses will be transferred between this Linode (A) and the selected
+              Linode (B).
+            </small>
+          </p>
+          <Form onSubmit={this.onSubmit}>
+            <FormGroup className="row">
+              <div className="col-sm-6">
+                <label className="col-form-label">Linode A:</label>
+                <span>{linode.label}</span>
+              </div>
+              <div className="col-sm-6">
+                <label className="col-form-label">Linode B:</label>
+                <Select
+                  value={selectedOtherLinode}
+                  name="selectedOtherLinode"
+                  onChange={({ target: { name, value } }) =>
+                    this.setState({ [name]: value, checkedB: {} })}
+                  options={this.otherLinodes().map(linode => ({ ...linode, value: linode.id }))}
+                />
+              </div>
+            </FormGroup>
+            <FormGroup className="row">
+              <div className="col-sm-6" id="sectionA">
+                <IPList
+                  linode={linode}
+                  checked={checkedA}
+                  onChange={(record, checked) => {
+                    this.setState({
+                      checkedA: {
+                        [record.address]: checked,
+                      },
+                    });
+                  }}
+                />
+              </div>
+              <div className="col-sm-6" id="sectionB">
+                <IPList
+                  linode={linodes[selectedOtherLinode]}
+                  checked={checkedB}
+                  onChange={(record, checked) => {
+                    this.setState({
+                      checkedB: {
+                        [record.address]: checked,
+                      },
+                    });
+                  }}
+                />
+              </div>
+            </FormGroup>
+            <SubmitButton disabled={loading} disabledChildren="Transferring">Transfer</SubmitButton>
+            <FormSummary errors={errors} success="Transfer complete." />
+          </Form>
+        </div>
+      );
+    }
+
     return (
-      <Card header={<CardHeader title="IP Transfer" />}>
-        <p>
-          <small>
-            The selected IP addresses will be transferred between this Linode (A) and the selected
-            Linode (B).
-          </small>
-        </p>
-        <Form onSubmit={this.onSubmit}>
-          <FormGroup className="row">
-            <div className="col-sm-6">
-              <label className="col-form-label">Linode A:</label>
-              <span>{linode.label}</span>
-            </div>
-            <div className="col-sm-6">
-              <label className="col-form-label">Linode B:</label>
-              <Select
-                value={selectedOtherLinode}
-                name="selectedOtherLinode"
-                onChange={({ record: { name, value } }) =>
-                  this.setState({ [name]: value, checkedB: {} })}
-                options={this.otherLinodes().map(linode => ({ ...linode, value: linode.id }))}
-              />
-            </div>
-          </FormGroup>
-          <FormGroup className="row">
-            <div className="col-sm-6" id="sectionA">
-              <IPList
-                linode={linode}
-                checked={checkedA}
-                onChange={(record, checked) => {
-                  this.setState({
-                    checkedA: {
-                      [record.address]: checked,
-                    },
-                  });
-                }}
-              />
-            </div>
-            <div className="col-sm-6" id="sectionB">
-              <IPList
-                linode={linodes[selectedOtherLinode]}
-                checked={checkedB}
-                onChange={(record, checked) => {
-                  this.setState({
-                    checkedB: {
-                      [record.address]: checked,
-                    },
-                  });
-                }}
-              />
-            </div>
-          </FormGroup>
-          <SubmitButton disabled={loading}>Transfer IPs</SubmitButton>
-          <FormSummary errors={errors} />
-        </Form>
-      </Card>
+      <Card header={<CardHeader title="IP Transfer" />}>{body}</Card>
     );
   }
 }

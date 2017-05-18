@@ -23,9 +23,22 @@ export async function reduceErrors(response) {
   return errors;
 }
 
-export function dispatchOrStoreErrors(apiCalls, extraWholeFormFields = []) {
+export function dispatchOrStoreErrors(apiCalls,
+                                      extraWholeFormFields = [],
+                                      optionalStateKey = undefined) {
   return async (dispatch) => {
-    this.setState({ loading: true, errors: {} });
+    const setStateWithOptionalKey = ({ loading, errors }) => {
+      if (optionalStateKey) {
+        this.setState({
+          loading: { ...loading, [optionalStateKey]: loading[optionalStateKey] },
+          errors: { ...errors, [optionalStateKey]: errors[optionalStateKey] },
+        });
+      } else {
+        this.setState({ loading, errors });
+      }
+    };
+
+    setStateWithOptionalKey({ loading: true, errors: {} });
 
     const results = [];
     for (let i = 0; i < apiCalls.length; i++) {
@@ -50,12 +63,12 @@ export function dispatchOrStoreErrors(apiCalls, extraWholeFormFields = []) {
 
           return [...flattenedErrors, error];
         }, [])).filter(Boolean);
-        this.setState({ errors, loading: false });
+        setStateWithOptionalKey({ errors, loading: false });
         return null;
       }
     }
 
-    this.setState({ loading: false, errors: { _: [] } });
+    setStateWithOptionalKey({ loading: false, errors: { _: [] } });
 
     return results;
   };
