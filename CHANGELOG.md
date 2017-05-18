@@ -10,3 +10,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - excess profile requests
 - static endpoint requests reference error
+- now using `npm --no-git-tag-version version patch|minor|major` to bump versions so that shrinkwrap also gets updated
