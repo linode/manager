@@ -20,7 +20,7 @@ export default function Introduction() {
             All API endpoints (starting from version 4) are located at:
           </p>
           <pre>
-            <code>{`https://${ API_ROOT}/${ API_VERSION }/*`}</code>
+            <code>{`${ API_ROOT}/${ API_VERSION }/*`}</code>
           </pre>
           <p>
             Occasionally we will add features and improvements to our API - only certain changes will trigger a

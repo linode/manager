@@ -18,24 +18,32 @@ import { setStorage } from '~/storage';
 
 
 export class Layout extends Component {
+  // This is a special preload that is only called once on page load because
+  // all pages are rendered through here and preloads don't get called again
+  // if they were just called.
   static async preload({ dispatch, getState }) {
-    // Fetch not just timezone but also email and username.
-    if (!getState().api.profile.timezone) {
-      const { timezone } = await dispatch(api.profile.one());
-      // Needed for time display component that is not attached to Redux.
-      setStorage('profile/timezone', timezone);
-    }
-
-    if (!getState().api.account.network_helper) {
-      await dispatch(api.account.one());
-    }
-
     // Filter out objects we've already grabbed this page session.
-    const rest = ['kernels', 'types', 'regions', 'distributions'].filter(
-      type => Object.values(getState().api[type]).length);
+    // Note: this doesn't matter at this stage in the router implementation
+    // because this preload is only ever called once. However, future router
+    // implementations may decide to let a preload that has already been
+    // called before be called again if a certain amount of time has elapsed.
+    const requests = ['kernels', 'types', 'regions', 'distributions'].filter(
+      type => !Object.values(getState().api[type][type]).length).map(type => api[type].all());
+
+    if (!Object.keys(getState().api.profile).length) {
+      requests.push(api.profile.one());
+    }
+
+    if (!Object.keys(getState().api.account).length) {
+      requests.push(api.account.one());
+    }
 
     // Fetch all objects we haven't already grabbed this page session.
-    await Promise.all(rest.map(type => dispatch(api[type].all())));
+    await Promise.all(requests.map(request => dispatch(request)));
+
+    // Needed for time display component that is not attached to Redux.
+    const { timezone } = getState().api.profile;
+    setStorage('profile/timezone', timezone);
   }
 
   constructor() {

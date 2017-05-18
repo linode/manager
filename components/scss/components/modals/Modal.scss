@@ -52,7 +52,7 @@
         }
     }
 
-    .Input, .Select {
+    .Input, .Select, textarea, .alert {
         display: block;
 
         :last-child.form-control {

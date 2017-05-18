@@ -18,7 +18,7 @@ export default function Filtering() {
         </p>
         <pre>
           <code>
-  curl "https://{ API_ROOT }/{ API_VERSION }/linode/distributions" \
+  curl "{ API_ROOT }/{ API_VERSION }/linode/distributions" \
   {`
   -H 'X-Filter: {
     "vendor": "Debian"
@@ -31,7 +31,7 @@ export default function Filtering() {
         </p>
         <pre>
           <code>
-  curl "https://{ API_ROOT }/{ API_VERSION }/linode/distributions" \
+  curl "{ API_ROOT }/{ API_VERSION }/linode/distributions" \
   {`
   -H 'X-Filter: {
     "vendor": "Debian",
@@ -45,7 +45,7 @@ export default function Filtering() {
         </p>
         <pre>
           <code>
-  curl "https://{ API_ROOT }/{ API_VERSION }/linode/distributions" \
+  curl "{ API_ROOT }/{ API_VERSION }/linode/distributions" \
   {`
   -H 'X-Filter: {
     "+or": [
@@ -61,7 +61,7 @@ export default function Filtering() {
         </p>
         <pre>
           <code>
-    curl "https://{ API_ROOT }/{ API_VERSION }/linode/distributions" \
+    curl "{ API_ROOT }/{ API_VERSION }/linode/distributions" \
     {`
     -H 'X-Filter: {
       "minimum_storage_size": {
@@ -100,7 +100,7 @@ export default function Filtering() {
         />
         <pre>
           <code>
-    curl "https://{ API_ROOT }/{ API_VERSION }/linode/distributions" \
+    curl "{ API_ROOT }/{ API_VERSION }/linode/distributions" \
     {`
     -H 'X-Filter: {
       "+or": [

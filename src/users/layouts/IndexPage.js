@@ -5,7 +5,7 @@ import { Link } from 'react-router';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 import { setError } from '~/actions/errors';
-import { users, profile } from '~/api';
+import { users } from '~/api';
 
 import { User } from '../components';
 
@@ -13,7 +13,6 @@ import { User } from '../components';
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
     try {
-      await dispatch(profile.one());
       await dispatch(users.all());
     } catch (response) {
       // eslint-disable-next-line no-console
