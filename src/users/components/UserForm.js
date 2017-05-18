@@ -24,7 +24,8 @@ export default class UserForm extends Component {
     };
   }
 
-  onChange = ({ target: { name, value } }) => this.setState({ [name]: value });
+  onChange = ({ target: { name, value, type } }) =>
+    this.setState({ [name]: type === 'radio' ? value === 'true' : value })
 
   onSubmit = () => {
     const { dispatch, user: { username: oldUsername } } = this.props;
