@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased] 
 
+## [0.5.1] 2017-05-18
+### Fixed
+- fixed reset my application secret #1801
+
 ## [0.5.0] 2017-05-18
 ### Fixed
 - fix tests and linter errors #1770
