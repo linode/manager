@@ -8,7 +8,8 @@ import { List } from 'linode-components/lists';
 import { ListBody } from 'linode-components/lists/bodies';
 import { LinkCell } from 'linode-components/tables/cells';
 
-import { objectFromMapByLabel } from '~/api/util';
+import { objectFromMapByLabel, getObjectByLabelLazily } from '~/api/util';
+import { nodebalancerStats } from '~/api/nodebalancers';
 import { setSource } from '~/actions/source';
 import Region from '~/linodes/components/Region';
 import {
@@ -16,10 +17,36 @@ import {
 } from '~/constants';
 
 
+function formatData(datasets, legends) {
+  const x = datasets[0].map(([x]) => x);
+  const ys = datasets.map(dataset => dataset.map(([, y]) => y));
+  return LineGraph.formatData(x, ys, legends);
+}
+
 export class DashboardPage extends Component {
+  static async preload({ dispatch, getState }, { nodebalancerLabel }) {
+    let id;
+    try {
+      ({ id } = await dispatch(
+        getObjectByLabelLazily('nodebalancers', nodebalancerLabel)
+      ));
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error(e);
+      await dispatch(setError(e));
+    }
+
+    try {
+      await dispatch(nodebalancerStats([id]));
+    } catch (e) {
+      // Stats aren't available.
+    }
+  }
+
   constructor(props) {
     super(props);
 
+    console.log(props.nodebalancer._stats);
     this.state = {
       errors: {},
       saving: false,

@@ -52,6 +52,7 @@ export class DashboardPage extends Component {
     };
 
     const stats = props.linode._stats;
+    console.log(stats);
     if (stats) {
       this.graphs = {
         cpu: {
