@@ -15,12 +15,6 @@ import CreateOrEditApplication from './CreateOrEditApplication';
 
 
 export default class MyApplication extends Component {
-  constructor() {
-    super();
-
-    this.renderSecret = renderSecret.bind(this);
-  }
-
   deleteApp = async () => {
     const { client, dispatch } = this.props;
 
@@ -32,7 +26,7 @@ export default class MyApplication extends Component {
   editAction = () => {
     const { dispatch, client } = this.props;
 
-    dispatch(showModal('Edit OAuth Client',
+    return dispatch(showModal('Edit OAuth Client',
       <CreateOrEditApplication
         id={client.id}
         label={client.label}
@@ -45,7 +39,7 @@ export default class MyApplication extends Component {
 
   deleteAction = () => {
     const { dispatch, client } = this.props;
-    dispatch(showModal('Delete OAuth Client',
+    return dispatch(showModal('Delete OAuth Client',
       <DeleteModalBody
         onOk={() => {
           dispatch(hideModal());
@@ -61,12 +55,13 @@ export default class MyApplication extends Component {
   resetAction = () => {
     const { dispatch, client } = this.props;
 
-    dispatch(showModal('Reset client secret',
+    return dispatch(showModal('Reset Client Secret',
       <ConfirmModalBody
         onCancel={() => dispatch(hideModal())}
         onOk={async () => {
           const { secret } = await dispatch(resetSecret(client.id));
-          this.renderSecret('client secret', 'reset', secret);
+          return dispatch(renderSecret(
+            'client secret', 'reset', secret, () => dispatch(hideModal())));
         }}
       >
         Are you sure you want to reset <strong>{client.label}</strong>'s secret?

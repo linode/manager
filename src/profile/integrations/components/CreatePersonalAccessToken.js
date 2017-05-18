@@ -15,7 +15,7 @@ import SelectExpiration from '../../components/SelectExpiration';
 
 export function renderSecret(label, verb, secret, close) {
   return showModal(
-    `${_.capitalize(label)} ${verb}`,
+    [...label.split(' '), verb].map(_.capitalize).join(' '),
     <ConfirmModalBody
       onOk={close}
       onCancel={close}
