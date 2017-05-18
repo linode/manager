@@ -9,9 +9,10 @@ import { ListBody } from 'linode-components/lists/bodies';
 import { LinkCell } from 'linode-components/tables/cells';
 import { Select } from 'linode-components/forms';
 
+import { setError } from '~/actions/errors';
+import { setSource } from '~/actions/source';
 import { objectFromMapByLabel, getObjectByLabelLazily } from '~/api/util';
 import { nodebalancerStats } from '~/api/nodebalancers';
-import { setSource } from '~/actions/source';
 import Region from '~/linodes/components/Region';
 import LineGraph from '~/components/graphs/LineGraph';
 import {
@@ -49,7 +50,6 @@ export class DashboardPage extends Component {
     super(props);
 
     const stats = props.nodebalancer._stats;
-    console.log(stats);
     if (stats) {
       this.graphs = {
         connections: {

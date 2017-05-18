@@ -7,7 +7,9 @@ export function updateConfigSSL(data, nodebalancerId, configId) {
 
 export function nodebalancerStats(nodebalancerId) {
   return async (dispatch) => {
-    const { data: _stats } = await dispatch(thunkFetch.get(`/nodebalancers/${nodebalancerId}/stats`));
+    const { data: _stats } = await dispatch(
+      thunkFetch.get(`/nodebalancers/${nodebalancerId}/stats`)
+    );
     dispatch(actions.one({ _stats }, nodebalancerId));
   };
 }
