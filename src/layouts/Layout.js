@@ -28,7 +28,7 @@ export class Layout extends Component {
     // implementations may decide to let a preload that has already been
     // called before be called again if a certain amount of time has elapsed.
     const requests = ['kernels', 'types', 'regions', 'distributions'].filter(
-      type => !Object.values(getState().api[type]).length).map(type => api[type].all());
+      type => !Object.values(getState().api[type][type]).length).map(type => api[type].all());
 
     if (!Object.keys(getState().api.profile).length) {
       requests.push(api.profile.one());
