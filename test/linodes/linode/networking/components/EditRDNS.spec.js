@@ -1,11 +1,13 @@
+import { expect } from 'chai';
+import { mount } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
-import { mount } from 'enzyme';
-import { expect } from 'chai';
 
+import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
 import { testLinode } from '@/data/linodes';
-import { expectRequest } from '@/common';
+
 import EditRDNS from '~/linodes/linode/networking/components/EditRDNS';
+
 
 describe('linodes/linode/networking/components/EditRDNS', () => {
   const sandbox = sinon.sandbox.create();
@@ -47,14 +49,14 @@ describe('linodes/linode/networking/components/EditRDNS', () => {
 
     changeInput('hostname', 'test.com');
 
-    await page.find('Form').props().onSubmit();
+    await page.find('Form').props().onSubmit({ preventDefault() {} });
 
-    expect(dispatch.callCount).to.equal(2);
-
-    const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, `/linode/instances/${testLinode.id}/ips/${ip.address}`, {
-      method: 'PUT',
-      body: { rdns: 'test.com' },
-    });
+    expect(dispatch.callCount).to.equal(1);
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      ([fn]) => expectRequest(fn, `/linode/instances/${testLinode.id}/ips/${ip.address}`, {
+        method: 'PUT',
+        body: { rdns: 'test.com' },
+      }),
+    ]);
   });
 });

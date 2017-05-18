@@ -10,7 +10,7 @@ import {
 } from 'linode-components/tables/cells';
 
 import { setShared } from '~/api/linodes';
-import { FormSummary, reduceErrors } from '~/components/forms';
+import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
 import { IPRdnsCell } from '~/components/tables/cells';
 
 
@@ -18,51 +18,29 @@ export default class IPSharing extends Component {
   constructor(props) {
     super(props);
 
-    this.onChange = this.onChange.bind(this);
-    this.state = {
-      errors: {},
-      saving: false,
-      checked: {},
-    };
+    // Need to be able to update immediately and when props change.
+    this._componentWillReceiveProps((state) => {
+      this.state = {
+        ...state,
+        errors: {},
+        loading: false,
+      };
+    })(props);
+    this.componentWillReceiveProps = this._componentWillReceiveProps();
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { linode } = nextProps;
-    const checked = {};
-
-    (linode._ips.ipv4.shared || []).forEach(ip => {
-      checked[ip.address] = true;
-    });
-
-    this.setState({
-      checked: _.merge({}, checked, this.state.checked),
-    });
-  }
-
-  onSubmit = async () => {
+  onSubmit = () => {
     const { dispatch, linode } = this.props;
     const { checked } = this.state;
 
-    this.setState({ errors: {}, saving: true });
-
     const sharedIps = Object.keys(_.pickBy(checked, checked => checked));
 
-    try {
-      await dispatch(setShared(linode.id, sharedIps));
-    } catch (response) {
-      if (!response.json) {
-        // eslint-disable-next-line no-console
-        return console.error(response);
-      }
-
-      const errors = await reduceErrors(response);
-      this.setState({ errors });
-    }
-
-    this.setState({ saving: false });
+    return dispatch(dispatchOrStoreErrors.call(this, [
+      () => setShared(linode.id, sharedIps),
+    ]));
   }
 
-  onChange(record, checked) {
+  onChange = (record, checked) => {
     this.setState(_.merge({}, this.state, {
       checked: {
         [record.ip.address]: checked,
@@ -70,8 +48,26 @@ export default class IPSharing extends Component {
     }));
   }
 
-  formatRows() {
-    const { linodes, linode: thisLinode } = this.props;
+  _componentWillReceiveProps(_setState) {
+    const setState = _setState || this.setState.bind(this);
+    return (nextProps) => {
+      const { linode } = nextProps;
+      const checked = {};
+      const validIPs = this.validIPs(nextProps);
+
+      validIPs.forEach(({ ip: { address } }) => {
+        checked[address] = (linode._ips.ipv4.shared || []).filter(
+          ip => ip.address === address).length !== 0;
+      });
+
+      setState({
+        checked: _.merge({}, checked, this.state ? this.state.checked : {}),
+      });
+    };
+  }
+
+  validIPs(props = undefined) {
+    const { linodes, linode: thisLinode } = props || this.props;
 
     const data = _.flatten(linodes
       .filter((linode) => { return linode.id !== thisLinode.id; })
@@ -86,51 +82,66 @@ export default class IPSharing extends Component {
   }
 
   render() {
-    const { errors, saving } = this.state;
+    const { errors, loading } = this.state;
     const { checked } = this.state;
-    const data = this.formatRows();
+    const data = this.validIPs();
+
+    let body = (
+      <p>
+        Sharing is only available within Linodes in the same region. There are no other Linodes
+        in this region.
+      </p>
+    );
+
+    if (data.length) {
+      body = (
+        <div>
+          <p>
+            <small>
+              The selected IP addresses can be brought up by this Linode if the original Linode's
+              host becomes unavailable.
+            </small>
+          </p>
+          <Form onSubmit={this.onSubmit}>
+            <FormGroup>
+              <Table
+                className="Table--secondary"
+                columns={[
+                  {
+                    cellComponent: CheckboxCell,
+                    headerClassName: 'CheckboxColumn',
+                    selectedKeyFn: (record) => {
+                      return record.ip.address;
+                    },
+                  },
+                  { cellComponent: IPRdnsCell, ipKey: 'ip', label: 'IP Address' },
+                  {
+                    cellComponent: LinkCell,
+                    hrefFn: (record) => {
+                      return `/linodes/${record.linode.label}`;
+                    },
+                    label: 'Linode',
+                    textFn: (record) => {
+                      return record.linode.label;
+                    },
+                  },
+                ]}
+                data={data}
+                selectedMap={checked}
+                onToggleSelect={this.onChange}
+              />
+            </FormGroup>
+            <FormGroup>
+              <SubmitButton disabled={loading} />
+              <FormSummary errors={errors} success="Shared IPs saved." />
+            </FormGroup>
+          </Form>
+        </div>
+      );
+    }
 
     return (
-      <Card header={<CardHeader title="IP Sharing" />}>
-        <p>
-          <small>
-            The selected IP addresses can be brought up by this Linode if the original Linode's
-            host becomes unavailable.
-          </small>
-        </p>
-        <Form onSubmit={this.onSubmit}>
-          <FormGroup>
-            <Table
-              className="Table--secondary"
-              columns={[
-                {
-                  cellComponent: CheckboxCell,
-                  headerClassName: 'CheckboxColumn',
-                  selectedKeyFn: (record) => {
-                    return record.ip.address;
-                  },
-                },
-                { cellComponent: IPRdnsCell, ipKey: 'ip', label: 'IP Address' },
-                {
-                  cellComponent: LinkCell,
-                  hrefFn: (record) => {
-                    return `/linodes/${record.linode.label}`;
-                  },
-                  label: 'Linode',
-                  textFn: (record) => {
-                    return record.linode.label;
-                  },
-                },
-              ]}
-              data={data}
-              selectedMap={checked}
-              onToggleSelect={this.onChange}
-            />
-          </FormGroup>
-          <SubmitButton disabled={saving}>Save</SubmitButton>
-          <FormSummary errors={errors} />
-        </Form>
-      </Card>
+      <Card header={<CardHeader title="IP Sharing" />}>{body}</Card>
     );
   }
 }

@@ -27,7 +27,7 @@ export default function ButtonCell(props) {
   return (
     <TableCell className="ButtonCell" column={column} record={record}>
       <Button
-        className={buttonClassName}
+        className={buttonClassName || 'btn-secondary'}
         disabled={disabled}
         onClick={() => {
           if (onClick) {
@@ -48,8 +48,4 @@ ButtonCell.propTypes = {
   }),
   isDisabledFn: PropTypes.func,
   record: PropTypes.object,
-};
-
-ButtonCell.defaultProps = {
-  buttonClassName: '',
 };

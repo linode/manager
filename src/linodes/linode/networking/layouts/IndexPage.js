@@ -4,9 +4,24 @@ import { withRouter } from 'react-router';
 import { push } from 'react-router-redux';
 
 import { Tabs } from 'linode-components/tabs';
+
+import { setError } from '~/actions/errors';
+import { linodeIPs } from '~/api/linodes';
+import { getObjectByLabelLazily } from '~/api/util';
+
 import { selectLinode } from '../../utilities';
 
+
 export class IndexPage extends Component {
+  static async preload({ dispatch, getState }, { linodeLabel }) {
+    try {
+      const { id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
+      await dispatch(linodeIPs(id));
+    } catch (e) {
+      dispatch(setError(e));
+    }
+  }
+
   render() {
     const { linode } = this.props;
     if (!linode) return null;

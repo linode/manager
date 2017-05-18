@@ -1,14 +1,15 @@
+import { expect } from 'chai';
+import { mount } from 'enzyme';
+import _ from 'lodash';
 import React from 'react';
 import sinon from 'sinon';
-import { mount } from 'enzyme';
-import { expect } from 'chai';
-import _ from 'lodash';
-import { push } from 'react-router-redux';
 
 import IPTransfer from '~/linodes/linode/networking/components/IPTransfer';
+
+import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
 import { testLinode } from '@/data/linodes';
 import { state } from '@/data';
-import { expectRequest, expectObjectDeepEquals } from '@/common';
+
 
 const { linodes } = state.api;
 
@@ -112,33 +113,41 @@ describe('linodes/linode/networking/components/IPTransfer', () => {
 
     await page.find('Form').props().onSubmit();
 
-    expect(dispatch.callCount).to.equal(6);
+    expect(dispatch.callCount).to.equal(1);
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      ([fn]) => expectRequest(fn, '/networking/ip-assign', {
+        method: 'POST',
+        body: {
+          region: testLinode.region.id,
+          assignments: [
+            { address: ipA.address, linode_id: ipB.linode_id },
+            { address: ipB.address, linode_id: ipA.linode_id },
+          ],
+        },
+      }),
+      async ([fn]) => {
+        const _dispatch = sinon.stub();
+        const promiseAllStub = sinon.stub(Promise, 'all');
+        fn(_dispatch);
 
-    let fn = dispatch.getCall(0).args[0];
-    await expectRequest(fn, '/networking/ip-assign', {
-      method: 'POST',
-      body: {
-        region: testLinode.region.id,
-        assignments: [
-          { address: ipA.address, linode_id: ipB.linode_id },
-          { address: ipB.address, linode_id: ipA.linode_id },
-        ],
+        expect(promiseAllStub.callCount).to.equal(1);
+        expect(_dispatch.callCount).to.equal(3);
+
+        let _fn = _dispatch.getCall(1).args[0];
+        await expectRequest(_fn, `/linode/instances/${ipA.linode_id}/ips`);
+
+        _fn = _dispatch.getCall(2).args[0];
+        await expectRequest(_fn, `/linode/instances/${ipB.linode_id}/ips`);
+
+        _fn = _dispatch.getCall(0).args[0];
+        _dispatch.reset();
+        _dispatch.returns({ total_pages: 1, linodes: [], total_results: 0 });
+        await _fn(_dispatch, () => state);
+        _fn = _dispatch.firstCall.args[0];
+        await expectRequest(_fn, '/linode/instances/?page=1', undefined, {
+          linodes: [],
+        });
       },
-    });
-
-    fn = dispatch.getCall(1).args[0];
-    await expectRequest(fn, `/linode/instances/${ipA.linode_id}`);
-
-    fn = dispatch.getCall(2).args[0];
-    await expectRequest(fn, `/linode/instances/${ipA.linode_id}/ips`);
-
-    fn = dispatch.getCall(3).args[0];
-    await expectRequest(fn, `/linode/instances/${ipB.linode_id}`);
-
-    fn = dispatch.getCall(4).args[0];
-    await expectRequest(fn, `/linode/instances/${ipB.linode_id}/ips`);
-
-    fn = dispatch.getCall(5).args[0];
-    expectObjectDeepEquals(fn, push(`/linodes/${testLinode.label}`));
+    ]);
   });
 });
