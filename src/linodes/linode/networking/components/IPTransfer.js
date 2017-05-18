@@ -105,7 +105,7 @@ export default class IPTransfer extends Component {
                 <Select
                   value={selectedOtherLinode}
                   name="selectedOtherLinode"
-                  onChange={({ record: { name, value } }) =>
+                  onChange={({ target: { name, value } }) =>
                     this.setState({ [name]: value, checkedB: {} })}
                   options={this.otherLinodes().map(linode => ({ ...linode, value: linode.id }))}
                 />
