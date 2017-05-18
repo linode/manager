@@ -6,8 +6,6 @@ import { setToken } from '~/actions/authentication';
 import { getCookie } from '~/api/util';
 import { setStorage } from '~/storage';
 
-console.log(getCookie);
-
 export function setSession(oauthToken = '', scopes = '') {
   return (dispatch) => {
     // Set these two so we can grab them on subsequent page loads
@@ -24,19 +22,21 @@ export function OAuthCallbackPage(props) {
 
   try {
     // For development use.
-    let access_token = ENV_PERSONAL_ACCESS_TOKEN;
+    // eslint-disable-next-line no-undef
+    let accessToken = ENV_PERSONAL_ACCESS_TOKEN;
     let scopes = '*';
 
-    if (!access_token) {
-      ({ access_token, scopes } = JSON.parse(getCookie('__loa')));
+    if (!accessToken) {
+      ({ accessToken, scopes } = JSON.parse(getCookie('__loa')));
     }
 
     // Token needs to be in redux state for all API calls
-    dispatch(setSession(access_token, scopes));
+    dispatch(setSession(accessToken, scopes));
 
     // Done OAuth flow. Let the app begin.
     dispatch(push(returnTo || '/'));
 
+    // eslint-disable-next-line no-undef
     if (!ENV_PERSONAL_ACCESS_TOKEN) {
       // We don't need the cookie anymore
       document.cookie = '__loa=; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
