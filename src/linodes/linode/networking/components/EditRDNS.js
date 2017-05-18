@@ -3,7 +3,7 @@ import React, { PropTypes, Component } from 'react';
 import { CancelButton } from 'linode-components/buttons';
 import { Form, Input, ModalFormGroup, SubmitButton } from 'linode-components/forms';
 
-import { setRDNS } from '~/api/networking';
+import { setRDNS } from '~/api/linodes';
 import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
 
 
@@ -18,11 +18,11 @@ export default class EditRDNS extends Component {
   }
 
   onSubmit = () => {
-    const { dispatch, ip } = this.props;
+    const { dispatch, ip: { linode_id: linodeId, address } } = this.props;
     const { hostname } = this.state;
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => setRDNS(ip, hostname),
+      () => setRDNS(linodeId, address, hostname),
       close,
     ]));
   }

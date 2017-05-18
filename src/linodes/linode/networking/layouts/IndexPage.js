@@ -16,7 +16,6 @@ export class IndexPage extends Component {
   static async preload({ dispatch, getState }, { linodeLabel }) {
     try {
       const { id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
-      // Even on the IPManagement page this is needed for shared IPs.
       await dispatch(linodeIPs(id));
     } catch (e) {
       dispatch(setError(e));

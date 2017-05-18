@@ -9,7 +9,6 @@ import { setError } from '~/actions/errors';
 import { Button } from 'linode-components/buttons';
 import { Card, CardHeader } from 'linode-components/cards';
 
-
 export class SummaryPage extends Component {
   componentDidMount() {
     const { dispatch } = this.props;

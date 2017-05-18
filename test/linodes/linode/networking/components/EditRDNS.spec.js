@@ -52,9 +52,6 @@ describe('linodes/linode/networking/components/EditRDNS', () => {
     await page.find('Form').props().onSubmit({ preventDefault() {} });
 
     expect(dispatch.callCount).to.equal(1);
-    const first = dispatch.firstCall.args[0];
-    dispatch.reset();
-    first(dispatch);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
       ([fn]) => expectRequest(fn, `/linode/instances/${testLinode.id}/ips/${ip.address}`, {
         method: 'PUT',
