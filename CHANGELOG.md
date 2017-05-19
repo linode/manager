@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Changed
+- lookup lish domains based on datacenter #1795
 
 ## [0.5.6] 2017-05-19
 ### Fixed
