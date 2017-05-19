@@ -19,7 +19,7 @@ export default function IPAddressCell(props) {
 
   return (
     <TableCell column={column} record={record}>
-      {record.ipv4[0]}
+      {ipv4}
       {ipv6}
     </TableCell>
   );
