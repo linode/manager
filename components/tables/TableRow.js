@@ -21,7 +21,7 @@ export default class TableRow extends Component {
   }
 
   render() {
-    const { columns, record, selectedMap } = this.props;
+    const { className, columns, onClick, record, selectedMap } = this.props;
     const checkboxColumn = columns.filter(function (column) {
       return  column.cellComponent &&
         (column.cellComponent === CheckboxCell) &&
@@ -41,7 +41,7 @@ export default class TableRow extends Component {
 
     const selectedClass = selected ? 'TableRow--selected' : '';
     return (
-      <tr className={`TableRow ${selectedClass}`}>
+      <tr className={`TableRow ${className} ${selectedClass}`} onClick={onClick}>
         {columns.map((column, index) => {
           // rendering options from most to least specific
 
@@ -83,8 +83,14 @@ export default class TableRow extends Component {
 }
 
 TableRow.propTypes = {
+  className: PropTypes.string,
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
   onToggleSelect: PropTypes.func,
+  onClick: PropTypes.func,
   record: PropTypes.object.isRequired,
   selectedMap: PropTypes.object,
+};
+
+TableRow.defaultProps = {
+  className: ''
 };

@@ -5,6 +5,24 @@ import TableHeaderRow from './TableHeaderRow';
 import TableRow from './TableRow';
 
 
+function renderRows(columns, data, onToggleSelect, selectedMap) {
+  return data.map(function (record, index) {
+    return (
+      <TableRow
+        // assumes that if one record in the collection does not have an id,
+        // than no records should have an id, and all keys will fallback to
+        // index usage
+        key={record.id || index}
+        index={index}
+        columns={columns}
+        record={record}
+        onToggleSelect={onToggleSelect}
+        selectedMap={selectedMap}
+      />
+    );
+  });
+}
+
 export default function Table(props) {
   const {
     className,
@@ -15,6 +33,7 @@ export default function Table(props) {
     noDataMessage,
     onToggleSelect,
     selectedMap,
+    renderRowsFn = renderRows,
   } = props;
 
   let tableContent;
@@ -27,21 +46,7 @@ export default function Table(props) {
           <TableHeaderRow columns={columns} />
         </thead>
         <tbody>
-        {data.map(function (record, index) {
-          return (
-            <TableRow
-              // assumes that if one record in the collection does not have an id,
-              // than no records should have an id, and all keys will fallback to
-              // index usage
-              key={record.id || index}
-              index={index}
-              columns={columns}
-              record={record}
-              onToggleSelect={onToggleSelect}
-              selectedMap={selectedMap}
-            />
-          );
-        })}
+          {renderRowsFn(columns, data, onToggleSelect, selectedMap)}
         </tbody>
       </table>
     );

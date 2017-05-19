@@ -1,9 +1,9 @@
 import React from 'react';
 
-import { Table } from 'linode-components/tables';
-import { Tabs } from 'linode-components/tabs';
-import { default as Example } from './Example';
-import { DescriptionCell, FieldCell } from './Tables/Cells';
+import { default as MethodParams } from './MethodParams';
+import { default as MethodRequest } from './MethodRequest';
+import { default as MethodResponse } from './MethodResponse';
+import { default as MethodResponseExample } from './MethodResponseExample';
 
 
 export default function Method(props) {
@@ -22,61 +22,21 @@ export default function Method(props) {
   let methodParams = null;
   if (params) {
     methodParams = (
-      <div className="Method-section Method-params">
-        <h4><b>Parameters</b></h4>
-        <Table
-          className="Table--secondary"
-          columns={[
-            { label: 'Field', dataKey: 'name', headerClassName: 'FieldColumn' },
-            { label: 'Type', dataKey: 'type', headerClassName: 'TypeColumn' },
-            { label: 'Description', dataKey: 'description', headerClassName: 'DescriptionColumn' }
-          ]}
-          data={params}
-        />
-      </div>
+      <MethodParams params={params} />
     );
   }
 
   let methodRequest = (
-    <div className="Method-section Method-request">
-      <h4><b>Request</b></h4>
-      <Tabs
-        tabs={examples.map(function(example, index) {
-          // example: { name, value }
-          return {
-            name: example.name,
-            children: (<Example key={index} example={example.value} />)
-          };
-        })}
-      />
-    </div>
+    <MethodRequest examples={examples} />
   );
 
   let methodResponse = null;
   let methodResponseExample = null;
   if (name === 'GET') {
-    methodResponse = (
-      <div className="Method-section Method-response">
-        <h4><b>Response</b></h4>
-        <Table
-          className="Table--secondary"
-          columns={[
-            { cellComponent: FieldCell, label: 'Field', headerClassName: 'FieldColumn' },
-            { label: 'Type', dataKey: 'type', headerClassName: 'TypeColumn' },
-            { cellComponent: DescriptionCell, label: 'Description', headerClassName: 'DescriptionColumn' }
-          ]}
-          data={schema}
-        />
-      </div>
-    );
+    methodResponse = (<MethodResponse schema={schema} />);
 
     if (resource.example) {
-      methodResponseExample = (
-        <div className="Method-section Method-responseExample">
-          <h4><b>Example</b></h4>
-          <Example example={JSON.stringify(resource.example, null, 2)} />
-        </div>
-      );
+      methodResponseExample = (<MethodResponseExample resource={resource} />);
     }
   }
 
