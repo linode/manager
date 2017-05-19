@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [0.5.4] 2017-05-18
+### Fixed
+- fixed ipv4 rendering #1816
+
 ## [0.5.3] 2017-05-18
 ### Fixed
 - fixed miscalculated plan values #1811
