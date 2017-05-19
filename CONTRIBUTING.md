@@ -84,7 +84,7 @@ A release branch is composed of 1 or more features that have been merged into ma
 10. Approve/Merge pull against master w/ "Create a merge commit"
 11. Open a pull: linode/release < {your_fork_origin}/release-0.5.0 for review
 12. Approve/Merge pull against release w/ "Create a merge commit"
-13. Create a release via github (v0.5.0) against *linode/release*, copy CHANGELOG.md details for the version into the release description
+13. Create a release via github (v0.5.0) against **linode/release**, copy CHANGELOG.md details for the version into the release description
 14. Publish release
 15. Notify in chat [(#linode-next on irc.oftc.net)](https://webchat.oftc.net/?channels=linode-next&uio=d4) that release is complete, coordinate deploy
 16. After deploy, manually check that the app is in the expected state. See testing doc.
@@ -104,7 +104,7 @@ A hotfix branch is for bug fixes against the current release.
 10. Approve/Merge pull against release w/ "Squash and Merge"
 11. Open a pull: linode/master < {your_fork_origin}/release-0.5.1 for review
 12. Approve/Merge pull against master w/ "Squash and Merge"
-13. Create a release via github (v0.5.1) against *linode/release*, copy CHANGELOG.md details for the version into the release description
+13. Create a release via github (v0.5.1) against **linode/release**, copy CHANGELOG.md details for the version into the release description
 14. Publish release
 15. Notify in chat [(#linode-next on irc.oftc.net)](https://webchat.oftc.net/?channels=linode-next&uio=d4) that release is complete, coordinate deploy
 16. After deploy, manually check that the app is in the expected state. See testing doc.
