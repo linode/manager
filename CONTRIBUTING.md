@@ -67,3 +67,53 @@ there's already a bug filed for your problem - if so, leave a comment
 mentioning that you can reproduce it. Otherwise, go ahead and open an issue
 with as much detail as you can provide (for example: node version, operating
 system, browser, device, etc.). Thanks!
+
+## Releasing
+### Creating a release branch:
+A release branch is composed of 1 or more features that have been merged into master.
+
+1. git checkout master
+2. git pull origin master // make sure you have latest
+3. npm install && npm start // update packages and manually check to see that the app is in good state
+4. git checkout -b release-0.5.0 // create a new release branch with the planned version change
+5. npm --no-git-tag-version version patch|minor|major // bump the version in the package.json
+6. Manually update CHANGELOG.md to represent changes for the release version
+7. git add .
+8. git commit -m "Bumped version to 0.5.0 and updated CHANGELOG"
+9. git push -u {your_fork_origin} release-0.5.0
+10. Open a pull: linode/master < {your_fork_origin}/release-0.5.0 for review
+11. Approve/Merge pull against master w/ "Create a merge commit"
+12. Open a pull: linode/release < {your_fork_origin}/release-0.5.0 for review
+13. Approve/Merge pull against release w/ "Create a merge commit"
+14. Create a release via github (v0.5.0) against linode/release, Copy CHANGELOG.md details for the version into the release description
+15. Publish release
+16. Notify in chat that release is complete, coordinate deploy
+17. After deploy, manually check that the app is in the expected state. See testing doc.
+
+### Creating a hotfix branch:
+A hotfix branch is for bug fixes against the current release.
+
+1. git checkout release
+2. git pull origin release
+3. npm intsall && npm start // update packages and manually check to see that the app is in good state
+4. git checkout -b HF-0.5.1
+5. Add and commit your hotfix
+6. npm --no-git-tag-version version patch
+7. Manually update CHANGELOG.md to represent changes for the release version
+8. git add .
+9. git commit -m "Bumped version to 0.5.1 and updated CHANGELOG"
+10. Open a pull: linode/release < {your_fork_origin}/release-0.5.1 for review
+11. Approve/Merge pull against release w/ "Squash and Merge"
+12. Open a pull: linode/master < {your_fork_origin}/release-0.5.1 for review
+13. Approve/Merge pull against master w/ "Squash and Merge"
+14. Create a release via github (v0.5.1) against linode/release, Copy CHANGELOG.md details for the version into the release description
+15. Publish release
+16. Notify in chat that release is complete, coordinate deploy
+17. After deploy, manually check that the app is in the expected state. See testing doc.
+
+### References
+- http://nvie.com/posts/a-successful-git-branching-model/
+- https://docs.npmjs.com/cli/version
+- http://keepachangelog.com/en/0.3.0/
+- https://help.github.com/articles/merging-a-pull-request/
+- https://help.github.com/articles/about-pull-request-merges/
