@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [0.5.3] 2017-05-18
+### Fixed
+- fixed miscalculated plan values #1811
+
 ## [0.5.2] 2017-05-18
 ### Fixed
 - fixed user restricted radio #1808
