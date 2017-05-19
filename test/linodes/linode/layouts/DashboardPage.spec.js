@@ -1,10 +1,14 @@
+import { expect } from 'chai';
+import { mount, shallow } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
-import { mount, shallow } from 'enzyme';
-import { expect } from 'chai';
 
+
+import { DATACENTERS } from '~/constants';
 import { DashboardPage } from '~/linodes/linode/layouts/DashboardPage';
+
 import { testLinode, testLinode1246 } from '@/data/linodes';
+
 
 describe('linodes/linode/layouts/DashboardPage', async () => {
   const sandbox = sinon.sandbox.create();
@@ -120,7 +124,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
 
   it('renders lish path', () => {
     const lishLink = `ssh -t tdude@lish-${
-        testLinode.region.id
+        DATACENTERS[testLinode.region.id]
       }.linode.com`;
     const page = shallow(
       <DashboardPage

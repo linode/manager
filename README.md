@@ -39,7 +39,6 @@ client secret set appropriately:
 
     export const clientId = 'change me';
     export const clientSecret = 'change me';
-    export const LISH_ROOT = 'wss://lish.alpha.linode.com';
 
 Be sure to set your callback URL to something like
 `http://localhost:3000/oauth/callback` when you register your OAuth client.

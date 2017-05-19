@@ -7,7 +7,6 @@ script:
         cat <<EOF > src/secrets.js
         export const clientId = 'placeholder';
         export const clientSecret = 'placeholder';
-        export const LISH_ROOT = 'wss://lish.alpha.linode.com';
         EOF
     - |
       if [[ $(git diff HEAD^ $(git rev-parse --abbrev-ref HEAD) --name-only | grep -v scss) ]]; then

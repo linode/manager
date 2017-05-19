@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { LISH_ROOT } from '~/secrets';
+import { DATACENTERS } from '~/constants';
 import { getObjectByLabelLazily } from '~/api/util';
 import { lishToken } from '~/api/linodes';
 
@@ -49,7 +49,8 @@ export class Weblish extends Component {
     const { dispatch } = this.props;
     const { linode } = this.state;
     const { lish_token: token } = await dispatch(lishToken(linode.id));
-    const socket = new WebSocket(`${LISH_ROOT}:8181/${token}/weblish`);
+    const socket = new WebSocket(
+      `https://${DATACENTERS[linode.region.id]}.linode.com:8181/${token}/weblish`);
     socket.addEventListener('open', () =>
       this.setState({ renderingLish: true }, this.renderTerminal(socket)));
   }
