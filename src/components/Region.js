@@ -11,21 +11,23 @@ export default class Region extends Component {
     const dcClass = region.id === selected ? 'selected' : '';
 
     return (
-      <div
-        className={`region ${dcClass}`}
-        key={region.id}
-        onClick={() => onRegionSelected(region.id)}
-      >
-        <header>
-          <div className="title">{region.label}</div>
-        </header>
-        <div className="option-contents">
-          <img
-            src={flags[region.country]}
-            width={64}
-            height={64}
-            alt={region.label}
-          />
+      <div className="col-sm-3">
+        <div
+          className={`region ${dcClass}`}
+          key={region.id}
+          onClick={() => onRegionSelected(region.id)}
+        >
+          <header>
+            <div className="title">{region.label}</div>
+          </header>
+          <div className="option-contents">
+            <img
+              src={flags[region.country]}
+              width={64}
+              height={64}
+              alt={region.label}
+            />
+          </div>
         </div>
       </div>
     );
@@ -39,7 +41,7 @@ export default class Region extends Component {
     return regions.length ? (
       <div key={region}>
         <h3>{region}</h3>
-        <div className="region-group">
+        <div className="region-group row">
           {regions.map(this.renderZone)}
         </div>
       </div>
