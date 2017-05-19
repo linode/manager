@@ -6,7 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-## [0.5.4] 2017-05-18
+## [0.5.5] 2017-05-19
+### Fixed
+- fixed distribution rendering #1822
+
+## [0.5.4] 2017-05-19
 ### Fixed
 - fixed ipv4 rendering #1816
 
