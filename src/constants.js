@@ -22,8 +22,21 @@ export const LinodeStates = {
 
 export const regionMap = {
   'North America': ['us-east-1a', 'us-south-1a', 'us-west-1a', 'us-southeast-1a'],
-  Europe: ['eu-central-1a', 'eu-central-1a'],
+  Europe: ['eu-central-1a', 'eu-west-1a'],
   Asia: ['ap-northeast-1a', 'ap-south-1a', 'ap-northeast-1b'],
+};
+
+// Still necessary for older DNS lookups.
+export const DATACENTERS = {
+  'us-east-1a': 'newark',
+  'us-south-1a': 'dallas',
+  'us-west-1a': 'fremont',
+  'us-southeast-1a': 'atlanta',
+  'eu-central-1a': 'frankfurt',
+  'eu-west-1a': 'london',
+  'ap-northeast-1a': 'tokyo',
+  'ap-northeast-1b': 'shinagawa1',
+  'ap-south-1a': 'singapore',
 };
 
 export const LinodeStatesReadable = {
