@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [0.5.5] 2017-05-19
 ### Fixed
-- fixed distribution rendering #1823
+- fixed region rendering #1823
 
 ## [0.5.4] 2017-05-19
 ### Fixed
