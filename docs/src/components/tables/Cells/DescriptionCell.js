@@ -10,10 +10,9 @@ export default function DescriptionCell(props) {
   if (typeof description === 'object') {
     descriptionEl = (
       <div>
-        <div>{description.descText}</div>
-        <div>
+        <div>{description.descText}
           <ul>
-            {description.listItems.forEach(function(item) {
+            {description.listItems.map(function(item) {
               return (<li>{item}</li>);
             })}
           </ul>
