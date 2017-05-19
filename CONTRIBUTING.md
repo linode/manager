@@ -78,17 +78,16 @@ A release branch is composed of 1 or more features that have been merged into ma
 4. git checkout -b release-0.5.0 // create a new release branch with the planned version change
 5. npm --no-git-tag-version version patch|minor|major // bump the version in the package.json
 6. Manually update CHANGELOG.md to represent changes for the release version
-7. git add .
-8. git commit -m "Bumped version to 0.5.0 and updated CHANGELOG"
-9. git push -u {your_fork_origin} release-0.5.0
-10. Open a pull: linode/master < {your_fork_origin}/release-0.5.0 for review
-11. Approve/Merge pull against master w/ "Create a merge commit"
-12. Open a pull: linode/release < {your_fork_origin}/release-0.5.0 for review
-13. Approve/Merge pull against release w/ "Create a merge commit"
-14. Create a release via github (v0.5.0) against linode/release, Copy CHANGELOG.md details for the version into the release description
-15. Publish release
-16. Notify in chat [(#linode-next on irc.oftc.net)](https://webchat.oftc.net/?channels=linode-next&uio=d4) that release is complete, coordinate deploy
-17. After deploy, manually check that the app is in the expected state. See testing doc.
+7. Stage and commit your changes
+8. git push -u {your_fork_origin} release-0.5.0
+9. Open a pull: linode/master < {your_fork_origin}/release-0.5.0 for review
+10. Approve/Merge pull against master w/ "Create a merge commit"
+11. Open a pull: linode/release < {your_fork_origin}/release-0.5.0 for review
+12. Approve/Merge pull against release w/ "Create a merge commit"
+13. Create a release via github (v0.5.0) against linode/release, Copy CHANGELOG.md details for the version into the release description
+14. Publish release
+15. Notify in chat [(#linode-next on irc.oftc.net)](https://webchat.oftc.net/?channels=linode-next&uio=d4) that release is complete, coordinate deploy
+16. After deploy, manually check that the app is in the expected state. See testing doc.
 
 ### Creating a hotfix branch:
 A hotfix branch is for bug fixes against the current release.
@@ -100,16 +99,15 @@ A hotfix branch is for bug fixes against the current release.
 5. Add and commit your hotfix
 6. npm --no-git-tag-version version patch
 7. Manually update CHANGELOG.md to represent changes for the release version
-8. git add .
-9. git commit -m "Bumped version to 0.5.1 and updated CHANGELOG"
-10. Open a pull: linode/release < {your_fork_origin}/release-0.5.1 for review
-11. Approve/Merge pull against release w/ "Squash and Merge"
-12. Open a pull: linode/master < {your_fork_origin}/release-0.5.1 for review
-13. Approve/Merge pull against master w/ "Squash and Merge"
-14. Create a release via github (v0.5.1) against linode/release, Copy CHANGELOG.md details for the version into the release description
-15. Publish release
-16. Notify in chat [(#linode-next on irc.oftc.net)](https://webchat.oftc.net/?channels=linode-next&uio=d4) that release is complete, coordinate deploy
-17. After deploy, manually check that the app is in the expected state. See testing doc.
+8. Stage and commit your changes
+9. Open a pull: linode/release < {your_fork_origin}/release-0.5.1 for review
+10. Approve/Merge pull against release w/ "Squash and Merge"
+11. Open a pull: linode/master < {your_fork_origin}/release-0.5.1 for review
+12. Approve/Merge pull against master w/ "Squash and Merge"
+13. Create a release via github (v0.5.1) against linode/release, Copy CHANGELOG.md details for the version into the release description
+14. Publish release
+15. Notify in chat [(#linode-next on irc.oftc.net)](https://webchat.oftc.net/?channels=linode-next&uio=d4) that release is complete, coordinate deploy
+16. After deploy, manually check that the app is in the expected state. See testing doc.
 
 ### References
 - http://nvie.com/posts/a-successful-git-branching-model/
