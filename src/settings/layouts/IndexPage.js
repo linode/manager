@@ -32,7 +32,7 @@ export class IndexPage extends Component {
     const { dispatch } = this.props;
     const { networkHelper: network_helper } = this.state;
 
-    await dispatch(dispatchOrStoreErrors.apply(this, [
+    return dispatch(dispatchOrStoreErrors.apply(this, [
       [() => account.put({ network_helper })],
     ]));
   }

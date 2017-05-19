@@ -26,7 +26,11 @@ describe('settings/layouts/IndexPage', () => {
       />
     );
 
-    page.find('radio').at(1).simulate('change', { target: { value: true } });
+    const helper = page.find('input[name="networkHelper"]').at(0);
+    helper.simulate('change', { target: {
+      name: 'networkHelper',
+      value: 'true',
+    } });
 
     dispatch.reset();
     await page.find('Form').props().onSubmit();
