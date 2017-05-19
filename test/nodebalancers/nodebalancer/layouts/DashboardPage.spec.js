@@ -34,7 +34,7 @@ describe('nodebalancers/nodebalancer/layouts/DashboardPage', () => {
     expect(renderedProtocol).to.equal('HTTP');
     expect(renderedAlgorithm).to.equal('Round Robin');
     expect(renderedStick).to.equal('-- None --');
-    expect(renderedCheck).to.equal('0 up, 0 down');
+    expect(renderedCheck).to.equal('1 up, 0 down');
     expect(secondRenderedPort).to.equal('81');
   });
 });
