@@ -67,11 +67,10 @@ function convertUlToArray(description) {
   return description;
 }
 
-function getResourceObjByName(name) {
-  let resourceName = name.toLowerCase();
-  let resourceObject = apiObjectMap[resourceName];
-  if (!resourceObject && (resourceName.charAt(resourceName.length - 1) === 's')) {
-    resourceObject = apiObjectMap[resourceName.substr(0, resourceName.length - 1)];
+function getResourceObjByName(resource) {
+  let resourceObject = apiObjectMap[resource];
+  if (!resourceObject && (resource.charAt(resource.length - 1) === 's')) {
+    resourceObject = apiObjectMap[resource.substr(0, resource.length - 1)];
   }
   return resourceObject;
 }
@@ -109,29 +108,19 @@ function formatMethodExamples(methodObj) {
 
 function formatSchemaExample(schema) {
   const schemaExample = {};
-
-  schema.forEach(function(obj) {
-    if (obj.value === undefined && obj.schema) {
-      schemaExample[obj.name] = formatSchemaExample(obj.schema);
-    } else {
-      let value = obj.value;
-      if (Array.isArray(value)) {
-        value = value.map(function(obj) {
-          if (typeof obj === 'object' && obj !== null) {
-            return formatSchemaExample(obj);
-          }
-          return obj;
-        });
-      }
-
-      schemaExample[obj.name] = value;
-    }
-  });
-
+  if (Array.isArray(schema)) {
+    schema.forEach(function(obj) {
+      schemaExample[obj.name] = obj.value;
+    });
+  } else {
+    Object.keys(schema).forEach(function(key) {
+      schemaExample[key] = schema[key]._value;
+    });
+  }
   return schemaExample;
 }
 
-function formatSchemaField(schemaField, enumMap) {
+function formatSchemaField(schemaField) {
   let description;
   if (schemaField._description) {
     description = schemaField._description;
@@ -144,28 +133,18 @@ function formatSchemaField(schemaField, enumMap) {
   const editable = schemaField._editable;
   const filterable = schemaField._filterable;
   const type = schemaField._type;
-  const subType = schemaField._subtype;
-  let value = schemaField._value;
+  const value = schemaField._value;
 
   let nestedSchema = null;
+  let example = null;
   if (apiObjectMap[type]) {
-    nestedSchema = formatSchema(getResourceObjByName(type).schema, enumMap);
-  } else if (type === 'enum' && enumMap[subType]) {
-    nestedSchema = enumMap[subType]; // already formatted
+    nestedSchema = formatSchema(getResourceObjByName(type).schema);
+    example = formatSchemaExample(getResourceObjByName(type).schema);
   } else if (!type) {
+    console.log(name, schemaField);
     // TODO: check the name of the nested item?
-    nestedSchema = formatSchema(schemaField, enumMap);
-  } else if (Array.isArray(value)) {
-    value = value.map(function(obj) {
-      if (typeof obj === 'object' && obj !== null) {
-        return formatSchema(obj, enumMap);
-      }
-      return obj;
-    });
-
-    if (value.length && typeof value[0] !== 'string') {
-      nestedSchema = value[0]; // use the first example in the array as the schema
-    }
+    nestedSchema = formatSchema(schemaField);
+    example = formatSchemaExample(schemaField);
   }
 
   return {
@@ -174,40 +153,23 @@ function formatSchemaField(schemaField, enumMap) {
     editable: editable,
     filterable: filterable,
     type: type,
-    subType: subType,
     value: value,
+    example: example,
     schema: nestedSchema
   };
 }
 
-function formatSchema(schema, enumMap={}) {
+function formatSchema(schema) {
   if (Array.isArray(schema)) {
     return schema;
   }
 
   return Object.keys(schema).map(function (schemaName) {
-    if (typeof schema[schemaName] === 'object' && schema[schemaName] !== null) {
-      return formatSchemaField(_.merge(schema[schemaName], { name: schemaName }), enumMap);
+    if (typeof schema[schemaName] === 'object') {
+      return formatSchemaField(_.merge(schema[schemaName], { name: schemaName }));
     }
     // TODO: account for other cases
   }).filter(function(item) { return item; }); // filter at the end dumps nulls from result of non-object values
-}
-
-function createEnumMap(enums) {
-  const enumMap = {};
-
-  Object.keys(enums).map(function(enumName) {
-    const enumList = enums[enumName];
-
-    enumMap[enumName] = Object.keys(enumList).map(function(key) {
-      return {
-        name: key,
-        description: enumList[key]
-      };
-    });
-  });
-
-  return enumMap;
 }
 
 function formatMethodResource(endpoint, method) {
@@ -235,8 +197,7 @@ function formatMethodResource(endpoint, method) {
 
       schema = resourceObject.schema;
       if (schema) {
-        resourceObject.schema = formatSchema(schema, enumMap);
-        resourceObject.example = formatSchemaExample(resourceObject.schema);
+        resourceObject.schema = formatSchema(resourceObject.schema);
       }
     }
   }
@@ -361,25 +322,6 @@ allEndpoints = allEndpoints.map(function(endpoint) {
   return endpoint;
 });
 
-
-// rename formattedEndpoints > endpoints
-function renameEndpoints(endpoints) {
-  return endpoints.map(function(endpoint) {
-    endpoint.endpoints = endpoint.formattedEndpoints;
-    delete endpoint.formattedEndpoints;
-    if (endpoint.endpoints.length) {
-      endpoint.endpoints = renameEndpoints(endpoint.endpoints);
-    }
-    return endpoint;
-  });
-}
-allEndpoints = renameEndpoints(allEndpoints);
-
 const data = JSON.stringify(allEndpoints, null, 2);
-const endpointModule = `
-  /**
-  *   Generated Docs Source -- DO NOT EDIT
-  */
-  module.exports = { endpoints: ${data} };
-`;
-fs.writeFileSync(path.join('./src', 'api.js'), endpointModule);
+const endpointModule = `module.exports = { endpoints: ${data} };`;
+fs.writeFileSync(path.join(endpointsPath, 'api.js'), endpointModule);

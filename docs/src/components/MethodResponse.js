@@ -5,17 +5,11 @@ import Example from './Example';
 import { SchemaTableBody } from './tables';
 import { DescriptionCell, FieldCell } from './tables/Cells';
 
-const defaultColumns = [
+const columns = [
   { cellComponent: FieldCell, label: 'Field', headerClassName: 'FieldColumn' },
   { label: 'Type', dataKey: 'type', headerClassName: 'TypeColumn' },
   { cellComponent: DescriptionCell, label: 'Description', headerClassName: 'DescriptionColumn' }
 ];
-
-const enumColumns = [
-  { cellComponent: FieldCell, label: 'Value', headerClassName: 'FieldColumn' },
-  { cellComponent: DescriptionCell, label: 'Description', headerClassName: 'DescriptionColumn' }
-];
-
 
 export default class MethodResponse extends Component {
 
@@ -40,24 +34,15 @@ export default class MethodResponse extends Component {
   }
 
   renderNestedSchemaTable(record) {
-
-    let example = null;
-    if (record.example) {
-      example = (
-        <div><Example example={JSON.stringify(record.example, null, 2)} /></div>
-      );
-    }
-
-    const columns = record.type === 'enum' ? enumColumns : defaultColumns;
     return (
       <div>
-        <div>{this.renderSchemaTable(record.schema, columns)}</div>
-        {example}
+        <div>{this.renderSchemaTable(record.schema)}</div>
+        <div><Example example={JSON.stringify(record.example, null, 2)} /></div>
       </div>
     );
   }
 
-  renderSchemaTable(schemaData, columns) {
+  renderSchemaTable(schemaData) {
     const { activeSchemaIds } = this.state;
 
     return (
@@ -65,8 +50,9 @@ export default class MethodResponse extends Component {
         renderRowsFn={(columns, data, onToggleSelect, selectedMap) => {
           const rows = [];
           data.forEach((record, index) => {
-            if (record.schema) {
+            if (record.schema && record.example) {
               const nestedSchemaId = `${record.name}-${index}`;
+
               rows.push(<TableRow
                 className="NestedSchemaParent"
                 key={record.id || index}
@@ -107,7 +93,7 @@ export default class MethodResponse extends Component {
     return (
       <div className="Method-section MethodResponse">
         <h4><b>Response</b></h4>
-        {this.renderSchemaTable(schema, defaultColumns)}
+        {this.renderSchemaTable(schema)}
       </div>
     );
   }
