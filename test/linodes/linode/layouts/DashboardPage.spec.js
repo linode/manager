@@ -24,7 +24,6 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
       />);
 
     const ipSection = page.find('#ips');
-    console.log('THIS REALLY SHOULDNT PASS');
     expect(ipSection.find('li').at(0).text()).to.equal(ipv4[0]);
     expect(ipSection.find('li').at(1).text()).to.equal(ipv6.split('/')[0]);
   });
