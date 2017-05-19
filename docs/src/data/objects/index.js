@@ -18,6 +18,7 @@ const nodebalancerConfigNode = require('./nodebalancer_config_node');
 const oauthclient = require('./oauthclient');
 const oauthtoken = require('./oauthtoken');
 const profile = require('./profile');
+const region = require('./region');
 const service = require('./service');
 const stackscript = require('./stackscript');
 const supportticket = require('./supportticket');
@@ -46,6 +47,7 @@ module.exports.apiObjectMap = {
   oauthclient,
   oauthtoken,
   profile,
+  region,
   service,
   stackscript,
   supportticket,
