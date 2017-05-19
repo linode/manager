@@ -7,12 +7,12 @@
 tr.NestedSchemaParent {
     &:hover {
         cursor: pointer;
-        background-color: $gray;
+        background-color: $medium-gray;
     }
 }
 
 td.NestedSchemaCell {
-    background-color: $gray;
+    background-color: $medium-gray;
     padding: 10px 0 0 40px;
 
     .Example {
