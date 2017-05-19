@@ -5,7 +5,10 @@
 }
 
 tr.NestedSchemaParent {
-
+    &:hover {
+        cursor: pointer;
+        background-color: $light-blue;
+    }
 }
 
 td.NestedSchemaCell {
