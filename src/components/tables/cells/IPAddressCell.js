@@ -7,6 +7,11 @@ import { TableCell } from 'linode-components/tables/cells';
 export default function IPAddressCell(props) {
   const { column, record } = props;
 
+  let ipv4 = record.ipv4;
+  if (Array.isArray(ipv4)) {
+    ipv4 = ipv4[0];
+  }
+
   let ipv6 = null;
   if (record.ipv6) {
     ipv6 = (<div className="text-muted">{record.ipv6.split('/')[0]}</div>);
@@ -14,7 +19,7 @@ export default function IPAddressCell(props) {
 
   return (
     <TableCell column={column} record={record}>
-      {record.ipv4[0]}
+      {ipv4}
       {ipv6}
     </TableCell>
   );

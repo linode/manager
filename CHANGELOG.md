@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [0.5.6] 2017-05-19
+### Fixed
+- fixed ipv4 rendering in nodebalancers list
+
 ## [0.5.5] 2017-05-19
 ### Fixed
 - fixed region rendering #1823
