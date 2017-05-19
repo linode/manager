@@ -12,7 +12,7 @@ export default class Region extends Component {
     const dcClass = region.id === selected ? 'selected' : '';
 
     return (
-      <div className="col-sm-3" key={region.id}>
+      <div className="col-sm-3">
         <div
           className={`region ${dcClass}`}
           key={region.id}
@@ -42,10 +42,8 @@ export default class Region extends Component {
     return regions.length ? (
       <div className="region-group" key={region}>
         <h3>{region}</h3>
-        <div>
-          <div className="row">
-            {regions.map(this.renderZone)}
-          </div>
+        <div className="region-group row">
+          {regions.map(this.renderZone)}
         </div>
       </div>
       ) : null;
