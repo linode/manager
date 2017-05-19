@@ -20,7 +20,7 @@ export default function Details(props) {
       return '(Select a plan to view the price of backups)';
     }
 
-    const price = (selectedType.backups_price / 100).toFixed(2);
+    const price = (selectedType.backups_price).toFixed(2);
     return `($${price}/mo)`;
   };
 

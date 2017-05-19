@@ -18,8 +18,8 @@ describe('linodes/components/Plan', () => {
       />
     );
 
-    c.find('.plan').at(1).simulate('click');
+    c.find('.plan').at(0).simulate('click');
     expect(onSelect.callCount).to.equal(1);
-    expect(onSelect.firstCall.args[0]).to.equal('linode2048.5');
+    expect(onSelect.firstCall.args[0]).to.equal('linode1024.5');
   });
 });
