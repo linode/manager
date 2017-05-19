@@ -22,7 +22,7 @@ export default class Region extends Component {
           </header>
           <div className="option-contents">
             <img
-            src={flags[region.country]}
+              src={flags[region.country]}
               width={64}
               height={64}
               alt={region.label}
