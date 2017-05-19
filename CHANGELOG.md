@@ -8,11 +8,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [0.5.5] 2017-05-19
 ### Fixed
-- fixed distribution rendering #1822
+- fixed distribution rendering #1823
 
 ## [0.5.4] 2017-05-19
 ### Fixed
-- fixed ipv4 rendering #1816
+- fixed ipv4 rendering #1817
 
 ## [0.5.3] 2017-05-18
 ### Fixed
