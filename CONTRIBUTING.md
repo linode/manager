@@ -72,14 +72,14 @@ system, browser, device, etc.). Thanks!
 ### Creating a release branch:
 A release branch is composed of 1 or more features that have been merged into master.
 
-1. git checkout master
-2. git pull origin master // make sure you have latest
-3. npm install && npm start // update packages and manually check to see that the app is in good state
-4. git checkout -b release-0.5.0 // create a new release branch with the planned version change
-5. npm --no-git-tag-version version patch|minor|major // bump the version in the package.json
+1. `git checkout master`
+2. `git pull origin master` # make sure you have latest
+3. `npm install && npm start` # update packages and manually check to see that the app is in good state
+4. `git checkout -b release-0.5.0` # create a new release branch with the planned version change
+5. `npm --no-git-tag-version version patch|minor|major` # bump the version in the package.json
 6. Manually update CHANGELOG.md to represent changes for the release version
 7. Stage and commit your changes
-8. git push -u {your_fork_origin} release-0.5.0
+8. `git push -u {your_fork_origin} release-0.5.0`
 9. Open a pull: linode/master < {your_fork_origin}/release-0.5.0 for review
 10. Approve/Merge pull against master w/ "Create a merge commit"
 11. Open a pull: linode/release < {your_fork_origin}/release-0.5.0 for review
@@ -92,12 +92,12 @@ A release branch is composed of 1 or more features that have been merged into ma
 ### Creating a hotfix branch:
 A hotfix branch is for bug fixes against the current release.
 
-1. git checkout release
-2. git pull origin release
-3. npm install && npm start // update packages and manually check to see that the app is in good state
-4. git checkout -b HF-0.5.1
+1. `git checkout release`
+2. `git pull origin release`
+3. `npm install && npm start` # update packages and manually check to see that the app is in good state
+4. `git checkout -b HF-0.5.1`
 5. Add and commit your hotfix
-6. npm --no-git-tag-version version patch
+6. `npm --no-git-tag-version version patch`
 7. Manually update CHANGELOG.md to represent changes for the release version
 8. Stage and commit your changes
 9. Open a pull: linode/release < {your_fork_origin}/release-0.5.1 for review
