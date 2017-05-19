@@ -1,13 +1,10 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
 import { setToken } from '~/actions/authentication';
-import { LOGIN_ROOT } from '~/constants';
-import { rawFetch } from '~/fetch';
-import { clientId, clientSecret } from '~/secrets';
+import { getCookie } from '~/api/util';
 import { setStorage } from '~/storage';
-
 
 export function setSession(oauthToken = '', scopes = '') {
   return (dispatch) => {
@@ -19,59 +16,42 @@ export function setSession(oauthToken = '', scopes = '') {
   };
 }
 
-export class OAuthCallbackPage extends Component {
-  constructor() {
-    super();
-    this.state = { error: null };
-  }
+export function OAuthCallbackPage(props) {
+  const { dispatch, location } = props;
+  const returnTo = location.query['return'];
 
-  async componentDidMount() {
-    const { dispatch, location } = this.props;
-    const { error, code } = location.query;
-    const returnTo = location.query['return'];
+  try {
+    // For development use.
+    // eslint-disable-next-line no-undef
+    let accessToken = ENV_PERSONAL_ACCESS_TOKEN;
+    let scopes = '*';
 
-    if (error) {
-      this.setState({ error: location.query.error_description });
-      return;
+    if (!accessToken) {
+      ({ accessToken, scopes } = JSON.parse(getCookie('__loa')));
     }
 
-    if (code) {
-      const data = new FormData();
-      data.append('client_id', clientId);
-      data.append('client_secret', clientSecret);
-      data.append('code', code);
+    // Token needs to be in redux state for all API calls
+    dispatch(setSession(accessToken, scopes));
 
-      // Exchange temporary code for access token.
-      const resp = await rawFetch(`${LOGIN_ROOT}/oauth/token`, {
-        method: 'POST',
-        body: data,
-        mode: 'cors',
-      });
-      const { access_token, scopes } = await resp.json();
+    // Done OAuth flow. Let the app begin.
+    dispatch(push(returnTo || '/'));
 
-      // Token needs to be in redux state for all API calls
-      dispatch(setSession(access_token, scopes));
-
-      // Done OAuth flow. Let the app begin.
-      dispatch(push(returnTo || '/'));
-    } else {
-      dispatch(push('/'));
+    // eslint-disable-next-line no-undef
+    if (!ENV_PERSONAL_ACCESS_TOKEN) {
+      // We don't need the cookie anymore
+      document.cookie = '__loa=; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
     }
-  }
-
-  render() {
-    const { error } = this.state;
-    if (error) {
-      return (
-        <div className="container">
-          <div className="alert alert-danger">
-            Error: {error}
-          </div>
+  } catch (e) {
+    return (
+      <div className="container">
+        <div className="alert alert-danger">
+          Error: {e}
         </div>
-      );
-    }
-    return <div></div>;
+      </div>
+    );
   }
+
+  return null;
 }
 
 OAuthCallbackPage.propTypes = {
