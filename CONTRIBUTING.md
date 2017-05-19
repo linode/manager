@@ -87,7 +87,7 @@ A release branch is composed of 1 or more features that have been merged into ma
 13. Approve/Merge pull against release w/ "Create a merge commit"
 14. Create a release via github (v0.5.0) against linode/release, Copy CHANGELOG.md details for the version into the release description
 15. Publish release
-16. Notify in chat that release is complete, coordinate deploy
+16. Notify in chat [#linode-next on irc.oftc.net](https://webchat.oftc.net/?channels=linode-next&uio=d4) that release is complete, coordinate deploy
 17. After deploy, manually check that the app is in the expected state. See testing doc.
 
 ### Creating a hotfix branch:
@@ -95,7 +95,7 @@ A hotfix branch is for bug fixes against the current release.
 
 1. git checkout release
 2. git pull origin release
-3. npm intsall && npm start // update packages and manually check to see that the app is in good state
+3. npm install && npm start // update packages and manually check to see that the app is in good state
 4. git checkout -b HF-0.5.1
 5. Add and commit your hotfix
 6. npm --no-git-tag-version version patch
@@ -108,7 +108,7 @@ A hotfix branch is for bug fixes against the current release.
 13. Approve/Merge pull against master w/ "Squash and Merge"
 14. Create a release via github (v0.5.1) against linode/release, Copy CHANGELOG.md details for the version into the release description
 15. Publish release
-16. Notify in chat that release is complete, coordinate deploy
+16. Notify in chat [#linode-next on irc.oftc.net](https://webchat.oftc.net/?channels=linode-next&uio=d4) that release is complete, coordinate deploy
 17. After deploy, manually check that the app is in the expected state. See testing doc.
 
 ### References
