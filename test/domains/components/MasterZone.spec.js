@@ -5,12 +5,12 @@ import { expect } from 'chai';
 
 import _ from 'lodash';
 import { formatDNSSeconds } from '~/domains/components/SelectDNSSeconds';
-import { ZonePage } from '~/domains/layouts/ZonePage';
+import { MasterZone } from '~/domains/components/MasterZone';
 import { api } from '@/data';
 
 const { domains } = api;
 
-describe('domains/layouts/ZonePage', () => {
+describe('domains/components/MasterZone', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
@@ -23,7 +23,7 @@ describe('domains/layouts/ZonePage', () => {
     const currentZone = domains.domains[2];
 
     const page = mount(
-      <ZonePage
+      <MasterZone
         dispatch={dispatch}
         domain={{
           ...currentZone,
@@ -46,7 +46,7 @@ describe('domains/layouts/ZonePage', () => {
     const currentZone = domains.domains[1];
 
     const page = mount(
-      <ZonePage
+      <MasterZone
         dispatch={dispatch}
         domain={{
           ...currentZone,
@@ -75,7 +75,7 @@ describe('domains/layouts/ZonePage', () => {
       r => r.type === 'NS');
 
     const page = mount(
-      <ZonePage
+      <MasterZone
         dispatch={dispatch}
         domain={{
           ...currentZone,
@@ -100,7 +100,7 @@ describe('domains/layouts/ZonePage', () => {
       r => r.type === 'MX');
 
     const page = mount(
-      <ZonePage
+      <MasterZone
         dispatch={dispatch}
         domain={{
           ...currentZone,
@@ -126,7 +126,7 @@ describe('domains/layouts/ZonePage', () => {
       r => ['A', 'AAAA'].indexOf(r.type) !== -1);
 
     const page = mount(
-      <ZonePage
+      <MasterZone
         dispatch={dispatch}
         domain={{
           ...currentZone,
@@ -154,7 +154,7 @@ describe('domains/layouts/ZonePage', () => {
       r => r.type === 'CNAME');
 
     const page = mount(
-      <ZonePage
+      <MasterZone
         dispatch={dispatch}
         domain={{
           ...currentZone,
@@ -182,7 +182,7 @@ describe('domains/layouts/ZonePage', () => {
       r => r.type === 'TXT');
 
     const page = mount(
-      <ZonePage
+      <MasterZone
         dispatch={dispatch}
         domain={{
           ...currentZone,
@@ -210,7 +210,7 @@ describe('domains/layouts/ZonePage', () => {
       r => r.type === 'SRV');
 
     const page = mount(
-      <ZonePage
+      <MasterZone
         dispatch={dispatch}
         domain={{
           ...currentZone,
