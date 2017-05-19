@@ -23,9 +23,9 @@ export default function Layout(props) {
                 width={35}
               />
             </span>
-            <span className="MainHeader-title">Linode Developers</span>
           </Link>
         </div>
+        <span className="MainHeader-title">Developers</span>
       </Header>
       <div className="Layout-container container">
         <div className="Layout-navigationContainer">
