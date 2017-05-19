@@ -1,9 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { Card } from 'linode-components/cards';
+import { Card, CardHeader } from 'linode-components/cards';
 import {
-  Checkbox, Form, FormGroup, SubmitButton,
+  Radio, Checkboxes, Form, FormGroup, SubmitButton,
 } from 'linode-components/forms';
 
 import { setSource } from '~/actions/source';
@@ -17,7 +17,7 @@ export class IndexPage extends Component {
     super(props);
 
     this.state = {
-      networkHelper: props.account.network_helper,
+      networkHelper: !!props.account.network_helper,
       errors: {},
     };
   }
@@ -32,13 +32,17 @@ export class IndexPage extends Component {
     const { dispatch } = this.props;
     const { networkHelper: network_helper } = this.state;
 
-    return dispatch(dispatchOrStoreErrors.call(this, [
-      () => account.put({ network_helper }),
+    return dispatch(dispatchOrStoreErrors.apply(this, [
+      [() => account.put({ network_helper })],
     ]));
   }
 
+  onChange = ({ target: { name, value, type, checked } }) =>
+    this.setState({ [name]: type === 'checkbox' ? checked : value === 'true' })
+
   render() {
     const { networkHelper, loading, errors } = this.state;
+
     return (
       <div>
         <header className="main-header main-header--border">
@@ -47,27 +51,37 @@ export class IndexPage extends Component {
           </div>
         </header>
         <div className="container">
-          <Card>
+          <Card header={<CardHeader title="Network Helper" />}>
             <Form onSubmit={this.onSubmit}>
-              <p>
-                This page controls the default account for all users.
-              </p>
               <FormGroup className="row">
-                <label className="col-sm-3 row-label">Enable Network Helper</label>
-                <div className="col-sm-9">
-                  <Checkbox
-                    id="networkHelper"
-                    checked={networkHelper}
-                    onChange={() => this.setState({
-                      networkHelper: !networkHelper,
-                    })}
-                    label="Network Helper automatically deposits a static
-                      networking configuration into your Linode at boot."
-                  />
+                <label className="col-form-label col-sm-2">Default Behavior</label>
+                <div className="col-sm-10">
+                  <Checkboxes>
+                    <Radio
+                      name="networkHelper"
+                      checked={!networkHelper}
+                      value="false"
+                      label="OFF - This is the legacy / old account behavior"
+                      onChange={this.onChange}
+                    />
+                    <Radio
+                      name="networkHelper"
+                      checked={networkHelper}
+                      value="true"
+                      onChange={this.onChange}
+                      label="ON  - This is new account behavior. You probably want this."
+                    />
+                  </Checkboxes>
+                  <div>
+                    <small className="text-muted">
+                      This controls the default setting for the Network Helper
+                      on newly created Configuration Profiles.
+                    </small>
+                  </div>
                 </div>
               </FormGroup>
               <FormGroup className="row">
-                <div className="offset-sm-3 col-sm-9">
+                <div className="offset-sm-2 col-sm-10">
                   <SubmitButton disabled={loading} />
                   <FormSummary errors={errors} success="Account saved." />
                 </div>
