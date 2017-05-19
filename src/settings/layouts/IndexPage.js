@@ -74,7 +74,8 @@ export class IndexPage extends Component {
                   </Checkboxes>
                   <div>
                     <small className="text-muted">
-                      This controls the default setting for the Network Helper on newly created Configuration Profiles.
+                      This controls the default setting for the Network Helper
+                      on newly created Configuration Profiles.
                     </small>
                   </div>
                 </div>
