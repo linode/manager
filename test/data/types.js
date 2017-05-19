@@ -9,7 +9,7 @@ export const apiTestType = {
   storage: 24576,
   transfer: 2000,
   vcpus: 2,
-  backups_price: 250,
+  backups_price: 2.5,
   class: 'standard',
 };
 
@@ -30,7 +30,7 @@ export const types = {
     storage: 24576,
     transfer: 1000,
     vcpus: 1,
-    backups_price: 150,
+    backups_price: 2.0,
     class: 'standard',
   },
   'linode2048.5': testType,
