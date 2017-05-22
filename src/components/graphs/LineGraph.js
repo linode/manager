@@ -1,9 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import Chart from 'chart.js';
-import moment from 'moment';
 import _ from 'lodash';
-import { getStorage } from '~/storage';
+import { formatGraphTime } from '../TimeDisplay';
 
 // Source: http://stackoverflow.com/a/5624139/1507139
 function rgbaFromHex(hex, alpha) {
@@ -13,11 +12,6 @@ function rgbaFromHex(hex, alpha) {
   const b = parseInt(result[3], 16);
 
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-}
-
-export function formatTime(time) {
-  const timezone = getStorage('profile/timezone') || 'UTC';
-  return moment.utc(time).tz(timezone).format('HH:mm');
 }
 
 export default class LineGraph extends Component {
@@ -59,7 +53,7 @@ export default class LineGraph extends Component {
   formatTicks(d, i) {
     // This is probably a temporary function until someone needs to pass in their own format.
     if (i % 10 === 0) {
-      return formatTime(d);
+      return formatGraphTime(d);
     }
 
     return undefined;
@@ -101,7 +95,7 @@ export default class LineGraph extends Component {
 
               // prevents trying to convert title if already in HH:mm format
               if (Number(title)) {
-                title = formatTime(title);
+                title = formatGraphTime(title);
               }
 
               return title;
