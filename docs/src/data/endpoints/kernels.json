@@ -13,7 +13,7 @@
           "description": "Returns list of <a href=\"#object-kernel\">kernels</a>.\n",
           "examples": {
             "curl": "curl https://$api_root/$version/linode/kernels\n",
-            "python": "import kernels\nTODO\n"
+            "python": "client.linode.get_kernels()\n"
           }
         }
       }
@@ -27,7 +27,7 @@
           "description": "Returns information about this <a href=\"#object-kernel\">kernel</a>.\n",
           "examples": {
             "curl": "curl https://$api_root/$version/linode/kernels/$kernel_id\n",
-            "python": "import kernels\nTODO\n"
+            "python": "kernel = linode.Kernel(client, 'linode/latest')\n"
           }
         }
       }

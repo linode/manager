@@ -12,13 +12,15 @@
         "GET": {
           "description": "Returns your user information.\n",
           "examples": {
-            "curl": "curl https://$api_root/$version/account/profile\n"
+            "curl": "curl https://$api_root/$version/account/profile\n",
+            "python": "my_profile = client.account.get_profile()\n"
           }
         },
         "PUT": {
           "description": "Edits your account profile.\n",
           "examples": {
-            "curl": "curl -H \"Content-Type: application/json\" \\\n  -H \"Authorization: token $TOKEN\" \\\n  -X PUT -d '{\n        \"username\": \"jsmith\",\n        \"email\": \"jsmith@mycompany.com\",\n        \"timezone\": \"US/Eastern\",\n        \"email_notifications\": true,\n        \"ip_whitelist_enabled\": true,\n        \"lish_auth_method\": \"password_keys\",\n        \"authorized_keys\": \"\"\n      }\n    }' \\\n    https://$api_root/$version/account/profile\n"
+            "curl": "curl -H \"Content-Type: application/json\" \\\n  -H \"Authorization: token $TOKEN\" \\\n  -X PUT -d '{\n        \"username\": \"jsmith\",\n        \"email\": \"jsmith@mycompany.com\",\n        \"timezone\": \"US/Eastern\",\n        \"email_notifications\": true,\n        \"ip_whitelist_enabled\": true,\n        \"lish_auth_method\": \"password_keys\",\n        \"authorized_keys\": \"\"\n      }\n    }' \\\n    https://$api_root/$version/account/profile\n",
+            "python": "my_profile.email = 'jsmith@mycompany.com'\nmy_profile.timezone = 'US/Eastern'\nmy_profile.email_notifications = True\nmy_profile.ip_whitelist_enabled = True\nmy_profile.lish_auth_method = 'password_keys'\nmy_profile.save()\n"
           }
         }
       }
@@ -28,7 +30,8 @@
         "POST": {
           "description": "Change your password.\n",
           "examples": {
-            "curl": "curl -H \"Content-Type: application/json\" \\\n  -H \"Authorization: token $TOKEN\" \\\n  -X POST -d '{\n      \"password\":\"hunter7\"\n  }' \\\n  https://$api_root/$version/account/profile/password\n"
+            "curl": "curl -H \"Content-Type: application/json\" \\\n  -H \"Authorization: token $TOKEN\" \\\n  -X POST -d '{\n      \"password\":\"hunter7\"\n  }' \\\n  https://$api_root/$version/account/profile/password\n",
+            "python": "my_profile = client.account.get_profile()\nmy_profile.reset_password('hunter7')\n"
           }
         }
       }
@@ -38,7 +41,8 @@
         "POST": {
           "description": "Begin enabling TFA on your account.  Returns a two-factor secret that you must validate with the tfa-enable-confirm endpoint to require two-factor for future logins.\n",
           "examples": {
-            "curl": "curl -H \"Content-Type: application/json\" \\\n  -H \"Authorization: token $TOKEN\" \\\n  -X POST \\\n  https://$api_root/$version/account/profile/tfa-enable\n"
+            "curl": "curl -H \"Content-Type: application/json\" \\\n  -H \"Authorization: token $TOKEN\" \\\n  -X POST \\\n  https://$api_root/$version/account/profile/tfa-enable\n",
+            "python": "my_profile = client.account.get_profile()\nsecret = my_profile.enable_tfa()\n"
           }
         }
       }
@@ -54,7 +58,8 @@
             }
           },
           "examples": {
-            "curl": "curl -H \"Content-Type: application/json\" \\\n  -H \"Authorization: token $TOKEN\" \\\n  -X POST -d '{\n    \"tfa_code\": \"123456\"\n  }' \\\n  https://$api_root/$version/account/profile/tfa-enable-confirm\n"
+            "curl": "curl -H \"Content-Type: application/json\" \\\n  -H \"Authorization: token $TOKEN\" \\\n  -X POST -d '{\n    \"tfa_code\": \"123456\"\n  }' \\\n  https://$api_root/$version/account/profile/tfa-enable-confirm\n",
+            "python": "my_profile = client.account.get_profile()\nmy_profile.confirm_tfa('123456')\n"
           }
         }
       }
@@ -64,7 +69,8 @@
         "POST": {
           "description": "Disable TFA on your account.  Future logins will not require TFA.\n",
           "examples": {
-            "curl": "curl -H \"Content-Type: application/json\" \\\n  -H \"Authorization: token $TOKEN\" \\\n  -X POST \\\n  https://$api_root/$version/account/profile/tfa-disable\n"
+            "curl": "curl -H \"Content-Type: application/json\" \\\n  -H \"Authorization: token $TOKEN\" \\\n  -X POST \\\n  https://$api_root/$version/account/profile/tfa-disable\n",
+            "python": "my_profile = client.account.get_profile()\nmy_profile.disable_tfa()\n"
           }
         }
       }
@@ -74,7 +80,8 @@
         "GET": {
           "description": "Get grants for the current user.\n",
           "examples": {
-            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/account/profile/grants\n"
+            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/account/profile/grants\n",
+            "python": "my_profile = client.account.get_profile()\nmy_grants = my_profile.grants\n"
           }
         }
       }
@@ -88,7 +95,8 @@
           "oauth": "tokens:view",
           "description": "Get a list of all OAuth Tokens active for your user.  This includes first-party (manager) tokens, third-party OAuth Tokens, and Personal Access Tokens.\n",
           "examples": {
-            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/account/tokens\n"
+            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/account/tokens\n",
+            "python": "my_tokens = client.account.get_tokens()\n"
           }
         },
         "POST": {
@@ -116,7 +124,8 @@
             }
           },
           "examples": {
-            "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n      \"scopes\": \"linodes:view;domains:view\"\n    }' \\\n    https://$api_root/$version/account/tokens\n"
+            "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n      \"scopes\": \"linodes:view;domains:view\"\n    }' \\\n    https://$api_root/$version/account/tokens\n",
+            "python": "from linode import OAuthScopes\nnew_token = client.account.create_personal_access_token(scopes=[OAuthScopes.Linodes.view, OAuthScopes.Domains.view])\n"
           }
         }
       }
@@ -130,21 +139,24 @@
           "oauth": "tokens:view",
           "description": "Get a single token.\n",
           "examples": {
-            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/account/tokens/123\n"
+            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/account/tokens/123\n",
+            "python": "my_token = linode.OAuthToken(client, 123)\n"
           }
         },
         "PUT": {
           "oauth": "tokens:modify",
           "description": "Edit a token's label.\n",
           "examples": {
-            "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X PUT -d '{\n      \"label\": \"test-new-label\"\n    }' \\\n    https://$api_root/$version/account/tokens/123\n"
+            "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X PUT -d '{\n      \"label\": \"test-new-label\"\n    }' \\\n    https://$api_root/$version/account/tokens/123\n",
+            "python": "my_token.label = 'test-new-label'\nmy_token.save()\n"
           }
         },
         "DELETE": {
           "oauth": "tokens:delete",
           "description": "Expire an OAuth Token for your user.\n",
           "examples": {
-            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    -X DELETE \\\n    https://$api_root/$version/account/tokens/123\n"
+            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    -X DELETE \\\n    https://$api_root/$version/account/tokens/123\n",
+            "python": "my_token.delete()\n"
           }
         }
       }
@@ -157,13 +169,15 @@
         "GET": {
           "description": "Returns your account settings.\n",
           "examples": {
-            "curl": "curl https://$api_root/$version/account/settings\n"
+            "curl": "curl https://$api_root/$version/account/settings\n",
+            "python": "my_settings = client.account.get_settings()\n"
           }
         },
         "PUT": {
           "description": "Edits your account settings.\n",
           "examples": {
-            "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X PUT -d '{\n      \"address_1\": \"123 Main St.\",\n      \"address_2\": \"Suite 101\",\n      \"city\": \"Philadelphia\",\n      \"company\": \"My Company, LLC\",\n      \"country\": \"US\",\n      \"email\": \"jsmith@mycompany.com\",\n      \"first_name\": \"John\",\n      \"last_name\": \"Smith\",\n      \"network_helper\": true,\n      \"phone\": \"555-555-1212\",\n      \"state\": \"PA\",\n      \"zip\": 19102\n      }\n    }' \\\n    https://$api_root/$version/account/settings\n"
+            "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X PUT -d '{\n      \"address_1\": \"123 Main St.\",\n      \"address_2\": \"Suite 101\",\n      \"city\": \"Philadelphia\",\n      \"company\": \"My Company, LLC\",\n      \"country\": \"US\",\n      \"email\": \"jsmith@mycompany.com\",\n      \"first_name\": \"John\",\n      \"last_name\": \"Smith\",\n      \"network_helper\": true,\n      \"phone\": \"555-555-1212\",\n      \"state\": \"PA\",\n      \"zip\": 19102\n      }\n    }' \\\n    https://$api_root/$version/account/settings\n",
+            "python": "my_settings = client.account.get_settings()\nmy_settings.address_1 = '123 Main St.'\nmy_settings.address_2 = 'Suite 101'\nmy_settings.city = 'Philadelphia'\nmy_settings.company = 'My Company, LLC'\nmy_settings.country = 'US'\nmy_settings.email = 'jsmith@company.com'\nmy_settings.save()\n"
           }
         }
       }
@@ -178,14 +192,15 @@
           "oauth": "clients:view",
           "description": "Returns a list of <a href=\"#object-client\">clients</a>.\n",
           "examples": {
-            "curl": "curl -H \"Authorization; token $TOKEN\" \\\n    https://$api_root/$version/account/clients\n"
+            "curl": "curl -H \"Authorization; token $TOKEN\" \\\n    https://$api_root/$version/account/clients\n",
+            "python": "my_clients = client.account.get_oauth_clients()\n"
           }
         },
         "POST": {
           "oauth": "clients:create",
           "description": "Registers a new OAuth client application.\n",
           "params": {
-            "name": {
+            "label": {
               "description": "A name for the new client application.",
               "type": "string",
               "limit": "1-128 characters"
@@ -197,7 +212,8 @@
             }
           },
           "examples": {
-            "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n        \"name\": \"Example app\",\n        \"redirect_uri\": \"https://oauthreturn.example.org/\",\n    }' \\\n    https://$api_root/$version/account/clients\n"
+            "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n        \"label\": \"Example app\",\n        \"redirect_uri\": \"https://oauthreturn.example.org/\",\n    }' \\\n    https://$api_root/$version/account/clients\n",
+            "python": "new_client = client.account.create_oauth_client('Example app', 'https://oauthreturn.example.org/')\n"
           }
         }
       }
@@ -212,14 +228,16 @@
           "oauth": "clients:view",
           "description": "Returns information about this <a href=\"#object-client\">OAuth client</a>.\n",
           "examples": {
-            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/account/clients/$client_id\n"
+            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/account/clients/$client_id\n",
+            "python": "my_client = linode.OAuthClient(client, 123)\n"
           }
         },
         "PUT": {
           "oauth": "clients:modify",
           "description": "Edits this <a href=\"#object-client\">OAuth client</a>.\n",
           "examples": {
-            "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X PUT -d '{\n        \"name\": \"Updated app name\",\n        \"redirect_uri\": \"https://newredirect.example.org/\",\n    }' \\\n    https://$api_root/$version/account/clients/$client_id\n"
+            "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X PUT -d '{\n        \"name\": \"Updated app name\",\n        \"redirect_uri\": \"https://newredirect.example.org/\",\n    }' \\\n    https://$api_root/$version/account/clients/$client_id\n",
+            "python": "my_client.name = 'Updated app name'\nmy_client.save()\n"
           }
         },
         "DELETE": {
@@ -227,7 +245,8 @@
           "dangerous": true,
           "description": "Delete this OAuth application. This action cannot be undone.\n",
           "examples": {
-            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    -X DELETE \\\n    https://$api_root/$version/account/clients/$client_id\n"
+            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    -X DELETE \\\n    https://$api_root/$version/account/clients/$client_id\n",
+            "python": "my_client = linode.OAuthClient(client, 123)\nmy_client.delete()\n"
           }
         }
       }
@@ -241,7 +260,8 @@
           "oauth": "clients:modify",
           "dangerous": true,
           "examples": {
-            "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST \\\n    https://$api_root/$version/account/clients/$client_id/reset_secret\n"
+            "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST \\\n    https://$api_root/$version/account/clients/$client_id/reset_secret\n",
+            "python": "my_client = linode.OAuthClient(client, 123)\nnew_secret = my_client.reset_secret()\n"
           }
         }
       }
@@ -255,14 +275,16 @@
           "oauth": "clients:view",
           "description": "Retrieve the OAuth application's current thumbnail image.\n",
           "examples": {
-            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/account/clients/$client_id/thumbnail\n"
+            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/account/clients/$client_id/thumbnail\n",
+            "python": "img = my_client.get_thumbnail()\n\n# save image to file\nmy_client.get_thumbnail('client_thumbnail.png')\n"
           }
         },
         "PUT": {
           "oauth": "clients:modify",
           "description": "Set or update the OAuth application's thumbnail image. If the image is larger than 128x128 it will be scaled down.\n",
           "examples": {
-            "curl": "curl -H \"Content-Type: image/png\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X PUT \\\n    --data-binary \"@/path/to/image\"\n    https://$api_root/$version/account/clients/$client_id/thumbnail\n"
+            "curl": "curl -H \"Content-Type: image/png\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X PUT \\\n    --data-binary \"@/path/to/image\"\n    https://$api_root/$version/account/clients/$client_id/thumbnail\n",
+            "python": "my_client = linode.OAuthClient(client, 123)\nmy_client.set_thumbnail('/path/to/image')\n\n# set from memory\nwith open('/path/to/image', 'rb') as f:\n    img = f.read()\nmy_client.set_thumbnail(img)\n"
           }
         }
       }
@@ -274,7 +296,8 @@
       "methods": {
         "GET": {
           "examples": {
-            "curl": "curl https://$api_root/$version/account/users\n"
+            "curl": "curl https://$api_root/$version/account/users\n",
+            "python": "my_users = client.account.get_users()\n"
           }
         },
         "POST": {
@@ -299,7 +322,8 @@
             }
           },
           "examples": {
-            "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n        \"username\": \"testguy\",\n        \"password\": \"hunter7\",\n        \"email\": \"testguy@linode.com\"\n    }' \\\n    https://$api_root/$version/account/users\n"
+            "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n        \"username\": \"testguy\",\n        \"password\": \"hunter7\",\n        \"email\": \"testguy@linode.com\"\n    }' \\\n    https://$api_root/$version/account/users\n",
+            "python": "# currently unimplemented\n"
           }
         }
       }
@@ -311,19 +335,22 @@
       "methods": {
         "GET": {
           "examples": {
-            "curl": "curl https://$api_root/$version/account/users/$username\n"
+            "curl": "curl https://$api_root/$version/account/users/$username\n",
+            "python": "my_user = linode.User(client, 'username')\n"
           }
         },
         "PUT": {
           "description": "Update a user.\n",
           "examples": {
-            "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X PUT -d '{\n        \"email\": \"newemail@linode.com\"\n      }\n    }' \\\n    https://$api_root/$version/account/users/testguy\n"
+            "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X PUT -d '{\n        \"email\": \"newemail@linode.com\"\n      }\n    }' \\\n    https://$api_root/$version/account/users/testguy\n",
+            "python": "my_user = linode.User(client, 'username')\nmy_user.email = 'newemail@linode.com'\nmy_user.save()\n"
           }
         },
         "DELETE": {
           "description": "Deletes a user.  May not delete the last unrestricted user on the account.\n",
           "examples": {
-            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    -X DELETE \\\n    https://$api_root/$version/account/users/testguy\n"
+            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    -X DELETE \\\n    https://$api_root/$version/account/users/testguy\n",
+            "python": "my_user = linode.User(client, 'username')\nmy_user.delete()\n"
           }
         }
       }
@@ -340,7 +367,8 @@
             }
           },
           "examples": {
-            "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n        \"password\": \"hunter7\",\n    }' \\\n    https://$api_root/$version/account/users/testguy/password\n"
+            "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n        \"password\": \"hunter7\",\n    }' \\\n    https://$api_root/$version/account/users/testguy/password\n",
+            "python": "my_user = linode.User(client, 'username')\nmy_user.change_password('hunter7')\n"
           }
         }
       }
@@ -353,13 +381,15 @@
         "GET": {
           "description": "Get grants for a restricted user.",
           "examples": {
-            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/account/users/testguy/grants\n"
+            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/account/users/testguy/grants\n",
+            "python": "my_user = linode.User(client, 'username')\ngrants = None # unrestricted users have no grants\n\nif my_user.restricted:\n    grants = my_user.grants\n"
           }
         },
         "PUT": {
           "description": "Update grants for a restricted user.\n",
           "examples": {
-            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    -X PUT -d '{\n        \"global\": {\n            \"add_linodes\": true\n        }\n    }' \\\n    https://$api_root/$version/account/users/testguy/grants\n"
+            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    -X PUT -d '{\n        \"global\": {\n            \"add_linodes\": true\n        }\n    }' \\\n    https://$api_root/$version/account/users/testguy/grants\n",
+            "python": "my_user = linode.User(client, 'username')\nassert my_user.restricted # we can't set grants for unrestricted users\n\nmy_user.grants.global.add_linodes = True\nmy_user.grants.save()\n"
           }
         }
       }
