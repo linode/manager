@@ -7,6 +7,22 @@ import { rawFetch } from '~/fetch';
 import { clientId, clientSecret } from '~/secrets';
 import * as session from '~/session';
 
+import { setToken } from '~/actions/authentication';
+import { setStorage } from '~/storage';
+
+export function setSession(oauthToken = '', scopes = '') {
+  return (dispatch) => {
+    // Set these two so we can grab them on subsequent page loads
+    setStorage('authentication/oauth-token', oauthToken);
+    setStorage('authentication/scopes', scopes);
+    // Add all to state for this (page load) session
+    dispatch(setToken(oauthToken, scopes));
+  };
+}
+
+funciton getAccessToken() {
+  return window.location.hash.substr(1);
+}
 
 export class OAuthCallbackPage extends Component {
   async componentDidMount() {
@@ -44,6 +60,18 @@ export class OAuthCallbackPage extends Component {
 
       // Done OAuth flow. Let the app begin.
       dispatch(push(returnTo || '/'));
+    } else if (getAccessToken) {
+      const accessToken = getAccessToken();
+      const returnTo = location.query['return'];
+
+      // Token needs to be in redux state for all API calls
+      dispatch(setSession(accessToken, '*'));
+
+      // Done OAuth flow. Let the app begin.
+      dispatch(push(returnTo || '/'));
+
+      return null;
+
     } else {
       dispatch(push('/'));
     }
