@@ -126,6 +126,9 @@ export class DashboardPage extends Component {
                   <option value="netv6">IPv6 Network</option>
                 </Select>
               </div>
+              <div className="float-sm-right">
+                Last 24 hours
+              </div>
             </div>
             <LineGraph {...this.graphs[this.state.source]} />
           </div>

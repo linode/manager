@@ -183,6 +183,9 @@ export class DashboardPage extends Component {
                     <option value="traffic">Traffic</option>
                   </Select>
                 </div>
+                <div className="float-sm-right">
+                  Last 24 hours
+                </div>
               </div>
               <LineGraph {...this.graphs[this.state.source]} />
             </div>
