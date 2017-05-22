@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
 import { setToken } from '~/actions/authentication';
-import { setStorage } from '~/storage';
+import { getStorage, setStorage } from '~/storage';
 
 
 export function setSession(oauthToken = '', scopes = '') {
@@ -19,7 +19,16 @@ export function setSession(oauthToken = '', scopes = '') {
 export function OAuthCallbackPage(props) {
   const { dispatch, location } = props;
   const accessToken = window.location.hash.substr(1);
-  const returnTo = location.query['return'];
+  const returnTo = location.query.return;
+  const nonce = location.query.state;
+
+  if (!nonce || getStorage('authentication/nonce') !== nonce) {
+    // Retry auth flow
+    dispatch(push('/'));
+    return null;
+  } else {
+    setStorage('authentication/nonce', '');
+  }
 
   // Token needs to be in redux state for all API calls
   dispatch(setSession(accessToken, '*'));
