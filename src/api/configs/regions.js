@@ -6,6 +6,7 @@ import {
 export const config = genConfig({
   plural: 'regions',
   endpoint: id => `/regions/${id}`,
+  cache: true,
   supports: [ONE, MANY],
 });
 
