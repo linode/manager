@@ -208,4 +208,4 @@ export const NODEBALANCER_CONFIG_CHECKS = new Map([
 export const AVAILABLE_DISK_SLOTS =
   ['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg', 'sdh'];
 
-export const STATIC_ENDPOINT_CACHE_MINUTES = 30;
+export const STATIC_ENDPOINT_CACHE_MINUTES = 15;
