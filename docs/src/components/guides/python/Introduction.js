@@ -10,7 +10,7 @@ export default function Introduction() {
       <h1>Getting started with Linode Python</h1>
       <section>
         <p>
-          With the release of API 4, Linode has also released an official Python library.  This guide is a simple introduction to working with
+          With the release of API V4, Linode has also released an official Python library.  This guide is a simple introduction to working with
           the Python library.
           The official Linode Python library is open source on <a href="http://github.com/Linode/python-linode-api">Github</a>, and can be installed.
         </p>
@@ -178,7 +178,7 @@ root@localhost:~#`}
       <section>
         <h2>Further Reading</h2>
         <p>
-        Now that you’ve had an overview of the features and concepts in the Python library, check out the Python library Reference for in-depth documentation, or look at the <a href="https://github.com/linode/python-linode-api/tree/master/examples/install-on-linode">Install on Linode sample project</a> for an example multi-user application using the Library.
+        Now that you’ve had an overview of the features and concepts in the Python library, check out the Python library reference for in-depth documentation, or look at the <a href="https://github.com/linode/python-linode-api/tree/master/examples/install-on-linode">Install on Linode sample project</a> for an example multi-user application using the Library.
         </p>
       </section>
     </section>
