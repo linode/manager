@@ -8,7 +8,7 @@ import { clientId, clientSecret } from '~/secrets';
 import * as session from '~/session';
 
 import { setToken } from '~/actions/authentication';
-import { setStorage } from '~/storage';
+import { getStorage, setStorage } from '~/storage';
 
 export function setSession(oauthToken = '', scopes = '') {
   return (dispatch) => {
@@ -63,6 +63,14 @@ export class OAuthCallbackPage extends Component {
     } else if (getAccessToken) {
       const accessToken = getAccessToken();
       const returnTo = location.query['return'];
+      const nonce = location.query.state;
+      if (!nonce || getStorage('authentication/nonce') !== nonce) {
+        // Retry auth flow
+        dispatch(push('/'));
+        return null;
+      } else {
+        setStorage('authentication/nonce', '');
+      }
 
       // Token needs to be in redux state for all API calls
       dispatch(setSession(accessToken, '*'));
