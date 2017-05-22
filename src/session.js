@@ -19,7 +19,7 @@ export function loginAuthorizePath(returnTo) {
   return `${LOGIN_ROOT}/oauth/authorize?` +
          `client_id=${clientId}` +
          '&scopes=*' +
-         '&type=implicit' +
+         '&response_type=token' +
          `&redirect_uri=${encodeURIComponent(APP_ROOT)}/oauth/callback?return=${returnTo}`;
   /* eslint-enable prefer-template */
 }
