@@ -718,6 +718,7 @@ module.exports = { endpoints: [
                               "description": "Status of the backup.",
                               "filterable": false,
                               "type": "enum",
+                              "subType": "Status",
                               "value": "successful",
                               "example": null,
                               "schema": null
@@ -726,6 +727,7 @@ module.exports = { endpoints: [
                               "name": "type",
                               "description": "Whether this is a snapshot or an auto backup.",
                               "type": "enum",
+                              "subType": "Type",
                               "value": "snapshot",
                               "example": null,
                               "schema": null
@@ -794,6 +796,7 @@ module.exports = { endpoints: [
                               "name": "configs",
                               "description": "A JSON Array of config labels that were included in this backup.",
                               "type": "array",
+                              "subType": "string",
                               "value": [
                                 "My Debian8 Profile"
                               ],
@@ -804,6 +807,7 @@ module.exports = { endpoints: [
                               "name": "disks",
                               "description": "A JSON Array of JSON Objects describing the disks included in this backup.",
                               "type": "array",
+                              "subType": "disk",
                               "value": [
                                 {
                                   "label": {
@@ -841,6 +845,7 @@ module.exports = { endpoints: [
                               "name": "availability",
                               "description": "If this backup is available, which backup slot it is in.  Otherwise, unavailable.",
                               "type": "enum",
+                              "subType": "BackupAvailability",
                               "value": "daily",
                               "example": null,
                               "schema": null
@@ -916,6 +921,7 @@ module.exports = { endpoints: [
                               "description": "Status of the backup.",
                               "filterable": false,
                               "type": "enum",
+                              "subType": "Status",
                               "value": "successful",
                               "example": null,
                               "schema": null
@@ -924,6 +930,7 @@ module.exports = { endpoints: [
                               "name": "type",
                               "description": "Whether this is a snapshot or an auto backup.",
                               "type": "enum",
+                              "subType": "Type",
                               "value": "snapshot",
                               "example": null,
                               "schema": null
@@ -992,6 +999,7 @@ module.exports = { endpoints: [
                               "name": "configs",
                               "description": "A JSON Array of config labels that were included in this backup.",
                               "type": "array",
+                              "subType": "string",
                               "value": [
                                 "My Debian8 Profile"
                               ],
@@ -1002,6 +1010,7 @@ module.exports = { endpoints: [
                               "name": "disks",
                               "description": "A JSON Array of JSON Objects describing the disks included in this backup.",
                               "type": "array",
+                              "subType": "disk",
                               "value": [
                                 {
                                   "label": {
@@ -1039,6 +1048,7 @@ module.exports = { endpoints: [
                               "name": "availability",
                               "description": "If this backup is available, which backup slot it is in.  Otherwise, unavailable.",
                               "type": "enum",
+                              "subType": "BackupAvailability",
                               "value": "daily",
                               "example": null,
                               "schema": null
@@ -1182,6 +1192,7 @@ module.exports = { endpoints: [
                       "description": "This Linode's IPv4 addresses.",
                       "editable": false,
                       "type": "array",
+                      "subType": "string",
                       "value": [
                         "97.107.143.8",
                         "192.168.149.108"
@@ -1212,6 +1223,7 @@ module.exports = { endpoints: [
                       "name": "type",
                       "description": "The type of Linode.",
                       "type": "array",
+                      "subType": "service",
                       "value": [
                         {
                           "id": {
@@ -1277,9 +1289,43 @@ module.exports = { endpoints: [
                       "description": "The current state of this Linode.",
                       "filterable": true,
                       "type": "enum",
+                      "subType": "Status",
                       "value": "running",
                       "example": null,
-                      "schema": null
+                      "schema": [
+                        {
+                          "name": "offline",
+                          "description": "The Linode is powered off."
+                        },
+                        {
+                          "name": "booting",
+                          "description": "The Linode is currently booting up."
+                        },
+                        {
+                          "name": "running",
+                          "description": "The Linode is currently running."
+                        },
+                        {
+                          "name": "shutting_down",
+                          "description": "The Linode is currently shutting down."
+                        },
+                        {
+                          "name": "rebooting",
+                          "description": "The Linode is rebooting."
+                        },
+                        {
+                          "name": "provisioning",
+                          "description": "The Linode is being created."
+                        },
+                        {
+                          "name": "deleting",
+                          "description": "The Linode is being deleted."
+                        },
+                        {
+                          "name": "migrating",
+                          "description": "The Linode is being migrated to a new host/region."
+                        }
+                      ]
                     },
                     {
                       "name": "total_transfer",
@@ -1301,13 +1347,23 @@ module.exports = { endpoints: [
                       "name": "hypervisor",
                       "description": "The hypervisor this Linode is running on.",
                       "type": "enum",
+                      "subType": "Hypervisor",
                       "value": "kvm",
                       "example": null,
-                      "schema": null
+                      "schema": [
+                        {
+                          "name": "kvm",
+                          "description": "KVM"
+                        },
+                        {
+                          "name": "xen",
+                          "description": "Xen"
+                        }
+                      ]
                     }
                   ],
-                  "enums": [
-                    {
+                  "enums": {
+                    "Status": {
                       "offline": "The Linode is powered off.",
                       "booting": "The Linode is currently booting up.",
                       "running": "The Linode is currently running.",
@@ -1315,24 +1371,21 @@ module.exports = { endpoints: [
                       "rebooting": "The Linode is rebooting.",
                       "provisioning": "The Linode is being created.",
                       "deleting": "The Linode is being deleted.",
-                      "migrating": "The Linode is being migrated to a new host/region.",
-                      "name": "Status"
+                      "migrating": "The Linode is being migrated to a new host/region."
                     },
-                    {
+                    "BackupStatus": {
                       "pending": "Backup is in the queue and waiting to begin.",
                       "running": "Linode in the process of being backed up.",
                       "needsPostProcessing": "Backups awaiting final integration into existing backup data.",
                       "successful": "Backup successfully completed.",
                       "failed": "Linode backup failed.",
-                      "userAborted": "User aborted current backup process.",
-                      "name": "BackupStatus"
+                      "userAborted": "User aborted current backup process."
                     },
-                    {
+                    "BackupType": {
                       "auto": "Automatic backup",
-                      "snapshot": "User-initiated, manual file backup",
-                      "name": "BackupType"
+                      "snapshot": "User-initiated, manual file backup"
                     },
-                    {
+                    "Window": {
                       "W0": "0000 - 0200 UTC",
                       "W2": "0200 - 0400 UTC",
                       "W4": "0400 - 0600 UTC",
@@ -1344,15 +1397,13 @@ module.exports = { endpoints: [
                       "W16": "1600 - 1800 UTC",
                       "W18": "1800 - 2000 UTC",
                       "W20": "2000 - 2200 UTC",
-                      "W22": "2200 - 0000 UTC",
-                      "name": "Window"
+                      "W22": "2200 - 0000 UTC"
                     },
-                    {
+                    "Hypervisor": {
                       "kvm": "KVM",
-                      "xen": "Xen",
-                      "name": "Hypervisor"
+                      "xen": "Xen"
                     }
-                  ]
+                  }
                 }
               },
               {
@@ -1735,6 +1786,7 @@ module.exports = { endpoints: [
                               "description": "Status of the backup.",
                               "filterable": false,
                               "type": "enum",
+                              "subType": "Status",
                               "value": "successful",
                               "example": null,
                               "schema": null
@@ -1743,6 +1795,7 @@ module.exports = { endpoints: [
                               "name": "type",
                               "description": "Whether this is a snapshot or an auto backup.",
                               "type": "enum",
+                              "subType": "Type",
                               "value": "snapshot",
                               "example": null,
                               "schema": null
@@ -1811,6 +1864,7 @@ module.exports = { endpoints: [
                               "name": "configs",
                               "description": "A JSON Array of config labels that were included in this backup.",
                               "type": "array",
+                              "subType": "string",
                               "value": [
                                 "My Debian8 Profile"
                               ],
@@ -1821,6 +1875,7 @@ module.exports = { endpoints: [
                               "name": "disks",
                               "description": "A JSON Array of JSON Objects describing the disks included in this backup.",
                               "type": "array",
+                              "subType": "disk",
                               "value": [
                                 {
                                   "label": {
@@ -1858,6 +1913,7 @@ module.exports = { endpoints: [
                               "name": "availability",
                               "description": "If this backup is available, which backup slot it is in.  Otherwise, unavailable.",
                               "type": "enum",
+                              "subType": "BackupAvailability",
                               "value": "daily",
                               "example": null,
                               "schema": null
@@ -1933,6 +1989,7 @@ module.exports = { endpoints: [
                               "description": "Status of the backup.",
                               "filterable": false,
                               "type": "enum",
+                              "subType": "Status",
                               "value": "successful",
                               "example": null,
                               "schema": null
@@ -1941,6 +1998,7 @@ module.exports = { endpoints: [
                               "name": "type",
                               "description": "Whether this is a snapshot or an auto backup.",
                               "type": "enum",
+                              "subType": "Type",
                               "value": "snapshot",
                               "example": null,
                               "schema": null
@@ -2009,6 +2067,7 @@ module.exports = { endpoints: [
                               "name": "configs",
                               "description": "A JSON Array of config labels that were included in this backup.",
                               "type": "array",
+                              "subType": "string",
                               "value": [
                                 "My Debian8 Profile"
                               ],
@@ -2019,6 +2078,7 @@ module.exports = { endpoints: [
                               "name": "disks",
                               "description": "A JSON Array of JSON Objects describing the disks included in this backup.",
                               "type": "array",
+                              "subType": "disk",
                               "value": [
                                 {
                                   "label": {
@@ -2056,6 +2116,7 @@ module.exports = { endpoints: [
                               "name": "availability",
                               "description": "If this backup is available, which backup slot it is in.  Otherwise, unavailable.",
                               "type": "enum",
+                              "subType": "BackupAvailability",
                               "value": "daily",
                               "example": null,
                               "schema": null
@@ -2199,6 +2260,7 @@ module.exports = { endpoints: [
                       "description": "This Linode's IPv4 addresses.",
                       "editable": false,
                       "type": "array",
+                      "subType": "string",
                       "value": [
                         "97.107.143.8",
                         "192.168.149.108"
@@ -2229,6 +2291,7 @@ module.exports = { endpoints: [
                       "name": "type",
                       "description": "The type of Linode.",
                       "type": "array",
+                      "subType": "service",
                       "value": [
                         {
                           "id": {
@@ -2294,9 +2357,43 @@ module.exports = { endpoints: [
                       "description": "The current state of this Linode.",
                       "filterable": true,
                       "type": "enum",
+                      "subType": "Status",
                       "value": "running",
                       "example": null,
-                      "schema": null
+                      "schema": [
+                        {
+                          "name": "offline",
+                          "description": "The Linode is powered off."
+                        },
+                        {
+                          "name": "booting",
+                          "description": "The Linode is currently booting up."
+                        },
+                        {
+                          "name": "running",
+                          "description": "The Linode is currently running."
+                        },
+                        {
+                          "name": "shutting_down",
+                          "description": "The Linode is currently shutting down."
+                        },
+                        {
+                          "name": "rebooting",
+                          "description": "The Linode is rebooting."
+                        },
+                        {
+                          "name": "provisioning",
+                          "description": "The Linode is being created."
+                        },
+                        {
+                          "name": "deleting",
+                          "description": "The Linode is being deleted."
+                        },
+                        {
+                          "name": "migrating",
+                          "description": "The Linode is being migrated to a new host/region."
+                        }
+                      ]
                     },
                     {
                       "name": "total_transfer",
@@ -2318,13 +2415,23 @@ module.exports = { endpoints: [
                       "name": "hypervisor",
                       "description": "The hypervisor this Linode is running on.",
                       "type": "enum",
+                      "subType": "Hypervisor",
                       "value": "kvm",
                       "example": null,
-                      "schema": null
+                      "schema": [
+                        {
+                          "name": "kvm",
+                          "description": "KVM"
+                        },
+                        {
+                          "name": "xen",
+                          "description": "Xen"
+                        }
+                      ]
                     }
                   ],
-                  "enums": [
-                    {
+                  "enums": {
+                    "Status": {
                       "offline": "The Linode is powered off.",
                       "booting": "The Linode is currently booting up.",
                       "running": "The Linode is currently running.",
@@ -2332,24 +2439,21 @@ module.exports = { endpoints: [
                       "rebooting": "The Linode is rebooting.",
                       "provisioning": "The Linode is being created.",
                       "deleting": "The Linode is being deleted.",
-                      "migrating": "The Linode is being migrated to a new host/region.",
-                      "name": "0"
+                      "migrating": "The Linode is being migrated to a new host/region."
                     },
-                    {
+                    "BackupStatus": {
                       "pending": "Backup is in the queue and waiting to begin.",
                       "running": "Linode in the process of being backed up.",
                       "needsPostProcessing": "Backups awaiting final integration into existing backup data.",
                       "successful": "Backup successfully completed.",
                       "failed": "Linode backup failed.",
-                      "userAborted": "User aborted current backup process.",
-                      "name": "1"
+                      "userAborted": "User aborted current backup process."
                     },
-                    {
+                    "BackupType": {
                       "auto": "Automatic backup",
-                      "snapshot": "User-initiated, manual file backup",
-                      "name": "2"
+                      "snapshot": "User-initiated, manual file backup"
                     },
-                    {
+                    "Window": {
                       "W0": "0000 - 0200 UTC",
                       "W2": "0200 - 0400 UTC",
                       "W4": "0400 - 0600 UTC",
@@ -2361,15 +2465,13 @@ module.exports = { endpoints: [
                       "W16": "1600 - 1800 UTC",
                       "W18": "1800 - 2000 UTC",
                       "W20": "2000 - 2200 UTC",
-                      "W22": "2200 - 0000 UTC",
-                      "name": "3"
+                      "W22": "2200 - 0000 UTC"
                     },
-                    {
+                    "Hypervisor": {
                       "kvm": "KVM",
-                      "xen": "Xen",
-                      "name": "4"
+                      "xen": "Xen"
                     }
-                  ]
+                  }
                 }
               },
               {
@@ -2689,6 +2791,7 @@ module.exports = { endpoints: [
                               "description": "Status of the backup.",
                               "filterable": false,
                               "type": "enum",
+                              "subType": "Status",
                               "value": "successful",
                               "example": null,
                               "schema": null
@@ -2697,6 +2800,7 @@ module.exports = { endpoints: [
                               "name": "type",
                               "description": "Whether this is a snapshot or an auto backup.",
                               "type": "enum",
+                              "subType": "Type",
                               "value": "snapshot",
                               "example": null,
                               "schema": null
@@ -2765,6 +2869,7 @@ module.exports = { endpoints: [
                               "name": "configs",
                               "description": "A JSON Array of config labels that were included in this backup.",
                               "type": "array",
+                              "subType": "string",
                               "value": [
                                 "My Debian8 Profile"
                               ],
@@ -2775,6 +2880,7 @@ module.exports = { endpoints: [
                               "name": "disks",
                               "description": "A JSON Array of JSON Objects describing the disks included in this backup.",
                               "type": "array",
+                              "subType": "disk",
                               "value": [
                                 {
                                   "label": {
@@ -2812,6 +2918,7 @@ module.exports = { endpoints: [
                               "name": "availability",
                               "description": "If this backup is available, which backup slot it is in.  Otherwise, unavailable.",
                               "type": "enum",
+                              "subType": "BackupAvailability",
                               "value": "daily",
                               "example": null,
                               "schema": null
@@ -2887,6 +2994,7 @@ module.exports = { endpoints: [
                               "description": "Status of the backup.",
                               "filterable": false,
                               "type": "enum",
+                              "subType": "Status",
                               "value": "successful",
                               "example": null,
                               "schema": null
@@ -2895,6 +3003,7 @@ module.exports = { endpoints: [
                               "name": "type",
                               "description": "Whether this is a snapshot or an auto backup.",
                               "type": "enum",
+                              "subType": "Type",
                               "value": "snapshot",
                               "example": null,
                               "schema": null
@@ -2963,6 +3072,7 @@ module.exports = { endpoints: [
                               "name": "configs",
                               "description": "A JSON Array of config labels that were included in this backup.",
                               "type": "array",
+                              "subType": "string",
                               "value": [
                                 "My Debian8 Profile"
                               ],
@@ -2973,6 +3083,7 @@ module.exports = { endpoints: [
                               "name": "disks",
                               "description": "A JSON Array of JSON Objects describing the disks included in this backup.",
                               "type": "array",
+                              "subType": "disk",
                               "value": [
                                 {
                                   "label": {
@@ -3010,6 +3121,7 @@ module.exports = { endpoints: [
                               "name": "availability",
                               "description": "If this backup is available, which backup slot it is in.  Otherwise, unavailable.",
                               "type": "enum",
+                              "subType": "BackupAvailability",
                               "value": "daily",
                               "example": null,
                               "schema": null
@@ -3153,6 +3265,7 @@ module.exports = { endpoints: [
                       "description": "This Linode's IPv4 addresses.",
                       "editable": false,
                       "type": "array",
+                      "subType": "string",
                       "value": [
                         "97.107.143.8",
                         "192.168.149.108"
@@ -3183,6 +3296,7 @@ module.exports = { endpoints: [
                       "name": "type",
                       "description": "The type of Linode.",
                       "type": "array",
+                      "subType": "service",
                       "value": [
                         {
                           "id": {
@@ -3248,9 +3362,43 @@ module.exports = { endpoints: [
                       "description": "The current state of this Linode.",
                       "filterable": true,
                       "type": "enum",
+                      "subType": "Status",
                       "value": "running",
                       "example": null,
-                      "schema": null
+                      "schema": [
+                        {
+                          "name": "offline",
+                          "description": "The Linode is powered off."
+                        },
+                        {
+                          "name": "booting",
+                          "description": "The Linode is currently booting up."
+                        },
+                        {
+                          "name": "running",
+                          "description": "The Linode is currently running."
+                        },
+                        {
+                          "name": "shutting_down",
+                          "description": "The Linode is currently shutting down."
+                        },
+                        {
+                          "name": "rebooting",
+                          "description": "The Linode is rebooting."
+                        },
+                        {
+                          "name": "provisioning",
+                          "description": "The Linode is being created."
+                        },
+                        {
+                          "name": "deleting",
+                          "description": "The Linode is being deleted."
+                        },
+                        {
+                          "name": "migrating",
+                          "description": "The Linode is being migrated to a new host/region."
+                        }
+                      ]
                     },
                     {
                       "name": "total_transfer",
@@ -3272,13 +3420,23 @@ module.exports = { endpoints: [
                       "name": "hypervisor",
                       "description": "The hypervisor this Linode is running on.",
                       "type": "enum",
+                      "subType": "Hypervisor",
                       "value": "kvm",
                       "example": null,
-                      "schema": null
+                      "schema": [
+                        {
+                          "name": "kvm",
+                          "description": "KVM"
+                        },
+                        {
+                          "name": "xen",
+                          "description": "Xen"
+                        }
+                      ]
                     }
                   ],
-                  "enums": [
-                    {
+                  "enums": {
+                    "Status": {
                       "offline": "The Linode is powered off.",
                       "booting": "The Linode is currently booting up.",
                       "running": "The Linode is currently running.",
@@ -3286,24 +3444,21 @@ module.exports = { endpoints: [
                       "rebooting": "The Linode is rebooting.",
                       "provisioning": "The Linode is being created.",
                       "deleting": "The Linode is being deleted.",
-                      "migrating": "The Linode is being migrated to a new host/region.",
-                      "name": "0"
+                      "migrating": "The Linode is being migrated to a new host/region."
                     },
-                    {
+                    "BackupStatus": {
                       "pending": "Backup is in the queue and waiting to begin.",
                       "running": "Linode in the process of being backed up.",
                       "needsPostProcessing": "Backups awaiting final integration into existing backup data.",
                       "successful": "Backup successfully completed.",
                       "failed": "Linode backup failed.",
-                      "userAborted": "User aborted current backup process.",
-                      "name": "1"
+                      "userAborted": "User aborted current backup process."
                     },
-                    {
+                    "BackupType": {
                       "auto": "Automatic backup",
-                      "snapshot": "User-initiated, manual file backup",
-                      "name": "2"
+                      "snapshot": "User-initiated, manual file backup"
                     },
-                    {
+                    "Window": {
                       "W0": "0000 - 0200 UTC",
                       "W2": "0200 - 0400 UTC",
                       "W4": "0400 - 0600 UTC",
@@ -3315,15 +3470,13 @@ module.exports = { endpoints: [
                       "W16": "1600 - 1800 UTC",
                       "W18": "1800 - 2000 UTC",
                       "W20": "2000 - 2200 UTC",
-                      "W22": "2200 - 0000 UTC",
-                      "name": "3"
+                      "W22": "2200 - 0000 UTC"
                     },
-                    {
+                    "Hypervisor": {
                       "kvm": "KVM",
-                      "xen": "Xen",
-                      "name": "4"
+                      "xen": "Xen"
                     }
-                  ]
+                  }
                 }
               },
               {
@@ -3467,9 +3620,55 @@ module.exports = { endpoints: [
                       "description": "Status of the disk.",
                       "filterable": false,
                       "type": "enum",
+                      "subType": "Status",
                       "value": "ok",
                       "example": null,
-                      "schema": null
+                      "schema": [
+                        {
+                          "name": "ok",
+                          "description": "No disk jobs are running."
+                        },
+                        {
+                          "name": "deleting",
+                          "description": "This disk is being deleted."
+                        },
+                        {
+                          "name": "creating",
+                          "description": "This disk is being created."
+                        },
+                        {
+                          "name": "migrating",
+                          "description": "This disk is being migrated."
+                        },
+                        {
+                          "name": "cancelling-migration",
+                          "description": "The disk migration is being cancelled."
+                        },
+                        {
+                          "name": "duplicating",
+                          "description": "This disk is being duplicated."
+                        },
+                        {
+                          "name": "resizing",
+                          "description": "This disk is being resized."
+                        },
+                        {
+                          "name": "restoring",
+                          "description": "This disk is being restored."
+                        },
+                        {
+                          "name": "copying",
+                          "description": "This disk is being copied."
+                        },
+                        {
+                          "name": "freezing",
+                          "description": "This disk is being frozen."
+                        },
+                        {
+                          "name": "thawing",
+                          "description": "This disk is being thawed."
+                        }
+                      ]
                     },
                     {
                       "name": "size",
@@ -3485,9 +3684,31 @@ module.exports = { endpoints: [
                       "name": "filesystem",
                       "description": "The filesystem on the disk.",
                       "type": "enum",
+                      "subType": "Filesystem",
                       "value": "ext4",
                       "example": null,
-                      "schema": null
+                      "schema": [
+                        {
+                          "name": "raw",
+                          "description": "No filesystem, just a raw binary stream."
+                        },
+                        {
+                          "name": "swap",
+                          "description": "Linux swap area"
+                        },
+                        {
+                          "name": "ext3",
+                          "description": "The ext3 journaling filesystem for Linux."
+                        },
+                        {
+                          "name": "ext4",
+                          "description": "The ext4 journaling filesystem for Linux."
+                        },
+                        {
+                          "name": "initrd",
+                          "description": "initrd (uncompressed initrd, ext2, max 32 MB)"
+                        }
+                      ]
                     },
                     {
                       "name": "created",
@@ -3504,8 +3725,8 @@ module.exports = { endpoints: [
                       "schema": null
                     }
                   ],
-                  "enums": [
-                    {
+                  "enums": {
+                    "Status": {
                       "ok": "No disk jobs are running.",
                       "deleting": "This disk is being deleted.",
                       "creating": "This disk is being created.",
@@ -3516,18 +3737,16 @@ module.exports = { endpoints: [
                       "restoring": "This disk is being restored.",
                       "copying": "This disk is being copied.",
                       "freezing": "This disk is being frozen.",
-                      "thawing": "This disk is being thawed.",
-                      "name": "Status"
+                      "thawing": "This disk is being thawed."
                     },
-                    {
+                    "Filesystem": {
                       "raw": "No filesystem, just a raw binary stream.",
                       "swap": "Linux swap area",
                       "ext3": "The ext3 journaling filesystem for Linux.",
                       "ext4": "The ext4 journaling filesystem for Linux.",
-                      "initrd": "initrd (uncompressed initrd, ext2, max 32 MB)",
-                      "name": "Filesystem"
+                      "initrd": "initrd (uncompressed initrd, ext2, max 32 MB)"
                     }
-                  ]
+                  }
                 }
               },
               {
@@ -4219,9 +4438,19 @@ module.exports = { endpoints: [
                       "name": "type",
                       "description": "The type of IP Address, either public or private",
                       "type": "enum",
+                      "subType": "IPAddressType",
                       "value": "public",
                       "example": null,
-                      "schema": null
+                      "schema": [
+                        {
+                          "name": "public",
+                          "description": "Public IP Address"
+                        },
+                        {
+                          "name": "private",
+                          "description": "Internal IP Addresses (192.168 range)"
+                        }
+                      ]
                     },
                     {
                       "name": "rdns",
@@ -4240,13 +4469,12 @@ module.exports = { endpoints: [
                       "schema": null
                     }
                   ],
-                  "enums": [
-                    {
+                  "enums": {
+                    "IPAddressType": {
                       "public": "Public IP Address",
-                      "private": "Internal IP Addresses (192.168 range)",
-                      "name": "IPAddressType"
+                      "private": "Internal IP Addresses (192.168 range)"
                     }
-                  ]
+                  }
                 }
               },
               {
@@ -4471,6 +4699,7 @@ module.exports = { endpoints: [
                       "editable": true,
                       "filterable": true,
                       "type": "array",
+                      "subType": "distribution",
                       "value": [
                         {
                           "id": {
@@ -4771,6 +5000,7 @@ module.exports = { endpoints: [
                       "editable": true,
                       "filterable": true,
                       "type": "array",
+                      "subType": "distribution",
                       "value": [
                         {
                           "id": {
@@ -5096,9 +5326,23 @@ module.exports = { endpoints: [
                       "description": "The status of the Domain it can be disabled, active, or edit_mode.\n",
                       "editable": true,
                       "type": "enum",
+                      "subType": "status",
                       "value": "active",
                       "example": null,
-                      "schema": null
+                      "schema": [
+                        {
+                          "name": "active",
+                          "description": "Turn on serving of this Domain."
+                        },
+                        {
+                          "name": "disabled",
+                          "description": "Turn off serving of this Domain."
+                        },
+                        {
+                          "name": "edit_mode",
+                          "description": "Use this mode while making edits."
+                        }
+                      ]
                     },
                     {
                       "name": "master_ips",
@@ -5106,6 +5350,7 @@ module.exports = { endpoints: [
                       "editable": true,
                       "filterable": true,
                       "type": "array",
+                      "subType": "string",
                       "value": [
                         "127.0.0.1",
                         "255.255.255.1",
@@ -5119,6 +5364,7 @@ module.exports = { endpoints: [
                       "description": "An array of IP addresses allowed to AXFR the entire Domain.\n",
                       "editable": true,
                       "type": "array",
+                      "subType": "string",
                       "value": [
                         "44.55.66.77"
                       ],
@@ -5141,24 +5387,32 @@ module.exports = { endpoints: [
                       "editable": false,
                       "filterable": true,
                       "type": "enum",
+                      "subType": "domain_type",
                       "value": "master",
                       "example": null,
-                      "schema": null
+                      "schema": [
+                        {
+                          "name": "master",
+                          "description": "A primary, authoritative Domain"
+                        },
+                        {
+                          "name": "slave",
+                          "description": "A secondary Domain which gets its updates from a master Domain."
+                        }
+                      ]
                     }
                   ],
-                  "enums": [
-                    {
+                  "enums": {
+                    "status": {
                       "active": "Turn on serving of this Domain.",
                       "disabled": "Turn off serving of this Domain.",
-                      "edit_mode": "Use this mode while making edits.",
-                      "name": "status"
+                      "edit_mode": "Use this mode while making edits."
                     },
-                    {
+                    "domain_type": {
                       "master": "A primary, authoritative Domain",
-                      "slave": "A secondary Domain which gets its updates from a master Domain.",
-                      "name": "domain_type"
+                      "slave": "A secondary Domain which gets its updates from a master Domain."
                     }
-                  ]
+                  }
                 }
               },
               {
@@ -5340,9 +5594,23 @@ module.exports = { endpoints: [
                       "description": "The status of the Domain it can be disabled, active, or edit_mode.\n",
                       "editable": true,
                       "type": "enum",
+                      "subType": "status",
                       "value": "active",
                       "example": null,
-                      "schema": null
+                      "schema": [
+                        {
+                          "name": "active",
+                          "description": "Turn on serving of this Domain."
+                        },
+                        {
+                          "name": "disabled",
+                          "description": "Turn off serving of this Domain."
+                        },
+                        {
+                          "name": "edit_mode",
+                          "description": "Use this mode while making edits."
+                        }
+                      ]
                     },
                     {
                       "name": "master_ips",
@@ -5350,6 +5618,7 @@ module.exports = { endpoints: [
                       "editable": true,
                       "filterable": true,
                       "type": "array",
+                      "subType": "string",
                       "value": [
                         "127.0.0.1",
                         "255.255.255.1",
@@ -5363,6 +5632,7 @@ module.exports = { endpoints: [
                       "description": "An array of IP addresses allowed to AXFR the entire Domain.\n",
                       "editable": true,
                       "type": "array",
+                      "subType": "string",
                       "value": [
                         "44.55.66.77"
                       ],
@@ -5385,24 +5655,32 @@ module.exports = { endpoints: [
                       "editable": false,
                       "filterable": true,
                       "type": "enum",
+                      "subType": "domain_type",
                       "value": "master",
                       "example": null,
-                      "schema": null
+                      "schema": [
+                        {
+                          "name": "master",
+                          "description": "A primary, authoritative Domain"
+                        },
+                        {
+                          "name": "slave",
+                          "description": "A secondary Domain which gets its updates from a master Domain."
+                        }
+                      ]
                     }
                   ],
-                  "enums": [
-                    {
+                  "enums": {
+                    "status": {
                       "active": "Turn on serving of this Domain.",
                       "disabled": "Turn off serving of this Domain.",
-                      "edit_mode": "Use this mode while making edits.",
-                      "name": "0"
+                      "edit_mode": "Use this mode while making edits."
                     },
-                    {
+                    "domain_type": {
                       "master": "A primary, authoritative Domain",
-                      "slave": "A secondary Domain which gets its updates from a master Domain.",
-                      "name": "1"
+                      "slave": "A secondary Domain which gets its updates from a master Domain."
                     }
-                  ]
+                  }
                 }
               },
               {
@@ -5556,18 +5834,17 @@ module.exports = { endpoints: [
                       "schema": null
                     }
                   ],
-                  "enums": [
-                    {
+                  "enums": {
+                    "Zone Record Types": {
                       "A": "Address Mapping Record",
                       "AAAA": "IP Version 6 Address Record",
                       "NS": "Name Server Record",
                       "MX": "Mail Exchanger Record",
                       "CNAME": "Canonical Name Record",
                       "TXT": "Text Record",
-                      "SRV": "Service Record",
-                      "name": "Zone Record Types"
+                      "SRV": "Service Record"
                     }
-                  ]
+                  }
                 }
               },
               {
@@ -5750,18 +6027,17 @@ module.exports = { endpoints: [
                       "schema": null
                     }
                   ],
-                  "enums": [
-                    {
+                  "enums": {
+                    "Zone Record Types": {
                       "A": "Address Mapping Record",
                       "AAAA": "IP Version 6 Address Record",
                       "NS": "Name Server Record",
                       "MX": "Mail Exchanger Record",
                       "CNAME": "Canonical Name Record",
                       "TXT": "Text Record",
-                      "SRV": "Service Record",
-                      "name": "0"
+                      "SRV": "Service Record"
                     }
-                  ]
+                  }
                 }
               },
               {
@@ -6693,9 +6969,23 @@ module.exports = { endpoints: [
                       "description": "The status of the ticket.",
                       "filterable": true,
                       "type": "enum",
+                      "subType": "Status",
                       "value": "open",
                       "example": null,
-                      "schema": null
+                      "schema": [
+                        {
+                          "name": "new",
+                          "description": "The support ticket has just been opened."
+                        },
+                        {
+                          "name": "open",
+                          "description": "The support ticket is open and can be replied to."
+                        },
+                        {
+                          "name": "closed",
+                          "description": "The support ticket is completed and closed."
+                        }
+                      ]
                     },
                     {
                       "name": "opened",
@@ -6782,14 +7072,13 @@ module.exports = { endpoints: [
                       ]
                     }
                   ],
-                  "enums": [
-                    {
+                  "enums": {
+                    "Status": {
                       "new": "The support ticket has just been opened.",
                       "open": "The support ticket is open and can be replied to.",
-                      "closed": "The support ticket is completed and closed.",
-                      "name": "Status"
+                      "closed": "The support ticket is completed and closed."
                     }
-                  ]
+                  }
                 }
               },
               {
@@ -6887,9 +7176,23 @@ module.exports = { endpoints: [
                       "description": "The status of the ticket.",
                       "filterable": true,
                       "type": "enum",
+                      "subType": "Status",
                       "value": "open",
                       "example": null,
-                      "schema": null
+                      "schema": [
+                        {
+                          "name": "new",
+                          "description": "The support ticket has just been opened."
+                        },
+                        {
+                          "name": "open",
+                          "description": "The support ticket is open and can be replied to."
+                        },
+                        {
+                          "name": "closed",
+                          "description": "The support ticket is completed and closed."
+                        }
+                      ]
                     },
                     {
                       "name": "opened",
@@ -6976,14 +7279,13 @@ module.exports = { endpoints: [
                       ]
                     }
                   ],
-                  "enums": [
-                    {
+                  "enums": {
+                    "Status": {
                       "new": "The support ticket has just been opened.",
                       "open": "The support ticket is open and can be replied to.",
-                      "closed": "The support ticket is completed and closed.",
-                      "name": "0"
+                      "closed": "The support ticket is completed and closed."
                     }
-                  ]
+                  }
                 }
               }
             ],
@@ -7248,9 +7550,23 @@ module.exports = { endpoints: [
                       "description": "Controls what authentication methods are allowed to connect to the Lish console servers.\n",
                       "editable": true,
                       "type": "enum",
+                      "subType": "LishSetting",
                       "value": "password_keys",
                       "example": null,
-                      "schema": null
+                      "schema": [
+                        {
+                          "name": "password_keys",
+                          "description": "Allow both password and key authentication"
+                        },
+                        {
+                          "name": "keys_only",
+                          "description": "Allow key authentication only"
+                        },
+                        {
+                          "name": "disabled",
+                          "description": "Disable Lish"
+                        }
+                      ]
                     },
                     {
                       "name": "authorized_keys",
@@ -7271,14 +7587,13 @@ module.exports = { endpoints: [
                       "schema": null
                     }
                   ],
-                  "enums": [
-                    {
+                  "enums": {
+                    "LishSetting": {
                       "password_keys": "Allow both password and key authentication",
                       "keys_only": "Allow key authentication only",
-                      "disabled": "Disable Lish",
-                      "name": "LishSetting"
+                      "disabled": "Disable Lish"
                     }
-                  ]
+                  }
                 }
               },
               {
@@ -7496,6 +7811,7 @@ module.exports = { endpoints: [
                           "name": "status",
                           "description": "The status of the client application.",
                           "type": "enum",
+                          "subType": "Status",
                           "value": "active",
                           "example": null,
                           "schema": null
@@ -7506,9 +7822,19 @@ module.exports = { endpoints: [
                       "name": "type",
                       "description": "If this is a Client Token or a Personal Access Token.\n",
                       "type": "enum",
+                      "subType": "OAuthTokenType",
                       "value": "personal_access_token",
                       "example": null,
-                      "schema": null
+                      "schema": [
+                        {
+                          "name": "client_token",
+                          "description": "A token created by a client application with an OAuth Authentication flow."
+                        },
+                        {
+                          "name": "personal_access_token",
+                          "description": "A token created through the API for use without a client application."
+                        }
+                      ]
                     },
                     {
                       "name": "scopes",
@@ -7550,13 +7876,12 @@ module.exports = { endpoints: [
                       "schema": null
                     }
                   ],
-                  "enums": [
-                    {
+                  "enums": {
+                    "OAuthTokenType": {
                       "client_token": "A token created by a client application with an OAuth Authentication flow.",
-                      "personal_access_token": "A token created through the API for use without a client application.",
-                      "name": "OAuthTokenType"
+                      "personal_access_token": "A token created through the API for use without a client application."
                     }
-                  ]
+                  }
                 }
               },
               {
@@ -7687,6 +8012,7 @@ module.exports = { endpoints: [
                           "name": "status",
                           "description": "The status of the client application.",
                           "type": "enum",
+                          "subType": "Status",
                           "value": "active",
                           "example": null,
                           "schema": null
@@ -7697,9 +8023,19 @@ module.exports = { endpoints: [
                       "name": "type",
                       "description": "If this is a Client Token or a Personal Access Token.\n",
                       "type": "enum",
+                      "subType": "OAuthTokenType",
                       "value": "personal_access_token",
                       "example": null,
-                      "schema": null
+                      "schema": [
+                        {
+                          "name": "client_token",
+                          "description": "A token created by a client application with an OAuth Authentication flow."
+                        },
+                        {
+                          "name": "personal_access_token",
+                          "description": "A token created through the API for use without a client application."
+                        }
+                      ]
                     },
                     {
                       "name": "scopes",
@@ -7741,13 +8077,12 @@ module.exports = { endpoints: [
                       "schema": null
                     }
                   ],
-                  "enums": [
-                    {
+                  "enums": {
+                    "OAuthTokenType": {
                       "client_token": "A token created by a client application with an OAuth Authentication flow.",
-                      "personal_access_token": "A token created through the API for use without a client application.",
-                      "name": "0"
+                      "personal_access_token": "A token created through the API for use without a client application."
                     }
-                  ]
+                  }
                 }
               },
               {
@@ -7919,9 +8254,23 @@ module.exports = { endpoints: [
                       "description": "Controls what authentication methods are allowed to connect to the Lish console servers.\n",
                       "editable": true,
                       "type": "enum",
+                      "subType": "LishSetting",
                       "value": "password_keys",
                       "example": null,
-                      "schema": null
+                      "schema": [
+                        {
+                          "name": "password_keys",
+                          "description": "Allow both password and key authentication"
+                        },
+                        {
+                          "name": "keys_only",
+                          "description": "Allow key authentication only"
+                        },
+                        {
+                          "name": "disabled",
+                          "description": "Disable Lish"
+                        }
+                      ]
                     },
                     {
                       "name": "authorized_keys",
@@ -7942,14 +8291,13 @@ module.exports = { endpoints: [
                       "schema": null
                     }
                   ],
-                  "enums": [
-                    {
+                  "enums": {
+                    "LishSetting": {
                       "password_keys": "Allow both password and key authentication",
                       "keys_only": "Allow key authentication only",
-                      "disabled": "Disable Lish",
-                      "name": "0"
+                      "disabled": "Disable Lish"
                     }
-                  ]
+                  }
                 }
               },
               {
@@ -8281,9 +8629,23 @@ module.exports = { endpoints: [
                       "description": "Controls what authentication methods are allowed to connect to the Lish console servers.\n",
                       "editable": true,
                       "type": "enum",
+                      "subType": "LishSetting",
                       "value": "password_keys",
                       "example": null,
-                      "schema": null
+                      "schema": [
+                        {
+                          "name": "password_keys",
+                          "description": "Allow both password and key authentication"
+                        },
+                        {
+                          "name": "keys_only",
+                          "description": "Allow key authentication only"
+                        },
+                        {
+                          "name": "disabled",
+                          "description": "Disable Lish"
+                        }
+                      ]
                     },
                     {
                       "name": "authorized_keys",
@@ -8304,14 +8666,13 @@ module.exports = { endpoints: [
                       "schema": null
                     }
                   ],
-                  "enums": [
-                    {
+                  "enums": {
+                    "LishSetting": {
                       "password_keys": "Allow both password and key authentication",
                       "keys_only": "Allow key authentication only",
-                      "disabled": "Disable Lish",
-                      "name": "0"
+                      "disabled": "Disable Lish"
                     }
-                  ]
+                  }
                 }
               },
               {
@@ -8489,9 +8850,23 @@ module.exports = { endpoints: [
                       "description": "Controls what authentication methods are allowed to connect to the Lish console servers.\n",
                       "editable": true,
                       "type": "enum",
+                      "subType": "LishSetting",
                       "value": "password_keys",
                       "example": null,
-                      "schema": null
+                      "schema": [
+                        {
+                          "name": "password_keys",
+                          "description": "Allow both password and key authentication"
+                        },
+                        {
+                          "name": "keys_only",
+                          "description": "Allow key authentication only"
+                        },
+                        {
+                          "name": "disabled",
+                          "description": "Disable Lish"
+                        }
+                      ]
                     },
                     {
                       "name": "authorized_keys",
@@ -8512,14 +8887,13 @@ module.exports = { endpoints: [
                       "schema": null
                     }
                   ],
-                  "enums": [
-                    {
+                  "enums": {
+                    "LishSetting": {
                       "password_keys": "Allow both password and key authentication",
                       "keys_only": "Allow key authentication only",
-                      "disabled": "Disable Lish",
-                      "name": "0"
+                      "disabled": "Disable Lish"
                     }
-                  ]
+                  }
                 }
               },
               {
@@ -8878,9 +9252,115 @@ module.exports = { endpoints: [
                       "name": "action",
                       "description": "The action that caused this event.\n",
                       "type": "enum",
+                      "subType": "EventType",
                       "value": "linode_reboot",
                       "example": null,
-                      "schema": null
+                      "schema": [
+                        {
+                          "name": "linode_boot",
+                          "description": "Linode boot"
+                        },
+                        {
+                          "name": "linode_create",
+                          "description": "Linode create"
+                        },
+                        {
+                          "name": "linode_delete",
+                          "description": "Linode delete"
+                        },
+                        {
+                          "name": "linode_shutdown",
+                          "description": "Linode shutdown"
+                        },
+                        {
+                          "name": "linode_reboot",
+                          "description": "Linode reboot"
+                        },
+                        {
+                          "name": "linode_snapshot",
+                          "description": "Linode snapshot"
+                        },
+                        {
+                          "name": "linode_addip",
+                          "description": "Linode addip"
+                        },
+                        {
+                          "name": "linode_migrate",
+                          "description": "Linode migrate"
+                        },
+                        {
+                          "name": "linode_rebuild",
+                          "description": "Linode rebuild"
+                        },
+                        {
+                          "name": "linode_clone",
+                          "description": "Linode clone"
+                        },
+                        {
+                          "name": "disk_create",
+                          "description": "Disk create"
+                        },
+                        {
+                          "name": "disk_delete",
+                          "description": "Disk delete"
+                        },
+                        {
+                          "name": "disk_duplicate",
+                          "description": "Disk duplicate"
+                        },
+                        {
+                          "name": "disk_resize",
+                          "description": "Disk resize"
+                        },
+                        {
+                          "name": "backups_enable",
+                          "description": "Backups enable"
+                        },
+                        {
+                          "name": "backups_cancel",
+                          "description": "Backups cancel"
+                        },
+                        {
+                          "name": "backups_restore",
+                          "description": "Backups restore"
+                        },
+                        {
+                          "name": "password_reset",
+                          "description": "Password reset"
+                        },
+                        {
+                          "name": "dns_zone_create",
+                          "description": "Domain create"
+                        },
+                        {
+                          "name": "dns_zone_delete",
+                          "description": "Domain delete"
+                        },
+                        {
+                          "name": "dns_record_create",
+                          "description": "Domain Record create"
+                        },
+                        {
+                          "name": "dns_record_delete",
+                          "description": "Domain Record delete"
+                        },
+                        {
+                          "name": "stackscript_create",
+                          "description": "Stackscript create"
+                        },
+                        {
+                          "name": "stackscript_publicize",
+                          "description": "Stackscript publicize"
+                        },
+                        {
+                          "name": "stackscript_revise",
+                          "description": "Stackscript revise"
+                        },
+                        {
+                          "name": "stackscript_delete",
+                          "description": "Stackscript delete"
+                        }
+                      ]
                     },
                     {
                       "name": "username",
@@ -8894,9 +9374,31 @@ module.exports = { endpoints: [
                       "name": "status",
                       "description": "The current status of this event.  \n",
                       "type": "enum",
+                      "subType": "EventStatus",
                       "value": "finished",
                       "example": null,
-                      "schema": null
+                      "schema": [
+                        {
+                          "name": "scheduled",
+                          "description": "Event has not yet started."
+                        },
+                        {
+                          "name": "started",
+                          "description": "Event is in progress."
+                        },
+                        {
+                          "name": "finished",
+                          "description": "Event is completed."
+                        },
+                        {
+                          "name": "failed",
+                          "description": "Something went wrong."
+                        },
+                        {
+                          "name": "notification",
+                          "description": "Stateless event."
+                        }
+                      ]
                     },
                     {
                       "name": "percent_complete",
@@ -8963,8 +9465,8 @@ module.exports = { endpoints: [
                       "schema": null
                     }
                   ],
-                  "enums": [
-                    {
+                  "enums": {
+                    "EventType": {
                       "linode_boot": "Linode boot",
                       "linode_create": "Linode create",
                       "linode_delete": "Linode delete",
@@ -8990,18 +9492,16 @@ module.exports = { endpoints: [
                       "stackscript_create": "Stackscript create",
                       "stackscript_publicize": "Stackscript publicize",
                       "stackscript_revise": "Stackscript revise",
-                      "stackscript_delete": "Stackscript delete",
-                      "name": "EventType"
+                      "stackscript_delete": "Stackscript delete"
                     },
-                    {
+                    "EventStatus": {
                       "scheduled": "Event has not yet started.",
                       "started": "Event is in progress.",
                       "finished": "Event is completed.",
                       "failed": "Something went wrong.",
-                      "notification": "Stateless event.",
-                      "name": "EventStatus"
+                      "notification": "Stateless event."
                     }
-                  ]
+                  }
                 }
               }
             ],
@@ -9088,9 +9588,115 @@ module.exports = { endpoints: [
                       "name": "action",
                       "description": "The action that caused this event.\n",
                       "type": "enum",
+                      "subType": "EventType",
                       "value": "linode_reboot",
                       "example": null,
-                      "schema": null
+                      "schema": [
+                        {
+                          "name": "linode_boot",
+                          "description": "Linode boot"
+                        },
+                        {
+                          "name": "linode_create",
+                          "description": "Linode create"
+                        },
+                        {
+                          "name": "linode_delete",
+                          "description": "Linode delete"
+                        },
+                        {
+                          "name": "linode_shutdown",
+                          "description": "Linode shutdown"
+                        },
+                        {
+                          "name": "linode_reboot",
+                          "description": "Linode reboot"
+                        },
+                        {
+                          "name": "linode_snapshot",
+                          "description": "Linode snapshot"
+                        },
+                        {
+                          "name": "linode_addip",
+                          "description": "Linode addip"
+                        },
+                        {
+                          "name": "linode_migrate",
+                          "description": "Linode migrate"
+                        },
+                        {
+                          "name": "linode_rebuild",
+                          "description": "Linode rebuild"
+                        },
+                        {
+                          "name": "linode_clone",
+                          "description": "Linode clone"
+                        },
+                        {
+                          "name": "disk_create",
+                          "description": "Disk create"
+                        },
+                        {
+                          "name": "disk_delete",
+                          "description": "Disk delete"
+                        },
+                        {
+                          "name": "disk_duplicate",
+                          "description": "Disk duplicate"
+                        },
+                        {
+                          "name": "disk_resize",
+                          "description": "Disk resize"
+                        },
+                        {
+                          "name": "backups_enable",
+                          "description": "Backups enable"
+                        },
+                        {
+                          "name": "backups_cancel",
+                          "description": "Backups cancel"
+                        },
+                        {
+                          "name": "backups_restore",
+                          "description": "Backups restore"
+                        },
+                        {
+                          "name": "password_reset",
+                          "description": "Password reset"
+                        },
+                        {
+                          "name": "dns_zone_create",
+                          "description": "Domain create"
+                        },
+                        {
+                          "name": "dns_zone_delete",
+                          "description": "Domain delete"
+                        },
+                        {
+                          "name": "dns_record_create",
+                          "description": "Domain Record create"
+                        },
+                        {
+                          "name": "dns_record_delete",
+                          "description": "Domain Record delete"
+                        },
+                        {
+                          "name": "stackscript_create",
+                          "description": "Stackscript create"
+                        },
+                        {
+                          "name": "stackscript_publicize",
+                          "description": "Stackscript publicize"
+                        },
+                        {
+                          "name": "stackscript_revise",
+                          "description": "Stackscript revise"
+                        },
+                        {
+                          "name": "stackscript_delete",
+                          "description": "Stackscript delete"
+                        }
+                      ]
                     },
                     {
                       "name": "username",
@@ -9104,9 +9710,31 @@ module.exports = { endpoints: [
                       "name": "status",
                       "description": "The current status of this event.  \n",
                       "type": "enum",
+                      "subType": "EventStatus",
                       "value": "finished",
                       "example": null,
-                      "schema": null
+                      "schema": [
+                        {
+                          "name": "scheduled",
+                          "description": "Event has not yet started."
+                        },
+                        {
+                          "name": "started",
+                          "description": "Event is in progress."
+                        },
+                        {
+                          "name": "finished",
+                          "description": "Event is completed."
+                        },
+                        {
+                          "name": "failed",
+                          "description": "Something went wrong."
+                        },
+                        {
+                          "name": "notification",
+                          "description": "Stateless event."
+                        }
+                      ]
                     },
                     {
                       "name": "percent_complete",
@@ -9173,8 +9801,8 @@ module.exports = { endpoints: [
                       "schema": null
                     }
                   ],
-                  "enums": [
-                    {
+                  "enums": {
+                    "EventType": {
                       "linode_boot": "Linode boot",
                       "linode_create": "Linode create",
                       "linode_delete": "Linode delete",
@@ -9200,18 +9828,16 @@ module.exports = { endpoints: [
                       "stackscript_create": "Stackscript create",
                       "stackscript_publicize": "Stackscript publicize",
                       "stackscript_revise": "Stackscript revise",
-                      "stackscript_delete": "Stackscript delete",
-                      "name": "0"
+                      "stackscript_delete": "Stackscript delete"
                     },
-                    {
+                    "EventStatus": {
                       "scheduled": "Event has not yet started.",
                       "started": "Event is in progress.",
                       "finished": "Event is completed.",
                       "failed": "Something went wrong.",
-                      "notification": "Stateless event.",
-                      "name": "1"
+                      "notification": "Stateless event."
                     }
-                  ]
+                  }
                 }
               }
             ],
