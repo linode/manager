@@ -25,6 +25,7 @@ import {
 
 import {
   Python,
+  PythonIntroduction,
 } from './components/guides';
 
 import {
@@ -79,7 +80,8 @@ export function init() {
           <Route path="/pagination" component={Pagination} />
           <Route path="/filtering" component={Filtering} />
           <Route path="/errors" component={Errors} />
-          <Route path="/python" component={Python} />
+          <Route path="/guides/python" component={Python} />
+          <Route path="/guides/python/introduction" component={PythonIntroduction} />
           {api.endpoints.map(function(endpoint, index) {
             return generateIndexRoute({ key: index, endpoint: endpoint });
           })}
