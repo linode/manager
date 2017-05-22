@@ -12,13 +12,13 @@ export default function Introduction() {
         <p>
           With the release of API 4, Linode has also released an official Python library.  This guide is a simple introduction to working with
           the Python library.
-          The official Linode Python library is open-source on <a href="http://github.com/Linode/python-linode-api">github</a>, and can be installed.
+          The official Linode Python library is open source on <a href="http://github.com/Linode/python-linode-api">Github</a>, and can be installed.
         </p>
         <pre>
           <code>pip install linode-api</code>
         </pre>
         <p>
-          In order to make requests to the API, you're going to need an OAuth Token.  If you haven't already, log in to the <a href="https://login.alpha.linode.com">Alpha</a>, click "Manage personal access tokens" and "Generate a new token".  This will generate and display a valid OAuth Token with access to your entire (alpha) account, which we will use for this tutorial.
+          In order to make requests to the API, you're going to need an OAuth Token. You were given one when you signed up for an alpha account, if you've lost yours contact support.
         </p>
       </section>
       <section>
