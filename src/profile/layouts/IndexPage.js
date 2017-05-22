@@ -24,9 +24,6 @@ export class IndexPage extends Component {
       { name: 'Password & Authentication', link: '/authentication' },
       { name: 'Integrations', link: '/integrations' },
       { name: 'Notifications', link: '/notifications' },
-      { name: 'Referrals', link: '/referrals' },
-      // TODO: Add this when API supports it
-      //{ name: 'Lish Settings', link: '/lish' },
     ].map(t => ({ ...t, link: `/profile${t.link}` }));
 
     return (
