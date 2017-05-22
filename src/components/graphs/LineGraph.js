@@ -78,14 +78,14 @@ export default class LineGraph extends Component {
           mode: 'index',
           intersect: false,
           callbacks: {
-            title: function(tooltipItems, data) {
+            title: function (tooltipItems, data) {
               // Pick first xLabel for now
-              var title = '';
-              var labels = data.labels;
-              var labelCount = labels ? labels.length : 0;
+              let title = '';
+              const labels = data.labels;
+              const labelCount = labels ? labels.length : 0;
 
               if (tooltipItems.length > 0) {
-                var item = tooltipItems[0];
+                const item = tooltipItems[0];
 
                 if (item.xLabel) {
                   title = item.xLabel;
@@ -100,14 +100,14 @@ export default class LineGraph extends Component {
 
               return title;
             },
-            label: function(tooltipItem, data) {
-              var label = data.datasets[tooltipItem.datasetIndex].label || '';
+            label: function (tooltipItem, data) {
+              let label = data.datasets[tooltipItem.datasetIndex].label || '';
 
               if (label) {
-                  label += ': ';
+                label += ': ';
               }
-              label += tooltipItem.yLabel;
-              return label += unit;
+              label += tooltipItem.yLabel + unit;
+              return label;
             },
           },
         },
