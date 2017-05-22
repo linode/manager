@@ -6,13 +6,16 @@ import { Table } from 'linode-components/tables';
 
 export default function Introduction() {
   return (
-    <section className="GettingStartedPage">
-      <h1>Getting started with Linode Python</h1>
+    <section className="Article">
+      <header>
+          <h1>Getting started with Linode Python</h1>
+          <h5>by William Smith; last updated May 22nd, 2017</h5>
+      </header>
       <section>
         <p>
           With the release of API V4, Linode has also released an official Python library.  This guide is a simple introduction to working with
           the Python library.
-          The official Linode Python library is open source on <a href="http://github.com/Linode/python-linode-api">Github</a>, and can be installed.
+          The official Linode Python library is open source on <a href="http://github.com/Linode/python-linode-api">Github</a>, and can be installed:
         </p>
         <pre>
           <code>pip install linode-api</code>

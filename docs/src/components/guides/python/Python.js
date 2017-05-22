@@ -6,7 +6,7 @@ import { LinkCell } from 'linode-components/tables/cells';
 
 export default function Python() {
   return(
-    <section className="GettingStartedPage">
+    <section className="Article">
       <h1>Python Guide</h1>
       <Table
         className="Table--secondary"
