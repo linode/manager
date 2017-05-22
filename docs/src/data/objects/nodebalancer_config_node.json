@@ -1,6 +1,6 @@
 {
   "name": "NodeBalancer Config Node",
-  "description": "Describes a node for a NodeBalancer configuration.\n",
+  "description": "Describes a configuration node for a NodeBalancer.\n",
   "schema": {
     "id": {
       "_editable": false,
@@ -34,9 +34,8 @@
       "_description": "The connections mode for this node. One of 'accept', 'reject', or 'drain'."
     },
     "status": {
-      "_editable": true,
       "_type": "string",
-      "_value": "online",
+      "_value": "UP",
       "_description": "The status of this node."
     }
   },
@@ -45,6 +44,12 @@
       "accept": "accept",
       "reject": "reject",
       "drain": "drain"
+    },
+    "status": {
+      "UP": "UP",
+      "DOWN": "DOWN",
+      "MAINT": "Under Maintenance",
+      "Unknown": "Unknown"
     }
   }
 }

@@ -13,7 +13,8 @@
           "oauth": "nodebalancers:view",
           "description": "Returns a list of <a href=\"#object-nodebalancer\">NodeBalancers</a>.\n",
           "examples": {
-            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/nodebalancers\n"
+            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/nodebalancers\n",
+            "python": "my_nodebalancers = client.get_nodebalancers()\n"
           }
         },
         "POST": {
@@ -36,7 +37,8 @@
             }
           },
           "examples": {
-            "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n        \"region\": \"us-east-1a\",\n        \"label\": \"my_cool_balancer\",\n        \"client_conn_throttle\": 10\n    }' \\\n    https://$api_root/$version/nodebalancers\n"
+            "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n        \"region\": \"us-east-1a\",\n        \"label\": \"my_cool_balancer\",\n        \"client_conn_throttle\": 10\n    }' \\\n    https://$api_root/$version/nodebalancers\n",
+            "python": "new_nodebalancer = client.create_nodebalancer('us-east-1a', label='my_cool_balancer', client_conn_throttle=10)\n"
           }
         }
       }
@@ -51,14 +53,16 @@
           "oauth": "nodebalancers:view",
           "description": "Returns information about this <a href=\"#object-nodebalancer\">NodeBalancer</a>.\n",
           "examples": {
-            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id\n"
+            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id\n",
+            "python": "my_nodebalancer = linode.NodeBalancer(client, 123)\n"
           }
         },
         "PUT": {
           "oauth": "nodebalancers:modify",
           "description": "Modifies this NodeBalancer.\n",
           "examples": {
-            "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X PUT -d '{\n        \"region\": \"us-east-1a\",\n        \"label\": \"awesome_new_label\",\n        \"client_conn_throttle\": 14\n    }' \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id\n"
+            "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X PUT -d '{\n        \"region\": \"us-east-1a\",\n        \"label\": \"awesome_new_label\",\n        \"client_conn_throttle\": 14\n    }' \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id\n",
+            "python": "my_nodebalancer = linode.NodeBalancer(client, 123)\nmy_nodebalancer.label = 'awesome_new_label'\nmy_nodebalancer.client_conn_throttle = 14\nmy_nodebalancer.save()\n"
           }
         },
         "DELETE": {
@@ -66,7 +70,8 @@
           "dangerous": true,
           "description": "Deletes this NodeBalancer and all associated configs and nodes. This action cannot be undone.\n",
           "examples": {
-            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    -X DELETE \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id\n"
+            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    -X DELETE \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id\n",
+            "python": "my_nodebalancer = linode.NodeBalancer(client, 123)\nmy_nodebalancer.delete()\n"
           }
         }
       }
@@ -81,7 +86,8 @@
           "oauth": "nodebalancers:view",
           "description": "Returns a list of <a href=\"#object-nodebalancer_config\">configs</a> for a given NodeBalancer.\n",
           "examples": {
-            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id/configs\n"
+            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id/configs\n",
+            "python": "my_nodebalancer = linode.NodeBalancer(client, 123)\nnb_configs = my_nodebalancer.configs\n"
           }
         },
         "POST": {
@@ -132,7 +138,8 @@
             }
           },
           "examples": {
-            "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n        \"label\": \"myNodeBalancer\",\n        \"port\": 80,\n        \"protocol\": \"http\",\n        \"algorithm\": \"roundrobin\",\n        \"stickiness\": \"none\",\n        \"check\": \"http_body\",\n        \"check_interval\": 5,\n        \"check_timeout\": 3,\n        \"check_attempts\": 10,\n        \"check_path\": \"/path/to/check\",\n        \"check_body\": \"we got some stuff back\",\n        \"cipher_suite\": \"legacy\"\n    }' \\\n    https://$api_root/$version/nodebalancers\n"
+            "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n        \"label\": \"myNodeBalancer\",\n        \"port\": 80,\n        \"protocol\": \"http\",\n        \"algorithm\": \"roundrobin\",\n        \"stickiness\": \"none\",\n        \"check\": \"http_body\",\n        \"check_interval\": 5,\n        \"check_timeout\": 3,\n        \"check_attempts\": 10,\n        \"check_path\": \"/path/to/check\",\n        \"check_body\": \"we got some stuff back\",\n        \"cipher_suite\": \"legacy\"\n    }' \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id/configs\n",
+            "python": "my_nodebalancer = linode.NodeBalancer(client, 123)\nnew_config = my_nodebalancer.create_config(port=80, label='myNodeBalancerConfig', protocol='http',\n        algorithm='roundrobin', stickiness='none', check='http_body', check_interval=5, check_timeout=3,\n        check_attempts=10, check_path='/path/to/check', check_body='we got some stuff back',\n        cipher_suite='legacy')\n"
           }
         }
       }
@@ -146,7 +153,8 @@
           "oauth": "nodebalancers:view",
           "description": "Returns information about this NodeBalancer config.\n",
           "examples": {
-            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id\n"
+            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id\n",
+            "python": "nb_config = linode.NodeBalancerConfig(client, 456, 123) # linode_client, nodebalancer_config_id, nodebalancer_id\n"
           }
         },
         "DELETE": {
@@ -154,7 +162,8 @@
           "description": "Deletes a NodeBalancer config and all associated nodes. This action cannot be undone.\n",
           "dangerous": true,
           "examples": {
-            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    -X DELETE \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id\n"
+            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    -X DELETE \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id\n",
+            "python": "nb_config = linode.NodeBalancerConfig(client, 456, 123) # linode_client, nodebalancer_config_id, nodebalancer_id\nnb_config.delete()\n"
           }
         }
       }
@@ -165,10 +174,11 @@
       "description": "Add or update SSL certificate and https protocol to an existing config profile.\n",
       "methods": {
         "POST": {
-          "oauth": "nodebaalancers:modify",
+          "oauth": "nodebalancers:modify",
           "description": "Adds/updates SSL certificates",
           "examples": {
-            "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n      \"ssl_cert\": \"----- BEGIN CERTIFICATE ----- < etc...> ----- END CERTIFICATE -----\",\n      \"ssl_key\": \"----- BEGIN PRIVATE KEY ----- < etc...> ----- END PRIVATE KEY -----\"\n    }' \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id/ssl\n"
+            "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n      \"ssl_cert\": \"----- BEGIN CERTIFICATE ----- < etc...> ----- END CERTIFICATE -----\",\n      \"ssl_key\": \"----- BEGIN PRIVATE KEY ----- < etc...> ----- END PRIVATE KEY -----\"\n    }' \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id/ssl\n",
+            "python": "# currently unimplemented\n"
           }
         }
       }
@@ -183,7 +193,8 @@
           "oauth": "nodebalancers:view",
           "description": "Returns a list of <a href=\"#object-nodebalancer_config_node\">config nodes</a> for a given NodeBalancer.\n",
           "examples": {
-            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id/nodes\n"
+            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id/nodes\n",
+            "python": "my_nodebalancer = linode.NodeBalancer(client, 123)\nnb_config = my_nodebalancer.configs[0]\nnb_nodes = nb_config.nodes\n"
           }
         },
         "POST": {
@@ -201,13 +212,10 @@
             },
             "mode": {
               "description": "The connections mode for this node. One of 'accept', 'reject', or 'drain'."
-            },
-            "status": {
-              "description": "The status of this node."
             }
           },
           "examples": {
-            "curl": "curl -H \"Content-Type: application/json\" \\\n  -H \"Authorization: token $TOKEN\" \\\n  -X POST -d '{\n      \"label\": \"greatest_node_ever\",\n      \"address\": \"192.168.4.5:80\",\n      \"weight\": 40,\n      \"mode\": \"accept\",\n      \"status\": \"online\"\n  }' \\\n  https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id/nodes\n"
+            "curl": "curl -H \"Content-Type: application/json\" \\\n  -H \"Authorization: token $TOKEN\" \\\n  -X POST -d '{\n      \"label\": \"greatest_node_ever\",\n      \"address\": \"192.168.4.5:80\",\n      \"weight\": 40,\n      \"mode\": \"accept\"\n  }' \\\n  https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id/nodes\n"
           }
         }
       }
@@ -221,14 +229,16 @@
           "oauth": "nodebalancers:view",
           "description": "Returns information about this node..\n",
           "examples": {
-            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id/nodes/$node_id\n"
+            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id/nodes/$node_id\n",
+            "python": "nb_node = linode.NodeBalancerNode(client, 789, 456, 123) # linode_client, node_id, config_id, nodebalancer_id\n"
           }
         },
         "PUT": {
           "oauth": "nodebalancers:modify",
           "description": "Modifies this node\n",
           "examples": {
-            "curl": "curl -H \"Content-Type: application/json\" \\\n  -H \"Authorization: token $TOKEN\" \\\n  -X PUT -d '{\n      \"label\": \"node001\",\n      \"address\": \"192.168.12.12:100\",\n      \"weight\": 40,\n      \"mode\": \"accept\",\n      \"status\": \"online\"\n  }' \\\n  https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id/nodes/$node_id\n"
+            "curl": "curl -H \"Content-Type: application/json\" \\\n  -H \"Authorization: token $TOKEN\" \\\n  -X PUT -d '{\n      \"label\": \"node001\",\n      \"address\": \"192.168.12.12:100\",\n      \"weight\": 40,\n      \"mode\": \"accept\",\n  }' \\\n  https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id/nodes/$node_id\n",
+            "python": "nb_node = linode.NodeBalancerNode(client, 789, 456, 123) # linode_client, node_id, config_id, nodebalancer_id\nnb_node.label = 'node001'\nnb_node.address = '192.168.12.12:100'\nnb_node.save()\n"
           }
         },
         "DELETE": {
@@ -236,7 +246,8 @@
           "description": "Deletes a NodeBalancer config. This action cannot be undone.\n",
           "dangerous": true,
           "examples": {
-            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    -X DELETE \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id/nodes/$node_id\n"
+            "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    -X DELETE \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id/nodes/$node_id\n",
+            "python": "nb_node = linode.NodeBalancerNode(client, 789, 456, 123) # linode_client, node_id, config_id, nodebalancer_id\nnb_node.delete()\n"
           }
         }
       }
