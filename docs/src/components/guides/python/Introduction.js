@@ -10,10 +10,9 @@ export default function Introduction() {
       <h1>Getting started with Linode Python</h1>
       <section>
         <p>
-          With the release of API 4, Linode has also released an official python library.  This guide is a simple introduction to working with
-          the python library.
-          The official Linode python library is open-source on <a href="http://github.com/Linode/python-linode-api">github</a>, and can be installed through
-          pypi with:
+          With the release of API 4, Linode has also released an official Python library.  This guide is a simple introduction to working with
+          the Python library.
+          The official Linode Python library is open-source on <a href="http://github.com/Linode/python-linode-api">github</a>, and can be installed.
         </p>
         <pre>
           <code>pip install linode-api</code>
@@ -27,7 +26,7 @@ export default function Introduction() {
         <p>
           The Python Library connects to the Linode API V4 using the LinodeClient class, which expects an OAuth Token in his constructor.
         </p>
-        <i>All example code in this guide is executed in a python shell.</i>
+        <i>All example code in this guide is executed in a Python shell.</i>
         <pre>
           <code>
 {`>>> import linode
@@ -113,7 +112,7 @@ Debian 8.8: linode/debian8`}
           </code>
         </pre>
         <p>
-          The Python Library uses SQLAlchemy-like filtering syntax - any field marked filterable can be searched by in this manner. We can chain filters together to run more complex searches, and even use SQLAlchemy operators like and_ and or_ if needed. This search reveals some options. Since Debian 8 is the newest Debian template available, let’s use it.
+          The Python library uses SQLAlchemy-like filtering syntax - any field marked filterable can be searched by in this manner. We can chain filters together to run more complex searches, and even use SQLAlchemy operators like and_ and or_ if needed. This search reveals some options. Since Debian 8 is the newest Debian template available, let’s use it.
 
           Since we have the id for the distribution, we don’t need to construct an object.
         </p>
@@ -179,7 +178,7 @@ root@localhost:~#`}
       <section>
         <h2>Further Reading</h2>
         <p>
-        Now that you’ve had an overview of the features and concepts in the Python Library, check out the Python Library Reference for in-depth documentation, or look at the <a href="https://github.com/linode/python-linode-api/tree/master/examples/install-on-linode">Install on Linode sample project</a> for an example multi-user application using the Library.
+        Now that you’ve had an overview of the features and concepts in the Python library, check out the Python library Reference for in-depth documentation, or look at the <a href="https://github.com/linode/python-linode-api/tree/master/examples/install-on-linode">Install on Linode sample project</a> for an example multi-user application using the Library.
         </p>
       </section>
     </section>
