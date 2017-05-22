@@ -15,7 +15,7 @@
           "description": "Returns a list of <a href=\"#object-linode\">Linodes</a>.\n",
           "examples": {
             "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/linode/instances\n",
-            "python": "import linode\nTODO\n"
+            "python": "my_linodes = client.linode.get_instances()\n"
           }
         },
         "POST": {
@@ -76,7 +76,7 @@
           },
           "examples": {
             "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n        \"region\": \"us-east-1a\",\n        \"type\": \"g5-standard-1\"\n    }' \\\n    https://$api_root/$version/linode/instances\n",
-            "python": "import linode\nTODO\n"
+            "python": "my_linode = client.linode.create_instance(client.get_regions().first(), 'g5-nanode-1')\n\ndistro = client.linode.get_distributons(linode.Distribution.vendor == 'debian').first()\n( my_linode_2, password ) = client.linode.create_instance('us-east-1a', 'g5-standard-1', distribtuion=distro)\n"
           }
         }
       }
@@ -92,7 +92,7 @@
           "description": "Returns information about this <a href=\"#object-linode\">Linode</a>.\n",
           "examples": {
             "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/linode/instances/$linode_id\n",
-            "python": "import linode\nTODO\n"
+            "python": "my_linode = linode.Linode(client, 123)\n"
           }
         },
         "PUT": {
@@ -100,7 +100,7 @@
           "description": "Edits this Linode.\n",
           "examples": {
             "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X PUT -d '{\n      \"label\": \"newlabel\",\n      \"schedule\": {\n        \"day\": \"Tuesday\",\n        \"window\": \"W20\"\n      }\n    }' \\\n    https://$api_root/$version/linode/instances/$linode_id\n",
-            "python": "import linode\nTODO\n"
+            "python": "my_linode.label = 'newlabel'\nmy_linode.save()\n"
           }
         },
         "DELETE": {
@@ -109,7 +109,7 @@
           "description": "Deletes this Linode. This action cannot be undone.\n",
           "examples": {
             "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    -X DELETE \\\n    https://$api_root/$version/linode/instances/$linode_id\n",
-            "python": "import linode\nTODO\n"
+            "python": "my_linode.delete()\n"
           }
         }
       }
@@ -125,7 +125,7 @@
           "description": "Returns a list of <a href=\"#object-disk\">disks</a>.\n",
           "examples": {
             "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/linode/instances/$linode_id/disks\n",
-            "python": "import linode\nTODO\n"
+            "python": "disks = my_linode.disks\n"
           }
         },
         "POST": {
@@ -179,7 +179,7 @@
           },
           "examples": {
             "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n        \"label\": \"Example Disk\",\n        \"filesystem\": \"ext4\",\n        \"size\": 4096\n    }' \\\n    https://$api_root/$version/linode/instances/$linode_id/disks\n",
-            "python": "import linode\nTODO\n"
+            "python": "new_disk = my_linode.create_disk(4096, filesystem='ext4', label='Example Disk')\n"
           }
         }
       }
@@ -195,7 +195,7 @@
           "description": "Returns information about this <a href=\"#object-disk\">disk</a>.\n",
           "examples": {
             "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/linode/instances/$linode_id/disks/$disk_id\n",
-            "python": "import linode\nTODO\n"
+            "python": "disk = my_linode.Disk(client, 456, 123) # linode_client, disk_id, linode_id\n"
           }
         },
         "PUT": {
@@ -203,7 +203,7 @@
           "description": "Updates a disk's metadata.\n",
           "examples": {
             "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X PUT -d '{\n      \"label\": \"New Disk Label\"\n    }' \\\n    https://$api_root/$version/linode/instances/$linode_id/disks/$disk_id\n",
-            "python": "import linode\nTODO\n"
+            "python": "disk.label = 'New Disk Label'\ndisk.save()\n"
           }
         },
         "POST": {
@@ -211,7 +211,7 @@
           "description": "Duplicates this disk.\n",
           "examples": {
             "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST \\\n    https://$api_root/$version/linode/instances/$linode_id/disks/$disk_id\n",
-            "python": "import linode\nTODO\n"
+            "python": "new_disk = disk.duplicate()\n"
           }
         },
         "DELETE": {
@@ -220,7 +220,7 @@
           "description": "Deletes this disk. This action cannot be undone.\n",
           "examples": {
             "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    -X DELETE \\\n    https://$api_root/$version/linode/instances/$linode_id/disks/$disk_id\n",
-            "python": "import linode\nTODO\n"
+            "python": "disk.delete()\n"
           }
         }
       }
@@ -261,7 +261,7 @@
           },
           "examples": {
             "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n        \"password\": \"hunter2\"\n    }' \\\n    https://$api_root/$version/linode/instances/$linode_id/disks/$disk_id/password\n",
-            "python": "import linode\nTODO\n"
+            "python": "disk.reset_root_password('hunter2')\n"
           }
         }
       }
@@ -277,7 +277,7 @@
           "description": "Returns a list of <a href=\"#object-linode_config\">configs</a> for a given Linode.\n",
           "examples": {
             "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/linode/instances/$linode_id/configs\n",
-            "python": "import linode\nTODO\n"
+            "python": "configs = my_linode.configs\n"
           }
         },
         "POST": {
@@ -324,7 +324,7 @@
           },
           "examples": {
             "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n        \"label\": \"Arch Linux config\",\n        \"kernel\": \"linode/latest_64\",\n        \"disks\": {\n          \"sda\": 5567,\n          \"sdb\": 5568\n          }\n        }\n    }' \\\n    https://$api_root/$version/linode/instances/$linode_id/configs\n",
-            "python": "import linode\nTODO\n"
+            "python": "config = my_linode.create_config('linode/latest_64', disks=linode.disks, label='Arch Linux Config')\n"
           }
         }
       }
@@ -340,7 +340,7 @@
           "description": "Returns information about this <a href=\"#object-linode_config\"> Linode config</a>.\n",
           "examples": {
             "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/linode/instances/$linode_id/configs/$config_id\n",
-            "python": "import linode\nTODO\n"
+            "python": "config = my_linode.Config(client, 567, 123) # linode_client, config_id, linode_id\n"
           }
         },
         "PUT": {
@@ -348,7 +348,7 @@
           "description": "Modifies a given Linode config.\n",
           "examples": {
             "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X PUT -d '{\n        \"label\": \"Edited config\",\n        \"kernel\": {\n          \"id\": \"linode/latest_64\"\n        },\n        \"disks\": {\n          \"sda\": {\n            \"id\": 5567\n          }\n        }\n    }' \\\n    https://$api_root/$version/linode/instances/$linode_id/configs/$config_id\n",
-            "python": "import linode TODO"
+            "python": "config.label = 'Edited config' config.kernel = linode.Kernel(client, 'linode/latest_64') config.save()"
           }
         },
         "DELETE": {
@@ -356,7 +356,7 @@
           "description": "Deletes a given Linode config.\n",
           "examples": {
             "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X DELETE \\\n    https://$api_root/$version/linode/instances/$linode_id/configs/$config_id\n",
-            "python": "import linode\nTODO\n"
+            "python": "config.delete()\n"
           }
         }
       }
@@ -378,7 +378,7 @@
           },
           "examples": {
             "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n        \"config\": 5567\n    }' \\\n    https://$api_root/$version/linode/instances/$linode_id/boot\n",
-            "python": "import linode\nTODO\n"
+            "python": "my_linode.boot()\n"
           }
         }
       }
@@ -393,7 +393,7 @@
           "dangerous": true,
           "examples": {
             "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST \\\n    https://$api_root/$version/linode/instances/$linode_id/shutdown\n",
-            "python": "import linode\nTODO\n"
+            "python": "my_linode.shutdown()\n"
           }
         }
       }
@@ -415,7 +415,7 @@
           },
           "examples": {
             "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n        \"config\": 5567\n\n    }' \\\n    https://$api_root/$version/linode/instances/$linode_id/reboot\n",
-            "python": "import linode\nTODO\n"
+            "python": "my_linode.reboot()\n"
           }
         }
       }
@@ -430,7 +430,7 @@
           "dangerous": true,
           "examples": {
             "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST \\\n    https://$api_root/$version/linode/instances/$linode_id/kvmify\n",
-            "python": "import linode\nTODO\n"
+            "python": "my_linode.kvmify()\n"
           }
         }
       }
@@ -452,7 +452,7 @@
           },
           "examples": {
             "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n        \"disks\": {\n          \"sda\": 5567,\n          \"sdb\": 5568\n          }\n        }\n    }' \\\n    https://$api_root/$version/linode/instances/$linode_id/rescue\n",
-            "python": "import linode\nTODO\n"
+            "python": "my_linode.rescue()\n"
           }
         }
       }
@@ -488,7 +488,7 @@
           "oauth": "linodes:view",
           "examples": {
             "curl": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/linode/instances/$linode_id/backups\n",
-            "python": "import linode\nTODO\n"
+            "python": "backups = my_linode.available_backups\n"
           }
         },
         "POST": {
@@ -503,7 +503,7 @@
           },
           "examples": {
             "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n        \"label\": \"Linode123456 snapshot\",\n    }' \\\n    https://$api_root/$version/linode/instances/$linode_id/backups\n",
-            "python": "import linode\nTODO\n"
+            "python": "my_linode.snapshot()\n"
           }
         }
       }
@@ -519,7 +519,7 @@
           "dangerous": true,
           "examples": {
             "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST \\\n    https://$api_root/$version/linode/instances/$linode_id/backups/enable\n",
-            "python": "import linode\nTODO\n"
+            "python": "my_linode.enable_backups()\n"
           }
         }
       }
@@ -534,7 +534,7 @@
           "dangerous": true,
           "examples": {
             "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST \\\n    https://$api_root/$version/linode/instances/$linode_id/backups/cancel\n",
-            "python": "import linode\nTODO\n"
+            "python": "my_linode.cancel_backups()\n"
           }
         }
       }
@@ -560,7 +560,7 @@
           },
           "examples": {
             "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n        \"linode\": 123456,\n    }' \\\n    https://$api_root/$version/linode/instances/$linode_id/backups/$backup_id/restore\n",
-            "python": "import linode\nTODO\n"
+            "python": "backup = my_linode.available_backups.daily\nbackup.restore()\n"
           }
         }
       }
@@ -666,7 +666,8 @@
             }
           },
           "examples": {
-            "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST \\\n    https://$api_root/$version/linode/instances/$linode_id/rebuild \\\n    -d '{\"distribution\":\"linode/debian8\",\"root_pass\":\"hunter7\"}'\n"
+            "curl": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST \\\n    https://$api_root/$version/linode/instances/$linode_id/rebuild \\\n    -d '{\"distribution\":\"linode/debian8\",\"root_pass\":\"hunter7\"}'\n",
+            "python": "my_linode.rebuild('linode/ubuntu16.04LTS', root_pass='hunter7')\n"
           }
         }
       }

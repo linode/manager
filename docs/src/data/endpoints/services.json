@@ -13,7 +13,7 @@
           "description": "Returns list of <a href=\"#object-service\">services</a>.\n",
           "examples": {
             "curl": "curl https://$api_root/$version/linode/services\n",
-            "python": "import services\nTODO\n"
+            "python": "client.linode.get_types()\n"
           }
         }
       }
@@ -27,7 +27,7 @@
           "description": "Returns information about this <a href=\"#object-service\">service</a>.\n",
           "examples": {
             "curl": "curl https://$api_root/$version/linode/services/$service_id\n",
-            "python": "import services\nTODO\n"
+            "python": "type = linode.Service(client, 'g5-standard=1')\n"
           }
         }
       }

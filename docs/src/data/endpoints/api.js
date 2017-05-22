@@ -25,7 +25,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import distributions\nTODO\n"
+                    "value": "client.linode.get_distributions()\n"
                   }
                 ],
                 "name": "GET",
@@ -114,7 +114,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import distributions\nTODO\n"
+                    "value": "distro = linode.Distribution(client, 'linode/debian8')\n"
                   }
                 ],
                 "name": "GET",
@@ -213,7 +213,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import kernels\nTODO\n"
+                    "value": "client.linode.get_kernels()\n"
                   }
                 ],
                 "name": "GET",
@@ -327,7 +327,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import kernels\nTODO\n"
+                    "value": "kernel = linode.Kernel(client, 'linode/latest')\n"
                   }
                 ],
                 "name": "GET",
@@ -453,7 +453,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "my_linodes = client.linode.get_instances()\n"
                   }
                 ],
                 "name": "GET",
@@ -1444,7 +1444,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "my_linode = client.linode.create_instance(client.get_regions().first(), 'g5-nanode-1')\n\ndistro = client.linode.get_distributons(linode.Distribution.vendor == 'debian').first()\n( my_linode_2, password ) = client.linode.create_instance('us-east-1a', 'g5-standard-1', distribtuion=distro)\n"
                   }
                 ],
                 "name": "POST"
@@ -1470,7 +1470,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "my_linode = linode.Linode(client, 123)\n"
                   }
                 ],
                 "name": "GET",
@@ -2382,7 +2382,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "my_linode.label = 'newlabel'\nmy_linode.save()\n"
                   }
                 ],
                 "name": "PUT"
@@ -2398,7 +2398,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "my_linode.delete()\n"
                   }
                 ],
                 "name": "DELETE"
@@ -2424,7 +2424,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "disks = my_linode.disks\n"
                   }
                 ],
                 "name": "GET",
@@ -3411,7 +3411,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "new_disk = my_linode.create_disk(4096, filesystem='ext4', label='Example Disk')\n"
                   }
                 ],
                 "name": "POST"
@@ -3437,7 +3437,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "disk = my_linode.Disk(client, 456, 123) # linode_client, disk_id, linode_id\n"
                   }
                 ],
                 "name": "GET",
@@ -3540,7 +3540,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "disk.label = 'New Disk Label'\ndisk.save()\n"
                   }
                 ],
                 "name": "PUT"
@@ -3555,7 +3555,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "new_disk = disk.duplicate()\n"
                   }
                 ],
                 "name": "POST"
@@ -3571,7 +3571,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "disk.delete()\n"
                   }
                 ],
                 "name": "DELETE"
@@ -3631,7 +3631,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "disk.reset_root_password('hunter2')\n"
                   }
                 ],
                 "name": "POST"
@@ -3657,7 +3657,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "configs = my_linode.configs\n"
                   }
                 ],
                 "name": "GET"
@@ -3720,7 +3720,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "config = my_linode.create_config('linode/latest_64', disks=linode.disks, label='Arch Linux Config')\n"
                   }
                 ],
                 "name": "POST"
@@ -3746,7 +3746,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "config = my_linode.Config(client, 567, 123) # linode_client, config_id, linode_id\n"
                   }
                 ],
                 "name": "GET"
@@ -3761,7 +3761,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode TODO"
+                    "value": "config.label = 'Edited config' config.kernel = linode.Kernel(client, 'linode/latest_64') config.save()"
                   }
                 ],
                 "name": "PUT"
@@ -3776,7 +3776,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "config.delete()\n"
                   }
                 ],
                 "name": "DELETE"
@@ -3809,7 +3809,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "my_linode.boot()\n"
                   }
                 ],
                 "name": "POST"
@@ -3834,7 +3834,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "my_linode.shutdown()\n"
                   }
                 ],
                 "name": "POST"
@@ -3867,7 +3867,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "my_linode.reboot()\n"
                   }
                 ],
                 "name": "POST"
@@ -3892,7 +3892,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "my_linode.kvmify()\n"
                   }
                 ],
                 "name": "POST"
@@ -3925,7 +3925,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "my_linode.rescue()\n"
                   }
                 ],
                 "name": "POST"
@@ -3979,7 +3979,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "backups = my_linode.available_backups\n"
                   }
                 ],
                 "name": "GET"
@@ -4002,7 +4002,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "my_linode.snapshot()\n"
                   }
                 ],
                 "name": "POST"
@@ -4028,7 +4028,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "my_linode.enable_backups()\n"
                   }
                 ],
                 "name": "POST"
@@ -4053,7 +4053,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "my_linode.cancel_backups()\n"
                   }
                 ],
                 "name": "POST"
@@ -4091,7 +4091,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "backup = my_linode.available_backups.daily\nbackup.restore()\n"
                   }
                 ],
                 "name": "POST"
@@ -4317,6 +4317,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST \\\n    https://$api_root/$version/linode/instances/$linode_id/rebuild \\\n    -d '{\"distribution\":\"linode/debian8\",\"root_pass\":\"hunter7\"}'\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_linode.rebuild('linode/ubuntu16.04LTS', root_pass='hunter7')\n"
                   }
                 ],
                 "name": "POST"
@@ -4350,7 +4354,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import services\nTODO\n"
+                    "value": "client.linode.get_types()\n"
                   }
                 ],
                 "name": "GET"
@@ -4374,7 +4378,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import services\nTODO\n"
+                    "value": "type = linode.Service(client, 'g5-standard=1')\n"
                   }
                 ],
                 "name": "GET"
@@ -5825,6 +5829,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/nodebalancers\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_nodebalancers = client.get_nodebalancers()\n"
                   }
                 ],
                 "name": "GET",
@@ -5897,6 +5905,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n        \"region\": \"us-east-1a\",\n        \"label\": \"my_cool_balancer\",\n        \"client_conn_throttle\": 10\n    }' \\\n    https://$api_root/$version/nodebalancers\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "new_nodebalancer = client.create_nodebalancer('us-east-1a', label='my_cool_balancer', client_conn_throttle=10)\n"
                   }
                 ],
                 "name": "POST"
@@ -5919,6 +5931,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_nodebalancer = linode.NodeBalancer(client, 123)\n"
                   }
                 ],
                 "name": "GET",
@@ -5972,6 +5988,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X PUT -d '{\n        \"region\": \"us-east-1a\",\n        \"label\": \"awesome_new_label\",\n        \"client_conn_throttle\": 14\n    }' \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_nodebalancer = linode.NodeBalancer(client, 123)\nmy_nodebalancer.label = 'awesome_new_label'\nmy_nodebalancer.client_conn_throttle = 14\nmy_nodebalancer.save()\n"
                   }
                 ],
                 "name": "PUT"
@@ -5984,6 +6004,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Authorization: token $TOKEN\" \\\n    -X DELETE \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_nodebalancer = linode.NodeBalancer(client, 123)\nmy_nodebalancer.delete()\n"
                   }
                 ],
                 "name": "DELETE"
@@ -6006,6 +6030,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id/configs\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_nodebalancer = linode.NodeBalancer(client, 123)\nnb_configs = my_nodebalancer.configs\n"
                   }
                 ],
                 "name": "GET"
@@ -6073,7 +6101,11 @@ module.exports = { endpoints: [
                 "examples": [
                   {
                     "name": "curl",
-                    "value": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n        \"label\": \"myNodeBalancer\",\n        \"port\": 80,\n        \"protocol\": \"http\",\n        \"algorithm\": \"roundrobin\",\n        \"stickiness\": \"none\",\n        \"check\": \"http_body\",\n        \"check_interval\": 5,\n        \"check_timeout\": 3,\n        \"check_attempts\": 10,\n        \"check_path\": \"/path/to/check\",\n        \"check_body\": \"we got some stuff back\",\n        \"cipher_suite\": \"legacy\"\n    }' \\\n    https://$api_root/$version/nodebalancers\n"
+                    "value": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n        \"label\": \"myNodeBalancer\",\n        \"port\": 80,\n        \"protocol\": \"http\",\n        \"algorithm\": \"roundrobin\",\n        \"stickiness\": \"none\",\n        \"check\": \"http_body\",\n        \"check_interval\": 5,\n        \"check_timeout\": 3,\n        \"check_attempts\": 10,\n        \"check_path\": \"/path/to/check\",\n        \"check_body\": \"we got some stuff back\",\n        \"cipher_suite\": \"legacy\"\n    }' \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id/configs\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_nodebalancer = linode.NodeBalancer(client, 123)\nnew_config = my_nodebalancer.create_config(port=80, label='myNodeBalancerConfig', protocol='http',\n        algorithm='roundrobin', stickiness='none', check='http_body', check_interval=5, check_timeout=3,\n        check_attempts=10, check_path='/path/to/check', check_body='we got some stuff back',\n        cipher_suite='legacy')\n"
                   }
                 ],
                 "name": "POST"
@@ -6095,6 +6127,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "nb_config = linode.NodeBalancerConfig(client, 456, 123) # linode_client, nodebalancer_config_id, nodebalancer_id\n"
                   }
                 ],
                 "name": "GET"
@@ -6107,6 +6143,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Authorization: token $TOKEN\" \\\n    -X DELETE \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "nb_config = linode.NodeBalancerConfig(client, 456, 123) # linode_client, nodebalancer_config_id, nodebalancer_id\nnb_config.delete()\n"
                   }
                 ],
                 "name": "DELETE"
@@ -6122,12 +6162,16 @@ module.exports = { endpoints: [
             "description": "Add or update SSL certificate and https protocol to an existing config profile.\n",
             "methods": [
               {
-                "oauth": "nodebaalancers:modify",
+                "oauth": "nodebalancers:modify",
                 "description": "Adds/updates SSL certificates",
                 "examples": [
                   {
                     "name": "curl",
                     "value": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n      \"ssl_cert\": \"----- BEGIN CERTIFICATE ----- < etc...> ----- END CERTIFICATE -----\",\n      \"ssl_key\": \"----- BEGIN PRIVATE KEY ----- < etc...> ----- END PRIVATE KEY -----\"\n    }' \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id/ssl\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "# currently unimplemented\n"
                   }
                 ],
                 "name": "POST"
@@ -6150,6 +6194,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id/nodes\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_nodebalancer = linode.NodeBalancer(client, 123)\nnb_config = my_nodebalancer.configs[0]\nnb_nodes = nb_config.nodes\n"
                   }
                 ],
                 "name": "GET"
@@ -6173,16 +6221,12 @@ module.exports = { endpoints: [
                   {
                     "description": "The connections mode for this node. One of 'accept', 'reject', or 'drain'.",
                     "name": "mode"
-                  },
-                  {
-                    "description": "The status of this node.",
-                    "name": "status"
                   }
                 ],
                 "examples": [
                   {
                     "name": "curl",
-                    "value": "curl -H \"Content-Type: application/json\" \\\n  -H \"Authorization: token $TOKEN\" \\\n  -X POST -d '{\n      \"label\": \"greatest_node_ever\",\n      \"address\": \"192.168.4.5:80\",\n      \"weight\": 40,\n      \"mode\": \"accept\",\n      \"status\": \"online\"\n  }' \\\n  https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id/nodes\n"
+                    "value": "curl -H \"Content-Type: application/json\" \\\n  -H \"Authorization: token $TOKEN\" \\\n  -X POST -d '{\n      \"label\": \"greatest_node_ever\",\n      \"address\": \"192.168.4.5:80\",\n      \"weight\": 40,\n      \"mode\": \"accept\"\n  }' \\\n  https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id/nodes\n"
                   }
                 ],
                 "name": "POST"
@@ -6204,6 +6248,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id/nodes/$node_id\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "nb_node = linode.NodeBalancerNode(client, 789, 456, 123) # linode_client, node_id, config_id, nodebalancer_id\n"
                   }
                 ],
                 "name": "GET"
@@ -6214,7 +6262,11 @@ module.exports = { endpoints: [
                 "examples": [
                   {
                     "name": "curl",
-                    "value": "curl -H \"Content-Type: application/json\" \\\n  -H \"Authorization: token $TOKEN\" \\\n  -X PUT -d '{\n      \"label\": \"node001\",\n      \"address\": \"192.168.12.12:100\",\n      \"weight\": 40,\n      \"mode\": \"accept\",\n      \"status\": \"online\"\n  }' \\\n  https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id/nodes/$node_id\n"
+                    "value": "curl -H \"Content-Type: application/json\" \\\n  -H \"Authorization: token $TOKEN\" \\\n  -X PUT -d '{\n      \"label\": \"node001\",\n      \"address\": \"192.168.12.12:100\",\n      \"weight\": 40,\n      \"mode\": \"accept\",\n  }' \\\n  https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id/nodes/$node_id\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "nb_node = linode.NodeBalancerNode(client, 789, 456, 123) # linode_client, node_id, config_id, nodebalancer_id\nnb_node.label = 'node001'\nnb_node.address = '192.168.12.12:100'\nnb_node.save()\n"
                   }
                 ],
                 "name": "PUT"
@@ -6227,6 +6279,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Authorization: token $TOKEN\" \\\n    -X DELETE \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id/nodes/$node_id\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "nb_node = linode.NodeBalancerNode(client, 789, 456, 123) # linode_client, node_id, config_id, nodebalancer_id\nnb_node.delete()\n"
                   }
                 ],
                 "name": "DELETE"
@@ -6265,6 +6321,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Authorization: token $TOKEN\" \\\n  https://api.alpha.linode.com/v4/networking/ipv4\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_ipv4s = client.networking.get_ipv4()\n"
                   }
                 ],
                 "name": "GET"
@@ -6284,6 +6344,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\"linode\":123}' \\\n    https://api.alpha.linode.com/v4/networking/ipv4\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "# presently unsupported\n"
                   }
                 ],
                 "name": "POST"
@@ -6305,6 +6369,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Authorization: token $TOKEN\" \\\n  https://$api_root/$version/networking/ipv4/97.107.143.37\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_ipv4 = linode.IPAddress(client, '97.107.143.37')\n"
                   }
                 ],
                 "name": "GET"
@@ -6316,6 +6384,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X PUT -d '{\"rdns\":\"example.org\"}' \\\n    https://$api_root/$version/networking/ipv4/97.107.143.37\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_ipv4.rdns = 'example.org'\nmy_ipv4.save()\n"
                   }
                 ],
                 "name": "PUT"
@@ -6337,6 +6409,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/networking/ipv6\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_ipv6s = client.networking.get_ipv6()\n"
                   }
                 ],
                 "name": "GET"
@@ -6358,6 +6434,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/networkint/ipv6/2600:3c01::2:5001\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_ipv6 = linode.IPv6Address(client, '2600:3c01::2:5001')\n"
                   }
                 ],
                 "name": "GET"
@@ -6369,6 +6449,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X PUT -d '{\"rdns\":\"example.org\"}' \\\n    https://$api_root/$version/networking/ipv6/2600:3c01::2:5001\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_ipv6.rdns = 'example.org'\nmy_ipv6.save()\n"
                   }
                 ],
                 "name": "PUT"
@@ -6402,6 +6486,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n        \"region\": \"us-east-1a\",\n        \"assignments\": [\n          {\"address\": \"210.111.22.95\", \"linode_id\": 134504},\n          {\"address\": \"190.12.207.11\", \"linode_id\": 119034},\n        ]\n    }' \\\nhttps://$api_root/$version/networking/ip-assign\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "linode_1 = linode.Linode(client, 134504)\nip1 = linode_1.ips.ipv4.public[0]\n\nlinode_2 = linode.Linode(client, 119034)\nip2 = linode_2.ips.ipv4.public[0]\n\nclient.networking.assign_ips(linode_1.region, ip1.to(linode_2), ip2.to(linode_1))\n"
                   }
                 ],
                 "name": "POST"
@@ -6441,7 +6529,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import regions\nTODO\n"
+                    "value": "all_regions = client.get_regions()\n"
                   }
                 ],
                 "name": "GET",
@@ -6497,7 +6585,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import regions\nTODO\n"
+                    "value": "region = linode.Region(client, 'us-east-1a')\n"
                   }
                 ],
                 "name": "GET",
@@ -7037,6 +7125,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl https://$api_root/$version/account/profile\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_profile = client.account.get_profile()\n"
                   }
                 ],
                 "name": "GET",
@@ -7195,6 +7287,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Content-Type: application/json\" \\\n  -H \"Authorization: token $TOKEN\" \\\n  -X PUT -d '{\n        \"username\": \"jsmith\",\n        \"email\": \"jsmith@mycompany.com\",\n        \"timezone\": \"US/Eastern\",\n        \"email_notifications\": true,\n        \"ip_whitelist_enabled\": true,\n        \"lish_auth_method\": \"password_keys\",\n        \"authorized_keys\": \"\"\n      }\n    }' \\\n    https://$api_root/$version/account/profile\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_profile.email = 'jsmith@mycompany.com'\nmy_profile.timezone = 'US/Eastern'\nmy_profile.email_notifications = True\nmy_profile.ip_whitelist_enabled = True\nmy_profile.lish_auth_method = 'password_keys'\nmy_profile.save()\n"
                   }
                 ],
                 "name": "PUT"
@@ -7212,6 +7308,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Content-Type: application/json\" \\\n  -H \"Authorization: token $TOKEN\" \\\n  -X POST -d '{\n      \"password\":\"hunter7\"\n  }' \\\n  https://$api_root/$version/account/profile/password\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_profile = client.account.get_profile()\nmy_profile.reset_password('hunter7')\n"
                   }
                 ],
                 "name": "POST"
@@ -7229,6 +7329,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Content-Type: application/json\" \\\n  -H \"Authorization: token $TOKEN\" \\\n  -X POST \\\n  https://$api_root/$version/account/profile/tfa-enable\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_profile = client.account.get_profile()\nsecret = my_profile.enable_tfa()\n"
                   }
                 ],
                 "name": "POST"
@@ -7253,6 +7357,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Content-Type: application/json\" \\\n  -H \"Authorization: token $TOKEN\" \\\n  -X POST -d '{\n    \"tfa_code\": \"123456\"\n  }' \\\n  https://$api_root/$version/account/profile/tfa-enable-confirm\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_profile = client.account.get_profile()\nmy_profile.confirm_tfa('123456')\n"
                   }
                 ],
                 "name": "POST"
@@ -7270,6 +7378,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Content-Type: application/json\" \\\n  -H \"Authorization: token $TOKEN\" \\\n  -X POST \\\n  https://$api_root/$version/account/profile/tfa-disable\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_profile = client.account.get_profile()\nmy_profile.disable_tfa()\n"
                   }
                 ],
                 "name": "POST"
@@ -7287,6 +7399,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/account/profile/grants\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_profile = client.account.get_profile()\nmy_grants = my_profile.grants\n"
                   }
                 ],
                 "name": "GET"
@@ -7308,6 +7424,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/account/tokens\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_tokens = client.account.get_tokens()\n"
                   }
                 ],
                 "name": "GET",
@@ -7470,6 +7590,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n      \"scopes\": \"linodes:view;domains:view\"\n    }' \\\n    https://$api_root/$version/account/tokens\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "from linode import OAuthScopes\nnew_token = client.account.create_personal_access_token(scopes=[OAuthScopes.Linodes.view, OAuthScopes.Domains.view])\n"
                   }
                 ],
                 "name": "POST"
@@ -7491,6 +7615,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/account/tokens/123\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_token = linode.OAuthToken(client, 123)\n"
                   }
                 ],
                 "name": "GET",
@@ -7629,6 +7757,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X PUT -d '{\n      \"label\": \"test-new-label\"\n    }' \\\n    https://$api_root/$version/account/tokens/123\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_token.label = 'test-new-label'\nmy_token.save()\n"
                   }
                 ],
                 "name": "PUT"
@@ -7640,6 +7772,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Authorization: token $TOKEN\" \\\n    -X DELETE \\\n    https://$api_root/$version/account/tokens/123\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_token.delete()\n"
                   }
                 ],
                 "name": "DELETE"
@@ -7660,6 +7796,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl https://$api_root/$version/account/settings\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_settings = client.account.get_settings()\n"
                   }
                 ],
                 "name": "GET",
@@ -7818,6 +7958,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X PUT -d '{\n      \"address_1\": \"123 Main St.\",\n      \"address_2\": \"Suite 101\",\n      \"city\": \"Philadelphia\",\n      \"company\": \"My Company, LLC\",\n      \"country\": \"US\",\n      \"email\": \"jsmith@mycompany.com\",\n      \"first_name\": \"John\",\n      \"last_name\": \"Smith\",\n      \"network_helper\": true,\n      \"phone\": \"555-555-1212\",\n      \"state\": \"PA\",\n      \"zip\": 19102\n      }\n    }' \\\n    https://$api_root/$version/account/settings\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_settings = client.account.get_settings()\nmy_settings.address_1 = '123 Main St.'\nmy_settings.address_2 = 'Suite 101'\nmy_settings.city = 'Philadelphia'\nmy_settings.company = 'My Company, LLC'\nmy_settings.country = 'US'\nmy_settings.email = 'jsmith@company.com'\nmy_settings.save()\n"
                   }
                 ],
                 "name": "PUT"
@@ -7840,6 +7984,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Authorization; token $TOKEN\" \\\n    https://$api_root/$version/account/clients\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_clients = client.account.get_oauth_clients()\n"
                   }
                 ],
                 "name": "GET"
@@ -7852,7 +8000,7 @@ module.exports = { endpoints: [
                     "description": "A name for the new client application.",
                     "type": "string",
                     "limit": "1-128 characters",
-                    "name": "name"
+                    "name": "label"
                   },
                   {
                     "description": "A URL to redirect to after the OAuth flow has completed.",
@@ -7864,7 +8012,11 @@ module.exports = { endpoints: [
                 "examples": [
                   {
                     "name": "curl",
-                    "value": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n        \"name\": \"Example app\",\n        \"redirect_uri\": \"https://oauthreturn.example.org/\",\n    }' \\\n    https://$api_root/$version/account/clients\n"
+                    "value": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n        \"label\": \"Example app\",\n        \"redirect_uri\": \"https://oauthreturn.example.org/\",\n    }' \\\n    https://$api_root/$version/account/clients\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "new_client = client.account.create_oauth_client('Example app', 'https://oauthreturn.example.org/')\n"
                   }
                 ],
                 "name": "POST"
@@ -7887,6 +8039,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/account/clients/$client_id\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_client = linode.OAuthClient(client, 123)\n"
                   }
                 ],
                 "name": "GET"
@@ -7898,6 +8054,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X PUT -d '{\n        \"name\": \"Updated app name\",\n        \"redirect_uri\": \"https://newredirect.example.org/\",\n    }' \\\n    https://$api_root/$version/account/clients/$client_id\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_client.name = 'Updated app name'\nmy_client.save()\n"
                   }
                 ],
                 "name": "PUT"
@@ -7910,6 +8070,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Authorization: token $TOKEN\" \\\n    -X DELETE \\\n    https://$api_root/$version/account/clients/$client_id\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_client = linode.OAuthClient(client, 123)\nmy_client.delete()\n"
                   }
                 ],
                 "name": "DELETE"
@@ -7931,6 +8095,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST \\\n    https://$api_root/$version/account/clients/$client_id/reset_secret\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_client = linode.OAuthClient(client, 123)\nnew_secret = my_client.reset_secret()\n"
                   }
                 ],
                 "name": "POST"
@@ -7952,6 +8120,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/account/clients/$client_id/thumbnail\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "img = my_client.get_thumbnail()\n\n# save image to file\nmy_client.get_thumbnail('client_thumbnail.png')\n"
                   }
                 ],
                 "name": "GET"
@@ -7963,6 +8135,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Content-Type: image/png\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X PUT \\\n    --data-binary \"@/path/to/image\"\n    https://$api_root/$version/account/clients/$client_id/thumbnail\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_client = linode.OAuthClient(client, 123)\nmy_client.set_thumbnail('/path/to/image')\n\n# set from memory\nwith open('/path/to/image', 'rb') as f:\n    img = f.read()\nmy_client.set_thumbnail(img)\n"
                   }
                 ],
                 "name": "PUT"
@@ -7982,6 +8158,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl https://$api_root/$version/account/users\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_users = client.account.get_users()\n"
                   }
                 ],
                 "name": "GET",
@@ -8163,6 +8343,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n        \"username\": \"testguy\",\n        \"password\": \"hunter7\",\n        \"email\": \"testguy@linode.com\"\n    }' \\\n    https://$api_root/$version/account/users\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "# currently unimplemented\n"
                   }
                 ],
                 "name": "POST"
@@ -8182,6 +8366,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl https://$api_root/$version/account/users/$username\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_user = linode.User(client, 'username')\n"
                   }
                 ],
                 "name": "GET",
@@ -8340,6 +8528,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X PUT -d '{\n        \"email\": \"newemail@linode.com\"\n      }\n    }' \\\n    https://$api_root/$version/account/users/testguy\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_user = linode.User(client, 'username')\nmy_user.email = 'newemail@linode.com'\nmy_user.save()\n"
                   }
                 ],
                 "name": "PUT"
@@ -8350,6 +8542,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Authorization: token $TOKEN\" \\\n    -X DELETE \\\n    https://$api_root/$version/account/users/testguy\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_user = linode.User(client, 'username')\nmy_user.delete()\n"
                   }
                 ],
                 "name": "DELETE"
@@ -8375,6 +8571,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n        \"password\": \"hunter7\",\n    }' \\\n    https://$api_root/$version/account/users/testguy/password\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_user = linode.User(client, 'username')\nmy_user.change_password('hunter7')\n"
                   }
                 ],
                 "name": "POST"
@@ -8395,6 +8595,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/account/users/testguy/grants\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_user = linode.User(client, 'username')\ngrants = None # unrestricted users have no grants\n\nif my_user.restricted:\n    grants = my_user.grants\n"
                   }
                 ],
                 "name": "GET",
@@ -8573,6 +8777,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Authorization: token $TOKEN\" \\\n    -X PUT -d '{\n        \"global\": {\n            \"add_linodes\": true\n        }\n    }' \\\n    https://$api_root/$version/account/users/testguy/grants\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_user = linode.User(client, 'username')\nassert my_user.restricted # we can't set grants for unrestricted users\n\nmy_user.grants.global.add_linodes = True\nmy_user.grants.save()\n"
                   }
                 ],
                 "name": "PUT"
@@ -8603,6 +8811,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl https://$api_root/$version/account/events\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_events = client.account.get_events()\n"
                   }
                 ],
                 "name": "GET",
@@ -8809,6 +9021,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl https://$api_root/$version/account/event/123\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "event = linode.Event(client, 123)\n"
                   }
                 ],
                 "name": "GET",
@@ -9014,6 +9230,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl https://$api_root/$version/account/event/123/seen\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "client.mark_lask_seen_event(event)\n"
                   }
                 ],
                 "name": "POST"
@@ -9034,6 +9254,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl https://$api_root/$version/account/event/123/read\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "event.mark_read()\n"
                   }
                 ],
                 "name": "POST"
