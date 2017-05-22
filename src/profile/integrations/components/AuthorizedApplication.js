@@ -9,25 +9,17 @@ import { AuthScopeCell } from '~/components/tables/cells';
 
 import { tokens } from '~/api';
 import { OAUTH_SUBSCOPES, OAUTH_SCOPES, API_ROOT } from '~/constants';
-import { reduceErrors } from '~/components/forms';
+import { dispatchOrStoreErrors } from '~/components/forms';
 
 
 export default class AuthorizedApplication extends Component {
-  constructor() {
-    super();
-    this.state = { errors: {} };
-  }
-
-  async revokeApp(id) {
+  revokeApp(id) {
     const { dispatch } = this.props;
 
-    try {
-      await dispatch(tokens.delete(id));
-    } catch (response) {
-      const errors = await reduceErrors(response);
-      this.setState({ errors });
-    }
-  }
+    return dispatch(dispatchOrStoreErrors.call(this, [
+      () => tokens.delete(id),
+    ]));
+   }
 
   render() {
     const { label, scopes, id, expires } = this.props;
