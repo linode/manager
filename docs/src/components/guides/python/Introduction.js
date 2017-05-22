@@ -12,7 +12,7 @@ export default function Introduction() {
         <p>
           With the release of API 4, Linode has also released an official python library.  This guide is a simple introduction to working with
           the python library.
-          The official Linode python library is open-source on [github](http://github.com/Linode/python-linode-api), and can be installed through
+          The official Linode python library is open-source on <a href="http://github.com/Linode/python-linode-api">github</a>, and can be installed through
           pypi with:
         </p>
         <pre>
