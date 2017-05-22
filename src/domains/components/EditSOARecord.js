@@ -6,7 +6,11 @@ import { CancelButton } from 'linode-components/buttons';
 import { domains } from '~/api';
 import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
 
-import SelectDNSSeconds from './SelectDNSSeconds';
+import SelectDNSSeconds, {
+  ONE_WEEK,
+  TWO_WEEKS,
+  FOUR_WEEKS,
+} from './SelectDNSSeconds';
 
 
 export default class EditSOARecord extends Component {
@@ -103,7 +107,7 @@ export default class EditSOARecord extends Component {
             id="masterIps"
             apiKey="master_ips"
             description="The IP addresses of the master DNS servers for this zone.
-              Semicolon or new line delimited. (maximum: 6)"
+              Semicolon delimited. (maximum: 6)"
           >
             <textarea
               name="masterIps"
@@ -121,7 +125,7 @@ export default class EditSOARecord extends Component {
           apiKey="axfr_ips"
           id="axfrIps"
           description="The IP addresses allowed to AXFR this entire zone.
-            Semicolon or new line delimited. (maximum: 6)"
+            Semicolon delimited. (maximum: 6)"
         >
           <textarea
             name="axfrIps"
@@ -221,14 +225,14 @@ export default class EditSOARecord extends Component {
               errors={errors}
             >
               <Select
-                value={Math.max(expireTime, 604800).toString()}
+                value={Math.max(expireTime, ONE_WEEK).toString()}
                 onChange={this.onChange}
                 id="expireTime"
                 name="expireTime"
               >
-                <option value="604800">Default (1 week)</option>
-                <option value="1209600">1209600 (2 weeks)</option>
-                <option value="2419200">2419200 (4 weeks)</option>
+                <option value={ONE_WEEK}>Default (1 week)</option>
+                <option value={TWO_WEEKS}>{TWO_WEEKS} (2 weeks)</option>
+                <option value={FOUR_WEEKS}>{FOUR_WEEKS} (4 weeks)</option>
               </Select>
             </ModalFormGroup>
           </span>
