@@ -13,7 +13,7 @@
           "description": "Returns a list of <a href=\"#object-distribution\">distributions</a>.\n",
           "examples": {
             "curl": "curl https://$api_root/$version/linode/distributions\n",
-            "python": "import distributions\nTODO\n"
+            "python": "client.linode.get_distributions()\n"
           }
         }
       }
@@ -27,7 +27,7 @@
           "description": "Returns information about this <a href=\"#object-distribution\"> distribution</a>.\n",
           "examples": {
             "curl": "curl https://$api_root/$version/linode/distributions/$distribution_id\n",
-            "python": "import distributions\nTODO\n"
+            "python": "distro = linode.Distribution(client, 'linode/debian8')\n"
           }
         }
       }

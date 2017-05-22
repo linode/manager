@@ -12,7 +12,7 @@
           "description": "Returns list of <a href=\"#object-region\">regions</a>.\n",
           "examples": {
             "curl": "curl https://$api_root/$version/regions\n",
-            "python": "import regions\nTODO\n"
+            "python": "all_regions = client.get_regions()\n"
           }
         }
       }
@@ -26,7 +26,7 @@
           "description": "Returns information about this <a href=\"#object-region\"> region</a>.\n",
           "examples": {
             "curl": "curl https://$api_root/$version/region/$region_id\n",
-            "python": "import regions\nTODO\n"
+            "python": "region = linode.Region(client, 'us-east-1a')\n"
           }
         }
       }
