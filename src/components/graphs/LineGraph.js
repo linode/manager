@@ -60,7 +60,7 @@ export default class LineGraph extends Component {
   }
 
 
-  renderChart({ data, title, yAxis }) {
+  renderChart({ data, title, yAxis, unit }) {
     const thisDOMNode = ReactDOM.findDOMNode(this);
     const ctx = thisDOMNode.getContext('2d');
     const config = {
@@ -77,6 +77,39 @@ export default class LineGraph extends Component {
         tooltips: {
           mode: 'index',
           intersect: false,
+          callbacks: {
+            title: function(tooltipItems, data) {
+              // Pick first xLabel for now
+              var title = '';
+              var labels = data.labels;
+              var labelCount = labels ? labels.length : 0;
+
+              if (tooltipItems.length > 0) {
+                var item = tooltipItems[0];
+
+                if (item.xLabel) {
+                  title = item.xLabel;
+                } else if (labelCount > 0 && item.index < labelCount) {
+                  title = labels[item.index];
+                }
+              }
+
+              if (Number(title)) {
+                title = moment(title).format('HH:mm');
+              }
+
+              return title;
+            },
+            label: function(tooltipItem, data) {
+              var label = data.datasets[tooltipItem.datasetIndex].label || '';
+
+              if (label) {
+                  label += ': ';
+              }
+              label += tooltipItem.yLabel;
+              return label += unit;
+            },
+          },
         },
         hover: {
           mode: 'nearest',

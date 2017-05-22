@@ -59,6 +59,7 @@ export class DashboardPage extends Component {
             format: p => p.toFixed(1),
           },
           data: formatData([stats.connections]),
+          unit: ' connections',
         },
         traffic: {
           title: 'Traffic',
@@ -68,6 +69,7 @@ export class DashboardPage extends Component {
           },
           data: formatData([stats.traffic.in, stats.traffic.out],
                            ['In', 'Out']),
+          unit: ' bits/s',
         },
       };
     }

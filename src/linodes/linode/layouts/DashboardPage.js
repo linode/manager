@@ -62,6 +62,7 @@ export class DashboardPage extends Component {
             format: p => `${p.toFixed(1)}%`,
           },
           data: formatData([stats.cpu]),
+          unit: '%',
         },
         io: {
           title: 'IO',
@@ -71,6 +72,7 @@ export class DashboardPage extends Component {
           },
           data: formatData([stats.io.io, stats.io.swap],
                            ['Disk', 'Swap']),
+          unit: ' blocks/s',
         },
         netv4: {
           title: 'IPv4 Network',
@@ -82,6 +84,7 @@ export class DashboardPage extends Component {
                             stats.netv4.out, stats.netv4.private_out],
                            ['Public IPv4 Inbound', 'Private IPv4 Inbound',
                             'Public IPv4 Outbound', 'Private IPv4 Outbound']),
+          unit: ' bits/s',
         },
         netv6: {
           title: 'IPv6 Network',
@@ -93,6 +96,7 @@ export class DashboardPage extends Component {
                             stats.netv6.out, stats.netv6.private_out],
                            ['Public IPv6 Inbound', 'Private IPv6 Inbound',
                             'Public IPv6 Outbound', 'Private IPv6 Outbound']),
+          unit: ' bits/s',
         },
       };
     }
