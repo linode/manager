@@ -49,7 +49,6 @@ export class DashboardPage extends Component {
 
     this.state = {
       source: 'cpu',
-      range: 'last1day',
     };
 
     const stats = props.linode._stats;
@@ -125,18 +124,6 @@ export class DashboardPage extends Component {
                   <option value="io">IO</option>
                   <option value="netv4">IPv4 Network</option>
                   <option value="netv6">IPv6 Network</option>
-                </Select>
-              </div>
-              <div className="float-sm-right">
-                <Select
-                  value={this.state.range}
-                  name="range"
-                  onChange={this.onChange}
-                  disabled
-                >
-                  <option key={1} value="last1day">Last 24 hours</option>
-                  <option key={2} value="last2day">Last 48 hours</option>
-                  <option key={3} value="last7day">Last week</option>
                 </Select>
               </div>
             </div>

@@ -94,6 +94,7 @@ export default class LineGraph extends Component {
                 }
               }
 
+              // prevents trying to convert title if already in HH:mm format
               if (Number(title)) {
                 title = moment(title).format('HH:mm');
               }
