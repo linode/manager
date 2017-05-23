@@ -72,7 +72,6 @@ export default class Region extends Component {
     return (
       <Card header={<CardHeader title="Region" />}>
         {_.map(regionMap, this.renderRegion)}
-        {_.map(regionMap, this.renderRegion)}
       </Card>
     );
   }
