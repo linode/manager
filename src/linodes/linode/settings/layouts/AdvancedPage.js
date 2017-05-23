@@ -17,10 +17,10 @@ export class AdvancedPage extends Component {
 
     try {
       await dispatch(linodes.disks.all([id]));
-      const { total_pages } = await dispatch(kernels.page(0));
+      const { total_pages: totalPages } = await dispatch(kernels.page(0));
 
       // Fetch rest of things without waiting.
-      for (let i = 1; i < total_pages; i++) {
+      for (let i = 1; i < totalPages; i++) {
         dispatch(kernels.page(i));
       }
     } catch (e) {
