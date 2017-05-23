@@ -30,10 +30,16 @@ const DNS_SECONDS_PRETTY = {
   [FOUR_WEEKS]: '4 weeks',
 };
 
-export function formatDNSSeconds(dnsSeconds, defaultSeconds = ONE_DAY) {
+export function formatDNSSeconds(dnsSeconds, defaultSeconds = ONE_DAY, withTitle = false) {
   const actual = !dnsSeconds || +dnsSeconds === +defaultSeconds ? defaultSeconds : dnsSeconds;
   const pretty = DNS_SECONDS_PRETTY[actual];
-  return `${actual === defaultSeconds ? 'Default' : actual}${pretty ? ` (${pretty})` : ''}`;
+  const actualOrDefault = actual === defaultSeconds ? 'Default' : actual;
+
+  if (withTitle) {
+    return <span title={pretty}>{actualOrDefault}</span>;
+  }
+
+  return `${actualOrDefault}${pretty ? ` (${pretty})` : ''}`;
 }
 
 export default function SelectDNSSeconds(props) {

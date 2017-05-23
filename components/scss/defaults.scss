@@ -92,3 +92,9 @@ small {
 strong {
   font-weight: 500; // toned down from 'bolder'
 }
+
+[title]:not(a) {
+    border-bottom: $border;
+    border-bottom-style: dashed;
+    cursor: help;
+}
