@@ -4,9 +4,9 @@ import { shallow } from 'enzyme';
 import { expect } from 'chai';
 
 import { testLinode1235 } from '@/data/linodes';
-import { AdvancedPage } from '~/linodes/linode/settings/layouts/AdvancedPage';
+import { ConfigsDisksPage } from '~/linodes/linode/settings/advanced/layouts/ConfigsDisksPage';
 
-describe('linodes/linode/settings/layouts/AdvancedPage', () => {
+describe('linodes/linode/settings/advanced/layouts/ConfigsDisksPage', () => {
   const sandbox = sinon.sandbox.create();
   const dispatch = sandbox.spy();
 
@@ -17,7 +17,7 @@ describe('linodes/linode/settings/layouts/AdvancedPage', () => {
 
   it('renders config panel component', () => {
     const page = shallow(
-      <AdvancedPage
+      <ConfigsDisksPage
         linode={testLinode1235}
         dispatch={() => {}}
       />
@@ -28,7 +28,7 @@ describe('linodes/linode/settings/layouts/AdvancedPage', () => {
 
   it('renders disk panel component', () => {
     const page = shallow(
-      <AdvancedPage
+      <ConfigsDisksPage
         linode={testLinode1235}
         dispatch={() => {}}
       />
