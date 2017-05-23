@@ -88,19 +88,19 @@ function formatMethodExamples(methodObj) {
 
 function formatSchemaExample(schema) {
   const schemaExample = {};
-  if (Array.isArray(schema)) {
-    schema.forEach(function(obj) {
+
+  schema.forEach(function(obj) {
+    if (obj.value === undefined && obj.schema) {
+      schemaExample[obj.name] = formatSchemaExample(obj.schema);
+    } else {
       schemaExample[obj.name] = obj.value;
-    });
-  } else {
-    Object.keys(schema).forEach(function(key) {
-      schemaExample[key] = schema[key]._value;
-    });
-  }
+    }
+  });
+
   return schemaExample;
 }
 
-function formatSchemaField(schemaField) {
+function formatSchemaField(schemaField, enumMap) {
   let description;
   if (schemaField._description) {
     description = schemaField._description;
@@ -113,18 +113,17 @@ function formatSchemaField(schemaField) {
   const editable = schemaField._editable;
   const filterable = schemaField._filterable;
   const type = schemaField._type;
+  const subType = schemaField._subtype;
   const value = schemaField._value;
 
   let nestedSchema = null;
-  let example = null;
   if (apiObjectMap[type]) {
-    nestedSchema = formatSchema(getResourceObjByName(type).schema);
-    example = formatSchemaExample(getResourceObjByName(type).schema);
+    nestedSchema = formatSchema(getResourceObjByName(type).schema, enumMap);
+  } else if (type === 'enum' && enumMap[subType]) {
+    nestedSchema = enumMap[subType]; // already formatted
   } else if (!type) {
-    console.log(name, schemaField);
     // TODO: check the name of the nested item?
-    nestedSchema = formatSchema(schemaField);
-    example = formatSchemaExample(schemaField);
+    nestedSchema = formatSchema(schemaField, enumMap);
   }
 
   return {
@@ -133,23 +132,40 @@ function formatSchemaField(schemaField) {
     editable: editable,
     filterable: filterable,
     type: type,
+    subType: subType,
     value: value,
-    example: example,
     schema: nestedSchema
   };
 }
 
-function formatSchema(schema) {
+function formatSchema(schema, enumMap={}) {
   if (Array.isArray(schema)) {
     return schema;
   }
 
   return Object.keys(schema).map(function (schemaName) {
-    if (typeof schema[schemaName] === 'object') {
-      return formatSchemaField(_.merge(schema[schemaName], { name: schemaName }));
+    if (typeof schema[schemaName] === 'object' && schema[schemaName] !== null) {
+      return formatSchemaField(_.merge(schema[schemaName], { name: schemaName }), enumMap);
     }
     // TODO: account for other cases
   }).filter(function(item) { return item; }); // filter at the end dumps nulls from result of non-object values
+}
+
+function createEnumMap(enums) {
+  const enumMap = {};
+
+  Object.keys(enums).map(function(enumName) {
+    const enumList = enums[enumName];
+
+    enumMap[enumName] = Object.keys(enumList).map(function(key) {
+      return {
+        name: key,
+        description: enumList[key]
+      };
+    });
+  });
+
+  return enumMap;
 }
 
 function formatMethodResource(endpoint, method) {
@@ -169,17 +185,16 @@ function formatMethodResource(endpoint, method) {
     let schema;
     if (resourceObject) {
       enums = resourceObject.enums;
+
+      let enumMap;
       if (enums) {
-        resourceObject.enums = Object.keys(enums).map(function(enumName) {
-          return _.merge({}, enums[enumName], {
-            name: enumName
-          });
-        });
+        enumMap = createEnumMap(enums);
       }
 
       schema = resourceObject.schema;
       if (schema) {
-        resourceObject.schema = formatSchema(resourceObject.schema);
+        resourceObject.schema = formatSchema(schema, enumMap);
+        resourceObject.example = formatSchemaExample(resourceObject.schema);
       }
     }
   }
@@ -280,7 +295,6 @@ let endpointMap = {
 
 allEndpoints.forEach(function(endpoint) {
   const pathArr = endpoint.base_path.split('/');
-  // console.log('PATH ARR: ', pathArr);
   const basePath = `/${pathArr[1]}`;
   const altBasePath = `${basePath}/${pathArr[2]}`;
   console.log('BASE: ', basePath, ' ALT BASE: ', altBasePath);

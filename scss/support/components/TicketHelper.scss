@@ -1,18 +1,29 @@
 .TicketHelper {
+    li:not(:last-of-type) {
+        margin-bottom: 10px;
+    }
+
     h3 {
         margin-bottom: 0;
         padding: 0 0 5px 0;
 
-        &:not(:first-of-type) {
+        &:not(:first-child) {
             padding-top: 15px;
         }
     }
 
-    li:not(:last-of-type) {
-        margin-bottom: 15px;
-    }
-
     p {
         max-width: 750px;
+
+        &[class] {
+            padding-bottom: 5px;
+            border-bottom: $border;
+        }
+    }
+
+    .btn {
+        white-space: initial;
+        text-align: left;
+        height: auto;
     }
 }

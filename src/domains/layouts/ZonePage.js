@@ -199,7 +199,7 @@ export class ZonePage extends Component {
         const { ttl_sec: defaultTTLSec } = domain;
         return {
           ...record,
-          ttl_sec: formatDNSSeconds(ttlSec, defaultTTLSec),
+          ttl_sec: formatDNSSeconds(ttlSec, defaultTTLSec, true),
         };
       });
     };
@@ -213,21 +213,24 @@ export class ZonePage extends Component {
 
     const soaRecord = {
       ...domain,
-      ttl_sec: formatDNSSeconds(domain.ttl_sec),
-      refresh_sec: formatDNSSeconds(domain.refresh_sec),
-      retry_sec: formatDNSSeconds(domain.retry_sec),
-      expire_sec: formatDNSSeconds(domain.expire_sec, 604800),
+      ttl_sec: formatDNSSeconds(domain.ttl_sec, undefined, true),
+      refresh_sec: formatDNSSeconds(domain.refresh_sec, undefined, true),
+      retry_sec: formatDNSSeconds(domain.retry_sec, undefined, true),
+      expire_sec: formatDNSSeconds(domain.expire_sec, 604800, true),
     };
 
     return (
       <div>
         <header className="main-header main-header--border">
-          <div className="container">
-            <Link to="/domains">Domains</Link>
-            <h1 title={domain.id}>
-              {domain.group ? `${domain.group} / ` : ''}
-              {domain.domain}
-            </h1>
+          <div className="container clearfix">
+            <div className="float-sm-left">
+              <Link to="/domains">Domains</Link>
+              <h1 title={domain.id}>
+                <Link to={`/domains/${domain.domain}`}>
+                  {domain.group ? `${domain.group} / ${domain.domain}` : domain.domain}
+                </Link>
+              </h1>
+            </div>
           </div>
         </header>
         <div className="container">

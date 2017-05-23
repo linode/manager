@@ -20,7 +20,8 @@ export class AuthorizedApplicationsPage extends Component {
   render() {
     const { dispatch } = this.props;
     const clients = Object.values(this.props.tokens.tokens).filter(
-      token => token.type === 'client_token');
+      token => token.type === 'client_token').sort(
+        (a, b) => new Date(b.created) - new Date(a.created)); // Sort by most recent first
 
     return (
       <div className="row">
@@ -29,7 +30,8 @@ export class AuthorizedApplicationsPage extends Component {
             <AuthorizedApplication
               label={client.client.label}
               scopes={client.scopes}
-              id={client.client.id}
+              clientId={client.client.id}
+              id={client.id}
               expires={client.expiry}
               dispatch={dispatch}
             />

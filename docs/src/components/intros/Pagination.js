@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function Pagination() {
   return (
-    <section className="GettingStartedPage">
+    <section className="Article">
       <h1>Pagination</h1>
       <section>
         <p>
