@@ -109,6 +109,7 @@ export class DashboardPage extends Component {
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   renderGraphs() {
+    const { timezone } = this.props;
     return (
       <Card header={<CardHeader title="Graphs" />} className="graphs">
         {!this.graphs ? <p>No graphs are available.</p> : (
@@ -130,7 +131,10 @@ export class DashboardPage extends Component {
                 Last 24 hours
               </div>
             </div>
-            <LineGraph {...this.graphs[this.state.source]} />
+            <LineGraph
+              timezone={timezone}
+              {...this.graphs[this.state.source]}
+            />
           </div>
         )}
       </Card>
@@ -241,13 +245,14 @@ export class DashboardPage extends Component {
 DashboardPage.propTypes = {
   linode: PropTypes.object,
   username: PropTypes.string,
+  timezone: PropTypes.string,
   dispatch: PropTypes.func.isRequired,
 };
 
 function select(state, props) {
   const { linode } = selectLinode(state, props);
-  const { username } = state.api.profile;
-  return { linode, username };
+  const { username, timezone } = state.api.profile;
+  return { linode, username, timezone };
 }
 
 export default connect(select)(DashboardPage);

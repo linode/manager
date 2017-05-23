@@ -3,14 +3,8 @@ import moment from 'moment-timezone';
 
 import { getStorage } from '~/storage';
 
-
-const timezone = getStorage('profile/timezone') || 'UTC';
-
-export function formatGraphTime(time) {
-  return moment.utc(time).tz(timezone).format('HH:mm');
-}
-
 export default function TimeDisplay(props) {
+  const timezone = getStorage('profile/timezone') || 'UTC';
   const utcTime = moment.utc(props.time, moment.iso_8601).tz(timezone);
   return (
     <span

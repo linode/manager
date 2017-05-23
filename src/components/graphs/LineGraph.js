@@ -2,7 +2,12 @@ import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import Chart from 'chart.js';
 import _ from 'lodash';
-import { formatGraphTime } from '../TimeDisplay';
+import moment from 'moment-timezone';
+
+
+export function formatGraphTime(time, timezone) {
+  return moment.utc(time).tz(timezone).format('HH:mm');
+}
 
 // Source: http://stackoverflow.com/a/5624139/1507139
 function rgbaFromHex(hex, alpha) {
@@ -50,16 +55,16 @@ export default class LineGraph extends Component {
     this._chart.destroy();
   }
 
-  formatTicks(d, i) {
+  formatTicks(timezone, d, i) {
     // This is probably a temporary function until someone needs to pass in their own format.
     if (i % 10 === 0) {
-      return formatGraphTime(d);
+      return formatGraphTime(d, timezone);
     }
 
     return undefined;
   }
 
-  renderChart({ data, title, yAxis, unit }) {
+  renderChart({ timezone, data, title, yAxis, unit }) {
     const thisDOMNode = ReactDOM.findDOMNode(this);
     const ctx = thisDOMNode.getContext('2d');
     const config = {
@@ -95,7 +100,7 @@ export default class LineGraph extends Component {
 
               // prevents trying to convert title if already in HH:mm format
               if (Number(title)) {
-                title = formatGraphTime(title);
+                title = formatGraphTime(title, timezone);
               }
 
               return title;
@@ -123,7 +128,10 @@ export default class LineGraph extends Component {
               display: true,
               labelString: 'Time',
             },
-            ticks: { display: true, callback: this.formatTicks },
+            ticks: {
+              display: true,
+              callback: (d, i) => this.formatTicks(timezone, d, i),
+            },
           }],
           yAxes: [{
             display: true,
@@ -156,6 +164,7 @@ export default class LineGraph extends Component {
 }
 
 LineGraph.propTypes = {
+  timezone: PropTypes.string,
   data: PropTypes.shape({
     labels: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number])),
     datasets: PropTypes.arrayOf(

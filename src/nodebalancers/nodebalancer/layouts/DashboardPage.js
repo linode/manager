@@ -89,7 +89,7 @@ export class DashboardPage extends Component {
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   render() {
-    const { nodebalancer } = this.props;
+    const { nodebalancer, timezone } = this.props;
     const { configs } = nodebalancer._configs;
 
     const newConfigs = Object.values(configs).map((config) => {
@@ -187,7 +187,10 @@ export class DashboardPage extends Component {
                   Last 24 hours
                 </div>
               </div>
-              <LineGraph {...this.graphs[this.state.source]} />
+              <LineGraph
+                timezone={timezone}
+                {...this.graphs[this.state.source]}
+              />
             </div>
           )}
         </Card>
@@ -199,15 +202,17 @@ export class DashboardPage extends Component {
 DashboardPage.propTypes = {
   dispatch: PropTypes.func,
   nodebalancer: PropTypes.object,
+  timezone: PropTypes.string,
 };
 
 function select(state, ownProps) {
   const params = ownProps.params;
   const nbLabel = params.nbLabel;
+  const { timezone } = state.api.profile;
 
   const nodebalancer = objectFromMapByLabel(state.api.nodebalancers.nodebalancers, nbLabel);
 
-  return { nodebalancer };
+  return { nodebalancer, timezone };
 }
 
 export default connect(select)(DashboardPage);
