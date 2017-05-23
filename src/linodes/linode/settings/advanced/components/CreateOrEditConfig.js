@@ -386,7 +386,7 @@ CreateOrEditConfig.defaultProps = {
       enable_modules_dep_helper: true,
       disable_updatedb: true,
     },
-    kernel: '',
+    kernel: 'linode/latest_64',
     virt_mode: 'paravirt',
     run_level: 'default',
     ram_limit: 0,

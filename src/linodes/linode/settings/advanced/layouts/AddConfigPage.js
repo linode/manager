@@ -36,7 +36,6 @@ export class AddConfigPage extends Component {
 
 AddConfigPage.propTypes = {
   linode: PropTypes.object.isRequired,
-  disks: PropTypes.object.isRequired,
   account: PropTypes.object.isRequired,
   kernels: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
