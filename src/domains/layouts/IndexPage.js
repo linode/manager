@@ -63,7 +63,7 @@ export class IndexPage extends Component {
         onOk={async () => {
           const ids = zonesArr.map(function (zone) { return zone.id; });
 
-          await dispatch(domains.delete(ids));
+          await Promise.all(ids.map(id => dispatch(domains.delete(id))));
           dispatch(toggleSelected(OBJECT_TYPE, ids));
           dispatch(hideModal());
         }}
