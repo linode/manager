@@ -30,6 +30,7 @@ export class TicketPage extends Component {
   static async preload({ dispatch }, { ticketId }) {
     try {
       await dispatch(getObjectByLabelLazily('tickets', ticketId, 'id'));
+      await dispatch(tickets.one([ticketId]));
       await dispatch(tickets.replies.all([ticketId]));
     } catch (response) {
       // eslint-disable-next-line no-console

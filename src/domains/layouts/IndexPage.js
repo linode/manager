@@ -80,7 +80,7 @@ export class IndexPage extends Component {
     const sortedZones = _.sortBy(Object.values(zones), ({ created }) => moment(created));
 
     const groups = _.sortBy(
-      _.map(_.groupBy(sortedZones, d => d.group), (_zones, _group) => {
+      _.map(_.groupBy(sortedZones, d => d.display_group), (_zones, _group) => {
         return {
           name: _group,
           data: _zones,
