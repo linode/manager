@@ -11,7 +11,7 @@ import { linodes } from '~/api';
 import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
 import { AVAILABLE_DISK_SLOTS } from '~/constants';
 
-import { DiskSelect } from '../../components';
+import { DiskSelect } from '../../../components';
 
 
 export default class CreateOrEditConfig extends Component {

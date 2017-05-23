@@ -5,7 +5,7 @@ import { Card, CardHeader } from 'linode-components/cards';
 
 import { setSource } from '~/actions/source';
 import { CreateOrEditConfig } from '../components';
-import { selectLinode } from '../../utilities';
+import { selectLinode } from '../../../utilities';
 
 
 export class AddConfigPage extends Component {
