@@ -6,7 +6,7 @@ import { Table } from 'linode-components/tables';
 
 export default function Introduction() {
   return (
-    <section className="GettingStartedPage">
+    <section className="Article">
       <h1>Introduction</h1>
       <section>
         <p>
