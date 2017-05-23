@@ -48,6 +48,12 @@ export default function Layout(props) {
                 })}
               </ul>
             </div>
+            <div className="VerticalNav-section">
+              <h3>Guides</h3>
+              <ul>
+                <li><Link to="/guides/python">Python</Link></li>
+              </ul>
+            </div>
           </div>
         </div>
         <div className="Layout-content">
