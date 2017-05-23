@@ -22,24 +22,19 @@ export default class AuthorizedApplication extends Component {
   }
 
   render() {
-    const { label, scopes, id, expires } = this.props;
-    const icon = id ? `${API_ROOT}/account/clients/${id}/thumbnail` : '';
+    const { label, scopes, id, clientId, expires } = this.props;
+    const icon = clientId ? `${API_ROOT}/account/clients/${clientId}/thumbnail` : '';
     const expireValue = <TimeDisplay time={expires} />;
 
     const scopeData = OAUTH_SCOPES.map(function (scope) {
       return { scopes: scopes, scope: scope };
     });
 
+    const nav = <Button onClick={() => this.revokeApp(id)}>Revoke</Button>;
+    const header = <CardImageHeader title={label} icon={icon} nav={nav} />;
+
     return (
-      <Card
-        header={
-          <CardImageHeader
-            title={label}
-            icon={icon}
-            nav={<Button onClick={() => this.revokeApp(id)}>Revoke</Button>}
-          />
-        }
-      >
+      <Card header={header}>
         <div className="row">
           <label className="col-sm-4 row-label">Expires</label>
           <div className="col-sm-8">{expireValue}</div>
@@ -68,6 +63,7 @@ AuthorizedApplication.propTypes = {
   label: PropTypes.string.isRequired,
   scopes: PropTypes.string.isRequired,
   id: PropTypes.any.isRequired,
+  clientId: PropTypes.any.isRequired,
   expires: PropTypes.string.isRequired,
   dispatch: PropTypes.func.isRequired,
 };
