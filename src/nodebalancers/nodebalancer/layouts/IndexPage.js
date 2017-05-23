@@ -45,11 +45,9 @@ export class IndexPage extends Component {
         <header className="main-header">
           <div className="container clearfix">
             <div className="float-sm-left">
-              <Breadcrumbs crumbs={[{ to: '/nodebalancers', label: 'NodeBalancers' }]} />
+              <Breadcrumbs crumbs={crumbs} />
               <h1 title={nodebalancer.id}>
-                <Link to={`/nodebalancers/${nodebalancer.label}`}>
-                  <GroupLabel object={nodebalancer} />
-                </Link>
+                <Link to={`/nodebalancers/${nodebalancer.label}`}>{title}</Link>
               </h1>
             </div>
           </div>
