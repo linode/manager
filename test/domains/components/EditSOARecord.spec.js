@@ -80,8 +80,6 @@ describe('domains/components/EditSOARecord', () => {
         body: {
           domain: 'tester1234.com',
           group: 'tester-zones',
-          axfr_ips: ['44.55.66.77'],
-          master_ips: ['127.0.0.1', '255.255.255.1', '123.123.123.7'],
           soa_email: 'admin@tester1234.com',
           status: 'active',
           ttl_sec: 3600,
