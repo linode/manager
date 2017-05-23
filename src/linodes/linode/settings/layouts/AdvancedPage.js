@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { setError } from '~/actions/errors';
 import { setSource } from '~/actions/source';
-import { linodes } from '~/api';
+import { linodes, kernels } from '~/api';
 import { getObjectByLabelLazily } from '~/api/util';
 
 import { ConfigPanel } from '../components/ConfigPanel';
