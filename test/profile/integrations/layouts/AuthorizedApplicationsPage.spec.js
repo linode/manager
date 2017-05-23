@@ -38,7 +38,8 @@ describe('profile/integrations/layouts/AuthorizedApplicationsPage', () => {
     expectObjectDeepEquals(firstToken.props(), {
       label: applicationTokens[0].client.label,
       scopes: applicationTokens[0].scopes,
-      id: applicationTokens[0].client.id,
+      clientId: applicationTokens[0].client.id,
+      id: applicationTokens[0].id,
       expires: applicationTokens[0].expiry,
       dispatch,
     });
