@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Nested object schemas and examples for method params and responses
 - Nested enumerations for method responses
+- Python guide section intro
 
 ### Fixed
 - Missing response examples for GETs
