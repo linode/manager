@@ -39,10 +39,12 @@ export default class Region extends Component {
       zonesInRegion.indexOf(id) !== -1);
 
     return regions.length ? (
-      <div key={region}>
+      <div className="region-group" key={region}>
         <h3>{region}</h3>
-        <div className="region-group row">
-          {regions.map(this.renderZone)}
+        <div>
+          <div className="row">
+            {regions.map(this.renderZone)}
+          </div>
         </div>
       </div>
       ) : null;

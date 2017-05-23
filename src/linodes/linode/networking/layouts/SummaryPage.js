@@ -55,7 +55,7 @@ export class SummaryPage extends Component {
     const { ipv4 } = this.props.linode._ips;
 
     return (
-      <div className="col-sm-6">
+      <div className="col-lg-6 col-md-12 col-sm-12">
         <h3>
           IPv4
           <HelpButton
@@ -104,7 +104,7 @@ export class SummaryPage extends Component {
     const { ipv6 } = this.props.linode._ips;
 
     return (
-      <div className="col-sm-6">
+      <div className="col-lg-6 col-md-12 col-sm-12">
         <h3>
           IPv6
           <HelpButton
