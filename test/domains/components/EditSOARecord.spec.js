@@ -30,7 +30,7 @@ describe('domains/components/EditSOARecord', () => {
     expect(zone.props().value).to.equal(currentZone.domain);
 
     const group = page.find('#group');
-    expect(group.props().value).to.equal(currentZone.display_group);
+    expect(group.props().value).to.equal(currentZone.group);
 
     const email = page.find('#email');
     expect(email.props().value).to.equal(currentZone.soa_email);
@@ -79,7 +79,7 @@ describe('domains/components/EditSOARecord', () => {
         method: 'PUT',
         body: {
           domain: 'tester1234.com',
-          display_group: 'tester-zones',
+          group: 'tester-zones',
           soa_email: 'admin@tester1234.com',
           ttl_sec: 3600,
           refresh_sec: 3600,
