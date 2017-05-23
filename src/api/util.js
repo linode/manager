@@ -35,6 +35,11 @@ export function getObjectByLabelLazily(pluralName, label, labelName = 'label') {
       return oldResource;
     }
 
+    // API doesn't support X-Filter on 'id', so look it up directly.
+    if (labelName === 'id') {
+      return await dispatch(api[pluralName].one([label]));
+    }
+
     const response = await dispatch(api[pluralName].all([], undefined, {
       headers: {
         'X-Filter': { [labelName]: label },
