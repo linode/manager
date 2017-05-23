@@ -27,7 +27,7 @@ export default function Introduction() {
       <section>
         <h2>Connecting to the API</h2>
         <p>
-          The Python Library connects to the Linode API V4 using the LinodeClient class, which expects an OAuth Token in his constructor.
+          The Python library connects to the Linode API V4 using the LinodeClient class, which expects an OAuth Token in his constructor.
         </p>
         <i>All example code in this guide is executed in a Python shell.</i>
         <pre>
