@@ -131,10 +131,12 @@ export class TicketPage extends Component {
     return (
       <div>
         <header className="main-header main-header--border">
-          <div className="container">
-            <Link to="/support">Support</Link>
-            <h1 title={ticket.id}>{ticket.summary}</h1>
-            {renderTicketCreationInfo(ticket)}
+          <div className="container clearfix">
+            <div className="float-sm-left">
+              <Link to="/support">Support</Link>
+              <h1 title={ticket.id}>{ticket.summary}</h1>
+              {renderTicketCreationInfo(ticket)}
+            </div>
           </div>
         </header>
         <div className="container">
