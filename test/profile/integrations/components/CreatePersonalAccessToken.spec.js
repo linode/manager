@@ -5,7 +5,9 @@ import { expect } from 'chai';
 
 import CreatePersonalAccessToken from '~/profile/integrations/components/CreatePersonalAccessToken';
 import { SHOW_MODAL } from '~/actions/modal';
+
 import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
+
 
 describe('profile/integrations/components/CreatePersonalAccessToken', () => {
   const sandbox = sinon.sandbox.create();
