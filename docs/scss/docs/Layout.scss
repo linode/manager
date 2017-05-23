@@ -13,7 +13,8 @@ $sidebar-width: 250px;
         position: fixed;
         top: $nav-height;
         background-color: $light-gray;
-        border: $border;
+        border-left: $border;
+        border-right: $border;
         height: 100%;
         width: $sidebar-width;
     }
@@ -25,5 +26,6 @@ $sidebar-width: 250px;
         min-height: calc(100% - #{$nav-height});
         margin-left: $sidebar-width;
         width: calc(100% - #{$sidebar-width});
+        border-right: $border;
     }
 }
