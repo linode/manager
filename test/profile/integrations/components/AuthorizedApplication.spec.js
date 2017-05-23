@@ -1,13 +1,15 @@
+import { expect } from 'chai';
+import { mount } from 'enzyme';
+import _ from 'lodash';
 import React from 'react';
 import sinon from 'sinon';
-import { mount } from 'enzyme';
-import { expect } from 'chai';
 
-import _ from 'lodash';
 import { OAUTH_SCOPES, OAUTH_SUBSCOPES } from '~/constants';
 import AuthorizedApplication from '~/profile/integrations/components/AuthorizedApplication';
+
+import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
 import { api } from '@/data';
-import { expectRequest } from '@/common';
+
 
 const { tokens: { tokens } } = api;
 
@@ -96,13 +98,15 @@ describe('profile/integrations/components/AuthorizedApplication', () => {
         dispatch={dispatch}
         label={tokens[2].client.label}
         scopes={tokens[2].scopes}
-        id={tokens[2].client.id}
+        id={tokens[2].id}
+        clientId={tokens[2].client.id}
       />
     );
 
-    page.find('Button').props().onClick();
+    await page.find('Button').props().onClick();
     expect(dispatch.callCount).to.equal(1);
-    const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, `/account/tokens/${tokens[2].client.id}`, { method: 'DELETE' });
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      ([fn]) => expectRequest(fn, `/account/tokens/${tokens[2].id}`, { method: 'DELETE' }),
+    ], 1);
   });
 });

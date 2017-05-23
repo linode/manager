@@ -9,45 +9,32 @@ import { AuthScopeCell } from '~/components/tables/cells';
 
 import { tokens } from '~/api';
 import { OAUTH_SUBSCOPES, OAUTH_SCOPES, API_ROOT } from '~/constants';
-import { reduceErrors } from '~/components/forms';
+import { dispatchOrStoreErrors } from '~/components/forms';
 
 
 export default class AuthorizedApplication extends Component {
-  constructor() {
-    super();
-    this.state = { errors: {} };
-  }
-
-  async revokeApp(id) {
+  revokeApp(id) {
     const { dispatch } = this.props;
 
-    try {
-      await dispatch(tokens.delete(id));
-    } catch (response) {
-      const errors = await reduceErrors(response);
-      this.setState({ errors });
-    }
+    return dispatch(dispatchOrStoreErrors.call(this, [
+      () => tokens.delete(id),
+    ]));
   }
 
   render() {
-    const { label, scopes, id, expires } = this.props;
-    const icon = id ? `${API_ROOT}/account/clients/${id}/thumbnail` : '';
+    const { label, scopes, id, clientId, expires } = this.props;
+    const icon = clientId ? `${API_ROOT}/account/clients/${clientId}/thumbnail` : '';
     const expireValue = <TimeDisplay time={expires} />;
 
     const scopeData = OAUTH_SCOPES.map(function (scope) {
       return { scopes: scopes, scope: scope };
     });
 
+    const nav = <Button onClick={() => this.revokeApp(id)}>Revoke</Button>;
+    const header = <CardImageHeader title={label} icon={icon} nav={nav} />;
+
     return (
-      <Card
-        header={
-          <CardImageHeader
-            title={label}
-            icon={icon}
-            nav={<Button onClick={() => this.revokeApp(id)}>Revoke</Button>}
-          />
-        }
-      >
+      <Card header={header}>
         <div className="row">
           <label className="col-sm-4 row-label">Expires</label>
           <div className="col-sm-8">{expireValue}</div>
@@ -76,6 +63,7 @@ AuthorizedApplication.propTypes = {
   label: PropTypes.string.isRequired,
   scopes: PropTypes.string.isRequired,
   id: PropTypes.any.isRequired,
+  clientId: PropTypes.any.isRequired,
   expires: PropTypes.string.isRequired,
   dispatch: PropTypes.func.isRequired,
 };
