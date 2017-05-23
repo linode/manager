@@ -14,7 +14,7 @@ export default function Layout(props) {
     <div className="Docs Layout">
       <Header>
         <div className="MainHeader-brand">
-          <Link to="https://linode.com">
+          <Link to="/">
             <span className="MainHeader-logo">
               <img
                 src={LinodeLogoImgSrc}
