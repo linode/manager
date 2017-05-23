@@ -181,7 +181,7 @@ root@localhost:~#`}
       <section>
         <h2>Further Reading</h2>
         <p>
-        Now that you’ve had an overview of the features and concepts in the Python library, check out the Python library reference for in-depth documentation, or look at the <a href="https://github.com/linode/python-linode-api/tree/master/examples/install-on-linode">Install on Linode sample project</a> for an example multi-user application using the Library.
+        Now that you’ve had an overview of the features and concepts in the Python library, check out the Python library reference for in-depth documentation, or look at the <a href="https://github.com/linode/python-linode-api/tree/master/examples/install-on-linode">Install on Linode sample project</a> for an example multi-user application using the library.
         </p>
       </section>
     </section>
