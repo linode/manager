@@ -32,10 +32,10 @@ export class RescuePage extends Component {
 
     return (
       <div className="row">
-        <section className="col-lg-6 col-md-12 col-sm-12">
+        <div className="col-lg-6 col-md-12 col-sm-12">
           <RescueMode dispatch={dispatch} linode={linode} />
-        </section>
-        <section className="col-lg-6 col-md-12 col-sm-12">
+        </div>
+        <div className="col-lg-6 col-md-12 col-sm-12">
           <ResetRootPassword dispatch={dispatch} linode={linode} />
         </section>
       </div>

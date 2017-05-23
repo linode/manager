@@ -26,9 +26,4 @@
         text-align: left;
         height: auto;
     }
-
-    // This gets shoved under the ticket response card and we can't give it margin-bottom.
-    @media (max-width: 992px) {
-        margin-top: 15px;
-    }
 }
