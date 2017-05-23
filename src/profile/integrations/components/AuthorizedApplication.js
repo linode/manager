@@ -19,7 +19,7 @@ export default class AuthorizedApplication extends Component {
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => tokens.delete(id),
     ]));
-   }
+  }
 
   render() {
     const { label, scopes, id, expires } = this.props;
