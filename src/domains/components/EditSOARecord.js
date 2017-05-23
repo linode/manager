@@ -14,7 +14,7 @@ export default class EditSOARecord extends Component {
     super();
 
     const {
-      display_group: group, domain: zone, ttl_sec: defaultTTL, refresh_sec: refreshRate,
+      group: group, domain: zone, ttl_sec: defaultTTL, refresh_sec: refreshRate,
       retry_sec: retryRate, expire_sec: expireTime, soa_email: email,
     } = props.zone;
 
@@ -35,7 +35,7 @@ export default class EditSOARecord extends Component {
     const { dispatch, close } = this.props;
     const { group, zone, defaultTTL, refreshRate, retryRate, expireTime, email } = this.state;
     const data = {
-      display_group: group,
+      group: group,
       domain: zone,
       ttl_sec: defaultTTL,
       refresh_sec: refreshRate,
