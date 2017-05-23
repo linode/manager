@@ -7,7 +7,7 @@ export const DEVTOOLS_DISABLED = ENV_DEVTOOLS_DISABLED || process.env.NODE_ENV =
 export const VERSION = ENV_VERSION;
 /* eslint-enable no-undef */
 
-export const EVENT_POLLING_DELAY = (15 * 1000); // milliseconds
+export const EVENT_POLLING_DELAY = (3 * 1000); // milliseconds
 
 export const LinodeStates = {
   pending: [

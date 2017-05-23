@@ -29,6 +29,8 @@ export class Notifications extends Component {
     this._polling = Polling({
       apiRequestFn: this.fetchAllEvents.bind(this),
       timeout: EVENT_POLLING_DELAY,
+      backoff: true,
+      maxBackoffTimeout: (5 * 60 * 1000), // 5 minutes
     });
     this.state = { loadingMore: false };
   }

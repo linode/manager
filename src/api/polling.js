@@ -6,10 +6,12 @@ export default function Polling(args) {
   const pollingIdMap = {};
   const {
     apiRequestFn,
-    timeout = DEFAULT_TIMEOUT,
     maxTries = null,
     onMaxTriesReached = null,
+    backoff = false,
+    maxBackoffTimeout = null,
   } = args;
+  let { timeout = DEFAULT_TIMEOUT } = args;
 
   let numTries = 0;
 
@@ -23,6 +25,14 @@ export default function Polling(args) {
     // additional calls to this function will restart polling by default
     // so that requests don't stack
     stop(id);
+
+    let updatedTimeout = timeout;
+    if (backoff && numTries > 0) {
+      updatedTimeout = Math.pow((timeout / 1000), numTries) * 1000;
+      if (updatedTimeout > maxBackoffTimeout) {
+        updatedTimeout = maxBackoffTimeout;
+      }
+    }
 
     pollingIdMap[id] = setTimeout(async function () {
       await apiRequestFn();
@@ -39,7 +49,7 @@ export default function Polling(args) {
       } else {
         poll(id);
       }
-    }, timeout);
+    }, updatedTimeout);
   }
 
   function start(id) {
