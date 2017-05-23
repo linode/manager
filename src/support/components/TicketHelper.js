@@ -48,7 +48,7 @@ export default class TicketHelper extends Component {
             <LinkButton onClick={this.toggleSection('availibility')} id="availibility-button">
               When will there be availibility in Tokyo, Singapore, or Frankfurt?
             </LinkButton>
-            <p className={this.state.hidden.availibility ? 'hidden' : ''} id="availibility"><small>
+            <p className={this.state.hidden.availibility ? 'hidden' : ''}><small>
               {/* eslint-disable max-len */}
               Our Singapore and Frankfurt regions are now available and we are currently considering expansion in Tokyo. You can stay up-to-date on all region news on <Link to="https://blog.linode.com">our blog</Link>.
               {/* eslint-enable max-len */}
