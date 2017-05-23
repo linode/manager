@@ -50,7 +50,8 @@ export default class ChangeTimezone extends Component {
               />
               <div>
                 <small className="text-muted">
-                  This timezone setting is unique to this app. Any timezone setting in the classic Manager will not be reflected here.
+                  This timezone setting is unique to this app. Any timezone setting in the classic
+                  Manager will not be reflected here.
                 </small>
               </div>
             </div>
