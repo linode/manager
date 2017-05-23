@@ -6,7 +6,7 @@ import { Table } from 'linode-components/tables';
 
 export default function Filtering() {
   return (
-    <section className="GettingStartedPage">
+    <section className="Article">
       <h1>Filtering &amp; Sorting</h1>
       <section>
         <p>

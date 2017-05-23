@@ -6,7 +6,7 @@ import { Table } from 'linode-components/tables';
 
 export default function Authentication() {
   return (
-    <section className="GettingStartedPage">
+    <section className="Article">
       <h1>Authentication</h1>
       <section>
         <p>
