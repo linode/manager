@@ -6,11 +6,14 @@ export default function Polling(args) {
   const pollingIdMap = {};
   const {
     apiRequestFn,
-    timeout = DEFAULT_TIMEOUT,
     maxTries = null,
     onMaxTriesReached = null,
+    backoff = false,
+    maxBackoffTimeout = null,
   } = args;
-
+  let { timeout = DEFAULT_TIMEOUT } = args;
+  let linearConstant = timeout / 1000;
+  let increment = linearConstant;
   let numTries = 0;
 
   function stop(id) {
@@ -26,6 +29,14 @@ export default function Polling(args) {
 
     pollingIdMap[id] = setTimeout(async function () {
       await apiRequestFn();
+
+      if (backoff && numTries > 0) {
+        increment += linearConstant;
+        timeout = timeout + (increment * 1000);
+        if (timeout > maxBackoffTimeout) {
+          timeout = maxBackoffTimeout;
+        }
+      }
 
       delete pollingIdMap[id];
       ++numTries;
@@ -46,7 +57,16 @@ export default function Polling(args) {
     poll(id);
   }
 
+  function reset() {
+    if (backoff) {
+      numTries = 0;
+      increment = linearConstant;
+      timeout = (increment * 1000);
+    }
+  }
+
   return Object.freeze({
+    reset: reset,
     start: start,
     stop: stop,
   });

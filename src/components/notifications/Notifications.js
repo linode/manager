@@ -17,6 +17,8 @@ import { eventRead } from '~/api/events';
 import NotificationList from './NotificationList';
 
 const MIN_SHOWN_EVENTS = 10;
+const POLLING_ID = 'events';
+
 
 export class Notifications extends Component {
   constructor(props) {
@@ -29,6 +31,8 @@ export class Notifications extends Component {
     this._polling = Polling({
       apiRequestFn: this.fetchAllEvents.bind(this),
       timeout: EVENT_POLLING_DELAY,
+      backoff: true,
+      maxBackoffTimeout: (5 * 60 * 1000), // 5 minutes
     });
     this.state = { loadingMore: false };
   }
@@ -49,24 +53,25 @@ export class Notifications extends Component {
     }
 
     // initialize polling for unseen events
-    this._polling.start();
+    this._polling.start(POLLING_ID);
   }
 
-  componentWillUpdate() {
-    const { events } = this.props;
-    if (events.ids.length) {
+  componentWillUpdate(nextProps) {
+    const { events } = nextProps;
+
+    if (events.totalResults > 0) {
       const latest = events.events[events.ids[0]];
       this._filterOptions = _.merge(
         {},
         this._filterOptions,
         greaterThanDatetimeFilter('created', latest.created)
       );
+      this._polling.reset();
     }
   }
 
   componentWillUnmount() {
-    clearTimeout(this._pollingTimeoutId);
-    this._pollingTimeoutId = null;
+    this._polling.stop(POLLING_ID);
   }
 
   async onClickItem(event) {
