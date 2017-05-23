@@ -225,7 +225,7 @@ export class ZonePage extends Component {
           <div className="container">
             <Link to="/domains">Domains</Link>
             <h1 title={domain.id}>
-              {domain.display_group ? `${domain.display_group} / ` : ''}
+              {domain.group ? `${domain.group} / ` : ''}
               {domain.domain}
             </h1>
           </div>
