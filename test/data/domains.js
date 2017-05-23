@@ -1,7 +1,7 @@
 export const apiTestDomain = {
   domain: 'example.com',
   axfr_ips: ['44.55.66.77'],
-  display_group: 'Example Display Group',
+  group: 'Example Display Group',
   retry_sec: 3600,
   refresh_sec: 14400,
   description: 'Example Description',

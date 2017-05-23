@@ -35,17 +35,22 @@ export function getObjectByLabelLazily(pluralName, label, labelName = 'label') {
       return oldResource;
     }
 
-    const response = await dispatch(api[pluralName].all([], undefined, {
-      headers: {
-        'X-Filter': { [labelName]: label },
-      },
-    }));
+    // The API doesn't allow filtering with X-Filter on 'id'.
+    if (labelName === 'id') {
+      const response = await dispatch(api[pluralName].one([label]));
+    } else {
+      const response = await dispatch(api[pluralName].all([], undefined, {
+        headers: {
+          'X-Filter': { [labelName]: label },
+        },
+      }));
 
-    if (!response.total_results) {
-      throw new Error404();
+      if (!response.total_results) {
+        throw new Error404();
+      }
+
+      return response[pluralName][0];
     }
-
-    return response[pluralName][0];
   };
 }
 

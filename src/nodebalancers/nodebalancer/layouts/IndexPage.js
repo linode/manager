@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
 import { push } from 'react-router-redux';
 import { Tabs } from 'linode-components/tabs';
 
@@ -63,9 +64,13 @@ export class IndexPage extends Component {
     return (
       <div className="details-page">
         <header className="main-header">
-          <div className="container">
-            <Breadcrumbs crumbs={crumbs} />
-            <h1 title={nodebalancer.id}>{title}</h1>
+          <div className="container clearfix">
+            <div className="float-sm-left">
+              <Breadcrumbs crumbs={crumbs} />
+              <h1 title={nodebalancer.id}>
+                <Link to={`/nodebalancers/${nodebalancer.label}`}>{title}</Link>
+              </h1>
+            </div>
           </div>
         </header>
         <div className="main-header-fix"></div>
