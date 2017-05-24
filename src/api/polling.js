@@ -12,7 +12,7 @@ export default function Polling(args) {
     maxBackoffTimeout = null,
   } = args;
   let { timeout = DEFAULT_TIMEOUT } = args;
-  let linearConstant = timeout / 1000;
+  const linearConstant = timeout / 1000;
   let increment = linearConstant;
   let numTries = 0;
 
