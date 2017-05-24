@@ -67,7 +67,7 @@ export function selectObjectByLabel({ collection, paramField, resultField, label
 export function lessThanDatetimeFilter(key, datetime) {
   return {
     [key]: {
-      '+lte': datetime,
+      '+lt': datetime,
     },
   };
 }
@@ -75,7 +75,7 @@ export function lessThanDatetimeFilter(key, datetime) {
 export function greaterThanDatetimeFilter(key, datetime) {
   return {
     [key]: {
-      '+gte': datetime,
+      '+gt': datetime,
     },
   };
 }
