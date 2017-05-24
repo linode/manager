@@ -1,3 +1,4 @@
+import React from 'react';
 import { RouterContext, match } from 'react-router';
 
 import { checkLogin } from './session';
@@ -83,7 +84,8 @@ export class LoadingRouterContext extends RouterContext {
     // Necessary to await this for testing
     await this.runPreload(this.props);
 
-    this.setState({ initialLoad: false });
+    // Wait 1 second after loading
+    setTimeout(() => this.setState({ initialLoad: false }), 1000);
   }
 
   async componentWillReceiveProps(newProps) {
@@ -103,7 +105,12 @@ export class LoadingRouterContext extends RouterContext {
 
   render() {
     if (this.state.initialLoad) {
-      return null;
+      return (
+        <div className="AppLoader">
+          <div className="AppLoader-text">Loading the Manager...</div>
+          <div className="AppLoader-loader"></div>
+        </div>
+      );
     }
 
     // Force scroll to the top of the page on page change.
