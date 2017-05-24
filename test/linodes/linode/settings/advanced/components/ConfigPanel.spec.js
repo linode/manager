@@ -3,11 +3,13 @@ import sinon from 'sinon';
 import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 
-import { ConfigPanel } from '~/linodes/linode/settings/components/ConfigPanel';
+import { ConfigPanel } from '~/linodes/linode/settings/advanced/components/ConfigPanel';
+
 import { expectRequest } from '@/common';
 import { testLinode, testLinode1238, testLinode1239 } from '@/data/linodes';
 
-describe('linodes/linode/settings/components/ConfigPanel', () => {
+
+describe('linodes/linode/settings/advanced/components/ConfigPanel', () => {
   const sandbox = sinon.sandbox.create();
   const dispatch = sandbox.spy();
 
