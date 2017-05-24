@@ -11,7 +11,7 @@ import { linodes } from '~/api';
 import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
 import { AVAILABLE_DISK_SLOTS } from '~/constants';
 
-import { DiskSelect } from '../../components';
+import { DiskSelect } from '../../../components';
 
 
 export default class CreateOrEditConfig extends Component {
@@ -386,7 +386,7 @@ CreateOrEditConfig.defaultProps = {
       enable_modules_dep_helper: true,
       disable_updatedb: true,
     },
-    kernel: '',
+    kernel: 'linode/latest_64',
     virt_mode: 'paravirt',
     run_level: 'default',
     ram_limit: 0,

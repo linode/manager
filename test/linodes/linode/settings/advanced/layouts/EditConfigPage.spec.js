@@ -5,14 +5,14 @@ import React from 'react';
 import { push } from 'react-router-redux';
 import sinon from 'sinon';
 
-import { EditConfigPage } from '~/linodes/linode/settings/layouts/EditConfigPage';
+import { EditConfigPage } from '~/linodes/linode/settings/advanced/layouts/EditConfigPage';
 
 import { expectDispatchOrStoreErrors, expectRequest, expectObjectDeepEquals } from '@/common';
 import { api } from '@/data';
 import { testLinode } from '@/data/linodes';
 
 
-describe('linodes/linode/settings/layouts/EditConfigPage', () => {
+describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
   const sandbox = sinon.sandbox.create();
   const dispatch = sandbox.spy();
 

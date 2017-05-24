@@ -3,7 +3,7 @@ import { mount } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
-import { EditModal } from '~/linodes/linode/settings/components/EditModal';
+import { EditModal } from '~/linodes/linode/settings/advanced/components/EditModal';
 
 import { testLinode1236 } from '@/data/linodes';
 import { hideModal } from '~/actions/modal';

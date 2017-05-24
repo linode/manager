@@ -5,7 +5,7 @@ import { Card, CardHeader } from 'linode-components/cards';
 
 import { setSource } from '~/actions/source';
 import { CreateOrEditConfig } from '../components';
-import { selectLinode } from '../../utilities';
+import { selectLinode } from '../../../utilities';
 
 
 export class AddConfigPage extends Component {
@@ -36,7 +36,6 @@ export class AddConfigPage extends Component {
 
 AddConfigPage.propTypes = {
   linode: PropTypes.object.isRequired,
-  disks: PropTypes.object.isRequired,
   account: PropTypes.object.isRequired,
   kernels: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,

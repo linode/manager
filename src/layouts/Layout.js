@@ -27,7 +27,7 @@ export class Layout extends Component {
     // because this preload is only ever called once. However, future router
     // implementations may decide to let a preload that has already been
     // called before be called again if a certain amount of time has elapsed.
-    const requests = ['kernels', 'types', 'regions', 'distributions'].filter(
+    const requests = ['types', 'regions', 'distributions'].filter(
       type => !Object.values(getState().api[type][type]).length).map(type => api[type].all());
 
     if (!Object.keys(getState().api.profile).length) {
