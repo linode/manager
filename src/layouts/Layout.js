@@ -23,15 +23,20 @@ export class Layout extends Component {
   // all pages are rendered through here and preloads don't get called again
   // if they were just called.
   static async preload({ dispatch, getState }) {
-    try {
-      if (!Object.keys(getState().api.profile).length) {
-        await dispatch(profile.one());
-        // Needed for time display component that is not attached to Redux.
-        const { timezone } = getState().api.profile;
-        setStorage('profile/timezone', timezone);
-      }
-    } catch (response) {
-      dispatch(setError(response));
+    // Filter out objects we've already grabbed this page session.
+    // Note: this doesn't matter at this stage in the router implementation
+    // because this preload is only ever called once. However, future router
+    // implementations may decide to let a preload that has already been
+    // called before be called again if a certain amount of time has elapsed.
+    const requests = ['types', 'regions', 'distributions'].filter(
+      type => !Object.values(getState().api[type][type]).length).map(type => api[type].all());
+
+    if (!Object.keys(getState().api.profile).length) {
+      requests.push(api.profile.one());
+    }
+
+    if (!Object.keys(getState().api.account).length) {
+      requests.push(api.account.one());
     }
   }
 
