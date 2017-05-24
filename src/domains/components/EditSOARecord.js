@@ -18,10 +18,10 @@ export default class EditSOARecord extends Component {
     super(props);
 
     const {
-      group, domain: zone, ttl_sec: defaultTTL, refresh_sec: refreshRate,
+      group, domain, ttl_sec: defaultTTL, refresh_sec: refreshRate,
       retry_sec: retryRate, expire_sec: expireTime, soa_email: email, status,
       axfr_ips: axfrIps, master_ips: masterIps,
-    } = props.zone;
+    } = props.domains;
 
     this.state = {
       errors: {},
