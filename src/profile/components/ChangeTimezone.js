@@ -26,9 +26,9 @@ export default class ChangeTimezone extends Component {
     const { dispatch } = this.props;
     const { timezone } = this.state;
 
-    setStorage('profile/timezone', timezone);
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => profile.put({ timezone }),
+      () => setStorage('profile/timezone', timezone),
     ]));
   }
 
