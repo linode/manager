@@ -71,7 +71,7 @@ describe('router/LoadingRouterContext', () => {
     expect(match.callCount).to.equal(1);
   });
 
-  it('should not render on initial load', async () => {
+  it('renders AppLoader on initial load', async () => {
     // Prevent redirect to login
     sandbox.stub(session, 'checkLogin');
 
@@ -89,6 +89,6 @@ describe('router/LoadingRouterContext', () => {
 
     await rc.instance().componentWillMount();
 
-    expect(rc.instance().render()).to.equal(null);
+    expect(rc.find('.AppLoader').length).to.equal(1);
   });
 });
