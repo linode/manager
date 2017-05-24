@@ -7,7 +7,7 @@ export const DEVTOOLS_DISABLED = ENV_DEVTOOLS_DISABLED || process.env.NODE_ENV =
 export const VERSION = ENV_VERSION;
 /* eslint-enable no-undef */
 
-export const EVENT_POLLING_DELAY = (15 * 1000); // milliseconds
+export const EVENT_POLLING_DELAY = (5 * 1000); // milliseconds
 
 export const LinodeStates = {
   pending: [
@@ -22,8 +22,21 @@ export const LinodeStates = {
 
 export const regionMap = {
   'North America': ['us-east-1a', 'us-south-1a', 'us-west-1a', 'us-southeast-1a'],
-  Europe: ['eu-central-1a', 'eu-central-1a'],
+  Europe: ['eu-central-1a', 'eu-west-1a'],
   Asia: ['ap-northeast-1a', 'ap-south-1a', 'ap-northeast-1b'],
+};
+
+// Still necessary for older DNS lookups.
+export const DATACENTERS = {
+  'us-east-1a': 'newark',
+  'us-south-1a': 'dallas',
+  'us-west-1a': 'fremont',
+  'us-southeast-1a': 'atlanta',
+  'eu-central-1a': 'frankfurt',
+  'eu-west-1a': 'london',
+  'ap-northeast-1a': 'tokyo',
+  'ap-northeast-1b': 'shinagawa1',
+  'ap-south-1a': 'singapore',
 };
 
 export const LinodeStatesReadable = {

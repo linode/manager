@@ -3,11 +3,13 @@ import sinon from 'sinon';
 import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 
-import { ConfigPanel } from '~/linodes/linode/settings/components/ConfigPanel';
+import { ConfigPanel } from '~/linodes/linode/settings/advanced/components/ConfigPanel';
+
 import { expectRequest } from '@/common';
 import { testLinode, testLinode1238, testLinode1239 } from '@/data/linodes';
 
-describe('linodes/linode/settings/components/ConfigPanel', () => {
+
+describe('linodes/linode/settings/advanced/components/ConfigPanel', () => {
   const sandbox = sinon.sandbox.create();
   const dispatch = sandbox.spy();
 
@@ -97,9 +99,8 @@ describe('linodes/linode/settings/components/ConfigPanel', () => {
         linode={testLinode1238}
       />
     );
-    const actionBtn = panel.
-      find('.ConfigPanel-delete').at(0);
-    actionBtn.simulate('click', { preventDefault: () => {} });
+    const deleteBtn = panel.find('Button').at(1);
+    deleteBtn.simulate('click', { preventDefault: () => {} });
     expect(dispatch.callCount).to.equal(1);
     await dispatch.args[0][0].body.props.onOk();
     const fn = dispatch.secondCall.args[0];

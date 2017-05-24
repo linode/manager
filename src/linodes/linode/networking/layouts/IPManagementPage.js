@@ -5,22 +5,17 @@ import _ from 'lodash';
 import { IPTransfer, IPSharing } from '../components';
 import { setError } from '~/actions/errors';
 import { linodes } from '~/api';
-import { createHeaderFilter, objectFromMapByLabel } from '~/api/util';
+import { createHeaderFilter, getObjectByLabelLazily } from '~/api/util';
 import { linodeIPs } from '~/api/linodes';
 import { selectLinode } from '../../utilities';
 
 export class IPManagementPage extends Component {
   static async preload({ dispatch, getState }, { linodeLabel }) {
-    const linode = objectFromMapByLabel(getState().api.linodes.linodes, linodeLabel);
-
     try {
-      const allLinodes = await dispatch(linodes.all([], undefined, createHeaderFilter({
-        region: linode.region,
-      })));
-
-      for (const linode of Object.values(allLinodes.linodes)) {
-        await dispatch(linodeIPs(linode.id));
-      }
+      const { region } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
+      const allLinodes = await dispatch(linodes.all([], undefined, createHeaderFilter({ region })));
+      await Promise.all(Object.values(allLinodes.linodes).map(
+        ({ id }) => dispatch(linodeIPs(id))));
     } catch (e) {
       dispatch(setError(e));
     }

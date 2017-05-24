@@ -1,6 +1,6 @@
 {
   "name": "linode-api-docs",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Linode API Docs",
   "main": "src/index.js",
   "scripts": {
@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "any-json": "^2.2.0",
     "babel-cli": "^6.10.1",
     "babel-core": "^6.3.15",
     "babel-eslint": "^6.1.2",

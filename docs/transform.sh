@@ -9,7 +9,7 @@ convertToJSON() {
   ls /tmp/dev_docs_$TEMPDIR/_data/$folder \
     | while read i; do
       filename=$(echo $i | sed 's/\.yaml$//')
-      any-json -format=yaml /tmp/dev_docs_$TEMPDIR/_data/$folder/$i > "$filename.json"
+      ../../../node_modules/any-json/bin/any-json -format=yaml /tmp/dev_docs_$TEMPDIR/_data/$folder/$i > "$filename.json"
       done
   cd ../../..
 }

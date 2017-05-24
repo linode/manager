@@ -47,7 +47,13 @@ function convertUlToArray(description) {
   return description;
 }
 
-
+function getResourceObjByName(resource) {
+  let resourceObject = apiObjectMap[resource];
+  if (!resourceObject && (resource.charAt(resource.length - 1) === 's')) {
+    resourceObject = apiObjectMap[resource.substr(0, resource.length - 1)];
+  }
+  return resourceObject;
+}
 
 function formatMethodParams(methodObj) {
   let params;
@@ -55,9 +61,12 @@ function formatMethodParams(methodObj) {
     params = Object.keys(methodObj.params).map(function(paramName) {
       const param = methodObj.params[paramName];
 
-      param.description = stripATags(param.description);
+      param.description = convertUlToArray(stripATags(param.description));
+
+      const type = apiObjectMap[param.type] ? 'integer' : param.type;
       return _.merge({}, param, {
-        name: paramName
+        name: paramName,
+        type: type,
       });
     });
   }
@@ -77,6 +86,88 @@ function formatMethodExamples(methodObj) {
   return examples;
 }
 
+function formatSchemaExample(schema) {
+  const schemaExample = {};
+
+  schema.forEach(function(obj) {
+    if (obj.value === undefined && obj.schema) {
+      schemaExample[obj.name] = formatSchemaExample(obj.schema);
+    } else {
+      schemaExample[obj.name] = obj.value;
+    }
+  });
+
+  return schemaExample;
+}
+
+function formatSchemaField(schemaField, enumMap) {
+  let description;
+  if (schemaField._description) {
+    description = schemaField._description;
+  } else {
+    description = schemaField.description;
+  }
+  description = convertUlToArray(description);
+
+  const name = schemaField.name;
+  const editable = schemaField._editable;
+  const filterable = schemaField._filterable;
+  const type = schemaField._type;
+  const subType = schemaField._subtype;
+  const value = schemaField._value;
+
+  let nestedSchema = null;
+  if (apiObjectMap[type]) {
+    nestedSchema = formatSchema(getResourceObjByName(type).schema, enumMap);
+  } else if (type === 'enum' && enumMap[subType]) {
+    nestedSchema = enumMap[subType]; // already formatted
+  } else if (!type) {
+    // TODO: check the name of the nested item?
+    nestedSchema = formatSchema(schemaField, enumMap);
+  }
+
+  return {
+    name: name,
+    description: description,
+    editable: editable,
+    filterable: filterable,
+    type: type,
+    subType: subType,
+    value: value,
+    schema: nestedSchema
+  };
+}
+
+function formatSchema(schema, enumMap={}) {
+  if (Array.isArray(schema)) {
+    return schema;
+  }
+
+  return Object.keys(schema).map(function (schemaName) {
+    if (typeof schema[schemaName] === 'object' && schema[schemaName] !== null) {
+      return formatSchemaField(_.merge(schema[schemaName], { name: schemaName }), enumMap);
+    }
+    // TODO: account for other cases
+  }).filter(function(item) { return item; }); // filter at the end dumps nulls from result of non-object values
+}
+
+function createEnumMap(enums) {
+  const enumMap = {};
+
+  Object.keys(enums).map(function(enumName) {
+    const enumList = enums[enumName];
+
+    enumMap[enumName] = Object.keys(enumList).map(function(key) {
+      return {
+        name: key,
+        description: enumList[key]
+      };
+    });
+  });
+
+  return enumMap;
+}
+
 function formatMethodResource(endpoint, method) {
   // IF this is a GET endpoint and has an associated resource object, combine them
   let resourceObject;
@@ -88,44 +179,22 @@ function formatMethodResource(endpoint, method) {
       resource = 'profile';
     }
 
-    resourceObject = apiObjectMap[resource];
-    if (!resourceObject && (resource.charAt(resource.length - 1) === 's')) {
-      resourceObject = apiObjectMap[resource.substr(0, resource.length - 1)];
-    }
+    resourceObject = getResourceObjByName(resource);
 
     let enums;
     let schema;
     if (resourceObject) {
       enums = resourceObject.enums;
+
+      let enumMap;
       if (enums) {
-        resourceObject.enums = Object.keys(enums).map(function(enumName) {
-          return _.merge({}, enums[enumName], {
-            name: enumName
-          });
-        });
+        enumMap = createEnumMap(enums);
       }
 
       schema = resourceObject.schema;
       if (schema) {
-        resourceObject.schema = Object.keys(schema).map(function(schemaName) {
-          const schemaField = schema[schemaName];
-
-          let description;
-          if (schemaField._description) {
-            description = schemaField._description;
-          } else {
-            description = schemaField.description;
-          }
-
-          description = convertUlToArray(description);
-          return {
-            name: schemaName,
-            description: description,
-            editable: schemaField._editable,
-            type: schemaField._type,
-            value: schemaField._value
-          };
-        });
+        resourceObject.schema = formatSchema(schema, enumMap);
+        resourceObject.example = formatSchemaExample(resourceObject.schema);
       }
     }
   }
@@ -226,7 +295,6 @@ let endpointMap = {
 
 allEndpoints.forEach(function(endpoint) {
   const pathArr = endpoint.base_path.split('/');
-  // console.log('PATH ARR: ', pathArr);
   const basePath = `/${pathArr[1]}`;
   const altBasePath = `${basePath}/${pathArr[2]}`;
   console.log('BASE: ', basePath, ' ALT BASE: ', altBasePath);
@@ -268,7 +336,3 @@ allEndpoints = allEndpoints.map(function(endpoint) {
 const data = JSON.stringify(allEndpoints, null, 2);
 const endpointModule = `module.exports = { endpoints: ${data} };`;
 fs.writeFileSync(path.join(endpointsPath, 'api.js'), endpointModule);
-
-const compressedData = JSON.stringify(allEndpoints);
-const compressedModule = `module.exports = { endpoints: ${compressedData} };`;
-fs.writeFileSync(path.join(endpointsPath, 'api_min.js'), compressedModule);

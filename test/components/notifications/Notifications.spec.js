@@ -7,9 +7,10 @@ import { Notifications } from '~/components/notifications/Notifications';
 
 import { api } from '@/data';
 
+
 const events = api.events;
 
-describe('components/Notifications', function () {
+describe('components/notifications/Notifications', function () {
   const sandbox = sinon.sandbox.create();
   let dispatch;
   let notifications;
@@ -26,11 +27,6 @@ describe('components/Notifications', function () {
   it('defines default state', () => {
     expect(notifications.instance().state).to.exist;
     expect(notifications.instance().state.loadingMore).to.equal(false);
-  });
-
-  it('disables polling on unmount', () => {
-    notifications.instance().componentWillUnmount();
-    expect(notifications.instance()._pollingTimeoutId).to.equal(null);
   });
 
   it('implements fetching an events page', () => {

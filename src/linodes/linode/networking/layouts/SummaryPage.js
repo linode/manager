@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { selectLinode } from '../../utilities';
 import { ipv4ns, ipv6ns, ipv6nsSuffix } from '~/constants';
-import { linodeIPs, addIP } from '~/api/linodes';
+import { addIP } from '~/api/linodes';
 import { setSource } from '~/actions/source';
 import { setError } from '~/actions/errors';
 import { Button } from 'linode-components/buttons';
@@ -11,29 +11,12 @@ import { Card, CardHeader } from 'linode-components/cards';
 import { HelpButton } from 'linode-components/buttons';
 
 export class SummaryPage extends Component {
-  static async preload({ dispatch, getState }, { linodeLabel }) {
-    const { id } = Object.values(getState().api.linodes.linodes).reduce(
-      (match, linode) => linode.label === linodeLabel ? linode : match);
-
-    try {
-      await dispatch(linodeIPs(id));
-    } catch (e) {
-      dispatch(setError(e));
-    }
-  }
-
-  constructor() {
-    super();
-
-    this.addPrivateIP = this.addPrivateIP.bind(this);
-  }
-
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
   }
 
-  async addPrivateIP() {
+  addPrivateIP = async () => {
     const { dispatch, linode } = this.props;
     try {
       await dispatch(addIP(linode.id, 'private'));
@@ -72,7 +55,7 @@ export class SummaryPage extends Component {
     const { ipv4 } = this.props.linode._ips;
 
     return (
-      <div className="col-sm-6">
+      <div className="col-lg-6 col-md-12 col-sm-12">
         <h3>
           IPv4
           <HelpButton
@@ -121,7 +104,7 @@ export class SummaryPage extends Component {
     const { ipv6 } = this.props.linode._ips;
 
     return (
-      <div className="col-sm-6">
+      <div className="col-lg-6 col-md-12 col-sm-12">
         <h3>
           IPv6
           <HelpButton

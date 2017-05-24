@@ -6,9 +6,31 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [0.6.0]
+### Changed
+- lookup lish domains based on datacenter #1795
+- delay fetching kernels until config pages #1846
+- increase timeout between event requests #1856
+- border-right on docs layout #1843
+- added indicator to elements with title attribute #1840
+- added nested response objects #1755
+- removed referrals page #1838
+- added docs python guide #1763
+- lish not hard-coded to alpha #1795
+- added nodebalancer graphs #1805
+
+### Fixed
+- domain groups displayed correctly #1844
+- fixed mass delete #1845
+- fixed missing response examples #1849
+- fixed plan style #1783
+- fixed node up down display #1780
+- fixed backup price calculation #1783
+- fixed plan price calculation #1814
+
 ## [0.5.6] 2017-05-19
 ### Fixed
-- fixed ipv4 rendering in nodebalancers list
+- fixed ipv4 rendering in nodebalancers list #1826
 
 ## [0.5.5] 2017-05-19
 ### Fixed

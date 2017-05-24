@@ -25,7 +25,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import distributions\nTODO\n"
+                    "value": "client.linode.get_distributions()\n"
                   }
                 ],
                 "name": "GET",
@@ -37,44 +37,64 @@ module.exports = { endpoints: [
                     {
                       "name": "id",
                       "type": "string",
-                      "value": "linode/Arch2014.10"
+                      "value": "linode/Arch2014.10",
+                      "schema": null
                     },
                     {
                       "name": "created",
                       "type": "datetime",
-                      "value": "2014-12-24T18:00:09.000Z"
+                      "value": "2014-12-24T18:00:09.000Z",
+                      "schema": null
                     },
                     {
                       "name": "label",
                       "description": "The user-friendly name of this distribution.",
+                      "filterable": true,
                       "type": "string",
-                      "value": "Arch Linux 2014.10"
+                      "value": "Arch Linux 2014.10",
+                      "schema": null
                     },
                     {
                       "name": "minimum_storage_size",
                       "description": "The minimum size required for the distrbution image.",
+                      "filterable": true,
                       "type": "integer",
-                      "value": 800
+                      "value": 800,
+                      "schema": null
                     },
                     {
                       "name": "recommended",
                       "description": "True if this distribution is recommended by Linode.",
+                      "filterable": true,
                       "type": "boolean",
-                      "value": true
+                      "value": true,
+                      "schema": null
                     },
                     {
                       "name": "vendor",
                       "description": "The upstream distribution vendor. Consistent between releases of a distro.",
+                      "filterable": true,
                       "type": "string",
-                      "value": "Arch"
+                      "value": "Arch",
+                      "schema": null
                     },
                     {
                       "name": "x64",
                       "description": "True if this is a 64-bit distribution.",
                       "type": "boolean",
-                      "value": true
+                      "value": true,
+                      "schema": null
                     }
-                  ]
+                  ],
+                  "example": {
+                    "id": "linode/Arch2014.10",
+                    "created": "2014-12-24T18:00:09.000Z",
+                    "label": "Arch Linux 2014.10",
+                    "minimum_storage_size": 800,
+                    "recommended": true,
+                    "vendor": "Arch",
+                    "x64": true
+                  }
                 }
               }
             ],
@@ -96,7 +116,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import distributions\nTODO\n"
+                    "value": "distro = linode.Distribution(client, 'linode/debian8')\n"
                   }
                 ],
                 "name": "GET",
@@ -106,32 +126,66 @@ module.exports = { endpoints: [
                   "description": "Distribution objects describe a Linux distribution supported by Linode.\n",
                   "schema": [
                     {
-                      "name": "0"
+                      "name": "id",
+                      "type": "string",
+                      "value": "linode/Arch2014.10",
+                      "schema": null
                     },
                     {
-                      "name": "1"
+                      "name": "created",
+                      "type": "datetime",
+                      "value": "2014-12-24T18:00:09.000Z",
+                      "schema": null
                     },
                     {
-                      "name": "2",
-                      "description": "The user-friendly name of this distribution."
+                      "name": "label",
+                      "description": "The user-friendly name of this distribution.",
+                      "filterable": true,
+                      "type": "string",
+                      "value": "Arch Linux 2014.10",
+                      "schema": null
                     },
                     {
-                      "name": "3",
-                      "description": "The minimum size required for the distrbution image."
+                      "name": "minimum_storage_size",
+                      "description": "The minimum size required for the distrbution image.",
+                      "filterable": true,
+                      "type": "integer",
+                      "value": 800,
+                      "schema": null
                     },
                     {
-                      "name": "4",
-                      "description": "True if this distribution is recommended by Linode."
+                      "name": "recommended",
+                      "description": "True if this distribution is recommended by Linode.",
+                      "filterable": true,
+                      "type": "boolean",
+                      "value": true,
+                      "schema": null
                     },
                     {
-                      "name": "5",
-                      "description": "The upstream distribution vendor. Consistent between releases of a distro."
+                      "name": "vendor",
+                      "description": "The upstream distribution vendor. Consistent between releases of a distro.",
+                      "filterable": true,
+                      "type": "string",
+                      "value": "Arch",
+                      "schema": null
                     },
                     {
-                      "name": "6",
-                      "description": "True if this is a 64-bit distribution."
+                      "name": "x64",
+                      "description": "True if this is a 64-bit distribution.",
+                      "type": "boolean",
+                      "value": true,
+                      "schema": null
                     }
-                  ]
+                  ],
+                  "example": {
+                    "id": "linode/Arch2014.10",
+                    "created": "2014-12-24T18:00:09.000Z",
+                    "label": "Arch Linux 2014.10",
+                    "minimum_storage_size": 800,
+                    "recommended": true,
+                    "vendor": "Arch",
+                    "x64": true
+                  }
                 }
               }
             ],
@@ -163,7 +217,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import kernels\nTODO\n"
+                    "value": "client.linode.get_kernels()\n"
                   }
                 ],
                 "name": "GET",
@@ -175,60 +229,89 @@ module.exports = { endpoints: [
                     {
                       "name": "id",
                       "type": "string",
-                      "value": "linode/3.5.2-x86_64-linode26"
+                      "value": "linode/3.5.2-x86_64-linode26",
+                      "schema": null
                     },
                     {
                       "name": "description",
                       "description": "Additional, descriptive text about the kernel.",
                       "type": "string",
-                      "value": "null"
+                      "value": "null",
+                      "schema": null
                     },
                     {
                       "name": "xen",
                       "description": "If this kernel is suitable for Xen Linodes.",
+                      "filterable": true,
                       "type": "boolean",
-                      "value": false
+                      "value": false,
+                      "schema": null
                     },
                     {
                       "name": "kvm",
                       "description": "If this kernel is suitable for KVM Linodes.",
+                      "filterable": true,
                       "type": "boolean",
-                      "value": true
+                      "value": true,
+                      "schema": null
                     },
                     {
                       "name": "label",
                       "description": "The friendly name of this kernel.",
+                      "filterable": true,
                       "type": "string",
-                      "value": "3.5.2-x86_64-linode26"
+                      "value": "3.5.2-x86_64-linode26",
+                      "schema": null
                     },
                     {
                       "name": "version",
                       "description": "Linux Kernel version.",
+                      "filterable": true,
                       "type": "string",
-                      "value": "3.5.2"
+                      "value": "3.5.2",
+                      "schema": null
                     },
                     {
                       "name": "x64",
                       "description": "True if this is a 64-bit kernel, false for 32-bit.",
+                      "filterable": true,
                       "type": "boolean",
-                      "value": true
+                      "value": true,
+                      "schema": null
                     },
                     {
                       "name": "current",
+                      "filterable": true,
                       "type": "boolean",
-                      "value": true
+                      "value": true,
+                      "schema": null
                     },
                     {
                       "name": "deprecated",
+                      "filterable": true,
                       "type": "boolean",
-                      "value": false
+                      "value": false,
+                      "schema": null
                     },
                     {
                       "name": "latest",
                       "type": "boolean",
-                      "value": true
+                      "value": true,
+                      "schema": null
                     }
-                  ]
+                  ],
+                  "example": {
+                    "id": "linode/3.5.2-x86_64-linode26",
+                    "description": "null",
+                    "xen": false,
+                    "kvm": true,
+                    "label": "3.5.2-x86_64-linode26",
+                    "version": "3.5.2",
+                    "x64": true,
+                    "current": true,
+                    "deprecated": false,
+                    "latest": true
+                  }
                 }
               }
             ],
@@ -250,7 +333,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import kernels\nTODO\n"
+                    "value": "kernel = linode.Kernel(client, 'linode/latest')\n"
                   }
                 ],
                 "name": "GET",
@@ -260,42 +343,91 @@ module.exports = { endpoints: [
                   "description": "Kernel objects describe a Linux kernel that can be booted on a Linode. Some special kernels are available that have special behavior, such as \"Direct Disk\", which will boot your disk directly instead of supplying a kernel directly to the hypervisor. The latest kernels are \"linode/latest_64\" (64 bit) and \"linode/latest\" (32bit).\n",
                   "schema": [
                     {
-                      "name": "0"
+                      "name": "id",
+                      "type": "string",
+                      "value": "linode/3.5.2-x86_64-linode26",
+                      "schema": null
                     },
                     {
-                      "name": "1",
-                      "description": "Additional, descriptive text about the kernel."
+                      "name": "description",
+                      "description": "Additional, descriptive text about the kernel.",
+                      "type": "string",
+                      "value": "null",
+                      "schema": null
                     },
                     {
-                      "name": "2",
-                      "description": "If this kernel is suitable for Xen Linodes."
+                      "name": "xen",
+                      "description": "If this kernel is suitable for Xen Linodes.",
+                      "filterable": true,
+                      "type": "boolean",
+                      "value": false,
+                      "schema": null
                     },
                     {
-                      "name": "3",
-                      "description": "If this kernel is suitable for KVM Linodes."
+                      "name": "kvm",
+                      "description": "If this kernel is suitable for KVM Linodes.",
+                      "filterable": true,
+                      "type": "boolean",
+                      "value": true,
+                      "schema": null
                     },
                     {
-                      "name": "4",
-                      "description": "The friendly name of this kernel."
+                      "name": "label",
+                      "description": "The friendly name of this kernel.",
+                      "filterable": true,
+                      "type": "string",
+                      "value": "3.5.2-x86_64-linode26",
+                      "schema": null
                     },
                     {
-                      "name": "5",
-                      "description": "Linux Kernel version."
+                      "name": "version",
+                      "description": "Linux Kernel version.",
+                      "filterable": true,
+                      "type": "string",
+                      "value": "3.5.2",
+                      "schema": null
                     },
                     {
-                      "name": "6",
-                      "description": "True if this is a 64-bit kernel, false for 32-bit."
+                      "name": "x64",
+                      "description": "True if this is a 64-bit kernel, false for 32-bit.",
+                      "filterable": true,
+                      "type": "boolean",
+                      "value": true,
+                      "schema": null
                     },
                     {
-                      "name": "7"
+                      "name": "current",
+                      "filterable": true,
+                      "type": "boolean",
+                      "value": true,
+                      "schema": null
                     },
                     {
-                      "name": "8"
+                      "name": "deprecated",
+                      "filterable": true,
+                      "type": "boolean",
+                      "value": false,
+                      "schema": null
                     },
                     {
-                      "name": "9"
+                      "name": "latest",
+                      "type": "boolean",
+                      "value": true,
+                      "schema": null
                     }
-                  ]
+                  ],
+                  "example": {
+                    "id": "linode/3.5.2-x86_64-linode26",
+                    "description": "null",
+                    "xen": false,
+                    "kvm": true,
+                    "label": "3.5.2-x86_64-linode26",
+                    "version": "3.5.2",
+                    "x64": true,
+                    "current": true,
+                    "deprecated": false,
+                    "latest": true
+                  }
                 }
               }
             ],
@@ -329,7 +461,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "my_linodes = client.linode.get_instances()\n"
                   }
                 ],
                 "name": "GET",
@@ -342,7 +474,8 @@ module.exports = { endpoints: [
                       "name": "id",
                       "description": "This Linode's ID",
                       "type": "integer",
-                      "value": 123456
+                      "value": 123456,
+                      "schema": null
                     },
                     {
                       "name": "alerts",
@@ -355,62 +488,623 @@ module.exports = { endpoints: [
                           "Outbound Traffic - Mbit/s - Average outbound traffic over a 2 hour period exceeding this value triggers this alert. (Range 0-10000, default 10)",
                           "Transfer Quota - % - Percentage of network transfer quota used being greater than this value will trigger this alert. (Range 0-400, default 80)"
                         ]
-                      }
+                      },
+                      "schema": [
+                        {
+                          "name": "cpu",
+                          "description": "Average CPU usage over 2 hours exceeding this value triggers this alert.",
+                          "schema": [
+                            {
+                              "name": "enabled",
+                              "type": "boolean",
+                              "value": true,
+                              "schema": null
+                            },
+                            {
+                              "name": "threshold",
+                              "description": "CPU Usage % (Range 0-2000, default 90).",
+                              "type": "integer",
+                              "value": 90,
+                              "schema": null
+                            }
+                          ]
+                        },
+                        {
+                          "name": "io",
+                          "description": "Average Disk IO ops/sec over 2 hours exceeding this value triggers this alert.",
+                          "schema": [
+                            {
+                              "name": "enabled",
+                              "type": "boolean",
+                              "value": true,
+                              "schema": null
+                            },
+                            {
+                              "name": "threshold",
+                              "description": "Disk IO Rate ops/sec (Range 0-100000, default 10000).",
+                              "type": "integer",
+                              "value": 10000,
+                              "schema": null
+                            }
+                          ]
+                        },
+                        {
+                          "name": "transfer_in",
+                          "description": "Average incoming traffic over a 2 hour period exceeding this value triggers this alert.",
+                          "schema": [
+                            {
+                              "name": "enabled",
+                              "type": "boolean",
+                              "value": true,
+                              "schema": null
+                            },
+                            {
+                              "name": "threshold",
+                              "description": "Incoming Traffic Mbit/s (Range 0-40000, default 10).",
+                              "type": "integer",
+                              "value": 10,
+                              "schema": null
+                            }
+                          ]
+                        },
+                        {
+                          "name": "transfer_out",
+                          "description": "Average outbound traffic over a 2 hour period exceeding this value triggers this alert.",
+                          "schema": [
+                            {
+                              "name": "enabled",
+                              "type": "boolean",
+                              "value": true,
+                              "schema": null
+                            },
+                            {
+                              "name": "threshold",
+                              "description": "Outbound Traffic Mbit/s (Range 0-10000, default 10).",
+                              "type": "integer",
+                              "value": 10,
+                              "schema": null
+                            }
+                          ]
+                        },
+                        {
+                          "name": "transfer_quota",
+                          "description": "Percentage of network transfer quota used being greater than this value will trigger this alert.",
+                          "schema": [
+                            {
+                              "name": "enabled",
+                              "type": "boolean",
+                              "value": true,
+                              "schema": null
+                            },
+                            {
+                              "name": "threshold",
+                              "description": "Transfer Quota % (Range 0-400, default 80).",
+                              "type": "integer",
+                              "value": 80,
+                              "schema": null
+                            }
+                          ]
+                        }
+                      ]
                     },
                     {
                       "name": "backups",
-                      "description": "Displays if backups are enabled, last backup datetime if applicable, and the day/window your backups will occur. Window is prefixed by a \"W\" and an integer representing the two-hour window in 24-hour UTC time format. For example, 2AM is represented as \"W2\", 8PM as \"W20\", etc. (W0, W2, W4...W22)\n"
+                      "description": "Displays if backups are enabled, last backup datetime if applicable, and the day/window your backups will occur. Window is prefixed by a \"W\" and an integer representing the two-hour window in 24-hour UTC time format. For example, 2AM is represented as \"W2\", 8PM as \"W20\", etc. (W0, W2, W4...W22)\n",
+                      "schema": [
+                        {
+                          "name": "enabled",
+                          "type": "boolean",
+                          "value": true,
+                          "schema": null
+                        },
+                        {
+                          "name": "schedule",
+                          "description": "The day and window of a Linode's automatic backups.",
+                          "schema": [
+                            {
+                              "name": "day",
+                              "type": "string",
+                              "value": "Tuesday",
+                              "schema": null
+                            },
+                            {
+                              "name": "window",
+                              "type": "string",
+                              "value": "W20",
+                              "schema": null
+                            }
+                          ]
+                        },
+                        {
+                          "name": "last_backup",
+                          "description": "If enabled, the last backup that was successfully taken.",
+                          "type": "backup",
+                          "schema": [
+                            {
+                              "name": "id",
+                              "type": "integer",
+                              "value": 123456,
+                              "schema": null
+                            },
+                            {
+                              "name": "label",
+                              "description": "Human-friendly backup name.",
+                              "filterable": false,
+                              "type": "string",
+                              "value": "A label for your snapshot",
+                              "schema": null
+                            },
+                            {
+                              "name": "status",
+                              "description": "Status of the backup.",
+                              "filterable": false,
+                              "type": "enum",
+                              "subType": "Status",
+                              "value": "successful",
+                              "schema": [
+                                {
+                                  "name": "offline",
+                                  "description": "The Linode is powered off."
+                                },
+                                {
+                                  "name": "booting",
+                                  "description": "The Linode is currently booting up."
+                                },
+                                {
+                                  "name": "running",
+                                  "description": "The Linode is currently running."
+                                },
+                                {
+                                  "name": "shutting_down",
+                                  "description": "The Linode is currently shutting down."
+                                },
+                                {
+                                  "name": "rebooting",
+                                  "description": "The Linode is rebooting."
+                                },
+                                {
+                                  "name": "provisioning",
+                                  "description": "The Linode is being created."
+                                },
+                                {
+                                  "name": "deleting",
+                                  "description": "The Linode is being deleted."
+                                },
+                                {
+                                  "name": "migrating",
+                                  "description": "The Linode is being migrated to a new host/region."
+                                }
+                              ]
+                            },
+                            {
+                              "name": "type",
+                              "description": "Whether this is a snapshot or an auto backup.",
+                              "type": "enum",
+                              "subType": "Type",
+                              "value": "snapshot",
+                              "schema": null
+                            },
+                            {
+                              "name": "region",
+                              "description": "This backup  region.",
+                              "filterable": false,
+                              "type": "region",
+                              "schema": [
+                                {
+                                  "name": "id",
+                                  "type": "string",
+                                  "value": "us-east-1a",
+                                  "schema": null
+                                },
+                                {
+                                  "name": "label",
+                                  "description": "Human-friendly region name.",
+                                  "filterable": true,
+                                  "type": "string",
+                                  "value": "Newark, NJ",
+                                  "schema": null
+                                },
+                                {
+                                  "name": "country",
+                                  "description": "Country",
+                                  "filterable": true,
+                                  "type": "string",
+                                  "value": "US",
+                                  "schema": null
+                                }
+                              ]
+                            },
+                            {
+                              "name": "created",
+                              "type": "datetime",
+                              "value": "2015-09-29T11:21:01",
+                              "schema": null
+                            },
+                            {
+                              "name": "updated",
+                              "type": "datetime",
+                              "value": "2015-09-29T11:21:01",
+                              "schema": null
+                            },
+                            {
+                              "name": "finished",
+                              "description": "An ISO 8601 datetime of when the backup completed.",
+                              "type": "datetime",
+                              "value": "2015-09-29T11:21:01",
+                              "schema": null
+                            },
+                            {
+                              "name": "configs",
+                              "description": "A JSON Array of config labels that were included in this backup.",
+                              "type": "array",
+                              "subType": "string",
+                              "value": [
+                                "My Debian8 Profile"
+                              ],
+                              "schema": null
+                            },
+                            {
+                              "name": "disks",
+                              "description": "A JSON Array of JSON Objects describing the disks included in this backup.",
+                              "type": "array",
+                              "subType": "disk",
+                              "value": [
+                                {
+                                  "label": {
+                                    "_type": "string",
+                                    "_value": "My Debian8 Disk"
+                                  },
+                                  "size": {
+                                    "_type": "integer",
+                                    "_value": 24064
+                                  },
+                                  "filesystem": {
+                                    "_type": "string",
+                                    "_value": "ext4"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "_type": "string",
+                                    "_value": "swap"
+                                  },
+                                  "size": {
+                                    "_type": "integer",
+                                    "_value": 512
+                                  },
+                                  "filesystem": {
+                                    "_type": "string",
+                                    "_value": "swap"
+                                  }
+                                }
+                              ],
+                              "schema": null
+                            },
+                            {
+                              "name": "availability",
+                              "description": "If this backup is available, which backup slot it is in.  Otherwise, unavailable.",
+                              "type": "enum",
+                              "subType": "BackupAvailability",
+                              "value": "daily",
+                              "schema": null
+                            }
+                          ]
+                        },
+                        {
+                          "name": "snapshot",
+                          "description": "If enabled, the last snapshot that was successfully taken.",
+                          "type": "backup",
+                          "schema": [
+                            {
+                              "name": "id",
+                              "type": "integer",
+                              "value": 123456,
+                              "schema": null
+                            },
+                            {
+                              "name": "label",
+                              "description": "Human-friendly backup name.",
+                              "filterable": false,
+                              "type": "string",
+                              "value": "A label for your snapshot",
+                              "schema": null
+                            },
+                            {
+                              "name": "status",
+                              "description": "Status of the backup.",
+                              "filterable": false,
+                              "type": "enum",
+                              "subType": "Status",
+                              "value": "successful",
+                              "schema": [
+                                {
+                                  "name": "offline",
+                                  "description": "The Linode is powered off."
+                                },
+                                {
+                                  "name": "booting",
+                                  "description": "The Linode is currently booting up."
+                                },
+                                {
+                                  "name": "running",
+                                  "description": "The Linode is currently running."
+                                },
+                                {
+                                  "name": "shutting_down",
+                                  "description": "The Linode is currently shutting down."
+                                },
+                                {
+                                  "name": "rebooting",
+                                  "description": "The Linode is rebooting."
+                                },
+                                {
+                                  "name": "provisioning",
+                                  "description": "The Linode is being created."
+                                },
+                                {
+                                  "name": "deleting",
+                                  "description": "The Linode is being deleted."
+                                },
+                                {
+                                  "name": "migrating",
+                                  "description": "The Linode is being migrated to a new host/region."
+                                }
+                              ]
+                            },
+                            {
+                              "name": "type",
+                              "description": "Whether this is a snapshot or an auto backup.",
+                              "type": "enum",
+                              "subType": "Type",
+                              "value": "snapshot",
+                              "schema": null
+                            },
+                            {
+                              "name": "region",
+                              "description": "This backup  region.",
+                              "filterable": false,
+                              "type": "region",
+                              "schema": [
+                                {
+                                  "name": "id",
+                                  "type": "string",
+                                  "value": "us-east-1a",
+                                  "schema": null
+                                },
+                                {
+                                  "name": "label",
+                                  "description": "Human-friendly region name.",
+                                  "filterable": true,
+                                  "type": "string",
+                                  "value": "Newark, NJ",
+                                  "schema": null
+                                },
+                                {
+                                  "name": "country",
+                                  "description": "Country",
+                                  "filterable": true,
+                                  "type": "string",
+                                  "value": "US",
+                                  "schema": null
+                                }
+                              ]
+                            },
+                            {
+                              "name": "created",
+                              "type": "datetime",
+                              "value": "2015-09-29T11:21:01",
+                              "schema": null
+                            },
+                            {
+                              "name": "updated",
+                              "type": "datetime",
+                              "value": "2015-09-29T11:21:01",
+                              "schema": null
+                            },
+                            {
+                              "name": "finished",
+                              "description": "An ISO 8601 datetime of when the backup completed.",
+                              "type": "datetime",
+                              "value": "2015-09-29T11:21:01",
+                              "schema": null
+                            },
+                            {
+                              "name": "configs",
+                              "description": "A JSON Array of config labels that were included in this backup.",
+                              "type": "array",
+                              "subType": "string",
+                              "value": [
+                                "My Debian8 Profile"
+                              ],
+                              "schema": null
+                            },
+                            {
+                              "name": "disks",
+                              "description": "A JSON Array of JSON Objects describing the disks included in this backup.",
+                              "type": "array",
+                              "subType": "disk",
+                              "value": [
+                                {
+                                  "label": {
+                                    "_type": "string",
+                                    "_value": "My Debian8 Disk"
+                                  },
+                                  "size": {
+                                    "_type": "integer",
+                                    "_value": 24064
+                                  },
+                                  "filesystem": {
+                                    "_type": "string",
+                                    "_value": "ext4"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "_type": "string",
+                                    "_value": "swap"
+                                  },
+                                  "size": {
+                                    "_type": "integer",
+                                    "_value": 512
+                                  },
+                                  "filesystem": {
+                                    "_type": "string",
+                                    "_value": "swap"
+                                  }
+                                }
+                              ],
+                              "schema": null
+                            },
+                            {
+                              "name": "availability",
+                              "description": "If this backup is available, which backup slot it is in.  Otherwise, unavailable.",
+                              "type": "enum",
+                              "subType": "BackupAvailability",
+                              "value": "daily",
+                              "schema": null
+                            }
+                          ]
+                        }
+                      ]
                     },
                     {
                       "name": "created",
                       "type": "datetime",
-                      "value": "2015-09-29T11:21:01"
+                      "value": "2015-09-29T11:21:01",
+                      "schema": null
                     },
                     {
                       "name": "region",
                       "description": "This Linode's region.",
-                      "type": "region"
+                      "filterable": true,
+                      "type": "region",
+                      "schema": [
+                        {
+                          "name": "id",
+                          "type": "string",
+                          "value": "us-east-1a",
+                          "schema": null
+                        },
+                        {
+                          "name": "label",
+                          "description": "Human-friendly region name.",
+                          "filterable": true,
+                          "type": "string",
+                          "value": "Newark, NJ",
+                          "schema": null
+                        },
+                        {
+                          "name": "country",
+                          "description": "Country",
+                          "filterable": true,
+                          "type": "string",
+                          "value": "US",
+                          "schema": null
+                        }
+                      ]
                     },
                     {
                       "name": "distribution",
                       "description": "The distribution that this Linode booted to last.",
-                      "type": "distribution"
+                      "filterable": true,
+                      "type": "distribution",
+                      "schema": [
+                        {
+                          "name": "id",
+                          "type": "string",
+                          "value": "linode/Arch2014.10",
+                          "schema": null
+                        },
+                        {
+                          "name": "created",
+                          "type": "datetime",
+                          "value": "2014-12-24T18:00:09.000Z",
+                          "schema": null
+                        },
+                        {
+                          "name": "label",
+                          "description": "The user-friendly name of this distribution.",
+                          "filterable": true,
+                          "type": "string",
+                          "value": "Arch Linux 2014.10",
+                          "schema": null
+                        },
+                        {
+                          "name": "minimum_storage_size",
+                          "description": "The minimum size required for the distrbution image.",
+                          "filterable": true,
+                          "type": "integer",
+                          "value": 800,
+                          "schema": null
+                        },
+                        {
+                          "name": "recommended",
+                          "description": "True if this distribution is recommended by Linode.",
+                          "filterable": true,
+                          "type": "boolean",
+                          "value": true,
+                          "schema": null
+                        },
+                        {
+                          "name": "vendor",
+                          "description": "The upstream distribution vendor. Consistent between releases of a distro.",
+                          "filterable": true,
+                          "type": "string",
+                          "value": "Arch",
+                          "schema": null
+                        },
+                        {
+                          "name": "x64",
+                          "description": "True if this is a 64-bit distribution.",
+                          "type": "boolean",
+                          "value": true,
+                          "schema": null
+                        }
+                      ]
                     },
                     {
                       "name": "group",
                       "description": "This Linode's display group.",
                       "editable": true,
+                      "filterable": true,
                       "type": "string",
-                      "value": "Example"
+                      "value": "Example",
+                      "schema": null
                     },
                     {
                       "name": "ipv4",
                       "description": "This Linode's IPv4 addresses.",
                       "editable": false,
                       "type": "array",
+                      "subType": "string",
                       "value": [
                         "97.107.143.8",
                         "192.168.149.108"
-                      ]
+                      ],
+                      "schema": null
                     },
                     {
                       "name": "ipv6",
                       "description": "This Linode's IPv6 slaac address.",
                       "editable": false,
                       "type": "string",
-                      "value": "2a01:7e00::f03c:91ff:fe96:46f5/64"
+                      "value": "2a01:7e00::f03c:91ff:fe96:46f5/64",
+                      "schema": null
                     },
                     {
                       "name": "label",
                       "description": "This Linode's display label.",
                       "editable": true,
+                      "filterable": true,
                       "type": "string",
-                      "value": "Example Linode"
+                      "value": "Example Linode",
+                      "schema": null
                     },
                     {
                       "name": "type",
                       "description": "The type of Linode.",
                       "type": "array",
+                      "subType": "service",
                       "value": [
                         {
                           "id": {
@@ -467,35 +1161,85 @@ module.exports = { endpoints: [
                             "_value": 2
                           }
                         }
-                      ]
+                      ],
+                      "schema": null
                     },
                     {
                       "name": "status",
                       "description": "The current state of this Linode.",
+                      "filterable": true,
                       "type": "enum",
-                      "value": "running"
+                      "subType": "Status",
+                      "value": "running",
+                      "schema": [
+                        {
+                          "name": "offline",
+                          "description": "The Linode is powered off."
+                        },
+                        {
+                          "name": "booting",
+                          "description": "The Linode is currently booting up."
+                        },
+                        {
+                          "name": "running",
+                          "description": "The Linode is currently running."
+                        },
+                        {
+                          "name": "shutting_down",
+                          "description": "The Linode is currently shutting down."
+                        },
+                        {
+                          "name": "rebooting",
+                          "description": "The Linode is rebooting."
+                        },
+                        {
+                          "name": "provisioning",
+                          "description": "The Linode is being created."
+                        },
+                        {
+                          "name": "deleting",
+                          "description": "The Linode is being deleted."
+                        },
+                        {
+                          "name": "migrating",
+                          "description": "The Linode is being migrated to a new host/region."
+                        }
+                      ]
                     },
                     {
                       "name": "total_transfer",
                       "description": "The amount of outbound traffic used this month.",
                       "type": "integer",
-                      "value": 20000
+                      "value": 20000,
+                      "schema": null
                     },
                     {
                       "name": "updated",
                       "description": "The last updated datetime for this Linode record.",
                       "type": "datetime",
-                      "value": "2015-10-27T09:59:26.000Z"
+                      "value": "2015-10-27T09:59:26.000Z",
+                      "schema": null
                     },
                     {
                       "name": "hypervisor",
                       "description": "The hypervisor this Linode is running on.",
                       "type": "enum",
-                      "value": "kvm"
+                      "subType": "Hypervisor",
+                      "value": "kvm",
+                      "schema": [
+                        {
+                          "name": "kvm",
+                          "description": "KVM"
+                        },
+                        {
+                          "name": "xen",
+                          "description": "Xen"
+                        }
+                      ]
                     }
                   ],
-                  "enums": [
-                    {
+                  "enums": {
+                    "Status": {
                       "offline": "The Linode is powered off.",
                       "booting": "The Linode is currently booting up.",
                       "running": "The Linode is currently running.",
@@ -503,24 +1247,21 @@ module.exports = { endpoints: [
                       "rebooting": "The Linode is rebooting.",
                       "provisioning": "The Linode is being created.",
                       "deleting": "The Linode is being deleted.",
-                      "migrating": "The Linode is being migrated to a new host/region.",
-                      "name": "Status"
+                      "migrating": "The Linode is being migrated to a new host/region."
                     },
-                    {
+                    "BackupStatus": {
                       "pending": "Backup is in the queue and waiting to begin.",
                       "running": "Linode in the process of being backed up.",
                       "needsPostProcessing": "Backups awaiting final integration into existing backup data.",
                       "successful": "Backup successfully completed.",
                       "failed": "Linode backup failed.",
-                      "userAborted": "User aborted current backup process.",
-                      "name": "BackupStatus"
+                      "userAborted": "User aborted current backup process."
                     },
-                    {
+                    "BackupType": {
                       "auto": "Automatic backup",
-                      "snapshot": "User-initiated, manual file backup",
-                      "name": "BackupType"
+                      "snapshot": "User-initiated, manual file backup"
                     },
-                    {
+                    "Window": {
                       "W0": "0000 - 0200 UTC",
                       "W2": "0200 - 0400 UTC",
                       "W4": "0400 - 0600 UTC",
@@ -532,15 +1273,224 @@ module.exports = { endpoints: [
                       "W16": "1600 - 1800 UTC",
                       "W18": "1800 - 2000 UTC",
                       "W20": "2000 - 2200 UTC",
-                      "W22": "2200 - 0000 UTC",
-                      "name": "Window"
+                      "W22": "2200 - 0000 UTC"
                     },
-                    {
+                    "Hypervisor": {
                       "kvm": "KVM",
-                      "xen": "Xen",
-                      "name": "Hypervisor"
+                      "xen": "Xen"
                     }
-                  ]
+                  },
+                  "example": {
+                    "id": 123456,
+                    "alerts": {
+                      "cpu": {
+                        "enabled": true,
+                        "threshold": 90
+                      },
+                      "io": {
+                        "enabled": true,
+                        "threshold": 10000
+                      },
+                      "transfer_in": {
+                        "enabled": true,
+                        "threshold": 10
+                      },
+                      "transfer_out": {
+                        "enabled": true,
+                        "threshold": 10
+                      },
+                      "transfer_quota": {
+                        "enabled": true,
+                        "threshold": 80
+                      }
+                    },
+                    "backups": {
+                      "enabled": true,
+                      "schedule": {
+                        "day": "Tuesday",
+                        "window": "W20"
+                      },
+                      "last_backup": {
+                        "id": 123456,
+                        "label": "A label for your snapshot",
+                        "status": "successful",
+                        "type": "snapshot",
+                        "region": {
+                          "id": "us-east-1a",
+                          "label": "Newark, NJ",
+                          "country": "US"
+                        },
+                        "created": "2015-09-29T11:21:01",
+                        "updated": "2015-09-29T11:21:01",
+                        "finished": "2015-09-29T11:21:01",
+                        "configs": [
+                          "My Debian8 Profile"
+                        ],
+                        "disks": [
+                          {
+                            "label": {
+                              "_type": "string",
+                              "_value": "My Debian8 Disk"
+                            },
+                            "size": {
+                              "_type": "integer",
+                              "_value": 24064
+                            },
+                            "filesystem": {
+                              "_type": "string",
+                              "_value": "ext4"
+                            }
+                          },
+                          {
+                            "label": {
+                              "_type": "string",
+                              "_value": "swap"
+                            },
+                            "size": {
+                              "_type": "integer",
+                              "_value": 512
+                            },
+                            "filesystem": {
+                              "_type": "string",
+                              "_value": "swap"
+                            }
+                          }
+                        ],
+                        "availability": "daily"
+                      },
+                      "snapshot": {
+                        "id": 123456,
+                        "label": "A label for your snapshot",
+                        "status": "successful",
+                        "type": "snapshot",
+                        "region": {
+                          "id": "us-east-1a",
+                          "label": "Newark, NJ",
+                          "country": "US"
+                        },
+                        "created": "2015-09-29T11:21:01",
+                        "updated": "2015-09-29T11:21:01",
+                        "finished": "2015-09-29T11:21:01",
+                        "configs": [
+                          "My Debian8 Profile"
+                        ],
+                        "disks": [
+                          {
+                            "label": {
+                              "_type": "string",
+                              "_value": "My Debian8 Disk"
+                            },
+                            "size": {
+                              "_type": "integer",
+                              "_value": 24064
+                            },
+                            "filesystem": {
+                              "_type": "string",
+                              "_value": "ext4"
+                            }
+                          },
+                          {
+                            "label": {
+                              "_type": "string",
+                              "_value": "swap"
+                            },
+                            "size": {
+                              "_type": "integer",
+                              "_value": 512
+                            },
+                            "filesystem": {
+                              "_type": "string",
+                              "_value": "swap"
+                            }
+                          }
+                        ],
+                        "availability": "daily"
+                      }
+                    },
+                    "created": "2015-09-29T11:21:01",
+                    "region": {
+                      "id": "us-east-1a",
+                      "label": "Newark, NJ",
+                      "country": "US"
+                    },
+                    "distribution": {
+                      "id": "linode/Arch2014.10",
+                      "created": "2014-12-24T18:00:09.000Z",
+                      "label": "Arch Linux 2014.10",
+                      "minimum_storage_size": 800,
+                      "recommended": true,
+                      "vendor": "Arch",
+                      "x64": true
+                    },
+                    "group": "Example",
+                    "ipv4": [
+                      "97.107.143.8",
+                      "192.168.149.108"
+                    ],
+                    "ipv6": "2a01:7e00::f03c:91ff:fe96:46f5/64",
+                    "label": "Example Linode",
+                    "type": [
+                      {
+                        "id": {
+                          "_type": "string",
+                          "_value": "g5-standard-1"
+                        },
+                        "backups_price": {
+                          "_type": "integer",
+                          "_value": 250
+                        },
+                        "class": {
+                          "_type": "string",
+                          "_value": "standard"
+                        },
+                        "disk": {
+                          "_type": "integer",
+                          "_value": 24576
+                        },
+                        "hourly_price": {
+                          "_type": "integer",
+                          "_value": 1
+                        },
+                        "label": {
+                          "_type": "string",
+                          "_value": "Linode 2048"
+                        },
+                        "mbits_out": {
+                          "_type": "integer",
+                          "_value": 125
+                        },
+                        "monthly_price": {
+                          "_type": "integer",
+                          "_value": 1000
+                        },
+                        "ram": {
+                          "_type": "integer",
+                          "_value": 2048
+                        },
+                        "service_type": {
+                          "_type": "enum",
+                          "_subtype": "Service Type",
+                          "_value": "linode"
+                        },
+                        "storage": {
+                          "_type": "integer",
+                          "_value": 24576
+                        },
+                        "transfer": {
+                          "_type": "integer",
+                          "_value": 2000
+                        },
+                        "vcpus": {
+                          "_type": "integer",
+                          "_value": 2
+                        }
+                      }
+                    ],
+                    "status": "running",
+                    "total_transfer": 20000,
+                    "updated": "2015-10-27T09:59:26.000Z",
+                    "hypervisor": "kvm"
+                  }
                 }
               },
               {
@@ -550,12 +1500,12 @@ module.exports = { endpoints: [
                 "params": [
                   {
                     "description": "A region ID to provision this Linode in.\n",
-                    "type": "region",
+                    "type": "integer",
                     "name": "region"
                   },
                   {
                     "description": "A Linode type ID to use for this Linode.\n",
-                    "type": "service",
+                    "type": "integer",
                     "name": "type"
                   },
                   {
@@ -573,12 +1523,17 @@ module.exports = { endpoints: [
                   {
                     "optional": true,
                     "description": "The Distribution to deploy this Linode with.  May not be included if 'backup' is sent.\n",
-                    "type": "distribution",
+                    "type": "integer",
                     "name": "distribution"
                   },
                   {
                     "optional": "unless source == \"distro\"",
-                    "description": "The root password to use when sourcing this Linode from a distribution. <ul><li>root_pass is required if the source provided is a distribution.</li></ul>\n",
+                    "description": {
+                      "descText": "The root password to use when sourcing this Linode from a distribution. \n",
+                      "listItems": [
+                        "root_pass is required if the source provided is a distribution."
+                      ]
+                    },
                     "name": "root_pass"
                   },
                   {
@@ -588,20 +1543,30 @@ module.exports = { endpoints: [
                   },
                   {
                     "optional": true,
-                    "description": "The stackscript ID to deploy with this disk. <ul><li>Must provide a distribution. Distribution must be one that the stackscript can be deployed to.</li></ul>\n",
-                    "type": "stackscript",
+                    "description": {
+                      "descText": "The stackscript ID to deploy with this disk. \n",
+                      "listItems": [
+                        "Must provide a distribution. Distribution must be one that the stackscript can be deployed to."
+                      ]
+                    },
+                    "type": "integer",
                     "name": "stackscript"
                   },
                   {
                     "optional": true,
-                    "description": "UDF (user-defined fields) for this stackscript. Defaults to \"{}\". <ul><li>Must match UDFs required by stackscript.</li></ul>\n",
+                    "description": {
+                      "descText": "UDF (user-defined fields) for this stackscript. Defaults to \"{}\". \n",
+                      "listItems": [
+                        "Must match UDFs required by stackscript."
+                      ]
+                    },
                     "type": "string",
                     "name": "stackscript_udf_responses"
                   },
                   {
                     "optional": true,
                     "description": "The Backup to restore to the newly created Linode.  May not be included if 'distribution' is sent.\n",
-                    "type": "backup",
+                    "type": "integer",
                     "name": "backup"
                   },
                   {
@@ -617,7 +1582,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "my_linode = client.linode.create_instance(client.get_regions().first(), 'g5-nanode-1')\n\ndistro = client.linode.get_distributons(linode.Distribution.vendor == 'debian').first()\n( my_linode_2, password ) = client.linode.create_instance('us-east-1a', 'g5-standard-1', distribtuion=distro)\n"
                   }
                 ],
                 "name": "POST"
@@ -643,7 +1608,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "my_linode = linode.Linode(client, 123)\n"
                   }
                 ],
                 "name": "GET",
@@ -653,11 +1618,14 @@ module.exports = { endpoints: [
                   "description": "Linode objects describe a single Linode on your account.\n",
                   "schema": [
                     {
-                      "name": "0",
-                      "description": "This Linode's ID"
+                      "name": "id",
+                      "description": "This Linode's ID",
+                      "type": "integer",
+                      "value": 123456,
+                      "schema": null
                     },
                     {
-                      "name": "1",
+                      "name": "alerts",
                       "description": {
                         "descText": "Toggle and set thresholds for receiving email alerts. \n",
                         "listItems": [
@@ -667,62 +1635,758 @@ module.exports = { endpoints: [
                           "Outbound Traffic - Mbit/s - Average outbound traffic over a 2 hour period exceeding this value triggers this alert. (Range 0-10000, default 10)",
                           "Transfer Quota - % - Percentage of network transfer quota used being greater than this value will trigger this alert. (Range 0-400, default 80)"
                         ]
-                      }
+                      },
+                      "schema": [
+                        {
+                          "name": "cpu",
+                          "description": "Average CPU usage over 2 hours exceeding this value triggers this alert.",
+                          "schema": [
+                            {
+                              "name": "enabled",
+                              "type": "boolean",
+                              "value": true,
+                              "schema": null
+                            },
+                            {
+                              "name": "threshold",
+                              "description": "CPU Usage % (Range 0-2000, default 90).",
+                              "type": "integer",
+                              "value": 90,
+                              "schema": null
+                            }
+                          ]
+                        },
+                        {
+                          "name": "io",
+                          "description": "Average Disk IO ops/sec over 2 hours exceeding this value triggers this alert.",
+                          "schema": [
+                            {
+                              "name": "enabled",
+                              "type": "boolean",
+                              "value": true,
+                              "schema": null
+                            },
+                            {
+                              "name": "threshold",
+                              "description": "Disk IO Rate ops/sec (Range 0-100000, default 10000).",
+                              "type": "integer",
+                              "value": 10000,
+                              "schema": null
+                            }
+                          ]
+                        },
+                        {
+                          "name": "transfer_in",
+                          "description": "Average incoming traffic over a 2 hour period exceeding this value triggers this alert.",
+                          "schema": [
+                            {
+                              "name": "enabled",
+                              "type": "boolean",
+                              "value": true,
+                              "schema": null
+                            },
+                            {
+                              "name": "threshold",
+                              "description": "Incoming Traffic Mbit/s (Range 0-40000, default 10).",
+                              "type": "integer",
+                              "value": 10,
+                              "schema": null
+                            }
+                          ]
+                        },
+                        {
+                          "name": "transfer_out",
+                          "description": "Average outbound traffic over a 2 hour period exceeding this value triggers this alert.",
+                          "schema": [
+                            {
+                              "name": "enabled",
+                              "type": "boolean",
+                              "value": true,
+                              "schema": null
+                            },
+                            {
+                              "name": "threshold",
+                              "description": "Outbound Traffic Mbit/s (Range 0-10000, default 10).",
+                              "type": "integer",
+                              "value": 10,
+                              "schema": null
+                            }
+                          ]
+                        },
+                        {
+                          "name": "transfer_quota",
+                          "description": "Percentage of network transfer quota used being greater than this value will trigger this alert.",
+                          "schema": [
+                            {
+                              "name": "enabled",
+                              "type": "boolean",
+                              "value": true,
+                              "schema": null
+                            },
+                            {
+                              "name": "threshold",
+                              "description": "Transfer Quota % (Range 0-400, default 80).",
+                              "type": "integer",
+                              "value": 80,
+                              "schema": null
+                            }
+                          ]
+                        }
+                      ]
                     },
                     {
-                      "name": "2",
-                      "description": "Displays if backups are enabled, last backup datetime if applicable, and the day/window your backups will occur. Window is prefixed by a \"W\" and an integer representing the two-hour window in 24-hour UTC time format. For example, 2AM is represented as \"W2\", 8PM as \"W20\", etc. (W0, W2, W4...W22)\n"
+                      "name": "backups",
+                      "description": "Displays if backups are enabled, last backup datetime if applicable, and the day/window your backups will occur. Window is prefixed by a \"W\" and an integer representing the two-hour window in 24-hour UTC time format. For example, 2AM is represented as \"W2\", 8PM as \"W20\", etc. (W0, W2, W4...W22)\n",
+                      "schema": [
+                        {
+                          "name": "enabled",
+                          "type": "boolean",
+                          "value": true,
+                          "schema": null
+                        },
+                        {
+                          "name": "schedule",
+                          "description": "The day and window of a Linode's automatic backups.",
+                          "schema": [
+                            {
+                              "name": "day",
+                              "type": "string",
+                              "value": "Tuesday",
+                              "schema": null
+                            },
+                            {
+                              "name": "window",
+                              "type": "string",
+                              "value": "W20",
+                              "schema": null
+                            }
+                          ]
+                        },
+                        {
+                          "name": "last_backup",
+                          "description": "If enabled, the last backup that was successfully taken.",
+                          "type": "backup",
+                          "schema": [
+                            {
+                              "name": "id",
+                              "type": "integer",
+                              "value": 123456,
+                              "schema": null
+                            },
+                            {
+                              "name": "label",
+                              "description": "Human-friendly backup name.",
+                              "filterable": false,
+                              "type": "string",
+                              "value": "A label for your snapshot",
+                              "schema": null
+                            },
+                            {
+                              "name": "status",
+                              "description": "Status of the backup.",
+                              "filterable": false,
+                              "type": "enum",
+                              "subType": "Status",
+                              "value": "successful",
+                              "schema": [
+                                {
+                                  "name": "offline",
+                                  "description": "The Linode is powered off."
+                                },
+                                {
+                                  "name": "booting",
+                                  "description": "The Linode is currently booting up."
+                                },
+                                {
+                                  "name": "running",
+                                  "description": "The Linode is currently running."
+                                },
+                                {
+                                  "name": "shutting_down",
+                                  "description": "The Linode is currently shutting down."
+                                },
+                                {
+                                  "name": "rebooting",
+                                  "description": "The Linode is rebooting."
+                                },
+                                {
+                                  "name": "provisioning",
+                                  "description": "The Linode is being created."
+                                },
+                                {
+                                  "name": "deleting",
+                                  "description": "The Linode is being deleted."
+                                },
+                                {
+                                  "name": "migrating",
+                                  "description": "The Linode is being migrated to a new host/region."
+                                }
+                              ]
+                            },
+                            {
+                              "name": "type",
+                              "description": "Whether this is a snapshot or an auto backup.",
+                              "type": "enum",
+                              "subType": "Type",
+                              "value": "snapshot",
+                              "schema": null
+                            },
+                            {
+                              "name": "region",
+                              "description": "This backup  region.",
+                              "filterable": false,
+                              "type": "region",
+                              "schema": [
+                                {
+                                  "name": "id",
+                                  "type": "string",
+                                  "value": "us-east-1a",
+                                  "schema": null
+                                },
+                                {
+                                  "name": "label",
+                                  "description": "Human-friendly region name.",
+                                  "filterable": true,
+                                  "type": "string",
+                                  "value": "Newark, NJ",
+                                  "schema": null
+                                },
+                                {
+                                  "name": "country",
+                                  "description": "Country",
+                                  "filterable": true,
+                                  "type": "string",
+                                  "value": "US",
+                                  "schema": null
+                                }
+                              ]
+                            },
+                            {
+                              "name": "created",
+                              "type": "datetime",
+                              "value": "2015-09-29T11:21:01",
+                              "schema": null
+                            },
+                            {
+                              "name": "updated",
+                              "type": "datetime",
+                              "value": "2015-09-29T11:21:01",
+                              "schema": null
+                            },
+                            {
+                              "name": "finished",
+                              "description": "An ISO 8601 datetime of when the backup completed.",
+                              "type": "datetime",
+                              "value": "2015-09-29T11:21:01",
+                              "schema": null
+                            },
+                            {
+                              "name": "configs",
+                              "description": "A JSON Array of config labels that were included in this backup.",
+                              "type": "array",
+                              "subType": "string",
+                              "value": [
+                                "My Debian8 Profile"
+                              ],
+                              "schema": null
+                            },
+                            {
+                              "name": "disks",
+                              "description": "A JSON Array of JSON Objects describing the disks included in this backup.",
+                              "type": "array",
+                              "subType": "disk",
+                              "value": [
+                                {
+                                  "label": {
+                                    "_type": "string",
+                                    "_value": "My Debian8 Disk"
+                                  },
+                                  "size": {
+                                    "_type": "integer",
+                                    "_value": 24064
+                                  },
+                                  "filesystem": {
+                                    "_type": "string",
+                                    "_value": "ext4"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "_type": "string",
+                                    "_value": "swap"
+                                  },
+                                  "size": {
+                                    "_type": "integer",
+                                    "_value": 512
+                                  },
+                                  "filesystem": {
+                                    "_type": "string",
+                                    "_value": "swap"
+                                  }
+                                }
+                              ],
+                              "schema": null
+                            },
+                            {
+                              "name": "availability",
+                              "description": "If this backup is available, which backup slot it is in.  Otherwise, unavailable.",
+                              "type": "enum",
+                              "subType": "BackupAvailability",
+                              "value": "daily",
+                              "schema": null
+                            }
+                          ]
+                        },
+                        {
+                          "name": "snapshot",
+                          "description": "If enabled, the last snapshot that was successfully taken.",
+                          "type": "backup",
+                          "schema": [
+                            {
+                              "name": "id",
+                              "type": "integer",
+                              "value": 123456,
+                              "schema": null
+                            },
+                            {
+                              "name": "label",
+                              "description": "Human-friendly backup name.",
+                              "filterable": false,
+                              "type": "string",
+                              "value": "A label for your snapshot",
+                              "schema": null
+                            },
+                            {
+                              "name": "status",
+                              "description": "Status of the backup.",
+                              "filterable": false,
+                              "type": "enum",
+                              "subType": "Status",
+                              "value": "successful",
+                              "schema": [
+                                {
+                                  "name": "offline",
+                                  "description": "The Linode is powered off."
+                                },
+                                {
+                                  "name": "booting",
+                                  "description": "The Linode is currently booting up."
+                                },
+                                {
+                                  "name": "running",
+                                  "description": "The Linode is currently running."
+                                },
+                                {
+                                  "name": "shutting_down",
+                                  "description": "The Linode is currently shutting down."
+                                },
+                                {
+                                  "name": "rebooting",
+                                  "description": "The Linode is rebooting."
+                                },
+                                {
+                                  "name": "provisioning",
+                                  "description": "The Linode is being created."
+                                },
+                                {
+                                  "name": "deleting",
+                                  "description": "The Linode is being deleted."
+                                },
+                                {
+                                  "name": "migrating",
+                                  "description": "The Linode is being migrated to a new host/region."
+                                }
+                              ]
+                            },
+                            {
+                              "name": "type",
+                              "description": "Whether this is a snapshot or an auto backup.",
+                              "type": "enum",
+                              "subType": "Type",
+                              "value": "snapshot",
+                              "schema": null
+                            },
+                            {
+                              "name": "region",
+                              "description": "This backup  region.",
+                              "filterable": false,
+                              "type": "region",
+                              "schema": [
+                                {
+                                  "name": "id",
+                                  "type": "string",
+                                  "value": "us-east-1a",
+                                  "schema": null
+                                },
+                                {
+                                  "name": "label",
+                                  "description": "Human-friendly region name.",
+                                  "filterable": true,
+                                  "type": "string",
+                                  "value": "Newark, NJ",
+                                  "schema": null
+                                },
+                                {
+                                  "name": "country",
+                                  "description": "Country",
+                                  "filterable": true,
+                                  "type": "string",
+                                  "value": "US",
+                                  "schema": null
+                                }
+                              ]
+                            },
+                            {
+                              "name": "created",
+                              "type": "datetime",
+                              "value": "2015-09-29T11:21:01",
+                              "schema": null
+                            },
+                            {
+                              "name": "updated",
+                              "type": "datetime",
+                              "value": "2015-09-29T11:21:01",
+                              "schema": null
+                            },
+                            {
+                              "name": "finished",
+                              "description": "An ISO 8601 datetime of when the backup completed.",
+                              "type": "datetime",
+                              "value": "2015-09-29T11:21:01",
+                              "schema": null
+                            },
+                            {
+                              "name": "configs",
+                              "description": "A JSON Array of config labels that were included in this backup.",
+                              "type": "array",
+                              "subType": "string",
+                              "value": [
+                                "My Debian8 Profile"
+                              ],
+                              "schema": null
+                            },
+                            {
+                              "name": "disks",
+                              "description": "A JSON Array of JSON Objects describing the disks included in this backup.",
+                              "type": "array",
+                              "subType": "disk",
+                              "value": [
+                                {
+                                  "label": {
+                                    "_type": "string",
+                                    "_value": "My Debian8 Disk"
+                                  },
+                                  "size": {
+                                    "_type": "integer",
+                                    "_value": 24064
+                                  },
+                                  "filesystem": {
+                                    "_type": "string",
+                                    "_value": "ext4"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "_type": "string",
+                                    "_value": "swap"
+                                  },
+                                  "size": {
+                                    "_type": "integer",
+                                    "_value": 512
+                                  },
+                                  "filesystem": {
+                                    "_type": "string",
+                                    "_value": "swap"
+                                  }
+                                }
+                              ],
+                              "schema": null
+                            },
+                            {
+                              "name": "availability",
+                              "description": "If this backup is available, which backup slot it is in.  Otherwise, unavailable.",
+                              "type": "enum",
+                              "subType": "BackupAvailability",
+                              "value": "daily",
+                              "schema": null
+                            }
+                          ]
+                        }
+                      ]
                     },
                     {
-                      "name": "3"
+                      "name": "created",
+                      "type": "datetime",
+                      "value": "2015-09-29T11:21:01",
+                      "schema": null
                     },
                     {
-                      "name": "4",
-                      "description": "This Linode's region."
+                      "name": "region",
+                      "description": "This Linode's region.",
+                      "filterable": true,
+                      "type": "region",
+                      "schema": [
+                        {
+                          "name": "id",
+                          "type": "string",
+                          "value": "us-east-1a",
+                          "schema": null
+                        },
+                        {
+                          "name": "label",
+                          "description": "Human-friendly region name.",
+                          "filterable": true,
+                          "type": "string",
+                          "value": "Newark, NJ",
+                          "schema": null
+                        },
+                        {
+                          "name": "country",
+                          "description": "Country",
+                          "filterable": true,
+                          "type": "string",
+                          "value": "US",
+                          "schema": null
+                        }
+                      ]
                     },
                     {
-                      "name": "5",
-                      "description": "The distribution that this Linode booted to last."
+                      "name": "distribution",
+                      "description": "The distribution that this Linode booted to last.",
+                      "filterable": true,
+                      "type": "distribution",
+                      "schema": [
+                        {
+                          "name": "id",
+                          "type": "string",
+                          "value": "linode/Arch2014.10",
+                          "schema": null
+                        },
+                        {
+                          "name": "created",
+                          "type": "datetime",
+                          "value": "2014-12-24T18:00:09.000Z",
+                          "schema": null
+                        },
+                        {
+                          "name": "label",
+                          "description": "The user-friendly name of this distribution.",
+                          "filterable": true,
+                          "type": "string",
+                          "value": "Arch Linux 2014.10",
+                          "schema": null
+                        },
+                        {
+                          "name": "minimum_storage_size",
+                          "description": "The minimum size required for the distrbution image.",
+                          "filterable": true,
+                          "type": "integer",
+                          "value": 800,
+                          "schema": null
+                        },
+                        {
+                          "name": "recommended",
+                          "description": "True if this distribution is recommended by Linode.",
+                          "filterable": true,
+                          "type": "boolean",
+                          "value": true,
+                          "schema": null
+                        },
+                        {
+                          "name": "vendor",
+                          "description": "The upstream distribution vendor. Consistent between releases of a distro.",
+                          "filterable": true,
+                          "type": "string",
+                          "value": "Arch",
+                          "schema": null
+                        },
+                        {
+                          "name": "x64",
+                          "description": "True if this is a 64-bit distribution.",
+                          "type": "boolean",
+                          "value": true,
+                          "schema": null
+                        }
+                      ]
                     },
                     {
-                      "name": "6",
-                      "description": "This Linode's display group."
+                      "name": "group",
+                      "description": "This Linode's display group.",
+                      "editable": true,
+                      "filterable": true,
+                      "type": "string",
+                      "value": "Example",
+                      "schema": null
                     },
                     {
-                      "name": "7",
-                      "description": "This Linode's IPv4 addresses."
+                      "name": "ipv4",
+                      "description": "This Linode's IPv4 addresses.",
+                      "editable": false,
+                      "type": "array",
+                      "subType": "string",
+                      "value": [
+                        "97.107.143.8",
+                        "192.168.149.108"
+                      ],
+                      "schema": null
                     },
                     {
-                      "name": "8",
-                      "description": "This Linode's IPv6 slaac address."
+                      "name": "ipv6",
+                      "description": "This Linode's IPv6 slaac address.",
+                      "editable": false,
+                      "type": "string",
+                      "value": "2a01:7e00::f03c:91ff:fe96:46f5/64",
+                      "schema": null
                     },
                     {
-                      "name": "9",
-                      "description": "This Linode's display label."
+                      "name": "label",
+                      "description": "This Linode's display label.",
+                      "editable": true,
+                      "filterable": true,
+                      "type": "string",
+                      "value": "Example Linode",
+                      "schema": null
                     },
                     {
-                      "name": "10",
-                      "description": "The type of Linode."
+                      "name": "type",
+                      "description": "The type of Linode.",
+                      "type": "array",
+                      "subType": "service",
+                      "value": [
+                        {
+                          "id": {
+                            "_type": "string",
+                            "_value": "g5-standard-1"
+                          },
+                          "backups_price": {
+                            "_type": "integer",
+                            "_value": 250
+                          },
+                          "class": {
+                            "_type": "string",
+                            "_value": "standard"
+                          },
+                          "disk": {
+                            "_type": "integer",
+                            "_value": 24576
+                          },
+                          "hourly_price": {
+                            "_type": "integer",
+                            "_value": 1
+                          },
+                          "label": {
+                            "_type": "string",
+                            "_value": "Linode 2048"
+                          },
+                          "mbits_out": {
+                            "_type": "integer",
+                            "_value": 125
+                          },
+                          "monthly_price": {
+                            "_type": "integer",
+                            "_value": 1000
+                          },
+                          "ram": {
+                            "_type": "integer",
+                            "_value": 2048
+                          },
+                          "service_type": {
+                            "_type": "enum",
+                            "_subtype": "Service Type",
+                            "_value": "linode"
+                          },
+                          "storage": {
+                            "_type": "integer",
+                            "_value": 24576
+                          },
+                          "transfer": {
+                            "_type": "integer",
+                            "_value": 2000
+                          },
+                          "vcpus": {
+                            "_type": "integer",
+                            "_value": 2
+                          }
+                        }
+                      ],
+                      "schema": null
                     },
                     {
-                      "name": "11",
-                      "description": "The current state of this Linode."
+                      "name": "status",
+                      "description": "The current state of this Linode.",
+                      "filterable": true,
+                      "type": "enum",
+                      "subType": "Status",
+                      "value": "running",
+                      "schema": [
+                        {
+                          "name": "offline",
+                          "description": "The Linode is powered off."
+                        },
+                        {
+                          "name": "booting",
+                          "description": "The Linode is currently booting up."
+                        },
+                        {
+                          "name": "running",
+                          "description": "The Linode is currently running."
+                        },
+                        {
+                          "name": "shutting_down",
+                          "description": "The Linode is currently shutting down."
+                        },
+                        {
+                          "name": "rebooting",
+                          "description": "The Linode is rebooting."
+                        },
+                        {
+                          "name": "provisioning",
+                          "description": "The Linode is being created."
+                        },
+                        {
+                          "name": "deleting",
+                          "description": "The Linode is being deleted."
+                        },
+                        {
+                          "name": "migrating",
+                          "description": "The Linode is being migrated to a new host/region."
+                        }
+                      ]
                     },
                     {
-                      "name": "12",
-                      "description": "The amount of outbound traffic used this month."
+                      "name": "total_transfer",
+                      "description": "The amount of outbound traffic used this month.",
+                      "type": "integer",
+                      "value": 20000,
+                      "schema": null
                     },
                     {
-                      "name": "13",
-                      "description": "The last updated datetime for this Linode record."
+                      "name": "updated",
+                      "description": "The last updated datetime for this Linode record.",
+                      "type": "datetime",
+                      "value": "2015-10-27T09:59:26.000Z",
+                      "schema": null
                     },
                     {
-                      "name": "14",
-                      "description": "The hypervisor this Linode is running on."
+                      "name": "hypervisor",
+                      "description": "The hypervisor this Linode is running on.",
+                      "type": "enum",
+                      "subType": "Hypervisor",
+                      "value": "kvm",
+                      "schema": [
+                        {
+                          "name": "kvm",
+                          "description": "KVM"
+                        },
+                        {
+                          "name": "xen",
+                          "description": "Xen"
+                        }
+                      ]
                     }
                   ],
-                  "enums": [
-                    {
+                  "enums": {
+                    "Status": {
                       "offline": "The Linode is powered off.",
                       "booting": "The Linode is currently booting up.",
                       "running": "The Linode is currently running.",
@@ -730,24 +2394,21 @@ module.exports = { endpoints: [
                       "rebooting": "The Linode is rebooting.",
                       "provisioning": "The Linode is being created.",
                       "deleting": "The Linode is being deleted.",
-                      "migrating": "The Linode is being migrated to a new host/region.",
-                      "name": "0"
+                      "migrating": "The Linode is being migrated to a new host/region."
                     },
-                    {
+                    "BackupStatus": {
                       "pending": "Backup is in the queue and waiting to begin.",
                       "running": "Linode in the process of being backed up.",
                       "needsPostProcessing": "Backups awaiting final integration into existing backup data.",
                       "successful": "Backup successfully completed.",
                       "failed": "Linode backup failed.",
-                      "userAborted": "User aborted current backup process.",
-                      "name": "1"
+                      "userAborted": "User aborted current backup process."
                     },
-                    {
+                    "BackupType": {
                       "auto": "Automatic backup",
-                      "snapshot": "User-initiated, manual file backup",
-                      "name": "2"
+                      "snapshot": "User-initiated, manual file backup"
                     },
-                    {
+                    "Window": {
                       "W0": "0000 - 0200 UTC",
                       "W2": "0200 - 0400 UTC",
                       "W4": "0400 - 0600 UTC",
@@ -759,15 +2420,224 @@ module.exports = { endpoints: [
                       "W16": "1600 - 1800 UTC",
                       "W18": "1800 - 2000 UTC",
                       "W20": "2000 - 2200 UTC",
-                      "W22": "2200 - 0000 UTC",
-                      "name": "3"
+                      "W22": "2200 - 0000 UTC"
                     },
-                    {
+                    "Hypervisor": {
                       "kvm": "KVM",
-                      "xen": "Xen",
-                      "name": "4"
+                      "xen": "Xen"
                     }
-                  ]
+                  },
+                  "example": {
+                    "id": 123456,
+                    "alerts": {
+                      "cpu": {
+                        "enabled": true,
+                        "threshold": 90
+                      },
+                      "io": {
+                        "enabled": true,
+                        "threshold": 10000
+                      },
+                      "transfer_in": {
+                        "enabled": true,
+                        "threshold": 10
+                      },
+                      "transfer_out": {
+                        "enabled": true,
+                        "threshold": 10
+                      },
+                      "transfer_quota": {
+                        "enabled": true,
+                        "threshold": 80
+                      }
+                    },
+                    "backups": {
+                      "enabled": true,
+                      "schedule": {
+                        "day": "Tuesday",
+                        "window": "W20"
+                      },
+                      "last_backup": {
+                        "id": 123456,
+                        "label": "A label for your snapshot",
+                        "status": "successful",
+                        "type": "snapshot",
+                        "region": {
+                          "id": "us-east-1a",
+                          "label": "Newark, NJ",
+                          "country": "US"
+                        },
+                        "created": "2015-09-29T11:21:01",
+                        "updated": "2015-09-29T11:21:01",
+                        "finished": "2015-09-29T11:21:01",
+                        "configs": [
+                          "My Debian8 Profile"
+                        ],
+                        "disks": [
+                          {
+                            "label": {
+                              "_type": "string",
+                              "_value": "My Debian8 Disk"
+                            },
+                            "size": {
+                              "_type": "integer",
+                              "_value": 24064
+                            },
+                            "filesystem": {
+                              "_type": "string",
+                              "_value": "ext4"
+                            }
+                          },
+                          {
+                            "label": {
+                              "_type": "string",
+                              "_value": "swap"
+                            },
+                            "size": {
+                              "_type": "integer",
+                              "_value": 512
+                            },
+                            "filesystem": {
+                              "_type": "string",
+                              "_value": "swap"
+                            }
+                          }
+                        ],
+                        "availability": "daily"
+                      },
+                      "snapshot": {
+                        "id": 123456,
+                        "label": "A label for your snapshot",
+                        "status": "successful",
+                        "type": "snapshot",
+                        "region": {
+                          "id": "us-east-1a",
+                          "label": "Newark, NJ",
+                          "country": "US"
+                        },
+                        "created": "2015-09-29T11:21:01",
+                        "updated": "2015-09-29T11:21:01",
+                        "finished": "2015-09-29T11:21:01",
+                        "configs": [
+                          "My Debian8 Profile"
+                        ],
+                        "disks": [
+                          {
+                            "label": {
+                              "_type": "string",
+                              "_value": "My Debian8 Disk"
+                            },
+                            "size": {
+                              "_type": "integer",
+                              "_value": 24064
+                            },
+                            "filesystem": {
+                              "_type": "string",
+                              "_value": "ext4"
+                            }
+                          },
+                          {
+                            "label": {
+                              "_type": "string",
+                              "_value": "swap"
+                            },
+                            "size": {
+                              "_type": "integer",
+                              "_value": 512
+                            },
+                            "filesystem": {
+                              "_type": "string",
+                              "_value": "swap"
+                            }
+                          }
+                        ],
+                        "availability": "daily"
+                      }
+                    },
+                    "created": "2015-09-29T11:21:01",
+                    "region": {
+                      "id": "us-east-1a",
+                      "label": "Newark, NJ",
+                      "country": "US"
+                    },
+                    "distribution": {
+                      "id": "linode/Arch2014.10",
+                      "created": "2014-12-24T18:00:09.000Z",
+                      "label": "Arch Linux 2014.10",
+                      "minimum_storage_size": 800,
+                      "recommended": true,
+                      "vendor": "Arch",
+                      "x64": true
+                    },
+                    "group": "Example",
+                    "ipv4": [
+                      "97.107.143.8",
+                      "192.168.149.108"
+                    ],
+                    "ipv6": "2a01:7e00::f03c:91ff:fe96:46f5/64",
+                    "label": "Example Linode",
+                    "type": [
+                      {
+                        "id": {
+                          "_type": "string",
+                          "_value": "g5-standard-1"
+                        },
+                        "backups_price": {
+                          "_type": "integer",
+                          "_value": 250
+                        },
+                        "class": {
+                          "_type": "string",
+                          "_value": "standard"
+                        },
+                        "disk": {
+                          "_type": "integer",
+                          "_value": 24576
+                        },
+                        "hourly_price": {
+                          "_type": "integer",
+                          "_value": 1
+                        },
+                        "label": {
+                          "_type": "string",
+                          "_value": "Linode 2048"
+                        },
+                        "mbits_out": {
+                          "_type": "integer",
+                          "_value": 125
+                        },
+                        "monthly_price": {
+                          "_type": "integer",
+                          "_value": 1000
+                        },
+                        "ram": {
+                          "_type": "integer",
+                          "_value": 2048
+                        },
+                        "service_type": {
+                          "_type": "enum",
+                          "_subtype": "Service Type",
+                          "_value": "linode"
+                        },
+                        "storage": {
+                          "_type": "integer",
+                          "_value": 24576
+                        },
+                        "transfer": {
+                          "_type": "integer",
+                          "_value": 2000
+                        },
+                        "vcpus": {
+                          "_type": "integer",
+                          "_value": 2
+                        }
+                      }
+                    ],
+                    "status": "running",
+                    "total_transfer": 20000,
+                    "updated": "2015-10-27T09:59:26.000Z",
+                    "hypervisor": "kvm"
+                  }
                 }
               },
               {
@@ -780,7 +2650,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "my_linode.label = 'newlabel'\nmy_linode.save()\n"
                   }
                 ],
                 "name": "PUT"
@@ -796,7 +2666,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "my_linode.delete()\n"
                   }
                 ],
                 "name": "DELETE"
@@ -822,7 +2692,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "disks = my_linode.disks\n"
                   }
                 ],
                 "name": "GET",
@@ -832,11 +2702,14 @@ module.exports = { endpoints: [
                   "description": "Linode objects describe a single Linode on your account.\n",
                   "schema": [
                     {
-                      "name": "0",
-                      "description": "This Linode's ID"
+                      "name": "id",
+                      "description": "This Linode's ID",
+                      "type": "integer",
+                      "value": 123456,
+                      "schema": null
                     },
                     {
-                      "name": "1",
+                      "name": "alerts",
                       "description": {
                         "descText": "Toggle and set thresholds for receiving email alerts. \n",
                         "listItems": [
@@ -846,62 +2719,758 @@ module.exports = { endpoints: [
                           "Outbound Traffic - Mbit/s - Average outbound traffic over a 2 hour period exceeding this value triggers this alert. (Range 0-10000, default 10)",
                           "Transfer Quota - % - Percentage of network transfer quota used being greater than this value will trigger this alert. (Range 0-400, default 80)"
                         ]
-                      }
+                      },
+                      "schema": [
+                        {
+                          "name": "cpu",
+                          "description": "Average CPU usage over 2 hours exceeding this value triggers this alert.",
+                          "schema": [
+                            {
+                              "name": "enabled",
+                              "type": "boolean",
+                              "value": true,
+                              "schema": null
+                            },
+                            {
+                              "name": "threshold",
+                              "description": "CPU Usage % (Range 0-2000, default 90).",
+                              "type": "integer",
+                              "value": 90,
+                              "schema": null
+                            }
+                          ]
+                        },
+                        {
+                          "name": "io",
+                          "description": "Average Disk IO ops/sec over 2 hours exceeding this value triggers this alert.",
+                          "schema": [
+                            {
+                              "name": "enabled",
+                              "type": "boolean",
+                              "value": true,
+                              "schema": null
+                            },
+                            {
+                              "name": "threshold",
+                              "description": "Disk IO Rate ops/sec (Range 0-100000, default 10000).",
+                              "type": "integer",
+                              "value": 10000,
+                              "schema": null
+                            }
+                          ]
+                        },
+                        {
+                          "name": "transfer_in",
+                          "description": "Average incoming traffic over a 2 hour period exceeding this value triggers this alert.",
+                          "schema": [
+                            {
+                              "name": "enabled",
+                              "type": "boolean",
+                              "value": true,
+                              "schema": null
+                            },
+                            {
+                              "name": "threshold",
+                              "description": "Incoming Traffic Mbit/s (Range 0-40000, default 10).",
+                              "type": "integer",
+                              "value": 10,
+                              "schema": null
+                            }
+                          ]
+                        },
+                        {
+                          "name": "transfer_out",
+                          "description": "Average outbound traffic over a 2 hour period exceeding this value triggers this alert.",
+                          "schema": [
+                            {
+                              "name": "enabled",
+                              "type": "boolean",
+                              "value": true,
+                              "schema": null
+                            },
+                            {
+                              "name": "threshold",
+                              "description": "Outbound Traffic Mbit/s (Range 0-10000, default 10).",
+                              "type": "integer",
+                              "value": 10,
+                              "schema": null
+                            }
+                          ]
+                        },
+                        {
+                          "name": "transfer_quota",
+                          "description": "Percentage of network transfer quota used being greater than this value will trigger this alert.",
+                          "schema": [
+                            {
+                              "name": "enabled",
+                              "type": "boolean",
+                              "value": true,
+                              "schema": null
+                            },
+                            {
+                              "name": "threshold",
+                              "description": "Transfer Quota % (Range 0-400, default 80).",
+                              "type": "integer",
+                              "value": 80,
+                              "schema": null
+                            }
+                          ]
+                        }
+                      ]
                     },
                     {
-                      "name": "2",
-                      "description": "Displays if backups are enabled, last backup datetime if applicable, and the day/window your backups will occur. Window is prefixed by a \"W\" and an integer representing the two-hour window in 24-hour UTC time format. For example, 2AM is represented as \"W2\", 8PM as \"W20\", etc. (W0, W2, W4...W22)\n"
+                      "name": "backups",
+                      "description": "Displays if backups are enabled, last backup datetime if applicable, and the day/window your backups will occur. Window is prefixed by a \"W\" and an integer representing the two-hour window in 24-hour UTC time format. For example, 2AM is represented as \"W2\", 8PM as \"W20\", etc. (W0, W2, W4...W22)\n",
+                      "schema": [
+                        {
+                          "name": "enabled",
+                          "type": "boolean",
+                          "value": true,
+                          "schema": null
+                        },
+                        {
+                          "name": "schedule",
+                          "description": "The day and window of a Linode's automatic backups.",
+                          "schema": [
+                            {
+                              "name": "day",
+                              "type": "string",
+                              "value": "Tuesday",
+                              "schema": null
+                            },
+                            {
+                              "name": "window",
+                              "type": "string",
+                              "value": "W20",
+                              "schema": null
+                            }
+                          ]
+                        },
+                        {
+                          "name": "last_backup",
+                          "description": "If enabled, the last backup that was successfully taken.",
+                          "type": "backup",
+                          "schema": [
+                            {
+                              "name": "id",
+                              "type": "integer",
+                              "value": 123456,
+                              "schema": null
+                            },
+                            {
+                              "name": "label",
+                              "description": "Human-friendly backup name.",
+                              "filterable": false,
+                              "type": "string",
+                              "value": "A label for your snapshot",
+                              "schema": null
+                            },
+                            {
+                              "name": "status",
+                              "description": "Status of the backup.",
+                              "filterable": false,
+                              "type": "enum",
+                              "subType": "Status",
+                              "value": "successful",
+                              "schema": [
+                                {
+                                  "name": "offline",
+                                  "description": "The Linode is powered off."
+                                },
+                                {
+                                  "name": "booting",
+                                  "description": "The Linode is currently booting up."
+                                },
+                                {
+                                  "name": "running",
+                                  "description": "The Linode is currently running."
+                                },
+                                {
+                                  "name": "shutting_down",
+                                  "description": "The Linode is currently shutting down."
+                                },
+                                {
+                                  "name": "rebooting",
+                                  "description": "The Linode is rebooting."
+                                },
+                                {
+                                  "name": "provisioning",
+                                  "description": "The Linode is being created."
+                                },
+                                {
+                                  "name": "deleting",
+                                  "description": "The Linode is being deleted."
+                                },
+                                {
+                                  "name": "migrating",
+                                  "description": "The Linode is being migrated to a new host/region."
+                                }
+                              ]
+                            },
+                            {
+                              "name": "type",
+                              "description": "Whether this is a snapshot or an auto backup.",
+                              "type": "enum",
+                              "subType": "Type",
+                              "value": "snapshot",
+                              "schema": null
+                            },
+                            {
+                              "name": "region",
+                              "description": "This backup  region.",
+                              "filterable": false,
+                              "type": "region",
+                              "schema": [
+                                {
+                                  "name": "id",
+                                  "type": "string",
+                                  "value": "us-east-1a",
+                                  "schema": null
+                                },
+                                {
+                                  "name": "label",
+                                  "description": "Human-friendly region name.",
+                                  "filterable": true,
+                                  "type": "string",
+                                  "value": "Newark, NJ",
+                                  "schema": null
+                                },
+                                {
+                                  "name": "country",
+                                  "description": "Country",
+                                  "filterable": true,
+                                  "type": "string",
+                                  "value": "US",
+                                  "schema": null
+                                }
+                              ]
+                            },
+                            {
+                              "name": "created",
+                              "type": "datetime",
+                              "value": "2015-09-29T11:21:01",
+                              "schema": null
+                            },
+                            {
+                              "name": "updated",
+                              "type": "datetime",
+                              "value": "2015-09-29T11:21:01",
+                              "schema": null
+                            },
+                            {
+                              "name": "finished",
+                              "description": "An ISO 8601 datetime of when the backup completed.",
+                              "type": "datetime",
+                              "value": "2015-09-29T11:21:01",
+                              "schema": null
+                            },
+                            {
+                              "name": "configs",
+                              "description": "A JSON Array of config labels that were included in this backup.",
+                              "type": "array",
+                              "subType": "string",
+                              "value": [
+                                "My Debian8 Profile"
+                              ],
+                              "schema": null
+                            },
+                            {
+                              "name": "disks",
+                              "description": "A JSON Array of JSON Objects describing the disks included in this backup.",
+                              "type": "array",
+                              "subType": "disk",
+                              "value": [
+                                {
+                                  "label": {
+                                    "_type": "string",
+                                    "_value": "My Debian8 Disk"
+                                  },
+                                  "size": {
+                                    "_type": "integer",
+                                    "_value": 24064
+                                  },
+                                  "filesystem": {
+                                    "_type": "string",
+                                    "_value": "ext4"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "_type": "string",
+                                    "_value": "swap"
+                                  },
+                                  "size": {
+                                    "_type": "integer",
+                                    "_value": 512
+                                  },
+                                  "filesystem": {
+                                    "_type": "string",
+                                    "_value": "swap"
+                                  }
+                                }
+                              ],
+                              "schema": null
+                            },
+                            {
+                              "name": "availability",
+                              "description": "If this backup is available, which backup slot it is in.  Otherwise, unavailable.",
+                              "type": "enum",
+                              "subType": "BackupAvailability",
+                              "value": "daily",
+                              "schema": null
+                            }
+                          ]
+                        },
+                        {
+                          "name": "snapshot",
+                          "description": "If enabled, the last snapshot that was successfully taken.",
+                          "type": "backup",
+                          "schema": [
+                            {
+                              "name": "id",
+                              "type": "integer",
+                              "value": 123456,
+                              "schema": null
+                            },
+                            {
+                              "name": "label",
+                              "description": "Human-friendly backup name.",
+                              "filterable": false,
+                              "type": "string",
+                              "value": "A label for your snapshot",
+                              "schema": null
+                            },
+                            {
+                              "name": "status",
+                              "description": "Status of the backup.",
+                              "filterable": false,
+                              "type": "enum",
+                              "subType": "Status",
+                              "value": "successful",
+                              "schema": [
+                                {
+                                  "name": "offline",
+                                  "description": "The Linode is powered off."
+                                },
+                                {
+                                  "name": "booting",
+                                  "description": "The Linode is currently booting up."
+                                },
+                                {
+                                  "name": "running",
+                                  "description": "The Linode is currently running."
+                                },
+                                {
+                                  "name": "shutting_down",
+                                  "description": "The Linode is currently shutting down."
+                                },
+                                {
+                                  "name": "rebooting",
+                                  "description": "The Linode is rebooting."
+                                },
+                                {
+                                  "name": "provisioning",
+                                  "description": "The Linode is being created."
+                                },
+                                {
+                                  "name": "deleting",
+                                  "description": "The Linode is being deleted."
+                                },
+                                {
+                                  "name": "migrating",
+                                  "description": "The Linode is being migrated to a new host/region."
+                                }
+                              ]
+                            },
+                            {
+                              "name": "type",
+                              "description": "Whether this is a snapshot or an auto backup.",
+                              "type": "enum",
+                              "subType": "Type",
+                              "value": "snapshot",
+                              "schema": null
+                            },
+                            {
+                              "name": "region",
+                              "description": "This backup  region.",
+                              "filterable": false,
+                              "type": "region",
+                              "schema": [
+                                {
+                                  "name": "id",
+                                  "type": "string",
+                                  "value": "us-east-1a",
+                                  "schema": null
+                                },
+                                {
+                                  "name": "label",
+                                  "description": "Human-friendly region name.",
+                                  "filterable": true,
+                                  "type": "string",
+                                  "value": "Newark, NJ",
+                                  "schema": null
+                                },
+                                {
+                                  "name": "country",
+                                  "description": "Country",
+                                  "filterable": true,
+                                  "type": "string",
+                                  "value": "US",
+                                  "schema": null
+                                }
+                              ]
+                            },
+                            {
+                              "name": "created",
+                              "type": "datetime",
+                              "value": "2015-09-29T11:21:01",
+                              "schema": null
+                            },
+                            {
+                              "name": "updated",
+                              "type": "datetime",
+                              "value": "2015-09-29T11:21:01",
+                              "schema": null
+                            },
+                            {
+                              "name": "finished",
+                              "description": "An ISO 8601 datetime of when the backup completed.",
+                              "type": "datetime",
+                              "value": "2015-09-29T11:21:01",
+                              "schema": null
+                            },
+                            {
+                              "name": "configs",
+                              "description": "A JSON Array of config labels that were included in this backup.",
+                              "type": "array",
+                              "subType": "string",
+                              "value": [
+                                "My Debian8 Profile"
+                              ],
+                              "schema": null
+                            },
+                            {
+                              "name": "disks",
+                              "description": "A JSON Array of JSON Objects describing the disks included in this backup.",
+                              "type": "array",
+                              "subType": "disk",
+                              "value": [
+                                {
+                                  "label": {
+                                    "_type": "string",
+                                    "_value": "My Debian8 Disk"
+                                  },
+                                  "size": {
+                                    "_type": "integer",
+                                    "_value": 24064
+                                  },
+                                  "filesystem": {
+                                    "_type": "string",
+                                    "_value": "ext4"
+                                  }
+                                },
+                                {
+                                  "label": {
+                                    "_type": "string",
+                                    "_value": "swap"
+                                  },
+                                  "size": {
+                                    "_type": "integer",
+                                    "_value": 512
+                                  },
+                                  "filesystem": {
+                                    "_type": "string",
+                                    "_value": "swap"
+                                  }
+                                }
+                              ],
+                              "schema": null
+                            },
+                            {
+                              "name": "availability",
+                              "description": "If this backup is available, which backup slot it is in.  Otherwise, unavailable.",
+                              "type": "enum",
+                              "subType": "BackupAvailability",
+                              "value": "daily",
+                              "schema": null
+                            }
+                          ]
+                        }
+                      ]
                     },
                     {
-                      "name": "3"
+                      "name": "created",
+                      "type": "datetime",
+                      "value": "2015-09-29T11:21:01",
+                      "schema": null
                     },
                     {
-                      "name": "4",
-                      "description": "This Linode's region."
+                      "name": "region",
+                      "description": "This Linode's region.",
+                      "filterable": true,
+                      "type": "region",
+                      "schema": [
+                        {
+                          "name": "id",
+                          "type": "string",
+                          "value": "us-east-1a",
+                          "schema": null
+                        },
+                        {
+                          "name": "label",
+                          "description": "Human-friendly region name.",
+                          "filterable": true,
+                          "type": "string",
+                          "value": "Newark, NJ",
+                          "schema": null
+                        },
+                        {
+                          "name": "country",
+                          "description": "Country",
+                          "filterable": true,
+                          "type": "string",
+                          "value": "US",
+                          "schema": null
+                        }
+                      ]
                     },
                     {
-                      "name": "5",
-                      "description": "The distribution that this Linode booted to last."
+                      "name": "distribution",
+                      "description": "The distribution that this Linode booted to last.",
+                      "filterable": true,
+                      "type": "distribution",
+                      "schema": [
+                        {
+                          "name": "id",
+                          "type": "string",
+                          "value": "linode/Arch2014.10",
+                          "schema": null
+                        },
+                        {
+                          "name": "created",
+                          "type": "datetime",
+                          "value": "2014-12-24T18:00:09.000Z",
+                          "schema": null
+                        },
+                        {
+                          "name": "label",
+                          "description": "The user-friendly name of this distribution.",
+                          "filterable": true,
+                          "type": "string",
+                          "value": "Arch Linux 2014.10",
+                          "schema": null
+                        },
+                        {
+                          "name": "minimum_storage_size",
+                          "description": "The minimum size required for the distrbution image.",
+                          "filterable": true,
+                          "type": "integer",
+                          "value": 800,
+                          "schema": null
+                        },
+                        {
+                          "name": "recommended",
+                          "description": "True if this distribution is recommended by Linode.",
+                          "filterable": true,
+                          "type": "boolean",
+                          "value": true,
+                          "schema": null
+                        },
+                        {
+                          "name": "vendor",
+                          "description": "The upstream distribution vendor. Consistent between releases of a distro.",
+                          "filterable": true,
+                          "type": "string",
+                          "value": "Arch",
+                          "schema": null
+                        },
+                        {
+                          "name": "x64",
+                          "description": "True if this is a 64-bit distribution.",
+                          "type": "boolean",
+                          "value": true,
+                          "schema": null
+                        }
+                      ]
                     },
                     {
-                      "name": "6",
-                      "description": "This Linode's display group."
+                      "name": "group",
+                      "description": "This Linode's display group.",
+                      "editable": true,
+                      "filterable": true,
+                      "type": "string",
+                      "value": "Example",
+                      "schema": null
                     },
                     {
-                      "name": "7",
-                      "description": "This Linode's IPv4 addresses."
+                      "name": "ipv4",
+                      "description": "This Linode's IPv4 addresses.",
+                      "editable": false,
+                      "type": "array",
+                      "subType": "string",
+                      "value": [
+                        "97.107.143.8",
+                        "192.168.149.108"
+                      ],
+                      "schema": null
                     },
                     {
-                      "name": "8",
-                      "description": "This Linode's IPv6 slaac address."
+                      "name": "ipv6",
+                      "description": "This Linode's IPv6 slaac address.",
+                      "editable": false,
+                      "type": "string",
+                      "value": "2a01:7e00::f03c:91ff:fe96:46f5/64",
+                      "schema": null
                     },
                     {
-                      "name": "9",
-                      "description": "This Linode's display label."
+                      "name": "label",
+                      "description": "This Linode's display label.",
+                      "editable": true,
+                      "filterable": true,
+                      "type": "string",
+                      "value": "Example Linode",
+                      "schema": null
                     },
                     {
-                      "name": "10",
-                      "description": "The type of Linode."
+                      "name": "type",
+                      "description": "The type of Linode.",
+                      "type": "array",
+                      "subType": "service",
+                      "value": [
+                        {
+                          "id": {
+                            "_type": "string",
+                            "_value": "g5-standard-1"
+                          },
+                          "backups_price": {
+                            "_type": "integer",
+                            "_value": 250
+                          },
+                          "class": {
+                            "_type": "string",
+                            "_value": "standard"
+                          },
+                          "disk": {
+                            "_type": "integer",
+                            "_value": 24576
+                          },
+                          "hourly_price": {
+                            "_type": "integer",
+                            "_value": 1
+                          },
+                          "label": {
+                            "_type": "string",
+                            "_value": "Linode 2048"
+                          },
+                          "mbits_out": {
+                            "_type": "integer",
+                            "_value": 125
+                          },
+                          "monthly_price": {
+                            "_type": "integer",
+                            "_value": 1000
+                          },
+                          "ram": {
+                            "_type": "integer",
+                            "_value": 2048
+                          },
+                          "service_type": {
+                            "_type": "enum",
+                            "_subtype": "Service Type",
+                            "_value": "linode"
+                          },
+                          "storage": {
+                            "_type": "integer",
+                            "_value": 24576
+                          },
+                          "transfer": {
+                            "_type": "integer",
+                            "_value": 2000
+                          },
+                          "vcpus": {
+                            "_type": "integer",
+                            "_value": 2
+                          }
+                        }
+                      ],
+                      "schema": null
                     },
                     {
-                      "name": "11",
-                      "description": "The current state of this Linode."
+                      "name": "status",
+                      "description": "The current state of this Linode.",
+                      "filterable": true,
+                      "type": "enum",
+                      "subType": "Status",
+                      "value": "running",
+                      "schema": [
+                        {
+                          "name": "offline",
+                          "description": "The Linode is powered off."
+                        },
+                        {
+                          "name": "booting",
+                          "description": "The Linode is currently booting up."
+                        },
+                        {
+                          "name": "running",
+                          "description": "The Linode is currently running."
+                        },
+                        {
+                          "name": "shutting_down",
+                          "description": "The Linode is currently shutting down."
+                        },
+                        {
+                          "name": "rebooting",
+                          "description": "The Linode is rebooting."
+                        },
+                        {
+                          "name": "provisioning",
+                          "description": "The Linode is being created."
+                        },
+                        {
+                          "name": "deleting",
+                          "description": "The Linode is being deleted."
+                        },
+                        {
+                          "name": "migrating",
+                          "description": "The Linode is being migrated to a new host/region."
+                        }
+                      ]
                     },
                     {
-                      "name": "12",
-                      "description": "The amount of outbound traffic used this month."
+                      "name": "total_transfer",
+                      "description": "The amount of outbound traffic used this month.",
+                      "type": "integer",
+                      "value": 20000,
+                      "schema": null
                     },
                     {
-                      "name": "13",
-                      "description": "The last updated datetime for this Linode record."
+                      "name": "updated",
+                      "description": "The last updated datetime for this Linode record.",
+                      "type": "datetime",
+                      "value": "2015-10-27T09:59:26.000Z",
+                      "schema": null
                     },
                     {
-                      "name": "14",
-                      "description": "The hypervisor this Linode is running on."
+                      "name": "hypervisor",
+                      "description": "The hypervisor this Linode is running on.",
+                      "type": "enum",
+                      "subType": "Hypervisor",
+                      "value": "kvm",
+                      "schema": [
+                        {
+                          "name": "kvm",
+                          "description": "KVM"
+                        },
+                        {
+                          "name": "xen",
+                          "description": "Xen"
+                        }
+                      ]
                     }
                   ],
-                  "enums": [
-                    {
+                  "enums": {
+                    "Status": {
                       "offline": "The Linode is powered off.",
                       "booting": "The Linode is currently booting up.",
                       "running": "The Linode is currently running.",
@@ -909,24 +3478,21 @@ module.exports = { endpoints: [
                       "rebooting": "The Linode is rebooting.",
                       "provisioning": "The Linode is being created.",
                       "deleting": "The Linode is being deleted.",
-                      "migrating": "The Linode is being migrated to a new host/region.",
-                      "name": "0"
+                      "migrating": "The Linode is being migrated to a new host/region."
                     },
-                    {
+                    "BackupStatus": {
                       "pending": "Backup is in the queue and waiting to begin.",
                       "running": "Linode in the process of being backed up.",
                       "needsPostProcessing": "Backups awaiting final integration into existing backup data.",
                       "successful": "Backup successfully completed.",
                       "failed": "Linode backup failed.",
-                      "userAborted": "User aborted current backup process.",
-                      "name": "1"
+                      "userAborted": "User aborted current backup process."
                     },
-                    {
+                    "BackupType": {
                       "auto": "Automatic backup",
-                      "snapshot": "User-initiated, manual file backup",
-                      "name": "2"
+                      "snapshot": "User-initiated, manual file backup"
                     },
-                    {
+                    "Window": {
                       "W0": "0000 - 0200 UTC",
                       "W2": "0200 - 0400 UTC",
                       "W4": "0400 - 0600 UTC",
@@ -938,15 +3504,224 @@ module.exports = { endpoints: [
                       "W16": "1600 - 1800 UTC",
                       "W18": "1800 - 2000 UTC",
                       "W20": "2000 - 2200 UTC",
-                      "W22": "2200 - 0000 UTC",
-                      "name": "3"
+                      "W22": "2200 - 0000 UTC"
                     },
-                    {
+                    "Hypervisor": {
                       "kvm": "KVM",
-                      "xen": "Xen",
-                      "name": "4"
+                      "xen": "Xen"
                     }
-                  ]
+                  },
+                  "example": {
+                    "id": 123456,
+                    "alerts": {
+                      "cpu": {
+                        "enabled": true,
+                        "threshold": 90
+                      },
+                      "io": {
+                        "enabled": true,
+                        "threshold": 10000
+                      },
+                      "transfer_in": {
+                        "enabled": true,
+                        "threshold": 10
+                      },
+                      "transfer_out": {
+                        "enabled": true,
+                        "threshold": 10
+                      },
+                      "transfer_quota": {
+                        "enabled": true,
+                        "threshold": 80
+                      }
+                    },
+                    "backups": {
+                      "enabled": true,
+                      "schedule": {
+                        "day": "Tuesday",
+                        "window": "W20"
+                      },
+                      "last_backup": {
+                        "id": 123456,
+                        "label": "A label for your snapshot",
+                        "status": "successful",
+                        "type": "snapshot",
+                        "region": {
+                          "id": "us-east-1a",
+                          "label": "Newark, NJ",
+                          "country": "US"
+                        },
+                        "created": "2015-09-29T11:21:01",
+                        "updated": "2015-09-29T11:21:01",
+                        "finished": "2015-09-29T11:21:01",
+                        "configs": [
+                          "My Debian8 Profile"
+                        ],
+                        "disks": [
+                          {
+                            "label": {
+                              "_type": "string",
+                              "_value": "My Debian8 Disk"
+                            },
+                            "size": {
+                              "_type": "integer",
+                              "_value": 24064
+                            },
+                            "filesystem": {
+                              "_type": "string",
+                              "_value": "ext4"
+                            }
+                          },
+                          {
+                            "label": {
+                              "_type": "string",
+                              "_value": "swap"
+                            },
+                            "size": {
+                              "_type": "integer",
+                              "_value": 512
+                            },
+                            "filesystem": {
+                              "_type": "string",
+                              "_value": "swap"
+                            }
+                          }
+                        ],
+                        "availability": "daily"
+                      },
+                      "snapshot": {
+                        "id": 123456,
+                        "label": "A label for your snapshot",
+                        "status": "successful",
+                        "type": "snapshot",
+                        "region": {
+                          "id": "us-east-1a",
+                          "label": "Newark, NJ",
+                          "country": "US"
+                        },
+                        "created": "2015-09-29T11:21:01",
+                        "updated": "2015-09-29T11:21:01",
+                        "finished": "2015-09-29T11:21:01",
+                        "configs": [
+                          "My Debian8 Profile"
+                        ],
+                        "disks": [
+                          {
+                            "label": {
+                              "_type": "string",
+                              "_value": "My Debian8 Disk"
+                            },
+                            "size": {
+                              "_type": "integer",
+                              "_value": 24064
+                            },
+                            "filesystem": {
+                              "_type": "string",
+                              "_value": "ext4"
+                            }
+                          },
+                          {
+                            "label": {
+                              "_type": "string",
+                              "_value": "swap"
+                            },
+                            "size": {
+                              "_type": "integer",
+                              "_value": 512
+                            },
+                            "filesystem": {
+                              "_type": "string",
+                              "_value": "swap"
+                            }
+                          }
+                        ],
+                        "availability": "daily"
+                      }
+                    },
+                    "created": "2015-09-29T11:21:01",
+                    "region": {
+                      "id": "us-east-1a",
+                      "label": "Newark, NJ",
+                      "country": "US"
+                    },
+                    "distribution": {
+                      "id": "linode/Arch2014.10",
+                      "created": "2014-12-24T18:00:09.000Z",
+                      "label": "Arch Linux 2014.10",
+                      "minimum_storage_size": 800,
+                      "recommended": true,
+                      "vendor": "Arch",
+                      "x64": true
+                    },
+                    "group": "Example",
+                    "ipv4": [
+                      "97.107.143.8",
+                      "192.168.149.108"
+                    ],
+                    "ipv6": "2a01:7e00::f03c:91ff:fe96:46f5/64",
+                    "label": "Example Linode",
+                    "type": [
+                      {
+                        "id": {
+                          "_type": "string",
+                          "_value": "g5-standard-1"
+                        },
+                        "backups_price": {
+                          "_type": "integer",
+                          "_value": 250
+                        },
+                        "class": {
+                          "_type": "string",
+                          "_value": "standard"
+                        },
+                        "disk": {
+                          "_type": "integer",
+                          "_value": 24576
+                        },
+                        "hourly_price": {
+                          "_type": "integer",
+                          "_value": 1
+                        },
+                        "label": {
+                          "_type": "string",
+                          "_value": "Linode 2048"
+                        },
+                        "mbits_out": {
+                          "_type": "integer",
+                          "_value": 125
+                        },
+                        "monthly_price": {
+                          "_type": "integer",
+                          "_value": 1000
+                        },
+                        "ram": {
+                          "_type": "integer",
+                          "_value": 2048
+                        },
+                        "service_type": {
+                          "_type": "enum",
+                          "_subtype": "Service Type",
+                          "_value": "linode"
+                        },
+                        "storage": {
+                          "_type": "integer",
+                          "_value": 24576
+                        },
+                        "transfer": {
+                          "_type": "integer",
+                          "_value": 2000
+                        },
+                        "vcpus": {
+                          "_type": "integer",
+                          "_value": 2
+                        }
+                      }
+                    ],
+                    "status": "running",
+                    "total_transfer": 20000,
+                    "updated": "2015-10-27T09:59:26.000Z",
+                    "hypervisor": "kvm"
+                  }
                 }
               },
               {
@@ -961,13 +3736,23 @@ module.exports = { endpoints: [
                   },
                   {
                     "optional": true,
-                    "description": "Optional distribution to deploy with this disk. <ul><li>If no distribution is provided, a blank disk is created.</li></ul>\n",
-                    "type": "distribution",
+                    "description": {
+                      "descText": "Optional distribution to deploy with this disk. \n",
+                      "listItems": [
+                        "If no distribution is provided, a blank disk is created."
+                      ]
+                    },
+                    "type": "integer",
                     "name": "distribution"
                   },
                   {
                     "optional": "unless distribution is specified",
-                    "description": "Root password to deploy distribution with. <ul><li>root_pass is required if a distribution is provided.</li></ul>\n",
+                    "description": {
+                      "descText": "Root password to deploy distribution with. \n",
+                      "listItems": [
+                        "root_pass is required if a distribution is provided."
+                      ]
+                    },
                     "type": "string",
                     "name": "root_pass"
                   },
@@ -996,13 +3781,23 @@ module.exports = { endpoints: [
                   },
                   {
                     "optional": true,
-                    "description": "The stackscript ID to deploy with this disk. <ul><li>Must provide a distribution. Distribution must be one that the stackscript can be deployed to.</li></ul>\n",
-                    "type": "stackscript",
+                    "description": {
+                      "descText": "The stackscript ID to deploy with this disk. \n",
+                      "listItems": [
+                        "Must provide a distribution. Distribution must be one that the stackscript can be deployed to."
+                      ]
+                    },
+                    "type": "integer",
                     "name": "stackscript"
                   },
                   {
                     "optional": true,
-                    "description": "UDF (user-defined fields) for this stackscript. Defaults to \"{}\". <ul><li>Must match UDFs required by stackscript.</li></ul>\n",
+                    "description": {
+                      "descText": "UDF (user-defined fields) for this stackscript. Defaults to \"{}\". \n",
+                      "listItems": [
+                        "Must match UDFs required by stackscript."
+                      ]
+                    },
                     "type": "string",
                     "name": "stackscript_udf_responses"
                   }
@@ -1014,7 +3809,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "new_disk = my_linode.create_disk(4096, filesystem='ext4', label='Example Disk')\n"
                   }
                 ],
                 "name": "POST"
@@ -1040,7 +3835,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "disk = my_linode.Disk(client, 456, 123) # linode_client, disk_id, linode_id\n"
                   }
                 ],
                 "name": "GET",
@@ -1052,46 +3847,124 @@ module.exports = { endpoints: [
                     {
                       "name": "id",
                       "type": "integer",
-                      "value": 123456
+                      "value": 123456,
+                      "schema": null
                     },
                     {
                       "name": "label",
                       "description": "Human-friendly disk name.",
+                      "filterable": true,
                       "type": "string",
-                      "value": "Ubuntu 14.04 Disk"
+                      "value": "Ubuntu 14.04 Disk",
+                      "schema": null
                     },
                     {
                       "name": "status",
                       "description": "Status of the disk.",
+                      "filterable": false,
                       "type": "enum",
-                      "value": "ok"
+                      "subType": "Status",
+                      "value": "ok",
+                      "schema": [
+                        {
+                          "name": "ok",
+                          "description": "No disk jobs are running."
+                        },
+                        {
+                          "name": "deleting",
+                          "description": "This disk is being deleted."
+                        },
+                        {
+                          "name": "creating",
+                          "description": "This disk is being created."
+                        },
+                        {
+                          "name": "migrating",
+                          "description": "This disk is being migrated."
+                        },
+                        {
+                          "name": "cancelling-migration",
+                          "description": "The disk migration is being cancelled."
+                        },
+                        {
+                          "name": "duplicating",
+                          "description": "This disk is being duplicated."
+                        },
+                        {
+                          "name": "resizing",
+                          "description": "This disk is being resized."
+                        },
+                        {
+                          "name": "restoring",
+                          "description": "This disk is being restored."
+                        },
+                        {
+                          "name": "copying",
+                          "description": "This disk is being copied."
+                        },
+                        {
+                          "name": "freezing",
+                          "description": "This disk is being frozen."
+                        },
+                        {
+                          "name": "thawing",
+                          "description": "This disk is being thawed."
+                        }
+                      ]
                     },
                     {
                       "name": "size",
                       "description": "Size of this disk in MB.",
                       "editable": true,
+                      "filterable": true,
                       "type": "integer",
-                      "value": 1000
+                      "value": 1000,
+                      "schema": null
                     },
                     {
                       "name": "filesystem",
                       "description": "The filesystem on the disk.",
                       "type": "enum",
-                      "value": "ext4"
+                      "subType": "Filesystem",
+                      "value": "ext4",
+                      "schema": [
+                        {
+                          "name": "raw",
+                          "description": "No filesystem, just a raw binary stream."
+                        },
+                        {
+                          "name": "swap",
+                          "description": "Linux swap area"
+                        },
+                        {
+                          "name": "ext3",
+                          "description": "The ext3 journaling filesystem for Linux."
+                        },
+                        {
+                          "name": "ext4",
+                          "description": "The ext4 journaling filesystem for Linux."
+                        },
+                        {
+                          "name": "initrd",
+                          "description": "initrd (uncompressed initrd, ext2, max 32 MB)"
+                        }
+                      ]
                     },
                     {
                       "name": "created",
                       "type": "datetime",
-                      "value": "2015-09-29T11:21:01"
+                      "value": "2015-09-29T11:21:01",
+                      "schema": null
                     },
                     {
                       "name": "updated",
                       "type": "datetime",
-                      "value": "2015-09-29T11:21:01"
+                      "value": "2015-09-29T11:21:01",
+                      "schema": null
                     }
                   ],
-                  "enums": [
-                    {
+                  "enums": {
+                    "Status": {
                       "ok": "No disk jobs are running.",
                       "deleting": "This disk is being deleted.",
                       "creating": "This disk is being created.",
@@ -1102,18 +3975,25 @@ module.exports = { endpoints: [
                       "restoring": "This disk is being restored.",
                       "copying": "This disk is being copied.",
                       "freezing": "This disk is being frozen.",
-                      "thawing": "This disk is being thawed.",
-                      "name": "Status"
+                      "thawing": "This disk is being thawed."
                     },
-                    {
+                    "Filesystem": {
                       "raw": "No filesystem, just a raw binary stream.",
                       "swap": "Linux swap area",
                       "ext3": "The ext3 journaling filesystem for Linux.",
                       "ext4": "The ext4 journaling filesystem for Linux.",
-                      "initrd": "initrd (uncompressed initrd, ext2, max 32 MB)",
-                      "name": "Filesystem"
+                      "initrd": "initrd (uncompressed initrd, ext2, max 32 MB)"
                     }
-                  ]
+                  },
+                  "example": {
+                    "id": 123456,
+                    "label": "Ubuntu 14.04 Disk",
+                    "status": "ok",
+                    "size": 1000,
+                    "filesystem": "ext4",
+                    "created": "2015-09-29T11:21:01",
+                    "updated": "2015-09-29T11:21:01"
+                  }
                 }
               },
               {
@@ -1126,7 +4006,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "disk.label = 'New Disk Label'\ndisk.save()\n"
                   }
                 ],
                 "name": "PUT"
@@ -1141,7 +4021,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "new_disk = disk.duplicate()\n"
                   }
                 ],
                 "name": "POST"
@@ -1157,7 +4037,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "disk.delete()\n"
                   }
                 ],
                 "name": "DELETE"
@@ -1217,7 +4097,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "disk.reset_root_password('hunter2')\n"
                   }
                 ],
                 "name": "POST"
@@ -1243,7 +4123,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "configs = my_linode.configs\n"
                   }
                 ],
                 "name": "GET"
@@ -1254,7 +4134,7 @@ module.exports = { endpoints: [
                 "params": [
                   {
                     "description": "A kernel ID to boot this Linode with.\n",
-                    "type": "kernel",
+                    "type": "integer",
                     "name": "kernel"
                   },
                   {
@@ -1306,7 +4186,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "config = my_linode.create_config('linode/latest_64', disks=linode.disks, label='Arch Linux Config')\n"
                   }
                 ],
                 "name": "POST"
@@ -1332,7 +4212,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "config = my_linode.Config(client, 567, 123) # linode_client, config_id, linode_id\n"
                   }
                 ],
                 "name": "GET"
@@ -1347,7 +4227,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode TODO"
+                    "value": "config.label = 'Edited config' config.kernel = linode.Kernel(client, 'linode/latest_64') config.save()"
                   }
                 ],
                 "name": "PUT"
@@ -1362,7 +4242,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "config.delete()\n"
                   }
                 ],
                 "name": "DELETE"
@@ -1395,7 +4275,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "my_linode.boot()\n"
                   }
                 ],
                 "name": "POST"
@@ -1420,7 +4300,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "my_linode.shutdown()\n"
                   }
                 ],
                 "name": "POST"
@@ -1453,7 +4333,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "my_linode.reboot()\n"
                   }
                 ],
                 "name": "POST"
@@ -1478,7 +4358,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "my_linode.kvmify()\n"
                   }
                 ],
                 "name": "POST"
@@ -1500,7 +4380,7 @@ module.exports = { endpoints: [
                   {
                     "optional": true,
                     "description": "Disks to include during Rescue.\n",
-                    "type": "disk",
+                    "type": "integer",
                     "name": "disks"
                   }
                 ],
@@ -1511,7 +4391,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "my_linode.rescue()\n"
                   }
                 ],
                 "name": "POST"
@@ -1533,7 +4413,7 @@ module.exports = { endpoints: [
                 "params": [
                   {
                     "description": "A Linode type to use for this Linode.\n",
-                    "type": "service",
+                    "type": "integer",
                     "name": "type"
                   }
                 ],
@@ -1565,7 +4445,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "backups = my_linode.available_backups\n"
                   }
                 ],
                 "name": "GET"
@@ -1588,7 +4468,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "my_linode.snapshot()\n"
                   }
                 ],
                 "name": "POST"
@@ -1614,7 +4494,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "my_linode.enable_backups()\n"
                   }
                 ],
                 "name": "POST"
@@ -1639,7 +4519,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "my_linode.cancel_backups()\n"
                   }
                 ],
                 "name": "POST"
@@ -1660,7 +4540,7 @@ module.exports = { endpoints: [
                 "params": [
                   {
                     "description": "The ID of the Linode to restore a backup to.\n",
-                    "type": "linode",
+                    "type": "integer",
                     "name": "linode"
                   },
                   {
@@ -1677,7 +4557,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import linode\nTODO\n"
+                    "value": "backup = my_linode.available_backups.daily\nbackup.restore()\n"
                   }
                 ],
                 "name": "POST"
@@ -1773,52 +4653,77 @@ module.exports = { endpoints: [
                       "name": "address",
                       "description": "The IP Address.",
                       "type": "string",
-                      "value": "97.107.143.8"
+                      "value": "97.107.143.8",
+                      "schema": null
                     },
                     {
                       "name": "gateway",
                       "description": "The default gateway. Gateways for private IP's are always null.",
                       "type": "string",
-                      "value": "97.107.143.1"
+                      "value": "97.107.143.1",
+                      "schema": null
                     },
                     {
                       "name": "subnet_mask",
                       "description": "The subnet mask.",
                       "type": "string",
-                      "value": "255.255.255.0"
+                      "value": "255.255.255.0",
+                      "schema": null
                     },
                     {
                       "name": "prefix",
                       "description": "The network prefix.",
                       "type": "string",
-                      "value": 24
+                      "value": 24,
+                      "schema": null
                     },
                     {
                       "name": "type",
                       "description": "The type of IP Address, either public or private",
                       "type": "enum",
-                      "value": "public"
+                      "subType": "IPAddressType",
+                      "value": "public",
+                      "schema": [
+                        {
+                          "name": "public",
+                          "description": "Public IP Address"
+                        },
+                        {
+                          "name": "private",
+                          "description": "Internal IP Addresses (192.168 range)"
+                        }
+                      ]
                     },
                     {
                       "name": "rdns",
                       "description": "Reverse DNS address for this IP Address. Null to reset.",
                       "editable": true,
                       "type": "string",
-                      "value": null
+                      "value": null,
+                      "schema": null
                     },
                     {
                       "name": "linode_id",
                       "type": "integer",
-                      "value": 42
+                      "value": 42,
+                      "schema": null
                     }
                   ],
-                  "enums": [
-                    {
+                  "enums": {
+                    "IPAddressType": {
                       "public": "Public IP Address",
-                      "private": "Internal IP Addresses (192.168 range)",
-                      "name": "IPAddressType"
+                      "private": "Internal IP Addresses (192.168 range)"
                     }
-                  ]
+                  },
+                  "example": {
+                    "address": "97.107.143.8",
+                    "gateway": "97.107.143.1",
+                    "subnet_mask": "255.255.255.0",
+                    "prefix": 24,
+                    "type": "public",
+                    "rdns": null,
+                    "linode_id": 42
+                  }
                 }
               },
               {
@@ -1864,13 +4769,23 @@ module.exports = { endpoints: [
                   },
                   {
                     "optional": true,
-                    "description": "The stackscript ID to deploy with this disk. <ul><li>Must provide a distribution. Distribution must be one that the stackscript can be deployed to.</li></ul>\n",
-                    "type": "stackscript",
+                    "description": {
+                      "descText": "The stackscript ID to deploy with this disk. \n",
+                      "listItems": [
+                        "Must provide a distribution. Distribution must be one that the stackscript can be deployed to."
+                      ]
+                    },
+                    "type": "integer",
                     "name": "stackscript"
                   },
                   {
                     "optional": true,
-                    "description": "UDF (user-defined fields) for this stackscript. Defaults to \"{}\". <ul><li>Must match UDFs required by stackscript.</li></ul>\n",
+                    "description": {
+                      "descText": "UDF (user-defined fields) for this stackscript. Defaults to \"{}\". \n",
+                      "listItems": [
+                        "Must match UDFs required by stackscript."
+                      ]
+                    },
                     "type": "string",
                     "name": "stackscript_udf_responses"
                   }
@@ -1879,6 +4794,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST \\\n    https://$api_root/$version/linode/instances/$linode_id/rebuild \\\n    -d '{\"distribution\":\"linode/debian8\",\"root_pass\":\"hunter7\"}'\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_linode.rebuild('linode/ubuntu16.04LTS', root_pass='hunter7')\n"
                   }
                 ],
                 "name": "POST"
@@ -1912,7 +4831,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import services\nTODO\n"
+                    "value": "client.linode.get_types()\n"
                   }
                 ],
                 "name": "GET"
@@ -1936,7 +4855,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import services\nTODO\n"
+                    "value": "type = linode.Service(client, 'g5-standard=1')\n"
                   }
                 ],
                 "name": "GET"
@@ -1983,39 +4902,48 @@ module.exports = { endpoints: [
                       "name": "id",
                       "description": "A unique ID for the StackScript.",
                       "type": "integer",
-                      "value": 37
+                      "value": 37,
+                      "schema": null
                     },
                     {
                       "name": "customer_id",
                       "description": "The customer that created this StackScript.",
                       "type": "integer",
-                      "value": 123
+                      "value": 123,
+                      "schema": null
                     },
                     {
                       "name": "user_id",
                       "description": "The user account that created this StackScript.",
                       "type": "integer",
-                      "value": 456
+                      "value": 456,
+                      "schema": null
                     },
                     {
                       "name": "label",
                       "description": "This StackScript's display label.",
                       "editable": true,
+                      "filterable": true,
                       "type": "string",
-                      "value": "Example StackScript"
+                      "value": "Example StackScript",
+                      "schema": null
                     },
                     {
                       "name": "description",
                       "description": "In-depth information on what this StackScript does.",
                       "editable": true,
+                      "filterable": true,
                       "type": "string",
-                      "value": "Installs the Linode API bindings"
+                      "value": "Installs the Linode API bindings",
+                      "schema": null
                     },
                     {
                       "name": "distributions",
                       "description": "A list of distributions this StackScript is compatible with.",
                       "editable": true,
+                      "filterable": true,
                       "type": "array",
+                      "subType": "distribution",
                       "value": [
                         {
                           "id": {
@@ -2077,52 +5005,61 @@ module.exports = { endpoints: [
                             "_value": 600
                           }
                         }
-                      ]
+                      ],
+                      "schema": null
                     },
                     {
                       "name": "deployments_total",
                       "description": "The total number of times this StackScript has been deployed.",
                       "type": "integer",
-                      "value": 150
+                      "value": 150,
+                      "schema": null
                     },
                     {
                       "name": "deployments_active",
                       "description": "The total number of active deployments.",
                       "type": "integer",
-                      "value": 42
+                      "value": 42,
+                      "schema": null
                     },
                     {
                       "name": "is_public",
                       "description": "Publicize StackScript in the Linode StackScript library. Note that StackScripts cannot be changed to private after they have been public.\n",
                       "editable": true,
+                      "filterable": true,
                       "type": "boolean",
-                      "value": true
+                      "value": true,
+                      "schema": null
                     },
                     {
                       "name": "created",
                       "description": "When the StackScript was initially created.",
                       "type": "datetime",
-                      "value": "2015-09-29T11:21:01"
+                      "value": "2015-09-29T11:21:01",
+                      "schema": null
                     },
                     {
                       "name": "updated",
                       "description": "When the StackScript was last updated.",
                       "type": "datetime",
-                      "value": "2015-10-15T10:02:01"
+                      "value": "2015-10-15T10:02:01",
+                      "schema": null
                     },
                     {
                       "name": "rev_note",
                       "description": "The most recent note about what was changed for this revision.",
                       "editable": true,
                       "type": "string",
-                      "value": "Initial import"
+                      "value": "Initial import",
+                      "schema": null
                     },
                     {
                       "name": "script",
                       "description": "The actual script body to be executed.",
                       "editable": true,
                       "type": "string",
-                      "value": "#!/bin/bash"
+                      "value": "#!/bin/bash",
+                      "schema": null
                     },
                     {
                       "name": "user_defined_fields",
@@ -2165,9 +5102,124 @@ module.exports = { endpoints: [
                             "_value": "possible,enum,values"
                           }
                         }
-                      ]
+                      ],
+                      "schema": null
                     }
-                  ]
+                  ],
+                  "example": {
+                    "id": 37,
+                    "customer_id": 123,
+                    "user_id": 456,
+                    "label": "Example StackScript",
+                    "description": "Installs the Linode API bindings",
+                    "distributions": [
+                      {
+                        "id": {
+                          "_type": "string",
+                          "_value": "linode/debian8"
+                        },
+                        "label": {
+                          "_type": "string",
+                          "_value": "Debian 8.1"
+                        },
+                        "vendor": {
+                          "_type": "string",
+                          "_value": "Debian"
+                        },
+                        "x64": {
+                          "_type": "boolean",
+                          "_value": true
+                        },
+                        "recommended": {
+                          "_type": "boolean",
+                          "_value": true
+                        },
+                        "created": {
+                          "_type": "datetime",
+                          "_value": "2015-04-27T16:26:41.000Z"
+                        },
+                        "minimum_storage_size": {
+                          "_type": "integer",
+                          "_value": 900
+                        }
+                      },
+                      {
+                        "id": {
+                          "_type": "string",
+                          "_value": "linode/debian7"
+                        },
+                        "label": {
+                          "_type": "string",
+                          "_value": "Debian 7"
+                        },
+                        "vendor": {
+                          "_type": "string",
+                          "_value": "Debian"
+                        },
+                        "x64": {
+                          "_type": "boolean",
+                          "_value": true
+                        },
+                        "recommended": {
+                          "_type": "boolean",
+                          "_value": true
+                        },
+                        "created": {
+                          "_type": "datetime",
+                          "_value": "2014-09-24T13:59:32.000Z"
+                        },
+                        "minimum_storage_size": {
+                          "_type": "integer",
+                          "_value": 600
+                        }
+                      }
+                    ],
+                    "deployments_total": 150,
+                    "deployments_active": 42,
+                    "is_public": true,
+                    "created": "2015-09-29T11:21:01",
+                    "updated": "2015-10-15T10:02:01",
+                    "rev_note": "Initial import",
+                    "script": "#!/bin/bash",
+                    "user_defined_fields": [
+                      {
+                        "name": {
+                          "_type": "string",
+                          "_value": "var1"
+                        },
+                        "label": {
+                          "_type": "string",
+                          "_value": "A question"
+                        },
+                        "example": {
+                          "_type": "string",
+                          "_value": "An example value"
+                        },
+                        "default": {
+                          "_type": "string",
+                          "_value": "Default value"
+                        }
+                      },
+                      {
+                        "name": {
+                          "_type": "string",
+                          "_value": "var2"
+                        },
+                        "label": {
+                          "_type": "string",
+                          "_value": "Another question"
+                        },
+                        "example": {
+                          "_type": "string",
+                          "_value": "possible"
+                        },
+                        "oneof": {
+                          "_type": "string",
+                          "_value": "possible,enum,values"
+                        }
+                      }
+                    ]
+                  }
                 }
               },
               {
@@ -2186,7 +5238,7 @@ module.exports = { endpoints: [
                   },
                   {
                     "description": "A list of distributions compatible with StackScript.\n",
-                    "type": "distribution",
+                    "type": "integer",
                     "name": "distributions"
                   },
                   {
@@ -2248,62 +5300,327 @@ module.exports = { endpoints: [
                   "description": "StackScript objects describe a StackScript which can be used to help automate deployment of new Linodes.\n",
                   "schema": [
                     {
-                      "name": "0",
-                      "description": "A unique ID for the StackScript."
+                      "name": "id",
+                      "description": "A unique ID for the StackScript.",
+                      "type": "integer",
+                      "value": 37,
+                      "schema": null
                     },
                     {
-                      "name": "1",
-                      "description": "The customer that created this StackScript."
+                      "name": "customer_id",
+                      "description": "The customer that created this StackScript.",
+                      "type": "integer",
+                      "value": 123,
+                      "schema": null
                     },
                     {
-                      "name": "2",
-                      "description": "The user account that created this StackScript."
+                      "name": "user_id",
+                      "description": "The user account that created this StackScript.",
+                      "type": "integer",
+                      "value": 456,
+                      "schema": null
                     },
                     {
-                      "name": "3",
-                      "description": "This StackScript's display label."
+                      "name": "label",
+                      "description": "This StackScript's display label.",
+                      "editable": true,
+                      "filterable": true,
+                      "type": "string",
+                      "value": "Example StackScript",
+                      "schema": null
                     },
                     {
-                      "name": "4",
-                      "description": "In-depth information on what this StackScript does."
+                      "name": "description",
+                      "description": "In-depth information on what this StackScript does.",
+                      "editable": true,
+                      "filterable": true,
+                      "type": "string",
+                      "value": "Installs the Linode API bindings",
+                      "schema": null
                     },
                     {
-                      "name": "5",
-                      "description": "A list of distributions this StackScript is compatible with."
+                      "name": "distributions",
+                      "description": "A list of distributions this StackScript is compatible with.",
+                      "editable": true,
+                      "filterable": true,
+                      "type": "array",
+                      "subType": "distribution",
+                      "value": [
+                        {
+                          "id": {
+                            "_type": "string",
+                            "_value": "linode/debian8"
+                          },
+                          "label": {
+                            "_type": "string",
+                            "_value": "Debian 8.1"
+                          },
+                          "vendor": {
+                            "_type": "string",
+                            "_value": "Debian"
+                          },
+                          "x64": {
+                            "_type": "boolean",
+                            "_value": true
+                          },
+                          "recommended": {
+                            "_type": "boolean",
+                            "_value": true
+                          },
+                          "created": {
+                            "_type": "datetime",
+                            "_value": "2015-04-27T16:26:41.000Z"
+                          },
+                          "minimum_storage_size": {
+                            "_type": "integer",
+                            "_value": 900
+                          }
+                        },
+                        {
+                          "id": {
+                            "_type": "string",
+                            "_value": "linode/debian7"
+                          },
+                          "label": {
+                            "_type": "string",
+                            "_value": "Debian 7"
+                          },
+                          "vendor": {
+                            "_type": "string",
+                            "_value": "Debian"
+                          },
+                          "x64": {
+                            "_type": "boolean",
+                            "_value": true
+                          },
+                          "recommended": {
+                            "_type": "boolean",
+                            "_value": true
+                          },
+                          "created": {
+                            "_type": "datetime",
+                            "_value": "2014-09-24T13:59:32.000Z"
+                          },
+                          "minimum_storage_size": {
+                            "_type": "integer",
+                            "_value": 600
+                          }
+                        }
+                      ],
+                      "schema": null
                     },
                     {
-                      "name": "6",
-                      "description": "The total number of times this StackScript has been deployed."
+                      "name": "deployments_total",
+                      "description": "The total number of times this StackScript has been deployed.",
+                      "type": "integer",
+                      "value": 150,
+                      "schema": null
                     },
                     {
-                      "name": "7",
-                      "description": "The total number of active deployments."
+                      "name": "deployments_active",
+                      "description": "The total number of active deployments.",
+                      "type": "integer",
+                      "value": 42,
+                      "schema": null
                     },
                     {
-                      "name": "8",
-                      "description": "Publicize StackScript in the Linode StackScript library. Note that StackScripts cannot be changed to private after they have been public.\n"
+                      "name": "is_public",
+                      "description": "Publicize StackScript in the Linode StackScript library. Note that StackScripts cannot be changed to private after they have been public.\n",
+                      "editable": true,
+                      "filterable": true,
+                      "type": "boolean",
+                      "value": true,
+                      "schema": null
                     },
                     {
-                      "name": "9",
-                      "description": "When the StackScript was initially created."
+                      "name": "created",
+                      "description": "When the StackScript was initially created.",
+                      "type": "datetime",
+                      "value": "2015-09-29T11:21:01",
+                      "schema": null
                     },
                     {
-                      "name": "10",
-                      "description": "When the StackScript was last updated."
+                      "name": "updated",
+                      "description": "When the StackScript was last updated.",
+                      "type": "datetime",
+                      "value": "2015-10-15T10:02:01",
+                      "schema": null
                     },
                     {
-                      "name": "11",
-                      "description": "The most recent note about what was changed for this revision."
+                      "name": "rev_note",
+                      "description": "The most recent note about what was changed for this revision.",
+                      "editable": true,
+                      "type": "string",
+                      "value": "Initial import",
+                      "schema": null
                     },
                     {
-                      "name": "12",
-                      "description": "The actual script body to be executed."
+                      "name": "script",
+                      "description": "The actual script body to be executed.",
+                      "editable": true,
+                      "type": "string",
+                      "value": "#!/bin/bash",
+                      "schema": null
                     },
                     {
-                      "name": "13",
-                      "description": "Variables that can be set to customize the script per deployment."
+                      "name": "user_defined_fields",
+                      "description": "Variables that can be set to customize the script per deployment.",
+                      "type": "array",
+                      "value": [
+                        {
+                          "name": {
+                            "_type": "string",
+                            "_value": "var1"
+                          },
+                          "label": {
+                            "_type": "string",
+                            "_value": "A question"
+                          },
+                          "example": {
+                            "_type": "string",
+                            "_value": "An example value"
+                          },
+                          "default": {
+                            "_type": "string",
+                            "_value": "Default value"
+                          }
+                        },
+                        {
+                          "name": {
+                            "_type": "string",
+                            "_value": "var2"
+                          },
+                          "label": {
+                            "_type": "string",
+                            "_value": "Another question"
+                          },
+                          "example": {
+                            "_type": "string",
+                            "_value": "possible"
+                          },
+                          "oneof": {
+                            "_type": "string",
+                            "_value": "possible,enum,values"
+                          }
+                        }
+                      ],
+                      "schema": null
                     }
-                  ]
+                  ],
+                  "example": {
+                    "id": 37,
+                    "customer_id": 123,
+                    "user_id": 456,
+                    "label": "Example StackScript",
+                    "description": "Installs the Linode API bindings",
+                    "distributions": [
+                      {
+                        "id": {
+                          "_type": "string",
+                          "_value": "linode/debian8"
+                        },
+                        "label": {
+                          "_type": "string",
+                          "_value": "Debian 8.1"
+                        },
+                        "vendor": {
+                          "_type": "string",
+                          "_value": "Debian"
+                        },
+                        "x64": {
+                          "_type": "boolean",
+                          "_value": true
+                        },
+                        "recommended": {
+                          "_type": "boolean",
+                          "_value": true
+                        },
+                        "created": {
+                          "_type": "datetime",
+                          "_value": "2015-04-27T16:26:41.000Z"
+                        },
+                        "minimum_storage_size": {
+                          "_type": "integer",
+                          "_value": 900
+                        }
+                      },
+                      {
+                        "id": {
+                          "_type": "string",
+                          "_value": "linode/debian7"
+                        },
+                        "label": {
+                          "_type": "string",
+                          "_value": "Debian 7"
+                        },
+                        "vendor": {
+                          "_type": "string",
+                          "_value": "Debian"
+                        },
+                        "x64": {
+                          "_type": "boolean",
+                          "_value": true
+                        },
+                        "recommended": {
+                          "_type": "boolean",
+                          "_value": true
+                        },
+                        "created": {
+                          "_type": "datetime",
+                          "_value": "2014-09-24T13:59:32.000Z"
+                        },
+                        "minimum_storage_size": {
+                          "_type": "integer",
+                          "_value": 600
+                        }
+                      }
+                    ],
+                    "deployments_total": 150,
+                    "deployments_active": 42,
+                    "is_public": true,
+                    "created": "2015-09-29T11:21:01",
+                    "updated": "2015-10-15T10:02:01",
+                    "rev_note": "Initial import",
+                    "script": "#!/bin/bash",
+                    "user_defined_fields": [
+                      {
+                        "name": {
+                          "_type": "string",
+                          "_value": "var1"
+                        },
+                        "label": {
+                          "_type": "string",
+                          "_value": "A question"
+                        },
+                        "example": {
+                          "_type": "string",
+                          "_value": "An example value"
+                        },
+                        "default": {
+                          "_type": "string",
+                          "_value": "Default value"
+                        }
+                      },
+                      {
+                        "name": {
+                          "_type": "string",
+                          "_value": "var2"
+                        },
+                        "label": {
+                          "_type": "string",
+                          "_value": "Another question"
+                        },
+                        "example": {
+                          "_type": "string",
+                          "_value": "possible"
+                        },
+                        "oneof": {
+                          "_type": "string",
+                          "_value": "possible,enum,values"
+                        }
+                      }
+                    ]
+                  }
                 }
               },
               {
@@ -2385,112 +5702,174 @@ module.exports = { endpoints: [
                     {
                       "name": "id",
                       "type": "integer",
-                      "value": 357
+                      "value": 357,
+                      "schema": null
                     },
                     {
                       "name": "domain",
                       "description": "The Domain name.\n",
                       "editable": true,
+                      "filterable": true,
                       "type": "string",
-                      "value": "example.com"
+                      "value": "example.com",
+                      "schema": null
                     },
                     {
                       "name": "soa_email",
                       "description": "Start of Authority (SOA) contact email.\n",
                       "editable": true,
                       "type": "string",
-                      "value": "admin@example.com"
+                      "value": "admin@example.com",
+                      "schema": null
                     },
                     {
                       "name": "description",
                       "description": "A description to keep track of this Domain.\n",
                       "editable": true,
                       "type": "string",
-                      "value": "Example Description"
+                      "value": "Example Description",
+                      "schema": null
                     },
                     {
                       "name": "refresh_sec",
                       "description": "Time interval before the Domain should be refreshed, in seconds.\n",
                       "editable": true,
                       "type": "integer",
-                      "value": 14400
+                      "value": 14400,
+                      "schema": null
                     },
                     {
                       "name": "retry_sec",
                       "description": "Time interval that should elapse before a failed refresh should be retried, in seconds.\n",
                       "editable": true,
                       "type": "integer",
-                      "value": 3600
+                      "value": 3600,
+                      "schema": null
                     },
                     {
                       "name": "expire_sec",
                       "description": "Time value that specifies the upper limit on the time interval that can elapse before the Domain is no longer authoritative, in seconds.\n",
                       "editable": true,
                       "type": "integer",
-                      "value": 604800
+                      "value": 604800,
+                      "schema": null
                     },
                     {
                       "name": "ttl_sec",
                       "description": "Time interval that the resource record may be cached before\n  it should be discarded, in seconds.\n",
                       "editable": true,
                       "type": "integer",
-                      "value": 3600
+                      "value": 3600,
+                      "schema": null
                     },
                     {
                       "name": "status",
                       "description": "The status of the Domain it can be disabled, active, or edit_mode.\n",
                       "editable": true,
                       "type": "enum",
-                      "value": "active"
+                      "subType": "status",
+                      "value": "active",
+                      "schema": [
+                        {
+                          "name": "active",
+                          "description": "Turn on serving of this Domain."
+                        },
+                        {
+                          "name": "disabled",
+                          "description": "Turn off serving of this Domain."
+                        },
+                        {
+                          "name": "edit_mode",
+                          "description": "Use this mode while making edits."
+                        }
+                      ]
                     },
                     {
                       "name": "master_ips",
                       "description": "An array of IP addresses for this Domain.\n",
                       "editable": true,
+                      "filterable": true,
                       "type": "array",
+                      "subType": "string",
                       "value": [
                         "127.0.0.1",
                         "255.255.255.1",
                         "123.123.123.7"
-                      ]
+                      ],
+                      "schema": null
                     },
                     {
                       "name": "axfr_ips",
                       "description": "An array of IP addresses allowed to AXFR the entire Domain.\n",
                       "editable": true,
                       "type": "array",
+                      "subType": "string",
                       "value": [
                         "44.55.66.77"
-                      ]
+                      ],
+                      "schema": null
                     },
                     {
                       "name": "display_group",
                       "description": "A display group to keep track of this Domain.\n",
                       "editable": true,
+                      "filterable": true,
                       "type": "string",
-                      "value": "Example Display Group"
+                      "value": "Example Display Group",
+                      "schema": null
                     },
                     {
                       "name": "type",
                       "description": "Controls the Domain type.",
                       "editable": false,
+                      "filterable": true,
                       "type": "enum",
-                      "value": "master"
+                      "subType": "domain_type",
+                      "value": "master",
+                      "schema": [
+                        {
+                          "name": "master",
+                          "description": "A primary, authoritative Domain"
+                        },
+                        {
+                          "name": "slave",
+                          "description": "A secondary Domain which gets its updates from a master Domain."
+                        }
+                      ]
                     }
                   ],
-                  "enums": [
-                    {
+                  "enums": {
+                    "status": {
                       "active": "Turn on serving of this Domain.",
                       "disabled": "Turn off serving of this Domain.",
-                      "edit_mode": "Use this mode while making edits.",
-                      "name": "status"
+                      "edit_mode": "Use this mode while making edits."
                     },
-                    {
+                    "domain_type": {
                       "master": "A primary, authoritative Domain",
-                      "slave": "A secondary Domain which gets its updates from a master Domain.",
-                      "name": "domain_type"
+                      "slave": "A secondary Domain which gets its updates from a master Domain."
                     }
-                  ]
+                  },
+                  "example": {
+                    "id": 357,
+                    "domain": "example.com",
+                    "soa_email": "admin@example.com",
+                    "description": "Example Description",
+                    "refresh_sec": 14400,
+                    "retry_sec": 3600,
+                    "expire_sec": 604800,
+                    "ttl_sec": 3600,
+                    "status": "active",
+                    "master_ips": [
+                      "127.0.0.1",
+                      "255.255.255.1",
+                      "123.123.123.7"
+                    ],
+                    "axfr_ips": [
+                      "44.55.66.77"
+                    ],
+                    "display_group": "Example Display Group",
+                    "type": "master"
+                  }
                 }
               },
               {
@@ -2597,70 +5976,176 @@ module.exports = { endpoints: [
                   "description": "Domains\n",
                   "schema": [
                     {
-                      "name": "0"
+                      "name": "id",
+                      "type": "integer",
+                      "value": 357,
+                      "schema": null
                     },
                     {
-                      "name": "1",
-                      "description": "The Domain name.\n"
+                      "name": "domain",
+                      "description": "The Domain name.\n",
+                      "editable": true,
+                      "filterable": true,
+                      "type": "string",
+                      "value": "example.com",
+                      "schema": null
                     },
                     {
-                      "name": "2",
-                      "description": "Start of Authority (SOA) contact email.\n"
+                      "name": "soa_email",
+                      "description": "Start of Authority (SOA) contact email.\n",
+                      "editable": true,
+                      "type": "string",
+                      "value": "admin@example.com",
+                      "schema": null
                     },
                     {
-                      "name": "3",
-                      "description": "A description to keep track of this Domain.\n"
+                      "name": "description",
+                      "description": "A description to keep track of this Domain.\n",
+                      "editable": true,
+                      "type": "string",
+                      "value": "Example Description",
+                      "schema": null
                     },
                     {
-                      "name": "4",
-                      "description": "Time interval before the Domain should be refreshed, in seconds.\n"
+                      "name": "refresh_sec",
+                      "description": "Time interval before the Domain should be refreshed, in seconds.\n",
+                      "editable": true,
+                      "type": "integer",
+                      "value": 14400,
+                      "schema": null
                     },
                     {
-                      "name": "5",
-                      "description": "Time interval that should elapse before a failed refresh should be retried, in seconds.\n"
+                      "name": "retry_sec",
+                      "description": "Time interval that should elapse before a failed refresh should be retried, in seconds.\n",
+                      "editable": true,
+                      "type": "integer",
+                      "value": 3600,
+                      "schema": null
                     },
                     {
-                      "name": "6",
-                      "description": "Time value that specifies the upper limit on the time interval that can elapse before the Domain is no longer authoritative, in seconds.\n"
+                      "name": "expire_sec",
+                      "description": "Time value that specifies the upper limit on the time interval that can elapse before the Domain is no longer authoritative, in seconds.\n",
+                      "editable": true,
+                      "type": "integer",
+                      "value": 604800,
+                      "schema": null
                     },
                     {
-                      "name": "7",
-                      "description": "Time interval that the resource record may be cached before\n  it should be discarded, in seconds.\n"
+                      "name": "ttl_sec",
+                      "description": "Time interval that the resource record may be cached before\n  it should be discarded, in seconds.\n",
+                      "editable": true,
+                      "type": "integer",
+                      "value": 3600,
+                      "schema": null
                     },
                     {
-                      "name": "8",
-                      "description": "The status of the Domain it can be disabled, active, or edit_mode.\n"
+                      "name": "status",
+                      "description": "The status of the Domain it can be disabled, active, or edit_mode.\n",
+                      "editable": true,
+                      "type": "enum",
+                      "subType": "status",
+                      "value": "active",
+                      "schema": [
+                        {
+                          "name": "active",
+                          "description": "Turn on serving of this Domain."
+                        },
+                        {
+                          "name": "disabled",
+                          "description": "Turn off serving of this Domain."
+                        },
+                        {
+                          "name": "edit_mode",
+                          "description": "Use this mode while making edits."
+                        }
+                      ]
                     },
                     {
-                      "name": "9",
-                      "description": "An array of IP addresses for this Domain.\n"
+                      "name": "master_ips",
+                      "description": "An array of IP addresses for this Domain.\n",
+                      "editable": true,
+                      "filterable": true,
+                      "type": "array",
+                      "subType": "string",
+                      "value": [
+                        "127.0.0.1",
+                        "255.255.255.1",
+                        "123.123.123.7"
+                      ],
+                      "schema": null
                     },
                     {
-                      "name": "10",
-                      "description": "An array of IP addresses allowed to AXFR the entire Domain.\n"
+                      "name": "axfr_ips",
+                      "description": "An array of IP addresses allowed to AXFR the entire Domain.\n",
+                      "editable": true,
+                      "type": "array",
+                      "subType": "string",
+                      "value": [
+                        "44.55.66.77"
+                      ],
+                      "schema": null
                     },
                     {
-                      "name": "11",
-                      "description": "A display group to keep track of this Domain.\n"
+                      "name": "display_group",
+                      "description": "A display group to keep track of this Domain.\n",
+                      "editable": true,
+                      "filterable": true,
+                      "type": "string",
+                      "value": "Example Display Group",
+                      "schema": null
                     },
                     {
-                      "name": "12",
-                      "description": "Controls the Domain type."
+                      "name": "type",
+                      "description": "Controls the Domain type.",
+                      "editable": false,
+                      "filterable": true,
+                      "type": "enum",
+                      "subType": "domain_type",
+                      "value": "master",
+                      "schema": [
+                        {
+                          "name": "master",
+                          "description": "A primary, authoritative Domain"
+                        },
+                        {
+                          "name": "slave",
+                          "description": "A secondary Domain which gets its updates from a master Domain."
+                        }
+                      ]
                     }
                   ],
-                  "enums": [
-                    {
+                  "enums": {
+                    "status": {
                       "active": "Turn on serving of this Domain.",
                       "disabled": "Turn off serving of this Domain.",
-                      "edit_mode": "Use this mode while making edits.",
-                      "name": "0"
+                      "edit_mode": "Use this mode while making edits."
                     },
-                    {
+                    "domain_type": {
                       "master": "A primary, authoritative Domain",
-                      "slave": "A secondary Domain which gets its updates from a master Domain.",
-                      "name": "1"
+                      "slave": "A secondary Domain which gets its updates from a master Domain."
                     }
-                  ]
+                  },
+                  "example": {
+                    "id": 357,
+                    "domain": "example.com",
+                    "soa_email": "admin@example.com",
+                    "description": "Example Description",
+                    "refresh_sec": 14400,
+                    "retry_sec": 3600,
+                    "expire_sec": 604800,
+                    "ttl_sec": 3600,
+                    "status": "active",
+                    "master_ips": [
+                      "127.0.0.1",
+                      "255.255.255.1",
+                      "123.123.123.7"
+                    ],
+                    "axfr_ips": [
+                      "44.55.66.77"
+                    ],
+                    "display_group": "Example Display Group",
+                    "type": "master"
+                  }
                 }
               },
               {
@@ -2727,83 +6212,106 @@ module.exports = { endpoints: [
                     {
                       "name": "id",
                       "type": "integer",
-                      "value": 468
+                      "value": 468,
+                      "schema": null
                     },
                     {
                       "name": "type",
                       "description": "Type of record (A/AAAA, NS, MX, CNAME, TXT, SRV).\n",
                       "type": "string",
-                      "value": "A"
+                      "value": "A",
+                      "schema": null
                     },
                     {
                       "name": "name",
                       "description": "The hostname or FQDN. When type=MX the subdomain to delegate to the Target MX server.\n",
                       "editable": true,
+                      "filterable": true,
                       "type": "string",
-                      "value": "sub.example.com"
+                      "value": "sub.example.com",
+                      "schema": null
                     },
                     {
                       "name": "target",
                       "description": "When type=MX the hostname. When type=CNAME the target of the alias. When type=TXT the value of the record. When type=A or AAAA the token of '[remote_addr]' will be substituted with the IP address of the request.\n",
                       "editable": true,
+                      "filterable": true,
                       "type": "string",
-                      "value": "sub"
+                      "value": "sub",
+                      "schema": null
                     },
                     {
                       "name": "priority",
                       "description": "Priority for MX and SRV records.\n",
                       "editable": true,
                       "type": "integer",
-                      "value": 10
+                      "value": 10,
+                      "schema": null
                     },
                     {
                       "name": "weight",
                       "description": "A relative weight for records with the same priority, higher value means more preferred.\n",
                       "editable": true,
                       "type": "integer",
-                      "value": 20
+                      "value": 20,
+                      "schema": null
                     },
                     {
                       "name": "port",
                       "description": "The TCP or UDP port on which the service is to be found.\n",
                       "editable": true,
                       "type": "integer",
-                      "value": 80
+                      "value": 80,
+                      "schema": null
                     },
                     {
                       "name": "service",
                       "description": "The service to append to an SRV record. Must conform to RFC2782 standards.\n",
                       "editable": true,
                       "type": "string",
-                      "value": "_sip"
+                      "value": "_sip",
+                      "schema": null
                     },
                     {
                       "name": "protocol",
                       "description": "The protocol to append to an SRV record. Must conform to RFC2782 standards.\n",
                       "editable": true,
                       "type": "string",
-                      "value": "_tcp"
+                      "value": "_tcp",
+                      "schema": null
                     },
                     {
                       "name": "ttl_sec",
                       "description": "Time interval that the resource record may be cached before it should be discarded, in seconds. Leave as 0 to accept our default.\n",
                       "editable": true,
                       "type": "integer",
-                      "value": 86400
+                      "value": 86400,
+                      "schema": null
                     }
                   ],
-                  "enums": [
-                    {
+                  "enums": {
+                    "Zone Record Types": {
                       "A": "Address Mapping Record",
                       "AAAA": "IP Version 6 Address Record",
                       "NS": "Name Server Record",
                       "MX": "Mail Exchanger Record",
                       "CNAME": "Canonical Name Record",
                       "TXT": "Text Record",
-                      "SRV": "Service Record",
-                      "name": "Zone Record Types"
+                      "SRV": "Service Record"
                     }
-                  ]
+                  },
+                  "example": {
+                    "id": 468,
+                    "type": "A",
+                    "name": "sub.example.com",
+                    "target": "sub",
+                    "priority": 10,
+                    "weight": 20,
+                    "port": 80,
+                    "service": "_sip",
+                    "protocol": "_tcp",
+                    "ttl_sec": 86400
+                  }
                 }
               },
               {
@@ -2897,57 +6405,108 @@ module.exports = { endpoints: [
                   "description": "Domain Records: The Domain Record fields will contain different values depending on what type of record it is.\n",
                   "schema": [
                     {
-                      "name": "0"
+                      "name": "id",
+                      "type": "integer",
+                      "value": 468,
+                      "schema": null
                     },
                     {
-                      "name": "1",
-                      "description": "Type of record (A/AAAA, NS, MX, CNAME, TXT, SRV).\n"
+                      "name": "type",
+                      "description": "Type of record (A/AAAA, NS, MX, CNAME, TXT, SRV).\n",
+                      "type": "string",
+                      "value": "A",
+                      "schema": null
                     },
                     {
-                      "name": "2",
-                      "description": "The hostname or FQDN. When type=MX the subdomain to delegate to the Target MX server.\n"
+                      "name": "name",
+                      "description": "The hostname or FQDN. When type=MX the subdomain to delegate to the Target MX server.\n",
+                      "editable": true,
+                      "filterable": true,
+                      "type": "string",
+                      "value": "sub.example.com",
+                      "schema": null
                     },
                     {
-                      "name": "3",
-                      "description": "When type=MX the hostname. When type=CNAME the target of the alias. When type=TXT the value of the record. When type=A or AAAA the token of '[remote_addr]' will be substituted with the IP address of the request.\n"
+                      "name": "target",
+                      "description": "When type=MX the hostname. When type=CNAME the target of the alias. When type=TXT the value of the record. When type=A or AAAA the token of '[remote_addr]' will be substituted with the IP address of the request.\n",
+                      "editable": true,
+                      "filterable": true,
+                      "type": "string",
+                      "value": "sub",
+                      "schema": null
                     },
                     {
-                      "name": "4",
-                      "description": "Priority for MX and SRV records.\n"
+                      "name": "priority",
+                      "description": "Priority for MX and SRV records.\n",
+                      "editable": true,
+                      "type": "integer",
+                      "value": 10,
+                      "schema": null
                     },
                     {
-                      "name": "5",
-                      "description": "A relative weight for records with the same priority, higher value means more preferred.\n"
+                      "name": "weight",
+                      "description": "A relative weight for records with the same priority, higher value means more preferred.\n",
+                      "editable": true,
+                      "type": "integer",
+                      "value": 20,
+                      "schema": null
                     },
                     {
-                      "name": "6",
-                      "description": "The TCP or UDP port on which the service is to be found.\n"
+                      "name": "port",
+                      "description": "The TCP or UDP port on which the service is to be found.\n",
+                      "editable": true,
+                      "type": "integer",
+                      "value": 80,
+                      "schema": null
                     },
                     {
-                      "name": "7",
-                      "description": "The service to append to an SRV record. Must conform to RFC2782 standards.\n"
+                      "name": "service",
+                      "description": "The service to append to an SRV record. Must conform to RFC2782 standards.\n",
+                      "editable": true,
+                      "type": "string",
+                      "value": "_sip",
+                      "schema": null
                     },
                     {
-                      "name": "8",
-                      "description": "The protocol to append to an SRV record. Must conform to RFC2782 standards.\n"
+                      "name": "protocol",
+                      "description": "The protocol to append to an SRV record. Must conform to RFC2782 standards.\n",
+                      "editable": true,
+                      "type": "string",
+                      "value": "_tcp",
+                      "schema": null
                     },
                     {
-                      "name": "9",
-                      "description": "Time interval that the resource record may be cached before it should be discarded, in seconds. Leave as 0 to accept our default.\n"
+                      "name": "ttl_sec",
+                      "description": "Time interval that the resource record may be cached before it should be discarded, in seconds. Leave as 0 to accept our default.\n",
+                      "editable": true,
+                      "type": "integer",
+                      "value": 86400,
+                      "schema": null
                     }
                   ],
-                  "enums": [
-                    {
+                  "enums": {
+                    "Zone Record Types": {
                       "A": "Address Mapping Record",
                       "AAAA": "IP Version 6 Address Record",
                       "NS": "Name Server Record",
                       "MX": "Mail Exchanger Record",
                       "CNAME": "Canonical Name Record",
                       "TXT": "Text Record",
-                      "SRV": "Service Record",
-                      "name": "0"
+                      "SRV": "Service Record"
                     }
-                  ]
+                  },
+                  "example": {
+                    "id": 468,
+                    "type": "A",
+                    "name": "sub.example.com",
+                    "target": "sub",
+                    "priority": 10,
+                    "weight": 20,
+                    "port": 80,
+                    "service": "_sip",
+                    "protocol": "_tcp",
+                    "ttl_sec": 86400
+                  }
                 }
               },
               {
@@ -3015,6 +6574,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/nodebalancers\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_nodebalancers = client.get_nodebalancers()\n"
                   }
                 ],
                 "name": "GET",
@@ -3027,30 +6590,40 @@ module.exports = { endpoints: [
                       "name": "id",
                       "description": "An integer.",
                       "type": "integer",
-                      "value": 123456
+                      "value": 123456,
+                      "schema": null
                     },
                     {
                       "name": "label",
                       "description": "The NodeBalancer's display label. Must be 3-32 ASCII characters limited to letters, numbers, underscores, and dashes, starting and ending with a letter, and without two dashes or underscores in a row.",
                       "editable": true,
                       "type": "string",
-                      "value": "nodebalancer12345"
+                      "value": "nodebalancer12345",
+                      "schema": null
                     },
                     {
                       "name": "hostname",
                       "description": "The NodeBalancer's hostname.",
                       "editable": false,
                       "type": "string",
-                      "value": "nb-69-164-223-4.us-east-1a.nodebalancer.linode.com"
+                      "value": "nb-69-164-223-4.us-east-1a.nodebalancer.linode.com",
+                      "schema": null
                     },
                     {
                       "name": "client_conn_throttle",
                       "description": "Throttle connections per second. 0 to disable, max of 20.",
                       "editable": true,
                       "type": "integer",
-                      "value": 10
+                      "value": 10,
+                      "schema": null
                     }
-                  ]
+                  ],
+                  "example": {
+                    "id": 123456,
+                    "label": "nodebalancer12345",
+                    "hostname": "nb-69-164-223-4.us-east-1a.nodebalancer.linode.com",
+                    "client_conn_throttle": 10
+                  }
                 }
               },
               {
@@ -3060,7 +6633,7 @@ module.exports = { endpoints: [
                 "params": [
                   {
                     "description": "A region ID to provision this NodeBalancer in.\n",
-                    "type": "region",
+                    "type": "integer",
                     "name": "region"
                   },
                   {
@@ -3079,6 +6652,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n        \"region\": \"us-east-1a\",\n        \"label\": \"my_cool_balancer\",\n        \"client_conn_throttle\": 10\n    }' \\\n    https://$api_root/$version/nodebalancers\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "new_nodebalancer = client.create_nodebalancer('us-east-1a', label='my_cool_balancer', client_conn_throttle=10)\n"
                   }
                 ],
                 "name": "POST"
@@ -3101,6 +6678,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_nodebalancer = linode.NodeBalancer(client, 123)\n"
                   }
                 ],
                 "name": "GET",
@@ -3110,22 +6691,43 @@ module.exports = { endpoints: [
                   "description": "NodeBalancer objects describe a single NodeBalancer on your account.\n",
                   "schema": [
                     {
-                      "name": "0",
-                      "description": "An integer."
+                      "name": "id",
+                      "description": "An integer.",
+                      "type": "integer",
+                      "value": 123456,
+                      "schema": null
                     },
                     {
-                      "name": "1",
-                      "description": "The NodeBalancer's display label. Must be 3-32 ASCII characters limited to letters, numbers, underscores, and dashes, starting and ending with a letter, and without two dashes or underscores in a row."
+                      "name": "label",
+                      "description": "The NodeBalancer's display label. Must be 3-32 ASCII characters limited to letters, numbers, underscores, and dashes, starting and ending with a letter, and without two dashes or underscores in a row.",
+                      "editable": true,
+                      "type": "string",
+                      "value": "nodebalancer12345",
+                      "schema": null
                     },
                     {
-                      "name": "2",
-                      "description": "The NodeBalancer's hostname."
+                      "name": "hostname",
+                      "description": "The NodeBalancer's hostname.",
+                      "editable": false,
+                      "type": "string",
+                      "value": "nb-69-164-223-4.us-east-1a.nodebalancer.linode.com",
+                      "schema": null
                     },
                     {
-                      "name": "3",
-                      "description": "Throttle connections per second. 0 to disable, max of 20."
+                      "name": "client_conn_throttle",
+                      "description": "Throttle connections per second. 0 to disable, max of 20.",
+                      "editable": true,
+                      "type": "integer",
+                      "value": 10,
+                      "schema": null
                     }
-                  ]
+                  ],
+                  "example": {
+                    "id": 123456,
+                    "label": "nodebalancer12345",
+                    "hostname": "nb-69-164-223-4.us-east-1a.nodebalancer.linode.com",
+                    "client_conn_throttle": 10
+                  }
                 }
               },
               {
@@ -3135,6 +6737,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X PUT -d '{\n        \"region\": \"us-east-1a\",\n        \"label\": \"awesome_new_label\",\n        \"client_conn_throttle\": 14\n    }' \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_nodebalancer = linode.NodeBalancer(client, 123)\nmy_nodebalancer.label = 'awesome_new_label'\nmy_nodebalancer.client_conn_throttle = 14\nmy_nodebalancer.save()\n"
                   }
                 ],
                 "name": "PUT"
@@ -3147,6 +6753,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Authorization: token $TOKEN\" \\\n    -X DELETE \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_nodebalancer = linode.NodeBalancer(client, 123)\nmy_nodebalancer.delete()\n"
                   }
                 ],
                 "name": "DELETE"
@@ -3169,6 +6779,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id/configs\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_nodebalancer = linode.NodeBalancer(client, 123)\nnb_configs = my_nodebalancer.configs\n"
                   }
                 ],
                 "name": "GET"
@@ -3236,7 +6850,11 @@ module.exports = { endpoints: [
                 "examples": [
                   {
                     "name": "curl",
-                    "value": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n        \"label\": \"myNodeBalancer\",\n        \"port\": 80,\n        \"protocol\": \"http\",\n        \"algorithm\": \"roundrobin\",\n        \"stickiness\": \"none\",\n        \"check\": \"http_body\",\n        \"check_interval\": 5,\n        \"check_timeout\": 3,\n        \"check_attempts\": 10,\n        \"check_path\": \"/path/to/check\",\n        \"check_body\": \"we got some stuff back\",\n        \"cipher_suite\": \"legacy\"\n    }' \\\n    https://$api_root/$version/nodebalancers\n"
+                    "value": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n        \"label\": \"myNodeBalancer\",\n        \"port\": 80,\n        \"protocol\": \"http\",\n        \"algorithm\": \"roundrobin\",\n        \"stickiness\": \"none\",\n        \"check\": \"http_body\",\n        \"check_interval\": 5,\n        \"check_timeout\": 3,\n        \"check_attempts\": 10,\n        \"check_path\": \"/path/to/check\",\n        \"check_body\": \"we got some stuff back\",\n        \"cipher_suite\": \"legacy\"\n    }' \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id/configs\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_nodebalancer = linode.NodeBalancer(client, 123)\nnew_config = my_nodebalancer.create_config(port=80, label='myNodeBalancerConfig', protocol='http',\n        algorithm='roundrobin', stickiness='none', check='http_body', check_interval=5, check_timeout=3,\n        check_attempts=10, check_path='/path/to/check', check_body='we got some stuff back',\n        cipher_suite='legacy')\n"
                   }
                 ],
                 "name": "POST"
@@ -3258,6 +6876,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "nb_config = linode.NodeBalancerConfig(client, 456, 123) # linode_client, nodebalancer_config_id, nodebalancer_id\n"
                   }
                 ],
                 "name": "GET"
@@ -3270,6 +6892,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Authorization: token $TOKEN\" \\\n    -X DELETE \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "nb_config = linode.NodeBalancerConfig(client, 456, 123) # linode_client, nodebalancer_config_id, nodebalancer_id\nnb_config.delete()\n"
                   }
                 ],
                 "name": "DELETE"
@@ -3285,12 +6911,16 @@ module.exports = { endpoints: [
             "description": "Add or update SSL certificate and https protocol to an existing config profile.\n",
             "methods": [
               {
-                "oauth": "nodebaalancers:modify",
+                "oauth": "nodebalancers:modify",
                 "description": "Adds/updates SSL certificates",
                 "examples": [
                   {
                     "name": "curl",
                     "value": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n      \"ssl_cert\": \"----- BEGIN CERTIFICATE ----- < etc...> ----- END CERTIFICATE -----\",\n      \"ssl_key\": \"----- BEGIN PRIVATE KEY ----- < etc...> ----- END PRIVATE KEY -----\"\n    }' \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id/ssl\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "# currently unimplemented\n"
                   }
                 ],
                 "name": "POST"
@@ -3313,6 +6943,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id/nodes\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_nodebalancer = linode.NodeBalancer(client, 123)\nnb_config = my_nodebalancer.configs[0]\nnb_nodes = nb_config.nodes\n"
                   }
                 ],
                 "name": "GET"
@@ -3336,16 +6970,12 @@ module.exports = { endpoints: [
                   {
                     "description": "The connections mode for this node. One of 'accept', 'reject', or 'drain'.",
                     "name": "mode"
-                  },
-                  {
-                    "description": "The status of this node.",
-                    "name": "status"
                   }
                 ],
                 "examples": [
                   {
                     "name": "curl",
-                    "value": "curl -H \"Content-Type: application/json\" \\\n  -H \"Authorization: token $TOKEN\" \\\n  -X POST -d '{\n      \"label\": \"greatest_node_ever\",\n      \"address\": \"192.168.4.5:80\",\n      \"weight\": 40,\n      \"mode\": \"accept\",\n      \"status\": \"online\"\n  }' \\\n  https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id/nodes\n"
+                    "value": "curl -H \"Content-Type: application/json\" \\\n  -H \"Authorization: token $TOKEN\" \\\n  -X POST -d '{\n      \"label\": \"greatest_node_ever\",\n      \"address\": \"192.168.4.5:80\",\n      \"weight\": 40,\n      \"mode\": \"accept\"\n  }' \\\n  https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id/nodes\n"
                   }
                 ],
                 "name": "POST"
@@ -3367,6 +6997,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id/nodes/$node_id\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "nb_node = linode.NodeBalancerNode(client, 789, 456, 123) # linode_client, node_id, config_id, nodebalancer_id\n"
                   }
                 ],
                 "name": "GET"
@@ -3377,7 +7011,11 @@ module.exports = { endpoints: [
                 "examples": [
                   {
                     "name": "curl",
-                    "value": "curl -H \"Content-Type: application/json\" \\\n  -H \"Authorization: token $TOKEN\" \\\n  -X PUT -d '{\n      \"label\": \"node001\",\n      \"address\": \"192.168.12.12:100\",\n      \"weight\": 40,\n      \"mode\": \"accept\",\n      \"status\": \"online\"\n  }' \\\n  https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id/nodes/$node_id\n"
+                    "value": "curl -H \"Content-Type: application/json\" \\\n  -H \"Authorization: token $TOKEN\" \\\n  -X PUT -d '{\n      \"label\": \"node001\",\n      \"address\": \"192.168.12.12:100\",\n      \"weight\": 40,\n      \"mode\": \"accept\",\n  }' \\\n  https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id/nodes/$node_id\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "nb_node = linode.NodeBalancerNode(client, 789, 456, 123) # linode_client, node_id, config_id, nodebalancer_id\nnb_node.label = 'node001'\nnb_node.address = '192.168.12.12:100'\nnb_node.save()\n"
                   }
                 ],
                 "name": "PUT"
@@ -3390,6 +7028,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Authorization: token $TOKEN\" \\\n    -X DELETE \\\n    https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id/nodes/$node_id\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "nb_node = linode.NodeBalancerNode(client, 789, 456, 123) # linode_client, node_id, config_id, nodebalancer_id\nnb_node.delete()\n"
                   }
                 ],
                 "name": "DELETE"
@@ -3428,6 +7070,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Authorization: token $TOKEN\" \\\n  https://api.alpha.linode.com/v4/networking/ipv4\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_ipv4s = client.networking.get_ipv4()\n"
                   }
                 ],
                 "name": "GET"
@@ -3447,6 +7093,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\"linode\":123}' \\\n    https://api.alpha.linode.com/v4/networking/ipv4\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "# presently unsupported\n"
                   }
                 ],
                 "name": "POST"
@@ -3468,6 +7118,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Authorization: token $TOKEN\" \\\n  https://$api_root/$version/networking/ipv4/97.107.143.37\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_ipv4 = linode.IPAddress(client, '97.107.143.37')\n"
                   }
                 ],
                 "name": "GET"
@@ -3479,6 +7133,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X PUT -d '{\"rdns\":\"example.org\"}' \\\n    https://$api_root/$version/networking/ipv4/97.107.143.37\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_ipv4.rdns = 'example.org'\nmy_ipv4.save()\n"
                   }
                 ],
                 "name": "PUT"
@@ -3500,6 +7158,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/networking/ipv6\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_ipv6s = client.networking.get_ipv6()\n"
                   }
                 ],
                 "name": "GET"
@@ -3521,6 +7183,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/networkint/ipv6/2600:3c01::2:5001\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_ipv6 = linode.IPv6Address(client, '2600:3c01::2:5001')\n"
                   }
                 ],
                 "name": "GET"
@@ -3532,6 +7198,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X PUT -d '{\"rdns\":\"example.org\"}' \\\n    https://$api_root/$version/networking/ipv6/2600:3c01::2:5001\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_ipv6.rdns = 'example.org'\nmy_ipv6.save()\n"
                   }
                 ],
                 "name": "PUT"
@@ -3552,7 +7222,7 @@ module.exports = { endpoints: [
                 "params": [
                   {
                     "description": "The region where the IPv4 address and Linode are located.\n",
-                    "type": "region",
+                    "type": "integer",
                     "name": "region"
                   },
                   {
@@ -3565,6 +7235,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n        \"region\": \"us-east-1a\",\n        \"assignments\": [\n          {\"address\": \"210.111.22.95\", \"linode_id\": 134504},\n          {\"address\": \"190.12.207.11\", \"linode_id\": 119034},\n        ]\n    }' \\\nhttps://$api_root/$version/networking/ip-assign\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "linode_1 = linode.Linode(client, 134504)\nip1 = linode_1.ips.ipv4.public[0]\n\nlinode_2 = linode.Linode(client, 119034)\nip2 = linode_2.ips.ipv4.public[0]\n\nclient.networking.assign_ips(linode_1.region, ip1.to(linode_2), ip2.to(linode_1))\n"
                   }
                 ],
                 "name": "POST"
@@ -3604,10 +7278,44 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import regions\nTODO\n"
+                    "value": "all_regions = client.get_regions()\n"
                   }
                 ],
-                "name": "GET"
+                "name": "GET",
+                "resource": {
+                  "name": "Region",
+                  "prefix": "dctr",
+                  "description": "Region objects describe the regions available for Linode services.\n",
+                  "schema": [
+                    {
+                      "name": "id",
+                      "type": "string",
+                      "value": "us-east-1a",
+                      "schema": null
+                    },
+                    {
+                      "name": "label",
+                      "description": "Human-friendly region name.",
+                      "filterable": true,
+                      "type": "string",
+                      "value": "Newark, NJ",
+                      "schema": null
+                    },
+                    {
+                      "name": "country",
+                      "description": "Country",
+                      "filterable": true,
+                      "type": "string",
+                      "value": "US",
+                      "schema": null
+                    }
+                  ],
+                  "example": {
+                    "id": "us-east-1a",
+                    "label": "Newark, NJ",
+                    "country": "US"
+                  }
+                }
               }
             ],
             "path": "regions",
@@ -3628,10 +7336,44 @@ module.exports = { endpoints: [
                   },
                   {
                     "name": "python",
-                    "value": "import regions\nTODO\n"
+                    "value": "region = linode.Region(client, 'us-east-1a')\n"
                   }
                 ],
-                "name": "GET"
+                "name": "GET",
+                "resource": {
+                  "name": "Region",
+                  "prefix": "dctr",
+                  "description": "Region objects describe the regions available for Linode services.\n",
+                  "schema": [
+                    {
+                      "name": "id",
+                      "type": "string",
+                      "value": "us-east-1a",
+                      "schema": null
+                    },
+                    {
+                      "name": "label",
+                      "description": "Human-friendly region name.",
+                      "filterable": true,
+                      "type": "string",
+                      "value": "Newark, NJ",
+                      "schema": null
+                    },
+                    {
+                      "name": "country",
+                      "description": "Country",
+                      "filterable": true,
+                      "type": "string",
+                      "value": "US",
+                      "schema": null
+                    }
+                  ],
+                  "example": {
+                    "id": "us-east-1a",
+                    "label": "Newark, NJ",
+                    "country": "US"
+                  }
+                }
               }
             ],
             "path": "regions/:id",
@@ -3679,66 +7421,139 @@ module.exports = { endpoints: [
                       "name": "id",
                       "description": "This ticket's ID",
                       "type": "integer",
-                      "value": 1234
+                      "value": 1234,
+                      "schema": null
                     },
                     {
                       "name": "summary",
                       "description": "This is summary or title for the ticket.",
                       "type": "string",
-                      "value": "A summary of the ticket."
+                      "value": "A summary of the ticket.",
+                      "schema": null
                     },
                     {
                       "name": "description",
                       "description": "The full details of the issue or question.",
                       "type": "string",
-                      "value": "More details about the ticket."
+                      "value": "More details about the ticket.",
+                      "schema": null
                     },
                     {
                       "name": "status",
                       "description": "The status of the ticket.",
+                      "filterable": true,
                       "type": "enum",
-                      "value": "open"
+                      "subType": "Status",
+                      "value": "open",
+                      "schema": [
+                        {
+                          "name": "new",
+                          "description": "The support ticket has just been opened."
+                        },
+                        {
+                          "name": "open",
+                          "description": "The support ticket is open and can be replied to."
+                        },
+                        {
+                          "name": "closed",
+                          "description": "The support ticket is completed and closed."
+                        }
+                      ]
                     },
                     {
                       "name": "opened",
+                      "filterable": true,
                       "type": "datetime",
-                      "value": "2017-02-23T11:21:01"
+                      "value": "2017-02-23T11:21:01",
+                      "schema": null
                     },
                     {
                       "name": "closed",
+                      "filterable": true,
                       "type": "datetime",
-                      "value": "2017-02-25T03:20:00"
+                      "value": "2017-02-25T03:20:00",
+                      "schema": null
                     },
                     {
                       "name": "closed_by",
                       "description": "The user who closed this ticket.",
                       "type": "string",
-                      "value": "some_user"
+                      "value": "some_user",
+                      "schema": null
                     },
                     {
                       "name": "updated",
+                      "filterable": true,
                       "type": "datetime",
-                      "value": "2017-02-23T11:21:01"
+                      "value": "2017-02-23T11:21:01",
+                      "schema": null
                     },
                     {
                       "name": "updated_by",
                       "description": "The user who last updated this ticket.",
                       "type": "string",
-                      "value": "some_other_user"
+                      "value": "some_other_user",
+                      "schema": null
                     },
                     {
                       "name": "entity",
-                      "description": "The entity this ticket was opened regarding"
+                      "description": "The entity this ticket was opened regarding",
+                      "schema": [
+                        {
+                          "name": "id",
+                          "description": "The entity's ID that this event is for.  This is meaningless without a type.\n",
+                          "type": "integer",
+                          "value": 9302,
+                          "schema": null
+                        },
+                        {
+                          "name": "label",
+                          "description": "The current label of this object.  This will reflect changes in label.\n",
+                          "type": "string",
+                          "value": "linode123",
+                          "schema": null
+                        },
+                        {
+                          "name": "type",
+                          "description": "The type of entity this is related to.\n",
+                          "type": "string",
+                          "value": "linode",
+                          "schema": null
+                        },
+                        {
+                          "name": "url",
+                          "description": "The URL where you can access the object this event is for.  If a relative URL, it is relative to the domain you retrieved the event from.\n",
+                          "type": "string",
+                          "value": "/v4/linode/instances/123",
+                          "schema": null
+                        }
+                      ]
                     }
                   ],
-                  "enums": [
-                    {
+                  "enums": {
+                    "Status": {
                       "new": "The support ticket has just been opened.",
                       "open": "The support ticket is open and can be replied to.",
-                      "closed": "The support ticket is completed and closed.",
-                      "name": "Status"
+                      "closed": "The support ticket is completed and closed."
                     }
-                  ]
+                  },
+                  "example": {
+                    "id": 1234,
+                    "summary": "A summary of the ticket.",
+                    "description": "More details about the ticket.",
+                    "status": "open",
+                    "opened": "2017-02-23T11:21:01",
+                    "closed": "2017-02-25T03:20:00",
+                    "closed_by": "some_user",
+                    "updated": "2017-02-23T11:21:01",
+                    "updated_by": "some_other_user",
+                    "entity": {
+                      "id": 9302,
+                      "label": "linode123",
+                      "type": "linode",
+                      "url": "/v4/linode/instances/123"
+                    }
+                  }
                 }
               },
               {
@@ -3808,51 +7623,142 @@ module.exports = { endpoints: [
                   "description": "Support ticket objects describe requests to the Linode support team.\n",
                   "schema": [
                     {
-                      "name": "0",
-                      "description": "This ticket's ID"
+                      "name": "id",
+                      "description": "This ticket's ID",
+                      "type": "integer",
+                      "value": 1234,
+                      "schema": null
                     },
                     {
-                      "name": "1",
-                      "description": "This is summary or title for the ticket."
+                      "name": "summary",
+                      "description": "This is summary or title for the ticket.",
+                      "type": "string",
+                      "value": "A summary of the ticket.",
+                      "schema": null
                     },
                     {
-                      "name": "2",
-                      "description": "The full details of the issue or question."
+                      "name": "description",
+                      "description": "The full details of the issue or question.",
+                      "type": "string",
+                      "value": "More details about the ticket.",
+                      "schema": null
                     },
                     {
-                      "name": "3",
-                      "description": "The status of the ticket."
+                      "name": "status",
+                      "description": "The status of the ticket.",
+                      "filterable": true,
+                      "type": "enum",
+                      "subType": "Status",
+                      "value": "open",
+                      "schema": [
+                        {
+                          "name": "new",
+                          "description": "The support ticket has just been opened."
+                        },
+                        {
+                          "name": "open",
+                          "description": "The support ticket is open and can be replied to."
+                        },
+                        {
+                          "name": "closed",
+                          "description": "The support ticket is completed and closed."
+                        }
+                      ]
                     },
                     {
-                      "name": "4"
+                      "name": "opened",
+                      "filterable": true,
+                      "type": "datetime",
+                      "value": "2017-02-23T11:21:01",
+                      "schema": null
                     },
                     {
-                      "name": "5"
+                      "name": "closed",
+                      "filterable": true,
+                      "type": "datetime",
+                      "value": "2017-02-25T03:20:00",
+                      "schema": null
                     },
                     {
-                      "name": "6",
-                      "description": "The user who closed this ticket."
+                      "name": "closed_by",
+                      "description": "The user who closed this ticket.",
+                      "type": "string",
+                      "value": "some_user",
+                      "schema": null
                     },
                     {
-                      "name": "7"
+                      "name": "updated",
+                      "filterable": true,
+                      "type": "datetime",
+                      "value": "2017-02-23T11:21:01",
+                      "schema": null
                     },
                     {
-                      "name": "8",
-                      "description": "The user who last updated this ticket."
+                      "name": "updated_by",
+                      "description": "The user who last updated this ticket.",
+                      "type": "string",
+                      "value": "some_other_user",
+                      "schema": null
                     },
                     {
-                      "name": "9",
-                      "description": "The entity this ticket was opened regarding"
+                      "name": "entity",
+                      "description": "The entity this ticket was opened regarding",
+                      "schema": [
+                        {
+                          "name": "id",
+                          "description": "The entity's ID that this event is for.  This is meaningless without a type.\n",
+                          "type": "integer",
+                          "value": 9302,
+                          "schema": null
+                        },
+                        {
+                          "name": "label",
+                          "description": "The current label of this object.  This will reflect changes in label.\n",
+                          "type": "string",
+                          "value": "linode123",
+                          "schema": null
+                        },
+                        {
+                          "name": "type",
+                          "description": "The type of entity this is related to.\n",
+                          "type": "string",
+                          "value": "linode",
+                          "schema": null
+                        },
+                        {
+                          "name": "url",
+                          "description": "The URL where you can access the object this event is for.  If a relative URL, it is relative to the domain you retrieved the event from.\n",
+                          "type": "string",
+                          "value": "/v4/linode/instances/123",
+                          "schema": null
+                        }
+                      ]
                     }
                   ],
-                  "enums": [
-                    {
+                  "enums": {
+                    "Status": {
                       "new": "The support ticket has just been opened.",
                       "open": "The support ticket is open and can be replied to.",
-                      "closed": "The support ticket is completed and closed.",
-                      "name": "0"
+                      "closed": "The support ticket is completed and closed."
                     }
-                  ]
+                  },
+                  "example": {
+                    "id": 1234,
+                    "summary": "A summary of the ticket.",
+                    "description": "More details about the ticket.",
+                    "status": "open",
+                    "opened": "2017-02-23T11:21:01",
+                    "closed": "2017-02-25T03:20:00",
+                    "closed_by": "some_user",
+                    "updated": "2017-02-23T11:21:01",
+                    "updated_by": "some_other_user",
+                    "entity": {
+                      "id": 9302,
+                      "label": "linode123",
+                      "type": "linode",
+                      "url": "/v4/linode/instances/123"
+                    }
+                  }
                 }
               }
             ],
@@ -3884,27 +7790,37 @@ module.exports = { endpoints: [
                       "name": "id",
                       "description": "This ticket's ID",
                       "type": "int",
-                      "value": 1234
+                      "value": 1234,
+                      "schema": null
                     },
                     {
                       "name": "description",
                       "description": "The body of this ticket reply.",
                       "type": "string",
-                      "value": "More details about the ticket."
+                      "value": "More details about the ticket.",
+                      "schema": null
                     },
                     {
                       "name": "created",
                       "description": "A timestamp for when the reply was submitted.",
                       "type": "datetime",
-                      "value": "2017-02-23T11:21:01"
+                      "value": "2017-02-23T11:21:01",
+                      "schema": null
                     },
                     {
                       "name": "created_by",
                       "description": "The user who submitted this reply.",
                       "type": "string",
-                      "value": "some_other_user"
+                      "value": "some_other_user",
+                      "schema": null
                     }
-                  ]
+                  ],
+                  "example": {
+                    "id": 1234,
+                    "description": "More details about the ticket.",
+                    "created": "2017-02-23T11:21:01",
+                    "created_by": "some_other_user"
+                  }
                 }
               },
               {
@@ -3986,6 +7902,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl https://$api_root/$version/account/profile\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_profile = client.account.get_profile()\n"
                   }
                 ],
                 "name": "GET",
@@ -3998,70 +7918,153 @@ module.exports = { endpoints: [
                       "name": "username",
                       "description": "The username of the user.\n",
                       "type": "string",
-                      "value": "example_user"
+                      "value": "example_user",
+                      "schema": null
                     },
                     {
                       "name": "email",
                       "description": "The email address of the user.\n",
                       "editable": true,
                       "type": "string",
-                      "value": "person@place.com"
+                      "value": "person@place.com",
+                      "schema": null
                     },
                     {
                       "name": "timezone",
                       "description": "The selected timezone of the user location.",
                       "editable": true,
                       "type": "string",
-                      "value": "US/Eastern"
+                      "value": "US/Eastern",
+                      "schema": null
                     },
                     {
                       "name": "email_notifications",
                       "description": "Toggles to determine if the user receives email notifications",
                       "editable": true,
                       "type": "boolean",
-                      "value": true
+                      "value": true,
+                      "schema": null
                     },
                     {
                       "name": "referrals",
-                      "description": "Displays information related to referral signups attributed to the user.\n"
+                      "description": "Displays information related to referral signups attributed to the user.\n",
+                      "schema": [
+                        {
+                          "name": "code",
+                          "description": "an alphanumeric code unique to each user for use in creating referral URLs.",
+                          "type": "string",
+                          "value": "rcg3340777c21fa49a5beb971ca1aec44bc584333",
+                          "schema": null
+                        },
+                        {
+                          "name": "url",
+                          "description": "referral URL based on `code`.",
+                          "type": "string",
+                          "value": "https://www.linode.com/?r=rcg3340777c21fa49a5beb971ca1aec44bc584333",
+                          "schema": null
+                        },
+                        {
+                          "name": "total",
+                          "description": "total number of referrals attributed to user.",
+                          "type": "integer",
+                          "value": 10,
+                          "schema": null
+                        },
+                        {
+                          "name": "completed",
+                          "description": "total number of referrals attributed to user that have converted to full accounts.",
+                          "type": "integer",
+                          "value": 8,
+                          "schema": null
+                        },
+                        {
+                          "name": "pending",
+                          "description": "total number of referrals attributed to user that have not yet converted to full accounts.",
+                          "type": "integer",
+                          "value": 2,
+                          "schema": null
+                        },
+                        {
+                          "name": "credit",
+                          "description": "dollar amount of credit based on completed referrals.",
+                          "type": "integer",
+                          "value": 160,
+                          "schema": null
+                        }
+                      ]
                     },
                     {
                       "name": "ip_whitelist_enabled",
                       "description": "When enabled, you can only log in from an IP address on your whitelist.\n",
                       "editable": true,
                       "type": "boolean",
-                      "value": true
+                      "value": true,
+                      "schema": null
                     },
                     {
                       "name": "lish_auth_method",
                       "description": "Controls what authentication methods are allowed to connect to the Lish console servers.\n",
                       "editable": true,
                       "type": "enum",
-                      "value": "password_keys"
+                      "subType": "LishSetting",
+                      "value": "password_keys",
+                      "schema": [
+                        {
+                          "name": "password_keys",
+                          "description": "Allow both password and key authentication"
+                        },
+                        {
+                          "name": "keys_only",
+                          "description": "Allow key authentication only"
+                        },
+                        {
+                          "name": "disabled",
+                          "description": "Disable Lish"
+                        }
+                      ]
                     },
                     {
                       "name": "authorized_keys",
                       "description": "Comma-delimited list of authorized SSH public keys",
                       "editable": true,
                       "type": "string",
-                      "value": "ssh-rsa AADDDDB3NzaC1yc2EAAAADAQABAAACAQDzP5sZlvUR9nZPy0WrklktNXffq+nQoEYUdVJ0hpIzZs+KqjZ3CDbsJZF0g0pn1/gpY9oSEeXzFpWasdkjlfasdf09asldf+O+y8w6rbPe8IyP1mext4cmBe6g/nHAjw/k0rS6cuUFZu++snG0qubymE9gMZ3X0ac92TP7tk0dEwq1fbjumhqNmNyqSbt5j8pLuLRhYHhVszmwnuKjeGjm9mJLJGnd5V6IdZWEIhCjrNgNr1H+fVNI87ryFE31i/i/bnHcbnkNdAmDc2EQ2gJ33vXg8D8Nf2aI+K+e3t9MiFVTJmzAILQpvZQj2YV4mfOt+GSTUJ4VdgH9dNC/3lA0yoP6YoFYw0cdTKhJ0MotmR9iZepbJfbuXxAFOECJuC1bxFtUam3fIsGqj3vXi1R6CzRzxNERqPGLiFcXH8z0VTwXA1v+iflVd4KqihnwNtU+45TXTtFY0twLQRauB9qo9slvnhYlHqQZb8SBYw5WltX3MBQpyLTSZLQLqIKZVgQRKKF413fT52vMF54zk5SpImm5qY5Q1E4od00UJ1x4kFe0fTUQWVgeYvL8AgFx/idUsVs9r3jRPVTUnQZNB2D+7Cyf9dUFjjpiuH3AMMZyRYfJbh/Chg8J6QXYZyEQCxMRa9/lm2rRCVfGbcfb5zgKsV/HRHI/O1F9cZ9JvykwQ== someguy@someplace.com"
+                      "value": "ssh-rsa AADDDDB3NzaC1yc2EAAAADAQABAAACAQDzP5sZlvUR9nZPy0WrklktNXffq+nQoEYUdVJ0hpIzZs+KqjZ3CDbsJZF0g0pn1/gpY9oSEeXzFpWasdkjlfasdf09asldf+O+y8w6rbPe8IyP1mext4cmBe6g/nHAjw/k0rS6cuUFZu++snG0qubymE9gMZ3X0ac92TP7tk0dEwq1fbjumhqNmNyqSbt5j8pLuLRhYHhVszmwnuKjeGjm9mJLJGnd5V6IdZWEIhCjrNgNr1H+fVNI87ryFE31i/i/bnHcbnkNdAmDc2EQ2gJ33vXg8D8Nf2aI+K+e3t9MiFVTJmzAILQpvZQj2YV4mfOt+GSTUJ4VdgH9dNC/3lA0yoP6YoFYw0cdTKhJ0MotmR9iZepbJfbuXxAFOECJuC1bxFtUam3fIsGqj3vXi1R6CzRzxNERqPGLiFcXH8z0VTwXA1v+iflVd4KqihnwNtU+45TXTtFY0twLQRauB9qo9slvnhYlHqQZb8SBYw5WltX3MBQpyLTSZLQLqIKZVgQRKKF413fT52vMF54zk5SpImm5qY5Q1E4od00UJ1x4kFe0fTUQWVgeYvL8AgFx/idUsVs9r3jRPVTUnQZNB2D+7Cyf9dUFjjpiuH3AMMZyRYfJbh/Chg8J6QXYZyEQCxMRa9/lm2rRCVfGbcfb5zgKsV/HRHI/O1F9cZ9JvykwQ== someguy@someplace.com",
+                      "schema": null
                     },
                     {
                       "name": "two_factor_auth",
                       "description": "Toggles whether two factor authentication (TFA) is enabled or disabled.",
                       "editable": true,
                       "type": "boolean",
-                      "value": true
+                      "value": true,
+                      "schema": null
                     }
                   ],
-                  "enums": [
-                    {
+                  "enums": {
+                    "LishSetting": {
                       "password_keys": "Allow both password and key authentication",
                       "keys_only": "Allow key authentication only",
-                      "disabled": "Disable Lish",
-                      "name": "LishSetting"
+                      "disabled": "Disable Lish"
                     }
-                  ]
+                  },
+                  "example": {
+                    "username": "example_user",
+                    "email": "person@place.com",
+                    "timezone": "US/Eastern",
+                    "email_notifications": true,
+                    "referrals": {
+                      "code": "rcg3340777c21fa49a5beb971ca1aec44bc584333",
+                      "url": "https://www.linode.com/?r=rcg3340777c21fa49a5beb971ca1aec44bc584333",
+                      "total": 10,
+                      "completed": 8,
+                      "pending": 2,
+                      "credit": 160
+                    },
+                    "ip_whitelist_enabled": true,
+                    "lish_auth_method": "password_keys",
+                    "authorized_keys": "ssh-rsa AADDDDB3NzaC1yc2EAAAADAQABAAACAQDzP5sZlvUR9nZPy0WrklktNXffq+nQoEYUdVJ0hpIzZs+KqjZ3CDbsJZF0g0pn1/gpY9oSEeXzFpWasdkjlfasdf09asldf+O+y8w6rbPe8IyP1mext4cmBe6g/nHAjw/k0rS6cuUFZu++snG0qubymE9gMZ3X0ac92TP7tk0dEwq1fbjumhqNmNyqSbt5j8pLuLRhYHhVszmwnuKjeGjm9mJLJGnd5V6IdZWEIhCjrNgNr1H+fVNI87ryFE31i/i/bnHcbnkNdAmDc2EQ2gJ33vXg8D8Nf2aI+K+e3t9MiFVTJmzAILQpvZQj2YV4mfOt+GSTUJ4VdgH9dNC/3lA0yoP6YoFYw0cdTKhJ0MotmR9iZepbJfbuXxAFOECJuC1bxFtUam3fIsGqj3vXi1R6CzRzxNERqPGLiFcXH8z0VTwXA1v+iflVd4KqihnwNtU+45TXTtFY0twLQRauB9qo9slvnhYlHqQZb8SBYw5WltX3MBQpyLTSZLQLqIKZVgQRKKF413fT52vMF54zk5SpImm5qY5Q1E4od00UJ1x4kFe0fTUQWVgeYvL8AgFx/idUsVs9r3jRPVTUnQZNB2D+7Cyf9dUFjjpiuH3AMMZyRYfJbh/Chg8J6QXYZyEQCxMRa9/lm2rRCVfGbcfb5zgKsV/HRHI/O1F9cZ9JvykwQ== someguy@someplace.com",
+                    "two_factor_auth": true
+                  }
                 }
               },
               {
@@ -4070,6 +8073,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Content-Type: application/json\" \\\n  -H \"Authorization: token $TOKEN\" \\\n  -X PUT -d '{\n        \"username\": \"jsmith\",\n        \"email\": \"jsmith@mycompany.com\",\n        \"timezone\": \"US/Eastern\",\n        \"email_notifications\": true,\n        \"ip_whitelist_enabled\": true,\n        \"lish_auth_method\": \"password_keys\",\n        \"authorized_keys\": \"\"\n      }\n    }' \\\n    https://$api_root/$version/account/profile\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_profile.email = 'jsmith@mycompany.com'\nmy_profile.timezone = 'US/Eastern'\nmy_profile.email_notifications = True\nmy_profile.ip_whitelist_enabled = True\nmy_profile.lish_auth_method = 'password_keys'\nmy_profile.save()\n"
                   }
                 ],
                 "name": "PUT"
@@ -4087,6 +8094,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Content-Type: application/json\" \\\n  -H \"Authorization: token $TOKEN\" \\\n  -X POST -d '{\n      \"password\":\"hunter7\"\n  }' \\\n  https://$api_root/$version/account/profile/password\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_profile = client.account.get_profile()\nmy_profile.reset_password('hunter7')\n"
                   }
                 ],
                 "name": "POST"
@@ -4104,6 +8115,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Content-Type: application/json\" \\\n  -H \"Authorization: token $TOKEN\" \\\n  -X POST \\\n  https://$api_root/$version/account/profile/tfa-enable\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_profile = client.account.get_profile()\nsecret = my_profile.enable_tfa()\n"
                   }
                 ],
                 "name": "POST"
@@ -4128,6 +8143,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Content-Type: application/json\" \\\n  -H \"Authorization: token $TOKEN\" \\\n  -X POST -d '{\n    \"tfa_code\": \"123456\"\n  }' \\\n  https://$api_root/$version/account/profile/tfa-enable-confirm\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_profile = client.account.get_profile()\nmy_profile.confirm_tfa('123456')\n"
                   }
                 ],
                 "name": "POST"
@@ -4145,6 +8164,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Content-Type: application/json\" \\\n  -H \"Authorization: token $TOKEN\" \\\n  -X POST \\\n  https://$api_root/$version/account/profile/tfa-disable\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_profile = client.account.get_profile()\nmy_profile.disable_tfa()\n"
                   }
                 ],
                 "name": "POST"
@@ -4162,6 +8185,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/account/profile/grants\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_profile = client.account.get_profile()\nmy_grants = my_profile.grants\n"
                   }
                 ],
                 "name": "GET"
@@ -4183,6 +8210,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/account/tokens\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_tokens = client.account.get_tokens()\n"
                   }
                 ],
                 "name": "GET",
@@ -4195,57 +8226,124 @@ module.exports = { endpoints: [
                       "name": "id",
                       "description": "This token's ID.\n",
                       "type": "integer",
-                      "value": 123
+                      "value": 123,
+                      "schema": null
                     },
                     {
                       "name": "client",
                       "description": "The OAuthClient this token is associated with, or null if this is a Personal Access Token.\n",
                       "type": "oauthclient",
-                      "value": null
+                      "value": null,
+                      "schema": [
+                        {
+                          "name": "id",
+                          "description": "This application's OAuth client ID",
+                          "type": "string",
+                          "value": "0123456789abcdef0123",
+                          "schema": null
+                        },
+                        {
+                          "name": "name",
+                          "description": "Human-friendly client name.",
+                          "editable": true,
+                          "filterable": true,
+                          "type": "string",
+                          "value": "Example OAuth app",
+                          "schema": null
+                        },
+                        {
+                          "name": "secret",
+                          "description": "The app's client secret, used in the OAuth flow. Visible only on app creation.",
+                          "type": "string",
+                          "value": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+                          "schema": null
+                        },
+                        {
+                          "name": "redirect_uri",
+                          "description": "The URL to redirect to after the OAuth flow.",
+                          "editable": true,
+                          "type": "string",
+                          "value": "https://oauthreturn.example.org/",
+                          "schema": null
+                        },
+                        {
+                          "name": "status",
+                          "description": "The status of the client application.",
+                          "type": "enum",
+                          "subType": "Status",
+                          "value": "active",
+                          "schema": null
+                        }
+                      ]
                     },
                     {
                       "name": "type",
                       "description": "If this is a Client Token or a Personal Access Token.\n",
                       "type": "enum",
-                      "value": "personal_access_token"
+                      "subType": "OAuthTokenType",
+                      "value": "personal_access_token",
+                      "schema": [
+                        {
+                          "name": "client_token",
+                          "description": "A token created by a client application with an OAuth Authentication flow."
+                        },
+                        {
+                          "name": "personal_access_token",
+                          "description": "A token created through the API for use without a client application."
+                        }
+                      ]
                     },
                     {
                       "name": "scopes",
                       "description": "The OAuth Scopes this token has.\n",
                       "type": "string",
-                      "value": "*"
+                      "value": "*",
+                      "schema": null
                     },
                     {
                       "name": "label",
                       "description": "The label given to this token.\n",
                       "type": "string",
-                      "value": "cli-token"
+                      "value": "cli-token",
+                      "schema": null
                     },
                     {
                       "name": "created",
                       "type": "datetime",
-                      "value": "2017-01-01T13:46:32.000Z"
+                      "value": "2017-01-01T13:46:32.000Z",
+                      "schema": null
                     },
                     {
                       "name": "token",
                       "description": "The OAuth Token that you can use in API requests.  Except for the inital creation of the token, this field is truncated to 16 characters.\n",
                       "type": "string",
-                      "value": "cd224292c853fe27..."
+                      "value": "cd224292c853fe27...",
+                      "schema": null
                     },
                     {
                       "name": "expiry",
                       "description": "When this token expires.\n",
                       "type": "datetime",
-                      "value": "2018-01-01T13:46:32.000Z"
+                      "value": "2018-01-01T13:46:32.000Z",
+                      "schema": null
                     }
                   ],
-                  "enums": [
-                    {
+                  "enums": {
+                    "OAuthTokenType": {
                       "client_token": "A token created by a client application with an OAuth Authentication flow.",
-                      "personal_access_token": "A token created through the API for use without a client application.",
-                      "name": "OAuthTokenType"
+                      "personal_access_token": "A token created through the API for use without a client application."
                     }
-                  ]
+                  },
+                  "example": {
+                    "id": 123,
+                    "client": null,
+                    "type": "personal_access_token",
+                    "scopes": "*",
+                    "label": "cli-token",
+                    "created": "2017-01-01T13:46:32.000Z",
+                    "token": "cd224292c853fe27...",
+                    "expiry": "2018-01-01T13:46:32.000Z"
+                  }
                 }
               },
               {
@@ -4279,6 +8377,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n      \"scopes\": \"linodes:view;domains:view\"\n    }' \\\n    https://$api_root/$version/account/tokens\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "from linode import OAuthScopes\nnew_token = client.account.create_personal_access_token(scopes=[OAuthScopes.Linodes.view, OAuthScopes.Domains.view])\n"
                   }
                 ],
                 "name": "POST"
@@ -4300,6 +8402,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/account/tokens/123\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_token = linode.OAuthToken(client, 123)\n"
                   }
                 ],
                 "name": "GET",
@@ -4309,44 +8415,127 @@ module.exports = { endpoints: [
                   "description": "An OAuth Token granting access to your user.\n",
                   "schema": [
                     {
-                      "name": "0",
-                      "description": "This token's ID.\n"
+                      "name": "id",
+                      "description": "This token's ID.\n",
+                      "type": "integer",
+                      "value": 123,
+                      "schema": null
                     },
                     {
-                      "name": "1",
-                      "description": "The OAuthClient this token is associated with, or null if this is a Personal Access Token.\n"
+                      "name": "client",
+                      "description": "The OAuthClient this token is associated with, or null if this is a Personal Access Token.\n",
+                      "type": "oauthclient",
+                      "value": null,
+                      "schema": [
+                        {
+                          "name": "id",
+                          "description": "This application's OAuth client ID",
+                          "type": "string",
+                          "value": "0123456789abcdef0123",
+                          "schema": null
+                        },
+                        {
+                          "name": "name",
+                          "description": "Human-friendly client name.",
+                          "editable": true,
+                          "filterable": true,
+                          "type": "string",
+                          "value": "Example OAuth app",
+                          "schema": null
+                        },
+                        {
+                          "name": "secret",
+                          "description": "The app's client secret, used in the OAuth flow. Visible only on app creation.",
+                          "type": "string",
+                          "value": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+                          "schema": null
+                        },
+                        {
+                          "name": "redirect_uri",
+                          "description": "The URL to redirect to after the OAuth flow.",
+                          "editable": true,
+                          "type": "string",
+                          "value": "https://oauthreturn.example.org/",
+                          "schema": null
+                        },
+                        {
+                          "name": "status",
+                          "description": "The status of the client application.",
+                          "type": "enum",
+                          "subType": "Status",
+                          "value": "active",
+                          "schema": null
+                        }
+                      ]
                     },
                     {
-                      "name": "2",
-                      "description": "If this is a Client Token or a Personal Access Token.\n"
+                      "name": "type",
+                      "description": "If this is a Client Token or a Personal Access Token.\n",
+                      "type": "enum",
+                      "subType": "OAuthTokenType",
+                      "value": "personal_access_token",
+                      "schema": [
+                        {
+                          "name": "client_token",
+                          "description": "A token created by a client application with an OAuth Authentication flow."
+                        },
+                        {
+                          "name": "personal_access_token",
+                          "description": "A token created through the API for use without a client application."
+                        }
+                      ]
                     },
                     {
-                      "name": "3",
-                      "description": "The OAuth Scopes this token has.\n"
+                      "name": "scopes",
+                      "description": "The OAuth Scopes this token has.\n",
+                      "type": "string",
+                      "value": "*",
+                      "schema": null
                     },
                     {
-                      "name": "4",
-                      "description": "The label given to this token.\n"
+                      "name": "label",
+                      "description": "The label given to this token.\n",
+                      "type": "string",
+                      "value": "cli-token",
+                      "schema": null
                     },
                     {
-                      "name": "5"
+                      "name": "created",
+                      "type": "datetime",
+                      "value": "2017-01-01T13:46:32.000Z",
+                      "schema": null
                     },
                     {
-                      "name": "6",
-                      "description": "The OAuth Token that you can use in API requests.  Except for the inital creation of the token, this field is truncated to 16 characters.\n"
+                      "name": "token",
+                      "description": "The OAuth Token that you can use in API requests.  Except for the inital creation of the token, this field is truncated to 16 characters.\n",
+                      "type": "string",
+                      "value": "cd224292c853fe27...",
+                      "schema": null
                     },
                     {
-                      "name": "7",
-                      "description": "When this token expires.\n"
+                      "name": "expiry",
+                      "description": "When this token expires.\n",
+                      "type": "datetime",
+                      "value": "2018-01-01T13:46:32.000Z",
+                      "schema": null
                     }
                   ],
-                  "enums": [
-                    {
+                  "enums": {
+                    "OAuthTokenType": {
                       "client_token": "A token created by a client application with an OAuth Authentication flow.",
-                      "personal_access_token": "A token created through the API for use without a client application.",
-                      "name": "0"
+                      "personal_access_token": "A token created through the API for use without a client application."
                     }
-                  ]
+                  },
+                  "example": {
+                    "id": 123,
+                    "client": null,
+                    "type": "personal_access_token",
+                    "scopes": "*",
+                    "label": "cli-token",
+                    "created": "2017-01-01T13:46:32.000Z",
+                    "token": "cd224292c853fe27...",
+                    "expiry": "2018-01-01T13:46:32.000Z"
+                  }
                 }
               },
               {
@@ -4356,6 +8545,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X PUT -d '{\n      \"label\": \"test-new-label\"\n    }' \\\n    https://$api_root/$version/account/tokens/123\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_token.label = 'test-new-label'\nmy_token.save()\n"
                   }
                 ],
                 "name": "PUT"
@@ -4367,6 +8560,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Authorization: token $TOKEN\" \\\n    -X DELETE \\\n    https://$api_root/$version/account/tokens/123\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_token.delete()\n"
                   }
                 ],
                 "name": "DELETE"
@@ -4387,6 +8584,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl https://$api_root/$version/account/settings\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_settings = client.account.get_settings()\n"
                   }
                 ],
                 "name": "GET",
@@ -4396,50 +8597,156 @@ module.exports = { endpoints: [
                   "description": "Your User profile information.\n",
                   "schema": [
                     {
-                      "name": "0",
-                      "description": "The username of the user.\n"
+                      "name": "username",
+                      "description": "The username of the user.\n",
+                      "type": "string",
+                      "value": "example_user",
+                      "schema": null
                     },
                     {
-                      "name": "1",
-                      "description": "The email address of the user.\n"
+                      "name": "email",
+                      "description": "The email address of the user.\n",
+                      "editable": true,
+                      "type": "string",
+                      "value": "person@place.com",
+                      "schema": null
                     },
                     {
-                      "name": "2",
-                      "description": "The selected timezone of the user location."
+                      "name": "timezone",
+                      "description": "The selected timezone of the user location.",
+                      "editable": true,
+                      "type": "string",
+                      "value": "US/Eastern",
+                      "schema": null
                     },
                     {
-                      "name": "3",
-                      "description": "Toggles to determine if the user receives email notifications"
+                      "name": "email_notifications",
+                      "description": "Toggles to determine if the user receives email notifications",
+                      "editable": true,
+                      "type": "boolean",
+                      "value": true,
+                      "schema": null
                     },
                     {
-                      "name": "4",
-                      "description": "Displays information related to referral signups attributed to the user.\n"
+                      "name": "referrals",
+                      "description": "Displays information related to referral signups attributed to the user.\n",
+                      "schema": [
+                        {
+                          "name": "code",
+                          "description": "an alphanumeric code unique to each user for use in creating referral URLs.",
+                          "type": "string",
+                          "value": "rcg3340777c21fa49a5beb971ca1aec44bc584333",
+                          "schema": null
+                        },
+                        {
+                          "name": "url",
+                          "description": "referral URL based on `code`.",
+                          "type": "string",
+                          "value": "https://www.linode.com/?r=rcg3340777c21fa49a5beb971ca1aec44bc584333",
+                          "schema": null
+                        },
+                        {
+                          "name": "total",
+                          "description": "total number of referrals attributed to user.",
+                          "type": "integer",
+                          "value": 10,
+                          "schema": null
+                        },
+                        {
+                          "name": "completed",
+                          "description": "total number of referrals attributed to user that have converted to full accounts.",
+                          "type": "integer",
+                          "value": 8,
+                          "schema": null
+                        },
+                        {
+                          "name": "pending",
+                          "description": "total number of referrals attributed to user that have not yet converted to full accounts.",
+                          "type": "integer",
+                          "value": 2,
+                          "schema": null
+                        },
+                        {
+                          "name": "credit",
+                          "description": "dollar amount of credit based on completed referrals.",
+                          "type": "integer",
+                          "value": 160,
+                          "schema": null
+                        }
+                      ]
                     },
                     {
-                      "name": "5",
-                      "description": "When enabled, you can only log in from an IP address on your whitelist.\n"
+                      "name": "ip_whitelist_enabled",
+                      "description": "When enabled, you can only log in from an IP address on your whitelist.\n",
+                      "editable": true,
+                      "type": "boolean",
+                      "value": true,
+                      "schema": null
                     },
                     {
-                      "name": "6",
-                      "description": "Controls what authentication methods are allowed to connect to the Lish console servers.\n"
+                      "name": "lish_auth_method",
+                      "description": "Controls what authentication methods are allowed to connect to the Lish console servers.\n",
+                      "editable": true,
+                      "type": "enum",
+                      "subType": "LishSetting",
+                      "value": "password_keys",
+                      "schema": [
+                        {
+                          "name": "password_keys",
+                          "description": "Allow both password and key authentication"
+                        },
+                        {
+                          "name": "keys_only",
+                          "description": "Allow key authentication only"
+                        },
+                        {
+                          "name": "disabled",
+                          "description": "Disable Lish"
+                        }
+                      ]
                     },
                     {
-                      "name": "7",
-                      "description": "Comma-delimited list of authorized SSH public keys"
+                      "name": "authorized_keys",
+                      "description": "Comma-delimited list of authorized SSH public keys",
+                      "editable": true,
+                      "type": "string",
+                      "value": "ssh-rsa AADDDDB3NzaC1yc2EAAAADAQABAAACAQDzP5sZlvUR9nZPy0WrklktNXffq+nQoEYUdVJ0hpIzZs+KqjZ3CDbsJZF0g0pn1/gpY9oSEeXzFpWasdkjlfasdf09asldf+O+y8w6rbPe8IyP1mext4cmBe6g/nHAjw/k0rS6cuUFZu++snG0qubymE9gMZ3X0ac92TP7tk0dEwq1fbjumhqNmNyqSbt5j8pLuLRhYHhVszmwnuKjeGjm9mJLJGnd5V6IdZWEIhCjrNgNr1H+fVNI87ryFE31i/i/bnHcbnkNdAmDc2EQ2gJ33vXg8D8Nf2aI+K+e3t9MiFVTJmzAILQpvZQj2YV4mfOt+GSTUJ4VdgH9dNC/3lA0yoP6YoFYw0cdTKhJ0MotmR9iZepbJfbuXxAFOECJuC1bxFtUam3fIsGqj3vXi1R6CzRzxNERqPGLiFcXH8z0VTwXA1v+iflVd4KqihnwNtU+45TXTtFY0twLQRauB9qo9slvnhYlHqQZb8SBYw5WltX3MBQpyLTSZLQLqIKZVgQRKKF413fT52vMF54zk5SpImm5qY5Q1E4od00UJ1x4kFe0fTUQWVgeYvL8AgFx/idUsVs9r3jRPVTUnQZNB2D+7Cyf9dUFjjpiuH3AMMZyRYfJbh/Chg8J6QXYZyEQCxMRa9/lm2rRCVfGbcfb5zgKsV/HRHI/O1F9cZ9JvykwQ== someguy@someplace.com",
+                      "schema": null
                     },
                     {
-                      "name": "8",
-                      "description": "Toggles whether two factor authentication (TFA) is enabled or disabled."
+                      "name": "two_factor_auth",
+                      "description": "Toggles whether two factor authentication (TFA) is enabled or disabled.",
+                      "editable": true,
+                      "type": "boolean",
+                      "value": true,
+                      "schema": null
                     }
                   ],
-                  "enums": [
-                    {
+                  "enums": {
+                    "LishSetting": {
                       "password_keys": "Allow both password and key authentication",
                       "keys_only": "Allow key authentication only",
-                      "disabled": "Disable Lish",
-                      "name": "0"
+                      "disabled": "Disable Lish"
                     }
-                  ]
+                  },
+                  "example": {
+                    "username": "example_user",
+                    "email": "person@place.com",
+                    "timezone": "US/Eastern",
+                    "email_notifications": true,
+                    "referrals": {
+                      "code": "rcg3340777c21fa49a5beb971ca1aec44bc584333",
+                      "url": "https://www.linode.com/?r=rcg3340777c21fa49a5beb971ca1aec44bc584333",
+                      "total": 10,
+                      "completed": 8,
+                      "pending": 2,
+                      "credit": 160
+                    },
+                    "ip_whitelist_enabled": true,
+                    "lish_auth_method": "password_keys",
+                    "authorized_keys": "ssh-rsa AADDDDB3NzaC1yc2EAAAADAQABAAACAQDzP5sZlvUR9nZPy0WrklktNXffq+nQoEYUdVJ0hpIzZs+KqjZ3CDbsJZF0g0pn1/gpY9oSEeXzFpWasdkjlfasdf09asldf+O+y8w6rbPe8IyP1mext4cmBe6g/nHAjw/k0rS6cuUFZu++snG0qubymE9gMZ3X0ac92TP7tk0dEwq1fbjumhqNmNyqSbt5j8pLuLRhYHhVszmwnuKjeGjm9mJLJGnd5V6IdZWEIhCjrNgNr1H+fVNI87ryFE31i/i/bnHcbnkNdAmDc2EQ2gJ33vXg8D8Nf2aI+K+e3t9MiFVTJmzAILQpvZQj2YV4mfOt+GSTUJ4VdgH9dNC/3lA0yoP6YoFYw0cdTKhJ0MotmR9iZepbJfbuXxAFOECJuC1bxFtUam3fIsGqj3vXi1R6CzRzxNERqPGLiFcXH8z0VTwXA1v+iflVd4KqihnwNtU+45TXTtFY0twLQRauB9qo9slvnhYlHqQZb8SBYw5WltX3MBQpyLTSZLQLqIKZVgQRKKF413fT52vMF54zk5SpImm5qY5Q1E4od00UJ1x4kFe0fTUQWVgeYvL8AgFx/idUsVs9r3jRPVTUnQZNB2D+7Cyf9dUFjjpiuH3AMMZyRYfJbh/Chg8J6QXYZyEQCxMRa9/lm2rRCVfGbcfb5zgKsV/HRHI/O1F9cZ9JvykwQ== someguy@someplace.com",
+                    "two_factor_auth": true
+                  }
                 }
               },
               {
@@ -4448,6 +8755,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X PUT -d '{\n      \"address_1\": \"123 Main St.\",\n      \"address_2\": \"Suite 101\",\n      \"city\": \"Philadelphia\",\n      \"company\": \"My Company, LLC\",\n      \"country\": \"US\",\n      \"email\": \"jsmith@mycompany.com\",\n      \"first_name\": \"John\",\n      \"last_name\": \"Smith\",\n      \"network_helper\": true,\n      \"phone\": \"555-555-1212\",\n      \"state\": \"PA\",\n      \"zip\": 19102\n      }\n    }' \\\n    https://$api_root/$version/account/settings\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_settings = client.account.get_settings()\nmy_settings.address_1 = '123 Main St.'\nmy_settings.address_2 = 'Suite 101'\nmy_settings.city = 'Philadelphia'\nmy_settings.company = 'My Company, LLC'\nmy_settings.country = 'US'\nmy_settings.email = 'jsmith@company.com'\nmy_settings.save()\n"
                   }
                 ],
                 "name": "PUT"
@@ -4470,6 +8781,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Authorization; token $TOKEN\" \\\n    https://$api_root/$version/account/clients\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_clients = client.account.get_oauth_clients()\n"
                   }
                 ],
                 "name": "GET"
@@ -4482,7 +8797,7 @@ module.exports = { endpoints: [
                     "description": "A name for the new client application.",
                     "type": "string",
                     "limit": "1-128 characters",
-                    "name": "name"
+                    "name": "label"
                   },
                   {
                     "description": "A URL to redirect to after the OAuth flow has completed.",
@@ -4494,7 +8809,11 @@ module.exports = { endpoints: [
                 "examples": [
                   {
                     "name": "curl",
-                    "value": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n        \"name\": \"Example app\",\n        \"redirect_uri\": \"https://oauthreturn.example.org/\",\n    }' \\\n    https://$api_root/$version/account/clients\n"
+                    "value": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n        \"label\": \"Example app\",\n        \"redirect_uri\": \"https://oauthreturn.example.org/\",\n    }' \\\n    https://$api_root/$version/account/clients\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "new_client = client.account.create_oauth_client('Example app', 'https://oauthreturn.example.org/')\n"
                   }
                 ],
                 "name": "POST"
@@ -4517,6 +8836,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/account/clients/$client_id\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_client = linode.OAuthClient(client, 123)\n"
                   }
                 ],
                 "name": "GET"
@@ -4528,6 +8851,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X PUT -d '{\n        \"name\": \"Updated app name\",\n        \"redirect_uri\": \"https://newredirect.example.org/\",\n    }' \\\n    https://$api_root/$version/account/clients/$client_id\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_client.name = 'Updated app name'\nmy_client.save()\n"
                   }
                 ],
                 "name": "PUT"
@@ -4540,6 +8867,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Authorization: token $TOKEN\" \\\n    -X DELETE \\\n    https://$api_root/$version/account/clients/$client_id\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_client = linode.OAuthClient(client, 123)\nmy_client.delete()\n"
                   }
                 ],
                 "name": "DELETE"
@@ -4561,6 +8892,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST \\\n    https://$api_root/$version/account/clients/$client_id/reset_secret\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_client = linode.OAuthClient(client, 123)\nnew_secret = my_client.reset_secret()\n"
                   }
                 ],
                 "name": "POST"
@@ -4582,6 +8917,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/account/clients/$client_id/thumbnail\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "img = my_client.get_thumbnail()\n\n# save image to file\nmy_client.get_thumbnail('client_thumbnail.png')\n"
                   }
                 ],
                 "name": "GET"
@@ -4593,6 +8932,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Content-Type: image/png\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X PUT \\\n    --data-binary \"@/path/to/image\"\n    https://$api_root/$version/account/clients/$client_id/thumbnail\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_client = linode.OAuthClient(client, 123)\nmy_client.set_thumbnail('/path/to/image')\n\n# set from memory\nwith open('/path/to/image', 'rb') as f:\n    img = f.read()\nmy_client.set_thumbnail(img)\n"
                   }
                 ],
                 "name": "PUT"
@@ -4612,6 +8955,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl https://$api_root/$version/account/users\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_users = client.account.get_users()\n"
                   }
                 ],
                 "name": "GET",
@@ -4621,50 +8968,156 @@ module.exports = { endpoints: [
                   "description": "Your User profile information.\n",
                   "schema": [
                     {
-                      "name": "0",
-                      "description": "The username of the user.\n"
+                      "name": "username",
+                      "description": "The username of the user.\n",
+                      "type": "string",
+                      "value": "example_user",
+                      "schema": null
                     },
                     {
-                      "name": "1",
-                      "description": "The email address of the user.\n"
+                      "name": "email",
+                      "description": "The email address of the user.\n",
+                      "editable": true,
+                      "type": "string",
+                      "value": "person@place.com",
+                      "schema": null
                     },
                     {
-                      "name": "2",
-                      "description": "The selected timezone of the user location."
+                      "name": "timezone",
+                      "description": "The selected timezone of the user location.",
+                      "editable": true,
+                      "type": "string",
+                      "value": "US/Eastern",
+                      "schema": null
                     },
                     {
-                      "name": "3",
-                      "description": "Toggles to determine if the user receives email notifications"
+                      "name": "email_notifications",
+                      "description": "Toggles to determine if the user receives email notifications",
+                      "editable": true,
+                      "type": "boolean",
+                      "value": true,
+                      "schema": null
                     },
                     {
-                      "name": "4",
-                      "description": "Displays information related to referral signups attributed to the user.\n"
+                      "name": "referrals",
+                      "description": "Displays information related to referral signups attributed to the user.\n",
+                      "schema": [
+                        {
+                          "name": "code",
+                          "description": "an alphanumeric code unique to each user for use in creating referral URLs.",
+                          "type": "string",
+                          "value": "rcg3340777c21fa49a5beb971ca1aec44bc584333",
+                          "schema": null
+                        },
+                        {
+                          "name": "url",
+                          "description": "referral URL based on `code`.",
+                          "type": "string",
+                          "value": "https://www.linode.com/?r=rcg3340777c21fa49a5beb971ca1aec44bc584333",
+                          "schema": null
+                        },
+                        {
+                          "name": "total",
+                          "description": "total number of referrals attributed to user.",
+                          "type": "integer",
+                          "value": 10,
+                          "schema": null
+                        },
+                        {
+                          "name": "completed",
+                          "description": "total number of referrals attributed to user that have converted to full accounts.",
+                          "type": "integer",
+                          "value": 8,
+                          "schema": null
+                        },
+                        {
+                          "name": "pending",
+                          "description": "total number of referrals attributed to user that have not yet converted to full accounts.",
+                          "type": "integer",
+                          "value": 2,
+                          "schema": null
+                        },
+                        {
+                          "name": "credit",
+                          "description": "dollar amount of credit based on completed referrals.",
+                          "type": "integer",
+                          "value": 160,
+                          "schema": null
+                        }
+                      ]
                     },
                     {
-                      "name": "5",
-                      "description": "When enabled, you can only log in from an IP address on your whitelist.\n"
+                      "name": "ip_whitelist_enabled",
+                      "description": "When enabled, you can only log in from an IP address on your whitelist.\n",
+                      "editable": true,
+                      "type": "boolean",
+                      "value": true,
+                      "schema": null
                     },
                     {
-                      "name": "6",
-                      "description": "Controls what authentication methods are allowed to connect to the Lish console servers.\n"
+                      "name": "lish_auth_method",
+                      "description": "Controls what authentication methods are allowed to connect to the Lish console servers.\n",
+                      "editable": true,
+                      "type": "enum",
+                      "subType": "LishSetting",
+                      "value": "password_keys",
+                      "schema": [
+                        {
+                          "name": "password_keys",
+                          "description": "Allow both password and key authentication"
+                        },
+                        {
+                          "name": "keys_only",
+                          "description": "Allow key authentication only"
+                        },
+                        {
+                          "name": "disabled",
+                          "description": "Disable Lish"
+                        }
+                      ]
                     },
                     {
-                      "name": "7",
-                      "description": "Comma-delimited list of authorized SSH public keys"
+                      "name": "authorized_keys",
+                      "description": "Comma-delimited list of authorized SSH public keys",
+                      "editable": true,
+                      "type": "string",
+                      "value": "ssh-rsa AADDDDB3NzaC1yc2EAAAADAQABAAACAQDzP5sZlvUR9nZPy0WrklktNXffq+nQoEYUdVJ0hpIzZs+KqjZ3CDbsJZF0g0pn1/gpY9oSEeXzFpWasdkjlfasdf09asldf+O+y8w6rbPe8IyP1mext4cmBe6g/nHAjw/k0rS6cuUFZu++snG0qubymE9gMZ3X0ac92TP7tk0dEwq1fbjumhqNmNyqSbt5j8pLuLRhYHhVszmwnuKjeGjm9mJLJGnd5V6IdZWEIhCjrNgNr1H+fVNI87ryFE31i/i/bnHcbnkNdAmDc2EQ2gJ33vXg8D8Nf2aI+K+e3t9MiFVTJmzAILQpvZQj2YV4mfOt+GSTUJ4VdgH9dNC/3lA0yoP6YoFYw0cdTKhJ0MotmR9iZepbJfbuXxAFOECJuC1bxFtUam3fIsGqj3vXi1R6CzRzxNERqPGLiFcXH8z0VTwXA1v+iflVd4KqihnwNtU+45TXTtFY0twLQRauB9qo9slvnhYlHqQZb8SBYw5WltX3MBQpyLTSZLQLqIKZVgQRKKF413fT52vMF54zk5SpImm5qY5Q1E4od00UJ1x4kFe0fTUQWVgeYvL8AgFx/idUsVs9r3jRPVTUnQZNB2D+7Cyf9dUFjjpiuH3AMMZyRYfJbh/Chg8J6QXYZyEQCxMRa9/lm2rRCVfGbcfb5zgKsV/HRHI/O1F9cZ9JvykwQ== someguy@someplace.com",
+                      "schema": null
                     },
                     {
-                      "name": "8",
-                      "description": "Toggles whether two factor authentication (TFA) is enabled or disabled."
+                      "name": "two_factor_auth",
+                      "description": "Toggles whether two factor authentication (TFA) is enabled or disabled.",
+                      "editable": true,
+                      "type": "boolean",
+                      "value": true,
+                      "schema": null
                     }
                   ],
-                  "enums": [
-                    {
+                  "enums": {
+                    "LishSetting": {
                       "password_keys": "Allow both password and key authentication",
                       "keys_only": "Allow key authentication only",
-                      "disabled": "Disable Lish",
-                      "name": "0"
+                      "disabled": "Disable Lish"
                     }
-                  ]
+                  },
+                  "example": {
+                    "username": "example_user",
+                    "email": "person@place.com",
+                    "timezone": "US/Eastern",
+                    "email_notifications": true,
+                    "referrals": {
+                      "code": "rcg3340777c21fa49a5beb971ca1aec44bc584333",
+                      "url": "https://www.linode.com/?r=rcg3340777c21fa49a5beb971ca1aec44bc584333",
+                      "total": 10,
+                      "completed": 8,
+                      "pending": 2,
+                      "credit": 160
+                    },
+                    "ip_whitelist_enabled": true,
+                    "lish_auth_method": "password_keys",
+                    "authorized_keys": "ssh-rsa AADDDDB3NzaC1yc2EAAAADAQABAAACAQDzP5sZlvUR9nZPy0WrklktNXffq+nQoEYUdVJ0hpIzZs+KqjZ3CDbsJZF0g0pn1/gpY9oSEeXzFpWasdkjlfasdf09asldf+O+y8w6rbPe8IyP1mext4cmBe6g/nHAjw/k0rS6cuUFZu++snG0qubymE9gMZ3X0ac92TP7tk0dEwq1fbjumhqNmNyqSbt5j8pLuLRhYHhVszmwnuKjeGjm9mJLJGnd5V6IdZWEIhCjrNgNr1H+fVNI87ryFE31i/i/bnHcbnkNdAmDc2EQ2gJ33vXg8D8Nf2aI+K+e3t9MiFVTJmzAILQpvZQj2YV4mfOt+GSTUJ4VdgH9dNC/3lA0yoP6YoFYw0cdTKhJ0MotmR9iZepbJfbuXxAFOECJuC1bxFtUam3fIsGqj3vXi1R6CzRzxNERqPGLiFcXH8z0VTwXA1v+iflVd4KqihnwNtU+45TXTtFY0twLQRauB9qo9slvnhYlHqQZb8SBYw5WltX3MBQpyLTSZLQLqIKZVgQRKKF413fT52vMF54zk5SpImm5qY5Q1E4od00UJ1x4kFe0fTUQWVgeYvL8AgFx/idUsVs9r3jRPVTUnQZNB2D+7Cyf9dUFjjpiuH3AMMZyRYfJbh/Chg8J6QXYZyEQCxMRa9/lm2rRCVfGbcfb5zgKsV/HRHI/O1F9cZ9JvykwQ== someguy@someplace.com",
+                    "two_factor_auth": true
+                  }
                 }
               },
               {
@@ -4696,6 +9149,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n        \"username\": \"testguy\",\n        \"password\": \"hunter7\",\n        \"email\": \"testguy@linode.com\"\n    }' \\\n    https://$api_root/$version/account/users\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "# currently unimplemented\n"
                   }
                 ],
                 "name": "POST"
@@ -4715,6 +9172,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl https://$api_root/$version/account/users/$username\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_user = linode.User(client, 'username')\n"
                   }
                 ],
                 "name": "GET",
@@ -4724,50 +9185,156 @@ module.exports = { endpoints: [
                   "description": "Your User profile information.\n",
                   "schema": [
                     {
-                      "name": "0",
-                      "description": "The username of the user.\n"
+                      "name": "username",
+                      "description": "The username of the user.\n",
+                      "type": "string",
+                      "value": "example_user",
+                      "schema": null
                     },
                     {
-                      "name": "1",
-                      "description": "The email address of the user.\n"
+                      "name": "email",
+                      "description": "The email address of the user.\n",
+                      "editable": true,
+                      "type": "string",
+                      "value": "person@place.com",
+                      "schema": null
                     },
                     {
-                      "name": "2",
-                      "description": "The selected timezone of the user location."
+                      "name": "timezone",
+                      "description": "The selected timezone of the user location.",
+                      "editable": true,
+                      "type": "string",
+                      "value": "US/Eastern",
+                      "schema": null
                     },
                     {
-                      "name": "3",
-                      "description": "Toggles to determine if the user receives email notifications"
+                      "name": "email_notifications",
+                      "description": "Toggles to determine if the user receives email notifications",
+                      "editable": true,
+                      "type": "boolean",
+                      "value": true,
+                      "schema": null
                     },
                     {
-                      "name": "4",
-                      "description": "Displays information related to referral signups attributed to the user.\n"
+                      "name": "referrals",
+                      "description": "Displays information related to referral signups attributed to the user.\n",
+                      "schema": [
+                        {
+                          "name": "code",
+                          "description": "an alphanumeric code unique to each user for use in creating referral URLs.",
+                          "type": "string",
+                          "value": "rcg3340777c21fa49a5beb971ca1aec44bc584333",
+                          "schema": null
+                        },
+                        {
+                          "name": "url",
+                          "description": "referral URL based on `code`.",
+                          "type": "string",
+                          "value": "https://www.linode.com/?r=rcg3340777c21fa49a5beb971ca1aec44bc584333",
+                          "schema": null
+                        },
+                        {
+                          "name": "total",
+                          "description": "total number of referrals attributed to user.",
+                          "type": "integer",
+                          "value": 10,
+                          "schema": null
+                        },
+                        {
+                          "name": "completed",
+                          "description": "total number of referrals attributed to user that have converted to full accounts.",
+                          "type": "integer",
+                          "value": 8,
+                          "schema": null
+                        },
+                        {
+                          "name": "pending",
+                          "description": "total number of referrals attributed to user that have not yet converted to full accounts.",
+                          "type": "integer",
+                          "value": 2,
+                          "schema": null
+                        },
+                        {
+                          "name": "credit",
+                          "description": "dollar amount of credit based on completed referrals.",
+                          "type": "integer",
+                          "value": 160,
+                          "schema": null
+                        }
+                      ]
                     },
                     {
-                      "name": "5",
-                      "description": "When enabled, you can only log in from an IP address on your whitelist.\n"
+                      "name": "ip_whitelist_enabled",
+                      "description": "When enabled, you can only log in from an IP address on your whitelist.\n",
+                      "editable": true,
+                      "type": "boolean",
+                      "value": true,
+                      "schema": null
                     },
                     {
-                      "name": "6",
-                      "description": "Controls what authentication methods are allowed to connect to the Lish console servers.\n"
+                      "name": "lish_auth_method",
+                      "description": "Controls what authentication methods are allowed to connect to the Lish console servers.\n",
+                      "editable": true,
+                      "type": "enum",
+                      "subType": "LishSetting",
+                      "value": "password_keys",
+                      "schema": [
+                        {
+                          "name": "password_keys",
+                          "description": "Allow both password and key authentication"
+                        },
+                        {
+                          "name": "keys_only",
+                          "description": "Allow key authentication only"
+                        },
+                        {
+                          "name": "disabled",
+                          "description": "Disable Lish"
+                        }
+                      ]
                     },
                     {
-                      "name": "7",
-                      "description": "Comma-delimited list of authorized SSH public keys"
+                      "name": "authorized_keys",
+                      "description": "Comma-delimited list of authorized SSH public keys",
+                      "editable": true,
+                      "type": "string",
+                      "value": "ssh-rsa AADDDDB3NzaC1yc2EAAAADAQABAAACAQDzP5sZlvUR9nZPy0WrklktNXffq+nQoEYUdVJ0hpIzZs+KqjZ3CDbsJZF0g0pn1/gpY9oSEeXzFpWasdkjlfasdf09asldf+O+y8w6rbPe8IyP1mext4cmBe6g/nHAjw/k0rS6cuUFZu++snG0qubymE9gMZ3X0ac92TP7tk0dEwq1fbjumhqNmNyqSbt5j8pLuLRhYHhVszmwnuKjeGjm9mJLJGnd5V6IdZWEIhCjrNgNr1H+fVNI87ryFE31i/i/bnHcbnkNdAmDc2EQ2gJ33vXg8D8Nf2aI+K+e3t9MiFVTJmzAILQpvZQj2YV4mfOt+GSTUJ4VdgH9dNC/3lA0yoP6YoFYw0cdTKhJ0MotmR9iZepbJfbuXxAFOECJuC1bxFtUam3fIsGqj3vXi1R6CzRzxNERqPGLiFcXH8z0VTwXA1v+iflVd4KqihnwNtU+45TXTtFY0twLQRauB9qo9slvnhYlHqQZb8SBYw5WltX3MBQpyLTSZLQLqIKZVgQRKKF413fT52vMF54zk5SpImm5qY5Q1E4od00UJ1x4kFe0fTUQWVgeYvL8AgFx/idUsVs9r3jRPVTUnQZNB2D+7Cyf9dUFjjpiuH3AMMZyRYfJbh/Chg8J6QXYZyEQCxMRa9/lm2rRCVfGbcfb5zgKsV/HRHI/O1F9cZ9JvykwQ== someguy@someplace.com",
+                      "schema": null
                     },
                     {
-                      "name": "8",
-                      "description": "Toggles whether two factor authentication (TFA) is enabled or disabled."
+                      "name": "two_factor_auth",
+                      "description": "Toggles whether two factor authentication (TFA) is enabled or disabled.",
+                      "editable": true,
+                      "type": "boolean",
+                      "value": true,
+                      "schema": null
                     }
                   ],
-                  "enums": [
-                    {
+                  "enums": {
+                    "LishSetting": {
                       "password_keys": "Allow both password and key authentication",
                       "keys_only": "Allow key authentication only",
-                      "disabled": "Disable Lish",
-                      "name": "0"
+                      "disabled": "Disable Lish"
                     }
-                  ]
+                  },
+                  "example": {
+                    "username": "example_user",
+                    "email": "person@place.com",
+                    "timezone": "US/Eastern",
+                    "email_notifications": true,
+                    "referrals": {
+                      "code": "rcg3340777c21fa49a5beb971ca1aec44bc584333",
+                      "url": "https://www.linode.com/?r=rcg3340777c21fa49a5beb971ca1aec44bc584333",
+                      "total": 10,
+                      "completed": 8,
+                      "pending": 2,
+                      "credit": 160
+                    },
+                    "ip_whitelist_enabled": true,
+                    "lish_auth_method": "password_keys",
+                    "authorized_keys": "ssh-rsa AADDDDB3NzaC1yc2EAAAADAQABAAACAQDzP5sZlvUR9nZPy0WrklktNXffq+nQoEYUdVJ0hpIzZs+KqjZ3CDbsJZF0g0pn1/gpY9oSEeXzFpWasdkjlfasdf09asldf+O+y8w6rbPe8IyP1mext4cmBe6g/nHAjw/k0rS6cuUFZu++snG0qubymE9gMZ3X0ac92TP7tk0dEwq1fbjumhqNmNyqSbt5j8pLuLRhYHhVszmwnuKjeGjm9mJLJGnd5V6IdZWEIhCjrNgNr1H+fVNI87ryFE31i/i/bnHcbnkNdAmDc2EQ2gJ33vXg8D8Nf2aI+K+e3t9MiFVTJmzAILQpvZQj2YV4mfOt+GSTUJ4VdgH9dNC/3lA0yoP6YoFYw0cdTKhJ0MotmR9iZepbJfbuXxAFOECJuC1bxFtUam3fIsGqj3vXi1R6CzRzxNERqPGLiFcXH8z0VTwXA1v+iflVd4KqihnwNtU+45TXTtFY0twLQRauB9qo9slvnhYlHqQZb8SBYw5WltX3MBQpyLTSZLQLqIKZVgQRKKF413fT52vMF54zk5SpImm5qY5Q1E4od00UJ1x4kFe0fTUQWVgeYvL8AgFx/idUsVs9r3jRPVTUnQZNB2D+7Cyf9dUFjjpiuH3AMMZyRYfJbh/Chg8J6QXYZyEQCxMRa9/lm2rRCVfGbcfb5zgKsV/HRHI/O1F9cZ9JvykwQ== someguy@someplace.com",
+                    "two_factor_auth": true
+                  }
                 }
               },
               {
@@ -4776,6 +9343,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X PUT -d '{\n        \"email\": \"newemail@linode.com\"\n      }\n    }' \\\n    https://$api_root/$version/account/users/testguy\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_user = linode.User(client, 'username')\nmy_user.email = 'newemail@linode.com'\nmy_user.save()\n"
                   }
                 ],
                 "name": "PUT"
@@ -4786,6 +9357,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Authorization: token $TOKEN\" \\\n    -X DELETE \\\n    https://$api_root/$version/account/users/testguy\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_user = linode.User(client, 'username')\nmy_user.delete()\n"
                   }
                 ],
                 "name": "DELETE"
@@ -4811,6 +9386,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Content-Type: application/json\" \\\n    -H \"Authorization: token $TOKEN\" \\\n    -X POST -d '{\n        \"password\": \"hunter7\",\n    }' \\\n    https://$api_root/$version/account/users/testguy/password\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_user = linode.User(client, 'username')\nmy_user.change_password('hunter7')\n"
                   }
                 ],
                 "name": "POST"
@@ -4831,6 +9410,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Authorization: token $TOKEN\" \\\n    https://$api_root/$version/account/users/testguy/grants\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_user = linode.User(client, 'username')\ngrants = None # unrestricted users have no grants\n\nif my_user.restricted:\n    grants = my_user.grants\n"
                   }
                 ],
                 "name": "GET",
@@ -4840,21 +9423,83 @@ module.exports = { endpoints: [
                   "schema": [
                     {
                       "name": "global",
-                      "description": "Grants involving global permissions, such as creating resources."
+                      "description": "Grants involving global permissions, such as creating resources.",
+                      "schema": [
+                        {
+                          "name": "add_linodes",
+                          "description": "If this user may create Linodes.",
+                          "type": "boolean",
+                          "value": true,
+                          "schema": null
+                        },
+                        {
+                          "name": "add_nodebalancers",
+                          "description": "If this user may create NodeBalancers.",
+                          "type": "boolean",
+                          "value": true,
+                          "schema": null
+                        },
+                        {
+                          "name": "add_domains",
+                          "description": "If this user may create Domains.",
+                          "type": "boolean",
+                          "value": true,
+                          "schema": null
+                        },
+                        {
+                          "name": "add_longview",
+                          "description": "If this user may create longview instances.",
+                          "type": "boolean",
+                          "value": true,
+                          "schema": null
+                        },
+                        {
+                          "name": "add_stackscripts",
+                          "description": "If this user may create StackScripts.",
+                          "type": "boolean",
+                          "value": true,
+                          "schema": null
+                        },
+                        {
+                          "name": "longview_subscription",
+                          "description": "If this user may manage longview subscription.",
+                          "type": "boolean",
+                          "value": true,
+                          "schema": null
+                        }
+                      ]
                     },
                     {
                       "name": "customer",
-                      "description": "Grants related to modifying the account."
+                      "description": "Grants related to modifying the account.",
+                      "schema": [
+                        {
+                          "name": "access",
+                          "description": "If this user may modify the account.",
+                          "type": "boolean",
+                          "value": false,
+                          "schema": null
+                        },
+                        {
+                          "name": "cancel",
+                          "description": "If this user may cancel the account.",
+                          "type": "boolean",
+                          "value": false,
+                          "schema": null
+                        }
+                      ]
                     },
                     {
                       "name": "stackscript",
                       "description": "Individual grants to StackScripts you own.  Grants include all, use, edit and delete",
-                      "type": "array"
+                      "type": "array",
+                      "schema": null
                     },
                     {
                       "name": "nodebalancer",
                       "description": "Individual grants to NodeBalancers you own.  Grants inlcude all, access, and delete",
-                      "type": "array"
+                      "type": "array",
+                      "schema": null
                     },
                     {
                       "name": "linode",
@@ -4905,14 +9550,76 @@ module.exports = { endpoints: [
                             "_value": "linode324"
                           }
                         }
-                      ]
+                      ],
+                      "schema": null
                     },
                     {
                       "name": "domain",
                       "description": "Individual grants to a Domain you own.  Grants include all, access and delete",
-                      "type": "array"
+                      "type": "array",
+                      "schema": null
                     }
-                  ]
+                  ],
+                  "example": {
+                    "global": {
+                      "add_linodes": true,
+                      "add_nodebalancers": true,
+                      "add_domains": true,
+                      "add_longview": true,
+                      "add_stackscripts": true,
+                      "longview_subscription": true
+                    },
+                    "customer": {
+                      "access": false,
+                      "cancel": false
+                    },
+                    "linode": [
+                      {
+                        "all": {
+                          "_type": "boolean",
+                          "_value": false
+                        },
+                        "access": {
+                          "_type": "boolean",
+                          "_value": true
+                        },
+                        "delete": {
+                          "_type": "boolean",
+                          "_value": false
+                        },
+                        "id": {
+                          "_type": "integer",
+                          "_value": 123
+                        },
+                        "label": {
+                          "_type": "string",
+                          "_value": "linode123"
+                        }
+                      },
+                      {
+                        "all": {
+                          "_type": "boolean",
+                          "_value": true
+                        },
+                        "access": {
+                          "_type": "boolean",
+                          "_value": false
+                        },
+                        "delete": {
+                          "_type": "boolean",
+                          "_value": false
+                        },
+                        "id": {
+                          "_type": "integer",
+                          "_value": 324
+                        },
+                        "label": {
+                          "_type": "string",
+                          "_value": "linode324"
+                        }
+                      }
+                    ]
+                  }
                 }
               },
               {
@@ -4921,6 +9628,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl -H \"Authorization: token $TOKEN\" \\\n    -X PUT -d '{\n        \"global\": {\n            \"add_linodes\": true\n        }\n    }' \\\n    https://$api_root/$version/account/users/testguy/grants\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_user = linode.User(client, 'username')\nassert my_user.restricted # we can't set grants for unrestricted users\n\nmy_user.grants.global.add_linodes = True\nmy_user.grants.save()\n"
                   }
                 ],
                 "name": "PUT"
@@ -4951,6 +9662,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl https://$api_root/$version/account/events\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "my_events = client.account.get_events()\n"
                   }
                 ],
                 "name": "GET",
@@ -4962,79 +9677,251 @@ module.exports = { endpoints: [
                     {
                       "name": "id",
                       "type": "integer",
-                      "value": 1234
+                      "value": 1234,
+                      "schema": null
                     },
                     {
                       "name": "entity",
-                      "description": "Detailed inforrmation about the event's entity, including id, type, label, and URL used to access it.\n"
+                      "description": "Detailed inforrmation about the event's entity, including id, type, label, and URL used to access it.\n",
+                      "schema": [
+                        {
+                          "name": "id",
+                          "description": "The entity's ID that this event is for.  This is meaningless without a type.\n",
+                          "type": "integer",
+                          "value": 9302,
+                          "schema": null
+                        },
+                        {
+                          "name": "label",
+                          "description": "The current label of this object.  This will reflect changes in label.\n",
+                          "type": "string",
+                          "value": "linode123",
+                          "schema": null
+                        },
+                        {
+                          "name": "type",
+                          "description": "The type of entity this is related to.\n",
+                          "type": "string",
+                          "value": "linode",
+                          "schema": null
+                        },
+                        {
+                          "name": "url",
+                          "description": "The URL where you can access the object this event is for.  If a relative URL, it is relative to the domain you retrieved the event from.\n",
+                          "type": "string",
+                          "value": "/v4/linode/instances/123",
+                          "schema": null
+                        }
+                      ]
                     },
                     {
                       "name": "action",
                       "description": "The action that caused this event.\n",
                       "type": "enum",
-                      "value": "linode_reboot"
+                      "subType": "EventType",
+                      "value": "linode_reboot",
+                      "schema": [
+                        {
+                          "name": "linode_boot",
+                          "description": "Linode boot"
+                        },
+                        {
+                          "name": "linode_create",
+                          "description": "Linode create"
+                        },
+                        {
+                          "name": "linode_delete",
+                          "description": "Linode delete"
+                        },
+                        {
+                          "name": "linode_shutdown",
+                          "description": "Linode shutdown"
+                        },
+                        {
+                          "name": "linode_reboot",
+                          "description": "Linode reboot"
+                        },
+                        {
+                          "name": "linode_snapshot",
+                          "description": "Linode snapshot"
+                        },
+                        {
+                          "name": "linode_addip",
+                          "description": "Linode addip"
+                        },
+                        {
+                          "name": "linode_migrate",
+                          "description": "Linode migrate"
+                        },
+                        {
+                          "name": "linode_rebuild",
+                          "description": "Linode rebuild"
+                        },
+                        {
+                          "name": "linode_clone",
+                          "description": "Linode clone"
+                        },
+                        {
+                          "name": "disk_create",
+                          "description": "Disk create"
+                        },
+                        {
+                          "name": "disk_delete",
+                          "description": "Disk delete"
+                        },
+                        {
+                          "name": "disk_duplicate",
+                          "description": "Disk duplicate"
+                        },
+                        {
+                          "name": "disk_resize",
+                          "description": "Disk resize"
+                        },
+                        {
+                          "name": "backups_enable",
+                          "description": "Backups enable"
+                        },
+                        {
+                          "name": "backups_cancel",
+                          "description": "Backups cancel"
+                        },
+                        {
+                          "name": "backups_restore",
+                          "description": "Backups restore"
+                        },
+                        {
+                          "name": "password_reset",
+                          "description": "Password reset"
+                        },
+                        {
+                          "name": "dns_zone_create",
+                          "description": "Domain create"
+                        },
+                        {
+                          "name": "dns_zone_delete",
+                          "description": "Domain delete"
+                        },
+                        {
+                          "name": "dns_record_create",
+                          "description": "Domain Record create"
+                        },
+                        {
+                          "name": "dns_record_delete",
+                          "description": "Domain Record delete"
+                        },
+                        {
+                          "name": "stackscript_create",
+                          "description": "Stackscript create"
+                        },
+                        {
+                          "name": "stackscript_publicize",
+                          "description": "Stackscript publicize"
+                        },
+                        {
+                          "name": "stackscript_revise",
+                          "description": "Stackscript revise"
+                        },
+                        {
+                          "name": "stackscript_delete",
+                          "description": "Stackscript delete"
+                        }
+                      ]
                     },
                     {
                       "name": "username",
                       "description": "The username of the user who initiated this event.\n",
                       "type": "string",
-                      "value": "example_user"
+                      "value": "example_user",
+                      "schema": null
                     },
                     {
                       "name": "status",
                       "description": "The current status of this event.  \n",
                       "type": "enum",
-                      "value": "finished"
+                      "subType": "EventStatus",
+                      "value": "finished",
+                      "schema": [
+                        {
+                          "name": "scheduled",
+                          "description": "Event has not yet started."
+                        },
+                        {
+                          "name": "started",
+                          "description": "Event is in progress."
+                        },
+                        {
+                          "name": "finished",
+                          "description": "Event is completed."
+                        },
+                        {
+                          "name": "failed",
+                          "description": "Something went wrong."
+                        },
+                        {
+                          "name": "notification",
+                          "description": "Stateless event."
+                        }
+                      ]
                     },
                     {
                       "name": "percent_complete",
                       "description": "A percentage estimating the amount of time remaining for an event.  Returns null for notification events.\n",
+                      "filterable": false,
                       "type": "integer",
-                      "value": 20
+                      "value": 20,
+                      "schema": null
                     },
                     {
                       "name": "rate",
                       "description": "The rate of completion of the event.  Currently only returned for migration and resize events.\n",
                       "type": "string",
-                      "value": null
+                      "value": null,
+                      "schema": null
                     },
                     {
                       "name": "time_remaining",
                       "description": "The estimated time remaining until the completion of this event.  Currently only returned for in progress migrations or resizes.\n",
                       "type": "string",
-                      "value": null
+                      "value": null,
+                      "schema": null
                     },
                     {
                       "name": "seen",
                       "description": "If this event has been seen.",
                       "type": "boolean",
-                      "value": false
+                      "value": false,
+                      "schema": null
                     },
                     {
                       "name": "read",
                       "description": "If this event has been read.",
                       "type": "boolean",
-                      "value": false
+                      "value": false,
+                      "schema": null
                     },
                     {
                       "name": "created",
+                      "filterable": true,
                       "type": "datetime",
-                      "value": "2014-12-24T18:00:09.000Z"
+                      "value": "2014-12-24T18:00:09.000Z",
+                      "schema": null
                     },
                     {
                       "name": "updated",
                       "type": "datetime",
-                      "value": "2014-12-24T19:00:09.000Z"
+                      "value": "2014-12-24T19:00:09.000Z",
+                      "schema": null
                     },
                     {
                       "name": "user_id",
                       "description": "The ID of the user who initiated this event.\n",
                       "type": "integer",
-                      "value": 234567
+                      "value": 234567,
+                      "schema": null
                     }
                   ],
-                  "enums": [
-                    {
+                  "enums": {
+                    "EventType": {
                       "linode_boot": "Linode boot",
                       "linode_create": "Linode create",
                       "linode_delete": "Linode delete",
@@ -5060,18 +9947,36 @@ module.exports = { endpoints: [
                       "stackscript_create": "Stackscript create",
                       "stackscript_publicize": "Stackscript publicize",
                       "stackscript_revise": "Stackscript revise",
-                      "stackscript_delete": "Stackscript delete",
-                      "name": "EventType"
+                      "stackscript_delete": "Stackscript delete"
                     },
-                    {
+                    "EventStatus": {
                       "scheduled": "Event has not yet started.",
                       "started": "Event is in progress.",
                       "finished": "Event is completed.",
                       "failed": "Something went wrong.",
-                      "notification": "Stateless event.",
-                      "name": "EventStatus"
+                      "notification": "Stateless event."
                     }
-                  ]
+                  },
+                  "example": {
+                    "id": 1234,
+                    "entity": {
+                      "id": 9302,
+                      "label": "linode123",
+                      "type": "linode",
+                      "url": "/v4/linode/instances/123"
+                    },
+                    "action": "linode_reboot",
+                    "username": "example_user",
+                    "status": "finished",
+                    "percent_complete": 20,
+                    "rate": null,
+                    "time_remaining": null,
+                    "seen": false,
+                    "read": false,
+                    "created": "2014-12-24T18:00:09.000Z",
+                    "updated": "2014-12-24T19:00:09.000Z",
+                    "user_id": 234567
+                  }
                 }
               }
             ],
@@ -5091,6 +9996,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl https://$api_root/$version/account/event/123\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "event = linode.Event(client, 123)\n"
                   }
                 ],
                 "name": "GET",
@@ -5100,57 +10009,253 @@ module.exports = { endpoints: [
                   "description": "Event objects describe a notification on a user's account timeline.\n",
                   "schema": [
                     {
-                      "name": "0"
+                      "name": "id",
+                      "type": "integer",
+                      "value": 1234,
+                      "schema": null
                     },
                     {
-                      "name": "1",
-                      "description": "Detailed inforrmation about the event's entity, including id, type, label, and URL used to access it.\n"
+                      "name": "entity",
+                      "description": "Detailed inforrmation about the event's entity, including id, type, label, and URL used to access it.\n",
+                      "schema": [
+                        {
+                          "name": "id",
+                          "description": "The entity's ID that this event is for.  This is meaningless without a type.\n",
+                          "type": "integer",
+                          "value": 9302,
+                          "schema": null
+                        },
+                        {
+                          "name": "label",
+                          "description": "The current label of this object.  This will reflect changes in label.\n",
+                          "type": "string",
+                          "value": "linode123",
+                          "schema": null
+                        },
+                        {
+                          "name": "type",
+                          "description": "The type of entity this is related to.\n",
+                          "type": "string",
+                          "value": "linode",
+                          "schema": null
+                        },
+                        {
+                          "name": "url",
+                          "description": "The URL where you can access the object this event is for.  If a relative URL, it is relative to the domain you retrieved the event from.\n",
+                          "type": "string",
+                          "value": "/v4/linode/instances/123",
+                          "schema": null
+                        }
+                      ]
                     },
                     {
-                      "name": "2",
-                      "description": "The action that caused this event.\n"
+                      "name": "action",
+                      "description": "The action that caused this event.\n",
+                      "type": "enum",
+                      "subType": "EventType",
+                      "value": "linode_reboot",
+                      "schema": [
+                        {
+                          "name": "linode_boot",
+                          "description": "Linode boot"
+                        },
+                        {
+                          "name": "linode_create",
+                          "description": "Linode create"
+                        },
+                        {
+                          "name": "linode_delete",
+                          "description": "Linode delete"
+                        },
+                        {
+                          "name": "linode_shutdown",
+                          "description": "Linode shutdown"
+                        },
+                        {
+                          "name": "linode_reboot",
+                          "description": "Linode reboot"
+                        },
+                        {
+                          "name": "linode_snapshot",
+                          "description": "Linode snapshot"
+                        },
+                        {
+                          "name": "linode_addip",
+                          "description": "Linode addip"
+                        },
+                        {
+                          "name": "linode_migrate",
+                          "description": "Linode migrate"
+                        },
+                        {
+                          "name": "linode_rebuild",
+                          "description": "Linode rebuild"
+                        },
+                        {
+                          "name": "linode_clone",
+                          "description": "Linode clone"
+                        },
+                        {
+                          "name": "disk_create",
+                          "description": "Disk create"
+                        },
+                        {
+                          "name": "disk_delete",
+                          "description": "Disk delete"
+                        },
+                        {
+                          "name": "disk_duplicate",
+                          "description": "Disk duplicate"
+                        },
+                        {
+                          "name": "disk_resize",
+                          "description": "Disk resize"
+                        },
+                        {
+                          "name": "backups_enable",
+                          "description": "Backups enable"
+                        },
+                        {
+                          "name": "backups_cancel",
+                          "description": "Backups cancel"
+                        },
+                        {
+                          "name": "backups_restore",
+                          "description": "Backups restore"
+                        },
+                        {
+                          "name": "password_reset",
+                          "description": "Password reset"
+                        },
+                        {
+                          "name": "dns_zone_create",
+                          "description": "Domain create"
+                        },
+                        {
+                          "name": "dns_zone_delete",
+                          "description": "Domain delete"
+                        },
+                        {
+                          "name": "dns_record_create",
+                          "description": "Domain Record create"
+                        },
+                        {
+                          "name": "dns_record_delete",
+                          "description": "Domain Record delete"
+                        },
+                        {
+                          "name": "stackscript_create",
+                          "description": "Stackscript create"
+                        },
+                        {
+                          "name": "stackscript_publicize",
+                          "description": "Stackscript publicize"
+                        },
+                        {
+                          "name": "stackscript_revise",
+                          "description": "Stackscript revise"
+                        },
+                        {
+                          "name": "stackscript_delete",
+                          "description": "Stackscript delete"
+                        }
+                      ]
                     },
                     {
-                      "name": "3",
-                      "description": "The username of the user who initiated this event.\n"
+                      "name": "username",
+                      "description": "The username of the user who initiated this event.\n",
+                      "type": "string",
+                      "value": "example_user",
+                      "schema": null
                     },
                     {
-                      "name": "4",
-                      "description": "The current status of this event.  \n"
+                      "name": "status",
+                      "description": "The current status of this event.  \n",
+                      "type": "enum",
+                      "subType": "EventStatus",
+                      "value": "finished",
+                      "schema": [
+                        {
+                          "name": "scheduled",
+                          "description": "Event has not yet started."
+                        },
+                        {
+                          "name": "started",
+                          "description": "Event is in progress."
+                        },
+                        {
+                          "name": "finished",
+                          "description": "Event is completed."
+                        },
+                        {
+                          "name": "failed",
+                          "description": "Something went wrong."
+                        },
+                        {
+                          "name": "notification",
+                          "description": "Stateless event."
+                        }
+                      ]
                     },
                     {
-                      "name": "5",
-                      "description": "A percentage estimating the amount of time remaining for an event.  Returns null for notification events.\n"
+                      "name": "percent_complete",
+                      "description": "A percentage estimating the amount of time remaining for an event.  Returns null for notification events.\n",
+                      "filterable": false,
+                      "type": "integer",
+                      "value": 20,
+                      "schema": null
                     },
                     {
-                      "name": "6",
-                      "description": "The rate of completion of the event.  Currently only returned for migration and resize events.\n"
+                      "name": "rate",
+                      "description": "The rate of completion of the event.  Currently only returned for migration and resize events.\n",
+                      "type": "string",
+                      "value": null,
+                      "schema": null
                     },
                     {
-                      "name": "7",
-                      "description": "The estimated time remaining until the completion of this event.  Currently only returned for in progress migrations or resizes.\n"
+                      "name": "time_remaining",
+                      "description": "The estimated time remaining until the completion of this event.  Currently only returned for in progress migrations or resizes.\n",
+                      "type": "string",
+                      "value": null,
+                      "schema": null
                     },
                     {
-                      "name": "8",
-                      "description": "If this event has been seen."
+                      "name": "seen",
+                      "description": "If this event has been seen.",
+                      "type": "boolean",
+                      "value": false,
+                      "schema": null
                     },
                     {
-                      "name": "9",
-                      "description": "If this event has been read."
+                      "name": "read",
+                      "description": "If this event has been read.",
+                      "type": "boolean",
+                      "value": false,
+                      "schema": null
                     },
                     {
-                      "name": "10"
+                      "name": "created",
+                      "filterable": true,
+                      "type": "datetime",
+                      "value": "2014-12-24T18:00:09.000Z",
+                      "schema": null
                     },
                     {
-                      "name": "11"
+                      "name": "updated",
+                      "type": "datetime",
+                      "value": "2014-12-24T19:00:09.000Z",
+                      "schema": null
                     },
                     {
-                      "name": "12",
-                      "description": "The ID of the user who initiated this event.\n"
+                      "name": "user_id",
+                      "description": "The ID of the user who initiated this event.\n",
+                      "type": "integer",
+                      "value": 234567,
+                      "schema": null
                     }
                   ],
-                  "enums": [
-                    {
+                  "enums": {
+                    "EventType": {
                       "linode_boot": "Linode boot",
                       "linode_create": "Linode create",
                       "linode_delete": "Linode delete",
@@ -5176,18 +10281,36 @@ module.exports = { endpoints: [
                       "stackscript_create": "Stackscript create",
                       "stackscript_publicize": "Stackscript publicize",
                       "stackscript_revise": "Stackscript revise",
-                      "stackscript_delete": "Stackscript delete",
-                      "name": "0"
+                      "stackscript_delete": "Stackscript delete"
                     },
-                    {
+                    "EventStatus": {
                       "scheduled": "Event has not yet started.",
                       "started": "Event is in progress.",
                       "finished": "Event is completed.",
                       "failed": "Something went wrong.",
-                      "notification": "Stateless event.",
-                      "name": "1"
+                      "notification": "Stateless event."
                     }
-                  ]
+                  },
+                  "example": {
+                    "id": 1234,
+                    "entity": {
+                      "id": 9302,
+                      "label": "linode123",
+                      "type": "linode",
+                      "url": "/v4/linode/instances/123"
+                    },
+                    "action": "linode_reboot",
+                    "username": "example_user",
+                    "status": "finished",
+                    "percent_complete": 20,
+                    "rate": null,
+                    "time_remaining": null,
+                    "seen": false,
+                    "read": false,
+                    "created": "2014-12-24T18:00:09.000Z",
+                    "updated": "2014-12-24T19:00:09.000Z",
+                    "user_id": 234567
+                  }
                 }
               }
             ],
@@ -5206,6 +10329,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl https://$api_root/$version/account/event/123/seen\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "client.mark_lask_seen_event(event)\n"
                   }
                 ],
                 "name": "POST"
@@ -5226,6 +10353,10 @@ module.exports = { endpoints: [
                   {
                     "name": "curl",
                     "value": "curl https://$api_root/$version/account/event/123/read\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "event.mark_read()\n"
                   }
                 ],
                 "name": "POST"

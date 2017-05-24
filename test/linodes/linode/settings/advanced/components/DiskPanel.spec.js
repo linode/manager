@@ -3,7 +3,7 @@ import sinon from 'sinon';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
 
-import { DiskPanel } from '~/linodes/linode/settings/components/DiskPanel';
+import { DiskPanel } from '~/linodes/linode/settings/advanced/components/DiskPanel';
 
 import { testLinode, testLinode1236, testLinodeWithUnallocatedSpace } from '@/data/linodes';
 import { SHOW_MODAL } from '~/actions/modal';

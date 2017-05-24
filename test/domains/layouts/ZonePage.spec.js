@@ -60,12 +60,13 @@ describe('domains/layouts/ZonePage', () => {
 
     const soaValues = soaRow.find('td');
     expect(soaValues.length).to.equal(7);
-    const fmt = formatDNSSeconds;
+    const fmt = (time, def) => mount(formatDNSSeconds(time, def, true));
     // Test all values in SOA row
-    [currentZone.domain, currentZone.soa_email, fmt(currentZone.ttl_sec),
-     fmt(currentZone.refresh_sec), fmt(currentZone.retry_sec),
+    [currentZone.domain, currentZone.soa_email].forEach(
+      (value, i) => expect(soaValues.at(i).text()).to.equal(value));
+    [fmt(currentZone.ttl_sec), fmt(currentZone.refresh_sec), fmt(currentZone.retry_sec),
      fmt(currentZone.expire_sec, 604800)].forEach(
-       (value, i) => expect(soaValues.at(i).text()).to.equal(value));
+       (value, i) => expect(soaValues.at(i + 2).text()).to.equal(value.text()));
   });
 
   it('renders ns records', () => {
@@ -90,7 +91,7 @@ describe('domains/layouts/ZonePage', () => {
     // Test all values in an NS row
     const nsRecord = nsRecords[0];
     [nsRecord.target, nsRecord.name || currentZone.domain,
-      '86400 (1 day)'].forEach((value, i) => expect(nsValues.at(i).text()).to.equal(value));
+      '86400'].forEach((value, i) => expect(nsValues.at(i).text()).to.equal(value));
   });
 
   it('renders mx records', () => {
@@ -141,8 +142,10 @@ describe('domains/layouts/ZonePage', () => {
     expect(aValues.length).to.equal(5);
     // Test all values in a A/AAAA row
     const aRecord = aRecords[0];
-    [aRecord.name, aRecord.target, formatDNSSeconds(aRecord.ttl_sec, currentZone.ttl_sec),
-    ].forEach((value, i) => expect(aValues.at(i).text()).to.equal(value));
+    [aRecord.name, aRecord.target].forEach((value, i) =>
+      expect(aValues.at(i).text()).to.equal(value));
+    expect(mount(formatDNSSeconds(aRecord.ttl_sec, currentZone.ttl_sec, true))
+      .text()).to.equal(aValues.at(2).text());
   });
 
   it('renders cname records', () => {
@@ -167,9 +170,10 @@ describe('domains/layouts/ZonePage', () => {
     expect(cnameValues.length).to.equal(5);
     // Test all values in a CNAME row
     const cnameRecord = cnameRecords[0];
-    [cnameRecord.name, cnameRecord.target,
-     formatDNSSeconds(cnameRecord.ttl_sec, currentZone.ttl_sec)].forEach((value, i) =>
-       expect(cnameValues.at(i).text()).to.equal(value));
+    [cnameRecord.name, cnameRecord.target].forEach(
+      (value, i) => expect(cnameValues.at(i).text()).to.equal(value));
+    expect(mount(formatDNSSeconds(cnameRecord.ttl_sec, currentZone.ttl_sec, true)).text())
+      .to.equal(cnameValues.at(2).text());
   });
 
   it('renders txt records', () => {
@@ -194,10 +198,10 @@ describe('domains/layouts/ZonePage', () => {
     expect(txtValues.length).to.equal(5);
     // Test all values in a TXT row
     const txtRecord = txtRecords[0];
-    [txtRecord.name, txtRecord.target, formatDNSSeconds(txtRecord.ttl_sec, currentZone.ttl_sec),
-    ].forEach((value, i) => {
-      expect(txtValues.at(i).text()).to.equal(value);
-    });
+    [txtRecord.name, txtRecord.target].forEach((value, i) =>
+      expect(txtValues.at(i).text()).to.equal(value));
+    expect(mount(formatDNSSeconds(txtRecord.ttl_sec, currentZone.ttl_sec, true)).text())
+      .to.equal(txtValues.at(2).text());
   });
 
   it('renders srv records', () => {
@@ -223,7 +227,9 @@ describe('domains/layouts/ZonePage', () => {
     // Test all values in a SRV row
     const srvRecord = srvRecords[0];
     [srvRecord.name, srvRecord.priority, currentZone.domain, srvRecord.weight, srvRecord.port,
-     srvRecord.target, formatDNSSeconds(srvRecord.ttl_sec, currentZone.ttl_sec),
-    ].forEach((value, i) => expect(srvValues.at(i).text()).to.equal(value.toString()));
+     srvRecord.target].forEach(
+       (value, i) => expect(srvValues.at(i).text()).to.equal(value.toString()));
+    expect(mount(formatDNSSeconds(srvRecord.ttl_sec, currentZone.ttl_sec, true)).text())
+      .to.equal(srvValues.at(6).text());
   });
 });

@@ -5,7 +5,7 @@ import { Table } from 'linode-components/tables';
 
 export default function Errors() {
   return (
-    <section className="GettingStartedPage">
+    <section className="Article">
       <h1>Errors</h1>
       <section>
         <p>

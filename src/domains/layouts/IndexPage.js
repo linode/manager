@@ -63,7 +63,7 @@ export class IndexPage extends Component {
         onOk={async () => {
           const ids = zonesArr.map(function (zone) { return zone.id; });
 
-          await dispatch(domains.delete(ids));
+          await Promise.all(ids.map(id => dispatch(domains.delete(id))));
           dispatch(toggleSelected(OBJECT_TYPE, ids));
           dispatch(hideModal());
         }}
@@ -80,7 +80,7 @@ export class IndexPage extends Component {
     const sortedZones = _.sortBy(Object.values(zones), ({ created }) => moment(created));
 
     const groups = _.sortBy(
-      _.map(_.groupBy(sortedZones, d => d.display_group), (_zones, _group) => {
+      _.map(_.groupBy(sortedZones, d => d.group), (_zones, _group) => {
         return {
           name: _group,
           data: _zones,
