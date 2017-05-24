@@ -91,9 +91,9 @@ describe('api/util', async () => {
     expect(lessThanNow).to.be.an('object');
     expect(lessThanNow.example).to.exist;
     expect(lessThanNow.example).to.be.an('object');
-    expect(lessThanNow.example['+lte']).to.exist;
-    expect(typeof lessThanNow.example['+lte']).to.equal('string');
-    expect(typeof (new Date(lessThanNow.example['+lte']))).to.equal('object');
+    expect(lessThanNow.example['+lt']).to.exist;
+    expect(typeof lessThanNow.example['+lt']).to.equal('string');
+    expect(typeof (new Date(lessThanNow.example['+lt']))).to.equal('object');
   });
 
   it('provides a lessThanNowFilter function', function () {
@@ -103,8 +103,8 @@ describe('api/util', async () => {
     expect(lessThanNow).to.be.an('object');
     expect(lessThanNow.example).to.exist;
     expect(lessThanNow.example).to.be.an('object');
-    expect(lessThanNow.example['+lte']).to.exist;
-    expect(typeof lessThanNow.example['+lte']).to.equal('string');
-    expect(typeof (new Date(lessThanNow.example['+lte']))).to.equal('object');
+    expect(lessThanNow.example['+lt']).to.exist;
+    expect(typeof lessThanNow.example['+lt']).to.equal('string');
+    expect(typeof (new Date(lessThanNow.example['+lt']))).to.equal('object');
   });
 });
