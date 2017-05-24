@@ -59,6 +59,8 @@ export class Notifications extends Component {
   componentWillUpdate(nextProps) {
     const { events } = nextProps;
 
+    // total results is relative to the last filtered request
+    // TODO: review api structure to account for totalResults seen all time vs in last request
     if (events.totalResults > 0) {
       const latest = events.events[events.ids[0]];
       this._filterOptions = _.merge(
