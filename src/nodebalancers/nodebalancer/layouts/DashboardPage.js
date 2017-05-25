@@ -63,6 +63,7 @@ export class DashboardPage extends Component {
             format: p => p.toFixed(1),
           },
           data: formatData([stats.connections]),
+          unit: ' connections',
         },
         traffic: {
           title: 'Traffic',
@@ -72,6 +73,7 @@ export class DashboardPage extends Component {
           },
           data: formatData([stats.traffic.in, stats.traffic.out],
                            ['In', 'Out']),
+          unit: ' bits/s',
         },
       };
     }
@@ -227,8 +229,14 @@ export class DashboardPage extends Component {
                     <option value="traffic">Traffic</option>
                   </Select>
                 </div>
+                <div className="float-sm-right">
+                  Last 24 hours
+                </div>
               </div>
-              <LineGraph {...this.graphs[this.state.source]} />
+              <LineGraph
+                timezone={timezone}
+                {...this.graphs[this.state.source]}
+              />
             </div>
           )}
         </Card>
