@@ -67,7 +67,6 @@ export default class MethodResponse extends Component {
           data.forEach((record, index) => {
             if (record.schema) {
               const nestedSchemaId = `${record.name}-${index}`;
-
               rows.push(<TableRow
                 className="NestedSchemaParent"
                 key={record.id || index}
