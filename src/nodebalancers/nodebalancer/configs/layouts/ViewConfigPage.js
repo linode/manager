@@ -77,7 +77,7 @@ export class ViewConfigPage extends Component {
 
     dispatch(showModal('Delete Node',
       <DeleteModalBody
-        onOk={async () => {
+        onOk={() => {
           const ids = [nodebalancer.id, config.id, node.id].filter(Boolean);
 
           return dispatch(dispatchOrStoreErrors.call(this, [
