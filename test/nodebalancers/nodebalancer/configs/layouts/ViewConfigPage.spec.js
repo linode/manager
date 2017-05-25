@@ -28,7 +28,7 @@ describe('nodebalancers/nodebalancer/configs/layouts/ViewConfigPage', () => {
     expect(parseInt(port)).to.equal(portFromApi);
     const nodeRows = page.find('.TableRow');
     const nodeValues = nodeRows.at(0).find('td');
-    expect(nodeValues.length).to.equal(6);
+    expect(nodeValues.length).to.equal(7);
     [
       nodesFromApi[1].label,
       nodesFromApi[1].address,
