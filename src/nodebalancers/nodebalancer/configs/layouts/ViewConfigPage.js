@@ -8,14 +8,16 @@ import { Card, CardHeader } from 'linode-components/cards';
 import { List } from 'linode-components/lists';
 import { Table } from 'linode-components/tables';
 import { ButtonCell } from 'linode-components/tables/cells';
+import { DeleteModalBody } from 'linode-components/modals';
 
-import { showModal } from '~/actions/modal';
+import { showModal, hideModal } from '~/actions/modal';
 import { setError } from '~/actions/errors';
 import { nodebalancers } from '~/api';
 import { getObjectByLabelLazily, objectFromMapByLabel } from '~/api/util';
 import { NODEBALANCER_CONFIG_ALGORITHMS, NODEBALANCER_CONFIG_STICKINESS } from '~/constants';
 
 import { NodeModal } from '../components/NodeModal';
+import { dispatchOrStoreErrors } from '~/components/forms';
 
 
 export class ViewConfigPage extends Component {
@@ -70,8 +72,27 @@ export class ViewConfigPage extends Component {
     ));
   }
 
+  deleteNBConfigNode(nodebalancer, config, node) {
+    const { dispatch } = this.props;
+
+    dispatch(showModal('Delete Node',
+      <DeleteModalBody
+        onOk={async () => {
+          const ids = [nodebalancer.id, config.id, node.id].filter(Boolean);
+
+          return dispatch(dispatchOrStoreErrors.call(this, [
+            () => nodebalancers.configs.nodes.delete(...ids),
+            hideModal,
+          ]));
+        }}
+        onCancel={() => dispatch(hideModal())}
+        items={[node.label]}
+      />
+    ));
+  }
+
   render() {
-    const { config } = this.props;
+    const { nodebalancer, config } = this.props;
     const nodes = Object.values(config._nodes.nodes);
 
     return (
@@ -122,6 +143,14 @@ export class ViewConfigPage extends Component {
                     cellComponent: ButtonCell,
                     onClick: (node) => this.editNodeModal(node),
                     text: 'Edit',
+                  },
+                  {
+                    cellComponent: ButtonCell,
+                    headerClassName: 'ButtonColumn',
+                    onClick: (node) => {
+                      this.deleteNBConfigNode(nodebalancer, config, node);
+                    },
+                    text: 'Delete',
                   },
                 ]}
                 data={nodes}
