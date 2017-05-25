@@ -39,6 +39,8 @@ export const DATACENTERS = {
   'ap-south-1a': 'singapore',
 };
 
+export const UNVAILABLE_DATACENTERS = ['ap-northeast-1a'];
+
 export const LinodeStatesReadable = {
   shutting_down: 'Powering Off',
   contact_support: 'Error',
