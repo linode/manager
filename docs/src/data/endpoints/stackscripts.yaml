@@ -1,0 +1,118 @@
+# vim: set et ts=2 sw=2 tw=80 :
+name: StackScripts
+sort: 4
+base_path: /linode/stackscripts
+description: >
+  StackScript endpoints provide a means of managing the
+  <a href="#object-stackscript"> StackScript objects</a> accessible from your
+  account.
+endpoints:
+  linode/stackscripts:
+    type: list
+    resource: stackscript
+    description: >
+      View public StackScripts.
+    methods:
+      GET:
+        description: >
+          Returns a list of public <a href="#object-stackscript">StackScripts</a>.
+          Results can be <a href="#filtering">filtered</a>.  Include '"mine": true'
+          in the filter dict to see only StackScripts you created.
+        examples:
+          curl: |
+            curl https://$api_root/$version/linode/stackscripts
+          python: |
+            import stackscript
+            TODO
+      POST:
+        oauth: stackscripts:create
+        description: >
+          Create a new StackScript.
+        params:
+          label:
+            description: >
+              Label of StackScript.
+            limit: 3-128 characters
+          description:
+            optional: true
+            description: >
+              Description of the StackScript.
+          distributions:
+            description: >
+              A list of <a href="#object-distribution">distributions</a>
+              compatible with StackScript.
+            type: distribution
+          is_public:
+            optional: true
+            description: >
+              If true, this StackScript will be publicly visible in the Linode
+              StackScript library. Defaults to False.
+          rev_note:
+            optional: true
+            description: >
+              Release notes for this revision.
+            limit: 0-512 characters
+          script:
+            description: >
+              The shell script to run on boot.
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+              -H "Authorization: token $TOKEN" \
+              -X POST -d '{
+                "label": "Initial Label",
+                "distributions": ["linode/ubuntu15.4", "linode/ubuntu15.10"],
+                "script": "#!..."
+              }' \
+              https://$api_root/$version/linode/stackscripts
+          python: |
+            import stackscript
+            TODO
+  linode/stackscripts/:id:
+    type: list
+    resource: stackscript
+    authenticated: true
+    description: >
+      Manage a particular StackScript.
+    methods:
+      GET:
+        oauth: stackscripts:view
+        description: >
+          Returns information about this <a href="#object-stackscript">
+          StackScript</a>.
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+              -H "Authorization: token $TOKEN" \
+              -X GET \
+              https://$api_root/$version/linode/stackscripts/$stackscript_id
+          python: |
+            import stackscript
+            TODO
+      PUT:
+        oauth: stackscripts:modify
+        description: >
+          Edits this StackScript.
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+              -H "Authorization: token $TOKEN" \
+              -X PUT -d '{
+                "label": "New Label"
+              }' \
+              https://$api_root/$version/stackscripts/$stackscript_id
+          python: |
+            import stackscript
+            TODO
+      DELETE:
+        oauth: stackscripts:delete
+        description: >
+          Deletes this StackScript.  This action cannot be undone.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+              -X DELETE \
+              https://$api_root/$version/linode/stackscripts/$stackscript_id
+          python: |
+            import stackscript
+            TODO

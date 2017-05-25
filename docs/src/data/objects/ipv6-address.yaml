@@ -1,0 +1,20 @@
+name: IPv6 Address
+description: >
+    An IPv6 Address
+schema:
+  address:
+    _type: string
+    _value: "2600:3c01::2:5001"
+    _description: The IPv6 Address.
+  gateway:
+    _type: string
+    _value: "fe80::1"
+    _description: The default gateway.
+  range:
+    _type: string
+    _value: "2600:3c01::2:5000"
+    _description: The IPv6 range.
+  rdns:
+    _type: string
+    _value: "example.org"
+    _description: Optional reverse DNS address for this IPv6 Address.

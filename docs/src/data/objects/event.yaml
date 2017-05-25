@@ -1,0 +1,107 @@
+# vim: set et ts=2 sw=2 tw=80 :
+name: Event
+prefix: event
+description: >
+  Event objects describe a notification on a user's account timeline.
+schema:
+  id:
+    _type: integer
+    _value: 1234
+  entity:
+    _type: string
+    _value: linode123456
+    _description: >
+      The current label of the entity this event was created for.
+  type:
+    _type: enum
+    _subtype: EventType
+    _value: linode_reboot
+    _description: >
+      This event's type.
+  username:
+    _type: string
+    _value: example_user
+    _description: >
+      The username of the user who initiated this event.
+  percent_complete:
+    _type: integer
+    _value: 20
+    _description: >
+      A percentage estimating the amount of time remaining for an event.  Returns
+      null for notification events.
+    _filterable: false
+  rate:
+    _type: string
+    _value: null
+    _description: >
+      The rate of completion of the event.  Currently only returned for
+      migration and resize events.
+  time_remaining:
+    _type: string
+    _value: null
+    _description: >
+      The estimated time remaining until the completion of this event.  Currently
+      only returned for in progress migrations or resizes.
+  seen:
+    _type: boolean
+    _value: false
+    _description: If this event has been seen.
+  read:
+    _type: boolean
+    _value: false
+    _description: If this event has been read.
+  created:
+    _type: datetime
+    _value: 2014-12-24T18:00:09
+    _filterable: true
+  updated:
+    _type: datetime
+    _value: 2014-12-24T19:00:09
+  user_id:
+    _type: integer
+    _value: 234567
+    _description: >
+      The ID of the user who initiated this event.
+  linode_id:
+    _type: integer
+    _value: 123456
+    _description: The Linode's ID if the event affects a Linode.
+    _filterable: true
+  stackscript_id:
+   _type: integer
+   _value: null
+   _description: The StackScript's ID if the event affects a StackScript.
+   _filterable: true
+  nodebalancer_id:
+   _type: integer
+   _value: null
+   _description: The NodeBalancer's ID if the event affects a NodeBalancer.
+   _filterable: true
+enums:
+  EventType:
+    linode_boot: Linode boot
+    linode_create: Linode create
+    linode_delete: Linode delete
+    linode_shutdown: Linode shutdown
+    linode_reboot: Linode reboot
+    linode_snapshot: Linode snapshot
+    linode_addip: Linode addip
+    linode_migrate: Linode migrate
+    linode_rebuild: Linode rebuild
+    linode_clone: Linode clone
+    disk_create: Disk create
+    disk_delete: Disk delete
+    disk_duplicate: Disk duplicate
+    disk_resize: Disk resize
+    backups_enable: Backups enable
+    backups_cancel: Backups cancel
+    backups_restore: Backups restore
+    password_reset: Password reset
+    dns_zone_create: DNS Zone create
+    dns_zone_delete: DNS Zone delete
+    dns_record_create: DNS Zone Record create
+    dns_record_delete: DNS Zone Record delete
+    stackscript_create: Stackscript create
+    stackscript_publicize: Stackscript publicize
+    stackscript_revise: Stackscript revise
+    stackscript_delete: Stackscript delete

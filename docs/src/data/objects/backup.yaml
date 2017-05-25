@@ -1,0 +1,98 @@
+# vim: set et ts=2 sw=2 tw=80 :
+name: Backup
+prefix: backup
+description: >
+  Backup objects represent a specific backup of a Linode.
+schema:
+  id:
+    _type: integer
+    _value: 123456
+  label:
+    _type: string
+    _value: A label for your snapshot
+    _description: Human-friendly backup name.
+    _filterable: false
+    _limit: 1-255 characters
+  status:
+    _type: enum
+    _subtype: Status
+    _value: successful
+    _description: Status of the backup.
+    _filterable: false
+  type:
+    _type: enum
+    _subtype: Type
+    _value: snapshot
+    _description: Whether this is a snapshot or an auto backup.
+  datacenter:
+      _type: datacenter
+      _filterable: false
+      _description: This backup  datacenter.
+      id:
+        _type: string
+        _value: newark
+      label:
+        _type: string
+        _value: Newark, NJ
+      country:
+        _type: string
+        _value: us
+  created:
+    _type: datetime
+    _value: "2015-09-29T11:21:01"
+  updated:
+    _type: datetime
+    _value: "2015-09-29T11:21:01"
+  finished:
+    _type: datetime
+    _value: "2015-09-29T11:21:01"
+    _description: An ISO 8601 datetime of when the backup completed.
+  configs:
+    _type: array
+    _subtype: string
+    _description: A JSON Array of config labels that were included in this backup.
+    _value:
+      - "My Debian8 Profile"
+  disks:
+    _type: array
+    _subtype: disk
+    _value:
+      - label:
+            _type: string
+            _value: "My Debian8 Disk"
+        size:
+            _type: integer
+            _value: 24064
+        filesystem:
+            _type: string
+            _value: "ext4"
+      - label:
+            _type: string
+            _value: "swap"
+        size:
+            _type: integer
+            _value: 512
+        filesystem:
+            _type: string
+            _value: "swap"
+    _description: A JSON Array of JSON Objects describing the disks included in this backup.
+  availability:
+    _type: enum
+    _subtype: BackupAvailability
+    _value: daily
+    _description: If this backup is available, which backup slot it is in.  Otherwise, unavailable.
+enums:
+  Status:
+    paused: Backup job is currently suspended.
+    pending: Backup job has not started yet.
+    running: Backup job is currently running.
+    needsPostProcessing: Backup needs some finishing touches.
+    failed: Backup job failed.
+    userAborted: Backup (snapshot) was aborted by user.
+  Type:
+    auto: A backup that is automatically created when Backups are enabled.
+    snapshot: A backup that is manually created by the User.
+  BackupAvailability:
+    unavailable: This backup cannot be restored.
+    daily: This is your daily backup, and can be restored.
+    weekly: This is one of your weekly backups, and can be restored.

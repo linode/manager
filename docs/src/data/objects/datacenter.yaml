@@ -1,0 +1,28 @@
+# vim: set et ts=2 sw=2 tw=80 :
+name: Datacenter
+prefix: dctr
+description: >
+  Datacenter objects describe the datacenters available for Linode services.
+schema:
+  id:
+    _type: string
+    _value: newark
+  label:
+    _type: string
+    _value: Newark, NJ
+    _description: Human-friendly datacenter name.
+    _filterable: true
+  country:
+    _type: string
+    _value: US
+    _description: Country
+    _filterable: true
+enums:
+  Datacenter:
+    dallas: Dallas, TX
+    fremont: Fremont, CA
+    atlanta: Atlanta, GA
+    newark:  Newark, NJ
+    london: London, England, UK
+    singapore: Singapore, SG
+    frankfurt: Frankfurt, DE

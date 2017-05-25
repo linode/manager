@@ -33,8 +33,7 @@ import {
   generateChildRoute
 } from '~/RoutesGenerator';
 
-import { api } from '~/data/endpoints';
-
+import { default as api } from '~/api';
 
 ReactGA.initialize(GA_ID); // eslint-disable-line no-undef
 function logPageView() {
