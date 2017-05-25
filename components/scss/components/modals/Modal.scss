@@ -59,6 +59,10 @@
             width: 100%;
         }
     }
+
+    textarea {
+        min-width: 100%;
+    }
 }
 .DeleteModalBody {
     strong {
