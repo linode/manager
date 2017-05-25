@@ -26,6 +26,9 @@ import {
 import {
   Python,
   PythonIntroduction,
+  Curl,
+  CreateLinode,
+  TestingWithCurl,
 } from './components/guides';
 
 import {
@@ -82,6 +85,9 @@ export function init() {
           <Route path="/errors" component={Errors} />
           <Route path="/guides/python" component={Python} />
           <Route path="/guides/python/introduction" component={PythonIntroduction} />
+          <Route path="/guides/curl" component={Curl} />
+          <Route path="/guides/curl/creating-a-linode" component={CreateLinode} />
+          <Route path="/guides/curl/testing-with-curl" component={TestingWithCurl} />
           {api.endpoints.map(function(endpoint, index) {
             return generateIndexRoute({ key: index, endpoint: endpoint });
           })}
