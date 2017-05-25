@@ -113,7 +113,17 @@ function formatSchemaExample(schema) {
     if (obj.value === undefined && obj.schema) {
       schemaExample[obj.name] = formatSchemaExample(obj.schema);
     } else {
-      schemaExample[obj.name] = obj.value;
+      let value = obj.value;
+      if (Array.isArray(value)) {
+        value = value.map(function(obj) {
+          if (typeof obj === 'object' && obj !== null) {
+            return formatSchemaExample(obj);
+          }
+          return obj;
+        });
+      }
+
+      schemaExample[obj.name] = value;
     }
   });
 
@@ -134,7 +144,7 @@ function formatSchemaField(schemaField, enumMap) {
   const filterable = schemaField._filterable;
   const type = schemaField._type;
   const subType = schemaField._subtype;
-  const value = schemaField._value;
+  let value = schemaField._value;
 
   let nestedSchema = null;
   if (apiObjectMap[type]) {
@@ -144,6 +154,17 @@ function formatSchemaField(schemaField, enumMap) {
   } else if (!type) {
     // TODO: check the name of the nested item?
     nestedSchema = formatSchema(schemaField, enumMap);
+  } else if (Array.isArray(value)) {
+    value = value.map(function(obj) {
+      if (typeof obj === 'object' && obj !== null) {
+        return formatSchema(obj, enumMap);
+      }
+      return obj;
+    });
+
+    if (value.length && typeof value[0] !== 'string') {
+      nestedSchema = value[0]; // use the first example in the array as the schema
+    }
   }
 
   return {
