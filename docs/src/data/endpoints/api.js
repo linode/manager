@@ -749,36 +749,67 @@ module.exports = { endpoints: [
                               "type": "array",
                               "subType": "disk",
                               "value": [
-                                {
-                                  "label": {
-                                    "_type": "string",
-                                    "_value": "My Debian8 Disk"
+                                [
+                                  {
+                                    "name": "label",
+                                    "type": "string",
+                                    "value": "My Debian8 Disk",
+                                    "schema": null
                                   },
-                                  "size": {
-                                    "_type": "integer",
-                                    "_value": 24064
+                                  {
+                                    "name": "size",
+                                    "type": "integer",
+                                    "value": 24064,
+                                    "schema": null
                                   },
-                                  "filesystem": {
-                                    "_type": "string",
-                                    "_value": "ext4"
+                                  {
+                                    "name": "filesystem",
+                                    "type": "string",
+                                    "value": "ext4",
+                                    "schema": null
                                   }
+                                ],
+                                [
+                                  {
+                                    "name": "label",
+                                    "type": "string",
+                                    "value": "swap",
+                                    "schema": null
+                                  },
+                                  {
+                                    "name": "size",
+                                    "type": "integer",
+                                    "value": 512,
+                                    "schema": null
+                                  },
+                                  {
+                                    "name": "filesystem",
+                                    "type": "string",
+                                    "value": "swap",
+                                    "schema": null
+                                  }
+                                ]
+                              ],
+                              "schema": [
+                                {
+                                  "name": "label",
+                                  "type": "string",
+                                  "value": "My Debian8 Disk",
+                                  "schema": null
                                 },
                                 {
-                                  "label": {
-                                    "_type": "string",
-                                    "_value": "swap"
-                                  },
-                                  "size": {
-                                    "_type": "integer",
-                                    "_value": 512
-                                  },
-                                  "filesystem": {
-                                    "_type": "string",
-                                    "_value": "swap"
-                                  }
+                                  "name": "size",
+                                  "type": "integer",
+                                  "value": 24064,
+                                  "schema": null
+                                },
+                                {
+                                  "name": "filesystem",
+                                  "type": "string",
+                                  "value": "ext4",
+                                  "schema": null
                                 }
-                              ],
-                              "schema": null
+                              ]
                             },
                             {
                               "name": "availability",
@@ -924,36 +955,67 @@ module.exports = { endpoints: [
                               "type": "array",
                               "subType": "disk",
                               "value": [
-                                {
-                                  "label": {
-                                    "_type": "string",
-                                    "_value": "My Debian8 Disk"
+                                [
+                                  {
+                                    "name": "label",
+                                    "type": "string",
+                                    "value": "My Debian8 Disk",
+                                    "schema": null
                                   },
-                                  "size": {
-                                    "_type": "integer",
-                                    "_value": 24064
+                                  {
+                                    "name": "size",
+                                    "type": "integer",
+                                    "value": 24064,
+                                    "schema": null
                                   },
-                                  "filesystem": {
-                                    "_type": "string",
-                                    "_value": "ext4"
+                                  {
+                                    "name": "filesystem",
+                                    "type": "string",
+                                    "value": "ext4",
+                                    "schema": null
                                   }
+                                ],
+                                [
+                                  {
+                                    "name": "label",
+                                    "type": "string",
+                                    "value": "swap",
+                                    "schema": null
+                                  },
+                                  {
+                                    "name": "size",
+                                    "type": "integer",
+                                    "value": 512,
+                                    "schema": null
+                                  },
+                                  {
+                                    "name": "filesystem",
+                                    "type": "string",
+                                    "value": "swap",
+                                    "schema": null
+                                  }
+                                ]
+                              ],
+                              "schema": [
+                                {
+                                  "name": "label",
+                                  "type": "string",
+                                  "value": "My Debian8 Disk",
+                                  "schema": null
                                 },
                                 {
-                                  "label": {
-                                    "_type": "string",
-                                    "_value": "swap"
-                                  },
-                                  "size": {
-                                    "_type": "integer",
-                                    "_value": 512
-                                  },
-                                  "filesystem": {
-                                    "_type": "string",
-                                    "_value": "swap"
-                                  }
+                                  "name": "size",
+                                  "type": "integer",
+                                  "value": 24064,
+                                  "schema": null
+                                },
+                                {
+                                  "name": "filesystem",
+                                  "type": "string",
+                                  "value": "ext4",
+                                  "schema": null
                                 }
-                              ],
-                              "schema": null
+                              ]
                             },
                             {
                               "name": "availability",
@@ -1106,63 +1168,169 @@ module.exports = { endpoints: [
                       "type": "array",
                       "subType": "service",
                       "value": [
-                        {
-                          "id": {
-                            "_type": "string",
-                            "_value": "g5-standard-1"
+                        [
+                          {
+                            "name": "id",
+                            "type": "string",
+                            "value": "g5-standard-1",
+                            "schema": null
                           },
-                          "backups_price": {
-                            "_type": "integer",
-                            "_value": 250
+                          {
+                            "name": "backups_price",
+                            "type": "integer",
+                            "value": 250,
+                            "schema": null
                           },
-                          "class": {
-                            "_type": "string",
-                            "_value": "standard"
+                          {
+                            "name": "class",
+                            "type": "string",
+                            "value": "standard",
+                            "schema": null
                           },
-                          "disk": {
-                            "_type": "integer",
-                            "_value": 24576
+                          {
+                            "name": "disk",
+                            "type": "integer",
+                            "value": 24576,
+                            "schema": null
                           },
-                          "hourly_price": {
-                            "_type": "integer",
-                            "_value": 1
+                          {
+                            "name": "hourly_price",
+                            "type": "integer",
+                            "value": 1,
+                            "schema": null
                           },
-                          "label": {
-                            "_type": "string",
-                            "_value": "Linode 2048"
+                          {
+                            "name": "label",
+                            "type": "string",
+                            "value": "Linode 2048",
+                            "schema": null
                           },
-                          "mbits_out": {
-                            "_type": "integer",
-                            "_value": 125
+                          {
+                            "name": "mbits_out",
+                            "type": "integer",
+                            "value": 125,
+                            "schema": null
                           },
-                          "monthly_price": {
-                            "_type": "integer",
-                            "_value": 1000
+                          {
+                            "name": "monthly_price",
+                            "type": "integer",
+                            "value": 1000,
+                            "schema": null
                           },
-                          "ram": {
-                            "_type": "integer",
-                            "_value": 2048
+                          {
+                            "name": "ram",
+                            "type": "integer",
+                            "value": 2048,
+                            "schema": null
                           },
-                          "service_type": {
-                            "_type": "enum",
-                            "_subtype": "Service Type",
-                            "_value": "linode"
+                          {
+                            "name": "service_type",
+                            "type": "enum",
+                            "subType": "Service Type",
+                            "value": "linode",
+                            "schema": null
                           },
-                          "storage": {
-                            "_type": "integer",
-                            "_value": 24576
+                          {
+                            "name": "storage",
+                            "type": "integer",
+                            "value": 24576,
+                            "schema": null
                           },
-                          "transfer": {
-                            "_type": "integer",
-                            "_value": 2000
+                          {
+                            "name": "transfer",
+                            "type": "integer",
+                            "value": 2000,
+                            "schema": null
                           },
-                          "vcpus": {
-                            "_type": "integer",
-                            "_value": 2
+                          {
+                            "name": "vcpus",
+                            "type": "integer",
+                            "value": 2,
+                            "schema": null
                           }
-                        }
+                        ]
                       ],
-                      "schema": null
+                      "schema": [
+                        {
+                          "name": "id",
+                          "type": "string",
+                          "value": "g5-standard-1",
+                          "schema": null
+                        },
+                        {
+                          "name": "backups_price",
+                          "type": "integer",
+                          "value": 250,
+                          "schema": null
+                        },
+                        {
+                          "name": "class",
+                          "type": "string",
+                          "value": "standard",
+                          "schema": null
+                        },
+                        {
+                          "name": "disk",
+                          "type": "integer",
+                          "value": 24576,
+                          "schema": null
+                        },
+                        {
+                          "name": "hourly_price",
+                          "type": "integer",
+                          "value": 1,
+                          "schema": null
+                        },
+                        {
+                          "name": "label",
+                          "type": "string",
+                          "value": "Linode 2048",
+                          "schema": null
+                        },
+                        {
+                          "name": "mbits_out",
+                          "type": "integer",
+                          "value": 125,
+                          "schema": null
+                        },
+                        {
+                          "name": "monthly_price",
+                          "type": "integer",
+                          "value": 1000,
+                          "schema": null
+                        },
+                        {
+                          "name": "ram",
+                          "type": "integer",
+                          "value": 2048,
+                          "schema": null
+                        },
+                        {
+                          "name": "service_type",
+                          "type": "enum",
+                          "subType": "Service Type",
+                          "value": "linode",
+                          "schema": null
+                        },
+                        {
+                          "name": "storage",
+                          "type": "integer",
+                          "value": 24576,
+                          "schema": null
+                        },
+                        {
+                          "name": "transfer",
+                          "type": "integer",
+                          "value": 2000,
+                          "schema": null
+                        },
+                        {
+                          "name": "vcpus",
+                          "type": "integer",
+                          "value": 2,
+                          "schema": null
+                        }
+                      ]
                     },
                     {
                       "name": "status",
@@ -1328,32 +1496,14 @@ module.exports = { endpoints: [
                         ],
                         "disks": [
                           {
-                            "label": {
-                              "_type": "string",
-                              "_value": "My Debian8 Disk"
-                            },
-                            "size": {
-                              "_type": "integer",
-                              "_value": 24064
-                            },
-                            "filesystem": {
-                              "_type": "string",
-                              "_value": "ext4"
-                            }
+                            "label": "My Debian8 Disk",
+                            "size": 24064,
+                            "filesystem": "ext4"
                           },
                           {
-                            "label": {
-                              "_type": "string",
-                              "_value": "swap"
-                            },
-                            "size": {
-                              "_type": "integer",
-                              "_value": 512
-                            },
-                            "filesystem": {
-                              "_type": "string",
-                              "_value": "swap"
-                            }
+                            "label": "swap",
+                            "size": 512,
+                            "filesystem": "swap"
                           }
                         ],
                         "availability": "daily"
@@ -1376,32 +1526,14 @@ module.exports = { endpoints: [
                         ],
                         "disks": [
                           {
-                            "label": {
-                              "_type": "string",
-                              "_value": "My Debian8 Disk"
-                            },
-                            "size": {
-                              "_type": "integer",
-                              "_value": 24064
-                            },
-                            "filesystem": {
-                              "_type": "string",
-                              "_value": "ext4"
-                            }
+                            "label": "My Debian8 Disk",
+                            "size": 24064,
+                            "filesystem": "ext4"
                           },
                           {
-                            "label": {
-                              "_type": "string",
-                              "_value": "swap"
-                            },
-                            "size": {
-                              "_type": "integer",
-                              "_value": 512
-                            },
-                            "filesystem": {
-                              "_type": "string",
-                              "_value": "swap"
-                            }
+                            "label": "swap",
+                            "size": 512,
+                            "filesystem": "swap"
                           }
                         ],
                         "availability": "daily"
@@ -1431,59 +1563,19 @@ module.exports = { endpoints: [
                     "label": "Example Linode",
                     "type": [
                       {
-                        "id": {
-                          "_type": "string",
-                          "_value": "g5-standard-1"
-                        },
-                        "backups_price": {
-                          "_type": "integer",
-                          "_value": 250
-                        },
-                        "class": {
-                          "_type": "string",
-                          "_value": "standard"
-                        },
-                        "disk": {
-                          "_type": "integer",
-                          "_value": 24576
-                        },
-                        "hourly_price": {
-                          "_type": "integer",
-                          "_value": 1
-                        },
-                        "label": {
-                          "_type": "string",
-                          "_value": "Linode 2048"
-                        },
-                        "mbits_out": {
-                          "_type": "integer",
-                          "_value": 125
-                        },
-                        "monthly_price": {
-                          "_type": "integer",
-                          "_value": 1000
-                        },
-                        "ram": {
-                          "_type": "integer",
-                          "_value": 2048
-                        },
-                        "service_type": {
-                          "_type": "enum",
-                          "_subtype": "Service Type",
-                          "_value": "linode"
-                        },
-                        "storage": {
-                          "_type": "integer",
-                          "_value": 24576
-                        },
-                        "transfer": {
-                          "_type": "integer",
-                          "_value": 2000
-                        },
-                        "vcpus": {
-                          "_type": "integer",
-                          "_value": 2
-                        }
+                        "id": "g5-standard-1",
+                        "backups_price": 250,
+                        "class": "standard",
+                        "disk": 24576,
+                        "hourly_price": 1,
+                        "label": "Linode 2048",
+                        "mbits_out": 125,
+                        "monthly_price": 1000,
+                        "ram": 2048,
+                        "service_type": "linode",
+                        "storage": 24576,
+                        "transfer": 2000,
+                        "vcpus": 2
                       }
                     ],
                     "status": "running",
@@ -1896,36 +1988,67 @@ module.exports = { endpoints: [
                               "type": "array",
                               "subType": "disk",
                               "value": [
-                                {
-                                  "label": {
-                                    "_type": "string",
-                                    "_value": "My Debian8 Disk"
+                                [
+                                  {
+                                    "name": "label",
+                                    "type": "string",
+                                    "value": "My Debian8 Disk",
+                                    "schema": null
                                   },
-                                  "size": {
-                                    "_type": "integer",
-                                    "_value": 24064
+                                  {
+                                    "name": "size",
+                                    "type": "integer",
+                                    "value": 24064,
+                                    "schema": null
                                   },
-                                  "filesystem": {
-                                    "_type": "string",
-                                    "_value": "ext4"
+                                  {
+                                    "name": "filesystem",
+                                    "type": "string",
+                                    "value": "ext4",
+                                    "schema": null
                                   }
+                                ],
+                                [
+                                  {
+                                    "name": "label",
+                                    "type": "string",
+                                    "value": "swap",
+                                    "schema": null
+                                  },
+                                  {
+                                    "name": "size",
+                                    "type": "integer",
+                                    "value": 512,
+                                    "schema": null
+                                  },
+                                  {
+                                    "name": "filesystem",
+                                    "type": "string",
+                                    "value": "swap",
+                                    "schema": null
+                                  }
+                                ]
+                              ],
+                              "schema": [
+                                {
+                                  "name": "label",
+                                  "type": "string",
+                                  "value": "My Debian8 Disk",
+                                  "schema": null
                                 },
                                 {
-                                  "label": {
-                                    "_type": "string",
-                                    "_value": "swap"
-                                  },
-                                  "size": {
-                                    "_type": "integer",
-                                    "_value": 512
-                                  },
-                                  "filesystem": {
-                                    "_type": "string",
-                                    "_value": "swap"
-                                  }
+                                  "name": "size",
+                                  "type": "integer",
+                                  "value": 24064,
+                                  "schema": null
+                                },
+                                {
+                                  "name": "filesystem",
+                                  "type": "string",
+                                  "value": "ext4",
+                                  "schema": null
                                 }
-                              ],
-                              "schema": null
+                              ]
                             },
                             {
                               "name": "availability",
@@ -2071,36 +2194,67 @@ module.exports = { endpoints: [
                               "type": "array",
                               "subType": "disk",
                               "value": [
-                                {
-                                  "label": {
-                                    "_type": "string",
-                                    "_value": "My Debian8 Disk"
+                                [
+                                  {
+                                    "name": "label",
+                                    "type": "string",
+                                    "value": "My Debian8 Disk",
+                                    "schema": null
                                   },
-                                  "size": {
-                                    "_type": "integer",
-                                    "_value": 24064
+                                  {
+                                    "name": "size",
+                                    "type": "integer",
+                                    "value": 24064,
+                                    "schema": null
                                   },
-                                  "filesystem": {
-                                    "_type": "string",
-                                    "_value": "ext4"
+                                  {
+                                    "name": "filesystem",
+                                    "type": "string",
+                                    "value": "ext4",
+                                    "schema": null
                                   }
+                                ],
+                                [
+                                  {
+                                    "name": "label",
+                                    "type": "string",
+                                    "value": "swap",
+                                    "schema": null
+                                  },
+                                  {
+                                    "name": "size",
+                                    "type": "integer",
+                                    "value": 512,
+                                    "schema": null
+                                  },
+                                  {
+                                    "name": "filesystem",
+                                    "type": "string",
+                                    "value": "swap",
+                                    "schema": null
+                                  }
+                                ]
+                              ],
+                              "schema": [
+                                {
+                                  "name": "label",
+                                  "type": "string",
+                                  "value": "My Debian8 Disk",
+                                  "schema": null
                                 },
                                 {
-                                  "label": {
-                                    "_type": "string",
-                                    "_value": "swap"
-                                  },
-                                  "size": {
-                                    "_type": "integer",
-                                    "_value": 512
-                                  },
-                                  "filesystem": {
-                                    "_type": "string",
-                                    "_value": "swap"
-                                  }
+                                  "name": "size",
+                                  "type": "integer",
+                                  "value": 24064,
+                                  "schema": null
+                                },
+                                {
+                                  "name": "filesystem",
+                                  "type": "string",
+                                  "value": "ext4",
+                                  "schema": null
                                 }
-                              ],
-                              "schema": null
+                              ]
                             },
                             {
                               "name": "availability",
@@ -2253,63 +2407,169 @@ module.exports = { endpoints: [
                       "type": "array",
                       "subType": "service",
                       "value": [
-                        {
-                          "id": {
-                            "_type": "string",
-                            "_value": "g5-standard-1"
+                        [
+                          {
+                            "name": "id",
+                            "type": "string",
+                            "value": "g5-standard-1",
+                            "schema": null
                           },
-                          "backups_price": {
-                            "_type": "integer",
-                            "_value": 250
+                          {
+                            "name": "backups_price",
+                            "type": "integer",
+                            "value": 250,
+                            "schema": null
                           },
-                          "class": {
-                            "_type": "string",
-                            "_value": "standard"
+                          {
+                            "name": "class",
+                            "type": "string",
+                            "value": "standard",
+                            "schema": null
                           },
-                          "disk": {
-                            "_type": "integer",
-                            "_value": 24576
+                          {
+                            "name": "disk",
+                            "type": "integer",
+                            "value": 24576,
+                            "schema": null
                           },
-                          "hourly_price": {
-                            "_type": "integer",
-                            "_value": 1
+                          {
+                            "name": "hourly_price",
+                            "type": "integer",
+                            "value": 1,
+                            "schema": null
                           },
-                          "label": {
-                            "_type": "string",
-                            "_value": "Linode 2048"
+                          {
+                            "name": "label",
+                            "type": "string",
+                            "value": "Linode 2048",
+                            "schema": null
                           },
-                          "mbits_out": {
-                            "_type": "integer",
-                            "_value": 125
+                          {
+                            "name": "mbits_out",
+                            "type": "integer",
+                            "value": 125,
+                            "schema": null
                           },
-                          "monthly_price": {
-                            "_type": "integer",
-                            "_value": 1000
+                          {
+                            "name": "monthly_price",
+                            "type": "integer",
+                            "value": 1000,
+                            "schema": null
                           },
-                          "ram": {
-                            "_type": "integer",
-                            "_value": 2048
+                          {
+                            "name": "ram",
+                            "type": "integer",
+                            "value": 2048,
+                            "schema": null
                           },
-                          "service_type": {
-                            "_type": "enum",
-                            "_subtype": "Service Type",
-                            "_value": "linode"
+                          {
+                            "name": "service_type",
+                            "type": "enum",
+                            "subType": "Service Type",
+                            "value": "linode",
+                            "schema": null
                           },
-                          "storage": {
-                            "_type": "integer",
-                            "_value": 24576
+                          {
+                            "name": "storage",
+                            "type": "integer",
+                            "value": 24576,
+                            "schema": null
                           },
-                          "transfer": {
-                            "_type": "integer",
-                            "_value": 2000
+                          {
+                            "name": "transfer",
+                            "type": "integer",
+                            "value": 2000,
+                            "schema": null
                           },
-                          "vcpus": {
-                            "_type": "integer",
-                            "_value": 2
+                          {
+                            "name": "vcpus",
+                            "type": "integer",
+                            "value": 2,
+                            "schema": null
                           }
-                        }
+                        ]
                       ],
-                      "schema": null
+                      "schema": [
+                        {
+                          "name": "id",
+                          "type": "string",
+                          "value": "g5-standard-1",
+                          "schema": null
+                        },
+                        {
+                          "name": "backups_price",
+                          "type": "integer",
+                          "value": 250,
+                          "schema": null
+                        },
+                        {
+                          "name": "class",
+                          "type": "string",
+                          "value": "standard",
+                          "schema": null
+                        },
+                        {
+                          "name": "disk",
+                          "type": "integer",
+                          "value": 24576,
+                          "schema": null
+                        },
+                        {
+                          "name": "hourly_price",
+                          "type": "integer",
+                          "value": 1,
+                          "schema": null
+                        },
+                        {
+                          "name": "label",
+                          "type": "string",
+                          "value": "Linode 2048",
+                          "schema": null
+                        },
+                        {
+                          "name": "mbits_out",
+                          "type": "integer",
+                          "value": 125,
+                          "schema": null
+                        },
+                        {
+                          "name": "monthly_price",
+                          "type": "integer",
+                          "value": 1000,
+                          "schema": null
+                        },
+                        {
+                          "name": "ram",
+                          "type": "integer",
+                          "value": 2048,
+                          "schema": null
+                        },
+                        {
+                          "name": "service_type",
+                          "type": "enum",
+                          "subType": "Service Type",
+                          "value": "linode",
+                          "schema": null
+                        },
+                        {
+                          "name": "storage",
+                          "type": "integer",
+                          "value": 24576,
+                          "schema": null
+                        },
+                        {
+                          "name": "transfer",
+                          "type": "integer",
+                          "value": 2000,
+                          "schema": null
+                        },
+                        {
+                          "name": "vcpus",
+                          "type": "integer",
+                          "value": 2,
+                          "schema": null
+                        }
+                      ]
                     },
                     {
                       "name": "status",
@@ -2475,32 +2735,14 @@ module.exports = { endpoints: [
                         ],
                         "disks": [
                           {
-                            "label": {
-                              "_type": "string",
-                              "_value": "My Debian8 Disk"
-                            },
-                            "size": {
-                              "_type": "integer",
-                              "_value": 24064
-                            },
-                            "filesystem": {
-                              "_type": "string",
-                              "_value": "ext4"
-                            }
+                            "label": "My Debian8 Disk",
+                            "size": 24064,
+                            "filesystem": "ext4"
                           },
                           {
-                            "label": {
-                              "_type": "string",
-                              "_value": "swap"
-                            },
-                            "size": {
-                              "_type": "integer",
-                              "_value": 512
-                            },
-                            "filesystem": {
-                              "_type": "string",
-                              "_value": "swap"
-                            }
+                            "label": "swap",
+                            "size": 512,
+                            "filesystem": "swap"
                           }
                         ],
                         "availability": "daily"
@@ -2523,32 +2765,14 @@ module.exports = { endpoints: [
                         ],
                         "disks": [
                           {
-                            "label": {
-                              "_type": "string",
-                              "_value": "My Debian8 Disk"
-                            },
-                            "size": {
-                              "_type": "integer",
-                              "_value": 24064
-                            },
-                            "filesystem": {
-                              "_type": "string",
-                              "_value": "ext4"
-                            }
+                            "label": "My Debian8 Disk",
+                            "size": 24064,
+                            "filesystem": "ext4"
                           },
                           {
-                            "label": {
-                              "_type": "string",
-                              "_value": "swap"
-                            },
-                            "size": {
-                              "_type": "integer",
-                              "_value": 512
-                            },
-                            "filesystem": {
-                              "_type": "string",
-                              "_value": "swap"
-                            }
+                            "label": "swap",
+                            "size": 512,
+                            "filesystem": "swap"
                           }
                         ],
                         "availability": "daily"
@@ -2578,59 +2802,19 @@ module.exports = { endpoints: [
                     "label": "Example Linode",
                     "type": [
                       {
-                        "id": {
-                          "_type": "string",
-                          "_value": "g5-standard-1"
-                        },
-                        "backups_price": {
-                          "_type": "integer",
-                          "_value": 250
-                        },
-                        "class": {
-                          "_type": "string",
-                          "_value": "standard"
-                        },
-                        "disk": {
-                          "_type": "integer",
-                          "_value": 24576
-                        },
-                        "hourly_price": {
-                          "_type": "integer",
-                          "_value": 1
-                        },
-                        "label": {
-                          "_type": "string",
-                          "_value": "Linode 2048"
-                        },
-                        "mbits_out": {
-                          "_type": "integer",
-                          "_value": 125
-                        },
-                        "monthly_price": {
-                          "_type": "integer",
-                          "_value": 1000
-                        },
-                        "ram": {
-                          "_type": "integer",
-                          "_value": 2048
-                        },
-                        "service_type": {
-                          "_type": "enum",
-                          "_subtype": "Service Type",
-                          "_value": "linode"
-                        },
-                        "storage": {
-                          "_type": "integer",
-                          "_value": 24576
-                        },
-                        "transfer": {
-                          "_type": "integer",
-                          "_value": 2000
-                        },
-                        "vcpus": {
-                          "_type": "integer",
-                          "_value": 2
-                        }
+                        "id": "g5-standard-1",
+                        "backups_price": 250,
+                        "class": "standard",
+                        "disk": 24576,
+                        "hourly_price": 1,
+                        "label": "Linode 2048",
+                        "mbits_out": 125,
+                        "monthly_price": 1000,
+                        "ram": 2048,
+                        "service_type": "linode",
+                        "storage": 24576,
+                        "transfer": 2000,
+                        "vcpus": 2
                       }
                     ],
                     "status": "running",
@@ -2980,36 +3164,67 @@ module.exports = { endpoints: [
                               "type": "array",
                               "subType": "disk",
                               "value": [
-                                {
-                                  "label": {
-                                    "_type": "string",
-                                    "_value": "My Debian8 Disk"
+                                [
+                                  {
+                                    "name": "label",
+                                    "type": "string",
+                                    "value": "My Debian8 Disk",
+                                    "schema": null
                                   },
-                                  "size": {
-                                    "_type": "integer",
-                                    "_value": 24064
+                                  {
+                                    "name": "size",
+                                    "type": "integer",
+                                    "value": 24064,
+                                    "schema": null
                                   },
-                                  "filesystem": {
-                                    "_type": "string",
-                                    "_value": "ext4"
+                                  {
+                                    "name": "filesystem",
+                                    "type": "string",
+                                    "value": "ext4",
+                                    "schema": null
                                   }
+                                ],
+                                [
+                                  {
+                                    "name": "label",
+                                    "type": "string",
+                                    "value": "swap",
+                                    "schema": null
+                                  },
+                                  {
+                                    "name": "size",
+                                    "type": "integer",
+                                    "value": 512,
+                                    "schema": null
+                                  },
+                                  {
+                                    "name": "filesystem",
+                                    "type": "string",
+                                    "value": "swap",
+                                    "schema": null
+                                  }
+                                ]
+                              ],
+                              "schema": [
+                                {
+                                  "name": "label",
+                                  "type": "string",
+                                  "value": "My Debian8 Disk",
+                                  "schema": null
                                 },
                                 {
-                                  "label": {
-                                    "_type": "string",
-                                    "_value": "swap"
-                                  },
-                                  "size": {
-                                    "_type": "integer",
-                                    "_value": 512
-                                  },
-                                  "filesystem": {
-                                    "_type": "string",
-                                    "_value": "swap"
-                                  }
+                                  "name": "size",
+                                  "type": "integer",
+                                  "value": 24064,
+                                  "schema": null
+                                },
+                                {
+                                  "name": "filesystem",
+                                  "type": "string",
+                                  "value": "ext4",
+                                  "schema": null
                                 }
-                              ],
-                              "schema": null
+                              ]
                             },
                             {
                               "name": "availability",
@@ -3155,36 +3370,67 @@ module.exports = { endpoints: [
                               "type": "array",
                               "subType": "disk",
                               "value": [
-                                {
-                                  "label": {
-                                    "_type": "string",
-                                    "_value": "My Debian8 Disk"
+                                [
+                                  {
+                                    "name": "label",
+                                    "type": "string",
+                                    "value": "My Debian8 Disk",
+                                    "schema": null
                                   },
-                                  "size": {
-                                    "_type": "integer",
-                                    "_value": 24064
+                                  {
+                                    "name": "size",
+                                    "type": "integer",
+                                    "value": 24064,
+                                    "schema": null
                                   },
-                                  "filesystem": {
-                                    "_type": "string",
-                                    "_value": "ext4"
+                                  {
+                                    "name": "filesystem",
+                                    "type": "string",
+                                    "value": "ext4",
+                                    "schema": null
                                   }
+                                ],
+                                [
+                                  {
+                                    "name": "label",
+                                    "type": "string",
+                                    "value": "swap",
+                                    "schema": null
+                                  },
+                                  {
+                                    "name": "size",
+                                    "type": "integer",
+                                    "value": 512,
+                                    "schema": null
+                                  },
+                                  {
+                                    "name": "filesystem",
+                                    "type": "string",
+                                    "value": "swap",
+                                    "schema": null
+                                  }
+                                ]
+                              ],
+                              "schema": [
+                                {
+                                  "name": "label",
+                                  "type": "string",
+                                  "value": "My Debian8 Disk",
+                                  "schema": null
                                 },
                                 {
-                                  "label": {
-                                    "_type": "string",
-                                    "_value": "swap"
-                                  },
-                                  "size": {
-                                    "_type": "integer",
-                                    "_value": 512
-                                  },
-                                  "filesystem": {
-                                    "_type": "string",
-                                    "_value": "swap"
-                                  }
+                                  "name": "size",
+                                  "type": "integer",
+                                  "value": 24064,
+                                  "schema": null
+                                },
+                                {
+                                  "name": "filesystem",
+                                  "type": "string",
+                                  "value": "ext4",
+                                  "schema": null
                                 }
-                              ],
-                              "schema": null
+                              ]
                             },
                             {
                               "name": "availability",
@@ -3337,63 +3583,169 @@ module.exports = { endpoints: [
                       "type": "array",
                       "subType": "service",
                       "value": [
-                        {
-                          "id": {
-                            "_type": "string",
-                            "_value": "g5-standard-1"
+                        [
+                          {
+                            "name": "id",
+                            "type": "string",
+                            "value": "g5-standard-1",
+                            "schema": null
                           },
-                          "backups_price": {
-                            "_type": "integer",
-                            "_value": 250
+                          {
+                            "name": "backups_price",
+                            "type": "integer",
+                            "value": 250,
+                            "schema": null
                           },
-                          "class": {
-                            "_type": "string",
-                            "_value": "standard"
+                          {
+                            "name": "class",
+                            "type": "string",
+                            "value": "standard",
+                            "schema": null
                           },
-                          "disk": {
-                            "_type": "integer",
-                            "_value": 24576
+                          {
+                            "name": "disk",
+                            "type": "integer",
+                            "value": 24576,
+                            "schema": null
                           },
-                          "hourly_price": {
-                            "_type": "integer",
-                            "_value": 1
+                          {
+                            "name": "hourly_price",
+                            "type": "integer",
+                            "value": 1,
+                            "schema": null
                           },
-                          "label": {
-                            "_type": "string",
-                            "_value": "Linode 2048"
+                          {
+                            "name": "label",
+                            "type": "string",
+                            "value": "Linode 2048",
+                            "schema": null
                           },
-                          "mbits_out": {
-                            "_type": "integer",
-                            "_value": 125
+                          {
+                            "name": "mbits_out",
+                            "type": "integer",
+                            "value": 125,
+                            "schema": null
                           },
-                          "monthly_price": {
-                            "_type": "integer",
-                            "_value": 1000
+                          {
+                            "name": "monthly_price",
+                            "type": "integer",
+                            "value": 1000,
+                            "schema": null
                           },
-                          "ram": {
-                            "_type": "integer",
-                            "_value": 2048
+                          {
+                            "name": "ram",
+                            "type": "integer",
+                            "value": 2048,
+                            "schema": null
                           },
-                          "service_type": {
-                            "_type": "enum",
-                            "_subtype": "Service Type",
-                            "_value": "linode"
+                          {
+                            "name": "service_type",
+                            "type": "enum",
+                            "subType": "Service Type",
+                            "value": "linode",
+                            "schema": null
                           },
-                          "storage": {
-                            "_type": "integer",
-                            "_value": 24576
+                          {
+                            "name": "storage",
+                            "type": "integer",
+                            "value": 24576,
+                            "schema": null
                           },
-                          "transfer": {
-                            "_type": "integer",
-                            "_value": 2000
+                          {
+                            "name": "transfer",
+                            "type": "integer",
+                            "value": 2000,
+                            "schema": null
                           },
-                          "vcpus": {
-                            "_type": "integer",
-                            "_value": 2
+                          {
+                            "name": "vcpus",
+                            "type": "integer",
+                            "value": 2,
+                            "schema": null
                           }
-                        }
+                        ]
                       ],
-                      "schema": null
+                      "schema": [
+                        {
+                          "name": "id",
+                          "type": "string",
+                          "value": "g5-standard-1",
+                          "schema": null
+                        },
+                        {
+                          "name": "backups_price",
+                          "type": "integer",
+                          "value": 250,
+                          "schema": null
+                        },
+                        {
+                          "name": "class",
+                          "type": "string",
+                          "value": "standard",
+                          "schema": null
+                        },
+                        {
+                          "name": "disk",
+                          "type": "integer",
+                          "value": 24576,
+                          "schema": null
+                        },
+                        {
+                          "name": "hourly_price",
+                          "type": "integer",
+                          "value": 1,
+                          "schema": null
+                        },
+                        {
+                          "name": "label",
+                          "type": "string",
+                          "value": "Linode 2048",
+                          "schema": null
+                        },
+                        {
+                          "name": "mbits_out",
+                          "type": "integer",
+                          "value": 125,
+                          "schema": null
+                        },
+                        {
+                          "name": "monthly_price",
+                          "type": "integer",
+                          "value": 1000,
+                          "schema": null
+                        },
+                        {
+                          "name": "ram",
+                          "type": "integer",
+                          "value": 2048,
+                          "schema": null
+                        },
+                        {
+                          "name": "service_type",
+                          "type": "enum",
+                          "subType": "Service Type",
+                          "value": "linode",
+                          "schema": null
+                        },
+                        {
+                          "name": "storage",
+                          "type": "integer",
+                          "value": 24576,
+                          "schema": null
+                        },
+                        {
+                          "name": "transfer",
+                          "type": "integer",
+                          "value": 2000,
+                          "schema": null
+                        },
+                        {
+                          "name": "vcpus",
+                          "type": "integer",
+                          "value": 2,
+                          "schema": null
+                        }
+                      ]
                     },
                     {
                       "name": "status",
@@ -3559,32 +3911,14 @@ module.exports = { endpoints: [
                         ],
                         "disks": [
                           {
-                            "label": {
-                              "_type": "string",
-                              "_value": "My Debian8 Disk"
-                            },
-                            "size": {
-                              "_type": "integer",
-                              "_value": 24064
-                            },
-                            "filesystem": {
-                              "_type": "string",
-                              "_value": "ext4"
-                            }
+                            "label": "My Debian8 Disk",
+                            "size": 24064,
+                            "filesystem": "ext4"
                           },
                           {
-                            "label": {
-                              "_type": "string",
-                              "_value": "swap"
-                            },
-                            "size": {
-                              "_type": "integer",
-                              "_value": 512
-                            },
-                            "filesystem": {
-                              "_type": "string",
-                              "_value": "swap"
-                            }
+                            "label": "swap",
+                            "size": 512,
+                            "filesystem": "swap"
                           }
                         ],
                         "availability": "daily"
@@ -3607,32 +3941,14 @@ module.exports = { endpoints: [
                         ],
                         "disks": [
                           {
-                            "label": {
-                              "_type": "string",
-                              "_value": "My Debian8 Disk"
-                            },
-                            "size": {
-                              "_type": "integer",
-                              "_value": 24064
-                            },
-                            "filesystem": {
-                              "_type": "string",
-                              "_value": "ext4"
-                            }
+                            "label": "My Debian8 Disk",
+                            "size": 24064,
+                            "filesystem": "ext4"
                           },
                           {
-                            "label": {
-                              "_type": "string",
-                              "_value": "swap"
-                            },
-                            "size": {
-                              "_type": "integer",
-                              "_value": 512
-                            },
-                            "filesystem": {
-                              "_type": "string",
-                              "_value": "swap"
-                            }
+                            "label": "swap",
+                            "size": 512,
+                            "filesystem": "swap"
                           }
                         ],
                         "availability": "daily"
@@ -3662,59 +3978,19 @@ module.exports = { endpoints: [
                     "label": "Example Linode",
                     "type": [
                       {
-                        "id": {
-                          "_type": "string",
-                          "_value": "g5-standard-1"
-                        },
-                        "backups_price": {
-                          "_type": "integer",
-                          "_value": 250
-                        },
-                        "class": {
-                          "_type": "string",
-                          "_value": "standard"
-                        },
-                        "disk": {
-                          "_type": "integer",
-                          "_value": 24576
-                        },
-                        "hourly_price": {
-                          "_type": "integer",
-                          "_value": 1
-                        },
-                        "label": {
-                          "_type": "string",
-                          "_value": "Linode 2048"
-                        },
-                        "mbits_out": {
-                          "_type": "integer",
-                          "_value": 125
-                        },
-                        "monthly_price": {
-                          "_type": "integer",
-                          "_value": 1000
-                        },
-                        "ram": {
-                          "_type": "integer",
-                          "_value": 2048
-                        },
-                        "service_type": {
-                          "_type": "enum",
-                          "_subtype": "Service Type",
-                          "_value": "linode"
-                        },
-                        "storage": {
-                          "_type": "integer",
-                          "_value": 24576
-                        },
-                        "transfer": {
-                          "_type": "integer",
-                          "_value": 2000
-                        },
-                        "vcpus": {
-                          "_type": "integer",
-                          "_value": 2
-                        }
+                        "id": "g5-standard-1",
+                        "backups_price": 250,
+                        "class": "standard",
+                        "disk": 24576,
+                        "hourly_price": 1,
+                        "label": "Linode 2048",
+                        "mbits_out": 125,
+                        "monthly_price": 1000,
+                        "ram": 2048,
+                        "service_type": "linode",
+                        "storage": 24576,
+                        "transfer": 2000,
+                        "vcpus": 2
                       }
                     ],
                     "status": "running",
@@ -4945,68 +5221,139 @@ module.exports = { endpoints: [
                       "type": "array",
                       "subType": "distribution",
                       "value": [
-                        {
-                          "id": {
-                            "_type": "string",
-                            "_value": "linode/debian8"
+                        [
+                          {
+                            "name": "id",
+                            "type": "string",
+                            "value": "linode/debian8",
+                            "schema": null
                           },
-                          "label": {
-                            "_type": "string",
-                            "_value": "Debian 8.1"
+                          {
+                            "name": "label",
+                            "type": "string",
+                            "value": "Debian 8.1",
+                            "schema": null
                           },
-                          "vendor": {
-                            "_type": "string",
-                            "_value": "Debian"
+                          {
+                            "name": "vendor",
+                            "type": "string",
+                            "value": "Debian",
+                            "schema": null
                           },
-                          "x64": {
-                            "_type": "boolean",
-                            "_value": true
+                          {
+                            "name": "x64",
+                            "type": "boolean",
+                            "value": true,
+                            "schema": null
                           },
-                          "recommended": {
-                            "_type": "boolean",
-                            "_value": true
+                          {
+                            "name": "recommended",
+                            "type": "boolean",
+                            "value": true,
+                            "schema": null
                           },
-                          "created": {
-                            "_type": "datetime",
-                            "_value": "2015-04-27T16:26:41.000Z"
+                          {
+                            "name": "created",
+                            "type": "datetime",
+                            "value": "2015-04-27T16:26:41.000Z",
+                            "schema": null
                           },
-                          "minimum_storage_size": {
-                            "_type": "integer",
-                            "_value": 900
+                          {
+                            "name": "minimum_storage_size",
+                            "type": "integer",
+                            "value": 900,
+                            "schema": null
                           }
+                        ],
+                        [
+                          {
+                            "name": "id",
+                            "type": "string",
+                            "value": "linode/debian7",
+                            "schema": null
+                          },
+                          {
+                            "name": "label",
+                            "type": "string",
+                            "value": "Debian 7",
+                            "schema": null
+                          },
+                          {
+                            "name": "vendor",
+                            "type": "string",
+                            "value": "Debian",
+                            "schema": null
+                          },
+                          {
+                            "name": "x64",
+                            "type": "boolean",
+                            "value": true,
+                            "schema": null
+                          },
+                          {
+                            "name": "recommended",
+                            "type": "boolean",
+                            "value": true,
+                            "schema": null
+                          },
+                          {
+                            "name": "created",
+                            "type": "datetime",
+                            "value": "2014-09-24T13:59:32.000Z",
+                            "schema": null
+                          },
+                          {
+                            "name": "minimum_storage_size",
+                            "type": "integer",
+                            "value": 600,
+                            "schema": null
+                          }
+                        ]
+                      ],
+                      "schema": [
+                        {
+                          "name": "id",
+                          "type": "string",
+                          "value": "linode/debian8",
+                          "schema": null
                         },
                         {
-                          "id": {
-                            "_type": "string",
-                            "_value": "linode/debian7"
-                          },
-                          "label": {
-                            "_type": "string",
-                            "_value": "Debian 7"
-                          },
-                          "vendor": {
-                            "_type": "string",
-                            "_value": "Debian"
-                          },
-                          "x64": {
-                            "_type": "boolean",
-                            "_value": true
-                          },
-                          "recommended": {
-                            "_type": "boolean",
-                            "_value": true
-                          },
-                          "created": {
-                            "_type": "datetime",
-                            "_value": "2014-09-24T13:59:32.000Z"
-                          },
-                          "minimum_storage_size": {
-                            "_type": "integer",
-                            "_value": 600
-                          }
+                          "name": "label",
+                          "type": "string",
+                          "value": "Debian 8.1",
+                          "schema": null
+                        },
+                        {
+                          "name": "vendor",
+                          "type": "string",
+                          "value": "Debian",
+                          "schema": null
+                        },
+                        {
+                          "name": "x64",
+                          "type": "boolean",
+                          "value": true,
+                          "schema": null
+                        },
+                        {
+                          "name": "recommended",
+                          "type": "boolean",
+                          "value": true,
+                          "schema": null
+                        },
+                        {
+                          "name": "created",
+                          "type": "datetime",
+                          "value": "2015-04-27T16:26:41.000Z",
+                          "schema": null
+                        },
+                        {
+                          "name": "minimum_storage_size",
+                          "type": "integer",
+                          "value": 900,
+                          "schema": null
                         }
-                      ],
-                      "schema": null
+                      ]
                     },
                     {
                       "name": "deployments_total",
@@ -5066,44 +5413,85 @@ module.exports = { endpoints: [
                       "description": "Variables that can be set to customize the script per deployment.",
                       "type": "array",
                       "value": [
-                        {
-                          "name": {
-                            "_type": "string",
-                            "_value": "var1"
+                        [
+                          {
+                            "name": "name",
+                            "type": "string",
+                            "value": "var1",
+                            "schema": null
                           },
-                          "label": {
-                            "_type": "string",
-                            "_value": "A question"
+                          {
+                            "name": "label",
+                            "type": "string",
+                            "value": "A question",
+                            "schema": null
                           },
-                          "example": {
-                            "_type": "string",
-                            "_value": "An example value"
+                          {
+                            "name": "example",
+                            "type": "string",
+                            "value": "An example value",
+                            "schema": null
                           },
-                          "default": {
-                            "_type": "string",
-                            "_value": "Default value"
+                          {
+                            "name": "default",
+                            "type": "string",
+                            "value": "Default value",
+                            "schema": null
                           }
+                        ],
+                        [
+                          {
+                            "name": "name",
+                            "type": "string",
+                            "value": "var2",
+                            "schema": null
+                          },
+                          {
+                            "name": "label",
+                            "type": "string",
+                            "value": "Another question",
+                            "schema": null
+                          },
+                          {
+                            "name": "example",
+                            "type": "string",
+                            "value": "possible",
+                            "schema": null
+                          },
+                          {
+                            "name": "oneof",
+                            "type": "string",
+                            "value": "possible,enum,values",
+                            "schema": null
+                          }
+                        ]
+                      ],
+                      "schema": [
+                        {
+                          "name": "name",
+                          "type": "string",
+                          "value": "var1",
+                          "schema": null
                         },
                         {
-                          "name": {
-                            "_type": "string",
-                            "_value": "var2"
-                          },
-                          "label": {
-                            "_type": "string",
-                            "_value": "Another question"
-                          },
-                          "example": {
-                            "_type": "string",
-                            "_value": "possible"
-                          },
-                          "oneof": {
-                            "_type": "string",
-                            "_value": "possible,enum,values"
-                          }
+                          "name": "label",
+                          "type": "string",
+                          "value": "A question",
+                          "schema": null
+                        },
+                        {
+                          "name": "example",
+                          "type": "string",
+                          "value": "An example value",
+                          "schema": null
+                        },
+                        {
+                          "name": "default",
+                          "type": "string",
+                          "value": "Default value",
+                          "schema": null
                         }
-                      ],
-                      "schema": null
+                      ]
                     }
                   ],
                   "example": {
@@ -5114,64 +5502,22 @@ module.exports = { endpoints: [
                     "description": "Installs the Linode API bindings",
                     "distributions": [
                       {
-                        "id": {
-                          "_type": "string",
-                          "_value": "linode/debian8"
-                        },
-                        "label": {
-                          "_type": "string",
-                          "_value": "Debian 8.1"
-                        },
-                        "vendor": {
-                          "_type": "string",
-                          "_value": "Debian"
-                        },
-                        "x64": {
-                          "_type": "boolean",
-                          "_value": true
-                        },
-                        "recommended": {
-                          "_type": "boolean",
-                          "_value": true
-                        },
-                        "created": {
-                          "_type": "datetime",
-                          "_value": "2015-04-27T16:26:41.000Z"
-                        },
-                        "minimum_storage_size": {
-                          "_type": "integer",
-                          "_value": 900
-                        }
+                        "id": "linode/debian8",
+                        "label": "Debian 8.1",
+                        "vendor": "Debian",
+                        "x64": true,
+                        "recommended": true,
+                        "created": "2015-04-27T16:26:41.000Z",
+                        "minimum_storage_size": 900
                       },
                       {
-                        "id": {
-                          "_type": "string",
-                          "_value": "linode/debian7"
-                        },
-                        "label": {
-                          "_type": "string",
-                          "_value": "Debian 7"
-                        },
-                        "vendor": {
-                          "_type": "string",
-                          "_value": "Debian"
-                        },
-                        "x64": {
-                          "_type": "boolean",
-                          "_value": true
-                        },
-                        "recommended": {
-                          "_type": "boolean",
-                          "_value": true
-                        },
-                        "created": {
-                          "_type": "datetime",
-                          "_value": "2014-09-24T13:59:32.000Z"
-                        },
-                        "minimum_storage_size": {
-                          "_type": "integer",
-                          "_value": 600
-                        }
+                        "id": "linode/debian7",
+                        "label": "Debian 7",
+                        "vendor": "Debian",
+                        "x64": true,
+                        "recommended": true,
+                        "created": "2014-09-24T13:59:32.000Z",
+                        "minimum_storage_size": 600
                       }
                     ],
                     "deployments_total": 150,
@@ -5183,40 +5529,16 @@ module.exports = { endpoints: [
                     "script": "#!/bin/bash",
                     "user_defined_fields": [
                       {
-                        "name": {
-                          "_type": "string",
-                          "_value": "var1"
-                        },
-                        "label": {
-                          "_type": "string",
-                          "_value": "A question"
-                        },
-                        "example": {
-                          "_type": "string",
-                          "_value": "An example value"
-                        },
-                        "default": {
-                          "_type": "string",
-                          "_value": "Default value"
-                        }
+                        "name": "var1",
+                        "label": "A question",
+                        "example": "An example value",
+                        "default": "Default value"
                       },
                       {
-                        "name": {
-                          "_type": "string",
-                          "_value": "var2"
-                        },
-                        "label": {
-                          "_type": "string",
-                          "_value": "Another question"
-                        },
-                        "example": {
-                          "_type": "string",
-                          "_value": "possible"
-                        },
-                        "oneof": {
-                          "_type": "string",
-                          "_value": "possible,enum,values"
-                        }
+                        "name": "var2",
+                        "label": "Another question",
+                        "example": "possible",
+                        "oneof": "possible,enum,values"
                       }
                     ]
                   }
@@ -5346,68 +5668,139 @@ module.exports = { endpoints: [
                       "type": "array",
                       "subType": "distribution",
                       "value": [
-                        {
-                          "id": {
-                            "_type": "string",
-                            "_value": "linode/debian8"
+                        [
+                          {
+                            "name": "id",
+                            "type": "string",
+                            "value": "linode/debian8",
+                            "schema": null
                           },
-                          "label": {
-                            "_type": "string",
-                            "_value": "Debian 8.1"
+                          {
+                            "name": "label",
+                            "type": "string",
+                            "value": "Debian 8.1",
+                            "schema": null
                           },
-                          "vendor": {
-                            "_type": "string",
-                            "_value": "Debian"
+                          {
+                            "name": "vendor",
+                            "type": "string",
+                            "value": "Debian",
+                            "schema": null
                           },
-                          "x64": {
-                            "_type": "boolean",
-                            "_value": true
+                          {
+                            "name": "x64",
+                            "type": "boolean",
+                            "value": true,
+                            "schema": null
                           },
-                          "recommended": {
-                            "_type": "boolean",
-                            "_value": true
+                          {
+                            "name": "recommended",
+                            "type": "boolean",
+                            "value": true,
+                            "schema": null
                           },
-                          "created": {
-                            "_type": "datetime",
-                            "_value": "2015-04-27T16:26:41.000Z"
+                          {
+                            "name": "created",
+                            "type": "datetime",
+                            "value": "2015-04-27T16:26:41.000Z",
+                            "schema": null
                           },
-                          "minimum_storage_size": {
-                            "_type": "integer",
-                            "_value": 900
+                          {
+                            "name": "minimum_storage_size",
+                            "type": "integer",
+                            "value": 900,
+                            "schema": null
                           }
+                        ],
+                        [
+                          {
+                            "name": "id",
+                            "type": "string",
+                            "value": "linode/debian7",
+                            "schema": null
+                          },
+                          {
+                            "name": "label",
+                            "type": "string",
+                            "value": "Debian 7",
+                            "schema": null
+                          },
+                          {
+                            "name": "vendor",
+                            "type": "string",
+                            "value": "Debian",
+                            "schema": null
+                          },
+                          {
+                            "name": "x64",
+                            "type": "boolean",
+                            "value": true,
+                            "schema": null
+                          },
+                          {
+                            "name": "recommended",
+                            "type": "boolean",
+                            "value": true,
+                            "schema": null
+                          },
+                          {
+                            "name": "created",
+                            "type": "datetime",
+                            "value": "2014-09-24T13:59:32.000Z",
+                            "schema": null
+                          },
+                          {
+                            "name": "minimum_storage_size",
+                            "type": "integer",
+                            "value": 600,
+                            "schema": null
+                          }
+                        ]
+                      ],
+                      "schema": [
+                        {
+                          "name": "id",
+                          "type": "string",
+                          "value": "linode/debian8",
+                          "schema": null
                         },
                         {
-                          "id": {
-                            "_type": "string",
-                            "_value": "linode/debian7"
-                          },
-                          "label": {
-                            "_type": "string",
-                            "_value": "Debian 7"
-                          },
-                          "vendor": {
-                            "_type": "string",
-                            "_value": "Debian"
-                          },
-                          "x64": {
-                            "_type": "boolean",
-                            "_value": true
-                          },
-                          "recommended": {
-                            "_type": "boolean",
-                            "_value": true
-                          },
-                          "created": {
-                            "_type": "datetime",
-                            "_value": "2014-09-24T13:59:32.000Z"
-                          },
-                          "minimum_storage_size": {
-                            "_type": "integer",
-                            "_value": 600
-                          }
+                          "name": "label",
+                          "type": "string",
+                          "value": "Debian 8.1",
+                          "schema": null
+                        },
+                        {
+                          "name": "vendor",
+                          "type": "string",
+                          "value": "Debian",
+                          "schema": null
+                        },
+                        {
+                          "name": "x64",
+                          "type": "boolean",
+                          "value": true,
+                          "schema": null
+                        },
+                        {
+                          "name": "recommended",
+                          "type": "boolean",
+                          "value": true,
+                          "schema": null
+                        },
+                        {
+                          "name": "created",
+                          "type": "datetime",
+                          "value": "2015-04-27T16:26:41.000Z",
+                          "schema": null
+                        },
+                        {
+                          "name": "minimum_storage_size",
+                          "type": "integer",
+                          "value": 900,
+                          "schema": null
                         }
-                      ],
-                      "schema": null
+                      ]
                     },
                     {
                       "name": "deployments_total",
@@ -5467,44 +5860,85 @@ module.exports = { endpoints: [
                       "description": "Variables that can be set to customize the script per deployment.",
                       "type": "array",
                       "value": [
-                        {
-                          "name": {
-                            "_type": "string",
-                            "_value": "var1"
+                        [
+                          {
+                            "name": "name",
+                            "type": "string",
+                            "value": "var1",
+                            "schema": null
                           },
-                          "label": {
-                            "_type": "string",
-                            "_value": "A question"
+                          {
+                            "name": "label",
+                            "type": "string",
+                            "value": "A question",
+                            "schema": null
                           },
-                          "example": {
-                            "_type": "string",
-                            "_value": "An example value"
+                          {
+                            "name": "example",
+                            "type": "string",
+                            "value": "An example value",
+                            "schema": null
                           },
-                          "default": {
-                            "_type": "string",
-                            "_value": "Default value"
+                          {
+                            "name": "default",
+                            "type": "string",
+                            "value": "Default value",
+                            "schema": null
                           }
+                        ],
+                        [
+                          {
+                            "name": "name",
+                            "type": "string",
+                            "value": "var2",
+                            "schema": null
+                          },
+                          {
+                            "name": "label",
+                            "type": "string",
+                            "value": "Another question",
+                            "schema": null
+                          },
+                          {
+                            "name": "example",
+                            "type": "string",
+                            "value": "possible",
+                            "schema": null
+                          },
+                          {
+                            "name": "oneof",
+                            "type": "string",
+                            "value": "possible,enum,values",
+                            "schema": null
+                          }
+                        ]
+                      ],
+                      "schema": [
+                        {
+                          "name": "name",
+                          "type": "string",
+                          "value": "var1",
+                          "schema": null
                         },
                         {
-                          "name": {
-                            "_type": "string",
-                            "_value": "var2"
-                          },
-                          "label": {
-                            "_type": "string",
-                            "_value": "Another question"
-                          },
-                          "example": {
-                            "_type": "string",
-                            "_value": "possible"
-                          },
-                          "oneof": {
-                            "_type": "string",
-                            "_value": "possible,enum,values"
-                          }
+                          "name": "label",
+                          "type": "string",
+                          "value": "A question",
+                          "schema": null
+                        },
+                        {
+                          "name": "example",
+                          "type": "string",
+                          "value": "An example value",
+                          "schema": null
+                        },
+                        {
+                          "name": "default",
+                          "type": "string",
+                          "value": "Default value",
+                          "schema": null
                         }
-                      ],
-                      "schema": null
+                      ]
                     }
                   ],
                   "example": {
@@ -5515,64 +5949,22 @@ module.exports = { endpoints: [
                     "description": "Installs the Linode API bindings",
                     "distributions": [
                       {
-                        "id": {
-                          "_type": "string",
-                          "_value": "linode/debian8"
-                        },
-                        "label": {
-                          "_type": "string",
-                          "_value": "Debian 8.1"
-                        },
-                        "vendor": {
-                          "_type": "string",
-                          "_value": "Debian"
-                        },
-                        "x64": {
-                          "_type": "boolean",
-                          "_value": true
-                        },
-                        "recommended": {
-                          "_type": "boolean",
-                          "_value": true
-                        },
-                        "created": {
-                          "_type": "datetime",
-                          "_value": "2015-04-27T16:26:41.000Z"
-                        },
-                        "minimum_storage_size": {
-                          "_type": "integer",
-                          "_value": 900
-                        }
+                        "id": "linode/debian8",
+                        "label": "Debian 8.1",
+                        "vendor": "Debian",
+                        "x64": true,
+                        "recommended": true,
+                        "created": "2015-04-27T16:26:41.000Z",
+                        "minimum_storage_size": 900
                       },
                       {
-                        "id": {
-                          "_type": "string",
-                          "_value": "linode/debian7"
-                        },
-                        "label": {
-                          "_type": "string",
-                          "_value": "Debian 7"
-                        },
-                        "vendor": {
-                          "_type": "string",
-                          "_value": "Debian"
-                        },
-                        "x64": {
-                          "_type": "boolean",
-                          "_value": true
-                        },
-                        "recommended": {
-                          "_type": "boolean",
-                          "_value": true
-                        },
-                        "created": {
-                          "_type": "datetime",
-                          "_value": "2014-09-24T13:59:32.000Z"
-                        },
-                        "minimum_storage_size": {
-                          "_type": "integer",
-                          "_value": 600
-                        }
+                        "id": "linode/debian7",
+                        "label": "Debian 7",
+                        "vendor": "Debian",
+                        "x64": true,
+                        "recommended": true,
+                        "created": "2014-09-24T13:59:32.000Z",
+                        "minimum_storage_size": 600
                       }
                     ],
                     "deployments_total": 150,
@@ -5584,40 +5976,16 @@ module.exports = { endpoints: [
                     "script": "#!/bin/bash",
                     "user_defined_fields": [
                       {
-                        "name": {
-                          "_type": "string",
-                          "_value": "var1"
-                        },
-                        "label": {
-                          "_type": "string",
-                          "_value": "A question"
-                        },
-                        "example": {
-                          "_type": "string",
-                          "_value": "An example value"
-                        },
-                        "default": {
-                          "_type": "string",
-                          "_value": "Default value"
-                        }
+                        "name": "var1",
+                        "label": "A question",
+                        "example": "An example value",
+                        "default": "Default value"
                       },
                       {
-                        "name": {
-                          "_type": "string",
-                          "_value": "var2"
-                        },
-                        "label": {
-                          "_type": "string",
-                          "_value": "Another question"
-                        },
-                        "example": {
-                          "_type": "string",
-                          "_value": "possible"
-                        },
-                        "oneof": {
-                          "_type": "string",
-                          "_value": "possible,enum,values"
-                        }
+                        "name": "var2",
+                        "label": "Another question",
+                        "example": "possible",
+                        "oneof": "possible,enum,values"
                       }
                     ]
                   }
@@ -9506,52 +9874,103 @@ module.exports = { endpoints: [
                       "description": "Individual grants to a Linode you own.  Grants incldue all, access, resize, and delete",
                       "type": "array",
                       "value": [
-                        {
-                          "all": {
-                            "_type": "boolean",
-                            "_value": false
+                        [
+                          {
+                            "name": "all",
+                            "type": "boolean",
+                            "value": false,
+                            "schema": null
                           },
-                          "access": {
-                            "_type": "boolean",
-                            "_value": true
+                          {
+                            "name": "access",
+                            "type": "boolean",
+                            "value": true,
+                            "schema": null
                           },
-                          "delete": {
-                            "_type": "boolean",
-                            "_value": false
+                          {
+                            "name": "delete",
+                            "type": "boolean",
+                            "value": false,
+                            "schema": null
                           },
-                          "id": {
-                            "_type": "integer",
-                            "_value": 123
+                          {
+                            "name": "id",
+                            "type": "integer",
+                            "value": 123,
+                            "schema": null
                           },
-                          "label": {
-                            "_type": "string",
-                            "_value": "linode123"
+                          {
+                            "name": "label",
+                            "type": "string",
+                            "value": "linode123",
+                            "schema": null
                           }
+                        ],
+                        [
+                          {
+                            "name": "all",
+                            "type": "boolean",
+                            "value": true,
+                            "schema": null
+                          },
+                          {
+                            "name": "access",
+                            "type": "boolean",
+                            "value": false,
+                            "schema": null
+                          },
+                          {
+                            "name": "delete",
+                            "type": "boolean",
+                            "value": false,
+                            "schema": null
+                          },
+                          {
+                            "name": "id",
+                            "type": "integer",
+                            "value": 324,
+                            "schema": null
+                          },
+                          {
+                            "name": "label",
+                            "type": "string",
+                            "value": "linode324",
+                            "schema": null
+                          }
+                        ]
+                      ],
+                      "schema": [
+                        {
+                          "name": "all",
+                          "type": "boolean",
+                          "value": false,
+                          "schema": null
                         },
                         {
-                          "all": {
-                            "_type": "boolean",
-                            "_value": true
-                          },
-                          "access": {
-                            "_type": "boolean",
-                            "_value": false
-                          },
-                          "delete": {
-                            "_type": "boolean",
-                            "_value": false
-                          },
-                          "id": {
-                            "_type": "integer",
-                            "_value": 324
-                          },
-                          "label": {
-                            "_type": "string",
-                            "_value": "linode324"
-                          }
+                          "name": "access",
+                          "type": "boolean",
+                          "value": true,
+                          "schema": null
+                        },
+                        {
+                          "name": "delete",
+                          "type": "boolean",
+                          "value": false,
+                          "schema": null
+                        },
+                        {
+                          "name": "id",
+                          "type": "integer",
+                          "value": 123,
+                          "schema": null
+                        },
+                        {
+                          "name": "label",
+                          "type": "string",
+                          "value": "linode123",
+                          "schema": null
                         }
-                      ],
-                      "schema": null
+                      ]
                     },
                     {
                       "name": "domain",
@@ -9575,48 +9994,18 @@ module.exports = { endpoints: [
                     },
                     "linode": [
                       {
-                        "all": {
-                          "_type": "boolean",
-                          "_value": false
-                        },
-                        "access": {
-                          "_type": "boolean",
-                          "_value": true
-                        },
-                        "delete": {
-                          "_type": "boolean",
-                          "_value": false
-                        },
-                        "id": {
-                          "_type": "integer",
-                          "_value": 123
-                        },
-                        "label": {
-                          "_type": "string",
-                          "_value": "linode123"
-                        }
+                        "all": false,
+                        "access": true,
+                        "delete": false,
+                        "id": 123,
+                        "label": "linode123"
                       },
                       {
-                        "all": {
-                          "_type": "boolean",
-                          "_value": true
-                        },
-                        "access": {
-                          "_type": "boolean",
-                          "_value": false
-                        },
-                        "delete": {
-                          "_type": "boolean",
-                          "_value": false
-                        },
-                        "id": {
-                          "_type": "integer",
-                          "_value": 324
-                        },
-                        "label": {
-                          "_type": "string",
-                          "_value": "linode324"
-                        }
+                        "all": true,
+                        "access": false,
+                        "delete": false,
+                        "id": 324,
+                        "label": "linode324"
                       }
                     ]
                   }
