@@ -44,8 +44,8 @@ When you start working on a feature, do this:
 **Tip**: set up your local git repository to lint before every commit.
 
 ```sh
-echo "#!/usr/bin/env bash" > .git/hooks/pre-commit
-echo "npm run lint" >> .git/hooks/pre-commit
+echo '#!/usr/bin/env bash' > .git/hooks/pre-commit
+echo 'npm run lint' >> .git/hooks/pre-commit
 chmod +x .git/hooks/pre-commit
 ```
 
