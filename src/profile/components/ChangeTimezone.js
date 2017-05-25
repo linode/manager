@@ -6,6 +6,7 @@ import { Form, FormGroup, Select, SubmitButton } from 'linode-components/forms';
 
 import { profile } from '~/api';
 import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+import { setStorage } from '~/storage';
 
 
 const timezones = moment.tz.names();
@@ -27,6 +28,7 @@ export default class ChangeTimezone extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => profile.put({ timezone }),
+      () => setStorage('profile/timezone', timezone),
     ]));
   }
 

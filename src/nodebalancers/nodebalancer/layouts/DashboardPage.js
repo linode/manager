@@ -63,6 +63,7 @@ export class DashboardPage extends Component {
             format: p => p.toFixed(1),
           },
           data: formatData([stats.connections]),
+          unit: ' connections',
         },
         traffic: {
           title: 'Traffic',
@@ -72,6 +73,7 @@ export class DashboardPage extends Component {
           },
           data: formatData([stats.traffic.in, stats.traffic.out],
                            ['In', 'Out']),
+          unit: ' bits/s',
         },
       };
     }
@@ -110,7 +112,7 @@ export class DashboardPage extends Component {
   }
 
   render() {
-    const { nodebalancer } = this.props;
+    const { nodebalancer, timezone } = this.props;
     const { configs } = nodebalancer._configs;
 
     const newConfigs = Object.values(configs).map((config) => {
@@ -211,8 +213,14 @@ export class DashboardPage extends Component {
                     <option value="traffic">Traffic</option>
                   </Select>
                 </div>
+                <div className="float-sm-right">
+                  Last 24 hours
+                </div>
               </div>
-              <LineGraph {...this.graphs[this.state.source]} />
+              <LineGraph
+                timezone={timezone}
+                {...this.graphs[this.state.source]}
+              />
             </div>
           )}
         </Card>
@@ -224,15 +232,17 @@ export class DashboardPage extends Component {
 DashboardPage.propTypes = {
   dispatch: PropTypes.func,
   nodebalancer: PropTypes.object,
+  timezone: PropTypes.string,
 };
 
 function select(state, ownProps) {
   const params = ownProps.params;
   const nbLabel = params.nbLabel;
+  const { timezone } = state.api.profile;
 
   const nodebalancer = objectFromMapByLabel(state.api.nodebalancers.nodebalancers, nbLabel);
 
-  return { nodebalancer };
+  return { nodebalancer, timezone };
 }
 
 export default connect(select)(DashboardPage);
