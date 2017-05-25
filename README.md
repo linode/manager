@@ -33,7 +33,7 @@ The following buzzwords are involved in this project:
 Currently the codebase is hardcoded to point to our [alpha
 environment](https://alpha.linode.com). It communicates with Linode via 
 [Linode API 4](https://developers.linode.com). You'll need to [register an OAuth
-client](https://developers.linode.com/reference/#authentication) in the alpha
+client](https://developers.linode.com/access) in the alpha
 environment, then create a file at `src/secrets.js` with your client ID and
 client secret set appropriately:
 
