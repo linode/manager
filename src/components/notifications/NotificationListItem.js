@@ -29,7 +29,6 @@ export default function NotificationListItem(props) {
     className += ` ${baseCls}--read`;
   }
 
-  const eventAction = event.action.split('_');
   if (timeRemaining !== null && timeRemaining > 0) {
     message = (
       <span>
@@ -71,16 +70,6 @@ export default function NotificationListItem(props) {
           </div>
           {timestampMessage}
         </div>
-      );
-    } else if (eventAction.length === 3 && eventAction[0] === 'nodebalancer') {
-      message = (
-        <span>
-          <span>
-            {entity}
-            {` config ${eventOptions.pastTenseAction}`}
-          </span>
-          {timestampMessage}
-        </span>
       );
     } else {
       message = (
