@@ -189,12 +189,12 @@ const EventTypeMap = {
   },
   nodebalancer_config_create: {
     presentTenseAction: 'Creating',
-    pastTenseAction: 'created',
+    pastTenseAction: 'config created',
     redirectUrl: getNodebalancerRedirectUrl,
   },
   nodebalancer_config_delete: {
     presentTenseAction: 'Deleting',
-    pastTenseAction: 'deleted',
+    pastTenseAction: 'config deleted',
     redirectUrl: getNodebalancerRedirectUrl,
   },
 
