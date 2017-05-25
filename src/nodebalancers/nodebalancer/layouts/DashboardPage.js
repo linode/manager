@@ -95,7 +95,7 @@ export class DashboardPage extends Component {
 
     dispatch(showModal('Delete NodeBalancer Config',
       <DeleteModalBody
-        onOk={async () => {
+        onOk={() => {
           const ids = [nodebalancer.id, config.id].filter(Boolean);
 
           return dispatch(dispatchOrStoreErrors.call(this, [
