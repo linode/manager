@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [0.6.1]
+### Fixed
+- fixed domain event rendering
+
 ## [0.6.0]
 ### Changed
 - lookup lish domains based on datacenter #1795
