@@ -29,6 +29,9 @@ import {
   Curl,
   CreateLinode,
   TestingWithCurl,
+  BasicSetup,
+  CoreConcepts,
+  OAuthWorkflow,
 } from './components/guides';
 
 import {
