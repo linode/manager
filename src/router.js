@@ -66,6 +66,14 @@ export class LoadingRouterContext extends RouterContext {
       setTimeout(() => this.props.dispatch(preloadStop()), 0);
       done();
     });
+
+    // initialLoad doesn't apply to /oauth/callback page, which is a pseudo-page only
+    // loaded on login or token refresh. AppLoader should be shown while this page is
+    // working and only not shown when the page after it is done loading.
+    if (newProps.location.pathname !== '/oauth/callback') {
+      // Wait 1 second after loading so app loader isn't jumpy.
+      setTimeout(() => this.setState({ initialLoad: false }), 1000);
+    }
   }
 
   constructor(props) {
@@ -79,18 +87,15 @@ export class LoadingRouterContext extends RouterContext {
 
   async componentWillMount() {
     const ret = checkLogin(this.props);
-    this.setState({ checkLoginDone: true });
-    console.log(ret);
     if (ret) {
       return;
     }
 
-    console.log('HERE!');
-    // Necessary to await this for testing
-    await this.runPreload(this.props);
+    // We are not going to redirect, so session is fine so far. Show AppLoader.
+    this.setState({ checkLoginDone: true });
 
-    // Wait 1 second after loading so app loader isn't jumpy.
-    setTimeout(() => this.setState({ initialLoad: false }), 1000);
+    // Necessary to await this for testing
+    return this.runPreload(this.props);
   }
 
   async componentWillReceiveProps(newProps) {
@@ -101,7 +106,8 @@ export class LoadingRouterContext extends RouterContext {
     this.props.dispatch(preloadReset());
     setTimeout(() => this.props.dispatch(preloadStart()), 0);
 
-    await this.runPreload(newProps);
+    // Necessary to await this for testing
+    return this.runPreload(newProps);
   }
 
   shouldComponentUpdate() {
@@ -109,8 +115,7 @@ export class LoadingRouterContext extends RouterContext {
   }
 
   render() {
-    if (this.state.initialLoad) {
-      console.log(this.state.checkLoginDone);
+    if (this.state.initialLoad && this.props.location.pathname !== '/logout') {
       // If the user is about to be redirected somewhere, don't show them the loading screen.
       if (!this.state.checkLoginDone) {
         return null;
@@ -123,6 +128,7 @@ export class LoadingRouterContext extends RouterContext {
             <div className="AppLoader-text">Loading the Manager...</div>
             <div className="AppLoader-loader"></div>
           </div>
+          {this.props.location.pathname === '/oauth/callback' ? super.render() : null}
         </div>
       );
     }

@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
@@ -9,18 +9,17 @@ import * as session from '~/session';
 
 
 export class OAuthCallbackPage extends Component {
-  constructor() {
-    super();
-    this.state = { error: null };
-  }
-
   async componentDidMount() {
     const { dispatch, location } = this.props;
     const { error, code } = location.query;
     const returnTo = location.query['return'];
 
     if (error) {
-      this.setState({ error: location.query.error_description });
+      // These errors only happen while developing or setting up the app.
+      /* eslint-disable no-console */
+      console.log('Error during OAuth callback:');
+      console.error(error);
+      /* eslint-enable no-console */
       return;
     }
 
@@ -49,17 +48,7 @@ export class OAuthCallbackPage extends Component {
   }
 
   render() {
-    const { error } = this.state;
-    if (error) {
-      return (
-        <div className="container">
-          <div className="alert alert-danger">
-            Error: {error}
-          </div>
-        </div>
-      );
-    }
-    return <div></div>;
+    return null;
   }
 }
 
