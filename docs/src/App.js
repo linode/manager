@@ -29,6 +29,9 @@ import {
   Curl,
   CreateLinode,
   TestingWithCurl,
+  BasicSetup,
+  CoreConcepts,
+  OAuthWorkflow,
 } from './components/guides';
 
 import {
@@ -90,11 +93,14 @@ export function init() {
           <Route path={`/${API_VERSION}/pagination`} component={Pagination} />
           <Route path={`/${API_VERSION}/filtering`} component={Filtering} />
           <Route path={`/${API_VERSION}/errors`} component={Errors} />
-          <Route path={`/${API_VERSION}/guides/python`} component={Python} />
-          <Route path={`/${API_VERSION}/guides/python/introduction`} component={PythonIntroduction} />
           <Route path={`/${API_VERSION}/guides/curl`} component={Curl} />
           <Route path={`/${API_VERSION}/guides/curl/creating-a-linode`} component={CreateLinode} />
           <Route path={`/${API_VERSION}/guides/curl/testing-with-curl`} component={TestingWithCurl} />
+          <Route path={`/${API_VERSION}/guides/python`} component={Python} />
+          <Route path={`/${API_VERSION}/guides/python/introduction`} component={PythonIntroduction} />
+          <Route path={`/${API_VERSION}/guides/python/basic-setup`} component={BasicSetup} />
+          <Route path={`/${API_VERSION}/guides/python/oauth-Workflow`} component={OAuthWorkflow} />
+          <Route path={`/${API_VERSION}/guides/python/core-concepts`} component={CoreConcepts} />
           {api.endpoints.map(function(endpoint, index) {
             return generateIndexRoute({ key: index, endpoint: endpoint });
           })}
