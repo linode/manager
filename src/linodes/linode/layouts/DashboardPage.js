@@ -156,7 +156,7 @@ export class DashboardPage extends Component {
               </div>
               <div className="col-sm-8">
                 <ul className="list-unstyled" id="ips">
-                  <li>{linode.ipv4}</li>
+                  <li>{linode.ipv4[0]}</li>
                   <li className="text-muted">{linode.ipv6.split('/')[0]}</li>
                   <li><Link to={`/linodes/${linode.label}/networking`}>(...)</Link></li>
                 </ul>
