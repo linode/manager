@@ -3,15 +3,14 @@ import { connect } from 'react-redux';
 
 import { LOGIN_ROOT } from '~/constants';
 import { logout } from '~/actions/authentication';
-import { setSession } from './OAuth';
-import { redirect } from '~/session';
+import * as session from '~/session';
 
 export class Logout extends Component {
   componentDidMount() {
     const { dispatch, redirect } = this.props;
 
     // Drop session info
-    dispatch(setSession());
+    dispatch(session.expire);
 
     // Reset state
     dispatch(logout());
@@ -30,7 +29,7 @@ Logout.propTypes = {
 };
 
 Logout.defaultProps = {
-  redirect,
+  redirect: session.redirect,
 };
 
 export default connect()(Logout);

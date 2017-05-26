@@ -80,10 +80,12 @@ export class LoadingRouterContext extends RouterContext {
   async componentWillMount() {
     const ret = checkLogin(this.props);
     this.setState({ checkLoginDone: true });
+    console.log(ret);
     if (ret) {
       return;
     }
 
+    console.log('HERE!');
     // Necessary to await this for testing
     await this.runPreload(this.props);
 
@@ -108,6 +110,7 @@ export class LoadingRouterContext extends RouterContext {
 
   render() {
     if (this.state.initialLoad) {
+      console.log(this.state.checkLoginDone);
       // If the user is about to be redirected somewhere, don't show them the loading screen.
       if (!this.state.checkLoginDone) {
         return null;
