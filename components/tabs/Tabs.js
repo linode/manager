@@ -47,11 +47,13 @@ export default function Tabs(props) {
           </Tab>
         ))}
       </TabList>
-      {tabs.map((tab, i) => (
-        <TabPanel key={tab.name} className={`${componentName}-container`}>
-          {i === selected ? tab.children || children : null}
-        </TabPanel>
-      ))}
+      {tabs.map((tab) => {
+        return (
+          <TabPanel key={tab.name} className={`${componentName}-container`}>
+            {tab.children || children}
+          </TabPanel>
+        );
+      })}
     </ReactTabs>
   );
 }
