@@ -1,14 +1,37 @@
+import { setToken } from '~/actions/authentication';
+import { APP_ROOT, LOGIN_ROOT } from '~/constants';
+import { clientId } from '~/secrets';
+import { getStorage, setStorage } from '~/storage';
 import { store } from '~/store';
-import { APP_ROOT, LOGIN_ROOT } from './constants';
-import { clientId } from './secrets';
-import { SET_TOKEN } from './actions/authentication';
-import { getStorage } from '~/storage';
 
-export function initializeAuthentication(dispatch) {
+
+export function initialize(dispatch) {
   const token = getStorage('authentication/oauth-token') || null;
   const scopes = getStorage('authentication/scopes') || null;
-  dispatch({ type: SET_TOKEN, token, scopes });
+  dispatch(setToken(token, scopes));
 }
+
+
+export function expire(dispatch) {
+  const next = { location: window.location };
+  // Remove these from local storage so if login fails, next time we jump to login sooner.
+  setStorage('authentication/oauth-token', '');
+  setStorage('authentication/scopes', '');
+  dispatch(setToken(null, null));
+  checkLogin(next);
+}
+
+
+export function start(oauthToken = '', scopes = '') {
+  return (dispatch) => {
+    // Set these two so we can grab them on subsequent page loads
+    setStorage('authentication/oauth-token', oauthToken);
+    setStorage('authentication/scopes', scopes);
+    // Add all to state for this (page load) session
+    dispatch(setToken(oauthToken, scopes));
+  };
+}
+
 
 export function redirect(location) {
   window.location = location;

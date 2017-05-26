@@ -6,18 +6,8 @@ import { setToken } from '~/actions/authentication';
 import { LOGIN_ROOT } from '~/constants';
 import { rawFetch } from '~/fetch';
 import { clientId, clientSecret } from '~/secrets';
-import { setStorage } from '~/storage';
+import * as session from '~/session';
 
-
-export function setSession(oauthToken = '', scopes = '') {
-  return (dispatch) => {
-    // Set these two so we can grab them on subsequent page loads
-    setStorage('authentication/oauth-token', oauthToken);
-    setStorage('authentication/scopes', scopes);
-    // Add all to state for this (page load) session
-    dispatch(setToken(oauthToken, scopes));
-  };
-}
 
 export class OAuthCallbackPage extends Component {
   constructor() {
@@ -50,7 +40,7 @@ export class OAuthCallbackPage extends Component {
       const { access_token, scopes } = await resp.json();
 
       // Token needs to be in redux state for all API calls
-      dispatch(setSession(access_token, scopes));
+      dispatch(session.start(access_token, scopes));
 
       // Done OAuth flow. Let the app begin.
       dispatch(push(returnTo || '/'));

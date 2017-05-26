@@ -1,13 +1,15 @@
 import React from 'react';
 import { RouterContext, match } from 'react-router';
 
-import { checkLogin } from './session';
 import {
   preloadReset,
   preloadStart,
   preloadStop,
 } from '~/actions/preloadIndicator';
+import Header from '~/components/Header';
 import { store } from '~/store';
+
+import { checkLogin } from './session';
 
 
 // This wraps the react-router match function so that we can await it
@@ -72,11 +74,12 @@ export class LoadingRouterContext extends RouterContext {
     this.preloadCounter = 0;
     this.lastPreloads = [];
 
-    this.state = { initialLoad: true };
+    this.state = { initialLoad: true, checkLoginDone: false };
   }
 
   async componentWillMount() {
     const ret = checkLogin(this.props);
+    this.setState({ checkLoginDone: true });
     if (ret) {
       return;
     }
@@ -84,7 +87,7 @@ export class LoadingRouterContext extends RouterContext {
     // Necessary to await this for testing
     await this.runPreload(this.props);
 
-    // Wait 1 second after loading
+    // Wait 1 second after loading so app loader isn't jumpy.
     setTimeout(() => this.setState({ initialLoad: false }), 1000);
   }
 
@@ -105,10 +108,18 @@ export class LoadingRouterContext extends RouterContext {
 
   render() {
     if (this.state.initialLoad) {
+      // If the user is about to be redirected somewhere, don't show them the loading screen.
+      if (!this.state.checkLoginDone) {
+        return null;
+      }
+
       return (
-        <div className="AppLoader">
-          <div className="AppLoader-text">Loading the Manager...</div>
-          <div className="AppLoader-loader"></div>
+        <div className="layout layout--appLoader full-height">
+          <Header email="" notifications={{ open: false }} session={{ open: false }} events={{ ids: [] }} />
+          <div className="AppLoader full-height">
+            <div className="AppLoader-text">Loading the Manager...</div>
+            <div className="AppLoader-loader"></div>
+          </div>
         </div>
       );
     }
