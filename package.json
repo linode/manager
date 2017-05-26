@@ -1,6 +1,6 @@
 {
   "name": "linode-manager",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "The Linode Manager website",
   "scripts": {
     "clean": "rm -rf dist",
