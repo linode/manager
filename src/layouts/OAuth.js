@@ -2,7 +2,6 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { setToken } from '~/actions/authentication';
 import { LOGIN_ROOT } from '~/constants';
 import { rawFetch } from '~/fetch';
 import { clientId, clientSecret } from '~/secrets';

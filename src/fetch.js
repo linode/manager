@@ -47,7 +47,9 @@ export function fetch(token, _path, _options) {
       const { status } = response;
       if (status >= 400) {
         if (status === 401) {
-          dispatch(session.expire);
+          // Unfortunate that we are keeping this store, but the alternative is
+          // to hook every fetch call up to redux directly.
+          store.dispatch(session.expire);
         }
 
         reject(response);

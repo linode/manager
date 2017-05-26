@@ -115,7 +115,7 @@ export class LoadingRouterContext extends RouterContext {
 
       return (
         <div className="layout layout--appLoader full-height">
-          <Header email="" notifications={{ open: false }} session={{ open: false }} events={{ ids: [] }} />
+          <Header />
           <div className="AppLoader full-height">
             <div className="AppLoader-text">Loading the Manager...</div>
             <div className="AppLoader-loader"></div>

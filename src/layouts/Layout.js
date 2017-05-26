@@ -42,7 +42,7 @@ export class Layout extends Component {
 
     ['types', 'regions', 'distributions']
       .filter(type => !Object.values(getState().api[type][type]).length)
-      .forEach(type => requests.push(type => api[type].all()));
+      .forEach(type => requests.push(api[type].all()));
 
     // Fetch all objects we haven't already grabbed this page session.
     await Promise.all(requests.map(request => dispatch(request)));
