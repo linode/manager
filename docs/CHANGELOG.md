@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased] 
 
+## [0.2.1] 2017-05-26
+### Fixed
+- subtle tabs bug which caused tab content to not be rendered, python examples now show
+- example formatting for arrays, some additional schema definitions in tables for the same arrays
+
 ## [0.2.0] 2017-05-23
 ### Added
 - Nested object schemas and examples for method params and responses
