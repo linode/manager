@@ -17,28 +17,34 @@ export class AuthorizedApplicationsPage extends Component {
     }
   }
 
-  render() {
+  renderGroup = (group, i, groups) => {
     const { dispatch } = this.props;
+    const _renderGroup = group.map(client =>
+      <div className="col-lg-6" key={client.id}>
+        <AuthorizedApplication
+          label={client.client.label}
+          scopes={client.scopes}
+          clientId={client.client.id}
+          id={client.id}
+          expires={client.expiry}
+          dispatch={dispatch}
+        />
+      </div>
+    );
+
+    if (i === groups.length - 1) {
+      return <div className="row">{_renderGroup}</div>
+    }
+
+    return <section className="row">{_renderGroup}</section>
+  }
+
+  render() {
     const clients = Object.values(this.props.tokens.tokens).filter(
       token => token.type === 'client_token').sort(
         (a, b) => new Date(b.created) - new Date(a.created)); // Sort by most recent first
 
-    return (
-      <div className="row">
-        {clients.map(client =>
-          <div className="col-lg-6" key={client.id}>
-            <AuthorizedApplication
-              label={client.client.label}
-              scopes={client.scopes}
-              clientId={client.client.id}
-              id={client.id}
-              expires={client.expiry}
-              dispatch={dispatch}
-            />
-          </div>
-         )}
-      </div>
-    );
+    return <div>{_.chunk(clients, 2).map(this.renderGroup)}</div>;
   }
 }
 

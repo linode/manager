@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
@@ -34,9 +35,22 @@ export class MyApplicationsPage extends Component {
     )));
   }
 
-  render() {
+  renderGroup = (group, i, groups) => {
     const { dispatch } = this.props;
+    const _renderGroup = group.map(client =>
+      <div className="col-lg-6" key={client.id}>
+        <MyApplication client={client} dispatch={dispatch} />
+      </div>
+    );
 
+    if (i === groups.length - 1) {
+      return <div className="row">{_renderGroup}</div>
+    }
+
+    return <section className="row">{_renderGroup}</section>
+  }
+
+  render() {
     const clients = Object.values(this.props.clients.clients);
 
     return (
@@ -49,19 +63,13 @@ export class MyApplicationsPage extends Component {
             Create an OAuth Client
           </Button>
         </header>
-        <div className="row">
-          {clients.length ? clients.map(client =>
-            <div className="col-lg-6" key={client.id}>
-              <MyApplication client={client} dispatch={dispatch} />
-            </div>
-           ) : (
-            <CreateHelper
-              label="applications"
-              onClick={this.renderCreateOAuthClient}
-              linkText="Create an OAuth Client"
-            />
-           )}
-        </div>
+        {clients.length ? _.chunk(clients, 2).map(this.renderGroup) : (
+          <CreateHelper
+            label="applications"
+            onClick={this.renderCreateOAuthClient}
+            linkText="Create an OAuth Client"
+          />
+        )}
       </div>
     );
   }
