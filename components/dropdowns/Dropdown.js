@@ -22,7 +22,7 @@ export default class Dropdown extends Component {
 
   render() {
     const [first, ...rest] = this.props.elements;
-    const { disabled } = this.props;
+    const { disabled, dropdownIcon } = this.props;
 
     const dropdownMenu = rest.map((item, i) => !item ? <hr key={i} /> :
       <button
@@ -56,7 +56,7 @@ export default class Dropdown extends Component {
             aria-haspopup="true"
             aria-expanded={this.state.open}
             onClick={this.open}
-          ><i className="fa fa-caret-down" /></button>
+          ><i className={`fa ${dropdownIcon}`} /></button>
         )}
         <div className={`Dropdown-menu ${orientation}`}>{dropdownMenu}</div>
       </div>
@@ -71,4 +71,9 @@ Dropdown.propTypes = {
   })).isRequired,
   leftOriented: PropTypes.bool,
   disabled: PropTypes.bool,
+  dropdownIcon: PropTypes.string,
+};
+
+Dropdown.defaultProps = {
+  dropdownIcon: 'fa-caret-down',
 };
