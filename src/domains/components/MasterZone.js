@@ -12,6 +12,7 @@ import { ButtonCell } from 'linode-components/tables/cells';
 import { showModal, hideModal } from '~/actions/modal';
 import { domains } from '~/api';
 import { NameserversCell } from '~/components/tables/cells';
+import { GroupLabel } from '~/components';
 import { NAME_SERVERS } from '~/constants';
 
 import { formatDNSSeconds, ONE_DAY } from './SelectDNSSeconds';
@@ -202,8 +203,9 @@ export class MasterZone extends Component {
           <div className="container">
             <Link to="/domains">Domains</Link>
             <h1 title={domain.id}>
-              {domain.group ? `${domain.group} / ` : ''}
-              {domain.domain}
+              <Link to={`/domains/${domain.domain}`}>
+                <GroupLabel object={{ ...domain, label: domain.domain }} />
+              </Link>
             </h1>
           </div>
         </header>

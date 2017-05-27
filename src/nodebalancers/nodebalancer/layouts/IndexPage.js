@@ -5,10 +5,12 @@ import { push } from 'react-router-redux';
 import { Tabs } from 'linode-components/tabs';
 
 import Breadcrumbs from '~/components/Breadcrumbs';
+
 import { setError } from '~/actions/errors';
 import { nodebalancers } from '~/api';
 import { getObjectByLabelLazily, objectFromMapByLabel } from '~/api/util';
 import { setTitle } from '~/actions/title';
+import { GroupLabel } from '~/components';
 
 
 export class IndexPage extends Component {
@@ -68,7 +70,9 @@ export class IndexPage extends Component {
             <div className="float-sm-left">
               <Breadcrumbs crumbs={crumbs} />
               <h1 title={nodebalancer.id}>
-                <Link to={`/nodebalancers/${nodebalancer.label}`}>{title}</Link>
+                <Link to={`/nodebalancers/${nodebalancer.label}`}>
+                  <GroupLabel object={nodebalancer} />
+                </Link>
               </h1>
             </div>
           </div>
