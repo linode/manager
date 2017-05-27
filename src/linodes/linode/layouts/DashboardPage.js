@@ -194,11 +194,11 @@ export class DashboardPage extends Component {
                 <div className="input-group">
                   <Input
                     id="ssh-input"
-                    value={`ssh root@${linode.ipv4}`}
+                    value={`ssh root@${linode.ipv4[0]}`}
                     readOnly
                   />
                   <span className="input-group-btn">
-                    <Button href={`ssh://root@${linode.ipv4}`}>SSH</Button>
+                    <Button href={`ssh://root@${linode.ipv4[0]}`}>SSH</Button>
                   </span>
                 </div>
               </div>
