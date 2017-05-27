@@ -77,7 +77,7 @@ export class Layout extends Component {
       dispatch,
     } = this.props;
     const { title, link } = this.state;
-    const githubRoot = 'https://github.com/linode/manager/blob/master/';
+    const githubRoot = `https://github.com/linode/manager/blob/${VERSION || 'master'}/`;
     return (
       <div
         className="layout full-height"
@@ -129,7 +129,7 @@ export class Layout extends Component {
                 rel="noopener"
                 href={`${githubRoot}${source.source}`}
               >
-                Source
+                Page Source
               </a>
             }
             <Link to="/styleguide">Styleguide</Link>

@@ -127,35 +127,38 @@ export class DashboardPage extends Component {
 
     return (
       <div>
-        <Card header={<CardHeader title="Summary" />}>
-          <div className="row">
-            <div className="col-sm-2 row-label">
-              IP Addresses
+        <section>
+          <Card header={<CardHeader title="Summary" />}>
+            <div className="row">
+              <div className="col-sm-2 row-label">
+                IP Addresses
+              </div>
+              <div className="col-sm-10">
+                <ul className="list-unstyled">
+                  <li>{nodebalancer.ipv4}</li>
+                  <li className="text-muted">{nodebalancer.ipv6}</li>
+                </ul>
+              </div>
             </div>
-            <div className="col-sm-10">
-              <ul className="list-unstyled">
-                <li>{nodebalancer.ipv4}</li>
-                <li className="text-muted">{nodebalancer.ipv6}</li>
-              </ul>
+            <div className="row">
+              <div className="col-sm-2 row-label">
+                Hostname
+              </div>
+              <div className="col-sm-10">
+                {nodebalancer.hostname}
+              </div>
             </div>
-          </div>
-          <div className="row">
-            <div className="col-sm-2 row-label">
-              Hostname
+            <div className="row">
+              <div className="col-sm-2 row-label">
+                Region
+              </div>
+              <div className="col-sm-10">
+                <Region obj={nodebalancer} />
+              </div>
             </div>
-            <div className="col-sm-10">
-              {nodebalancer.hostname}
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-sm-2 row-label">
-              Region
-            </div>
-            <div className="col-sm-10">
-              <Region obj={nodebalancer} />
-            </div>
-          </div>
-        </Card>
+          </Card>
+        </section>
+        <section>
         <Card
           header={
             <CardHeader
@@ -199,6 +202,7 @@ export class DashboardPage extends Component {
             </ListBody>
           </List>
         </Card>
+        </section>
         <Card header={<CardHeader title="Graphs" />}>
           {!this.graphs ? <p>No graphs are available.</p> : (
             <div>

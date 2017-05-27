@@ -208,15 +208,14 @@ export class MasterZone extends Component {
           </div>
         </header>
         <div className="container">
-          <Card
-            id="soa"
-            header={
-              <CardHeader title="SOA Record" />
-            }
-          >
-            <Table
-              className="Table--secondary"
-              columns={[
+          <section>
+            <Card
+              id="soa"
+              header={<CardHeader title="SOA Record" />}
+            >
+              <Table
+                className="Table--secondary"
+                columns={[
                 { dataKey: 'domain', label: 'Primary Domain' },
                 { dataKey: 'soa_email', label: 'Email' },
                 { dataKey: 'ttl_sec', label: 'Default TTL' },
@@ -234,7 +233,9 @@ export class MasterZone extends Component {
               ]}
               data={[soaRecord]}
             />
-          </Card>
+            </Card>
+          </section>
+          <section>
           <Card
             id="ns"
             header={
@@ -267,6 +268,8 @@ export class MasterZone extends Component {
               data={nsRecords}
             />
           </Card>
+          </section>
+          <section>
           <Card
             id="mx"
             header={
@@ -304,6 +307,8 @@ export class MasterZone extends Component {
               data={mxRecords}
             />
           </Card>
+          </section>
+          <section>
           <Card
             id="a"
             header={
@@ -340,6 +345,8 @@ export class MasterZone extends Component {
               data={aRecords}
             />
           </Card>
+          </section>
+          <section>
           <Card
             id="cname"
             header={
@@ -379,6 +386,8 @@ export class MasterZone extends Component {
               data={cnameRecords}
             />
           </Card>
+          </section>
+          <section>
           <Card
             id="txt"
             header={
@@ -416,6 +425,7 @@ export class MasterZone extends Component {
               data={txtRecords}
             />
           </Card>
+          </section>
           <Card
             id="srv"
             header={
