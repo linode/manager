@@ -5,7 +5,8 @@ import { Form, FormGroup, SubmitButton, Select } from 'linode-components/forms';
 
 import { linodes as apiLinodes } from '~/api';
 import { createHeaderFilter } from '~/api/util';
-import { assignIps, linodeIPs } from '~/api/linodes';
+import { linodeIPs } from '~/api/linodes';
+import { assignIPs } from '~/api/networking';
 import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
 
 import IPList from './IPList';
@@ -47,7 +48,7 @@ export default class IPTransfer extends Component {
     });
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => assignIps(linode.region.id, assignments),
+      () => assignIPs(linode.region.id, assignments),
       () => (dispatch) => Promise.all([
         dispatch(apiLinodes.all([], undefined, createHeaderFilter({
           '+or': [{ label: linode.label }, { label: otherLinode.label }],
