@@ -20,7 +20,7 @@ import { NodeModal } from '../components/NodeModal';
 import { dispatchOrStoreErrors } from '~/components/forms';
 
 
-export class ViewConfigPage extends Component {
+export class DashboardPage extends Component {
   static async preload({ dispatch, getState }, { nbLabel, configId }) {
     try {
       const { id } = await dispatch(getObjectByLabelLazily('nodebalancers', nbLabel));
@@ -168,7 +168,7 @@ export class ViewConfigPage extends Component {
   }
 }
 
-ViewConfigPage.propTypes = {
+DashboardPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   config: PropTypes.object.isRequired,
   nodebalancer: PropTypes.object.isRequired,
@@ -181,5 +181,4 @@ function select(state, props) {
   return { config, nodebalancer };
 }
 
-export default connect(select)(ViewConfigPage);
-
+export default connect(select)(DashboardPage);

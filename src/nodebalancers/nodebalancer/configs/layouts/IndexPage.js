@@ -54,7 +54,7 @@ export class IndexPage extends Component {
               <Breadcrumbs crumbs={crumbs} />
               <h1 title={nodebalancer.id}>
                 <Link to={`/nodebalancers/${nodebalancer.label}/configs/${config.id}`}>
-                  Port ${config.port}
+                  Port {config.port}
                 </Link>
               </h1>
             </div>
