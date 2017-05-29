@@ -38,10 +38,10 @@ export class IndexPage extends Component {
     ));
 
     if (i === groups.length - 1) {
-      return <div className="row">{_renderGroup}</div>
+      return <div className="row">{_renderGroup}</div>;
     }
 
-    return <section className="row">{_renderGroup}</section>
+    return <section className="row">{_renderGroup}</section>;
   }
 
   render() {

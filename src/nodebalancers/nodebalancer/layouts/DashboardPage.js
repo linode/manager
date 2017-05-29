@@ -159,49 +159,49 @@ export class DashboardPage extends Component {
           </Card>
         </section>
         <section>
-        <Card
-          header={
-            <CardHeader
-              title="Configs"
-              nav={
-                <Link
-                  to={`/nodebalancers/${nodebalancer.label}/configs/create`}
-                  className="linode-add btn btn-default float-sm-right"
-                >Add a Config</Link>
-              }
-            />
-          }
-        >
-          <List>
-            <ListBody>
-              <Table
-                className="Table--secondary"
-                columns={[
-                  { textKey: 'port', label: 'Port',
-                    cellComponent: LinkCell,
-                    hrefFn: function (config) {
-                      return `/nodebalancers/${nodebalancer.label}/configs/${config.id}`;
-                    },
-                  },
-                  { dataKey: 'protocol', label: 'Protocol' },
-                  { dataKey: 'algorithm', label: 'Algorithm' },
-                  { dataKey: 'stickiness', label: 'Session Stickiness' },
-                  { dataKey: 'statusString', label: 'Node Status' },
-                  {
-                    cellComponent: ButtonCell,
-                    headerClassName: 'ButtonColumn',
-                    onClick: (config) => {
-                      this.deleteNodeBalancerConfig(nodebalancer, config);
-                    },
-                    text: 'Delete',
-                  },
-                ]}
-                data={newConfigs}
-                selectedMap={{}}
+          <Card
+            header={
+              <CardHeader
+                title="Configs"
+                nav={
+                  <Link
+                    to={`/nodebalancers/${nodebalancer.label}/configs/create`}
+                    className="linode-add btn btn-default float-sm-right"
+                  >Add a Config</Link>
+                }
               />
-            </ListBody>
-          </List>
-        </Card>
+            }
+          >
+            <List>
+              <ListBody>
+                <Table
+                  className="Table--secondary"
+                  columns={[
+                    { textKey: 'port', label: 'Port',
+                      cellComponent: LinkCell,
+                      hrefFn: function (config) {
+                        return `/nodebalancers/${nodebalancer.label}/configs/${config.id}`;
+                      },
+                    },
+                    { dataKey: 'protocol', label: 'Protocol' },
+                    { dataKey: 'algorithm', label: 'Algorithm' },
+                    { dataKey: 'stickiness', label: 'Session Stickiness' },
+                    { dataKey: 'statusString', label: 'Node Status' },
+                    {
+                      cellComponent: ButtonCell,
+                      headerClassName: 'ButtonColumn',
+                      onClick: (config) => {
+                        this.deleteNodeBalancerConfig(nodebalancer, config);
+                      },
+                      text: 'Delete',
+                    },
+                  ]}
+                  data={newConfigs}
+                  selectedMap={{}}
+                />
+              </ListBody>
+            </List>
+          </Card>
         </section>
         <Card header={<CardHeader title="Graphs" />}>
           {!this.graphs ? <p>No graphs are available.</p> : (

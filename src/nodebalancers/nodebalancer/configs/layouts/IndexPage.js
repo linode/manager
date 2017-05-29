@@ -10,7 +10,6 @@ import { setError } from '~/actions/errors';
 import { nodebalancers } from '~/api';
 import { getObjectByLabelLazily, objectFromMapByLabel } from '~/api/util';
 import { setTitle } from '~/actions/title';
-import { GroupLabel } from '~/components';
 
 
 export class IndexPage extends Component {
@@ -31,13 +30,20 @@ export class IndexPage extends Component {
   }
 
   render() {
-    const { nodebalancer } = this.props;
+    const { nodebalancer, config } = this.props;
     if (!nodebalancer) return null;
 
     const { label } = nodebalancer;
+    const crumbs = [
+      { to: '/nodebalancers', label: 'NodeBalancers' },
+      { to: `/nodebalancers/${nodebalancer.label}`, label: nodebalancer.label },
+    ];
     const tabs = [
-      { name: 'Dashboard', link: `/nodebalancers/${label}` },
-      { name: 'Settings', link: `/nodebalancers/${label}/settings` },
+      { name: 'Dashboard', link: `/nodebalancers/${label}/configs/${config.id}` },
+      {
+        name: 'Settings',
+        link: `/nodebalancers/${label}/configs/${config.id}/settings`,
+      },
     ];
 
     return (
@@ -45,10 +51,10 @@ export class IndexPage extends Component {
         <header className="main-header">
           <div className="container clearfix">
             <div className="float-sm-left">
-              <Breadcrumbs crumbs={[{ to: '/nodebalancers', label: 'NodeBalancers' }]} />
+              <Breadcrumbs crumbs={crumbs} />
               <h1 title={nodebalancer.id}>
-                <Link to={`/nodebalancers/${nodebalancer.label}`}>
-                  <GroupLabel object={nodebalancer} />
+                <Link to={`/nodebalancers/${nodebalancer.label}/configs/${config.id}`}>
+                  Port ${config.port}
                 </Link>
               </h1>
             </div>
@@ -73,14 +79,16 @@ export class IndexPage extends Component {
 IndexPage.propTypes = {
   dispatch: PropTypes.func,
   nodebalancer: PropTypes.object,
+  config: PropTypes.object,
   children: PropTypes.node,
 };
 
 function select(state, props) {
   const { nodebalancers } = state.api.nodebalancers;
-  const { nbLabel } = props.params;
+  const { nbLabel, configId } = props.params;
   const nodebalancer = objectFromMapByLabel(Object.values(nodebalancers), nbLabel);
-  return { nodebalancer };
+  const config = nodebalancer._configs.configs[configId];
+  return { nodebalancer, config };
 }
 
 export default connect(select)(IndexPage);

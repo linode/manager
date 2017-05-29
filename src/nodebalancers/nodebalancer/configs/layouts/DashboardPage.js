@@ -113,7 +113,9 @@ export class ViewConfigPage extends Component {
             </div>
             <div className="row">
               <div className="col-sm-3 row-label">Session Stickiness</div>
-              <div className="col-sm-9">{NODEBALANCER_CONFIG_STICKINESS.get(config.stickiness)}</div>
+              <div className="col-sm-9">
+                {NODEBALANCER_CONFIG_STICKINESS.get(config.stickiness)}
+              </div>
             </div>
           </Card>
         </section>
