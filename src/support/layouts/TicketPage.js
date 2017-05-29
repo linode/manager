@@ -53,7 +53,6 @@ export class TicketPage extends Component {
     dispatch(setTitle(this.props.ticket.summary));
   }
 
-
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   onSubmit = () => {
