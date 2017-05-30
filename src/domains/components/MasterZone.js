@@ -90,7 +90,7 @@ export class MasterZone extends Component {
     }));
   }
 
-  renderDeleteRecord(title, id) {
+  renderDeleteRecord(title, id, name = 'record') {
     const { dispatch, domain } = this.props;
 
     dispatch(showModal(title,
@@ -99,8 +99,8 @@ export class MasterZone extends Component {
           await dispatch(domains.records.delete(domain.id, id));
           dispatch(hideModal());
         }}
-        items={[domain.domain]}
-        typeOfItem="Domains"
+        items={[name]}
+        parentItem={domain.domain}
         onCancel={() => dispatch(hideModal())}
       />
     ));
@@ -373,7 +373,8 @@ export class MasterZone extends Component {
                   cellComponent: ButtonCell,
                   headerClassName: 'ButtonColumn',
                   text: 'Delete',
-                  onClick: ({ id }) => this.renderDeleteRecord('Delete CNAME Record', id),
+                  onClick: ({ name, id }) =>
+                    this.renderDeleteRecord('Delete CNAME Record', id, name),
                 },
               ]}
               data={cnameRecords}
