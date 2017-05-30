@@ -74,4 +74,16 @@
 .AuthScopeCell {
     width: 65px;
     text-align: center;
+
+    .fa {
+        padding-right: 5px;
+    }
+
+    .fa-check {
+        color: $green;
+    }
+
+    .fa-times {
+        color: $red;
+    }
 }
