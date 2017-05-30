@@ -6,15 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-## [0.6.2] 2017-05-26
-### Fixed
-- fixed weblish to use correct wss domain
-
-## [0.6.1] 2017-05-26
+## [0.6.1]
 ### Fixed
 - fixed domain event rendering
 
-## [0.6.0] 2017-05-24
+## [0.6.0]
 ### Changed
 - lookup lish domains based on datacenter #1795
 - delay fetching kernels until config pages #1846
