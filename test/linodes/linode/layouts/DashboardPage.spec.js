@@ -105,15 +105,13 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
 
   it('renders ssh path', () => {
     const ipv4 = testLinode.ipv4;
-    const sshPath = `ssh root@${ipv4}`;
+    const sshPath = `ssh root@${ipv4[0]}`;
     const page = shallow(
       <DashboardPage
         linode={testLinode}
       />);
 
-    expect(page.find('#ssh-input').props())
-      .to.have.property('value')
-      .to.equal(sshPath);
+    expect(page.find('#ssh-input').props().value).to.equal(sshPath);
   });
 
   it('renders lish input elements', () => {
