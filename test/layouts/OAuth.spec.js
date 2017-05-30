@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { shallow, mount } from 'enzyme';
+import { shallow } from 'enzyme';
 import React from 'react';
 import { push } from 'react-router-redux';
 import sinon from 'sinon';
@@ -58,24 +58,6 @@ describe('layouts/OAuth', () => {
     expect(fetchStub.callCount).to.equal(1);
     expect(fetchStub.calledWith(`${LOGIN_ROOT}/oauth/token`)).to.equal(true);
     // TODO: Figure out how to test FormData, it's weird
-  });
-
-  it('handles OAuth redirect errors', async () => {
-    const fetchStub = sandbox.stub(fetch, 'rawFetch').returns({
-      json: () => exchangeResponse,
-    });
-    const component = mount(
-      <OAuthCallbackPage
-        dispatch={() => ({ timezone: '' })}
-        location={{
-          query: {
-            error: 'yes',
-            error_description: 'you done screwed up now',
-          },
-        }}
-      />);
-    expect(fetchStub.callCount).to.equal(0);
-    expect(component.find('.alert').text()).to.equal('Error: you done screwed up now');
   });
 
   it('dispatches a setToken action', async () => {

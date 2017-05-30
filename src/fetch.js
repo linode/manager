@@ -2,8 +2,7 @@ import * as isomorphicFetch from 'isomorphic-fetch';
 import _ from 'lodash';
 
 import { store } from '~/store';
-import { checkLogin } from '~/session';
-import { setToken } from '~/actions/authentication';
+import * as session from '~/session';
 import { API_ROOT } from './constants';
 
 /*
@@ -12,12 +11,6 @@ import { API_ROOT } from './constants';
  */
 export function rawFetch(...args) {
   return isomorphicFetch['default'](...args);
-}
-
-function expireSession() {
-  const next = { location: window.location };
-  store.dispatch(setToken(null, null, null, null));
-  checkLogin(next);
 }
 
 export function fetch(token, _path, _options) {
@@ -54,7 +47,9 @@ export function fetch(token, _path, _options) {
       const { status } = response;
       if (status >= 400) {
         if (status === 401) {
-          expireSession();
+          // Unfortunate that we are keeping this store, but the alternative is
+          // to hook every fetch call up to redux directly.
+          store.dispatch(session.expireAndReAuth);
         }
 
         reject(response);
