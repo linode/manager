@@ -90,7 +90,7 @@ export default class PersonalAccessToken extends Component {
                 formatFn: _.capitalize,
               },
             ].concat(OAUTH_SUBSCOPES.map((subscope) => {
-              return { cellComponent: AuthScopeCell, subscope: subscope };
+              return { cellComponent: AuthScopeCell, subscope: subscope, headerClassName: 'AuthScopeCell' };
             }))}
             data={scopeData}
           />
