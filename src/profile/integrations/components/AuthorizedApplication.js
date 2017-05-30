@@ -48,9 +48,11 @@ export default class AuthorizedApplication extends Component {
                 dataKey: 'scope',
                 formatFn: _.capitalize,
               },
-            ].concat(OAUTH_SUBSCOPES.map((subscope) => {
-              return { cellComponent: AuthScopeCell, subscope: subscope, headerClassName: 'AuthScopeCell' };
-            }))}
+            ].concat(OAUTH_SUBSCOPES.map((subscope) => ({
+              subscope,
+              cellComponent: AuthScopeCell,
+              headerClassName: 'AuthScopeCell',
+            })))}
             data={scopeData}
           />
         </div>
