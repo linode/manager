@@ -56,6 +56,9 @@ function hashLinkScroll() {
         element.scrollTop = element.offsetHeight;
       }
     }, 0);
+  } else {
+    // If we're not jumping to a specific place, scroll to top.
+    window.scroll(0, 0);
   }
 }
 
