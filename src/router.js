@@ -1,12 +1,15 @@
+import React from 'react';
 import { RouterContext, match } from 'react-router';
 
-import { checkLogin } from './session';
 import {
   preloadReset,
   preloadStart,
   preloadStop,
 } from '~/actions/preloadIndicator';
+import Header from '~/components/Header';
 import { store } from '~/store';
+
+import { checkLogin } from './session';
 
 
 // This wraps the react-router match function so that we can await it
@@ -63,6 +66,14 @@ export class LoadingRouterContext extends RouterContext {
       setTimeout(() => this.props.dispatch(preloadStop()), 0);
       done();
     });
+
+    // initialLoad doesn't apply to /oauth/callback page, which is a pseudo-page only
+    // loaded on login or token refresh. AppLoader should be shown while this page is
+    // working and only not shown when the page after it is done loading.
+    if (newProps.location.pathname !== '/oauth/callback') {
+      // Wait 1 second after loading so app loader isn't jumpy.
+      setTimeout(() => this.setState({ initialLoad: false }), 1000);
+    }
   }
 
   constructor(props) {
@@ -71,7 +82,7 @@ export class LoadingRouterContext extends RouterContext {
     this.preloadCounter = 0;
     this.lastPreloads = [];
 
-    this.state = { initialLoad: true };
+    this.state = { initialLoad: true, checkLoginDone: false };
   }
 
   async componentWillMount() {
@@ -80,10 +91,11 @@ export class LoadingRouterContext extends RouterContext {
       return;
     }
 
-    // Necessary to await this for testing
-    await this.runPreload(this.props);
+    // We are not going to redirect, so session is fine so far. Show AppLoader.
+    this.setState({ checkLoginDone: true });
 
-    this.setState({ initialLoad: false });
+    // Necessary to await this for testing
+    return this.runPreload(this.props);
   }
 
   async componentWillReceiveProps(newProps) {
@@ -94,7 +106,8 @@ export class LoadingRouterContext extends RouterContext {
     this.props.dispatch(preloadReset());
     setTimeout(() => this.props.dispatch(preloadStart()), 0);
 
-    await this.runPreload(newProps);
+    // Necessary to await this for testing
+    return this.runPreload(newProps);
   }
 
   shouldComponentUpdate() {
@@ -102,8 +115,22 @@ export class LoadingRouterContext extends RouterContext {
   }
 
   render() {
-    if (this.state.initialLoad) {
-      return null;
+    if (this.state.initialLoad && this.props.location.pathname !== '/logout') {
+      // If the user is about to be redirected somewhere, don't show them the loading screen.
+      if (!this.state.checkLoginDone) {
+        return null;
+      }
+
+      return (
+        <div className="layout layout--appLoader full-height">
+          <Header />
+          <div className="AppLoader full-height">
+            <div className="AppLoader-text">Loading the Manager...</div>
+            <div className="AppLoader-loader"></div>
+          </div>
+          {this.props.location.pathname === '/oauth/callback' ? super.render() : null}
+        </div>
+      );
     }
 
     // Force scroll to the top of the page on page change.
