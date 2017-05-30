@@ -49,7 +49,7 @@ export function fetch(token, _path, _options) {
         if (status === 401) {
           // Unfortunate that we are keeping this store, but the alternative is
           // to hook every fetch call up to redux directly.
-          store.dispatch(session.expire);
+          store.dispatch(session.expireAndReAuth);
         }
 
         reject(response);

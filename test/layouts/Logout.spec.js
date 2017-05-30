@@ -3,10 +3,10 @@ import sinon from 'sinon';
 import { expect } from 'chai';
 import { shallow } from 'enzyme';
 
-import { logout, setToken } from '~/actions/authentication';
+import { logout } from '~/actions/authentication';
 import { LOGIN_ROOT } from '~/constants';
-import * as storage from '~/storage';
 import { Logout } from '~/layouts/Logout';
+import * as session from '~/session';
 
 import { expectObjectDeepEquals } from '@/common';
 
@@ -20,39 +20,25 @@ describe('layouts/Logout', () => {
 
   it('resets session values on componentDidMount', async () => {
     const dispatch = sandbox.stub();
-    const redirect = sandbox.spy();
-    const setStorage = sandbox.spy(storage, 'setStorage');
+    sandbox.stub(session, 'redirect');
     const component = shallow(
       <Logout
         dispatch={dispatch}
-        redirect={redirect}
       />
     );
+
     await component.instance().componentDidMount();
-    dispatch.firstCall.args[0](dispatch);
-    expect(dispatch.callCount).to.equal(3);
-    expectObjectDeepEquals(dispatch.thirdCall.args[0], setToken(null, null));
+    expect(dispatch.callCount).to.equal(2);
+    expect(dispatch.firstCall.args[0]).to.equal(session.expire);
     expectObjectDeepEquals(dispatch.secondCall.args[0], logout());
-
-    const sessionValues = [
-      'authentication/oauth-token',
-      'authentication/scopes',
-    ];
-
-    expect(setStorage.callCount).to.equal(sessionValues.length);
-    sessionValues.map((name, i) => {
-      expect(setStorage.args[i][0]).to.equal(name);
-      expect(setStorage.args[i][1]).to.equal('');
-    });
   });
 
   it('redirects to login\'s logout', async () => {
     const dispatch = sandbox.stub();
-    const redirect = sandbox.spy();
+    const redirect = sandbox.stub(session, 'redirect');
     const component = shallow(
       <Logout
         dispatch={dispatch}
-        redirect={redirect}
       />
     );
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { expect } from 'chai';
 import sinon from 'sinon';
-import { shallow, mount } from 'enzyme';
+import { shallow } from 'enzyme';
 
 import { LoadingRouterContext } from '~/router';
 import * as session from '~/session';
@@ -18,7 +18,7 @@ describe('router/LoadingRouterContext', () => {
   it('should call check login state and preload methods on componentWillMount', async () => {
     const checkLoginStub = sandbox.stub(session, 'checkLogin');
 
-    const rc = mount(
+    const rc = shallow(
       <LoadingRouterContext
         dispatch={sandbox.stub().returns(Promise.resolve())}
         match={sandbox.spy()}

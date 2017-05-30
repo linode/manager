@@ -46,12 +46,15 @@ export function initialize(dispatch) {
 }
 
 export function expire(dispatch) {
-  const next = { location: window.location };
   // Remove these from local storage so if login fails, next time we jump to login sooner.
   setStorage('authentication/oauth-token', '');
   setStorage('authentication/scopes', '');
   dispatch(setToken(null, null));
-  checkLogin(next);
+}
+
+export function expireAndReAuth(dispatch) {
+  dispatch(expire);
+  checkLogin(window);
 }
 
 export function start(oauthToken = '', scopes = '') {
