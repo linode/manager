@@ -1,7 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 
 import { Card, CardHeader } from 'linode-components/cards';
-import { Form, FormGroup, FormGroupError, SubmitButton, Select, PasswordInput } from 'linode-components/forms';
+import {
+  Form, FormGroup, FormGroupError, SubmitButton, Select, PasswordInput,
+} from 'linode-components/forms';
 import { ConfirmModalBody } from 'linode-components/modals';
 
 import { resetPassword } from '~/api/linodes';
