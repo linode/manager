@@ -14,9 +14,8 @@ export default function Errors() {
           <code>4xx</code> codes indicate an error on your side, and
           <code>5xx</code> codes indicate an error on our side. An error on your
           side might be an invalid input, a required parameter being omitted, and
-          so on. Errors on our side are not going to happen often and we're
-          probably going to be running around with our hair on fire if you ever
-          see them.
+          so on. Errors on our side shouldn't ever happen, and we're probably going to be
+          running around with our hair on fire if you ever see them.
         </p>
         <p>
           Every request that returns errors will look something like this:
