@@ -8,6 +8,7 @@ export default function DeleteModalBody(props) {
     items,
     onCancel,
     typeOfItem,
+    parentItem,
   } = props;
 
   let body;
@@ -18,6 +19,13 @@ export default function DeleteModalBody(props) {
         <ScrollingList items={items} />
         <p>This operation cannot be undone.</p>
       </div>
+    );
+  } else if (parentItem) {
+    body = (
+      <p>
+        Are you sure you want
+        to <strong>permanently</strong> delete <strong>{items[0]}</strong> from {parentItem}?
+      </p>
     );
   } else {
     body = (
@@ -46,4 +54,5 @@ DeleteModalBody.propTypes = {
   items: PropTypes.arrayOf(PropTypes.string),
   onCancel: PropTypes.func,
   typeOfItem: PropTypes.string,
+  parentItem: PropTypes.string,
 };
