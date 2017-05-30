@@ -74,7 +74,7 @@ export default class ResetRootPassword extends Component {
       </div>
     );
 
-    const header = <CardHeader title="Reset root password" helpLink="http://example.org" />;
+    const header = <CardHeader title="Reset root password" />;
 
     return (
       <Card header={header}>

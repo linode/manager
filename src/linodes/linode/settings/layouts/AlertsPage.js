@@ -114,7 +114,7 @@ export class AlertsPage extends Component {
       },
     ];
 
-    const header = <CardHeader title="Alerts" helpLink="https://google.com" />;
+    const header = <CardHeader title="Alerts" />;
 
     return (
       <Card header={header}>
