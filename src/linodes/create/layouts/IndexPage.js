@@ -8,7 +8,7 @@ import { Card, CardHeader } from 'linode-components/cards';
 import { setError } from '~/actions/errors';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
-import { linodes } from '~/api';
+import * as api from '~/api';
 import { dispatchOrStoreErrors } from '~/components/forms';
 import Region from '~/components/Region';
 
@@ -18,10 +18,16 @@ import Plan from '../../components/Plan';
 
 
 export class IndexPage extends Component {
-  static async preload(store) {
-    const { dispatch } = store;
+  static async preload({ dispatch, getState }) {
     try {
-      await dispatch(linodes.all());
+      const requests = [api.linodes.all()];
+
+      ['types', 'regions', 'distributions']
+        .filter(type => !Object.values(getState().api[type][type]).length)
+        .forEach(type => requests.push(api[type].all()));
+
+      // Fetch all objects we haven't already grabbed this page session.
+      await Promise.all(requests.map(request => dispatch(request)));
     } catch (response) {
       dispatch(setError(response));
     }
@@ -66,7 +72,7 @@ export class IndexPage extends Component {
     }
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => linodes.post(data),
+      () => api.linodes.post(data),
       // label is created by the api if not sent, so accept it from the previous call
       ({ label }) => push(`/linodes/${label}`),
     ], ['distribution', 'type', 'region']));
