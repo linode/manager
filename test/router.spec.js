@@ -1,7 +1,7 @@
 import React from 'react';
 import { expect } from 'chai';
 import sinon from 'sinon';
-import { shallow, mount } from 'enzyme';
+import { shallow } from 'enzyme';
 
 import { LoadingRouterContext } from '~/router';
 import * as session from '~/session';
@@ -18,7 +18,7 @@ describe('router/LoadingRouterContext', () => {
   it('should call check login state and preload methods on componentWillMount', async () => {
     const checkLoginStub = sandbox.stub(session, 'checkLogin');
 
-    const rc = mount(
+    const rc = shallow(
       <LoadingRouterContext
         dispatch={sandbox.stub().returns(Promise.resolve())}
         match={sandbox.spy()}
@@ -71,7 +71,7 @@ describe('router/LoadingRouterContext', () => {
     expect(match.callCount).to.equal(1);
   });
 
-  it('should not render on initial load', async () => {
+  it('renders AppLoader on initial load', async () => {
     // Prevent redirect to login
     sandbox.stub(session, 'checkLogin');
 
@@ -89,6 +89,6 @@ describe('router/LoadingRouterContext', () => {
 
     await rc.instance().componentWillMount();
 
-    expect(rc.instance().render()).to.equal(null);
+    expect(rc.find('.AppLoader').length).to.equal(1);
   });
 });

@@ -1,37 +1,25 @@
-import React, { Component, PropTypes } from 'react';
+import { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { setToken } from '~/actions/authentication';
 import { LOGIN_ROOT } from '~/constants';
 import { rawFetch } from '~/fetch';
 import { clientId, clientSecret } from '~/secrets';
-import { setStorage } from '~/storage';
+import * as session from '~/session';
 
-
-export function setSession(oauthToken = '', scopes = '') {
-  return (dispatch) => {
-    // Set these two so we can grab them on subsequent page loads
-    setStorage('authentication/oauth-token', oauthToken);
-    setStorage('authentication/scopes', scopes);
-    // Add all to state for this (page load) session
-    dispatch(setToken(oauthToken, scopes));
-  };
-}
 
 export class OAuthCallbackPage extends Component {
-  constructor() {
-    super();
-    this.state = { error: null };
-  }
-
   async componentDidMount() {
     const { dispatch, location } = this.props;
     const { error, code } = location.query;
     const returnTo = location.query['return'];
 
     if (error) {
-      this.setState({ error: location.query.error_description });
+      // These errors only happen while developing or setting up the app.
+      /* eslint-disable no-console */
+      console.log('Error during OAuth callback:');
+      console.error(error);
+      /* eslint-enable no-console */
       return;
     }
 
@@ -50,7 +38,7 @@ export class OAuthCallbackPage extends Component {
       const { access_token, scopes } = await resp.json();
 
       // Token needs to be in redux state for all API calls
-      dispatch(setSession(access_token, scopes));
+      dispatch(session.start(access_token, scopes));
 
       // Done OAuth flow. Let the app begin.
       dispatch(push(returnTo || '/'));
@@ -60,17 +48,7 @@ export class OAuthCallbackPage extends Component {
   }
 
   render() {
-    const { error } = this.state;
-    if (error) {
-      return (
-        <div className="container">
-          <div className="alert alert-danger">
-            Error: {error}
-          </div>
-        </div>
-      );
-    }
-    return <div></div>;
+    return null;
   }
 }
 

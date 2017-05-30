@@ -123,3 +123,11 @@ Header.propTypes = {
   session: PropTypes.object,
   events: PropTypes.object,
 };
+
+// These defaultProps are only used by the router when it is rendering the half-empty loading page.
+Header.defaultProps = {
+  email: '',
+  notifications: { open: false },
+  session: { open: false },
+  events: { ids: [] },
+};
