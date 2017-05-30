@@ -28,9 +28,11 @@ export class Layout extends Component {
     // because this preload is only ever called once. However, future router
     // implementations may decide to let a preload that has already been
     // called before be called again if a certain amount of time has elapsed.
-    const requests = ['types', 'regions', 'distributions'].filter(
-      type => !Object.values(getState().api[type][type]).length).map(type => api[type].all());
 
+    const requests = [];
+
+    // Put authentication requests first so if the token we got from localstorage is invalid,
+    // it will fail sooner and redirect to login sooner.
     if (!Object.keys(getState().api.profile).length) {
       requests.push(api.profile.one());
     }
@@ -38,6 +40,17 @@ export class Layout extends Component {
     if (!Object.keys(getState().api.account).length) {
       requests.push(api.account.one());
     }
+
+    ['types', 'regions', 'distributions']
+      .filter(type => !Object.values(getState().api[type][type]).length)
+      .forEach(type => requests.push(api[type].all()));
+
+    // Fetch all objects we haven't already grabbed this page session.
+    await Promise.all(requests.map(request => dispatch(request)));
+
+    // Needed for time display component that is not attached to Redux.
+    const { timezone } = getState().api.profile;
+    setStorage('profile/timezone', timezone);
   }
 
   constructor() {
