@@ -19,8 +19,7 @@ endpoints:
           curl: |
             curl https://$api_root/$version/linode/kernels
           python: |
-            import kernels
-            TODO
+            client.linode.get_kernels()
   linode/kernels/:id:
     type: resource
     resource: kernels
@@ -34,5 +33,4 @@ endpoints:
           curl: |
             curl https://$api_root/$version/linode/kernels/$kernel_id
           python: |
-            import kernels
-            TODO
+            kernel = linode.Kernel(client, 'linode/latest')

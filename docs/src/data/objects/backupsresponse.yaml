@@ -21,9 +21,9 @@ schema:
     label:
       _type: string
       _value: null
-    datacenter:
+    region:
       _type: string
-      _value: newark
+      _value: us-east-1a
     configs:
       _type: array
       _subtype: string
@@ -71,9 +71,9 @@ schema:
       label:
         _type: string
         _value: null
-      datacenter:
+      region:
         _type: string
-        _value: newark
+        _value: us-east-1a
       configs:
         _type: array
         _subtype: string
@@ -115,9 +115,9 @@ schema:
       label:
         _type: string
         _value: null
-      datacenter:
+      region:
         _type: string
-        _value: newark
+        _value: us-east-1a
       configs:
         _type: array
         _subtype: string
@@ -164,9 +164,9 @@ schema:
         label:
           _type: string
           _value: null
-        datacenter:
+        region:
           _type: string
-          _value: newark
+          _value: us-east-1a
         configs:
           _type: array
           _subtype: string
@@ -196,3 +196,12 @@ schema:
     in_progress:
       _type: Backup
       _value: "null"
+  service:
+    _description: >
+      Status and information about the backup service.
+    enabled:
+      _type: boolean
+      _value: true
+    updated:
+      _type: datetime
+      _value: 2017-03-27T10:30:00

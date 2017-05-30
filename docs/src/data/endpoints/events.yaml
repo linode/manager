@@ -18,6 +18,8 @@ endpoints:
         examples:
           curl: |
             curl https://$api_root/$version/account/events
+          python: |
+            my_events = client.account.get_events()
   account/events/:id:
     type: resource
     resource: events
@@ -32,6 +34,8 @@ endpoints:
         examples:
           curl: |
             curl https://$api_root/$version/account/event/123
+          python: |
+            event = linode.Event(client, 123)
   account/events/:id/seen:
     type: resource
     resource: events
@@ -43,6 +47,8 @@ endpoints:
         examples:
           curl: |
             curl https://$api_root/$version/account/event/123/seen
+          python: |
+            client.mark_lask_seen_event(event)
   account/events/:id/read:
     type: resource
     resource: events
@@ -54,3 +60,5 @@ endpoints:
         examples:
           curl: |
             curl https://$api_root/$version/account/event/123/read
+          python: |
+            event.mark_read()

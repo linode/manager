@@ -1,16 +1,16 @@
-name: Datacenter
-import: from linode import Datacenter
-_object: datacenter
+name: Region
+import: from linode import Region
+_object: region
 desc: >
-    Represents a Datacenter in the API.
+    Represents a Region in the API.
 constructor:
-    name: Datacenter
+    name: Region
     parameters:
         client:
             _keyword: false
             desc: The <code>LinodeClient</code> this object will use to communicate with the API.
         id:
             _keyword: false
-            desc: This Datacenter's ID.
+            desc: This Region's ID.
     example: >
-        dc = linode.Datacenter(client, "newark")
+        region = linode.Region(client, "us-east-1a")

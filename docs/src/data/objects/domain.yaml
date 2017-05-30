@@ -1,19 +1,19 @@
 # vim: set et ts=2 sw=2 tw=80 :
-name: DNS Zones
-prefix: dnszone
+name: Domains
+prefix: domain
 description: >
-  DNS Zones
+  Domains
 schema:
   id:
     _type: integer
     _value: 357
-  dnszone:
+  domain:
     _editable: true
     _type: string
     _value: example.com
     _filterable: true
     _description: >
-      The DNS Zone name.
+      The Domain name.
   soa_email:
     _editable: true
     _type: string
@@ -27,14 +27,14 @@ schema:
     _value: Example Description
     _optional: true
     _description: >
-      A description to keep track of this DNS Zone.
+      A description to keep track of this Domain.
   refresh_sec:
     _editable: true
     _type: integer
     _value: 14400
     _optional: true
     _description: >
-      Time interval before the DNS Zone should be refreshed, in seconds.
+      Time interval before the Domain should be refreshed, in seconds.
   retry_sec:
     _editable: true
     _type: integer
@@ -50,7 +50,7 @@ schema:
     _optional: true
     _description: >
       Time value that specifies the upper limit on
-      the time interval that can elapse before the DNS Zone is no
+      the time interval that can elapse before the Domain is no
       longer authoritative, in seconds.
   ttl_sec:
     _editable: true
@@ -67,7 +67,7 @@ schema:
     _value: active
     _optional: true
     _description: >
-      The status of the DNS Zone it can be disabled, active, or edit_mode.
+      The status of the Domain it can be disabled, active, or edit_mode.
   master_ips:
     _editable: true
     _type: array
@@ -79,7 +79,7 @@ schema:
       - "123.123.123.7"
     _optional: true
     _description: >
-      An array of IP addresses for this DNS Zone.
+      An array of IP addresses for this Domain.
   axfr_ips:
     _editable: true
     _type: array
@@ -88,7 +88,7 @@ schema:
       - "44.55.66.77"
     _optional: true
     _description: >
-      An array of IP addresses allowed to AXFR the entire DNS Zone.
+      An array of IP addresses allowed to AXFR the entire Domain.
   display_group:
     _editable: true
     _value: Example Display Group
@@ -96,19 +96,19 @@ schema:
     _optional: true
     _filterable: true
     _description: >
-      A display group to keep track of this DNS Zone.
+      A display group to keep track of this Domain.
   type:
     _editable: false
     _value: master
     _type: enum
     _filterable: true
-    _subtype: dnszone_type
-    _description: Controls the DNS zone type.
+    _subtype: domain_type
+    _description: Controls the Domain type.
 enums:
   status:
-    active : Turn on serving of this DNS Zone.
-    disabled : Turn off serving of this DNS Zone.
+    active : Turn on serving of this Domain.
+    disabled : Turn off serving of this Domain.
     edit_mode : Use this mode while making edits.
-  dnszone_type:
-    master: A primary, authoritative DNS zone
-    slave: A secondary DNS zone which gets its updates from a master DNS zone.
+  domain_type:
+    master: A primary, authoritative Domain
+    slave: A secondary Domain which gets its updates from a master Domain.

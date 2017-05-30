@@ -8,21 +8,46 @@ schema:
     _type: integer
     _value: 1234
   entity:
-    _type: string
-    _value: linode123456
     _description: >
-      The current label of the entity this event was created for.
-  type:
+      Detailed inforrmation about the event's entity, including id, type, label, and URL used to access it.
+    id:
+      _type: integer
+      _value: 9302
+      _description: >
+        The entity's ID that this event is for.  This is meaningless without a type.
+    label:
+      _type: string
+      _value: linode123
+      _description: >
+        The current label of this object.  This will reflect changes in label.
+    type:
+      _type: string
+      _value: linode
+      _description: >
+        The type of entity this is related to.
+    url:
+      _type: string
+      _value: /v4/linode/instances/123
+      _description: >
+        The URL where you can access the object this event is for.  If a relative URL, it is
+        relative to the domain you retrieved the event from.
+  action:
     _type: enum
     _subtype: EventType
     _value: linode_reboot
     _description: >
-      This event's type.
+      The action that caused this event.
   username:
     _type: string
     _value: example_user
     _description: >
       The username of the user who initiated this event.
+  status:
+    _type: enum
+    _subtype: EventStatus
+    _value: finished
+    _description: >
+      The current status of this event.  
   percent_complete:
     _type: integer
     _value: 20
@@ -62,21 +87,6 @@ schema:
     _value: 234567
     _description: >
       The ID of the user who initiated this event.
-  linode_id:
-    _type: integer
-    _value: 123456
-    _description: The Linode's ID if the event affects a Linode.
-    _filterable: true
-  stackscript_id:
-   _type: integer
-   _value: null
-   _description: The StackScript's ID if the event affects a StackScript.
-   _filterable: true
-  nodebalancer_id:
-   _type: integer
-   _value: null
-   _description: The NodeBalancer's ID if the event affects a NodeBalancer.
-   _filterable: true
 enums:
   EventType:
     linode_boot: Linode boot
@@ -97,11 +107,17 @@ enums:
     backups_cancel: Backups cancel
     backups_restore: Backups restore
     password_reset: Password reset
-    dns_zone_create: DNS Zone create
-    dns_zone_delete: DNS Zone delete
-    dns_record_create: DNS Zone Record create
-    dns_record_delete: DNS Zone Record delete
+    dns_zone_create: Domain create
+    dns_zone_delete: Domain delete
+    dns_record_create: Domain Record create
+    dns_record_delete: Domain Record delete
     stackscript_create: Stackscript create
     stackscript_publicize: Stackscript publicize
     stackscript_revise: Stackscript revise
     stackscript_delete: Stackscript delete
+  EventStatus:
+    scheduled: Event has not yet started.
+    started: Event is in progress.
+    finished: Event is completed.
+    failed: Something went wrong.
+    notification: Stateless event.

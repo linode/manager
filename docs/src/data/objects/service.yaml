@@ -17,7 +17,7 @@ schema:
   backups_price:
     _type: integer
     _value: 250
-    _description: Cost (in cents) per month if backups are enabled.
+    _description: Cost (in US dollars) per month if backups are enabled.
     _filterable: false
   hourly_price:
     _type: integer
@@ -37,7 +37,7 @@ schema:
   monthly_price:
     _type: integer
     _value: 1000
-    _description: Cost (in cents) per month.
+    _description: Cost (in US dollars) per month.
     _filterable: true
   ram:
     _type: integer

@@ -57,3 +57,4 @@ enums:
     swap: Linux swap area
     ext3: The ext3 journaling filesystem for Linux.
     ext4: The ext4 journaling filesystem for Linux.
+    initrd: initrd (uncompressed initrd, ext2, max 32 MB)

@@ -1,0 +1,36 @@
+# vim: set et ts=2 sw=2 tw=80 :
+name: Regions
+base_path: /regions
+description: >
+  Region endpoints provide a means of viewing <a href="#object-region">
+  region objects</a>.
+endpoints:
+  regions:
+    type: list
+    resource: regions
+    description: >
+      Returns collection of regions.
+    methods:
+      GET:
+        description: >
+          Returns list of <a href="#object-region">regions</a>.
+        examples:
+          curl: |
+            curl https://$api_root/$version/regions
+          python: |
+            all_regions = client.get_regions()
+  regions/:id:
+    type: resource
+    resource: region
+    description: >
+      Return a particular region.
+    methods:
+      GET:
+        description: >
+          Returns information about this <a href="#object-region">
+          region</a>.
+        examples:
+          curl: |
+            curl https://$api_root/$version/region/$region_id
+          python: |
+            region = linode.Region(client, 'us-east-1a')

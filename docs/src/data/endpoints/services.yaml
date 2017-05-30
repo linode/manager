@@ -19,8 +19,7 @@ endpoints:
           curl: |
             curl https://$api_root/$version/linode/services
           python: |
-            import services
-            TODO
+            client.linode.get_types()
   linode/types/:id:
     type: resource
     resource: types
@@ -34,5 +33,4 @@ endpoints:
           curl: |
             curl https://$api_root/$version/linode/services/$service_id
           python: |
-            import services
-            TODO
+            type = linode.Service(client, 'g5-standard=1')

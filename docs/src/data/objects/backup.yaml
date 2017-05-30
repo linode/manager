@@ -24,13 +24,13 @@ schema:
     _subtype: Type
     _value: snapshot
     _description: Whether this is a snapshot or an auto backup.
-  datacenter:
-      _type: datacenter
+  region:
+      _type: region
       _filterable: false
-      _description: This backup  datacenter.
+      _description: This backup  region.
       id:
         _type: string
-        _value: newark
+        _value: us-east-1a
       label:
         _type: string
         _value: Newark, NJ

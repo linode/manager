@@ -19,8 +19,7 @@ endpoints:
           curl: |
             curl https://$api_root/$version/linode/distributions
           python: |
-            import distributions
-            TODO
+            client.linode.get_distributions()
   linode/distributions/:id:
     type: resource
     resource: distributions
@@ -35,5 +34,4 @@ endpoints:
           curl: |
             curl https://$api_root/$version/linode/distributions/$distribution_id
           python: |
-            import distributions
-            TODO
+            distro = linode.Distribution(client, 'linode/debian8')

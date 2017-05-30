@@ -20,6 +20,8 @@ endpoints:
           curl: |
             curl -H "Authorization: token $TOKEN" \
               https://api.alpha.linode.com/v4/networking/ipv4
+          python: |
+            my_ipv4s = client.networking.get_ipv4()
       POST:
         money: true
         oauth: ips:create
@@ -36,6 +38,8 @@ endpoints:
                 -H "Authorization: token $TOKEN" \
                 -X POST -d '{"linode":123}' \
                 https://api.alpha.linode.com/v4/networking/ipv4
+          python: |
+            # presently unsupported
   networking/ipv4/:address:
     type: resource
     authenticated: true
@@ -50,6 +54,8 @@ endpoints:
             curl: |
               curl -H "Authorization: token $TOKEN" \
                 https://$api_root/$version/networking/ipv4/97.107.143.37
+            python: |
+              my_ipv4 = linode.IPAddress(client, '97.107.143.37')
       PUT:
         oauth: ips:modify
         description: >
@@ -60,6 +66,9 @@ endpoints:
                 -H "Authorization: token $TOKEN" \
                 -X PUT -d '{"rdns":"example.org"}' \
                 https://$api_root/$version/networking/ipv4/97.107.143.37
+          python: |
+            my_ipv4.rdns = 'example.org'
+            my_ipv4.save()
   networking/ipv6:
     type: list
     authenticated: true
@@ -74,6 +83,8 @@ endpoints:
           curl: |
             curl -H "Authorization: token $TOKEN" \
                 https://$api_root/$version/networking/ipv6
+          python: |
+            my_ipv6s = client.networking.get_ipv6()
   networking/ipv6/:address:
     type: resource
     authenticated: true
@@ -89,6 +100,8 @@ endpoints:
           curl: |
             curl -H "Authorization: token $TOKEN" \
                 https://$api_root/$version/networkint/ipv6/2600:3c01::2:5001
+          python: |
+            my_ipv6 = linode.IPv6Address(client, '2600:3c01::2:5001')
       PUT:
         oauth: ips:modify
         description: >
@@ -99,6 +112,9 @@ endpoints:
                 -H "Authorization: token $TOKEN" \
                 -X PUT -d '{"rdns":"example.org"}' \
                 https://$api_root/$version/networking/ipv6/2600:3c01::2:5001
+          python: |
+            my_ipv6.rdns = 'example.org'
+            my_ipv6.save()
   networking/ip-assign:
     type: strange
     authenticated: true
@@ -109,11 +125,11 @@ endpoints:
         oauth: linodes:access
         dangerous: true
         params:
-          datacenter:
+          region:
             description: >
-              The <a href="#object-datacenter">datacenter</a> where the IPv4 address
+              The <a href="#object-region">region</a> where the IPv4 address
               and Linode are located.
-            type: datacenter
+            type: region
           assignments:
             description: >
               An array of IPv4 addresses and the Linode IDs they will be assigned to
@@ -123,10 +139,18 @@ endpoints:
             curl -H "Content-Type: application/json" \
                 -H "Authorization: token $TOKEN" \
                 -X POST -d '{
-                    "datacenter": "newark",
+                    "region": "us-east-1a",
                     "assignments": [
                       {"address": "210.111.22.95", "linode_id": 134504},
                       {"address": "190.12.207.11", "linode_id": 119034},
                     ]
                 }' \
             https://$api_root/$version/networking/ip-assign
+          python: |
+            linode_1 = linode.Linode(client, 134504)
+            ip1 = linode_1.ips.ipv4.public[0]
+
+            linode_2 = linode.Linode(client, 119034)
+            ip2 = linode_2.ips.ipv4.public[0]
+
+            client.networking.assign_ips(linode_1.region, ip1.to(linode_2), ip2.to(linode_1))

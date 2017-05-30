@@ -100,7 +100,7 @@ endpoints:
               -X PUT -d '{
                 "label": "New Label"
               }' \
-              https://$api_root/$version/stackscripts/$stackscript_id
+              https://$api_root/$version/linode/stackscripts/$stackscript_id
           python: |
             import stackscript
             TODO

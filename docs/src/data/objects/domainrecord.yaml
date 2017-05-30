@@ -1,8 +1,8 @@
 # vim: set et ts=2 sw=2 tw=80 :
-name: DNS Zone Records
+name: Domain Records
 prefix: zrcd
 description: >
-  DNS Zone Records: The DNS Zone Record fields will contain different values
+  Domain Records: The Domain Record fields will contain different values
   depending on what type of record it is.
 schema:
   id:
@@ -79,11 +79,6 @@ schema:
       Time interval that the resource record may be cached before
       it should be discarded, in seconds. Leave as 0 to accept
       our default.
-  zone_record_type:
-    _type: enum
-    _subtype: Zone Record Types
-    _value: A
-    _description: DNS Zone Record Options.
 enums:
   Zone Record Types:
     A: Address Mapping Record
