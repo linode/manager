@@ -53,14 +53,14 @@ export default class CreatePersonalAccessToken extends Component {
     const { dispatch } = this.props;
     const { label, expiry } = this.state;
 
-    const scopes = OAUTH_SUBSCOPES.reduce((scopes, scope) => {
+    const scopes = OAUTH_SCOPES.reduce((scopes, scope) => {
       const level = this.state[scope];
       if (OAUTH_SUBSCOPES.indexOf(level) === -1) {
         return scopes;
       }
 
-      return `${scopes};${scope}:${level}`;
-    }, '') || undefined;
+      return [...scopes, `${scope}:${level}`];
+    }, []).join(',') || undefined;
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => tokens.post({ label, scopes, expiry: SelectExpiration.map(expiry) }),

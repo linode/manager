@@ -3,6 +3,7 @@ import sinon from 'sinon';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
 
+import { OAUTH_SCOPES } from '~/constants';
 import CreatePersonalAccessToken from '~/profile/integrations/components/CreatePersonalAccessToken';
 import { SHOW_MODAL } from '~/actions/modal';
 
@@ -40,6 +41,7 @@ describe('profile/integrations/components/CreatePersonalAccessToken', () => {
         method: 'POST',
         body: {
           label: 'My sweet new token',
+          scopes: OAUTH_SCOPES.map(scope => `${scope}:delete`).join(','),
           // Can't actually check on expiry because it's based off of $NOW which
           // leads to test failure
         },
