@@ -38,7 +38,7 @@ export default class RescueMode extends Component {
     const { errors, loading, disks: configuredDisks } = this.state;
 
     return (
-      <Card header={<CardHeader title="Rescue mode" />}>
+      <Card header={<CardHeader title="Rescue mode" />} className="full-height">
         <Form className="RescueMode-form" onSubmit={this.onSubmit}>
           {AVAILABLE_DISK_SLOTS.map((slot, i) => (
             <DiskSelect

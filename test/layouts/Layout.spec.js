@@ -52,7 +52,7 @@ describe('layouts/Layout', () => {
   it('renders a footer', () => {
     const component = shallow(makeLayout());
     const sourceLink = component.find('footer a');
-    expect(sourceLink.text()).to.equal('Source');
+    expect(sourceLink.text()).to.equal('Page Source');
     expect(sourceLink.props().href)
       .to.equal('https://github.com/linode/manager/blob/master/foobar.html');
   });

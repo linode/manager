@@ -34,6 +34,10 @@
         height: $form-field-height;
         text-align: center;
 
+        .fa {
+            color: $light-black;
+        }
+
         // Hide default Bootstrap arrow
         ::after {
             display: none;

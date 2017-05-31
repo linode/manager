@@ -147,16 +147,16 @@ export class DashboardPage extends Component {
     const lishLink = `${username}@lish-${DATACENTERS[linode.region.id]}.linode.com`;
 
     return (
-      <div className="row-justify row-eq-height">
+      <div className="row">
         <section className="col-lg-6 col-md-12 col-sm-12">
-          <Card header={<CardHeader title="Summary" />}>
+          <Card header={<CardHeader title="Summary" />} className="full-height">
             <div className="row">
               <div className="col-sm-4 row-label">
                 IP Addresses
               </div>
               <div className="col-sm-8">
                 <ul className="list-unstyled" id="ips">
-                  <li>{linode.ipv4}</li>
+                  <li>{linode.ipv4[0]}</li>
                   <li className="text-muted">{linode.ipv6.split('/')[0]}</li>
                   <li><Link to={`/linodes/${linode.label}/networking`}>(...)</Link></li>
                 </ul>
@@ -187,18 +187,18 @@ export class DashboardPage extends Component {
           </Card>
         </section>
         <section className="col-lg-6 col-md-12 col-sm-12">
-          <Card header={<CardHeader title="Access" />}>
+          <Card header={<CardHeader title="Access" />} className="full-height">
             <FormGroup className="row">
               <label htmlFor="ssh-input" className="col-sm-4 col-form-label">SSH</label>
               <div className="col-sm-8">
                 <div className="input-group">
                   <Input
                     id="ssh-input"
-                    value={`ssh root@${linode.ipv4}`}
+                    value={`ssh root@${linode.ipv4[0]}`}
                     readOnly
                   />
                   <span className="input-group-btn">
-                    <Button href={`ssh://root@${linode.ipv4}`}>SSH</Button>
+                    <Button href={`ssh://root@${linode.ipv4[0]}`}>SSH</Button>
                   </span>
                 </div>
               </div>
@@ -236,7 +236,11 @@ export class DashboardPage extends Component {
     return (
       <div>
         {this.renderDetails()}
-        {this.renderGraphs()}
+        <div className="row">
+          <div className="col-sm-12">
+            {this.renderGraphs()}
+          </div>
+        </div>
       </div>
     );
   }
