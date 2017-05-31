@@ -36,11 +36,13 @@ export class IPManagementPage extends Component {
 
     return (
       <div>
-        <IPTransfer
-          dispatch={dispatch}
-          linode={linode}
-          linodes={linodesInRegion}
-        />
+        <section>
+          <IPTransfer
+            dispatch={dispatch}
+            linode={linode}
+            linodes={linodesInRegion}
+          />
+        </section>
         <IPSharing
           dispatch={dispatch}
           linode={linode}
