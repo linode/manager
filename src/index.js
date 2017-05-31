@@ -9,13 +9,13 @@ import ReactGA from 'react-ga';
 import { store } from './store';
 import DevTools from './components/DevTools';
 import { GA_ID } from './constants';
-import { initializeAuthentication } from './session';
+import * as session from './session';
 
 // eslint-disable-next-line no-unused-vars
 import styles from '../scss/manager.scss';
 
 const history = syncHistoryWithStore(browserHistory, store);
-initializeAuthentication(store.dispatch);
+store.dispatch(session.initialize);
 
 import Layout from './layouts/Layout';
 import OAuthCallbackPage from './layouts/OAuth';

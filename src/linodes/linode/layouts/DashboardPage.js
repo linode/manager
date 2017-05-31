@@ -49,7 +49,6 @@ export class DashboardPage extends Component {
 
     this.state = {
       source: 'cpu',
-      range: 'last1day',
     };
 
     const stats = props.linode._stats;
@@ -62,6 +61,7 @@ export class DashboardPage extends Component {
             format: p => `${p.toFixed(1)}%`,
           },
           data: formatData([stats.cpu]),
+          unit: '%',
         },
         io: {
           title: 'IO',
@@ -71,6 +71,7 @@ export class DashboardPage extends Component {
           },
           data: formatData([stats.io.io, stats.io.swap],
                            ['Disk', 'Swap']),
+          unit: ' blocks/s',
         },
         netv4: {
           title: 'IPv4 Network',
@@ -82,6 +83,7 @@ export class DashboardPage extends Component {
                             stats.netv4.out, stats.netv4.private_out],
                            ['Public IPv4 Inbound', 'Private IPv4 Inbound',
                             'Public IPv4 Outbound', 'Private IPv4 Outbound']),
+          unit: ' bits/s',
         },
         netv6: {
           title: 'IPv6 Network',
@@ -93,6 +95,7 @@ export class DashboardPage extends Component {
                             stats.netv6.out, stats.netv6.private_out],
                            ['Public IPv6 Inbound', 'Private IPv6 Inbound',
                             'Public IPv6 Outbound', 'Private IPv6 Outbound']),
+          unit: ' bits/s',
         },
       };
     }
@@ -106,6 +109,7 @@ export class DashboardPage extends Component {
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   renderGraphs() {
+    const { timezone } = this.props;
     return (
       <Card header={<CardHeader title="Graphs" />} className="graphs">
         {!this.graphs ? <p>No graphs are available.</p> : (
@@ -124,19 +128,13 @@ export class DashboardPage extends Component {
                 </Select>
               </div>
               <div className="float-sm-right">
-                <Select
-                  value={this.state.range}
-                  name="range"
-                  onChange={this.onChange}
-                  disabled
-                >
-                  <option key={1} value="last1day">Last 24 hours</option>
-                  <option key={2} value="last2day">Last 48 hours</option>
-                  <option key={3} value="last7day">Last week</option>
-                </Select>
+                Last 24 hours
               </div>
             </div>
-            <LineGraph {...this.graphs[this.state.source]} />
+            <LineGraph
+              timezone={timezone}
+              {...this.graphs[this.state.source]}
+            />
           </div>
         )}
       </Card>
@@ -149,16 +147,16 @@ export class DashboardPage extends Component {
     const lishLink = `${username}@lish-${DATACENTERS[linode.region.id]}.linode.com`;
 
     return (
-      <div className="row-justify row-eq-height">
+      <div className="row">
         <section className="col-lg-6 col-md-12 col-sm-12">
-          <Card header={<CardHeader title="Summary" />}>
+          <Card header={<CardHeader title="Summary" />} className="full-height">
             <div className="row">
               <div className="col-sm-4 row-label">
                 IP Addresses
               </div>
               <div className="col-sm-8">
                 <ul className="list-unstyled" id="ips">
-                  <li>{linode.ipv4}</li>
+                  <li>{linode.ipv4[0]}</li>
                   <li className="text-muted">{linode.ipv6.split('/')[0]}</li>
                   <li><Link to={`/linodes/${linode.label}/networking`}>(...)</Link></li>
                 </ul>
@@ -189,18 +187,18 @@ export class DashboardPage extends Component {
           </Card>
         </section>
         <section className="col-lg-6 col-md-12 col-sm-12">
-          <Card header={<CardHeader title="Access" />}>
+          <Card header={<CardHeader title="Access" />} className="full-height">
             <FormGroup className="row">
               <label htmlFor="ssh-input" className="col-sm-4 col-form-label">SSH</label>
               <div className="col-sm-8">
                 <div className="input-group">
                   <Input
                     id="ssh-input"
-                    value={`ssh root@${linode.ipv4}`}
+                    value={`ssh root@${linode.ipv4[0]}`}
                     readOnly
                   />
                   <span className="input-group-btn">
-                    <Button href={`ssh://root@${linode.ipv4}`}>SSH</Button>
+                    <Button href={`ssh://root@${linode.ipv4[0]}`}>SSH</Button>
                   </span>
                 </div>
               </div>
@@ -238,7 +236,11 @@ export class DashboardPage extends Component {
     return (
       <div>
         {this.renderDetails()}
-        {this.renderGraphs()}
+        <div className="row">
+          <div className="col-sm-12">
+            {this.renderGraphs()}
+          </div>
+        </div>
       </div>
     );
   }
@@ -247,13 +249,14 @@ export class DashboardPage extends Component {
 DashboardPage.propTypes = {
   linode: PropTypes.object,
   username: PropTypes.string,
+  timezone: PropTypes.string,
   dispatch: PropTypes.func.isRequired,
 };
 
 function select(state, props) {
   const { linode } = selectLinode(state, props);
-  const { username } = state.api.profile;
-  return { linode, username };
+  const { username, timezone } = state.api.profile;
+  return { linode, username, timezone };
 }
 
 export default connect(select)(DashboardPage);

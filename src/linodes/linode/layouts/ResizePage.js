@@ -7,6 +7,8 @@ import {
 } from 'linode-components/forms';
 
 import { setSource } from '~/actions/source';
+import { setError } from '~/actions/errors';
+import { types } from '~/api';
 import { resizeLinode } from '~/api/linodes';
 import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
 import Plan from '~/linodes/components/Plan';
@@ -15,6 +17,16 @@ import { selectLinode } from '../utilities';
 
 
 export class ResizePage extends Component {
+  static async preload({ dispatch, getState }) {
+    try {
+      if (!getState().api.types.ids.length) {
+        await dispatch(types.all());
+      }
+    } catch (response) {
+      dispatch(setError(response));
+    }
+  }
+
   constructor(props) {
     super(props);
 

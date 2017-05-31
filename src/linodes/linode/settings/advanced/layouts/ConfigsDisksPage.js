@@ -17,8 +17,12 @@ export class ConfigsDisksPage extends Component {
   render() {
     return (
       <div>
-        <ConfigPanel {...this.props} />
-        <DiskPanel {...this.props} />
+        <section>
+          <ConfigPanel {...this.props} />
+        </section>
+        <section>
+          <DiskPanel {...this.props} />
+        </section>
       </div>
     );
   }

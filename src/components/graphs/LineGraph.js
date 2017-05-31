@@ -1,8 +1,13 @@
 import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import Chart from 'chart.js';
-import moment from 'moment';
 import _ from 'lodash';
+import moment from 'moment-timezone';
+
+
+export function formatGraphTime(time, timezone) {
+  return moment.utc(time).tz(timezone).format('HH:mm');
+}
 
 // Source: http://stackoverflow.com/a/5624139/1507139
 function rgbaFromHex(hex, alpha) {
@@ -50,17 +55,16 @@ export default class LineGraph extends Component {
     this._chart.destroy();
   }
 
-  formatTicks(d, i) {
+  formatTicks(timezone, d, i) {
     // This is probably a temporary function until someone needs to pass in their own format.
     if (i % 10 === 0) {
-      return moment(d).format('HH:mm');
+      return formatGraphTime(d, timezone);
     }
 
     return undefined;
   }
 
-
-  renderChart({ data, title, yAxis }) {
+  renderChart({ timezone, data, title, yAxis, unit }) {
     const thisDOMNode = ReactDOM.findDOMNode(this);
     const ctx = thisDOMNode.getContext('2d');
     const config = {
@@ -77,6 +81,40 @@ export default class LineGraph extends Component {
         tooltips: {
           mode: 'index',
           intersect: false,
+          callbacks: {
+            title: function (tooltipItems, data) {
+              // Pick first xLabel for now
+              let title = '';
+              const labels = data.labels;
+              const labelCount = labels ? labels.length : 0;
+
+              if (tooltipItems.length > 0) {
+                const item = tooltipItems[0];
+
+                if (item.xLabel) {
+                  title = item.xLabel;
+                } else if (labelCount > 0 && item.index < labelCount) {
+                  title = labels[item.index];
+                }
+              }
+
+              // prevents trying to convert title if already in HH:mm format
+              if (Number(title)) {
+                title = formatGraphTime(title, timezone);
+              }
+
+              return title;
+            },
+            label: function (tooltipItem, data) {
+              let label = data.datasets[tooltipItem.datasetIndex].label || '';
+
+              if (label) {
+                label += ': ';
+              }
+              label += tooltipItem.yLabel + unit;
+              return label;
+            },
+          },
         },
         hover: {
           mode: 'nearest',
@@ -90,7 +128,10 @@ export default class LineGraph extends Component {
               display: true,
               labelString: 'Time',
             },
-            ticks: { display: true, callback: this.formatTicks },
+            ticks: {
+              display: true,
+              callback: (d, i) => this.formatTicks(timezone, d, i),
+            },
           }],
           yAxes: [{
             display: true,
@@ -98,7 +139,11 @@ export default class LineGraph extends Component {
               display: true,
               labelString: yAxis.label,
             },
-            ticks: { display: true, callback: yAxis.format },
+            ticks: {
+              display: true,
+              callback: yAxis.format,
+              beginAtZero: true,
+            },
           }],
         },
       },
@@ -123,6 +168,7 @@ export default class LineGraph extends Component {
 }
 
 LineGraph.propTypes = {
+  timezone: PropTypes.string,
   data: PropTypes.shape({
     labels: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number])),
     datasets: PropTypes.arrayOf(

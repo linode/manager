@@ -155,7 +155,7 @@ export default class StatusDropdown extends Component {
 
     return (
       <div className="StatusDropdown StatusDropdown--dropdown">
-        <Dropdown elements={[{ name: status }, ...elements]} />
+        <Dropdown elements={[{ name: status }, ...elements]} dropdownIcon="fa-cog" />
       </div>
     );
   }

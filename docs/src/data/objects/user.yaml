@@ -1,0 +1,21 @@
+# vim: set et ts=2 sw=2 tw=80 :
+name: User
+prefix: account/users
+description: >
+  User information associated with an account.
+schema:
+  username:
+    _type: string
+    _value: example_user
+    _description: >
+      The username of the user.
+  email:
+    _type: string
+    _value: "person@place.com"
+    _description: >
+      The email address of the user.
+  restricted:
+    _type: boolean
+    _value: true
+    _description: >
+      Whether or not the user has access restrictions.

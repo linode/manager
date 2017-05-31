@@ -29,7 +29,7 @@ export default class RescueMode extends Component {
     const { disks } = this.state;
 
     return dispatch(dispatchOrStoreErrors.apply(this, [
-      [() => rescueLinode(linode.id, { disks })],
+      [() => rescueLinode(linode.id, disks)],
     ]));
   }
 
@@ -38,9 +38,9 @@ export default class RescueMode extends Component {
     const { errors, loading, disks: configuredDisks } = this.state;
 
     return (
-      <Card header={<CardHeader title="Rescue mode" />}>
+      <Card header={<CardHeader title="Rescue mode" />} className="full-height">
         <Form className="RescueMode-form" onSubmit={this.onSubmit}>
-          {AVAILABLE_DISK_SLOTS.map((slot, i) => (
+          {AVAILABLE_DISK_SLOTS.map((slot, i) => slot === 'sdh' ? null : (
             <DiskSelect
               key={i}
               disks={disks}

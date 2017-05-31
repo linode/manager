@@ -18,29 +18,35 @@ export default class CreateOrEditConfig extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      label: props.config.label,
-      comments: props.config.comments,
-      kernel: props.config.kernel,
-      initrd: props.config.initrd || '',
-      rootDevice: props.config.root_device,
-      virtMode: props.config.virt_mode,
-      runLevel: props.config.run_level,
-      ramLimit: props.config.ram_limit,
-      disks: props.config.disks,
+    this.componentWillReceiveProps = this.componentWillMount;
+  }
+
+  componentWillMount() {
+    const { config, account } = this.props;
+
+    this.setState({
+      label: config.label,
+      comments: config.comments,
+      kernel: config.kernel,
+      initrd: config.initrd || '',
+      rootDevice: config.root_device,
+      virtMode: config.virt_mode,
+      runLevel: config.run_level,
+      ramLimit: config.ram_limit,
+      disks: config.disks,
       isCustomRoot: AVAILABLE_DISK_SLOTS.indexOf(
-        props.config.root_device.replace('/dev/', '')) === -1,
-      isMaxRam: props.config.ram_limit === 0,
-      enableDistroHelper: props.config.helpers.enable_distro_helper,
-      enableNetworkHelper: props.config.helpers.enable_network_helper,
-      enableModulesDepHelper: props.config.helpers.enable_modules_dep_helper,
-      disableUpdatedb: props.config.helpers.disable_updatedb,
+        config.root_device.replace('/dev/', '')) === -1,
+      isMaxRam: config.ram_limit === 0,
+      enableDistroHelper: config.helpers.enable_distro_helper,
+      enableNetworkHelper: config.helpers.enable_network_helper,
+      enableModulesDepHelper: config.helpers.enable_modules_dep_helper,
+      disableUpdatedb: config.helpers.disable_updatedb,
       errors: {},
       loading: null,
-    };
+    });
 
-    if (!props.config.id) {
-      this.state.enableNetworkHelper = props.account.network_helper;
+    if (!config.id) {
+      this.setState({ enableNetworkHelper: account.network_helper });
     }
   }
 
@@ -386,7 +392,7 @@ CreateOrEditConfig.defaultProps = {
       enable_modules_dep_helper: true,
       disable_updatedb: true,
     },
-    kernel: 'linode/latest_64',
+    kernel: 'linode/latest-64bit',
     virt_mode: 'paravirt',
     run_level: 'default',
     ram_limit: 0,

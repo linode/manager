@@ -8,9 +8,10 @@
     z-index: $preload-z-index;
 
     &--running {
-        animation: left-to-right 4s;
+        // 30s is an upper bound on how long we expect requests to take.
+        animation: left-to-right 30s;
         opacity: 1;
-        transition: opacity 0 none, width;
+        transition: opacity 0 none, width ease;
     }
 
     &--done {
@@ -27,6 +28,6 @@
     }
 
     100% {
-        width: calc(35%);
+        width: calc(95%);
     }
 }
