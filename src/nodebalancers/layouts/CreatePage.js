@@ -17,7 +17,7 @@ import Region from '~/components/Region';
 export class CreatePage extends Component {
   static async preload({ dispatch, getState }) {
     try {
-      if (!Object.values(getState().api.regions).length) {
+      if (!getState().api.regions.ids.length) {
         await dispatch(regions.all());
       }
     } catch (response) {

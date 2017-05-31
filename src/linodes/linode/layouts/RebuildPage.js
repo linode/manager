@@ -19,7 +19,7 @@ import { selectLinode } from '../utilities';
 export class RebuildPage extends Component {
   static async preload({ dispatch, getState }) {
     try {
-      if (!Object.values(getState().api.distributions).length) {
+      if (!getState().api.distributions.ids.length) {
         await dispatch(distributions.all());
       }
     } catch (response) {
