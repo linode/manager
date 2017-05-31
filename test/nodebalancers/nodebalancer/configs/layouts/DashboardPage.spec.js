@@ -4,9 +4,9 @@ import { mount } from 'enzyme';
 import { expect } from 'chai';
 
 import { genericNodeBalancer } from '@/data/nodebalancers';
-import { ViewConfigPage } from '~/nodebalancers/nodebalancer/configs/layouts/ViewConfigPage';
+import { DashboardPage } from '~/nodebalancers/nodebalancer/configs/layouts/DashboardPage';
 
-describe('nodebalancers/nodebalancer/configs/layouts/ViewConfigPage', () => {
+describe('nodebalancers/nodebalancer/configs/layouts/DashboardPage', () => {
   const sandbox = sinon.sandbox.create();
   const dispatch = sandbox.stub();
 
@@ -17,7 +17,7 @@ describe('nodebalancers/nodebalancer/configs/layouts/ViewConfigPage', () => {
 
   it('displays the config view summary', async () => {
     const page = await mount(
-      <ViewConfigPage
+      <DashboardPage
         config={genericNodeBalancer._configs.configs[1]}
         nodebalancer={genericNodeBalancer}
       />

@@ -7,7 +7,9 @@ import { ChangePassword, TwoFactor } from '../components';
 export function AuthenticationPage(props) {
   return (
     <div>
-      <ChangePassword dispatch={props.dispatch} />
+      <section>
+        <ChangePassword dispatch={props.dispatch} />
+      </section>
       <TwoFactor
         dispatch={props.dispatch}
         tfaEnabled={props.profile.two_factor_auth === 'enabled'}

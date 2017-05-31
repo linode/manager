@@ -14,9 +14,9 @@
 }
 
 .Modal {
-    width: 500px;
-    margin: $main-padding-tb auto;
-    max-height: calc(100% - #{2 * $main-padding-tb});
+    width: 600px;
+    margin: 30px auto;
+    max-height: calc(100% - #{2 * 30px});
     box-shadow: $box-shadow;
     background: $white;
     display: flex;
@@ -25,7 +25,7 @@
 
     &-header {
         background: $gray;
-        padding: $main-padding-tb * 2 $main-padding-lr;
+        padding: 20px 30px;
         border-bottom: 1px solid #ccc;
 
         h3 {
@@ -35,8 +35,7 @@
     }
 
     &-body {
-        // TODO: address calculated gutter values where possible
-        padding: $main-padding-tb ($grid-gutter-width-base / 2);
+        padding: 15px 30px;
         overflow-y: auto;
     }
 

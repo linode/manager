@@ -20,7 +20,7 @@ import { NodeModal } from '../components/NodeModal';
 import { dispatchOrStoreErrors } from '~/components/forms';
 
 
-export class ViewConfigPage extends Component {
+export class DashboardPage extends Component {
   static async preload({ dispatch, getState }, { nbLabel, configId }) {
     try {
       const { id } = await dispatch(getObjectByLabelLazily('nodebalancers', nbLabel));
@@ -97,24 +97,28 @@ export class ViewConfigPage extends Component {
 
     return (
       <div>
-        <Card header={<CardHeader title="Summary" />}>
-          <div className="row">
-            <div className="col-sm-3 row-label">Port</div>
-            <div className="col-sm-9" id="port">{config.port}</div>
-          </div>
-          <div className="row">
-            <div className="col-sm-3 row-label">Protocol</div>
-            <div className="col-sm-9">{config.protocol.toUpperCase()}</div>
-          </div>
-          <div className="row">
-            <div className="col-sm-3 row-label">Algorithm</div>
-            <div className="col-sm-9">{NODEBALANCER_CONFIG_ALGORITHMS.get(config.algorithm)}</div>
-          </div>
-          <div className="row">
-            <div className="col-sm-3 row-label">Session Stickiness</div>
-            <div className="col-sm-9">{NODEBALANCER_CONFIG_STICKINESS.get(config.stickiness)}</div>
-          </div>
-        </Card>
+        <section>
+          <Card header={<CardHeader title="Summary" />}>
+            <div className="row">
+              <div className="col-sm-3 row-label">Port</div>
+              <div className="col-sm-9" id="port">{config.port}</div>
+            </div>
+            <div className="row">
+              <div className="col-sm-3 row-label">Protocol</div>
+              <div className="col-sm-9">{config.protocol.toUpperCase()}</div>
+            </div>
+            <div className="row">
+              <div className="col-sm-3 row-label">Algorithm</div>
+              <div className="col-sm-9">{NODEBALANCER_CONFIG_ALGORITHMS.get(config.algorithm)}</div>
+            </div>
+            <div className="row">
+              <div className="col-sm-3 row-label">Session Stickiness</div>
+              <div className="col-sm-9">
+                {NODEBALANCER_CONFIG_STICKINESS.get(config.stickiness)}
+              </div>
+            </div>
+          </Card>
+        </section>
         <Card
           title="Nodes"
           header={
@@ -164,7 +168,7 @@ export class ViewConfigPage extends Component {
   }
 }
 
-ViewConfigPage.propTypes = {
+DashboardPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   config: PropTypes.object.isRequired,
   nodebalancer: PropTypes.object.isRequired,
@@ -177,5 +181,4 @@ function select(state, props) {
   return { config, nodebalancer };
 }
 
-export default connect(select)(ViewConfigPage);
-
+export default connect(select)(DashboardPage);
