@@ -1,0 +1,132 @@
+name: Support Tickets
+sort: 0
+base_path: /support/tickets
+description: >
+  Support tickets allow you to view, submit, and manage requests for help to
+  the Linode support team.
+endpoints:
+  support/tickets:
+    type: list
+    resource: supportticket
+    authenticated: true
+    description: >
+      Manage the support tickets your account can access.
+    methods:
+      GET:
+        oauth: tickets:view
+        description: >
+          Returns a list of <a href="#object-supportticket">Support Tickets</a>.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                https://$api_root/$version/support/tickets
+      POST:
+        oauth: tickets:create
+        description: >
+          Submit a new question and request help from the Linode support team.
+          Only one of domain_id, linode_id, and nodebalancer_id can be set on
+          a single ticket.
+        params:
+          summary:
+            description: >
+              A short summary or title for the support ticket.
+            type: string
+          description:
+            description: >
+              The complete details of the support request.
+            type: string
+          domain_id:
+            description: >
+              The Domain this ticket is regarding, if relevant.
+            type: int
+            optional: true
+          linode_id:
+            description: >
+              The Linode this ticket is regarding, if relevant.
+            type: int
+            optional: true
+          nodebalancer_id:
+            description: >
+              The NodeBalancer this ticket is regarding, if relevant.
+            type: int
+            optional: true
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X POST -d '{
+                    "summary": "A question about a Linode",
+                    "description": "More details about the question",
+                    "linode_id": 123,
+                }' \
+                https://$api_root/$version/support/tickets
+  support/tickets/:id:
+    type: resource
+    resource: supportticket
+    authenticated: true
+    description: >
+      Manage a particular support ticket your account can access.
+    methods:
+      GET:
+        oauth: tickets:view
+        description: >
+          Returns information about this
+          <a href="#object-supportticket">support ticket</a>.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                https://$api_root/$version/support/ticket/$ticket_id
+  support/tickets/:id/replies:
+    type: list
+    resource: supportticketreply
+    authenticated: true
+    description: >
+      Manage the replies to a particular support ticket.
+    methods:
+      GET:
+        oauth: tickets:view
+        description: >
+          Returns a list of
+          <a href="#object-supportticketreply">support ticket replies</a>.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                https://$api_root/$version/support/tickets/$ticket_id/replies
+      POST:
+        oauth: tickets:modify
+        description: >
+          Add a new reply to an existing support ticket.
+        params:
+          description:
+            description: >
+              The reply to attach to the support ticket.
+            type: string
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X POST -d '{
+                    "description": "More details about the ticket",
+                }' \
+                https://$api_root/$version/support/tickets/$ticket_id/replies
+  support/tickets/:id/attachments:
+    type: list
+    resource: supportticket
+    authenticated: true
+    methods:
+      POST:
+        oauth: tickets:modify
+        description: >
+          Add a file attachment to a particular support ticket.
+        params:
+          file:
+            description: >
+              The file to attach. There is a 5MB size limit.
+            type: string
+        examples:
+          curl: |
+            curl -H "Content-Type: multipart/form-data" \
+                -H "Authorization: token $TOKEN" \
+                -X POST \
+                -F file=@/path/to/file \
+                https://$api_root/$version/support/tickets/$ticket_id/attachments

@@ -26,7 +26,7 @@ export default class NewSlaveZone extends Component {
     const { domain, ips } = this.state;
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => domains.post({ domain, ips: ips.split(';'), type: 'slave' }),
+      () => domains.post({ domain, master_ips: ips.split(';'), type: 'slave' }),
       () => push('/domains'),
     ]));
   }

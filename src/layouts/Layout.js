@@ -27,9 +27,11 @@ export class Layout extends Component {
     // because this preload is only ever called once. However, future router
     // implementations may decide to let a preload that has already been
     // called before be called again if a certain amount of time has elapsed.
-    const requests = ['types', 'regions', 'distributions'].filter(
-      type => !Object.values(getState().api[type][type]).length).map(type => api[type].all());
 
+    const requests = [];
+
+    // Put authentication requests first so if the token we got from localstorage is invalid,
+    // it will fail sooner and redirect to login sooner.
     if (!Object.keys(getState().api.profile).length) {
       requests.push(api.profile.one());
     }
@@ -37,6 +39,10 @@ export class Layout extends Component {
     if (!Object.keys(getState().api.account).length) {
       requests.push(api.account.one());
     }
+
+    ['types', 'regions', 'distributions']
+      .filter(type => !Object.values(getState().api[type][type]).length)
+      .forEach(type => requests.push(api[type].all()));
 
     // Fetch all objects we haven't already grabbed this page session.
     await Promise.all(requests.map(request => dispatch(request)));
@@ -77,7 +83,7 @@ export class Layout extends Component {
       dispatch,
     } = this.props;
     const { title, link } = this.state;
-    const githubRoot = 'https://github.com/linode/manager/blob/master/';
+    const githubRoot = `https://github.com/linode/manager/blob/${VERSION || 'master'}/`;
     return (
       <div
         className="layout full-height"
@@ -129,7 +135,7 @@ export class Layout extends Component {
                 rel="noopener"
                 href={`${githubRoot}${source.source}`}
               >
-                Source
+                Page Source
               </a>
             }
             <Link to="/styleguide">Styleguide</Link>

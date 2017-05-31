@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
@@ -28,8 +29,22 @@ export class IndexPage extends Component {
     dispatch(setTitle('Users'));
   }
 
-  render() {
+  renderGroup = (group, i, groups) => {
     const { username: currentUser } = this.props.profile;
+    const _renderGroup = group.map(user => (
+      <div className="col-lg-6" key={user.username}>
+        <User user={user} currentUser={currentUser} />
+      </div>
+    ));
+
+    if (i === groups.length - 1) {
+      return <div className="row">{_renderGroup}</div>;
+    }
+
+    return <section className="row">{_renderGroup}</section>;
+  }
+
+  render() {
     const listOfUsers = Object.values(this.props.users.users);
 
     return (
@@ -44,13 +59,7 @@ export class IndexPage extends Component {
           </div>
         </header>
         <div className="PrimaryPage-body">
-          <div className="row">
-            {listOfUsers.map(user => (
-              <div className="col-lg-6" key={user.username}>
-                <User user={user} currentUser={currentUser} />
-              </div>
-            ))}
-          </div>
+          {_.chunk(listOfUsers, 2).map(this.renderGroup)}
         </div>
       </div>
     );

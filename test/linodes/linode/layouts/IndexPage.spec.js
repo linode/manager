@@ -38,7 +38,7 @@ describe('linodes/linode/layouts/IndexPage', () => {
   });
 
   it('renders the linode label and group', () => {
-    const page = shallow(
+    const page = mount(
       <IndexPage
         dispatch={dispatch}
         linode={testLinode}
@@ -47,7 +47,9 @@ describe('linodes/linode/layouts/IndexPage', () => {
 
     const h1Link = page.find('h1 Link');
     expect(h1Link.props().to).to.equal(`/linodes/${testLinode.label}`);
-    expect(h1Link.props().children).to.equal(`${testLinode.group} / ${testLinode.label}`);
+    const displayGroupProps = h1Link.find('GroupLabel').props();
+    expect(displayGroupProps.object.group).to.equal(testLinode.group);
+    expect(displayGroupProps.object.label).to.equal(testLinode.label);
   });
 
   it('renders the linode label alone when ungrouped', () => {

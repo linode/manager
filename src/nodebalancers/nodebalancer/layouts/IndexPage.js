@@ -5,10 +5,12 @@ import { push } from 'react-router-redux';
 import { Tabs } from 'linode-components/tabs';
 
 import Breadcrumbs from '~/components/Breadcrumbs';
+
 import { setError } from '~/actions/errors';
 import { nodebalancers } from '~/api';
 import { getObjectByLabelLazily, objectFromMapByLabel } from '~/api/util';
 import { setTitle } from '~/actions/title';
+import { GroupLabel } from '~/components';
 
 
 export class IndexPage extends Component {
@@ -29,46 +31,25 @@ export class IndexPage extends Component {
   }
 
   render() {
-    const { nodebalancer, params } = this.props;
+    const { nodebalancer } = this.props;
     if (!nodebalancer) return null;
 
     const { label } = nodebalancer;
-    let crumbs;
-    let tabs;
-    let title = '';
-
-    if (params.configId) {
-      crumbs = [
-        { to: '/nodebalancers', label: 'NodeBalancers' },
-        { to: `/nodebalancers/${nodebalancer.label}`, label: nodebalancer.label },
-      ];
-      tabs = [
-        { name: 'Dashboard', link: `/nodebalancers/${label}/configs/${params.configId}` },
-        {
-          name: 'Settings',
-          link: `/nodebalancers/${label}/configs/${params.configId}/settings`,
-        },
-      ];
-      title = `Port ${nodebalancer._configs.configs[params.configId].port}`;
-    } else {
-      crumbs = [
-        { to: '/nodebalancers', label: 'NodeBalancers' },
-      ];
-      tabs = [
-        { name: 'Dashboard', link: `/nodebalancers/${label}` },
-        { name: 'Settings', link: `/nodebalancers/${label}/settings` },
-      ];
-      title = nodebalancer.label;
-    }
+    const tabs = [
+      { name: 'Dashboard', link: `/nodebalancers/${label}` },
+      { name: 'Settings', link: `/nodebalancers/${label}/settings` },
+    ];
 
     return (
-      <div className="details-page">
+      <div>
         <header className="main-header">
           <div className="container clearfix">
             <div className="float-sm-left">
-              <Breadcrumbs crumbs={crumbs} />
+              <Breadcrumbs crumbs={[{ to: '/nodebalancers', label: 'NodeBalancers' }]} />
               <h1 title={nodebalancer.id}>
-                <Link to={`/nodebalancers/${nodebalancer.label}`}>{title}</Link>
+                <Link to={`/nodebalancers/${nodebalancer.label}`}>
+                  <GroupLabel object={nodebalancer} />
+                </Link>
               </h1>
             </div>
           </div>
@@ -93,14 +74,12 @@ IndexPage.propTypes = {
   dispatch: PropTypes.func,
   nodebalancer: PropTypes.object,
   children: PropTypes.node,
-  params: PropTypes.object,
 };
 
 function select(state, props) {
   const { nodebalancers } = state.api.nodebalancers;
   const { nbLabel } = props.params;
   const nodebalancer = objectFromMapByLabel(Object.values(nodebalancers), nbLabel);
-
   return { nodebalancer };
 }
 

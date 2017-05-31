@@ -47,9 +47,9 @@ describe('profile/integrations/components/PersonalAccessToken', () => {
       expect(columns.at(0).text()).to.equal(_.capitalize(OAUTH_SCOPES[i - 1]));
 
       // No strikethroughs because all scopes are granted
-      expect(row.find('s').length).to.equal(0);
+      expect(row.find('.fa-times').length).to.equal(0);
       // All bold because all scopes are granted
-      expect(row.find('strong').length).to.equal(OAUTH_SUBSCOPES.length);
+      expect(row.find('.fa-check').length).to.equal(OAUTH_SUBSCOPES.length);
     }
   });
 

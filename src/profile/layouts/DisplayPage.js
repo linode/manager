@@ -7,10 +7,12 @@ import { ChangeTimezone, ChangeEmail } from '../components';
 export function DisplayPage(props) {
   return (
     <div>
-      <ChangeTimezone
-        dispatch={props.dispatch}
-        timezone={props.profile.timezone}
-      />
+      <section>
+        <ChangeTimezone
+          dispatch={props.dispatch}
+          timezone={props.profile.timezone}
+        />
+      </section>
       <ChangeEmail
         dispatch={props.dispatch}
         email={props.profile.email}

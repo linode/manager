@@ -1,1 +1,0 @@
-module.exports = {"name":"Service","import":"from linode import Service","_object":"service","desc":"Represents a Service in the API.\n","endpoints":null,"methods":null};

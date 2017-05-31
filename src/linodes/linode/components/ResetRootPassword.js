@@ -1,7 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 
 import { Card, CardHeader } from 'linode-components/cards';
-import { Form, FormGroup, SubmitButton, Select, PasswordInput } from 'linode-components/forms';
+import {
+  Form, FormGroup, FormGroupError, SubmitButton, Select, PasswordInput,
+} from 'linode-components/forms';
 import { ConfirmModalBody } from 'linode-components/modals';
 
 import { resetPassword } from '~/api/linodes';
@@ -13,15 +15,22 @@ export default class ResetRootPassword extends Component {
   constructor(props) {
     super(props);
 
-    this.nonSwapDisks = Object.values(props.linode._disks.disks).filter(
-      (d) => d.filesystem !== 'swap');
-
     this.state = {
       errors: {},
       loading: false,
       password: '',
-      disk: this.nonSwapDisks[0].id || '',
     };
+
+    this.componentWillReceiveProps = this.componentWillMount;
+  }
+
+  componentWillMount() {
+    this.nonSwapDisks = Object.values(this.props.linode._disks.disks).filter(
+      (d) => d.filesystem !== 'swap');
+
+    this.setState({
+      disk: this.nonSwapDisks.length ? this.nonSwapDisks[0].id : '',
+    });
   }
 
   onSubmit = () => {
@@ -63,9 +72,9 @@ export default class ResetRootPassword extends Component {
     // This is difficult to do until we have know the last booted config.
     const diskAvailable = linode.status !== 'offline';
     const disabled = !this.nonSwapDisks.length || diskAvailable;
-    let disabledText = 'Linode does not have any disks eligible for password reset.';
+    let disabledText = 'Linode must be powered off to reset the root password.';
     if (!diskAvailable) {
-      disabledText = 'Linode must be powered off to reset the root password.';
+      disabledText = 'Linode does not have any disks eligible for password reset.';
     }
 
     const disabledMessage = !disabled ? null : (
@@ -74,12 +83,12 @@ export default class ResetRootPassword extends Component {
       </div>
     );
 
-    const header = <CardHeader title="Reset root password" helpLink="http://example.org" />;
+    const header = <CardHeader title="Reset root password" />;
 
     return (
-      <Card header={header}>
+      <Card header={header} className="full-height">
         <Form onSubmit={this.onSubmitConfirm}>
-          <FormGroup className="row" errors={errors} field="disk">
+          <FormGroup className="row" errors={errors} name="disk">
             <label htmlFor="disk" className="col-sm-3 col-form-label">Disk</label>
             <div className="col-sm-9">
               <Select
@@ -93,16 +102,19 @@ export default class ResetRootPassword extends Component {
               </Select>
             </div>
           </FormGroup>
-          <FormGroup className="row" errors={errors} field="password">
+          <FormGroup className="row" errors={errors} name="password">
             <label htmlFor="password" className="col-sm-3 col-form-label">Password</label>
             <div className="col-sm-9">
-              <PasswordInput
-                id="password"
-                name="password"
-                value={this.state.password}
-                onChange={this.onChange}
-                disabled={disabled}
-              />
+              <div className="clearfix">
+                <PasswordInput
+                  id="password"
+                  name="password"
+                  value={this.state.password}
+                  onChange={this.onChange}
+                  disabled={disabled}
+                />
+              </div>
+              <FormGroupError errors={errors} name="password" inline={false} />
             </div>
           </FormGroup>
           <FormGroup className="row">

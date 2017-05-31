@@ -9,6 +9,7 @@ import { setError } from '~/actions/errors';
 import { setTitle } from '~/actions/title';
 import { linodes } from '~/api';
 import { getObjectByLabelLazily } from '~/api/util';
+import { GroupLabel } from '~/components';
 import StatusDropdown from '~/linodes/components/StatusDropdown';
 
 import { selectLinode } from '../utilities';
@@ -53,14 +54,14 @@ export class IndexPage extends Component {
     ].map(t => ({ ...t, link: `/linodes/${linode.label}${t.link}` }));
 
     return (
-      <div className="details-page">
+      <div>
         <header className="main-header">
           <div className="container">
             <div className="float-sm-left">
               <Link to="/linodes">Linodes</Link>
               <h1 title={linode.id}>
                 <Link to={`/linodes/${linode.label}`}>
-                  {linode.group ? `${linode.group} / ${linode.label}` : linode.label}
+                  <GroupLabel object={linode} />
                 </Link>
               </h1>
             </div>

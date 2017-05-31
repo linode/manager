@@ -1,0 +1,327 @@
+# vim: set et ts=2 sw=2 tw=80 :
+name: NodeBalancers
+base_path: /nodebalancers
+description: >
+  NodeBalancer endpoints provide a means of managing <a href="#object-nodebalancer">
+  NodeBalancer objects</a> on your account.
+endpoints:
+  nodebalancers:
+    type: list
+    resource: nodebalancer
+    authenticated: true
+    description: >
+      Manage the collection of NodeBalancers your account may access.
+    methods:
+      GET:
+        oauth: nodebalancers:view
+        description: >
+          Returns a list of <a href="#object-nodebalancer">NodeBalancers</a>.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                https://$api_root/$version/nodebalancers
+          python: |
+            my_nodebalancers = client.get_nodebalancers()
+      POST:
+        money: true
+        oauth: nodebalancers:create
+        description: >
+          Creates a new NodeBalancer.
+        params:
+          region:
+            description: >
+              A <a href="#object-region">region</a> ID to provision
+              this NodeBalancer in.
+            type: region
+          label:
+            optional: true
+            description: The label to assign this NodeBalancer. Defaults to "nodebalancer" followed by its ID.
+            limit: "3-32 ASCII characters limited to letters, numbers, underscores, and dashes, starting and ending with a letter, and without two dashes or underscores in a row"
+          client_conn_throttle:
+            optional: true
+            description: >
+              To help mitigate abuse, throttle connections per second, per client. 0 to disable, max of 20.
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X POST -d '{
+                    "region": "us-east-1a",
+                    "label": "my_cool_balancer",
+                    "client_conn_throttle": 10
+                }' \
+                https://$api_root/$version/nodebalancers
+          python: |
+            new_nodebalancer = client.create_nodebalancer('us-east-1a', label='my_cool_balancer', client_conn_throttle=10)
+  nodebalancers/:id:
+    type: resource
+    resource: nodebalancer
+    authenticated: true
+    description: >
+      Manage a particular NodeBalancer your account may access.
+    methods:
+      GET:
+        oauth: nodebalancers:view
+        description: >
+          Returns information about this <a href="#object-nodebalancer">NodeBalancer</a>.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                https://$api_root/$version/nodebalancers/$nodebalancer_id
+          python: |
+            my_nodebalancer = linode.NodeBalancer(client, 123)
+      PUT:
+        oauth: nodebalancers:modify
+        description: >
+          Modifies this NodeBalancer.
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X PUT -d '{
+                    "region": "us-east-1a",
+                    "label": "awesome_new_label",
+                    "client_conn_throttle": 14
+                }' \
+                https://$api_root/$version/nodebalancers/$nodebalancer_id
+          python: |
+            my_nodebalancer = linode.NodeBalancer(client, 123)
+            my_nodebalancer.label = 'awesome_new_label'
+            my_nodebalancer.client_conn_throttle = 14
+            my_nodebalancer.save()
+      DELETE:
+       oauth: nodebalancers:delete
+       dangerous: true
+       description: >
+         Deletes this NodeBalancer and all associated configs and nodes. This action cannot be undone.
+       examples:
+         curl: |
+           curl -H "Authorization: token $TOKEN" \
+               -X DELETE \
+               https://$api_root/$version/nodebalancers/$nodebalancer_id
+         python: |
+           my_nodebalancer = linode.NodeBalancer(client, 123)
+           my_nodebalancer.delete()
+  nodebalancers/:id/configs:
+    type: list
+    resource: nodebalancer_config
+    authenticated: true
+    description: >
+      Manage the configs on this NodeBalancer.
+    methods:
+      GET:
+        oauth: nodebalancers:view
+        description: >
+          Returns a list of <a href="#object-nodebalancer_config">configs</a> for a
+          given NodeBalancer.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                https://$api_root/$version/nodebalancers/$nodebalancer_id/configs
+          python: |
+            my_nodebalancer = linode.NodeBalancer(client, 123)
+            nb_configs = my_nodebalancer.configs
+      POST:
+        oauth: nodebalancers:create
+        description: >
+          Creates a NodeBalancer config.
+        params:
+          label:
+            description: Unique label for your NodeBalancer config.
+          port:
+            description: Port to bind to on the public interfaces.
+            limit: 1-65534
+          protocol:
+            description: The protocol used for the config.
+          algorithm:
+            description: Balancing algorithm.
+          stickiness:
+            description: Session persistence. Route subsequent requests from a client to the same backend.
+          check:
+            description: Perform active health checks on the backend nodes.
+          check_interval:
+            description: Seconds between health check probes.
+          check_timeout:
+            description: Seconds to wait before considering the probe a failure.
+            limit: 1-30. Must be less than check_interval # leave the final period off!
+          check_attempts:
+            description: Number of failed probes before taking a node out of rotation.
+            limit: 1-30
+          check_path:
+            description: When check is "http", the path to request.
+          check_body:
+            description: When check is "http", a regex to match within the first 16,384 bytes of the response body.
+          check_passive:
+            description: Enable passive checks based on observing communication with back-end nodes.
+          # ssl_cert:
+          #  description: SSL certificate served by the NodeBalancer when the protocol is "https".
+          # ssl_key:
+          #  description: Unpassphrased private key for the SSL certificate when the protocol is "https".
+          cipher_suite:
+            description: SSL cipher suite to enforce.
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X POST -d '{
+                    "label": "myNodeBalancer",
+                    "port": 80,
+                    "protocol": "http",
+                    "algorithm": "roundrobin",
+                    "stickiness": "none",
+                    "check": "http_body",
+                    "check_interval": 5,
+                    "check_timeout": 3,
+                    "check_attempts": 10,
+                    "check_path": "/path/to/check",
+                    "check_body": "we got some stuff back",
+                    "cipher_suite": "legacy"
+                }' \
+                https://$api_root/$version/nodebalancers/$nodebalancer_id/configs
+          python: |
+            my_nodebalancer = linode.NodeBalancer(client, 123)
+            new_config = my_nodebalancer.create_config(port=80, label='myNodeBalancerConfig', protocol='http',
+                    algorithm='roundrobin', stickiness='none', check='http_body', check_interval=5, check_timeout=3,
+                    check_attempts=10, check_path='/path/to/check', check_body='we got some stuff back',
+                    cipher_suite='legacy')
+  nodebalancers/:id/configs/:id:
+    type: resource
+    authenticated: true
+    description: >
+      Manage a particular NodeBalancer config.
+    methods:
+      GET:
+        oauth: nodebalancers:view
+        description: >
+          Returns information about this NodeBalancer config.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id
+          python: |
+            nb_config = linode.NodeBalancerConfig(client, 456, 123) # linode_client, nodebalancer_config_id, nodebalancer_id
+      DELETE:
+        oauth: nodebalancers:modify
+        description: >
+          Deletes a NodeBalancer config and all associated nodes. This action cannot be undone.
+        dangerous: true
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                -X DELETE \
+                https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id
+          python: |
+            nb_config = linode.NodeBalancerConfig(client, 456, 123) # linode_client, nodebalancer_config_id, nodebalancer_id
+            nb_config.delete()
+  nodebalancers/:id/configs/:id/ssl:
+    type: resource
+    authenticated: true
+    description: >
+      Add or update SSL certificate and https protocol to an existing config profile.
+    methods:
+      POST:
+        oauth: nodebalancers:modify
+        description: Adds/updates SSL certificates
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X POST -d '{
+                  "ssl_cert": "----- BEGIN CERTIFICATE ----- < etc...> ----- END CERTIFICATE -----",
+                  "ssl_key": "----- BEGIN PRIVATE KEY ----- < etc...> ----- END PRIVATE KEY -----"
+                }' \
+                https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id/ssl
+          python: |
+            # currently unimplemented
+  nodebalancers/:id/configs/:id/nodes:
+    type: list
+    resource: nodebalancer_config_nodes
+    authenticated: true
+    description: >
+      Manage the nodes for a specified NodeBalancer config.
+    methods:
+      GET:
+        oauth: nodebalancers:view
+        description: >
+          Returns a list of <a href="#object-nodebalancer_config_node">config nodes</a> for a
+          given NodeBalancer.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id/nodes
+          python: |
+            my_nodebalancer = linode.NodeBalancer(client, 123)
+            nb_config = my_nodebalancer.configs[0]
+            nb_nodes = nb_config.nodes
+      POST:
+        oauth: nodebalancers:create
+        description: Creates a new NodeBalancer config node.
+        params:
+          label:
+            description: Unique label for your NodeBalancer config node.
+          address:
+            description: The address:port combination used to communicate with this node.
+          weight:
+            description: Load balancing weight, 1-255. Higher means more connections.
+          mode:
+            description: The connections mode for this node. One of 'accept', 'reject', or 'drain'.
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+              -H "Authorization: token $TOKEN" \
+              -X POST -d '{
+                  "label": "greatest_node_ever",
+                  "address": "192.168.4.5:80",
+                  "weight": 40,
+                  "mode": "accept"
+              }' \
+              https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id/nodes
+  nodebalancers/:id/configs/:id/nodes/:id:
+    type: resource
+    authenticated: true
+    description: >
+      Manage a particular NodeBalancer config node.
+    methods:
+      GET:
+        oauth: nodebalancers:view
+        description: >
+          Returns information about this node..
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id/nodes/$node_id
+          python: |
+            nb_node = linode.NodeBalancerNode(client, 789, 456, 123) # linode_client, node_id, config_id, nodebalancer_id
+      PUT:
+        oauth: nodebalancers:modify
+        description: >
+          Modifies this node
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+              -H "Authorization: token $TOKEN" \
+              -X PUT -d '{
+                  "label": "node001",
+                  "address": "192.168.12.12:100",
+                  "weight": 40,
+                  "mode": "accept",
+              }' \
+              https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id/nodes/$node_id
+          python: |
+            nb_node = linode.NodeBalancerNode(client, 789, 456, 123) # linode_client, node_id, config_id, nodebalancer_id
+            nb_node.label = 'node001'
+            nb_node.address = '192.168.12.12:100'
+            nb_node.save()
+      DELETE:
+        oauth: nodebalancers:modify
+        description: >
+          Deletes a NodeBalancer config. This action cannot be undone.
+        dangerous: true
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                -X DELETE \
+                https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id/nodes/$node_id
+          python: |
+            nb_node = linode.NodeBalancerNode(client, 789, 456, 123) # linode_client, node_id, config_id, nodebalancer_id
+            nb_node.delete()

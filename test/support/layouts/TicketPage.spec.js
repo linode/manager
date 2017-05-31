@@ -60,6 +60,7 @@ describe('support/layouts/TicketPage', () => {
     page.find('#reply[name="reply"]').simulate(
       'change', { target: { name: 'reply', value: reply } });
 
+    dispatch.reset();
     await page.find('Form').props().onSubmit();
 
     // No attachments, so save attachment endpoint not called.
