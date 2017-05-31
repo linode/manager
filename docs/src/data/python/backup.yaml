@@ -1,0 +1,30 @@
+name: Backup
+import: from linode import Backup
+_object: backup
+desc: >
+    A Backup taken for a Linode.
+constructor:
+    name: Backup
+    parameters:
+        client:
+            _keyword: false
+            desc: The <code>LinodeClient</code> this object will use to communicate with the API.
+        id:
+            _keyword: false
+            desc: This Backup's ID.
+        parent_id:
+            _keyword: false
+            desc: The <code>Linode</code> object's ID who owns this Backup.
+    example: >
+        backup = linode.Backup(client, 543, 123)
+methods:
+    restore_to:
+        desc: >
+            Restores this Backup to a Linode
+        example: |
+            backup.restore_to(l)
+        returns: True if the restore succeeded
+        parameters:
+            linode:
+                _keyword: false
+                desc: A linode object or ID to restore this Backup to.

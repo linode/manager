@@ -1,0 +1,16 @@
+name: Distribution
+import: from linode import Distribution
+_object: distribution
+desc: >
+    Represents a Distribution in the API.
+constructor:
+    name: Distribution
+    parameters:
+        client:
+            _keyword: false
+            desc: The <code>LinodeClient</code> this object will use to communicate with the API.
+        id:
+            _keyword: false
+            desc: This Distribution's ID.
+    example: >
+        distro = linode.Distribution(client, "linode/debian8")

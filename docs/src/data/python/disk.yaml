@@ -1,0 +1,34 @@
+name: Disk
+import: from linode import Disk
+_object: disk
+desc: >
+    A Linode disk.  These do not need to be created manually - deploy a linode with
+    <code>client.create_linode(serv, dc, source=distribution)</code> to have the API generate
+    working disks for you.
+constructor:
+    name: Disk
+    parameters:
+        client:
+            _keyword: false
+            desc: The <code>LinodeClient</code> this object will use to communicate with the API.
+        id:
+            _keyword: false
+            desc: This Disk's ID.
+        parent_id:
+            _keyword: false
+            desc: The <code>Linode</code> object's ID who owns this Disk.
+    example: >
+        disk = linode.Disk(client, "Debian 8.1 Disk", "123456")
+methods:
+    save:
+        desc: >
+            Sends any local changes to Editable fields of this Disk to the API, saving them.
+        example: |
+            disk.save()
+        returns: True if the save succeeded
+    delete:
+        desc: >
+            Deletes this Disk.  This is not reversable.
+        example:
+            disk.delete()
+        returns: True if the delete succueeded.

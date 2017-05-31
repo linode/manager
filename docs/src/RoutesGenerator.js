@@ -27,9 +27,9 @@ export function generateChildRoute(props) {
   const { prevCrumbs, endpoint } = props;
 
   let childEndpoints = null;
-  if (endpoint.formattedEndpoints) {
-    childEndpoints = endpoint.formattedEndpoints.map(function(childEndpoint, index) {
-      if (childEndpoint.formattedEndpoints && childEndpoint.formattedEndpoints.length) {
+  if (endpoint.endpoints) {
+    childEndpoints = endpoint.endpoints.map(function(childEndpoint, index) {
+      if (childEndpoint.endpoints && childEndpoint.endpoints.length) {
         return generateChildRoute({ endpoint: childEndpoint, prevCrumbs: prevCrumbs });
       }
 

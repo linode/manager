@@ -1,0 +1,551 @@
+# vim: set et ts=2 sw=2 tw=80 :
+name: Account
+sort: 1
+base_path: /account
+description: >
+  Account endpoints provide a means of viewing <a href="#object-profile">
+  user profile objects</a>, as well as managing OAuth Clients and Tokens.
+endpoints:
+  account/profile:
+    type: resource
+    resource: account
+    description: >
+      Manage your user information.
+    methods:
+      GET:
+        description: >
+          Returns your user information.
+        examples:
+          curl: |
+            curl https://$api_root/$version/account/profile
+          python: |
+            my_profile = client.account.get_profile()
+      PUT:
+        description: >
+          Edits your account profile.
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+              -H "Authorization: token $TOKEN" \
+              -X PUT -d '{
+                    "username": "jsmith",
+                    "email": "jsmith@mycompany.com",
+                    "timezone": "US/Eastern",
+                    "email_notifications": true,
+                    "ip_whitelist_enabled": true,
+                    "lish_auth_method": "password_keys",
+                    "authorized_keys": ""
+                  }
+                }' \
+                https://$api_root/$version/account/profile
+          python: |
+            my_profile.email = 'jsmith@mycompany.com'
+            my_profile.timezone = 'US/Eastern'
+            my_profile.email_notifications = True
+            my_profile.ip_whitelist_enabled = True
+            my_profile.lish_auth_method = 'password_keys'
+            my_profile.save()
+  account/profile/password:
+    methods:
+      POST:
+        description: >
+          Change your password.
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+              -H "Authorization: token $TOKEN" \
+              -X POST -d '{
+                  "password":"hunter7"
+              }' \
+              https://$api_root/$version/account/profile/password
+          python: |
+            my_profile = client.account.get_profile()
+            my_profile.reset_password('hunter7')
+  account/profile/tfa-enable:
+    methods:
+      POST:
+        description: >
+          Begin enabling TFA on your account.  Returns a two-factor secret
+          that you must validate with the tfa-enable-confirm endpoint
+          to require two-factor for future logins.
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+              -H "Authorization: token $TOKEN" \
+              -X POST \
+              https://$api_root/$version/account/profile/tfa-enable
+          python: |
+            my_profile = client.account.get_profile()
+            secret = my_profile.enable_tfa()
+  account/profile/tfa-enable-confirm:
+    methods:
+      POST:
+        description: >
+          Confirm your two-factor secret and require TFA for future logins.
+        params:
+          tfa_code:
+            type: string
+            description: >
+              The code generated using the two-factor secret you got from tfa-enable
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+              -H "Authorization: token $TOKEN" \
+              -X POST -d '{
+                "tfa_code": "123456"
+              }' \
+              https://$api_root/$version/account/profile/tfa-enable-confirm
+          python: |
+            my_profile = client.account.get_profile()
+            my_profile.confirm_tfa('123456')
+  account/profile/tfa-disable:
+    methods:
+      POST:
+        description: >
+          Disable TFA on your account.  Future logins will not require TFA.
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+              -H "Authorization: token $TOKEN" \
+              -X POST \
+              https://$api_root/$version/account/profile/tfa-disable
+          python: |
+            my_profile = client.account.get_profile()
+            my_profile.disable_tfa()
+  account/profile/grants:
+    methods:
+      GET:
+        description: >
+          Get grants for the current user.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                https://$api_root/$version/account/profile/grants
+          python: |
+            my_profile = client.account.get_profile()
+            my_grants = my_profile.grants
+  account/tokens:
+    type: list
+    resource: oauthtoken
+    description: >
+      Manage OAuth Tokens created for your user.
+    methods:
+      GET:
+        oauth: tokens:view
+        description: >
+          Get a list of all OAuth Tokens active for your user.  This includes first-party (manager) tokens,
+          third-party OAuth Tokens, and Personal Access Tokens.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                https://$api_root/$version/account/tokens
+          python: |
+            my_tokens = client.account.get_tokens()
+      POST:
+        oauth: tokens:create
+        dangerous: true
+        description: >
+          Creates a new Personal Access Token for your user with the given scopes and expiry.  This token
+          can subsequently be used to access the API and make any requests it has OAuth Scopes for.
+        params:
+          label:
+            type: string
+            value: my-token
+            optional: true
+            description: >
+              The label for this Personal Access Token.  For your reference only.
+          expiry:
+            type: datetime
+            value: 2017-12-31 01:00:00
+            optional: true
+            description: >
+              If provided, when this Personal Access Token will expire.  If omitted, the resulting
+              token will be valid until it is revoked.
+          scopes:
+            type: string
+            value: linodes:view
+            optional: true
+            description: >
+              The OAuth Scopes this token will be created with.  If omitted, the resulting token
+              will have all OAuth Scopes.
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X POST -d '{
+                  "scopes": "linodes:view;domains:view"
+                }' \
+                https://$api_root/$version/account/tokens
+          python: |
+            from linode import OAuthScopes
+            new_token = client.account.create_personal_access_token(scopes=[OAuthScopes.Linodes.view, OAuthScopes.Domains.view])
+  account/tokens/:id:
+    type: resource
+    resource: oauthtoken
+    description: >
+      Manage individual OAuth Tokens for your user.
+    methods:
+      GET:
+        oauth: tokens:view
+        description: >
+          Get a single token.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                https://$api_root/$version/account/tokens/123
+          python: |
+            my_token = linode.OAuthToken(client, 123)
+      PUT:
+        oauth: tokens:modify
+        description: >
+          Edit a token's label.
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X PUT -d '{
+                  "label": "test-new-label"
+                }' \
+                https://$api_root/$version/account/tokens/123
+          python: |
+            my_token.label = 'test-new-label'
+            my_token.save()
+      DELETE:
+        oauth: tokens:delete
+        description: >
+          Expire an OAuth Token for your user.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                -X DELETE \
+                https://$api_root/$version/account/tokens/123
+          python: |
+            my_token.delete()
+  account/settings:
+    type: resource
+    resource: account
+    description: >
+      Manage your account settings.
+    methods:
+      GET:
+        description: >
+          Returns your account settings.
+        examples:
+          curl: |
+            curl https://$api_root/$version/account/settings
+          python: |
+            my_settings = client.account.get_settings()
+      PUT:
+        description: >
+          Edits your account settings.
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X PUT -d '{
+                  "address_1": "123 Main St.",
+                  "address_2": "Suite 101",
+                  "city": "Philadelphia",
+                  "company": "My Company, LLC",
+                  "country": "US",
+                  "email": "jsmith@mycompany.com",
+                  "first_name": "John",
+                  "last_name": "Smith",
+                  "network_helper": true,
+                  "phone": "555-555-1212",
+                  "state": "PA",
+                  "zip": 19102
+                  }
+                }' \
+                https://$api_root/$version/account/settings
+          python: |
+            my_settings = client.account.get_settings()
+            my_settings.address_1 = '123 Main St.'
+            my_settings.address_2 = 'Suite 101'
+            my_settings.city = 'Philadelphia'
+            my_settings.company = 'My Company, LLC'
+            my_settings.country = 'US'
+            my_settings.email = 'jsmith@company.com'
+            my_settings.save()
+  account/clients:
+    type: list
+    resource: client
+    authenticated: true
+    description: >
+      Manage the collection of OAuth client applications your account may access.
+    methods:
+      GET:
+        oauth: clients:view
+        description: >
+          Returns a list of <a href="#object-client">clients</a>.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                https://$api_root/$version/account/clients
+          python: |
+            my_clients = client.account.get_oauth_clients()
+      POST:
+        oauth: clients:create
+        description: >
+          Registers a new OAuth client application.
+        params:
+          label:
+            description: A name for the new client application.
+            type: string
+            limit: "1-128 characters"
+          redirect_uri:
+            description: A URL to redirect to after the OAuth flow has completed.
+            type: string
+            limit: "1-512 characters"
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X POST -d '{
+                    "label": "Example app",
+                    "redirect_uri": "https://oauthreturn.example.org/",
+                }' \
+                https://$api_root/$version/account/clients
+          python: |
+            new_client = client.account.create_oauth_client('Example app', 'https://oauthreturn.example.org/')
+  account/clients/:id:
+    type: resource
+    resource: client
+    authenticated: true
+    description: >
+      Manage a particular OAuth client application your account may access.
+    methods:
+      GET:
+        oauth: clients:view
+        description: >
+          Returns information about this <a href="#object-client">OAuth client</a>.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                https://$api_root/$version/account/clients/$client_id
+          python: |
+            my_client = linode.OAuthClient(client, 123)
+      PUT:
+        oauth: clients:modify
+        description: >
+          Edits this <a href="#object-client">OAuth client</a>.
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X PUT -d '{
+                    "name": "Updated app name",
+                    "redirect_uri": "https://newredirect.example.org/",
+                }' \
+                https://$api_root/$version/account/clients/$client_id
+          python: |
+            my_client.name = 'Updated app name'
+            my_client.save()
+      DELETE:
+        oauth: clients:delete
+        dangerous: true
+        description: >
+          Delete this OAuth application. This action cannot be undone.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                -X DELETE \
+                https://$api_root/$version/account/clients/$client_id
+          python: |
+            my_client = linode.OAuthClient(client, 123)
+            my_client.delete()
+  account/clients/:id/reset_secret:
+    type: action
+    authenticated: true
+    description: >
+      Reset the OAuth application's client secret.
+    methods:
+      POST:
+        oauth: clients:modify
+        dangerous: true
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X POST \
+                https://$api_root/$version/account/clients/$client_id/reset_secret
+          python: |
+            my_client = linode.OAuthClient(client, 123)
+            new_secret = my_client.reset_secret()
+  account/clients/:id/thumbnail:
+    type: action
+    authenticated: true
+    description: >
+      Manage the OAuth application's thumbnail image.
+    methods:
+      GET:
+        oauth: clients:view
+        description: >
+          Retrieve the OAuth application's current thumbnail image.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                https://$api_root/$version/account/clients/$client_id/thumbnail
+          python: |
+            img = my_client.get_thumbnail()
+
+            # save image to file
+            my_client.get_thumbnail('client_thumbnail.png')
+      PUT:
+        oauth: clients:modify
+        description: >
+          Set or update the OAuth application's thumbnail image.
+          If the image is larger than 128x128 it will be scaled down.
+        examples:
+          curl: |
+            curl -H "Content-Type: image/png" \
+                -H "Authorization: token $TOKEN" \
+                -X PUT \
+                --data-binary "@/path/to/image"
+                https://$api_root/$version/account/clients/$client_id/thumbnail
+          python: |
+            my_client = linode.OAuthClient(client, 123)
+            my_client.set_thumbnail('/path/to/image')
+
+            # set from memory
+            with open('/path/to/image', 'rb') as f:
+                img = f.read()
+            my_client.set_thumbnail(img)
+  account/users:
+    type: list
+    resource: account
+    description: >
+      Returns a list of <a href="#object-user">User objects</a> associated with your account.
+    methods:
+      GET:
+        examples:
+          curl: |
+            curl https://$api_root/$version/account/users
+          python: |
+            my_users = client.account.get_users()
+      POST:
+        description: >
+          Creates a new user.
+        params:
+          username:
+            type: string
+            description: The username for the new user.
+          email:
+            type: string
+            description: The user's email.
+          password:
+            type: string
+            description: The user's password.
+          restricted:
+            optinoal: true
+            type: bool
+            description: If false, this user has access to the entire account.  Defaults to true.
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X POST -d '{
+                    "username": "testguy",
+                    "password": "hunter7",
+                    "email": "testguy@linode.com"
+                }' \
+                https://$api_root/$version/account/users
+          python: |
+            # currently unimplemented
+  account/users/:username:
+    type: resource
+    resource: account
+    description: >
+      Returns information about a specific user associated with your account.
+    methods:
+      GET:
+        examples:
+          curl: |
+            curl https://$api_root/$version/account/users/$username
+          python: |
+            my_user = linode.User(client, 'username')
+      PUT:
+        description: >
+          Update a user.
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X PUT -d '{
+                    "email": "newemail@linode.com"
+                  }
+                }' \
+                https://$api_root/$version/account/users/testguy
+          python: |
+            my_user = linode.User(client, 'username')
+            my_user.email = 'newemail@linode.com'
+            my_user.save()
+      DELETE:
+        description: >
+          Deletes a user.  May not delete the last unrestricted user on the account.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                -X DELETE \
+                https://$api_root/$version/account/users/testguy
+          python: |
+            my_user = linode.User(client, 'username')
+            my_user.delete()
+  account/users/:username/password:
+    type: action
+    description: >
+      Update a user's password
+    methods:
+      POST:
+        params:
+          password:
+            type: string
+            description: The user's new password.
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X POST -d '{
+                    "password": "hunter7",
+                }' \
+                https://$api_root/$version/account/users/testguy/password
+          python: |
+            my_user = linode.User(client, 'username')
+            my_user.change_password('hunter7')
+  account/users/:username/grants:
+    type: resource
+    resource: usergrants
+    description: >
+      Manage grants for restricted users.  It is an error to call this endpoint for unrestrcited users.  Only unrestricted
+      users may access this endpoint.
+    methods:
+      GET:
+        description: Get grants for a restricted user.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                https://$api_root/$version/account/users/testguy/grants
+          python: |
+            my_user = linode.User(client, 'username')
+            grants = None # unrestricted users have no grants
+
+            if my_user.restricted:
+                grants = my_user.grants
+      PUT:
+        description: >
+          Update grants for a restricted user.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                -X PUT -d '{
+                    "global": {
+                        "add_linodes": true
+                    }
+                }' \
+                https://$api_root/$version/account/users/testguy/grants
+          python: |
+            my_user = linode.User(client, 'username')
+            assert my_user.restricted # we can't set grants for unrestricted users
+
+            my_user.grants.global.add_linodes = True
+            my_user.grants.save()

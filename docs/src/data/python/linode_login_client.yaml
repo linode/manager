@@ -1,0 +1,48 @@
+name: LinodeLoginClient
+import: from linode import LinodeLoginClient
+desc: >
+    The LinodeLoginClient class is responsible for communicating with login.linode.com
+    and managing the OAuth workflow.
+constructor:
+    name: LinodeLoginClient
+    parameters:
+        client_id:
+            _keyword: false
+            desc: >
+                 The Client ID generated from the login service.
+        client_secret:
+            _keyword: false
+            desc: >
+                 The Client Secret generated from the login service.
+        base_url:
+            _keyword: true
+            desc: Who this LinodeLoginClient should talk to.  Set to https://login.alpha.linode.com for alpha environment.
+            _default: "'https://login.linode.com'"
+    example: >
+            login_client = linode.LinodeLoginClient('my-client-id', 'my-client-secret', base_url='https://login.alpha.linode.com')
+methods:
+    generate_login_url:
+        desc: >
+            Generates a URL a user can be redirected to to authenticate.
+        parameters:
+            scopes:
+                _keyword: true
+                desc: A list of OAuthScopes to request from the user
+                _default: None
+            redirect_url:
+                _keyword: true
+                desc: The URI to redirect successful auths to.  If not provided, uses OAuth Client's default.
+                _default: None
+        example: >
+            login_client.generate_login_url(scopes=linode.OAuthScopes.all)
+        returns: A URL to send users to for authentication with login.linode.com
+    finish_oauth:
+        desc: >
+            Trades a temporary access code for an OAuth token
+        parameters:
+            code:
+                _keyword: false
+                desc: The code you received from the OAuth callback.
+        example:
+            login_client.finish_oauth('my-callback-code')
+        returns: A tuple containing the OAuth Token received and the scopes authorized

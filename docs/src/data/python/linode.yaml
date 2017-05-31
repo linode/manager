@@ -1,0 +1,241 @@
+name: Linode
+import: from linode import Linode
+_object: linode
+desc: >
+    A Linode.  Create linodes with <code>LinodeClient.create_linode</code>.  This class holds all attributes of a Linode
+    and methods for managing it.
+_pylib_attributes:
+    disks:
+        _type: list
+        _description: A list of Disks belonging to this Linode
+    configs:
+        _type: list
+        _description: A list of Configs belonging to this Linode
+    recent_backups:
+        _type: list
+        _description: A list of recent Backups for this Linode.  This is for record keeping only, you may not be able to restore all of them.
+    ips:
+        _type: object
+        _description: >
+            A response object containing "ipv4" and "ipv6" attributes, both of which contain a list of the relevant type of
+            IP Address for this Linode.
+constructor:
+    name: Linode
+    parameters:
+        client:
+            _keyword: false
+            desc: The <code>LinodeClient</code> this object will use to communicate with the API.
+        id:
+            _keyword: false
+            desc: This Linode's ID.
+    example: >
+        l = linode.Linode(client, "123456")
+methods:
+    boot:
+        desc: >
+             Requests a boot for this Linode.  This function returns immediatley following the API request,
+             you should check the <code>state</code> attribute to see when the Linode has actually booted.
+        parameters:
+            config:
+                _keyword: true
+                desc: >
+                    The <code>Config</code> object to use when booting this Linode. By default, uses the only
+                    or last booted config.
+                _default: None
+        example: >
+            l.boot()
+        returns: True if boot request succeeded
+    shutdown:
+        desc: >
+             Requests a shutdown for this Linode.  This function returns immediatley following the API request,
+             you should check the <code>state</code> attribute to see when the Linode has actually come offline.
+        example: >
+            l.shutdown()
+        returns: True if shutdown request succeeded
+    reboot:
+        desc: >
+            Requests a reboot for ths Linode.  This function returns immediately following the API request,
+            you should check the <code>state</code> attribute to see when the Linode has actaully rebooted.
+        example: >
+            l.reboot()
+        returns: True if the reboot request succeeded
+    generate_root_password:
+        desc: >
+            Generates a random password to assign to the root account on the Linode.  This is used during deployment
+            of a new Linode from a <code>Distribution</code> to create a root password if one was not provided.
+        example: |
+            linode.Linode.generate_root_password()
+        returns: A 32-character password.
+    save:
+        desc: >
+            Sends any local changes to Editable fields of this Linode to the API, saving them.
+        example: |
+            l.save()
+        returns: True if the save succeeded
+    delete:
+        desc: >
+            Deletes this Linode from your account.  This is not reversable.
+        example:
+            l.delete()
+        returns: True if the delete succueeded.
+    create_config:
+        desc: >
+            Creates a new <code>Config</code> object for this Linode.  These do not need to be created manually - deploy
+            a linode with <code>client.create_linode(serv, dc, source=distribution)</code> to have the API generate
+            working config for you.
+        parameters:
+            kernel:
+                _keyword: false
+                desc: The <code>Kernel</code> to use with this Config
+            label:
+                _keyword: true
+                desc: The label for this Config
+                _default: None
+            disks:
+                _keyword: true
+                desc: A list of <code>Disks</code> for this Config.  The first disk is sda, the second sdb, etc.
+                _default: None
+            '**kwargs':
+                _keyword: false
+                desc: >
+                    Any number of other keyword arguments to pass to the POST /linodes/12345/configs endpoint.  See
+                    the <a href="/reference/index.html#ep-linodes-configs-POST">API Reference</a> for a complete breakdown
+                    of all accepted values.
+        example: |
+            kernel = client.linode.get_kernels(linode.Kernel.kvm == True, linode.Kernel.label.contains("4")).last()
+            config = l.create_config(kernel, disks=[d for d in linode.disks])
+        returns: The new Config object
+    create_disk:
+        desc: >
+            Creates a new Disk of a given size.  This disk can be created raw or given a filesystem.
+        parameters:
+            size:
+                _keyword: false
+                desc: The size of the new Disk
+            label:
+                _keyword: true
+                desc: The label for the new Disk
+                _default: None
+            filesystem:
+                _keyword: true
+                desc: The type of filesystem to deploy to the new disk (e.g. 'ext4', 'swap').  If None, creates a raw disk.
+                _default: None
+            read_only:
+                _keyword: true
+                desc: If this disk should be created read-only
+                _default: 'False'
+        example: |
+            disk = l.create_disk(2048, label='other_disk' filesystem='ext4')
+        returns: A new Disk object
+    create_disk*:
+        desc: >
+            Creates a Disk and deploys a <code>Distribution</code> to it.
+        parameters:
+            size:
+                _keyword: false
+                desc: The size of the new Disk
+            label:
+                _keyword: true
+                desc: The label for the new Disk
+                _default: None
+            distribution:
+                _keyword: true
+                desc: A Distribution object to deploy to this disk upon creation.
+                _default: None
+            root_key:
+                _keyword: true
+                desc: >
+                    The ssh public key to include in the disk's filesystem's authorized_keys file for the root user.  Only include if a
+                    distribution was given as well.
+                _default: None
+            stackscript:
+                _keyword: true
+                desc: The StackScript to deploy to this disk.
+                _default: None
+            '**stackscrit_args':
+                keyword: false
+                desc: Any number of additional keyword arguments, which will be sent as responses to the StackScript's user-defined fields.
+        example: |
+            s = client.linode.get_stackscripts(linode.StackScript.label == 'my-aweomse-stackscript')[0]
+            disk, pw = l.create_disk(2048, distribution=s.distributions[0], stackscript=s, udf_value="foobar")
+        returns: A tuple containing a new Disk object and the generated password for the root user on the new filesystem
+    create_disk**:
+        desc: >
+            Creates a Disk and deploys a <code>Distribution</code> to it, using the provided password for the root user.
+        parameters:
+            size:
+                _keyword: false
+                desc: The size of the new Disk
+            label:
+                _keyword: true
+                desc: The label for the new Disk
+                _default: None
+            distribution:
+                _keyword: true
+                desc: A Distribution object to deploy to this disk upon creation.
+                _default: None
+            root_pass:
+                _keyword: true
+                desc: >
+                    The password for the root user in this disk's filesystem.  Only include if you are including a distribution as well.
+                    If a distribution is given and no root_pass is provided, one will be generated and returned along with the Disk.
+                _default: None
+            root_key:
+                _keyword: true
+                desc: >
+                    The ssh public key to include in the disk's filesystem's authorized_keys file for the root user.  Only include if a
+                    distribution was giben as well.
+                _default: None
+            stackscript:
+                _keyword: true
+                desc: The StackScript to deploy to this disk.
+                _default: None
+            '**stackscrit_args':
+                keyword: false
+                desc: Any number of additional keyword arguments, which will be sent as responses to the StackScript's user-defined fields.
+        example: |
+            s = client.linode.get_stackscripts(linode.StackScript.label == 'my-aweomse-stackscript')[0]
+            disk = l.create_disk(2048, distribution=s.distributions[0], root_pass='hunter2')
+        returns: A new Disk object
+    allocate_ip:
+        desc: >
+            Allocates a new IPv4 Address for this Linode.
+        parameters:
+            public:
+                _keyword: true
+                desc: If True, allocate a Public IP address, else allocate a Private IP address.
+                _default: False
+        example:
+            l.allocate_ip()
+        returns: True if the delete succueeded.
+    rebuild:
+        desc: >
+            Deletes all Disks and Configs for this Linode, then deploys a Distribution to it.
+        parameters:
+            distribution:
+                _keyword: true
+                desc: A Distribution object to deploy to this disk upon creation.
+                _default: None
+            root_pass:
+                _keyword: true
+                desc: >
+                    The password for the root user in this disk's filesystem.  Only include if you are including a distribution as well.
+                    If a distribution is given and no root_pass is provided, one will be generated and returned along with the Disk.
+                _default: None
+            root_key:
+                _keyword: true
+                desc: >
+                    The ssh public key to include in the disk's filesystem's authorized_keys file for the root user.  Only include if a
+                    distribution was giben as well.
+                _default: None
+            stackscript:
+                _keyword: true
+                desc: The StackScript to deploy to this disk.
+                _default: None
+            '**stackscrit_args':
+                keyword: false
+                desc: Any number of additional keyword arguments, which will be sent as responses to the StackScript's user-defined fields.
+        example:
+            pw = l.rebuild("linode/debian8")
+        returns:
+            The root password generated for this deplpyment.

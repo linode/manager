@@ -1,0 +1,13 @@
+name: IPv6 Pool
+description: >
+  A Public IPv6 Pool, available to an entire Region
+schema:
+  range:
+    _type: string
+    _value: 2600:3c01::2:5000/64
+    _description: The IP Address.
+  region:
+    _type: string
+    _subtype: Region
+    _value: us-east-1a
+    _description: The Region this pool is available in.
