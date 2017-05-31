@@ -12,7 +12,7 @@ export default class Region extends Component {
     const dcClass = region.id === selected ? 'selected' : '';
 
     return (
-      <div className="col-sm-3">
+      <div className="col-sm-3" key={region.id}>
         <div
           className={`region ${dcClass}`}
           key={region.id}
