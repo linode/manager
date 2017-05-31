@@ -6,7 +6,7 @@ import { Table } from 'linode-components/tables';
 import { ButtonCell } from 'linode-components/tables/cells';
 
 import { showModal, hideModal } from '~/actions/modal';
-import { setRDNS } from '~/api/linodes';
+import { setRDNS } from '~/api/networking';
 import { dispatchOrStoreErrors } from '~/components/forms';
 
 import EditRDNS from '../components/EditRDNS';
@@ -21,12 +21,11 @@ export class ReverseDNSPage extends Component {
   }
 
   resetRDNS = (record) => {
-    const { dispatch, linode } = this.props;
-    const address = record.address;
+    const { dispatch } = this.props;
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => setRDNS(linode.id, address, null),
-    ], [], address));
+      () => setRDNS(record, null),
+    ], [], record.address));
   }
 
   renderEditRDNS(ip) {
