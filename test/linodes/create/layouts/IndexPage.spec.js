@@ -8,7 +8,7 @@ import * as errors from '~/actions/errors';
 import { IndexPage } from '~/linodes/create/layouts/IndexPage';
 
 import { expectDispatchOrStoreErrors, expectObjectDeepEquals, expectRequest } from '@/common';
-import { api, state } from '@/data';
+import { api } from '@/data';
 
 describe('linodes/create/layouts/IndexPage', () => {
   const sandbox = sinon.sandbox.create();
@@ -23,9 +23,15 @@ describe('linodes/create/layouts/IndexPage', () => {
     const error = 'this is my error string';
     dispatch.onCall(0).throws(new Error(error));
 
-    await IndexPage.preload({ dispatch, getState: () => state }, { });
+    await IndexPage.preload({ dispatch, getState: () => ({
+      api: {
+        types: { types: {} },
+        distributions: { distributions: {} },
+        regions: { regions: {} },
+      },
+    }) }, { });
 
-    expect(dispatch.callCount).to.equal(4);
+    expect(dispatch.callCount).to.equal(2);
     expect(setError.callCount).to.equal(1);
     expect(setError.firstCall.args[0].message).to.equal(error);
   });

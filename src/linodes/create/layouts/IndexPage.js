@@ -21,6 +21,7 @@ export class IndexPage extends Component {
   static async preload({ dispatch, getState }) {
     try {
       const requests = [];
+
       ['types', 'regions', 'distributions']
         .filter(type => !Object.values(getState().api[type][type]).length)
         .forEach(type => requests.push(api[type].all()));
@@ -28,7 +29,7 @@ export class IndexPage extends Component {
       // Fetch all objects we haven't already grabbed this page session.
       await Promise.all(requests.map(request => dispatch(request)));
     } catch (response) {
-      dispatch(setError(response));
+      await dispatch(setError(response));
     }
   }
 
