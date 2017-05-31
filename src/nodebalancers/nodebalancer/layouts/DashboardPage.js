@@ -195,26 +195,14 @@ export class DashboardPage extends Component {
                       },
                       text: 'Delete',
                     },
-                  },
-                  { dataKey: 'protocol', label: 'Protocol' },
-                  { dataKey: 'algorithm', label: 'Algorithm' },
-                  { dataKey: 'stickiness', label: 'Session Stickiness' },
-                  { dataKey: 'statusString', label: 'Node Status' },
-                  {
-                    cellComponent: ButtonCell,
-                    headerClassName: 'ButtonColumn',
-                    onClick: (config) => {
-                      this.deleteNodeBalancerConfig(nodebalancer, config);
-                    },
-                    text: 'Delete',
-                  },
-                ]}
-                data={newConfigs}
-                selectedMap={{}}
-              />
-            </div>
-          )}
-        </Card>
+                  ]}
+                  data={newConfigs}
+                  selectedMap={{}}
+                />
+              </ListBody>
+            </List>
+          </Card>
+        </section>
         <Card header={<CardHeader title="Graphs" />}>
           {!this.graphs ? <p>No graphs are available.</p> : (
             <div>

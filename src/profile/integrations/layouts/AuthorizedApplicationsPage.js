@@ -20,24 +20,16 @@ export class AuthorizedApplicationsPage extends Component {
 
   renderGroup = (group, i, groups) => {
     const { dispatch } = this.props;
-    const clients = Object.values(this.props.tokens.tokens).filter(
-      token => token.type === 'client_token').sort(
-        (a, b) => new Date(b.created) - new Date(a.created)); // Sort by most recent first
-
-    return (
-      <div className="row">
-        {clients.map(client =>
-          <div className="col-lg-6" key={client.id}>
-            <AuthorizedApplication
-              label={client.client.label}
-              scopes={client.scopes}
-              clientId={client.client.id}
-              id={client.id}
-              expires={client.expiry}
-              dispatch={dispatch}
-            />
-          </div>
-         )}
+    const _renderGroup = group.map(client =>
+      <div className="col-lg-6" key={client.id}>
+        <AuthorizedApplication
+          label={client.client.label}
+          scopes={client.scopes}
+          clientId={client.client.id}
+          id={client.id}
+          expires={client.expiry}
+          dispatch={dispatch}
+        />
       </div>
     );
 
