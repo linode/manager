@@ -32,6 +32,7 @@ export class MasterZone extends Component {
       target: ns,
       ttl_sec: ONE_DAY,
       name: domain.domain,
+      readOnly: true,
     }));
 
     const { NS } = domain._groupedRecords;
@@ -39,6 +40,7 @@ export class MasterZone extends Component {
       nsRecords.push({
         ...record,
         name: record.name || domain.domain,
+        readOnly: false,
       });
     });
 
@@ -91,7 +93,7 @@ export class MasterZone extends Component {
     }));
   }
 
-  renderDeleteRecord(title, id) {
+  renderDeleteRecord(title, id, name) {
     const { dispatch, domain } = this.props;
 
     dispatch(showModal(title,
@@ -100,8 +102,7 @@ export class MasterZone extends Component {
           await dispatch(domains.records.delete(domain.id, id));
           dispatch(hideModal());
         }}
-        items={[domain.domain]}
-        typeOfItem="Domains"
+        items={[name]}
         onCancel={() => dispatch(hideModal())}
       />
     ));
@@ -264,7 +265,8 @@ export class MasterZone extends Component {
                   {
                     cellComponent: NameserversCell,
                     onEditClick: ({ id }) => this.renderEditNSRecord('Edit NS Record', id),
-                    onDeleteClick: ({ id }) => this.renderDeleteRecord('Delete NS Record', id),
+                    onDeleteClick: ({ id, target }) =>
+                      this.renderDeleteRecord('Delete NS Record', id, target),
                   },
                 ]}
                 data={nsRecords}
@@ -303,7 +305,8 @@ export class MasterZone extends Component {
                     cellComponent: ButtonCell,
                     headerClassName: 'ButtonColumn',
                     text: 'Delete',
-                    onClick: ({ id }) => this.renderDeleteRecord('Delete MX Record', id),
+                    onClick: ({ id, target }) =>
+                      this.renderDeleteRecord('Delete MX Record', id, target),
                   },
                 ]}
                 data={mxRecords}
@@ -341,7 +344,8 @@ export class MasterZone extends Component {
                     cellComponent: ButtonCell,
                     headerClassName: 'ButtonColumn',
                     text: 'Delete',
-                    onClick: ({ id }) => this.renderDeleteRecord('Delete A/AAAA Record', id),
+                    onClick: ({ id, name }) =>
+                      this.renderDeleteRecord('Delete A/AAAA Record', id, name),
                   },
                 ]}
                 data={aRecords}
@@ -382,7 +386,8 @@ export class MasterZone extends Component {
                     cellComponent: ButtonCell,
                     headerClassName: 'ButtonColumn',
                     text: 'Delete',
-                    onClick: ({ id }) => this.renderDeleteRecord('Delete CNAME Record', id),
+                    onClick: ({ id, name }) =>
+                      this.renderDeleteRecord('Delete CNAME Record', id, name),
                   },
                 ]}
                 data={cnameRecords}
@@ -421,7 +426,8 @@ export class MasterZone extends Component {
                     cellComponent: ButtonCell,
                     headerClassName: 'ButtonColumn',
                     text: 'Delete',
-                    onClick: ({ id }) => this.renderDeleteRecord('Delete TXT Record', id),
+                    onClick: ({ id, name }) =>
+                      this.renderDeleteRecord('Delete TXT Record', id, name),
                   },
                 ]}
                 data={txtRecords}
@@ -463,7 +469,7 @@ export class MasterZone extends Component {
                   cellComponent: ButtonCell,
                   headerClassName: 'ButtonColumn',
                   text: 'Delete',
-                  onClick: ({ id }) => this.renderDeleteRecord('Delete SRV Record', id),
+                  onClick: ({ id, name }) => this.renderDeleteRecord('Delete SRV Record', id, name),
                 },
               ]}
               data={srvRecords}
