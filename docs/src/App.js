@@ -36,10 +36,27 @@ import {
 
 import {
   generateIndexRoute,
-  generateChildRoute
+  generateChildRoute,
+  generateLibraryRoutes,
 } from '~/RoutesGenerator';
 
 import { default as api } from '~/api';
+import { python } from '~/data/python';
+
+const pythonDataTitles = Object.values(python.pythonObjects).map(function(pythonObject) {
+  return {
+    href: pythonObject.routePath,
+    path: pythonObject.name,
+    description: pythonObject.formattedPythonObject.desc,
+    formattedLibraryObject: pythonObject.formattedPythonObject,
+  };
+});
+const pythonClientObjectTitles = pythonDataTitles.filter(function(pythonData) {
+  return (pythonData.path === 'LinodeLoginClient' || pythonData.path === 'LinodeClient');
+});
+const pythonAPITitles = pythonDataTitles.filter(function(pythonData) {
+  return (pythonData.path !== 'LinodeLoginClient' && pythonData.path !== 'LinodeClient');
+});
 
 import { API_VERSION } from '~/constants';
 
@@ -96,7 +113,7 @@ export function init() {
           <Route path={`/${API_VERSION}/guides/curl`} component={Curl} />
           <Route path={`/${API_VERSION}/guides/curl/creating-a-linode`} component={CreateLinode} />
           <Route path={`/${API_VERSION}/guides/curl/testing-with-curl`} component={TestingWithCurl} />
-          <Route path={`/${API_VERSION}/guides/python`} component={Python} />
+          <Route path={`/${API_VERSION}/guides/python`} component={Python} pythonDataObjects={{pythonDataTitles, pythonClientObjectTitles, pythonAPITitles}} />
           <Route path={`/${API_VERSION}/guides/python/introduction`} component={PythonIntroduction} />
           <Route path={`/${API_VERSION}/guides/python/basic-setup`} component={BasicSetup} />
           <Route path={`/${API_VERSION}/guides/python/oauth-Workflow`} component={OAuthWorkflow} />
@@ -107,6 +124,9 @@ export function init() {
           {api.endpoints.map(function(endpoint) {
             const crumb = [{ groupLabel: 'Reference', label: endpoint.path, to: endpoint.routePath }];
             return generateChildRoute({ endpoint: endpoint, prevCrumbs: crumb });
+          })}
+          {pythonClientObjectTitles.map(function(pythonObject, index) {
+            return generateLibraryRoutes({ index: index, libraryObject: pythonObject, prevCrumbs: []});
           })}
         </Route>
         <Route path="*" component={NotFound} />

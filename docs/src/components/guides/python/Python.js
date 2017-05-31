@@ -8,20 +8,10 @@ import { API_VERSION } from '~/constants';
 
 import { python } from '~/data/python';
 
-export default function Python() {
-  const pythonDataTitles = Object.values(python.pythonObjects).map(function(pythonObject) {
-    return {
-      href: pythonObject.routePath,
-      path: pythonObject.name,
-      description: pythonObject.formattedPythonObject.desc,
-    };
-  });
-  const pythonClientObjectTitles = pythonDataTitles.filter(function(pythonData) {
-    return (pythonData.path === 'LinodeLoginClient' || pythonData.path === 'LinodeClient');
-  });
-  const pythonAPITitles = pythonDataTitles.filter(function(pythonData) {
-    return (pythonData.path !== 'LinodeLoginClient' && pythonData.path !== 'LinodeClient');
-  });
+export default function Python(props) {
+  const { route } = props;
+  const { pythonDataObjects } = route;
+  const { pythonDataTitles, pythonClientObjectTitles, pythonAPITitles } = pythonDataObjects;
   return(
     <section className="Article">
       <h1>Python Guide</h1>
