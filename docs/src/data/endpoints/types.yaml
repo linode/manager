@@ -1,36 +1,35 @@
 # vim: set et ts=2 sw=2 tw=80 :
-name: Service
+name: Types
 sort: 1
 base_path: /linode/types
 description: >
-  Type endpoints provide a means of viewing <a href="#object-service">
-  service objects</a>.
+  Type endpoints provide a means of viewing type objects.
 endpoints:
   linode/types:
     type: list
-    resource: services
+    resource: types
     description: >
       Returns collection of types.
     methods:
       GET:
         description: >
-          Returns list of <a href="#object-service">services</a>.
+          Returns list of types.
         examples:
           curl: |
-            curl https://$api_root/$version/linode/services
+            curl https://$api_root/$version/linode/types
           python: |
             client.linode.get_types()
   linode/types/:id:
     type: resource
-    resource: services
+    resource: types
     description: >
       Returns information about a specific Linode type offered by Linode.
     methods:
       GET:
         description: >
-          Returns information about this <a href="#object-service">service</a>.
+          Returns information about this type.
         examples:
           curl: |
-            curl https://$api_root/$version/linode/services/$service_id
+            curl https://$api_root/$version/linode/types/$type_id
           python: |
-            type = linode.Service(client, 'g5-standard=1')
+            type = linode.Type(client, 'g5-standard=1')
