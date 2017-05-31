@@ -17,13 +17,13 @@ export default function Introduction() {
           Creating a Linode requires you to be logged in. Before proceeding, make sure you have gone through the <Link to="/guides/curl/testing-with-curl">testing with curl guide</Link>, since you will need an authorization token to proceed.
         </p>
         <p>
-          Before you can create a Linode, you will need to choose a <strong>region</strong>, a <strong>service plan</strong>, and a <strong>distribution</strong>. The API has endpoints available to help you do this.
+          Before you can create a Linode, you will need to choose a <strong>region</strong>, a <strong>type</strong>, and a <strong>distribution</strong>. The API has endpoints available to help you do this.
         </p>
       </section>
       <section>
         <h2>Selecting a region</h2>
         <p>
-          A region is a physical location which can run Linodes. To retrieve a list of available region, you can use the /regions API endpoint. To make an API call against this endpoint over curl, run the following command:
+          A <Link to="/reference/endpoints/regions">region</Link> is a physical location that contains Linodes. To retrieve a list of available region, you can use the /regions API endpoint. To make an API call against this endpoint over curl, run the following command:
         </p>
         <pre>
           <code>
@@ -51,13 +51,13 @@ export default function Introduction() {
           </code>
         </pre>
         <p>
-          The region list is pretty self-explanatory: regions geographical locations are provided in the <code>label</code> field. The <code>id</code> field is a unique ID which you’ll use to refer to the region you want to select. For this example, we’ll go with the "Newark, NJ" region with ID "us-east-1a".
+          The region list is pretty self-explanatory: regions' geographical locations are provided in the <code>label</code> field. The <code>id</code> field is a unique ID which you’ll use to refer to the region you want to select. For this example, we’ll go with the "Newark, NJ" region with ID "us-east-1a".
         </p>
       </section>
       <section>
-        <h2>Selecting a service plan</h2>
+        <h2>Selecting a type</h2>
         <p>
-          Once you have a region in mind, the next step is to choose a Linode service plan. A service plan determines the resources available to your new Linode (such as memory, storage space, and network transfer). Run the following curl command to retrieve a list of available Linode plans:
+          Once you have a region in mind, the next step is to choose a Linode type. A type determines the resources available to your new Linode (such as memory, storage space, and network transfer). Run the following curl command to retrieve a list of available Linode plans:
         </p>
         <pre>
           <code>
@@ -70,7 +70,7 @@ export default function Introduction() {
         <pre>
           <code>
 {`{
-    "services": [
+    "types": [
         {
             "id": "g5-standard-1",
             "label": "Linode 2048",
@@ -93,13 +93,13 @@ export default function Introduction() {
           </code>
         </pre>
         <p>
-          Each entry in the services list represents an available Linode service plan. You can review the details of each plan, such as the number of Virtual CPUs, memory, disk space, monthly price, etc. For explanations of each field, see the <Link to="/reference/endpoints/linode/types">complete service reference</Link>. Once you have selected the service plan you want to launch, note its ID and continue to the next step.
+          Each entry in the types list represents an available Linode type. You can review the details of each plan, such as the number of virtual CPUs, memory, disk space, monthly price, etc. For explanations of each field, see the <Link to="/reference/endpoints/linode/types">complete type reference</Link>. Once you have selected the type you want to launch, note its ID and continue to the next step.
         </p>
       </section>
       <section>
         <h2>Selecting a distribution</h2>
         <p>
-          Now you need to choose a Linux distribution to deploy to your new Linode. Just like selecting a service and a region, issue a call to the API, this time for a list of available distributions:
+          Now you need to choose a Linux distribution to deploy to your new Linode. Just like selecting a type and a region, issue a call to the API, this time for a list of available distributions:
         </p>
         <pre>
           <code>
@@ -131,13 +131,13 @@ export default function Introduction() {
           </code>
         </pre>
         <p>
-          For detailed information about each field, see the complete distribution reference. For this example, we’ll go with Debian 8.
+          For detailed information about each field, see the complete <Link to="/reference/endpoints/linode/distributions">distribution reference</Link>. For this example, we’ll go with Debian 8.
         </p>
       </section>
       <section>
         <h2>Creating your new Linode</h2>
         <p>
-          Now that you’ve selected a region, service plan, and distribution, you’re ready to launch a new Linode! The API calls above were unauthenticated because they return only publicly visible information. However, launching a Linode is tied to your account so this call must be authenticated.
+          Now that you’ve selected a region, type, and distribution, you’re ready to launch a new Linode! The API calls above were unauthenticated because they return only publicly visible information. However, launching a Linode is tied to your account so this call must be authenticated.
         </p>
         <p>
           You will need to substitute your authorization token in the command below before running it (replace <strong>$TOKEN</strong>). If you don’t yet have an authorization token, read through the Testing with curl guide before proceeding.
@@ -146,7 +146,7 @@ export default function Introduction() {
           You should also set a root password for the new Linode (replace <strong>$root_pass</strong>).
         </p>
         <p>
-          As you can see, the region, service plan, and Linux distribution are all specified in the JSON POST data and can be changed as needed to deploy Linodes to different locations and with different characteristics. Customize the following curl command and run it when you’re ready to deploy:
+          As you can see, the region, type, and Linux distribution are all specified in the JSON POST data and can be changed as needed to deploy Linodes to different locations and with different characteristics. Customize the following curl command and run it when you’re ready to deploy:
         </p>
         <pre>
           <code>
@@ -283,7 +283,7 @@ export default function Introduction() {
           </code>
         </pre>
         <p>
-          Congratulations! You have now successfully launched a Linode through the API!
+          Congratulations! You have now successfully launched a Linode through the API.
         </p>
       </section>
     </section>

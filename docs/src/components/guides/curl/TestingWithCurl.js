@@ -14,7 +14,7 @@ export default function Introduction() {
       </header>
       <section>
         <p>
-          <a href="http://curl.haxx.se/">cURL</a> is a simple and popular command line tool that allows you to perform various kinds of HTTP requests. It may already be installed on your system - run curl --version in your shell to check. Once you've confirmed that you have it installed, we can use it to test out the Linode API from the comfort of your shell.
+          <a href="http://curl.haxx.se/">cURL</a> is a simple and popular command line tool that allows you to perform various kinds of HTTP requests. It may already be installed on your system - run <code>curl --version</code> in your shell to check. Once you've confirmed that you have it installed, we can use it to test out the Linode API from the comfort of your shell.
         </p>
       </section>
       <section>
@@ -59,7 +59,7 @@ export default function Introduction() {
           For many requests, you will have to authenticate as a particular user. For now, we’re going to use a personal access token to make things easier. If you’d like to learn how to make a full blown OAuth client, read the <Link to="/access">authentication documentation</Link>.
         </p>
         <p>
-          To generate a personal access token <a href="https://login.alpha.linode.com/register/">sign up for the api alpha</a> and a token will be emailed to you. These tokens can be used to make API requests authenticated with your Linode account and have full access to all OAuth scopes. You’ll only see the full OAuth token once, so be sure to write it down somewhere. If you’re in the shell, running something like this might work well:
+          To generate a personal access token, <a href="https://login.alpha.linode.com/register/">sign up for the api alpha</a> and a token will be emailed to you. These tokens can be used to make authenticated API requests with your Linode account and have full access to all OAuth scopes. You’ll only see the full OAuth token once, so be sure to write it down somewhere. If you’re in the shell, running something like this might work well:
         </p>
         <pre>
           <code>
@@ -70,7 +70,7 @@ export default function Introduction() {
       <section>
         <h2>Authentication Header</h2>
         <p>
-          Now you can make requests with curl using your access token by adding <code>-H "Authorization: token $token"</code>. The <i className="fa fa-lock"></i> Authenticated requests on the reference page include this header in the curl examples. Try this, for example:
+          Now you can make requests with curl using your access token by adding <code>-H "Authorization: token $token"</code>. The <i className="fa fa-lock"></i> Authenticated requests on the reference page include this header in the curl examples. For example:
         </p>
         <pre>
           <code>
