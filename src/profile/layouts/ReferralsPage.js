@@ -11,14 +11,12 @@ export function ReferralsPage(props) {
 
   return (
     <Card header={header}>
-      <div className="row">
-        <div className="col-sm-12">
-          Referrals reward you when you refer people to Linode. If someone
-          signs up using your referral code, you'll receive a credit of
-          $20.00, so long as the person you referred remains an active
-          customer for 90 days.
-        </div>
-      </div>
+      <p>
+        Referrals reward you when you refer people to Linode. If someone
+        signs up using your referral code, you'll receive a credit of
+        $20.00, so long as the person you referred remains an active
+        customer for 90 days.
+      </p>
       <div className="row">
         <div className="col-sm-12">
           <hr />
