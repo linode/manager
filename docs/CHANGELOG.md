@@ -5,14 +5,22 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased] 
+
+## [0.3.0] 2017-05-31
+### Added
+- .gitignore file #1970
+- /reference default redirect to /introduction #1958
 ### Changed
-- json removed and yaml added in it's place
-- docsConvert.js renamed to prebuild.js and prebuld defined as an npm script
-- api /objects read and conversion moved from objectsConvert.js (deleted) to prebuild.js
+- json removed and yaml added in it's place #1909
+- docsConvert.js renamed to prebuild.js and prebuld defined as an npm script #1909
+- api /objects read and conversion moved from objectsConvert.js (deleted) to prebuild.js #1909
+- src/api.js, which is now ignored since it's built #1970
+- increased with on endpoint index table headers for longer urls #1968
 ### Fixed
-- broken /linode/types and /linode/types/:id endpoints
+- broken /reference crumbs #1963
+- broken /linode/types and /linode/types/:id endpoints #1964
 ### Removed
-- transform.sh no longer needed after yaml move
+- transform.sh no longer needed after yaml move #1909
 
 ## [0.2.1] 2017-05-26
 ### Fixed
