@@ -15,9 +15,9 @@ export class IPManagementPage extends Component {
   static async preload({ dispatch, getState }, { linodeLabel }) {
     try {
       const { region } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
+      await dispatch(linodes.all([], undefined));
       await Promise.all([
         // TODO: , createHeaderFilter({ region: region.id }) when API supports it
-        linodes.all([], undefined),
         ipv4s(region),
         ipv6s(region),
       ].map(r => dispatch(r)));
