@@ -1,0 +1,81 @@
+name: Clients
+base_path: /account/clients
+description: >
+  Client endpoints provide a means of managing the <a href="#object-client">
+  OAuth client applications</a> on your account.
+endpoints:
+  account/clients:
+    type: list
+    resource: client
+    authenticated: true
+    description: >
+      Manage the collection of OAuth client applications your account may access.
+    methods:
+      GET:
+        oauth: clients:view
+        description: >
+          Returns a list of <a href="#object-client">clients</a>.
+        examples:
+          curl: |
+            curl -H "Authorization; token $TOKEN" \
+                https://$api_root/$version/account/clients
+      POST:
+        oauth: clients:create
+        description: >
+          Registers a new OAuth client application.
+        params:
+          name:
+            description: A name for the new client application.
+            type: string
+            limit: "1-128 characters"
+          redirect_uri:
+            description: A URL to redirect to after the OAuth flow has completed.
+            type: string
+            limit: "1-512 characters"
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X POST -d '{
+                    "name": "Example app",
+                    "redirect_uri": "https://oauthreturn.example.org/",
+                }' \
+                https://$api_root/$version/account/clients
+  account/clients/:id:
+    type: resource
+    resource: client
+    authenticated: true
+    description: >
+      Manage a particular OAuth client application your account may access.
+    methods:
+      GET:
+        oauth: clients:view
+        description: >
+          Returns information about this <a href="#object-client">OAuth client</a>.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                https://$api_root/$version/account/clients/$client_id
+      PUT:
+        oauth: clients:modify
+        description: >
+          Edits this <a href="#object-client">OAuth client</a>.
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X PUT -d '{
+                    "name": "Updated app name",
+                    "redirect_uri": "https://newredirect.example.org/",
+                }' \
+                https://$api_root/$version/account/clients/$client_id
+      DELETE:
+        oauth: clients:delete
+        dangerous: true
+        description: >
+          Delete this OAuth application. This action cannot be undone.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                -X DELETE \
+                https://$api_root/$version/account/clients/$client_id
