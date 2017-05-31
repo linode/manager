@@ -20,6 +20,7 @@ import Plan from '../../components/Plan';
 export class IndexPage extends Component {
   static async preload({ dispatch, getState }) {
     try {
+      const requests = [];
       ['types', 'regions', 'distributions']
         .filter(type => !Object.values(getState().api[type][type]).length)
         .forEach(type => requests.push(api[type].all()));
@@ -41,6 +42,7 @@ export class IndexPage extends Component {
       label: '',
       password: '',
       errors: {},
+      backups: false,
       loading: false,
     };
   }
