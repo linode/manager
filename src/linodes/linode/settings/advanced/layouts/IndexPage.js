@@ -2,7 +2,7 @@ import { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { setError } from '~/actions/errors';
-import { linodes, kernels } from '~/api';
+import { linodes, kernels, distributions } from '~/api';
 import { getObjectByLabelLazily } from '~/api/util';
 
 import { selectLinode } from '../../../utilities';
@@ -13,8 +13,20 @@ export class IndexPage extends Component {
     const { id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
 
     try {
-      await dispatch(linodes.disks.all([id]));
-      const { total_pages: totalPages } = await dispatch(kernels.page(0));
+      const requests = [
+        linodes.disks.all([id]),
+        kernels.page(0),
+      ];
+
+      await Promise.all(requests.map(r => dispatch(r)));
+
+      // Fetch distributions without waiting
+      if (!getState().api.distributions.ids.length) {
+        // Only needed from the add disk modal which isn't shown immediately.
+        dispatch(distributions.all());
+      }
+
+      const { totalPages } = getState().api.kernels;
 
       // Fetch rest of kernel pages without waiting.
       for (let i = 1; i < totalPages; i++) {

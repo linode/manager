@@ -7,13 +7,24 @@ import { Card, CardHeader } from 'linode-components/cards';
 import { Input, Form, FormGroup, FormGroupError, SubmitButton } from 'linode-components/forms';
 
 import { setSource } from '~/actions/source';
+import { setError } from '~/actions/errors';
 import { setTitle } from '~/actions/title';
-import { nodebalancers } from '~/api';
+import { nodebalancers, regions } from '~/api';
 import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
 import Region from '~/components/Region';
 
 
 export class CreatePage extends Component {
+  static async preload({ dispatch, getState }) {
+    try {
+      if (!getState().api.regions.ids.length) {
+        await dispatch(regions.all());
+      }
+    } catch (response) {
+      dispatch(setError(response));
+    }
+  }
+
   constructor() {
     super();
 
