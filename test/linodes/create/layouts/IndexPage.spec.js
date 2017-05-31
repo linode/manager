@@ -8,7 +8,7 @@ import * as errors from '~/actions/errors';
 import { IndexPage } from '~/linodes/create/layouts/IndexPage';
 
 import { expectDispatchOrStoreErrors, expectObjectDeepEquals, expectRequest } from '@/common';
-import { api } from '@/data';
+import { api, state } from '@/data';
 
 describe('linodes/create/layouts/IndexPage', () => {
   const sandbox = sinon.sandbox.create();
@@ -16,38 +16,18 @@ describe('linodes/create/layouts/IndexPage', () => {
     sandbox.restore();
   });
 
-  function assertContains(thing) {
-    return () => {
-      const page = shallow(
-        <IndexPage
-          dispatch={() => {}}
-          distributions={api.distributions}
-          regions={api.regions}
-          types={api.types}
-          linodes={api.linodes}
-        />);
-      expect(page.find(thing).length).to.equal(1);
-    };
-  }
-
-  [
-    'Source',
-    'Region',
-    'Plan',
-    'Details',
-  ].map(t => it(`renders a ${t}`, assertContains(t)));
-
   it('dispatches an error if fetching when mounted fails', async () => {
-    sandbox.stub(errors, 'setError', e => e);
-    const env = { dispatch() {} };
+    const setError = sandbox.stub(errors, 'setError');
+
+    const dispatch = sandbox.stub();
     const error = 'this is my error string';
-    const dispatch = sandbox.stub(env, 'dispatch');
     dispatch.onCall(0).throws(new Error(error));
 
-    await IndexPage.preload({ dispatch }, { });
+    await IndexPage.preload({ dispatch, getState: () => state }, { });
 
-    expect(dispatch.callCount).to.equal(2);
-    expect(dispatch.args[1][0].message).to.equal(error);
+    expect(dispatch.callCount).to.equal(4);
+    expect(setError.callCount).to.equal(1);
+    expect(setError.firstCall.args[0].message).to.equal(error);
   });
 
   it('selects a source when appropriate', () => {

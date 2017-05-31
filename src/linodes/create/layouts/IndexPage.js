@@ -20,8 +20,6 @@ import Plan from '../../components/Plan';
 export class IndexPage extends Component {
   static async preload({ dispatch, getState }) {
     try {
-      const requests = [api.linodes.all()];
-
       ['types', 'regions', 'distributions']
         .filter(type => !Object.values(getState().api[type][type]).length)
         .forEach(type => requests.push(api[type].all()));
