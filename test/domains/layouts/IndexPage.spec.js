@@ -37,7 +37,7 @@ describe('domains/layouts/IndexPage', () => {
     expect(firstZone.find('td').at(1).text())
       .to.equal('example.com');
     expect(firstZone.find('td').at(2).text())
-      .to.equal('Master');
+      .to.equal('Master Zone');
   });
 
   it('shows the delete modal when delete is pressed', () => {

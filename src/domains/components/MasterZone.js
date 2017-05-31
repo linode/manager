@@ -12,6 +12,7 @@ import { ButtonCell } from 'linode-components/tables/cells';
 import { showModal, hideModal } from '~/actions/modal';
 import { domains } from '~/api';
 import { NameserversCell } from '~/components/tables/cells';
+import { GroupLabel } from '~/components';
 import { NAME_SERVERS } from '~/constants';
 
 import { formatDNSSeconds, ONE_DAY } from './SelectDNSSeconds';
@@ -202,220 +203,231 @@ export class MasterZone extends Component {
           <div className="container">
             <Link to="/domains">Domains</Link>
             <h1 title={domain.id}>
-              {domain.group ? `${domain.group} / ` : ''}
-              {domain.domain}
+              <Link to={`/domains/${domain.domain}`}>
+                <GroupLabel object={{ ...domain, label: domain.domain }} />
+              </Link>
             </h1>
           </div>
         </header>
         <div className="container">
-          <Card
-            id="soa"
-            header={
-              <CardHeader title="SOA Record" />
-            }
-          >
-            <Table
-              className="Table--secondary"
-              columns={[
-                { dataKey: 'domain', label: 'Primary Domain' },
-                { dataKey: 'soa_email', label: 'Email' },
-                { dataKey: 'ttl_sec', label: 'Default TTL' },
-                { dataKey: 'refresh_sec', label: 'Refresh Rate' },
-                { dataKey: 'retry_sec', label: 'Retry Rate' },
-                { dataKey: 'expire_sec', label: 'Expire Time' },
-                {
-                  cellComponent: ButtonCell,
-                  headerClassName: 'ButtonColumn',
-                  text: 'Edit',
-                  onClick: () => {
-                    this.renderSOAEditRecord();
+          <section>
+            <Card
+              id="soa"
+              header={<CardHeader title="SOA Record" />}
+            >
+              <Table
+                className="Table--secondary"
+                columns={[
+                  { dataKey: 'domain', label: 'Primary Domain' },
+                  { dataKey: 'soa_email', label: 'Email' },
+                  { dataKey: 'ttl_sec', label: 'Default TTL' },
+                  { dataKey: 'refresh_sec', label: 'Refresh Rate' },
+                  { dataKey: 'retry_sec', label: 'Retry Rate' },
+                  { dataKey: 'expire_sec', label: 'Expire Time' },
+                  {
+                    cellComponent: ButtonCell,
+                    headerClassName: 'ButtonColumn',
+                    text: 'Edit',
+                    onClick: () => {
+                      this.renderSOAEditRecord();
+                    },
                   },
-                },
-              ]}
-              data={[soaRecord]}
-            />
-          </Card>
-          <Card
-            id="ns"
-            header={
-              <CardHeader
-                title="NS Records"
-                nav={
-                  <Button
-                    onClick={() => {
-                      this.renderEditRecord('Add NS Record', EditNSRecord);
-                    }}
-                  >
-                    Add NS Record
-                  </Button>
-                }
+                ]}
+                data={[soaRecord]}
               />
-            }
-          >
-            <Table
-              className="Table--secondary"
-              columns={[
-                { dataKey: 'target', label: 'Name Server' },
-                { dataKey: 'name', label: 'Subdomain' },
-                { dataKey: 'ttl_sec', label: 'TTL' },
-                {
-                  cellComponent: NameserversCell,
-                  onEditClick: ({ id }) => this.renderEditNSRecord('Edit NS Record', id),
-                  onDeleteClick: ({ id }) => this.renderDeleteRecord('Delete NS Record', id),
-                },
-              ]}
-              data={nsRecords}
-            />
-          </Card>
-          <Card
-            id="mx"
-            header={
-              <CardHeader
-                title="MX Records"
-                nav={
-                  <Button
-                    onClick={() => { this.renderEditRecord('Add MX Record', EditMXRecord); }}
-                  >
-                    Add MX Record
-                  </Button>
-                }
+            </Card>
+          </section>
+          <section>
+            <Card
+              id="ns"
+              header={
+                <CardHeader
+                  title="NS Records"
+                  nav={
+                    <Button
+                      onClick={() => {
+                        this.renderEditRecord('Add NS Record', EditNSRecord);
+                      }}
+                    >
+                      Add NS Record
+                    </Button>
+                  }
+                />
+              }
+            >
+              <Table
+                className="Table--secondary"
+                columns={[
+                  { dataKey: 'target', label: 'Name Server' },
+                  { dataKey: 'name', label: 'Subdomain' },
+                  { dataKey: 'ttl_sec', label: 'TTL' },
+                  {
+                    cellComponent: NameserversCell,
+                    onEditClick: ({ id }) => this.renderEditNSRecord('Edit NS Record', id),
+                    onDeleteClick: ({ id }) => this.renderDeleteRecord('Delete NS Record', id),
+                  },
+                ]}
+                data={nsRecords}
               />
-            }
-          >
-            <Table
-              className="Table--secondary"
-              columns={[
-                { dataKey: 'target', label: 'Mail Server' },
-                { dataKey: 'priority', label: 'Preference' },
-                { dataKey: 'name', label: 'Subdomain' },
-                {
-                  cellComponent: ButtonCell,
-                  headerClassName: 'ButtonColumn',
-                  text: 'Edit',
-                  onClick: ({ id }) => this.renderEditMXRecord('Edit MX Record', id),
-                },
-                {
-                  cellComponent: ButtonCell,
-                  headerClassName: 'ButtonColumn',
-                  text: 'Delete',
-                  onClick: ({ id }) => this.renderDeleteRecord('Delete MX Record', id),
-                },
-              ]}
-              data={mxRecords}
-            />
-          </Card>
-          <Card
-            id="a"
-            header={
-              <CardHeader
-                title="A/AAAA Records"
-                nav={
-                  <Button
-                    onClick={() => { this.renderEditRecord('Add A/AAAA Record', EditARecord); }}
-                  >
-                    Add A/AAAA Record
-                  </Button>
-                }
+            </Card>
+          </section>
+          <section>
+            <Card
+              id="mx"
+              header={
+                <CardHeader
+                  title="MX Records"
+                  nav={
+                    <Button
+                      onClick={() => { this.renderEditRecord('Add MX Record', EditMXRecord); }}
+                    >
+                      Add MX Record
+                    </Button>
+                  }
+                />
+              }
+            >
+              <Table
+                className="Table--secondary"
+                columns={[
+                  { dataKey: 'target', label: 'Mail Server' },
+                  { dataKey: 'priority', label: 'Preference' },
+                  { dataKey: 'name', label: 'Subdomain' },
+                  {
+                    cellComponent: ButtonCell,
+                    headerClassName: 'ButtonColumn',
+                    text: 'Edit',
+                    onClick: ({ id }) => this.renderEditMXRecord('Edit MX Record', id),
+                  },
+                  {
+                    cellComponent: ButtonCell,
+                    headerClassName: 'ButtonColumn',
+                    text: 'Delete',
+                    onClick: ({ id }) => this.renderDeleteRecord('Delete MX Record', id),
+                  },
+                ]}
+                data={mxRecords}
               />
-            }
-          >
-            <Table
-              className="Table--secondary"
-              columns={[
-                { dataKey: 'name', label: 'Hostname' },
-                { dataKey: 'target', label: 'IP Address' },
-                { dataKey: 'ttl_sec', label: 'TTL' },
-                {
-                  cellComponent: ButtonCell,
-                  text: 'Edit',
-                  onClick: ({ id }) => this.renderEditARecord('Edit A/AAAA Record', id),
-                },
-                {
-                  cellComponent: ButtonCell,
-                  headerClassName: 'ButtonColumn',
-                  text: 'Delete',
-                  onClick: ({ id }) => this.renderDeleteRecord('Delete A/AAAA Record', id),
-                },
-              ]}
-              data={aRecords}
-            />
-          </Card>
-          <Card
-            id="cname"
-            header={
-              <CardHeader
-                title="CNAME Records"
-                nav={
-                  <Button
-                    onClick={() => {
-                      this.renderEditRecord('Add CNAME Record', EditCNAMERecord);
-                    }}
-                  >
-                    Add CNAME Record
-                  </Button>
-                }
+            </Card>
+          </section>
+          <section>
+            <Card
+              id="a"
+              header={
+                <CardHeader
+                  title="A/AAAA Records"
+                  nav={
+                    <Button
+                      onClick={() => { this.renderEditRecord('Add A/AAAA Record', EditARecord); }}
+                    >
+                      Add A/AAAA Record
+                    </Button>
+                  }
+                />
+              }
+            >
+              <Table
+                className="Table--secondary"
+                columns={[
+                  { dataKey: 'name', label: 'Hostname' },
+                  { dataKey: 'target', label: 'IP Address' },
+                  { dataKey: 'ttl_sec', label: 'TTL' },
+                  {
+                    cellComponent: ButtonCell,
+                    text: 'Edit',
+                    onClick: ({ id }) => this.renderEditARecord('Edit A/AAAA Record', id),
+                  },
+                  {
+                    cellComponent: ButtonCell,
+                    headerClassName: 'ButtonColumn',
+                    text: 'Delete',
+                    onClick: ({ id }) => this.renderDeleteRecord('Delete A/AAAA Record', id),
+                  },
+                ]}
+                data={aRecords}
               />
-            }
-          >
-            <Table
-              className="Table--secondary"
-              columns={[
-                { dataKey: 'name', label: 'Hostname' },
-                { dataKey: 'target', label: 'Aliases to' },
-                { dataKey: 'ttl_sec', label: 'TTL' },
-                {
-                  cellComponent: ButtonCell,
-                  headerClassName: 'ButtonColumn',
-                  text: 'Edit',
-                  onClick: ({ id }) => this.renderEditCNAMERecord('Edit CNAME Record', id),
-                },
-                {
-                  cellComponent: ButtonCell,
-                  headerClassName: 'ButtonColumn',
-                  text: 'Delete',
-                  onClick: ({ id }) => this.renderDeleteRecord('Delete CNAME Record', id),
-                },
-              ]}
-              data={cnameRecords}
-            />
-          </Card>
-          <Card
-            id="txt"
-            header={
-              <CardHeader
-                title="TXT Records"
-                nav={
-                  <Button
-                    onClick={() => { this.renderEditRecord('Add TXT Record', EditTXTRecord); }}
-                  >
-                    Add TXT Record
-                  </Button>
-                }
+            </Card>
+          </section>
+          <section>
+            <Card
+              id="cname"
+              header={
+                <CardHeader
+                  title="CNAME Records"
+                  nav={
+                    <Button
+                      onClick={() => {
+                        this.renderEditRecord('Add CNAME Record', EditCNAMERecord);
+                      }}
+                    >
+                      Add CNAME Record
+                    </Button>
+                  }
+                />
+              }
+            >
+              <Table
+                className="Table--secondary"
+                columns={[
+                  { dataKey: 'name', label: 'Hostname' },
+                  { dataKey: 'target', label: 'Aliases to' },
+                  { dataKey: 'ttl_sec', label: 'TTL' },
+                  {
+                    cellComponent: ButtonCell,
+                    headerClassName: 'ButtonColumn',
+                    text: 'Edit',
+                    onClick: ({ id }) => this.renderEditCNAMERecord('Edit CNAME Record', id),
+                  },
+                  {
+                    cellComponent: ButtonCell,
+                    headerClassName: 'ButtonColumn',
+                    text: 'Delete',
+                    onClick: ({ id }) => this.renderDeleteRecord('Delete CNAME Record', id),
+                  },
+                ]}
+                data={cnameRecords}
               />
-            }
-          >
-            <Table
-              className="Table--secondary"
-              columns={[
-                { dataKey: 'name', label: 'Name' },
-                { dataKey: 'target', label: 'Value' },
-                { dataKey: 'ttl_sec', label: 'TTL' },
-                {
-                  cellComponent: ButtonCell,
-                  headerClassName: 'ButtonColumn',
-                  text: 'Edit',
-                  onClick: ({ id }) => this.renderEditTXTRecord('Edit TXT Record', id),
-                },
-                {
-                  cellComponent: ButtonCell,
-                  headerClassName: 'ButtonColumn',
-                  text: 'Delete',
-                  onClick: ({ id }) => this.renderDeleteRecord('Delete TXT Record', id),
-                },
-              ]}
-              data={txtRecords}
-            />
-          </Card>
+            </Card>
+          </section>
+          <section>
+            <Card
+              id="txt"
+              header={
+                <CardHeader
+                  title="TXT Records"
+                  nav={
+                    <Button
+                      onClick={() => { this.renderEditRecord('Add TXT Record', EditTXTRecord); }}
+                    >
+                      Add TXT Record
+                    </Button>
+                  }
+                />
+              }
+            >
+              <Table
+                className="Table--secondary"
+                columns={[
+                  { dataKey: 'name', label: 'Name' },
+                  { dataKey: 'target', label: 'Value' },
+                  { dataKey: 'ttl_sec', label: 'TTL' },
+                  {
+                    cellComponent: ButtonCell,
+                    headerClassName: 'ButtonColumn',
+                    text: 'Edit',
+                    onClick: ({ id }) => this.renderEditTXTRecord('Edit TXT Record', id),
+                  },
+                  {
+                    cellComponent: ButtonCell,
+                    headerClassName: 'ButtonColumn',
+                    text: 'Delete',
+                    onClick: ({ id }) => this.renderDeleteRecord('Delete TXT Record', id),
+                  },
+                ]}
+                data={txtRecords}
+              />
+            </Card>
+          </section>
           <Card
             id="srv"
             header={
