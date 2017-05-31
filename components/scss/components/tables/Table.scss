@@ -70,21 +70,3 @@
         top: 1px;
     }
 }
-
-.AuthScopeCell {
-    width: 80px;
-    text-align: center;
-    padding: 0 !important;
-
-    .fa {
-        padding-right: 5px;
-    }
-
-    .fa-check {
-        color: $green;
-    }
-
-    .fa-times {
-        color: $red;
-    }
-}
