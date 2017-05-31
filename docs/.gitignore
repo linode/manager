@@ -1,0 +1,6 @@
+.DS_Store
+.sass-cache/
+src/api.js
+node_modules
+npm-debug.log
+dist
