@@ -15,9 +15,11 @@ export class IPManagementPage extends Component {
   static async preload({ dispatch, getState }, { linodeLabel }) {
     try {
       const { region } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
-      await dispatch(linodes.all([], undefined, createHeaderFilter({ region: region.id })));
-      await dispatch(ipv4s(region));
-      await dispatch(ipv6s(region));
+      await Promise.all([
+        linodes.all([], undefined, createHeaderFilter({ region: region.id })),
+        ipv4s(region),
+        ipv6s(region)
+      ].map(r => dispatch(r)));
     } catch (e) {
       dispatch(setError(e));
     }
