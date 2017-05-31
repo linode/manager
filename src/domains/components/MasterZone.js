@@ -426,7 +426,8 @@ export class MasterZone extends Component {
                     cellComponent: ButtonCell,
                     headerClassName: 'ButtonColumn',
                     text: 'Delete',
-                    onClick: ({ id, name }) => this.renderDeleteRecord('Delete TXT Record', id, name),
+                    onClick: ({ id, name }) =>
+                      this.renderDeleteRecord('Delete TXT Record', id, name),
                   },
                 ]}
                 data={txtRecords}
