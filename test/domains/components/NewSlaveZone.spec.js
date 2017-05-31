@@ -39,7 +39,7 @@ describe('domains/components/NewSlaveZone', () => {
         body: {
           domain: 'test.com',
           type: 'slave',
-          ips: ['1', '2', '3', '4'],
+          master_ips: ['1', '2', '3', '4'],
         },
       }),
       ([pushResult]) => expectObjectDeepEquals(pushResult, push('/domains')),
