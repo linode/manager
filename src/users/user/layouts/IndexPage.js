@@ -36,7 +36,7 @@ export class IndexPage extends Component {
     const tabs = tabList.map(t => ({ ...t, link: `/users/${username}${t.link}` }));
 
     return (
-      <div className="details-page">
+      <div>
         <header className="main-header">
           <div className="container">
             <div className="float-sm-left">

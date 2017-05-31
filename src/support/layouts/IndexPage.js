@@ -111,7 +111,7 @@ export class IndexPage extends Component {
             dataKey: 'id',
             className: 'hidden-md-down',
             headerClassName: 'hidden-md-down',
-            formatFn: id => <span>#{id}</span>,
+            formatFn: id => <span>Ticket #{id}</span>,
           },
           {
             cellComponent: this.renderUpdatedByCell,

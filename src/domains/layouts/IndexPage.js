@@ -118,7 +118,7 @@ export class IndexPage extends Component {
                       cellComponent: LinkCell,
                       hrefFn: (zone) => `/domains/${zone.domain}`, textKey: 'domain',
                     },
-                    { dataKey: 'type', formatFn: _.capitalize },
+                    { dataKey: 'type', formatFn: (type) => `${_.capitalize(type)} Zone` },
                     {
                       cellComponent: ButtonCell,
                       headerClassName: 'ButtonColumn',

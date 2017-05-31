@@ -1,13 +1,16 @@
+import _ from 'lodash';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import CreateHelper from '~/components/CreateHelper';
+
 import { showModal, hideModal } from '~/actions/modal';
 import { Button } from 'linode-components/buttons';
 import { setError } from '~/actions/errors';
 import { tokens } from '~/api';
 import PersonalAccessToken from '../components/PersonalAccessToken';
 import CreatePersonalAccessToken from '../components/CreatePersonalAccessToken';
+
 
 export class PersonalAccessTokensPage extends Component {
   static async preload({ dispatch }) {
@@ -32,8 +35,30 @@ export class PersonalAccessTokensPage extends Component {
     )));
   }
 
-  render() {
+  renderGroup = (group, i, groups) => {
     const { dispatch } = this.props;
+    const _renderGroup = group.map(client =>
+      <div className="col-lg-6" key={client.id}>
+        <PersonalAccessToken
+          type="token"
+          label={client.label}
+          id={client.id}
+          scopes={client.scopes}
+          expires={client.expiry}
+          secret={client.token}
+          dispatch={dispatch}
+        />
+      </div>
+    );
+
+    if (i === groups.length - 1) {
+      return <div className="row">{_renderGroup}</div>;
+    }
+
+    return <section className="row">{_renderGroup}</section>;
+  }
+
+  render() {
     const clients = Object.values(this.props.tokens.tokens).filter(
       token => token.type === 'personal_access_token');
 
@@ -44,27 +69,13 @@ export class PersonalAccessTokensPage extends Component {
             Create a Personal Access Token
           </Button>
         </header>
-        <div className="row">
-          {clients.length ? clients.map(client =>
-            <div className="col-lg-6" key={client.id}>
-              <PersonalAccessToken
-                type="token"
-                label={client.label}
-                id={client.id}
-                scopes={client.scopes}
-                expires={client.expiry}
-                secret={client.token}
-                dispatch={dispatch}
-              />
-            </div>
-           ) : (
-            <CreateHelper
-              label="tokens"
-              onClick={this.renderCreatePersonalAccessToken}
-              linkText="Create a Personal Access Token"
-            />
-           )}
-        </div>
+        {clients.length ? _.chunk(clients, 2).map(this.renderGroup) : (
+          <CreateHelper
+            label="tokens"
+            onClick={this.renderCreatePersonalAccessToken}
+            linkText="Create a Personal Access Token"
+          />
+        )}
       </div>
     );
   }

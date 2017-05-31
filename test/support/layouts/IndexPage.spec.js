@@ -28,7 +28,7 @@ describe('support/layouts/IndexPage', () => {
 
     // Get id without hashtag
     const id = ticket.find('td').at(1).text()
-      .substring('#'.length);
+      .substring('Ticket #'.length);
     const renderedTicket = api.tickets.tickets[id];
     const label = ticket.find('Link').at(0);
     expect(label.props().to).to.equal(`/support/${id}`);

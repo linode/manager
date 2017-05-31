@@ -86,7 +86,7 @@ export default class ResetRootPassword extends Component {
     const header = <CardHeader title="Reset root password" />;
 
     return (
-      <Card header={header}>
+      <Card header={header} className="full-height">
         <Form onSubmit={this.onSubmitConfirm}>
           <FormGroup className="row" errors={errors} name="disk">
             <label htmlFor="disk" className="col-sm-3 col-form-label">Disk</label>

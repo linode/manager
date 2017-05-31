@@ -147,9 +147,9 @@ export class DashboardPage extends Component {
     const lishLink = `${username}@lish-${DATACENTERS[linode.region.id]}.linode.com`;
 
     return (
-      <div className="row-justify row-eq-height">
+      <div className="row">
         <section className="col-lg-6 col-md-12 col-sm-12">
-          <Card header={<CardHeader title="Summary" />}>
+          <Card header={<CardHeader title="Summary" />} className="full-height">
             <div className="row">
               <div className="col-sm-4 row-label">
                 IP Addresses
@@ -187,7 +187,7 @@ export class DashboardPage extends Component {
           </Card>
         </section>
         <section className="col-lg-6 col-md-12 col-sm-12">
-          <Card header={<CardHeader title="Access" />}>
+          <Card header={<CardHeader title="Access" />} className="full-height">
             <FormGroup className="row">
               <label htmlFor="ssh-input" className="col-sm-4 col-form-label">SSH</label>
               <div className="col-sm-8">
@@ -236,7 +236,11 @@ export class DashboardPage extends Component {
     return (
       <div>
         {this.renderDetails()}
-        {this.renderGraphs()}
+        <div className="row">
+          <div className="col-sm-12">
+            {this.renderGraphs()}
+          </div>
+        </div>
       </div>
     );
   }

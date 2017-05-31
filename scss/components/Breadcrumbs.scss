@@ -18,12 +18,9 @@
         }
     }
 
-    &-crumbLink {
-        margin-top: -5px;
-    }
-
     &-divider {
         @extend .font-xs;
-        margin-left: 5px;
+        margin-left: 10px;
+        color: $light-black;
     }
 }

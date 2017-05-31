@@ -83,11 +83,11 @@ export class DiskPanel extends Component {
   renderStatusMessage() {
     if (!this.poweredOff()) {
       return (
-        <section>
+        <div>
           <div className="alert alert-info">
             Your Linode must be powered off to manage your disks.
           </div>
-        </section>
+        </div>
       );
     }
 

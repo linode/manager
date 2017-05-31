@@ -97,23 +97,29 @@ export class IndexPage extends Component {
       <div className="container create-page">
         <Link to="/linodes">Linodes</Link>
         <h1>Add a Linode</h1>
-        <Source
-          distribution={distribution}
-          distributions={distributions.distributions}
-          onDistroSelected={id => this.setState({ distribution: id })}
-        />
-        <Region
-          selected={region}
-          regions={regions.regions}
-          onRegionSelected={id => this.setState({ region: id })}
-        />
-        <Card header={<CardHeader title="Plan" />}>
-          <Plan
-            selected={type}
-            types={types.types}
-            onServiceSelected={id => this.setState({ type: id })}
+        <section>
+          <Source
+            distribution={distribution}
+            distributions={distributions.distributions}
+            onDistroSelected={id => this.setState({ distribution: id })}
           />
-        </Card>
+        </section>
+        <section>
+          <Region
+            selected={region}
+            regions={regions.regions}
+            onRegionSelected={id => this.setState({ region: id })}
+          />
+        </section>
+        <section>
+          <Card header={<CardHeader title="Plan" />}>
+            <Plan
+              selected={type}
+              types={types.types}
+              onServiceSelected={id => this.setState({ type: id })}
+            />
+          </Card>
+        </section>
         <Details
           selectedType={selectedType}
           onSubmit={this.onSubmit}
