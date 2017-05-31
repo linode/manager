@@ -10,7 +10,7 @@ import {
 
 export function generateIndexRoute(props) {
   const { endpoint, key } = props;
-  const crumbs = [{ groupLabel: 'Reference', label: endpoint.path, to: endpoint.path }];
+  const crumbs = [{ groupLabel: 'Reference', label: endpoint.path, to: endpoint.routePath }];
 
   return (
     <Route
