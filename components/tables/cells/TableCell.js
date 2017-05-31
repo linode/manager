@@ -1,10 +1,21 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
 
+import { Tooltip } from '../../tooltips';
+
+
 export default function TableCell(props) {
-  const { column, record } = props;
-  const { formatFn } = column;
-  const className = column.className || props.className || '';
+  const {
+    className = '',
+    column,
+    record,
+    title,
+    tooltip,
+  } = props;
+  const {
+    formatFn,
+  } = column;
+  const columnClassName = column.className || '';
 
   // TODO: add dynamic class name based on column type ( numeric/text/etc )
   let children = props.children;
@@ -15,9 +26,25 @@ export default function TableCell(props) {
     }
   }
 
+  let tooltipComponent;
+  let tooltipAttributes;
+  if (tooltip) {
+    const tooltipId = `tooltip-${record.id}`;
+
+    tooltipAttributes = {'data-tip': true, 'data-for': tooltipId };
+    tooltipComponent = (
+      <Tooltip id={tooltipId}>{tooltip}</Tooltip>
+    );
+  }
+
   return (
-    <td className={`Table-cell ${className}`}>
-      {children}
+    <td
+      className={`TableCell ${className} ${columnClassName}`}
+    >
+      <div className="TableCell-content" {...tooltipAttributes}>
+        {children}
+      </div>
+      {tooltipComponent}
     </td>
   );
 }
@@ -33,5 +60,5 @@ TableCell.propTypes = {
   record: PropTypes.shape({
     id: PropTypes.number,
   }).isRequired,
+  title: PropTypes.string,
 };
-

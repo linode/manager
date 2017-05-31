@@ -1,16 +1,16 @@
-import React from 'react';
-import { Link } from 'react-router';
+import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
+
 import TableCell from './TableCell';
 
 
-export default function LinkCell(props) {
+export default function LabelCell(props) {
   const { column, record } = props;
   const {
     className = '',
-    hrefFn,
-    textKey = 'label',
+    titleKey = 'id',
     textFn,
+    textKey = 'name',
   } = column;
 
   let children = props.children;
@@ -22,32 +22,33 @@ export default function LinkCell(props) {
     }
   }
 
-  const name = record[textKey];
-  const tooltipText = `${name} \n ID: ${record.id}`;
+  const title = record[titleKey];
+  const tooltipText = (
+    <div>
+      <div>
+        {title}
+      </div>
+      <div>ID: {record.id}</div>
+    </div>
+  );
 
   return (
     <TableCell
-      className={`LinkCell ${className}`}
+      className={`LabelCell ${className}`}
       column={column}
       record={record}
       tooltip={tooltipText}
     >
-      <Link to={hrefFn(record)}>
-        {children}
-      </Link>
+      {children}
     </TableCell>
   );
 }
 
-LinkCell.propTypes = {
+LabelCell.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,
   column: PropTypes.shape({
-    hrefFn: PropTypes.func.isRequired,
     titleKey: PropTypes.string,
-    textKey: PropTypes.string,
-    // TODO: consider generalizing textFn for formatting
-    textFn: PropTypes.func,
-  }).isRequired,
+  }),
   record: PropTypes.object.isRequired,
 };

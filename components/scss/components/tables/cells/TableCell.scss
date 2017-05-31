@@ -1,0 +1,7 @@
+.TableCell {
+    .TableCell-content,
+    .TableCell-content > a {
+        @include truncate();
+        display: block;
+    }
+}
