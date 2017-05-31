@@ -22,5 +22,5 @@ export default function Source(props) {
 Source.propTypes = {
   distributions: PropTypes.object.isRequired,
   onDistroSelected: PropTypes.func.isRequired,
-  distribution: PropTypes.string.isRequired,
+  distribution: PropTypes.string,
 };
