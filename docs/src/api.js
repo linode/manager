@@ -7364,7 +7364,7 @@
               {
                 "oauth": "linodes:modify",
                 "dangerous": true,
-                "description": "Creates a snapshot backup of a Linode. <div class=\"alert alert-danger\">\n  <strong>WARNING</strong>\n  <p>\n    If you already have a snapshot, this is a destructive operation.\n    The previous snapshot will be deleted.\n  </p>\n</div>\n",
+                "description": "Creates a snapshot backup of a Linode. WARNING: If you already have a snapshot, this is a destructive operation. The previous snapshot will be deleted.\n",
                 "params": [
                   {
                     "optional": true,
