@@ -4,8 +4,10 @@ import { connect } from 'react-redux';
 
 import { setError } from '~/actions/errors';
 import { linodes } from '~/api';
-import { createHeaderFilter, getObjectByLabelLazily } from '~/api/util';
-import { linodeIPs } from '~/api/linodes';
+import { ipv6s, ipv4s } from '~/api/networking';
+import { getObjectByLabelLazily } from '~/api/util';
+
+import { IPTransfer, IPSharing } from '../components';
 import { selectLinode } from '../../utilities';
 
 
@@ -13,9 +15,12 @@ export class IPManagementPage extends Component {
   static async preload({ dispatch, getState }, { linodeLabel }) {
     try {
       const { region } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
-      const allLinodes = await dispatch(linodes.all([], undefined, createHeaderFilter({ region })));
-      await Promise.all(Object.values(allLinodes.linodes).map(
-        ({ id }) => dispatch(linodeIPs(id))));
+      await dispatch(linodes.all([], undefined));
+      await Promise.all([
+        // TODO: , createHeaderFilter({ region: region.id }) when API supports it
+        ipv4s(region),
+        ipv6s(region),
+      ].map(r => dispatch(r)));
     } catch (e) {
       dispatch(setError(e));
     }
