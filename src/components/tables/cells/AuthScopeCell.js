@@ -7,12 +7,14 @@ import { TableCell } from 'linode-components/tables/cells';
 function renderScope(scopesRequested, currentScope, currentSubscope) {
   const subscopeAllowed = (
     <small>
-      <strong>{_.capitalize(currentSubscope)}</strong>
+      <i className="fa fa-check" />
+      {_.capitalize(currentSubscope)}
     </small>
   );
   const subscopeNotAllowed = (
-    <small className="text-muted">
-      <s>{_.capitalize(currentSubscope)}</s>
+    <small>
+      <i className="fa fa-times" />
+      {_.capitalize(currentSubscope)}
     </small>
   );
 
