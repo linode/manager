@@ -623,14 +623,9 @@ endpoints:
         oauth: linodes:modify
         dangerous: true
         description: >
-          Creates a snapshot backup of a Linode.
-          <div class="alert alert-danger">
-            <strong>WARNING</strong>
-            <p>
-              If you already have a snapshot, this is a destructive operation.
-              The previous snapshot will be deleted.
-            </p>
-          </div>
+          Creates a snapshot backup of a Linode. WARNING:
+          If you already have a snapshot, this is a destructive operation.
+          The previous snapshot will be deleted.
         params:
           label:
             optional: true
