@@ -55,8 +55,8 @@ export class SlaveZone extends Component {
 
     const soaRecord = {
       ...domain,
-      axfr_ips: axfr_ips.map(ip => <div>{ip}</div>),
-      master_ips: master_ips.map(ip => <div>{ip}</div>),
+      axfr_ips: axfr_ips.map(ip => <div key={ip}>{ip}</div>),
+      master_ips: master_ips.map(ip => <div key={ip}>{ip}</div>),
     };
 
     return (
