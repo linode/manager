@@ -3,8 +3,6 @@ import React, { PropTypes } from 'react';
 import { Button } from 'linode-components/buttons';
 import { TableCell } from 'linode-components/tables/cells';
 
-import { NAME_SERVERS } from '~/constants';
-
 
 export default function NameserversCell(props) {
   const { column, record } = props;
@@ -12,7 +10,7 @@ export default function NameserversCell(props) {
 
   let actions;
   // Linode nameservers are readonly
-  if (NAME_SERVERS.indexOf(record.target) > -1) {
+  if (record.readOnly) {
     actions = (
       <small className="text-muted">Read-only</small>
     );
