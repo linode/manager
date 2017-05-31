@@ -1,7 +1,7 @@
 import 'babel-polyfill';
 import React from 'react';
 import { render } from 'react-dom';
-import { Router, Route, IndexRedirect, browserHistory } from 'react-router';
+import { Redirect, Router, Route, IndexRedirect, browserHistory } from 'react-router';
 import ReactGA from 'react-ga';
 
 import { GA_ID } from './constants';
@@ -78,6 +78,7 @@ export function init() {
       <Route path="/" component={Layout} endpoints={api.endpoints}>
         <Route component={IndexLayout}>
           <IndexRedirect to="/introduction" />
+          <Redirect from="/reference" to="/introduction" />
           <Route path="/introduction" component={Introduction} />
           <Route path="/access" component={Access} />
           <Route path="/pagination" component={Pagination} />
