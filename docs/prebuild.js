@@ -67,10 +67,11 @@ function convertUlToArray(description) {
   return description;
 }
 
-function getResourceObjByName(resource) {
-  let resourceObject = apiObjectMap[resource];
-  if (!resourceObject && (resource.charAt(resource.length - 1) === 's')) {
-    resourceObject = apiObjectMap[resource.substr(0, resource.length - 1)];
+function getResourceObjByName(name) {
+  let resourceName = name.toLowerCase();
+  let resourceObject = apiObjectMap[resourceName];
+  if (!resourceObject && (resourceName.charAt(resourceName.length - 1) === 's')) {
+    resourceObject = apiObjectMap[resourceName.substr(0, resourceName.length - 1)];
   }
   return resourceObject;
 }
