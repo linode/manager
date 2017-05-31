@@ -1,8 +1,7 @@
 # vim: set et ts=2 sw=2 tw=80 :
-name: Service
-prefix: serv
+name: Type
 description: >
-  Service objects describe a service available for purchase from Linode.
+  Type objects describe a service available for purchase from Linode.
   Provisioning new infrastructure generally involves including a service ID with
   the request.
 schema:
@@ -19,6 +18,9 @@ schema:
     _value: 250
     _description: Cost (in US dollars) per month if backups are enabled.
     _filterable: false
+  class:
+    _type: enum
+    _subtype: Class
   hourly_price:
     _type: integer
     _value: 1
@@ -27,7 +29,7 @@ schema:
   label:
     _type: string
     _value: Linode 2048
-    _description: Human-friendly name of this service.
+    _description: Human-friendly name of this type.
     _filterable: true
   mbits_out:
     _type: integer
@@ -42,13 +44,7 @@ schema:
   ram:
     _type: integer
     _value: 2048
-    _description: Amount of RAM included in this service.
-    _filterable: true
-  service_type:
-    _type: enum
-    _subtype: Service Type
-    _value: linode
-    _description: The type of service offered.
+    _description: Amount of RAM included in this type.
     _filterable: true
   transfer:
     _type: integer
@@ -61,8 +57,6 @@ schema:
     _description: If applicable, number of CPU cores.
     _filterable: true
 enums:
-  Service Type:
-    linode: A Linode service.
-    backup: A backup service.
-    nodebalancer: A NodeBalancer service.
-    longview: A Longview subscription.
+  Class:
+    standard: Standard class
+    highmem: High memory class
