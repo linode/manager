@@ -139,7 +139,11 @@ export default class LineGraph extends Component {
               display: true,
               labelString: yAxis.label,
             },
-            ticks: { display: true, callback: yAxis.format },
+            ticks: {
+              display: true,
+              callback: yAxis.format,
+              beginAtZero: true,
+            },
           }],
         },
       },
