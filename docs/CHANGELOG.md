@@ -5,6 +5,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased] 
+### Changed
+- json removed and yaml added in it's place
+- docsConvert.js renamed to prebuild.js and prebuld defined as an npm script
+- api /objects read and conversion moved from objectsConvert.js (deleted) to prebuild.js
+### Fixed
+- broken /linode/types and /linode/types/:id endpoints
+### Removed
+- transform.sh no longer needed after yaml move
 
 ## [0.2.1] 2017-05-26
 ### Fixed

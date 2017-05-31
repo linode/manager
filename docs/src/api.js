@@ -1602,7 +1602,7 @@
                   },
                   {
                     "description": "A Linode type ID to use for this Linode.\n",
-                    "type": "integer",
+                    "type": "service",
                     "name": "type"
                   },
                   {
@@ -7324,7 +7324,7 @@
                 "params": [
                   {
                     "description": "A Linode type to use for this Linode.\n",
-                    "type": "integer",
+                    "type": "service",
                     "name": "type"
                   }
                 ],
@@ -7716,64 +7716,6 @@
             ],
             "path": "linode/instances/:id/rebuild",
             "routePath": "/reference/endpoints/linode/instances/:id/rebuild",
-            "endpoints": []
-          }
-        ]
-      },
-      {
-        "name": "Types",
-        "sort": 1,
-        "base_path": "/linode/types",
-        "description": "Type endpoints provide a means of viewing service objects.\n",
-        "path": "/linode",
-        "methods": null,
-        "endpoints": [
-          {
-            "type": "list",
-            "resource": "types",
-            "description": "Returns collection of types.\n",
-            "methods": [
-              {
-                "description": "Returns list of services.\n",
-                "examples": [
-                  {
-                    "name": "curl",
-                    "value": "curl https://$api_root/$version/linode/services\n"
-                  },
-                  {
-                    "name": "python",
-                    "value": "client.linode.get_types()\n"
-                  }
-                ],
-                "name": "GET"
-              }
-            ],
-            "path": "linode/types",
-            "routePath": "/reference/endpoints/linode/types",
-            "endpoints": []
-          },
-          {
-            "type": "resource",
-            "resource": "types",
-            "description": "Returns information about a specific Linode type offered by Linode.\n",
-            "methods": [
-              {
-                "description": "Returns information about this service.\n",
-                "examples": [
-                  {
-                    "name": "curl",
-                    "value": "curl https://$api_root/$version/linode/services/$service_id\n"
-                  },
-                  {
-                    "name": "python",
-                    "value": "type = linode.Service(client, 'g5-standard=1')\n"
-                  }
-                ],
-                "name": "GET"
-              }
-            ],
-            "path": "linode/types/:id",
-            "routePath": "/reference/endpoints/linode/types/:id",
             "endpoints": []
           }
         ]
@@ -8659,6 +8601,300 @@
             ],
             "path": "linode/stackscripts/:id",
             "routePath": "/reference/endpoints/linode/stackscripts/:id",
+            "endpoints": []
+          }
+        ]
+      },
+      {
+        "name": "Types",
+        "sort": 1,
+        "base_path": "/linode/types",
+        "description": "Type endpoints provide a means of viewing type objects.\n",
+        "path": "/linode",
+        "methods": null,
+        "endpoints": [
+          {
+            "type": "list",
+            "resource": "types",
+            "description": "Returns collection of types.\n",
+            "methods": [
+              {
+                "description": "Returns list of types.\n",
+                "examples": [
+                  {
+                    "name": "curl",
+                    "value": "curl https://$api_root/$version/linode/types\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "client.linode.get_types()\n"
+                  }
+                ],
+                "name": "GET",
+                "resource": {
+                  "name": "Type",
+                  "description": "Type objects describe a service available for purchase from Linode. Provisioning new infrastructure generally involves including a service ID with the request.\n",
+                  "schema": [
+                    {
+                      "name": "id",
+                      "type": "string",
+                      "value": "linode2048.5",
+                      "schema": null
+                    },
+                    {
+                      "name": "storage",
+                      "description": "If applicable, disk space in MB.",
+                      "filterable": true,
+                      "type": "integer",
+                      "value": 24576,
+                      "schema": null
+                    },
+                    {
+                      "name": "backups_price",
+                      "description": "Cost (in US dollars) per month if backups are enabled.",
+                      "filterable": false,
+                      "type": "integer",
+                      "value": 250,
+                      "schema": null
+                    },
+                    {
+                      "name": "class",
+                      "type": "enum",
+                      "subType": "Class",
+                      "schema": [
+                        {
+                          "name": "standard",
+                          "description": "Standard class"
+                        },
+                        {
+                          "name": "highmem",
+                          "description": "High memory class"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "hourly_price",
+                      "description": "Cost (in cents) per hour.",
+                      "filterable": true,
+                      "type": "integer",
+                      "value": 1,
+                      "schema": null
+                    },
+                    {
+                      "name": "label",
+                      "description": "Human-friendly name of this type.",
+                      "filterable": true,
+                      "type": "string",
+                      "value": "Linode 2048",
+                      "schema": null
+                    },
+                    {
+                      "name": "mbits_out",
+                      "description": "If applicable, Mbits outbound bandwidth.",
+                      "filterable": true,
+                      "type": "integer",
+                      "value": 125,
+                      "schema": null
+                    },
+                    {
+                      "name": "monthly_price",
+                      "description": "Cost (in US dollars) per month.",
+                      "filterable": true,
+                      "type": "integer",
+                      "value": 1000,
+                      "schema": null
+                    },
+                    {
+                      "name": "ram",
+                      "description": "Amount of RAM included in this type.",
+                      "filterable": true,
+                      "type": "integer",
+                      "value": 2048,
+                      "schema": null
+                    },
+                    {
+                      "name": "transfer",
+                      "description": "If applicable, outbound transfer in MB.",
+                      "filterable": true,
+                      "type": "integer",
+                      "value": 2000,
+                      "schema": null
+                    },
+                    {
+                      "name": "vcpus",
+                      "description": "If applicable, number of CPU cores.",
+                      "filterable": true,
+                      "type": "integer",
+                      "value": 2,
+                      "schema": null
+                    }
+                  ],
+                  "enums": {
+                    "Class": {
+                      "standard": "Standard class",
+                      "highmem": "High memory class"
+                    }
+                  },
+                  "example": {
+                    "id": "linode2048.5",
+                    "storage": 24576,
+                    "backups_price": 250,
+                    "class": {},
+                    "hourly_price": 1,
+                    "label": "Linode 2048",
+                    "mbits_out": 125,
+                    "monthly_price": 1000,
+                    "ram": 2048,
+                    "transfer": 2000,
+                    "vcpus": 2
+                  }
+                }
+              }
+            ],
+            "path": "linode/types",
+            "routePath": "/reference/endpoints/linode/types",
+            "endpoints": []
+          },
+          {
+            "type": "resource",
+            "resource": "types",
+            "description": "Returns information about a specific Linode type offered by Linode.\n",
+            "methods": [
+              {
+                "description": "Returns information about this type.\n",
+                "examples": [
+                  {
+                    "name": "curl",
+                    "value": "curl https://$api_root/$version/linode/types/$type_id\n"
+                  },
+                  {
+                    "name": "python",
+                    "value": "type = linode.Type(client, 'g5-standard=1')\n"
+                  }
+                ],
+                "name": "GET",
+                "resource": {
+                  "name": "Type",
+                  "description": "Type objects describe a service available for purchase from Linode. Provisioning new infrastructure generally involves including a service ID with the request.\n",
+                  "schema": [
+                    {
+                      "name": "id",
+                      "type": "string",
+                      "value": "linode2048.5",
+                      "schema": null
+                    },
+                    {
+                      "name": "storage",
+                      "description": "If applicable, disk space in MB.",
+                      "filterable": true,
+                      "type": "integer",
+                      "value": 24576,
+                      "schema": null
+                    },
+                    {
+                      "name": "backups_price",
+                      "description": "Cost (in US dollars) per month if backups are enabled.",
+                      "filterable": false,
+                      "type": "integer",
+                      "value": 250,
+                      "schema": null
+                    },
+                    {
+                      "name": "class",
+                      "type": "enum",
+                      "subType": "Class",
+                      "schema": [
+                        {
+                          "name": "standard",
+                          "description": "Standard class"
+                        },
+                        {
+                          "name": "highmem",
+                          "description": "High memory class"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "hourly_price",
+                      "description": "Cost (in cents) per hour.",
+                      "filterable": true,
+                      "type": "integer",
+                      "value": 1,
+                      "schema": null
+                    },
+                    {
+                      "name": "label",
+                      "description": "Human-friendly name of this type.",
+                      "filterable": true,
+                      "type": "string",
+                      "value": "Linode 2048",
+                      "schema": null
+                    },
+                    {
+                      "name": "mbits_out",
+                      "description": "If applicable, Mbits outbound bandwidth.",
+                      "filterable": true,
+                      "type": "integer",
+                      "value": 125,
+                      "schema": null
+                    },
+                    {
+                      "name": "monthly_price",
+                      "description": "Cost (in US dollars) per month.",
+                      "filterable": true,
+                      "type": "integer",
+                      "value": 1000,
+                      "schema": null
+                    },
+                    {
+                      "name": "ram",
+                      "description": "Amount of RAM included in this type.",
+                      "filterable": true,
+                      "type": "integer",
+                      "value": 2048,
+                      "schema": null
+                    },
+                    {
+                      "name": "transfer",
+                      "description": "If applicable, outbound transfer in MB.",
+                      "filterable": true,
+                      "type": "integer",
+                      "value": 2000,
+                      "schema": null
+                    },
+                    {
+                      "name": "vcpus",
+                      "description": "If applicable, number of CPU cores.",
+                      "filterable": true,
+                      "type": "integer",
+                      "value": 2,
+                      "schema": null
+                    }
+                  ],
+                  "enums": {
+                    "Class": {
+                      "standard": "Standard class",
+                      "highmem": "High memory class"
+                    }
+                  },
+                  "example": {
+                    "id": "linode2048.5",
+                    "storage": 24576,
+                    "backups_price": 250,
+                    "class": {},
+                    "hourly_price": 1,
+                    "label": "Linode 2048",
+                    "mbits_out": 125,
+                    "monthly_price": 1000,
+                    "ram": 2048,
+                    "transfer": 2000,
+                    "vcpus": 2
+                  }
+                }
+              }
+            ],
+            "path": "linode/types/:id",
+            "routePath": "/reference/endpoints/linode/types/:id",
             "endpoints": []
           }
         ]
