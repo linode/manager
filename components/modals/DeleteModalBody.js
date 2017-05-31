@@ -20,13 +20,6 @@ export default function DeleteModalBody(props) {
         <p>This operation cannot be undone.</p>
       </div>
     );
-  } else if (parentItem) {
-    body = (
-      <p>
-        Are you sure you want
-        to <strong>permanently</strong> delete <strong>{items[0]}</strong> from {parentItem}?
-      </p>
-    );
   } else {
     body = (
       <p>
@@ -54,5 +47,4 @@ DeleteModalBody.propTypes = {
   items: PropTypes.arrayOf(PropTypes.string),
   onCancel: PropTypes.func,
   typeOfItem: PropTypes.string,
-  parentItem: PropTypes.string,
 };
