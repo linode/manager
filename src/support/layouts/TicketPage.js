@@ -157,8 +157,8 @@ export class TicketPage extends Component {
                 </section>
               )}
               {Object.values(replies).map(reply => (
-                <section>
-                  <TicketReply reply={reply} createdField="created" key={reply.id} />
+                <section key={reply.id}>
+                  <TicketReply reply={reply} createdField="created" />
                 </section>
               ))}
               {ticket.status === 'closed' ?
