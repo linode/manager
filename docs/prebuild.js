@@ -14,7 +14,7 @@ fs.readdirSync(objectsPath).filter(function(fileName) {
   return path.extname(fileName) === '.yaml';
 }).forEach(function(fileName) {
   const filePath = path.join(objectsPath, fileName);
-  apiObjectMap[fileName.split('.')[0]] = yaml.safeLoad(fs.readFileSync(filePath, 'utf-8'), { json: true });
+  apiObjectMap[fileName.split('.')[0].toLowerCase()] = yaml.safeLoad(fs.readFileSync(filePath, 'utf-8'), { json: true });
 });
 
 const endpointsPath = path.join(BASE_PATH, 'endpoints');
@@ -67,10 +67,11 @@ function convertUlToArray(description) {
   return description;
 }
 
-function getResourceObjByName(resource) {
-  let resourceObject = apiObjectMap[resource];
-  if (!resourceObject && (resource.charAt(resource.length - 1) === 's')) {
-    resourceObject = apiObjectMap[resource.substr(0, resource.length - 1)];
+function getResourceObjByName(name) {
+  let resourceName = name.toLowerCase();
+  let resourceObject = apiObjectMap[resourceName];
+  if (!resourceObject && (resourceName.charAt(resourceName.length - 1) === 's')) {
+    resourceObject = apiObjectMap[resourceName.substr(0, resourceName.length - 1)];
   }
   return resourceObject;
 }
