@@ -7721,7 +7721,7 @@
         ]
       },
       {
-        "name": "Types",
+        "name": "Service",
         "sort": 1,
         "base_path": "/linode/types",
         "description": "Type endpoints provide a means of viewing service objects.\n",
@@ -7730,7 +7730,7 @@
         "endpoints": [
           {
             "type": "list",
-            "resource": "types",
+            "resource": "services",
             "description": "Returns collection of types.\n",
             "methods": [
               {
@@ -7745,7 +7745,139 @@
                     "value": "client.linode.get_types()\n"
                   }
                 ],
-                "name": "GET"
+                "name": "GET",
+                "resource": {
+                  "name": "Service",
+                  "prefix": "serv",
+                  "description": "Service objects describe a service available for purchase from Linode. Provisioning new infrastructure generally involves including a service ID with the request.\n",
+                  "schema": [
+                    {
+                      "name": "id",
+                      "type": "string",
+                      "value": "linode2048.5",
+                      "schema": null
+                    },
+                    {
+                      "name": "storage",
+                      "description": "If applicable, disk space in MB.",
+                      "filterable": true,
+                      "type": "integer",
+                      "value": 24576,
+                      "schema": null
+                    },
+                    {
+                      "name": "backups_price",
+                      "description": "Cost (in US dollars) per month if backups are enabled.",
+                      "filterable": false,
+                      "type": "integer",
+                      "value": 250,
+                      "schema": null
+                    },
+                    {
+                      "name": "hourly_price",
+                      "description": "Cost (in cents) per hour.",
+                      "filterable": true,
+                      "type": "integer",
+                      "value": 1,
+                      "schema": null
+                    },
+                    {
+                      "name": "label",
+                      "description": "Human-friendly name of this service.",
+                      "filterable": true,
+                      "type": "string",
+                      "value": "Linode 2048",
+                      "schema": null
+                    },
+                    {
+                      "name": "mbits_out",
+                      "description": "If applicable, Mbits outbound bandwidth.",
+                      "filterable": true,
+                      "type": "integer",
+                      "value": 125,
+                      "schema": null
+                    },
+                    {
+                      "name": "monthly_price",
+                      "description": "Cost (in US dollars) per month.",
+                      "filterable": true,
+                      "type": "integer",
+                      "value": 1000,
+                      "schema": null
+                    },
+                    {
+                      "name": "ram",
+                      "description": "Amount of RAM included in this service.",
+                      "filterable": true,
+                      "type": "integer",
+                      "value": 2048,
+                      "schema": null
+                    },
+                    {
+                      "name": "service_type",
+                      "description": "The type of service offered.",
+                      "filterable": true,
+                      "type": "enum",
+                      "subType": "Service Type",
+                      "value": "linode",
+                      "schema": [
+                        {
+                          "name": "linode",
+                          "description": "A Linode service."
+                        },
+                        {
+                          "name": "backup",
+                          "description": "A backup service."
+                        },
+                        {
+                          "name": "nodebalancer",
+                          "description": "A NodeBalancer service."
+                        },
+                        {
+                          "name": "longview",
+                          "description": "A Longview subscription."
+                        }
+                      ]
+                    },
+                    {
+                      "name": "transfer",
+                      "description": "If applicable, outbound transfer in MB.",
+                      "filterable": true,
+                      "type": "integer",
+                      "value": 2000,
+                      "schema": null
+                    },
+                    {
+                      "name": "vcpus",
+                      "description": "If applicable, number of CPU cores.",
+                      "filterable": true,
+                      "type": "integer",
+                      "value": 2,
+                      "schema": null
+                    }
+                  ],
+                  "enums": {
+                    "Service Type": {
+                      "linode": "A Linode service.",
+                      "backup": "A backup service.",
+                      "nodebalancer": "A NodeBalancer service.",
+                      "longview": "A Longview subscription."
+                    }
+                  },
+                  "example": {
+                    "id": "linode2048.5",
+                    "storage": 24576,
+                    "backups_price": 250,
+                    "hourly_price": 1,
+                    "label": "Linode 2048",
+                    "mbits_out": 125,
+                    "monthly_price": 1000,
+                    "ram": 2048,
+                    "service_type": "linode",
+                    "transfer": 2000,
+                    "vcpus": 2
+                  }
+                }
               }
             ],
             "path": "linode/types",
@@ -7754,7 +7886,7 @@
           },
           {
             "type": "resource",
-            "resource": "types",
+            "resource": "services",
             "description": "Returns information about a specific Linode type offered by Linode.\n",
             "methods": [
               {
@@ -7769,7 +7901,139 @@
                     "value": "type = linode.Service(client, 'g5-standard=1')\n"
                   }
                 ],
-                "name": "GET"
+                "name": "GET",
+                "resource": {
+                  "name": "Service",
+                  "prefix": "serv",
+                  "description": "Service objects describe a service available for purchase from Linode. Provisioning new infrastructure generally involves including a service ID with the request.\n",
+                  "schema": [
+                    {
+                      "name": "id",
+                      "type": "string",
+                      "value": "linode2048.5",
+                      "schema": null
+                    },
+                    {
+                      "name": "storage",
+                      "description": "If applicable, disk space in MB.",
+                      "filterable": true,
+                      "type": "integer",
+                      "value": 24576,
+                      "schema": null
+                    },
+                    {
+                      "name": "backups_price",
+                      "description": "Cost (in US dollars) per month if backups are enabled.",
+                      "filterable": false,
+                      "type": "integer",
+                      "value": 250,
+                      "schema": null
+                    },
+                    {
+                      "name": "hourly_price",
+                      "description": "Cost (in cents) per hour.",
+                      "filterable": true,
+                      "type": "integer",
+                      "value": 1,
+                      "schema": null
+                    },
+                    {
+                      "name": "label",
+                      "description": "Human-friendly name of this service.",
+                      "filterable": true,
+                      "type": "string",
+                      "value": "Linode 2048",
+                      "schema": null
+                    },
+                    {
+                      "name": "mbits_out",
+                      "description": "If applicable, Mbits outbound bandwidth.",
+                      "filterable": true,
+                      "type": "integer",
+                      "value": 125,
+                      "schema": null
+                    },
+                    {
+                      "name": "monthly_price",
+                      "description": "Cost (in US dollars) per month.",
+                      "filterable": true,
+                      "type": "integer",
+                      "value": 1000,
+                      "schema": null
+                    },
+                    {
+                      "name": "ram",
+                      "description": "Amount of RAM included in this service.",
+                      "filterable": true,
+                      "type": "integer",
+                      "value": 2048,
+                      "schema": null
+                    },
+                    {
+                      "name": "service_type",
+                      "description": "The type of service offered.",
+                      "filterable": true,
+                      "type": "enum",
+                      "subType": "Service Type",
+                      "value": "linode",
+                      "schema": [
+                        {
+                          "name": "linode",
+                          "description": "A Linode service."
+                        },
+                        {
+                          "name": "backup",
+                          "description": "A backup service."
+                        },
+                        {
+                          "name": "nodebalancer",
+                          "description": "A NodeBalancer service."
+                        },
+                        {
+                          "name": "longview",
+                          "description": "A Longview subscription."
+                        }
+                      ]
+                    },
+                    {
+                      "name": "transfer",
+                      "description": "If applicable, outbound transfer in MB.",
+                      "filterable": true,
+                      "type": "integer",
+                      "value": 2000,
+                      "schema": null
+                    },
+                    {
+                      "name": "vcpus",
+                      "description": "If applicable, number of CPU cores.",
+                      "filterable": true,
+                      "type": "integer",
+                      "value": 2,
+                      "schema": null
+                    }
+                  ],
+                  "enums": {
+                    "Service Type": {
+                      "linode": "A Linode service.",
+                      "backup": "A backup service.",
+                      "nodebalancer": "A NodeBalancer service.",
+                      "longview": "A Longview subscription."
+                    }
+                  },
+                  "example": {
+                    "id": "linode2048.5",
+                    "storage": 24576,
+                    "backups_price": 250,
+                    "hourly_price": 1,
+                    "label": "Linode 2048",
+                    "mbits_out": 125,
+                    "monthly_price": 1000,
+                    "ram": 2048,
+                    "service_type": "linode",
+                    "transfer": 2000,
+                    "vcpus": 2
+                  }
+                }
               }
             ],
             "path": "linode/types/:id",

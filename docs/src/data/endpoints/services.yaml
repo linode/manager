@@ -1,5 +1,5 @@
 # vim: set et ts=2 sw=2 tw=80 :
-name: Types
+name: Service
 sort: 1
 base_path: /linode/types
 description: >
@@ -8,7 +8,7 @@ description: >
 endpoints:
   linode/types:
     type: list
-    resource: types
+    resource: services
     description: >
       Returns collection of types.
     methods:
@@ -22,7 +22,7 @@ endpoints:
             client.linode.get_types()
   linode/types/:id:
     type: resource
-    resource: types
+    resource: services
     description: >
       Returns information about a specific Linode type offered by Linode.
     methods:
