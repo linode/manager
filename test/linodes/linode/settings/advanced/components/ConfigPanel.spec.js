@@ -1,6 +1,6 @@
 import React from 'react';
 import sinon from 'sinon';
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import { expect } from 'chai';
 
 import { ConfigPanel } from '~/linodes/linode/settings/advanced/components/ConfigPanel';
@@ -19,14 +19,14 @@ describe('linodes/linode/settings/advanced/components/ConfigPanel', () => {
   });
 
   it('renders with no config', () => {
-    const panel = shallow(
+    const panel = mount(
       <ConfigPanel
         dispatch={() => {}}
         linode={testLinode1239}
       />
     );
 
-    expect(panel.find('p').text()).to.equal('No configs yet. Add a config.');
+    expect(panel.find('p').text()).to.equal('You have no configs.');
   });
 
   it('renders multiple configs', () => {

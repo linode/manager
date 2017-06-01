@@ -17,6 +17,7 @@ export default function MethodParams(props) {
           { label: 'Description', cellComponent: DescriptionCell, headerClassName: 'DescriptionColumn' }
         ]}
         data={params}
+        noDataMessage="No parameters documented."
       />
     </div>
   );

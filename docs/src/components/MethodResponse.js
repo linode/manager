@@ -97,6 +97,7 @@ export default class MethodResponse extends Component {
         className="Table--secondary"
         columns={columns}
         data={schemaData}
+        noDataMessage="No response documented."
       />
     )
   }

@@ -75,5 +75,5 @@ Table.propTypes = {
 Table.defaultProps = {
   className: '',
   disableHeader: false,
-  noDataMessage: 'No records found.',
+  noDataMessage: 'No data found.',
 };
