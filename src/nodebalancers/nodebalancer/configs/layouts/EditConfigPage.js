@@ -7,7 +7,7 @@ import { Card } from 'linode-components/cards';
 import { setSource } from '~/actions/source';
 import { objectFromMapByLabel } from '~/api/util';
 
-import { ConfigForm } from '../components';
+import { ConfigForm } from '../../components';
 
 
 export class EditConfigPage extends Component {
