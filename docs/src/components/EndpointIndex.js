@@ -38,6 +38,7 @@ export default function EndpointIndex(props) {
                   { label: 'Description', dataKey: 'description' },
                 ]}
                 data={endpointSection.endpoints}
+                noDataMessage="No endpoints documented."
               />
             </div>
           );

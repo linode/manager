@@ -38,8 +38,11 @@ describe('domains/components/MasterZone', () => {
     const a = page.find('#a');
     const txt = page.find('#txt');
 
-    [srv, mx, cname, a, txt].forEach(section =>
-      expect(section.find('p').text()).to.equal('No records found.'));
+    expect(srv.find('p').text()).to.equal('You have no SRV records.');
+    expect(mx.find('p').text()).to.equal('You have no MX records.');
+    expect(cname.find('p').text()).to.equal('You have no CNAME records.');
+    expect(a.find('p').text()).to.equal('You have no A/AAAA records.');
+    expect(txt.find('p').text()).to.equal('You have no TXT records.');
   });
 
   it('renders soa records', () => {

@@ -197,6 +197,7 @@ export class DashboardPage extends Component {
                     },
                   ]}
                   data={newConfigs}
+                  noDataMessage="You have no configs."
                   selectedMap={{}}
                 />
               </ListBody>

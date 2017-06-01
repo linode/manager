@@ -159,6 +159,7 @@ export class DashboardPage extends Component {
                 ]}
                 data={nodes}
                 selectedMap={{}}
+                noDataMessage="You have no nodes."
               />
             </ListBody>
           </List>

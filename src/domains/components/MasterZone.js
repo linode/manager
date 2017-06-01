@@ -270,6 +270,7 @@ export class MasterZone extends Component {
                   },
                 ]}
                 data={nsRecords}
+                noDataMessage="You have no NS records."
               />
             </Card>
           </section>
@@ -310,6 +311,7 @@ export class MasterZone extends Component {
                   },
                 ]}
                 data={mxRecords}
+                noDataMessage="You have no MX records."
               />
             </Card>
           </section>
@@ -349,6 +351,7 @@ export class MasterZone extends Component {
                   },
                 ]}
                 data={aRecords}
+                noDataMessage="You have no A/AAAA records."
               />
             </Card>
           </section>
@@ -391,6 +394,7 @@ export class MasterZone extends Component {
                   },
                 ]}
                 data={cnameRecords}
+                noDataMessage="You have no CNAME records."
               />
             </Card>
           </section>
@@ -431,6 +435,7 @@ export class MasterZone extends Component {
                   },
                 ]}
                 data={txtRecords}
+                noDataMessage="You have no TXT records."
               />
             </Card>
           </section>
@@ -473,6 +478,7 @@ export class MasterZone extends Component {
                 },
               ]}
               data={srvRecords}
+              noDataMessage="You have no SRV records."
             />
           </Card>
         </div>
