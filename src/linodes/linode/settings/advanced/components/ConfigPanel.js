@@ -34,12 +34,6 @@ export class ConfigPanel extends Component {
       return null;
     }
 
-    if (configs.length === 0) {
-      return (
-        <p>No configs yet. Add a config.</p>
-      );
-    }
-
     return (
       <Table
         className="ConfigPanel-config Table--secondary"
@@ -58,6 +52,7 @@ export class ConfigPanel extends Component {
           },
         ]}
         data={configs}
+        noDataMessage="You have no configs."
       />
     );
   }
