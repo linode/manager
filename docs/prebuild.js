@@ -361,25 +361,6 @@ allEndpoints = allEndpoints.map(function(endpoint) {
   return endpoint;
 });
 
-
-// rename formattedEndpoints > endpoints
-function renameEndpoints(endpoints) {
-  return endpoints.map(function(endpoint) {
-    endpoint.endpoints = endpoint.formattedEndpoints;
-    delete endpoint.formattedEndpoints;
-    if (endpoint.endpoints.length) {
-      endpoint.endpoints = renameEndpoints(endpoint.endpoints);
-    }
-    return endpoint;
-  });
-}
-allEndpoints = renameEndpoints(allEndpoints);
-
 const data = JSON.stringify(allEndpoints, null, 2);
-const endpointModule = `
-  /**
-  *   Generated Docs Source -- DO NOT EDIT
-  */
-  module.exports = { endpoints: ${data} };
-`;
-fs.writeFileSync(path.join('./src', 'api.js'), endpointModule);
+const endpointModule = `module.exports = { endpoints: ${data} };`;
+fs.writeFileSync(path.join(endpointsPath, 'api.js'), endpointModule);
