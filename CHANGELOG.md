@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [0.7.1] 2017-05-31
+### Fixed
+- fixed nodebalancer config create #1981
+
 ## [0.7.0] 2017-05-31
 ### Changed
 - added delete nodebalancer config #1879
