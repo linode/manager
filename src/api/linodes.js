@@ -10,7 +10,6 @@ function linodeAction(id, action, body, handleRsp) {
     const { token } = state.authentication;
     const rsp = await fetch(token, `/linode/instances/${id}/${action}`, { method: 'POST', body });
 
-    dispatch(actions.one({ ...body }, id));
     if (handleRsp) {
       dispatch(handleRsp(await rsp.json()));
     }
@@ -18,19 +17,24 @@ function linodeAction(id, action, body, handleRsp) {
 }
 
 export function powerOnLinode(id, config = null) {
-  return linodeAction(id, 'boot', JSON.stringify({ config }));
+  return linodeAction(id, 'boot', JSON.stringify({ config }), () =>
+    actions.one({ status: 'booting' }, id));
 }
 
 export function powerOffLinode(id, config = null) {
-  return linodeAction(id, 'shutdown', JSON.stringify({ config }));
+  return linodeAction(id, 'shutdown', JSON.stringify({ config }), () =>
+    actions.one({ status: 'shutting_down' }, id));
 }
 
 export function rebootLinode(id, config = null) {
-  return linodeAction(id, 'reboot', JSON.stringify({ config }));
+  return linodeAction(id, 'reboot', JSON.stringify({ config }), () =>
+    actions.one({ status: 'rebooting' }, id));
 }
 
 export function rescueLinode(id, disks = null) {
-  return linodeAction(id, 'rescue', JSON.stringify({ disks }));
+  return linodeAction(id, 'rescue', JSON.stringify({ disks }), () =>
+    // Add this manually so StatusDropdown will start polling.
+    actions.one({ status: 'rebooting' }, id));
 }
 
 export function rebuildLinode(id, config = null) {

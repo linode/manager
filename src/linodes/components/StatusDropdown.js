@@ -13,8 +13,8 @@ import ConfigSelectModalBody from '~/linodes/components/ConfigSelectModalBody';
 import { launchWeblishConsole } from '~/linodes/components/WeblishLaunch';
 
 
-const RANDOM_PROGRESS_MAX = 75;
-const RANDOM_PROGRESS_MIN = 40;
+const RANDOM_PROGRESS_MAX = 30;
+const RANDOM_PROGRESS_MIN = 10;
 
 function randomInitialProgress() {
   return Math.random() * (RANDOM_PROGRESS_MAX - RANDOM_PROGRESS_MIN) + RANDOM_PROGRESS_MIN;
@@ -63,9 +63,14 @@ export default class StatusDropdown extends Component {
     const { dispatch, linode } = this.props;
 
     dispatch(actions.one({ status: tempStatus, __progress: 1 }, linode.id));
-    dispatch(actions.one({ __progress: randomInitialProgress() }, linode.id));
 
     this._polling.start(linode.id);
+
+    // The point of this is to give time for bar to animate from beginning.
+    // Important for this to happen last otherwise we end up in an infinite loop.
+    setTimeout(() => {
+      dispatch(actions.one({ __progress: randomInitialProgress() }, linode.id));
+    }, 500);
   }
 
   fetchLinode() {
@@ -86,15 +91,14 @@ export default class StatusDropdown extends Component {
     const { linode, dispatch, className } = this.props;
 
     if (LinodeStates.pending.indexOf(linode.status) !== -1) {
-      const safeProgress = linode.__progress || RANDOM_PROGRESS_MAX;
       return (
         <div className={`StatusDropdown ${className}`}>
           <div className="StatusDropdown-container">
             <div
-              style={{ width: `${safeProgress}%` }}
+              style={{ width: `${linode.__progress}%` }}
               className="StatusDropdown-progress"
             >
-              <div className="StatusDropdown-percent">{Math.round(safeProgress)}%</div>
+              <div className="StatusDropdown-percent">{Math.round(linode.__progress)}%</div>
             </div>
           </div>
         </div>

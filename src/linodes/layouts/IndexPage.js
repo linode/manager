@@ -63,6 +63,10 @@ export class IndexPage extends Component {
       dispatch(hideModal());
     };
 
+    if (!confirmType) {
+      return callback();
+    }
+
     let modalBody = (
       <div>
         <p>Are you sure you want to {confirmType.toLowerCase()} these Linodes?</p>
@@ -77,17 +81,12 @@ export class IndexPage extends Component {
       );
     }
 
-    if (confirmType) {
-      dispatch(showModal(`Confirm ${confirmType}`, (
-        <ConfirmModalBody
-          onCancel={() => dispatch(hideModal())}
-          onOk={callback}
-        >{modalBody}</ConfirmModalBody>
-      )));
-    } else {
-      // No need to confirm.
-      callback();
-    }
+    dispatch(showModal(`Confirm ${confirmType}`, (
+      <ConfirmModalBody
+        onCancel={() => dispatch(hideModal())}
+        onOk={callback}
+      >{modalBody}</ConfirmModalBody>
+    )));
   }
 
   powerOn = (linodes) => this.genericAction(powerOnLinode, linodes)
