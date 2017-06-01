@@ -17,6 +17,7 @@ export const LinodeStates = {
     'migrating',
     'provisioning',
     'deleting',
+    'rebuilding',
   ],
 };
 

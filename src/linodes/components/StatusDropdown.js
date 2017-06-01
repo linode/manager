@@ -47,9 +47,12 @@ export default class StatusDropdown extends Component {
   componentWillUpdate(nextProps) {
     const { linode } = nextProps;
 
+    console.log(linode.status);
     // stop polling if Linode status change is complete
     if (LinodeStates.pending.indexOf(linode.status) === -1) {
       this._polling.stop(linode.id);
+    } else if (!this._polling.isPolling(linode.id)) {
+      this.startLinodePolling(linode.status);
     }
   }
 
@@ -57,10 +60,10 @@ export default class StatusDropdown extends Component {
     // TODO: error state
   }
 
-  async startLinodePolling(tempStatus = '') {
+  startLinodePolling(tempStatus = '') {
     const { dispatch, linode } = this.props;
 
-    await dispatch(actions.one({ status: tempStatus, __progress: 1 }, linode.id));
+    dispatch(actions.one({ status: tempStatus, __progress: 1 }, linode.id));
     dispatch(actions.one({ __progress: randomInitialProgress() }, linode.id));
 
     this._polling.start(linode.id);
@@ -172,7 +175,7 @@ export default class StatusDropdown extends Component {
               action={element._action}
             />
           )));
-        }
+        };
 
         const noConfirmActions = ['power-on', 'text-console'];
         if (noConfirmActions.indexOf(element._key) !== -1) {

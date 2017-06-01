@@ -18,7 +18,8 @@ export default function Polling(args) {
 
   function stop(id) {
     if (pollingIdMap[id] !== undefined) {
-      clearTimeout(pollingIdMap[id]);
+      clearTimeout(pollingIdMap[id].timeout);
+      pollingIdMap[id].isPolling = false;
     }
   }
 
@@ -27,7 +28,7 @@ export default function Polling(args) {
     // so that requests don't stack
     stop(id);
 
-    pollingIdMap[id] = setTimeout(async function () {
+    const _timeout = setTimeout(async function () {
       await apiRequestFn();
 
       if (backoff && numTries > 0) {
@@ -51,6 +52,8 @@ export default function Polling(args) {
         poll(id);
       }
     }, timeout);
+
+    pollingIdMap[id] = { timeout: _timeout, isPolling: true };
   }
 
   function start(id) {
@@ -65,9 +68,18 @@ export default function Polling(args) {
     }
   }
 
+  function isPolling(id) {
+    if (pollingIdMap[id] === undefined) {
+      return false;
+    }
+
+    return pollingIdMap[id].isPolling;
+  }
+
   return Object.freeze({
     reset: reset,
     start: start,
     stop: stop,
+    isPolling: isPolling,
   });
 }

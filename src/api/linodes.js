@@ -45,6 +45,8 @@ export function rebuildLinode(id, config = null) {
 
   function handleRsp(rsp) {
     return async (dispatch) => {
+      // Add this manually so StatusDropdown will start polling.
+      dispatch(actions.one({ status: 'rebuilding' }, id));
       await dispatch(actions.disks.invalidate([id], false));
       await dispatch(actions.disks.many(makeNormalResponse(rsp, 'disks'), id));
       await dispatch(actions.configs.invalidate([id], false));

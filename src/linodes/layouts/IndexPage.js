@@ -61,7 +61,7 @@ export class IndexPage extends Component {
     const callback = () => {
       linodes.forEach(linode => dispatch(actionToDispatch(linode.id)));
       dispatch(hideModal());
-    }
+    };
 
     let modalBody = (
       <div>
