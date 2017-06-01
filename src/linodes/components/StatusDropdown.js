@@ -1,8 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 
 import { Dropdown } from 'linode-components/dropdowns';
+import { ConfirmModalBody, DeleteModalBody } from 'linode-components/modals';
 
-import { showModal } from '~/actions/modal';
+import { hideModal, showModal } from '~/actions/modal';
 import { linodes as apiLinodes } from '~/api';
 import { actions } from '~/api/configs/linodes';
 import { powerOnLinode, powerOffLinode, rebootLinode } from '~/api/linodes';
@@ -127,7 +128,12 @@ export default class StatusDropdown extends Component {
         name: 'Launch Console',
         _key: 'text-console',
         _action: () => { launchWeblishConsole(linode); },
-        _condition: () => linode.status === 'running',
+        _condition: () => true,
+      },
+      {
+        name: 'Delete',
+        _key: 'delete',
+        _condition: () => true,
       },
     ]
     .filter(element => element._condition())
@@ -136,20 +142,52 @@ export default class StatusDropdown extends Component {
       action: () => {
         this.close();
 
-        const configCount = Object.keys(linode._configs.configs).length;
-        if (!element._configs || configCount <= 1) {
-          dispatch(element._action(linode.id));
-          this.startLinodePolling(element.tempStatus);
+        if (element._key === 'delete') {
+          dispatch(showModal('Delete Linode', (
+            <DeleteModalBody
+              onOk={() => {
+                dispatch(apiLinodes.delete(linode.id));
+                dispatch(hideModal());
+              }}
+              items={[linode.label]}
+              onCancel={() => dispatch(hideModal())}
+            />
+          )));
           return;
         }
 
-        dispatch(showModal('Select Configuration Profile',
-          <ConfigSelectModalBody
-            linode={linode}
-            dispatch={dispatch}
-            action={element._action}
-          />
-        ));
+        const callback = () => {
+          const configCount = Object.keys(linode._configs.configs).length;
+          if (!element._configs || configCount <= 1) {
+            dispatch(element._action(linode.id));
+            this.startLinodePolling(element.tempStatus);
+            dispatch(hideModal());
+            return;
+          }
+
+          dispatch(showModal('Select Configuration Profile', (
+            <ConfigSelectModalBody
+              linode={linode}
+              dispatch={dispatch}
+              action={element._action}
+            />
+          )));
+        }
+
+        const noConfirmActions = ['power-on', 'text-console'];
+        if (noConfirmActions.indexOf(element._key) !== -1) {
+          // No need to confirm this action.
+          callback();
+        } else {
+          dispatch(showModal(`Confirm ${element.name}`, (
+            <ConfirmModalBody
+              onCancel={() => dispatch(hideModal())}
+              onOk={callback}
+            >
+              Are you sure you want to {element.name.toLowerCase()} <strong>{linode.label}</strong>?
+            </ConfirmModalBody>
+          )));
+        }
       },
     }));
 
