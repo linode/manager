@@ -77,6 +77,11 @@ export default function Library(props) {
                   <div className="Method-section">
                     <p className="Method-description">{method.desc}</p>
                   </div>
+                  <pre>
+                    <code>
+                      {method.example}
+                    </code>
+                  </pre>
                   <div className="Method-section Method-params">
                     <h4><b>Parameters</b></h4>
                     <Table
@@ -87,6 +92,7 @@ export default function Library(props) {
                       ]}
                       data={method.parameters}
                     />
+                    <strong>Returns:</strong> {method.returns}
                   </div>
                 </div>
                 {index < (methods.length - 1) ? <div className="divider"></div> : null}
