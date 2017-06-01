@@ -47,7 +47,6 @@ export default class StatusDropdown extends Component {
   componentWillUpdate(nextProps) {
     const { linode } = nextProps;
 
-    console.log(linode.status);
     // stop polling if Linode status change is complete
     if (LinodeStates.pending.indexOf(linode.status) === -1) {
       this._polling.stop(linode.id);
