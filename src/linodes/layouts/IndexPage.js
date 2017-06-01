@@ -94,7 +94,7 @@ export class IndexPage extends Component {
   powerOff = (linodes) => this.genericAction(powerOffLinode, linodes, 'Power Off')
   reboot = (linodes) => this.genericAction(rebootLinode, linodes, 'Reboot')
 
-  deleteLinodes(linodesToBeRemoved) {
+  deleteLinodes = (linodesToBeRemoved) => {
     const { dispatch } = this.props;
     const linodesArray = Array.isArray(linodesToBeRemoved)
                        ? linodesToBeRemoved
@@ -140,8 +140,8 @@ export class IndexPage extends Component {
               dispatch={dispatch}
               massEditOptions={[
                 { name: 'Reboot', action: this.reboot },
-                { name: 'Power on', action: this.powerOn },
-                { name: 'Power off', action: this.powerOff },
+                { name: 'Power On', action: this.powerOn },
+                { name: 'Power Off', action: this.powerOff },
                 null,
                 { name: 'Delete', action: this.deleteLinodes },
               ]}
