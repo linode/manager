@@ -44,7 +44,7 @@ export default class Dropdown extends Component {
         <button
           type="button"
           className="Dropdown-first"
-          onClick={first.action}
+          onClick={first.action || this.open}
           disabled={disabled}
         >{first.name}</button>
         {rest.length === 0 ? null : (
