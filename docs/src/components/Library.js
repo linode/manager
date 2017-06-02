@@ -12,22 +12,79 @@ export default function Library(props) {
   const { route } = props;
   const { crumbs, libraryObject } = route;
   const { name, desc, formattedLibraryObject } = libraryObject;
-  const methods = Object.keys(formattedLibraryObject.methods).map(function(key, index) {
-    let method = formattedLibraryObject.methods[key];
-    let parameters = Object.keys(method.parameters).map(function(key, index) {
-      return { name: key, ...method.parameters[key] };
-    });
-    return {name: key,
+
+  function methodContents(containingObject, key) {
+    let method = containingObject.methods[key];
+    if (method.parameters) {
+      let parameters = Object.keys(method.parameters).map(function(key, index) {
+        return { name: key, ...method.parameters[key] };
+      });
+      return {name: key,
+        ...method,
+        parameters,
+      };
+    }
+    return { name: key,
       ...method,
-      parameters,
     };
-  });
+  }
+  let methods = [];
+  if (formattedLibraryObject.methods) {
+    methods = Object.keys(formattedLibraryObject.methods).map(function(key, index) {
+      return methodContents(formattedLibraryObject, key);
+    });
+  }
   const constructorParameters = Object.keys(formattedLibraryObject.constructor.parameters).map(function(key, index) {
     return { name: key, desc: formattedLibraryObject.constructor.parameters[key].desc };
   });
 
-  console.log('libraryObject', libraryObject);
-  console.log('methods', methods);
+  function methodDisplay(method, index) {
+    return (
+      <div>
+        <div id={method.name} className="Method">
+          <h2>{method.name}</h2>
+          <div className="Method-section">
+            <p className="Method-description">{method.desc}</p>
+          </div>
+          <pre>
+            <code>
+              {method.example}
+            </code>
+          </pre>
+          <div className="Method-section Method-params">
+            <h4><b>Parameters</b></h4>
+            <Table
+              className="Table--secondary"
+              columns={[
+                { label: 'Argument', dataKey: 'name', headerClassName: 'FieldColumn' },
+                { label: 'Description', dataKey: 'desc', headerClassName: 'DescriptionColumn' }
+              ]}
+              data={!!method.parameters ? Object.values(method.parameters) : []}
+            />
+            <strong>Returns:</strong> {method.returns}
+          </div>
+        </div>
+        {index < (methods.length - 1) ? <div className="divider"></div> : null}
+      </div>
+    );
+  }
+
+  function groupDisplay(group) {
+    const methods = Object.keys(group.methods).map(function(key, index) {
+      return methodContents(group, key);
+    });
+    return (
+      <div className="Endpoint-title">
+        <h2>{group.name} Group</h2>
+        <p>{group.desc}</p>
+        <div className="Endpoint-body">
+          {Object.keys(methods).map(function(key, i) {
+            return methodDisplay(methods[key], i);
+          })}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="Endpoint">
@@ -70,36 +127,13 @@ export default function Library(props) {
         <div className="divider"></div>
         <div className="Endpoint-body">
           {methods.map(function(method, index) {
-            return (
-              <div>
-                <div id={method.name} className="Method">
-                  <h2>{method.name}</h2>
-                  <div className="Method-section">
-                    <p className="Method-description">{method.desc}</p>
-                  </div>
-                  <pre>
-                    <code>
-                      {method.example}
-                    </code>
-                  </pre>
-                  <div className="Method-section Method-params">
-                    <h4><b>Parameters</b></h4>
-                    <Table
-                      className="Table--secondary"
-                      columns={[
-                        { label: 'Argument', dataKey: 'name', headerClassName: 'FieldColumn' },
-                        { label: 'Description', dataKey: 'desc', headerClassName: 'DescriptionColumn' }
-                      ]}
-                      data={method.parameters}
-                    />
-                    <strong>Returns:</strong> {method.returns}
-                  </div>
-                </div>
-                {index < (methods.length - 1) ? <div className="divider"></div> : null}
-              </div>
-            );
+            return methodDisplay(method, index);
           })}
         </div>
+        <div className="divider"></div>
+        {!!formattedLibraryObject.groups ? Object.keys(formattedLibraryObject.groups).map(function(key) {
+          return groupDisplay(formattedLibraryObject.groups[key]);
+        }) : null }
       </div>
     </div>
   );
