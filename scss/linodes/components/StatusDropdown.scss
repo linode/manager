@@ -44,8 +44,8 @@
 
         text-align: center;
         background-color: $green;
-        -webkit-animation: blink 2s linear infinite;
-        animation: blink 2s linear infinite;
+        -webkit-animation: blink 2s ease infinite;
+        animation: blink 2s ease infinite;
 
         height: 5px;
         width: 0px;
@@ -56,12 +56,10 @@
     }
 
     @-webkit-keyframes blink {
-        0% {background-color: $light-green;}
-        100% {background-color: $green;}
+        50% {background-color: $light-green;}
     }
 
     @keyframes blink {
-        0% {background-color: $light-green;}
-        100% {background-color: $green;}
+        50% {background-color: $light-green;}
     }
 }
