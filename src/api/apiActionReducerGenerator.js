@@ -92,16 +92,9 @@ export function filterResources(config, resources, resourceFilter) {
 
 function genThunkOne(config, actions) {
   return (ids = [], options) => async (dispatch, getState) => {
-    const oldState = getStateOfSpecificResource(config, getState(), ids);
-    const newProgress = Math.min(oldState && oldState.__progress + 10 || 100, 95);
-
     const { token } = getState().authentication;
     const response = await fetch(token, config.endpoint(...ids), options);
-    const resource = {
-      ...(await response.json()),
-      __progress: newProgress,
-    };
-
+    const resource = await response.json();
     dispatch(actions.one(resource, ...ids));
     return resource;
   };

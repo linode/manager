@@ -1,7 +1,5 @@
 .StatusDropdown {
-    position: relative;
     width: 120px;
-    border: $border;
     // Offset td padding
     margin-left: -30px;
     height: $form-field-height;
@@ -11,7 +9,6 @@
     }
 
     .Dropdown {
-        position: relative;
         width: 120px;
 
         &-first {
@@ -31,30 +28,24 @@
     }
 
     &-container {
-        // These calculations offset the left, right and top borders.
-        width: calc(100% + 2px);
-        position: relative;
-        top: -1px;
-        left: -1px;
+        width: 100%;
+        height: 5px;
+        border: $border;
+        border-color: $gray;
+        margin-top: 3px;
     }
 
     &-progress {
+        position: relative;
+        left: -1px;
+        top: -1px;
+
         text-align: center;
         background-color: $green;
-        background-image: linear-gradient(
-            45deg,
-            rgba(white, 0.1) 25%,
-            transparent 25%,
-            transparent 50%,
-            rgba(white, 0.1) 50%,
-            rgba(white, 0.1) 75%,
-            transparent 75%,
-            transparent
-        );
-        -webkit-animation: spin 2s linear infinite;
-        animation: spin 2s linear infinite;
+        -webkit-animation: blink 2s linear infinite;
+        animation: blink 2s linear infinite;
 
-        height: $form-field-height;
+        height: 5px;
         width: 0px;
         -webkit-transition: width 1s ease-in;
         -moz-transition: width 1s ease-in;
@@ -62,20 +53,13 @@
         -ms-transition: width 1s ease-in;
     }
 
-    @-webkit-keyframes spin {
-        0% {background-position: 0px 0px;}
-        100% {background-position: 0px 60px;}
+    @-webkit-keyframes blink {
+        0% {background-color: $light-green;}
+        100% {background-color: $light-green;}
     }
 
-    @keyframes spin {
-        0% {background-position: 0px 0px;}
-        100% {background-position: 0px 60px;}
-    }
-
-    &-percent {
-        @extend .font-small;
-        color: $white;
-        padding: 0 8px;
-        line-height: $form-field-height;
+    @keyframes blink {
+        0% {background-color: $light-green;}
+        100% {background-color: $light-green;}
     }
 }

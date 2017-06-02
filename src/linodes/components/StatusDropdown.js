@@ -13,8 +13,8 @@ import ConfigSelectModalBody from '~/linodes/components/ConfigSelectModalBody';
 import { launchWeblishConsole } from '~/linodes/components/WeblishLaunch';
 
 
-const RANDOM_PROGRESS_MAX = 30;
-const RANDOM_PROGRESS_MIN = 10;
+const RANDOM_PROGRESS_MAX = 20;
+const RANDOM_PROGRESS_MIN = 5;
 
 function randomInitialProgress() {
   return Math.random() * (RANDOM_PROGRESS_MAX - RANDOM_PROGRESS_MIN) + RANDOM_PROGRESS_MIN;
@@ -32,6 +32,7 @@ export default class StatusDropdown extends Component {
       maxTries: 20,
       onMaxTriesReached: this.onMaxPollingReached.bind(this),
     });
+
     this.state = {
       open: false,
     };
@@ -40,18 +41,23 @@ export default class StatusDropdown extends Component {
   componentDidMount() {
     const { linode } = this.props;
     if (linode.status === 'provisioning') {
-      this.startLinodePolling('provisioning');
+      this.startLinodePolling();
     }
   }
 
   componentWillUpdate(nextProps) {
     const { linode } = nextProps;
 
-    // stop polling if Linode status change is complete
-    if (LinodeStates.pending.indexOf(linode.status) === -1) {
+    const isPending = LinodeStates.pending.indexOf(linode.status) !== -1;
+    const isPolling = this._polling.isPolling(linode.id);
+
+    if (isPending && !isPolling) {
+      this.startLinodePolling();
+    } else if (!isPending && isPolling) {
       this._polling.stop(linode.id);
-    } else if (!this._polling.isPolling(linode.id)) {
-      this.startLinodePolling(linode.status);
+      this.setProgress(100);
+      // Reset it back to zero after giving it time to fade away without animating back to 0.
+      setTimeout(() => this.setProgress(0), 100);
     }
   }
 
@@ -59,24 +65,31 @@ export default class StatusDropdown extends Component {
     // TODO: error state
   }
 
-  startLinodePolling(tempStatus = '') {
-    const { dispatch, linode } = this.props;
+  setProgress(progress) {
+    const { linode, dispatch } = this.props;
+    return dispatch(actions.one({ __progress: progress }, linode.id));
+  }
 
-    dispatch(actions.one({ status: tempStatus, __progress: 1 }, linode.id));
+  startLinodePolling() {
+    const { linode } = this.props;
+
+    this.setProgress(1);
 
     this._polling.start(linode.id);
 
     // The point of this is to give time for bar to animate from beginning.
     // Important for this to happen last otherwise we end up in an infinite loop.
-    setTimeout(() => {
-      dispatch(actions.one({ __progress: randomInitialProgress() }, linode.id));
-    }, 500);
+    setTimeout(() => this.setProgress(randomInitialProgress()), 500);
   }
 
   fetchLinode() {
     const { dispatch, linode } = this.props;
 
     dispatch(apiLinodes.one([linode.id]));
+
+    // Increment progress with max of 95%.
+    const newProgress = Math.min(linode.__progress ? linode.__progress + 10 : 1, 95);
+    this.setProgress(newProgress);
   }
 
   open() {
@@ -88,22 +101,7 @@ export default class StatusDropdown extends Component {
   }
 
   render() {
-    const { linode, dispatch, className } = this.props;
-
-    if (LinodeStates.pending.indexOf(linode.status) !== -1) {
-      return (
-        <div className={`StatusDropdown ${className}`}>
-          <div className="StatusDropdown-container">
-            <div
-              style={{ width: `${linode.__progress}%` }}
-              className="StatusDropdown-progress"
-            >
-              <div className="StatusDropdown-percent">{Math.round(linode.__progress)}%</div>
-            </div>
-          </div>
-        </div>
-      );
-    }
+    const { linode, dispatch } = this.props;
 
     const status = LinodeStatesReadable[linode.status];
     const elements = [
@@ -166,7 +164,6 @@ export default class StatusDropdown extends Component {
           const configCount = Object.keys(linode._configs.configs).length;
           if (!element._configs || configCount <= 1) {
             dispatch(element._action(linode.id));
-            this.startLinodePolling(element.tempStatus);
             dispatch(hideModal());
             return;
           }
@@ -200,13 +197,18 @@ export default class StatusDropdown extends Component {
     return (
       <div className="StatusDropdown StatusDropdown--dropdown">
         <Dropdown elements={[{ name: status }, ...elements]} dropdownIcon="fa-cog" />
+        <div className="StatusDropdown-container">
+          <div
+            style={{ width: `${linode.__progress}%` }}
+            className={`StatusDropdown-progress ${linode.__progress === 100 ? 'hidden' : ''}`}
+          />
+        </div>
       </div>
     );
   }
 }
 
 StatusDropdown.propTypes = {
-  className: PropTypes.string,
   linode: PropTypes.object,
   dispatch: PropTypes.func,
 };
