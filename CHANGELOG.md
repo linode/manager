@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [0.7.2] 2017-06-02
+### Fixed
+- two_factor_auth on profile is a boolean #1997
+
 ## [0.7.1] 2017-05-31
 ### Fixed
 - fixed nodebalancer config create #1981
