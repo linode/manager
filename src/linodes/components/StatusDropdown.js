@@ -20,76 +20,96 @@ function randomInitialProgress() {
   return Math.random() * (RANDOM_PROGRESS_MAX - RANDOM_PROGRESS_MIN) + RANDOM_PROGRESS_MIN;
 }
 
+const POLLING = Polling({
+  apiRequestFn: fetchLinode,
+  timeout: 2500,
+  maxTries: 20,
+  onMaxTriesReached: onMaxPollingReached,
+});
+
+function fetchLinode(id) {
+  return async (dispatch, getState) => {
+    const linode = getState().api.linodes.linodes[id];
+    await dispatch(apiLinodes.one([id]));
+
+    // Increment progress with max of 95%.
+    const newProgress = Math.min(linode.__progress ? linode.__progress + 10 : 1, 95);
+    dispatch(setProgress(linode, newProgress));
+  }
+}
+
+function onMaxPollingReached() {
+  // TODO: error state
+}
+
+function setProgress(linode, progress) {
+  return (dispatch) => {
+    const safeProgress = linode.__progress || 0;
+    const progressIncreasingOrZero = progress === 0 ? 0 : Math.max(safeProgress, progress);
+
+    const isPending = LinodeStates.pending.indexOf(linode.status) !== -1;
+
+    return dispatch(actions.one({ __progress: progressIncreasingOrZero }, linode.id));
+  };
+}
+
 export default class StatusDropdown extends Component {
   constructor() {
     super();
     this.open = this.open.bind(this);
     this.close = this.close.bind(this);
 
-    this._polling = Polling({
-      apiRequestFn: this.fetchLinode.bind(this),
-      timeout: 2500,
-      maxTries: 20,
-      onMaxTriesReached: this.onMaxPollingReached.bind(this),
-    });
-
     this.state = {
       open: false,
+      hiddenClass: '',
     };
   }
 
   componentDidMount() {
-    const { linode } = this.props;
-    if (linode.status === 'provisioning') {
+    const { linode, dispatch } = this.props;
+
+    const isPending = LinodeStates.pending.indexOf(linode.status) !== -1;
+    const isPolling = POLLING.isPolling(linode.id);
+
+    if (isPending && !isPolling) {
       this.startLinodePolling();
     }
   }
 
   componentWillUpdate(nextProps) {
-    const { linode } = nextProps;
+    const { linode, dispatch } = nextProps;
 
     const isPending = LinodeStates.pending.indexOf(linode.status) !== -1;
-    const isPolling = this._polling.isPolling(linode.id);
+    const isPolling = POLLING.isPolling(linode.id);
+    const inEndingState = [undefined, 0, 100].indexOf(linode.__progress) === -1;
 
     if (isPending && !isPolling) {
       this.startLinodePolling();
-    } else if (!isPending && isPolling) {
-      this._polling.stop(linode.id);
-      this.setProgress(100);
-      // Reset it back to zero after giving it time to fade away without animating back to 0.
-      setTimeout(() => this.setProgress(0), 100);
+    } else if (!isPending && (isPolling || inEndingState)) {
+      POLLING.stop(linode.id);
+      dispatch(setProgress(linode, 100));
+
+      setTimeout(() => {
+        // Reset it back to zero after giving it time to fade away without animating back to 0.
+        this.setState({ hiddenClass: 'hidden' });
+
+        setTimeout(() => {
+          dispatch(setProgress(linode, 0));
+          this.setState({ hiddenClass: '' });
+        }, 100);
+      }, 1200); // A little bit longer than the width transition time.
     }
   }
 
-  onMaxPollingReached() {
-    // TODO: error state
-  }
-
-  setProgress(progress) {
-    const { linode, dispatch } = this.props;
-    return dispatch(actions.one({ __progress: progress }, linode.id));
-  }
-
   startLinodePolling() {
-    const { linode } = this.props;
+    const { linode, dispatch } = this.props;
 
-    this.setProgress(1);
-
-    this._polling.start(linode.id);
+    dispatch(setProgress(linode, 1));
+    dispatch(POLLING.start(linode.id));
 
     // The point of this is to give time for bar to animate from beginning.
     // Important for this to happen last otherwise we end up in an infinite loop.
-    setTimeout(() => this.setProgress(randomInitialProgress()), 500);
-  }
-
-  fetchLinode() {
-    const { dispatch, linode } = this.props;
-
-    dispatch(apiLinodes.one([linode.id]));
-
-    // Increment progress with max of 95%.
-    const newProgress = Math.min(linode.__progress ? linode.__progress + 10 : 1, 95);
-    this.setProgress(newProgress);
+    setTimeout(() => dispatch(setProgress(linode, randomInitialProgress())), 100);
   }
 
   open() {
@@ -198,9 +218,10 @@ export default class StatusDropdown extends Component {
       <div className="StatusDropdown StatusDropdown--dropdown">
         <Dropdown elements={[{ name: status }, ...elements]} dropdownIcon="fa-cog" />
         <div className="StatusDropdown-container">
+          {/* The calc(x + 1px) is needed because we have left: -1px on this element. */}
           <div
-            style={{ width: `${linode.__progress}%` }}
-            className={`StatusDropdown-progress ${linode.__progress === 100 ? 'hidden' : ''}`}
+            style={{ width: `calc(${linode.__progress}%${linode.__progress === 0 ? '' : ' + 1px'})` }}
+            className={`StatusDropdown-progress ${this.state.hiddenClass}`}
           />
         </div>
       </div>

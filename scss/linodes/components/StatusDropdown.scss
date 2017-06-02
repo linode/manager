@@ -1,5 +1,5 @@
 .StatusDropdown {
-    width: 120px;
+    width: 140px;
     // Offset td padding
     margin-left: -30px;
     // Offset progress bard
@@ -11,9 +11,11 @@
     }
 
     .Dropdown {
-        width: 120px;
+        width: 100%;
 
         &-first {
+            @extend .text-muted;
+
             background: $white;
             width: calc(100% - #{$form-field-height});
 

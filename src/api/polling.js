@@ -16,48 +16,61 @@ export default function Polling(args) {
   let increment = linearConstant;
   let numTries = 0;
 
-  function stop(id) {
+  function clear(id) {
     if (pollingIdMap[id] !== undefined) {
       clearTimeout(pollingIdMap[id].timeout);
+    }
+  }
+
+  function stop(id) {
+    if (pollingIdMap[id] !== undefined) {
+      clear(id);
       pollingIdMap[id].isPolling = false;
     }
   }
 
   function poll(id) {
+    return (dispatch) => {
+      // Prevent requests from stacking.
+      clear(id);
+
+      const _timeout = setTimeout(async function () {
+        await dispatch(apiRequestFn(id));
+
+        if (backoff && numTries > 0) {
+          increment += linearConstant;
+          timeout = timeout + (increment * 1000);
+          if (timeout > maxBackoffTimeout) {
+            timeout = maxBackoffTimeout;
+          }
+        }
+
+        delete pollingIdMap[id].timeout;
+        ++numTries;
+
+        if (maxTries !== null) {
+          if (numTries <= maxTries) {
+            dispatch(poll(id));
+          } else if (onMaxTriesReached) {
+            onMaxTriesReached();
+          }
+        } else {
+          dispatch(poll(id));
+        }
+      }, timeout);
+
+      //if (!isPolling(id)) {
+        pollingIdMap[id] = { timeout: _timeout, isPolling: true };
+      //}
+    };
+  }
+
+  function start(id) {
     // additional calls to this function will restart polling by default
     // so that requests don't stack
     stop(id);
 
-    const _timeout = setTimeout(async function () {
-      await apiRequestFn();
-
-      if (backoff && numTries > 0) {
-        increment += linearConstant;
-        timeout = timeout + (increment * 1000);
-        if (timeout > maxBackoffTimeout) {
-          timeout = maxBackoffTimeout;
-        }
-      }
-
-      delete pollingIdMap[id];
-      ++numTries;
-
-      if (maxTries !== null) {
-        if (numTries <= maxTries) {
-          poll(id);
-        } else if (onMaxTriesReached) {
-          onMaxTriesReached();
-        }
-      } else {
-        poll(id);
-      }
-    }, timeout);
-
-    pollingIdMap[id] = { timeout: _timeout, isPolling: true };
-  }
-
-  function start(id) {
-    poll(id);
+    return poll(id);
   }
 
   function reset() {
