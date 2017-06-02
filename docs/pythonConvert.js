@@ -2,6 +2,7 @@
 const fs = require('fs');
 const path = require('path');
 
+const yaml = require('js-yaml');
 const _ = require('lodash');
 
 const BASE_PATH = './src/data';
@@ -11,10 +12,10 @@ const pythonPath = path.join(BASE_PATH, 'python');
 const files = fs.readdirSync(pythonPath);
 
 let pythonObjects = files.filter(function(fileName) {
-  return path.extname(fileName) === '.json';
+  return path.extname(fileName) === '.yaml';
 }).map(function(fileName) {
   const filePath = path.join(pythonPath, fileName);
-  const pythonObject = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+  const pythonObject = yaml.safeLoad(fs.readFileSync(filePath, 'utf-8'), { json: true });
 
   return pythonObject;
 });
