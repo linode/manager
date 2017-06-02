@@ -11,7 +11,7 @@ export function toggleTFA(enable) {
       `/account/profile/tfa-${enable ? 'enable' : 'disable'}`));
     if (!enable) {
       const { profile } = getState().api;
-      dispatch(actions.one({ ...profile, two_factor_auth: 'disabled' }));
+      dispatch(actions.one({ ...profile, two_factor_auth: false }));
     }
     return result;
   };
@@ -23,7 +23,7 @@ export function confirmTFA(code) {
       tfa_code: code,
     }));
     const { profile } = getState().api;
-    dispatch(actions.one({ ...profile, two_factor_auth: 'enabled' }));
+    dispatch(actions.one({ ...profile, two_factor_auth: true }));
     return result;
   };
 }
