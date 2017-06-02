@@ -2,6 +2,8 @@
     width: 120px;
     // Offset td padding
     margin-left: -30px;
+    // Offset progress bard
+    margin-top: -3px;
     height: $form-field-height;
 
     &--dropdown {
@@ -55,11 +57,11 @@
 
     @-webkit-keyframes blink {
         0% {background-color: $light-green;}
-        100% {background-color: $light-green;}
+        100% {background-color: $green;}
     }
 
     @keyframes blink {
         0% {background-color: $light-green;}
-        100% {background-color: $light-green;}
+        100% {background-color: $green;}
     }
 }
