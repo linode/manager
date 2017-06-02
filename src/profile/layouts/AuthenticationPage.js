@@ -12,7 +12,7 @@ export function AuthenticationPage(props) {
       </section>
       <TwoFactor
         dispatch={props.dispatch}
-        tfaEnabled={props.profile.two_factor_auth === 'enabled'}
+        tfaEnabled={props.profile.two_factor_auth}
         username={props.profile.username}
       />
     </div>
