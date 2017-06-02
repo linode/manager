@@ -32,8 +32,9 @@ function fetchLinode(id) {
     const linode = getState().api.linodes.linodes[id];
     await dispatch(apiLinodes.one([id]));
 
-    // Increment progress with max of 95%.
-    const newProgress = Math.min(linode.__progress ? linode.__progress + 10 : 1, 95);
+    // Increment progress with max of 95% growing smaller over time.
+    const increase = 200 / linode.__progress;
+    const newProgress = Math.min(linode.__progress ? linode.__progress + increase : 1, 95);
     dispatch(setProgress(linode, newProgress));
   }
 }
@@ -95,8 +96,10 @@ export default class StatusDropdown extends Component {
 
         setTimeout(() => {
           dispatch(setProgress(linode, 0));
+          // Since this hidden-ness is set in state, it may be the case
+          // that the bar animates back to 0 on a page change.
           this.setState({ hiddenClass: '' });
-        }, 100);
+        }, 10);
       }, 1200); // A little bit longer than the width transition time.
     }
   }
