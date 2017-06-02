@@ -749,7 +749,7 @@ endpoints:
             subtype: string
             description: >
               A list of IP Addresses this Linode will share.
-        example:
+        examples:
           curl: |
             curl -H "Content-Type: application/json" \
                 -H "Authorization: token $TOKEN" \
