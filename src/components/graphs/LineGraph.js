@@ -21,15 +21,8 @@ function rgbaFromHex(hex, alpha) {
 
 export default class LineGraph extends Component {
   // Source: http://www.mulinblog.com/a-color-palette-optimized-for-data-visualization/
-  static COLORS = [
-    'FAA43A',
-    '60BD68',
-    '5DA5DA',
-    'B276B2',
-    'B2912F',
-  ]
 
-  static formatData(x, ys, legends = []) {
+  static formatData(x, ys, colors, legends = []) {
     return {
       labels: x,
       datasets: ys.map((y, i) => ({
@@ -37,8 +30,8 @@ export default class LineGraph extends Component {
         data: y,
         pointRadius: 0,
         fill: false,
-        borderColor: rgbaFromHex(LineGraph.COLORS[i], 1),
-        backgroundColor: rgbaFromHex(LineGraph.COLORS[i], 0.3),
+        borderColor: rgbaFromHex(colors[i], 1),
+        backgroundColor: rgbaFromHex(colors[i], 0.3),
       })),
     };
   }
