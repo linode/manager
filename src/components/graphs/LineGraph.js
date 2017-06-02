@@ -20,8 +20,6 @@ function rgbaFromHex(hex, alpha) {
 }
 
 export default class LineGraph extends Component {
-  // Source: http://www.mulinblog.com/a-color-palette-optimized-for-data-visualization/
-
   static formatData(x, ys, colors, legends = []) {
     return {
       labels: x,
