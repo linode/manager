@@ -20,12 +20,13 @@ function randomInitialProgress() {
   return Math.random() * (RANDOM_PROGRESS_MAX - RANDOM_PROGRESS_MIN) + RANDOM_PROGRESS_MIN;
 }
 
-const POLLING = Polling({
-  apiRequestFn: fetchLinode,
-  timeout: 2500,
-  maxTries: 20,
-  onMaxTriesReached: onMaxPollingReached,
-});
+function setProgress(linode, progress) {
+  return (dispatch) => {
+    const safeProgress = linode.__progress || 0;
+    const progressIncreasingOrZero = progress === 0 ? 0 : Math.max(safeProgress, progress);
+    return dispatch(actions.one({ __progress: progressIncreasingOrZero }, linode.id));
+  };
+}
 
 function fetchLinode(id) {
   return async (dispatch, getState) => {
@@ -36,23 +37,19 @@ function fetchLinode(id) {
     const increase = 200 / linode.__progress;
     const newProgress = Math.min(linode.__progress ? linode.__progress + increase : 1, 95);
     dispatch(setProgress(linode, newProgress));
-  }
+  };
 }
 
 function onMaxPollingReached() {
   // TODO: error state
 }
 
-function setProgress(linode, progress) {
-  return (dispatch) => {
-    const safeProgress = linode.__progress || 0;
-    const progressIncreasingOrZero = progress === 0 ? 0 : Math.max(safeProgress, progress);
-
-    const isPending = LinodeStates.pending.indexOf(linode.status) !== -1;
-
-    return dispatch(actions.one({ __progress: progressIncreasingOrZero }, linode.id));
-  };
-}
+const POLLING = Polling({
+  apiRequestFn: fetchLinode,
+  timeout: 2500,
+  maxTries: 20,
+  onMaxTriesReached: onMaxPollingReached,
+});
 
 export default class StatusDropdown extends Component {
   constructor() {
@@ -67,7 +64,7 @@ export default class StatusDropdown extends Component {
   }
 
   componentDidMount() {
-    const { linode, dispatch } = this.props;
+    const { linode } = this.props;
 
     const isPending = LinodeStates.pending.indexOf(linode.status) !== -1;
     const isPolling = POLLING.isPolling(linode.id);
@@ -217,13 +214,15 @@ export default class StatusDropdown extends Component {
       },
     }));
 
+    // The calc(x + 1px) is needed because we have left: -1px on this element.
+    const progressWidth = `calc(${linode.__progress}%${linode.__progress === 0 ? '' : ' + 1px'})`;
+
     return (
       <div className="StatusDropdown StatusDropdown--dropdown">
         <Dropdown elements={[{ name: status }, ...elements]} dropdownIcon="fa-cog" />
         <div className="StatusDropdown-container">
-          {/* The calc(x + 1px) is needed because we have left: -1px on this element. */}
           <div
-            style={{ width: `calc(${linode.__progress}%${linode.__progress === 0 ? '' : ' + 1px'})` }}
+            style={{ width: progressWidth }}
             className={`StatusDropdown-progress ${this.state.hiddenClass}`}
           />
         </div>

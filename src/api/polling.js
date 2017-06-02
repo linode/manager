@@ -59,9 +59,7 @@ export default function Polling(args) {
         }
       }, timeout);
 
-      //if (!isPolling(id)) {
-        pollingIdMap[id] = { timeout: _timeout, isPolling: true };
-      //}
+      pollingIdMap[id] = { timeout: _timeout, isPolling: true };
     };
   }
 
