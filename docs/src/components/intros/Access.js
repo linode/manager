@@ -48,11 +48,11 @@ export default function Authentication() {
           OAuth client application will be used.
         </p>
         <p>
-          When the user is redirected, several parameters will be added to the query string:
-          <code>code</code>, <code>username</code>, <code>email</code>, and <code>state</code>.
+          When the user is redirected, two parameters will be added to the query string:
+          <code>code</code> and <code>state</code>.
           The last parameter will match the state you gave us at the start of the flow. This allows you to ensure
           that the OAuth flow was initiated by your application, rather than by someone manually navigating to
-          { LOGIN_ROOT } with your <code>client_id</code>. The username and email are just for convenience.
+          { LOGIN_ROOT } with your <code>client_id</code>.
           The important parameter is the code, this is the <em>access code</em> you need to continue the OAuth flow.
         </p>
         <p>
@@ -129,11 +129,7 @@ export default function Authentication() {
           </code>
         </pre>
         <p>
-          Note that we include the scopes here. In the future, we may change the
-          login flow to allow the user to deny access to specific scopes. You
-          should consider this list of scopes returned in the response as the final
-          level granted as it may be different than the ones you asked for. Also
-          included is the actual <code>access_token</code>. With this token, you
+          Included is the actual <code>access_token</code>. With this token, you
           can proceed to make authenticated HTTP requests with the API by adding
           this header to each request:
         </p>
@@ -169,10 +165,10 @@ export default function Authentication() {
         </ul>
         <p>
           In addition to the level of access you request,
-          you will be granted each access level below it. For example, requesting
-          <em>modify</em> access will also grant you <em>view</em> access, and requesting <em>delete</em>
-          access will grant you <em>full</em> access to that resource (<code>resource:*</code>
-          has the same effect).
+          you will be granted each access level below it. For example, requesting <em>modify</em> access
+          will also grant you <em>view</em> access, and requesting <em>delete</em> access
+          will grant you <em>full</em> access to that resource (<code>resource:*</code> has
+          the same effect).
         </p>
         <p>
           Each API endpoint documented on this page includes the OAuth scope necessary
