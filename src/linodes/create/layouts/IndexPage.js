@@ -8,7 +8,7 @@ import { Card, CardHeader } from 'linode-components/cards';
 import { setError } from '~/actions/errors';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
-import { linodes } from '~/api';
+import * as api from '~/api';
 import { dispatchOrStoreErrors } from '~/components/forms';
 import Region from '~/components/Region';
 
@@ -18,12 +18,18 @@ import Plan from '../../components/Plan';
 
 
 export class IndexPage extends Component {
-  static async preload(store) {
-    const { dispatch } = store;
+  static async preload({ dispatch, getState }) {
     try {
-      await dispatch(linodes.all());
+      const requests = [];
+
+      ['types', 'regions', 'distributions']
+        .filter(type => !Object.values(getState().api[type][type]).length)
+        .forEach(type => requests.push(api[type].all()));
+
+      // Fetch all objects we haven't already grabbed this page session.
+      await Promise.all(requests.map(request => dispatch(request)));
     } catch (response) {
-      dispatch(setError(response));
+      await dispatch(setError(response));
     }
   }
 
@@ -37,6 +43,7 @@ export class IndexPage extends Component {
       label: '',
       password: '',
       errors: {},
+      backups: false,
       loading: false,
     };
   }
@@ -66,7 +73,7 @@ export class IndexPage extends Component {
     }
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => linodes.post(data),
+      () => api.linodes.post(data),
       // label is created by the api if not sent, so accept it from the previous call
       ({ label }) => push(`/linodes/${label}`),
     ], ['distribution', 'type', 'region']));
@@ -97,23 +104,29 @@ export class IndexPage extends Component {
       <div className="container create-page">
         <Link to="/linodes">Linodes</Link>
         <h1>Add a Linode</h1>
-        <Source
-          distribution={distribution}
-          distributions={distributions.distributions}
-          onDistroSelected={id => this.setState({ distribution: id })}
-        />
-        <Region
-          selected={region}
-          regions={regions.regions}
-          onRegionSelected={id => this.setState({ region: id })}
-        />
-        <Card header={<CardHeader title="Plan" />}>
-          <Plan
-            selected={type}
-            types={types.types}
-            onServiceSelected={id => this.setState({ type: id })}
+        <section>
+          <Source
+            distribution={distribution}
+            distributions={distributions.distributions}
+            onDistroSelected={id => this.setState({ distribution: id })}
           />
-        </Card>
+        </section>
+        <section>
+          <Region
+            selected={region}
+            regions={regions.regions}
+            onRegionSelected={id => this.setState({ region: id })}
+          />
+        </section>
+        <section>
+          <Card header={<CardHeader title="Plan" />}>
+            <Plan
+              selected={type}
+              types={types.types}
+              onServiceSelected={id => this.setState({ type: id })}
+            />
+          </Card>
+        </section>
         <Details
           selectedType={selectedType}
           onSubmit={this.onSubmit}

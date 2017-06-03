@@ -155,23 +155,23 @@ const EventTypeMap = {
     redirectUrl: getLinodeRedirectUrl,
   },
 
-  dns_zone_create: {
+  domain_create: {
     presentTenseAction: 'Creating',
     pastTenseAction: 'created',
     redirectUrl: getDomainRedirectUrl,
   },
-  dns_zone_delete: {
+  domain_delete: {
     presentTenseAction: 'Deleting',
     pastTenseAction: 'deleted',
     redirectUrl: getDomainsRedirectUrl,
   },
 
-  dns_record_create: {
+  domain_record_create: {
     presentTenseAction: 'Creating',
     pastTenseAction: 'created',
     redirectUrl: getDomainRedirectUrl,
   },
-  dns_record_delete: {
+  domain_record_delete: {
     presentTenseAction: 'Deleting',
     pastTenseAction: 'deleted',
     redirectUrl: getDomainsRedirectUrl,
@@ -189,12 +189,12 @@ const EventTypeMap = {
   },
   nodebalancer_config_create: {
     presentTenseAction: 'Creating',
-    pastTenseAction: 'created',
+    pastTenseAction: 'config created',
     redirectUrl: getNodebalancerRedirectUrl,
   },
   nodebalancer_config_delete: {
     presentTenseAction: 'Deleting',
-    pastTenseAction: 'deleted',
+    pastTenseAction: 'config deleted',
     redirectUrl: getNodebalancerRedirectUrl,
   },
 

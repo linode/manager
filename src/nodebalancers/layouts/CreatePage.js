@@ -7,13 +7,24 @@ import { Card, CardHeader } from 'linode-components/cards';
 import { Input, Form, FormGroup, FormGroupError, SubmitButton } from 'linode-components/forms';
 
 import { setSource } from '~/actions/source';
+import { setError } from '~/actions/errors';
 import { setTitle } from '~/actions/title';
-import { nodebalancers } from '~/api';
+import { nodebalancers, regions } from '~/api';
 import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
 import Region from '~/components/Region';
 
 
 export class CreatePage extends Component {
+  static async preload({ dispatch, getState }) {
+    try {
+      if (!getState().api.regions.ids.length) {
+        await dispatch(regions.all());
+      }
+    } catch (response) {
+      dispatch(setError(response));
+    }
+  }
+
   constructor() {
     super();
 
@@ -48,16 +59,18 @@ export class CreatePage extends Component {
 
     return (
       <div className="PrimaryPage container">
-        <header className="PrimaryPage-header">
+        <header className="PrimaryPage-headerRow">
           <Link to="/nodebalancers">NodeBalancers</Link>
           <h1>Add a NodeBalancer</h1>
         </header>
-        <div className="PrimaryPage-body Nodebalancer-create">
-          <Region
-            selected={region}
-            regions={regions.regions}
-            onRegionSelected={id => this.setState({ region: id })}
-          />
+        <div className="PrimaryPage-body">
+          <section>
+            <Region
+              selected={region}
+              regions={regions.regions}
+              onRegionSelected={id => this.setState({ region: id })}
+            />
+          </section>
           <Card header={<CardHeader />}>
             <Form onSubmit={this.onSubmit}>
               <FormGroup className="row" errors={errors} name="label">
@@ -74,9 +87,9 @@ export class CreatePage extends Component {
                 </div>
               </FormGroup>
               <FormGroup className="row">
-                <label htmlFor="label" className="col-sm-2 col-form-label">Plan</label>
+                <label htmlFor="label" className="col-sm-2 row-label">Plan</label>
                 <div className="col-sm-10">
-                  <div className="text-muted static-plan">$20.00/mo ($0.03/hr)</div>
+                  <div className="text-muted">$20.00/mo ($0.03/hr)</div>
                 </div>
               </FormGroup>
               <FormGroup className="row">

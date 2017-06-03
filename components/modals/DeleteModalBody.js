@@ -8,6 +8,7 @@ export default function DeleteModalBody(props) {
     items,
     onCancel,
     typeOfItem,
+    parentItem,
   } = props;
 
   let body;

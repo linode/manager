@@ -1,18 +1,34 @@
 .TicketHelper {
+    li:not(:last-of-type) {
+        margin-bottom: 10px;
+    }
+
     h3 {
         margin-bottom: 0;
         padding: 0 0 5px 0;
 
-        &:not(:first-of-type) {
+        &:not(:first-child) {
             padding-top: 15px;
         }
     }
 
-    li:not(:last-of-type) {
-        margin-bottom: 15px;
-    }
-
     p {
         max-width: 750px;
+
+        &[class] {
+            padding-bottom: 5px;
+            border-bottom: $border;
+        }
+    }
+
+    .btn {
+        white-space: initial;
+        text-align: left;
+        height: auto;
+    }
+
+    // This gets shoved under the ticket response card and we can't give it margin-bottom.
+    @media (max-width: 992px) {
+        margin-top: 15px;
     }
 }

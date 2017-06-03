@@ -5,10 +5,11 @@ import { Link } from 'react-router';
 import { ModalShell } from 'linode-components/modals';
 import { Error } from 'linode-components/errors';
 
+import { setError } from '~/actions/errors';
 import { hideModal } from '~/actions/modal';
 import { hideNotifications } from '~/actions/notifications';
 import { hideSession } from '~/actions/session';
-import * as api from '~/api';
+import { profile } from '~/api';
 import Header from '~/components/Header';
 import Notifications from '~/components/notifications/Notifications';
 import PreloadIndicator from '~/components/PreloadIndicator.js';
@@ -22,28 +23,16 @@ export class Layout extends Component {
   // all pages are rendered through here and preloads don't get called again
   // if they were just called.
   static async preload({ dispatch, getState }) {
-    // Filter out objects we've already grabbed this page session.
-    // Note: this doesn't matter at this stage in the router implementation
-    // because this preload is only ever called once. However, future router
-    // implementations may decide to let a preload that has already been
-    // called before be called again if a certain amount of time has elapsed.
-    const requests = ['kernels', 'types', 'regions', 'distributions'].filter(
-      type => !Object.values(getState().api[type][type]).length).map(type => api[type].all());
-
-    if (!Object.keys(getState().api.profile).length) {
-      requests.push(api.profile.one());
+    try {
+      if (!Object.keys(getState().api.profile).length) {
+        await dispatch(profile.one());
+        // Needed for time display component that is not attached to Redux.
+        const { timezone } = getState().api.profile;
+        setStorage('profile/timezone', timezone);
+      }
+    } catch (response) {
+      dispatch(setError(response));
     }
-
-    if (!Object.keys(getState().api.account).length) {
-      requests.push(api.account.one());
-    }
-
-    // Fetch all objects we haven't already grabbed this page session.
-    await Promise.all(requests.map(request => dispatch(request)));
-
-    // Needed for time display component that is not attached to Redux.
-    const { timezone } = getState().api.profile;
-    setStorage('profile/timezone', timezone);
   }
 
   constructor() {
@@ -77,7 +66,7 @@ export class Layout extends Component {
       dispatch,
     } = this.props;
     const { title, link } = this.state;
-    const githubRoot = 'https://github.com/linode/manager/blob/master/';
+    const githubRoot = `https://github.com/linode/manager/blob/${VERSION || 'master'}/`;
     return (
       <div
         className="layout full-height"
@@ -129,7 +118,7 @@ export class Layout extends Component {
                 rel="noopener"
                 href={`${githubRoot}${source.source}`}
               >
-                Source
+                Page Source
               </a>
             }
             <Link to="/styleguide">Styleguide</Link>

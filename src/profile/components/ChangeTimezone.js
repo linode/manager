@@ -6,6 +6,7 @@ import { Form, FormGroup, Select, SubmitButton } from 'linode-components/forms';
 
 import { profile } from '~/api';
 import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+import { setStorage } from '~/storage';
 
 
 const timezones = moment.tz.names();
@@ -27,6 +28,7 @@ export default class ChangeTimezone extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => profile.put({ timezone }),
+      () => setStorage('profile/timezone', timezone),
     ]));
   }
 
@@ -48,6 +50,12 @@ export default class ChangeTimezone extends Component {
                 value={timezone}
                 options={timezones.map(zone => ({ value: zone, label: zone }))}
               />
+              <div>
+                <small className="text-muted">
+                  This timezone setting is unique to this app. Any timezone setting in the classic
+                  Manager will not be reflected here.
+                </small>
+              </div>
             </div>
           </FormGroup>
           <FormGroup className="row">

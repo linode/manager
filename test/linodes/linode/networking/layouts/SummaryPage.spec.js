@@ -17,18 +17,6 @@ describe('linodes/linode/networking/layouts/SummaryPage', () => {
   });
 
   describe('IPv4', () => {
-    it('renders help button', async () => {
-      const path = 'https://www.linode.com/docs/networking/linux-static-ip-configuration';
-      const page = shallow(
-        <SummaryPage
-          linode={testLinode}
-        />);
-
-      expect(page.find('HelpButton').at(0).props())
-        .to.have.property('to')
-        .which.equals(path);
-    });
-
     it('renders address ip and url', async () => {
       const { ipv4 } = testLinode._ips;
       const page = shallow(
@@ -67,18 +55,6 @@ describe('linodes/linode/networking/layouts/SummaryPage', () => {
   });
 
   describe('IPv6', () => {
-    it('renders help button', async () => {
-      const path = 'https://www.linode.com/docs/networking/native-ipv6-networking';
-      const page = shallow(
-        <SummaryPage
-          linode={testLinode}
-        />);
-
-      expect(page.find('HelpButton').at(1).props())
-        .to.have.property('to')
-        .which.equals(path);
-    });
-
     it('renders slaac ip', async () => {
       const { ipv6 } = testLinode._ips;
       const page = shallow(

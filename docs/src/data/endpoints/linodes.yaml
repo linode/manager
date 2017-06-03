@@ -1,0 +1,833 @@
+# vim: set et ts=2 sw=2 tw=80 :
+name: Linodes
+sort: 0
+base_path: /linode/instances
+description: >
+  Linode endpoints provide a means of managing the <a href="#object-linode">
+  Linode objects</a> on your account.
+endpoints:
+  linode/instances:
+    type: list
+    resource: linode
+    authenticated: true
+    description: >
+      Manage the collection of Linodes your account may access.
+    methods:
+      GET:
+        oauth: linodes:view
+        description: >
+          Returns a list of <a href="#object-linode">Linodes</a>.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                https://$api_root/$version/linode/instances
+          python: |
+            my_linodes = client.linode.get_instances()
+      POST:
+        money: true
+        oauth: linodes:create
+        description: >
+          Creates a new Linode.
+        params:
+          region:
+            description: >
+              A <a href="#object-region">region</a> ID to provision
+              this Linode in.
+            type: region
+          type:
+            description: >
+              A <a href="#object-service">Linode type</a> ID to use for this
+              Linode.
+            type: service
+          label:
+            optional: true
+            description: The label to assign this Linode. Defaults to "linode".
+            limit: "3-32 ASCII characters limited to letters, numbers, underscores, and dashes, starting and ending with a letter, and without two dashes or underscores in a row"
+          group:
+            optional: true
+            description: The group to assign this Linode. Defaults to "empty".
+            limit: 0-50 characters
+          distribution:
+            optional: true
+            description: >
+              The <a href="#object-distribution">Distribution</a> to deploy this
+              Linode with.  May not be included if 'backup' is sent.
+            type: distribution
+          root_pass:
+            optional: unless source == "distro"
+            description: >
+              The root password to use when sourcing this Linode from a distribution.
+              <ul><li>root_pass is required if the source provided is a distribution.</li></ul>
+          root_ssh_key:
+            optional: true
+            description: >
+              A public SSH key file to install at `/root/.ssh/authorized_keys` when creating this Linode.
+          stackscript:
+            optional: true
+            description: >
+              The stackscript ID to deploy with this disk.
+              <ul><li>Must provide a distribution. Distribution must be
+              one that the stackscript can be deployed to.</li></ul>
+            type: stackscript
+          stackscript_udf_responses:
+            optional: true
+            description: >
+              UDF (user-defined fields) for this stackscript. Defaults to "{}".
+              <ul><li>Must match UDFs required by stackscript.</li></ul>
+            type: string
+          backup:
+            optional: true
+            description: >
+              The <a href="#object-backup">Backup</a> to restore to the newly created
+              Linode.  May not be included if 'distribution' is sent.
+            type: backup
+          with_backup:
+            optional: true
+            description: >
+              Subscribes this Linode with the Backup service. (Additional charges apply.) Defaults to "false".
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X POST -d '{
+                    "region": "us-east-1a",
+                    "type": "g5-standard-1"
+                }' \
+                https://$api_root/$version/linode/instances
+          python: |
+            my_linode = client.linode.create_instance(client.get_regions().first(), 'g5-nanode-1')
+
+            distro = client.linode.get_distributons(linode.Distribution.vendor == 'debian').first()
+            ( my_linode_2, password ) = client.linode.create_instance('us-east-1a', 'g5-standard-1', distribtuion=distro)
+  linode/instances/:id:
+    type: resource
+    resource: linode
+    authenticated: true
+    description: >
+      Manage a particular Linode your account may access.
+    methods:
+      GET:
+        oauth: linodes:view
+        description: >
+          Returns information about this <a href="#object-linode">Linode</a>.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                https://$api_root/$version/linode/instances/$linode_id
+          python: |
+            my_linode = linode.Linode(client, 123)
+      PUT:
+        oauth: linodes:modify
+        description: >
+          Edits this Linode.
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X PUT -d '{
+                  "label": "newlabel",
+                  "schedule": {
+                    "day": "Tuesday",
+                    "window": "W20"
+                  }
+                }' \
+                https://$api_root/$version/linode/instances/$linode_id
+          python: |
+            my_linode.label = 'newlabel'
+            my_linode.save()
+      DELETE:
+        oauth: linodes:delete
+        dangerous: true
+        description: >
+          Deletes this Linode. This action cannot be undone.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                -X DELETE \
+                https://$api_root/$version/linode/instances/$linode_id
+          python: |
+            my_linode.delete()
+  linode/instances/:id/disks:
+    type: list
+    resource: linode
+    authenticated: true
+    description: >
+      Manage the disks associated with this Linode.
+    methods:
+      GET:
+        oauth: linodes:view
+        description: >
+          Returns a list of <a href="#object-disk">disks</a>.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                https://$api_root/$version/linode/instances/$linode_id/disks
+          python: |
+            disks = my_linode.disks
+      POST:
+        oauth: linodes:modify
+        description: >
+          Creates a new disk.
+        params:
+          size:
+            description: >
+              Size in MB for this disk.
+            type: integer
+            limit: between 0 and the available space on the Linode
+          distribution:
+            optional: true
+            description: >
+              Optional distribution to deploy with this disk.
+              <ul><li>If no distribution is provided, a blank disk
+              is created.</li></ul>
+            type: distribution
+          root_pass:
+            optional: unless distribution is specified
+            description: >
+              Root password to deploy distribution with.
+              <ul><li>root_pass is required if a distribution is provided.</li></ul>
+            type: string
+          root_ssh_key:
+            optional: unless distribution is not specified
+            description: >
+              SSH key to add to root's authorized_keys.
+            type: string
+          label:
+            description: >
+              User-friendly string to name this disk.
+            type: string
+            limit: 1-50 characters
+          filesystem:
+            description: >
+              A <a href="#object-filesystem-enum">filesystem</a> for this disk.
+            type: string
+          read_only:
+            optional: true
+            description: >
+              If true, this disk is read-only.
+            type: boolean
+          stackscript:
+            optional: true
+            description: >
+              The stackscript ID to deploy with this disk.
+              <ul><li>Must provide a distribution. Distribution must be
+              one that the stackscript can be deployed to.</li></ul>
+            type: stackscript
+          stackscript_udf_responses:
+            optional: true
+            description: >
+              UDF (user-defined fields) for this stackscript. Defaults to "{}".
+              <ul><li>Must match UDFs required by stackscript.</li></ul>
+            type: string
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X POST -d '{
+                    "label": "Example Disk",
+                    "filesystem": "ext4",
+                    "size": 4096
+                }' \
+                https://$api_root/$version/linode/instances/$linode_id/disks
+          python: |
+            new_disk = my_linode.create_disk(4096, filesystem='ext4', label='Example Disk')
+  linode/instances/:id/disks/:id:
+    type: resource
+    resource: disk
+    authenticated: true
+    description: >
+      Manage a particular disk associated with this Linode.
+    methods:
+      GET:
+        oauth: linodes:view
+        description: >
+          Returns information about this <a href="#object-disk">disk</a>.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                https://$api_root/$version/linode/instances/$linode_id/disks/$disk_id
+          python: |
+            disk = my_linode.Disk(client, 456, 123) # linode_client, disk_id, linode_id
+      PUT:
+        oauth: linodes:modify
+        description: >
+          Updates a disk's metadata.
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X PUT -d '{
+                  "label": "New Disk Label"
+                }' \
+                https://$api_root/$version/linode/instances/$linode_id/disks/$disk_id
+          python: |
+            disk.label = 'New Disk Label'
+            disk.save()
+      POST:
+        oauth: linodes:create
+        description: >
+          Duplicates this disk.
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X POST \
+                https://$api_root/$version/linode/instances/$linode_id/disks/$disk_id
+          python: |
+            new_disk = disk.duplicate()
+      DELETE:
+        oauth: linodes:delete
+        dangerous: true
+        description: >
+          Deletes this disk. This action cannot be undone.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                -X DELETE \
+                https://$api_root/$version/linode/instances/$linode_id/disks/$disk_id
+          python: |
+            disk.delete()
+  linode/instances/:id/disks/:id/resize:
+    type: strange
+    authenticated: true
+    description: Resizes the disk.
+    methods:
+      POST:
+        oauth: linodes:modify
+        dangerous: true
+        params:
+          size:
+            description: The desired size of the disk in MB.
+            type: integer
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X POST -d '{
+                    "size": 1024
+                }' \
+                https://$api_root/$version/linode/instances/$linode_id/disks/$disk_id/resize
+  linode/instances/:id/disks/:id/password:
+    type: strange
+    authenticated: true
+    description: >
+      Resets the root password of a disk.
+    methods:
+      POST:
+        oauth: linodes:modify
+        dangerous: true
+        params:
+          password:
+            description: >
+              New root password for the OS installed on this disk.
+            type: string
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X POST -d '{
+                    "password": "hunter2"
+                }' \
+                https://$api_root/$version/linode/instances/$linode_id/disks/$disk_id/password
+          python: |
+            disk.reset_root_password('hunter2')
+  linode/instances/:id/configs:
+    type: list
+    resource: linode_config
+    authenticated: true
+    description: >
+      Manage the boot configs on this Linode.
+    methods:
+      GET:
+        oauth: linodes:view
+        description: >
+          Returns a list of <a href="#object-linode_config">configs</a> for a
+          given Linode.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                https://$api_root/$version/linode/instances/$linode_id/configs
+          python: |
+            configs = my_linode.configs
+      POST:
+        oauth: linodes:modify
+        description: >
+          Creates a new config for a given Linode.
+        params:
+          kernel:
+            description: >
+              A <a href="#object-kernel">kernel</a> ID to boot this Linode with.
+            type: kernel
+          label:
+            description: >
+              The user-friendly label to name this config.
+            limit: 1-48 characters
+          disks:
+            description: >
+              <a href="#object-disk">Disks</a> attached to this Linode config.
+          comments:
+            optional: true
+            description: >
+              Optional field for arbitrary user comments on this config.
+            limit: 1-255 characters
+          ram_limit:
+            optional: true
+            description: >
+              The maximum RAM the Linode will be given when booting this
+              config. This defaults to the total RAM of the Linode.
+            limit: between 0 and the Linode's total RAM
+          root_device_ro:
+            optional: true
+            description: >
+              Controls whether to mount the root disk read-only. Defaults
+              to false.
+          devtmpfs_automount:
+            optional: true
+            description: >
+              Populates the /dev directory early during boot without udev.
+              Defaults to false.
+          run_level:
+            optional: true
+            description: >
+              Sets the <a href="#object-run_level-enum">run level</a> for Linode boot. Defaults to "default".
+          virt_mode:
+            optional: true
+            description: >
+              Controls the <a href="#object-virt_mode-enum">virtualization mode</a>. Defaults to "paravirt".
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X POST -d '{
+                    "label": "Arch Linux config",
+                    "kernel": "linode/latest_64",
+                    "disks": {
+                      "sda": 5567,
+                      "sdb": 5568
+                      }
+                    }
+                }' \
+                https://$api_root/$version/linode/instances/$linode_id/configs
+          python: |
+            config = my_linode.create_config('linode/latest_64', disks=linode.disks, label='Arch Linux Config')
+  linode/instances/:id/configs/:id:
+    type: resource
+    resource: linode_config
+    authenticated: true
+    description: >
+      Manage a particular config for a given Linode.
+    methods:
+      GET:
+        oauth: linodes:view
+        description: >
+          Returns information about this <a href="#object-linode_config">
+          Linode config</a>.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                https://$api_root/$version/linode/instances/$linode_id/configs/$config_id
+          python: |
+            config = my_linode.Config(client, 567, 123) # linode_client, config_id, linode_id
+      PUT:
+        oauth: linodes:modify
+        description: >
+          Modifies a given Linode config.
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X PUT -d '{
+                    "label": "Edited config",
+                    "kernel": {
+                      "id": "linode/latest_64"
+                    },
+                    "disks": {
+                      "sda": {
+                        "id": 5567
+                      }
+                    }
+                }' \
+                https://$api_root/$version/linode/instances/$linode_id/configs/$config_id
+          python:
+            config.label = 'Edited config'
+            config.kernel = linode.Kernel(client, 'linode/latest_64')
+            config.save()
+      DELETE:
+        oauth: linodes:modify
+        description: >
+          Deletes a given Linode config.
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X DELETE \
+                https://$api_root/$version/linode/instances/$linode_id/configs/$config_id
+          python: |
+            config.delete()
+  linode/instances/:id/boot:
+    type: action
+    authenticated: true
+    description: >
+      Boots a Linode.
+    methods:
+      POST:
+        oauth: linodes:modify
+        dangerous: false
+        params:
+          config:
+            optional: true
+            description: >
+              Optional config ID to boot the linode with.
+            type: linode_config
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X POST -d '{
+                    "config": 5567
+                }' \
+                https://$api_root/$version/linode/instances/$linode_id/boot
+          python: |
+            my_linode.boot()
+  linode/instances/:id/shutdown:
+    type: action
+    authenticated: true
+    description: >
+      Shuts down a Linode.
+    methods:
+      POST:
+        oauth: linodes:modify
+        dangerous: true
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X POST \
+                https://$api_root/$version/linode/instances/$linode_id/shutdown
+          python: |
+            my_linode.shutdown()
+  linode/instances/:id/reboot:
+    type: action
+    authenticated: true
+    description: >
+      Reboots a Linode.
+    methods:
+      POST:
+        oauth: linodes:modify
+        dangerous: true
+        params:
+          config:
+            optional: true
+            description: >
+              Optional config ID to boot the linode with.
+            type: linode_config
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X POST -d '{
+                    "config": 5567
+
+                }' \
+                https://$api_root/$version/linode/instances/$linode_id/reboot
+          python: |
+            my_linode.reboot()
+  linode/instances/:id/kvmify:
+    type: action
+    authenticated: true
+    description: >
+      Changes a Linode's hypervisor from Xen to KVM.
+    methods:
+      POST:
+        oauth: linodes:modify
+        dangerous: true
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X POST \
+                https://$api_root/$version/linode/instances/$linode_id/kvmify
+          python: |
+            my_linode.kvmify()
+  linode/instances/:id/rescue:
+    type: action
+    authenticated: true
+    description: >
+      Reboots a Linode in Rescue Mode.
+    methods:
+      POST:
+        oauth: linodes:modify
+        dangerous: false
+        params:
+          disks:
+            optional: true
+            description: >
+              <a href="#object-disk">Disks</a> to include during Rescue.
+            type: disk
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X POST -d '{
+                    "disks": {
+                      "sda": 5567,
+                      "sdb": 5568
+                      }
+                    }
+                }' \
+                https://$api_root/$version/linode/instances/$linode_id/rescue
+          python: |
+            my_linode.rescue()
+  linode/instances/:id/resize:
+    type: action
+    authenticated: true
+    description: >
+      Resizes a Linode to a new <a href="#object-service">Linode type</a>.
+    methods:
+      POST:
+        money: true
+        oauth: linodes:modify
+        dangerous: false
+        params:
+          type:
+            description: >
+              A <a href="#object-service">Linode type</a> to use for this Linode.
+            type: service
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X POST -d '{
+                    "type": "g5-standard-1"
+                    }
+                }' \
+                https://$api_root/$version/linode/instances/$linode_id/resize
+  linode/instances/:id/backups:
+    type: action
+    authenticated: true
+    description: >
+      Returns information about this Linode's available <a href="#object-backup">backups</a>.
+    methods:
+      GET:
+        description: >
+          Returns a <a href="#object-backupsresponse">Backups Response</a> with information on this Linode's
+          available backups.
+        oauth: linodes:view
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                https://$api_root/$version/linode/instances/$linode_id/backups
+          python: |
+            backups = my_linode.available_backups
+      POST:
+        oauth: linodes:modify
+        dangerous: true
+        description: >
+          Creates a snapshot backup of a Linode. WARNING:
+          If you already have a snapshot, this is a destructive operation.
+          The previous snapshot will be deleted.
+        params:
+          label:
+            optional: true
+            description: >
+              Human-friendly label for this snapshot. Must be 1-50 characters.
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X POST -d '{
+                    "label": "Linode123456 snapshot",
+                }' \
+                https://$api_root/$version/linode/instances/$linode_id/backups
+          python: |
+            my_linode.snapshot()
+  linode/instances/:id/backups/enable:
+    type: action
+    authenticated: true
+    description: >
+       Enables the <a href="#object-backup">backup</a> service on the given Linode.
+    methods:
+      POST:
+        money: true
+        oauth: linodes:modify
+        dangerous: true
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X POST \
+                https://$api_root/$version/linode/instances/$linode_id/backups/enable
+          python: |
+            my_linode.enable_backups()
+  linode/instances/:id/backups/cancel:
+    type: action
+    authenticated: true
+    description: >
+      Cancels the <a href="#object-backup">backup</a> service on the given Linode.
+    methods:
+      POST:
+        oauth: linodes:delete
+        dangerous: true
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X POST \
+                https://$api_root/$version/linode/instances/$linode_id/backups/cancel
+          python: |
+            my_linode.cancel_backups()
+  linode/instances/:id/backups/:id/restore:
+    type: action
+    authenticated: true
+    description: >
+      Restores a <a href="#object-backup">backup</a> to a Linode.
+    methods:
+      POST:
+        oauth: linodes:create
+        dangerous: true
+        params:
+          linode:
+            description: >
+              The ID of the Linode to restore a backup to.
+            type: linode
+          overwrite:
+            description: >
+                If true, deletes all disks and configs on the target linode before restoring.
+            type: boolean
+            optional: true
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X POST -d '{
+                    "linode": 123456,
+                }' \
+                https://$api_root/$version/linode/instances/$linode_id/backups/$backup_id/restore
+          python: |
+            backup = my_linode.available_backups.daily
+            backup.restore()
+  linode/instances/:id/ips:
+    type: strange
+    authenticated: true
+    description: >
+      View networking information for this Linode.
+    methods:
+      GET:
+        oauth: linodes:view
+        description: >
+          Returns a <a href="#object-linodenetworking">Linode Networking Object</a>.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                https://$api_root/$version/linode/instances/$linode_id/ips
+      POST:
+        money: true
+        oauth: linodes:modify
+        description: >
+          Allocates a new IP Address for this Linode.
+        params:
+          type:
+            description: >
+                An <a href="#object-ipaddresstype-enum">IP Address Type</a> for this IP Address. Public IP's incur a monthly cost.
+            type: IPAddressType
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X POST -d '{
+                    "type": "private"
+                }' \
+                https://$api_root/$version/linode/instances/$linode_id/ips
+  linode/instances/:id/ips/sharing:
+    methods:
+      POST:
+        description: >
+            Sets IP Sharing for this Linode.
+        params:
+          ips:
+            type: list
+            subtype: string
+            description: >
+              A list of IP Addresses this Linode will share.
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X POST -d '{
+                  "ips": [ "97.107.143.29", "97.107.143.112" ]
+                }' \
+                https://$api_root/$version/linode/instances/$linode_id/ips/sharing
+  linode/instances/:id/ips/:ip_address:
+    type: action
+    resource: ipaddress
+    authenticated: true
+    description: >
+      Manage a particular IP Address associated with this Linode.
+    methods:
+      GET:
+        oauth: linodes:view
+        description: >
+          Returns information about this <a href="#object-ipaddress">IPv4</a> or
+          <a href="#object-ipv6-address">IPv6</a> Address.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                https://$api_root/$version/linode/instances/$linode_id/ips/$ip_address
+      PUT:
+        oauth: linodes:modify
+        description: >
+            Update this IP Address
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X PUT -d '{
+                    "rdns":"example.org"
+                }' \
+                https://$api_root/$version/linode/instances/$linode_id/ips/$ip_address
+  linode/instances/:id/rebuild:
+    type: action
+    authenticated: true
+    description: >
+      Deletes all Disks and Configs on this Linode, then deploys a new Distribution to this Linode with the given attributes.
+      Returns information about this <a href="#object-linode">Linode</a>.
+    methods:
+      POST:
+        oauth: linodes:modify
+        dangerous: true
+        params:
+          distribution:
+            description: >
+                An <a href="#object-ipaddresstype-enum">Distribution</a> to deploy to this Linode.
+            type: Distribution
+          root_pass:
+            description: >
+                The root password for the new deployment.
+            type: string
+          root_ssh_key:
+            optional: true
+            description: >
+                The key to authorize for root access to the new deployment.
+            type: string
+          stackscript:
+            optional: true
+            description: >
+              The stackscript ID to deploy with this disk.
+              <ul><li>Must provide a distribution. Distribution must be
+              one that the stackscript can be deployed to.</li></ul>
+            type: stackscript
+          stackscript_udf_responses:
+            optional: true
+            description: >
+              UDF (user-defined fields) for this stackscript. Defaults to "{}".
+              <ul><li>Must match UDFs required by stackscript.</li></ul>
+            type: string
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X POST \
+                https://$api_root/$version/linode/instances/$linode_id/rebuild \
+                -d '{"distribution":"linode/debian8","root_pass":"hunter7"}'
+          python: |
+            my_linode.rebuild('linode/ubuntu16.04LTS', root_pass='hunter7')

@@ -9,6 +9,8 @@ import { tickets } from '~/api';
 import { getObjectByLabelLazily } from '~/api/util';
 import { addTicketAttachment } from '~/api/tickets';
 import { setError } from '~/actions/errors';
+import { setSource } from '~/actions/source';
+import { setTitle } from '~/actions/title';
 import { MAX_UPLOAD_SIZE_MB } from '~/constants';
 import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
 
@@ -30,7 +32,6 @@ export class TicketPage extends Component {
   static async preload({ dispatch }, { ticketId }) {
     try {
       await dispatch(getObjectByLabelLazily('tickets', ticketId, 'id'));
-      await dispatch(tickets.one([ticketId]));
       await dispatch(tickets.replies.all([ticketId]));
     } catch (response) {
       // eslint-disable-next-line no-console
@@ -43,6 +44,13 @@ export class TicketPage extends Component {
     super();
 
     this.state = { reply: '', attachments: [], errors: {}, loading: false };
+  }
+
+  async componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch(setSource(__filename));
+
+    dispatch(setTitle(this.props.ticket.summary));
   }
 
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
@@ -142,9 +150,16 @@ export class TicketPage extends Component {
         <div className="container">
           <div className="row">
             <div className="col-lg-7 col-md-12">
-              <TicketReply reply={ticket} createdField="opened" />
+              {/* TODO: make sure this logic makes sense. */}
+              {!ticket.description ? null : (
+                <section>
+                  <TicketReply reply={ticket} createdField="opened" />
+                </section>
+              )}
               {Object.values(replies).map(reply => (
-                <TicketReply reply={reply} createdField="created" key={reply.id} />
+                <section key={reply.id}>
+                  <TicketReply reply={reply} createdField="created" />
+                </section>
               ))}
               {ticket.status === 'closed' ?
                 this.renderTicketClosed() :

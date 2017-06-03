@@ -1,0 +1,37 @@
+name: IPv4 Address
+description: >
+    An IPv4 Address
+schema:
+  address:
+    _type: string
+    _value: 97.107.143.8
+    _description: The IP Address.
+  gateway:
+    _type: string
+    _value: 97.107.143.1
+    _description: The default gateway. Gateways for private IP's are always null.
+  subnet_mask:
+    _type: string
+    _value: 255.255.255.0
+    _description: The subnet mask.
+  prefix:
+    _type: string
+    _value: 24
+    _description: The network prefix.
+  type:
+    _type: enum
+    _subtype: IPAddressType
+    _value: public
+    _description: The type of IP Address, either public or private
+  rdns:
+    _editable: true
+    _type: string
+    _value: null
+    _description: Reverse DNS address for this IP Address. Null to reset.
+  linode_id:
+    _type: integer
+    _value: 42
+enums:
+  IPAddressType:
+    public: Public IP Address
+    private: Internal IP Addresses (192.168 range)

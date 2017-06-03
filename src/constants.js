@@ -7,7 +7,7 @@ export const DEVTOOLS_DISABLED = ENV_DEVTOOLS_DISABLED || process.env.NODE_ENV =
 export const VERSION = ENV_VERSION;
 /* eslint-enable no-undef */
 
-export const EVENT_POLLING_DELAY = (15 * 1000); // milliseconds
+export const EVENT_POLLING_DELAY = (5 * 1000); // milliseconds
 
 export const LinodeStates = {
   pending: [
@@ -38,6 +38,8 @@ export const DATACENTERS = {
   'ap-northeast-1b': 'shinagawa1',
   'ap-south-1a': 'singapore',
 };
+
+export const UNAVAILABLE_DATACENTERS = ['ap-northeast-1a'];
 
 export const LinodeStatesReadable = {
   shutting_down: 'Powering Off',

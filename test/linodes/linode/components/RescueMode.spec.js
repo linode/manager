@@ -38,12 +38,17 @@ describe('linodes/linode/components/RescueMode', () => {
         linode={testLinode}
       />);
 
-    page.setState({ diskSlots: [12345, 12346] });
+    page.setState({ disks: { sda: 12345, sdb: 12346 } });
     await page.find('Form').props().onSubmit();
 
     expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
-      ([fn]) => expectRequest(fn, '/linode/instances/1234/rescue', { method: 'POST' }),
+      ([fn]) => expectRequest(fn, '/linode/instances/1234/rescue', {
+        method: 'POST',
+        body: {
+          disks: { sda: 12345, sdb: 12346 },
+        },
+      }),
     ]);
   });
 });

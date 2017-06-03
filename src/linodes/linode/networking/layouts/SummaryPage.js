@@ -8,7 +8,7 @@ import { setSource } from '~/actions/source';
 import { setError } from '~/actions/errors';
 import { Button } from 'linode-components/buttons';
 import { Card, CardHeader } from 'linode-components/cards';
-import { HelpButton } from 'linode-components/buttons';
+
 
 export class SummaryPage extends Component {
   componentDidMount() {
@@ -55,12 +55,9 @@ export class SummaryPage extends Component {
     const { ipv4 } = this.props.linode._ips;
 
     return (
-      <div className="col-sm-6">
+      <div className="col-lg-6 col-md-12 col-sm-12">
         <h3>
           IPv4
-          <HelpButton
-            to="https://www.linode.com/docs/networking/linux-static-ip-configuration"
-          />
         </h3>
         <div className="row">
           <div className="col-sm-3 row-label">Address</div>
@@ -104,12 +101,9 @@ export class SummaryPage extends Component {
     const { ipv6 } = this.props.linode._ips;
 
     return (
-      <div className="col-sm-6">
+      <div className="col-lg-6 col-md-12 col-sm-12">
         <h3>
           IPv6
-          <HelpButton
-            to="https://www.linode.com/docs/networking/native-ipv6-networking"
-          />
         </h3>
         <div className="row">
           <div className="col-sm-3 row-label">Address</div>

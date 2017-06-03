@@ -1,7 +1,7 @@
 import 'babel-polyfill';
 import React from 'react';
 import { render } from 'react-dom';
-import { Router, Route, IndexRedirect, browserHistory } from 'react-router';
+import { Redirect, Router, Route, IndexRedirect, browserHistory } from 'react-router';
 import ReactGA from 'react-ga';
 
 import { GA_ID } from './constants';
@@ -36,8 +36,7 @@ import {
   generateChildRoute
 } from '~/RoutesGenerator';
 
-import { api } from '~/data/endpoints';
-
+import { default as api } from '~/api';
 
 ReactGA.initialize(GA_ID); // eslint-disable-line no-undef
 function logPageView() {
@@ -59,6 +58,9 @@ function hashLinkScroll() {
         element.scrollTop = element.offsetHeight;
       }
     }, 0);
+  } else {
+    // If we're not jumping to a specific place, scroll to top.
+    window.scroll(0, 0);
   }
 }
 
@@ -78,6 +80,7 @@ export function init() {
       <Route path="/" component={Layout} endpoints={api.endpoints}>
         <Route component={IndexLayout}>
           <IndexRedirect to="/introduction" />
+          <Redirect from="/reference" to="/introduction" />
           <Route path="/introduction" component={Introduction} />
           <Route path="/access" component={Access} />
           <Route path="/pagination" component={Pagination} />

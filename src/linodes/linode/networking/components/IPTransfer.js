@@ -5,7 +5,8 @@ import { Form, FormGroup, SubmitButton, Select } from 'linode-components/forms';
 
 import { linodes as apiLinodes } from '~/api';
 import { createHeaderFilter } from '~/api/util';
-import { assignIps, linodeIPs } from '~/api/linodes';
+import { linodeIPs } from '~/api/linodes';
+import { assignIPs } from '~/api/networking';
 import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
 
 import IPList from './IPList';
@@ -47,7 +48,7 @@ export default class IPTransfer extends Component {
     });
 
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => assignIps(linode.region.id, assignments),
+      () => assignIPs(linode.region.id, assignments),
       () => (dispatch) => Promise.all([
         dispatch(apiLinodes.all([], undefined, createHeaderFilter({
           '+or': [{ label: linode.label }, { label: otherLinode.label }],
@@ -96,11 +97,11 @@ export default class IPTransfer extends Component {
           </p>
           <Form onSubmit={this.onSubmit}>
             <FormGroup className="row">
-              <div className="col-sm-6">
+              <div className="col-lg-6 col-md-12 col-sm-12">
                 <label className="col-form-label">Linode A:</label>
                 <span>{linode.label}</span>
               </div>
-              <div className="col-sm-6">
+              <div className="col-lg-6 col-md-12 col-sm-12">
                 <label className="col-form-label">Linode B:</label>
                 <Select
                   value={selectedOtherLinode}
@@ -112,7 +113,7 @@ export default class IPTransfer extends Component {
               </div>
             </FormGroup>
             <FormGroup className="row">
-              <div className="col-sm-6" id="sectionA">
+              <div className="col-lg-6 col-md-12 col-sm-12" id="sectionA">
                 <IPList
                   linode={linode}
                   checked={checkedA}
@@ -125,7 +126,7 @@ export default class IPTransfer extends Component {
                   }}
                 />
               </div>
-              <div className="col-sm-6" id="sectionB">
+              <div className="col-lg-6 col-md-12 col-sm-12" id="sectionB">
                 <IPList
                   linode={linodes[selectedOtherLinode]}
                   checked={checkedB}

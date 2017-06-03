@@ -21,16 +21,16 @@ describe('domains/components/EditSOARecord', () => {
     const page = mount(
       <EditSOARecord
         dispatch={() => {}}
-        zone={currentZone}
+        domains={currentZone}
         close={() => () => {}}
       />
     );
 
-    const zone = page.find('#zone');
+    const zone = page.find('#domain');
     expect(zone.props().value).to.equal(currentZone.domain);
 
     const group = page.find('#group');
-    expect(group.props().value).to.equal(currentZone.display_group);
+    expect(group.props().value).to.equal(currentZone.group);
 
     const email = page.find('#email');
     expect(email.props().value).to.equal(currentZone.soa_email);
@@ -55,7 +55,7 @@ describe('domains/components/EditSOARecord', () => {
     const page = mount(
       <EditSOARecord
         dispatch={dispatch}
-        zone={currentZone}
+        domains={currentZone}
         close={() => close}
       />
     );
@@ -63,7 +63,7 @@ describe('domains/components/EditSOARecord', () => {
     const changeInput = (name, value) =>
       page.find({ name }).simulate('change', { target: { name, value } });
 
-    changeInput('zone', 'tester1234.com');
+    changeInput('domain', 'tester1234.com');
     changeInput('group', 'tester-zones');
     changeInput('email', 'admin@tester1234.com');
     changeInput('defaultTTL', 3600);
@@ -79,8 +79,11 @@ describe('domains/components/EditSOARecord', () => {
         method: 'PUT',
         body: {
           domain: 'tester1234.com',
-          display_group: 'tester-zones',
+          group: 'tester-zones',
+          axfr_ips: ['44.55.66.77'],
+          master_ips: ['127.0.0.1', '255.255.255.1', '123.123.123.7'],
           soa_email: 'admin@tester1234.com',
+          status: 'active',
           ttl_sec: 3600,
           refresh_sec: 3600,
           retry_sec: 3600,

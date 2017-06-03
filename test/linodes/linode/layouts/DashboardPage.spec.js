@@ -25,6 +25,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
       <DashboardPage
         dispatch={dispatch}
         linode={testLinode}
+        timezone="UTC"
       />);
 
     const ipSection = page.find('#ips');
@@ -36,6 +37,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
     const page = mount(
       <DashboardPage
         linode={{ ...testLinode, backups: { enabled: false } }}
+        timezone="UTC"
       />);
 
     expect(page.find('#backup-status').text()).to.equal('Enable Backups');
@@ -45,6 +47,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
     const page = mount(
       <DashboardPage
         linode={testLinode}
+        timezone="UTC"
       />);
 
     expect(page.find('#backup-status').text()).to.equal('View Backups');
@@ -54,6 +57,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
     const page = mount(
       <DashboardPage
         linode={testLinode}
+        timezone="UTC"
       />);
 
     expect(page.find('#plan').text()).to.equal('Linode 2G');
@@ -63,6 +67,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
     const page = mount(
       <DashboardPage
         linode={testLinode}
+        timezone="UTC"
       />);
 
     expect(page.find('#region').text()).to.equal(testLinode.region.label);
@@ -72,6 +77,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
     const page = mount(
       <DashboardPage
         linode={testLinode}
+        timezone="UTC"
       />);
 
     expect(page.find('#distro').text()).to.equal(testLinode.distribution.vendor);
@@ -81,6 +87,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
     const page = mount(
       <DashboardPage
         linode={testLinode1246}
+        timezone="UTC"
       />);
 
     expect(page.find('#distro').text()).to.equal('Unknown');
@@ -98,15 +105,13 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
 
   it('renders ssh path', () => {
     const ipv4 = testLinode.ipv4;
-    const sshPath = `ssh root@${ipv4}`;
+    const sshPath = `ssh root@${ipv4[0]}`;
     const page = shallow(
       <DashboardPage
         linode={testLinode}
       />);
 
-    expect(page.find('#ssh-input').props())
-      .to.have.property('value')
-      .to.equal(sshPath);
+    expect(page.find('#ssh-input').props().value).to.equal(sshPath);
   });
 
   it('renders lish input elements', () => {

@@ -35,6 +35,11 @@ export function getObjectByLabelLazily(pluralName, label, labelName = 'label') {
       return oldResource;
     }
 
+    // API doesn't support X-Filter on 'id', so look it up directly.
+    if (labelName === 'id') {
+      return await dispatch(api[pluralName].one([label]));
+    }
+
     const response = await dispatch(api[pluralName].all([], undefined, {
       headers: {
         'X-Filter': { [labelName]: label },
@@ -62,7 +67,7 @@ export function selectObjectByLabel({ collection, paramField, resultField, label
 export function lessThanDatetimeFilter(key, datetime) {
   return {
     [key]: {
-      '+lte': datetime,
+      '+lt': datetime,
     },
   };
 }
@@ -70,7 +75,7 @@ export function lessThanDatetimeFilter(key, datetime) {
 export function greaterThanDatetimeFilter(key, datetime) {
   return {
     [key]: {
-      '+gte': datetime,
+      '+gt': datetime,
     },
   };
 }

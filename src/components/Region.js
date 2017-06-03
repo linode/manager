@@ -1,9 +1,10 @@
-import React, { Component, PropTypes } from 'react';
 import _ from 'lodash';
+import React, { Component, PropTypes } from 'react';
 
 import { Card, CardHeader } from 'linode-components/cards';
 import { flags } from '~/assets';
-import { regionMap } from '~/constants';
+import { regionMap, UNAVAILABLE_DATACENTERS } from '~/constants';
+
 
 export default class Region extends Component {
   renderZone = (region) => {
@@ -11,7 +12,7 @@ export default class Region extends Component {
     const dcClass = region.id === selected ? 'selected' : '';
 
     return (
-      <div className="col-sm-3">
+      <div className="col-sm-3" key={region.id}>
         <div
           className={`region ${dcClass}`}
           key={region.id}
@@ -36,13 +37,15 @@ export default class Region extends Component {
   renderRegion = (zonesInRegion, region) => {
     const allRealRegions = this.props.regions;
     const regions = Object.values(allRealRegions).filter(({ id }) =>
-      zonesInRegion.indexOf(id) !== -1);
+      zonesInRegion.indexOf(id) !== -1 && UNAVAILABLE_DATACENTERS.indexOf(id) === -1);
 
     return regions.length ? (
-      <div key={region}>
+      <div className="region-group" key={region}>
         <h3>{region}</h3>
-        <div className="region-group row">
-          {regions.map(this.renderZone)}
+        <div>
+          <div className="row">
+            {regions.map(this.renderZone)}
+          </div>
         </div>
       </div>
       ) : null;

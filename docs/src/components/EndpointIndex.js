@@ -19,7 +19,7 @@ export default function EndpointIndex(props) {
         <p>{endpoint.description}</p>
       </div>
       <div>
-        {endpoint.formattedEndpoints.map(function(endpointSection) {
+        {endpoint.endpoints.map(function(endpointSection) {
           return (
             <div className="EndpointIndex-group">
               <h3>{endpointSection.name}</h3>
@@ -37,7 +37,8 @@ export default function EndpointIndex(props) {
                   },
                   { label: 'Description', dataKey: 'description' },
                 ]}
-                data={endpointSection.formattedEndpoints}
+                data={endpointSection.endpoints}
+                noDataMessage="No endpoints documented."
               />
             </div>
           );
