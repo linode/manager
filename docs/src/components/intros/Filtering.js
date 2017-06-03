@@ -74,30 +74,6 @@ export default function Filtering() {
           You can combine and nest operators to construct arbitrarily-complex queries - say, give me all distributions which are either
           recommended or whose vendor is Debian, or who have a minimum_storage_size between 100 and 500 (inclusive).
         </p>
-        <p>
-          Below is a list of all available operators. Operators are keys of a Filter JSON object, their value must be of the appropriate
-          type, and they are evaluated as described below.
-        </p>
-        <Table
-          className="Table--secondary"
-          columns={[
-            { dataKey: 'operator', label: 'Operator', headerClassName: 'OperatorColumn' },
-            { dataKey: 'type', label: 'Type', headerClassName: 'TypeColumn' },
-            { dataKey: 'description', label: 'Description', headerClassName: 'DescriptionColumn' }
-          ]}
-          data={[
-            { operator: '+and', type: 'array', description: 'All conditions must be true' },
-            { operator: '+or', type: 'array', description: 'One condition must be true' },
-            { operator: '+gt', type: 'number', description: 'Value must be greater than number' },
-            { operator: '+gte', type: 'number', description: 'Value must be greater than or equal to that number' },
-            { operator: '+lt', type: 'number', description: 'Value must be less than number' },
-            { operator: '+lte', type: 'number', description: 'Value must be less than or equal to that number' },
-            { operator: '+contains', type: 'string', description: 'Given string must be in the value' },
-            { operator: '+neq', type: 'string', description: 'Does not equal the value' },
-            { operator: '+order-by', type: 'string', description: 'Attribute to order the results by - must be filterable' },
-            { operator: '+order', type: 'string', description: 'Either "asc" or "desc".  Defaults to "asc".  Requires an \+order-by\' be given.' }
-          ]}
-        />
         <pre>
           <code>
     curl "{ API_ROOT }/{ API_VERSION }/linode/distributions" \
@@ -132,6 +108,30 @@ export default function Filtering() {
     }'`}
           </code>
         </pre>
+        <p>
+          Below is a list of all available operators. Operators are keys of a Filter JSON object, their value must be of the appropriate
+          type, and they are evaluated as described below.
+        </p>
+        <Table
+          className="Table--secondary"
+          columns={[
+            { dataKey: 'operator', label: 'Operator', headerClassName: 'OperatorColumn' },
+            { dataKey: 'type', label: 'Type', headerClassName: 'TypeColumn' },
+            { dataKey: 'description', label: 'Description', headerClassName: 'DescriptionColumn' }
+          ]}
+          data={[
+            { operator: '+and', type: 'array', description: 'All conditions must be true' },
+            { operator: '+or', type: 'array', description: 'One condition must be true' },
+            { operator: '+gt', type: 'number', description: 'Value must be greater than number' },
+            { operator: '+gte', type: 'number', description: 'Value must be greater than or equal to that number' },
+            { operator: '+lt', type: 'number', description: 'Value must be less than number' },
+            { operator: '+lte', type: 'number', description: 'Value must be less than or equal to that number' },
+            { operator: '+contains', type: 'string', description: 'Given string must be in the value' },
+            { operator: '+neq', type: 'string', description: 'Does not equal the value' },
+            { operator: '+order-by', type: 'string', description: 'Attribute to order the results by - must be filterable' },
+            { operator: '+order', type: 'string', description: 'Either "asc" or "desc".  Defaults to "asc".  Requires an \+order-by\' be given.' }
+          ]}
+        />
       </section>
     </section>
   );
