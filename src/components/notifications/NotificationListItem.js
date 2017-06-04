@@ -44,9 +44,14 @@ export default function NotificationListItem(props) {
     );
   } else {
     const timestampMessage = (
-      <small className="NotificationList-listItem-time text-muted">
-        <TimeDisplay time={event.created} /> by <b>{event.username}</b>
-      </small>
+      <div>
+        <small>
+          <span className="text-muted">
+            <TimeDisplay time={event.created} /> by&nbsp;
+          </span>
+          <strong>{event.username}</strong>
+        </small>
+      </div>
     );
 
     // TODO: check against upcoming API Change
