@@ -84,7 +84,7 @@ export default class Header extends Component {
               className={`${linkClass('/domains')}`}
               to="/domains"
             >Domains</Link>
-            {!username ? null :
+            {!username ? null : (
               <div
                 className="MainHeader-session float-sm-right"
                 onClick={this.toggleSession}
@@ -100,14 +100,16 @@ export default class Header extends Component {
                   width={35}
                 />
               </div>
-            }
-            <div
-              className="MainHeader-notifications float-sm-right"
-              onClick={this.toggleNotifications}
-            >
-              <i className="fa fa-bell-o"></i>
-              {!unseenCount ? null : <span className="MainHeader-badge Badge">{unseenCount}</span>}
-            </div>
+            )}
+            {!username ? null : (
+              <div
+                className="MainHeader-notifications float-sm-right"
+                onClick={this.toggleNotifications}
+              >
+                <i className="fa fa-bell-o"></i>
+                {!unseenCount ? null : <span className="MainHeader-badge Badge">{unseenCount}</span>}
+              </div>
+            )}
           </div>
         </div>
       </div>

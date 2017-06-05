@@ -1,25 +1,28 @@
 export const SET_ERROR = '@@errors/SET_ERROR';
 export const TOGGLE_DETAILS = '@@errors/TOGGLE_DETAILS';
 
-/**
- * Sets the global error state from the given HTTP response.
- * @param {Response} response - the HTTP response from the server.
- * @param {Object} json - Set this if you've already read the JSON from the response.
- */
-export function setError(response, json = null) {
+
+export function setError(response = {}) {
   return async (dispatch) => {
     if (response.status) {
       const type = response.headers && response.headers.get('Content-Type');
       const _json = !json && type === 'application/json'
-                  ? await response.json() : null;
+                  ? response.json() : null;
+
       dispatch({
         type: SET_ERROR,
         status: response.status,
         statusText: response.statusText,
         json: _json,
       });
+    } else if (response.message === 'Failed to fetch') {
+      dispatch({
+        type: SET_ERROR,
+        status: 521,
+        statusText: 'Failed connecting to server.',
+      });
     }
-  };
+  }
 }
 
 export function toggleDetails() {

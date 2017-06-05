@@ -16,8 +16,6 @@ export default function errors(state = defaultState, action) {
     }
     case TOGGLE_DETAILS:
       return { ...state, details: !state.details };
-    case LOCATION_CHANGE:
-      return { ...state, json: null, status: null, statusText: null };
     default:
       return state;
   }

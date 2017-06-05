@@ -53,6 +53,8 @@ export class IndexPage extends Component {
       { name: 'Settings', link: '/settings' },
     ].map(t => ({ ...t, link: `/linodes/${linode.label}${t.link}` }));
 
+    f.hoo.bar;
+
     return (
       <div>
         <header className="main-header">
