@@ -106,8 +106,10 @@ export default class Header extends Component {
                 className="MainHeader-notifications float-sm-right"
                 onClick={this.toggleNotifications}
               >
-                <i className="fa fa-bell-o"></i>
-                {!unseenCount ? null : <span className="MainHeader-badge Badge">{unseenCount}</span>}
+                <i className="fa fa-bell-o" />
+                {!unseenCount ? null : (
+                  <span className="MainHeader-badge Badge">{unseenCount}</span>
+                )}
               </div>
             )}
           </div>

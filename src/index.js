@@ -91,21 +91,21 @@ window.handleError = function (e, component = {}) {
   } catch (e) {
     // eslint-disable-next-line no-console
     console.trace(e);
-  } finally {
-    // eslint-disable-next-line no-param-reassign
-    e.component = {
-      props: component.props,
-      state: component.state,
-      displayName: component.displayName,
-    };
+  }
 
-    // TraceKit.report throws an error.
-    try {
-      TraceKit.report(e);
-    } catch (newE) {
-      if (newE !== e) {
-        throw newE;
-      }
+  // eslint-disable-next-line no-param-reassign
+  e.component = {
+    props: component.props,
+    state: component.state,
+    displayName: component.displayName,
+  };
+
+  // TraceKit.report throws an error.
+  try {
+    TraceKit.report(e);
+  } catch (newE) {
+    if (newE !== e) {
+      throw newE;
     }
   }
 };
