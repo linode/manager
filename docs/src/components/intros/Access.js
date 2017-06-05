@@ -129,7 +129,11 @@ export default function Authentication() {
           </code>
         </pre>
         <p>
-          Included is the actual <code>access_token</code>. With this token, you
+          Note that we include the scopes here. In the future, we may change the
+          login flow to allow the user to deny access to specific scopes. You
+          should consider this list of scopes returned in the response as the final
+          level granted as it may be different than the ones you asked for. Also
+          included is the actual <code>access_token</code>. With this token, you
           can proceed to make authenticated HTTP requests with the API by adding
           this header to each request:
         </p>
