@@ -1,6 +1,6 @@
 {
   "name": "linode-api-docs",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "description": "Linode API Docs",
   "main": "src/index.js",
   "scripts": {

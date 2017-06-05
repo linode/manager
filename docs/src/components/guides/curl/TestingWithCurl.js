@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router';
-import { API_ROOT, API_VERSION } from '~/constants';
+import { API_ROOT, API_VERSION, ROUTE_BASE_PATH } from '~/constants';
 
 import { Table } from 'linode-components/tables';
 
@@ -14,13 +14,13 @@ export default function Introduction() {
       </header>
       <section>
         <p>
-          <a href="http://curl.haxx.se/">cURL</a> is a simple and popular command line tool that allows you to perform various kinds of HTTP requests. It may already be installed on your system - run <code>curl --version</code> in your shell to check. Once you've confirmed that you have it installed, we can use it to test out the Linode API from the comfort of your shell.
+          <a href="http://curl.haxx.se/" target="_blank" rel="nofollow noopener noreferrer">cURL</a> is a simple and popular command line tool that allows you to perform various kinds of HTTP requests. It may already be installed on your system - run <code>curl --version</code> in your shell to check. Once you've confirmed that you have it installed, we can use it to test out the Linode API from the comfort of your shell.
         </p>
       </section>
       <section>
         <h2>Unauthenticated Requests</h2>
         <p>
-          You can perform anonymous HTTP requests against various resources on the API. You can tell which ones are anonymous from the <i className="fa fa-lock"></i> Authenticated indicator in the reference documentation. For API endpoints where this indicator is missing, you're able to use curl to test them without any additional steps. For example, we could <Link to="/reference/endpoints/linode/distributions">list supported distributions</Link>:
+          You can perform anonymous HTTP requests against various resources on the API. You can tell which ones are anonymous from the <i className="fa fa-lock"></i> Authenticated indicator in the reference documentation. For API endpoints where this indicator is missing, you're able to use curl to test them without any additional steps. For example, we could <Link to={`${ROUTE_BASE_PATH}/reference/endpoints/linode/distributions`}>list supported distributions</Link>:
         </p>
         <pre>
           <code>
