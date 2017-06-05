@@ -46,22 +46,20 @@ export class LoadingRouterContext extends RouterContext {
           }
 
           this.preloadCounter++;
+
+          let error = false;
           try {
             await component.preload(store, newProps.params);
           } catch (e) {
-            if (e.status === 404) {
-              // TODO: Show a 404 page.
-              return;
-            }
-
-            window.onerror(e.message, e.source, e.colNo, e.lineNo, e, component);
-            return;
+            error = true;
+            window.handleError(e);
+            this.setState({ noRender: true });
           }
 
           this.preloadCounter--;
 
           // If a preload triggered an error, stop preloading and all the error to be shown.
-          if (store.getState().errors.status) {
+          if (error) {
             break;
           }
 

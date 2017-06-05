@@ -49,10 +49,6 @@ export class Layout extends Component {
     );
   }
 
-  unstable_handleError() {
-    console.log(arguments);
-  }
-
   render() {
     const {
       username,

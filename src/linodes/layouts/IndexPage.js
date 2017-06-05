@@ -1,8 +1,8 @@
-import React, { Component, PropTypes } from 'react';
-import { Link } from 'react-router';
-import { connect } from 'react-redux';
-import moment from 'moment';
 import _ from 'lodash';
+import moment from 'moment';
+import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
+import { Link } from 'react-router';
 
 import CreateHelper from '~/components/CreateHelper';
 
@@ -22,7 +22,6 @@ import {
 import { MassEditControl } from 'linode-components/lists/controls';
 import StatusDropdownCell from '~/linodes/components/StatusDropdownCell';
 
-import { setError } from '~/actions/errors';
 import { default as toggleSelected } from '~/actions/select';
 import { linodes as api } from '~/api';
 import {
@@ -39,15 +38,8 @@ const OBJECT_TYPE = 'linodes';
 
 
 export class IndexPage extends Component {
-
   static async preload({ dispatch }) {
-    try {
-      await dispatch(api.all());
-    } catch (response) {
-      // eslint-disable-next-line no-console
-      console.error(response);
-      dispatch(setError(response));
-    }
+    await dispatch(api.all());
   }
 
   constructor(props) {

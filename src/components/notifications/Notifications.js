@@ -3,7 +3,6 @@ import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 
 import { events } from '~/api';
-import { setError } from '~/actions/errors';
 import { eventRead } from '~/api/events';
 import Polling from '~/api/polling';
 import {
@@ -103,18 +102,12 @@ export class Notifications extends Component {
 
   async fetchEventsPage(options = null) {
     const { dispatch } = this.props;
-    await dispatch(
-      events.page(0, [], null, true, null, options)
-    );
+    await dispatch(events.page(0, [], null, true, null, options));
   }
 
   async fetchAllEvents() {
     const { dispatch } = this.props;
-    try {
-      await dispatch(events.all([], null, createHeaderFilter(this._filterOptions)));
-    } catch (response) {
-      dispatch(setError(response));
-    }
+    await dispatch(events.all([], null, createHeaderFilter(this._filterOptions)));
   }
 
   render() {

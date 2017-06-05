@@ -28,11 +28,17 @@ app.use(require('webpack-dev-middleware')(compiler, {
 app.use(require('webpack-hot-middleware')(compiler));
 
 app.get('*', function(req, res) {
-  if (req.url === "/static/common.js") {
+  if (req.url === '/static/common.js') {
     res.send('');
   } else {
     res.sendFile(path.join(__dirname, 'index.html'));
   }
+});
+
+app.post('/error', function(req, res) {
+  // Stub to be handled by nginx backend in production.
+  console.log('error submitted');
+  res.send('');
 });
 
 var port = process.env.MANAGER_PORT || 3000;

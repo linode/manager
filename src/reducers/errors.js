@@ -14,6 +14,8 @@ export default function errors(state = defaultState, action) {
       const { json, status, statusText } = action;
       return { ...state, json, status, statusText };
     }
+    case LOCATION_CHANGE:
+      return defaultState;
     case TOGGLE_DETAILS:
       return { ...state, details: !state.details };
     default:
