@@ -8,6 +8,7 @@ import { linodes as apiLinodes } from '~/api';
 import { actions } from '~/api/configs/linodes';
 import { powerOnLinode, powerOffLinode, rebootLinode } from '~/api/linodes';
 import Polling from '~/api/polling';
+import { createHeaderFilter } from '~/api/util';
 import { LinodeStates, LinodeStatesReadable } from '~/constants';
 import ConfigSelectModalBody from '~/linodes/components/ConfigSelectModalBody';
 import { launchWeblishConsole } from '~/linodes/components/WeblishLaunch';
@@ -28,15 +29,20 @@ function setProgress(linode, progress) {
   };
 }
 
-function fetchLinode(id) {
+function fetchLinodes(...ids) {
   return async (dispatch, getState) => {
-    const linode = getState().api.linodes.linodes[id];
-    await dispatch(apiLinodes.one([id]));
+    const allLinodes = Object.values(getState().api.linodes.linodes);
+    const linodes = allLinodes.filter(l => ids.indexOf(l.id.toString()) !== -1);
+    await dispatch(apiLinodes.all([], null, createHeaderFilter({
+      '+or': linodes.map(({ label }) => ({ label })),
+    })));
 
-    // Increment progress with max of 95% growing smaller over time.
-    const increase = 200 / linode.__progress;
-    const newProgress = Math.min(linode.__progress ? linode.__progress + increase : 1, 95);
-    dispatch(setProgress(linode, newProgress));
+    await Promise.all(linodes.map(linode => {
+      // Increment progress with max of 95% growing smaller over time.
+      const increase = 200 / linode.__progress;
+      const newProgress = Math.min(linode.__progress ? linode.__progress + increase : 1, 95);
+      return dispatch(setProgress(linode, newProgress));
+    }));
   };
 }
 
@@ -45,7 +51,7 @@ function onMaxPollingReached() {
 }
 
 const POLLING = Polling({
-  apiRequestFn: fetchLinode,
+  apiRequestFn: fetchLinodes,
   timeout: 2500,
   maxTries: 20,
   onMaxTriesReached: onMaxPollingReached,
@@ -104,12 +110,13 @@ export default class StatusDropdown extends Component {
   startLinodePolling() {
     const { linode, dispatch } = this.props;
 
-    dispatch(setProgress(linode, 1));
+    POLLING.reset();
     dispatch(POLLING.start(linode.id));
+    dispatch(setProgress(linode, 1));
 
     // The point of this is to give time for bar to animate from beginning.
     // Important for this to happen last otherwise we end up in an infinite loop.
-    setTimeout(() => dispatch(setProgress(linode, randomInitialProgress())), 100);
+    setTimeout(() => dispatch(setProgress(linode, randomInitialProgress())), 10);
   }
 
   open() {

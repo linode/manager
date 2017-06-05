@@ -2,8 +2,6 @@ const DEFAULT_TIMEOUT = 10000;
 
 
 export default function Polling(args) {
-  // map for managing multiple polling timeouts at once, using an object.id
-  const pollingIdMap = {};
   const {
     apiRequestFn,
     maxTries = null,
@@ -16,75 +14,67 @@ export default function Polling(args) {
   let increment = linearConstant;
   let numTries = 0;
 
-  function clear(id) {
-    if (pollingIdMap[id] !== undefined) {
-      clearTimeout(pollingIdMap[id].timeout);
-    }
-  }
+  let pollingIds = {};
 
-  function stop(id) {
-    if (pollingIdMap[id] !== undefined) {
-      clear(id);
-      pollingIdMap[id].isPolling = false;
-    }
-  }
-
-  function poll(id) {
+  function poll() {
     return (dispatch) => {
-      // Prevent requests from stacking.
-      clear(id);
+      setTimeout(async function () {
+        const ids = Object.keys(pollingIds);
+        if (!ids.length) {
+          return;
+        }
 
-      const _timeout = setTimeout(async function () {
-        await dispatch(apiRequestFn(id));
+        await dispatch(apiRequestFn(...ids));
 
         if (backoff && numTries > 0) {
           increment += linearConstant;
-          timeout = timeout + (increment * 1000);
+          timeout += (increment * 1000);
           if (timeout > maxBackoffTimeout) {
             timeout = maxBackoffTimeout;
           }
         }
 
-        delete pollingIdMap[id].timeout;
         ++numTries;
 
         if (maxTries !== null) {
           if (numTries <= maxTries) {
-            dispatch(poll(id));
+            dispatch(poll());
           } else if (onMaxTriesReached) {
             onMaxTriesReached();
           }
         } else {
-          dispatch(poll(id));
+          dispatch(poll());
         }
       }, timeout);
-
-      pollingIdMap[id] = { timeout: _timeout, isPolling: true };
     };
   }
 
   function start(id) {
-    // additional calls to this function will restart polling by default
-    // so that requests don't stack
-    stop(id);
+    pollingIds[id] = true;
 
-    return poll(id);
+    if (Object.values(pollingIds).length === 1) {
+      return poll();
+    }
+
+    // Already polling.
+    return () => {};
+  }
+
+  function stop(id) {
+    delete pollingIds[id];
   }
 
   function reset() {
+    numTries = 0;
+
     if (backoff) {
-      numTries = 0;
       increment = linearConstant;
       timeout = (increment * 1000);
     }
   }
 
   function isPolling(id) {
-    if (pollingIdMap[id] === undefined) {
-      return false;
-    }
-
-    return pollingIdMap[id].isPolling;
+    return !!pollingIds[id];
   }
 
   return Object.freeze({
