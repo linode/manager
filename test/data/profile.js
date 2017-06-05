@@ -1,6 +1,6 @@
 export const profile = {
   restricted: false,
-  two_factor_auth: 'enabled',
+  two_factor_auth: true,
   timezone: 'US/Eastern',
   email: 'user@example.com',
   authorized_keys: null,

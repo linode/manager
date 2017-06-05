@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased] 
 
+## [0.4.0] 2017-06-05
+### Added
+- /v4 to the base of all urls
+
+## [0.3.2] 2017-06-02
+### Fixed
+- examples typo in linode/instances/:id/ips/sharing, which caused a page break
+
 ## [0.3.1] 2017-06-01
 ### Fixed
 - temporary fix for `npm run prebuild` incorrect reference
