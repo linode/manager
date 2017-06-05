@@ -5,6 +5,8 @@ import { Header } from 'linode-components/navigation';
 
 import { LinodeLogoImgSrc } from '~/assets';
 
+import { ROUTE_BASE_PATH } from '~/constants';
+
 
 export default function Layout(props) {
   const { route } = props;
@@ -33,11 +35,11 @@ export default function Layout(props) {
             <div className="VerticalNav-section">
               <h3>Getting Started</h3>
               <ul>
-                <li><Link to="/introduction">Introduction</Link></li>
-                <li><Link to="/access">Access</Link></li>
-                <li><Link to="/pagination">Pagination</Link></li>
-                <li><Link to="/filtering">Filtering &amp; Sorting</Link></li>
-                <li><Link to="/errors">Errors</Link></li>
+                <li><Link to={`${ROUTE_BASE_PATH}/introduction`}>Introduction</Link></li>
+                <li><Link to={`${ROUTE_BASE_PATH}/access`}>Access</Link></li>
+                <li><Link to={`${ROUTE_BASE_PATH}/pagination`}>Pagination</Link></li>
+                <li><Link to={`${ROUTE_BASE_PATH}/filtering`}>Filtering &amp; Sorting</Link></li>
+                <li><Link to={`${ROUTE_BASE_PATH}/errors`}>Errors</Link></li>
               </ul>
             </div>
             <div className="VerticalNav-section">
@@ -51,7 +53,7 @@ export default function Layout(props) {
             <div className="VerticalNav-section">
               <h3>Guides</h3>
               <ul>
-                <li><Link to="/guides/python">Python</Link></li>
+                <li><Link to={`${ROUTE_BASE_PATH}/guides/python`}>Python</Link></li>
               </ul>
             </div>
           </div>

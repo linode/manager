@@ -6,7 +6,7 @@ const yaml = require('js-yaml');
 const _ = require('lodash');
 
 const BASE_PATH = './src/data';
-const ROUTE_BASE_PATH = '/reference';
+const ROUTE_BASE_PATH = '/v4/reference';
 
 const objectsPath = path.join(BASE_PATH, 'objects');
 const apiObjectMap = {};
