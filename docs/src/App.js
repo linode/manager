@@ -35,6 +35,9 @@ import {
 
 import { default as api } from '~/api';
 
+import { ROUTE_BASE_PATH } from '~/constants';
+
+
 ReactGA.initialize(GA_ID); // eslint-disable-line no-undef
 function logPageView() {
   ReactGA.set({ page: window.location.pathname });
@@ -76,15 +79,15 @@ export function init() {
     >
       <Route path="/" component={Layout} endpoints={api.endpoints}>
         <Route component={IndexLayout}>
-          <IndexRedirect to="/introduction" />
-          <Redirect from="/reference" to="/introduction" />
-          <Route path="/introduction" component={Introduction} />
-          <Route path="/access" component={Access} />
-          <Route path="/pagination" component={Pagination} />
-          <Route path="/filtering" component={Filtering} />
-          <Route path="/errors" component={Errors} />
-          <Route path="/guides/python" component={Python} />
-          <Route path="/guides/python/introduction" component={PythonIntroduction} />
+          <IndexRedirect to={`${ROUTE_BASE_PATH}/introduction`} />
+          <Redirect from={`${ROUTE_BASE_PATH}/reference`} to={`${ROUTE_BASE_PATH}/introduction`} />
+          <Route path={`${ROUTE_BASE_PATH}/introduction`} component={Introduction} />
+          <Route path={`${ROUTE_BASE_PATH}/access`} component={Access} />
+          <Route path={`${ROUTE_BASE_PATH}/pagination`} component={Pagination} />
+          <Route path={`${ROUTE_BASE_PATH}/filtering`} component={Filtering} />
+          <Route path={`${ROUTE_BASE_PATH}/errors`} component={Errors} />
+          <Route path={`${ROUTE_BASE_PATH}/guides/python`} component={Python} />
+          <Route path={`${ROUTE_BASE_PATH}/guides/python/introduction`} component={PythonIntroduction} />
           {api.endpoints.map(function(endpoint, index) {
             return generateIndexRoute({ key: index, endpoint: endpoint });
           })}
