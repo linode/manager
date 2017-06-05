@@ -6,6 +6,7 @@ import {
 } from 'linode-components/forms';
 
 import { users } from '~/api';
+import { setTitle } from '~/actions/title';
 import { actions } from '~/api/configs/users';
 import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
 
@@ -45,6 +46,7 @@ export default class UserForm extends Component {
       () => users[oldUsername ? 'put' : 'post'](data, ...idsPath),
       () => oldUsername !== data.username && push(`/users/${data.username}`),
       () => oldUsername !== data.username && actions.delete(data.username),
+      () => setTitle(data.username),
     ]));
   }
 

@@ -4,6 +4,7 @@ import { Form, Input, SubmitButton, Select, ModalFormGroup } from 'linode-compon
 import { CancelButton } from 'linode-components/buttons';
 
 import { domains } from '~/api';
+import { setTitle } from '~/actions/title';
 import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
 
 import SelectDNSSeconds, {
@@ -59,6 +60,7 @@ export default class EditSOARecord extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => domains.put(data, this.props.domains.id),
+      () => setTitle(data.domain),
       () => close(domain)(),
     ]));
   }
