@@ -53,7 +53,6 @@ export class IndexPage extends Component {
             <div className="float-sm-left">
               <Link to="/linodes">Linodes</Link>
               <h1 title={linode.id}>
-                {foo.bar}
                 <Link to={`/linodes/${linode.label}`}>
                   <GroupLabel object={linode} />
                 </Link>
