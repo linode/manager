@@ -1,0 +1,20 @@
+.MethodResponseExample {
+    &-header {
+        border-bottom: $border;
+        padding: 10px;
+        position: relative;
+
+        &:hover {
+            background: $medium-gray;
+            cursor: pointer;
+        }
+    }
+
+    &-headerIcon {
+        margin-left: 10px;
+    }
+
+    .Example {
+        padding: 0;
+    }
+}

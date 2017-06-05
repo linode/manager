@@ -1,0 +1,12 @@
+.FieldCell {
+    &-inner {
+        height: 50px;
+        padding: 15px 0 0 0;
+        position: relative;
+
+        .Label {
+            position: absolute;
+            bottom: 0;
+        }
+    }
+}

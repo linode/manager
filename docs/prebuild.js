@@ -87,9 +87,11 @@ function formatMethodParams(methodObj) {
       param.description = convertUlToArray(stripATags(param.description));
 
       const type = apiObjectMap[param.type] ? 'integer' : param.type;
+      const required = !param.optional;
       return _.merge({}, param, {
         name: paramName,
         type: type,
+        required: required
       });
     });
   }

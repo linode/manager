@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Table } from 'linode-components/tables';
-import { DescriptionCell } from './tables/Cells';
+import { DescriptionCell, ParamFieldCell } from './tables/Cells';
 
 
 export default function MethodParams(props) {
@@ -12,9 +12,9 @@ export default function MethodParams(props) {
       <Table
         className="Table--secondary"
         columns={[
-          { label: 'Field', dataKey: 'name', headerClassName: 'FieldColumn' },
+          { cellComponent: ParamFieldCell, label: 'Field', headerClassName: 'FieldColumn' },
           { label: 'Type', dataKey: 'type', headerClassName: 'TypeColumn' },
-          { label: 'Description', cellComponent: DescriptionCell, headerClassName: 'DescriptionColumn' }
+          { cellComponent: DescriptionCell, label: 'Description', headerClassName: 'DescriptionColumn' }
         ]}
         data={params}
         noDataMessage="No parameters documented."

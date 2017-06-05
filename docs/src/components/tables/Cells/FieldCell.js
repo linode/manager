@@ -6,8 +6,10 @@ export default function FieldCell(props) {
   const { record } = props;
 
   return (
-    <td className={`Table-cell FieldCell`}>
-      {record.name}
+    <td className={`TableCell FieldCell`}>
+      <div className="FieldCell-inner">
+        {record.name}
+      </div>
     </td>
   );
 }
