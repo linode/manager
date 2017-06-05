@@ -4,6 +4,9 @@ import { Breadcrumbs } from 'linode-components/breadcrumbs';
 import { Table } from 'linode-components/tables';
 import { LinkCell } from 'linode-components/tables/cells';
 
+import { ROUTE_BASE_PATH } from '~/constants';
+
+
 export default function Python() {
   return(
     <section className="Article">
@@ -24,7 +27,7 @@ export default function Python() {
         ]}
         data={[
           {
-            href: '/guides/python/introduction',
+            href: `${ROUTE_BASE_PATH}/guides/python/introduction`,
             path: 'Introduction',
             description: 'The introductory summary to using the Python guide',
           },
