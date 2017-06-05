@@ -32,21 +32,8 @@ export class Layout extends Component {
 
   constructor() {
     super();
-    this.renderError = this.renderError.bind(this);
-    this.state = { title: '', link: '' };
-  }
 
-  renderError() {
-    const { errors } = this.props;
-    const subject = encodeURIComponent(`${errors.status} ${errors.statusText}`);
-    const location = window.location.href;
-    const json = JSON.stringify(errors.json, null, 4);
-    const body = encodeURIComponent(
-      `I'm getting the following error on ${location}:\n\n${json}`);
-    const href = `mailto:support@linode.com?subject=${subject}&body=${body}`;
-    return (
-      <Error status={errors.status} href={href} />
-    );
+    this.state = { title: '', link: '' };
   }
 
   render() {
@@ -101,7 +88,7 @@ export class Layout extends Component {
         <div className="Main full-height">
           <div className="Main-inner">
             {errors.status ?
-              this.renderError() :
+              <Error status={errors.status} /> :
               this.props.children}
           </div>
           <footer className="footer text-sm-center">

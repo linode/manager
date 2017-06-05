@@ -17,7 +17,7 @@ import { hideModal } from '~/actions/modal';
 import { actions, thunks, reducer } from '~/api/configs/linodes';
 import Billing from '~/billing';
 import DevTools from '~/components/DevTools';
-import { GA_ID } from '~/constants';
+import { ERROR_ENDPOINT, GA_ID } from '~/constants';
 import Domains from '~/domains';
 import { rawFetch } from '~/fetch';
 import Layout from '~/layouts/Layout';
@@ -182,10 +182,12 @@ TraceKit.report.subscribe(function (error) {
     }),
   };
 
-  rawFetch('/error', options).catch(function (e) {
-    // eslint-disable-next-line no-console
-    console.error(e);
-  });
+  if (ERROR_ENDPOINT) {
+    rawFetch(ERROR_ENDPOINT, options).catch(function (e) {
+      // eslint-disable-next-line no-console
+      console.error(e);
+    });
+  }
 });
 
 // React is not in a great state right now w.r.t. error handling in render functions.
