@@ -46,6 +46,6 @@ describe('users/user/layouts/EditUserPage', () => {
           restricted: false,
         },
       }),
-    ], 4);
+    ], 5);
   });
 });
