@@ -14,7 +14,7 @@ export default function Polling(args) {
   let increment = linearConstant;
   let numTries = 0;
 
-  let pollingIds = {};
+  const pollingIds = {};
 
   function poll() {
     return (dispatch) => {
