@@ -8,20 +8,20 @@ export default function ParamFieldCell(props) {
   let subLabel;
   if (record.required) {
     subLabel = (
-      <div className="Label Label-required">
-        required
+      <div className="FieldCell-label">
+        <small className="text-muted">required</small>
       </div>
     );
   } else {
     subLabel = (
-      <div className="Label Label-optional">
-        optional
+      <div className="FieldCell-label">
+        <small className="text-muted">optional</small>
       </div>
     );
   }
 
   return (
-    <td className={`TableCell FieldCell`}>
+    <td className="TableCell FieldCell">
       <div className="FieldCell-inner">
         <div>
           {record.name}

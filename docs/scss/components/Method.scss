@@ -31,10 +31,9 @@
         height: 35px;
     }
 
-    th, td {
-        @extend .font-small;
-        padding: 2px 8px;
-    }
+    //th, td {
+    //    @extend .font-small;
+    //}
 
     td {
         border-right: $border;
