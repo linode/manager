@@ -126,10 +126,12 @@ export function init() {
             return generateChildRoute({ endpoint: endpoint, prevCrumbs: crumb });
           })}
           {pythonClientObjectTitles.map(function(pythonObject, index) {
-            return generateLibraryRoutes({ index: index, libraryObject: pythonObject, prevCrumbs: []});
+            const crumb = [{ groupLabel: 'Guides', label: '/python', to: `${ROUTE_BASE_PATH}/guides/python` }];
+            return generateLibraryRoutes({ index: index, libraryObject: pythonObject, prevCrumbs: crumb });
           })}
           {pythonAPITitles.map(function(pythonObject, index) {
-            return generateLibraryRoutes({ index: index, libraryObject: pythonObject, prevCrumbs: []});
+            const crumb = [{ groupLabel: 'Guides', label: '/python', to: `${ROUTE_BASE_PATH}/guides/python` }];
+            return generateLibraryRoutes({ index: index, libraryObject: pythonObject, prevCrumbs: crumb });
           })}
         </Route>
         <Route path="*" component={NotFound} />
