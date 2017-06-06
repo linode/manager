@@ -19,7 +19,7 @@ endpoints:
         examples:
           curl: |
             curl -H "Authorization: token $TOKEN" \
-              https://api.alpha.linode.com/v4/networking/ipv4
+              https://$api_root/$version/networking/ipv4
           python: |
             my_ipv4s = client.networking.get_ipv4()
       POST:
@@ -37,7 +37,7 @@ endpoints:
             curl -H "Content-Type: application/json" \
                 -H "Authorization: token $TOKEN" \
                 -X POST -d '{"linode":123}' \
-                https://api.alpha.linode.com/v4/networking/ipv4
+                https://$api_root/$version/networking/ipv4
           python: |
             # presently unsupported
   networking/ipv4/:address:
