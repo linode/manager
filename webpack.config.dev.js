@@ -33,8 +33,7 @@ module.exports = {
       'ENV_LOGIN_ROOT': JSON.stringify(process.env.LOGIN_ROOT),
       'ENV_APP_ROOT': JSON.stringify(process.env.APP_ROOT),
       'ENV_GA_ID': JSON.stringify(process.env.GA_ID),
-      'ENV_VERSION': JSON.stringify(_package.version),
-      'ENV_ERROR_ENDPOINT': JSON.stringify(process.env.ERROR_ENDPOINT)
+      'ENV_VERSION': JSON.stringify(_package.version)
     })
   ],
   module: {

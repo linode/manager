@@ -3,7 +3,7 @@ import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 
 import { linodes } from '~/api';
-import { ipv6s, ipv4s } from '~/api/networking';
+import { ipv4s } from '~/api/networking';
 import { createHeaderFilter, getObjectByLabelLazily } from '~/api/util';
 
 import { IPTransfer, IPSharing } from '../components';

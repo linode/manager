@@ -139,7 +139,6 @@ export class IndexPage extends Component {
           </div>
         </ListHeader>
         <ListBody>
-          {foo.bar.h}
           {groups.map((group, index) => {
             return (
               <ListGroup

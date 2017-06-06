@@ -68,7 +68,7 @@ function fetchIPvs(ipv, region) {
               global: [],
               addresses: [],
             },
-          }
+          },
         };
       }
 
