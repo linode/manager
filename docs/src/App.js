@@ -118,17 +118,19 @@ export function init() {
             <Route path="guides/curl/creating-a-linode" component={CreateLinode} />
             <Route path="guides/curl/testing-with-curl" component={TestingWithCurl} />
             {api.endpoints.map(function(endpoint, index) {
-               return generateIndexRoute({ key: index, endpoint: endpoint });
-             })}
+              return generateIndexRoute({ key: index, endpoint: endpoint });
+            })}
             {api.endpoints.map(function(endpoint) {
-               const crumb = [{ groupLabel: 'Reference', label: endpoint.path, to: endpoint.routePath }];
-               return generateChildRoute({ endpoint: endpoint, prevCrumbs: crumb });
-             })}
+              const crumb = [{ groupLabel: 'Reference', label: endpoint.path, to: endpoint.routePath }];
+              return generateChildRoute({ endpoint: endpoint, prevCrumbs: crumb });
+            })}
             {pythonClientObjectTitles.map(function(pythonObject, index) {
-              return generateLibraryRoutes({ index: index, libraryObject: pythonObject, prevCrumbs: []});
+              const crumb = [{ groupLabel: 'Guides', label: '/python', to: `${ROUTE_BASE_PATH}/guides/python` }];
+              return generateLibraryRoutes({ index: index, libraryObject: pythonObject, prevCrumbs: crumb });
             })}
             {pythonAPITitles.map(function(pythonObject, index) {
-              return generateLibraryRoutes({ index: index, libraryObject: pythonObject, prevCrumbs: []});
+              const crumb = [{ groupLabel: 'Guides', label: '/python', to: `${ROUTE_BASE_PATH}/guides/python` }];
+              return generateLibraryRoutes({ index: index, libraryObject: pythonObject, prevCrumbs: crumb });
             })}
           </Route>
         </Route>

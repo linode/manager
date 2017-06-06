@@ -14,7 +14,9 @@ export default function Python(props) {
   const { pythonDataTitles, pythonClientObjectTitles, pythonAPITitles } = pythonDataObjects;
   return(
     <section className="Article">
-      <h1>Python Guide</h1>
+      <div className="EndpointIndex-header">
+        <h1>Python Guide</h1>
+      </div>
       <div className="EndpointIndex-group">
         <h3>Getting Started</h3>
         <Table
