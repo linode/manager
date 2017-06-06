@@ -5,8 +5,16 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased] 
+
+
+## [0.5.0] 2017-06-06
+### Added
+- cURL guide #1878
 ### Fixed
-- include original /reference redirect to the new /v4/introduction
+- updated duplicate base version vars to use API_VERSION, prebuild script uses environment var if present
+- include original /reference redirect to the new /v4/introduction #2019
+### Changed
+- updated Introduction section #2008
 
 ## [0.4.0] 2017-06-05
 ### Added
