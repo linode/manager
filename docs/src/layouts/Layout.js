@@ -54,6 +54,7 @@ export default function Layout(props) {
               <h3>Guides</h3>
               <ul>
                 <li><Link to={`${ROUTE_BASE_PATH}/guides/python`}>Python</Link></li>
+                <li><Link to={`${ROUTE_BASE_PATH}/guides/curl`}>cURL</Link></li>
               </ul>
             </div>
           </div>

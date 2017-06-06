@@ -26,6 +26,9 @@ import {
 import {
   Python,
   PythonIntroduction,
+  Curl,
+  CreateLinode,
+  TestingWithCurl,
 } from './components/guides';
 
 import {
@@ -89,6 +92,18 @@ export function init() {
           <Route path={`${ROUTE_BASE_PATH}/errors`} component={Errors} />
           <Route path={`${ROUTE_BASE_PATH}/guides/python`} component={Python} />
           <Route path={`${ROUTE_BASE_PATH}/guides/python/introduction`} component={PythonIntroduction} />
+          <IndexRedirect to={`${ROUTE_BASE_PATH}/introduction`} />
+          <Redirect from={`${ROUTE_BASE_PATH}/reference`} to={`${ROUTE_BASE_PATH}/introduction`} />
+          <Route path={`${ROUTE_BASE_PATH}/introduction`} component={Introduction} />
+          <Route path={`${ROUTE_BASE_PATH}/access`} component={Access} />
+          <Route path={`${ROUTE_BASE_PATH}/pagination`} component={Pagination} />
+          <Route path={`${ROUTE_BASE_PATH}/filtering`} component={Filtering} />
+          <Route path={`${ROUTE_BASE_PATH}/errors`} component={Errors} />
+          <Route path={`${ROUTE_BASE_PATH}/guides/python`} component={Python} />
+          <Route path={`${ROUTE_BASE_PATH}/guides/python/introduction`} component={PythonIntroduction} />
+          <Route path={`${ROUTE_BASE_PATH}/guides/curl`} component={Curl} />
+          <Route path={`${ROUTE_BASE_PATH}/guides/curl/creating-a-linode`} component={CreateLinode} />
+          <Route path={`${ROUTE_BASE_PATH}/guides/curl/testing-with-curl`} component={TestingWithCurl} />
           {api.endpoints.map(function(endpoint, index) {
             return generateIndexRoute({ key: index, endpoint: endpoint });
           })}
