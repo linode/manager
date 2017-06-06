@@ -4,7 +4,7 @@ import { Breadcrumbs } from 'linode-components/breadcrumbs';
 import { Table } from 'linode-components/tables';
 import { LinkCell } from 'linode-components/tables/cells';
 
-import { API_ROOT, API_VERSION, ROUTE_BASE_PATH } from '~/constants';
+import { API_ROOT, API_VERSION } from '~/constants';
 
 export default function Index() {
   return(
@@ -26,12 +26,12 @@ export default function Index() {
         ]}
         data={[
           {
-            href: `${ROUTE_BASE_PATH}/guides/curl/testing-with-curl`,
+            href: `/${API_VERSION}/guides/curl/testing-with-curl`,
             path: 'Testing with cURL',
             description: 'A crash course on cURL and how to use it to try out the API.',
           },
           {
-            href: `${ROUTE_BASE_PATH}/guides/curl/creating-a-linode`,
+            href: `/${API_VERSION}/guides/curl/creating-a-linode`,
             path: 'Creating a Linode',
             description: 'Starting from nothing and ending with a running server.',
           },
