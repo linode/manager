@@ -55,7 +55,7 @@ export function getStateOfSpecificResource(config, state, ids) {
       return objects;
     }
 
-    return objects[_ids.length];
+    return objects[_ids[_ids.length - 1]];
   }
   return refined;
 }
@@ -92,15 +92,9 @@ export function filterResources(config, resources, resourceFilter) {
 
 function genThunkOne(config, actions) {
   return (ids = [], options) => async (dispatch, getState) => {
-    const oldState = getStateOfSpecificResource(config, getState(), ids);
-
     const { token } = getState().authentication;
     const response = await fetch(token, config.endpoint(...ids), options);
-    const resource = {
-      ...(await response.json()),
-      __progress: oldState && oldState.__progress || 100,
-    };
-
+    const resource = await response.json();
     dispatch(actions.one(resource, ...ids));
     return resource;
   };

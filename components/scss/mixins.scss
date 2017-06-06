@@ -30,3 +30,7 @@
     color: $lightest-black;
     opacity: 1;
 }
+
+@mixin selected() {
+    background-color: $gray;
+}

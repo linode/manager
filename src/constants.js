@@ -17,6 +17,7 @@ export const LinodeStates = {
     'migrating',
     'provisioning',
     'deleting',
+    'rebuilding',
   ],
 };
 
@@ -46,9 +47,10 @@ export const LinodeStatesReadable = {
   contact_support: 'Error',
   offline: 'Offline',
   running: 'Running',
-  booting: 'Booting',
+  booting: 'Powering On',
   provisioning: 'Provisioning',
   rebooting: 'Rebooting',
+  rebuilding: 'Powering Off',
 };
 
 export const NodebalancerStatusReadable = {
