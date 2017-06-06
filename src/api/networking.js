@@ -6,19 +6,23 @@ import { createHeaderFilter } from './util';
 
 
 // Internal helper function for updating IPs in redux state.
-export function updateIP(ipv, ip) {
-  return (dispatch, getState) => {
+export function updateIP(ipv, ip, linode = {}) {
+  return async (dispatch, getState) => {
     const { type, address, linode_id: linodeId } = ip;
-    const { _ips } = getState().api.linodes.linodes[linodeId];
+
+    let { _ips } = linode;
+    if (!_ips) {
+      ({ _ips } = getState().api.linodes.linodes[linodeId]);
+    }
 
     // Slaac is not a list like the rest.
     if (type === 'slaac') {
-      dispatch(actions.one({ _ips: { ..._ips, ipv6: { ..._ips.ipv6, slaac: ip } } }));
+      return await dispatch(actions.one({ _ips: { ..._ips, ipv6: { ..._ips.ipv6, slaac: ip } } }));
     }
 
     // Only add IP to linode _ips if it isn't already there.
     if (!_.find(_ips[ipv][type], { address })) {
-      dispatch(actions.one({
+      return await dispatch(actions.one({
         _ips: {
           ..._ips,
           [ipv]: {
@@ -28,6 +32,8 @@ export function updateIP(ipv, ip) {
         },
       }, linodeId));
     }
+
+    return linode;
   };
 }
 
@@ -41,15 +47,18 @@ function fetchIPvs(ipv, region) {
     const linodes = getState().api.linodes.linodes;
 
     // Clear out existing state because update doesn't remove things.
-    const startedUpdatingThisLinode = {};
-    ips[`${ipv}s`].forEach(ip => {
+    // Do it in a temp object so we don't have to dispatch and re-render
+    // with deleted IPs.
+    const linodeStates = {};
+    await Promise.all((ips[`${ipv}s`] || []).map(async (ip) => {
       if (!linodes[ip.linode_id]) {
         return;
       }
 
-      if (!startedUpdatingThisLinode[ip.linode_id]) {
+      if (!linodeStates[ip.linode_id]) {
         const _ips = linodes[ip.linode_id]._ips || {};
-        dispatch(actions.one({
+
+        linodeStates[ip.linode_id] = {
           _ips: {
             ..._ips,
             [ipv]: {
@@ -59,14 +68,13 @@ function fetchIPvs(ipv, region) {
               global: [],
               addresses: [],
             },
-          },
-        }, ip.linode_id));
-        startedUpdatingThisLinode[ip.linode_id] = true;
+          }
+        };
       }
 
-      // Update the Linode with this IP.
-      dispatch(updateIP(ipv, ip));
-    });
+      // Update the Linode with this IP and save it back into the temp state.
+      linodeStates[ip.linode_id] = await dispatch(updateIP(ipv, ip, linodeStates[ip.linode_id]));
+    }));
   };
 }
 

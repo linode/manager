@@ -43,8 +43,13 @@ store.dispatch(session.initialize);
 
 window.actions = actions; window.thunks = thunks; window.reducer = reducer;
 
-ReactGA.initialize(GA_ID); // eslint-disable-line no-undef
-function logPageView() {
+ReactGA.initialize(GA_ID);
+
+function onPageChange() {
+  // Force scroll to the top of the page on page change.
+  window.scroll(0, 0);
+
+  // Log page views.
   ReactGA.set({ page: window.location.pathname });
   ReactGA.pageview(window.location.pathname);
 }
@@ -58,7 +63,7 @@ function fillInMissingProps(props) {
   return props;
 }
 
-window.handleError = function (e, component = {}) {
+window.handleError = function (e) {
   try {
     // eslint-disable-next-line no-console
     console.trace(e);
@@ -93,13 +98,6 @@ window.handleError = function (e, component = {}) {
     console.trace(e);
   }
 
-  // eslint-disable-next-line no-param-reassign
-  e.component = {
-    props: component.props,
-    state: component.state,
-    displayName: component.displayName,
-  };
-
   // TraceKit.report throws an error.
   try {
     TraceKit.report(e);
@@ -108,6 +106,9 @@ window.handleError = function (e, component = {}) {
       throw newE;
     }
   }
+
+  // Needed for react-guard.
+  return null;
 };
 
 const init = () => {
@@ -117,7 +118,7 @@ const init = () => {
         <div>
           <Router
             history={history}
-            onUpdate={logPageView}
+            onUpdate={onPageChange}
             dispatch={store.dispatch}
             render={props => <LoadingRouterContext {...fillInMissingProps(props)} />}
           >
@@ -163,30 +164,8 @@ const init = () => {
 window.init = init;
 
 TraceKit.report.subscribe(function (error) {
-  const state = store.getState();
-  const options = {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    method: 'POST',
-    body: JSON.stringify({
-      error,
-      navigator: {
-        userAgent: window.navigator.userAgent,
-        language: window.navigator.language,
-      },
-      state: {
-        ...state,
-        authentication: { ...state.authentication, token: 'REDACTED' },
-      },
-    }),
-  };
-
-  if (ERROR_ENDPOINT) {
-    rawFetch(ERROR_ENDPOINT, options).catch(function (e) {
-      // eslint-disable-next-line no-console
-      console.error(e);
-    });
+  if (GA_ID) {
+    ReactGA.exception({ description: JSON.stringify(error), fatal: true });
   }
 });
 

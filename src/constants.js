@@ -2,7 +2,7 @@
 export const API_ROOT = ENV_API_ROOT || 'https://api.alpha.linode.com/v4';
 export const LOGIN_ROOT = ENV_LOGIN_ROOT || 'https://login.alpha.linode.com';
 export const APP_ROOT = ENV_APP_ROOT || 'http://localhost:3000';
-export const GA_ID = ENV_GA_ID || '000000';
+export const GA_ID = ENV_GA_ID;
 export const DEVTOOLS_DISABLED = ENV_DEVTOOLS_DISABLED || process.env.NODE_ENV === 'production';
 export const ERROR_ENDPOINT = ENV_ERROR_ENDPOINT;
 export const VERSION = ENV_VERSION;
