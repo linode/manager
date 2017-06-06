@@ -22,12 +22,10 @@ export default function ParamFieldCell(props) {
 
   return (
     <td className="TableCell FieldCell">
-      <div className="FieldCell-inner">
-        <div>
-          {record.name}
-        </div>
-        {subLabel}
+      <div>
+        {record.name}
       </div>
+      {subLabel}
     </td>
   );
 }
