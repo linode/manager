@@ -2,7 +2,7 @@ module.exports = { pythonObjects: {
   "LinodeLoginClient": {
     "name": "LinodeLoginClient",
     "path": "/linode-login-client",
-    "routePath": "/guides/python/linode-login-client",
+    "routePath": "/v4/guides/python/linode-login-client",
     "formattedPythonObject": {
       "name": "LinodeLoginClient",
       "import": "from linode import LinodeLoginClient",
@@ -61,7 +61,7 @@ module.exports = { pythonObjects: {
   "LinodeClient": {
     "name": "LinodeClient",
     "path": "/linode-client",
-    "routePath": "/guides/python/linode-client",
+    "routePath": "/v4/guides/python/linode-client",
     "formattedPythonObject": {
       "name": "LinodeClient",
       "import": "from linode import LinodeClient",
@@ -303,7 +303,7 @@ module.exports = { pythonObjects: {
   "Linode": {
     "name": "Linode",
     "path": "/linode",
-    "routePath": "/guides/python/linode",
+    "routePath": "/v4/guides/python/linode",
     "formattedPythonObject": {
       "name": "Linode",
       "import": "from linode import Linode",
@@ -554,7 +554,7 @@ module.exports = { pythonObjects: {
   "Config": {
     "name": "Config",
     "path": "/config",
-    "routePath": "/guides/python/config",
+    "routePath": "/v4/guides/python/config",
     "formattedPythonObject": {
       "name": "Config",
       "import": "from linode import Config",
@@ -595,7 +595,7 @@ module.exports = { pythonObjects: {
   "Disk": {
     "name": "Disk",
     "path": "/disk",
-    "routePath": "/guides/python/disk",
+    "routePath": "/v4/guides/python/disk",
     "formattedPythonObject": {
       "name": "Disk",
       "import": "from linode import Disk",
@@ -636,7 +636,7 @@ module.exports = { pythonObjects: {
   "Region": {
     "name": "Region",
     "path": "/region",
-    "routePath": "/guides/python/region",
+    "routePath": "/v4/guides/python/region",
     "formattedPythonObject": {
       "name": "Region",
       "import": "from linode import Region",
@@ -661,7 +661,7 @@ module.exports = { pythonObjects: {
   "Distribution": {
     "name": "Distribution",
     "path": "/distribution",
-    "routePath": "/guides/python/distribution",
+    "routePath": "/v4/guides/python/distribution",
     "formattedPythonObject": {
       "name": "Distribution",
       "import": "from linode import Distribution",
@@ -686,7 +686,7 @@ module.exports = { pythonObjects: {
   "Backup": {
     "name": "Backup",
     "path": "/backup",
-    "routePath": "/guides/python/backup",
+    "routePath": "/v4/guides/python/backup",
     "formattedPythonObject": {
       "name": "Backup",
       "import": "from linode import Backup",
@@ -728,7 +728,7 @@ module.exports = { pythonObjects: {
   "IPAddress": {
     "name": "IPAddress",
     "path": "/ipaddress",
-    "routePath": "/guides/python/ipaddress",
+    "routePath": "/v4/guides/python/ipaddress",
     "formattedPythonObject": {
       "name": "IPAddress",
       "import": "from linode import IPAddress",
@@ -757,7 +757,7 @@ module.exports = { pythonObjects: {
   "IPv6Address": {
     "name": "IPv6Address",
     "path": "/ipv6address",
-    "routePath": "/guides/python/ipv6address",
+    "routePath": "/v4/guides/python/ipv6address",
     "formattedPythonObject": {
       "name": "IPv6Address",
       "import": "from linode import IPv6Address",
@@ -786,7 +786,7 @@ module.exports = { pythonObjects: {
   "Kernel": {
     "name": "Kernel",
     "path": "/kernel",
-    "routePath": "/guides/python/kernel",
+    "routePath": "/v4/guides/python/kernel",
     "formattedPythonObject": {
       "name": "Kernel",
       "import": "from linode import Kernel",
@@ -811,7 +811,7 @@ module.exports = { pythonObjects: {
   "Service": {
     "name": "Service",
     "path": "/service",
-    "routePath": "/guides/python/service",
+    "routePath": "/v4/guides/python/service",
     "formattedPythonObject": {
       "name": "Service",
       "import": "from linode import Service",
@@ -836,7 +836,7 @@ module.exports = { pythonObjects: {
   "StackScript": {
     "name": "StackScript",
     "path": "/stackscript",
-    "routePath": "/guides/python/stackscript",
+    "routePath": "/v4/guides/python/stackscript",
     "formattedPythonObject": {
       "name": "StackScript",
       "import": "from linode import StackScript",
@@ -868,7 +868,7 @@ module.exports = { pythonObjects: {
   "DNS Zone": {
     "name": "DNS Zone",
     "path": "/dnszone",
-    "routePath": "/guides/python/dnszone",
+    "routePath": "/v4/guides/python/dnszone",
     "formattedPythonObject": {
       "name": "DNS Zone",
       "import": "from linode import DNSZone",
@@ -926,7 +926,7 @@ module.exports = { pythonObjects: {
   "DNS Zone Record": {
     "name": "DNS Zone Record",
     "path": "/dnszone-record",
-    "routePath": "/guides/python/dnszone-record",
+    "routePath": "/v4/guides/python/dnszone-record",
     "formattedPythonObject": {
       "name": "DNS Zone Record",
       "import": "from linode import DNSZoneRecord",
