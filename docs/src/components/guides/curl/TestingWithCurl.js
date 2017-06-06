@@ -145,7 +145,7 @@ export default function Introduction() {
          },
          "type": [
             {
-               "backups_price": 250,
+               "backups_price": 2.5,
                "label": "Linode 2048",
                "storage": 24576,
                "transfer": 2000,
@@ -153,7 +153,7 @@ export default function Introduction() {
                "id": "g5-standard-1",
                "hourly_price": 1,
                "ram": 2048,
-               "monthly_price": 1000,
+               "monthly_price": 10.0,
                "mbits_out": 125,
                "class": "standard"
             }
