@@ -27,7 +27,7 @@ export default function Layout(props) {
             </span>
           </Link>
         </div>
-        <span className="MainHeader-title">Developers</span>
+        <span className="MainHeader-title"><Link to="/">Developers</Link></span>
       </Header>
       <div className="Layout-container container">
         <div className="Layout-navigationContainer">
