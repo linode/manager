@@ -1,0 +1,50 @@
+name: NodeBalancer
+import: from linode import NodeBalancer
+_object: nodebalancer
+desc: >
+    Represents a NodeBalancer
+_pylib_attributes:
+    configs:
+        _type: list
+        _description: A list of configs existing on this NodeBalancer
+constructor:
+    name: NodeBalancer
+    parameters:
+        client:
+            _keyword: false
+            desc: The <code>LinodeClient</code> this object will use to communicate with the API.
+        id:
+            _keyword: false
+            desc: This NodeBalancer's ID
+    example: >
+        nodebalancer = linode.NodeBalancer(client, 1234)
+methods:
+    save:
+        desc: >
+            Sends any local changes to Editable fields of this Domain to the API, saving them.
+        example: |
+            nodebalancer.save()
+        returns: True if the save succeeded
+    delete:
+        desc: >
+            Deletes this NodeBalancer from your account.  This is not reversable.
+        example:
+            nodebalancer.delete()
+        returns: True if the delete succueeded.
+    create_config:
+        desc: Creates a new NodeBalancerConfig for this NodeBalancer
+        parameters:
+            label:
+                _keyword: true
+                desc: A label for this config
+            port:
+                _keyword: true
+                desc: The port for this NodeBalancerConfig
+            '**kwargs':
+                _keyword: false
+                desc: >
+                    Any number of keyword arguments to send to the POST /nodebalanacers/123/configs endpoint.  See
+                    the <a href="/reference#ep-nodebalancer-configs-POST">endpoint docs</a> for more information.
+        example: |
+            config = nodebalancer.create_config(port=80, label='test')
+        returns: A new NodeBalancerConfig object

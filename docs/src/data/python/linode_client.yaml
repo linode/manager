@@ -27,6 +27,34 @@ methods:
         example: >
             dc = client.get_datacenters(linode.Datacenter.label.contains("Newark"))[0]
         returns: A list of Datacenter objects
+    get_domains:
+        desc: >
+            Retrieves a list of Domain objects.  This function is filterable - include filters in the
+            parameters list to retrieve only specific objects.
+        parameters:
+            '*filters':
+                desc: Any number of filters to this function
+                _keyword: false
+        example: >
+            domains = client.dns.get_zones()
+        returns: A list of Domain objects
+    create_domain:
+        desc: Creates a new Domain record.
+        parameters:
+            domain:
+                desc: The Domain we are managing
+                _keyword: false
+            master:
+                desc: Is this the master Domain record?
+                _keyword: true
+                _default: 'True'
+            '**kwargs':
+                desc: >
+                    Any number of additional keyword arguments to pass to the POST /domains endpoint.  For more information, see
+                    the <a href="/reference/#ep-domains-POST">endpoint docs</a> for complete breakdown.
+                _keyword: false
+        example: |
+            z = client.create_domain('example.org')
 groups:
     linode:
         name: Linode
@@ -44,7 +72,7 @@ groups:
                 example: >
                     distros = client.linode.get_distributions(linode.Distribution.vendor == "Debian")
                 returns: A list of Distribution objects
-            get_services:
+            get_types:
                 desc: >
                     Retrieves a list of Service objects.  This function is filterable - include filters in
                     the parameters list to retrieve only specific objects.
@@ -201,31 +229,3 @@ groups:
         desc: >
             All methods for accessing and creating Dns-related resources
         methods:
-            get_zones:
-                desc: >
-                    Retrieves a list of DNS Zone objects.  This function is filterable - include filters in the
-                    parameters list to retrieve only specific objects.
-                parameters:
-                    '*filters':
-                        desc: Any number of filters to this function
-                        _keyword: false
-                example: >
-                    dnszones = client.dns.get_zones()
-                returns: A list of DNS Zone objects
-            create_zone:
-                desc: Creates a new DNS Zone record.
-                parameters:
-                    dnszone:
-                        desc: The DNS zone we are managing
-                        _keyword: false
-                    master:
-                        desc: Is this the master DNS zone record?
-                        _keyword: true
-                        _default: 'True'
-                    '**kwargs':
-                        desc: >
-                            Any number of additional keyword arguments to pass to the POST /dnszones endpoint.  For more information, see
-                            the <a href="/reference/#ep-dnszones-POST">endpoint docs</a> for complete breakdown.
-                        _keyword: false
-                example: |
-                    z = client.create_dnszone('example.org')
