@@ -30,7 +30,7 @@ methods:
             Deletes this NodeBalancer from your account.  This is not reversable.
         example:
             nodebalancer.delete()
-        returns: True if the delete succueeded.
+        returns: True if the delete succeeded.
     create_config:
         desc: Creates a new NodeBalancerConfig for this NodeBalancer
         parameters:
@@ -43,7 +43,7 @@ methods:
             '**kwargs':
                 _keyword: false
                 desc: >
-                    Any number of keyword arguments to send to the POST /nodebalanacers/123/configs endpoint.  See
+                    Any number of keyword arguments to send to the POST /nodebalancers/123/configs endpoint.  See
                     the <a href="/reference#ep-nodebalancer-configs-POST">endpoint docs</a> for more information.
         example: |
             config = nodebalancer.create_config(port=80, label='test')

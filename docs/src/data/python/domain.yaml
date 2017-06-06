@@ -30,7 +30,7 @@ methods:
             Deletes this Domain from your account.  This is not reversable.
         example:
             domain.delete()
-        returns: True if the delete succueeded.
+        returns: True if the delete succeeded.
     create_record:
         desc: Creates a new DomainRecord for this Domain
         parameters:
