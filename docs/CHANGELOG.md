@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased] 
+
+## [0.6.0] 2017-06-07
 ### Added
 - required and optional denotation to method params
 - collapsed by default and toggle for response examples
