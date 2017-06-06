@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router';
 import { API_ROOT,
   API_VERSION,
-  ROUTE_BASE_PATH,
   MANAGER_ROOT,
 } from '~/constants';
 
@@ -24,7 +23,7 @@ export default function Introduction() {
       <section>
         <h2>Unauthenticated Requests</h2>
         <p>
-          You can perform anonymous HTTP requests against various resources on the API. You can tell which ones are anonymous from the <i className="fa fa-lock"></i> Authenticated indicator in the reference documentation. For API endpoints where this indicator is missing, you're able to use curl to test them without any additional steps. For example, we could <Link to={`${ROUTE_BASE_PATH}/reference/endpoints/linode/distributions`}>list supported distributions</Link>:
+          You can perform anonymous HTTP requests against various resources on the API. You can tell which ones are anonymous from the <i className="fa fa-lock"></i> Authenticated indicator in the reference documentation. For API endpoints where this indicator is missing, you're able to use curl to test them without any additional steps. For example, we could <Link to={`/${API_VERSION}/reference/endpoints/linode/distributions`}>list supported distributions</Link>:
         </p>
         <pre>
           <code>

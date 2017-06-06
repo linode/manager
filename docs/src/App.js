@@ -38,7 +38,7 @@ import {
 
 import { default as api } from '~/api';
 
-import { ROUTE_BASE_PATH } from '~/constants';
+import { API_VERSION } from '~/constants';
 
 
 ReactGA.initialize(GA_ID); // eslint-disable-line no-undef
@@ -82,28 +82,19 @@ export function init() {
     >
       <Route path="/" component={Layout} endpoints={api.endpoints}>
         <Route component={IndexLayout}>
-          <IndexRedirect to={`${ROUTE_BASE_PATH}/introduction`} />
-          <Redirect from='/reference' to={`${ROUTE_BASE_PATH}/introduction`} />
-          <Redirect from={`${ROUTE_BASE_PATH}/reference`} to={`${ROUTE_BASE_PATH}/introduction`} />
-          <Route path={`${ROUTE_BASE_PATH}/introduction`} component={Introduction} />
-          <Route path={`${ROUTE_BASE_PATH}/access`} component={Access} />
-          <Route path={`${ROUTE_BASE_PATH}/pagination`} component={Pagination} />
-          <Route path={`${ROUTE_BASE_PATH}/filtering`} component={Filtering} />
-          <Route path={`${ROUTE_BASE_PATH}/errors`} component={Errors} />
-          <Route path={`${ROUTE_BASE_PATH}/guides/python`} component={Python} />
-          <Route path={`${ROUTE_BASE_PATH}/guides/python/introduction`} component={PythonIntroduction} />
-          <IndexRedirect to={`${ROUTE_BASE_PATH}/introduction`} />
-          <Redirect from={`${ROUTE_BASE_PATH}/reference`} to={`${ROUTE_BASE_PATH}/introduction`} />
-          <Route path={`${ROUTE_BASE_PATH}/introduction`} component={Introduction} />
-          <Route path={`${ROUTE_BASE_PATH}/access`} component={Access} />
-          <Route path={`${ROUTE_BASE_PATH}/pagination`} component={Pagination} />
-          <Route path={`${ROUTE_BASE_PATH}/filtering`} component={Filtering} />
-          <Route path={`${ROUTE_BASE_PATH}/errors`} component={Errors} />
-          <Route path={`${ROUTE_BASE_PATH}/guides/python`} component={Python} />
-          <Route path={`${ROUTE_BASE_PATH}/guides/python/introduction`} component={PythonIntroduction} />
-          <Route path={`${ROUTE_BASE_PATH}/guides/curl`} component={Curl} />
-          <Route path={`${ROUTE_BASE_PATH}/guides/curl/creating-a-linode`} component={CreateLinode} />
-          <Route path={`${ROUTE_BASE_PATH}/guides/curl/testing-with-curl`} component={TestingWithCurl} />
+          <IndexRedirect to={`/${API_VERSION}/introduction`} />
+          <Redirect from='/reference' to={`/${API_VERSION}/introduction`} />
+          <Redirect from={`/${API_VERSION}/reference`} to={`/${API_VERSION}/introduction`} />
+          <Route path={`/${API_VERSION}/introduction`} component={Introduction} />
+          <Route path={`/${API_VERSION}/access`} component={Access} />
+          <Route path={`/${API_VERSION}/pagination`} component={Pagination} />
+          <Route path={`/${API_VERSION}/filtering`} component={Filtering} />
+          <Route path={`/${API_VERSION}/errors`} component={Errors} />
+          <Route path={`/${API_VERSION}/guides/python`} component={Python} />
+          <Route path={`/${API_VERSION}/guides/python/introduction`} component={PythonIntroduction} />
+          <Route path={`/${API_VERSION}/guides/curl`} component={Curl} />
+          <Route path={`/${API_VERSION}/guides/curl/creating-a-linode`} component={CreateLinode} />
+          <Route path={`/${API_VERSION}/guides/curl/testing-with-curl`} component={TestingWithCurl} />
           {api.endpoints.map(function(endpoint, index) {
             return generateIndexRoute({ key: index, endpoint: endpoint });
           })}
