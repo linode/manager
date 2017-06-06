@@ -109,7 +109,7 @@ export default function Filtering() {
           </code>
         </pre>
         <p>
-          Below is a list of all available operators. Operators are keys of a Filter JSON object, their value must be of the appropriate
+          Below is a list of all available operators. Operators are keys of a Filter JSON object. Their value must be of the appropriate
           type, and they are evaluated as described below.
         </p>
         <Table
