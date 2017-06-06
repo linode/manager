@@ -21,7 +21,7 @@ export default function Introduction() {
           <code>pip install linode-api</code>
         </pre>
         <p>
-          In order to make requests to the API, you're going to need an OAuth Token.  You can make a personal access token at [cloud.linode.com](https://cloud.linode.com/profile/integrations/tokens).
+          In order to make requests to the API, you're going to need an OAuth Token.  You can make a personal access token at <a href="https://cloud.linode.com/profile/integrations/tokens" target="_blank" rel="nofollow noopener noreferrer">cloud.linode.com</a>.
         </p>
       </section>
       <section>
