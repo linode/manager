@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased] 
+### Fixed
+- include original /reference redirect to the new /v4/introduction
 
 ## [0.4.0] 2017-06-05
 ### Added

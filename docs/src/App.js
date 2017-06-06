@@ -80,6 +80,7 @@ export function init() {
       <Route path="/" component={Layout} endpoints={api.endpoints}>
         <Route component={IndexLayout}>
           <IndexRedirect to={`${ROUTE_BASE_PATH}/introduction`} />
+          <Redirect from='/reference' to={`${ROUTE_BASE_PATH}/introduction`} />
           <Redirect from={`${ROUTE_BASE_PATH}/reference`} to={`${ROUTE_BASE_PATH}/introduction`} />
           <Route path={`${ROUTE_BASE_PATH}/introduction`} component={Introduction} />
           <Route path={`${ROUTE_BASE_PATH}/access`} component={Access} />
