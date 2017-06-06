@@ -274,7 +274,8 @@ function formatEndpoint(endpoint, path = null) {
   endpoint.description = stripATags(endpoint.description);
 
   return _.merge({}, endpoint, {
-    path: path,
+    // TODO: apply / to url paths in yaml
+    path: `/${path}`,
     formattedEndpoints: endpoint.formattedEndpoints || [],
     methods: methods
   });
