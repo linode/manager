@@ -104,7 +104,7 @@ export class SummaryPage extends Component {
         <div className="row">
           <div className="col-sm-3 row-label">Address</div>
           <div className="col-sm-9">
-            <div id="slaac">{ipv6.slaac.address} / {ipv6.slaac.prefix}</div>
+            {!ipv6.slaac ? null : <div id="slaac">{ipv6.slaac.address} / {ipv6.slaac.prefix}</div>}
             {ipv6.addresses.map(ip =>
               <div>{ip.address} / {ip.prefix}</div>)}
           </div>
