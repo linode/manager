@@ -79,6 +79,8 @@ window.handleError = function (e) {
 
     const ignoreStatuses = [404, 401];
     if (ignoreStatuses.indexOf(e.status) === -1) {
+      const modalFrame = document.getElementById('emergency-modal');
+      modalFrame.className="full-height";
       render(
         <ModalShell
           open
@@ -90,7 +92,7 @@ window.handleError = function (e) {
             returnHome={() => session.redirect(window.location.pathname)}
           />
         </ModalShell>,
-           document.getElementById('emergency-modal'),
+        modalFrame
       );
     }
   } catch (e) {
