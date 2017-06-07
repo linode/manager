@@ -12,6 +12,7 @@ export default function Method(props) {
     name,
     description,
     examples,
+    money,
     params,
     resource = {},
   } = method;
@@ -42,9 +43,12 @@ export default function Method(props) {
 
   return (
     <div id={name} className="Method">
-      <h2>{name}</h2>
-      <div className="Method-section">
-        <p className="Method-description">{description}</p>
+      <div className="Title">
+        <div className="Title-heading">
+          <h2>{name}</h2>
+          {money ? <small className="text-muted"><i className="fa fa-dollar"></i> Will incur a charge on your account</small> : null}
+        </div>
+        <p>{description}</p>
       </div>
       {methodParams}
       {methodRequest}
