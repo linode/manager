@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased] 
 
+## [0.5.3] 2017-06-07
+### Fixed
+- added missing cost indicators to methods
+
 ## [0.5.2] 2017-06-07
 ### Fixed
 - added missing Authenticated denotations with icons to endpoints
