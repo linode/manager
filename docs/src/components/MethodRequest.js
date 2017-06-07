@@ -5,7 +5,6 @@ import { default as Example } from './Example';
 
 import { API_ROOT, API_VERSION } from '~/constants';
 
-
 export default function MethodRequest(props) {
   const { examples } = props;
 
