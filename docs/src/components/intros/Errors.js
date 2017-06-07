@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Table } from 'linode-components/tables';
+import Example from '../Example';
 
 
 export default function Errors() {
@@ -19,9 +20,8 @@ export default function Errors() {
         <p>
           Every request that returns errors will look something like this:
         </p>
-        <pre>
-          <code>
-{`{
+        <Example
+          example={`{
   "errors": [
     {
       "field": "region",
@@ -29,8 +29,8 @@ export default function Errors() {
     }
   ]
 }`}
-          </code>
-        </pre>
+          name="json"
+        />
         <p>
           The <code>errors</code> field is an array of the things that went
           wrong with your request. We will try to include as many of the

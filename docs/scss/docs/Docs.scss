@@ -1,5 +1,5 @@
 .Docs {
-    p, pre {
+    p {
         padding: 5px 0;
     }
 
@@ -13,9 +13,13 @@
     }
 
     pre {
-        background-color: $black;
-        color: $white;
-        padding: 10px;
+        code:not(.hljs) {
+            padding: 10px;
+        }
+
+        .hljs {
+            padding: 10px 15px;
+        }
 
         code {
             @extend .font-small;

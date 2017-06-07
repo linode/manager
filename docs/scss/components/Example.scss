@@ -1,18 +1,36 @@
 .Example {
-    padding: 10px 0 0 0;
     position: relative;
 
     pre {
         padding: 0;
     }
 
-    &-copy {
+    &-clipboardButton {
+        background: transparent;
+        border: transparent;
         position: absolute;
-        top: 5px;
-        right: 5px;
+        top: 7px;
+        right: 4px;
+
+        i {
+            color: $white;
+        }
+
+        &:focus {
+            outline: none;
+        }
 
         &:hover {
             cursor: pointer;
         }
+    }
+}
+
+.Tabs-container .Example,
+.MethodResponseExample .Example {
+    padding: 10px 0 0 0;
+
+    &-clipboardButton {
+        top: 17px;
     }
 }

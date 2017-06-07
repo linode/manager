@@ -9,7 +9,7 @@ export default function MethodResponseExample(props) {
   return (
     <div className="Method-section MethodResponseExample">
       <h4><b>Example</b></h4>
-      <Example example={JSON.stringify(resource.example, null, 2)} />
+      <Example example={JSON.stringify(resource.example, null, 2)} name="json" noclipboard />
     </div>
   );
 }
