@@ -10,7 +10,6 @@ export default function MethodRequest(props) {
   const { examples } = props;
 
   const tabs = examples.map(function(example, index) {
-    console.log('example.value', example.value);
     const exampleValue = example.value.replace(/https:\/\/\$api_root/g, API_ROOT).replace(/\$version/g, API_VERSION);
     return {
       name: example.name,
