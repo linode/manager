@@ -11,7 +11,7 @@ export default function Authentication() {
       <section>
         <p>
           To use some API endpoints, authentication is required. This is indicated by the <small className="text-muted">&nbsp;<i className="fa fa-lock"></i>&nbsp;Authenticated</small> notation
-          throughout the documentation. We use the basic OAuth workflow where you can create We use the basic OAuth workflow where you can create
+          throughout the documentation. We use the basic OAuth workflow where you can create
           <em> applications</em> that integrate with Linode by registering those applications with us.
           You then use OAuth to authenticate on behalf of the user to request access to resources from their account.
         </p>
