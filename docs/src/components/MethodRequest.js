@@ -9,7 +9,7 @@ export default function MethodRequest(props) {
   const tabs = examples.map(function(example, index) {
     return {
       name: example.name,
-      children: (<Example key={`${example.name}-index`} example={example.value} />)
+      children: (<Example key={`${example.name}-index`} example={example.value} name={example.name} />)
     };
   });
 

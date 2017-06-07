@@ -1,7 +1,9 @@
 import React from 'react';
-import { API_ROOT, API_VERSION } from '~/constants';
 
 import { Table } from 'linode-components/tables';
+
+import Example from '../Example';
+import { API_ROOT, API_VERSION } from '~/constants';
 
 
 export default function Introduction() {
@@ -19,9 +21,7 @@ export default function Introduction() {
           <p>
             All API endpoints (starting from version 4) are located at:
           </p>
-          <pre>
-            <code>{`${ API_ROOT}/${ API_VERSION }/*`}</code>
-          </pre>
+          <Example example={`${ API_ROOT}/${ API_VERSION }/*`} name="bash" noclipboard />
           <p>
             Occasionally we will add features and improvements to our API - only certain changes will trigger a
             version bump, including:
