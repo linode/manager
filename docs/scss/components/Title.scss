@@ -1,0 +1,17 @@
+.Title {
+    padding: 10px 0;
+
+    &-heading {
+        h1, h2, small {
+            display: inline;
+        }
+
+        h1, h2 {
+            margin: 0;
+        }
+
+        small {
+            margin-left: 10px;
+        }
+    }
+}

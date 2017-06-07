@@ -1,10 +1,6 @@
 .Method {
     padding: 25px;
 
-    &-section {
-        margin-bottom: 15px;
-    }
-
     &-request {
         padding: 10px 0 0 0;
 
@@ -31,10 +27,6 @@
         }
     }
 
-    &-description {
-
-    }
-
     .Table--secondary .TableRow {
         height: 35px;
     }
@@ -52,19 +44,7 @@
         width: 150px;
     }
 
-    .FieldCell {
-
-    }
-
     .TypeColumn {
         width: 100px;
-    }
-
-    .DescriptionColumn {
-
-    }
-
-    .DescriptionCell {
-
     }
 }
