@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased] 
 
+## [0.5.1] 2017-06-07
+### Fixed
+- Made the $api_root and $version variables from yaml render to the constants in the prebuild step
 
 ## [0.5.0] 2017-06-06
 ### Added
