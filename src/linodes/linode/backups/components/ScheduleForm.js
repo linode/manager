@@ -16,6 +16,8 @@ export default class ScheduleForm extends Component {
       window: props.window,
       day: props.day,
     };
+
+    console.log(props.window, props.day);
   }
 
   onSubmit = () => {
@@ -37,7 +39,7 @@ export default class ScheduleForm extends Component {
         <FormGroup name="window" errors={errors} className="row">
           <label htmlFor="window" className="col-sm-2 col-form-label">Time of Day (EST)</label>
           <div className="col-sm-10">
-            <Select id="window" name="window" value={window} onChange={this.onChange}>
+            <Select id="window" name="window" value={window || ''} onChange={this.onChange}>
               <option value="W0">12AM - 2AM</option>
               <option value="W2">2AM - 4AM</option>
               <option value="W4">4AM - 6AM</option>
