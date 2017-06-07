@@ -9,7 +9,7 @@ export default function ExampleCell(props) {
 
   return (
     <td className={`Table-cell ExampleCell`} colSpan={colSpan}>
-      <Example example={JSON.stringify(example, null, 2)} />
+      <Example example={JSON.stringify(example, null, 2)} name="json" />
     </td>
   );
 }
