@@ -77,7 +77,8 @@ window.handleError = function (e) {
       }
     });
 
-    if (e.status !== 404) {
+    const ignoreStatuses = [404, 401];
+    if (ignoreStatuses.indexOf(e.status) === -1) {
       render(
         <ModalShell
           open
