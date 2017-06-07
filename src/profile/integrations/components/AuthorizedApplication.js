@@ -26,7 +26,7 @@ export default class AuthorizedApplication extends Component {
   renderRevokeApp(id, name) {
     const { dispatch } = this.props;
 
-    dispatch(showModal('Revoke Application Access',
+    dispatch(showModal('Revoke Authorized Application',
       <ConfirmModalBody
         buttonText="Revoke"
         onOk={async () => {
