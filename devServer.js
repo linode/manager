@@ -35,12 +35,6 @@ app.get('*', function(req, res) {
   }
 });
 
-app.post('/error', function(req, res) {
-  // Stub to be handled by nginx backend in production.
-  console.log('error submitted');
-  res.send('');
-});
-
 var port = process.env.MANAGER_PORT || 3000;
 
 app.listen(port, 'localhost', function(err) {
