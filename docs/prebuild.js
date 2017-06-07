@@ -10,6 +10,9 @@ const ROUTE_BASE_PATH = `/${process.env.API_VERSION || 'v4'}/reference`;
 const API_ROOT = process.env.API_ROOT || 'https://api.linode.com';
 const API_VERSION = process.env.API_VERSION || 'v4';
 
+const pythonPath = path.join(BASE_PATH, 'python');
+const pythonFiles = fs.readdirSync(pythonPath);
+
 const objectsPath = path.join(BASE_PATH, 'objects');
 const apiObjectMap = {};
 fs.readdirSync(objectsPath).filter(function(fileName) {
@@ -385,3 +388,121 @@ const endpointModule = `
   module.exports = { endpoints: ${data} };
 `;
 fs.writeFileSync(path.join('./src', 'api.js'), endpointModule);
+
+/**
+ *   Convert Python YAML docs to JSON js objects
+ */
+
+function convertPythonYaml() {
+  let pythonObjects = pythonFiles.filter(function(fileName) {
+    return path.extname(fileName) === '.yaml';
+  }).map(function(fileName) {
+    const filePath = path.join(pythonPath, fileName);
+    const pythonObject = yaml.safeLoad(fs.readFileSync(filePath, 'utf-8'), { json: true });
+
+    return pythonObject;
+  });
+
+  let pythonObjectMap = {
+    'LinodeLoginClient': {
+      name: 'LinodeLoginClient',
+      path: '/linode-login-client',
+      routePath: `${ROUTE_BASE_PATH}/linode-login-client`,
+      formattedPythonObject: [],
+    },
+    'LinodeClient': {
+      name: 'LinodeClient',
+      path: '/linode-client',
+      routePath: `${ROUTE_BASE_PATH}/linode-client`,
+      formattedPythonObject: [],
+    },
+    'Linode': {
+      name: 'Linode',
+      path: '/linode',
+      routePath: `${ROUTE_BASE_PATH}/linode`,
+      formattedPythonObject: [],
+    },
+    'Config': {
+      name: 'Config',
+      path: '/config',
+      routePath: `${ROUTE_BASE_PATH}/config`,
+      formattedPythonObject: [],
+    },
+    'Disk': {
+      name: 'Disk',
+      path: '/disk',
+      routePath: `${ROUTE_BASE_PATH}/disk`,
+      formattedPythonObject: [],
+    },
+    'Region': {
+      name: 'Region',
+      path: '/region',
+      routePath: `${ROUTE_BASE_PATH}/region`,
+      formattedPythonObject: [],
+    },
+    'Distribution': {
+      name: 'Distribution',
+      path: '/distribution',
+      routePath: `${ROUTE_BASE_PATH}/distribution`,
+      formattedPythonObject: [],
+    },
+    'Backup': {
+      name: 'Backup',
+      path: '/backup',
+      routePath: `${ROUTE_BASE_PATH}/backup`,
+      formattedPythonObject: [],
+    },
+    'IPAddress': {
+      name: 'IPAddress',
+      path: '/ipaddress',
+      routePath: `${ROUTE_BASE_PATH}/ipaddress`,
+      formattedPythonObject: [],
+    },
+    'IPv6Address': {
+      name: 'IPv6Address',
+      path: '/ipv6address',
+      routePath: `${ROUTE_BASE_PATH}/ipv6address`,
+      formattedPythonObject: [],
+    },
+    'Kernel': {
+      name: 'Kernel',
+      path: '/kernel',
+      routePath: `${ROUTE_BASE_PATH}/kernel`,
+      formattedPythonObject: [],
+    },
+    'Service': {
+      name: 'Service',
+      path: '/service',
+      routePath: `${ROUTE_BASE_PATH}/service`,
+      formattedPythonObject: [],
+    },
+    'StackScript': {
+      name: 'StackScript',
+      path: '/stackscript',
+      routePath: `${ROUTE_BASE_PATH}/stackscript`,
+      formattedPythonObject: [],
+    },
+    'DNS Zone': {
+      name: 'DNS Zone',
+      path: '/dnszone',
+      routePath: `${ROUTE_BASE_PATH}/dnszone`,
+      formattedPythonObject: [],
+    },
+    'DNS Zone Record': {
+      name: 'DNS Zone Record',
+      path: '/dnszone-record',
+      routePath: `${ROUTE_BASE_PATH}/dnszone-record`,
+      formattedPythonObject: [],
+    },
+  };
+
+  pythonObjects.forEach(function(pythonObject) {
+    if (pythonObjectMap[pythonObject.name]) {
+      pythonObjectMap[pythonObject.name].formattedPythonObject = pythonObject;
+    }
+  });
+  const data = JSON.stringify(pythonObjectMap, null, 2);
+  const pythonModule = `module.exports = { pythonObjects: ${data} };`;
+  fs.writeFileSync(path.join(pythonPath, 'python.js'), pythonModule);
+}
+convertPythonYaml();
