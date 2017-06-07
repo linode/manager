@@ -126,11 +126,11 @@ export function init() {
             return generateChildRoute({ endpoint: endpoint, prevCrumbs: crumb });
           })}
           {pythonClientObjectTitles.map(function(pythonObject, index) {
-            const crumb = [{ groupLabel: 'Guides', label: '/python', to: `${ROUTE_BASE_PATH}/guides/python` }];
+            const crumb = [{ groupLabel: 'Guides', label: '/python', to: `/${API_VERSION}/guides/python` }];
             return generateLibraryRoutes({ index: index, libraryObject: pythonObject, prevCrumbs: crumb });
           })}
           {pythonAPITitles.map(function(pythonObject, index) {
-            const crumb = [{ groupLabel: 'Guides', label: '/python', to: `${ROUTE_BASE_PATH}/guides/python` }];
+            const crumb = [{ groupLabel: 'Guides', label: '/python', to: `/${API_VERSION}/guides/python` }];
             return generateLibraryRoutes({ index: index, libraryObject: pythonObject, prevCrumbs: crumb });
           })}
         </Route>
