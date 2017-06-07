@@ -61,7 +61,7 @@ export class TicketPage extends Component {
 
     const requests = [
       // All other requests will get unshift()ed before this so this happens last.
-      () => this.setState({ reply: '', attachments: [], }),
+      () => this.setState({ reply: '', attachments: [] }),
     ];
 
     if (description) {
