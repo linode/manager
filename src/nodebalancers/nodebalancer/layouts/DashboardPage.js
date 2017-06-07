@@ -23,10 +23,10 @@ import {
 } from '~/constants';
 
 
-function formatData(datasets, legends) {
+function formatData(colors, datasets, legends) {
   const x = datasets[0].map(([x]) => x);
   const ys = datasets.map(dataset => dataset.map(([, y]) => y));
-  return LineGraph.formatData(x, ys, legends);
+  return LineGraph.formatData(x, ys, colors, legends);
 }
 
 export class DashboardPage extends Component {
@@ -52,7 +52,7 @@ export class DashboardPage extends Component {
             label: 'Connections per second',
             format: p => p.toFixed(1),
           },
-          data: formatData([stats.connections]),
+          data: formatData(['990066'], [stats.connections]),
           unit: ' connections',
         },
         traffic: {
@@ -61,7 +61,8 @@ export class DashboardPage extends Component {
             label: 'Bits per second',
             format: r => `${r.toFixed(1)} bits/s`,
           },
-          data: formatData([stats.traffic.in, stats.traffic.out],
+          data: formatData(['0033CC', '32CD32'],
+                           [stats.traffic.in, stats.traffic.out],
                            ['In', 'Out']),
           unit: ' bits/s',
         },

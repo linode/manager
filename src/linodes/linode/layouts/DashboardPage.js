@@ -19,10 +19,10 @@ import WeblishLaunch from '~/linodes/components/WeblishLaunch';
 import { selectLinode } from '../utilities';
 
 
-function formatData(datasets, legends) {
+function formatData(colors, datasets, legends) {
   const x = datasets[0].map(([x]) => x);
   const ys = datasets.map(dataset => dataset.map(([, y]) => y));
-  return LineGraph.formatData(x, ys, legends);
+  return LineGraph.formatData(x, ys, colors, legends);
 }
 
 export class DashboardPage extends Component {
@@ -52,7 +52,7 @@ export class DashboardPage extends Component {
             label: 'Percentage of CPU(s) used',
             format: p => `${p.toFixed(1)}%`,
           },
-          data: formatData([stats.cpu]),
+          data: formatData(['0033CC'], [stats.cpu]),
           unit: '%',
         },
         io: {
@@ -61,7 +61,8 @@ export class DashboardPage extends Component {
             label: 'Blocks per second',
             format: r => `${r.toFixed(1)} blocks/s`,
           },
-          data: formatData([stats.io.io, stats.io.swap],
+          data: formatData(['FFD04B', 'FA373E'],
+                           [stats.io.io, stats.io.swap],
                            ['Disk', 'Swap']),
           unit: ' blocks/s',
         },
@@ -71,7 +72,8 @@ export class DashboardPage extends Component {
             label: 'Bits per second',
             format: r => `${r.toFixed()} bits/s`,
           },
-          data: formatData([stats.netv4.in, stats.netv4.private_in,
+          data: formatData(['0033CC', 'CC0099', '32CD32', 'FFFF99'],
+                           [stats.netv4.in, stats.netv4.private_in,
                             stats.netv4.out, stats.netv4.private_out],
                            ['Public IPv4 Inbound', 'Private IPv4 Inbound',
                             'Public IPv4 Outbound', 'Private IPv4 Outbound']),
@@ -83,7 +85,8 @@ export class DashboardPage extends Component {
             label: 'Bits per second',
             format: r => `${r.toFixed()} bits/s`,
           },
-          data: formatData([stats.netv6.in, stats.netv6.private_in,
+          data: formatData(['0033CC', 'CC0099', '32CD32', 'FFFF99'],
+                           [stats.netv6.in, stats.netv6.private_in,
                             stats.netv6.out, stats.netv6.private_out],
                            ['Public IPv6 Inbound', 'Private IPv6 Inbound',
                             'Public IPv6 Outbound', 'Private IPv6 Outbound']),

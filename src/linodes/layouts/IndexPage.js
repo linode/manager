@@ -6,10 +6,14 @@ import { Link } from 'react-router';
 
 import CreateHelper from '~/components/CreateHelper';
 
-import { List } from 'linode-components/lists';
-import { Table } from 'linode-components/tables';
-import { ListHeader } from 'linode-components/lists/headers';
+import { ScrollingList } from 'linode-components/lists';
 import { ListBody, ListGroup } from 'linode-components/lists/bodies';
+import { MassEditControl } from 'linode-components/lists/controls';
+import { ListHeader } from 'linode-components/lists/headers';
+import { List } from 'linode-components/lists';
+import { ConfirmModalBody, DeleteModalBody } from 'linode-components/modals';
+import StatusDropdownCell from '~/linodes/components/StatusDropdownCell';
+import { Table } from 'linode-components/tables';
 import {
   CheckboxCell,
   LinkCell,
@@ -19,36 +23,24 @@ import {
   RegionCell,
   BackupsCell,
 } from '~/components/tables/cells';
-import { MassEditControl } from 'linode-components/lists/controls';
-import StatusDropdownCell from '~/linodes/components/StatusDropdownCell';
 
 import { default as toggleSelected } from '~/actions/select';
+import { showModal, hideModal } from '~/actions/modal';
+import { setSource } from '~/actions/source';
+import { setTitle } from '~/actions/title';
 import { linodes as api } from '~/api';
 import {
   powerOnLinode,
   powerOffLinode,
   rebootLinode,
 } from '~/api/linodes';
-import { setSource } from '~/actions/source';
-import { setTitle } from '~/actions/title';
-import { DeleteModalBody } from 'linode-components/modals';
-import { showModal, hideModal } from '~/actions/modal';
+
 
 const OBJECT_TYPE = 'linodes';
-
 
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
     await dispatch(api.all());
-  }
-
-  constructor(props) {
-    super(props);
-
-    this.powerOn = this.powerOn.bind(this);
-    this.powerOff = this.powerOff.bind(this);
-    this.reboot = this.reboot.bind(this);
-    this.deleteLinodes = this.deleteLinodes.bind(this);
   }
 
   componentDidMount() {
@@ -57,31 +49,45 @@ export class IndexPage extends Component {
     dispatch(setTitle('Linodes'));
   }
 
-  powerOn(linodes) {
+  genericAction(actionToDispatch, linodes, confirmType) {
     const { dispatch } = this.props;
 
-    linodes.forEach(function (linode) {
-      dispatch(powerOnLinode(linode.id));
-    });
+    const callback = () => {
+      linodes.forEach(linode => dispatch(actionToDispatch(linode.id)));
+      dispatch(hideModal());
+    };
+
+    if (!confirmType) {
+      return callback();
+    }
+
+    let modalBody = (
+      <div>
+        <p>Are you sure you want to {confirmType.toLowerCase()} these Linodes?</p>
+        <ScrollingList items={linodes.map(l => l.label)} />
+      </div>
+    );
+    if (linodes.length === 1) {
+      modalBody = (
+        <p>
+          Are you sure you want to {confirmType.toLowerCase()} <strong>{linodes[0].label}</strong>?
+        </p>
+      );
+    }
+
+    dispatch(showModal(`Confirm ${confirmType}`, (
+      <ConfirmModalBody
+        onCancel={() => dispatch(hideModal())}
+        onOk={callback}
+      >{modalBody}</ConfirmModalBody>
+    )));
   }
 
-  powerOff(linodes) {
-    const { dispatch } = this.props;
+  powerOn = (linodes) => this.genericAction(powerOnLinode, linodes)
+  powerOff = (linodes) => this.genericAction(powerOffLinode, linodes, 'Power Off')
+  reboot = (linodes) => this.genericAction(rebootLinode, linodes, 'Reboot')
 
-    linodes.forEach(function (linode) {
-      dispatch(powerOffLinode(linode.id));
-    });
-  }
-
-  reboot(linodes) {
-    const { dispatch } = this.props;
-
-    linodes.forEach(function (linode) {
-      dispatch(rebootLinode(linode.id));
-    });
-  }
-
-  deleteLinodes(linodesToBeRemoved) {
+  deleteLinodes = (linodesToBeRemoved) => {
     const { dispatch } = this.props;
     const linodesArray = Array.isArray(linodesToBeRemoved)
                        ? linodesToBeRemoved
@@ -127,8 +133,8 @@ export class IndexPage extends Component {
               dispatch={dispatch}
               massEditOptions={[
                 { name: 'Reboot', action: this.reboot },
-                { name: 'Power on', action: this.powerOn },
-                { name: 'Power off', action: this.powerOff },
+                { name: 'Power On', action: this.powerOn },
+                { name: 'Power Off', action: this.powerOff },
                 null,
                 { name: 'Delete', action: this.deleteLinodes },
               ]}
