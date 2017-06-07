@@ -121,12 +121,9 @@ export class IndexPage extends Component {
         data: _tickets,
       }));
 
-    // Stub out empty sections.
-    Object.values(statusFormat).forEach(name => {
-      if (!groups.filter(group => group.name === name).length) {
-        groups.push();
-      }
-    });
+    if (groups[0].name !== 'Open') {
+      groups.unshift({ name: 'Open', data: [] });
+    }
 
     return (
       <List>
@@ -142,6 +139,7 @@ export class IndexPage extends Component {
                   columns={group.columns}
                   data={group.data}
                   selectedMap={{}}
+                  noDataMessage="You have no open tickets."
                   disableHeader
                 />
               </ListGroup>

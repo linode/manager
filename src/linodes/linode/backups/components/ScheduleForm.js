@@ -16,8 +16,6 @@ export default class ScheduleForm extends Component {
       window: props.window,
       day: props.day,
     };
-
-    console.log(props.window, props.day);
   }
 
   onSubmit = () => {
