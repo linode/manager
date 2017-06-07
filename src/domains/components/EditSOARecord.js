@@ -58,6 +58,10 @@ export default class EditSOARecord extends Component {
       status,
     };
 
+    if (!data.group) {
+      delete data.group;
+    }
+
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => domains.put(data, this.props.domains.id),
       () => setTitle(data.domain),

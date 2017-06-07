@@ -29,7 +29,6 @@ export class IndexPage extends Component {
     dispatch(setTitle(user.username));
   }
 
-
   render() {
     if (!this.props.user) {
       return null;

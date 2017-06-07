@@ -41,12 +41,15 @@ export default class UserForm extends Component {
       delete data.password;
     }
 
+    const creating = !oldUsername;
+
     const idsPath = [oldUsername].filter(Boolean);
     return dispatch(dispatchOrStoreErrors.call(this, [
-      () => users[oldUsername ? 'put' : 'post'](data, ...idsPath),
+      () => users[creating ? 'post' : 'put'](data, ...idsPath),
+      (user) => creating ? null : actions.one(user),
       () => oldUsername !== data.username && push(`/users/${data.username}`),
-      () => oldUsername !== data.username && actions.delete(data.username),
-      () => setTitle(data.username),
+      () => oldUsername !== data.username && actions.delete(oldUsername),
+      () => creating ? null : setTitle(data.username),
     ]));
   }
 
