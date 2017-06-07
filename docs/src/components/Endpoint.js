@@ -19,8 +19,8 @@ export default function Endpoint(props) {
         <div className="Endpoint-breadcrumbsContainer">
           <Breadcrumbs crumbs={crumbs} />
         </div>
-        <div className="Endpoint-title">
-          <div className="Endpoint-titleHeading">
+        <div className="Title">
+          <div className="Title-heading">
             <h1>{path}</h1>
             {authenticated ? <small className="text-muted"><i className="fa fa-lock"></i> Authenticated</small> : null}
           </div>
