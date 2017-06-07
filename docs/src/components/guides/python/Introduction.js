@@ -21,7 +21,7 @@ export default function Introduction() {
           <code>pip install linode-api</code>
         </pre>
         <p>
-          In order to make requests to the API, you're going to need an OAuth Token. You were given one when you signed up for an alpha account, if you've lost yours contact support.
+          In order to make requests to the API, you're going to need an OAuth Token.  You can make a personal access token at <a href="https://cloud.linode.com/profile/integrations/tokens" target="_blank" rel="nofollow noopener noreferrer">cloud.linode.com</a>.
         </p>
       </section>
       <section>
@@ -40,22 +40,30 @@ export default function Introduction() {
       <section>
         <h2>Requirements for Creating a Linode</h2>
         <p>
-          In order to create a Linode, we need a Datacenter (which defines where it will live) and a Service (which defines the size of the Linode). Since we don’t know the IDs of any objects in the API, we’ll list them to see what we want:
+          In order to create a Linode, we need a Regions (which defines where it will live) and a Service (which defines the size of the Linode). Since we don’t know the IDs of any objects in the API, we’ll list them to see what we want:
         </p>
         <pre>
           <code>
-{`>>> for d in client.get_datacenters():
-...   print(d.label)
+{`>>> for r in client.get_regions():
+...   print(r.label)
 ...
-Newark, NJ`}
+Dallas, TX
+Fremont, CA
+Atlanta, GA
+Newark, NJ
+London, UK
+Singapore, SG
+Frankfurt, DE
+Tokyo 2, JP
+Tokyo, JP`}
           </code>
         </pre>
         <p>
-          Looks like we only have one option in the alpha environment - so we’ll just grab it and move on.
+          We've got a lot of regions to pick from - let's just use the first one and move on.
         </p>
         <pre>
           <code>
-          >>> dc = client.get_datacenters()[0]
+          >>> region = client.get_regions()[0]
           </code>
         </pre>
         <p>
@@ -63,8 +71,7 @@ Newark, NJ`}
         </p>
         <pre>
           <code>
-{`>>> serv = client.linode.get_types(linode.Service.label == "Linode 2048").first()
->>> serv = linode.Service(client, 'g5-standard-1')
+{`>>> serv = linode.Service(client, 'g5-standard-1')
 >>> serv.label
 'Linode 2048'`}
           </code>
@@ -80,7 +87,7 @@ Newark, NJ`}
         </p>
         <pre>
           <code>
-          >>> l = client.linode.create_instance(serv, dc)
+          >>> l = client.linode.create_instance(serv, region)
           </code>
         </pre>
         <p>
@@ -136,7 +143,7 @@ True`}
         </p>
         <pre>
           <code>
-            >>> l, pw = client.linode.create_instance(serv, dc, distribution="linode/debian8")
+            >>> l, pw = client.linode.create_instance(serv, region, distribution="linode/debian8")
           </code>
         </pre>
         <p>

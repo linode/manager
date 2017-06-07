@@ -3,7 +3,7 @@
 }
 
 .selected {
-  background: $gray;
+  @include selected;
 }
 
 // TODO: prettify

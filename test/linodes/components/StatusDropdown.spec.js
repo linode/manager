@@ -29,8 +29,10 @@ describe('linodes/components/StatusDropdown', () => {
 
     dropdown.find('.Dropdown-toggle').simulate('click');
 
-    expect(dropdown.find('.Dropdown-item').length).to.equal(1);
+    expect(dropdown.find('.Dropdown-item').length).to.equal(3);
     expect(dropdown.find('.Dropdown-item').at(0).text()).to.equal('Power On');
+    expect(dropdown.find('.Dropdown-item').at(1).text()).to.equal('Launch Console');
+    expect(dropdown.find('.Dropdown-item').at(2).text()).to.equal('Delete');
   });
 
   it('renders correct options for online Linodes', () => {
@@ -42,9 +44,11 @@ describe('linodes/components/StatusDropdown', () => {
 
     dropdown.find('.Dropdown-toggle').simulate('click');
 
-    expect(dropdown.find('.Dropdown-item').length).to.equal(3);
+    expect(dropdown.find('.Dropdown-item').length).to.equal(4);
     expect(dropdown.find('.Dropdown-item').at(0).text()).to.equal('Reboot');
     expect(dropdown.find('.Dropdown-item').at(1).text()).to.equal('Power Off');
+    expect(dropdown.find('.Dropdown-item').at(2).text()).to.equal('Launch Console');
+    expect(dropdown.find('.Dropdown-item').at(3).text()).to.equal('Delete');
   });
 
   it('dispatches on item click', async () => {
@@ -55,7 +59,9 @@ describe('linodes/components/StatusDropdown', () => {
 
     dropdown.find('.Dropdown-toggle').simulate('click');
     dropdown.find('.Dropdown-item').first().simulate('mousedown');
-    const reboot = dispatch.firstCall.args[0];
+    const modal = mount(dispatch.firstCall.args[0].body);
+    await modal.find('Form').props().onSubmit();
+    const reboot = dispatch.secondCall.args[0];
     await expectRequest(reboot, '/linode/instances/1235/reboot', { method: 'POST' });
   });
 
