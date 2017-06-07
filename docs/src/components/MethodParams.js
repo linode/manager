@@ -8,7 +8,7 @@ export default function MethodParams(props) {
   const { params } = props;
   return (
     <div className="Method-section Method-params">
-      <h3><b>Parameters</b></h3>
+      <h3>Parameters</h3>
       <Table
         className="Table--secondary"
         columns={[
