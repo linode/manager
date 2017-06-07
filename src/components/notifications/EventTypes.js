@@ -112,23 +112,27 @@ const EventTypeMap = {
   },
 
   disk_create: {
-    presentTenseAction: 'Creating',
+    presentTenseAction: 'Creating disk on',
     pastTenseAction: 'created',
+    pastTensePrefix: 'Disk on',
     redirectUrl: getLinodeDiskRedirectUrl,
   },
   disk_delete: {
-    presentTenseAction: 'Deleting',
+    presentTenseAction: 'Deleting disk on',
     pastTenseAction: 'deleted',
+    pastTensePrefix: 'Disk on',
     redirectUrl: getLinodeDiskRedirectUrl,
   },
   disk_duplicate: {
-    presentTenseAction: 'Duplicating',
+    presentTenseAction: 'Duplicating disk on',
     pastTenseAction: 'duplicated',
+    pastTensePrefix: 'Disk on',
     redirectUrl: getLinodeDiskRedirectUrl,
   },
   disk_resize: {
-    presentTenseAction: 'Resizing',
+    presentTenseAction: 'Resizing disk on',
     pastTenseAction: 'resized',
+    pastTensePrefix: 'Disk on',
     redirectUrl: getLinodeDiskRedirectUrl,
   },
 
@@ -167,13 +171,15 @@ const EventTypeMap = {
   },
 
   domain_record_create: {
-    presentTenseAction: 'Creating',
+    presentTenseAction: 'Creating record on',
     pastTenseAction: 'created',
+    pastTensePrefix: 'Record on',
     redirectUrl: getDomainRedirectUrl,
   },
   domain_record_delete: {
-    presentTenseAction: 'Deleting',
+    presentTenseAction: 'Deleting record on',
     pastTenseAction: 'deleted',
+    pastTensePrefix: 'Record on',
     redirectUrl: getDomainsRedirectUrl,
   },
 
@@ -188,13 +194,15 @@ const EventTypeMap = {
     redirectUrl: getNodeBalancersRedirectUrl,
   },
   nodebalancer_config_create: {
-    presentTenseAction: 'Creating',
-    pastTenseAction: 'config created',
+    presentTenseAction: 'Creating config on',
+    pastTenseAction: 'created',
+    pastTensePrefix: 'Config on',
     redirectUrl: getNodebalancerRedirectUrl,
   },
   nodebalancer_config_delete: {
-    presentTenseAction: 'Deleting',
-    pastTenseAction: 'config deleted',
+    presentTenseAction: 'Deleting config on',
+    pastTenseAction: 'deleted',
+    pastTensePrefix: 'Config on',
     redirectUrl: getNodebalancerRedirectUrl,
   },
 
