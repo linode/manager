@@ -42,7 +42,7 @@
     }
 
     &--selected {
-        @extend .selected;
+        @include selected;
     }
 }
 
