@@ -92,5 +92,5 @@ TableRow.propTypes = {
 };
 
 TableRow.defaultProps = {
-  className: ''
+  className: '',
 };

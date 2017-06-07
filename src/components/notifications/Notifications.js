@@ -38,13 +38,15 @@ export class Notifications extends Component {
   }
 
   async componentDidMount() {
+    const { dispatch } = this.props;
+
     // OAuth token is not available during the callback
     while (window.location.pathname === '/oauth/callback') {
       await new Promise(r => setTimeout(r, 100));
     }
 
     // begin by fetching all unseen events
-    await this.fetchAllEvents(createHeaderFilter({ seen: false }));
+    await dispatch(this.fetchAllEvents(createHeaderFilter({ seen: false })));
 
     // if there are less than MIN_SHOWN_EVENTS returned from unseen events,
     // fetch any events earlier from now in order to fill out the event list
@@ -53,7 +55,7 @@ export class Notifications extends Component {
     }
 
     // initialize polling for unseen events
-    this._polling.start(POLLING_ID);
+    dispatch(this._polling.start(POLLING_ID));
   }
 
   componentWillUpdate(nextProps) {
@@ -108,9 +110,9 @@ export class Notifications extends Component {
     );
   }
 
-  async fetchAllEvents() {
-    const { dispatch } = this.props;
-    await dispatch(events.all([], null, createHeaderFilter(this._filterOptions)));
+  fetchAllEvents() {
+    return async (dispatch) =>
+      await dispatch(events.all([], null, createHeaderFilter(this._filterOptions)));
   }
 
   render() {
