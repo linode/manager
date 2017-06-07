@@ -3,7 +3,6 @@ import React from 'react';
 import { Tabs } from 'linode-components/tabs';
 import { default as Example } from './Example';
 
-
 export default function MethodRequest(props) {
   const { examples } = props;
 

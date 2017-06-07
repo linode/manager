@@ -7,6 +7,8 @@ const _ = require('lodash');
 
 const BASE_PATH = './src/data';
 const ROUTE_BASE_PATH = `/${process.env.API_VERSION || 'v4'}/reference`;
+const API_ROOT = process.env.API_ROOT || 'https://api.linode.com';
+const API_VERSION = process.env.API_VERSION || 'v4';
 
 const objectsPath = path.join(BASE_PATH, 'objects');
 const apiObjectMap = {};
@@ -100,7 +102,7 @@ function formatMethodExamples(methodObj) {
     examples = Object.keys(methodObj.examples).map(function(example) {
       return {
         name: example,
-        value: methodObj.examples[example]
+        value: methodObj.examples[example].replace(/https:\/\/\$api_root/g, API_ROOT).replace(/\$version/g, API_VERSION),
       };
     });
   }
