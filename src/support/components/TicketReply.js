@@ -48,14 +48,7 @@ export default function TicketReply(props) {
   const createdBy = props.reply[`${props.createdField}_by`];
   const created = <TimeDisplay time={props.reply[props.createdField]} />;
   const icon = `https://gravatar.com/avatar/${props.reply.gravatar_id}`;
-  const header = (
-    <CardImageHeader
-      title={createdBy}
-      subtitle={created}
-      icon={icon}
-      tags={props.reply.from_linode && ['Linode Employee']}
-    />
-  );
+  const header = <CardImageHeader title={createdBy} subtitle={created} icon={icon} />;
 
   const description = stringToParagraphs(props.reply.description);
 

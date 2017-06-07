@@ -55,6 +55,11 @@
         &--read{
             background-color: $gray;
         }
+
+        &-time {
+            display: block;
+            margin-top: -1px;
+        }
     }
 
     &-end {

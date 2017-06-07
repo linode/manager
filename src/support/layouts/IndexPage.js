@@ -106,7 +106,6 @@ export class IndexPage extends Component {
         columns: [
           {
             cellComponent: this.renderLabelCell,
-            headerClassName: 'TicketLabelColumn',
           },
           {
             dataKey: 'id',
@@ -120,13 +119,6 @@ export class IndexPage extends Component {
         ],
         data: _tickets,
       }));
-
-    // Stub out empty sections.
-    Object.values(statusFormat).forEach(name => {
-      if (!groups.filter(group => group.name === name).length) {
-        groups.push();
-      }
-    });
 
     return (
       <List>
