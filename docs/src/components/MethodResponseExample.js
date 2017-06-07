@@ -22,15 +22,14 @@ export default class MethodResponseExample extends Component {
     const { collapsed } = this.state;
 
     const caretClass = collapsed ? 'fa-caret-right' : 'fa-caret-down';
-
+    const collapsedDenotation = collapsed ? '(show)' : '(hide)';
     return (
       <div className="Method-section MethodResponseExample">
         <div className="MethodResponseExample-header" onClick={this.onClick}>
-          <h4>
+          <h3>
             <b>Example</b>
-            <i className={`MethodResponseExample-headerIcon fa ${caretClass}`} />
-          </h4>
-
+          </h3>
+          <span className="MethodResponseExample-headerControl">{collapsedDenotation} <i className={`MethodResponseExample-headerIcon fa ${caretClass}`} /></span>
         </div>
         <Example example={JSON.stringify(resource.example, null, 2)} name="json" noclipboard collapsed={collapsed} />
       </div>

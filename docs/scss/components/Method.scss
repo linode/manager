@@ -4,10 +4,6 @@
     &-request {
         padding: 10px 0 0 0;
 
-        h4 {
-            padding: 0 0 10px 0;
-        }
-
         .Tabs {
             .ReactTabs__TabList {
                 padding: 0;
@@ -29,5 +25,11 @@
 
     td {
         border-right: $border;
+    }
+}
+
+.Docs .Method-request {
+    h3 {
+        padding: 0 0 10px 0;
     }
 }
