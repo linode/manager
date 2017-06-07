@@ -6,7 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased] 
 
-## [0.5.3] 2017-06-07
+## [0.6.0] 2017-06-07
+### Added
+- Syntax highlighting for code examples
+- Copy to clipboard icons for examples
 ### Fixed
 - added missing cost indicators to methods
 
