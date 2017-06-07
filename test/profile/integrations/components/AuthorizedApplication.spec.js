@@ -105,6 +105,12 @@ describe('profile/integrations/components/AuthorizedApplication', () => {
 
     await page.find('Button').props().onClick();
     expect(dispatch.callCount).to.equal(1);
+    const { body } = dispatch.firstCall.args[0];
+
+    dispatch.reset();
+    body.props.onOk();
+
+    expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
       ([fn]) => expectRequest(fn, `/account/tokens/${tokens[2].id}`, { method: 'DELETE' }),
     ], 1);
