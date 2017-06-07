@@ -23,7 +23,7 @@ export default function Introduction() {
       <section>
         <h2>Unauthenticated Requests</h2>
         <p>
-          You can perform anonymous HTTP requests against various resources on the API. You can tell which ones are anonymous from the <i className="fa fa-lock"></i> Authenticated indicator in the reference documentation. For API endpoints where this indicator is missing, you're able to use curl to test them without any additional steps. For example, we could <Link to={`/${API_VERSION}/reference/endpoints/linode/distributions`}>list supported distributions</Link>:
+          You can perform anonymous HTTP requests against various resources on the API. You can tell which ones are anonymous from the <small className="text-muted"><i className="fa fa-lock"></i> Authenticated</small> indicator in the reference documentation. For API endpoints where this indicator is missing, you're able to use curl to test them without any additional steps. For example, we could <Link to={`/${API_VERSION}/reference/endpoints/linode/distributions`}>list supported distributions</Link>:
         </p>
         <pre>
           <code>
@@ -73,7 +73,7 @@ export default function Introduction() {
       <section>
         <h2>Authentication Header</h2>
         <p>
-          Now you can make requests with curl using your access token by adding <code>-H "Authorization: token $token"</code>. The <i className="fa fa-lock"></i> Authenticated requests on the reference page include this header in the curl examples. For example:
+          Now you can make requests with curl using your access token by adding <code>-H "Authorization: token $token"</code>. The <small className="text-muted"><i className="fa fa-lock"></i> Authenticated</small> requests on the reference page include this header in the curl examples. For example:
         </p>
         <pre>
           <code>
