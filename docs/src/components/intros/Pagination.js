@@ -1,5 +1,8 @@
 import React from 'react';
 
+import Example from '../Example';
+
+
 export default function Pagination() {
   return (
     <section className="Article">
@@ -8,16 +11,16 @@ export default function Pagination() {
         <p>
           Resource lists are always paginated. The response will look similar to this:
         </p>
-        <pre>
-          <code>
-{`{
+        <Example
+          example={`{
   "linodes": [ ... ],
   "page": 1,
   "total_pages": 10,
   "total_results": 248
 }`}
-          </code>
-        </pre>
+          name="json"
+          noclipboard
+        />
         <p>
           Pages start at 1. You may get a particular page by adding <code>?page=2</code> to your URL. Each page has at most 25 results.
         </p>
