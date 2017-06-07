@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased] 
 
+## [0.5.2] 2017-06-07
+### Fixed
+- added missing Authenticated denotations with icons to endpoints
+
 ## [0.5.1] 2017-06-07
 ### Fixed
 - Made the $api_root and $version variables from yaml render to the constants in the prebuild step
