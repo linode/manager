@@ -107,7 +107,7 @@ export default class MethodResponse extends Component {
 
     return (
       <div className="Method-section MethodResponse">
-        <h4><b>Response</b></h4>
+        <h3>Response</h3>
         {this.renderSchemaTable(schema, defaultColumns)}
       </div>
     );
