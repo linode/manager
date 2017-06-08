@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [0.6.0] 2017-06-07
 ### Added
+- required and optional denotation to method params
+- collapsed by default and toggle for response examples
+
+## [0.6.0] 2017-06-07
+### Added
 - Syntax highlighting for code examples
 - Copy to clipboard icons for examples
 ### Fixed
