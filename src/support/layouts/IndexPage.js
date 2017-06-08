@@ -99,6 +99,7 @@ export class IndexPage extends Component {
         columns: [
           {
             cellComponent: this.renderLabelCell,
+            headerClassName: 'TicketLabelColumn',
           },
           {
             dataKey: 'id',
@@ -112,6 +113,10 @@ export class IndexPage extends Component {
         ],
         data: _tickets,
       }));
+
+    if (groups[0].name !== 'Open') {
+      groups.unshift({ name: 'Open', data: [] });
+    }
 
     return (
       <List>
@@ -127,6 +132,7 @@ export class IndexPage extends Component {
                   columns={group.columns}
                   data={group.data}
                   selectedMap={{}}
+                  noDataMessage="You have no open tickets."
                   disableHeader
                 />
               </ListGroup>

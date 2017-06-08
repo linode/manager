@@ -67,22 +67,21 @@ export default function Forms() {
                 </FormGroup>
                 <FormGroup className="row">
                   <label className="col-sm-3 col-form-label"></label>
-                  <div className="col-sm-9">
+                  <div className="col-sm-9 Input input-md">
                     <input
                       type="text"
                       name="example-form-field"
-                      className="form-control input-md"
+                      className="form-control"
                       placeholder="275px"
                     />
                   </div>
                 </FormGroup>
                 <FormGroup className="row">
                   <label className="col-sm-3 col-form-label"></label>
-                  <div className="col-sm-9">
+                  <div className="col-sm-9 Input input-lg">
                     <input
                       type="text"
                       name="example-form-field"
-                      className="form-control input-lg"
                       placeholder="325px"
                     />
                   </div>
