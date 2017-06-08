@@ -3,17 +3,17 @@ import ReactTooltip from 'react-tooltip'
 
 
 export default function Tooltip(props) {
-  const { enabled, id, position, children } = props;
+  const { id, position, children } = props;
 
   return (
-    <ReactTooltip className="Tooltip" delayHide={500} id={id} effect="solid" place={position} role="tooltip">
+    <ReactTooltip className="Tooltip" delayHide={500} delayShow={300} id={id} effect="solid" place={position} role="tooltip">
       {children}
     </ReactTooltip>
   );
 };
 
 Tooltip.propTypes = {
-
+  position: PropTypes.string,
 };
 
 Tooltip.defaultProps = {

@@ -220,7 +220,7 @@ export class MasterZone extends Component {
                 className="Table--secondary"
                 columns={[
                   { cellComponent: LabelCell, headerClassName: 'LabelColumn', dataKey: 'domain', label: 'Primary Domain', titleKey: 'domain' },
-                  { dataKey: 'soa_email', label: 'Email' },
+                  { headerClassName: 'EmailColumn', dataKey: 'soa_email', label: 'Email' },
                   { dataKey: 'ttl_sec', label: 'Default TTL' },
                   { dataKey: 'refresh_sec', label: 'Refresh Rate' },
                   { dataKey: 'retry_sec', label: 'Retry Rate' },
@@ -462,7 +462,7 @@ export class MasterZone extends Component {
                 { cellComponent: LabelCell, headerClassName: 'LabelColumn', dataKey: 'domain', label: 'Domain', titleKey: 'domain' },
                 { dataKey: 'weight', label: 'Weight' },
                 { dataKey: 'port', label: 'Port' },
-                { dataKey: 'target', label: 'Target' },
+                { cellComponent: LabelCell, headerClassName: 'LabelColumn', dataKey: 'target', label: 'Target', titleKey: 'target' },
                 { dataKey: 'ttl_sec', label: 'TTL' },
                 {
                   cellComponent: ButtonCell,

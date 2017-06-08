@@ -1,16 +1,19 @@
 import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
 
+
+import { Tooltip } from '../../tooltips';
+
 import TableCell from './TableCell';
 
 
 export default function LabelCell(props) {
-  const { column, record } = props;
+  const { cellIndex, column, record } = props;
   const {
     className = '',
-    titleKey = 'id',
     textFn,
-    textKey = 'name',
+    dataKey = 'name',
+    disableTooltip = false,
   } = column;
 
   let children = props.children;
@@ -18,37 +21,49 @@ export default function LabelCell(props) {
     if (textFn) {
       children = textFn(record);
     } else {
-      children = record[textKey];
+      children = record[dataKey];
     }
   }
 
-  const title = record[titleKey];
-  const tooltipText = (
-    <div>
+  const idText = record.id ? (<div>ID: {record.id}</div>) : null;
+  let tooltipComponent;
+  let tooltipAttributes;
+  if (!disableTooltip) {
+    const tooltipId = `tooltip-${record.id}-${cellIndex}`;
+    const tooltipText = (
       <div>
-        {title}
+        <div>
+          {children}
+        </div>
+        {idText}
       </div>
-      <div>ID: {record.id}</div>
-    </div>
-  );
+    );
+
+    tooltipAttributes = {'data-tip': true, 'data-for': tooltipId };
+    tooltipComponent = (
+      <Tooltip id={tooltipId}>{tooltipText}</Tooltip>
+    );
+  }
 
   return (
     <TableCell
+      cellIndex={cellIndex}
       className={`LabelCell ${className}`}
       column={column}
       record={record}
-      tooltip={tooltipText}
     >
-      {children}
+      <span {...tooltipAttributes}>{children}</span>
+      {tooltipComponent}
     </TableCell>
   );
 }
 
 LabelCell.propTypes = {
+  cellIndex: PropTypes.number,
   children: PropTypes.node,
   className: PropTypes.string,
   column: PropTypes.shape({
-    titleKey: PropTypes.string,
+    disableTooltip: PropTypes.bool,
   }),
   record: PropTypes.object.isRequired,
 };

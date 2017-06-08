@@ -7,13 +7,14 @@ import { Tooltip } from '../../tooltips';
 export default function TableCell(props) {
   const {
     className = '',
+    cellIndex,
     column,
     record,
     title,
-    tooltip,
   } = props;
   const {
     formatFn,
+    disableTooltip = false,
   } = column;
   const columnClassName = column.className || '';
 
@@ -26,35 +27,25 @@ export default function TableCell(props) {
     }
   }
 
-  let tooltipComponent;
-  let tooltipAttributes;
-  if (tooltip) {
-    const tooltipId = `tooltip-${record.id}`;
-
-    tooltipAttributes = {'data-tip': true, 'data-for': tooltipId };
-    tooltipComponent = (
-      <Tooltip id={tooltipId}>{tooltip}</Tooltip>
-    );
-  }
-
   return (
     <td
       className={`TableCell ${className} ${columnClassName}`}
     >
-      <div className="TableCell-content" {...tooltipAttributes}>
+      <div className="TableCell-content">
         {children}
       </div>
-      {tooltipComponent}
     </td>
   );
 }
 
 TableCell.propTypes = {
+  cellIndex: PropTypes.number,
   children: PropTypes.node,
   className: PropTypes.string,
   column: PropTypes.shape({
     className: PropTypes.string,
     dataKey: PropTypes.string,
+    disableTooltip: PropTypes.bool,
   }).isRequired,
   formatFn: PropTypes.func,
   record: PropTypes.shape({

@@ -1,5 +1,12 @@
 .Tooltip {
+    background-color: $black !important;
+    border-radius: 0 !important;
+    padding: 6px 8px !important;
     pointer-events: auto !important;
+
+    &:after {
+        border-top-color: $black !important;
+    }
 
     &:hover {
         visibility: visible !important;
