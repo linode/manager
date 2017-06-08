@@ -2,20 +2,13 @@ import _ from 'lodash';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { setError } from '~/actions/errors';
 import { tokens } from '~/api';
 
 import AuthorizedApplication from '../components/AuthorizedApplication';
 
 export class AuthorizedApplicationsPage extends Component {
   static async preload({ dispatch }) {
-    try {
-      await dispatch(tokens.all());
-    } catch (response) {
-      // eslint-disable-next-line no-console
-      console.error(response);
-      dispatch(setError(response));
-    }
+    await dispatch(tokens.all());
   }
 
   renderGroup = (group, i, groups) => {

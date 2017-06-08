@@ -28,7 +28,7 @@ app.use(require('webpack-dev-middleware')(compiler, {
 app.use(require('webpack-hot-middleware')(compiler));
 
 app.get('*', function(req, res) {
-  if (req.url === "/static/common.js") {
+  if (req.url === '/static/common.js') {
     res.send('');
   } else {
     res.sendFile(path.join(__dirname, 'index.html'));

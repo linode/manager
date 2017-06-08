@@ -13,7 +13,6 @@ import {
   SubmitButton,
 } from 'linode-components/forms';
 
-import { setError } from '~/actions/errors';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 import { domains, linodes, nodebalancers, tickets } from '~/api';
@@ -24,17 +23,11 @@ import TicketHelper from '../components/TicketHelper';
 
 export class CreatePage extends Component {
   static async preload({ dispatch }) {
-    try {
-      await Promise.all([
-        dispatch(linodes.all()),
-        dispatch(domains.all()),
-        dispatch(nodebalancers.all()),
-      ]);
-    } catch (response) {
-      // eslint-disable-next-line no-console
-      console.error(response);
-      dispatch(setError(response));
-    }
+    await Promise.all([
+      dispatch(linodes.all()),
+      dispatch(domains.all()),
+      dispatch(nodebalancers.all()),
+    ]);
   }
 
   constructor(props) {
@@ -102,7 +95,9 @@ export class CreatePage extends Component {
           <Link to="/support">Support</Link>
           <h1>Open a ticket</h1>
         </header>
-        <TicketHelper displayHeader />
+        <section>
+          <TicketHelper displayHeader />
+        </section>
         <Card>
           <Form onSubmit={this.onSubmit}>
             <FormGroup className="row" errors={errors} name="summary">

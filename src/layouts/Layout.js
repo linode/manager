@@ -2,10 +2,9 @@ import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
-import { ModalShell } from 'linode-components/modals';
 import { Error } from 'linode-components/errors';
+import { ModalShell } from 'linode-components/modals';
 
-import { setError } from '~/actions/errors';
 import { hideModal } from '~/actions/modal';
 import { hideNotifications } from '~/actions/notifications';
 import { hideSession } from '~/actions/session';
@@ -23,35 +22,18 @@ export class Layout extends Component {
   // all pages are rendered through here and preloads don't get called again
   // if they were just called.
   static async preload({ dispatch, getState }) {
-    try {
-      if (!Object.keys(getState().api.profile).length) {
-        await dispatch(profile.one());
-        // Needed for time display component that is not attached to Redux.
-        const { timezone } = getState().api.profile;
-        setStorage('profile/timezone', timezone);
-      }
-    } catch (response) {
-      dispatch(setError(response));
+    if (!Object.keys(getState().api.profile).length) {
+      await dispatch(profile.one());
+      // Needed for time display component that is not attached to Redux.
+      const { timezone } = getState().api.profile;
+      setStorage('profile/timezone', timezone);
     }
   }
 
   constructor() {
     super();
-    this.renderError = this.renderError.bind(this);
-    this.state = { title: '', link: '' };
-  }
 
-  renderError() {
-    const { errors } = this.props;
-    const subject = encodeURIComponent(`${errors.status} ${errors.statusText}`);
-    const location = window.location.href;
-    const json = JSON.stringify(errors.json, null, 4);
-    const body = encodeURIComponent(
-      `I'm getting the following error on ${location}:\n\n${json}`);
-    const href = `mailto:support@linode.com?subject=${subject}&body=${body}`;
-    return (
-      <Error status={errors.status} href={href} />
-    );
+    this.state = { title: '', link: '' };
   }
 
   render() {
@@ -67,6 +49,7 @@ export class Layout extends Component {
     } = this.props;
     const { title, link } = this.state;
     const githubRoot = `https://github.com/linode/manager/blob/${VERSION || 'master'}/`;
+
     return (
       <div
         className="layout full-height"
@@ -105,7 +88,7 @@ export class Layout extends Component {
         <div className="Main full-height">
           <div className="Main-inner">
             {errors.status ?
-              this.renderError() :
+              <Error status={errors.status} /> :
               this.props.children}
           </div>
           <footer className="footer text-sm-center">

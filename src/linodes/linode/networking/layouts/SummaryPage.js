@@ -5,7 +5,6 @@ import { selectLinode } from '../../utilities';
 import { ipv4ns, ipv6ns, ipv6nsSuffix } from '~/constants';
 import { addIP } from '~/api/linodes';
 import { setSource } from '~/actions/source';
-import { setError } from '~/actions/errors';
 import { Button } from 'linode-components/buttons';
 import { Card, CardHeader } from 'linode-components/cards';
 
@@ -18,11 +17,8 @@ export class SummaryPage extends Component {
 
   addPrivateIP = async () => {
     const { dispatch, linode } = this.props;
-    try {
-      await dispatch(addIP(linode.id, 'private'));
-    } catch (e) {
-      dispatch(setError(e));
-    }
+    // TODO: replace with dispatchOrStoreErrors
+    await dispatch(addIP(linode.id, 'private'));
   }
 
   renderNameservers(isIpv4) {
@@ -108,7 +104,7 @@ export class SummaryPage extends Component {
         <div className="row">
           <div className="col-sm-3 row-label">Address</div>
           <div className="col-sm-9">
-            <div id="slaac">{ipv6.slaac.address} / {ipv6.slaac.prefix}</div>
+            {!ipv6.slaac ? null : <div id="slaac">{ipv6.slaac.address} / {ipv6.slaac.prefix}</div>}
             {ipv6.addresses.map(ip =>
               <div>{ip.address} / {ip.prefix}</div>)}
           </div>
