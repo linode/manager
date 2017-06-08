@@ -52,7 +52,7 @@ function onPageChange() {
   // Force scroll to the top of the page on page change.
   window.scroll(0, 0);
 
-   // Log page views.
+  // Log page views.
   ReactGA.set({ page: window.location.pathname });
   ReactGA.pageview(window.location.pathname);
 }
