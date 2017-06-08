@@ -5,10 +5,7 @@ import * as actions from '../../src/actions/errors';
 
 describe('reducers/errors', () => {
   const defaultState = {
-    json: null,
     status: null,
-    statusText: null,
-    details: false,
   };
   deepFreeze(defaultState);
 
@@ -22,15 +19,11 @@ describe('reducers/errors', () => {
     expect(
       errors(defaultState, {
         type: actions.SET_ERROR,
-        status: 400,
-        statusText: 'Bad Request',
-        json: { },
+        status: 404,
       })
     ).to.deep.equal({
       ...defaultState,
-      status: 400,
-      statusText: 'Bad Request',
-      json: { },
+      status: 404,
     });
   });
 
@@ -39,7 +32,6 @@ describe('reducers/errors', () => {
       errors(defaultState, { type: actions.TOGGLE_DETAILS })
     ).to.deep.equal({
       ...defaultState,
-      details: !defaultState.details,
     });
   });
 });

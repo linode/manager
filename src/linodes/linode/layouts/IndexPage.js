@@ -5,7 +5,6 @@ import { push } from 'react-router-redux';
 import { Link } from 'react-router';
 import { Tabs } from 'linode-components/tabs';
 
-import { setError } from '~/actions/errors';
 import { setTitle } from '~/actions/title';
 import { linodes } from '~/api';
 import { getObjectByLabelLazily } from '~/api/util';
@@ -16,14 +15,8 @@ import { selectLinode } from '../utilities';
 
 export class IndexPage extends Component {
   static async preload({ dispatch, getState }, { linodeLabel }) {
-    try {
-      const { id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
-      await dispatch(linodes.configs.all([id]));
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.error(e);
-      await dispatch(setError(e));
-    }
+    const { id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
+    await dispatch(linodes.configs.all([id]));
   }
 
   constructor(props) {
