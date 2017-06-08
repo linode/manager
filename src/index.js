@@ -42,10 +42,10 @@ store.dispatch(session.initialize);
 
 window.actions = actions; window.thunks = thunks; window.reducer = reducer;
 
-if (ENVIRONMENT === 'production') {
-  ReactGA.initialize(GA_ID);
-} else {
+if (ENVIRONMENT !== 'production') {
   ReactGA.initialize(GA_ID, { debug: true });
+} else {
+  ReactGA.initialize(GA_ID);
 }
 
 function onPageChange() {
