@@ -11,7 +11,7 @@ import { default as Method } from './Method';
 export default function Endpoint(props) {
   const { route } = props;
   const { crumbs, endpoint } = route;
-  const { description, methods, path, resource } = endpoint;
+  const { authenticated, description, methods, path, resource } = endpoint;
 
   return (
     <div className="Endpoint">
@@ -19,8 +19,11 @@ export default function Endpoint(props) {
         <div className="Endpoint-breadcrumbsContainer">
           <Breadcrumbs crumbs={crumbs} />
         </div>
-        <div className="Endpoint-title">
-          <h1>{path}</h1>
+        <div className="Title">
+          <div className="Title-heading">
+            <h1>{path}</h1>
+            {authenticated ? <small className="text-muted"><i className="fa fa-lock"></i> Authenticated</small> : null}
+          </div>
           <p>{description}</p>
         </div>
         <div className="Endpoint-methods">

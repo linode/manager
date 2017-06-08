@@ -4,13 +4,12 @@ import { Breadcrumbs } from 'linode-components/breadcrumbs';
 import { Table } from 'linode-components/tables';
 import { LinkCell } from 'linode-components/tables/cells';
 
-import { API_VERSION } from '~/constants';
+import { API_ROOT, API_VERSION } from '~/constants';
 
-
-export default function Python() {
+export default function Index() {
   return(
     <section className="Article">
-      <h1>Python Guide</h1>
+      <h1>cURL Guide</h1>
       <Table
         className="Table--secondary"
         columns={[
@@ -27,9 +26,14 @@ export default function Python() {
         ]}
         data={[
           {
-            href: `/${API_VERSION}/guides/python/introduction`,
-            path: 'Introduction',
-            description: 'The introductory summary to using the Python guide',
+            href: `/${API_VERSION}/guides/curl/testing-with-curl`,
+            path: 'Testing with cURL',
+            description: 'A crash course on cURL and how to use it to try out the API.',
+          },
+          {
+            href: `/${API_VERSION}/guides/curl/creating-a-linode`,
+            path: 'Creating a Linode',
+            description: 'Starting from nothing and ending with a running server.',
           },
         ]}
       />

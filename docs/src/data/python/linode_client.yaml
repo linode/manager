@@ -11,10 +11,10 @@ constructor:
                 The OAuth Token to use when talking to the the API
         base_url:
             _keyword: true
-            desc: Who this LinodeClient should talk to.  Set to https://api.alpha.linode.com/v4 for alpha environment.
+            desc: Who this LinodeClient should talk to.
             _default: "'https://api.linode.com/v4'"
     example: >
-            client = linode.LinodeClient('my-token', base_url='https://api.alpha.linode.com/v4')
+            client = linode.LinodeClient('my-token')
 methods:
     get_datacenters:
         desc: >

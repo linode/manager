@@ -1,6 +1,6 @@
 {
   "name": "linode-api-docs",
-  "version": "0.4.0",
+  "version": "0.6.0",
   "description": "Linode API Docs",
   "main": "src/index.js",
   "scripts": {
@@ -57,14 +57,17 @@
     "bootstrap": "^4.0.0-alpha.6",
     "clipboard": "^1.6.1",
     "fontawesome": "^4.5.0",
+    "highlight.js": "https://registry.npmjs.org/highlight.js/-/highlight.js-9.12.0.tgz",
     "history": "^2.1.2",
     "linode-components": "file:../components",
     "lodash": "^4.16.4",
     "moment": "^2.17.1",
     "moment-timezone": "^0.5.11",
     "react": "^15.1.0",
+    "react-clipboard.js": "^1.1.2",
     "react-dom": "^15.1.0",
     "react-ga": "^2.1.2",
+    "react-highlight": "^0.10.0",
     "react-router": "^2.4.1",
     "react-tabs": "^0.7.0"
   }

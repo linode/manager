@@ -3,14 +3,6 @@
         padding: 25px;
     }
 
-    &-title {
-        padding: 10px 0;
-
-        h1 {
-            margin: 0;
-        }
-    }
-
     &-body {
 
     }
@@ -36,6 +28,6 @@
     }
 
     .divider {
-        border: $border;
+        border-top: $border;
     }
 }
