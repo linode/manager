@@ -1,6 +1,6 @@
 {
   "name": "linode-api-docs",
-  "version": "0.4.0",
+  "version": "0.5.2",
   "dependencies": {
     "asap": {
       "version": "2.0.5",
@@ -61,6 +61,11 @@
       "version": "1.2.2",
       "from": "good-listener@>=1.2.0 <2.0.0",
       "resolved": "https://registry.npmjs.org/good-listener/-/good-listener-1.2.2.tgz"
+    },
+    "highlight.js": {
+      "version": "9.12.0",
+      "from": "https://registry.npmjs.org/highlight.js/-/highlight.js-9.12.0.tgz",
+      "resolved": "https://registry.npmjs.org/highlight.js/-/highlight.js-9.12.0.tgz"
     },
     "history": {
       "version": "2.1.2",
@@ -172,6 +177,11 @@
       "from": "react@>=15.1.0 <16.0.0",
       "resolved": "https://registry.npmjs.org/react/-/react-15.5.4.tgz"
     },
+    "react-clipboard.js": {
+      "version": "1.1.2",
+      "from": "react-clipboard.js@latest",
+      "resolved": "https://registry.npmjs.org/react-clipboard.js/-/react-clipboard.js-1.1.2.tgz"
+    },
     "react-dom": {
       "version": "15.5.4",
       "from": "react-dom@>=15.1.0 <16.0.0",
@@ -181,6 +191,11 @@
       "version": "2.2.0",
       "from": "react-ga@>=2.1.2 <3.0.0",
       "resolved": "https://registry.npmjs.org/react-ga/-/react-ga-2.2.0.tgz"
+    },
+    "react-highlight": {
+      "version": "0.10.0",
+      "from": "react-highlight@latest",
+      "resolved": "https://registry.npmjs.org/react-highlight/-/react-highlight-0.10.0.tgz"
     },
     "react-router": {
       "version": "2.8.1",

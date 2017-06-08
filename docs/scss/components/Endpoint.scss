@@ -5,9 +5,19 @@
 
     &-title {
         padding: 10px 0;
+    }
+
+    &-titleHeading {
+        h1, small {
+            display: inline;
+        }
 
         h1 {
             margin: 0;
+        }
+
+        small {
+            margin-left: 10px;
         }
     }
 
@@ -36,6 +46,6 @@
     }
 
     .divider {
-        border: $border;
+        border-top: $border;
     }
 }

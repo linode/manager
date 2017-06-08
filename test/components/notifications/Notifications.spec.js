@@ -40,7 +40,7 @@ describe('components/notifications/Notifications', function () {
   it('implements fetching all events', () => {
     expect(notifications.instance().fetchAllEvents).to.exist;
 
-    notifications.instance().fetchAllEvents();
+    notifications.instance().fetchAllEvents()(dispatch);
 
     expect(dispatch.callCount).to.equal(1);
   });

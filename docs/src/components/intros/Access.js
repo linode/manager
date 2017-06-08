@@ -1,7 +1,9 @@
 import React from 'react';
-import { LOGIN_ROOT } from '~/constants';
 
 import { Table } from 'linode-components/tables';
+import Example from '../Example';
+import { LOGIN_ROOT } from '~/constants';
+
 
 
 export default function Authentication() {
@@ -10,7 +12,7 @@ export default function Authentication() {
       <h1>Authentication</h1>
       <section>
         <p>
-          To use some API endpoints, authentication is required. This is indicated by the <span className="text-muted">&nbsp;<i className="fa fa-lock"></i>&nbsp;Authenticated</span> notation
+          To use some API endpoints, authentication is required. This is indicated by the <small className="text-muted">&nbsp;<i className="fa fa-lock"></i>&nbsp;Authenticated</small> notation
           throughout the documentation. We use the basic OAuth workflow where you can create
           <em> applications</em> that integrate with Linode by registering those applications with us.
           You then use OAuth to authenticate on behalf of the user to request access to resources from their account.
@@ -31,11 +33,7 @@ export default function Authentication() {
           If you are making a web based application this is the recommended method for getting a user's authorization.
           When you want a user to log into your service, you can direct them to a URL similar to this:
         </p>
-          <pre>
-            <code>
-              { LOGIN_ROOT }/oauth/authorize?client_id=<strong>client_id</strong>
-            </code>
-          </pre>
+        <Example example={`${LOGIN_ROOT}/oauth/authorize?client_id=client_id`} name="bash" noclipboard />
         <p>
           The user logs in to Linode and is presented the scope levels your application is requesting.
           Once the user accepts your request for access, we redirect them back to you with an <em>access code</em>.
@@ -48,11 +46,11 @@ export default function Authentication() {
           OAuth client application will be used.
         </p>
         <p>
-          When the user is redirected, several parameters will be added to the query string:
-          <code>code</code>, <code>username</code>, <code>email</code>, and <code>state</code>.
+          When the user is redirected, two parameters will be added to the query string:
+          <code>code</code> and <code>state</code>.
           The last parameter will match the state you gave us at the start of the flow. This allows you to ensure
           that the OAuth flow was initiated by your application, rather than by someone manually navigating to
-          { LOGIN_ROOT } with your <code>client_id</code>. The username and email are just for convenience.
+          { LOGIN_ROOT } with your <code>client_id</code>.
           The important parameter is the code, this is the <em>access code</em> you need to continue the OAuth flow.
         </p>
         <p>
@@ -93,13 +91,9 @@ export default function Authentication() {
         <p>
           Once the user has logged in to Linode and you have received an <em>access code</em>, you
           will need to exchange that access code for an <em>Authorization token</em>. You do this by
-          making the following HTTP request:
+          making the following HTTP POST request:
         </p>
-        <pre>
-          <code>
-            POST { LOGIN_ROOT }/oauth/token
-          </code>
-        </pre>
+        <Example example={`${LOGIN_ROOT}/oauth/token`} name="bash" noclipboard />
         <p>
           Make this request as <code>application/x-www-form-urlencoded</code> or
           as <code>multipart/form-data</code> and include the following parameters
@@ -120,14 +114,14 @@ export default function Authentication() {
         <p>
           You'll get a response like this:
         </p>
-        <pre>
-          <code>
-{`{
-"scopes": "linodes:create",
-"access_token": "03d084436a6c91fbafd5c4b20c82e5056a2e9ce1635920c30dc8d81dc7a6665c"
+        <Example
+          example={`{
+  "scopes": "linodes:create",
+  "access_token": "03d084436a6c91fbafd5c4b20c82e5056a2e9ce1635920c30dc8d81dc7a6665c"
 }`}
-          </code>
-        </pre>
+          name="json"
+          noclipboard
+        />
         <p>
           Note that we include the scopes here. In the future, we may change the
           login flow to allow the user to deny access to specific scopes. You
@@ -137,11 +131,7 @@ export default function Authentication() {
           can proceed to make authenticated HTTP requests with the API by adding
           this header to each request:
         </p>
-        <pre>
-          <code>
-            Authorization: token 03d084436a6c91fbafd5c4b20c82e5056a2e9ce1635920c30dc8d81dc7a6665c
-          </code>
-        </pre>
+        <Example example="Authorization: token 03d084436a6c91fbafd5c4b20c82e5056a2e9ce1635920c30dc8d81dc7a6665c" name="bash" noclipboard />
       </section>
       <section>
         <h2>OAuth Scopes</h2>
@@ -169,10 +159,10 @@ export default function Authentication() {
         </ul>
         <p>
           In addition to the level of access you request,
-          you will be granted each access level below it. For example, requesting
-          <em>modify</em> access will also grant you <em>view</em> access, and requesting <em>delete</em>
-          access will grant you <em>full</em> access to that resource (<code>resource:*</code>
-          has the same effect).
+          you will be granted each access level below it. For example, requesting <em>modify</em> access
+          will also grant you <em>view</em> access, and requesting <em>delete</em> access
+          will grant you <em>full</em> access to that resource (<code>resource:*</code> has
+          the same effect).
         </p>
         <p>
           Each API endpoint documented on this page includes the OAuth scope necessary
