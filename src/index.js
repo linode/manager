@@ -17,7 +17,7 @@ import { hideModal } from '~/actions/modal';
 import { actions, thunks, reducer } from '~/api/configs/linodes';
 import Billing from '~/billing';
 import DevTools from '~/components/DevTools';
-import { GA_ID } from '~/constants';
+import { GA_ID, ENVIRONMENT } from '~/constants';
 import Domains from '~/domains';
 import Layout from '~/layouts/Layout';
 import Logout from '~/layouts/Logout';
@@ -42,7 +42,11 @@ store.dispatch(session.initialize);
 
 window.actions = actions; window.thunks = thunks; window.reducer = reducer;
 
-ReactGA.initialize(GA_ID);
+if (ENVIRONMENT !== 'production') {
+  ReactGA.initialize(GA_ID, { debug: true });
+} else {
+  ReactGA.initialize(GA_ID);
+}
 
 function onPageChange() {
   // Force scroll to the top of the page on page change.
