@@ -6,6 +6,7 @@ import { Card } from 'linode-components/cards';
 import { Form, FormGroup, FormGroupError, SubmitButton, Input } from 'linode-components/forms';
 
 import { setSource } from '~/actions/source';
+import { setTitle } from '~/actions/title';
 import { nodebalancers } from '~/api';
 import { objectFromMapByLabel } from '~/api/util';
 import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
@@ -35,6 +36,7 @@ export class SettingsPage extends Component {
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => nodebalancers.put({ client_conn_throttle: +connThrottle, label }, id),
       () => label !== oldLabel ? push(`/nodebalancers/${label}/settings`) : () => {},
+      () => setTitle(label),
     ]));
   }
 

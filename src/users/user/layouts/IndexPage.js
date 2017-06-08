@@ -7,6 +7,7 @@ import { Tabs } from 'linode-components/tabs';
 
 import { users } from '~/api';
 import { getObjectByLabelLazily } from '~/api/util';
+import { setTitle } from '~/actions/title';
 import { setError } from '~/actions/errors';
 
 export class IndexPage extends Component {
@@ -21,6 +22,11 @@ export class IndexPage extends Component {
       // eslint-disable-next-line no-console
       await dispatch(setError(response));
     }
+  }
+
+  async componentDidMount() {
+    const { dispatch, user } = this.props;
+    dispatch(setTitle(user.username));
   }
 
   render() {

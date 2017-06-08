@@ -7,6 +7,7 @@ import { Form, FormGroup, FormGroupError, Input, SubmitButton } from 'linode-com
 
 import { linodes } from '~/api';
 import { setSource } from '~/actions/source';
+import { setTitle } from '~/actions/title';
 import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
 
 import { selectLinode } from '../../utilities';
@@ -31,6 +32,7 @@ export class DisplayPage extends Component {
 
     const requests = [
       () => linodes.put({ group, label }, id),
+      () => setTitle(label),
     ];
 
     if (oldLabel !== label) {
