@@ -53,7 +53,7 @@ export default function TicketReply(props) {
       title={createdBy}
       subtitle={created}
       icon={icon}
-      tags={props.reply.from_linode && ['Linode Employee']}
+      tags={props.reply.from_linode ? ['Linode Employee'] : []}
     />
   );
 
