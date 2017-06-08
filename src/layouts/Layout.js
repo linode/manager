@@ -48,7 +48,8 @@ export class Layout extends Component {
       dispatch,
     } = this.props;
     const { title, link } = this.state;
-    const githubRoot = `https://github.com/linode/manager/blob/v${VERSION || 'master'}/`;
+    const version = VERSION ? `v${VERSION}` : 'master';
+    const githubRoot = `https://github.com/linode/manager/blob/${version}/`;
 
     return (
       <div
