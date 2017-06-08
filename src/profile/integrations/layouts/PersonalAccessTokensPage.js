@@ -6,7 +6,6 @@ import CreateHelper from '~/components/CreateHelper';
 
 import { showModal, hideModal } from '~/actions/modal';
 import { Button } from 'linode-components/buttons';
-import { setError } from '~/actions/errors';
 import { tokens } from '~/api';
 import PersonalAccessToken from '../components/PersonalAccessToken';
 import CreatePersonalAccessToken from '../components/CreatePersonalAccessToken';
@@ -14,15 +13,7 @@ import CreatePersonalAccessToken from '../components/CreatePersonalAccessToken';
 
 export class PersonalAccessTokensPage extends Component {
   static async preload({ dispatch }) {
-    try {
-      await dispatch(tokens.all());
-    } catch (response) {
-      if (!response.json) {
-        // eslint-disable-next-line no-console
-        return console.error(response);
-      }
-      dispatch(setError(response));
-    }
+    await dispatch(tokens.all());
   }
 
   renderCreatePersonalAccessToken = () => {

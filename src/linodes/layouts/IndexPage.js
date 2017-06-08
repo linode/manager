@@ -4,6 +4,8 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
+import CreateHelper from '~/components/CreateHelper';
+
 import { ScrollingList } from 'linode-components/lists';
 import { ListBody, ListGroup } from 'linode-components/lists/bodies';
 import { MassEditControl } from 'linode-components/lists/controls';
@@ -22,7 +24,6 @@ import {
   BackupsCell,
 } from '~/components/tables/cells';
 
-import { setError } from '~/actions/errors';
 import { default as toggleSelected } from '~/actions/select';
 import { showModal, hideModal } from '~/actions/modal';
 import { setSource } from '~/actions/source';
@@ -33,20 +34,13 @@ import {
   powerOffLinode,
   rebootLinode,
 } from '~/api/linodes';
-import CreateHelper from '~/components/CreateHelper';
 
 
 const OBJECT_TYPE = 'linodes';
 
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
-    try {
-      await dispatch(api.all());
-    } catch (response) {
-      // eslint-disable-next-line no-console
-      console.error(response);
-      dispatch(setError(response));
-    }
+    await dispatch(api.all());
   }
 
   componentDidMount() {
