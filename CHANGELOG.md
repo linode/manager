@@ -6,6 +6,23 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [0.8.0] 2017-06-08
+### Changed
+- added Linode Employee identifier to ticket reply #2038
+- confirmation added to revoke token button #2033
+- uses classic Manager graph colors #2002
+- confirmation added to reboot and power off #1987
+- delete added to Linode dropdown #1987
+
+### Fixed
+- fixed support ticket layout and clearing text field on reply submission #2038
+- fixed notification text not granular enough #2032
+- fixed page title changes when the user triggers a change on the page #2016
+- fixed error handling to display a modal on error except for 401s and 404s #2009
+- launch lish is available from any Linode state #1987
+- rebuild and bulk actions trigger power progress bar #1987
+- fixed page source link 404 #2044
+
 ## [0.7.2] 2017-06-02
 ### Fixed
 - two_factor_auth on profile is a boolean #1997
