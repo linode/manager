@@ -28,6 +28,7 @@ export class AuthorizedApplicationsPage extends Component {
           clientId={client.client.id}
           id={client.id}
           expires={client.expiry}
+          created={client.created}
           dispatch={dispatch}
         />
       </div>

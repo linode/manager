@@ -41,6 +41,7 @@ describe('profile/integrations/layouts/AuthorizedApplicationsPage', () => {
       clientId: applicationTokens[0].client.id,
       id: applicationTokens[0].id,
       expires: applicationTokens[0].expiry,
+      created: applicationTokens[0].created,
       dispatch,
     });
   });

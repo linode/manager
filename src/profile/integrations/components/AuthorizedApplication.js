@@ -23,10 +23,10 @@ export default class AuthorizedApplication extends Component {
     ]));
   }
 
-  renderRevokeApp(id, name) {
+  renderRevokeApp(id, name, created) {
     const { dispatch } = this.props;
 
-    dispatch(showModal('Revoke Authorized Application',
+    dispatch(showModal('Revoke Token Access',
       <ConfirmModalBody
         buttonText="Revoke"
         onOk={async () => {
@@ -36,23 +36,28 @@ export default class AuthorizedApplication extends Component {
         onCancel={() => dispatch(hideModal())}
       >
         <p>
-          Are you sure you want to
-          revoke <strong>{name}</strong>'s access?
+          Are you sure you want to revoke this token's access,
+          created {created} by <strong>{name}</strong>?
         </p>
       </ConfirmModalBody>
     ));
   }
 
   render() {
-    const { label, scopes, id, clientId, expires } = this.props;
+    const { label, scopes, id, clientId, expires, created } = this.props;
     const icon = clientId ? `${API_ROOT}/account/clients/${clientId}/thumbnail` : '';
     const expireValue = <TimeDisplay time={expires} />;
+    const createValue = <TimeDisplay time={created} />;
 
     const scopeData = OAUTH_SCOPES.map(function (scope) {
       return { scopes: scopes, scope: scope };
     });
 
-    const nav = <Button onClick={() => this.renderRevokeApp(id, label)}>Revoke</Button>;
+    const nav = (
+      <Button onClick={() => this.renderRevokeApp(id, label, createValue)}>
+        Revoke
+      </Button>
+    );
     const header = <CardImageHeader title={label} icon={icon} nav={nav} />;
 
     return (
@@ -89,5 +94,6 @@ AuthorizedApplication.propTypes = {
   id: PropTypes.any.isRequired,
   clientId: PropTypes.any.isRequired,
   expires: PropTypes.string.isRequired,
+  created: PropTypes.string.isRequired,
   dispatch: PropTypes.func.isRequired,
 };
