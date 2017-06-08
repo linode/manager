@@ -47,14 +47,18 @@ select.form-control {
     max-width: 100%;
 }
 
-input.form-control.input-md,
-select.form-control.input-md {
-  width: 275px;
+.input-md {
+    input.form-control,
+    select.form-control.input-md {
+        width: 275px;
+    }
 }
 
-input.form-control.input-lg,
-select.form-control.input-lg {
-    min-width: 600px;
+.input-lg {
+    input.form-control,
+    select.form-control {
+        min-width: 600px;
+    }
 }
 
 input[type="number"].form-control {

@@ -52,16 +52,19 @@ export class TicketPage extends Component {
     const { attachments, reply: description } = this.state;
     const { ticket, dispatch } = this.props;
 
-    const requests = [];
+    const requests = [
+      // All other requests will get unshift()ed before this so this happens last.
+      () => this.setState({ reply: '', attachments: [] }),
+    ];
 
     if (description) {
-      requests.push(() => tickets.replies.post({ description }, [ticket.id]));
+      requests.unshift(() => tickets.replies.post({ description }, [ticket.id]));
     }
 
     for (let i = 0; i < attachments.length; i++) {
       const attachment = attachments[i];
 
-      requests.push(() => {
+      requests.unshift(() => {
         if ((attachment.size / (1024 * 1024)) < MAX_UPLOAD_SIZE_MB) {
           return addTicketAttachment(ticket.id, attachment);
         }

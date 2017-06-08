@@ -13,6 +13,12 @@
         width: 40px;
     }
 
+    &-tag {
+        border: $border;
+        padding: 1px 3px;
+        margin-left: 10px;
+    }
+
     &-nav {
         padding: 5px 0 0 0;
     }
