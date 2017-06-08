@@ -18,17 +18,17 @@ describe('components/Error', () => {
 
     expect(error.find('h1').text()).to.equal('404');
     expect(error.find('h2').text()).to.equal('Whoops!');
-    expect(error.find('p').text()).to.equal(
-      'The page you\'re trying to reach does not exist. Bummer!');
+    expect(error.find('.Error-body').text()).to.equal(
+      'The page you\'re trying to reach does not exist.');
   });
 
   it('renders a 400 component', () => {
-    const error = shallow(<Error status={400} description="foobar" />);
+    const error = shallow(<Error status={400} />);
 
     expect(error.find('h1').text()).to.equal('400');
     expect(error.find('h2').text()).to.equal('Doh!');
-    expect(error.find('p').text()).to.equal(
-      'You are not authorized to access this page. foobar');
+    expect(error.find('.Error-body').text()).to.equal(
+      'You are not authorized to access this page.');
   });
 
   it('renders a 500 component', () => {

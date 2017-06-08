@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 
 import { Button } from 'linode-components/buttons';
 
-import { setError } from '~/actions/errors';
 import { showModal, hideModal } from '~/actions/modal';
 import { clients } from '~/api';
 import CreateHelper from '~/components/CreateHelper';
@@ -14,13 +13,7 @@ import { MyApplication, CreateOrEditApplication } from '../components';
 
 export class MyApplicationsPage extends Component {
   static async preload({ dispatch }) {
-    try {
-      await dispatch(clients.all());
-    } catch (response) {
-      // eslint-disable-next-line no-console
-      console.error(response);
-      dispatch(setError(response));
-    }
+    await dispatch(clients.all());
   }
 
   renderCreateOAuthClient = () => {

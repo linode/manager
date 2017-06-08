@@ -7,7 +7,6 @@ import {
 } from 'linode-components/forms';
 
 import { setSource } from '~/actions/source';
-import { setError } from '~/actions/errors';
 import { setTitle } from '~/actions/title';
 import { account } from '~/api';
 import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
@@ -15,12 +14,8 @@ import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
 
 export class IndexPage extends Component {
   static async preload({ dispatch, getState }) {
-    try {
-      if (!Object.keys(getState().api.account).length) {
-        await dispatch(account.one());
-      }
-    } catch (response) {
-      dispatch(setError(response));
+    if (!Object.keys(getState().api.account).length) {
+      await dispatch(account.one());
     }
   }
 

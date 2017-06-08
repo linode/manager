@@ -16,7 +16,6 @@ import {
   LinkCell,
 } from 'linode-components/tables/cells';
 
-import { setError } from '~/actions/errors';
 import { showModal, hideModal } from '~/actions/modal';
 import { default as toggleSelected } from '~/actions/select';
 import { setSource } from '~/actions/source';
@@ -28,15 +27,8 @@ import CreateHelper from '~/components/CreateHelper';
 const OBJECT_TYPE = 'domains';
 
 export class IndexPage extends Component {
-
   static async preload({ dispatch }) {
-    try {
-      await dispatch(domains.all());
-    } catch (response) {
-      // eslint-disable-next-line no-console
-      console.error(response);
-      dispatch(setError(response));
-    }
+    await dispatch(domains.all());
   }
 
   constructor(props) {

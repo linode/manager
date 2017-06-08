@@ -5,7 +5,6 @@ import { push } from 'react-router-redux';
 
 import { Card, CardHeader } from 'linode-components/cards';
 
-import { setError } from '~/actions/errors';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 import * as api from '~/api';
@@ -19,18 +18,14 @@ import Plan from '../../components/Plan';
 
 export class IndexPage extends Component {
   static async preload({ dispatch, getState }) {
-    try {
-      const requests = [];
+    const requests = [];
 
-      ['types', 'regions', 'distributions']
-        .filter(type => !Object.values(getState().api[type][type]).length)
-        .forEach(type => requests.push(api[type].all()));
+    ['types', 'regions', 'distributions']
+      .filter(type => !Object.values(getState().api[type][type]).length)
+      .forEach(type => requests.push(api[type].all()));
 
-      // Fetch all objects we haven't already grabbed this page session.
-      await Promise.all(requests.map(request => dispatch(request)));
-    } catch (response) {
-      await dispatch(setError(response));
-    }
+    // Fetch all objects we haven't already grabbed this page session.
+    await Promise.all(requests.map(request => dispatch(request)));
   }
 
   constructor() {

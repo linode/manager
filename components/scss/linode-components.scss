@@ -89,7 +89,7 @@ p {
 hr {
     width: 100%;
     margin: 0;
-    background: $dark-gray;
+    background: $gray;
 }
 
 small {
@@ -141,14 +141,16 @@ footer {
     }
 }
 
-.error {
+.Error {
+    text-align: center;
+
     h1 {
         font-size: 8rem; /* Special font-size case */
         color: $dark-gray;
     }
 
-    p {
-        margin: 10px;
+    &-body {
+        margin-top: 10px;
     }
 }
 

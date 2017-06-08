@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { setError } from '~/actions/errors';
 import { linodes } from '~/api';
 
 import { BackupRestore, BackupDetails } from '../components';
@@ -10,12 +9,8 @@ import { selectLinode } from '../../utilities';
 
 export class BackupPage extends Component {
   static async preload({ dispatch }) {
-    try {
-      // All linodes are in-fact needed for restore dialog.
-      await dispatch(linodes.all());
-    } catch (e) {
-      dispatch(setError(e));
-    }
+    // All linodes are in-fact needed for restore dialog.
+    await dispatch(linodes.all());
   }
 
   render() {

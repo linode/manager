@@ -6,7 +6,6 @@ import { Tabs } from 'linode-components/tabs';
 
 import Breadcrumbs from '~/components/Breadcrumbs';
 
-import { setError } from '~/actions/errors';
 import { nodebalancers } from '~/api';
 import { getObjectByLabelLazily, objectFromMapByLabel } from '~/api/util';
 import { setTitle } from '~/actions/title';
@@ -14,14 +13,8 @@ import { setTitle } from '~/actions/title';
 
 export class IndexPage extends Component {
   static async preload({ dispatch, getState }, { nbLabel }) {
-    try {
-      const { id } = await dispatch(getObjectByLabelLazily('nodebalancers', nbLabel));
-      await dispatch(nodebalancers.configs.all([id]));
-    } catch (response) {
-      // eslint-disable-next-line no-console
-      console.error(response);
-      dispatch(setError(response));
-    }
+    const { id } = await dispatch(getObjectByLabelLazily('nodebalancers', nbLabel));
+    await dispatch(nodebalancers.configs.all([id]));
   }
 
   async componentDidMount() {

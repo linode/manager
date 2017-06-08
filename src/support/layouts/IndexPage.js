@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import _ from 'lodash';
 
-import { setError } from '~/actions/errors';
 import { tickets } from '~/api';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
@@ -52,13 +51,7 @@ export function renderTicketCreationInfo(ticket) {
 
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
-    try {
-      await dispatch(tickets.all());
-    } catch (response) {
-      // eslint-disable-next-line no-console
-      console.error(response);
-      dispatch(setError(response));
-    }
+    await dispatch(tickets.all());
   }
 
   async componentDidMount() {

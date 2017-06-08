@@ -1,24 +1,23 @@
+import _ from 'lodash';
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 
-import _ from 'lodash';
-
-import { EVENT_POLLING_DELAY } from '~/constants';
 import { events } from '~/api';
+import { eventRead } from '~/api/events';
+import Polling from '~/api/polling';
 import {
   createHeaderFilter,
   greaterThanDatetimeFilter,
   lessThanDatetimeFilter,
   lessThanNowFilter,
 } from '~/api/util';
-import Polling from '~/api/polling';
+import { EVENT_POLLING_DELAY } from '~/constants';
 
-import { eventRead } from '~/api/events';
 import NotificationList from './NotificationList';
+
 
 const MIN_SHOWN_EVENTS = 10;
 const POLLING_ID = 'events';
-
 
 export class Notifications extends Component {
   constructor(props) {
@@ -105,9 +104,7 @@ export class Notifications extends Component {
 
   async fetchEventsPage(options = null) {
     const { dispatch } = this.props;
-    await dispatch(
-      events.page(0, [], null, true, null, options)
-    );
+    await dispatch(events.page(0, [], null, true, null, options));
   }
 
   fetchAllEvents() {

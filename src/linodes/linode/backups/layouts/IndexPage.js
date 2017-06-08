@@ -8,7 +8,6 @@ import { Tabs } from 'linode-components/tabs';
 import { Form, SubmitButton } from 'linode-components/forms';
 
 import { setSource } from '~/actions/source';
-import { setError } from '~/actions/errors';
 import { enableBackup } from '~/api/backups';
 import { linodeBackups } from '~/api/linodes';
 import { getObjectByLabelLazily } from '~/api/util';
@@ -19,15 +18,9 @@ import { selectLinode } from '../../utilities';
 
 export class IndexPage extends Component {
   static async preload({ dispatch, getState }, { linodeLabel }) {
-    try {
-      const { id, backups } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
-      if (backups.enabled) {
-        await dispatch(linodeBackups([id]));
-      }
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.error(e);
-      await dispatch(setError(e));
+    const { id, backups } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
+    if (backups.enabled) {
+      await dispatch(linodeBackups([id]));
     }
   }
 

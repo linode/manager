@@ -6,7 +6,6 @@ import { Button } from 'linode-components/buttons';
 import { Card, CardHeader } from 'linode-components/cards';
 import { FormGroup, Input, Select } from 'linode-components/forms';
 
-import { setError } from '~/actions/errors';
 import { setSource } from '~/actions/source';
 import { getObjectByLabelLazily } from '~/api/util';
 import { linodeStats } from '~/api/linodes';
@@ -28,14 +27,7 @@ function formatData(colors, datasets, legends) {
 
 export class DashboardPage extends Component {
   static async preload({ dispatch, getState }, { linodeLabel }) {
-    let id;
-    try {
-      ({ id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel)));
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.error(e);
-      await dispatch(setError(e));
-    }
+    const { id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
 
     try {
       await dispatch(linodeStats([id]));

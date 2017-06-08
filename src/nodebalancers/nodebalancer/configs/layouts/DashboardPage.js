@@ -11,7 +11,6 @@ import { ButtonCell } from 'linode-components/tables/cells';
 import { DeleteModalBody } from 'linode-components/modals';
 
 import { showModal, hideModal } from '~/actions/modal';
-import { setError } from '~/actions/errors';
 import { nodebalancers } from '~/api';
 import { getObjectByLabelLazily, objectFromMapByLabel } from '~/api/util';
 import { NODEBALANCER_CONFIG_ALGORITHMS, NODEBALANCER_CONFIG_STICKINESS } from '~/constants';
@@ -22,15 +21,9 @@ import { dispatchOrStoreErrors } from '~/components/forms';
 
 export class DashboardPage extends Component {
   static async preload({ dispatch, getState }, { nbLabel, configId }) {
-    try {
-      const { id } = await dispatch(getObjectByLabelLazily('nodebalancers', nbLabel));
-      await dispatch(nodebalancers.configs.one([id, configId]));
-      await dispatch(nodebalancers.configs.nodes.all([id, configId]));
-    } catch (response) {
-      // eslint-disable-next-line no-console
-      console.error(response);
-      dispatch(setError(response));
-    }
+    const { id } = await dispatch(getObjectByLabelLazily('nodebalancers', nbLabel));
+    await dispatch(nodebalancers.configs.one([id, configId]));
+    await dispatch(nodebalancers.configs.nodes.all([id, configId]));
   }
 
   constructor() {

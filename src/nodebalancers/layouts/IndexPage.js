@@ -2,7 +2,6 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
-import { setError } from '~/actions/errors';
 import { default as toggleSelected } from '~/actions/select';
 import { showModal, hideModal } from '~/actions/modal';
 import { nodebalancers as api } from '~/api';
@@ -29,15 +28,8 @@ const OBJECT_TYPE = 'nodebalancers';
 
 
 export class IndexPage extends Component {
-
   static async preload({ dispatch }) {
-    try {
-      await dispatch(api.all());
-    } catch (response) {
-      // eslint-disable-next-line no-console
-      console.error(response);
-      dispatch(setError(response));
-    }
+    await dispatch(api.all());
   }
 
   constructor(props) {

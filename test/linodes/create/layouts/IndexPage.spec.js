@@ -4,7 +4,6 @@ import React from 'react';
 import { push } from 'react-router-redux';
 import sinon from 'sinon';
 
-import * as errors from '~/actions/errors';
 import { IndexPage } from '~/linodes/create/layouts/IndexPage';
 
 import { expectDispatchOrStoreErrors, expectObjectDeepEquals, expectRequest } from '@/common';
@@ -14,26 +13,6 @@ describe('linodes/create/layouts/IndexPage', () => {
   const sandbox = sinon.sandbox.create();
   afterEach(() => {
     sandbox.restore();
-  });
-
-  it('dispatches an error if fetching when mounted fails', async () => {
-    const setError = sandbox.stub(errors, 'setError');
-
-    const dispatch = sandbox.stub();
-    const error = 'this is my error string';
-    dispatch.onCall(0).throws(new Error(error));
-
-    await IndexPage.preload({ dispatch, getState: () => ({
-      api: {
-        types: { types: {} },
-        distributions: { distributions: {} },
-        regions: { regions: {} },
-      },
-    }) }, { });
-
-    expect(dispatch.callCount).to.equal(2);
-    expect(setError.callCount).to.equal(1);
-    expect(setError.firstCall.args[0].message).to.equal(error);
   });
 
   it('selects a source when appropriate', () => {

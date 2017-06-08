@@ -8,12 +8,6 @@ body,
 
 .layout {
     min-width: 800px;
-
-    &--appLoader .MainHeader .container {
-        & > :not(.MainHeader-brand, .MainHeader-link) {
-            display: none;
-        }
-    }
 }
 
 .row-eq-height {

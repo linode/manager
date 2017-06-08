@@ -17,14 +17,14 @@ export default class ConfirmModalBody extends Component {
   }
 
   render() {
-    const { className, buttonText, buttonDisabledText, onCancel, children } = this.props;
+    const { className, buttonText, buttonDisabledText, onCancel, noCancel, children } = this.props;
     const { loading } = this.state;
 
     return (
       <Form className={`ConfirmModalBody-body ${className}`} onSubmit={this.onSubmit}>
         {React.isValidElement(children) ? children : <p>{children}</p>}
         <div className="Modal-footer">
-          <CancelButton disabled={loading} onClick={onCancel} />
+          {noCancel ? null : <CancelButton disabled={loading} onClick={onCancel} />}
           <SubmitButton
             disabled={loading}
             disabledChildren={buttonDisabledText || 'Confirmed'}
@@ -42,8 +42,10 @@ ConfirmModalBody.propTypes = {
   buttonDisabledText: PropTypes.string,
   onOk: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
+  noCancel: PropTypes.bool.isRequired,
 };
 
 ConfirmModalBody.defaultProps = {
   className: '',
+  noCancel: false,
 };

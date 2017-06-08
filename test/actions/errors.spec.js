@@ -21,39 +21,14 @@ describe('actions/errors', () => {
       expect(actions.setError({})).to.be.a('function');
     });
 
-    it('retrieve the body for JSON responses', async () => {
-      const json = sandbox.stub();
-      json.returns({ foo: 'bar' });
-      const response = {
-        headers: {
-          get: () => 'application/json',
-        },
-        json,
-        status: 200,
-      };
-      const thunk = actions.setError(response);
-      await thunk(() => {});
-      expect(json.callCount).to.equal(1);
-    });
-
     it('dispatches a SET_ERROR action', async () => {
-      const response = {
-        headers: {
-          get: () => 'application/json',
-        },
-        json: () => ({ foo: 'bar' }),
-        status: 400,
-        statusText: 'Bad Request',
-      };
-      const thunk = actions.setError(response);
+      const thunk = actions.setError({ status: 404 });
       const dispatch = sandbox.spy();
       await thunk(dispatch);
       expect(dispatch.callCount).to.equal(1);
       expect(dispatch.calledWith({
         type: actions.SET_ERROR,
-        status: 400,
-        statusText: 'Bad Request',
-        json: { foo: 'bar' },
+        status: 404,
       })).to.equal(true);
     });
   });
