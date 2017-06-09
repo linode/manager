@@ -23,7 +23,7 @@ schema:
   deprecated:
     _type: boolean
     _value: true
-    _description: True if this distribution is deprecated.
+    _description: True if this distribution version is deprecated.
     _filterable: true
   vendor:
     _type: string
