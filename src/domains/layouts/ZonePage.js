@@ -2,7 +2,6 @@ import _ from 'lodash';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { setError } from '~/actions/errors';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 import { domains } from '~/api';
@@ -14,14 +13,8 @@ import SlaveZone from '../components/SlaveZone';
 
 export class ZonePage extends Component {
   static async preload({ dispatch, getState }, { domainLabel }) {
-    try {
-      const { id } = await dispatch(getObjectByLabelLazily('domains', domainLabel, 'domain'));
-      await dispatch(domains.records.all([id]));
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.error(e);
-      dispatch(setError(e));
-    }
+    const { id } = await dispatch(getObjectByLabelLazily('domains', domainLabel, 'domain'));
+    await dispatch(domains.records.all([id]));
   }
 
   async componentDidMount() {

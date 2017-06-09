@@ -1,6 +1,6 @@
 {
   "name": "linode-manager",
-  "version": "0.7.2",
+  "version": "0.8.0",
   "dependencies": {
     "asap": {
       "version": "2.0.5",
@@ -11,6 +11,12 @@
       "version": "4.0.0-alpha.6",
       "from": "bootstrap@4.0.0-alpha.6",
       "resolved": "https://registry.npmjs.org/bootstrap/-/bootstrap-4.0.0-alpha.6.tgz"
+    },
+    "canvas": {
+      "version": "1.6.5",
+      "from": "canvas@>=1.3.12 <2.0.0",
+      "resolved": "https://registry.npmjs.org/canvas/-/canvas-1.6.5.tgz",
+      "optional": true
     },
     "charenc": {
       "version": "0.0.2",
@@ -56,6 +62,48 @@
       "version": "0.0.2",
       "from": "crypt@>=0.0.1 <0.1.0",
       "resolved": "https://registry.npmjs.org/crypt/-/crypt-0.0.2.tgz"
+    },
+    "css-font-size-keywords": {
+      "version": "1.0.0",
+      "from": "css-font-size-keywords@>=1.0.0 <2.0.0",
+      "resolved": "https://registry.npmjs.org/css-font-size-keywords/-/css-font-size-keywords-1.0.0.tgz",
+      "optional": true
+    },
+    "css-font-stretch-keywords": {
+      "version": "1.0.1",
+      "from": "css-font-stretch-keywords@>=1.0.1 <2.0.0",
+      "resolved": "https://registry.npmjs.org/css-font-stretch-keywords/-/css-font-stretch-keywords-1.0.1.tgz",
+      "optional": true
+    },
+    "css-font-style-keywords": {
+      "version": "1.0.1",
+      "from": "css-font-style-keywords@>=1.0.1 <2.0.0",
+      "resolved": "https://registry.npmjs.org/css-font-style-keywords/-/css-font-style-keywords-1.0.1.tgz",
+      "optional": true
+    },
+    "css-font-weight-keywords": {
+      "version": "1.0.0",
+      "from": "css-font-weight-keywords@>=1.0.0 <2.0.0",
+      "resolved": "https://registry.npmjs.org/css-font-weight-keywords/-/css-font-weight-keywords-1.0.0.tgz",
+      "optional": true
+    },
+    "css-global-keywords": {
+      "version": "1.0.1",
+      "from": "css-global-keywords@>=1.0.1 <2.0.0",
+      "resolved": "https://registry.npmjs.org/css-global-keywords/-/css-global-keywords-1.0.1.tgz",
+      "optional": true
+    },
+    "css-list-helpers": {
+      "version": "1.0.1",
+      "from": "css-list-helpers@>=1.0.1 <2.0.0",
+      "resolved": "https://registry.npmjs.org/css-list-helpers/-/css-list-helpers-1.0.1.tgz",
+      "optional": true
+    },
+    "css-system-font-keywords": {
+      "version": "1.0.0",
+      "from": "css-system-font-keywords@>=1.0.0 <2.0.0",
+      "resolved": "https://registry.npmjs.org/css-system-font-keywords/-/css-system-font-keywords-1.0.0.tgz",
+      "optional": true
     },
     "d3": {
       "version": "3.5.17",
@@ -127,6 +175,12 @@
       "from": "isarray@0.0.1",
       "resolved": "https://registry.npmjs.org/isarray/-/isarray-0.0.1.tgz"
     },
+    "isnumeric": {
+      "version": "0.2.0",
+      "from": "isnumeric@>=0.2.0 <0.3.0",
+      "resolved": "https://registry.npmjs.org/isnumeric/-/isnumeric-0.2.0.tgz",
+      "optional": true
+    },
     "isomorphic-fetch": {
       "version": "2.2.1",
       "from": "isomorphic-fetch@>=2.2.0 <3.0.0",
@@ -146,6 +200,16 @@
       "version": "3.0.1",
       "from": "js-tokens@>=3.0.0 <4.0.0",
       "resolved": "https://registry.npmjs.org/js-tokens/-/js-tokens-3.0.1.tgz"
+    },
+    "linode-components": {
+      "version": "0.0.1",
+      "from": "components",
+      "resolved": "file:components"
+    },
+    "linode-styleguide": {
+      "version": "0.0.1",
+      "from": "styleguide",
+      "resolved": "file:styleguide"
     },
     "lodash": {
       "version": "4.17.4",
@@ -177,6 +241,11 @@
       "from": "moment-timezone@>=0.5.11 <0.6.0",
       "resolved": "https://registry.npmjs.org/moment-timezone/-/moment-timezone-0.5.13.tgz"
     },
+    "nan": {
+      "version": "2.6.2",
+      "from": "nan@>=2.4.0 <3.0.0",
+      "resolved": "https://registry.npmjs.org/nan/-/nan-2.6.2.tgz"
+    },
     "node-fetch": {
       "version": "1.6.3",
       "from": "node-fetch@>=1.0.1 <2.0.0",
@@ -186,6 +255,12 @@
       "version": "4.1.1",
       "from": "object-assign@>=4.1.0 <5.0.0",
       "resolved": "https://registry.npmjs.org/object-assign/-/object-assign-4.1.1.tgz"
+    },
+    "parse-css-font": {
+      "version": "2.0.2",
+      "from": "parse-css-font@>=2.0.2 <3.0.0",
+      "resolved": "https://registry.npmjs.org/parse-css-font/-/parse-css-font-2.0.2.tgz",
+      "optional": true
     },
     "path-to-regexp": {
       "version": "1.7.0",
@@ -232,6 +307,11 @@
       "from": "react-ga@>=2.1.2 <3.0.0",
       "resolved": "https://registry.npmjs.org/react-ga/-/react-ga-2.1.2.tgz"
     },
+    "react-guard": {
+      "version": "0.4.0",
+      "from": "react-guard@>=0.4.0 <0.5.0",
+      "resolved": "https://registry.npmjs.org/react-guard/-/react-guard-0.4.0.tgz"
+    },
     "react-redux": {
       "version": "4.4.7",
       "from": "react-redux@>=4.0.6 <5.0.0",
@@ -242,6 +322,28 @@
       "from": "react-router@>=2.4.1 <3.0.0",
       "resolved": "https://registry.npmjs.org/react-router/-/react-router-2.8.1.tgz",
       "dependencies": {
+        "warning": {
+          "version": "3.0.0",
+          "from": "warning@>=3.0.0 <4.0.0",
+          "resolved": "https://registry.npmjs.org/warning/-/warning-3.0.0.tgz"
+        }
+      }
+    },
+    "react-router-dom": {
+      "version": "4.1.1",
+      "from": "react-router-dom@>=4.1.1 <5.0.0",
+      "resolved": "https://registry.npmjs.org/react-router-dom/-/react-router-dom-4.1.1.tgz",
+      "dependencies": {
+        "history": {
+          "version": "4.6.1",
+          "from": "history@>=4.5.1 <5.0.0",
+          "resolved": "https://registry.npmjs.org/history/-/history-4.6.1.tgz"
+        },
+        "react-router": {
+          "version": "4.1.1",
+          "from": "react-router@>=4.1.1 <5.0.0",
+          "resolved": "https://registry.npmjs.org/react-router/-/react-router-4.1.1.tgz"
+        },
         "warning": {
           "version": "3.0.0",
           "from": "warning@>=3.0.0 <4.0.0",
@@ -263,16 +365,6 @@
       "version": "3.6.0",
       "from": "redux@>=3.0.5 <4.0.0",
       "resolved": "https://registry.npmjs.org/redux/-/redux-3.6.0.tgz"
-    },
-    "redux-devtools": {
-      "version": "3.3.2",
-      "from": "redux-devtools@>=3.3.1 <4.0.0",
-      "resolved": "https://registry.npmjs.org/redux-devtools/-/redux-devtools-3.3.2.tgz"
-    },
-    "redux-devtools-instrument": {
-      "version": "1.8.0",
-      "from": "redux-devtools-instrument@>=1.0.1 <2.0.0",
-      "resolved": "https://registry.npmjs.org/redux-devtools-instrument/-/redux-devtools-instrument-1.8.0.tgz"
     },
     "redux-thunk": {
       "version": "2.2.0",
@@ -299,20 +391,48 @@
       "from": "symbol-observable@>=1.0.2 <2.0.0",
       "resolved": "https://registry.npmjs.org/symbol-observable/-/symbol-observable-1.0.4.tgz"
     },
+    "tcomb": {
+      "version": "2.7.0",
+      "from": "tcomb@>=2.5.0 <3.0.0",
+      "resolved": "https://registry.npmjs.org/tcomb/-/tcomb-2.7.0.tgz"
+    },
     "tether": {
       "version": "1.4.0",
       "from": "tether@>=1.4.0 <2.0.0",
       "resolved": "https://registry.npmjs.org/tether/-/tether-1.4.0.tgz"
+    },
+    "tracekit": {
+      "version": "0.4.4",
+      "from": "tracekit@>=0.4.4 <0.5.0",
+      "resolved": "https://registry.npmjs.org/tracekit/-/tracekit-0.4.4.tgz"
     },
     "ua-parser-js": {
       "version": "0.7.12",
       "from": "ua-parser-js@>=0.7.9 <0.8.0",
       "resolved": "https://registry.npmjs.org/ua-parser-js/-/ua-parser-js-0.7.12.tgz"
     },
+    "units-css": {
+      "version": "0.4.0",
+      "from": "units-css@>=0.4.0 <0.5.0",
+      "resolved": "https://registry.npmjs.org/units-css/-/units-css-0.4.0.tgz",
+      "optional": true
+    },
+    "unquote": {
+      "version": "1.1.0",
+      "from": "unquote@>=1.1.0 <2.0.0",
+      "resolved": "https://registry.npmjs.org/unquote/-/unquote-1.1.0.tgz",
+      "optional": true
+    },
     "value-equal": {
       "version": "0.2.0",
       "from": "value-equal@>=0.2.0 <0.3.0",
       "resolved": "https://registry.npmjs.org/value-equal/-/value-equal-0.2.0.tgz"
+    },
+    "viewport-dimensions": {
+      "version": "0.2.0",
+      "from": "viewport-dimensions@>=0.2.0 <0.3.0",
+      "resolved": "https://registry.npmjs.org/viewport-dimensions/-/viewport-dimensions-0.2.0.tgz",
+      "optional": true
     },
     "warning": {
       "version": "2.1.0",

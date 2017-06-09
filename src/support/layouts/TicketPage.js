@@ -8,7 +8,6 @@ import { Form, FormGroup, FormGroupError, SubmitButton, Input } from 'linode-com
 import { tickets } from '~/api';
 import { getObjectByLabelLazily } from '~/api/util';
 import { addTicketAttachment } from '~/api/tickets';
-import { setError } from '~/actions/errors';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 import { MAX_UPLOAD_SIZE_MB } from '~/constants';
@@ -30,14 +29,8 @@ AttachmentTooBigError.prototype = new Error();
 
 export class TicketPage extends Component {
   static async preload({ dispatch }, { ticketId }) {
-    try {
-      await dispatch(getObjectByLabelLazily('tickets', ticketId, 'id'));
-      await dispatch(tickets.replies.all([ticketId]));
-    } catch (response) {
-      // eslint-disable-next-line no-console
-      console.error(response);
-      await dispatch(setError(response));
-    }
+    await dispatch(getObjectByLabelLazily('tickets', ticketId, 'id'));
+    await dispatch(tickets.replies.all([ticketId]));
   }
 
   constructor() {
@@ -59,16 +52,19 @@ export class TicketPage extends Component {
     const { attachments, reply: description } = this.state;
     const { ticket, dispatch } = this.props;
 
-    const requests = [];
+    const requests = [
+      // All other requests will get unshift()ed before this so this happens last.
+      () => this.setState({ reply: '', attachments: [] }),
+    ];
 
     if (description) {
-      requests.push(() => tickets.replies.post({ description }, [ticket.id]));
+      requests.unshift(() => tickets.replies.post({ description }, [ticket.id]));
     }
 
     for (let i = 0; i < attachments.length; i++) {
       const attachment = attachments[i];
 
-      requests.push(() => {
+      requests.unshift(() => {
         if ((attachment.size / (1024 * 1024)) < MAX_UPLOAD_SIZE_MB) {
           return addTicketAttachment(ticket.id, attachment);
         }

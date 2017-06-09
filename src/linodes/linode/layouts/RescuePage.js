@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { setError } from '~/actions/errors';
 import { setSource } from '~/actions/source';
 import { linodes } from '~/api';
 import { getObjectByLabelLazily } from '~/api/util';
@@ -12,14 +11,8 @@ import { selectLinode } from '../utilities';
 
 export class RescuePage extends Component {
   static async preload({ dispatch, getState }, { linodeLabel }) {
-    try {
-      const { id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
-      await dispatch(linodes.disks.all([id]));
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.error(e);
-      dispatch(setError(e));
-    }
+    const { id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
+    await dispatch(linodes.disks.all([id]));
   }
 
   async componentDidMount() {

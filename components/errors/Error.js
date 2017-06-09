@@ -2,40 +2,49 @@ import React, { PropTypes } from 'react';
 
 
 export default function Error(props) {
-  const { status, href, description } = props;
+  const { status, href } = props;
   let statusString = status.toString();
+  const explicitlyHandled = [404, 521];
   if (status >= 400 && status < 404) {
     statusString = '40x';
-  } else if (status !== 404) {
+  } else if (explicitlyHandled.indexOf(status) === -1) {
     statusString = '50x';
   }
 
   const { title, msg } = {
     404: {
       title: 'Whoops!',
-      msg: 'The page you\'re trying to reach does not exist. Bummer!',
+      msg: 'The page you\'re trying to reach does not exist.',
     },
     '40x': {
       title: 'Doh!',
-      msg: `You are not authorized to access this page. ${description}`,
+      msg: 'You are not authorized to access this page.',
+    },
+    521: {
+      title: 'Hang on!',
+      msg: (
+        <div>
+          <div>You are unable to connect to our servers.</div>
+          <div>Check your internet connection and refresh.</div>
+        </div>
+      ),
     },
     '50x': {
       title: 'Uh-oh!',
       msg: (
-        <span>
-          There was an issue on our end. Sorry about that!
-          <br />
-          Please try again later or <a href={href}>contact support</a>.
-        </span>
+        <div>
+          <div>There was an issue on our end. Sorry about that!</div>
+          <div>Please try again later or <a href={href}>contact support</a>.</div>
+        </div>
       ),
     },
   }[statusString];
 
   return (
-    <div className="error text-sm-center">
+    <div className="Error">
       <h1>{status}</h1>
       <h2>{title}</h2>
-      <p>{msg}</p>
+      <div className="Error-body">{msg}</div>
     </div>
   );
 }
@@ -43,7 +52,6 @@ export default function Error(props) {
 Error.propTypes = {
   status: PropTypes.number.isRequired,
   href: PropTypes.string,
-  description: PropTypes.string,
 };
 
 Error.defaultProps = {
