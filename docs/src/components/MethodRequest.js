@@ -9,13 +9,13 @@ export default function MethodRequest(props) {
   const tabs = examples.map(function(example, index) {
     return {
       name: example.name,
-      children: (<Example key={`${example.name}-index`} example={example.value} />)
+      children: (<Example key={`${example.name}-index`} example={example.value} name={example.name} />)
     };
   });
 
   return (
     <div className="Method-section Method-request">
-      <h4><b>Request</b></h4>
+      <h3>Request</h3>
       <Tabs tabs={tabs} />
     </div>
   );

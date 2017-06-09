@@ -1,16 +1,8 @@
 .Method {
     padding: 25px;
 
-    &-section {
-        margin-bottom: 15px;
-    }
-
     &-request {
         padding: 10px 0 0 0;
-
-        h4 {
-            padding: 0 0 10px 0;
-        }
 
         .Tabs {
             .ReactTabs__TabList {
@@ -31,40 +23,17 @@
         }
     }
 
-    &-description {
-
-    }
-
-    .Table--secondary .TableRow {
-        height: 35px;
-    }
-
-    th, td {
-        @extend .font-small;
-        padding: 2px 8px;
-    }
-
     td {
         border-right: $border;
     }
+}
 
-    .FieldColumn {
-        width: 150px;
-    }
+.Method-section.Method-request {
+    margin-bottom: 30px;
+}
 
-    .FieldCell {
-
-    }
-
-    .TypeColumn {
-        width: 100px;
-    }
-
-    .DescriptionColumn {
-
-    }
-
-    .DescriptionCell {
-
+.Docs .Method-request {
+    h3 {
+        padding: 0 0 10px 0;
     }
 }

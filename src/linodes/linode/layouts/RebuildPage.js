@@ -7,7 +7,6 @@ import {
 } from 'linode-components/forms';
 
 import { setSource } from '~/actions/source';
-import { setError } from '~/actions/errors';
 import { distributions } from '~/api';
 import { rebuildLinode } from '~/api/linodes';
 import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
@@ -18,12 +17,8 @@ import { selectLinode } from '../utilities';
 
 export class RebuildPage extends Component {
   static async preload({ dispatch, getState }) {
-    try {
-      if (!getState().api.distributions.ids.length) {
-        await dispatch(distributions.all());
-      }
-    } catch (response) {
-      dispatch(setError(response));
+    if (!getState().api.distributions.ids.length) {
+      await dispatch(distributions.all());
     }
   }
 

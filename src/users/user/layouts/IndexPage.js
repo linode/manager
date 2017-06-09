@@ -7,20 +7,22 @@ import { Tabs } from 'linode-components/tabs';
 
 import { users } from '~/api';
 import { getObjectByLabelLazily } from '~/api/util';
-import { setError } from '~/actions/errors';
+
+import { setTitle } from '~/actions/title';
+
 
 export class IndexPage extends Component {
   static async preload({ dispatch, getState }, { username }) {
-    try {
-      await dispatch(getObjectByLabelLazily('users', username, 'username'));
-      const user = await dispatch(users.one([username]));
-      if (user.restricted) {
-        await dispatch(users.permissions.one([username]));
-      }
-    } catch (response) {
-      // eslint-disable-next-line no-console
-      await dispatch(setError(response));
+    await dispatch(getObjectByLabelLazily('users', username, 'username'));
+    const user = await dispatch(users.one([username]));
+    if (user.restricted) {
+      await dispatch(users.permissions.one([username]));
     }
+  }
+
+  async componentDidMount() {
+    const { dispatch, user } = this.props;
+    dispatch(setTitle(user.username));
   }
 
   render() {

@@ -46,9 +46,24 @@ export class LoadingRouterContext extends RouterContext {
           }
 
           this.preloadCounter++;
-          await component.preload(store, newProps.params);
-          newPreloads.push(component.preload);
+
+          let error = false;
+          try {
+            await component.preload(store, newProps.params);
+          } catch (e) {
+            error = true;
+            window.handleError(e);
+            this.setState({ noRender: true });
+          }
+
           this.preloadCounter--;
+
+          // If a preload triggered an error, stop preloading and all the error to be shown.
+          if (error) {
+            break;
+          }
+
+          newPreloads.push(component.preload);
         }
       }
 
@@ -137,8 +152,6 @@ export class LoadingRouterContext extends RouterContext {
       );
     }
 
-    // Force scroll to the top of the page on page change.
-    window.scroll(0, 0);
     return super.render();
   }
 }

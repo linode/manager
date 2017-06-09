@@ -5,7 +5,6 @@ import { Link } from 'react-router';
 
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
-import { setError } from '~/actions/errors';
 import { users } from '~/api';
 
 import { User } from '../components';
@@ -13,13 +12,7 @@ import { User } from '../components';
 
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
-    try {
-      await dispatch(users.all());
-    } catch (response) {
-      // eslint-disable-next-line no-console
-      console.error(response);
-      dispatch(setError(response));
-    }
+    await dispatch(users.all());
   }
 
   async componentDidMount() {
@@ -38,10 +31,10 @@ export class IndexPage extends Component {
     ));
 
     if (i === groups.length - 1) {
-      return <div className="row">{_renderGroup}</div>;
+      return <div className="row" key={i}>{_renderGroup}</div>;
     }
 
-    return <section className="row">{_renderGroup}</section>;
+    return <section className="row" key={i}>{_renderGroup}</section>;
   }
 
   render() {

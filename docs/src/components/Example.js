@@ -1,16 +1,65 @@
-import React from 'react';
+import React, { Component, PropTypes } from 'react';
+import Highlight from 'react-highlight';
+import ClipboardButton from 'react-clipboard.js';
 
 
-export default function Example(props) {
-  const { example } = props;
+const DEFAULT_CLIPBOARD_ICON = 'fa-clipboard';
+const languageMap = {
+  curl: 'bash'
+};
 
-  return (
-    <div className="Example">
-      <pre>
-        <code>
+export default class Example extends Component {
+
+  constructor() {
+    super();
+
+    this.onClickCopy = this.onClickCopy.bind(this);
+
+    this.state = { clipboardIcon: DEFAULT_CLIPBOARD_ICON };
+  }
+
+  onClickCopy() {
+    if (this.state.clipboardIcon === DEFAULT_CLIPBOARD_ICON) {
+      this.setState({ clipboardIcon: 'fa-check' }, () => {
+        setTimeout(() => {
+          this.setState({ clipboardIcon: DEFAULT_CLIPBOARD_ICON });
+        }, 2500)
+      });
+    }
+  }
+
+  render() {
+    const { collapsed, example, name, noclipboard } = this.props;
+    const { clipboardIcon } = this.state;
+
+    const collapsedClass = collapsed ? 'collapse' : '';
+    const lowerCaseName = name.toLowerCase();
+    const language = languageMap[lowerCaseName] ? languageMap[lowerCaseName] : lowerCaseName;
+
+    let clipboardButton;
+    if (!noclipboard) {
+      clipboardButton = (
+        <ClipboardButton className="Example-clipboardButton" data-clipboard-text={example} onClick={this.onClickCopy}>
+          <i className={`fa ${clipboardIcon}`}></i>
+        </ClipboardButton>
+      );
+    }
+
+    return (
+      <div className={`Example ${collapsedClass}`}>
+        <Highlight className={`language-${language}`}>
           {example}
-        </code>
-      </pre>
-    </div>
-  );
+        </Highlight>
+        {clipboardButton}
+      </div>
+    );
+  }
+}
+
+Example.propTypes = {
+  noclipboard: PropTypes.bool
+};
+
+Example.defaultProps = {
+  noclipboard: false
 };

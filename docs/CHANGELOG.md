@@ -6,6 +6,22 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased] 
 
+## [0.7.1] 2017-06-09
+### Changed
+- distribution "recommended" renamed to "deprecated"
+
+## [0.7.0] 2017-06-08
+### Added
+- required and optional denotation to method params
+- collapsed by default and toggle for response examples
+
+## [0.6.0] 2017-06-07
+### Added
+- Syntax highlighting for code examples
+- Copy to clipboard icons for examples
+### Fixed
+- added missing cost indicators to methods
+
 ## [0.5.2] 2017-06-07
 ### Fixed
 - added missing Authenticated denotations with icons to endpoints

@@ -90,9 +90,11 @@ function formatMethodParams(methodObj) {
       param.description = convertUlToArray(stripATags(param.description));
 
       const type = apiObjectMap[param.type] ? 'integer' : param.type;
+      const required = !param.optional;
       return _.merge({}, param, {
         name: paramName,
         type: type,
+        required: required
       });
     });
   }
@@ -275,7 +277,8 @@ function formatEndpoint(endpoint, path = null) {
   endpoint.description = stripATags(endpoint.description);
 
   return _.merge({}, endpoint, {
-    path: path,
+    // TODO: apply / to url paths in yaml
+    path: `/${path}`,
     formattedEndpoints: endpoint.formattedEndpoints || [],
     methods: methods
   });
