@@ -11,10 +11,10 @@ _.plugins = [
   new webpack.optimize.OccurenceOrderPlugin(),
   new webpack.DefinePlugin({
     'process.env': {
-      'NODE_ENV': JSON.stringify('production')
+      'NODE_ENV': JSON.stringify('production'),
+      'CONSOLE_TRACE_ENABLED': JSON.stringify(process.env.CONSOLE_TRACE_ENABLED),
     },
     'ENV_DEVTOOLS_DISABLED': JSON.stringify(process.env.DEVTOOLS_DISBLED),
-    'ENV_CONSOLE_TRACE_ENABLED': JSON.stringify(process.env.CONSOLE_TRACE_ENABLED),
     'ENV_APP_ROOT': JSON.stringify(process.env.APP_ROOT),
     'ENV_API_ROOT': JSON.stringify(process.env.API_ROOT),
     'ENV_LOGIN_ROOT': JSON.stringify(process.env.LOGIN_ROOT),
