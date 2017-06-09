@@ -1,32 +1,55 @@
+import _ from 'lodash';
 import React, { PropTypes, Component } from 'react';
+import { connect } from 'react-redux';
 
 import { Card, CardHeader } from 'linode-components/cards';
 import { Form, FormGroup, SubmitButton, Select } from 'linode-components/forms';
 
-import { linodes as apiLinodes } from '~/api';
-import { createHeaderFilter } from '~/api/util';
-import { linodeIPs } from '~/api/linodes';
-import { assignIPs } from '~/api/networking';
+import { setSource } from '~/actions/source';
+import { linodes } from '~/api';
+import { ipv4s, assignIPs } from '~/api/networking';
+import { createHeaderFilter, getObjectByLabelLazily } from '~/api/util';
 import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
 
-import IPList from './IPList';
+import { IPList } from '../components';
+import { selectLinode } from '../../utilities';
 
 
-export default class IPTransfer extends Component {
-  constructor(props) {
-    super(props);
+export class IPTransferPage extends Component {
+  static async preload({ dispatch, getState }, { linodeLabel }) {
+    const { region } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
 
-    // Need to be able to update immediately and when props change.
-    this._componentWillReceiveProps((state) => {
-      this.state = {
-        ...state,
-        errors: {},
-        loading: false,
-        checkedA: {},
-        checkedB: {},
-      };
-    })(props);
-    this.componentWillReceiveProps = this._componentWillReceiveProps();
+    await Promise.all([
+      ipv4s(region),
+      linodes.all([], undefined, createHeaderFilter({ region: region.id })),
+    ].map(dispatch));
+  }
+
+  constructor() {
+    super();
+
+    this.state = {
+      errors: {},
+      loading: false,
+      checkedA: {},
+      checkedB: {},
+    };
+
+    this.componentWillReceiveProps = this.componentWillMount;
+  }
+
+  componentWillMount() {
+    const otherLinode = this.otherLinodes()[0] || {};
+    const { selectedOtherLinode } = this.state;
+
+    this.setState({
+      selectedOtherLinode: selectedOtherLinode || otherLinode.id,
+    });
+  }
+
+  componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch(setSource(__filename));
   }
 
   onSubmit = () => {
@@ -38,50 +61,40 @@ export default class IPTransfer extends Component {
     const assignments = [];
     Object.keys(checkedA).forEach(address => {
       if (checkedA[address]) {
-        assignments.push({ address, linode_id: otherLinode.id });
+        assignments.push({ ip: linode._ips[address], id: otherLinode.id });
       }
     });
     Object.keys(checkedB).forEach(address => {
       if (checkedB[address]) {
-        assignments.push({ address, linode_id: linode.id });
+        assignments.push({ ip: otherLinode._ips[address], id: linode.id });
       }
     });
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => assignIPs(linode.region.id, assignments),
-      () => (dispatch) => Promise.all([
-        dispatch(apiLinodes.all([], undefined, createHeaderFilter({
-          '+or': [{ label: linode.label }, { label: otherLinode.label }],
-        }))),
-        dispatch(linodeIPs(linode.id)),
-        dispatch(linodeIPs(otherLinode.id)),
-      ]),
+      // This setState is important so that old checked IPs that have transferred don't break
+      // things.
+      () => this.setState({ checkedA: {}, checkedB: {} }),
     ]));
   }
 
-  otherLinodes(props) {
-    const { linodes, linode } = (props || this.props);
+  otherLinodes() {
+    const { linodes, linode } = this.props;
     return Object.values(linodes).filter(l => l.id !== linode.id);
-  }
-
-  _componentWillReceiveProps(_setState) {
-    const setState = _setState || this.setState.bind(this);
-    return (nextProps) => {
-      const otherLinode = this.otherLinodes(nextProps)[0] || {};
-      const { selectedOtherLinode } = (this.state || {});
-      setState({
-        selectedOtherLinode: selectedOtherLinode || otherLinode.id,
-      });
-    };
   }
 
   render() {
     const { errors, loading, selectedOtherLinode, checkedA, checkedB } = this.state;
-    const { linode, linodes } = this.props;
+    const { linodes, linode } = this.props;
+
+    // Although we only explicitly looked up all linodes in the current dc,
+    // other linodes may already exist in the state.
+    const linodesInRegion = _.pickBy(linodes, l =>
+      l.region.id === linode.region.id);
 
     let body = (
       <p>
-        Transfer is only available within Linodes in the same region. There are no other
+        Transfer is only available within Linodes in the same region. You have no other
         Linodes in this region.
       </p>
     );
@@ -128,7 +141,7 @@ export default class IPTransfer extends Component {
               </div>
               <div className="col-lg-6 col-md-12 col-sm-12" id="sectionB">
                 <IPList
-                  linode={linodes[selectedOtherLinode]}
+                  linode={linodesInRegion[selectedOtherLinode]}
                   checked={checkedB}
                   onChange={(record, checked) => {
                     this.setState({
@@ -153,8 +166,16 @@ export default class IPTransfer extends Component {
   }
 }
 
-IPTransfer.propTypes = {
-  linode: PropTypes.object.isRequired,
+IPTransferPage.propTypes = {
   linodes: PropTypes.object.isRequired,
+  linode: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
 };
+
+function select(state, props) {
+  const { linode } = selectLinode(state, props);
+  const { linodes } = state.api.linodes;
+  return { linode, linodes };
+}
+
+export default connect(select)(IPTransferPage);

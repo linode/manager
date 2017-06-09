@@ -28,6 +28,7 @@ export default class Dropdown extends Component {
       <button
         type="button"
         key={item.name}
+        id={item.name.split(' ').join('-').toLowerCase()}
         className="Dropdown-item"
         // This onMouseDown is intentional. See https://github.com/linode/manager/pull/223
         onMouseDown={item.action}
@@ -46,6 +47,7 @@ export default class Dropdown extends Component {
           className="Dropdown-first"
           onClick={first.action || this.open}
           disabled={disabled}
+          id={first.name.split(' ').join('-').toLowerCase()}
         >{first.name}</button>
         {rest.length === 0 ? null : (
           <button

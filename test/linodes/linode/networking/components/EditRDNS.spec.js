@@ -3,10 +3,10 @@ import { mount } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
+import EditRDNS from '~/linodes/linode/networking/components/EditRDNS';
+
 import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
 import { testLinode } from '@/data/linodes';
-
-import EditRDNS from '~/linodes/linode/networking/components/EditRDNS';
 
 
 describe('linodes/linode/networking/components/EditRDNS', () => {
@@ -17,7 +17,8 @@ describe('linodes/linode/networking/components/EditRDNS', () => {
   });
 
   const dispatch = sandbox.stub();
-  const ip = testLinode._ips.ipv4.public[0];
+  const ip = Object.values(testLinode._ips).filter(
+    ip => ip.type === 'public' && ip.version === 'ipv4')[0];
 
   it('renders fields correctly', () => {
     const page = mount(

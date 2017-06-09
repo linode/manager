@@ -50,7 +50,7 @@ export class IndexPage extends Component {
 
     const selectedDomains = zonesArr.map(l => l.domain);
 
-    dispatch(showModal('Delete Domain(s)',
+    dispatch(showModal('Delete Domain(s)', (
       <DeleteModalBody
         onOk={async () => {
           const ids = zonesArr.map(function (zone) { return zone.id; });
@@ -63,7 +63,7 @@ export class IndexPage extends Component {
         typeOfItem="Domains"
         onCancel={() => dispatch(hideModal())}
       />
-    ));
+    )));
   }
 
   renderZones(zones) {
