@@ -145,7 +145,7 @@ groups:
                         The StackScript to deploy this Linode with.
                     _keyword: true
                     _default: None
-                stackscript_udf_responses:
+                stackscript_data:
                     desc: >
                         A dict containing values for all StackScript user-defined fields.
                     _keyword: true
