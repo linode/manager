@@ -6,13 +6,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [0.7.3] 2017-06-09
+### Added
+- added linode_kvmify to account/events action enums
+### Changed
+- account/events action enums renamed from dns > domain
+- renamed domains display_group to group
+
 ## [0.7.2] 2017-06-09
 ### Changed
 - reorganized routes and added index redirect from /v4/ to /v4/introduction
-
-## [0.7.3] 2017-06-09
-### Changed
-- account/events action enums renamed from dns > domain
 
 ## [0.7.1] 2017-06-09
 ### Changed
