@@ -69,7 +69,7 @@ endpoints:
               <ul><li>Must provide a distribution. Distribution must be
               one that the stackscript can be deployed to.</li></ul>
             type: stackscript
-          stackscript_udf_responses:
+          stackscript_data:
             optional: true
             description: >
               UDF (user-defined fields) for this stackscript. Defaults to "{}".
@@ -213,7 +213,7 @@ endpoints:
               <ul><li>Must provide a distribution. Distribution must be
               one that the stackscript can be deployed to.</li></ul>
             type: stackscript
-          stackscript_udf_responses:
+          stackscript_data:
             optional: true
             description: >
               UDF (user-defined fields) for this stackscript. Defaults to "{}".
@@ -816,7 +816,7 @@ endpoints:
               <ul><li>Must provide a distribution. Distribution must be
               one that the stackscript can be deployed to.</li></ul>
             type: stackscript
-          stackscript_udf_responses:
+          stackscript_data:
             optional: true
             description: >
               UDF (user-defined fields) for this stackscript. Defaults to "{}".
