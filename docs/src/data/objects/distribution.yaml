@@ -20,10 +20,10 @@ schema:
     _value: 800
     _description: The minimum size required for the distrbution image.
     _filterable: true
-  recommended:
+  deprecated:
     _type: boolean
     _value: true
-    _description: True if this distribution is recommended by Linode.
+    _description: True if this distribution version is deprecated.
     _filterable: true
   vendor:
     _type: string
