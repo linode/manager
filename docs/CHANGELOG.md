@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 - reorganized routes and added index redirect from /v4/ to /v4/introduction
 
+## [0.7.2] 2017-06-09
+### Changed
+- account/events action enums renamed from dns > domain
+
 ## [0.7.1] 2017-06-09
 ### Changed
 - distribution "recommended" renamed to "deprecated"
