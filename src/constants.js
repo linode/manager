@@ -5,6 +5,7 @@ export const APP_ROOT = ENV_APP_ROOT || 'http://localhost:3000';
 export const GA_ID = ENV_GA_ID;
 export const ENVIRONMENT = process.env.NODE_ENV || 'development';
 export const DEVTOOLS_DISABLED = ENV_DEVTOOLS_DISABLED || ENVIRONMENT === 'production';
+export const CONSOLE_TRACE_ENABLED = ENV_CONSOLE_TRACE_ENABLED || false;
 export const VERSION = ENV_VERSION;
 /* eslint-enable no-undef */
 

@@ -17,7 +17,7 @@ import { hideModal } from '~/actions/modal';
 import { actions, thunks, reducer } from '~/api/configs/linodes';
 import Billing from '~/billing';
 import DevTools from '~/components/DevTools';
-import { GA_ID, ENVIRONMENT } from '~/constants';
+import { CONSOLE_TRACE_ENABLED, GA_ID, ENVIRONMENT } from '~/constants';
 import Domains from '~/domains';
 import Layout from '~/layouts/Layout';
 import Logout from '~/layouts/Logout';
@@ -68,8 +68,10 @@ function fillInMissingProps(props) {
 
 window.handleError = function (e) {
   try {
-    // eslint-disable-next-line no-console
-    console.trace(e);
+    if (CONSOLE_TRACE_ENABLED) {
+      // eslint-disable-next-line no-console
+      console.trace(e);
+    }
 
     store.dispatch(setError(e));
 
@@ -98,8 +100,10 @@ window.handleError = function (e) {
       );
     }
   } catch (e) {
-    // eslint-disable-next-line no-console
-    console.trace(e);
+    if (CONSOLE_TRACE_ENABLED) {
+      // eslint-disable-next-line no-console
+      console.trace(e);
+    }
   }
 
   // TraceKit.report throws an error.
