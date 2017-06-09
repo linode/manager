@@ -457,7 +457,7 @@ export class MasterZone extends Component {
             <Table
               className="Table--secondary"
               columns={[
-                { dataKey: 'service', label: 'Service' },
+                { dataKey: 'name', label: 'Service' },
                 { dataKey: 'priority', label: 'Priority' },
                 { dataKey: 'domain', label: 'Domain' },
                 { dataKey: 'weight', label: 'Weight' },
