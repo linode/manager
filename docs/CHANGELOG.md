@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased] 
 
+## [0.7.1] 2017-06-09
+### Changed
+- distribution "recommended" renamed to "deprecated"
+
 ## [0.7.0] 2017-06-08
 ### Added
 - required and optional denotation to method params
