@@ -26,15 +26,15 @@ module.exports = {
     new webpack.NoErrorsPlugin(),
     new webpack.DefinePlugin({
       'process.env': {
-        'NODE_ENV': process.env.NODE_ENV
+        'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
       },
-      'ENV_DEVTOOLS_DISABLED': process.env.DEVTOOLS_DISABLED,
-      'ENV_CONSOLE_TRACE_ENABLED': process.env.CONSOLE_TRACE_ENABLED,
-      'ENV_API_ROOT': process.env.API_ROOT,
-      'ENV_LOGIN_ROOT': process.env.LOGIN_ROOT,
-      'ENV_APP_ROOT': process.env.APP_ROOT,
-      'ENV_GA_ID': process.env.GA_ID,
-      'ENV_VERSION': _package.version
+      'ENV_DEVTOOLS_DISABLED': JSON.stringify(process.env.DEVTOOLS_DISABLED),
+      'ENV_CONSOLE_TRACE_ENABLED': JSON.stringify(process.env.CONSOLE_TRACE_ENABLED),
+      'ENV_API_ROOT': JSON.stringify(process.env.API_ROOT),
+      'ENV_LOGIN_ROOT': JSON.stringify(process.env.LOGIN_ROOT),
+      'ENV_APP_ROOT': JSON.stringify(process.env.APP_ROOT),
+      'ENV_GA_ID': JSON.stringify(process.env.GA_ID),
+      'ENV_VERSION': JSON.stringify(_package.version)
     })
   ],
   module: {

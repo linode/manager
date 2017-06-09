@@ -11,13 +11,13 @@ _.plugins = [
   new webpack.optimize.OccurenceOrderPlugin(),
   new webpack.DefinePlugin({
     'process.env': {
-      'NODE_ENV': 'production'
+      'NODE_ENV': JSON.stringify('production')
     },
-    'ENV_API_ROOT': process.env.API_ROOT,
-    'ENV_LOGIN_ROOT': process.env.LOGIN_ROOT,
-    'ENV_API_VERSION': process.env.API_VERSION,
-    'ENV_GA_ID': process.env.GA_ID,
-    'ENV_VERSION': _package.version
+    'ENV_API_ROOT': JSON.stringify(process.env.API_ROOT),
+    'ENV_LOGIN_ROOT': JSON.stringify(process.env.LOGIN_ROOT),
+    'ENV_API_VERSION': JSON.stringify(process.env.API_VERSION),
+    'ENV_GA_ID': JSON.stringify(process.env.GA_ID),
+    'ENV_VERSION': JSON.stringify(_package.version)
   }),
   new webpack.optimize.UglifyJsPlugin({
     compressor: {
