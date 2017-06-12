@@ -131,7 +131,12 @@ export class DashboardPage extends Component {
               <Table
                 className="Table--secondary"
                 columns={[
-                  { cellComponent: LabelCell, headerClassName: 'LabelColumn', dataKey: 'label', label: 'Label' },
+                  {
+                    cellComponent: LabelCell,
+                    headerClassName: 'LabelColumn',
+                    dataKey: 'label',
+                    label: 'Label',
+                  },
                   { dataKey: 'address', label: 'Address' },
                   { dataKey: 'weight', label: 'Weight' },
                   { dataKey: 'mode', label: 'Mode', formatFn: _.capitalize },

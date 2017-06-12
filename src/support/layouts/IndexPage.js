@@ -63,7 +63,10 @@ export class IndexPage extends Component {
 
   renderLabelCell = ({ record: ticket }) => {
     return (
-      <TableCell column={{ className: 'LabelCell', headerClassName: 'LabelColumn' }} record={ticket}>
+      <TableCell
+        column={{ className: 'LabelCell', headerClassName: 'LabelColumn' }}
+        record={ticket}
+      >
         <Link title={ticket.id} to={`/support/${ticket.id}`}>{ticket.summary}</Link>
         <small>{renderTicketCreationInfo(ticket)}</small>
       </TableCell>

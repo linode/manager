@@ -219,7 +219,13 @@ export class MasterZone extends Component {
               <Table
                 className="Table--secondary"
                 columns={[
-                  { cellComponent: LabelCell, headerClassName: 'LabelColumn', dataKey: 'domain', label: 'Primary Domain', titleKey: 'domain' },
+                  {
+                    cellComponent: LabelCell,
+                    headerClassName: 'LabelColumn',
+                    dataKey: 'domain',
+                    label: 'Primary Domain',
+                    titleKey: 'domain',
+                  },
                   { headerClassName: 'EmailColumn', dataKey: 'soa_email', label: 'Email' },
                   { dataKey: 'ttl_sec', label: 'Default TTL' },
                   { dataKey: 'refresh_sec', label: 'Refresh Rate' },
@@ -260,7 +266,13 @@ export class MasterZone extends Component {
                 className="Table--secondary"
                 columns={[
                   { dataKey: 'target', label: 'Name Server' },
-                  { cellComponent: LabelCell, headerClassName: 'LabelColumn', dataKey: 'name', label: 'Subdomain', titleKey: 'name' },
+                  {
+                    cellComponent: LabelCell,
+                    headerClassName: 'LabelColumn',
+                    dataKey: 'name',
+                    label: 'Subdomain',
+                    titleKey: 'name',
+                  },
                   { dataKey: 'ttl_sec', label: 'TTL' },
                   {
                     cellComponent: NameserversCell,
@@ -295,7 +307,13 @@ export class MasterZone extends Component {
                 columns={[
                   { dataKey: 'target', label: 'Mail Server' },
                   { dataKey: 'priority', label: 'Preference' },
-                  { cellComponent: LabelCell, headerClassName: 'LabelColumn', dataKey: 'name', label: 'Subdomain', titleKey: 'name' },
+                  {
+                    cellComponent: LabelCell,
+                    headerClassName: 'LabelColumn',
+                    dataKey: 'name',
+                    label: 'Subdomain',
+                    titleKey: 'name',
+                  },
                   {
                     cellComponent: ButtonCell,
                     headerClassName: 'ButtonColumn',
@@ -334,7 +352,13 @@ export class MasterZone extends Component {
               <Table
                 className="Table--secondary"
                 columns={[
-                  { cellComponent: LabelCell, headerClassName: 'LabelColumn', dataKey: 'name', label: 'Hostname', titleKey: 'name' },
+                  {
+                    cellComponent: LabelCell,
+                    headerClassName: 'LabelColumn',
+                    dataKey: 'name',
+                    label: 'Hostname',
+                    titleKey: 'name',
+                  },
                   { dataKey: 'target', label: 'IP Address' },
                   { dataKey: 'ttl_sec', label: 'TTL' },
                   {
@@ -376,7 +400,13 @@ export class MasterZone extends Component {
               <Table
                 className="Table--secondary"
                 columns={[
-                  { cellComponent: LabelCell, headerClassName: 'LabelColumn', dataKey: 'name', label: 'Hostname', titleKey: 'name' },
+                  {
+                    cellComponent: LabelCell,
+                    headerClassName: 'LabelColumn',
+                    dataKey: 'name',
+                    label: 'Hostname',
+                    titleKey: 'name',
+                  },
                   { dataKey: 'target', label: 'Aliases to' },
                   { dataKey: 'ttl_sec', label: 'TTL' },
                   {
@@ -417,7 +447,13 @@ export class MasterZone extends Component {
               <Table
                 className="Table--secondary"
                 columns={[
-                  { cellComponent: LabelCell, headerClassName: 'LabelColumn', dataKey: 'name', label: 'Name', titleKey: 'name' },
+                  {
+                    cellComponent: LabelCell,
+                    headerClassName: 'LabelColumn',
+                    dataKey: 'name',
+                    label: 'Name',
+                    titleKey: 'name',
+                  },
                   { dataKey: 'target', label: 'Value' },
                   { dataKey: 'ttl_sec', label: 'TTL' },
                   {
@@ -459,10 +495,22 @@ export class MasterZone extends Component {
               columns={[
                 { dataKey: 'service', label: 'Service' },
                 { dataKey: 'priority', label: 'Priority' },
-                { cellComponent: LabelCell, headerClassName: 'LabelColumn', dataKey: 'domain', label: 'Domain', titleKey: 'domain' },
+                {
+                  cellComponent: LabelCell,
+                  headerClassName: 'LabelColumn',
+                  dataKey: 'domain',
+                  label: 'Domain',
+                  titleKey: 'domain',
+                },
                 { dataKey: 'weight', label: 'Weight' },
                 { dataKey: 'port', label: 'Port' },
-                { cellComponent: LabelCell, headerClassName: 'LabelColumn', dataKey: 'target', label: 'Target', titleKey: 'target' },
+                {
+                  cellComponent: LabelCell,
+                  headerClassName: 'LabelColumn',
+                  dataKey: 'target',
+                  label: 'Target',
+                  titleKey: 'target',
+                },
                 { dataKey: 'ttl_sec', label: 'TTL' },
                 {
                   cellComponent: ButtonCell,
