@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [0.8.2] 2017-06-12
+### fixed
+- retain tab active border color
+
 ## [0.8.1] 2017-06-12
 ### Changed
 - reduced padding and margin on tabs
