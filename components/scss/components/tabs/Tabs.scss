@@ -7,21 +7,23 @@
     }
 
     [role="tablist"].form-tab-list [role="tab"] {
-        padding: 6px 12px;
+        padding: 6px 10px;
+    }
+
+    li[role="tab"]:not(.ReactTabs__Tab--selected):hover {
+        background: none;
     }
 
     [role="tab"] {
-        border-color: 1px solid transparent;
+        padding: 6px 10px;
 
         &:not(:last-of-type) {
-            margin-right: 15px;
+            margin-right: 0;
         }
 
         &:hover,
         &[aria-selected="true"] {
             background: $background-color;
-            border: 1px solid #bbb;
-            border-bottom: 0;
             border-radius: 0;
             -moz-border-radius: 0;
             -webkit-border-radius: 0;
