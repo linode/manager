@@ -359,7 +359,7 @@ export class MasterZone extends Component {
                     label: 'Hostname',
                     titleKey: 'name',
                   },
-                  { dataKey: 'target', label: 'IP Address' },
+                  { headerClassName: 'IPAddressColumn', dataKey: 'target', label: 'IP Address' },
                   { dataKey: 'ttl_sec', label: 'TTL' },
                   {
                     cellComponent: ButtonCell,
