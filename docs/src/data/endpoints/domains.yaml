@@ -77,7 +77,7 @@ endpoints:
             optional: true
             description: >
               An array of IP addresses allowed to AXFR the entire Domain.
-          display_group:
+          group:
             optional: true
             description: >
               A display group to keep track of this Domain.
