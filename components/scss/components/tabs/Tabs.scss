@@ -21,6 +21,10 @@
             margin-right: 0;
         }
 
+        &.ReactTabs__Tab--selected {
+            border-color: #bbb;
+        }
+
         &:hover,
         &[aria-selected="true"] {
             background: $background-color;
