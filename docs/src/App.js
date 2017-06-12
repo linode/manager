@@ -26,7 +26,6 @@ import {
 
 import {
   Python,
-  PythonIntroduction,
   BasicSetup,
   CoreConcepts,
   OAuthWorkflow,
@@ -36,7 +35,7 @@ import {
   CreateLinode,
   TestingWithCurl,
 } from './components/intros/guides/curl';
-
+import { PythonIntroduction } from './components/intros/guides/python';
 import {
   generateIndexRoute,
   generateChildRoute,
@@ -118,8 +117,8 @@ export function init() {
             <Route path="guides" component={Guides} />
             <Route path="guides/curl/creating-a-linode" component={CreateLinode} />
             <Route path="guides/curl/testing-with-curl" component={TestingWithCurl} />
+            <Route path="guides/python/getting-started" component={PythonIntroduction} />
             <Route path="libraries/python" component={Python} pythonDataObjects={{pythonDataTitles, pythonClientObjectTitles, pythonAPITitles}} />
-            <Route path="libraries/python/introduction" component={PythonIntroduction} />
             <Route path="libraries/python/basic-setup" component={BasicSetup} />
             <Route path="libraries/python/oauth-workflow" component={OAuthWorkflow} />
             <Route path="libraries/python/core-concepts" component={CoreConcepts} />

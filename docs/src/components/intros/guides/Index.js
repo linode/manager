@@ -9,14 +9,14 @@ import { API_ROOT, API_VERSION } from '~/constants';
 export default function Index() {
   return(
     <section className="Article">
-      <h1>cURL Guide</h1>
+      <h1>cURL Guides</h1>
       <Table
         className="Table--secondary"
         columns={[
           {
             cellComponent: LinkCell,
             textKey: 'path',
-            label: 'Section',
+            label: 'Title',
             headerClassName: 'SectionColumn',
             hrefFn: function(subPage) {
               return subPage.href;
@@ -33,7 +33,30 @@ export default function Index() {
           {
             href: `/${API_VERSION}/guides/curl/creating-a-linode`,
             path: 'Creating a Linode',
-            description: 'Starting from nothing and ending with a running server.',
+            description: 'Starting from nothing and ending with a running Linode instance.',
+          },
+        ]}
+      />
+      <h1>Python Guides</h1>
+      <Table
+        className="Table--secondary"
+        columns={[
+          {
+            cellComponent: LinkCell,
+            textKey: 'path',
+            label: 'Title',
+            headerClassName: 'SectionColumn',
+            hrefFn: function(subPage) {
+              return subPage.href;
+            }
+          },
+          { label: 'Description', dataKey: 'description' },
+        ]}
+        data={[
+          {
+            href: `/${API_VERSION}/guides/python/getting-started`,
+            path: 'Getting started with Linode Python',
+            description: 'A quick guide on getting started with the official Linode Python wrapper',
           },
         ]}
       />
