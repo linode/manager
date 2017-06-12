@@ -7,14 +7,15 @@
     }
 
     [role="tablist"].form-tab-list [role="tab"] {
-        padding: 6px 12px;
+        padding: 6px 8px;
     }
 
     [role="tab"] {
         border-color: 1px solid transparent;
+        padding: 6px 8px;
 
         &:not(:last-of-type) {
-            margin-right: 15px;
+            margin-right: 8px;
         }
 
         &:hover,
