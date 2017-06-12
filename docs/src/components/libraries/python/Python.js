@@ -35,11 +35,6 @@ export default function Python(props) {
           ]}
           data={[
             {
-              href: `/${API_VERSION}/libraries/python/introduction`,
-              path: 'Introduction',
-              description: 'The introductory summary to using the Python guide',
-            },
-            {
               href: `/${API_VERSION}/libraries/python/basic-setup`,
               path: 'Basic Setup',
               description: 'Setting up the official Linode Python library',
