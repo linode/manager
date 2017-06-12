@@ -89,7 +89,7 @@ schema:
     _optional: true
     _description: >
       An array of IP addresses allowed to AXFR the entire Domain.
-  display_group:
+  group:
     _editable: true
     _value: Example Display Group
     _type: string
