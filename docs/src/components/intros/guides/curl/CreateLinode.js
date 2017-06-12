@@ -4,11 +4,17 @@ import { Link } from 'react-router';
 import { Table } from 'linode-components/tables';
 import Example from '~/components/Example';
 import { API_ROOT, API_VERSION } from '~/constants';
+import { Breadcrumbs } from 'linode-components/breadcrumbs';
 
 
-export default function Introduction() {
+export default function Introduction(props) {
+  const { route } = props;
+  const { crumbs } = route;
   return (
     <section className="Article">
+    <div className="Endpoint-breadcrumbsContainer">
+      <Breadcrumbs crumbs={crumbs} />
+    </div>
       <header>
           <h1>Creating a Linode</h1>
           <h5>by William Smith; last updated May 22nd, 2017</h5>

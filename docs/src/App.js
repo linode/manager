@@ -96,7 +96,8 @@ function onRouterUpdate() {
 
 export function init() {
   hashLinkScroll();
-
+  const guideCrumbs = [{ groupLabel: 'Guides', label: '/guides', to: `/${API_VERSION}/guides` }];
+  const pythonCrumbs = [{ groupLabel: 'Python', label: '/python', to: `/${API_VERSION}/libraries/python` }];
   render(
     <Router
       history={browserHistory}
@@ -115,13 +116,13 @@ export function init() {
             <Route path="filtering" component={Filtering} />
             <Route path="errors" component={Errors} />
             <Route path="guides" component={Guides} />
-            <Route path="guides/curl/creating-a-linode" component={CreateLinode} />
-            <Route path="guides/curl/testing-with-curl" component={TestingWithCurl} />
-            <Route path="guides/python/getting-started" component={PythonIntroduction} />
+            <Route path="guides/curl/creating-a-linode" component={CreateLinode} crumbs={guideCrumbs} />
+            <Route path="guides/curl/testing-with-curl" component={TestingWithCurl} crumbs={guideCrumbs} />
+            <Route path="guides/python/getting-started" component={PythonIntroduction} crumbs={guideCrumbs} />
             <Route path="libraries/python" component={Python} pythonDataObjects={{pythonDataTitles, pythonClientObjectTitles, pythonAPITitles}} />
-            <Route path="libraries/python/basic-setup" component={BasicSetup} />
-            <Route path="libraries/python/oauth-workflow" component={OAuthWorkflow} />
-            <Route path="libraries/python/core-concepts" component={CoreConcepts} />
+            <Route path="libraries/python/basic-setup" component={BasicSetup} crumbs={pythonCrumbs} />
+            <Route path="libraries/python/oauth-workflow" component={OAuthWorkflow} crumbs={pythonCrumbs} />
+            <Route path="libraries/python/core-concepts" component={CoreConcepts} crumbs={pythonCrumbs} />
             {api.endpoints.map(function(endpoint, index) {
                return generateIndexRoute({ key: index, endpoint: endpoint });
              })}

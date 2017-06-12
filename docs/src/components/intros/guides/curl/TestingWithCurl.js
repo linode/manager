@@ -8,11 +8,17 @@ import { API_ROOT,
   API_VERSION,
   MANAGER_ROOT,
 } from '~/constants';
+import { Breadcrumbs } from 'linode-components/breadcrumbs';
 
 
-export default function Introduction() {
+export default function Introduction(props) {
+  const { route } = props;
+  const { crumbs } = route;
   return (
     <section className="Article">
+    <div className="Endpoint-breadcrumbsContainer">
+      <Breadcrumbs crumbs={crumbs} />
+    </div>
       <header>
           <h1>Testing with cURL</h1>
           <h5>by William Smith; last updated May 22nd, 2017</h5>
