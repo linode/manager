@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 
 import { Table } from 'linode-components/tables';
 
-import Example from '../../Example';
+import Example from '~/components/Example';
 import { API_ROOT,
   API_VERSION,
   MANAGER_ROOT,

@@ -21,18 +21,21 @@ import {
   Pagination,
   Filtering,
   Errors,
+  Guides,
 } from './components/intros';
 
 import {
   Python,
   PythonIntroduction,
-  Curl,
-  CreateLinode,
-  TestingWithCurl,
   BasicSetup,
   CoreConcepts,
   OAuthWorkflow,
-} from './components/guides';
+} from './components/libraries';
+
+import {
+  CreateLinode,
+  TestingWithCurl,
+} from './components/intros/guides/curl';
 
 import {
   generateIndexRoute,
@@ -112,14 +115,14 @@ export function init() {
             <Route path="pagination" component={Pagination} />
             <Route path="filtering" component={Filtering} />
             <Route path="errors" component={Errors} />
-            <Route path="guides/curl" component={Curl} />
+            <Route path="guides" component={Guides} />
             <Route path="guides/curl/creating-a-linode" component={CreateLinode} />
             <Route path="guides/curl/testing-with-curl" component={TestingWithCurl} />
-            <Route path={guides/python} component={Python} pythonDataObjects={{pythonDataTitles, pythonClientObjectTitles, pythonAPITitles}} />
-            <Route path={guides/python/introduction} component={PythonIntroduction} />
-            <Route path={guides/python/basic-setup} component={BasicSetup} />
-            <Route path={guides/python/oauth-workflow} component={OAuthWorkflow} />
-            <Route path={guides/python/core-concepts} component={CoreConcepts} />
+            <Route path="libraries/python" component={Python} pythonDataObjects={{pythonDataTitles, pythonClientObjectTitles, pythonAPITitles}} />
+            <Route path="libraries/python/introduction" component={PythonIntroduction} />
+            <Route path="libraries/python/basic-setup" component={BasicSetup} />
+            <Route path="libraries/python/oauth-workflow" component={OAuthWorkflow} />
+            <Route path="libraries/python/core-concepts" component={CoreConcepts} />
             {api.endpoints.map(function(endpoint, index) {
                return generateIndexRoute({ key: index, endpoint: endpoint });
              })}
@@ -129,11 +132,11 @@ export function init() {
              })}
           </Route>
           {pythonClientObjectTitles.map(function(pythonObject, index) {
-            const crumb = [{ groupLabel: 'Guides', label: '/python', to: `/${API_VERSION}/guides/python` }];
+            const crumb = [{ groupLabel: 'Libraries', label: '/python', to: `/${API_VERSION}/libraries/python` }];
             return generateLibraryRoutes({ index: index, libraryObject: pythonObject, prevCrumbs: crumb });
           })}
           {pythonAPITitles.map(function(pythonObject, index) {
-            const crumb = [{ groupLabel: 'Guides', label: '/python', to: `/${API_VERSION}/guides/python` }];
+            const crumb = [{ groupLabel: 'Libraries', label: '/python', to: `/${API_VERSION}/libraries/python` }];
             return generateLibraryRoutes({ index: index, libraryObject: pythonObject, prevCrumbs: crumb });
           })}
         </Route>
