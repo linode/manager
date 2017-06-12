@@ -1,13 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router';
 import { API_ROOT, API_VERSION, LOGIN_ROOT } from '~/constants';
+import { Breadcrumbs } from 'linode-components/breadcrumbs';
 
 import { Table } from 'linode-components/tables';
 
 
-export default function BasicSetup() {
+export default function BasicSetup(props) {
+  const { route } = props;
+  const { crumbs } = route;
   return (
     <section className="Article">
+      <div className="Endpoint-breadcrumbsContainer">
+        <Breadcrumbs crumbs={crumbs} />
+      </div>
       <header>
         <h1>OAuth Workflow</h1>
         <h5>by William Smith; last updated May 22nd, 2017</h5>
