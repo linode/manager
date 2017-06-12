@@ -35,22 +35,22 @@ export default function Python(props) {
           ]}
           data={[
             {
-              href: `/${API_VERSION}/guides/python/introduction`,
+              href: `/${API_VERSION}/libraries/python/introduction`,
               path: 'Introduction',
               description: 'The introductory summary to using the Python guide',
             },
             {
-              href: `/${API_VERSION}/guides/python/basic-setup`,
+              href: `/${API_VERSION}/libraries/python/basic-setup`,
               path: 'Basic Setup',
               description: 'Setting up the official Linode Python library',
             },
             {
-              href: `/${API_VERSION}/guides/python/oauth-workflow`,
+              href: `/${API_VERSION}/libraries/python/oauth-workflow`,
               path: 'OAuth Workflow',
               description: 'A description of the OAuth workflow for the Linode Python library',
             },
             {
-              href: `/${API_VERSION}/guides/python/core-concepts`,
+              href: `/${API_VERSION}/libraries/python/core-concepts`,
               path: 'Core Concepts',
               description: 'Core concepts for using the Linode Python library',
             },

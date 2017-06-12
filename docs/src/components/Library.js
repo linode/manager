@@ -13,7 +13,7 @@ import { default as Method } from './Method';
 export default function Library(props) {
   const { route } = props;
   const { crumbs, libraryObject } = route;
-  const { name, desc, formattedLibraryObject } = libraryObject;
+  const { name, desc, formattedLibraryObject, language } = libraryObject;
 
   function methodContents(containingObject, key) {
     let method = containingObject.methods[key];
@@ -95,9 +95,9 @@ export default function Library(props) {
           <p>{formattedLibraryObject.desc}</p>
         </div>
         <div className="divider"></div>
-        <Example example={formattedLibraryObject.import} />
+        <Example example={formattedLibraryObject.import} language={language } />
         <h2>Constructor</h2>
-        <Example example={formattedLibraryObject.constructor.example} />
+        <Example example={formattedLibraryObject.constructor.example} language={language} />
         <div className="Endpoint-body">
           <div>
             <div id="parameters" className="Method">
