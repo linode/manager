@@ -36,7 +36,6 @@ export default function Introduction(props) {
           The Python library connects to the Linode API V4 using the LinodeClient class, which expects an OAuth Token in his constructor.
         </p>
         <i>All example code in this guide is executed in a Python shell.</i>
-        <Example example="pip install linode-api" name="bash" />
         <Example
           example={`>>> import linode
 >>> client = linode.LinodeClient('my-oauth-token')`}

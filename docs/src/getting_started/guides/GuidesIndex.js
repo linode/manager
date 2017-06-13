@@ -61,11 +61,6 @@ export default function GuidesIndex() {
               description: 'A quick guide on getting started with the official Linode Python wrapper',
             },
             {
-              href: `/${API_VERSION}/guides/python/basic-setup`,
-              path: 'Basic Setup',
-              description: 'Setting up the official Linode Python library',
-            },
-            {
               href: `/${API_VERSION}/guides/python/oauth-workflow`,
               path: 'OAuth Workflow',
               description: 'A description of the OAuth workflow for the Linode Python library',
