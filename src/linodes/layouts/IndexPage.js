@@ -166,7 +166,7 @@ export class IndexPage extends Component {
                     },
                     {
                       cellComponent: BackupsCell,
-                      className: 'hidden-lg-down',
+                      className: 'BackupsCell hidden-lg-down',
                       disableTooltip: true,
                       headerClassName: 'BackupsColumn hidden-lg-down',
                       hrefFn: (linode) => `/linodes/${linode.label}/backups`,
