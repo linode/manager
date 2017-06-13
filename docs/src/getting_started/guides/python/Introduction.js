@@ -1,8 +1,9 @@
 import React from 'react';
-import { API_ROOT, API_VERSION } from '~/constants';
-import { Breadcrumbs } from 'linode-components/breadcrumbs';
 
+import { Breadcrumbs } from 'linode-components/breadcrumbs';
 import { Table } from 'linode-components/tables';
+
+import { API_ROOT, API_VERSION } from '~/constants';
 
 
 export default function Introduction(props) {
