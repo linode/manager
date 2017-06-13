@@ -14,7 +14,6 @@
         border: 0; // reset from above
         border-bottom: 3px solid transparent;
 
-        &:hover,
         &[aria-selected="true"] {
             border: 0;
             border-bottom: 3px solid $blue;
