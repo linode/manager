@@ -41,7 +41,7 @@ export default (
     <Route path="pagination" component={Pagination} />
     <Route path="filtering" component={Filtering} />
     <Route path="errors" component={Errors} />
-    <Route path="guides" component={GuidesIndex} />
+    <Route path="guides" component={GuidesIndex} crumbs={guideCrumbs} />
     <Route path="guides/curl/creating-a-linode" component={CreateLinode} crumbs={guideCrumbs} />
     <Route path="guides/curl/testing-with-curl" component={TestingWithCurl} crumbs={guideCrumbs} />
     <Route path="guides/python/getting-started" component={PythonIntroduction} crumbs={guideCrumbs} />
