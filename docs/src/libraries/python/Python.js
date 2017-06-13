@@ -25,7 +25,7 @@ export default function Python(props) {
             {
               cellComponent: LinkCell,
               textKey: 'path',
-              label: 'Section',
+              label: 'Object',
               headerClassName: 'SectionColumn',
               hrefFn: function(subPage) {
                 return subPage.href;
@@ -46,7 +46,7 @@ export default function Python(props) {
             {
               cellComponent: LinkCell,
               textKey: 'path',
-              label: 'Section',
+              label: 'Object',
               headerClassName: 'SectionColumn',
               hrefFn: function(subPage) {
                 return subPage.href;
