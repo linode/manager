@@ -51,7 +51,9 @@ export class IPSharingPage extends Component {
           ip.address === address).length !== 0;
       });
 
-      this.setState({ checked });
+      this.setState({
+        checked: _.merge({}, checked, this.state ? this.state.checked : {}),
+      });
     });
   }
 

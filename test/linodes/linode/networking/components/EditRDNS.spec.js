@@ -55,6 +55,7 @@ describe('linodes/linode/networking/components/EditRDNS', () => {
     expect(dispatch.callCount).to.equal(1);
     const first = dispatch.firstCall.args[0];
     dispatch.reset();
+    dispatch.returns({ rdns: '' });
     first(dispatch);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
       ([fn]) => expectRequest(fn, `/linode/instances/${testLinode.id}/ips/${ip.address}`, {

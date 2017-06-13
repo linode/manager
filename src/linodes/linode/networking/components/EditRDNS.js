@@ -29,7 +29,7 @@ export default class EditRDNS extends Component {
   }
 
   onSubmit = () => {
-    const { dispatch, ip } = this.props;
+    const { dispatch, ip, close } = this.props;
     const { hostname } = this.state;
 
     return dispatch(dispatchOrStoreErrors.call(this, [

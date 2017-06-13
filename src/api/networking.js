@@ -100,7 +100,8 @@ export function assignIPs(region, assignments) {
 export function setRDNS(ip, rdns) {
   return async function (dispatch, getState) {
     const { linode_id: linodeId, address } = ip;
-    await dispatch(thunkFetch.put(`/linode/instances/${linodeId}/ips/${address}`, { rdns }));
+    const { rdns: resultingRDNS } = await dispatch(
+      thunkFetch.put(`/linode/instances/${linodeId}/ips/${address}`, { rdns }));
 
     const { _ips } = getState().api.linodes.linodes[linodeId];
 
@@ -110,7 +111,7 @@ export function setRDNS(ip, rdns) {
         ..._ips,
         [ip.address]: {
           ...ip,
-          rdns,
+          rdns: resultingRDNS,
         },
       },
     }, linodeId));
