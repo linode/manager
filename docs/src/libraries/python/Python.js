@@ -18,41 +18,6 @@ export default function Python(props) {
         <h1>Python Library</h1>
       </div>
       <div className="EndpointIndex-group">
-        <h3>Getting Started</h3>
-        <Table
-          className="Table--secondary"
-          columns={[
-            {
-              cellComponent: LinkCell,
-              textKey: 'path',
-              label: 'Section',
-              headerClassName: 'SectionColumn',
-              hrefFn: function(subPage) {
-                return subPage.href;
-              }
-            },
-            { label: 'Description', dataKey: 'description' },
-          ]}
-          data={[
-            {
-              href: `/${API_VERSION}/libraries/python/basic-setup`,
-              path: 'Basic Setup',
-              description: 'Setting up the official Linode Python library',
-            },
-            {
-              href: `/${API_VERSION}/libraries/python/oauth-workflow`,
-              path: 'OAuth Workflow',
-              description: 'A description of the OAuth workflow for the Linode Python library',
-            },
-            {
-              href: `/${API_VERSION}/libraries/python/core-concepts`,
-              path: 'Core Concepts',
-              description: 'Core concepts for using the Linode Python library',
-            },
-          ]}
-        />
-      </div>
-      <div className="EndpointIndex-group">
         <h3>Client Objects</h3>
         <Table
           className="Table--secondary"

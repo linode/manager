@@ -1,10 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router';
 
+import { Breadcrumbs } from 'linode-components/breadcrumbs';
 import { Table } from 'linode-components/tables';
+
 import Example from '~/components/Example';
 import { API_ROOT, API_VERSION } from '~/constants';
-import { Breadcrumbs } from 'linode-components/breadcrumbs';
 
 
 export default function Introduction(props) {

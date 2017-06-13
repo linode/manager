@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Table } from 'linode-components/tables';
 
-import Example from '../Example';
+import Example from '~/components/Example';
 import { API_ROOT, API_VERSION } from '~/constants';
 
 

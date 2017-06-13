@@ -15,27 +15,9 @@ import {
   Layout,
 } from './layouts';
 
-import {
-  Introduction,
-  Access,
-  Pagination,
-  Filtering,
-  Errors,
-  Guides,
-} from './components/intros';
+import { default as GettingStartedRoutes } from './getting_started/Routes';
+import { Python as PythonLibrary } from './libraries/python';
 
-import {
-  Python,
-  BasicSetup,
-  CoreConcepts,
-  OAuthWorkflow,
-} from './components/libraries';
-
-import {
-  CreateLinode,
-  TestingWithCurl,
-} from './components/intros/guides/curl';
-import { PythonIntroduction } from './components/intros/guides/python';
 import {
   generateIndexRoute,
   generateChildRoute,
@@ -96,8 +78,6 @@ function onRouterUpdate() {
 
 export function init() {
   hashLinkScroll();
-  const guideCrumbs = [{ groupLabel: 'Guides', label: '/guides', to: `/${API_VERSION}/guides` }];
-  const pythonCrumbs = [{ groupLabel: 'Python', label: '/python', to: `/${API_VERSION}/libraries/python` }];
   render(
     <Router
       history={browserHistory}
@@ -108,21 +88,8 @@ export function init() {
           <IndexRedirect to={`/${API_VERSION}`} />
           <Redirect from='/reference' to={`/${API_VERSION}/`} />
           <Route path={`/${API_VERSION}`}>
-            <IndexRedirect to="introduction" />
-            <Redirect from="reference" to="introduction" />
-            <Route path="introduction" component={Introduction} />
-            <Route path="access" component={Access} />
-            <Route path="pagination" component={Pagination} />
-            <Route path="filtering" component={Filtering} />
-            <Route path="errors" component={Errors} />
-            <Route path="guides" component={Guides} />
-            <Route path="guides/curl/creating-a-linode" component={CreateLinode} crumbs={guideCrumbs} />
-            <Route path="guides/curl/testing-with-curl" component={TestingWithCurl} crumbs={guideCrumbs} />
-            <Route path="guides/python/getting-started" component={PythonIntroduction} crumbs={guideCrumbs} />
-            <Route path="libraries/python" component={Python} pythonDataObjects={{pythonDataTitles, pythonClientObjectTitles, pythonAPITitles}} />
-            <Route path="libraries/python/basic-setup" component={BasicSetup} crumbs={pythonCrumbs} />
-            <Route path="libraries/python/oauth-workflow" component={OAuthWorkflow} crumbs={pythonCrumbs} />
-            <Route path="libraries/python/core-concepts" component={CoreConcepts} crumbs={pythonCrumbs} />
+            {GettingStartedRoutes}
+            <Route path="libraries/python" component={PythonLibrary} pythonDataObjects={{pythonDataTitles, pythonClientObjectTitles, pythonAPITitles}} />
             {api.endpoints.map(function(endpoint, index) {
                return generateIndexRoute({ key: index, endpoint: endpoint });
              })}
