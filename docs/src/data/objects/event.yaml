@@ -39,6 +39,7 @@ schema:
       The action that caused this event.
   username:
     _type: string
+    _type: string
     _value: example_user
     _description: >
       The username of the user who initiated this event.
@@ -99,6 +100,7 @@ enums:
     linode_migrate: Linode migrate
     linode_rebuild: Linode rebuild
     linode_clone: Linode clone
+    linode_kvmify: Linode kvmify
     disk_create: Disk create
     disk_delete: Disk delete
     disk_duplicate: Disk duplicate
@@ -107,10 +109,10 @@ enums:
     backups_cancel: Backups cancel
     backups_restore: Backups restore
     password_reset: Password reset
-    dns_zone_create: Domain create
-    dns_zone_delete: Domain delete
-    dns_record_create: Domain Record create
-    dns_record_delete: Domain Record delete
+    domain_create: Domain create
+    domain_delete: Domain delete
+    domain_record_create: Domain Record create
+    domain_record_delete: Domain Record delete
     stackscript_create: Stackscript create
     stackscript_publicize: Stackscript publicize
     stackscript_revise: Stackscript revise
