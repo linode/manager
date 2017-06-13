@@ -155,7 +155,6 @@ export class IndexPage extends Component {
                   columns={[
                     { cellComponent: CheckboxCell, headerClassName: 'CheckboxColumn' },
                     {
-                      className: 'RowLabelCell',
                       cellComponent: LinkCell,
                       hrefFn: (linode) => `/linodes/${linode.label}`,
                     },
@@ -168,6 +167,7 @@ export class IndexPage extends Component {
                     {
                       cellComponent: BackupsCell,
                       className: 'hidden-lg-down',
+                      disableTooltip: true,
                       headerClassName: 'BackupsColumn hidden-lg-down',
                       hrefFn: (linode) => `/linodes/${linode.label}/backups`,
                     },

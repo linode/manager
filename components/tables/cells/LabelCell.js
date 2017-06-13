@@ -1,18 +1,18 @@
-import React from 'react';
-import { Link } from 'react-router';
+import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
 
+
 import { Tooltip } from '../../tooltips';
+
 import TableCell from './TableCell';
 
 
-export default function LinkCell(props) {
+export default function LabelCell(props) {
   const { cellIndex, column, record } = props;
   const {
     className = '',
-    hrefFn,
-    textKey = 'label',
     textFn,
+    dataKey = 'name',
     disableTooltip = false,
   } = column;
 
@@ -21,20 +21,19 @@ export default function LinkCell(props) {
     if (textFn) {
       children = textFn(record);
     } else {
-      children = record[textKey];
+      children = record[dataKey];
     }
   }
 
-  const name = record[textKey];
+  const idText = record.id ? (<div>ID: {record.id}</div>) : null;
   let tooltipComponent;
   let tooltipAttributes;
   if (!disableTooltip) {
     const tooltipId = `tooltip-${record.id}-${cellIndex}`;
-    const idText = `ID: ${record.id}`;
     const tooltipText = (
       <div>
         <div>
-          {name}
+          {children}
         </div>
         {idText}
       </div>
@@ -49,28 +48,22 @@ export default function LinkCell(props) {
   return (
     <TableCell
       cellIndex={cellIndex}
-      className={`LinkCell ${className}`}
+      className={`LabelCell ${className}`}
       column={column}
       record={record}
     >
-      <Link to={hrefFn(record)} {...tooltipAttributes}>
-        {children}
-      </Link>
+      <span {...tooltipAttributes}>{children}</span>
       {tooltipComponent}
     </TableCell>
   );
 }
 
-LinkCell.propTypes = {
+LabelCell.propTypes = {
   cellIndex: PropTypes.number,
   children: PropTypes.node,
   className: PropTypes.string,
   column: PropTypes.shape({
     disableTooltip: PropTypes.bool,
-    hrefFn: PropTypes.func.isRequired,
-    textKey: PropTypes.string,
-    // TODO: consider generalizing textFn for formatting
-    textFn: PropTypes.func,
-  }).isRequired,
+  }),
   record: PropTypes.object.isRequired,
 };

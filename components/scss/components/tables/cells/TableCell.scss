@@ -1,0 +1,8 @@
+.TableCell.LinkCell > .TableCell-content > a,
+.TableCell.LabelCell > .TableCell-content > span {
+    @extend .font-large;
+    @include truncate();
+    display: inline-block;
+    vertical-align: bottom;
+    max-width: 100%;
+}
