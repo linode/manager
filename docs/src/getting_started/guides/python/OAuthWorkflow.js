@@ -33,4 +33,3 @@ export default function BasicSetup(props) {
     </section>
   );
 }
-

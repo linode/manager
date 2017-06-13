@@ -13,7 +13,7 @@ import {
   Errors,
 } from './intros';
 
-import { GuidesIndex } from './guides/GuidesIndex';
+import { default as GuidesIndex } from './guides/GuidesIndex';
 
 import {
   TestingWithCurl,
@@ -21,7 +21,7 @@ import {
 } from './guides/curl';
 
 import {
-  Introduction as PythonIntroduction,
+  PythonIntroduction,
   BasicSetup,
   CoreConcepts,
   OAuthWorkflow
@@ -31,7 +31,6 @@ import { python } from '~/data/python';
 
 import { API_VERSION } from '~/constants';
 const guideCrumbs = [{ groupLabel: 'Guides', label: '/guides', to: `/${API_VERSION}/guides` }];
-const pythonCrumbs = [{ groupLabel: 'Python', label: '/python', to: `/${API_VERSION}/libraries/python` }];
 
 export default (
   <Route component={IndexLayout}>
@@ -42,13 +41,12 @@ export default (
     <Route path="pagination" component={Pagination} />
     <Route path="filtering" component={Filtering} />
     <Route path="errors" component={Errors} />
-    <Route path="guides" component={GuidesIndex}>
-      <Route path="curl/creating-a-linode" component={CreateLinode} crumbs={guideCrumbs} />
-      <Route path="curl/testing-with-curl" component={TestingWithCurl} crumbs={guideCrumbs} />
-      <Route path="python/getting-started" component={PythonIntroduction} crumbs={guideCrumbs} />
-      <Route path="python/basic-setup" component={BasicSetup} crumbs={pythonCrumbs} />
-      <Route path="python/oauth-workflow" component={OAuthWorkflow} crumbs={pythonCrumbs} />
-      <Route path="python/core-concepts" component={CoreConcepts} crumbs={pythonCrumbs} />
-    </Route>
+    <Route path="guides" component={GuidesIndex} />
+    <Route path="guides/curl/creating-a-linode" component={CreateLinode} crumbs={guideCrumbs} />
+    <Route path="guides/curl/testing-with-curl" component={TestingWithCurl} crumbs={guideCrumbs} />
+    <Route path="guides/python/getting-started" component={PythonIntroduction} crumbs={guideCrumbs} />
+    <Route path="guides/python/basic-setup" component={BasicSetup} crumbs={guideCrumbs} />
+    <Route path="guides/python/oauth-workflow" component={OAuthWorkflow} crumbs={guideCrumbs} />
+    <Route path="guides/python/core-concepts" component={CoreConcepts} crumbs={guideCrumbs} />
   </Route>
 );

@@ -5,6 +5,7 @@ import { Breadcrumbs } from 'linode-components/breadcrumbs';
 import { Table } from 'linode-components/tables';
 
 import { API_ROOT, API_VERSION } from '~/constants';
+import { Example } from '~/components';
 
 
 export default function CoreConcepts(props) {
@@ -24,26 +25,34 @@ export default function CoreConcepts(props) {
         <p>
           All listing methods of the LinodeClient object can be "filtered," allowing you to query for only the objects you desire. Filtering uses a SQLAlchemy-inspired syntax. All attributes that are filterable are marked with a Filterable <i className="fa fa-filter"></i> icon below.
         </p>
-        <table>
-          <tr><td><code>==</code></td><td>Fields must be exactly equal</td></tr>
-          <tr><td><code>contains</code></td><td>Equivalent to "b in a"</td></tr>
-          <tr><td><code>&gt;</code></td><td>Greater than (numeric)</td></tr>
-          <tr><td><code>&gt;=</code></td><td>Greater than or equal to (numeric)</td></tr>
-          <tr><td><code>&lt;</code></td><td>Less than (numeric)</td></tr>
-          <tr><td><code>&lt;=</code></td><td>Less than or equal to (numeric)</td></tr>
-        </table>
+        <Table
+          columns={[
+            { headerClassName: 'OperatorColumn', dataKey: 'operator', label: 'Operator' },
+            { dataKey: 'description', label: 'Description' }
+          ]}
+          data={[
+            { operator: '==', description: 'Fields must be exactly equal' },
+            { operator: 'contains', description: 'Equivalent to "b in a"' },
+            { operator: '>', description: 'Equivalent to "b in a"' },
+            { operator: '>=', description: 'Greater than or equal to (numeric)' },
+            { operator: '<', description: 'Less than (numeric)' },
+            { operator: '<=', description: 'Less than or equal to (numeric)' },
+          ]}
+        />
         <p>
           Logical operators are provided to combine filters. They are listed below:
         </p>
-        <table>
-          <tr><td>linode.and_</td><td><code>&amp;</code></td><td>
-            Both filters must match for the composite filter to match.  The single character method
-            requires the filter statements to both be in parenthesis.<br/>&nbsp;
-          </td></tr>
-          <tr><td>linode.or_</td><td><code>|</code></td><td>
-            Either filter must match for the composite filter to match. The single character method requires the filters statements to both be in parenthesis.<br/>&nbsp;
-          </td></tr>
-        </table>
+        <Table
+          columns={[
+            { headerClassName: 'OperatorColumn', dataKey: 'operator', label: 'Operator' },
+            { headerClassName: 'OperatorColumn', dataKey: 'shorthand', label: '' },
+            { dataKey: 'description', label: 'Description' }
+          ]}
+          data={[
+            { operator: 'linode.and_', shorthand: '&', description: 'Both filters must match for the composite filter to match.  The single character method requires the filter statements to both be in parenthesis.' },
+            { operator: 'linode.or_', shorthand: '|', description: 'Either filter must match for the composite filter to match. The single character method requires the filters statements to both be in parenthesis.' },
+          ]}
+        />
       </section>
       <section>
         <h2>Volatile Attributes</h2>
@@ -53,13 +62,12 @@ export default function CoreConcepts(props) {
         <p>
           While it <em>is</em> possible to poll on volatile attributes to detect changes, doing so without a timeout is not advised, and is not guaranteed to ever exit. For example, this code should <em>not</em> live in a production system:
         </p>
-        <pre>
-          <code>
-{`linode.boot()
+        <Example
+          example={`linode.boot()
 while not linode.state == 'running':
     pass`}
-          </code>
-        </pre>
+          name="bash"
+        />
         <p>
           This code may work most of the time, but it is not guaranteed that <code>linode.state</code> will ever be seen as running just because you called <code>boot</code>. For instance, another process could delete the linode and our poll may not hit during any window where the state is "running".
         </p>
