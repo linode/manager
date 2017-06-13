@@ -45,7 +45,6 @@ export default (
     <Route path="guides/curl/creating-a-linode" component={CreateLinode} crumbs={guideCrumbs} />
     <Route path="guides/curl/testing-with-curl" component={TestingWithCurl} crumbs={guideCrumbs} />
     <Route path="guides/python/getting-started" component={PythonIntroduction} crumbs={guideCrumbs} />
-    <Route path="guides/python/basic-setup" component={BasicSetup} crumbs={guideCrumbs} />
     <Route path="guides/python/oauth-workflow" component={OAuthWorkflow} crumbs={guideCrumbs} />
     <Route path="guides/python/core-concepts" component={CoreConcepts} crumbs={guideCrumbs} />
   </Route>

@@ -66,7 +66,7 @@ export default function CoreConcepts(props) {
           example={`linode.boot()
 while not linode.state == 'running':
     pass`}
-          name="bash"
+          name="python"
         />
         <p>
           This code may work most of the time, but it is not guaranteed that <code>linode.state</code> will ever be seen as running just because you called <code>boot</code>. For instance, another process could delete the linode and our poll may not hit during any window where the state is "running".
