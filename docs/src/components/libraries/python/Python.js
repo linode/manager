@@ -15,7 +15,7 @@ export default function Python(props) {
   return(
     <section className="Article">
       <div className="EndpointIndex-header">
-        <h1>Python Guide</h1>
+        <h1>Python Library</h1>
       </div>
       <div className="EndpointIndex-group">
         <h3>Getting Started</h3>
