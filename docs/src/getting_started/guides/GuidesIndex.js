@@ -10,7 +10,7 @@ import { API_ROOT, API_VERSION } from '~/constants';
 export default function GuidesIndex() {
   return(
     <section className="Article">
-      <h1>cURL Guides</h1>
+      <h1>cURL</h1>
       <Table
         className="Table--secondary"
         columns={[
@@ -38,16 +38,15 @@ export default function GuidesIndex() {
           },
         ]}
       />
-      <h1>Python Guides</h1>
+      <h1>Python</h1>
       <div className="EndpointIndex-group">
-        <h3>Getting Started</h3>
         <Table
           className="Table--secondary"
           columns={[
             {
               cellComponent: LinkCell,
               textKey: 'path',
-              label: 'Section',
+              label: 'Title',
               headerClassName: 'SectionColumn',
               hrefFn: function(subPage) {
                 return subPage.href;
@@ -62,17 +61,17 @@ export default function GuidesIndex() {
               description: 'A quick guide on getting started with the official Linode Python wrapper',
             },
             {
-              href: `/${API_VERSION}/libraries/python/basic-setup`,
+              href: `/${API_VERSION}/guides/python/basic-setup`,
               path: 'Basic Setup',
               description: 'Setting up the official Linode Python library',
             },
             {
-              href: `/${API_VERSION}/libraries/python/oauth-workflow`,
+              href: `/${API_VERSION}/guides/python/oauth-workflow`,
               path: 'OAuth Workflow',
               description: 'A description of the OAuth workflow for the Linode Python library',
             },
             {
-              href: `/${API_VERSION}/libraries/python/core-concepts`,
+              href: `/${API_VERSION}/guides/python/core-concepts`,
               path: 'Core Concepts',
               description: 'Core concepts for using the Linode Python library',
             },
