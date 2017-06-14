@@ -2,6 +2,8 @@ import React from 'react';
 
 import { Table } from 'linode-components/tables';
 
+import { Link } from 'react-router';
+
 import Example from '../Example';
 import { API_ROOT, API_VERSION } from '~/constants';
 
@@ -18,6 +20,9 @@ export default function Introduction() {
           HTTP methods to manipulate and return standard HTTP status codes to tell you how
           it went.
           </p>
+          <div className="alert alert-info" role="alert">
+            <Link to={`/${API_VERSION}/guides/curl/testing-with-curl`}>Check out the Testing with cURL guide</Link> to get started making API calls using a Personal Access Token (PAT).
+          </div>
           <p>
             All API endpoints (starting from version 4) are located at:
           </p>

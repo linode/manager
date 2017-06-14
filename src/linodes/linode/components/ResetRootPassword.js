@@ -88,6 +88,7 @@ export default class ResetRootPassword extends Component {
     return (
       <Card header={header} className="full-height">
         <Form onSubmit={this.onSubmitConfirm}>
+          {disabledMessage}
           <FormGroup className="row" errors={errors} name="disk">
             <label htmlFor="disk" className="col-sm-3 col-form-label">Disk</label>
             <div className="col-sm-9">
@@ -123,7 +124,6 @@ export default class ResetRootPassword extends Component {
                 disabled={disabled || loading}
                 disabledChildren={disabled ? 'Reset' : 'Resetting'}
               >Reset</SubmitButton>
-              {disabledMessage}
               <FormSummary errors={errors} success="Password reset." />
             </div>
           </FormGroup>
