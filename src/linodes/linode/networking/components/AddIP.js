@@ -7,6 +7,7 @@ import { Form, Input, ModalFormGroup, Radio, SubmitButton } from 'linode-compone
 import { showModal, hideModal } from '~/actions/modal';
 import { addIP } from '~/api/networking';
 import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+import { MONTHLY_IP_COST } from '~/constants';
 
 
 export default class AddIP extends Component {
@@ -48,8 +49,9 @@ export default class AddIP extends Component {
     return (
       <Form onSubmit={this.onSubmit}>
         <p>
-          You will incur a $1/month charge for each additional public IPv4. To request more IPv6
-          addresses, you'll have to <Link to="/support/create">create a ticket</Link>.
+          You will incur a ${MONTHLY_IP_COST}/month charge for each additional public IPv4.
+          To request more IPv6 addresses, you'll have to <Link to="/support/create">create a
+          ticket</Link>.
         </p>
         <ModalFormGroup label="Version">
           <Input disabled value="IPv4" />

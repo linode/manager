@@ -237,3 +237,5 @@ export const IPV6_DNS_RESOLVERS = [
   '2600:3c03::b',
   '2600:3c03::c',
 ];
+
+export const MONTHLY_IP_COST = 1;
