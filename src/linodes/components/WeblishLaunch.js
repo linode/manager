@@ -1,7 +1,5 @@
 import React, { PropTypes } from 'react';
 
-import { Button } from 'linode-components/buttons';
-
 
 export function launchWeblishConsole(linode) {
   window.open(
@@ -15,7 +13,7 @@ export default function WeblishLaunch(props) {
   const { linode } = props;
 
   return (
-    <Button onClick={() => { launchWeblishConsole(linode); }}>Launch</Button>
+    <a href="#" onClick={() => { launchWeblishConsole(linode); }}>Browser</a>
   );
 }
 

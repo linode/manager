@@ -2,9 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
-import { Button } from 'linode-components/buttons';
 import { Card, CardHeader } from 'linode-components/cards';
-import { FormGroup, Input, Select } from 'linode-components/forms';
+import { Select } from 'linode-components/forms';
 
 import { setSource } from '~/actions/source';
 import { getObjectByLabelLazily } from '~/api/util';
@@ -182,45 +181,27 @@ export class DashboardPage extends Component {
           </Card>
         </section>
         <section className="col-lg-6 col-md-12 col-sm-12">
-          <Card header={<CardHeader title="Access" />} className="full-height">
-            <FormGroup className="row">
-              <label htmlFor="ssh-input" className="col-sm-4 col-form-label">SSH</label>
-              <div className="col-sm-8">
-                <div className="input-group">
-                  <Input
-                    id="ssh-input"
-                    value={`ssh root@${linode.ipv4[0]}`}
-                    readOnly
-                  />
-                  <span className="input-group-btn">
-                    <Button href={`ssh://root@${linode.ipv4[0]}`}>SSH</Button>
-                  </span>
-                </div>
+          <Card header={<CardHeader title="Access" />} className="Access full-height">
+            <div className="Access-method">
+              <h3>SSH</h3>
+              <pre id="ssh-input">{`ssh root@${linode.ipv4[0]}`}</pre>
+              <div className="Access-launchers">
+                <a href={`ssh://root@${linode.ipv4[0]}`}>SSH</a>
               </div>
-            </FormGroup>
-            <FormGroup className="row">
-              <label className="col-sm-4 col-form-label" htmlFor="lish-input">
-                Console
-              </label>
-              <div className="col-sm-8">
-                <div className="input-group">
-                  <Input
-                    id="lish-input"
-                    value={`ssh -t ${lishLink}`}
-                    readOnly
-                  />
-                  <span className="input-group-btn">
-                    <Button href={`ssh://${lishLink}`}>SSH</Button>
-                  </span>
-                  <span className="input-group-btn">
-                    <WeblishLaunch linode={linode} />
-                  </span>
-                </div>
+            </div>
+            <div className="Access-method">
+              <h3>Lish Console</h3>
+              <pre id="lish-input">{`ssh -t ${lishLink}`}</pre>
+              <div className="Access-launchers">
+                <a href={`ssh://${lishLink}`}>SSH</a>
+                <WeblishLaunch linode={linode} />
+              </div>
+              <div>
                 <small className="text-muted">
                   Lish listens on ports 22, 443, and 2200.
                 </small>
               </div>
-            </FormGroup>
+            </div>
           </Card>
         </section>
       </div>
