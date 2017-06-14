@@ -157,6 +157,7 @@ export class IndexPage extends Component {
                     {
                       cellComponent: LinkCell,
                       hrefFn: (linode) => `/linodes/${linode.label}`,
+                      tooltipEnabled: true,
                     },
                     { cellComponent: IPAddressCell, headerClassName: 'LinodeIPAddressColumn' },
                     {
@@ -166,7 +167,7 @@ export class IndexPage extends Component {
                     },
                     {
                       cellComponent: BackupsCell,
-                      className: 'hidden-lg-down',
+                      className: 'BackupsCell hidden-lg-down',
                       disableTooltip: true,
                       headerClassName: 'BackupsColumn hidden-lg-down',
                       hrefFn: (linode) => `/linodes/${linode.label}/backups`,
