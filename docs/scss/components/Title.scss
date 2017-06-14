@@ -2,12 +2,24 @@
     padding: 10px 0;
 
     &-heading {
-        h1, h2, small {
+        h1, h2 {
             display: inline;
         }
 
         h1, h2 {
             margin: 0;
         }
+    }
+}
+
+.Descriptor {
+    display: block;
+    float: right;
+    clear: right;
+
+    &--inline {
+        display: inline;
+        float: none;
+        margin-left: 10px;
     }
 }
