@@ -1,20 +1,18 @@
+$tab-active-border: #bbb;
+
 .Tabs {
-    [role="tablist"] {
+    .TabList {
         @extend .container;
         background: $white;
         border-bottom: $border;
         margin: 0 auto;
     }
 
-    [role="tablist"].form-tab-list [role="tab"] {
+    .TabList.form-tab-list .Tab {
         padding: 6px 10px;
     }
 
-    li[role="tab"]:not(.ReactTabs__Tab--selected):hover {
-        background: none;
-    }
-
-    [role="tab"] {
+    .Tab {
         padding: 6px 10px;
 
         &:not(:last-of-type) {
@@ -22,7 +20,7 @@
         }
 
         &.ReactTabs__Tab--selected {
-            border-color: #bbb;
+            border-color: $tab-active-border;
         }
 
         &:hover,
@@ -52,6 +50,25 @@
         }
     }
 
+    // general hover state
+    .Tab:not(.ReactTabs__Tab--selected):hover {
+        border: 1px solid $tab-active-border;
+        border-bottom: none;
+    }
+
+    // special cases for before the active tab
+    .Tab.selected-previous:hover {
+        border: 1px solid $tab-active-border;
+        border-right: 1px solid transparent;
+        border-bottom: none;
+    }
+
+    // special cases for after the active tab
+    .Tab.ReactTabs__Tab--selected + .Tab:hover {
+        border: 1px solid $tab-active-border;
+        border-left: 1px solid transparent;
+        border-bottom: none;
+    }
     
     &-container {
         @extend .container;
