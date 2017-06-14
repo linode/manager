@@ -156,9 +156,6 @@ function formatSchemaField(schemaField, enumMap) {
     nestedSchema = formatSchema(getResourceObjByName(type).schema, enumMap);
   } else if (type === 'enum' && enumMap[subType]) {
     nestedSchema = enumMap[subType]; // already formatted
-  } else if (!type) {
-    // TODO: check the name of the nested item?
-    nestedSchema = formatSchema(schemaField, enumMap);
   } else if (Array.isArray(value)) {
     value = value.map(function(obj) {
       if (typeof obj === 'object' && obj !== null) {
@@ -170,6 +167,9 @@ function formatSchemaField(schemaField, enumMap) {
     if (value.length && typeof value[0] !== 'string') {
       nestedSchema = value[0]; // use the first example in the array as the schema
     }
+  } else {
+    // TODO: check the name of the nested item?
+    nestedSchema = formatSchema(schemaField, enumMap);
   }
 
   return {
