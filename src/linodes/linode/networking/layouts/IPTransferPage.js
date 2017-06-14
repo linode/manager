@@ -94,7 +94,7 @@ export class IPTransferPage extends Component {
 
     let body = (
       <p>
-        Transfer is only available within Linodes in the same region. You have no other
+        Transfer is limited to Linodes in the same region. You have no other
         Linodes in this region.
       </p>
     );

@@ -108,7 +108,7 @@ export class IPSharingPage extends Component {
 
     let body = (
       <p>
-        Sharing is only available within Linodes in the same region. You have no other Linodes
+        Sharing is limited to Linodes in the same region. You have no other Linodes
         in this region.
       </p>
     );
