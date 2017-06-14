@@ -24,7 +24,13 @@ export default function Lists() {
               <p>Basic List Example:</p>
               <Table
                 columns={[
-                  { cellComponent: LabelCell, headerClassName: 'LabelColumn', dataKey: 'label', label: 'Linode' },
+                  {
+                    cellComponent: LabelCell,
+                    headerClassName: 'LabelColumn',
+                    dataKey: 'label',
+                    label: 'Linode',
+                    tooltipEnabled: true,
+                  },
                   { dataKey: 'ip_address', label: 'IP address' },
                   { dataKey: 'region', label: 'Region' },
                 ]}

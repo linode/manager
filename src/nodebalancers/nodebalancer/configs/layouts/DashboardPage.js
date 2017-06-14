@@ -136,6 +136,7 @@ export class DashboardPage extends Component {
                     headerClassName: 'LabelColumn',
                     dataKey: 'label',
                     label: 'Label',
+                    tooltipEnabled: true,
                   },
                   { dataKey: 'address', label: 'Address' },
                   { dataKey: 'weight', label: 'Weight' },
