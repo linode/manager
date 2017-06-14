@@ -47,7 +47,7 @@ export default function Method(props) {
       <div className="Title">
         <div className="Title-heading">
           <h2>{name}</h2>
-          <div>
+          <div className="Descriptor">
             <div>
               {money ? <small className="text-muted"><i className="fa fa-dollar"></i> Will incur a charge on your account</small> : null}
             </div>
