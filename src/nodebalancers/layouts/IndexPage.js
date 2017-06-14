@@ -94,6 +94,7 @@ export class IndexPage extends Component {
               {
                 cellComponent: LinkCell,
                 hrefFn: (nodebalancer) => { return `/nodebalancers/${nodebalancer.label}`; },
+                tooltipEnabled: true,
               },
               { cellComponent: IPAddressCell, headerClassName: 'IPAddressColumn' },
               { cellComponent: RegionCell },

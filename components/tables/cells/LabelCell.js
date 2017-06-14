@@ -13,7 +13,7 @@ export default function LabelCell(props) {
     className = '',
     textFn,
     dataKey = 'name',
-    disableTooltip = false,
+    tooltipEnabled = false,
   } = column;
 
   let children = props.children;
@@ -28,7 +28,8 @@ export default function LabelCell(props) {
   const idText = record.id ? (<div>ID: {record.id}</div>) : null;
   let tooltipComponent;
   let tooltipAttributes;
-  if (!disableTooltip) {
+  let tooltipEnabledClass = '';
+  if (tooltipEnabled) {
     const tooltipId = `tooltip-${record.id}-${cellIndex}`;
     const tooltipText = (
       <div>
@@ -39,6 +40,7 @@ export default function LabelCell(props) {
       </div>
     );
 
+    tooltipEnabledClass = 'TooltipEnabled';
     tooltipAttributes = {'data-tip': true, 'data-for': tooltipId };
     tooltipComponent = (
       <Tooltip id={tooltipId}>{tooltipText}</Tooltip>
@@ -48,7 +50,7 @@ export default function LabelCell(props) {
   return (
     <TableCell
       cellIndex={cellIndex}
-      className={`LabelCell ${className}`}
+      className={`LabelCell ${className} ${tooltipEnabledClass}`}
       column={column}
       record={record}
     >
