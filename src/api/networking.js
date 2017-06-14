@@ -100,8 +100,9 @@ export function assignIPs(region, assignments) {
 export function setRDNS(ip, rdns) {
   return async function (dispatch, getState) {
     const { linode_id: linodeId, address } = ip;
+    const rawAddress = address.split('/')[0].trim();
     const { rdns: resultingRDNS } = await dispatch(
-      thunkFetch.put(`/linode/instances/${linodeId}/ips/${address}`, { rdns }));
+      thunkFetch.put(`/linode/instances/${linodeId}/ips/${rawAddress}`, { rdns }));
 
     const { _ips } = getState().api.linodes.linodes[linodeId];
 
@@ -109,7 +110,7 @@ export function setRDNS(ip, rdns) {
     return dispatch(actions.one({
       _ips: {
         ..._ips,
-        [ip.address]: {
+        [address]: {
           ...ip,
           rdns: resultingRDNS,
         },
@@ -153,12 +154,14 @@ export function getIPs(linodeId) {
       address: ips.ipv6.link_local,
       type: 'link-local',
       version: 'ipv6',
+      linode_id: linodeId,
     };
 
     _ips[ips.ipv6.slaac.address] = {
       ...ips.ipv6.slaac,
       type: 'slaac',
       version: 'ipv6',
+      linode_id: linodeId,
     };
 
     ips.ipv6.global.forEach(function (ip) {
@@ -173,6 +176,7 @@ export function getIPs(linodeId) {
       _ips[ip.address] = {
         ...ip,
         version: 'ipv6',
+        linode_id: linodeId,
       };
     });
 
