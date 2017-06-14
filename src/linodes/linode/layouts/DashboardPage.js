@@ -196,11 +196,9 @@ export class DashboardPage extends Component {
                 <a href={`ssh://${lishLink}`}>SSH</a>
                 <WeblishLaunch linode={linode} />
               </div>
-              <div>
-                <small className="text-muted">
-                  Lish listens on ports 22, 443, and 2200.
-                </small>
-              </div>
+              <small className="text-muted">
+                Lish listens on ports 22, 443, and 2200.
+              </small>
             </div>
           </Card>
         </section>
