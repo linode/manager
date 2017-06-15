@@ -25,7 +25,7 @@ body,
     display: flex;
     flex-direction: column;
     min-height: 100%;
-    padding-top: $nav-height;
+    padding-top: $nav-height + $mini-nav-height;
 
     &-dropdownContainer {
         position: relative;
