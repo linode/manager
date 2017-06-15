@@ -115,6 +115,7 @@ function formatSchemaExample(schema) {
   const schemaExample = {};
 
   if (!Array.isArray(schema)) {
+    // debugger;
     return schemaExample;
   }
 
@@ -165,20 +166,6 @@ function formatSchemaField(schemaField, enumMap) {
   } else if (type === 'enum' || type === 'object' || type === 'array' || !type) {
     // is of the the checked types, or no type provided (currently undocumented)
     nestedSchema = formatSchema(schemaField, enumMap);
-  } else {
-    // is a boolean or string type, in which case, format the provided values
-    if (Array.isArray(value)) {
-      value = value.map(function (obj) {
-        if (typeof obj === 'object' && obj !== null) {
-          return formatSchema(obj, enumMap);
-        }
-        return obj;
-      });
-
-      if (value.length && typeof value[0] !== 'string') {
-        nestedSchema = value[0]; // use the first example in the array as the schema
-      }
-    }
   }
 
   return {
