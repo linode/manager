@@ -3,6 +3,7 @@ description: >
   Information about a restricted user's grants.
 schema:
   global:
+    _type: object
     _description: Grants involving global permissions, such as creating resources.
     add_linodes:
       _type: boolean
@@ -29,6 +30,7 @@ schema:
       _value: true
       _description: If this user may manage longview subscription.
   customer:
+    _type: object
     _description: Grants related to modifying the account.
     access:
       _type: boolean

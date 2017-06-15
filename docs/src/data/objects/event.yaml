@@ -8,6 +8,7 @@ schema:
     _type: integer
     _value: 1234
   entity:
+    _type: object
     _description: >
       Detailed inforrmation about the event's entity, including id, type, label, and URL used to access it.
     id:

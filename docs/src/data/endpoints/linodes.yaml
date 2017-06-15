@@ -42,10 +42,12 @@ endpoints:
           label:
             optional: true
             description: The label to assign this Linode. Defaults to "linode".
+            type: string
             limit: "3-32 ASCII characters limited to letters, numbers, underscores, and dashes, starting and ending with a letter, and without two dashes or underscores in a row"
           group:
             optional: true
             description: The group to assign this Linode. Defaults to "empty".
+            type: string
             limit: 0-50 characters
           distribution:
             optional: true
@@ -58,10 +60,12 @@ endpoints:
             description: >
               The root password to use when sourcing this Linode from a distribution.
               <ul><li>root_pass is required if the source provided is a distribution.</li></ul>
+            type: string
           root_ssh_key:
             optional: true
             description: >
               A public SSH key file to install at `/root/.ssh/authorized_keys` when creating this Linode.
+            type: string
           stackscript:
             optional: true
             description: >
@@ -85,6 +89,7 @@ endpoints:
             optional: true
             description: >
               Subscribes this Linode with the Backup service. (Additional charges apply.) Defaults to "false".
+            type: boolean
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -362,38 +367,46 @@ endpoints:
             description: >
               The user-friendly label to name this config.
             limit: 1-48 characters
+            type: string
           disks:
             description: >
               <a href="#object-disk">Disks</a> attached to this Linode config.
+            type: disks
           comments:
             optional: true
             description: >
               Optional field for arbitrary user comments on this config.
             limit: 1-255 characters
+            type: string
           ram_limit:
             optional: true
             description: >
               The maximum RAM the Linode will be given when booting this
               config. This defaults to the total RAM of the Linode.
             limit: between 0 and the Linode's total RAM
+            type: integer
           root_device_ro:
             optional: true
             description: >
               Controls whether to mount the root disk read-only. Defaults
               to false.
+            type: boolean
           devtmpfs_automount:
             optional: true
             description: >
               Populates the /dev directory early during boot without udev.
               Defaults to false.
+            type: boolean
           run_level:
             optional: true
             description: >
               Sets the <a href="#object-run_level-enum">run level</a> for Linode boot. Defaults to "default".
+            type: enum
           virt_mode:
             optional: true
             description: >
               Controls the <a href="#object-virt_mode-enum">virtualization mode</a>. Defaults to "paravirt".
+            type: enum
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -631,6 +644,7 @@ endpoints:
             optional: true
             description: >
               Human-friendly label for this snapshot. Must be 1-50 characters.
+            type: string
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
