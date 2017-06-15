@@ -66,7 +66,7 @@ export default class BackupRestore extends Component {
       l => <option value={l.id} key={l.id}>{l.label}</option>);
 
     restoreTo.splice(0, 0,
-                     <option value={linode.id} key={linode.id}>This Linode</option>);
+      <option value={linode.id} key={linode.id}>This Linode</option>);
 
     const targetLabel = target === linode.id ? 'This Linode' : linodes.linodes[target].label;
 
