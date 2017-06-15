@@ -9,6 +9,7 @@ import { clients } from '~/api';
 import { resetSecret } from '~/api/clients';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { API_ROOT } from '~/constants';
+import { TrackEvent } from '~/actions/trackEvent.js';
 
 import { renderSecret } from './CreatePersonalAccessToken';
 import CreateOrEditApplication from './CreateOrEditApplication';
@@ -25,11 +26,13 @@ export default class MyApplication extends Component {
 
   editAction = () => {
     const { dispatch, client } = this.props;
+    const title = 'Edit OAuth Client';
 
-    return dispatch(showModal('Edit OAuth Client',
+    return dispatch(showModal(title,
       <CreateOrEditApplication
         id={client.id}
         label={client.label}
+        title={title}
         redirect={client.redirect_uri}
         dispatch={dispatch}
         close={() => dispatch(hideModal())}
@@ -54,12 +57,18 @@ export default class MyApplication extends Component {
 
   resetAction = () => {
     const { dispatch, client } = this.props;
+    const title = 'Reset Client Secret';
 
-    return dispatch(showModal('Reset Client Secret',
+    return dispatch(showModal(title,
       <ConfirmModalBody
-        onCancel={() => dispatch(hideModal())}
+        onCancel={() => {
+          TrackEvent('Modal', 'cancel', title);
+          dispatch(hideModal());
+        }}
         onOk={async () => {
           const { secret } = await dispatch(resetSecret(client.id));
+          
+          TrackEvent('Modal', 'reset', title);
           return dispatch(renderSecret(
             'client secret', 'reset', secret, () => dispatch(hideModal())));
         }}

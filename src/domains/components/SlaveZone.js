@@ -30,23 +30,6 @@ export class SlaveZone extends Component {
     ));
   }
 
-  renderEditRecord(title, component, props = {}) {
-    const { dispatch, domain } = this.props;
-    dispatch(showModal(
-      title,
-      React.createElement(component, {
-        ...props,
-        dispatch,
-        zone: domain,
-        close: () => dispatch(hideModal()),
-      }),
-    ));
-  }
-
-  renderEditSOARecord(title) {
-    return this.renderEditRecord(title, EditSOARecord);
-  }
-
   render() {
     const { domain } = this.props;
 

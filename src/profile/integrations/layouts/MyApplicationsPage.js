@@ -18,9 +18,12 @@ export class MyApplicationsPage extends Component {
 
   renderCreateOAuthClient = () => {
     const { dispatch } = this.props;
-    dispatch(showModal('Create an OAuth Client', (
+    const title = 'Create an OAuth Client';
+
+    dispatch(showModal(title, (
       <CreateOrEditApplication
         dispatch={dispatch}
+        title={title}
         close={() => dispatch(hideModal())}
         submitText="Create"
         submitDisabledText="Creating"
