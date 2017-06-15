@@ -25,6 +25,8 @@ export default class ConfigForm extends Component {
       stickiness: props.config.stickiness,
       algorithm: props.config.algorithm,
       check: props.config.check,
+      checkPath: props.config.check_path,
+      checkBody: props.config.check_body,
       checkPassive: props.config.check_passive,
       checkInterval: props.config.check_interval,
       checkTimeout: props.config.check_timeout,
@@ -38,7 +40,7 @@ export default class ConfigForm extends Component {
     const { dispatch, nodebalancer, config } = this.props;
     const {
       port, protocol, algorithm, stickiness, check, checkPassive, checkInterval, checkTimeout,
-      checkAttempts, sslCert, sslKey,
+      checkAttempts, sslCert, sslKey, checkPath, checkBody,
     } = this.state;
 
     const data = {
@@ -48,6 +50,8 @@ export default class ConfigForm extends Component {
       check,
       port: parseInt(port),
       check_passive: checkPassive,
+      check_body: checkBody,
+      check_path: checkPath,
       check_interval: parseInt(checkInterval),
       check_timeout: parseInt(checkTimeout),
       check_attempts: parseInt(checkAttempts),
@@ -86,7 +90,7 @@ export default class ConfigForm extends Component {
     const { submitText, submitDisabledText } = this.props;
     const {
       port, protocol, algorithm, stickiness, check, checkPassive, checkInterval, checkTimeout,
-      checkAttempts, sslCert, sslKey, errors, loading,
+      checkAttempts, sslCert, sslKey, checkPath, checkBody, errors, loading,
     } = this.state;
 
     return (
@@ -213,6 +217,41 @@ export default class ConfigForm extends Component {
             <FormGroupError errors={errors} name="check" />
           </div>
         </FormGroup>
+        {check === 'connection' ? null : (
+          <FormGroup errors={errors} name="check_path" className="row">
+            <label htmlFor="checkPath" className="col-sm-2 col-form-label">
+              HTTP Path to Check
+            </label>
+            <div className="col-sm-10">
+              <Input
+                id="checkPath"
+                name="checkPath"
+                value={checkPath}
+                onChange={this.onChange}
+              />
+              <FormGroupError errors={errors} name="check_path" />
+            </div>
+          </FormGroup>
+        )}
+        {check !== 'http_body' ? null : (
+          <FormGroup errors={errors} name="check_body" className="row">
+            <label htmlFor="checkBody" className="col-sm-2 col-form-label">HTTP Body Regex</label>
+            <div className="col-sm-10">
+              <Input
+                id="checkBody"
+                name="checkBody"
+                value={checkBody}
+                onChange={this.onChange}
+              />
+              <div>
+                <small className="text-muted">
+                  A regex to match within the first 16,384 bytes of the response body.
+                </small>
+              </div>
+              <FormGroupError errors={errors} name="check_body" />
+            </div>
+          </FormGroup>
+        )}
         <FormGroup errors={errors} name="check_interval" className="row">
           <label className="col-sm-2 col-form-label">Interval</label>
           <div className="col-sm-10">
@@ -306,5 +345,7 @@ ConfigForm.defaultProps = {
     stickiness: 'table',
     check: 'connection',
     check_passive: true,
+    check_path: '',
+    check_body: '',
   },
 };
