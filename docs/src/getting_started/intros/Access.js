@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Table } from 'linode-components/tables';
-import Example from '../Example';
+import Example from '~/components/Example';
 import { LOGIN_ROOT } from '~/constants';
 
 
