@@ -106,9 +106,9 @@ export class IndexPage extends Component {
                   columns={[
                     { cellComponent: CheckboxCell, headerClassName: 'CheckboxColumn' },
                     {
+                      className: 'RowLabelCell',
                       cellComponent: LinkCell,
                       hrefFn: (zone) => `/domains/${zone.domain}`, textKey: 'domain',
-                      tooltipEnabled: true,
                     },
                     { dataKey: 'type', formatFn: _.capitalize },
                     {

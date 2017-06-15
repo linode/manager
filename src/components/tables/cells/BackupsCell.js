@@ -7,7 +7,7 @@ export default function BackupsCell(props) {
   const { column, record } = props;
 
   return (
-    <LinkCell column={column} record={record}>
+    <LinkCell className="BackupsCell" column={column} record={record}>
       {record.backups.enabled ? 'View Backups' : 'Enable Backups'}
     </LinkCell>
   );

@@ -40,7 +40,6 @@ export default function Layout(props) {
                 <li><Link to={`/${API_VERSION}/pagination`}>Pagination</Link></li>
                 <li><Link to={`/${API_VERSION}/filtering`}>Filtering &amp; Sorting</Link></li>
                 <li><Link to={`/${API_VERSION}/errors`}>Errors</Link></li>
-                <li><Link to={`/${API_VERSION}/guides`}>Guides</Link></li>
               </ul>
             </div>
             <div className="VerticalNav-section">
@@ -52,9 +51,10 @@ export default function Layout(props) {
               </ul>
             </div>
             <div className="VerticalNav-section">
-              <h3>Libraries</h3>
+              <h3>Guides</h3>
               <ul>
-                <li><Link to={`/${API_VERSION}/libraries/python`}>Python</Link></li>
+                <li><Link to={`/${API_VERSION}/guides/curl`}>cURL</Link></li>
+                <li><Link to={`/${API_VERSION}/guides/python`}>Python</Link></li>
               </ul>
             </div>
           </div>

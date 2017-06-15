@@ -21,7 +21,7 @@ describe('components/tables/cells/TableCell', function () {
   it('should be defined', function () {
     expect(TableCell).to.be.defined;
     expect(tableCell).to.be.defined;
-    expect(tableCell.find('.TableCell').length).to.equal(1);
+    expect(tableCell.find('.Table-cell').length).to.equal(1);
   });
 
   it('should accept className from props', function () {

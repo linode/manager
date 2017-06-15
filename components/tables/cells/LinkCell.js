@@ -1,19 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router';
 import { PropTypes } from 'prop-types';
-
-import { Tooltip } from '../../tooltips';
 import TableCell from './TableCell';
 
 
 export default function LinkCell(props) {
-  const { cellIndex, column, record } = props;
+  const { column, record } = props;
   const {
     className = '',
     hrefFn,
+    titleKey = 'id',
     textKey = 'label',
     textFn,
-    tooltipEnabled = false,
   } = column;
 
   let children = props.children;
@@ -25,51 +23,24 @@ export default function LinkCell(props) {
     }
   }
 
-  const name = record[textKey];
-  let tooltipComponent;
-  let tooltipAttributes;
-  let tooltipEnabledClass = '';
-  if (tooltipEnabled) {
-    const tooltipId = `tooltip-${record.id}-${cellIndex}`;
-    const idText = `ID: ${record.id}`;
-    const tooltipText = (
-      <div>
-        <div>
-          {name}
-        </div>
-        {idText}
-      </div>
-    );
-
-    tooltipEnabledClass = 'TooltipEnabled';
-    tooltipAttributes = {'data-tip': true, 'data-for': tooltipId };
-    tooltipComponent = (
-      <Tooltip id={tooltipId}>{tooltipText}</Tooltip>
-    );
-  }
-
   return (
-    <TableCell
-      cellIndex={cellIndex}
-      className={`LinkCell ${className} ${tooltipEnabledClass}`}
-      column={column}
-      record={record}
-    >
-      <Link to={hrefFn(record)} {...tooltipAttributes}>
+    <TableCell className={`LinkCell ${className}`} column={column} record={record}>
+      <Link
+        to={hrefFn(record)}
+        title={record[titleKey]}
+      >
         {children}
       </Link>
-      {tooltipComponent}
     </TableCell>
   );
 }
 
 LinkCell.propTypes = {
-  cellIndex: PropTypes.number,
   children: PropTypes.node,
   className: PropTypes.string,
   column: PropTypes.shape({
-    disableTooltip: PropTypes.bool,
     hrefFn: PropTypes.func.isRequired,
+    titleKey: PropTypes.string,
     textKey: PropTypes.string,
     // TODO: consider generalizing textFn for formatting
     textFn: PropTypes.func,

@@ -22,7 +22,7 @@ export default function Endpoint(props) {
         <div className="Title">
           <div className="Title-heading">
             <h1>{path}</h1>
-            {authenticated ? <div className="Descriptor Descriptor--inline"><small className="text-muted"><i className="fa fa-lock"></i> Authenticated</small></div> : null}
+            {authenticated ? <small className="text-muted"><i className="fa fa-lock"></i> Authenticated</small> : null}
           </div>
           <p>{description}</p>
         </div>
