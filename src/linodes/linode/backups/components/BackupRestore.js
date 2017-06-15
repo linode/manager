@@ -3,7 +3,9 @@ import { push } from 'react-router-redux';
 
 import { Card, CardHeader } from 'linode-components/cards';
 import { Checkbox, Form, FormGroup, Select, SubmitButton } from 'linode-components/forms';
+import { ConfirmModalBody } from 'linode-components/modals';
 
+import { showModal, hideModal } from '~/actions/modal';
 import { restoreBackup } from '~/api/backups';
 import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
 
@@ -24,10 +26,28 @@ export default class BackupRestore extends Component {
     const { dispatch, linode, backup, linodes } = this.props;
     const { target, overwrite } = this.state;
 
-    return dispatch(dispatchOrStoreErrors.call(this, [
+    const toRestoreTo = linodes.linodes[target].label;
+
+    const callback = () => dispatch(dispatchOrStoreErrors.call(this, [
       () => restoreBackup(linode.id, target, backup.id, overwrite),
-      () => push(`/linodes/${linodes.linodes[target].label}`),
+      () => push(`/linodes/${toRestoreTo}`),
     ]));
+
+    const modalBody = 'Are you sure you want to restore backups to ${toRestoreTo}?';
+
+    return dispatch(showModal('Confirm Backup Restore', (
+      <ConfirmModalBody
+        onCancel={() => dispatch(hideModal())}
+        onOk={callback}
+      >
+        Are you sure you want to restore backups to <strong>{toRestoreTo}</strong>?
+        {!overwrite ? null : (
+          <span>
+             &nbsp;This will destroy all disks and configs on <strong>{toRestoreTo}</strong>.
+          </span>
+        )}
+      </ConfirmModalBody>
+    )));
   }
 
   onChange = ({ target: { name, value, checked } }) =>
@@ -72,7 +92,7 @@ export default class BackupRestore extends Component {
                 name="overwrite"
                 value={overwrite}
                 checked={overwrite}
-                label="Destroy all disks and backups"
+                label="Destroy all disks and configs"
                 onChange={this.onChange}
               />
             </div>
