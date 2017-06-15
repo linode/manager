@@ -1,6 +1,8 @@
 import React, { PropTypes, Component } from 'react';
 import { Link } from 'react-router';
 
+import { Header as HeaderWrapper } from 'linode-components/navigation';
+
 import { hideNotifications, showNotifications } from '~/actions/notifications';
 import { hideSession, showSession } from '~/actions/session';
 import { eventSeen } from '~/api/events';
@@ -56,65 +58,68 @@ export default class Header extends Component {
         return events.events[id].seen ? count : count + 1;
       }, 0);
 
+    const miniHeader = (
+      <div className="MiniHeader-text">
+        This is the beta Linode Manager.
+        Click <a href="https://manager.linode.com">here</a> to go back to the classic Linode Manager.
+      </div>
+    );
+
     return (
-      <div className="Header">
-        <div className="MainHeader clearfix">
-          <div className="container">
-            <div className="MainHeader-brand">
-              <Link to="/">
-                <span className="MainHeader-logo">
-                  <img
-                    src={LinodeLogoImgSrc}
-                    alt="Linode Logo"
-                    height={40}
-                    width={35}
-                  />
-                </span>
-              </Link>
-            </div>
-            <Link
-              className={`${linkClass('/linodes')}`}
-              to="/linodes"
-            >Linodes</Link>
-            <Link
-              className={`${linkClass('/nodebalancers')}`}
-              to="/nodebalancers"
-            >NodeBalancers</Link>
-            <Link
-              className={`${linkClass('/domains')}`}
-              to="/domains"
-            >Domains</Link>
-            {!username ? null : (
-              <div
-                className="MainHeader-session float-sm-right"
-                onClick={this.toggleSession}
-              >
-                <span className="MainHeader-username">
-                  {username}
-                </span>
-                <img
-                  className="MainHeader-gravatar"
-                  src={gravatarLink}
-                  alt="User Avatar"
-                  height={35}
-                  width={35}
-                />
-              </div>
-            )}
-            {!username ? null : (
-              <div
-                className="MainHeader-notifications float-sm-right"
-                onClick={this.toggleNotifications}
-              >
-                <i className="fa fa-bell-o" />
-                {!unseenCount ? null : (
-                  <span className="MainHeader-badge Badge">{unseenCount}</span>
-                )}
-              </div>
+      <HeaderWrapper miniHeader={miniHeader}>
+        <div className="MainHeader-brand">
+          <Link to="/">
+            <span className="MainHeader-logo">
+              <img
+                src={LinodeLogoImgSrc}
+                alt="Linode Logo"
+                height={40}
+                width={35}
+              />
+            </span>
+          </Link>
+        </div>
+        <Link
+          className={`${linkClass('/linodes')}`}
+          to="/linodes"
+        >Linodes</Link>
+        <Link
+          className={`${linkClass('/nodebalancers')}`}
+          to="/nodebalancers"
+        >NodeBalancers</Link>
+        <Link
+          className={`${linkClass('/domains')}`}
+          to="/domains"
+        >Domains</Link>
+        {!username ? null : (
+          <div
+            className="MainHeader-session float-sm-right"
+            onClick={this.toggleSession}
+          >
+            <span className="MainHeader-username">
+              {username}
+            </span>
+            <img
+              className="MainHeader-gravatar"
+              src={gravatarLink}
+              alt="User Avatar"
+              height={35}
+              width={35}
+            />
+          </div>
+        )}
+        {!username ? null : (
+          <div
+            className="MainHeader-notifications float-sm-right"
+            onClick={this.toggleNotifications}
+          >
+            <i className="fa fa-bell-o" />
+            {!unseenCount ? null : (
+              <span className="MainHeader-badge Badge">{unseenCount}</span>
             )}
           </div>
-        </div>
-      </div>
+        )}
+      </HeaderWrapper>
     );
   }
 }

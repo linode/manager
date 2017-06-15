@@ -12,9 +12,16 @@ export default function Layout(props) {
   const { route } = props;
   const { endpoints } = route;
 
+  const miniHeader = (
+    <div className="MiniHeader-text">
+      This is the beta Linode APIv4 documentation.
+      Click <a href="https://linode.com/api">here</a> for APIv3 documentation.
+    </div>
+  );
+
   return (
     <div className="Docs Layout">
-      <Header>
+      <Header miniHeader={miniHeader}>
         <div className="MainHeader-brand">
           <Link to="/">
             <span className="MainHeader-logo">

@@ -119,3 +119,21 @@
         top: 6px;
     }
 }
+
+.MiniHeader {
+    @extend .font-small;
+
+    background: $green;
+    color: $black;
+    height: $mini-nav-height;
+    line-height: $mini-nav-height;
+    overflow-x: auto;
+
+    a {
+        color: $light-black;
+    }
+
+    &-text {
+        min-width: 830px;
+    }
+}
