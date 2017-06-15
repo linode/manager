@@ -21,7 +21,7 @@ describe('nodebalancers/nodebalancer/configs/layouts/EditConfigPage', () => {
 
   it('commits changes to the API', async () => {
     const id = 1;
-    const page = await mount(
+    const page = mount(
       <EditConfigPage
         id={id}
         nodebalancer={genericNodeBalancer}
@@ -43,7 +43,7 @@ describe('nodebalancers/nodebalancer/configs/layouts/EditConfigPage', () => {
     changeInput('protocol', 'http');
     changeInput('algorithm', 'roundrobin');
     changeInput('stickiness', 'none');
-    changeInput('check', 'http');
+    changeInput('check', 'http_body');
     changeInput('checkPath', '/');
     changeInput('checkBody', 'foo');
     changeInput('checkPassive', true);
@@ -66,7 +66,7 @@ describe('nodebalancers/nodebalancer/configs/layouts/EditConfigPage', () => {
           stickiness: 'none',
           check_passive: true,
           port: 82,
-          check: 'http',
+          check: 'http_body',
           check_body: 'foo',
           check_path: '/',
         },
