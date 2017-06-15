@@ -20,8 +20,6 @@ import {
   dispatchOrStoreErrors,
   getObjectByLabelLazily,
 } from '~/api/util';
-import { linodeIPs } from '~/api/linodes';
-import { assignIPs } from '~/api/networking';
 
 import { IPList } from '../components';
 import { selectLinode } from '../../utilities';

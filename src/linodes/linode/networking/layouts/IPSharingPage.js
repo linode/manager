@@ -14,9 +14,6 @@ import {
   CheckboxCell,
   LinkCell,
 } from 'linode-components/tables/cells';
-import { Form, FormGroup, SubmitButton } from 'linode-components/forms';
-import { Table } from 'linode-components/tables';
-
 
 import { setSource } from '~/actions/source';
 import { setShared } from '~/api/networking';
