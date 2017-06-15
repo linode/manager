@@ -15,32 +15,28 @@ import {
   Layout,
 } from './layouts';
 
-import { default as GettingStartedRoutes } from './getting_started/Routes';
-import { Python as PythonLibrary } from './libraries/python';
+import {
+  Introduction,
+  Access,
+  Pagination,
+  Filtering,
+  Errors,
+} from './components/intros';
+
+import {
+  Python,
+  PythonIntroduction,
+  Curl,
+  CreateLinode,
+  TestingWithCurl,
+} from './components/guides';
 
 import {
   generateIndexRoute,
-  generateChildRoute,
-  generateLibraryRoutes,
+  generateChildRoute
 } from '~/RoutesGenerator';
 
 import { default as api } from '~/api';
-import { python } from '~/data/python';
-
-const pythonDataTitles = Object.values(python.pythonObjects).map(function(pythonObject) {
-  return {
-    href: pythonObject.routePath,
-    path: pythonObject.name,
-    description: pythonObject.formattedPythonObject.desc,
-    formattedLibraryObject: pythonObject.formattedPythonObject,
-  };
-});
-const pythonClientObjectTitles = pythonDataTitles.filter(function(pythonData) {
-  return (pythonData.path === 'LinodeLoginClient' || pythonData.path === 'LinodeClient');
-});
-const pythonAPITitles = pythonDataTitles.filter(function(pythonData) {
-  return (pythonData.path !== 'LinodeLoginClient' && pythonData.path !== 'LinodeClient');
-});
 
 import { API_VERSION } from '~/constants';
 
@@ -78,6 +74,7 @@ function onRouterUpdate() {
 
 export function init() {
   hashLinkScroll();
+
   render(
     <Router
       history={browserHistory}
@@ -88,8 +85,18 @@ export function init() {
           <IndexRedirect to={`/${API_VERSION}`} />
           <Redirect from='/reference' to={`/${API_VERSION}/`} />
           <Route path={`/${API_VERSION}`}>
-            {GettingStartedRoutes}
-            <Route path="libraries/python" component={PythonLibrary} pythonDataObjects={{pythonDataTitles, pythonClientObjectTitles, pythonAPITitles}} />
+            <IndexRedirect to="introduction" />
+            <Redirect from="reference" to="introduction" />
+            <Route path="introduction" component={Introduction} />
+            <Route path="access" component={Access} />
+            <Route path="pagination" component={Pagination} />
+            <Route path="filtering" component={Filtering} />
+            <Route path="errors" component={Errors} />
+            <Route path="guides/python" component={Python} />
+            <Route path="guides/python/introduction" component={PythonIntroduction} />
+            <Route path="guides/curl" component={Curl} />
+            <Route path="guides/curl/creating-a-linode" component={CreateLinode} />
+            <Route path="guides/curl/testing-with-curl" component={TestingWithCurl} />
             {api.endpoints.map(function(endpoint, index) {
                return generateIndexRoute({ key: index, endpoint: endpoint });
              })}
@@ -98,14 +105,6 @@ export function init() {
                return generateChildRoute({ endpoint: endpoint, prevCrumbs: crumb });
              })}
           </Route>
-          {pythonClientObjectTitles.map(function(pythonObject, index) {
-            const crumb = [{ groupLabel: 'Libraries', label: '/python', to: `/${API_VERSION}/libraries/python` }];
-            return generateLibraryRoutes({ index: index, libraryObject: pythonObject, prevCrumbs: crumb });
-          })}
-          {pythonAPITitles.map(function(pythonObject, index) {
-            const crumb = [{ groupLabel: 'Libraries', label: '/python', to: `/${API_VERSION}/libraries/python` }];
-            return generateLibraryRoutes({ index: index, libraryObject: pythonObject, prevCrumbs: crumb });
-          })}
         </Route>
         <Route path="*" component={NotFound} />
       </Route>

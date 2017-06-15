@@ -51,7 +51,6 @@ export default class TableRow extends Component {
               return (
                 <column.cellComponent
                   key={index}
-                  cellIndex={index}
                   checked={record[column.dataKey] || selected}
                   column={column}
                   record={record}
@@ -63,7 +62,6 @@ export default class TableRow extends Component {
             return (
               <column.cellComponent
                 key={index}
-                cellIndex={index}
                 column={column}
                 record={record}
               />
@@ -74,7 +72,6 @@ export default class TableRow extends Component {
           return (
             <TableCell
               key={index}
-              cellIndex={index}
               column={column}
               record={record}
             />

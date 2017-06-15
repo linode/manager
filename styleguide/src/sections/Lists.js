@@ -5,7 +5,6 @@ import { Table } from 'linode-components/tables';
 import {
   ButtonCell,
   CheckboxCell,
-  LabelCell,
   LinkCell,
 } from 'linode-components/tables/cells';
 
@@ -24,13 +23,7 @@ export default function Lists() {
               <p>Basic List Example:</p>
               <Table
                 columns={[
-                  {
-                    cellComponent: LabelCell,
-                    headerClassName: 'LabelColumn',
-                    dataKey: 'label',
-                    label: 'Linode',
-                    tooltipEnabled: true,
-                  },
+                  { className: 'RowLabelCell', dataKey: 'label', label: 'Linode' },
                   { dataKey: 'ip_address', label: 'IP address' },
                   { dataKey: 'region', label: 'Region' },
                 ]}
@@ -47,8 +40,7 @@ export default function Lists() {
                 columns={[
                   { cellComponent: CheckboxCell, headerClassName: 'CheckboxColumn', onChange: () => {} },
                   {
-                    className: 'LabelCell',
-                    headerClassName: 'LabelColumn',
+                    className: 'RowLabelCell',
                     cellComponent: LinkCell,
                     dataKey: 'label',
                     label: 'Linode',

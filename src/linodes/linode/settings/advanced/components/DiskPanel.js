@@ -101,7 +101,6 @@ export class DiskPanel extends Component {
 
     return (
       <Card header={header}>
-        {this.renderStatusMessage()}
         <section className="disk-layout">
           {Object.values(disks).map(d =>
             <div
@@ -132,6 +131,7 @@ export class DiskPanel extends Component {
             )}
           </div>
         </section>
+        {this.renderStatusMessage()}
       </Card>
     );
   }

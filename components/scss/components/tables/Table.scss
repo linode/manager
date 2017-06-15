@@ -30,3 +30,43 @@
         }
     }
 }
+
+.TableRow {
+    height: 65px;
+    border: $border;
+    margin: 0 15px;
+    background: $white;
+
+    &-selector {
+        padding-right: 10px;
+    }
+
+    &--selected {
+        @include selected;
+    }
+}
+
+.CheckboxCell {
+    width: 45px;
+}
+
+.RowLabelCell {
+    @extend .font-large;
+    width: 350px;
+
+    small {
+        display: block;
+    }
+}
+
+.ButtonCell {
+    padding: 0;
+
+    button {
+        // TODO: proper styles for buttons in cells
+        display: block;
+        float: right;
+        position: relative;
+        top: 1px;
+    }
+}

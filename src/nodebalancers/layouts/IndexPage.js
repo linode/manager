@@ -92,9 +92,9 @@ export class IndexPage extends Component {
             columns={[
               { cellComponent: CheckboxCell, headerClassName: 'CheckboxColumn' },
               {
+                className: 'RowLabelCell',
                 cellComponent: LinkCell,
                 hrefFn: (nodebalancer) => { return `/nodebalancers/${nodebalancer.label}`; },
-                tooltipEnabled: true,
               },
               { cellComponent: IPAddressCell, headerClassName: 'IPAddressColumn' },
               { cellComponent: RegionCell },
