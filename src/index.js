@@ -1,6 +1,7 @@
 import 'babel-polyfill';
 import React from 'react';
 import { render } from 'react-dom';
+import ReactGA from 'react-ga';
 import reactGuard from 'react-guard';
 import { Provider } from 'react-redux';
 import { Router, Route, IndexRedirect, browserHistory } from 'react-router';
@@ -124,6 +125,17 @@ window.handleError = function (e) {
   // Needed for react-guard.
   return null;
 };
+
+document.addEventListener('track', function(e) {
+  console.log(e);
+  const {cate, action, label, value} = e.detail;
+  ReactGA.event({
+      category: cate,
+      action: action,
+      label: label,
+      value: value,
+  });
+}, false);
 
 const init = () => {
   try {

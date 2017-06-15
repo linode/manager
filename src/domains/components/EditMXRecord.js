@@ -12,6 +12,7 @@ import { CancelButton } from 'linode-components/buttons';
 import { domains } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 
+import { TrackEvent } from '~/actions/trackEvent.js';
 
 export default class EditMXRecord extends Component {
   constructor(props) {
@@ -35,7 +36,7 @@ export default class EditMXRecord extends Component {
   }
 
   onSubmit = () => {
-    const { dispatch, id, close } = this.props;
+    const { dispatch, id, title, close } = this.props;
     const { mailserver, subdomain, preference } = this.state;
     const ids = [this.props.zone.id, id].filter(Boolean);
     const data = {
@@ -48,6 +49,7 @@ export default class EditMXRecord extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => domains.records[id ? 'put' : 'post'](data, ...ids),
+      () => TrackEvent('Modal', id ? 'edit' : 'add', title),
       close,
     ]));
   }
@@ -55,7 +57,7 @@ export default class EditMXRecord extends Component {
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   render() {
-    const { close } = this.props;
+    const { close, title } = this.props;
     const { errors, loading, zone, subdomain, preference, mailserver } = this.state;
 
     return (
@@ -88,7 +90,10 @@ export default class EditMXRecord extends Component {
           />
         </ModalFormGroup>
         <div className="Modal-footer">
-          <CancelButton onClick={close} />
+          <CancelButton onClick={() => {
+            TrackEvent('Modal', 'cancel', title);
+            close();
+          }} />
           <SubmitButton
             disabled={loading}
             disabledChildren={this.props.id ? undefined : 'Adding MX Record'}
@@ -105,6 +110,7 @@ export default class EditMXRecord extends Component {
 EditMXRecord.propTypes = {
   dispatch: PropTypes.func.isRequired,
   zone: PropTypes.object.isRequired,
+  title: PropTypes.string.isRequired,
   close: PropTypes.func.isRequired,
   id: PropTypes.number,
 };
