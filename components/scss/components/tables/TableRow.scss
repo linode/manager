@@ -1,0 +1,14 @@
+.TableRow {
+    height: 65px;
+    border: $border;
+    margin: 0 15px;
+    background: $white;
+
+    &-selector {
+        padding-right: 10px;
+    }
+
+    &--selected {
+        @include selected();
+    }
+}

@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Table } from 'linode-components/tables';
-import Example from '../Example';
+import Example from '~/components/Example';
 import { LOGIN_ROOT } from '~/constants';
 
 
@@ -12,8 +12,7 @@ export default function Authentication() {
       <h1>Authentication</h1>
       <section>
         <p>
-          To use some API endpoints, authentication is required. This is indicated by the <small className="text-muted">&nbsp;<i className="fa fa-lock"></i>&nbsp;Authenticated</small> notation
-          throughout the documentation. We use the basic OAuth workflow where you can create
+          To use some API endpoints, authentication is required. We use the basic OAuth workflow where you can create
           <em> applications</em> that integrate with Linode by registering those applications with us.
           You then use OAuth to authenticate on behalf of the user to request access to resources from their account.
         </p>
@@ -49,8 +48,8 @@ export default function Authentication() {
           When the user is redirected, two parameters will be added to the query string:
           <code>code</code> and <code>state</code>.
           The last parameter will match the state you gave us at the start of the flow. This allows you to ensure
-          that the OAuth flow was initiated by your application, rather than by someone manually navigating to
-          { LOGIN_ROOT } with your <code>client_id</code>.
+          that the OAuth flow was initiated by your application, rather than by someone manually navigating to { LOGIN_ROOT } with
+          your <code>client_id</code>.
           The important parameter is the code, this is the <em>access code</em> you need to continue the OAuth flow.
         </p>
         <p>
@@ -165,8 +164,8 @@ export default function Authentication() {
           the same effect).
         </p>
         <p>
-          Each API endpoint documented on this page includes the OAuth scope necessary
-          to use that resource. It will look like this: <span className="text-muted">&nbsp;<i className="fa fa-key"></i>&nbsp;linodes:view</span>.
+          Each API endpoint documented on these pages includes the OAuth scope necessary
+          to use that resource. It will look like this: <span className="text-muted">&nbsp;OAuth scopes:&nbsp;linodes:view</span>.
           You may also request <code>*</code> to get full access to a user's account,
           but this is highly discouraged. You should do your best to request the least amount
           of access needed for your application to function.

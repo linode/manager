@@ -187,10 +187,8 @@ a:hover, a:focus, a:active {
 }
 
 .alert {
-    @extend .font-xs;
-
     display: inline-block;
-    margin: 5px 0 0 0;
+    margin: 0 0 0 0;
     padding: 15px;
     line-height: initial;
     min-height: initial;

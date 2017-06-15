@@ -155,11 +155,11 @@ export class IndexPage extends Component {
                   columns={[
                     { cellComponent: CheckboxCell, headerClassName: 'CheckboxColumn' },
                     {
-                      className: 'RowLabelCell',
                       cellComponent: LinkCell,
                       hrefFn: (linode) => `/linodes/${linode.label}`,
+                      tooltipEnabled: true,
                     },
-                    { cellComponent: IPAddressCell, headerClassName: 'IPAddressColumn' },
+                    { cellComponent: IPAddressCell, headerClassName: 'LinodeIPAddressColumn' },
                     {
                       cellComponent: RegionCell,
                       headerClassName: 'RegionColumn hidden-md-down',
@@ -167,7 +167,8 @@ export class IndexPage extends Component {
                     },
                     {
                       cellComponent: BackupsCell,
-                      className: 'hidden-lg-down',
+                      className: 'BackupsCell hidden-lg-down',
+                      disableTooltip: true,
                       headerClassName: 'BackupsColumn hidden-lg-down',
                       hrefFn: (linode) => `/linodes/${linode.label}/backups`,
                     },

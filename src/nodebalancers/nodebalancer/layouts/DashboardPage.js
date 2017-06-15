@@ -173,6 +173,7 @@ export class DashboardPage extends Component {
                       hrefFn: function (config) {
                         return `/nodebalancers/${nodebalancer.label}/configs/${config.id}`;
                       },
+                      tooltipEnabled: true,
                     },
                     { dataKey: 'protocol', label: 'Protocol' },
                     { dataKey: 'algorithm', label: 'Algorithm' },

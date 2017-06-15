@@ -1,18 +1,24 @@
 import React from 'react';
 import { Link } from 'react-router';
 
+import { Breadcrumbs } from 'linode-components/breadcrumbs';
 import { Table } from 'linode-components/tables';
 
-import Example from '../../Example';
 import { API_ROOT,
   API_VERSION,
   MANAGER_ROOT,
 } from '~/constants';
+import Example from '~/components/Example';
 
 
-export default function Introduction() {
+export default function Introduction(props) {
+  const { route } = props;
+  const { crumbs } = route;
   return (
     <section className="Article">
+    <div className="Endpoint-breadcrumbsContainer">
+      <Breadcrumbs crumbs={crumbs} />
+    </div>
       <header>
           <h1>Testing with cURL</h1>
           <h5>by William Smith; last updated May 22nd, 2017</h5>
