@@ -163,6 +163,7 @@ export const ipv4ns = {
     '103.3.60.19',
     '103.3.60.20'],
 };
+
 export const ipv6ns = {
   'us-south-1a': '2600:3c00::',
   'us-west-1a': '2600:3c01::',
@@ -174,6 +175,7 @@ export const ipv6ns = {
   'ap-northeast-1b': '2400:8902::',
   'ap-south-1a': '2400:8901::',
 };
+
 export const ipv6nsSuffix = ['5', '6', '7', '8', '9', 'b', 'c'];
 
 export const NAME_SERVERS = [
@@ -212,3 +214,28 @@ export const NODEBALANCER_CONFIG_CHECKS = new Map([
 
 export const AVAILABLE_DISK_SLOTS =
   ['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg', 'sdh'];
+
+export const IPV4_DNS_RESOLVERS = [
+  '66.228.42.5',
+  '96.126.106.5',
+  '50.116.53.5',
+  '50.116.58.5',
+  '50.116.61.5',
+  '50.116.62.5',
+  '66.175.211.5',
+  '97.107.133.4',
+  '207.192.69.4',
+  '207.192.69.5',
+];
+
+export const IPV6_DNS_RESOLVERS = [
+  '2600:3c03::5',
+  '2600:3c03::6',
+  '2600:3c03::7',
+  '2600:3c03::8',
+  '2600:3c03::9',
+  '2600:3c03::b',
+  '2600:3c03::c',
+];
+
+export const MONTHLY_IP_COST = 1;

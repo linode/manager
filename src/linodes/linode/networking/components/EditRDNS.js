@@ -3,11 +3,22 @@ import React, { PropTypes, Component } from 'react';
 import { CancelButton } from 'linode-components/buttons';
 import { Form, Input, ModalFormGroup, SubmitButton } from 'linode-components/forms';
 
+import { showModal, hideModal } from '~/actions/modal';
 import { setRDNS } from '~/api/networking';
 import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
 
 
 export default class EditRDNS extends Component {
+  static trigger(dispatch, ip) {
+    return dispatch(showModal('Edit RDNS Entry', (
+      <EditRDNS
+        ip={ip}
+        dispatch={dispatch}
+        close={() => dispatch(hideModal())}
+      />
+    )));
+  }
+
   constructor(props) {
     super(props);
 
@@ -18,7 +29,7 @@ export default class EditRDNS extends Component {
   }
 
   onSubmit = () => {
-    const { dispatch, ip } = this.props;
+    const { dispatch, ip, close } = this.props;
     const { hostname } = this.state;
 
     return dispatch(dispatchOrStoreErrors.call(this, [
@@ -35,6 +46,9 @@ export default class EditRDNS extends Component {
 
     return (
       <Form onSubmit={this.onSubmit}>
+        <p>
+          This request may take a while.
+        </p>
         <ModalFormGroup label="IP Address" id="address">
           <Input
             id="address"
