@@ -33,8 +33,6 @@ export default class BackupRestore extends Component {
       () => push(`/linodes/${toRestoreTo}`),
     ]));
 
-    const modalBody = 'Are you sure you want to restore backups to ${toRestoreTo}?';
-
     return dispatch(showModal('Confirm Backup Restore', (
       <ConfirmModalBody
         onCancel={() => dispatch(hideModal())}
@@ -43,7 +41,7 @@ export default class BackupRestore extends Component {
         Are you sure you want to restore backups to <strong>{toRestoreTo}</strong>?
         {!overwrite ? null : (
           <span>
-             &nbsp;This will destroy all disks and configs on <strong>{toRestoreTo}</strong>.
+            &nbsp;This will destroy all disks and configs on <strong>{toRestoreTo}</strong>.
           </span>
         )}
       </ConfirmModalBody>
