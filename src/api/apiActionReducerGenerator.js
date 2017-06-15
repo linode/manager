@@ -1,9 +1,11 @@
+import _ from 'lodash';
+
+import { fetch } from '~/fetch';
+
 import {
   ONE, MANY, DELETE, POST, PUT, generateDefaultStateFull,
 } from './apiResultActionReducerGenerator';
-import { fetch } from '~/fetch';
-
-import _ from 'lodash';
+import * as cache from './cache';
 
 
 /*
@@ -110,6 +112,7 @@ function genThunkPage(config, actions) {
                      fetchBeganAt, options) {
     return async (dispatch, getState) => {
       const { token } = getState().authentication;
+
       const endpoint = `${config.endpoint(...ids, '')}?page=${page + 1}`;
 
       const fetchOptions = _.merge({}, config.options, options);
@@ -162,7 +165,12 @@ function genThunkAll(config, actions, fetchPage) {
   function fetchAll(ids = [], resourceFilter, options) {
     return async (dispatch, getState) => {
       let state = getStateOfSpecificResource(config, getState(), ids) ||
-        generateDefaultStateFull(config);
+                  generateDefaultStateFull(config);
+
+      const cachedResources = config.cache && cache.get(config.plural);
+      if (cachedResources) {
+        return await dispatch(actions.many(cachedResources, ...ids));
+      }
 
       const fetchBeganAt = new Date();
 
@@ -205,6 +213,10 @@ function genThunkAll(config, actions, fetchPage) {
         ...resources[resources.length - 1],
         [config.plural]: resources.reduce((a, b) => [...a, ...b[config.plural]], []),
       };
+
+      if (config.cache) {
+        cache.set(config.plural, res);
+      }
 
       return res;
     };
