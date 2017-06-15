@@ -3,15 +3,21 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
 import { Card } from 'linode-components/cards';
-import { Form, FormGroup, FormGroupError, SubmitButton, Input } from 'linode-components/forms';
+import {
+  Form,
+  FormGroup,
+  FormGroupError,
+  FormSummary,
+  SubmitButton,
+  Input,
+} from 'linode-components/forms';
 
 import { tickets } from '~/api';
-import { getObjectByLabelLazily } from '~/api/util';
+import { dispatchOrStoreErrors, getObjectByLabelLazily } from '~/api/util';
 import { addTicketAttachment } from '~/api/tickets';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 import { MAX_UPLOAD_SIZE_MB } from '~/constants';
-import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
 
 import { renderTicketCreationInfo } from './IndexPage';
 import TicketReply from '../components/TicketReply';

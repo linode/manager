@@ -6,10 +6,13 @@ import { nodebalancers } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { CancelButton } from 'linode-components/buttons';
 import {
-  Form, ModalFormGroup, Input, Select, SubmitButton,
+  Form,
+  FormSummary,
+  ModalFormGroup,
+  Input,
+  Select,
+  SubmitButton,
 } from 'linode-components/forms';
-
-import { FormSummary } from 'linode-components/forms';
 
 
 export class NodeModal extends Component {

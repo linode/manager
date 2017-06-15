@@ -1,7 +1,7 @@
 import moment from 'moment';
 
 import * as api from './';
-import { reduceErrors } from '~/api/errors';
+import { reduceErrors } from './errors';
 
 // Extra cruft involving constructor / prototypes is for any `new Error404`s  to be shown as
 // instanceof Error404:

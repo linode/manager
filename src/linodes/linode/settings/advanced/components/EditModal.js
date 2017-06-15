@@ -1,12 +1,18 @@
 import React, { Component, PropTypes } from 'react';
 
 import { CancelButton } from 'linode-components/buttons';
-import { Form, ModalFormGroup, Input, SubmitButton } from 'linode-components/forms';
+import {
+  Form,
+  FormSummary,
+  ModalFormGroup,
+  Input,
+  SubmitButton,
+} from 'linode-components/forms';
 
 import { hideModal } from '~/actions/modal';
 import { linodes } from '~/api';
 import { resizeLinodeDisk } from '~/api/linodes';
-import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+import { dispatchOrStoreErrors } from '~/api/util';
 
 
 export class EditModal extends Component {

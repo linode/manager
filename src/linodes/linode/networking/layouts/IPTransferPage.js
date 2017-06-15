@@ -3,13 +3,25 @@ import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 
 import { Card, CardHeader } from 'linode-components/cards';
-import { Form, FormGroup, SubmitButton, Select } from 'linode-components/forms';
+import {
+  Form,
+  FormGroup,
+  FormSummary,
+  SubmitButton,
+  Select,
+} from 'linode-components/forms';
+
 
 import { setSource } from '~/actions/source';
 import { linodes } from '~/api';
 import { ipv4s, assignIPs } from '~/api/networking';
-import { createHeaderFilter, getObjectByLabelLazily } from '~/api/util';
-import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+import {
+  createHeaderFilter,
+  dispatchOrStoreErrors,
+  getObjectByLabelLazily,
+} from '~/api/util';
+import { linodeIPs } from '~/api/linodes';
+import { assignIPs } from '~/api/networking';
 
 import { IPList } from '../components';
 import { selectLinode } from '../../utilities';

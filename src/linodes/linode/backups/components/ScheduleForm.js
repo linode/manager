@@ -1,10 +1,16 @@
 import React, { Component, PropTypes } from 'react';
 
-import { Form, FormGroup, FormGroupError, Select, SubmitButton } from 'linode-components/forms';
+import {
+  Form,
+  FormGroup,
+  FormGroupError,
+  FormSummary,
+  Select,
+  SubmitButton,
+} from 'linode-components/forms';
 
 import { linodes } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
-import { FormSummary } from 'linode-components/forms';
 
 
 export default class ScheduleForm extends Component {

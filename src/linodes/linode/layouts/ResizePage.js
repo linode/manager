@@ -3,13 +3,16 @@ import { connect } from 'react-redux';
 
 import { Card, CardHeader } from 'linode-components/cards';
 import {
-  FormGroup, Form, SubmitButton,
+  FormGroup,
+  Form,
+  FormSummary,
+  SubmitButton,
 } from 'linode-components/forms';
 
 import { setSource } from '~/actions/source';
 import { types } from '~/api';
 import { resizeLinode } from '~/api/linodes';
-import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+import { dispatchOrStoreErrors } from '~/api/util';
 import Plan from '~/linodes/components/Plan';
 
 import { selectLinode } from '../utilities';

@@ -1,11 +1,17 @@
 import React, { PropTypes, Component } from 'react';
 
 import { CancelButton } from 'linode-components/buttons';
-import { Form, Input, ModalFormGroup, SubmitButton } from 'linode-components/forms';
+import {
+  Form,
+  FormSummary,
+  Input,
+  ModalFormGroup,
+  SubmitButton,
+} from 'linode-components/forms';
 
 import { showModal, hideModal } from '~/actions/modal';
 import { setRDNS } from '~/api/networking';
-import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+import { dispatchOrStoreErrors } from '~/api/util';
 
 
 export default class EditRDNS extends Component {
