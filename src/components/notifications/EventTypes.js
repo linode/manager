@@ -10,6 +10,10 @@ export function getLinodeRedirectUrl(entity) {
   return `${getLinodesRedirectUrl()}/${entity.label}`;
 }
 
+export function getLinodeNetworkingRedirectUrl(entity) {
+  return `${getLinodeRedirectUrl(entity)}/networking`;
+}
+
 export function getLinodeDiskRedirectUrl(entity) {
   return `${getLinodeRedirectUrl(entity)}/settings/advanced`;
 }
@@ -83,7 +87,7 @@ const EventTypeMap = {
     presentTenseAction: 'Adding an IP to',
     pastTenseAction: '',
     pastTensePrefix: 'IP added to',
-    redirectUrl: getLinodeRedirectUrl,
+    redirectUrl: getLinodeNetworkingRedirectUrl,
   },
   linode_migrate: {
     presentTenseAction: 'Migrating',

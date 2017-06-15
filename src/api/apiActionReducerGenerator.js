@@ -128,7 +128,12 @@ function genThunkPage(config, actions) {
         const existingResourceState = getStateOfSpecificResource(
           config, getState(), [...ids, resource.id]);
         if (existingResourceState) {
-          const updatedAt = existingResourceState.__updatedAt || fetchBeganAt;
+          // Sometimes the object will have sub-objects of it created before the object actually
+          // exists. However, this is not cause to refetch the object after we just grabbed it.
+          const hasActualState = !!Object.keys(existingResourceState).filter(
+            key => !key.startsWith('_')).length;
+
+          const updatedAt = hasActualState && existingResourceState.__updatedAt || fetchBeganAt;
           if (updatedAt > now) {
             return await dispatch(fetchOne([...ids, resource.id]));
           }
@@ -294,12 +299,13 @@ export default function apiActionReducerGenerator(config, actions) {
   return thunks;
 }
 
-// Helpers function when making calls outside of the ability of the above thunks.
+// Helper function when making calls outside of the ability of the above thunks.
 function _thunkFetch(method, stringifyBody = true) {
   return (url, body, headers = {}) =>
     async (dispatch, getState) => {
       const state = getState();
       const { token } = state.authentication;
+
       const result = await fetch(token, url, {
         method,
         headers,
