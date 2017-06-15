@@ -63,10 +63,7 @@ export class IndexPage extends Component {
 
   renderLabelCell = ({ record: ticket }) => {
     return (
-      <TableCell
-        column={{ className: 'LabelCell', headerClassName: 'TicketLabelColumn' }}
-        record={ticket}
-      >
+      <TableCell column={{ className: 'RowLabelCell' }} record={ticket}>
         <Link title={ticket.id} to={`/support/${ticket.id}`}>{ticket.summary}</Link>
         <small>{renderTicketCreationInfo(ticket)}</small>
       </TableCell>
@@ -107,7 +104,7 @@ export class IndexPage extends Component {
           {
             dataKey: 'id',
             className: 'hidden-md-down',
-            headerClassName: 'TicketIdColumn hidden-md-down',
+            headerClassName: 'hidden-md-down',
             formatFn: id => <span>Ticket #{id}</span>,
           },
           {

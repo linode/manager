@@ -43,7 +43,7 @@ describe('linodes/linode/networking/components/IPTransfer', () => {
     const rowsA = sectionA.find('.TableRow');
     expect(rowsA.length).to.equal(testLinode._ips.ipv4.public.length);
     rowsA.forEach(row => {
-      const address = row.find('.TableCell').at(1).text();
+      const address = row.find('.Table-cell').at(1).text();
       const ip = allIps[address.split(' ')[0]];
       expect(address).to.equal(`${ip.address} (${ip.rdns})`);
     });
@@ -53,7 +53,7 @@ describe('linodes/linode/networking/components/IPTransfer', () => {
     const rowsB = sectionB.find('.TableRow');
     expect(rowsB.length).to.equal(linodeB._ips.ipv4.public.length);
     rowsB.forEach(row => {
-      const address = row.find('.TableCell').at(1).text();
+      const address = row.find('.Table-cell').at(1).text();
       const ip = allIps[address.split(' ')[0]];
       expect(address).to.equal(`${ip.address} (${ip.rdns})`);
     });
@@ -79,7 +79,7 @@ describe('linodes/linode/networking/components/IPTransfer', () => {
     const rowsB = sectionB.find('.TableRow');
     expect(rowsB.length).to.equal(notLinodeB._ips.ipv4.public.length);
     rowsB.forEach(row => {
-      const address = row.find('.TableCell').at(1).text();
+      const address = row.find('.Table-cell').at(1).text();
       const ip = allIps[address.split(' ')[0]];
       expect(address).to.equal(`${ip.address} (${ip.rdns})`);
     });
@@ -96,7 +96,7 @@ describe('linodes/linode/networking/components/IPTransfer', () => {
     );
 
     const sectionAFirstIp = page.find('#sectionA .TableRow').at(0);
-    const addressA = sectionAFirstIp.find('.TableCell').at(1).text()
+    const addressA = sectionAFirstIp.find('.Table-cell').at(1).text()
                                     .split(' ')[0];
     const ipA = allIps[addressA];
     const checkboxA = sectionAFirstIp.find('Checkbox');
@@ -104,7 +104,7 @@ describe('linodes/linode/networking/components/IPTransfer', () => {
     checkboxAProps.onChange({ target: { checked: true } });
 
     const sectionBFirstIp = page.find('#sectionB .TableRow').at(0);
-    const addressB = sectionBFirstIp.find('.TableCell').at(1).text()
+    const addressB = sectionBFirstIp.find('.Table-cell').at(1).text()
                                     .split(' ')[0];
     const ipB = allIps[addressB];
     const checkboxB = sectionBFirstIp.find('Checkbox');

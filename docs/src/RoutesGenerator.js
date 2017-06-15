@@ -4,8 +4,7 @@ import _ from 'lodash';
 
 import {
   Endpoint,
-  EndpointIndex,
-  Library,
+  EndpointIndex
 } from '~/components';
 
 
@@ -49,19 +48,4 @@ export function generateChildRoute(props) {
   }
 
   return childEndpoints;
-}
-
-export function generateLibraryRoutes(props) {
-  const { prevCrumbs, libraryObject, index } = props;
-
-  const crumbs = [].concat(prevCrumbs).concat([{ label: libraryObject.path, to: libraryObject.href }]);
-  return (
-    <Route
-      key={index}
-      component={Library}
-      crumbs={crumbs}
-      libraryObject={libraryObject}
-      path={libraryObject.href}
-    />
-  );
 }

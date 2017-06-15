@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Example from '~/components/Example';
+import Example from '../Example';
 
 
 export default function Pagination() {
