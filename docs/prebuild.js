@@ -115,7 +115,7 @@ function formatSchemaExample(schema) {
   const schemaExample = {};
 
   if (!Array.isArray(schema)) {
-    // debugger;
+    // TODO: Account for objects / clean this method up
     return schemaExample;
   }
 
