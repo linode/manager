@@ -38,6 +38,11 @@ describe('linodes/linode/backups/components/BackupRestore', () => {
     await page.find('Form').props().onSubmit({ preventDefault() {} });
 
     expect(dispatch.callCount).to.equal(1);
+    const modal = mount(dispatch.firstCall.args[0].body);
+
+    dispatch.reset();
+    modal.find('Form').props().onSubmit({ preventDefault() {} });
+    expect(dispatch.callCount).to.equal(1);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
       ([fn]) => expectRequest(fn, `/linode/instances/1234/backups/${backup.id}/restore`, {
         method: 'POST',
