@@ -114,6 +114,11 @@ function formatMethodExamples(methodObj) {
 function formatSchemaExample(schema) {
   const schemaExample = {};
 
+  if (!Array.isArray(schema)) {
+    // TODO: Account for objects / clean this method up
+    return schemaExample;
+  }
+
   schema.forEach(function(obj) {
     if (obj.value === undefined && obj.schema) {
       schemaExample[obj.name] = formatSchemaExample(obj.schema);
@@ -153,23 +158,14 @@ function formatSchemaField(schemaField, enumMap) {
 
   let nestedSchema = null;
   if (apiObjectMap[type]) {
+    // matches a known object from /objects, format using the reference
     nestedSchema = formatSchema(getResourceObjByName(type).schema, enumMap);
   } else if (type === 'enum' && enumMap[subType]) {
+    // matches a known enum from an enums key on an object in /objects, format using the reference
     nestedSchema = enumMap[subType]; // already formatted
-  } else if (!type) {
-    // TODO: check the name of the nested item?
+  } else if (type === 'enum' || type === 'object' || type === 'array' || !type) {
+    // is of the the checked types, or no type provided (currently undocumented)
     nestedSchema = formatSchema(schemaField, enumMap);
-  } else if (Array.isArray(value)) {
-    value = value.map(function(obj) {
-      if (typeof obj === 'object' && obj !== null) {
-        return formatSchema(obj, enumMap);
-      }
-      return obj;
-    });
-
-    if (value.length && typeof value[0] !== 'string') {
-      nestedSchema = value[0]; // use the first example in the array as the schema
-    }
   }
 
   return {
@@ -189,12 +185,19 @@ function formatSchema(schema, enumMap={}) {
     return schema;
   }
 
-  return Object.keys(schema).map(function (schemaName) {
-    if (typeof schema[schemaName] === 'object' && schema[schemaName] !== null) {
-      return formatSchemaField(_.merge(schema[schemaName], { name: schemaName }), enumMap);
+  const filteredSchemas = Object.keys(schema).map(function (schemaName) {
+    const val = schema[schemaName];
+    if (typeof val === 'object' && !Array.isArray(val) && val !== null) {
+      return formatSchemaField(_.merge(val, { name: schemaName }), enumMap);
     }
-    // TODO: account for other cases
   }).filter(function(item) { return item; }); // filter at the end dumps nulls from result of non-object values
+
+  // do not represent array types without nested objects in the schema tables
+  if (!filteredSchemas.length) {
+    return null;
+  }
+
+  return filteredSchemas;
 }
 
 function createEnumMap(enums) {

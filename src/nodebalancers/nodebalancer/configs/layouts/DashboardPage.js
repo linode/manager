@@ -7,7 +7,7 @@ import { Button } from 'linode-components/buttons';
 import { Card, CardHeader } from 'linode-components/cards';
 import { List } from 'linode-components/lists';
 import { Table } from 'linode-components/tables';
-import { ButtonCell } from 'linode-components/tables/cells';
+import { ButtonCell, LabelCell } from 'linode-components/tables/cells';
 import { DeleteModalBody } from 'linode-components/modals';
 
 import { showModal, hideModal } from '~/actions/modal';
@@ -131,7 +131,13 @@ export class DashboardPage extends Component {
               <Table
                 className="Table--secondary"
                 columns={[
-                  { dataKey: 'label', label: 'Label' },
+                  {
+                    cellComponent: LabelCell,
+                    headerClassName: 'LabelColumn',
+                    dataKey: 'label',
+                    label: 'Label',
+                    tooltipEnabled: true,
+                  },
                   { dataKey: 'address', label: 'Address' },
                   { dataKey: 'weight', label: 'Weight' },
                   { dataKey: 'mode', label: 'Mode', formatFn: _.capitalize },
