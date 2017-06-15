@@ -7,7 +7,7 @@ import { DeleteModalBody } from 'linode-components/modals';
 import { Button } from 'linode-components/buttons';
 import { Card, CardHeader } from 'linode-components/cards';
 import { Table } from 'linode-components/tables';
-import { ButtonCell } from 'linode-components/tables/cells';
+import { ButtonCell, LabelCell } from 'linode-components/tables/cells';
 
 import { showModal, hideModal } from '~/actions/modal';
 import { domains } from '~/api';
@@ -219,8 +219,15 @@ export class MasterZone extends Component {
               <Table
                 className="Table--secondary"
                 columns={[
-                  { dataKey: 'domain', label: 'Primary Domain' },
-                  { dataKey: 'soa_email', label: 'Email' },
+                  {
+                    cellComponent: LabelCell,
+                    headerClassName: 'LabelColumn',
+                    dataKey: 'domain',
+                    label: 'Primary Domain',
+                    titleKey: 'domain',
+                    tooltipEnabled: true,
+                  },
+                  { headerClassName: 'EmailColumn', dataKey: 'soa_email', label: 'Email' },
                   { dataKey: 'ttl_sec', label: 'Default TTL' },
                   { dataKey: 'refresh_sec', label: 'Refresh Rate' },
                   { dataKey: 'retry_sec', label: 'Retry Rate' },
@@ -260,7 +267,14 @@ export class MasterZone extends Component {
                 className="Table--secondary"
                 columns={[
                   { dataKey: 'target', label: 'Name Server' },
-                  { dataKey: 'name', label: 'Subdomain' },
+                  {
+                    cellComponent: LabelCell,
+                    headerClassName: 'LabelColumn',
+                    dataKey: 'name',
+                    label: 'Subdomain',
+                    titleKey: 'name',
+                    tooltipEnabled: true,
+                  },
                   { dataKey: 'ttl_sec', label: 'TTL' },
                   {
                     cellComponent: NameserversCell,
@@ -295,7 +309,14 @@ export class MasterZone extends Component {
                 columns={[
                   { dataKey: 'target', label: 'Mail Server' },
                   { dataKey: 'priority', label: 'Preference' },
-                  { dataKey: 'name', label: 'Subdomain' },
+                  {
+                    cellComponent: LabelCell,
+                    headerClassName: 'LabelColumn',
+                    dataKey: 'name',
+                    label: 'Subdomain',
+                    titleKey: 'name',
+                    tooltipEnabled: true,
+                  },
                   {
                     cellComponent: ButtonCell,
                     headerClassName: 'ButtonColumn',
@@ -334,8 +355,15 @@ export class MasterZone extends Component {
               <Table
                 className="Table--secondary"
                 columns={[
-                  { dataKey: 'name', label: 'Hostname' },
-                  { dataKey: 'target', label: 'IP Address' },
+                  {
+                    cellComponent: LabelCell,
+                    headerClassName: 'LabelColumn',
+                    dataKey: 'name',
+                    label: 'Hostname',
+                    titleKey: 'name',
+                    tooltipEnabled: true,
+                  },
+                  { headerClassName: 'IPAddressColumn', dataKey: 'target', label: 'IP Address' },
                   { dataKey: 'ttl_sec', label: 'TTL' },
                   {
                     cellComponent: ButtonCell,
@@ -376,7 +404,14 @@ export class MasterZone extends Component {
               <Table
                 className="Table--secondary"
                 columns={[
-                  { dataKey: 'name', label: 'Hostname' },
+                  {
+                    cellComponent: LabelCell,
+                    headerClassName: 'LabelColumn',
+                    dataKey: 'name',
+                    label: 'Hostname',
+                    titleKey: 'name',
+                    tooltipEnabled: true,
+                  },
                   { dataKey: 'target', label: 'Aliases to' },
                   { dataKey: 'ttl_sec', label: 'TTL' },
                   {
@@ -417,7 +452,14 @@ export class MasterZone extends Component {
               <Table
                 className="Table--secondary"
                 columns={[
-                  { dataKey: 'name', label: 'Name' },
+                  {
+                    cellComponent: LabelCell,
+                    headerClassName: 'LabelColumn',
+                    dataKey: 'name',
+                    label: 'Name',
+                    titleKey: 'name',
+                    tooltipEnabled: true,
+                  },
                   { dataKey: 'target', label: 'Value' },
                   { dataKey: 'ttl_sec', label: 'TTL' },
                   {
@@ -459,10 +501,24 @@ export class MasterZone extends Component {
               columns={[
                 { dataKey: 'service', label: 'Service' },
                 { dataKey: 'priority', label: 'Priority' },
-                { dataKey: 'domain', label: 'Domain' },
+                {
+                  cellComponent: LabelCell,
+                  headerClassName: 'LabelColumn',
+                  dataKey: 'domain',
+                  label: 'Domain',
+                  titleKey: 'domain',
+                  tooltipEnabled: true,
+                },
                 { dataKey: 'weight', label: 'Weight' },
                 { dataKey: 'port', label: 'Port' },
-                { dataKey: 'target', label: 'Target' },
+                {
+                  cellComponent: LabelCell,
+                  headerClassName: 'LabelColumn',
+                  dataKey: 'target',
+                  label: 'Target',
+                  titleKey: 'target',
+                  tooltipEnabled: true,
+                },
                 { dataKey: 'ttl_sec', label: 'TTL' },
                 {
                   cellComponent: ButtonCell,
