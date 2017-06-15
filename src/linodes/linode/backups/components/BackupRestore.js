@@ -59,14 +59,16 @@ export default class BackupRestore extends Component {
       return null;
     }
 
-    const otherLinodes =
-      Object.values(linodes.linodes).filter(l => l.id !== linode.id);
+    const otherLinodes = Object.values(linodes.linodes).filter(
+      l => l.id !== linode.id && l.region.id === linode.region.id);
 
     const restoreTo = otherLinodes.map(
       l => <option value={l.id} key={l.id}>{l.label}</option>);
 
     restoreTo.splice(0, 0,
-      <option value={linode.id} key={linode.id}>This Linode</option>);
+                     <option value={linode.id} key={linode.id}>This Linode</option>);
+
+    const targetLabel = target === linode.id ? 'This Linode' : linodes.linodes[target].label;
 
     return (
       <Card header={<CardHeader title="Restore" />}>
@@ -81,6 +83,11 @@ export default class BackupRestore extends Component {
                 name="target"
                 onChange={this.onChange}
               >{restoreTo}</Select>
+              <div>
+                <small className="text-muted">
+                  You can only restore to Linodes within the same region.
+                </small>
+              </div>
             </div>
           </FormGroup>
           <FormGroup className="row">
@@ -90,7 +97,7 @@ export default class BackupRestore extends Component {
                 name="overwrite"
                 value={overwrite}
                 checked={overwrite}
-                label="Destroy all disks and configs"
+                label={<span>Destroy all disks and configs on <strong>{targetLabel}</strong></span>}
                 onChange={this.onChange}
               />
             </div>
