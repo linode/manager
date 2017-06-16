@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import { TrackEvent } from '~/actions/trackEvent.js';
 
 export default function Select(props) {
   return (
@@ -10,7 +11,10 @@ export default function Select(props) {
         name={props.name}
         id={props.id}
         disabled={props.disabled}
-        onChange={props.onChange}
+        onChange={(e) => {
+          TrackEvent('Select', e.target.value.split(':')[0], props.name);
+          props.onChange(e);
+        }}
       >
         {props.options ? props.options.map((option, i) =>
           <option key={i} value={option.value} disabled={option.disabled}>
