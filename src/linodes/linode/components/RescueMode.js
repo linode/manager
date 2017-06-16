@@ -1,10 +1,15 @@
 import React, { Component, PropTypes } from 'react';
 
 import { Card, CardHeader } from 'linode-components/cards';
-import { Form, FormGroup, SubmitButton } from 'linode-components/forms';
+import {
+  Form,
+  FormGroup,
+  FormSummary,
+  SubmitButton,
+} from 'linode-components/forms';
 
 import { rescueLinode } from '~/api/linodes';
-import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+import { dispatchOrStoreErrors } from '~/api/util';
 import DiskSelect from './DiskSelect';
 import { AVAILABLE_DISK_SLOTS } from '~/constants';
 

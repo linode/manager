@@ -5,13 +5,12 @@ import { push } from 'react-router-redux';
 
 import { Card, CardHeader } from 'linode-components/cards';
 import { Tabs } from 'linode-components/tabs';
-import { Form, SubmitButton } from 'linode-components/forms';
+import { Form, FormSummary, SubmitButton } from 'linode-components/forms';
 
 import { setSource } from '~/actions/source';
 import { enableBackup } from '~/api/backups';
 import { linodeBackups } from '~/api/linodes';
-import { getObjectByLabelLazily } from '~/api/util';
-import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+import { dispatchOrStoreErrors, getObjectByLabelLazily } from '~/api/util';
 
 import { selectLinode } from '../../utilities';
 

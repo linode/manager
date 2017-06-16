@@ -1,11 +1,17 @@
 import React, { PropTypes, Component } from 'react';
 
 import { ModalFormGroup } from 'linode-components/forms';
-import { Form, Input, SubmitButton } from 'linode-components/forms';
+import {
+  Form,
+  FormSummary,
+  Input,
+  SubmitButton,
+} from 'linode-components/forms';
 import { CancelButton } from 'linode-components/buttons';
 
 import { domains } from '~/api';
-import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+import { dispatchOrStoreErrors } from '~/api/util';
+
 
 export default class EditMXRecord extends Component {
   constructor(props) {

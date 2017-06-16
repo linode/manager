@@ -2,12 +2,19 @@ import React, { Component, PropTypes } from 'react';
 import { push } from 'react-router-redux';
 
 import {
-  Form, FormGroup, FormGroupError, Input, Select, Checkbox, SubmitButton,
+  Form,
+  FormGroup,
+  FormGroupError,
+  FormSummary,
+  Input,
+  Select,
+  Checkbox,
+  SubmitButton,
 } from 'linode-components/forms';
 
 import { nodebalancers } from '~/api';
 import { updateConfigSSL } from '~/api/nodebalancers';
-import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+import { dispatchOrStoreErrors } from '~/api/util';
 import {
   NODEBALANCER_CONFIG_ALGORITHMS, NODEBALANCER_CONFIG_STICKINESS, NODEBALANCER_CONFIG_CHECKS,
 } from '~/constants';

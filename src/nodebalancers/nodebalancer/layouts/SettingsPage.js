@@ -3,13 +3,19 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
 import { Card } from 'linode-components/cards';
-import { Form, FormGroup, FormGroupError, SubmitButton, Input } from 'linode-components/forms';
+import {
+  Form,
+  FormGroup,
+  FormGroupError,
+  FormSummary,
+  SubmitButton,
+  Input,
+} from 'linode-components/forms';
 
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 import { nodebalancers } from '~/api';
-import { objectFromMapByLabel } from '~/api/util';
-import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+import { dispatchOrStoreErrors, objectFromMapByLabel } from '~/api/util';
 
 
 export class SettingsPage extends Component {

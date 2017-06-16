@@ -2,12 +2,19 @@ import React, { Component, PropTypes } from 'react';
 import { push } from 'react-router-redux';
 
 import { Card, CardHeader } from 'linode-components/cards';
-import { Checkbox, Form, FormGroup, Select, SubmitButton } from 'linode-components/forms';
 import { ConfirmModalBody } from 'linode-components/modals';
+import {
+  Checkbox,
+  Form,
+  FormGroup,
+  FormSummary,
+  Select,
+  SubmitButton,
+} from 'linode-components/forms';
 
 import { showModal, hideModal } from '~/actions/modal';
 import { restoreBackup } from '~/api/backups';
-import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+import { dispatchOrStoreErrors } from '~/api/util';
 
 
 export default class BackupRestore extends Component {

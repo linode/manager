@@ -1,10 +1,16 @@
 import React, { PropTypes, Component } from 'react';
 
 import { CancelButton } from 'linode-components/buttons';
-import { Form, Input, ModalFormGroup, SubmitButton } from 'linode-components/forms';
+import {
+  Form,
+  FormSummary,
+  Input,
+  ModalFormGroup,
+  SubmitButton,
+} from 'linode-components/forms';
 
 import { tokens } from '~/api';
-import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+import { dispatchOrStoreErrors } from '~/api/util';
 
 
 export default class EditPersonalAccessToken extends Component {

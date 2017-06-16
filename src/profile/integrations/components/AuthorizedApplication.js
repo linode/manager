@@ -11,7 +11,7 @@ import { AuthScopeCell } from '~/components/tables/cells';
 import { showModal, hideModal } from '~/actions/modal';
 import { tokens } from '~/api';
 import { OAUTH_SUBSCOPES, OAUTH_SCOPES, API_ROOT } from '~/constants';
-import { dispatchOrStoreErrors } from '~/components/forms';
+import { dispatchOrStoreErrors } from '~/api/util';
 
 
 export default class AuthorizedApplication extends Component {

@@ -3,7 +3,8 @@ import React, { Component, PropTypes } from 'react';
 import { Form, FormGroup, SubmitButton } from 'linode-components/forms';
 
 import { takeBackup } from '~/api/backups';
-import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+import { dispatchOrStoreErrors } from '~/api/util';
+import { FormSummary } from 'linode-components/forms';
 
 
 export default class TakeSnapshot extends Component {

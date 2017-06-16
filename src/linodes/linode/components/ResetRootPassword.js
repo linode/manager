@@ -2,13 +2,19 @@ import React, { Component, PropTypes } from 'react';
 
 import { Card, CardHeader } from 'linode-components/cards';
 import {
-  Form, FormGroup, FormGroupError, SubmitButton, Select, PasswordInput,
+  Form,
+  FormGroup,
+  FormGroupError,
+  FormSummary,
+  SubmitButton,
+  Select,
+  PasswordInput,
 } from 'linode-components/forms';
 import { ConfirmModalBody } from 'linode-components/modals';
 
 import { resetPassword } from '~/api/linodes';
 import { showModal, hideModal } from '~/actions/modal';
-import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+import { dispatchOrStoreErrors } from '~/api/util';
 
 
 export default class ResetRootPassword extends Component {

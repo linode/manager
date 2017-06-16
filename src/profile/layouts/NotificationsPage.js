@@ -2,10 +2,14 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { Card, CardHeader } from 'linode-components/cards';
-import { Form, SubmitButton } from 'linode-components/forms';
+import {
+  Form,
+  FormSummary,
+  SubmitButton,
+} from 'linode-components/forms';
 
 import { profile } from '~/api';
-import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+import { dispatchOrStoreErrors } from '~/api/util';
 
 
 export class NotificationsPage extends Component {

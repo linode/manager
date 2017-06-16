@@ -1,12 +1,12 @@
 import React, { PropTypes, Component } from 'react';
 
 import { CancelButton } from 'linode-components/buttons';
-import { Form, Input, ModalFormGroup, SubmitButton } from 'linode-components/forms';
+import { Form, FormSummary, Input, ModalFormGroup, SubmitButton } from 'linode-components/forms';
 
 import { clients } from '~/api';
 import { updateClientThumbnail } from '~/api/clients';
 import { MAX_UPLOAD_SIZE_MB } from '~/constants';
-import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+import { dispatchOrStoreErrors } from '~/api/util';
 
 import { renderSecret } from './CreatePersonalAccessToken';
 
