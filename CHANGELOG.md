@@ -30,6 +30,7 @@ an ellipsis is shown with a tooltip enabled #2007
 - network tab correctly shows ipv4 addresses #2066
 - destroy all disks and backups when checked using backup restore #2084
 - ensure Linodes outside of region are not available to backup restore #2084
+- breaks in styleguide forms, styles, header etc #2081
 
 ## [0.8.3] 2017-06-12
 ### Changed
