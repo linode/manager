@@ -30,6 +30,7 @@ export default function BasicSetup(props) {
           The <code>linode.OAuthScopes</code> object contains all OAuth Scopes your application can request. If you require access to more than a user's email address and username, you will need to include OAuth Scopes in your request for authentication. See the table to the right for all available OAuth Scopes.
         </p>
       </section>
+      <div className="offset-4"><Link to={`/${API_VERSION}/guides/python/core-concepts`}>Linode Python Core Concepts &raquo;</Link></div>
     </section>
   );
 }
