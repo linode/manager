@@ -69,6 +69,10 @@ export default class EditSOARecord extends Component {
       delete data.group;
     }
 
+    if (!data.soa_email) {
+      delete data.soa_email;
+    }
+
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => domains.put(data, this.props.domains.id),
       () => setTitle(data.domain),
