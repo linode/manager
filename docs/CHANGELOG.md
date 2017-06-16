@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - reorganized guides into guides and libraries, cURL and python guides now exist on the same index #2085
 ### Fixed
 - missing method response field and method request param types denotations #2070
+- a couple links in creating a Linode cURL guide #2090
 
 ## [0.7.3] 2017-06-09
 ### Added
