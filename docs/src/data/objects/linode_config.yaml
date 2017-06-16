@@ -24,6 +24,7 @@ schema:
     _value: false
     _description: Populates the /dev directory early during boot without udev.
   disks:
+    _type: disks
     _description: <a href="#object-disk">Disks</a> attached to this Linode config.
     _editable: true
     sda:
@@ -79,6 +80,7 @@ schema:
       _value: "null"
       _description: The disk mapped to /dev/sdh.
   helpers:
+    _type: array
     _description: Helpers enabled when booting to this Linode config.
     disable_updatedb:
       _editable: true

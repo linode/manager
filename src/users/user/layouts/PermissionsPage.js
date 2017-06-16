@@ -2,10 +2,17 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { Card } from 'linode-components/cards';
-import { Checkbox, Checkboxes, Form, FormGroup, SubmitButton } from 'linode-components/forms';
+import {
+  Checkbox,
+  Checkboxes,
+  Form,
+  FormGroup,
+  FormSummary,
+  SubmitButton,
+} from 'linode-components/forms';
 
 import { users } from '~/api';
-import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+import { dispatchOrStoreErrors } from '~/api/util';
 
 import { selectUser } from './IndexPage';
 import { PermissionsTable } from '../components';

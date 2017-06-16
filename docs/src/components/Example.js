@@ -29,12 +29,12 @@ export default class Example extends Component {
   }
 
   render() {
-    const { collapsed, example, name, noclipboard } = this.props;
+    const { collapsed, example, language, noclipboard } = this.props;
     const { clipboardIcon } = this.state;
 
     const collapsedClass = collapsed ? 'collapse' : '';
-    const lowerCaseName = name.toLowerCase();
-    const language = languageMap[lowerCaseName] ? languageMap[lowerCaseName] : lowerCaseName;
+    const lowerCaseLanguage = language.toLowerCase();
+    const languageName = languageMap[lowerCaseLanguage] ? languageMap[lowerCaseLanguage] : lowerCaseLanguage;
 
     let clipboardButton;
     if (!noclipboard) {
@@ -47,7 +47,7 @@ export default class Example extends Component {
 
     return (
       <div className={`Example ${collapsedClass}`}>
-        <Highlight className={`language-${language}`}>
+        <Highlight className={`language-${languageName}`}>
           {example}
         </Highlight>
         {clipboardButton}
@@ -61,5 +61,6 @@ Example.propTypes = {
 };
 
 Example.defaultProps = {
-  noclipboard: false
+  noclipboard: false,
+  language: 'bash',
 };

@@ -37,8 +37,9 @@ $background-color: #FCFCFC;
 $main-padding-tb: 10px;
 $main-padding-lr: 20px;
 
+$mini-nav-height: 40px;
 $nav-height: 60px;
-$main-height: calc(100% - #{$nav-height});
+$main-height: calc(100% - #{$nav-height + $mini-nav-height});
 
 
 /* END layout definitions */

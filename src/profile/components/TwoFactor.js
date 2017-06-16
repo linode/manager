@@ -1,11 +1,15 @@
 import React, { Component, PropTypes } from 'react';
 
 import { Card, CardHeader } from 'linode-components/cards';
-import { Form, SubmitButton } from 'linode-components/forms';
+import {
+  Form,
+  FormSummary,
+  SubmitButton,
+} from 'linode-components/forms';
 
 import { showModal } from '~/actions/modal';
 import { toggleTFA } from '~/api/profile';
-import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+import { dispatchOrStoreErrors } from '~/api/util';
 
 import { TwoFactorModal } from './TwoFactorModal';
 

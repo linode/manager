@@ -1,10 +1,17 @@
 import React, { PropTypes, Component } from 'react';
 
-import { Form, Input, Select, SubmitButton, ModalFormGroup } from 'linode-components/forms';
+import {
+  Form,
+  FormSummary,
+  Input,
+  Select,
+  SubmitButton,
+  ModalFormGroup,
+} from 'linode-components/forms';
 import { CancelButton } from 'linode-components/buttons';
 
 import { domains } from '~/api';
-import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+import { dispatchOrStoreErrors } from '~/api/util';
 
 import SelectDNSSeconds from './SelectDNSSeconds';
 
@@ -15,7 +22,7 @@ export default class EditSRVRecord extends Component {
 
     const { id, zone: { ttl_sec: defaultTTL, domain: zone } } = props;
     const {
-      name: service,
+      service,
       protocol,
       target,
       priority,

@@ -9,7 +9,8 @@ import {
 import { setSource } from '~/actions/source';
 import { distributions } from '~/api';
 import { rebuildLinode } from '~/api/linodes';
-import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+import { dispatchOrStoreErrors } from '~/api/util';
+import { FormSummary } from 'linode-components/forms';
 import Distributions from '~/linodes/components/Distributions';
 
 import { selectLinode } from '../utilities';

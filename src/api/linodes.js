@@ -2,7 +2,7 @@ import { fetch } from '~/fetch';
 
 import { actions } from './configs/linodes';
 import { thunkFetch } from './apiActionReducerGenerator';
-import { updateIP } from './networking';
+
 
 function linodeAction(id, action, body, handleRsp) {
   return async (dispatch, getState) => {
@@ -94,30 +94,6 @@ export function resizeLinodeDisk(linodeId, diskId, size) {
   };
 }
 
-export function linodeIPs(linodeId) {
-  return async (dispatch, getState) => {
-    const state = getState();
-    const { token } = state.authentication;
-    const response = await fetch(token, `/linode/instances/${linodeId}/ips`);
-    const json = { _ips: await response.json() };
-    dispatch(actions.one(json, linodeId));
-  };
-}
-
-export function addIP(linodeId, type) {
-  return async (dispatch, getState) => {
-    const state = getState();
-    const { token } = state.authentication;
-    const result = await fetch(token, `/linode/instances/${linodeId}/ips`, {
-      method: 'POST',
-      body: JSON.stringify({ type }),
-    });
-    const ip = await result.json();
-
-    dispatch(updateIP('ipv4', ip));
-  };
-}
-
 export function resizeLinode(linodeId, type) {
   return thunkFetch.post(`/linode/instances/${linodeId}/resize`, { type });
 }
@@ -130,10 +106,6 @@ export function linodeBackups(linodeId) {
     const json = { _backups: await response.json() };
     dispatch(actions.one(json, linodeId));
   };
-}
-
-export function setShared(linodeId, ips) {
-  return thunkFetch.post(`/linode/instances/${linodeId}/ips/sharing`, { ips });
 }
 
 export function linodeStats(linodeId) {

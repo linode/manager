@@ -15,7 +15,10 @@ export default function DeleteModalBody(props) {
   if (items.length > 1) {
     body = (
       <div>
-        <p>Are you sure you want to <strong>permanently</strong> delete these {typeOfItem}?</p>
+        <p>
+          Are you sure you want to <strong>permanently</strong> delete
+          these {items.length} {typeOfItem}?
+        </p>
         <ScrollingList items={items} />
         <p>This operation cannot be undone.</p>
       </div>

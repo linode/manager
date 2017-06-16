@@ -33,10 +33,12 @@ endpoints:
             description: >
               Label of StackScript.
             limit: 3-128 characters
+            type: string
           description:
             optional: true
             description: >
               Description of the StackScript.
+            type: string
           distributions:
             description: >
               A list of <a href="#object-distribution">distributions</a>
@@ -47,14 +49,17 @@ endpoints:
             description: >
               If true, this StackScript will be publicly visible in the Linode
               StackScript library. Defaults to False.
+            type: boolean
           rev_note:
             optional: true
             description: >
               Release notes for this revision.
             limit: 0-512 characters
+            type: string
           script:
             description: >
               The shell script to run on boot.
+            type: string
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
