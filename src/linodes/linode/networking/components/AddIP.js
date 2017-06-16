@@ -2,11 +2,18 @@ import React, { PropTypes, Component } from 'react';
 import { Link } from 'react-router';
 
 import { CancelButton } from 'linode-components/buttons';
-import { Form, Input, ModalFormGroup, Radio, SubmitButton } from 'linode-components/forms';
+import {
+  Form,
+  FormSummary,
+  Input,
+  ModalFormGroup,
+  Radio,
+  SubmitButton,
+} from 'linode-components/forms';
 
 import { showModal, hideModal } from '~/actions/modal';
 import { addIP } from '~/api/networking';
-import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+import { dispatchOrStoreErrors } from '~/api/util';
 import { MONTHLY_IP_COST } from '~/constants';
 
 

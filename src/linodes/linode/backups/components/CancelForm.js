@@ -1,11 +1,11 @@
 import React, { Component, PropTypes } from 'react';
 
 import { ConfirmModalBody } from 'linode-components/modals';
-import { Form, SubmitButton } from 'linode-components/forms';
+import { Form, FormSummary, SubmitButton } from 'linode-components/forms';
 
 import { cancelBackup } from '~/api/backups';
 import { showModal, hideModal } from '~/actions/modal';
-import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+import { dispatchOrStoreErrors } from '~/api/util';
 
 
 export default class CancelForm extends Component {

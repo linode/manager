@@ -16,7 +16,7 @@ import { getObjectByLabelLazily, objectFromMapByLabel } from '~/api/util';
 import { NODEBALANCER_CONFIG_ALGORITHMS, NODEBALANCER_CONFIG_STICKINESS } from '~/constants';
 
 import { NodeModal } from '../components/NodeModal';
-import { dispatchOrStoreErrors } from '~/components/forms';
+import { dispatchOrStoreErrors } from '~/api/util';
 
 
 export class DashboardPage extends Component {
