@@ -21,8 +21,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - required overwrite modal to backup restore #800
 - missing check_body and check_path fields to NodeBalancer config active health check form section #2089
 ### Changed
-- long text in link and label table cells is now truncated based on the width of the th, 
-an elipsis is shown with a tooltip enabled #2007
+- long text in link and label table cells are now truncated based on the width of the th, 
+an ellipsis is shown with a tooltip enabled #2007
 - network tab revamped, IP Sharing and IP Transfer split into 2 separate tabs #2066
 - network tab now shows 1 gateway for all addresses #2066
 - API_ROOT and LOGIN_ROOT constants in manager no longer default to alpha, and instead default to cloud.linode.com #2088
