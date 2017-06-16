@@ -150,19 +150,23 @@ export function getIPs(linodeId) {
       };
     });
 
-    _ips[ips.ipv6.link_local] = {
-      address: ips.ipv6.link_local,
-      type: 'link-local',
-      version: 'ipv6',
-      linode_id: linodeId,
-    };
+    if (ips.ipv6.link_local) {
+      _ips[ips.ipv6.link_local] = {
+        address: ips.ipv6.link_local,
+        type: 'link-local',
+        version: 'ipv6',
+        linode_id: linodeId,
+      };
+    }
 
-    _ips[ips.ipv6.slaac.address] = {
-      ...ips.ipv6.slaac,
-      type: 'slaac',
-      version: 'ipv6',
-      linode_id: linodeId,
-    };
+    if (ips.ipv6.slaac) {
+      _ips[ips.ipv6.slaac.address] = {
+        ...ips.ipv6.slaac,
+        type: 'slaac',
+        version: 'ipv6',
+        linode_id: linodeId,
+      };
+    }
 
     ips.ipv6.global.forEach(function (ip) {
       _ips[ip.range] = {
