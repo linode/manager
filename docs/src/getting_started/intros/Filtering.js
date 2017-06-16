@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router';
 import { Table } from 'linode-components/tables';
 
 import Example from '~/components/Example';
@@ -124,6 +125,7 @@ export default function Filtering() {
           ]}
         />
       </section>
+      <div className="offset-4"><Link to={`/${API_VERSION}/errors`}>How errors are reported &raquo;</Link></div>
     </section>
   );
 }
