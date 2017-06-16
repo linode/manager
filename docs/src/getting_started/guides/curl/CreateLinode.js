@@ -11,6 +11,7 @@ import { API_ROOT, API_VERSION } from '~/constants';
 export default function Introduction(props) {
   const { route } = props;
   const { crumbs } = route;
+
   return (
     <section className="Article">
     <div className="Endpoint-breadcrumbsContainer">
@@ -22,7 +23,7 @@ export default function Introduction(props) {
       </header>
       <section>
         <p>
-          Creating a Linode requires you to be logged in. Before proceeding, make sure you have gone through the <Link to="/guides/curl/testing-with-curl">testing with curl guide</Link>, since you will need an authorization token to proceed.
+          Creating a Linode requires you to be logged in. Before proceeding, make sure you have gone through the <Link to={`${API_VERSION}/guides/curl/testing-with-curl`}>testing with curl guide</Link>, since you will need an authorization token to proceed.
         </p>
         <p>
           Before you can create a Linode, you will need to choose a <strong>region</strong>, a <strong>type</strong>, and a <strong>distribution</strong>. The API has endpoints available to help you do this.
@@ -31,7 +32,7 @@ export default function Introduction(props) {
       <section>
         <h2>Selecting a region</h2>
         <p>
-          A <Link to="/reference/endpoints/regions">region</Link> is a physical location that contains Linodes. To retrieve a list of available region, you can use the /regions API endpoint. To make an API call against this endpoint over curl, run the following command:
+          A <Link to={`${API_VERSION}/reference/endpoints/regions`}>region</Link> is a physical location that contains Linodes. To retrieve a list of available region, you can use the /regions API endpoint. To make an API call against this endpoint over curl, run the following command:
         </p>
         <Example example={`curl ${API_ROOT}/${API_VERSION}/regions`} name="bash" />
         <p>
