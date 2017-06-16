@@ -4,10 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
-### fixed
-- styleguide forms page breaks
-- several styleguide css regressions
+## [0.9.1] 2017-06-16
+### Fixed
+- networking glue code when no slaac and link-local ips are present
 
 ## [0.9.0] 2017-06-16
 ### Added
