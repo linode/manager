@@ -15,7 +15,7 @@ export default class EditSRVRecord extends Component {
 
     const { id, zone: { ttl_sec: defaultTTL, domain: zone } } = props;
     const {
-      name: service,
+      service,
       protocol,
       target,
       priority,
