@@ -7,10 +7,12 @@
         min-height: 0;
 
         &-success {
+            @extend .font-xs;
             color: $green;
         }
 
         &-danger {
+            @extend .font-xs;
             color: $red;
         }
     }
