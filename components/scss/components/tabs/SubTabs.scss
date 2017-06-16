@@ -5,24 +5,32 @@
         margin-top: -10px;
     }
 
-    [role="tablist"] {
+    .TabList {
         padding: 0;
         background: transparent;
     }
 
-    [role="tab"] {
-        border: 0; // reset from above
+    .Tab {
+        border: none; // reset from above
         border-bottom: 3px solid transparent;
 
-        &:hover,
         &[aria-selected="true"] {
-            border: 0;
-            border-bottom: 3px solid $blue;
             background: transparent;
+            border: none;
+            border-bottom: 3px solid $blue;
         }
     }
 
+    // general hover state and special cases for before and after active
+    .Tab:not(.ReactTabs__Tab--selected):hover,
+    .Tab.selected-previous:hover,
+    .Tab.ReactTabs__Tab--selected + .Tab:hover {
+        background: transparent;
+        border: none;
+        border-bottom: 3px solid $blue;
+    }
+
     &-container {
-        padding: 15px 0 0 0;        
+        padding: 15px 0 0 0;
     }
 }
