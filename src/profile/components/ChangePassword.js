@@ -2,11 +2,16 @@ import React, { Component, PropTypes } from 'react';
 
 import { Card, CardHeader } from 'linode-components/cards';
 import {
-  Form, FormGroup, FormGroupError, PasswordInput, SubmitButton,
+  Form,
+  FormGroup,
+  FormGroupError,
+  FormSummary,
+  PasswordInput,
+  SubmitButton,
 } from 'linode-components/forms';
 
 import { setPassword } from '~/api/profile';
-import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+import { dispatchOrStoreErrors } from '~/api/util';
 
 import SelectExpiration from '../components/SelectExpiration';
 

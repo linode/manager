@@ -2,13 +2,19 @@ import React, { Component, PropTypes } from 'react';
 
 import { Card, CardHeader } from 'linode-components/cards';
 import {
-  Form, FormGroup, FormGroupError, SubmitButton, Select, PasswordInput,
+  Form,
+  FormGroup,
+  FormGroupError,
+  FormSummary,
+  SubmitButton,
+  Select,
+  PasswordInput,
 } from 'linode-components/forms';
 import { ConfirmModalBody } from 'linode-components/modals';
 
 import { resetPassword } from '~/api/linodes';
 import { showModal, hideModal } from '~/actions/modal';
-import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+import { dispatchOrStoreErrors } from '~/api/util';
 
 
 export default class ResetRootPassword extends Component {
@@ -88,6 +94,7 @@ export default class ResetRootPassword extends Component {
     return (
       <Card header={header} className="full-height">
         <Form onSubmit={this.onSubmitConfirm}>
+          {disabledMessage}
           <FormGroup className="row" errors={errors} name="disk">
             <label htmlFor="disk" className="col-sm-3 col-form-label">Disk</label>
             <div className="col-sm-9">
@@ -123,7 +130,6 @@ export default class ResetRootPassword extends Component {
                 disabled={disabled || loading}
                 disabledChildren={disabled ? 'Reset' : 'Resetting'}
               >Reset</SubmitButton>
-              {disabledMessage}
               <FormSummary errors={errors} success="Password reset." />
             </div>
           </FormGroup>

@@ -5,7 +5,7 @@ import { push } from 'react-router-redux';
 
 import { Tabs } from 'linode-components/tabs';
 
-import { linodeIPs } from '~/api/linodes';
+import { getIPs } from '~/api/networking';
 import { getObjectByLabelLazily } from '~/api/util';
 
 import { selectLinode } from '../../utilities';
@@ -14,8 +14,7 @@ import { selectLinode } from '../../utilities';
 export class IndexPage extends Component {
   static async preload({ dispatch, getState }, { linodeLabel }) {
     const { id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
-    // Even on the IPManagement page this is needed for shared IPs.
-    await dispatch(linodeIPs(id));
+    await dispatch(getIPs(id));
   }
 
   render() {
@@ -24,8 +23,9 @@ export class IndexPage extends Component {
 
     const tabs = [
       { name: 'Summary', link: '/' },
-      { name: 'Reverse DNS', link: '/reversedns' },
-      { name: 'IP Management', link: '/ipmanagement' },
+      { name: 'IP Transfer', link: '/transfer' },
+      { name: 'IP Sharing', link: '/sharing' },
+      { name: 'DNS Resolvers', link: '/resolvers' },
     ].map(t => ({ ...t, link: `/linodes/${linode.label}/networking${t.link}` }));
 
     return (

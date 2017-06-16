@@ -5,8 +5,13 @@ import { ConfirmModalBody } from 'linode-components/modals';
 
 import { showModal, hideModal } from '~/actions/modal';
 import { confirmTFA } from '~/api/profile';
-import { ModalFormGroup, FormGroupError, Input } from 'linode-components/forms';
-import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+import {
+  ModalFormGroup,
+  FormGroupError,
+  FormSummary,
+  Input,
+} from 'linode-components/forms';
+import { dispatchOrStoreErrors } from '~/api/util';
 
 
 export class TwoFactorModal extends Component {

@@ -1,10 +1,17 @@
 import React, { PropTypes, Component } from 'react';
 
 import { Card, CardHeader } from 'linode-components/cards';
-import { Form, FormGroup, FormGroupError, SubmitButton, Input } from 'linode-components/forms';
+import {
+  Form,
+  FormGroup,
+  FormGroupError,
+  FormSummary,
+  SubmitButton,
+  Input,
+} from 'linode-components/forms';
 
 import { profile } from '~/api';
-import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+import { dispatchOrStoreErrors } from '~/api/util';
 
 
 export default class ChangeEmail extends Component {

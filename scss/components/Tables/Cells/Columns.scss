@@ -3,7 +3,11 @@
 }
 
 .IPAddressColumn {
-    width: 300px;
+    width: 400px;
+}
+
+.LinodeIPAddressColumn {
+    width: 275px;
 }
 
 .RegionColumn {
@@ -11,7 +15,7 @@
 }
 
 .StatusDropdownColumn {
-    width: 140px;
+    width: 170px;
 }
 
 .PermissionsCheckboxColumn {
@@ -19,5 +23,13 @@
 }
 
 .TicketLabelColumn {
-    width: 550px;
+    width: 600px;
+}
+
+.TicketIdColumn {
+    width: 160px;
+}
+
+.IPNavColumn {
+    width: 150px;
 }

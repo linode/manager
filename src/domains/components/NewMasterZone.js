@@ -2,11 +2,16 @@ import React, { PropTypes, Component } from 'react';
 import { push } from 'react-router-redux';
 
 import {
-  FormGroup, FormGroupError, Form, SubmitButton, Input,
+  FormGroup,
+  FormGroupError,
+  Form,
+  FormSummary,
+  SubmitButton,
+  Input,
 } from 'linode-components/forms';
 
 import { domains } from '~/api';
-import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+import { dispatchOrStoreErrors } from '~/api/util';
 
 
 export default class NewMasterZone extends Component {

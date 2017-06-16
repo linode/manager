@@ -1,20 +1,22 @@
+import _ from 'lodash';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import _ from 'lodash';
 
-import { tickets } from '~/api';
+import { ListBody, ListGroup } from 'linode-components/lists/bodies';
+import { TableCell } from 'linode-components/tables/cells';
+import { List } from 'linode-components/lists';
+import { Table } from 'linode-components/tables';
+
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
+import { tickets } from '~/api';
 import CreateHelper from '~/components/CreateHelper';
 import {
   getLinodeRedirectUrl, getNodebalancerRedirectUrl, getDomainRedirectUrl,
 } from '~/components/notifications/EventTypes';
-import { List } from 'linode-components/lists';
-import { Table } from 'linode-components/tables';
-import { ListBody, ListGroup } from 'linode-components/lists/bodies';
-import { TableCell } from 'linode-components/tables/cells';
 import TimeDisplay from '~/components/TimeDisplay';
+
 
 const TICKET_LINK_MAP = {
   linode: getLinodeRedirectUrl,
@@ -63,7 +65,10 @@ export class IndexPage extends Component {
 
   renderLabelCell = ({ record: ticket }) => {
     return (
-      <TableCell column={{ className: 'RowLabelCell' }} record={ticket}>
+      <TableCell
+        column={{ className: 'LabelCell', headerClassName: 'TicketLabelColumn' }}
+        record={ticket}
+      >
         <Link title={ticket.id} to={`/support/${ticket.id}`}>{ticket.summary}</Link>
         <small>{renderTicketCreationInfo(ticket)}</small>
       </TableCell>
@@ -104,7 +109,7 @@ export class IndexPage extends Component {
           {
             dataKey: 'id',
             className: 'hidden-md-down',
-            headerClassName: 'hidden-md-down',
+            headerClassName: 'TicketIdColumn hidden-md-down',
             formatFn: id => <span>Ticket #{id}</span>,
           },
           {

@@ -25,35 +25,72 @@ function createTestStats() {
   return stats;
 }
 
-let usedIpv4UpTo = 0;
-function createTestIpv4(linodeId) {
+let usedIPv4UpTo = 0;
+function createTestIPv4(linodeId, type = 'public') {
+  const address = `97.107.143.${usedIPv4UpTo++}`;
   return {
+    address,
+    type,
+    version: 'ipv4',
     linode_id: linodeId,
-    address: `97.107.143.${usedIpv4UpTo++}`,
     gateway: '97.107.143.0',
     rdns: 'li1-1.members.linode.com',
+    prefix: type === 'public' ? 24 : 17,
+    key: address,
   };
 }
 
-let usedIpv6UpTo = 0;
-function createTestIpv6(linodeId) {
+let usedIPv6UpTo = 0;
+function createTestIPv6(linodeId) {
+  const address = `2600:3c03::f03c:91ff:fe0a:${usedIPv6UpTo++}`;
+
   return {
+    address,
+    key: address,
     linode_id: linodeId,
-    address: `2600:3c03::f03c:91ff:fe0a:${usedIpv6UpTo++}`,
-    gateway: '97.107.143.99',
+    gateway: 'fe80::1',
     rdns: 'li1-1.members.linode.com',
+    type: 'public',
+    version: 'ipv6',
+    prefix: '64',
+  };
+}
+
+function createTestLinkLocal(linodeId) {
+  const address = 'fe80::f03c:91ff:fe0a:181f';
+
+  return {
+    address,
+    key: address,
+    linode_id: linodeId,
+    type: 'link-local',
+    version: 'ipv6',
+  };
+}
+
+function createTestSlaac(linodeId) {
+  const ipv6 = createTestIPv6(linodeId);
+
+  return {
+    ...ipv6,
+    type: 'slaac',
   };
 }
 
 function createTestLinode(id) {
-  const ipv4 = createTestIpv4(id);
-  const secondIpv4 = createTestIpv4(id);
-  const ipv6 = createTestIpv6(id);
+  const ipv4 = createTestIPv4(id);
+  const secondIPv4 = createTestIPv4(id);
+  const ipv6 = createTestIPv6(id);
+  const privateIPv4 = createTestIPv4(id, 'private');
+
+  const slaac = createTestSlaac(id);
+  const linkLocal = createTestLinkLocal(id);
+
   return {
     id,
     group: 'Test Group',
     label: `test-linode-${id}`,
-    ipv4: [ipv4.address, secondIpv4.address],
+    ipv4: [ipv4.address, secondIPv4.address],
     ipv6: ipv6.address,
     created: '2016-07-06T16:47:27',
     type: testType,
@@ -217,22 +254,12 @@ function createTestLinode(id) {
       },
     },
     _ips: {
-      ipv4: {
-        private: [createTestIpv4(id)],
-        public: [ipv4],
-        shared: [],
-      },
-      ipv6: {
-        global: [],
-        addresses: [],
-        link_local: 'fe80::f03c:91ff:fe0a:181f',
-        slaac: {
-          address: ipv6.address,
-          rdns: '',
-          prefix: '64',
-        },
-      },
+      [privateIPv4.key]: privateIPv4,
+      [ipv4.key]: ipv4,
+      [linkLocal.key]: linkLocal,
+      [slaac.key]: slaac,
     },
+    _shared: [],
   };
 }
 
@@ -443,7 +470,7 @@ export const testLinode1245 = {
     ...testLinode._ips,
     ipv4: {
       ...testLinode._ips.ipv4,
-      public: [createTestIpv4(1245)],
+      public: [createTestIPv4(1245)],
       private: [],
     },
   },

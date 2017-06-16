@@ -5,13 +5,39 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### fixed
+- styleguide forms page breaks
+- several styleguide css regressions
+
+## [0.9.0] 2017-06-16
+### Added
+- object count to the delete modal #2062
+- tooltip component, defaults to disabled, included on primary label and link table cells #2007, #2073, #2074
+- ability to add additional IPs, links to opening a support ticket #2066
+- enable private IP to the networking tab #2066
+- delete IP functionality to the networking tab #2066
+- global IP pools to networking tab #2066
+- beta banner including link to the classic manager #2088
+- required overwrite modal to backup restore #800
+- missing check_body and check_path fields to NodeBalancer config active health check form section #2089
+### Changed
+- long text in link and label table cells are now truncated based on the width of the th, 
+an ellipsis is shown with a tooltip enabled #2007
+- network tab revamped, IP Sharing and IP Transfer split into 2 separate tabs #2066
+- network tab now shows proper gateway for all addresses #2066
+- API_ROOT and LOGIN_ROOT constants in manager no longer default to alpha, and instead default to cloud.linode.com #2088
+### Fixed
+- linode list and linode dashboard correctly shows ipv4 addresses #2066
+- destroy all disks and configs when checked using backup restore #2084
+- ensure Linodes outside of region are not available to backup restore #2084
+- breaks in styleguide forms, styles, header etc #2081
 
 ## [0.8.3] 2017-06-12
-### changed
+### Changed
 - reinstate hover states, collapsed borders on adjacent active tabs
 
 ## [0.8.2] 2017-06-12
-### fixed
+### Fixed
 - retain tab active border color
 
 ## [0.8.1] 2017-06-12

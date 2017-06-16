@@ -7,8 +7,9 @@ import {
 
 import { users } from '~/api';
 import { setTitle } from '~/actions/title';
+import { dispatchOrStoreErrors } from '~/api/util';
 import { actions } from '~/api/configs/users';
-import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+import { FormSummary } from 'linode-components/forms';
 
 
 export default class UserForm extends Component {

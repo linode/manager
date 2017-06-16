@@ -8,7 +8,7 @@ import { Card, CardHeader } from 'linode-components/cards';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 import * as api from '~/api';
-import { dispatchOrStoreErrors } from '~/components/forms';
+import { dispatchOrStoreErrors } from '~/api/util';
 import Region from '~/components/Region';
 
 import Details from '../components/Details';

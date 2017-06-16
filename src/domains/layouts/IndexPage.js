@@ -50,7 +50,7 @@ export class IndexPage extends Component {
 
     const selectedDomains = zonesArr.map(l => l.domain);
 
-    dispatch(showModal('Delete Domain(s)',
+    dispatch(showModal('Delete Domain(s)', (
       <DeleteModalBody
         onOk={async () => {
           const ids = zonesArr.map(function (zone) { return zone.id; });
@@ -63,7 +63,7 @@ export class IndexPage extends Component {
         typeOfItem="Domains"
         onCancel={() => dispatch(hideModal())}
       />
-    ));
+    )));
   }
 
   renderZones(zones) {
@@ -106,9 +106,9 @@ export class IndexPage extends Component {
                   columns={[
                     { cellComponent: CheckboxCell, headerClassName: 'CheckboxColumn' },
                     {
-                      className: 'RowLabelCell',
                       cellComponent: LinkCell,
                       hrefFn: (zone) => `/domains/${zone.domain}`, textKey: 'domain',
+                      tooltipEnabled: true,
                     },
                     { dataKey: 'type', formatFn: _.capitalize },
                     {

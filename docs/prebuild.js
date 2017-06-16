@@ -10,6 +10,9 @@ const ROUTE_BASE_PATH = `/${process.env.API_VERSION || 'v4'}/reference`;
 const API_ROOT = process.env.API_ROOT || 'https://api.linode.com';
 const API_VERSION = process.env.API_VERSION || 'v4';
 
+const pythonPath = path.join(BASE_PATH, 'python');
+const pythonFiles = fs.readdirSync(pythonPath);
+
 const objectsPath = path.join(BASE_PATH, 'objects');
 const apiObjectMap = {};
 fs.readdirSync(objectsPath).filter(function(fileName) {
@@ -114,6 +117,11 @@ function formatMethodExamples(methodObj) {
 function formatSchemaExample(schema) {
   const schemaExample = {};
 
+  if (!Array.isArray(schema)) {
+    // TODO: Account for objects / clean this method up
+    return schemaExample;
+  }
+
   schema.forEach(function(obj) {
     if (obj.value === undefined && obj.schema) {
       schemaExample[obj.name] = formatSchemaExample(obj.schema);
@@ -153,23 +161,14 @@ function formatSchemaField(schemaField, enumMap) {
 
   let nestedSchema = null;
   if (apiObjectMap[type]) {
+    // matches a known object from /objects, format using the reference
     nestedSchema = formatSchema(getResourceObjByName(type).schema, enumMap);
   } else if (type === 'enum' && enumMap[subType]) {
+    // matches a known enum from an enums key on an object in /objects, format using the reference
     nestedSchema = enumMap[subType]; // already formatted
-  } else if (!type) {
-    // TODO: check the name of the nested item?
+  } else if (type === 'enum' || type === 'object' || type === 'array' || !type) {
+    // is of the the checked types, or no type provided (currently undocumented)
     nestedSchema = formatSchema(schemaField, enumMap);
-  } else if (Array.isArray(value)) {
-    value = value.map(function(obj) {
-      if (typeof obj === 'object' && obj !== null) {
-        return formatSchema(obj, enumMap);
-      }
-      return obj;
-    });
-
-    if (value.length && typeof value[0] !== 'string') {
-      nestedSchema = value[0]; // use the first example in the array as the schema
-    }
   }
 
   return {
@@ -189,12 +188,19 @@ function formatSchema(schema, enumMap={}) {
     return schema;
   }
 
-  return Object.keys(schema).map(function (schemaName) {
-    if (typeof schema[schemaName] === 'object' && schema[schemaName] !== null) {
-      return formatSchemaField(_.merge(schema[schemaName], { name: schemaName }), enumMap);
+  const filteredSchemas = Object.keys(schema).map(function (schemaName) {
+    const val = schema[schemaName];
+    if (typeof val === 'object' && !Array.isArray(val) && val !== null) {
+      return formatSchemaField(_.merge(val, { name: schemaName }), enumMap);
     }
-    // TODO: account for other cases
   }).filter(function(item) { return item; }); // filter at the end dumps nulls from result of non-object values
+
+  // do not represent array types without nested objects in the schema tables
+  if (!filteredSchemas.length) {
+    return null;
+  }
+
+  return filteredSchemas;
 }
 
 function createEnumMap(enums) {
@@ -388,3 +394,136 @@ const endpointModule = `
   module.exports = { endpoints: ${data} };
 `;
 fs.writeFileSync(path.join('./src', 'api.js'), endpointModule);
+
+/**
+ *   Convert Python YAML docs to JSON js objects
+ */
+
+function convertPythonYaml() {
+  let pythonObjects = pythonFiles.filter(function(fileName) {
+    return path.extname(fileName) === '.yaml';
+  }).map(function(fileName) {
+    const filePath = path.join(pythonPath, fileName);
+    const pythonObject = yaml.safeLoad(fs.readFileSync(filePath, 'utf-8'), { json: true });
+
+    return pythonObject;
+  });
+
+  let pythonObjectMap = {
+    'LinodeLoginClient': {
+      name: 'LinodeLoginClient',
+      path: '/linode-login-client',
+      langauge: 'python',
+      routePath: '/v4/libraries/python/linode-login-client',
+      formattedPythonObject: [],
+    },
+    'LinodeClient': {
+      name: 'LinodeClient',
+      path: '/linode-client',
+      langauge: 'python',
+      routePath: '/v4/libraries/python/linode-client',
+      formattedPythonObject: [],
+    },
+    'Linode': {
+      name: 'Linode',
+      path: '/linode',
+      langauge: 'python',
+      routePath: '/v4/libraries/python/linode',
+      formattedPythonObject: [],
+    },
+    'Config': {
+      name: 'Config',
+      path: '/config',
+      langauge: 'python',
+      routePath: '/v4/libraries/python/config',
+      formattedPythonObject: [],
+    },
+    'Disk': {
+      name: 'Disk',
+      path: '/disk',
+      langauge: 'python',
+      routePath: '/v4/libraries/python/disk',
+      formattedPythonObject: [],
+    },
+    'Region': {
+      name: 'Region',
+      path: '/region',
+      langauge: 'python',
+      routePath: '/v4/libraries/python/region',
+      formattedPythonObject: [],
+    },
+    'Distribution': {
+      name: 'Distribution',
+      path: '/distribution',
+      langauge: 'python',
+      routePath: '/v4/libraries/python/distribution',
+      formattedPythonObject: [],
+    },
+    'Backup': {
+      name: 'Backup',
+      path: '/backup',
+      langauge: 'python',
+      routePath: '/v4/libraries/python/backup',
+      formattedPythonObject: [],
+    },
+    'IPAddress': {
+      name: 'IPAddress',
+      path: '/ipaddress',
+      langauge: 'python',
+      routePath: '/v4/libraries/python/ipaddress',
+      formattedPythonObject: [],
+    },
+    'IPv6Address': {
+      name: 'IPv6Address',
+      path: '/ipv6address',
+      langauge: 'python',
+      routePath: '/v4/libraries/python/ipv6address',
+      formattedPythonObject: [],
+    },
+    'Kernel': {
+      name: 'Kernel',
+      path: '/kernel',
+      langauge: 'python',
+      routePath: '/v4/libraries/python/kernel',
+      formattedPythonObject: [],
+    },
+    'Service': {
+      name: 'Service',
+      path: '/service',
+      langauge: 'python',
+      routePath: '/v4/libraries/python/service',
+      formattedPythonObject: [],
+    },
+    'StackScript': {
+      name: 'StackScript',
+      path: '/stackscript',
+      langauge: 'python',
+      routePath: '/v4/libraries/python/stackscript',
+      formattedPythonObject: [],
+    },
+    'DNS Zone': {
+      name: 'DNS Zone',
+      path: '/dnszone',
+      langauge: 'python',
+      routePath: '/v4/libraries/python/dnszone',
+      formattedPythonObject: [],
+    },
+    'DNS Zone Record': {
+      name: 'DNS Zone Record',
+      path: '/dnszone-record',
+      langauge: 'python',
+      routePath: '/v4/libraries/python/dnszone-record',
+      formattedPythonObject: [],
+    },
+  };
+
+  pythonObjects.forEach(function(pythonObject) {
+    if (pythonObjectMap[pythonObject.name]) {
+      pythonObjectMap[pythonObject.name].formattedPythonObject = pythonObject;
+    }
+  });
+  const data = JSON.stringify(pythonObjectMap, null, 2);
+  const pythonModule = `module.exports = { pythonObjects: ${data} };`;
+  fs.writeFileSync(path.join(pythonPath, 'python.js'), pythonModule);
+}
+convertPythonYaml();

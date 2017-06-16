@@ -3,12 +3,22 @@ import { push } from 'react-router-redux';
 
 import { CancelButton } from 'linode-components/buttons';
 import {
-  Form, FormGroup, FormGroupError, Input, Select, Radio, RadioInputCombo, RadioSelectCombo,
-  Checkbox, Checkboxes, SubmitButton,
+  Form,
+  FormGroup,
+  FormSummary,
+  FormGroupError,
+  Input,
+  Select,
+  Radio,
+  RadioInputCombo,
+  RadioSelectCombo,
+  Checkbox,
+  Checkboxes,
+  SubmitButton,
 } from 'linode-components/forms';
 
 import { linodes } from '~/api';
-import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+import { dispatchOrStoreErrors } from '~/api/util';
 import { AVAILABLE_DISK_SLOTS } from '~/constants';
 
 import { DiskSelect } from '../../../components';

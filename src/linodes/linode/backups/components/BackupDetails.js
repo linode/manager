@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { PropTypes } from 'react';
 
 import { Card, CardHeader } from 'linode-components/cards';
@@ -41,6 +42,10 @@ export default function BackupDetails(props) {
   return (
     <Card header={<CardHeader title="Backup details" />}>
       {label}
+      <FormGroup className="row">
+        <div className="col-sm-3 row-label">Type</div>
+        <div className="col-sm-9" id="type">{_.capitalize(backup.type)}</div>
+      </FormGroup>
       <FormGroup className="row">
         <div className="col-sm-3 row-label">Started</div>
         <div className="col-sm-9" id="started"><TimeDisplay time={backup.created} /></div>

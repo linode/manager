@@ -7,7 +7,7 @@ import { ConfirmModalBody, DeleteModalBody } from 'linode-components/modals';
 import { showModal, hideModal } from '~/actions/modal';
 import { clients } from '~/api';
 import { resetSecret } from '~/api/clients';
-import { dispatchOrStoreErrors } from '~/components/forms';
+import { dispatchOrStoreErrors } from '~/api/util';
 import { API_ROOT } from '~/constants';
 
 import { renderSecret } from './CreatePersonalAccessToken';

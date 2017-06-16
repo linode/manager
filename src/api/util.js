@@ -1,6 +1,7 @@
 import moment from 'moment';
 
 import * as api from './';
+import { reduceErrors } from './errors';
 
 // Extra cruft involving constructor / prototypes is for any `new Error404`s  to be shown as
 // instanceof Error404:
@@ -11,6 +12,43 @@ export function Error404() {
 
 Error404.prototype = new Error();
 
+export function dispatchOrStoreErrors(apiCalls, extraWholeFormFields = []) {
+  return async (dispatch) => {
+    this.setState({ loading: true, errors: {} });
+
+    const results = [];
+    for (let i = 0; i < apiCalls.length; i++) {
+      const nextCall = apiCalls[i];
+
+      try {
+        const nextDispatch = nextCall(...results);
+        if (nextDispatch) {
+          results[i] = await dispatch(nextDispatch);
+        }
+      } catch (response) {
+        if (!response.json) {
+          throw response;
+        }
+
+        const errors = await reduceErrors(response);
+        errors._ = errors._.concat(extraWholeFormFields.reduce((flattenedErrors, field) => {
+          const error = errors[field];
+          if (Array.isArray(error)) {
+            return [...flattenedErrors, ...error];
+          }
+
+          return [...flattenedErrors, error];
+        }, [])).filter(Boolean);
+        this.setState({ errors, loading: false });
+        return null;
+      }
+    }
+
+    this.setState({ loading: false, errors: { _: [] } });
+
+    return results;
+  };
+}
 
 export function objectFromMapByLabel(map, label, labelName = 'label') {
   const mapValues = Object.values(map);

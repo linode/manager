@@ -34,3 +34,9 @@
 @mixin selected() {
     background-color: $gray;
 }
+
+@mixin truncate() {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
