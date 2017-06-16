@@ -12,9 +12,10 @@ export default function IPAddressCell(props) {
     ipv4 = ipv4[0];
   }
 
+  const _ipv6 = record.ipv6.split('/')[0];
   let ipv6 = null;
-  if (record.ipv6) {
-    ipv6 = (<div className="text-muted">{record.ipv6.split('/')[0]}</div>);
+  if (_ipv6 !== 'None') {
+    ipv6 = <div className="text-muted">{_ipv6}</div>;
   }
 
   return (
