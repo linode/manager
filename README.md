@@ -12,8 +12,7 @@
 </p>
 
 This is the new Linode Manager. It provides a web interface for managing your
-Linode account. Currently this software is *pre-alpha* and won't be released for
-a while. [Read the blog post](https://engineering.linode.com/2016/05/16/Announcing-the-new-open-source-manager.html).
+Linode account. Currently this software is *beta* and is available at [cloud.linode.com](https://cloud.linode.com).
 
 The following buzzwords are involved in this project:
 
@@ -30,12 +29,10 @@ The following buzzwords are involved in this project:
     node --version # should be 6.x - 7.2.1
     npm install
 
-Currently the codebase is hardcoded to point to our [alpha
-environment](https://alpha.linode.com). It communicates with Linode via 
-[Linode API 4](https://developers.linode.com). You'll need to [register an OAuth
-client](https://developers.linode.com/access) in the alpha
-environment, then create a file at `src/secrets.js` with your client ID and
-client secret set appropriately:
+This application communicates with Linode via the
+[Linode APIv4](https://developers.linode.com). You'll need to [register an OAuth
+client](https://cloud.linode.com/profile/integrations/tokens), then create a file
+at `src/secrets.js` with your client ID and client secret set appropriately:
 
     export const clientId = 'change me';
     export const clientSecret = 'change me';

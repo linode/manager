@@ -1,9 +1,9 @@
 .PreloadIndicator {
     position: fixed;
     left: 0px;
-    top: 0px;
+    top: $mini-nav-height;
     width: 0px;
-    background-color: $green;
+    background-color: $blue;
     height: 3px;
     z-index: $preload-z-index;
 

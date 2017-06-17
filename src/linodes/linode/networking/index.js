@@ -4,14 +4,17 @@ import { Route, IndexRoute } from 'react-router';
 import {
   IndexPage,
   SummaryPage,
-  ReverseDNSPage,
-  IPManagementPage,
+  DNSResolversPage,
+  IPTransferPage,
+  IPSharingPage,
 } from './layouts';
+
 
 export default (
   <Route path="networking" component={IndexPage}>
     <IndexRoute component={SummaryPage} />
-    <Route path="reversedns" component={ReverseDNSPage} />
-    <Route path="ipmanagement" component={IPManagementPage} />
+    <Route path="resolvers" component={DNSResolversPage} />
+    <Route path="transfer" component={IPTransferPage} />
+    <Route path="sharing" component={IPSharingPage} />
   </Route>
 );

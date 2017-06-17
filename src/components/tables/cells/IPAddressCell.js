@@ -13,8 +13,8 @@ export default function IPAddressCell(props) {
   }
 
   let ipv6 = null;
-  if (record.ipv6) {
-    ipv6 = (<div className="text-muted">{record.ipv6.split('/')[0]}</div>);
+  if (record.ipv6 && record.ipv6 !== 'None/64') {
+    ipv6 = <div className="text-muted">{record.ipv6}</div>;
   }
 
   return (

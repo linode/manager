@@ -6,6 +6,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [0.8.0] 2017-06-16
+### Added
+- info block to the docs intro which points to testing with cURL and how to get started with a PAT #2072
+- OAuth scope denotation to endpoint methods throughout the docs #2075
+- introductory python guides #2085
+- python wrapper API documentation #2085
+### Changed
+- reorganized guides into guides and libraries, cURL and python guides now exist on the same index #2085
+### Fixed
+- missing method response field and method request param types denotations #2070
+- a couple links in creating a Linode cURL guide #2090
+
 ## [0.7.3] 2017-06-09
 ### Added
 - added linode_kvmify to account/events action enums

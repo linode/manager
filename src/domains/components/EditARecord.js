@@ -1,10 +1,17 @@
 import React, { PropTypes, Component } from 'react';
 
-import { Form, Select, Input, SubmitButton, ModalFormGroup } from 'linode-components/forms';
+import {
+  Form,
+  FormSummary,
+  Select,
+  Input,
+  SubmitButton,
+  ModalFormGroup,
+} from 'linode-components/forms';
 import { CancelButton } from 'linode-components/buttons';
 
 import { domains } from '~/api';
-import { dispatchOrStoreErrors, FormSummary } from '~/components/forms';
+import { dispatchOrStoreErrors } from '~/api/util';
 
 import SelectDNSSeconds from './SelectDNSSeconds';
 

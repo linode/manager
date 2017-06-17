@@ -16,7 +16,7 @@ import { objectFromMapByLabel, getObjectByLabelLazily } from '~/api/util';
 import { nodebalancerStats } from '~/api/nodebalancers';
 import { nodebalancers } from '~/api';
 import Region from '~/linodes/components/Region';
-import { dispatchOrStoreErrors } from '~/components/forms';
+import { dispatchOrStoreErrors } from '~/api/util';
 import LineGraph from '~/components/graphs/LineGraph';
 import {
   NODEBALANCER_CONFIG_ALGORITHMS, NODEBALANCER_CONFIG_STICKINESS,
@@ -173,6 +173,7 @@ export class DashboardPage extends Component {
                       hrefFn: function (config) {
                         return `/nodebalancers/${nodebalancer.label}/configs/${config.id}`;
                       },
+                      tooltipEnabled: true,
                     },
                     { dataKey: 'protocol', label: 'Protocol' },
                     { dataKey: 'algorithm', label: 'Algorithm' },

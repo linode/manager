@@ -37,10 +37,12 @@ endpoints:
             optional: true
             description: The label to assign this NodeBalancer. Defaults to "nodebalancer" followed by its ID.
             limit: "3-32 ASCII characters limited to letters, numbers, underscores, and dashes, starting and ending with a letter, and without two dashes or underscores in a row"
+            type: string
           client_conn_throttle:
             optional: true
             description: >
               To help mitigate abuse, throttle connections per second, per client. 0 to disable, max of 20.
+            type: string
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -128,37 +130,50 @@ endpoints:
         params:
           label:
             description: Unique label for your NodeBalancer config.
+            type: string
           port:
             description: Port to bind to on the public interfaces.
             limit: 1-65534
+            type: integer
           protocol:
             description: The protocol used for the config.
+            type: string
           algorithm:
             description: Balancing algorithm.
+            type: enum
           stickiness:
             description: Session persistence. Route subsequent requests from a client to the same backend.
+            type: enum
           check:
             description: Perform active health checks on the backend nodes.
+            type: enum
           check_interval:
             description: Seconds between health check probes.
+            type: integer
           check_timeout:
             description: Seconds to wait before considering the probe a failure.
             limit: 1-30. Must be less than check_interval # leave the final period off!
+            type: integer
           check_attempts:
             description: Number of failed probes before taking a node out of rotation.
             limit: 1-30
+            type: integer
           check_path:
             description: When check is "http", the path to request.
+            type: string
           check_body:
             description: When check is "http", a regex to match within the first 16,384 bytes of the response body.
+            type: string
           check_passive:
             description: Enable passive checks based on observing communication with back-end nodes.
+            type: boolean
           # ssl_cert:
           #  description: SSL certificate served by the NodeBalancer when the protocol is "https".
           # ssl_key:
           #  description: Unpassphrased private key for the SSL certificate when the protocol is "https".
           cipher_suite:
             description: SSL cipher suite to enforce.
+            type: enum
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -259,12 +274,16 @@ endpoints:
         params:
           label:
             description: Unique label for your NodeBalancer config node.
+            type: string
           address:
             description: The address:port combination used to communicate with this node.
+            type: string
           weight:
             description: Load balancing weight, 1-255. Higher means more connections.
+            type: integer
           mode:
             description: The connections mode for this node. One of 'accept', 'reject', or 'drain'.
+            type: enum
         examples:
           curl: |
             curl -H "Content-Type: application/json" \

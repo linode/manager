@@ -3,10 +3,15 @@ import { Link } from 'react-router';
 
 import { Card, CardHeader } from 'linode-components/cards';
 import {
-  Checkbox, Form, FormGroup, FormGroupError, Input, PasswordInput, SubmitButton,
+  Checkbox,
+  Form,
+  FormGroup,
+  FormGroupError,
+  FormSummary,
+  Input,
+  PasswordInput,
+  SubmitButton,
 } from 'linode-components/forms';
-
-import { FormSummary } from '~/components/forms';
 
 
 export default function Details(props) {

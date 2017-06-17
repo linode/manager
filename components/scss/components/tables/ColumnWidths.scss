@@ -1,0 +1,20 @@
+.ButtonColumn {
+    width: 70px;
+}
+
+.CheckboxColumn {
+    width: 45px;
+}
+
+.CheckboxColumn + th:not(.CheckboxColumn),
+.CheckboxCell + td:not(.CheckboxCell) {
+    padding: 5px 15px 5px 0;
+}
+
+.LabelColumn {
+    width: 300px;
+}
+
+.EmailColumn {
+    width: 200px;
+}

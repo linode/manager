@@ -1,8 +1,20 @@
 import React from 'react';
 
 import {
-  FormSummary, Form, FormGroup, SubmitButton, Input, Radio, Checkbox, Select, CheckboxInputCombo,
-  FormGroupError, RadioInputCombo, RadioSelectCombo, Checkboxes, PasswordInput,
+  FormSummary,
+  Form,
+  FormGroup,
+  SubmitButton,
+  Input,
+  Radio,
+  Checkbox,
+  Select,
+  CheckboxInputCombo,
+  FormGroupError,
+  RadioInputCombo,
+  RadioSelectCombo,
+  Checkboxes,
+  PasswordInput,
 } from 'linode-components/forms';
 import { CancelButton } from 'linode-components/buttons';
 

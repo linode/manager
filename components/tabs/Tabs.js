@@ -33,19 +33,23 @@ export default function Tabs(props) {
       selectedIndex={selected}
       className={`${componentName} ${className}`}
     >
-      <TabList>
-        {tabs.map((tab, i) => (
-          <Tab
-            key={tab.name}
-            onClick={(e) => {
-              if (onClick) {
-                onClick(e, i);
-              }
-            }}
-          >
-            {tab.link ? <Link to={tab.link}>{tab.name}</Link> : tab.name}
-          </Tab>
-        ))}
+      <TabList className="TabList">
+        {tabs.map(function(tab, i) {
+          const className = ((i + 1) === selected) ? 'selected-previous' : '';
+          return (
+            <Tab
+              key={tab.name}
+              className={`Tab ${className}`}
+              onClick={(e) => {
+                if (onClick) {
+                  onClick(e, i);
+                }
+              }}
+            >
+              {tab.link ? <Link to={tab.link}>{tab.name}</Link> : tab.name}
+            </Tab>
+          );
+        })}
       </TabList>
       {tabs.map((tab) => {
         return (
