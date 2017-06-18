@@ -13,7 +13,7 @@ export default function Authentication() {
       <section>
         <p>
           To use some API endpoints, authentication is required. We use the basic OAuth workflow where you can create
-          <em> applications</em> that integrate with Linode by registering those applications with us.
+          &nbsp;<em>applications</em> that integrate with Linode by registering those applications with us.
           You then use OAuth to authenticate on behalf of the user to request access to resources from their account.
         </p>
       </section>
@@ -22,7 +22,7 @@ export default function Authentication() {
         <p>
           In the OAuth workflow it is a two step process to authenticate a user before you can start making API calls.
           You will first need to request an <strong>access code</strong> that can then be exchanged for an
-          <strong>authorization token</strong>. To aid as many application developers as possible with their
+          &nbsp;<strong>authorization token</strong>. To aid as many application developers as possible with their
           design we provide two methods for requesting an access code.
         </p>
       </section>
