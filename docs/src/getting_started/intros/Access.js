@@ -22,7 +22,7 @@ export default function Authentication() {
         <p>
           In the OAuth workflow it is a two step process to authenticate a user before you can start making API calls.
           You will first need to request an <strong>access code</strong> that can then be exchanged for an
-          <strong>authorization token</strong>. To aid as many application developers as possible with their
+          <strong> authorization token</strong>. To aid as many application developers as possible with their
           design we provide two methods for requesting an access code.
         </p>
       </section>
