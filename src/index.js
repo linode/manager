@@ -169,7 +169,10 @@ window.init = init;
 
 TraceKit.report.subscribe(function (error) {
   if (GA_ID) {
-    ReactGA.exception({ description: JSON.stringify(error), fatal: true });
+    // eslint-disable-next-line no-undef
+    ga('send', 'exception', {
+      exDescription: JSON.stringify(error),
+    });
   }
 });
 
