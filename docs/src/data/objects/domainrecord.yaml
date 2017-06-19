@@ -8,6 +8,7 @@ schema:
   id:
     _type: Integer
     _value: 468
+    _description: The id of the domain record. Returns something like 468
   type:
     _type: String
     _value: A

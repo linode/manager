@@ -7,6 +7,7 @@ schema:
   id:
     _type: Integer
     _value: 1234
+    _description: Event id. Returns something like 1234
   entity:
     _type: Object
     _description: >
@@ -81,9 +82,11 @@ schema:
     _type: Datetime
     _value: 2014-12-24T18:00:09
     _filterable: true
+    _description: An ISO 8601 datetime of when the event was created. Returns something that looks like this, 2014-12-24T18:00:09
   updated:
     _type: Datetime
     _value: 2014-12-24T19:00:09
+    _description: An ISO 8601 datetime of when the event was updated. Returns something that looks like this, 2014-12-24T19:00:09
   user_id:
     _type: Integer
     _value: 234567

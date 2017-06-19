@@ -176,6 +176,7 @@ schema:
   created:
     _type: Datetime
     _value: "2015-09-29T11:21:01"
+    _description: An ISO 8601 datetime of when the Linode was created. Returns something that looks like this, 2015-09-29T11:21:01
   region:
     _type: Region
     _filterable: true

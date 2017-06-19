@@ -47,6 +47,8 @@ endpoints:
             my_profile.save()
   /account/profile/password:
     _group: Profile
+    description: >
+      Change your password.
     methods:
       POST:
         description: >
@@ -64,6 +66,8 @@ endpoints:
             my_profile.reset_password('hunter7')
   /account/profile/tfa-enable:
     _group: Profile
+    description: >
+      Begin enabling TFA on your account.
     methods:
       POST:
         description: >
@@ -81,6 +85,8 @@ endpoints:
             secret = my_profile.enable_tfa()
   /account/profile/tfa-enable-confirm:
     _group: Profile
+    description: >
+      Confirm your two-factor secret and require TFA for future logins.
     methods:
       POST:
         description: >
@@ -103,6 +109,8 @@ endpoints:
             my_profile.confirm_tfa('123456')
   /account/profile/tfa-disable:
     _group: Profile
+    description: >
+      Disable TFA on your account.  Future logins will not require TFA.
     methods:
       POST:
         description: >
@@ -118,8 +126,10 @@ endpoints:
             my_profile.disable_tfa()
   /account/profile/grants:
     _group: Profile
-    type: strange
+    type: Strange
     resource: usergrants
+    description: >
+      Get grants for the current user.
     methods:
       GET:
         description: >

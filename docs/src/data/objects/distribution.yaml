@@ -7,9 +7,11 @@ schema:
   id:
     _type: String
     _value: linode/Arch2014.10
+    _description: The distribution name such as, linode/Arch2014.10
   created:
     _type: Datetime
     _value: 2014-12-24T18:00:09
+    _description: The creation date of the Linode distribution
   label:
     _type: String
     _value: Arch Linux 2014.10
