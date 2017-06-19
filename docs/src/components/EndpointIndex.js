@@ -15,8 +15,8 @@ export default function EndpointIndex(props) {
         <div className="EndpointIndex-breadcrumbsContainer">
           <Breadcrumbs crumbs={crumbs} />
         </div>
-        <h2>{endpoint.name}</h2>
-        <p>{endpoint.description}</p>
+        <h1>{endpoint.name}</h1>
+        {!endpoint.description ? null : <p>{endpoint.description}</p>}
       </div>
       <div>
         {endpoint.endpoints.map(function(endpointSection) {

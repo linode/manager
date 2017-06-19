@@ -71,9 +71,26 @@ function hashLinkScroll() {
   }
 }
 
+window.setTitle = function(newTitle) {
+  const title = document.querySelector('title');
+  title.innerHTML = 'Linode API Documentation';
+
+  if (newTitle) {
+    title.innerHTML = `${newTitle} | ${title.innerHTML}`;
+  }
+};
+
+function updateTitle() {
+  const h1 = document.querySelector('h1');
+  if (h1) {
+    window.setTitle(h1.innerHTML);
+  }
+}
+
 function onRouterUpdate() {
   logPageView();
   hashLinkScroll();
+  updateTitle();
 }
 
 export function init() {
