@@ -23,7 +23,7 @@ export default function CoreConcepts(props) {
       <section>
         <h2>Filtering</h2>
         <p>
-          All listing methods of the LinodeClient object can be "filtered," allowing you to query for only the objects you desire. Filtering uses a SQLAlchemy-inspired syntax. All attributes that are filterable are marked with a Filterable <i className="fa fa-filter"></i> icon below.
+          All listing methods of the LinodeClient object can be "filtered," allowing you to query for only the objects you desire. Filtering uses a SQLAlchemy-inspired syntax.
         </p>
         <Table
           columns={[
