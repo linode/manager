@@ -69,7 +69,7 @@ function fillInMissingProps(props) {
 window.handleError = function (e) {
   try {
     // eslint-disable-next-line no-console
-    console.trace(e);
+    console.error(e);
 
     store.dispatch(setError(e));
 
@@ -99,7 +99,7 @@ window.handleError = function (e) {
     }
   } catch (e) {
     // eslint-disable-next-line no-console
-    console.trace(e);
+    console.error(e);
   }
 
   // TraceKit.report throws an error.
