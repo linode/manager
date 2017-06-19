@@ -17,7 +17,7 @@ import { hideModal } from '~/actions/modal';
 import { actions, thunks, reducer } from '~/api/configs/linodes';
 import Billing from '~/billing';
 import DevTools from '~/components/DevTools';
-import { GA_ID, ENVIRONMENT } from '~/constants';
+import { CONSOLE_TRACE_ENABLED, GA_ID, ENVIRONMENT } from '~/constants';
 import Domains from '~/domains';
 import Layout from '~/layouts/Layout';
 import Logout from '~/layouts/Logout';
@@ -66,54 +66,60 @@ function fillInMissingProps(props) {
   return props;
 }
 
-window.handleError = function (e) {
-  try {
-    // eslint-disable-next-line no-console
-    console.trace(e);
-
-    store.dispatch(setError(e));
-
-    // If we hit an error, any future page changes should trigger a full page load.
-    const errorPagePathname = window.location.pathname;
-    history.listen(function (location) {
-      if (location.pathname !== errorPagePathname) {
-        session.redirect(location.pathname);
+if (ENVIRONMENT === 'production') {
+  window.handleError = function (e) {
+    try {
+      if (CONSOLE_TRACE_ENABLED) {
+        // eslint-disable-next-line no-console
+        console.trace(e);
       }
-    });
 
-    const ignoreStatuses = [404, 401];
-    if (ignoreStatuses.indexOf(e.status) === -1) {
-      render(
-        <ModalShell
-          open
-          title={'Oh no! This page is broken.'}
-        >
-          {/* Yes, we could use window.reload() but we've already got this utility function that
-          * can be stubbed out. */}
-          <InternalError
-            returnHome={() => session.redirect(window.location.pathname)}
-          />
-        </ModalShell>,
-        document.getElementById('emergency-modal')
-      );
+      store.dispatch(setError(e));
+
+      // If we hit an error, any future page changes should trigger a full page load.
+      const errorPagePathname = window.location.pathname;
+      history.listen(function (location) {
+        if (location.pathname !== errorPagePathname) {
+          session.redirect(location.pathname);
+        }
+      });
+
+      const ignoreStatuses = [404, 401];
+      if (ignoreStatuses.indexOf(e.status) === -1) {
+        render(
+          <ModalShell
+            open
+            title={'Oh no! This page is broken.'}
+          >
+            {/* Yes, we could use window.reload() but we've already got this utility function that
+             * can be stubbed out. */}
+            <InternalError
+              returnHome={() => session.redirect(window.location.pathname)}
+            />
+          </ModalShell>,
+          document.getElementById('emergency-modal')
+        );
+      }
+    } catch (e) {
+      if (CONSOLE_TRACE_ENABLED) {
+        // eslint-disable-next-line no-console
+        console.trace(e);
+      }
     }
-  } catch (e) {
-    // eslint-disable-next-line no-console
-    console.trace(e);
-  }
 
-  // TraceKit.report throws an error.
-  try {
-    TraceKit.report(e);
-  } catch (newE) {
-    if (newE !== e) {
-      throw newE;
+    // TraceKit.report throws an error.
+    try {
+      TraceKit.report(e);
+    } catch (newE) {
+      if (newE !== e) {
+        throw newE;
+      }
     }
-  }
 
-  // Needed for react-guard.
-  return null;
-};
+    // Needed for react-guard.
+    return null;
+  };
+}
 
 const init = () => {
   try {
@@ -167,13 +173,15 @@ const init = () => {
 
 window.init = init;
 
-TraceKit.report.subscribe(function (error) {
-  if (GA_ID) {
-    ReactGA.exception({ description: JSON.stringify(error), fatal: true });
-  }
-});
+if (ENVIRONMENT === 'production') {
+  TraceKit.report.subscribe(function (error) {
+    if (GA_ID) {
+      ReactGA.exception({ description: JSON.stringify(error), fatal: true });
+    }
+  });
 
-// React is not in a great state right now w.r.t. error handling in render functions.
-// Here is a thread discussing current workarounds: https://github.com/facebook/react/issues/2461
-// react-guard is a solution presented there and seems good enough for now.
-reactGuard(React, window.handleError);
+  // React is not in a great state right now w.r.t. error handling in render functions.
+  // Here is a thread discussing current workarounds: https://github.com/facebook/react/issues/2461
+  // react-guard is a solution presented there and seems good enough for now.
+  reactGuard(React, window.handleError);
+}
