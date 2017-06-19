@@ -7,7 +7,7 @@ schema:
   id:
     _type: Integer
     _value: 357
-    _description: The id of the domain. Returns something like 357
+    _description: The id of the domain.
   domain:
     _editable: true
     _type: String

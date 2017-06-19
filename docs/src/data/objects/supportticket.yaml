@@ -26,12 +26,12 @@ schema:
     _type: Datetime
     _value: "2017-02-23T11:21:01"
     _filterable: true
-    _description: An ISO 8601 datetime of when the ticket was opened. Returns something that looks like this, 2017-02-23T11:21:01
+    _description: An ISO 8601 datetime of when the ticket was opened.
   closed:
     _type: Datetime
     _value: "2017-02-25T03:20:00"
     _filterable: true
-    _description: An ISO 8601 datetime of when the ticket was closed. Returns something that looks like this, 2017-02-25T03:20:00
+    _description: An ISO 8601 datetime of when the ticket was closed.
   closed_by:
     _type: String
     _value: some_user
@@ -40,7 +40,7 @@ schema:
     _type: Datetime
     _value: "2017-02-23T11:21:01"
     _filterable: true
-    _description: An ISO 8601 datetime of when the ticket was updated. Returns something that looks like this, 2017-02-23T11:21:01
+    _description: An ISO 8601 datetime of when the ticket was updated.
   updated_by:
     _type: String
     _value: some_other_user

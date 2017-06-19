@@ -31,7 +31,7 @@ schema:
   linode_id:
     _type: Integer
     _value: 42
-    _description: The Linode id looks something like 123456
+    _description: The Linode id.
 enums:
   IPAddressType:
     public: Public IP Address

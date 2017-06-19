@@ -11,7 +11,7 @@ schema:
   id:
     _type: String
     _value: linode/3.5.2-x86_64-linode26
-    _description: The kernel name such as, linode/3.5.2-x86_64-linode26
+    _description: The kernel name.
   description:
     _type: String
     _value: "null"
