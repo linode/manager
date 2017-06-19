@@ -90,7 +90,7 @@ while not linode.state == 'running':
           While many API requests are paginated, all listing calls in the Python Library return <code>PaginatedLists</code> that handle loading additional pages seamlessly. While these lists are not intended to be long-lived (i.e. do not store a PaginatedList that you expect to change, as it will not update itself), it does allow easy iteration over all resources without having to worry about when a page transition occurs.
         </p>
       </section>
-      <div className="offset-3"><Link to={`/${API_VERSION}/libraries/python`}>Check out the Python Library objects &raquo;</Link></div>
+      <div className="text-sm-center"><Link to={`/${API_VERSION}/libraries/python`}>Check out the Python Library objects &raquo;</Link></div>
     </section>
   );
 }

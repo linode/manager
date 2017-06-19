@@ -198,7 +198,7 @@ root@localhost:~#`}
         Now that you’ve had an overview of the features and concepts in the Python library, check out the Python library reference for in-depth documentation, or look at the <a href="https://github.com/linode/python-linode-api/tree/master/examples/install-on-linode" target="_blank" rel="nofollow noopener noreferrer">Install on Linode sample project</a> for an example multi-user application using the library.
         </p>
       </section>
-      <div className="offset-5"><Link to={`/${API_VERSION}/guides/python/oauth-workflow`}>OAuth Workflow &raquo;</Link></div>
+      <div className="text-sm-center"><Link to={`/${API_VERSION}/guides/python/oauth-workflow`}>OAuth Workflow &raquo;</Link></div>
     </section>
   );
 }

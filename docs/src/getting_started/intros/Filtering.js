@@ -125,7 +125,7 @@ export default function Filtering() {
           ]}
         />
       </section>
-      <div className="offset-4"><Link to={`/${API_VERSION}/errors`}>How errors are reported &raquo;</Link></div>
+      <div className="text-sm-center"><Link to={`/${API_VERSION}/errors`}>How errors are reported &raquo;</Link></div>
     </section>
   );
 }

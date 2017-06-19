@@ -69,7 +69,7 @@ export default function Errors() {
           ]}
         />
       </section>
-      <div className="offset-3"><Link to={`/${API_VERSION}/guides`}>Get started using the API with these helpful guides &raquo;</Link></div>
+      <div className="text-sm-center"><Link to={`/${API_VERSION}/guides`}>Get started using the API with these helpful guides &raquo;</Link></div>
     </section>
   );
 }

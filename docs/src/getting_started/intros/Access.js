@@ -172,7 +172,7 @@ export default function Authentication() {
           of access needed for your application to function.
         </p>
       </section>
-      <div className="offset-4"><Link to={`/${API_VERSION}/pagination`}>Find out about pagination &raquo;</Link></div>
+      <div className="text-sm-center"><Link to={`/${API_VERSION}/pagination`}>Find out about pagination &raquo;</Link></div>
     </section>
   );
 }

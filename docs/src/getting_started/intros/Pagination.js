@@ -50,7 +50,7 @@ export default function Pagination() {
           profile from <code>/linode/instances/123456/configs/5678</code>.
         </p>
       </section>
-      <div className="offset-4"><Link to={`/${API_VERSION}/filtering`}>Filtering and sorting results &raquo;</Link></div>
+      <div className="text-sm-center"><Link to={`/${API_VERSION}/filtering`}>Filtering and sorting results &raquo;</Link></div>
     </section>
   );
 }
