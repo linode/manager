@@ -1,6 +1,6 @@
 {
   "name": "linode-manager",
-  "version": "0.9.3",
+  "version": "0.9.6",
   "dependencies": {
     "asap": {
       "version": "2.0.5",
