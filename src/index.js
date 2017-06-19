@@ -169,8 +169,9 @@ window.init = init;
 
 TraceKit.report.subscribe(function (error) {
   if (GA_ID) {
+    // eslint-disable-next-line no-undef
     ga('send', 'exception', {
-      'exDescription': JSON.stringify(error),
+      exDescription: JSON.stringify(error),
     });
   }
 });
