@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.9.5] 2017-06-16
+### Fixed
+- don't render private ipv4 on Linode list
+
 ## [0.9.4] 2017-06-16
 ### Fixed
 - allow saving soa records on slave domains
