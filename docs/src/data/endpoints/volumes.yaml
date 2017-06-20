@@ -1,0 +1,40 @@
+name: Volumes
+base_path: /linode/volumes
+description: >
+  Volume endpoints provide a means of managing your <a href="#object-volume">
+  Block Storage Volumes</a>.
+endpoints:
+  linode/volumes:
+    type: list
+    resource: volume
+    authenticated: true
+    description: >
+        Manage your Block Storage Volumes.
+    methods:
+      GET:
+        oauth: volumes:view
+        description: >
+          Returns a list of <a href="#object-volume">volumes</a>.
+        examples:
+          curl: |
+            curl -H "Authorization; token $TOKEN" \
+                https://$api_root/$version/linode/volumes
+          python: |
+            # not yet implemented
+  linode/volumes/:id:
+    type: resource
+    resource: volume
+    authenticated: true
+    description: >
+      Manage an individual Block Storage Volume.
+    methods:
+      GET:
+        oauth: volumes:view
+        description: >
+          Returns information about this <a href="#object-volume">Volume</a>.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                https://$api_root/$version/linode/volumes/$volume_id
+          python: |
+            # not yet implemented

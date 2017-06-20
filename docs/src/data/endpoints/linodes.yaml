@@ -479,6 +479,22 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/configs/$config_id
           python: |
             config.delete()
+  /linode/instances/:id/volumes:
+    resource: volume
+    authenticated: true
+    description: >
+        View Block Storage Volumes attached to this Linode.
+    methods:
+      GET:
+        oauth: linodes:view
+        description: >
+          Returns a list of <a href="#object-volume">volumes</a>.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                https://$api_root/$version/linode/instances/$linode_id/volumes
+          python: |
+            # not yet implemented
   /linode/instances/:id/boot:
     type: Action
     authenticated: true
