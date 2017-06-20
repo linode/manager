@@ -84,6 +84,10 @@ function updateTitle() {
   const h1 = document.querySelector('h1');
   if (h1) {
     window.setTitle(h1.textContent);
+  } else {
+    // If the page is missing h1, we should fill it in. But it's probably better to reset
+    // the title than to leave it as the last page.
+    window.setTitle();
   }
 }
 
