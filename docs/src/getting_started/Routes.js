@@ -30,7 +30,7 @@ import {
 import { python } from '~/data/python';
 
 import { API_VERSION } from '~/constants';
-const guideCrumbs = [{ groupLabel: 'Guides', label: '/guides', to: `/${API_VERSION}/guides` }];
+const guideCrumbs = [{ groupLabel: 'Getting Started', label: '/guides', to: `/${API_VERSION}/guides` }];
 
 export default (
   <Route component={IndexLayout}>
