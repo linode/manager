@@ -1,7 +1,6 @@
 import 'babel-polyfill';
 import React from 'react';
 import { render } from 'react-dom';
-import ReactGA from 'react-ga';
 import reactGuard from 'react-guard';
 import { Provider } from 'react-redux';
 import { Router, Route, IndexRedirect, browserHistory } from 'react-router';
@@ -42,10 +41,22 @@ store.dispatch(session.initialize);
 
 window.actions = actions; window.thunks = thunks; window.reducer = reducer;
 
+function loadGA(debug = false) {
+  /* eslint-disable */
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script',`https://www.google-analytics.com/analytics${debug && '_debug' || ''}.js`,'ga');
+  /* eslint-enable */
+}
+
 if (ENVIRONMENT !== 'production') {
-  ReactGA.initialize(GA_ID, { debug: true });
+  loadGA(true);
+  window.ga_debug = { trace: true };
+  window.ga('create', GA_ID, { cookieDomain: 'none', debug: true });
 } else {
-  ReactGA.initialize(GA_ID);
+  loadGA();
+  window.ga('create', GA_ID, 'auto');
 }
 
 function onPageChange() {
@@ -53,8 +64,7 @@ function onPageChange() {
   window.scroll(0, 0);
 
   // Log page views.
-  ReactGA.set({ page: window.location.pathname });
-  ReactGA.pageview(window.location.pathname);
+  window.ga('send', 'pageview');
 }
 
 function fillInMissingProps(props) {
@@ -169,9 +179,13 @@ window.init = init;
 
 TraceKit.report.subscribe(function (error) {
   if (GA_ID) {
-    // eslint-disable-next-line no-undef
-    ga('send', 'exception', {
-      exDescription: JSON.stringify(error),
+    window.ga('send', 'exception', {
+      exDescription: JSON.stringify({
+        error,
+        datetime: new Date(),
+        userAgent: window.navigator.userAgent,
+        location: window.location.pathname,
+      }),
     });
   }
 });
