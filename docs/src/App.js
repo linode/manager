@@ -73,17 +73,17 @@ function hashLinkScroll() {
 
 window.setTitle = function(newTitle) {
   const title = document.querySelector('title');
-  title.innerHTML = 'Linode API Documentation';
+  title.textContent = 'Linode API Documentation';
 
   if (newTitle) {
-    title.innerHTML = `${newTitle} | ${title.innerHTML}`;
+    title.textContent = `${newTitle} | ${title.textContent}`;
   }
 };
 
 function updateTitle() {
   const h1 = document.querySelector('h1');
   if (h1) {
-    window.setTitle(h1.innerHTML);
+    window.setTitle(h1.textContent);
   }
 }
 
