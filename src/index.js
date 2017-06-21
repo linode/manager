@@ -126,14 +126,13 @@ window.handleError = function (e) {
   return null;
 };
 
-document.addEventListener('track', function(e) {
-  console.log(e);
-  const {cate, action, label, value} = e.detail;
+document.addEventListener('track', function (e) {
+  const { cate, action, label, value } = e.detail;
   ReactGA.event({
-      category: cate,
-      action: action,
-      label: label,
-      value: value,
+    category: cate,
+    action: action,
+    label: label,
+    value: value,
   });
 }, false);
 

@@ -107,10 +107,12 @@ export default class EditARecord extends Component {
             </Select>
           </ModalFormGroup>)}
         <div className="Modal-footer">
-          <CancelButton onClick={() => {
-            TrackEvent('Modal', 'cancel', title);
-            close();
-          }} />
+          <CancelButton
+            onClick={() => {
+              TrackEvent('Modal', 'cancel', title);
+              close();
+            }}
+          />
           <SubmitButton
             disabled={loading}
             disabledChildren={this.props.id ? undefined : 'Adding A/AAAA Record'}

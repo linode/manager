@@ -67,7 +67,7 @@ export default class MyApplication extends Component {
         }}
         onOk={async () => {
           const { secret } = await dispatch(resetSecret(client.id));
-          
+
           TrackEvent('Modal', 'reset', title);
           return dispatch(renderSecret(
             'client secret', 'reset', secret, () => dispatch(hideModal())));

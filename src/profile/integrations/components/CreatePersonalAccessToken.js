@@ -137,10 +137,12 @@ export default class CreatePersonalAccessToken extends Component {
         </small></p>
         {OAUTH_SCOPES.map(this.renderScopeFormGroup)}
         <div className="Modal-footer">
-          <CancelButton onClick={() => {
-            TrackEvent('Modal', 'cancel', title);
-            close();
-          }} />
+          <CancelButton
+            onClick={() => {
+              TrackEvent('Modal', 'cancel', title);
+              close();
+            }}
+          />
           <SubmitButton
             disabled={loading}
             disabledChildren="Creating"

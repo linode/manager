@@ -120,10 +120,13 @@ export class NodeModal extends Component {
           </Select>
         </ModalFormGroup>
         <div className="Modal-footer">
-          <CancelButton disabled={loading} onClick={() => {
-            TrackEvent('Modal', 'cancel', 'Add Node'),
-            dispatch(hideModal());
-          }} />
+          <CancelButton
+            disabled={loading}
+            onClick={() => {
+              TrackEvent('Modal', 'cancel', 'Add Node');
+              dispatch(hideModal());
+            }}
+          />
           <SubmitButton disabled={loading} />
           <FormSummary errors={errors} />
         </div>

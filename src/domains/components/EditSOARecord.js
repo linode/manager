@@ -258,10 +258,12 @@ export default class EditSOARecord extends Component {
           </span>
         : null}
         <div className="Modal-footer">
-          <CancelButton onClick={() => {
-            TrackEvent('Modal', 'cancel', title);
-            dispatch(hideModal());
-          }} />
+          <CancelButton
+            onClick={() => {
+              TrackEvent('Modal', 'cancel', title);
+              dispatch(hideModal());
+            }}
+          />
           <SubmitButton disabled={loading} />
           <FormSummary errors={errors} />
         </div>

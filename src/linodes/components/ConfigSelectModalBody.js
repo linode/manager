@@ -49,7 +49,6 @@ export default class ConfigSelectModalBody extends Component {
           <CancelButton
             disabled={loading}
             onClick={() => {
-              console.log('fdsd');
               TrackEvent('Modal', 'cancel', title);
               dispatch(hideModal());
             }}

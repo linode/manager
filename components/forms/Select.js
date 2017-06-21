@@ -12,7 +12,8 @@ export default function Select(props) {
         id={props.id}
         disabled={props.disabled}
         onChange={(e) => {
-          TrackEvent('Select', e.target.value.split(':')[0], props.name);
+          const value = String(e.target.value);
+          TrackEvent('Select', value.indexOf(':') < 0 ? value.split(':')[0] : value, props.name);
           props.onChange(e);
         }}
       >

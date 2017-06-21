@@ -141,10 +141,12 @@ export class AddModal extends Component {
           />
         </ModalFormGroup>
         <div className="Modal-footer">
-          <CancelButton onClick={() => {
-            TrackEvent('Modal', 'cancel', title);
-            dispatch(hideModal());
-          }} />
+          <CancelButton
+            onClick={() => {
+              TrackEvent('Modal', 'cancel', title);
+              dispatch(hideModal());
+            }}
+          />
           <SubmitButton
             disabled={loading}
             disabledChildren="Adding Disk"

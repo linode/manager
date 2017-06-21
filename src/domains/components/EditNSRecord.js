@@ -94,10 +94,12 @@ export default class EditNSRecord extends Component {
           />
         </ModalFormGroup>
         <div className="Modal-footer">
-          <CancelButton onClick={() => {
-            TrackEvent('Modal', 'cancel', title);
-            close();
-          }} />
+          <CancelButton
+            onClick={() => {
+              TrackEvent('Modal', 'cancel', title);
+              close();
+            }}
+          />
           <SubmitButton
             disabled={loading}
             disabledChildren={this.props.id ? undefined : 'Adding NS Record'}

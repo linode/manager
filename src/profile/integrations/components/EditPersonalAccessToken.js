@@ -54,10 +54,12 @@ export default class EditPersonalAccessToken extends Component {
           />
         </ModalFormGroup>
         <div className="Modal-footer">
-          <CancelButton onClick={() => {
-            TrackEvent('Modal', 'cancel', title);
-            close();
-          }} />
+          <CancelButton
+            onClick={() => {
+              TrackEvent('Modal', 'cancel', title);
+              close();
+            }}
+          />
           <SubmitButton disabled={loading} />
           <FormSummary errors={errors} />
         </div>
