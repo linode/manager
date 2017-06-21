@@ -14,7 +14,7 @@ constructor:
             desc: Who this LinodeClient should talk to.
             _default: "'https://api.linode.com/v4'"
     example: >
-            client = linode.LinodeClient('my-token')
+            client = LinodeClient('my-token')
 methods:
     get_datacenters:
         desc: >
