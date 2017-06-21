@@ -5,6 +5,36 @@ successful with your contribution if you visit the [IRC
 channel](https://webchat.oftc.net/?channels=linode-next&uio=d4) upfront and discuss
 your plans.
 
+The following buzzwords are involved in this project:
+
+* [React.js](https://facebook.github.io/react/)
+* [Redux](http://redux.js.org/)
+* [Webpack](https://webpack.github.io/)
+* ES6/ES7 (via [Babel](https://babeljs.io/))
+* [SCSS](http://sass-lang.com)
+
+## Setup
+
+    git clone https://github.com/Linode/manager.git
+    cd manager
+    node --version # should be 6.x - 7.2.1
+    npm install
+
+This application communicates with Linode via the
+[Linode APIv4](https://developers.linode.com). You'll need to [register an OAuth
+client](https://cloud.linode.com/profile/integrations/tokens), then create a file
+at `src/secrets.js` with your client ID and client secret set appropriately:
+
+    export const clientId = 'change me';
+    export const clientSecret = 'change me';
+
+Be sure to set your callback URL to something like
+`http://localhost:3000/oauth/callback` when you register your OAuth client.
+
+Note: if you pick a callback url that is not on localhost:3000, you will need to
+update the APP_ROOT variable in src/constants.js to point to the different
+server.
+
 ## Development Flow
 
 Changes to the Linode Manager usually follow this flow:
@@ -30,7 +60,26 @@ adding features/elements/components that don't have a clear precedent. If this
 is the case, you will need to submit an issue with a mockup and send a request
 for comments to the [(#linode-next channel on irc.oftc.net)](https://webchat.oftc.net/?channels=linode-next&uio=d4).
 
-## General workflows
+## Development
+
+Run:
+
+    npm start
+
+to start the development server. Connect to
+[localhost:3000](https://localhost:3000) to try it out. Most of the changes you
+make will be applied on the fly, but you may occasionally find that you have to
+restart it.
+
+While running the manager in development mode, you may press Ctrl+H to view the
+redux dev tools to track the state of the application, and Ctrl+Q to move them
+around the screen if necessary. If you'd rather disable the devtools, you can
+set the NODE_ENV flag to "production" or set the DEVTOOLS_DISABLED flag to false:
+
+    DEVTOOLS_DISABLED=true npm start
+
+## Git workflows
+
 We are doing our best to follow [a successful git branching model](http://nvie.com/posts/a-successful-git-branching-model/)
 
 In addition, updates should be accompanied by a [CHANGELOG.md](https://github.com/linode/manager/blob/master/CHANGELOG.md). 
@@ -91,10 +140,28 @@ echo 'npm run lint' >> .git/hooks/pre-commit
 chmod +x .git/hooks/pre-commit
 ```
 
-### Testing
+## Testing
 
+To run tests:
 
-### Coding Style
+    npm test
+
+To automatically re-run tests when you make changes:
+
+    npm run test:watch
+    
+To automatically re-run tests on a single test file:
+
+    npm run test:watch --single_file=**/name.spec.js
+
+Our tests live in test/**.spec.js. They're based on
+[Mocha](https://mochajs.org/) and do assertions with
+[Chai](http://chaijs.com/) plus DOM/React testing with
+[enzyme](http://airbnb.io/enzyme/). We run them with
+[Karma](https://news.ycombinator.com/item?id=11927891).
+We're aiming for 95%+ test coverage.
+
+## Coding Style
 
 The manager is written in ES6, with some ES7 in use as well. A general guideline
 for the coding style is "imitate the code that's already there". When in doubt,
