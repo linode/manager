@@ -66,12 +66,17 @@ export class SummaryPage extends Component {
     //  elements.pop();
     // }
 
+    console.log(record.type, record.version);
     if (['private', 'link-local', 'pool'].indexOf(record.type.toLowerCase()) === -1) {
       elements.splice(1, 0, {
         name: 'Edit RDNS',
         action: () => EditRDNS.trigger(dispatch, record),
       });
-      elements.splice(2, 0, { name: 'Reset RDNS', action: () => this.resetRDNS(record) });
+
+      if (record.rdns) {
+        const name = record.version === 'ipv4' ? 'Reset RDNS' : 'Remove RDNS';
+        elements.splice(2, 0, { name, action: () => this.resetRDNS(record) });
+      }
     }
 
     return (
