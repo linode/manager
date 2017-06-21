@@ -59,6 +59,8 @@ describe('nodebalancers/nodebalancer/layouts/AddConfigPage', () => {
           check_passive: true,
           port: 82,
           check: 'none',
+          check_path: '',
+          check_body: '',
         },
       }),
       ([pushResult]) => expectObjectDeepEquals(
@@ -100,6 +102,8 @@ describe('nodebalancers/nodebalancer/layouts/AddConfigPage', () => {
           check_timeout: 30,
           check_attempts: 3,
           check_interval: 0,
+          check_path: '',
+          check_body: '',
           protocol: 'https',
           algorithm: 'roundrobin',
           stickiness: 'none',
@@ -115,4 +119,3 @@ describe('nodebalancers/nodebalancer/layouts/AddConfigPage', () => {
     ], 2, [{ id: 5 }]);
   });
 });
-

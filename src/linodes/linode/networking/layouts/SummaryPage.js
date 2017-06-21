@@ -1,12 +1,21 @@
+import _ from 'lodash';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { selectLinode } from '../../utilities';
-import { ipv4ns, ipv6ns, ipv6nsSuffix } from '~/constants';
-import { addIP } from '~/api/linodes';
+import { ListBody, ListGroup } from 'linode-components/lists/bodies';
+import { Dropdown } from 'linode-components/dropdowns';
+import { List } from 'linode-components/lists';
+import { DeleteModalBody } from 'linode-components/modals';
+import { Table } from 'linode-components/tables';
+import { TableCell } from 'linode-components/tables/cells';
+
+import { showModal, hideModal } from '~/actions/modal';
 import { setSource } from '~/actions/source';
-import { Button } from 'linode-components/buttons';
-import { Card, CardHeader } from 'linode-components/cards';
+import { deleteIP, setRDNS } from '~/api/networking';
+import { dispatchOrStoreErrors } from '~/api/util';
+
+import { MoreInfo, EditRDNS, AddIP } from '../components';
+import { selectLinode } from '../../utilities';
 
 
 export class SummaryPage extends Component {
@@ -15,144 +24,143 @@ export class SummaryPage extends Component {
     dispatch(setSource(__filename));
   }
 
-  addPrivateIP = async () => {
-    const { dispatch, linode } = this.props;
-    // TODO: replace with dispatchOrStoreErrors
-    await dispatch(addIP(linode.id, 'private'));
+  resetRDNS = (ip) => {
+    const { dispatch } = this.props;
+
+    return dispatch(dispatchOrStoreErrors.call(this, [
+      () => setRDNS(ip, null),
+    ], [], ip.address));
   }
 
-  renderNameservers(isIpv4) {
-    const dc = this.props.linode.region.id;
-    const ipToObject = ip => ({ address: ip });
-    const id = isIpv4 ? 'ipv4Nameservers' : 'ipv6Nameservers';
-    const ips = isIpv4 ? ipv4ns[dc].map(ipToObject) :
-                ipv6nsSuffix.map(suffix => ipToObject(ipv6ns[dc] + suffix));
-    return this.renderIps(id, ips);
-  }
+  deleteIP = (ip) => {
+    const { dispatch } = this.props;
 
-  renderIps(id, ips) {
-    const isIpv6 = prefix => ['17', '24'].indexOf(prefix) === -1;
+    return dispatch(showModal('Delete IP Address', (
+      <DeleteModalBody
+        onOk={async () => {
+          dispatch(deleteIP(ip.address));
+          dispatch(hideModal());
+        }}
+        items={[ip.address]}
+        typeOfItem="IPs"
+        onCancel={() => dispatch(hideModal())}
+      />
+    )));
+  };
+
+  renderIPNav = ({ column, record }) => {
+    const { dispatch } = this.props;
+
+    if (record.type.toLowerCase() === 'link-local') {
+      return <TableCell column={column} record={record} />;
+    }
+
+    const elements = [
+      { name: 'More Info', action: () => MoreInfo.trigger(dispatch, record) },
+      //{ name: 'Delete', action: () => this.deleteIP(record) },
+    ];
+
+    // TODO: add once there's support for deleting.
+    // if (['slaac', 'link-local'].indexOf(record.type.toLowerCase()) !== -1) {
+    //  // Cannot delete slaac address.
+    //  elements.pop();
+    // }
+
+    if (['private', 'link-local', 'pool'].indexOf(record.type.toLowerCase()) === -1) {
+      elements.splice(1, 0, {
+        name: 'Edit RDNS',
+        action: () => EditRDNS.trigger(dispatch, record),
+      });
+
+      if (record.rdns) {
+        const name = record.version === 'ipv4' ? 'Reset RDNS' : 'Remove RDNS';
+        elements.splice(2, 0, { name, action: () => this.resetRDNS(record) });
+      }
+    }
 
     return (
-      <ul className="list-unstyled" id={id}>
-        {ips.map(({ address, prefix, rdns }) =>
-          <li key={address}>
-            <span className="text-nowrap">
-              {address}{prefix && isIpv6(prefix) ? ` / ${prefix}` : null}
-            </span>
-            {rdns ? <div className="text-nowrap">({rdns})</div> : null}
-          </li>
-        )}
-      </ul>
+      <TableCell column={column} record={record}>
+        <Dropdown elements={elements} />
+      </TableCell>
     );
   }
 
-  renderIPv4() {
-    const { ipv4 } = this.props.linode._ips;
-
+  renderIPSection(ips, type) {
     return (
-      <div className="col-lg-6 col-md-12 col-sm-12">
-        <h3>
-          IPv4
-        </h3>
-        <div className="row">
-          <div className="col-sm-3 row-label">Address</div>
-          <div className="col-sm-9">{this.renderIps('publicIpv4', ipv4.public)}</div>
-        </div>
-        <div className="row">
-          <div className="col-sm-3 row-label">Subnet mask</div>
-          <div className="col-sm-9" id="ipv4Subnet">
-            {ipv4.public[0].subnet_mask}
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-sm-3 row-label">Gateway</div>
-          <div className="col-sm-9" id="ipv4Gateway">
-            {ipv4.public[0].gateway}
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-sm-3 row-label">Nameservers</div>
-          <div className="col-sm-9">{this.renderNameservers(true)}</div>
-        </div>
-        <div className="row">
-          <div className="col-sm-3 row-label">Private address</div>
-          <div className="col-sm-9">
-            {ipv4.private.length ? this.renderIps('privateIpv4', ipv4.private) : (
-              <Button
-                id="addPrivateIp"
-                onClick={this.addPrivateIP}
-                disabled
-              >
-                Enable private IP address
-              </Button>
-             )}
-          </div>
-        </div>
-      </div>
-    );
-  }
+      <ListGroup name={type} key={type}>
+        <Table
+          className="Table--secondary"
+          columns={[
 
-  renderIPv6() {
-    const { ipv6 } = this.props.linode._ips;
-
-    return (
-      <div className="col-lg-6 col-md-12 col-sm-12">
-        <h3>
-          IPv6
-        </h3>
-        <div className="row">
-          <div className="col-sm-3 row-label">Address</div>
-          <div className="col-sm-9">
-            {!ipv6.slaac ? null : <div id="slaac">{ipv6.slaac.address} / {ipv6.slaac.prefix}</div>}
-            {ipv6.addresses.map(ip =>
-              <div>{ip.address} / {ip.prefix}</div>)}
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-sm-3 row-label">Gateway</div>
-          {/* TODO: replace once gateways are returned */}
-          <div className="col-sm-9">fe80::1</div>
-        </div>
-        <div className="row">
-          <div className="col-sm-3 row-label">Nameservers</div>
-          <div className="col-sm-9">{this.renderNameservers()}</div>
-        </div>
-        <div className="row">
-          <div className="col-sm-3 row-label">Link-local IP</div>
-          <div className="col-sm-9">
-            {this.renderIps('linkLocal', [{ address: ipv6.link_local }])}
-          </div>
-        </div>
-      </div>
+            {
+              dataKey: 'address',
+              label: 'Address',
+            },
+            {
+              dataKey: 'rdns',
+              label: 'Reverse DNS',
+            },
+            {
+              dataKey: 'type',
+              label: 'Type',
+              headerClassName: 'hidden-md-down',
+              className: 'hidden-md-down',
+            },
+            {
+              cellComponent: this.renderIPNav,
+              headerClassName: 'IPNavColumn',
+            },
+          ]}
+          data={ips}
+          noDataMessage={`You have no ${type} addresses.`}
+        />
+      </ListGroup>
     );
   }
 
   render() {
-    const nav = (
-      <Button
-        id="public-ip-button"
-        className="float-sm-right"
-        disabled
-      >
-        Add public IP address
-      </Button>
-    );
+    const { dispatch, linode } = this.props;
+
+    const ipv4s = Object.values(linode._ips).filter(ip => ip.version === 'ipv4').map(ip => ({
+      ...ip,
+      type: _.capitalize(ip.type),
+    }));
+
+    const ipv6s = Object.values(linode._ips).filter(ip => ip.version === 'ipv6').map(ip => {
+      let type = _.capitalize(ip.type);
+      let address = `${ip.address} / ${ip.prefix}`;
+      if (ip.type === 'slaac') {
+        type = 'SLAAC';
+      } else if (ip.type === 'link-local') {
+        type = 'Link-Local';
+        address = ip.address;
+      } else if (ip.type === 'pool') {
+        address = ip.range;
+      }
+
+      return { ...ip, type, address };
+    });
+
+    const buttonElements = [
+      { name: 'Add an IP Address', action: () => AddIP.trigger(dispatch, linode) },
+      // TODO: Add rdnslookup when API supports it
+      // { name: 'Add an RDNS Entry', action: this.rdnsLookup },
+    ];
 
     return (
-      <Card
-        header={
-          <CardHeader
-            title="Summary"
-            nav={nav}
-          />
-        }
-      >
-        <div className="row">
-          {this.renderIPv4()}
-          {this.renderIPv6()}
-        </div>
-      </Card>
+      <div>
+        <header className="NavigationHeader clearfix">
+          <div className="float-sm-right">
+            <Dropdown elements={buttonElements} />
+          </div>
+        </header>
+        <List>
+          <ListBody>
+            {this.renderIPSection(ipv4s, 'IPv4')}
+            {this.renderIPSection(ipv6s, 'IPv6')}
+          </ListBody>
+        </List>
+      </div>
     );
   }
 }

@@ -9,6 +9,7 @@ schema:
     _value: 123456
     _description: This Linode's ID
   alerts:
+    _type: array
     _description: >
       Toggle and set thresholds for receiving email alerts.
       <ul>
@@ -63,6 +64,7 @@ schema:
         _value: 80
         _description: Transfer Quota % (Range 0-400, default 80).
   backups:
+    _type: backup
     _description: >
       Displays if backups are enabled, last backup datetime if applicable, and
       the day/window your backups will occur. Window is prefixed by a "W" and an

@@ -26,6 +26,7 @@ schema:
    _description: Toggles to determine if the user receives email notifications
    _editable: true
   referrals:
+    _type: object
     _description: >
       Displays information related to referral signups attributed to the user.
     code:

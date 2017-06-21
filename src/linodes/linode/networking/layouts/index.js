@@ -1,4 +1,5 @@
 export IndexPage from './IndexPage';
 export SummaryPage from './SummaryPage';
-export ReverseDNSPage from './ReverseDNSPage';
-export IPManagementPage from './IPManagementPage';
+export DNSResolversPage from './DNSResolversPage';
+export IPTransferPage from './IPTransferPage';
+export IPSharingPage from './IPSharingPage';

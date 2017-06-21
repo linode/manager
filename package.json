@@ -1,6 +1,6 @@
 {
   "name": "linode-manager",
-  "version": "0.8.3",
+  "version": "0.9.8",
   "description": "The Linode Manager website",
   "scripts": {
     "clean": "rm -rf dist",
@@ -114,12 +114,12 @@
     "rd3": "^0.6.3",
     "react": "^15.1.0",
     "react-dom": "^15.1.0",
-    "react-ga": "^2.1.2",
     "react-guard": "^0.4.0",
     "react-redux": "^4.0.6",
     "react-router": "^2.4.1",
     "react-router-redux": "^4.0.5",
     "react-tabs": "^0.7.0",
+    "react-tooltip": "^3.3.0",
     "redux": "^3.0.5",
     "redux-thunk": "^2.1.0",
     "tracekit": "^0.4.4",

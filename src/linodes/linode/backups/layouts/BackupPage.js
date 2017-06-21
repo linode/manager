@@ -17,7 +17,9 @@ export class BackupPage extends Component {
     const { dispatch, linode, backup } = this.props;
     return (
       <div>
-        <BackupDetails linode={linode} backup={backup} dispatch={dispatch} />
+        <section>
+          <BackupDetails linode={linode} backup={backup} dispatch={dispatch} />
+        </section>
         <BackupRestore
           linode={linode}
           backup={backup}
