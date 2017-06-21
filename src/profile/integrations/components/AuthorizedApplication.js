@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React, { PropTypes, Component } from 'react';
 
 import { ConfirmModalBody } from 'linode-components/modals';
@@ -12,6 +11,8 @@ import { showModal, hideModal } from '~/actions/modal';
 import { tokens } from '~/api';
 import { OAUTH_SUBSCOPES, OAUTH_SCOPES, API_ROOT } from '~/constants';
 import { dispatchOrStoreErrors } from '~/api/util';
+
+import { scopeFormat } from './PersonalAccessToken';
 
 
 export default class AuthorizedApplication extends Component {
@@ -73,7 +74,7 @@ export default class AuthorizedApplication extends Component {
             columns={[
               {
                 dataKey: 'scope',
-                formatFn: _.capitalize,
+                formatFn: scopeFormat,
               },
             ].concat(OAUTH_SUBSCOPES.map((subscope) => ({
               subscope,

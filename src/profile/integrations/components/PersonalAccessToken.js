@@ -13,8 +13,16 @@ import { AuthScopeCell } from '~/components/tables/cells';
 import TimeDisplay from '~/components/TimeDisplay';
 import { OAUTH_SCOPES, OAUTH_SUBSCOPES } from '~/constants';
 
-import { EditPersonalAccessToken } from './';
+import { EditPersonalAccessToken } from './EditPersonalAccessToken';
 
+
+export function scopeFormat(scope) {
+  return {
+    ips: 'IPs',
+    nodebalancers: 'NodeBalancers',
+    stackscripts: 'StackScripts',
+  }[scope] || _.capitalize(scope);
+}
 
 export default class PersonalAccessToken extends Component {
   constructor() {
@@ -87,7 +95,7 @@ export default class PersonalAccessToken extends Component {
             columns={[
               {
                 dataKey: 'scope',
-                formatFn: _.capitalize,
+                formatFn: scopeFormat,
               },
             ].concat(OAUTH_SUBSCOPES.map((subscope) => ({
               subscope,
