@@ -228,6 +228,9 @@ export class DashboardPage extends Component {
   }
 
   render() {
+    // To protect when Linode is deleted.
+    if (!this.props.linode) { return null; }
+
     return (
       <div>
         {this.renderDetails()}

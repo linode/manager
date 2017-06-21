@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import { replace } from 'react-router-redux';
 
 import { Dropdown } from 'linode-components/dropdowns';
 import { ConfirmModalBody, DeleteModalBody } from 'linode-components/modals';
@@ -178,7 +179,7 @@ export default class StatusDropdown extends Component {
             <DeleteModalBody
               onOk={() => {
                 dispatch(apiLinodes.delete(linode.id));
-                dispatch(hideModal());
+                dispatch(replace('/'));
               }}
               items={[linode.label]}
               onCancel={() => dispatch(hideModal())}
