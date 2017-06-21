@@ -66,7 +66,6 @@ export class SummaryPage extends Component {
     //  elements.pop();
     // }
 
-    console.log(record.type, record.version);
     if (['private', 'link-local', 'pool'].indexOf(record.type.toLowerCase()) === -1) {
       elements.splice(1, 0, {
         name: 'Edit RDNS',
