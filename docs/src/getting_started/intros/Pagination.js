@@ -1,4 +1,6 @@
 import React from 'react';
+import { Link } from 'react-router';
+import { API_VERSION } from '~/constants';
 
 import Example from '~/components/Example';
 
@@ -48,6 +50,7 @@ export default function Pagination() {
           profile from <code>/linode/instances/123456/configs/5678</code>.
         </p>
       </section>
+      <div className="text-sm-center"><Link to={`/${API_VERSION}/filtering`}>Filtering and sorting results &raquo;</Link></div>
     </section>
   );
 }
