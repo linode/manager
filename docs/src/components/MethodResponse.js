@@ -3,7 +3,8 @@ import React, { Component, PropTypes } from 'react';
 import { Table, TableRow } from 'linode-components/tables';
 import Example from './Example';
 import { SchemaTableBody } from './tables';
-import { DescriptionCell, FieldCell } from './tables/Cells';
+import { DescriptionCell, FieldCell, NestedParentCell } from './tables/cells';
+
 
 const defaultColumns = [
   { cellComponent: FieldCell, label: 'Field', headerClassName: 'FieldColumn' },
@@ -15,7 +16,6 @@ const enumColumns = [
   { cellComponent: FieldCell, label: 'Value', headerClassName: 'FieldColumn' },
   { cellComponent: DescriptionCell, label: 'Description', headerClassName: 'DescriptionColumn' }
 ];
-
 
 export default class MethodResponse extends Component {
 
@@ -40,7 +40,6 @@ export default class MethodResponse extends Component {
   }
 
   renderNestedSchemaTable(record) {
-
     let example = null;
     if (record.example) {
       example = (
@@ -49,6 +48,7 @@ export default class MethodResponse extends Component {
     }
 
     const columns = record.type === 'enum' ? enumColumns : defaultColumns;
+
     return (
       <div>
         <div>{this.renderSchemaTable(record.schema, columns)}</div>
@@ -66,14 +66,18 @@ export default class MethodResponse extends Component {
           const rows = [];
           data.forEach((record, index) => {
             if (record.schema) {
+              const parentColumns = [
+                { ...columns[0], cellComponent: NestedParentCell },
+                ...columns.slice(1),
+              ];
               const nestedSchemaId = `${record.name}-${index}`;
               rows.push(<TableRow
                 className="NestedSchemaParent"
                 key={record.id || index}
                 index={index}
-                columns={columns}
+                columns={parentColumns}
                 onClick={() => { this.onClickRow(nestedSchemaId); }}
-                record={record}
+                record={{ ...record, selected: activeSchemaIds[nestedSchemaId] }}
               />);
               rows.push(
                 <tr id={nestedSchemaId} className={`NestedSchemaRow ${!activeSchemaIds[nestedSchemaId] ? 'collapse' : ''}`}>
@@ -113,4 +117,3 @@ export default class MethodResponse extends Component {
     );
   }
 }
-
