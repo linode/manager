@@ -1,8 +1,9 @@
 import React from 'react';
 
 import { Table } from 'linode-components/tables';
+import { Link } from 'react-router';
 import Example from '~/components/Example';
-import { LOGIN_ROOT } from '~/constants';
+import { LOGIN_ROOT, API_VERSION } from '~/constants';
 
 
 
@@ -171,6 +172,7 @@ export default function Authentication() {
           of access needed for your application to function.
         </p>
       </section>
+      <div className="text-sm-center"><Link to={`/${API_VERSION}/pagination`}>Find out about pagination &raquo;</Link></div>
     </section>
   );
 }

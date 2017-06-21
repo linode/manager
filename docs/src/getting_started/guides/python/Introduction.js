@@ -2,6 +2,7 @@ import React from 'react';
 
 import { Breadcrumbs } from 'linode-components/breadcrumbs';
 import { Table } from 'linode-components/tables';
+import { Link } from 'react-router';
 
 import { API_ROOT, API_VERSION } from '~/constants';
 import { Example } from '~/components';
@@ -197,6 +198,7 @@ root@localhost:~#`}
         Now that you’ve had an overview of the features and concepts in the Python library, check out the Python library reference for in-depth documentation, or look at the <a href="https://github.com/linode/python-linode-api/tree/master/examples/install-on-linode" target="_blank" rel="nofollow noopener noreferrer">Install on Linode sample project</a> for an example multi-user application using the library.
         </p>
       </section>
+      <div className="text-sm-center"><Link to={`/${API_VERSION}/guides/python/oauth-workflow`}>OAuth Workflow &raquo;</Link></div>
     </section>
   );
 }
