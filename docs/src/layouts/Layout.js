@@ -15,11 +15,11 @@ export default class Layout extends Component {
     this.renderNavListItems = this.renderNavListItems.bind(this);
   }
 
-  renderNavListItems(items, path) {
+  renderNavListItems(items, path, childParentMap) {
     return items.map((item, index) => {
       return (
         <li
-          className={item.href === path ? 'active': ''}
+          className={(item.href === path || item.href === childParentMap[path]) ? 'active': ''}
           key={index}
         >
           <Link to={item.href}>{item.label}</Link>
@@ -30,7 +30,7 @@ export default class Layout extends Component {
 
   render() {
     const { route } = this.props;
-    const { endpoints } = route;
+    const { childParentMap, endpoints } = route;
     const path = this.props.location.pathname;
 
     const miniHeader = (
@@ -70,7 +70,7 @@ export default class Layout extends Component {
                     { label: 'Filtering & Sorting', href: `/${API_VERSION}/filtering` },
                     { label: 'Errors', href: `/${API_VERSION}/errors` },
                     { label: 'Guides', href: `/${API_VERSION}/guides` },
-                  ], path)}
+                  ], path, childParentMap)}
                 </ul>
               </div>
               <div className="VerticalNav-section">
@@ -78,7 +78,7 @@ export default class Layout extends Component {
                 <ul>
                   {this.renderNavListItems(endpoints.map(function(endpoint, index) {
                     return { label: endpoint.name, href: endpoint.routePath };
-                  }), path)}
+                  }), path, childParentMap)}
                 </ul>
               </div>
               <div className="VerticalNav-section">
@@ -86,7 +86,7 @@ export default class Layout extends Component {
                 <ul>
                   {this.renderNavListItems([
                     { label: 'Python', href: `/${API_VERSION}/libraries/python` }
-                  ], path)}
+                  ], path, childParentMap)}
                 </ul>
               </div>
             </div>

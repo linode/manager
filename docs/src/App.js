@@ -44,6 +44,16 @@ const pythonAPITitles = pythonDataTitles.filter(function(pythonData) {
 
 import { API_VERSION } from '~/constants';
 
+// only used for active nav state
+const childParentMap = {};
+api.endpoints.forEach(function(endpoint) {
+  endpoint.endpoints.forEach(function(childEndpoint, index) {
+    childEndpoint.endpoints.forEach(function(child) {
+      childParentMap[child.routePath] = endpoint.routePath;
+    });
+  });
+});
+
 
 ReactGA.initialize(GA_ID); // eslint-disable-line no-undef
 function logPageView() {
@@ -104,7 +114,7 @@ export function init() {
       history={browserHistory}
       onUpdate={onRouterUpdate}
     >
-      <Route path="/" component={Layout} endpoints={api.endpoints}>
+      <Route path="/" component={Layout} endpoints={api.endpoints} childParentMap={childParentMap}>
         <Route component={IndexLayout}>
           <IndexRedirect to={`/${API_VERSION}`} />
           <Redirect from='/reference' to={`/${API_VERSION}/`} />

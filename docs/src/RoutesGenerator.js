@@ -41,6 +41,7 @@ export function generateChildRoute(props) {
           component={Endpoint}
           crumbs={crumbs}
           endpoint={childEndpoint}
+          parentPath={endpoint.routePath}
           path={childEndpoint.routePath}
         />
       );
