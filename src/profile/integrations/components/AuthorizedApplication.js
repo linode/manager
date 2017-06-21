@@ -12,7 +12,7 @@ import { tokens } from '~/api';
 import { OAUTH_SUBSCOPES, OAUTH_SCOPES, API_ROOT } from '~/constants';
 import { dispatchOrStoreErrors } from '~/api/util';
 
-import { scopeFormat } from './PersonalAccessToken';
+import { scopeFormat } from '../utilities';
 
 
 export default class AuthorizedApplication extends Component {

@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 
@@ -14,15 +13,8 @@ import TimeDisplay from '~/components/TimeDisplay';
 import { OAUTH_SCOPES, OAUTH_SUBSCOPES } from '~/constants';
 
 import { EditPersonalAccessToken } from './EditPersonalAccessToken';
+import { scopeFormat } from '../utilities';
 
-
-export function scopeFormat(scope) {
-  return {
-    ips: 'IPs',
-    nodebalancers: 'NodeBalancers',
-    stackscripts: 'StackScripts',
-  }[scope] || _.capitalize(scope);
-}
 
 export default class PersonalAccessToken extends Component {
   constructor() {
