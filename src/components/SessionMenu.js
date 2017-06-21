@@ -39,7 +39,7 @@ export default function SessionMenu(props) {
         </li>
         <hr />
         <li className="SessionMenu-item">
-          <Link to="/logout">Logout</Link>
+          <Link to="/logout">Log out</Link>
         </li>
       </ul>
     </div>
