@@ -55,7 +55,7 @@ export default class Distribution extends Component {
         name: this.renderLabel(),
         action: this.onClick,
       },
-      ...vendor.versions.map((version, i) => ({
+      ...vendor.versions.filter(version => !version.deprecated).map((version, i) => ({
         name: version.label,
         action: () => this.setState({ selectedIndex: i }, this.onClick),
       })),
@@ -66,7 +66,7 @@ export default class Distribution extends Component {
         onClick={this.onClick}
         className={`LinodesDistribution ${isSelectedClass} ${noDistributionClass}`}
       >
-        <Dropdown elements={versions} />
+        <Dropdown elements={versions.length > 2 ? versions : [versions[0]]} />
         <div className="LinodesDistribution-body">
           {vendor ? <img
             src={distros[vendor.name]}
