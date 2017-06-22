@@ -11,9 +11,8 @@
   <img src="https://img.shields.io/badge/badges-many-brightgreen.svg" alt="much badges" />
 </p>
 
-This is the new Linode Manager. It provides a web interface for managing your
-
-Linode account. Currently this software is *early-access* and is available at [cloud.linode.com](https://cloud.linode.com).
+This is the new Linode Manager. It provides a web interface for managing your Linode account. 
+Currently this software is *early-access* and is available at [cloud.linode.com](https://cloud.linode.com).
 
 ## Contributing
 
