@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Link } from 'react-router';
 
 import { Header } from 'linode-components/navigation';
@@ -8,22 +8,43 @@ import { LinodeLogoImgSrc } from '~/assets';
 import { API_VERSION } from '~/constants';
 
 
-export default function Layout(props) {
-  const { route } = props;
-  const { endpoints } = route;
+export default class Layout extends Component {
+  constructor() {
+    super();
 
-  const miniHeader = (
-    <div className="MiniHeader-text">
-      This is the beta Linode APIv4 documentation.
+    this.renderNavListItems = this.renderNavListItems.bind(this);
+  }
+
+  renderNavListItems(items, path, childParentMap) {
+    return items.map((item, index) => {
+      return (
+        <li
+          className={(item.href === path || item.href === childParentMap[path]) ? 'active': ''}
+          key={index}
+        >
+          <Link to={item.href}>{item.label}</Link>
+        </li>
+      )
+    });
+  }
+
+  render() {
+    const { route } = this.props;
+    const { childParentMap, endpoints } = route;
+    const path = this.props.location.pathname;
+
+    const miniHeader = (
+      <div className="MiniHeader-text">
+      This is the early-access Linode APIv4 documentation.
       Click <a href="https://linode.com/api">here</a> for APIv3 documentation.
-    </div>
-  );
+      </div>
+    );
 
-  return (
-    <div className="Docs Layout">
-      <Header miniHeader={miniHeader}>
-        <div className="MainHeader-brand">
-          <Link to="/">
+    return (
+      <div className="Docs Layout">
+        <Header miniHeader={miniHeader}>
+          <div className="MainHeader-brand">
+            <Link to="/">
             <span className="MainHeader-logo">
               <img
                 src={LinodeLogoImgSrc}
@@ -32,44 +53,49 @@ export default function Layout(props) {
                 width={35}
               />
             </span>
-          </Link>
-        </div>
-        <span className="MainHeader-title">Developers</span>
-      </Header>
-      <div className="Layout-container container">
-        <div className="Layout-navigationContainer">
-          <div className="VerticalNav">
-            <div className="VerticalNav-section">
-              <h3>Getting Started</h3>
-              <ul>
-                <li><Link to={`/${API_VERSION}/introduction`}>Introduction</Link></li>
-                <li><Link to={`/${API_VERSION}/access`}>Access</Link></li>
-                <li><Link to={`/${API_VERSION}/pagination`}>Pagination</Link></li>
-                <li><Link to={`/${API_VERSION}/filtering`}>Filtering &amp; Sorting</Link></li>
-                <li><Link to={`/${API_VERSION}/errors`}>Errors</Link></li>
-                <li><Link to={`/${API_VERSION}/guides`}>Guides</Link></li>
-              </ul>
-            </div>
-            <div className="VerticalNav-section">
-              <h3>Reference</h3>
-              <ul>
-                {endpoints.map(function(endpoint, index) {
-                  return (<li key={index}><Link to={endpoint.routePath}>{endpoint.name}</Link></li>);
-                })}
-              </ul>
-            </div>
-            <div className="VerticalNav-section">
-              <h3>Libraries</h3>
-              <ul>
-                <li><Link to={`/${API_VERSION}/libraries/python`}>Python</Link></li>
-              </ul>
+            </Link>
+          </div>
+          <span className="MainHeader-title">Developers</span>
+        </Header>
+        <div className="Layout-container container">
+          <div className="Layout-navigationContainer">
+            <div className="VerticalNav">
+              <div className="VerticalNav-section">
+                <h3>Getting Started</h3>
+                <ul>
+                  {this.renderNavListItems([
+                    { label: 'Introduction', href: `/${API_VERSION}/introduction` },
+                    { label: 'Access', href: `/${API_VERSION}/access` },
+                    { label: 'Pagination', href: `/${API_VERSION}/pagination` },
+                    { label: 'Filtering & Sorting', href: `/${API_VERSION}/filtering` },
+                    { label: 'Errors', href: `/${API_VERSION}/errors` },
+                    { label: 'Guides', href: `/${API_VERSION}/guides` },
+                  ], path, childParentMap)}
+                </ul>
+              </div>
+              <div className="VerticalNav-section">
+                <h3>Reference</h3>
+                <ul>
+                  {this.renderNavListItems(endpoints.map(function(endpoint, index) {
+                    return { label: endpoint.name, href: endpoint.routePath };
+                  }), path, childParentMap)}
+                </ul>
+              </div>
+              <div className="VerticalNav-section">
+                <h3>Libraries</h3>
+                <ul>
+                  {this.renderNavListItems([
+                    { label: 'Python', href: `/${API_VERSION}/libraries/python` }
+                  ], path, childParentMap)}
+                </ul>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="Layout-content">
-          {props.children}
+          <div className="Layout-content">
+            {this.props.children}
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  }
 };
