@@ -50,7 +50,7 @@ function loadGA(debug = false) {
   /* eslint-enable */
 }
 
-if (ENVIRONMENT !== 'production') {
+if (ENVIRONMENT === 'debug') {
   loadGA(true);
   window.ga_debug = { trace: true };
   window.ga('create', GA_ID, { cookieDomain: 'none', debug: true });
