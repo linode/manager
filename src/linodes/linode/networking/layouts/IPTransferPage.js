@@ -90,7 +90,8 @@ export class IPTransferPage extends Component {
 
   otherLinodes() {
     const { linodes, linode } = this.props;
-    return Object.values(linodes).filter(l => l.id !== linode.id);
+    return Object.values(_.pickBy(linodes, l => l.region.id === linode.region.id))
+      .filter(l => l.id !== linode.id);
   }
 
   render() {
@@ -99,8 +100,7 @@ export class IPTransferPage extends Component {
 
     // Although we only explicitly looked up all linodes in the current dc,
     // other linodes may already exist in the state.
-    const linodesInRegion = _.pickBy(linodes, l =>
-      l.region.id === linode.region.id);
+    const linodesInRegion = this.otherLinodes();
 
     let body = (
       <p>
@@ -131,7 +131,7 @@ export class IPTransferPage extends Component {
                   name="selectedOtherLinode"
                   onChange={({ target: { name, value } }) =>
                     this.setState({ [name]: value, checkedB: {} })}
-                  options={this.otherLinodes().map(linode => ({ ...linode, value: linode.id }))}
+                  options={linodesInRegion.map(linode => ({ ...linode, value: linode.id }))}
                 />
               </div>
             </FormGroup>
@@ -151,7 +151,7 @@ export class IPTransferPage extends Component {
               </div>
               <div className="col-lg-6 col-md-12 col-sm-12" id="sectionB">
                 <IPList
-                  linode={linodesInRegion[selectedOtherLinode]}
+                  linode={linodes[selectedOtherLinode]}
                   checked={checkedB}
                   onChange={(record, checked) => {
                     this.setState({
