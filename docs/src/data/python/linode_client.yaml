@@ -36,7 +36,7 @@ methods:
                 desc: Any number of filters to this function
                 _keyword: false
         example: >
-            domains = client.dns.get_zones()
+            domains = client.get_domains()
         returns: A list of Domain objects
     create_domain:
         desc: Creates a new Domain record.
