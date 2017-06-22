@@ -14,7 +14,7 @@ export default function Layout(props) {
 
   const miniHeader = (
     <div className="MiniHeader-text">
-      This is the beta Linode APIv4 documentation.
+      This is the early-access Linode APIv4 documentation.
       Click <a href="https://linode.com/api">here</a> for APIv3 documentation.
     </div>
   );

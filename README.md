@@ -12,7 +12,7 @@
 </p>
 
 This is the new Linode Manager. It provides a web interface for managing your
-Linode account. Currently this software is *beta* and is available at [cloud.linode.com](https://cloud.linode.com).
+Linode account. Currently this software is *early-access* and is available at [cloud.linode.com](https://cloud.linode.com).
 
 The following buzzwords are involved in this project:
 
