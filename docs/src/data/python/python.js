@@ -81,7 +81,7 @@ module.exports = { pythonObjects: {
             "_default": "'https://api.linode.com/v4'"
           }
         },
-        "example": "client = linode.LinodeClient('my-token')\n"
+        "example": "client = LinodeClient('my-token')\n"
       },
       "methods": {
         "get_datacenters": {

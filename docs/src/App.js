@@ -45,6 +45,44 @@ const pythonAPITitles = pythonDataTitles.filter(function(pythonData) {
 import { API_VERSION } from '~/constants';
 
 
+import {
+  TestingWithCurl,
+  CreateLinode
+} from './getting_started/guides/curl';
+import {
+  PythonIntroduction,
+  BasicSetup,
+  CoreConcepts,
+  OAuthWorkflow
+} from './getting_started/guides/python';
+
+const guidesRoutePath = `/${API_VERSION}/guides`;
+const guideCrumbs = [{ groupLabel: 'Getting Started', label: '/guides', to: guidesRoutePath }];
+const guides = [
+  { routePath: `${guidesRoutePath}/curl/creating-a-linode`, component: CreateLinode, crumbs: guideCrumbs },
+  { routePath: `${guidesRoutePath}/curl/testing-with-curl`, component: TestingWithCurl, crumbs: guideCrumbs },
+  { routePath: `${guidesRoutePath}/python/getting-started`, component: PythonIntroduction, crumbs: guideCrumbs },
+  { routePath: `${guidesRoutePath}/python/oauth-workflow`, component: OAuthWorkflow, crumbs: guideCrumbs },
+  { routePath: `${guidesRoutePath}/python/core-concepts`, component: CoreConcepts, crumbs: guideCrumbs },
+];
+
+// only used for active nav state
+const childParentMap = {};
+api.endpoints.forEach(function(endpoint) {
+  endpoint.endpoints.forEach(function(childEndpoint, index) {
+    childEndpoint.endpoints.forEach(function(child) {
+      childParentMap[child.routePath] = endpoint.routePath;
+    });
+  });
+});
+[].concat(pythonClientObjectTitles).concat(pythonAPITitles).forEach(function(endpoint) {
+  childParentMap[endpoint.href] = `/${API_VERSION}/libraries/python`;
+});
+guides.forEach(function(endpoint) {
+  childParentMap[endpoint.routePath] = guidesRoutePath;
+});
+
+
 ReactGA.initialize(GA_ID); // eslint-disable-line no-undef
 function logPageView() {
   ReactGA.set({ page: window.location.pathname });
@@ -104,12 +142,12 @@ export function init() {
       history={browserHistory}
       onUpdate={onRouterUpdate}
     >
-      <Route path="/" component={Layout} endpoints={api.endpoints}>
+      <Route path="/" component={Layout} endpoints={api.endpoints} childParentMap={childParentMap}>
         <Route component={IndexLayout}>
           <IndexRedirect to={`/${API_VERSION}`} />
           <Redirect from='/reference' to={`/${API_VERSION}/`} />
           <Route path={`/${API_VERSION}`}>
-            {GettingStartedRoutes}
+            {GettingStartedRoutes(guides, guideCrumbs)}
             <Route path="libraries/python" component={PythonLibrary} pythonDataObjects={{pythonDataTitles, pythonClientObjectTitles, pythonAPITitles}} />
             {api.endpoints.map(function(endpoint, index) {
               return generateIndexRoute({ key: index, endpoint: endpoint });
