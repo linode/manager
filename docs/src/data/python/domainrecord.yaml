@@ -1,32 +1,32 @@
-name: DNS Zone Record
-import: from linode import DNSZoneRecord
-_object: dnszonerecord
+name: Domain Record
+import: from linode import DomainRecord
+_object: domain_record
 desc: >
-    A DNS Zone record.
+    A Domain record.
 constructor:
-    name: DNSZoneRecord
+    name: DomainRecord
     parameters:
         client:
             _keyword: false
             desc: The <code>LinodeClient</code> this object will use to communicate with the API.
         id:
             _keyword: false
-            desc: This DNSZoneRecord's ID.
+            desc: This DomainRecord's ID.
         parent_id:
             _keyword: false
-            desc: The <code>Linode</code> object's ID who owns this DNSZoneRecord.
+            desc: The <code>Linode</code> object's ID who owns this DomainRecord.
     example: >
-        dnszonerecord = linode.DNSZoneRecord(client, "example.org", "www")
+        domain_record = linode.DomainRecord(client, "example.org", "www")
 methods:
     save:
         desc: >
-            Sends any local changes to Editable fields of this DNSZoneRecord to the API, saving them.
+            Sends any local changes to Editable fields of this DomainRecord to the API, saving them.
         example: |
             record.save()
         returns: True if the save succeeded
     delete:
         desc: >
-            Deletes this DNSZoneRecord.  This is not reversable.
+            Deletes this DomainRecord.  This is not reversable.
         example:
             record.delete()
         returns: True if the delete succueeded.
