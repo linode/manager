@@ -24,6 +24,7 @@ describe('domains/components/EditARecord', () => {
       <EditARecord
         dispatch={dispatch}
         zone={currentZone}
+        title="boop"
         id={currentRecord.id}
         close={() => {}}
       />
@@ -48,14 +49,15 @@ describe('domains/components/EditARecord', () => {
       <EditARecord
         dispatch={dispatch}
         zone={currentZone}
+        title="title"
         id={currentRecord.id}
         close={close}
       />
     );
 
     const changeInput = (name, value) =>
-      page.find({ name }).simulate('change', { target: { value, name } });
-
+      page.find({ name }).simulate('change', { target:
+        { value: value, name: name } });
     changeInput('hostname', 'tee');
     changeInput('ip', '4.4.4.4');
     changeInput('ttl', 1);
@@ -85,6 +87,7 @@ describe('domains/components/EditARecord', () => {
     const page = mount(
       <EditARecord
         dispatch={dispatch}
+        title="title"
         zone={currentZone}
         close={close}
       />

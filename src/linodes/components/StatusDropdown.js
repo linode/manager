@@ -12,6 +12,7 @@ import { createHeaderFilter } from '~/api/util';
 import { LinodeStates, LinodeStatesReadable } from '~/constants';
 import ConfigSelectModalBody from '~/linodes/components/ConfigSelectModalBody';
 import { launchWeblishConsole } from '~/linodes/components/WeblishLaunch';
+import { TrackEvent } from '~/actions/trackEvent.js';
 
 
 const RANDOM_PROGRESS_MAX = 20;
@@ -178,10 +179,14 @@ export default class StatusDropdown extends Component {
             <DeleteModalBody
               onOk={() => {
                 dispatch(apiLinodes.delete(linode.id));
+                TrackEvent('Modal', 'delete', 'Delete Linode');
                 dispatch(hideModal());
               }}
               items={[linode.label]}
-              onCancel={() => dispatch(hideModal())}
+              onCancel={() => {
+                TrackEvent('Modal', 'cancel', 'Delete Linode');
+                dispatch(hideModal());
+              }}
             />
           )));
           return;
@@ -194,10 +199,12 @@ export default class StatusDropdown extends Component {
             dispatch(hideModal());
             return;
           }
+          const title = 'Select Configuration Profile';
 
-          dispatch(showModal('Select Configuration Profile', (
+          dispatch(showModal(title, (
             <ConfigSelectModalBody
               linode={linode}
+              title={title}
               dispatch={dispatch}
               action={element._action}
             />
@@ -211,8 +218,14 @@ export default class StatusDropdown extends Component {
         } else {
           dispatch(showModal(`Confirm ${element.name}`, (
             <ConfirmModalBody
-              onCancel={() => dispatch(hideModal())}
-              onOk={callback}
+              onCancel={() => {
+                TrackEvent('Modal', 'cancel', `Confirm ${element.name}`);
+                dispatch(hideModal());
+              }}
+              onOk={() => {
+                TrackEvent('Modal', element.name, `Confirm ${element.name}`);
+                callback();
+              }}
             >
               Are you sure you want to {element.name.toLowerCase()} <strong>{linode.label}</strong>?
             </ConfirmModalBody>
