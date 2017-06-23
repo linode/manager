@@ -1,6 +1,7 @@
 .DS_Store
 .sass-cache/
 src/api.js
+src/python.js
 node_modules
 npm-debug.log
 dist

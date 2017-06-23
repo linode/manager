@@ -25,7 +25,7 @@ import {
 } from '~/RoutesGenerator';
 
 import { default as api } from '~/api';
-import { python } from '~/data/python';
+import { default as python } from '~/python';
 
 const pythonDataTitles = Object.values(python.pythonObjects).map(function(pythonObject) {
   return {

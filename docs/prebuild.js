@@ -531,6 +531,6 @@ function convertPythonYaml() {
   });
   const data = JSON.stringify(pythonObjectMap, null, 2);
   const pythonModule = `module.exports = { pythonObjects: ${data} };`;
-  fs.writeFileSync(path.join(pythonPath, 'python.js'), pythonModule);
+  fs.writeFileSync(path.join('./src', 'python.js'), pythonModule);
 }
 convertPythonYaml();
