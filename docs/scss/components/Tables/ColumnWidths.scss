@@ -1,6 +1,7 @@
 .EndpointColumn {
     width: 325px;
-    @media screen and (max-width: 700px) {
+
+    @media screen and (max-width: 768px) {
         width: 198px;
     }
 }
@@ -27,7 +28,8 @@
 
 .FieldColumn {
     width: 220px;
-    @media screen and (max-width: 700px) {
+
+    @media screen and (max-width: 768px) {
         width: 198px;
     }
 }

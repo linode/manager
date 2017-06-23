@@ -9,8 +9,9 @@
     &-breadcrumbsContainer {
         margin-bottom: 5px;
     }
+
     .LinkCell {
-        @media screen and (max-width: 700px) {
+        @media screen and (max-width: 768px) {
             overflow-wrap: break-word;
         }
     }

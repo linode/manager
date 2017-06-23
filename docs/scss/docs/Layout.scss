@@ -17,20 +17,7 @@ $sidebar-width: 250px;
         border-right: $border;
         height: 100%;
         width: $sidebar-width;
-        @media screen and (max-width: 700px) {
-            display: none;
-            overflow-y: visible;
-            &-Show {
-                display: inline;
-                z-index: 9000;
-            }
-            &-Hide {
-                display: none;
-            }
-        }
     }
-
-
 
     &-content {
         position: absolute;
@@ -40,10 +27,34 @@ $sidebar-width: 250px;
         margin-left: $sidebar-width;
         width: calc(100% - #{$sidebar-width});
         border-right: $border;
-        @media screen and (max-width: 700px) {
-          margin-left: 0;
-          width: 94%;
-          margin-right: 16px;
+    }
+
+    @media screen and (max-width: 768px) {
+        width: 100%;
+
+        &-container {
+            padding: 0;
+        }
+
+        &-navigationContainer {
+            display: none; 
+            overflow-y: visible;
+            border: $border;
+
+            &--show {
+                display: inline;
+                z-index: 9000;
+            }
+
+            &--hide {
+                display: none;
+            }
+        }
+
+        &-content {
+            margin-left: 0;
+            width: 100%;
+            border: 0;
         }
     }
 }

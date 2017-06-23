@@ -51,7 +51,7 @@ export default class Layout extends Component {
       </div>
     );
 
-    const verticalNavShow = verticalNav ? 'Layout-navigationContainer-Show' : 'Layout-navigationContainer-Hide';
+    const verticalNavShow = verticalNav ? 'Layout-navigationContainer--show' : 'Layout-navigationContainer--hide';
 
     return (
       <div className="Docs Layout">

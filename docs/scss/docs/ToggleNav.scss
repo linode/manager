@@ -1,10 +1,14 @@
 .ToggleNav {
     margin-top: 18px;
     display: none;
-    @media screen and (max-width: 700px) {
+
+    outline: none !important;
+
+    @media screen and (max-width: 768px) {
         display: inline;
     }
-  i {
-    color: $white;
-  }
+
+    i {
+        color: $white;
+    }
 }
