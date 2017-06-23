@@ -67,8 +67,9 @@ export class DashboardPage extends Component {
 
   deleteNBConfigNode(nodebalancer, config, node) {
     const { dispatch } = this.props;
+    const title = 'Delete Node';
 
-    dispatch(showModal('Delete Node',
+    dispatch(showModal(title,
       <DeleteModalBody
         onOk={() => {
           const ids = [nodebalancer.id, config.id, node.id].filter(Boolean);
@@ -80,6 +81,7 @@ export class DashboardPage extends Component {
         }}
         onCancel={() => dispatch(hideModal())}
         items={[node.label]}
+        typeOfItem={title}
       />
     ));
   }

@@ -11,6 +11,7 @@ import {
 
 import { tokens } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
+import { TrackEvent } from '~/actions/trackEvent.js';
 
 
 export default class EditPersonalAccessToken extends Component {
@@ -27,17 +28,18 @@ export default class EditPersonalAccessToken extends Component {
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   onSubmit = () => {
-    const { dispatch, id, close } = this.props;
+    const { dispatch, id, title, close } = this.props;
     const { label } = this.state;
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => tokens.put({ label }, id),
+      () => TrackEvent('Modal', 'edit', title),
       close,
     ]));
   }
 
   render() {
-    const { close } = this.props;
+    const { close, title } = this.props;
     const { errors, label, loading } = this.state;
 
     return (
@@ -52,7 +54,12 @@ export default class EditPersonalAccessToken extends Component {
           />
         </ModalFormGroup>
         <div className="Modal-footer">
-          <CancelButton onClick={close} />
+          <CancelButton
+            onClick={() => {
+              TrackEvent('Modal', 'cancel', title);
+              close();
+            }}
+          />
           <SubmitButton disabled={loading} />
           <FormSummary errors={errors} />
         </div>
@@ -65,5 +72,6 @@ EditPersonalAccessToken.propTypes = {
   dispatch: PropTypes.func.isRequired,
   close: PropTypes.func.isRequired,
   label: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
   id: PropTypes.number.isRequired,
 };

@@ -11,6 +11,7 @@ import { CancelButton } from 'linode-components/buttons';
 
 import { domains } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
+import { TrackEvent } from '~/actions/trackEvent.js';
 
 import SelectDNSSeconds from './SelectDNSSeconds';
 
@@ -38,7 +39,7 @@ export default class EditNSRecord extends Component {
   }
 
   onSubmit = () => {
-    const { dispatch, id, close } = this.props;
+    const { dispatch, id, title, close } = this.props;
     const { ttl, nameserver, subdomain } = this.state;
     const ids = [this.props.zone.id, id].filter(Boolean);
 
@@ -52,6 +53,7 @@ export default class EditNSRecord extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => domains.records[id ? 'put' : 'post'](data, ...ids),
+      () => TrackEvent('Modal', 'add', title),
       close,
     ]));
   }
@@ -59,7 +61,7 @@ export default class EditNSRecord extends Component {
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   render() {
-    const { close } = this.props;
+    const { close, title } = this.props;
     const { errors, loading, zone, defaultTTL, ttl, nameserver, subdomain } = this.state;
 
     return (
@@ -92,7 +94,12 @@ export default class EditNSRecord extends Component {
           />
         </ModalFormGroup>
         <div className="Modal-footer">
-          <CancelButton onClick={close} />
+          <CancelButton
+            onClick={() => {
+              TrackEvent('Modal', 'cancel', title);
+              close();
+            }}
+          />
           <SubmitButton
             disabled={loading}
             disabledChildren={this.props.id ? undefined : 'Adding NS Record'}
@@ -109,6 +116,7 @@ export default class EditNSRecord extends Component {
 EditNSRecord.propTypes = {
   dispatch: PropTypes.func.isRequired,
   zone: PropTypes.object.isRequired,
+  title: PropTypes.string.isRequired,
   close: PropTypes.func.isRequired,
   id: PropTypes.number,
 };

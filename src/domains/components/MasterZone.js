@@ -103,6 +103,7 @@ export class MasterZone extends Component {
           dispatch(hideModal());
         }}
         items={[name]}
+        typeOfItem={title}
         onCancel={() => dispatch(hideModal())}
       />
     ));
@@ -110,11 +111,12 @@ export class MasterZone extends Component {
 
   renderSOAEditRecord() {
     const { dispatch, domain } = this.props;
-
+    const title = 'Edit SOA Record';
     dispatch(showModal(
-      'Edit SOA Record',
+      title,
       <EditSOARecord
         dispatch={dispatch}
+        title={title}
         domains={domain}
         close={(newDomain) => () => {
           dispatch(hideModal());
@@ -131,6 +133,7 @@ export class MasterZone extends Component {
       React.createElement(component, {
         ...props,
         dispatch,
+        title,
         zone: domain,
         close: () => dispatch(hideModal()),
       }),

@@ -13,6 +13,8 @@ import { CancelButton } from 'linode-components/buttons';
 import { domains } from '~/api';
 import { setTitle } from '~/actions/title';
 import { dispatchOrStoreErrors } from '~/api/util';
+import { hideModal } from '~/actions/modal';
+import { TrackEvent } from '~/actions/trackEvent.js';
 
 import SelectDNSSeconds, {
   ONE_WEEK,
@@ -48,7 +50,7 @@ export default class EditSOARecord extends Component {
   }
 
   onSubmit = () => {
-    const { dispatch, close } = this.props;
+    const { dispatch, title, close } = this.props;
     const { group, domain, defaultTTL, refreshRate, retryRate, expireTime, email,
       status, masterIps, axfrIps,
     } = this.state;
@@ -76,6 +78,7 @@ export default class EditSOARecord extends Component {
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => domains.put(data, this.props.domains.id),
       () => setTitle(data.domain),
+      () => TrackEvent('Modal', 'edit', title),
       () => close(domain)(),
     ]));
   }
@@ -83,7 +86,7 @@ export default class EditSOARecord extends Component {
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   render() {
-    const { close } = this.props;
+    const { dispatch, title } = this.props;
     const { type } = this.props.domains;
     const {
       group, domain, defaultTTL, refreshRate, retryRate, expireTime, email,
@@ -255,7 +258,12 @@ export default class EditSOARecord extends Component {
           </span>
         : null}
         <div className="Modal-footer">
-          <CancelButton onClick={close()} />
+          <CancelButton
+            onClick={() => {
+              TrackEvent('Modal', 'cancel', title);
+              dispatch(hideModal());
+            }}
+          />
           <SubmitButton disabled={loading} />
           <FormSummary errors={errors} />
         </div>
@@ -267,5 +275,6 @@ export default class EditSOARecord extends Component {
 EditSOARecord.propTypes = {
   dispatch: PropTypes.func.isRequired,
   domains: PropTypes.object.isRequired,
+  title: PropTypes.string.isRequired,
   close: PropTypes.func.isRequired,
 };

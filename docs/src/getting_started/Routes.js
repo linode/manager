@@ -14,9 +14,6 @@ import {
 } from './intros';
 
 import { default as GuidesIndex } from './guides/GuidesIndex';
-
-import { python } from '~/data/python';
-
 import { API_VERSION } from '~/constants';
 
 export default function GettingStartedRoutes(guides, crumbs) {
