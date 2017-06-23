@@ -7,6 +7,7 @@ import { Card, CardImageHeader } from 'linode-components/cards/';
 import { Table } from 'linode-components/tables';
 import TimeDisplay from '~/components/TimeDisplay';
 import { AuthScopeCell } from '~/components/tables/cells';
+import { TrackEvent } from '~/actions/trackEvent.js';
 
 import { showModal, hideModal } from '~/actions/modal';
 import { tokens } from '~/api';
@@ -25,15 +26,20 @@ export default class AuthorizedApplication extends Component {
 
   renderRevokeApp(id, name, created) {
     const { dispatch } = this.props;
+    const title = 'Revoke Token Access';
 
-    dispatch(showModal('Revoke Token Access',
+    dispatch(showModal(title,
       <ConfirmModalBody
         buttonText="Revoke"
         onOk={async () => {
           await this.revokeApp(id);
+          TrackEvent('Modal', 'revoke', title);
           dispatch(hideModal());
         }}
-        onCancel={() => dispatch(hideModal())}
+        onCancel={() => {
+          TrackEvent('Modal', 'cancel', title);
+          dispatch(hideModal());
+        }}
       >
         <p>
           Are you sure you want to revoke this token's access,

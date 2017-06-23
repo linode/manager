@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import ConfirmModalBody from './ConfirmModalBody';
 import { ScrollingList } from '../lists';
+import { TrackEvent } from '~/actions/trackEvent.js';
 
 export default function DeleteModalBody(props) {
   const {
@@ -37,8 +38,14 @@ export default function DeleteModalBody(props) {
       className="DeleteModalBody"
       buttonText="Delete"
       buttonDisabledText="Deleting"
-      onOk={onOk}
-      onCancel={onCancel}
+      onOk={() => {
+        onOk();
+        TrackEvent('Modal', 'delete', typeOfItem);
+      }}
+      onCancel={() => {
+        onCancel();
+        TrackEvent('Modal', 'cancel', typeOfItem);
+      }}
     >
       {body}
     </ConfirmModalBody>
@@ -49,5 +56,5 @@ DeleteModalBody.propTypes = {
   onOk: PropTypes.func,
   items: PropTypes.arrayOf(PropTypes.string),
   onCancel: PropTypes.func,
-  typeOfItem: PropTypes.string,
+  typeOfItem: PropTypes.string.isRequired,
 };
