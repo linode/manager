@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
 
-export function scopeFormat(scope) {
+export function formatScope(scope) {
   return {
     ips: 'IPs',
     nodebalancers: 'NodeBalancers',

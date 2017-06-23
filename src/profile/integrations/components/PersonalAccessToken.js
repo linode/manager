@@ -13,7 +13,7 @@ import TimeDisplay from '~/components/TimeDisplay';
 import { OAUTH_SCOPES, OAUTH_SUBSCOPES } from '~/constants';
 
 import { EditPersonalAccessToken } from './EditPersonalAccessToken';
-import { scopeFormat } from '../utilities';
+import { formatScope } from '../utilities';
 
 
 export default class PersonalAccessToken extends Component {
@@ -87,7 +87,7 @@ export default class PersonalAccessToken extends Component {
             columns={[
               {
                 dataKey: 'scope',
-                formatFn: scopeFormat,
+                formatFn: formatScope,
               },
             ].concat(OAUTH_SUBSCOPES.map((subscope) => ({
               subscope,

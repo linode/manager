@@ -12,7 +12,7 @@ import { tokens } from '~/api';
 import { OAUTH_SUBSCOPES, OAUTH_SCOPES, API_ROOT } from '~/constants';
 import { dispatchOrStoreErrors } from '~/api/util';
 
-import { scopeFormat } from '../utilities';
+import { formatScope } from '../utilities';
 
 
 export default class AuthorizedApplication extends Component {
@@ -74,7 +74,7 @@ export default class AuthorizedApplication extends Component {
             columns={[
               {
                 dataKey: 'scope',
-                formatFn: scopeFormat,
+                formatFn: formatScope,
               },
             ].concat(OAUTH_SUBSCOPES.map((subscope) => ({
               subscope,

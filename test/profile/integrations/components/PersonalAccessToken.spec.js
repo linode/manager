@@ -1,13 +1,12 @@
 import { expect } from 'chai';
 import { mount } from 'enzyme';
-import _ from 'lodash';
 import React from 'react';
 import sinon from 'sinon';
 
 import { hideModal } from '~/actions/modal';
 import { OAUTH_SCOPES, OAUTH_SUBSCOPES } from '~/constants';
-import PersonalAccessToken
-  from '~/profile/integrations/components/PersonalAccessToken';
+import PersonalAccessToken from '~/profile/integrations/components/PersonalAccessToken';
+import { formatScope } from '~/profile/integrations/utilities';
 
 import { expectObjectDeepEquals, expectRequest } from '@/common';
 import { tokens } from '@/data/tokens';
@@ -44,7 +43,7 @@ describe('profile/integrations/components/PersonalAccessToken', () => {
 
       // +1 for scope name
       expect(columns.length).to.equal(OAUTH_SUBSCOPES.length + 1);
-      expect(columns.at(0).text()).to.equal(_.capitalize(OAUTH_SCOPES[i - 1]));
+      expect(columns.at(0).text()).to.equal(formatScope(OAUTH_SCOPES[i - 1]));
 
       // No strikethroughs because all scopes are granted
       expect(row.find('.fa-times').length).to.equal(0);
