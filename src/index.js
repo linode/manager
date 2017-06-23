@@ -125,6 +125,16 @@ window.handleError = function (e) {
   return null;
 };
 
+document.addEventListener('track', function (e) {
+  const { cate, action, label, value } = e.detail;
+  window.ga('send', 'event', {
+    category: cate,
+    action: action,
+    label: label,
+    value: value,
+  });
+}, false);
+
 const init = () => {
   try {
     render(

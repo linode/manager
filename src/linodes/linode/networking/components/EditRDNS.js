@@ -12,6 +12,7 @@ import {
 import { showModal, hideModal } from '~/actions/modal';
 import { setRDNS } from '~/api/networking';
 import { dispatchOrStoreErrors } from '~/api/util';
+import { TrackEvent } from '~/actions/trackEvent.js';
 
 
 export default class EditRDNS extends Component {
@@ -35,11 +36,12 @@ export default class EditRDNS extends Component {
   }
 
   onSubmit = () => {
-    const { dispatch, ip, close } = this.props;
+    const { dispatch, ip, title, close } = this.props;
     const { hostname } = this.state;
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => setRDNS(ip, hostname),
+      () => TrackEvent('Modal', 'edit', title),
       close,
     ]));
   }
@@ -47,7 +49,7 @@ export default class EditRDNS extends Component {
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   render() {
-    const { close, ip: { address } } = this.props;
+    const { close, ip: { address }, title } = this.props;
     const { errors, loading, hostname } = this.state;
 
     return (
@@ -72,7 +74,12 @@ export default class EditRDNS extends Component {
           />
         </ModalFormGroup>
         <div className="Modal-footer">
-          <CancelButton onClick={close} />
+          <CancelButton
+            onClick={() => {
+              TrackEvent('Modal', 'cancel', title);
+              close();
+            }}
+          />
           <SubmitButton disabled={loading} />
           <FormSummary errors={errors} />
         </div>
@@ -83,6 +90,7 @@ export default class EditRDNS extends Component {
 
 EditRDNS.propTypes = {
   dispatch: PropTypes.func.isRequired,
+  title: PropTypes.string.isRequired,
   ip: PropTypes.object.isRequired,
   close: PropTypes.func.isRequired,
 };

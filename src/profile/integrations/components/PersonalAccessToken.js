@@ -24,11 +24,13 @@ export default class PersonalAccessToken extends Component {
 
   editAction = () => {
     const { dispatch, label, id } = this.props;
+    const title = 'Edit Personal Access Token';
 
-    dispatch(showModal('Edit Personal Access Token',
+    dispatch(showModal(title,
       <EditPersonalAccessToken
         id={id}
         label={label}
+        title={title}
         dispatch={dispatch}
         close={() => dispatch(hideModal())}
       />

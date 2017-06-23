@@ -12,6 +12,7 @@ import { CancelButton } from 'linode-components/buttons';
 
 import { domains } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
+import { TrackEvent } from '~/actions/trackEvent.js';
 
 import SelectDNSSeconds from './SelectDNSSeconds';
 
@@ -39,7 +40,7 @@ export default class EditARecord extends Component {
   }
 
   onSubmit = () => {
-    const { dispatch, id, close } = this.props;
+    const { dispatch, id, title, close } = this.props;
     const { ttl, hostname, ip, type } = this.state;
     const ids = [this.props.zone.id, id].filter(Boolean);
     const data = {
@@ -52,6 +53,7 @@ export default class EditARecord extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => domains.records[id ? 'put' : 'post'](data, ...ids),
+      () => TrackEvent('Modal', id ? 'edit' : 'add', title),
       close,
     ]));
   }
@@ -59,7 +61,7 @@ export default class EditARecord extends Component {
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   render() {
-    const { close } = this.props;
+    const { close, title } = this.props;
     const { errors, loading, defaultTTL, type, ttl, ip, hostname } = this.state;
 
     return (
@@ -105,7 +107,12 @@ export default class EditARecord extends Component {
             </Select>
           </ModalFormGroup>)}
         <div className="Modal-footer">
-          <CancelButton onClick={close} />
+          <CancelButton
+            onClick={() => {
+              TrackEvent('Modal', 'cancel', title);
+              close();
+            }}
+          />
           <SubmitButton
             disabled={loading}
             disabledChildren={this.props.id ? undefined : 'Adding A/AAAA Record'}
@@ -122,6 +129,7 @@ export default class EditARecord extends Component {
 EditARecord.propTypes = {
   dispatch: PropTypes.func.isRequired,
   zone: PropTypes.object.isRequired,
+  title: PropTypes.string.isRequired,
   close: PropTypes.func.isRequired,
   id: PropTypes.number,
 };

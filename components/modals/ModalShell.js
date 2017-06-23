@@ -1,11 +1,16 @@
 import React, { PropTypes } from 'react';
+import { TrackEvent } from '~/actions/trackEvent.js';
 
 export default function ModalShell(props) {
   const { title, open } = props;
+
   return (
     <div
       className={`ModalOverlay ${open ? 'ModalOverlay--visible' : ''}`}
-      onClick={props.close}
+      onClick={() => {
+        props.close();
+        TrackEvent('Modal', 'close-overlay', title);
+      }}
     >
       <div className="Modal" onClick={(e) => e.stopPropagation()}>
         <header className="Modal-header">

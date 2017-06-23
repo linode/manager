@@ -7,6 +7,7 @@ import { clients } from '~/api';
 import { updateClientThumbnail } from '~/api/clients';
 import { MAX_UPLOAD_SIZE_MB } from '~/constants';
 import { dispatchOrStoreErrors } from '~/api/util';
+import { TrackEvent } from '~/actions/trackEvent.js';
 
 import { renderSecret } from './CreatePersonalAccessToken';
 
@@ -27,7 +28,7 @@ export default class CreateOrEditApplication extends Component {
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   onSubmit = () => {
-    const { dispatch } = this.props;
+    const { dispatch, submitText, title } = this.props;
     const { label, redirect, thumbnail } = this.state;
 
     const data = { label, redirect_uri: redirect };
@@ -52,11 +53,12 @@ export default class CreateOrEditApplication extends Component {
       },
       ({ secret }) => this.props.id ? this.props.close() :
         renderSecret('client', 'created', secret, this.props.close),
+      () => TrackEvent('Modal', submitText, title),
     ]));
   }
 
   render() {
-    const { close } = this.props;
+    const { close, title } = this.props;
     const { errors, label, redirect, loading } = this.state;
 
     return (
@@ -88,7 +90,12 @@ export default class CreateOrEditApplication extends Component {
           />
         </ModalFormGroup>
         <div className="Modal-footer">
-          <CancelButton onClick={close} />
+          <CancelButton
+            onClick={() => {
+              TrackEvent('Modal', 'cancel', title);
+              close();
+            }}
+          />
           <SubmitButton
             disabled={loading}
             disabledChildren={this.props.submitDisabledText}
@@ -103,6 +110,7 @@ export default class CreateOrEditApplication extends Component {
 CreateOrEditApplication.propTypes = {
   dispatch: PropTypes.func.isRequired,
   close: PropTypes.func.isRequired,
+  title: PropTypes.string.isRequired,
   submitText: PropTypes.string,
   submitDisabledText: PropTypes.string,
   label: PropTypes.string,
