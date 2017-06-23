@@ -60,9 +60,6 @@ if (ENVIRONMENT === 'debug') {
 }
 
 function onPageChange() {
-  // Force scroll to the top of the page on page change.
-  window.scroll(0, 0);
-
   // Log page views.
   window.ga('send', 'pageview');
 }

@@ -123,6 +123,9 @@ export class LoadingRouterContext extends RouterContext {
 
     // Necessary to await this for testing
     return this.runPreload(newProps);
+
+    // Force scroll to the top of the page on page change. ONLY AFTER PRELOAD
+    window.scroll(0, 0);
   }
 
   shouldComponentUpdate() {
