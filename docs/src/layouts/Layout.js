@@ -32,7 +32,6 @@ export default class Layout extends Component {
   toggleVerticalNav(e) {
     if (e.target.id === 'ToggleNavButton' || e.target.id === 'ToggleNavButtonIcon') {
       this.setState({ verticalNav: !this.state.verticalNav });
-      console.log('toggle button clicked');
     }
     if (e.target.id.match(/NavLink-.*/)) {
       this.setState({ verticalNav: false });
