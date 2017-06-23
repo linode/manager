@@ -12,6 +12,12 @@ import {
 import { tokens } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 
+console.log(Form);
+console.log(FormSummary);
+console.log(Input);
+console.log(ModalFormGroup);
+console.log(SubmitButton);
+console.log(CancelButton);
 
 export default class EditPersonalAccessToken extends Component {
   constructor(props) {

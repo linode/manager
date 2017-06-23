@@ -12,7 +12,7 @@ import { AuthScopeCell } from '~/components/tables/cells';
 import TimeDisplay from '~/components/TimeDisplay';
 import { OAUTH_SCOPES, OAUTH_SUBSCOPES } from '~/constants';
 
-import { EditPersonalAccessToken } from './EditPersonalAccessToken';
+import EditPersonalAccessToken from './EditPersonalAccessToken';
 import { formatScope } from '../utilities';
 
 
