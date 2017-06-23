@@ -178,8 +178,8 @@ export default class StatusDropdown extends Component {
           dispatch(showModal('Delete Linode', (
             <DeleteModalBody
               onOk={async function () {
-                await dispatch(push('/'));
                 await dispatch(apiLinodes.delete(linode.id));
+                await dispatch(push('/'));
               }}
               items={[linode.label]}
               onCancel={() => dispatch(hideModal())}

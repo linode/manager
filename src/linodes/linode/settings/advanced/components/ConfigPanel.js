@@ -30,10 +30,6 @@ export class ConfigPanel extends Component {
   }
 
   renderConfigContent(linode, configs) {
-    if (!linode && linode._configs.totalPages === -1) {
-      return null;
-    }
-
     return (
       <Table
         className="ConfigPanel-config Table--secondary"

@@ -11,7 +11,6 @@ import { selectLinode } from '../../utilities';
 export class IndexPage extends Component {
   render() {
     const { linode } = this.props;
-    if (!linode) return null;
 
     const tabs = [
       { name: 'Display', link: '/' },
