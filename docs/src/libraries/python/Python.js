@@ -6,7 +6,8 @@ import { LinkCell } from 'linode-components/tables/cells';
 
 import { API_VERSION } from '~/constants';
 
-import { python } from '~/data/python';
+import { default as python } from '~/python';
+
 
 export default function Python(props) {
   const { route } = props;
