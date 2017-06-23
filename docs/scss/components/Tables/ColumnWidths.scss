@@ -1,5 +1,8 @@
 .EndpointColumn {
     width: 325px;
+    @media screen and (max-width: 700px) {
+        width: 198px;
+    }
 }
 
 .MethodColumn {
@@ -24,6 +27,9 @@
 
 .FieldColumn {
     width: 220px;
+    @media screen and (max-width: 700px) {
+        width: 198px;
+    }
 }
 
 .TypeColumn {
