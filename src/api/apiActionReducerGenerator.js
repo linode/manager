@@ -221,8 +221,8 @@ function genThunkAll(config, actions, fetchPage) {
 function genThunkDelete(config, actions) {
   return (...ids) => async (dispatch, getState) => {
     const { token } = getState().authentication;
-    const response = await fetch(
-      token, config.endpoint(...ids), { method: 'DELETE' });
+    const response = await fetch(token, config.endpoint(...ids),
+      { method: 'DELETE' });
     const json = await response.json();
     dispatch(actions.delete(...ids));
     return json;
