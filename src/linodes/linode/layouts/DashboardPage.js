@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
@@ -44,17 +43,7 @@ export class DashboardPage extends Component {
       source: 'cpu',
     };
 
-    this.componentWillReceiveProps = this.componentWillMount;
-  }
-
-  shouldComponentUpdate(newProps, newState) {
-    // Prevents graph animation from happening multiple times for unchanged data.
-    return !_.isEqual(this.props, newProps) || !_.isEqual(this.state, newState);
-  }
-
-  componentWillMount() {
-    const stats = this.props.linode._stats;
-
+    const stats = props.linode._stats;
     if (stats) {
       this.graphs = {
         cpu: {
@@ -237,7 +226,7 @@ export class DashboardPage extends Component {
       </div>
     );
   }
-  
+
   render() {
     return (
       <div>
