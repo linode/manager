@@ -42,7 +42,7 @@ describe('components/Dropdown', () => {
           { elements: [
             { action: clickBodyItem, name: 'Phil' },
             { action: unclicked, name: 'Will' },
-          ]}
+          ] },
         ]}
       />
     );
