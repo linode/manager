@@ -41,8 +41,8 @@ describe('linodes/layouts/IndexPage', () => {
       />);
 
     dispatch.reset();
-    const { elements } = page.find('Dropdown').first().props();
-    elements.find(d => d && d.name === 'Delete').action();
+    const { groups } = page.find('Dropdown').first().props();
+    groups.find(d => d && d.name === 'Delete').action();
     const modal = mount(dispatch.firstCall.args[0].body);
 
     dispatch.reset();
