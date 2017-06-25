@@ -42,7 +42,7 @@ describe('linodes/layouts/IndexPage', () => {
 
     dispatch.reset();
     const { groups } = page.find('Dropdown').first().props();
-    groups.find(d => d && d.name === 'Delete').action();
+    groups[2].elements[0].action();
     const modal = mount(dispatch.firstCall.args[0].body);
 
     dispatch.reset();

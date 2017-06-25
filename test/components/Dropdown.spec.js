@@ -14,10 +14,12 @@ describe('components/Dropdown', () => {
   it('renders dropdown component 2', () => {
     const dropdown = mount(
       <Dropdown
-        elements={[
-          { action: () => {}, name: 'Drew' },
-          { action: () => {}, name: 'Phil' },
-          { action: () => {}, name: 'Will' },
+        groups={[
+          { elements: [{ action: () => {}, name: 'Drew' }] },
+          { elements: [
+            { action: () => {}, name: 'Phil' },
+            { action: () => {}, name: 'Will' },
+          ] },
         ]}
       />
     );
@@ -35,10 +37,12 @@ describe('components/Dropdown', () => {
     const unclicked = sandbox.spy();
     const dropdown = mount(
       <Dropdown
-        elements={[
-          { action: clickFirst, name: 'Drew' },
-          { action: clickBodyItem, name: 'Phil' },
-          { action: unclicked, name: 'Will' },
+        groups={[
+          { elements: [{ action: clickFirst, name: 'Drew' }] },
+          { elements: [
+            { action: clickBodyItem, name: 'Phil' },
+            { action: unclicked, name: 'Will' },
+          ]}
         ]}
       />
     );
@@ -65,12 +69,14 @@ describe('components/Dropdown', () => {
 
   it('closes on second click', () => {
     const noAction = () => {};
-    const dropdown = mount(<Dropdown
-      elements={[
-        { action: noAction, name: '' },
-        { action: noAction, name: '' },
-      ]}
-    />);
+    const dropdown = mount(
+      <Dropdown
+        groups={[
+          { elements: [{ action: noAction, name: '' }] },
+          { elements: [{ action: noAction, name: '' }] },
+        ]}
+      />
+    );
 
     dropdown.find('.Dropdown-toggle').simulate('click');
     expect(dropdown.find('.Dropdown--open').length).to.equal(1);
@@ -80,12 +86,14 @@ describe('components/Dropdown', () => {
 
   it('closes on blur', () => {
     const noAction = () => {};
-    const dropdown = mount(<Dropdown
-      elements={[
-        { action: noAction, name: '' },
-        { action: noAction, name: '' },
-      ]}
-    />);
+    const dropdown = mount(
+      <Dropdown
+        groups={[
+          { elements: [{ action: noAction, name: '' }] },
+          { elements: [{ action: noAction, name: '' }] },
+        ]}
+      />
+    );
 
     dropdown.find('.Dropdown-toggle').simulate('click');
     expect(dropdown.find('.Dropdown--open').length).to.equal(1);
