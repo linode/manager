@@ -23,10 +23,10 @@ export function IndexPage(props) {
       isSubTabs
       onClick={(e, tabIndex) => {
         e.stopPropagation();
-        this.props.dispatch(push(tabs[tabIndex].link));
+        props.dispatch(push(tabs[tabIndex].link));
       }}
       pathname={location.pathname}
-    >{this.props.children}</Tabs>
+    >{props.children}</Tabs>
   );
 }
 
