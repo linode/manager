@@ -41,7 +41,6 @@ export default class MassEditControl extends Component {
       return selectedMap[record[selectedKey]];
     });
 
-    console.log(massEditGroups);
     return (
       <MassEditDropdown
         checked={allSelected}
