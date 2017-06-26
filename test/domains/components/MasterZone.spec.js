@@ -147,7 +147,7 @@ describe('domains/components/MasterZone', () => {
     const aRecord = aRecords[0];
     [aRecord.name, aRecord.target].forEach((value, i) =>
       expect(aValues.at(i).text()).to.equal(value));
-    expect(mount(formatDNSSeconds(aRecord.ttl_sec, currentZone.ttl_sec)).text()
+    expect(mount(formatDNSSeconds(aRecord.ttl_sec, currentZone.ttl_sec, true)).text()
       ).to.equal(aValues.at(2).text());
   });
 
@@ -175,7 +175,7 @@ describe('domains/components/MasterZone', () => {
     const cnameRecord = cnameRecords[0];
     [cnameRecord.name, cnameRecord.target].forEach(
       (value, i) => expect(cnameValues.at(i).text()).to.equal(value));
-    expect(mount(formatDNSSeconds(cnameRecord.ttl_sec, currentZone.ttl_sec)).text())
+    expect(mount(formatDNSSeconds(cnameRecord.ttl_sec, currentZone.ttl_sec, true)).text())
       .to.equal(cnameValues.at(2).text());
   });
 
@@ -203,7 +203,7 @@ describe('domains/components/MasterZone', () => {
     const txtRecord = txtRecords[0];
     [txtRecord.name, txtRecord.target].forEach((value, i) =>
       expect(txtValues.at(i).text()).to.equal(value));
-    expect(mount(formatDNSSeconds(txtRecord.ttl_sec, currentZone.ttl_sec)).text())
+    expect(mount(formatDNSSeconds(txtRecord.ttl_sec, currentZone.ttl_sec, true)).text())
       .to.equal(txtValues.at(2).text());
   });
 
@@ -232,7 +232,7 @@ describe('domains/components/MasterZone', () => {
     [srvRecord.name, srvRecord.priority, currentZone.domain, srvRecord.weight, srvRecord.port,
      srvRecord.target].forEach(
        (value, i) => expect(srvValues.at(i).text()).to.equal(value.toString()));
-    expect(mount(formatDNSSeconds(srvRecord.ttl_sec, currentZone.ttl_sec)).text())
+    expect(mount(formatDNSSeconds(srvRecord.ttl_sec, currentZone.ttl_sec, true)).text())
       .to.equal(srvValues.at(6).text());
   });
 });
