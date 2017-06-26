@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import { push } from 'react-router-redux';
 
 import { Dropdown } from 'linode-components/dropdowns';
 import { ConfirmModalBody, DeleteModalBody } from 'linode-components/modals';
@@ -177,10 +178,10 @@ export default class StatusDropdown extends Component {
         if (element._key === 'delete') {
           dispatch(showModal('Delete Linode', (
             <DeleteModalBody
-              onOk={() => {
-                dispatch(apiLinodes.delete(linode.id));
+              onOk={async function () {
+                await dispatch(apiLinodes.delete(linode.id));
                 TrackEvent('Modal', 'delete', 'Delete Linode');
-                dispatch(hideModal());
+                await dispatch(push('/'));
               }}
               items={[linode.label]}
               onCancel={() => {

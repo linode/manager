@@ -24,7 +24,7 @@ export class IndexPage extends Component {
 
   render() {
     const { nodebalancer, config } = this.props;
-    if (!nodebalancer) return null;
+    if (!nodebalancer || !config) return null;
 
     const { label } = nodebalancer;
     const crumbs = [

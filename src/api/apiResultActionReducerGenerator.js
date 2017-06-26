@@ -153,9 +153,11 @@ export class ReducerGenerator {
 
   static del(config, state, action) {
     const id = action.ids[action.ids.length - 1];
+    const newMany = _.omit(state[config.plural], id);
     return {
       ...state,
-      [config.plural]: _.omit(state[config.plural], id),
+      ids: Object.values(newMany).map(({ id }) => id),
+      [config.plural]: newMany,
     };
   }
 

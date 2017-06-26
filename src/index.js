@@ -50,7 +50,7 @@ function loadGA(debug = false) {
   /* eslint-enable */
 }
 
-if (ENVIRONMENT !== 'production') {
+if (ENVIRONMENT === 'debug') {
   loadGA(true);
   window.ga_debug = { trace: true };
   window.ga('create', GA_ID, { cookieDomain: 'none', debug: true });
@@ -63,9 +63,6 @@ if (ENVIRONMENT !== 'production') {
 }
 
 function onPageChange() {
-  // Force scroll to the top of the page on page change.
-  window.scroll(0, 0);
-
   // Log page views.
   window.ga('send', 'pageview');
 }
