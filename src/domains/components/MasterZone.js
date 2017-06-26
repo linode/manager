@@ -463,7 +463,12 @@ export class MasterZone extends Component {
                     titleKey: 'name',
                     tooltipEnabled: true,
                   },
-                  { dataKey: 'target', label: 'Value' },
+                  { cellComponent: LabelCell,
+                    headerClassName: 'LabelColumn',
+                    dataKey: 'target',
+                    label: 'Value',
+                    tooltipEnabled: true,
+                  },
                   { dataKey: 'ttl_sec', label: 'TTL' },
                   {
                     cellComponent: ButtonCell,
