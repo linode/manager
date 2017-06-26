@@ -171,10 +171,6 @@ export class MasterZone extends Component {
   render() {
     const { domain } = this.props;
 
-    if (!domain) {
-      return null;
-    }
-
     const formatSeconds = (records) => {
       return records.map(record => {
         const { ttl_sec: ttlSec } = record;

@@ -33,9 +33,6 @@ export class SlaveZone extends Component {
   render() {
     const { domain } = this.props;
 
-    if (!domain) {
-      return null;
-    }
     const { axfr_ips, master_ips } = domain;
 
     const soaRecord = {
