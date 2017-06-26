@@ -1,13 +1,6 @@
 import React, { PropTypes, Component } from 'react';
 
-import {
-  Form,
-  FormSummary,
-  Select,
-  Input,
-  SubmitButton,
-  ModalFormGroup,
-} from 'linode-components/forms';
+import { Form, FormSummary, Input, SubmitButton, ModalFormGroup } from 'linode-components/forms';
 import { CancelButton } from 'linode-components/buttons';
 
 import { domains } from '~/api';
@@ -15,6 +8,7 @@ import { dispatchOrStoreErrors } from '~/api/util';
 import { TrackEvent } from '~/actions/trackEvent.js';
 
 import SelectDNSSeconds from './SelectDNSSeconds';
+
 
 export default class EditARecord extends Component {
   constructor(props) {

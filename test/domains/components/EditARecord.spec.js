@@ -97,9 +97,8 @@ describe('domains/components/EditARecord', () => {
       page.find({ name }).simulate('change', { target: { name, value } });
 
     changeInput('hostname', 'tee');
-    changeInput('ip', '4.4.4.4');
+    changeInput('ip', '2001:0db8:85a3:0000:0000:8a2e:0370:7334');
     changeInput('ttl', 1);
-    changeInput('type', 'AAAA');
 
     await page.find('Form').props().onSubmit();
 
@@ -108,7 +107,7 @@ describe('domains/components/EditARecord', () => {
       ([fn]) => expectRequest(fn, `/domains/${currentZone.id}/records/`, {
         method: 'POST',
         body: {
-          target: '4.4.4.4',
+          target: '2001:0db8:85a3:0000:0000:8a2e:0370:7334',
           name: 'tee',
           ttl_sec: 1,
           type: 'AAAA',
