@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
@@ -43,7 +44,12 @@ export class DashboardPage extends Component {
   constructor(props) {
     super(props);
 
-    const stats = props.nodebalancer._stats;
+    this.componentWillReceiveProps = this.componentWillMount;
+  }
+
+  componentWillMount() {
+    const stats = this.props.nodebalancer._stats;
+
     if (stats) {
       this.graphs = {
         connections: {
@@ -79,6 +85,11 @@ export class DashboardPage extends Component {
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
+  }
+
+  shouldComponentUpdate(newProps, newState) {
+    // Prevents graph animation from happening multiple times for unchanged data.
+    return !_.isEqual(this.props, newProps) || !_.isEqual(this.state, newState);
   }
 
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
