@@ -5,7 +5,7 @@ import reactGuard from 'react-guard';
 import { Provider } from 'react-redux';
 import { Router, Route, IndexRedirect, browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
-import TraceKit from 'tracekit';
+import Raven from 'raven-js';
 
 import { InternalError, NotFound } from 'linode-components/errors';
 import { ModalShell } from 'linode-components/modals';
@@ -16,7 +16,7 @@ import { hideModal } from '~/actions/modal';
 import { actions, thunks, reducer } from '~/api/configs/linodes';
 import Billing from '~/billing';
 import DevTools from '~/components/DevTools';
-import { GA_ID, ENVIRONMENT } from '~/constants';
+import { GA_ID, ENVIRONMENT, SENTRY_URL } from '~/constants';
 import Domains from '~/domains';
 import Layout from '~/layouts/Layout';
 import Logout from '~/layouts/Logout';
@@ -57,6 +57,9 @@ if (ENVIRONMENT !== 'production') {
 } else {
   loadGA();
   window.ga('create', GA_ID, 'auto');
+  Raven
+    .config(SENTRY_URL)
+    .install();
 }
 
 function onPageChange() {
@@ -77,6 +80,8 @@ function fillInMissingProps(props) {
 }
 
 window.handleError = function (e) {
+  Raven.captureException(e);
+
   try {
     // eslint-disable-next-line no-console
     console.error(e);
@@ -110,15 +115,6 @@ window.handleError = function (e) {
   } catch (e) {
     // eslint-disable-next-line no-console
     console.error(e);
-  }
-
-  // TraceKit.report throws an error.
-  try {
-    TraceKit.report(e);
-  } catch (newE) {
-    if (newE !== e) {
-      throw newE;
-    }
   }
 
   // Needed for react-guard.
@@ -186,19 +182,6 @@ const init = () => {
 };
 
 window.init = init;
-
-TraceKit.report.subscribe(function (error) {
-  if (GA_ID) {
-    window.ga('send', 'exception', {
-      exDescription: JSON.stringify({
-        error,
-        datetime: new Date(),
-        userAgent: window.navigator.userAgent,
-        location: window.location.pathname,
-      }),
-    });
-  }
-});
 
 // React is not in a great state right now w.r.t. error handling in render functions.
 // Here is a thread discussing current workarounds: https://github.com/facebook/react/issues/2461
