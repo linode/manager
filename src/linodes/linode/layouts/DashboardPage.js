@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
@@ -43,7 +44,12 @@ export class DashboardPage extends Component {
       source: 'cpu',
     };
 
-    const stats = props.linode._stats;
+    this.componentWillReceiveProps = this.componentWillMount;
+  }
+
+  componentWillMount() {
+    const stats = this.props.linode._stats;
+
     if (stats) {
       this.graphs = {
         cpu: {
@@ -99,6 +105,11 @@ export class DashboardPage extends Component {
   async componentDidMount() {
     const { dispatch } = this.props;
     await dispatch(setSource(__filename));
+  }
+
+  shouldComponentUpdate(newProps, newState) {
+    // Prevents graph animation from happening multiple times for unchanged data.
+    return !_.isEqual(this.props, newProps) || !_.isEqual(this.state, newState);
   }
 
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
