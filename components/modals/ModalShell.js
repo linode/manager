@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import { TrackEvent } from '~/actions/trackEvent.js';
+import { EmitEvent } from '../utils';
 
 export default function ModalShell(props) {
   const { title, open } = props;
@@ -9,7 +9,7 @@ export default function ModalShell(props) {
       className={`ModalOverlay ${open ? 'ModalOverlay--visible' : ''}`}
       onClick={() => {
         props.close();
-        TrackEvent('Modal', 'close-overlay', title);
+        EmitEvent('modal:close', 'Modal', 'close-overlay', title);
       }}
     >
       <div className="Modal" onClick={(e) => e.stopPropagation()}>

@@ -4,7 +4,8 @@ import { rebootLinode } from '~/api/linodes';
 import { hideModal } from '~/actions/modal';
 import { Button } from 'linode-components/buttons';
 import { CancelButton } from 'linode-components/buttons';
-import { TrackEvent } from '~/actions/trackEvent.js';
+import { EmitEvent } from 'linode-components/utils';
+
 
 export default class ConfigSelectModalBody extends Component {
   constructor(props) {
@@ -49,7 +50,7 @@ export default class ConfigSelectModalBody extends Component {
           <CancelButton
             disabled={loading}
             onClick={() => {
-              TrackEvent('Modal', 'cancel', title);
+              EmitEvent('modal:cancel', 'Modal', 'cancel', title);
               dispatch(hideModal());
             }}
           />
@@ -58,7 +59,7 @@ export default class ConfigSelectModalBody extends Component {
             disabled={loading}
             onClick={async () => {
               this.setState({ loading: true });
-              TrackEvent('Modal', buttonText, title);
+              EmitEvent('modal:submit', 'Modal', buttonText, title);
               await dispatch(action(linode.id, configId));
               this.setState({ loading: false });
               dispatch(hideModal());

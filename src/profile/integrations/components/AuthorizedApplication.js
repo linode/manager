@@ -6,7 +6,7 @@ import { Card, CardImageHeader } from 'linode-components/cards/';
 import { Table } from 'linode-components/tables';
 import TimeDisplay from '~/components/TimeDisplay';
 import { AuthScopeCell } from '~/components/tables/cells';
-import { TrackEvent } from '~/actions/trackEvent.js';
+import { EmitEvent } from 'linode-components/utils';
 
 import { showModal, hideModal } from '~/actions/modal';
 import { tokens } from '~/api';
@@ -34,11 +34,11 @@ export default class AuthorizedApplication extends Component {
         buttonText="Revoke"
         onOk={async () => {
           await this.revokeApp(id);
-          TrackEvent('Modal', 'revoke', title);
+          EmitEvent('modal:submit', 'Modal', 'revoke', title);
           dispatch(hideModal());
         }}
         onCancel={() => {
-          TrackEvent('Modal', 'cancel', title);
+          EmitEvent('modal:cancel', 'Modal', 'cancel', title);
           dispatch(hideModal());
         }}
       >

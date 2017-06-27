@@ -9,7 +9,7 @@ import { clients } from '~/api';
 import { resetSecret } from '~/api/clients';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { API_ROOT } from '~/constants';
-import { TrackEvent } from '~/actions/trackEvent.js';
+import { EmitEvent } from 'linode-components/utils';
 
 import { renderSecret } from './CreatePersonalAccessToken';
 import CreateOrEditApplication from './CreateOrEditApplication';
@@ -62,13 +62,13 @@ export default class MyApplication extends Component {
     return dispatch(showModal(title,
       <ConfirmModalBody
         onCancel={() => {
-          TrackEvent('Modal', 'cancel', title);
+          EmitEvent('modal:cancel', 'Modal', 'cancel', title);
           dispatch(hideModal());
         }}
         onOk={async () => {
           const { secret } = await dispatch(resetSecret(client.id));
 
-          TrackEvent('Modal', 'reset', title);
+          EmitEvent('modal:submit', 'Modal', 'reset', title);
           return dispatch(renderSecret(
             'client secret', 'reset', secret, () => dispatch(hideModal())));
         }}

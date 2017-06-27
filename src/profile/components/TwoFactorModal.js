@@ -12,7 +12,7 @@ import {
   Input,
 } from 'linode-components/forms';
 import { dispatchOrStoreErrors } from '~/api/util';
-import { TrackEvent } from '~/actions/trackEvent.js';
+import { EmitEvent } from 'linode-components/utils';
 
 
 export class TwoFactorModal extends Component {
@@ -43,11 +43,11 @@ export class TwoFactorModal extends Component {
       <ConfirmModalBody
         buttonText="Ok"
         onOk={() => {
-          TrackEvent('Modal', 'Ok', title);
+          EmitEvent('modal:submit', 'Modal', 'Ok', title);
           dispatch(hideModal());
         }}
         onCancel={() => {
-          TrackEvent('Modal', 'cancel', title);
+          EmitEvent('modal:cancel', 'Modal', 'cancel', title);
           dispatch(hideModal());
         }}
       >
@@ -78,11 +78,11 @@ export class TwoFactorModal extends Component {
           buttonText="Enable"
           buttonDisabledText="Enabling"
           onOk={() => {
-            TrackEvent('Modal', 'Enable', title);
+            EmitEvent('modal:submit', 'Modal', 'Enable', title);
             this.onSubmit();
           }}
           onCancel={() => {
-            TrackEvent('Modal', 'cancel', title);
+            EmitEvent('modal:cancel', 'Modal', 'cancel', title);
             dispatch(hideModal());
           }}
         >
