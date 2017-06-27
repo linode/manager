@@ -4,9 +4,17 @@
     &-header,
     &-group {
         margin-bottom: 20px;
+        width: 100%;
+        overflow-x: auto;
     }
 
     &-breadcrumbsContainer {
         margin-bottom: 5px;
+    }
+
+    .LinkCell {
+        @media screen and (max-width: 768px) {
+            overflow-wrap: break-word;
+        }
     }
 }

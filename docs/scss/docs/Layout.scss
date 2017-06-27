@@ -28,4 +28,37 @@ $sidebar-width: 250px;
         width: calc(100% - #{$sidebar-width});
         border-right: $border;
     }
+
+    @media screen and (max-width: 768px) {
+        width: 100%;
+
+        &-container {
+            padding: 0;
+        }
+
+        &-navigationContainer {
+            display: none; 
+            overflow-y: visible;
+            border: $border;
+
+            &--show {
+                display: inline;
+                z-index: 9000;
+            }
+
+            &--hide {
+                display: none;
+            }
+        }
+
+        &-content {
+            margin-left: 0;
+            width: 100%;
+            border: 0;
+        }
+
+        .Table {
+            width: auto;
+        }
+    }
 }
