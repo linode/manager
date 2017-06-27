@@ -13,7 +13,7 @@ import {
   Select,
   SubmitButton,
 } from 'linode-components/forms';
-import { TrackEvent } from '~/actions/trackEvent.js';
+import { EmitEvent } from 'linode-components/utils';
 
 
 export class NodeModal extends Component {
@@ -46,7 +46,7 @@ export class NodeModal extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => nodebalancers.configs.nodes[state.id ? 'put' : 'post'](data, ...ids),
-      () => TrackEvent('Modal', 'add', 'Add Node'),
+      () => { EmitEvent('modal:submit', 'Modal', 'add', 'Add Node'); },
       hideModal,
     ]));
   }
@@ -123,7 +123,7 @@ export class NodeModal extends Component {
           <CancelButton
             disabled={loading}
             onClick={() => {
-              TrackEvent('Modal', 'cancel', 'Add Node');
+              EmitEvent('modal:cancel', 'Modal', 'cancel', 'Add Node');
               dispatch(hideModal());
             }}
           />

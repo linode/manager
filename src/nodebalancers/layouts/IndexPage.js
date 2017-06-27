@@ -7,7 +7,7 @@ import { showModal, hideModal } from '~/actions/modal';
 import { nodebalancers as api } from '~/api';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
-import { TrackEvent } from '~/actions/trackEvent.js';
+import { EmitEvent } from 'linode-components/utils';
 
 import { DeleteModalBody } from 'linode-components/modals';
 import CreateHelper from '~/components/CreateHelper';
@@ -59,11 +59,11 @@ export class IndexPage extends Component {
 
           await Promise.all(ids.map(id => dispatch(api.delete(id))));
           dispatch(toggleSelected(OBJECT_TYPE, ids));
-          TrackEvent('Modal', 'delete', title);
+          EmitEvent('modal:submit', 'Modal', 'delete', title);
           dispatch(hideModal());
         }}
         onCancel={() => {
-          TrackEvent('Modal', 'cancel', title);
+          EmitEvent('modal:cancel', 'Modal', 'cancel', title);
           dispatch(hideModal());
         }}
         items={nodebalancersArr.map(n => n.label)}
