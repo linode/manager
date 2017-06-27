@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.10.0] 2017-06-27
+### Added
+- analytics in modals and selects #2083
+- sentry for error tracking #2149
+### Changed
+- prevent graph from re-rendering needlessly #2153
+### Fixed
+- reset RDNS wording and only display when relevant #2140
+- other linode in iptransfer must be in same datacenter #2145
+- oauth scope formatting # 2139
+- redirect to /linodes on delete #2147
+
 ## [0.9.10] 2017-06-27
 ### Changed
 - rename dnszone grant to domain

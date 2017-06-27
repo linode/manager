@@ -1,6 +1,6 @@
 {
   "name": "linode-manager",
-  "version": "0.9.10",
+  "version": "0.10.0",
   "dependencies": {
     "abbrev": {
       "version": "1.0.9",
