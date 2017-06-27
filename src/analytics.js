@@ -33,6 +33,7 @@ function init(environment, GA_ID) {
   handleEvent('modal:cancel');
   handleEvent('modal:show');
   handleEvent('modal:close');
+  handleEvent('select:change');
 };
 
 export const analytics = {
