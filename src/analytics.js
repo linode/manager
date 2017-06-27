@@ -19,7 +19,7 @@ function handleEvent(eventName) {
   }, false);
 }
 
-function init(environment, GA_ID) {
+export function init(environment, GA_ID) {
   if (environment === 'debug') {
     loadGA(true);
     window.ga_debug = { trace: true };
@@ -34,8 +34,4 @@ function init(environment, GA_ID) {
   handleEvent('modal:show');
   handleEvent('modal:close');
   handleEvent('select:change');
-};
-
-export const analytics = {
-  init: init,
 };

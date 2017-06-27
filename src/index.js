@@ -17,7 +17,7 @@ import { actions, thunks, reducer } from '~/api/configs/linodes';
 import Billing from '~/billing';
 import DevTools from '~/components/DevTools';
 import { GA_ID, ENVIRONMENT, SENTRY_URL } from '~/constants';
-import { analytics } from './analytics';
+import { init as initAnalytics } from './analytics';
 import Domains from '~/domains';
 import Layout from '~/layouts/Layout';
 import Logout from '~/layouts/Logout';
@@ -42,7 +42,7 @@ store.dispatch(session.initialize);
 
 window.actions = actions; window.thunks = thunks; window.reducer = reducer;
 
-analytics.init(ENVIRONMENT, GA_ID);
+initAnalytics(ENVIRONMENT, GA_ID);
 if (ENVIRONMENT === 'production') {
   Raven
     .config(SENTRY_URL)
