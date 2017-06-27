@@ -1,8 +1,16 @@
 .Method {
     padding: 25px;
 
+    td {
+        border-right: $border;
+    }
+
     &-request {
         padding: 10px 0 0 0;
+
+        .Docs & h3 {
+            padding: 0 0 10px 0;            
+        }
 
         .Tabs {
             .ReactTabs__TabList {
@@ -12,7 +20,6 @@
             .ReactTabs__Tab {
                 height: 30px;
                 padding: 4px 10px;
-
             }
 
             &-container {
@@ -22,17 +29,12 @@
         }
     }
 
-    td {
-        border-right: $border;
+    &-section {
+        width: 100%;
+        overflow: auto;
     }
-}
-
-.Method-section.Method-request {
-    margin-bottom: 30px;
-}
-
-.Docs .Method-request {
-    h3 {
-        padding: 0 0 10px 0;
+    
+    &-section.#{&}-request {
+        margin-bottom: 30px;
     }
 }

@@ -118,6 +118,7 @@ window.setTitle = function(newTitle) {
   }
 };
 
+
 function updateTitle() {
   const h1 = document.querySelector('h1');
   if (h1) {
