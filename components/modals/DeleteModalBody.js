@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import ConfirmModalBody from './ConfirmModalBody';
 import { ScrollingList } from '../lists';
-import { default as EmitEvent } from '../utils';
+import { EmitEvent } from '../utils';
 
 export default function DeleteModalBody(props) {
   const {
