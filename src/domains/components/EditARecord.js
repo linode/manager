@@ -1,13 +1,6 @@
 import React, { PropTypes, Component } from 'react';
 
-import {
-  Form,
-  FormSummary,
-  Select,
-  Input,
-  SubmitButton,
-  ModalFormGroup,
-} from 'linode-components/forms';
+import { Form, FormSummary, Input, SubmitButton, ModalFormGroup } from 'linode-components/forms';
 import { CancelButton } from 'linode-components/buttons';
 
 import { domains } from '~/api';
@@ -15,6 +8,7 @@ import { dispatchOrStoreErrors } from '~/api/util';
 import { EmitEvent } from 'linode-components/utils';
 
 import SelectDNSSeconds from './SelectDNSSeconds';
+
 
 export default class EditARecord extends Component {
   constructor(props) {
@@ -59,6 +53,10 @@ export default class EditARecord extends Component {
   }
 
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
+  onIPChange = ({ target: { value } }) => {
+    const type = value.indexOf(':') !== -1 ? 'AAAA' : 'A';
+    this.setState({ type: value ? type : this.state.type, ip: value });
+  }
 
   render() {
     const { close, title } = this.props;
@@ -80,8 +78,8 @@ export default class EditARecord extends Component {
             id="ip"
             name="ip"
             value={ip}
-            placeholder="1.1.1.1"
-            onChange={this.onChange}
+            placeholder={type === 'A' ? '172.16.254.1' : '2001:0db8:85a3:0000:0000:8a2e:0370:7334'}
+            onChange={this.onIPChange}
           />
         </ModalFormGroup>
         <ModalFormGroup label="TTL" id="ttl" apiKey="ttl_sec" errors={errors}>
@@ -93,19 +91,6 @@ export default class EditARecord extends Component {
             onChange={this.onChange}
           />
         </ModalFormGroup>
-        {this.props.id ? null : (
-          <ModalFormGroup label="Type" id="type" apiKey="type" errors={errors}>
-            <Select
-              id="type"
-              name="type"
-              value={type || 'A'}
-              defaultSeconds={defaultTTL}
-              onChange={this.onChange}
-            >
-              <option value="A">A</option>
-              <option value="AAAA">AAAA</option>
-            </Select>
-          </ModalFormGroup>)}
         <div className="Modal-footer">
           <CancelButton
             onClick={() => {

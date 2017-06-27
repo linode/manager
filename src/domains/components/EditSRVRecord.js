@@ -118,7 +118,7 @@ export default class EditSRVRecord extends Component {
             id="target"
             name="target"
             value={target}
-            placeholder=""
+            placeholder="www"
             onChange={this.onChange}
           />
         </ModalFormGroup>
