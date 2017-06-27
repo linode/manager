@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.9.10] 2017-06-27
+### Changed
+- rename dnszone grant to domain
+
 ## [0.9.9] 2017-06-26
 ### Fixed
 - overflowing text in domains txt record values now gets truncated

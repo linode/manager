@@ -82,7 +82,7 @@ describe('users/user/layouts/PermissionsPage', () => {
               id: 4321,
             },
           ],
-          dnszone: [
+          domain: [
             {
               all: true,
               access: true,

@@ -31,8 +31,8 @@ export class PermissionsPage extends Component {
 
   onSubmit = () => {
     const { dispatch, user: { username } } = this.props;
-    const { global, customer, linode, nodebalancer, dnszone } = this.state;
-    const data = { global, customer, linode, nodebalancer, dnszone };
+    const { global, customer, linode, nodebalancer, domain } = this.state;
+    const data = { global, customer, linode, nodebalancer, domain };
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => users.permissions.put(data, username),
@@ -66,7 +66,7 @@ export class PermissionsPage extends Component {
   }
 
   render() {
-    const { global, customer, linode, dnszone, nodebalancer, loading, errors } = this.state;
+    const { global, customer, linode, domain, nodebalancer, loading, errors } = this.state;
 
     return (
       <Form onSubmit={this.onSubmit}>
@@ -144,9 +144,9 @@ export class PermissionsPage extends Component {
           />
           <PermissionsTable
             title="Domains"
-            parentKey="dnszone"
+            parentKey="domain"
             onCellChange={this.onCellChange}
-            objects={dnszone}
+            objects={domain}
             columns={[
               { dataKey: 'all', label: 'All' },
               { dataKey: 'access', label: 'Access' },
