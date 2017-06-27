@@ -11,7 +11,7 @@ import {
 
 import { tokens } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
-import { TrackEvent } from '~/actions/trackEvent.js';
+import { EmitEvent } from 'linode-components/utils';
 
 
 export default class EditPersonalAccessToken extends Component {
@@ -33,7 +33,7 @@ export default class EditPersonalAccessToken extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => tokens.put({ label }, id),
-      () => TrackEvent('Modal', 'edit', title),
+      () => { EmitEvent('modal:submit', 'Modal', 'edit', title) },
       close,
     ]));
   }
@@ -56,7 +56,7 @@ export default class EditPersonalAccessToken extends Component {
         <div className="Modal-footer">
           <CancelButton
             onClick={() => {
-              TrackEvent('Modal', 'cancel', title);
+              EmitEvent('modal:cancel', 'Modal', 'cancel', title);
               close();
             }}
           />

@@ -13,7 +13,7 @@ import { hideModal } from '~/actions/modal';
 import { linodes } from '~/api';
 import { resizeLinodeDisk } from '~/api/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
-import { TrackEvent } from '~/actions/trackEvent.js';
+import { EmitEvent } from 'linode-components/utils';
 
 
 export class EditModal extends Component {
@@ -33,7 +33,7 @@ export class EditModal extends Component {
     const { linode, disk, title, dispatch } = this.props;
 
     const requests = [
-      () => TrackEvent('Modal', 'edit', title),
+      () => { EmitEvent('modal:submit', 'Modal', 'edit', title) },
       hideModal,
     ];
     if (size !== disk.size) {
@@ -85,7 +85,7 @@ export class EditModal extends Component {
         <div className="Modal-footer">
           <CancelButton
             onClick={() => {
-              TrackEvent('Modal', 'cancel', title);
+              EmitEvent('modal:cancel', 'Modal', 'cancel', title);
               dispatch(hideModal());
             }}
           />

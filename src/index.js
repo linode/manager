@@ -17,6 +17,7 @@ import { actions, thunks, reducer } from '~/api/configs/linodes';
 import Billing from '~/billing';
 import DevTools from '~/components/DevTools';
 import { GA_ID, ENVIRONMENT, SENTRY_URL } from '~/constants';
+import { analytics } from './analytics';
 import Domains from '~/domains';
 import Layout from '~/layouts/Layout';
 import Logout from '~/layouts/Logout';
@@ -41,27 +42,14 @@ store.dispatch(session.initialize);
 
 window.actions = actions; window.thunks = thunks; window.reducer = reducer;
 
-function loadGA(debug = false) {
-  /* eslint-disable */
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script',`https://www.google-analytics.com/analytics${debug && '_debug' || ''}.js`,'ga');
-  /* eslint-enable */
-}
-
-if (ENVIRONMENT === 'debug') {
-  loadGA(true);
-  window.ga_debug = { trace: true };
-  window.ga('create', GA_ID, { cookieDomain: 'none', debug: true });
-} else {
-  loadGA();
-  window.ga('create', GA_ID, 'auto');
+analytics.init(ENVIRONMENT, GA_ID);
+if (ENVIRONMENT === 'production') {
   Raven
     .config(SENTRY_URL)
     .install();
 }
 
+// TODO: move to analytics
 function onPageChange() {
   // Log page views.
   window.ga('send', 'pageview');
@@ -117,16 +105,6 @@ window.handleError = function (e) {
   // Needed for react-guard.
   return null;
 };
-
-document.addEventListener('track', function (e) {
-  const { cate, action, label, value } = e.detail;
-  window.ga('send', 'event', {
-    category: cate,
-    action: action,
-    label: label,
-    value: value,
-  });
-}, false);
 
 const init = () => {
   try {

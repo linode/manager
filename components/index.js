@@ -10,3 +10,4 @@ import 'navigation/index';
 import 'tables/index';
 import 'tabs/index'
 import 'tooltips/index';
+import 'utils/index';

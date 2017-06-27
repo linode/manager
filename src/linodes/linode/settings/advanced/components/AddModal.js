@@ -15,7 +15,7 @@ import {
 import { hideModal } from '~/actions/modal';
 import { linodes } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
-import { TrackEvent } from '~/actions/trackEvent.js';
+import { EmitEvent } from 'linode-components/utils';
 
 
 export class AddModal extends Component {
@@ -46,7 +46,7 @@ export class AddModal extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => linodes.disks.post(data, linode.id),
-      () => TrackEvent('Modal', 'add', title),
+      () => { EmitEvent('modal:submit', 'Modal', 'add', title) },
       hideModal,
     ]));
   }
@@ -143,7 +143,7 @@ export class AddModal extends Component {
         <div className="Modal-footer">
           <CancelButton
             onClick={() => {
-              TrackEvent('Modal', 'cancel', title);
+              EmitEvent('modal:cancel', 'Modal', 'cancel', title);
               dispatch(hideModal());
             }}
           />

@@ -12,7 +12,7 @@ import {
 import { showModal, hideModal } from '~/actions/modal';
 import { setRDNS } from '~/api/networking';
 import { dispatchOrStoreErrors } from '~/api/util';
-import { TrackEvent } from '~/actions/trackEvent.js';
+import { EmitEvent } from 'linode-components/utils';
 
 
 export default class EditRDNS extends Component {
@@ -41,7 +41,7 @@ export default class EditRDNS extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => setRDNS(ip, hostname),
-      () => TrackEvent('Modal', 'edit', title),
+      () => { EmitEvent('modal:submit', 'Modal', 'edit', title) },
       close,
     ]));
   }
@@ -76,7 +76,7 @@ export default class EditRDNS extends Component {
         <div className="Modal-footer">
           <CancelButton
             onClick={() => {
-              TrackEvent('Modal', 'cancel', title);
+              EmitEvent('modal:cancel', 'Modal', 'cancel', title);
               close();
             }}
           />

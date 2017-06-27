@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import ConfirmModalBody from './ConfirmModalBody';
 import { ScrollingList } from '../lists';
-import { TrackEvent } from '~/actions/trackEvent.js';
+import { default as EmitEvent } from '../utils';
 
 export default function DeleteModalBody(props) {
   const {
@@ -40,11 +40,11 @@ export default function DeleteModalBody(props) {
       buttonDisabledText="Deleting"
       onOk={() => {
         onOk();
-        TrackEvent('Modal', 'delete', typeOfItem);
+        EmitEvent('modal:submit', 'Modal', 'delete', typeOfItem);
       }}
       onCancel={() => {
         onCancel();
-        TrackEvent('Modal', 'cancel', typeOfItem);
+        EmitEvent('modal:cancel', 'Modal', 'cancel', typeOfItem);
       }}
     >
       {body}

@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import { TrackEvent } from '~/actions/trackEvent.js';
+import { EmitEvent } from '../utils';
 
 export default function Select(props) {
   return (
@@ -13,7 +13,12 @@ export default function Select(props) {
         disabled={props.disabled}
         onChange={(e) => {
           const value = String(e.target.value);
-          TrackEvent('Select', value.indexOf(':') < 0 ? value.split(':')[0] : value, props.name);
+          EmitEvent(
+            'select:change',
+            'Select',
+            value.indexOf(':') < 0 ? value.split(':')[0] : value,
+            props.name
+          );
           props.onChange(e);
         }}
       >

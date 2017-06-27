@@ -16,7 +16,7 @@ import { showModal } from '~/actions/modal';
 import { tokens } from '~/api';
 import { OAUTH_SUBSCOPES, OAUTH_SCOPES } from '~/constants';
 import { dispatchOrStoreErrors } from '~/api/util';
-import { TrackEvent } from '~/actions/trackEvent.js';
+import { EmitEvent } from 'linode-components/utils';
 
 import SelectExpiration from '../../components/SelectExpiration';
 
@@ -26,11 +26,11 @@ export function renderSecret(label, verb, secret, close) {
   return showModal(title,
     <ConfirmModalBody
       onOk={() => {
-        TrackEvent('Modal', 'I understand', title);
+        EmitEvent('modal:submit', 'Modal', 'I understand', title);
         close();
       }}
       onCancel={() => {
-        TrackEvent('Modal', 'cancel', title);
+        EmitEvent('modal:submit', 'Modal', 'cancel', title);
         close();
       }}
       buttonText="I understand"
@@ -78,7 +78,7 @@ export default class CreatePersonalAccessToken extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => tokens.post({ label, scopes, expiry: SelectExpiration.map(expiry) }),
-      () => TrackEvent('Modal', 'create', title),
+      () => { EmitEvent('modal:submit', 'Modal', 'create', title) },
       ({ token }) => renderSecret(
         'personal access token', 'created', token, this.props.close),
     ]));
@@ -139,7 +139,7 @@ export default class CreatePersonalAccessToken extends Component {
         <div className="Modal-footer">
           <CancelButton
             onClick={() => {
-              TrackEvent('Modal', 'cancel', title);
+              EmitEvent('modal:cancel', 'Modal', 'cancel', title);
               close();
             }}
           />
