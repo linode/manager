@@ -39,7 +39,7 @@ export const testPermissions = {
       id: 4321,
     },
   ],
-  dnszone: [
+  domain: [
     {
       all: true,
       access: true,
