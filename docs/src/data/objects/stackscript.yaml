@@ -32,7 +32,7 @@ schema:
     _filterable: true
   distributions:
     _description: A list of distributions this StackScript is compatible with.
-    _type: array
+    _type: Array[object]
     _editable: true
     _subtype: distribution
     _filterable: true
@@ -115,7 +115,7 @@ schema:
     _editable: true
   user_defined_fields:
     _description: Variables that can be set to customize the script per deployment.
-    _type: array
+    _type: Array[object]
     _value:
       - name:
           _type: string

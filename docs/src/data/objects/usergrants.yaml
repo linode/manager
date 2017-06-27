@@ -41,13 +41,13 @@ schema:
       _value: false
       _description: If this user may cancel the account.
   stackscript:
-    _type: array
+    _type: Array[object]
     _description: Individual grants to StackScripts you own.  Grants include all, use, edit and delete
   nodebalancer:
-    _type: array
+    _type: Array[object]
     _description: Individual grants to NodeBalancers you own.  Grants inlcude all, access, and delete
   linode:
-    _type: array
+    _type: Array[object]
     _description: Individual grants to a Linode you own.  Grants incldue all, access, resize, and delete
     _value:
       - all:
@@ -81,5 +81,5 @@ schema:
           _type: string
           _value: linode324
   domain:
-    _type: array
+    _type: Array[object]
     _description: Individual grants to a Domain you own.  Grants include all, access and delete

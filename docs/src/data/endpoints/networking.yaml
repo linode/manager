@@ -137,7 +137,7 @@ endpoints:
           assignments:
             description: >
               An array of IPv4 addresses and the Linode IDs they will be assigned to
-            type: array
+            type: Array[object]
         examples:
           curl: |
             curl -H "Content-Type: application/json" \

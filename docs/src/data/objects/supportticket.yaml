@@ -44,6 +44,7 @@ schema:
     _description: The user who last updated this ticket.
   entity:
     _description: The entity this ticket was opened regarding
+    _type: object
     id:
       _type: integer
       _value: 9302

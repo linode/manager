@@ -80,7 +80,7 @@ schema:
       _value: "null"
       _description: The disk mapped to /dev/sdh.
   helpers:
-    _type: array
+    _type: object
     _description: Helpers enabled when booting to this Linode config.
     disable_updatedb:
       _editable: true

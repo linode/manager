@@ -9,7 +9,7 @@ schema:
     _value: 123456
     _description: This Linode's ID
   alerts:
-    _type: array
+    _type: object
     _description: >
       Toggle and set thresholds for receiving email alerts.
       <ul>
@@ -223,7 +223,7 @@ schema:
     limit: 0-50 characters
   ipv4:
     _editable: false
-    _type: array
+    _type: Array[string]
     _subtype: string
     _description: This Linode's IPv4 addresses.
     _value: ["97.107.143.8", "192.168.149.108"]
@@ -241,7 +241,7 @@ schema:
     _limit: "3-32 ASCII characters limited to letters, numbers, underscores, and dashes, starting and ending with a letter, and without two dashes or underscores in a row"
   type:
     _description: The type of Linode.
-    _type: array
+    _type: Array[object]
     _subtype: service
     _value:
       - id:

@@ -19,7 +19,7 @@
 }
 
 .TypeColumn {
-    width: 75px;
+    width: 120px;
 }
 
 .StatusCodeColumn {
@@ -32,8 +32,4 @@
     @media screen and (max-width: #{$table-breakpoint}) {
         width: 198px;
     }
-}
-
-.TypeColumn {
-    width: 100px;
 }
