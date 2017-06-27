@@ -33,6 +33,7 @@ export default function Errors() {
   ]
 }`}
           name="json"
+          noclipboard
         />
         <p>
           The <code>errors</code> field is an array of the things that went
