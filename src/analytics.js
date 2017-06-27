@@ -34,4 +34,4 @@ export function init(environment, GA_ID) {
   handleEvent('modal:show');
   handleEvent('modal:close');
   handleEvent('select:change');
-};
+}

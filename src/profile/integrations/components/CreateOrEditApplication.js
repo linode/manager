@@ -7,7 +7,7 @@ import { clients } from '~/api';
 import { updateClientThumbnail } from '~/api/clients';
 import { MAX_UPLOAD_SIZE_MB } from '~/constants';
 import { dispatchOrStoreErrors } from '~/api/util';
-import { EmitEvent } from 'linode-components/utils';;
+import { EmitEvent } from 'linode-components/utils';
 
 import { renderSecret } from './CreatePersonalAccessToken';
 
@@ -53,7 +53,7 @@ export default class CreateOrEditApplication extends Component {
       },
       ({ secret }) => this.props.id ? this.props.close() :
         renderSecret('client', 'created', secret, this.props.close),
-      () => { EmitEvent('modal:submit', 'Modal', submitText, title) },
+      () => { EmitEvent('modal:submit', 'Modal', submitText, title); },
     ]));
   }
 

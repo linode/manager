@@ -41,7 +41,7 @@ export default class EditRDNS extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => setRDNS(ip, hostname),
-      () => { EmitEvent('modal:submit', 'Modal', 'edit', title) },
+      () => { EmitEvent('modal:submit', 'Modal', 'edit', title); },
       close,
     ]));
   }

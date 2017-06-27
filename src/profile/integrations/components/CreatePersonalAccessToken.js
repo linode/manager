@@ -78,7 +78,7 @@ export default class CreatePersonalAccessToken extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => tokens.post({ label, scopes, expiry: SelectExpiration.map(expiry) }),
-      () => { EmitEvent('modal:submit', 'Modal', 'create', title) },
+      () => { EmitEvent('modal:submit', 'Modal', 'create', title); },
       ({ token }) => renderSecret(
         'personal access token', 'created', token, this.props.close),
     ]));

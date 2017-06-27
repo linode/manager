@@ -33,7 +33,7 @@ export class EditModal extends Component {
     const { linode, disk, title, dispatch } = this.props;
 
     const requests = [
-      () => { EmitEvent('modal:submit', 'Modal', 'edit', title) },
+      () => { EmitEvent('modal:submit', 'Modal', 'edit', title); },
       hideModal,
     ];
     if (size !== disk.size) {

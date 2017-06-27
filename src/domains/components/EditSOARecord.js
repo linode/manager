@@ -78,7 +78,7 @@ export default class EditSOARecord extends Component {
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => domains.put(data, this.props.domains.id),
       () => setTitle(data.domain),
-      () => { EmitEvent('modal:submit', 'Modal', 'edit', title) },
+      () => { EmitEvent('modal:submit', 'Modal', 'edit', title); },
       () => close(domain)(),
     ]));
   }

@@ -46,7 +46,7 @@ export class NodeModal extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => nodebalancers.configs.nodes[state.id ? 'put' : 'post'](data, ...ids),
-      () => { EmitEvent('modal:submit', 'Modal', 'add', 'Add Node') },
+      () => { EmitEvent('modal:submit', 'Modal', 'add', 'Add Node'); },
       hideModal,
     ]));
   }

@@ -46,7 +46,7 @@ export class AddModal extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => linodes.disks.post(data, linode.id),
-      () => { EmitEvent('modal:submit', 'Modal', 'add', title) },
+      () => { EmitEvent('modal:submit', 'Modal', 'add', title); },
       hideModal,
     ]));
   }

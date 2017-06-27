@@ -53,7 +53,7 @@ export default class EditNSRecord extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => domains.records[id ? 'put' : 'post'](data, ...ids),
-      () => { EmitEvent('modal:submit', 'Modal', 'add', title) },
+      () => { EmitEvent('modal:submit', 'Modal', 'add', title); },
       close,
     ]));
   }

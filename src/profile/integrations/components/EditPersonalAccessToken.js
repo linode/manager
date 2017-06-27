@@ -33,7 +33,7 @@ export default class EditPersonalAccessToken extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => tokens.put({ label }, id),
-      () => { EmitEvent('modal:submit', 'Modal', 'edit', title) },
+      () => { EmitEvent('modal:submit', 'Modal', 'edit', title); },
       close,
     ]));
   }
