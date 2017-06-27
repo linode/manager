@@ -1,3 +1,7 @@
+.TableCell {
+    overflow: scroll;
+}
+
 // default checkbox rows with labels to use font-large for the label
 .CheckboxCell + .TableCell.LinkCell,
 .CheckboxCell + .TableCell.LabelCell {
