@@ -84,7 +84,7 @@ endpoints:
           Confirm your two-factor secret and require TFA for future logins.
         params:
           tfa_code:
-            type: string
+            type: String
             description: >
               The code generated using the two-factor secret you got from tfa-enable
         examples:
@@ -127,7 +127,7 @@ endpoints:
             my_profile = client.account.get_profile()
             my_grants = my_profile.grants
   account/tokens:
-    type: list
+    type: List
     resource: oauthtoken
     description: >
       Manage OAuth Tokens created for your user.
@@ -151,20 +151,20 @@ endpoints:
           can subsequently be used to access the API and make any requests it has OAuth Scopes for.
         params:
           label:
-            type: string
+            type: String
             value: my-token
             optional: true
             description: >
               The label for this Personal Access Token.  For your reference only.
           expiry:
-            type: datetime
+            type: Datetime
             value: 2017-12-31 01:00:00
             optional: true
             description: >
               If provided, when this Personal Access Token will expire.  If omitted, the resulting
               token will be valid until it is revoked.
           scopes:
-            type: string
+            type: String
             value: linodes:view
             optional: true
             description: >
@@ -270,7 +270,7 @@ endpoints:
             my_settings.email = 'jsmith@company.com'
             my_settings.save()
   account/clients:
-    type: list
+    type: List
     resource: client
     authenticated: true
     description: >
@@ -293,11 +293,11 @@ endpoints:
         params:
           label:
             description: A name for the new client application.
-            type: string
+            type: String
             limit: "1-128 characters"
           redirect_uri:
             description: A URL to redirect to after the OAuth flow has completed.
-            type: string
+            type: String
             limit: "1-512 characters"
         examples:
           curl: |
@@ -357,7 +357,7 @@ endpoints:
             my_client = linode.OAuthClient(client, 123)
             my_client.delete()
   account/clients/:id/reset_secret:
-    type: action
+    type: Action
     authenticated: true
     description: >
       Reset the OAuth application's client secret.
@@ -375,7 +375,7 @@ endpoints:
             my_client = linode.OAuthClient(client, 123)
             new_secret = my_client.reset_secret()
   account/clients/:id/thumbnail:
-    type: action
+    type: Action
     authenticated: true
     description: >
       Manage the OAuth application's thumbnail image.
@@ -414,7 +414,7 @@ endpoints:
                 img = f.read()
             my_client.set_thumbnail(img)
   account/users:
-    type: list
+    type: List
     resource: account
     description: >
       Returns a list of <a href="#object-user">User objects</a> associated with your account.
@@ -430,17 +430,17 @@ endpoints:
           Creates a new user.
         params:
           username:
-            type: string
+            type: String
             description: The username for the new user.
           email:
-            type: string
+            type: String
             description: The user's email.
           password:
-            type: string
+            type: String
             description: The user's password.
           restricted:
             optinoal: true
-            type: bool
+            type: Bool
             description: If false, this user has access to the entire account.  Defaults to true.
         examples:
           curl: |
@@ -494,14 +494,14 @@ endpoints:
             my_user = linode.User(client, 'username')
             my_user.delete()
   account/users/:username/password:
-    type: action
+    type: Action
     description: >
       Update a user's password
     methods:
       POST:
         params:
           password:
-            type: string
+            type: String
             description: The user's new password.
         examples:
           curl: |

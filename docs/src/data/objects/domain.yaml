@@ -5,39 +5,39 @@ description: >
   Domains
 schema:
   id:
-    _type: integer
+    _type: Integer
     _value: 357
   domain:
     _editable: true
-    _type: string
+    _type: String
     _value: example.com
     _filterable: true
     _description: >
       The Domain name.
   soa_email:
     _editable: true
-    _type: string
+    _type: String
     _value: admin@example.com
     _optional: true
     _description: >
       Start of Authority (SOA) contact email.
   description:
     _editable: true
-    _type: string
+    _type: String
     _value: Example Description
     _optional: true
     _description: >
       A description to keep track of this Domain.
   refresh_sec:
     _editable: true
-    _type: integer
+    _type: Integer
     _value: 14400
     _optional: true
     _description: >
       Time interval before the Domain should be refreshed, in seconds.
   retry_sec:
     _editable: true
-    _type: integer
+    _type: Integer
     _value: 3600
     _optional: true
     _description: >
@@ -45,7 +45,7 @@ schema:
       be retried, in seconds.
   expire_sec:
     _editable: true
-    _type: integer
+    _type: Integer
     _value: 604800
     _optional: true
     _description: >
@@ -54,7 +54,7 @@ schema:
       longer authoritative, in seconds.
   ttl_sec:
     _editable: true
-    _type: integer
+    _type: Integer
     _value: 3600
     _optional: true
     _description: >
@@ -62,7 +62,7 @@ schema:
         it should be discarded, in seconds.
   status:
     _editable: true
-    _type: enum
+    _type: Enum
     _subtype: status
     _value: active
     _optional: true
@@ -92,7 +92,7 @@ schema:
   group:
     _editable: true
     _value: Example Display Group
-    _type: string
+    _type: String
     _optional: true
     _filterable: true
     _description: >
@@ -100,7 +100,7 @@ schema:
   type:
     _editable: false
     _value: master
-    _type: enum
+    _type: Enum
     _filterable: true
     _subtype: domain_type
     _description: Controls the Domain type.

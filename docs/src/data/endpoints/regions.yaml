@@ -6,7 +6,7 @@ description: >
   region objects</a>.
 endpoints:
   regions:
-    type: list
+    type: List
     resource: regions
     description: >
       Returns collection of regions.

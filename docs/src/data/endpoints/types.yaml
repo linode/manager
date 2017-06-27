@@ -6,7 +6,7 @@ description: >
   Type endpoints provide a means of viewing type objects.
 endpoints:
   linode/types:
-    type: list
+    type: List
     resource: types
     description: >
       Returns collection of types.

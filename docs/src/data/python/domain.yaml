@@ -5,7 +5,7 @@ desc: >
     Represents a Domain in the API.
 _pylib_attributes:
     records:
-        _type: list
+        _type: List
         _description: A list of DomainRecords belonging to this Domain
 constructor:
     name: Domain
