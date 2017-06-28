@@ -31,7 +31,10 @@
 
     &-section {
         width: 100%;
-        overflow: auto;
+
+        @media screen and (max-width: #{$table-breakpoint}) {
+            overflow-x: auto;
+        }
     }
     
     &-section.#{&}-request {

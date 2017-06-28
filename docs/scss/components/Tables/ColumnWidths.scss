@@ -1,7 +1,7 @@
 .EndpointColumn {
     width: 325px;
 
-    @media screen and (max-width: 768px) {
+    @media screen and (max-width: #{$table-breakpoint}) {
         width: 198px;
     }
 }
@@ -29,7 +29,7 @@
 .FieldColumn {
     width: 220px;
 
-    @media screen and (max-width: 768px) {
+    @media screen and (max-width: #{$table-breakpoint}) {
         width: 198px;
     }
 }

@@ -25,11 +25,12 @@ $sidebar-width: 250px;
         background-color: $white;
         min-height: calc(100% - #{$nav-height + $mini-nav-height});
         margin-left: $sidebar-width;
-        width: calc(100% - #{$sidebar-width});
+        // Subtract the bootstrap margin too.
+        width: calc(100% - #{$sidebar-width} - 30px);
         border-right: $border;
     }
 
-    @media screen and (max-width: 768px) {
+    @media screen and (max-width: #{$sidebar-breakpoint}) {
         width: 100%;
 
         &-container {
@@ -56,7 +57,9 @@ $sidebar-width: 250px;
             width: 100%;
             border: 0;
         }
+    }
 
+    @media screen and (max-width: #{$table-breakpoint}) {    
         .Table {
             width: auto;
         }
