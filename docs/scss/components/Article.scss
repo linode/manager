@@ -2,7 +2,10 @@
     padding: 20px 25px;
     max-width: 750px;
     width: 100%;
-    overflow-x: auto;
+
+    @media screen and (max-width: #{$table-breakpoint}) {
+        overflow-x: auto;
+    }
 
     &-title {
         padding: 10px 0;

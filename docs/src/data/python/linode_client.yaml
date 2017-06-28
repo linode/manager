@@ -224,8 +224,3 @@ groups:
                 example: |
                     distros = client.linode.get_distributions(linode.or_(linode.Distribution.vendor == 'Ubuntu', linode.Distribution.vendor == 'Debian'))
                     s = client.create_stackscript('my-stackscript', '~/stackscripts/my-stackscript.sh', distros)
-    dns:
-        name: Dns
-        desc: >
-            All methods for accessing and creating Dns-related resources
-        methods:
