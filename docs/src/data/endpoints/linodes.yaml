@@ -154,7 +154,7 @@ endpoints:
             my_linode.delete()
   linode/instances/:id/disks:
     type: list
-    resource: linode
+    resource: disk
     authenticated: true
     description: >
       Manage the disks associated with this Linode.
