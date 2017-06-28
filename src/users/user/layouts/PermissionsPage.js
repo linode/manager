@@ -12,13 +12,21 @@ import {
 } from 'linode-components/forms';
 
 import { users } from '~/api';
-import { dispatchOrStoreErrors } from '~/api/util';
+import { dispatchOrStoreErrors, getObjectByLabelLazily } from '~/api/util';
 
 import { selectUser } from './IndexPage';
 import { PermissionsTable } from '../components';
 
 
 export class PermissionsPage extends Component {
+  static async preload({ dispatch, getState }, { username }) {
+    const user = await dispatch(getObjectByLabelLazily('users', username, 'username'));
+
+    if (user.restricted) {
+      await dispatch(users.permissions.one([username]));
+    }
+  }
+
   constructor(props) {
     super(props);
 
