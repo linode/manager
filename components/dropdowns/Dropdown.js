@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
-import { TrackEvent } from '~/actions/trackEvent.js';
 
 
 export default class Dropdown extends Component {
@@ -14,10 +13,16 @@ export default class Dropdown extends Component {
   }
 
   open() {
+    if(typeof this.props.onOpen === "function") {
+      this.props.onOpen();
+    }
     this.setState({ open: !this.state.open });
   }
 
   close() {
+    if(typeof this.props.onClose === "function") {
+      this.props.onClose();
+    }
     this.setState({ open: false });
   }
 
@@ -58,11 +63,7 @@ export default class Dropdown extends Component {
             data-toggle="dropdown"
             aria-haspopup="true"
             aria-expanded={this.state.open}
-            onClick={() => {
-              const value = rest.map((item, i) => !item ? '-' : item.name).join('|');
-              TrackEvent('Dropdown', 'open', `${first}|${value}`);
-              this.open();
-            }}
+            onClick={this.open}
           ><i className={`fa ${dropdownIcon}`} /></button>
         )}
         <div className={`Dropdown-menu ${orientation}`}>{dropdownMenu}</div>
@@ -79,6 +80,8 @@ Dropdown.propTypes = {
   leftOriented: PropTypes.bool,
   disabled: PropTypes.bool,
   dropdownIcon: PropTypes.string,
+  onOpen: PropTypes.func,
+  onClose: PropTypes.func,
 };
 
 Dropdown.defaultProps = {

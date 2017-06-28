@@ -16,6 +16,7 @@ import {
 
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
+import { TrackEvent } from '~/actions/trackEvent.js';
 import { domains, linodes, nodebalancers, tickets } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 
@@ -62,6 +63,7 @@ export class CreatePage extends Component {
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => tickets.post({ summary, description, [regardingField]: +regardingId }),
       ({ id }) => push(`/support/${id}`),
+      () => TrackEvent('Submit', 'open', 'ticket'),
     ]));
   }
 

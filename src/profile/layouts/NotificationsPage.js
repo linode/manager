@@ -8,6 +8,7 @@ import {
   SubmitButton,
 } from 'linode-components/forms';
 
+import { TrackEvent } from '~/actions/trackEvent.js';
 import { profile } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 
@@ -27,6 +28,7 @@ export class NotificationsPage extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => profile.put({ email_notifications: !enabled }),
+      () => TrackEvent('Submit', enabled ? 'Disable' : 'Enable', 'email notifications'),
     ]));
   }
 

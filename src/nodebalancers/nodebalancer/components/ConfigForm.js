@@ -12,6 +12,7 @@ import {
   SubmitButton,
 } from 'linode-components/forms';
 
+import { TrackEvent } from '~/actions/trackEvent.js';
 import { nodebalancers } from '~/api';
 import { updateConfigSSL } from '~/api/nodebalancers';
 import { dispatchOrStoreErrors } from '~/api/util';
@@ -76,7 +77,7 @@ export default class ConfigForm extends Component {
     }
 
     const idsPath = [nodebalancer.id, config.id].filter(Boolean);
-    const calls = [];
+    const calls = [() => TrackEvent('Submit', config.id ? 'edit' : 'add', 'nodebalancer config')];
     if ((config.id && protocol === 'https') &&
         (config.protocol !== 'https' || (sslCert || sslKey))) {
       calls.push(() => updateConfigSSL(sslData, ...idsPath));

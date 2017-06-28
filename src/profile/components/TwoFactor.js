@@ -8,6 +8,7 @@ import {
 } from 'linode-components/forms';
 
 import { showModal } from '~/actions/modal';
+import { TrackEvent } from '~/actions/trackEvent.js';
 import { toggleTFA } from '~/api/profile';
 import { dispatchOrStoreErrors } from '~/api/util';
 
@@ -33,6 +34,7 @@ export default class TwoFactor extends Component {
       requests.push(({ secret }) => this.twoFactorModal(secret));
     }
 
+    TrackEvent('Submit', tfaEnabled ? 'Disable' : 'Enable', 'Two Factor');
     return dispatch(dispatchOrStoreErrors.call(this, requests));
   }
 

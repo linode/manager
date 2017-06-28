@@ -16,6 +16,7 @@ import { linodes } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
+import { TrackEvent } from '~/actions/trackEvent.js';
 
 import { selectLinode } from '../../utilities';
 
@@ -40,6 +41,7 @@ export class DisplayPage extends Component {
     const requests = [
       () => linodes.put({ group, label }, id),
       () => setTitle(label),
+      () => TrackEvent('Submit', 'change display', 'linode'),
     ];
 
     if (oldLabel !== label) {

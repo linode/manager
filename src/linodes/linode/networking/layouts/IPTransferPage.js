@@ -13,6 +13,7 @@ import {
 
 
 import { setSource } from '~/actions/source';
+import { TrackEvent } from '~/actions/trackEvent.js';
 import { linodes } from '~/api';
 import { ipv4s, assignIPs } from '~/api/networking';
 import {
@@ -85,6 +86,7 @@ export class IPTransferPage extends Component {
       // This setState is important so that old checked IPs that have transferred don't break
       // things.
       () => this.setState({ checkedA: {}, checkedB: {} }),
+      () => TrackEvent('Submit', 'ip transfer', 'linode'),
     ]));
   }
 

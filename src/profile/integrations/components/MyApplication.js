@@ -80,13 +80,31 @@ export default class MyApplication extends Component {
 
   renderActions() {
     const elements = [
-      { name: 'Edit', action: this.editAction },
-      { name: 'Reset secret', action: this.resetAction },
+      { name: 'Edit', action: () => {
+        this.editAction();
+        EmitEvent('Dropdown', 'edit', 'my app');
+      }},
+      { name: 'Reset secret', action: () => {
+        this.resetAction();
+        EmitEvent('Dropdown', 'reset', 'my app');
+      }},
       null,
-      { name: 'Delete', action: this.deleteAction },
+      { name: 'Delete', action: () => {
+        this.deleteAction();
+        EmitEvent('Dropdown', 'delete', 'my app');
+      }},
     ];
 
-    return <Dropdown elements={elements} leftOriented={false} />;
+    return <Dropdown
+      elements={elements}
+      leftOriented={false}
+      onOpen={() => {
+        EmitEvent('Dropdown', 'open', 'my app');
+      }}
+      onClose={() => {
+        EmitEvent('Dropdown', 'close', 'my app');
+      }}
+    />;
   }
 
   render() {
