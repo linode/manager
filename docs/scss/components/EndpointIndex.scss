@@ -5,15 +5,19 @@
     &-group {
         margin-bottom: 20px;
         width: 100%;
-        overflow-x: auto;
     }
 
     &-breadcrumbsContainer {
         margin-bottom: 5px;
     }
 
-    .LinkCell {
-        @media screen and (max-width: 768px) {
+    @media screen and (max-width: #{$table-breakpoint}) {
+        &-header,
+        &-group {
+            overflow-x: auto;
+        }
+
+        .LinkCell {
             overflow-wrap: break-word;
         }
     }
