@@ -48,13 +48,13 @@ schema:
     _value: "2015-09-29T11:21:01"
     _description: An ISO 8601 datetime of when the backup completed.
   configs:
-    _type: Array
+    _type: Array[string]
     _subtype: string
     _description: A JSON Array of config labels that were included in this backup.
     _value:
       - "My Debian8 Profile"
   disks:
-    _type: Array
+    _type: Array[object]
     _subtype: disk
     _value:
       - label:

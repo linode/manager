@@ -6,7 +6,7 @@ schema:
     _description: >
       The Linode's IPv4 networking data.
     public:
-      _type: Array
+      _type: Array[object]
       _subtype: ipaddress
       _description: >
         The public IPv4 Addresses assigned to this Linode.
@@ -38,7 +38,7 @@ schema:
             _type: Integer
             _value: 123
     private:
-      _type: Array
+      _type: Array[object]
       _subtype: ipaddress
       _description: >
         The private IPv4 Addresses assigned to this Linode.
@@ -70,7 +70,7 @@ schema:
             _type: Integer
             _value: 123
     shared:
-      _type: Array
+      _type: Array[object]
       _subtype: ipaddress
       _value:
         - address:
@@ -104,7 +104,7 @@ schema:
       The Linode's IPv6 networking data.
     _value:
     addresses:
-        _type: Array
+        _type: Array[object]
         _subtype: ipv6-address
         _value:
           - address:
@@ -147,7 +147,7 @@ schema:
       _description: >
         This Linode's link-local range.
     global:
-      _type: Array
+      _type: Array[object]
       _subtype: ipv6pool
       _description: >
         Global IPv6 Pools that route to this Linode.

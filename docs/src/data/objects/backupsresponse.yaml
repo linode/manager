@@ -25,12 +25,12 @@ schema:
       _type: String
       _value: us-east-1a
     configs:
-      _type: Array
+      _type: Array[string]
       _subtype: string
       _value:
         - My Ubuntu 15.10 Profile
     disks:
-      _type: Array
+      _type: Array[object]
       _value:
         - filesystem:
             _type: String
@@ -53,7 +53,7 @@ schema:
   weekly:
     _description: >
       This Linode's current weekly backups.  Between 0 and 2 items.
-    _type: Array
+    _type: Array[object]
     _subtype: Backup
     _value:
     - id:
@@ -75,12 +75,12 @@ schema:
         _type: String
         _value: us-east-1a
       configs:
-        _type: Array
+        _type: Array[string]
         _subtype: string
         _value:
           - My Ubuntu 15.10 Profile
       disks:
-        _type: Array
+        _type: Array[object]
         _value:
           - filesystem:
               _type: String
@@ -119,12 +119,12 @@ schema:
         _type: String
         _value: us-east-1a
       configs:
-        _type: Array
+        _type: Array[string]
         _subtype: string
         _value:
           - My Ubuntu 15.10 Profile
       disks:
-        _type: Array
+        _type: Array[object]
         _value:
           - filesystem:
               _type: String
@@ -168,12 +168,12 @@ schema:
           _type: String
           _value: us-east-1a
         configs:
-          _type: Array
+          _type: Array[string]
           _subtype: string
           _value:
             - My Ubuntu 15.10 Profile
         disks:
-          _type: Array
+          _type: Array[object]
           _value:
             - filesystem:
                 _type: String
