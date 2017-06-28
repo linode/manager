@@ -5,7 +5,6 @@ import { push } from 'react-router-redux';
 
 import { Tabs } from 'linode-components/tabs';
 
-import { users } from '~/api';
 import { getObjectByLabelLazily } from '~/api/util';
 
 import { setTitle } from '~/actions/title';
