@@ -6,7 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-## [0.9.0] 2017-06-27
+## [0.9.1] 2017-06-29
+### Fixed
+- fix multiple docs/src/components/tables/cells directories
+
+## [0.9.0] 2017-06-29
 ### Added
 - page titles for each page #2114
 - next link for guides #2098
