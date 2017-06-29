@@ -18,9 +18,11 @@ export class PersonalAccessTokensPage extends Component {
 
   renderCreatePersonalAccessToken = () => {
     const { dispatch } = this.props;
-    dispatch(showModal('Create a Personal Access Token', (
+    const title = 'Create a Personal Access Token';
+    dispatch(showModal(title, (
       <CreatePersonalAccessToken
         dispatch={dispatch}
+        title={title}
         close={() => dispatch(hideModal())}
       />
     )));

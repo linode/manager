@@ -7,6 +7,8 @@ import { showModal, hideModal } from '~/actions/modal';
 import { nodebalancers as api } from '~/api';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
+import { EmitEvent } from 'linode-components/utils';
+
 import { DeleteModalBody } from 'linode-components/modals';
 import CreateHelper from '~/components/CreateHelper';
 import { List } from 'linode-components/lists';
@@ -48,17 +50,22 @@ export class IndexPage extends Component {
   deleteNodeBalancers(nodebalancers) {
     const { dispatch } = this.props;
     const nodebalancersArr = Array.isArray(nodebalancers) ? nodebalancers : [nodebalancers];
+    const title = 'Delete NodeBalancer(s)';
 
-    dispatch(showModal('Delete NodeBalancer(s)',
+    dispatch(showModal(title,
       <DeleteModalBody
         onOk={async () => {
           const ids = nodebalancersArr.map(function (nodebalancer) { return nodebalancer.id; });
 
           await Promise.all(ids.map(id => dispatch(api.delete(id))));
           dispatch(toggleSelected(OBJECT_TYPE, ids));
+          EmitEvent('modal:submit', 'Modal', 'delete', title);
           dispatch(hideModal());
         }}
-        onCancel={() => dispatch(hideModal())}
+        onCancel={() => {
+          EmitEvent('modal:cancel', 'Modal', 'cancel', title);
+          dispatch(hideModal());
+        }}
         items={nodebalancersArr.map(n => n.label)}
         typeOfItem="NodeBalancers"
       />

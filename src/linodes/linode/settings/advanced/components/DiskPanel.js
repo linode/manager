@@ -40,12 +40,14 @@ export class DiskPanel extends Component {
 
   editAction(d) {
     const { dispatch, linode } = this.props;
+    const title = 'Edit Disk';
 
-    return () => dispatch(showModal('Edit Disk', (
+    return () => dispatch(showModal(title, (
       <EditModal
         free={this.freeSpace()}
         linode={linode}
         disk={d}
+        title={title}
         dispatch={dispatch}
       />
     )));
@@ -69,12 +71,14 @@ export class DiskPanel extends Component {
 
   addAction = () => {
     const { dispatch, linode, distributions } = this.props;
+    const title = 'Add a Disk';
 
-    return dispatch(showModal('Add a Disk', (
+    return dispatch(showModal(title, (
       <AddModal
         distributions={distributions}
         free={this.freeSpace()}
         linode={linode}
+        title={title}
         dispatch={dispatch}
       />
     )));

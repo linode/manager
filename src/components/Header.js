@@ -60,7 +60,7 @@ export default class Header extends Component {
 
     const miniHeader = (
       <div className="MiniHeader-text">
-        This is the beta Linode Manager.
+        This is the early-access Linode Manager.
         Click <a href="https://manager.linode.com">here</a> to go back to the classic Linode Manager.
       </div>
     );

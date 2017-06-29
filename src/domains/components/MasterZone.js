@@ -103,6 +103,7 @@ export class MasterZone extends Component {
           dispatch(hideModal());
         }}
         items={[name]}
+        typeOfItem={title}
         onCancel={() => dispatch(hideModal())}
       />
     ));
@@ -110,11 +111,12 @@ export class MasterZone extends Component {
 
   renderSOAEditRecord() {
     const { dispatch, domain } = this.props;
-
+    const title = 'Edit SOA Record';
     dispatch(showModal(
-      'Edit SOA Record',
+      title,
       <EditSOARecord
         dispatch={dispatch}
+        title={title}
         domains={domain}
         close={(newDomain) => () => {
           dispatch(hideModal());
@@ -131,6 +133,7 @@ export class MasterZone extends Component {
       React.createElement(component, {
         ...props,
         dispatch,
+        title,
         zone: domain,
         close: () => dispatch(hideModal()),
       }),
@@ -168,17 +171,13 @@ export class MasterZone extends Component {
   render() {
     const { domain } = this.props;
 
-    if (!domain) {
-      return null;
-    }
-
     const formatSeconds = (records) => {
       return records.map(record => {
         const { ttl_sec: ttlSec } = record;
         const { ttl_sec: defaultTTLSec } = domain;
         return {
           ...record,
-          ttl_sec: formatDNSSeconds(ttlSec, defaultTTLSec),
+          ttl_sec: formatDNSSeconds(ttlSec, defaultTTLSec, true),
         };
       });
     };
@@ -192,10 +191,10 @@ export class MasterZone extends Component {
 
     const soaRecord = {
       ...domain,
-      ttl_sec: formatDNSSeconds(domain.ttl_sec),
-      refresh_sec: formatDNSSeconds(domain.refresh_sec),
-      retry_sec: formatDNSSeconds(domain.retry_sec),
-      expire_sec: formatDNSSeconds(domain.expire_sec, 604800),
+      ttl_sec: formatDNSSeconds(domain.ttl_sec, undefined, true),
+      refresh_sec: formatDNSSeconds(domain.refresh_sec, undefined, true),
+      retry_sec: formatDNSSeconds(domain.retry_sec, undefined, true),
+      expire_sec: formatDNSSeconds(domain.expire_sec, 604800, true),
     };
 
     return (

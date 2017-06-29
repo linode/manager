@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React, { PropTypes, Component } from 'react';
 
 import { ConfirmModalBody } from 'linode-components/modals';
@@ -7,11 +6,14 @@ import { Card, CardImageHeader } from 'linode-components/cards/';
 import { Table } from 'linode-components/tables';
 import TimeDisplay from '~/components/TimeDisplay';
 import { AuthScopeCell } from '~/components/tables/cells';
+import { EmitEvent } from 'linode-components/utils';
 
 import { showModal, hideModal } from '~/actions/modal';
 import { tokens } from '~/api';
 import { OAUTH_SUBSCOPES, OAUTH_SCOPES, API_ROOT } from '~/constants';
 import { dispatchOrStoreErrors } from '~/api/util';
+
+import { formatScope } from '../utilities';
 
 
 export default class AuthorizedApplication extends Component {
@@ -25,15 +27,20 @@ export default class AuthorizedApplication extends Component {
 
   renderRevokeApp(id, name, created) {
     const { dispatch } = this.props;
+    const title = 'Revoke Token Access';
 
-    dispatch(showModal('Revoke Token Access',
+    dispatch(showModal(title,
       <ConfirmModalBody
         buttonText="Revoke"
         onOk={async () => {
           await this.revokeApp(id);
+          EmitEvent('modal:submit', 'Modal', 'revoke', title);
           dispatch(hideModal());
         }}
-        onCancel={() => dispatch(hideModal())}
+        onCancel={() => {
+          EmitEvent('modal:cancel', 'Modal', 'cancel', title);
+          dispatch(hideModal());
+        }}
       >
         <p>
           Are you sure you want to revoke this token's access,
@@ -73,7 +80,7 @@ export default class AuthorizedApplication extends Component {
             columns={[
               {
                 dataKey: 'scope',
-                formatFn: _.capitalize,
+                formatFn: formatScope,
               },
             ].concat(OAUTH_SUBSCOPES.map((subscope) => ({
               subscope,

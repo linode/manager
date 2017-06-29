@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Table } from 'linode-components/tables';
-import { DescriptionCell, ParamFieldCell } from './tables/Cells';
+import { DescriptionCell, ParamFieldCell } from './tables/cells';
 
 
 export default function MethodParams(props) {

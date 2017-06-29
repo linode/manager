@@ -1,11 +1,11 @@
 import { expect } from 'chai';
 import { mount } from 'enzyme';
-import _ from 'lodash';
 import React from 'react';
 import sinon from 'sinon';
 
 import { OAUTH_SCOPES, OAUTH_SUBSCOPES } from '~/constants';
 import AuthorizedApplication from '~/profile/integrations/components/AuthorizedApplication';
+import { formatScope } from '~/profile/integrations/utilities';
 
 import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
 import { api } from '@/data';
@@ -40,7 +40,7 @@ describe('profile/integrations/components/AuthorizedApplication', () => {
 
       // +1 for scope name
       expect(columns.length).to.equal(OAUTH_SUBSCOPES.length + 1);
-      expect(columns.at(0).text()).to.equal(_.capitalize(OAUTH_SCOPES[i - 1]));
+      expect(columns.at(0).text()).to.equal(formatScope(OAUTH_SCOPES[i - 1]));
 
       // No strikethroughs because all scopes are granted
       expect(row.find('.fa-times').length).to.equal(0);
@@ -68,7 +68,7 @@ describe('profile/integrations/components/AuthorizedApplication', () => {
 
       // +1 for scope name
       expect(columns.length).to.equal(OAUTH_SUBSCOPES.length + 1);
-      expect(columns.at(0).text()).to.equal(_.capitalize(OAUTH_SCOPES[i - 1]));
+      expect(columns.at(0).text()).to.equal(formatScope(OAUTH_SCOPES[i - 1]));
 
       switch (OAUTH_SCOPES[i - 1]) {
         case 'linodes':

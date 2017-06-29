@@ -20,9 +20,9 @@ export default function Endpoint(props) {
           <Breadcrumbs crumbs={crumbs} />
         </div>
         <div className="Title">
-          <div className="Title-heading">
+          <div className="Title-heading clearfix">
             <h1>{path}</h1>
-            {authenticated ? <div className="Descriptor Descriptor--inline"><small className="text-muted"><i className="fa fa-lock"></i> Authenticated</small></div> : null}
+            {authenticated ? <div className="float-sm-right"><small className="text-muted"><i className="fa fa-lock"></i> Authenticated</small></div> : null}
           </div>
           <p>{description}</p>
         </div>

@@ -23,7 +23,7 @@ export default function CoreConcepts(props) {
       <section>
         <h2>Filtering</h2>
         <p>
-          All listing methods of the LinodeClient object can be "filtered," allowing you to query for only the objects you desire. Filtering uses a SQLAlchemy-inspired syntax. All attributes that are filterable are marked with a Filterable <i className="fa fa-filter"></i> icon below.
+          All listing methods of the LinodeClient object can be "filtered," allowing you to query for only the objects you desire. Filtering uses a SQLAlchemy-inspired syntax.
         </p>
         <Table
           columns={[
@@ -90,6 +90,7 @@ while not linode.state == 'running':
           While many API requests are paginated, all listing calls in the Python Library return <code>PaginatedLists</code> that handle loading additional pages seamlessly. While these lists are not intended to be long-lived (i.e. do not store a PaginatedList that you expect to change, as it will not update itself), it does allow easy iteration over all resources without having to worry about when a page transition occurs.
         </p>
       </section>
+      <div className="text-sm-center"><Link to={`/${API_VERSION}/libraries/python`}>Check out the Python Library objects &raquo;</Link></div>
     </section>
   );
 }

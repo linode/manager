@@ -9,6 +9,10 @@ tr.NestedSchemaParent {
         cursor: pointer;
         background-color: $medium-gray;
     }
+
+    td:first-of-type .fa {
+        padding-right: 5px;
+    }
 }
 
 td.NestedSchemaCell {

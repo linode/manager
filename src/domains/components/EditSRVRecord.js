@@ -12,6 +12,7 @@ import { CancelButton } from 'linode-components/buttons';
 
 import { domains } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
+import { EmitEvent } from 'linode-components/utils';
 
 import SelectDNSSeconds from './SelectDNSSeconds';
 
@@ -50,7 +51,7 @@ export default class EditSRVRecord extends Component {
   }
 
   onSubmit = () => {
-    const { dispatch, id, close } = this.props;
+    const { dispatch, id, title, close } = this.props;
     const { ttl, service, protocol, target, priority, weight, port } = this.state;
     const ids = [this.props.zone.id, id].filter(Boolean);
     const data = {
@@ -66,6 +67,7 @@ export default class EditSRVRecord extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => domains.records[id ? 'put' : 'post'](data, ...ids),
+      () => { EmitEvent('modal:submit', 'Modal', id ? 'edit' : 'add', title); },
       close,
     ]));
   }
@@ -73,7 +75,7 @@ export default class EditSRVRecord extends Component {
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value });
 
   render() {
-    const { close } = this.props;
+    const { close, title } = this.props;
     const {
       errors,
       loading,
@@ -116,7 +118,7 @@ export default class EditSRVRecord extends Component {
             id="target"
             name="target"
             value={target}
-            placeholder=""
+            placeholder="www"
             onChange={this.onChange}
           />
         </ModalFormGroup>
@@ -166,7 +168,12 @@ export default class EditSRVRecord extends Component {
           />
         </ModalFormGroup>
         <div className="Modal-footer">
-          <CancelButton onClick={close} />
+          <CancelButton
+            onClick={() => {
+              EmitEvent('modal:cancel', 'Modal', 'cancel', title);
+              close();
+            }}
+          />
           <SubmitButton
             disabled={loading}
             disabledChildren={this.props.id ? undefined : 'Adding SRV Record'}
@@ -183,6 +190,7 @@ export default class EditSRVRecord extends Component {
 EditSRVRecord.propTypes = {
   dispatch: PropTypes.func.isRequired,
   zone: PropTypes.object.isRequired,
+  title: PropTypes.string.isRequired,
   close: PropTypes.func.isRequired,
   id: PropTypes.number,
 };

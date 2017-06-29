@@ -121,8 +121,10 @@ export class LoadingRouterContext extends RouterContext {
     this.props.dispatch(preloadReset());
     setTimeout(() => this.props.dispatch(preloadStart()), 0);
 
-    // Necessary to await this for testing
-    return this.runPreload(newProps);
+    await this.runPreload(newProps);
+
+    // Force scroll to the top of the page on page change. ONLY AFTER PRELOAD
+    window.scroll(0, 0);
   }
 
   shouldComponentUpdate() {

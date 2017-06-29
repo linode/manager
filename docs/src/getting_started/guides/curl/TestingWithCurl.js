@@ -164,6 +164,7 @@ export default function Introduction(props) {
         noclipboard
       />
       </section>
+      <div className="text-sm-center"><Link to={`/${API_VERSION}/guides/curl/creating-a-linode`}>Creating a Linode &raquo;</Link></div>
     </section>
   );
 }

@@ -1,6 +1,6 @@
 {
   "name": "linode-manager",
-  "version": "0.9.10",
+  "version": "0.10.0",
   "description": "The Linode Manager website",
   "scripts": {
     "clean": "rm -rf dist",
@@ -111,6 +111,7 @@
     "moment": "^2.17.1",
     "moment-timezone": "^0.5.11",
     "qrious": "https://registry.npmjs.org/qrious/-/qrious-2.2.0.tgz",
+    "raven-js": "^3.16.0",
     "rd3": "^0.6.3",
     "react": "^15.1.0",
     "react-dom": "^15.1.0",
@@ -122,7 +123,6 @@
     "react-tooltip": "^3.3.0",
     "redux": "^3.0.5",
     "redux-thunk": "^2.1.0",
-    "tracekit": "^0.4.4",
     "xterm": "^2.0.1",
     "zxcvbn": "^4.4.1"
   }

@@ -1,8 +1,8 @@
 import { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { LOGIN_ROOT } from '~/constants';
 import { logout } from '~/actions/authentication';
+import { LOGIN_ROOT } from '~/constants';
 import * as session from '~/session';
 
 

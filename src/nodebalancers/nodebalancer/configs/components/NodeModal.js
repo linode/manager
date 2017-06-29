@@ -13,6 +13,7 @@ import {
   Select,
   SubmitButton,
 } from 'linode-components/forms';
+import { EmitEvent } from 'linode-components/utils';
 
 
 export class NodeModal extends Component {
@@ -45,6 +46,7 @@ export class NodeModal extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => nodebalancers.configs.nodes[state.id ? 'put' : 'post'](data, ...ids),
+      () => { EmitEvent('modal:submit', 'Modal', 'add', 'Add Node'); },
       hideModal,
     ]));
   }
@@ -118,7 +120,13 @@ export class NodeModal extends Component {
           </Select>
         </ModalFormGroup>
         <div className="Modal-footer">
-          <CancelButton disabled={loading} onClick={() => dispatch(hideModal())} />
+          <CancelButton
+            disabled={loading}
+            onClick={() => {
+              EmitEvent('modal:cancel', 'Modal', 'cancel', 'Add Node');
+              dispatch(hideModal());
+            }}
+          />
           <SubmitButton disabled={loading} />
           <FormSummary errors={errors} />
         </div>

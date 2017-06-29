@@ -8,18 +8,25 @@ import { LinkCell } from 'linode-components/tables/cells';
 export default function EndpointIndex(props) {
   const { route } = props;
   const { crumbs, endpoint } = route;
-
+  endpoint.endpoints = endpoint.endpoints.sort(function(a, b) {
+    return a.base_path - b.base_path;
+  });
   return (
     <div className="EndpointIndex">
       <div className="EndpointIndex-header">
         <div className="EndpointIndex-breadcrumbsContainer">
           <Breadcrumbs crumbs={crumbs} />
         </div>
-        <h2>{endpoint.name}</h2>
-        <p>{endpoint.description}</p>
+        <h1>{endpoint.name}</h1>
+        {!endpoint.description ? null : <p>{endpoint.description}</p>}
       </div>
       <div>
         {endpoint.endpoints.map(function(endpointSection) {
+          endpointSection.endpoints = endpointSection.endpoints.sort(function(a, b) {
+            if ( a.path < b.path) return -1;
+            if ( a.path > b.path) return 1;
+            return 0;
+          });
           return (
             <div className="EndpointIndex-group">
               <h3>{endpointSection.name}</h3>

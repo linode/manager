@@ -5,7 +5,6 @@ import { push } from 'react-router-redux';
 
 import { Tabs } from 'linode-components/tabs';
 
-import { users } from '~/api';
 import { getObjectByLabelLazily } from '~/api/util';
 
 import { setTitle } from '~/actions/title';
@@ -14,10 +13,6 @@ import { setTitle } from '~/actions/title';
 export class IndexPage extends Component {
   static async preload({ dispatch, getState }, { username }) {
     await dispatch(getObjectByLabelLazily('users', username, 'username'));
-    const user = await dispatch(users.one([username]));
-    if (user.restricted) {
-      await dispatch(users.permissions.one([username]));
-    }
   }
 
   async componentDidMount() {

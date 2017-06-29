@@ -15,6 +15,7 @@ import {
 import { hideModal } from '~/actions/modal';
 import { linodes } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
+import { EmitEvent } from 'linode-components/utils';
 
 
 export class AddModal extends Component {
@@ -33,7 +34,7 @@ export class AddModal extends Component {
   }
 
   onSubmit = () => {
-    const { dispatch, linode } = this.props;
+    const { dispatch, linode, title } = this.props;
     const { label, size, distribution, password, filesystem } = this.state;
     const data = {
       label,
@@ -45,6 +46,7 @@ export class AddModal extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => linodes.disks.post(data, linode.id),
+      () => { EmitEvent('modal:submit', 'Modal', 'add', title); },
       hideModal,
     ]));
   }
@@ -52,7 +54,7 @@ export class AddModal extends Component {
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   render() {
-    const { dispatch, free, distributions } = this.props;
+    const { dispatch, free, distributions, title } = this.props;
     const { label, size, distribution, filesystem, password, loading, errors } = this.state;
 
     const vendors = _.sortBy(
@@ -139,7 +141,12 @@ export class AddModal extends Component {
           />
         </ModalFormGroup>
         <div className="Modal-footer">
-          <CancelButton onClick={() => dispatch(hideModal())} />
+          <CancelButton
+            onClick={() => {
+              EmitEvent('modal:cancel', 'Modal', 'cancel', title);
+              dispatch(hideModal());
+            }}
+          />
           <SubmitButton
             disabled={loading}
             disabledChildren="Adding Disk"
@@ -154,6 +161,7 @@ export class AddModal extends Component {
 AddModal.propTypes = {
   distributions: PropTypes.object.isRequired,
   linode: PropTypes.object.isRequired,
-  dispatch: PropTypes.func.isRequired,
   free: PropTypes.number.isRequired,
+  title: PropTypes.string.isRequired,
+  dispatch: PropTypes.func.isRequired,
 };

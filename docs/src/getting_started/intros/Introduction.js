@@ -65,6 +65,7 @@ export default function Introduction() {
           a consistent tree of endpoints.
         </p>
       </section>
+      <div className="text-sm-center"><Link to={`/${API_VERSION}/access`}>Create an OAuth client and get an OAuth token &raquo;</Link></div>
     </section>
   );
 }

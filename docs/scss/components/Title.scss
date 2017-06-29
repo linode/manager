@@ -11,15 +11,3 @@
         }
     }
 }
-
-.Descriptor {
-    display: block;
-    float: right;
-    clear: right;
-
-    &--inline {
-        display: inline;
-        float: none;
-        margin-left: 10px;
-    }
-}

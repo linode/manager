@@ -171,6 +171,13 @@ function formatSchemaField(schemaField, enumMap) {
     nestedSchema = formatSchema(schemaField, enumMap);
   }
 
+  // don't show filters for nestedSchemas
+  if (Array.isArray(nestedSchema)) {
+    nestedSchema.forEach(function(obj) {
+      delete obj['filterable'];
+    });
+  }
+
   return {
     name: name,
     description: description,
@@ -524,6 +531,6 @@ function convertPythonYaml() {
   });
   const data = JSON.stringify(pythonObjectMap, null, 2);
   const pythonModule = `module.exports = { pythonObjects: ${data} };`;
-  fs.writeFileSync(path.join(pythonPath, 'python.js'), pythonModule);
+  fs.writeFileSync(path.join('./src', 'python.js'), pythonModule);
 }
 convertPythonYaml();

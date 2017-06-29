@@ -4,6 +4,8 @@ import { rebootLinode } from '~/api/linodes';
 import { hideModal } from '~/actions/modal';
 import { Button } from 'linode-components/buttons';
 import { CancelButton } from 'linode-components/buttons';
+import { EmitEvent } from 'linode-components/utils';
+
 
 export default class ConfigSelectModalBody extends Component {
   constructor(props) {
@@ -17,7 +19,7 @@ export default class ConfigSelectModalBody extends Component {
   }
 
   render() {
-    const { dispatch, linode, action } = this.props;
+    const { dispatch, linode, action, title } = this.props;
     const { loading, configId } = this.state;
 
     const buttonText = action === rebootLinode ? 'Reboot' : 'Power on';
@@ -47,13 +49,17 @@ export default class ConfigSelectModalBody extends Component {
         <div className="Modal-footer">
           <CancelButton
             disabled={loading}
-            onClick={() => dispatch(hideModal())}
+            onClick={() => {
+              EmitEvent('modal:cancel', 'Modal', 'cancel', title);
+              dispatch(hideModal());
+            }}
           />
           <Button
             className="LinodesLinodeComponentsConfigSelectModalBody-submit"
             disabled={loading}
             onClick={async () => {
               this.setState({ loading: true });
+              EmitEvent('modal:submit', 'Modal', buttonText, title);
               await dispatch(action(linode.id, configId));
               this.setState({ loading: false });
               dispatch(hideModal());
@@ -66,6 +72,7 @@ export default class ConfigSelectModalBody extends Component {
 
 ConfigSelectModalBody.propTypes = {
   linode: PropTypes.object.isRequired,
+  title: PropTypes.string.isRequired,
   dispatch: PropTypes.func.isRequired,
   action: PropTypes.func.isRequired,
 };
