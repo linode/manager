@@ -11,9 +11,9 @@
     "lint": "eslint --max-warnings=0 src test",
     "lint:fix": "eslint src test --fix",
     "start": "node devServer.js",
-    "test": "NODE_ENV=test karma start karma.conf.js --single-run",
-    "test:watch": "NODE_ENV=test karma start karma.conf.js",
-    "test:debug": "NODE_ENV=test karma start karma.conf.js --browsers=Chrome --debug"
+    "test": "cross-env NODE_ENV=test karma start karma.conf.js --single-run",
+    "test:watch": "cross-env NODE_ENV=test karma start karma.conf.js",
+    "test:debug": "cross-env NODE_ENV=test karma start karma.conf.js --browsers=Chrome --debug"
   },
   "repository": {
     "type": "git",
@@ -38,6 +38,7 @@
     "babel-eslint": "^6.1.2",
     "babel-istanbul": "^0.8.0",
     "babel-loader": "^6.2.0",
+    "babel-plugin-istanbul": "^4.1.4",
     "babel-plugin-transform-class-properties": "^6.18.0",
     "babel-plugin-transform-runtime": "^6.4.0",
     "babel-polyfill": "^6.3.14",
@@ -63,14 +64,10 @@
     "express": "^4.14.0",
     "file-loader": "^0.8.5",
     "imports-loader": "^0.6.5",
-    "isparta-loader": "^2.0.0",
-    "istanbul": "^0.4.3",
-    "istanbul-instrumenter-loader": "^0.2.0",
-    "json-loader": "^0.5.4",
     "jsonpath": "^0.2.11",
     "karma": "^0.13.22",
     "karma-chrome-launcher": "^1.0.1",
-    "karma-coverage": "^1.0.0",
+    "karma-coverage": "^1.1.1",
     "karma-mocha": "^1.0.1",
     "karma-phantomjs-launcher": "^1.0.0",
     "karma-sourcemap-loader": "^0.3.7",
@@ -90,9 +87,9 @@
     "sass-loader": "^3.1.2",
     "sinon": "^2.0.0-pre.2",
     "style-loader": "^0.13.0",
-    "webpack": "^1.12.9",
+    "webpack": "^2.6.1",
     "webpack-dev-middleware": "^1.4.0",
-    "webpack-hot-middleware": "^2.6.0",
+    "webpack-hot-middleware": "^2.6.4",
     "xunit-file": "^0.0.9"
   },
   "dependencies": {
