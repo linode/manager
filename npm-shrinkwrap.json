@@ -3546,12 +3546,6 @@
       "resolved": "https://registry.npmjs.org/has-binary/-/has-binary-0.1.7.tgz",
       "dev": true
     },
-    "has-color": {
-      "version": "0.1.7",
-      "from": "has-color@>=0.1.0 <0.2.0",
-      "resolved": "https://registry.npmjs.org/has-color/-/has-color-0.1.7.tgz",
-      "dev": true
-    },
     "has-cors": {
       "version": "1.1.0",
       "from": "has-cors@1.1.0",
@@ -4004,18 +3998,6 @@
       "from": "isomorphic-fetch@>=2.2.0 <3.0.0",
       "resolved": "https://registry.npmjs.org/isomorphic-fetch/-/isomorphic-fetch-2.2.1.tgz"
     },
-    "isparta": {
-      "version": "4.0.0",
-      "from": "isparta@>=4.0.0 <5.0.0",
-      "resolved": "https://registry.npmjs.org/isparta/-/isparta-4.0.0.tgz",
-      "dev": true
-    },
-    "isparta-loader": {
-      "version": "2.0.0",
-      "from": "isparta-loader@>=2.0.0 <3.0.0",
-      "resolved": "https://registry.npmjs.org/isparta-loader/-/isparta-loader-2.0.0.tgz",
-      "dev": true
-    },
     "isstream": {
       "version": "0.1.2",
       "from": "isstream@>=0.1.2 <0.2.0",
@@ -4206,12 +4188,6 @@
           "version": "1.2.2",
           "from": "esprima@1.2.2",
           "resolved": "https://registry.npmjs.org/esprima/-/esprima-1.2.2.tgz",
-          "dev": true
-        },
-        "underscore": {
-          "version": "1.7.0",
-          "from": "underscore@1.7.0",
-          "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.7.0.tgz",
           "dev": true
         }
       }
@@ -5024,32 +5000,6 @@
           "version": "1.1.7",
           "from": "underscore@>=1.1.0 <1.2.0",
           "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.1.7.tgz",
-          "dev": true
-        }
-      }
-    },
-    "nomnomnomnom": {
-      "version": "2.0.1",
-      "from": "nomnomnomnom@>=2.0.0 <3.0.0",
-      "resolved": "https://registry.npmjs.org/nomnomnomnom/-/nomnomnomnom-2.0.1.tgz",
-      "dev": true,
-      "dependencies": {
-        "ansi-styles": {
-          "version": "1.0.0",
-          "from": "ansi-styles@>=1.0.0 <1.1.0",
-          "resolved": "https://registry.npmjs.org/ansi-styles/-/ansi-styles-1.0.0.tgz",
-          "dev": true
-        },
-        "chalk": {
-          "version": "0.4.0",
-          "from": "chalk@>=0.4.0 <0.5.0",
-          "resolved": "https://registry.npmjs.org/chalk/-/chalk-0.4.0.tgz",
-          "dev": true
-        },
-        "strip-ansi": {
-          "version": "0.1.1",
-          "from": "strip-ansi@>=0.1.0 <0.2.0",
-          "resolved": "https://registry.npmjs.org/strip-ansi/-/strip-ansi-0.1.1.tgz",
           "dev": true
         }
       }
@@ -6995,9 +6945,9 @@
       "dev": true
     },
     "underscore": {
-      "version": "1.6.0",
-      "from": "underscore@>=1.6.0 <1.7.0",
-      "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.6.0.tgz",
+      "version": "1.7.0",
+      "from": "underscore@1.7.0",
+      "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.7.0.tgz",
       "dev": true
     },
     "uniq": {
