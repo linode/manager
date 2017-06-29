@@ -21,6 +21,7 @@ export function loginAuthorizePath(returnTo) {
 export function checkLogin(next) {
   const state = store.getState();
   if (next.location.pathname !== '/oauth/callback'
+      && next.location.pathname !== '/logout'
       && state.authentication.token === null) {
     const query = Object.keys(next.location.query || {})
             .reduce((a, k) => [
