@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import { EmitEvent } from '../utils';
 
 export default function Select(props) {
   return (
@@ -10,7 +11,16 @@ export default function Select(props) {
         name={props.name}
         id={props.id}
         disabled={props.disabled}
-        onChange={props.onChange}
+        onChange={(e) => {
+          const value = String(e.target.value);
+          EmitEvent(
+            'select:change',
+            'Select',
+            value.indexOf(':') < 0 ? value.split(':')[0] : value,
+            props.name
+          );
+          props.onChange(e);
+        }}
       >
         {props.options ? props.options.map((option, i) =>
           <option key={i} value={option.value} disabled={option.disabled}>

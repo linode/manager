@@ -1,8 +1,10 @@
 import React from 'react';
+import { Link } from 'react-router';
 
 import { Table } from 'linode-components/tables';
 
 import Example from '~/components/Example';
+import { API_ROOT, API_VERSION } from '~/constants';
 
 
 export default function Errors() {
@@ -31,6 +33,7 @@ export default function Errors() {
   ]
 }`}
           name="json"
+          noclipboard
         />
         <p>
           The <code>errors</code> field is an array of the things that went
@@ -67,6 +70,7 @@ export default function Errors() {
           ]}
         />
       </section>
+      <div className="text-sm-center"><Link to={`/${API_VERSION}/guides`}>Get started using the API with these helpful guides &raquo;</Link></div>
     </section>
   );
 }

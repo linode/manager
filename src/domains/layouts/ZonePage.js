@@ -27,6 +27,10 @@ export class ZonePage extends Component {
   render() {
     const { domain, dispatch } = this.props;
 
+    if (!domain) {
+      return null;
+    }
+
     if (domain.type === 'slave') {
       return (
         <SlaveZone

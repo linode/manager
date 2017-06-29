@@ -17,6 +17,7 @@ export default function GuidesIndex(props) {
         <div className="Endpoint-breadcrumbsContainer">
           <Breadcrumbs crumbs={crumbs} />
         </div>
+        <h1>Guides</h1>
       </div>
       <div>
         <section>

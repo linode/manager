@@ -5,7 +5,7 @@ import reactGuard from 'react-guard';
 import { Provider } from 'react-redux';
 import { Router, Route, IndexRedirect, browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
-import TraceKit from 'tracekit';
+import Raven from 'raven-js';
 
 import { InternalError, NotFound } from 'linode-components/errors';
 import { ModalShell } from 'linode-components/modals';
@@ -16,7 +16,8 @@ import { hideModal } from '~/actions/modal';
 import { actions, thunks, reducer } from '~/api/configs/linodes';
 import Billing from '~/billing';
 import DevTools from '~/components/DevTools';
-import { GA_ID, ENVIRONMENT } from '~/constants';
+import { GA_ID, ENVIRONMENT, SENTRY_URL } from '~/constants';
+import { init as initAnalytics } from './analytics';
 import Domains from '~/domains';
 import Layout from '~/layouts/Layout';
 import Logout from '~/layouts/Logout';
@@ -41,28 +42,15 @@ store.dispatch(session.initialize);
 
 window.actions = actions; window.thunks = thunks; window.reducer = reducer;
 
-function loadGA(debug = false) {
-  /* eslint-disable */
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script',`https://www.google-analytics.com/analytics${debug && '_debug' || ''}.js`,'ga');
-  /* eslint-enable */
+initAnalytics(ENVIRONMENT, GA_ID);
+if (ENVIRONMENT === 'production') {
+  Raven
+    .config(SENTRY_URL)
+    .install();
 }
 
-if (ENVIRONMENT !== 'production') {
-  loadGA(true);
-  window.ga_debug = { trace: true };
-  window.ga('create', GA_ID, { cookieDomain: 'none', debug: true });
-} else {
-  loadGA();
-  window.ga('create', GA_ID, 'auto');
-}
-
+// TODO: move to analytics
 function onPageChange() {
-  // Force scroll to the top of the page on page change.
-  window.scroll(0, 0);
-
   // Log page views.
   window.ga('send', 'pageview');
 }
@@ -77,9 +65,11 @@ function fillInMissingProps(props) {
 }
 
 window.handleError = function (e) {
+  Raven.captureException(e);
+
   try {
     // eslint-disable-next-line no-console
-    console.trace(e);
+    console.error(e);
 
     store.dispatch(setError(e));
 
@@ -109,16 +99,7 @@ window.handleError = function (e) {
     }
   } catch (e) {
     // eslint-disable-next-line no-console
-    console.trace(e);
-  }
-
-  // TraceKit.report throws an error.
-  try {
-    TraceKit.report(e);
-  } catch (newE) {
-    if (newE !== e) {
-      throw newE;
-    }
+    console.error(e);
   }
 
   // Needed for react-guard.
@@ -176,19 +157,6 @@ const init = () => {
 };
 
 window.init = init;
-
-TraceKit.report.subscribe(function (error) {
-  if (GA_ID) {
-    window.ga('send', 'exception', {
-      exDescription: JSON.stringify({
-        error,
-        datetime: new Date(),
-        userAgent: window.navigator.userAgent,
-        location: window.location.pathname,
-      }),
-    });
-  }
-});
 
 // React is not in a great state right now w.r.t. error handling in render functions.
 // Here is a thread discussing current workarounds: https://github.com/facebook/react/issues/2461

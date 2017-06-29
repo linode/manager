@@ -13,6 +13,7 @@ import { hideModal } from '~/actions/modal';
 import { linodes } from '~/api';
 import { resizeLinodeDisk } from '~/api/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
+import { EmitEvent } from 'linode-components/utils';
 
 
 export class EditModal extends Component {
@@ -29,9 +30,12 @@ export class EditModal extends Component {
 
   onSubmit = () => {
     const { size, label } = this.state;
-    const { linode, disk, dispatch } = this.props;
+    const { linode, disk, title, dispatch } = this.props;
 
-    const requests = [hideModal];
+    const requests = [
+      () => { EmitEvent('modal:submit', 'Modal', 'edit', title); },
+      hideModal,
+    ];
     if (size !== disk.size) {
       requests.unshift(() => resizeLinodeDisk(linode.id, disk.id, parseInt(size)));
     }
@@ -46,7 +50,7 @@ export class EditModal extends Component {
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   render() {
-    const { disk, free, dispatch } = this.props;
+    const { disk, free, title, dispatch } = this.props;
     const { label, size, errors, loading } = this.state;
 
     return (
@@ -79,7 +83,12 @@ export class EditModal extends Component {
           />
         </ModalFormGroup>
         <div className="Modal-footer">
-          <CancelButton onClick={() => dispatch(hideModal())} />
+          <CancelButton
+            onClick={() => {
+              EmitEvent('modal:cancel', 'Modal', 'cancel', title);
+              dispatch(hideModal());
+            }}
+          />
           <SubmitButton disabled={loading} />
           <FormSummary errors={errors} />
         </div>
@@ -91,5 +100,6 @@ EditModal.propTypes = {
   linode: PropTypes.object.isRequired,
   disk: PropTypes.object.isRequired,
   free: PropTypes.number.isRequired,
+  title: PropTypes.string.isRequired,
   dispatch: PropTypes.func.isRequired,
 };

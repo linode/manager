@@ -1,9 +1,12 @@
 .VerticalNav {
-    height: 100%;
+    height: $main-height;
     padding: 25px;
+    overflow-y: auto;
 
     &-section {
-        margin-bottom: 20px;
+        &:not(:last-of-type) {
+            margin-bottom: 20px;
+        }
 
         ul {
             list-style-type: none;
@@ -18,11 +21,12 @@
             a {
                 @extend .font-medium;
                 color: $light-black;
+                text-decoration: none;
             }
 
-            a:hover {
+            a:hover,
+            &.active a {
                 color: $blue;
-                text-decoration: none;
             }
         }
     }

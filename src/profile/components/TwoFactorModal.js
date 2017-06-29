@@ -12,6 +12,7 @@ import {
   Input,
 } from 'linode-components/forms';
 import { dispatchOrStoreErrors } from '~/api/util';
+import { EmitEvent } from 'linode-components/utils';
 
 
 export class TwoFactorModal extends Component {
@@ -37,11 +38,18 @@ export class TwoFactorModal extends Component {
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   twoFactorScratchModal(scratch) {
-    return (dispatch) => dispatch(showModal('Two-Factor Authentication Enabled',
+    const title = 'Two-Factor Authentication Enabled';
+    return (dispatch) => dispatch(showModal(title,
       <ConfirmModalBody
         buttonText="Ok"
-        onOk={() => dispatch(hideModal())}
-        onCancel={() => dispatch(hideModal())}
+        onOk={() => {
+          EmitEvent('modal:submit', 'Modal', 'Ok', title);
+          dispatch(hideModal());
+        }}
+        onCancel={() => {
+          EmitEvent('modal:cancel', 'Modal', 'cancel', title);
+          dispatch(hideModal());
+        }}
       >
         <div>
           <p>
@@ -62,14 +70,21 @@ export class TwoFactorModal extends Component {
       level: 'H',
       size: 250,
     });
+    const title = 'Two-Factor Authentication Enabled';
 
     return (
       <div className="TwoFactorModal">
         <ConfirmModalBody
           buttonText="Enable"
           buttonDisabledText="Enabling"
-          onOk={this.onSubmit}
-          onCancel={() => dispatch(hideModal())}
+          onOk={() => {
+            EmitEvent('modal:submit', 'Modal', 'Enable', title);
+            this.onSubmit();
+          }}
+          onCancel={() => {
+            EmitEvent('modal:cancel', 'Modal', 'cancel', title);
+            dispatch(hideModal());
+          }}
         >
           <div>
             <p>Scan this QR code to add your Linode account to your TFA app.</p>

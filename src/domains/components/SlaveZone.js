@@ -14,12 +14,14 @@ import EditSOARecord from '../components/EditSOARecord';
 export class SlaveZone extends Component {
   renderSOAEditRecord() {
     const { dispatch, domain } = this.props;
+    const title = 'Edit SOA Record';
 
     dispatch(showModal(
-      'Edit SOA Record',
+      title,
       <EditSOARecord
         dispatch={dispatch}
         domains={domain}
+        title={title}
         close={(newDomain) => () => {
           dispatch(hideModal());
           dispatch(replace(`/domains/${newDomain || domain.domain}`));
@@ -28,29 +30,9 @@ export class SlaveZone extends Component {
     ));
   }
 
-  renderEditRecord(title, component, props = {}) {
-    const { dispatch, domain } = this.props;
-    dispatch(showModal(
-      title,
-      React.createElement(component, {
-        ...props,
-        dispatch,
-        zone: domain,
-        close: () => dispatch(hideModal()),
-      }),
-    ));
-  }
-
-  renderEditSOARecord(title) {
-    return this.renderEditRecord(title, EditSOARecord);
-  }
-
   render() {
     const { domain } = this.props;
 
-    if (!domain) {
-      return null;
-    }
     const { axfr_ips, master_ips } = domain;
 
     const soaRecord = {

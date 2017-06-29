@@ -15,6 +15,7 @@ import { ConfirmModalBody } from 'linode-components/modals';
 import { resetPassword } from '~/api/linodes';
 import { showModal, hideModal } from '~/actions/modal';
 import { dispatchOrStoreErrors } from '~/api/util';
+import { EmitEvent } from 'linode-components/utils';
 
 
 export default class ResetRootPassword extends Component {
@@ -53,18 +54,23 @@ export default class ResetRootPassword extends Component {
 
   onSubmitConfirm = () => {
     const { dispatch } = this.props;
+    const title = 'Reset root password';
 
     const onOk = () => {
+      EmitEvent('modal:submit', 'Modal', 'reset', title);
       dispatch(hideModal());
       this.onSubmit();
     };
 
-    dispatch(showModal('Reset root password', (
+    dispatch(showModal(title, (
       <ConfirmModalBody
         buttonText="Reset"
         children="Are you sure you want to reset the root password for this Linode?
                   This cannot be undone."
-        onCancel={() => dispatch(hideModal())}
+        onCancel={() => {
+          EmitEvent('modal:cancel', 'Modal', 'cancel', title);
+          dispatch(hideModal());
+        }}
         onOk={onOk}
       />
     )));

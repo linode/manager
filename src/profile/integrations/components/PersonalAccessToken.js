@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 
@@ -13,7 +12,8 @@ import { AuthScopeCell } from '~/components/tables/cells';
 import TimeDisplay from '~/components/TimeDisplay';
 import { OAUTH_SCOPES, OAUTH_SUBSCOPES } from '~/constants';
 
-import { EditPersonalAccessToken } from './';
+import EditPersonalAccessToken from './EditPersonalAccessToken';
+import { formatScope } from '../utilities';
 
 
 export default class PersonalAccessToken extends Component {
@@ -24,11 +24,13 @@ export default class PersonalAccessToken extends Component {
 
   editAction = () => {
     const { dispatch, label, id } = this.props;
+    const title = 'Edit Personal Access Token';
 
-    dispatch(showModal('Edit Personal Access Token',
+    dispatch(showModal(title,
       <EditPersonalAccessToken
         id={id}
         label={label}
+        title={title}
         dispatch={dispatch}
         close={() => dispatch(hideModal())}
       />
@@ -87,7 +89,7 @@ export default class PersonalAccessToken extends Component {
             columns={[
               {
                 dataKey: 'scope',
-                formatFn: _.capitalize,
+                formatFn: formatScope,
               },
             ].concat(OAUTH_SUBSCOPES.map((subscope) => ({
               subscope,

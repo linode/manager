@@ -6,6 +6,21 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [0.9.0] 2017-06-27
+### Added
+- page titles for each page #2114
+- next link for guides #2098
+- expandable icon for expandable table rows #2121
+- show active sidebar nav item #2115
+### Changed
+- improvements to rendering on mobile #2156
+- LinodeClient example docs updated #2137
+- misc Python doc updates #2020
+- endpoints sorted alphabetically #2148
+- cleanup Python docs build step #2144
+### Fixed
+- no clipboard on errors examples #2167
+
 ## [0.8.0] 2017-06-16
 ### Added
 - info block to the docs intro which points to testing with cURL and how to get started with a PAT #2072

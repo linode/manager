@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import { push } from 'react-router-redux';
 
 import { Dropdown } from 'linode-components/dropdowns';
 import { ConfirmModalBody, DeleteModalBody } from 'linode-components/modals';
@@ -12,6 +13,7 @@ import { createHeaderFilter } from '~/api/util';
 import { LinodeStates, LinodeStatesReadable } from '~/constants';
 import ConfigSelectModalBody from '~/linodes/components/ConfigSelectModalBody';
 import { launchWeblishConsole } from '~/linodes/components/WeblishLaunch';
+import { EmitEvent } from 'linode-components/utils';
 
 
 const RANDOM_PROGRESS_MAX = 20;
@@ -176,12 +178,16 @@ export default class StatusDropdown extends Component {
         if (element._key === 'delete') {
           dispatch(showModal('Delete Linode', (
             <DeleteModalBody
-              onOk={() => {
-                dispatch(apiLinodes.delete(linode.id));
-                dispatch(hideModal());
+              onOk={async function () {
+                await dispatch(apiLinodes.delete(linode.id));
+                EmitEvent('modal:submit', 'Modal', 'delete', 'Delete Linode');
+                await dispatch(push('/'));
               }}
               items={[linode.label]}
-              onCancel={() => dispatch(hideModal())}
+              onCancel={() => {
+                EmitEvent('modal:cancel', 'Modal', 'cancel', 'Delete Linode');
+                dispatch(hideModal());
+              }}
             />
           )));
           return;
@@ -194,10 +200,12 @@ export default class StatusDropdown extends Component {
             dispatch(hideModal());
             return;
           }
+          const title = 'Select Configuration Profile';
 
-          dispatch(showModal('Select Configuration Profile', (
+          dispatch(showModal(title, (
             <ConfigSelectModalBody
               linode={linode}
+              title={title}
               dispatch={dispatch}
               action={element._action}
             />
@@ -211,8 +219,14 @@ export default class StatusDropdown extends Component {
         } else {
           dispatch(showModal(`Confirm ${element.name}`, (
             <ConfirmModalBody
-              onCancel={() => dispatch(hideModal())}
-              onOk={callback}
+              onCancel={() => {
+                EmitEvent('modal:cancel', 'Modal', 'cancel', `Confirm ${element.name}`);
+                dispatch(hideModal());
+              }}
+              onOk={() => {
+                EmitEvent('modal:submit', 'Modal', element.name, `Confirm ${element.name}`);
+                callback();
+              }}
             >
               Are you sure you want to {element.name.toLowerCase()} <strong>{linode.label}</strong>?
             </ConfirmModalBody>

@@ -25,7 +25,43 @@ $sidebar-width: 250px;
         background-color: $white;
         min-height: calc(100% - #{$nav-height + $mini-nav-height});
         margin-left: $sidebar-width;
-        width: calc(100% - #{$sidebar-width});
+        // Subtract the bootstrap margin too.
+        width: calc(100% - #{$sidebar-width} - 30px);
         border-right: $border;
+    }
+
+    @media screen and (max-width: #{$sidebar-breakpoint}) {
+        width: 100%;
+
+        &-container {
+            padding: 0;
+        }
+
+        &-navigationContainer {
+            display: none; 
+            overflow-y: visible;
+            border: $border;
+
+            &--show {
+                display: inline;
+                z-index: 9000;
+            }
+
+            &--hide {
+                display: none;
+            }
+        }
+
+        &-content {
+            margin-left: 0;
+            width: 100%;
+            border: 0;
+        }
+    }
+
+    @media screen and (max-width: #{$table-breakpoint}) {    
+        .Table {
+            width: auto;
+        }
     }
 }
