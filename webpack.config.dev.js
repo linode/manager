@@ -37,14 +37,14 @@ module.exports = {
     })
   ],
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.json$/,
-        loaders: ['json-loader'],
+        use: ['json-loader'],
       },
       {
         test: /\.jsx?/,
-        loaders: ['babel'],
+        use: ['babel-loader'],
         include: [
           path.join(__dirname, 'src'),
           path.resolve(__dirname, './node_modules/linode-components'),
@@ -53,18 +53,24 @@ module.exports = {
       },
       {
         test: /\.scss$/,
-        loaders: ['style', 'css', 'sass'],
+        use: [
+          'style-loader',
+          'css-loader',
+          {
+            loader: 'sass-loader',
+            options: {
+              includePaths: [
+                path.resolve(__dirname, './node_modules/bootstrap/scss/')
+              ]
+            }
+          }
+        ],
       },
       {
         test: /\.svg$/,
-        loaders: ['file'],
+        use: ['file-loader'],
         include: path.join(__dirname, 'node_modules')
       }
-    ]
-  },
-  sassLoader: {
-    includePaths: [
-      path.resolve(__dirname, './node_modules/bootstrap/scss/'),
     ]
   }
 };
