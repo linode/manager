@@ -8,7 +8,6 @@ _.devtool = 'cheap-module-source-map';
 _.entry = './src/index';
 _.plugins = [
   new webpack.optimize.CommonsChunkPlugin('common.js'),
-  new webpack.optimize.OccurenceOrderPlugin(),
   new webpack.DefinePlugin({
     'process.env': {
       'NODE_ENV': JSON.stringify('production')
