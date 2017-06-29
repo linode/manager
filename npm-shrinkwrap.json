@@ -1,6 +1,6 @@
 {
   "name": "linode-manager",
-  "version": "0.9.8",
+  "version": "0.10.0",
   "dependencies": {
     "abbrev": {
       "version": "1.0.9",
@@ -5685,6 +5685,11 @@
       "resolved": "https://registry.npmjs.org/range-parser/-/range-parser-1.2.0.tgz",
       "dev": true
     },
+    "raven-js": {
+      "version": "3.16.0",
+      "from": "raven-js@latest",
+      "resolved": "https://registry.npmjs.org/raven-js/-/raven-js-3.16.0.tgz"
+    },
     "raw-body": {
       "version": "2.2.0",
       "from": "raw-body@>=2.2.0 <2.3.0",
@@ -6725,11 +6730,6 @@
       "from": "tough-cookie@>=2.3.0 <2.4.0",
       "resolved": "https://registry.npmjs.org/tough-cookie/-/tough-cookie-2.3.2.tgz",
       "dev": true
-    },
-    "tracekit": {
-      "version": "0.4.4",
-      "from": "tracekit@>=0.4.4 <0.5.0",
-      "resolved": "https://registry.npmjs.org/tracekit/-/tracekit-0.4.4.tgz"
     },
     "trim-newlines": {
       "version": "1.0.0",

@@ -45,6 +45,9 @@ export default class UserForm extends Component {
     const creating = !oldUsername;
 
     const idsPath = [oldUsername].filter(Boolean);
+    // this logic may be deleting more data than it is supposed to be deleting
+    // when you save an existing user, but it isn't currently causing any
+    // problems
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => users[creating ? 'post' : 'put'](data, ...idsPath),
       (user) => creating ? null : actions.one(user),

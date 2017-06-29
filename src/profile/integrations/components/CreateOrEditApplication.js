@@ -7,7 +7,7 @@ import { clients } from '~/api';
 import { updateClientThumbnail } from '~/api/clients';
 import { MAX_UPLOAD_SIZE_MB } from '~/constants';
 import { dispatchOrStoreErrors } from '~/api/util';
-import { TrackEvent } from '~/actions/trackEvent.js';
+import { EmitEvent } from 'linode-components/utils';
 
 import { renderSecret } from './CreatePersonalAccessToken';
 
@@ -53,7 +53,7 @@ export default class CreateOrEditApplication extends Component {
       },
       ({ secret }) => this.props.id ? this.props.close() :
         renderSecret('client', 'created', secret, this.props.close),
-      () => TrackEvent('Modal', submitText, title),
+      () => { EmitEvent('modal:submit', 'Modal', submitText, title); },
     ]));
   }
 
@@ -92,7 +92,7 @@ export default class CreateOrEditApplication extends Component {
         <div className="Modal-footer">
           <CancelButton
             onClick={() => {
-              TrackEvent('Modal', 'cancel', title);
+              EmitEvent('modal:cancel', 'Modal', 'cancel', title);
               close();
             }}
           />

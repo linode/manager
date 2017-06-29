@@ -6,7 +6,7 @@ import { Form, FormSummary, SubmitButton } from 'linode-components/forms';
 import { cancelBackup } from '~/api/backups';
 import { showModal, hideModal } from '~/actions/modal';
 import { dispatchOrStoreErrors } from '~/api/util';
-import { TrackEvent } from '~/actions/trackEvent.js';
+import { EmitEvent } from 'linode-components/utils';
 
 
 export default class CancelForm extends Component {
@@ -32,11 +32,11 @@ export default class CancelForm extends Component {
     dispatch(showModal(title, (
       <ConfirmModalBody
         onOk={() => {
-          TrackEvent('Modal', 'Cancel backups service', title);
+          EmitEvent('modal:submit', 'Modal', 'Cancel backups service', title);
           this.onOk();
         }}
         onCancel={() => {
-          TrackEvent('Modal', 'cancel', title);
+          EmitEvent('modal:cancel', 'Modal', 'cancel', title);
           dispatch(hideModal());
         }}
         buttonText="Cancel backups service"

@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import { push } from 'react-router-redux';
 
 import { Dropdown } from 'linode-components/dropdowns';
 import { ConfirmModalBody, DeleteModalBody } from 'linode-components/modals';
@@ -12,7 +13,7 @@ import { createHeaderFilter } from '~/api/util';
 import { LinodeStates, LinodeStatesReadable } from '~/constants';
 import ConfigSelectModalBody from '~/linodes/components/ConfigSelectModalBody';
 import { launchWeblishConsole } from '~/linodes/components/WeblishLaunch';
-import { TrackEvent } from '~/actions/trackEvent.js';
+import { EmitEvent } from 'linode-components/utils';
 
 
 const RANDOM_PROGRESS_MAX = 20;
@@ -177,14 +178,14 @@ export default class StatusDropdown extends Component {
         if (element._key === 'delete') {
           dispatch(showModal('Delete Linode', (
             <DeleteModalBody
-              onOk={() => {
-                dispatch(apiLinodes.delete(linode.id));
-                TrackEvent('Modal', 'delete', 'Delete Linode');
-                dispatch(hideModal());
+              onOk={async function () {
+                await dispatch(apiLinodes.delete(linode.id));
+                EmitEvent('modal:submit', 'Modal', 'delete', 'Delete Linode');
+                await dispatch(push('/'));
               }}
               items={[linode.label]}
               onCancel={() => {
-                TrackEvent('Modal', 'cancel', 'Delete Linode');
+                EmitEvent('modal:cancel', 'Modal', 'cancel', 'Delete Linode');
                 dispatch(hideModal());
               }}
             />
@@ -219,11 +220,11 @@ export default class StatusDropdown extends Component {
           dispatch(showModal(`Confirm ${element.name}`, (
             <ConfirmModalBody
               onCancel={() => {
-                TrackEvent('Modal', 'cancel', `Confirm ${element.name}`);
+                EmitEvent('modal:cancel', 'Modal', 'cancel', `Confirm ${element.name}`);
                 dispatch(hideModal());
               }}
               onOk={() => {
-                TrackEvent('Modal', element.name, `Confirm ${element.name}`);
+                EmitEvent('modal:submit', 'Modal', element.name, `Confirm ${element.name}`);
                 callback();
               }}
             >

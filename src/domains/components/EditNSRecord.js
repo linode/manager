@@ -11,7 +11,7 @@ import { CancelButton } from 'linode-components/buttons';
 
 import { domains } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
-import { TrackEvent } from '~/actions/trackEvent.js';
+import { EmitEvent } from 'linode-components/utils';
 
 import SelectDNSSeconds from './SelectDNSSeconds';
 
@@ -53,7 +53,7 @@ export default class EditNSRecord extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => domains.records[id ? 'put' : 'post'](data, ...ids),
-      () => TrackEvent('Modal', 'add', title),
+      () => { EmitEvent('modal:submit', 'Modal', 'add', title); },
       close,
     ]));
   }
@@ -96,7 +96,7 @@ export default class EditNSRecord extends Component {
         <div className="Modal-footer">
           <CancelButton
             onClick={() => {
-              TrackEvent('Modal', 'cancel', title);
+              EmitEvent('modal:cancel', 'Modal', 'cancel', title);
               close();
             }}
           />

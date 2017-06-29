@@ -1,0 +1,16 @@
+.ToggleNav {
+    margin-top: 18px;
+    display: none;
+
+    outline: none !important;
+
+    @media screen and (max-width: #{$sidebar-breakpoint}) {
+        cursor: pointer;
+        cursor: hand;
+        display: inline;
+    }
+
+    i {
+        color: $white;
+    }
+}

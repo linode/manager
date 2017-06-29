@@ -5,6 +5,36 @@ successful with your contribution if you visit the [IRC
 channel](https://webchat.oftc.net/?channels=linode-next&uio=d4) upfront and discuss
 your plans.
 
+The following buzzwords are involved in this project:
+
+* [React.js](https://facebook.github.io/react/)
+* [Redux](http://redux.js.org/)
+* [Webpack](https://webpack.github.io/)
+* ES6/ES7 (via [Babel](https://babeljs.io/))
+* [SCSS](http://sass-lang.com)
+
+## Setup
+
+    git clone https://github.com/Linode/manager.git
+    cd manager
+    node --version # should be 6.x - 7.2.1
+    npm install
+
+This application communicates with Linode via the
+[Linode APIv4](https://developers.linode.com). You'll need to [register an OAuth
+client](https://cloud.linode.com/profile/integrations/tokens), then create a file
+at `src/secrets.js` with your client ID and client secret set appropriately:
+
+    export const clientId = 'change me';
+    export const clientSecret = 'change me';
+
+Be sure to set your callback URL to something like
+`http://localhost:3000/oauth/callback` when you register your OAuth client.
+
+Note: if you pick a callback url that is not on localhost:3000, you will need to
+update the APP_ROOT variable in src/constants.js to point to the different
+server.
+
 ## Development Flow
 
 Changes to the Linode Manager usually follow this flow:
@@ -30,26 +60,108 @@ adding features/elements/components that don't have a clear precedent. If this
 is the case, you will need to submit an issue with a mockup and send a request
 for comments to the [(#linode-next channel on irc.oftc.net)](https://webchat.oftc.net/?channels=linode-next&uio=d4).
 
-## Making pull requests
+## Development
 
-When you start working on a feature, do this:
+Run:
 
-1. `git fetch upstream`
-1. `git checkout -b add-so-and-so-feature upstream/master`
-1. do work awesomely
-1. Run `npm run lint` to lint your code and `npm test` to test your code
-1. `git push -u origin add-so-and-so-feature`
-1. Make pull request from your feature branch
+    npm start
+
+to start the development server. Connect to
+[localhost:3000](https://localhost:3000) to try it out. Most of the changes you
+make will be applied on the fly, but you may occasionally find that you have to
+restart it.
+
+While running the manager in development mode, you may press Ctrl+H to view the
+redux dev tools to track the state of the application, and Ctrl+Q to move them
+around the screen if necessary. If you'd rather disable the devtools, you can
+set the NODE_ENV flag to "production" or set the DEVTOOLS_DISABLED flag to false:
+
+    DEVTOOLS_DISABLED=true npm start
+
+## Git workflows
+
+We are doing our best to follow [a successful git branching model](http://nvie.com/posts/a-successful-git-branching-model/)
+
+In addition, updates should be accompanied by a [CHANGELOG.md](https://github.com/linode/manager/blob/master/CHANGELOG.md). 
+See [Keepachangelog](http://keepachangelog.com/en/0.3.0/) for formatting details
+
+In general, the following flows apply.
+
+When creating a new feature:
+1. `git checkout develop`
+2. `git checkout -b my-feature-name`
+3. stage and commit changes to your feature branch
+4. `npm run lint` # to lint your code
+5. `npm test` # to test your code, see 
+6. `git push -u your-remote my-feature-name` # push to your remote and --set-upstream-to
+7. `git checkout develop` and `git pull origin develop` # make sure you're up to date
+8. `git rebase develop` or `git rebase -i develop` # rebase and cleanup your changes if desired
+9. `git push -f` # push your rebased feature to your remote 
+10. open a pull request against origin develop
+
+Updating your fork's develop from origin:
+1. `git pull origin develop`
+
+Updating your fork's develop from origin with conflicts:
+1. `git pull -X theirs origin develop` # assuming you don't have new changes on your fork's develop
+
+Creating a hotfix:
+1. `git checkout master`
+2. `git pull origin master`
+3. `git checkout -b hf-v0.9.1` # create a hotfix branch
+4. stage and commit your hotfix change
+5. `npm --no-git-tag version patch` # bump a patch version, updating both the `package.json` and `npm-shrinkwrap.json`
+6. Manually update the [CHANGELOG.md](https://github.com/linode/manager/blob/master/CHANGELOG.md) to represent changes for the patch version
+7. stage and commit the version bump and changelog addition
+8. `git push -u your-remote hf-v0.9.1`
+9. open a pull request against master for the hotfix (to be merged with "Create a Merge Commit" (--no-ff))
+10. open a pull request against develop for the hotfix (to be merged with "Create a Merge Commit" (--no-ff))
+10. after the pull request is approved and merged, follow up to make sure a release is tagged in github against master. 
+Copy relative changes from the [CHANGELOG.md](https://github.com/linode/manager/blob/master/CHANGELOG.md) into the release description.
+
+Creating a release candidate:
+1. `git checkout develop`
+2. `git pull origin develop` # make sure your local develop is up to date
+3. `git checkout -b rc-v0.9.0` # create a release candidate branch
+4. stage and commit your hotfix change
+5. `npm --no-git-tag version minor|major` # bump a minor or major version, updating both the `package.json` and `npm-shrinkwrap.json`
+6. Manually update the [CHANGELOG.md](https://github.com/linode/manager/blob/master/CHANGELOG.md) to represent changes for the version
+7. stage and commit the version bump and changelog addition
+8. `git push -u your-remote rc-v0.9.0`
+9. open a pull request against master for the release (to be merged with "Create a Merge Commit" (--no-ff))
+10. open a pull request against develop for the release (to be merged with "Create a Merge Commit" (--no-ff))
+10. after the pull request is approved and merged, follow up to make sure a release is tagged in github against master. 
+Copy relative changes from the [CHANGELOG.md](https://github.com/linode/manager/blob/master/CHANGELOG.md) into the release description.
 
 **Tip**: set up your local git repository to lint before every commit.
-
 ```sh
 echo '#!/usr/bin/env bash' > .git/hooks/pre-commit
 echo 'npm run lint' >> .git/hooks/pre-commit
 chmod +x .git/hooks/pre-commit
 ```
 
-### Coding Style
+## Testing
+
+To run tests:
+
+    npm test
+
+To automatically re-run tests when you make changes:
+
+    npm run test:watch
+    
+To automatically re-run tests on a single test file:
+
+    npm run test:watch --single_file=**/name.spec.js
+
+Our tests live in test/**.spec.js. They're based on
+[Mocha](https://mochajs.org/) and do assertions with
+[Chai](http://chaijs.com/) plus DOM/React testing with
+[enzyme](http://airbnb.io/enzyme/). We run them with
+[Karma](https://news.ycombinator.com/item?id=11927891).
+We're aiming for 95%+ test coverage.
+
+## Coding Style
 
 The manager is written in ES6, with some ES7 in use as well. A general guideline
 for the coding style is "imitate the code that's already there". When in doubt,
@@ -67,47 +179,6 @@ there's already a bug filed for your problem - if so, leave a comment
 mentioning that you can reproduce it. Otherwise, go ahead and open an issue
 with as much detail as you can provide (for example: node version, operating
 system, browser, device, etc.). Thanks!
-
-## Releasing
-### Creating a release branch:
-A release branch is composed of 1 or more features that have been merged into master.
-
-1. `git checkout master`
-2. `git pull origin master` # make sure you have latest
-3. `npm install && npm start` # update packages and manually check to see that the app is in good state
-4. `git checkout -b release-0.5.0` # create a new release branch with the planned version change
-5. `npm --no-git-tag-version version patch|minor|major` # bump the version in the package.json
-6. Manually update CHANGELOG.md to represent changes for the release version
-7. Stage and commit your changes
-8. `git push -u {your_fork_origin} release-0.5.0`
-9. Open a pull: linode/master < {your_fork_origin}/release-0.5.0 for review
-10. Approve/Merge pull against master w/ "Create a merge commit"
-11. Open a pull: linode/release < {your_fork_origin}/release-0.5.0 for review
-12. Approve/Merge pull against release w/ "Create a merge commit"
-13. Create a release via github (v0.5.0) against **linode/release**, copy CHANGELOG.md details for the version into the release description
-14. Publish release
-15. Notify in chat [(#linode-next on irc.oftc.net)](https://webchat.oftc.net/?channels=linode-next&uio=d4) that release is complete, coordinate deploy
-16. After deploy, manually check that the app is in the expected state. See testing doc.
-
-### Creating a hotfix branch:
-A hotfix branch is for bug fixes against the current release.
-
-1. `git checkout release`
-2. `git pull origin release`
-3. `npm install && npm start` # update packages and manually check to see that the app is in good state
-4. `git checkout -b HF-0.5.1`
-5. Add and commit your hotfix
-6. `npm --no-git-tag-version version patch`
-7. Manually update CHANGELOG.md to represent changes for the release version
-8. Stage and commit your changes
-9. Open a pull: linode/release < {your_fork_origin}/release-0.5.1 for review
-10. Approve/Merge pull against release w/ "Squash and Merge"
-11. Open a pull: linode/master < {your_fork_origin}/release-0.5.1 for review
-12. Approve/Merge pull against master w/ "Squash and Merge"
-13. Create a release via github (v0.5.1) against **linode/release**, copy CHANGELOG.md details for the version into the release description
-14. Publish release
-15. Notify in chat [(#linode-next on irc.oftc.net)](https://webchat.oftc.net/?channels=linode-next&uio=d4) that release is complete, coordinate deploy
-16. After deploy, manually check that the app is in the expected state. See testing doc.
 
 ### References
 - http://nvie.com/posts/a-successful-git-branching-model/

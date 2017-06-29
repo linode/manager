@@ -14,7 +14,7 @@ import { domains } from '~/api';
 import { setTitle } from '~/actions/title';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { hideModal } from '~/actions/modal';
-import { TrackEvent } from '~/actions/trackEvent.js';
+import { EmitEvent } from 'linode-components/utils';
 
 import SelectDNSSeconds, {
   ONE_WEEK,
@@ -78,7 +78,7 @@ export default class EditSOARecord extends Component {
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => domains.put(data, this.props.domains.id),
       () => setTitle(data.domain),
-      () => TrackEvent('Modal', 'edit', title),
+      () => { EmitEvent('modal:submit', 'Modal', 'edit', title); },
       () => close(domain)(),
     ]));
   }
@@ -260,7 +260,7 @@ export default class EditSOARecord extends Component {
         <div className="Modal-footer">
           <CancelButton
             onClick={() => {
-              TrackEvent('Modal', 'cancel', title);
+              EmitEvent('modal:cancel', 'Modal', 'cancel', title);
               dispatch(hideModal());
             }}
           />

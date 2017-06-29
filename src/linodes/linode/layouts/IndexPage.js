@@ -34,7 +34,8 @@ export class IndexPage extends Component {
 
   render() {
     const { linode } = this.props;
-    if (!linode) return null;
+
+    if (!linode) { return null; }
 
     const tabs = [
       { name: 'Dashboard', link: '' },

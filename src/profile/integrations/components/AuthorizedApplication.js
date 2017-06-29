@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React, { PropTypes, Component } from 'react';
 
 import { ConfirmModalBody } from 'linode-components/modals';
@@ -7,12 +6,14 @@ import { Card, CardImageHeader } from 'linode-components/cards/';
 import { Table } from 'linode-components/tables';
 import TimeDisplay from '~/components/TimeDisplay';
 import { AuthScopeCell } from '~/components/tables/cells';
-import { TrackEvent } from '~/actions/trackEvent.js';
+import { EmitEvent } from 'linode-components/utils';
 
 import { showModal, hideModal } from '~/actions/modal';
 import { tokens } from '~/api';
 import { OAUTH_SUBSCOPES, OAUTH_SCOPES, API_ROOT } from '~/constants';
 import { dispatchOrStoreErrors } from '~/api/util';
+
+import { formatScope } from '../utilities';
 
 
 export default class AuthorizedApplication extends Component {
@@ -33,11 +34,11 @@ export default class AuthorizedApplication extends Component {
         buttonText="Revoke"
         onOk={async () => {
           await this.revokeApp(id);
-          TrackEvent('Modal', 'revoke', title);
+          EmitEvent('modal:submit', 'Modal', 'revoke', title);
           dispatch(hideModal());
         }}
         onCancel={() => {
-          TrackEvent('Modal', 'cancel', title);
+          EmitEvent('modal:cancel', 'Modal', 'cancel', title);
           dispatch(hideModal());
         }}
       >
@@ -79,7 +80,7 @@ export default class AuthorizedApplication extends Component {
             columns={[
               {
                 dataKey: 'scope',
-                formatFn: _.capitalize,
+                formatFn: formatScope,
               },
             ].concat(OAUTH_SUBSCOPES.map((subscope) => ({
               subscope,
