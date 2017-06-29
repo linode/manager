@@ -116,7 +116,6 @@ export class Layout extends Component {
 Layout.propTypes = {
   username: PropTypes.string,
   email: PropTypes.string,
-  currentPath: PropTypes.string,
   children: PropTypes.node.isRequired,
   errors: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
@@ -132,7 +131,6 @@ function select(state) {
   return {
     username: state.api.profile.username,
     email: state.api.profile.email,
-    currentPath: state.routing.locationBeforeTransitions.pathname,
     errors: state.errors,
     source: state.source,
     linodes: state.api.linodes,
