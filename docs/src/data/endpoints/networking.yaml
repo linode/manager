@@ -8,6 +8,7 @@ description: >
 endpoints:
   networking/ipv4:
     type: list
+    resource: ipaddress
     authenticated: true
     description: >
       View and manage IPv4 Addresses you own.
@@ -42,6 +43,7 @@ endpoints:
             # presently unsupported
   networking/ipv4/:address:
     type: resource
+    resource: ipaddress
     authenticated: true
     description: >
       Manage a single <a href="#object-ipaddress">IPv4 Address</a>
@@ -71,6 +73,7 @@ endpoints:
             my_ipv4.save()
   networking/ipv6:
     type: list
+    resource: ipv6pool
     authenticated: true
     description: >
       Manage <a href="#object-ipv6pool">IPv6 Global Pools</a>.
@@ -87,6 +90,7 @@ endpoints:
             my_ipv6s = client.networking.get_ipv6()
   networking/ipv6/:address:
     type: resource
+    resource: ipv6pool
     authenticated: true
     description: >
       Manage a single <a href="#object-ipv6-address">IPv6 Address</a>.  Address in URL
