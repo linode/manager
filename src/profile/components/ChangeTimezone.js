@@ -36,7 +36,7 @@ export default class ChangeTimezone extends Component {
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => profile.put({ timezone }),
       () => setStorage('profile/timezone', timezone),
-      () => EmitEvent('Submit', timezone, 'timezone'),
+      () => EmitEvent('button:submit', 'Submit', timezone, 'timezone'),
     ]));
   }
 

@@ -63,7 +63,7 @@ export class CreatePage extends Component {
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => tickets.post({ summary, description, [regardingField]: +regardingId }),
       ({ id }) => push(`/support/${id}`),
-      () => EmitEvent('Submit', 'open', 'ticket'),
+      () => EmitEvent('button:submit', 'Submit', 'open', 'ticket'),
     ]));
   }
 

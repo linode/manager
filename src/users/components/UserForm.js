@@ -55,7 +55,7 @@ export default class UserForm extends Component {
       () => oldUsername !== data.username && push(`/users/${data.username}`),
       () => oldUsername !== data.username && actions.delete(oldUsername),
       () => creating ? null : setTitle(data.username),
-      () => EmitEvent('Submit', creating ? 'add' : 'edit', 'user'),
+      () => EmitEvent('button:submit', 'Submit', creating ? 'add' : 'edit', 'user'),
     ]));
   }
 

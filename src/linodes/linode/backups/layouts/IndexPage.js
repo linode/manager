@@ -40,7 +40,7 @@ export class IndexPage extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => enableBackup(linode.id),
-      () => EmitEvent('Submit', 'enable backups', 'linode'),
+      () => EmitEvent('button:submit', 'Submit', 'enable backups', 'linode'),
     ]));
   }
 

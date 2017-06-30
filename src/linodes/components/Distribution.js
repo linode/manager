@@ -60,8 +60,8 @@ export default class Distribution extends Component {
         name: version.label,
         action: () => {
           this.setState({ selectedIndex: i }, this.onClick);
-          EmitEvent('Dropdown', 'select distro version', version.label);
-        }
+          EmitEvent('dropdown:click', 'Dropdown', 'select distro version', version.label);
+        },
       })),
     ];
 
@@ -72,8 +72,13 @@ export default class Distribution extends Component {
       >
         <Dropdown
           elements={versions}
-          onOpen={() => EmitEvent('Dropdown', 'open distro version', vendor.name)}
-          onClose={() => EmitEvent('Dropdown', 'close distro version', vendor.name)}
+          onOpen={() => EmitEvent('dropdown:open', 'Dropdown', 'open distro version', vendor.name)}
+          onClose={() => EmitEvent(
+            'dropdown:close',
+            'Dropdown',
+            'close distro version',
+            vendor.name
+          )}
         />
         <div className="LinodesDistribution-body">
           {vendor ? <img

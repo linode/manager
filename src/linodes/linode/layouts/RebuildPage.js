@@ -50,7 +50,7 @@ export class RebuildPage extends Component {
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => rebuildLinode(id, { distribution, root_pass: password }),
       () => this.setState({ password: '', distribution: RebuildPage.DEFAULT_DISTRIBUTION }),
-      () => EmitEvent('Submit', 'rebuild', 'linode'),
+      () => EmitEvent('button:submit', 'Submit', 'rebuild', 'linode'),
     ], ['distribution']));
   }
 

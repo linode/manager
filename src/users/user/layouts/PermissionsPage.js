@@ -78,10 +78,12 @@ export class PermissionsPage extends Component {
     const { global, customer, linode, domain, nodebalancer, loading, errors } = this.state;
 
     return (
-      <Form onSubmit={() => {
-        this.onSubmit();
-        EmitEvent('Submit', 'change permissions', 'user');
-      }}>
+      <Form
+        onSubmit={() => {
+          this.onSubmit();
+          EmitEvent('button:submit', 'Submit', 'change permissions', 'user');
+        }}
+      >
         <Card className="Permissions">
           <div className="Permissions-section">
             <h3>Global Permissions</h3>

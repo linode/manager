@@ -62,7 +62,7 @@ export class TicketPage extends Component {
     const requests = [
       // All other requests will get unshift()ed before this so this happens last.
       () => this.setState({ reply: '', attachments: [] }),
-      () => EmitEvent('Submit', 'update', 'ticket', attachments.length),
+      () => EmitEvent('button:submit', 'Submit', 'update', 'ticket', attachments.length),
     ];
 
     if (description) {

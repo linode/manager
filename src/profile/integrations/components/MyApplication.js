@@ -82,29 +82,29 @@ export default class MyApplication extends Component {
     const elements = [
       { name: 'Edit', action: () => {
         this.editAction();
-        EmitEvent('Dropdown', 'edit', 'my app');
-      }},
+        EmitEvent('dropdown:click', 'Dropdown', 'edit', 'my app');
+      } },
       { name: 'Reset secret', action: () => {
         this.resetAction();
-        EmitEvent('Dropdown', 'reset', 'my app');
-      }},
+        EmitEvent('dropdown:click', 'Dropdown', 'reset', 'my app');
+      } },
       null,
       { name: 'Delete', action: () => {
         this.deleteAction();
-        EmitEvent('Dropdown', 'delete', 'my app');
-      }},
+        EmitEvent('dropdown:click', 'Dropdown', 'delete', 'my app');
+      } },
     ];
 
-    return <Dropdown
+    return (<Dropdown
       elements={elements}
       leftOriented={false}
       onOpen={() => {
-        EmitEvent('Dropdown', 'open', 'my app');
+        EmitEvent('dropdown:open', 'Dropdown', 'open', 'my app');
       }}
       onClose={() => {
-        EmitEvent('Dropdown', 'close', 'my app');
+        EmitEvent('dropdown:close', 'Dropdown', 'close', 'my app');
       }}
-    />;
+    />);
   }
 
   render() {

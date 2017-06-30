@@ -77,7 +77,7 @@ export default class ConfigForm extends Component {
     }
 
     const idsPath = [nodebalancer.id, config.id].filter(Boolean);
-    const calls = [() => EmitEvent('Submit', config.id ? 'edit' : 'add', 'nodebalancer config')];
+    const calls = [];
     if ((config.id && protocol === 'https') &&
         (config.protocol !== 'https' || (sslCert || sslKey))) {
       calls.push(() => updateConfigSSL(sslData, ...idsPath));
@@ -87,7 +87,7 @@ export default class ConfigForm extends Component {
     if (!config.id) {
       calls.push(({ id }) => push(`/nodebalancers/${nodebalancer.label}/configs/${id}`));
     }
-
+    calls.push(() => EmitEvent('button:submit', 'Submit', config.id ? 'edit' : 'add', 'nodebalancer config'));
     return dispatch(dispatchOrStoreErrors.call(this, calls));
   }
 

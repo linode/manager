@@ -41,7 +41,7 @@ export class DisplayPage extends Component {
     const requests = [
       () => linodes.put({ group, label }, id),
       () => setTitle(label),
-      () => EmitEvent('Submit', 'change display', 'linode'),
+      () => EmitEvent('button:submit', 'Submit', 'change display', 'linode'),
     ];
 
     if (oldLabel !== label) {

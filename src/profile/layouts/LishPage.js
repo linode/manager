@@ -26,8 +26,8 @@ export default class NotificationsPage extends Component {
   }
 
   onSubmit = () => {
-    consti { authorization } = this.state;
-    EmitEvent('Submit', 'update', 'lish', parseInt(authorization)),
+    const { authorization } = this.state;
+    EmitEvent('button:submit', 'Submit', 'update', 'lish', parseInt(authorization));
     // TODO: implement save
   }
 

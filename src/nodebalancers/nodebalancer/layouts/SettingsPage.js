@@ -44,7 +44,7 @@ export class SettingsPage extends Component {
       () => nodebalancers.put({ client_conn_throttle: +connThrottle, label }, id),
       () => label !== oldLabel ? push(`/nodebalancers/${label}/settings`) : () => {},
       () => setTitle(label),
-      () => EmitEvent('Submit', 'change', 'nodebalancer settings'),
+      () => EmitEvent('button:submit', 'Submit', 'change', 'nodebalancer settings'),
     ]));
   }
 

@@ -78,7 +78,7 @@ export class IPSharingPage extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => setShared(linode.id, sharedIPs),
-      () => EmitEvent('Submit', 'ip sharing', 'linode'),
+      () => EmitEvent('button:submit', 'Submit', 'ip sharing', 'linode'),
     ]));
   }
 

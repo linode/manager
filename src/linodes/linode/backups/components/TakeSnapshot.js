@@ -20,7 +20,7 @@ export default class TakeSnapshot extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => takeBackup(linode.id),
-      () => EmitEvent('Submit', 'take snapshot', 'linode'),
+      () => EmitEvent('button:submit', 'Submit', 'take snapshot', 'linode'),
     ]));
   }
 

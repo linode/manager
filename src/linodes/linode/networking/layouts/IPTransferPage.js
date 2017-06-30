@@ -86,7 +86,7 @@ export class IPTransferPage extends Component {
       // This setState is important so that old checked IPs that have transferred don't break
       // things.
       () => this.setState({ checkedA: {}, checkedB: {} }),
-      () => EmitEvent('Submit', 'ip transfer', 'linode'),
+      () => EmitEvent('button:submit', 'Submit', 'ip transfer', 'linode'),
     ]));
   }
 

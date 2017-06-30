@@ -64,12 +64,12 @@ export default class PersonalAccessToken extends Component {
     const elements = [
       { name: 'Edit', action: () => {
         this.editAction();
-        EmitEvent('Dropdown', 'edit','personal access token');
-      }},
+        EmitEvent('dropdown:click', 'Dropdown', 'edit', 'personal access token');
+      } },
       { name: 'Delete', action: () => {
         this.deleteAction();
-        EmitEvent('Dropdown', 'delete', 'personal access token');
-      }},
+        EmitEvent('dropdown:click', 'Dropdown', 'delete', 'personal access token');
+      } },
     ];
 
     const header = (
@@ -79,10 +79,10 @@ export default class PersonalAccessToken extends Component {
           elements={elements}
           leftOriented={false}
           onOpen={() => {
-            EmitEvent('Dropdown', 'open', 'personal access token');
+            EmitEvent('dropdown:open', 'Dropdown', 'open', 'personal access token');
           }}
           onClose={() => {
-            EmitEvent('Dropdown', 'close', 'personal access token');
+            EmitEvent('dropdown:close', 'Dropdown', 'close', 'personal access token');
           }}
         />}
       />

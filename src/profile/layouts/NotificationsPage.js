@@ -28,7 +28,11 @@ export class NotificationsPage extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => profile.put({ email_notifications: !enabled }),
-      () => EmitEvent('Submit', enabled ? 'Disable' : 'Enable', 'email notifications'),
+      () => EmitEvent(
+        'button:submit',
+        'Submit', enabled ? 'Disable' : 'Enable',
+        'email notifications'
+      ),
     ]));
   }
 

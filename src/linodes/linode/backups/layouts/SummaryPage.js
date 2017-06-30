@@ -31,7 +31,7 @@ export class SummaryPage extends Component {
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => takeBackup(linode.id),
       ({ id }) => push(`/linodes/${linode.label}/backups/${id}`),
-      () => EmitEvent('Submit', 'take first snapshot', 'linode'),
+      () => EmitEvent('button:submit', 'Submit', 'take first snapshot', 'linode'),
     ]));
   }
 

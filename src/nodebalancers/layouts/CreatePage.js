@@ -53,7 +53,7 @@ export class CreatePage extends Component {
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => nodebalancers.post({ label, region }),
       () => push(`/nodebalancers/${label}`),
-      () => EmitEvent('Submit', 'create', 'nodebalancer'),
+      () => EmitEvent('button:submit', 'Submit', 'create', 'nodebalancer'),
     ]));
   }
 

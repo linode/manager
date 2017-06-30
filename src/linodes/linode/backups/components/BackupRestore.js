@@ -39,7 +39,7 @@ export default class BackupRestore extends Component {
     const callback = () => dispatch(dispatchOrStoreErrors.call(this, [
       () => restoreBackup(linode.id, target, backup.id, overwrite),
       () => push(`/linodes/${toRestoreTo}`),
-      () => EmitEvent('Submit', 'restore backup', 'linode'),
+      () => EmitEvent('button:submit', 'Submit', 'restore backup', 'linode'),
     ]));
 
     return dispatch(showModal('Confirm Backup Restore', (

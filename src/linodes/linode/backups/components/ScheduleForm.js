@@ -32,7 +32,7 @@ export default class ScheduleForm extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => linodes.put({ backups: { schedule: { day, window } } }, linode.id),
-      () => EmitEvent('Submit', 'schedule backup', 'linode'),
+      () => EmitEvent('button:submit', 'Submit', 'schedule backup', 'linode'),
     ]));
   }
 

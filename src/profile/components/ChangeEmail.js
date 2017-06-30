@@ -32,7 +32,7 @@ export default class ChangeEmail extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => profile.put({ email }),
-      () => EmitEvent('Submit', 'change', 'email'),
+      () => EmitEvent('button:submit', 'Submit', 'change', 'email'),
     ]));
   }
 

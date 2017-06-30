@@ -53,10 +53,12 @@ export default function Details(props) {
   return (
     <Card header={<CardHeader title="Details" />}>
       {/* TODO: Form should encapsulate all form fields on the create page */}
-      <Form onSubmit={() => {
-        onSubmit();
-        EmitEvent('Submit', 'create', 'linode')
-      }}>
+      <Form
+        onSubmit={() => {
+          onSubmit();
+          EmitEvent('button:submit', 'Submit', 'create', 'linode');
+        }}
+      >
         <FormGroup name="label" errors={errors} className="row">
           <label htmlFor="label" className="col-sm-2 col-form-label">Label</label>
           <div className="col-sm-10">

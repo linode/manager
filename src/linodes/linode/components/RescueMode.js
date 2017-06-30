@@ -34,7 +34,7 @@ export default class RescueMode extends Component {
     const { dispatch, linode } = this.props;
     const { disks } = this.state;
 
-    EmitEvent('Submit', 'rescue', 'linode');
+    EmitEvent('button:submit', 'Submit', 'rescue', 'linode');
     return dispatch(dispatchOrStoreErrors.apply(this, [
       [() => rescueLinode(linode.id, disks)],
     ]));

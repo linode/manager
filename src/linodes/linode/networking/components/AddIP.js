@@ -44,7 +44,7 @@ export default class AddIP extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => addIP(linode.id, type),
-      () => EmitEvent('Submit', 'add ip', 'linode'),
+      () => EmitEvent('button:submit', 'Submit', 'add ip', 'linode'),
       close,
     ]));
   }

@@ -44,7 +44,7 @@ export class AlertsPage extends Component {
   onSubmit = () => {
     const { dispatch, linode } = this.props;
 
-    EmitEvent('Submit', 'change alerts', 'linode');
+    EmitEvent('button:submit', 'Submit', 'change alerts', 'linode');
     return dispatch(dispatchOrStoreErrors.apply(this, [
       [() => linodes.put({ alerts: this.state.alerts }, linode.id)],
     ]));

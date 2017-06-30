@@ -87,7 +87,7 @@ export default class CreateOrEditConfig extends Component {
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => linodes.configs[config.id ? 'put' : 'post'](data, ...idsPath),
       () => push(`/linodes/${linode.label}/settings/advanced`),
-      () => EmitEvent('Submit', config.id ? 'edit' : 'add', 'linode config'),
+      () => EmitEvent('button:submit', 'Submit', config.id ? 'edit' : 'add', 'linode config'),
     ]));
   }
 

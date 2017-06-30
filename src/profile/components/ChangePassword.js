@@ -36,7 +36,7 @@ export default class ChangePassword extends Component {
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => setPassword(password, SelectExpiration.map(expires)),
       () => this.setState({ password: '', expires: '0' }),
-      () => EmitEvent('Submit', 'change', 'password'),
+      () => EmitEvent('button:submit', 'Submit', 'change', 'password'),
     ]));
   }
 

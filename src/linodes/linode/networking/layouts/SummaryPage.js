@@ -59,8 +59,8 @@ export class SummaryPage extends Component {
     const elements = [
       { name: 'More Info', action: () => {
         MoreInfo.trigger(dispatch, record);
-        EmitEvent('Dropdown', 'More Info', 'network summary ips');
-      }},
+        EmitEvent('dropdown:click', 'Dropdown', 'More Info', 'network summary ips');
+      } },
       //{ name: 'Delete', action: () => this.deleteIP(record) },
     ];
 
@@ -75,7 +75,7 @@ export class SummaryPage extends Component {
         name: 'Edit RDNS',
         action: () => {
           EditRDNS.trigger(dispatch, record);
-          EmitEvent('Dropdown', 'Edit RDNS', 'network summary ips');
+          EmitEvent('dropdown:click', 'Dropdown', 'Edit RDNS', 'network summary ips');
         },
       });
 
@@ -83,8 +83,8 @@ export class SummaryPage extends Component {
         const name = record.version === 'ipv4' ? 'Reset RDNS' : 'Remove RDNS';
         elements.splice(2, 0, { name, action: () => {
           this.resetRDNS(record);
-          EmitEvent('Dropdown', name, 'network summary ips');
-        }});
+          EmitEvent('dropdown:click', 'Dropdown', name, 'network summary ips');
+        } });
       }
     }
 
@@ -93,11 +93,10 @@ export class SummaryPage extends Component {
         <Dropdown
           elements={elements}
           onOpen={() => {
-            console.log('hit');
-            EmitEvent('Dropdown', 'open', 'network summary ips');
+            EmitEvent('dropdown:open', 'Dropdown', 'open', 'network summary ips');
           }}
           onClose={() => {
-            EmitEvent('Dropdown', 'close', 'network summary ips');
+            EmitEvent('dropdown:close', 'Dropdown', 'close', 'network summary ips');
           }}
         />
       </TableCell>
@@ -163,8 +162,8 @@ export class SummaryPage extends Component {
     const buttonElements = [
       { name: 'Add an IP Address', action: () => {
         AddIP.trigger(dispatch, linode);
-        EmitEvent('Dropdown', 'add ip address', 'network summary add');
-                                                 }},
+        EmitEvent('dropdown:click', 'Dropdown', 'add ip address', 'network summary add');
+      } },
       // TODO: Add rdnslookup when API supports it
       // { name: 'Add an RDNS Entry', action: this.rdnsLookup },
     ];
@@ -176,10 +175,10 @@ export class SummaryPage extends Component {
             <Dropdown
               elements={buttonElements}
               onOpen={() => {
-                EmitEvent('Dropdown', 'open', 'network summary add');
+                EmitEvent('dropdown:open', 'Dropdown', 'open', 'network summary add');
               }}
               onClose={() => {
-                EmitEvent('Dropdown', 'close', 'network summary add');
+                EmitEvent('dropdown:close', 'Dropdown', 'close', 'network summary add');
               }}
             />
           </div>

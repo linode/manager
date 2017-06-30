@@ -34,7 +34,7 @@ export default class TwoFactor extends Component {
       requests.push(({ secret }) => this.twoFactorModal(secret));
     }
 
-    EmitEvent('Submit', tfaEnabled ? 'Disable' : 'Enable', 'Two Factor');
+    EmitEvent('button:submit', 'Submit', tfaEnabled ? 'Disable' : 'Enable', 'Two Factor');
     return dispatch(dispatchOrStoreErrors.call(this, requests));
   }
 

@@ -45,7 +45,7 @@ export class ResizePage extends Component {
     const { dispatch, linode } = this.props;
     const { type } = this.state;
 
-    EmitEvent('Submit', 'resize', 'linode');
+    EmitEvent('button:submit', 'Submit', 'resize', 'linode');
     return dispatch(dispatchOrStoreErrors.apply(this, [
       [() => resizeLinode(linode.id, type)],
       ['type'],
