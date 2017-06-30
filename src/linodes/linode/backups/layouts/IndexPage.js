@@ -8,7 +8,7 @@ import { Tabs } from 'linode-components/tabs';
 import { Form, FormSummary, SubmitButton } from 'linode-components/forms';
 
 import { setSource } from '~/actions/source';
-import { TrackEvent } from '~/actions/trackEvent.js';
+import { EmitEvent } from 'linode-components/utils';
 import { enableBackup } from '~/api/backups';
 import { linodeBackups } from '~/api/linodes';
 import { dispatchOrStoreErrors, getObjectByLabelLazily } from '~/api/util';
@@ -40,7 +40,7 @@ export class IndexPage extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => enableBackup(linode.id),
-      () => TrackEvent('Submit', 'enable backups', 'linode'),
+      () => EmitEvent('Submit', 'enable backups', 'linode'),
     ]));
   }
 

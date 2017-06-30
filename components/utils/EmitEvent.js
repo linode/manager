@@ -8,4 +8,8 @@ export default function EmitEvent(eventName, category, action, label, value = nu
       value,
     }
   }));
+<<<<<<< c7535c24a36c05142dc2aa79dc930d95246d4d88
+=======
+  console.log(category, eventName);
+>>>>>>> rename TrackEvent to EmitEvent
 }

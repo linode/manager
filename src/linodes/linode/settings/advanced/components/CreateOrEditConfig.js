@@ -17,7 +17,7 @@ import {
   SubmitButton,
 } from 'linode-components/forms';
 
-import { TrackEvent } from '~/actions/trackEvent.js';
+import { EmitEvent } from 'linode-components/utils';
 import { linodes } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { AVAILABLE_DISK_SLOTS } from '~/constants';
@@ -87,7 +87,7 @@ export default class CreateOrEditConfig extends Component {
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => linodes.configs[config.id ? 'put' : 'post'](data, ...idsPath),
       () => push(`/linodes/${linode.label}/settings/advanced`),
-      () => TrackEvent('Submit', config.id ? 'edit' : 'add', 'linode config'),
+      () => EmitEvent('Submit', config.id ? 'edit' : 'add', 'linode config'),
     ]));
   }
 

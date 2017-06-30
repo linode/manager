@@ -11,7 +11,7 @@ import {
   SubmitButton,
 } from 'linode-components/forms';
 
-import { TrackEvent } from '~/actions/trackEvent.js';
+import { EmitEvent } from 'linode-components/utils';
 import { users } from '~/api';
 import { dispatchOrStoreErrors, getObjectByLabelLazily } from '~/api/util';
 
@@ -80,7 +80,7 @@ export class PermissionsPage extends Component {
     return (
       <Form onSubmit={() => {
         this.onSubmit();
-        TrackEvent('Submit', 'change permissions', 'user');
+        EmitEvent('Submit', 'change permissions', 'user');
       }}>
         <Card className="Permissions">
           <div className="Permissions-section">

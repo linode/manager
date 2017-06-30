@@ -14,7 +14,7 @@ import {
 
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
-import { TrackEvent } from '~/actions/trackEvent.js';
+import { EmitEvent } from 'linode-components/utils';
 import { nodebalancers } from '~/api';
 import { dispatchOrStoreErrors, objectFromMapByLabel } from '~/api/util';
 
@@ -44,7 +44,7 @@ export class SettingsPage extends Component {
       () => nodebalancers.put({ client_conn_throttle: +connThrottle, label }, id),
       () => label !== oldLabel ? push(`/nodebalancers/${label}/settings`) : () => {},
       () => setTitle(label),
-      () => TrackEvent('Submit', 'change', 'nodebalancer settings'),
+      () => EmitEvent('Submit', 'change', 'nodebalancer settings'),
     ]));
   }
 

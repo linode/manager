@@ -10,7 +10,7 @@ import {
   SubmitButton,
 } from 'linode-components/forms';
 
-import { TrackEvent } from '~/actions/trackEvent.js';
+import { EmitEvent } from 'linode-components/utils';
 import { profile } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { setStorage } from '~/storage';
@@ -36,7 +36,7 @@ export default class ChangeTimezone extends Component {
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => profile.put({ timezone }),
       () => setStorage('profile/timezone', timezone),
-      () => TrackEvent('Submit', timezone, 'timezone'),
+      () => EmitEvent('Submit', timezone, 'timezone'),
     ]));
   }
 

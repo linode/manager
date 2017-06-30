@@ -3,7 +3,7 @@ import React, { Component, PropTypes } from 'react';
 import { Dropdown } from 'linode-components/dropdowns';
 
 import { distros } from '~/assets';
-import { TrackEvent } from '~/actions/trackEvent.js';
+import { EmitEvent } from 'linode-components/utils';
 
 
 export default class Distribution extends Component {
@@ -60,7 +60,7 @@ export default class Distribution extends Component {
         name: version.label,
         action: () => {
           this.setState({ selectedIndex: i }, this.onClick);
-          TrackEvent('Dropdown', 'select distro version', version.label);
+          EmitEvent('Dropdown', 'select distro version', version.label);
         }
       })),
     ];
@@ -72,8 +72,8 @@ export default class Distribution extends Component {
       >
         <Dropdown
           elements={versions}
-          onOpen={() => TrackEvent('Dropdown', 'open distro version', vendor.name)}
-          onClose={() => TrackEvent('Dropdown', 'close distro version', vendor.name)}
+          onOpen={() => EmitEvent('Dropdown', 'open distro version', vendor.name)}
+          onClose={() => EmitEvent('Dropdown', 'close distro version', vendor.name)}
         />
         <div className="LinodesDistribution-body">
           {vendor ? <img

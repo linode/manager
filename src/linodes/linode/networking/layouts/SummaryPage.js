@@ -13,7 +13,7 @@ import { showModal, hideModal } from '~/actions/modal';
 import { setSource } from '~/actions/source';
 import { deleteIP, setRDNS } from '~/api/networking';
 import { dispatchOrStoreErrors } from '~/api/util';
-import { TrackEvent } from '~/actions/trackEvent.js';
+import { EmitEvent } from 'linode-components/utils';
 
 import { MoreInfo, EditRDNS, AddIP } from '../components';
 import { selectLinode } from '../../utilities';
@@ -59,7 +59,7 @@ export class SummaryPage extends Component {
     const elements = [
       { name: 'More Info', action: () => {
         MoreInfo.trigger(dispatch, record);
-        TrackEvent('Dropdown', 'More Info', 'network summary ips');
+        EmitEvent('Dropdown', 'More Info', 'network summary ips');
       }},
       //{ name: 'Delete', action: () => this.deleteIP(record) },
     ];
@@ -75,7 +75,7 @@ export class SummaryPage extends Component {
         name: 'Edit RDNS',
         action: () => {
           EditRDNS.trigger(dispatch, record);
-          TrackEvent('Dropdown', 'Edit RDNS', 'network summary ips');
+          EmitEvent('Dropdown', 'Edit RDNS', 'network summary ips');
         },
       });
 
@@ -83,7 +83,7 @@ export class SummaryPage extends Component {
         const name = record.version === 'ipv4' ? 'Reset RDNS' : 'Remove RDNS';
         elements.splice(2, 0, { name, action: () => {
           this.resetRDNS(record);
-          TrackEvent('Dropdown', name, 'network summary ips');
+          EmitEvent('Dropdown', name, 'network summary ips');
         }});
       }
     }
@@ -94,10 +94,10 @@ export class SummaryPage extends Component {
           elements={elements}
           onOpen={() => {
             console.log('hit');
-            TrackEvent('Dropdown', 'open', 'network summary ips');
+            EmitEvent('Dropdown', 'open', 'network summary ips');
           }}
           onClose={() => {
-            TrackEvent('Dropdown', 'close', 'network summary ips');
+            EmitEvent('Dropdown', 'close', 'network summary ips');
           }}
         />
       </TableCell>
@@ -163,7 +163,7 @@ export class SummaryPage extends Component {
     const buttonElements = [
       { name: 'Add an IP Address', action: () => {
         AddIP.trigger(dispatch, linode);
-        TrackEvent('Dropdown', 'add ip address', 'network summary add');
+        EmitEvent('Dropdown', 'add ip address', 'network summary add');
                                                  }},
       // TODO: Add rdnslookup when API supports it
       // { name: 'Add an RDNS Entry', action: this.rdnsLookup },
@@ -176,10 +176,10 @@ export class SummaryPage extends Component {
             <Dropdown
               elements={buttonElements}
               onOpen={() => {
-                TrackEvent('Dropdown', 'open', 'network summary add');
+                EmitEvent('Dropdown', 'open', 'network summary add');
               }}
               onClose={() => {
-                TrackEvent('Dropdown', 'close', 'network summary add');
+                EmitEvent('Dropdown', 'close', 'network summary add');
               }}
             />
           </div>

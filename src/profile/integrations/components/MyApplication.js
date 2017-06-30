@@ -5,11 +5,11 @@ import { Dropdown } from 'linode-components/dropdowns';
 import { ConfirmModalBody, DeleteModalBody } from 'linode-components/modals';
 
 import { showModal, hideModal } from '~/actions/modal';
+import { EmitEvent } from 'linode-components/utils';
 import { clients } from '~/api';
 import { resetSecret } from '~/api/clients';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { API_ROOT } from '~/constants';
-import { EmitEvent } from 'linode-components/utils';
 
 import { renderSecret } from './CreatePersonalAccessToken';
 import CreateOrEditApplication from './CreateOrEditApplication';

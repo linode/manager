@@ -13,7 +13,7 @@ import {
   SubmitButton,
 } from 'linode-components/forms';
 
-import { TrackEvent } from '~/actions/trackEvent.js';
+import { EmitEvent } from 'linode-components/utils';
 
 
 export default function Details(props) {
@@ -55,7 +55,7 @@ export default function Details(props) {
       {/* TODO: Form should encapsulate all form fields on the create page */}
       <Form onSubmit={() => {
         onSubmit();
-        TrackEvent('Submit', 'create', 'linode')
+        EmitEvent('Submit', 'create', 'linode')
       }}>
         <FormGroup name="label" errors={errors} className="row">
           <label htmlFor="label" className="col-sm-2 col-form-label">Label</label>

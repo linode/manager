@@ -7,7 +7,7 @@ import {
 } from 'linode-components/forms';
 
 import { setSource } from '~/actions/source';
-import { TrackEvent } from '~/actions/trackEvent.js';
+import { EmitEvent } from 'linode-components/utils';
 import { distributions } from '~/api';
 import { rebuildLinode } from '~/api/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
@@ -50,7 +50,7 @@ export class RebuildPage extends Component {
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => rebuildLinode(id, { distribution, root_pass: password }),
       () => this.setState({ password: '', distribution: RebuildPage.DEFAULT_DISTRIBUTION }),
-      () => TrackEvent('Submit', 'rebuild', 'linode'),
+      () => EmitEvent('Submit', 'rebuild', 'linode'),
     ], ['distribution']));
   }
 

@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 
 import { Form, FormGroup, SubmitButton } from 'linode-components/forms';
 
-import { TrackEvent } from '~/actions/trackEvent.js';
+import { EmitEvent } from 'linode-components/utils';
 import { takeBackup } from '~/api/backups';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { FormSummary } from 'linode-components/forms';
@@ -20,7 +20,7 @@ export default class TakeSnapshot extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => takeBackup(linode.id),
-      () => TrackEvent('Submit', 'take snapshot', 'linode'),
+      () => EmitEvent('Submit', 'take snapshot', 'linode'),
     ]));
   }
 

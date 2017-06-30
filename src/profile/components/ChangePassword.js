@@ -10,7 +10,7 @@ import {
   SubmitButton,
 } from 'linode-components/forms';
 
-import { TrackEvent } from '~/actions/trackEvent.js';
+import { EmitEvent } from 'linode-components/utils';
 import { setPassword } from '~/api/profile';
 import { dispatchOrStoreErrors } from '~/api/util';
 
@@ -36,7 +36,7 @@ export default class ChangePassword extends Component {
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => setPassword(password, SelectExpiration.map(expires)),
       () => this.setState({ password: '', expires: '0' }),
-      () => TrackEvent('Submit', 'change', 'password'),
+      () => EmitEvent('Submit', 'change', 'password'),
     ]));
   }
 

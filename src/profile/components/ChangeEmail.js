@@ -10,7 +10,7 @@ import {
   Input,
 } from 'linode-components/forms';
 
-import { TrackEvent } from '~/actions/trackEvent.js';
+import { EmitEvent } from 'linode-components/utils';
 import { profile } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 
@@ -32,7 +32,7 @@ export default class ChangeEmail extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => profile.put({ email }),
-      () => TrackEvent('Submit', 'change', 'email'),
+      () => EmitEvent('Submit', 'change', 'email'),
     ]));
   }
 

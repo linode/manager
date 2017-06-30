@@ -13,7 +13,7 @@ import {
 } from 'linode-components/forms';
 
 import { showModal, hideModal } from '~/actions/modal';
-import { TrackEvent } from '~/actions/trackEvent.js';
+import { EmitEvent } from 'linode-components/utils';
 import { restoreBackup } from '~/api/backups';
 import { dispatchOrStoreErrors } from '~/api/util';
 
@@ -39,7 +39,7 @@ export default class BackupRestore extends Component {
     const callback = () => dispatch(dispatchOrStoreErrors.call(this, [
       () => restoreBackup(linode.id, target, backup.id, overwrite),
       () => push(`/linodes/${toRestoreTo}`),
-      () => TrackEvent('Submit', 'restore backup', 'linode'),
+      () => EmitEvent('Submit', 'restore backup', 'linode'),
     ]));
 
     return dispatch(showModal('Confirm Backup Restore', (

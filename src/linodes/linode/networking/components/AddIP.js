@@ -12,7 +12,7 @@ import {
 } from 'linode-components/forms';
 
 import { showModal, hideModal } from '~/actions/modal';
-import { TrackEvent } from '~/actions/trackEvent.js';
+import { EmitEvent } from 'linode-components/utils';
 import { addIP } from '~/api/networking';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { MONTHLY_IP_COST } from '~/constants';
@@ -44,7 +44,7 @@ export default class AddIP extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => addIP(linode.id, type),
-      () => TrackEvent('Submit', 'add ip', 'linode'),
+      () => EmitEvent('Submit', 'add ip', 'linode'),
       close,
     ]));
   }

@@ -174,7 +174,7 @@ export default class StatusDropdown extends Component {
       ...element,
       action: () => {
         this.close();
-        TrackEvent('Dropdown', element.name, 'status dropdown');
+        EmitEvent('Dropdown', element.name, 'status dropdown');
 
         if (element._key === 'delete') {
           dispatch(showModal('Delete Linode', (
@@ -245,10 +245,10 @@ export default class StatusDropdown extends Component {
           elements={[{ name: status }, ...elements]}
           dropdownIcon="fa-cog"
           onOpen={() => {
-            TrackEvent('Dropdown', 'open', 'status dropdown');
+            EmitEvent('Dropdown', 'open', 'status dropdown');
           }}
           onClose={() => {
-            TrackEvent('Dropdown', 'close', 'status dropdown');
+            EmitEvent('Dropdown', 'close', 'status dropdown');
           }}
         />
         <div className="StatusDropdown-container">

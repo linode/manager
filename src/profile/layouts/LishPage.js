@@ -10,7 +10,7 @@ import {
   Select,
 } from 'linode-components/forms';
 
-import { TrackEvent } from '~/actions/trackEvent.js';
+import { EmitEvent } from 'linode-components/utils';
 
 
 export default class NotificationsPage extends Component {
@@ -27,7 +27,7 @@ export default class NotificationsPage extends Component {
 
   onSubmit = () => {
     consti { authorization } = this.state;
-    TrackEvent('Submit', 'update', 'lish', parseInt(authorization)),
+    EmitEvent('Submit', 'update', 'lish', parseInt(authorization)),
     // TODO: implement save
   }
 
