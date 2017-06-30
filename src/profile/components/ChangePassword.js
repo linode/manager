@@ -45,7 +45,10 @@ export default class ChangePassword extends Component {
 
     return (
       <Card header={<CardHeader title="Change password" />}>
-        <Form onSubmit={this.onSubmit}>
+        <Form
+          onSubmit={this.onSubmit}
+          analytics={{ title: 'Password Settings' }}
+        >
           <FormGroup className="row" errors={errors} name="password">
             <label htmlFor="password" className="col-sm-2 col-form-label">New password</label>
             <div className="col-sm-10">

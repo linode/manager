@@ -42,7 +42,10 @@ export default class NewSlaveZone extends Component {
     const { errors, loading, domain, ips } = this.state;
 
     return (
-      <Form onSubmit={this.onSubmit}>
+      <Form
+        onSubmit={this.onSubmit}
+        analytics={{ title: 'Add Slave Zone', action: 'add' }}
+      >
         <FormGroup errors={errors} name="domain" className="row">
           <label className="col-sm-2 col-form-label">Domain</label>
           <div className="col-sm-10 clearfix">

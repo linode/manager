@@ -51,6 +51,15 @@
         }
     }
 
+    &-body .alert {
+        @extend .font-xs;
+        text-align: center;
+    }
+
+    &-body .alert:last-child {
+        margin-bottom: 15px;
+    }
+
     .Input, .Select, textarea, .alert {
         display: block;
 

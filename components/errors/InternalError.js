@@ -1,14 +1,15 @@
 import React, { PropTypes } from 'react';
 
-import { ConfirmModalBody } from '../modals';
+import { FormModalBody } from '../modals';
 
 
 export default function InternalError(props) {
   return (
-    <ConfirmModalBody
+    <FormModalBody
       noCancel
-      onOk={props.returnHome}
+      onSubmit={props.returnHome}
       buttonText="Refresh"
+      analytics={{ title: 'Internal Error' }}
     >
       <div>
         <p>
@@ -22,7 +23,7 @@ export default function InternalError(props) {
           </small>
         </p>
       </div>
-    </ConfirmModalBody>
+    </FormModalBody>
   );
 }
 

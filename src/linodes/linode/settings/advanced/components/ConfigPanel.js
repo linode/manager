@@ -18,7 +18,7 @@ export class ConfigPanel extends Component {
 
     dispatch(showModal('Delete Config',
       <DeleteModalBody
-        onOk={async () => {
+        onSubmit={async () => {
           await dispatch(linodes.configs.delete(linode.id, config.id));
           dispatch(hideModal());
         }}

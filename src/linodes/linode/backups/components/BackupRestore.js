@@ -2,7 +2,6 @@ import React, { Component, PropTypes } from 'react';
 import { push } from 'react-router-redux';
 
 import { Card, CardHeader } from 'linode-components/cards';
-import { ConfirmModalBody } from 'linode-components/modals';
 import {
   Checkbox,
   Form,
@@ -11,6 +10,7 @@ import {
   Select,
   SubmitButton,
 } from 'linode-components/forms';
+import { ConfirmModalBody } from 'linode-components/modals';
 
 import { showModal, hideModal } from '~/actions/modal';
 import { restoreBackup } from '~/api/backups';
@@ -40,17 +40,21 @@ export default class BackupRestore extends Component {
       () => push(`/linodes/${toRestoreTo}`),
     ]));
 
-    return dispatch(showModal('Confirm Backup Restore', (
+    const title = 'Confirm Backup Restore';
+    return dispatch(showModal(title, (
       <ConfirmModalBody
         onCancel={() => dispatch(hideModal())}
-        onOk={callback}
+        onSubmit={callback}
+        analytics={{ title }}
       >
-        Are you sure you want to restore backups to <strong>{toRestoreTo}</strong>?
-        {!overwrite ? null : (
-          <span>
-            &nbsp;This will destroy all disks and configs on <strong>{toRestoreTo}</strong>.
-          </span>
-        )}
+        <div>
+          Are you sure you want to restore backups to <strong>{toRestoreTo}</strong>?
+          {!overwrite ? null : (
+            <span>
+              &nbsp;This will destroy all disks and configs on <strong>{toRestoreTo}</strong>.
+            </span>
+          )}
+        </div>
       </ConfirmModalBody>
     )));
   }
@@ -79,7 +83,10 @@ export default class BackupRestore extends Component {
 
     return (
       <Card header={<CardHeader title="Restore" />}>
-        <Form onSubmit={this.onSubmit}>
+        <Form
+          onSubmit={this.onSubmit}
+          analytics={{ title: 'Restore Backup', action: 'restore' }}
+        >
           <FormGroup className="row">
             <div className="col-sm-3 col-form-label">
               Restore to

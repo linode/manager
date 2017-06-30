@@ -13,8 +13,7 @@ import {
   SubmitButton,
 } from 'linode-components/forms';
 
-import { setSource } from '~/actions/source';
-import { setTitle } from '~/actions/title';
+import { setAnalytics, setSource, setTitle } from '~/actions';
 import { nodebalancers, regions } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 import Region from '~/components/Region';
@@ -43,6 +42,7 @@ export class CreatePage extends Component {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
     dispatch(setTitle('Add a NodeBalancer'));
+    dispatch(setAnalytics(['nodebalancers', 'create']));
   }
 
   onSubmit = () => {
@@ -74,7 +74,10 @@ export class CreatePage extends Component {
             />
           </section>
           <Card header={<CardHeader />}>
-            <Form onSubmit={this.onSubmit}>
+            <Form
+              onSubmit={this.onSubmit}
+              analytics={{ title: 'Create NodeBalancer', action: 'add' }}
+            >
               <FormGroup className="row" errors={errors} name="label">
                 <label htmlFor="label" className="col-sm-2 col-form-label">Label</label>
                 <div className="col-sm-10">

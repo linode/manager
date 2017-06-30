@@ -38,7 +38,7 @@ export class SummaryPage extends Component {
 
     return dispatch(showModal('Delete IP Address', (
       <DeleteModalBody
-        onOk={async () => {
+        onSubmit={async () => {
           dispatch(deleteIP(ip));
           dispatch(hideModal());
         }}
@@ -85,7 +85,10 @@ export class SummaryPage extends Component {
 
     return (
       <TableCell column={column} record={record}>
-        <Dropdown groups={groups} />
+        <Dropdown
+          groups={groups}
+          analytics={{ title: 'IP actions' }}
+        />
       </TableCell>
     );
   }

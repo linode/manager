@@ -9,8 +9,7 @@ import { TableCell } from 'linode-components/tables/cells';
 import { List } from 'linode-components/lists';
 import { Table } from 'linode-components/tables';
 
-import { setSource } from '~/actions/source';
-import { setTitle } from '~/actions/title';
+import { setAnalytics, setSource, setTitle } from '~/actions';
 import { tickets } from '~/api';
 import CreateHelper from '~/components/CreateHelper';
 import {
@@ -60,8 +59,8 @@ export class IndexPage extends Component {
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
-
     dispatch(setTitle('Support'));
+    dispatch(setAnalytics(['tickets']));
   }
 
   renderLabelCell = ({ record: ticket }) => {

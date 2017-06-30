@@ -1,17 +1,8 @@
 import _ from 'lodash';
 import React, { PropTypes, Component } from 'react';
 
-import { CancelButton } from 'linode-components/buttons';
-import {
-  Form,
-  FormSummary,
-  Input,
-  ModalFormGroup,
-  Select,
-  SubmitButton,
-} from 'linode-components/forms';
-import { ConfirmModalBody } from 'linode-components/modals';
-import { EmitEvent } from 'linode-components/utils';
+import { Input, ModalFormGroup, Select } from 'linode-components/forms';
+import { FormModalBody } from 'linode-components/modals';
 
 import { showModal, hideModal } from '~/actions/modal';
 import { tokens } from '~/api';
@@ -25,16 +16,11 @@ import { formatScope } from '../utilities';
 export function renderSecret(label, verb, secret, close) {
   const title = [...label.split(' '), verb].map(_.capitalize).join(' ');
   return showModal(title,
-    <ConfirmModalBody
-      onOk={() => {
-        EmitEvent('modal:submit', 'Modal', 'I understand', title);
-        close();
-      }}
-      onCancel={() => {
-        EmitEvent('modal:submit', 'Modal', 'cancel', title);
-        close();
-      }}
+    <FormModalBody
+      onSubmit={close}
       buttonText="I understand"
+      noCancel
+      analytics={{ title, action: 'info' }}
     >
       <div>
         <p>
@@ -42,7 +28,7 @@ export function renderSecret(label, verb, secret, close) {
         </p>
         <div className="alert alert-warning" id="secret">{secret}</div>
       </div>
-    </ConfirmModalBody>
+    </FormModalBody>
   );
 }
 
@@ -69,7 +55,6 @@ export default class CreatePersonalAccessToken extends Component {
       errors: {},
       label: '',
       expiry: '0',
-      loading: false,
     };
   }
 
@@ -90,9 +75,7 @@ export default class CreatePersonalAccessToken extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => tokens.post({ label, scopes, expiry: SelectExpiration.map(expiry) }),
-      () => { EmitEvent('modal:submit', 'Modal', 'create', CreatePersonalAccessToken.title); },
-      ({ token }) => renderSecret(
-        'personal access token', 'created', token, this.props.close),
+      ({ token }) => renderSecret('personal access token', 'created', token, this.props.close),
     ]));
   }
 
@@ -120,54 +103,49 @@ export default class CreatePersonalAccessToken extends Component {
   }
 
   render() {
-    const { close, title } = this.props;
-    const { errors, label, expiry, loading } = this.state;
+    const { close } = this.props;
+    const { errors, label, expiry } = this.state;
 
     return (
-      <Form onSubmit={this.onSubmit}>
-        <ModalFormGroup id="label" label="Label" apiKey="label" errors={errors}>
-          <Input
-            name="label"
-            id="label"
-            placeholder="My client"
-            value={label}
-            onChange={this.onChange}
-          />
-        </ModalFormGroup>
-        <ModalFormGroup id="expiry" label="Expires" apiKey="expiry" errors={errors}>
-          <SelectExpiration
-            value={expiry}
-            name="expiry"
-            id="expiry"
-            onChange={this.onChange}
-          />
-        </ModalFormGroup>
-        <h3 className="sub-header">Access</h3>
-        <p><small>
-          Set a maximum (cascading) access level for every OAuth scope to restrict this token's
-          abilities. e.g. Modify access also gives access to View.
-        </small></p>
-        {OAUTH_SCOPES.map(this.renderScopeFormGroup)}
-        <div className="Modal-footer">
-          <CancelButton
-            onClick={() => {
-              EmitEvent('modal:cancel', 'Modal', 'cancel', title);
-              close();
-            }}
-          />
-          <SubmitButton
-            disabled={loading}
-            disabledChildren="Creating"
-          >Create</SubmitButton>
-          <FormSummary errors={errors} />
+      <FormModalBody
+        onSubmit={this.onSubmit}
+        onCancel={close}
+        buttonText="Create"
+        buttonDisabledText="Creating"
+        errors={errors}
+        analytics={{ title: CreatePersonalAccessToken.title, action: 'add' }}
+      >
+        <div>
+          <ModalFormGroup id="label" label="Label" apiKey="label" errors={errors}>
+            <Input
+              name="label"
+              id="label"
+              placeholder="My client"
+              value={label}
+              onChange={this.onChange}
+            />
+          </ModalFormGroup>
+          <ModalFormGroup id="expiry" label="Expires" apiKey="expiry" errors={errors}>
+            <SelectExpiration
+              value={expiry}
+              name="expiry"
+              id="expiry"
+              onChange={this.onChange}
+            />
+          </ModalFormGroup>
+          <h3 className="sub-header">Access</h3>
+          <p><small>
+            Set a maximum (cascading) access level for every OAuth scope to restrict this token's
+            abilities. e.g. Modify access also gives access to View.
+          </small></p>
+          {OAUTH_SCOPES.map(this.renderScopeFormGroup)}
         </div>
-      </Form>
+      </FormModalBody>
     );
   }
 }
 
 CreatePersonalAccessToken.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  title: PropTypes.string.isRequired,
   close: PropTypes.func.isRequired,
 };

@@ -2,18 +2,17 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
-import { setSource } from '~/actions/source';
-import { setTitle } from '~/actions/title';
-
 import { Tabs } from 'linode-components/tabs';
+
+import { setAnalytics, setSource, setTitle } from '~/actions';
 
 
 export class IndexPage extends Component {
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
-
     dispatch(setTitle('Billing'));
+    dispatch(setAnalytics(['billing']));
   }
 
   render() {

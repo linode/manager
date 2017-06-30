@@ -1,10 +1,17 @@
+import _ from 'lodash';
+
+import { fetch } from '~/fetch';
+
 import {
   ONE, MANY, DELETE, POST, PUT, generateDefaultStateFull,
 } from './apiResultActionReducerGenerator';
-import { fetch } from '~/fetch';
 
-import _ from 'lodash';
 
+// Sometimes the object will have sub-objects of it created before the object actually
+// exists. However, this is not cause to refetch the object after we just grabbed it.
+export function fullyLoadedObject(object) {
+  return object && !!Object.keys(object).filter(key => !key.startsWith('_')).length;
+}
 
 /*
  * This function applies the ids to the config to try to find
@@ -128,10 +135,7 @@ function genThunkPage(config, actions) {
         const existingResourceState = getStateOfSpecificResource(
           config, getState(), [...ids, resource.id]);
         if (existingResourceState) {
-          // Sometimes the object will have sub-objects of it created before the object actually
-          // exists. However, this is not cause to refetch the object after we just grabbed it.
-          const hasActualState = !!Object.keys(existingResourceState).filter(
-            key => !key.startsWith('_')).length;
+          const hasActualState = fullyLoadedObject(existingResourceState);
 
           const updatedAt = hasActualState && existingResourceState.__updatedAt || fetchBeganAt;
           if (updatedAt > now) {

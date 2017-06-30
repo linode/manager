@@ -1,9 +1,22 @@
 import React, { PropTypes } from 'react';
 
+import { EmitEvent, FORM_SUBMIT } from '../utils';
+
+
 export default function Form(props) {
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
-    props.onSubmit(event);
+    await props.onSubmit(event);
+
+    const {
+      title,
+      type = 'form',
+      action = 'edit',
+    } = (props.analytics || {});
+
+    if (props.analytics && !props.noSubmitEvent) {
+      EmitEvent(FORM_SUBMIT, type, action, title);
+    }
   }
 
   return (
@@ -17,5 +30,16 @@ export default function Form(props) {
 Form.propTypes = {
   className: PropTypes.string,
   onSubmit: PropTypes.func.isRequired,
+  noSubmitEvent: PropTypes.bool,
   children: PropTypes.node.isRequired,
+  analytics: PropTypes.shape({
+    type: PropTypes.string,
+    action: PropTypes.string,
+    title: PropTypes.string,
+  }),
+};
+
+Form.defaultProps = {
+  className: '',
+  noSubmitEvent: false,
 };

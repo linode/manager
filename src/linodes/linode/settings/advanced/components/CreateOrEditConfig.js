@@ -93,7 +93,7 @@ export default class CreateOrEditConfig extends Component {
     this.setState({ [name]: type === 'checkbox' ? checked : value })
 
   render() {
-    const { kernels, linode } = this.props;
+    const { kernels, linode, config } = this.props;
     const {
       loading, label, comments, kernel, isCustomRoot, rootDevice, initrd, errors, virtMode,
       runLevel, ramLimit, isMaxRam, disks, enableDistroHelper, enableNetworkHelper,
@@ -101,7 +101,10 @@ export default class CreateOrEditConfig extends Component {
     } = this.state;
 
     return (
-      <Form onSubmit={this.onSubmit}>
+      <Form
+        onSubmit={this.onSubmit}
+        analytics={{ title: 'Linode Config Settings', action: config.id ? 'edit' : 'add' }}
+      >
         <FormGroup errors={errors} name="label" className="row">
           <label htmlFor="label" className="col-sm-2 col-form-label">Label</label>
           <div className="col-sm-10">
@@ -254,7 +257,7 @@ export default class CreateOrEditConfig extends Component {
             labelClassName="col-sm-2"
             fieldClassName="col-sm-10"
             onChange={({ target: { value, name } }) =>
-              this.setState({ disks: { ...this.state.disks, [name]: value || null } })}
+              this.setState({ disks: { ...this.state.disks, [name]: +value || null } })}
           />
         ))}
         <FormGroup className="row">
@@ -395,7 +398,7 @@ CreateOrEditConfig.propTypes = {
 CreateOrEditConfig.defaultProps = {
   config: {
     disks: AVAILABLE_DISK_SLOTS.reduce((disks, slot) => ({ ...disks, [slot]: null }), {}),
-    root_device: '',
+    root_device: '/dev/sda',
     helpers: {
       enable_distro_helper: true,
       enable_network_helper: true,
