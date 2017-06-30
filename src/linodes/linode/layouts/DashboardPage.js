@@ -76,7 +76,7 @@ export class DashboardPage extends Component {
       <div className="Menu-item">
         <label className="row-label">Units:</label>
         <Select
-          value={this.state.units}
+          value={units}
           name="units"
           onChange={this.onChange}
           options={_units.map((label, value) => ({ label, value }))}
