@@ -84,6 +84,21 @@ textarea {
         width: 100%;
     }
 }
+::-webkit-input-placeholder {
+    @include placeholder();
+}
+
+::-moz-placeholder {
+     @include placeholder();
+}
+
+:-moz-placeholder {
+    @include placeholder();
+}
+
+:-ms-input-placeholder {
+    @include placeholder();
+}
 
 .form-group {
   margin-bottom: 10px;
