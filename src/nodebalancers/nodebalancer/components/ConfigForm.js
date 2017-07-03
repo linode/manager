@@ -87,7 +87,8 @@ export default class ConfigForm extends Component {
     if (!config.id) {
       calls.push(({ id }) => push(`/nodebalancers/${nodebalancer.label}/configs/${id}`));
     }
-    calls.push(() => EmitEvent('button:submit', 'Submit', config.id ? 'edit' : 'add', 'nodebalancer config'));
+    calls.push(() => EmitEvent('button:submit', 'Submit',
+      config.id ? 'edit' : 'add', 'nodebalancer config'));
     return dispatch(dispatchOrStoreErrors.call(this, calls));
   }
 
