@@ -4,21 +4,4 @@
     &-label {
         margin-left: 5px;
     }
-
-    // These rules need to be separated or they'll be ignored
-    ::-webkit-input-placeholder {
-        @include placeholder();
-    }
-
-    ::-mox-placeholder {
-        @include placeholder();
-    }
-
-    :-moz-placeholder {
-        @include placeholder();
-    }
-
-    :-ms-input-placeholder {
-        @include placeholder();
-    }
 }
