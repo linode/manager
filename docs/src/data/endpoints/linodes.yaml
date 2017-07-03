@@ -1,12 +1,12 @@
 # vim: set et ts=2 sw=2 tw=80 :
 name: Linodes
 sort: 0
-base_path: /linode/instances
 description: >
   Linode endpoints provide a means of managing the <a href="#object-linode">
   Linode objects</a> on your account.
 endpoints:
-  linode/instances:
+  /linode/instances:
+    _group: Instances
     resource: linode
     authenticated: true
     description: >
@@ -103,7 +103,8 @@ endpoints:
 
             distro = client.linode.get_distributons(linode.Distribution.vendor == 'debian').first()
             ( my_linode_2, password ) = client.linode.create_instance('us-east-1a', 'g5-standard-1', distribtuion=distro)
-  linode/instances/:id:
+  /linode/instances/:id:
+    _group: Instances
     type: resource
     resource: linode
     authenticated: true
@@ -151,7 +152,8 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id
           python: |
             my_linode.delete()
-  linode/instances/:id/disks:
+  /linode/instances/:id/disks:
+    _group: Disks
     resource: disk
     authenticated: true
     description: >
@@ -234,7 +236,8 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/disks
           python: |
             new_disk = my_linode.create_disk(4096, filesystem='ext4', label='Example Disk')
-  linode/instances/:id/disks/:id:
+  /linode/instances/:id/disks/:id:
+    _group: Disks
     type: resource
     resource: disk
     authenticated: true
@@ -290,7 +293,8 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/disks/$disk_id
           python: |
             disk.delete()
-  linode/instances/:id/disks/:id/resize:
+  /linode/instances/:id/disks/:id/resize:
+    _group: Disks
     type: Strange
     authenticated: true
     description: Resizes the disk.
@@ -310,7 +314,8 @@ endpoints:
                     "size": 1024
                 }' \
                 https://$api_root/$version/linode/instances/$linode_id/disks/$disk_id/resize
-  linode/instances/:id/disks/:id/password:
+  /linode/instances/:id/disks/:id/password:
+    _group: Disks
     type: Strange
     authenticated: true
     description: >
@@ -334,7 +339,8 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/disks/$disk_id/password
           python: |
             disk.reset_root_password('hunter2')
-  linode/instances/:id/configs:
+  /linode/instances/:id/configs:
+    _group: Configs
     resource: linode_config
     authenticated: true
     description: >
@@ -420,7 +426,8 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/configs
           python: |
             config = my_linode.create_config('linode/latest_64', disks=linode.disks, label='Arch Linux Config')
-  linode/instances/:id/configs/:id:
+  /linode/instances/:id/configs/:id:
+    _group: Configs
     type: resource
     resource: linode_config
     authenticated: true
@@ -474,7 +481,8 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/configs/$config_id
           python: |
             config.delete()
-  linode/instances/:id/boot:
+  /linode/instances/:id/boot:
+    _group: Instances
     type: Action
     authenticated: true
     description: >
@@ -499,7 +507,8 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/boot
           python: |
             my_linode.boot()
-  linode/instances/:id/shutdown:
+  /linode/instances/:id/shutdown:
+    _group: Instances
     type: Action
     authenticated: true
     description: >
@@ -516,7 +525,8 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/shutdown
           python: |
             my_linode.shutdown()
-  linode/instances/:id/reboot:
+  /linode/instances/:id/reboot:
+    _group: Instances
     type: Action
     authenticated: true
     description: >
@@ -542,7 +552,8 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/reboot
           python: |
             my_linode.reboot()
-  linode/instances/:id/kvmify:
+  /linode/instances/:id/kvmify:
+    _group: Instances
     type: Action
     authenticated: true
     description: >
@@ -559,7 +570,8 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/kvmify
           python: |
             my_linode.kvmify()
-  linode/instances/:id/rescue:
+  /linode/instances/:id/rescue:
+    _group: Instances
     type: Action
     authenticated: true
     description: >
@@ -588,7 +600,8 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/rescue
           python: |
             my_linode.rescue()
-  linode/instances/:id/resize:
+  /linode/instances/:id/resize:
+    _group: Instances
     type: Action
     authenticated: true
     description: >
@@ -612,7 +625,8 @@ endpoints:
                     }
                 }' \
                 https://$api_root/$version/linode/instances/$linode_id/resize
-  linode/instances/:id/backups:
+  /linode/instances/:id/backups:
+    _group: Backups
     type: Action
     resource: backup
     authenticated: true
@@ -653,7 +667,8 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/backups
           python: |
             my_linode.snapshot()
-  linode/instances/:id/backups/enable:
+  /linode/instances/:id/backups/enable:
+    _group: Backups
     type: Action
     authenticated: true
     description: >
@@ -671,7 +686,8 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/backups/enable
           python: |
             my_linode.enable_backups()
-  linode/instances/:id/backups/cancel:
+  /linode/instances/:id/backups/cancel:
+    _group: Backups
     type: Action
     authenticated: true
     description: >
@@ -688,7 +704,8 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/backups/cancel
           python: |
             my_linode.cancel_backups()
-  linode/instances/:id/backups/:id/restore:
+  /linode/instances/:id/backups/:id/restore:
+    _group: Backups
     type: Action
     authenticated: true
     description: >
@@ -718,7 +735,8 @@ endpoints:
           python: |
             backup = my_linode.available_backups.daily
             backup.restore()
-  linode/instances/:id/ips:
+  /linode/instances/:id/ips:
+    _group: IPs
     type: Strange
     resource: linodenetworking
     authenticated: true
@@ -751,7 +769,8 @@ endpoints:
                     "type": "private"
                 }' \
                 https://$api_root/$version/linode/instances/$linode_id/ips
-  linode/instances/:id/ips/sharing:
+  /linode/instances/:id/ips/sharing:
+    _group: IPs
     methods:
       POST:
         description: >
@@ -769,7 +788,8 @@ endpoints:
                   "ips": [ "97.107.143.29", "97.107.143.112" ]
                 }' \
                 https://$api_root/$version/linode/instances/$linode_id/ips/sharing
-  linode/instances/:id/ips/:ip_address:
+  /linode/instances/:id/ips/:ip_address:
+    _group: IPs
     type: Action
     resource: ipaddress
     authenticated: true
@@ -797,7 +817,8 @@ endpoints:
                     "rdns":"example.org"
                 }' \
                 https://$api_root/$version/linode/instances/$linode_id/ips/$ip_address
-  linode/instances/:id/rebuild:
+  /linode/instances/:id/rebuild:
+    _group: Instances
     type: Action
     authenticated: true
     description: >
@@ -843,3 +864,205 @@ endpoints:
                 -d '{"distribution":"linode/debian8","root_pass":"hunter7"}'
           python: |
             my_linode.rebuild('linode/ubuntu16.04LTS', root_pass='hunter7')
+  /linode/stackscripts:
+    _group: StackScripts
+    resource: stackscript
+    description: >
+      View public StackScripts.
+    methods:
+      GET:
+        description: >
+          Returns a list of public <a href="#object-stackscript">StackScripts</a>.
+          Results can be <a href="#filtering">filtered</a>.  Include '"mine": true'
+          in the filter dict to see only StackScripts you created.
+        examples:
+          curl: |
+            curl https://$api_root/$version/linode/stackscripts
+          python: |
+            import stackscript
+            TODO
+      POST:
+        oauth: stackscripts:create
+        description: >
+          Create a new StackScript.
+        params:
+          label:
+            description: >
+              Label of StackScript.
+            limit: 3-128 characters
+            type: string
+          description:
+            optional: true
+            description: >
+              Description of the StackScript.
+            type: string
+          distributions:
+            description: >
+              A list of <a href="#object-distribution">distributions</a>
+              compatible with StackScript.
+            type: distribution
+          is_public:
+            optional: true
+            description: >
+              If true, this StackScript will be publicly visible in the Linode
+              StackScript library. Defaults to False.
+            type: boolean
+          rev_note:
+            optional: true
+            description: >
+              Release notes for this revision.
+            limit: 0-512 characters
+            type: string
+          script:
+            description: >
+              The shell script to run on boot.
+            type: string
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+              -H "Authorization: token $TOKEN" \
+              -X POST -d '{
+                "label": "Initial Label",
+                "distributions": ["linode/ubuntu15.4", "linode/ubuntu15.10"],
+                "script": "#!..."
+              }' \
+              https://$api_root/$version/linode/stackscripts
+          python: |
+            import stackscript
+            TODO
+  /linode/stackscripts/:id:
+    _group: StackScripts
+    resource: stackscript
+    authenticated: true
+    description: >
+      Manage a particular StackScript.
+    methods:
+      GET:
+        oauth: stackscripts:view
+        description: >
+          Returns information about this <a href="#object-stackscript">
+          StackScript</a>.
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+              -H "Authorization: token $TOKEN" \
+              -X GET \
+              https://$api_root/$version/linode/stackscripts/$stackscript_id
+          python: |
+            import stackscript
+            TODO
+      PUT:
+        oauth: stackscripts:modify
+        description: >
+          Edits this StackScript.
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+              -H "Authorization: token $TOKEN" \
+              -X PUT -d '{
+                "label": "New Label"
+              }' \
+              https://$api_root/$version/linode/stackscripts/$stackscript_id
+          python: |
+            import stackscript
+            TODO
+      DELETE:
+        oauth: stackscripts:delete
+        description: >
+          Deletes this StackScript.  This action cannot be undone.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+              -X DELETE \
+              https://$api_root/$version/linode/stackscripts/$stackscript_id
+          python: |
+            import stackscript
+            TODO
+  /linode/distributions:
+    _group: Distributions
+    resource: distributions
+    description: >
+      View the collection of distributions.
+    methods:
+      GET:
+        description: >
+          Returns a list of <a href="#object-distribution">distributions</a>.
+        examples:
+          curl: |
+            curl https://$api_root/$version/linode/distributions
+          python: |
+            client.linode.get_distributions()
+  /linode/distributions/:id:
+    _group: Distributions
+    type: resource
+    resource: distributions
+    description: >
+      Returns information about a specific distribution.
+    methods:
+      GET:
+        description: >
+          Returns information about this <a href="#object-distribution">
+          distribution</a>.
+        examples:
+          curl: |
+            curl https://$api_root/$version/linode/distributions/$distribution_id
+          python: |
+            distro = linode.Distribution(client, 'linode/debian8')
+  /linode/kernels:
+    _group: Kernels
+    resource: kernels
+    description: >
+      Returns collection of kernels.
+    methods:
+      GET:
+        description: >
+          Returns list of <a href="#object-kernel">kernels</a>.
+        examples:
+          curl: |
+            curl https://$api_root/$version/linode/kernels
+          python: |
+            client.linode.get_kernels()
+  /linode/kernels/:id:
+    _group: Kernels
+    type: resource
+    resource: kernels
+    description: >
+      Returns information about a specific kernel.
+    methods:
+      GET:
+        description: >
+          Returns information about this <a href="#object-kernel">kernel</a>.
+        examples:
+          curl: |
+            curl https://$api_root/$version/linode/kernels/$kernel_id
+          python: |
+            kernel = linode.Kernel(client, 'linode/latest')
+  /linode/types:
+    _group: Types
+    resource: types
+    description: >
+      Returns collection of types.
+    methods:
+      GET:
+        description: >
+          Returns list of types.
+        examples:
+          curl: |
+            curl https://$api_root/$version/linode/types
+          python: |
+            client.linode.get_types()
+  /linode/types/:id:
+    _group: Types
+    type: resource
+    resource: types
+    description: >
+      Returns information about a specific Linode type offered by Linode.
+    methods:
+      GET:
+        description: >
+          Returns information about this type.
+        examples:
+          curl: |
+            curl https://$api_root/$version/linode/types/$type_id
+          python: |
+            type = linode.Type(client, 'g5-standard=1')
