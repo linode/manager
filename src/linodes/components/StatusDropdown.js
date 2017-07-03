@@ -3,6 +3,7 @@ import { push } from 'react-router-redux';
 
 import { Dropdown } from 'linode-components/dropdowns';
 import { ConfirmModalBody, DeleteModalBody } from 'linode-components/modals';
+import { EmitEvent } from 'linode-components/utils';
 
 import { hideModal, showModal } from '~/actions/modal';
 import { linodes as apiLinodes } from '~/api';
@@ -13,7 +14,6 @@ import { createHeaderFilter } from '~/api/util';
 import { LinodeStates, LinodeStatesReadable } from '~/constants';
 import ConfigSelectModalBody from '~/linodes/components/ConfigSelectModalBody';
 import { launchWeblishConsole } from '~/linodes/components/WeblishLaunch';
-import { TrackEvent } from '~/actions/trackEvent.js';
 
 
 const RANDOM_PROGRESS_MAX = 20;
@@ -135,11 +135,11 @@ export default class StatusDropdown extends Component {
     return dispatch(showModal(`Confirm ${name}`, (
       <ConfirmModalBody
         onCancel={() => {
-          TrackEvent('Modal', 'cancel', `Confirm ${name}`);
+          EmitEvent('modal:cancel', 'Modal', 'cancel', `Confirm ${name}`);
           dispatch(hideModal());
         }}
         onOk={() => {
-          TrackEvent('Modal', name, `Confirm ${name}`);
+          EmitEvent('modal:submit', 'Modal', name, `Confirm ${name}`);
           onConfirm();
         }}
       >
@@ -179,12 +179,12 @@ export default class StatusDropdown extends Component {
       <DeleteModalBody
         onOk={async function () {
           await dispatch(apiLinodes.delete(linode.id));
-          TrackEvent('Modal', 'delete', 'Delete Linode');
+          EmitEvent('modal:submit', 'Modal', 'delete', 'Delete Linode');
           await dispatch(push('/'));
         }}
         items={[linode.label]}
         onCancel={() => {
-          TrackEvent('Modal', 'cancel', 'Delete Linode');
+          Event('modal:cancel', 'Modal', 'cancel', 'Delete Linode');
           dispatch(hideModal());
         }}
       />
