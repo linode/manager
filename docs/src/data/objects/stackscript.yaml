@@ -33,6 +33,7 @@ schema:
   distributions:
     _description: A list of distributions this StackScript is compatible with.
     _type: Array[object]
+    _seeAlso: "/reference/endpoints/linode/distributions"
     _editable: true
     _subtype: distribution
     _filterable: true
