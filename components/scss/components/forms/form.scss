@@ -84,26 +84,27 @@ textarea {
         width: 100%;
     }
 }
-::-webkit-input-placeholder {
-    @include placeholder();
-}
-
-::-moz-placeholder {
-     @include placeholder();
-}
-
-:-moz-placeholder {
-    @include placeholder();
-}
-
-:-ms-input-placeholder {
-    @include placeholder();
-}
 
 .form-group {
   margin-bottom: 10px;
 
   &:last-child {
     margin-bottom: 0;
+  }
+
+  ::-webkit-input-placeholder {
+    @include placeholder();
+  }
+
+  ::-moz-placeholder {
+     @include placeholder();
+  }
+
+  :-moz-placeholder {
+    @include placeholder();
+  }
+
+  :-ms-input-placeholder {
+    @include placeholder();
   }
 }
