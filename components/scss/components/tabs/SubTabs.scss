@@ -20,6 +20,10 @@
             border-bottom: 3px solid $blue;
             font-weight: normal;
         }
+
+        &:not(:last-of-type) {
+            margin-right: 3px;
+        }
     }
 
     // general hover state and special cases for before and after active
