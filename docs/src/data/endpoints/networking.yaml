@@ -7,7 +7,6 @@ description: >
   networking objects</a>.
 endpoints:
   networking/ipv4:
-    type: List
     resource: ipaddress
     authenticated: true
     description: >
@@ -72,7 +71,6 @@ endpoints:
             my_ipv4.rdns = 'example.org'
             my_ipv4.save()
   networking/ipv6:
-    type: List
     resource: ipv6pool
     authenticated: true
     description: >

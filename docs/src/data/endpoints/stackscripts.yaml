@@ -8,7 +8,6 @@ description: >
   account.
 endpoints:
   linode/stackscripts:
-    type: List
     resource: stackscript
     description: >
       View public StackScripts.
@@ -74,7 +73,6 @@ endpoints:
             import stackscript
             TODO
   linode/stackscripts/:id:
-    type: List
     resource: stackscript
     authenticated: true
     description: >

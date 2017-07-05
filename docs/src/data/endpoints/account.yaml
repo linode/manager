@@ -127,7 +127,6 @@ endpoints:
             my_profile = client.account.get_profile()
             my_grants = my_profile.grants
   account/tokens:
-    type: List
     resource: oauthtoken
     description: >
       Manage OAuth Tokens created for your user.
@@ -270,7 +269,6 @@ endpoints:
             my_settings.email = 'jsmith@company.com'
             my_settings.save()
   account/clients:
-    type: List
     resource: client
     authenticated: true
     description: >
@@ -414,7 +412,6 @@ endpoints:
                 img = f.read()
             my_client.set_thumbnail(img)
   account/users:
-    type: List
     resource: account
     description: >
       Returns a list of <a href="#object-user">User objects</a> associated with your account.

@@ -9,7 +9,6 @@ description: >
   here. We'll just direct you to [RFC 1035](https://www.ietf.org/rfc/rfc1035.txt).
 endpoints:
   domains:
-    type: List
     resource: domains
     authenticated: true
     description: >
@@ -170,7 +169,6 @@ endpoints:
             import linode
             TODO
   domains/:id/records:
-    type: List
     resource: domainrecords
     authenticated: true
     description: >

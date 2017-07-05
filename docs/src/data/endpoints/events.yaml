@@ -6,7 +6,6 @@ description: >
   event notifications.
 endpoints:
   account/events:
-    type: List
     resource: events
     authenticated: true
     description: >

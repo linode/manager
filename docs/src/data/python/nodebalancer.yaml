@@ -5,7 +5,6 @@ desc: >
     Represents a NodeBalancer
 _pylib_attributes:
     configs:
-        _type: List
         _description: A list of configs existing on this NodeBalancer
 constructor:
     name: NodeBalancer

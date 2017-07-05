@@ -7,7 +7,6 @@ description: >
   kernel objects</a>.
 endpoints:
   linode/kernels:
-    type: List
     resource: kernels
     description: >
       Returns collection of kernels.

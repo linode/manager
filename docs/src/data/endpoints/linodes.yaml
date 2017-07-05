@@ -7,7 +7,6 @@ description: >
   Linode objects</a> on your account.
 endpoints:
   linode/instances:
-    type: List
     resource: linode
     authenticated: true
     description: >
@@ -153,7 +152,6 @@ endpoints:
           python: |
             my_linode.delete()
   linode/instances/:id/disks:
-    type: List
     resource: disk
     authenticated: true
     description: >
@@ -337,7 +335,6 @@ endpoints:
           python: |
             disk.reset_root_password('hunter2')
   linode/instances/:id/configs:
-    type: List
     resource: linode_config
     authenticated: true
     description: >
@@ -761,7 +758,6 @@ endpoints:
             Sets IP Sharing for this Linode.
         params:
           ips:
-            type: List
             subtype: String
             description: >
               A list of IP Addresses this Linode will share.

@@ -6,13 +6,10 @@ desc: >
     and methods for managing it.
 _pylib_attributes:
     disks:
-        _type: List
         _description: A list of Disks belonging to this Linode
     configs:
-        _type: List
         _description: A list of Configs belonging to this Linode
     recent_backups:
-        _type: List
         _description: A list of recent Backups for this Linode.  This is for record keeping only, you may not be able to restore all of them.
     ips:
         _type: Object
