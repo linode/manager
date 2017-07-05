@@ -9,7 +9,6 @@ description: >
   here. We'll just direct you to [RFC 1035](https://www.ietf.org/rfc/rfc1035.txt).
 endpoints:
   domains:
-    type: list
     resource: domains
     authenticated: true
     description: >
@@ -34,65 +33,65 @@ endpoints:
           domain:
             description: >
               The Domain name.
-            type: string
+            type: String
           type:
             description: >
               Domain <a href="#object-domain_type-enum">type</a> as master or slave.
-            type: enum
+            type: Enum
           soa_email:
             optional: true
             description: >
               Start of Authority (SOA) contact email.
-            type: string
+            type: String
           description:
             optional: true
             description: >
               A description to keep track of this Domain.
-            type: string
+            type: String
           refresh_sec:
             optional: true
             description: >
               Time interval before the Domain should be refreshed, in seconds.
-            type: integer
+            type: Integer
           retry_sec:
             optional: true
             description: >
               Time interval that should elapse before a failed refresh should
                 be retried, in seconds.
-            type: integer
+            type: Integer
           expire_sec:
             optional: true
             description: >
               Time value that specifies the upper limit on
                 the time interval that can elapse before the Domain is no
                 longer authoritative, in seconds.
-            type: integer
+            type: Integer
           ttl_sec:
             optional: true
             description: >
               Time interval that the resource record may be cached before
                 it should be discarded, in seconds.
-            type: integer
+            type: Integer
           status:
             optional: true
             description: >
               The status of the Domain; it can be disabled, active, or edit_mode.
-            type: enum
+            type: Enum
           master_ips:
             optional: true
             description: >
               An array of IP addresses for this Domain.
-            type: array
+            type: Array[string]
           axfr_ips:
             optional: true
             description: >
               An array of IP addresses allowed to AXFR the entire Domain.
-            type: array
+            type: Array[string]
           group:
             optional: true
             description: >
               A display group to keep track of this Domain.
-            type: string
+            type: String
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -170,7 +169,6 @@ endpoints:
             import linode
             TODO
   domains/:id/records:
-    type: list
     resource: domainrecords
     authenticated: true
     description: >
@@ -195,14 +193,14 @@ endpoints:
           type:
             description: >
               <a href="#object-zone-record-types-enum">Type</a> of record.
-            type: enum
+            type: Enum
           name:
             optional: true
             description: >
               The hostname or FQDN. When type=MX the subdomain to
               delegate to the Target MX server.
             limit: 1-100 characters
-            type: string
+            type: String
           target:
             optional: true
             description: >
@@ -210,40 +208,40 @@ endpoints:
               alias. When Type=TXT the value of the record. When Type=A or
               AAAA the token of '[remote_addr]' will be substituted with the
               IP address of the request.
-            type: string
+            type: String
           priority:
             optional: true
             description: >
               Priority for MX and SRV records.
-            type: integer
+            type: Integer
           weight:
             optional: true
             description: >
               A relative weight for records with the same priority,
               higher value means more preferred.
-            type: integer
+            type: Integer
           port:
             optional: true
             description: >
               The TCP or UDP port on which the service is to be found.
-            type: integer
+            type: Integer
           service:
             optional: true
             description: >
               The service to append to an SRV record.
-            type: string
+            type: String
           protocol:
             optional: true
             description: >
               The protocol to append to an SRV record.
-            type: string
+            type: String
           ttl:
             optional: true
             description: >
               Time interval that the resource record may be cached before
                 it should be discarded. In seconds. Leave as 0 to accept
                 our default.
-            type: integer
+            type: Integer
         examples:
           curl: |
             curl -H "Content-Type: application/json" \

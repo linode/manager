@@ -6,53 +6,53 @@ description: >
   the request.
 schema:
   id:
-    _type: string
+    _type: String
     _value: linode2048.5
   storage:
-    _type: integer
+    _type: Integer
     _value: 24576
     _description: If applicable, disk space in MB.
     _filterable: true
   backups_price:
-    _type: integer
+    _type: Integer
     _value: 250
     _description: Cost (in US dollars) per month if backups are enabled.
     _filterable: false
   class:
-    _type: enum
+    _type: Enum
     _subtype: Class
   hourly_price:
-    _type: integer
+    _type: Integer
     _value: 1
     _description: Cost (in cents) per hour.
     _filterable: true
   label:
-    _type: string
+    _type: String
     _value: Linode 2048
     _description: Human-friendly name of this type.
     _filterable: true
   mbits_out:
-    _type: integer
+    _type: Integer
     _value: 125
     _description: If applicable, Mbits outbound bandwidth.
     _filterable: true
   monthly_price:
-    _type: integer
+    _type: Integer
     _value: 1000
     _description: Cost (in US dollars) per month.
     _filterable: true
   ram:
-    _type: integer
+    _type: Integer
     _value: 2048
     _description: Amount of RAM included in this type.
     _filterable: true
   transfer:
-    _type: integer
+    _type: Integer
     _value: 2000
     _description: If applicable, outbound transfer in MB.
     _filterable: true
   vcpus:
-    _type: integer
+    _type: Integer
     _value: 2
     _description: If applicable, number of CPU cores.
     _filterable: true

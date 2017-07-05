@@ -156,17 +156,18 @@ function formatSchemaField(schemaField, enumMap) {
   const editable = schemaField._editable;
   const filterable = schemaField._filterable;
   const type = schemaField._type;
+  const lowerType = type ? type.toLowerCase() : null;
   const subType = schemaField._subtype;
   let value = schemaField._value;
 
   let nestedSchema = null;
-  if (apiObjectMap[type]) {
+  if (apiObjectMap[lowerType]) {
     // matches a known object from /objects, format using the reference
-    nestedSchema = formatSchema(getResourceObjByName(type).schema, enumMap);
-  } else if (type === 'enum' && enumMap[subType]) {
+    nestedSchema = formatSchema(getResourceObjByName(lowerType).schema, enumMap);
+  } else if (lowerType === 'enum' && enumMap[subType]) {
     // matches a known enum from an enums key on an object in /objects, format using the reference
     nestedSchema = enumMap[subType]; // already formatted
-  } else if (type === 'enum' || type === 'object' || type === 'array' || !type) {
+  } else if (lowerType === 'enum' || lowerType === 'object' || lowerType === 'array' || !lowerType) {
     // is of the the checked types, or no type provided (currently undocumented)
     nestedSchema = formatSchema(schemaField, enumMap);
   }

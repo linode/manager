@@ -6,7 +6,6 @@ description: >
   NodeBalancer objects</a> on your account.
 endpoints:
   nodebalancers:
-    type: list
     resource: nodebalancer
     authenticated: true
     description: >
@@ -32,17 +31,17 @@ endpoints:
             description: >
               A <a href="#object-region">region</a> ID to provision
               this NodeBalancer in.
-            type: region
+            type: Region
           label:
             optional: true
             description: The label to assign this NodeBalancer. Defaults to "nodebalancer" followed by its ID.
             limit: "3-32 ASCII characters limited to letters, numbers, underscores, and dashes, starting and ending with a letter, and without two dashes or underscores in a row"
-            type: string
+            type: String
           client_conn_throttle:
             optional: true
             description: >
               To help mitigate abuse, throttle connections per second, per client. 0 to disable, max of 20.
-            type: string
+            type: String
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -105,7 +104,6 @@ endpoints:
            my_nodebalancer = linode.NodeBalancer(client, 123)
            my_nodebalancer.delete()
   nodebalancers/:id/configs:
-    type: list
     resource: nodebalancer_config
     authenticated: true
     description: >
@@ -130,50 +128,50 @@ endpoints:
         params:
           label:
             description: Unique label for your NodeBalancer config.
-            type: string
+            type: String
           port:
             description: Port to bind to on the public interfaces.
             limit: 1-65534
-            type: integer
+            type: Integer
           protocol:
             description: The protocol used for the config.
-            type: string
+            type: String
           algorithm:
             description: Balancing algorithm.
-            type: enum
+            type: Enum
           stickiness:
             description: Session persistence. Route subsequent requests from a client to the same backend.
-            type: enum
+            type: Enum
           check:
             description: Perform active health checks on the backend nodes.
-            type: enum
+            type: Enum
           check_interval:
             description: Seconds between health check probes.
-            type: integer
+            type: Integer
           check_timeout:
             description: Seconds to wait before considering the probe a failure.
             limit: 1-30. Must be less than check_interval # leave the final period off!
-            type: integer
+            type: Integer
           check_attempts:
             description: Number of failed probes before taking a node out of rotation.
             limit: 1-30
-            type: integer
+            type: Integer
           check_path:
             description: When check is "http", the path to request.
-            type: string
+            type: String
           check_body:
             description: When check is "http", a regex to match within the first 16,384 bytes of the response body.
-            type: string
+            type: String
           check_passive:
             description: Enable passive checks based on observing communication with back-end nodes.
-            type: boolean
+            type: Boolean
           # ssl_cert:
           #  description: SSL certificate served by the NodeBalancer when the protocol is "https".
           # ssl_key:
           #  description: Unpassphrased private key for the SSL certificate when the protocol is "https".
           cipher_suite:
             description: SSL cipher suite to enforce.
-            type: enum
+            type: Enum
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -250,7 +248,6 @@ endpoints:
           python: |
             # currently unimplemented
   nodebalancers/:id/configs/:id/nodes:
-    type: list
     resource: nodebalancer_config_nodes
     authenticated: true
     description: >
@@ -275,16 +272,16 @@ endpoints:
         params:
           label:
             description: Unique label for your NodeBalancer config node.
-            type: string
+            type: String
           address:
             description: The address:port combination used to communicate with this node.
-            type: string
+            type: String
           weight:
             description: Load balancing weight, 1-255. Higher means more connections.
-            type: integer
+            type: Integer
           mode:
             description: The connections mode for this node. One of 'accept', 'reject', or 'drain'.
-            type: enum
+            type: Enum
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
