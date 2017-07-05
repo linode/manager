@@ -26,6 +26,9 @@ function formatData(colors, datasets, legends) {
   return LineGraph.formatData(x, ys, colors, legends);
 }
 
+const IO_UNITS = [' blocks', 'K blocks', 'M blocks'];
+const NETWORK_UNITS = [' bits', 'K bits', 'M bits'];
+
 export class DashboardPage extends Component {
   static async preload({ dispatch, getState }, { linodeLabel }) {
     const { id } = await dispatch(getObjectByLabelLazily('linodes', linodeLabel));
@@ -42,13 +45,49 @@ export class DashboardPage extends Component {
 
     this.state = {
       source: 'cpu',
+      units: 0,
     };
 
     this.componentWillReceiveProps = this.componentWillMount;
   }
 
-  componentWillMount() {
-    const stats = this.props.linode._stats;
+  async componentDidMount() {
+    const { dispatch } = this.props;
+    await dispatch(setSource(__filename));
+  }
+
+  shouldComponentUpdate(newProps, newState) {
+    // Prevents graph animation from happening multiple times for unchanged data.
+    return !_.isEqual(this.props, newProps) || !_.isEqual(this.state, newState);
+  }
+
+  onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
+
+  renderUnitSelect() {
+    const { units, source } = this.state;
+
+    if (source === 'cpu') {
+      return null;
+    }
+
+    const _units = source === 'io' ? IO_UNITS : NETWORK_UNITS;
+
+    return (
+      <div className="Menu-item">
+        <label className="row-label">Units:</label>
+        <Select
+          value={units}
+          name="units"
+          onChange={this.onChange}
+          options={_units.map((label, value) => ({ label, value }))}
+        />
+      </div>
+    );
+  }
+
+  renderGraphs() {
+    const { timezone, linode: { _stats: stats } } = this.props;
+    const { units } = this.state;
 
     if (stats) {
       this.graphs = {
@@ -64,64 +103,49 @@ export class DashboardPage extends Component {
         io: {
           title: 'IO',
           yAxis: {
-            label: 'Blocks per second',
-            format: r => `${r.toFixed(1)} blocks/s`,
+            label: `${IO_UNITS[units]} per second`,
+            format: r => `${r.toFixed(1) / Math.pow(1000, units)}${IO_UNITS[units]}/s`,
           },
           data: formatData(['FFD04B', 'FA373E'],
                            [stats.io.io, stats.io.swap],
                            ['Disk', 'Swap']),
-          unit: ' blocks/s',
+          unit: `${IO_UNITS[units]}/s`,
         },
         netv4: {
           title: 'IPv4 Network',
           yAxis: {
-            label: 'Bits per second',
-            format: r => `${r.toFixed()} bits/s`,
+            label: `${NETWORK_UNITS[units]} per second`,
+            format: r => `${r.toFixed() / Math.pow(1000, units)}${NETWORK_UNITS[units]}/s`,
           },
           data: formatData(['0033CC', 'CC0099', '32CD32', 'FFFF99'],
                            [stats.netv4.in, stats.netv4.private_in,
                             stats.netv4.out, stats.netv4.private_out],
                            ['Public IPv4 Inbound', 'Private IPv4 Inbound',
                             'Public IPv4 Outbound', 'Private IPv4 Outbound']),
-          unit: ' bits/s',
+          unit: `${NETWORK_UNITS[units]}/s`,
         },
         netv6: {
           title: 'IPv6 Network',
           yAxis: {
-            label: 'Bits per second',
-            format: r => `${r.toFixed()} bits/s`,
+            label: `${NETWORK_UNITS[units]} per second`,
+            format: r => `${r.toFixed() / Math.pow(1000, units)}${NETWORK_UNITS[units]}/s`,
           },
           data: formatData(['0033CC', 'CC0099', '32CD32', 'FFFF99'],
                            [stats.netv6.in, stats.netv6.private_in,
                             stats.netv6.out, stats.netv6.private_out],
                            ['Public IPv6 Inbound', 'Private IPv6 Inbound',
                             'Public IPv6 Outbound', 'Private IPv6 Outbound']),
-          unit: ' bits/s',
+          unit: `${NETWORK_UNITS[units]}/s`,
         },
       };
     }
-  }
 
-  async componentDidMount() {
-    const { dispatch } = this.props;
-    await dispatch(setSource(__filename));
-  }
-
-  shouldComponentUpdate(newProps, newState) {
-    // Prevents graph animation from happening multiple times for unchanged data.
-    return !_.isEqual(this.props, newProps) || !_.isEqual(this.state, newState);
-  }
-
-  onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
-
-  renderGraphs() {
-    const { timezone } = this.props;
     return (
       <Card header={<CardHeader title="Graphs" />} className="graphs">
         {!this.graphs ? <p>No graphs are available.</p> : (
           <div>
-            <div className="clearfix">
-              <div className="float-sm-left">
+            <div className="Menu">
+              <div className="Menu-item">
                 <Select
                   value={this.state.source}
                   name="source"
@@ -133,9 +157,8 @@ export class DashboardPage extends Component {
                   <option value="netv6">IPv6 Network</option>
                 </Select>
               </div>
-              <div className="float-sm-right">
-                Last 24 hours
-              </div>
+              {this.renderUnitSelect()}
+              <div className="Menu-item--right">Last 24 Hours</div>
             </div>
             <LineGraph
               timezone={timezone}
