@@ -5,87 +5,87 @@ description: >
   Event objects describe a notification on a user's account timeline.
 schema:
   id:
-    _type: integer
+    _type: Integer
     _value: 1234
   entity:
-    _type: object
+    _type: Object
     _description: >
       Detailed inforrmation about the event's entity, including id, type, label, and URL used to access it.
     id:
-      _type: integer
+      _type: Integer
       _value: 9302
       _description: >
         The entity's ID that this event is for.  This is meaningless without a type.
     label:
-      _type: string
+      _type: String
       _value: linode123
       _description: >
         The current label of this object.  This will reflect changes in label.
     type:
-      _type: string
+      _type: String
       _value: linode
       _description: >
         The type of entity this is related to.
     url:
-      _type: string
+      _type: String
       _value: /v4/linode/instances/123
       _description: >
         The URL where you can access the object this event is for.  If a relative URL, it is
         relative to the domain you retrieved the event from.
   action:
-    _type: enum
+    _type: Enum
     _subtype: EventType
     _value: linode_reboot
     _description: >
       The action that caused this event.
   username:
-    _type: string
-    _type: string
+    _type: String
+    _type: String
     _value: example_user
     _description: >
       The username of the user who initiated this event.
   status:
-    _type: enum
+    _type: Enum
     _subtype: EventStatus
     _value: finished
     _description: >
       The current status of this event.  
   percent_complete:
-    _type: integer
+    _type: Integer
     _value: 20
     _description: >
       A percentage estimating the amount of time remaining for an event.  Returns
       null for notification events.
     _filterable: false
   rate:
-    _type: string
+    _type: String
     _value: null
     _description: >
       The rate of completion of the event.  Currently only returned for
       migration and resize events.
   time_remaining:
-    _type: string
+    _type: String
     _value: null
     _description: >
       The estimated time remaining until the completion of this event.  Currently
       only returned for in progress migrations or resizes.
   seen:
-    _type: boolean
+    _type: Boolean
     _value: false
     _description: If this event has been seen.
   read:
-    _type: boolean
+    _type: Boolean
     _value: false
     _description: If this event has been read.
   created:
-    _type: datetime
+    _type: Datetime
     _value: 2014-12-24T18:00:09
     _filterable: true
   updated:
-    _type: datetime
+    _type: Datetime
     _value: 2014-12-24T19:00:09
   user_id:
-    _type: integer
+    _type: Integer
     _value: 234567
     _description: >
       The ID of the user who initiated this event.

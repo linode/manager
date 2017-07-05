@@ -7,7 +7,6 @@ description: >
   Linode objects</a> on your account.
 endpoints:
   linode/instances:
-    type: list
     resource: linode
     authenticated: true
     description: >
@@ -33,63 +32,63 @@ endpoints:
             description: >
               A <a href="#object-region">region</a> ID to provision
               this Linode in.
-            type: region
+            type: Region
           type:
             description: >
               A <a href="#object-service">Linode type</a> ID to use for this
               Linode.
-            type: service
+            type: Service
           label:
             optional: true
             description: The label to assign this Linode. Defaults to "linode".
-            type: string
+            type: String
             limit: "3-32 ASCII characters limited to letters, numbers, underscores, and dashes, starting and ending with a letter, and without two dashes or underscores in a row"
           group:
             optional: true
             description: The group to assign this Linode. Defaults to "empty".
-            type: string
+            type: String
             limit: 0-50 characters
           distribution:
             optional: true
             description: >
               The <a href="#object-distribution">Distribution</a> to deploy this
               Linode with.  May not be included if 'backup' is sent.
-            type: distribution
+            type: Distribution
           root_pass:
             optional: unless source == "distro"
             description: >
               The root password to use when sourcing this Linode from a distribution.
               <ul><li>root_pass is required if the source provided is a distribution.</li></ul>
-            type: string
+            type: String
           root_ssh_key:
             optional: true
             description: >
               A public SSH key file to install at `/root/.ssh/authorized_keys` when creating this Linode.
-            type: string
+            type: String
           stackscript:
             optional: true
             description: >
               The stackscript ID to deploy with this disk.
               <ul><li>Must provide a distribution. Distribution must be
               one that the stackscript can be deployed to.</li></ul>
-            type: stackscript
+            type: Stackscript
           stackscript_data:
             optional: true
             description: >
               UDF (user-defined fields) for this stackscript. Defaults to "{}".
               <ul><li>Must match UDFs required by stackscript.</li></ul>
-            type: string
+            type: String
           backup:
             optional: true
             description: >
               The <a href="#object-backup">Backup</a> to restore to the newly created
               Linode.  May not be included if 'distribution' is sent.
-            type: backup
+            type: Backup
           with_backup:
             optional: true
             description: >
               Subscribes this Linode with the Backup service. (Additional charges apply.) Defaults to "false".
-            type: boolean
+            type: Boolean
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -153,7 +152,6 @@ endpoints:
           python: |
             my_linode.delete()
   linode/instances/:id/disks:
-    type: list
     resource: disk
     authenticated: true
     description: >
@@ -177,7 +175,7 @@ endpoints:
           size:
             description: >
               Size in MB for this disk.
-            type: integer
+            type: Integer
             limit: between 0 and the available space on the Linode
           distribution:
             optional: true
@@ -185,45 +183,45 @@ endpoints:
               Optional distribution to deploy with this disk.
               <ul><li>If no distribution is provided, a blank disk
               is created.</li></ul>
-            type: distribution
+            type: Distribution
           root_pass:
             optional: unless distribution is specified
             description: >
               Root password to deploy distribution with.
               <ul><li>root_pass is required if a distribution is provided.</li></ul>
-            type: string
+            type: String
           root_ssh_key:
             optional: unless distribution is not specified
             description: >
               SSH key to add to root's authorized_keys.
-            type: string
+            type: String
           label:
             description: >
               User-friendly string to name this disk.
-            type: string
+            type: String
             limit: 1-50 characters
           filesystem:
             description: >
               A <a href="#object-filesystem-enum">filesystem</a> for this disk.
-            type: string
+            type: String
           read_only:
             optional: true
             description: >
               If true, this disk is read-only.
-            type: boolean
+            type: Boolean
           stackscript:
             optional: true
             description: >
               The stackscript ID to deploy with this disk.
               <ul><li>Must provide a distribution. Distribution must be
               one that the stackscript can be deployed to.</li></ul>
-            type: stackscript
+            type: Stackscript
           stackscript_data:
             optional: true
             description: >
               UDF (user-defined fields) for this stackscript. Defaults to "{}".
               <ul><li>Must match UDFs required by stackscript.</li></ul>
-            type: string
+            type: String
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -293,7 +291,7 @@ endpoints:
           python: |
             disk.delete()
   linode/instances/:id/disks/:id/resize:
-    type: strange
+    type: Strange
     authenticated: true
     description: Resizes the disk.
     methods:
@@ -303,7 +301,7 @@ endpoints:
         params:
           size:
             description: The desired size of the disk in MB.
-            type: integer
+            type: Integer
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -313,7 +311,7 @@ endpoints:
                 }' \
                 https://$api_root/$version/linode/instances/$linode_id/disks/$disk_id/resize
   linode/instances/:id/disks/:id/password:
-    type: strange
+    type: Strange
     authenticated: true
     description: >
       Resets the root password of a disk.
@@ -325,7 +323,7 @@ endpoints:
           password:
             description: >
               New root password for the OS installed on this disk.
-            type: string
+            type: String
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -337,7 +335,6 @@ endpoints:
           python: |
             disk.reset_root_password('hunter2')
   linode/instances/:id/configs:
-    type: list
     resource: linode_config
     authenticated: true
     description: >
@@ -362,51 +359,51 @@ endpoints:
           kernel:
             description: >
               A <a href="#object-kernel">kernel</a> ID to boot this Linode with.
-            type: kernel
+            type: Kernel
           label:
             description: >
               The user-friendly label to name this config.
             limit: 1-48 characters
-            type: string
+            type: String
           disks:
             description: >
               <a href="#object-disk">Disks</a> attached to this Linode config.
-            type: disks
+            type: Disks
           comments:
             optional: true
             description: >
               Optional field for arbitrary user comments on this config.
             limit: 1-255 characters
-            type: string
+            type: String
           ram_limit:
             optional: true
             description: >
               The maximum RAM the Linode will be given when booting this
               config. This defaults to the total RAM of the Linode.
             limit: between 0 and the Linode's total RAM
-            type: integer
+            type: Integer
           root_device_ro:
             optional: true
             description: >
               Controls whether to mount the root disk read-only. Defaults
               to false.
-            type: boolean
+            type: Boolean
           devtmpfs_automount:
             optional: true
             description: >
               Populates the /dev directory early during boot without udev.
               Defaults to false.
-            type: boolean
+            type: Boolean
           run_level:
             optional: true
             description: >
               Sets the <a href="#object-run_level-enum">run level</a> for Linode boot. Defaults to "default".
-            type: enum
+            type: Enum
           virt_mode:
             optional: true
             description: >
               Controls the <a href="#object-virt_mode-enum">virtualization mode</a>. Defaults to "paravirt".
-            type: enum
+            type: Enum
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -478,7 +475,7 @@ endpoints:
           python: |
             config.delete()
   linode/instances/:id/boot:
-    type: action
+    type: Action
     authenticated: true
     description: >
       Boots a Linode.
@@ -491,7 +488,7 @@ endpoints:
             optional: true
             description: >
               Optional config ID to boot the linode with.
-            type: linode_config
+            type: Linode_config
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -503,7 +500,7 @@ endpoints:
           python: |
             my_linode.boot()
   linode/instances/:id/shutdown:
-    type: action
+    type: Action
     authenticated: true
     description: >
       Shuts down a Linode.
@@ -520,7 +517,7 @@ endpoints:
           python: |
             my_linode.shutdown()
   linode/instances/:id/reboot:
-    type: action
+    type: Action
     authenticated: true
     description: >
       Reboots a Linode.
@@ -533,7 +530,7 @@ endpoints:
             optional: true
             description: >
               Optional config ID to boot the linode with.
-            type: linode_config
+            type: Linode_config
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -546,7 +543,7 @@ endpoints:
           python: |
             my_linode.reboot()
   linode/instances/:id/kvmify:
-    type: action
+    type: Action
     authenticated: true
     description: >
       Changes a Linode's hypervisor from Xen to KVM.
@@ -563,7 +560,7 @@ endpoints:
           python: |
             my_linode.kvmify()
   linode/instances/:id/rescue:
-    type: action
+    type: Action
     authenticated: true
     description: >
       Reboots a Linode in Rescue Mode.
@@ -576,7 +573,7 @@ endpoints:
             optional: true
             description: >
               <a href="#object-disk">Disks</a> to include during Rescue.
-            type: disk
+            type: Disk
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -592,7 +589,7 @@ endpoints:
           python: |
             my_linode.rescue()
   linode/instances/:id/resize:
-    type: action
+    type: Action
     authenticated: true
     description: >
       Resizes a Linode to a new <a href="#object-service">Linode type</a>.
@@ -605,7 +602,7 @@ endpoints:
           type:
             description: >
               A <a href="#object-service">Linode type</a> to use for this Linode.
-            type: service
+            type: Service
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -616,7 +613,7 @@ endpoints:
                 }' \
                 https://$api_root/$version/linode/instances/$linode_id/resize
   linode/instances/:id/backups:
-    type: action
+    type: Action
     resource: backup
     authenticated: true
     description: >
@@ -645,7 +642,7 @@ endpoints:
             optional: true
             description: >
               Human-friendly label for this snapshot. Must be 1-50 characters.
-            type: string
+            type: String
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -657,7 +654,7 @@ endpoints:
           python: |
             my_linode.snapshot()
   linode/instances/:id/backups/enable:
-    type: action
+    type: Action
     authenticated: true
     description: >
        Enables the <a href="#object-backup">backup</a> service on the given Linode.
@@ -675,7 +672,7 @@ endpoints:
           python: |
             my_linode.enable_backups()
   linode/instances/:id/backups/cancel:
-    type: action
+    type: Action
     authenticated: true
     description: >
       Cancels the <a href="#object-backup">backup</a> service on the given Linode.
@@ -692,7 +689,7 @@ endpoints:
           python: |
             my_linode.cancel_backups()
   linode/instances/:id/backups/:id/restore:
-    type: action
+    type: Action
     authenticated: true
     description: >
       Restores a <a href="#object-backup">backup</a> to a Linode.
@@ -704,11 +701,11 @@ endpoints:
           linode:
             description: >
               The ID of the Linode to restore a backup to.
-            type: linode
+            type: Linode
           overwrite:
             description: >
                 If true, deletes all disks and configs on the target linode before restoring.
-            type: boolean
+            type: Boolean
             optional: true
         examples:
           curl: |
@@ -722,7 +719,7 @@ endpoints:
             backup = my_linode.available_backups.daily
             backup.restore()
   linode/instances/:id/ips:
-    type: strange
+    type: Strange
     resource: linodenetworking
     authenticated: true
     description: >
@@ -761,8 +758,7 @@ endpoints:
             Sets IP Sharing for this Linode.
         params:
           ips:
-            type: list
-            subtype: string
+            subtype: String
             description: >
               A list of IP Addresses this Linode will share.
         examples:
@@ -774,7 +770,7 @@ endpoints:
                 }' \
                 https://$api_root/$version/linode/instances/$linode_id/ips/sharing
   linode/instances/:id/ips/:ip_address:
-    type: action
+    type: Action
     resource: ipaddress
     authenticated: true
     description: >
@@ -802,7 +798,7 @@ endpoints:
                 }' \
                 https://$api_root/$version/linode/instances/$linode_id/ips/$ip_address
   linode/instances/:id/rebuild:
-    type: action
+    type: Action
     authenticated: true
     description: >
       Deletes all Disks and Configs on this Linode, then deploys a new Distribution to this Linode with the given attributes.
@@ -819,25 +815,25 @@ endpoints:
           root_pass:
             description: >
                 The root password for the new deployment.
-            type: string
+            type: String
           root_ssh_key:
             optional: true
             description: >
                 The key to authorize for root access to the new deployment.
-            type: string
+            type: String
           stackscript:
             optional: true
             description: >
               The stackscript ID to deploy with this disk.
               <ul><li>Must provide a distribution. Distribution must be
               one that the stackscript can be deployed to.</li></ul>
-            type: stackscript
+            type: Stackscript
           stackscript_data:
             optional: true
             description: >
               UDF (user-defined fields) for this stackscript. Defaults to "{}".
               <ul><li>Must match UDFs required by stackscript.</li></ul>
-            type: string
+            type: String
         examples:
           curl: |
             curl -H "Content-Type: application/json" \

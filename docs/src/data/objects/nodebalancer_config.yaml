@@ -5,86 +5,86 @@ description: >
 schema:
   id:
     _editable: false
-    _type: integer
+    _type: Integer
     _value: 804
     _description: An integer
   label:
     _editable: true
-    _type: string
+    _type: String
     _value: balancerconfig123
     _description: Unique label for your NodeBalancer config
   port:
     _editable: true
-    _type: integer
+    _type: Integer
     _value: 80
     _description: Port to bind to on the public interfaces. 1-65534
   protocol:
     _editable: true
-    _type: enum
+    _type: Enum
     _subtype: protocol
     _value: 'https'
     _description: The protocol used for the config.
   algorithm:
     _editable: true
-    _type: enum
+    _type: Enum
     _subtype: algorithm
     _value: 'roundrobin'
     _description: Balancing algorithm
   stickiness:
     _editable: true
-    _type: enum
+    _type: Enum
     _subtype: stickiness
     _value: 'table'
     _description: Session persistence. Route subsequent requests from a client to the same backend.
   check:
     _editable: true
-    _type: enum
+    _type: Enum
     _subtype: check
     _value: 'connection'
     _description: Perform active health checks on the backend nodes.
   check_interval:
     _editable: true
-    _type: integer
+    _type: Integer
     _value: 5
     _description: Seconds between health check probes.
   check_timeout:
     _editable: true
-    _type: integer
+    _type: Integer
     _value: 3
     _description: Seconds to wait before considering the probe a failure. 1-30. Must be less than check_interval.
   check_attempts:
     _editable: true
-    _type: integer
+    _type: Integer
     _value: 20
     _description: Number of failed probes before taking a node out of rotation. 1-30.
   check_path:
     _editable: true
-    _type: string
+    _type: String
     _value: "/"
     _description: When check is "http", the path to request.
   check_body:
     _editable: true
-    _type: string
+    _type: String
     _value:
     _description: When check is "http", a regex to match within the first 16,384 bytes of the response body.
   check_passive:
     _editable: true
-    _type: boolean
+    _type: Boolean
     _value: true
     _description: Enable passive checks based on observing communication with back-end nodes.
   ssl_cert:
     _editable: true
-    _type: string
+    _type: String
     _value:
     _description: SSL certificate served by the NodeBalancer when the protocol is "https".
   ssl_key:
     _editable: true
-    _type: string
+    _type: String
     _value:
     _description: Unpassphrased private key for the SSL certificate when the protocol is "https".
   cipher_suite:
     _editable: true
-    _type: enum
+    _type: Enum
     _subtype: cipher_suite
     _value: recommended
     _description: SSL cipher suite to enforce.

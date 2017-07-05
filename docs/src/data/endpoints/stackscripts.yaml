@@ -8,7 +8,6 @@ description: >
   account.
 endpoints:
   linode/stackscripts:
-    type: list
     resource: stackscript
     description: >
       View public StackScripts.
@@ -33,33 +32,33 @@ endpoints:
             description: >
               Label of StackScript.
             limit: 3-128 characters
-            type: string
+            type: String
           description:
             optional: true
             description: >
               Description of the StackScript.
-            type: string
+            type: String
           distributions:
             description: >
               A list of <a href="#object-distribution">distributions</a>
               compatible with StackScript.
-            type: distribution
+            type: Distribution
           is_public:
             optional: true
             description: >
               If true, this StackScript will be publicly visible in the Linode
               StackScript library. Defaults to False.
-            type: boolean
+            type: Boolean
           rev_note:
             optional: true
             description: >
               Release notes for this revision.
             limit: 0-512 characters
-            type: string
+            type: String
           script:
             description: >
               The shell script to run on boot.
-            type: string
+            type: String
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -74,7 +73,6 @@ endpoints:
             import stackscript
             TODO
   linode/stackscripts/:id:
-    type: list
     resource: stackscript
     authenticated: true
     description: >

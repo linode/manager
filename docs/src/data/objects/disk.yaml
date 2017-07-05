@@ -5,39 +5,39 @@ description: >
   Disk objects are disk images that are attached to a Linode.
 schema:
   id:
-    _type: integer
+    _type: Integer
     _value: 123456
   label:
     #_editable: true
     # NOTE: label is marked as editable in the dict, but the PUT endpoint does
     # not actually call from_dict so the point is moot.
-    _type: string
+    _type: String
     _value: Ubuntu 14.04 Disk
     _description: Human-friendly disk name.
     _filterable: true
     _limit: 1-50 characters
   status:
-    _type: enum
+    _type: Enum
     _subtype: Status
     _value: ok
     _description: Status of the disk.
     _filterable: false
   size:
     _editable: true
-    _type: integer
+    _type: Integer
     _value: 1000
     _description: Size of this disk in MB.
     _filterable: true
   filesystem:
-    _type: enum
+    _type: Enum
     _subtype: Filesystem
     _value: ext4
     _description: The filesystem on the disk.
   created:
-    _type: datetime
+    _type: Datetime
     _value: "2015-09-29T11:21:01"
   updated:
-    _type: datetime
+    _type: Datetime
     _value: "2015-09-29T11:21:01"
 enums:
   Status:

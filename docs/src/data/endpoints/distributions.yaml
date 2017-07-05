@@ -7,7 +7,6 @@ description: >
   <a href="#object-distribution">distribution objects</a>.
 endpoints:
   linode/distributions:
-    type: list
     resource: distributions
     description: >
       View the collection of distributions.

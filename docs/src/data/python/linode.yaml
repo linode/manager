@@ -6,16 +6,13 @@ desc: >
     and methods for managing it.
 _pylib_attributes:
     disks:
-        _type: list
         _description: A list of Disks belonging to this Linode
     configs:
-        _type: list
         _description: A list of Configs belonging to this Linode
     recent_backups:
-        _type: list
         _description: A list of recent Backups for this Linode.  This is for record keeping only, you may not be able to restore all of them.
     ips:
-        _type: object
+        _type: Object
         _description: >
             A response object containing "ipv4" and "ipv6" attributes, both of which contain a list of the relevant type of
             IP Address for this Linode.

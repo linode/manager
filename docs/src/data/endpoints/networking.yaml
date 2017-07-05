@@ -7,7 +7,6 @@ description: >
   networking objects</a>.
 endpoints:
   networking/ipv4:
-    type: list
     resource: ipaddress
     authenticated: true
     description: >
@@ -32,7 +31,7 @@ endpoints:
           linode:
             description: >
               The Linode ID to assign this IP to.
-            type: int
+            type: Int
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -72,7 +71,6 @@ endpoints:
             my_ipv4.rdns = 'example.org'
             my_ipv4.save()
   networking/ipv6:
-    type: list
     resource: ipv6pool
     authenticated: true
     description: >
@@ -120,7 +118,7 @@ endpoints:
             my_ipv6.rdns = 'example.org'
             my_ipv6.save()
   networking/ip-assign:
-    type: strange
+    type: Strange
     authenticated: true
     description: >
       Assigns an IPv4 address to a Linode.
@@ -133,11 +131,11 @@ endpoints:
             description: >
               The <a href="#object-region">region</a> where the IPv4 address
               and Linode are located.
-            type: region
+            type: Region
           assignments:
             description: >
               An array of IPv4 addresses and the Linode IDs they will be assigned to
-            type: array
+            type: Array[object]
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
