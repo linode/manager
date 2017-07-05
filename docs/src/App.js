@@ -68,10 +68,10 @@ const guides = [
 
 // only used for active nav state
 const childParentMap = {};
-api.endpoints.forEach(function(endpoint) {
-  endpoint.endpoints.forEach(function(childEndpoint, index) {
-    childEndpoint.endpoints.forEach(function(child) {
-      childParentMap[child.routePath] = endpoint.routePath;
+api.indices.forEach(function(endpointIndex) {
+  endpointIndex.groups.forEach(function(group) {
+    group.endpoints.forEach(function(child) {
+      childParentMap[child.routePath] = endpointIndex.routePath;
     });
   });
 });
@@ -143,19 +143,19 @@ export function init() {
       history={browserHistory}
       onUpdate={onRouterUpdate}
     >
-      <Route path="/" component={Layout} endpoints={api.endpoints} childParentMap={childParentMap}>
+      <Route path="/" component={Layout} indices={api.indices} childParentMap={childParentMap}>
         <Route component={IndexLayout}>
           <IndexRedirect to={`/${API_VERSION}`} />
           <Redirect from='/reference' to={`/${API_VERSION}/`} />
           <Route path={`/${API_VERSION}`}>
             {GettingStartedRoutes(guides, guideCrumbs)}
             <Route path="libraries/python" component={PythonLibrary} pythonDataObjects={{pythonDataTitles, pythonClientObjectTitles, pythonAPITitles}} />
-            {api.endpoints.map(function(endpoint, index) {
-              return generateIndexRoute({ key: index, endpoint: endpoint });
+            {api.indices.map(function(endpointIndex, index) {
+              return generateIndexRoute({ key: index, endpointIndex: endpointIndex });
             })}
-            {api.endpoints.map(function(endpoint) {
-              const crumb = [{ groupLabel: 'Reference', label: endpoint.path, to: endpoint.routePath }];
-              return generateChildRoute({ endpoint: endpoint, prevCrumbs: crumb });
+            {api.indices.map(function(endpointIndex) {
+              const crumb = [{ groupLabel: 'Reference', label: endpointIndex.path, to: endpointIndex.routePath }];
+              return generateChildRoute({ endpointIndex: endpointIndex, prevCrumbs: crumb });
             })}
             {pythonClientObjectTitles.map(function(pythonObject, index) {
               const crumb = [{ groupLabel: 'Libraries', label: '/python', to: `/${API_VERSION}/libraries/python` }];

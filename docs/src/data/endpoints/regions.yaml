@@ -1,11 +1,10 @@
 # vim: set et ts=2 sw=2 tw=80 :
 name: Regions
-base_path: /regions
 description: >
   Region endpoints provide a means of viewing <a href="#object-region">
   region objects</a>.
 endpoints:
-  regions:
+  /regions:
     resource: regions
     description: >
       Returns collection of regions.
@@ -18,7 +17,7 @@ endpoints:
             curl https://$api_root/$version/regions
           python: |
             all_regions = client.get_regions()
-  regions/:id:
+  /regions/:id:
     type: resource
     resource: region
     description: >

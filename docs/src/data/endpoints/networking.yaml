@@ -1,14 +1,15 @@
 # vim: set et ts=2 sw=2 tw=80 :
 name: Networking
 sort: 1
-base_path: /networking
 description: >
   Networking endpoints provide a means of viewing <a href="#object-networking">
   networking objects</a>.
 endpoints:
-  networking/ipv4:
+  /networking/ipv4:
+    _group: IPv4
     resource: ipaddress
     authenticated: true
+    resource: ipaddress
     description: >
       View and manage IPv4 Addresses you own.
     methods:
@@ -40,7 +41,8 @@ endpoints:
                 https://$api_root/$version/networking/ipv4
           python: |
             # presently unsupported
-  networking/ipv4/:address:
+  /networking/ipv4/:address:
+    _group: IPv4
     type: resource
     resource: ipaddress
     authenticated: true
@@ -70,7 +72,8 @@ endpoints:
           python: |
             my_ipv4.rdns = 'example.org'
             my_ipv4.save()
-  networking/ipv6:
+  /networking/ipv6:
+    _group: IPv6
     resource: ipv6pool
     authenticated: true
     description: >
@@ -86,7 +89,8 @@ endpoints:
                 https://$api_root/$version/networking/ipv6
           python: |
             my_ipv6s = client.networking.get_ipv6()
-  networking/ipv6/:address:
+  /networking/ipv6/:address:
+    _group: IPv6
     type: resource
     resource: ipv6pool
     authenticated: true
@@ -117,7 +121,8 @@ endpoints:
           python: |
             my_ipv6.rdns = 'example.org'
             my_ipv6.save()
-  networking/ip-assign:
+  /networking/ip-assign:
+    _group: IPv4
     type: Strange
     authenticated: true
     description: >

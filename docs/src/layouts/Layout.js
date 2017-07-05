@@ -41,7 +41,7 @@ export default class Layout extends Component {
   render() {
     const { route } = this.props;
     const { verticalNav } = this.state;
-    const { childParentMap, endpoints } = route;
+    const { childParentMap, indices } = route;
     const path = this.props.location.pathname;
 
     const miniHeader = (
@@ -92,8 +92,8 @@ export default class Layout extends Component {
               <div className="VerticalNav-section">
                 <h3>Reference</h3>
                 <ul>
-                  {this.renderNavListItems(endpoints.map(function(endpoint, index) {
-                    return { label: endpoint.name, href: endpoint.routePath };
+                  {this.renderNavListItems(indices.map(function(endpointIndex, index) {
+                    return { label: endpointIndex.name, href: endpointIndex.routePath };
                   }), path, childParentMap)}
                 </ul>
               </div>
