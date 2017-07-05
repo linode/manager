@@ -55,8 +55,8 @@ export class SummaryPage extends Component {
       return <TableCell column={column} record={record} />;
     }
 
-    const elements = [
-      { name: 'More Info', action: () => MoreInfo.trigger(dispatch, record) },
+    const groups = [
+      { elements: [{ name: 'More Info', action: () => MoreInfo.trigger(dispatch, record) }] },
       //{ name: 'Delete', action: () => this.deleteIP(record) },
     ];
 
@@ -67,20 +67,21 @@ export class SummaryPage extends Component {
     // }
 
     if (['private', 'link-local', 'pool'].indexOf(record.type.toLowerCase()) === -1) {
-      elements.splice(1, 0, {
-        name: 'Edit RDNS',
-        action: () => EditRDNS.trigger(dispatch, record),
-      });
+      groups.push({ elements: [
+        { name: 'Edit RDNS', action: () => EditRDNS.trigger(dispatch, record) },
+      ] });
 
       if (record.rdns) {
         const name = record.version === 'ipv4' ? 'Reset RDNS' : 'Remove RDNS';
-        elements.splice(2, 0, { name, action: () => this.resetRDNS(record) });
+        groups[1].elements.push({
+          name, action: () => this.resetRDNS(record),
+        });
       }
     }
 
     return (
       <TableCell column={column} record={record}>
-        <Dropdown elements={elements} />
+        <Dropdown groups={groups} />
       </TableCell>
     );
   }
@@ -141,8 +142,8 @@ export class SummaryPage extends Component {
       return { ...ip, type, address };
     });
 
-    const buttonElements = [
-      { name: 'Add an IP Address', action: () => AddIP.trigger(dispatch, linode) },
+    const buttonGroups = [
+      { elements: [{ name: 'Add an IP Address', action: () => AddIP.trigger(dispatch, linode) }] },
       // TODO: Add rdnslookup when API supports it
       // { name: 'Add an RDNS Entry', action: this.rdnsLookup },
     ];
@@ -151,7 +152,7 @@ export class SummaryPage extends Component {
       <div>
         <header className="NavigationHeader clearfix">
           <div className="float-sm-right">
-            <Dropdown elements={buttonElements} />
+            <Dropdown groups={buttonGroups} />
           </div>
         </header>
         <List>
