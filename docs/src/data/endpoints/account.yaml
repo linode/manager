@@ -113,6 +113,8 @@ endpoints:
             my_profile = client.account.get_profile()
             my_profile.disable_tfa()
   account/profile/grants:
+    type: strange
+    resource: usergrants
     methods:
       GET:
         description: >

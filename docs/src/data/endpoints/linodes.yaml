@@ -617,6 +617,7 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/resize
   linode/instances/:id/backups:
     type: action
+    resource: backup
     authenticated: true
     description: >
       Returns information about this Linode's available <a href="#object-backup">backups</a>.
@@ -722,6 +723,7 @@ endpoints:
             backup.restore()
   linode/instances/:id/ips:
     type: strange
+    resource: linodenetworking
     authenticated: true
     description: >
       View networking information for this Linode.

@@ -201,6 +201,7 @@ endpoints:
                     cipher_suite='legacy')
   nodebalancers/:id/configs/:id:
     type: resource
+    resource: nodebalancer_config
     authenticated: true
     description: >
       Manage a particular NodeBalancer config.
@@ -297,6 +298,7 @@ endpoints:
               https://$api_root/$version/nodebalancers/$nodebalancer_id/configs/$config_id/nodes
   nodebalancers/:id/configs/:id/nodes/:id:
     type: resource
+    resource: nodebalancer_config_nodes
     authenticated: true
     description: >
       Manage a particular NodeBalancer config node.
