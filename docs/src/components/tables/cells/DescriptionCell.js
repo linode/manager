@@ -7,7 +7,8 @@ import { API_VERSION, API_ROOT } from '~/constants';
 export default function DescriptionCell(props) {
   const { column, record } = props;
   const { description, seeAlso } = record;
-  const seeAlsoDisplay = (Array.isArray(seeAlso) ? seeAlso : [seeAlso]).map(item => (<div>See also: <Link to={`/${API_VERSION}${item}`}>{item}</Link></div>));
+  const seeAlsoDisplay = (Array.isArray(seeAlso) ? seeAlso : [seeAlso]).map(
+    item => <div>See also: <Link to={`/${API_VERSION}${item}`}>{item}</Link></div>);
 
   let descriptionEl;
   if (typeof description === 'object') {
