@@ -5,11 +5,11 @@ import { Dropdown } from 'linode-components/dropdowns';
 import { ConfirmModalBody, DeleteModalBody } from 'linode-components/modals';
 
 import { showModal, hideModal } from '~/actions/modal';
+import { EmitEvent } from 'linode-components/utils';
 import { clients } from '~/api';
 import { resetSecret } from '~/api/clients';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { API_ROOT } from '~/constants';
-import { EmitEvent } from 'linode-components/utils';
 
 import { renderSecret } from './CreatePersonalAccessToken';
 import CreateOrEditApplication from './CreateOrEditApplication';
@@ -80,13 +80,31 @@ export default class MyApplication extends Component {
 
   renderActions() {
     const elements = [
-      { name: 'Edit', action: this.editAction },
-      { name: 'Reset secret', action: this.resetAction },
+      { name: 'Edit', action: () => {
+        this.editAction();
+        EmitEvent('dropdown:click', 'Dropdown', 'edit', 'my app');
+      } },
+      { name: 'Reset secret', action: () => {
+        this.resetAction();
+        EmitEvent('dropdown:click', 'Dropdown', 'reset', 'my app');
+      } },
       null,
-      { name: 'Delete', action: this.deleteAction },
+      { name: 'Delete', action: () => {
+        this.deleteAction();
+        EmitEvent('dropdown:click', 'Dropdown', 'delete', 'my app');
+      } },
     ];
 
-    return <Dropdown elements={elements} leftOriented={false} />;
+    return (<Dropdown
+      elements={elements}
+      leftOriented={false}
+      onOpen={() => {
+        EmitEvent('dropdown:open', 'Dropdown', 'open', 'my app');
+      }}
+      onClose={() => {
+        EmitEvent('dropdown:close', 'Dropdown', 'close', 'my app');
+      }}
+    />);
   }
 
   render() {

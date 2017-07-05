@@ -12,6 +12,7 @@ import {
 } from 'linode-components/forms';
 
 import { setSource } from '~/actions/source';
+import { EmitEvent } from 'linode-components/utils';
 import { linodes } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 
@@ -43,6 +44,7 @@ export class AlertsPage extends Component {
   onSubmit = () => {
     const { dispatch, linode } = this.props;
 
+    EmitEvent('button:submit', 'Submit', 'change alerts', 'linode');
     return dispatch(dispatchOrStoreErrors.apply(this, [
       [() => linodes.put({ alerts: this.state.alerts }, linode.id)],
     ]));

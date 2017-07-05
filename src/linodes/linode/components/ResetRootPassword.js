@@ -47,6 +47,7 @@ export default class ResetRootPassword extends Component {
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => resetPassword(linode.id, disk, password),
       () => this.setState({ password: '' }),
+      () => EmitEvent('button:submit', 'Submit', 'reset password', 'linode'),
     ]));
   }
 

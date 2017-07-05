@@ -8,6 +8,7 @@ import {
   SubmitButton,
 } from 'linode-components/forms';
 
+import { EmitEvent } from 'linode-components/utils';
 import { rescueLinode } from '~/api/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
 import DiskSelect from './DiskSelect';
@@ -33,6 +34,7 @@ export default class RescueMode extends Component {
     const { dispatch, linode } = this.props;
     const { disks } = this.state;
 
+    EmitEvent('button:submit', 'Submit', 'rescue', 'linode');
     return dispatch(dispatchOrStoreErrors.apply(this, [
       [() => rescueLinode(linode.id, disks)],
     ]));

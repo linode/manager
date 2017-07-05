@@ -12,6 +12,7 @@ import {
 } from 'linode-components/forms';
 
 import { showModal, hideModal } from '~/actions/modal';
+import { EmitEvent } from 'linode-components/utils';
 import { addIP } from '~/api/networking';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { MONTHLY_IP_COST } from '~/constants';
@@ -43,6 +44,7 @@ export default class AddIP extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => addIP(linode.id, type),
+      () => EmitEvent('button:submit', 'Submit', 'add ip', 'linode'),
       close,
     ]));
   }

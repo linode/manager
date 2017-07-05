@@ -11,6 +11,7 @@ import {
   SubmitButton,
 } from 'linode-components/forms';
 
+import { EmitEvent } from 'linode-components/utils';
 import { users } from '~/api';
 import { dispatchOrStoreErrors, getObjectByLabelLazily } from '~/api/util';
 
@@ -77,7 +78,12 @@ export class PermissionsPage extends Component {
     const { global, customer, linode, domain, nodebalancer, loading, errors } = this.state;
 
     return (
-      <Form onSubmit={this.onSubmit}>
+      <Form
+        onSubmit={() => {
+          this.onSubmit();
+          EmitEvent('button:submit', 'Submit', 'change permissions', 'user');
+        }}
+      >
         <Card className="Permissions">
           <div className="Permissions-section">
             <h3>Global Permissions</h3>

@@ -6,6 +6,7 @@ import { push } from 'react-router-redux';
 import { Form, SubmitButton, FormSummary } from 'linode-components/forms';
 import { Card, CardHeader } from 'linode-components/cards';
 
+import { EmitEvent } from 'linode-components/utils';
 import { takeBackup } from '~/api/backups';
 import { TimeDisplay } from '~/components';
 
@@ -30,6 +31,7 @@ export class SummaryPage extends Component {
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => takeBackup(linode.id),
       ({ id }) => push(`/linodes/${linode.label}/backups/${id}`),
+      () => EmitEvent('button:submit', 'Submit', 'take first snapshot', 'linode'),
     ]));
   }
 

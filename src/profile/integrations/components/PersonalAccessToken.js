@@ -11,6 +11,7 @@ import { tokens as apiTokens } from '~/api';
 import { AuthScopeCell } from '~/components/tables/cells';
 import TimeDisplay from '~/components/TimeDisplay';
 import { OAUTH_SCOPES, OAUTH_SUBSCOPES } from '~/constants';
+import { EmitEvent } from 'linode-components/utils';
 
 import EditPersonalAccessToken from './EditPersonalAccessToken';
 import { formatScope } from '../utilities';
@@ -61,14 +62,29 @@ export default class PersonalAccessToken extends Component {
     });
 
     const elements = [
-      { name: 'Edit', action: this.editAction },
-      { name: 'Delete', action: this.deleteAction },
+      { name: 'Edit', action: () => {
+        this.editAction();
+        EmitEvent('dropdown:click', 'Dropdown', 'edit', 'personal access token');
+      } },
+      { name: 'Delete', action: () => {
+        this.deleteAction();
+        EmitEvent('dropdown:click', 'Dropdown', 'delete', 'personal access token');
+      } },
     ];
 
     const header = (
       <CardImageHeader
         title={label}
-        nav={<Dropdown elements={elements} leftOriented={false} />}
+        nav={<Dropdown
+          elements={elements}
+          leftOriented={false}
+          onOpen={() => {
+            EmitEvent('dropdown:open', 'Dropdown', 'open', 'personal access token');
+          }}
+          onClose={() => {
+            EmitEvent('dropdown:close', 'Dropdown', 'close', 'personal access token');
+          }}
+        />}
       />
     );
 

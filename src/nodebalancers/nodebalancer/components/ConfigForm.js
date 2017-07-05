@@ -12,6 +12,7 @@ import {
   SubmitButton,
 } from 'linode-components/forms';
 
+import { EmitEvent } from 'linode-components/utils';
 import { nodebalancers } from '~/api';
 import { updateConfigSSL } from '~/api/nodebalancers';
 import { dispatchOrStoreErrors } from '~/api/util';
@@ -86,7 +87,8 @@ export default class ConfigForm extends Component {
     if (!config.id) {
       calls.push(({ id }) => push(`/nodebalancers/${nodebalancer.label}/configs/${id}`));
     }
-
+    calls.push(() => EmitEvent('button:submit', 'Submit',
+      config.id ? 'edit' : 'add', 'nodebalancer config'));
     return dispatch(dispatchOrStoreErrors.call(this, calls));
   }
 

@@ -9,6 +9,7 @@ import {
   SubmitButton,
 } from 'linode-components/forms';
 
+import { EmitEvent } from 'linode-components/utils';
 import { linodes } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 
@@ -31,6 +32,7 @@ export default class ScheduleForm extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => linodes.put({ backups: { schedule: { day, window } } }, linode.id),
+      () => EmitEvent('button:submit', 'Submit', 'schedule backup', 'linode'),
     ]));
   }
 

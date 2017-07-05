@@ -10,6 +10,8 @@ import {
   Select,
 } from 'linode-components/forms';
 
+import { EmitEvent } from 'linode-components/utils';
+
 
 export default class NotificationsPage extends Component {
   constructor() {
@@ -24,6 +26,8 @@ export default class NotificationsPage extends Component {
   }
 
   onSubmit = () => {
+    const { authorization } = this.state;
+    EmitEvent('button:submit', 'Submit', 'update', 'lish', parseInt(authorization));
     // TODO: implement save
   }
 

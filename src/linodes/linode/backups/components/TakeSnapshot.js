@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 
 import { Form, FormGroup, SubmitButton } from 'linode-components/forms';
 
+import { EmitEvent } from 'linode-components/utils';
 import { takeBackup } from '~/api/backups';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { FormSummary } from 'linode-components/forms';
@@ -19,6 +20,7 @@ export default class TakeSnapshot extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => takeBackup(linode.id),
+      () => EmitEvent('button:submit', 'Submit', 'take snapshot', 'linode'),
     ]));
   }
 

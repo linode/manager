@@ -13,10 +13,16 @@ export default class Dropdown extends Component {
   }
 
   open() {
+    if(typeof this.props.onOpen === "function") {
+      this.props.onOpen();
+    }
     this.setState({ open: !this.state.open });
   }
 
   close() {
+    if(typeof this.props.onClose === "function") {
+      this.props.onClose();
+    }
     this.setState({ open: false });
   }
 
@@ -74,6 +80,8 @@ Dropdown.propTypes = {
   leftOriented: PropTypes.bool,
   disabled: PropTypes.bool,
   dropdownIcon: PropTypes.string,
+  onOpen: PropTypes.func,
+  onClose: PropTypes.func,
 };
 
 Dropdown.defaultProps = {

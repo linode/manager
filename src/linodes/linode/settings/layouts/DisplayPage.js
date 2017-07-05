@@ -16,6 +16,7 @@ import { linodes } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
+import { EmitEvent } from 'linode-components/utils';
 
 import { selectLinode } from '../../utilities';
 
@@ -40,6 +41,7 @@ export class DisplayPage extends Component {
     const requests = [
       () => linodes.put({ group, label }, id),
       () => setTitle(label),
+      () => EmitEvent('button:submit', 'Submit', 'change display', 'linode'),
     ];
 
     if (oldLabel !== label) {

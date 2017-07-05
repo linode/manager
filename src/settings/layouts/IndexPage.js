@@ -13,6 +13,7 @@ import {
 
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
+import { EmitEvent } from 'linode-components/utils';
 import { account } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 
@@ -43,6 +44,7 @@ export class IndexPage extends Component {
     const { dispatch } = this.props;
     const { networkHelper: network_helper } = this.state;
 
+    EmitEvent('button:submit', 'Submit', 'save', 'settings', network_helper);
     return dispatch(dispatchOrStoreErrors.apply(this, [
       [() => account.put({ network_helper })],
     ]));

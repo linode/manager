@@ -3,6 +3,7 @@ import React, { Component, PropTypes } from 'react';
 import { Dropdown } from 'linode-components/dropdowns';
 
 import { distros } from '~/assets';
+import { EmitEvent } from 'linode-components/utils';
 
 
 export default class Distribution extends Component {
@@ -57,7 +58,10 @@ export default class Distribution extends Component {
       },
       ...vendor.versions.map((version, i) => ({
         name: version.label,
-        action: () => this.setState({ selectedIndex: i }, this.onClick),
+        action: () => {
+          this.setState({ selectedIndex: i }, this.onClick);
+          EmitEvent('dropdown:click', 'Dropdown', 'select distro version', version.label);
+        },
       })),
     ];
 
@@ -66,7 +70,16 @@ export default class Distribution extends Component {
         onClick={this.onClick}
         className={`LinodesDistribution ${isSelectedClass} ${noDistributionClass}`}
       >
-        <Dropdown elements={versions} />
+        <Dropdown
+          elements={versions}
+          onOpen={() => EmitEvent('dropdown:open', 'Dropdown', 'open distro version', vendor.name)}
+          onClose={() => EmitEvent(
+            'dropdown:close',
+            'Dropdown',
+            'close distro version',
+            vendor.name
+          )}
+        />
         <div className="LinodesDistribution-body">
           {vendor ? <img
             src={distros[vendor.name]}

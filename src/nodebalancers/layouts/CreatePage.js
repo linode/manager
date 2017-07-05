@@ -15,6 +15,7 @@ import {
 
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
+import { EmitEvent } from 'linode-components/utils';
 import { nodebalancers, regions } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 import Region from '~/components/Region';
@@ -52,6 +53,7 @@ export class CreatePage extends Component {
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => nodebalancers.post({ label, region }),
       () => push(`/nodebalancers/${label}`),
+      () => EmitEvent('button:submit', 'Submit', 'create', 'nodebalancer'),
     ]));
   }
 

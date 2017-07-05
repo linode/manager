@@ -8,4 +8,5 @@ export default function EmitEvent(eventName, category, action, label, value = nu
       value,
     }
   }));
+  console.log(category, eventName);
 }

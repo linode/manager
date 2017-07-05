@@ -10,6 +10,7 @@ import {
   Input,
 } from 'linode-components/forms';
 
+import { EmitEvent } from 'linode-components/utils';
 import { profile } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 
@@ -31,6 +32,7 @@ export default class ChangeEmail extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => profile.put({ email }),
+      () => EmitEvent('button:submit', 'Submit', 'change', 'email'),
     ]));
   }
 

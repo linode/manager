@@ -16,6 +16,7 @@ import {
 } from 'linode-components/tables/cells';
 
 import { setSource } from '~/actions/source';
+import { EmitEvent } from 'linode-components/utils';
 import { setShared } from '~/api/networking';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { IPRdnsCell } from '~/components/tables/cells';
@@ -77,6 +78,7 @@ export class IPSharingPage extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => setShared(linode.id, sharedIPs),
+      () => EmitEvent('button:submit', 'Submit', 'ip sharing', 'linode'),
     ]));
   }
 

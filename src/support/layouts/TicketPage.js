@@ -17,6 +17,7 @@ import { dispatchOrStoreErrors, getObjectByLabelLazily } from '~/api/util';
 import { addTicketAttachment } from '~/api/tickets';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
+import { EmitEvent } from 'linode-components/utils';
 import { MAX_UPLOAD_SIZE_MB } from '~/constants';
 
 import { renderTicketCreationInfo } from './IndexPage';
@@ -61,6 +62,7 @@ export class TicketPage extends Component {
     const requests = [
       // All other requests will get unshift()ed before this so this happens last.
       () => this.setState({ reply: '', attachments: [] }),
+      () => EmitEvent('button:submit', 'Submit', 'update', 'ticket', attachments.length),
     ];
 
     if (description) {

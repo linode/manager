@@ -10,6 +10,7 @@ import {
 } from 'linode-components/forms';
 
 import { setSource } from '~/actions/source';
+import { EmitEvent } from 'linode-components/utils';
 import { types } from '~/api';
 import { resizeLinode } from '~/api/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
@@ -44,6 +45,7 @@ export class ResizePage extends Component {
     const { dispatch, linode } = this.props;
     const { type } = this.state;
 
+    EmitEvent('button:submit', 'Submit', 'resize', 'linode');
     return dispatch(dispatchOrStoreErrors.apply(this, [
       [() => resizeLinode(linode.id, type)],
       ['type'],

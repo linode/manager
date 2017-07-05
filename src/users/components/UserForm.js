@@ -7,6 +7,7 @@ import {
 
 import { users } from '~/api';
 import { setTitle } from '~/actions/title';
+import { EmitEvent } from 'linode-components/utils';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { actions } from '~/api/configs/users';
 import { FormSummary } from 'linode-components/forms';
@@ -54,6 +55,7 @@ export default class UserForm extends Component {
       () => oldUsername !== data.username && push(`/users/${data.username}`),
       () => oldUsername !== data.username && actions.delete(oldUsername),
       () => creating ? null : setTitle(data.username),
+      () => EmitEvent('button:submit', 'Submit', creating ? 'add' : 'edit', 'user'),
     ]));
   }
 
