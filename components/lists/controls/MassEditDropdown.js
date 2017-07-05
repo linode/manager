@@ -1,11 +1,10 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
 
 import { Dropdown } from '../../dropdowns';
 
-
 export default function MassEditDropdown(props) {
-  const { checked, disabled, options, onChange } = props;
+  const { checked, disabled, groups, onChange } = props;
 
   return (
     <div className="input-group">
@@ -18,7 +17,7 @@ export default function MassEditDropdown(props) {
           checked={checked}
         />
       </span>
-      <Dropdown elements={options} disabled={disabled} leftOriented />
+      <Dropdown groups={groups} disabled={disabled} leftOriented />
     </div>
   );
 }
@@ -27,7 +26,7 @@ MassEditDropdown.propTypes = {
   checked: PropTypes.bool,
   disabled: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
-  options: PropTypes.array.isRequired,
+  groups: PropTypes.array.isRequired,
 };
 
 MassEditDropdown.defaultProps = {

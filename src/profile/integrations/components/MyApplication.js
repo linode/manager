@@ -79,14 +79,13 @@ export default class MyApplication extends Component {
   }
 
   renderActions() {
-    const elements = [
-      { name: 'Edit', action: this.editAction },
-      { name: 'Reset secret', action: this.resetAction },
-      null,
-      { name: 'Delete', action: this.deleteAction },
+    const groups = [
+      { elements: [{ name: 'Edit', action: this.editAction }] },
+      { elements: [{ name: 'Reset Secret', action: this.resetAction }] },
+      { elements: [{ name: 'Delete', action: this.deleteAction }] },
     ];
 
-    return <Dropdown elements={elements} leftOriented={false} />;
+    return <Dropdown groups={groups} leftOriented={false} />;
   }
 
   render() {

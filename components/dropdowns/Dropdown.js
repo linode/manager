@@ -21,19 +21,28 @@ export default class Dropdown extends Component {
   }
 
   render() {
-    const [first, ...rest] = this.props.elements;
+    const [{ elements: [first] }, ...groups] = this.props.groups;
     const { disabled, dropdownIcon } = this.props;
 
-    const dropdownMenu = rest.map((item, i) => !item ? <hr key={i} /> :
-      <button
-        type="button"
-        key={item.name}
-        id={item.name.split(' ').join('-').toLowerCase()}
-        className="Dropdown-item"
-        // This onMouseDown is intentional. See https://github.com/linode/manager/pull/223
-        onMouseDown={item.action}
-      >{item.name}</button>
-    );
+    const dropdownMenu = groups.map((group, i, groups) => (
+      <div className="Dropdown-group" key={group.name || i}>
+        {!group.name ? null : (
+          <div className="Dropdown-groupLabel">{group.name}</div>
+        )}
+        <div className="Dropdown-elements">
+          {group.elements.map((item, i) => (
+            <button
+              type="button"
+              key={item.name}
+              id={item.name.split(' ').join('-').toLowerCase()}
+              className="Dropdown-item"
+              // This onMouseDown is intentional. See https://github.com/linode/manager/pull/223
+              onMouseDown={item.action}
+            >{item.name}</button>
+          ))}
+        </div>
+      </div>
+    ))
 
     const orientation = !this.props.leftOriented ? 'Dropdown-menu--right' : '';
 
@@ -49,7 +58,7 @@ export default class Dropdown extends Component {
           disabled={disabled}
           id={first.name.split(' ').join('-').toLowerCase()}
         >{first.name}</button>
-        {rest.length === 0 ? null : (
+        {groups.length === 0 ? null : (
           <button
             disabled={disabled}
             type="button"
@@ -67,9 +76,12 @@ export default class Dropdown extends Component {
 }
 
 Dropdown.propTypes = {
-  elements: PropTypes.arrayOf(PropTypes.shape({
-    name: PropTypes.node.isRequired,
-    action: PropTypes.func,
+  groups: PropTypes.arrayOf(PropTypes.shape({
+    name: PropTypes.node,
+    elements: PropTypes.arrayOf(PropTypes.shape({
+      name: PropTypes.node.isRequired,
+      action: PropTypes.func,
+    })),
   })).isRequired,
   leftOriented: PropTypes.bool,
   disabled: PropTypes.bool,

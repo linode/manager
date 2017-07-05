@@ -60,15 +60,15 @@ export default class PersonalAccessToken extends Component {
       return { scopes: scopes, scope: scope };
     });
 
-    const elements = [
-      { name: 'Edit', action: this.editAction },
-      { name: 'Delete', action: this.deleteAction },
+    const groups = [
+      { elements: [{ name: 'Edit', action: this.editAction }] },
+      { elements: [{ name: 'Delete', action: this.deleteAction }] },
     ];
 
     const header = (
       <CardImageHeader
         title={label}
-        nav={<Dropdown elements={elements} leftOriented={false} />}
+        nav={<Dropdown groups={groups} leftOriented={false} />}
       />
     );
 

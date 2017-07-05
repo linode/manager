@@ -64,7 +64,7 @@ describe('profile/integrations/components/PersonalAccessToken', () => {
       />
     );
 
-    page.find('Dropdown').props().elements[1].action();
+    page.find('Dropdown').props().groups[1].elements[0].action();
 
     expect(dispatch.callCount).to.equal(1);
     const { body } = dispatch.firstCall.args[0];
