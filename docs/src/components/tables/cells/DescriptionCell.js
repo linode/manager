@@ -9,7 +9,7 @@ export default function DescriptionCell(props) {
   const { description, seeAlso } = record;
   const seeAlsoDisplay = seeAlso && (Array.isArray(seeAlso) ? seeAlso : [seeAlso]).map(item => (
     <div className="DescriptionCell-seeAlso">
-      See also: <Link to={`/${API_VERSION}${item}`}>{item}</Link>
+      <small>See also: <Link to={`/${API_VERSION}${item}`}>{item}</Link></small>
     </div>
   ));
 
