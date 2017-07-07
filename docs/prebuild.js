@@ -153,6 +153,7 @@ function formatSchemaField(schemaField, enumMap) {
   description = convertUlToArray(description);
 
   const name = schemaField.name;
+  const seeAlso = schemaField._seeAlso;
   const editable = schemaField._editable;
   const filterable = schemaField._filterable;
   const type = schemaField._type;
@@ -181,6 +182,7 @@ function formatSchemaField(schemaField, enumMap) {
 
   return {
     name: name,
+    seeAlso: seeAlso,
     description: description,
     editable: editable,
     filterable: filterable,
