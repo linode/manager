@@ -72,7 +72,6 @@ export class Layout extends Component {
         <ModalShell
           open={this.props.modal.open}
           title={this.props.modal.title}
-          close={() => dispatch(hideModal())}
         >
           {this.props.modal.body}
         </ModalShell>
