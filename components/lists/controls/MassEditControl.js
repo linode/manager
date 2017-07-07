@@ -31,7 +31,7 @@ export default class MassEditControl extends Component {
   render() {
     const {
       data,
-      massEditOptions,
+      massEditGroups,
       selectedKey,
       selectedMap,
     } = this.props;
@@ -45,12 +45,13 @@ export default class MassEditControl extends Component {
       <MassEditDropdown
         checked={allSelected}
         disabled={noneSelected}
-        options={massEditOptions.map((option) => {
-          return option && {
+        groups={massEditGroups.map((group) => ({
+          ...group,
+          elements: group.elements.map((option) => ({
             name: option.name,
             action: this.createMassEditActionHandler(option.action),
-          } || option;
-        })}
+          }))
+        }))}
         onChange={this.onMassEditChange}
       />
     );
@@ -60,7 +61,7 @@ export default class MassEditControl extends Component {
 MassEditControl.propTypes = {
   data: PropTypes.array.isRequired,
   dispatch: PropTypes.func,
-  massEditOptions: MassEditDropdown.propTypes.options,
+  massEditGroups: MassEditDropdown.propTypes.groups,
   objectType: PropTypes.string.isRequired,
   selectedKey: PropTypes.string,
   selectedMap: PropTypes.object.isRequired,

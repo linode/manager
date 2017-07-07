@@ -1,0 +1,15 @@
+.Menu {
+    @extend .clearfix;
+
+    &-item {
+        @extend .float-sm-left;
+
+        &--right {
+            @extend .float-sm-right;
+        }
+
+        & + &:not(&--right) {
+            padding-left: 15px;
+        }
+    }
+}

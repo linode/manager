@@ -7,29 +7,22 @@ import { LinkCell } from 'linode-components/tables/cells';
 
 export default function EndpointIndex(props) {
   const { route } = props;
-  const { crumbs, endpoint } = route;
-  endpoint.endpoints = endpoint.endpoints.sort(function(a, b) {
-    return a.base_path - b.base_path;
-  });
+  const { crumbs, endpointIndex } = route;
+
   return (
     <div className="EndpointIndex">
       <div className="EndpointIndex-header">
         <div className="EndpointIndex-breadcrumbsContainer">
           <Breadcrumbs crumbs={crumbs} />
         </div>
-        <h1>{endpoint.name}</h1>
-        {!endpoint.description ? null : <p>{endpoint.description}</p>}
+        <h1>{endpointIndex.name}</h1>
+        {!endpointIndex.description ? null : <p>{endpointIndex.description}</p>}
       </div>
       <div>
-        {endpoint.endpoints.map(function(endpointSection) {
-          endpointSection.endpoints = endpointSection.endpoints.sort(function(a, b) {
-            if ( a.path < b.path) return -1;
-            if ( a.path > b.path) return 1;
-            return 0;
-          });
+        {endpointIndex.groups.map(function(group) {
           return (
             <div className="EndpointIndex-group">
-              <h3>{endpointSection.name}</h3>
+              {group.label === 'default' ? null : <h3>{group.label}</h3>}
               <Table
                 className="Table--secondary"
                 columns={[
@@ -38,13 +31,13 @@ export default function EndpointIndex(props) {
                     textKey: 'path',
                     label: 'Endpoint',
                     headerClassName: 'EndpointColumn',
-                    hrefFn: function(childEndpoint) {
-                      return childEndpoint.routePath;
+                    hrefFn: function(endpoint) {
+                      return endpoint.routePath;
                     }
                   },
                   { label: 'Description', dataKey: 'description' },
                 ]}
-                data={endpointSection.endpoints}
+                data={group.endpoints}
                 noDataMessage="No endpoints documented."
               />
             </div>

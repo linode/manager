@@ -3,6 +3,7 @@ import { push } from 'react-router-redux';
 
 import { Dropdown } from 'linode-components/dropdowns';
 import { ConfirmModalBody, DeleteModalBody } from 'linode-components/modals';
+import { EmitEvent } from 'linode-components/utils';
 
 import { hideModal, showModal } from '~/actions/modal';
 import { linodes as apiLinodes } from '~/api';
@@ -13,7 +14,6 @@ import { createHeaderFilter } from '~/api/util';
 import { LinodeStates, LinodeStatesReadable } from '~/constants';
 import ConfigSelectModalBody from '~/linodes/components/ConfigSelectModalBody';
 import { launchWeblishConsole } from '~/linodes/components/WeblishLaunch';
-import { EmitEvent } from 'linode-components/utils';
 
 
 const RANDOM_PROGRESS_MAX = 20;
@@ -129,118 +129,97 @@ export default class StatusDropdown extends Component {
     this.setState({ open: false });
   }
 
-  render() {
+  confirmAction = (name, onConfirm) => {
     const { linode, dispatch } = this.props;
 
+    return dispatch(showModal(`Confirm ${name}`, (
+      <ConfirmModalBody
+        onCancel={() => {
+          EmitEvent('modal:cancel', 'Modal', 'cancel', `Confirm ${name}`);
+          dispatch(hideModal());
+        }}
+        onOk={() => {
+          EmitEvent('modal:submit', 'Modal', name, `Confirm ${name}`);
+          onConfirm();
+        }}
+      >
+        Are you sure you want to {name.toLowerCase()} <strong>{linode.label}</strong>?
+      </ConfirmModalBody>
+    )));
+  }
+
+  selectConfig = (callback) => {
+    const { linode, dispatch } = this.props;
+    const configCount = Object.keys(linode._configs.configs).length;
+    if (configCount <= 1) {
+      dispatch(callback(linode.id));
+      dispatch(hideModal());
+      return;
+    }
+
+    const title = 'Select Configuration Profile';
+
+    dispatch(showModal(title, (
+      <ConfigSelectModalBody
+        linode={linode}
+        title={title}
+        dispatch={dispatch}
+        action={callback}
+      />
+    )));
+  }
+
+  rebootLinode = () => this.confirmAction('Reboot', () => this.selectConfig(rebootLinode))
+  powerOffLinode = () => this.confirmAction('Power Off', () => powerOffLinode(this.props.linode.id))
+  powerOnLinode = () => this.selectConfig(powerOnLinode)
+  deleteLinode = () => {
+    const { linode, dispatch } = this.props;
+
+    dispatch(showModal('Delete Linode', (
+      <DeleteModalBody
+        onOk={async function () {
+          await dispatch(apiLinodes.delete(linode.id));
+          EmitEvent('modal:submit', 'Modal', 'delete', 'Delete Linode');
+          await dispatch(push('/'));
+        }}
+        items={[linode.label]}
+        onCancel={() => {
+          Event('modal:cancel', 'Modal', 'cancel', 'Delete Linode');
+          dispatch(hideModal());
+        }}
+      />
+    )));
+  }
+
+  render() {
+    const { linode } = this.props;
+
     const status = LinodeStatesReadable[linode.status];
-    const elements = [
+    const groups = [
+      { elements: [{ name: status }] },
       {
-        name: 'Reboot',
-        tempStatus: 'rebooting',
-        _key: 'reboot',
-        _action: rebootLinode,
-        _condition: () => linode.status === 'running',
-        _configs: true,
+        elements: [
+          { name: 'Reboot', action: this.rebootLinode },
+          { name: 'Power Off', action: this.powerOffLinode },
+        ],
       },
-      {
-        name: 'Power Off',
-        tempStatus: 'shutting_down',
-        _key: 'power-off',
-        _action: powerOffLinode,
-        _condition: () => linode.status === 'running',
-      },
-      {
-        name: 'Power On',
-        tempStatus: 'booting',
-        _key: 'power-on',
-        _action: powerOnLinode,
-        _condition: () => linode.status === 'offline',
-        _configs: true,
-      },
-      {
+      { elements: [{
         name: 'Launch Console',
-        _key: 'text-console',
-        _action: () => { launchWeblishConsole(linode); },
-        _condition: () => true,
-      },
-      {
-        name: 'Delete',
-        _key: 'delete',
-        _condition: () => true,
-      },
-    ]
-    .filter(element => element._condition())
-    .map(element => ({
-      ...element,
-      action: () => {
-        this.close();
+        action: () => launchWeblishConsole(linode),
+      }] },
+      { elements: [{ name: 'Delete', action: this.deleteLinode }] },
+    ];
 
-        if (element._key === 'delete') {
-          dispatch(showModal('Delete Linode', (
-            <DeleteModalBody
-              onOk={async function () {
-                await dispatch(apiLinodes.delete(linode.id));
-                EmitEvent('modal:submit', 'Modal', 'delete', 'Delete Linode');
-                await dispatch(push('/'));
-              }}
-              items={[linode.label]}
-              onCancel={() => {
-                EmitEvent('modal:cancel', 'Modal', 'cancel', 'Delete Linode');
-                dispatch(hideModal());
-              }}
-            />
-          )));
-          return;
-        }
-
-        const callback = () => {
-          const configCount = Object.keys(linode._configs.configs).length;
-          if (!element._configs || configCount <= 1) {
-            dispatch(element._action(linode.id));
-            dispatch(hideModal());
-            return;
-          }
-          const title = 'Select Configuration Profile';
-
-          dispatch(showModal(title, (
-            <ConfigSelectModalBody
-              linode={linode}
-              title={title}
-              dispatch={dispatch}
-              action={element._action}
-            />
-          )));
-        };
-
-        const noConfirmActions = ['power-on', 'text-console'];
-        if (noConfirmActions.indexOf(element._key) !== -1) {
-          // No need to confirm this action.
-          callback();
-        } else {
-          dispatch(showModal(`Confirm ${element.name}`, (
-            <ConfirmModalBody
-              onCancel={() => {
-                EmitEvent('modal:cancel', 'Modal', 'cancel', `Confirm ${element.name}`);
-                dispatch(hideModal());
-              }}
-              onOk={() => {
-                EmitEvent('modal:submit', 'Modal', element.name, `Confirm ${element.name}`);
-                callback();
-              }}
-            >
-              Are you sure you want to {element.name.toLowerCase()} <strong>{linode.label}</strong>?
-            </ConfirmModalBody>
-          )));
-        }
-      },
-    }));
+    if (linode.status === 'offline') {
+      groups[1].elements = [{ name: 'Power On', action: this.powerOnLinode }];
+    }
 
     // The calc(x + 1px) is needed because we have left: -1px on this element.
     const progressWidth = `calc(${linode.__progress}%${linode.__progress === 0 ? '' : ' + 1px'})`;
 
     return (
       <div className="StatusDropdown StatusDropdown--dropdown">
-        <Dropdown elements={[{ name: status }, ...elements]} dropdownIcon="fa-cog" />
+        <Dropdown groups={groups} dropdownIcon="fa-cog" />
         <div className="StatusDropdown-container">
           <div
             style={{ width: progressWidth }}

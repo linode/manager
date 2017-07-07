@@ -5,32 +5,32 @@ description: >
 schema:
   id:
     _editable: false
-    _type: integer
+    _type: Integer
     _value: 804
     _description: An integer
   label:
     _editable: true
-    _type: string
+    _type: String
     _value: node001
     _description: Unique label for your NodeBalancer config
   address:
     _editable: true
-    _type: string
+    _type: String
     _value: '192.168.12.12:80'
     _description: The address:port combination used to communicate with this Node.
   weight:
     _editable: true
-    _type: integer
+    _type: Integer
     _value: 20
     _description: Load balancing weight, 1-255. Higher means more connections.
   mode:
     _editable: true
-    _type: enum
+    _type: Enum
     _subtype: mode
     _value: "accept"
     _description: The connections mode for this node. One of 'accept', 'reject', or 'drain'.
   status:
-    _type: string
+    _type: String
     _value: "UP"
     _description: The status of this node.
 enums:

@@ -18,6 +18,7 @@ import { OAUTH_SUBSCOPES, OAUTH_SCOPES } from '~/constants';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { EmitEvent } from 'linode-components/utils';
 
+import { formatScope } from '../utilities';
 import SelectExpiration from '../../components/SelectExpiration';
 
 
@@ -74,7 +75,7 @@ export default class CreatePersonalAccessToken extends Component {
       }
 
       return [...scopes, `${scope}:${level}`];
-    }, []).join(',') || undefined;
+    }, []).join(',') || ''; // '' allows no scopes. undefined copies current scopes.
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => tokens.post({ label, scopes, expiry: SelectExpiration.map(expiry) }),
@@ -88,7 +89,7 @@ export default class CreatePersonalAccessToken extends Component {
     return (
       <ModalFormGroup
         id={scope}
-        label={_.capitalize(scope)}
+        label={formatScope(scope)}
         apiKey={scope}
         errors={this.state.errors}
         key={scope}

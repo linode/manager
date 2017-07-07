@@ -6,15 +6,15 @@ description: >
   depending on what type of record it is.
 schema:
   id:
-    _type: integer
+    _type: Integer
     _value: 468
   type:
-    _type: string
+    _type: String
     _value: A
     _description: >
       Type of record (A/AAAA, NS, MX, CNAME, TXT, SRV).
   name:
-    _type: string
+    _type: String
     _value: sub.example.com
     _editable: true
     _optional: true
@@ -24,7 +24,7 @@ schema:
       Target MX server.
     _limit: 1-100 characters
   target:
-    _type: string
+    _type: String
     _value: sub
     _editable: true
     _optional: true
@@ -35,14 +35,14 @@ schema:
       When type=A or AAAA the token of '[remote_addr]' will be substituted
       with the IP address of the request.
   priority:
-    _type: integer
+    _type: Integer
     _value: 10
     _editable: true
     _optional: true
     _description: >
       Priority for MX and SRV records.
   weight:
-    _type: integer
+    _type: Integer
     _value: 20
     _editable: true
     _optional: true
@@ -50,28 +50,28 @@ schema:
       A relative weight for records with the same priority,
       higher value means more preferred.
   port:
-    _type: integer
+    _type: Integer
     _value: 80
     _editable: true
     _optional: true
     _description: >
       The TCP or UDP port on which the service is to be found.
   service:
-    _type: string
+    _type: String
     _value: _sip
     _editable: true
     _optional: true
     _description: >
       The service to append to an SRV record. Must conform to RFC2782 standards.
   protocol:
-    _type: string
+    _type: String
     _value: _tcp
     _editable: true
     _optional: true
     _description: >
       The protocol to append to an SRV record. Must conform to RFC2782 standards.
   ttl_sec:
-    _type: integer
+    _type: Integer
     _value: 86400
     _editable: true
     _optional: true

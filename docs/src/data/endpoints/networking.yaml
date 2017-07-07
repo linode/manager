@@ -1,14 +1,15 @@
 # vim: set et ts=2 sw=2 tw=80 :
 name: Networking
 sort: 1
-base_path: /networking
 description: >
   Networking endpoints provide a means of viewing <a href="#object-networking">
   networking objects</a>.
 endpoints:
-  networking/ipv4:
-    type: list
+  /networking/ipv4:
+    _group: IPv4
+    resource: ipaddress
     authenticated: true
+    resource: ipaddress
     description: >
       View and manage IPv4 Addresses you own.
     methods:
@@ -31,7 +32,7 @@ endpoints:
           linode:
             description: >
               The Linode ID to assign this IP to.
-            type: int
+            type: Int
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -40,8 +41,10 @@ endpoints:
                 https://$api_root/$version/networking/ipv4
           python: |
             # presently unsupported
-  networking/ipv4/:address:
+  /networking/ipv4/:address:
+    _group: IPv4
     type: resource
+    resource: ipaddress
     authenticated: true
     description: >
       Manage a single <a href="#object-ipaddress">IPv4 Address</a>
@@ -69,8 +72,9 @@ endpoints:
           python: |
             my_ipv4.rdns = 'example.org'
             my_ipv4.save()
-  networking/ipv6:
-    type: list
+  /networking/ipv6:
+    _group: IPv6
+    resource: ipv6pool
     authenticated: true
     description: >
       Manage <a href="#object-ipv6pool">IPv6 Global Pools</a>.
@@ -85,8 +89,10 @@ endpoints:
                 https://$api_root/$version/networking/ipv6
           python: |
             my_ipv6s = client.networking.get_ipv6()
-  networking/ipv6/:address:
+  /networking/ipv6/:address:
+    _group: IPv6
     type: resource
+    resource: ipv6pool
     authenticated: true
     description: >
       Manage a single <a href="#object-ipv6-address">IPv6 Address</a>.  Address in URL
@@ -115,8 +121,9 @@ endpoints:
           python: |
             my_ipv6.rdns = 'example.org'
             my_ipv6.save()
-  networking/ip-assign:
-    type: strange
+  /networking/ip-assign:
+    _group: IPv4
+    type: Strange
     authenticated: true
     description: >
       Assigns an IPv4 address to a Linode.
@@ -129,11 +136,11 @@ endpoints:
             description: >
               The <a href="#object-region">region</a> where the IPv4 address
               and Linode are located.
-            type: region
+            type: Region
           assignments:
             description: >
               An array of IPv4 addresses and the Linode IDs they will be assigned to
-            type: array
+            type: Array[object]
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
