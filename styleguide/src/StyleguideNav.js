@@ -1,21 +1,22 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
-
 import { Link } from 'react-router';
+
+import { VerticalNav, VerticalNavSection } from 'linode-components/navigation';
 
 
 const navigationItems = [
-  { href: '/styleguide', text: 'Overview' },
-  { href: '/styleguide/colors', text: 'Colors' },
-  { href: '/styleguide/typography', text: 'Typography' },
-  { href: '/styleguide/iconography', text: 'Iconography' },
-  { href: '/styleguide/writing-style', text: 'Writing Style' },
-  { href: '/styleguide/buttons', text: 'Buttons' },
-  { href: '/styleguide/navigation', text: 'Navigation' },
-  { href: '/styleguide/tabs', text: 'Tabs' },
-  { href: '/styleguide/forms', text: 'Forms' },
-  { href: '/styleguide/modals', text: 'Modals' },
-  { href: '/styleguide/lists', text: 'Lists' },
+  { href: '/styleguide', label: 'Overview' },
+  { href: '/styleguide/colors', label: 'Colors' },
+  { href: '/styleguide/typography', label: 'Typography' },
+  { href: '/styleguide/iconography', label: 'Iconography' },
+  { href: '/styleguide/writing-style', label: 'Writing Style' },
+  { href: '/styleguide/buttons', label: 'Buttons' },
+  { href: '/styleguide/navigation', label: 'Navigation' },
+  { href: '/styleguide/tabs', label: 'Tabs' },
+  { href: '/styleguide/forms', label: 'Forms' },
+  { href: '/styleguide/modals', label: 'Modals' },
+  { href: '/styleguide/lists', label: 'Lists' },
 ];
 
 function createNavigationItems() {
@@ -28,10 +29,15 @@ function createNavigationItems() {
 }
 
 export function StyleguideNav(props) {
+  const path = location.pathname.match(/overview/) ? '/styleguide' : location.pathname;
   return (
-    <div className="Styleguide-nav col-sm-2">
-      <ul>{createNavigationItems()}</ul>
-    </div>
+    <VerticalNav>
+      <VerticalNavSection
+        title=""
+        path={path}
+        navItems={navigationItems}
+      />
+    </VerticalNav>
   );
 }
 

@@ -9,7 +9,7 @@ module.exports = {
   node: {
     __filename: true,
   },
-  devtool: 'module-eval-source-map',
+  devtool: 'source-map',
   entry: [
     'eventsource-polyfill', // necessary for hot reloading with IE
     'webpack-hot-middleware/client',
