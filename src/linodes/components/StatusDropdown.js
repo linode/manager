@@ -184,7 +184,7 @@ export default class StatusDropdown extends Component {
         }}
         items={[linode.label]}
         onCancel={() => {
-          Event('modal:cancel', 'Modal', 'cancel', 'Delete Linode');
+          EmitEvent('modal:cancel', 'Modal', 'cancel', 'Delete Linode');
           dispatch(hideModal());
         }}
       />
