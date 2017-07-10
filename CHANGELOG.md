@@ -5,7 +5,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [0.11.0] 2017-07-10
-
+### Added
+- unit selection to graphs #2185
+- support for no access tokens #2192
+- volumes to oauth scopes #2224
+### Changed
+- shared vertical nav updates for components, styleguide, docs, #2218
+### Fixed
+- input placeholder styles on nodebalancers ssl fields and domains fields #2188
+- buttons page in styleguide #2213
+### Removed
+- NodeBalancer config label field where present #2224
 
 ## [0.10.0] 2017-06-27
 ### Added
