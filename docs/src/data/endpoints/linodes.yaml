@@ -825,6 +825,15 @@ endpoints:
                     "rdns":"example.org"
                 }' \
                 https://$api_root/$version/linode/instances/$linode_id/ips/$ip_address
+      DELETE:
+        oauth: linodes:modify
+        description: >
+          Delete a public IPv4 address associated with this Linode
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                -X DELETE \
+                https://$api_root/$version/linode/instances/$linode_id/ips/97.107.143.37
   /linode/instances/:id/rebuild:
     type: Action
     authenticated: true
