@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-## [0.11.0] 2017-07-10
+## [0.10.0] 2017-07-10
 ### Added
 - missing /networking responses #2184
 - missing Linode backups response #2184
@@ -14,28 +14,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - full support for grouping endpoints on index pages #2194
 - prebuild to server start, updated readme with build steps #2217
 - block storage get docs #2225
+- endpoints for removing public IPv4 addresses #2226
 ### Removed
 - duplicate clients yaml #2176
-
-## [0.10.0] 2017-06-27
-### Added
-- docs sidebar collapse and hamburger menu for small screens  #2156
-- alphabetically sort endpoints #2148
-- NodeBalancer python docs #2020
-- expandable icon to table rows #2121
-- next links to docs guides #2098
-- logic to correctly display page titles #2114
-- filterable denotation #2118
-### Changed
-- moved and ignored python doc output #2169
-- renamed python dnszones to domains #2020
-- active nav items updated and now account for endpoint indices and endpoint pages #2169
-### Fixed
-- some docs css regressions #2169
-- disks object reference #2170
-- removed clipboard from errors json example #2167
-- LinodeClient reference in python docs #2137
-- minor spacing issues, using nbsp #2103
 
 ## [0.9.1] 2017-06-29
 ### Fixed
