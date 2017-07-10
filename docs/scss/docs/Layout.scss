@@ -11,7 +11,7 @@ $sidebar-width: 250px;
 
     &-navigationContainer {
         position: fixed;
-        top: $nav-height + $mini-nav-height;
+        top: $nav-height;
         background-color: $light-gray;
         border-left: $border;
         border-right: $border;
@@ -21,9 +21,9 @@ $sidebar-width: 250px;
 
     &-content {
         position: absolute;
-        top: $nav-height + $mini-nav-height;
+        top: $nav-height;
         background-color: $white;
-        min-height: calc(100% - #{$nav-height + $mini-nav-height});
+        min-height: calc(100% - #{$nav-height});
         margin-left: $sidebar-width;
         // Subtract the bootstrap margin too.
         width: calc(100% - #{$sidebar-width} - 30px);
