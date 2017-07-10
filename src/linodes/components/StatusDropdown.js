@@ -141,6 +141,7 @@ export default class StatusDropdown extends Component {
         onOk={() => {
           EmitEvent('modal:submit', 'Modal', name, `Confirm ${name}`);
           onConfirm();
+          dispatch(hideModal());
         }}
       >
         Are you sure you want to {name.toLowerCase()} <strong>{linode.label}</strong>?
@@ -170,7 +171,8 @@ export default class StatusDropdown extends Component {
   }
 
   rebootLinode = () => this.confirmAction('Reboot', () => this.selectConfig(rebootLinode))
-  powerOffLinode = () => this.confirmAction('Power Off', () => powerOffLinode(this.props.linode.id))
+  powerOffLinode = () => this.confirmAction('Power Off', () =>
+    this.props.dispatch(powerOffLinode(this.props.linode.id)))
   powerOnLinode = () => this.selectConfig(powerOnLinode)
   deleteLinode = () => {
     const { linode, dispatch } = this.props;

@@ -32,7 +32,7 @@ export default function Introduction(props) {
       <section>
         <h2>Selecting a region</h2>
         <p>
-          A <Link to={`${API_VERSION}/reference/endpoints/regions`}>region</Link> is a physical location that contains Linodes. To retrieve a list of available region, you can use the /regions API endpoint. To make an API call against this endpoint over curl, run the following command:
+          A <Link to={`/${API_VERSION}/reference/endpoints/regions`}>region</Link> is a physical location that contains Linodes. To retrieve a list of available region, you can use the /regions API endpoint. To make an API call against this endpoint over curl, run the following command:
         </p>
         <Example example={`curl ${API_ROOT}/${API_VERSION}/regions`} name="bash" />
         <p>
