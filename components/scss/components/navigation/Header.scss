@@ -121,16 +121,18 @@
 }
 
 .MiniHeader {
-    @extend .font-small;
+    @extend .text-sm-center;
 
-    background: $green;
-    color: $black;
+    font-size: 12px;
+    background: #555;
+    color: #ccc;
     height: $mini-nav-height;
     line-height: $mini-nav-height;
     overflow-x: auto;
 
     a {
-        color: $light-black;
+        color: #ddd;
+        text-decoration: underline;
     }
 
     &-text {
