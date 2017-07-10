@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - volumes to oauth scopes #2224
 ### Changed
 - shared vertical nav updates for components, styleguide, docs, #2218
+- tone down the miniheader #2229
 ### Fixed
 - input placeholder styles on nodebalancers ssl fields and domains fields #2188
 - buttons page in styleguide #2213
