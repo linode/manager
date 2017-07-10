@@ -187,7 +187,7 @@ export const OAUTH_SUBSCOPES = ['view', 'modify', 'create', 'delete'];
 
 export const OAUTH_SCOPES = [
   'linodes', 'domains', 'nodebalancers', 'images', 'stackscripts', 'longview', 'events', 'tokens',
-  'clients', 'account', 'users', 'tickets', 'ips',
+  'clients', 'account', 'users', 'tickets', 'ips', 'volumes',
 ];
 
 // Set by API, but we can enforce it here to be nice.

@@ -72,6 +72,15 @@ endpoints:
           python: |
             my_ipv4.rdns = 'example.org'
             my_ipv4.save()
+      DELETE:
+        oauth: ips:modify
+        description: >
+          Delete a public IPv4 address
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                -X DELETE \
+                https://$api_root/$version/networking/ipv4/97.107.143.37
   /networking/ipv6:
     _group: IPv6
     resource: ipv6pool

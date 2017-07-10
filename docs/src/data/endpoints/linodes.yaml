@@ -479,6 +479,22 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/configs/$config_id
           python: |
             config.delete()
+  /linode/instances/:id/volumes:
+    resource: volume
+    authenticated: true
+    description: >
+        View Block Storage Volumes attached to this Linode.
+    methods:
+      GET:
+        oauth: linodes:view
+        description: >
+          Returns a list of <a href="#object-volume">volumes</a>.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                https://$api_root/$version/linode/instances/$linode_id/volumes
+          python: |
+            # not yet implemented
   /linode/instances/:id/boot:
     type: Action
     authenticated: true
@@ -809,6 +825,15 @@ endpoints:
                     "rdns":"example.org"
                 }' \
                 https://$api_root/$version/linode/instances/$linode_id/ips/$ip_address
+      DELETE:
+        oauth: linodes:modify
+        description: >
+          Delete a public IPv4 address associated with this Linode
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                -X DELETE \
+                https://$api_root/$version/linode/instances/$linode_id/ips/97.107.143.37
   /linode/instances/:id/rebuild:
     type: Action
     authenticated: true
@@ -1057,3 +1082,38 @@ endpoints:
             curl https://$api_root/$version/linode/types/$type_id
           python: |
             type = linode.Type(client, 'g5-standard=1')
+  /linode/volumes:
+    _group: Volumes
+    resource: volume
+    authenticated: true
+    description: >
+        Manage your Block Storage Volumes.
+    methods:
+      GET:
+        oauth: volumes:view
+        description: >
+          Returns a list of volumes.
+        examples:
+          curl: |
+            curl -H "Authorization; token $TOKEN" \
+                https://$api_root/$version/linode/volumes
+          python: |
+            # not yet implemented
+  /linode/volumes/:id:
+    _group: Volumes
+    type: resource
+    resource: volume
+    authenticated: true
+    description: >
+      Manage an individual Block Storage Volume.
+    methods:
+      GET:
+        oauth: volumes:view
+        description: >
+          Returns information about this Volume.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                https://$api_root/$version/linode/volumes/$volume_id
+          python: |
+            # not yet implemented
