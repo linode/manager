@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - endpoints for removing public IPv4 addresses #2226
 ### Removed
 - duplicate clients yaml #2176
+- drop miniheader #2231
 
 ## [0.9.1] 2017-06-29
 ### Fixed
