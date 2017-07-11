@@ -24,7 +24,7 @@ export default function Introduction() {
             <Link to={`/${API_VERSION}/guides/curl/testing-with-curl`}>Check out the Testing with cURL guide</Link> to get started making API calls using a Personal Access Token (PAT).
           </div>
           <p>
-            All APIv4 endpoint are located at:
+            All APIv4 endpoints are located at:
           </p>
           <Example example={`${ API_ROOT}/${ API_VERSION }/*`} name="bash" noclipboard />
           <p>
