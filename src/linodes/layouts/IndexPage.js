@@ -4,11 +4,11 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
-import { ScrollingList } from 'linode-components/lists';
+import { Input } from 'linode-components/forms';
+import { List, ScrollingList } from 'linode-components/lists';
 import { ListBody, ListGroup } from 'linode-components/lists/bodies';
 import { MassEditControl } from 'linode-components/lists/controls';
 import { ListHeader } from 'linode-components/lists/headers';
-import { List } from 'linode-components/lists';
 import { ConfirmModalBody, DeleteModalBody } from 'linode-components/modals';
 import { Table } from 'linode-components/tables';
 import {
@@ -36,6 +36,12 @@ const OBJECT_TYPE = 'linodes';
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
     await dispatch(api.all());
+  }
+
+  constructor() {
+    super();
+
+    this.state = { filter: '' };
   }
 
   componentDidMount() {
@@ -110,9 +116,9 @@ export class IndexPage extends Component {
     const { dispatch, selectedMap } = this.props;
     const { filter } = this.state;
 
-    const filteredLinodes = _.omitBy(linodes, l =>
-      l.label.toLowerCase().indexOf(filter.toLowerCase()) !== -1);
-    const sortedLinodes = _.sortBy(Object.values(linodes), l => moment(l.created));
+    const filteredLinodes = filter.length ? _.pickBy(linodes, l =>
+      l.label.toLowerCase().indexOf(filter.toLowerCase()) !== -1) : linodes;
+    const sortedLinodes = _.sortBy(Object.values(filteredLinodes), l => moment(l.created));
 
     const groups = _.sortBy(
       _.map(_.groupBy(sortedLinodes, l => l.group), (_linodes, _group) => {
