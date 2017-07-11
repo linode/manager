@@ -329,6 +329,10 @@ allEndpoints.forEach(function(endpointContainer) {
   const containerName = endpointContainer.name.toLowerCase();
   const rawEndpoints = endpointContainer.endpoints;
 
+  if (!rawEndpoints) {
+    throw new Error(`No endpoints defined in ${containerName}, define at least 1 endpoint.`);
+  }
+
   const endpoints = Object.keys(rawEndpoints).map(function(path) {
     const endpoint = rawEndpoints[path];
 
@@ -351,6 +355,10 @@ allEndpoints.forEach(function(endpointContainer) {
   endpoints.forEach(function(endpoint) {
     if (!endpoint._group) {
       endpoint._group = 'default';
+    }
+
+    if (!endpointMap[containerName]) {
+      throw new Error(`'${containerName}' undefined in the endpoint map. check the file name against the endpointMap in prebuild.`);
     }
 
     if (!endpointMap[containerName].groups[endpoint._group]) {
