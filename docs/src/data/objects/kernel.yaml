@@ -11,6 +11,7 @@ schema:
   id:
     _type: String
     _value: linode/3.5.2-x86_64-linode26
+    _description: The kernel name.
   description:
     _type: String
     _value: "null"
@@ -44,11 +45,14 @@ schema:
     _type: Boolean
     _value: true
     _filterable: true
+    _description: A kernel that is supported.
   deprecated:
     _type: Boolean
     _value: false
     _filterable: true
+    _description: A kernel that should no longer be used and support for it will be ending soon.
   latest:
     _type: Boolean
     _value: true
+    _description: When set to this value your Linode will always boot with the latest kernel.  If there is a kernel change this will point to the newest kernel.
 

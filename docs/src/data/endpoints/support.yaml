@@ -109,6 +109,8 @@ endpoints:
   /support/tickets/:id/attachments:
     resource: supportticket
     authenticated: true
+    description: >
+      Attach a file to a support ticket.
     methods:
       POST:
         oauth: tickets:modify

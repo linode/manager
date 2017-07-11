@@ -9,6 +9,7 @@ schema:
   id:
     _type: Integer
     _value: 804
+    _description: The id for this Linode config.
   comments:
     _editable: true
     _type: String
@@ -18,6 +19,7 @@ schema:
   created:
     _type: Datetime
     _value: 2015-09-29T11:21:38
+    _description: An ISO 8601 datetime of when the Linode config was created.
   devtmpfs_automount:
     _editable: true
     _type: Boolean
@@ -124,6 +126,7 @@ schema:
     current:
       _type: Boolean
       _value: true
+    _description: The selected kernel for linode boot.
   label:
     _editable: true
     _type: String
@@ -156,6 +159,7 @@ schema:
   updated:
     _type: Datetime
     _value: 2015-09-29T11:21:38
+    _description: An ISO 8601 datetime of when the Linode config was updated.
   virt_mode:
     _editable: true
     _type: Enum

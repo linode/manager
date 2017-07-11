@@ -7,6 +7,7 @@ schema:
   id:
     _type: String
     _value: us-east-1a
+    _description: The region's id.
   label:
     _type: String
     _value: Newark, NJ

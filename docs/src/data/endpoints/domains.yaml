@@ -115,6 +115,8 @@ endpoints:
             TODO
   /domains/:id:
     authenticated: true
+    description: >
+      Manage a specific domain your account may access.
     resource: domain
     methods:
       GET:
@@ -256,6 +258,8 @@ endpoints:
             TODO
   /domains/:id/records/:id:
     authenticated: true
+    description: >
+      Manage a specific domain record your account may access.
     resource: domainrecord
     methods:
       GET:

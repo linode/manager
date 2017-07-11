@@ -7,6 +7,7 @@ schema:
   id:
     _type: Integer
     _value: 123456
+    _description: Disk id.
   label:
     #_editable: true
     # NOTE: label is marked as editable in the dict, but the PUT endpoint does
@@ -36,9 +37,11 @@ schema:
   created:
     _type: Datetime
     _value: "2015-09-29T11:21:01"
+    _description: An ISO 8601 datetime of when the disk was created.
   updated:
     _type: Datetime
     _value: "2015-09-29T11:21:01"
+    _description: An ISO 8601 datetime of when the disk was updated.
 enums:
   Status:
     ok: No disk jobs are running.

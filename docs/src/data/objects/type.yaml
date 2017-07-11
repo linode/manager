@@ -8,6 +8,7 @@ schema:
   id:
     _type: String
     _value: linode2048.5
+    _description: The type id.
   storage:
     _type: Integer
     _value: 24576
@@ -21,6 +22,7 @@ schema:
   class:
     _type: Enum
     _subtype: Class
+    _description: Returns either standard or highmem.
   hourly_price:
     _type: Integer
     _value: 1

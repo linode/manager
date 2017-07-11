@@ -32,7 +32,7 @@ schema:
     _value: cli-token
   created:
     _type: Datetime
-    _descripton: >
+    _description: >
       When this token was created.
     _value: 2017-01-01 13:46:32
   token:
