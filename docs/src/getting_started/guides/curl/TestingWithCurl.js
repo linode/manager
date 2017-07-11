@@ -61,7 +61,7 @@ export default function Introduction(props) {
       <section>
         <h2>Authenticated Requests</h2>
         <p>
-          For many requests, you will have to authenticate as a particular user. For now, we’re going to use a personal access token to make things easier. If you’d like to learn how to make a full blown OAuth client, read the <Link to="/access">authentication documentation</Link>.
+          For many requests, you will have to authenticate as a particular user. For now, we’re going to use a personal access token to make things easier. If you’d like to learn how to make a full blown OAuth client, read the <Link to={`/${API_VERSION}/access`}>authentication documentation</Link>.
         </p>
         <p>
           To generate a personal access token, <a href={`${MANAGER_ROOT}/profile/integrations/tokens`} target="_blank" rel="nofollow noopener noreferrer">visit the new manager</a>. These tokens can be used to make authenticated API requests with your Linode account and can have full access to all OAuth scopes. You’ll only see the full OAuth token once, so be sure to write it down somewhere. If you’re in the shell, running something like this might work well:
