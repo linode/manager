@@ -6,6 +6,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [0.10.0] 2017-07-10
+### Added
+- missing /networking responses #2184
+- missing Linode backups response #2184
+- see also links for relevant objects #2190
+- full support for grouping endpoints on index pages #2194
+- prebuild to server start, updated readme with build steps #2217
+- block storage get docs #2225
+- endpoints for removing public IPv4 addresses #2226
+### Removed
+- duplicate clients yaml #2176
+- drop miniheader #2231
+
 ## [0.9.1] 2017-06-29
 ### Fixed
 - fix multiple docs/src/components/tables/cells directories
