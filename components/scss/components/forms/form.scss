@@ -91,4 +91,20 @@ textarea {
   &:last-child {
     margin-bottom: 0;
   }
+
+  ::-webkit-input-placeholder {
+    @include placeholder();
+  }
+
+  ::-moz-placeholder {
+     @include placeholder();
+  }
+
+  :-moz-placeholder {
+    @include placeholder();
+  }
+
+  :-ms-input-placeholder {
+    @include placeholder();
+  }
 }

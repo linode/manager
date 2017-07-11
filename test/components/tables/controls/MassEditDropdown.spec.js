@@ -20,9 +20,7 @@ describe('components/lists/MassEditDropdown', function () {
   it('should render a checkbox and a dropdown', function () {
     const massEditDropdown = mount(
       <MassEditDropdown
-        options={[
-          { name: 'Test', action: () => {} },
-        ]}
+        groups={[{ elements: [{ name: 'Test', action: () => {} }] }]}
         onChange={() => {}}
       />
     );
@@ -34,9 +32,7 @@ describe('components/lists/MassEditDropdown', function () {
   it('should have a default checked state', function () {
     const massEditDropdown = mount(
       <MassEditDropdown
-        options={[
-          { name: 'Test', action: () => {} },
-        ]}
+        groups={[{ elements: [{ name: 'Test', action: () => {} }] }]}
         onChange={() => {}}
       />
     );
@@ -48,9 +44,7 @@ describe('components/lists/MassEditDropdown', function () {
     const massEditDropdown = mount(
       <MassEditDropdown
         checked
-        options={[
-          { name: 'Test', action: () => {} },
-        ]}
+        groups={[{ elements: [{ name: 'Test', action: () => {} }] }]}
         onChange={() => {}}
       />
     );
@@ -63,9 +57,7 @@ describe('components/lists/MassEditDropdown', function () {
     const massEditDropdown = mount(
       <MassEditDropdown
         checked
-        options={[
-          { name: 'Test', action: () => {} },
-        ]}
+        groups={[{ elements: [{ name: 'Test', action: () => {} }] }]}
         onChange={onChange}
       />
     );

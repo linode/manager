@@ -56,7 +56,7 @@ export default function Method(props) {
             </div>
           </div>
         </div>
-        <p>{description}</p>
+        {!description ? null : <p>{description}</p>}
       </div>
       {methodParams}
       {methodRequest}

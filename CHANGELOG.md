@@ -4,17 +4,43 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.11.0] 2017-07-10
+### Added
+- unit selection to graphs #2185
+- support for no access tokens #2192
+- volumes to oauth scopes #2224
+### Changed
+- shared vertical nav updates for components, styleguide, docs, #2218
+- tone down the miniheader #2229
+### Fixed
+- input placeholder styles on nodebalancers ssl fields and domains fields #2188
+- buttons page in styleguide #2213
+### Removed
+- NodeBalancer config label field where present #2224
+
 ## [0.10.0] 2017-06-27
 ### Added
 - analytics in modals and selects #2083
 - sentry for error tracking #2149
 ### Changed
 - prevent graph from re-rendering needlessly #2153
+- contributing guidelines to include new git flow #2106
+- minor wording updates, beta > early-access #2146
+- console.trace is now console.error #2111
 ### Fixed
 - reset RDNS wording and only display when relevant #2140
 - other linode in iptransfer must be in same datacenter #2145
 - oauth scope formatting # 2139
 - redirect to /linodes on delete #2147
+- updated srv record target placeholder #2161
+- removed details from TTL defaults on domains #2161
+- add TTL defaults to dropdowns on domain record edits #2161
+- adjust how editing A/AAAA records handles ipv4 and ipv6 #2161
+- logout redirection #2177
+- user permission page crash #2175
+- a duplicate scss import #2172
+- component imports that reference manager #2166
+- renamed track event to emit event #2166
 
 ## [0.9.10] 2017-06-27
 ### Changed

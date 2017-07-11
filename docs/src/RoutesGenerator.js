@@ -10,42 +10,40 @@ import {
 
 
 export function generateIndexRoute(props) {
-  const { endpoint, key } = props;
-  const crumbs = [{ groupLabel: 'Reference', label: endpoint.path, to: endpoint.routePath }];
+  const { endpointIndex, key } = props;
+  const crumbs = [{ groupLabel: 'Reference', label: endpointIndex.path, to: endpointIndex.routePath }];
 
   return (
     <Route
       key={key}
       component={EndpointIndex}
       crumbs={crumbs}
-      endpoint={endpoint}
-      path={endpoint.routePath}
+      endpointIndex={endpointIndex}
+      path={endpointIndex.routePath}
     />
   );
 }
 
 export function generateChildRoute(props) {
-  const { prevCrumbs, endpoint } = props;
+  const { prevCrumbs, endpointIndex } = props;
+  let childEndpoints = [];
 
-  let childEndpoints = null;
-  if (endpoint.endpoints) {
-    childEndpoints = endpoint.endpoints.map(function(childEndpoint, index) {
-      if (childEndpoint.endpoints && childEndpoint.endpoints.length) {
-        return generateChildRoute({ endpoint: childEndpoint, prevCrumbs: prevCrumbs });
-      }
+  if (endpointIndex.groups.length) {
+    endpointIndex.groups.forEach(function(group, index) {
+      childEndpoints = childEndpoints.concat(group.endpoints.map(function(endpoint) {
+        const crumbs = [].concat(prevCrumbs).concat([{ label: endpoint.path, to: endpoint.routePath }]);
 
-      const crumbs = [].concat(prevCrumbs).concat([{ label: childEndpoint.path, to: childEndpoint.routePath }]);
-      return (
-        <Route
-          key={index}
-          component={Endpoint}
-          crumbs={crumbs}
-          endpoint={childEndpoint}
-          path={childEndpoint.routePath}
-        />
-      );
+        return (
+          <Route
+            key={index}
+            component={Endpoint}
+            crumbs={crumbs}
+            endpoint={endpoint}
+            path={endpoint.routePath}
+          />
+        );
+      }));
     });
-    childEndpoints = _.flatten(childEndpoints);
   }
 
   return childEndpoints;

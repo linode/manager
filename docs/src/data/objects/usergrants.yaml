@@ -3,83 +3,83 @@ description: >
   Information about a restricted user's grants.
 schema:
   global:
-    _type: object
+    _type: Object
     _description: Grants involving global permissions, such as creating resources.
     add_linodes:
-      _type: boolean
+      _type: Boolean
       _value: true
       _description: If this user may create Linodes.
     add_nodebalancers:
-      _type: boolean
+      _type: Boolean
       _value: true
       _description: If this user may create NodeBalancers.
     add_domains:
-      _type: boolean
+      _type: Boolean
       _value: true
       _description: If this user may create Domains.
     add_longview:
-      _type: boolean
+      _type: Boolean
       _value: true
       _description: If this user may create longview instances.
     add_stackscripts:
-      _type: boolean
+      _type: Boolean
       _value: true
       _description: If this user may create StackScripts.
     longview_subscription:
-      _type: boolean
+      _type: Boolean
       _value: true
       _description: If this user may manage longview subscription.
   customer:
-    _type: object
+    _type: Object
     _description: Grants related to modifying the account.
     access:
-      _type: boolean
+      _type: Boolean
       _value: false
       _description: If this user may modify the account.
     cancel:
-      _type: boolean
+      _type: Boolean
       _value: false
       _description: If this user may cancel the account.
   stackscript:
-    _type: array
+    _type: Array[object]
     _description: Individual grants to StackScripts you own.  Grants include all, use, edit and delete
   nodebalancer:
-    _type: array
+    _type: Array[object]
     _description: Individual grants to NodeBalancers you own.  Grants inlcude all, access, and delete
   linode:
-    _type: array
+    _type: Array[object]
     _description: Individual grants to a Linode you own.  Grants incldue all, access, resize, and delete
     _value:
       - all:
-          _type: boolean
+          _type: Boolean
           _value: false
         access:
-          _type: boolean
+          _type: Boolean
           _value: true
         delete:
-          _type: boolean
+          _type: Boolean
           _value: false
         id:
-          _type: integer
+          _type: Integer
           _value: 123
         label:
-          _type: string
+          _type: String
           _value: linode123
       - all:
-          _type: boolean
+          _type: Boolean
           _value: true
         access:
-          _type: boolean
+          _type: Boolean
           _value: false
         delete:
-          _type: boolean
+          _type: Boolean
           _value: false
         id:
-          _type: integer
+          _type: Integer
           _value: 324
         label:
-          _type: string
+          _type: String
           _value: linode324
   domain:
-    _type: array
+    _type: Array[object]
     _description: Individual grants to a Domain you own.  Grants include all, access and delete

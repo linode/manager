@@ -5,15 +5,15 @@ description: >
   Region objects describe the regions available for Linode services.
 schema:
   id:
-    _type: string
+    _type: String
     _value: us-east-1a
   label:
-    _type: string
+    _type: String
     _value: Newark, NJ
     _description: Human-friendly region name.
     _filterable: true
   country:
-    _type: string
+    _type: String
     _value: US
     _description: Country
     _filterable: true

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
 
-import { Header } from 'linode-components/navigation';
+import { Header, VerticalNav, VerticalNavSection } from 'linode-components/navigation';
 
 import { LinodeLogoImgSrc } from '~/assets';
 
@@ -12,21 +12,7 @@ export default class Layout extends Component {
   constructor() {
     super();
     document.addEventListener('click', this.toggleVerticalNav.bind(this));
-    this.renderNavListItems = this.renderNavListItems.bind(this);
     this.state = { verticalNav: false };
-  }
-
-  renderNavListItems(items, path, childParentMap) {
-    return items.map((item, index) => {
-      return (
-        <li
-          className={(item.href === path || item.href === childParentMap[path]) ? 'active': ''}
-          key={index}
-        >
-          <Link to={item.href} id={`NavLink-${index}`}>{item.label}</Link>
-        </li>
-      )
-    });
   }
 
   toggleVerticalNav(e) {
@@ -41,21 +27,14 @@ export default class Layout extends Component {
   render() {
     const { route } = this.props;
     const { verticalNav } = this.state;
-    const { childParentMap, endpoints } = route;
+    const { childParentMap, indices } = route;
     const path = this.props.location.pathname;
-
-    const miniHeader = (
-      <div className="MiniHeader-text">
-      This is the early-access Linode APIv4 documentation.
-      Click <a href="https://linode.com/api">here</a> for APIv3 documentation.
-      </div>
-    );
 
     const verticalNavShow = verticalNav ? 'Layout-navigationContainer--show' : 'Layout-navigationContainer--hide';
 
     return (
       <div className="Docs Layout">
-        <Header miniHeader={miniHeader}>
+        <Header>
           <div className="MainHeader-brand">
             <Link to="/">
             <span className="MainHeader-logo">
@@ -75,37 +54,43 @@ export default class Layout extends Component {
         </Header>
         <div className="Layout-container container">
           <div className={`Layout-navigationContainer ${verticalNavShow}`}>
-            <div className="VerticalNav">
-              <div className="VerticalNav-section">
-                <h3>Getting Started</h3>
-                <ul>
-                  {this.renderNavListItems([
-                    { label: 'Introduction', href: `/${API_VERSION}/introduction` },
-                    { label: 'Access', href: `/${API_VERSION}/access` },
-                    { label: 'Pagination', href: `/${API_VERSION}/pagination` },
-                    { label: 'Filtering & Sorting', href: `/${API_VERSION}/filtering` },
-                    { label: 'Errors', href: `/${API_VERSION}/errors` },
-                    { label: 'Guides', href: `/${API_VERSION}/guides` },
-                  ], path, childParentMap)}
-                </ul>
-              </div>
-              <div className="VerticalNav-section">
-                <h3>Reference</h3>
-                <ul>
-                  {this.renderNavListItems(endpoints.map(function(endpoint, index) {
-                    return { label: endpoint.name, href: endpoint.routePath };
-                  }), path, childParentMap)}
-                </ul>
-              </div>
-              <div className="VerticalNav-section">
-                <h3>Libraries</h3>
-                <ul>
-                  {this.renderNavListItems([
-                    { label: 'Python', href: `/${API_VERSION}/libraries/python` }
-                  ], path, childParentMap)}
-                </ul>
-              </div>
-            </div>
+            <VerticalNav>
+              <VerticalNavSection
+                title="Getting Started"
+                checkActiveItem={function (path, href) {
+                  return (href === path || href === childParentMap[path]);
+                }}
+                path={path}
+                navItems={[
+                  { label: 'Introduction', href: `/${API_VERSION}/introduction` },
+                  { label: 'Access', href: `/${API_VERSION}/access` },
+                  { label: 'Pagination', href: `/${API_VERSION}/pagination` },
+                  { label: 'Filtering & Sorting', href: `/${API_VERSION}/filtering` },
+                  { label: 'Errors', href: `/${API_VERSION}/errors` },
+                  { label: 'Guides', href: `/${API_VERSION}/guides` },
+                ]}
+              />
+              <VerticalNavSection
+                title="Reference"
+                checkActiveItem={function (path, href) {
+                  return (href === path || href === childParentMap[path]);
+                }}
+                path={path}
+                navItems={indices.map(function(endpointIndex, index) {
+                  return { label: endpointIndex.name, href: endpointIndex.routePath };
+                })}
+              />
+              <VerticalNavSection
+                title="Libraries"
+                checkActiveItem={function (path, href) {
+                  return (href === path || href === childParentMap[path]);
+                }}
+                path={path}
+                navItems={[
+                  { label: 'Python', href: `/${API_VERSION}/libraries/python` }
+                ]}
+              />
+            </VerticalNav>
           </div>
           <div className="Layout-content">
             {this.props.children}

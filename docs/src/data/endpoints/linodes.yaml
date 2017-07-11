@@ -1,13 +1,11 @@
 # vim: set et ts=2 sw=2 tw=80 :
 name: Linodes
 sort: 0
-base_path: /linode/instances
 description: >
   Linode endpoints provide a means of managing the <a href="#object-linode">
   Linode objects</a> on your account.
 endpoints:
-  linode/instances:
-    type: list
+  /linode/instances:
     resource: linode
     authenticated: true
     description: >
@@ -33,63 +31,63 @@ endpoints:
             description: >
               A <a href="#object-region">region</a> ID to provision
               this Linode in.
-            type: region
+            type: Region
           type:
             description: >
               A <a href="#object-service">Linode type</a> ID to use for this
               Linode.
-            type: service
+            type: Service
           label:
             optional: true
             description: The label to assign this Linode. Defaults to "linode".
-            type: string
+            type: String
             limit: "3-32 ASCII characters limited to letters, numbers, underscores, and dashes, starting and ending with a letter, and without two dashes or underscores in a row"
           group:
             optional: true
             description: The group to assign this Linode. Defaults to "empty".
-            type: string
+            type: String
             limit: 0-50 characters
           distribution:
             optional: true
             description: >
               The <a href="#object-distribution">Distribution</a> to deploy this
               Linode with.  May not be included if 'backup' is sent.
-            type: distribution
+            type: Distribution
           root_pass:
             optional: unless source == "distro"
             description: >
               The root password to use when sourcing this Linode from a distribution.
               <ul><li>root_pass is required if the source provided is a distribution.</li></ul>
-            type: string
+            type: String
           root_ssh_key:
             optional: true
             description: >
               A public SSH key file to install at `/root/.ssh/authorized_keys` when creating this Linode.
-            type: string
+            type: String
           stackscript:
             optional: true
             description: >
               The stackscript ID to deploy with this disk.
               <ul><li>Must provide a distribution. Distribution must be
               one that the stackscript can be deployed to.</li></ul>
-            type: stackscript
+            type: Stackscript
           stackscript_data:
             optional: true
             description: >
               UDF (user-defined fields) for this stackscript. Defaults to "{}".
               <ul><li>Must match UDFs required by stackscript.</li></ul>
-            type: string
+            type: String
           backup:
             optional: true
             description: >
               The <a href="#object-backup">Backup</a> to restore to the newly created
               Linode.  May not be included if 'distribution' is sent.
-            type: backup
+            type: Backup
           with_backup:
             optional: true
             description: >
               Subscribes this Linode with the Backup service. (Additional charges apply.) Defaults to "false".
-            type: boolean
+            type: Boolean
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -104,7 +102,7 @@ endpoints:
 
             distro = client.linode.get_distributons(linode.Distribution.vendor == 'debian').first()
             ( my_linode_2, password ) = client.linode.create_instance('us-east-1a', 'g5-standard-1', distribtuion=distro)
-  linode/instances/:id:
+  /linode/instances/:id:
     type: resource
     resource: linode
     authenticated: true
@@ -152,8 +150,8 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id
           python: |
             my_linode.delete()
-  linode/instances/:id/disks:
-    type: list
+  /linode/instances/:id/disks:
+    _group: Disks
     resource: disk
     authenticated: true
     description: >
@@ -177,7 +175,7 @@ endpoints:
           size:
             description: >
               Size in MB for this disk.
-            type: integer
+            type: Integer
             limit: between 0 and the available space on the Linode
           distribution:
             optional: true
@@ -185,45 +183,45 @@ endpoints:
               Optional distribution to deploy with this disk.
               <ul><li>If no distribution is provided, a blank disk
               is created.</li></ul>
-            type: distribution
+            type: Distribution
           root_pass:
             optional: unless distribution is specified
             description: >
               Root password to deploy distribution with.
               <ul><li>root_pass is required if a distribution is provided.</li></ul>
-            type: string
+            type: String
           root_ssh_key:
             optional: unless distribution is not specified
             description: >
               SSH key to add to root's authorized_keys.
-            type: string
+            type: String
           label:
             description: >
               User-friendly string to name this disk.
-            type: string
+            type: String
             limit: 1-50 characters
           filesystem:
             description: >
               A <a href="#object-filesystem-enum">filesystem</a> for this disk.
-            type: string
+            type: String
           read_only:
             optional: true
             description: >
               If true, this disk is read-only.
-            type: boolean
+            type: Boolean
           stackscript:
             optional: true
             description: >
               The stackscript ID to deploy with this disk.
               <ul><li>Must provide a distribution. Distribution must be
               one that the stackscript can be deployed to.</li></ul>
-            type: stackscript
+            type: Stackscript
           stackscript_data:
             optional: true
             description: >
               UDF (user-defined fields) for this stackscript. Defaults to "{}".
               <ul><li>Must match UDFs required by stackscript.</li></ul>
-            type: string
+            type: String
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -236,7 +234,8 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/disks
           python: |
             new_disk = my_linode.create_disk(4096, filesystem='ext4', label='Example Disk')
-  linode/instances/:id/disks/:id:
+  /linode/instances/:id/disks/:id:
+    _group: Disks
     type: resource
     resource: disk
     authenticated: true
@@ -292,8 +291,9 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/disks/$disk_id
           python: |
             disk.delete()
-  linode/instances/:id/disks/:id/resize:
-    type: strange
+  /linode/instances/:id/disks/:id/resize:
+    _group: Disks
+    type: Strange
     authenticated: true
     description: Resizes the disk.
     methods:
@@ -303,7 +303,7 @@ endpoints:
         params:
           size:
             description: The desired size of the disk in MB.
-            type: integer
+            type: Integer
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -312,8 +312,9 @@ endpoints:
                     "size": 1024
                 }' \
                 https://$api_root/$version/linode/instances/$linode_id/disks/$disk_id/resize
-  linode/instances/:id/disks/:id/password:
-    type: strange
+  /linode/instances/:id/disks/:id/password:
+    _group: Disks
+    type: Strange
     authenticated: true
     description: >
       Resets the root password of a disk.
@@ -325,7 +326,7 @@ endpoints:
           password:
             description: >
               New root password for the OS installed on this disk.
-            type: string
+            type: String
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -336,8 +337,8 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/disks/$disk_id/password
           python: |
             disk.reset_root_password('hunter2')
-  linode/instances/:id/configs:
-    type: list
+  /linode/instances/:id/configs:
+    _group: Configs
     resource: linode_config
     authenticated: true
     description: >
@@ -362,51 +363,51 @@ endpoints:
           kernel:
             description: >
               A <a href="#object-kernel">kernel</a> ID to boot this Linode with.
-            type: kernel
+            type: Kernel
           label:
             description: >
               The user-friendly label to name this config.
             limit: 1-48 characters
-            type: string
+            type: String
           disks:
             description: >
               <a href="#object-disk">Disks</a> attached to this Linode config.
-            type: disks
+            type: Disks
           comments:
             optional: true
             description: >
               Optional field for arbitrary user comments on this config.
             limit: 1-255 characters
-            type: string
+            type: String
           ram_limit:
             optional: true
             description: >
               The maximum RAM the Linode will be given when booting this
               config. This defaults to the total RAM of the Linode.
             limit: between 0 and the Linode's total RAM
-            type: integer
+            type: Integer
           root_device_ro:
             optional: true
             description: >
               Controls whether to mount the root disk read-only. Defaults
               to false.
-            type: boolean
+            type: Boolean
           devtmpfs_automount:
             optional: true
             description: >
               Populates the /dev directory early during boot without udev.
               Defaults to false.
-            type: boolean
+            type: Boolean
           run_level:
             optional: true
             description: >
               Sets the <a href="#object-run_level-enum">run level</a> for Linode boot. Defaults to "default".
-            type: enum
+            type: Enum
           virt_mode:
             optional: true
             description: >
               Controls the <a href="#object-virt_mode-enum">virtualization mode</a>. Defaults to "paravirt".
-            type: enum
+            type: Enum
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -423,7 +424,8 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/configs
           python: |
             config = my_linode.create_config('linode/latest_64', disks=linode.disks, label='Arch Linux Config')
-  linode/instances/:id/configs/:id:
+  /linode/instances/:id/configs/:id:
+    _group: Configs
     type: resource
     resource: linode_config
     authenticated: true
@@ -477,8 +479,24 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/configs/$config_id
           python: |
             config.delete()
-  linode/instances/:id/boot:
-    type: action
+  /linode/instances/:id/volumes:
+    resource: volume
+    authenticated: true
+    description: >
+        View Block Storage Volumes attached to this Linode.
+    methods:
+      GET:
+        oauth: linodes:view
+        description: >
+          Returns a list of <a href="#object-volume">volumes</a>.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                https://$api_root/$version/linode/instances/$linode_id/volumes
+          python: |
+            # not yet implemented
+  /linode/instances/:id/boot:
+    type: Action
     authenticated: true
     description: >
       Boots a Linode.
@@ -491,7 +509,7 @@ endpoints:
             optional: true
             description: >
               Optional config ID to boot the linode with.
-            type: linode_config
+            type: Linode_config
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -502,8 +520,8 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/boot
           python: |
             my_linode.boot()
-  linode/instances/:id/shutdown:
-    type: action
+  /linode/instances/:id/shutdown:
+    type: Action
     authenticated: true
     description: >
       Shuts down a Linode.
@@ -519,8 +537,8 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/shutdown
           python: |
             my_linode.shutdown()
-  linode/instances/:id/reboot:
-    type: action
+  /linode/instances/:id/reboot:
+    type: Action
     authenticated: true
     description: >
       Reboots a Linode.
@@ -533,7 +551,7 @@ endpoints:
             optional: true
             description: >
               Optional config ID to boot the linode with.
-            type: linode_config
+            type: Linode_config
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -545,8 +563,8 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/reboot
           python: |
             my_linode.reboot()
-  linode/instances/:id/kvmify:
-    type: action
+  /linode/instances/:id/kvmify:
+    type: Action
     authenticated: true
     description: >
       Changes a Linode's hypervisor from Xen to KVM.
@@ -562,8 +580,8 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/kvmify
           python: |
             my_linode.kvmify()
-  linode/instances/:id/rescue:
-    type: action
+  /linode/instances/:id/rescue:
+    type: Action
     authenticated: true
     description: >
       Reboots a Linode in Rescue Mode.
@@ -576,7 +594,7 @@ endpoints:
             optional: true
             description: >
               <a href="#object-disk">Disks</a> to include during Rescue.
-            type: disk
+            type: Disk
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -591,8 +609,8 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/rescue
           python: |
             my_linode.rescue()
-  linode/instances/:id/resize:
-    type: action
+  /linode/instances/:id/resize:
+    type: Action
     authenticated: true
     description: >
       Resizes a Linode to a new <a href="#object-service">Linode type</a>.
@@ -605,7 +623,7 @@ endpoints:
           type:
             description: >
               A <a href="#object-service">Linode type</a> to use for this Linode.
-            type: service
+            type: Service
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -615,8 +633,10 @@ endpoints:
                     }
                 }' \
                 https://$api_root/$version/linode/instances/$linode_id/resize
-  linode/instances/:id/backups:
-    type: action
+  /linode/instances/:id/backups:
+    _group: Backups
+    type: Action
+    resource: backup
     authenticated: true
     description: >
       Returns information about this Linode's available <a href="#object-backup">backups</a>.
@@ -644,7 +664,7 @@ endpoints:
             optional: true
             description: >
               Human-friendly label for this snapshot. Must be 1-50 characters.
-            type: string
+            type: String
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -655,8 +675,9 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/backups
           python: |
             my_linode.snapshot()
-  linode/instances/:id/backups/enable:
-    type: action
+  /linode/instances/:id/backups/enable:
+    _group: Backups
+    type: Action
     authenticated: true
     description: >
        Enables the <a href="#object-backup">backup</a> service on the given Linode.
@@ -673,8 +694,9 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/backups/enable
           python: |
             my_linode.enable_backups()
-  linode/instances/:id/backups/cancel:
-    type: action
+  /linode/instances/:id/backups/cancel:
+    _group: Backups
+    type: Action
     authenticated: true
     description: >
       Cancels the <a href="#object-backup">backup</a> service on the given Linode.
@@ -690,8 +712,9 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/backups/cancel
           python: |
             my_linode.cancel_backups()
-  linode/instances/:id/backups/:id/restore:
-    type: action
+  /linode/instances/:id/backups/:id/restore:
+    _group: Backups
+    type: Action
     authenticated: true
     description: >
       Restores a <a href="#object-backup">backup</a> to a Linode.
@@ -703,11 +726,11 @@ endpoints:
           linode:
             description: >
               The ID of the Linode to restore a backup to.
-            type: linode
+            type: Linode
           overwrite:
             description: >
                 If true, deletes all disks and configs on the target linode before restoring.
-            type: boolean
+            type: Boolean
             optional: true
         examples:
           curl: |
@@ -720,8 +743,10 @@ endpoints:
           python: |
             backup = my_linode.available_backups.daily
             backup.restore()
-  linode/instances/:id/ips:
-    type: strange
+  /linode/instances/:id/ips:
+    _group: IPs
+    type: Strange
+    resource: linodenetworking
     authenticated: true
     description: >
       View networking information for this Linode.
@@ -752,15 +777,15 @@ endpoints:
                     "type": "private"
                 }' \
                 https://$api_root/$version/linode/instances/$linode_id/ips
-  linode/instances/:id/ips/sharing:
+  /linode/instances/:id/ips/sharing:
+    _group: IPs
     methods:
       POST:
         description: >
             Sets IP Sharing for this Linode.
         params:
           ips:
-            type: list
-            subtype: string
+            subtype: String
             description: >
               A list of IP Addresses this Linode will share.
         examples:
@@ -771,8 +796,9 @@ endpoints:
                   "ips": [ "97.107.143.29", "97.107.143.112" ]
                 }' \
                 https://$api_root/$version/linode/instances/$linode_id/ips/sharing
-  linode/instances/:id/ips/:ip_address:
-    type: action
+  /linode/instances/:id/ips/:ip_address:
+    _group: IPs
+    type: Action
     resource: ipaddress
     authenticated: true
     description: >
@@ -799,8 +825,17 @@ endpoints:
                     "rdns":"example.org"
                 }' \
                 https://$api_root/$version/linode/instances/$linode_id/ips/$ip_address
-  linode/instances/:id/rebuild:
-    type: action
+      DELETE:
+        oauth: linodes:modify
+        description: >
+          Delete a public IPv4 address associated with this Linode
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                -X DELETE \
+                https://$api_root/$version/linode/instances/$linode_id/ips/97.107.143.37
+  /linode/instances/:id/rebuild:
+    type: Action
     authenticated: true
     description: >
       Deletes all Disks and Configs on this Linode, then deploys a new Distribution to this Linode with the given attributes.
@@ -817,25 +852,25 @@ endpoints:
           root_pass:
             description: >
                 The root password for the new deployment.
-            type: string
+            type: String
           root_ssh_key:
             optional: true
             description: >
                 The key to authorize for root access to the new deployment.
-            type: string
+            type: String
           stackscript:
             optional: true
             description: >
               The stackscript ID to deploy with this disk.
               <ul><li>Must provide a distribution. Distribution must be
               one that the stackscript can be deployed to.</li></ul>
-            type: stackscript
+            type: Stackscript
           stackscript_data:
             optional: true
             description: >
               UDF (user-defined fields) for this stackscript. Defaults to "{}".
               <ul><li>Must match UDFs required by stackscript.</li></ul>
-            type: string
+            type: String
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -845,3 +880,240 @@ endpoints:
                 -d '{"distribution":"linode/debian8","root_pass":"hunter7"}'
           python: |
             my_linode.rebuild('linode/ubuntu16.04LTS', root_pass='hunter7')
+  /linode/stackscripts:
+    _group: StackScripts
+    resource: stackscript
+    description: >
+      View public StackScripts.
+    methods:
+      GET:
+        description: >
+          Returns a list of public <a href="#object-stackscript">StackScripts</a>.
+          Results can be <a href="#filtering">filtered</a>.  Include '"mine": true'
+          in the filter dict to see only StackScripts you created.
+        examples:
+          curl: |
+            curl https://$api_root/$version/linode/stackscripts
+          python: |
+            import stackscript
+            TODO
+      POST:
+        oauth: stackscripts:create
+        description: >
+          Create a new StackScript.
+        params:
+          label:
+            description: >
+              Label of StackScript.
+            limit: 3-128 characters
+            type: string
+          description:
+            optional: true
+            description: >
+              Description of the StackScript.
+            type: string
+          distributions:
+            description: >
+              A list of <a href="#object-distribution">distributions</a>
+              compatible with StackScript.
+            type: distribution
+          is_public:
+            optional: true
+            description: >
+              If true, this StackScript will be publicly visible in the Linode
+              StackScript library. Defaults to False.
+            type: boolean
+          rev_note:
+            optional: true
+            description: >
+              Release notes for this revision.
+            limit: 0-512 characters
+            type: string
+          script:
+            description: >
+              The shell script to run on boot.
+            type: string
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+              -H "Authorization: token $TOKEN" \
+              -X POST -d '{
+                "label": "Initial Label",
+                "distributions": ["linode/ubuntu15.4", "linode/ubuntu15.10"],
+                "script": "#!..."
+              }' \
+              https://$api_root/$version/linode/stackscripts
+          python: |
+            import stackscript
+            TODO
+  /linode/stackscripts/:id:
+    _group: StackScripts
+    resource: stackscript
+    authenticated: true
+    description: >
+      Manage a particular StackScript.
+    methods:
+      GET:
+        oauth: stackscripts:view
+        description: >
+          Returns information about this <a href="#object-stackscript">
+          StackScript</a>.
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+              -H "Authorization: token $TOKEN" \
+              -X GET \
+              https://$api_root/$version/linode/stackscripts/$stackscript_id
+          python: |
+            import stackscript
+            TODO
+      PUT:
+        oauth: stackscripts:modify
+        description: >
+          Edits this StackScript.
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+              -H "Authorization: token $TOKEN" \
+              -X PUT -d '{
+                "label": "New Label"
+              }' \
+              https://$api_root/$version/linode/stackscripts/$stackscript_id
+          python: |
+            import stackscript
+            TODO
+      DELETE:
+        oauth: stackscripts:delete
+        description: >
+          Deletes this StackScript.  This action cannot be undone.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+              -X DELETE \
+              https://$api_root/$version/linode/stackscripts/$stackscript_id
+          python: |
+            import stackscript
+            TODO
+  /linode/distributions:
+    _group: Distributions
+    resource: distributions
+    description: >
+      View the collection of distributions.
+    methods:
+      GET:
+        description: >
+          Returns a list of <a href="#object-distribution">distributions</a>.
+        examples:
+          curl: |
+            curl https://$api_root/$version/linode/distributions
+          python: |
+            client.linode.get_distributions()
+  /linode/distributions/:id:
+    _group: Distributions
+    type: resource
+    resource: distributions
+    description: >
+      Returns information about a specific distribution.
+    methods:
+      GET:
+        description: >
+          Returns information about this <a href="#object-distribution">
+          distribution</a>.
+        examples:
+          curl: |
+            curl https://$api_root/$version/linode/distributions/$distribution_id
+          python: |
+            distro = linode.Distribution(client, 'linode/debian8')
+  /linode/kernels:
+    _group: Kernels
+    resource: kernels
+    description: >
+      Returns collection of kernels.
+    methods:
+      GET:
+        description: >
+          Returns list of <a href="#object-kernel">kernels</a>.
+        examples:
+          curl: |
+            curl https://$api_root/$version/linode/kernels
+          python: |
+            client.linode.get_kernels()
+  /linode/kernels/:id:
+    _group: Kernels
+    type: resource
+    resource: kernels
+    description: >
+      Returns information about a specific kernel.
+    methods:
+      GET:
+        description: >
+          Returns information about this <a href="#object-kernel">kernel</a>.
+        examples:
+          curl: |
+            curl https://$api_root/$version/linode/kernels/$kernel_id
+          python: |
+            kernel = linode.Kernel(client, 'linode/latest')
+  /linode/types:
+    _group: Types
+    resource: types
+    description: >
+      Returns collection of types.
+    methods:
+      GET:
+        description: >
+          Returns list of types.
+        examples:
+          curl: |
+            curl https://$api_root/$version/linode/types
+          python: |
+            client.linode.get_types()
+  /linode/types/:id:
+    _group: Types
+    type: resource
+    resource: types
+    description: >
+      Returns information about a specific Linode type offered by Linode.
+    methods:
+      GET:
+        description: >
+          Returns information about this type.
+        examples:
+          curl: |
+            curl https://$api_root/$version/linode/types/$type_id
+          python: |
+            type = linode.Type(client, 'g5-standard=1')
+  /linode/volumes:
+    _group: Volumes
+    resource: volume
+    authenticated: true
+    description: >
+        Manage your Block Storage Volumes.
+    methods:
+      GET:
+        oauth: volumes:view
+        description: >
+          Returns a list of volumes.
+        examples:
+          curl: |
+            curl -H "Authorization; token $TOKEN" \
+                https://$api_root/$version/linode/volumes
+          python: |
+            # not yet implemented
+  /linode/volumes/:id:
+    _group: Volumes
+    type: resource
+    resource: volume
+    authenticated: true
+    description: >
+      Manage an individual Block Storage Volume.
+    methods:
+      GET:
+        oauth: volumes:view
+        description: >
+          Returns information about this Volume.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                https://$api_root/$version/linode/volumes/$volume_id
+          python: |
+            # not yet implemented
