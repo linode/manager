@@ -65,8 +65,8 @@ export class SummaryPage extends Component {
 
     if (['slaac', 'link-local', 'private'].indexOf(record.type.toLowerCase()) !== -1
         || numPublicIPv4 === 1) {
-     // Cannot delete slaac, link-local, private, or last public IPv4 address.
-     groups.pop();
+      // Cannot delete slaac, link-local, private, or last public IPv4 address.
+      groups.pop();
     }
 
     if (['private', 'link-local', 'pool'].indexOf(record.type.toLowerCase()) === -1) {
