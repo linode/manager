@@ -108,7 +108,10 @@ export class IndexPage extends Component {
 
   renderLinodes(linodes) {
     const { dispatch, selectedMap } = this.props;
-    // TODO: add sort function in linodes config definition
+    const { filter } = this.state;
+
+    const filteredLinodes = _.omitBy(linodes, l =>
+      l.label.toLowerCase().indexOf(filter.toLowerCase()) !== -1);
     const sortedLinodes = _.sortBy(Object.values(linodes), l => moment(l.created));
 
     const groups = _.sortBy(
@@ -121,8 +124,8 @@ export class IndexPage extends Component {
 
     return (
       <List>
-        <ListHeader>
-          <div className="pull-sm-left">
+        <ListHeader className="Menu">
+          <div className="Menu-item">
             <MassEditControl
               data={sortedLinodes}
               dispatch={dispatch}
@@ -137,6 +140,13 @@ export class IndexPage extends Component {
               selectedMap={selectedMap}
               objectType={OBJECT_TYPE}
               toggleSelected={toggleSelected}
+            />
+          </div>
+          <div className="Menu-item">
+            <Input
+              placeholder="Filter..."
+              onChange={({ target: { value } }) => this.setState({ filter: value })}
+              value={this.state.filter}
             />
           </div>
         </ListHeader>
