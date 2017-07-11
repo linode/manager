@@ -63,7 +63,7 @@ export default function Introduction(props) {
         <p>
           Once you have a region in mind, the next step is to choose a Linode type. A type determines the resources available to your new Linode (such as memory, storage space, and network transfer). Run the following curl command to retrieve a list of available Linode plans:
         </p>
-        <Example example={`curl ${API_ROOT}/${API_VERSION}/linode/types`} name="bash" />
+        <Example example={`curl ${API_ROOT}/${API_VERSION}/reference/endpoints/linode/types`} name="bash" />
         <p>
           The above command will return a JSON object like the following:
         </p>
@@ -92,7 +92,7 @@ export default function Introduction(props) {
           noclipboard
         />
         <p>
-          Each entry in the types list represents an available Linode type. You can review the details of each plan, such as the number of virtual CPUs, memory, disk space, monthly price, etc. For explanations of each field, see the <Link to="/reference/endpoints/linode/types">complete type reference</Link>. Once you have selected the type you want to launch, note its ID and continue to the next step.
+          Each entry in the types list represents an available Linode type. You can review the details of each plan, such as the number of virtual CPUs, memory, disk space, monthly price, etc. For explanations of each field, see the <Link to={`/${API_VERSION}/reference/endpoints/linode/types`}>complete type reference</Link>. Once you have selected the type you want to launch, note its ID and continue to the next step.
         </p>
       </section>
       <section>
@@ -125,7 +125,7 @@ export default function Introduction(props) {
           noclipboard
         />
         <p>
-          For detailed information about each field, see the complete <Link to="/reference/endpoints/linode/distributions">distribution reference</Link>. For this example, we’ll go with Debian 8.
+          For detailed information about each field, see the complete <Link to={`/${API_VERSION}/reference/endpoints/linode/distributions`}>distribution reference</Link>. For this example, we’ll go with Debian 8.
         </p>
       </section>
       <section>

@@ -30,18 +30,11 @@ export default class Layout extends Component {
     const { childParentMap, indices } = route;
     const path = this.props.location.pathname;
 
-    const miniHeader = (
-      <div className="MiniHeader-text">
-      This is the early-access Linode APIv4 documentation.
-      Click <a href="https://linode.com/api">here</a> for APIv3 documentation.
-      </div>
-    );
-
     const verticalNavShow = verticalNav ? 'Layout-navigationContainer--show' : 'Layout-navigationContainer--hide';
 
     return (
       <div className="Docs Layout">
-        <Header miniHeader={miniHeader}>
+        <Header>
           <div className="MainHeader-brand">
             <Link to="/">
             <span className="MainHeader-logo">
