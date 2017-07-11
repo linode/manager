@@ -85,9 +85,9 @@ export class IndexPage extends Component {
             <MassEditControl
               data={data}
               dispatch={dispatch}
-              massEditOptions={[
+              massEditGroups={[{ elements: [
                 { name: 'Delete', action: this.deleteNodeBalancers },
-              ]}
+              ] }]}
               selectedMap={selectedMap}
               objectType={OBJECT_TYPE}
               toggleSelected={toggleSelected}

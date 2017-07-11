@@ -1,12 +1,12 @@
 # vim: set et ts=2 sw=2 tw=80 :
 name: Account
 sort: 1
-base_path: /account
 description: >
   Account endpoints provide a means of viewing <a href="#object-profile">
   user profile objects</a>, as well as managing OAuth Clients and Tokens.
 endpoints:
-  account/profile:
+  /account/profile:
+    _group: Profile
     type: resource
     resource: account
     description: >
@@ -45,7 +45,8 @@ endpoints:
             my_profile.ip_whitelist_enabled = True
             my_profile.lish_auth_method = 'password_keys'
             my_profile.save()
-  account/profile/password:
+  /account/profile/password:
+    _group: Profile
     methods:
       POST:
         description: >
@@ -61,7 +62,8 @@ endpoints:
           python: |
             my_profile = client.account.get_profile()
             my_profile.reset_password('hunter7')
-  account/profile/tfa-enable:
+  /account/profile/tfa-enable:
+    _group: Profile
     methods:
       POST:
         description: >
@@ -77,14 +79,15 @@ endpoints:
           python: |
             my_profile = client.account.get_profile()
             secret = my_profile.enable_tfa()
-  account/profile/tfa-enable-confirm:
+  /account/profile/tfa-enable-confirm:
+    _group: Profile
     methods:
       POST:
         description: >
           Confirm your two-factor secret and require TFA for future logins.
         params:
           tfa_code:
-            type: string
+            type: String
             description: >
               The code generated using the two-factor secret you got from tfa-enable
         examples:
@@ -98,7 +101,8 @@ endpoints:
           python: |
             my_profile = client.account.get_profile()
             my_profile.confirm_tfa('123456')
-  account/profile/tfa-disable:
+  /account/profile/tfa-disable:
+    _group: Profile
     methods:
       POST:
         description: >
@@ -112,7 +116,10 @@ endpoints:
           python: |
             my_profile = client.account.get_profile()
             my_profile.disable_tfa()
-  account/profile/grants:
+  /account/profile/grants:
+    _group: Profile
+    type: strange
+    resource: usergrants
     methods:
       GET:
         description: >
@@ -124,8 +131,8 @@ endpoints:
           python: |
             my_profile = client.account.get_profile()
             my_grants = my_profile.grants
-  account/tokens:
-    type: list
+  /account/tokens:
+    _group: Tokens
     resource: oauthtoken
     description: >
       Manage OAuth Tokens created for your user.
@@ -149,20 +156,20 @@ endpoints:
           can subsequently be used to access the API and make any requests it has OAuth Scopes for.
         params:
           label:
-            type: string
+            type: String
             value: my-token
             optional: true
             description: >
               The label for this Personal Access Token.  For your reference only.
           expiry:
-            type: datetime
+            type: Datetime
             value: 2017-12-31 01:00:00
             optional: true
             description: >
               If provided, when this Personal Access Token will expire.  If omitted, the resulting
               token will be valid until it is revoked.
           scopes:
-            type: string
+            type: String
             value: linodes:view
             optional: true
             description: >
@@ -179,7 +186,8 @@ endpoints:
           python: |
             from linode import OAuthScopes
             new_token = client.account.create_personal_access_token(scopes=[OAuthScopes.Linodes.view, OAuthScopes.Domains.view])
-  account/tokens/:id:
+  /account/tokens/:id:
+    _group: Tokens
     type: resource
     resource: oauthtoken
     description: >
@@ -221,7 +229,8 @@ endpoints:
                 https://$api_root/$version/account/tokens/123
           python: |
             my_token.delete()
-  account/settings:
+  /account/settings:
+    _group: Settings
     type: resource
     resource: account
     description: >
@@ -267,8 +276,8 @@ endpoints:
             my_settings.country = 'US'
             my_settings.email = 'jsmith@company.com'
             my_settings.save()
-  account/clients:
-    type: list
+  /account/clients:
+    _group: Clients
     resource: client
     authenticated: true
     description: >
@@ -291,11 +300,11 @@ endpoints:
         params:
           label:
             description: A name for the new client application.
-            type: string
+            type: String
             limit: "1-128 characters"
           redirect_uri:
             description: A URL to redirect to after the OAuth flow has completed.
-            type: string
+            type: String
             limit: "1-512 characters"
         examples:
           curl: |
@@ -308,7 +317,8 @@ endpoints:
                 https://$api_root/$version/account/clients
           python: |
             new_client = client.account.create_oauth_client('Example app', 'https://oauthreturn.example.org/')
-  account/clients/:id:
+  /account/clients/:id:
+    _group: Clients
     type: resource
     resource: client
     authenticated: true
@@ -354,8 +364,9 @@ endpoints:
           python: |
             my_client = linode.OAuthClient(client, 123)
             my_client.delete()
-  account/clients/:id/reset_secret:
-    type: action
+  /account/clients/:id/reset_secret:
+    _group: Clients
+    type: Action
     authenticated: true
     description: >
       Reset the OAuth application's client secret.
@@ -372,8 +383,9 @@ endpoints:
           python: |
             my_client = linode.OAuthClient(client, 123)
             new_secret = my_client.reset_secret()
-  account/clients/:id/thumbnail:
-    type: action
+  /account/clients/:id/thumbnail:
+    _group: Clients
+    type: Action
     authenticated: true
     description: >
       Manage the OAuth application's thumbnail image.
@@ -411,8 +423,8 @@ endpoints:
             with open('/path/to/image', 'rb') as f:
                 img = f.read()
             my_client.set_thumbnail(img)
-  account/users:
-    type: list
+  /account/users:
+    _group: Users
     resource: account
     description: >
       Returns a list of <a href="#object-user">User objects</a> associated with your account.
@@ -428,17 +440,17 @@ endpoints:
           Creates a new user.
         params:
           username:
-            type: string
+            type: String
             description: The username for the new user.
           email:
-            type: string
+            type: String
             description: The user's email.
           password:
-            type: string
+            type: String
             description: The user's password.
           restricted:
             optinoal: true
-            type: bool
+            type: Bool
             description: If false, this user has access to the entire account.  Defaults to true.
         examples:
           curl: |
@@ -452,7 +464,8 @@ endpoints:
                 https://$api_root/$version/account/users
           python: |
             # currently unimplemented
-  account/users/:username:
+  /account/users/:username:
+    _group: Users
     type: resource
     resource: account
     description: >
@@ -491,15 +504,16 @@ endpoints:
           python: |
             my_user = linode.User(client, 'username')
             my_user.delete()
-  account/users/:username/password:
-    type: action
+  /account/users/:username/password:
+    _group: Users
+    type: Action
     description: >
       Update a user's password
     methods:
       POST:
         params:
           password:
-            type: string
+            type: String
             description: The user's new password.
         examples:
           curl: |
@@ -512,7 +526,8 @@ endpoints:
           python: |
             my_user = linode.User(client, 'username')
             my_user.change_password('hunter7')
-  account/users/:username/grants:
+  /account/users/:username/grants:
+    _group: Users
     type: resource
     resource: usergrants
     description: >
@@ -549,3 +564,141 @@ endpoints:
 
             my_user.grants.global.add_linodes = True
             my_user.grants.save()
+  /account/clients:
+    _group: Clients
+    type: list
+    resource: client
+    authenticated: true
+    description: >
+      Manage the collection of OAuth client applications your account may access.
+    methods:
+      GET:
+        oauth: clients:view
+        description: >
+          Returns a list of <a href="#object-client">clients</a>.
+        examples:
+          curl: |
+            curl -H "Authorization; token $TOKEN" \
+                https://$api_root/$version/account/clients
+      POST:
+        oauth: clients:create
+        description: >
+          Registers a new OAuth client application.
+        params:
+          name:
+            description: A name for the new client application.
+            type: string
+            limit: "1-128 characters"
+          redirect_uri:
+            description: A URL to redirect to after the OAuth flow has completed.
+            type: string
+            limit: "1-512 characters"
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X POST -d '{
+                    "name": "Example app",
+                    "redirect_uri": "https://oauthreturn.example.org/",
+                }' \
+                https://$api_root/$version/account/clients
+  /account/clients/:id:
+    _group: Clients
+    type: resource
+    resource: client
+    authenticated: true
+    description: >
+      Manage a particular OAuth client application your account may access.
+    methods:
+      GET:
+        oauth: clients:view
+        description: >
+          Returns information about this <a href="#object-client">OAuth client</a>.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                https://$api_root/$version/account/clients/$client_id
+      PUT:
+        oauth: clients:modify
+        description: >
+          Edits this <a href="#object-client">OAuth client</a>.
+        examples:
+          curl: |
+            curl -H "Content-Type: application/json" \
+                -H "Authorization: token $TOKEN" \
+                -X PUT -d '{
+                    "name": "Updated app name",
+                    "redirect_uri": "https://newredirect.example.org/",
+                }' \
+                https://$api_root/$version/account/clients/$client_id
+      DELETE:
+        oauth: clients:delete
+        dangerous: true
+        description: >
+          Delete this OAuth application. This action cannot be undone.
+        examples:
+          curl: |
+            curl -H "Authorization: token $TOKEN" \
+                -X DELETE \
+                https://$api_root/$version/account/clients/$client_id
+  /account/events:
+    _group: Events
+    type: list
+    resource: events
+    authenticated: true
+    description: >
+      View the collection of events.
+    methods:
+      GET:
+        description: >
+          Returns a list of <a href="#object-event">events</a>.
+        examples:
+          curl: |
+            curl https://$api_root/$version/account/events
+          python: |
+            my_events = client.account.get_events()
+  /account/events/:id:
+    _group: Events
+    type: resource
+    resource: events
+    authenticated: true
+    description: >
+      Returns information about a specific event.
+    methods:
+      GET:
+        description: >
+          Returns information about this <a href="#object-event">
+          event</a>.
+        examples:
+          curl: |
+            curl https://$api_root/$version/account/event/123
+          python: |
+            event = linode.Event(client, 123)
+  /account/events/:id/seen:
+    _group: Events
+    type: resource
+    resource: events
+    authenticated: true
+    methods:
+      POST:
+        description: >
+          Marks all <a href="#object-event">events</a> up to and including :id as seen.
+        examples:
+          curl: |
+            curl https://$api_root/$version/account/event/123/seen
+          python: |
+            client.mark_lask_seen_event(event)
+  /account/events/:id/read:
+    _group: Events
+    type: resource
+    resource: events
+    authenticated: true
+    methods:
+      POST:
+        description: >
+          Updates specific <a href="#object-event">event</a> to designate that it has been read.
+        examples:
+          curl: |
+            curl https://$api_root/$version/account/event/123/read
+          python: |
+            event.mark_read()

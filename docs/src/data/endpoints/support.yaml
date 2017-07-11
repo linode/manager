@@ -1,12 +1,10 @@
-name: Support Tickets
+name: Support
 sort: 0
-base_path: /support/tickets
 description: >
   Support tickets allow you to view, submit, and manage requests for help to
   the Linode support team.
 endpoints:
-  support/tickets:
-    type: list
+  /support/tickets:
     resource: supportticket
     authenticated: true
     description: >
@@ -30,25 +28,25 @@ endpoints:
           summary:
             description: >
               A short summary or title for the support ticket.
-            type: string
+            type: String
           description:
             description: >
               The complete details of the support request.
-            type: string
+            type: String
           domain_id:
             description: >
               The Domain this ticket is regarding, if relevant.
-            type: int
+            type: Int
             optional: true
           linode_id:
             description: >
               The Linode this ticket is regarding, if relevant.
-            type: int
+            type: Int
             optional: true
           nodebalancer_id:
             description: >
               The NodeBalancer this ticket is regarding, if relevant.
-            type: int
+            type: Int
             optional: true
         examples:
           curl: |
@@ -60,7 +58,7 @@ endpoints:
                     "linode_id": 123,
                 }' \
                 https://$api_root/$version/support/tickets
-  support/tickets/:id:
+  /support/tickets/:id:
     type: resource
     resource: supportticket
     authenticated: true
@@ -76,8 +74,7 @@ endpoints:
           curl: |
             curl -H "Authorization: token $TOKEN" \
                 https://$api_root/$version/support/ticket/$ticket_id
-  support/tickets/:id/replies:
-    type: list
+  /support/tickets/:id/replies:
     resource: supportticketreply
     authenticated: true
     description: >
@@ -100,7 +97,7 @@ endpoints:
           description:
             description: >
               The reply to attach to the support ticket.
-            type: string
+            type: String
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -109,8 +106,7 @@ endpoints:
                     "description": "More details about the ticket",
                 }' \
                 https://$api_root/$version/support/tickets/$ticket_id/replies
-  support/tickets/:id/attachments:
-    type: list
+  /support/tickets/:id/attachments:
     resource: supportticket
     authenticated: true
     methods:
@@ -122,7 +118,7 @@ endpoints:
           file:
             description: >
               The file to attach. There is a 5MB size limit.
-            type: string
+            type: String
         examples:
           curl: |
             curl -H "Content-Type: multipart/form-data" \

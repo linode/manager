@@ -1,6 +1,6 @@
 {
   "name": "linode-api-docs",
-  "version": "0.9.1",
+  "version": "0.10.0",
   "description": "Linode API Docs",
   "main": "src/index.js",
   "scripts": {
@@ -9,7 +9,7 @@
     "build": "npm run clean && npm run build:webpack",
     "clean": "rm -rf dist",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node devServer.js"
+    "start": "npm run prebuild && node devServer.js"
   },
   "author": "",
   "license": "ISC",

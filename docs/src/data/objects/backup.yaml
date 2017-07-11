@@ -5,79 +5,79 @@ description: >
   Backup objects represent a specific backup of a Linode.
 schema:
   id:
-    _type: integer
+    _type: Integer
     _value: 123456
   label:
-    _type: string
+    _type: String
     _value: A label for your snapshot
     _description: Human-friendly backup name.
     _filterable: false
     _limit: 1-255 characters
   status:
-    _type: enum
+    _type: Enum
     _subtype: Status
     _value: successful
     _description: Status of the backup.
     _filterable: false
   type:
-    _type: enum
+    _type: Enum
     _subtype: Type
     _value: snapshot
     _description: Whether this is a snapshot or an auto backup.
   region:
-      _type: region
+      _type: Region
       _filterable: false
       _description: This backup  region.
       id:
-        _type: string
+        _type: String
         _value: us-east-1a
       label:
-        _type: string
+        _type: String
         _value: Newark, NJ
       country:
-        _type: string
+        _type: String
         _value: us
   created:
-    _type: datetime
+    _type: Datetime
     _value: "2015-09-29T11:21:01"
   updated:
-    _type: datetime
+    _type: Datetime
     _value: "2015-09-29T11:21:01"
   finished:
-    _type: datetime
+    _type: Datetime
     _value: "2015-09-29T11:21:01"
     _description: An ISO 8601 datetime of when the backup completed.
   configs:
-    _type: array
+    _type: Array[string]
     _subtype: string
     _description: A JSON Array of config labels that were included in this backup.
     _value:
       - "My Debian8 Profile"
   disks:
-    _type: array
+    _type: Array[object]
     _subtype: disk
     _value:
       - label:
-            _type: string
+            _type: String
             _value: "My Debian8 Disk"
         size:
-            _type: integer
+            _type: Integer
             _value: 24064
         filesystem:
-            _type: string
+            _type: String
             _value: "ext4"
       - label:
-            _type: string
+            _type: String
             _value: "swap"
         size:
-            _type: integer
+            _type: Integer
             _value: 512
         filesystem:
-            _type: string
+            _type: String
             _value: "swap"
     _description: A JSON Array of JSON Objects describing the disks included in this backup.
   availability:
-    _type: enum
+    _type: Enum
     _subtype: BackupAvailability
     _value: daily
     _description: If this backup is available, which backup slot it is in.  Otherwise, unavailable.

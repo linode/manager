@@ -126,12 +126,13 @@ export class IndexPage extends Component {
             <MassEditControl
               data={sortedLinodes}
               dispatch={dispatch}
-              massEditOptions={[
-                { name: 'Reboot', action: this.reboot },
-                { name: 'Power On', action: this.powerOn },
-                { name: 'Power Off', action: this.powerOff },
-                null,
-                { name: 'Delete', action: this.deleteLinodes },
+              massEditGroups={[
+                { elements: [{ name: 'Reboot', action: this.reboot }] },
+                { elements: [
+                  { name: 'Power On', action: this.powerOn },
+                  { name: 'Power Off', action: this.powerOff },
+                ] },
+                { elements: [{ name: 'Delete', action: this.deleteLinodes }] },
               ]}
               selectedMap={selectedMap}
               objectType={OBJECT_TYPE}

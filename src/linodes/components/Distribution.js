@@ -50,23 +50,23 @@ export default class Distribution extends Component {
     const isSelectedClass = isSelected ? 'LinodesDistribution--isSelected' : '';
     const noDistributionClass = noDistribution ? 'LinodesDistribution--isNoDistribution' : '';
 
-    const versions = !vendor ? [{ name: 'Empty' }] : [
-      {
-        name: this.renderLabel(),
-        action: this.onClick,
-      },
-      ...vendor.versions.map((version, i) => ({
+    const versions = [{ elements: [
+      !vendor ? { name: 'Empty' } : { name: this.renderLabel(), action: this.onClick },
+    ] }];
+
+    if (vendor && vendor.versions.length > 1) {
+      versions.push({ elements: vendor.versions.map((version, i) => ({
         name: version.label,
         action: () => this.setState({ selectedIndex: i }, this.onClick),
-      })),
-    ];
+      })) });
+    }
 
     return (
       <div
         onClick={this.onClick}
         className={`LinodesDistribution ${isSelectedClass} ${noDistributionClass}`}
       >
-        <Dropdown elements={versions} />
+        <Dropdown groups={versions} />
         <div className="LinodesDistribution-body">
           {vendor ? <img
             src={distros[vendor.name]}

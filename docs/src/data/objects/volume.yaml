@@ -1,0 +1,53 @@
+name: Volume
+prefix: volume
+description: >
+    A Block Storage Volume
+schema:
+  id:
+    _type: integer
+    _value: 123
+  label:
+    _type: string
+    _value: my-volume
+    _description: This volume's label.
+    _filterable: true
+    _editable: true
+  status:
+    _type: enum
+    _subtype: VolumeStatus
+    _value: active
+    _description: This volume's status.
+    _filterable: true
+  size:
+    _type: integer
+    _value: 102400
+    _description: This volume's size, in MB.
+  region:
+      _type: region
+      _filterable: true
+      _description: The region this volume exists in.
+      id:
+        _type: string
+        _value: us-east-1a
+      label:
+        _type: string
+        _value: Newark, NJ
+      country:
+        _type: string
+        _value: us
+  created:
+    _type: datetime
+    _value: "2017-06-20T11:21:01"
+  updated:
+    _type: datetime
+    _value: "2017-06-20T11:21:01"
+  linode_id:
+    _type: integer
+    _description: The ID of the linode this volume is attached to.
+    _value: 456
+enums:
+  VolumeStatus:
+    creating: creating
+    active: active
+    resizing: resizing
+    contact_support: contact_support

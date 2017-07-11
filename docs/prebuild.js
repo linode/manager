@@ -153,20 +153,22 @@ function formatSchemaField(schemaField, enumMap) {
   description = convertUlToArray(description);
 
   const name = schemaField.name;
+  const seeAlso = schemaField._seeAlso;
   const editable = schemaField._editable;
   const filterable = schemaField._filterable;
   const type = schemaField._type;
+  const lowerType = type ? type.toLowerCase() : null;
   const subType = schemaField._subtype;
   let value = schemaField._value;
 
   let nestedSchema = null;
-  if (apiObjectMap[type]) {
+  if (apiObjectMap[lowerType]) {
     // matches a known object from /objects, format using the reference
-    nestedSchema = formatSchema(getResourceObjByName(type).schema, enumMap);
-  } else if (type === 'enum' && enumMap[subType]) {
+    nestedSchema = formatSchema(getResourceObjByName(lowerType).schema, enumMap);
+  } else if (lowerType === 'enum' && enumMap[subType]) {
     // matches a known enum from an enums key on an object in /objects, format using the reference
     nestedSchema = enumMap[subType]; // already formatted
-  } else if (type === 'enum' || type === 'object' || type === 'array' || !type) {
+  } else if (lowerType === 'enum' || lowerType === 'object' || lowerType === 'array' || !lowerType) {
     // is of the the checked types, or no type provided (currently undocumented)
     nestedSchema = formatSchema(schemaField, enumMap);
   }
@@ -180,6 +182,7 @@ function formatSchemaField(schemaField, enumMap) {
 
   return {
     name: name,
+    seeAlso: seeAlso,
     description: description,
     editable: editable,
     filterable: filterable,
@@ -276,129 +279,125 @@ function formatMethod(endpoint, method) {
   });
 }
 
-
-function formatEndpoint(endpoint, path = null) {
-  let methods = null;
-  if (endpoint.methods) {
-    methods = Object.keys(endpoint.methods).map(function(method) {
-      return formatMethod(endpoint, method);
-    });
-  }
-  endpoint.description = stripATags(endpoint.description);
-
-  return _.merge({}, endpoint, {
-    // TODO: apply / to url paths in yaml
-    path: `/${path}`,
-    formattedEndpoints: endpoint.formattedEndpoints || [],
-    methods: methods
-  });
-}
-
 // map and nest
 let endpointMap = {
-  '/linode': {
+  linodes: {
     name: 'Linodes',
     path: '/linode',
     routePath: `${ROUTE_BASE_PATH}/linode`,
-    formattedEndpoints: []
+    groups: {}
   },
-  '/domains': {
+  domains: {
     name: 'Domains',
     path: '/domains',
     routePath: `${ROUTE_BASE_PATH}/domains`,
-    formattedEndpoints: []
+    groups: {}
   },
-  '/nodebalancers': {
+  nodebalancers: {
     name: 'NodeBalancers',
     path: '/nodebalancers',
     routePath: `${ROUTE_BASE_PATH}/nodebalancers`,
-    formattedEndpoints: []
+    groups: {}
   },
-  '/networking': {
+  networking: {
     name: 'Networking',
     path: '/networking',
     routePath: `${ROUTE_BASE_PATH}/networking`,
-    formattedEndpoints: []
+    groups: {}
   },
-  '/regions': {
+  regions: {
     name: 'Regions',
     path: '/regions',
     routePath: `${ROUTE_BASE_PATH}/regions`,
-    formattedEndpoints: []
+    groups: {}
   },
-  '/support/tickets': {
+  support: {
     name: 'Support',
     path: '/support',
     routePath: `${ROUTE_BASE_PATH}/support`,
-    formattedEndpoints: []
+    groups: {}
   },
-  '/account': {
+  account: {
     name: 'Account',
     path: '/account',
     routePath: `${ROUTE_BASE_PATH}/account`,
-    formattedEndpoints: []
+    groups: {}
   },
 };
 
-allEndpoints.forEach(function(endpoint) {
-  const pathArr = endpoint.base_path.split('/');
-  const basePath = `/${pathArr[1]}`;
-  const altBasePath = `${basePath}/${pathArr[2]}`;
-  console.log('BASE: ', basePath, ' ALT BASE: ', altBasePath);
+allEndpoints.forEach(function(endpointContainer) {
+  const containerName = endpointContainer.name.toLowerCase();
+  const rawEndpoints = endpointContainer.endpoints;
 
-  if (endpointMap[basePath]) {
-    const formatted = formatEndpoint(endpoint, basePath);
-    endpointMap[basePath].formattedEndpoints.push(formatted);
-  } else if (endpointMap[altBasePath]) {
-    endpointMap[altBasePath].formattedEndpoints.push(formatEndpoint(endpoint, altBasePath));
-  } else {
-    console.log('NO MATCH FOUND: ', basePath);
-  }
-});
+  const endpoints = Object.keys(rawEndpoints).map(function(path) {
+    const endpoint = rawEndpoints[path];
 
-// back to an array
-allEndpoints = Object.keys(endpointMap).map(function(key) {
-  return endpointMap[key];
-}).filter(function(endpoint) { return endpoint; });
-
-// map children
-allEndpoints = allEndpoints.map(function(endpoint) {
-  endpoint.formattedEndpoints = endpoint.formattedEndpoints.map(function(formattedEndpoint) {
-    if (formattedEndpoint.endpoints) {
-      Object.keys(formattedEndpoint.endpoints).forEach(function(path) {
-        const childEndpoint = formattedEndpoint.endpoints[path];
-        const childFormattedEndpoint = formatEndpoint(childEndpoint, path);
-
-        childFormattedEndpoint.routePath = `${ROUTE_BASE_PATH}/endpoints/${path}`;
-        formattedEndpoint.formattedEndpoints.push(childFormattedEndpoint);
+    let methods = null;
+    if (endpoint.methods) {
+      methods = Object.keys(endpoint.methods).map(function(method) {
+        return formatMethod(endpoint, method);
       });
-      delete formattedEndpoint.endpoints;
     }
-    return formattedEndpoint;
+
+    return _.merge({}, endpoint, {
+      description: stripATags(endpoint.description),
+      path: path,
+      routePath: `${ROUTE_BASE_PATH}/endpoints${path}`,
+      methods: methods
+    });
   });
-  return endpoint;
+
+  // map groups from endpoint definitions, pushing each endpoint into it's group
+  endpoints.forEach(function(endpoint) {
+    if (!endpoint._group) {
+      endpoint._group = 'default';
+    }
+
+    if (!endpointMap[containerName].groups[endpoint._group]) {
+      endpointMap[containerName].groups[endpoint._group] = {
+        label: endpoint._group,
+        endpoints: []
+      };
+    }
+
+    endpointMap[containerName].groups[endpoint._group].endpoints.push(endpoint);
+  });
 });
 
+// covert to arrays and sort
+allEndpoints = Object.keys(endpointMap).map(function(key) {
+  const endpointIndex = endpointMap[key];
 
-// rename formattedEndpoints > endpoints
-function renameEndpoints(endpoints) {
-  return endpoints.map(function(endpoint) {
-    endpoint.endpoints = endpoint.formattedEndpoints;
-    delete endpoint.formattedEndpoints;
-    if (endpoint.endpoints.length) {
-      endpoint.endpoints = renameEndpoints(endpoint.endpoints);
-    }
-    return endpoint;
+  // convert groups to an array
+  endpointIndex.groups = Object.values(endpointIndex.groups);
+
+  // alphabetically sort groups
+  endpointIndex.groups = endpointIndex.groups.sort(function(a, b) {
+    var nameA = a.label.toLowerCase();
+    var nameB = b.label.toLowerCase();
+    if ((nameA === 'default') || nameA < nameB) { return -1; }
+    if (nameA > nameB) { return 1; }
+    return 0;
   });
-}
-allEndpoints = renameEndpoints(allEndpoints);
+
+  // alphabetically sort endpoints in groups
+  endpointIndex.groups.forEach(function(group) {
+    group.endpoints = group.endpoints.sort(function(a, b) {
+      if (a.path < b.path) { return -1; }
+      if (a.path > b.path) { return 1; }
+      return 0;
+    });
+  });
+
+  return endpointIndex;
+}).filter(function(endpoint) { return endpoint; });
 
 const data = JSON.stringify(allEndpoints, null, 2);
 const endpointModule = `
   /**
   *   Generated Docs Source -- DO NOT EDIT
   */
-  module.exports = { endpoints: ${data} };
+  module.exports = { indices: ${data} };
 `;
 fs.writeFileSync(path.join('./src', 'api.js'), endpointModule);
 
