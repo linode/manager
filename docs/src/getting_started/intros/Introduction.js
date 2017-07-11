@@ -14,7 +14,7 @@ export default function Introduction() {
       <h1>Introduction</h1>
       <section>
         <p>
-          The Linode API is an HTTP service that follows (to a large extent)&nbsp;
+          The Linode APIv4 is an HTTP service that follows (to a large extent)&nbsp;
           <a href="https://en.wikipedia.org/wiki/Representational_state_transfer" target="_blank">REST</a>
           &nbsp;style. Resources (like Linodes) have predictable URLs that use standard
           HTTP methods to manipulate and return standard HTTP status codes to tell you how
@@ -24,7 +24,7 @@ export default function Introduction() {
             <Link to={`/${API_VERSION}/guides/curl/testing-with-curl`}>Check out the Testing with cURL guide</Link> to get started making API calls using a Personal Access Token (PAT).
           </div>
           <p>
-            All API endpoints (starting from version 4) are located at:
+            All APIv4 endpoint are located at:
           </p>
           <Example example={`${ API_ROOT}/${ API_VERSION }/*`} name="bash" noclipboard />
           <p>
