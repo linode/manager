@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
 
 import { Header, VerticalNav, VerticalNavSection } from 'linode-components/navigation';
@@ -30,25 +30,30 @@ export default class Layout extends Component {
     const { childParentMap, indices } = route;
     const path = this.props.location.pathname;
 
-    const verticalNavShow = verticalNav ? 'Layout-navigationContainer--show' : 'Layout-navigationContainer--hide';
+    const verticalNavShow = verticalNav ?
+      'Layout-navigationContainer--show' : 'Layout-navigationContainer--hide';
 
     return (
       <div className="Docs Layout">
         <Header>
           <div className="MainHeader-brand">
             <Link to="/">
-            <span className="MainHeader-logo">
-              <img
-                src={LinodeLogoImgSrc}
-                alt="Linode Logo"
-                height={40}
-                width={35}
-              />
-            </span>
+              <span className="MainHeader-logo">
+                <img
+                  src={LinodeLogoImgSrc}
+                  alt="Linode Logo"
+                  height={40}
+                  width={35}
+                />
+              </span>
             </Link>
           </div>
           <span className="MainHeader-title">Developers</span>
-          <button className="ToggleNav navbar-toggler navbar-toggler-right collapsed" type="button" id="ToggleNavButton">
+          <button
+            className="ToggleNav navbar-toggler navbar-toggler-right collapsed"
+            type="button"
+            id="ToggleNavButton"
+          >
             <i className="fa fa-bars" id="ToggleNavButtonIcon"></i>
           </button>
         </Header>
@@ -76,7 +81,7 @@ export default class Layout extends Component {
                   return (href === path || href === childParentMap[path]);
                 }}
                 path={path}
-                navItems={indices.map(function(endpointIndex, index) {
+                navItems={indices.map(function (endpointIndex) {
                   return { label: endpointIndex.name, href: endpointIndex.routePath };
                 })}
               />
@@ -87,7 +92,7 @@ export default class Layout extends Component {
                 }}
                 path={path}
                 navItems={[
-                  { label: 'Python', href: `/${API_VERSION}/libraries/python` }
+                  { label: 'Python', href: `/${API_VERSION}/libraries/python` },
                 ]}
               />
             </VerticalNav>
@@ -99,4 +104,12 @@ export default class Layout extends Component {
       </div>
     );
   }
+}
+
+Layout.propTypes = {
+  children: PropTypes.node,
+  route: PropTypes.object,
+  location: PropTypes.shape({
+    pathname: PropTypes.string,
+  }),
 };
