@@ -26,6 +26,7 @@
     "consistent-return": 0,
     "react/no-multi-comp": 0,
     "react/no-did-mount-set-state": 0,
+    "react/prefer-stateless-function": 0,
     "import/no-duplicates": 0,
     "no-duplicate-imports": 0,
     "new-cap": 0,
