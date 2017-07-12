@@ -89,6 +89,12 @@ const EventTypeMap = {
     pastTensePrefix: 'IP added to',
     redirectUrl: getLinodeNetworkingRedirectUrl,
   },
+  linode_deleteip: {
+    presentTenseAction: 'Deleting an IP from',
+    pastTenseAction: '',
+    pastTensePrefix: 'IP deleted from',
+    redirectUrl: getLinodeNetworkingRedirectUrl,
+  },
   linode_migrate: {
     presentTenseAction: 'Migrating',
     pastTenseAction: 'migrated',

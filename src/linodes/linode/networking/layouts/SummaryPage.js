@@ -38,7 +38,7 @@ export class SummaryPage extends Component {
     return dispatch(showModal('Delete IP Address', (
       <DeleteModalBody
         onOk={async () => {
-          dispatch(deleteIP(ip.address));
+          dispatch(deleteIP(ip));
           dispatch(hideModal());
         }}
         items={[ip.address]}
@@ -49,7 +49,7 @@ export class SummaryPage extends Component {
   };
 
   renderIPNav = ({ column, record }) => {
-    const { dispatch } = this.props;
+    const { dispatch, linode } = this.props;
 
     if (record.type.toLowerCase() === 'link-local') {
       return <TableCell column={column} record={record} />;
@@ -57,17 +57,20 @@ export class SummaryPage extends Component {
 
     const groups = [
       { elements: [{ name: 'More Info', action: () => MoreInfo.trigger(dispatch, record) }] },
-      //{ name: 'Delete', action: () => this.deleteIP(record) },
+      { elements: [{ name: 'Delete', action: () => this.deleteIP(record) }] },
     ];
 
-    // TODO: add once there's support for deleting.
-    // if (['slaac', 'link-local'].indexOf(record.type.toLowerCase()) !== -1) {
-    //  // Cannot delete slaac address.
-    //  elements.pop();
-    // }
+    const numPublicIPv4 = Object.values(linode._ips).filter(
+      ip => ip.type === 'public' && ip.version === 'ipv4').length;
+
+    if (['slaac', 'link-local', 'private'].indexOf(record.type.toLowerCase()) !== -1
+        || numPublicIPv4 === 1) {
+      // Cannot delete slaac, link-local, private, or last public IPv4 address.
+      groups.pop();
+    }
 
     if (['private', 'link-local', 'pool'].indexOf(record.type.toLowerCase()) === -1) {
-      groups.push({ elements: [
+      groups.splice(1, 0, { elements: [
         { name: 'Edit RDNS', action: () => EditRDNS.trigger(dispatch, record) },
       ] });
 
