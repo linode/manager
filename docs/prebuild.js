@@ -89,7 +89,18 @@ function formatMethodParams(methodObj) {
 
       param.description = convertUlToArray(stripATags(param.description));
 
-      const type = apiObjectMap[param.type] ? 'integer' : param.type;
+      let type = param.type;
+      if (type) {
+        const resourceObj = getResourceObjByName(param.type);
+        if (resourceObj) {
+          if (Array.isArray(resourceObj.schema)) {
+            type = resourceObj.schema.filter(function(schemaObj) { return schemaObj.name === 'id'; })[0]._type;
+          } else {
+            type = resourceObj.schema.id._type;
+          }
+        }
+      }
+
       const required = !param.optional;
       return _.merge({}, param, {
         name: paramName,
