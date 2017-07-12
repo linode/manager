@@ -64,8 +64,8 @@ endpoints:
             optional: true
             description: >
               A public SSH key file to install at `/root/.ssh/authorized_keys` when creating this Linode.
-            type: String
-          stackscript:
+            type: string
+          stackscript_id:
             optional: true
             description: >
               The stackscript ID to deploy with this disk.
@@ -77,8 +77,8 @@ endpoints:
             description: >
               UDF (user-defined fields) for this stackscript. Defaults to "{}".
               <ul><li>Must match UDFs required by stackscript.</li></ul>
-            type: String
-          backup:
+            type: string
+          backup_id:
             optional: true
             description: >
               The <a href="#object-backup">Backup</a> to restore to the newly created
@@ -210,8 +210,8 @@ endpoints:
             optional: true
             description: >
               If true, this disk is read-only.
-            type: Boolean
-          stackscript:
+            type: boolean
+          stackscript_id:
             optional: true
             description: >
               The stackscript ID to deploy with this disk.
@@ -510,7 +510,7 @@ endpoints:
         oauth: linodes:modify
         dangerous: false
         params:
-          config:
+          config_id:
             optional: true
             description: >
               Optional config ID to boot the linode with.
@@ -794,7 +794,7 @@ endpoints:
         oauth: linodes:create
         dangerous: true
         params:
-          linode:
+          linode_id:
             description: >
               The ID of the Linode to restore a backup to.
             type: Linode
@@ -928,8 +928,8 @@ endpoints:
             optional: true
             description: >
                 The key to authorize for root access to the new deployment.
-            type: String
-          stackscript:
+            type: string
+          stackscript_id:
             optional: true
             description: >
               The stackscript ID to deploy with this disk.

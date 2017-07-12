@@ -29,7 +29,7 @@ endpoints:
         description: >
           Create a new Public <a href="#object-ipaddress">IPv4 Address</a>
         params:
-          linode:
+          linode_id:
             description: >
               The Linode ID to assign this IP to.
             type: Integer
