@@ -196,3 +196,13 @@ export function setShared(linodeId, ips) {
     dispatch(actions.one({ _shared: ips }, linodeId));
   };
 }
+
+export function deleteIP(ip) {
+  return async function (dispatch, getState) {
+    await dispatch(thunkFetch.delete(`/networking/ipv4/${ip.address}`));
+
+    const linode = getState().api.linodes.linodes[ip.linode_id];
+    const _ips = _.omitBy(linode._ips, (_, key) => key === ip.address);
+    dispatch(actions.one({ _ips }, linode.id));
+  };
+}
