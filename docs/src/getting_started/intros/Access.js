@@ -6,7 +6,6 @@ import Example from '~/components/Example';
 import { LOGIN_ROOT, API_VERSION } from '~/constants';
 
 
-
 export default function Authentication() {
   return (
     <section className="Article">
@@ -41,7 +40,7 @@ export default function Authentication() {
         </p>
         <p>
           There are additional parameters that you can supply in the query string of the above request.
-          If you provided a redirect_uri when you sent the user to { LOGIN_ROOT },
+          If you provided a redirect_uri when you sent the user to {LOGIN_ROOT},
           they will be redirected to that URI. Otherwise, the default redirect URI associated with your
           OAuth client application will be used.
         </p>
@@ -49,40 +48,41 @@ export default function Authentication() {
           When the user is redirected, two parameters will be added to the query string:
           <code>code</code> and <code>state</code>.
           The last parameter will match the state you gave us at the start of the flow. This allows you to ensure
-          that the OAuth flow was initiated by your application, rather than by someone manually navigating to { LOGIN_ROOT } with
+          that the OAuth flow was initiated by your application,
+          rather than by someone manually navigating to {LOGIN_ROOT} with
           your <code>client_id</code>.
           The important parameter is the code, this is the <em>access code</em> you need to continue the OAuth flow.
         </p>
         <p>
           You can include the following parameters in the query string when
-          you direct your users to { LOGIN_ROOT }:
+          you direct your users to {LOGIN_ROOT}:
         </p>
         <Table
           className="Table--secondary"
           columns={[
             { dataKey: 'parameter', label: 'Parameter', headerClassName: 'ParameterColumn' },
-            { dataKey: 'description', label: 'Description', headerClassName: 'DescriptionColumn' }
+            { dataKey: 'description', label: 'Description', headerClassName: 'DescriptionColumn' },
           ]}
           data={[
             {
               parameter: 'client_id',
-              description: 'Required. Your application\'s client ID.'
+              description: 'Required. Your application\'s client ID.',
             },
             {
               parameter: 'scopes',
-              description: 'A comma-delimited list of OAuth scopes you need.'
+              description: 'A comma-delimited list of OAuth scopes you need.',
             },
             {
               parameter: 'redirect_uri',
               description: 'Where to redirect the user after login. If provided, the redirect URI you ' +
               'registered your application with should match the start of this string. If you registered ' +
               ' your app with http://example.org as the redirect URI, then this parameter must start with ' +
-              '"http://example.org".'
+              '"http://example.org".',
             },
             {
               parameter: 'state',
-              description: 'An arbitrary token that will be returned to you at the end of the process.'
-            }
+              description: 'An arbitrary token that will be returned to you at the end of the process.',
+            },
           ]}
         />
       </section>
@@ -103,12 +103,12 @@ export default function Authentication() {
           className="Table--secondary"
           columns={[
             { dataKey: 'parameter', label: 'Parameter', headerClassName: 'ParameterColumn' },
-            { dataKey: 'description', label: 'Description', headerClassName: 'DescriptionColumn' }
+            { dataKey: 'description', label: 'Description', headerClassName: 'DescriptionColumn' },
           ]}
           data={[
             { parameter: 'client_id', description: 'Your app\'s client ID' },
             { parameter: 'client_secret', description: 'Your app\'s client secret' },
-            { parameter: 'code', description: 'The code you just received from the redirect' }
+            { parameter: 'code', description: 'The code you just received from the redirect' },
           ]}
         />
         <p>
@@ -131,7 +131,11 @@ export default function Authentication() {
           can proceed to make authenticated HTTP requests with the API by adding
           this header to each request:
         </p>
-        <Example example="Authorization: token 03d084436a6c91fbafd5c4b20c82e5056a2e9ce1635920c30dc8d81dc7a6665c" name="bash" noclipboard />
+        <Example
+          example="Authorization: token 03d084436a6c91fbafd5c4b20c82e5056a2e9ce1635920c30dc8d81dc7a6665c"
+          name="bash"
+          noclipboard
+        />
       </section>
       <section>
         <h2>OAuth Scopes</h2>
@@ -141,7 +145,7 @@ export default function Authentication() {
           want more access, you need to add <em>OAuth scopes</em> to the query string.
           An OAuth scope defines the level of access your OAuth token will receive.
           You can request a comma-delimited list of scopes by adding <code>scopes=a,b,c</code>
-          to the query string of the <code>{ LOGIN_ROOT }</code> URL.
+          to the query string of the <code>{LOGIN_ROOT}</code> URL.
         </p>
         <p>
           A scope takes the form of <code>resource:access</code>, where the
@@ -166,13 +170,18 @@ export default function Authentication() {
         </p>
         <p>
           Each API endpoint documented on these pages includes the OAuth scope necessary
-          to use that resource. It will look like this: <span className="text-muted">&nbsp;OAuth scopes:&nbsp;linodes:view</span>.
+          to use that resource. It will look like this:
+          <span className="text-muted">&nbsp;OAuth scopes:&nbsp;linodes:view</span>.
           You may also request <code>*</code> to get full access to a user's account,
           but this is highly discouraged. You should do your best to request the least amount
           of access needed for your application to function.
         </p>
       </section>
-      <div className="text-sm-center"><Link to={`/${API_VERSION}/pagination`}>Find out about pagination &raquo;</Link></div>
+      <div className="text-sm-center">
+        <Link to={`/${API_VERSION}/pagination`}>
+          Find out about pagination &raquo;
+        </Link>
+      </div>
     </section>
   );
 }
