@@ -11,9 +11,9 @@
     "lint": "eslint --max-warnings=0 src test",
     "lint:fix": "eslint src test --fix",
     "start": "node devServer.js",
-    "test": "cross-env NODE_ENV=test karma start karma.conf.js --single-run",
-    "test:watch": "cross-env NODE_ENV=test karma start karma.conf.js",
-    "test:debug": "cross-env NODE_ENV=test karma start karma.conf.js --browsers=Chrome --debug"
+    "test": "NODE_ENV=test karma start karma.conf.js --single-run",
+    "test:watch": "NODE_ENV=test karma start karma.conf.js",
+    "test:debug": "NODE_ENV=test karma start karma.conf.js --browsers=Chrome --debug"
   },
   "repository": {
     "type": "git",
