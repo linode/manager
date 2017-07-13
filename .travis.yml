@@ -17,6 +17,6 @@ script:
         npm run lint
         cd docs && npm run lint
         cd ../components && npm run lint
-        cd .. && npm test
+        cd ../ && npm test
         cat ./coverage/lcov.info | node ./bin/styleguideTestFilter.js | ./node_modules/.bin/coveralls
       fi
