@@ -1,13 +1,9 @@
-import React from 'react';
-import { Link } from 'react-router';
+import React, { PropTypes } from 'react';
 
 import { Breadcrumbs } from 'linode-components/breadcrumbs';
 import { Table } from 'linode-components/tables';
-import { LinkCell } from 'linode-components/tables/cells';
-
 
 import { default as Example } from  './Example';
-import { default as Method } from './Method';
 
 
 export default function Library(props) {
@@ -127,4 +123,8 @@ export default function Library(props) {
       </div>
     </div>
   );
+};
+
+Library.propTypes = {
+
 };
