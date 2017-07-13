@@ -56,7 +56,9 @@ export class APITokensPage extends Component {
 
     if (!token.client) {
       groups.splice(1, 0, {
-        elements: [{ name: 'Edit', action: () => EditPersonalAccessToken.trigger(dispatch, token) }],
+        elements: [
+          { name: 'Edit', action: () => EditPersonalAccessToken.trigger(dispatch, token) },
+        ],
       });
     }
 

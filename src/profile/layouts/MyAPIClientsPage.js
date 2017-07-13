@@ -18,7 +18,6 @@ import { showModal, hideModal } from '~/actions/modal';
 import toggleSelected from '~/actions/select';
 import { clients as api } from '~/api';
 import { resetSecret } from '~/api/clients';
-import { TimeCell } from '~/components/tables/cells';
 import { API_ROOT } from '~/constants';
 
 import { renderSecret } from '../components/CreatePersonalAccessToken';
@@ -42,7 +41,6 @@ export class MyAPIClientsPage extends Component {
     return `${API_ROOT}/account/clients/${client.id}/thumbnail`;
   }
 
-  
   deleteAction = (client) => {
     const { dispatch } = this.props;
 
@@ -50,7 +48,7 @@ export class MyAPIClientsPage extends Component {
       <DeleteModalBody
         onOk={() => {
           dispatch(hideModal());
-          this.deleteApp();
+          return dispatch(api.delete(client.id));
         }}
         onCancel={() => dispatch(hideModal())}
         typeOfItem="Clients"
@@ -137,7 +135,7 @@ export class MyAPIClientsPage extends Component {
               data={sortedClients}
               dispatch={dispatch}
               massEditGroups={[{ elements: [
-                { name: 'Revoke', action: this.revokeClients },
+                { name: 'Delete', action: this.deleteClients },
               ] }]}
               selectedMap={selectedMap}
               objectType={OBJECT_TYPE}

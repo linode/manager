@@ -3,7 +3,6 @@ import { mount } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
-import { SHOW_MODAL } from '~/actions/modal';
 import { API_ROOT } from '~/constants';
 import { APITokensPage } from '~/profile/layouts/APITokensPage';
 
@@ -34,8 +33,7 @@ describe('profile/layouts/APITokensPage', () => {
     const token = page.find('.TableRow');
     expect(token.length).to.equal(Object.keys(tokens.tokens).length);
     const firstToken = token.at(1);
-    console.log(firstToken.debug());
-    expect(firstToken.find('td').at(1).text())
+    expect(firstToken.find('td img').props().src)
       .to.equal(`${API_ROOT}/account/clients/d64b169cc95fde4e367g/thumbnail`);
     expect(firstToken.find('td').at(2).text())
       .to.equal('Test client');
