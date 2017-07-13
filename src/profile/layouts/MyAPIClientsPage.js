@@ -11,7 +11,7 @@ import CreateHelper from '~/components/CreateHelper';
 import { MyApplication, CreateOrEditApplication } from '../components';
 
 
-export class MyApplicationsPage extends Component {
+export class MyAPIClientsPage extends Component {
   static async preload({ dispatch }) {
     await dispatch(clients.all());
   }
@@ -71,7 +71,7 @@ export class MyApplicationsPage extends Component {
   }
 }
 
-MyApplicationsPage.propTypes = {
+MyAPIClientsPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   clients: PropTypes.object.isRequired,
 };
@@ -82,4 +82,4 @@ function select(state) {
   };
 }
 
-export default connect(select)(MyApplicationsPage);
+export default connect(select)(MyAPIClientsPage);

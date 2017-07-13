@@ -26,7 +26,7 @@ import CreatePersonalAccessToken from '../components/CreatePersonalAccessToken';
 
 const OBJECT_TYPE = 'tokens';
 
-export class ActiveTokensPage extends Component {
+export class APITokensPage extends Component {
   static async preload({ dispatch }) {
     await dispatch(api.all());
   }
@@ -139,7 +139,7 @@ export class ActiveTokensPage extends Component {
                     label: 'Label',
                   },
                   {
-                    dataFn: t => t.client ? 'OAuth Client' : 'Personal Access Token',
+                    dataFn: t => t.client ? 'OAuth Client Token' : 'Personal Access Token',
                     label: 'Type',
                   },
                   {
@@ -185,7 +185,7 @@ export class ActiveTokensPage extends Component {
   }
 }
 
-ActiveTokensPage.propTypes = {
+APITokensPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
   tokens: PropTypes.object.isRequired,
   selectedMap: PropTypes.object.isRequired,
@@ -198,4 +198,4 @@ function select(state) {
   };
 }
 
-export default connect(select)(ActiveTokensPage);
+export default connect(select)(APITokensPage);
