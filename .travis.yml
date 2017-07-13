@@ -3,8 +3,8 @@ node_js:
     - "6"
 install:
     - npm install
-    - cd docs && npm install
-    - cd ../components && npm install && cd ../
+    - (cd docs && npm install)
+    - (cd components && npm install)
 script:
     - set -e
     - |
@@ -15,8 +15,8 @@ script:
     - |
       if [[ $(git diff HEAD^ $(git rev-parse --abbrev-ref HEAD) --name-only | grep -v scss) ]]; then
         npm run lint
-        cd docs && npm run lint
-        cd ../components && npm run lint
-        cd ../ && npm test
+        (cd docs && npm run lint)
+        (cd components && npm run lint)
+        npm test
         cat ./coverage/lcov.info | node ./bin/styleguideTestFilter.js | ./node_modules/.bin/coveralls
       fi
