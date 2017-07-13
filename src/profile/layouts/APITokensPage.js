@@ -20,6 +20,7 @@ import { tokens as api } from '~/api';
 import { TimeCell } from '~/components/tables/cells';
 
 import TokenMoreInfo from '../components/TokenMoreInfo';
+import EditPersonalAccessToken from '../components/EditPersonalAccessToken';
 import CreatePersonalAccessToken from '../components/CreatePersonalAccessToken';
 
 
@@ -39,10 +40,18 @@ export class ActiveTokensPage extends Component {
   createDropdownGroups = (token) => {
     const { dispatch } = this.props;
 
-    return [
+    const groups = [
       { elements: [{ name: 'More Info', action: () => TokenMoreInfo.trigger(dispatch, token) }] },
       { elements: [{ name: 'Revoke', action: () => this.revokeTokens(token) }] },
     ];
+
+    if (!token.client) {
+      groups.splice(1, 0, {
+        elements: [{ name: 'Edit', action: () => EditPersonalAccessToken.trigger(dispatch, token) }],
+      });
+    }
+
+    return groups;
   }
 
   revokeTokens = (tokens) => {
