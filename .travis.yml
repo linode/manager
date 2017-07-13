@@ -4,7 +4,7 @@ node_js:
 install:
     - npm install
     - cd docs && npm install
-    - cd ../components && npm install
+    - cd ../components && npm install && cd ../
 script:
     - set -e
     - |
