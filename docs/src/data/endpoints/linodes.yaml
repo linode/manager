@@ -102,7 +102,7 @@ endpoints:
             my_linode = client.linode.create_instance(client.get_regions().first(), 'g5-nanode-1')
 
             distro = client.linode.get_distributons(linode.Distribution.vendor == 'debian').first()
-            ( my_linode_2, password ) = client.linode.create_instance('us-east-1a', 'g5-standard-1', distribtuion=distro)
+            ( my_linode_2, password ) = client.linode.create_instance('us-east-1a', 'g5-standard-1', distribution=distro)
   /linode/instances/:id:
     type: resource
     resource: linode
