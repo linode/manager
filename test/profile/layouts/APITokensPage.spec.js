@@ -4,6 +4,7 @@ import React from 'react';
 import sinon from 'sinon';
 
 import { SHOW_MODAL } from '~/actions/modal';
+import { API_ROOT } from '~/constants';
 import { APITokensPage } from '~/profile/layouts/APITokensPage';
 
 import { api } from '@/data';
@@ -31,13 +32,15 @@ describe('profile/layouts/APITokensPage', () => {
     );
 
     const token = page.find('.TableRow');
-    // + 1 for the group
     expect(token.length).to.equal(Object.keys(tokens.tokens).length);
-    const firstToken = token.at(0);
+    const firstToken = token.at(1);
+    console.log(firstToken.debug());
     expect(firstToken.find('td').at(1).text())
-      .to.equal('personal');
+      .to.equal(`${API_ROOT}/account/clients/d64b169cc95fde4e367g/thumbnail`);
     expect(firstToken.find('td').at(2).text())
-      .to.equal('Personal Access Token');
+      .to.equal('Test client');
+    expect(firstToken.find('td').at(3).text())
+      .to.equal('OAuth Client Token');
   });
 
   it('revokes selected tokens when revoke is pressed', async () => {
