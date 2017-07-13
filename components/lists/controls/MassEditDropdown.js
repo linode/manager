@@ -1,7 +1,6 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
 
-import { Checkbox } from '../../forms';
 import { Dropdown } from '../../dropdowns';
 
 export default function MassEditDropdown(props) {
@@ -10,7 +9,8 @@ export default function MassEditDropdown(props) {
   return (
     <div className="input-group">
       <span className="input-group-addon">
-        <Checkbox
+        <input
+          type="checkbox"
           onChange={function (e) {
             onChange(e.target.checked);
           }}
