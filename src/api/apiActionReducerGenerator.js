@@ -180,11 +180,12 @@ function genThunkAll(config, actions, fetchPage) {
 
       // Grab all pages we know about. If state.invalid, don't save the result
       // in the redux store until we've got all the results.
+      const requests = [];
       for (let i = 1; i < resources[0].total_pages; i += 1) {
-        const resource = await dispatch(
-          fetchPage(i, ids, resourceFilter, !state.invalid, fetchBeganAt, options));
-        resources.push(resource);
+        requests.push(fetchPage(i, ids, resourceFilter, !state.invalid, fetchBeganAt, options));
       }
+
+      (await Promise.all(requests.map(r => dispatch(r)))).map(response => resources.push(response));
 
       // If the number of total results returned by the last page is different
       // than the total number of results we have, restart.
