@@ -28,7 +28,7 @@ export default function Introduction(props) {
           <a href="http://curl.haxx.se/" target="_blank" rel="nofollow noopener noreferrer">
             cURL
           </a>
-          is a simple and popular command line tool that allows you to perform various kinds
+          &nbsp;is a simple and popular command line tool that allows you to perform various kinds
           of HTTP requests. It may already be installed on your system - run
           <code>curl --version</code> in your shell to check. Once you've confirmed that
           you have it installed, we can use it to test out the Linode API from the comfort
@@ -43,7 +43,7 @@ export default function Introduction(props) {
           <small className="text-muted"><i className="fa fa-lock"></i> Authenticated</small>
           indicator in the reference documentation. For API endpoints where this indicator is
           missing, you're able to use curl to test them without any additional steps.
-          For example, we could
+          For example, we could&nbsp;
           <Link to={`/${API_VERSION}/reference/endpoints/linode/distributions`}>
             list supported distributions
           </Link>:
@@ -79,13 +79,13 @@ export default function Introduction(props) {
         <p>
           For many requests, you will have to authenticate as a particular user. For now, we’re
           going to use a personal access token to make things easier. If you’d like to learn
-          how to make a full blown OAuth client, read the
+          how to make a full blown OAuth client, read the&nbsp;
           <Link to={`/${API_VERSION}/access`}>
             authentication documentation
           </Link>.
         </p>
         <p>
-          To generate a personal access token,
+          To generate a personal access token,&nbsp;
           <a
             href={`${MANAGER_ROOT}/profile/integrations/tokens`}
             target="_blank"

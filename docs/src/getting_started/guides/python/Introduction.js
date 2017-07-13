@@ -24,7 +24,7 @@ export default function Introduction(props) {
         <p>
           With the release of API V4, Linode has also released an official Python library.
           This guide is a simple introduction to working with the Python library.
-          The official Linode Python library is open source on
+          The official Linode Python library is open source on&nbsp;
           <a
             href="http://github.com/Linode/python-linode-api"
             target="_blank"
@@ -37,7 +37,7 @@ export default function Introduction(props) {
         <Example example="pip install linode-api" name="bash" />
         <p>
           In order to make requests to the API, you're going to need an OAuth Token.
-          You can make a personal access token at
+          You can make a personal access token at&nbsp;
           <a
             href="https://cloud.linode.com/profile/integrations/tokens"
             target="_blank"
@@ -238,7 +238,7 @@ root@localhost:~#`}
         <h2>Further Reading</h2>
         <p>
           Now that you’ve had an overview of the features and concepts in the Python library,
-          check out the Python library reference for in-depth documentation, or look at the
+          check out the Python library reference for in-depth documentation, or look at the&nbsp;
           <a
             // eslint-disable-next-line max-len
             href="https://github.com/linode/python-linode-api/tree/master/examples/install-on-linode"
@@ -247,7 +247,7 @@ root@localhost:~#`}
           >
               Install on Linode sample project
           </a>
-          for an example multi-user application using the library.
+          &nbsp;for an example multi-user application using the library.
         </p>
       </section>
       <div className="text-sm-center">

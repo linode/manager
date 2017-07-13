@@ -22,9 +22,11 @@ export default function BasicSetup(props) {
         <p>
           The Python Library includes an OAuth Client tailored to Linode's OAuth 2 implementation,
           making it easy to allow users to authenticate against Linode and grant your applications
-          certain rights to their account. All communication between
-          <a href={LOGIN_ROOT} target="_blank" rel="nofollow noopener noreferrer">{LOGIN_ROOT}</a>
-          and your application is handled by the <code>LinodeLoginClient</code>.
+          certain rights to their account. All communication between&nbsp;
+          <a href={LOGIN_ROOT} target="_blank" rel="nofollow noopener noreferrer">
+            {LOGIN_ROOT}
+          </a>
+          &nbsp;and your application is handled by the <code>LinodeLoginClient</code>.
         </p>
       </section>
       <section>

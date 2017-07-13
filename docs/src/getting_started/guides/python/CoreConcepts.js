@@ -103,8 +103,8 @@ while not linode.state == 'running':
           removed).
         </p>
         <p>
-          Any attribute of any object that you can update will be marked Editable
-          <i className="fa fa-pencil"></i>in the object reference below. These attributes
+          Any attribute of any object that you can update will be marked Editable&nbsp;
+          <i className="fa fa-pencil"></i>&nbsp;in the object reference below. These attributes
           can be assigned as normal, and updated in the server with a call to <code>save()</code>.
         </p>
         <p>

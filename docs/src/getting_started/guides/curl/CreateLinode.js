@@ -23,8 +23,10 @@ export default function Introduction(props) {
       <section>
         <p>
           Creating a Linode requires you to be logged in. Before proceeding, make sure you have
-          gone through the
-          <Link to={`${API_VERSION}/guides/curl/testing-with-curl`}>testing with curl guide</Link>,
+          gone through the&nbsp;
+          <Link to={`${API_VERSION}/guides/curl/testing-with-curl`}>
+            testing with curl guide
+          </Link>,
           since you will need an authorization token to proceed.
         </p>
         <p>
@@ -114,7 +116,7 @@ export default function Introduction(props) {
         <p>
           Each entry in the types list represents an available Linode type. You can review
           the details of each plan, such as the number of virtual CPUs, memory, disk space,
-          monthly price, etc. For explanations of each field, see the
+          monthly price, etc. For explanations of each field, see the&nbsp;
           <Link to={`/${API_VERSION}/reference/endpoints/linode/types`}>
             complete type reference
           </Link>
@@ -155,7 +157,7 @@ export default function Introduction(props) {
           noclipboard
         />
         <p>
-          For detailed information about each field, see the complete
+          For detailed information about each field, see the complete&nbsp;
           <Link to={`/${API_VERSION}/reference/endpoints/linode/distributions`}>
             distribution reference
           </Link>
