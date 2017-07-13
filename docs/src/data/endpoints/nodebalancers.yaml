@@ -6,6 +6,7 @@ description: >
 endpoints:
   /nodebalancers:
     resource: nodebalancer
+    paginationKey: nodebalancers
     authenticated: true
     description: >
       Manage the collection of NodeBalancers your account may access.
@@ -105,6 +106,7 @@ endpoints:
   /nodebalancers/:id/configs:
     _group: Configs
     resource: nodebalancer_config
+    paginationKey: configs
     authenticated: true
     description: >
       Manage the configs on this NodeBalancer.
@@ -252,6 +254,7 @@ endpoints:
   /nodebalancers/:id/configs/:id/nodes:
     _group: Configs
     resource: nodebalancer_config_nodes
+    paginationKey: nodes
     authenticated: true
     description: >
       Manage the nodes for a specified NodeBalancer config.

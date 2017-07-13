@@ -7,9 +7,9 @@ description: >
 endpoints:
   /networking/ipv4:
     _group: IPv4
-    resource: ipaddress
     authenticated: true
     resource: ipaddress
+    paginationKey: ipv4s
     description: >
       View and manage IPv4 Addresses you own.
     methods:
@@ -84,6 +84,7 @@ endpoints:
   /networking/ipv6:
     _group: IPv6
     resource: ipv6pool
+    paginationKey: ipv6s
     authenticated: true
     description: >
       Manage <a href="#object-ipv6pool">IPv6 Global Pools</a>.

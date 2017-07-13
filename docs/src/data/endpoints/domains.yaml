@@ -8,8 +8,9 @@ description: >
   here. We'll just direct you to [RFC 1035](https://www.ietf.org/rfc/rfc1035.txt).
 endpoints:
   /domains:
-    resource: domains
+    resource: domain
     authenticated: true
+    paginationKey: domains
     description: >
       Manage the collection of Domains your account may access.
     methods:
@@ -169,6 +170,7 @@ endpoints:
             TODO
   /domains/:id/records:
     resource: domainrecords
+    paginationKey: records
     authenticated: true
     description: >
       Manage the collection of Domain Records your account may access.

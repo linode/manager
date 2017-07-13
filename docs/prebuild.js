@@ -159,18 +159,27 @@ function formatSchemaField(schemaField, enumMap) {
   const type = schemaField._type;
   const lowerType = type ? type.toLowerCase() : null;
   const subType = schemaField._subtype;
+  const isArray = schemaField._isArray;
   let value = schemaField._value;
+
+  let typeLabel = schemaField._typeLabel || type || 'object';
 
   let nestedSchema = null;
   if (apiObjectMap[lowerType]) {
     // matches a known object from /objects, format using the reference
     nestedSchema = formatSchema(getResourceObjByName(lowerType).schema, enumMap);
+    typeLabel = 'object';
   } else if (lowerType === 'enum' && enumMap[subType]) {
     // matches a known enum from an enums key on an object in /objects, format using the reference
     nestedSchema = enumMap[subType]; // already formatted
   } else if (lowerType === 'enum' || lowerType === 'object' || lowerType === 'array' || !lowerType) {
     // is of the the checked types, or no type provided (currently undocumented)
     nestedSchema = formatSchema(schemaField, enumMap);
+  }
+
+  typeLabel = _.capitalize(typeLabel);
+  if (isArray) {
+    typeLabel = `Array[${_.capitalize(typeLabel)}]`;
   }
 
   // don't show filters for nestedSchemas
@@ -186,16 +195,29 @@ function formatSchemaField(schemaField, enumMap) {
     description: description,
     editable: editable,
     filterable: filterable,
-    type: type,
+    type: typeLabel,
     subType: subType,
     value: value,
     schema: nestedSchema
   };
 }
 
-function formatSchema(schema, enumMap={}) {
+function createPaginationSchema(paginationKey, resourceType) {
+  return {
+    total_pages: { _type: 'integer', description: 'The total number of pages of results.' },
+    total_results: { _type: 'integer', description: 'The total number of results.' },
+    [paginationKey]: { _type: resourceType, _isArray: true, description: 'All results for the current page.' },
+    page: { _type: 'integer', description: 'The current page in the results.' },
+  };
+}
+
+function formatSchema(schema, enumMap={}, paginationKey=null, resourceType=null) {
   if (Array.isArray(schema)) {
     return schema;
+  }
+
+  if (paginationKey) {
+    return formatSchema(createPaginationSchema(paginationKey, resourceType), enumMap);
   }
 
   const filteredSchemas = Object.keys(schema).map(function (schemaName) {
@@ -241,7 +263,8 @@ function formatMethodResource(endpoint, method) {
       resource = 'profile';
     }
 
-    resourceObject = getResourceObjByName(resource);
+    // Paginated endpoints will modify the schema, so we need to be using a copy of the data.
+    resourceObject = _.cloneDeep(getResourceObjByName(resource));
 
     let enums;
     let schema;
@@ -255,7 +278,7 @@ function formatMethodResource(endpoint, method) {
 
       schema = resourceObject.schema;
       if (schema) {
-        resourceObject.schema = formatSchema(schema, enumMap);
+        resourceObject.schema = formatSchema(schema, enumMap, endpoint.paginationKey, endpoint.resource);
         resourceObject.example = formatSchemaExample(resourceObject.schema);
       }
     }
