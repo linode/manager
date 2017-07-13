@@ -5,6 +5,15 @@
     &-group {
         margin-bottom: 20px;
         width: 100%;
+
+        h1, .GithubLink {
+            display: inline;
+        }
+
+        .GithubLink {
+            float: right;
+            padding: 10px 0;
+        }
     }
 
     &-breadcrumbsContainer {

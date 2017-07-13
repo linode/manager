@@ -507,18 +507,18 @@ function convertPythonYaml() {
       routePath: '/v4/libraries/python/stackscript',
       formattedPythonObject: [],
     },
-    'DNS Zone': {
-      name: 'DNS Zone',
-      path: '/dnszone',
+    'Domain': {
+      name: 'Domain',
+      path: '/domain',
       langauge: 'python',
-      routePath: '/v4/libraries/python/dnszone',
+      routePath: '/v4/libraries/python/domain',
       formattedPythonObject: [],
     },
-    'DNS Zone Record': {
-      name: 'DNS Zone Record',
-      path: '/dnszone-record',
+    'Domain Record': {
+      name: 'Domain Record',
+      path: '/domain-record',
       langauge: 'python',
-      routePath: '/v4/libraries/python/dnszone-record',
+      routePath: '/v4/libraries/python/domain-record',
       formattedPythonObject: [],
     },
   };
