@@ -1,3 +1,5 @@
+import _ from 'lodash';
+import moment from 'moment';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
@@ -81,7 +83,7 @@ export class IndexPage extends Component {
 
     const filteredNodebalancers = filter.length ? _.pickBy(nodebalancers.nodebalancers, l =>
       l.label.toLowerCase().indexOf(filter.toLowerCase()) !== -1) : nodebalancers.nodebalancers;
-    const data = Object.values(filteredNodebalancers);
+    const data = _.sortBy(Object.values(filteredNodebalancers), n => moment(n.created));
 
     const renderNodeBalancers = (data) => (
       <List>
