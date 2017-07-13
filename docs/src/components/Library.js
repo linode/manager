@@ -3,38 +3,49 @@ import React, { PropTypes } from 'react';
 import { Breadcrumbs } from 'linode-components/breadcrumbs';
 import { Table } from 'linode-components/tables';
 
-import { default as Example } from  './Example';
+import { default as Example } from './Example';
 
 
 export default function Library(props) {
   const { route } = props;
   const { crumbs, libraryObject } = route;
-  const { name, desc, formattedLibraryObject, language } = libraryObject;
+  const { formattedLibraryObject, language } = libraryObject;
 
   function methodContents(containingObject, key) {
-    let method = containingObject.methods[key];
+    const method = containingObject.methods[key];
+
     if (method.parameters) {
-      let parameters = Object.keys(method.parameters).map(function(key, index) {
+      const parameters = Object.keys(method.parameters).map(function (key) {
         return { name: key, ...method.parameters[key] };
       });
-      return {name: key,
+
+      return {
+        name: key,
         ...method,
         parameters,
       };
     }
-    return { name: key,
+
+    return {
+      name: key,
       ...method,
     };
   }
+
   let methods = [];
   if (formattedLibraryObject.methods) {
-    methods = Object.keys(formattedLibraryObject.methods).map(function(key, index) {
+    methods = Object.keys(formattedLibraryObject.methods).map(function (key) {
       return methodContents(formattedLibraryObject, key);
     });
   }
-  const constructorParameters = Object.keys(formattedLibraryObject.constructor.parameters).map(function(key, index) {
-    return { name: key, desc: formattedLibraryObject.constructor.parameters[key].desc };
-  });
+
+  const constructorParameters = Object.keys(formattedLibraryObject.constructor.parameters)
+    .map(function (key) {
+      return {
+        name: key,
+        desc: formattedLibraryObject.constructor.parameters[key].desc,
+      };
+    });
 
   function methodDisplay(method, index) {
     return (
@@ -51,7 +62,7 @@ export default function Library(props) {
               className="Table--secondary"
               columns={[
                 { label: 'Argument', dataKey: 'name', headerClassName: 'FieldColumn' },
-                { label: 'Description', dataKey: 'desc', headerClassName: 'DescriptionColumn' }
+                { label: 'Description', dataKey: 'desc', headerClassName: 'DescriptionColumn' },
               ]}
               data={!!method.parameters ? Object.values(method.parameters) : []}
             />
@@ -64,15 +75,16 @@ export default function Library(props) {
   }
 
   function groupDisplay(group) {
-    const methods = Object.keys(group.methods).map(function(key, index) {
+    const methods = Object.keys(group.methods).map(function (key) {
       return methodContents(group, key);
     });
+
     return (
       <div className="Endpoint-title">
         <h2>{group.name} Group</h2>
         <p>{group.desc}</p>
         <div className="Endpoint-body">
-          {Object.keys(methods).map(function(key, i) {
+          {Object.keys(methods).map(function (key, i) {
             return methodDisplay(methods[key], i);
           })}
         </div>
@@ -91,7 +103,7 @@ export default function Library(props) {
           <p>{formattedLibraryObject.desc}</p>
         </div>
         <div className="divider"></div>
-        <Example example={formattedLibraryObject.import} language={language } />
+        <Example example={formattedLibraryObject.import} language={language} />
         <h2>Constructor</h2>
         <Example example={formattedLibraryObject.constructor.example} language={language} />
         <div className="Endpoint-body">
@@ -102,7 +114,7 @@ export default function Library(props) {
                   className="Table--secondary"
                   columns={[
                     { label: 'Property', dataKey: 'name', headerClassName: 'FieldColumn' },
-                    { label: 'Description', dataKey: 'desc', headerClassName: 'DescriptionColumn' }
+                    { label: 'Description', dataKey: 'desc', headerClassName: 'DescriptionColumn' },
                   ]}
                   data={constructorParameters}
                 />
@@ -112,19 +124,20 @@ export default function Library(props) {
         </div>
         <div className="divider"></div>
         <div className="Endpoint-body">
-          {methods.map(function(method, index) {
+          {methods.map(function (method, index) {
             return methodDisplay(method, index);
           })}
         </div>
         <div className="divider"></div>
-        {!!formattedLibraryObject.groups ? Object.keys(formattedLibraryObject.groups).map(function(key) {
-          return groupDisplay(formattedLibraryObject.groups[key]);
-        }) : null }
+        {!!formattedLibraryObject.groups ? Object.keys(formattedLibraryObject.groups)
+            .map(function (key) {
+              return groupDisplay(formattedLibraryObject.groups[key]);
+            }) : null}
       </div>
     </div>
   );
-};
+}
 
 Library.propTypes = {
-
+  route: PropTypes.object,
 };
