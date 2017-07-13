@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 
 import { default as MethodParams } from './MethodParams';
 import { default as MethodRequest } from './MethodRequest';
@@ -49,10 +49,14 @@ export default function Method(props) {
           <h2>{name}</h2>
           <div className="float-sm-right">
             <div>
-              {money ? <small className="text-muted"><i className="fa fa-dollar"></i> Will incur a charge on your account</small> : null}
+              {money ? (
+                <small className="text-muted">
+                  <i className="fa fa-dollar"></i>
+                  Will incur a charge on your account
+                </small>) : null}
             </div>
             <div>
-              {oauth ? <small className="text-muted">OAuth scopes: { oauth } </small> : null}
+              {oauth ? <small className="text-muted">OAuth scopes: {oauth} </small> : null}
             </div>
           </div>
         </div>
@@ -64,4 +68,8 @@ export default function Method(props) {
       {methodResponseExample}
     </div>
   );
+}
+
+Method.propTypes = {
+  method: PropTypes.object,
 };
