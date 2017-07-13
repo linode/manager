@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 
 import { Input } from './';
 
@@ -28,9 +28,9 @@ export default function PasswordInput(props) {
         <span></span>
       </div>
       {props.value === '' ? null : (
-         <small className="PasswordInput-strength-text">
-           This is {str[strength.score]} password.
-         </small>
+        <small className="PasswordInput-strength-text">
+         This is {str[strength.score]} password.
+        </small>
        )}
     </div>
   );

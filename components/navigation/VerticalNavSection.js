@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 
 
@@ -6,9 +6,9 @@ function renderNavListItems(navItems, path, checkActiveItem) {
   return navItems.map((item, index) => {
     let nameOfClass;
     if (checkActiveItem) {
-      nameOfClass = checkActiveItem(path, item.href) ? 'active': '';
+      nameOfClass = checkActiveItem(path, item.href) ? 'active' : '';
     } else {
-      nameOfClass = item.href === path ? 'active': '';
+      nameOfClass = item.href === path ? 'active' : '';
     }
     return (
       <li
@@ -17,7 +17,7 @@ function renderNavListItems(navItems, path, checkActiveItem) {
       >
         <Link to={item.href} id={`NavLink-${index}`}>{item.label}</Link>
       </li>
-    )
+    );
   });
 }
 
@@ -33,4 +33,11 @@ export default function VerticalNavSection(props) {
       </ul>
     </div>
   );
+}
+
+VerticalNavSection.propTypes = {
+  navItems: PropTypes.array,
+  title: PropTypes.string,
+  path: PropTypes.string,
+  checkActiveItem: PropTypes.bool,
 };
