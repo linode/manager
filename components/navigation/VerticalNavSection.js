@@ -39,5 +39,5 @@ VerticalNavSection.propTypes = {
   navItems: PropTypes.array,
   title: PropTypes.string,
   path: PropTypes.string,
-  checkActiveItem: PropTypes.bool,
+  checkActiveItem: PropTypes.func,
 };
