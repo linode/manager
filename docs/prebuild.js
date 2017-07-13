@@ -114,7 +114,7 @@ function formatMethodExamples(methodObj) {
   return examples;
 }
 
-function formatSchemaExample(schema) {
+function formatSchemaExample(schema, paginationKey) {
   const schemaExample = {};
 
   if (!Array.isArray(schema)) {
@@ -125,6 +125,10 @@ function formatSchemaExample(schema) {
   schema.forEach(function(obj) {
     if (obj.value === undefined && obj.schema) {
       schemaExample[obj.name] = formatSchemaExample(obj.schema);
+      // Pagination key represents an array of objects that we need to look up.
+      if (obj.name === paginationKey) {
+        schemaExample[obj.name] = [schemaExample[obj.name]];
+      }
     } else {
       let value = obj.value;
       if (Array.isArray(value)) {
@@ -204,10 +208,10 @@ function formatSchemaField(schemaField, enumMap) {
 
 function createPaginationSchema(paginationKey, resourceType) {
   return {
-    total_pages: { _type: 'integer', description: 'The total number of pages of results.' },
-    total_results: { _type: 'integer', description: 'The total number of results.' },
+    total_pages: { _type: 'integer', description: 'The total number of pages of results.', _value: 1 },
+    total_results: { _type: 'integer', description: 'The total number of results.', _value: 1 },
     [paginationKey]: { _type: resourceType, _isArray: true, description: 'All results for the current page.' },
-    page: { _type: 'integer', description: 'The current page in the results.' },
+    page: { _type: 'integer', description: 'The current page in the results.', _value: 1 },
   };
 }
 
@@ -279,7 +283,7 @@ function formatMethodResource(endpoint, method) {
       schema = resourceObject.schema;
       if (schema) {
         resourceObject.schema = formatSchema(schema, enumMap, endpoint.paginationKey, endpoint.resource);
-        resourceObject.example = formatSchemaExample(resourceObject.schema);
+        resourceObject.example = formatSchemaExample(resourceObject.schema, endpoint.paginationKey);
       }
     }
   }
