@@ -83,7 +83,8 @@ export class MyAPIClientsPage extends Component {
   createDropdownGroups = (client) => {
     const { dispatch } = this.props;
     const groups = [
-      { elements: [{ name: 'Edit', action: () => CreateOrEditApplication.trigger(dispatch, client) }] },
+      { elements: [{ name: 'Edit', action: () =>
+        CreateOrEditApplication.trigger(dispatch, client) }] },
       { elements: [{ name: 'Reset Secret', action: () => this.resetAction(client) }] },
       { elements: [{ name: 'Delete', action: () => this.deleteAction(client) }] },
     ];
@@ -125,7 +126,8 @@ export class MyAPIClientsPage extends Component {
 
     const filteredClients = filter.length ? _.pickBy(clients, c =>
       c.label.toLowerCase().indexOf(filter.toLowerCase()) !== -1) : clients;
-    const sortedClients = _.sortBy(Object.values(filteredClients), ({ created }) => moment(created));
+    const sortedClients = _.sortBy(Object.values(filteredClients),
+      ({ created }) => moment(created));
 
     return (
       <List>
