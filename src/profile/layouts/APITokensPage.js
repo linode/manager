@@ -11,13 +11,14 @@ import { MassEditControl } from 'linode-components/lists/controls';
 import { ListHeader } from 'linode-components/lists/headers';
 import { DeleteModalBody } from 'linode-components/modals';
 import { Table } from 'linode-components/tables';
-import { DropdownCell, CheckboxCell } from 'linode-components/tables/cells';
+import { DropdownCell, CheckboxCell, ThumbnailCell } from 'linode-components/tables/cells';
 import { EmitEvent } from 'linode-components/utils';
 
 import { showModal, hideModal } from '~/actions/modal';
 import toggleSelected from '~/actions/select';
 import { tokens as api } from '~/api';
 import { TimeCell } from '~/components/tables/cells';
+import { API_ROOT } from '~/constants';
 
 import TokenMoreInfo from '../components/TokenMoreInfo';
 import EditPersonalAccessToken from '../components/EditPersonalAccessToken';
@@ -35,6 +36,14 @@ export class APITokensPage extends Component {
     super();
 
     this.state = { filter: '' };
+  }
+
+  thumbnailSrc(token) {
+    if (token.client) {
+      return `${API_ROOT}/account/clients/${token.client.id}/thumbnail`;
+    }
+
+    return null;
   }
 
   createDropdownGroups = (token) => {
@@ -133,6 +142,11 @@ export class APITokensPage extends Component {
               <Table
                 columns={[
                   { cellComponent: CheckboxCell, headerClassName: 'CheckboxColumn' },
+                  {
+                    cellComponent: ThumbnailCell,
+                    headerClassName: 'ThumbnailColumn',
+                    srcFn: this.thumbnailSrc,
+                  },
                   {
                     dataFn: this.tokenLabel,
                     tooltipEnabled: true,
