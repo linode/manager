@@ -9,6 +9,9 @@ export default function DeleteModalBody(props) {
     items,
     onCancel,
     typeOfItem,
+    parentItem,
+    deleteAction,
+    deleteActionPending,
   } = props;
 
   let body;
@@ -16,7 +19,7 @@ export default function DeleteModalBody(props) {
     body = (
       <div>
         <p>
-          Are you sure you want to <strong>permanently</strong> delete
+          Are you sure you want to <strong>permanently</strong> {deleteAction}
           these {items.length} {typeOfItem}?
         </p>
         <ScrollingList items={items} />
@@ -27,7 +30,7 @@ export default function DeleteModalBody(props) {
     body = (
       <p>
         Are you sure you want
-        to <strong>permanently</strong> delete <strong>{items[0]}</strong>?
+        to <strong>permanently</strong> {deleteAction} <strong>{items[0]}</strong>?
       </p>
     );
   }
@@ -35,8 +38,8 @@ export default function DeleteModalBody(props) {
   return (
     <ConfirmModalBody
       className="DeleteModalBody"
-      buttonText="Delete"
-      buttonDisabledText="Deleting"
+      buttonText={_.capitalize(deleteAction)}
+      buttonDisabledText={_.capitalize(deleteActionPending)}
       onOk={() => {
         onOk();
         EmitEvent('modal:submit', 'Modal', 'delete', typeOfItem);
@@ -56,4 +59,11 @@ DeleteModalBody.propTypes = {
   items: PropTypes.arrayOf(PropTypes.string),
   onCancel: PropTypes.func,
   typeOfItem: PropTypes.string.isRequired,
+  deleteAction: PropTypes.string.isRequired,
+  deleteActionPending: PropTypes.string.isRequired,
+};
+
+DeleteModalBody.defaultProps = {
+  deleteAction: 'delete',
+  deleteActionPending: 'deleting',
 };

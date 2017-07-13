@@ -11,15 +11,15 @@ import {
   SubmitButton,
 } from 'linode-components/forms';
 import { ConfirmModalBody } from 'linode-components/modals';
-
-import { showModal } from '~/actions/modal';
-import { tokens } from '~/api';
-import { OAUTH_SUBSCOPES, OAUTH_SCOPES } from '~/constants';
-import { dispatchOrStoreErrors } from '~/api/util';
 import { EmitEvent } from 'linode-components/utils';
 
+import { showModal, hideModal } from '~/actions/modal';
+import { tokens } from '~/api';
+import { dispatchOrStoreErrors } from '~/api/util';
+import { OAUTH_SUBSCOPES, OAUTH_SCOPES } from '~/constants';
+
+import SelectExpiration from './SelectExpiration';
 import { formatScope } from '../utilities';
-import SelectExpiration from '../../components/SelectExpiration';
 
 
 export function renderSecret(label, verb, secret, close) {
@@ -47,6 +47,17 @@ export function renderSecret(label, verb, secret, close) {
 }
 
 export default class CreatePersonalAccessToken extends Component {
+  static title = 'Create a Personal Access Token'
+
+  static trigger(dispatch) {
+    return dispatch(showModal(CreatePersonalAccessToken.title, (
+      <CreatePersonalAccessToken
+        dispatch={dispatch}
+        close={() => dispatch(hideModal())}
+      />
+    )));
+  }
+
   constructor() {
     super();
 
@@ -65,7 +76,7 @@ export default class CreatePersonalAccessToken extends Component {
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   onSubmit = () => {
-    const { dispatch, title } = this.props;
+    const { dispatch } = this.props;
     const { label, expiry } = this.state;
 
     const scopes = OAUTH_SCOPES.reduce((scopes, scope) => {
@@ -79,7 +90,7 @@ export default class CreatePersonalAccessToken extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => tokens.post({ label, scopes, expiry: SelectExpiration.map(expiry) }),
-      () => { EmitEvent('modal:submit', 'Modal', 'create', title); },
+      () => { EmitEvent('modal:submit', 'Modal', 'create', CreatePersonalAccessToken.title); },
       ({ token }) => renderSecret(
         'personal access token', 'created', token, this.props.close),
     ]));
