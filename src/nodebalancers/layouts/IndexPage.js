@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
@@ -81,16 +80,16 @@ export class IndexPage extends Component {
     const { dispatch, nodebalancers, selectedMap } = this.props;
     const { filter } = this.state;
 
-    const { sorted: data } = transform(nodebalancers.nodebalancers, {
+    const { sorted } = transform(nodebalancers.nodebalancers, {
       filterBy: filter,
     });
 
-    const renderNodeBalancers = (data) => (
+    const renderNodeBalancers = () => (
       <List>
         <ListHeader className="Menu">
           <div className="Menu-item">
             <MassEditControl
-              data={data}
+              data={sorted}
               dispatch={dispatch}
               massEditGroups={[{ elements: [
                 { name: 'Delete', action: this.deleteNodeBalancers },
@@ -126,7 +125,8 @@ export class IndexPage extends Component {
                 text: 'Delete',
               },
             ]}
-            data={data}
+            noDataMessage={"No NodeBalancers found."}
+            data={sorted}
             selectedMap={selectedMap}
             disableHeader
             onToggleSelect={(record) => {
@@ -149,7 +149,7 @@ export class IndexPage extends Component {
           </div>
         </header>
         <div className="PrimaryPage-body">
-          {data.length ? renderNodeBalancers(data) : (
+          {Object.values(nodebalancers.nodebalancers).length ? renderNodeBalancers() : (
             <CreateHelper
               label="NodeBalancers"
               href="/nodebalancers/create"
