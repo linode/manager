@@ -37,50 +37,6 @@ a {
         }
     }
 
-    &.btn-help, &.btn-warning {
-        $size: 24px;
-        .fa {
-            color: $lightest-black;
-        }
-        background-color: $gray;
-        line-height: $size - 2px;
-        margin: 0 10px;
-        padding: 0;
-        display: inline-block;
-        width: $size;
-        height: $size;
-        border-radius: $size / 2;
-        font-weight: bold;
-
-        &:hover {
-            background-color: $blue;
-            border: $blue;
-
-            .fa {
-                color: $white;
-                line-height: $size + 2px;
-            }
-        }
-    }
-
-    &.btn-warning {
-        .fa {
-            color: $white;
-        }
-        background-color: $red;
-        border-color: $red;
-        text-indent: -0.5px;
-
-        &:hover {
-            background-color: $white;
-            border: $white;
-
-            .fa {
-                color: $red;
-            }
-        }
-    }
-
     &.btn-primary {
         &, &:active, &:focus {
             background: $blue;

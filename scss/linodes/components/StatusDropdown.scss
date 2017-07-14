@@ -10,7 +10,11 @@
         width: 100%;
 
         &-first {
-            @extend .text-muted;
+            color: $lightest-black;
+
+            &#running {
+                color: $green;
+            }
 
             background: $white;
             width: calc(100% - #{$form-field-height});

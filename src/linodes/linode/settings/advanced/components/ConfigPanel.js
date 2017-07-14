@@ -3,7 +3,7 @@ import React, { Component, PropTypes } from 'react';
 import { DeleteModalBody } from 'linode-components/modals';
 import { linodes } from '~/api';
 import { showModal, hideModal } from '~/actions/modal';
-import { Button } from 'linode-components/buttons';
+import { PrimaryButton } from 'linode-components/buttons';
 import { Card, CardHeader } from 'linode-components/cards';
 import { Table } from 'linode-components/tables';
 import {
@@ -60,12 +60,13 @@ export class ConfigPanel extends Component {
     const content = this.renderConfigContent(linode, configs);
 
     const nav = (
-      <Button
+      <PrimaryButton
         to={`/linodes/${linode.label}/settings/advanced/configs/create`}
         className="float-sm-right"
+        buttonClass="btn-default"
       >
         Add a config
-      </Button>
+      </PrimaryButton>
     );
 
     const header = <CardHeader title="Configs" nav={nav} />;

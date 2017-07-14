@@ -1,8 +1,8 @@
 import _ from 'lodash';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
 
+import { PrimaryButton } from 'linode-components/buttons';
 import { Input } from 'linode-components/forms';
 import { List } from 'linode-components/lists';
 import { Table } from 'linode-components/tables';
@@ -146,10 +146,7 @@ export class IndexPage extends Component {
         <header className="PrimaryPage-header">
           <div className="PrimaryPage-headerRow clearfix">
             <h1 className="float-sm-left">Domains</h1>
-            <Link to="/domains/create" className="linode-add btn btn-primary float-sm-right">
-              <span className="fa fa-plus"></span>
-              Add a Domain
-            </Link>
+            <PrimaryButton className="float-sm-right">Add a Domain</PrimaryButton>
           </div>
         </header>
         <div className="PrimaryPage-body">
