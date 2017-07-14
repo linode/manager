@@ -10,8 +10,13 @@ export default function Distributions(props) {
     return null;
   }
 
+  const withVendorLowerCased = _.map(distributions, d => ({
+    ...d,
+    vendor: d.vendor.toLowerCase(),
+  }));
+
   const vendorsUnsorted = _.map(
-    _.groupBy(distributions, 'vendor'),
+    _.groupBy(withVendorLowerCased, 'vendor'),
     (v, k) => ({
       name: k,
       versions: _.orderBy(v, ['recommended', 'created'], ['desc', 'desc']),
