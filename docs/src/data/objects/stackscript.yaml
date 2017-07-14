@@ -32,7 +32,8 @@ schema:
     _filterable: true
   distributions:
     _description: A list of distributions this StackScript is compatible with.
-    _type: Array[object]
+    _type: object
+    _isArray: true
     _seeAlso: "/reference/endpoints/linode/distributions"
     _editable: true
     _subtype: distribution
@@ -116,7 +117,8 @@ schema:
     _editable: true
   user_defined_fields:
     _description: Variables that can be set to customize the script per deployment.
-    _type: Array[object]
+    _type: object
+    _isArray: true
     _value:
       - name:
           _type: String

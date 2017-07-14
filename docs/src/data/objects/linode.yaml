@@ -64,7 +64,7 @@ schema:
         _value: 80
         _description: Transfer Quota % (Range 0-400, default 80).
   backups:
-    _type: Backup
+    _type: Object
     _seeAlso: "/reference/endpoints/linode/instances/:id/backups"
     _description: >
       Displays if backups are enabled, last backup datetime if applicable, and
@@ -109,28 +109,19 @@ schema:
         _type: Region
         _filterable: false
         _description: This backup region.
-        id:
-          _type: String
-          _value: us-east-1a
-        label:
-          _type: String
-          _value: Newark, NJ
-        country:
-          _type: String
-          _value: us
       created:
-        _type: Datetime
+        _type: String
         _value: "2015-09-29T11:21:01"
       updated:
-        _type: Datetime
+        _type: String
         _value: "2015-09-29T11:21:01"
       finished:
-        _type: Datetime
+        _type: String
         _value: "2015-09-29T11:21:01"
         _description: An ISO 8601 datetime of when the backup completed.
     snapshot:
       _description: If enabled, the last snapshot that was successfully taken.
-      _type: Backup
+      _type: Object
       id:
         _type: Integer
         _value: 123456
@@ -155,30 +146,21 @@ schema:
         _type: Region
         _filterable: false
         _description: This backup region.
-        id:
-          _type: String
-          _value: us-east-1a
-        label:
-          _type: String
-          _value: Newark, NJ
-        country:
-          _type: String
-          _value: us
       created:
-        _type: Datetime
+        _type: String
         _value: "2015-09-29T11:21:01"
       updated:
-        _type: Datetime
+        _type: String
         _value: "2015-09-29T11:21:01"
       finished:
-        _type: Datetime
+        _type: String
         _value: "2015-09-29T11:21:01"
         _description: An ISO 8601 datetime of when the backup completed.
   created:
-    _type: Datetime
+    _type: String
     _value: "2015-09-29T11:21:01"
   region:
-    _type: Region
+    _type: Object
     _filterable: true
     _seeAlso: "/reference/endpoints/regions"
     _description: This Linode's region.
@@ -196,27 +178,6 @@ schema:
     _type: Distribution
     _seeAlso: "/reference/endpoints/linode/distributions"
     _filterable: true
-    id:
-      _type: String
-      _value: linode/opensuse13.2
-    label:
-      _type: String
-      _value: openSUSE 13.2
-    vendor:
-      _type: String
-      _value: openSUSE
-    x64:
-      _type: Boolean
-      _value: true
-    recommended:
-      _type: Boolean
-      _value: true
-    created:
-      _type: Datetime
-      _value: 2014-12-17T17:55:42
-    minimum_storage_size:
-      _type: Integer
-      _value: 700
   group:
     _editable: true
     _type: String
@@ -226,8 +187,8 @@ schema:
     limit: 0-50 characters
   ipv4:
     _editable: false
-    _type: Array[string]
-    _subtype: string
+    _type: string
+    _isArray: true
     _description: This Linode's IPv4 addresses.
     _seeAlso: ["/reference/endpoints/linode/instances/:id/ips", "/reference/endpoints/networking/ipv4"]
     _value: ["97.107.143.8", "192.168.149.108"]
@@ -246,49 +207,8 @@ schema:
     _limit: "3-32 ASCII characters limited to letters, numbers, underscores, and dashes, starting and ending with a letter, and without two dashes or underscores in a row"
   type:
     _description: The type of Linode.
-    _type: Array[object]
-    _subtype: service
-    _value:
-      - id:
-          _type: String
-          _value: g5-standard-1
-        backups_price:
-          _type: Integer
-          _value: 250
-        class:
-          _type: String
-          _value: standard
-        disk:
-          _type: Integer
-          _value: 24576
-        hourly_price:
-          _type: Integer
-          _value: 1
-        label:
-          _type: String
-          _value: Linode 2048
-        mbits_out:
-          _type: Integer
-          _value: 125
-        monthly_price:
-          _type: Integer
-          _value: 1000
-        ram:
-          _type: Integer
-          _value: 2048
-        service_type:
-          _type: Enum
-          _subtype: Service Type
-          _value: linode
-        storage:
-          _type: Integer
-          _value: 24576
-        transfer:
-          _type: Integer
-          _value: 2000
-        vcpus:
-          _type: Integer
-          _value: 2
+    _type: Type
+    _isArray: true
   status:
     _type: Enum
     _subtype: Status

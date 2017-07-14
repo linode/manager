@@ -26,11 +26,31 @@
     }
 }
 
+.Endpoint .Tabs {
+    .TabList {
+        border: 0;
+
+        .Tab {
+            background: #292b2c;
+            border-color: #292b2c;
+            color: white;
+
+            &:not(.ReactTabs__Tab--selected) {
+                background: $white;
+                color: $black;
+                border-color: $black;
+            }
+
+            &:not(:last-of-type) {
+                margin-right: 1px;
+            }
+        }
+    }
+}
+
 .Tabs-container .Example,
 .MethodResponseExample .Example {
-    padding: 10px 0 0 0;
-
     &-clipboardButton {
-        top: 17px;
+        top: 7px;
     }
 }

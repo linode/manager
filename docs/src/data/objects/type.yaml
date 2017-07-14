@@ -14,16 +14,16 @@ schema:
     _description: If applicable, disk space in MB.
     _filterable: true
   backups_price:
-    _type: Integer
-    _value: 250
+    _type: Float
+    _value: 2.5
     _description: Cost (in US dollars) per month if backups are enabled.
     _filterable: false
   class:
     _type: Enum
     _subtype: Class
   hourly_price:
-    _type: Integer
-    _value: 1
+    _type: Float
+    _value: 1.44
     _description: Cost (in cents) per hour.
     _filterable: true
   label:

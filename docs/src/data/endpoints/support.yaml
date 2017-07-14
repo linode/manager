@@ -6,6 +6,7 @@ description: >
 endpoints:
   /support/tickets:
     resource: supportticket
+    paginationKey: tickets
     authenticated: true
     description: >
       Manage the support tickets your account can access.
@@ -76,6 +77,7 @@ endpoints:
                 https://$api_root/$version/support/ticket/$ticket_id
   /support/tickets/:id/replies:
     resource: supportticketreply
+    paginationKey: replies
     authenticated: true
     description: >
       Manage the replies to a particular support ticket.

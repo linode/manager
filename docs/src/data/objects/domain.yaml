@@ -70,7 +70,8 @@ schema:
       The status of the Domain it can be disabled, active, or edit_mode.
   master_ips:
     _editable: true
-    _type: Array[string]
+    _type: string
+    _isArray: true
     _subtype: string
     _filterable: true
     _value:
@@ -82,7 +83,8 @@ schema:
       An array of IP addresses for this Domain.
   axfr_ips:
     _editable: true
-    _type: Array[string]
+    _type: string
+    _isArray: true
     _subtype: string
     _value:
       - "44.55.66.77"

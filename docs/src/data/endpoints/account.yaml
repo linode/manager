@@ -134,6 +134,7 @@ endpoints:
   /account/tokens:
     _group: Tokens
     resource: oauthtoken
+    paginationKey: tokens
     description: >
       Manage OAuth Tokens created for your user.
     methods:
@@ -279,6 +280,7 @@ endpoints:
   /account/clients:
     _group: Clients
     resource: client
+    paginationKey: clients
     authenticated: true
     description: >
       Manage the collection of OAuth client applications your account may access.
@@ -425,7 +427,8 @@ endpoints:
             my_client.set_thumbnail(img)
   /account/users:
     _group: Users
-    resource: account
+    resource: user
+    paginationKey: users
     description: >
       Returns a list of <a href="#object-user">User objects</a> associated with your account.
     methods:
@@ -467,7 +470,7 @@ endpoints:
   /account/users/:username:
     _group: Users
     type: resource
-    resource: account
+    resource: user
     description: >
       Returns information about a specific user associated with your account.
     methods:
@@ -566,8 +569,8 @@ endpoints:
             my_user.grants.save()
   /account/clients:
     _group: Clients
-    type: list
     resource: client
+    paginationKey: clients
     authenticated: true
     description: >
       Manage the collection of OAuth client applications your account may access.
@@ -643,8 +646,8 @@ endpoints:
                 https://$api_root/$version/account/clients/$client_id
   /account/events:
     _group: Events
-    type: list
-    resource: events
+    resource: event
+    paginationKey: events
     authenticated: true
     description: >
       View the collection of events.

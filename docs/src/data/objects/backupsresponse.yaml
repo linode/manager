@@ -3,199 +3,18 @@ description: >
     Information on a Linode's available <a href="#object-backup">Backups</a>
 schema:
   daily:
-    _description: >
-      The current Daily backup for this Linode.
+    _description: The current Daily backup for this Linode.
     _type: Backup
-    id:
-      _type: Integer
-      _value: 123456
-    status:
-      _type: String
-      _value: finished
-    created:
-      _type: Datetime
-      _value: 2017-01-01T12:00:12
-    finished:
-      _type: Datetime
-      _value: 2017-01-01T12:08:32
-    label:
-      _type: String
-      _value: null
-    region:
-      _type: String
-      _value: us-east-1a
-    configs:
-      _type: Array[string]
-      _subtype: string
-      _value:
-        - My Ubuntu 15.10 Profile
-    disks:
-      _type: Array[object]
-      _value:
-        - filesystem:
-            _type: String
-            _value: ext4
-          label:
-            _type: String
-            _value: My Ubuntu 15.10 Disk
-          size:
-            _type: Integer
-            _value: 1024
-        - filesystem:
-            _type: String
-            _value: swap
-          label:
-            _type: String
-            _value: swap
-          size:
-            _type: Integer
-            _value: 512
   weekly:
-    _description: >
-      This Linode's current weekly backups.  Between 0 and 2 items.
-    _type: Array[object]
-    _subtype: Backup
-    _value:
-    - id:
-        _type: Integer
-        _value: 142359
-      status:
-        _type: String
-        _value: finished
-      created:
-        _type: Datetime
-        _value: 2016-12-26T11:35:32
-      finished:
-        _type: Datetime
-        _value: 2016-12-26T11:41:53
-      label:
-        _type: String
-        _value: null
-      region:
-        _type: String
-        _value: us-east-1a
-      configs:
-        _type: Array[string]
-        _subtype: string
-        _value:
-          - My Ubuntu 15.10 Profile
-      disks:
-        _type: Array[object]
-        _value:
-          - filesystem:
-              _type: String
-              _value: ext4
-            label:
-              _type: String
-              _value: My Ubuntu 15.10 Disk
-            size:
-              _type: Integer
-              _value: 1024
-          - filesystem:
-              _type: String
-              _value: swap
-            label:
-              _type: String
-              _value: swap
-            size:
-              _type: Integer
-              _value: 512
-    - id:
-        _type: Integer
-        _value: 901234
-      status:
-        _type: String
-        _value: finished
-      created:
-        _type: Datetime
-        _value: 2016-12-19T11:46:16
-      finished:
-        _type: Datetime
-        _value: 2016-12-19T11:49:02
-      label:
-        _type: String
-        _value: null
-      region:
-        _type: String
-        _value: us-east-1a
-      configs:
-        _type: Array[string]
-        _subtype: string
-        _value:
-          - My Ubuntu 15.10 Profile
-      disks:
-        _type: Array[object]
-        _value:
-          - filesystem:
-              _type: String
-              _value: ext4
-            label:
-              _type: String
-              _value: My Ubuntu 15.10 Disk
-            size:
-              _type: Integer
-              _value: 1024
-          - filesystem:
-              _type: String
-              _value: swap
-            label:
-              _type: String
-              _value: swap
-            size:
-              _type: Integer
-              _value: 512
+    _description: This Linode's current weekly backups.  Between 0 and 2 items.
+    _type: backup
+    _isArray: true
   snapshot:
-    _description: >
-      This Linode's current and in progress snapshots.
+    _description: This Linode's current and in progress snapshots.
     current:
-        _type: Backup
-        id:
-          _type: Integer
-          _value: 92348
-        status:
-          _type: String
-          _value: finished
-        created:
-          _type: Datetime
-          _value: 2016-12-01T10:30:00
-        finished:
-          _type: Datetime
-          _value: 2016-12-01T10:33:45
-        label:
-          _type: String
-          _value: null
-        region:
-          _type: String
-          _value: us-east-1a
-        configs:
-          _type: Array[string]
-          _subtype: string
-          _value:
-            - My Ubuntu 15.10 Profile
-        disks:
-          _type: Array[object]
-          _value:
-            - filesystem:
-                _type: String
-                _value: ext4
-              label:
-                _type: String
-                _value: My Ubuntu 15.10 Disk
-              size:
-                _type: Integer
-                _value: 1024
-            - filesystem:
-                _type: String
-                _value: swap
-              label:
-                _type: String
-                _value: swap
-              size:
-                _type: Integer
-                _value: 512
+      _type: Backup
     in_progress:
       _type: Backup
-      _value: "null"
   service:
     _description: >
       Status and information about the backup service.
@@ -203,5 +22,5 @@ schema:
       _type: Boolean
       _value: true
     updated:
-      _type: Datetime
+      _type: String
       _value: 2017-03-27T10:30:00

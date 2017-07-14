@@ -25,57 +25,29 @@ schema:
     _value: snapshot
     _description: Whether this is a snapshot or an auto backup.
   region:
-      _type: Region
+      _type: region
       _filterable: false
-      _description: This backup  region.
-      id:
-        _type: String
-        _value: us-east-1a
-      label:
-        _type: String
-        _value: Newark, NJ
-      country:
-        _type: String
-        _value: us
+      _description: This backup region.
   created:
-    _type: Datetime
+    _type: string
     _value: "2015-09-29T11:21:01"
   updated:
-    _type: Datetime
+    _type: string
     _value: "2015-09-29T11:21:01"
   finished:
-    _type: Datetime
+    _type: string
     _value: "2015-09-29T11:21:01"
     _description: An ISO 8601 datetime of when the backup completed.
   configs:
-    _type: Array[string]
-    _subtype: string
-    _description: A JSON Array of config labels that were included in this backup.
+    _type: string
+    _isArray: true
+    _description: Config labels that were included in this backup.
     _value:
       - "My Debian8 Profile"
   disks:
-    _type: Array[object]
-    _subtype: disk
-    _value:
-      - label:
-            _type: String
-            _value: "My Debian8 Disk"
-        size:
-            _type: Integer
-            _value: 24064
-        filesystem:
-            _type: String
-            _value: "ext4"
-      - label:
-            _type: String
-            _value: "swap"
-        size:
-            _type: Integer
-            _value: 512
-        filesystem:
-            _type: String
-            _value: "swap"
-    _description: A JSON Array of JSON Objects describing the disks included in this backup.
+    _type: Disk
+    _isArray: true
+    _description: The disks included in this backup.
   availability:
     _type: Enum
     _subtype: BackupAvailability
