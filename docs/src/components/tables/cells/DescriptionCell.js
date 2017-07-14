@@ -45,7 +45,7 @@ export default function DescriptionCell(props) {
 
 DescriptionCell.propTypes = {
   record: PropTypes.shape({
-    description: PropTypes.string,
-    seeAlso: PropTypes.string,
+    description: PropTypes.object,
+    seeAlso: PropTypes.array,
   }),
 };
