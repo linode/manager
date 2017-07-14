@@ -31,6 +31,24 @@
     opacity: 1;
 }
 
+@mixin placeholder-full() {
+    ::-webkit-input-placeholder {
+        @include placeholder();
+    }
+
+    ::-moz-placeholder {
+        @include placeholder();
+    }
+
+    :-moz-placeholder {
+        @include placeholder();
+    }
+
+    :-ms-input-placeholder {
+        @include placeholder();
+    }
+}
+
 @mixin selected() {
     background-color: $gray;
 }

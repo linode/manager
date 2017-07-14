@@ -1,14 +1,12 @@
-import _ from 'lodash';
-import moment from 'moment';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
-import { ScrollingList } from 'linode-components/lists';
+import { Input } from 'linode-components/forms';
+import { List, ScrollingList } from 'linode-components/lists';
 import { ListBody, ListGroup } from 'linode-components/lists/bodies';
 import { MassEditControl } from 'linode-components/lists/controls';
 import { ListHeader } from 'linode-components/lists/headers';
-import { List } from 'linode-components/lists';
 import { ConfirmModalBody, DeleteModalBody } from 'linode-components/modals';
 import { Table } from 'linode-components/tables';
 import {
@@ -22,6 +20,7 @@ import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 import { linodes as api } from '~/api';
 import { powerOnLinode, powerOffLinode, rebootLinode } from '~/api/linodes';
+import { transform } from '~/api/util';
 import CreateHelper from '~/components/CreateHelper';
 import {
   IPAddressCell,
@@ -36,6 +35,12 @@ const OBJECT_TYPE = 'linodes';
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
     await dispatch(api.all());
+  }
+
+  constructor() {
+    super();
+
+    this.state = { filter: '' };
   }
 
   componentDidMount() {
@@ -108,21 +113,16 @@ export class IndexPage extends Component {
 
   renderLinodes(linodes) {
     const { dispatch, selectedMap } = this.props;
-    // TODO: add sort function in linodes config definition
-    const sortedLinodes = _.sortBy(Object.values(linodes), l => moment(l.created));
+    const { filter } = this.state;
 
-    const groups = _.sortBy(
-      _.map(_.groupBy(sortedLinodes, l => l.group), (_linodes, _group) => {
-        return {
-          name: _group,
-          data: _linodes,
-        };
-      }), lg => lg.name);
+    const { groups, sorted: sortedLinodes } = transform(linodes, {
+      filterBy: filter,
+    });
 
     return (
       <List>
-        <ListHeader>
-          <div className="pull-sm-left">
+        <ListHeader className="Menu">
+          <div className="Menu-item">
             <MassEditControl
               data={sortedLinodes}
               dispatch={dispatch}
@@ -137,6 +137,13 @@ export class IndexPage extends Component {
               selectedMap={selectedMap}
               objectType={OBJECT_TYPE}
               toggleSelected={toggleSelected}
+            />
+          </div>
+          <div className="Menu-item">
+            <Input
+              placeholder="Filter..."
+              onChange={({ target: { value } }) => this.setState({ filter: value })}
+              value={this.state.filter}
             />
           </div>
         </ListHeader>

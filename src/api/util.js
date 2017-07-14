@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import moment from 'moment';
 
 import * as api from './';
@@ -128,4 +129,25 @@ export function createHeaderFilter(filter) {
       'X-Filter': filter,
     },
   };
+}
+
+export function transform(objects, options = {}) {
+  const {
+    filterBy,
+    filterOn = 'label',
+    sortBy = o => moment(o.created),
+    groupOn = 'group',
+  } = options;
+
+  const filtered = filterBy.length ? _.pickBy(objects, o =>
+    o[filterOn].toLowerCase().indexOf(filterBy.toLowerCase()) !== -1) : objects;
+  const sorted = _.sortBy(Object.values(filtered), sortBy);
+
+  const groups = _.sortBy(
+    _.map(_.groupBy(sorted, l => l[groupOn]), (objectsInGroup, groupName) => ({
+      name: groupName,
+      data: objectsInGroup,
+    })), group => group.name);
+
+  return { filtered, sorted, groups };
 }
