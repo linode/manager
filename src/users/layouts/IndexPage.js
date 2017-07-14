@@ -15,6 +15,7 @@ import {
   ButtonCell,
   CheckboxCell,
   LinkCell,
+  ThumbnailCell,
 } from 'linode-components/tables/cells';
 import { EmitEvent } from 'linode-components/utils';
 
@@ -23,10 +24,17 @@ import toggleSelected from '~/actions/select';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 import { users as api } from '~/api';
+import { getEmailHash } from '~/cache';
 import CreateHelper from '~/components/CreateHelper';
+import { GRAVATAR_BASE_URL } from '~/constants';
 
 
 const OBJECT_TYPE = 'users';
+
+function getGravatarURL(user) {
+  const emailHash = getEmailHash(user.email);
+  return `${GRAVATAR_BASE_URL}${emailHash}`;
+}
 
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
@@ -110,6 +118,11 @@ export class IndexPage extends Component {
                 cellComponent: CheckboxCell,
                 headerClassName: 'CheckboxColumn',
                 selectedKey: 'username',
+              },
+              {
+                cellComponent: ThumbnailCell,
+                headerClassName: 'ThumbnailColumn',
+                srcFn: getGravatarURL,
               },
               {
                 cellComponent: LinkCell,
