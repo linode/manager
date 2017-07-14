@@ -118,6 +118,7 @@ export class IndexPage extends Component {
                       onClick: (zone) => { this.deleteZones(zone); },
                     },
                   ]}
+                  noDataMessage="No Domains found."
                   data={group.data}
                   selectedMap={selectedMap}
                   disableHeader

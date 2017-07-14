@@ -43,7 +43,7 @@ export default class MassEditControl extends Component {
 
     return (
       <MassEditDropdown
-        checked={allSelected}
+        checked={allSelected && !noneSelected}
         disabled={noneSelected}
         groups={massEditGroups.map((group) => ({
           ...group,

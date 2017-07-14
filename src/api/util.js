@@ -143,11 +143,15 @@ export function transform(objects, options = {}) {
     o[filterOn].toLowerCase().indexOf(filterBy.toLowerCase()) !== -1) : objects;
   const sorted = _.sortBy(Object.values(filtered), sortBy);
 
-  const groups = _.sortBy(
+  let groups = _.sortBy(
     _.map(_.groupBy(sorted, l => l[groupOn]), (objectsInGroup, groupName) => ({
       name: groupName,
       data: objectsInGroup,
     })), group => group.name);
+
+  if (!groups.length) {
+    groups = [{ name: '', data: [] }];
+  }
 
   return { filtered, sorted, groups };
 }
