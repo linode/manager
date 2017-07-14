@@ -4,6 +4,9 @@
   The Linode API Docs
 </h1>
 
+This is the new Linode developers site. It provides documentation to complement the APIv4.
+Currently this software is *early-access* and is available at [developers.linode.com](https://developers.linode.com).
+
 ## Setup
 
     git clone https://github.com/Linode/manager.git
