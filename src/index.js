@@ -52,7 +52,9 @@ if (ENVIRONMENT === 'production') {
 // TODO: move to analytics
 function onPageChange() {
   // Log page views.
-  window.ga('send', 'pageview');
+  if (window.location.pathname.indexOf('/oauth') !== 0) {
+    window.ga('send', 'pageview');
+  }
 }
 
 function fillInMissingProps(props) {
