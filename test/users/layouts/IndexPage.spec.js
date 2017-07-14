@@ -4,6 +4,7 @@ import React from 'react';
 import sinon from 'sinon';
 
 import { SHOW_MODAL } from '~/actions/modal';
+import { getEmailHash } from '~/cache';
 import { GRAVATAR_BASE_URL } from '~/constants';
 import { IndexPage } from '~/users/layouts/IndexPage';
 
@@ -38,11 +39,15 @@ describe('users/layouts/IndexPage', () => {
     expect(zone.length).to.equal(Object.keys(users.users).length);
     const firstZone = zone.at(0);
     expect(firstZone.find('td img').props().src)
-      .to.equal(`${GRAVATAR_BASE_URL}`);
+      .to.equal(`${GRAVATAR_BASE_URL}${getEmailHash('example1@domain.com')}`);
     expect(firstZone.find('Link').props().to)
       .to.equal('/users/testuser1');
     expect(firstZone.find('td').at(2).text())
       .to.equal('testuser1');
+    expect(firstZone.find('td').at(3).text())
+      .to.equal('example1@domain.com');
+    expect(firstZone.find('td').at(4).text())
+      .to.equal('Unrestricted');
   });
 
   it('shows the delete modal when delete is pressed', () => {
