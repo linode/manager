@@ -22,6 +22,7 @@ import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 import { linodes as api } from '~/api';
 import { powerOnLinode, powerOffLinode, rebootLinode } from '~/api/linodes';
+import { transform } from '~/api/util';
 import CreateHelper from '~/components/CreateHelper';
 import {
   IPAddressCell,
@@ -116,17 +117,9 @@ export class IndexPage extends Component {
     const { dispatch, selectedMap } = this.props;
     const { filter } = this.state;
 
-    const filteredLinodes = filter.length ? _.pickBy(linodes, l =>
-      l.label.toLowerCase().indexOf(filter.toLowerCase()) !== -1) : linodes;
-    const sortedLinodes = _.sortBy(Object.values(filteredLinodes), l => moment(l.created));
-
-    const groups = _.sortBy(
-      _.map(_.groupBy(sortedLinodes, l => l.group), (_linodes, _group) => {
-        return {
-          name: _group,
-          data: _linodes,
-        };
-      }), lg => lg.name);
+    const { groups, sorted: sortedLinodes } = transform(linodes, {
+      filterBy: filter,
+    });
 
     return (
       <List>
