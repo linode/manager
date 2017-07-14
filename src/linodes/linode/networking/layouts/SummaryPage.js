@@ -149,7 +149,7 @@ export class SummaryPage extends Component {
     return (
       <div>
         <header className="NavigationHeader clearfix">
-          // TODO: Add rdnslookup when API supports it
+          {/* TODO: Add rdnslookup when API supports it */}
           <PrimaryButton
             className="float-sm-right"
             buttonClass="btn-default"
