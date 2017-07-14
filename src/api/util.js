@@ -139,12 +139,14 @@ export function transform(objects, options = {}) {
     groupOn = 'group',
   } = options;
 
+  const filterOnFn = _.isFunction(filterOn) ? filterOn : o => o[filterOn];
   const filtered = filterBy.length ? _.pickBy(objects, o =>
-    o[filterOn].toLowerCase().indexOf(filterBy.toLowerCase()) !== -1) : objects;
+    filterOnFn(o).toLowerCase().indexOf(filterBy.toLowerCase()) !== -1) : objects;
   const sorted = _.sortBy(Object.values(filtered), sortBy);
 
-  let groups = _.sortBy(
-    _.map(_.groupBy(sorted, l => l[groupOn]), (objectsInGroup, groupName) => ({
+  const groupOnFn = _.isFunction(groupOn) ? groupOn : o => o[groupOn];
+  const groups = _.sortBy(
+    _.map(_.groupBy(sorted, groupOnFn), (objectsInGroup, groupName) => ({
       name: groupName,
       data: objectsInGroup,
     })), group => group.name);

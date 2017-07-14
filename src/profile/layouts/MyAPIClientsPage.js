@@ -1,5 +1,3 @@
-import _ from 'lodash';
-import moment from 'moment';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
@@ -18,6 +16,7 @@ import { showModal, hideModal } from '~/actions/modal';
 import toggleSelected from '~/actions/select';
 import { clients as api } from '~/api';
 import { resetSecret } from '~/api/clients';
+import { transform } from '~/api/util';
 import { API_ROOT } from '~/constants';
 
 import { renderSecret } from '../components/CreatePersonalAccessToken';
@@ -124,10 +123,9 @@ export class MyAPIClientsPage extends Component {
     const { dispatch, selectedMap, clients: { clients } } = this.props;
     const { filter } = this.state;
 
-    const filteredClients = filter.length ? _.pickBy(clients, c =>
-      c.label.toLowerCase().indexOf(filter.toLowerCase()) !== -1) : clients;
-    const sortedClients = _.sortBy(Object.values(filteredClients),
-      ({ created }) => moment(created));
+    const { sorted: sortedClients } = transform(clients, {
+      filterBy: filter,
+    });
 
     return (
       <List>

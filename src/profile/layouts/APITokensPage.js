@@ -1,5 +1,3 @@
-import _ from 'lodash';
-import moment from 'moment';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
@@ -17,6 +15,7 @@ import { EmitEvent } from 'linode-components/utils';
 import { showModal, hideModal } from '~/actions/modal';
 import toggleSelected from '~/actions/select';
 import { tokens as api } from '~/api';
+import { transform } from '~/api/util';
 import { TimeCell } from '~/components/tables/cells';
 import { API_ROOT } from '~/constants';
 
@@ -100,17 +99,11 @@ export class APITokensPage extends Component {
     const { dispatch, selectedMap, tokens: { tokens } } = this.props;
     const { filter } = this.state;
 
-    const filteredTokens = filter.length ? _.pickBy(tokens, t =>
-      this.tokenLabel(t).toLowerCase().indexOf(filter.toLowerCase()) !== -1) : tokens;
-    const sortedTokens = _.sortBy(Object.values(filteredTokens), ({ created }) => moment(created));
-    const groups = _.sortBy(
-      _.map(_.groupBy(sortedTokens, d => d.client ? d.client.label : 'Personal Access Tokens'),
-            (_tokens, _group) => {
-              return {
-                name: _group,
-                data: _tokens,
-              };
-            }), tokenGroup => tokenGroup.name);
+    const { groups, sorted: sortedTokens } = transform(tokens, {
+      filterBy: filter,
+      filterOn: this.tokenLabel,
+      groupOn: d => d.client ? d.client.label : 'Personal Access Tokens',
+    });
 
     return (
       <List>
