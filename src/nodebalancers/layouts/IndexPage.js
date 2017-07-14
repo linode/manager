@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import moment from 'moment';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
@@ -21,13 +20,14 @@ import {
   IPAddressCell,
 } from '~/components/tables/cells';
 import { MassEditControl } from 'linode-components/lists/controls';
+import { EmitEvent } from 'linode-components/utils';
 
-import { default as toggleSelected } from '~/actions/select';
 import { showModal, hideModal } from '~/actions/modal';
-import { nodebalancers as api } from '~/api';
+import { default as toggleSelected } from '~/actions/select';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
-import { EmitEvent } from 'linode-components/utils';
+import { nodebalancers as api } from '~/api';
+import { transform } from '~/api/util';
 
 
 const OBJECT_TYPE = 'nodebalancers';
@@ -81,9 +81,9 @@ export class IndexPage extends Component {
     const { dispatch, nodebalancers, selectedMap } = this.props;
     const { filter } = this.state;
 
-    const filteredNodebalancers = filter.length ? _.pickBy(nodebalancers.nodebalancers, l =>
-      l.label.toLowerCase().indexOf(filter.toLowerCase()) !== -1) : nodebalancers.nodebalancers;
-    const data = _.sortBy(Object.values(filteredNodebalancers), n => moment(n.created));
+    const { sorted: data } = transform(nodebalancers.nodebalancers, {
+      filterBy: filter,
+    });
 
     const renderNodeBalancers = (data) => (
       <List>
