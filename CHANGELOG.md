@@ -4,13 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [0.11.1] 2017-07-10
-### Added
-- add delete IP support
-### Fixed
-- add linode_deleteip event formatting
+## [0.11.2] 2017-07-12
+### Changed
+- don't track pageviews on /oauth page
 
-## [0.11.0] 2017-07-10
+## [0.11.1] 2017-07-12
+### Added
+- add delete IP support #2270
+### Fixed
+- add linode_deleteip event formatting #2270
+
+## [0.11.0] 2017-07-11
 ### Added
 - unit selection to graphs #2185
 - support for no access tokens #2192
