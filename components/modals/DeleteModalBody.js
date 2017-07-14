@@ -1,7 +1,10 @@
+import _ from 'lodash';
 import React, { PropTypes } from 'react';
+
 import ConfirmModalBody from './ConfirmModalBody';
 import { ScrollingList } from '../lists';
 import { EmitEvent } from '../utils';
+
 
 export default function DeleteModalBody(props) {
   const {
@@ -9,7 +12,6 @@ export default function DeleteModalBody(props) {
     items,
     onCancel,
     typeOfItem,
-    parentItem,
     deleteAction,
     deleteActionPending,
   } = props;

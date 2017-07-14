@@ -145,7 +145,7 @@ export function transform(objects, options = {}) {
   const sorted = _.sortBy(Object.values(filtered), sortBy);
 
   const groupOnFn = _.isFunction(groupOn) ? groupOn : o => o[groupOn];
-  const groups = _.sortBy(
+  let groups = _.sortBy(
     _.map(_.groupBy(sorted, groupOnFn), (objectsInGroup, groupName) => ({
       name: groupName,
       data: objectsInGroup,

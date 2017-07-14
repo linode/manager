@@ -172,6 +172,7 @@ export class MyAPIClientsPage extends Component {
                 groups: this.createDropdownGroups,
               },
             ]}
+            noDataMessage="No clients found."
             data={sortedClients}
             selectedMap={selectedMap}
             onToggleSelect={(client) => dispatch(toggleSelected(OBJECT_TYPE, client.id))}

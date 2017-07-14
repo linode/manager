@@ -167,6 +167,7 @@ export class APITokensPage extends Component {
                     groups: this.createDropdownGroups,
                   },
                 ]}
+                noDataMessage="No tokens found."
                 data={group.data}
                 selectedMap={selectedMap}
                 onToggleSelect={(token) => dispatch(toggleSelected(OBJECT_TYPE, token.id))}
