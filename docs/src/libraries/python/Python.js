@@ -1,19 +1,15 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 
-import { Breadcrumbs } from 'linode-components/breadcrumbs';
 import { Table } from 'linode-components/tables';
 import { LinkCell } from 'linode-components/tables/cells';
-
-import { API_VERSION } from '~/constants';
-
-import { default as python } from '~/python';
 
 
 export default function Python(props) {
   const { route } = props;
   const { pythonDataObjects } = route;
-  const { pythonDataTitles, pythonClientObjectTitles, pythonAPITitles } = pythonDataObjects;
-  return(
+  const { pythonClientObjectTitles, pythonAPITitles } = pythonDataObjects;
+
+  return (
     <section className="Article">
       <div className="EndpointIndex-header">
         <h1>Python Library</h1>
@@ -28,9 +24,9 @@ export default function Python(props) {
               textKey: 'path',
               label: 'Object',
               headerClassName: 'SectionColumn',
-              hrefFn: function(subPage) {
+              hrefFn: function (subPage) {
                 return subPage.href;
-              }
+              },
             },
             { label: 'Description', dataKey: 'description' },
           ]}
@@ -49,9 +45,9 @@ export default function Python(props) {
               textKey: 'path',
               label: 'Object',
               headerClassName: 'SectionColumn',
-              hrefFn: function(subPage) {
+              hrefFn: function (subPage) {
                 return subPage.href;
-              }
+              },
             },
             { label: 'Description', dataKey: 'description' },
           ]}
@@ -63,3 +59,7 @@ export default function Python(props) {
     </section>
   );
 }
+
+Python.propTypes = {
+  route: PropTypes.object,
+};

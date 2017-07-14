@@ -14,5 +14,5 @@ TableHeaderCell.propTypes = {
 };
 
 TableHeaderCell.defaultProps = {
-  className: ''
+  className: '',
 };

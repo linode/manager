@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 
 
 export default function Header(props) {
@@ -21,3 +21,9 @@ export default function Header(props) {
     </div>
   );
 }
+
+Header.propTypes = {
+  className: PropTypes.string,
+  children: PropTypes.node,
+  miniHeader: PropTypes.string,
+};

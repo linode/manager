@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 
 import { Table } from 'linode-components/tables';
 import { DescriptionCell, ParamFieldCell } from './tables/cells';
@@ -6,6 +6,7 @@ import { DescriptionCell, ParamFieldCell } from './tables/cells';
 
 export default function MethodParams(props) {
   const { params } = props;
+
   return (
     <div className="Method-section Method-params">
       <h3>Parameters</h3>
@@ -14,7 +15,11 @@ export default function MethodParams(props) {
         columns={[
           { cellComponent: ParamFieldCell, label: 'Field', headerClassName: 'FieldColumn' },
           { label: 'Type', dataKey: 'type', headerClassName: 'TypeColumn' },
-          { cellComponent: DescriptionCell, label: 'Description', headerClassName: 'DescriptionColumn' }
+          {
+            cellComponent: DescriptionCell,
+            label: 'Description',
+            headerClassName: 'DescriptionColumn',
+          },
         ]}
         data={params}
         noDataMessage="No parameters documented."
@@ -22,3 +27,7 @@ export default function MethodParams(props) {
     </div>
   );
 }
+
+MethodParams.propTypes = {
+  params: PropTypes.arrayOf(PropTypes.object),
+};

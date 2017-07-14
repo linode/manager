@@ -50,7 +50,7 @@ export default class MassEditControl extends Component {
           elements: group.elements.map((option) => ({
             name: option.name,
             action: this.createMassEditActionHandler(option.action),
-          }))
+          })),
         }))}
         onChange={this.onMassEditChange}
       />

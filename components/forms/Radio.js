@@ -25,7 +25,6 @@ Radio.propTypes = {
   onChange: PropTypes.func.isRequired,
   name: PropTypes.string.isRequired,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
-  name: PropTypes.string.isRequired,
   label: PropTypes.any,
   id: PropTypes.string,
 };

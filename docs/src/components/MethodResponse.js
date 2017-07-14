@@ -2,19 +2,18 @@ import React, { Component, PropTypes } from 'react';
 
 import { Table, TableRow } from 'linode-components/tables';
 import Example from './Example';
-import { SchemaTableBody } from './tables';
 import { DescriptionCell, FieldCell, NestedParentCell } from './tables/cells';
 
 
 const defaultColumns = [
   { cellComponent: FieldCell, label: 'Field', headerClassName: 'FieldColumn' },
   { label: 'Type', dataKey: 'type', headerClassName: 'TypeColumn' },
-  { cellComponent: DescriptionCell, label: 'Description', headerClassName: 'DescriptionColumn' }
+  { cellComponent: DescriptionCell, label: 'Description', headerClassName: 'DescriptionColumn' },
 ];
 
 const enumColumns = [
   { cellComponent: FieldCell, label: 'Value', headerClassName: 'FieldColumn' },
-  { cellComponent: DescriptionCell, label: 'Description', headerClassName: 'DescriptionColumn' }
+  { cellComponent: DescriptionCell, label: 'Description', headerClassName: 'DescriptionColumn' },
 ];
 
 export default class MethodResponse extends Component {
@@ -23,12 +22,12 @@ export default class MethodResponse extends Component {
     super();
 
     this.state = {
-      activeSchemaIds: {}
+      activeSchemaIds: {},
     };
   }
 
   onClickRow(nestedSchemaId) {
-    let { activeSchemaIds }  = this.state;
+    const { activeSchemaIds } = this.state;
 
     if (activeSchemaIds[nestedSchemaId]) {
       delete activeSchemaIds[nestedSchemaId];
@@ -62,7 +61,7 @@ export default class MethodResponse extends Component {
 
     return (
       <Table
-        renderRowsFn={(columns, data, onToggleSelect, selectedMap) => {
+        renderRowsFn={(columns, data) => {
           const rows = [];
           data.forEach((record, index) => {
             if (record.schema) {
@@ -80,7 +79,12 @@ export default class MethodResponse extends Component {
                 record={{ ...record, selected: activeSchemaIds[nestedSchemaId] }}
               />);
               rows.push(
-                <tr id={nestedSchemaId} className={`NestedSchemaRow ${!activeSchemaIds[nestedSchemaId] ? 'collapse' : ''}`}>
+                <tr
+                  id={nestedSchemaId}
+                  className={
+                    `NestedSchemaRow ${!activeSchemaIds[nestedSchemaId] ? 'collapse' : ''}`
+                  }
+                >
                   <td className="NestedSchemaCell" colSpan={columns.length}>
                     {this.renderNestedSchemaTable(record)}
                   </td>
@@ -103,7 +107,7 @@ export default class MethodResponse extends Component {
         data={schemaData}
         noDataMessage="No response documented."
       />
-    )
+    );
   }
 
   render() {
@@ -117,3 +121,7 @@ export default class MethodResponse extends Component {
     );
   }
 }
+
+MethodResponse.propTypes = {
+  schema: PropTypes.arrayOf(PropTypes.object),
+};

@@ -1,20 +1,16 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { PropTypes } from 'prop-types';
-
-import { Tooltip } from '../../tooltips';
 
 
 export default function TableCell(props) {
   const {
     className = '',
-    cellIndex,
     column,
     record,
-    title,
   } = props;
+
   const {
     formatFn,
-    disableTooltip = false,
   } = column;
   const columnClassName = column.className || '';
 

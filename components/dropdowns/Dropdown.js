@@ -24,13 +24,13 @@ export default class Dropdown extends Component {
     const [{ elements: [first] }, ...groups] = this.props.groups;
     const { disabled, dropdownIcon } = this.props;
 
-    const dropdownMenu = groups.map((group, i, groups) => (
+    const dropdownMenu = groups.map((group, i) => (
       <div className="Dropdown-group" key={group.name || i}>
         {!group.name ? null : (
           <div className="Dropdown-groupLabel">{group.name}</div>
         )}
         <div className="Dropdown-elements">
-          {group.elements.map((item, i) => (
+          {group.elements.map((item) => (
             <button
               type="button"
               key={item.name}
@@ -42,7 +42,7 @@ export default class Dropdown extends Component {
           ))}
         </div>
       </div>
-    ))
+    ));
 
     const orientation = !this.props.leftOriented ? 'Dropdown-menu--right' : '';
 

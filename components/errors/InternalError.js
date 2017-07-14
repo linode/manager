@@ -25,3 +25,7 @@ export default function InternalError(props) {
     </ConfirmModalBody>
   );
 }
+
+InternalError.propTypes = {
+  returnHome: PropTypes.func,
+};

@@ -1,13 +1,14 @@
-import React from 'react';
-import { Link } from 'react-router';
+import React, { PropTypes } from 'react';
 
 
 export default function IndexLayout(props) {
-  const { route } = props;
-
   return (
     <div>
       {props.children}
     </div>
   );
 }
+
+IndexLayout.propTypes = {
+  children: PropTypes.node,
+};
