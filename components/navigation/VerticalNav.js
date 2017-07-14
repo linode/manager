@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 
 
 export default function VerticalNav(props) {
@@ -9,4 +9,8 @@ export default function VerticalNav(props) {
       {children}
     </div>
   );
+}
+
+VerticalNav.propTypes = {
+  children: PropTypes.node,
 };

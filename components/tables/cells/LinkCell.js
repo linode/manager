@@ -42,7 +42,7 @@ export default function LinkCell(props) {
     );
 
     tooltipEnabledClass = 'TooltipEnabled';
-    tooltipAttributes = {'data-tip': true, 'data-for': tooltipId };
+    tooltipAttributes = { 'data-tip': true, 'data-for': tooltipId };
     tooltipComponent = (
       <Tooltip id={tooltipId}>{tooltipText}</Tooltip>
     );

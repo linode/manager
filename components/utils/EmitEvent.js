@@ -6,6 +6,6 @@ export default function EmitEvent(eventName, category, action, label, value = nu
       action,
       label,
       value,
-    }
+    },
   }));
 }

@@ -1,17 +1,17 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 
 import { Breadcrumbs } from 'linode-components/breadcrumbs';
 import { Table } from 'linode-components/tables';
 import { LinkCell } from 'linode-components/tables/cells';
 
-import { API_ROOT, API_VERSION } from '~/constants';
+import { API_VERSION } from '~/constants';
 
 
 export default function GuidesIndex(props) {
   const { route } = props;
   const { crumbs } = route;
 
-  return(
+  return (
     <div className="EndpointIndex">
       <div className="EndpointIndex-header">
         <div className="Endpoint-breadcrumbsContainer">
@@ -30,9 +30,9 @@ export default function GuidesIndex(props) {
                 textKey: 'path',
                 label: 'Title',
                 headerClassName: 'SectionColumn',
-                hrefFn: function(subPage) {
+                hrefFn: function (subPage) {
                   return subPage.href;
-                }
+                },
               },
               { label: 'Description', dataKey: 'description' },
             ]}
@@ -61,9 +61,9 @@ export default function GuidesIndex(props) {
                   textKey: 'path',
                   label: 'Title',
                   headerClassName: 'SectionColumn',
-                  hrefFn: function(subPage) {
+                  hrefFn: function (subPage) {
                     return subPage.href;
-                  }
+                  },
                 },
                 { label: 'Description', dataKey: 'description' },
               ]}
@@ -71,7 +71,8 @@ export default function GuidesIndex(props) {
                 {
                   href: `/${API_VERSION}/guides/python/getting-started`,
                   path: 'Getting started with Linode Python',
-                  description: 'A quick guide on getting started with the official Linode Python wrapper',
+                  description: 'A quick guide on getting started with the official Linode ' +
+                  'Python wrapper',
                 },
                 {
                   href: `/${API_VERSION}/guides/python/oauth-workflow`,
@@ -91,3 +92,7 @@ export default function GuidesIndex(props) {
     </div>
   );
 }
+
+GuidesIndex.propTypes = {
+  route: PropTypes.object,
+};

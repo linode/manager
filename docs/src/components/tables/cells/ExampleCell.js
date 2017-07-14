@@ -8,13 +8,13 @@ export default function ExampleCell(props) {
   const { example, colSpan } = props;
 
   return (
-    <td className={`Table-cell ExampleCell`} colSpan={colSpan}>
+    <td className="Table-cell ExampleCell" colSpan={colSpan}>
       <Example example={JSON.stringify(example, null, 2)} name="json" />
     </td>
   );
 }
 
 ExampleCell.propTypes = {
-  record: PropTypes.shape({
-  }),
+  colSpan: PropTypes.number,
+  example: PropTypes.string,
 };
