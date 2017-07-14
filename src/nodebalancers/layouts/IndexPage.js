@@ -2,13 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
-import { default as toggleSelected } from '~/actions/select';
-import { showModal, hideModal } from '~/actions/modal';
-import { nodebalancers as api } from '~/api';
-import { setSource } from '~/actions/source';
-import { setTitle } from '~/actions/title';
-import { EmitEvent } from 'linode-components/utils';
-
+import { Input } from 'linode-components/forms';
 import { DeleteModalBody } from 'linode-components/modals';
 import CreateHelper from '~/components/CreateHelper';
 import { List } from 'linode-components/lists';
@@ -25,9 +19,17 @@ import {
   IPAddressCell,
 } from '~/components/tables/cells';
 import { MassEditControl } from 'linode-components/lists/controls';
+import { EmitEvent } from 'linode-components/utils';
+
+import { showModal, hideModal } from '~/actions/modal';
+import { default as toggleSelected } from '~/actions/select';
+import { setSource } from '~/actions/source';
+import { setTitle } from '~/actions/title';
+import { nodebalancers as api } from '~/api';
+import { transform } from '~/api/util';
+
 
 const OBJECT_TYPE = 'nodebalancers';
-
 
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
@@ -38,6 +40,8 @@ export class IndexPage extends Component {
     super(props);
 
     this.deleteNodeBalancers = this.deleteNodeBalancers.bind(this);
+
+    this.state = { filter: '' };
   }
 
   async componentDidMount() {
@@ -74,16 +78,18 @@ export class IndexPage extends Component {
 
   render() {
     const { dispatch, nodebalancers, selectedMap } = this.props;
-    // TODO: add sort function in config definition
-    const data = Object.values(nodebalancers.nodebalancers);
+    const { filter } = this.state;
 
-    // TODO: add mass edit controls to nodebalancers
-    const renderNodeBalancers = (data) => (
+    const { sorted } = transform(nodebalancers.nodebalancers, {
+      filterBy: filter,
+    });
+
+    const renderNodeBalancers = () => (
       <List>
-        <ListHeader>
-          <div className="pull-sm-left">
+        <ListHeader className="Menu">
+          <div className="Menu-item">
             <MassEditControl
-              data={data}
+              data={sorted}
               dispatch={dispatch}
               massEditGroups={[{ elements: [
                 { name: 'Delete', action: this.deleteNodeBalancers },
@@ -91,6 +97,13 @@ export class IndexPage extends Component {
               selectedMap={selectedMap}
               objectType={OBJECT_TYPE}
               toggleSelected={toggleSelected}
+            />
+          </div>
+          <div className="Menu-item">
+            <Input
+              placeholder="Filter..."
+              onChange={({ target: { value } }) => this.setState({ filter: value })}
+              value={this.state.filter}
             />
           </div>
         </ListHeader>
@@ -112,7 +125,8 @@ export class IndexPage extends Component {
                 text: 'Delete',
               },
             ]}
-            data={data}
+            noDataMessage={"No NodeBalancers found."}
+            data={sorted}
             selectedMap={selectedMap}
             disableHeader
             onToggleSelect={(record) => {
@@ -135,7 +149,7 @@ export class IndexPage extends Component {
           </div>
         </header>
         <div className="PrimaryPage-body">
-          {data.length ? renderNodeBalancers(data) : (
+          {Object.values(nodebalancers.nodebalancers).length ? renderNodeBalancers() : (
             <CreateHelper
               label="NodeBalancers"
               href="/nodebalancers/create"

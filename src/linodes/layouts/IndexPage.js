@@ -181,6 +181,7 @@ export class IndexPage extends Component {
                       dispatch: dispatch,
                     },
                   ]}
+                  noDataMessage="No Linodes found."
                   data={group.data}
                   selectedMap={selectedMap}
                   disableHeader
