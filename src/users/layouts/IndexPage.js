@@ -133,6 +133,7 @@ export class IndexPage extends Component {
                 tooltipEnabled: true,
               },
               { dataKey: 'email' },
+              { dataFn: (user) => user.restricted ? 'Restricted' : 'Unrestricted' },
               {
                 cellComponent: ButtonCell,
                 headerClassName: 'ButtonColumn',

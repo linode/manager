@@ -21,7 +21,12 @@ export default function TableCell(props) {
   // TODO: add dynamic class name based on column type ( numeric/text/etc )
   let children = props.children;
   if (!children) {
-    children = record[column.dataKey];
+    if (column.dataKey) {
+      children = record[column.dataKey];
+    } else if (column.dataFn) {
+      children = column.dataFn(record);
+    }
+
     if (formatFn) {
       children = formatFn(children);
     }
@@ -45,11 +50,12 @@ TableCell.propTypes = {
   column: PropTypes.shape({
     className: PropTypes.string,
     dataKey: PropTypes.string,
+    dataFn: PropTypes.func,
     disableTooltip: PropTypes.bool,
   }).isRequired,
   formatFn: PropTypes.func,
   record: PropTypes.shape({
-    id: PropTypes.number,
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   }).isRequired,
   title: PropTypes.string,
 };

@@ -4,6 +4,7 @@ import React from 'react';
 import sinon from 'sinon';
 
 import { SHOW_MODAL } from '~/actions/modal';
+import { GRAVATAR_BASE_URL } from '~/constants';
 import { IndexPage } from '~/users/layouts/IndexPage';
 
 import { api } from '@/data';
@@ -36,9 +37,11 @@ describe('users/layouts/IndexPage', () => {
     // + 1 for the group
     expect(zone.length).to.equal(Object.keys(users.users).length);
     const firstZone = zone.at(0);
+    expect(firstZone.find('td img').props().src)
+      .to.equal(`${GRAVATAR_BASE_URL}`);
     expect(firstZone.find('Link').props().to)
       .to.equal('/users/testuser1');
-    expect(firstZone.find('td').at(1).text())
+    expect(firstZone.find('td').at(2).text())
       .to.equal('testuser1');
   });
 
