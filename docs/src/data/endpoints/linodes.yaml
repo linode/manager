@@ -7,6 +7,7 @@ description: >
 endpoints:
   /linode/instances:
     resource: linode
+    paginationKey: linodes
     authenticated: true
     description: >
       Manage the collection of Linodes your account may access.
@@ -101,7 +102,7 @@ endpoints:
             my_linode = client.linode.create_instance(client.get_regions().first(), 'g5-nanode-1')
 
             distro = client.linode.get_distributons(linode.Distribution.vendor == 'debian').first()
-            ( my_linode_2, password ) = client.linode.create_instance('us-east-1a', 'g5-standard-1', distribtuion=distro)
+            ( my_linode_2, password ) = client.linode.create_instance('us-east-1a', 'g5-standard-1', distribution=distro)
   /linode/instances/:id:
     type: resource
     resource: linode
@@ -153,6 +154,7 @@ endpoints:
   /linode/instances/:id/disks:
     _group: Disks
     resource: disk
+    paginationKey: disks
     authenticated: true
     description: >
       Manage the disks associated with this Linode.
@@ -340,6 +342,7 @@ endpoints:
   /linode/instances/:id/configs:
     _group: Configs
     resource: linode_config
+    paginationKey: configs
     authenticated: true
     description: >
       Manage the boot configs on this Linode.
@@ -481,6 +484,7 @@ endpoints:
             config.delete()
   /linode/instances/:id/volumes:
     resource: volume
+    paginationKey: volumes
     authenticated: true
     description: >
         View Block Storage Volumes attached to this Linode.
@@ -635,8 +639,8 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/resize
   /linode/instances/:id/backups:
     _group: Backups
-    type: Action
-    resource: backup
+    resource: backupsresponse
+    paginationKey: backups
     authenticated: true
     description: >
       Returns information about this Linode's available <a href="#object-backup">backups</a>.
@@ -883,6 +887,7 @@ endpoints:
   /linode/stackscripts:
     _group: StackScripts
     resource: stackscript
+    paginationKey: stackscripts
     description: >
       View public StackScripts.
     methods:
@@ -997,6 +1002,7 @@ endpoints:
   /linode/distributions:
     _group: Distributions
     resource: distributions
+    paginationKey: distributions
     description: >
       View the collection of distributions.
     methods:
@@ -1027,6 +1033,7 @@ endpoints:
   /linode/kernels:
     _group: Kernels
     resource: kernels
+    paginationKey: kernels
     description: >
       Returns collection of kernels.
     methods:
@@ -1056,6 +1063,7 @@ endpoints:
   /linode/types:
     _group: Types
     resource: types
+    paginationKey: types
     description: >
       Returns collection of types.
     methods:
@@ -1085,6 +1093,7 @@ endpoints:
   /linode/volumes:
     _group: Volumes
     resource: volume
+    paginationKey: volumes
     authenticated: true
     description: >
         Manage your Block Storage Volumes.
