@@ -1,9 +1,9 @@
 import _ from 'lodash';
-import moment from 'moment';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
+import { Input } from 'linode-components/forms';
 import { List } from 'linode-components/lists';
 import { Table } from 'linode-components/tables';
 import { MassEditControl } from 'linode-components/lists/controls';
@@ -21,6 +21,7 @@ import { default as toggleSelected } from '~/actions/select';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 import { domains } from '~/api';
+import { transform } from '~/api/util';
 import CreateHelper from '~/components/CreateHelper';
 
 
@@ -35,6 +36,8 @@ export class IndexPage extends Component {
     super(props);
 
     this.deleteZones = this.deleteZones.bind(this);
+
+    this.state = { filter: '' };
   }
 
   async componentDidMount() {
@@ -68,21 +71,17 @@ export class IndexPage extends Component {
 
   renderZones(zones) {
     const { dispatch, selectedMap } = this.props;
-    // TODO: add sort function in dns zones config definition
-    const sortedZones = _.sortBy(Object.values(zones), ({ created }) => moment(created));
+    const { filter } = this.state;
 
-    const groups = _.sortBy(
-      _.map(_.groupBy(sortedZones, d => d.group), (_zones, _group) => {
-        return {
-          name: _group,
-          data: _zones,
-        };
-      }), zoneGroup => zoneGroup.name);
+    const { groups, sorted: sortedZones } = transform(zones, {
+      filterOn: 'domain',
+      filterBy: filter,
+    });
 
     return (
       <List>
-        <ListHeader>
-          <div className="pull-sm-left">
+        <ListHeader className="Menu">
+          <div className="Menu-item">
             <MassEditControl
               data={sortedZones}
               dispatch={dispatch}
@@ -92,6 +91,13 @@ export class IndexPage extends Component {
               selectedMap={selectedMap}
               objectType={OBJECT_TYPE}
               toggleSelected={toggleSelected}
+            />
+          </div>
+          <div className="Menu-item">
+            <Input
+              placeholder="Filter..."
+              onChange={({ target: { value } }) => this.setState({ filter: value })}
+              value={this.state.filter}
             />
           </div>
         </ListHeader>
