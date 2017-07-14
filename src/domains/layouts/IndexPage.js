@@ -146,7 +146,9 @@ export class IndexPage extends Component {
         <header className="PrimaryPage-header">
           <div className="PrimaryPage-headerRow clearfix">
             <h1 className="float-sm-left">Domains</h1>
-            <PrimaryButton className="float-sm-right">Add a Domain</PrimaryButton>
+            <PrimaryButton to="/domains/create" className="float-sm-right">
+              Add a Domain
+            </PrimaryButton>
           </div>
         </header>
         <div className="PrimaryPage-body">
