@@ -21,8 +21,8 @@ export default class MassEditControl extends Component {
 
   createMassEditActionHandler(fn) {
     return () => {
-      const { data, selectedMap } = this.props;
-      const filteredData = data.filter((record) => { return selectedMap[record.id]; });
+      const { data, selectedMap, selectedKey } = this.props;
+      const filteredData = data.filter((record) => { return selectedMap[record[selectedKey]]; });
 
       fn(filteredData);
     };

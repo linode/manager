@@ -1,18 +1,49 @@
-import _ from 'lodash';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
+import { Input } from 'linode-components/forms';
+import { List } from 'linode-components/lists';
+import { ListBody } from 'linode-components/lists/bodies';
+import { MassEditControl } from 'linode-components/lists/controls';
+import { ListHeader } from 'linode-components/lists/headers';
+import { DeleteModalBody } from 'linode-components/modals';
+import { Table } from 'linode-components/tables';
+import {
+  ButtonCell,
+  CheckboxCell,
+  LinkCell,
+  ThumbnailCell,
+} from 'linode-components/tables/cells';
+import { EmitEvent } from 'linode-components/utils';
+
+import { showModal, hideModal } from '~/actions/modal';
+import toggleSelected from '~/actions/select';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
-import { users } from '~/api';
+import { users as api } from '~/api';
+import { transform } from '~/api/util';
+import { getEmailHash } from '~/cache';
+import CreateHelper from '~/components/CreateHelper';
+import { GRAVATAR_BASE_URL } from '~/constants';
 
-import { User } from '../components';
 
+const OBJECT_TYPE = 'users';
+
+function getGravatarURL(user) {
+  const emailHash = getEmailHash(user.email);
+  return `${GRAVATAR_BASE_URL}${emailHash}`;
+}
 
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
-    await dispatch(users.all());
+    await dispatch(api.all());
+  }
+
+  constructor() {
+    super();
+
+    this.state = { filter: '' };
   }
 
   async componentDidMount() {
@@ -22,24 +53,107 @@ export class IndexPage extends Component {
     dispatch(setTitle('Users'));
   }
 
-  renderGroup = (group, i, groups) => {
-    const { username: currentUser } = this.props.profile;
-    const _renderGroup = group.map(user => (
-      <div className="col-lg-6" key={user.username}>
-        <User user={user} currentUser={currentUser} />
-      </div>
+  deleteUsers = (users) => {
+    const { dispatch } = this.props;
+    const usersArr = Array.isArray(users) ? users : [users];
+    const title = 'Delete User(s)';
+
+    dispatch(showModal(title,
+      <DeleteModalBody
+        onOk={async () => {
+          const ids = usersArr.map(user => user.username);
+
+          await Promise.all(ids.map(id => dispatch(api.delete(id))));
+          dispatch(toggleSelected(OBJECT_TYPE, ids));
+          EmitEvent('modal:submit', 'Modal', 'delete', title);
+          dispatch(hideModal());
+        }}
+        onCancel={() => {
+          EmitEvent('modal:cancel', 'Modal', 'cancel', title);
+          dispatch(hideModal());
+        }}
+        items={usersArr.map(n => n.username)}
+        typeOfItem="Users"
+      />
     ));
+  }
 
-    if (i === groups.length - 1) {
-      return <div className="row" key={i}>{_renderGroup}</div>;
-    }
+  renderUsers(users) {
+    const { dispatch, selectedMap, profile: { username: currentUsername } } = this.props;
+    const { filter } = this.state;
 
-    return <section className="row" key={i}>{_renderGroup}</section>;
+    const { sorted: sortedUsers } = transform(users, {
+      filterOn: 'username',
+      filterBy: filter,
+    });
+
+    return (
+      <List>
+        <ListHeader className="Menu">
+          <div className="Menu-item">
+            <MassEditControl
+              data={sortedUsers}
+              dispatch={dispatch}
+              massEditGroups={[{ elements: [
+                { name: 'Delete', action: this.deleteUsers },
+              ] }]}
+              selectedMap={selectedMap}
+              selectedKey="username"
+              objectType={OBJECT_TYPE}
+              toggleSelected={toggleSelected}
+            />
+          </div>
+          <div className="Menu-item">
+            <Input
+              placeholder="Filter..."
+              onChange={({ target: { value } }) => this.setState({ filter: value })}
+              value={this.state.filter}
+            />
+          </div>
+        </ListHeader>
+        <ListBody>
+          <Table
+            columns={[
+              {
+                cellComponent: CheckboxCell,
+                headerClassName: 'CheckboxColumn',
+                selectedKey: 'username',
+              },
+              {
+                cellComponent: ThumbnailCell,
+                headerClassName: 'ThumbnailColumn',
+                srcFn: getGravatarURL,
+              },
+              {
+                cellComponent: LinkCell,
+                idKey: 'username',
+                hrefFn: (user) =>
+                  user.username !== currentUsername ? `/users/${user.username}` : '/profile',
+                textKey: 'username',
+                tooltipEnabled: true,
+              },
+              { dataKey: 'email' },
+              { dataFn: (user) => user.restricted ? 'Restricted' : 'Unrestricted' },
+              {
+                cellComponent: ButtonCell,
+                headerClassName: 'ButtonColumn',
+                text: 'Delete',
+                onClick: (user) => { this.deleteUsers(user); },
+              },
+            ]}
+            data={sortedUsers}
+            selectedMap={selectedMap}
+            disableHeader
+            onToggleSelect={(user) => {
+              dispatch(toggleSelected(OBJECT_TYPE, user.username));
+            }}
+          />
+        </ListBody>
+      </List>
+    );
   }
 
   render() {
-    const listOfUsers = Object.values(this.props.users.users);
-
     return (
       <div className="PrimaryPage container">
         <header className="PrimaryPage-header">
@@ -52,7 +166,9 @@ export class IndexPage extends Component {
           </div>
         </header>
         <div className="PrimaryPage-body">
-          {_.chunk(listOfUsers, 2).map(this.renderGroup)}
+          {Object.keys(this.props.users.users).length ?
+            this.renderUsers(this.props.users.users) :
+            <CreateHelper label="Users" href="/users/create" linkText="Add a User" />}
         </div>
       </div>
     );
@@ -63,12 +179,14 @@ IndexPage.propTypes = {
   dispatch: PropTypes.func,
   users: PropTypes.object,
   profile: PropTypes.object,
+  selectedMap: PropTypes.object.isRequired,
 };
 
 function select(state) {
   return {
     users: state.api.users,
     profile: state.api.profile,
+    selectedMap: state.select.selected[OBJECT_TYPE] || {},
   };
 }
 

@@ -4,18 +4,15 @@ import React from 'react';
 import sinon from 'sinon';
 
 import { SHOW_MODAL } from '~/actions/modal';
-import { getEmailHash } from '~/cache';
-import { GRAVATAR_BASE_URL } from '~/constants';
-import { IndexPage } from '~/users/layouts/IndexPage';
+import { IndexPage } from '~/nodebalancers/layouts/IndexPage';
 
 import { api } from '@/data';
 import { expectRequest } from '@/common.js';
-import { profile } from '@/data/profile';
 
 
-const { users } = api;
+const { nodebalancers } = api;
 
-describe('users/layouts/IndexPage', () => {
+describe('nodebalancers/layouts/IndexPage', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
@@ -24,30 +21,25 @@ describe('users/layouts/IndexPage', () => {
 
   const dispatch = sandbox.spy();
 
-  it('renders a list of Users', () => {
+  it('renders a list of Nodebalancers', () => {
     const page = mount(
       <IndexPage
         dispatch={dispatch}
         selectedMap={{}}
-        profile={profile}
-        users={users}
+        nodebalancers={nodebalancers}
       />
     );
 
     const zone = page.find('.TableRow');
     // + 1 for the group
-    expect(zone.length).to.equal(Object.keys(users.users).length);
+    expect(zone.length).to.equal(Object.keys(nodebalancers.nodebalancers).length);
     const firstZone = zone.at(0);
-    expect(firstZone.find('td img').props().src)
-      .to.equal(`${GRAVATAR_BASE_URL}${getEmailHash('example1@domain.com')}`);
     expect(firstZone.find('Link').props().to)
-      .to.equal('/users/testuser1');
+      .to.equal('/nodebalancers/nodebalancer-2');
+    expect(firstZone.find('td').at(1).text())
+      .to.equal('nodebalancer-2');
     expect(firstZone.find('td').at(2).text())
-      .to.equal('testuser1');
-    expect(firstZone.find('td').at(3).text())
-      .to.equal('example1@domain.com');
-    expect(firstZone.find('td').at(4).text())
-      .to.equal('Unrestricted');
+      .to.equal('1.1.1.1');
   });
 
   it('shows the delete modal when delete is pressed', () => {
@@ -55,8 +47,7 @@ describe('users/layouts/IndexPage', () => {
       <IndexPage
         dispatch={dispatch}
         selectedMap={{}}
-        profile={profile}
-        users={users}
+        nodebalancers={nodebalancers}
       />
     );
 
@@ -68,13 +59,12 @@ describe('users/layouts/IndexPage', () => {
       .to.have.property('type').which.equals(SHOW_MODAL);
   });
 
-  it('deletes selected users when delete is pressed', async () => {
+  it('deletes selected nodebalancers when delete is pressed', async () => {
     const page = mount(
       <IndexPage
         dispatch={dispatch}
         selectedMap={{ 1: true }}
-        profile={profile}
-        users={users}
+        nodebalancers={nodebalancers}
       />
     );
 
@@ -86,6 +76,6 @@ describe('users/layouts/IndexPage', () => {
     dispatch.reset();
     modal.find('Form').props().onSubmit({ preventDefault() {} });
     const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, '/account/users/testuser1', { method: 'DELETE' });
+    await expectRequest(fn, '/nodebalancers/23', { method: 'DELETE' });
   });
 });
