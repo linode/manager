@@ -1,4 +1,6 @@
 .Input {
+    @include placeholder-full();
+
     display: inline-block;
 
     &-label {
