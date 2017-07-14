@@ -1,5 +1,3 @@
-import _ from 'lodash';
-import moment from 'moment';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
@@ -24,6 +22,7 @@ import toggleSelected from '~/actions/select';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 import { users as api } from '~/api';
+import { transform } from '~/api/util';
 import { getEmailHash } from '~/cache';
 import CreateHelper from '~/components/CreateHelper';
 import { GRAVATAR_BASE_URL } from '~/constants';
@@ -83,9 +82,10 @@ export class IndexPage extends Component {
     const { dispatch, selectedMap, profile: { username: currentUsername } } = this.props;
     const { filter } = this.state;
 
-    const filteredUsers = filter.length ? _.pickBy(users, u =>
-      u.username.toLowerCase().indexOf(filter.toLowerCase()) !== -1) : users;
-    const sortedUsers = _.sortBy(Object.values(filteredUsers), ({ created }) => moment(created));
+    const { sorted: sortedUsers } = transform(users, {
+      filterOn: 'username',
+      filterBy: filter,
+    });
 
     return (
       <List>
