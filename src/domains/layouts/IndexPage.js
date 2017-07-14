@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import moment from 'moment';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
@@ -22,6 +21,7 @@ import { default as toggleSelected } from '~/actions/select';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 import { domains } from '~/api';
+import { transform } from '~/api/util';
 import CreateHelper from '~/components/CreateHelper';
 
 
@@ -73,17 +73,10 @@ export class IndexPage extends Component {
     const { dispatch, selectedMap } = this.props;
     const { filter } = this.state;
 
-    const filteredZones = filter.length ? _.pickBy(zones, z =>
-      z.domain.toLowerCase().indexOf(filter.toLowerCase()) !== -1) : zones;
-    const sortedZones = _.sortBy(Object.values(filteredZones), ({ created }) => moment(created));
-
-    const groups = _.sortBy(
-      _.map(_.groupBy(sortedZones, d => d.group), (_zones, _group) => {
-        return {
-          name: _group,
-          data: _zones,
-        };
-      }), zoneGroup => zoneGroup.name);
+    const { groups, sorted: sortedZones } = transform(zones, {
+      filterOn: 'domain',
+      filterBy: filter,
+    });
 
     return (
       <List>
