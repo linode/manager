@@ -1,7 +1,8 @@
-import React, { PropTypes } from 'react';
 import _ from 'lodash';
+import React, { PropTypes } from 'react';
 
 import Distribution from './Distribution';
+
 
 export default function Distributions(props) {
   const { distributions, distribution, onSelected, noDistribution = true } = props;
