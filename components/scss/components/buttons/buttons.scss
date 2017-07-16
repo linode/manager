@@ -106,19 +106,6 @@ a {
         display: inline-block;
     }
 
-    &.btn-secondary {
-        border: $border;
-        border-color: $gray;
-        color: $light-black;
-        background: $white;
-
-        &:not([disabled]):hover {
-            border: $border;
-            color: $black;
-            background: $white;
-        }
-    }
-
     & + & {
         margin-left: 5px;
     }
