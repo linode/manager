@@ -241,4 +241,4 @@ export const IPV6_DNS_RESOLVERS = [
 
 export const MONTHLY_IP_COST = 1;
 
-export const SESSION_DURATION = 120;
+export const SESSION_DURATION = 119; // minutes
