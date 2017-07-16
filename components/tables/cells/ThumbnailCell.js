@@ -11,7 +11,7 @@ export default function ThumbnailCell(props) {
 
   return (
     <TableCell className="ThumbnailCell" column={column} record={record}>
-      {!src ? null : <img src={src} />}
+      {!src ? null : <img src={src} role="presentation" />}
     </TableCell>
   );
 }
