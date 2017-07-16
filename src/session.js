@@ -1,9 +1,13 @@
 import { setToken } from '~/actions/authentication';
-import { APP_ROOT, LOGIN_ROOT } from '~/constants';
+import { APP_ROOT, LOGIN_ROOT, SESSION_DURATION } from '~/constants';
 import { clientId } from '~/secrets';
 import { getStorage, setStorage } from '~/storage';
 import { store } from '~/store';
 
+
+const AUTH_TOKEN = 'authentication/oauth-token';
+const AUTH_SCOPES = 'authentication/scopes';
+const AUTH_EXPIRATION = 'authentication/expiration';
 
 export function redirect(location) {
   window.location = location;
@@ -41,15 +45,21 @@ export function checkLogin(next) {
 }
 
 export function initialize(dispatch) {
-  const token = getStorage('authentication/oauth-token') || null;
-  const scopes = getStorage('authentication/scopes') || null;
+  const expiration = getStorage(AUTH_EXPIRATION) || null;
+  if (expiration && new Date(expiration) < new Date()) {
+    return dispatch(setToken(null, null));
+  }
+
+  const token = getStorage(AUTH_TOKEN) || null;
+  const scopes = getStorage(AUTH_SCOPES) || null;
   dispatch(setToken(token, scopes));
 }
 
 export function expire(dispatch) {
   // Remove these from local storage so if login fails, next time we jump to login sooner.
-  setStorage('authentication/oauth-token', '');
-  setStorage('authentication/scopes', '');
+  setStorage(AUTH_TOKEN, '');
+  setStorage(AUTH_SCOPES, '');
+  setStorage(AUTH_EXPIRATION, '');
   dispatch(setToken(null, null));
 }
 
@@ -61,8 +71,12 @@ export function expireAndReAuth(dispatch) {
 export function start(oauthToken = '', scopes = '') {
   return (dispatch) => {
     // Set these two so we can grab them on subsequent page loads
-    setStorage('authentication/oauth-token', oauthToken);
-    setStorage('authentication/scopes', scopes);
+    setStorage(AUTH_TOKEN, oauthToken);
+    setStorage(AUTH_SCOPES, scopes);
+
+    const now = new Date();
+    now.setMinutes(now.getMinutes() + SESSION_DURATION);
+    setStorage(AUTH_EXPIRATION, now);
     // Add all to state for this (page load) session
     dispatch(setToken(oauthToken, scopes));
   };
