@@ -14,6 +14,7 @@ import { reducer as tokens } from './configs/tokens';
 import { reducer as clients } from './configs/clients';
 import { reducer as users } from './configs/users';
 import { reducer as tickets } from './configs/tickets';
+import { reducer as stackscripts } from './configs/stackscripts';
 
 export default combineReducers({
   linodes,
@@ -30,4 +31,5 @@ export default combineReducers({
   users,
   tickets,
   account,
+  stackscripts
 });
