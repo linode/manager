@@ -23,6 +23,7 @@ import Layout from '~/layouts/Layout';
 import Logout from '~/layouts/Logout';
 import OAuthCallbackPage from '~/layouts/OAuth';
 import Linodes from '~/linodes';
+import StackScripts from '~/stackscripts';
 import Weblish from '~/linodes/linode/layouts/Weblish';
 import NodeBalancers from '~/nodebalancers';
 import Profile from '~/profile';
@@ -138,6 +139,7 @@ const init = () => {
             >
               <IndexRedirect to="/linodes" />
               {Linodes}
+              {StackScripts}
               {NodeBalancers}
               {Domains}
               {Profile}
