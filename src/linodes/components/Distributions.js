@@ -1,7 +1,8 @@
-import React, { PropTypes } from 'react';
 import _ from 'lodash';
+import React, { PropTypes } from 'react';
 
 import Distribution from './Distribution';
+
 
 export default function Distributions(props) {
   const { distributions, distribution, onSelected, noDistribution = true } = props;
@@ -10,8 +11,13 @@ export default function Distributions(props) {
     return null;
   }
 
+  const withVendorLowerCased = _.map(distributions, d => ({
+    ...d,
+    vendor: d.vendor.toLowerCase(),
+  }));
+
   const vendorsUnsorted = _.map(
-    _.groupBy(distributions, 'vendor'),
+    _.groupBy(withVendorLowerCased, 'vendor'),
     (v, k) => ({
       name: k,
       versions: _.orderBy(v, ['recommended', 'created'], ['desc', 'desc']),
