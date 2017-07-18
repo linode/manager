@@ -2,17 +2,35 @@ import React, { PropTypes, Component } from 'react';
 
 import { CancelButton } from 'linode-components/buttons';
 import { Form, FormSummary, Input, ModalFormGroup, SubmitButton } from 'linode-components/forms';
+import { EmitEvent } from 'linode-components/utils';
 
+import { showModal, hideModal } from '~/actions/modal';
 import { clients } from '~/api';
 import { updateClientThumbnail } from '~/api/clients';
-import { MAX_UPLOAD_SIZE_MB } from '~/constants';
 import { dispatchOrStoreErrors } from '~/api/util';
-import { EmitEvent } from 'linode-components/utils';
+import { MAX_UPLOAD_SIZE_MB } from '~/constants';
+
 
 import { renderSecret } from './CreatePersonalAccessToken';
 
 
 export default class CreateOrEditApplication extends Component {
+  static trigger(dispatch, client = {}) {
+    const title = client ? 'Create an OAuth Client' : 'Edit OAuth Client';
+
+    return dispatch(showModal(title, (
+      <CreateOrEditApplication
+        dispatch={dispatch}
+        title={title}
+        label={client.label}
+        id={client.id}
+        redirect={client.redirect_uri}
+        thumbnail={client.thumbnail}
+        close={() => dispatch(hideModal())}
+      />
+    )));
+  }
+
   constructor(props) {
     super(props);
 

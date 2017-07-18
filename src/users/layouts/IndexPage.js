@@ -141,6 +141,7 @@ export class IndexPage extends Component {
                 onClick: (user) => { this.deleteUsers(user); },
               },
             ]}
+            noDataMessage="No users found."
             data={sortedUsers}
             selectedMap={selectedMap}
             disableHeader
@@ -161,7 +162,7 @@ export class IndexPage extends Component {
             <h1 className="float-sm-left">Users</h1>
             <Link to="/users/create" className="linode-add btn btn-primary float-sm-right">
               <span className="fa fa-plus"></span>
-              Add a user
+              Add a User
             </Link>
           </div>
         </header>

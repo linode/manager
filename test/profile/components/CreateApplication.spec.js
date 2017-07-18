@@ -5,13 +5,13 @@ import sinon from 'sinon';
 
 import * as fetch from '~/fetch';
 import { MAX_UPLOAD_SIZE_MB } from '~/constants';
-import { CreateOrEditApplication } from '~/profile/integrations/components';
+import { CreateOrEditApplication } from '~/profile/components';
 
 import { expectDispatchOrStoreErrors, expectObjectDeepEquals, expectRequest } from '@/common';
 import { state } from '@/data';
 
 
-describe('profile/integrations/components/CreateOrEditApplication', () => {
+describe('profile/components/CreateOrEditApplication', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {

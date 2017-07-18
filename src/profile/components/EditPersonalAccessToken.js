@@ -8,13 +8,27 @@ import {
   ModalFormGroup,
   SubmitButton,
 } from 'linode-components/forms';
+import { EmitEvent } from 'linode-components/utils';
 
+import { showModal, hideModal } from '~/actions/modal';
 import { tokens } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
-import { EmitEvent } from 'linode-components/utils';
 
 
 export default class EditPersonalAccessToken extends Component {
+  static title = 'Edit Personal Access Token'
+
+  static trigger(dispatch, token) {
+    return dispatch(showModal(EditPersonalAccessToken.title, (
+      <EditPersonalAccessToken
+        dispatch={dispatch}
+        close={() => dispatch(hideModal())}
+        label={token.label}
+        id={token.id}
+      />
+    )));
+  }
+
   constructor(props) {
     super(props);
 
@@ -28,18 +42,18 @@ export default class EditPersonalAccessToken extends Component {
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   onSubmit = () => {
-    const { dispatch, id, title, close } = this.props;
+    const { dispatch, id, close } = this.props;
     const { label } = this.state;
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => tokens.put({ label }, id),
-      () => { EmitEvent('modal:submit', 'Modal', 'edit', title); },
+      () => { EmitEvent('modal:submit', 'Modal', 'edit', EditPersonalAccessToken.title); },
       close,
     ]));
   }
 
   render() {
-    const { close, title } = this.props;
+    const { close } = this.props;
     const { errors, label, loading } = this.state;
 
     return (
@@ -56,7 +70,7 @@ export default class EditPersonalAccessToken extends Component {
         <div className="Modal-footer">
           <CancelButton
             onClick={() => {
-              EmitEvent('modal:cancel', 'Modal', 'cancel', title);
+              EmitEvent('modal:cancel', 'Modal', 'cancel', EditPersonalAccessToken.title);
               close();
             }}
           />
@@ -72,6 +86,5 @@ EditPersonalAccessToken.propTypes = {
   dispatch: PropTypes.func.isRequired,
   close: PropTypes.func.isRequired,
   label: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired,
   id: PropTypes.number.isRequired,
 };
