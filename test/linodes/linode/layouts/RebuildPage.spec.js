@@ -6,7 +6,9 @@ import sinon from 'sinon';
 
 import { RebuildPage } from '~/linodes/linode/layouts/RebuildPage';
 
-import { expectDispatchOrStoreErrors, expectObjectDeepEquals, expectRequest } from '@/common';
+import {
+  changeInput, expectDispatchOrStoreErrors, expectObjectDeepEquals, expectRequest,
+} from '@/common';
 import { api } from '@/data';
 import { testLinode } from '@/data/linodes';
 
@@ -23,14 +25,13 @@ describe('linodes/linode/layouts/RebuildPage', () => {
     const page = mount(
       <RebuildPage
         dispatch={dispatch}
-        distributions={api.distributions}
+        distributions={api.distributions.distributions}
         linode={testLinode}
       />
     );
 
-    page.find('.LinodesDistribution').first().simulate('click');
-    page.find('PasswordInput').find({ id: 'password' }).simulate(
-      'change', { target: { value: 'new password', name: 'password' } });
+    changeInput(page, 'distribution', 'linode/debian7');
+    changeInput(page, 'password', 'new password');
 
     dispatch.reset();
     await page.find('Form').props().onSubmit();

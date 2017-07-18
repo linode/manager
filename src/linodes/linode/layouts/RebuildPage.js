@@ -3,18 +3,17 @@ import { connect } from 'react-redux';
 
 import { Card, CardHeader } from 'linode-components/cards';
 import {
-  FormGroup, FormGroupError, Form, SubmitButton, PasswordInput,
+  FormGroup, FormGroupError, Form, FormSummary, Input, SubmitButton, PasswordInput,
 } from 'linode-components/forms';
 import { ConfirmModalBody } from 'linode-components/modals';
-import { FormSummary } from 'linode-components/forms';
+import { onChange } from 'linode-components/forms/utilities';
 
 import { hideModal, showModal } from '~/actions/modal';
 import { setSource } from '~/actions/source';
 import { distributions } from '~/api';
 import { rebuildLinode } from '~/api/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
-import { DEFAULT_DISTRIBUTION } from '~/constants';
-import Distributions from '~/linodes/components/Distributions';
+import { DistributionSelect } from '~/linodes/components';
 
 import { selectLinode } from '../utilities';
 
@@ -30,12 +29,15 @@ export class RebuildPage extends Component {
     super(props);
 
     const distribution = props.linode.distribution;
+
     this.state = {
-      distribution: distribution ? distribution.id : DEFAULT_DISTRIBUTION,
+      distribution: distribution ? distribution.id : undefined,
       password: '',
       errors: {},
       loading: false,
     };
+
+    this.onChange = onChange.bind(this);
   }
 
   async componentDidMount() {
@@ -44,14 +46,14 @@ export class RebuildPage extends Component {
   }
 
   onSubmit = () => {
-    const { dispatch, linode: { id, label }, distributions: { distributions } } = this.props;
+    const { dispatch, linode: { id, label }, distributions } = this.props;
     const { password, distribution } = this.state;
     const distroLabel = distributions[distribution].label;
 
     const callback = async () => {
       await dispatch(dispatchOrStoreErrors.call(this, [
         () => rebuildLinode(id, { distribution, root_pass: password }),
-        () => this.setState({ password: '', distribution: DEFAULT_DISTRIBUTION }),
+        () => this.setState({ password: '', distribution }),
       ], ['distribution']));
 
       // We want to hide the modal regardless of the status of the call.
@@ -71,8 +73,6 @@ export class RebuildPage extends Component {
     )));
   }
 
-  onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
-
   render() {
     const { distributions } = this.props;
     const { distribution, errors, loading } = this.state;
@@ -86,17 +86,28 @@ export class RebuildPage extends Component {
           onSubmit={this.onSubmit}
           analytics={{ title: 'Rebuild Linode' }}
         >
-          <div className="clearfix">
-            <Distributions
-              distributions={distributions.distributions}
-              distribution={distribution}
-              onSelected={distribution => this.setState({ distribution })}
-              noDistribution={false}
-            />
-          </div>
+          <FormGroup className="row">
+            <label className="col-sm-3 col-form-label">Current Distribution</label>
+            <div className="col-sm-9">
+              <Input disabled value={(distributions[distribution] || { label: 'Unknown' }).label} />
+            </div>
+          </FormGroup>
+          <FormGroup errors={errors} name="distribution" className="row">
+            <label className="col-sm-3 col-form-label">New Distribution</label>
+            <div className="col-sm-9">
+              <DistributionSelect
+                distributions={distributions}
+                value={distribution}
+                name="distribution"
+                id="distribution"
+                onChange={this.onChange}
+              />
+              <FormGroupError errors={errors} name="distribution" inline={false} />
+            </div>
+          </FormGroup>
           <FormGroup errors={errors} name="root_pass" className="row">
-            <label htmlFor="password" className="col-sm-2 col-form-label">Root password</label>
-            <div className="col-sm-10 clearfix">
+            <label htmlFor="password" className="col-sm-3 col-form-label">Root password</label>
+            <div className="col-sm-9 clearfix">
               <PasswordInput
                 name="password"
                 id="password"
@@ -108,7 +119,7 @@ export class RebuildPage extends Component {
             </div>
           </FormGroup>
           <FormGroup className="row">
-            <div className="col-sm-10 offset-sm-2">
+            <div className="col-sm-9 offset-sm-3">
               <SubmitButton
                 disabled={loading}
                 disabledChildren="Rebuilding"
@@ -130,7 +141,7 @@ RebuildPage.propTypes = {
 
 function select(state, props) {
   const { linode } = selectLinode(state, props);
-  const { distributions } = state.api;
+  const { distributions } = state.api.distributions;
   return { linode, distributions };
 }
 
