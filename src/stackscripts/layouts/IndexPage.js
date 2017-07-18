@@ -4,6 +4,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
+import { Input } from 'linode-components/forms';
 import { List } from 'linode-components/lists';
 import { Table } from 'linode-components/tables';
 import { MassEditControl } from 'linode-components/lists/controls';
@@ -21,6 +22,7 @@ import { default as toggleSelected } from '~/actions/select';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 import { stackscripts } from '~/api';
+import { transform } from '~/api/util';
 import CreateHelper from '~/components/CreateHelper';
 
 const OBJECT_TYPE = 'stackscripts';
@@ -33,6 +35,7 @@ export class IndexPage extends Component {
   constructor(props) {
     super(props);
 
+    this.state = { filter: '' };
   }
 
   async componentDidMount() {
@@ -42,39 +45,75 @@ export class IndexPage extends Component {
     dispatch(setTitle('StackScripts'));
   }
 
- /* renderScripts(scripts) {
-    const { dispatch } = this.props;
+ renderScripts(scripts) {
+    const { dispatch, selectedMap } = this.props;
+    const { filter } = this.state;
+
+    const { groups, sorted: sortedScripts } = transform(scripts, {
+      filterOn: 'stackscript',
+      filterBy: filter,
+    });
 
     return (
       <List>
+        <ListHeader className="Menu">
+          <div className="Menu-item">
+            <MassEditControl
+              data={sortedScripts}
+              dispatch={dispatch}
+              massEditGroups={[{ elements: [
+                { name: 'Delete', action: () => {} },
+              ] }]}
+              selectedMap={selectedMap}
+              objectType={OBJECT_TYPE}
+              toggleSelected={toggleSelected}
+            />
+          </div>
+          <div className="Menu-item">
+            <Input
+              placeholder="Filter..."
+              onChange={({ target: { value } }) => this.setState({ filter: value })}
+              value={this.state.filter}
+            />
+          </div>
+        </ListHeader>
         <ListBody>
-          <Table
-            columns={[
-              { cellComponent: CheckboxCell, headerClassName: 'CheckboxColumn' },
-              {
-                cellComponent: LinkCell,
-                hrefFn: (script) => `/stackscripts/${script.id}`, textKey: 'stackscript',
-                tooltipEnabled: true,
-              },
-              { dataKey: 'type', formatFn: _.capitalize },
-              {
-                cellComponent: ButtonCell,
-                headerClassName: 'ButtonColumn',
-                text: 'Delete',
-                onClick: (script) => {},
-              },
-            ]}
-            data={group.data}
-            selectedMap={selectedMap}
-            disableHeader
-            onToggleSelect={(record) => {
-              dispatch(toggleSelected(OBJECT_TYPE, record.id));
-            }}
-          />
+          {groups.map((group, index) => {
+            return (
+              <ListGroup
+                key={index}
+                name={group.name}
+              >
+                <Table
+                  columns={[
+                    { cellComponent: CheckboxCell, headerClassName: 'CheckboxColumn' },
+                    {
+                      cellComponent: LinkCell,
+                      hrefFn: (script) => `/stackscripts/${script.id}`, textKey: 'stackscript',
+                      tooltipEnabled: true,
+                    },
+                    { dataKey: 'type', formatFn: _.capitalize },
+                    {
+                      cellComponent: ButtonCell,
+                      headerClassName: 'ButtonColumn',
+                      text: 'Delete',
+                      onClick: (script) => {},
+                    },
+                  ]}
+                  data={group.data}
+                  selectedMap={selectedMap}
+                  disableHeader
+                  onToggleSelect={(record) => {
+                    dispatch(toggleSelected(OBJECT_TYPE, record.id));
+                  }}
+                />
+              </ListGroup>
+            );
+          })}
         </ListBody>
       </List>
     );
-  }*/
+  }
 
   render() {
     console.log('ss',this.props.stackscripts);
@@ -89,6 +128,11 @@ export class IndexPage extends Component {
             </Link>
           </div>
         </header>
+        <div className="PrimaryPage-body">
+          {Object.keys(this.props.stackscripts.stackscripts).length ?
+            this.renderScripts(this.props.stackscripts.stackscripts) :
+            <CreateHelper label="StackStripts" href="/stackscripts/create" linkText="Add a StackScript" />}
+        </div>
       </div>
     );
   }
