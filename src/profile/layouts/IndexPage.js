@@ -22,7 +22,8 @@ export class IndexPage extends Component {
     const tabs = [
       { name: 'Display', link: '' },
       { name: 'Password & Authentication', link: '/authentication' },
-      { name: 'Integrations', link: '/integrations' },
+      { name: 'API Tokens', link: '/tokens' },
+      { name: 'My API Clients', link: '/clients' },
       { name: 'Notifications', link: '/notifications' },
       { name: 'Referrals', link: '/referrals' },
     ].map(t => ({ ...t, link: `/profile${t.link}` }));

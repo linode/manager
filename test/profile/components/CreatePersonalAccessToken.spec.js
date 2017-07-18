@@ -4,13 +4,13 @@ import { shallow } from 'enzyme';
 import { expect } from 'chai';
 
 import { OAUTH_SCOPES } from '~/constants';
-import CreatePersonalAccessToken from '~/profile/integrations/components/CreatePersonalAccessToken';
+import CreatePersonalAccessToken from '~/profile/components/CreatePersonalAccessToken';
 import { SHOW_MODAL } from '~/actions/modal';
 
 import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
 
 
-describe('profile/integrations/components/CreatePersonalAccessToken', () => {
+describe('profile/components/CreatePersonalAccessToken', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
