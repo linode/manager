@@ -35,6 +35,8 @@ export class IndexPage extends Component {
   constructor(props) {
     super(props);
 
+    this.deleteScripts = this.deleteScripts.bind(this);
+    
     this.state = { filter: '' };
   }
 
@@ -43,6 +45,28 @@ export class IndexPage extends Component {
     dispatch(setSource(__filename));
 
     dispatch(setTitle('StackScripts'));
+  }
+
+  deleteScripts(scriptsToDelete) {
+    const { dispatch } = this.props;
+    const scriptsArr = Array.isArray(scriptsToDelete) ? scriptsToDelete : [scriptsToDelete];
+
+    const selectedStackScripts = scriptsArr.map(l => l.label);
+
+    dispatch(showModal('Delete StackScript(s)', (
+      <DeleteModalBody
+        onOk={async () => {
+          const ids = scriptsArr.map(function (script) { return script.id; });
+
+          await Promise.all(ids.map(id => dispatch(stackscripts.delete(id))));
+          dispatch(toggleSelected(OBJECT_TYPE, ids));
+          dispatch(hideModal());
+        }}
+        items={selectedStackScripts}
+        typeOfItem="StackScripts"
+        onCancel={() => dispatch(hideModal())}
+      />
+    )));
   }
 
  renderScripts(scripts) {
@@ -107,7 +131,7 @@ export class IndexPage extends Component {
                       cellComponent: ButtonCell,
                       headerClassName: 'ButtonColumn',
                       text: 'Delete',
-                      onClick: (script) => {},
+                      onClick: (script) => { this.deleteScripts(script); },
                     },
                   ]}
                   data={group.data}
