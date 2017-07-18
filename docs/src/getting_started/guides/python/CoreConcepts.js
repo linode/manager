@@ -98,7 +98,7 @@ while not linode.state == 'running':
         <h2>Updating and Deleting Objects</h2>
         <p>
           All API resources are represented as objects, and all objects you own can be
-          updated and deleted (an object you own would be a Linode or a DNS Zone, as opposed
+          updated and deleted (an object you own would be a Linode or a Domain, as opposed
           to a Datacenter or Service, which are accessible to you but cannot be modified or
           removed).
         </p>

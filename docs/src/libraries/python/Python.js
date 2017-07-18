@@ -12,7 +12,22 @@ export default function Python(props) {
   return (
     <section className="Article">
       <div className="EndpointIndex-header">
-        <h1>Python Library</h1>
+        <div className="Title">
+          <div className="Title-heading clearfix">
+            <h1>Python Library</h1>
+            <div className="float-sm-right">
+              <span className="GithubLink">
+                See this project on <a
+                      href="https://github.com/linode/python-linode-api"
+                      target="_blank"
+                      rel="nofollow noopener noreferrer"
+                    >
+                  <i className="fa fa-github"></i> GitHub
+                </a>.
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
       <div className="EndpointIndex-group">
         <h3>Client Objects</h3>
