@@ -16,7 +16,7 @@ describe('linodes/create/components/Source', () => {
     const onSourceSelected = sandbox.spy();
     const c = mount(
       <Source
-        distributions={api.distributions}
+        distributions={api.distributions.distributions}
         distribution={null}
         onDistroSelected={onSourceSelected}
       />
