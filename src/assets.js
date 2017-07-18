@@ -1,14 +1,14 @@
-import Arch from 'file-loader!../assets/distros/Arch.png';
-import CentOS from 'file-loader!../assets/distros/CentOS.png';
-import Debian from 'file-loader!../assets/distros/Debian.png';
-import Fedora from 'file-loader!../assets/distros/Fedora.png';
-import Gentoo from 'file-loader!../assets/distros/Gentoo.png';
-import Slackware from 'file-loader!../assets/distros/Slackware.png';
-import Ubuntu from 'file-loader!../assets/distros/Ubuntu.png';
-import openSUSE from 'file-loader!../assets/distros/OpenSUSE.png';
+import arch from 'file-loader!../assets/distros/Arch.png';
+import centos from 'file-loader!../assets/distros/CentOS.png';
+import debian from 'file-loader!../assets/distros/Debian.png';
+import fedora from 'file-loader!../assets/distros/Fedora.png';
+import gentoo from 'file-loader!../assets/distros/Gentoo.png';
+import slackware from 'file-loader!../assets/distros/Slackware.png';
+import ubuntu from 'file-loader!../assets/distros/Ubuntu.png';
+import opensuse from 'file-loader!../assets/distros/OpenSUSE.png';
 
 export const distros = {
-  Arch, CentOS, Debian, Fedora, Gentoo, Slackware, Ubuntu, openSUSE,
+  arch, centos, debian, fedora, gentoo, slackware, ubuntu, opensuse,
 };
 
 import us from 'flag-icon-css/flags/4x3/us.svg';
