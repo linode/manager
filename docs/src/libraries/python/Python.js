@@ -18,10 +18,10 @@ export default function Python(props) {
             <div className="float-sm-right">
               <span className="GithubLink">
                 See this project on <a
-                      href="https://github.com/linode/python-linode-api"
-                      target="_blank"
-                      rel="nofollow noopener noreferrer"
-                    >
+                  href="https://github.com/linode/python-linode-api"
+                  target="_blank"
+                  rel="nofollow noopener noreferrer"
+                >
                   <i className="fa fa-github"></i> GitHub
                 </a>.
               </span>
