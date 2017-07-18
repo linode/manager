@@ -49,8 +49,12 @@ export class IndexPage extends Component {
     const { dispatch, selectedMap } = this.props;
     const { filter } = this.state;
 
-    const { groups, sorted: sortedScripts } = transform(scripts, {
+    const { groups, sorted: sortedScripts } = transform(Object.values(scripts).map(script => {
+      script['privacy'] = script.is_public ? 'Public' : 'Private';
+      return script;
+    }), {
       filterOn: 'stackscript',
+      groupOn: 'privacy',
       filterBy: filter,
     });
 
@@ -89,10 +93,16 @@ export class IndexPage extends Component {
                     { cellComponent: CheckboxCell, headerClassName: 'CheckboxColumn' },
                     {
                       cellComponent: LinkCell,
-                      hrefFn: (script) => `/stackscripts/${script.id}`, textKey: 'stackscript',
+                      hrefFn: (script) => `/stackscripts/${script.id}`, textKey: 'label',
                       tooltipEnabled: true,
                     },
-                    { dataKey: 'type', formatFn: _.capitalize },
+                    { dataKey: 'is_public', formatFn: (is_public) => {
+                      return is_public ? 'Public' : 'Private';
+                    }},
+                    { dataFn: (stackscript) => {
+                      const { deployments_active, deployments_total } = stackscript;
+                      return `${deployments_active} active / ${deployments_total} total deploys`;
+                    }},
                     {
                       cellComponent: ButtonCell,
                       headerClassName: 'ButtonColumn',
