@@ -1,16 +1,17 @@
 {
   "name": "linode-manager",
-  "version": "0.11.4",
+  "version": "0.11.5",
   "description": "The Linode Manager website",
   "scripts": {
     "clean": "rm -rf dist",
-    "build:webpack": "cross-env NODE_ENV=production webpack --config webpack.config.prod.js",
+    "copy-assets": "./bin/copy-assets.sh",
+    "build:webpack": "npm run copy-assets && cross-env NODE_ENV=production webpack --config webpack.config.prod.js",
     "build": "npm run clean && npm run build:webpack",
     "rebuild-components": "rm -fr node_modules/linode-components && npm install",
     "kill": "lsof -i :3000 | grep node | tr -s ' ' | cut -d ' ' -f2 | xargs kill",
     "lint": "eslint --max-warnings=0 src test",
     "lint:fix": "eslint src test --fix",
-    "start": "node devServer.js",
+    "start": "npm run copy-assets && node devServer.js",
     "test": "NODE_ENV=test karma start karma.conf.js --single-run",
     "test:watch": "NODE_ENV=test karma start karma.conf.js",
     "test:debug": "NODE_ENV=test karma start karma.conf.js --browsers=Chrome --debug"
@@ -101,6 +102,7 @@
     "d3": "^3.5.17",
     "deep-freeze": "0.0.1",
     "flag-icon-css": "^2.3.0",
+    "font-awesome": "^4.7.0",
     "fontawesome": "^4.5.0",
     "history": "^2.1.2",
     "isomorphic-fetch": "^2.2.0",
@@ -110,7 +112,7 @@
     "md5": "^2.1.0",
     "moment": "^2.17.1",
     "moment-timezone": "^0.5.11",
-    "qrious": "https://registry.npmjs.org/qrious/-/qrious-2.2.0.tgz",
+    "qrious": "^2.2.0",
     "raven-js": "^3.16.0",
     "rd3": "^0.6.3",
     "react": "^15.1.0",
@@ -124,6 +126,6 @@
     "redux": "^3.0.5",
     "redux-thunk": "^2.1.0",
     "xterm": "^2.0.1",
-    "zxcvbn": "^4.4.1"
+    "zxcvbn": "^4.4.2"
   }
 }

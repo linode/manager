@@ -4,17 +4,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [0.11.4] 2017-07-14
+## [0.11.5] 2017-07-18
 ### Fixed
-- group by lowercase distribution vendor names
+- no 3rd-party script includes # 2294
+
+## [0.11.4] 2017-07-18
+### Fixed
+- group by lowercase distribution vendor names #2309
 
 ## [0.11.3] 2017-07-18
 ### Added
-- rebuild confirm check
+- rebuild confirm check #2302
 
 ## [0.11.2] 2017-07-12
 ### Changed
-- don't track pageviews on /oauth page
+- don't track pageviews on /oauth page #2269
 
 ## [0.11.1] 2017-07-12
 ### Added
