@@ -5,7 +5,9 @@ import { Card, CardHeader } from 'linode-components/cards';
 import {
   FormGroup, FormGroupError, Form, SubmitButton, PasswordInput,
 } from 'linode-components/forms';
+import { ConfirmModalBody } from 'linode-components/modals';
 
+import { hideModal, showModal } from '~/actions/modal';
 import { setSource } from '~/actions/source';
 import { distributions } from '~/api';
 import { rebuildLinode } from '~/api/linodes';
@@ -43,13 +45,31 @@ export class RebuildPage extends Component {
   }
 
   onSubmit = () => {
-    const { dispatch, linode: { id } } = this.props;
+    const { dispatch, linode: { id, label }, distributions: { distributions } } = this.props;
     const { password, distribution } = this.state;
+    const distroLabel = distributions[distribution].label;
 
-    return dispatch(dispatchOrStoreErrors.call(this, [
-      () => rebuildLinode(id, { distribution, root_pass: password }),
-      () => this.setState({ password: '', distribution: RebuildPage.DEFAULT_DISTRIBUTION }),
-    ], ['distribution']));
+    const callback = async () => {
+      await dispatch(dispatchOrStoreErrors.call(this, [
+        () => rebuildLinode(id, { distribution, root_pass: password }),
+        () => this.setState({ password: '', distribution: RebuildPage.DEFAULT_DISTRIBUTION }),
+      ], ['distribution']));
+
+      // We want to hide the modal regardless of the status of the call.
+      dispatch(hideModal());
+    };
+
+    return dispatch(showModal('Rebuild Linode', (
+      <ConfirmModalBody
+        onCancel={() => dispatch(hideModal())}
+        onOk={callback}
+      >
+        <p>
+          Rebuilding will destroy all data, wipe your Linode clean, and start fresh.
+          Are you sure you want to rebuild <strong>{label}</strong> with {distroLabel}?
+        </p>
+      </ConfirmModalBody>
+    )));
   }
 
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
@@ -60,6 +80,9 @@ export class RebuildPage extends Component {
 
     return (
       <Card header={<CardHeader title="Rebuild" />}>
+        <p>
+          Rebuilding will destroy all data, wipe your Linode clean, and start fresh.
+        </p>
         <Form onSubmit={this.onSubmit}>
           <div className="clearfix">
             <Distributions
