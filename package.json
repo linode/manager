@@ -112,7 +112,7 @@
     "md5": "^2.1.0",
     "moment": "^2.17.1",
     "moment-timezone": "^0.5.11",
-    "qrious": "https://registry.npmjs.org/qrious/-/qrious-2.2.0.tgz",
+    "qrious": "^2.2.0",
     "raven-js": "^3.16.0",
     "rd3": "^0.6.3",
     "react": "^15.1.0",
@@ -126,6 +126,6 @@
     "redux": "^3.0.5",
     "redux-thunk": "^2.1.0",
     "xterm": "^2.0.1",
-    "zxcvbn": "https://registry.npmjs.org/zxcvbn/-/zxcvbn-4.4.2.tgz"
+    "zxcvbn": "^4.4.2"
   }
 }
