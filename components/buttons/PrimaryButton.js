@@ -15,6 +15,7 @@ export default function PrimaryButton(props) {
 
 PrimaryButton.propTypes = {
   buttonClass: PropTypes.string,
+  children: PropTypes.node.isRequired,
 };
 
 PrimaryButton.defaultProps = {
