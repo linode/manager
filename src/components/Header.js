@@ -91,6 +91,10 @@ export default class Header extends Component {
           className={`${linkClass('/domains')}`}
           to="/domains"
         >Domains</Link>
+        <Link
+          className={`${linkClass('/support')}`}
+          to="/support"
+        >Support</Link>
         {!username ? null : (
           <div
             className="MainHeader-session float-sm-right"
