@@ -1,5 +1,3 @@
-import _ from 'lodash';
-import moment from 'moment';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
@@ -36,7 +34,7 @@ export class IndexPage extends Component {
     super(props);
 
     this.deleteScripts = this.deleteScripts.bind(this);
-    
+
     this.state = { filter: '' };
   }
 
@@ -69,13 +67,16 @@ export class IndexPage extends Component {
     )));
   }
 
- renderScripts(scripts) {
+  renderScripts(scripts) {
     const { dispatch, selectedMap } = this.props;
     const { filter } = this.state;
 
     const { groups, sorted: sortedScripts } = transform(Object.values(scripts).map(script => {
-      script['privacy'] = script.is_public ? 'Public' : 'Private';
-      return script;
+      const returnedScript = {
+        ...script,
+        privacy: script.is_public ? 'Public' : 'Private',
+      };
+      return returnedScript;
     }), {
       filterOn: 'stackscript',
       groupOn: 'privacy',
@@ -120,13 +121,13 @@ export class IndexPage extends Component {
                       hrefFn: (script) => `/stackscripts/${script.id}`, textKey: 'label',
                       tooltipEnabled: true,
                     },
-                    { dataKey: 'is_public', formatFn: (is_public) => {
-                      return is_public ? 'Public' : 'Private';
-                    }},
+                    { dataKey: 'is_public', formatFn: (isPublic) => {
+                      return isPublic ? 'Public' : 'Private';
+                    } },
                     { dataFn: (stackscript) => {
-                      const { deployments_active, deployments_total } = stackscript;
-                      return `${deployments_active} active / ${deployments_total} total deploys`;
-                    }},
+                      const { deployments_active: active, deployments_total: total } = stackscript;
+                      return `${active} active / ${total} total deploys`;
+                    } },
                     {
                       cellComponent: ButtonCell,
                       headerClassName: 'ButtonColumn',
@@ -150,7 +151,6 @@ export class IndexPage extends Component {
   }
 
   render() {
-    console.log('ss',this.props.stackscripts);
     return (
       <div className="PrimaryPage container">
         <header className="PrimaryPage-header">
@@ -165,12 +165,17 @@ export class IndexPage extends Component {
         <div className="PrimaryPage-body">
           {Object.keys(this.props.stackscripts.stackscripts).length ?
             this.renderScripts(this.props.stackscripts.stackscripts) :
-            <CreateHelper label="StackStripts" href="/stackscripts/create" linkText="Add a StackScript" />}
+            <CreateHelper
+              label="StackStripts"
+              href="/stackscripts/create"
+              linkText="Add a StackScript"
+            />
+          }
         </div>
       </div>
     );
   }
-};
+}
 
 IndexPage.propTypes = {
   dispatch: PropTypes.func,
@@ -180,7 +185,6 @@ IndexPage.propTypes = {
 
 
 function select(state) {
-  console.log(state);
   return {
     stackscripts: state.api.stackscripts,
     selectedMap: state.select.selected[OBJECT_TYPE] || {},

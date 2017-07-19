@@ -31,5 +31,5 @@ export default combineReducers({
   users,
   tickets,
   account,
-  stackscripts
+  stackscripts,
 });
