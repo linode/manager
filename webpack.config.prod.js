@@ -4,7 +4,7 @@ var webpack = require('webpack');
 var _ = require('./webpack.config.dev.js');
 var _package = require('./package.json');
 
-_.devtool = 'cheap-module-source-map';
+_.devtool = 'source-map';
 _.entry = './src/index';
 _.plugins = [
   new webpack.optimize.CommonsChunkPlugin({
@@ -24,8 +24,9 @@ _.plugins = [
     'ENV_VERSION': JSON.stringify(_package.version)
   }),
   new webpack.optimize.UglifyJsPlugin({
+    sourceMap: true,
     compressor: {
-      warnings: false
+      warnings: false,
     }
   }),
   new webpack.optimize.AggressiveMergingPlugin()
