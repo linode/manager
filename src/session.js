@@ -1,5 +1,5 @@
 import { setToken } from '~/actions/authentication';
-import { APP_ROOT, LOGIN_ROOT, SESSION_DURATION } from '~/constants';
+import { APP_ROOT, LOGIN_ROOT } from '~/constants';
 import { clientId } from '~/secrets';
 import { getStorage, setStorage } from '~/storage';
 import { store } from '~/store';
@@ -7,7 +7,7 @@ import { store } from '~/store';
 
 const AUTH_TOKEN = 'authentication/oauth-token';
 const AUTH_SCOPES = 'authentication/scopes';
-const AUTH_EXPIRATION = 'authentication/expiration';
+const AUTH_EXPIRES = 'authentication/expires';
 
 export function redirect(location) {
   window.location = location;
@@ -45,21 +45,23 @@ export function checkLogin(next) {
 }
 
 export function initialize(dispatch) {
-  const expiration = getStorage(AUTH_EXPIRATION) || null;
-  if (expiration && new Date(expiration) < new Date()) {
-    return dispatch(setToken(null, null));
+  const expires = getStorage(AUTH_EXPIRES) || null;
+  if (expires && new Date(expires) < new Date()) {
+    // Calling expire makes sure the full expire steps are taken.
+    return dispatch(expire);
   }
 
   const token = getStorage(AUTH_TOKEN) || null;
   const scopes = getStorage(AUTH_SCOPES) || null;
-  dispatch(setToken(token, scopes));
+  // Calling this makes sure AUTH_EXPIRES is always set.
+  dispatch(start(token, scopes, expires));
 }
 
 export function expire(dispatch) {
   // Remove these from local storage so if login fails, next time we jump to login sooner.
   setStorage(AUTH_TOKEN, '');
   setStorage(AUTH_SCOPES, '');
-  setStorage(AUTH_EXPIRATION, '');
+  setStorage(AUTH_EXPIRES, '');
   dispatch(setToken(null, null));
 }
 
@@ -68,15 +70,13 @@ export function expireAndReAuth(dispatch) {
   checkLogin(window);
 }
 
-export function start(oauthToken = '', scopes = '') {
+export function start(oauthToken = '', scopes = '', expires) {
   return (dispatch) => {
     // Set these two so we can grab them on subsequent page loads
     setStorage(AUTH_TOKEN, oauthToken);
     setStorage(AUTH_SCOPES, scopes);
+    setStorage(AUTH_EXPIRES, expires);
 
-    const now = new Date();
-    now.setMinutes(now.getMinutes() + SESSION_DURATION);
-    setStorage(AUTH_EXPIRATION, now);
     // Add all to state for this (page load) session
     dispatch(setToken(oauthToken, scopes));
   };
