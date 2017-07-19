@@ -55,7 +55,7 @@ describe('session', () => {
     const sessionValues = [
       'authentication/oauth-token',
       'authentication/scopes',
-      'authentication/expiration',
+      'authentication/expires',
     ];
 
     expect(setStorage.callCount).to.equal(sessionValues.length);
