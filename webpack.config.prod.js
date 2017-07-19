@@ -4,7 +4,6 @@ var webpack = require('webpack');
 var _ = require('./webpack.config.dev.js');
 var _package = require('./package.json');
 
-_.devtool = 'source-map';
 _.entry = './src/index';
 _.plugins = [
   new webpack.optimize.CommonsChunkPlugin({
