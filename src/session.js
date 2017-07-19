@@ -44,19 +44,6 @@ export function checkLogin(next) {
   return null;
 }
 
-export function initialize(dispatch) {
-  const expires = getStorage(AUTH_EXPIRES) || null;
-  if (expires && new Date(expires) < new Date()) {
-    // Calling expire makes sure the full expire steps are taken.
-    return dispatch(expire);
-  }
-
-  const token = getStorage(AUTH_TOKEN) || null;
-  const scopes = getStorage(AUTH_SCOPES) || null;
-  // Calling this makes sure AUTH_EXPIRES is always set.
-  dispatch(start(token, scopes, expires));
-}
-
 export function expire(dispatch) {
   // Remove these from local storage so if login fails, next time we jump to login sooner.
   setStorage(AUTH_TOKEN, '');
@@ -80,4 +67,17 @@ export function start(oauthToken = '', scopes = '', expires) {
     // Add all to state for this (page load) session
     dispatch(setToken(oauthToken, scopes));
   };
+}
+
+export function initialize(dispatch) {
+  const expires = getStorage(AUTH_EXPIRES) || null;
+  if (expires && new Date(expires) < new Date()) {
+    // Calling expire makes sure the full expire steps are taken.
+    return dispatch(expire);
+  }
+
+  const token = getStorage(AUTH_TOKEN) || null;
+  const scopes = getStorage(AUTH_SCOPES) || null;
+  // Calling this makes sure AUTH_EXPIRES is always set.
+  dispatch(start(token, scopes, expires));
 }
