@@ -110,6 +110,7 @@ export default class ConfigForm extends Component {
               name="port"
               placeholder="80"
               type="number"
+              min={0}
               value={port}
               onChange={this.onChange}
             />
@@ -266,6 +267,7 @@ export default class ConfigForm extends Component {
               id="checkInterval"
               name="checkInterval"
               placeholder="0"
+              min={0}
               value={checkInterval}
               onChange={this.onChange}
               type="number"
@@ -281,6 +283,7 @@ export default class ConfigForm extends Component {
               id="checkTimeout"
               name="checkTimeout"
               placeholder="0"
+              min={0}
               value={checkTimeout}
               onChange={this.onChange}
               type="number"
@@ -296,6 +299,7 @@ export default class ConfigForm extends Component {
               id="checkAttempts"
               name="checkAttempts"
               placeholder="0"
+              min={0}
               value={checkAttempts}
               onChange={this.onChange}
               type="number"
