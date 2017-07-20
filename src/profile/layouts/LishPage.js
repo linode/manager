@@ -12,29 +12,36 @@ import {
   Textarea,
 } from 'linode-components/forms';
 
+import { dispatchOrStoreErrors } from '~/api/util';
+
 
 export default class LishPage extends Component {
   constructor() {
     super();
 
-    this.state = {
-      authorization: '',
-      keys: '',
-      errors: {},
-      loading: false,
-    };
+    this.componentWillReceiveProps = this.componentWillMount;
   }
 
   componentWillMount(props) {
     this.setState({
-      authorization: props.profile.authorization,
-      
+      authorization: props.profile.lish_auth_method,
+      keys: props.profile.authorized_keys,
     });
   }
 
   onSubmit = () => {
-    
+    const { dispatch } = this.props;
+    const { authorization, keys } = this.state;
+
+    return dispatch(dispatchOrStoreErrors.call(this, [
+      () => profile.put({
+        lish_auth_method: authorization,
+        authorized_keys: keys,
+      }),
+    ]));
   }
+
+  onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   render() {
     const { errors, loading, authorization, keys } = this.state;
