@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
 
 import { Card, CardHeader } from 'linode-components/cards';
 import {
@@ -24,8 +25,15 @@ export default class LishPage extends Component {
     };
   }
 
+  componentWillMount(props) {
+    this.setState({
+      authorization: props.profile.authorization,
+      
+    });
+  }
+
   onSubmit = () => {
-    // TODO: implement save
+    
   }
 
   render() {
@@ -85,3 +93,16 @@ export default class LishPage extends Component {
     );
   }
 }
+
+LishPage.propTypes = {
+  dispatch: PropTypes.func,
+  profile: PropTypes.object,
+};
+
+function select(state) {
+  return {
+    profile: state.api.profile,
+  };
+}
+
+export default connect(select)(LishPage);
