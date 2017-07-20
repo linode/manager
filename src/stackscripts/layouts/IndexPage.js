@@ -20,14 +20,15 @@ import { default as toggleSelected } from '~/actions/select';
 import { setSource } from '~/actions/source';
 import { setTitle } from '~/actions/title';
 import { stackscripts } from '~/api';
-import { transform } from '~/api/util';
+import { createHeaderFilter, transform } from '~/api/util';
 import CreateHelper from '~/components/CreateHelper';
+
 
 const OBJECT_TYPE = 'stackscripts';
 
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
-    await dispatch(stackscripts.all());
+    await dispatch(stackscripts.all([], null, createHeaderFilter({ mine: true })));
   }
 
   constructor(props) {
@@ -78,7 +79,7 @@ export class IndexPage extends Component {
       };
       return returnedScript;
     }), {
-      filterOn: 'stackscript',
+      filterOn: 'label',
       groupOn: 'privacy',
       filterBy: filter,
     });
@@ -91,7 +92,7 @@ export class IndexPage extends Component {
               data={sortedScripts}
               dispatch={dispatch}
               massEditGroups={[{ elements: [
-                { name: 'Delete', action: () => {} },
+                { name: 'Delete', action: this.deleteScripts },
               ] }]}
               selectedMap={selectedMap}
               objectType={OBJECT_TYPE}

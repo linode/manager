@@ -4,13 +4,10 @@ import React from 'react';
 import sinon from 'sinon';
 
 import { SHOW_MODAL } from '~/actions/modal';
-import { getEmailHash } from '~/cache';
-import { GRAVATAR_BASE_URL } from '~/constants';
 import { IndexPage } from '~/stackscripts/layouts/IndexPage';
 
 import { api } from '@/data';
 import { expectRequest } from '@/common.js';
-import { profile } from '@/data/profile';
 
 
 const { stackscripts } = api;
@@ -29,25 +26,22 @@ describe('stackscripts/layouts/IndexPage', () => {
       <IndexPage
         dispatch={dispatch}
         selectedMap={{}}
-        profile={profile}
         stackscripts={stackscripts}
       />
     );
 
-    const zone = page.find('.TableRow');
+    const script = page.find('.TableRow');
     // + 1 for the group
-    expect(zone.length).to.equal(Object.keys(stackscripts.stackscripts).length);
-    const firstZone = zone.at(0);
-    expect(firstZone.find('td img').props().src)
-      .to.equal(`${GRAVATAR_BASE_URL}${getEmailHash('example1@domain.com')}`);
-    expect(firstZone.find('Link').props().to)
-      .to.equal('/stackscripts/teststackscript1');
-    expect(firstZone.find('td').at(2).text())
-      .to.equal('teststackscript1');
-    expect(firstZone.find('td').at(3).text())
-      .to.equal('example1@domain.com');
-    expect(firstZone.find('td').at(4).text())
-      .to.equal('Unrestricted');
+    expect(script.length).to.equal(Object.keys(stackscripts.stackscripts).length);
+    const firstScript = script.at(0);
+    expect(firstScript.find('Link').props().to)
+      .to.equal('/stackscripts/38');
+    expect(firstScript.find('td').at(1).text())
+      .to.equal('Example 2');
+    expect(firstScript.find('td').at(2).text())
+      .to.equal('Private');
+    expect(firstScript.find('td').at(3).text())
+      .to.equal('42 active / 150 total deploys');
   });
 
   it('shows the delete modal when delete is pressed', () => {
@@ -55,14 +49,13 @@ describe('stackscripts/layouts/IndexPage', () => {
       <IndexPage
         dispatch={dispatch}
         selectedMap={{}}
-        profile={profile}
         stackscripts={stackscripts}
       />
     );
 
-    const zoneDelete = page.find('.TableRow Button').at(0);
+    const scriptDelete = page.find('.TableRow Button').at(0);
     dispatch.reset();
-    zoneDelete.simulate('click');
+    scriptDelete.simulate('click');
     expect(dispatch.callCount).to.equal(1);
     expect(dispatch.firstCall.args[0])
       .to.have.property('type').which.equals(SHOW_MODAL);
@@ -73,7 +66,6 @@ describe('stackscripts/layouts/IndexPage', () => {
       <IndexPage
         dispatch={dispatch}
         selectedMap={{ 1: true }}
-        profile={profile}
         stackscripts={stackscripts}
       />
     );
@@ -86,6 +78,6 @@ describe('stackscripts/layouts/IndexPage', () => {
     dispatch.reset();
     modal.find('Form').props().onSubmit({ preventDefault() {} });
     const fn = dispatch.firstCall.args[0];
-    await expectRequest(fn, '/account/stackscripts/teststackscript1', { method: 'DELETE' });
+    await expectRequest(fn, '/linode/stackscripts/38', { method: 'DELETE' });
   });
 });
