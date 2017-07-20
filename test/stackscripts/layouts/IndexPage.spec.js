@@ -1,24 +1,24 @@
 import { expect } from 'chai';
 import { mount } from 'enzyme';
-import react from 'react';
+import React from 'react';
 import sinon from 'sinon';
 
-import { show_modal } from '~/actions/modal';
-import { getemailhash } from '~/cache';
-import { gravatar_base_url } from '~/constants';
-import { indexpage } from '~/stackscripts/layouts/indexpage';
+import { SHOW_MODAL } from '~/actions/modal';
+import { getEmailHash } from '~/cache';
+import { GRAVATAR_BASE_URL } from '~/constants';
+import { IndexPage } from '~/stackscripts/layouts/IndexPage';
 
 import { api } from '@/data';
-import { expectrequest } from '@/common.js';
+import { expectRequest } from '@/common.js';
 import { profile } from '@/data/profile';
 
 
 const { stackscripts } = api;
 
-describe('stackscripts/layouts/indexpage', () => {
+describe('stackscripts/layouts/IndexPage', () => {
   const sandbox = sinon.sandbox.create();
 
-  aftereach(() => {
+  afterEach(() => {
     sandbox.restore();
   });
 
@@ -26,53 +26,53 @@ describe('stackscripts/layouts/indexpage', () => {
 
   it('renders a list of stackscripts', () => {
     const page = mount(
-      <indexpage
+      <IndexPage
         dispatch={dispatch}
-        selectedmap={{}}
+        selectedMap={{}}
         profile={profile}
         stackscripts={stackscripts}
       />
     );
 
-    const zone = page.find('.tablerow');
+    const zone = page.find('.TableRow');
     // + 1 for the group
-    expect(zone.length).to.equal(object.keys(stackscripts.stackscripts).length);
-    const firstzone = zone.at(0);
-    expect(firstzone.find('td img').props().src)
-      .to.equal(`${gravatar_base_url}${getemailhash('example1@domain.com')}`);
-    expect(firstzone.find('link').props().to)
+    expect(zone.length).to.equal(Object.keys(stackscripts.stackscripts).length);
+    const firstZone = zone.at(0);
+    expect(firstZone.find('td img').props().src)
+      .to.equal(`${GRAVATAR_BASE_URL}${getEmailHash('example1@domain.com')}`);
+    expect(firstZone.find('Link').props().to)
       .to.equal('/stackscripts/teststackscript1');
-    expect(firstzone.find('td').at(2).text())
+    expect(firstZone.find('td').at(2).text())
       .to.equal('teststackscript1');
-    expect(firstzone.find('td').at(3).text())
+    expect(firstZone.find('td').at(3).text())
       .to.equal('example1@domain.com');
-    expect(firstzone.find('td').at(4).text())
-      .to.equal('unrestricted');
+    expect(firstZone.find('td').at(4).text())
+      .to.equal('Unrestricted');
   });
 
   it('shows the delete modal when delete is pressed', () => {
     const page = mount(
-      <indexpage
+      <IndexPage
         dispatch={dispatch}
-        selectedmap={{}}
+        selectedMap={{}}
         profile={profile}
         stackscripts={stackscripts}
       />
     );
 
-    const zonedelete = page.find('.tablerow button').at(0);
+    const zoneDelete = page.find('.TableRow Button').at(0);
     dispatch.reset();
-    zonedelete.simulate('click');
-    expect(dispatch.callcount).to.equal(1);
-    expect(dispatch.firstcall.args[0])
-      .to.have.property('type').which.equals(show_modal);
+    zoneDelete.simulate('click');
+    expect(dispatch.callCount).to.equal(1);
+    expect(dispatch.firstCall.args[0])
+      .to.have.property('type').which.equals(SHOW_MODAL);
   });
 
   it('deletes selected stackscripts when delete is pressed', async () => {
     const page = mount(
-      <indexpage
+      <IndexPage
         dispatch={dispatch}
-        selectedmap={{ 1: true }}
+        selectedMap={{ 1: true }}
         profile={profile}
         stackscripts={stackscripts}
       />
@@ -81,11 +81,11 @@ describe('stackscripts/layouts/indexpage', () => {
     dispatch.reset();
 
     page.find('tr button').at(0).simulate('click');
-    const modal = mount(dispatch.firstcall.args[0].body);
+    const modal = mount(dispatch.firstCall.args[0].body);
 
     dispatch.reset();
-    modal.find('form').props().onsubmit({ preventdefault() {} });
-    const fn = dispatch.firstcall.args[0];
-    await expectrequest(fn, '/account/stackscripts/teststackscript1', { method: 'delete' });
+    modal.find('Form').props().onSubmit({ preventDefault() {} });
+    const fn = dispatch.firstCall.args[0];
+    await expectRequest(fn, '/account/stackscripts/teststackscript1', { method: 'DELETE' });
   });
 });
