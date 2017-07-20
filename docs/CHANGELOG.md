@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [0.10.2] 2017-07-20
 ### Fixed
-- account endpoint documentation
+- account endpoint documentation #2318
 
 ## [0.10.1] 2017-07-17
 ### Fixed
