@@ -32,9 +32,10 @@ export default function Method(props) {
 
   let methodResponse = null;
   let methodResponseExample = null;
-  if (response) {
-    const { schema = [] } = response;
-    methodResponse = (<MethodResponse schema={schema} />);
+
+  const responseSchema = response.schema;
+  if (responseSchema) {
+    methodResponse = (<MethodResponse schema={responseSchema} />);
 
     if (response.example) {
       methodResponseExample = (<MethodResponseExample response={response} />);
