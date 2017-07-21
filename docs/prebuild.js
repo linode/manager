@@ -278,34 +278,35 @@ function createEnumMap(enums) {
 
 function formatMethodResponse(methodObj) {
   let response = methodObj.response;
+
+  let resourceObject;
   if (typeof response === 'string') {
     let resourceName = response;
 
-    // IF this is a GET endpoint and has an associated resource object, combine them
-    let resourceObject;
-
     // Paginated endpoints will modify the schema, so we need to be using a copy of the data.
     resourceObject = _.cloneDeep(getResourceObjByName(resourceName));
+  } else {
+    resourceObject = { schema: response };
+  }
 
-    let enums;
-    let schema;
-    if (resourceObject) {
-      enums = resourceObject.enums;
+  let enums;
+  let schema;
+  if (resourceObject) {
+    enums = resourceObject.enums;
 
-      let enumMap;
-      if (enums) {
-        enumMap = createEnumMap(enums);
-      }
-
-      schema = resourceObject.schema;
-      if (schema) {
-        resourceObject.schema = formatSchema(schema, enumMap, methodObj.paginationKey, methodObj.response);
-        resourceObject.example = formatSchemaExample(resourceObject.schema, methodObj.paginationKey);
-      }
+    let enumMap;
+    if (enums) {
+      enumMap = createEnumMap(enums);
     }
 
-    return resourceObject;
+    schema = resourceObject.schema;
+    if (schema) {
+      resourceObject.schema = formatSchema(schema, enumMap, methodObj.paginationKey, methodObj.response);
+      resourceObject.example = formatSchemaExample(resourceObject.schema, methodObj.paginationKey);
+    }
   }
+
+  return resourceObject;
 }
 
 function formatMethod(endpoint, method) {
