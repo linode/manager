@@ -5,9 +5,14 @@ import sinon from 'sinon';
 
 import { CreatePage } from '~/support/layouts/CreatePage';
 
-import { expectDispatchOrStoreErrors, expectObjectDeepEquals, expectRequest } from '@/common';
-import { testLinode } from '@/data/linodes';
+import {
+  changeInput,
+  expectDispatchOrStoreErrors,
+  expectObjectDeepEquals,
+  expectRequest,
+} from '@/common';
 import { api } from '@/data';
+import { testLinode } from '@/data/linodes';
 
 
 describe('support/layouts/CreatePage', () => {
@@ -28,12 +33,9 @@ describe('support/layouts/CreatePage', () => {
       />
     );
 
-    const changeInput = (type, id, value) =>
-      page.find(type).find({ id }).simulate('change', { target: { value, name: id } });
-
-    changeInput('Input', 'summary', 'My new ticket!');
-    changeInput('Select', 'regarding', `linode_id:${testLinode.id}`);
-    changeInput('textarea', 'description', 'This is my new description!');
+    changeInput(page, 'summary', 'My new ticket!');
+    changeInput(page, 'regarding', `linode_id:${testLinode.id}`);
+    changeInput(page, 'description', 'This is my new description!');
 
     dispatch.reset();
     await page.find('Form').props().onSubmit();

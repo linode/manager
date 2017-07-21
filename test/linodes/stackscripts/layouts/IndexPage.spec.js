@@ -1,18 +1,25 @@
 import { expect } from 'chai';
 import { mount } from 'enzyme';
 import React from 'react';
+import { push } from 'react-router-redux';
 import sinon from 'sinon';
 
 import { SHOW_MODAL } from '~/actions/modal';
-import { IndexPage } from '~/stackscripts/layouts/IndexPage';
+import { DEFAULT_DISTRIBUTION } from '~/constants';
+import { IndexPage } from '~/linodes/stackscripts/layouts/IndexPage';
 
 import { api } from '@/data';
-import { expectRequest } from '@/common.js';
+import {
+  changeInput,
+  expectDispatchOrStoreErrors,
+  expectObjectDeepEquals,
+  expectRequest,
+} from '@/common.js';
 
 
 const { stackscripts } = api;
 
-describe('stackscripts/layouts/IndexPage', () => {
+describe('linodes/stackscripts/layouts/IndexPage', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
@@ -79,5 +86,38 @@ describe('stackscripts/layouts/IndexPage', () => {
     modal.find('Form').props().onSubmit({ preventDefault() {} });
     const fn = dispatch.firstCall.args[0];
     await expectRequest(fn, '/linode/stackscripts/38', { method: 'DELETE' });
+  });
+
+  it('creates a stackscript', async () => {
+    const page = mount(
+      <IndexPage
+        dispatch={dispatch}
+        selectedMap={{}}
+        stackscripts={stackscripts}
+      />
+    );
+
+    dispatch.reset();
+
+    page.find('button').at(0).simulate('click');
+    const modal = mount(dispatch.firstCall.args[0].body);
+
+    dispatch.reset();
+
+    changeInput(modal, 'label', 'WordPress');
+
+    modal.find('Form').props().onSubmit({ preventDefault() {} });
+
+    await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      ([fn]) => expectRequest(fn, '/linode/stackscripts/', {
+        method: 'POST',
+        body: {
+          label: 'WordPress',
+          script: '#!/bin/bash\n\n# Your script goes here.',
+          distributions: [DEFAULT_DISTRIBUTION],
+        },
+      }),
+      ([pushResult]) => expectObjectDeepEquals(pushResult, push('/stackscripts/1')),
+    ], 2, [{ id: 1 }]);
   });
 });

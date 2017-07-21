@@ -5,7 +5,7 @@ import sinon from 'sinon';
 
 import EditNSRecord from '~/domains/components/EditNSRecord';
 
-import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
+import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '@/common';
 import { api } from '@/data';
 
 
@@ -52,12 +52,9 @@ describe('domains/components/EditNSRecord', () => {
       />
     );
 
-    const changeInput = (name, value) =>
-      page.find({ name }).simulate('change', { target: { name, value } });
-
-    changeInput('nameserver', 'ns1.tester1234.com');
-    changeInput('subdomain', 'tester1234.com');
-    changeInput('ttl', 3600);
+    changeInput(page, 'nameserver', 'ns1.tester1234.com');
+    changeInput(page, 'subdomain', 'tester1234.com');
+    changeInput(page, 'ttl', 3600);
 
     await page.find('Form').props().onSubmit();
 
@@ -87,12 +84,9 @@ describe('domains/components/EditNSRecord', () => {
       />
     );
 
-    const changeInput = (name, value) =>
-      page.find({ name }).simulate('change', { target: { name, value } });
-
-    changeInput('nameserver', 'ns1.tester1234.com');
-    changeInput('subdomain', 'tester1234.com');
-    changeInput('ttl', 3600);
+    changeInput(page, 'nameserver', 'ns1.tester1234.com');
+    changeInput(page, 'subdomain', 'tester1234.com');
+    changeInput(page, 'ttl', 3600);
 
     await page.find('Form').props().onSubmit();
 

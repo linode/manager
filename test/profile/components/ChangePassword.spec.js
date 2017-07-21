@@ -5,7 +5,7 @@ import sinon from 'sinon';
 
 import { ChangePassword } from '~/profile/components';
 
-import { expectRequest, expectDispatchOrStoreErrors } from '@/common';
+import { changeInput, expectRequest, expectDispatchOrStoreErrors } from '@/common';
 
 
 describe('profile/components/ChangePassword', () => {
@@ -24,10 +24,8 @@ describe('profile/components/ChangePassword', () => {
       />
     );
 
-    const changeInput = (id, value) =>
-      page.find({ id, name: id }).simulate('change', { target: { value, name: id } });
-
-    changeInput('password', 'thePassword');
+    changeInput(page, 'password', 'thePassword');
+    changeInput(page, 'expires', 0);
 
     await page.find('Form').props().onSubmit();
     expect(dispatch.callCount).to.equal(1);

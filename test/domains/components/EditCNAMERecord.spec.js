@@ -5,7 +5,7 @@ import sinon from 'sinon';
 
 import EditCNAMERecord from '~/domains/components/EditCNAMERecord';
 
-import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
+import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '@/common';
 import { api } from '@/data';
 
 
@@ -52,12 +52,9 @@ describe('domains/components/EditCNAMERecord', () => {
       />
     );
 
-    const changeInput = (name, value) =>
-      page.find({ name }).simulate('change', { target: { name, value } });
-
-    changeInput('hostname', 'www.tester1234.com');
-    changeInput('alias', 'www.othertester1234.com');
-    changeInput('ttl', 3600);
+    changeInput(page, 'hostname', 'www.tester1234.com');
+    changeInput(page, 'alias', 'www.othertester1234.com');
+    changeInput(page, 'ttl', 3600);
 
     await page.find('Form').props().onSubmit();
 
@@ -89,12 +86,9 @@ describe('domains/components/EditCNAMERecord', () => {
       />
     );
 
-    const changeInput = (name, value) =>
-      page.find({ name }).simulate('change', { target: { name, value } });
-
-    changeInput('hostname', 'www.tester1234.com');
-    changeInput('alias', 'www.othertester1234.com');
-    changeInput('ttl', 3600);
+    changeInput(page, 'hostname', 'www.tester1234.com');
+    changeInput(page, 'alias', 'www.othertester1234.com');
+    changeInput(page, 'ttl', 3600);
 
     await page.find('Form').props().onSubmit();
 

@@ -39,6 +39,31 @@ export default class ScheduleForm extends Component {
   render() {
     const { errors, loading, window, day } = this.state;
 
+    const windowOptions = [
+      { value: 'W0', label: '12AM - 2AM' },
+      { value: 'W2', label: '2AM - 4AM' },
+      { value: 'W4', label: '4AM - 6AM' },
+      { value: 'W6', label: '6AM - 8AM' },
+      { value: 'W8', label: '8AM - 10AM' },
+      { value: 'W10', label: '10AM - 12PM' },
+      { value: 'W12', label: '12PM - 2PM' },
+      { value: 'W14', label: '2PM - 4PM' },
+      { value: 'W16', label: '4PM - 6PM' },
+      { value: 'W18', label: '6PM - 8PM' },
+      { value: 'W20', label: '8PM - 10PM' },
+      { value: 'W22', label: '10PM - 12AM' },
+    ];
+
+    const dayOptions = [
+      { value: 'Sunday', label: 'Sunday' },
+      { value: 'Monday', label: 'Monday' },
+      { value: 'Tuesday', label: 'Tuesday' },
+      { value: 'Wednesday', label: 'Wednesday' },
+      { value: 'Thursday', label: 'Thursday' },
+      { value: 'Friday', label: 'Friday' },
+      { value: 'Saturday', label: 'Saturday' },
+    ];
+
     return (
       <Form
         onSubmit={this.onSubmit}
@@ -47,20 +72,13 @@ export default class ScheduleForm extends Component {
         <FormGroup name="window" errors={errors} className="row">
           <label htmlFor="window" className="col-sm-2 col-form-label">Time of Day (EST)</label>
           <div className="col-sm-10">
-            <Select id="window" name="window" value={window || ''} onChange={this.onChange}>
-              <option value="W0">12AM - 2AM</option>
-              <option value="W2">2AM - 4AM</option>
-              <option value="W4">4AM - 6AM</option>
-              <option value="W6">6AM - 8AM</option>
-              <option value="W8">8AM - 10AM</option>
-              <option value="W10">10AM - 12PM</option>
-              <option value="W12">12PM - 2PM</option>
-              <option value="W14">2PM - 4PM</option>
-              <option value="W16">4PM - 6PM</option>
-              <option value="W18">6PM - 8PM</option>
-              <option value="W20">8PM - 10PM</option>
-              <option value="W22">10PM - 12AM</option>
-            </Select>
+            <Select
+              id="window"
+              name="window"
+              value={window || ''}
+              onChange={this.onChange}
+              options={windowOptions}
+            />
             <FormGroupError errors={errors} name="day" />
           </div>
         </FormGroup>
@@ -73,15 +91,8 @@ export default class ScheduleForm extends Component {
               value={day}
               onChange={this.onChange}
               className="float-sm-left"
-            >
-              <option value="Sunday">Sunday</option>
-              <option value="Monday">Monday</option>
-              <option value="Tuesday">Tuesday</option>
-              <option value="Wednesday">Wednesday</option>
-              <option value="Thursday">Thursday</option>
-              <option value="Friday">Friday</option>
-              <option value="Saturday">Saturday</option>
-            </Select>
+              options={dayOptions}
+            />
             <FormGroupError errors={errors} name="day" />
           </div>
         </FormGroup>

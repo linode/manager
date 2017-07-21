@@ -19,7 +19,6 @@ export default function RadioSelectCombo(props) {
         label={props.selectLabel}
         disabled={props.selectDisabled}
         options={props.selectOptions}
-        children={props.selectChildren}
       />
     </div>
   );
@@ -36,7 +35,6 @@ RadioSelectCombo.propTypes = {
   selectOptions: PropTypes.any,
   selectDisabled: PropTypes.bool,
   selectLabel: PropTypes.string,
-  selectChildren: PropTypes.any,
 };
 
 RadioSelectCombo.defaultProps = {

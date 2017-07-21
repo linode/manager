@@ -5,7 +5,7 @@ import sinon from 'sinon';
 
 import EditRDNS from '~/linodes/linode/networking/components/EditRDNS';
 
-import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
+import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '@/common';
 import { state } from '@/data';
 import { testLinode } from '@/data/linodes';
 
@@ -46,10 +46,7 @@ describe('linodes/linode/networking/components/EditRDNS', () => {
       />
     );
 
-    const changeInput = (name, value) =>
-      page.instance().setState({ [name]: value });
-
-    changeInput('hostname', 'test.com');
+    changeInput(page, 'hostname', 'test.com');
 
     await page.find('Form').props().onSubmit({ preventDefault() {} });
 

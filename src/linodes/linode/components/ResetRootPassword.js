@@ -107,9 +107,8 @@ export default class ResetRootPassword extends Component {
                 value={disk}
                 onChange={this.onChange}
                 disabled={disabled}
-              >
-                {this.nonSwapDisks.map(d => <option value={d.id} key={d.id}>{d.label}</option>)}
-              </Select>
+                options={this.nonSwapDisks.map(d => ({ value: d.id, label: d.label }))}
+              />
             </div>
           </FormGroup>
           <FormGroup className="row" errors={errors} name="password">

@@ -12,6 +12,7 @@ import {
   FormGroupError,
   FormSummary,
   SubmitButton,
+  Textarea,
 } from 'linode-components/forms';
 
 import { setAnalytics, setSource, setTitle } from '~/actions';
@@ -67,15 +68,13 @@ export class CreatePage extends Component {
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   renderOptionsGroup(label, field, group) {
-    return (
-      <optgroup label={label} key={label}>
-        {group.map(object => (
-          <option key={object.id} value={`${field}:${object.id}`}>
-            {object.label || object.domain}
-          </option>
-         ))}
-      </optgroup>
-    );
+    return {
+      label,
+      options: group.map(object => ({
+        value: `${field}:${object.id}`,
+        label: object.label || object.domain,
+      })),
+    };
   }
 
   render() {
@@ -124,7 +123,8 @@ export class CreatePage extends Component {
                   id="regarding"
                   value={regarding}
                   onChange={this.onChange}
-                >{regardingOptions}</Select>
+                  options={regardingOptions}
+                />
                 <FormGroupError errors={errors} name="regarding" inline={false} />
               </div>
             </FormGroup>
@@ -133,7 +133,7 @@ export class CreatePage extends Component {
                 Description
               </label>
               <div className="col-sm-10">
-                <textarea
+                <Textarea
                   className="textarea-md"
                   name="description"
                   id="description"
