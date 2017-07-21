@@ -3,6 +3,7 @@ import reducer from '~/reducers';
 import deepFreeze from 'deep-freeze';
 
 import { linodes } from './linodes';
+import { stackscripts } from './stackscripts';
 import { distributions } from './distributions';
 import { regions } from './regions';
 import { types } from './types';
@@ -53,6 +54,7 @@ export const authentication = { token: 'token' };
 
 export const api = fakeAPI([
   [linodes, 'linode', 'linodes'],
+  [stackscripts, 'stackscript', 'stackscripts'],
   [distributions, 'distribution', 'distributions'],
   [regions, 'region', 'regions'],
   [types, 'type', 'types'],
