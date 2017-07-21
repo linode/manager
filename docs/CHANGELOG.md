@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [0.10.2] 2017-07-20
+### Fixed
+- account endpoint documentation #2318
+
+## [0.10.1] 2017-07-17
+### Fixed
+- python docs domain field naming #2281
+
 ## [0.10.0] 2017-07-10
 ### Added
 - missing /networking responses #2184
