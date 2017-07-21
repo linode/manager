@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.11.6] 2017-07-21
+### Added
+- response_type to OAuth flow to conform to RFC 6749
+
 ## [0.11.5] 2017-07-18
 ### Fixed
 - no 3rd-party script includes # 2294
