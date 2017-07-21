@@ -29,7 +29,13 @@ let allEndpoints = files.filter(function(fileName) {
   return path.extname(fileName) === '.yaml';
 }).map(function(fileName) {
   const filePath = path.join(endpointsPath, fileName);
-  const endpoint = yaml.safeLoad(fs.readFileSync(filePath, 'utf-8'), { json: true });
+  let endpoint;
+  try {
+    endpoint = yaml.safeLoad(fs.readFileSync(filePath, 'utf-8'), { json: true });
+  } catch (e) {
+    console.log(`File [${filePath}] could not be read.`);
+    process.exit();
+  }
 
   return endpoint;
 });
@@ -235,11 +241,6 @@ function formatMethodResource(endpoint, method) {
   let resourceObject;
   if (method === 'GET' && endpoint.resource) {
     let resource = endpoint.resource;
-
-    // mismatch rewrites
-    if (resource === 'account') {
-      resource = 'profile';
-    }
 
     resourceObject = getResourceObjByName(resource);
 
