@@ -12,6 +12,7 @@ import {
   Textarea,
 } from 'linode-components/forms';
 
+import { profile } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 
 
@@ -20,12 +21,17 @@ export default class LishPage extends Component {
     super();
 
     this.componentWillReceiveProps = this.componentWillMount;
+
+    this.state = {
+      loading: false,
+      errors: {},
+    };
   }
 
-  componentWillMount(props) {
+  componentWillMount() {
     this.setState({
-      authorization: props.profile.lish_auth_method,
-      keys: props.profile.authorized_keys,
+      authorization: this.props.profile.lish_auth_method,
+      keys: this.props.profile.authorized_keys || '',
     });
   }
 
@@ -56,12 +62,12 @@ export default class LishPage extends Component {
 
     return (
       <div>
-        <Card header={<CardHeader title={title} />}>
+        <Card header={<CardHeader title="Change Lish settings" />}>
           <Form
             onSubmit={this.onSubmit}
             analytics={{ title }}
           >
-            <FormGroup className="row" errors={errors} name="mode">
+            <FormGroup className="row" errors={errors} name="lish_auth_method">
               <label htmlFor="authorization" className="col-sm-2 col-form-label">
                 Authorization mode
               </label>
@@ -69,23 +75,35 @@ export default class LishPage extends Component {
                 <Select
                   id="authorization"
                   name="authorization"
-                  onChange={mode => this.setState({ authorization: mode })}
+                  onChange={this.onChange}
                   value={authorization}
                   options={authorizationOptions}
                 />
                 <FormGroupError errors={errors} name="mode" />
+                >
+                  <option value="0">Allow both password and key authorization</option>
+                  <option value="1">Allow key authentication only</option>
+                  <option value="2">Disable Lish</option>
+                </Select>
+                <FormGroupError errors={errors} name="lish_auth_method" />
               </div>
             </FormGroup>
-            <FormGroup className="row" errors={errors} name="keys">
+            <FormGroup className="row" errors={errors} name="authorized_keys">
               <label htmlFor="keys" className="col-sm-2 col-form-label">Lish keys:</label>
               <div className="col-sm-10">
-                <Textarea id="keys" className="textarea-md" name="keys" value={keys} />
+                <Textarea
+                  id="keys"
+                  className="textarea-md"
+                  name="keys"
+                  value={keys}
+                  onChange={this.onChange}
+                />
                 <div>
                   <small className="text-muted">
                     Place your SSH public keys here for use with Lish console access.
                   </small>
                 </div>
-                <FormGroupError errors={errors} name="keys" />
+                <FormGroupError errors={errors} name="authorized_keys" inline={false} />
               </div>
             </FormGroup>
             <FormGroup className="row">
