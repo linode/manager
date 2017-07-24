@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
+import { PrimaryButton } from 'linode-components/buttons';
 import { Input } from 'linode-components/forms';
 import { List } from 'linode-components/lists';
 import { Table } from 'linode-components/tables';
@@ -34,8 +35,6 @@ export class IndexPage extends Component {
   constructor(props) {
     super(props);
 
-    this.deleteScripts = this.deleteScripts.bind(this);
-
     this.state = { filter: '' };
   }
 
@@ -46,7 +45,7 @@ export class IndexPage extends Component {
     dispatch(setTitle('StackScripts'));
   }
 
-  deleteScripts(scriptsToDelete) {
+  deleteScripts = (scriptsToDelete) => {
     const { dispatch } = this.props;
     const scriptsArr = Array.isArray(scriptsToDelete) ? scriptsToDelete : [scriptsToDelete];
 
@@ -54,7 +53,7 @@ export class IndexPage extends Component {
 
     dispatch(showModal('Delete StackScript(s)', (
       <DeleteModalBody
-        onOk={async () => {
+        onSubmit={async () => {
           const ids = scriptsArr.map(function (script) { return script.id; });
 
           await Promise.all(ids.map(id => dispatch(stackscripts.delete(id))));
@@ -157,10 +156,9 @@ export class IndexPage extends Component {
         <header className="PrimaryPage-header">
           <div className="PrimaryPage-headerRow clearfix">
             <h1 className="float-sm-left">StackScripts</h1>
-            <Link to="/stackscripts/create" className="linode-add btn btn-primary float-sm-right">
-              <span className="fa fa-plus"></span>
+            <PrimaryButton className="float-sm-right">
               Add a StackScript
-            </Link>
+            </PrimaryButton>
           </div>
         </header>
         <div className="PrimaryPage-body">
