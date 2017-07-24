@@ -5,7 +5,6 @@ import { Link } from 'react-router';
 import { Error } from 'linode-components/errors';
 import { ModalShell } from 'linode-components/modals';
 
-import { hideModal } from '~/actions/modal';
 import { hideNotifications } from '~/actions/notifications';
 import { hideSession } from '~/actions/session';
 import { profile } from '~/api';
@@ -72,7 +71,6 @@ export class Layout extends Component {
         <ModalShell
           open={this.props.modal.open}
           title={this.props.modal.title}
-          close={() => dispatch(hideModal())}
         >
           {this.props.modal.body}
         </ModalShell>
