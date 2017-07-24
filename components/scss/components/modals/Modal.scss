@@ -53,7 +53,12 @@
 
     &-body .alert {
         @extend .font-xs;
+        
         text-align: center;
+
+        &.alert-danger {
+            text-align: left;
+        }
     }
 
     &-body .alert:last-child {

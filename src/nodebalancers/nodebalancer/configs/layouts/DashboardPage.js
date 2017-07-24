@@ -100,6 +100,8 @@ export class DashboardPage extends Component {
   }
 
   render() {
+    const { dispatch, nodebalancer, config } = this.props;
+
     return (
       <div>
         <section>
