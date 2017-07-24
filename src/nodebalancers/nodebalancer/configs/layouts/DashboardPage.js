@@ -3,7 +3,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { ListBody } from 'linode-components/lists/bodies';
-import { Button } from 'linode-components/buttons';
+import { PrimaryButton } from 'linode-components/buttons';
 import { Card, CardHeader } from 'linode-components/cards';
 import { List } from 'linode-components/lists';
 import { Table } from 'linode-components/tables';
@@ -120,10 +120,11 @@ export class DashboardPage extends Component {
             <CardHeader
               title="Nodes"
               nav={
-                <Button
+                <PrimaryButton
                   onClick={this.addNodeModal}
-                  className="linode-add btn btn-default float-sm-right"
-                >Add a Node</Button>
+                  buttonClass="btn-default"
+                  className="float-sm-right"
+                >Add a Node</PrimaryButton>
               }
             />
           }

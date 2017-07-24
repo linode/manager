@@ -28,7 +28,7 @@ describe('linodes/linode/settings/components/EditModal', () => {
         disk={testDisk}
         free={0}
       />);
-    modal.find('.btn-secondary').simulate('click');
+    modal.find('CancelButton').simulate('click');
     expect(dispatch.callCount).to.equal(1);
     expect(dispatch.calledWith(hideModal())).to.equal(true);
   });

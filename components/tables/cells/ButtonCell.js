@@ -27,7 +27,7 @@ export default function ButtonCell(props) {
   return (
     <TableCell className="ButtonCell" column={column} record={record}>
       <Button
-        className={buttonClassName || 'btn-secondary'}
+        className={buttonClassName}
         disabled={disabled}
         onClick={() => {
           if (onClick) {

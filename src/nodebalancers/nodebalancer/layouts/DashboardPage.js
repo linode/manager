@@ -1,8 +1,8 @@
 import _ from 'lodash';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
 
+import { PrimaryButton } from 'linode-components/buttons';
 import { Card, CardHeader } from 'linode-components/cards';
 import { Table } from 'linode-components/tables';
 import { List } from 'linode-components/lists';
@@ -220,10 +220,11 @@ export class DashboardPage extends Component {
               <CardHeader
                 title="Configs"
                 nav={
-                  <Link
+                  <PrimaryButton
                     to={`/nodebalancers/${nodebalancer.label}/configs/create`}
-                    className="linode-add btn btn-default float-sm-right"
-                  >Add a Config</Link>
+                    buttonClass="btn-default"
+                    className="float-sm-right"
+                  >Add a Config</PrimaryButton>
                 }
               />
             }
