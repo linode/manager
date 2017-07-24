@@ -1,7 +1,6 @@
 import { combineReducers } from 'redux';
 import { routerReducer } from 'react-router-redux';
 
-import { LOGOUT } from '~/actions/authentication';
 import authentication from './authentication';
 import modal from './modal';
 import notifications from './notifications';
@@ -28,9 +27,5 @@ const appReducer = combineReducers({
 });
 
 export default function rootReducer(state, action) {
-  if (action.type === LOGOUT) {
-    return appReducer(undefined, action);
-  }
-
   return appReducer(state, action);
 }
