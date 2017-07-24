@@ -5,12 +5,12 @@ description: >
   region objects</a>.
 endpoints:
   /regions:
-    resource: region
-    paginationKey: regions
     description: >
       Returns collection of regions.
     methods:
       GET:
+        response: region
+        paginationKey: regions
         description: >
           Returns list of <a href="#object-region">regions</a>.
         examples:
@@ -20,11 +20,11 @@ endpoints:
             all_regions = client.get_regions()
   /regions/:id:
     type: resource
-    resource: region
     description: >
       Return a particular region.
     methods:
       GET:
+        response: region
         description: >
           Returns information about this <a href="#object-region">
           region</a>.

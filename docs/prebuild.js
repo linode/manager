@@ -88,10 +88,12 @@ function getResourceObjByName(name) {
 }
 
 function formatMethodParams(methodObj) {
-  let params;
-  if (methodObj.params) {
-    params = Object.keys(methodObj.params).map(function(paramName) {
-      const param = methodObj.params[paramName];
+  let params = methodObj.params;
+
+  let formattedParams;
+  if (params) {
+    formattedParams = Object.keys(params).map(function(paramName) {
+      const param = params[paramName];
 
       param.description = convertUlToArray(stripATags(param.description));
 
@@ -115,7 +117,8 @@ function formatMethodParams(methodObj) {
       });
     });
   }
-  return params;
+
+  return formattedParams;
 }
 
 function formatMethodExamples(methodObj) {
@@ -273,30 +276,33 @@ function createEnumMap(enums) {
   return enumMap;
 }
 
-function formatMethodResource(endpoint, method) {
-  // IF this is a GET endpoint and has an associated resource object, combine them
+function formatMethodResponse(methodObj) {
+  let response = methodObj.response;
+
   let resourceObject;
-  if (method === 'GET' && endpoint.resource) {
-    let resource = endpoint.resource;
+  if (typeof response === 'string') {
+    let resourceName = response;
 
     // Paginated endpoints will modify the schema, so we need to be using a copy of the data.
-    resourceObject = _.cloneDeep(getResourceObjByName(resource));
+    resourceObject = _.cloneDeep(getResourceObjByName(resourceName));
+  } else {
+    resourceObject = { schema: response };
+  }
 
-    let enums;
-    let schema;
-    if (resourceObject) {
-      enums = resourceObject.enums;
+  let enums;
+  let schema;
+  if (resourceObject) {
+    enums = resourceObject.enums;
 
-      let enumMap;
-      if (enums) {
-        enumMap = createEnumMap(enums);
-      }
+    let enumMap;
+    if (enums) {
+      enumMap = createEnumMap(enums);
+    }
 
-      schema = resourceObject.schema;
-      if (schema) {
-        resourceObject.schema = formatSchema(schema, enumMap, endpoint.paginationKey, endpoint.resource);
-        resourceObject.example = formatSchemaExample(resourceObject.schema, endpoint.paginationKey);
-      }
+    schema = resourceObject.schema;
+    if (schema) {
+      resourceObject.schema = formatSchema(schema, enumMap, methodObj.paginationKey, methodObj.response);
+      resourceObject.example = formatSchemaExample(resourceObject.schema, methodObj.paginationKey);
     }
   }
 
@@ -306,15 +312,17 @@ function formatMethodResource(endpoint, method) {
 function formatMethod(endpoint, method) {
   const methodObj = endpoint.methods[method];
   methodObj.description = stripATags(methodObj.description);
-  const resourceObj = formatMethodResource(endpoint, method);
-  const examples = formatMethodExamples(methodObj);
+
   const params = formatMethodParams(methodObj);
+  const response = formatMethodResponse(methodObj);
+
+  const examples = formatMethodExamples(methodObj);
 
   return _.merge({}, methodObj, {
     name: method,
     examples: examples,
     params: params,
-    resource: resourceObj
+    response: response
   });
 }
 

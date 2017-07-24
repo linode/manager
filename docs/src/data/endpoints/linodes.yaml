@@ -6,13 +6,13 @@ description: >
   Linode objects</a> on your account.
 endpoints:
   /linode/instances:
-    resource: linode
-    paginationKey: linodes
     authenticated: true
     description: >
       Manage the collection of Linodes your account may access.
     methods:
       GET:
+        response: linode
+        paginationKey: linodes
         oauth: linodes:view
         description: >
           Returns a list of <a href="#object-linode">Linodes</a>.
@@ -105,12 +105,12 @@ endpoints:
             ( my_linode_2, password ) = client.linode.create_instance('us-east-1a', 'g5-standard-1', distribution=distro)
   /linode/instances/:id:
     type: resource
-    resource: linode
     authenticated: true
     description: >
       Manage a particular Linode your account may access.
     methods:
       GET:
+        response: linode
         oauth: linodes:view
         description: >
           Returns information about this <a href="#object-linode">Linode</a>.
@@ -153,13 +153,13 @@ endpoints:
             my_linode.delete()
   /linode/instances/:id/disks:
     _group: Disks
-    resource: disk
-    paginationKey: disks
     authenticated: true
     description: >
       Manage the disks associated with this Linode.
     methods:
       GET:
+        response: disk
+        paginationKey: disks
         oauth: linodes:view
         description: >
           Returns a list of <a href="#object-disk">disks</a>.
@@ -239,12 +239,12 @@ endpoints:
   /linode/instances/:id/disks/:id:
     _group: Disks
     type: resource
-    resource: disk
     authenticated: true
     description: >
       Manage a particular disk associated with this Linode.
     methods:
       GET:
+        response: disk
         oauth: linodes:view
         description: >
           Returns information about this <a href="#object-disk">disk</a>.
@@ -341,13 +341,13 @@ endpoints:
             disk.reset_root_password('hunter2')
   /linode/instances/:id/configs:
     _group: Configs
-    resource: linode_config
-    paginationKey: configs
     authenticated: true
     description: >
       Manage the boot configs on this Linode.
     methods:
       GET:
+        response: linode_config
+        paginationKey: configs
         oauth: linodes:view
         description: >
           Returns a list of <a href="#object-linode_config">configs</a> for a
@@ -430,12 +430,12 @@ endpoints:
   /linode/instances/:id/configs/:id:
     _group: Configs
     type: resource
-    resource: linode_config
     authenticated: true
     description: >
       Manage a particular config for a given Linode.
     methods:
       GET:
+        response: linode_config
         oauth: linodes:view
         description: >
           Returns information about this <a href="#object-linode_config">
@@ -483,13 +483,13 @@ endpoints:
           python: |
             config.delete()
   /linode/instances/:id/volumes:
-    resource: volume
-    paginationKey: volumes
     authenticated: true
     description: >
         View Block Storage Volumes attached to this Linode.
     methods:
       GET:
+        response: volume
+        paginationKey: volumes
         oauth: linodes:view
         description: >
           Returns a list of <a href="#object-volume">volumes</a>.
@@ -639,13 +639,13 @@ endpoints:
                 https://$api_root/$version/linode/instances/$linode_id/resize
   /linode/instances/:id/backups:
     _group: Backups
-    resource: backupsresponse
-    paginationKey: backups
     authenticated: true
     description: >
       Returns information about this Linode's available <a href="#object-backup">backups</a>.
     methods:
       GET:
+        response: backupsresponse
+        paginationKey: backups
         description: >
           Returns a <a href="#object-backupsresponse">Backups Response</a> with information on this Linode's
           available backups.
@@ -750,12 +750,12 @@ endpoints:
   /linode/instances/:id/ips:
     _group: IPs
     type: Strange
-    resource: linodenetworking
     authenticated: true
     description: >
       View networking information for this Linode.
     methods:
       GET:
+        response: linodenetworking
         oauth: linodes:view
         description: >
           Returns a <a href="#object-linodenetworking">Linode Networking Object</a>.
@@ -803,12 +803,12 @@ endpoints:
   /linode/instances/:id/ips/:ip_address:
     _group: IPs
     type: Action
-    resource: ipaddress
     authenticated: true
     description: >
       Manage a particular IP Address associated with this Linode.
     methods:
       GET:
+        response: ipaddress
         oauth: linodes:view
         description: >
           Returns information about this <a href="#object-ipaddress">IPv4</a> or
@@ -886,12 +886,12 @@ endpoints:
             my_linode.rebuild('linode/ubuntu16.04LTS', root_pass='hunter7')
   /linode/stackscripts:
     _group: StackScripts
-    resource: stackscript
-    paginationKey: stackscripts
     description: >
       View public StackScripts.
     methods:
       GET:
+        response: stackscript
+        paginationKey: stackscripts
         description: >
           Returns a list of public <a href="#object-stackscript">StackScripts</a>.
           Results can be <a href="#filtering">filtered</a>.  Include '"mine": true'
@@ -953,12 +953,12 @@ endpoints:
             TODO
   /linode/stackscripts/:id:
     _group: StackScripts
-    resource: stackscript
     authenticated: true
     description: >
       Manage a particular StackScript.
     methods:
       GET:
+        response: stackscript
         oauth: stackscripts:view
         description: >
           Returns information about this <a href="#object-stackscript">
@@ -1001,12 +1001,12 @@ endpoints:
             TODO
   /linode/distributions:
     _group: Distributions
-    resource: distributions
-    paginationKey: distributions
     description: >
       View the collection of distributions.
     methods:
       GET:
+        response: distributions
+        paginationKey: distributions
         description: >
           Returns a list of <a href="#object-distribution">distributions</a>.
         examples:
@@ -1017,11 +1017,11 @@ endpoints:
   /linode/distributions/:id:
     _group: Distributions
     type: resource
-    resource: distributions
     description: >
       Returns information about a specific distribution.
     methods:
       GET:
+        response: distributions
         description: >
           Returns information about this <a href="#object-distribution">
           distribution</a>.
@@ -1032,12 +1032,12 @@ endpoints:
             distro = linode.Distribution(client, 'linode/debian8')
   /linode/kernels:
     _group: Kernels
-    resource: kernels
-    paginationKey: kernels
     description: >
       Returns collection of kernels.
     methods:
       GET:
+        response: kernels
+        paginationKey: kernels
         description: >
           Returns list of <a href="#object-kernel">kernels</a>.
         examples:
@@ -1048,11 +1048,11 @@ endpoints:
   /linode/kernels/:id:
     _group: Kernels
     type: resource
-    resource: kernels
     description: >
       Returns information about a specific kernel.
     methods:
       GET:
+        response: kernels
         description: >
           Returns information about this <a href="#object-kernel">kernel</a>.
         examples:
@@ -1062,12 +1062,12 @@ endpoints:
             kernel = linode.Kernel(client, 'linode/latest')
   /linode/types:
     _group: Types
-    resource: types
-    paginationKey: types
     description: >
       Returns collection of types.
     methods:
       GET:
+        response: types
+        paginationKey: types
         description: >
           Returns list of types.
         examples:
@@ -1078,11 +1078,11 @@ endpoints:
   /linode/types/:id:
     _group: Types
     type: resource
-    resource: types
     description: >
       Returns information about a specific Linode type offered by Linode.
     methods:
       GET:
+        response: types
         description: >
           Returns information about this type.
         examples:
@@ -1092,13 +1092,13 @@ endpoints:
             type = linode.Type(client, 'g5-standard=1')
   /linode/volumes:
     _group: Volumes
-    resource: volume
-    paginationKey: volumes
     authenticated: true
     description: >
         Manage your Block Storage Volumes.
     methods:
       GET:
+        response: volume
+        paginationKey: volumes
         oauth: volumes:view
         description: >
           Returns a list of volumes.
@@ -1111,12 +1111,12 @@ endpoints:
   /linode/volumes/:id:
     _group: Volumes
     type: resource
-    resource: volume
     authenticated: true
     description: >
       Manage an individual Block Storage Volume.
     methods:
       GET:
+        response: volume
         oauth: volumes:view
         description: >
           Returns information about this Volume.

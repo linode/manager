@@ -13,6 +13,7 @@ endpoints:
       Manage your user information.
     methods:
       GET:
+        response: account
         description: >
           Returns your user information.
         examples:
@@ -119,9 +120,9 @@ endpoints:
   /account/profile/grants:
     _group: Profile
     type: strange
-    resource: usergrants
     methods:
       GET:
+        response: usergrants
         description: >
           Get grants for the current user.
         examples:
@@ -133,12 +134,12 @@ endpoints:
             my_grants = my_profile.grants
   /account/tokens:
     _group: Tokens
-    resource: oauthtoken
-    paginationKey: tokens
     description: >
       Manage OAuth Tokens created for your user.
     methods:
       GET:
+        response: oauthtoken
+        paginationKey: tokens
         oauth: tokens:view
         description: >
           Get a list of all OAuth Tokens active for your user.  This includes first-party (manager) tokens,
@@ -190,11 +191,11 @@ endpoints:
   /account/tokens/:id:
     _group: Tokens
     type: resource
-    resource: oauthtoken
     description: >
       Manage individual OAuth Tokens for your user.
     methods:
       GET:
+        response: oauthtoken
         oauth: tokens:view
         description: >
           Get a single token.
@@ -233,11 +234,11 @@ endpoints:
   /account/settings:
     _group: Settings
     type: resource
-    resource: account
     description: >
       Manage your account settings.
     methods:
       GET:
+        response: account
         description: >
           Returns your account settings.
         examples:
@@ -279,13 +280,13 @@ endpoints:
             my_settings.save()
   /account/clients:
     _group: Clients
-    resource: client
-    paginationKey: clients
     authenticated: true
     description: >
       Manage the collection of OAuth client applications your account may access.
     methods:
       GET:
+        response: client
+        paginationKey: clients
         oauth: clients:view
         description: >
           Returns a list of <a href="#object-client">clients</a>.
@@ -322,12 +323,12 @@ endpoints:
   /account/clients/:id:
     _group: Clients
     type: resource
-    resource: client
     authenticated: true
     description: >
       Manage a particular OAuth client application your account may access.
     methods:
       GET:
+        response: client
         oauth: clients:view
         description: >
           Returns information about this <a href="#object-client">OAuth client</a>.
@@ -427,12 +428,12 @@ endpoints:
             my_client.set_thumbnail(img)
   /account/users:
     _group: Users
-    resource: user
-    paginationKey: users
     description: >
       Returns a list of <a href="#object-user">User objects</a> associated with your account.
     methods:
       GET:
+        response: user
+        paginationKey: users
         examples:
           curl: |
             curl https://$api_root/$version/account/users
@@ -470,11 +471,11 @@ endpoints:
   /account/users/:username:
     _group: Users
     type: resource
-    resource: user
     description: >
       Returns information about a specific user associated with your account.
     methods:
       GET:
+        response: user
         examples:
           curl: |
             curl https://$api_root/$version/account/users/$username
@@ -532,12 +533,12 @@ endpoints:
   /account/users/:username/grants:
     _group: Users
     type: resource
-    resource: usergrants
     description: >
       Manage grants for restricted users.  It is an error to call this endpoint for unrestrcited users.  Only unrestricted
       users may access this endpoint.
     methods:
       GET:
+        response: usergrants
         description: Get grants for a restricted user.
         examples:
           curl: |
@@ -569,13 +570,13 @@ endpoints:
             my_user.grants.save()
   /account/clients:
     _group: Clients
-    resource: client
-    paginationKey: clients
     authenticated: true
     description: >
       Manage the collection of OAuth client applications your account may access.
     methods:
       GET:
+        response: client
+        paginationKey: clients
         oauth: clients:view
         description: >
           Returns a list of <a href="#object-client">clients</a>.
@@ -608,12 +609,12 @@ endpoints:
   /account/clients/:id:
     _group: Clients
     type: resource
-    resource: client
     authenticated: true
     description: >
       Manage a particular OAuth client application your account may access.
     methods:
       GET:
+        response: client
         oauth: clients:view
         description: >
           Returns information about this <a href="#object-client">OAuth client</a>.
@@ -646,13 +647,13 @@ endpoints:
                 https://$api_root/$version/account/clients/$client_id
   /account/events:
     _group: Events
-    resource: event
-    paginationKey: events
     authenticated: true
     description: >
       View the collection of events.
     methods:
       GET:
+        response: event
+        paginationKey: events
         description: >
           Returns a list of <a href="#object-event">events</a>.
         examples:
@@ -663,12 +664,12 @@ endpoints:
   /account/events/:id:
     _group: Events
     type: resource
-    resource: events
     authenticated: true
     description: >
       Returns information about a specific event.
     methods:
       GET:
+        response: events
         description: >
           Returns information about this <a href="#object-event">
           event</a>.

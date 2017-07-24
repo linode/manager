@@ -5,13 +5,13 @@ description: >
   NodeBalancer objects</a> on your account.
 endpoints:
   /nodebalancers:
-    resource: nodebalancer
-    paginationKey: nodebalancers
     authenticated: true
     description: >
       Manage the collection of NodeBalancers your account may access.
     methods:
       GET:
+        response: nodebalancer
+        paginationKey: nodebalancers
         oauth: nodebalancers:view
         description: >
           Returns a list of <a href="#object-nodebalancer">NodeBalancers</a>.
@@ -56,12 +56,12 @@ endpoints:
             new_nodebalancer = client.create_nodebalancer('us-east-1a', label='my_cool_balancer', client_conn_throttle=10)
   /nodebalancers/:id:
     type: resource
-    resource: nodebalancer
     authenticated: true
     description: >
       Manage a particular NodeBalancer your account may access.
     methods:
       GET:
+        response: nodebalancer
         oauth: nodebalancers:view
         description: >
           Returns information about this <a href="#object-nodebalancer">NodeBalancer</a>.
@@ -105,13 +105,13 @@ endpoints:
            my_nodebalancer.delete()
   /nodebalancers/:id/configs:
     _group: Configs
-    resource: nodebalancer_config
-    paginationKey: configs
     authenticated: true
     description: >
       Manage the configs on this NodeBalancer.
     methods:
       GET:
+        response: nodebalancer_config
+        paginationKey: configs
         oauth: nodebalancers:view
         description: >
           Returns a list of <a href="#object-nodebalancer_config">configs</a> for a
@@ -202,12 +202,12 @@ endpoints:
   /nodebalancers/:id/configs/:id:
     _group: Configs
     type: resource
-    resource: nodebalancer_config
     authenticated: true
     description: >
       Manage a particular NodeBalancer config.
     methods:
       GET:
+        response: nodebalancer_config
         oauth: nodebalancers:view
         description: >
           Returns information about this NodeBalancer config.
@@ -253,13 +253,13 @@ endpoints:
             # currently unimplemented
   /nodebalancers/:id/configs/:id/nodes:
     _group: Configs
-    resource: nodebalancer_config_nodes
-    paginationKey: nodes
     authenticated: true
     description: >
       Manage the nodes for a specified NodeBalancer config.
     methods:
       GET:
+        response: nodebalancer_config_nodes
+        paginationKey: nodes
         oauth: nodebalancers:view
         description: >
           Returns a list of <a href="#object-nodebalancer_config_node">config nodes</a> for a
@@ -302,12 +302,12 @@ endpoints:
   /nodebalancers/:id/configs/:id/nodes/:id:
     _group: Configs
     type: resource
-    resource: nodebalancer_config_nodes
     authenticated: true
     description: >
       Manage a particular NodeBalancer config node.
     methods:
       GET:
+        response: nodebalancer_config_nodes
         oauth: nodebalancers:view
         description: >
           Returns information about this node..

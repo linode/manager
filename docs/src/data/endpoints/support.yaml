@@ -5,13 +5,13 @@ description: >
   the Linode support team.
 endpoints:
   /support/tickets:
-    resource: supportticket
-    paginationKey: tickets
     authenticated: true
     description: >
       Manage the support tickets your account can access.
     methods:
       GET:
+        response: supportticket
+        paginationKey: tickets
         oauth: tickets:view
         description: >
           Returns a list of <a href="#object-supportticket">Support Tickets</a>.

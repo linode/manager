@@ -18,7 +18,7 @@ export default class MethodResponseExample extends Component {
   }
 
   render() {
-    const { resource } = this.props;
+    const { response } = this.props;
     const { collapsed } = this.state;
 
     const caretClass = collapsed ? 'fa-caret-right' : 'fa-caret-down';
@@ -33,7 +33,7 @@ export default class MethodResponseExample extends Component {
           </span>
         </div>
         <Example
-          example={JSON.stringify(resource.example, null, 2)}
+          example={JSON.stringify(response.example, null, 2)}
           name="json"
           noclipboard
           collapsed={collapsed}
@@ -44,7 +44,7 @@ export default class MethodResponseExample extends Component {
 }
 
 MethodResponseExample.propTypes = {
-  resource: PropTypes.shape({
+  response: PropTypes.shape({
     example: PropTypes.string,
   }),
 };
