@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
 
 import { PrimaryButton } from 'linode-components/buttons';
 import { Input } from 'linode-components/forms';
@@ -16,10 +15,9 @@ import {
   LinkCell,
 } from 'linode-components/tables/cells';
 
+import { setAnalytics, setSource, setTitle } from '~/actions';
 import { showModal, hideModal } from '~/actions/modal';
 import { default as toggleSelected } from '~/actions/select';
-import { setSource } from '~/actions/source';
-import { setTitle } from '~/actions/title';
 import { stackscripts } from '~/api';
 import { createHeaderFilter, transform } from '~/api/util';
 import CreateHelper from '~/components/CreateHelper';
@@ -41,7 +39,7 @@ export class IndexPage extends Component {
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
-
+    dispatch(setAnalytics(['stackscripts']));
     dispatch(setTitle('StackScripts'));
   }
 
