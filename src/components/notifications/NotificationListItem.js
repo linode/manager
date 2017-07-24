@@ -19,13 +19,11 @@ export default function NotificationListItem(props) {
     return null;
   }
 
-  let entity;
+  const entity = <strong>{event.entity.label}</strong>;
   let message;
   if (!event.read) {
-    entity = (<strong>{event.entity.label}</strong>);
     className += ` ${baseCls}--unread`;
   } else {
-    entity = event.entity.label;
     className += ` ${baseCls}--read`;
   }
 

@@ -3,7 +3,7 @@ import sinon from 'sinon';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
 
-import { AddModal } from '~/linodes/linode/settings/advanced/components/AddModal';
+import AddDisk from '~/linodes/linode/settings/advanced/components/AddDisk';
 
 import { api } from '@/data';
 import { testLinode1236 } from '@/data/linodes';
@@ -11,7 +11,7 @@ import { hideModal } from '~/actions/modal';
 import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
 
 
-describe('linodes/linode/settings/advanced/components/AddModal', () => {
+describe('linodes/linode/settings/advanced/components/AddDisk', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
@@ -23,7 +23,7 @@ describe('linodes/linode/settings/advanced/components/AddModal', () => {
 
   it('should drop filesystem and render password if a distro is selected', () => {
     const modal = mount(
-      <AddModal
+      <AddDisk
         dispatch={() => {}}
         linode={testLinode1236}
         free={4096}
@@ -40,7 +40,7 @@ describe('linodes/linode/settings/advanced/components/AddModal', () => {
 
   it('should enforce the min and max sizes contextually', () => {
     const modal = mount(
-      <AddModal
+      <AddDisk
         dispatch={() => {}}
         linode={testLinode1236}
         free={4096}
@@ -60,7 +60,7 @@ describe('linodes/linode/settings/advanced/components/AddModal', () => {
   it('should dismiss the modal when Cancel is clicked', async () => {
     const dispatch = sandbox.spy();
     const modal = mount(
-      <AddModal
+      <AddDisk
         dispatch={dispatch}
         linode={testLinode1236}
         free={4096}
@@ -68,6 +68,7 @@ describe('linodes/linode/settings/advanced/components/AddModal', () => {
       />);
 
     modal.find('CancelButton').simulate('click');
+
     expect(dispatch.callCount).to.equal(1);
     expect(dispatch.calledWith(hideModal())).to.equal(true);
   });
@@ -75,7 +76,7 @@ describe('linodes/linode/settings/advanced/components/AddModal', () => {
   it('should POST /linode/instances/:id/disks/ when form is submitted', async () => {
     const dispatch = sandbox.spy();
     const modal = mount(
-      <AddModal
+      <AddDisk
         dispatch={dispatch}
         linode={testLinode1236}
         free={4096}

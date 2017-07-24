@@ -11,8 +11,7 @@ import {
   SubmitButton,
 } from 'linode-components/forms';
 
-import { setSource } from '~/actions/source';
-import { setTitle } from '~/actions/title';
+import { setSource, setTitle } from '~/actions';
 import { account } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
 
@@ -63,7 +62,10 @@ export class IndexPage extends Component {
         </header>
         <div className="container">
           <Card header={<CardHeader title="Network Helper" />}>
-            <Form onSubmit={this.onSubmit}>
+            <Form
+              onSubmit={this.onSubmit}
+              analytics={{ title: 'Account Settings' }}
+            >
               <FormGroup className="row">
                 <label className="col-form-label col-sm-2">Default Behavior</label>
                 <div className="col-sm-10">

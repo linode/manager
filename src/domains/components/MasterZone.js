@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import { replace } from 'react-router-redux';
 
 import { DeleteModalBody } from 'linode-components/modals';
 import { PrimaryButton } from 'linode-components/buttons';
@@ -77,10 +76,7 @@ export class MasterZone extends Component {
     const { domain } = this.props;
 
     const { TXT } = domain._groupedRecords;
-    return (TXT || []).map(record => ({
-      ...record,
-      name: record.name || domain.domain,
-    }));
+    return TXT || [];
   }
 
   formatCNAMERecords() {
@@ -93,35 +89,18 @@ export class MasterZone extends Component {
     }));
   }
 
-  renderDeleteRecord(title, id, name) {
+  renderDeleteRecord(type, id, name) {
     const { dispatch, domain } = this.props;
 
-    dispatch(showModal(title,
+    dispatch(showModal(`Delete ${type}`,
       <DeleteModalBody
-        onOk={async () => {
+        onSubmit={async () => {
           await dispatch(domains.records.delete(domain.id, id));
           dispatch(hideModal());
         }}
         items={[name]}
-        typeOfItem={title}
+        typeOfItem={type}
         onCancel={() => dispatch(hideModal())}
-      />
-    ));
-  }
-
-  renderSOAEditRecord() {
-    const { dispatch, domain } = this.props;
-    const title = 'Edit SOA Record';
-    dispatch(showModal(
-      title,
-      <EditSOARecord
-        dispatch={dispatch}
-        title={title}
-        domains={domain}
-        close={(newDomain) => () => {
-          dispatch(hideModal());
-          dispatch(replace(`/domains/${newDomain || domain.domain}`));
-        }}
       />
     ));
   }
@@ -169,7 +148,7 @@ export class MasterZone extends Component {
   }
 
   render() {
-    const { domain } = this.props;
+    const { domain, dispatch } = this.props;
 
     const formatSeconds = (records) => {
       return records.map(record => {
@@ -235,9 +214,7 @@ export class MasterZone extends Component {
                     cellComponent: ButtonCell,
                     headerClassName: 'ButtonColumn',
                     text: 'Edit',
-                    onClick: () => {
-                      this.renderSOAEditRecord();
-                    },
+                    onClick: () => EditSOARecord.trigger(dispatch, domain),
                   },
                 ]}
                 data={[soaRecord]}
@@ -280,7 +257,7 @@ export class MasterZone extends Component {
                     cellComponent: NameserversCell,
                     onEditClick: ({ id }) => this.renderEditNSRecord('Edit NS Record', id),
                     onDeleteClick: ({ id, target }) =>
-                      this.renderDeleteRecord('Delete NS Record', id, target),
+                      this.renderDeleteRecord('NS Record', id, target),
                   },
                 ]}
                 data={nsRecords}
@@ -329,7 +306,7 @@ export class MasterZone extends Component {
                     headerClassName: 'ButtonColumn',
                     text: 'Delete',
                     onClick: ({ id, target }) =>
-                      this.renderDeleteRecord('Delete MX Record', id, target),
+                      this.renderDeleteRecord('MX Record', id, target),
                   },
                 ]}
                 data={mxRecords}
@@ -377,7 +354,7 @@ export class MasterZone extends Component {
                     headerClassName: 'ButtonColumn',
                     text: 'Delete',
                     onClick: ({ id, name }) =>
-                      this.renderDeleteRecord('Delete A/AAAA Record', id, name),
+                      this.renderDeleteRecord('A/AAAA Record', id, name),
                   },
                 ]}
                 data={aRecords}
@@ -428,7 +405,7 @@ export class MasterZone extends Component {
                     headerClassName: 'ButtonColumn',
                     text: 'Delete',
                     onClick: ({ id, name }) =>
-                      this.renderDeleteRecord('Delete CNAME Record', id, name),
+                      this.renderDeleteRecord('CNAME Record', id, name),
                   },
                 ]}
                 data={cnameRecords}
@@ -482,7 +459,7 @@ export class MasterZone extends Component {
                     headerClassName: 'ButtonColumn',
                     text: 'Delete',
                     onClick: ({ id, name }) =>
-                      this.renderDeleteRecord('Delete TXT Record', id, name),
+                      this.renderDeleteRecord('TXT Record', id, name),
                   },
                 ]}
                 data={txtRecords}
@@ -540,7 +517,7 @@ export class MasterZone extends Component {
                   cellComponent: ButtonCell,
                   headerClassName: 'ButtonColumn',
                   text: 'Delete',
-                  onClick: ({ id, name }) => this.renderDeleteRecord('Delete SRV Record', id, name),
+                  onClick: ({ id, name }) => this.renderDeleteRecord('SRV Record', id, name),
                 },
               ]}
               data={srvRecords}

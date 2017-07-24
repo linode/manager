@@ -61,12 +61,14 @@ export default class Distribution extends Component {
       })) });
     }
 
+    const dropdownAnalytics = { title: 'Distribution version' };
+
     return (
       <div
         onClick={this.onClick}
         className={`LinodesDistribution ${isSelectedClass} ${noDistributionClass}`}
       >
-        <Dropdown groups={versions} />
+        <Dropdown groups={versions} analytics={dropdownAnalytics} />
         <div className="LinodesDistribution-body">
           {vendor ? <img
             src={distros[vendor.name]}

@@ -16,12 +16,10 @@ import {
   LinkCell,
   ThumbnailCell,
 } from 'linode-components/tables/cells';
-import { EmitEvent } from 'linode-components/utils';
 
+import { setAnalytics, setSource, setTitle } from '~/actions';
 import { showModal, hideModal } from '~/actions/modal';
 import toggleSelected from '~/actions/select';
-import { setSource } from '~/actions/source';
-import { setTitle } from '~/actions/title';
 import { users as api } from '~/api';
 import { transform } from '~/api/util';
 import { getEmailHash } from '~/cache';
@@ -50,8 +48,8 @@ export class IndexPage extends Component {
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
-
     dispatch(setTitle('Users'));
+    dispatch(setAnalytics(['users']));
   }
 
   deleteUsers = (users) => {
@@ -61,18 +59,14 @@ export class IndexPage extends Component {
 
     dispatch(showModal(title,
       <DeleteModalBody
-        onOk={async () => {
+        onSubmit={async () => {
           const ids = usersArr.map(user => user.username);
 
           await Promise.all(ids.map(id => dispatch(api.delete(id))));
           dispatch(toggleSelected(OBJECT_TYPE, ids));
-          EmitEvent('modal:submit', 'Modal', 'delete', title);
           dispatch(hideModal());
         }}
-        onCancel={() => {
-          EmitEvent('modal:cancel', 'Modal', 'cancel', title);
-          dispatch(hideModal());
-        }}
+        onCancel={() => dispatch(hideModal())}
         items={usersArr.map(n => n.username)}
         typeOfItem="Users"
       />

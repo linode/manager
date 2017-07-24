@@ -14,8 +14,7 @@ import {
 
 import { linodes } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
-import { setSource } from '~/actions/source';
-import { setTitle } from '~/actions/title';
+import { setSource, setTitle } from '~/actions';
 
 import { selectLinode } from '../../utilities';
 
@@ -54,7 +53,10 @@ export class DisplayPage extends Component {
 
     return (
       <Card header={<CardHeader title="Display" />}>
-        <Form onSubmit={this.onSubmit}>
+        <Form
+          onSubmit={this.onSubmit}
+          analytics={{ title: 'Linode Display Settings' }}
+        >
           <FormGroup errors={errors} className="row" name="group">
             <label htmlFor="group" className="col-sm-1 col-form-label">Group</label>
             <div className="col-sm-11">

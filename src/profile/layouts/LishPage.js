@@ -11,7 +11,7 @@ import {
 } from 'linode-components/forms';
 
 
-export default class NotificationsPage extends Component {
+export default class LishPage extends Component {
   constructor() {
     super();
 
@@ -30,10 +30,15 @@ export default class NotificationsPage extends Component {
   render() {
     const { errors, loading, authorization, keys } = this.state;
 
+    const title = 'Change Lish Settings';
+
     return (
       <div>
-        <Card header={<CardHeader title="Change Lish settings" />}>
-          <Form onSubmit={this.onSubmit}>
+        <Card header={<CardHeader title={title} />}>
+          <Form
+            onSubmit={this.onSubmit}
+            analytics={{ title }}
+          >
             <FormGroup className="row" errors={errors} name="mode">
               <label htmlFor="authorization" className="col-sm-2 col-form-label">
                 Authorization mode
