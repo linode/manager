@@ -22,7 +22,7 @@ describe('components/modal/ConfirmModalBody', () => {
       </ConfirmModalBody>
     );
 
-    expect(modal.find('.btn-default').text()).to.equal('OK button text');
+    expect(modal.find('.btn-default').at(1).text()).to.equal('OK button text');
     expect(modal.find('.bodytext').length).to.equal(1);
   });
 
@@ -58,13 +58,5 @@ describe('components/modal/ConfirmModalBody', () => {
 
     modal.find('CancelButton').simulate('click');
     expect(onCancel.callCount).to.equal(1);
-  });
-
-  it('uses a default confirm button text', () => {
-    const modal = mount(
-      <ConfirmModalBody onOk={() => {}} onCancel={() => {}} />
-    );
-
-    expect(modal.find('.btn-default').text()).to.equal('Confirm');
   });
 });

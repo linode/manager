@@ -4,23 +4,20 @@ import Button from './Button';
 
 export default function PrimaryButton(props) {
   return (
-    <Button
-      buttonClass="btn-primary"
-      disabled={props.disabled}
-      onClick={props.onClick}
-      type={props.type}
-    >{props.children}</Button>
+    <div className="PrimaryButton">
+      <Button {...props}>
+        <i className="fa fa-plus" />
+        {props.children}
+      </Button>
+    </div>
   );
 }
 
 PrimaryButton.propTypes = {
-  children: PropTypes.node,
-  disabled: PropTypes.bool,
-  onClick: PropTypes.func,
-  type: PropTypes.string,
+  buttonClass: PropTypes.string,
+  children: PropTypes.node.isRequired,
 };
 
 PrimaryButton.defaultProps = {
-  disabled: false,
-  type: 'button',
+  buttonClass: 'btn-primary',
 };

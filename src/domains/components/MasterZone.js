@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 import { replace } from 'react-router-redux';
 
 import { DeleteModalBody } from 'linode-components/modals';
-import { Button } from 'linode-components/buttons';
+import { PrimaryButton } from 'linode-components/buttons';
 import { Card, CardHeader } from 'linode-components/cards';
 import { Table } from 'linode-components/tables';
 import { ButtonCell, LabelCell } from 'linode-components/tables/cells';
@@ -251,13 +251,14 @@ export class MasterZone extends Component {
                 <CardHeader
                   title="NS Records"
                   nav={
-                    <Button
+                    <PrimaryButton
                       onClick={() => {
                         this.renderEditRecord('Add NS Record', EditNSRecord);
                       }}
+                      buttonClass="btn-default"
                     >
                       Add NS Record
-                    </Button>
+                    </PrimaryButton>
                   }
                 />
               }
@@ -294,11 +295,12 @@ export class MasterZone extends Component {
                 <CardHeader
                   title="MX Records"
                   nav={
-                    <Button
+                    <PrimaryButton
                       onClick={() => { this.renderEditRecord('Add MX Record', EditMXRecord); }}
+                      buttonClass="btn-default"
                     >
                       Add MX Record
-                    </Button>
+                    </PrimaryButton>
                   }
                 />
               }
@@ -342,11 +344,12 @@ export class MasterZone extends Component {
                 <CardHeader
                   title="A/AAAA Records"
                   nav={
-                    <Button
+                    <PrimaryButton
                       onClick={() => { this.renderEditRecord('Add A/AAAA Record', EditARecord); }}
+                      buttonClass="btn-default"
                     >
                       Add A/AAAA Record
-                    </Button>
+                    </PrimaryButton>
                   }
                 />
               }
@@ -389,13 +392,14 @@ export class MasterZone extends Component {
                 <CardHeader
                   title="CNAME Records"
                   nav={
-                    <Button
+                    <PrimaryButton
                       onClick={() => {
                         this.renderEditRecord('Add CNAME Record', EditCNAMERecord);
                       }}
+                      buttonClass="btn-default"
                     >
                       Add CNAME Record
-                    </Button>
+                    </PrimaryButton>
                   }
                 />
               }
@@ -439,11 +443,12 @@ export class MasterZone extends Component {
                 <CardHeader
                   title="TXT Records"
                   nav={
-                    <Button
+                    <PrimaryButton
                       onClick={() => { this.renderEditRecord('Add TXT Record', EditTXTRecord); }}
+                      buttonClass="btn-default"
                     >
                       Add TXT Record
-                    </Button>
+                    </PrimaryButton>
                   }
                 />
               }
@@ -491,11 +496,12 @@ export class MasterZone extends Component {
               <CardHeader
                 title="SRV Records"
                 nav={
-                  <Button
+                  <PrimaryButton
                     onClick={() => { this.renderEditRecord('Add SRV Record', EditSRVRecord); }}
+                    buttonClass="btn-default"
                   >
                     Add SRV Record
-                  </Button>
+                  </PrimaryButton>
                 }
               />
             }

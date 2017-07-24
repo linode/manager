@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
 
+import { PrimaryButton } from 'linode-components/buttons';
 import { Input } from 'linode-components/forms';
 import { List, ScrollingList } from 'linode-components/lists';
 import { ListBody, ListGroup } from 'linode-components/lists/bodies';
@@ -205,10 +205,9 @@ export class IndexPage extends Component {
         <header className="PrimaryPage-header">
           <div className="PrimaryPage-headerRow clearfix">
             <h1 className="float-sm-left">Linodes</h1>
-            <Link to="/linodes/create" className="linode-add btn btn-primary float-sm-right">
-              <span className="fa fa-plus"></span>
+            <PrimaryButton to="/linodes/create" className="float-sm-right">
               Add a Linode
-            </Link>
+            </PrimaryButton>
           </div>
         </header>
         <div className="PrimaryPage-body">
