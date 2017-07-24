@@ -7,6 +7,7 @@ import {
   Form,
   FormSummary,
   SubmitButton,
+  Input,
 } from 'linode-components/forms';
 
 import { setSource } from '~/actions/source';
@@ -14,6 +15,7 @@ import { types } from '~/api';
 import { resizeLinode } from '~/api/linodes';
 import { dispatchOrStoreErrors } from '~/api/util';
 import Plan from '~/linodes/components/Plan';
+import { planName } from '~/linodes/components/PlanStyle';
 
 import { selectLinode } from '../utilities';
 
@@ -51,12 +53,18 @@ export class ResizePage extends Component {
   }
 
   render() {
-    const { types } = this.props;
+    const { types, linode: { type: { id: currentType } } } = this.props;
     const { type, errors, loading } = this.state;
 
     return (
       <Card header={<CardHeader title="Resize" />}>
         <Form onSubmit={this.onSubmit}>
+          <FormGroup className="row">
+            <label className="col-sm-3 col-form-label">Current Plan</label>
+            <div className="col-sm-9">
+              <Input disabled value={planName(types.types[currentType].label)} />
+            </div>
+          </FormGroup>
           <FormGroup>
             <Plan
               types={types.types}
