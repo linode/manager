@@ -5,6 +5,10 @@ import { getStorage, setStorage } from '~/storage';
 import { store } from '~/store';
 
 
+const AUTH_TOKEN = 'authentication/oauth-token';
+const AUTH_SCOPES = 'authentication/scopes';
+const AUTH_EXPIRES = 'authentication/expires';
+
 export function redirect(location) {
   window.location = location;
 }
@@ -41,16 +45,11 @@ export function checkLogin(next) {
   return null;
 }
 
-export function initialize(dispatch) {
-  const token = getStorage('authentication/oauth-token') || null;
-  const scopes = getStorage('authentication/scopes') || null;
-  dispatch(setToken(token, scopes));
-}
-
 export function expire(dispatch) {
   // Remove these from local storage so if login fails, next time we jump to login sooner.
-  setStorage('authentication/oauth-token', '');
-  setStorage('authentication/scopes', '');
+  setStorage(AUTH_TOKEN, '');
+  setStorage(AUTH_SCOPES, '');
+  setStorage(AUTH_EXPIRES, '');
   dispatch(setToken(null, null));
 }
 
@@ -59,12 +58,27 @@ export function expireAndReAuth(dispatch) {
   checkLogin(window);
 }
 
-export function start(oauthToken = '', scopes = '') {
+export function start(oauthToken = '', scopes = '', expires) {
   return (dispatch) => {
     // Set these two so we can grab them on subsequent page loads
-    setStorage('authentication/oauth-token', oauthToken);
-    setStorage('authentication/scopes', scopes);
+    setStorage(AUTH_TOKEN, oauthToken);
+    setStorage(AUTH_SCOPES, scopes);
+    setStorage(AUTH_EXPIRES, expires);
+
     // Add all to state for this (page load) session
     dispatch(setToken(oauthToken, scopes));
   };
+}
+
+export function initialize(dispatch) {
+  const expires = getStorage(AUTH_EXPIRES) || null;
+  if (expires && new Date(expires) < new Date()) {
+    // Calling expire makes sure the full expire steps are taken.
+    return dispatch(expire);
+  }
+
+  const token = getStorage(AUTH_TOKEN) || null;
+  const scopes = getStorage(AUTH_SCOPES) || null;
+  // Calling this makes sure AUTH_EXPIRES is always set.
+  dispatch(start(token, scopes, expires));
 }
