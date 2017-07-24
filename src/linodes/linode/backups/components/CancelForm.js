@@ -1,12 +1,11 @@
 import React, { Component, PropTypes } from 'react';
 
-import { ConfirmModalBody } from 'linode-components/modals';
 import { Form, FormSummary, SubmitButton } from 'linode-components/forms';
+import { FormModalBody } from 'linode-components/modals';
 
 import { cancelBackup } from '~/api/backups';
 import { showModal, hideModal } from '~/actions/modal';
 import { dispatchOrStoreErrors } from '~/api/util';
-import { EmitEvent } from 'linode-components/utils';
 
 
 export default class CancelForm extends Component {
@@ -16,7 +15,7 @@ export default class CancelForm extends Component {
     this.state = { loading: false, errors: {} };
   }
 
-  onOk = () => {
+  onSubmit = () => {
     const { linode, dispatch } = this.props;
 
     return dispatch(dispatchOrStoreErrors.call(this, [
@@ -25,25 +24,20 @@ export default class CancelForm extends Component {
     ]));
   }
 
-  onSubmit = () => {
+  confirm = () => {
     const { dispatch } = this.props;
     const title = 'Cancel Backups Service';
 
     dispatch(showModal(title, (
-      <ConfirmModalBody
-        onOk={() => {
-          EmitEvent('modal:submit', 'Modal', 'Cancel backups service', title);
-          this.onOk();
-        }}
-        onCancel={() => {
-          EmitEvent('modal:cancel', 'Modal', 'cancel', title);
-          dispatch(hideModal());
-        }}
+      <FormModalBody
+        onSubmit={this.onSubmit}
+        onCancel={() => dispatch(hideModal())}
         buttonText="Cancel backups service"
         buttonDisabledText="Cancelling backups service"
+        analytics={{ title }}
       >
         Are you sure you want to cancel the backups service for this Linode? This cannot be undone.
-      </ConfirmModalBody>
+      </FormModalBody>
     )));
   }
 
@@ -51,7 +45,10 @@ export default class CancelForm extends Component {
     const { loading, errors } = this.state;
 
     return (
-      <Form onSubmit={this.onSubmit}>
+      <Form
+        onSubmit={this.confirm}
+        analytics={{ title: 'Cancel Backups Service' }}
+      >
         <p>This will remove all existing backups.</p>
         <SubmitButton
           className="btn btn-default"

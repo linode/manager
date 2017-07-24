@@ -94,14 +94,17 @@ export default class ConfigForm extends Component {
     this.setState({ [name]: type === 'checkbox' ? checked : value })
 
   render() {
-    const { submitText, submitDisabledText } = this.props;
+    const { submitText, submitDisabledText, config } = this.props;
     const {
       port, protocol, algorithm, stickiness, check, checkPassive, checkInterval, checkTimeout,
       checkAttempts, sslCert, sslKey, checkPath, checkBody, errors, loading,
     } = this.state;
 
     return (
-      <Form onSubmit={this.onSubmit}>
+      <Form
+        onSubmit={this.onSubmit}
+        analytics={{ title: 'NodeBalancer Config Settings', action: config.id ? 'edit' : 'add' }}
+      >
         <FormGroup errors={errors} name="port" className="row">
           <label className="col-sm-2 col-form-label">Port</label>
           <div className="col-sm-10">

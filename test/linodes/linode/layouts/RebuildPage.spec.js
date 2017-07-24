@@ -39,7 +39,7 @@ describe('linodes/linode/layouts/RebuildPage', () => {
     const modal = mount(dispatch.firstCall.args[0].body);
 
     dispatch.reset();
-    await modal.props().onOk();
+    await modal.props().onSubmit();
 
     expect(dispatch.callCount).to.equal(2);
     await expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [

@@ -1,17 +1,10 @@
 import React, { PropTypes, Component } from 'react';
 
-import { ModalFormGroup } from 'linode-components/forms';
-import {
-  Form,
-  FormSummary,
-  Input,
-  SubmitButton,
-} from 'linode-components/forms';
-import { CancelButton } from 'linode-components/buttons';
+import { ModalFormGroup, Input } from 'linode-components/forms';
+import { FormModalBody } from 'linode-components/modals';
 
 import { domains } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
-import { EmitEvent } from 'linode-components/utils';
 
 
 export default class EditMXRecord extends Component {
@@ -27,7 +20,6 @@ export default class EditMXRecord extends Component {
 
     this.state = {
       errors: {},
-      loading: false,
       zone,
       mailserver,
       subdomain,
@@ -36,7 +28,7 @@ export default class EditMXRecord extends Component {
   }
 
   onSubmit = () => {
-    const { dispatch, id, title, close } = this.props;
+    const { dispatch, id, close } = this.props;
     const { mailserver, subdomain, preference } = this.state;
     const ids = [this.props.zone.id, id].filter(Boolean);
     const data = {
@@ -49,7 +41,6 @@ export default class EditMXRecord extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => domains.records[id ? 'put' : 'post'](data, ...ids),
-      () => { EmitEvent('modal:submit', 'Modal', id ? 'edit' : 'add', title); },
       close,
     ]));
   }
@@ -57,54 +48,51 @@ export default class EditMXRecord extends Component {
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   render() {
-    const { close, title } = this.props;
-    const { errors, loading, zone, subdomain, preference, mailserver } = this.state;
+    const { close, title, id } = this.props;
+    const { errors, zone, subdomain, preference, mailserver } = this.state;
+
+    const analytics = { title, action: id ? 'edit' : 'add' };
 
     return (
-      <Form onSubmit={this.onSubmit}>
-        <ModalFormGroup id="mailserver" label="Mail Server" apiKey="target" errors={errors}>
-          <Input
-            id="mailserver"
-            name="mailserver"
-            value={mailserver}
-            placeholder="mx.domain.com"
-            onChange={this.onChange}
-          />
-        </ModalFormGroup>
-        <ModalFormGroup label="Preference" id="preference" apiKey="priority" errors={errors}>
-          <Input
-            id="preference"
-            name="preference"
-            value={preference}
-            placeholder="10"
-            onChange={this.onChange}
-          />
-        </ModalFormGroup>
-        <ModalFormGroup label="Subdomain" id="subdomain" apiKey="name" errors={errors}>
-          <Input
-            id="subdomain"
-            name="subdomain"
-            value={subdomain || zone}
-            placeholder="domain.com"
-            onChange={this.onChange}
-          />
-        </ModalFormGroup>
-        <div className="Modal-footer">
-          <CancelButton
-            onClick={() => {
-              EmitEvent('modal:cancel', 'Modal', 'cancel', title);
-              close();
-            }}
-          />
-          <SubmitButton
-            disabled={loading}
-            disabledChildren={this.props.id ? undefined : 'Adding MX Record'}
-          >
-            {this.props.id ? undefined : 'Add MX Record'}
-          </SubmitButton>
-          <FormSummary errors={errors} />
+      <FormModalBody
+        onSubmit={this.onSubmit}
+        onCancel={close}
+        buttonText={id ? undefined : 'Add MX Record'}
+        buttonDisabledText={id ? undefined : 'Adding MX Record'}
+        analytics={analytics}
+        errors={errors}
+      >
+        <div>
+          <ModalFormGroup id="mailserver" label="Mail Server" apiKey="target" errors={errors}>
+            <Input
+              id="mailserver"
+              name="mailserver"
+              value={mailserver}
+              placeholder="mx.domain.com"
+              onChange={this.onChange}
+            />
+          </ModalFormGroup>
+          <ModalFormGroup label="Preference" id="preference" apiKey="priority" errors={errors}>
+            <Input
+              id="preference"
+              name="preference"
+              value={preference}
+              placeholder="10"
+              type="number"
+              onChange={this.onChange}
+            />
+          </ModalFormGroup>
+          <ModalFormGroup label="Subdomain" id="subdomain" apiKey="name" errors={errors}>
+            <Input
+              id="subdomain"
+              name="subdomain"
+              value={subdomain || zone}
+              placeholder="domain.com"
+              onChange={this.onChange}
+            />
+          </ModalFormGroup>
         </div>
-      </Form>
+      </FormModalBody>
     );
   }
 }

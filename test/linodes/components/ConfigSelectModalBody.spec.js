@@ -1,15 +1,18 @@
+import { expect } from 'chai';
+import { mount, shallow } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
-import { shallow } from 'enzyme';
-import { expect } from 'chai';
-import ConfigSelectModalBody from '~/linodes/components/ConfigSelectModalBody';
-import { powerOnLinode, rebootLinode } from '~/api/linodes';
 
+import { powerOnLinode, rebootLinode } from '~/api/linodes';
+import ConfigSelectModalBody from '~/linodes/components/ConfigSelectModalBody';
+
+import { expectDispatchOrStoreErrors } from '@/common';
 import { api } from '@/data';
+
 
 const { linodes } = api;
 
-describe('linodes/components/StatusDropdown/ConfigSelectModalBody', () => {
+describe('linodes/components/ConfigSelectModalBody', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
@@ -24,8 +27,7 @@ describe('linodes/components/StatusDropdown/ConfigSelectModalBody', () => {
       />
     );
 
-    expect(modal.find('.LinodesLinodeComponentsConfigSelectModalBody-submit').
-      props().children).to.equal('Power on');
+    expect(modal.props().buttonText).to.equal('Power On');
   });
 
   it('renders reboot button text', () => {
@@ -36,8 +38,7 @@ describe('linodes/components/StatusDropdown/ConfigSelectModalBody', () => {
       />
     );
 
-    expect(modal.find('.LinodesLinodeComponentsConfigSelectModalBody-submit').
-      props().children).to.equal('Reboot');
+    expect(modal.props().buttonText).to.equal('Reboot');
   });
 
   it('renders config list', () => {
@@ -45,13 +46,13 @@ describe('linodes/components/StatusDropdown/ConfigSelectModalBody', () => {
     const modal = shallow(<ConfigSelectModalBody linode={linode} />);
 
     const configs = Object.values(linode._configs.configs);
-    const elements = modal.find('div.radio label');
+    const elements = modal.find('Radio');
     expect(elements.length).to.equal(configs.length);
 
     for (let i = 0; i < configs.length; i++) {
       const element = elements.at(i);
-      expect(element.find('span').text()).to.equal(configs[i].label);
-      expect(element.find('input').props().value).to.equal(configs[i].id);
+      expect(element.props().label).to.equal(configs[i].label);
+      expect(element.props().value).to.equal(configs[i].id);
     }
   });
 
@@ -61,7 +62,7 @@ describe('linodes/components/StatusDropdown/ConfigSelectModalBody', () => {
 
     const linode = linodes.linodes['1238'];
 
-    const modal = shallow(
+    const modal = mount(
       <ConfigSelectModalBody
         linode={linode}
         action={action}
@@ -69,17 +70,19 @@ describe('linodes/components/StatusDropdown/ConfigSelectModalBody', () => {
       />
     );
 
-    const configElement = modal.find('div.radio label input').at(1);
+    const configElement = modal.find('Radio').at(1);
     configElement.simulate('change', { target: { value: 321321 } });
 
-    modal.find('.LinodesLinodeComponentsConfigSelectModalBody-submit').
-      simulate('click');
-
-    expect(action.callCount).to.equal(1);
-    expect(action.firstCall.args[0]).to.equal(linode.id);
-    expect(action.firstCall.args[1]).to.equal(321321);
+    dispatch.reset();
+    modal.find('FormModalBody').props().onSubmit();
 
     expect(dispatch.callCount).to.equal(1);
-    expect(dispatch.firstCall.args[0]).to.equal(42);
+    expectDispatchOrStoreErrors(dispatch.firstCall.args[0], [
+      () => {
+        expect(action.callCount).to.equal(1);
+        expect(action.firstCall.args[0]).to.equal(linode.id);
+        expect(action.firstCall.args[1]).to.equal(321321);
+      },
+    ]);
   });
 });

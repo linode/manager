@@ -3,14 +3,14 @@ import { mount } from 'enzyme';
 import React from 'react';
 import sinon from 'sinon';
 
-import { EditModal } from '~/linodes/linode/settings/advanced/components/EditModal';
+import EditDisk from '~/linodes/linode/settings/advanced/components/EditDisk';
 
 import { testLinode1236 } from '@/data/linodes';
 import { hideModal } from '~/actions/modal';
 import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
 
 
-describe('linodes/linode/settings/components/EditModal', () => {
+describe('linodes/linode/settings/components/EditDisk', () => {
   const sandbox = sinon.sandbox.create();
 
   afterEach(() => {
@@ -22,12 +22,13 @@ describe('linodes/linode/settings/components/EditModal', () => {
   it('should dismiss the modal when Cancel is clicked', () => {
     const dispatch = sandbox.spy();
     const modal = mount(
-      <EditModal
+      <EditDisk
         dispatch={dispatch}
         linode={testLinode1236}
         disk={testDisk}
         free={0}
       />);
+
     modal.find('CancelButton').simulate('click');
     expect(dispatch.callCount).to.equal(1);
     expect(dispatch.calledWith(hideModal())).to.equal(true);
@@ -36,7 +37,7 @@ describe('linodes/linode/settings/components/EditModal', () => {
   it('should commit changes to the API', async () => {
     const dispatch = sandbox.spy();
     const modal = mount(
-      <EditModal
+      <EditDisk
         dispatch={dispatch}
         linode={testLinode1236}
         disk={testDisk}

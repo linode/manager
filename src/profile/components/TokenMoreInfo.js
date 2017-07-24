@@ -17,7 +17,7 @@ export default class TokenMoreInfo extends Component {
     return dispatch(showModal(TokenMoreInfo.title, (
       <ConfirmModalBody
         noCancel
-        onOk={() => dispatch(hideModal())}
+        onSubmit={() => dispatch(hideModal())}
         buttonText="Done"
       >
         <TokenMoreInfo scopes={token.scopes} />
@@ -35,20 +35,22 @@ export default class TokenMoreInfo extends Component {
     return (
       <div className="OAuthScopes">
         <p>This application has access to your:</p>
-        <Table
-          className="Table--secondary"
-          columns={[
-            {
-              dataKey: 'scope',
-              formatFn: formatScope,
-            },
-          ].concat(OAUTH_SUBSCOPES.map((subscope) => ({
-            subscope,
-            cellComponent: AuthScopeCell,
-            headerClassName: 'AuthScopeColumn',
-          })))}
-          data={scopeData}
-        />
+        <section>
+          <Table
+            className="Table--secondary"
+            columns={[
+              {
+                dataKey: 'scope',
+                formatFn: formatScope,
+              },
+            ].concat(OAUTH_SUBSCOPES.map((subscope) => ({
+              subscope,
+              cellComponent: AuthScopeCell,
+              headerClassName: 'AuthScopeColumn',
+            })))}
+            data={scopeData}
+          />
+        </section>
       </div>
     );
   }

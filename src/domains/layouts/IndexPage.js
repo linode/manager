@@ -16,10 +16,9 @@ import {
   LinkCell,
 } from 'linode-components/tables/cells';
 
+import { setAnalytics, setSource, setTitle } from '~/actions';
 import { showModal, hideModal } from '~/actions/modal';
 import { default as toggleSelected } from '~/actions/select';
-import { setSource } from '~/actions/source';
-import { setTitle } from '~/actions/title';
 import { domains } from '~/api';
 import { transform } from '~/api/util';
 import CreateHelper from '~/components/CreateHelper';
@@ -43,8 +42,8 @@ export class IndexPage extends Component {
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
-
     dispatch(setTitle('Domains'));
+    dispatch(setAnalytics(['domains']));
   }
 
   deleteZones(zonesToDelete) {
@@ -55,7 +54,7 @@ export class IndexPage extends Component {
 
     dispatch(showModal('Delete Domain(s)', (
       <DeleteModalBody
-        onOk={async () => {
+        onSubmit={async () => {
           const ids = zonesArr.map(function (zone) { return zone.id; });
 
           await Promise.all(ids.map(id => dispatch(domains.delete(id))));

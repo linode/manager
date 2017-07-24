@@ -5,9 +5,7 @@ import { expect } from 'chai';
 
 import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
 import { genericNodeBalancer } from '@/data/nodebalancers';
-import {
-  NodeModal,
-} from '~/nodebalancers/nodebalancer/configs/components/NodeModal';
+import NodeModal from '~/nodebalancers/nodebalancer/configs/components/NodeModal';
 
 const node = genericNodeBalancer._configs.configs['1']._nodes.nodes[1];
 

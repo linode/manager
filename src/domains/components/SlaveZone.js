@@ -1,86 +1,62 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import { replace } from 'react-router-redux';
 
 import { Card, CardHeader } from 'linode-components/cards';
 import { Table } from 'linode-components/tables';
 import { ButtonCell } from 'linode-components/tables/cells';
 
-import { showModal, hideModal } from '~/actions/modal';
 import EditSOARecord from '../components/EditSOARecord';
 
 
-export class SlaveZone extends Component {
-  renderSOAEditRecord() {
-    const { dispatch, domain } = this.props;
-    const title = 'Edit SOA Record';
+export function SlaveZone(props) {
+  const { domain, dispatch } = props;
 
-    dispatch(showModal(
-      title,
-      <EditSOARecord
-        dispatch={dispatch}
-        domains={domain}
-        title={title}
-        close={(newDomain) => () => {
-          dispatch(hideModal());
-          dispatch(replace(`/domains/${newDomain || domain.domain}`));
-        }}
-      />
-    ));
-  }
+  const { axfr_ips, master_ips } = domain;
 
-  render() {
-    const { domain } = this.props;
+  const soaRecord = {
+    ...domain,
+    axfr_ips: axfr_ips.map(ip => <div key={ip}>{ip}</div>),
+    master_ips: master_ips.map(ip => <div key={ip}>{ip}</div>),
+  };
 
-    const { axfr_ips, master_ips } = domain;
-
-    const soaRecord = {
-      ...domain,
-      axfr_ips: axfr_ips.map(ip => <div key={ip}>{ip}</div>),
-      master_ips: master_ips.map(ip => <div key={ip}>{ip}</div>),
-    };
-
-    return (
-      <div>
-        <header className="main-header main-header--border">
-          <div className="container">
-            <Link to="/domains">Domains</Link>
-            <h1 title={domain.id}>
-              {domain.group ? `${domain.group} / ` : ''}
-              {domain.domain}
-            </h1>
-          </div>
-        </header>
+  return (
+    <div>
+      <header className="main-header main-header--border">
         <div className="container">
-          <Card
-            id="soa"
-            header={
-              <CardHeader title="SOA Record" />
-            }
-          >
-            <Table
-              className="Table--secondary"
-              columns={[
-                { dataKey: 'domain', label: 'Primary Domain' },
-                { dataKey: 'axfr_ips', label: 'Domain Transfers' },
-                { dataKey: 'master_ips', label: 'Masters' },
-                {
-                  cellComponent: ButtonCell,
-                  headerClassName: 'ButtonColumn',
-                  text: 'Edit',
-                  onClick: () => {
-                    this.renderSOAEditRecord();
-                  },
-                },
-              ]}
-              data={[soaRecord]}
-            />
-          </Card>
+          <Link to="/domains">Domains</Link>
+          <h1 title={domain.id}>
+            {domain.group ? `${domain.group} / ` : ''}
+            {domain.domain}
+          </h1>
         </div>
+      </header>
+      <div className="container">
+        <Card
+          id="soa"
+          header={
+            <CardHeader title="SOA Record" />
+          }
+        >
+          <Table
+            className="Table--secondary"
+            columns={[
+              { dataKey: 'domain', label: 'Primary Domain' },
+              { dataKey: 'axfr_ips', label: 'Domain Transfers' },
+              { dataKey: 'master_ips', label: 'Masters' },
+              {
+                cellComponent: ButtonCell,
+                headerClassName: 'ButtonColumn',
+                text: 'Edit',
+                onClick: () => EditSOARecord.trigger(dispatch, domain),
+              },
+            ]}
+            data={[soaRecord]}
+          />
+        </Card>
       </div>
-    );
-  }
+    </div>
+  );
 }
 
 SlaveZone.propTypes = {

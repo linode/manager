@@ -1,25 +1,20 @@
 import React, { PropTypes, Component } from 'react';
 import { Link } from 'react-router';
 
-import { CancelButton } from 'linode-components/buttons';
-import {
-  Form,
-  FormSummary,
-  Input,
-  ModalFormGroup,
-  Radio,
-  SubmitButton,
-} from 'linode-components/forms';
+import { Input, ModalFormGroup, Radio } from 'linode-components/forms';
+import { FormModalBody } from 'linode-components/modals';
 
-import { showModal, hideModal } from '~/actions/modal';
+import { hideModal, showModal } from '~/actions/modal';
 import { addIP } from '~/api/networking';
 import { dispatchOrStoreErrors } from '~/api/util';
 import { MONTHLY_IP_COST } from '~/constants';
 
 
 export default class AddIP extends Component {
+  static title = 'Add an IP Address'
+
   static trigger(dispatch, linode) {
-    return dispatch(showModal('Add an IP Address', (
+    return dispatch(showModal(AddIP.title, (
       <AddIP
         dispatch={dispatch}
         linode={linode}
@@ -51,46 +46,50 @@ export default class AddIP extends Component {
 
   render() {
     const { close } = this.props;
-    const { errors, loading, type } = this.state;
+    const { errors, type } = this.state;
 
     return (
-      <Form onSubmit={this.onSubmit}>
-        <p>
-          You will incur a ${MONTHLY_IP_COST}/month charge for each additional public IPv4.
-          To request more IPv6 addresses, you'll have to <Link to="/support/create">create a
-          ticket</Link>.
-        </p>
-        <ModalFormGroup label="Version">
-          <Input disabled value="IPv4" />
-        </ModalFormGroup>
-        <ModalFormGroup label="Type" id="type" apiKey="type">
-          <div>
-            <Radio
-              id="public"
-              name="type"
-              value="public"
-              checked={type === 'public'}
-              onChange={this.onChange}
-              label="Public"
-            />
-          </div>
-          <div>
-            <Radio
-              id="private"
-              name="type"
-              value="private"
-              checked={type === 'private'}
-              onChange={this.onChange}
-              label="Private"
-            />
-          </div>
-        </ModalFormGroup>
-        <div className="Modal-footer">
-          <CancelButton onClick={close} />
-          <SubmitButton disabled={loading} disabledChildren="Adding">Add</SubmitButton>
-          <FormSummary errors={errors} />
+      <FormModalBody
+        onSubmit={this.onSubmit}
+        onCancel={close}
+        buttonText="Add IP Address"
+        buttonDisabledText="Adding IP Address"
+        analytics={{ title: AddIP.title, action: 'add' }}
+        errors={errors}
+      >
+        <div>
+          <p>
+            You will incur a ${MONTHLY_IP_COST}/month charge for each additional public IPv4.
+            To request more IPv6 addresses, you'll have to <Link to="/support/create">create a
+            ticket</Link>.
+          </p>
+          <ModalFormGroup label="Version">
+            <Input disabled value="IPv4" />
+          </ModalFormGroup>
+          <ModalFormGroup label="Type" id="type" apiKey="type">
+            <div>
+              <Radio
+                id="public"
+                name="type"
+                value="public"
+                checked={type === 'public'}
+                onChange={this.onChange}
+                label="Public"
+              />
+            </div>
+            <div>
+              <Radio
+                id="private"
+                name="type"
+                value="private"
+                checked={type === 'private'}
+                onChange={this.onChange}
+                label="Private"
+              />
+            </div>
+          </ModalFormGroup>
         </div>
-      </Form>
+      </FormModalBody>
     );
   }
 }

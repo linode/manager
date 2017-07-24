@@ -20,6 +20,7 @@ export const LinodeStates = {
     'provisioning',
     'deleting',
     'rebuilding',
+    'restoring',
   ],
 };
 
@@ -53,6 +54,7 @@ export const LinodeStatesReadable = {
   provisioning: 'Provisioning',
   rebooting: 'Rebooting',
   rebuilding: 'Powering Off',
+  restoring: 'Restoring',
 };
 
 export const NodebalancerStatusReadable = {

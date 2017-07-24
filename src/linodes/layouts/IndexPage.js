@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
@@ -9,24 +10,16 @@ import { MassEditControl } from 'linode-components/lists/controls';
 import { ListHeader } from 'linode-components/lists/headers';
 import { ConfirmModalBody, DeleteModalBody } from 'linode-components/modals';
 import { Table } from 'linode-components/tables';
-import {
-  CheckboxCell,
-  LinkCell,
-} from 'linode-components/tables/cells';
+import { CheckboxCell, LinkCell } from 'linode-components/tables/cells';
 
-import { default as toggleSelected } from '~/actions/select';
+import { setAnalytics, setSource, setTitle } from '~/actions';
 import { showModal, hideModal } from '~/actions/modal';
-import { setSource } from '~/actions/source';
-import { setTitle } from '~/actions/title';
+import { default as toggleSelected } from '~/actions/select';
 import { linodes as api } from '~/api';
 import { powerOnLinode, powerOffLinode, rebootLinode } from '~/api/linodes';
-import { transform } from '~/api/util';
+import { fullyLoadedObject, transform } from '~/api/util';
 import CreateHelper from '~/components/CreateHelper';
-import {
-  IPAddressCell,
-  RegionCell,
-  BackupsCell,
-} from '~/components/tables/cells';
+import { IPAddressCell, RegionCell, BackupsCell } from '~/components/tables/cells';
 import StatusDropdownCell from '~/linodes/components/StatusDropdownCell';
 
 
@@ -47,6 +40,7 @@ export class IndexPage extends Component {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
     dispatch(setTitle('Linodes'));
+    dispatch(setAnalytics(['linodes']));
   }
 
   genericAction(actionToDispatch, linodes, confirmType) {
@@ -75,10 +69,12 @@ export class IndexPage extends Component {
       );
     }
 
-    dispatch(showModal(`Confirm ${confirmType}`, (
+    const title = `Confirm ${confirmType}`;
+    dispatch(showModal(title, (
       <ConfirmModalBody
         onCancel={() => dispatch(hideModal())}
-        onOk={callback}
+        onSubmit={callback}
+        analytics={{ title }}
       >{modalBody}</ConfirmModalBody>
     )));
   }
@@ -97,7 +93,7 @@ export class IndexPage extends Component {
 
     dispatch(showModal('Delete Linode(s)',
       <DeleteModalBody
-        onOk={async () => {
+        onSubmit={async () => {
           const ids = linodesToBeRemoved.map(function (linode) { return linode.id; });
 
           await Promise.all(ids.map(id => dispatch(api.delete(id))));
@@ -198,7 +194,7 @@ export class IndexPage extends Component {
   }
 
   render() {
-    const { linodes } = this.props.linodes;
+    const { linodes } = this.props;
 
     return (
       <div className="PrimaryPage container">
@@ -211,7 +207,7 @@ export class IndexPage extends Component {
           </div>
         </header>
         <div className="PrimaryPage-body">
-          {Object.keys(this.props.linodes.linodes).length ? this.renderLinodes(linodes) :
+          {Object.keys(linodes).length ? this.renderLinodes(linodes) :
             <CreateHelper label="Linodes" href="/linodes/create" linkText="Add a Linode" />}
         </div>
       </div>
@@ -226,8 +222,9 @@ IndexPage.propTypes = {
 };
 
 function select(state) {
+  const linodes = _.pickBy(state.api.linodes.linodes, fullyLoadedObject);
   return {
-    linodes: state.api.linodes,
+    linodes,
     selectedMap: state.select.selected[OBJECT_TYPE] || {},
   };
 }

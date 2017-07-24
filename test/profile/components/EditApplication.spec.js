@@ -24,7 +24,7 @@ describe('profile/components/CreateOrEditApplication', () => {
         dispatch={dispatch}
         close={close}
         label="My awesome client"
-        redirect="http://example.com"
+        redirect_uri="http://example.com"
         id="1"
       />
     );

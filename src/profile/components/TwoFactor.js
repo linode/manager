@@ -1,13 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 
 import { Card, CardHeader } from 'linode-components/cards';
-import {
-  Form,
-  FormSummary,
-  SubmitButton,
-} from 'linode-components/forms';
+import { Form, FormSummary, SubmitButton } from 'linode-components/forms';
 
-import { showModal } from '~/actions/modal';
 import { toggleTFA } from '~/api/profile';
 import { dispatchOrStoreErrors } from '~/api/util';
 
@@ -26,34 +21,29 @@ export default class TwoFactor extends Component {
   }
 
   onSubmit = () => {
-    const { dispatch, tfaEnabled } = this.props;
+    const { dispatch, tfaEnabled, username } = this.props;
 
     const requests = [() => toggleTFA(!tfaEnabled)];
     if (!tfaEnabled) {
-      requests.push(({ secret }) => this.twoFactorModal(secret));
+      requests.push(({ secret }) => TwoFactorModal.trigger(dispatch, secret, username));
     }
 
     return dispatch(dispatchOrStoreErrors.call(this, requests));
   }
 
-  twoFactorModal(secret) {
-    return (dispatch) => dispatch(showModal('Enable Two-Factor Authentication', (
-      <TwoFactorModal
-        dispatch={dispatch}
-        secret={secret}
-        username={this.props.username}
-      />
-    )));
-  }
-
   render() {
     const { tfaEnabled } = this.props;
     const { errors, loading } = this.state;
-    const header = <CardHeader title="Change Two-Factor Authentication" />;
+
+    const title = 'Change Two-Factor Authentication';
+    const header = <CardHeader title={title} />;
 
     return (
       <Card header={header}>
-        <Form onSubmit={this.onSubmit}>
+        <Form
+          onSubmit={this.onSubmit}
+          analytics={{ title }}
+        >
           <p>
             Two-factor authentication (TFA) is
             currently <strong>{tfaEnabled ? 'enabled' : 'disabled'}</strong>.

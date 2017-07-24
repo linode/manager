@@ -40,7 +40,10 @@ export default class ScheduleForm extends Component {
     const { errors, loading, window, day } = this.state;
 
     return (
-      <Form onSubmit={this.onSubmit}>
+      <Form
+        onSubmit={this.onSubmit}
+        analytics={{ title: 'Backups Schedule' }}
+      >
         <FormGroup name="window" errors={errors} className="row">
           <label htmlFor="window" className="col-sm-2 col-form-label">Time of Day (EST)</label>
           <div className="col-sm-10">

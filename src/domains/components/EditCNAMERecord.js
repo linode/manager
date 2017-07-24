@@ -1,19 +1,13 @@
 import React, { PropTypes, Component } from 'react';
 
-import {
-  Form,
-  FormSummary,
-  Input,
-  SubmitButton,
-  ModalFormGroup,
-} from 'linode-components/forms';
-import { CancelButton } from 'linode-components/buttons';
+import { Input, ModalFormGroup } from 'linode-components/forms';
+import { FormModalBody } from 'linode-components/modals';
 
 import { domains } from '~/api';
 import { dispatchOrStoreErrors } from '~/api/util';
-import { EmitEvent } from 'linode-components/utils';
 
 import SelectDNSSeconds from './SelectDNSSeconds';
+
 
 export default class EditCNAMERecord extends Component {
   constructor(props) {
@@ -28,7 +22,6 @@ export default class EditCNAMERecord extends Component {
 
     this.state = {
       errors: {},
-      loading: false,
       zone,
       defaultTTL,
       ttl,
@@ -38,7 +31,7 @@ export default class EditCNAMERecord extends Component {
   }
 
   onSubmit = () => {
-    const { dispatch, id, title, close } = this.props;
+    const { dispatch, id, close } = this.props;
     const { ttl, hostname, alias } = this.state;
     const ids = [this.props.zone.id, id].filter(Boolean);
     const data = {
@@ -50,7 +43,6 @@ export default class EditCNAMERecord extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => domains.records[id ? 'put' : 'post'](data, ...ids),
-      () => { EmitEvent('modal:submit', 'Modal', id ? 'edit' : 'add', title); },
       close,
     ]));
   }
@@ -58,54 +50,50 @@ export default class EditCNAMERecord extends Component {
   onChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   render() {
-    const { close, title } = this.props;
-    const { errors, loading, defaultTTL, ttl, hostname, alias } = this.state;
+    const { close, title, id } = this.props;
+    const { errors, defaultTTL, ttl, hostname, alias } = this.state;
+
+    const analytics = { title, action: id ? 'edit' : 'add' };
 
     return (
-      <Form onSubmit={this.onSubmit}>
-        <ModalFormGroup errors={errors} id="hostname" label="Hostname" apiKey="name">
-          <Input
-            id="hostname"
-            name="hostname"
-            value={hostname}
-            placeholder="www.thisdomain.com"
-            onChange={this.onChange}
-          />
-        </ModalFormGroup>
-        <ModalFormGroup label="Aliases to" id="alias" apiKey="target" errors={errors}>
-          <Input
-            id="alias"
-            name="alias"
-            value={alias}
-            placeholder="www.otherdomain.com"
-            onChange={this.onChange}
-          />
-        </ModalFormGroup>
-        <ModalFormGroup label="TTL" id="ttl" apiKey="ttl_sec" errors={errors}>
-          <SelectDNSSeconds
-            id="ttl"
-            name="ttl"
-            value={ttl}
-            defaultSeconds={defaultTTL}
-            onChange={this.onChange}
-          />
-        </ModalFormGroup>
-        <div className="Modal-footer">
-          <CancelButton
-            onClick={() => {
-              EmitEvent('modal:cancel', 'Modal', 'cancel', title);
-              close();
-            }}
-          />
-          <SubmitButton
-            disabled={loading}
-            disabledChildren={this.props.id ? undefined : 'Adding CNAME Record'}
-          >
-            {this.props.id ? undefined : 'Add CNAME Record'}
-          </SubmitButton>
-          <FormSummary errors={errors} />
+      <FormModalBody
+        onSubmit={this.onSubmit}
+        onCancel={close}
+        buttonText={id ? undefined : 'Add CNAME Record'}
+        buttonDisabledText={id ? undefined : 'Adding CNAME Record'}
+        analytics={analytics}
+        errors={errors}
+      >
+        <div>
+          <ModalFormGroup errors={errors} id="hostname" label="Hostname" apiKey="name">
+            <Input
+              id="hostname"
+              name="hostname"
+              value={hostname}
+              placeholder="www.thisdomain.com"
+              onChange={this.onChange}
+            />
+          </ModalFormGroup>
+          <ModalFormGroup label="Aliases to" id="alias" apiKey="target" errors={errors}>
+            <Input
+              id="alias"
+              name="alias"
+              value={alias}
+              placeholder="www.otherdomain.com"
+              onChange={this.onChange}
+            />
+          </ModalFormGroup>
+          <ModalFormGroup label="TTL" id="ttl" apiKey="ttl_sec" errors={errors}>
+            <SelectDNSSeconds
+              id="ttl"
+              name="ttl"
+              value={ttl}
+              defaultSeconds={defaultTTL}
+              onChange={this.onChange}
+            />
+          </ModalFormGroup>
         </div>
-      </Form>
+      </FormModalBody>
     );
   }
 }

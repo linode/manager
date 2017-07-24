@@ -81,6 +81,7 @@ describe('users/layouts/IndexPage', () => {
     dispatch.reset();
 
     page.find('tr button').at(0).simulate('click');
+    expect(dispatch.callCount).to.equal(1);
     const modal = mount(dispatch.firstCall.args[0].body);
 
     dispatch.reset();

@@ -77,7 +77,7 @@ export class DashboardPage extends Component {
 
     dispatch(showModal(title,
       <DeleteModalBody
-        onOk={() => {
+        onSubmit={() => {
           const ids = [nodebalancer.id, config.id].filter(Boolean);
 
           return dispatch(dispatchOrStoreErrors.call(this, [
@@ -85,7 +85,7 @@ export class DashboardPage extends Component {
             hideModal,
           ]));
         }}
-        typeOfItem={title}
+        typeOfItem="NodeBalancer Config"
         onCancel={() => dispatch(hideModal())}
         items={[`port ${config.port}`]}
       />

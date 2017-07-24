@@ -127,7 +127,10 @@ export class IPSharingPage extends Component {
               host becomes unavailable.
             </small>
           </p>
-          <Form onSubmit={this.onSubmit}>
+          <Form
+            onSubmit={this.onSubmit}
+            analytics={{ title: 'IP sharing settings' }}
+          >
             <FormGroup>
               <Table
                 className="Table--secondary"

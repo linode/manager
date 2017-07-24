@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
 import { Tabs } from 'linode-components/tabs';
-import { setSource } from '~/actions/source';
-import { setTitle } from '~/actions/title';
+
+import { setAnalytics, setSource, setTitle } from '~/actions';
 
 
 export class IndexPage extends Component {
@@ -12,8 +12,8 @@ export class IndexPage extends Component {
   async componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setSource(__filename));
-
     dispatch(setTitle('My Profile'));
+    dispatch(setAnalytics(['profile']));
   }
 
   render() {

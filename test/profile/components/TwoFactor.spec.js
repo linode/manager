@@ -60,6 +60,6 @@ describe('profile/components/TwoFactor', () => {
           method: 'POST',
         });
       },
-    ], 2, [{ secret: '' }]);
+    ], 1, [{ secret: '' }]);
   });
 });
