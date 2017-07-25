@@ -1,8 +1,7 @@
 # vim: set et ts=2 sw=2 tw=80 :
 name: Domains
 description: >
-  Domain endpoints provide a means of managing the <a href="#object-domain">
-  Domain objects</a> on your account.
+  Domain endpoints provide a means of managing the Domain objects on your account.
 
   Note: the validation rules for domain records are too complicated to document
   here. We'll just direct you to [RFC 1035](https://www.ietf.org/rfc/rfc1035.txt).
@@ -17,7 +16,7 @@ endpoints:
         paginationKey: domains
         oauth: domains:view
         description: >
-          Returns a list of <a href="#object-domain">Domains</a>.
+          Returns a list of Domains.
         examples:
           curl: |
             curl -H "Authorization: token $TOKEN" \
@@ -36,7 +35,7 @@ endpoints:
             type: String
           type:
             description: >
-              Domain <a href="#object-domain_type-enum">type</a> as master or slave.
+              Domain type as master or slave.
             type: Enum
           soa_email:
             optional: true
@@ -121,8 +120,7 @@ endpoints:
         response: domain
         oauth: domains:view
         description: >
-          Returns information for the <a href="#object-domain">Domain</a>
-          identified by :id.
+          Returns information for the Domain identified by :id.
         examples:
           curl: |
             curl -H "Authorization: token $TOKEN" \
@@ -178,7 +176,7 @@ endpoints:
         paginationKey: records
         oauth: domains:view
         description: >
-          Returns a list of <a href="#object-domainrecord">Domain Records</a>.
+          Returns a list of Domain Records.
         examples:
           curl: |
             curl -H "Authorization: token $TOKEN" \
@@ -193,7 +191,7 @@ endpoints:
         params:
           type:
             description: >
-              <a href="#object-zone-record-types-enum">Type</a> of record.
+              Type of record.
             type: Enum
           name:
             optional: true
@@ -263,8 +261,7 @@ endpoints:
         response: domainrecord
         oauth: domains:view
         description: >
-          Returns information for the <a href="#object-domainrecord">Domain
-          Record</a> identified by ":id".
+          Returns information for the Domain Record identified by ":id".
         examples:
           curl: |
             curl -H "Authorization: token $TOKEN" \

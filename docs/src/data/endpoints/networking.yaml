@@ -2,8 +2,7 @@
 name: Networking
 sort: 1
 description: >
-  Networking endpoints provide a means of viewing <a href="#object-networking">
-  networking objects</a>.
+  Networking endpoints provide a means of viewing networking objects.
 endpoints:
   /networking/ipv4:
     _group: IPv4
@@ -16,7 +15,7 @@ endpoints:
         paginationKey: ipv4s
         oauth: ips:view
         description: >
-          Returns a list of <a href="#object-ipaddress">IPv4 Addresses</a>
+          Returns a list of IPv4 Addresses.
         examples:
           curl: |
             curl -H "Authorization: token $TOKEN" \
@@ -27,7 +26,7 @@ endpoints:
         money: true
         oauth: ips:create
         description: >
-          Create a new Public <a href="#object-ipaddress">IPv4 Address</a>
+          Create a new Public IPv4 Address.
         params:
           linode:
             description: >
@@ -46,13 +45,13 @@ endpoints:
     type: resource
     authenticated: true
     description: >
-      Manage a single <a href="#object-ipaddress">IPv4 Address</a>
+      Manage a single IPv4 Address.
     methods:
       GET:
         response: ipaddress
         oauth: ips:get
         description: >
-            Returns a single <a href="#object-ipaddress">IPv4 Address</a>
+            Returns a single IPv4 Address.
         examples:
             curl: |
               curl -H "Authorization: token $TOKEN" \
@@ -62,7 +61,7 @@ endpoints:
       PUT:
         oauth: ips:modify
         description: >
-            Update RDNS on one <a href="#object-ipaddress">IPv4 Address</a>.  Set RDNS to null to reset.
+            Update RDNS on one IPv4 Address.  Set RDNS to null to reset.
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -85,14 +84,14 @@ endpoints:
     _group: IPv6
     authenticated: true
     description: >
-      Manage <a href="#object-ipv6pool">IPv6 Global Pools</a>.
+      Manage IPv6 Global Pools.
     methods:
       GET:
         response: ipv6pool
         paginationKey: ipv6s
         oauth: ips:view
         description: >
-          Returns a list of <a href="#object-ipv6pool">IPv6 Pools</a>.
+          Returns a list of IPv6 Pools.
         examples:
           curl: |
             curl -H "Authorization: token $TOKEN" \
@@ -104,14 +103,14 @@ endpoints:
     type: resource
     authenticated: true
     description: >
-      Manage a single <a href="#object-ipv6-address">IPv6 Address</a>.  Address in URL
+      Manage a single IPv6 Address.  Address in URL
       can be as compressed as you want.
     methods:
       GET:
         response: ipv6pool
         oauth: ips:view
         description: >
-          Return a single <a href="#object-ipv6-address">IPv6 Address</a>.
+          Return a single IPv6 Address.
         examples:
           curl: |
             curl -H "Authorization: token $TOKEN" \
@@ -121,7 +120,7 @@ endpoints:
       PUT:
         oauth: ips:modify
         description: >
-          Set RDNS on a single <a href="#object-ipv6-address">IPv6 Address</a>.
+          Set RDNS on a single IPv6 Address.
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -144,7 +143,7 @@ endpoints:
         params:
           region:
             description: >
-              The <a href="#object-region">region</a> where the IPv4 address
+              The region where the IPv4 address
               and Linode are located.
             type: Region
           assignments:

@@ -40,25 +40,6 @@ let allEndpoints = files.filter(function(fileName) {
   return endpoint;
 });
 
-function stripATags(description) {
-  if (description) {
-    if (description.match(/href/)) {
-      // First the obligatory warning messages
-      // https://blog.codinghorror.com/parsing-html-the-cthulhu-way/
-      // http://stackoverflow.com/questions/1732348/regex-match-open-tags-except-xhtml-self-contained-tags/1732454#1732454
-      // find '<a' the beginning of the tag
-      // .* any character
-      // ? non greedy meaning stop after you've found the first match
-      // find '">' the end of the tag
-      // (space star) [ *] find zero or more spaces
-      // g global over the entire string
-      description = description.replace(/<a.*?"> */g, '');
-      description = description.replace(/<\/a>/g, '');
-    }
-  }
-  return description;
-}
-
 function convertUlToArray(description) {
   let matches;
   const listItems = [];
@@ -95,7 +76,7 @@ function formatMethodParams(methodObj) {
     formattedParams = Object.keys(params).map(function(paramName) {
       const param = params[paramName];
 
-      param.description = convertUlToArray(stripATags(param.description));
+      param.description = convertUlToArray(param.description);
 
       let type = param.type;
       if (type) {
@@ -311,7 +292,6 @@ function formatMethodResponse(methodObj) {
 
 function formatMethod(endpoint, method) {
   const methodObj = endpoint.methods[method];
-  methodObj.description = stripATags(methodObj.description);
 
   const params = formatMethodParams(methodObj);
   const response = formatMethodResponse(methodObj);
@@ -391,7 +371,7 @@ allEndpoints.forEach(function(endpointContainer) {
     }
 
     return _.merge({}, endpoint, {
-      description: stripATags(endpoint.description),
+      description: endpoint.description,
       path: path,
       routePath: `${ROUTE_BASE_PATH}/endpoints${path}`,
       methods: methods

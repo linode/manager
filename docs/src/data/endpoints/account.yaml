@@ -2,8 +2,8 @@
 name: Account
 sort: 1
 description: >
-  Account endpoints provide a means of viewing <a href="#object-profile">
-  user profile objects</a>, as well as managing OAuth Clients and Tokens.
+  Account endpoints provide a means of viewing user profile objects,
+  as well as managing OAuth Clients and Tokens.
 endpoints:
   /account/profile:
     _group: Profile
@@ -289,7 +289,7 @@ endpoints:
         paginationKey: clients
         oauth: clients:view
         description: >
-          Returns a list of <a href="#object-client">clients</a>.
+          Returns a list of clients.
         examples:
           curl: |
             curl -H "Authorization: token $TOKEN" \
@@ -331,7 +331,7 @@ endpoints:
         response: client
         oauth: clients:view
         description: >
-          Returns information about this <a href="#object-client">OAuth client</a>.
+          Returns information about this OAuth client.
         examples:
           curl: |
             curl -H "Authorization: token $TOKEN" \
@@ -341,7 +341,7 @@ endpoints:
       PUT:
         oauth: clients:modify
         description: >
-          Edits this <a href="#object-client">OAuth client</a>.
+          Edits this OAuth client.
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -429,7 +429,7 @@ endpoints:
   /account/users:
     _group: Users
     description: >
-      Returns a list of <a href="#object-user">User objects</a> associated with your account.
+      Returns a list of User objects associated with your account.
     methods:
       GET:
         response: user
@@ -579,7 +579,7 @@ endpoints:
         paginationKey: clients
         oauth: clients:view
         description: >
-          Returns a list of <a href="#object-client">clients</a>.
+          Returns a list of clients.
         examples:
           curl: |
             curl -H "Authorization; token $TOKEN" \
@@ -617,7 +617,7 @@ endpoints:
         response: client
         oauth: clients:view
         description: >
-          Returns information about this <a href="#object-client">OAuth client</a>.
+          Returns information about this OAuth client.
         examples:
           curl: |
             curl -H "Authorization: token $TOKEN" \
@@ -625,7 +625,7 @@ endpoints:
       PUT:
         oauth: clients:modify
         description: >
-          Edits this <a href="#object-client">OAuth client</a>.
+          Edits this OAuth client.
         examples:
           curl: |
             curl -H "Content-Type: application/json" \
@@ -655,7 +655,7 @@ endpoints:
         response: event
         paginationKey: events
         description: >
-          Returns a list of <a href="#object-event">events</a>.
+          Returns a list of events.
         examples:
           curl: |
             curl https://$api_root/$version/account/events
@@ -671,8 +671,7 @@ endpoints:
       GET:
         response: events
         description: >
-          Returns information about this <a href="#object-event">
-          event</a>.
+          Returns information about this event.
         examples:
           curl: |
             curl https://$api_root/$version/account/event/123
@@ -686,7 +685,7 @@ endpoints:
     methods:
       POST:
         description: >
-          Marks all <a href="#object-event">events</a> up to and including :id as seen.
+          Marks all events up to and including :id as seen.
         examples:
           curl: |
             curl https://$api_root/$version/account/event/123/seen
@@ -700,7 +699,7 @@ endpoints:
     methods:
       POST:
         description: >
-          Updates specific <a href="#object-event">event</a> to designate that it has been read.
+          Updates specific event to designate that it has been read.
         examples:
           curl: |
             curl https://$api_root/$version/account/event/123/read

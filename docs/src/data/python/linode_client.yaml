@@ -51,7 +51,7 @@ methods:
             '**kwargs':
                 desc: >
                     Any number of additional keyword arguments to pass to the POST /domains endpoint.  For more information, see
-                    the <a href="/reference/#ep-domains-POST">endpoint docs</a> for complete breakdown.
+                    the endpoint docs for complete breakdown.
                 _keyword: false
         example: |
             z = client.create_domain('example.org')
@@ -150,7 +150,7 @@ groups:
                 '**kwargs':
                     desc: >
                         Any number of additional keyword arguments to pass to the POST /linodes endpoint.  These depend on the
-                        source parameter's value.  See the <a href="/reference/#ep-linodes-POST">endpoint docs</a> for more information.
+                        source parameter's value.  See the endpoint docs for more information.
                     _keyword: false
             example: |
                 serv = client.linode.get_services(linode.Service.label == 'Linode 1024')[0]
@@ -186,7 +186,7 @@ groups:
                 '**kwargs':
                     desc: >
                         Any number of additional keyword arguments to pass to the POST /linodes endpoint.  These depend on the
-                        source parameter's value.  See the <a href="/reference/#ep-linodes-POST">endpoint docs</a> more information.
+                        source parameter's value.  See the endpoint docs more information.
                     _keyword: false
             example: |
                 serv = client.linode.get_services(linode.Service.label == 'Linode 1024')[0]
@@ -219,7 +219,7 @@ groups:
                     '**kwargs':
                         desc: >
                             Any number of additional keyword arguments to pass to the POST /stackscripts endpoint.  For more information,
-                            see the <a href="/reference/#ep-stackscripts-POST">endpoint docs</a> for complete breakdown.
+                            see the endpoint docs for complete breakdown.
                         _keyword: false
                 example: |
                     distros = client.linode.get_distributions(linode.or_(linode.Distribution.vendor == 'Ubuntu', linode.Distribution.vendor == 'Debian'))

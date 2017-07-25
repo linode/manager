@@ -14,7 +14,7 @@ endpoints:
         paginationKey: tickets
         oauth: tickets:view
         description: >
-          Returns a list of <a href="#object-supportticket">Support Tickets</a>.
+          Returns a list of Support Tickets.
         examples:
           curl: |
             curl -H "Authorization: token $TOKEN" \
@@ -69,8 +69,7 @@ endpoints:
       GET:
         oauth: tickets:view
         description: >
-          Returns information about this
-          <a href="#object-supportticket">support ticket</a>.
+          Returns information about this support ticket.
         examples:
           curl: |
             curl -H "Authorization: token $TOKEN" \
@@ -85,8 +84,7 @@ endpoints:
       GET:
         oauth: tickets:view
         description: >
-          Returns a list of
-          <a href="#object-supportticketreply">support ticket replies</a>.
+          Returns a list of support ticket replies.
         examples:
           curl: |
             curl -H "Authorization: token $TOKEN" \
