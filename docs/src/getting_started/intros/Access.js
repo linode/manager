@@ -89,6 +89,10 @@ export default function Authentication() {
               'then this parameter must start with "http://example.org".',
             },
             {
+              parameter: 'response_type',
+              description: 'Required. Currently the word \'code\' is the only supported value.',
+            },
+            {
               parameter: 'state',
               description: 'An arbitrary token that will be returned to you at the end of ' +
               'the process.',
