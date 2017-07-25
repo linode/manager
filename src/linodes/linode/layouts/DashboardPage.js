@@ -16,6 +16,7 @@ import Region from '~/linodes/components/Region';
 import DistroStyle from '~/linodes/components/DistroStyle';
 import PlanStyle from '~/linodes/components/PlanStyle';
 import WeblishLaunch from '~/linodes/components/WeblishLaunch';
+import { convertUnits } from '~/utilities';
 
 import { selectLinode } from '../utilities';
 
@@ -98,44 +99,44 @@ export class DashboardPage extends Component {
             format: p => `${p.toFixed(1)}%`,
           },
           data: formatData(['0033CC'], [stats.cpu]),
-          unit: '%',
+          tooltipFormat: v => `${v}%`,
         },
         io: {
           title: 'IO',
           yAxis: {
             label: `${IO_UNITS[units]} per second`,
-            format: r => `${r.toFixed(1) / Math.pow(1000, units)}${IO_UNITS[units]}/s`,
+            format: v => convertUnits(v, units, IO_UNITS, 1),
           },
           data: formatData(['FFD04B', 'FA373E'],
                            [stats.io.io, stats.io.swap],
                            ['Disk', 'Swap']),
-          unit: `${IO_UNITS[units]}/s`,
+          tooltipFormat: v => convertUnits(v, units, IO_UNITS, 1),
         },
         netv4: {
           title: 'IPv4 Network',
           yAxis: {
             label: `${NETWORK_UNITS[units]} per second`,
-            format: r => `${r.toFixed() / Math.pow(1000, units)}${NETWORK_UNITS[units]}/s`,
+            format: v => convertUnits(v, units, NETWORK_UNITS),
           },
           data: formatData(['0033CC', 'CC0099', '32CD32', 'FFFF99'],
                            [stats.netv4.in, stats.netv4.private_in,
                             stats.netv4.out, stats.netv4.private_out],
                            ['Public IPv4 Inbound', 'Private IPv4 Inbound',
                             'Public IPv4 Outbound', 'Private IPv4 Outbound']),
-          unit: `${NETWORK_UNITS[units]}/s`,
+          tooltipFormat: v => convertUnits(v, units, NETWORK_UNITS),
         },
         netv6: {
           title: 'IPv6 Network',
           yAxis: {
             label: `${NETWORK_UNITS[units]} per second`,
-            format: r => `${r.toFixed() / Math.pow(1000, units)}${NETWORK_UNITS[units]}/s`,
+            format: v => convertUnits(v, units, NETWORK_UNITS),
           },
           data: formatData(['0033CC', 'CC0099', '32CD32', 'FFFF99'],
                            [stats.netv6.in, stats.netv6.private_in,
                             stats.netv6.out, stats.netv6.private_out],
                            ['Public IPv6 Inbound', 'Private IPv6 Inbound',
                             'Public IPv6 Outbound', 'Private IPv6 Outbound']),
-          unit: `${NETWORK_UNITS[units]}/s`,
+          tooltipFormat: v => convertUnits(v, units, NETWORK_UNITS),
         },
       };
     }
