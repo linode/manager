@@ -22,6 +22,7 @@ import LineGraph from '~/components/graphs/LineGraph';
 import {
   NODEBALANCER_CONFIG_ALGORITHMS, NODEBALANCER_CONFIG_STICKINESS,
 } from '~/constants';
+import { convertUnits } from '~/utilities';
 
 
 const CONNECTION_UNITS = [' connections', 'K connections', 'M connections'];
@@ -120,21 +121,21 @@ export class DashboardPage extends Component {
           title: 'Connections',
           yAxis: {
             label: `${CONNECTION_UNITS[units]} per second`,
-            format: r => `${r.toFixed(1) / Math.pow(1000, units)}${CONNECTION_UNITS[units]}/s`,
+            format: v => convertUnits(v, units, CONNECTION_UNITS, 1),
           },
           data: formatData(['990066'], [stats.connections]),
-          unit: `${CONNECTION_UNITS[units]}/s`,
+          tooltipFormat: v => convertUnits(v, units, CONNECTION_UNITS, 1),
         },
         traffic: {
           title: 'Traffic',
           yAxis: {
             label: `${NETWORK_UNITS[units]} per second`,
-            format: r => `${r.toFixed(1) / Math.pow(1000, units)}${NETWORK_UNITS[units]}/s`,
+            format: v => convertUnits(v, units, NETWORK_UNITS, 1),
           },
           data: formatData(['0033CC', '32CD32'],
                            [stats.traffic.in, stats.traffic.out],
                            ['In', 'Out']),
-          unit: `${NETWORK_UNITS[units]}/s`,
+          tooltipFormat: v => convertUnits(v, units, NETWORK_UNITS, 1),
         },
       };
     }
