@@ -17,7 +17,7 @@ export function loginAuthorizePath(returnTo) {
   /* eslint-disable prefer-template */
   return `${LOGIN_ROOT}/oauth/authorize?` +
          `client_id=${clientId}` +
-         '&scopes=*' +
+         '&scope=*' +
          '&response_type=code' + // TODO: response_type should be 'token' for implicit grant flow
          `&redirect_uri=${encodeURIComponent(APP_ROOT)}/oauth/callback?return=${returnTo}`;
   /* eslint-enable prefer-template */

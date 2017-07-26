@@ -35,7 +35,7 @@ export class OAuthCallbackPage extends Component {
         body: data,
         mode: 'cors',
       });
-      const { access_token, scopes, expires_in: expiresIn } = await resp.json();
+      const { access_token, scope: scopes, expires_in: expiresIn } = await resp.json();
 
       const expires = new Date();
       expires.setSeconds(expires.getSeconds() + expiresIn);
