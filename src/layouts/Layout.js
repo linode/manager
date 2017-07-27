@@ -53,7 +53,7 @@ export class Layout extends Component {
 
     return (
       <div
-        className="layout full-height"
+        className="Layout"
         onClick={(e) => {
           const { notifications, session } = this.props;
           // Gross
@@ -66,48 +66,46 @@ export class Layout extends Component {
           }
         }}
       >
-        <PreloadIndicator />
-        <Notifications />
-        <SessionMenu open={session.open} />
-        <ModalShell
-          open={this.props.modal.open}
-          title={this.props.modal.title}
-          close={() => dispatch(hideModal())}
-        >
-          {this.props.modal.body}
-        </ModalShell>
-        <Header
-          dispatch={dispatch}
-          link={link}
-          title={title}
-          email={email}
-          username={username}
-          notifications={notifications}
-          session={session}
-          events={events}
-        />
-        <div className="Main full-height">
-          <div className="Main-inner">
+        <div className="Layout-inner">
+          <PreloadIndicator />
+          <Notifications />
+          <SessionMenu open={session.open} />
+          <ModalShell
+            open={this.props.modal.open}
+            title={this.props.modal.title}
+            close={() => dispatch(hideModal())}
+          >
+            {this.props.modal.body}
+          </ModalShell>
+          <Header
+            dispatch={dispatch}
+            link={link}
+            title={title}
+            email={email}
+            username={username}
+            notifications={notifications}
+            session={session}
+            events={events}
+          />
+          <div className="Main">
             {errors.status ?
               <Error status={errors.status} /> :
               this.props.children}
           </div>
-          <footer className="footer text-sm-center">
-            <div>
-              <span>Version {VERSION}</span>
-            </div>
-            {!source || !source.source ? null :
-              <a
-                target="__blank"
-                rel="noopener"
-                href={`${githubRoot}${source.source}`}
-              >
-                Page Source
-              </a>
-            }
-            <Link to="/styleguide">Styleguide</Link>
-          </footer>
         </div>
+        <footer className="Footer text-sm-center">
+          <div>
+            <span>Version {VERSION}</span>
+          </div>
+          {!source || !source.source ? null : (
+            <a
+              target="__blank"
+              rel="noopener"
+              href={`${githubRoot}${source.source}`}
+            >Page Source</a>
+          )}
+          <Link to="/styleguide">Styleguide</Link>
+        </footer>
       </div>
     );
   }

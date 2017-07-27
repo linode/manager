@@ -6,10 +6,10 @@ export default function Header(props) {
 
   return (
     <div className={`Header ${className}`}>
-      {!props.miniHeader ? null : (
+      {!props.infoHeader ? null : (
         <div className="MiniHeader">
           <div className="container">
-            {props.miniHeader}
+            {props.infoHeader}
           </div>
         </div>
       )}
@@ -18,6 +18,13 @@ export default function Header(props) {
           {props.children}
         </div>
       </div>
+      {!props.contextHeader ? null : (
+        <div className="ContextHeader">
+          <div className="container">
+            {props.contextHeader}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -25,5 +32,6 @@ export default function Header(props) {
 Header.propTypes = {
   className: PropTypes.string,
   children: PropTypes.node,
-  miniHeader: PropTypes.string,
+  infoHeader: PropTypes.node,
+  contextHeader: PropTypes.node,
 };

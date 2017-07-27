@@ -1,0 +1,33 @@
+.MiniHeader {
+    font-size: 12px;
+    background: $light-black;
+    color: $dark-gray;
+    height: $mini-nav-height;
+    line-height: $mini-nav-height;
+    overflow-x: auto;
+    text-align: center;
+
+    a {
+        color: $white;
+        text-decoration: underline;
+    }
+}
+
+.ContextHeader {
+    background: $main-header-color-active;
+    padding: 5px 0;
+
+    &-link {
+        @extend .font-small;
+
+        color: $gray;
+
+        &--selected,
+        &:hover,
+        &:active,
+        &:focus {
+            text-decoration: none;
+            color: $white;
+        }
+    }
+}

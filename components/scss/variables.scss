@@ -1,33 +1,41 @@
 /* BEGIN Color definitions */
-$light-blue: #f2f5f9;
+// Basic element colors
 $blue: #4A90E2;
+$light-blue: lighten($blue, 37%);
 
-//$green: #38D377;
-$green: #2fd071;
-$light-green: lighten($green, 20%);
+$green: #3bb878;
+$light-green: lighten($green, 45%);
+
 $red: #F24C2B;
 
-$yellow: #FFFCF0;
-$dark-yellow: darken($yellow, 20);
-$darkest-yellow: darken($yellow, 40);
+$yellow: #ffefaf;
+$dark-yellow: #FFFCF0;
 
+// Basic text / layout colors
 $light-gray: #FAFAFA;
 $medium-gray: #F3F3F3;
 $gray: #F0F0F0;
-$dark-gray: #D0D0D0;
+$dark-gray: #CCC;
 
-$lightest-black: #A0A0A0;
-$light-black: #777;
-$black: #4b4b4b;
-$darkest-black: #111;
+$lightest-black: #999;
+$light-black: #555;
+$black: #111;
+$darkest-black: black;
 $dark-black: #333333;
 
 $white: #FEFEFE;
 $transparent: rgba(0, 0, 0, 0.5);
 
-$nav-hover-background-color: #3c3c3c;
+// Semantics colors
 
-$background-color: #FCFCFC;
+$main-header-color-text: $dark-gray;
+$main-header-color-text-highlight: $white;
+$main-header-color: $dark-black;
+$main-header-highlight-color: lighten($main-header-color, 5%);
+$main-header-color-active: $green;
+
+$select-color: $light-green;
+$background-color: #FAFAFA;
 
 /* END color definitions */
 

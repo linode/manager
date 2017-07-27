@@ -5,11 +5,11 @@ import { ComingSoon } from 'linode-components/errors';
 
 
 function placeholder() {
-  return <ComingSoon feature="billing" classicLink="/account" />;
+  return <ComingSoon feature="images" classicLink="/images" />;
 }
 
 export default (
-  <Route path="/billing">
+  <Route path="/images">
     <IndexRoute component={placeholder} />
   </Route>
 );

@@ -2,12 +2,12 @@
     display: none;
 
     &:hover {
-        background: $nav-hover-background-color;
+        background: $main-header-highlight-color;
     }
 
     &--open {
         display: block;
-        position: fixed;
+        position: absolute;
         top: $nav-height + $mini-nav-height;
         z-index: 1001;
         left: calc(#{$grid-max-width} + calc(calc(100% - #{$grid-max-width}) / 2));
