@@ -169,8 +169,7 @@ export default class StatusDropdown extends Component {
   }
 
   rebootLinode = () => this.confirmAction('Reboot', () => this.selectConfig(rebootLinode))
-  powerOffLinode = () => this.confirmAction('Power Off', () =>
-    this.props.dispatch(powerOffLinode(this.props.linode.id)))
+  powerOffLinode = () => this.confirmAction('Power Off', () => powerOffLinode(this.props.linode.id))
   powerOnLinode = () => this.selectConfig(powerOnLinode)
   deleteLinode = () => {
     const { linode, dispatch } = this.props;
