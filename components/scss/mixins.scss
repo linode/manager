@@ -50,7 +50,7 @@
 }
 
 @mixin selected() {
-    background-color: $light-blue;
+    background-color: $select-color;
 }
 
 @mixin truncate() {

@@ -125,7 +125,8 @@ function hashLinkScroll() {
     }, 0);
   } else {
     // If we're not jumping to a specific place, scroll to top.
-    window.scroll(0, 0);
+    document.querySelector('.Layout-navigationContainer').scrollTop = 0;
+    document.querySelector('.Layout-content').scrollTop = 0;
   }
 }
 
@@ -157,7 +158,6 @@ function onRouterUpdate() {
 }
 
 export function init() {
-  hashLinkScroll();
   render(
     <Router
       history={browserHistory}
@@ -228,4 +228,6 @@ export function init() {
     </Router>,
     document.getElementById('root')
   );
+
+  hashLinkScroll();
 }

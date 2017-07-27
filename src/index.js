@@ -33,6 +33,8 @@ import Settings from '~/settings';
 import { store } from '~/store';
 import Support from '~/support';
 import Users from '~/users';
+import Volumes from '~/linodes/volumes';
+import Images from '~/linodes/images';
 
 // eslint-disable-next-line no-unused-vars
 import styles from '../scss/manager.scss';
@@ -145,6 +147,8 @@ const init = () => {
               {Profile}
               {Users}
               {Billing}
+              {Volumes}
+              {Images}
               {Settings}
               {Support}
               <Route path="*" component={NotFound} />
