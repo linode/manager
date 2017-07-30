@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { PrimaryButton } from 'linode-components/buttons';
+import { Dropdown } from 'linode-components/dropdowns';
 import { Input } from 'linode-components/forms';
 import { List, ScrollingList } from 'linode-components/lists';
 import { ListBody, ListGroup } from 'linode-components/lists/bodies';
@@ -15,19 +15,43 @@ import { CheckboxCell, LinkCell } from 'linode-components/tables/cells';
 import { setAnalytics, setSource, setTitle } from '~/actions';
 import { showModal, hideModal } from '~/actions/modal';
 import { default as toggleSelected } from '~/actions/select';
-import { linodes as api } from '~/api';
+import * as api from '~/api';
 import { powerOnLinode, powerOffLinode, rebootLinode } from '~/api/linodes';
 import { fullyLoadedObject, transform } from '~/api/util';
 import CreateHelper from '~/components/CreateHelper';
 import { IPAddressCell, RegionCell, BackupsCell } from '~/components/tables/cells';
 import StatusDropdownCell from '~/linodes/components/StatusDropdownCell';
 
+import { AddLinode } from '../components';
+
 
 const OBJECT_TYPE = 'linodes';
 
+export function PrimaryButton(props) {
+  const firstName = [<i className="fa fa-plus" />, props.children];
+  const groups = [
+    { elements: [{ name: firstName, action: props.onClick }] },
+    { elements: [
+      { name: 'Create from Backup', action: 1 },
+      { name: 'Create from StackScript', action: 1 },
+      { name: 'Clone', action: 1 },
+    ]}
+  ];
+
+  return (
+    <div className={`PrimaryButton ${props.className} ${props.buttonClass || 'btn-primary'}`}>
+      <Dropdown
+        groups={groups}
+      />
+    </div>
+  );
+}
+
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
-    await dispatch(api.all());
+    await dispatch(api.linodes.all());
+
+    ['distributions', 'types', 'regions'].map(f => dispatch(api[f].all()));
   }
 
   constructor() {
@@ -96,7 +120,7 @@ export class IndexPage extends Component {
         onSubmit={async () => {
           const ids = linodesToBeRemoved.map(function (linode) { return linode.id; });
 
-          await Promise.all(ids.map(id => dispatch(api.delete(id))));
+          await Promise.all(ids.map(id => dispatch(api.linodes.delete(id))));
           dispatch(toggleSelected(OBJECT_TYPE, ids));
           dispatch(hideModal());
         }}
@@ -194,21 +218,31 @@ export class IndexPage extends Component {
   }
 
   render() {
-    const { linodes } = this.props;
+    const { dispatch, linodes, distributions, types, regions } = this.props;
+
+    const addLinode = () => AddLinode.trigger(dispatch, distributions, types, regions);
 
     return (
       <div className="PrimaryPage container">
         <header className="PrimaryPage-header">
           <div className="PrimaryPage-headerRow clearfix">
             <h1 className="float-sm-left">Linodes</h1>
-            <PrimaryButton to="/linodes/create" className="float-sm-right">
+            <PrimaryButton
+              className="float-sm-right"
+              onClick={() => AddLinode.trigger(dispatch, distributions)}
+            >
               Add a Linode
             </PrimaryButton>
           </div>
         </header>
         <div className="PrimaryPage-body">
-          {Object.keys(linodes).length ? this.renderLinodes(linodes) :
-            <CreateHelper label="Linodes" href="/linodes/create" linkText="Add a Linode" />}
+          {Object.keys(linodes).length ? this.renderLinodes(linodes) : (
+            <CreateHelper
+              label="Linodes"
+              linkText="Add a Linode"
+              onClick={() => AddLinode.trigger(dispatch, distributions)}
+            />
+          )}
         </div>
       </div>
     );
@@ -223,8 +257,14 @@ IndexPage.propTypes = {
 
 function select(state) {
   const linodes = _.pickBy(state.api.linodes.linodes, fullyLoadedObject);
+  const distributions = state.api.distributions.distributions;
+  const types = state.api.types.types;
+  const regions = state.api.regions.regions;
   return {
     linodes,
+    distributions,
+    types,
+    regions,
     selectedMap: state.select.selected[OBJECT_TYPE] || {},
   };
 }
