@@ -51,7 +51,7 @@
         width: 200px;
         text-align: right;
         position: absolute;
-        top: $form-field-height - 1px;
+        top: calc(100% - 1px);
         z-index: 1000;
 
         left: 0;

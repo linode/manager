@@ -85,7 +85,6 @@ export default class Dropdown extends Component {
           className="Dropdown-first"
           onClick={this.wrapClick(first.action || this.open)}
           disabled={disabled}
-          id={(first.name || '').split(' ').join('-').toLowerCase()}
         >{first.name}</button>
         {groups.length === 0 ? null : (
           <button
