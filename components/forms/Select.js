@@ -46,7 +46,7 @@ export default class Select extends Component {
           id={this.props.id}
           name={this.props.name}
           onChange={this.onChange}
-          value={this.props.value}
+          value={value}
         />
         <VendorSelect
           clearable={false}
