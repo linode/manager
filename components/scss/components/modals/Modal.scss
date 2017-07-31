@@ -65,12 +65,16 @@
         margin-bottom: 15px;
     }
 
-    .Input, .Select, textarea, .alert {
+    .Input, textarea, .alert {
         display: block;
 
         :last-child.form-control {
             width: 100%;
         }
+    }
+
+    .Select {
+        width: 100%;
     }
 
     textarea {

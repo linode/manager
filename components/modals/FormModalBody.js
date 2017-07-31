@@ -50,7 +50,7 @@ export default class FormModalBody extends Component {
             disabled={loading}
             disabledChildren={buttonDisabledText}
           >{buttonText}</SubmitButton>
-          <FormSummary errors={errors} />
+          <FormSummary className="text-sm-right" errors={errors} />
         </div>
       </Form>
     );

@@ -1,3 +1,7 @@
+.CheckboxCell .Checkbox-input {
+    top: initial;
+}
+
 // default checkbox rows with labels to use font-large for the label
 .CheckboxCell + .TableCell.LinkCell,
 .CheckboxCell + .TableCell.LabelCell,

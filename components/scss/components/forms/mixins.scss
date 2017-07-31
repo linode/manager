@@ -1,16 +1,16 @@
 @mixin checkbox() {
     @extends .checkbox;
 
-    display: inline-block;
     line-height: $form-field-height;
 
     &-input {
-        height: $form-field-height / 2;
-        width: $form-field-height / 2;
+        height: 16px;
+        width: 16px;
+        position: relative;
+        top: 3px;
     }
 
     &-label {
-        display: inline-block;
         line-height: $form-field-height;
         padding: 0 10px;
     }

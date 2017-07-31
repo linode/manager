@@ -32,6 +32,12 @@ export default class Select extends Component {
                          this.props.options[0].options[0].value :
                          this.props.options[0].value;
 
+    const value = this.props.value || defaultValue;
+    // Update the form so the value is no longer undefined.
+    if (_.isUndefined(this.props.value)) {
+      this.onChange({ value: defaultValue });
+    }
+
     return (
       <span className={this.props.className}>
         {/* This allows us to use this in tests like a normal input. */}

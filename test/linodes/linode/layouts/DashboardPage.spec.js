@@ -4,7 +4,7 @@ import React from 'react';
 import sinon from 'sinon';
 
 
-import { DATACENTERS } from '~/constants';
+import { ZONES } from '~/constants';
 import { DashboardPage } from '~/linodes/linode/layouts/DashboardPage';
 
 import { testLinode, testLinode1246 } from '@/data/linodes';
@@ -129,7 +129,7 @@ describe('linodes/linode/layouts/DashboardPage', async () => {
 
   it('renders lish path', () => {
     const lishLink = `ssh -t tdude@lish-${
-        DATACENTERS[testLinode.region.id]
+        ZONES[testLinode.region.id]
       }.linode.com`;
     const page = shallow(
       <DashboardPage
