@@ -10,7 +10,6 @@
         padding-right: 10px;
         position: relative;
         top: 1px;
-        color: inherit;
     }
 
     .Dropdown {
@@ -26,10 +25,6 @@
 
         &-first, &-toggle {
             @extend .btn-primary;
-        }
-
-        &-toggle {
-            margin-left: 1px;
 
             .fa {
                 color: $white;
@@ -40,6 +35,10 @@
                     color: $blue;
                 }
             }
+        }
+
+        &-toggle {
+            margin-left: 1px;
         }
     }
 }

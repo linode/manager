@@ -1,23 +1,35 @@
 import React, { PropTypes } from 'react';
+import { push } from 'react-router-redux';
 
-import Button from './Button';
+import { Dropdown } from '../dropdowns';
+
 
 export default function PrimaryButton(props) {
+  const groups = [
+    { elements: [{ name: props.children, action: props.onClick, to: props.to, icon: 'fa-plus' }] },
+  ];
+
+  if (props.options && props.options.length) {
+    groups.push({ elements: props.options });
+  }
+
   return (
-    <div className="PrimaryButton">
-      <Button {...props}>
-        <i className="fa fa-plus" />
-        {props.children}
-      </Button>
+    <div className={`PrimaryButton ${props.className} ${props.buttonClass}`}>
+      {/* TODO: add appropriate analytics items */}
+      <Dropdown groups={groups} />
     </div>
   );
 }
 
 PrimaryButton.propTypes = {
-  buttonClass: PropTypes.string,
   children: PropTypes.node.isRequired,
+  options: PropTypes.array,
+  onClick: PropTypes.func,
+  to: PropTypes.string,
+  buttonClass: PropTypes.string,
 };
 
 PrimaryButton.defaultProps = {
   buttonClass: 'btn-primary',
+  options: [],
 };

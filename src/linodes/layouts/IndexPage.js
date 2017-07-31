@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { Dropdown } from 'linode-components/dropdowns';
+import { PrimaryButton } from 'linode-components/buttons';
 import { Input } from 'linode-components/forms';
 import { List, ScrollingList } from 'linode-components/lists';
 import { ListBody, ListGroup } from 'linode-components/lists/bodies';
@@ -26,26 +26,6 @@ import { AddLinode } from '../components';
 
 
 const OBJECT_TYPE = 'linodes';
-
-export function PrimaryButton(props) {
-  const firstName = [<i className="fa fa-plus" />, props.children];
-  const groups = [
-    { elements: [{ name: firstName, action: props.onClick }] },
-    { elements: [
-      { name: 'Create from Backup', action: 1 },
-      { name: 'Create from StackScript', action: 1 },
-      { name: 'Clone', action: 1 },
-    ]}
-  ];
-
-  return (
-    <div className={`PrimaryButton ${props.className} ${props.buttonClass || 'btn-primary'}`}>
-      <Dropdown
-        groups={groups}
-      />
-    </div>
-  );
-}
 
 export class IndexPage extends Component {
   static async preload({ dispatch }) {
@@ -221,6 +201,11 @@ export class IndexPage extends Component {
     const { dispatch, linodes, distributions, types, regions } = this.props;
 
     const addLinode = () => AddLinode.trigger(dispatch, distributions, types, regions);
+    const addOptions = [
+      { name: 'Create from Backup', action: 1 },
+      { name: 'Create from StackScript', action: 1 },
+      { name: 'Clone', action: 1 },
+    ];
 
     return (
       <div className="PrimaryPage container">
@@ -230,6 +215,7 @@ export class IndexPage extends Component {
             <PrimaryButton
               className="float-sm-right"
               onClick={() => AddLinode.trigger(dispatch, distributions)}
+              options={addOptions}
             >
               Add a Linode
             </PrimaryButton>
