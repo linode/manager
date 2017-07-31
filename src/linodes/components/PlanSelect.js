@@ -3,9 +3,12 @@ import React, { PropTypes } from 'react';
 
 import { Select } from 'linode-components/forms';
 
+import { planStyle } from './PlanStyle';
+
 
 export default function PlanSelect(props) {
-  const sortedPlans = _.sortBy(_.map(props.plans, (plan) => ({ ...plan, value: plan.id })), 'value');
+  const sortedPlans = _.map(_.sortBy(props.plans, 'memory'), (plan) =>
+    ({ label: planStyle(plan), value: plan.id, class: plan.class, }));
   const groupedPlans = _.groupBy(sortedPlans, 'class');
 
   const options = [

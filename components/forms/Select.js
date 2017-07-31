@@ -69,7 +69,7 @@ Select.propTypes = {
   onChange: PropTypes.func.isRequired,
   options: PropTypes.array.isRequired,
   name: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired,
+  value: PropTypes.any,
   label: PropTypes.string,
   className: PropTypes.string,
   id: PropTypes.string,

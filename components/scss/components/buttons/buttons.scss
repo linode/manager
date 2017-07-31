@@ -104,14 +104,13 @@ a {
     }
 
     &.btn-cancel, &.btn-cancel:not([href]) {
-        margin: 0 10px;
         display: inline;
 
         color: $light-blue;
     }
 
     & + & {
-        margin-left: 5px;
+        margin: 0 10px;
     }
 }
 
@@ -126,8 +125,9 @@ a {
         padding: 0 8px;
         border-radius: 0;
 
-        .Checkbox {
-            padding: 0 !important;
+        input[type=checkbox] {
+            height: $checkbox-height-width;
+            width: $checkbox-height-width;
         }
     }
 
