@@ -32,10 +32,6 @@ form {
     padding: 3px 0px;
 }
 
-.Checkbox {
-    @include checkbox();
-}
-
 .Checkbox label,
 .Radio {
     &:hover {

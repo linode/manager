@@ -65,6 +65,12 @@ export default class AddLinode extends Component {
     const { close, distributions, plans } = this.props;
     const { errors, label, distribution, region, plan, backups, password } = this.state;
 
+    let backupsLabel = 'Enable';
+    if (plan) {
+      const backupsPrice = plans[plan].backups_price.toFixed(2);
+      backupsLabel = `Enable ($${backupsPrice}/mo)`;
+    }
+
     return (
       <FormModalBody
         onSubmit={this.onSubmit}
@@ -91,7 +97,11 @@ export default class AddLinode extends Component {
               name="distribution"
               id="distribution"
               onChange={this.onChange}
+              allowNone
             />
+            <small className="text-muted">
+              <ExternalLink to="https://linode.com/distributions">Learn more</ExternalLink>
+            </small>
           </ModalFormGroup>
           <ModalFormGroup label="Region" id="region" apiKey="region">
             <RegionSelect
@@ -122,11 +132,12 @@ export default class AddLinode extends Component {
               name="password"
               id="password"
               onChange={this.onChange}
+              disabled={distribution === 'none'}
             />
           </ModalFormGroup>
           <ModalFormGroup label="Backups" id="backups" apiKey="backups">
             <Checkbox
-              label="Enabled"
+              label={backupsLabel}
               name="backups"
               id="backups"
               onChange={this.onChange}
