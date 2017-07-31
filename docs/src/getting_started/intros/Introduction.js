@@ -1,8 +1,8 @@
 import React from 'react';
-
-import { Table } from 'linode-components/tables';
-
 import { Link } from 'react-router';
+
+import { ExternalLink } from 'linode-components/buttons';
+import { Table } from 'linode-components/tables';
 
 import Example from '~/components/Example';
 import { API_ROOT, API_VERSION } from '~/constants';
@@ -15,7 +15,7 @@ export default function Introduction() {
       <section>
         <p>
           The Linode APIv4 is an HTTP service that follows (to a large extent)&nbsp;
-          <a href="https://en.wikipedia.org/wiki/Representational_state_transfer" target="_blank">REST</a>
+          <ExternalLink to="https://en.wikipedia.org/wiki/Representational_state_transfer">REST</ExternalLink>
           &nbsp;style. Resources (like Linodes) have predictable URLs that use standard
           HTTP methods to manipulate and return standard HTTP status codes to tell you how
           it went.

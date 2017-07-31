@@ -3,7 +3,7 @@ import React, { Component, PropTypes } from 'react';
 
 import { Card, CardHeader } from 'linode-components/cards';
 import { flags } from '~/assets';
-import { regionMap, UNAVAILABLE_DATACENTERS } from '~/constants';
+import { regionMap, UNAVAILABLE_ZONES } from '~/constants';
 
 
 export default class Region extends Component {
@@ -37,7 +37,7 @@ export default class Region extends Component {
   renderRegion = (zonesInRegion, region) => {
     const allRealRegions = this.props.regions;
     const regions = Object.values(allRealRegions).filter(({ id }) =>
-      zonesInRegion.indexOf(id) !== -1 && UNAVAILABLE_DATACENTERS.indexOf(id) === -1);
+      zonesInRegion.indexOf(id) !== -1 && UNAVAILABLE_ZONES.indexOf(id) === -1);
 
     return regions.length ? (
       <div className="region-group" key={region}>

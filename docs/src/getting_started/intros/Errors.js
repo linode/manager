@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router';
 
+import { ExternalLink } from 'linode-components/buttons';
 import { Table } from 'linode-components/tables';
 
 import Example from '~/components/Example';
@@ -13,8 +14,8 @@ export default function Errors() {
       <h1>Errors</h1>
       <section>
         <p>
-          Success is indicated via <a href="https://en.wikipedia.org/wiki/List_of_HTTP_status_codes">
-          standard HTTP status codes</a>.
+          Success is indicated via <ExternalLink to="https://en.wikipedia.org/wiki/List_of_HTTP_status_codes">
+          standard HTTP status codes</ExternalLink>.
           Generally speaking, <code>2xx</code> codes indicate success,
           <code>4xx</code> codes indicate an error on your side, and
           <code>5xx</code> codes indicate an error on our side. An error on your

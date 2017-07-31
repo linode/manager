@@ -31,7 +31,7 @@ export class IndexPage extends Component {
   static async preload({ dispatch }) {
     await dispatch(api.linodes.all());
 
-    ['distributions', 'types', 'regions'].map(f => dispatch(api[f].all()));
+    ['distributions', 'types'].map(f => dispatch(api[f].all()));
   }
 
   constructor() {
@@ -200,7 +200,7 @@ export class IndexPage extends Component {
   render() {
     const { dispatch, linodes, distributions, types, regions } = this.props;
 
-    const addLinode = () => AddLinode.trigger(dispatch, distributions, types, regions);
+    const addLinode = () => AddLinode.trigger(dispatch, distributions, types);
     const addOptions = [
       { name: 'Create from Backup', action: 1 },
       { name: 'Create from StackScript', action: 1 },
@@ -214,7 +214,7 @@ export class IndexPage extends Component {
             <h1 className="float-sm-left">Linodes</h1>
             <PrimaryButton
               className="float-sm-right"
-              onClick={() => AddLinode.trigger(dispatch, distributions)}
+              onClick={addLinode}
               options={addOptions}
             >
               Add a Linode
@@ -226,7 +226,7 @@ export class IndexPage extends Component {
             <CreateHelper
               label="Linodes"
               linkText="Add a Linode"
-              onClick={() => AddLinode.trigger(dispatch, distributions)}
+              onClick={addLinode}
             />
           )}
         </div>
@@ -245,12 +245,10 @@ function select(state) {
   const linodes = _.pickBy(state.api.linodes.linodes, fullyLoadedObject);
   const distributions = state.api.distributions.distributions;
   const types = state.api.types.types;
-  const regions = state.api.regions.regions;
   return {
     linodes,
     distributions,
     types,
-    regions,
     selectedMap: state.select.selected[OBJECT_TYPE] || {},
   };
 }

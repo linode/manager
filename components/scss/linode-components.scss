@@ -72,18 +72,22 @@ a, a.force-link:not([href]):not([tabindex]) {
     &:hover, &:focus, &:active {
         text-decoration: underline;
     }
+
+    .fa-external-link {
+        padding-left: 5px;
+    }
 }
 
 a > i.fa {
-  color: $blue;
+    color: $blue;
 }
 
 label {
-  margin-bottom: 0;
+    margin-bottom: 0;
 }
 
 p {
-  margin-bottom: 10px;
+    margin-bottom: 10px;
 }
 
 hr {
@@ -93,11 +97,11 @@ hr {
 }
 
 small {
-  @extend .font-small;
+    @extend .font-small;
 }
 
 strong {
-  font-weight: 500; // toned down from 'bolder'
+    font-weight: 500; // toned down from 'bolder'
 }
 
 section {

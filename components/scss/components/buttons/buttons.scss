@@ -104,8 +104,10 @@ a {
     }
 
     &.btn-cancel, &.btn-cancel:not([href]) {
-        margin-left: 10px;
-        display: inline-block;
+        margin: 0 10px;
+        display: inline;
+
+        color: $light-blue;
     }
 
     & + & {

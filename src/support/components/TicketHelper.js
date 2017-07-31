@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
 
 import { Card, CardHeader } from 'linode-components/cards';
-import { LinkButton } from 'linode-components/buttons';
+import { ExternalLink, LinkButton } from 'linode-components/buttons';
 
 export default class TicketHelper extends Component {
   constructor() {
@@ -50,7 +50,7 @@ export default class TicketHelper extends Component {
             </LinkButton>
             <p className={this.state.hidden.availibility ? 'hidden' : ''} id="availibility"><small>
               {/* eslint-disable max-len */}
-              Our Singapore and Frankfurt regions are now available and we are currently considering expansion in Tokyo. You can stay up-to-date on all region news on <Link to="https://blog.linode.com">our blog</Link>.
+              Our Singapore and Frankfurt regions are now available and we are currently considering expansion in Tokyo. You can stay up-to-date on all region news on <ExternalLink to="https://blog.linode.com">our blog</ExternalLink>.
               {/* eslint-enable max-len */}
             </small></p>
           </li>
@@ -81,7 +81,7 @@ export default class TicketHelper extends Component {
             <p className={this.state.hidden.powered_off ? 'hidden' : ''}><small>
               {/* eslint-disable max-len */}
               Yes, your Linode will be charged regardless of whether it is powered on. For more
-              information about our billing system, see the <Link to="https://www.linode.com/docs/platform/billing-and-payments">billing</Link> guide.
+              information about our billing system, see the <ExternalLink to="https://www.linode.com/docs/platform/billing-and-payments">billing</ExternalLink> guide.
               {/* eslint-enable max-len */}
             </small></p>
           </li>
@@ -101,7 +101,7 @@ export default class TicketHelper extends Component {
             </LinkButton>
             <p className={this.state.hidden.disk_full ? 'hidden' : ''}><small>
               {/* eslint-disable max-len */}
-              With Linode, you can slice and dice your storage quota among multiple disks images. This simply means that you have allocated all of your Linode storage space towards disk images. See our <Link to="https://www.linode.com/docs/migrate-to-linode/disk-images/disk-images-and-configuration-profiles">disk images</Link> guide for more information.
+              With Linode, you can slice and dice your storage quota among multiple disks images. This simply means that you have allocated all of your Linode storage space towards disk images. See our <ExternalLink to="https://www.linode.com/docs/migrate-to-linode/disk-images/disk-images-and-configuration-profiles">disk images</ExternalLink> guide for more information.
               {/* eslint-enable max-len */}
             </small></p>
           </li>
@@ -109,32 +109,22 @@ export default class TicketHelper extends Component {
         <h3 className="sub-header">Resources</h3>
         <ul className="list-unstyled">
           <li>
-            <Link
-              target="_blank"
-              rel="nofollow"
-              to="https://forum.linode.com/"
-            >Community forum</Link>
+            <ExternalLink to="https://forum.linode.com/">Community forum</ExternalLink>
           </li>
           <li>
-            <Link
-              target="_blank"
-              rel="nofollow"
-              to="https://www.linode.com/docs/"
-            >User documentation and guides</Link>
+            <ExternalLink to="https://www.linode.com/docs/">
+              User documentation and guides
+            </ExternalLink>
           </li>
           <li>
-            <Link
-              target="_blank"
-              rel="nofollow"
-              to="https://developers.linode.com/"
-            >Developer documentation and guides</Link>
+            <ExternalLink to="https://developers.linode.com/">
+              Developer documentation and guides
+            </ExternalLink>
           </li>
           <li>
-            <Link
-              target="_blank"
-              rel="nofollow"
-              to="https://status.linode.com/"
-            >Overall system status</Link>
+            <ExternalLink to="https://status.linode.com/">
+              Overall system status
+            </ExternalLink>
           </li>
         </ul>
       </Card>
