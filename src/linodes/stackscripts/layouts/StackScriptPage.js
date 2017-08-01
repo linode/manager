@@ -57,7 +57,7 @@ export class StackScriptPage extends Component {
               </section>
               <Card header={<CardHeader title="Tips" />}>
                 <p>
-                  Check out the StackScript <Link to="https://www.linode.com/docs/platform/stackscripts">documentation</Link>. But keep in mind:
+                  Check out the StackScript <a href="https://www.linode.com/docs/platform/stackscripts">documentation</a>. But keep in mind:
                 </p>
                 <ul>
                   <li>
