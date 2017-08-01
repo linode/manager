@@ -33,9 +33,12 @@ export default class Select extends Component {
                          this.props.options[0].value;
 
     const value = this.props.value || defaultValue;
+
     // Update the form so the value is no longer undefined.
     if (_.isUndefined(this.props.value)) {
-      this.onChange({ value: defaultValue });
+      // setState will not be allowed during render, so take it out of the current
+      // function.
+      setTimeout(() => this.onChange({ value: defaultValue }), 0);
     }
 
     return (

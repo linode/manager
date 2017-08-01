@@ -104,13 +104,24 @@ a {
     }
 
     &.btn-cancel, &.btn-cancel:not([href]) {
+        margin: 0 10px;
         display: inline;
 
-        color: $light-blue;
+        color: $lightest-black;
+        text-decoration: underline;
+
+        &:hover,
+        &:active,
+        &:focus {
+            color: $lightest-black;
+        }
     }
 
-    & + & {
-        margin: 0 10px;
+    // This is for the disk list and record lists.
+    :not(.btn-group) {
+        &.btn-default + .btn-default {
+            margin-left: 10px;
+        }
     }
 }
 
@@ -128,6 +139,7 @@ a {
         input[type=checkbox] {
             height: $checkbox-height-width;
             width: $checkbox-height-width;
+            margin-top: 1px;
         }
     }
 

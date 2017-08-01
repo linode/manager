@@ -22,7 +22,7 @@ import CreateHelper from '~/components/CreateHelper';
 import { IPAddressCell, RegionCell, BackupsCell } from '~/components/tables/cells';
 import StatusDropdownCell from '~/linodes/components/StatusDropdownCell';
 
-import { AddLinode } from '../components';
+import { AddLinode, CloneLinode } from '../components';
 
 
 const OBJECT_TYPE = 'linodes';
@@ -201,10 +201,12 @@ export class IndexPage extends Component {
     const { dispatch, linodes, distributions, types, regions } = this.props;
 
     const addLinode = () => AddLinode.trigger(dispatch, distributions, types);
+    const cloneLinode = () => CloneLinode.trigger(dispatch, linodes, types);
+
     const addOptions = [
       { name: 'Create from Backup', action: 1 },
       { name: 'Create from StackScript', action: 1 },
-      { name: 'Clone', action: 1 },
+      { name: 'Clone a Linode', action: cloneLinode },
     ];
 
     return (
@@ -245,6 +247,7 @@ function select(state) {
   const linodes = _.pickBy(state.api.linodes.linodes, fullyLoadedObject);
   const distributions = state.api.distributions.distributions;
   const types = state.api.types.types;
+
   return {
     linodes,
     distributions,
