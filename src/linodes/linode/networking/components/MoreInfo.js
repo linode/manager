@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
 
-import { ModalFormGroup, Input } from 'linode-components/forms';
+import { ModalFormGroup, Input, Textarea } from 'linode-components/forms';
 import { FormModalBody } from 'linode-components/modals';
 
 import { IPV4_DNS_RESOLVERS, IPV6_DNS_RESOLVERS } from '~/constants';
@@ -42,7 +42,7 @@ export default class MoreInfo extends Component {
   renderDNSResolvers(resolvers) {
     return (
       <ModalFormGroup label="DNS Resolvers">
-        <textarea
+        <Textarea
           className="form-control"
           disabled
           rows={resolvers.length}

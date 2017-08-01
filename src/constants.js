@@ -242,3 +242,9 @@ export const IPV6_DNS_RESOLVERS = [
 ];
 
 export const MONTHLY_IP_COST = 1;
+
+export const DISTRIBUTION_DISPLAY_ORDER = [
+  'ubuntu', 'debian', 'centos', 'fedora', 'arch', 'opensuse', 'gentoo', 'slackware',
+];
+
+export const DEFAULT_DISTRIBUTION = 'linode/Ubuntu16.04LTS';

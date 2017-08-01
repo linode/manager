@@ -136,3 +136,49 @@ export async function expectDispatchOrStoreErrors(fn,
     sandbox.restore();
   }
 }
+
+export function changeInput(component, idName, value, options = {}) {
+  const selector = { name: idName };
+
+  try {
+    let input = component;
+
+    if (!options.nameOnly) {
+      selector.id = idName;
+    }
+
+    if (options.displayName) {
+      input = input.find(options.displayName);
+    }
+
+    input = input.find(selector);
+
+    if (input.length > 1 && input.at(0).props().type === 'radio') {
+      input = input.at(0);
+    }
+
+    // Work-around for testing the Select component with multiple values.
+    if (Array.isArray(value)) {
+      input.props().onChange(value.map(value => ({ target: { value, name: idName } })));
+      return;
+    }
+
+    const event = { target: { value, name: idName, checked: value } };
+
+    if (input.length === 0 && options.displayName) {
+      const selectorsMatch = (props) =>
+        Object.values(selector).reduce(
+          (field, matched) => matched && props[field] === selector[field], false);
+      const componentWithSelectorAttributes = component.findWhere(
+        o => o.name() === options.displayName && selectorsMatch(o.props()));
+      componentWithSelectorAttributes.props().onChange(event);
+      return;
+    }
+
+    input.simulate('change', event);
+  } catch (e) {
+    const eWithMoreInfo = e;
+    eWithMoreInfo.message = `${e.message}: ${JSON.stringify(selector)}`;
+    throw eWithMoreInfo;
+  }
+}

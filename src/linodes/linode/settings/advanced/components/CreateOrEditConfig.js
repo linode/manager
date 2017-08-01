@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { Component, PropTypes } from 'react';
 import { push } from 'react-router-redux';
 
@@ -15,6 +16,7 @@ import {
   Checkbox,
   Checkboxes,
   SubmitButton,
+  Textarea,
 } from 'linode-components/forms';
 
 import { linodes } from '~/api';
@@ -28,11 +30,13 @@ export default class CreateOrEditConfig extends Component {
   constructor(props) {
     super(props);
 
+    this.state = { errors: {}, loading: false };
+
     this.componentWillReceiveProps = this.componentWillMount;
   }
 
-  componentWillMount() {
-    const { config, account } = this.props;
+  componentWillMount(nextProps) {
+    const { config, account } = nextProps || this.props;
 
     this.setState({
       label: config.label,
@@ -51,8 +55,6 @@ export default class CreateOrEditConfig extends Component {
       enableNetworkHelper: config.helpers.enable_network_helper,
       enableModulesDepHelper: config.helpers.enable_modules_dep_helper,
       disableUpdatedb: config.helpers.disable_updatedb,
-      errors: {},
-      loading: null,
     });
 
     if (!config.id) {
@@ -92,8 +94,28 @@ export default class CreateOrEditConfig extends Component {
   onChange = ({ target: { name, value, type, checked } }) =>
     this.setState({ [name]: type === 'checkbox' ? checked : value })
 
+  kernelOptions() {
+    const { kernels } = this.props;
+
+    const ungroupedKernelOptions = _.sortBy(_.map(kernels.kernels, kernel => ({
+      ...kernel,
+      value: kernel.id,
+    })), 'version').reverse();
+
+    return [
+      {
+        label: 'Current',
+        options: _.filter(ungroupedKernelOptions, 'current'),
+      },
+      {
+        label: 'Deprecated',
+        options: _.filter(ungroupedKernelOptions, 'deprecated'),
+      },
+    ];
+  }
+
   render() {
-    const { kernels, linode, config } = this.props;
+    const { linode, config } = this.props;
     const {
       loading, label, comments, kernel, isCustomRoot, rootDevice, initrd, errors, virtMode,
       runLevel, ramLimit, isMaxRam, disks, enableDistroHelper, enableNetworkHelper,
@@ -121,7 +143,7 @@ export default class CreateOrEditConfig extends Component {
         <FormGroup errors={errors} name="comments" className="row">
           <label htmlFor="comments" className="col-sm-2 col-form-label">Notes</label>
           <div className="col-sm-10">
-            <textarea
+            <Textarea
               name="comments"
               id="comments"
               placeholder="Notes"
@@ -157,36 +179,14 @@ export default class CreateOrEditConfig extends Component {
         <FormGroup errors={errors} name="kernel" className="row">
           <label htmlFor="kernel" className="col-sm-2 col-form-label">Kernel</label>
           <div className="col-sm-10">
-            <Select name="kernel" id="kernel" value={kernel} onChange={this.onChange}>
-              <optgroup label="Current">
-                {Object.values(kernels.kernels).map(kernel => {
-                  const map = {
-                    'linode/latest': 'Latest 32-bit kernel',
-                    'linode/latest_64': 'Latest 64-bit kernel',
-                  };
-                  if (kernel.deprecated) return;
-                  return (
-                    <option key={kernel.id} value={kernel.id}>
-                      {map[kernel.id] || kernel.label}
-                    </option>
-                  );
-                })}
-              </optgroup>
-              <optgroup label="Deprecated">
-                {Object.values(kernels.kernels).map(kernel => {
-                  const map = {
-                    'linode/latest': 'Latest 32-bit kernel',
-                    'linode/latest_64': 'Latest 64-bit kernel',
-                  };
-                  if (!kernel.deprecated) return;
-                  return (
-                    <option key={kernel.id} value={kernel.id}>
-                      {map[kernel.id] || kernel.label}
-                    </option>
-                  );
-                })}
-              </optgroup>
-            </Select>
+            <Select
+              className="input-md"
+              name="kernel"
+              id="kernel"
+              value={kernel}
+              onChange={this.onChange}
+              options={this.kernelOptions()}
+            />
             <FormGroupError errors={errors} name="kernel" />
           </div>
         </FormGroup>
@@ -263,10 +263,16 @@ export default class CreateOrEditConfig extends Component {
         <FormGroup className="row">
           <label htmlFor="initrd" className="col-sm-2 col-form-label">initrd</label>
           <div className="col-sm-10">
-            <Select name="initrd" id="initrd" value={initrd} onChange={this.onChange}>
-              <option value="">-- None --</option>
-              <option value="25669">Recovery (Finnix)</option>
-            </Select>
+            <Select
+              name="initrd"
+              id="initrd"
+              value={initrd}
+              onChange={this.onChange}
+              options={[
+                { value: '', label: '-- None --' },
+                { value: '25669', label: 'Recover (Finnix)' },
+              ]}
+            />
           </div>
         </FormGroup>
         <FormGroup className="row" errors={errors} name="root_device">
@@ -284,11 +290,9 @@ export default class CreateOrEditConfig extends Component {
                 selectValue={isCustomRoot ? '/dev/sda' : rootDevice}
                 selectDisabled={isCustomRoot}
                 selectOnChange={e => this.setState({ rootDevice: e.target.value })}
-                selectChildren={AVAILABLE_DISK_SLOTS.map((slot, i) =>
-                  <option key={i} value={`/dev/${slot}`}>
-                    /dev/{slot}
-                  </option>
-                )}
+                selectOptions={AVAILABLE_DISK_SLOTS.map((slot) => ({
+                  value: `/dev/${slot}`, label: `/dev/${slot}`,
+                }))}
               />
               <FormGroupError errors={errors} name={!isCustomRoot ? 'root_device' : ''} />
             </FormGroup>

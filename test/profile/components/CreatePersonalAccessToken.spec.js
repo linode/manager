@@ -7,7 +7,7 @@ import { OAUTH_SCOPES } from '~/constants';
 import CreatePersonalAccessToken from '~/profile/components/CreatePersonalAccessToken';
 import { SHOW_MODAL } from '~/actions/modal';
 
-import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
+import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '@/common';
 
 
 describe('profile/components/CreatePersonalAccessToken', () => {
@@ -27,10 +27,8 @@ describe('profile/components/CreatePersonalAccessToken', () => {
       />
     );
 
-    const changeInput = (id, value) =>
-      page.find({ id, name: id }).props().onChange({ target: { value, name: id } });
-
-    changeInput('label', 'My sweet new token');
+    changeInput(page, 'label', 'My sweet new token');
+    changeInput(page, 'expiry', 0);
 
     await page.props().onSubmit();
 
@@ -62,11 +60,9 @@ describe('profile/components/CreatePersonalAccessToken', () => {
       />
     );
 
-    const changeInput = (id, value) =>
-      page.find({ id, name: id }).props().onChange({ target: { value, name: id } });
-
-    changeInput('label', 'My sweet new token');
-    OAUTH_SCOPES.forEach(scope => changeInput(scope, ''));
+    changeInput(page, 'label', 'My sweet new token');
+    changeInput(page, 'expiry', 0);
+    OAUTH_SCOPES.forEach(scope => changeInput(page, scope, ''));
 
     dispatch.reset();
     await page.props().onSubmit();
