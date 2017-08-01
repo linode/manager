@@ -137,7 +137,7 @@ export function transform(objects, options = {}) {
   const {
     filterBy,
     filterOn = 'label',
-    sortBy = o => moment(o.created),
+    sortBy = 'label',
     groupOn = 'group',
   } = options;
 
