@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [0.10.3] 2017-08-01
+### Added
+- docs for DELETE /linode/volumes/:id #2356
+- docs for POST /linode/volumes/:id/detach #2355
+
 ## [0.10.2] 2017-07-20
 ### Fixed
 - account endpoint documentation #2318
