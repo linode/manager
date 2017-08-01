@@ -81,10 +81,7 @@ export default function Introduction(props) {
           and network transfer). Run the following curl command to retrieve a list of available
           Linode plans:
         </p>
-        <Example
-          example={`curl ${API_ROOT}/${API_VERSION}/reference/endpoints/linode/types`}
-          name="bash"
-        />
+        <Example example={`curl ${API_ROOT}/${API_VERSION}/linode/types`} name="bash" />
         <p>
           The above command will return a JSON object like the following:
         </p>
