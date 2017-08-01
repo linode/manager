@@ -137,7 +137,7 @@ export function transform(objects, options = {}) {
   const {
     filterBy,
     filterOn = 'label',
-    sortBy = 'label',
+    sortBy = o => o.label.toLowerCase(),
     groupOn = 'group',
   } = options;
 
