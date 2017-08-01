@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { Component, PropTypes } from 'react';
 import { push } from 'react-router-redux';
 
@@ -190,7 +191,7 @@ export default class StatusDropdown extends Component {
   render() {
     const { linode } = this.props;
 
-    const status = LinodeStatesReadable[linode.status];
+    const status = LinodeStatesReadable[linode.status] || _.capitalize(linode.status);
     const groups = [
       { elements: [{ name: status }] },
       {

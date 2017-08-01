@@ -21,6 +21,7 @@ export const LinodeStates = {
     'deleting',
     'rebuilding',
     'restoring',
+    'cloning',
   ],
 };
 

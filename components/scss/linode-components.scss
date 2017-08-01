@@ -75,6 +75,8 @@ a, a.force-link:not([href]):not([tabindex]) {
 
     .fa-external-link {
         padding-left: 5px;
+        position: relative;
+        top: 1px;
     }
 }
 
