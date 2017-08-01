@@ -26,7 +26,9 @@ export default class EditSOARecord extends Component {
         domains={domain}
         close={(newDomain) => () => {
           dispatch(hideModal());
-          dispatch(replace(`/domains/${newDomain || domain.domain}`));
+          if (newDomain) {
+            dispatch(replace(`/domains/${newDomain || domain.domain}`));
+          }
         }}
       />
     )));
@@ -113,7 +115,7 @@ export default class EditSOARecord extends Component {
     return (
       <FormModalBody
         onSubmit={this.onSubmit}
-        onCancel={close}
+        onCancel={close()}
         analytics={{ title: EditSOARecord.title }}
         errors={errors}
       >
