@@ -47,7 +47,7 @@ export default class CreateOrEditConfig extends Component {
       virtMode: config.virt_mode,
       runLevel: config.run_level,
       ramLimit: config.ram_limit,
-      disks: config.disks,
+      disks: config.devices.map(d => d.disk_id),
       isCustomRoot: AVAILABLE_DISK_SLOTS.indexOf(
         config.root_device.replace('/dev/', '')) === -1,
       isMaxRam: config.ram_limit === 0,
@@ -69,7 +69,7 @@ export default class CreateOrEditConfig extends Component {
       label: this.state.label,
       comments: this.state.comments,
       kernel: this.state.kernel,
-      disks: this.state.disks,
+      devices: this.state.disks.map(d => ({ disk_id: d })),
       // API expects this to be null not ''
       initrd: this.state.initrd || null,
       root_device: this.state.rootDevice,
