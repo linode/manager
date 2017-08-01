@@ -5,7 +5,7 @@ import sinon from 'sinon';
 
 import EditTXTRecord from '~/domains/components/EditTXTRecord';
 
-import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
+import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '@/common';
 import { api } from '@/data';
 
 
@@ -52,12 +52,9 @@ describe('domains/components/EditTXTRecord', () => {
       />
     );
 
-    const changeInput = (name, value) =>
-      page.find({ name }).simulate('change', { target: { name, value } });
-
-    changeInput('textname', 'somename');
-    changeInput('textvalue', 'someval');
-    changeInput('ttl', 3600);
+    changeInput(page, 'textname', 'somename');
+    changeInput(page, 'textvalue', 'someval');
+    changeInput(page, 'ttl', 3600);
 
     await page.find('Form').props().onSubmit();
 
@@ -87,12 +84,9 @@ describe('domains/components/EditTXTRecord', () => {
       />
     );
 
-    const changeInput = (name, value) =>
-      page.find({ name }).simulate('change', { target: { name, value } });
-
-    changeInput('textname', 'somename');
-    changeInput('textvalue', 'someval');
-    changeInput('ttl', 3600);
+    changeInput(page, 'textname', 'somename');
+    changeInput(page, 'textvalue', 'someval');
+    changeInput(page, 'ttl', 3600);
 
     await page.find('Form').props().onSubmit();
 

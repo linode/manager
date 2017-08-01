@@ -22,6 +22,8 @@ import { stackscripts } from '~/api';
 import { createHeaderFilter, transform } from '~/api/util';
 import CreateHelper from '~/components/CreateHelper';
 
+import AddStackScript from '../components/AddStackScript';
+
 
 const OBJECT_TYPE = 'stackscripts';
 
@@ -149,12 +151,17 @@ export class IndexPage extends Component {
   }
 
   render() {
+    const { dispatch } = this.props;
+
     return (
       <div className="PrimaryPage container">
         <header className="PrimaryPage-header">
           <div className="PrimaryPage-headerRow clearfix">
             <h1 className="float-sm-left">StackScripts</h1>
-            <PrimaryButton className="float-sm-right">
+            <PrimaryButton
+              className="float-sm-right"
+              onClick={() => AddStackScript.trigger(dispatch)}
+            >
               Add a StackScript
             </PrimaryButton>
           </div>
@@ -164,7 +171,7 @@ export class IndexPage extends Component {
             this.renderScripts(this.props.stackscripts.stackscripts) :
             <CreateHelper
               label="StackStripts"
-              href="/stackscripts/create"
+              onClick={() => AddStackScript.trigger(dispatch)}
               linkText="Add a StackScript"
             />
           }

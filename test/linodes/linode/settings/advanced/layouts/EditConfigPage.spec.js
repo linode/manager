@@ -5,6 +5,7 @@ import React from 'react';
 import { push } from 'react-router-redux';
 import sinon from 'sinon';
 
+import { AVAILABLE_DISK_SLOTS } from '~/constants';
 import { EditConfigPage } from '~/linodes/linode/settings/advanced/layouts/EditConfigPage';
 
 import { expectDispatchOrStoreErrors, expectRequest, expectObjectDeepEquals } from '@/common';
@@ -218,17 +219,16 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
       />
     );
 
-    const kernel = page.find('#kernel');
-    expect(kernel.find('optgroup').length).to.equal(2);
-    expect(kernel.find('optgroup').at(0).props()).to.have.property('label')
-                                                 .which.equals('Current');
-    expect(kernel.find('optgroup').at(1).props()).to.have.property('label')
-                                                 .which.equals('Deprecated');
-    expect(kernel.find('option').length).to.equal(2);
-    expect(kernel.find('option').at('0').text()).to.equal('Latest 64-bit kernel');
-    expect(kernel.find('option[value="linode/latest_64"]').length).to.equal(1);
-    expect(kernel.find('option').at('1').text()).to.equal('Latest 32-bit kernel');
-    expect(kernel.find('option[value="linode/latest"]').length).to.equal(1);
+    const kernel = page.findWhere(
+      o => o.name() === 'Select' && o.props().id === 'kernel');
+    const { options } = kernel.props();
+
+    expect(options.length).to.equal(2); // Two groups
+    expect(options[0].label).to.equal('Current');
+    expect(options[1].label).to.equal('Deprecated');
+    expect(options[0].options.length).to.equal(2);
+    expect(options[0].options[0].label).to.equal('4.0.1-x86-linode55');
+    expect(options[0].options[1].label).to.equal('4.0.1-x86_64-linode55');
   });
 
   it('renders boot device properly', () => {
@@ -239,12 +239,11 @@ describe('linodes/linode/settings/advanced/layouts/EditConfigPage', () => {
       />
     );
 
-    const device = page.find('#root-device-select');
-    expect(device.find('option').length).to.equal(8);
-    expect(device.find('option').at('0').text()).to.equal('/dev/sda');
-    expect(device.find('option[value="/dev/sda"]').length).to.equal(1);
-    expect(device.find('option').at('1').text()).to.equal('/dev/sdb');
-    expect(device.find('option[value="/dev/sdb"]').length).to.equal(1);
+    const device = page.findWhere(
+      o => o.name() === 'Select' && o.props().id === 'root-device-select');
+    const { options } = device.props();
+    expect(options.length).to.equal(AVAILABLE_DISK_SLOTS.length);
+    AVAILABLE_DISK_SLOTS.forEach((slot, i) => expect(options[i].value).to.equal(`/dev/${slot}`));
   });
 
   it('commits changes to the API', async () => {

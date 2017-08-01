@@ -22,7 +22,7 @@ export default class ChangePassword extends Component {
 
     this.state = {
       password: '',
-      expires: '0',
+      expires: null,
       errors: {},
       loading: false,
     };
@@ -34,7 +34,7 @@ export default class ChangePassword extends Component {
 
     return dispatch(dispatchOrStoreErrors.call(this, [
       () => setPassword(password, SelectExpiration.map(expires)),
-      () => this.setState({ password: '', expires: '0' }),
+      () => this.setState({ password: '', expires: null }),
     ]));
   }
 

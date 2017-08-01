@@ -18,10 +18,11 @@ export default function DiskSelect(props) {
       <label className={`${labelClassName} col-form-label`}>/dev/{slot}</label>
       <div className={fieldClassName}>
         <Select
+          className="input-md"
           onChange={onChange}
           options={allDiskOptions}
           name={slot}
-          value={configuredDisks[slot] ? configuredDisks[slot] : ''}
+          value={configuredDisks[slot]}
         />
         <FormGroupError errors={errors} name={slot} />
       </div>

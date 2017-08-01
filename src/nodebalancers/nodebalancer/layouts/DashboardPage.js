@@ -52,12 +52,6 @@ export class DashboardPage extends Component {
       source: 'connections',
       units: 0,
     };
-
-    this.componentWillReceiveProps = this.componentWillMount;
-  }
-
-  componentWillMount() {
-
   }
 
   async componentDidMount() {
@@ -99,9 +93,10 @@ export class DashboardPage extends Component {
     const _units = source === 'connections' ? CONNECTION_UNITS : NETWORK_UNITS;
 
     return (
-      <div className="Menu-item">
-        <label className="row-label">Units:</label>
+      <div className="Menu-item clearfix">
+        <label className="col-form-label float-sm-left">Units:</label>
         <Select
+          className="float-sm-left"
           value={units}
           name="units"
           onChange={this.onChange}
@@ -140,6 +135,11 @@ export class DashboardPage extends Component {
       };
     }
 
+    const options = [
+      { value: 'connections', label: 'Connections' },
+      { value: 'traffic', label: 'Traffic' },
+    ];
+
     return (
       <Card header={<CardHeader title="Graphs" />}>
         {!this.graphs ? <p>No graphs are available.</p> : (
@@ -150,10 +150,8 @@ export class DashboardPage extends Component {
                   value={this.state.source}
                   name="source"
                   onChange={this.onChange}
-                >
-                  <option value="connections">Connections</option>
-                  <option value="traffic">Traffic</option>
-                </Select>
+                  options={options}
+                />
               </div>
               {this.renderUnitSelect()}
               <div className="Menu-item Menu-item--right">Last 24 Hours</div>

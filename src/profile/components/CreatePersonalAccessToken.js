@@ -54,7 +54,8 @@ export default class CreatePersonalAccessToken extends Component {
       }), {}),
       errors: {},
       label: '',
-      expiry: '0',
+      expiry: null,
+      loading: false,
     };
   }
 

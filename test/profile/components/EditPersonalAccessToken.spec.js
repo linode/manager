@@ -5,7 +5,7 @@ import sinon from 'sinon';
 
 import EditPersonalAccessToken from '~/profile/components/EditPersonalAccessToken';
 
-import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
+import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '@/common';
 import { testToken } from '@/data/tokens';
 
 
@@ -29,10 +29,7 @@ describe('profile/components/EditPersonalAccessToken', () => {
       />
     );
 
-    const changeInput = (id, value) =>
-      page.find('Input').find({ id }).simulate('change', { target: { value, name: id } });
-
-    changeInput('label', 'My awesome token');
+    changeInput(page, 'label', 'My awesome token');
 
     await page.props().onSubmit();
 

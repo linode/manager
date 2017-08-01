@@ -5,7 +5,7 @@ import sinon from 'sinon';
 
 import EditSRVRecord from '~/domains/components/EditSRVRecord';
 
-import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
+import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '@/common';
 import { api } from '@/data';
 
 
@@ -64,16 +64,13 @@ describe('domains/components/EditSRVRecord', () => {
       />
     );
 
-    const changeInput = (name, value) =>
-      page.find({ name }).simulate('change', { target: { name, value } });
-
-    changeInput('service', '_ips');
-    changeInput('protocol', '_udp');
-    changeInput('target', 'ns2.service.com');
-    changeInput('priority', 77);
-    changeInput('weight', 7);
-    changeInput('port', 777);
-    changeInput('ttl', 3600);
+    changeInput(page, 'service', '_ips');
+    changeInput(page, 'protocol', '_udp');
+    changeInput(page, 'target', 'ns2.service.com');
+    changeInput(page, 'priority', 77);
+    changeInput(page, 'weight', 7);
+    changeInput(page, 'port', 777);
+    changeInput(page, 'ttl', 3600);
 
     await page.find('Form').props().onSubmit();
 
@@ -107,16 +104,13 @@ describe('domains/components/EditSRVRecord', () => {
       />
     );
 
-    const changeInput = (name, value) =>
-      page.find({ name }).simulate('change', { target: { name, value } });
-
-    changeInput('service', '_ips');
-    changeInput('protocol', '_udp');
-    changeInput('target', 'ns2.service.com');
-    changeInput('priority', 77);
-    changeInput('weight', 7);
-    changeInput('port', 777);
-    changeInput('ttl', 3600);
+    changeInput(page, 'service', '_ips');
+    changeInput(page, 'protocol', '_udp');
+    changeInput(page, 'target', 'ns2.service.com');
+    changeInput(page, 'priority', 77);
+    changeInput(page, 'weight', 7);
+    changeInput(page, 'port', 777);
+    changeInput(page, 'ttl', 3600);
 
     await page.find('Form').props().onSubmit();
 

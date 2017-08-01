@@ -8,7 +8,7 @@ import AddDisk from '~/linodes/linode/settings/advanced/components/AddDisk';
 import { api } from '@/data';
 import { testLinode1236 } from '@/data/linodes';
 import { hideModal } from '~/actions/modal';
-import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
+import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '@/common';
 
 
 describe('linodes/linode/settings/advanced/components/AddDisk', () => {
@@ -17,9 +17,6 @@ describe('linodes/linode/settings/advanced/components/AddDisk', () => {
   afterEach(() => {
     sandbox.restore();
   });
-
-  const changeInput = (cmpt, id, value) =>
-    cmpt.find({ id, name: id }).simulate('change', { target: { name: id, value } });
 
   it('should drop filesystem and render password if a distro is selected', () => {
     const modal = mount(

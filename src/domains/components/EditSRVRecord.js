@@ -72,6 +72,14 @@ export default class EditSRVRecord extends Component {
 
     const analytics = { title, action: id ? 'edit' : 'add' };
 
+    const protocolOptions = [
+      { value: '_tcp', label: 'tcp' },
+      { value: '_udp', label: 'udp' },
+      { value: '_xmpp', label: 'xmpp' },
+      { value: '_tls', label: 'tls' },
+      { value: '_smtp', label: 'smtp' },
+    ];
+
     return (
       <FormModalBody
         onSubmit={this.onSubmit}
@@ -97,13 +105,8 @@ export default class EditSRVRecord extends Component {
               name="protocol"
               value={protocol}
               onChange={this.onChange}
-            >
-              <option value="_tcp">tcp</option>
-              <option value="_udp">udp</option>
-              <option value="_xmpp">xmpp</option>
-              <option value="_tls">tls</option>
-              <option value="_smtp">smtp</option>
-            </Select>
+              options={protocolOptions}
+            />
           </ModalFormGroup>
           <ModalFormGroup id="target" label="Target" apiKey="target" errors={errors}>
             <Input

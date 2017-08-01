@@ -5,7 +5,7 @@ import sinon from 'sinon';
 
 import { EditUserPage } from '~/users/user/layouts/EditUserPage';
 
-import { expectDispatchOrStoreErrors, expectRequest } from '@/common';
+import { changeInput, expectDispatchOrStoreErrors, expectRequest } from '@/common';
 import { testUser } from '@/data/users';
 
 
@@ -26,11 +26,8 @@ describe('users/user/layouts/EditUserPage', () => {
       />
     );
 
-    const changeInput = (id, value) =>
-      page.find({ id, name: id }).simulate('change', { target: { value, name: id } });
-
-    changeInput('username', 'the-username');
-    changeInput('email', 'the-email');
+    changeInput(page, 'username', 'the-username');
+    changeInput(page, 'email', 'the-email');
 
     dispatch.reset();
     await page.find('Form').props().onSubmit({ preventDefault() {} });

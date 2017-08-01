@@ -71,6 +71,12 @@ export default class NodeModal extends Component {
     const { dispatch, title } = this.props;
     const { id, label, address, weight, mode, errors } = this.state;
 
+    const modeOptions = [
+      { value: 'accept', label: 'Accept' },
+      { value: 'reject', label: 'Reject' },
+      { value: 'drain', label: 'Drain' },
+    ];
+
     return (
       <FormModalBody
         onSubmit={this.onSubmit}
@@ -137,11 +143,8 @@ export default class NodeModal extends Component {
               name="mode"
               onChange={this.onChange}
               value={mode}
-            >
-              <option value="accept">Accept</option>
-              <option value="reject">Reject</option>
-              <option value="drain">Drain</option>
-            </Select>
+              options={modeOptions}
+            />
           </ModalFormGroup>
         </div>
       </FormModalBody>
