@@ -1,5 +1,4 @@
 import React, { PropTypes } from 'react';
-import { push } from 'react-router-redux';
 
 import { Dropdown } from '../dropdowns';
 
@@ -14,7 +13,7 @@ export default function PrimaryButton(props) {
   }
 
   return (
-    <div className={`PrimaryButton ${props.className} ${props.buttonClass}`}>
+    <div className={`PrimaryButton ${props.buttonClass}`}>
       {/* TODO: add appropriate analytics items */}
       <Dropdown groups={groups} />
     </div>

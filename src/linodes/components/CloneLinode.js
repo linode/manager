@@ -1,5 +1,4 @@
 import React, { PropTypes, Component } from 'react';
-import { Link } from 'react-router';
 
 import { ExternalLink } from 'linode-components/buttons';
 import { ModalFormGroup } from 'linode-components/forms';
@@ -49,7 +48,7 @@ export default class CloneLinode extends Component {
   }
 
   render() {
-    const { close, distributions, plans, linodes } = this.props;
+    const { close, plans, linodes } = this.props;
     const { errors, region, plan, linode } = this.state;
 
     return (
@@ -104,6 +103,6 @@ export default class CloneLinode extends Component {
 CloneLinode.propTypes = {
   dispatch: PropTypes.func.isRequired,
   close: PropTypes.func.isRequired,
-  distributions: PropTypes.object.isRequired,
+  linodes: PropTypes.object.isRequired,
   plans: PropTypes.object.isRequired,
 };

@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import React, { PropTypes } from 'react';
+import React from 'react';
 
 import { Select } from 'linode-components/forms';
 import { REGION_MAP, UNAVAILABLE_ZONES } from '~/constants';

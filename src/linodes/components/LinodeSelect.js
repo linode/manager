@@ -11,7 +11,6 @@ export default function DistributionSelect(props) {
     options: group,
   }));
 
-  console.log(options);
   return (
     <Select
       {...props}
